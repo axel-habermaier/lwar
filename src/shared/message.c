@@ -9,12 +9,40 @@ static void id_pack(Buffer* buffer, Id id)
 	buffer_write_uint16(buffer, id.gen);
 }
 
+static Id id_unpack(Buffer* buffer)
+{
+	Id id;
+	id.n = buffer_read_uint16(buffer);
+	id.gen = buffer_read_uint16(buffer);
+	return id;
+}
+
+#define ID_SIZE 2 * 2
+#define PLAYERNAME_SIZE 32
+#define COMMON_PREFIX_SIZE 1 + 4
+
+static size_t msg_len[] = 
+{
+	ID_SIZE + PLAYERNAME_SIZE, // connect
+	ID_SIZE + PLAYERNAME_SIZE, // join
+	ID_SIZE, // leave
+	ID_SIZE + 2, // chat + variable length msg
+	ID_SIZE + 5 + 4, // input
+	ID_SIZE + ID_SIZE + 1, // add
+	ID_SIZE, // remove
+	ID_SIZE + 4 * 4 + 2 + 1 // update
+};
+
 size_t message_pack(Buffer* buffer, Message* m)
 {
 	LWAR_ASSERT_NOT_NULL(buffer);
 	LWAR_ASSERT_NOT_NULL(m);
 
-	if (!buffer_fits(buffer, sizeof(m->type) + sizeof(m->seqno)))
+	size_t req_size = msg_len[m->type] + COMMON_PREFIX_SIZE;
+	if (m->type == MESSAGE_CHAT)
+		req_size += strlen(m->chat.text);
+
+	if (!buffer_fits(buffer, req_size))
 		return 0;
 
 	size_t offset = buffer_tell(buffer);
@@ -26,23 +54,45 @@ size_t message_pack(Buffer* buffer, Message* m)
 	{
 	case MESSAGE_CONNECT:
     case MESSAGE_JOIN:
-		if (!buffer_fits(buffer, sizeof(m->join.player) + sizeof(m->join.name)))
-			return 0;
-
 		id_pack(buffer, m->join.player);
 		buffer_write_array(buffer, (uint8_t*)m->join.name, sizeof(m->join.name));
 		break;
     case MESSAGE_LEAVE:
+		id_pack(buffer, m->leave.player);
 		break;
     case MESSAGE_CHAT:
+	{
+		size_t len = strlen(m->chat.text);
+		buffer_write_uint16(buffer, (uint16_t)len);
+		buffer_write_array(buffer, (uint8_t*)m->chat.text, len);
+		id_pack(buffer, m->chat.player);
 		break;
+	}
     case MESSAGE_INPUT:
+		id_pack(buffer, m->input.player);
+		buffer_write_uint32(buffer, m->input.ack);
+		buffer_write_bool(buffer, m->input.up);
+		buffer_write_bool(buffer, m->input.down);
+		buffer_write_bool(buffer, m->input.left);
+		buffer_write_bool(buffer, m->input.right);
+		buffer_write_bool(buffer, m->input.shooting);
 		break;
     case MESSAGE_ADD:
+		id_pack(buffer, m->add.entity);
+		id_pack(buffer, m->add.player);
+		buffer_write_uint8(buffer, m->add.type);
 		break;
     case MESSAGE_REMOVE:
+		id_pack(buffer, m->remove.entity);
 		break;
     case MESSAGE_UPDATE:
+		id_pack(buffer, m->update.entity);
+		buffer_write_int32(buffer, m->update.x);
+		buffer_write_int32(buffer, m->update.y);
+		buffer_write_int32(buffer, m->update.vx);
+		buffer_write_int32(buffer, m->update.vy);
+		buffer_write_uint16(buffer, m->update.rot);
+		buffer_write_uint8(buffer, m->update.health);
 		break;
 	default:
 		LWAR_NO_SWITCH_DEFAULT;
@@ -51,148 +101,73 @@ size_t message_pack(Buffer* buffer, Message* m)
 	return buffer_tell(buffer) - offset;
 }
 
-//static size_t str_pack(char *out, const char *in, size_t n) {
-//    strncpy(out, in, n-1);
-//    out[n-1] = 0;
-//    return n;
-//}
-//
-//static size_t str_unpack(const char *in, char *out, size_t n) {
-//    return str_pack(out, in, n);
-//}
-//
-//#define name_pack(out, in)   str_pack(out, in, MAX_NAME_LENGTH)
-//#define name_unpack(out, in) str_unpack(out, in, MAX_NAME_LENGTH)
-//
-//static size_t id_pack(char *out, Id id) {
-//    uint16_pack(out,   id.gen);
-//    uint16_pack(out+2, id.n);
-//    return 4;
-//}
-//
-//static size_t id_unpack(const char *out, Id *id) {
-//    uint16_unpack(out,   &id->gen);
-//    uint16_unpack(out+2, &id->n);
-//    return 4;
-//}
-//
-//size_t message_pack(char *s, Message *m, size_t len) {
-//    size_t n = 0;
-//
-//    if(n+11 > len) return 0;
-//    n += uint32_pack(s+n, APP_ID);
-//    n += uint8_pack (s+n, m->type);
-//    n += uint32_pack(s+n, m->seqno);
-//
-//    switch(m->type) {
-//    case MESSAGE_CONNECT:
-//    case MESSAGE_JOIN:
-//        if(n + 4+MAX_NAME_LENGTH > len) return 0;
-//        n += id_pack(s+n, m->join.player);
-//        n += name_pack(s+n, m->join.name);
-//        break;
-//    case MESSAGE_LEAVE:
-//        if(n + 4 > len) return 0;
-//        n += id_pack(s+n, m->leave.player);
-//        break;
-//    case MESSAGE_CHAT:
-//        if(n + 6+m->chat.len > len) return 0;
-//        n += id_pack(s+n, m->chat.player);
-//        n += uint16_pack(s+n, m->chat.len);
-//        n += str_pack(s+n, m->chat.text, m->chat.len);
-//        break;
-//    case MESSAGE_INPUT:
-//        if(n + 13 > len) return 0;
-//        n += id_pack(s+n, m->input.player);
-//        n += uint8_pack(s+n, m->input.up);
-//        n += uint8_pack(s+n, m->input.down);
-//        n += uint8_pack(s+n, m->input.left);
-//        n += uint8_pack(s+n, m->input.right);
-//        n += uint8_pack(s+n, m->input.shooting);
-//        n += uint32_pack(s+n, m->input.ack);
-//        break;
-//    case MESSAGE_ADD:
-//        if(n + 9 > len) return 0;
-//        n += id_pack(s+n, m->add.entity);
-//        n += id_pack(s+n, m->add.player);
-//        n += uint8_pack(s+n, m->add.type);
-//        break;
-//    case MESSAGE_REMOVE:
-//        if(n + 4 > len) return 0;
-//        n += id_pack(s+n, m->remove.entity);
-//        break;
-//    case MESSAGE_UPDATE:
-//        if(n + 23 > len) return 0;
-//        n += id_pack(s+n, m->update.entity);
-//        n +=  int32_pack(s+n, m->update.x);
-//        n +=  int32_pack(s+n, m->update.y);
-//        n +=  int32_pack(s+n, m->update.vx);
-//        n +=  int32_pack(s+n, m->update.vy);
-//        n += uint16_pack(s+n, m->update.rot);
-//        n += uint8_pack (s+n, m->update.health);
-//        break;
-//    }
-//    return n;
-//}
-//
-//size_t message_unpack(const char *s, Message *m, size_t len) {
-//    size_t n = 0;
-//    uint32_t app_id;
-//    n += uint32_unpack(s+n, &app_id);
-//    if(app_id != APP_ID) return 0;
-//    n += uint8_unpack (s+n, &m->type);
-//    n += uint32_unpack(s+n, &m->seqno);
-//
-//    switch(m->type) {
-//    case MESSAGE_CONNECT:
-//    case MESSAGE_JOIN:
-//        if(n + 4+MAX_NAME_LENGTH > len) return 0;
-//        n += id_unpack(s+n, &m->join.player);
-//        n += name_unpack(s+n, m->join.name);
-//        break;
-//    case MESSAGE_LEAVE:
-//        if(n + 4 > len) return 0;
-//        n += id_unpack(s+n, &m->leave.player);
-//        break;
-//    case MESSAGE_CHAT:
-//        if(n + 6 > len) return 0;
-//        n += id_unpack(s+n, &m->chat.player);
-//        n += uint16_unpack(s+n, &m->chat.len);
-//        if(n + m->chat.len > len) return 0;
-//        n += str_unpack(s+n, m->chat.text, m->chat.len);
-//        break;
-//    case MESSAGE_INPUT:
-//        if(n + 13 > len) return 0;
-//        n += id_unpack(s+n, &m->input.player);
-//        n += uint8_unpack(s+n, &m->input.up);
-//        n += uint8_unpack(s+n, &m->input.down);
-//        n += uint8_unpack(s+n, &m->input.left);
-//        n += uint8_unpack(s+n, &m->input.right);
-//        n += uint8_unpack(s+n, &m->input.shooting);
-//        n += uint32_unpack(s+n, &m->input.ack);
-//        break;
-//    case MESSAGE_ADD:
-//        n += id_unpack(s+n, &m->add.entity);
-//        n += id_unpack(s+n, &m->add.player);
-//        n += uint8_unpack(s+n, &m->add.type);
-//        break;
-//    case MESSAGE_REMOVE:
-//        if(n + 4 > len) return 0;
-//        n += id_unpack(s+n, &m->remove.entity);
-//        break;
-//    case MESSAGE_UPDATE:
-//        if(n + 23 > len) return 0;
-//        n += id_unpack(s+n, &m->update.entity);
-//        n +=  int32_unpack(s+n, &m->update.x);
-//        n +=  int32_unpack(s+n, &m->update.y);
-//        n +=  int32_unpack(s+n, &m->update.vx);
-//        n +=  int32_unpack(s+n, &m->update.vy);
-//        n += uint16_unpack(s+n, &m->update.rot);
-//        n += uint8_unpack (s+n, &m->update.health);
-//        break;
-//    }
-//    return n;
-//}
+size_t message_unpack(Buffer* buffer, Message* m)
+{
+	LWAR_ASSERT_NOT_NULL(buffer);
+	LWAR_ASSERT_NOT_NULL(m);
+
+	if (!buffer_fits(buffer, COMMON_PREFIX_SIZE))
+		return 0;
+
+	m->type = buffer_read_uint8(buffer);
+	m->seqno = buffer_read_uint32(buffer);
+
+	size_t req_size = msg_len[m->type];
+	size_t chat_size = 0;
+	if (m->type == MESSAGE_CHAT)
+		chat_size = buffer_read_uint16(buffer);
+
+	if (!buffer_fits(buffer, req_size + chat_size))
+		return 0;
+
+	switch (m->type)
+	{
+	case MESSAGE_CONNECT:
+    case MESSAGE_JOIN:
+		m->join.player = id_unpack(buffer);
+		buffer_read_array(buffer, (uint8_t*)m->join.name, sizeof(m->join.name));
+		break;
+    case MESSAGE_LEAVE:
+		m->leave.player = id_unpack(buffer);
+		break;
+    case MESSAGE_CHAT:
+	{
+		buffer_read_array(buffer, (uint8_t*)m->chat.text, chat_size);
+		m->chat.player = id_unpack(buffer);
+		break;
+	}
+    case MESSAGE_INPUT:
+		m->input.player = id_unpack(buffer);
+		m->input.ack = buffer_read_uint32(buffer);
+		m->input.up = buffer_read_bool(buffer);
+		m->input.down = buffer_read_bool(buffer);
+		m->input.left = buffer_read_bool(buffer);
+		m->input.right = buffer_read_bool(buffer);
+		m->input.shooting = buffer_read_bool(buffer);
+		break;
+    case MESSAGE_ADD:
+		m->add.entity = id_unpack(buffer);
+		m->add.player = id_unpack(buffer);
+		m->add.type = buffer_read_uint8(buffer);
+		break;
+    case MESSAGE_REMOVE:
+		m->remove.entity = id_unpack(buffer);
+		break;
+    case MESSAGE_UPDATE:
+		m->update.entity = id_unpack(buffer);
+		m->update.x = buffer_read_int32(buffer);
+		m->update.y = buffer_read_int32(buffer);
+		m->update.vx = buffer_read_int32(buffer);
+		m->update.vy = buffer_read_int32(buffer);
+		m->update.rot = buffer_read_uint16(buffer);
+		m->update.health = buffer_read_uint8(buffer);
+		break;
+	default:
+		LWAR_NO_SWITCH_DEFAULT;
+	}
+
+	return req_size + chat_size;
+}
 
 static const char *strmsg[] = {
     "connect",
