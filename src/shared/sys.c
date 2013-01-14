@@ -40,7 +40,7 @@ int32_t sys_sprintf(char* const dest, size_t length, const char* const fmt, ...)
 	return ret;
 }
 
-void mem_cpy(void* const dest, const void* const src, size_t bytes)
+void mem_copy(void* const dest, const void* const src, size_t bytes)
 {
 	LWAR_ASSERT_NOT_NULL(dest);
 	LWAR_ASSERT_NOT_NULL(src);
@@ -48,4 +48,12 @@ void mem_cpy(void* const dest, const void* const src, size_t bytes)
 	LWAR_ASSERT(((char*)dest) + bytes < src || ((char*)dest) + bytes > ((char*)src) + bytes, "Memory regions are overlapping");
 
 	memcpy(dest, src, bytes); 
+}
+
+void mem_move(void* const dest, const void* const src, size_t bytes)
+{
+	LWAR_ASSERT_NOT_NULL(dest);
+	LWAR_ASSERT_NOT_NULL(src);
+
+	memmove(dest, src, bytes); 
 }
