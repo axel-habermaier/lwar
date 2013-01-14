@@ -11,7 +11,7 @@ local sln = solution "lwar"
 	
   configuration { "Release" }
 	targetdir "bin/release"
-	flags { "Optimize", "ExtraWarnings" }
+	flags { "Optimize", "Symbols", "ExtraWarnings" }
 	
   local proj = project "client"
 	proj.location = "build"
@@ -67,3 +67,9 @@ local sln = solution "lwar"
 	pchheader "prelude.h"
     pchsource "src/shared/prelude.c"
 	vpaths { [""] = { "src/shared" } }
+	
+	configuration "vs2010"
+		excludes { "src/shared/sys.linux.c" }
+		
+	configuration "gmake"
+		excludes { "src/shared/sys.win32.c" }
