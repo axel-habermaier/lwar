@@ -25,7 +25,7 @@ typedef struct Logger Logger;
 typedef struct Logger
 {
 	LogFunc callback;
-	List list;
+	ListNode list;
 } Logger;
 
 // Initializes the logging system

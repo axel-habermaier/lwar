@@ -26,6 +26,9 @@ typedef struct sockaddr sockaddr;
 
 static Socket udp_socket;
 
+#define APP_ID 0xf27087c5,
+typedef uint32_t AppId;
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Helper functions
 
@@ -129,7 +132,7 @@ bool net_shutdown()
 	return ret;
 }
 
-bool net_receive(Packet packet, size_t* size, EndPoint* endPoint)
+bool net_receive(Packet* packet, size_t* size, EndPoint* endPoint)
 {
 	net_init_socket();
 
@@ -137,7 +140,7 @@ bool net_receive(Packet packet, size_t* size, EndPoint* endPoint)
 	memset(&from, 0, sizeof(sockaddr_in));
 	socklen_t len = sizeof(sockaddr_in);
 
-	int read_bytes = recvfrom(udp_socket, (char*)packet, sizeof(packet), 0, (sockaddr*)&from, &len);
+	int read_bytes = recvfrom(udp_socket, (char*)packet->data, sizeof(packet), 0, (sockaddr*)&from, &len);
 #ifdef WINDOWS
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
 #endif
@@ -159,7 +162,7 @@ bool net_receive(Packet packet, size_t* size, EndPoint* endPoint)
 	return true;
 }
 
-bool net_send(const Packet packet, size_t size, EndPoint* endPoint)
+bool net_send(const Packet* packet, size_t size, EndPoint* endPoint)
 {
 	net_init_socket();
 
@@ -169,7 +172,7 @@ bool net_send(const Packet packet, size_t size, EndPoint* endPoint)
 	addr.sin_port = htons(endPoint->port);
 	addr.sin_addr.s_addr = endPoint->ip;
 
-	int sent_bytes = sendto(udp_socket, (char*)packet, size, 0, (sockaddr*)&addr, sizeof(sockaddr_in));
+	int sent_bytes = sendto(udp_socket, (char*)packet->data, size, 0, (sockaddr*)&addr, sizeof(sockaddr_in));
 	if (sent_bytes == SOCKET_ERROR)
 		return net_error("Sending failed");
 
@@ -199,4 +202,10 @@ bool net_endpoint(EndPoint* endPoint, const IPAddress address, uint16_t port)
 {
 	endPoint->port = port;
 	return inet_pton(AF_INET, address, &endPoint->ip) == 1;
+}
+
+void net_init_packet(Packet* packet)
+{
+	LWAR_ASSERT_NOT_NULL(packet);
+	buffer_init(&packet->buffer, packet->data, sizeof(AppId), sizeof(packet->data) - sizeof(AppId));
 }

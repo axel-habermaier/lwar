@@ -1,6 +1,6 @@
 #include "prelude.h"
 
-void list_init_head(List* head)
+void list_init_head(ListNode* head)
 {
 	LWAR_ASSERT_NOT_NULL(head);
 	LWAR_ASSERT_NULL(head->next);
@@ -10,7 +10,7 @@ void list_init_head(List* head)
 	head->prev = head;
 }
 
-void list_add(List* node, List* prevNode)
+void list_add(ListNode* node, ListNode* prevNode)
 {
 	LWAR_ASSERT_NOT_NULL(node);
 	LWAR_ASSERT_NOT_NULL(prevNode);
@@ -24,7 +24,7 @@ void list_add(List* node, List* prevNode)
 	prevNode->next = node;
 }
 
-void list_remove(List* node)
+void list_remove(ListNode* node)
 {
 	LWAR_ASSERT_NOT_NULL(node);
 	LWAR_ASSERT_NOT_NULL(node->next);

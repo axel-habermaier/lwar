@@ -81,11 +81,18 @@
 	#define LWAR_ASSERT_NOT_REACHED(fmt, ...) LWAR_DIE(fmt, __VA_ARGS__)
 	#define LWAR_ASSERT_NOT_NULL(ptr) LWAR_ASSERT((ptr) != NULL, "Pointer '" #ptr "' is null.")
 	#define LWAR_ASSERT_NULL(ptr) LWAR_ASSERT((ptr) == NULL, "Pointer '" #ptr "' must be null.")
+	#define LWAR_ASSERT_IN_RANGE(v, lower, upper) LWAR_ASSERT(v >= lower && v < upper, "'" #v "' is out of range.")
 #else
 	#define LWAR_ASSERT(cond, fmt, ...) LWAR_UNUSED(cond)
 	#define LWAR_ASSERT_NOT_REACHED(fmt, ...) 
 	#define LWAR_ASSERT_NOT_NULL(ptr) LWAR_UNUSED(ptr)
 	#define LWAR_ASSERT_NULL(ptr) LWAR_UNUSED(ptr)
+	#define LWAR_ASSERT_IN_RANGE(v, lower, upper) \
+		LWAR_MULTILINE_MACRO_BEGIN \
+		LWAR_UNUSED(v); \
+		LWAR_UNUSED(lower); \
+		LWAR_UNUSED(upper); \
+		LWAR_MULTILINE_MACRO_END
 #endif
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -106,6 +113,9 @@ typedef struct
 	uint16_t gen;
 } Id;
 
+typedef char PlayerName[32];
+typedef char ChatMsg[128];
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Standard project includes
 #include "list.h"
@@ -114,7 +124,7 @@ typedef struct
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Project-wide constants
-enum 
-{
-	SERVER_PORT = 32422,
-};
+#define SERVER_PORT = 54321
+#define M_PI 3.14159265358979323846
+#define UPDATE_SCALE_BITS 8,
+#define UPDATE_SCALE (1 << UPDATE_SCALE_BITS),

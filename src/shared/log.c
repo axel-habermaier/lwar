@@ -1,7 +1,7 @@
 #include "prelude.h"
 #include <stdarg.h>
 
-static List loggers;
+static ListNode loggers;
 
 void log_init()
 {
@@ -40,11 +40,10 @@ void log_write(const char* msg, LogType type, const char* file, size_t line, ...
 
 	va_end(vl);
 
-	Logger* logger;
-	List* node;
+	ListNode* node;
 	list_foreach(node, &loggers)
 	{
-		logger = list_element(node, Logger, list);
+		Logger *logger = list_element(node, Logger, list);
 		logger->callback(&data);
 	}
 }

@@ -1,22 +1,22 @@
-typedef struct List List;
-typedef struct List
+typedef struct ListNode ListNode;
+typedef struct ListNode
 {
-	List* next;
-	List* prev;
-} List;
+	ListNode* next;
+	ListNode* prev;
+} ListNode;
 
 #define LIST_INIT(l) { &(l), &(l) }
 
 // Initializes the list head
-void list_init_head(List* head);
+void list_init_head(ListNode* head);
 
 // Adds node right after prevNode into the list
-void list_add(List* node, List* prevNode);
+void list_add(ListNode* node, ListNode* prevNode);
 
 // Removes the node from the list
-void list_remove(List* node);
+void list_remove(ListNode* node);
 
-// Gets the list entry, where list is a pointer to a List, type is the type of the struct containing the list member
+// Gets the list entry, where list is a pointer to a ListNode, type is the type of the struct containing the list member
 #define list_element(list, type, member) (type*)((uint8_t*)list - offsetof(type, member))
 
 // Iterates through the list starting at head, where node is set to the current node during each iteration
