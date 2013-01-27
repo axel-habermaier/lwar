@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Client
+namespace Lwar.Client
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Processes;

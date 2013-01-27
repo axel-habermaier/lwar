@@ -1,7 +1,7 @@
 ﻿<#@ include file="../Framework/Platform/CodeModel.t4" #><# #>
 using System;
 
-namespace Client
+namespace Lwar.Client
 {
 	using Pegasus.Framework.Platform.Assets;
 

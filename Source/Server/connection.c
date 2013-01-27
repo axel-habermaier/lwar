@@ -57,7 +57,7 @@ static void conn_error(const char* const msg)
     strerror_r(errno, errmsg, sizeof(errmsg));
 #endif
 
-	log_error("%s - %s", msg, errmsg);
+	log_error("%s - %s\n", msg, errmsg);
 }
 
 int conn_init()

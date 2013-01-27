@@ -100,6 +100,8 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <AdditionalOptions>/wd4305 /wd4244 %(AdditionalOptions)</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -117,6 +119,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <AdditionalOptions>/wd4305 /wd4244 /wd4267 %(AdditionalOptions)</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,6 +140,7 @@
       <AdditionalOptions>/wd4305 /wd4244 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +163,7 @@
       <AdditionalOptions>/wd4305 /wd4244 /wd4267 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -177,17 +182,21 @@
     <ClCompile Include="physics.c" />
     <ClCompile Include="pq.c" />
     <ClCompile Include="protocol.c" />
-    <ClCompile Include="rules.c" />
+    <ClCompile Include="rules\bullet.c" />
+    <ClCompile Include="rules\planet.c" />
+    <ClCompile Include="rules\ship.c" />
     <ClCompile Include="server.c" />
     <ClCompile Include="time.c" />
     <ClCompile Include="uint.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="connection.h" />
+    <ClInclude Include="coroutine.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="pq.h" />
+    <ClInclude Include="rules.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="server_export.h" />
     <ClInclude Include="uint.h" />

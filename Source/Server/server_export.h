@@ -5,7 +5,7 @@ extern "C" {
 #ifdef _MSC_VER
 	#define EXPORT __declspec(dllexport)
 #else
-	#define SYM_EXPORT
+	#define EXPORT
 #endif
 
 	typedef void (*LogCallback)(const char* message);

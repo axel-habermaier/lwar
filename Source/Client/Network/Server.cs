@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Client.Network
+namespace Lwar.Client.Network
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
@@ -9,26 +9,36 @@ namespace Client.Network
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Processes;
 
+	/// <summary>
+	///   Represents the server hosting a game session.
+	/// </summary>
 	public class Server
 	{
-		/// <summary>
-		///   The update frequency of the server in Hz.
-		/// </summary>
-		private const int ServerUpdateFrequency = 30;
-
 		/// <summary>
 		///   The log callbacks that have been passed to the native code. We must keep a reference in order to prevent
 		///   the garbage collector from freeing the delegates while they are still being used by native code.
 		/// </summary>
 		private readonly NativeMethods.LogCallbacks _logCallbacks = new NativeMethods.LogCallbacks
 		{
-			Die = s => Log.Die("(Server) {0}", s),
-			Error = s => Log.Error("(Server) {0}", s),
-			Warning = s => Log.Warn("(Server) {0}", s),
-			Info = s => Log.Info("(Server) {0}", s),
-			Debug = s => NetworkLog.DebugInfo("(Server) {0}", s)
+			Die = s => Log.Die("(Server) {0}", RemoveTrailingNewline(s)),
+			Error = s => Log.Error("(Server) {0}", RemoveTrailingNewline(s)),
+			Warning = s => Log.Warn("(Server) {0}", RemoveTrailingNewline(s)),
+			Info = s => Log.Info("(Server) {0}", RemoveTrailingNewline(s)),
+			Debug = s => NetworkLog.DebugInfo("(Server) {0}", RemoveTrailingNewline(s))
 		};
 
+		/// <summary>
+		///   Removes a trailing newline.
+		/// </summary>
+		private static string RemoveTrailingNewline(string s)
+		{
+			return s.EndsWith("\n") ? s.Substring(0, s.Length - 2) : s;
+		}
+
+		/// <summary>
+		///   Initializes the server, runs it and shuts it down if an error occurs or cancellation is requested.
+		/// </summary>
+		/// <param name="context">The context in which the server process should be executed.</param>
 		public async Task Run(ProcessContext context)
 		{
 			Log.Info("Initializing server...");
@@ -47,13 +57,11 @@ namespace Client.Network
 
 				while (!context.IsCanceled)
 				{
-					if (NativeMethods.Update((ulong)watch.ElapsedMilliseconds, true) < 0)
+					if (await context.WaitFor(() => NativeMethods.Update((ulong)watch.ElapsedMilliseconds, true)) < 0)
 					{
 						Log.Error("Server stopped after error.");
 						break;
 					}
-
-					await context.Delay(1000 / ServerUpdateFrequency);
 				}
 			}
 			finally
@@ -63,12 +71,15 @@ namespace Client.Network
 			}
 		}
 
+		/// <summary>
+		///   Provides access to the native service types and functions.
+		/// </summary>
 		private static class NativeMethods
 		{
 #if Windows
 			private const string LibraryName = "lwar-server.dll";
 #else
-			private const string LibraryName = "liblwar-server.so";
+			private const string LibraryName = "libserver.so";
 #endif
 
 			[DllImport(LibraryName, EntryPoint = "server_init")]

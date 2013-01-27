@@ -2,7 +2,7 @@
 
 namespace Pegasus.Gameplay
 {
-	using Client.Gameplay;
+	using Lwar.Client.Gameplay;
 	using Framework.Math;
 	using Framework.Platform;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Client
+namespace Lwar.Client
 {
 	/// <summary>
 	///   The asset attribute is used to indicate to the application which asset should be loaded into a public static field.

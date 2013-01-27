@@ -4,7 +4,8 @@ VPATH = Source/Server Source/Dedicated
 BUILD = build/Debug/server
 
 SERVER_H      = server.h
-SERVER_SRC    = client.c connection.c entity.c log.c message.c physics.c pq.c protocol.c rules.c server.c time.c uint.c
+SERVER_SRC    = client.c connection.c entity.c log.c message.c physics.c pq.c protocol.c server.c time.c uint.c \
+                rules/planet.c rules/ship.c rules/bullet.c
 SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
 SERVER_SO     = $(BUILD)/libserver.so
 SERVER_LIB    = 
@@ -19,7 +20,7 @@ CC = clang
 LD = clang
 CFLAGS = -Wall -g -fPIC -ISource/Server
 
-all: $(BUILD) $(SERVER_SO) $(DEDICATED_BIN)
+all: $(BUILD) $(BUILD)/rules $(SERVER_SO) $(DEDICATED_BIN)
 
 run: $(DEDICATED_BIN)
 	LD_LIBRARY_PATH=$(BUILD) ./$(DEDICATED_BIN) -visual
@@ -29,6 +30,9 @@ clean:
 
 $(BUILD):
 	mkdir -p $@
+
+$(BUILD)/rules:
+	mkdir -p $@/rules
 
 $(BUILD)/%.o: %.c $(SERVER_H)
 	$(CC) -c $< -o $@ $(CFLAGS)

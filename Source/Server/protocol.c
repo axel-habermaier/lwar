@@ -6,6 +6,7 @@
 
 #include "server.h"
 #include "message.h"
+#include "coroutine.h"
 
 typedef struct QueuedMessage QueuedMessage;
 struct QueuedMessage {
@@ -45,7 +46,7 @@ static void message_enqueue_all(QueuedMessage *qm) {
 }
 
 /* if c == 0 then broadcast */
-Message *message_reliable(Client *c, Message *m, uint8_t new_type) {
+static Message *message_reliable(Client *c, Message *m, uint8_t new_type) {
     QueuedMessage *qm = (QueuedMessage*)malloc(sizeof(QueuedMessage));
     if(m) memcpy(&qm->m, m, sizeof(Message));
     m = &qm->m;
@@ -55,13 +56,17 @@ Message *message_reliable(Client *c, Message *m, uint8_t new_type) {
     return m;
 }
 
-void message_update(Entity *e, Message *m) {
+/* return pointer to static location,
+ * process messages strictly sequentially */
+static Message *message_update(Entity *e) {
+    static Message _m;
+    Message *m = &_m;
     m->type = MESSAGE_UPDATE;
     m->time = server->cur_time; /* TODO: subtract some base_time */
 
     m->update.entity = e->id;
 
-    m->update.x   = e->x.x;
+    m->update.x   = e->x.x;     /* TODO: some scaling */
     m->update.y   = e->x.y;
 
     m->update.vx  = e->v.x;
@@ -69,6 +74,7 @@ void message_update(Entity *e, Message *m) {
 
     m->update.rot = e->rot;
     m->update.health = e->health;
+    return m;
 }
 
 static void message_handle(Address *a, Message *m) {
@@ -129,27 +135,45 @@ size_t packet_scan(char *p, size_t n, Address a) {
     return i;
 }
 
-size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a, void **cookie) {
+/* this is implemented as a coroutine,
+ * intended to be called mutliple times until 0 is returned.
+ * qm,e are static so they are preserved across calls.
+ * the state is stored in __state in cr_begin (see coroutine.h)
+ * and the function resumes at the correspoinding cr_yield.
+ * cr_return reinitializes the state to the loc of cr_begin()
+ */
+
+static Message *message_next(Client *c) {
+    static QueuedMessage *qm;
+    static Entity *e;
+
+    cr_begin();
+
+    list_for_each_entry_cont(qm, QueuedMessage, &c->queue, l) {
+        cr_yield(&qm->m);
+    }
+
+    list_for_each_entry_cont(e, Entity, &server->allocated, l) {
+        cr_yield(message_update(e));
+    }
+
+    qm = 0; e = 0;
+    cr_return(0);
+}
+
+size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a) {
     size_t i=0,k;
-    QueuedMessage *qm;
     Message *m;
 
-    list_for_each_entry_cont(*cookie, qm, QueuedMessage, &c->queue, l) {
-        m = &qm->m;
+    while((m = message_next(c))) {
         k = message_pack(p+i, m, n-i);
         if(k > 0) {
             i += k;
         } else { /* does not fit any more */
-            *cookie = qm;
-            *a      = c->adr;
+            *a = c->adr;
             return i;
         }
     }
-    return 0;
-}
 
-size_t packet_fmt_update(Entity *e, char *p, size_t n) {
-    Message m;
-    message_update(e,&m);
-    return message_pack(p, &m, n);
+    return 0;
 }

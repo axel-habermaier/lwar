@@ -71,3 +71,14 @@ void entities_init() {
         list_add_tail(&e->l, &server->free);
     }
 }
+
+EntityType *entity_type_get(size_t id) {
+    if(id < MAX_TYPES)
+        return server->types[id];
+    else return 0;
+}
+
+void entity_type_register(size_t id, EntityType *t) {
+    if(id < MAX_TYPES)
+        server->types[id] = t;
+}

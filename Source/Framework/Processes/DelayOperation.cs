@@ -42,7 +42,7 @@ namespace Pegasus.Framework.Processes
 		public static DelayOperation Create(int time)
 		{
 			var operation = GetInstance();
-			operation._frameCount = time * App.UpdatesPerSecond / 1000 + 1;
+			operation._frameCount = time * App.UpdatesPerSecond / 1000;
 			operation.SetDescription(String.Format("Delaying process for {0}ms.", time));
 			operation.IsCompleted = false;
 			return operation;

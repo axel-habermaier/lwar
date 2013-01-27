@@ -3,6 +3,7 @@
 enum {
     MAX_CLIENTS    = 8,
     MAX_ENTITIES   = 1024,
+    MAX_TYPES      = 32,
     MAX_COLLISIONS = 32, /* should be n^2-1 for priority queue */
 };
 
@@ -51,10 +52,8 @@ Client *client_get(Id player, Address *a);
 void mqueue_init(List *l);
 void mqueue_ack(List *l, uint32_t ack);
 void mqueue_destroy(List *l);
-// Message *message_reliable(Client *c, Message *m, uint8_t new_type);
 size_t packet_scan(char *p, size_t n, Address a);
-size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a, void **cookie);
-size_t packet_fmt_update(Entity *e, char *p, size_t n);
+size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a);
 
 void entities_init();
 void entity_actions();
@@ -69,7 +68,8 @@ void physics_acc(Entity *e, Vec a);
 void physics_acc_rel(Entity *e, Vec a);
 
 void rules_init();
-EntityType *entity_type(size_t id);
+EntityType *entity_type_get(size_t id);
+void entity_type_register(size_t id, EntityType *t);
 
 struct Vec {
     Pos x,y;
@@ -133,9 +133,10 @@ struct Client {
 };
 
 struct Server {
-    /* static memory for clients and entities */
-    Client clients [MAX_CLIENTS];
-    Entity entities[MAX_ENTITIES];
+    /* static memory for clients, entities, and types */
+    Client   clients [MAX_CLIENTS];
+    Entity   entities[MAX_ENTITIES];
+    EntityType *types[MAX_TYPES];
 
     /* entities are further linked to either the
      * allocated or free list for fast traversal
@@ -163,9 +164,8 @@ struct Server {
 #define for_each_allocated_entity(s,e) \
     list_for_each_entry(e, Entity, &s->allocated, l)
 
-#define list_for_each_entry_cont(cookie, pos, type, head, member)        \
-    for (pos = (cookie) ? (type*)(cookie)  \
-                        : list_entry((head)->next, type, member);    \
+#define list_for_each_entry_cont(pos, type, head, member)        \
+    for (pos = (pos) ? (pos) : list_entry((head)->next, type, member);    \
          &pos->member != (head);                     \
          pos = list_entry(pos->member.next, type, member))
 

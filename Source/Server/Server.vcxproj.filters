@@ -9,10 +9,18 @@
     <ClCompile Include="physics.c" />
     <ClCompile Include="pq.c" />
     <ClCompile Include="protocol.c" />
-    <ClCompile Include="rules.c" />
     <ClCompile Include="server.c" />
     <ClCompile Include="time.c" />
     <ClCompile Include="uint.c" />
+    <ClCompile Include="rules\bullet.c">
+      <Filter>Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rules\planet.c">
+      <Filter>Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rules\ship.c">
+      <Filter>Rules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="connection.h" />
@@ -24,5 +32,12 @@
     <ClInclude Include="uint.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="server_export.h" />
+    <ClInclude Include="coroutine.h" />
+    <ClInclude Include="rules.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Rules">
+      <UniqueIdentifier>{48537878-3998-4180-b8f8-54c892fbdd68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -1,4 +1,6 @@
 #include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "server_export.h"
@@ -7,6 +9,12 @@
 
 typedef unsigned long long Clock;
 static int visual;
+
+static void iputs(const char *msg) { fputs(msg,stdout); }
+static void eputs(const char *msg) { fputs(msg,stderr); }
+static void die  (const char *msg) { fputs(msg,stderr); exit(1); };
+
+static LogCallbacks callbacks = { die, eputs, eputs, iputs, eputs, };
 
 static Clock clock_get() {
     struct timespec tp;
@@ -26,6 +34,8 @@ int main(int argc, char *argv[]) {
     if(visual) {
         if(!visualization_init()) return 1;
     }
+
+    server_callbacks(callbacks);
 
     for(;;) {
         Clock t = clock_get();

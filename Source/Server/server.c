@@ -6,6 +6,7 @@
 
 #include "log.h"
 #include "connection.h"
+#include "rules.h"
 
 static Server _server;
 Server *server=&_server;
@@ -29,34 +30,18 @@ static void server_receive() {
 /* send queued reliable messages
  * TODO: put some timeouts in */
 static void server_send() {
-    size_t n,k;
+    size_t n;
     Client *c;
-    Entity *e;
     Address a;
     char p[MAX_PACKET_LENGTH];
 
     for_each_connected_client(server, c) {
-        void *cookie=0;
         for(;;) {
-            n = packet_fmt_queue(c, p, MAX_PACKET_LENGTH, &a, &cookie);
+            n = packet_fmt_queue(c, p, MAX_PACKET_LENGTH, &a);
             if(!n) break;
             conn_send(p, n, &a);
         }
     }
-
-    n = 0;
-    for_each_allocated_entity(server, e) {
-        again:
-        k = packet_fmt_update(e, p+n, MAX_PACKET_LENGTH-n);
-        if(!k && n) {
-            conn_send(p, n, &a);
-            n = 0;
-            goto again;
-        } else {
-            n += k;
-        }
-    }
-    if(n) conn_send(p, n, &a);
 }
 
 int server_init() {
@@ -66,14 +51,19 @@ int server_init() {
 
     clients_init();
     entities_init();
-    rules_init();
+    // rules_init();
 
     if(!conn_init()) return 0;
     if(!conn_bind()) return 0;
 
+    /* register some entity types */
+    entity_type_register(ENTITY_TYPE_SHIP,   type_ship);
+    entity_type_register(ENTITY_TYPE_BULLET, type_bullet);
+    entity_type_register(ENTITY_TYPE_PLANET, type_planet);
+
     server->running = 1;
 
-    log_info("Initialized");
+    log_info("Initialized\n");
 
     return 1;
 }
@@ -108,5 +98,5 @@ int server_update(Clock time, int force) {
 
 void server_shutdown() {
     conn_shutdown();
-    log_info("Terminated");
+    log_info("Terminated\n");
 }

@@ -172,7 +172,7 @@ static void handle_collisions(Time d) {
         Collision *c = &collisions[i];
         Entity *e0 = c->e0;
         Entity *e1 = c->e1;
-        log_info("collision of %d and %d at Δt %.3f", e0->id.n, e1->id.n, c->d.t);
+        log_info("collision of %d and %d at Δt %.3f\n", e0->id.n, e1->id.n, c->d.t);
 
         /* move to collision point */
         move(e0, c->d);
@@ -189,6 +189,19 @@ static void physics_move(Time d) {
     for_each_entity(server, e) {
         move_remaining(e);
         e->a = _0; /* reset acceleration */
+
+        /* TODO: circular world hack */
+        if(e->x.x < -12)
+            e->x.x += 24;
+
+        if(e->x.x >  12)
+            e->x.x -= 24;
+
+        if(e->x.y < -10)
+            e->x.y += 20;
+
+        if(e->x.y >  10)
+            e->x.y -= 20;
     }
 }
 

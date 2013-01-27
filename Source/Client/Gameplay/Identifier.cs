@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Client.Gameplay
+namespace Lwar.Client.Gameplay
 {
 	using Pegasus.Framework;
 

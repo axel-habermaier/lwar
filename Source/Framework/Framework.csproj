@@ -176,6 +176,8 @@
     <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\IMeasurement.cs" />
     <Compile Include="Platform\Measurement.cs" />
+    <Compile Include="Processes\TaskOperation`1.cs" />
+    <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Rendering\GpuProfiler.cs" />
     <Compile Include="Math\Circle.cs">
       <DependentUpon>Circle.tt</DependentUpon>
