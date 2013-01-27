@@ -19,7 +19,7 @@ namespace Pegasus.Gameplay
 		/// <summary>
 		///   Gets or sets the entity's unique identifier.
 		/// </summary>
-		EntityIdentifier Id { get; set; }
+		Identifier Id { get; set; }
 
 		/// <summary>
 		///   Invoked when the entity should update its internal state.

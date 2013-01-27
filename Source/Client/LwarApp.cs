@@ -4,23 +4,31 @@ namespace Client
 {
 	using System.Collections.Generic;
 	using Gameplay;
+	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
+	using Pegasus.Framework.Processes;
 	using Pegasus.Framework.Scripting;
 
 	internal sealed class LwarApp : App
 	{
+		private readonly ProcessScheduler _scheduler = new ProcessScheduler();
+		private readonly Server _server = new Server();
+
 		/// <summary>
 		///   The current game session.
 		/// </summary>
 		private readonly GameSession _session = new GameSession();
+
+		private IProcess _serverProcess;
 
 		/// <summary>
 		///   Invoked when the application should update the game state.
 		/// </summary>
 		protected override void Update()
 		{
+			_scheduler.RunProcesses();
 			_session.Update();
 		}
 
@@ -41,7 +49,9 @@ namespace Client
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_serverProcess.SafeDispose();
 			_session.SafeDispose();
+			_scheduler.SafeDispose();
 
 			base.OnDisposing();
 		}
@@ -65,6 +75,8 @@ namespace Client
 			_session.InputDevice = LogicalInputDevice;
 			_session.Players = new List<Player> { new Player() };
 			_session.Initialize();
+
+			_serverProcess = _scheduler.CreateProcess(_server.Run);
 		}
 
 		/// <summary>

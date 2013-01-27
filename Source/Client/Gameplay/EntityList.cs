@@ -47,13 +47,7 @@ namespace Client.Gameplay
 			Assert.ArgumentNotNull(session, () => session);
 
 			_session = session;
-			ControllableEntities = new List<IUserControllable>();
 		}
-
-		/// <summary>
-		///   Gets the controllable entities.
-		/// </summary>
-		public List<IUserControllable> ControllableEntities { get; private set; }
 
 		/// <summary>
 		///   Adds the given entity to the list at the end of the frame. The entity is initialized immediately, however.
@@ -74,7 +68,7 @@ namespace Client.Gameplay
 			}
 
 			_added.Add(entity);
-			_entitiesById[entity.Id.Identifier] = entity;
+			_entitiesById[entity.Id.Id] = entity;
 
 			entity.Id = entity.Id.IncreaseGenerationCount();
 			entity.Added(_session);
@@ -101,9 +95,9 @@ namespace Client.Gameplay
 		///   Returns the entity instance with the given id, if the entity is currently in the level.
 		/// </summary>
 		/// <param name="id">The id of the entity that should be returned.</param>
-		public IEntity Find(EntityIdentifier id)
+		public IEntity Find(Identifier id)
 		{
-			var entity = _entitiesById[id.Identifier];
+			var entity = _entitiesById[id.Id];
 
 			// The entity might have been removed in the meantime
 			if (entity == null)
@@ -121,7 +115,7 @@ namespace Client.Gameplay
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the entity that should be returned.</typeparam>
 		/// <param name="id">The id of the entity that should be returned.</param>
-		public TEntity Find<TEntity>(EntityIdentifier id)
+		public TEntity Find<TEntity>(Identifier id)
 			where TEntity : class, IEntity
 		{
 			return Find(id) as TEntity;
@@ -132,13 +126,10 @@ namespace Client.Gameplay
 		/// </summary>
 		public void Update()
 		{
-			AddTypeSpecific(ControllableEntities);
-			RemoveTypeSpecific(ControllableEntities);
-
 			foreach (var entity in _removed)
 			{
 				_entities.Remove(entity);
-				_entitiesById[entity.Id.Identifier] = null;
+				_entitiesById[entity.Id.Id] = null;
 
 				entity.Dispose();
 			}
@@ -176,47 +167,6 @@ namespace Client.Gameplay
 			Assert.That(_entities.Count == 0, "There are some active entities left.");
 			Assert.That(_added.Count == 0, "There are some entities left that should be added.");
 			Assert.That(_removed.Count == 0, "There are some entities left that should be removed.");
-		}
-
-		/// <summary>
-		///   Adds the recently added entities to the given type-specific entity list.
-		/// </summary>
-		/// <typeparam name="TInterface">The type of the entities in the list.</typeparam>
-		/// <param name="list">The list the type-specific entities should be added to.</param>
-		private void AddTypeSpecific<TInterface>(List<TInterface> list)
-			where TInterface : class
-		{
-			foreach (var entity in _added)
-			{
-				var typedEntity = entity as TInterface;
-				if (typedEntity != null)
-					list.Add(typedEntity);
-			}
-		}
-
-		/// <summary>
-		///   Removes the recently removed entities from the given type-specific entity list.
-		/// </summary>
-		/// <typeparam name="TInterface">The type of the entities in the list.</typeparam>
-		/// <param name="list">The list the type-specific entities should be removed from.</param>
-		private void RemoveTypeSpecific<TInterface>(List<TInterface> list)
-			where TInterface : class
-		{
-			foreach (var entity in _removed)
-			{
-				var typedEntity = entity as TInterface;
-				if (typedEntity != null)
-				{
-					var index = list.IndexOf(typedEntity);
-					Assert.That(index != -1, "Entity was not in the list.");
-					var lastIndex = list.Count - 1;
-
-					if (index < lastIndex)
-						list[index] = list[lastIndex];
-
-					list.RemoveAt(lastIndex);
-				}
-			}
 		}
 	}
 }

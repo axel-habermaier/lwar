@@ -18,7 +18,7 @@ namespace Client.Gameplay
 		/// </summary>
 		protected Entity()
 		{
-			Id = EntityIdentifier.Create();
+			Id = Identifier.Create();
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace Client.Gameplay
 		/// <summary>
 		///   Gets or sets the entity's unique identifier.
 		/// </summary>
-		public EntityIdentifier Id { get; set; }
+		public Identifier Id { get; set; }
 
 		/// <summary>
 		///   Gets or sets the entity's position.

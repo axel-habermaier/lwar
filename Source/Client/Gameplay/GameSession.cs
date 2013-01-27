@@ -44,11 +44,6 @@ namespace Client.Gameplay
 		public ProcessScheduler Scheduler { get; private set; }
 
 		/// <summary>
-		///   Gets the input manager that is used to handle all user input of the game session.
-		/// </summary>
-		public InputManager InputManager { get; private set; }
-
-		/// <summary>
 		///   Gets the entities of the game session.
 		/// </summary>
 		public EntityList Entities { get; private set; }
@@ -71,7 +66,6 @@ namespace Client.Gameplay
 			SpriteBatch = new SpriteBatch(GraphicsDevice);
 			Scheduler = new ProcessScheduler();
 			Entities = new EntityList(this);
-			InputManager = new InputManager(this);
 
 			Window.Resized += UpdateProjectionMatrix;
 			UpdateProjectionMatrix(Window.Size);
@@ -82,7 +76,6 @@ namespace Client.Gameplay
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			InputManager.SafeDispose();
 			Entities.SafeDispose();
 			SpriteBatch.SafeDispose();
 			Scheduler.SafeDispose();
@@ -96,8 +89,6 @@ namespace Client.Gameplay
 		/// </summary>
 		public void Update()
 		{
-			InputManager.Update();
-
 			Entities.Update();
 			Scheduler.RunProcesses();
 		}
@@ -108,8 +99,6 @@ namespace Client.Gameplay
 		public void Draw()
 		{
 			Entities.Draw();
-			InputManager.Draw();
-
 			SpriteBatch.DrawBatch();
 		}
 
