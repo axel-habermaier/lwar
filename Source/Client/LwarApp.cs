@@ -7,6 +7,7 @@ namespace Client
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
+	using Pegasus.Framework.Scripting;
 
 	internal sealed class LwarApp : App
 	{
@@ -72,6 +73,8 @@ namespace Client
 		/// <param name="args">The arguments the application was started with.</param>
 		private static void Main(string[] args)
 		{
+			Cvars.AppName.Value = "lwar";
+
 			using (var app = new LwarApp())
 				app.Run();
 		}
