@@ -32,7 +32,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		private static string RemoveTrailingNewline(string s)
 		{
-			return s.EndsWith("\n") ? s.Substring(0, s.Length - 2) : s;
+			return s.EndsWith("\n") ? s.Substring(0, s.Length - 1) : s;
 		}
 
 		/// <summary>
@@ -55,9 +55,10 @@ namespace Lwar.Client.Network
 				var watch = new Stopwatch();
 				watch.Start();
 
+				Func<int> updateServer = () => NativeMethods.Update((ulong)watch.ElapsedMilliseconds, true);
 				while (!context.IsCanceled)
 				{
-					if (await context.WaitFor(() => NativeMethods.Update((ulong)watch.ElapsedMilliseconds, true)) < 0)
+					if (await context.WaitFor(updateServer) < 0)
 					{
 						Log.Error("Server stopped after error.");
 						break;

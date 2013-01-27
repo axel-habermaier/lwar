@@ -15,7 +15,7 @@ namespace Pegasus.Framework
 	using Scripting.Requests;
 
 	/// <summary>
-	///   App base class, invoking the Update and Draw functions whenever appropriate.
+	///   Represents the application.
 	/// </summary>
 	public abstract class App : DisposableObject
 	{

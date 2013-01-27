@@ -29,7 +29,7 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   The name of the player.
 		/// </summary>
-		public static readonly Cvar<string> PlayerName = new Cvar<string>("name", "Unnamed", "The name of the player.");
+		public static readonly Cvar<string> PlayerName = new Cvar<string>("name", "UnnamedPlayer", "The name of the player.");
 
 		/// <summary>
 		///   A cvar that indicates whether network debugging is enabled.

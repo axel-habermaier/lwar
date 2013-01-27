@@ -14,16 +14,16 @@ enum {
 };
 
 enum {
-    MESSAGE_CONNECT,
-    MESSAGE_JOIN,
-    MESSAGE_LEAVE,
-    MESSAGE_CHAT,
+    MESSAGE_CONNECT		= 1,
+    MESSAGE_JOIN		= 2,
+    MESSAGE_LEAVE		= 3,
+    MESSAGE_CHAT		= 4,
 
-    MESSAGE_INPUT,
+    MESSAGE_INPUT		= 5,
 
-    MESSAGE_ADD,
-    MESSAGE_REMOVE,
-    MESSAGE_UPDATE,
+    MESSAGE_ADD			= 6,
+    MESSAGE_REMOVE		= 7,
+    MESSAGE_UPDATE		= 8,
 };
 
 #define IS_RELIABLE(t) \

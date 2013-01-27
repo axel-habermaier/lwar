@@ -38,7 +38,7 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
-		internal static OutgoingPacket Create()
+		public static OutgoingPacket Create()
 		{
 			var packet = GetInstance();
 			packet.Writer = BufferWriter.Create(packet._data, Endianess.Big);
