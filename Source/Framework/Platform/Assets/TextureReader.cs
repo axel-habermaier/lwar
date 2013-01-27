@@ -27,16 +27,18 @@ namespace Pegasus.Framework.Platform.Assets
         /// <summary>
         ///   Loads a texture.
         /// </summary>
-        /// <param name="reader">The asset reader that should be used to load the texture.</param>
-        public Texture2D Load(AssetReader reader)
+		/// <param name="assetReader">The asset reader that should be used to load the texture.</param>
+		public Texture2D Load(AssetReader assetReader)
         {
+	        var reader = assetReader.Reader;
             var width = reader.ReadUInt16();
-            var height = reader.ReadUInt16();
-            var componentCount = reader.ReadByte();
+			var height = reader.ReadUInt16();
+			var componentCount = reader.ReadByte();
 
             var length = width * height * componentCount;
             var data = new byte[length];
-            reader.ReadBytes(data, length);
+	        for (var i = 0; i < length; ++i)
+		        data[i] = reader.ReadByte();
 
             var format = SurfaceFormat.Color;
             if (componentCount == 4)

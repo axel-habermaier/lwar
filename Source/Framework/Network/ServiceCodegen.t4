@@ -6,6 +6,7 @@ namespace <#= Namespace #>
 {
 	using System.Threading.Tasks;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Processes;
 
@@ -31,7 +32,7 @@ namespace <#= Namespace #>
 		/// <param name="incomingPacket">The packet that should be used to deserialize the operation and operation arguments.</param>
 		/// <param name="outgoingPacket">The packet that should contain the result of the service operation.</param>
 		/// <param name="operation">Identifies the operation that the client requested.</param>
-		protected override void InvokeOperation(IncomingPacket incomingPacket, OutgoingPacket outgoingPacket, int operation)
+		protected override void InvokeOperation(BufferReader incomingPacket, BufferWriter outgoingPacket, int operation)
 		{
 			switch (operation)
 			{
@@ -44,7 +45,7 @@ namespace <#= Namespace #>
 <# if (operation.ReturnsVoid) { #>
 					Service.<#= operation.Name #>(<#= operation.ArgumentList #>);
 <# } else { #>
-					outgoingPacket.Write(Service.<#= operation.Name #>(<#= operation.ArgumentList #>));
+					outgoingPacket.Write<#= operation.ReturnTypeWithoutNamespace #>(Service.<#= operation.Name #>(<#= operation.ArgumentList #>));
 <# } #>
 					break;
 				}
@@ -77,7 +78,7 @@ namespace <#= Namespace #>
 			<#= operation.ReturnsVoid ? String.Empty : "return " #>await InvokeAsync(context, <#= operation.OperationId #>, p =>
 				{
 <# foreach (var parameter in operation.Parameters) { #>
-					p.Write(<#= parameter.Name #>);
+					p.Write<#= parameter.TypeWithoutNamespace #>(<#= parameter.Name #>);
 <# } #>
 				<#= operation.ReturnsVoid ? "});" : ("}, p => p.Read" + operation.ReturnTypeWithoutNamespace + "());") #>
 		}

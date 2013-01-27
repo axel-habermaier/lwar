@@ -5,8 +5,9 @@ namespace Pegasus.AssetsCompiler
     using System.IO;
     using System.Linq;
     using Framework;
+    using Framework.Platform;
 
-    /// <summary>
+	/// <summary>
     ///   Processes fonts.
     /// </summary>
     public sealed class FontProcessor : AssetProcessor
@@ -25,8 +26,8 @@ namespace Pegasus.AssetsCompiler
         /// </summary>
         /// <param name="source">The source file that should be processed.</param>
         /// <param name="sourceRelative">The path to the source file relative to the Assets root directory.</param>
-        /// <param name="writer">The asset writer that should be used to write the compiled asset file.</param>
-        public override void Process(string source, string sourceRelative, AssetWriter writer)
+        /// <param name="writer">The writer that should be used to write the compiled asset file.</param>
+		public override void Process(string source, string sourceRelative, BufferWriter writer)
         {
             Assert.ArgumentNotNullOrWhitespace(source, () => source);
             Assert.ArgumentNotNull(writer, () => writer);
@@ -41,7 +42,7 @@ namespace Pegasus.AssetsCompiler
         /// <summary>
         ///   Finds the texture name and writes it to the compiled asset file.
         /// </summary>
-        private void ProcessTexture(XmlParser parser, AssetWriter writer, string path)
+		private void ProcessTexture(XmlParser parser, BufferWriter writer, string path)
         {
             var pages = parser.FindElement(parser.Root, "pages");
             var pagesList = parser.FindElements(pages, "page");
@@ -56,7 +57,7 @@ namespace Pegasus.AssetsCompiler
         /// <summary>
         ///   Processes the relevant common attributes.
         /// </summary>
-        private void ProcessCommon(XmlParser parser, AssetWriter writer)
+		private void ProcessCommon(XmlParser parser, BufferWriter writer)
         {
             var common = parser.FindElement(parser.Root, "common");
             writer.WriteUInt16(parser.ReadAttributeUInt16(common, "scaleW"));
@@ -67,7 +68,7 @@ namespace Pegasus.AssetsCompiler
         /// <summary>
         ///   Processes the character information.
         /// </summary>
-        private void ProcessCharacters(XmlParser parser, AssetWriter writer)
+		private void ProcessCharacters(XmlParser parser, BufferWriter writer)
         {
             var chars = parser.FindElement(parser.Root, "chars");
             var numGlyphs = parser.ReadAttributeUInt32(chars, "count");
@@ -103,7 +104,7 @@ namespace Pegasus.AssetsCompiler
         /// <summary>
         ///   Processes the kerning information.
         /// </summary>
-        private void ProcessKerning(XmlParser parser, AssetWriter writer)
+		private void ProcessKerning(XmlParser parser, BufferWriter writer)
         {
             if (!parser.HasElement(parser.Root, "kernings"))
             {

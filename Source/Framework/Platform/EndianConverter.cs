@@ -1,12 +1,9 @@
 ﻿using System;
 
-// ReSharper disable ConditionIsAlwaysTrueOrFalse
-#pragma warning disable 162 // Unreachable code detected
-
 namespace Pegasus.Framework.Platform
 {
 	/// <summary>
-	///   Converts little endian to big endian or vice versa.
+	///   Converts between little and big endian encoding.
 	/// </summary>
 	public static class EndianConverter
 	{
@@ -85,6 +82,3 @@ namespace Pegasus.Framework.Platform
 		}
 	}
 }
-
-// ReSharper restore ConditionIsAlwaysTrueOrFalse
-#pragma warning restore 162

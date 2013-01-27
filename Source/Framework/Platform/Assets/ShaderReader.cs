@@ -29,7 +29,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="reader">The asset reader that should be used to load the shader.</param>
 		public VertexShader LoadVertexShader(AssetReader reader)
 		{
-			return new VertexShader(_device, reader.ReadAll());
+			return new VertexShader(_device, reader.Data);
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="reader">The asset reader that should be used to load the shader.</param>
 		public FragmentShader LoadFragmentShader(AssetReader reader)
 		{
-			return new FragmentShader(_device, reader.ReadAll());
+			return new FragmentShader(_device, reader.Data);
 		}
 	}
 }

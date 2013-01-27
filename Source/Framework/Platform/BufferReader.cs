@@ -2,17 +2,23 @@
 
 namespace Pegasus.Framework.Platform
 {
-	using System.Diagnostics;
+	using System.Text;
+	using Math;
 
 	/// <summary>
 	///   Wraps a byte buffer, providing methods for reading fundamental data types from the buffer.
 	/// </summary>
-	public struct BufferReader
+	public class BufferReader : PooledObject<BufferReader>
 	{
 		/// <summary>
 		///   The buffer from which the data is read.
 		/// </summary>
-		private readonly ArraySegment<byte> _buffer;
+		private ArraySegment<byte> _buffer;
+
+		/// <summary>
+		///   Indicates the which endian encoding the buffer uses.
+		/// </summary>
+		private Endianess _endianess;
 
 		/// <summary>
 		///   The current read position.
@@ -20,45 +26,50 @@ namespace Pegasus.Framework.Platform
 		private int _readPosition;
 
 		/// <summary>
-		///   Initializes a new instance. The valid data of the buffer can be found within the
-		///   range [0, buffer.Length).
-		/// </summary>
-		/// <param name="buffer">The buffer from which the data should be read.</param>
-		public BufferReader(byte[] buffer)
-			: this(new ArraySegment<byte>(buffer, 0, buffer.Length))
-		{
-		}
-
-		/// <summary>
-		///   Initializes a new instance. The valid data of the buffer can be found within the
-		///   range [offset, offset + length).
-		/// </summary>
-		/// <param name="buffer">The buffer from which the data should be read.</param>
-		/// <param name="offset">The offset to the first valid byte in the buffer.</param>
-		/// <param name="length">The length of the buffer in bytes.</param>
-		public BufferReader(byte[] buffer, int offset, int length)
-			: this(new ArraySegment<byte>(buffer, offset, length))
-		{
-		}
-
-		/// <summary>
-		///   Initializes a new instance. The valid data of the buffer can be found within the
-		///   range [offset, offset + length).
-		/// </summary>
-		/// <param name="buffer">The buffer from which the data should be read.</param>
-		public BufferReader(ArraySegment<byte> buffer)
-			: this()
-		{
-			_buffer = buffer;
-			Reset();
-		}
-
-		/// <summary>
 		///   Gets a value indicating whether the end of the buffer has been reached.
 		/// </summary>
 		public bool EndOfBuffer
 		{
 			get { return _readPosition - _buffer.Offset >= _buffer.Count; }
+		}
+
+		/// <summary>
+		///   Creates a new instance. The valid data of the buffer can be found within the
+		///   range [0, buffer.Length).
+		/// </summary>
+		/// <param name="buffer">The buffer from which the data should be read.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public static BufferReader Create(byte[] buffer, Endianess endianess = Endianess.Little)
+		{
+			return Create(new ArraySegment<byte>(buffer, 0, buffer.Length), endianess);
+		}
+
+		/// <summary>
+		///   Creates a new instance. The valid data of the buffer can be found within the
+		///   range [offset, offset + length).
+		/// </summary>
+		/// <param name="buffer">The buffer from which the data should be read.</param>
+		/// <param name="offset">The offset to the first valid byte in the buffer.</param>
+		/// <param name="length">The length of the buffer in bytes.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public static BufferReader Create(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
+		{
+			return Create(new ArraySegment<byte>(buffer, offset, length), endianess);
+		}
+
+		/// <summary>
+		///   Creates a new instance. The valid data of the buffer can be found within the
+		///   range [offset, offset + length).
+		/// </summary>
+		/// <param name="buffer">The buffer from which the data should be read.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public static BufferReader Create(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
+		{
+			var reader = GetInstance();
+			reader._endianess = endianess;
+			reader._buffer = buffer;
+			reader.Reset();
+			return reader;
 		}
 
 		/// <summary>
@@ -70,62 +81,58 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   In debug builds, verifies that reads remain inside the valid data area.
-		/// </summary>
-		[Conditional("DEBUG"), DebuggerHidden]
-		private void ValidateReadPosition()
-		{
-			Assert.That(!EndOfBuffer, "Read past the end of the valid data area of the buffer.");
-		}
-
-		/// <summary>
-		///   Reads a Boolean value from the packet.
+		///   Reads a Boolean value.
 		/// </summary>
 		public bool ReadBoolean()
 		{
-			ValidateReadPosition();
-			var value = _buffer.Array[_readPosition++];
-			return value == 1;
+			return ReadByte() == 1;
 		}
 
 		/// <summary>
-		///   Reads a signed byte from the packet.
+		///   Reads a signed byte.
 		/// </summary>
 		public sbyte ReadSignedByte()
 		{
-			ValidateReadPosition();
-			return (sbyte)_buffer.Array[_readPosition++];
+			return (sbyte)ReadByte();
 		}
 
 		/// <summary>
-		///   Reads an unsigned byte from the packet.
+		///   Reads an unsigned byte.
 		/// </summary>
 		public byte ReadByte()
 		{
-			ValidateReadPosition();
+			Assert.That(!EndOfBuffer, "Read past the end of the valid data area of the buffer.");
 			return _buffer.Array[_readPosition++];
 		}
 
 		/// <summary>
-		///   Reads a 2 byte signed integer from the packet.
+		///   Reads a 2 byte signed integer.
 		/// </summary>
 		public short ReadInt16()
 		{
-			ValidateReadPosition();
-			return (short)(_buffer.Array[_readPosition++] | (_buffer.Array[_readPosition++] << 8));
+			var value = (short)(ReadByte() | (ReadByte() << 8));
+
+			if (_endianess != PlatformInfo.Endianess)
+				value = EndianConverter.Convert(value);
+
+			return value;
 		}
 
 		/// <summary>
-		///   Reads a 2 byte unsigned integer from the packet.
+		///   Reads a 2 byte unsigned integer.
 		/// </summary>
 		public ushort ReadUInt16()
 		{
-			ValidateReadPosition();
-			return (ushort)(_buffer.Array[_readPosition++] | (_buffer.Array[_readPosition++] << 8));
+			var value = (ushort)(ReadByte() | (ReadByte() << 8));
+
+			if (_endianess != PlatformInfo.Endianess)
+				value = EndianConverter.Convert(value);
+
+			return value;
 		}
 
 		/// <summary>
-		///   Reads an UTF-16 character from the packet.
+		///   Reads an UTF-16 character.
 		/// </summary>
 		public char ReadCharacter()
 		{
@@ -133,59 +140,135 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Reads a 4 byte signed integer from the packet.
+		///   Reads a 4 byte signed integer.
 		/// </summary>
 		public int ReadInt32()
 		{
-			ValidateReadPosition();
-			return _buffer.Array[_readPosition++] |
-				   (_buffer.Array[_readPosition++] << 8) |
-				   (_buffer.Array[_readPosition++] << 16) |
-				   (_buffer.Array[_readPosition++] << 24);
+			var value = ReadByte() | (ReadByte() << 8) | (ReadByte() << 16) | (ReadByte() << 24);
+
+			if (_endianess != PlatformInfo.Endianess)
+				value = EndianConverter.Convert(value);
+
+			return value;
 		}
 
 		/// <summary>
-		///   Reads a 4 byte unsigned integer from the packet.
+		///   Reads a 4 byte unsigned integer.
 		/// </summary>
 		public uint ReadUInt32()
 		{
-			ValidateReadPosition();
-			return (uint)(_buffer.Array[_readPosition++] |
-						  (_buffer.Array[_readPosition++] << 8) |
-						  (_buffer.Array[_readPosition++] << 16) |
-						  (_buffer.Array[_readPosition++] << 24));
+			var value = (uint)(ReadByte() | (ReadByte() << 8) | (ReadByte() << 16) | (ReadByte() << 24));
+
+			if (_endianess != PlatformInfo.Endianess)
+				value = EndianConverter.Convert(value);
+
+			return value;
 		}
 
 		/// <summary>
-		///   Reads an 8 byte signed integer from the packet.
+		///   Reads an 8 byte signed integer.
 		/// </summary>
 		public long ReadInt64()
 		{
-			ValidateReadPosition();
-			return _buffer.Array[_readPosition++] |
-				  ((long)(_buffer.Array[_readPosition++]) << 8) |
-				  ((long)(_buffer.Array[_readPosition++]) << 16) |
-				  ((long)(_buffer.Array[_readPosition++]) << 24) |
-				  ((long)(_buffer.Array[_readPosition++]) << 32) |
-				  ((long)(_buffer.Array[_readPosition++]) << 40) |
-				  ((long)(_buffer.Array[_readPosition++]) << 48) |
-				  ((long)(_buffer.Array[_readPosition++]) << 56);
+			var value = ReadByte() |
+						((long)(ReadByte()) << 8) |
+						((long)(ReadByte()) << 16) |
+						((long)(ReadByte()) << 24) |
+						((long)(ReadByte()) << 32) |
+						((long)(ReadByte()) << 40) |
+						((long)(ReadByte()) << 48) |
+						((long)(ReadByte()) << 56);
+
+			if (_endianess != PlatformInfo.Endianess)
+				value = EndianConverter.Convert(value);
+
+			return value;
 		}
 
 		/// <summary>
-		///   Reads an 8 byte unsigned integer from the packet.
+		///   Reads an 8 byte unsigned integer.
 		/// </summary>
 		public ulong ReadUInt64()
 		{
-			ValidateReadPosition();
-			return  _buffer.Array[_readPosition++] |
-					((ulong)(_buffer.Array[_readPosition++]) << 8) |
-					((ulong)(_buffer.Array[_readPosition++]) << 16) |
-					((ulong)(_buffer.Array[_readPosition++]) << 24) |
-					((ulong)(_buffer.Array[_readPosition++]) << 32) |
-					((ulong)(_buffer.Array[_readPosition++]) << 40) |
-					((ulong)(_buffer.Array[_readPosition++]) << 48) |
-					((ulong)(_buffer.Array[_readPosition++]) << 56);
+			var value = ReadByte() |
+						((ulong)(ReadByte()) << 8) |
+						((ulong)(ReadByte()) << 16) |
+						((ulong)(ReadByte()) << 24) |
+						((ulong)(ReadByte()) << 32) |
+						((ulong)(ReadByte()) << 40) |
+						((ulong)(ReadByte()) << 48) |
+						((ulong)(ReadByte()) << 56);
+
+			if (_endianess != PlatformInfo.Endianess)
+				value = EndianConverter.Convert(value);
+
+			return value;
+		}
+
+		/// <summary>
+		///   Reads a 4 byte signed fixed-point value with 8 bits for the fractional part.
+		/// </summary>
+		public Fixed8 ReadFixed8()
+		{
+			return new Fixed8 { RawValue = ReadInt32() };
+		}
+
+		/// <summary>
+		///   Reads a 4 byte signed fixed-point value with 16 bits for the fractional part.
+		/// </summary>
+		public Fixed16 ReadFixed16()
+		{
+			return new Fixed16 { RawValue = ReadInt32() };
+		}
+
+		// ReSharper disable InconsistentNaming
+
+		/// <summary>
+		///   Reads a two-component vector of Fixed8.
+		/// </summary>
+		public Vector2f8 ReadVector2f8()
+		{
+			return new Vector2f8(ReadFixed8(), ReadFixed8());
+		}
+
+		/// <summary>
+		///   Reads a two-component vector of Fixed16.
+		/// </summary>
+		public Vector2f16 ReadVector2f16()
+		{
+			return new Vector2f16(ReadFixed16(), ReadFixed16());
+		}
+
+		/// <summary>
+		///   Reads a two-component vector of integers.
+		/// </summary>
+		public Vector2i ReadVector2i()
+		{
+			return new Vector2i(ReadInt32(), ReadInt32());
+		}
+
+		// ReSharper restore InconsistentNaming
+
+		/// <summary>
+		///   Reads a string.
+		/// </summary>
+		public string ReadString()
+		{
+			return Encoding.ASCII.GetString(ReadByteArray());
+		}
+
+		/// <summary>
+		///   Reads a byte array.
+		/// </summary>
+		public byte[] ReadByteArray()
+		{
+			var length = ReadInt32();
+			var byteArray = new byte[length];
+
+			Array.Copy(_buffer.Array, _readPosition, byteArray, 0, length);
+			_readPosition += length;
+
+			return byteArray;
 		}
 	}
 }

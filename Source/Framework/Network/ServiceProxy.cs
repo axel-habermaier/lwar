@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Network
 	using System.Collections.Generic;
 	using System.Net;
 	using System.Threading.Tasks;
+	using Platform;
 	using Processes;
 
 	/// <summary>
@@ -15,7 +16,7 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   The service operation invocations for which no result has been received yet.
 		/// </summary>
-		private readonly Dictionary<int, IServiceOperation> _invocations = new Dictionary<int, IServiceOperation>();
+		private readonly Dictionary<uint, IServiceOperation> _invocations = new Dictionary<uint, IServiceOperation>();
 
 		/// <summary>
 		///   The identifier of the service that the remote host hosts.
@@ -30,7 +31,7 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   The number of operation invocation requests sent by the proxy.
 		/// </summary>
-		private int _invokeCount;
+		private uint _invokeCount;
 
 		/// <summary>
 		///   Indicates whether the proxy is currently running.
@@ -113,7 +114,7 @@ namespace Pegasus.Framework.Network
 				NetworkLog.ClientDebug("The server sent an unexpected message type: {0}.", header.MessageType);
 			else
 			{
-				var requestIdentifier = packet.ReadInt32();
+				var requestIdentifier = packet.Reader.ReadUInt32();
 				IServiceOperation operation;
 
 				if (!_invocations.TryGetValue(requestIdentifier, out operation))
@@ -142,8 +143,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="packet">The packet that contains the exception type and message.</param>
 		private void SetException(IServiceOperation operation, IncomingPacket packet)
 		{
-			var exceptionType = packet.ReadString();
-			var exceptionMessage = packet.ReadString();
+			var exceptionType = packet.Reader.ReadString();
+			var exceptionMessage = packet.Reader.ReadString();
 
 			try
 			{
@@ -187,8 +188,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="argumentSerializer">Serializes the operation's arguments into the packet.</param>
 		/// <param name="resultDeserializer">Deserializes the operation's result value from the packet.</param>
 		protected async Task<TResult> InvokeAsync<TResult>(ProcessContext context, int operationIdentifier,
-														   Action<OutgoingPacket> argumentSerializer,
-														   Func<IncomingPacket, TResult> resultDeserializer)
+														   Action<BufferWriter> argumentSerializer,
+														   Func<BufferReader, TResult> resultDeserializer)
 		{
 			Assert.ArgumentNotNull(argumentSerializer, () => argumentSerializer);
 			Assert.ArgumentNotNull(resultDeserializer, () => resultDeserializer);
@@ -199,14 +200,14 @@ namespace Pegasus.Framework.Network
 			var packet = OutgoingPacket.Create();
 			var header = new MessageHeader(_serviceIdentifier, MessageType.OperationCall);
 			header.Write(packet);
-			packet.Write((byte)operationIdentifier);
-			packet.Write(requestIdentifier);
+			packet.Writer.WriteByte((byte)operationIdentifier);
+			packet.Writer.WriteUInt32(requestIdentifier);
 
 			var operation = ServiceOperation<TResult>.Create(resultDeserializer);
 			try
 			{
 				_invocations.Add(_invokeCount, operation);
-				argumentSerializer(packet);
+				argumentSerializer(packet.Writer);
 
 				await _connection.SendAsync(context, packet);
 				return await context.WaitFor(operation);
@@ -223,7 +224,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
 		/// <param name="operationIdentifier">The unique identifier of the service operation.</param>
 		/// <param name="argumentSerializer">Serializes the operation's arguments into the packet.</param>
-		protected async Task InvokeAsync(ProcessContext context, int operationIdentifier, Action<OutgoingPacket> argumentSerializer)
+		protected async Task InvokeAsync(ProcessContext context, int operationIdentifier, Action<BufferWriter> argumentSerializer)
 		{
 			Assert.ArgumentNotNull(argumentSerializer, () => argumentSerializer);
 			Assert.ArgumentInRange(operationIdentifier, () => operationIdentifier, 0, Byte.MaxValue);
@@ -233,14 +234,14 @@ namespace Pegasus.Framework.Network
 			var packet = OutgoingPacket.Create();
 			var header = new MessageHeader(_serviceIdentifier, MessageType.OperationCall);
 			header.Write(packet);
-			packet.Write((byte)operationIdentifier);
-			packet.Write(requestIdentifier);
+			packet.Writer.WriteByte((byte)operationIdentifier);
+			packet.Writer.WriteUInt32(requestIdentifier);
 
 			var operation = ServiceOperation.Create();
 			try
 			{
 				_invocations.Add(_invokeCount, operation);
-				argumentSerializer(packet);
+				argumentSerializer(packet.Writer);
 
 				await _connection.SendAsync(context, packet);
 				await context.WaitFor(operation);

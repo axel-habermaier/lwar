@@ -40,13 +40,13 @@ namespace Pegasus.Framework.Network
 		{
 			Assert.ArgumentNotNull(packet, () => packet);
 			Assert.ArgumentNotNull(remoteEndPoint, () => remoteEndPoint);
+			Assert.InRange(packet.Size, 1, Packet.MaxSize);
 
 			using (packet)
 			{
 				try
 				{
-					var packetData = packet.DataBuffer;
-					await _socket.SendToAsync(context, packetData, remoteEndPoint);
+					await _socket.SendToAsync(context, new ArraySegment<byte>(packet.Data), remoteEndPoint);
 				}
 				catch (SocketException e)
 				{
@@ -64,13 +64,14 @@ namespace Pegasus.Framework.Network
 		{
 			var packet = IncomingPacket.Create();
 
-			var size = await _socket.ReceiveFromAsync(context, packet.DataBuffer, remoteEndPoint);
+			var size = await _socket.ReceiveFromAsync(context, new ArraySegment<byte>(packet.Data), remoteEndPoint);
 			if (size == 0 || size > Packet.MaxSize)
 			{
 				packet.Dispose();
 				throw new SocketOperationException("Received a Udp packet of invalid size ({0} bytes).", size);
 			}
 
+			packet.Initialize(size);
 			return packet;
 		}
 

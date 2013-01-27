@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform
 {
 	using Graphics;
+	using EndianessType = Platform.Endianess;
 
 	/// <summary>
 	///   Provides further information about the platform the application is running on.
@@ -14,12 +15,19 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public const string AssetExtension = ".pca"; // Pegasus Compiled Asset
 
-#if Windows
+#if BigEndian
 		/// <summary>
-		///   Indicates whether the platform is a big endian architecture.
+		///   Indicates whether the platform is a big or little endian architecture.
 		/// </summary>
-		public const bool IsBigEndian = false;
+		public const EndianessType Endianess = EndianessType.Big;
+#else
+		/// <summary>
+		///   Indicates whether the platform is a big or little endian architecture.
+		/// </summary>
+		public const EndianessType Endianess = EndianessType.Little;
+#endif
 
+#if Windows
 		/// <summary>
 		///   The type of the platform the application is running on.
 		/// </summary>
@@ -30,11 +38,6 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public const int ConsoleKey = 41;
 #elif Linux
-		/// <summary>
-		///   Indicates whether the platform is a big endian architecture.
-		/// </summary>
-        public const bool IsBigEndian = false;
-
         /// <summary>
         ///   The type of the platform the application is running on.
         /// </summary>

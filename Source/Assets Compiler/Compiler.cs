@@ -78,7 +78,7 @@ namespace Pegasus.AssetsCompiler
                     targetName = Path.GetFileNameWithoutExtension(file.Name);
 
                 using (var writer = new AssetWriter(Path.Combine(TargetPath, Path.Combine(path, targetName))))
-                    processor.Process(file.FullName, Path.Combine(path, file.Name), writer);
+                    processor.Process(file.FullName, Path.Combine(path, file.Name), writer.Writer);
             }
 
             // Now find all the subdirectories under this directory

@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Network
 {
+	using Platform;
 	using Scripting;
 
 	/// <summary>

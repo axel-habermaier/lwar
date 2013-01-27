@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
 	using Framework;
+	using Framework.Platform;
 	using Framework.Platform.Graphics;
 	using SharpDX.D3DCompiler;
 	using SharpDX.DXGI;
@@ -36,8 +37,8 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		/// <param name="source">The source file that should be processed.</param>
 		/// <param name="sourceRelative">The path to the source file relative to the Assets root directory.</param>
-		/// <param name="writer">The asset writer that should be used to write the compiled asset file.</param>
-		public override void Process(string source, string sourceRelative, AssetWriter writer)
+		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
+		public override void Process(string source, string sourceRelative, BufferWriter writer)
 		{
 			Assert.ArgumentNotNullOrWhitespace(source, () => source);
 			Assert.ArgumentNotNull(writer, () => writer);
@@ -96,8 +97,8 @@ namespace Pegasus.AssetsCompiler
 		///   Creates the input layout for the vertex shader using shader reflection.
 		/// </summary>
 		/// <param name="shaderCode">The shader byte code.</param>
-		/// <param name="writer">The asset writer that should be used to write the compiled asset file.</param>
-		private void CreateInputLayout(byte[] shaderCode, AssetWriter writer)
+		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
+		private void CreateInputLayout(byte[] shaderCode, BufferWriter writer)
 		{
 			var reflectionInfo = new ShaderReflection(shaderCode);
 			var shaderDesc = reflectionInfo.Description;
@@ -176,8 +177,8 @@ namespace Pegasus.AssetsCompiler
 		///   Serializes the input elements.
 		/// </summary>
 		/// <param name="elements">The elements that should be serialized.</param>
-		/// <param name="writer">The asset writer that should be used to write the compiled asset file.</param>
-		private void SerializeInputElements(InputElement[] elements, AssetWriter writer)
+		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
+		private void SerializeInputElements(InputElement[] elements, BufferWriter writer)
 		{
 			writer.WriteInt32(elements.Length);
 

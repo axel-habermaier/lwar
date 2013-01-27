@@ -28,9 +28,11 @@ namespace Pegasus.Framework.Platform.Assets
         /// <summary>
         ///   Loads a font.
         /// </summary>
-        /// <param name="reader">The asset reader that should be used to load the font.</param>
-        public Font Load(AssetReader reader)
+		/// <param name="assetReader">The asset reader that should be used to load the font.</param>
+        public Font Load(AssetReader assetReader)
         {
+	        var reader = assetReader.Reader;
+
             // Load the font metadata
             var scaleW = reader.ReadUInt16();
             var scaleH = reader.ReadUInt16();

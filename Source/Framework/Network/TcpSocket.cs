@@ -14,6 +14,11 @@ namespace Pegasus.Framework.Network
 	internal class TcpSocket : DisposableObject
 	{
 		/// <summary>
+		///   The number of bytes used to transmit the packet size.
+		/// </summary>
+		private const int SizeByteCount = sizeof(ushort);
+
+		/// <summary>
 		///   The underlying socket that is used to send and receive packets.
 		/// </summary>
 		private Socket _socket;
@@ -141,12 +146,20 @@ namespace Pegasus.Framework.Network
 		{
 			Assert.ArgumentNotNull(packet, () => packet);
 			Assert.That(IsConnected, "Cannot send: Not connected.");
+			Assert.InRange(packet.Size, 1, Packet.MaxSize);
 
 			using (packet)
 			{
 				try
 				{
-					await _socket.SendAsync(context, packet.DataBuffer);
+					// Send the size of the next packet
+					using (var sizePacket = OutgoingPacket.Create())
+					{
+						sizePacket.Writer.WriteUInt16((ushort)packet.Size);
+						await _socket.SendAsync(context, new ArraySegment<byte>(sizePacket.Data, 0, SizeByteCount));
+					}
+
+					await _socket.SendAsync(context, new ArraySegment<byte>(packet.Data, 0, packet.Size));
 				}
 				catch (SocketException e)
 				{
@@ -164,26 +177,27 @@ namespace Pegasus.Framework.Network
 		{
 			Assert.That(IsConnected, "Cannot receive: Not connected.");
 
-			var packet = IncomingPacket.Create();
+			IncomingPacket packet = null;
 			var packetReturned = false;
 
 			try
 			{
-				// Read the message size first; we'll later ensure that is still part of the returned packet
-				await ReceiveAsync(context, packet.DataBuffer.Array, 0, Packet.SizeByteCount);
-				var size = packet.Size;
+				// Read the size of the next packet
+				using (var sizePacket = IncomingPacket.Create(SizeByteCount))
+				{
+					await ReceiveAsync(context, sizePacket);
+					packet = IncomingPacket.Create(sizePacket.Reader.ReadUInt16());
+				}
 
-				if (size + Packet.SizeByteCount > Packet.MaxSize)
+				if (packet.Size + SizeByteCount > Packet.MaxSize)
 				{
 					_state = State.Faulted;
 					throw new SocketOperationException(
 						"Connection to {0} terminated. Received packet of size {1} while {2} is the maximum size allowed.",
-						RemoteEndPoint, size + Packet.SizeByteCount, Packet.MaxSize);
+						RemoteEndPoint, packet.Size + SizeByteCount, Packet.MaxSize);
 				}
 
-				await ReceiveAsync(context, packet.DataBuffer.Array, Packet.SizeByteCount, size);
-
-				packet.Reset();
+				await ReceiveAsync(context, packet);
 				packetReturned = true;
 				return packet;
 			}
@@ -191,7 +205,7 @@ namespace Pegasus.Framework.Network
 			{
 				// If we did not return the packet to due some exception (socket error, process cancellation), we
 				// have to dispose it
-				if (!packetReturned)
+				if (packet != null && !packetReturned)
 					packet.Dispose();
 			}
 		}
@@ -200,18 +214,16 @@ namespace Pegasus.Framework.Network
 		///   Tries to receive exactly the given number of bytes and copies them into the buffer.
 		/// </summary>
 		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
-		/// <param name="buffer">The buffer the incoming data should be written to.</param>
-		/// <param name="offset">The index of the first byte that should be written.</param>
-		/// <param name="count">The number of bytes that should be received.</param>
-		private async Task ReceiveAsync(ProcessContext context, byte[] buffer, int offset, int count)
+		/// <param name="packet">The packet the incoming data should be written to.</param>
+		private async Task ReceiveAsync(ProcessContext context, IncomingPacket packet)
 		{
 			try
 			{
 				var bytesReceived = 0;
-				while (bytesReceived < count)
+				while (bytesReceived < packet.Size)
 				{
-					var missingBytes = count - bytesReceived;
-					var bufferSegment = new ArraySegment<byte>(buffer, offset + bytesReceived, missingBytes);
+					var missingBytes = packet.Size - bytesReceived;
+					var bufferSegment = new ArraySegment<byte>(packet.Data, bytesReceived, missingBytes);
 					bytesReceived = await _socket.ReceiveAsync(context, bufferSegment);
 
 					if (bytesReceived == 0)

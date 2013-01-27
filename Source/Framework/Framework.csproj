@@ -173,6 +173,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\IMeasurement.cs" />
     <Compile Include="Platform\Measurement.cs" />
     <Compile Include="Rendering\GpuProfiler.cs" />
@@ -357,8 +358,6 @@
     <Compile Include="Platform\Input\MouseEventArgs.cs" />
     <Compile Include="Platform\EndianConverter.cs" />
     <Compile Include="Platform\Interop.cs" />
-    <Compile Include="Platform\LittleEndianConverter.cs" />
-    <Compile Include="Platform\BigEndianConverter.cs" />
     <Compile Include="Platform\PlatformType.cs" />
     <Compile Include="Platform\PlatformInfo.cs" />
     <Compile Include="Rendering\Quad.cs" />

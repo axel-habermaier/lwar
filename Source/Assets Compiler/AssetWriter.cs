@@ -1,128 +1,58 @@
 ﻿using System;
 
-// ReSharper disable ConditionIsAlwaysTrueOrFalse
-#pragma warning disable 162 // Unreachable code detected
-
 namespace Pegasus.AssetsCompiler
 {
-    using System.IO;
-    using System.Text;
-    using Framework;
-    using Framework.Platform;
+	using System.IO;
+	using Framework;
+	using Framework.Platform;
 
-    /// <summary>
-    ///   Writes a compiled asset file. The endianess of the compiled file always matches the endianess of the target
-    ///   platform, assuming that the compiler is always running on a little endian platform.
-    /// </summary>
-    public sealed class AssetWriter : DisposableObject
-    {
-        /// <summary>
-        ///   The stream used to write to the asset file.
-        /// </summary>
-        private readonly FileStream _stream;
+	/// <summary>
+	///   Writes a compiled asset file. The endianess of the compiled file always matches the endianess of the target
+	///   platform, assuming that the compiler is always running on a little endian platform.
+	/// </summary>
+	public sealed class AssetWriter : DisposableObject
+	{
+		/// <summary>
+		///   The maximum asset size in megabytes.
+		/// </summary>
+		private const int MaxAssetSize = 8;
 
-        /// <summary>
-        ///   Initializes a new instance.
-        /// </summary>
-        /// <param name="path">The path of the compiled asset.</param>
-        public AssetWriter(string path)
-        {
-            var assetName = path + PlatformInfo.AssetExtension;
+		/// <summary>
+		///   The buffer that stores the asset's data.
+		/// </summary>
+		private static readonly byte[] Buffer = new byte[MaxAssetSize * 1024 * 1024];
 
-            Log.Info("Compiling '{0}'...", assetName);
-            _stream = new FileStream(assetName, FileMode.Create);
-        }
+		/// <summary>
+		///   The name of the asset.
+		/// </summary>
+		private readonly string _assetName;
 
-        protected override void OnDisposing()
-        {
-            _stream.Dispose();
-        }
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="path">The path of the compiled asset.</param>
+		public AssetWriter(string path)
+		{
+			_assetName = path + PlatformInfo.AssetExtension;
+			Writer = BufferWriter.Create(Buffer);
 
-        /// <summary>
-        ///   Writes a 4 byte signed integer into the file.
-        /// </summary>
-        /// <param name="value">The value that should be written.</param>
-        public void WriteInt32(int value)
-        {
-            if (PlatformInfo.IsBigEndian)
-                value = EndianConverter.Convert(value);
+			Log.Info("Compiling asset '{0}'...", _assetName);
+		}
 
-            var bytes = BitConverter.GetBytes(value);
-            _stream.Write(bytes, 0, bytes.Length);
-        }
+		/// <summary>
+		///   Gets the writer that can be used to write the asset data.
+		/// </summary>
+		public BufferWriter Writer { get; private set; }
 
-        /// <summary>
-        ///   Writes a 4 byte unsigned integer into the file.
-        /// </summary>
-        /// <param name="value">The value that should be written.</param>
-        public void WriteUInt32(uint value)
-        {
-            if (PlatformInfo.IsBigEndian)
-                value = EndianConverter.Convert(value);
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			using (var stream = new FileStream(_assetName, FileMode.Create))
+				stream.Write(Buffer, 0, Writer.Length);
 
-            var bytes = BitConverter.GetBytes(value);
-            _stream.Write(bytes, 0, bytes.Length);
-        }
-
-        /// <summary>
-        ///   Writes a 2 byte signed integer into the file.
-        /// </summary>
-        /// <param name="value">The value that should be written.</param>
-        public void WriteInt16(short value)
-        {
-            if (PlatformInfo.IsBigEndian)
-                value = EndianConverter.Convert(value);
-
-            var bytes = BitConverter.GetBytes(value);
-            _stream.Write(bytes, 0, bytes.Length);
-        }
-
-        /// <summary>
-        ///   Writes a 2 byte unsigned integer into the file.
-        /// </summary>
-        /// <param name="value">The value that should be written.</param>
-        public void WriteUInt16(ushort value)
-        {
-            if (PlatformInfo.IsBigEndian)
-                value = EndianConverter.Convert(value);
-
-            var bytes = BitConverter.GetBytes(value);
-            _stream.Write(bytes, 0, bytes.Length);
-        }
-
-        /// <summary>
-        ///   Writes a byte into the file.
-        /// </summary>
-        /// <param name="value">The value that should be written.</param>
-        public void WriteByte(byte value)
-        {
-            _stream.WriteByte(value);
-        }
-
-        /// <summary>
-        ///   Writes a byte array into the file.
-        /// </summary>
-        /// <param name="value">The value that should be written.</param>
-        public void WriteByteArray(byte[] value)
-        {
-			WriteInt32(value.Length);
-            _stream.Write(value, 0, value.Length);
-        }
-
-        /// <summary>
-        ///   Writes a string into the file.
-        /// </summary>
-        /// <param name="value">The value that should be written.</param>
-        public void WriteString(string value)
-        {
-            Assert.ArgumentNotNull(value, () => value);
-            var bytes = Encoding.ASCII.GetBytes(value);
-
-            WriteInt32(bytes.Length);
-            _stream.Write(bytes, 0, bytes.Length);
-        }
-    }
+			Writer.SafeDispose();
+		}
+	}
 }
-
-// ReSharper restore ConditionIsAlwaysTrueOrFalse
-#pragma warning restore 162

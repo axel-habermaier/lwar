@@ -42,9 +42,9 @@ namespace Pegasus.Framework.Network
 		{
 			Assert.ArgumentNotNull(packet, () => packet);
 
-			packet.Write(ServiceIdentifier.FirstPart);
-			packet.Write(ServiceIdentifier.SecondPart);
-			packet.Write((byte)MessageType);
+			packet.Writer.WriteUInt64(ServiceIdentifier.FirstPart);
+			packet.Writer.WriteUInt64(ServiceIdentifier.SecondPart);
+			packet.Writer.WriteByte((byte)MessageType);
 		}
 
 		/// <summary>
@@ -57,8 +57,8 @@ namespace Pegasus.Framework.Network
 
 			return new MessageHeader
 			{
-				ServiceIdentifier = new ServiceIdentifier(packet.ReadUInt64(), packet.ReadUInt64()),
-				MessageType = (MessageType)packet.ReadByte(),
+				ServiceIdentifier = new ServiceIdentifier(packet.Reader.ReadUInt64(), packet.Reader.ReadUInt64()),
+				MessageType = (MessageType)packet.Reader.ReadByte(),
 			};
 		}
 	}

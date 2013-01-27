@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Network
 	using System.Collections.Generic;
 	using System.Net;
 	using System.Threading.Tasks;
+	using Platform;
 	using Processes;
 
 	/// <summary>
@@ -211,27 +212,27 @@ namespace Pegasus.Framework.Network
 		private async Task InvokeOperation(ProcessContext context, TcpSocket connection, IncomingPacket packet)
 		{
 			var response = OutgoingPacket.Create();
-			var operation = packet.ReadByte();
-			var requestId = packet.ReadUInt32();
+			var operation = packet.Reader.ReadByte();
+			var requestId = packet.Reader.ReadUInt32();
 
 			try
 			{
 				var header = new MessageHeader(_serviceIdentifier, MessageType.OperationResult);
 				header.Write(response);
-				response.Write(requestId); // Send back request id so that client knows which call the result belongs to
+				response.Writer.WriteUInt32(requestId); // Send back request id so that client knows which call the result belongs to
 
-				InvokeOperation(packet, response, operation);
+				InvokeOperation(packet.Reader, response.Writer, operation);
 			}
 			catch (Exception e)
 			{
-				response.Reset();
+				response.Writer.Reset();
 
 				var header = new MessageHeader(_serviceIdentifier, MessageType.OperationException);
 				header.Write(response);
 
-				response.Write(requestId); // Send back request id so that client knows which call the exception belongs to
-				response.Write(e.GetType().FullName);
-				response.Write(e.Message);
+				response.Writer.WriteUInt32(requestId); // Send back request id so that client knows which call the exception belongs to
+				response.Writer.WriteString(e.GetType().FullName);
+				response.Writer.WriteString(e.Message);
 			}
 
 			await connection.SendAsync(context, response);
@@ -244,6 +245,6 @@ namespace Pegasus.Framework.Network
 		/// <param name="incomingPacket">The packet that should be used to deserialize the operation and operation arguments.</param>
 		/// <param name="outgoingPacket">The packet that should contain the result of the service operation.</param>
 		/// <param name="operation">Identifies the operation that the client requested.</param>
-		protected abstract void InvokeOperation(IncomingPacket incomingPacket, OutgoingPacket outgoingPacket, int operation);
+		protected abstract void InvokeOperation(BufferReader incomingPacket, BufferWriter outgoingPacket, int operation);
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Network
 {
+	using Platform;
 	using Processes;
 
 	/// <summary>
@@ -19,7 +20,7 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   Deserializes the operation's result value from an incoming packet.
 		/// </summary>
-		private Func<IncomingPacket, TResult> _resultDeserializer;
+		private Func<BufferReader, TResult> _resultDeserializer;
 
 		/// <summary>
 		///   Gets the result produced by the asynchronous operation.
@@ -53,7 +54,7 @@ namespace Pegasus.Framework.Network
 		public void SetResult(IncomingPacket packet)
 		{
 			Assert.ArgumentNotNull(packet, () => packet);
-			Result = _resultDeserializer(packet);
+			Result = _resultDeserializer(packet.Reader);
 			IsCompleted = true;
 		}
 
@@ -82,7 +83,7 @@ namespace Pegasus.Framework.Network
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="resultDeserializer">Deserializes the operation's result value from an incoming packet.</param>
-		public static ServiceOperation<TResult> Create(Func<IncomingPacket, TResult> resultDeserializer)
+		public static ServiceOperation<TResult> Create(Func<BufferReader, TResult> resultDeserializer)
 		{
 			var invocation = GetInstance();
 			invocation._resultDeserializer = resultDeserializer;
