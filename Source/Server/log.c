@@ -1,40 +1,77 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "log.h"
+#include "server_export.h"
 
-#ifdef _MSC_VER
-#include <windows.h>
-#endif
+static LogCallbacks logCallbacks;
 
-int log_print(char *s, ...) {
-	va_list ap;
-	va_start(ap, s);
-	int r = vprintf(s, ap);
-
-#ifdef _MSC_VER
-	static char buffer[2048];
-	vsprintf_s(buffer, s, ap);
-	OutputDebugString(buffer);
-#endif
-
-	va_end(ap);
-	return r;
+void server_callbacks(LogCallbacks callbacks)
+{
+	logCallbacks = callbacks;
 }
 
-int log_printn(char *s, ...) {
-    va_list ap;
-    va_start(ap, s);
-    int r = vprintf(s, ap);
-	printf("\n");
-   
-#ifdef _MSC_VER
-	static char buffer[2048];
-	vsprintf_s(buffer, s, ap);
-	OutputDebugString(buffer);
-	OutputDebugString("\n");
-#endif
+static const char* format(const char* message, va_list vl)
+{
+	static char buffer[4096];
 
-	va_end(ap);
-    return r;
+	if (vsnprintf((char*)buffer, sizeof(buffer), (char*)message, vl) < 0)
+		log_die("Error while generating log message.");
+	else
+		return buffer;
+}
+
+void log_die(const char* message, ...)
+{
+	assert(logCallbacks.die != NULL);
+
+	va_list vl;
+	va_start(vl, message);
+	logCallbacks.die(format(message, vl));
+	va_end(vl);
+}
+
+void log_error(const char* message, ...)
+{
+	if (logCallbacks.error == NULL)
+		return;
+
+	va_list vl;
+	va_start(vl, message);
+	logCallbacks.error(format(message, vl));
+	va_end(vl);
+}
+
+void log_warn(const char* message, ...)
+{
+	if (logCallbacks.warning == NULL)
+		return;
+
+	va_list vl;
+	va_start(vl, message);
+	logCallbacks.warning(format(message, vl));
+	va_end(vl);
+}
+
+void log_info(const char* message, ...)
+{
+	if (logCallbacks.info == NULL)
+		return;
+
+	va_list vl;
+	va_start(vl, message);
+	logCallbacks.info(format(message, vl));
+	va_end(vl);
+}
+
+void log_debug(const char* message, ...)
+{
+	if (logCallbacks.debug == NULL)
+		return;
+
+	va_list vl;
+	va_start(vl, message);
+	logCallbacks.debug(format(message, vl));
+	va_end(vl);
 }

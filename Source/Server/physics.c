@@ -172,7 +172,7 @@ static void handle_collisions(Time d) {
         Collision *c = &collisions[i];
         Entity *e0 = c->e0;
         Entity *e1 = c->e1;
-        log_printn("collision of %d and %d at Δt %.3f", e0->id.n, e1->id.n, c->d.t);
+        log_info("collision of %d and %d at Δt %.3f", e0->id.n, e1->id.n, c->d.t);
 
         /* move to collision point */
         move(e0, c->d);

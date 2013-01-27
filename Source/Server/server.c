@@ -73,7 +73,7 @@ int server_init() {
 
     server->running = 1;
 
-    log_printn("server: initialized");
+    log_info("Initialized");
 
     return 1;
 }
@@ -108,5 +108,5 @@ int server_update(Clock time, int force) {
 
 void server_shutdown() {
     conn_shutdown();
-    log_printn("server: terminated");
+    log_info("Terminated");
 }

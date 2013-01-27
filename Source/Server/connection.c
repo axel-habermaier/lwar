@@ -51,15 +51,13 @@ static void conn_error(const char* const msg)
 
 	if (FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, (error), NULL, errmsg, sizeof(errmsg), NULL) == 0) 
 		strcpy(errmsg, "Unknown error.");
-
-	log_printn("%s - (%s)", msg, errmsg);
 #endif
 
 #ifdef __unix__
     strerror_r(errno, errmsg, sizeof(errmsg));
-	log_printn("%s - (%s)", msg, errmsg);
-    /* strerror */
 #endif
+
+	log_error("%s - %s", msg, errmsg);
 }
 
 int conn_init()

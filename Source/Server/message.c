@@ -163,45 +163,45 @@ static const char *strmsg[] = {
 };
 
 void message_print(Message *m) {
-    log_print("%s @%d ", strmsg[m->type], m->seqno);
+    log_info("%s @%d ", strmsg[m->type], m->seqno);
 
     switch(m->type) {
     case MESSAGE_CONNECT:
-        log_print("%s", m->join.name);
+        log_info("%s", m->join.name);
         break;
     case MESSAGE_JOIN:
-        log_print("%d ", m->join.player.n);
-        log_print("%s", m->join.name);
+        log_info("%d ", m->join.player.n);
+        log_info("%s", m->join.name);
         break;
     case MESSAGE_LEAVE:
-        log_print("%d", m->leave.player.n);
+        log_info("%d", m->leave.player.n);
         break;
     case MESSAGE_CHAT:
-        log_print("%d ", m->chat.player.n);
-        log_print("%.*s", m->chat.len, m->chat.text);
+        log_info("%d ", m->chat.player.n);
+        log_info("%.*s", m->chat.len, m->chat.text);
         break;
     case MESSAGE_INPUT:
-        log_print("%d ", m->input.player.n);
-        if(m->input.up)    log_print("↑");
-        if(m->input.down)  log_print("↓");
-        if(m->input.left)  log_print("←");
-        if(m->input.right) log_print("→");
-        if(m->input.shooting) log_print("*");
-        log_print(" %d ", m->input.ack);
+        log_info("%d ", m->input.player.n);
+        if(m->input.up)    log_info("↑");
+        if(m->input.down)  log_info("↓");
+        if(m->input.left)  log_info("←");
+        if(m->input.right) log_info("→");
+        if(m->input.shooting) log_info("*");
+        log_info(" %d ", m->input.ack);
         break;
     case MESSAGE_ADD:
-        log_print("%d ", m->add.entity.n);
-        log_print("%d ", m->add.player.n);
-        log_print("%d", m->add.type);
+        log_info("%d ", m->add.entity.n);
+        log_info("%d ", m->add.player.n);
+        log_info("%d", m->add.type);
         break;
     case MESSAGE_REMOVE:
-        log_print("%d", m->remove.entity.n);
+        log_info("%d", m->remove.entity.n);
         break;
     case MESSAGE_UPDATE:
-        log_print("%d ", m->update.entity.n);
-        log_print("(%d,%d) Δ(%d,%d) ", m->update.x, m->update.y, m->update.vx, m->update.vy);
-        log_print("%d° %d%%", (int)(((float)((m->update.rot)*360)) / M_PI), m->update.health);
+        log_info("%d ", m->update.entity.n);
+        log_info("(%d,%d) Δ(%d,%d) ", m->update.x, m->update.y, m->update.vx, m->update.vy);
+        log_info("%d° %d%%", (int)(((float)((m->update.rot)*360)) / M_PI), m->update.health);
         break;
     }
-    log_print("\n");
+    log_info("\n");
 }

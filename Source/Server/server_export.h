@@ -8,6 +8,21 @@ extern "C" {
 	#define SYM_EXPORT
 #endif
 
+	typedef void (*LogCallback)(const char* message);
+
+	typedef struct
+	{
+		// The die callback is expected to terminate the application. If it does not, the resulting behavior of the
+		// server is undefined.
+		LogCallback die;
+		LogCallback error;
+		LogCallback warning;
+		LogCallback info;
+		LogCallback debug;
+	} LogCallbacks;
+
+	EXPORT void server_callbacks(LogCallbacks callbacks);
+
     /* initialize server data structures
      * and network connection,
      * return > 0 on success
