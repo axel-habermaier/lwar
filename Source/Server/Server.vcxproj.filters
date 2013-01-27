@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="client.c" />
+    <ClCompile Include="connection.c" />
+    <ClCompile Include="entity.c" />
+    <ClCompile Include="log.c" />
+    <ClCompile Include="message.c" />
+    <ClCompile Include="physics.c" />
+    <ClCompile Include="pq.c" />
+    <ClCompile Include="protocol.c" />
+    <ClCompile Include="rules.c" />
+    <ClCompile Include="server.c" />
+    <ClCompile Include="time.c" />
+    <ClCompile Include="uint.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="connection.h" />
+    <ClInclude Include="list.h" />
+    <ClInclude Include="log.h" />
+    <ClInclude Include="message.h" />
+    <ClInclude Include="pq.h" />
+    <ClInclude Include="server.h" />
+    <ClInclude Include="uint.h" />
+    <ClInclude Include="vector.h" />
+    <ClInclude Include="server_export.h" />
+  </ItemGroup>
+</Project>

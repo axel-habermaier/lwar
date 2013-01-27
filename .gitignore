@@ -1,0 +1,7 @@
+*.sdf
+*.user
+/Binaries
+/ipch
+/.svn
+*.suo
+/Source/Server/obj

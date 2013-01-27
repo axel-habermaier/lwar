@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F35D340A-310C-4414-BE7F-87F061CE7C83}</ProjectGuid>
+    <Compiler>
+      <Compiler ctype="GccCompiler" />
+    </Compiler>
+    <Language>C</Language>
+    <Target>Bin</Target>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries\Debug</OutputPath>
+    <OutputName>lwar-server</OutputName>
+    <CompileTarget>SharedLibrary</CompileTarget>
+    <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\..\Binaries\Release</OutputPath>
+    <OutputName>lwar-server</OutputName>
+    <CompileTarget>SharedLibrary</CompileTarget>
+    <OptimizationLevel>3</OptimizationLevel>
+    <DefineSymbols>MONODEVELOP</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="client.c" />
+    <Compile Include="connection.c" />
+    <Compile Include="entity.c" />
+    <Compile Include="log.c" />
+    <Compile Include="message.c" />
+    <Compile Include="physics.c" />
+    <Compile Include="pq.c" />
+    <Compile Include="protocol.c" />
+    <Compile Include="rules.c" />
+    <Compile Include="server.c" />
+    <Compile Include="time.c" />
+    <Compile Include="uint.c" />
+    <Compile Include="visualization.c" />
+    <Compile Include="window.c" />
+    <Compile Include="window_x11.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="connection.h" />
+    <None Include="list.h" />
+    <None Include="log.h" />
+    <None Include="message.h" />
+    <None Include="pq.h" />
+    <None Include="server.h" />
+    <None Include="uint.h" />
+    <None Include="vector.h" />
+    <None Include="window.h" />
+  </ItemGroup>
+</Project>

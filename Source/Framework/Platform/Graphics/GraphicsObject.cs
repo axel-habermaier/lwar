@@ -1,0 +1,37 @@
+﻿using System;
+
+namespace Pegasus.Framework.Platform.Graphics
+{
+	#if Direct3D11
+
+#endif
+
+	/// <summary>
+	///   Base class for all objects belong to a graphics device.
+	/// </summary>
+	public abstract class GraphicsObject : DisposableObject
+	{
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
+		protected GraphicsObject(GraphicsDevice graphicsDevice)
+		{
+			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			GraphicsDevice = graphicsDevice;
+		}
+
+		/// <summary>
+		///   Gets the graphics device this instance belongs to.
+		/// </summary>
+		internal GraphicsDevice GraphicsDevice { get; private set; }
+
+		/// <summary>
+		///   Gets the current state of the graphics device.
+		/// </summary>
+		internal GraphicsDeviceState DeviceState
+		{
+			get { return GraphicsDevice.State; }
+		}
+	}
+}

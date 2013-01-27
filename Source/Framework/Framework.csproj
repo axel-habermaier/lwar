@@ -1,0 +1,467 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug Direct3D11</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Pegasus.Framework</RootNamespace>
+    <AssemblyName>Pegasus.Framework</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Direct3D11; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|AnyCPU'">
+    <OutputPath>..\..\Binaries\Release\</OutputPath>
+    <DefineConstants>TRACE;Direct3D11; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|AnyCPU'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OpenGL3; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|AnyCPU'">
+    <OutputPath>..\..\Binaries\Release\</OutputPath>
+    <DefineConstants>TRACE;OpenGL3; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|AnyCPU'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OpenGL3; Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|AnyCPU'">
+    <OutputPath>..\..\Binaries\Release\</OutputPath>
+    <DefineConstants>TRACE;OpenGL3; Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Direct3D11; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x86'">
+    <OutputPath>..\..\Binaries\Release\</OutputPath>
+    <DefineConstants>TRACE;Direct3D11; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OpenGL3; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
+    <OutputPath>..\..\Binaries\Release\</OutputPath>
+    <DefineConstants>TRACE;OpenGL3; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OpenGL3; Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
+    <OutputPath>..\..\Binaries\Release\</OutputPath>
+    <DefineConstants>TRACE;OpenGL3; Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Platform\IMeasurement.cs" />
+    <Compile Include="Platform\Measurement.cs" />
+    <Compile Include="Rendering\GpuProfiler.cs" />
+    <Compile Include="Math\Circle.cs">
+      <DependentUpon>Circle.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Math\Size.cs">
+      <DependentUpon>Size.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Math\Fixed.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Fixed.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Math\Rectangle.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rectangle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Math\Vector2.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Vector2.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Network\UdpSocket.cs" />
+    <Compile Include="Network\SocketOperationException.cs" />
+    <Compile Include="Network\IServiceOperation.cs" />
+    <Compile Include="Network\MessageHeader.cs" />
+    <Compile Include="Network\MessageType.cs" />
+    <Compile Include="Network\ServiceOperation.cs" />
+    <Compile Include="Network\ServiceHost.cs" />
+    <Compile Include="Network\ServiceIdentifier.cs" />
+    <Compile Include="Network\ServiceOperation`1.cs" />
+    <Compile Include="Network\ServiceProxy.cs" />
+    <Compile Include="Network\TcpListener.cs" />
+    <Compile Include="Network\IncomingPacket.cs" />
+    <Compile Include="Network\NetworkLog.cs" />
+    <Compile Include="Network\OutgoingPacket.cs" />
+    <Compile Include="Network\Packet.cs" />
+    <Compile Include="Network\SocketExtensions.cs" />
+    <Compile Include="Network\TcpSocket.cs" />
+    <Compile Include="Platform\Assets\AssetReader.cs" />
+    <Compile Include="Platform\Assets\FontReader.cs" />
+    <Compile Include="Platform\Assets\ShaderReader.cs" />
+    <Compile Include="Platform\Assets\TextureReader.cs" />
+    <Compile Include="Platform\BufferReader.cs" />
+    <Compile Include="Platform\BufferWriter.cs" />
+    <Compile Include="Platform\Graphics\Query.cs" />
+    <Compile Include="Platform\Graphics\QueryType.cs" />
+    <Compile Include="Platform\Graphics\TimestampDisjointQuery.cs" />
+    <Compile Include="Platform\Graphics\TimestampQuery.cs" />
+    <Compile Include="Platform\NativeLibrary.cs" />
+    <Compile Include="Pool.cs" />
+    <Compile Include="PooledObject.cs" />
+    <Compile Include="Processes\AsyncAction.cs" />
+    <Compile Include="Processes\AsyncFunc.cs" />
+    <Compile Include="Processes\Awaiter.cs" />
+    <Compile Include="Processes\Awaiter`1.cs" />
+    <Compile Include="Processes\DelayOperation.cs" />
+    <Compile Include="Processes\IAsyncOperation.cs" />
+    <Compile Include="Processes\IAsyncOperation`1.cs" />
+    <Compile Include="Processes\IProcess.cs" />
+    <Compile Include="Processes\IProcess`1.cs" />
+    <Compile Include="Processes\Process.cs" />
+    <Compile Include="Processes\ProcessContext.cs" />
+    <Compile Include="Processes\ProcessScheduler.cs" />
+    <Compile Include="Processes\Process`1.cs" />
+    <Compile Include="Network\SocketOperation.cs" />
+    <Compile Include="Platform\Graphics\BufferType.cs" />
+    <Compile Include="Platform\Graphics\Shader.cs" />
+    <Compile Include="Platform\Graphics\ShaderType.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Pipe4Parser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Pipe3Parser.cs" />
+    <Compile Include="Scripting\Requests\RequestBinding.cs" />
+    <Compile Include="Platform\Input\InputTriggerParser.cs" />
+    <Compile Include="Platform\Graphics\Color.cs" />
+    <Compile Include="Scripting\Command`0.cs" />
+    <Compile Include="Scripting\Commands.cs" />
+    <Compile Include="Scripting\CommandRegistry.cs" />
+    <Compile Include="Scripting\Command`1.cs" />
+    <Compile Include="Scripting\Command`3.cs" />
+    <Compile Include="Scripting\Command`2.cs" />
+    <Compile Include="Scripting\Cvar.cs" />
+    <Compile Include="Scripting\CvarRegistry.cs" />
+    <Compile Include="Scripting\ICommand.cs" />
+    <Compile Include="Scripting\ICvar.cs" />
+    <Compile Include="Scripting\Cvars.cs" />
+    <Compile Include="Platform\Graphics\SurfaceFormatExtensions.cs" />
+    <Compile Include="DisposableExtensions.cs" />
+    <Compile Include="Platform\Input\BinaryInputTriggerType.cs" />
+    <Compile Include="Platform\Input\BinaryInputTrigger.cs" />
+    <Compile Include="Platform\Input\ConfigurableTrigger.cs" />
+    <Compile Include="Platform\Input\KeyTrigger.cs" />
+    <Compile Include="Platform\Input\KeyTriggerType.cs" />
+    <Compile Include="Platform\Input\InputExtensions.cs" />
+    <Compile Include="Platform\Input\InputTrigger.cs" />
+    <Compile Include="Platform\Input\LogicalInput.cs" />
+    <Compile Include="Platform\Input\MouseTrigger.cs" />
+    <Compile Include="Platform\Input\MouseTriggerType.cs" />
+    <Compile Include="Platform\Input\ScanCodeKeyTrigger.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\AttemptParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\CharacterParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\EnumerationLiteralParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\SkipStringParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\DescriptionParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\QuotedStringParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\ReferenceParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\StringParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\EndOfInputParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\DigitParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\LetterParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\WhiteSpaces1Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\WhiteSpacesParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\AlternativesParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\ApplyParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\BetweenParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SeparatedBy1Parser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SeparatedByParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Pipe2Parser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Many1Parser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\ManyParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SequenceSecondParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SequenceFirstParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SkipParser.cs" />
+    <Compile Include="Scripting\Parsing\CombinedParser.cs" />
+    <Compile Include="Scripting\Parsing\ErrorType.cs" />
+    <Compile Include="Scripting\Parsing\ErrorMessage.cs" />
+    <Compile Include="Scripting\Parsing\ErrorMessageList.cs" />
+    <Compile Include="Scripting\Parsing\InputStream.cs" />
+    <Compile Include="Scripting\Parsing\InputStreamState.cs" />
+    <Compile Include="Scripting\Parsing\None.cs" />
+    <Compile Include="Scripting\Parsing\Parser.cs" />
+    <Compile Include="Scripting\Parsing\Reply.cs" />
+    <Compile Include="Scripting\Parsing\ReplyStatus.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Float32Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Float64Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Int64Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\UInt64Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Int8Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\UInt8Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Int16Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\UInt16Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\UInt32Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Int32Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\NumberParser.cs" />
+    <Compile Include="Scripting\Requests\CommandRequest.cs" />
+    <Compile Include="Scripting\Requests\DisplayCvar.cs" />
+    <Compile Include="Scripting\Requests\DescribeCvar.cs" />
+    <Compile Include="Scripting\Requests\CvarRequest.cs" />
+    <Compile Include="Scripting\Requests\InvokeCommand.cs" />
+    <Compile Include="Scripting\Requests\IRequest.cs" />
+    <Compile Include="Scripting\RequestParser.cs" />
+    <Compile Include="Rendering\UserInterface\ConsoleInput.cs" />
+    <Compile Include="Platform\Input\InputState.cs" />
+    <Compile Include="Scripting\Requests\RequestBindings.cs" />
+    <Compile Include="Platform\Input\Keyboard.cs" />
+    <Compile Include="Platform\Input\LogicalInputDevice.cs" />
+    <Compile Include="Platform\Input\Mouse.cs" />
+    <Compile Include="Scripting\Interpreter.cs" />
+    <Compile Include="LogHistory.cs" />
+    <Compile Include="Platform\InteropExtensions.cs" />
+    <Compile Include="Scripting\TypeDescription.cs" />
+    <Compile Include="Rendering\UserInterface\ConsolePrompt.cs" />
+    <Compile Include="Rendering\UserInterface\Glyph.cs" />
+    <Compile Include="Rendering\UserInterface\KerningPair.cs" />
+    <Compile Include="Rendering\UserInterface\ConsoleContent.cs" />
+    <Compile Include="Rendering\UserInterface\TextAlignmentExtensions.cs" />
+    <Compile Include="Scripting\Requests\DescribeCommand.cs" />
+    <Compile Include="Scripting\Requests\SetCvar.cs" />
+    <Compile Include="Math\MathUtils.cs" />
+    <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Platform\Graphics\MapMode.cs" />
+    <Compile Include="Platform\Graphics\RenderTarget.cs" />
+    <Compile Include="Platform\Graphics\SwapChain.cs" />
+    <Compile Include="Platform\Input\KeyEventArgs.cs" />
+    <Compile Include="Platform\Input\MouseEventArgs.cs" />
+    <Compile Include="Platform\EndianConverter.cs" />
+    <Compile Include="Platform\Interop.cs" />
+    <Compile Include="Platform\LittleEndianConverter.cs" />
+    <Compile Include="Platform\BigEndianConverter.cs" />
+    <Compile Include="Platform\PlatformType.cs" />
+    <Compile Include="Platform\PlatformInfo.cs" />
+    <Compile Include="Rendering\Quad.cs" />
+    <Compile Include="Rendering\SpriteBatch.cs" />
+    <Compile Include="GameTime.cs" />
+    <Compile Include="Rendering\UserInterface\Caret.cs" />
+    <Compile Include="Rendering\UserInterface\Console.cs" />
+    <Compile Include="Rendering\UserInterface\Label.cs" />
+    <Compile Include="Rendering\UserInterface\TextAlignment.cs" />
+    <Compile Include="Rendering\UserInterface\TextBox.cs" />
+    <Compile Include="Rendering\TextRenderer.cs" />
+    <Compile Include="Rendering\UserInterface\TextLayout.cs" />
+    <Compile Include="Rendering\UserInterface\TextLine.cs" />
+    <Compile Include="Rendering\UserInterface\TextSequence.cs" />
+    <Compile Include="Rendering\UserInterface\TextToken.cs" />
+    <Compile Include="Rendering\UserInterface\TextTokenStream.cs" />
+    <Compile Include="Rendering\UserInterface\TextTokenType.cs" />
+    <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Platform\Window.cs" />
+    <Compile Include="Assert.cs" />
+    <Compile Include="App.cs" />
+    <Compile Include="DisposableObject.cs" />
+    <Compile Include="Platform\Graphics\BlendOption.cs" />
+    <Compile Include="Platform\Graphics\BlendOperation.cs" />
+    <Compile Include="Platform\Graphics\BlendState.cs" />
+    <Compile Include="Platform\Graphics\Buffer.cs" />
+    <Compile Include="Platform\Graphics\ColorWriteChannels.cs" />
+    <Compile Include="Platform\Graphics\Comparison.cs" />
+    <Compile Include="Platform\Graphics\ConstantBuffer.cs" />
+    <Compile Include="Platform\Graphics\IndexBuffer.cs" />
+    <Compile Include="Platform\Graphics\FragmentShader.cs" />
+    <Compile Include="Platform\Graphics\DepthFormat.cs" />
+    <Compile Include="Platform\Graphics\DepthStencilState.cs" />
+    <Compile Include="Platform\Graphics\GraphicsDeviceState.cs" />
+    <Compile Include="Platform\Graphics\IndexSize.cs" />
+    <Compile Include="Platform\Graphics\Texture2D.cs" />
+    <Compile Include="Platform\Graphics\VertexInputBinding.cs" />
+    <Compile Include="Platform\Graphics\VertexDataSemantics.cs" />
+    <Compile Include="Platform\Graphics\VertexInputLayout.cs" />
+    <Compile Include="Platform\Graphics\PipelineState.cs" />
+    <Compile Include="Platform\Graphics\PrimitiveType.cs" />
+    <Compile Include="Platform\Graphics\RasterizerState.cs" />
+    <Compile Include="Platform\Graphics\ResourceUsage.cs" />
+    <Compile Include="Platform\Graphics\CullMode.cs" />
+    <Compile Include="Platform\Graphics\FillMode.cs" />
+    <Compile Include="Platform\Graphics\SamplerState.cs" />
+    <Compile Include="Platform\Graphics\StencilOperation.cs" />
+    <Compile Include="Platform\Graphics\StencilOperationDescription.cs" />
+    <Compile Include="Platform\Graphics\SurfaceFormat.cs" />
+    <Compile Include="Platform\Graphics\TextureAddressMode.cs" />
+    <Compile Include="Platform\Graphics\ClearTargets.cs" />
+    <Compile Include="Platform\Graphics\GraphicsApi.cs" />
+    <Compile Include="Platform\Graphics\GraphicsDevice.cs" />
+    <Compile Include="Platform\Graphics\GraphicsObject.cs" />
+    <Compile Include="Platform\Graphics\TextureFilter.cs" />
+    <Compile Include="Platform\Graphics\VertexDataFormat.cs" />
+    <Compile Include="Platform\Graphics\VertexBuffer.cs" />
+    <Compile Include="Platform\Graphics\VertexPositionColorTexture.cs" />
+    <Compile Include="Platform\Graphics\VertexShader.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Platform\Assets\AssetsManager.cs" />
+    <Compile Include="Platform\Input\Key.cs" />
+    <Compile Include="Platform\Input\MouseButton.cs" />
+    <Compile Include="Rendering\UserInterface\Font.cs" />
+    <Compile Include="Platform\Statistics.cs" />
+    <Compile Include="Platform\AveragedValue.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Platform\CodeModel.t4" />
+    <None Include="Math\Circle.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Circle.cs</LastGenOutput>
+    </None>
+    <None Include="Math\Size.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Size.cs</LastGenOutput>
+    </None>
+    <None Include="Math\Fixed.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Fixed.cs</LastGenOutput>
+    </None>
+    <None Include="Math\Rectangle.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Rectangle.cs</LastGenOutput>
+    </None>
+    <None Include="Math\Vector2.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Vector2.cs</LastGenOutput>
+    </None>
+    <None Include="Network\ServiceCodegen.t4">
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

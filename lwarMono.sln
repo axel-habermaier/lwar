@@ -1,0 +1,152 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Source\Client\Client.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework", "Source\Framework\Framework.csproj", "{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E008FA73-A930-40B5-93A4-959A4D30492D} = {E008FA73-A930-40B5-93A4-959A4D30492D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Source\Assets Compiler\Assets Compiler.csproj", "{E80892FA-2200-4A98-8909-239E1A5A790B}"
+EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Platform", "Source\Platform\Platform.cproj", "{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}"
+EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Server", "Source\Server\Server.cproj", "{F35D340A-310C-4414-BE7F-87F061CE7C83}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Direct3D11|x86 = Debug Direct3D11|x86
+		Debug Linux|x86 = Debug Linux|x86
+		Debug OpenGL3|x86 = Debug OpenGL3|x86
+		Release Direct3D11|x86 = Release Direct3D11|x86
+		Release Linux|x86 = Release Linux|x86
+		Release OpenGL3|x86 = Release OpenGL3|x86
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x86.ActiveCfg = Debug|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x86.Build.0 = Debug|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Linux|x86.ActiveCfg = Debug|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Linux|x86.Build.0 = Debug|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x86.ActiveCfg = Debug|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x86.Build.0 = Debug|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x86.ActiveCfg = Release|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x86.Build.0 = Release|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Linux|x86.ActiveCfg = Release|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Linux|x86.Build.0 = Release|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x86.ActiveCfg = Release|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x86.Build.0 = Release|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Debug Direct3D11|x86.ActiveCfg = Debug|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Debug Direct3D11|x86.Build.0 = Debug|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Debug Linux|x86.ActiveCfg = Debug|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Debug Linux|x86.Build.0 = Debug|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Debug OpenGL3|x86.ActiveCfg = Debug|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Debug OpenGL3|x86.Build.0 = Debug|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Release Direct3D11|x86.ActiveCfg = Release|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Release Direct3D11|x86.Build.0 = Release|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Release Linux|x86.ActiveCfg = Release|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Release Linux|x86.Build.0 = Release|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Release OpenGL3|x86.ActiveCfg = Release|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Release OpenGL3|x86.Build.0 = Release|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug Direct3D11|x86.ActiveCfg = Debug Direct3D11|x86
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug Direct3D11|x86.Build.0 = Debug Direct3D11|x86
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug Linux|x86.ActiveCfg = Debug Linux|Any CPU
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug Linux|x86.Build.0 = Debug Linux|Any CPU
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug OpenGL3|x86.ActiveCfg = Debug OpenGL3|x86
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug OpenGL3|x86.Build.0 = Debug OpenGL3|x86
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release Direct3D11|x86.ActiveCfg = Release Direct3D11|x86
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release Direct3D11|x86.Build.0 = Release Direct3D11|x86
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release Linux|x86.ActiveCfg = Release Linux|Any CPU
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release Linux|x86.Build.0 = Release Linux|Any CPU
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release OpenGL3|x86.ActiveCfg = Release OpenGL3|x86
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release OpenGL3|x86.Build.0 = Release OpenGL3|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Debug Direct3D11|x86.ActiveCfg = Debug|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Debug Direct3D11|x86.Build.0 = Debug|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Debug Linux|x86.ActiveCfg = Debug|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Debug Linux|x86.Build.0 = Debug|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Debug OpenGL3|x86.ActiveCfg = Debug|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Debug OpenGL3|x86.Build.0 = Debug|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Release Direct3D11|x86.ActiveCfg = Release|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Release Direct3D11|x86.Build.0 = Release|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Release Linux|x86.ActiveCfg = Release|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Release Linux|x86.Build.0 = Release|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Release OpenGL3|x86.ActiveCfg = Release|x86
+		{E80892FA-2200-4A98-8909-239E1A5A790B}.Release OpenGL3|x86.Build.0 = Release|x86
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Debug Direct3D11|x86.ActiveCfg = Debug|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Debug Direct3D11|x86.Build.0 = Debug|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Debug Linux|x86.ActiveCfg = Debug|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Debug Linux|x86.Build.0 = Debug|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Debug OpenGL3|x86.ActiveCfg = Debug|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Debug OpenGL3|x86.Build.0 = Debug|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Release Direct3D11|x86.ActiveCfg = Release|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Release Direct3D11|x86.Build.0 = Release|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Release Linux|x86.ActiveCfg = Release|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Release Linux|x86.Build.0 = Release|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Release OpenGL3|x86.ActiveCfg = Release|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Release OpenGL3|x86.Build.0 = Release|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F35D340A-310C-4414-BE7F-87F061CE7C83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug Direct3D11|x86.ActiveCfg = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug Direct3D11|x86.Build.0 = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug Linux|x86.ActiveCfg = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug Linux|x86.Build.0 = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug OpenGL3|x86.ActiveCfg = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug OpenGL3|x86.Build.0 = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release Direct3D11|x86.ActiveCfg = Release|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release Direct3D11|x86.Build.0 = Release|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release Linux|x86.ActiveCfg = Release|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release Linux|x86.Build.0 = Release|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release OpenGL3|x86.ActiveCfg = Release|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release OpenGL3|x86.Build.0 = Release|x86
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Debug Direct3D11|x86.ActiveCfg = Debug|x86
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Debug Direct3D11|x86.Build.0 = Debug|x86
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Debug Linux|x86.ActiveCfg = Debug|Any CPU
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Debug Linux|x86.Build.0 = Debug|Any CPU
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Debug OpenGL3|x86.ActiveCfg = Debug|x86
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Debug OpenGL3|x86.Build.0 = Debug|x86
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Release Direct3D11|x86.ActiveCfg = Release|x86
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Release Direct3D11|x86.Build.0 = Release|x86
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Release Linux|x86.ActiveCfg = Release|Any CPU
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Release Linux|x86.Build.0 = Release|Any CPU
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Release OpenGL3|x86.ActiveCfg = Release|x86
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Release OpenGL3|x86.Build.0 = Release|x86
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADC1BAF1-B42F-42B7-95DD-FDE784564CD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Debug Direct3D11|x86.ActiveCfg = Debug Direct3D11|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Debug Direct3D11|x86.Build.0 = Debug Direct3D11|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Debug Linux|x86.ActiveCfg = Debug OpenGL3|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Debug Linux|x86.Build.0 = Debug OpenGL3|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Debug OpenGL3|x86.ActiveCfg = Debug OpenGL3|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Debug OpenGL3|x86.Build.0 = Debug OpenGL3|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Release Direct3D11|x86.ActiveCfg = Release Direct3D11|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Release Direct3D11|x86.Build.0 = Release Direct3D11|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Release Linux|x86.ActiveCfg = Release OpenGL3|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Release Linux|x86.Build.0 = Release OpenGL3|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Release OpenGL3|x86.ActiveCfg = Release OpenGL3|Win32
+		{E008FA73-A930-40B5-93A4-959A4D30492D}.Release OpenGL3|x86.Build.0 = Release OpenGL3|Win32
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Source\Client\Client.csproj
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

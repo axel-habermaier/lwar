@@ -1,0 +1,194 @@
+﻿using System;
+
+namespace Pegasus.Framework
+{
+	using System.Diagnostics;
+	using System.Runtime.InteropServices;
+	using Scripting;
+
+	/// <summary>
+	///   Provides functions to log fatal errors, errors, warnings, informational messages, and debug-time only
+	///   informational messages. An event is raised whenever one of these functions is invoked.
+	/// </summary>
+	public static class Log
+	{
+		/// <summary>
+		///   Wires up the events to write all logged messages to the console.
+		/// </summary>
+		static Log()
+		{
+			OnFatalError += HandleFatalError;
+			OnError += message => Console.WriteLine("ERROR: {0}", message);
+			OnWarning += message => Console.WriteLine("WARNING: {0}", message);
+			OnInfo += message => Console.WriteLine("INFO: {0}", message);
+			OnDebugInfo += message => Console.WriteLine("DEBUG INFO: {0}", message);
+		}
+
+		/// <summary>
+		///   Handles a fatal error by displaying the error on the console and throwing an InvalidOperationException.
+		/// </summary>
+		/// <param name="message">The fatal error message.</param>
+		[DebuggerHidden]
+		private static void HandleFatalError(string message)
+		{
+			Console.WriteLine("FATAL ERROR: {0}", message);
+			throw new InvalidOperationException(message);
+		}
+
+		/// <summary>
+		///   Raised when a fatal error occurred. Typically, the program terminates after all event handlers have
+		///   been executed.
+		/// </summary>
+		public static event Action<string> OnFatalError;
+
+		/// <summary>
+		///   Raised when an error occurred.
+		/// </summary>
+		public static event Action<string> OnError;
+
+		/// <summary>
+		///   Raised when a warning was generated.
+		/// </summary>
+		public static event Action<string> OnWarning;
+
+		/// <summary>
+		///   Raised when an informational message was generated.
+		/// </summary>
+		public static event Action<string> OnInfo;
+
+		/// <summary>
+		///   Raised when a debug informational message was generated.
+		/// </summary>
+		public static event Action<string> OnDebugInfo;
+
+		/// <summary>
+		///   Raises the OnFatalError event with the given message and terminates the application by throwing
+		///   an InvalidOperationException.
+		/// </summary>
+		/// <param name="message">
+		///   The message that should be formatted and passed as an argument of the OnFatalError event.
+		/// </param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[DebuggerHidden]
+		public static void Die(string message, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			var formattedMessage = String.Format(message, arguments);
+
+			if (OnFatalError != null)
+				OnFatalError(formattedMessage);
+
+			throw new InvalidOperationException(formattedMessage);
+		}
+
+#if Windows
+		/// <summary>
+		///   Raises the OnFatalError event with the given message and terminates the application by throwing
+		///   an InvalidOperationException. The exception message contains further details about the Win32 error that
+		///   occurred.
+		/// </summary>
+		/// <param name="message">
+		///   The message that should be formatted and passed as an argument of the OnFatalError event.
+		/// </param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[DebuggerHidden]
+		public static void Win32Die(string message, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			var formattedMessage = String.Format(message, arguments);
+
+			var error = Marshal.GetHRForLastWin32Error();
+			try
+			{
+				Marshal.ThrowExceptionForHR(error);
+			}
+			catch (Exception e)
+			{
+				formattedMessage = String.Format("{0}\n{1}", formattedMessage, e.Message);
+				Die(formattedMessage);
+			}
+
+			formattedMessage = String.Format("{0}\n(Error Code: {1})", formattedMessage, error);
+			Die(formattedMessage);
+		}
+#endif
+
+		/// <summary>
+		///   Raises the OnError event with the given message.
+		/// </summary>
+		/// <param name="message">
+		///   The message that should be formatted and passed as an argument of the OnError event.
+		/// </param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		public static void Error(string message, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+
+			if (OnError != null)
+				OnError(String.Format(message, arguments));
+		}
+
+		/// <summary>
+		///   Raises the OnWarning event with the given message.
+		/// </summary>
+		/// <param name="message">
+		///   The message that should be formatted and passed as an argument of the OnWarning event.
+		/// </param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		public static void Warn(string message, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+
+			if (OnWarning != null)
+				OnWarning(String.Format(message, arguments));
+		}
+
+		/// <summary>
+		///   Raises the OnInfo event with the given message.
+		/// </summary>
+		/// <param name="message">
+		///   The message that should be formatted and passed as an argument of the OnInfo event.
+		/// </param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		public static void Info(string message, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+
+			if (OnInfo != null)
+				OnInfo(String.Format(message, arguments));
+		}
+
+		/// <summary>
+		///   In debug builds, raises the OnDebugInfo event with the given message.
+		/// </summary>
+		/// <param name="message">
+		///   The message that should be formatted and passed as an argument of the OnDebugInfo event.
+		/// </param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[Conditional("DEBUG")]
+		public static void DebugInfo(string message, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+
+			if (OnDebugInfo != null)
+				OnDebugInfo(String.Format(message, arguments));
+		}
+
+		/// <summary>
+		///   Raises the OnDebugInfo event with the given message if the given cvar is set to true.
+		/// </summary>
+		/// <param name="enabled">The cvar that determines whether the message should be logged.</param>
+		/// <param name="message">
+		///   The message that should be formatted and passed as an argument of the OnDebugInfo event.
+		/// </param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		public static void DebugInfo(Cvar<bool> enabled, string message, params object[] arguments)
+		{
+			Assert.ArgumentNotNull(enabled, () => enabled);
+			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+
+			if (enabled.Value && OnDebugInfo != null)
+				OnDebugInfo(String.Format(message, arguments));
+		}
+	}
+}
