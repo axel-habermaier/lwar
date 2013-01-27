@@ -5,3 +5,9 @@
 /.svn
 *.suo
 /Source/Server/obj
+*.opensdf
+Source/Client/obj
+Source/Assets Compiler/obj
+Source/Assets Compiler/bin
+Source/Framework/obj
+Source/Platform/obj
