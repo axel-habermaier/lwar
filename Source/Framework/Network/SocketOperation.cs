@@ -43,7 +43,7 @@ namespace Pegasus.Framework.Network
 		public void UpdateState()
 		{
 			// IsCompleted cannot return _isCompleted, as that sometimes leads to an inconsistent state where IsCompleted is
-			// false when the process registeres the socket operation but already true when IsCompleted on the awaiter is called
+			// false when the process registers the socket operation but already true when IsCompleted on the awaiter is called
 			// by C#'s async/await state machine
 			lock (_lockObj)
 				IsCompleted = _isCompleted;

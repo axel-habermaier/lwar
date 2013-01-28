@@ -19,6 +19,16 @@
     <CompileTarget>SharedLibrary</CompileTarget>
     <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
+    <Libs>
+      <Libs>
+        <Lib>m</Lib>
+      </Libs>
+    </Libs>
+    <Includes>
+      <Includes>
+        <Include>${ProjectDir}</Include>
+      </Includes>
+    </Includes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\Binaries\Release</OutputPath>
@@ -27,6 +37,16 @@
     <OptimizationLevel>3</OptimizationLevel>
     <DefineSymbols>MONODEVELOP</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
+    <Includes>
+      <Includes>
+        <Include>${ProjectDir}</Include>
+      </Includes>
+    </Includes>
+    <Libs>
+      <Libs>
+        <Lib>m</Lib>
+      </Libs>
+    </Libs>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="client.c" />
@@ -37,13 +57,12 @@
     <Compile Include="physics.c" />
     <Compile Include="pq.c" />
     <Compile Include="protocol.c" />
-    <Compile Include="rules.c" />
     <Compile Include="server.c" />
     <Compile Include="time.c" />
     <Compile Include="uint.c" />
-    <Compile Include="visualization.c" />
-    <Compile Include="window.c" />
-    <Compile Include="window_x11.c" />
+    <Compile Include="rules\bullet.c" />
+    <Compile Include="rules\planet.c" />
+    <Compile Include="rules\ship.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="connection.h" />
@@ -54,6 +73,5 @@
     <None Include="server.h" />
     <None Include="uint.h" />
     <None Include="vector.h" />
-    <None Include="window.h" />
   </ItemGroup>
 </Project>

@@ -54,15 +54,19 @@ namespace Lwar.Client.Network
 			{
 				var watch = new Stopwatch();
 				watch.Start();
-
+				long lastTime = 0;
 				Func<int> updateServer = () => NativeMethods.Update((ulong)watch.ElapsedMilliseconds, true);
 				while (!context.IsCanceled)
 				{
+					Log.Info("{0}", watch.ElapsedMilliseconds - lastTime);
+					lastTime = watch.ElapsedMilliseconds;
 					if (await context.WaitFor(updateServer) < 0)
 					{
 						Log.Error("Server stopped after error.");
 						break;
 					}
+
+					await context.NextFrame();
 				}
 			}
 			finally

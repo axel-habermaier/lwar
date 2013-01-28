@@ -25,10 +25,7 @@ namespace Pegasus.Framework.Processes
 		/// <summary>
 		///   Gets a value indicating whether the task has completed.
 		/// </summary>
-		public bool IsCompleted
-		{
-			get { return _task.IsCompleted; }
-		}
+		public bool IsCompleted { get; private set; }
 
 		/// <summary>
 		///   Updates the state of the asynchronous operation, setting its Exception and IsCompleted properties if the
@@ -36,6 +33,10 @@ namespace Pegasus.Framework.Processes
 		/// </summary>
 		public void UpdateState()
 		{
+			// IsCompleted cannot return _task.IsCompleted, as that sometimes leads to an inconsistent state where _task.IsCompleted is
+			// false when the process registers the task operation but already true when IsCompleted on the awaiter is called
+			// by C#'s async/await state machine
+			IsCompleted = _task.IsCompleted;
 		}
 
 		/// <summary>

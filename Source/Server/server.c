@@ -75,7 +75,7 @@ int server_update(Clock time, int force) {
         /* skip first frame */
         if(!server->prev_time)
             return 1;
-
+	
         server_receive();
 
         if(   force
