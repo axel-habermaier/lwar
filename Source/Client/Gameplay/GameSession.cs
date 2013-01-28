@@ -6,6 +6,7 @@ namespace Lwar.Client.Gameplay
 	using System.Net;
 	using System.Threading.Tasks;
 	using Network;
+	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
@@ -133,6 +134,16 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
+		///   Processes the given message.
+		/// </summary>
+		/// <param name="message">The message that should be processed.</param>
+		private void ProcessMessage(IMessage message)
+		{
+			Assert.ArgumentNotNull(message, () => message);
+			message.Process(this);
+		}
+
+		/// <summary>
 		///   Draws the session state to the screen.
 		/// </summary>
 		public void Draw()
@@ -185,6 +196,7 @@ namespace Lwar.Client.Gameplay
 
 			Entities = new EntityList(this);
 			ServerProxy = new ServerProxy(serverEndPoint, Scheduler);
+			ServerProxy.MessageReceived += ProcessMessage;
 
 			var label = new Label(LoadingFont)
 			{

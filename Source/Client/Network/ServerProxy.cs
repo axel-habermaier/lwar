@@ -4,11 +4,10 @@ namespace Lwar.Client.Network
 {
 	using System.Net;
 	using System.Threading.Tasks;
-	using Gameplay;
+	using Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Processes;
-	using Pegasus.Framework.Scripting;
 
 	/// <summary>
 	///   Represents a proxy of an lwar server that a client can use to communicate with the server.
@@ -16,14 +15,14 @@ namespace Lwar.Client.Network
 	public class ServerProxy : DisposableObject
 	{
 		/// <summary>
-		///   The maximum allowed length of an ASCII player name, including the terminating 0 character.
+		///   The maximum allowed length of an UTF8-encoded player name, including the terminating 0 character.
 		/// </summary>
 		private const int MaxPlayerNameLength = 32;
 
 		/// <summary>
-		///   The maximum allowed length of an ASCII chat message, including the terminating 0 character.
+		///   The maximum allowed length of an UTF8-encoded chat message, including the terminating 0 character.
 		/// </summary>
-		private const int MaxChatMessageLength = 500;
+		private const int MaxChatMessageLength = 128;
 
 		/// <summary>
 		///   The maximum number of connection attempts before giving up.
@@ -41,9 +40,14 @@ namespace Lwar.Client.Network
 		public const ushort DefaultPort = 32422;
 
 		/// <summary>
-		///   The application identifier that is used to determine whether a Udp packet was sent by another application.
+		///   The delivery manager that is used to enforce the delivery guarantees of all incoming and outgoing messages.
 		/// </summary>
-		public const uint AppId = 0xf27087c5;
+		private readonly DeliveryManager _deliveryManager = new DeliveryManager();
+
+		/// <summary>
+		///   The process that handles incoming packets from the server.
+		/// </summary>
+		private readonly IProcess _receiveProcess;
 
 		/// <summary>
 		///   The endpoint of the server.
@@ -59,11 +63,6 @@ namespace Lwar.Client.Network
 		///   The current state of the virtual connection to the server.
 		/// </summary>
 		private State _state = State.Disconnected;
-
-		/// <summary>
-		/// The process that handles incoming packets from the server.
-		/// </summary>
-		private IProcess _receiveProcess;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -88,11 +87,17 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		///   Raised when a message has been received from the server.
+		/// </summary>
+		public event Action<IMessage> MessageReceived;
+
+		/// <summary>
 		///   Sends a Connect message to the server.
 		/// </summary>
 		public async Task Connect(ProcessContext context)
 		{
 			Assert.That(_state == State.Disconnected, "The proxy is not disconnected.");
+			_state = State.Connecting;
 
 			try
 			{
@@ -102,13 +107,7 @@ namespace Lwar.Client.Network
 				while (_state != State.Connected && attempts < MaxConnectionAttempts)
 				{
 					var packet = OutgoingPacket.Create();
-					packet.Writer.WriteUInt32(AppId);
-					packet.Writer.WriteByte((byte)MessageType.Connect);
-					packet.Writer.WriteInt32(0);
-					packet.Writer.WriteIdentifier(new Identifier()); // Required, but unused
-					packet.Writer.WriteString(Cvars.PlayerName.Value, MaxPlayerNameLength);
-
-					_state = State.Connecting;
+					packet.Writer.WriteUInt16(3);
 					++attempts;
 
 					await _socket.SendAsync(context, packet, _serverEndPoint);
@@ -162,6 +161,9 @@ namespace Lwar.Client.Network
 												   sender, _serverEndPoint);
 							continue;
 						}
+
+						foreach (var message in MessageDeserializer.Deserialize(packet, _deliveryManager))
+							MessageReceived(message);
 					}
 				}
 				catch (SocketOperationException e)

@@ -19,6 +19,11 @@ Message Delivery Guarantees
 	processed. The remote peer discards all reliable messages that have already been processed, and it
 	only processes a reliable message that is the direct successor of the last processed reliable
 	message (i.e., its sequence number is that of the last message + 1).
+
+	The sequence numbers must be specified per message, and not per packet. If they were specified per 
+	packet and a reliable message is sent twice because an acknowledgement has not been received before 
+	the next packet	is sent, the client might process the same message twice, as there is no general
+	way to figure out whether two reliable messages actually are the same.
 	
 	Unreliable messages, on the other hand, are neither acknowledged nor do the peers care if a message
 	is lost. Unreliable messages are timestamped, allowing the peers to filter out older unreliable messages
@@ -112,7 +117,7 @@ Messages Payload Data
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------
 		uint32(Id)	playerId	The generational identifier of the player that generated the chat message
-		uint8[]		message		The variable-sized chat message, terminated by a '\0', with
+		uint8[]		message		The variable-sized, UTF8-encoded chat message, terminated by a '\0', with
 								a length that does not exceed the maximum allowed chat message length
 	
 	Add
@@ -139,7 +144,8 @@ Messages Payload Data
 		---------	----------	------------------------------------------------------------------------
 		uint32(Id)	playerId	The generational identifier of the player that changed his/her name
 		uint8[n]	name		The fixed-sized player name, terminated by a '\0', where n equals the
-								exact amount of bytes allowed for a player name, including the '\0'
+								exact amount of bytes allowed for a player name, including the '\0';
+								UTF8-encoded
 
 	Synced
 		Does not carry any payload data

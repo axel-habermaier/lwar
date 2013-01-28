@@ -6,7 +6,6 @@ namespace Pegasus.Framework.Network
 	using System.Net.Sockets;
 	using System.Threading.Tasks;
 	using Processes;
-	using Scripting;
 
 	/// <summary>
 	///   Represents a Udp-based socket connection that can be used to unreliably send and receive packets over the network.

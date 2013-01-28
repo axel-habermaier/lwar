@@ -13,11 +13,6 @@ namespace Lwar.Client
 	public static class BufferExtensions
 	{
 		/// <summary>
-		///   A cached string builder instance to reduce the pressure on the garbage collector.
-		/// </summary>
-		private static readonly StringBuilder Builder = new StringBuilder();
-
-		/// <summary>
 		///   Writes the given identifier into the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the identifier should be written into.</param>
@@ -34,7 +29,7 @@ namespace Lwar.Client
 		///   Reads an identifier from the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the identifier should be read from.</param>
-		public static Identifier WriteIdentifier(this BufferReader buffer)
+		public static Identifier ReadIdentifier(this BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
@@ -48,47 +43,43 @@ namespace Lwar.Client
 		/// </summary>
 		/// <param name="buffer">The buffer the string should be written into.</param>
 		/// <param name="s">The string that should be written into the buffer.</param>
-		/// <param name="length">The fixed length of the string.</param>
+		/// <param name="length">The fixed length of the string, including the termiating '\0'.</param>
 		public static void WriteString(this BufferWriter buffer, string s, int length)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 			Assert.ArgumentNotNull(s, () => s);
 			Assert.ArgumentInRange(length, () => length, 1, Int32.MaxValue);
-			Assert.ArgumentSatisfies(s.Length < length - 1, () => s, "String is too long.");
+			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) < length - 1, () => s, "String is too long.");
 
-			var bytes = Encoding.ASCII.GetBytes(s);
-			Assert.That(bytes.Length < length - 1, "String is too long.");
-
+			var bytes = Encoding.UTF8.GetBytes(s);
 			foreach (var b in bytes)
 				buffer.WriteByte(b);
 
+			// Fill the remaining space with 0s
 			for (var i = 0; i < length - bytes.Length; ++i)
 				buffer.WriteByte(0);
 		}
 
 		/// <summary>
-		///   Reads a fixed-size string of the given length from the buffer.
+		///   Reads a fixed-size string of the given maximum length from the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the string should be read from.</param>
-		/// <param name="length">The fixed length of the string.</param>
+		/// <param name="length">The fixed length of the string, including the termiating '\0'.</param>
 		public static string ReadString(this BufferReader buffer, int length)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 			Assert.ArgumentInRange(length, () => length, 1, Int32.MaxValue);
 
-			Builder.Clear();
+			var bytes = new byte[length];
+			var count = 0;
 			for (var i = 0; i < length; ++i)
 			{
-				var character = buffer.ReadByte();
-				if (character == 0)
-					break;
-				Builder.Append(character);
+				bytes[i] = buffer.ReadByte();
+				if (bytes[i] != 0)
+					++count;
 			}
 
-			for (var i = Builder.Length; i < length; ++i)
-				buffer.ReadByte();
-
-			return Builder.ToString();
+			return Encoding.UTF8.GetString(bytes, 0, count);
 		}
 	}
 }
