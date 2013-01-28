@@ -28,7 +28,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   The maximum number of connection attempts before giving up.
 		/// </summary>
-		private const int MaxConnectionAttempts = 10;
+		private const int MaxConnectionAttempts = 20;
 
 		/// <summary>
 		///   The delay between two connection attempts in milliseconds.
@@ -41,7 +41,7 @@ namespace Lwar.Client.Network
 		public const ushort DefaultPort = 32422;
 
 		/// <summary>
-		/// The application identifier that is used to determine whether a Udp packet was sent by another application.
+		///   The application identifier that is used to determine whether a Udp packet was sent by another application.
 		/// </summary>
 		public const uint AppId = 0xf27087c5;
 
@@ -67,6 +67,14 @@ namespace Lwar.Client.Network
 		public ServerProxy(IPEndPoint serverEndPoint)
 		{
 			_serverEndPoint = serverEndPoint;
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether a connection to the server is established.
+		/// </summary>
+		public bool IsConnected
+		{
+			get { return _state == State.Connected; }
 		}
 
 		/// <summary>
@@ -149,7 +157,7 @@ namespace Lwar.Client.Network
 				catch (SocketOperationException e)
 				{
 					NetworkLog.ClientDebug(e.Message);
-					// Ignore the error otherwise, as Udp is connectionless anyway
+					// Ignore the error as Udp is connectionless anyway
 				}
 			}
 		}

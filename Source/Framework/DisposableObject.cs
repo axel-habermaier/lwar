@@ -54,8 +54,6 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected virtual void OnDisposing()
-		{
-		}
+		protected abstract void OnDisposing();
 	}
 }

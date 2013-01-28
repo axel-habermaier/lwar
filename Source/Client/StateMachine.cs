@@ -2,6 +2,7 @@
 
 namespace Lwar.Client
 {
+	using System.Threading.Tasks;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Processes;
 
@@ -11,6 +12,16 @@ namespace Lwar.Client
 	/// </summary>
 	public class StateMachine : PooledObject<StateMachine>
 	{
+		/// <summary>
+		///   The process that handles delayed state changes.
+		/// </summary>
+		private IProcess _delayedStateChangeProcess;
+
+		/// <summary>
+		///   The state function that should be set next.
+		/// </summary>
+		private AsyncAction _nextState;
+
 		/// <summary>
 		///   The process scheduler that schedules the asynchronous state processes.
 		/// </summary>
@@ -29,11 +40,12 @@ namespace Lwar.Client
 		{
 			var stateMachine = GetInstance();
 			stateMachine._scheduler = processManager;
+			stateMachine._delayedStateChangeProcess = processManager.CreateProcess(stateMachine.HandleDelayedStateChanges);
 			return stateMachine;
 		}
 
 		/// <summary>
-		///   Changes the state to the given state function.
+		///   Immediately changes the state to the given state function.
 		/// </summary>
 		/// <param name="asyncAction">The state function representing the new state of the state machine.</param>
 		public void ChangeState(AsyncAction asyncAction)
@@ -43,10 +55,38 @@ namespace Lwar.Client
 		}
 
 		/// <summary>
+		///   Changes the state to the given state function within the duration of one frame.
+		/// </summary>
+		/// <param name="asyncAction">The state function representing the new state of the state machine.</param>
+		public void ChangeStateDelayed(AsyncAction asyncAction)
+		{
+			_nextState = asyncAction;
+		}
+
+		/// <summary>
+		///   Updates the current state if a delayed state change has been requested.
+		/// </summary>
+		/// <param name="context">The context in which the delayed state changes should be handled.</param>
+		private async Task HandleDelayedStateChanges(ProcessContext context)
+		{
+			while (!context.IsCanceled)
+			{
+				if (_nextState != null)
+				{
+					ChangeState(_nextState);
+					_nextState = null;
+				}
+
+				await context.NextFrame();
+			}
+		}
+
+		/// <summary>
 		///   Invoked when the pooled instance is returned to the pool.
 		/// </summary>
 		protected override void OnReturning()
 		{
+			_delayedStateChangeProcess.SafeDispose();
 			_stateProcess.SafeDispose();
 		}
 	}

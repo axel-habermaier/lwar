@@ -2,10 +2,10 @@
 
 namespace Pegasus.Framework.Rendering.UserInterface
 {
-	using Platform.Graphics;
 	using Math;
-	using Platform;
+	using Platform.Graphics;
 	using Platform.Input;
+	using Scripting;
 
 	/// <summary>
 	///   A Quake-like in-game console.
@@ -100,6 +100,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Log.OnWarning += OnWarning;
 			Log.OnInfo += OnInfo;
 			Log.OnDebugInfo += OnDebugInfo;
+			Commands.ShowConsole.Invoked += OnShowConsole;
 
 			_input.CharEntered += OnCharEntered;
 			_input.KeyPressed += OnKeyPressed;
@@ -110,12 +111,16 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public event Action<string> UserInput;
 
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
 		protected override void OnDisposing()
 		{
 			Log.OnError -= OnError;
 			Log.OnWarning -= OnWarning;
 			Log.OnInfo -= OnInfo;
 			Log.OnDebugInfo -= OnDebugInfo;
+			Commands.ShowConsole.Invoked -= OnShowConsole;
 
 			_input.CharEntered -= OnCharEntered;
 			_input.KeyPressed -= OnKeyPressed;
@@ -270,6 +275,15 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			if (_input.ScrollToBottom.IsTriggered)
 				_content.ScrollToBottom();
+		}
+
+		/// <summary>
+		///   Shows or hides the console.
+		/// </summary>
+		/// <param name="show">Indicates whether the console should be shown.</param>
+		private void OnShowConsole(bool show)
+		{
+			_active = show;
 		}
 
 		/// <summary>

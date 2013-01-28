@@ -15,6 +15,7 @@ namespace Lwar.Client
 		/// <param name="assets">The assets manager that should be used to load the assets.</param>
 		public static void Load(AssetsManager assets)
 		{
+			Lwar.Client.Gameplay.GameSession.LoadingFont = assets.LoadFont("Fonts/Liberation Mono 12");
 		}
 	}
 }

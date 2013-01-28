@@ -26,5 +26,10 @@ namespace Pegasus.Framework.Scripting
 																							 "Binds a command invocation to a logical input. " +
 																							 "Whenever the input is triggered, the command is " +
 																							 "invoked with the specified arguments.");
+
+		/// <summary>
+		///   Shows or hides the console.
+		/// </summary>
+		public static Command<bool> ShowConsole = new Command<bool>("show_console", "Shows or hides the console.");
 	}
 }

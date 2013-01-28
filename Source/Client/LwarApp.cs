@@ -2,15 +2,12 @@
 
 namespace Lwar.Client
 {
-	using System.Collections.Generic;
-	using System.Net;
 	using Gameplay;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Processes;
 	using Pegasus.Framework.Scripting;
 
 	/// <summary>
@@ -19,95 +16,21 @@ namespace Lwar.Client
 	internal sealed class LwarApp : App
 	{
 		/// <summary>
-		///   Starts up a new server instance.
+		///   The local game server that can be used to hosts game sessions locally.
 		/// </summary>
-		public static readonly Command StartServer = new Command("start", "Starts up a new server instance.");
+		private readonly Server _server = new Server();
 
 		/// <summary>
-		///   Shuts down the currently running server.
+		///   The game session.
 		/// </summary>
-		public static readonly Command StopServer = new Command("stop", "Shuts down the currently running server.");
-
-		/// <summary>
-		///   Connects to a game session on a server.
-		/// </summary>
-		public static readonly Command<IPEndPoint> Connect = new Command<IPEndPoint>("connect",
-																					 "Connects to a game session on a server.");
-
-		/// <summary>
-		///   Disconnects from the current game session.
-		/// </summary>
-		public static readonly Command Disconnect = new Command("disconnect", "Disconnects from the current game session.");
-
-		private readonly ProcessScheduler _scheduler = new ProcessScheduler();
-
-		/// <summary>
-		///   The current game session.
-		/// </summary>
-		private readonly GameSession _session = new GameSession();
-
-		private IProcess _connectProcess, _handleServerMessagesProcess;
-
-		private ServerProxy _proxy;
-
-		private Server _server;
-
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		public LwarApp()
-		{
-			StartServer.Invoked += () =>
-				{
-					_server.SafeDispose();
-					_server = new Server();
-					_server.Run();
-				};
-
-			StopServer.Invoked += () =>
-				{
-					if (_server == null)
-						Log.Warn("The server is currently not running.");
-
-					_server.SafeDispose();
-					_server = null;
-				};
-
-			Connect.Invoked += serverEndPoint =>
-				{
-					_proxy.SafeDispose();
-					_connectProcess.SafeDispose();
-					_handleServerMessagesProcess.SafeDispose();
-
-					_proxy = new ServerProxy(serverEndPoint);
-					_handleServerMessagesProcess = _scheduler.CreateProcess(_proxy.HandleServerMessages);
-					_connectProcess = _scheduler.CreateProcess(_proxy.Connect);
-				};
-
-			Disconnect.Invoked += () =>
-				{
-					if (_proxy == null)
-						Log.Warn("Not connected to any server.");
-
-					_proxy.SafeDispose();
-					_connectProcess.SafeDispose();
-					_handleServerMessagesProcess.SafeDispose();
-
-					_proxy = null;
-					_connectProcess = null;
-					_handleServerMessagesProcess = null;
-				};
-		}
+		private GameSession _session;
 
 		/// <summary>
 		///   Invoked when the application should update the game state.
 		/// </summary>
 		protected override void Update()
 		{
-			if (_server != null)
-				_server.Update();
-
-			_scheduler.RunProcesses();
+			_server.Update();
 			_session.Update();
 		}
 
@@ -128,12 +51,8 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_handleServerMessagesProcess.SafeDispose();
-			_connectProcess.SafeDispose();
-			_proxy.SafeDispose();
-			_server.SafeDispose();
 			_session.SafeDispose();
-			_scheduler.SafeDispose();
+			_server.SafeDispose();
 
 			base.OnDisposing();
 		}
@@ -151,12 +70,7 @@ namespace Lwar.Client
 			Window.Size = new Size(1280, 720);
 
 			AssetsLoader.Load(Assets);
-
-			_session.Window = Window;
-			_session.GraphicsDevice = GraphicsDevice;
-			_session.InputDevice = LogicalInputDevice;
-			_session.Players = new List<Player> { new Player() };
-			_session.Initialize();
+			_session = new GameSession(Window, GraphicsDevice, LogicalInputDevice);
 
 			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
 			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");

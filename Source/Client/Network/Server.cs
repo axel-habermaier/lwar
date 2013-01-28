@@ -18,17 +18,12 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   The update frequency of the server in Hz.
 		/// </summary>
-		private const int UpdateFrequency = 60;
+		private const int UpdateFrequency = 30;
 
 		/// <summary>
 		///   Can be used to cancel the server update process.
 		/// </summary>
-		private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();
-
-		/// <summary>
-		///   Indicates whether the server initialization has been successful.
-		/// </summary>
-		private readonly bool _isInitialized;
+		private CancellationTokenSource _cancellation;
 
 		/// <summary>
 		///   The log callbacks that have been passed to the native code. We must keep a reference in order to prevent
@@ -60,13 +55,16 @@ namespace Lwar.Client.Network
 				Debug = s => _logs.Enqueue(() => NetworkLog.DebugInfo("(Server) {0}", RemoveTrailingNewline(s)))
 			};
 
-			Log.Info("Initializing server...");
+			LwarCommands.StartServer.Invoked += Run;
+			LwarCommands.StopServer.Invoked += Shutdown;
+		}
 
-			NativeMethods.SetCallbacks(_logCallbacks);
-			_isInitialized = NativeMethods.Initialize();
-
-			if (!_isInitialized)
-				Log.Error("Failed to initialize the server.");
+		/// <summary>
+		///   Gets a value indicating whether the server is currently initialized.
+		/// </summary>
+		public bool IsInitialized
+		{
+			get { return _cancellation != null && _task != null; }
 		}
 
 		/// <summary>
@@ -74,7 +72,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		public bool IsRunning
 		{
-			get { return !_cancellation.IsCancellationRequested && _isInitialized; }
+			get { return IsInitialized && !_cancellation.IsCancellationRequested; }
 		}
 
 		/// <summary>
@@ -93,11 +91,21 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Runs the server update process on a separate thread.
 		/// </summary>
-		public void Run()
+		private void Run()
 		{
-			if (!_isInitialized)
-				return;
+			Shutdown();
+			Log.Info("Initializing server...");
 
+			NativeMethods.SetCallbacks(_logCallbacks);
+			var isInitialized = NativeMethods.Initialize();
+
+			if (!isInitialized)
+			{
+				Log.Error("Failed to initialize the server.");
+				return;
+			}
+
+			_cancellation = new CancellationTokenSource();
 			var token = _cancellation.Token;
 			_task = Task.Factory.StartNew(() =>
 				{
@@ -109,7 +117,7 @@ namespace Lwar.Client.Network
 						var updateStart = watch.ElapsedMilliseconds;
 						if (NativeMethods.Update((ulong)watch.ElapsedMilliseconds, true) < 0)
 						{
-							Log.Error("Server stopped after error.");
+							_logs.Enqueue(() => Log.Error("Server stopped after error."));
 							break;
 						}
 
@@ -135,6 +143,9 @@ namespace Lwar.Client.Network
 		/// </summary>
 		public void Update()
 		{
+			if (!IsRunning)
+				return;
+
 			HandleServerLogs();
 
 			if (!IsRunning && Faulted != null)
@@ -142,24 +153,34 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///   Shuts down the server.
 		/// </summary>
-		protected override void OnDisposing()
+		private void Shutdown()
 		{
-			if (!_isInitialized)
+			if (!IsInitialized)
 				return;
 
 			if (IsRunning)
 				_cancellation.Cancel();
-
+		
 			_task.Wait();
 			NativeMethods.Shutdown();
 			Log.Info("Server has shut down.");
 
 			_task.SafeDispose();
 			_cancellation.SafeDispose();
+			_task = null;
+			_cancellation = null;
 
 			HandleServerLogs();
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			Shutdown();
 		}
 
 		/// <summary>

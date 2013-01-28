@@ -198,5 +198,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
             return _glyphs[index];
         }
+
+	    /// <summary>
+	    ///   Disposes the object, releasing all managed and unmanaged resources.
+	    /// </summary>
+	    protected override void OnDisposing()
+	    {
+		    // Nothing to do here.
+	    }
     }
 }

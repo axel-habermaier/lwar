@@ -40,7 +40,7 @@ Network constants
 	Reliable Message Frequency:		~15 Hz
 	Disconnect Timeout:				 15 seconds		Client and server consider a connection to be dropped 
 													if no data has been received for the given timeout
-	Connection Timeout:				  5 seconds		Client stops connection attempt after the given timeout
+	Connection Timeout:				  2 seconds		Client stops connection attempt after the given timeout
 	Connection Retry Delay:			100	ms			Client retries to connect to the server with the given delay
 													for as long as the connection attempt has not timed out
 

@@ -54,6 +54,10 @@ PG_NORETURN pgVoid pgDie(pgString message, ...)
 	va_start(vl, message);
 	libraryState.logCallbacks.die(pgFormat(message, vl));
 	va_end(vl);
+
+#ifndef _MSC_VER
+    for(;;);
+#endif
 }
 
 pgVoid pgError(pgString message, ...)

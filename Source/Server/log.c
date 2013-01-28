@@ -30,7 +30,10 @@ void log_die(const char* message, ...)
 	va_start(vl, message);
 	logCallbacks.die(format(message, vl));
 	va_end(vl);
+
+#ifndef _MSC_VER
     for(;;);
+#endif
 }
 
 void log_error(const char* message, ...)
