@@ -25,17 +25,24 @@ Message Delivery Guarantees
 	that are received after newer ones have arrived.
 
 Network constants
-	Max Packet Size: 				512 byte (including the packet header)
-	Packet Header Size:			 	 14 byte
-	Reliable Message Header Size:	  5 byte
-	Unreliable Message Header Size:	  1 byte
-	Fixed Player Name Length: 	 	 32 byte (including the trailing '\0')
-	Max Chat Message Length: 		128 byte (including the trailing '\0')
+	Constant						Value 			Comment
+	-------------------------------	----------		---------------------------------------------------------
+	Max Packet Size: 				512 byte 		Including the packet header
+	Packet Header Size:			 	 14 byte	
+	Reliable Message Header Size:	  5 byte	
+	Unreliable Message Header Size:	  1 byte	
+	Fixed Player Name Length: 	 	 32 byte 		Including the trailing '\0'
+	Max Chat Message Length: 		128 byte 		Including the trailing '\0'
 	Max Player Count:				  8 players
-	Stats Message Frequency:		 ~2 Hz
-	Input Message Frequency:		~20	Hz
+	Stats Message Frequency:		 ~2 Hz			Clients do not have to be up-to-date all the time
+	Input Message Frequency:		~30	Hz			Should be relatively high to reduce latency
 	Update Message Frequency:		~15 Hz
 	Reliable Message Frequency:		~15 Hz
+	Disconnect Timeout:				 15 seconds		Client and server consider a connection to be dropped 
+													if no data has been received for the given timeout
+	Connection Timeout:				  5 seconds		Client stops connection attempt after the given timeout
+	Connection Retry Delay:			100	ms			Client retries to connect to the server with the given delay
+													for as long as the connection attempt has not timed out
 
 Packet Header
 	The following data is included at the beginning of every UDP packet sent by the server or the client.
@@ -62,9 +69,25 @@ Message Types
 	109		Name		yes			client/server	Broadcasts a player name change to all peers
 	201		Stats		no			server			Periodically updates the client's stats (pings, scores)
 	202		Update		no			server			Periodically updates the client's entity states
-	203		Input		no			client			Peridoically updates the server's client-specific input state
+	203		Input		no			client			Periodically updates the server's client-specific input state
 	
-Messages
+Message Header
+	Reliable messages have the following header:
+	
+	Type		Name 		Description
+	---------	----------	------------------------------------------------------------------------
+	uint32		seqno		The sequence number of the reliable message. Starts with 0 and increases
+							by 1 with every reliable message sent to that particular remote peer.
+	uint8		type		One of the reliable message type ids
+							
+	
+	Unreliable messages have the following header:
+	
+	Type		Name 		Description
+	---------	----------	------------------------------------------------------------------------
+	uint8		type		One of the unreliable message type ids
+	
+Messages Payload Data
 	Connect, Disconnect
 		Do not carry any payload data
 		
@@ -130,33 +153,18 @@ Messages
 	Input
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------	
+		uint32(Id)	playerId	The generational identifier of the player that generated the message 
+								(required by current server implementation?)
 		uint8		forward		Boolean value
 		uint8		backward	Boolean value
 		uint8		left		Boolean value
 		uint8		right		Boolean value
 		uint8		shooting	Boolean value
 	
-Message Header
-	Reliable messages have the following header:
-	
-	Type		Name 		Description
-	---------	----------	------------------------------------------------------------------------
-	uint32		seqno		The sequence number of the reliable message. Starts with 0 and increases
-							by 1 with every reliable message sent to that particular remote peer.
-	uint8		type		One of the reliable message type ids
-							
-	
-	Unreliable messages have the following header:
-	
-	Type		Name 		Description
-	---------	----------	------------------------------------------------------------------------
-	uint8		type		One of the unreliable message type ids
-	
 Connecting to the server
-	
+		
 
 Revision History
-
     Rev.    Date    Author    Changes
     ----  --------  --------  ----------------------------------------------------------------------
      1    13-01-28  Axel      Initial version
