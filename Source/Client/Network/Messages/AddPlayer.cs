@@ -22,9 +22,9 @@ namespace Lwar.Client.Network.Messages
 		}
 
 		/// <summary>
-		///   Gets the sequence number of the message.
+		///   Gets or sets the sequence number of the message.
 		/// </summary>
-		public uint SequenceNumber { get; private set; }
+		public uint SequenceNumber { get; set; }
 
 		/// <summary>
 		///   Creates a new instance.

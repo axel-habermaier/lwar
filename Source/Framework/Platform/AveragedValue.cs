@@ -50,11 +50,16 @@ namespace Pegasus.Framework.Platform
 		private double _min;
 
 		/// <summary>
+		///   Determines the current time.
+		/// </summary>
+		private Time _time;
+
+		/// <summary>
 		///   Invoked when the measurement should begin.
 		/// </summary>
 		public void Begin()
 		{
-			_beginTime = NativeLibrary.Time;
+			_beginTime = _time.Milliseconds;
 		}
 
 		/// <summary>
@@ -62,7 +67,7 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public void End()
 		{
-			AddMeasurement(1000.0 * (NativeLibrary.Time - _beginTime));
+			AddMeasurement(_time.Milliseconds - _beginTime);
 		}
 
 		/// <summary>

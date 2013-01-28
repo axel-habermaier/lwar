@@ -16,9 +16,9 @@ namespace Lwar.Client.Network
 		private uint _lastAckedSequenceNumber;
 
 		/// <summary>
-		///   The sequence number of the last reliable message that has been received and processed.
+		///   Gets the sequence number of the last reliable message that has been received and processed.
 		/// </summary>
-		private uint _lastReceivedSequenceNumber;
+		public uint LastReceivedSequenceNumber { get; private set; }
 
 		/// <summary>
 		///   The maximum of the timestamps of all received unreliable messages.
@@ -31,6 +31,15 @@ namespace Lwar.Client.Network
 		private uint _lastSentSequenceNumber;
 
 		/// <summary>
+		///   Checks whether the reception of the given message has been acknowledged by the remote peer.
+		/// </summary>
+		/// <param name="message">The message that should be checked.</param>
+		public bool IsAcknowledged(IReliableMessage message)
+		{
+			return message.SequenceNumber <= _lastAckedSequenceNumber;
+		}
+
+		/// <summary>
 		///   Checks whether the reliable message is the immediate successor to the last processed reliable message. If true,
 		///   the last processed sequence number is incremented by one.
 		/// </summary>
@@ -39,9 +48,9 @@ namespace Lwar.Client.Network
 		{
 			Assert.ArgumentNotNull(message, () => message);
 
-			if (message.SequenceNumber == _lastReceivedSequenceNumber + 1)
+			if (message.SequenceNumber == LastReceivedSequenceNumber + 1)
 			{
-				++_lastReceivedSequenceNumber;
+				++LastReceivedSequenceNumber;
 				return true;
 			}
 
@@ -67,11 +76,11 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Updates the last acknowledged sequence number.
 		/// </summary>
-		/// <param name="acknowledgedSequenceNumber">The sequence number that has been acknowledged.</param>
-		public void UpdateLastAckedSequenceNumber(uint acknowledgedSequenceNumber)
+		/// <param name="ackedSequenceNumber">The sequence number that has been acknowledged.</param>
+		public void UpdateLastAckedSequenceNumber(uint ackedSequenceNumber)
 		{
-			if (acknowledgedSequenceNumber > _lastAckedSequenceNumber)
-				_lastAckedSequenceNumber = acknowledgedSequenceNumber;
+			if (ackedSequenceNumber > _lastAckedSequenceNumber)
+				_lastAckedSequenceNumber = ackedSequenceNumber;
 		}
 	}
 }

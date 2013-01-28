@@ -11,9 +11,9 @@ namespace Pegasus.Framework.Platform
 	internal class NativeLibrary : DisposableObject
 	{
 #if Linux
-		/// <summary>
-		///   The name of the native Pegasus.Platform library.
-		/// </summary>
+	/// <summary>
+	///   The name of the native Pegasus.Platform library.
+	/// </summary>
 		internal const string LibraryName = "libPlatform.so";
 #else
 		/// <summary>
@@ -61,14 +61,6 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Gets the current time in seconds.
-		/// </summary>
-		public static double Time
-		{
-			get { return NativeMethods.GetTime(); }
-		}
-
-		/// <summary>
 		///   Escape curly braces that might be contained in a string in order to be able to pass it to the log functions.
 		/// </summary>
 		/// <param name="s">The string that should be escaped.</param>
@@ -105,9 +97,6 @@ namespace Pegasus.Framework.Platform
 
 			[DllImport(LibraryName, EntryPoint = "pgGetGraphicsApi")]
 			public static extern GraphicsApi GetGraphicsApi();
-
-			[DllImport(LibraryName, EntryPoint = "pgGetTime")]
-			public static extern double GetTime();
 
 			[StructLayout(LayoutKind.Sequential)]
 			public struct LogCallbacks

@@ -81,12 +81,12 @@
     <Compile Include="LwarCommands.cs" />
     <Compile Include="Network\DeliveryManager.cs" />
     <Compile Include="Network\Messages\AddPlayer.cs" />
+    <Compile Include="Network\Messages\MessageQueue.cs" />
     <Compile Include="Network\Messages\MessageTypeExtensions.cs" />
     <Compile Include="Network\Messages\RemovePlayer.cs" />
     <Compile Include="Network\Header.cs" />
     <Compile Include="Network\Messages\IReliableMessage.cs" />
     <Compile Include="Network\Messages\IUnreliableMessage.cs" />
-    <Compile Include="Network\Messages\MessageDeserializer.cs" />
     <Compile Include="Network\Messages\MessageType.cs" />
     <Compile Include="Network\Messages\IMessage.cs" />
     <Compile Include="Network\Server.cs" />

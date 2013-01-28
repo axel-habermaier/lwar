@@ -2,6 +2,7 @@
 
 namespace Lwar.Client.Network
 {
+	using System.Collections.Generic;
 	using System.Net;
 	using System.Threading.Tasks;
 	using Messages;
@@ -45,9 +46,21 @@ namespace Lwar.Client.Network
 		private readonly DeliveryManager _deliveryManager = new DeliveryManager();
 
 		/// <summary>
+		///   The message queue that queues outgoing messages and sends them to the server, ensuring that reliable messages are
+		///   resent for
+		///   as long as their reception has not been acknowledged.
+		/// </summary>
+		private readonly MessageQueue _messageQueue;
+
+		/// <summary>
 		///   The process that handles incoming packets from the server.
 		/// </summary>
 		private readonly IProcess _receiveProcess;
+
+		/// <summary>
+		///   The process that sends queued messages to the server.
+		/// </summary>
+		private readonly IProcess _sendProcess;
 
 		/// <summary>
 		///   The endpoint of the server.
@@ -74,8 +87,10 @@ namespace Lwar.Client.Network
 			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
 			Assert.ArgumentNotNull(scheduler, () => scheduler);
 
+			_messageQueue = new MessageQueue(_socket, _deliveryManager, serverEndPoint);
 			_serverEndPoint = serverEndPoint;
 			_receiveProcess = scheduler.CreateProcess(Receive);
+			_sendProcess = scheduler.CreateProcess(Send);
 		}
 
 		/// <summary>
@@ -130,13 +145,33 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		///   Sends the queued messages to the server.
+		/// </summary>
+		/// <param name="context">The context in which the queued messages should be sent.</param>
+		private async Task Send(ProcessContext context)
+		{
+			while (!context.IsCanceled)
+			{
+				try
+				{
+					await _messageQueue.Send(context);
+				}
+				catch (SocketOperationException e)
+				{
+					// Ignore the error as Udp is connectionless anyway, so there's nothing we can do.
+					// We can just hope for the best that the next send will work again, and if not,
+					// the connection will eventually time out and the game session will end.
+					NetworkLog.ClientDebug("Error while sending: {0}.", e.Message);
+				}
+			}
+		}
+
+		/// <summary>
 		///   Handles incoming packets from the server.
 		/// </summary>
 		/// <param name="context">The context in which the incoming packets should be handled.</param>
 		private async Task Receive(ProcessContext context)
 		{
-			Assert.That(_state == State.Disconnected, "Must be called before trying to establish a connection to the server.");
-
 			var sender = new IPEndPoint(IPAddress.Any, 0);
 			while (!context.IsCanceled)
 			{
@@ -157,19 +192,95 @@ namespace Lwar.Client.Network
 
 						if (!sender.Equals(_serverEndPoint))
 						{
-							NetworkLog.ClientDebug("Received a packet from {0}, but expecting packets from server {1} only. Packet was ignored.",
-												   sender, _serverEndPoint);
+							NetworkLog.ClientWarn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
+												  sender, _serverEndPoint);
 							continue;
 						}
 
-						foreach (var message in MessageDeserializer.Deserialize(packet, _deliveryManager))
+						foreach (var message in DeserializeMessages(packet))
+						{
+							Assert.That(MessageReceived != null, "No one is listening for received messages.");
+
 							MessageReceived(message);
+							message.Dispose();
+						}
 					}
 				}
 				catch (SocketOperationException e)
 				{
-					NetworkLog.ClientDebug(e.Message);
-					// Ignore the error as Udp is connectionless anyway
+					// Ignore the error as Udp is connectionless anyway, so there's nothing we can do.
+					// We can just hope for the best that the next receive will work again, and if not,
+					// the connection will eventually time out and the game session will end.
+					NetworkLog.ClientDebug("Error while receiving: {0}.", e.Message);
+				}
+			}
+		}
+
+		/// <summary>
+		///   Deserializes all messages from the incoming packet.
+		/// </summary>
+		/// <param name="packet">The packet from which the messages should be deserialized.</param>
+		private IEnumerable<IMessage> DeserializeMessages(IncomingPacket packet)
+		{
+			Assert.ArgumentNotNull(packet, () => packet);
+
+			using (packet)
+			{
+				var buffer = packet.Reader;
+				var header = Header.Create(buffer);
+
+				if (header == null)
+					yield break;
+
+				var ignoreUnreliableMessages = _deliveryManager.AllowDelivery(header.Value.Timestamp);
+				_deliveryManager.UpdateLastAckedSequenceNumber(header.Value.Acknowledgement);
+
+				IReliableMessage reliableMessage = null;
+				IUnreliableMessage unreliableMessage = null;
+
+				while (!buffer.EndOfBuffer)
+				{
+					var type = (MessageType)buffer.ReadByte();
+					switch (type)
+					{
+						case MessageType.AddPlayer:
+							reliableMessage = AddPlayer.Create(buffer);
+							break;
+						case MessageType.RemovePlayer:
+							reliableMessage = RemovePlayer.Create(buffer);
+							break;
+						case MessageType.ChatMessage:
+							break;
+						case MessageType.AddEntity:
+							break;
+						case MessageType.RemoveEntity:
+							break;
+						case MessageType.ChangePlayerState:
+							break;
+						case MessageType.ChangePlayerName:
+							break;
+						case MessageType.Synced:
+							break;
+						case MessageType.ServerFull:
+							break;
+						case MessageType.UpdatePlayerStats:
+							break;
+						case MessageType.UpdateEntity:
+							break;
+						case MessageType.Connect:
+						case MessageType.Disconnect:
+						case MessageType.UpdateClientInput:
+							NetworkLog.ClientWarn("Received unexpected message of type {0}. The rest of the packet is ignored.", type);
+							yield break;
+						default:
+							NetworkLog.ClientWarn("Received a message of unknown type. The rest of the packet is ignored.");
+							yield break;
+					}
+
+					if (type.IsReliable() && _deliveryManager.AllowDelivery(reliableMessage))
+						yield return reliableMessage;
+					else if (type.IsUnreliable() && !ignoreUnreliableMessages)
+						yield return unreliableMessage;
 				}
 			}
 		}
@@ -179,6 +290,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_sendProcess.SafeDispose();
 			_receiveProcess.SafeDispose();
 			_socket.SafeDispose();
 		}

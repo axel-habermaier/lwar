@@ -8,8 +8,8 @@ namespace Lwar.Client.Network.Messages
 	public interface IReliableMessage : IMessage
 	{
 		/// <summary>
-		///   Gets the sequence number of the message.
+		///   Gets or sets the sequence number of the message.
 		/// </summary>
-		uint SequenceNumber { get; }
+		uint SequenceNumber { get; set; }
 	}
 }

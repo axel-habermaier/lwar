@@ -8,8 +8,8 @@ namespace Lwar.Client.Network.Messages
 	public interface IUnreliableMessage : IMessage
 	{
 		/// <summary>
-		///   Gets the timestamp of the message.
+		///   Gets or sets the timestamp of the message.
 		/// </summary>
-		uint Timestamp { get; }
+		uint Timestamp { get; set; }
 	}
 }
