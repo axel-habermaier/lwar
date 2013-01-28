@@ -1,0 +1,162 @@
+lwar Network Protocol Specification
+===================================
+
+Message Delivery Guarantees
+	Messages sent between the client and server are either ordered-reliable or unreliable. Both types 
+	of messages are sent via UDP, therefore lwar's network protocol has to guarantee the in-order 
+	delivery of ordered-reliable messages.
+
+	The client and the server exchange fixed-size packets that give reliable messages a higher 
+	priority. A packet is filled with all queued reliable messages, appending unreliable messages
+	only if the maximum packet size is not exceeded. If there are any reliable messages that do not
+	fit into the packet, these messages will be sent with the next packet they fit in.
+
+	Reliable messages have a sequence number associated with them, starting at 0 and increasing by one
+	with every reliable message that is sent to a specific remote peer. The reliable messages have
+	to be resent for as long as the remote peer has not acknowledged the reception of the message by
+	sending an ack that is equal to or greater than the message's sequence number. With every packet
+	the remote peer sends, it acknowledges the maximum sequence number of all reliable message it has
+	processed. The remote peer discards all reliable messages that have already been processed, and it
+	only processes a reliable message that is the direct successor of the last processed reliable
+	message (i.e., its sequence number is that of the last message + 1).
+	
+	Unreliable messages, on the other hand, are neither acknowledged nor do the peers care if a message
+	is lost. Unreliable messages are timestamped, allowing the peers to filter out older unreliable messages
+	that are received after newer ones have arrived.
+
+Network constants
+	Max Packet Size: 				512 byte (including the packet header)
+	Packet Header Size:			 	 14 byte
+	Reliable Message Header Size:	  5 byte
+	Unreliable Message Header Size:	  1 byte
+	Fixed Player Name Length: 	 	 32 byte (including the trailing '\0')
+	Max Chat Message Length: 		128 byte (including the trailing '\0')
+	Max Player Count:				  8 players
+	Stats Message Frequency:		 ~2 Hz
+	Input Message Frequency:		~20	Hz
+	Update Message Frequency:		~15 Hz
+	Reliable Message Frequency:		~15 Hz
+
+Packet Header
+	The following data is included at the beginning of every UDP packet sent by the server or the client.
+	
+	Type		Name 		Description
+	---------	----------	------------------------------------------------------------------------
+	uint32		appId		Must always be 0xf27087c5 
+	uint32		ack			Sequence number of the last reliable packet that has been received
+	uint32		timestamp	Timestamp of the unreliable messages contained in the packet
+	uint8		rel			The number of reliable messages contained in the packet
+	uint8		unrel		The number of unreliable messages contained in the packet
+	
+Message Types
+	Id		Type		Reliable	Sender			Description	
+	---  	---------	---------	-------------	----------------------------------------------------------------
+	101 	Connect		yes			client			Client wants to connect to a server
+	102		Disconnect	yes			client			Client wants to disconnect from a server
+	103		Join		yes			server			Informs all peers about a new player
+	104 	Leave		yes			server			Informs all peers that a client left
+	105		Chat		yes			client/server	Broadcasts the chat message to all peers
+	106		Add			yes			server			Adds a new entity to the world
+	107		Remove		yes			server			Removes an entity from the world
+	108		Selection	yes			client/server	Broadcasts a ship or weapon type change to all peers
+	109		Name		yes			client/server	Broadcasts a player name change to all peers
+	201		Stats		no			server			Periodically updates the client's stats (pings, scores)
+	202		Update		no			server			Periodically updates the client's entity states
+	203		Input		no			client			Peridoically updates the server's client-specific input state
+	
+Messages
+	Connect, Disconnect
+		Do not carry any payload data
+		
+	Join, Leave
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint32(Id)	playerId	The generational identifier of the player
+		
+	Chat
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint32(Id)	playerId	The generational identifier of the player that generated the chat message
+		uint8[]		message		The variable-sized, ASCII-encoded chat message, terminated by a '\0', with
+								a length that does not exceed the maximum allowed chat message length
+	
+	Add
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint32(Id)	entityId	The generational identifier of the entity that is added
+		uint32(Id)	playerId	The generational identifier of the player the entity belongs to
+		uint8		typeId		The identifier of the entity template
+		
+	Remove
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint32(Id)	entityId	The generational identifier of the entity that is removed
+		
+	Selection
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint32(Id)	playerId	The generational identifier of the player that selected a new ship or weapon type
+		uint8		shipType	The identifier of the new ship type template
+		uint8		weaponType	The identifier of the new weapon type template
+		
+	Name
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint32(Id)	playerId	The generational identifier of the player that change his/her name
+		uint8[n]	name		The fixed-sized, ASCII-encoded player name, terminated by a '\0', where
+								n = Fixed Player Name Length
+								
+	Stats
+		Consists of an array of values for each player, so n = Max Player Count. 
+	
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint16[n]	scores		The player scores
+		uint16[n]	pings		The player pings
+		
+	Update
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint8		num			The number of updated entities
+		[for i < num, ++i]
+		uint32(Id)	entityId	The generational identifier of the entity that is updated
+		int16		x			The new x position
+		int16		y			The new y position
+		int16		vx			The new x velocity
+		int16		vy			The new y velocity
+		uint16		rot			The new rotation
+		uint8		health		The new health
+		
+	Input
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------	
+		uint8		forward		Boolean value
+		uint8		backward	Boolean value
+		uint8		left		Boolean value
+		uint8		right		Boolean value
+		uint8		shooting	Boolean value
+	
+Message Header
+	Reliable messages have the following header:
+	
+	Type		Name 		Description
+	---------	----------	------------------------------------------------------------------------
+	uint32		seqno		The sequence number of the reliable message. Starts with 0 and increases
+							by 1 with every reliable message sent to that particular remote peer.
+	uint8		type		One of the reliable message type ids
+							
+	
+	Unreliable messages have the following header:
+	
+	Type		Name 		Description
+	---------	----------	------------------------------------------------------------------------
+	uint8		type		One of the unreliable message type ids
+	
+Connecting to the server
+	
+
+Revision History
+
+    Rev.    Date    Author    Changes
+    ----  --------  --------  ----------------------------------------------------------------------
+     1    13-01-28  Axel      Initial version
