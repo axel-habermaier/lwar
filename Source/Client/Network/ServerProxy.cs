@@ -28,7 +28,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   The maximum number of connection attempts before giving up.
 		/// </summary>
-		private const int MaxConnectionAttempts = 20;
+		private const int MaxConnectionAttempts = 10;
 
 		/// <summary>
 		///   The delay between two connection attempts in milliseconds.
@@ -61,12 +61,22 @@ namespace Lwar.Client.Network
 		private State _state = State.Disconnected;
 
 		/// <summary>
+		/// The process that handles incoming packets from the server.
+		/// </summary>
+		private IProcess _receiveProcess;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The endpoint of the server.</param>
-		public ServerProxy(IPEndPoint serverEndPoint)
+		/// <param name="scheduler">The scheduler that should be used to schedule the proxy's internal processes.</param>
+		public ServerProxy(IPEndPoint serverEndPoint, ProcessScheduler scheduler)
 		{
+			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
+			Assert.ArgumentNotNull(scheduler, () => scheduler);
+
 			_serverEndPoint = serverEndPoint;
+			_receiveProcess = scheduler.CreateProcess(Receive);
 		}
 
 		/// <summary>
@@ -121,10 +131,10 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		///   Handles incoming messages from the server.
+		///   Handles incoming packets from the server.
 		/// </summary>
-		/// <param name="context">The context in which the incoming messages should be handled.</param>
-		public async Task HandleServerMessages(ProcessContext context)
+		/// <param name="context">The context in which the incoming packets should be handled.</param>
+		private async Task Receive(ProcessContext context)
 		{
 			Assert.That(_state == State.Disconnected, "Must be called before trying to establish a connection to the server.");
 
@@ -167,6 +177,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_receiveProcess.SafeDispose();
 			_socket.SafeDispose();
 		}
 

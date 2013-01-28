@@ -4,6 +4,7 @@ namespace Lwar.Client.Gameplay
 {
 	using System.Collections.Generic;
 	using System.Net;
+	using System.Threading.Tasks;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
@@ -42,11 +43,6 @@ namespace Lwar.Client.Gameplay
 		private readonly StateMachine _updateState;
 
 		/// <summary>
-		///   The process that handles incoming server messages.
-		/// </summary>
-		private IProcess _handleServerMessagesProcess;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public GameSession(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
@@ -66,9 +62,9 @@ namespace Lwar.Client.Gameplay
 			Window.Resized += UpdateProjectionMatrix;
 			UpdateProjectionMatrix(Window.Size);
 
-			LwarCommands.Connect.Invoked += LoadGame;
-			LwarCommands.Disconnect.Invoked += Inactive;
-			Inactive();
+			LwarCommands.Connect.Invoked += serverEndPoint => _updateState.ChangeState(ctx => Loading(ctx, serverEndPoint));
+			LwarCommands.Disconnect.Invoked += () => _updateState.ChangeState(Inactive);
+			_updateState.ChangeState(Inactive);
 		}
 
 		/// <summary>
@@ -120,7 +116,6 @@ namespace Lwar.Client.Gameplay
 			SpriteBatch.SafeDispose();
 			_drawState.SafeDispose();
 			_updateState.SafeDispose();
-			_handleServerMessagesProcess.SafeDispose();
 			ServerProxy.SafeDispose();
 			Scheduler.SafeDispose();
 			_drawScheduler.SafeDispose();
@@ -161,89 +156,99 @@ namespace Lwar.Client.Gameplay
 		private void Cleanup()
 		{
 			Entities.SafeDispose();
-			_handleServerMessagesProcess.SafeDispose();
 			ServerProxy.SafeDispose();
 
 			Entities = null;
-			_handleServerMessagesProcess = null;
 			ServerProxy = null;
 		}
 
 		/// <summary>
-		///   Sets the game session into its inactive state.
+		///   Active when the game session is inactive.
 		/// </summary>
-		private void Inactive()
+		/// <param name="context">The context in which the state function should be executed.</param>
+		private async Task Inactive(ProcessContext context)
 		{
 			Cleanup();
-
-			// TODO: Implement menu, server selection, etc.
-			_updateState.ChangeStateDelayed(async ctx => await ctx.NextFrame());
 			_drawState.ChangeStateDelayed(async ctx => await ctx.NextFrame());
+			await context.NextFrame();
 		}
 
 		/// <summary>
 		///   Active when a connection to a server is established and the game is loaded.
 		/// </summary>
+		/// <param name="context">The context in which the state function should be executed.</param>
 		/// <param name="serverEndPoint">The end point of the server that hosts the game session.</param>
-		private void LoadGame(IPEndPoint serverEndPoint)
+		private async Task Loading(ProcessContext context, IPEndPoint serverEndPoint)
 		{
 			Commands.ShowConsole.Invoke(false);
 			Cleanup();
 
 			Entities = new EntityList(this);
-			ServerProxy = new ServerProxy(serverEndPoint);
-			_handleServerMessagesProcess = Scheduler.CreateProcess(ServerProxy.HandleServerMessages);
+			ServerProxy = new ServerProxy(serverEndPoint, Scheduler);
 
-			var label = new Label(LoadingFont) { Alignment = TextAlignment.Centered | TextAlignment.Middle };
+			var label = new Label(LoadingFont)
+			{
+				Alignment = TextAlignment.Centered | TextAlignment.Middle,
+				Text = String.Format("Connecting to {0}...", serverEndPoint)
+			};
 
-			_updateState.ChangeStateDelayed(async ctx =>
-				{
-					label.Text = String.Format("Connecting to {0}...", serverEndPoint);
-					await ServerProxy.Connect(ctx);
+			_drawState.ChangeState(ctx => LoadingDraw(ctx, label));
+			await ServerProxy.Connect(context);
 
-					if (!ServerProxy.IsConnected)
-					{
-						Commands.ShowConsole.Invoke(true);
-						Inactive();
-						return;
-					}
+			if (!ServerProxy.IsConnected)
+			{
+				Commands.ShowConsole.Invoke(true);
+				_updateState.ChangeStateDelayed(Inactive);
+				return;
+			}
 
-					Play();
-				});
+			label.Text = "Awaiting game state...";
+			await context.Delay(1000);
 
-			_drawState.ChangeStateDelayed(async ctx =>
-				{
-					while (!ctx.IsCanceled)
-					{
-						label.Area = new Rectangle(Vector2i.Zero, Window.Size);
-						label.Draw(SpriteBatch);
-						await ctx.NextFrame();
-					}
-				});
+			_updateState.ChangeStateDelayed(Playing);
 		}
 
 		/// <summary>
-		///   Active when a game session is running.
+		///   Draws the loading screen.
 		/// </summary>
-		private void Play()
+		/// <param name="context">The context in which the state function should be executed.</param>
+		/// <param name="label">The label describing the current loading state.</param>
+		private async Task LoadingDraw(ProcessContext context, Label label)
 		{
-			_updateState.ChangeStateDelayed(async ctx =>
-				{
-					while (!ctx.IsCanceled)
-					{
-						Entities.Update();
-						await ctx.NextFrame();
-					}
-				});
+			while (!context.IsCanceled)
+			{
+				label.Area = new Rectangle(Vector2i.Zero, Window.Size);
+				label.Draw(SpriteBatch);
+				await context.NextFrame();
+			}
+		}
 
-			_drawState.ChangeStateDelayed(async ctx =>
-				{
-					while (!ctx.IsCanceled)
-					{
-						Entities.Draw();
-						await ctx.NextFrame();
-					}
-				});
+		/// <summary>
+		///   Active when the game session is running.
+		/// </summary>
+		/// <param name="context">The context in which the state function should be executed.</param>
+		private async Task Playing(ProcessContext context)
+		{
+			_drawState.ChangeState(PlayingDraw);
+
+			while (!context.IsCanceled)
+			{
+				Entities.Update();
+				await context.NextFrame();
+			}
+		}
+
+		/// <summary>
+		///   Draws the game session.
+		/// </summary>
+		/// <param name="context">The context in which the state function should be executed.</param>
+		private async Task PlayingDraw(ProcessContext context)
+		{
+			while (!context.IsCanceled)
+			{
+				Entities.Draw();
+				await context.NextFrame();
+			}
 		}
 	}
 }
