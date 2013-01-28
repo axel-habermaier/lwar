@@ -49,7 +49,8 @@ namespace Lwar.Client
 		private IProcess _connectProcess, _handleServerMessagesProcess;
 
 		private ServerProxy _proxy;
-		private IProcess _serverProcess;
+
+		private Server _server;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -58,17 +59,18 @@ namespace Lwar.Client
 		{
 			StartServer.Invoked += () =>
 				{
-					_serverProcess.SafeDispose();
-					_serverProcess = _scheduler.CreateProcess(new Server().Run);
+					_server.SafeDispose();
+					_server = new Server();
+					_server.Run();
 				};
 
 			StopServer.Invoked += () =>
 				{
-					if (_serverProcess == null)
+					if (_server == null)
 						Log.Warn("The server is currently not running.");
 
-					_serverProcess.SafeDispose();
-					_serverProcess = null;
+					_server.SafeDispose();
+					_server = null;
 				};
 
 			Connect.Invoked += serverEndPoint =>
@@ -102,6 +104,9 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void Update()
 		{
+			if (_server != null)
+				_server.Update();
+
 			_scheduler.RunProcesses();
 			_session.Update();
 		}
@@ -126,7 +131,7 @@ namespace Lwar.Client
 			_handleServerMessagesProcess.SafeDispose();
 			_connectProcess.SafeDispose();
 			_proxy.SafeDispose();
-			_serverProcess.SafeDispose();
+			_server.SafeDispose();
 			_session.SafeDispose();
 			_scheduler.SafeDispose();
 
