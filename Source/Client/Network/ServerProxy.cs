@@ -8,6 +8,7 @@ namespace Lwar.Client.Network
 	using Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Processes;
 
 	/// <summary>
@@ -31,6 +32,24 @@ namespace Lwar.Client.Network
 		public const ushort DefaultPort = 32422;
 
 		/// <summary>
+		///   The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
+		///   considered to be dropped.
+		/// </summary>
+		public const int DroppedTimeout = 15000;
+
+		/// <summary>
+		///   The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
+		///   considered to be lagging.
+		/// </summary>
+		public const int LaggingTimeout = 500;
+
+		/// <summary>
+		///   The connection state check frequency in Hz. The connection state check determines whether a connection is lagging or
+		///   dropped.
+		/// </summary>
+		public const int ConnectionStateCheckFrequency = 10;
+
+		/// <summary>
 		///   The delivery manager that is used to enforce the delivery guarantees of all incoming and outgoing messages.
 		/// </summary>
 		private readonly DeliveryManager _deliveryManager = new DeliveryManager();
@@ -40,6 +59,11 @@ namespace Lwar.Client.Network
 		///   resent for as long as their reception has not been acknowledged.
 		/// </summary>
 		private readonly MessageQueue _messageQueue;
+
+		/// <summary>
+		///   The process that observes the connection state.
+		/// </summary>
+		private readonly IProcess _observerProcess;
 
 		/// <summary>
 		///   The process that handles incoming packets from the server.
@@ -62,9 +86,19 @@ namespace Lwar.Client.Network
 		private readonly UdpSocket _socket = new UdpSocket();
 
 		/// <summary>
+		///   The time when the last packet has been received from the server.
+		/// </summary>
+		private double _lastPacketTimestamp;
+
+		/// <summary>
 		///   The current state of the virtual connection to the server.
 		/// </summary>
 		private State _state = State.Disconnected;
+
+		/// <summary>
+		///   Provides the time that is used to check whether a connection is lagging or dropped.
+		/// </summary>
+		private Time _time = new Time();
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -80,6 +114,7 @@ namespace Lwar.Client.Network
 			_serverEndPoint = serverEndPoint;
 			_receiveProcess = scheduler.CreateProcess(Receive);
 			_sendProcess = scheduler.CreateProcess(Send);
+			_observerProcess = scheduler.CreateProcess(ObserveConnectionState);
 		}
 
 		/// <summary>
@@ -91,7 +126,8 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the connection to the server has been established and the game state is currently being synced.
+		///   Gets a value indicating whether the connection to the server has been established and the game state is currently
+		///   being synced.
 		/// </summary>
 		public bool IsSyncing
 		{
@@ -199,6 +235,7 @@ namespace Lwar.Client.Network
 							continue;
 						}
 
+						_lastPacketTimestamp = _time.Milliseconds;
 						foreach (var message in DeserializeMessages(packet))
 						{
 							Assert.That(MessageReceived != null, "No one is listening for received messages.");
@@ -321,12 +358,36 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		///   Observes the connection state, setting the state to Lagging if no packet has been received for a short amount of time
+		///   and eventually to Dropped if no more packets are received. If another packet is received before the Dropped timeout
+		///   occurs, the connection state is reset to Connected.
+		/// </summary>
+		/// <param name="context">The context in which the connection state should be observed.</param>
+		private async Task ObserveConnectionState(ProcessContext context)
+		{
+			while (!context.IsCanceled)
+			{
+				var delta = _time.Milliseconds - _lastPacketTimestamp;
+
+				if (delta > DroppedTimeout)
+					_state = State.Dropped;
+				else if (delta > LaggingTimeout)
+					_state = State.Lagging;
+				else
+					_state = State.Connected;
+
+				await context.Delay(1000 / ConnectionStateCheckFrequency);
+			}
+		}
+
+		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
 			_sendProcess.SafeDispose();
 			_receiveProcess.SafeDispose();
+			_observerProcess.SafeDispose();
 			_messageQueue.SafeDispose();
 			_socket.SafeDispose();
 		}
@@ -364,7 +425,19 @@ namespace Lwar.Client.Network
 			/// <summary>
 			///   Indicates that a connection has been established and that the proxy is waiting for Synced message.
 			/// </summary>
-			Syncing
+			Syncing,
+
+			/// <summary>
+			///   Indicates that a connection is lagging, that is, no new packets have been received from the server for a short amount
+			///   of time.
+			/// </summary>
+			Lagging,
+
+			/// <summary>
+			///   Indicates that a connection has been dropped after no packets have been received from the server for a specific
+			///   amount of time.
+			/// </summary>
+			Dropped
 		}
 	}
 }
