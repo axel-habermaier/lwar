@@ -216,12 +216,19 @@ Disconnecting from the server
 	to the server. Upon reception of the message, the server stops sending any messages except for
 	a Leave message with the client's player id that also acknowledges the Disconnect message. 
 
+	The Leave message sent to a disconnecting client will not be acknowledged (similarily, a Full
+	message sent to a connecting client will not be acknowledged). The server just resends the message
+	until it stops receiving the Disconnect (or Connect) messages from the client. Either, the client
+	received the Leave (Full) message and disconnected successfully (aborted the connection attempt)
+	or the client did not receive the message and timed out. 
+
 	If the connection between the server and the client is lost due to an unexpected event (server or 
 	client crash, network cable unplugged, etc.) and cannot be reestablished within the duration of the
 	Disconnect timeout, the client's game session ends and/or the server removes the client, sending all 
 	of its remaining clients a Leave message for the disconnected client.
 
 Revision History
-    Rev.    Date    Author    Changes
-    ----  --------  --------  ----------------------------------------------------------------------
-     1    13-01-28  Axel      Initial version
+    Rev.    Date    Author		Changes
+    ----  --------  ----------	----------------------------------------------------------------------
+	 2	  13-01-29	Axel		Clarified how Leave and Full messages are handled
+     1    13-01-28  Axel		Initial version
