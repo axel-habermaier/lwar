@@ -10,6 +10,11 @@ namespace Lwar.Client.Network.Messages
 	public class AddPlayer : PooledObject<AddPlayer>, IReliableMessage
 	{
 		/// <summary>
+		///   The size of the message in bytes.
+		/// </summary>
+		private static readonly int Size = Marshal.SizeOf(typeof(Identifier)) + sizeof(uint);
+
+		/// <summary>
 		///   The identifier of the player that is added.
 		/// </summary>
 		private Identifier _playerId;
@@ -20,6 +25,16 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="session">The game session that should be updated.</param>
 		public void Process(GameSession session)
 		{
+		}
+
+		/// <summary>
+		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		/// </summary>
+		/// <param name="buffer">The buffer the message should be written to.</param>
+		public bool Serialize(BufferWriter buffer)
+		{
+			Assert.That(false, "The client cannot send this type of message.");
+			return true;
 		}
 
 		/// <summary>
@@ -35,7 +50,7 @@ namespace Lwar.Client.Network.Messages
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			if (!buffer.CanRead(Marshal.SizeOf(typeof(Identifier)) + sizeof(uint)))
+			if (!buffer.CanRead(Size))
 				return null;
 
 			var message = GetInstance();

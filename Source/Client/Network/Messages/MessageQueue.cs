@@ -27,16 +27,6 @@ namespace Lwar.Client.Network.Messages
 		private readonly Queue<IReliableMessage> _reliableMessages = new Queue<IReliableMessage>();
 
 		/// <summary>
-		///   The endpoint of the remote peer.
-		/// </summary>
-		private readonly IPEndPoint _remoteEndPoint;
-
-		/// <summary>
-		///   The socket that is used to send the messages to the remote peer.
-		/// </summary>
-		private readonly UdpSocket _socket;
-
-		/// <summary>
 		///   The queued unreliable messages that have not yet been sent.
 		/// </summary>
 		private readonly Queue<IUnreliableMessage> _unreliableMessages = new Queue<IUnreliableMessage>();
@@ -49,21 +39,14 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="socket">The socket that is used to send the messages to the remote peer.</param>
 		/// <param name="deliveryManager">The delivery manager that is used to enforce the message delivery constraints.</param>
-		/// <param name="remoteEndPoint">The endpoint of the remote peer.</param>
-		public MessageQueue(UdpSocket socket, DeliveryManager deliveryManager, IPEndPoint remoteEndPoint)
+		public MessageQueue(DeliveryManager deliveryManager)
 		{
-			Assert.ArgumentNotNull(socket, () => socket);
 			Assert.ArgumentNotNull(deliveryManager, () => deliveryManager);
-			Assert.ArgumentNotNull(remoteEndPoint, () => remoteEndPoint);
 
 			_time = new Time();
 			_time.Offset = _time.Seconds;
-
-			_socket = socket;
 			_deliveryManager = deliveryManager;
-			_remoteEndPoint = remoteEndPoint;
 		}
 
 		/// <summary>
@@ -72,6 +55,7 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="message">The reliable message that should be enqueued.</param>
 		public void Enqueue(IReliableMessage message)
 		{
+			_deliveryManager.AssignSequenceNumber(message);
 			_reliableMessages.Enqueue(message);
 		}
 
@@ -87,8 +71,7 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Sends all queued messages, resending all reliable messages that have previously been sent but not yet acknowledged.
 		/// </summary>
-		/// <param name="context">The context in wich the messages should be sent.</param>
-		public async Task Send(ProcessContext context)
+		public OutgoingPacket CreatePacket()
 		{
 			RemoveAckedMessages();
 
@@ -96,10 +79,9 @@ namespace Lwar.Client.Network.Messages
 			var header = new Header(_deliveryManager.LastReceivedSequenceNumber, (uint)_time.Milliseconds);
 			header.Write(packet.Writer);
 
-			AddReliableMessages(packet.Writer);
-			AddUnreliableMessages(packet.Writer);
-
-			await _socket.SendAsync(context, packet, _remoteEndPoint);
+			AddMessages(_reliableMessages, packet.Writer);
+			AddMessages(_unreliableMessages, packet.Writer);
+			return packet;
 		}
 
 		/// <summary>
@@ -117,20 +99,17 @@ namespace Lwar.Client.Network.Messages
 		}
 
 		/// <summary>
-		///   Adds all queued reliable messages to the buffer that fit into the remaining space.
+		///   Adds all queued messages to the buffer that fit into the remaining space.
 		/// </summary>
+		/// <param name="messages">The messages that should be written to the buffer.</param>
 		/// <param name="buffer">The buffer the messages should be written into.</param>
-		private void AddReliableMessages(BufferWriter buffer)
+		private static void AddMessages(IEnumerable<IMessage> messages, BufferWriter buffer)
 		{
-
-		}
-
-		/// <summary>
-		///   Adds all queued unreliable messages to the buffer that fit into the remaining space.
-		/// </summary>
-		/// <param name="buffer">The buffer the messages should be written into.</param>
-		private void AddUnreliableMessages(BufferWriter buffer)
-		{
+			foreach (var message in messages)
+			{
+				if (!message.Serialize(buffer))
+					break;
+			}
 		}
 	}
 }

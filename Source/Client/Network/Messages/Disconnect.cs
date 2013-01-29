@@ -2,22 +2,16 @@
 
 namespace Lwar.Client.Network.Messages
 {
-	using System.Runtime.InteropServices;
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class RemovePlayer : PooledObject<RemovePlayer>, IReliableMessage
+	public class Disconnect : PooledObject<Disconnect>, IReliableMessage
 	{
 		/// <summary>
 		///   The size of the message in bytes.
 		/// </summary>
-		private static readonly int Size = Marshal.SizeOf(typeof(Identifier)) + sizeof(uint);
-
-		/// <summary>
-		///   The identifier of the player that is added.
-		/// </summary>
-		private Identifier _playerId;
+		private static readonly int Size = sizeof(byte);
 
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -33,7 +27,12 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public bool Serialize(BufferWriter buffer)
 		{
-			Assert.That(false, "The client cannot send this type of message.");
+			Assert.ArgumentNotNull(buffer, () => buffer);
+
+			if (!buffer.CanWrite(Size))
+				return false;
+
+			buffer.WriteByte((byte)MessageType.Disconnect);
 			return true;
 		}
 
@@ -41,22 +40,5 @@ namespace Lwar.Client.Network.Messages
 		///   Gets or sets the sequence number of the message.
 		/// </summary>
 		public uint SequenceNumber { get; set; }
-
-		/// <summary>
-		///   Creates a new instance.
-		/// </summary>
-		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static RemovePlayer Create(BufferReader buffer)
-		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			if (!buffer.CanRead(Size))
-				return null;
-
-			var message = GetInstance();
-			message.SequenceNumber = buffer.ReadUInt32();
-			message._playerId = buffer.ReadIdentifier();
-			return message;
-		}
 	}
 }

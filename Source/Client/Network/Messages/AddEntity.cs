@@ -7,7 +7,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class RemovePlayer : PooledObject<RemovePlayer>, IReliableMessage
+	public class AddEntity : PooledObject<AddEntity>, IReliableMessage
 	{
 		/// <summary>
 		///   The size of the message in bytes.
@@ -46,7 +46,7 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static RemovePlayer Create(BufferReader buffer)
+		public static AddEntity Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
@@ -54,8 +54,7 @@ namespace Lwar.Client.Network.Messages
 				return null;
 
 			var message = GetInstance();
-			message.SequenceNumber = buffer.ReadUInt32();
-			message._playerId = buffer.ReadIdentifier();
+			
 			return message;
 		}
 	}

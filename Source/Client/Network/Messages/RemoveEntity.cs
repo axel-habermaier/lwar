@@ -2,22 +2,16 @@
 
 namespace Lwar.Client.Network.Messages
 {
-	using System.Runtime.InteropServices;
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class RemovePlayer : PooledObject<RemovePlayer>, IReliableMessage
+	public class RemoveEntity : PooledObject<RemoveEntity>, IReliableMessage
 	{
 		/// <summary>
 		///   The size of the message in bytes.
 		/// </summary>
-		private static readonly int Size = Marshal.SizeOf(typeof(Identifier)) + sizeof(uint);
-
-		/// <summary>
-		///   The identifier of the player that is added.
-		/// </summary>
-		private Identifier _playerId;
+		private static readonly int Size = 0;
 
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -46,7 +40,7 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static RemovePlayer Create(BufferReader buffer)
+		public static RemoveEntity Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
@@ -54,8 +48,7 @@ namespace Lwar.Client.Network.Messages
 				return null;
 
 			var message = GetInstance();
-			message.SequenceNumber = buffer.ReadUInt32();
-			message._playerId = buffer.ReadIdentifier();
+
 			return message;
 		}
 	}

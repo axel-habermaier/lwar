@@ -81,6 +81,11 @@
     <Compile Include="LwarCommands.cs" />
     <Compile Include="Network\DeliveryManager.cs" />
     <Compile Include="Network\Messages\AddPlayer.cs" />
+    <Compile Include="Network\Messages\AddEntity.cs" />
+    <Compile Include="Network\Messages\Connect.cs" />
+    <Compile Include="Network\Messages\Disconnect.cs" />
+    <Compile Include="Network\Messages\RemoveEntity.cs" />
+    <Compile Include="Network\Messages\UpdateClientInput.cs" />
     <Compile Include="Network\Messages\MessageQueue.cs" />
     <Compile Include="Network\Messages\MessageTypeExtensions.cs" />
     <Compile Include="Network\Messages\RemovePlayer.cs" />

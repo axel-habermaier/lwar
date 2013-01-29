@@ -11,7 +11,7 @@ namespace Lwar.Client.Network
 	public class DeliveryManager
 	{
 		/// <summary>
-		///   The sequence number of the last reliable message that has been sent and acknowledged.
+		///   The sequence number of the last reliable message that has been assigned and acknowledged.
 		/// </summary>
 		private uint _lastAckedSequenceNumber;
 
@@ -26,9 +26,9 @@ namespace Lwar.Client.Network
 		private uint _lastReceivedTimestamp;
 
 		/// <summary>
-		///   The sequence number of the last reliable message that has been sent.
+		///   The last sequence number that has been assigned to a reliable message.
 		/// </summary>
-		private uint _lastSentSequenceNumber;
+		private uint _lastAssignedSequenceNumber;
 
 		/// <summary>
 		///   Checks whether the reception of the given message has been acknowledged by the remote peer.
@@ -81,6 +81,15 @@ namespace Lwar.Client.Network
 		{
 			if (ackedSequenceNumber > _lastAckedSequenceNumber)
 				_lastAckedSequenceNumber = ackedSequenceNumber;
+		}
+
+		/// <summary>
+		/// Assigns a sequence number to the reliable message.
+		/// </summary>
+		/// <param name="message">The reliable message the sequence number should be assigned to.</param>
+		public void AssignSequenceNumber(IReliableMessage message)
+		{
+			message.SequenceNumber = _lastAssignedSequenceNumber++;
 		}
 	}
 }

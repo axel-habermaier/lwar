@@ -87,7 +87,7 @@ namespace Lwar.Client.Network
 			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
 			Assert.ArgumentNotNull(scheduler, () => scheduler);
 
-			_messageQueue = new MessageQueue(_socket, _deliveryManager, serverEndPoint);
+			_messageQueue = new MessageQueue(_deliveryManager);
 			_serverEndPoint = serverEndPoint;
 			_receiveProcess = scheduler.CreateProcess(Receive);
 			_sendProcess = scheduler.CreateProcess(Send);
@@ -154,7 +154,8 @@ namespace Lwar.Client.Network
 			{
 				try
 				{
-					await _messageQueue.Send(context);
+					var packet = _messageQueue.CreatePacket();
+					await _socket.SendAsync(context, packet, _serverEndPoint);
 				}
 				catch (SocketOperationException e)
 				{
@@ -285,8 +286,12 @@ namespace Lwar.Client.Network
 
 					if (type.IsReliable() && _deliveryManager.AllowDelivery(reliableMessage))
 						yield return reliableMessage;
-					else if (type.IsUnreliable() && !ignoreUnreliableMessages)
+					
+					if (type.IsUnreliable() && !ignoreUnreliableMessages)
+					{
+						unreliableMessage.Timestamp = header.Value.Timestamp;
 						yield return unreliableMessage;
+					}
 				}
 			}
 		}
