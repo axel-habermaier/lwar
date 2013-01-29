@@ -6,18 +6,8 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class RemoveEntity : PooledObject<RemoveEntity>, IReliableMessage
+	public class Synced : PooledObject<Synced>, IReliableMessage
 	{
-		/// <summary>
-		///   The size of the message in bytes.
-		/// </summary>
-		private const int Size = sizeof(uint) + Identifier.Size;
-
-		/// <summary>
-		///   The identifier of the entity that is removed.
-		/// </summary>
-		private Identifier _entityId;
-
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
@@ -45,16 +35,15 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static RemoveEntity Create(BufferReader buffer)
+		public static Synced Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			if (!buffer.CanRead(Size))
+			if (!buffer.CanRead(sizeof(uint)))
 				return null;
 
 			var message = GetInstance();
 			message.SequenceNumber = buffer.ReadUInt32();
-			message._entityId = buffer.ReadIdentifier();
 			return message;
 		}
 	}

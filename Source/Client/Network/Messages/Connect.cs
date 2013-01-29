@@ -11,7 +11,7 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   The size of the message in bytes.
 		/// </summary>
-		private static readonly int Size = sizeof(byte);
+		private const int Size = sizeof(byte) + sizeof(uint);
 
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -19,6 +19,7 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="session">The game session that should be updated.</param>
 		public void Process(GameSession session)
 		{
+			Assert.That(false, "The client cannot process this type of message.");
 		}
 
 		/// <summary>
@@ -33,6 +34,7 @@ namespace Lwar.Client.Network.Messages
 				return false;
 
 			buffer.WriteByte((byte)MessageType.Connect);
+			buffer.WriteUInt32(SequenceNumber);
 			return true;
 		}
 
@@ -40,5 +42,13 @@ namespace Lwar.Client.Network.Messages
 		///   Gets or sets the sequence number of the message.
 		/// </summary>
 		public uint SequenceNumber { get; set; }
+
+		/// <summary>
+		///   Creates a new instance.
+		/// </summary>
+		public Connect Create()
+		{
+			return GetInstance();
+		}
 	}
 }

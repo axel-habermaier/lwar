@@ -286,7 +286,7 @@ namespace Pegasus.Framework.Platform
 		public void WriteString(string value)
 		{
 			Assert.ArgumentNotNull(value, () => value);
-			WriteByteArray(Encoding.ASCII.GetBytes(value));
+			WriteByteArray(Encoding.UTF8.GetBytes(value));
 		}
 
 		/// <summary>

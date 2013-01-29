@@ -1,6 +1,6 @@
 using System;
 
-namespace Lwar.Client.Network.Messages
+namespace Lwar.Client.Network
 {
 	/// <summary>
 	///   Represents a reliable message.

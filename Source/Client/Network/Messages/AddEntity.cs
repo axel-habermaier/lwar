@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Network.Messages
 {
-	using System.Runtime.InteropServices;
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
@@ -12,12 +11,22 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   The size of the message in bytes.
 		/// </summary>
-		private static readonly int Size = Marshal.SizeOf(typeof(Identifier)) + sizeof(uint);
+		private const int Size = sizeof(uint) + 2 * Identifier.Size + sizeof(byte);
 
 		/// <summary>
-		///   The identifier of the player that is added.
+		///   The identifier of the entity that is added.
+		/// </summary>
+		private Identifier _entityId;
+
+		/// <summary>
+		///   The identifier of the player that the new entity belongs to.
 		/// </summary>
 		private Identifier _playerId;
+
+		/// <summary>
+		///   The type template of the entity that is added.
+		/// </summary>
+		private EntityTemplate _template;
 
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -54,7 +63,11 @@ namespace Lwar.Client.Network.Messages
 				return null;
 
 			var message = GetInstance();
-			
+			message.SequenceNumber = buffer.ReadUInt32();
+			message._entityId = buffer.ReadIdentifier();
+			message._playerId = buffer.ReadIdentifier();
+			message._template = (EntityTemplate)buffer.ReadByte();
+
 			return message;
 		}
 	}

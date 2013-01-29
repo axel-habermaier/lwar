@@ -1,14 +1,11 @@
 ﻿using System;
 
-namespace Lwar.Client.Network.Messages
+namespace Lwar.Client.Network
 {
 	using System.Collections.Generic;
-	using System.Net;
-	using System.Threading.Tasks;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Processes;
 
 	/// <summary>
 	///   The message queue that is responsible for packing all queued messages into a packet and sending it to the remote
@@ -92,7 +89,10 @@ namespace Lwar.Client.Network.Messages
 			while (_reliableMessages.Count != 0)
 			{
 				if (_deliveryManager.IsAcknowledged(_reliableMessages.Peek()))
-					_reliableMessages.Dequeue();
+				{
+					var message=_reliableMessages.Dequeue();
+					message.Dispose();
+				}
 				else
 					break;
 			}

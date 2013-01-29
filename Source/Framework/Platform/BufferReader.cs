@@ -263,7 +263,7 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public string ReadString()
 		{
-			return Encoding.ASCII.GetString(ReadByteArray());
+			return Encoding.UTF8.GetString(ReadByteArray());
 		}
 
 		/// <summary>

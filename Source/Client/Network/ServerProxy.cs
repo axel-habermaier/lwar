@@ -16,16 +16,6 @@ namespace Lwar.Client.Network
 	public class ServerProxy : DisposableObject
 	{
 		/// <summary>
-		///   The maximum allowed length of an UTF8-encoded player name, including the terminating 0 character.
-		/// </summary>
-		private const int MaxPlayerNameLength = 32;
-
-		/// <summary>
-		///   The maximum allowed length of an UTF8-encoded chat message, including the terminating 0 character.
-		/// </summary>
-		private const int MaxChatMessageLength = 128;
-
-		/// <summary>
 		///   The maximum number of connection attempts before giving up.
 		/// </summary>
 		private const int MaxConnectionAttempts = 10;
@@ -286,7 +276,7 @@ namespace Lwar.Client.Network
 
 					if (type.IsReliable() && _deliveryManager.AllowDelivery(reliableMessage))
 						yield return reliableMessage;
-					
+
 					if (type.IsUnreliable() && !ignoreUnreliableMessages)
 					{
 						unreliableMessage.Timestamp = header.Value.Timestamp;

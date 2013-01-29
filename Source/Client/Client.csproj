@@ -73,6 +73,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssetsLoader.tt</DependentUpon>
     </Compile>
+    <Compile Include="Gameplay\EntityTemplate.cs" />
     <Compile Include="Gameplay\Identifier.cs" />
     <Compile Include="Gameplay\GameSession.cs" />
     <Compile Include="Gameplay\Entity.cs" />
@@ -83,17 +84,25 @@
     <Compile Include="Network\Messages\AddPlayer.cs" />
     <Compile Include="Network\Messages\AddEntity.cs" />
     <Compile Include="Network\Messages\Connect.cs" />
+    <Compile Include="Network\Messages\ChatMessage.cs" />
+    <Compile Include="Network\Messages\ChangeName.cs" />
+    <Compile Include="Network\Messages\ChangePlayerState.cs" />
+    <Compile Include="Network\Messages\UpdatePlayerStats.cs" />
+    <Compile Include="Network\Messages\UpdateEntity.cs" />
+    <Compile Include="Network\Messages\Full.cs" />
+    <Compile Include="Network\Messages\Synced.cs" />
     <Compile Include="Network\Messages\Disconnect.cs" />
     <Compile Include="Network\Messages\RemoveEntity.cs" />
     <Compile Include="Network\Messages\UpdateClientInput.cs" />
-    <Compile Include="Network\Messages\MessageQueue.cs" />
-    <Compile Include="Network\Messages\MessageTypeExtensions.cs" />
+    <Compile Include="Network\MessageQueue.cs" />
+    <Compile Include="Network\MessageTypeExtensions.cs" />
     <Compile Include="Network\Messages\RemovePlayer.cs" />
     <Compile Include="Network\Header.cs" />
-    <Compile Include="Network\Messages\IReliableMessage.cs" />
-    <Compile Include="Network\Messages\IUnreliableMessage.cs" />
-    <Compile Include="Network\Messages\MessageType.cs" />
-    <Compile Include="Network\Messages\IMessage.cs" />
+    <Compile Include="Network\IReliableMessage.cs" />
+    <Compile Include="Network\IUnreliableMessage.cs" />
+    <Compile Include="Network\MessageType.cs" />
+    <Compile Include="Network\IMessage.cs" />
+    <Compile Include="Network\Specification.cs" />
     <Compile Include="Network\Server.cs" />
     <Compile Include="Network\ServerProxy.cs" />
     <Compile Include="StateMachine.cs" />

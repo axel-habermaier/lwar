@@ -15,6 +15,11 @@ namespace Lwar.Client.Gameplay
 	public struct Identifier : IEquatable<Identifier>
 	{
 		/// <summary>
+		///   The size of an identifier in bytes.
+		/// </summary>
+		public const int Size = 2 * sizeof(ushort);
+
+		/// <summary>
 		///   The identifier that was assigned last.
 		/// </summary>
 		private static ushort _lastAssignedId;

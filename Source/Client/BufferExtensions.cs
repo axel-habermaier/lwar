@@ -5,6 +5,7 @@ namespace Lwar.Client
 	using System.Text;
 	using Gameplay;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
 
 	/// <summary>
@@ -39,47 +40,56 @@ namespace Lwar.Client
 		}
 
 		/// <summary>
-		///   Writes a fixed-size string of the given length into the buffer.
+		///   Writes a string of the given maximum length into the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the string should be written into.</param>
 		/// <param name="s">The string that should be written into the buffer.</param>
-		/// <param name="length">The fixed length of the string, including the termiating '\0'.</param>
+		/// <param name="length">The maximum length of the string.</param>
 		public static void WriteString(this BufferWriter buffer, string s, int length)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 			Assert.ArgumentNotNull(s, () => s);
-			Assert.ArgumentInRange(length, () => length, 1, Int32.MaxValue);
-			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) < length - 1, () => s, "String is too long.");
+			Assert.ArgumentInRange(length, () => length, 1, Byte.MaxValue);
+			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) < length, () => s, "String is too long.");
 
 			var bytes = Encoding.UTF8.GetBytes(s);
+			buffer.WriteByte((byte)bytes.Length);
 			foreach (var b in bytes)
 				buffer.WriteByte(b);
-
-			// Fill the remaining space with 0s
-			for (var i = 0; i < length - bytes.Length; ++i)
-				buffer.WriteByte(0);
 		}
 
 		/// <summary>
-		///   Reads a fixed-size string of the given maximum length from the buffer.
+		///   Reads a string of the given length from the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the string should be read from.</param>
-		/// <param name="length">The fixed length of the string, including the termiating '\0'.</param>
+		/// <param name="length">The maximum length of the string.</param>
 		public static string ReadString(this BufferReader buffer, int length)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-			Assert.ArgumentInRange(length, () => length, 1, Int32.MaxValue);
+			Assert.ArgumentInRange(length, () => length, 1, Byte.MaxValue);
 
-			var bytes = new byte[length];
-			var count = 0;
-			for (var i = 0; i < length; ++i)
+			int size = buffer.ReadByte();
+			var skipBytes = 0;
+
+			if (!buffer.CanRead(size))
+				return null;
+
+			if (size > length)
 			{
-				bytes[i] = buffer.ReadByte();
-				if (bytes[i] != 0)
-					++count;
+				NetworkLog.ClientWarn("Received a string that exceeds the maximum allowed length. String truncated.");
+				skipBytes = size - length;
+				size = length;
 			}
 
-			return Encoding.UTF8.GetString(bytes, 0, count);
+			var bytes = new byte[size];
+			for (var i = 0; i < size; ++i)
+				bytes[i] = buffer.ReadByte();
+
+			// Skip the remaining bytes if the string is too long
+			for (var i = 0; i < skipBytes; ++i)
+				buffer.ReadByte();
+
+			return Encoding.UTF8.GetString(bytes);
 		}
 	}
 }

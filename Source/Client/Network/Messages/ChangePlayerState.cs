@@ -6,17 +6,22 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class RemoveEntity : PooledObject<RemoveEntity>, IReliableMessage
+	public class ChangePlayerState : PooledObject<ChangePlayerState>, IReliableMessage
 	{
 		/// <summary>
-		///   The size of the message in bytes.
+		///   The identifier of the player that changed his or her name.
 		/// </summary>
-		private const int Size = sizeof(uint) + Identifier.Size;
+		private Identifier _playerId;
 
 		/// <summary>
-		///   The identifier of the entity that is removed.
+		///   The new ship type.
 		/// </summary>
-		private Identifier _entityId;
+		private byte _shipType;
+
+		/// <summary>
+		///   The new weapon type.
+		/// </summary>
+		private byte _weaponType;
 
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -32,7 +37,16 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public bool Serialize(BufferWriter buffer)
 		{
-			Assert.That(false, "The client cannot send this type of message.");
+			Assert.ArgumentNotNull(buffer, () => buffer);
+
+			if (!buffer.CanWrite(sizeof(byte) + sizeof(uint) + Identifier.Size + 2 * sizeof(byte)))
+				return false;
+
+			buffer.WriteByte((byte)MessageType.ChangePlayerName);
+			buffer.WriteUInt32(SequenceNumber);
+			buffer.WriteIdentifier(_playerId);
+			buffer.WriteByte(_shipType);
+			buffer.WriteByte(_weaponType);
 			return true;
 		}
 
@@ -45,16 +59,18 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static RemoveEntity Create(BufferReader buffer)
+		public static ChangePlayerState Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			if (!buffer.CanRead(Size))
+			if (!buffer.CanRead(sizeof(uint) + Identifier.Size + 2 * sizeof(byte)))
 				return null;
 
 			var message = GetInstance();
 			message.SequenceNumber = buffer.ReadUInt32();
-			message._entityId = buffer.ReadIdentifier();
+			message._playerId = buffer.ReadIdentifier();
+			message._shipType = buffer.ReadByte();
+			message._weaponType = buffer.ReadByte();
 			return message;
 		}
 	}

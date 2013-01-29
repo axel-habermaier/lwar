@@ -2,21 +2,17 @@
 
 namespace Lwar.Client.Network.Messages
 {
+	using System.Collections.Generic;
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class RemoveEntity : PooledObject<RemoveEntity>, IReliableMessage
+	public class UpdatePlayerStats : PooledObject<UpdatePlayerStats>, IReliableMessage
 	{
 		/// <summary>
-		///   The size of the message in bytes.
+		///   The new statistics of the players.
 		/// </summary>
-		private const int Size = sizeof(uint) + Identifier.Size;
-
-		/// <summary>
-		///   The identifier of the entity that is removed.
-		/// </summary>
-		private Identifier _entityId;
+		private readonly List<Stats> _stats = new List<Stats>();
 
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -45,17 +41,56 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static RemoveEntity Create(BufferReader buffer)
+		public static UpdatePlayerStats Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			if (!buffer.CanRead(Size))
+			if (!buffer.CanRead(sizeof(uint) + sizeof(byte)))
 				return null;
 
 			var message = GetInstance();
 			message.SequenceNumber = buffer.ReadUInt32();
-			message._entityId = buffer.ReadIdentifier();
+			message._stats.Clear();
+
+			var count = buffer.ReadByte();
+			if (!buffer.CanRead(count * (Identifier.Size + 3 * sizeof(ushort))))
+				return null;
+
+			for (var i = 0; i < count; ++i)
+			{
+				message._stats.Add(new Stats
+				{
+					Player = buffer.ReadIdentifier(),
+					Kills = buffer.ReadUInt16(),
+					Deaths = buffer.ReadUInt16(),
+					Ping = buffer.ReadUInt16()
+				});
+			}
+
 			return message;
+		}
+
+		private struct Stats
+		{
+			/// <summary>
+			///   The number of deaths of the player.
+			/// </summary>
+			public ushort Deaths;
+
+			/// <summary>
+			///   The number of kills scored by the player.
+			/// </summary>
+			public ushort Kills;
+
+			/// <summary>
+			///   The player's network latency.
+			/// </summary>
+			public ushort Ping;
+
+			/// <summary>
+			///   The identifier of the player whose stats are updated.
+			/// </summary>
+			public Identifier Player;
 		}
 	}
 }

@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Network.Messages
 {
-	using System.Runtime.InteropServices;
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
@@ -12,7 +11,7 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   The size of the message in bytes.
 		/// </summary>
-		private static readonly int Size = Marshal.SizeOf(typeof(Identifier)) + sizeof(uint);
+		private const int Size = sizeof(uint) + Identifier.Size;
 
 		/// <summary>
 		///   The identifier of the player that is added.

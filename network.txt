@@ -125,7 +125,10 @@ Messages Payload Data
 		---------	----------	------------------------------------------------------------------------
 		uint32(Id)	entityId	The generational identifier of the entity that is added
 		uint32(Id)	playerId	The generational identifier of the player the entity belongs to
-		uint8		typeId		The identifier of the entity type template
+		uint8		typeId		The identifier of the entity type template; possible values are:
+								1	Ship
+								2	Bullet
+								3	Planet
 		
 	Remove
 		Type		Name 		Description
@@ -148,12 +151,16 @@ Messages Payload Data
 
 	Synced
 		Does not carry any payload data
+
+	Full
+		Does not carry any payload data
 										
 	Stats
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------
 		uint8		num			The number of player stats updates that follow
 		[for i < num, ++i]
+		uint32(Id)  player		The generational identifier of the player whose stats are updated
 		uint16		kills		The player kills
 		uint16		deaths		The player deaths
 		uint16		ping		The player pings
@@ -232,6 +239,7 @@ Revision History
     ----  --------  ----------	----------------------------------------------------------------------
 	 3	  13-01-29	Axel		Stats message is no longer fix-sized
 								Strings are now handled uniformly in all messages
+								Added entity template ids
 	 2	  13-01-29	Axel		Clarified how Leave and Full messages are handled
 								Re-assigned message type ids
      1    13-01-28  Axel		Initial version
