@@ -277,6 +277,12 @@ namespace Lwar.Client.Network
 							yield break;
 					}
 
+					if (reliableMessage == null && unreliableMessage == null)
+					{
+						NetworkLog.ClientWarn("Received incomplete message of type {0}. Message ignored.", type);
+						yield break;
+					}
+
 					if (type.IsReliable() && _deliveryManager.AllowDelivery(reliableMessage))
 						yield return reliableMessage;
 					else if (type.IsUnreliable() && !ignoreUnreliableMessages)

@@ -81,6 +81,15 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Checks whether the given number of bytes can be read from the buffer.
+		/// </summary>
+		/// <param name="size">The number of bytes that should be checked.</param>
+		public bool CanRead(int size)
+		{
+			return _readPosition + size < _buffer.Offset + _buffer.Count;
+		}
+
+		/// <summary>
 		///   Reads a Boolean value.
 		/// </summary>
 		public bool ReadBoolean()

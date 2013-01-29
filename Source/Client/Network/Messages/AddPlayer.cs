@@ -2,6 +2,7 @@
 
 namespace Lwar.Client.Network.Messages
 {
+	using System.Runtime.InteropServices;
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
@@ -33,6 +34,9 @@ namespace Lwar.Client.Network.Messages
 		public static AddPlayer Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
+
+			if (!buffer.CanRead(Marshal.SizeOf(typeof(Identifier)) + sizeof(uint)))
+				return null;
 
 			var message = GetInstance();
 			message.SequenceNumber = buffer.ReadUInt32();

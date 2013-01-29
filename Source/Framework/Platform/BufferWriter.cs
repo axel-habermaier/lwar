@@ -78,6 +78,15 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Checks whether the given number of bytes can be written to the buffer.
+		/// </summary>
+		/// <param name="size">The number of bytes that should be checked.</param>
+		public bool CanWrite(int size)
+		{
+			return _writePosition + size < _buffer.Offset + _buffer.Count;
+		}
+
+		/// <summary>
 		///   Appends the given byte value to the end of the payload.
 		/// </summary>
 		/// <param name="value">The value that should be appended.</param>

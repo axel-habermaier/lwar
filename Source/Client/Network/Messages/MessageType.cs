@@ -7,19 +7,19 @@ namespace Lwar.Client.Network.Messages
 	/// </summary>
 	public enum MessageType
 	{
-		Connect = 101,
-		Disconnect = 102,
-		AddPlayer = 103,
-		RemovePlayer = 104,
-		ChatMessage = 105,
-		AddEntity = 106,
-		RemoveEntity = 107,
-		ChangePlayerState = 108,
-		ChangePlayerName = 109,
-		Synced = 110,
-		ServerFull = 111,
-		UpdatePlayerStats = 201,
-		UpdateEntity = 202,
-		UpdateClientInput = 203
+		Connect = 1,
+		Disconnect = 2,
+		AddPlayer = 3,
+		RemovePlayer = 4,
+		ChatMessage = 5,
+		AddEntity = 6,
+		RemoveEntity = 7,
+		ChangePlayerState = 8,
+		ChangePlayerName = 9,
+		Synced = 10,
+		ServerFull = 11,
+		UpdatePlayerStats = 101,
+		UpdateEntity = 102,
+		UpdateClientInput = 103
 	}
 }

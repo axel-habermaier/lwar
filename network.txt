@@ -56,25 +56,25 @@ Packet Header
 	uint32		timestamp	Timestamp of the unreliable messages contained in the packet
 	
 Message Types
-	The ids of reliable message types range from 101 to 199, while the ids of unreliable message types
-	range from 201 to 299. This can be used to quickly determine whether a message is reliable or unreliable.
+	The ids of reliable message types range from 1 to 99, while the ids of unreliable message types
+	range from 101 to 199. This can be used to quickly determine whether a message is reliable or unreliable.
 
 	Id		Type		Reliable	Sender			Description	
 	---  	---------	---------	-------------	----------------------------------------------------------------
-	101 	Connect		yes			client			Client wants to connect to a server
-	102		Disconnect	yes			client			Client wants to disconnect from a server
-	103		Join		yes			server			Informs all clients about a new player
-	104 	Leave		yes			server			Informs all clients that a client left
-	105		Chat		yes			client/server	Broadcasts the chat message to all clients
-	106		Add			yes			server			Adds a new entity to the clients' worlds
-	107		Remove		yes			server			Removes an entity from the clients' worlds
-	108		Selection	yes			client/server	Broadcasts a ship or weapon type change to all clients
-	109		Name		yes			client/server	Broadcasts a player name change to all clients
-	110		Synced		yes			server			Signals the client that the game state has been fully synced
-	111		Full		yes			server			Signals the client that the server is full
-	201		Stats		no			server			Periodically updates the clients' stats (pings, scores)
-	202		Update		no			server			Periodically updates the clients' entity states
-	203		Input		no			client			Periodically updates the server's client-specific input state
+	  1 	Connect		yes			client			Client wants to connect to a server
+	  2		Disconnect	yes			client			Client wants to disconnect from a server
+	  3		Join		yes			server			Informs all clients about a new player
+	  4 	Leave		yes			server			Informs all clients that a client left
+	  5		Chat		yes			client/server	Broadcasts the chat message to all clients
+	  6		Add			yes			server			Adds a new entity to the clients' worlds
+	  7		Remove		yes			server			Removes an entity from the clients' worlds
+	  8		Selection	yes			client/server	Broadcasts a ship or weapon type change to all clients
+	  9		Name		yes			client/server	Broadcasts a player name change to all clients
+	 10		Synced		yes			server			Signals the client that the game state has been fully synced
+	 11		Full		yes			server			Signals the client that the server is full
+	101		Stats		no			server			Periodically updates the clients' stats (pings, scores)
+	102		Update		no			server			Periodically updates the clients' entity states
+	103		Input		no			client			Periodically updates the server's client-specific input state
 	
 Message Header
 	Both reliable and unreliable messages first contain the message type id in their header. This way, the message
@@ -231,4 +231,5 @@ Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
 	 2	  13-01-29	Axel		Clarified how Leave and Full messages are handled
+								Re-assigned message type ids
      1    13-01-28  Axel		Initial version

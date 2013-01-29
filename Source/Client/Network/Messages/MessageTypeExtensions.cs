@@ -16,7 +16,7 @@ namespace Lwar.Client.Network.Messages
 		public static bool IsReliable(this MessageType type)
 		{
 			Assert.ArgumentInRange(type, () => type);
-			return (int)type > 100 && (int)type < 200;
+			return (int)type < 100;
 		}
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace Lwar.Client.Network.Messages
 		public static bool IsUnreliable(this MessageType type)
 		{
 			Assert.ArgumentInRange(type, () => type);
-			return (int)type > 200 && (int)type < 300;
+			return (int)type > 100;
 		}
 	}
 }
