@@ -46,7 +46,7 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
-		public Connect Create()
+		public static Connect Create()
 		{
 			return GetInstance();
 		}

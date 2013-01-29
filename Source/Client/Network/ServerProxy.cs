@@ -99,6 +99,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Sends a Connect message to the server.
 		/// </summary>
+		/// <param name="context">The context in which the connection should be established.</param>
 		public async Task Connect(ProcessContext context)
 		{
 			Assert.That(_state == State.Disconnected, "The proxy is not disconnected.");
@@ -111,11 +112,8 @@ namespace Lwar.Client.Network
 
 				while (_state != State.Connected && attempts < MaxConnectionAttempts)
 				{
-					var packet = OutgoingPacket.Create();
-					packet.Writer.WriteUInt16(3);
+					_messageQueue.Enqueue(Messages.Connect.Create());
 					++attempts;
-
-					await _socket.SendAsync(context, packet, _serverEndPoint);
 					await context.Delay(RetryDelay);
 				}
 
@@ -270,7 +268,7 @@ namespace Lwar.Client.Network
 						case MessageType.Connect:
 						case MessageType.Disconnect:
 						case MessageType.UpdateClientInput:
-							NetworkLog.ClientWarn("Received unexpected message of type {0}. The rest of the packet is ignored.", type);
+							NetworkLog.ClientWarn("Received an unexpected message of type {0}. The rest of the packet is ignored.", type);
 							yield break;
 						default:
 							NetworkLog.ClientWarn("Received a message of unknown type. The rest of the packet is ignored.");
@@ -302,6 +300,7 @@ namespace Lwar.Client.Network
 		{
 			_sendProcess.SafeDispose();
 			_receiveProcess.SafeDispose();
+			_messageQueue.SafeDispose();
 			_socket.SafeDispose();
 		}
 

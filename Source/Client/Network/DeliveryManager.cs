@@ -2,8 +2,8 @@
 
 namespace Lwar.Client.Network
 {
-	using Messages;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Platform;
 
 	/// <summary>
 	///   Manages the delivery guarantees of all incoming and outgoing messages.
@@ -11,14 +11,24 @@ namespace Lwar.Client.Network
 	public class DeliveryManager
 	{
 		/// <summary>
+		///   Determines the current time for the creation of the unreliable message timestamps.
+		/// </summary>
+		private readonly Time _time;
+
+		/// <summary>
 		///   The sequence number of the last reliable message that has been assigned and acknowledged.
 		/// </summary>
 		private uint _lastAckedSequenceNumber;
 
 		/// <summary>
+		///   The last sequence number that has been assigned to a reliable message.
+		/// </summary>
+		private uint _lastAssignedSequenceNumber;
+
+		/// <summary>
 		///   Gets the sequence number of the last reliable message that has been received and processed.
 		/// </summary>
-		public uint LastReceivedSequenceNumber { get; private set; }
+		private uint _lastReceivedSequenceNumber;
 
 		/// <summary>
 		///   The maximum of the timestamps of all received unreliable messages.
@@ -26,9 +36,22 @@ namespace Lwar.Client.Network
 		private uint _lastReceivedTimestamp;
 
 		/// <summary>
-		///   The last sequence number that has been assigned to a reliable message.
+		///   Initializes a new instance.
 		/// </summary>
-		private uint _lastAssignedSequenceNumber;
+		public DeliveryManager()
+		{
+			_time.Offset = _time.Seconds;
+		}
+
+		/// <summary>
+		///   Writes the header for a packet.
+		/// </summary>
+		/// <param name="buffer">The buffer the header should be written into.</param>
+		public void WriteHeader(BufferWriter buffer)
+		{
+			var header = new Header(_lastReceivedSequenceNumber, (uint)_time.Milliseconds);
+			header.Write(buffer);
+		}
 
 		/// <summary>
 		///   Checks whether the reception of the given message has been acknowledged by the remote peer.
@@ -48,9 +71,9 @@ namespace Lwar.Client.Network
 		{
 			Assert.ArgumentNotNull(message, () => message);
 
-			if (message.SequenceNumber == LastReceivedSequenceNumber + 1)
+			if (message.SequenceNumber == _lastReceivedSequenceNumber + 1)
 			{
-				++LastReceivedSequenceNumber;
+				++_lastReceivedSequenceNumber;
 				return true;
 			}
 
@@ -84,7 +107,7 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		/// Assigns a sequence number to the reliable message.
+		///   Assigns a sequence number to the reliable message.
 		/// </summary>
 		/// <param name="message">The reliable message the sequence number should be assigned to.</param>
 		public void AssignSequenceNumber(IReliableMessage message)

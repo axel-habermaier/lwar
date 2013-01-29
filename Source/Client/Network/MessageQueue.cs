@@ -11,7 +11,7 @@ namespace Lwar.Client.Network
 	///   The message queue that is responsible for packing all queued messages into a packet and sending it to the remote
 	///   peer. Reliable messages will be resent until their reception has been acknowledged by the remote peer.
 	/// </summary>
-	public class MessageQueue
+	public class MessageQueue : DisposableObject
 	{
 		/// <summary>
 		///   The delivery manager that is used to enforce the message delivery constraints.
@@ -29,21 +29,22 @@ namespace Lwar.Client.Network
 		private readonly Queue<IUnreliableMessage> _unreliableMessages = new Queue<IUnreliableMessage>();
 
 		/// <summary>
-		///   Determines the current time.
-		/// </summary>
-		private Time _time;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="deliveryManager">The delivery manager that is used to enforce the message delivery constraints.</param>
 		public MessageQueue(DeliveryManager deliveryManager)
 		{
 			Assert.ArgumentNotNull(deliveryManager, () => deliveryManager);
-
-			_time = new Time();
-			_time.Offset = _time.Seconds;
 			_deliveryManager = deliveryManager;
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_reliableMessages.SafeDisposeAll();
+			_unreliableMessages.SafeDisposeAll();
 		}
 
 		/// <summary>
@@ -73,11 +74,12 @@ namespace Lwar.Client.Network
 			RemoveAckedMessages();
 
 			var packet = OutgoingPacket.Create();
-			var header = new Header(_deliveryManager.LastReceivedSequenceNumber, (uint)_time.Milliseconds);
-			header.Write(packet.Writer);
+			_deliveryManager.WriteHeader(packet.Writer);
 
 			AddMessages(_reliableMessages, packet.Writer);
 			AddMessages(_unreliableMessages, packet.Writer);
+
+			_unreliableMessages.Clear();
 			return packet;
 		}
 
@@ -90,7 +92,7 @@ namespace Lwar.Client.Network
 			{
 				if (_deliveryManager.IsAcknowledged(_reliableMessages.Peek()))
 				{
-					var message=_reliableMessages.Dequeue();
+					var message = _reliableMessages.Dequeue();
 					message.Dispose();
 				}
 				else

@@ -6,7 +6,6 @@ namespace Lwar.Client.Gameplay
 	using System.Net;
 	using System.Threading.Tasks;
 	using Network;
-	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
@@ -171,6 +170,16 @@ namespace Lwar.Client.Gameplay
 
 			Entities = null;
 			ServerProxy = null;
+		}
+
+		/// <summary>
+		///   Aborts the game session and shows a 'server is full' message.
+		/// </summary>
+		public void ServerIsFull()
+		{
+			Log.Error("The server is full.");
+			Commands.ShowConsole.Invoke(true);
+			_updateState.ChangeStateDelayed(Inactive);
 		}
 
 		/// <summary>

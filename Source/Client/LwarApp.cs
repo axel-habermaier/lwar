@@ -77,6 +77,8 @@ namespace Lwar.Client
 			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");
 			Commands.Bind.Invoke(Key.F3.WentDown(), "connect 127.0.0.1:" + ServerProxy.DefaultPort);
 			Commands.Bind.Invoke(Key.F4.WentDown(), "disconnect");
+
+			Commands.ShowConsole.Invoke(true);
 		}
 
 		/// <summary>

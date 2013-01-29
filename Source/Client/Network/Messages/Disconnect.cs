@@ -44,9 +44,9 @@ namespace Lwar.Client.Network.Messages
 		public uint SequenceNumber { get; set; }
 
 		/// <summary>
-		/// Creates a new instance.
+		///   Creates a new instance.
 		/// </summary>
-		public Disconnect Create()
+		public static Disconnect Create()
 		{
 			return GetInstance();
 		}

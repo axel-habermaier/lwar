@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework
 {
+	using System.Collections.Generic;
 	using System.Diagnostics;
 
 	/// <summary>
@@ -9,6 +10,20 @@ namespace Pegasus.Framework
 	/// </summary>
 	public static class DisposableExtensions
 	{
+		/// <summary>
+		///   Disposes all objects contained in the enumerable if the enumerable is not null.
+		/// </summary>
+		/// <param name="enumerable">The enumerabble that should be disposed.</param>
+		[DebuggerHidden]
+		public static void SafeDisposeAll(this IEnumerable<IDisposable> enumerable)
+		{
+			if (enumerable == null)
+				return;
+
+			foreach (var obj in enumerable)
+				obj.SafeDispose();
+		}
+
 		/// <summary>
 		///   Disposes the object if it is not null.
 		/// </summary>
