@@ -36,8 +36,8 @@ Network-related constants
 	Packet Header Size:			 	 12 bytes	
 	Reliable Message Header Size:	  5 bytes	
 	Unreliable Message Header Size:	  1 byte	
-	Fixed Player Name Length: 	 	 32 bytes 		Including the trailing '\0'
-	Max Chat Message Length: 		128 bytes 		Including the trailing '\0'
+	Max Player Name Length: 	 	 32 bytes 		
+	Max Chat Message Length: 		128 bytes 		
 	Max Player Count:				  8 players
 	Stats Message Frequency:		 ~2 Hz			Clients do not have to be up-to-date all the time
 	Input Message Frequency:		~30	Hz			Should be relatively high to reduce latency
@@ -117,8 +117,8 @@ Messages Payload Data
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------
 		uint32(Id)	playerId	The generational identifier of the player that generated the chat message
-		uint8[]		message		The variable-sized, UTF8-encoded chat message, terminated by a '\0', with
-								a length that does not exceed the maximum allowed chat message length
+		uint8		len			The length of the chat message in bytes; len < Max Chat Message Length
+		uint8[len]	msg			The UTF8-encoded chat message (not '\0'-terminated)
 	
 	Add
 		Type		Name 		Description
@@ -143,20 +143,20 @@ Messages Payload Data
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------
 		uint32(Id)	playerId	The generational identifier of the player that changed his/her name
-		uint8[n]	name		The fixed-sized player name, terminated by a '\0', where n equals the
-								exact amount of bytes allowed for a player name, including the '\0';
-								UTF8-encoded
+		uint8		len			The length of the player name in bytes; len < Max Player Name Length
+		uint8[len]	name		The UTF8-encoded player name (not '\0'-terminated)
 
 	Synced
 		Does not carry any payload data
 										
 	Stats
-		Consists of an array of values for each player, so n = Max Player Count. 
-	
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------
-		uint16[n]	scores		The player scores
-		uint16[n]	pings		The player pings
+		uint8		num			The number of player stats updates that follow
+		[for i < num, ++i]
+		uint16		kills		The player kills
+		uint16		deaths		The player deaths
+		uint16		ping		The player pings
 		
 	Update
 		Type		Name 		Description
@@ -230,6 +230,8 @@ Disconnecting from the server
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	 3	  13-01-29	Axel		Stats message is no longer fix-sized
+								Strings are now handled uniformly in all messages
 	 2	  13-01-29	Axel		Clarified how Leave and Full messages are handled
 								Re-assigned message type ids
      1    13-01-28  Axel		Initial version
