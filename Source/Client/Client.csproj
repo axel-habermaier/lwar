@@ -85,11 +85,11 @@
     <Compile Include="Network\Messages\AddEntity.cs" />
     <Compile Include="Network\Messages\Connect.cs" />
     <Compile Include="Network\Messages\ChatMessage.cs" />
-    <Compile Include="Network\Messages\ChangeName.cs" />
+    <Compile Include="Network\Messages\ChangePlayerName.cs" />
     <Compile Include="Network\Messages\ChangePlayerState.cs" />
     <Compile Include="Network\Messages\UpdatePlayerStats.cs" />
     <Compile Include="Network\Messages\UpdateEntity.cs" />
-    <Compile Include="Network\Messages\Full.cs" />
+    <Compile Include="Network\Messages\ServerFull.cs" />
     <Compile Include="Network\Messages\Synced.cs" />
     <Compile Include="Network\Messages\Disconnect.cs" />
     <Compile Include="Network\Messages\RemoveEntity.cs" />

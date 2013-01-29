@@ -8,7 +8,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 
-	public class UpdateEntity : PooledObject<UpdateEntity>, IReliableMessage
+	public class UpdateEntity : PooledObject<UpdateEntity>, IUnreliableMessage
 	{
 		/// <summary>
 		///   The new entity data.
@@ -34,9 +34,9 @@ namespace Lwar.Client.Network.Messages
 		}
 
 		/// <summary>
-		///   Gets or sets the sequence number of the message.
+		///   Gets or sets the timestamp of the message.
 		/// </summary>
-		public uint SequenceNumber { get; set; }
+		public uint Timestamp { get; set; }
 
 		/// <summary>
 		///   Creates a new instance.
@@ -46,11 +46,10 @@ namespace Lwar.Client.Network.Messages
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			if (!buffer.CanRead(sizeof(uint) + sizeof(byte)))
+			if (!buffer.CanRead(sizeof(byte)))
 				return null;
 
 			var message = GetInstance();
-			message.SequenceNumber = buffer.ReadUInt32();
 			message._stats.Clear();
 
 			var count = buffer.ReadByte();

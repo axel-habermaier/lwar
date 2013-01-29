@@ -6,7 +6,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class Full : PooledObject<Full>, IReliableMessage
+	public class ServerFull : PooledObject<ServerFull>, IReliableMessage
 	{
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -35,7 +35,7 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static Full Create(BufferReader buffer)
+		public static ServerFull Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 

@@ -241,22 +241,31 @@ namespace Lwar.Client.Network
 							reliableMessage = RemovePlayer.Create(buffer);
 							break;
 						case MessageType.ChatMessage:
+							reliableMessage = ChatMessage.Create(buffer);
 							break;
 						case MessageType.AddEntity:
+							reliableMessage = AddEntity.Create(buffer);
 							break;
 						case MessageType.RemoveEntity:
+							reliableMessage = RemoveEntity.Create(buffer);
 							break;
 						case MessageType.ChangePlayerState:
+							reliableMessage = ChangePlayerState.Create(buffer);
 							break;
 						case MessageType.ChangePlayerName:
+							reliableMessage = ChangePlayerName.Create(buffer);
 							break;
 						case MessageType.Synced:
+							reliableMessage = Synced.Create(buffer);
 							break;
 						case MessageType.ServerFull:
+							reliableMessage = ServerFull.Create(buffer);
 							break;
 						case MessageType.UpdatePlayerStats:
+							unreliableMessage = UpdatePlayerStats.Create(buffer);
 							break;
 						case MessageType.UpdateEntity:
+							unreliableMessage = UpdateEntity.Create(buffer);
 							break;
 						case MessageType.Connect:
 						case MessageType.Disconnect:

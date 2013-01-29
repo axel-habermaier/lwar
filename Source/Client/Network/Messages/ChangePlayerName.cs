@@ -7,7 +7,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class ChangeName : PooledObject<ChangeName>, IReliableMessage
+	public class ChangePlayerName : PooledObject<ChangePlayerName>, IReliableMessage
 	{
 		/// <summary>
 		///   The new player name.
@@ -54,7 +54,7 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static ChangeName Create(BufferReader buffer)
+		public static ChangePlayerName Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
@@ -73,7 +73,7 @@ namespace Lwar.Client.Network.Messages
 		/// </summary>
 		/// <param name="player">The player that changed his or her name.</param>
 		/// <param name="name">The new name.</param>
-		public static ChangeName Create(Identifier player, string name)
+		public static ChangePlayerName Create(Identifier player, string name)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
 			Assert.That(Encoding.UTF8.GetByteCount(name) < Specification.MaxPlayerNameLength, "Name is too long.");

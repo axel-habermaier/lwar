@@ -7,7 +7,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class UpdatePlayerStats : PooledObject<UpdatePlayerStats>, IReliableMessage
+	public class UpdatePlayerStats : PooledObject<UpdatePlayerStats>, IUnreliableMessage
 	{
 		/// <summary>
 		///   The new statistics of the players.
@@ -33,9 +33,9 @@ namespace Lwar.Client.Network.Messages
 		}
 
 		/// <summary>
-		///   Gets or sets the sequence number of the message.
+		///   Gets or sets the timestamp of the message.
 		/// </summary>
-		public uint SequenceNumber { get; set; }
+		public uint Timestamp { get; set; }
 
 		/// <summary>
 		///   Creates a new instance.
@@ -45,11 +45,10 @@ namespace Lwar.Client.Network.Messages
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			if (!buffer.CanRead(sizeof(uint) + sizeof(byte)))
+			if (!buffer.CanRead(sizeof(byte)))
 				return null;
 
 			var message = GetInstance();
-			message.SequenceNumber = buffer.ReadUInt32();
 			message._stats.Clear();
 
 			var count = buffer.ReadByte();
