@@ -37,8 +37,7 @@ namespace Lwar.Client.Network
 
 		/// <summary>
 		///   The message queue that queues outgoing messages and sends them to the server, ensuring that reliable messages are
-		///   resent for
-		///   as long as their reception has not been acknowledged.
+		///   resent for as long as their reception has not been acknowledged.
 		/// </summary>
 		private readonly MessageQueue _messageQueue;
 
@@ -92,6 +91,22 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether the connection to the server has been established and the game state is currently being synced.
+		/// </summary>
+		public bool IsSyncing
+		{
+			get { return _state == State.Syncing; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the server is full and cannot accept any further clients.
+		/// </summary>
+		public bool ServerIsFull
+		{
+			get { return _state == State.Full; }
+		}
+
+		/// <summary>
 		///   Raised when a message has been received from the server.
 		/// </summary>
 		public event Action<IMessage> MessageReceived;
@@ -120,7 +135,7 @@ namespace Lwar.Client.Network
 				if (attempts >= MaxConnectionAttempts)
 				{
 					_state = State.Faulted;
-					NetworkLog.ClientError("Failed to connect to {0}. No response.", _serverEndPoint);
+					NetworkLog.ClientError("Failed to connect to {0}. The server did no respond.", _serverEndPoint);
 				}
 				else
 					NetworkLog.ClientInfo("Connected to {0}.", _serverEndPoint);
@@ -177,8 +192,6 @@ namespace Lwar.Client.Network
 				{
 					using (var packet = await _socket.ReceiveAsync(context, sender))
 					{
-						_state = State.Connected;
-
 						if (!sender.Equals(_serverEndPoint))
 						{
 							NetworkLog.ClientWarn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
@@ -234,6 +247,10 @@ namespace Lwar.Client.Network
 					{
 						case MessageType.AddPlayer:
 							reliableMessage = AddPlayer.Create(buffer);
+
+							// If this is the first packet that we receive from the server, it means we're syncing the game state.
+							if (reliableMessage.SequenceNumber == 0)
+								_state = State.Syncing;
 							break;
 						case MessageType.RemovePlayer:
 							reliableMessage = RemovePlayer.Create(buffer);
@@ -255,9 +272,19 @@ namespace Lwar.Client.Network
 							break;
 						case MessageType.Synced:
 							reliableMessage = Synced.Create(buffer);
+
+							if (_state != State.Syncing)
+								NetworkLog.ClientWarn("Ignored an unexpected synced message.");
+							else
+								_state = State.Connected;
 							break;
 						case MessageType.ServerFull:
 							reliableMessage = ServerFull.Create(buffer);
+
+							if (reliableMessage.SequenceNumber != 0)
+								NetworkLog.ClientWarn("Ignored an unexpected server full message.");
+							else
+								_state = State.Full;
 							break;
 						case MessageType.UpdatePlayerStats:
 							unreliableMessage = UpdatePlayerStats.Create(buffer);
@@ -320,14 +347,24 @@ namespace Lwar.Client.Network
 			Connecting,
 
 			/// <summary>
-			///   Indicates that a connection is established.
+			///   Indicates that a connection is established and the game state is fully synced.
 			/// </summary>
 			Connected,
 
 			/// <summary>
 			///   Indicates that a connection is faulted due to an error and can no longer be used to send and receive any data.
 			/// </summary>
-			Faulted
+			Faulted,
+
+			/// <summary>
+			///   Indicates that the server is full and cannot accept any further clients.
+			/// </summary>
+			Full,
+
+			/// <summary>
+			///   Indicates that a connection has been established and that the proxy is waiting for Synced message.
+			/// </summary>
+			Syncing
 		}
 	}
 }

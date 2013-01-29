@@ -22,6 +22,12 @@ namespace Lwar.Client.Gameplay
 	public class GameSession : DisposableObject
 	{
 		/// <summary>
+		///   The amount of time in milliseconds that the session should wait after a full game state synchronization before
+		///   entering the playing state.
+		/// </summary>
+		private const int EnterPlayingStateDelay = 500;
+
+		/// <summary>
 		///   The font that is used to draw the text of the loading screen.
 		/// </summary>
 		[Asset("Fonts/Liberation Mono 12")]
@@ -173,16 +179,6 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
-		///   Aborts the game session and shows a 'server is full' message.
-		/// </summary>
-		public void ServerIsFull()
-		{
-			Log.Error("The server is full.");
-			Commands.ShowConsole.Invoke(true);
-			_updateState.ChangeStateDelayed(Inactive);
-		}
-
-		/// <summary>
 		///   Active when the game session is inactive.
 		/// </summary>
 		/// <param name="context">The context in which the state function should be executed.</param>
@@ -216,16 +212,22 @@ namespace Lwar.Client.Gameplay
 			_drawState.ChangeState(ctx => LoadingDraw(ctx, label));
 			await ServerProxy.Connect(context);
 
-			if (!ServerProxy.IsConnected)
+			if (!ServerProxy.IsSyncing && !ServerProxy.IsConnected)
 			{
+				if (ServerProxy.ServerIsFull)
+					Log.Error("Unable to connect to {0}: The server is full.", serverEndPoint);
+
 				Commands.ShowConsole.Invoke(true);
 				_updateState.ChangeStateDelayed(Inactive);
 				return;
 			}
 
 			label.Text = "Awaiting game state...";
-			await context.Delay(1000);
+			await context.WaitFor(() => ServerProxy.IsConnected);
 
+			label.Text = "Synchronizing...";
+
+			await context.Delay(EnterPlayingStateDelay);
 			_updateState.ChangeStateDelayed(Playing);
 		}
 

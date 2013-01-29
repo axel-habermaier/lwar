@@ -14,6 +14,7 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="session">The game session that should be updated.</param>
 		public void Process(GameSession session)
 		{
+			// Nothing to do here
 		}
 
 		/// <summary>

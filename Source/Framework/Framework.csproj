@@ -177,6 +177,7 @@
     <Compile Include="Platform\IMeasurement.cs" />
     <Compile Include="Platform\Measurement.cs" />
     <Compile Include="Platform\Time.cs" />
+    <Compile Include="Processes\DelegateOperation.cs" />
     <Compile Include="Processes\TaskOperation`1.cs" />
     <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Rendering\GpuProfiler.cs" />
