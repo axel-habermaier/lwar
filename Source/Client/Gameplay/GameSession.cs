@@ -8,6 +8,7 @@ namespace Lwar.Client.Gameplay
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
@@ -215,7 +216,7 @@ namespace Lwar.Client.Gameplay
 			if (!ServerProxy.IsSyncing && !ServerProxy.IsConnected)
 			{
 				if (ServerProxy.ServerIsFull)
-					Log.Error("Unable to connect to {0}: The server is full.", serverEndPoint);
+					NetworkLog.ClientError("Unable to connect to {0}: The server is full.", serverEndPoint);
 
 				Commands.ShowConsole.Invoke(true);
 				_updateState.ChangeStateDelayed(Inactive);
@@ -223,11 +224,20 @@ namespace Lwar.Client.Gameplay
 			}
 
 			label.Text = "Awaiting game state...";
-			await context.WaitFor(() => ServerProxy.IsConnected);
+			await context.WaitFor(() => ServerProxy.IsConnected || ServerProxy.IsDropped);
+
+			if (!ServerProxy.IsConnected)
+			{
+				NetworkLog.ClientError("Game state synchronization failed: The server did not respond.");
+
+				Commands.ShowConsole.Invoke(true);
+				_updateState.ChangeStateDelayed(Inactive);
+				return;
+			}
 
 			label.Text = "Synchronizing...";
-
 			await context.Delay(EnterPlayingStateDelay);
+
 			_updateState.ChangeStateDelayed(Playing);
 		}
 
@@ -257,6 +267,10 @@ namespace Lwar.Client.Gameplay
 			while (!context.IsCanceled)
 			{
 				Entities.Update();
+
+				if (ServerProxy.IsLagging)
+					_updateState.ChangeStateDelayed(WaitingForServer);
+
 				await context.NextFrame();
 			}
 		}
@@ -270,6 +284,52 @@ namespace Lwar.Client.Gameplay
 			while (!context.IsCanceled)
 			{
 				Entities.Draw();
+				await context.NextFrame();
+			}
+		}
+
+		/// <summary>
+		///   Pauses the game session if the connection to the server is lagging.
+		/// </summary>
+		/// <param name="context">The context in which the state function should be executed.</param>
+		private async Task WaitingForServer(ProcessContext context)
+		{
+			var label = new Label(LoadingFont) { Alignment = TextAlignment.Centered | TextAlignment.Middle };
+			_drawState.ChangeState(ctx => WaitingForServerDraw(ctx, label));
+
+			while (!context.IsCanceled && ServerProxy.IsLagging)
+			{
+				label.Text = String.Format("Waiting for server ({0} seconds)...", (int)(ServerProxy.TimeToDrop / 1000));
+				await context.NextFrame();
+			}
+
+			if (ServerProxy.IsDropped)
+			{
+				NetworkLog.ClientError("The connection to the server has been dropped.");
+
+				Commands.ShowConsole.Invoke(true);
+				_updateState.ChangeStateDelayed(Inactive);
+			}
+			else if (ServerProxy.IsConnected)
+				_updateState.ChangeStateDelayed(Playing);
+
+			Assert.That(false, "Unexpected connection state.");
+		}
+
+		/// <summary>
+		///   Draws the game session if the connection to the server is lagging.
+		/// </summary>
+		/// <param name="context">The context in which the state function should be executed.</param>
+		/// <param name="label">The label describing the current waiting state.</param>
+		private async Task WaitingForServerDraw(ProcessContext context, Label label)
+		{
+			while (!context.IsCanceled)
+			{
+				Entities.Draw();
+
+				label.Area = new Rectangle(Vector2i.Zero, Window.Size);
+				label.Draw(SpriteBatch);
+
 				await context.NextFrame();
 			}
 		}

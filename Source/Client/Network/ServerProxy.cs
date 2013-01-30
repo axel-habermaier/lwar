@@ -118,6 +118,12 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		///   Gets the remaining time in milliseconds before the connection will be dropped, if the connection is currently
+		///   lagging.
+		/// </summary>
+		public double TimeToDrop { get; private set; }
+
+		/// <summary>
 		///   Gets a value indicating whether a connection to the server is established.
 		/// </summary>
 		public bool IsConnected
@@ -132,6 +138,22 @@ namespace Lwar.Client.Network
 		public bool IsSyncing
 		{
 			get { return _state == State.Syncing; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the connection to the server is lagging.
+		/// </summary>
+		public bool IsLagging
+		{
+			get { return _state == State.Lagging; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the connection to the server has been dropped.
+		/// </summary>
+		public bool IsDropped
+		{
+			get { return _state == State.Dropped; }
 		}
 
 		/// <summary>
@@ -372,7 +394,10 @@ namespace Lwar.Client.Network
 				if (delta > DroppedTimeout)
 					_state = State.Dropped;
 				else if (delta > LaggingTimeout)
+				{
 					_state = State.Lagging;
+					TimeToDrop = DroppedTimeout - delta;
+				}
 				else
 					_state = State.Connected;
 
@@ -390,6 +415,9 @@ namespace Lwar.Client.Network
 			_observerProcess.SafeDispose();
 			_messageQueue.SafeDispose();
 			_socket.SafeDispose();
+
+			if (_state == State.Connected || _state == State.Syncing)
+				NetworkLog.ClientInfo("Disconnected from {0}.", _serverEndPoint);
 		}
 
 		/// <summary>
