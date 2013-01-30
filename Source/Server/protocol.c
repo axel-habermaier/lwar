@@ -185,6 +185,7 @@ static int message_handle(Address *a, Message *m, size_t seqno) {
 static void packet_scan(Packet *p) {
     Message m;
     size_t seqno;
+	// TODO: Must parse packet header first
     while(packet_get(p, &m, &seqno)) {
         message_handle(&p->adr, &m, seqno);
     }
@@ -200,6 +201,7 @@ void protocol_recv() {
 
 static void packet_init_header(Client *c, Packet *p) {
     packet_init(p);
+	// TODO: What is this? VS no like.
     Message m ;//= { MESSAGE_HEADER, .header = { APP_ID, c->last_in_seqno, server->cur_time } };
     packet_put(p, &m, 0); /* just dummy, header shouldn't be marked reliable */
 }

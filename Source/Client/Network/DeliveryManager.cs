@@ -40,7 +40,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		public DeliveryManager()
 		{
-			_time.Offset = _time.Seconds;
+			_time.Offset = -_time.Seconds;
 		}
 
 		/// <summary>

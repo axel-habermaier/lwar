@@ -122,7 +122,10 @@ namespace Lwar.Client.Network
 		///   Gets the remaining time in milliseconds before the connection will be dropped, if the connection is currently
 		///   lagging.
 		/// </summary>
-		public double TimeToDrop { get; private set; }
+		public double TimeToDrop
+		{
+			get { return DroppedTimeout - (_time.Milliseconds - _lastPacketTimestamp); }
+		}
 
 		/// <summary>
 		///   Gets a value indicating whether a connection to the server is established.
@@ -146,7 +149,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		public bool IsLagging
 		{
-			get { return _state == State.Lagging; }
+			get { return _time.Milliseconds - _lastPacketTimestamp > LaggingTimeout; }
 		}
 
 		/// <summary>
@@ -184,7 +187,7 @@ namespace Lwar.Client.Network
 				var attempts = 0;
 				NetworkLog.ClientInfo("Connecting to {0}.", _serverEndPoint);
 
-				while (_state != State.Connected && attempts < MaxConnectionAttempts)
+				while (_state == State.Connecting && attempts < MaxConnectionAttempts)
 				{
 					_messageQueue.Enqueue(Messages.Connect.Create());
 					++attempts;
@@ -390,7 +393,7 @@ namespace Lwar.Client.Network
 		{
 			while (!context.IsCanceled)
 			{
-				if (_state == State.Disconnected)
+				if (_state != State.Syncing || _state != State.Connected)
 				{
 					await context.NextFrame();
 					continue;
@@ -400,13 +403,6 @@ namespace Lwar.Client.Network
 
 				if (delta > DroppedTimeout)
 					_state = State.Dropped;
-				else if (delta > LaggingTimeout)
-				{
-					_state = State.Lagging;
-					TimeToDrop = DroppedTimeout - delta;
-				}
-				else
-					_state = State.Connected;
 
 				await context.Delay(1000 / ConnectionStateCheckFrequency);
 			}
@@ -435,17 +431,22 @@ namespace Lwar.Client.Network
 			/// <summary>
 			///   Indicates that the connection is not established.
 			/// </summary>
-			Disconnected,
+			Disconnected = 0,
 
 			/// <summary>
 			///   Indicates that a connection attempt has been started.
 			/// </summary>
-			Connecting,
+			Connecting = 1,
+
+			/// <summary>
+			///   Indicates that a connection has been established and that the proxy is waiting for Synced message.
+			/// </summary>
+			Syncing = 2,
 
 			/// <summary>
 			///   Indicates that a connection is established and the game state is fully synced.
 			/// </summary>
-			Connected,
+			Connected = 3,
 
 			/// <summary>
 			///   Indicates that a connection is faulted due to an error and can no longer be used to send and receive any data.
@@ -456,17 +457,6 @@ namespace Lwar.Client.Network
 			///   Indicates that the server is full and cannot accept any further clients.
 			/// </summary>
 			Full,
-
-			/// <summary>
-			///   Indicates that a connection has been established and that the proxy is waiting for Synced message.
-			/// </summary>
-			Syncing,
-
-			/// <summary>
-			///   Indicates that a connection is lagging, that is, no new packets have been received from the server for a short amount
-			///   of time.
-			/// </summary>
-			Lagging,
 
 			/// <summary>
 			///   Indicates that a connection has been dropped after no packets have been received from the server for a specific

@@ -46,7 +46,7 @@ namespace Pegasus.Framework.Network
 			{
 				try
 				{
-					await _socket.SendToAsync(context, new ArraySegment<byte>(packet.Data), remoteEndPoint);
+					await _socket.SendToAsync(context, new ArraySegment<byte>(packet.Data, 0, packet.Size), remoteEndPoint);
 				}
 				catch (SocketException e)
 				{

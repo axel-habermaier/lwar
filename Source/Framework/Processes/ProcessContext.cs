@@ -60,7 +60,7 @@ namespace Pegasus.Framework.Processes
 		///   Instructs the process to wait for the completion of the given action that will be executed on another thread.
 		/// </summary>
 		/// <param name="action">The action that the process should wait for.</param>
-		public Awaiter WaitFor(Action action)
+		public Awaiter WaitForTask(Action action)
 		{
 			Assert.ArgumentNotNull(action, () => action);
 			return WaitFor(TaskOperation.Create(action));
@@ -71,10 +71,20 @@ namespace Pegasus.Framework.Processes
 		/// </summary>
 		/// <typeparam name="TResult">The type of the operation's result.</typeparam>
 		/// <param name="func">The function that the process should wait for.</param>
-		public Awaiter<TResult> WaitFor<TResult>(Func<TResult> func)
+		public Awaiter<TResult> WaitForTask<TResult>(Func<TResult> func)
 		{
 			Assert.ArgumentNotNull(func, () => func);
 			return WaitFor(TaskOperation<TResult>.Create(func));
+		}
+
+		/// <summary>
+		///   Instructs the process to wait for the given function to return true.
+		/// </summary>
+		/// <param name="func">The function that the process should wait for.</param>
+		public Awaiter WaitFor(Func<bool> func)
+		{
+			Assert.ArgumentNotNull(func, () => func);
+			return WaitFor(DelegateOperation.Create(func));
 		}
 
 		/// <summary>
