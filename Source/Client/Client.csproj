@@ -79,6 +79,7 @@
     <Compile Include="Gameplay\Entity.cs" />
     <Compile Include="Gameplay\EntityList.cs" />
     <Compile Include="BufferExtensions.cs" />
+    <Compile Include="Gameplay\InputState.cs" />
     <Compile Include="LwarCommands.cs" />
     <Compile Include="Network\DeliveryManager.cs" />
     <Compile Include="Network\Messages\AddPlayer.cs" />

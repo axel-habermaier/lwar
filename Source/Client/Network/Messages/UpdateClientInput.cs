@@ -14,34 +14,14 @@ namespace Lwar.Client.Network.Messages
 		private const int Size = sizeof(byte) + Identifier.Size + 5 * sizeof(byte);
 
 		/// <summary>
-		///   Indicates whether the player wants to move backwards.
+		///   The input state that is sent with the message.
 		/// </summary>
-		private bool _backward;
+		private InputState _inputState;
 
 		/// <summary>
-		///   Indicates whether the player wants to move forward.
-		/// </summary>
-		private bool _forward;
-
-		/// <summary>
-		///   Indicates whether the player wants to move to the left.
-		/// </summary>
-		private bool _left;
-
-		/// <summary>
-		///   The identifier of the player that is added.
+		///   The identifier of the player that is change his or her input state.
 		/// </summary>
 		private Identifier _playerId;
-
-		/// <summary>
-		///   Indicates whether the player wants to to the right.
-		/// </summary>
-		private bool _right;
-
-		/// <summary>
-		///   Indicates whether the player wants to shoot.
-		/// </summary>
-		private bool _shooting;
 
 		/// <summary>
 		///   Gets or sets the timestamp of the message.
@@ -70,11 +50,7 @@ namespace Lwar.Client.Network.Messages
 
 			buffer.WriteByte((byte)MessageType.UpdateClientInput);
 			buffer.WriteIdentifier(_playerId);
-			buffer.WriteBoolean(_forward);
-			buffer.WriteBoolean(_backward);
-			buffer.WriteBoolean(_left);
-			buffer.WriteBoolean(_right);
-			buffer.WriteBoolean(_shooting);
+			_inputState.Write(buffer);
 
 			return true;
 		}
@@ -82,14 +58,12 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
-		public UpdateClientInput Create(Identifier playerId, bool forward, bool backward, bool left, bool right, bool shooting)
+		/// <param name="playerId">The identifier of the player that is change his or her input state.</param>
+		/// <param name="inputState">The input state that should be sent with the message.</param>
+		public UpdateClientInput Create(Identifier playerId, InputState inputState)
 		{
 			var update = GetInstance();
-			update._forward = forward;
-			update._backward = backward;
-			update._left = left;
-			update._right = right;
-			update._shooting = shooting;
+			update._inputState = inputState;
 			update._playerId = playerId;
 			return update;
 		}

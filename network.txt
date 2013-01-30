@@ -195,8 +195,8 @@ Messages Payload Data
 
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------	
-		uint32		frameNo		The monotonically increasing frame number, starting with 1
 		uint32(Id)	playerId	The generational identifier of the player that generated the message 
+		uint32		frameNo		The monotonically increasing frame number, starting with 1
 		uint8		forward		Boolean state value, also including the seven previous states
 		uint8		backward	Boolean state value, also including the seven previous states
 		uint8		left		Boolean state value, also including the seven previous states
