@@ -207,7 +207,7 @@ namespace Lwar.Client.Network
 				if (attempts >= MaxConnectionAttempts)
 				{
 					_state = State.Faulted;
-					NetworkLog.ClientError("Failed to connect to {0}. The server did no respond.", _serverEndPoint);
+					NetworkLog.ClientError("Failed to connect to {0}. The server did not respond.", _serverEndPoint);
 				}
 				else
 					NetworkLog.ClientInfo("Connected to {0}.", _serverEndPoint);

@@ -185,7 +185,11 @@ namespace Lwar.Client.Gameplay
 		/// <param name="context">The context in which the state function should be executed.</param>
 		private async Task Inactive(ProcessContext context)
 		{
+			if (ServerProxy != null)
+				Log.Info("The game session has ended.");
+
 			Cleanup();
+
 			_drawState.ChangeStateDelayed(async ctx => await ctx.NextFrame());
 			await context.NextFrame();
 		}
