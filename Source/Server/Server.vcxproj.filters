@@ -21,6 +21,8 @@
     <ClCompile Include="rules\ship.c">
       <Filter>Rules</Filter>
     </ClCompile>
+    <ClCompile Include="packet.c" />
+    <ClCompile Include="slab.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="connection.h" />
@@ -34,6 +36,8 @@
     <ClInclude Include="server_export.h" />
     <ClInclude Include="coroutine.h" />
     <ClInclude Include="rules.h" />
+    <ClInclude Include="packet.h" />
+    <ClInclude Include="slab.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Rules">

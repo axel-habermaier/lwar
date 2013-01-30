@@ -28,7 +28,7 @@ int packet_get(Packet *p, Message *m, size_t *seqno) {
 
 int packet_recv(Packet *p) {
     p->a = 0;
-    p->a = MAX_PACKET_LENGTH;
+    p->b = MAX_PACKET_LENGTH;
     return    conn_recv(p->p, &p->b, &p->adr)
            && p->b != 0; /* EAGAIN */
 }

@@ -28,7 +28,7 @@ void slab_init(Slab *s, void *p, size_t n, size_t size,
     INIT_LIST_HEAD(&s->free);
     INIT_LIST_HEAD(&s->allocated);
 
-    log_info("Initialized Slab at %x, %d * #%d", p, n, size);
+    log_debug("Initialized Slab at %x, %d * #%d", p, n, size);
 
     size_t i;
     for(i = 0; i < s->n; i++) {

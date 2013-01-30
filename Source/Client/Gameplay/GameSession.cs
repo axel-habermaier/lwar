@@ -312,8 +312,8 @@ namespace Lwar.Client.Gameplay
 			}
 			else if (ServerProxy.IsConnected)
 				_updateState.ChangeStateDelayed(Playing);
-
-			Assert.That(false, "Unexpected connection state.");
+			else
+				Assert.That(false, "Unexpected connection state.");
 		}
 
 		/// <summary>

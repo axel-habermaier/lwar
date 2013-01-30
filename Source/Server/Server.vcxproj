@@ -179,6 +179,7 @@
     <ClCompile Include="entity.c" />
     <ClCompile Include="log.c" />
     <ClCompile Include="message.c" />
+    <ClCompile Include="packet.c" />
     <ClCompile Include="physics.c" />
     <ClCompile Include="pq.c" />
     <ClCompile Include="protocol.c" />
@@ -186,6 +187,7 @@
     <ClCompile Include="rules\planet.c" />
     <ClCompile Include="rules\ship.c" />
     <ClCompile Include="server.c" />
+    <ClCompile Include="slab.c" />
     <ClCompile Include="time.c" />
     <ClCompile Include="uint.c" />
   </ItemGroup>
@@ -195,10 +197,12 @@
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="message.h" />
+    <ClInclude Include="packet.h" />
     <ClInclude Include="pq.h" />
     <ClInclude Include="rules.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="server_export.h" />
+    <ClInclude Include="slab.h" />
     <ClInclude Include="uint.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>

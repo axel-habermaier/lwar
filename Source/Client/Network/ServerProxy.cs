@@ -98,7 +98,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Provides the time that is used to check whether a connection is lagging or dropped.
 		/// </summary>
-		private Time _time = new Time();
+		private Time _time;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -110,6 +110,7 @@ namespace Lwar.Client.Network
 			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
 			Assert.ArgumentNotNull(scheduler, () => scheduler);
 
+			_time.Offset = -_time.Seconds;
 			_messageQueue = new MessageQueue(_deliveryManager);
 			_serverEndPoint = serverEndPoint;
 			_receiveProcess = scheduler.CreateProcess(Receive);
@@ -389,6 +390,12 @@ namespace Lwar.Client.Network
 		{
 			while (!context.IsCanceled)
 			{
+				if (_state == State.Disconnected)
+				{
+					await context.NextFrame();
+					continue;
+				}
+
 				var delta = _time.Milliseconds - _lastPacketTimestamp;
 
 				if (delta > DroppedTimeout)
