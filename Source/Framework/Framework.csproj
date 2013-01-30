@@ -173,6 +173,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayPool.cs" />
+    <Compile Include="ObjectPool.cs" />
     <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\IMeasurement.cs" />
     <Compile Include="Platform\Measurement.cs" />

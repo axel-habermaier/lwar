@@ -22,7 +22,7 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   The pool that manages the instaces of type TObject.
 		/// </summary>
-		private static readonly Pool<TObject> Pool = new Pool<TObject>();
+		private static readonly ObjectPool<TObject> Pool = new ObjectPool<TObject>();
 
 #if DEBUG
 		/// <summary>

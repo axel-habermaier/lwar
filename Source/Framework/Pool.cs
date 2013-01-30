@@ -3,17 +3,13 @@
 namespace Pegasus.Framework
 {
 	using System.Collections.Generic;
-	using Platform;
 
 	/// <summary>
-	///   Pools objects of type T in order to reduce the pressure on the garbage collector. Instead of new'ing up a new object
-	///   of type T whenever one is needed, the pool's Get() method should be used to retrieve a previously allocated instance.
-	///   Once the object is no longer being used, it must be returned to the pool so that it can be reused later on. If the
-	///   pool runs out of instances, it batch-creates several new ones.
+	///   Base implementation of pooled allocators.
 	/// </summary>
 	/// <typeparam name="T">The type of the pooled objects.</typeparam>
-	internal class Pool<T>
-		where T : class, IDisposable, new()
+	public abstract class Pool<T>
+		where T : class
 	{
 		/// <summary>
 		///   The initial number of pooled instances. If the pool runs out of instances, another 'Capacity' many instances are
@@ -39,22 +35,28 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Initializes the type.
 		/// </summary>
-		public Pool()
+		protected Pool()
 		{
 			AllocateObjects();
 		}
 
 		/// <summary>
-		///   Allocates the given number of objects.
+		///   Allocates new array instances.
 		/// </summary>
 		private void AllocateObjects()
 		{
 			_allocationCount += Capacity;
 			Log.DebugInfo("Pool<{0}>: Allocating new objects ({1} objects total).", typeof(T).Name, _allocationCount);
 
-			for (var i = 0; i < Capacity; ++i)
-				_items.Add(new T());
+			AllocateObjects(_items, Capacity);
 		}
+
+		/// <summary>
+		///   Allocates new objects.
+		/// </summary>
+		/// <param name="items">The list in which the newly allocated items should be stored.</param>
+		/// <param name="count">The number of items that should be allocated.</param>
+		protected abstract void AllocateObjects(List<T> items, int count);
 
 		/// <summary>
 		///   Gets a pooled object.
