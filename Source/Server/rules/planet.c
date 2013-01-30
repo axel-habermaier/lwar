@@ -17,7 +17,7 @@ static void gravity(Entity *e0) {
     Entity *e1;
     Pos m0 = entity_mass(e0);
 
-    for_each_allocated_entity(server, e1) {
+    entities_foreach(e1) {
         if(e0->type != e1->type) {
             Pos m1 = entity_mass(e1);
 

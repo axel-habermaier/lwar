@@ -73,7 +73,7 @@ int visualization_update() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     Entity *e;
-    for_each_allocated_entity(server, e) {
+    entities_foreach(e) {
         draw_entity(e);
     }
 

@@ -3,6 +3,8 @@
 
 #include "server.h"
 
+static Client      _clients[MAX_CLIENTS];
+
 static void player_init(Player *p) {
     p->ship = 0;
     p->shooting = 0;
@@ -27,52 +29,43 @@ static void player_action(Player *p) {
 
 void player_actions() {
     Client *c;
-    for_each_connected_client(server, c) {
+    clients_foreach(c) {
         player_action(&c->player);
     }
 }
 
-static void client_init(Client *c) {
+static void client_ctor(size_t i, void *p) {
+    Client *c = (Client*)p;
+    c->player.id.n = i;
+    c->next_out_seqno = 1; /* important to start with one */
+    c->last_in_ack    = 0;
+    c->last_in_seqno  = 0;
     player_init(&c->player);
-    c->next_seqno = 0;
-    c->last_ack   = 0;
-    mqueue_init(&c->queue);
+    /* mqueue_init(&c->queue); */
+}
+
+static void client_dtor(size_t i, void *p) {
+    Client *c = (Client*)p;
+    c->player.id.gen ++;
 }
 
 Client *client_create() {
-    Client *c;
-    for_each_client(server, c) {
-        if(!c->connected) {
-            c->connected = 1;
-            client_init(c);
-            return c;
-        }
-    }
-    return 0;
+    return slab_new(&server->clients, Client);
 }
 
 void client_remove(Client *c) {
-    if(c) {
-        c->player.id.gen ++;
-        mqueue_destroy(&c->queue);
-        c->connected = 0;
-    }
+    slab_free(&server->clients, c);
 }
 
 Client *client_get(Id player, Address *a) {
-    if(player.n < MAX_CLIENTS) {
-        Client *c = &server->clients[player.n];
-        if(c->connected)
-            if(!a || (c->adr.ip == a->ip && c->adr.port == a->port))
-                return c;
-    }
+    Client *c = slab_at(&server->clients, Client, player.n);
+    if(!c) return 0;
+    if(!a) return c;
+    if(   c->adr.ip == a->ip
+       && c->adr.port == a->port) return c;
     return 0;
 }
 
 void clients_init() {
-    size_t i;
-    for(i=0; i<MAX_CLIENTS;  i++) {
-        Client *c = &server->clients[i];
-        c->player.id.n = i;
-    }
+    slab_static(&server->clients, _clients, client_ctor, client_dtor);
 }

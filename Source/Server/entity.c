@@ -3,7 +3,8 @@
 
 #include "server.h"
 
-/* TODO: use entitie's type */
+static Entity _entities[MAX_ENTITIES];
+
 Pos entity_radius(Entity *e) {
     return e->type->r;
 }
@@ -31,20 +32,23 @@ static void entity_action(Entity *e) {
 
 void entity_actions() {
     Entity *e;
-    for_each_allocated_entity(server, e) {
+    entities_foreach(e) {
         entity_action(e);
     }
 }
 
-Entity *entity_create(EntityType *t, Vec x, Vec v) {
-    if(list_empty(&server->free))
-        return 0;
-    
-    List *l = server->free.next;
-    list_del(l);
-    list_add_tail(l, &server->created);
+static void entity_ctor(size_t i, void *p) {
+    Entity *e = (Entity*)p;
+    e->id.n = i;
+}
 
-    Entity *e = list_entry(l, Entity, l);
+static void entity_dtor(size_t i, void *p) {
+    Entity *e = (Entity*)p;
+    e->id.gen ++;
+}
+
+Entity *entity_create(EntityType *t, Vec x, Vec v) {
+    Entity *e = slab_new(&server->entities, Entity);
     e->x      = x;
     e->v      = v;
     e->rot    = 0;
@@ -53,23 +57,12 @@ Entity *entity_create(EntityType *t, Vec x, Vec v) {
     return e;
 }
 
-
 void entity_remove(Entity *e) {
-    List *l = &e->l;
-    e->id.gen ++;
-    list_del(l);
-    list_add_tail(l, &server->free);
+    slab_free(&server->entities, e);
 }
 
 void entities_init() {
-    size_t i;
-    for(i=0; i<MAX_ENTITIES; i++) {
-        Entity *e = &server->entities[i];
-        e->id.n = i;
-
-        INIT_LIST_HEAD(&e->l);
-        list_add_tail(&e->l, &server->free);
-    }
+    slab_static(&server->entities, _entities, entity_ctor, entity_dtor);
 }
 
 EntityType *entity_type_get(size_t id) {

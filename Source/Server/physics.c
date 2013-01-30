@@ -153,8 +153,8 @@ static void find_collisions(Time d) {
     Entity *e0,*e1;
     ncollisions = 0;
 
-    for_each_allocated_entity(server, e0) {
-        for_each_allocated_entity(server, e1) {
+    entities_foreach(e0) {
+        entities_foreach(e1) {
             Time e;
             if(   e0->id.n < e1->id.n  /* prevent to compare two entities twice  */
                && collide(e0,e1,&e)    /* check for collision, e yields the time */
@@ -172,7 +172,7 @@ static void handle_collisions(Time d) {
         Collision *c = &collisions[i];
         Entity *e0 = c->e0;
         Entity *e1 = c->e1;
-        log_info("collision of %d and %d at Δt %.3f\n", e0->id.n, e1->id.n, c->d.t);
+        log_info("collision of %d and %d at Δt %.3f", e0->id.n, e1->id.n, c->d.t);
 
         /* move to collision point */
         move(e0, c->d);
@@ -186,7 +186,7 @@ static void handle_collisions(Time d) {
 
 static void physics_move(Time d) {
     Entity *e;
-    for_each_entity(server, e) {
+    entities_foreach(e) {
         move_remaining(e);
         e->a = _0; /* reset acceleration */
 
@@ -208,7 +208,7 @@ static void physics_move(Time d) {
 void physics_update() {
     Time d = to_time(clock_delta());
     Entity *e;
-    for_each_allocated_entity(server,e)
+    entities_foreach(e)
         e->remaining = d;
     find_collisions(d);
     handle_collisions(d);

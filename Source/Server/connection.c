@@ -34,6 +34,12 @@ typedef SOCKET Socket;
 #include "server.h"
 #include "connection.h"
 
+enum 
+{
+	SERVER_PORT = 32422,
+	/* IP_STRLENGTH = 22, */
+};
+
 typedef struct
 {
 	Socket socket;
@@ -130,13 +136,13 @@ int conn_bind()
 	return 1;
 }
 
-int conn_receive(char buffer[MAX_PACKET_LENGTH], size_t* size, Address* address)
+int conn_recv(char *buf, size_t* size, Address* adr)
 {
 	struct sockaddr_in from;
 	memset(&from, 0, sizeof(struct sockaddr_in));
 	socklen_t len = sizeof(struct sockaddr_in);
 
-	int read_bytes = recvfrom(connection.socket, buffer, MAX_PACKET_LENGTH, 0, (struct sockaddr*)&from, &len);
+	int read_bytes = recvfrom(connection.socket, buf, *size, 0, (struct sockaddr*)&from, &len);
 #ifdef _MSC_VER
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
 #endif
@@ -155,21 +161,21 @@ int conn_receive(char buffer[MAX_PACKET_LENGTH], size_t* size, Address* address)
 	}
 
 	*size = read_bytes;
-	address->ip = from.sin_addr.s_addr;
-	address->port = from.sin_port;
+	adr->ip = from.sin_addr.s_addr;
+	adr->port = from.sin_port;
 
 	return 1;
 }
 
-int conn_send(const char buffer[MAX_PACKET_LENGTH], size_t size, Address* address)
+int conn_send(const char *buf, size_t size, Address* adr)
 {
 	struct sockaddr_in addr;
 	memset(&addr, 0, sizeof(struct sockaddr_in));
 	addr.sin_family = AF_INET;
-	addr.sin_port = address->port;
-	addr.sin_addr.s_addr = address->ip;
+	addr.sin_port = adr->port;
+	addr.sin_addr.s_addr = adr->ip;
 
-	int sent = sendto(connection.socket, buffer, size, 0, (struct sockaddr*)&addr, sizeof(struct sockaddr_in));
+	int sent = sendto(connection.socket, buf, size, 0, (struct sockaddr*)&addr, sizeof(struct sockaddr_in));
 	if (socket_error(sent))
 	{
 		conn_error("Sending failed");
@@ -185,8 +191,8 @@ int conn_send(const char buffer[MAX_PACKET_LENGTH], size_t size, Address* addres
 	return 1;
 }
 
-int conn_create_addr(Address* addr, const char ip[IP_STRLENGTH], uint16_t port)
-{
-	addr->port = htons(port);
-	return inet_pton(AF_INET, ip, &addr->ip);
+int address_create(Address *adr, const char *ip, uint16_t port) {
+	adr->port = htons(port);
+	return inet_pton(AF_INET, ip, &adr->ip);
 }
+

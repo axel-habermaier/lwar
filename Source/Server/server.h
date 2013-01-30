@@ -1,13 +1,13 @@
 #include "list.h"
+#include "slab.h"
 
 enum {
     MAX_CLIENTS    = 8,
     MAX_ENTITIES   = 1024,
     MAX_TYPES      = 32,
     MAX_COLLISIONS = 32, /* should be n^2-1 for priority queue */
+    MAX_QUEUE      = 1028,
 };
-
-typedef struct list_head List;
 
 typedef struct Vec Vec;
 typedef float      Pos;
@@ -20,7 +20,7 @@ typedef unsigned long long Clock;
 
 /* in seconds, used to prevent implicit conversions from Clock */
 typedef struct { Pos t; } Time;
-int time_cmp(Time d0, Time d1);
+int  time_cmp(Time d0, Time d1);
 Time time_add(Time d0, Time d1);
 Time time_sub(Time d0, Time d1);
 
@@ -44,20 +44,26 @@ void player_input(Player *p, int up, int down, int left, int right, int shooting
 void player_actions();
 
 void clients_init();
-void client_update(Client *c);
+/* void client_update(Client *c); */
 Client *client_create();
 void client_remove(Client *c);
 Client *client_get(Id player, Address *a);
 
+/*
 void mqueue_init(List *l);
 void mqueue_ack(List *l, uint32_t ack);
 void mqueue_destroy(List *l);
 size_t packet_scan(char *p, size_t n, Address a);
 size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a);
+*/
+void protocol_init();
+void protocol_recv();
+void protocol_send();
 
 void entities_init();
 void entity_actions();
 Entity *entity_create(EntityType *t, Vec x, Vec v);
+void entity_remove(Entity *e);
 Pos entity_radius(Entity *e);
 Pos entity_mass(Entity *e);
 Vec entity_acc(Entity *e);
@@ -95,13 +101,14 @@ struct Player {
 };
 
 struct Entity {
+    List l;
+
     Vec x,v,a;
     Pos rot;
     int health;
 
     Id id;
     EntityType *type;
-    List l;
 
     Time remaining;
 
@@ -120,30 +127,22 @@ struct EntityType {
 };
 
 struct Client {
-    Player player;
+    List l;
 
-    int connected;
+    Player player;
     Address adr;
 
-    size_t  next_seqno;
-    size_t  last_ack;
-    
-    /* unacknowlegded reliable messages */
-    List/*[QueuedMessage]*/ queue;
+    size_t next_out_seqno;
+    size_t last_in_ack;
+
+    size_t last_in_seqno;
 };
 
 struct Server {
-    /* static memory for clients, entities, and types */
-    Client   clients [MAX_CLIENTS];
-    Entity   entities[MAX_ENTITIES];
+    Slab clients;
+    Slab entities;
+    Slab queue;
     EntityType *types[MAX_TYPES];
-
-    /* entities are further linked to either the
-     * allocated or free list for fast traversal
-     */
-    List/*[Entity]*/ allocated;
-    List/*[Entity]*/ created;
-    List/*[Entity]*/ free;
 
     int running;
     Clock cur_time;
@@ -151,21 +150,11 @@ struct Server {
     Clock update_periodic;
 };
 
-#define for_each_client(s,c) \
-    for(c=s->clients; c<s->clients+MAX_CLIENTS; c++)
+#define clients_foreach(c)       slab_foreach(&server->clients, c, Client)
+#define clients_foreach_cont(c)  slab_foreach_cont(&server->clients, c, Client)
 
-#define for_each_connected_client(s,c) \
-    for_each_client(s,c) \
-      if(c->connected)
+#define entities_foreach(e)      slab_foreach(&server->entities, e, Entity)
+#define entities_foreach_cont(e) slab_foreach_cont(&server->entities, e, Entity)
 
-#define for_each_entity(s,e) \
-    for(e=s->entities; e<s->entities+MAX_ENTITIES; e++)
-
-#define for_each_allocated_entity(s,e) \
-    list_for_each_entry(e, Entity, &s->allocated, l)
-
-#define list_for_each_entry_cont(pos, type, head, member)        \
-    for (pos = (pos) ? (pos) : list_entry((head)->next, type, member);    \
-         &pos->member != (head);                     \
-         pos = list_entry(pos->member.next, type, member))
-
+#define queue_foreach(qm)        slab_foreach(&server->queue, qm, QueuedMessage)
+#define queue_foreach_cont(qm)   slab_foreach_cont(&server->queue, qm, QueuedMessage)

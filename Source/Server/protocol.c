@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -6,67 +7,122 @@
 
 #include "server.h"
 #include "message.h"
-#include "coroutine.h"
+#include "packet.h"
 
 typedef struct QueuedMessage QueuedMessage;
-struct QueuedMessage {
-    Message m;
-    List l;
+typedef struct PerClient     PerClient;
+
+struct PerClient {
+    size_t seqno;
+    /* TODO: timeout for this message */
 };
 
-void mqueue_init(List *l) {
-    INIT_LIST_HEAD(l);
+struct QueuedMessage {
+    List l;
+    unsigned int dest;
+    /* sequence numbers for each client */
+    PerClient c[MAX_CLIENTS];
+    Message m;
+};
+
+static QueuedMessage _queue[MAX_QUEUE];
+
+static void qm_ctor(size_t i, void *p) {
+    QueuedMessage *qm = (QueuedMessage*)p;
+    qm->dest = 0;
 }
 
-void mqueue_destroy(List *l) {
-    mqueue_ack(l, ~0);
+static void qm_dtor(size_t i, void *p) {}
+
+static int qm_check_obsolete(size_t i, void *p) {
+    QueuedMessage *qm = (QueuedMessage*)p;
+    return qm->dest == 0;
 }
 
-/* expects l to be sorted wrt. sequence numbers in ascending order */
-void mqueue_ack(List *l, uint32_t ack) {
-    while(!list_empty(l)) {
-        List *a = l->next;
-        QueuedMessage *qm = list_entry(a, QueuedMessage, l);
-        if(qm->m.seqno > ack) return;
-        free(qm);
-        list_del(l);
+static int qm_check_dest(Client *c, QueuedMessage *qm) {
+    size_t id = c->player.id.n;
+    return (qm->dest & (1 << id));
+}
+
+static void qm_set_dest(Client *c, QueuedMessage *qm) {
+    size_t id = c->player.id.n;
+    qm->dest |= (1 << id);
+}
+
+static void qm_clear_dest(Client *c, QueuedMessage *qm) {
+    size_t id = c->player.id.n;
+    qm->dest &= ~(1 << id);
+}
+
+#define qm_seqno(c,qm) qm->c[c->player.id.n].seqno
+
+static int qm_check_relevant(Client *c, QueuedMessage *qm) {
+    
+    /* message not for c */
+    if(!qm_check_dest(c, qm)) {
+        return 0;
     }
+
+    /* unreliable message for c, do not resend */
+    if(!is_reliable(&qm->m)) {
+        qm_clear_dest(c, qm);
+        return 1;
+    }
+
+    /* reliable message for c, already acknowledged */
+    if(qm_seqno(c, qm) <= c->last_in_ack) {
+        qm_clear_dest(c, qm);
+        return 0;
+    }
+
+    /* reliable, unacknowledged message for c */
+    return 1;
 }
 
-static void message_enqueue(Client *c, QueuedMessage *qm) {
-    list_add_tail(&c->queue, &qm->l);
-    qm->m.seqno = (c->next_seqno ++);
+QueuedMessage *qm_create() {
+    return slab_new(&server->queue, QueuedMessage);
 }
 
-static void message_enqueue_all(QueuedMessage *qm) {
+void qm_remove(QueuedMessage *qm) {
+    slab_free(&server->queue, qm);
+}
+
+static void qm_enqueue(Client *c, QueuedMessage *qm) {
+    qm_set_dest(c,qm);
+    if(is_reliable(&qm->m))
+        qm_seqno(c,qm) = (c->next_out_seqno ++);
+}
+
+static Message *message_unicast(Client *c, size_t type) {
+    QueuedMessage *qm = qm_create();
+    Message *m = &qm->m;
+    m->type = type;
+    qm_enqueue(c,qm);
+    return m;
+}
+
+static Message *message_broadcast(size_t type) {
+    QueuedMessage *qm = qm_create();
+    Message *m = &qm->m;
     Client *c;
-    for_each_client(server, c)
-        if(c->connected)
-            message_enqueue(c, qm);
-}
-
-/* if c == 0 then broadcast */
-static Message *message_reliable(Client *c, Message *m, uint8_t new_type) {
-    QueuedMessage *qm = (QueuedMessage*)malloc(sizeof(QueuedMessage));
-    if(m) memcpy(&qm->m, m, sizeof(Message));
-    m = &qm->m;
-    m->type = new_type;
-    if(c) message_enqueue(c, qm);
-    else  message_enqueue_all(qm);
+    m->type = type;
+    clients_foreach(c)
+        qm_enqueue(c,qm);
     return m;
 }
 
 /* return pointer to static location,
  * process messages strictly sequentially */
+/*
 static Message *message_update(Entity *e) {
     static Message _m;
     Message *m = &_m;
     m->type = MESSAGE_UPDATE;
-    m->time = server->cur_time; /* TODO: subtract some base_time */
+    m->time = server->cur_time; /* TODO: subtract some base_time *
 
     m->update.entity = e->id;
 
-    m->update.x   = e->x.x;     /* TODO: some scaling */
+    m->update.x   = e->x.x;     /* TODO: some scaling *
     m->update.y   = e->x.y;
 
     m->update.vx  = e->v.x;
@@ -76,8 +132,11 @@ static Message *message_update(Entity *e) {
     m->update.health = e->health;
     return m;
 }
+*/
 
-static void message_handle(Address *a, Message *m) {
+/* TODO: must update seqno for clients */
+static int message_handle(Address *a, Message *m, size_t seqno) {
+    /*
     Client *c;
 
     message_print(m);
@@ -93,7 +152,7 @@ static void message_handle(Address *a, Message *m) {
         break;
     case MESSAGE_LEAVE:
         {
-            /* TODO: if we need to send back to c, then keep c around with deleted flag */
+            /* TODO: if we need to send back to c, then keep c around with deleted flag *
             c = client_get(m->leave.player, a);
             if(!c) return;
             client_remove(c);
@@ -111,7 +170,7 @@ static void message_handle(Address *a, Message *m) {
         {
             c = client_get(m->input.player, a);
             if(!c) return;
-            /* TODO: rotation? */
+            /* TODO: rotation? *
             player_input(&c->player, m->input.up, m->input.down, m->input.left, m->input.right, m->input.shooting);
             uint32_t ack = m->input.ack;
             mqueue_ack(&c->queue, ack);
@@ -119,61 +178,63 @@ static void message_handle(Address *a, Message *m) {
         }
         break;
     }
+    */
 }
 
-size_t packet_scan(char *p, size_t n, Address a) {
-    size_t i=0,k;
+static void packet_scan(Packet *p) {
     Message m;
-    while(i < n) {
-        k = message_unpack(p+i, &m, n-i);
-
-        if(k > 0) message_handle(&a, &m);
-        else break;
-
-        i += k;
+    size_t seqno;
+    while(packet_get(p, &m, &seqno)) {
+        message_handle(&p->adr, &m, seqno);
     }
-    return i;
 }
 
-/* this is implemented as a coroutine,
- * intended to be called mutliple times until 0 is returned.
- * qm,e are static so they are preserved across calls.
- * the state is stored in __state in cr_begin (see coroutine.h)
- * and the function resumes at the correspoinding cr_yield.
- * cr_return reinitializes the state to the loc of cr_begin()
- */
-
-static Message *message_next(Client *c) {
-    static QueuedMessage *qm;
-    static Entity *e;
-
-    cr_begin();
-
-    list_for_each_entry_cont(qm, QueuedMessage, &c->queue, l) {
-        cr_yield(&qm->m);
+/* handle all pending incoming messages */
+void protocol_recv() {
+    Packet p;
+    while(packet_recv(&p)) {
+        packet_scan(&p);
     }
-
-    list_for_each_entry_cont(e, Entity, &server->allocated, l) {
-        cr_yield(message_update(e));
-    }
-
-    qm = 0; e = 0;
-    cr_return(0);
 }
 
-size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a) {
-    size_t i=0,k;
-    Message *m;
+static void packet_init_header(Client *c, Packet *p) {
+    packet_init(p);
+    Message m = { MESSAGE_HEADER, .header = { APP_ID, c->last_in_seqno, server->cur_time } };
+    packet_put(p, &m, 0); /* just dummy, header shouldn't be marked reliable */
+}
 
-    while((m = message_next(c))) {
-        k = message_pack(p+i, m, n-i);
-        if(k > 0) {
-            i += k;
-        } else { /* does not fit any more */
-            *a = c->adr;
-            return i;
+static int packet_fmt(Client *c, Packet *p, QueuedMessage *qm) {
+    /* first, check whether the message is relevant for c */
+    if(!qm_check_relevant(c, qm)) return 1;
+    return packet_put(p, &qm->m, qm_seqno(c, qm));
+}
+
+static void protocol_send_client(Client *c) {
+    Packet p;
+    QueuedMessage *qm;
+
+    packet_init_header(c, &p);
+
+    queue_foreach(qm) {
+    again:
+        if(!packet_fmt(c, &p, qm)) { /* did not fit any more */
+            packet_send(&p);
+            packet_init_header(c, &p);
+            goto again;
         }
     }
+}
 
-    return 0;
+/* (re)send queued messages */
+void protocol_send() {
+    Client *c;
+    clients_foreach(c) {
+        protocol_send_client(c);
+    }
+    /* deferred, because queue_foreach is not safe against deletion */
+    slab_free_pred(&server->queue, qm_check_obsolete);
+}
+
+void protocol_init() {
+    slab_static(&server->queue, _queue, qm_ctor, qm_dtor);
 }

@@ -10,9 +10,9 @@
 typedef unsigned long long Clock;
 static int visual;
 
-static void iputs(const char *msg) { fputs(msg,stdout); }
-static void eputs(const char *msg) { fputs(msg,stderr); }
-static void die  (const char *msg) { fputs(msg,stderr); exit(1); };
+static void iputs(const char *msg) { fputs(msg,stdout); fputs("\n",stdout); fflush(stdout); }
+static void eputs(const char *msg) { fputs(msg,stderr); fputs("\n",stderr); fflush(stderr); }
+static void die  (const char *msg) { fputs(msg,stderr); fputs("\n",stderr); fflush(stderr); exit(1); };
 
 static LogCallbacks callbacks = { die, eputs, eputs, iputs, eputs, };
 

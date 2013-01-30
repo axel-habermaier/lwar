@@ -31,6 +31,7 @@ extern "C" {
 
     /* should be called periodically
      * clock is a monotonic counter in millisecs
+     *       that MUST start with 0
      * force specifies to bypass the internal message delay
      *       and to send status updates immediatly
      * return > 0 on success

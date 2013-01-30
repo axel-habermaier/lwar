@@ -1,12 +1,11 @@
 typedef struct Message Message;
 
-size_t message_pack(char *s, Message *m, size_t len);
-size_t message_unpack(const char *s, Message *m, size_t len);
+size_t message_pack(char *s, Message *m, size_t seqno, size_t len);
+size_t message_unpack(const char *s, Message *m, size_t *seqno, size_t len);
 
 void message_print(Message *m);
 
 enum {
-    APP_ID     = 0xf27087c5,
     SCALE_BITS = 8,
     SCALE      = (1 << SCALE_BITS),
     MAX_NAME_LENGTH = 32,
@@ -14,68 +13,76 @@ enum {
 };
 
 enum {
-    MESSAGE_CONNECT		= 1,
-    MESSAGE_JOIN		= 2,
-    MESSAGE_LEAVE		= 3,
-    MESSAGE_CHAT		= 4,
-
-    MESSAGE_INPUT		= 5,
-
-    MESSAGE_ADD			= 6,
-    MESSAGE_REMOVE		= 7,
-    MESSAGE_UPDATE		= 8,
+    MESSAGE_HEADER = 0xff,
+    MESSAGE_SELECTION = 8,
+    MESSAGE_FULL = 11,
+    MESSAGE_CONNECT = 1,
+    MESSAGE_CHAT = 5,
+    MESSAGE_SYNCED = 10,
+    MESSAGE_JOIN = 3,
+    MESSAGE_DISCONNECT = 2,
+    MESSAGE_NAME = 9,
+    MESSAGE_REMOVE = 7,
+    MESSAGE_LEAVE = 4,
+    MESSAGE_ADD = 6,
+    MESSAGE_INPUT = 103,
 };
 
-#define IS_RELIABLE(t) \
-    ((t) != MESSAGE_INPUT && (t) != MESSAGE_UPDATE)
+int is_reliable(Message *m);
 
 struct Message {
-    /* uint32_t app_id; */
-    uint8_t type;
-
-    union {
-        uint32_t seqno;
-        uint32_t time; /* used only for update messages */
-    };
+    uint8_t  type;
 
     union {
         struct {
-            Id player;
-            char name[MAX_NAME_LENGTH];
+            Id player_id;
+            uint8_t ship_type;
+            uint8_t weapon_type;
+        } selection;
+
+        struct {
+            uint32_t app_id;
+            uint32_t ack;
+            uint32_t time;
+        } header;
+
+        struct {
+        } full;
+
+        struct {
+        } connect;
+
+        struct {
+        } synced;
+
+        struct {
+            Id player_id;
         } join;
 
         struct {
-            Id player;
-        } leave;
+        } disconnect;
 
         struct {
-            Id player;
-            uint16_t len;
-            char text[MAX_CHAT_LENGTH]; /* could be little bit shorter */
-        } chat;
-
-        struct {
-            Id player;
-            uint8_t  up,down,left,right,shooting;
-            uint32_t ack;
-        } input;
-
-        struct {
-            Id entity;
-            Id player;
-            uint8_t type;
-        } add;
-
-        struct {
-            Id entity;
+            Id entity_id;
         } remove;
 
         struct {
-            Id entity;
-            int32_t  x, y;   /* scaled by SCALE */
-            int32_t  vx,vy;
-            uint16_t rot;    /* in radians, scaled by SCALE */
-            uint8_t  health; /* in percent */
-        } update;
+            Id player_id;
+        } leave;
+
+        struct {
+            Id entity_id;
+            Id player_id;
+            uint8_t type_id;
+        } add;
+
+        struct {
+            Id player_id;
+            uint8_t up;
+            uint8_t down;
+            uint8_t left;
+            uint8_t right;
+            uint8_t shooting;
+        } input;
     };
 };
