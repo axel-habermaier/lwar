@@ -110,6 +110,8 @@ namespace Lwar.Client.Network
 			_task = Task.Factory.StartNew(() =>
 				{
 					var time = new Time();
+					time.Offset = -time.Seconds;
+
 					while (!token.IsCancellationRequested)
 					{
 						var updateStart = time.Milliseconds;

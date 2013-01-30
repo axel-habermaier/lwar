@@ -18,13 +18,21 @@ namespace Pegasus.Framework.Network
 		private readonly IPEndPoint _localEndPoint;
 
 		/// <summary>
+		///   Used to create incoming and outgoing packets.
+		/// </summary>
+		private readonly IPacketFactory _packetFactory;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="packetFactory">The packet factory that should be used to create incoming and outgoing packets.</param>
 		/// <param name="localEndPoint">The local endpoint that should be used to listen for the new connections.</param>
-		public TcpListener(IPEndPoint localEndPoint)
+		public TcpListener(IPacketFactory packetFactory, IPEndPoint localEndPoint)
 		{
+			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
 			Assert.ArgumentNotNull(localEndPoint, () => localEndPoint);
 
+			_packetFactory = packetFactory;
 			_localEndPoint = localEndPoint;
 			RetryCount = 3;
 		}
@@ -73,7 +81,7 @@ namespace Pegasus.Framework.Network
 
 								retryCount = RetryCount;
 								if (Connected != null)
-									Connected(new TcpSocket(acceptedSocket));
+									Connected(new TcpSocket(_packetFactory, acceptedSocket));
 								else
 									acceptedSocket.SafeDispose();
 							}

@@ -19,6 +19,11 @@ namespace Pegasus.Framework.Network
 		private const int SizeByteCount = sizeof(ushort);
 
 		/// <summary>
+		///   Used to create incoming and outgoing packets.
+		/// </summary>
+		private readonly IPacketFactory _packetFactory;
+
+		/// <summary>
 		///   The underlying socket that is used to send and receive packets.
 		/// </summary>
 		private Socket _socket;
@@ -31,22 +36,29 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		internal TcpSocket()
+		/// <param name="packetFactory">The packet factory that should be used to create incoming and outgoing packets.</param>
+		internal TcpSocket(IPacketFactory packetFactory)
 		{
+			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
+
+			_packetFactory = packetFactory;
 			_state = State.Disconnected;
 		}
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="packetFactory">The packet factory that should be used to create incoming and outgoing packets.</param>
 		/// <param name="socket">The underlying socket that should be used to send and receive packets.</param>
-		internal TcpSocket(Socket socket)
+		internal TcpSocket(IPacketFactory packetFactory, Socket socket)
 		{
+			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
 			Assert.ArgumentNotNull(socket, () => socket);
 #if Windows
 			Assert.ArgumentSatisfies(socket.DualMode, () => socket, "Socket is not in dual mode.");
 #endif
 
+			_packetFactory = packetFactory;
 			_socket = socket;
 			_state = socket.Connected ? State.Connected : State.Faulted;
 			RemoteEndPoint = (IPEndPoint)_socket.RemoteEndPoint;
@@ -152,13 +164,7 @@ namespace Pegasus.Framework.Network
 			{
 				try
 				{
-					// Send the size of the next packet
-					using (var sizePacket = OutgoingPacket.Create())
-					{
-						sizePacket.Writer.WriteUInt16((ushort)packet.Size);
-						await _socket.SendAsync(context, new ArraySegment<byte>(sizePacket.Data, 0, SizeByteCount));
-					}
-
+					await SendPackSizeAsync(context, packet.Size);
 					await _socket.SendAsync(context, new ArraySegment<byte>(packet.Data, 0, packet.Size));
 				}
 				catch (SocketException e)
@@ -166,6 +172,20 @@ namespace Pegasus.Framework.Network
 					_state = State.Faulted;
 					throw new SocketOperationException("Disconnected from {0} while trying to send data: {1}.", RemoteEndPoint, e.Message);
 				}
+			}
+		}
+
+		/// <summary>
+		///   Sends the size of the next packet.
+		/// </summary>
+		/// <param name="context">The context in which the asynchronous method should be executed.</param>
+		/// <param name="size">The size that should be sent.</param>
+		private async Task SendPackSizeAsync(ProcessContext context, int size)
+		{
+			using (var packet = _packetFactory.CreateOutgoingPacket())
+			{
+				packet.Writer.WriteUInt16((ushort)size);
+				await _socket.SendAsync(context, new ArraySegment<byte>(packet.Data, 0, SizeByteCount));
 			}
 		}
 
@@ -183,10 +203,13 @@ namespace Pegasus.Framework.Network
 			try
 			{
 				// Read the size of the next packet
-				using (var sizePacket = IncomingPacket.Create(SizeByteCount))
+				using (var sizePacket = _packetFactory.CreateIncomingPacket())
 				{
+					sizePacket.SetDataRange(SizeByteCount);
 					await ReceiveAsync(context, sizePacket);
-					packet = IncomingPacket.Create(sizePacket.Reader.ReadUInt16());
+
+					packet = _packetFactory.CreateIncomingPacket();
+					packet.SetDataRange(sizePacket.Reader.ReadUInt16());
 				}
 
 				if (packet.Size + SizeByteCount > Packet.MaxSize)

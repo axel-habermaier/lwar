@@ -103,6 +103,7 @@
     <Compile Include="Network\IUnreliableMessage.cs" />
     <Compile Include="Network\MessageType.cs" />
     <Compile Include="Network\IMessage.cs" />
+    <Compile Include="Network\LwarPacketFactory.cs" />
     <Compile Include="Network\Specification.cs" />
     <Compile Include="Network\Server.cs" />
     <Compile Include="Network\ServerProxy.cs" />

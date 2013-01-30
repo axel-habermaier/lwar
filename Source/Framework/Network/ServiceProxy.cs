@@ -14,6 +14,11 @@ namespace Pegasus.Framework.Network
 	public abstract class ServiceProxy
 	{
 		/// <summary>
+		///   The packet factory that is used to create incoming and outgoing packets.
+		/// </summary>
+		private static readonly IPacketFactory PacketFactory = new ServicePacketFactory();
+
+		/// <summary>
 		///   The service operation invocations for which no result has been received yet.
 		/// </summary>
 		private readonly Dictionary<uint, IServiceOperation> _invocations = new Dictionary<uint, IServiceOperation>();
@@ -119,7 +124,7 @@ namespace Pegasus.Framework.Network
 
 				if (!_invocations.TryGetValue(requestIdentifier, out operation))
 					NetworkLog.ClientInfo("Received a response for a service operation after the operation has timed out.");
-				else 
+				else
 				{
 					switch (header.MessageType)
 					{
@@ -172,7 +177,7 @@ namespace Pegasus.Framework.Network
 			NetworkLog.ClientInfo("Connecting to service host at {0}.", hostEndPoint);
 
 			_connection.SafeDispose();
-			_connection = new TcpSocket();
+			_connection = new TcpSocket(PacketFactory);
 			await _connection.ConnectAsync(context, hostEndPoint);
 
 			IsConnected = true;
@@ -197,7 +202,7 @@ namespace Pegasus.Framework.Network
 			Assert.That(IsConnected, "The proxy is not connected to the host.");
 
 			var requestIdentifier = ++_invokeCount;
-			var packet = OutgoingPacket.Create();
+			var packet = PacketFactory.CreateOutgoingPacket();
 			var header = new MessageHeader(_serviceIdentifier, MessageType.OperationCall);
 			header.Write(packet);
 			packet.Writer.WriteByte((byte)operationIdentifier);
@@ -231,7 +236,7 @@ namespace Pegasus.Framework.Network
 			Assert.That(IsConnected, "The proxy is not connected to the host.");
 
 			var requestIdentifier = ++_invokeCount;
-			var packet = OutgoingPacket.Create();
+			var packet = PacketFactory.CreateOutgoingPacket();
 			var header = new MessageHeader(_serviceIdentifier, MessageType.OperationCall);
 			header.Write(packet);
 			packet.Writer.WriteByte((byte)operationIdentifier);

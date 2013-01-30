@@ -13,6 +13,11 @@ namespace Pegasus.Framework.Network
 	public class UdpSocket : DisposableObject
 	{
 		/// <summary>
+		///   Used to create incoming and outgoing packets.
+		/// </summary>
+		private readonly IPacketFactory _packetFactory;
+
+		/// <summary>
 		///   The underlying socket that is used to send and receive packets.
 		/// </summary>
 		private readonly Socket _socket;
@@ -21,8 +26,11 @@ namespace Pegasus.Framework.Network
 		///   Initializes a new instance. On Windows, dual mode is enabled to support both IPv6 and IPv4. On Linux, only IPv4 is
 		///   supported.
 		/// </summary>
-		public UdpSocket()
+		public UdpSocket(IPacketFactory packetFactory)
 		{
+			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
+			_packetFactory = packetFactory;
+
 #if Windows
 			_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp) { DualMode = true };
 #elif Linux
@@ -60,16 +68,17 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
 		/// <param name="remoteEndPoint">After the method completes, contains the endpoint of the peer that sent the packet.</param>
+		/// <param name="pool">The array pool that should be used to create the packet's data array instance.</param>
 		public async Task<IncomingPacket> ReceiveAsync(ProcessContext context, IPEndPoint remoteEndPoint)
 		{
-			var packet = IncomingPacket.Create();
+			var packet = _packetFactory.CreateIncomingPacket();
 			var packetReturned = false;
 
 			try
 			{
 				var size = await _socket.ReceiveFromAsync(context, new ArraySegment<byte>(packet.Data), remoteEndPoint);
 
-				packet.Initialize(size);
+				packet.SetDataRange(size);
 				packetReturned = true;
 				return packet;
 			}

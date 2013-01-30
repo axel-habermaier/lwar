@@ -16,6 +16,11 @@ namespace Pegasus.Framework.Network
 		where TService : class
 	{
 		/// <summary>
+		///   The packet factory that is used to create incoming and outgoing packets.
+		/// </summary>
+		private static readonly IPacketFactory PacketFactory = new ServicePacketFactory();
+
+		/// <summary>
 		///   The processes that handle incoming service operation requests from clients.
 		/// </summary>
 		private readonly List<IProcess> _clientProcesses = new List<IProcess>();
@@ -68,7 +73,7 @@ namespace Pegasus.Framework.Network
 			NetworkLog.ServerInfo("Service host for service '{0}' is started.", typeof(TService).FullName);
 			_isRunning = true;
 
-			var listener = new TcpListener(endPoint);
+			var listener = new TcpListener(PacketFactory, endPoint);
 			listener.Connected += OnClientConnected;
 
 			try
@@ -172,7 +177,7 @@ namespace Pegasus.Framework.Network
 			if (identifier == _serviceIdentifier)
 				return true;
 
-			var packet = OutgoingPacket.Create();
+			var packet = PacketFactory.CreateOutgoingPacket();
 			var header = new MessageHeader(_serviceIdentifier, MessageType.ServiceIdentifierMismatch);
 			header.Write(packet);
 
@@ -193,7 +198,7 @@ namespace Pegasus.Framework.Network
 			if (messageType == MessageType.OperationCall)
 				return true;
 
-			var packet = OutgoingPacket.Create();
+			var packet = PacketFactory.CreateOutgoingPacket();
 			var header = new MessageHeader(_serviceIdentifier, MessageType.InvalidMessageType);
 			header.Write(packet);
 
@@ -211,7 +216,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="packet">The packet that should be used to deserialize the operation and operation arguments.</param>
 		private async Task InvokeOperation(ProcessContext context, TcpSocket connection, IncomingPacket packet)
 		{
-			var response = OutgoingPacket.Create();
+			var response = PacketFactory.CreateOutgoingPacket();
 			var operation = packet.Reader.ReadByte();
 			var requestId = packet.Reader.ReadUInt32();
 

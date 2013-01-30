@@ -33,14 +33,6 @@ namespace Pegasus.Framework
 		private int _maxInUse;
 
 		/// <summary>
-		///   Initializes the type.
-		/// </summary>
-		protected Pool()
-		{
-			AllocateObjects();
-		}
-
-		/// <summary>
 		///   Allocates new array instances.
 		/// </summary>
 		private void AllocateObjects()

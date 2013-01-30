@@ -16,5 +16,10 @@ namespace Lwar.Client.Network
 		///   The maximum allowed byte length of an UTF8-encoded chat message.
 		/// </summary>
 		public const int MaxChatMessageLength = 128;
+
+		/// <summary>
+		///   The maximum allowed packet size in bytes.
+		/// </summary>
+		public const int MaxPacketSize = 512;
 	}
 }

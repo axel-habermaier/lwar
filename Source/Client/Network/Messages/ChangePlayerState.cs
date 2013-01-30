@@ -35,19 +35,15 @@ namespace Lwar.Client.Network.Messages
 		///   Serializes the message into the given buffer, returning false if the message did not fit.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
-		public bool Serialize(BufferWriter buffer)
+		public void Write(BufferWriter buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			if (!buffer.CanWrite(sizeof(byte) + sizeof(uint) + Identifier.Size + 2 * sizeof(byte)))
-				return false;
 
 			buffer.WriteByte((byte)MessageType.ChangePlayerName);
 			buffer.WriteUInt32(SequenceNumber);
 			buffer.WriteIdentifier(_playerId);
 			buffer.WriteByte(_shipType);
 			buffer.WriteByte(_weaponType);
-			return true;
 		}
 
 		/// <summary>
@@ -62,9 +58,6 @@ namespace Lwar.Client.Network.Messages
 		public static ChangePlayerState Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			if (!buffer.CanRead(sizeof(uint) + Identifier.Size + 2 * sizeof(byte)))
-				return null;
 
 			var message = GetInstance();
 			message.SequenceNumber = buffer.ReadUInt32();

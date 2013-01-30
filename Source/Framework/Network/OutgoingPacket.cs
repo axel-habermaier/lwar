@@ -12,7 +12,12 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   The data stored in the packet.
 		/// </summary>
-		private readonly byte[] _data = new byte[Packet.MaxSize];
+		private byte[] _data;
+
+		/// <summary>
+		///   The array pool that manages the data array instance.
+		/// </summary>
+		private ArrayPool<byte> _pool;
 
 		/// <summary>
 		///   Gets the writer that can be used to write the data to the packet.
@@ -24,7 +29,7 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		internal int Size
 		{
-			get { return Writer.Length; }
+			get { return Writer.Count; }
 		}
 
 		/// <summary>
@@ -38,9 +43,12 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
-		public static OutgoingPacket Create()
+		/// <param name="pool">The array pool that should be used to create the packet's data array instance.</param>
+		public static OutgoingPacket Create(ArrayPool<byte> pool)
 		{
 			var packet = GetInstance();
+			packet._pool = pool;
+			packet._data = pool.Get();
 			packet.Writer = BufferWriter.Create(packet._data, Endianess.Big);
 			return packet;
 		}
@@ -50,6 +58,7 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		protected override void OnReturning()
 		{
+			_pool.Return(_data);
 			Writer.SafeDispose();
 		}
 	}

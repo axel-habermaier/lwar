@@ -66,6 +66,11 @@ namespace Lwar.Client.Network
 		private readonly IProcess _observerProcess;
 
 		/// <summary>
+		///   The packet factory that is used to create incoming and outgoing packets.
+		/// </summary>
+		private readonly IPacketFactory _packetFactory;
+
+		/// <summary>
 		///   The process that handles incoming packets from the server.
 		/// </summary>
 		private readonly IProcess _receiveProcess;
@@ -83,7 +88,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   The Udp socket that is used for the communication with the server.
 		/// </summary>
-		private readonly UdpSocket _socket = new UdpSocket();
+		private readonly UdpSocket _socket;
 
 		/// <summary>
 		///   The time when the last packet has been received from the server.
@@ -103,15 +108,20 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="packetFactory">The packet factory that should be used to create incoming and outgoing packets.</param>
+		/// ///
 		/// <param name="serverEndPoint">The endpoint of the server.</param>
 		/// <param name="scheduler">The scheduler that should be used to schedule the proxy's internal processes.</param>
-		public ServerProxy(IPEndPoint serverEndPoint, ProcessScheduler scheduler)
+		public ServerProxy(IPacketFactory packetFactory, IPEndPoint serverEndPoint, ProcessScheduler scheduler)
 		{
+			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
 			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
 			Assert.ArgumentNotNull(scheduler, () => scheduler);
 
+			_packetFactory = packetFactory;
+			_socket = new UdpSocket(_packetFactory);
 			_time.Offset = -_time.Seconds;
-			_messageQueue = new MessageQueue(_deliveryManager);
+			_messageQueue = new MessageQueue(packetFactory, _deliveryManager);
 			_serverEndPoint = serverEndPoint;
 			_receiveProcess = scheduler.CreateProcess(Receive);
 			_sendProcess = scheduler.CreateProcess(Send);
@@ -370,6 +380,10 @@ namespace Lwar.Client.Network
 						NetworkLog.ClientWarn("Received incomplete message of type {0}. Message ignored.", type);
 						yield break;
 					}
+
+					// Check if we've read past the end of the buffer
+					if (buffer.Count > Specification.MaxPacketSize)
+						yield break;
 
 					if (type.IsReliable() && _deliveryManager.AllowDelivery(reliableMessage))
 						yield return reliableMessage;

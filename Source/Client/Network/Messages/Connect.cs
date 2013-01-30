@@ -9,11 +9,6 @@ namespace Lwar.Client.Network.Messages
 	public class Connect : PooledObject<Connect>, IReliableMessage
 	{
 		/// <summary>
-		///   The size of the message in bytes.
-		/// </summary>
-		private const int Size = sizeof(byte) + sizeof(uint);
-
-		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
@@ -26,16 +21,12 @@ namespace Lwar.Client.Network.Messages
 		///   Serializes the message into the given buffer, returning false if the message did not fit.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
-		public bool Serialize(BufferWriter buffer)
+		public void Write(BufferWriter buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			if (!buffer.CanWrite(Size))
-				return false;
-
 			buffer.WriteByte((byte)MessageType.Connect);
 			buffer.WriteUInt32(SequenceNumber);
-			return true;
 		}
 
 		/// <summary>

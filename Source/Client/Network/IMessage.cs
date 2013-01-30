@@ -17,9 +17,9 @@ namespace Lwar.Client.Network
 		void Process(GameSession session);
 
 		/// <summary>
-		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
-		bool Serialize(BufferWriter buffer);
+		void Write(BufferWriter buffer);
 	}
 }

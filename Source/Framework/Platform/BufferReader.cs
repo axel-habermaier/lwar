@@ -34,6 +34,14 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Gets the number of bytes that have been read from the buffer.
+		/// </summary>
+		public int Count
+		{
+			get { return _readPosition - _buffer.Offset; }
+		}
+
+		/// <summary>
 		///   Creates a new instance. The valid data of the buffer can be found within the
 		///   range [0, buffer.Length).
 		/// </summary>

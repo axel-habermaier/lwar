@@ -19,6 +19,11 @@ namespace Lwar.Client.Network
 		private readonly DeliveryManager _deliveryManager;
 
 		/// <summary>
+		///   The packet factory that is used to create incoming and outgoing packets.
+		/// </summary>
+		private readonly IPacketFactory _packetFactory;
+
+		/// <summary>
 		///   The queued reliable messages that have not yet been sent or that have not yet been acknowledged.
 		/// </summary>
 		private readonly Queue<IReliableMessage> _reliableMessages = new Queue<IReliableMessage>();
@@ -31,10 +36,14 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="packetFactory">The packet factory that should be used to create incoming and outgoing packets.</param>
 		/// <param name="deliveryManager">The delivery manager that is used to enforce the message delivery constraints.</param>
-		public MessageQueue(DeliveryManager deliveryManager)
+		public MessageQueue(IPacketFactory packetFactory, DeliveryManager deliveryManager)
 		{
+			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
 			Assert.ArgumentNotNull(deliveryManager, () => deliveryManager);
+
+			_packetFactory = packetFactory;
 			_deliveryManager = deliveryManager;
 		}
 
@@ -73,7 +82,7 @@ namespace Lwar.Client.Network
 		{
 			RemoveAckedMessages();
 
-			var packet = OutgoingPacket.Create();
+			var packet = _packetFactory.CreateOutgoingPacket();
 			_deliveryManager.WriteHeader(packet.Writer);
 
 			AddMessages(_reliableMessages, packet.Writer);
@@ -109,7 +118,9 @@ namespace Lwar.Client.Network
 		{
 			foreach (var message in messages)
 			{
-				if (!message.Serialize(buffer))
+				message.Write(buffer);
+
+				if (buffer.Count > Specification.MaxPacketSize)
 					break;
 			}
 		}

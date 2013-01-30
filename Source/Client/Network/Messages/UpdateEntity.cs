@@ -27,10 +27,9 @@ namespace Lwar.Client.Network.Messages
 		///   Serializes the message into the given buffer, returning false if the message did not fit.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
-		public bool Serialize(BufferWriter buffer)
+		public void Write(BufferWriter buffer)
 		{
 			Assert.That(false, "The client cannot send this type of message.");
-			return true;
 		}
 
 		/// <summary>
@@ -46,16 +45,10 @@ namespace Lwar.Client.Network.Messages
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			if (!buffer.CanRead(sizeof(byte)))
-				return null;
-
 			var message = GetInstance();
 			message._stats.Clear();
 
 			var count = buffer.ReadByte();
-			if (!buffer.CanRead(count * (Identifier.Size + 4 * sizeof(short) + sizeof(ushort) + sizeof(byte))))
-				return null;
-
 			for (var i = 0; i < count; ++i)
 			{
 				message._stats.Add(new Data

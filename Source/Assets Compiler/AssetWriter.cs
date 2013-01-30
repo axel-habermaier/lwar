@@ -50,7 +50,7 @@ namespace Pegasus.AssetsCompiler
 		protected override void OnDisposing()
 		{
 			using (var stream = new FileStream(_assetName, FileMode.Create))
-				stream.Write(Buffer, 0, Writer.Length);
+				stream.Write(Buffer, 0, Writer.Count);
 
 			Writer.SafeDispose();
 		}

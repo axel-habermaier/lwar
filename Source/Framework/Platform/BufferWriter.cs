@@ -28,7 +28,7 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Gets the number of bytes that have been written to the buffer.
 		/// </summary>
-		public int Length
+		public int Count
 		{
 			get { return _writePosition - _buffer.Offset; }
 		}

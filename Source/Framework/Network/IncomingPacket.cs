@@ -12,7 +12,12 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   The data stored in the packet.
 		/// </summary>
-		private readonly byte[] _data = new byte[Packet.MaxSize];
+		private byte[] _data;
+
+		/// <summary>
+		///   The array pool that manages the data array instance.
+		/// </summary>
+		private ArrayPool<byte> _pool;
 
 		/// <summary>
 		///   Gets the data stored in the packet.
@@ -43,23 +48,24 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="size">The size in bytes of the packet's data.</param>
-		internal static IncomingPacket Create(int size)
+		/// <param name="pool">The array pool that should be used to create the packet's data array instance.</param>
+		public static IncomingPacket Create(ArrayPool<byte> pool)
 		{
 			var packet = GetInstance();
-			packet.Size = size;
-			packet.Reader = BufferReader.Create(packet._data, 0, size, Endianess.Big);
+			packet._pool = pool;
+			packet._data = pool.Get();
 			return packet;
 		}
 
 		/// <summary>
-		///   Initializes the packet if its size is not known at creation time.
+		///   Sets the valid data range of the packet's data buffer.
 		/// </summary>
 		/// <param name="size">The size of the packet's data in bytes.</param>
-		internal void Initialize(int size)
+		internal void SetDataRange(int size)
 		{
-			Assert.InRange(size, 1, Packet.MaxSize);
+			Assert.InRange(size, 0, _data.Length);
 			Reader = BufferReader.Create(_data, 0, size, Endianess.Big);
+			Size = size;
 		}
 
 		/// <summary>
@@ -67,6 +73,7 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		protected override void OnReturning()
 		{
+			_pool.Return(_data);
 			Reader.SafeDispose();
 		}
 	}

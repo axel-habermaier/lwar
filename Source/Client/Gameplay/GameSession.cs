@@ -201,7 +201,7 @@ namespace Lwar.Client.Gameplay
 			Cleanup();
 
 			Entities = new EntityList(this);
-			ServerProxy = new ServerProxy(serverEndPoint, Scheduler);
+			ServerProxy = new ServerProxy(new LwarPacketFactory(), serverEndPoint, Scheduler);
 			ServerProxy.MessageReceived += ProcessMessage;
 
 			var label = new Label(LoadingFont)
