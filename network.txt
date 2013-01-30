@@ -11,7 +11,7 @@ Message Delivery Guarantees
 	only if the maximum packet size is not exceeded. If there are any reliable messages that do not
 	fit into the packet, these messages will be sent with the next packet they fit in.
 
-	Reliable messages have a sequence number associated with them, starting at 0 and increasing by one
+	Reliable messages have a sequence number associated with them, starting at 1 and increasing by one
 	with every reliable message that is sent to a specific remote peer. Reliable messages have
 	to be resent for as long as the remote peer has not acknowledged the reception of the message by
 	sending an ack that is equal to or greater than the message's sequence number. With every packet

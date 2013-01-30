@@ -112,7 +112,7 @@ namespace Lwar.Client.Network
 		/// <param name="message">The reliable message the sequence number should be assigned to.</param>
 		public void AssignSequenceNumber(IReliableMessage message)
 		{
-			message.SequenceNumber = _lastAssignedSequenceNumber++;
+			message.SequenceNumber = ++_lastAssignedSequenceNumber;
 		}
 	}
 }
