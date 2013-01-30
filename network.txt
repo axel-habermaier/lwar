@@ -179,14 +179,29 @@ Messages Payload Data
 		uint8		health		The new health
 		
 	Input
+		An input message contains the client's current input state, as well as the previous seven input
+		states as well. This makes it less likely that a one-frame input is missed (for instance, the
+		shooting button is pressed for the duration of one frame only and the corresponding packet is
+		lost; in that case, no shot would be fired). For each state value, bit 0 corresponds to the
+		current state, bit 1 to the previous one, bit 2 to the one before, and so on. Therefore, the
+		client sets an input state with
+			new = (old << 1) | (isActive ? 1 : 0)
+		The server uses the message's frame number to determine whether it has missed a message and if
+		so, it not only considers the current state bit, but also the bits of all missed state updates
+		as well using the following code:
+			state = (state & ~(0xff << (frameNumber - lastFrameNumber)) != 0
+		That way, an input is only missed if eight consecutive packets are lost. In that case, however,
+		the client has other problems anyway.
+
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------	
+		uint32		frameNo		The monotonically increasing frame number, starting with 1
 		uint32(Id)	playerId	The generational identifier of the player that generated the message 
-		uint8		forward		Boolean value
-		uint8		backward	Boolean value
-		uint8		left		Boolean value
-		uint8		right		Boolean value
-		uint8		shooting	Boolean value
+		uint8		forward		Boolean state value, also including the seven previous states
+		uint8		backward	Boolean state value, also including the seven previous states
+		uint8		left		Boolean state value, also including the seven previous states
+		uint8		right		Boolean state value, also including the seven previous states
+		uint8		shooting	Boolean state value, also including the seven previous states
 	
 Connecting to the server
 	The client tries to establish a connection to the server by sending Connect messages to the server's
@@ -237,6 +252,8 @@ Disconnecting from the server
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	 5	  13-01-30	Axel		Changed the Input message so that lost player inputs are less likely
+	 4	  13-01-30	Gidon		Sequence numbers now start with 1
 	 3	  13-01-29	Axel		Stats message is no longer fix-sized
 								Strings are now handled uniformly in all messages
 								Added entity template ids
