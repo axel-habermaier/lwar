@@ -195,4 +195,6 @@ static const Id   server_id = {0,0};
 #define queue_foreach(qm)        slab_foreach(&server->queue, qm, QueuedMessage)
 #define queue_foreach_cont(qm)   slab_foreach_cont(&server->queue, qm, QueuedMessage)
 
+#ifndef max
 #define max(n,m) ((n) < (m) ? (m) : (n))
+#endif
