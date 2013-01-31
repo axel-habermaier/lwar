@@ -50,7 +50,7 @@ namespace Lwar.Client
 			Assert.ArgumentNotNull(buffer, () => buffer);
 			Assert.ArgumentNotNull(s, () => s);
 			Assert.ArgumentInRange(length, () => length, 1, Byte.MaxValue);
-			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) < length, () => s, "String is too long.");
+			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) <= length, () => s, "String is too long.");
 
 			var bytes = Encoding.UTF8.GetBytes(s);
 			buffer.WriteByte((byte)bytes.Length);

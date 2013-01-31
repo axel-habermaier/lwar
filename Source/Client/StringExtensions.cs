@@ -10,20 +10,20 @@ namespace Lwar.Client
 	/// </summary>
 	public static class StringExtensions
 	{
-		//public static string Truncate(this string s, int maxUtf8Size)
-		//{
-		//	Assert.ArgumentNotNull(s, () => s);
-		//	Assert.ArgumentInRange(maxUtf8Size, () => maxUtf8Size, 1, Int32.MaxValue);
+		/// <summary>
+		///   Truncates the string to the given maximum allowed UTF8 size.
+		/// </summary>
+		/// <param name="s">The string that should be truncated.</param>
+		/// <param name="maxSize">The maximum UTF8 size of the string in bytes.</param>
+		public static string TruncateUtf8(this string s, int maxSize)
+		{
+			Assert.ArgumentNotNull(s, () => s);
+			Assert.ArgumentInRange(maxSize, () => maxSize, 1, Int32.MaxValue);
 
-		//	if (Encoding.UTF8.GetByteCount(s) > maxUtf8Size)
-		//	{
-		//		do
-		//		{
-		//			s = s.Substring(0, maxUtf8Size);
-		//		} while (Encoding.UTF8.GetByteCount(s) > maxUtf8Size);
+			while (Encoding.UTF8.GetByteCount(s) > maxSize)
+				s = s.Substring(0, maxSize);
 
-		//		Log.Warn("Your player name '{0}' is too long and has been truncated to '{1}'.", name, playerName);
-		//	}
-		//}
+			return s;
+		}
 	}
 }

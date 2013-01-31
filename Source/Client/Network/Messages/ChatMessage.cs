@@ -72,11 +72,10 @@ namespace Lwar.Client.Network.Messages
 		public static ChatMessage Create(Identifier player, string message)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
-			Assert.That(Encoding.UTF8.GetByteCount(message) < Specification.MaxChatMessageLength, "Message is too long.");
 
 			var chatMessage = GetInstance();
 			chatMessage._playerId = player;
-			chatMessage._message = message;
+			chatMessage._message = message.TruncateUtf8(Specification.MaxChatMessageLength);;
 			return chatMessage;
 		}
 	}

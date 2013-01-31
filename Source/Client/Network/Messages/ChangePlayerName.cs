@@ -76,16 +76,9 @@ namespace Lwar.Client.Network.Messages
 		{
 			Assert.ArgumentNotNullOrWhitespace(playerName, () => playerName);
 
-			var name = playerName;
-			if (Encoding.UTF8.GetByteCount(playerName) > Specification.MaxPlayerNameLength)
-			{
-				do
-				{
-					name = name.Substring(0, Specification.MaxPlayerNameLength);
-				} while (Encoding.UTF8.GetByteCount(name) > Specification.MaxPlayerNameLength);
-
+			var name = playerName.TruncateUtf8(Specification.MaxPlayerNameLength);
+			if (name.Length != playerName.Length)
 				Log.Warn("Your player name '{0}' is too long and has been truncated to '{1}'.", name, playerName);
-			}
 
 			var nameChange = GetInstance();
 			nameChange._playerId = player;
