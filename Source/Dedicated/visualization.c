@@ -5,6 +5,7 @@
 #include <GL/gl.h>
 
 #include "server.h"
+#include "rules.h"
 
 #include "log.h"
 #include "window.h"
@@ -44,8 +45,8 @@ int visualization_init() {
     glTranslatef(0,0,-10);
     glClearColor(0,0,0,0);
 
-    EntityType *ship   = entity_type_get(0);
-    EntityType *planet = entity_type_get(2);
+    EntityType *ship   = entity_type_get(ENTITY_TYPE_SHIP);
+    EntityType *planet = entity_type_get(ENTITY_TYPE_PLANET);
 
     Pos k = 0.5;
     Entity *enterprise = launch(-2, 6, k, 0, 0,0,  ship);

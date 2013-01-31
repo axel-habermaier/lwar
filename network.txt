@@ -28,6 +28,8 @@ Message Delivery Guarantees
 	Unreliable messages, on the other hand, are neither acknowledged nor do the peers care if a message
 	is lost. Unreliable messages are timestamped, allowing the peers to filter out older unreliable messages
 	that are received after newer ones have arrived due to UDP packet reordering.
+    Hence, both peers must also discard messages that refer to obsolete (and possibly already deleted)
+    players or entities.
 
 Network-related constants
 	Constant						Value 			Comment
@@ -189,7 +191,7 @@ Messages Payload Data
 		The server uses the message's frame number to determine whether it has missed a message and if
 		so, it not only considers the current state bit, but also the bits of all missed state updates
 		as well using the following code:
-			state = (state & ~(0xff << (frameNumber - lastFrameNumber)) != 0
+			state = (state & ~(0xff << (frameNo - lastFrameNo))) != 0
 		That way, an input is only missed if eight consecutive packets are lost. In that case, however,
 		the client has other problems anyway.
 
@@ -252,6 +254,9 @@ Disconnecting from the server
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	 6	  13-01-30	Gidon		Formula for input messages at the server:
+								balanced parens, use "frameNo" as in packet description.
+                                Added hint about obsolete ids.
 	 5	  13-01-30	Axel		Changed the Input message so that lost player inputs are less likely
 	 4	  13-01-30	Gidon		Sequence numbers now start with 1
 	 3	  13-01-29	Axel		Stats message is no longer fix-sized

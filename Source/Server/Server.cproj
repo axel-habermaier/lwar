@@ -63,6 +63,8 @@
     <Compile Include="rules\bullet.c" />
     <Compile Include="rules\planet.c" />
     <Compile Include="rules\ship.c" />
+    <Compile Include="packet.c" />
+    <Compile Include="slab.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="connection.h" />
@@ -73,5 +75,10 @@
     <None Include="server.h" />
     <None Include="uint.h" />
     <None Include="vector.h" />
+    <None Include="coroutine.h" />
+    <None Include="packet.h" />
+    <None Include="rules.h" />
+    <None Include="server_export.h" />
+    <None Include="slab.h" />
   </ItemGroup>
 </Project>

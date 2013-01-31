@@ -10,7 +10,7 @@
 static void gravity(Entity *e0);
 
 static const Pos gravity_factor = 0.04;
-static EntityType _planet = { 5,50, {0,0}, 0, gravity };
+static EntityType _planet = { 5,50, {0,0}, 0, 0, gravity };
 EntityType *type_planet = &_planet;
 
 static void gravity(Entity *e0) {

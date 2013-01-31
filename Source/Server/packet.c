@@ -7,30 +7,44 @@
 #include "packet.h"
 #include "connection.h"
 
-void packet_init(Packet *p) {
-    p->a = 0;
-    p->b = 0;
+static int check_bounds(Packet *p,size_t n) {
+    return    n != 0
+           && p->b <= MAX_PACKET_LENGTH;
+}
+
+void packet_init(Packet *p, Address *adr, size_t ack, size_t time) {
+    Header h = { APP_ID, ack, time };
+    p->adr = *adr;
+    p->a   = 0;
+    p->b   = header_pack(p->p, &h);
 }
 
 int packet_put(Packet *p, Message *m, size_t seqno) {
     assert(p->a <= p->b);
-    size_t n = message_pack(p->p + p->b, m, seqno, MAX_PACKET_LENGTH - p->b);
+    size_t n = message_pack(p->p + p->b, m, seqno);
     p->b += n;
-    return n != 0;
+    return check_bounds(p,n);
 }
 
 int packet_get(Packet *p, Message *m, size_t *seqno) {
     assert(p->a <= p->b);
-    size_t n = message_unpack(p->p + p->a, m, seqno, p->b - p->a);
+    size_t n = message_unpack(p->p + p->a, m, seqno);
     p->a += n;
-    return n != 0;
+    return check_bounds(p,n);
 }
 
 int packet_recv(Packet *p) {
     p->a = 0;
     p->b = MAX_PACKET_LENGTH;
-    return    conn_recv(p->p, &p->b, &p->adr)
-           && p->b != 0; /* EAGAIN */
+    if(!conn_recv(p->p, &p->b, &p->adr)) return 0;
+    if(p->b == 0) return 0; /* EAGAIN */
+
+    Header h;
+    p->a = header_unpack(p->p, &h);
+    if(h.app_id != APP_ID) return 0; /* TODO: warn */
+    p->ack  = h.ack;
+    p->time = h.time;
+    return 1;
 }
 
 int packet_send(Packet *p) {

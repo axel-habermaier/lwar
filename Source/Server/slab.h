@@ -18,6 +18,11 @@ void *slab_alloc(Slab *s);
 void  slab_free(Slab *s, void *p);
 void  slab_free_pred(Slab *s, int (*pred)(size_t, void *));
 
+/* add/get/remove specific entries */
+void  slab_add(Slab *s, size_t i);
+void *slab_get(Slab *s, size_t i);
+void *slab_remove(Slab *s, size_t i);
+
 #define slab_static(s,p,c,d) slab_init(s, p, sizeof(p)/sizeof(*p), sizeof(*p), c, d);
 #define slab_new(s,t)        ((t*)slab_alloc(s))
 #define slab_at(s,t,i)       ((i) < (s)->n ? (t*)((s)->mem + (s)->size * (i)) : 0)

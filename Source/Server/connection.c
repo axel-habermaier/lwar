@@ -196,3 +196,7 @@ int address_create(Address *adr, const char *ip, uint16_t port) {
 	return inet_pton(AF_INET, ip, &adr->ip);
 }
 
+int address_eq(Address *adr0, Address *adr1) {
+    return    adr0->ip   == adr1->ip
+           && adr0->port == adr1->port;
+}

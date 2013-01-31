@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -47,22 +48,36 @@ static void entity_dtor(size_t i, void *p) {
     e->id.gen ++;
 }
 
+static int entity_check_obsolete(size_t i, void *p) {
+    Entity *e = (Entity*)p;
+    return e->dead;
+}
+
 Entity *entity_create(EntityType *t, Vec x, Vec v) {
+    assert(t);
     Entity *e = slab_new(&server->entities, Entity);
+    assert(e);
+    e->type   = t;
     e->x      = x;
     e->v      = v;
-    e->rot    = 0;
-    e->health = 100;
-    e->type   = t;
+    e->rot    = 0; /* TODO: use v */
+    e->health = t->health;
+    e->dead   = 0;
+    /* TODO: notify */
     return e;
 }
 
 void entity_remove(Entity *e) {
-    slab_free(&server->entities, e);
+    /* TODO: notify */
+    e->dead = 1;
 }
 
 void entities_init() {
     slab_static(&server->entities, _entities, entity_ctor, entity_dtor);
+}
+
+void entities_cleanup() {
+    slab_free_pred(&server->entities, entity_check_obsolete);
 }
 
 EntityType *entity_type_get(size_t id) {

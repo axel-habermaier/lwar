@@ -9,6 +9,8 @@
 #include "message.h"
 #include "packet.h"
 
+static void protocol_send_full(Address *adr);
+
 typedef struct QueuedMessage QueuedMessage;
 typedef struct PerClient     PerClient;
 
@@ -36,7 +38,8 @@ static void qm_dtor(size_t i, void *p) {}
 
 static int qm_check_obsolete(size_t i, void *p) {
     QueuedMessage *qm = (QueuedMessage*)p;
-    return qm->dest == 0;
+    /* only keep qm for receiving clients */
+    return (qm->dest & server->client_mask) == 0;
 }
 
 static int qm_check_dest(Client *c, QueuedMessage *qm) {
@@ -79,12 +82,16 @@ static int qm_check_relevant(Client *c, QueuedMessage *qm) {
     return 1;
 }
 
-QueuedMessage *qm_create() {
-    return slab_new(&server->queue, QueuedMessage);
+static int m_check_seqno(Client *c, Message *m, size_t seqno) {
+    if(c && is_reliable(m)) {
+        if(seqno < c->last_in_seqno) return 0;
+        c->last_in_seqno = seqno;
+    }
+    return 1;
 }
 
-void qm_remove(QueuedMessage *qm) {
-    slab_free(&server->queue, qm);
+static QueuedMessage *qm_create() {
+    return slab_new(&server->queue, QueuedMessage);
 }
 
 static void qm_enqueue(Client *c, QueuedMessage *qm) {
@@ -118,11 +125,11 @@ static Message *message_update(Entity *e) {
     static Message _m;
     Message *m = &_m;
     m->type = MESSAGE_UPDATE;
-    m->time = server->cur_time; /* TODO: subtract some base_time *
+    m->time = server->cur_time; TODO: subtract some base_time *
 
     m->update.entity = e->id;
 
-    m->update.x   = e->x.x;     /* TODO: some scaling *
+    m->update.x   = e->x.x;     TODO: some scaling *
     m->update.y   = e->x.y;
 
     m->update.vx  = e->v.x;
@@ -134,60 +141,97 @@ static Message *message_update(Entity *e) {
 }
 */
 
-/* TODO: must update seqno for clients */
-static int message_handle(Address *a, Message *m, size_t seqno) {
-    /*
-    Client *c;
+static int misbehaves(Client *c, int test) {
+    if(test) c->misbehavior ++;
+    return test;
+}
 
-    message_print(m);
+static int misbehaves_id(Client *c, Id id) {
+    return misbehaves(c, !id_eq(client_id(c), id));
+}
+
+static void message_handle(Client *c, Address *adr, Message *m, size_t time) {
+    Message *r;
 
     switch(m->type) {
     case MESSAGE_CONNECT:
-        {
-            c = client_create();
-            m = message_reliable(0, m, MESSAGE_JOIN);
-            m->join.player = c->player.id;
-            c->adr = *a;
+        if(misbehaves(c, c != 0)) return;
+        c = client_create(adr);
+        if(c) {
+            r = message_broadcast(MESSAGE_JOIN);
+            r->join.player_id = client_id(c);
+        } else {
+            protocol_send_full(adr);
         }
         break;
-    case MESSAGE_LEAVE:
-        {
-            /* TODO: if we need to send back to c, then keep c around with deleted flag *
-            c = client_get(m->leave.player, a);
-            if(!c) return;
-            client_remove(c);
-            m = message_reliable(0, m, MESSAGE_LEAVE);
-        }
+
+    case MESSAGE_DISCONNECT:
+        if(!c) return;
+        c->hasleft = 1; /* do not broadcast leave message on timeout */
+        r = message_broadcast(MESSAGE_LEAVE);
+        r->leave.player_id = client_id(c);
         break;
+
     case MESSAGE_CHAT:
-        {
-            c = client_get(m->chat.player, a);
-            if(!c) return;
-            m = message_reliable(0, m, MESSAGE_CHAT);
-        }
+        if(!c) return;
+        if(misbehaves_id(c, m->chat.player_id)) return;
+        r = message_broadcast(MESSAGE_CHAT);
+        r->chat.player_id = m->chat.player_id;
+        r->chat.msg       = m->chat.msg;
         break;
+
+    case MESSAGE_SELECTION:
+        if(!c) return;
+        if(misbehaves_id(c, m->selection.player_id)) return;
+        player_select(&c->player, m->selection.ship_type, m->selection.weapon_type);
+        r = message_broadcast(MESSAGE_SELECTION);
+        r->selection.ship_type   = m->selection.ship_type;
+        r->selection.weapon_type = m->selection.weapon_type;
+        break;
+
+    case MESSAGE_NAME:
+        if(!c) return;
+        if(misbehaves_id(c, m->name.player_id)) return;
+        player_rename(&c->player, m->name.nick);
+        r = message_broadcast(MESSAGE_NAME);
+        r->name.player_id = m->name.player_id;
+        r->name.nick      = m->name.nick;
+        break;
+
     case MESSAGE_INPUT:
+        if(!c) return;
+        if(misbehaves_id(c, m->input.player_id)) return;
         {
-            c = client_get(m->input.player, a);
-            if(!c) return;
-            /* TODO: rotation? *
-            player_input(&c->player, m->input.up, m->input.down, m->input.left, m->input.right, m->input.shooting);
-            uint32_t ack = m->input.ack;
-            mqueue_ack(&c->queue, ack);
-            c->last_ack = ack;
+            if(m->input.frameno < c->last_in_frameno)
+                break;
+            uint8_t mask = ~(0xff << (m->input.frameno - c->last_in_frameno));
+
+            player_input(&c->player,
+                         mask & m->input.up,
+                         mask & m->input.down,
+                         mask & m->input.left,
+                         mask & m->input.right,
+                         mask & m->input.shooting);
         }
         break;
+
+    default:
+        misbehaves(c, c != 0);
     }
-    */
-	return 0;
 }
 
 static void packet_scan(Packet *p) {
     Message m;
     size_t seqno;
-	// TODO: Must parse packet header first
+    Client *c = client_lookup(&p->adr);
+    if(c) {
+        c->last_in_ack   = max(p->ack, c->last_in_ack);
+        c->last_activity = max(server->cur_time, c->last_activity);
+    }
+
     while(packet_get(p, &m, &seqno)) {
-        message_handle(&p->adr, &m, seqno);
+        if(m_check_seqno(c, &m, seqno))
+            message_handle(c, &p->adr, &m, p->time);
     }
 }
 
@@ -200,14 +244,10 @@ void protocol_recv() {
 }
 
 static void packet_init_header(Client *c, Packet *p) {
-    packet_init(p);
-	// TODO: What is this? VS no like.
-    Message m ;//= { MESSAGE_HEADER, .header = { APP_ID, c->last_in_seqno, server->cur_time } };
-    packet_put(p, &m, 0); /* just dummy, header shouldn't be marked reliable */
+    packet_init(p, &c->adr, c->last_in_seqno, server->cur_time);
 }
 
 static int packet_fmt(Client *c, Packet *p, QueuedMessage *qm) {
-    /* first, check whether the message is relevant for c */
     if(!qm_check_relevant(c, qm)) return 1;
     return packet_put(p, &qm->m, qm_seqno(c, qm));
 }
@@ -228,16 +268,63 @@ static void protocol_send_client(Client *c) {
     }
 }
 
+/* If a client times out, its dead flag is set,
+ * so that the client can be cleaned up later.
+ * If the client has previously sent a disconnect message,
+ * then hasleft is set and the other players do not need further notice.
+ * client_remove also disables c as message recepient.
+ */
+static void protocol_timed_out(Client *c) {
+    Message *r;
+    if(!c->hasleft) {
+        r = message_broadcast(MESSAGE_LEAVE);
+        r->leave.player_id = client_id(c);
+    }
+    client_remove(c);
+}
+
+/* Client has sent too many confusing messages,
+ * and will be disconnected (by timeout later).
+ * just there to use unicast and server_id :)
+ */
+static void protocol_kick(Client *c) {
+    Message *r;
+    static char kick_msg[] = "kicked for (protocol) misbehavior";
+    Str kick_msg_s = { strlen(kick_msg), kick_msg };
+    r = message_unicast(c, MESSAGE_CHAT);
+    r->chat.player_id = server_id;
+    r->chat.msg = kick_msg_s;
+
+    r = message_broadcast(MESSAGE_DISCONNECT);
+    message_handle(c, &c->adr, r, server->cur_time);
+}
+
 /* (re)send queued messages */
 void protocol_send() {
     Client *c;
     clients_foreach(c) {
-        protocol_send_client(c);
+        if(c->last_activity + TIMEOUT_INTERVAL < server->cur_time)
+            protocol_timed_out(c);
+        else if (c->misbehavior > MISBEHAVIOR_LIMIT)
+            protocol_kick(c);
+        else
+            protocol_send_client(c);
     }
-    /* deferred, because queue_foreach is not safe against deletion */
-    slab_free_pred(&server->queue, qm_check_obsolete);
+}
+
+static void protocol_send_full(Address *adr) {
+    Packet p;
+    Message m;
+    m.type = MESSAGE_FULL;
+    packet_init(&p, adr, 0, 0);
+    packet_put(&p, &m, 0);
+    packet_send(&p);
 }
 
 void protocol_init() {
     slab_static(&server->queue, _queue, qm_ctor, qm_dtor);
+}
+
+void protocol_cleanup() {
+    slab_free_pred(&server->queue,   qm_check_obsolete);
 }

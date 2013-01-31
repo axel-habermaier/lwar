@@ -7,11 +7,15 @@ enum {
     MAX_TYPES      = 32,
     MAX_COLLISIONS = 32, /* should be n^2-1 for priority queue */
     MAX_QUEUE      = 1028,
+
+    TIMEOUT_INTERVAL  = 15 * 1000 /*ms*/,
+    MISBEHAVIOR_LIMIT = 10,
 };
 
 typedef struct Vec Vec;
 typedef float      Pos;
 
+typedef struct Str Str;
 typedef struct Id Id;
 typedef struct Address Address;
 
@@ -33,6 +37,9 @@ typedef struct Server Server;
 
 extern Server *server;
 
+int id_eq(Id id0, Id id1);
+int address_eq(Address *adr0, Address *adr1);
+
 Clock clock_delta();
 int   clock_periodic(Clock *t, Clock i);
 Clock to_clock(Time d);
@@ -41,13 +48,18 @@ int   time_cmp(Time d0, Time d1);
 void  time_update(Clock t);
 
 void player_input(Player *p, int up, int down, int left, int right, int shooting);
+void player_select(Player *p, size_t ship_type, size_t weapon_type);
+void player_rename(Player *p, Str name);
 void player_actions();
 
 void clients_init();
+void clients_cleanup();
 /* void client_update(Client *c); */
-Client *client_create();
+Client *client_create(Address *adr);
 void client_remove(Client *c);
-Client *client_get(Id player, Address *a);
+Id client_id(Client *c);
+Client *client_get(Id player);
+Client *client_lookup(Address *adr);
 
 /*
 void mqueue_init(List *l);
@@ -59,8 +71,10 @@ size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a);
 void protocol_init();
 void protocol_recv();
 void protocol_send();
+void protocol_cleanup();
 
 void entities_init();
+void entities_cleanup();
 void entity_actions();
 Entity *entity_create(EntityType *t, Vec x, Vec v);
 void entity_remove(Entity *e);
@@ -81,7 +95,10 @@ struct Vec {
     Pos x,y;
 };
 
-static const Vec  _0  = {0,0};
+struct Str {
+    unsigned char n;
+    char  *s;
+};
 
 struct Id {
     uint16_t gen;
@@ -98,6 +115,9 @@ struct Player {
     int up,down,left,right;
     int shooting;
     Id id;
+    size_t ship_type;
+    size_t weapon_type;
+    Str name;
 };
 
 struct Entity {
@@ -106,6 +126,7 @@ struct Entity {
     Vec x,v,a;
     Pos rot;
     int health;
+    int dead;
 
     Id id;
     EntityType *type;
@@ -121,7 +142,7 @@ struct EntityType {
     Pos r; /* radius */
     Pos m; /* mass   */
     Vec a; /* acceleration */
-
+    int health; /* max health */
     Clock activation_interval; /* for shooting, ... */
     void (*action)(Entity *e);
 };
@@ -132,10 +153,19 @@ struct Client {
     Player player;
     Address adr;
 
-    size_t next_out_seqno;
-    size_t last_in_ack;
+    int needsync; /* needs initial game state  */
+    int hasleft;  /* has actively disconnected */
+    int dead;     /* memory will be released, don't use any more */
 
+    size_t next_out_seqno;
+
+    size_t last_in_ack;
     size_t last_in_seqno;
+    size_t last_in_frameno;
+    Clock  last_activity;
+
+    /* count protocol violations */
+    size_t misbehavior;
 };
 
 struct Server {
@@ -144,11 +174,17 @@ struct Server {
     Slab queue;
     EntityType *types[MAX_TYPES];
 
+    /* allocated clients */
+    unsigned int client_mask;
+
     int running;
     Clock cur_time;
     Clock prev_time;
     Clock update_periodic;
 };
+
+static const Vec  _0  = {0,0};
+static const Id   server_id = {0,0};
 
 #define clients_foreach(c)       slab_foreach(&server->clients, c, Client)
 #define clients_foreach_cont(c)  slab_foreach_cont(&server->clients, c, Client)
@@ -158,3 +194,5 @@ struct Server {
 
 #define queue_foreach(qm)        slab_foreach(&server->queue, qm, QueuedMessage)
 #define queue_foreach_cont(qm)   slab_foreach_cont(&server->queue, qm, QueuedMessage)
+
+#define max(n,m) ((n) < (m) ? (m) : (n))

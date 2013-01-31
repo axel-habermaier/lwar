@@ -12,6 +12,11 @@ static Server _server;
 
 Server *server=&_server;
 
+int id_eq(Id id0, Id id1) {
+    return    id0.n   == id1.n
+           && id0.gen == id1.gen;
+}
+
 enum {
     UPDATE_INTERVAL = 30,
 };
@@ -56,6 +61,11 @@ int server_update(Clock time, int force) {
         entity_actions();
 
         physics_update();
+        
+        /* remove obsolete messages, clients, and entities */
+        protocol_cleanup();
+        clients_cleanup();
+        entities_cleanup();
 
         return 1;
     }

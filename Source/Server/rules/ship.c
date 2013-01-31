@@ -9,7 +9,7 @@
 
 static void shoot(Entity *e);
 
-static EntityType _ship = { 1, 1, {0,0}, 200, shoot };
+static EntityType _ship = { 1, 1, {0,0}, 200, 100, shoot };
 EntityType *type_ship = &_ship;
 
 static void shoot(Entity *e) {
