@@ -83,7 +83,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="size">The number of bytes that should be checked.</param>
 		public bool CanWrite(int size)
 		{
-			return _writePosition + size < _buffer.Offset + _buffer.Count;
+			return _writePosition + size <= _buffer.Offset + _buffer.Count;
 		}
 
 		/// <summary>

@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Network
 {
-	using System.Collections.Generic;
 	using System.Net;
 	using System.Threading.Tasks;
 	using Messages;
@@ -275,7 +274,6 @@ namespace Lwar.Client.Network
 							continue;
 						}
 
-						_lastPacketTimestamp = _time.Milliseconds;
 						HandleMessages(packet);
 					}
 				}
@@ -304,6 +302,7 @@ namespace Lwar.Client.Network
 			if (header == null)
 				return;
 
+			_lastPacketTimestamp = _time.Milliseconds;
 			_deliveryManager.UpdateLastAckedSequenceNumber(header.Value.Acknowledgement);
 			var allowUnreliableDelivery = _deliveryManager.AllowUnreliableDelivery(header.Value.Timestamp);
 
@@ -335,16 +334,16 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		///  Deserializes a reliable message of the given type from the buffer, returning null if the message should
-		/// be ignored.
+		///   Deserializes a reliable message of the given type from the buffer, returning null if the message should
+		///   be ignored.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be deserialized from.</param>
 		/// <param name="type">The type of the reliable message.</param>
 		private IReliableMessage HandleReliableMessage(BufferReader buffer, MessageType type)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-			Assert.ArgumentInRange(type,()=>type);
-			Assert.ArgumentSatisfies(type.IsReliable(), ()=>type, "Not a reliable message type.");
+			Assert.ArgumentInRange(type, () => type);
+			Assert.ArgumentSatisfies(type.IsReliable(), () => type, "Not a reliable message type.");
 
 			if (!buffer.CanRead(sizeof(uint)))
 				return null;
@@ -359,7 +358,7 @@ namespace Lwar.Client.Network
 				case MessageType.AddPlayer:
 					message = AddPlayer.Create(buffer);
 
-					// If this is the first packet that we received from the server, it means we're syncing the game state.
+					// If this is the first packet that we received from the server, it means we're syncing the game state
 					if (allowDelivery && sequenceNumber == 1)
 						_state = State.Syncing;
 					break;
@@ -384,6 +383,7 @@ namespace Lwar.Client.Network
 				case MessageType.Synced:
 					message = Synced.Create(buffer);
 
+					// We should only receive a sync packet if we're actually syncing
 					if (allowDelivery && _state != State.Syncing)
 						NetworkLog.ClientWarn("Ignored an unexpected synced message.");
 					else if (allowDelivery)
@@ -392,6 +392,7 @@ namespace Lwar.Client.Network
 				case MessageType.ServerFull:
 					message = ServerFull.Create(buffer);
 
+					// Only the first message can be a server full message
 					if (allowDelivery && sequenceNumber != 1)
 						NetworkLog.ClientWarn("Ignored an unexpected server full message.");
 					else if (allowDelivery)
@@ -417,11 +418,10 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		///  Deserializes a reliable message of the given type from the buffer, returning null if the message should
-		/// be ignored.
+		///   Deserializes a reliable message of the given type from the buffer
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be deserialized from.</param>
-		/// <param name="type">The type of the reliable message.</param>
+		/// <param name="type">The type of the unreliable message.</param>
 		private static IUnreliableMessage HandleUnreliableMessage(BufferReader buffer, MessageType type)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
@@ -453,14 +453,13 @@ namespace Lwar.Client.Network
 		{
 			while (!context.IsCanceled)
 			{
-				if (_state != State.Syncing || _state != State.Connected)
+				if (_state != State.Syncing && _state != State.Connected)
 				{
 					await context.NextFrame();
 					continue;
 				}
 
 				var delta = _time.Milliseconds - _lastPacketTimestamp;
-
 				if (delta > DroppedTimeout)
 					_state = State.Dropped;
 

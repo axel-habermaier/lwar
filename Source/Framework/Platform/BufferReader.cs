@@ -94,7 +94,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="size">The number of bytes that should be checked.</param>
 		public bool CanRead(int size)
 		{
-			return _readPosition + size < _buffer.Offset + _buffer.Count;
+			return _readPosition + size <= _buffer.Offset + _buffer.Count;
 		}
 
 		/// <summary>
