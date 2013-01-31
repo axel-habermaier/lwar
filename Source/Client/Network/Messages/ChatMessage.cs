@@ -28,7 +28,7 @@ namespace Lwar.Client.Network.Messages
 		}
 
 		/// <summary>
-		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public void Write(BufferWriter buffer)

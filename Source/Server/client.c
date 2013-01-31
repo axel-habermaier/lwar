@@ -56,7 +56,6 @@ static void client_ctor(size_t i, void *p) {
     c->last_in_frameno = 0;
     c->last_activity   = 0;
     c->misbehavior     = 0;
-    c->needsync        = 1;
     c->hasleft         = 0;
     c->dead            = 0;
 
@@ -78,20 +77,16 @@ Client *client_create(Address *adr) {
     Client *c = slab_new(&server->clients, Client);
     if(c) {
         c->adr = *adr;
-        server->client_mask |= (1 << client_id(c).n);
-        log_debug("+ client %d", client_id(c).n);
+        server->client_mask |= (1 << c->player.id.n);
+        log_debug("+ client %d", c->player.id.n);
     }
     return c;
 }
 
 void client_remove(Client *c) {
     c->dead = 1;
-    server->client_mask &= ~(1 << client_id(c).n);
-    log_debug("- client %d", client_id(c).n);
-}
-
-Id client_id(Client *c) {
-    return c->player.id;
+    server->client_mask &= ~(1 << c->player.id.n);
+    log_debug("- client %d", c->player.id.n);
 }
 
 Client *client_lookup(Address *adr) {

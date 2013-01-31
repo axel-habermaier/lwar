@@ -23,7 +23,7 @@ CFLAGS = -Wall -g -fPIC -ISource/Server
 all: $(BUILD) $(BUILD)/rules $(SERVER_SO) $(DEDICATED_BIN)
 
 run: $(DEDICATED_BIN)
-	LD_LIBRARY_PATH=$(BUILD) ./$(DEDICATED_BIN) -visual
+	LD_LIBRARY_PATH=$(BUILD) ./$(DEDICATED_BIN) # -visual
 
 gdb: $(DEDICATED_BIN)
 	LD_LIBRARY_PATH=$(BUILD) gdb ./$(DEDICATED_BIN)

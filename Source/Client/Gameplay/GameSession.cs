@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Gameplay
 {
-	using System.Collections.Generic;
 	using System.Net;
 	using System.Threading.Tasks;
 	using Network;
@@ -107,7 +106,17 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   Gets the list of players that participate in the game session.
 		/// </summary>
-		public List<Player> Players { get; private set; }
+		public PlayerList Players { get; private set; }
+
+		/// <summary>
+		///   Gets the player instance for the local player.
+		/// </summary>
+		public Player LocalPlayer { get; set; }
+
+		/// <summary>
+		/// Manages the input state and periodically sends updates to the server.
+		/// </summary>
+		private InputManager _inputManager;
 
 		/// <summary>
 		///   Gets the proxy to the server that hosts the game session.
@@ -121,6 +130,7 @@ namespace Lwar.Client.Gameplay
 		{
 			Entities.SafeDispose();
 			SpriteBatch.SafeDispose();
+			_inputManager.SafeDispose();
 			_drawState.SafeDispose();
 			_updateState.SafeDispose();
 			ServerProxy.SafeDispose();
@@ -174,9 +184,13 @@ namespace Lwar.Client.Gameplay
 		{
 			Entities.SafeDispose();
 			ServerProxy.SafeDispose();
+			_inputManager.SafeDispose();
 
 			Entities = null;
+			Players = null;
+			LocalPlayer = null;
 			ServerProxy = null;
+			_inputManager = null;
 		}
 
 		/// <summary>
@@ -205,6 +219,7 @@ namespace Lwar.Client.Gameplay
 			Cleanup();
 
 			Entities = new EntityList(this);
+			Players = new PlayerList();
 			ServerProxy = new ServerProxy(new LwarPacketFactory(), serverEndPoint, Scheduler);
 			ServerProxy.MessageReceived += ProcessMessage;
 
@@ -242,6 +257,7 @@ namespace Lwar.Client.Gameplay
 			label.Text = "Synchronizing...";
 			await context.Delay(EnterPlayingStateDelay);
 
+			_inputManager = new InputManager(this);
 			_updateState.ChangeStateDelayed(Playing);
 		}
 
@@ -301,7 +317,7 @@ namespace Lwar.Client.Gameplay
 			var label = new Label(LoadingFont) { Alignment = TextAlignment.Centered | TextAlignment.Middle };
 			_drawState.ChangeState(ctx => WaitingForServerDraw(ctx, label));
 
-			while (!context.IsCanceled && ServerProxy.IsLagging)
+			while (!context.IsCanceled && ServerProxy.IsLagging && !ServerProxy.IsDropped)
 			{
 				label.Text = String.Format("Waiting for server ({0} seconds)...", (int)(ServerProxy.TimeToDrop / 1000));
 				await context.NextFrame();

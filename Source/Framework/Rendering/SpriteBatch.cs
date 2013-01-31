@@ -313,12 +313,11 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
 		/// <param name="position">The position of the quad.</param>
 		/// <param name="color">The color of the quad.</param>
-		public void Draw(Texture2D texture, Vector2f8 position, Color color)
+		public void Draw(Texture2D texture, Vector2 position, Color color)
 		{
 			var size = new SizeF(texture.Size.Width, texture.Size.Height);
-			var pos = new Vector2((float)position.X, (float)position.Y);
 
-			var quad = new Quad(new RectangleF(pos, size), color);
+			var quad = new Quad(new RectangleF(position, size), color);
 			Draw(ref quad, texture);
 		}
 

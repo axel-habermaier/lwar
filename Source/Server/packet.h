@@ -1,5 +1,6 @@
 enum {
     APP_ID = 0xf27087c5,
+    HEADER_LENGTH = 3*sizeof(size_t),
 	MAX_PACKET_LENGTH = 512,
 };
 
@@ -15,7 +16,12 @@ struct Packet {
 
     /* temp storage for incoming packets */
     size_t  ack, time;
+
+    /* connection failed */
+    int     io_failed;
 };
+
+int  packet_hasdata(Packet *p);
 
 void packet_init(Packet *p, Address *adr, size_t ack, size_t time);
 int  packet_put(Packet *p, Message *m, size_t seqno);
@@ -23,5 +29,3 @@ int  packet_get(Packet *p, Message *m, size_t *seqno);
 
 int  packet_recv(Packet *p);
 int  packet_send(Packet *p);
-
-#define packet_len(p) ((long long)((p)->b) - (long long)((p)->a))

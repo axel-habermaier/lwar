@@ -88,6 +88,7 @@ namespace Lwar.Client.Network
 			AddMessages(_reliableMessages, packet.Writer);
 			AddMessages(_unreliableMessages, packet.Writer);
 
+			_unreliableMessages.SafeDisposeAll();
 			_unreliableMessages.Clear();
 			return packet;
 		}

@@ -8,8 +8,18 @@ namespace Lwar.Client.Gameplay
 	public class Player
 	{
 		/// <summary>
-		///   The maximum number of players supported by a game session.
+		///   Gets or sets the player's identifier.
 		/// </summary>
-		public const int MaxPlayers = 8;
+		public Identifier Id { get; set; }
+
+		/// <summary>
+		///   Gets or sets the name of the player.
+		/// </summary>
+		public string Name { get; set; }
+
+		/// <summary>
+		///   Gets or sets a value indicating whether this player instance is currently in use.
+		/// </summary>
+		public bool IsActive { get; set; }
 	}
 }

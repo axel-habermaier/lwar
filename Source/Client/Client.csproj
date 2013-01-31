@@ -73,13 +73,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssetsLoader.tt</DependentUpon>
     </Compile>
+    <Compile Include="Gameplay\Bullet.cs" />
     <Compile Include="Gameplay\EntityTemplate.cs" />
     <Compile Include="Gameplay\Identifier.cs" />
     <Compile Include="Gameplay\GameSession.cs" />
     <Compile Include="Gameplay\Entity.cs" />
     <Compile Include="Gameplay\EntityList.cs" />
     <Compile Include="BufferExtensions.cs" />
-    <Compile Include="Gameplay\InputState.cs" />
+    <Compile Include="Gameplay\InputManager.cs" />
+    <Compile Include="Gameplay\InputStateHistory.cs" />
+    <Compile Include="Gameplay\PlayerList.cs" />
+    <Compile Include="Gameplay\Ship.cs" />
     <Compile Include="LwarCommands.cs" />
     <Compile Include="Network\DeliveryManager.cs" />
     <Compile Include="Network\Messages\AddPlayer.cs" />

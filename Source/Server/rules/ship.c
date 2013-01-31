@@ -9,7 +9,7 @@
 
 static void shoot(Entity *e);
 
-static EntityType _ship = { 1, 1, {0,0}, 200, 100, shoot };
+static EntityType _ship = { ENTITY_TYPE_SHIP, 1, 1, {0,0}, 200, 100, shoot };
 EntityType *type_ship = &_ship;
 
 static void shoot(Entity *e) {
@@ -18,5 +18,5 @@ static void shoot(Entity *e) {
     Vec x = add(e->x, scale(f, 2*entity_radius(e)));
     Vec v = add(e->v, scale(f, 4)); /* 1 = initial speed */
     EntityType *bullet = entity_type_get(ENTITY_TYPE_BULLET);
-    Entity *b = entity_create(bullet,x,v);
+    Entity *b = entity_create(bullet,0,x,v);
 }

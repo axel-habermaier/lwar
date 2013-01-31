@@ -13,7 +13,7 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   The new entity data.
 		/// </summary>
-		private readonly List<Data> _stats = new List<Data>();
+		private readonly List<Data> _data = new List<Data>();
 
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -21,10 +21,17 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="session">The game session that should be updated.</param>
 		public void Process(GameSession session)
 		{
+			Assert.ArgumentNotNull(session, () => session);
+
+			foreach (var entityUpdate in _data)
+			{
+				var entity = session.Entities.Find(entityUpdate.Entity);
+				entity.Position = entityUpdate.Position;
+			}
 		}
 
 		/// <summary>
-		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public void Write(BufferWriter buffer)
@@ -46,16 +53,16 @@ namespace Lwar.Client.Network.Messages
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
 			var message = GetInstance();
-			message._stats.Clear();
+			message._data.Clear();
 
 			var count = buffer.ReadByte();
 			for (var i = 0; i < count; ++i)
 			{
-				message._stats.Add(new Data
+				message._data.Add(new Data
 				{
 					Entity = buffer.ReadIdentifier(),
-					Position = new Vector2i(buffer.ReadInt16(), buffer.ReadInt16()),
-					Velocity = new Vector2i(buffer.ReadInt16(), buffer.ReadInt16()),
+					Position = new Vector2(buffer.ReadInt16(), buffer.ReadInt16()),
+					Velocity = new Vector2(buffer.ReadInt16(), buffer.ReadInt16()),
 					Rotation = buffer.ReadUInt16(),
 					Health = buffer.ReadByte()
 				});
@@ -79,7 +86,7 @@ namespace Lwar.Client.Network.Messages
 			/// <summary>
 			///   The updated position.
 			/// </summary>
-			public Vector2i Position;
+			public Vector2 Position;
 
 			/// <summary>
 			///   The updated rotation.
@@ -89,7 +96,7 @@ namespace Lwar.Client.Network.Messages
 			/// <summary>
 			///   The updated velocity.
 			/// </summary>
-			public Vector2i Velocity;
+			public Vector2 Velocity;
 		}
 	}
 }

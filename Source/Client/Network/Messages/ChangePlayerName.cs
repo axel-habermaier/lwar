@@ -25,10 +25,17 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="session">The game session that should be updated.</param>
 		public void Process(GameSession session)
 		{
+			Assert.ArgumentNotNull(session, () => session);
+
+			var player = session.Players[_playerId];
+			if (player.Name != null && player.Name != _name)
+				Log.Info("{0} was renamed to {1}.", player.Name, _name);
+
+			player.Name = _name;
 		}
 
 		/// <summary>
-		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public void Write(BufferWriter buffer)

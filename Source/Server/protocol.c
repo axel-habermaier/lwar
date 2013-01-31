@@ -11,6 +11,7 @@
 #include "log.h"
 
 static void protocol_send_full(Address *adr, size_t seqno);
+static void protocol_send_gamestate(Client *c);
 
 typedef struct QueuedMessage QueuedMessage;
 typedef struct PerClient     PerClient;
@@ -101,7 +102,7 @@ static void qm_enqueue(Client *c, QueuedMessage *qm) {
         qm_seqno(c,qm) = (c->next_out_seqno ++);
 }
 
-static Message *message_unicast(Client *c, size_t type) {
+static Message *message_unicast(Client *c, MessageType type) {
     QueuedMessage *qm = qm_create();
     Message *m = &qm->m;
     m->type = type;
@@ -109,7 +110,7 @@ static Message *message_unicast(Client *c, size_t type) {
     return m;
 }
 
-static Message *message_broadcast(size_t type) {
+static Message *message_broadcast(MessageType type) {
     QueuedMessage *qm = qm_create();
     Message *m = &qm->m;
     Client *c;
@@ -148,7 +149,7 @@ static int misbehaves(Client *c, int test) {
 }
 
 static int misbehaves_id(Client *c, Id id) {
-    return misbehaves(c, !id_eq(client_id(c), id));
+    return misbehaves(c, !id_eq(c->player.id, id));
 }
 
 static void message_handle(Client *c, Address *adr, Message *m, size_t time, size_t seqno) {
@@ -161,7 +162,9 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
         if(c) {
             m_check_seqno(c, m, seqno);
             r = message_broadcast(MESSAGE_JOIN);
-            r->join.player_id = client_id(c);
+            r->join.player_id = c->player.id;
+
+            protocol_send_gamestate(c);
         } else {
             protocol_send_full(adr, seqno);
         }
@@ -171,7 +174,7 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
         if(!c) return;
         c->hasleft = 1; /* do not broadcast leave message on timeout */
         r = message_broadcast(MESSAGE_LEAVE);
-        r->leave.player_id = client_id(c);
+        r->leave.player_id = c->player.id;
         break;
 
     case MESSAGE_CHAT:
@@ -230,6 +233,12 @@ static void packet_scan(Packet *p) {
         c->last_in_ack   = max(p->ack, c->last_in_ack);
         c->last_activity = max(server->cur_time, c->last_activity);
     }
+    
+    if(c) {
+        log_debug("%d> ack: %d, time: %d", c->player.id.n, p->ack, p->time);
+    } else {
+        log_debug("?> ack: %d, time: %d", p->ack, p->time);
+    }
 
     while(packet_get(p, &m, &seqno)) {
         if(m_check_seqno(c, &m, seqno))
@@ -241,10 +250,38 @@ static void packet_scan(Packet *p) {
 /* handle all pending incoming messages */
 void protocol_recv() {
     Packet p;
-    while(packet_recv(&p)) {
-        log_debug("> ack: %d, time: %d", p.ack, p.time);
+    int ok;
+    while((ok = packet_recv(&p))) {
         packet_scan(&p);
     }
+    if(ok<0) {
+        /* TODO: connection is dead */
+    }
+}
+
+static void protocol_send_gamestate(Client *cn) {
+    Message *r;
+    Client *c;
+    clients_foreach(c) {
+        if(c == cn) continue;
+
+        r = message_unicast(cn, MESSAGE_JOIN);
+        r->join.player_id = c->player.id;
+
+        r = message_unicast(cn, MESSAGE_NAME);
+        r->name.player_id = c->player.id;
+        r->name.nick      = c->player.name;
+    }
+
+    Entity *e;
+    entities_foreach(e) {
+        r = message_unicast(cn, MESSAGE_ADD);
+        r->add.entity_id  = e->id;
+        r->add.player_id  = (e->player ? e->player->id : server_id);
+        r->add.type_id    = e->type->id;
+    }
+
+    r = message_unicast(cn, MESSAGE_SYNCED);
 }
 
 static void packet_init_header(Client *c, Packet *p) {
@@ -257,6 +294,14 @@ static int packet_fmt(Client *c, Packet *p, QueuedMessage *qm) {
     return packet_put(p, &qm->m, qm_seqno(c, qm));
 }
 
+static void packet_send_init(Client *c, Packet *p) {
+    if(packet_hasdata(p)) {
+        log_debug("<%d ack: %d, time: %d", c->player.id.n, p->ack, p->time);
+        packet_send(p);
+        packet_init_header(c, p);
+    }
+}
+
 static void protocol_send_client(Client *c) {
     Packet p;
     QueuedMessage *qm;
@@ -266,17 +311,12 @@ static void protocol_send_client(Client *c) {
     queue_foreach(qm) {
     again:
         if(!packet_fmt(c, &p, qm)) { /* did not fit any more */
-            log_debug("< ack: %d, time: %d", p.ack, p.time);
-            packet_send(&p);
-            packet_init_header(c, &p);
+            packet_send_init(c, &p);
             goto again;
         }
     }
     
-    if(packet_len(&p) > 0) {
-        log_debug("< ack: %d, time: %d", p.ack, p.time);
-        packet_send(&p);
-    }
+    packet_send_init(c, &p);
 }
 
 /* If a client times out, its dead flag is set,
@@ -289,7 +329,7 @@ static void protocol_timed_out(Client *c) {
     Message *r;
     if(!c->hasleft) {
         r = message_broadcast(MESSAGE_LEAVE);
-        r->leave.player_id = client_id(c);
+        r->leave.player_id = c->player.id;
     }
     client_remove(c);
 }

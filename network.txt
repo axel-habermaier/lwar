@@ -73,10 +73,10 @@ Message Types
 	  8		Selection	yes			client/server	Broadcasts a ship or weapon type change to all clients
 	  9		Name		yes			client/server	Broadcasts a player name change to all clients
 	 10		Synced		yes			server			Signals the client that the game state has been fully synced
-	 11		Full		yes			server			Signals the client that the server is full
 	101		Stats		no			server			Periodically updates the clients' stats (pings, scores)
 	102		Update		no			server			Periodically updates the clients' entity states
 	103		Input		no			client			Periodically updates the server's client-specific input state
+	104		Full		no			server			Signals the client that the server is full
 	
 Message Header
 	Both reliable and unreliable messages first contain the message type id in their header. This way, the message
@@ -218,15 +218,15 @@ Connecting to the server
 	it can accept an additional client or whether the server is full. In the latter case, the server
 	sends a Full message back to the client. If the server is not full, it sends a Join message
 	containing the id of the newly allocated player to all clients, including the new one. This must be
-	the first message sent to the new client and it must have sequence number 0. Furthermore, this message
+	the first message sent to the new client and it must have sequence number 1. Furthermore, this message
 	must acknowledge the reception of the client's Connect message.
 
 	Upon reception of the Join message, the client knows that it has established a connection to the
 	server and waits for the synchronization of the game state to complete. The server starts sending
-	Join messages for all active players and then sends Add messages for all active entities in the world.
-	The players and entities that are sent represent the state of the server at the time the Join message
-	has been sent back to the connecting client and are followed by a Synced message. After the Synced
-	message has been sent, the server can start sending regular reliable and unreliable messages to 
+	Join messages for all active players and then sends all necessary Add, Name, and Selection messages in an
+	arbitrary order. The players and entities that are sent represent the state of the server at the time the 
+	Join message has been sent back to the connecting client and are followed by a Synced message. After the
+	Synced message has been sent, the server can start sending regular reliable and unreliable messages to 
 	the new client.
 	
 	The Synced message is a special marker for the client, indicating that it now knows about all players 
@@ -254,6 +254,9 @@ Disconnecting from the server
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	 7	  13-01-31	Axel		Clarified what messages are sent during the game state synchronization
+								phase
+								The Full message is now unreliable with new id 104
 	 6	  13-01-30	Gidon		Formula for input messages at the server:
 								balanced parens, use "frameNo" as in packet description.
                                 Added hint about obsolete ids.

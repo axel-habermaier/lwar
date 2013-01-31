@@ -14,15 +14,25 @@ namespace Lwar.Client.Network.Messages
 		private Identifier _playerId;
 
 		/// <summary>
+		///   Gets or sets a value that indicates whether this message corresponds to the local player.
+		/// </summary>
+		public bool IsLocalPlayer { get; set; }
+
+		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
 		public void Process(GameSession session)
 		{
+			Assert.ArgumentNotNull(session, () => session);
+			session.Players.Add(_playerId);
+
+			if (IsLocalPlayer)
+				session.LocalPlayer = session.Players[_playerId];
 		}
 
 		/// <summary>
-		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public void Write(BufferWriter buffer)

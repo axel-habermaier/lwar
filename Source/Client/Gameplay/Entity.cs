@@ -4,7 +4,7 @@ namespace Lwar.Client.Gameplay
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
-	using Pegasus.Gameplay;
+	using Pegasus.Framework.Rendering;
 
 	/// <summary>
 	///   An abstract base class for all entities in a level.
@@ -27,6 +27,14 @@ namespace Lwar.Client.Gameplay
 		protected GameSession Session { get; private set; }
 
 		/// <summary>
+		///   Gets the sprite batch that should be used for drawing.
+		/// </summary>
+		protected SpriteBatch SpriteBatch
+		{
+			get { return Session.SpriteBatch; }
+		}
+
+		/// <summary>
 		///   Gets or sets the entity's unique identifier.
 		/// </summary>
 		public Identifier Id { get; set; }
@@ -34,7 +42,7 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   Gets or sets the entity's position.
 		/// </summary>
-		public Vector2f8 Position { get; set; }
+		public Vector2 Position { get; set; }
 
 		#region Lifecycle 
 

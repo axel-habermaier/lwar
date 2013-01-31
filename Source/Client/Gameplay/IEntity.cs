@@ -1,10 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.Gameplay
+namespace Lwar.Client.Gameplay
 {
-	using Lwar.Client.Gameplay;
-	using Framework.Math;
-	using Framework.Platform;
+	using Pegasus.Framework.Math;
 
 	/// <summary>
 	///   Represents an entity.
@@ -14,7 +12,7 @@ namespace Pegasus.Gameplay
 		/// <summary>
 		///   Gets or sets the entity's position.
 		/// </summary>
-		Vector2f8 Position { get; set; }
+		Vector2 Position { get; set; }
 
 		/// <summary>
 		///   Gets or sets the entity's unique identifier.

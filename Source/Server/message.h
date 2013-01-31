@@ -1,3 +1,4 @@
+typedef enum   MessageType MessageType;
 typedef struct Header  Header ;
 typedef struct Message Message;
 
@@ -16,7 +17,7 @@ enum {
     MAX_CHAT_LENGTH = 500,
 };
 
-enum {
+enum MessageType {
     MESSAGE_CONNECT     = 1,
     MESSAGE_DISCONNECT  = 2,
     MESSAGE_JOIN        = 3,
@@ -27,9 +28,9 @@ enum {
     MESSAGE_SELECTION   = 8,
     MESSAGE_NAME        = 9,
     MESSAGE_SYNCED      = 10,
-    MESSAGE_FULL        = 11,
 
     MESSAGE_INPUT       = 103,
+    MESSAGE_FULL        = 104,
 };
 
 int is_reliable(Message *m);
@@ -41,7 +42,7 @@ struct Header {
 };
 
 struct Message {
-    uint8_t  type;
+    MessageType type;
 
     union {
         struct {

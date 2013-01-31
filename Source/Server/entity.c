@@ -53,10 +53,11 @@ static int entity_check_obsolete(size_t i, void *p) {
     return e->dead;
 }
 
-Entity *entity_create(EntityType *t, Vec x, Vec v) {
+Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
     assert(t);
     Entity *e = slab_new(&server->entities, Entity);
     assert(e);
+    e->player = p;
     e->type   = t;
     e->x      = x;
     e->v      = v;

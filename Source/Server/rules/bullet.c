@@ -5,5 +5,5 @@
 #include "server.h"
 #include "rules.h"
 
-static EntityType _bullet = { .1, .1, {0,0}, 10, 0, 0 };
+static EntityType _bullet = { ENTITY_TYPE_BULLET, .1, .1, {0,0}, 10, 0, 0 };
 EntityType *type_bullet = &_bullet;

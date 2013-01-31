@@ -132,7 +132,7 @@ pgVoid pgSetPixelFormat(pgContext* context)
 		if (rgba == 0 || doubleBuffered == 0)
 			continue;
 		
-		if (red == 8 && green == 8 && blue == 8 && alpha == 0 && depth == 24 && stencil == 8)
+		if (red == 8 && green == 8 && blue == 8 && /* alpha == 0 && */ depth == 24 && stencil == 8)
 		{
 			bestVisual = &visuals[i];
 			break;

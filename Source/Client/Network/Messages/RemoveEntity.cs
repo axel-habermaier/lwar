@@ -19,10 +19,12 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="session">The game session that should be updated.</param>
 		public void Process(GameSession session)
 		{
+			Assert.ArgumentNotNull(session, () => session);
+			session.Entities.Remove(_entityId);
 		}
 
 		/// <summary>
-		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public void Write(BufferWriter buffer)

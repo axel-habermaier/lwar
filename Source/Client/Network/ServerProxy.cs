@@ -122,8 +122,8 @@ namespace Lwar.Client.Network
 			_time.Offset = -_time.Seconds;
 			_messageQueue = new MessageQueue(packetFactory, _deliveryManager);
 			_serverEndPoint = serverEndPoint;
-			_receiveProcess = scheduler.CreateProcess(Receive);
-			_sendProcess = scheduler.CreateProcess(Send);
+			_receiveProcess = scheduler.CreateProcess(ReceiveAsync);
+			_sendProcess = scheduler.CreateProcess(SendAsync);
 			_observerProcess = scheduler.CreateProcess(ObserveConnectionState);
 		}
 
@@ -224,7 +224,7 @@ namespace Lwar.Client.Network
 		///   Sends the queued messages to the server.
 		/// </summary>
 		/// <param name="context">The context in which the queued messages should be sent.</param>
-		private async Task Send(ProcessContext context)
+		private async Task SendAsync(ProcessContext context)
 		{
 			while (!context.IsCanceled)
 			{
@@ -249,7 +249,7 @@ namespace Lwar.Client.Network
 		///   Handles incoming packets from the server.
 		/// </summary>
 		/// <param name="context">The context in which the incoming packets should be handled.</param>
-		private async Task Receive(ProcessContext context)
+		private async Task ReceiveAsync(ProcessContext context)
 		{
 			var sender = new IPEndPoint(_serverEndPoint.Address, _serverEndPoint.Port);
 			while (!context.IsCanceled)
@@ -267,7 +267,8 @@ namespace Lwar.Client.Network
 				{
 					using (var packet = await _socket.ReceiveAsync(context, sender))
 					{
-						if (sender.Port != _serverEndPoint.Port || !sender.Address.MapToIPv6().Equals(_serverEndPoint.Address.MapToIPv6()))
+						// TODO: Check server address
+						if (sender.Port != _serverEndPoint.Port)
 						{
 							NetworkLog.ClientWarn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
 												  sender, _serverEndPoint);
@@ -314,14 +315,7 @@ namespace Lwar.Client.Network
 				if (type.IsReliable())
 					message = HandleReliableMessage(buffer, type);
 				else if (type.IsUnreliable())
-				{
-					message = HandleUnreliableMessage(buffer, type);
-					if (!allowUnreliableDelivery)
-					{
-						message.SafeDispose();
-						message = null;
-					}
-				}
+					message = HandleUnreliableMessage(buffer, type, allowUnreliableDelivery);
 				else
 					Assert.That(false, "Unclassified message type.");
 
@@ -360,7 +354,10 @@ namespace Lwar.Client.Network
 
 					// If this is the first packet that we received from the server, it means we're syncing the game state
 					if (allowDelivery && sequenceNumber == 1)
+					{
+						((AddPlayer)message).IsLocalPlayer = true;
 						_state = State.Syncing;
+					}
 					break;
 				case MessageType.RemovePlayer:
 					message = RemovePlayer.Create(buffer);
@@ -389,15 +386,6 @@ namespace Lwar.Client.Network
 					else if (allowDelivery)
 						_state = State.Connected;
 					break;
-				case MessageType.ServerFull:
-					message = ServerFull.Create(buffer);
-
-					// Only the first message can be a server full message
-					if (allowDelivery && sequenceNumber != 1)
-						NetworkLog.ClientWarn("Ignored an unexpected server full message.");
-					else if (allowDelivery)
-						_state = State.Full;
-					break;
 				case MessageType.Connect:
 				case MessageType.Disconnect:
 					NetworkLog.ClientWarn("Received an unexpected reliable message of type {0}. The rest of the packet is ignored.", type);
@@ -422,18 +410,31 @@ namespace Lwar.Client.Network
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be deserialized from.</param>
 		/// <param name="type">The type of the unreliable message.</param>
-		private static IUnreliableMessage HandleUnreliableMessage(BufferReader buffer, MessageType type)
+		/// <param name="allowDelivery">Indicates whether the message is allowed to be delivered.</param>
+		private IUnreliableMessage HandleUnreliableMessage(BufferReader buffer, MessageType type, bool allowDelivery)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 			Assert.ArgumentInRange(type, () => type);
 			Assert.ArgumentSatisfies(type.IsUnreliable(), () => type, "Not an unreliable message type.");
 
+			IUnreliableMessage message;
 			switch (type)
 			{
 				case MessageType.UpdatePlayerStats:
-					return UpdatePlayerStats.Create(buffer);
+					message = UpdatePlayerStats.Create(buffer);
+					break;
 				case MessageType.UpdateEntity:
-					return UpdateEntity.Create(buffer);
+					message = UpdateEntity.Create(buffer);
+					break;
+				case MessageType.ServerFull:
+					message = ServerFull.Create(buffer);
+
+					// Only the first message can be a server full message
+					if (allowDelivery && _state != State.Connecting)
+						NetworkLog.ClientWarn("Ignored an unexpected server full message.");
+					else if (allowDelivery)
+						_state = State.Full;
+					break;
 				case MessageType.UpdateClientInput:
 					NetworkLog.ClientWarn("Received an unexpected unreliable message of type {0}. The rest of the packet is ignored.", type);
 					return null;
@@ -441,6 +442,14 @@ namespace Lwar.Client.Network
 					NetworkLog.ClientWarn("Received an unreliable message of unknown type. The rest of the packet is ignored.");
 					return null;
 			}
+
+			if (!allowDelivery)
+			{
+				message.SafeDispose();
+				return null;
+			}
+
+			return message;
 		}
 
 		/// <summary>
@@ -480,6 +489,24 @@ namespace Lwar.Client.Network
 
 			if (_state == State.Connected || _state == State.Syncing)
 				NetworkLog.ClientInfo("Disconnected from {0}.", _serverEndPoint);
+		}
+
+		/// <summary>
+		///   Sends the given unreliable message to the server.
+		/// </summary>
+		/// <param name="message">The message that should be sent.</param>
+		public void Send(IUnreliableMessage message)
+		{
+			_messageQueue.Enqueue(message);
+		}
+
+		/// <summary>
+		///   Sends the given reliable message to the server.
+		/// </summary>
+		/// <param name="message">The message that should be sent.</param>
+		public void Send(IReliableMessage message)
+		{
+			_messageQueue.Enqueue(message);
 		}
 
 		/// <summary>

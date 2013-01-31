@@ -9,6 +9,7 @@
 
 typedef unsigned long long Clock;
 static int visual;
+static Clock base;
 
 static void iputs(const char *msg) { fputs(msg,stdout); fputs("\n",stdout); fflush(stdout); }
 static void eputs(const char *msg) { fputs(msg,stderr); fputs("\n",stderr); fflush(stderr); }
@@ -22,7 +23,9 @@ static Clock clock_get() {
     time_t sec = tp.tv_sec;
     long  msec = tp.tv_nsec / 1000000;
 
-    return sec * 1000.0 + msec;
+    Clock now = sec * 1000.0 + msec;
+    if(!base) base = now;
+    return now - base;
 }
 
 int main(int argc, char *argv[]) {

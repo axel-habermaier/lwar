@@ -2,12 +2,13 @@
 
 namespace Lwar.Client.Gameplay
 {
+	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
 	/// <summary>
-	///   Represents the current input state.
+	///   Manages the current and the previous seven input stated.
 	/// </summary>
-	public struct InputState
+	public struct InputStateHistory
 	{
 		/// <summary>
 		///   Indicates whether the player moves backwards.

@@ -4,7 +4,6 @@ namespace Lwar.Client.Gameplay
 {
 	using System.Collections.Generic;
 	using Pegasus.Framework;
-	using Pegasus.Gameplay;
 
 	/// <summary>
 	///   Manages a list of entities, delaying additions and removals of entities until the end of the frame.
@@ -75,8 +74,16 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
-		///   Removes the given entity from the list at the end of the frame and returns
-		///   the entity instance to the pool for later re-use. The entity is disposed immediately, however.
+		///   Removes the given entity from the list at the end of the frame.
+		/// </summary>
+		/// <param name="id">The identifier of the entity that should be removed from the list.</param>
+		public void Remove(Identifier id)
+		{
+			Remove(Find(id));
+		}
+
+		/// <summary>
+		///   Removes the given entity from the list at the end of the frame.
 		/// </summary>
 		/// <param name="entity">The entity that should be removed from the list.</param>
 		public void Remove(IEntity entity)

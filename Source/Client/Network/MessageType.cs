@@ -17,9 +17,9 @@ namespace Lwar.Client.Network
 		ChangePlayerState = 8,
 		ChangePlayerName = 9,
 		Synced = 10,
-		ServerFull = 11,
 		UpdatePlayerStats = 101,
 		UpdateEntity = 102,
-		UpdateClientInput = 103
+		UpdateClientInput = 103,
+		ServerFull = 104
 	}
 }

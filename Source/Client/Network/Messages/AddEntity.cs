@@ -29,10 +29,32 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="session">The game session that should be updated.</param>
 		public void Process(GameSession session)
 		{
+			Assert.ArgumentNotNull(session, () => session);
+
+			var player = session.Players[_playerId];
+			IEntity entity = null;
+
+			switch (_template)
+			{
+				case EntityTemplate.Ship:
+					entity = Ship.Create();
+					break;
+				case EntityTemplate.Bullet:
+					entity = Bullet.Create();
+					break;
+				case EntityTemplate.Planet:
+					// TODO
+					break;
+				default:
+					throw new InvalidOperationException("Unknown entity template.");
+			}
+
+			entity.Id = _entityId;
+			session.Entities.Add(entity);
 		}
 
 		/// <summary>
-		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public void Write(BufferWriter buffer)

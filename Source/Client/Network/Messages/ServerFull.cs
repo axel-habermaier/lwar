@@ -6,7 +6,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class ServerFull : PooledObject<ServerFull>, IReliableMessage
+	public class ServerFull : PooledObject<ServerFull>, IUnreliableMessage
 	{
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -18,7 +18,7 @@ namespace Lwar.Client.Network.Messages
 		}
 
 		/// <summary>
-		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public void Write(BufferWriter buffer)
@@ -27,9 +27,9 @@ namespace Lwar.Client.Network.Messages
 		}
 
 		/// <summary>
-		///   Gets or sets the sequence number of the message.
+		///   Gets or sets the timestamp of the message.
 		/// </summary>
-		public uint SequenceNumber { get; set; }
+		public uint Timestamp { get; set; }
 
 		/// <summary>
 		///   Creates a new instance.

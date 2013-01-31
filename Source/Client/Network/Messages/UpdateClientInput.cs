@@ -11,7 +11,7 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   The input state that is sent with the message.
 		/// </summary>
-		private InputState _inputState;
+		private InputStateHistory _inputState;
 
 		/// <summary>
 		///   The identifier of the player that is change his or her input state.
@@ -33,7 +33,7 @@ namespace Lwar.Client.Network.Messages
 		}
 
 		/// <summary>
-		///   Serializes the message into the given buffer, returning false if the message did not fit.
+		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
 		public void Write(BufferWriter buffer)
@@ -50,7 +50,7 @@ namespace Lwar.Client.Network.Messages
 		/// </summary>
 		/// <param name="playerId">The identifier of the player that is change his or her input state.</param>
 		/// <param name="inputState">The input state that should be sent with the message.</param>
-		public UpdateClientInput Create(Identifier playerId, InputState inputState)
+		public static UpdateClientInput Create(Identifier playerId, InputStateHistory inputState)
 		{
 			var update = GetInstance();
 			update._inputState = inputState;

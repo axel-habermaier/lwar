@@ -57,7 +57,6 @@ void clients_cleanup();
 /* void client_update(Client *c); */
 Client *client_create(Address *adr);
 void client_remove(Client *c);
-Id client_id(Client *c);
 Client *client_get(Id player);
 Client *client_lookup(Address *adr);
 
@@ -76,7 +75,7 @@ void protocol_cleanup();
 void entities_init();
 void entities_cleanup();
 void entity_actions();
-Entity *entity_create(EntityType *t, Vec x, Vec v);
+Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v);
 void entity_remove(Entity *e);
 Pos entity_radius(Entity *e);
 Pos entity_mass(Entity *e);
@@ -129,6 +128,7 @@ struct Entity {
     int dead;
 
     Id id;
+    Player *player;
     EntityType *type;
 
     Time remaining;
@@ -139,6 +139,7 @@ struct Entity {
 };
 
 struct EntityType {
+    size_t id;
     Pos r; /* radius */
     Pos m; /* mass   */
     Vec a; /* acceleration */
@@ -153,7 +154,6 @@ struct Client {
     Player player;
     Address adr;
 
-    int needsync; /* needs initial game state  */
     int hasleft;  /* has actively disconnected */
     int dead;     /* memory will be released, don't use any more */
 

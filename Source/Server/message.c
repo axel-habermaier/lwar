@@ -113,13 +113,15 @@ size_t message_pack(char *s, Message *m, size_t seqno) {
 
 size_t message_unpack(const char *s, Message *m, size_t *seqno) {
     size_t i=0;
-    i += uint8_unpack(s+i, &m->type);
+    uint8_t _type;
+    i += uint8_unpack(s+i, &_type);
+    m->type = (MessageType)_type;
 
     if(is_reliable(m)) {
-        uint32_t tmp;
-        i += uint32_unpack(s+i, &tmp);
+        uint32_t _seqno;
+        i += uint32_unpack(s+i, &_seqno);
         assert(seqno);
-        *seqno = tmp;
+        *seqno = _seqno;
     }
 
     switch(m->type) {

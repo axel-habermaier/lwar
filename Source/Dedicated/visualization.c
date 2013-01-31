@@ -34,7 +34,7 @@ static Entity *launch(Pos x, Pos y, Pos vx, Pos vy, Pos ax, Pos ay, EntityType *
     Vec _x = {x, y};
     Vec _v = {vx,vy};
     Vec _a = {ax,ay};
-    Entity *e = entity_create(t,_x,_v);
+    Entity *e = entity_create(t,0,_x,_v);
     physics_acc(e,_a);
     return e;
 }
