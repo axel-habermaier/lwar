@@ -66,12 +66,10 @@ namespace Lwar.Client.Network
 		///   Checks whether the reliable message is the immediate successor to the last processed reliable message. If true,
 		///   the last processed sequence number is incremented by one.
 		/// </summary>
-		/// <param name="message">The reliable message that should be checked.</param>
-		public bool AllowDelivery(IReliableMessage message)
+		/// <param name="sequenceNumber">The sequence number that should be checked.</param>
+		public bool AllowReliableDelivery(uint sequenceNumber)
 		{
-			Assert.ArgumentNotNull(message, () => message);
-
-			if (message.SequenceNumber == _lastReceivedSequenceNumber + 1)
+			if (sequenceNumber == _lastReceivedSequenceNumber + 1)
 			{
 				++_lastReceivedSequenceNumber;
 				return true;
@@ -85,7 +83,7 @@ namespace Lwar.Client.Network
 		///   updates the last timestamp, causing future older unreliable messages to be discarded.
 		/// </summary>
 		/// <param name="timestamp">The timestamp of the received unreliable messages that should be delivered.</param>
-		public bool AllowDelivery(uint timestamp)
+		public bool AllowUnreliableDelivery(uint timestamp)
 		{
 			if (timestamp > _lastReceivedTimestamp)
 			{

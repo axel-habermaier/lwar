@@ -68,7 +68,6 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
 		/// <param name="remoteEndPoint">After the method completes, contains the endpoint of the peer that sent the packet.</param>
-		/// <param name="pool">The array pool that should be used to create the packet's data array instance.</param>
 		public async Task<IncomingPacket> ReceiveAsync(ProcessContext context, IPEndPoint remoteEndPoint)
 		{
 			var packet = _packetFactory.CreateIncomingPacket();

@@ -21,5 +21,10 @@ namespace Lwar.Client.Network
 		///   The maximum allowed packet size in bytes.
 		/// </summary>
 		public const int MaxPacketSize = 512;
+
+		/// <summary>
+		///   The size of the packet header in bytes.
+		/// </summary>
+		public const int HeaderSize = 12;
 	}
 }

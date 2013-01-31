@@ -23,3 +23,5 @@ int  packet_get(Packet *p, Message *m, size_t *seqno);
 
 int  packet_recv(Packet *p);
 int  packet_send(Packet *p);
+
+#define packet_len(p) ((long long)((p)->b) - (long long)((p)->a))

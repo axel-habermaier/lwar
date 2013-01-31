@@ -69,7 +69,7 @@ Entity *entity_create(EntityType *t, Vec x, Vec v) {
 
 void entity_remove(Entity *e) {
     /* TODO: notify */
-    e->dead = 1;
+    if(e) e->dead = 1;
 }
 
 void entities_init() {

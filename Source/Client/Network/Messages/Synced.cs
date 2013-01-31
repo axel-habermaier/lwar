@@ -38,10 +38,7 @@ namespace Lwar.Client.Network.Messages
 		public static Synced Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			var message = GetInstance();
-			message.SequenceNumber = buffer.ReadUInt32();
-			return message;
+			return GetInstance();
 		}
 	}
 }

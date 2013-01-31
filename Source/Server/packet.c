@@ -27,7 +27,7 @@ int packet_put(Packet *p, Message *m, size_t seqno) {
 }
 
 int packet_get(Packet *p, Message *m, size_t *seqno) {
-    assert(p->a <= p->b);
+    if(p->a > p->b) return 0;
     size_t n = message_unpack(p->p + p->a, m, seqno);
     p->a += n;
     return check_bounds(p,n);

@@ -77,14 +77,15 @@ namespace Pegasus.Framework.Network
 
 			var eventArgs = new SocketAsyncEventArgs { SocketFlags = SocketFlags.None };
 			eventArgs.SetBuffer(buffer.Array, buffer.Offset, buffer.Count);
-			await ExecuteAsync<object>(context, eventArgs, socket.ReceiveAsync, e => null);
+			eventArgs.RemoteEndPoint = remoteEndPoint;
+			await ExecuteAsync<object>(context, eventArgs, socket.ReceiveFromAsync, e => null);
 
 			var endPoint = (IPEndPoint)eventArgs.RemoteEndPoint;
 			remoteEndPoint.Address = endPoint.Address;
 			remoteEndPoint.Port = endPoint.Port;
 
 			Assert.That(eventArgs.Offset == buffer.Offset, "Unexpected offset.");
-			return eventArgs.Count;
+			return eventArgs.BytesTransferred;
 		}
 
 		/// <summary>

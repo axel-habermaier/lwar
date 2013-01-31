@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "server.h"
+#include "log.h"
 
 static Client      _clients[MAX_CLIENTS];
 
@@ -31,6 +32,8 @@ void player_rename(Player *p, Str name) {
 
 static void player_action(Player *p) {
     Entity *e = p->ship;
+    if(!e) return;
+
     Vec a = entity_acc(e);
     Vec b = { a.x * p->right - p->left,
               a.y * p->up    - p->down };
@@ -76,6 +79,7 @@ Client *client_create(Address *adr) {
     if(c) {
         c->adr = *adr;
         server->client_mask |= (1 << client_id(c).n);
+        log_debug("+ client %d", client_id(c).n);
     }
     return c;
 }
@@ -83,6 +87,7 @@ Client *client_create(Address *adr) {
 void client_remove(Client *c) {
     c->dead = 1;
     server->client_mask &= ~(1 << client_id(c).n);
+    log_debug("- client %d", client_id(c).n);
 }
 
 Id client_id(Client *c) {

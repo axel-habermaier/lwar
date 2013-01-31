@@ -8,8 +8,9 @@
 #include "server.h"
 #include "message.h"
 #include "packet.h"
+#include "log.h"
 
-static void protocol_send_full(Address *adr);
+static void protocol_send_full(Address *adr, size_t seqno);
 
 typedef struct QueuedMessage QueuedMessage;
 typedef struct PerClient     PerClient;
@@ -84,7 +85,7 @@ static int qm_check_relevant(Client *c, QueuedMessage *qm) {
 
 static int m_check_seqno(Client *c, Message *m, size_t seqno) {
     if(c && is_reliable(m)) {
-        if(seqno < c->last_in_seqno) return 0;
+        if(seqno <= c->last_in_seqno) return 0;
         c->last_in_seqno = seqno;
     }
     return 1;
@@ -150,7 +151,7 @@ static int misbehaves_id(Client *c, Id id) {
     return misbehaves(c, !id_eq(client_id(c), id));
 }
 
-static void message_handle(Client *c, Address *adr, Message *m, size_t time) {
+static void message_handle(Client *c, Address *adr, Message *m, size_t time, size_t seqno) {
     Message *r;
 
     switch(m->type) {
@@ -158,10 +159,11 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time) {
         if(misbehaves(c, c != 0)) return;
         c = client_create(adr);
         if(c) {
+            m_check_seqno(c, m, seqno);
             r = message_broadcast(MESSAGE_JOIN);
             r->join.player_id = client_id(c);
         } else {
-            protocol_send_full(adr);
+            protocol_send_full(adr, seqno);
         }
         break;
 
@@ -231,7 +233,8 @@ static void packet_scan(Packet *p) {
 
     while(packet_get(p, &m, &seqno)) {
         if(m_check_seqno(c, &m, seqno))
-            message_handle(c, &p->adr, &m, p->time);
+            log_debug("  > seqno: %d, type: %d", seqno, m.type);
+            message_handle(c, &p->adr, &m, p->time, seqno);
     }
 }
 
@@ -239,6 +242,7 @@ static void packet_scan(Packet *p) {
 void protocol_recv() {
     Packet p;
     while(packet_recv(&p)) {
+        log_debug("> ack: %d, time: %d", p.ack, p.time);
         packet_scan(&p);
     }
 }
@@ -249,6 +253,7 @@ static void packet_init_header(Client *c, Packet *p) {
 
 static int packet_fmt(Client *c, Packet *p, QueuedMessage *qm) {
     if(!qm_check_relevant(c, qm)) return 1;
+    log_debug("  < seqno: %d, type: %d", qm_seqno(c, qm), qm->m.type);
     return packet_put(p, &qm->m, qm_seqno(c, qm));
 }
 
@@ -261,10 +266,16 @@ static void protocol_send_client(Client *c) {
     queue_foreach(qm) {
     again:
         if(!packet_fmt(c, &p, qm)) { /* did not fit any more */
+            log_debug("< ack: %d, time: %d", p.ack, p.time);
             packet_send(&p);
             packet_init_header(c, &p);
             goto again;
         }
+    }
+    
+    if(packet_len(&p) > 0) {
+        log_debug("< ack: %d, time: %d", p.ack, p.time);
+        packet_send(&p);
     }
 }
 
@@ -296,7 +307,7 @@ static void protocol_kick(Client *c) {
     r->chat.msg = kick_msg_s;
 
     r = message_broadcast(MESSAGE_DISCONNECT);
-    message_handle(c, &c->adr, r, server->cur_time);
+    message_handle(c, &c->adr, r, server->cur_time, 0);
 }
 
 /* (re)send queued messages */
@@ -312,11 +323,11 @@ void protocol_send() {
     }
 }
 
-static void protocol_send_full(Address *adr) {
+static void protocol_send_full(Address *adr, size_t seqno) {
     Packet p;
     Message m;
     m.type = MESSAGE_FULL;
-    packet_init(&p, adr, 0, 0);
+    packet_init(&p, adr, seqno, 0);
     packet_put(&p, &m, 0);
     packet_send(&p);
 }

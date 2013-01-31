@@ -60,7 +60,6 @@ namespace Lwar.Client.Network.Messages
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
 			var message = GetInstance();
-			message.SequenceNumber = buffer.ReadUInt32();
 			message._playerId = buffer.ReadIdentifier();
 			message._shipType = buffer.ReadByte();
 			message._weaponType = buffer.ReadByte();

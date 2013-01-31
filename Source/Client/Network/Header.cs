@@ -44,7 +44,13 @@ namespace Lwar.Client.Network
 		/// <param name="buffer">The buffer the header data should be read from.</param>
 		public static Header? Create(BufferReader buffer)
 		{
-			var header = new Header();
+			Assert.ArgumentNotNull(buffer, () => buffer);
+
+			if (!buffer.CanRead(Specification.HeaderSize))
+			{
+				NetworkLog.ClientWarn("Received a packet with an incomplete header.");
+				return null;
+			}
 
 			if (buffer.ReadUInt32() != AppIdentifier)
 			{
@@ -52,6 +58,7 @@ namespace Lwar.Client.Network
 				return null;
 			}
 
+			var header = new Header();
 			header.Acknowledgement = buffer.ReadUInt32();
 			header.Timestamp = buffer.ReadUInt32();
 			return header;

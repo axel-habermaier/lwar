@@ -200,6 +200,8 @@ namespace Lwar.Client.Network
 				while (_state == State.Connecting && attempts < MaxConnectionAttempts)
 				{
 					_messageQueue.Enqueue(Messages.Connect.Create());
+					await _socket.SendAsync(context, _messageQueue.CreatePacket(), _serverEndPoint);
+
 					++attempts;
 					await context.Delay(RetryDelay);
 				}
@@ -229,8 +231,10 @@ namespace Lwar.Client.Network
 			{
 				try
 				{
-					var packet = _messageQueue.CreatePacket();
-					await _socket.SendAsync(context, packet, _serverEndPoint);
+					while (_state < State.Syncing)
+						await context.NextFrame();
+
+					await _socket.SendAsync(context, _messageQueue.CreatePacket(), _serverEndPoint);
 				}
 				catch (SocketOperationException e)
 				{
@@ -248,7 +252,7 @@ namespace Lwar.Client.Network
 		/// <param name="context">The context in which the incoming packets should be handled.</param>
 		private async Task Receive(ProcessContext context)
 		{
-			var sender = new IPEndPoint(IPAddress.Any, 0);
+			var sender = new IPEndPoint(_serverEndPoint.Address, _serverEndPoint.Port);
 			while (!context.IsCanceled)
 			{
 				if (_state == State.Faulted)
@@ -264,7 +268,7 @@ namespace Lwar.Client.Network
 				{
 					using (var packet = await _socket.ReceiveAsync(context, sender))
 					{
-						if (!sender.Equals(_serverEndPoint))
+						if (sender.Port != _serverEndPoint.Port || !sender.Address.MapToIPv6().Equals(_serverEndPoint.Address.MapToIPv6()))
 						{
 							NetworkLog.ClientWarn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
 												  sender, _serverEndPoint);
@@ -272,13 +276,7 @@ namespace Lwar.Client.Network
 						}
 
 						_lastPacketTimestamp = _time.Milliseconds;
-						foreach (var message in DeserializeMessages(packet))
-						{
-							Assert.That(MessageReceived != null, "No one is listening for received messages.");
-
-							MessageReceived(message);
-							message.Dispose();
-						}
+						HandleMessages(packet);
 					}
 				}
 				catch (SocketOperationException e)
@@ -292,108 +290,156 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		///   Deserializes all messages from the incoming packet.
+		///   Handles all messages in the incoming packet.
 		/// </summary>
 		/// <param name="packet">The packet from which the messages should be deserialized.</param>
-		private IEnumerable<IMessage> DeserializeMessages(IncomingPacket packet)
+		private void HandleMessages(IncomingPacket packet)
 		{
 			Assert.ArgumentNotNull(packet, () => packet);
+			Assert.That(MessageReceived != null, "No one is listening for received messages.");
 
-			using (packet)
+			var buffer = packet.Reader;
+			var header = Header.Create(buffer);
+
+			if (header == null)
+				return;
+
+			_deliveryManager.UpdateLastAckedSequenceNumber(header.Value.Acknowledgement);
+			var allowUnreliableDelivery = _deliveryManager.AllowUnreliableDelivery(header.Value.Timestamp);
+
+			while (!buffer.EndOfBuffer)
 			{
-				var buffer = packet.Reader;
-				var header = Header.Create(buffer);
+				var type = (MessageType)buffer.ReadByte();
+				IMessage message = null;
 
-				if (header == null)
-					yield break;
-
-				var ignoreUnreliableMessages = _deliveryManager.AllowDelivery(header.Value.Timestamp);
-				_deliveryManager.UpdateLastAckedSequenceNumber(header.Value.Acknowledgement);
-
-				IReliableMessage reliableMessage = null;
-				IUnreliableMessage unreliableMessage = null;
-
-				while (!buffer.EndOfBuffer)
+				if (type.IsReliable())
+					message = HandleReliableMessage(buffer, type);
+				else if (type.IsUnreliable())
 				{
-					var type = (MessageType)buffer.ReadByte();
-					switch (type)
+					message = HandleUnreliableMessage(buffer, type);
+					if (!allowUnreliableDelivery)
 					{
-						case MessageType.AddPlayer:
-							reliableMessage = AddPlayer.Create(buffer);
-
-							// If this is the first packet that we receive from the server, it means we're syncing the game state.
-							if (reliableMessage.SequenceNumber == 0)
-								_state = State.Syncing;
-							break;
-						case MessageType.RemovePlayer:
-							reliableMessage = RemovePlayer.Create(buffer);
-							break;
-						case MessageType.ChatMessage:
-							reliableMessage = ChatMessage.Create(buffer);
-							break;
-						case MessageType.AddEntity:
-							reliableMessage = AddEntity.Create(buffer);
-							break;
-						case MessageType.RemoveEntity:
-							reliableMessage = RemoveEntity.Create(buffer);
-							break;
-						case MessageType.ChangePlayerState:
-							reliableMessage = ChangePlayerState.Create(buffer);
-							break;
-						case MessageType.ChangePlayerName:
-							reliableMessage = ChangePlayerName.Create(buffer);
-							break;
-						case MessageType.Synced:
-							reliableMessage = Synced.Create(buffer);
-
-							if (_state != State.Syncing)
-								NetworkLog.ClientWarn("Ignored an unexpected synced message.");
-							else
-								_state = State.Connected;
-							break;
-						case MessageType.ServerFull:
-							reliableMessage = ServerFull.Create(buffer);
-
-							if (reliableMessage.SequenceNumber != 0)
-								NetworkLog.ClientWarn("Ignored an unexpected server full message.");
-							else
-								_state = State.Full;
-							break;
-						case MessageType.UpdatePlayerStats:
-							unreliableMessage = UpdatePlayerStats.Create(buffer);
-							break;
-						case MessageType.UpdateEntity:
-							unreliableMessage = UpdateEntity.Create(buffer);
-							break;
-						case MessageType.Connect:
-						case MessageType.Disconnect:
-						case MessageType.UpdateClientInput:
-							NetworkLog.ClientWarn("Received an unexpected message of type {0}. The rest of the packet is ignored.", type);
-							yield break;
-						default:
-							NetworkLog.ClientWarn("Received a message of unknown type. The rest of the packet is ignored.");
-							yield break;
-					}
-
-					if (reliableMessage == null && unreliableMessage == null)
-					{
-						NetworkLog.ClientWarn("Received incomplete message of type {0}. Message ignored.", type);
-						yield break;
-					}
-
-					// Check if we've read past the end of the buffer
-					if (buffer.Count > Specification.MaxPacketSize)
-						yield break;
-
-					if (type.IsReliable() && _deliveryManager.AllowDelivery(reliableMessage))
-						yield return reliableMessage;
-
-					if (type.IsUnreliable() && !ignoreUnreliableMessages)
-					{
-						unreliableMessage.Timestamp = header.Value.Timestamp;
-						yield return unreliableMessage;
+						message.SafeDispose();
+						message = null;
 					}
 				}
+				else
+					Assert.That(false, "Unclassified message type.");
+
+				// Only raise the event if we haven't read past the end of the buffer and we actually have a
+				// valid message to handle
+				using (message)
+					if (buffer.Count <= Specification.MaxPacketSize && message != null)
+						MessageReceived(message);
+			}
+		}
+
+		/// <summary>
+		///  Deserializes a reliable message of the given type from the buffer, returning null if the message should
+		/// be ignored.
+		/// </summary>
+		/// <param name="buffer">The buffer the message should be deserialized from.</param>
+		/// <param name="type">The type of the reliable message.</param>
+		private IReliableMessage HandleReliableMessage(BufferReader buffer, MessageType type)
+		{
+			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentInRange(type,()=>type);
+			Assert.ArgumentSatisfies(type.IsReliable(), ()=>type, "Not a reliable message type.");
+
+			if (!buffer.CanRead(sizeof(uint)))
+				return null;
+
+			IReliableMessage message;
+
+			var sequenceNumber = buffer.ReadUInt32();
+			var allowDelivery = _deliveryManager.AllowReliableDelivery(sequenceNumber);
+
+			switch (type)
+			{
+				case MessageType.AddPlayer:
+					message = AddPlayer.Create(buffer);
+
+					// If this is the first packet that we received from the server, it means we're syncing the game state.
+					if (allowDelivery && sequenceNumber == 1)
+						_state = State.Syncing;
+					break;
+				case MessageType.RemovePlayer:
+					message = RemovePlayer.Create(buffer);
+					break;
+				case MessageType.ChatMessage:
+					message = ChatMessage.Create(buffer);
+					break;
+				case MessageType.AddEntity:
+					message = AddEntity.Create(buffer);
+					break;
+				case MessageType.RemoveEntity:
+					message = RemoveEntity.Create(buffer);
+					break;
+				case MessageType.ChangePlayerState:
+					message = ChangePlayerState.Create(buffer);
+					break;
+				case MessageType.ChangePlayerName:
+					message = ChangePlayerName.Create(buffer);
+					break;
+				case MessageType.Synced:
+					message = Synced.Create(buffer);
+
+					if (allowDelivery && _state != State.Syncing)
+						NetworkLog.ClientWarn("Ignored an unexpected synced message.");
+					else if (allowDelivery)
+						_state = State.Connected;
+					break;
+				case MessageType.ServerFull:
+					message = ServerFull.Create(buffer);
+
+					if (allowDelivery && sequenceNumber != 1)
+						NetworkLog.ClientWarn("Ignored an unexpected server full message.");
+					else if (allowDelivery)
+						_state = State.Full;
+					break;
+				case MessageType.Connect:
+				case MessageType.Disconnect:
+					NetworkLog.ClientWarn("Received an unexpected reliable message of type {0}. The rest of the packet is ignored.", type);
+					return null;
+				default:
+					NetworkLog.ClientWarn("Received a message of unknown reliable type. The rest of the packet is ignored.");
+					return null;
+			}
+
+			if (!allowDelivery)
+			{
+				message.SafeDispose();
+				return null;
+			}
+
+			message.SequenceNumber = sequenceNumber;
+			return message;
+		}
+
+		/// <summary>
+		///  Deserializes a reliable message of the given type from the buffer, returning null if the message should
+		/// be ignored.
+		/// </summary>
+		/// <param name="buffer">The buffer the message should be deserialized from.</param>
+		/// <param name="type">The type of the reliable message.</param>
+		private static IUnreliableMessage HandleUnreliableMessage(BufferReader buffer, MessageType type)
+		{
+			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentInRange(type, () => type);
+			Assert.ArgumentSatisfies(type.IsUnreliable(), () => type, "Not an unreliable message type.");
+
+			switch (type)
+			{
+				case MessageType.UpdatePlayerStats:
+					return UpdatePlayerStats.Create(buffer);
+				case MessageType.UpdateEntity:
+					return UpdateEntity.Create(buffer);
+				case MessageType.UpdateClientInput:
+					NetworkLog.ClientWarn("Received an unexpected unreliable message of type {0}. The rest of the packet is ignored.", type);
+					return null;
+				default:
+					NetworkLog.ClientWarn("Received an unreliable message of unknown type. The rest of the packet is ignored.");
+					return null;
 			}
 		}
 

@@ -37,11 +37,7 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
 		public static ServerFull Create(BufferReader buffer)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			var message = GetInstance();
-			message.SequenceNumber = buffer.ReadUInt32();
-			return message;
+			return GetInstance();
 		}
 	}
 }
