@@ -13,7 +13,7 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   The statically allocated player instances.
 		/// </summary>
-		private readonly Player[] _players = new Player[Specification.MaxPlayers];
+		private readonly Player[] _players = new Player[Specification.MaxPlayers + 1];
 
 		/// <summary>
 		///   Initializes a new instance.

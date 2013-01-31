@@ -51,6 +51,8 @@ void player_input(Player *p, int up, int down, int left, int right, int shooting
 void player_select(Player *p, size_t ship_type, size_t weapon_type);
 void player_rename(Player *p, Str name);
 void player_actions();
+void player_spawn(Player *p, Vec x);
+void player_die(Player *p);
 
 void clients_init();
 void clients_cleanup();
@@ -110,12 +112,12 @@ struct Address {
 };
 
 struct Player {
+    Id id;
     Entity *ship;
     int up,down,left,right;
     int shooting;
-    Id id;
-    size_t ship_type;
-    size_t weapon_type;
+    EntityType *ship_type;
+    EntityType *weapon_type;
     Str name;
 };
 

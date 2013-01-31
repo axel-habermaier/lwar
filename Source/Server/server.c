@@ -42,12 +42,17 @@ int server_init() {
 }
 
 int server_update(Clock time, int force) {
+    static Clock debug_clock;
+
     if(server->running) {
         time_update(time);
 
         /* skip first frame */
         if(!server->prev_time)
             return 1;
+
+        if(clock_periodic(&debug_clock, 1000))
+            log_debug("server time: %d", server->cur_time);
 	
         protocol_recv();
 

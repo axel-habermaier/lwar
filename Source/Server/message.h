@@ -8,7 +8,7 @@ size_t header_unpack(const char *s, Header *h);
 size_t message_pack(char *s, Message *m, size_t seqno);
 size_t message_unpack(const char *s, Message *m, size_t *seqno);
 
-void message_print(Message *m);
+void message_debug(Message *m, const char *s);
 
 enum {
     SCALE_BITS = 8,

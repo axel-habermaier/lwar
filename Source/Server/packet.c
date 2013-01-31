@@ -16,8 +16,6 @@ int packet_hasdata(Packet *p) {
     return (p->a + HEADER_LENGTH < p->b);
 }
 
-#define packet_len(p) ((long long)((p)->b) - (long long)((p)->a))
-
 void packet_init(Packet *p, Address *adr, size_t ack, size_t time) {
     Header h = { APP_ID, ack, time };
     p->adr  = *adr;
@@ -25,6 +23,7 @@ void packet_init(Packet *p, Address *adr, size_t ack, size_t time) {
     p->b    = header_pack(p->p, &h);
     p->ack  = ack;
     p->time = time;
+    p->io_failed = 0;
 }
 
 int packet_put(Packet *p, Message *m, size_t seqno) {

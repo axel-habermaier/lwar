@@ -87,7 +87,8 @@ EntityType *entity_type_get(size_t id) {
     else return 0;
 }
 
+/* entity type 0 is invalid, should map to NULL */
 void entity_type_register(size_t id, EntityType *t) {
-    if(id < MAX_TYPES)
+    if(0 < id && id < MAX_TYPES)
         server->types[id] = t;
 }

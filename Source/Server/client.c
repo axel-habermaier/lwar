@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -22,8 +23,19 @@ void player_input(Player *p, int up, int down, int left, int right, int shooting
 }
 
 void player_select(Player *p, size_t ship_type, size_t weapon_type) {
-    p->ship_type   = ship_type;
-    p->weapon_type = weapon_type;
+    p->ship_type   = entity_type_get(ship_type);
+    p->weapon_type = entity_type_get(ship_type);
+}
+
+void player_spawn(Player *p, Vec x) {
+    assert(!p->ship);
+    if(p->ship_type)
+        p->ship = entity_create(p->ship_type, p, x, _0);
+}
+
+void player_die(Player *p) {
+    entity_remove(p->ship);
+    p->ship = 0;
 }
 
 void player_rename(Player *p, Str name) {

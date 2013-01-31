@@ -25,6 +25,10 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="session">The game session that should be updated.</param>
 		public void Process(GameSession session)
 		{
+			Assert.ArgumentNotNull(session, () => session);
+			var player = session.Players[_playerId];
+
+			Log.Info("{0}: {1}", player.Name, _message);
 		}
 
 		/// <summary>
@@ -35,7 +39,7 @@ namespace Lwar.Client.Network.Messages
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			buffer.WriteByte((byte)MessageType.Connect);
+			buffer.WriteByte((byte)MessageType.ChatMessage);
 			buffer.WriteUInt32(SequenceNumber);
 			buffer.WriteIdentifier(_playerId);
 			buffer.WriteString(_message, Specification.MaxChatMessageLength);

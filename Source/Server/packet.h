@@ -1,6 +1,6 @@
 enum {
     APP_ID = 0xf27087c5,
-    HEADER_LENGTH = 3*sizeof(size_t),
+    HEADER_LENGTH = 3*sizeof(uint32_t),
 	MAX_PACKET_LENGTH = 512,
 };
 

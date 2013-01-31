@@ -9,6 +9,7 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Processes;
+	using Pegasus.Framework.Scripting;
 
 	/// <summary>
 	///   Represents a proxy of an lwar server that a client can use to communicate with the server.
@@ -196,9 +197,9 @@ namespace Lwar.Client.Network
 				var attempts = 0;
 				NetworkLog.ClientInfo("Connecting to {0}.", _serverEndPoint);
 
+				_messageQueue.Enqueue(Messages.Connect.Create());
 				while (_state == State.Connecting && attempts < MaxConnectionAttempts)
 				{
-					_messageQueue.Enqueue(Messages.Connect.Create());
 					await _socket.SendAsync(context, _messageQueue.CreatePacket(), _serverEndPoint);
 
 					++attempts;

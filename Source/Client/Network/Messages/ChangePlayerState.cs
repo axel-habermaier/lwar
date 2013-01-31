@@ -9,14 +9,14 @@ namespace Lwar.Client.Network.Messages
 	public class ChangePlayerState : PooledObject<ChangePlayerState>, IReliableMessage
 	{
 		/// <summary>
-		///   The identifier of the player that changed his or her name.
+		///   The identifier of the player that changed his or her state.
 		/// </summary>
 		private Identifier _playerId;
 
 		/// <summary>
 		///   The new ship type.
 		/// </summary>
-		private byte _shipType;
+		private EntityTemplate _shipType;
 
 		/// <summary>
 		///   The new weapon type.
@@ -39,10 +39,10 @@ namespace Lwar.Client.Network.Messages
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			buffer.WriteByte((byte)MessageType.ChangePlayerName);
+			buffer.WriteByte((byte)MessageType.ChangePlayerState);
 			buffer.WriteUInt32(SequenceNumber);
 			buffer.WriteIdentifier(_playerId);
-			buffer.WriteByte(_shipType);
+			buffer.WriteByte((byte)_shipType);
 			buffer.WriteByte(_weaponType);
 		}
 
@@ -61,8 +61,25 @@ namespace Lwar.Client.Network.Messages
 
 			var message = GetInstance();
 			message._playerId = buffer.ReadIdentifier();
-			message._shipType = buffer.ReadByte();
+			message._shipType = (EntityTemplate)buffer.ReadByte();
 			message._weaponType = buffer.ReadByte();
+
+			Assert.InRange(message._shipType);
+			return message;
+		}
+
+		/// <summary>
+		/// Creates a new instance.
+		/// </summary>
+		/// <param name="playerId">The identifier of the player that changed his or her state.</param>
+		/// <param name="shipType">The new ship type.</param>
+		/// <param name="weaponTemplate">The new weapon type.</param>
+		public static ChangePlayerState Create(Identifier playerId, EntityTemplate shipType, byte weaponTemplate)
+		{
+			var message = GetInstance();
+			message._playerId = playerId;
+			message._shipType = shipType;
+			message._weaponType = weaponTemplate;
 			return message;
 		}
 	}

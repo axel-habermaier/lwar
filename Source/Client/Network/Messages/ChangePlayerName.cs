@@ -71,11 +71,21 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="player">The player that changed his or her name.</param>
-		/// <param name="name">The new name.</param>
-		public static ChangePlayerName Create(Identifier player, string name)
+		/// <param name="playerName">The new name.</param>
+		public static ChangePlayerName Create(Identifier player, string playerName)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
-			Assert.That(Encoding.UTF8.GetByteCount(name) < Specification.MaxPlayerNameLength, "Name is too long.");
+			Assert.ArgumentNotNullOrWhitespace(playerName, () => playerName);
+
+			var name = playerName;
+			if (Encoding.UTF8.GetByteCount(playerName) > Specification.MaxPlayerNameLength)
+			{
+				do
+				{
+					name = name.Substring(0, Specification.MaxPlayerNameLength);
+				} while (Encoding.UTF8.GetByteCount(name) > Specification.MaxPlayerNameLength);
+
+				Log.Warn("Your player name '{0}' is too long and has been truncated to '{1}'.", name, playerName);
+			}
 
 			var nameChange = GetInstance();
 			nameChange._playerId = player;

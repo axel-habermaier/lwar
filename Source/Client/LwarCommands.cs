@@ -30,5 +30,10 @@ namespace Lwar.Client
 		///   Disconnects from the current game session.
 		/// </summary>
 		public static readonly Command Disconnect = new Command("disconnect", "Disconnects from the current game session.");
+
+		/// <summary>
+		///   Sends a chat message to all peers.
+		/// </summary>
+		public static readonly Command<string> Chat = new Command<string>("chat", "Sends a chat message to all peers.");
 	}
 }

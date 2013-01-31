@@ -5,6 +5,7 @@ namespace Lwar.Client.Gameplay
 	using System.Net;
 	using System.Threading.Tasks;
 	using Network;
+	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Network;
@@ -49,6 +50,11 @@ namespace Lwar.Client.Gameplay
 		private readonly StateMachine _updateState;
 
 		/// <summary>
+		///   Manages the input state and periodically sends updates to the server.
+		/// </summary>
+		private InputManager _inputManager;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public GameSession(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
@@ -70,6 +76,8 @@ namespace Lwar.Client.Gameplay
 
 			LwarCommands.Connect.Invoked += serverEndPoint => _updateState.ChangeState(ctx => Loading(ctx, serverEndPoint));
 			LwarCommands.Disconnect.Invoked += () => _updateState.ChangeState(Inactive);
+			LwarCommands.Chat.Invoked += ChatMessageEntered;
+			Cvars.PlayerName.Changed += PlayerNameChanged;
 			_updateState.ChangeState(Inactive);
 		}
 
@@ -114,14 +122,30 @@ namespace Lwar.Client.Gameplay
 		public Player LocalPlayer { get; set; }
 
 		/// <summary>
-		/// Manages the input state and periodically sends updates to the server.
-		/// </summary>
-		private InputManager _inputManager;
-
-		/// <summary>
 		///   Gets the proxy to the server that hosts the game session.
 		/// </summary>
 		public ServerProxy ServerProxy { get; private set; }
+
+		/// <summary>
+		///   Invoked when the player changed his or her name.
+		/// </summary>
+		/// <param name="name">The new name of the player.</param>
+		private void PlayerNameChanged(string name)
+		{
+			if (ServerProxy != null && (ServerProxy.IsConnected || ServerProxy.IsSyncing))
+				ServerProxy.Send(ChangePlayerName.Create(LocalPlayer.Id, name));
+		}
+
+		/// <summary>
+		///   Invoked when a chat message should be sent to the server.
+		/// </summary>
+		/// <param name="message">The message that should be sent.</param>
+		private void ChatMessageEntered(string message)
+		{
+			// TODO: Check size
+			if (ServerProxy != null && ServerProxy.IsConnected)
+				ServerProxy.Send(ChatMessage.Create(LocalPlayer.Id, message));
+		}
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
@@ -215,7 +239,9 @@ namespace Lwar.Client.Gameplay
 		/// <param name="serverEndPoint">The end point of the server that hosts the game session.</param>
 		private async Task Loading(ProcessContext context, IPEndPoint serverEndPoint)
 		{
+#if !DEBUG
 			Commands.ShowConsole.Invoke(false);
+#endif
 			Cleanup();
 
 			Entities = new EntityList(this);
@@ -241,6 +267,9 @@ namespace Lwar.Client.Gameplay
 				_updateState.ChangeStateDelayed(Inactive);
 				return;
 			}
+
+			ServerProxy.Send(ChangePlayerName.Create(LocalPlayer.Id, Cvars.PlayerName.Value));
+			ServerProxy.Send(ChangePlayerState.Create(LocalPlayer.Id, EntityTemplate.Ship, 0));
 
 			label.Text = "Awaiting game state...";
 			await context.WaitFor(() => ServerProxy.IsConnected || ServerProxy.IsDropped);

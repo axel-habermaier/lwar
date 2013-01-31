@@ -5,6 +5,7 @@
 
 #include "uint.h"
 #include "server.h"
+#include "log.h"
 #include "message.h"
 
 int is_reliable(Message *m) {
@@ -14,7 +15,7 @@ int is_reliable(Message *m) {
 static size_t str_pack(char *out, Str in) {
     size_t i=0;
     i += uint8_pack(out+i, in.n);
-    memcpy(out, in.s, in.n);
+    memcpy(out+i, in.s, in.n);
     return i + in.n;
 }
 
@@ -173,3 +174,42 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
     return i;
 }
 
+void message_debug(Message *m, const char *s) {
+    switch(m->type) {
+    case MESSAGE_CONNECT:
+        log_debug("%sconnect", s);
+        break;
+    case MESSAGE_DISCONNECT:
+        log_debug("%sdisconnect", s);
+        break;
+    case MESSAGE_JOIN:
+        log_debug("%sjoin %d", s, m->join.player_id.n);
+        break;
+    case MESSAGE_LEAVE:
+        log_debug("%sleave %d", s, m->leave.player_id.n);
+        break;
+    case MESSAGE_CHAT:
+        log_debug("%schat %d: %.*s", s, m->chat.player_id.n, m->chat.msg.n, m->chat.msg.s);
+        break;
+    case MESSAGE_ADD:
+        log_debug("%sadd %d, player %d, type %d", s, m->add.entity_id.n, m->add.player_id.n, m->add.type_id);
+        break;
+    case MESSAGE_REMOVE:
+        log_debug("%srem %d", s, m->remove.entity_id.n);
+        break;
+    case MESSAGE_SELECTION:
+        log_debug("%sselect %d", s, m->selection.player_id.n);
+        break;
+    case MESSAGE_NAME:
+        log_debug("%sname %d: %.*s", s, m->name.player_id.n, m->name.nick.n, m->name.nick.s);
+        break;
+    case MESSAGE_SYNCED:
+        log_debug("%ssynced", s);
+        break;
+    case MESSAGE_FULL:
+        log_debug("%sfull", s);
+        break;
+    case MESSAGE_INPUT:
+        log_debug("%sinput %d", s, m->input.player_id.n);
+    }
+}

@@ -164,6 +164,7 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
             r = message_broadcast(MESSAGE_JOIN);
             r->join.player_id = c->player.id;
 
+            c->last_activity = server->cur_time;
             protocol_send_gamestate(c);
         } else {
             protocol_send_full(adr, seqno);
@@ -192,6 +193,16 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
         r = message_broadcast(MESSAGE_SELECTION);
         r->selection.ship_type   = m->selection.ship_type;
         r->selection.weapon_type = m->selection.weapon_type;
+
+        /* TODO: this is a shortcut hack */
+        {
+            Vec x = {100,100};
+            player_spawn(&c->player, x);
+            r = message_broadcast(MESSAGE_ADD);
+            r->add.entity_id = c->player.ship->id;
+            r->add.player_id = c->player.id;
+			r->add.type_id = c->player.ship_type->id;
+        }
         break;
 
     case MESSAGE_NAME:
@@ -234,28 +245,26 @@ static void packet_scan(Packet *p) {
         c->last_activity = max(server->cur_time, c->last_activity);
     }
     
-    if(c) {
-        log_debug("%d> ack: %d, time: %d", c->player.id.n, p->ack, p->time);
-    } else {
-        log_debug("?> ack: %d, time: %d", p->ack, p->time);
-    }
+    if(c) log_debug("%d> ack: %d, time: %d", c->player.id.n, p->ack, p->time);
+    else  log_debug("?> ack: %d, time: %d", p->ack, p->time);
 
     while(packet_get(p, &m, &seqno)) {
-        if(m_check_seqno(c, &m, seqno))
-            log_debug("  > seqno: %d, type: %d", seqno, m.type);
+        if(m_check_seqno(c, &m, seqno)) {
+            /*
+            if(c) log_debug("  %d> seqno: %d, type: %d", c->player.id.n, seqno, m.type);
+            else  log_debug("  ?> seqno: %d, type: %d", seqno, m.type);
+            */
+            message_debug(&m, "  > ");
             message_handle(c, &p->adr, &m, p->time, seqno);
+        }
     }
 }
 
 /* handle all pending incoming messages */
 void protocol_recv() {
     Packet p;
-    int ok;
-    while((ok = packet_recv(&p))) {
+    while(packet_recv(&p)) {
         packet_scan(&p);
-    }
-    if(ok<0) {
-        /* TODO: connection is dead */
     }
 }
 
@@ -290,8 +299,16 @@ static void packet_init_header(Client *c, Packet *p) {
 
 static int packet_fmt(Client *c, Packet *p, QueuedMessage *qm) {
     if(!qm_check_relevant(c, qm)) return 1;
-    log_debug("  < seqno: %d, type: %d", qm_seqno(c, qm), qm->m.type);
-    return packet_put(p, &qm->m, qm_seqno(c, qm));
+    /*
+    log_debug("  <%d seqno: %d, type: %d", c->player.id.n, qm_seqno(c, qm), qm->m.type);
+    */
+    message_debug(&qm->m, "  < ");
+    /* return packet_put(p, &qm->m, qm_seqno(c, qm)); */
+    if(packet_put(p, &qm->m, qm_seqno(c, qm))) {
+        return 1;
+    } else {
+        assert(0);
+    }
 }
 
 static void packet_send_init(Client *c, Packet *p) {
@@ -299,7 +316,9 @@ static void packet_send_init(Client *c, Packet *p) {
         log_debug("<%d ack: %d, time: %d", c->player.id.n, p->ack, p->time);
         packet_send(p);
         packet_init_header(c, p);
-    }
+    } /* else {
+        log_warn("<%d empty packet", c->player.id.n);
+    } */
 }
 
 static void protocol_send_client(Client *c) {
