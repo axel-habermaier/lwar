@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Scripting
 {
 	using Parsing;
-	using Platform;
 
 	/// <summary>
 	///   Interprets user-provided input to set and view cvars and invoke commands.

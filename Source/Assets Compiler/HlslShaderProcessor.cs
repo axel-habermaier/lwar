@@ -58,7 +58,7 @@ namespace Pegasus.AssetsCompiler
 #if DEBUG
 				flags |= ShaderFlags.Debug;
 #endif
-				var result = ShaderBytecode.Compile(shaderCode.Substring(firstLineEnd), "Main", profile, flags);
+				var result = ShaderBytecode.Compile(shaderCode.Substring(firstLineEnd), "Main", profile, flags, EffectFlags.None, source);
 				if (result.HasErrors)
 					throw new InvalidOperationException(result.Message);
 

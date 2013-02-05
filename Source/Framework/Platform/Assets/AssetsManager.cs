@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Platform.Assets
 	using System.IO;
 	using Graphics;
 	using Rendering.UserInterface;
+	using Scripting;
 
 	/// <summary>
 	///   Tracks all assets that it loaded. If an asset has already been loaded and it is
@@ -14,24 +15,19 @@ namespace Pegasus.Framework.Platform.Assets
 	public sealed class AssetsManager : DisposableObject
 	{
 		/// <summary>
+		///   The name of the assets directory.
+		/// </summary>
+		private const string AssetDirectory = "Assets";
+
+		/// <summary>
 		///   The loaded assets.
 		/// </summary>
-		private readonly Dictionary<string, IDisposable> _assets = new Dictionary<string, IDisposable>(1024);
+		private readonly Dictionary<string, Asset> _assets = new Dictionary<string, Asset>();
 
 		/// <summary>
-		///   The reader used to load fonts.
+		///   The graphics device for which the assets are managed.
 		/// </summary>
-		private readonly FontReader _fontReader;
-
-		/// <summary>
-		///   The reader used to load shaders.
-		/// </summary>
-		private readonly ShaderReader _shaderReader;
-
-		/// <summary>
-		///   The reader used to load textures.
-		/// </summary>
-		private readonly TextureReader _textureReader;
+		private readonly GraphicsDevice _device;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -39,16 +35,17 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="device">The graphics device that should be used to load the assets.</param>
 		internal AssetsManager(GraphicsDevice device)
 		{
-			_fontReader = new FontReader(this);
-			_shaderReader = new ShaderReader(device);
-			_textureReader = new TextureReader(device);
+			Assert.ArgumentNotNull(device, () => device);
+
+			_device = device;
+			Commands.ReloadAsset.Invoked += ReloadAsset;
 		}
 
 		/// <summary>
 		///   Gets the extension that should be appended to shader file names in order to distinguish between different
 		///   shaders for different graphics APIs.
 		/// </summary>
-		private string ShaderExtension
+		private static string ShaderExtension
 		{
 			get
 			{
@@ -65,12 +62,42 @@ namespace Pegasus.Framework.Platform.Assets
 		}
 
 		/// <summary>
+		/// Reloads an asset.
+		/// </summary>
+		/// <param name="assetName">The asset that should be reloaded.</param>
+		private void ReloadAsset(string assetName)
+		{
+			Assert.ArgumentNotNull(assetName, () => assetName);
+
+			Asset asset;
+			assetName = assetName.Replace("\\", "/");
+
+			if (!_assets.TryGetValue(assetName, out asset))
+				Log.Warn("No asset with name '{0}' has been loaded.", assetName);
+			else
+			{
+				try
+				{
+					Log.Info("Reloading {1} '{0}'...", assetName, asset.FriendlyName);
+					using (var reader = new AssetReader(Path.Combine(AssetDirectory, assetName)))
+						asset.Load(reader);
+				}
+				catch (DirectoryNotFoundException e)
+				{
+					Log.Die("Failed to reload asset '{0}': {1}", assetName, e.Message);
+				}
+			}
+		}
+
+		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			foreach (var asset in _assets.Values)
-				asset.Dispose();
+			Commands.ReloadAsset.Invoked -= ReloadAsset;
+
+			_assets.Values.SafeDisposeAll();
+			_assets.Clear();
 		}
 
 		/// <summary>
@@ -84,15 +111,15 @@ namespace Pegasus.Framework.Platform.Assets
 		{
 			Assert.NotDisposed(this);
 			Assert.ArgumentNotNullOrWhitespace(assetName, () => assetName);
-			IDisposable asset;
+			Asset asset;
 
 			if (_assets.TryGetValue(assetName, out asset))
 			{
 				var typedAsset = asset as TAsset;
 				if (typedAsset == null)
 				{
-					const string message = "Asset '{0}' is already loaded and has type '{1}'. Expected type '{2}'.";
-					Log.Die(message, assetName, asset.GetType().FullName, typeof(TAsset).FullName);
+					const string message = "Asset '{0}' is already loaded and has type '{1}'.";
+					Log.Die(message, assetName, asset.FriendlyName);
 				}
 				return typedAsset;
 			}
@@ -105,25 +132,25 @@ namespace Pegasus.Framework.Platform.Assets
 		/// </summary>
 		/// <typeparam name="TAsset">The type of the asset that should be loaded.</typeparam>
 		/// <param name="assetName">The name of the asset that should be loaded.</param>
-		/// <param name="loader">A function that actually creates and loads the asset instance.</param>
-		private TAsset Load<TAsset>(string assetName, Func<AssetReader, TAsset> loader)
-			where TAsset : class, IDisposable
+		private TAsset Load<TAsset>(string assetName)
+			where TAsset : Asset, new()
 		{
 			Assert.NotDisposed(this);
 			Assert.ArgumentNotNullOrWhitespace(assetName, () => assetName);
-			Assert.ArgumentNotNull(loader, () => loader);
 
+			assetName = assetName.Replace("\\", "/");
 			var asset = Find<TAsset>(assetName);
 
 			if (asset != null)
 				return asset;
 
-			Log.Info("Loading {0} '{1}'...", typeof(TAsset).Name, assetName);
-
 			try
 			{
-				using (var reader = new AssetReader(Path.Combine("Assets", assetName)))
-					asset = loader(reader);
+				asset = new TAsset { GraphicsDevice = _device, Assets = this };
+				Log.Info("Loading {0} '{1}'...", asset.FriendlyName, assetName);
+
+				using (var reader = new AssetReader(Path.Combine(AssetDirectory, assetName)))
+					asset.Load(reader);
 			}
 			catch (DirectoryNotFoundException e)
 			{
@@ -140,7 +167,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="fontFilePath">The path to the font description file.</param>
 		public Font LoadFont(string fontFilePath)
 		{
-			return Load(fontFilePath, reader => _fontReader.Load(reader));
+			return Load<FontAsset>(fontFilePath).Font;
 		}
 
 		/// <summary>
@@ -150,7 +177,7 @@ namespace Pegasus.Framework.Platform.Assets
 		public VertexShader LoadVertexShader(string shaderFilePath)
 		{
 			shaderFilePath = shaderFilePath + ShaderExtension;
-			return Load(shaderFilePath, reader => _shaderReader.LoadVertexShader(reader));
+			return Load<VertexShaderAsset>(shaderFilePath).Shader;
 		}
 
 		/// <summary>
@@ -160,7 +187,7 @@ namespace Pegasus.Framework.Platform.Assets
 		public FragmentShader LoadFragmentShader(string shaderFilePath)
 		{
 			shaderFilePath = shaderFilePath + ShaderExtension;
-			return Load(shaderFilePath, reader => _shaderReader.LoadFragmentShader(reader));
+			return Load<FragmentShaderAsset>(shaderFilePath).Shader;
 		}
 
 		/// <summary>
@@ -169,7 +196,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="texturePath">The path to the texture file.</param>
 		public Texture2D LoadTexture2D(string texturePath)
 		{
-			return Load(texturePath, reader => _textureReader.Load(reader));
+			return Load<Texture2DAsset>(texturePath).Texture;
 		}
 	}
 }

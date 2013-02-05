@@ -13,7 +13,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   The native texture instance.
 		/// </summary>
-		private readonly IntPtr _texture;
+		private IntPtr _texture;
 
 		/// <summary>
 		///   Initializes a new instance, copying the given byte array to GPU memory.
@@ -25,13 +25,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		public Texture2D(GraphicsDevice graphicsDevice, byte[] data, Size size, SurfaceFormat format)
 			: base(graphicsDevice)
 		{
-			Assert.ArgumentNotNull(data, () => data);
-			Assert.That(size.Width > 0, "Width must be greater than 0.");
-			Assert.That(size.Height > 0, "Height must be greater than 0.");
-			Assert.InRange(format);
-
-			Size = size;
-			_texture = NativeMethods.CreateTexture2D(graphicsDevice.NativePtr, data, size.Width, size.Height, format);
+			Reinitialize(data, size, format);
 		}
 
 		/// <summary>
@@ -51,6 +45,26 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Gets the size of the texture.
 		/// </summary>
 		public Size Size { get; private set; }
+
+		/// <summary>
+		///   Reinitializes the texture.
+		/// </summary>
+		/// <param name="data">The data that should be copied into the texture's memory.</param>
+		/// <param name="size">The size of the texture.</param>
+		/// <param name="format">The format of the texture.</param>
+		internal void Reinitialize(byte[] data, Size size, SurfaceFormat format)
+		{
+			Assert.ArgumentNotNull(data, () => data);
+			Assert.That(size.Width > 0, "Width must be greater than 0.");
+			Assert.That(size.Height > 0, "Height must be greater than 0.");
+			Assert.InRange(format);
+
+			if (_texture != IntPtr.Zero)
+				NativeMethods.DestroyTexture2D(_texture);
+
+			Size = size;
+			_texture = NativeMethods.CreateTexture2D(GraphicsDevice.NativePtr, data, size.Width, size.Height, format);
+		}
 
 		/// <summary>
 		///   Initializes the default instances.

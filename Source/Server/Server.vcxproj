@@ -190,7 +190,7 @@
     <ClCompile Include="rules\rocket.c" />
     <ClCompile Include="rules\ship.c" />
     <ClCompile Include="server.c" />
-    <ClCompile Include="slab.c" />
+    <ClCompile Include="pool.c" />
     <ClCompile Include="time.c" />
     <ClCompile Include="uint.c" />
   </ItemGroup>
@@ -205,7 +205,7 @@
     <ClInclude Include="rules.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="server_export.h" />
-    <ClInclude Include="slab.h" />
+    <ClInclude Include="pool.h" />
     <ClInclude Include="uint.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include "list.h"
-#include "slab.h"
+#include "pool.h"
 
 enum {
     MAX_CLIENTS    = 8,
@@ -52,7 +52,7 @@ void player_input(Player *p, int up, int down, int left, int right, int shooting
 void player_select(Player *p, size_t ship_type, size_t weapon_type);
 void player_rename(Player *p, Str name);
 void player_spawn(Player *p, Vec x);
-void player_notify(Entity *e);
+void player_notify_state(Entity *e);
 void player_die(Player *p);
 void players_update();
 
@@ -75,7 +75,8 @@ size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a);
 void protocol_init();
 void protocol_recv();
 void protocol_send(int force);
-void protocol_notify(Entity *e);
+void protocol_notify_state(Entity *e);
+void protocol_notify_collision(Entity *e0, Entity *e1, Vec v);
 void protocol_cleanup();
 
 void entities_init();
@@ -83,7 +84,7 @@ void entities_cleanup();
 void entities_update();
 Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v);
 void entity_remove(Entity *e);
-void entities_collision(Entity *e0, Entity *e1, Vec v0, Vec v1);
+void entities_notify_collision(Entity *e0, Entity *e1, Vec v0, Vec v1);
 
 void entity_push(Entity *e, Vec a);
 void entity_accelerate(Entity *e, Vec a);
@@ -184,9 +185,9 @@ struct Client {
 };
 
 struct Server {
-    Slab clients;
-    Slab entities;
-    Slab queue;
+    Pool clients;
+    Pool entities;
+    Pool queue;
     EntityType *types[MAX_TYPES];
 
     /* allocated clients */
@@ -202,14 +203,14 @@ struct Server {
 
 static const Vec  _0  = {0,0};
 
-#define clients_foreach(c)       slab_foreach(&server->clients, c, Client)
-#define clients_foreach_cont(c)  slab_foreach_cont(&server->clients, c, Client)
+#define clients_foreach(c)       pool_foreach(&server->clients, c, Client)
+#define clients_foreach_cont(c)  pool_foreach_cont(&server->clients, c, Client)
 
-#define entities_foreach(e)      slab_foreach(&server->entities, e, Entity)
-#define entities_foreach_cont(e) slab_foreach_cont(&server->entities, e, Entity)
+#define entities_foreach(e)      pool_foreach(&server->entities, e, Entity)
+#define entities_foreach_cont(e) pool_foreach_cont(&server->entities, e, Entity)
 
-#define queue_foreach(qm)        slab_foreach(&server->queue, qm, QueuedMessage)
-#define queue_foreach_cont(qm)   slab_foreach_cont(&server->queue, qm, QueuedMessage)
+#define queue_foreach(qm)        pool_foreach(&server->queue, qm, QueuedMessage)
+#define queue_foreach_cont(qm)   pool_foreach_cont(&server->queue, qm, QueuedMessage)
 
 #ifndef max
 #define max(n,m) ((n) < (m) ? (m) : (n))

@@ -6,6 +6,7 @@
 #include "server.h"
 #include "vector.h"
 #include "log.h"
+#include "performance.h"
 
 static Entity _entities[MAX_ENTITIES];
 
@@ -44,8 +45,8 @@ void entity_rotate(Entity *e, Pos r) {
 }
 
 static void notify(Entity *e) {
-    player_notify(e);
-    protocol_notify(e);
+    player_notify_state(e);
+    protocol_notify_state(e);
 }
 
 static void entity_action(Entity *e) {
@@ -66,7 +67,7 @@ static void entity_action(Entity *e) {
     }
 }
 
-void entities_collision(Entity *e0, Entity *e1, Vec v0, Vec v1) {
+void entities_notify_collision(Entity *e0, Entity *e1, Vec v0, Vec v1) {
     EntityType *t0 = e0->type;
     EntityType *t1 = e1->type;
     if(t0->collision) t0->collision(e0, e1, v0, v1);
@@ -74,10 +75,14 @@ void entities_collision(Entity *e0, Entity *e1, Vec v0, Vec v1) {
 }
 
 void entities_update() {
+    timer_start(TIMER_ENTITIES);
+
     Entity *e;
     entities_foreach(e) {
         entity_action(e);
     }
+
+    timer_stop(TIMER_ENTITIES);
 }
 
 static void entity_ctor(size_t i, void *p) {
@@ -98,7 +103,7 @@ static int entity_check_obsolete(size_t i, void *p) {
 Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
     assert(t);
     assert(p);
-    Entity *e = slab_new(&server->entities, Entity);
+    Entity *e = pool_new(&server->entities, Entity);
     assert(e);
     e->player = p;
     e->type   = t;
@@ -122,11 +127,11 @@ void entity_remove(Entity *e) {
 }
 
 void entities_init() {
-    slab_static(&server->entities, _entities, entity_ctor, entity_dtor);
+    pool_static(&server->entities, _entities, entity_ctor, entity_dtor);
 }
 
 void entities_cleanup() {
-    slab_free_pred(&server->entities, entity_check_obsolete);
+    pool_free_pred(&server->entities, entity_check_obsolete);
 }
 
 EntityType *entity_type_get(size_t id) {

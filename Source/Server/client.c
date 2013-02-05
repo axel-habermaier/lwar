@@ -35,7 +35,7 @@ static int client_check_obsolete(size_t i, void *p) {
 }
 
 Client *client_create(Address *adr) {
-    Client *c = slab_new(&server->clients, Client);
+    Client *c = pool_new(&server->clients, Client);
     if(c) {
         c->adr = *adr;
         server->client_mask |= (1 << c->player.id.n);
@@ -45,7 +45,7 @@ Client *client_create(Address *adr) {
 }
 
 Client *bot_create() {
-    Client *c = slab_new(&server->clients, Client);
+    Client *c = pool_new(&server->clients, Client);
     if(c) {
         c->adr = dummy;
         log_debug("+ bot %d", c->player.id.n);
@@ -73,15 +73,15 @@ Client *client_lookup(Address *adr) {
 }
 
 Client *client_get(Id player) {
-    Client *c = slab_at(&server->clients, Client, player.n);
+    Client *c = pool_at(&server->clients, Client, player.n);
     if(!c) return 0;
     return 0;
 }
 
 void clients_init() {
-    slab_static(&server->clients, _clients, client_ctor, client_dtor);
+    pool_static(&server->clients, _clients, client_ctor, client_dtor);
 }
 
 void clients_cleanup() {
-    slab_free_pred(&server->clients, client_check_obsolete);
+    pool_free_pred(&server->clients, client_check_obsolete);
 }

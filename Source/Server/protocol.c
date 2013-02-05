@@ -9,6 +9,7 @@
 #include "message.h"
 #include "packet.h"
 #include "log.h"
+#include "performance.h"
 
 #if _MSC_VER
 #define snprintf _snprintf
@@ -21,6 +22,10 @@ enum {
 static void protocol_send_full(Address *adr, size_t seqno);
 static void protocol_send_gamestate(Client *c);
 static void protocol_timed_out(Client *c);
+
+static struct {
+    size_t nsend,nrecv;
+} stats;
 
 typedef struct QueuedMessage QueuedMessage;
 typedef struct PerClient     PerClient;
@@ -103,7 +108,7 @@ static int m_check_seqno(Client *c, Message *m, size_t seqno) {
 }
 
 static QueuedMessage *qm_create() {
-    QueuedMessage *qm = slab_new(&server->queue, QueuedMessage);
+    QueuedMessage *qm = pool_new(&server->queue, QueuedMessage);
     assert(qm); /* TODO: handle allocation failure */
     return qm;
 }
@@ -258,17 +263,24 @@ static void packet_scan(Packet *p) {
 
 /* handle all pending incoming messages */
 void protocol_recv() {
+    timer_start(TIMER_RECV);
+    stats.nrecv = 0;
+
     Packet p;
     while(packet_recv(&p)) {
+        stats.nrecv ++;
         packet_scan(&p);
     }
     if(p.io_failed) {
         Client *c = client_lookup(&p.adr);
         if(c) protocol_timed_out(c);
     }
+
+    timer_stop(TIMER_RECV);
+    counter_set(COUNTER_RECV, stats.nrecv);
 }
 
-void protocol_notify(Entity *e) {
+void protocol_notify_state(Entity *e) {
     Message *m;
     if(e->dead) {
         m = message_broadcast(MESSAGE_REMOVE);
@@ -279,6 +291,14 @@ void protocol_notify(Entity *e) {
         m->add.player_id = e->player->id;
         m->add.type_id   = e->type->id;
     }
+}
+
+void protocol_notify_collision(Entity *e0, Entity *e1, Vec v) {
+    Message *m = message_broadcast(MESSAGE_COLLISION);
+    m->collision.entity_id[0] = e0->id;
+    m->collision.entity_id[1] = e1->id;
+    m->collision.x = v.x;
+    m->collision.y = v.y;
 }
 
 static void protocol_send_gamestate(Client *cn) {
@@ -325,6 +345,7 @@ static int packet_fmt(Client *c, Packet *p, QueuedMessage *qm) {
 static int packet_send_init(Client *c, Packet *p) {
     if(packet_hasdata(p)) {
         packet_send(p);
+        stats.nsend ++;
         if(p->io_failed) return 0;
         packet_init_header(c, p);
     }
@@ -368,7 +389,7 @@ static int protocol_send_client(Client *c) {
     }
 
     size_t n = 0;
-    size_t k = slab_nused(&server->entities);
+    size_t k = pool_nused(&server->entities);
     entities_foreach(e) {
     again_e:
         if(!n) {
@@ -422,6 +443,9 @@ void protocol_send(int force) {
     if(!force && !clock_periodic(&server->update_periodic, UPDATE_INTERVAL))
         return;
 
+    timer_start(TIMER_SEND);
+    stats.nsend = 0;
+
     Client *c;
     clients_foreach(c) {
         if(client_isbot(c)) {
@@ -438,6 +462,9 @@ void protocol_send(int force) {
             if(!ok) protocol_timed_out(c);
         }
     }
+
+    timer_stop(TIMER_SEND);
+    counter_set(COUNTER_SEND, stats.nsend);
 }
 
 static void protocol_send_full(Address *adr, size_t seqno) {
@@ -447,12 +474,13 @@ static void protocol_send_full(Address *adr, size_t seqno) {
     packet_init(&p, adr, seqno, 0);
     packet_put(&p, &m, 0);
     packet_send(&p);
+    stats.nsend ++;
 }
 
 void protocol_init() {
-    slab_static(&server->queue, _queue, qm_ctor, qm_dtor);
+    pool_static(&server->queue, _queue, qm_ctor, qm_dtor);
 }
 
 void protocol_cleanup() {
-    slab_free_pred(&server->queue,   qm_check_obsolete);
+    pool_free_pred(&server->queue,   qm_check_obsolete);
 }

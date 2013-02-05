@@ -35,6 +35,7 @@ enum MessageType {
     MESSAGE_UPDATE      = 102,
     MESSAGE_INPUT       = 103,
     MESSAGE_FULL        = 104,
+    MESSAGE_COLLISION   = 105,
 };
 
 int is_reliable(Message *m);
@@ -105,5 +106,11 @@ struct Message {
             uint8_t  shooting;
             uint16_t angle;
         } input;
+
+        struct {
+            Id entity_id[2];
+            int16_t x;
+            int16_t y;
+        } collision;
     };
 };

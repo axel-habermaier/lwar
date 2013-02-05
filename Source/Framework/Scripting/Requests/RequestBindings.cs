@@ -4,7 +4,6 @@ namespace Pegasus.Framework.Scripting.Requests
 {
 	using System.Collections.Generic;
 	using Parsing;
-	using Platform;
 	using Platform.Input;
 
 	/// <summary>

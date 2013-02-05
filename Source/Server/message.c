@@ -139,6 +139,12 @@ size_t message_pack(char *s, Message *m, size_t seqno) {
         i += uint8_pack(s+i, m->input.shooting);
         i += uint16_pack(s+i, m->input.angle);
         break;
+    case MESSAGE_COLLISION:
+        i += id_pack(s+i, m->collision.entity_id[0]);
+        i += id_pack(s+i, m->collision.entity_id[1]);
+        i += int16_pack(s+i, m->collision.x);
+        i += int16_pack(s+i, m->collision.y);
+        break;
     }
     return i;
 }
@@ -208,6 +214,12 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
         i += uint8_unpack(s+i, &m->input.shooting);
         i += uint16_unpack(s+i, &m->input.angle);
         break;
+    case MESSAGE_COLLISION:
+        i += id_unpack(s+i, &m->collision.entity_id[0]);
+        i += id_unpack(s+i, &m->collision.entity_id[1]);
+        i += int16_unpack(s+i, &m->collision.x);
+        i += int16_unpack(s+i, &m->collision.y);
+        break;
     }
     return i;
 }
@@ -255,5 +267,7 @@ void message_debug(Message *m, const char *s) {
         break;
     case MESSAGE_INPUT:
         log_debug("%sinput %d", s, m->input.player_id.n);
+    case MESSAGE_COLLISION:
+        log_debug("%scollision %d, %d", s, m->collision.entity_id[0], m->collision.entity_id[1]);
     }
 }

@@ -5,11 +5,11 @@
 #include "log.h"
 #include "server_export.h"
 
-static LogCallbacks logCallbacks;
+static LogCallbacks _callbacks;
 
-void server_callbacks(LogCallbacks callbacks)
+void server_log_callbacks(LogCallbacks callbacks)
 {
-	logCallbacks = callbacks;
+	_callbacks = callbacks;
 }
 
 static const char* format(const char* message, va_list vl)
@@ -24,11 +24,11 @@ static const char* format(const char* message, va_list vl)
 
 void log_die(const char* message, ...)
 {
-	assert(logCallbacks.die != NULL);
+	assert(_callbacks.die != NULL);
 
 	va_list vl;
 	va_start(vl, message);
-	logCallbacks.die(format(message, vl));
+	_callbacks.die(format(message, vl));
 	va_end(vl);
 
 #ifndef _MSC_VER
@@ -38,44 +38,44 @@ void log_die(const char* message, ...)
 
 void log_error(const char* message, ...)
 {
-	if (logCallbacks.error == NULL)
+	if (_callbacks.error == NULL)
 		return;
 
 	va_list vl;
 	va_start(vl, message);
-	logCallbacks.error(format(message, vl));
+	_callbacks.error(format(message, vl));
 	va_end(vl);
 }
 
 void log_warn(const char* message, ...)
 {
-	if (logCallbacks.warning == NULL)
+	if (_callbacks.warning == NULL)
 		return;
 
 	va_list vl;
 	va_start(vl, message);
-	logCallbacks.warning(format(message, vl));
+	_callbacks.warning(format(message, vl));
 	va_end(vl);
 }
 
 void log_info(const char* message, ...)
 {
-	if (logCallbacks.info == NULL)
+	if (_callbacks.info == NULL)
 		return;
 
 	va_list vl;
 	va_start(vl, message);
-	logCallbacks.info(format(message, vl));
+	_callbacks.info(format(message, vl));
 	va_end(vl);
 }
 
 void log_debug(const char* message, ...)
 {
-	if (logCallbacks.debug == NULL)
+	if (_callbacks.debug == NULL)
 		return;
 
 	va_list vl;
 	va_start(vl, message);
-	logCallbacks.debug(format(message, vl));
+	_callbacks.debug(format(message, vl));
 	va_end(vl);
 }

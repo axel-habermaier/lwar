@@ -7,6 +7,7 @@
 
 #include "vector.h"
 #include "log.h"
+#include "performance.h"
 #include "pq.h"
 
 static size_t mod(long a,long b) {
@@ -191,7 +192,14 @@ static void handle_collisions(Time d) {
 
         /* compute force vectors */
         bounce(e0, e1, &v0, &v1);
-        entities_collision(e0, e1, v0, v1);
+        entities_notify_collision(e0, e1, v0, v1);
+
+        /* compute collision point */
+        Pos r0 = e0->type->radius;
+        Pos r1 = e1->type->radius;
+        Vec v = add(scale(e0->x, r0/(r0+r1)),
+                    scale(e1->x, r1/(r0+r1)));
+        protocol_notify_collision(e0, e1, v);
 
         /* remaining time of the entities will be spent in physics_move */
     }
@@ -213,6 +221,8 @@ static void physics_move(Time d) {
 }
 
 void physics_update() {
+    timer_start(TIMER_PHYSICS);
+
     Time d = to_time(clock_delta());
     Entity *e;
     entities_foreach(e)
@@ -220,4 +230,6 @@ void physics_update() {
     find_collisions(d);
     handle_collisions(d);
     physics_move(d);
+
+    timer_stop(TIMER_PHYSICS);
 }

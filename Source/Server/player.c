@@ -37,7 +37,7 @@ void player_spawn(Player *p, Vec x) {
     }
 }
 
-void player_notify(Entity *e) {
+void player_notify_state(Entity *e) {
     if(e->player->ship == e)
         e->player->ship = 0;
 }

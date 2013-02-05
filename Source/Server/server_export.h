@@ -21,7 +21,18 @@ extern "C" {
 		LogCallback debug;
 	} LogCallbacks;
 
-	EXPORT void server_callbacks(LogCallbacks callbacks);
+    typedef void (*TimerCallback)(unsigned int timer);
+    typedef void (*CounterCallback)(unsigned int counter, unsigned int value);
+
+    typedef struct
+    {
+        TimerCallback   start;
+        TimerCallback   stop;
+        CounterCallback counted;
+    } PerformanceCallbacks;
+
+	EXPORT void server_log_callbacks(LogCallbacks callbacks);
+	EXPORT void server_performance_callbacks(PerformanceCallbacks callbacks);
 
     /* initialize server data structures
      * and network connection,

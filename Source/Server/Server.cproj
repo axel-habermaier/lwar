@@ -64,7 +64,10 @@
     <Compile Include="rules\planet.c" />
     <Compile Include="rules\ship.c" />
     <Compile Include="packet.c" />
-    <Compile Include="slab.c" />
+    <Compile Include="pool.c" />
+    <Compile Include="player.c" />
+    <Compile Include="rules.c" />
+    <Compile Include="rules\rocket.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="connection.h" />
@@ -79,6 +82,7 @@
     <None Include="packet.h" />
     <None Include="rules.h" />
     <None Include="server_export.h" />
-    <None Include="slab.h" />
+    <None Include="pool.h" />
+    <None Include="performance.h" />
   </ItemGroup>
 </Project>

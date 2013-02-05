@@ -177,6 +177,10 @@
     <Compile Include="Network\IPacketFactory.cs" />
     <Compile Include="Network\ServicePacketFactory.cs" />
     <Compile Include="ObjectPool.cs" />
+    <Compile Include="Platform\Assets\Asset.cs" />
+    <Compile Include="Platform\Assets\AssetReloader.cs" />
+    <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
+    <Compile Include="Platform\Assets\IAssetsCompiler.cs" />
     <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\IMeasurement.cs" />
     <Compile Include="Platform\Measurement.cs" />
@@ -228,9 +232,9 @@
     <Compile Include="Network\SocketExtensions.cs" />
     <Compile Include="Network\TcpSocket.cs" />
     <Compile Include="Platform\Assets\AssetReader.cs" />
-    <Compile Include="Platform\Assets\FontReader.cs" />
-    <Compile Include="Platform\Assets\ShaderReader.cs" />
-    <Compile Include="Platform\Assets\TextureReader.cs" />
+    <Compile Include="Platform\Assets\FontAsset.cs" />
+    <Compile Include="Platform\Assets\VertexShaderAsset.cs" />
+    <Compile Include="Platform\Assets\Texture2DAsset.cs" />
     <Compile Include="Platform\BufferReader.cs" />
     <Compile Include="Platform\BufferWriter.cs" />
     <Compile Include="Platform\Graphics\Query.cs" />

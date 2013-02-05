@@ -10,9 +10,14 @@ namespace Pegasus.Framework.Platform.Graphics
 	public abstract class Shader : GraphicsObject
 	{
 		/// <summary>
+		///   The type of the shader.
+		/// </summary>
+		private readonly ShaderType _type;
+
+		/// <summary>
 		///   The native shader instance.
 		/// </summary>
-		private readonly IntPtr _shader;
+		private IntPtr _shader;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -23,7 +28,23 @@ namespace Pegasus.Framework.Platform.Graphics
 		protected Shader(GraphicsDevice graphicsDevice, ShaderType type, byte[] shaderData)
 			: base(graphicsDevice)
 		{
-			_shader = NativeMethods.CreateShader(graphicsDevice.NativePtr, type, shaderData);
+			Assert.ArgumentNotNull(shaderData, () => shaderData);
+			Assert.ArgumentInRange(type, () => type);
+
+			_type = type;
+			Reinitialize(shaderData);
+		}
+
+		/// <summary>
+		///   Reinitializes the shader.
+		/// </summary>
+		/// <param name="shaderData">The shader source data.</param>
+		internal void Reinitialize(byte[] shaderData)
+		{
+			if (_shader != IntPtr.Zero)
+				NativeMethods.DestroyShader(_shader);
+
+			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, _type, shaderData);
 		}
 
 		/// <summary>

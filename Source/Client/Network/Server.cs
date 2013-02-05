@@ -203,10 +203,15 @@ namespace Lwar.Client.Network
 			[DllImport(LibraryName, EntryPoint = "server_shutdown")]
 			public static extern void Shutdown();
 
-			[DllImport(LibraryName, EntryPoint = "server_callbacks")]
+			[DllImport(LibraryName, EntryPoint = "server_log_callbacks")]
 			public static extern void SetCallbacks(LogCallbacks callbacks);
 
+			[DllImport(LibraryName, EntryPoint = "server_performance_callbacks")]
+			public static extern void SetCallbacks(PerformanceCallbacks callbacks);
+
 			public delegate void LogCallback(string message);
+			public delegate void TimerCallback(uint timer);
+			public delegate void CounterCallback(uint counter, uint value);
 
 			[StructLayout(LayoutKind.Sequential)]
 			public struct LogCallbacks
@@ -216,6 +221,14 @@ namespace Lwar.Client.Network
 				public LogCallback Warning;
 				public LogCallback Info;
 				public LogCallback Debug;
+			}
+
+			[StructLayout(LayoutKind.Sequential)]
+			public struct PerformanceCallbacks
+			{
+				public TimerCallback start;
+				public TimerCallback stop;
+				public CounterCallback counted;
 			}
 		}
 	}

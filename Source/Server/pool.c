@@ -2,21 +2,21 @@
 #include <assert.h>
 
 #include "list.h"
-#include "slab.h"
+#include "pool.h"
 
 #include "log.h"
 
-static void check_i(Slab *s, void *p) {
+static void check_i(Pool *s, void *p) {
     assert(s->mem <= (char*)p);
     assert((char*)p < s->mem + s->n * s->size);
     assert(((char*)p -  s->mem) % s->size == 0);
 }
 
-static size_t get_i(Slab *s, void *p) {
+static size_t get_i(Pool *s, void *p) {
     return (((char *)p) - s->mem) / s->size;
 }
 
-void slab_init(Slab *s, void *p, size_t n, size_t size,
+void pool_init(Pool *s, void *p, size_t n, size_t size,
                void (*ctor)(size_t, void *),
                void (*dtor)(size_t, void *))
 {
@@ -32,7 +32,7 @@ void slab_init(Slab *s, void *p, size_t n, size_t size,
     INIT_LIST_HEAD(&s->free);
     INIT_LIST_HEAD(&s->allocated);
 
-    log_debug("Initialized Slab at %x, %d * #%d", p, n, size);
+    log_debug("Initialized Pool at %x, %d * #%d", p, n, size);
 
     size_t i;
     for(i = 0; i < s->n; i++) {
@@ -42,27 +42,27 @@ void slab_init(Slab *s, void *p, size_t n, size_t size,
     }
 }
 
-void slab_add(Slab *s, size_t i) {
+void pool_add(Pool *s, size_t i) {
     List *l = (List *)s->mem + s->size * i;
     check_i(s, l);
     INIT_LIST_HEAD(l);
     list_add_tail(l, &s->free);
 }
 
-void *slab_get(Slab *s, size_t i) {
+void *pool_get(Pool *s, size_t i) {
     List *l = (List *)s->mem + s->size * i;
     check_i(s, l);
     return l;
 }
 
-void *slab_remove(Slab *s, size_t i) {
+void *pool_remove(Pool *s, size_t i) {
     List *l = (List *)s->mem + s->size * i;
     check_i(s, l);
     list_del(l);
     return l;
 }
 
-void *slab_alloc(Slab *s) {
+void *pool_alloc(Pool *s) {
     if(list_empty(&s->free))
         return 0;
     List *l = s->free.next;
@@ -76,16 +76,16 @@ void *slab_alloc(Slab *s) {
     return l;
 }
 
-void slab_free_pred(Slab *s, int (*pred)(size_t , void *)) {
+void pool_free_pred(Pool *s, int (*pred)(size_t , void *)) {
     List *l, *n;
     list_for_each_safe(l,n,&s->allocated) {
         check_i(s, l);
         if(pred(get_i(s,l), l))
-            slab_free(s, l);
+            pool_free(s, l);
     }
 }
 
-void slab_free(Slab *s, void *p) {
+void pool_free(Pool *s, void *p) {
     List *l = (List *)p;
     check_i(s, l);
     list_move_tail(l, &s->free);
