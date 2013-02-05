@@ -44,7 +44,20 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public Vector2 Position { get; set; }
 
-		#region Lifecycle 
+		/// <summary>
+		///   Gets or sets the entity's rotation.
+		/// </summary>
+		public float Rotation { get; set; }
+
+		/// <summary>
+		///   Gets or sets the entity's health.
+		/// </summary>
+		public float Health { get; set; }
+
+		/// <summary>
+		///   Gets or sets the player the entity belongs to.
+		/// </summary>
+		public Player Player { get; set; }
 
 		/// <summary>
 		///   Invoked when the entity should update its internal state.
@@ -80,12 +93,19 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
+		///   Invoked when a collision occured between the entity and the given other entity.
+		/// </summary>
+		/// <param name="other">The other entity of the collision.</param>
+		/// <param name="position">The position of the collision.</param>
+		public virtual void OnCollision(IEntity other, Vector2 position)
+		{
+		}
+
+		/// <summary>
 		///   Invoked when the entity has been added to a level.
 		/// </summary>
 		protected virtual void Added()
 		{
 		}
-
-		#endregion
 	}
 }

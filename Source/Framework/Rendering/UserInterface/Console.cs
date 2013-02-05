@@ -180,7 +180,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Draws the console.
 		/// </summary>
-		public void Draw(GameTime updateState)
+		public void Draw()
 		{
 			// Only draw the console when it is currently active
 			if (!_active)
@@ -194,7 +194,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_spriteBatch.Draw(consoleArea, Texture2D.White, BackgroundColor);
 
 			// Draw the prompt and content
-			_prompt.Draw(updateState, _spriteBatch);
+			_prompt.Draw(_spriteBatch);
 			_content.Draw(_spriteBatch);
 			_spriteBatch.DrawBatch();
 		}

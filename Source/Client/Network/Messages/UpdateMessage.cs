@@ -8,7 +8,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 
-	public class UpdateEntity : PooledObject<UpdateEntity>, IUnreliableMessage
+	public class UpdateMessage : Message<UpdateMessage>, IUnreliableMessage
 	{
 		/// <summary>
 		///   The new entity data.
@@ -19,24 +19,23 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public void Process(GameSession session)
+		public override void Process(GameSession session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
 
 			foreach (var entityUpdate in _data)
 			{
 				var entity = session.Entities.Find(entityUpdate.Entity);
-				entity.Position = entityUpdate.Position;
-			}
-		}
 
-		/// <summary>
-		///   Writes the message into the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the message should be written to.</param>
-		public void Write(BufferWriter buffer)
-		{
-			Assert.That(false, "The client cannot send this type of message.");
+				// Entity generation mismatch
+				if (entity == null)
+					continue;
+
+				entity.Position = entityUpdate.Position;
+				// TODO: decide where to convert
+				entity.Rotation = - (float)(entityUpdate.Rotation * Math.PI / 180.0);
+				entity.Health = entityUpdate.Health;
+			}
 		}
 
 		/// <summary>
@@ -48,27 +47,26 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static UpdateEntity Create(BufferReader buffer)
+		public static UpdateMessage Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			var message = GetInstance();
-			message._data.Clear();
-
-			var count = buffer.ReadByte();
-			for (var i = 0; i < count; ++i)
-			{
-				message._data.Add(new Data
+			return Deserialize(buffer, (b, m) =>
 				{
-					Entity = buffer.ReadIdentifier(),
-					Position = new Vector2(buffer.ReadInt16(), buffer.ReadInt16()),
-					Velocity = new Vector2(buffer.ReadInt16(), buffer.ReadInt16()),
-					Rotation = buffer.ReadUInt16(),
-					Health = buffer.ReadByte()
-				});
-			}
+					m._data.Clear();
 
-			return message;
+					var count = buffer.ReadByte();
+					for (var i = 0; i < count; ++i)
+					{
+						m._data.Add(new Data
+						{
+							Entity = b.ReadIdentifier(),
+							Position = new Vector2(b.ReadInt16(), b.ReadInt16()),
+							Velocity = new Vector2(b.ReadInt16(), b.ReadInt16()),
+							Rotation = b.ReadUInt16(),
+							Health = b.ReadByte()
+						});
+					}
+				});
 		}
 
 		private struct Data

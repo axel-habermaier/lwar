@@ -48,6 +48,14 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		///   Gets a value indicating whether any messages are waiting in the queue.
+		/// </summary>
+		public bool HasPendingData
+		{
+			get { return _reliableMessages.Count != 0 || _unreliableMessages.Count != 0; }
+		}
+
+		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
@@ -119,9 +127,7 @@ namespace Lwar.Client.Network
 		{
 			foreach (var message in messages)
 			{
-				message.Write(buffer);
-
-				if (buffer.Count > Specification.MaxPacketSize)
+				if (!message.Write(buffer))
 					break;
 			}
 		}

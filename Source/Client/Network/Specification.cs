@@ -10,12 +10,12 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   The maximum allowed byte length of an UTF8-encoded player name.
 		/// </summary>
-		public const int MaxPlayerNameLength = 32;
+		public const int MaximumPlayerNameLength = 32;
 
 		/// <summary>
 		///   The maximum allowed byte length of an UTF8-encoded chat message.
 		/// </summary>
-		public const int MaxChatMessageLength = 128;
+		public const int MaximumChatMessageLength = 128;
 
 		/// <summary>
 		///   The maximum allowed packet size in bytes.
@@ -33,8 +33,8 @@ namespace Lwar.Client.Network
 		public const int MaxPlayers = 8;
 
 		/// <summary>
-		///   The frequency of the update input message that is sent to the server in Hz.
+		///   The frequency in Hz that determines how often the user input is sent to the server.
 		/// </summary>
-		public const int UpdateInputFrequency = 30;
+		public const int InputUpdateFrequency = 30;
 	}
 }

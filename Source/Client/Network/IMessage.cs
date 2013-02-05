@@ -20,6 +20,6 @@ namespace Lwar.Client.Network
 		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
-		void Write(BufferWriter buffer);
+		bool Write(BufferWriter buffer);
 	}
 }

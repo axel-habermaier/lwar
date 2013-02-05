@@ -7,7 +7,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class UpdatePlayerStats : PooledObject<UpdatePlayerStats>, IUnreliableMessage
+	public class StatsMessage : Message<StatsMessage>, IUnreliableMessage
 	{
 		/// <summary>
 		///   The new statistics of the players.
@@ -18,17 +18,9 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public void Process(GameSession session)
+		public override void Process(GameSession session)
 		{
-		}
-
-		/// <summary>
-		///   Writes the message into the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the message should be written to.</param>
-		public void Write(BufferWriter buffer)
-		{
-			Assert.That(false, "The client cannot send this type of message.");
+			// TODO
 		}
 
 		/// <summary>
@@ -40,26 +32,25 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static UpdatePlayerStats Create(BufferReader buffer)
+		public static StatsMessage Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			var message = GetInstance();
-			message._stats.Clear();
-
-			var count = buffer.ReadByte();
-			for (var i = 0; i < count; ++i)
-			{
-				message._stats.Add(new Stats
+			return Deserialize(buffer, (b, m) =>
 				{
-					Player = buffer.ReadIdentifier(),
-					Kills = buffer.ReadUInt16(),
-					Deaths = buffer.ReadUInt16(),
-					Ping = buffer.ReadUInt16()
-				});
-			}
+					m._stats.Clear();
 
-			return message;
+					var count = b.ReadByte();
+					for (var i = 0; i < count; ++i)
+					{
+						m._stats.Add(new Stats
+						{
+							Player = b.ReadIdentifier(),
+							Kills = b.ReadUInt16(),
+							Deaths = b.ReadUInt16(),
+							Ping = b.ReadUInt16()
+						});
+					}
+				});
 		}
 
 		private struct Stats

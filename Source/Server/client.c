@@ -5,60 +5,8 @@
 #include "server.h"
 #include "log.h"
 
-static Client      _clients[MAX_CLIENTS];
-
-static void player_init(Player *p, size_t id) {
-    p->id.n        = id;
-    p->ship        = 0;
-    player_input(p, 0,0,0,0,0);
-    player_select(p, 0,0);
-}
-
-void player_input(Player *p, int up, int down, int left, int right, int shooting) {
-    p->up       = up;
-    p->down     = down;
-    p->left     = left;
-    p->right    = right;
-    p->shooting = shooting;
-}
-
-void player_select(Player *p, size_t ship_type, size_t weapon_type) {
-    p->ship_type   = entity_type_get(ship_type);
-    p->weapon_type = entity_type_get(ship_type);
-}
-
-void player_spawn(Player *p, Vec x) {
-    assert(!p->ship);
-    if(p->ship_type)
-        p->ship = entity_create(p->ship_type, p, x, _0);
-}
-
-void player_die(Player *p) {
-    entity_remove(p->ship);
-    p->ship = 0;
-}
-
-void player_rename(Player *p, Str name) {
-    p->name = name;
-}
-
-static void player_action(Player *p) {
-    Entity *e = p->ship;
-    if(!e) return;
-
-    Vec a = entity_acc(e);
-    Vec b = { a.x * p->right - p->left,
-              a.y * p->up    - p->down };
-    physics_acc_rel(e, b);
-    e->active = p->shooting;
-}
-
-void player_actions() {
-    Client *c;
-    clients_foreach(c) {
-        player_action(&c->player);
-    }
-}
+static Client _clients[MAX_CLIENTS];
+static Address dummy = {0,0};
 
 static void client_ctor(size_t i, void *p) {
     Client *c = (Client*)p;
@@ -82,7 +30,8 @@ static void client_dtor(size_t i, void *p) {
 }
 
 static int client_check_obsolete(size_t i, void *p) {
-    return (server->client_mask & (1 << i)) == 0;
+    Client *c = (Client *)p;
+    return c->dead; /* (server->client_mask & (1 << i)) == 0; */
 }
 
 Client *client_create(Address *adr) {
@@ -93,6 +42,19 @@ Client *client_create(Address *adr) {
         log_debug("+ client %d", c->player.id.n);
     }
     return c;
+}
+
+Client *bot_create() {
+    Client *c = slab_new(&server->clients, Client);
+    if(c) {
+        c->adr = dummy;
+        log_debug("+ bot %d", c->player.id.n);
+    }
+    return c;
+}
+
+int client_isbot(Client *c) {
+    return address_eq(&c->adr, &dummy);
 }
 
 void client_remove(Client *c) {
@@ -118,7 +80,6 @@ Client *client_get(Id player) {
 
 void clients_init() {
     slab_static(&server->clients, _clients, client_ctor, client_dtor);
-    slab_remove(&server->clients, 0); /* reserve id 0 for server */
 }
 
 void clients_cleanup() {

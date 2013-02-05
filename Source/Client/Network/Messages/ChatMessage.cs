@@ -2,12 +2,11 @@
 
 namespace Lwar.Client.Network.Messages
 {
-	using System.Text;
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class ChatMessage : PooledObject<ChatMessage>, IReliableMessage
+	public class ChatMessage : Message<ChatMessage>, IReliableMessage
 	{
 		/// <summary>
 		///   The chat message that the player sent.
@@ -23,7 +22,7 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public void Process(GameSession session)
+		public override void Process(GameSession session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
 			var player = session.Players[_playerId];
@@ -35,14 +34,16 @@ namespace Lwar.Client.Network.Messages
 		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
-		public void Write(BufferWriter buffer)
+		public override bool Write(BufferWriter buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			buffer.WriteByte((byte)MessageType.ChatMessage);
-			buffer.WriteUInt32(SequenceNumber);
-			buffer.WriteIdentifier(_playerId);
-			buffer.WriteString(_message, Specification.MaxChatMessageLength);
+			return buffer.TryWrite(this, (b, m) =>
+				{
+					b.WriteByte((byte)MessageType.Chat);
+					b.WriteUInt32(m.SequenceNumber);
+					b.WriteIdentifier(m._playerId);
+					b.WriteString(m._message, Specification.MaximumChatMessageLength);
+				});
 		}
 
 		/// <summary>
@@ -57,11 +58,11 @@ namespace Lwar.Client.Network.Messages
 		public static ChatMessage Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			var message = GetInstance();
-			message._playerId = buffer.ReadIdentifier();
-			message._message = buffer.ReadString(Specification.MaxChatMessageLength);
-			return message;
+			return Deserialize(buffer, (b, m) =>
+				{
+					m._playerId = b.ReadIdentifier();
+					m._message = b.ReadString(Specification.MaximumChatMessageLength);
+				});
 		}
 
 		/// <summary>
@@ -75,7 +76,8 @@ namespace Lwar.Client.Network.Messages
 
 			var chatMessage = GetInstance();
 			chatMessage._playerId = player;
-			chatMessage._message = message.TruncateUtf8(Specification.MaxChatMessageLength);;
+			chatMessage._message = message.TruncateUtf8(Specification.MaximumChatMessageLength);
+			;
 			return chatMessage;
 		}
 	}

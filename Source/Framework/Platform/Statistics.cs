@@ -3,8 +3,10 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Text;
+	using System.Threading.Tasks;
 	using Graphics;
 	using Math;
+	using Processes;
 	using Rendering;
 	using Rendering.UserInterface;
 
@@ -13,6 +15,11 @@ namespace Pegasus.Framework.Platform
 	/// </summary>
 	public class Statistics : DisposableObject
 	{
+		/// <summary>
+		///   The number of update of the statistic output per second.
+		/// </summary>
+		private const int UpdateFrequency = 30;
+
 		/// <summary>
 		///   The string builder that is used to construct the output.
 		/// </summary>
@@ -23,6 +30,11 @@ namespace Pegasus.Framework.Platform
 		///   valid instance of an object, it is an indication that a garbage collection has occurred.
 		/// </summary>
 		private readonly WeakReference _gcCheck = new WeakReference(new object());
+
+		/// <summary>
+		///   The scheduler for the update process.
+		/// </summary>
+		private readonly ProcessScheduler _scheduler = new ProcessScheduler();
 
 		/// <summary>
 		///   The approximate amount of garbage collections that have occurred since the application has been started.
@@ -38,6 +50,11 @@ namespace Pegasus.Framework.Platform
 		///   The sprite batch that is used for drawing.
 		/// </summary>
 		private SpriteBatch _spriteBatch;
+
+		/// <summary>
+		///   The update process.
+		/// </summary>
+		private IProcess _updateProcess;
 
 		/// <summary>
 		///   Gets the GPU frame time measurements.
@@ -70,6 +87,8 @@ namespace Pegasus.Framework.Platform
 			GpuFrameTime = new GpuProfiler(graphicsDevice);
 			CpuFrameTime = new AveragedValue();
 			UpdateInput = new AveragedValue();
+
+			_updateProcess = _scheduler.CreateProcess(UpdateAsync);
 		}
 
 		/// <summary>
@@ -83,9 +102,9 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Draws the statistics.
+		///   Updates the statistics.
 		/// </summary>
-		internal void Draw()
+		internal void Update()
 		{
 			if (!_gcCheck.IsAlive)
 			{
@@ -93,21 +112,42 @@ namespace Pegasus.Framework.Platform
 				_gcCheck.Target = new object();
 			}
 
-			_builder.Clear();
-			_builder.Append("Platform: ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
-			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug).Append("\n");
-			_builder.Append("Renderer: ").Append(PlatformInfo.GraphicsApi).Append("\n");
-			_builder.Append("# of GCs: ").Append(_garbageCollections).Append("\n\n");
+			_scheduler.RunProcesses();
+		}
 
-			WriteMeasurement(GpuFrameTime, "GPU Frame Time");
-			WriteMeasurement(CpuFrameTime, "CPU Frame Time");
+		/// <summary>
+		///   Updates the statistics periodically.
+		/// </summary>
+		/// <param name="context">The context in which the statistics should be updated.</param>
+		private async Task UpdateAsync(ProcessContext context)
+		{
+			while (!context.IsCanceled)
+			{
+				_builder.Clear();
+				_builder.Append("Platform: ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
+				_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug).Append("\n");
+				_builder.Append("Renderer: ").Append(PlatformInfo.GraphicsApi).Append("\n");
+				_builder.Append("# of GCs: ").Append(_garbageCollections).Append("\n\n");
 
-			_builder.Append("\n");
+				WriteMeasurement(GpuFrameTime, "GPU Frame Time");
+				WriteMeasurement(CpuFrameTime, "CPU Frame Time");
 
-			WriteMeasurement(UpdateInput, "Update Input");
-			WriteMeasurements(_builder);
+				_builder.Append("\n");
 
-			_label.Text = _builder.ToString();
+				WriteMeasurement(UpdateInput, "Update Input");
+				WriteMeasurements(_builder);
+
+				_label.Text = _builder.ToString();
+
+				await context.Delay(1000 / UpdateFrequency);
+			}
+		}
+
+		/// <summary>
+		///   Draws the statistics.
+		/// </summary>
+		internal void Draw()
+		{
 			_label.Draw(_spriteBatch);
 			_spriteBatch.DrawBatch();
 		}
@@ -139,6 +179,8 @@ namespace Pegasus.Framework.Platform
 		{
 			_spriteBatch.SafeDispose();
 			GpuFrameTime.SafeDispose();
+			_updateProcess.SafeDispose();
+			_scheduler.SafeDispose();
 		}
 	}
 }

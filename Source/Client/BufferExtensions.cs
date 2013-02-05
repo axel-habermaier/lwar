@@ -71,9 +71,6 @@ namespace Lwar.Client
 			int size = buffer.ReadByte();
 			var skipBytes = 0;
 
-			if (!buffer.CanRead(size))
-				return null;
-
 			if (size > length)
 			{
 				NetworkLog.ClientWarn("Received a string that exceeds the maximum allowed length. String truncated.");

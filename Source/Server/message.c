@@ -55,6 +55,30 @@ size_t header_unpack(const char *s, Header *h) {
     return i;
 }
 
+size_t update_pack(char *s, Update *u) {
+    size_t i=0;
+    i += id_pack(s+i, u->entity_id);
+    i += int16_pack(s+i, u->x);
+    i += int16_pack(s+i, u->y);
+    i += int16_pack(s+i, u->vx);
+    i += int16_pack(s+i, u->vy);
+    i += uint16_pack(s+i, u->angle);
+    i += uint8_pack(s+i, u->health);
+    return i;
+}
+
+size_t update_unpack(const char *s, Update *u) {
+    size_t i=0;
+    i += id_unpack(s+i, &u->entity_id);
+    i += int16_unpack(s+i, &u->x);
+    i += int16_unpack(s+i, &u->y);
+    i += int16_unpack(s+i, &u->vx);
+    i += int16_unpack(s+i, &u->vy);
+    i += uint16_unpack(s+i, &u->angle);
+    i += uint8_unpack(s+i, &u->health);
+    return i;
+}
+
 size_t message_pack(char *s, Message *m, size_t seqno) {
     size_t i=0;
     i += uint8_pack(s+i, m->type);
@@ -99,6 +123,12 @@ size_t message_pack(char *s, Message *m, size_t seqno) {
         break;
     case MESSAGE_FULL:
         break;
+    case MESSAGE_STATS:
+        assert(0);
+        break;
+    case MESSAGE_UPDATE:
+        i += uint8_pack(s+i, m->update.n);
+        break;
     case MESSAGE_INPUT:
         i += id_pack(s+i, m->input.player_id);
         i += uint32_pack(s+i, m->input.frameno);
@@ -107,6 +137,7 @@ size_t message_pack(char *s, Message *m, size_t seqno) {
         i += uint8_pack(s+i, m->input.left);
         i += uint8_pack(s+i, m->input.right);
         i += uint8_pack(s+i, m->input.shooting);
+        i += uint16_pack(s+i, m->input.angle);
         break;
     }
     return i;
@@ -161,6 +192,12 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
         break;
     case MESSAGE_FULL:
         break;
+    case MESSAGE_STATS:
+        assert(0);
+        break;
+    case MESSAGE_UPDATE:
+        i += uint8_unpack(s+i, &m->update.n);
+        break;
     case MESSAGE_INPUT:
         i += id_unpack(s+i, &m->input.player_id);
         i += uint32_unpack(s+i, &m->input.frameno);
@@ -169,6 +206,7 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
         i += uint8_unpack(s+i, &m->input.left);
         i += uint8_unpack(s+i, &m->input.right);
         i += uint8_unpack(s+i, &m->input.shooting);
+        i += uint16_unpack(s+i, &m->input.angle);
         break;
     }
     return i;
@@ -208,6 +246,12 @@ void message_debug(Message *m, const char *s) {
         break;
     case MESSAGE_FULL:
         log_debug("%sfull", s);
+        break;
+    case MESSAGE_STATS:
+        log_debug("%stats", s);
+        break;
+    case MESSAGE_UPDATE:
+        log_debug("%supdate #%d", s, m->update.n);
         break;
     case MESSAGE_INPUT:
         log_debug("%sinput %d", s, m->input.player_id.n);

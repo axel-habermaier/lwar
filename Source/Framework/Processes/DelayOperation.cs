@@ -2,15 +2,17 @@
 
 namespace Pegasus.Framework.Processes
 {
+	using Platform;
+
 	/// <summary>
 	///   Represents an asynchronous operation that just waits for a given amount of time to elapse.
 	/// </summary>
 	internal class DelayOperation : PooledObject<DelayOperation>, IAsyncOperation
 	{
 		/// <summary>
-		///   The number of frames to wait before the operation completes.
+		///   The amount of time in milliseconds that the operation waits before terminating.
 		/// </summary>
-		private int _frameCount;
+		private Time _time;
 
 		/// <summary>
 		///   Gets the exception that has been thrown during the execution of the operation.
@@ -31,18 +33,18 @@ namespace Pegasus.Framework.Processes
 		/// </summary>
 		public void UpdateState()
 		{
-			--_frameCount;
-			IsCompleted = _frameCount <= 0;
+			IsCompleted = _time.Seconds >= 0;
 		}
 
 		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="time">The amount of time in milliseconds that the operation waits before terminating.</param>
-		public static DelayOperation Create(int time)
+		public static DelayOperation Create(double time)
 		{
 			var operation = GetInstance();
-			operation._frameCount = time * App.UpdatesPerSecond / 1000;
+			operation._time = new Time();
+			operation._time.Offset = -operation._time.Seconds - time / 1000;
 			operation.SetDescription(String.Format("Delaying process for {0}ms.", time));
 			operation.IsCompleted = false;
 			return operation;

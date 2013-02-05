@@ -9,9 +9,17 @@
 #include "log.h"
 #include "pq.h"
 
-/* TODO: shared with visualization */
-float rad(float a) {
+static size_t mod(long a,long b) {
+    return (a % b + b) % b;
+}
+
+Pos rad(Pos a) {
     return a * M_PI / 180.0;
+}
+
+size_t deg(Pos a) {
+    Pos d = a * 180.0 / M_PI;
+    return mod(d, 360);
 }
 
 typedef struct Collision Collision;
@@ -44,42 +52,40 @@ Vec physics_x(Vec x, Vec v, Time d) {
     return add(scale(v, d.t), x);
 }
 
-/* accelerate e by a */
-void physics_acc(Entity *e, Vec a) {
-    e->a = add(e->a, a);
+/* predict orientation at time d, given rotation */
+Pos physics_phi(Pos phi, Pos r, Time d) {
+    return phi + r * d.t;
 }
 
-/* accelerate e by a relative to orientation */
-void physics_acc_rel(Entity *e, Vec a) {
-    /* forward */
-    Vec f = unit(rad(e->rot));
-    /* right */
-    Vec r = { f.y, -f.x };
-    physics_acc(e, add(scale(f, a.y), scale(r, a.x)));
+/* compute impact from old and new veloctiy */
+Pos physics_impact(Vec v0, Vec v1) {
+    return len(sub(v0,v1));
 }
 
 /* update position and velocity of e to time d */
 static void move(Entity *e, Time d) {
-    e->v = physics_v(e->v, e->a, d);
-    e->x = physics_x(e->x, e->v, d);
+    e->v   = physics_v(e->v, e->a, d);
+    e->x   = physics_x(e->x, e->v, d);
+    e->phi = physics_phi(e->phi, e->r, d);
     e->remaining = time_sub(e->remaining, d);
 }
 
 static void move_remaining(Entity *e) {
     if(e->remaining.t > 0) {
-        e->v = physics_v(e->v, e->a, e->remaining);
-        e->x = physics_x(e->x, e->v, e->remaining);
+        e->v   = physics_v(e->v, e->a, e->remaining);
+        e->x   = physics_x(e->x, e->v, e->remaining);
+        e->phi = physics_phi(e->phi, e->r, e->remaining);
     }
     e->remaining.t = 0;
 }
 
-/* compute possible collision point v at time t in the future
+/* compute possible collision point at time d in the future
  * return 1 if a collision occurs, 0 otherwise,
  * assuming that ei is at pos ei->x with speed ei->v at t=0 */
 static int collide(Entity *e0, Entity *e1, Time *d) {
     Vec x0 = e0->x, x1 = e1->x;
     Vec v0 = e0->v, v1 = e1->v;
-    Pos r = entity_radius(e0) + entity_radius(e1);
+    Pos r = e0->type->radius + e1->type->radius;
     
     /* ignore acceleration,
        TODO: test whether this has an impact */
@@ -98,7 +104,7 @@ static int collide(Entity *e0, Entity *e1, Time *d) {
     Pos a =   dot_sq(v);
     Pos b = 2*dot(v,x);
     Pos c =   dot_sq(x) - r*r;
-    int   n = roots(a,b,c, &d0,&d1);
+    int n =   roots(a,b,c, &d0,&d1);
     if(n && d) {
         /* prevent negative d (collisions in the past) */
         if(0 < d0 && (d0 < d1 || d1 < 0)) { d->t = d0; return 1; }
@@ -108,28 +114,30 @@ static int collide(Entity *e0, Entity *e1, Time *d) {
 }
 
 /* compute new velocities after a collision with respect to masses */
-static void bounce(Entity *e0, Entity *e1) {
+static void bounce(Entity *e0, Entity *e1, Vec *v0, Vec *v1) {
     /* masses */
-    Pos m0 = entity_mass(e0);
-    Pos m1 = entity_mass(e1);
-    
-    /* normalized impulse, proportional to other mass */
-    Pos i0 = m1 / (m0+m1);
-    Pos i1 = m0 / (m0+m1);
-    
-    /* delta of position and velocity */
-    Vec dx = sub(e0->x, e1->x);
-    Vec dv = sub(e0->v, e1->v);
-    
-    /* weird projection magic follows */
-    Pos k = 2.0 * dot(dx,dv)/dot_sq(dx);
-    e0->v = sub(e0->v, scale(dx,i0 * k)); /* sub,add with respect to dx */
-    e1->v = add(e1->v, scale(dx,i1 * k));
+    Pos m0 = e0->type->mass;
+    Pos m1 = e1->type->mass;
+
+    /* collision axis */
+    Vec dx = normalize(sub(e0->x, e1->x));
+
+    Vec p0,p1;
+
+    /* see http://en.wikipedia.org/wiki/Momentum#Application_to_collisions */
+    project(e0->v, dx, &p0, v0);
+    project(e1->v, dx, &p1, v1);
+
+    *v0 = add(*v0, scale(p0,(m0-m1)/(m0+m1)));
+    *v0 = add(*v0, scale(p1, (2*m1)/(m0+m1)));
+
+    *v1 = add(*v1, scale(p1,(m1-m0)/(m0+m1)));
+    *v1 = add(*v1, scale(p0, (2*m0)/(m0+m1)));
 }
 
 /* compute whether e0 and e1 intersect at the moment */
 static int intersect(Entity *e0, Entity *e1) {
-    Pos r = entity_radius(e0) + entity_radius(e1);
+    Pos r = e0->type->radius + e1->type->radius;
     return dist2(e0->x, e1->x) < r*r;
 }
 
@@ -149,18 +157,18 @@ static void collision_insert(Entity *e0, Entity *e1, Time d) {
         ncollisions++;
 }
 
-static void find_collisions(Time d) {
+static void find_collisions(Time d0) {
     Entity *e0,*e1;
     ncollisions = 0;
 
     entities_foreach(e0) {
         entities_foreach(e1) {
-            Time e;
-            if(   e0->id.n < e1->id.n  /* prevent to compare two entities twice  */
-               && collide(e0,e1,&e)    /* check for collision, e yields the time */
-               && time_cmp(e,d) <= 0)  /* only consider if in current frame      */
+            Time d1;
+            if(   e0->id.n < e1->id.n    /* prevent to compare two entities twice  */
+               && collide(e0,e1,&d1)     /* check for collision, d1 yields the time */
+               && time_cmp(d1,d0) <= 0)  /* only consider if in current frame      */
             {
-                collision_insert(e0,e1,e);
+                collision_insert(e0,e1,d1);
             }
         }
     }
@@ -170,15 +178,20 @@ static void handle_collisions(Time d) {
     size_t i;
     for(i=0; i<ncollisions; i++) {
         Collision *c = &collisions[i];
+        Vec v0,v1;
+
+        Time d = c->d;
         Entity *e0 = c->e0;
         Entity *e1 = c->e1;
-        // log_info("collision of %d and %d at Δt %.3f", e0->id.n, e1->id.n, c->d.t);
+        log_debug("collision of %d and %d at Δt %.3f", e0->id.n, e1->id.n, c->d.t);
 
         /* move to collision point */
-        move(e0, c->d);
-        move(e1, c->d);
+        move(e0, d);
+        move(e1, d);
 
-        bounce(e0, e1);
+        /* compute force vectors */
+        bounce(e0, e1, &v0, &v1);
+        entities_collision(e0, e1, v0, v1);
 
         /* remaining time of the entities will be spent in physics_move */
     }
@@ -189,19 +202,13 @@ static void physics_move(Time d) {
     entities_foreach(e) {
         move_remaining(e);
         e->a = _0; /* reset acceleration */
+        e->r =  0; /* and rotation       */
 
-        /* TODO: circular world hack */
-        if(e->x.x < -12)
-            e->x.x += 24;
+        if(e->x.x < 0) e->x.x += 1000;
+        if(e->x.x > 1000) e->x.x -= 1000;
+        if(e->x.y < 0) e->x.y += 800;
+        if(e->x.y > 800) e->x.y -= 800;
 
-        if(e->x.x >  12)
-            e->x.x -= 24;
-
-        if(e->x.y < -10)
-            e->x.y += 20;
-
-        if(e->x.y >  10)
-            e->x.y -= 20;
     }
 }
 

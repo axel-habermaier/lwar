@@ -25,6 +25,7 @@ void slab_init(Slab *s, void *p, size_t n, size_t size,
 
     s->mem  = (char*)p;
     s->n    = n;
+    s->i    = 0;
     s->size = size;
     s->ctor = ctor;
     s->dtor = dtor;
@@ -65,10 +66,13 @@ void *slab_alloc(Slab *s) {
     if(list_empty(&s->free))
         return 0;
     List *l = s->free.next;
+
     check_i(s, l);
     list_move_tail(l, &s->allocated);
-    if(s->ctor && l)
+    if(s->ctor)
         s->ctor(get_i(s,l), l);
+    s->i ++;
+
     return l;
 }
 
@@ -87,4 +91,5 @@ void slab_free(Slab *s, void *p) {
     list_move_tail(l, &s->free);
     if(s->dtor)
         s->dtor(get_i(s,l), l);
+    s->i --;
 }

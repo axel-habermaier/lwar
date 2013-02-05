@@ -138,14 +138,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Draws the text box.
 		/// </summary>
-		public void Draw(GameTime updateState, SpriteBatch spriteBatch)
+		public void Draw(SpriteBatch spriteBatch)
 		{
 			_layout.UpdateLayout();
 			_layout.DrawDebugVisualizations(spriteBatch);
 			_textRenderer.DrawCached(spriteBatch, _layout.Font.Texture);
 
 			var position = _layout.ComputeCaretPosition(_caret.Position);
-			_caret.Draw(updateState, spriteBatch, _layout.Font, position);
+			_caret.Draw(spriteBatch, _layout.Font, position);
 		}
 	}
 }

@@ -6,7 +6,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class AddPlayer : PooledObject<AddPlayer>, IReliableMessage
+	public class JoinMessage : Message<JoinMessage>, IReliableMessage
 	{
 		/// <summary>
 		///   The identifier of the player that is added.
@@ -22,22 +22,13 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public void Process(GameSession session)
+		public override void Process(GameSession session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
 			session.Players.Add(_playerId);
 
 			if (IsLocalPlayer)
 				session.LocalPlayer = session.Players[_playerId];
-		}
-
-		/// <summary>
-		///   Writes the message into the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the message should be written to.</param>
-		public void Write(BufferWriter buffer)
-		{
-			Assert.That(false, "The client cannot send this type of message.");
 		}
 
 		/// <summary>
@@ -49,13 +40,14 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static AddPlayer Create(BufferReader buffer)
+		public static JoinMessage Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			var message = GetInstance();
-			message._playerId = buffer.ReadIdentifier();
-			return message;
+			return Deserialize(buffer, (b, m) =>
+				{
+					m.IsLocalPlayer = false;
+					m._playerId = b.ReadIdentifier();
+				});
 		}
 	}
 }

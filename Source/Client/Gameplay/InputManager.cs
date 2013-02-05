@@ -6,6 +6,7 @@ namespace Lwar.Client.Gameplay
 	using Network;
 	using Network.Messages;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Processes;
 
@@ -14,6 +15,12 @@ namespace Lwar.Client.Gameplay
 	/// </summary>
 	public class InputManager : DisposableObject
 	{
+		/// <summary>
+		///   The minimum distance between the center of the player's ship and the mouse cursor that is required for the ship's
+		///   orientation to be updated.
+		/// </summary>
+		private const int MinimumOrientationUpdateDistance = 30;
+
 		/// <summary>
 		///   The process that updates the input state.
 		/// </summary>
@@ -45,6 +52,11 @@ namespace Lwar.Client.Gameplay
 		private InputState _left;
 
 		/// <summary>
+		///   The orientation of the player.
+		/// </summary>
+		private ushort _orientation;
+
+		/// <summary>
 		///   Indicates whether the player moves to the left.
 		/// </summary>
 		private InputState _right;
@@ -69,11 +81,11 @@ namespace Lwar.Client.Gameplay
 
 			_session = session;
 
-			_forward.Input = new LogicalInput(Key.W.IsPressed());
-			_backward.Input = new LogicalInput(Key.S.IsPressed());
-			_left.Input = new LogicalInput(Key.A.IsPressed());
-			_right.Input = new LogicalInput(Key.D.IsPressed());
-			_shooting.Input = new LogicalInput(Key.Space.IsPressed());
+			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed());
+			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed());
+			_left.Input = new LogicalInput(Key.A.IsPressed() | Key.Left.IsPressed());
+			_right.Input = new LogicalInput(Key.D.IsPressed() | Key.Right.IsPressed());
+			_shooting.Input = new LogicalInput(Key.Space.IsPressed() | MouseButton.Left.IsPressed());
 
 			_session.InputDevice.Register(_forward.Input);
 			_session.InputDevice.Register(_backward.Input);
@@ -111,8 +123,31 @@ namespace Lwar.Client.Gameplay
 		{
 			while (!context.IsCanceled)
 			{
-				_state.Update(_forward.Triggered, _backward.Triggered, _left.Triggered, _right.Triggered, _shooting.Triggered);
-				_session.ServerProxy.Send(UpdateClientInput.Create(_session.LocalPlayer.Id, _state));
+				if (_session.LocalPlayer.Ship == null)
+				{
+					await context.NextFrame();
+					continue;
+				}
+
+				// Calculate the orientation
+				var ship = _session.LocalPlayer.Ship.Position;
+				var mousePos = _session.InputDevice.Mouse.Position;
+				var target = new Vector2(mousePos.X, mousePos.Y);
+
+				// TODO: Take camera transform into account
+				// Don't update if ship and target are too close
+				if ((target - ship).Length > MinimumOrientationUpdateDistance)
+				{
+					var orientation = MathUtils.ComputeAngle(ship, target, new Vector2(1, 0));
+					orientation = MathUtils.RadToDeg(orientation);
+					_orientation = (ushort)orientation;
+				}
+
+				_state.Update(_forward.Triggered, _backward.Triggered,
+							  _left.Triggered, _right.Triggered,
+							  _shooting.Triggered, _orientation);
+
+				_session.ServerProxy.Send(InputMessage.Create(_session.LocalPlayer.Id, _state));
 
 				_forward.Triggered = false;
 				_backward.Triggered = false;
@@ -120,7 +155,7 @@ namespace Lwar.Client.Gameplay
 				_right.Triggered = false;
 				_shooting.Triggered = false;
 
-				await context.Delay(1000 / Specification.UpdateInputFrequency);
+				await context.Delay(1000 / Specification.InputUpdateFrequency);
 			}
 		}
 

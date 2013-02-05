@@ -11,14 +11,9 @@ namespace Lwar.Client.Network
 	internal class LwarPacketFactory : IPacketFactory
 	{
 		/// <summary>
-		///   The maximum packet size in bytes.
-		/// </summary>
-		private const int MaxPacketSize = 768;
-
-		/// <summary>
 		///   The pool that pools the byte arrays of the service packets.
 		/// </summary>
-		private static readonly ArrayPool<byte> Pool = new ArrayPool<byte>(MaxPacketSize);
+		private static readonly ArrayPool<byte> Pool = new ArrayPool<byte>(Specification.MaxPacketSize);
 
 		/// <summary>
 		///   Creates an outgoing packet.

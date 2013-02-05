@@ -6,7 +6,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class RemoveEntity : PooledObject<RemoveEntity>, IReliableMessage
+	public class RemoveMessage : Message<RemoveMessage>, IReliableMessage
 	{
 		/// <summary>
 		///   The identifier of the entity that is removed.
@@ -17,19 +17,10 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public void Process(GameSession session)
+		public override void Process(GameSession session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
 			session.Entities.Remove(_entityId);
-		}
-
-		/// <summary>
-		///   Writes the message into the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the message should be written to.</param>
-		public void Write(BufferWriter buffer)
-		{
-			Assert.That(false, "The client cannot send this type of message.");
 		}
 
 		/// <summary>
@@ -41,13 +32,10 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static RemoveEntity Create(BufferReader buffer)
+		public static RemoveMessage Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			var message = GetInstance();
-			message._entityId = buffer.ReadIdentifier();
-			return message;
+			return Deserialize(buffer, (b, m) => m._entityId = b.ReadIdentifier());
 		}
 	}
 }

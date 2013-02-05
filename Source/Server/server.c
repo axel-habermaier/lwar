@@ -17,22 +17,15 @@ int id_eq(Id id0, Id id1) {
            && id0.gen == id1.gen;
 }
 
-enum {
-    UPDATE_INTERVAL = 30,
-};
-
 int server_init() {
     if(!conn_init()) return 0;
     if(!conn_bind()) return 0;
 
-    clients_init();
-    entities_init();
     protocol_init();
 
-    /* register some entity types */
-    entity_type_register(ENTITY_TYPE_SHIP,   type_ship);
-    entity_type_register(ENTITY_TYPE_BULLET, type_bullet);
-    entity_type_register(ENTITY_TYPE_PLANET, type_planet);
+    clients_init();
+    entities_init();
+    rules_init();
 
     server->running = 1;
 
@@ -42,7 +35,7 @@ int server_init() {
 }
 
 int server_update(Clock time, int force) {
-    static Clock debug_clock;
+    /* static Clock debug_clock; */
 
     if(server->running) {
         time_update(time);
@@ -51,21 +44,18 @@ int server_update(Clock time, int force) {
         if(!server->prev_time)
             return 1;
 
+        /* heartbeat
         if(clock_periodic(&debug_clock, 1000))
             log_debug("server time: %d", server->cur_time);
-	
+        */
+
         protocol_recv();
 
-        if(   force
-           || clock_periodic(&server->update_periodic, UPDATE_INTERVAL))
-        {
-            protocol_send();
-        }
-
-        player_actions();
-        entity_actions();
-
+        players_update();
+        entities_update();
         physics_update();
+
+        protocol_send(force);
         
         /* remove obsolete messages, clients, and entities */
         protocol_cleanup();

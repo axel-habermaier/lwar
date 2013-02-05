@@ -322,6 +322,28 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
+		///   Draws a textured rectangle at the given position with the texture's size and rotation.
+		/// </summary>
+		/// <param name="texture">The texture that should be used to draw the quad.</param>
+		/// <param name="angle">The rotation of the quad.</param>
+		/// <param name="position">The position of the quad.</param>
+		/// <param name="color">The color of the quad.</param>
+		public void Draw(Texture2D texture, Vector2 position, float angle, Color color)
+		{
+			var size = new SizeF(texture.Size.Width, texture.Size.Height);
+			var shift = new Vector2(- size.Width, - size.Height) * 0.5f;
+			var quad = new Quad(new RectangleF(shift, size), color);
+
+			var rotation = Matrix.RotationZ(angle);
+			Quad.Transform(ref quad, ref rotation);
+
+			var translation = Matrix.Translation(position.X, position.Y, 0);
+			Quad.Transform(ref quad, ref translation);
+
+			Draw(ref quad, texture);
+		}
+
+		/// <summary>
 		///   Draws the given quad.
 		/// </summary>
 		/// <param name="quad">The quad that should be added.</param>
@@ -391,20 +413,10 @@ namespace Pegasus.Framework.Rendering
 			var rectangle = new RectangleF(0, -width / 2.0f, 1, width);
 			var quad = new Quad(rectangle, color);
 
-			// We now have to scale and rotate that line in order to draw what the user actually requested.
-			// Therefore, calculate the direction vector for the actual line as well as the direction vector for the unit line.
-			var startToEnd = end - start;
-			var startToTemp = new Vector2(1, 0);
-
-			// The scale factor is simply the magnitude of the distance vector, whereas the rotation is computed from the
-			// dot product of the two direction vectors.
-			var scale = startToEnd.Length;
-			var rotation = (float)Math.Acos(Vector2.Dot(startToEnd, startToTemp) / startToEnd.Length / startToTemp.Length);
-
-			// Math.Acos can only return results in the first and second quadrant, so make sure we rotate correctly if the rotation
-			// actually extends into the third or fourth quadrant
-			if (start.Y > end.Y)
-				rotation = MathUtils.TwoPi - rotation;
+			// The scale factor is simply the magnitude of the direction vector, whereas the rotation is computed relative to
+			// the unit vector in X direction.
+			var scale = (end - start).Length;
+			var rotation = MathUtils.ComputeAngle(start, end, new Vector2(1, 0));
 
 			// Construct the transformation matrix and draw the transformed quad
 			var transformMatrix = Matrix.Scale(scale, 1, 1) * Matrix.RotationZ(-rotation) *
@@ -546,7 +558,7 @@ namespace Pegasus.Framework.Rendering
 						var vertexOffset = vertexData + offset * _quadSize;
 						var quadOffset = quads + _sections[section].Offset * _quadSize;
 						var bytes = _sections[section].NumQuads * _quadSize;
-						
+
 						// Copy the entire section to the vertex buffer
 						Interop.Copy(vertexOffset, quadOffset, bytes);
 

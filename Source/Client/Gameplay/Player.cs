@@ -21,5 +21,10 @@ namespace Lwar.Client.Gameplay
 		///   Gets or sets a value indicating whether this player instance is currently in use.
 		/// </summary>
 		public bool IsActive { get; set; }
+
+		/// <summary>
+		///   Gets or sets the player's ship.
+		/// </summary>
+		public Ship Ship { get; set; }
 	}
 }

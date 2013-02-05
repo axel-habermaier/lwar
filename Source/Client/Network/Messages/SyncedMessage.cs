@@ -6,24 +6,15 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class Synced : PooledObject<Synced>, IReliableMessage
+	public class SyncedMessage : Message<SyncedMessage>, IReliableMessage
 	{
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public void Process(GameSession session)
+		public override void Process(GameSession session)
 		{
 			// Nothing to do here
-		}
-
-		/// <summary>
-		///   Writes the message into the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the message should be written to.</param>
-		public void Write(BufferWriter buffer)
-		{
-			Assert.That(false, "The client cannot send this type of message.");
 		}
 
 		/// <summary>
@@ -35,7 +26,7 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static Synced Create(BufferReader buffer)
+		public static SyncedMessage Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 			return GetInstance();

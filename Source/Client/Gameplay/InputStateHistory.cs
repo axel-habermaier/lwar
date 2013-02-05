@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Gameplay
 {
-	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
 	/// <summary>
@@ -26,6 +25,11 @@ namespace Lwar.Client.Gameplay
 		private byte _left;
 
 		/// <summary>
+		///   The orientation of the player.
+		/// </summary>
+		private ushort _orientation;
+
+		/// <summary>
 		///   Indicates whether the player moves to the left.
 		/// </summary>
 		private byte _right;
@@ -43,13 +47,14 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   Updates the current input state, also storing the seven previous states.
 		/// </summary>
-		public void Update(bool forward, bool backward, bool left, bool right, bool shooting)
+		public void Update(bool forward, bool backward, bool left, bool right, bool shooting, ushort orientation)
 		{
 			_forward = Update(_forward, forward);
 			_backward = Update(_backward, backward);
 			_left = Update(_left, left);
 			_right = Update(_right, right);
 			_shooting = Update(_shooting, shooting);
+			_orientation = orientation;
 
 			_version += 1;
 		}
@@ -66,6 +71,7 @@ namespace Lwar.Client.Gameplay
 			buffer.WriteByte(_left);
 			buffer.WriteByte(_right);
 			buffer.WriteByte(_shooting);
+			buffer.WriteUInt16(_orientation);
 		}
 
 		/// <summary>

@@ -6,7 +6,6 @@ namespace Lwar.Client
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Scripting;
@@ -16,6 +15,11 @@ namespace Lwar.Client
 	/// </summary>
 	internal sealed class LwarApp : App
 	{
+		/// <summary>
+		///   The targeted frame rate in frames per second.
+		/// </summary>
+		private const int TargetFramerate = 60;
+
 		/// <summary>
 		///   The local game server that can be used to hosts game sessions locally.
 		/// </summary>
@@ -63,8 +67,6 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void Initialize()
 		{
-			UpdatesPerSecond = 60;
-
 			Window.Closing += Exit;
 			Window.Resized += s => GraphicsDevice.SetViewport(new Rectangle(0, 0, s.Width, s.Height));
 			Window.Title = "lwar";

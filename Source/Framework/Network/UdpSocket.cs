@@ -36,10 +36,36 @@ namespace Pegasus.Framework.Network
 #elif Linux
 			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 #endif
+
+			_socket.Blocking = false;
 		}
 
 		/// <summary>
-		///   Sends the given packet sent over the connection.
+		///   Sends the given packet over the connection.
+		/// </summary>
+		/// <param name="packet">The packet that should be sent. The packet is returned to the pool before this function returns.</param>
+		/// <param name="remoteEndPoint">The endpoint of the peer the packet should be sent to.</param>
+		public void Send(OutgoingPacket packet, IPEndPoint remoteEndPoint)
+		{
+			Assert.ArgumentNotNull(packet, () => packet);
+			Assert.ArgumentNotNull(remoteEndPoint, () => remoteEndPoint);
+			Assert.InRange(packet.Size, 1, Packet.MaxSize);
+
+			using (packet)
+			{
+				try
+				{
+					_socket.SendTo(packet.Data, 0, packet.Size, SocketFlags.None, remoteEndPoint);
+				}
+				catch (SocketException e)
+				{
+					throw new SocketOperationException("Unable to send Udp packet to {0}: {1}.", remoteEndPoint, e.Message);
+				}
+			}
+		}
+
+		/// <summary>
+		///   Sends the given packet over the connection.
 		/// </summary>
 		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
 		/// <param name="packet">The packet that should be sent. The packet is returned to the pool before this function returns.</param>
@@ -60,6 +86,42 @@ namespace Pegasus.Framework.Network
 				{
 					throw new SocketOperationException("Unable to send Udp packet to {0}: {1}.", remoteEndPoint, e.Message);
 				}
+			}
+		}
+
+		/// <summary>
+		///   Tries to receive a packet sent over the connection. Returns true if a packet has been received, false otherwise.
+		/// </summary>
+		/// <param name="remoteEndPoint">After the method completes, contains the endpoint of the peer that sent the packet.</param>
+		/// <param name="packet">The packet that has been received.</param>
+		public bool TryReceive(ref IPEndPoint remoteEndPoint, out IncomingPacket packet)
+		{
+			packet = null;
+
+			if (_socket.Available == 0)
+				return false;
+
+			packet = _packetFactory.CreateIncomingPacket();
+			var packetReturned = false;
+
+			try
+			{
+				var endPoint = (EndPoint)remoteEndPoint;
+				var size = _socket.ReceiveFrom(packet.Data, ref endPoint);
+				remoteEndPoint = (IPEndPoint)endPoint;
+
+				packet.SetDataRange(size);
+				packetReturned = true;
+				return true;
+			}
+			catch (SocketException e)
+			{
+				throw new SocketOperationException("Error while trying to receive Udp packet: {0}.", e.Message);
+			}
+			finally
+			{
+				if (!packetReturned)
+					packet.SafeDispose();
 			}
 		}
 

@@ -47,16 +47,19 @@ Time  to_time(Clock t);
 int   time_cmp(Time d0, Time d1);
 void  time_update(Clock t);
 
-void player_input(Player *p, int up, int down, int left, int right, int shooting);
+void player_init(Player *p, size_t id);
+void player_input(Player *p, int up, int down, int left, int right, int shooting, Pos phi);
 void player_select(Player *p, size_t ship_type, size_t weapon_type);
 void player_rename(Player *p, Str name);
-void player_actions();
 void player_spawn(Player *p, Vec x);
+void player_notify(Entity *e);
 void player_die(Player *p);
+void players_update();
 
 void clients_init();
 void clients_cleanup();
-/* void client_update(Client *c); */
+Client *bot_create();
+int client_isbot(Client *c);
 Client *client_create(Address *adr);
 void client_remove(Client *c);
 Client *client_get(Id player);
@@ -71,22 +74,26 @@ size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a);
 */
 void protocol_init();
 void protocol_recv();
-void protocol_send();
+void protocol_send(int force);
+void protocol_notify(Entity *e);
 void protocol_cleanup();
 
 void entities_init();
 void entities_cleanup();
-void entity_actions();
+void entities_update();
 Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v);
 void entity_remove(Entity *e);
-Pos entity_radius(Entity *e);
-Pos entity_mass(Entity *e);
-Vec entity_acc(Entity *e);
+void entities_collision(Entity *e0, Entity *e1, Vec v0, Vec v1);
 
-float rad(float a); /* radians of a */
+void entity_push(Entity *e, Vec a);
+void entity_accelerate(Entity *e, Vec a);
+void entity_accelerate_to(Entity *e, Vec v);
+void entity_rotate(Entity *e, Pos r);
+
+Pos    rad(Pos a); /* radians of a */
+size_t deg(Pos a); /* degrees of a */
+Pos physics_impact(Vec v0, Vec v1);
 void physics_update();
-void physics_acc(Entity *e, Vec a);
-void physics_acc_rel(Entity *e, Vec a);
 
 void rules_init();
 EntityType *entity_type_get(size_t id);
@@ -116,6 +123,7 @@ struct Player {
     Entity *ship;
     int up,down,left,right;
     int shooting;
+    Pos phi; /* desired orientation */
     EntityType *ship_type;
     EntityType *weapon_type;
     Str name;
@@ -124,9 +132,9 @@ struct Player {
 struct Entity {
     List l;
 
-    Vec x,v,a;
-    Pos rot;
-    int health;
+    Vec x,v,a;  /* position, velocity, acceleration */
+    Pos phi,r;  /* orientation angle, rotation (= delta phi) */
+    Pos health;
     int dead;
 
     Id id;
@@ -142,12 +150,17 @@ struct Entity {
 
 struct EntityType {
     size_t id;
-    Pos r; /* radius */
-    Pos m; /* mass   */
-    Vec a; /* acceleration */
-    int health; /* max health */
-    Clock activation_interval; /* for shooting, ... */
+    Pos radius;
+    Pos mass;
+    Vec max_a;      /* max acceleration */
+    Vec max_b;      /* max brake        */
+    Pos max_r;      /* max rotation     */
+    Pos max_health; /* max health       */
+
+    /* for shooting, ... */
+    Clock activation_interval;
     void (*action)(Entity *e);
+    void (*collision)(Entity *self, Entity *other, Vec v0, Vec v1);
 };
 
 struct Client {
@@ -183,10 +196,11 @@ struct Server {
     Clock cur_time;
     Clock prev_time;
     Clock update_periodic;
+
+    Client *self;
 };
 
 static const Vec  _0  = {0,0};
-static const Id   server_id = {0,0};
 
 #define clients_foreach(c)       slab_foreach(&server->clients, c, Client)
 #define clients_foreach_cont(c)  slab_foreach_cont(&server->clients, c, Client)
@@ -199,4 +213,12 @@ static const Id   server_id = {0,0};
 
 #ifndef max
 #define max(n,m) ((n) < (m) ? (m) : (n))
+#endif
+
+#ifndef sgn
+#define sgn(n) ((n) == 0 ? 0 : ((n) < 0 ? -1 : 1))
+#endif
+
+#ifndef min
+#define min(n,m) ((n) > (m) ? (m) : (n))
 #endif

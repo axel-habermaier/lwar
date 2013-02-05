@@ -370,7 +370,6 @@
     <Compile Include="Platform\PlatformInfo.cs" />
     <Compile Include="Rendering\Quad.cs" />
     <Compile Include="Rendering\SpriteBatch.cs" />
-    <Compile Include="GameTime.cs" />
     <Compile Include="Rendering\UserInterface\Caret.cs" />
     <Compile Include="Rendering\UserInterface\Console.cs" />
     <Compile Include="Rendering\UserInterface\Label.cs" />

@@ -2,31 +2,23 @@
 
 namespace Lwar.Client.Network.Messages
 {
-	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class Connect : PooledObject<Connect>, IReliableMessage
+	public class DisconnectMessage : Message<DisconnectMessage>, IReliableMessage
 	{
-		/// <summary>
-		///   Processes the message, updating the given game session.
-		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public void Process(GameSession session)
-		{
-			Assert.That(false, "The client cannot process this type of message.");
-		}
-
 		/// <summary>
 		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
-		public void Write(BufferWriter buffer)
+		public override bool Write(BufferWriter buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			buffer.WriteByte((byte)MessageType.Connect);
-			buffer.WriteUInt32(SequenceNumber);
+			return buffer.TryWrite(this, (b, m) =>
+				{
+					b.WriteByte((byte)MessageType.Disconnect);
+					b.WriteUInt32(m.SequenceNumber);
+				});
 		}
 
 		/// <summary>
@@ -37,7 +29,7 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
-		public static Connect Create()
+		public static DisconnectMessage Create()
 		{
 			return GetInstance();
 		}

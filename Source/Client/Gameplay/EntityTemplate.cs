@@ -9,6 +9,7 @@ namespace Lwar.Client.Gameplay
 	{
 		Ship = 1,
 		Bullet = 2,
-		Planet = 3
+		Planet = 3,
+		Rocket = 4
 	}
 }

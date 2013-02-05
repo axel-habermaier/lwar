@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using System.Globalization;
 	using Math;
+	using Platform;
 	using Platform.Graphics;
 	using Math = System.Math;
 
@@ -38,9 +39,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private string _text;
 
 		/// <summary>
-		///   The time offset in milliseconds used to determine whether the caret should be visible.
+		///   The time used to determine whether the caret should be visible.
 		/// </summary>
-		private double _timeOffset;
+		private Time _time;
 
 		/// <summary>
 		///   Gets or sets the text that can be edited with the caret. If the text is changed, the caret
@@ -70,7 +71,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			{
 				_position = Math.Min(_text.Length, value);
 				_position = Math.Max(0, _position);
-				_timeOffset = 0;
+				_time.Offset -= _time.Seconds;
 			}
 		}
 
@@ -168,15 +169,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Draws the caret.
 		/// </summary>
-		/// <param name="updateState">The current update state.</param>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing the caret.</param>
 		/// <param name="font">The font that should be used to draw the caret.</param>
 		/// <param name="position">The position of the caret's top left corner.</param>
-		public void Draw(GameTime updateState, SpriteBatch spriteBatch, Font font, Vector2i position)
+		public void Draw(SpriteBatch spriteBatch, Font font, Vector2i position)
 		{
 			// Show and hide the caret depending on the frequency and offset
-			_timeOffset += updateState.ElapsedTime;
-			if (((int)Math.Round(_timeOffset / 1000 * Frequency)) % 2 != 0)
+			if (((int)Math.Round(_time.Seconds * Frequency)) % 2 != 0)
 				return;
 
 			TextRenderer.Draw(spriteBatch, font, CaretVisual, Color.White, position);

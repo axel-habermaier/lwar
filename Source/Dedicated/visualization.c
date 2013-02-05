@@ -22,7 +22,7 @@ static void glCircle() {
 }
 
 static void draw_entity(Entity *e) {
-    float r = entity_radius(e);
+    float r = e->type->radius;
     glPushMatrix();
     glTranslatef(e->x.x, e->x.y, 0);
     glScalef(r,r,1);
@@ -35,7 +35,7 @@ static Entity *launch(Pos x, Pos y, Pos vx, Pos vy, Pos ax, Pos ay, EntityType *
     Vec _v = {vx,vy};
     Vec _a = {ax,ay};
     Entity *e = entity_create(t,0,_x,_v);
-    physics_acc(e,_a);
+    e->a = _a;
     return e;
 }
 

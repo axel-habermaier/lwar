@@ -6,7 +6,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class UpdateClientInput : PooledObject<UpdateClientInput>, IUnreliableMessage
+	public class InputMessage : Message<InputMessage>, IUnreliableMessage
 	{
 		/// <summary>
 		///   The input state that is sent with the message.
@@ -24,25 +24,18 @@ namespace Lwar.Client.Network.Messages
 		public uint Timestamp { get; set; }
 
 		/// <summary>
-		///   Processes the message, updating the given game session.
-		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public void Process(GameSession session)
-		{
-			Assert.That(false, "The client cannot process this type of message.");
-		}
-
-		/// <summary>
 		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
-		public void Write(BufferWriter buffer)
+		public override bool Write(BufferWriter buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			buffer.WriteByte((byte)MessageType.UpdateClientInput);
-			buffer.WriteIdentifier(_playerId);
-			_inputState.Write(buffer);
+			return buffer.TryWrite(this, (b, m) =>
+				{
+					b.WriteByte((byte)MessageType.Input);
+					b.WriteIdentifier(m._playerId);
+					m._inputState.Write(b);
+				});
 		}
 
 		/// <summary>
@@ -50,7 +43,7 @@ namespace Lwar.Client.Network.Messages
 		/// </summary>
 		/// <param name="playerId">The identifier of the player that is change his or her input state.</param>
 		/// <param name="inputState">The input state that should be sent with the message.</param>
-		public static UpdateClientInput Create(Identifier playerId, InputStateHistory inputState)
+		public static InputMessage Create(Identifier playerId, InputStateHistory inputState)
 		{
 			var update = GetInstance();
 			update._inputState = inputState;

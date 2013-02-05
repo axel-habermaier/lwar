@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform
 {
+	using System.Diagnostics;
 	using System.Text;
 	using Math;
 
@@ -87,13 +88,22 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Checks whether the given number of bytes can be written to the buffer and throws an exception if not.
+		/// </summary>
+		/// <param name="size">The number of bytes that should be checked.</param>
+		[DebuggerHidden]
+		private void ValidateCanWrite(int size)
+		{
+			if (!CanWrite(size))
+				throw new IndexOutOfRangeException("Attempted to write past the end of the buffer.");
+		}
+
+		/// <summary>
 		///   Appends the given byte value to the end of the payload.
 		/// </summary>
 		/// <param name="value">The value that should be appended.</param>
 		private void Append(byte value)
 		{
-			Assert.That(_writePosition < _buffer.Offset + _buffer.Count,
-						"Attempted to write outside the valid data area of the buffer.");
 			_buffer.Array[_writePosition++] = value;
 		}
 
@@ -103,6 +113,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteBoolean(bool value)
 		{
+			ValidateCanWrite(1);
 			Append((byte)(value ? 1 : 0));
 		}
 
@@ -112,6 +123,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteSByte(sbyte value)
 		{
+			ValidateCanWrite(1);
 			Append((byte)value);
 		}
 
@@ -121,6 +133,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteByte(byte value)
 		{
+			ValidateCanWrite(1);
 			Append(value);
 		}
 
@@ -130,6 +143,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteInt16(short value)
 		{
+			ValidateCanWrite(2);
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
 
@@ -143,6 +157,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteUInt16(ushort value)
 		{
+			ValidateCanWrite(2);
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
 
@@ -156,6 +171,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="character">The value that should be written.</param>
 		public void WriteCharacter(char character)
 		{
+			ValidateCanWrite(2);
 			WriteUInt16(character);
 		}
 
@@ -165,6 +181,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteInt32(int value)
 		{
+			ValidateCanWrite(4);
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
 
@@ -180,6 +197,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteUInt32(uint value)
 		{
+			ValidateCanWrite(4);
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
 
@@ -195,6 +213,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteInt64(long value)
 		{
+			ValidateCanWrite(8);
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
 
@@ -214,6 +233,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteUInt64(ulong value)
 		{
+			ValidateCanWrite(8);
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
 
@@ -298,9 +318,34 @@ namespace Pegasus.Framework.Platform
 			Assert.ArgumentNotNull(value, () => value);
 			Assert.That(value.Length + _writePosition < _buffer.Offset + _buffer.Count, "Buffer overflow.");
 
+			ValidateCanWrite(sizeof(int) + value.Length);
 			WriteInt32(value.Length);
 			Array.Copy(value, 0, _buffer.Array, _writePosition, value.Length);
 			_writePosition += value.Length;
+		}
+
+		/// <summary>
+		///   Tries to serialize the given object into the buffer. Either, all writes succeed or the buffer remains unmodified
+		///   if any writes are out of bounds. Returns true to indicate that all writes have been successful.
+		/// </summary>
+		/// <typeparam name="T">The type of the object that should be serialized.</typeparam>
+		/// <param name="obj">The object that should be serialized into the buffer.</param>
+		/// <param name="serializer">The serializer that should be used to atomically modify the buffer.</param>
+		public bool TryWrite<T>(T obj, Action<BufferWriter, T> serializer)
+		{
+			Assert.ArgumentNotNull(serializer, () => serializer);
+
+			var offset = _writePosition;
+			try
+			{
+				serializer(this, obj);
+				return true;
+			}
+			catch (IndexOutOfRangeException)
+			{
+				_writePosition = offset;
+				return false;
+			}
 		}
 	}
 }

@@ -32,17 +32,17 @@ int main(int argc, char *argv[]) {
     if(argc > 1 && !strcmp(argv[1], "-visual"))
         visual = 1;
 
-    if(!server_init())        return 1;
+    server_callbacks(callbacks);
+
+    if(!server_init()) return 1;
 
     if(visual) {
         if(!visualization_init()) return 1;
     }
 
-    server_callbacks(callbacks);
-
     for(;;) {
         Clock t = clock_get();
-        if(!server_update(t,0))     break;
+        if(!server_update(t,0)) break;
         if(visual) {
             if(!visualization_update()) break;
         }

@@ -107,5 +107,46 @@ namespace Pegasus.Framework.Math
 
 			return value;
 		}
+
+		/// <summary>
+		///   Computes the angle in radians between the two vectors starting at the given start position and ending in end and
+		///   relativeTo.
+		/// </summary>
+		/// <param name="start">The starting point of the vectors whose angle should be computed.</param>
+		/// <param name="end">The end point of the vector whose angle should be computed.</param>
+		/// <param name="relativeTo">The vector that represents an angle of 0.</param>
+		public static float ComputeAngle(Vector2 start, Vector2 end, Vector2 relativeTo)
+		{
+			// Calculate the direction vector
+			var startToEnd = end - start;
+
+			// The rotation is computed from the dot product of the two direction vectors.
+			var rotation = (float)Math.Acos(Vector2.Dot(startToEnd, relativeTo) / startToEnd.Length / relativeTo.Length);
+
+			// Math.Acos can only return results in the first and second quadrant, so make sure we rotate correctly if the rotation
+			// actually extends into the third or fourth quadrant
+			if (start.Y > end.Y)
+				rotation = TwoPi - rotation;
+
+			return rotation;
+		}
+
+		/// <summary>
+		///   Converts degrees to radians.
+		/// </summary>
+		/// <param name="degrees">The value in degrees that should be converted.</param>
+		public static float DegToRad(float degrees)
+		{
+			return degrees / 180.0f * Pi;
+		}
+
+		/// <summary>
+		///   Converts radians to degrees.
+		/// </summary>
+		/// <param name="radians">The value in radians that should be converted.</param>
+		public static float RadToDeg(float radians)
+		{
+			return radians / Pi * 180.0f;
+		}
 	}
 }

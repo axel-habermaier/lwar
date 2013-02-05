@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform
 {
+	using System.Diagnostics;
 	using System.Text;
 	using Math;
 
@@ -98,11 +99,31 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Checks whether the given number of bytes can be read from the buffer and throws an exception if not.
+		/// </summary>
+		/// <param name="size">The number of bytes that should be checked.</param>
+		[DebuggerHidden]
+		private void ValidateCanRead(int size)
+		{
+			if (!CanRead(size))
+				throw new IndexOutOfRangeException("Attempted to read past the end of the buffer.");
+		}
+
+		/// <summary>
+		///   Reads an unsigned byte.
+		/// </summary>
+		private byte Next()
+		{
+			return _buffer.Array[_readPosition++];
+		}
+
+		/// <summary>
 		///   Reads a Boolean value.
 		/// </summary>
 		public bool ReadBoolean()
 		{
-			return ReadByte() == 1;
+			ValidateCanRead(1);
+			return Next() == 1;
 		}
 
 		/// <summary>
@@ -110,7 +131,8 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public sbyte ReadSignedByte()
 		{
-			return (sbyte)ReadByte();
+			ValidateCanRead(1);
+			return (sbyte)Next();
 		}
 
 		/// <summary>
@@ -118,8 +140,8 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public byte ReadByte()
 		{
-			Assert.That(!EndOfBuffer, "Read past the end of the valid data area of the buffer.");
-			return _buffer.Array[_readPosition++];
+			ValidateCanRead(1);
+			return Next();
 		}
 
 		/// <summary>
@@ -127,7 +149,8 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public short ReadInt16()
 		{
-			var value = (short)(ReadByte() | (ReadByte() << 8));
+			ValidateCanRead(2);
+			var value = (short)(Next() | (Next() << 8));
 
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
@@ -140,7 +163,8 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public ushort ReadUInt16()
 		{
-			var value = (ushort)(ReadByte() | (ReadByte() << 8));
+			ValidateCanRead(2);
+			var value = (ushort)(Next() | (Next() << 8));
 
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
@@ -161,7 +185,8 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public int ReadInt32()
 		{
-			var value = ReadByte() | (ReadByte() << 8) | (ReadByte() << 16) | (ReadByte() << 24);
+			ValidateCanRead(4);
+			var value = Next() | (Next() << 8) | (Next() << 16) | (Next() << 24);
 
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
@@ -174,7 +199,8 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public uint ReadUInt32()
 		{
-			var value = (uint)(ReadByte() | (ReadByte() << 8) | (ReadByte() << 16) | (ReadByte() << 24));
+			ValidateCanRead(4);
+			var value = (uint)(Next() | (Next() << 8) | (Next() << 16) | (Next() << 24));
 
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
@@ -187,14 +213,15 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public long ReadInt64()
 		{
-			var value = ReadByte() |
-						((long)(ReadByte()) << 8) |
-						((long)(ReadByte()) << 16) |
-						((long)(ReadByte()) << 24) |
-						((long)(ReadByte()) << 32) |
-						((long)(ReadByte()) << 40) |
-						((long)(ReadByte()) << 48) |
-						((long)(ReadByte()) << 56);
+			ValidateCanRead(8);
+			var value = Next() |
+						((long)(Next()) << 8) |
+						((long)(Next()) << 16) |
+						((long)(Next()) << 24) |
+						((long)(Next()) << 32) |
+						((long)(Next()) << 40) |
+						((long)(Next()) << 48) |
+						((long)(Next()) << 56);
 
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
@@ -207,14 +234,15 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public ulong ReadUInt64()
 		{
-			var value = ReadByte() |
-						((ulong)(ReadByte()) << 8) |
-						((ulong)(ReadByte()) << 16) |
-						((ulong)(ReadByte()) << 24) |
-						((ulong)(ReadByte()) << 32) |
-						((ulong)(ReadByte()) << 40) |
-						((ulong)(ReadByte()) << 48) |
-						((ulong)(ReadByte()) << 56);
+			ValidateCanRead(8);
+			var value = Next() |
+						((ulong)(Next()) << 8) |
+						((ulong)(Next()) << 16) |
+						((ulong)(Next()) << 24) |
+						((ulong)(Next()) << 32) |
+						((ulong)(Next()) << 40) |
+						((ulong)(Next()) << 48) |
+						((ulong)(Next()) << 56);
 
 			if (_endianess != PlatformInfo.Endianess)
 				value = EndianConverter.Convert(value);
@@ -279,13 +307,40 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public byte[] ReadByteArray()
 		{
+			ValidateCanRead(4);
 			var length = ReadInt32();
-			var byteArray = new byte[length];
+			ValidateCanRead(length);
 
+			var byteArray = new byte[length];
 			Array.Copy(_buffer.Array, _readPosition, byteArray, 0, length);
 			_readPosition += length;
 
 			return byteArray;
+		}
+
+		/// <summary>
+		///   Tries to deserialize an object of the given type from the buffer. Either, all reads succeed or the read position of
+		///   the buffer remains unmodified if any reads are out of bounds. Returns true to indicate that the object has been
+		///   successfully deserialized.
+		/// </summary>
+		/// <typeparam name="T">The type of the object that should be deserialized.</typeparam>
+		/// <param name="obj">The object that the deserialized values should be written to.</param>
+		/// <param name="deserializer">The deserializer that should be used to deserialize the object.</param>
+		public bool TryRead<T>(T obj, Action<BufferReader, T> deserializer)
+		{
+			Assert.ArgumentNotNull(deserializer, () => deserializer);
+
+			var offset = _readPosition;
+			try
+			{
+				deserializer(this, obj);
+				return true;
+			}
+			catch (IndexOutOfRangeException)
+			{
+				_readPosition = offset;
+				return false;
+			}
 		}
 	}
 }

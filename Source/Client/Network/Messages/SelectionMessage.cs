@@ -6,7 +6,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
-	public class ChangePlayerState : PooledObject<ChangePlayerState>, IReliableMessage
+	public class SelectionMessage : Message<SelectionMessage>, IReliableMessage
 	{
 		/// <summary>
 		///   The identifier of the player that changed his or her state.
@@ -27,23 +27,26 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public void Process(GameSession session)
+		public override void Process(GameSession session)
 		{
+			// TODO
 		}
 
 		/// <summary>
 		///   Writes the message into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the message should be written to.</param>
-		public void Write(BufferWriter buffer)
+		public override bool Write(BufferWriter buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			buffer.WriteByte((byte)MessageType.ChangePlayerState);
-			buffer.WriteUInt32(SequenceNumber);
-			buffer.WriteIdentifier(_playerId);
-			buffer.WriteByte((byte)_shipType);
-			buffer.WriteByte(_weaponType);
+			return buffer.TryWrite(this, (b, m) =>
+				{
+					b.WriteByte((byte)MessageType.Selection);
+					b.WriteUInt32(m.SequenceNumber);
+					b.WriteIdentifier(m._playerId);
+					b.WriteByte((byte)m._shipType);
+					b.WriteByte(m._weaponType);
+				});
 		}
 
 		/// <summary>
@@ -55,26 +58,26 @@ namespace Lwar.Client.Network.Messages
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
-		public static ChangePlayerState Create(BufferReader buffer)
+		public static SelectionMessage Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
+			return Deserialize(buffer, (b, m) =>
+				{
+					m._playerId = b.ReadIdentifier();
+					m._shipType = (EntityTemplate)b.ReadByte();
+					m._weaponType = b.ReadByte();
 
-			var message = GetInstance();
-			message._playerId = buffer.ReadIdentifier();
-			message._shipType = (EntityTemplate)buffer.ReadByte();
-			message._weaponType = buffer.ReadByte();
-
-			Assert.InRange(message._shipType);
-			return message;
+					Assert.InRange(m._shipType);
+				});
 		}
 
 		/// <summary>
-		/// Creates a new instance.
+		///   Creates a new instance.
 		/// </summary>
 		/// <param name="playerId">The identifier of the player that changed his or her state.</param>
 		/// <param name="shipType">The new ship type.</param>
 		/// <param name="weaponTemplate">The new weapon type.</param>
-		public static ChangePlayerState Create(Identifier playerId, EntityTemplate shipType, byte weaponTemplate)
+		public static SelectionMessage Create(Identifier playerId, EntityTemplate shipType, byte weaponTemplate)
 		{
 			var message = GetInstance();
 			message._playerId = playerId;

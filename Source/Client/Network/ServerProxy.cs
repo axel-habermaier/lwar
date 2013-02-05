@@ -9,7 +9,6 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Processes;
-	using Pegasus.Framework.Scripting;
 
 	/// <summary>
 	///   Represents a proxy of an lwar server that a client can use to communicate with the server.
@@ -42,12 +41,6 @@ namespace Lwar.Client.Network
 		///   considered to be lagging.
 		/// </summary>
 		public const int LaggingTimeout = 500;
-
-		/// <summary>
-		///   The connection state check frequency in Hz. The connection state check determines whether a connection is lagging or
-		///   dropped.
-		/// </summary>
-		public const int ConnectionStateCheckFrequency = 10;
 
 		/// <summary>
 		///   The delivery manager that is used to enforce the delivery guarantees of all incoming and outgoing messages.
@@ -163,6 +156,14 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		///   Gets a value indicating whether the connection to the server is faulted.
+		/// </summary>
+		public bool IsFaulted
+		{
+			get { return _state == State.Faulted; }
+		}
+
+		/// <summary>
 		///   Gets a value indicating whether the connection to the server has been dropped.
 		/// </summary>
 		public bool IsDropped
@@ -197,10 +198,10 @@ namespace Lwar.Client.Network
 				var attempts = 0;
 				NetworkLog.ClientInfo("Connecting to {0}.", _serverEndPoint);
 
-				_messageQueue.Enqueue(Messages.Connect.Create());
+				_messageQueue.Enqueue(ConnectMessage.Create());
 				while (_state == State.Connecting && attempts < MaxConnectionAttempts)
 				{
-					await _socket.SendAsync(context, _messageQueue.CreatePacket(), _serverEndPoint);
+					_socket.Send(_messageQueue.CreatePacket(), _serverEndPoint);
 
 					++attempts;
 					await context.Delay(RetryDelay);
@@ -227,22 +228,29 @@ namespace Lwar.Client.Network
 		/// <param name="context">The context in which the queued messages should be sent.</param>
 		private async Task SendAsync(ProcessContext context)
 		{
-			while (!context.IsCanceled)
+			try
 			{
-				try
-				{
-					while (_state < State.Syncing)
-						await context.NextFrame();
+				while (!context.IsCanceled && _state < State.Syncing)
+					await context.NextFrame();
 
-					await _socket.SendAsync(context, _messageQueue.CreatePacket(), _serverEndPoint);
-				}
-				catch (SocketOperationException e)
+				while (!context.IsCanceled && _state == State.Syncing)
 				{
-					// Ignore the error as Udp is connectionless anyway, so there's nothing we can do.
-					// We can just hope for the best that the next send will work again, and if not,
-					// the connection will eventually time out and the game session will end.
-					NetworkLog.ClientDebug("Error while sending: {0}.", e.Message);
+					_socket.Send(_messageQueue.CreatePacket(), _serverEndPoint);
+					await context.NextFrame();
 				}
+
+				while (!context.IsCanceled)
+				{
+					if (_messageQueue.HasPendingData)
+						_socket.Send(_messageQueue.CreatePacket(), _serverEndPoint);
+
+					await context.NextFrame();
+				}
+			}
+			catch (SocketOperationException e)
+			{
+				NetworkLog.ClientError("The connection to the server has been terminated due to an error: {0}", e.Message);
+				_state = State.Faulted;
 			}
 		}
 
@@ -252,40 +260,45 @@ namespace Lwar.Client.Network
 		/// <param name="context">The context in which the incoming packets should be handled.</param>
 		private async Task ReceiveAsync(ProcessContext context)
 		{
-			var sender = new IPEndPoint(_serverEndPoint.Address, _serverEndPoint.Port);
-			while (!context.IsCanceled)
+			try
 			{
-				if (_state == State.Faulted)
-					break;
+				var sender = new IPEndPoint(IPAddress.Any, 0);
 
-				if (_state == State.Disconnected)
+				while (!context.IsCanceled)
 				{
-					await context.NextFrame();
-					continue;
-				}
+					if (_state == State.Faulted)
+						break;
 
-				try
-				{
-					using (var packet = await _socket.ReceiveAsync(context, sender))
+					if (_state == State.Disconnected)
 					{
-						// TODO: Check server address
-						if (sender.Port != _serverEndPoint.Port)
-						{
-							NetworkLog.ClientWarn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
-												  sender, _serverEndPoint);
-							continue;
-						}
-
-						HandleMessages(packet);
+						await context.NextFrame();
+						continue;
 					}
+
+					IncomingPacket packet;
+					while (_socket.TryReceive(ref sender, out packet))
+					{
+						using (packet)
+						{
+							// TODO: Check server address
+							if (sender.Port != _serverEndPoint.Port)
+							{
+								NetworkLog.ClientWarn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
+													  sender, _serverEndPoint);
+								continue;
+							}
+
+							HandleMessages(packet);
+						}
+					}
+
+					await context.NextFrame();
 				}
-				catch (SocketOperationException e)
-				{
-					// Ignore the error as Udp is connectionless anyway, so there's nothing we can do.
-					// We can just hope for the best that the next receive will work again, and if not,
-					// the connection will eventually time out and the game session will end.
-					NetworkLog.ClientDebug("Error while receiving: {0}.", e.Message);
-				}
+			}
+			catch (SocketOperationException e)
+			{
+				NetworkLog.ClientError("The connection to the server has been terminated due to an error: {0}", e.Message);
+				_state = State.Faulted;
 			}
 		}
 
@@ -320,10 +333,9 @@ namespace Lwar.Client.Network
 				else
 					Assert.That(false, "Unclassified message type.");
 
-				// Only raise the event if we haven't read past the end of the buffer and we actually have a
-				// valid message to handle
-				using (message)
-					if (buffer.Count <= Specification.MaxPacketSize && message != null)
+				// Only raise the event if we actually have a valid message to handle
+				if (message != null)
+					using (message)
 						MessageReceived(message);
 			}
 		}
@@ -350,36 +362,36 @@ namespace Lwar.Client.Network
 
 			switch (type)
 			{
-				case MessageType.AddPlayer:
-					message = AddPlayer.Create(buffer);
+				case MessageType.Join:
+					message = JoinMessage.Create(buffer);
 
 					// If this is the first packet that we received from the server, it means we're syncing the game state
 					if (allowDelivery && sequenceNumber == 1)
 					{
-						((AddPlayer)message).IsLocalPlayer = true;
+						((JoinMessage)message).IsLocalPlayer = true;
 						_state = State.Syncing;
 					}
 					break;
-				case MessageType.RemovePlayer:
-					message = RemovePlayer.Create(buffer);
+				case MessageType.Leave:
+					message = LeaveMessage.Create(buffer);
 					break;
-				case MessageType.ChatMessage:
+				case MessageType.Chat:
 					message = ChatMessage.Create(buffer);
 					break;
-				case MessageType.AddEntity:
-					message = AddEntity.Create(buffer);
+				case MessageType.Add:
+					message = AddMessage.Create(buffer);
 					break;
-				case MessageType.RemoveEntity:
-					message = RemoveEntity.Create(buffer);
+				case MessageType.Remove:
+					message = RemoveMessage.Create(buffer);
 					break;
-				case MessageType.ChangePlayerState:
-					message = ChangePlayerState.Create(buffer);
+				case MessageType.Selection:
+					message = SelectionMessage.Create(buffer);
 					break;
-				case MessageType.ChangePlayerName:
-					message = ChangePlayerName.Create(buffer);
+				case MessageType.Name:
+					message = NameMessage.Create(buffer);
 					break;
 				case MessageType.Synced:
-					message = Synced.Create(buffer);
+					message = SyncedMessage.Create(buffer);
 
 					// We should only receive a sync packet if we're actually syncing
 					if (allowDelivery && _state != State.Syncing)
@@ -421,14 +433,14 @@ namespace Lwar.Client.Network
 			IUnreliableMessage message;
 			switch (type)
 			{
-				case MessageType.UpdatePlayerStats:
-					message = UpdatePlayerStats.Create(buffer);
+				case MessageType.Stats:
+					message = StatsMessage.Create(buffer);
 					break;
-				case MessageType.UpdateEntity:
-					message = UpdateEntity.Create(buffer);
+				case MessageType.Update:
+					message = UpdateMessage.Create(buffer);
 					break;
-				case MessageType.ServerFull:
-					message = ServerFull.Create(buffer);
+				case MessageType.Full:
+					message = FullMessage.Create(buffer);
 
 					// Only the first message can be a server full message
 					if (allowDelivery && _state != State.Connecting)
@@ -436,7 +448,10 @@ namespace Lwar.Client.Network
 					else if (allowDelivery)
 						_state = State.Full;
 					break;
-				case MessageType.UpdateClientInput:
+				case MessageType.Collision:
+					message = CollisionMessage.Create(buffer);
+					break;
+				case MessageType.Input:
 					NetworkLog.ClientWarn("Received an unexpected unreliable message of type {0}. The rest of the packet is ignored.", type);
 					return null;
 				default:
@@ -473,7 +488,7 @@ namespace Lwar.Client.Network
 				if (delta > DroppedTimeout)
 					_state = State.Dropped;
 
-				await context.Delay(1000 / ConnectionStateCheckFrequency);
+				await context.NextFrame();
 			}
 		}
 

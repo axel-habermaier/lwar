@@ -87,12 +87,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
         /// <summary>
         ///   Draws the prompt.
         /// </summary>
-        /// <param name="updateState">The current update state.</param>
         /// <param name="spriteBatch">The sprite batch that should be used to draw the prompt.</param>
-        public void Draw(GameTime updateState, SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
             _prompt.Draw(spriteBatch);
-            _input.Draw(updateState, spriteBatch);
+            _input.Draw(spriteBatch);
         }
 
         /// <summary>

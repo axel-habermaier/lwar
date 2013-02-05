@@ -77,6 +77,7 @@ Message Types
 	102		Update		no			server			Periodically updates the clients' entity states
 	103		Input		no			client			Periodically updates the server's client-specific input state
 	104		Full		no			server			Signals the client that the server is full
+	105		Collision	no			server			Indicates that a collision has occurred
 	
 Message Header
 	Both reliable and unreliable messages first contain the message type id in their header. This way, the message
@@ -131,6 +132,7 @@ Messages Payload Data
 								1	Ship
 								2	Bullet
 								3	Planet
+								4	Rocket
 		
 	Remove
 		Type		Name 		Description
@@ -177,7 +179,7 @@ Messages Payload Data
 		int16		y			The new y position
 		int16		vx			The new x velocity
 		int16		vy			The new y velocity
-		uint16		rot			The new rotation
+		uint16		orientation	New orientation angle, in degrees
 		uint8		health		The new health
 		
 	Input
@@ -204,6 +206,17 @@ Messages Payload Data
 		uint8		left		Boolean state value, also including the seven previous states
 		uint8		right		Boolean state value, also including the seven previous states
 		uint8		shooting	Boolean state value, also including the seven previous states
+		uint16		orientation	Current orientation angle of the player, in degrees
+
+	Collision
+    	Collision messages are sent for each pair of entities that collide. The order of the entityIds has
+        no significance. The impact point is the point where the two entities touch.
+
+		Type			Name 		Description
+		---------		----------	------------------------------------------------------------------------
+		uint32(id)[2]	entityIds 	The generational identifiers of the entities that collided
+		int16			x			The x position of the impact point
+		int16			y			The y position of the impact point
 	
 Connecting to the server
 	The client tries to establish a connection to the server by sending Connect messages to the server's
@@ -254,6 +267,9 @@ Disconnecting from the server
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	 9	  13-02-05	Axel		Added Rocket as entity type with id 4
+     8    13-02-04  Gidon		Renamed rot to orientation, added to Input message as well
+     							Initial Collision message specification
 	 7	  13-01-31	Axel		Clarified what messages are sent during the game state synchronization
 								phase
 								The Full message is now unreliable with new id 104

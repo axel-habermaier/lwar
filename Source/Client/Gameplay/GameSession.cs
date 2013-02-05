@@ -26,7 +26,7 @@ namespace Lwar.Client.Gameplay
 		///   The amount of time in milliseconds that the session should wait after a full game state synchronization before
 		///   entering the playing state.
 		/// </summary>
-		private const int EnterPlayingStateDelay = 500;
+		private const int EnterPlayingStateDelay = 250;
 
 		/// <summary>
 		///   The font that is used to draw the text of the loading screen.
@@ -133,7 +133,7 @@ namespace Lwar.Client.Gameplay
 		private void PlayerNameChanged(string name)
 		{
 			if (ServerProxy != null && (ServerProxy.IsConnected || ServerProxy.IsSyncing))
-				ServerProxy.Send(ChangePlayerName.Create(LocalPlayer.Id, name));
+				ServerProxy.Send(NameMessage.Create(LocalPlayer.Id, name));
 		}
 
 		/// <summary>
@@ -268,15 +268,18 @@ namespace Lwar.Client.Gameplay
 				return;
 			}
 
-			ServerProxy.Send(ChangePlayerName.Create(LocalPlayer.Id, Cvars.PlayerName.Value));
-			ServerProxy.Send(ChangePlayerState.Create(LocalPlayer.Id, EntityTemplate.Ship, 0));
+			ServerProxy.Send(NameMessage.Create(LocalPlayer.Id, Cvars.PlayerName.Value));
+			ServerProxy.Send(SelectionMessage.Create(LocalPlayer.Id, EntityTemplate.Ship, 0));
 
 			label.Text = "Awaiting game state...";
 			await context.WaitFor(() => ServerProxy.IsConnected || ServerProxy.IsDropped);
 
 			if (!ServerProxy.IsConnected)
 			{
-				NetworkLog.ClientError("Game state synchronization failed: The server did not respond.");
+				if (ServerProxy.IsFaulted)
+					NetworkLog.ClientError("An error occurred during the synchronization of the game state.");
+				else
+					NetworkLog.ClientError("Game state synchronization failed: The server did not respond.");
 
 				Commands.ShowConsole.Invoke(true);
 				_updateState.ChangeStateDelayed(Inactive);
@@ -346,15 +349,16 @@ namespace Lwar.Client.Gameplay
 			var label = new Label(LoadingFont) { Alignment = TextAlignment.Centered | TextAlignment.Middle };
 			_drawState.ChangeState(ctx => WaitingForServerDraw(ctx, label));
 
-			while (!context.IsCanceled && ServerProxy.IsLagging && !ServerProxy.IsDropped)
+			while (!context.IsCanceled && ServerProxy.IsLagging && !ServerProxy.IsDropped && !ServerProxy.IsFaulted)
 			{
-				label.Text = String.Format("Waiting for server ({0} seconds)...", (int)(ServerProxy.TimeToDrop / 1000));
+				label.Text = String.Format("Waiting for server ({0} seconds)...", (int)(ServerProxy.TimeToDrop / 1000) + 1);
 				await context.NextFrame();
 			}
 
-			if (ServerProxy.IsDropped)
+			if (ServerProxy.IsDropped || ServerProxy.IsFaulted)
 			{
-				NetworkLog.ClientError("The connection to the server has been dropped.");
+				if (ServerProxy.IsDropped)
+					NetworkLog.ClientError("The connection to the server has been dropped.");
 
 				Commands.ShowConsole.Invoke(true);
 				_updateState.ChangeStateDelayed(Inactive);

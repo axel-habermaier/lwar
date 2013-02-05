@@ -91,7 +91,7 @@ namespace Pegasus.Framework.Processes
 		///   Delays the execution of the process by the given amount of time.
 		/// </summary>
 		/// <param name="time">The amount of time in milliseconds that the process should wait before continuing.</param>
-		public Awaiter Delay(int time)
+		public Awaiter Delay(double time)
 		{
 			return WaitFor(DelayOperation.Create(time));
 		}

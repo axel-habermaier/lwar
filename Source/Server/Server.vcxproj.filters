@@ -23,6 +23,11 @@
     </ClCompile>
     <ClCompile Include="packet.c" />
     <ClCompile Include="slab.c" />
+    <ClCompile Include="player.c" />
+    <ClCompile Include="rules.c" />
+    <ClCompile Include="rules\rocket.c">
+      <Filter>Rules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="connection.h" />

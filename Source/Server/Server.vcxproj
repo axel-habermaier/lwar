@@ -181,10 +181,13 @@
     <ClCompile Include="message.c" />
     <ClCompile Include="packet.c" />
     <ClCompile Include="physics.c" />
+    <ClCompile Include="player.c" />
     <ClCompile Include="pq.c" />
     <ClCompile Include="protocol.c" />
+    <ClCompile Include="rules.c" />
     <ClCompile Include="rules\bullet.c" />
     <ClCompile Include="rules\planet.c" />
+    <ClCompile Include="rules\rocket.c" />
     <ClCompile Include="rules\ship.c" />
     <ClCompile Include="server.c" />
     <ClCompile Include="slab.c" />

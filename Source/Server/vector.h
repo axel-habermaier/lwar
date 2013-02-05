@@ -33,9 +33,20 @@ static inline Pos dist2(Vec v0, Vec v1) {
     return dot_sq(sub(v0,v1));
 }
 
-static inline Vec normalized(Vec v) {
+static inline Vec normalize(Vec v) {
     Pos s = len(v);
     Vec r = { v.x/s, v.y/s };
+    return r;
+}
+
+/* ( cos phi   - sin phi )  ( x )
+ * ( sin phi     cos phi )  ( y )
+ */
+static inline Vec rotate(Vec v, Pos phi) {
+    Pos _cos = cos(phi);
+    Pos _sin = sin(phi);
+    Vec r = { _cos * v.x - _sin * v.y,
+              _sin * v.x + _cos * v.y };
     return r;
 }
 
@@ -44,7 +55,17 @@ static inline Vec unit(Pos phi) {
     return v;
 }
 
-/* computes the projection and restriction of v onto b
+/* unit for phi + pi/2 */
+static inline Vec ortho(Pos phi) {
+    Vec v = { -sin(phi), cos(phi) };
+    return v;
+}
+
+static inline Pos arctan(Vec v) {
+    return atan2(v.y,v.x);
+}
+
+/* compute the projection and restriction of v onto b
  * b must be normalized
  * such that v = p + r and p || b
  */

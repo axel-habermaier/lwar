@@ -20,20 +20,9 @@ namespace Pegasus.Framework
 	public abstract class App : DisposableObject
 	{
 		/// <summary>
-		///   Maximum amount of time (in milliseconds) that might have elapsed between two frames. This is usually exceeded when
-		///   the process is paused by the debugger.
-		/// </summary>
-		private const double MaxElapsedTime = 500;
-
-		/// <summary>
 		///   The native platform library instance.
 		/// </summary>
 		private readonly NativeLibrary _nativeLibrary = new NativeLibrary();
-
-		/// <summary>
-		///   The accumulated elapsed time; an update and draw phase is started if the value exceeds the target elapsed time.
-		/// </summary>
-		private double _accumulatedElapsedTime;
 
 		/// <summary>
 		///   Indicates whether the application should continue to run.
@@ -76,12 +65,6 @@ namespace Pegasus.Framework
 		protected LogicalInputDevice LogicalInputDevice { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the number of updates that should be performed per second. For instance, a value of 60 causes the Update
-		///   function to be called exactly 60 times per second, provided that the device the application is run on is fast enough.
-		/// </summary>
-		public static int UpdatesPerSecond { get; protected set; }
-
-		/// <summary>
 		///   Gets the statistics manager that is used to measure performance values.
 		/// </summary>
 		protected Statistics Statistics { get; private set; }
@@ -118,49 +101,6 @@ namespace Pegasus.Framework
 		protected virtual Statistics CreateStatistics()
 		{
 			return new Statistics();
-		}
-
-		/// <summary>
-		///   Performs fixed time step updates.
-		/// </summary>
-		/// <param name="gameTime">The current game time.</param>
-		private void DoFixedTimeStepUpdates(GameTime gameTime)
-		{
-			gameTime.Update();
-
-			// Advance the accumulated elapsed time
-			_accumulatedElapsedTime += gameTime.RealElapsedTime;
-			var targetElapsedTime = 1000.0 / UpdatesPerSecond;
-
-			// If not enough time has elapsed to perform an update, let the process sleep 
-			if (_accumulatedElapsedTime < targetElapsedTime)
-			{
-				// Calculate the amount of milliseconds to sleep
-				var sleepTime = (int)System.Math.Ceiling(targetElapsedTime - _accumulatedElapsedTime);
-				Thread.Sleep(sleepTime);
-
-				// Once the process resumes, we're actually going to have to do something
-				DoFixedTimeStepUpdates(gameTime);
-				return;
-			}
-
-			// Do not allow any update to take longer than the maximum
-			if (_accumulatedElapsedTime > MaxElapsedTime)
-				_accumulatedElapsedTime = MaxElapsedTime;
-
-			var count = (int)(_accumulatedElapsedTime / targetElapsedTime);
-			if (count != 1)
-				Log.DebugInfo("Performing {0} update passes before drawing the next frame.", count);
-
-			// Perform as many full fixed length time steps as possible
-			while (_accumulatedElapsedTime >= targetElapsedTime)
-			{
-				_accumulatedElapsedTime -= targetElapsedTime;
-				gameTime.ElapsedTime = targetElapsedTime;
-				gameTime.Time += targetElapsedTime;
-
-				Update();
-			}
 		}
 
 		/// <summary>
@@ -215,9 +155,6 @@ namespace Pegasus.Framework
 					console.UserInput += interpreter.Execute;
 					Commands.Exit.Invoked += Exit;
 
-					// Keep track of the current game time
-					var gameTime = new GameTime();
-
 					// Run the application-specific initialization logic
 					Initialize();
 
@@ -233,8 +170,9 @@ namespace Pegasus.Framework
 						// Check if any command bindings have been triggered
 						bindings.InvokeTriggeredBindings();
 
-						// Update the application logic using a fixed time step model
-						DoFixedTimeStepUpdates(gameTime);
+						// Update the application logic 
+						Update();
+						Statistics.Update();
 
 						using (new Measurement(Statistics.GpuFrameTime))
 						using (new Measurement(Statistics.CpuFrameTime))
@@ -243,7 +181,7 @@ namespace Pegasus.Framework
 							Draw();
 
 							// Draw the console and the statistics on top of the current frame
-							console.Draw(gameTime);
+							console.Draw();
 							Statistics.Draw();
 						}
 

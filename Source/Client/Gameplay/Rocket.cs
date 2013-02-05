@@ -5,24 +5,24 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Graphics;
 
-	public class Ship : Entity<Ship>
+	public class Rocket : Entity<Rocket>
 	{
-		[Asset("Textures/Ship")]
+		[Asset("Textures/Rocket")]
 		public static Texture2D Texture;
 
 		public override void Draw()
 		{
 			var c = Health / 100.0f;
-			SpriteBatch.Draw(Texture, Position, Rotation, new Color(1.0f * c, 0.5f * c, 0.0f * c, 1.0f));
+			SpriteBatch.Draw(Texture, Position, Rotation, new Color(c, 0, 0, 1.0f));
 		}
 
-		public static Ship Create(Player player)
+		public static Rocket Create(Player player)
 		{
 			Assert.ArgumentNotNull(player, () => player);
 
-			var ship = GetInstance();
-			ship.Player = player;
-			return ship;
+			var rocket = GetInstance();
+			rocket.Player = player;
+			return rocket;
 		}
 	}
 }

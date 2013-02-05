@@ -13,9 +13,9 @@ namespace Pegasus.Framework.Network
 											   IAsyncOperation<TResult>
 	{
 		/// <summary>
-		///   The number of frames to wait before a timeout exception is thrown.
+		///   The amount of time in milliseconds to wait before a timeout exception is thrown.
 		/// </summary>
-		private int _frameCount;
+		private Time _time;
 
 		/// <summary>
 		///   Deserializes the operation's result value from an incoming packet.
@@ -38,7 +38,7 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		public void UpdateState()
 		{
-			if (_frameCount == 0)
+			if (_time.Seconds >= 0)
 				Exception = new TimeoutException("The asynchronous call of the service operation timed out.");
 		}
 
@@ -88,7 +88,8 @@ namespace Pegasus.Framework.Network
 			var invocation = GetInstance();
 			invocation._resultDeserializer = resultDeserializer;
 			invocation.IsCompleted = false;
-			invocation._frameCount = 10000 * App.UpdatesPerSecond / 1000;
+			invocation._time = new Time();
+			invocation._time.Offset = -invocation._time.Seconds - 10;
 			invocation.Exception = null;
 			invocation.Result = default(TResult);
 			return invocation;

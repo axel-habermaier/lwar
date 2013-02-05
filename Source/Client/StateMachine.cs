@@ -73,8 +73,12 @@ namespace Lwar.Client
 			{
 				if (_nextState != null)
 				{
-					ChangeState(_nextState);
+					// We have to reset _nextState before calling ChangeState, otherwise we'd overwrite the next state
+					// change if the next state changes again immediately
+					var nextState = _nextState;
 					_nextState = null;
+
+					ChangeState(nextState);
 				}
 
 				await context.NextFrame();

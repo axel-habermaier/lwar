@@ -11,11 +11,6 @@ namespace Lwar.Client.Gameplay
 	public class EntityList : DisposableObject
 	{
 		/// <summary>
-		///   The entities that have been added during the current frame.
-		/// </summary>
-		private readonly List<IEntity> _added = new List<IEntity>(8);
-
-		/// <summary>
 		///   The list of all entities in the level.
 		/// </summary>
 		private readonly List<IEntity> _entities = new List<IEntity>(1024);
@@ -26,11 +21,6 @@ namespace Lwar.Client.Gameplay
 		///   that the correct version of the entity is used.
 		/// </summary>
 		private readonly IEntity[] _entitiesById = new IEntity[UInt16.MaxValue];
-
-		/// <summary>
-		///   The entities that have been removed during the current frame.
-		/// </summary>
-		private readonly List<IEntity> _removed = new List<IEntity>(8);
 
 		/// <summary>
 		///   The game session the entities belong to.
@@ -55,21 +45,10 @@ namespace Lwar.Client.Gameplay
 		public void Add(IEntity entity)
 		{
 			Assert.ArgumentNotNull(entity, () => entity);
-			Assert.ArgumentSatisfies(!_added.Contains(entity), () => entity, "The entity has already been added during this frame.");
 			Assert.ArgumentSatisfies(!_entities.Contains(entity), () => entity, "The entity is already in the level.");
-			Assert.ArgumentSatisfies(!_removed.Contains(entity), () => entity, "The entity has just been removed during this frame.");
 
-			// Do not accept any new entities when the entity list is being disposed
-			if (IsDisposing)
-			{
-				entity.Dispose();
-				return;
-			}
-
-			_added.Add(entity);
+			_entities.Add(entity);
 			_entitiesById[entity.Id.Id] = entity;
-
-			entity.Id = entity.Id.IncreaseGenerationCount();
 			entity.Added(_session);
 		}
 
@@ -89,13 +68,11 @@ namespace Lwar.Client.Gameplay
 		public void Remove(IEntity entity)
 		{
 			Assert.ArgumentNotNull(entity, () => entity);
-			Assert.ArgumentSatisfies(!_added.Contains(entity), () => entity, "The entity has just been added during this frame.");
 			Assert.ArgumentSatisfies(_entities.Contains(entity), () => entity, "The entity is not in the level.");
-			Assert.ArgumentSatisfies(!_removed.Contains(entity), () => entity,
-									 "The entity has already been removed during this frame.");
 
-			_removed.Add(entity);
 			entity.Removed();
+			entity.Dispose();
+			_entities.Remove(entity);
 		}
 
 		/// <summary>
@@ -133,19 +110,6 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public void Update()
 		{
-			foreach (var entity in _removed)
-			{
-				_entities.Remove(entity);
-				_entitiesById[entity.Id.Id] = null;
-
-				entity.Dispose();
-			}
-
-			_entities.AddRange(_added);
-
-			_removed.Clear();
-			_added.Clear();
-
 			foreach (var entity in _entities)
 				entity.Update();
 		}
@@ -164,16 +128,8 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			// Remove all entities
-			foreach (var entity in _entities)
-				Remove(entity);
-
-			// Update the entity list; this guarantees that all entities are removed normally without introducing a special case
-			Update();
-
-			Assert.That(_entities.Count == 0, "There are some active entities left.");
-			Assert.That(_added.Count == 0, "There are some entities left that should be added.");
-			Assert.That(_removed.Count == 0, "There are some entities left that should be removed.");
+			_entities.SafeDisposeAll();
+			_entities.Clear();
 		}
 	}
 }
