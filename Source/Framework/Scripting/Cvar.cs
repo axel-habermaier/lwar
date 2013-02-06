@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework.Scripting
 {
-	using Platform;
-
 	/// <summary>
 	///   Represents a configurable value.
 	/// </summary>
@@ -54,11 +52,15 @@ namespace Pegasus.Framework.Scripting
 					return;
 				}
 
+				if (Changing != null)
+					Changing(value);
+
+				var oldValue = _value;
 				_value = value;
 				Log.Info("'{0}' is now '{1}'.", Name, value);
 
 				if (Changed != null)
-					Changed(value);
+					Changed(oldValue);
 			}
 		}
 
@@ -91,7 +93,12 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Raised when the value of the cvar has changed.
+		///   Raised when the value of the cvar is about to change, passing the new value to the event handlers.
+		/// </summary>
+		public event Action<T> Changing;
+
+		/// <summary>
+		///   Raised when the value of the cvar has changed, passing the old value to the event handlers.
 		/// </summary>
 		public event Action<T> Changed;
 

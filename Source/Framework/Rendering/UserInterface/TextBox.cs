@@ -2,20 +2,19 @@
 
 namespace Pegasus.Framework.Rendering.UserInterface
 {
+	using Math;
 	using Platform.Graphics;
 	using Platform.Input;
-	using Math;
-	using Rendering;
 
 	/// <summary>
 	///   Control for text input.
 	/// </summary>
-	public sealed class TextBox
+	public sealed class TextBox : DisposableObject
 	{
 		/// <summary>
 		///   The caret of the text box.
 		/// </summary>
-		private Caret _caret;
+		private readonly Caret _caret = new Caret();
 
 		/// <summary>
 		///   The layout of the text box's text.
@@ -146,6 +145,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			var position = _layout.ComputeCaretPosition(_caret.Position);
 			_caret.Draw(spriteBatch, _layout.Font, position);
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_caret.SafeDispose();
 		}
 	}
 }

@@ -36,5 +36,11 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		public static readonly Cvar<bool> NetworkDebugging = new Cvar<bool>("net_debug", PlatformInfo.IsDebug,
 																			"If true, prints out network debugging information.");
+
+		/// <summary>
+		///   The scaling factor that is applied to all timing values.
+		/// </summary>
+		public static readonly Cvar<double> TimeScaleFactor = new Cvar<double>("time_scale", 1.0,
+																			   "The scaling factor that is applied to all timing values.");
 	}
 }

@@ -109,21 +109,21 @@ namespace Lwar.Client.Network
 			var token = _cancellation.Token;
 			_task = Task.Factory.StartNew(() =>
 				{
-					var time = new Time();
-					time.Offset = -time.Seconds;
-
-					while (!token.IsCancellationRequested)
+					using (var clock = Clock.Create())
 					{
-						var updateStart = time.Milliseconds;
-						if (NativeMethods.Update((ulong)time.Milliseconds, true) < 0)
+						while (!token.IsCancellationRequested)
 						{
-							_logs.Enqueue(() => Log.Error("Server stopped after error."));
-							break;
-						}
+							var updateStart = clock.Milliseconds;
+							if (NativeMethods.Update((ulong)clock.Milliseconds, true) < 0)
+							{
+								_logs.Enqueue(() => Log.Error("Server stopped after error."));
+								break;
+							}
 
-						var timeTillNextUpdate = (1000 / UpdateFrequency) - (time.Milliseconds - updateStart);
-						if (timeTillNextUpdate > 0)
-							Thread.Sleep((int)timeTillNextUpdate);
+							var timeTillNextUpdate = (1000 / UpdateFrequency) - (clock.Milliseconds - updateStart);
+							if (timeTillNextUpdate > 0)
+								Thread.Sleep((int)timeTillNextUpdate);
+						}
 					}
 				}, token);
 		}

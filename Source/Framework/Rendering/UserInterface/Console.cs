@@ -144,6 +144,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_input.Dispose();
 
 			_spriteBatch.SafeDispose();
+			_prompt.SafeDispose();
 		}
 
 		/// <summary>

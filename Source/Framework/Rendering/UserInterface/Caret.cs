@@ -11,7 +11,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	/// <summary>
 	///   An indicator that shows the current insertion and deletion position within an editable text.
 	/// </summary>
-	internal struct Caret
+	internal class Caret : DisposableObject
 	{
 		/// <summary>
 		///   The frequency of the caret (in times per second).
@@ -29,6 +29,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public Action<string> TextChanged;
 
 		/// <summary>
+		///   The clock that is used to determine whether the caret should be visible.
+		/// </summary>
+		private Clock _clock = Clock.Create();
+
+		/// <summary>
 		///   The logical position of the caret, corresponding to an index of a character of the editable text.
 		/// </summary>
 		private int _position;
@@ -37,11 +42,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   The text that can be edited with the caret.
 		/// </summary>
 		private string _text;
-
-		/// <summary>
-		///   The time used to determine whether the caret should be visible.
-		/// </summary>
-		private Time _time;
 
 		/// <summary>
 		///   Gets or sets the text that can be edited with the caret. If the text is changed, the caret
@@ -71,7 +71,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			{
 				_position = Math.Min(_text.Length, value);
 				_position = Math.Max(0, _position);
-				_time.Offset -= _time.Seconds;
+
+				_clock.SafeDispose();
+				_clock = Clock.Create();
 			}
 		}
 
@@ -175,7 +177,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public void Draw(SpriteBatch spriteBatch, Font font, Vector2i position)
 		{
 			// Show and hide the caret depending on the frequency and offset
-			if (((int)Math.Round(_time.Seconds * Frequency)) % 2 != 0)
+			if (((int)Math.Round(_clock.Seconds * Frequency)) % 2 != 0)
 				return;
 
 			TextRenderer.Draw(spriteBatch, font, CaretVisual, Color.White, position);
@@ -189,6 +191,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public int GetWidth(Font font)
 		{
 			return font.MeasureWidth(CaretVisual);
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_clock.SafeDispose();
 		}
 	}
 }

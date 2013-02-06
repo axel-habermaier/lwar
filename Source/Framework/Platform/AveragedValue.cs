@@ -50,16 +50,11 @@ namespace Pegasus.Framework.Platform
 		private double _min;
 
 		/// <summary>
-		///   Determines the current time.
-		/// </summary>
-		private Time _time;
-
-		/// <summary>
 		///   Invoked when the measurement should begin.
 		/// </summary>
 		public void Begin()
 		{
-			_beginTime = _time.Milliseconds;
+			_beginTime = Clock.SystemTime;
 		}
 
 		/// <summary>
@@ -67,7 +62,7 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public void End()
 		{
-			AddMeasurement(_time.Milliseconds - _beginTime);
+			AddMeasurement(1000 * (Clock.SystemTime - _beginTime));
 		}
 
 		/// <summary>

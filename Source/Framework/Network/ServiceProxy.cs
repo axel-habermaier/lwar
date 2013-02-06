@@ -192,9 +192,15 @@ namespace Pegasus.Framework.Network
 		/// <param name="operationIdentifier">The unique identifier of the service operation.</param>
 		/// <param name="argumentSerializer">Serializes the operation's arguments into the packet.</param>
 		/// <param name="resultDeserializer">Deserializes the operation's result value from the packet.</param>
-		protected async Task<TResult> InvokeAsync<TResult>(ProcessContext context, int operationIdentifier,
+		/// <param name="timeout">
+		///   The amount of time in seconds to wait for the completion of the service operation before a
+		///   timeout exception should be thrown.
+		/// </param>
+		protected async Task<TResult> InvokeAsync<TResult>(ProcessContext context,
+														   int operationIdentifier,
 														   Action<BufferWriter> argumentSerializer,
-														   Func<BufferReader, TResult> resultDeserializer)
+														   Func<BufferReader, TResult> resultDeserializer,
+														   double timeout)
 		{
 			Assert.ArgumentNotNull(argumentSerializer, () => argumentSerializer);
 			Assert.ArgumentNotNull(resultDeserializer, () => resultDeserializer);
@@ -208,7 +214,7 @@ namespace Pegasus.Framework.Network
 			packet.Writer.WriteByte((byte)operationIdentifier);
 			packet.Writer.WriteUInt32(requestIdentifier);
 
-			var operation = ServiceOperation<TResult>.Create(resultDeserializer);
+			var operation = ServiceOperation<TResult>.Create(resultDeserializer, timeout);
 			try
 			{
 				_invocations.Add(_invokeCount, operation);
@@ -229,7 +235,14 @@ namespace Pegasus.Framework.Network
 		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
 		/// <param name="operationIdentifier">The unique identifier of the service operation.</param>
 		/// <param name="argumentSerializer">Serializes the operation's arguments into the packet.</param>
-		protected async Task InvokeAsync(ProcessContext context, int operationIdentifier, Action<BufferWriter> argumentSerializer)
+		/// <param name="timeout">
+		///   The amount of time in seconds to wait for the completion of the service operation before a
+		///   timeout exception should be thrown.
+		/// </param>
+		protected async Task InvokeAsync(ProcessContext context,
+										 int operationIdentifier,
+										 Action<BufferWriter> argumentSerializer,
+										 double timeout)
 		{
 			Assert.ArgumentNotNull(argumentSerializer, () => argumentSerializer);
 			Assert.ArgumentInRange(operationIdentifier, () => operationIdentifier, 0, Byte.MaxValue);
@@ -242,7 +255,7 @@ namespace Pegasus.Framework.Network
 			packet.Writer.WriteByte((byte)operationIdentifier);
 			packet.Writer.WriteUInt32(requestIdentifier);
 
-			var operation = ServiceOperation.Create();
+			var operation = ServiceOperation.Create(timeout);
 			try
 			{
 				_invocations.Add(_invokeCount, operation);

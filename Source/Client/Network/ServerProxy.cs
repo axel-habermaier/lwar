@@ -43,6 +43,11 @@ namespace Lwar.Client.Network
 		public const int LaggingTimeout = 500;
 
 		/// <summary>
+		///   Provides the time that is used to check whether a connection is lagging or dropped.
+		/// </summary>
+		private readonly Clock _clock = Clock.Create();
+
+		/// <summary>
 		///   The delivery manager that is used to enforce the delivery guarantees of all incoming and outgoing messages.
 		/// </summary>
 		private readonly DeliveryManager _deliveryManager = new DeliveryManager();
@@ -94,11 +99,6 @@ namespace Lwar.Client.Network
 		private State _state = State.Disconnected;
 
 		/// <summary>
-		///   Provides the time that is used to check whether a connection is lagging or dropped.
-		/// </summary>
-		private Time _time;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="packetFactory">The packet factory that should be used to create incoming and outgoing packets.</param>
@@ -113,7 +113,6 @@ namespace Lwar.Client.Network
 
 			_packetFactory = packetFactory;
 			_socket = new UdpSocket(_packetFactory);
-			_time.Offset = -_time.Seconds;
 			_messageQueue = new MessageQueue(packetFactory, _deliveryManager);
 			_serverEndPoint = serverEndPoint;
 			_receiveProcess = scheduler.CreateProcess(ReceiveAsync);
@@ -127,7 +126,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		public double TimeToDrop
 		{
-			get { return DroppedTimeout - (_time.Milliseconds - _lastPacketTimestamp); }
+			get { return DroppedTimeout - (_clock.Milliseconds - _lastPacketTimestamp); }
 		}
 
 		/// <summary>
@@ -152,7 +151,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		public bool IsLagging
 		{
-			get { return _time.Milliseconds - _lastPacketTimestamp > LaggingTimeout; }
+			get { return _clock.Milliseconds - _lastPacketTimestamp > LaggingTimeout; }
 		}
 
 		/// <summary>
@@ -317,7 +316,7 @@ namespace Lwar.Client.Network
 			if (header == null)
 				return;
 
-			_lastPacketTimestamp = _time.Milliseconds;
+			_lastPacketTimestamp = _clock.Milliseconds;
 			_deliveryManager.UpdateLastAckedSequenceNumber(header.Value.Acknowledgement);
 			var allowUnreliableDelivery = _deliveryManager.AllowUnreliableDelivery(header.Value.Timestamp);
 
@@ -484,7 +483,7 @@ namespace Lwar.Client.Network
 					continue;
 				}
 
-				var delta = _time.Milliseconds - _lastPacketTimestamp;
+				var delta = _clock.Milliseconds - _lastPacketTimestamp;
 				if (delta > DroppedTimeout)
 					_state = State.Dropped;
 
@@ -501,6 +500,8 @@ namespace Lwar.Client.Network
 			_receiveProcess.SafeDispose();
 			_observerProcess.SafeDispose();
 			_messageQueue.SafeDispose();
+			_deliveryManager.SafeDispose();
+			_clock.SafeDispose();
 			_socket.SafeDispose();
 
 			if (_state == State.Connected || _state == State.Syncing)

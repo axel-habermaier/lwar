@@ -10,9 +10,15 @@ namespace Pegasus.Framework.Network
 	internal class ServiceOperation : PooledObject<ServiceOperation>, IServiceOperation
 	{
 		/// <summary>
-		///   The amount of time in milliseconds to wait before a timeout exception is thrown.
+		///   The clock that provides time measurements.
 		/// </summary>
-		private Time _time;
+		private Clock _clock;
+
+		/// <summary>
+		///   The amount of time in seconds to wait for the completion of the service operation before a timeout exception is
+		///   thrown.
+		/// </summary>
+		private double _timeout;
 
 		/// <summary>
 		///   Gets the exception that has been raised during the execution of the operation by the host.
@@ -30,7 +36,7 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		public void UpdateState()
 		{
-			if (_time.Seconds >= 0)
+			if (_clock.Seconds >= _timeout)
 				Exception = new TimeoutException("The asynchronous call of the service operation timed out.");
 		}
 
@@ -68,14 +74,26 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
-		public static ServiceOperation Create()
+		/// <param name="timeout">
+		///   The amount of time in seconds to wait for the completion of the service operation before a
+		///   timeout exception should be thrown.
+		/// </param>
+		public static ServiceOperation Create(double timeout)
 		{
 			var invocation = GetInstance();
 			invocation.IsCompleted = false;
-			invocation._time = new Time();
-			invocation._time.Offset = -invocation._time.Seconds - 10;
+			invocation._clock = Clock.Create();
+			invocation._timeout = timeout;
 			invocation.Exception = null;
 			return invocation;
+		}
+
+		/// <summary>
+		///   Invoked when the pooled instance is returned to the pool.
+		/// </summary>
+		protected override void OnReturning()
+		{
+			_clock.SafeDispose();
 		}
 	}
 }

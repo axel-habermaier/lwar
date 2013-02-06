@@ -10,9 +10,14 @@ namespace Pegasus.Framework.Processes
 	internal class DelayOperation : PooledObject<DelayOperation>, IAsyncOperation
 	{
 		/// <summary>
+		///   The clock that provides time measurements.
+		/// </summary>
+		private Clock _clock;
+
+		/// <summary>
 		///   The amount of time in milliseconds that the operation waits before terminating.
 		/// </summary>
-		private Time _time;
+		private double _time;
 
 		/// <summary>
 		///   Gets the exception that has been thrown during the execution of the operation.
@@ -33,7 +38,7 @@ namespace Pegasus.Framework.Processes
 		/// </summary>
 		public void UpdateState()
 		{
-			IsCompleted = _time.Seconds >= 0;
+			IsCompleted = _clock.Milliseconds >= _time;
 		}
 
 		/// <summary>
@@ -43,11 +48,19 @@ namespace Pegasus.Framework.Processes
 		public static DelayOperation Create(double time)
 		{
 			var operation = GetInstance();
-			operation._time = new Time();
-			operation._time.Offset = -operation._time.Seconds - time / 1000;
+			operation._clock = Clock.Create();
+			operation._time = time;
 			operation.SetDescription(String.Format("Delaying process for {0}ms.", time));
 			operation.IsCompleted = false;
 			return operation;
+		}
+
+		/// <summary>
+		///   Invoked when the pooled instance is returned to the pool.
+		/// </summary>
+		protected override void OnReturning()
+		{
+			_clock.SafeDispose();
 		}
 	}
 }

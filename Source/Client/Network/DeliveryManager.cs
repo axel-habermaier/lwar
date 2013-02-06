@@ -2,17 +2,18 @@
 
 namespace Lwar.Client.Network
 {
+	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
 	/// <summary>
 	///   Manages the delivery guarantees of all incoming and outgoing messages.
 	/// </summary>
-	public class DeliveryManager
+	public class DeliveryManager : DisposableObject
 	{
 		/// <summary>
 		///   Determines the current time for the creation of the unreliable message timestamps.
 		/// </summary>
-		private readonly Time _time;
+		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
 		///   The sequence number of the last reliable message that has been assigned and acknowledged.
@@ -35,20 +36,12 @@ namespace Lwar.Client.Network
 		private uint _lastReceivedTimestamp;
 
 		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		public DeliveryManager()
-		{
-			_time.Offset = -_time.Seconds;
-		}
-
-		/// <summary>
 		///   Writes the header for a packet.
 		/// </summary>
 		/// <param name="buffer">The buffer the header should be written into.</param>
 		public void WriteHeader(BufferWriter buffer)
 		{
-			var header = new Header(_lastReceivedSequenceNumber, (uint)_time.Milliseconds);
+			var header = new Header(_lastReceivedSequenceNumber, (uint)_clock.Milliseconds);
 			header.Write(buffer);
 		}
 
@@ -110,6 +103,14 @@ namespace Lwar.Client.Network
 		public void AssignSequenceNumber(IReliableMessage message)
 		{
 			message.SequenceNumber = ++_lastAssignedSequenceNumber;
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_clock.SafeDispose();
 		}
 	}
 }

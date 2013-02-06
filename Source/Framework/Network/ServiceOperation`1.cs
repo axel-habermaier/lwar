@@ -13,14 +13,20 @@ namespace Pegasus.Framework.Network
 											   IAsyncOperation<TResult>
 	{
 		/// <summary>
-		///   The amount of time in milliseconds to wait before a timeout exception is thrown.
+		///   The clock that provides time measurements.
 		/// </summary>
-		private Time _time;
+		private Clock _clock;
 
 		/// <summary>
 		///   Deserializes the operation's result value from an incoming packet.
 		/// </summary>
 		private Func<BufferReader, TResult> _resultDeserializer;
+
+		/// <summary>
+		///   The amount of time in seconds to wait for the completion of the service operation before a timeout exception is
+		///   thrown.
+		/// </summary>
+		private double _timeout;
 
 		/// <summary>
 		///   Gets the result produced by the asynchronous operation.
@@ -38,7 +44,7 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		public void UpdateState()
 		{
-			if (_time.Seconds >= 0)
+			if (_clock.Seconds >= _timeout)
 				Exception = new TimeoutException("The asynchronous call of the service operation timed out.");
 		}
 
@@ -83,16 +89,28 @@ namespace Pegasus.Framework.Network
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="resultDeserializer">Deserializes the operation's result value from an incoming packet.</param>
-		public static ServiceOperation<TResult> Create(Func<BufferReader, TResult> resultDeserializer)
+		/// <param name="timeout">
+		///   The amount of time in seconds to wait for the completion of the service operation before a
+		///   timeout exception should be thrown.
+		/// </param>
+		public static ServiceOperation<TResult> Create(Func<BufferReader, TResult> resultDeserializer, double timeout)
 		{
 			var invocation = GetInstance();
 			invocation._resultDeserializer = resultDeserializer;
 			invocation.IsCompleted = false;
-			invocation._time = new Time();
-			invocation._time.Offset = -invocation._time.Seconds - 10;
+			invocation._clock = Clock.Create();
+			invocation._timeout = timeout;
 			invocation.Exception = null;
 			invocation.Result = default(TResult);
 			return invocation;
+		}
+
+		/// <summary>
+		///   Invoked when the pooled instance is returned to the pool.
+		/// </summary>
+		protected override void OnReturning()
+		{
+			_clock.SafeDispose();
 		}
 	}
 }
