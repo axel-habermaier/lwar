@@ -339,7 +339,7 @@ namespace Lwar.Client.Gameplay
 				if (LocalPlayer.Ship != null)
 				{
 					var position = LocalPlayer.Ship.Position;
-					Camera.View = Matrix.Translation(-position.X, -position.Y, 0);
+					Camera.Position = -position;
 				}
 
 				if (ServerProxy.IsLagging)

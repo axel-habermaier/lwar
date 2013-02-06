@@ -129,12 +129,19 @@ namespace Lwar.Client.Gameplay
 					continue;
 				}
 
-				// Calculate the orientation
-				var ship = _session.LocalPlayer.Ship.Position;
+				// The mouse position in window coordinates
 				var mousePos = _session.InputDevice.Mouse.Position;
-				var target = new Vector2(mousePos.X, mousePos.Y);
 
-				// TODO: Take camera transform into account
+				// Move the origin of the mouse position to the center of the window
+				var windowSize = _session.Window.Size;
+				mousePos = new Vector2i(mousePos.X - windowSize.Width / 2, mousePos.Y - windowSize.Height / 2);
+
+				// Now move the mouse position to camera coordiantes
+				var target = new Vector2(mousePos.X, mousePos.Y) - _session.Camera.Position;
+
+				// The ship position in camera coordinates
+				var ship = _session.LocalPlayer.Ship.Position;
+
 				// Don't update if ship and target are too close
 				if ((target - ship).Length > MinimumOrientationUpdateDistance)
 				{

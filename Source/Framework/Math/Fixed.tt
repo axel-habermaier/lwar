@@ -234,6 +234,15 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Negates the fixed-point value.
+		/// </summary>
+		/// <param name="value">The value that should be negated.</param>
+		public static Fixed<#= fractionalBits #> operator -(Fixed<#= fractionalBits #> value)
+		{
+			return new Fixed<#= fractionalBits #> { _rawValue = -value._rawValue };
+		}
+
+		/// <summary>
 		///   Multiplies the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>

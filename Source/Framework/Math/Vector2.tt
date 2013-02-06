@@ -147,6 +147,15 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Negates the components of a vector.
+		/// </summary>
+		/// <param name="vector">The vector whose components should be negated.</param>
+		public static Vector2<#= info.Name #> operator -(Vector2<#= info.Name #> vector)
+		{
+			return new Vector2<#= info.Name #>(-vector.X, -vector.Y);
+		}
+
+		/// <summary>
 		///   Performs a vector subtraction.
 		/// </summary>
 		/// <param name="left">The first vector.</param>

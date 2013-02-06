@@ -11,6 +11,24 @@ namespace Lwar.Client.Gameplay
 	public class Camera : ICamera
 	{
 		/// <summary>
+		///   The position of the camera.
+		/// </summary>
+		private Vector2 _position;
+
+		/// <summary>
+		///   Gets or sets the position of the camera.
+		/// </summary>
+		public Vector2 Position
+		{
+			get { return _position; }
+			set
+			{
+				_position = value;
+				View = Matrix.Translation(value.X, value.Y, 0);
+			}
+		}
+
+		/// <summary>
 		///   Gets or sets the camera's projection matrix.
 		/// </summary>
 		public Matrix Projection { get; set; }

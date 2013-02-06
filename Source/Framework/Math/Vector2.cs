@@ -139,6 +139,15 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Negates the components of a vector.
+		/// </summary>
+		/// <param name="vector">The vector whose components should be negated.</param>
+		public static Vector2 operator -(Vector2 vector)
+		{
+			return new Vector2(-vector.X, -vector.Y);
+		}
+
+		/// <summary>
 		///   Performs a vector subtraction.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
@@ -307,6 +316,15 @@ namespace Pegasus.Framework.Math
 		public static Vector2i operator +(Vector2i left, Vector2i right)
 		{
 			return new Vector2i(left.X + right.X, left.Y + right.Y);
+		}
+
+		/// <summary>
+		///   Negates the components of a vector.
+		/// </summary>
+		/// <param name="vector">The vector whose components should be negated.</param>
+		public static Vector2i operator -(Vector2i vector)
+		{
+			return new Vector2i(-vector.X, -vector.Y);
 		}
 
 		/// <summary>
@@ -481,6 +499,15 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Negates the components of a vector.
+		/// </summary>
+		/// <param name="vector">The vector whose components should be negated.</param>
+		public static Vector2f8 operator -(Vector2f8 vector)
+		{
+			return new Vector2f8(-vector.X, -vector.Y);
+		}
+
+		/// <summary>
 		///   Performs a vector subtraction.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
@@ -649,6 +676,15 @@ namespace Pegasus.Framework.Math
 		public static Vector2f16 operator +(Vector2f16 left, Vector2f16 right)
 		{
 			return new Vector2f16(left.X + right.X, left.Y + right.Y);
+		}
+
+		/// <summary>
+		///   Negates the components of a vector.
+		/// </summary>
+		/// <param name="vector">The vector whose components should be negated.</param>
+		public static Vector2f16 operator -(Vector2f16 vector)
+		{
+			return new Vector2f16(-vector.X, -vector.Y);
 		}
 
 		/// <summary>

@@ -230,6 +230,15 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Negates the fixed-point value.
+		/// </summary>
+		/// <param name="value">The value that should be negated.</param>
+		public static Fixed8 operator -(Fixed8 value)
+		{
+			return new Fixed8 { _rawValue = -value._rawValue };
+		}
+
+		/// <summary>
 		///   Multiplies the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
@@ -612,6 +621,15 @@ namespace Pegasus.Framework.Math
 		public static Fixed16 operator -(Fixed16 left, Fixed16 right)
 		{
 			return new Fixed16 { _rawValue = left._rawValue - right._rawValue };
+		}
+
+		/// <summary>
+		///   Negates the fixed-point value.
+		/// </summary>
+		/// <param name="value">The value that should be negated.</param>
+		public static Fixed16 operator -(Fixed16 value)
+		{
+			return new Fixed16 { _rawValue = -value._rawValue };
 		}
 
 		/// <summary>
