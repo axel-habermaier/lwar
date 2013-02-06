@@ -212,10 +212,10 @@ static void physics_move(Time d) {
         e->a = _0; /* reset acceleration */
         e->r =  0; /* and rotation       */
 
-        if(e->x.x < 0) e->x.x += 1000;
+       /* if(e->x.x < 0) e->x.x += 1000;
         if(e->x.x > 1000) e->x.x -= 1000;
         if(e->x.y < 0) e->x.y += 800;
-        if(e->x.y > 800) e->x.y -= 800;
+        if(e->x.y > 800) e->x.y -= 800;*/
 
     }
 }
