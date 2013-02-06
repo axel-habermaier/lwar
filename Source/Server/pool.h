@@ -15,6 +15,7 @@ void  pool_init(Pool *s, void *p, size_t n, size_t size,
                 void (*ctor)(size_t, void *),
                 void (*dtor)(size_t, void *));
 void *pool_alloc(Pool *s);
+void *pool_alloc_check(Pool *s, size_t size);
 void  pool_free(Pool *s, void *p);
 void  pool_free_pred(Pool *s, int (*pred)(size_t, void *));
 
@@ -24,7 +25,7 @@ void *pool_get(Pool *s, size_t i);
 void *pool_remove(Pool *s, size_t i);
 
 #define pool_static(s,p,c,d) pool_init(s, p, sizeof(p)/sizeof(*p), sizeof(*p), c, d);
-#define pool_new(s,t)        ((t*)pool_alloc(s))
+#define pool_new(s,t)        ((t*)pool_alloc_check(s,sizeof(t)))
 #define pool_at(s,t,i)       ((i) < (s)->n ? (t*)((s)->mem + (s)->size * (i)) : 0)
 
 #define pool_nused(s) ((s)->i)

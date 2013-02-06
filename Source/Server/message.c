@@ -136,7 +136,8 @@ size_t message_pack(char *s, Message *m, size_t seqno) {
         i += uint8_pack(s+i, m->input.down);
         i += uint8_pack(s+i, m->input.left);
         i += uint8_pack(s+i, m->input.right);
-        i += uint8_pack(s+i, m->input.shooting);
+        i += uint8_pack(s+i, m->input.fire1);
+        // i += uint8_pack(s+i, m->input.fire2);
         i += uint16_pack(s+i, m->input.angle);
         break;
     case MESSAGE_COLLISION:
@@ -211,7 +212,9 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
         i += uint8_unpack(s+i, &m->input.down);
         i += uint8_unpack(s+i, &m->input.left);
         i += uint8_unpack(s+i, &m->input.right);
-        i += uint8_unpack(s+i, &m->input.shooting);
+        i += uint8_unpack(s+i, &m->input.fire1);
+        // i += uint8_unpack(s+i, &m->input.fire2);
+        m->input.fire2 = 0;
         i += uint16_unpack(s+i, &m->input.angle);
         break;
     case MESSAGE_COLLISION:
@@ -242,13 +245,13 @@ void message_debug(Message *m, const char *s) {
         log_debug("%schat %d: %.*s", s, m->chat.player_id.n, m->chat.msg.n, m->chat.msg.s);
         break;
     case MESSAGE_ADD:
-        log_debug("%sadd %d, player %d, type %d", s, m->add.entity_id.n, m->add.player_id.n, m->add.type_id);
+        log_debug("%sadd %d: player %d, type %d", s, m->add.entity_id.n, m->add.player_id.n, m->add.type_id);
         break;
     case MESSAGE_REMOVE:
         log_debug("%srem %d", s, m->remove.entity_id.n);
         break;
     case MESSAGE_SELECTION:
-        log_debug("%sselect %d", s, m->selection.player_id.n);
+        log_debug("%sselect %d: ship %d, weapon %d", s, m->selection.player_id.n, m->selection.ship_type, m->selection.weapon_type);
         break;
     case MESSAGE_NAME:
         log_debug("%sname %d: %.*s", s, m->name.player_id.n, m->name.nick.n, m->name.nick.s);
@@ -268,6 +271,6 @@ void message_debug(Message *m, const char *s) {
     case MESSAGE_INPUT:
         log_debug("%sinput %d", s, m->input.player_id.n);
     case MESSAGE_COLLISION:
-        log_debug("%scollision %d, %d", s, m->collision.entity_id[0], m->collision.entity_id[1]);
+        log_debug("%scollision %d, %d", s, m->collision.entity_id[0].n, m->collision.entity_id[1].n);
     }
 }

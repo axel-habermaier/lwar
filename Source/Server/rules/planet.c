@@ -13,15 +13,14 @@ static void hit(Entity *e0, Entity *e1, Vec v0, Vec v1);
 static const Pos gravity_factor = 10000; // 0.04;
 static EntityType _planet = {
     ENTITY_TYPE_PLANET,     /* type id */
+    gravity,                /* activation callback */
+    hit,                    /* collision callback  */
     128,                    /* radius  */
     200,                    /* mass    */
     {0,0},                  /* acceleration */
     {0,0},                  /* brake   */
     0,                      /* turn speed   */
     1000,                   /* max health   */
-    0,                      /* activation I */
-    gravity,                /* activation callback */
-    hit,                    /* collision callback  */
 };
 
 EntityType *type_planet = &_planet;

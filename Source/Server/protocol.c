@@ -17,6 +17,7 @@
 
 enum {
     UPDATE_INTERVAL = 30,
+    RETRANSMIT_INTERVAL = 2*UPDATE_INTERVAL,
 };
 
 static void protocol_send_full(Address *adr, size_t seqno);
@@ -24,7 +25,7 @@ static void protocol_send_gamestate(Client *c);
 static void protocol_timed_out(Client *c);
 
 static struct {
-    size_t nsend,nrecv;
+    size_t nsend,nresend,nrecv;
 } stats;
 
 typedef struct QueuedMessage QueuedMessage;
@@ -33,10 +34,11 @@ typedef struct PerClient     PerClient;
 struct PerClient {
     size_t seqno;
     size_t tries;
+    Clock last_tx_time;
 };
 
 struct QueuedMessage {
-    List l;
+    List _l;
     unsigned int dest;
     /* sequence numbers for each client */
     PerClient c[MAX_CLIENTS];
@@ -75,12 +77,22 @@ static void qm_clear_dest(Client *c, QueuedMessage *qm) {
 
 #define qm_seqno(c,qm) qm->c[c->player.id.n].seqno
 #define qm_tries(c,qm) qm->c[c->player.id.n].tries
+#define qm_last_tx_time(c,qm) qm->c[c->player.id.n].last_tx_time
 
 static int qm_check_relevant(Client *c, QueuedMessage *qm) {
     
     /* message not for c */
     if(!qm_check_dest(c, qm)) {
         return 0;
+    }
+
+    if(   qm_tries(c,qm) > 0
+       && qm_last_tx_time(c,qm) + RETRANSMIT_INTERVAL < server->cur_time)
+    {
+        return 0;
+    }
+    else {
+        qm_last_tx_time(c,qm) = server->cur_time;
     }
 
     /* unreliable message for c, do not resend */
@@ -233,7 +245,8 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
                          mask & m->input.down,
                          mask & m->input.left,
                          mask & m->input.right,
-                         mask & m->input.shooting,
+                         mask & m->input.fire1,
+                         mask & m->input.fire2,
                             rad(m->input.angle));
         }
         break;
@@ -336,6 +349,8 @@ static int packet_fmt(Client *c, Packet *p, QueuedMessage *qm) {
         message_debug(&qm->m, dest_fmt(c));
 
     if(packet_put(p, &qm->m, qm_seqno(c, qm))) {
+        if(qm_tries(c,qm) > 0)
+            stats.nresend ++;
         qm_tries(c,qm) ++;
         return 1;
     }
@@ -356,7 +371,6 @@ static int packet_fmt_update_header(Packet *p, size_t n) {
     Message m;
     m.type = MESSAGE_UPDATE;
     m.update.n = n;
-    // message_debug(&m, "~ ");
     return packet_put(p, &m, 0);
 }
 
@@ -444,7 +458,8 @@ void protocol_send(int force) {
         return;
 
     timer_start(TIMER_SEND);
-    stats.nsend = 0;
+    stats.nsend   = 0;
+    stats.nresend = 0;
 
     Client *c;
     clients_foreach(c) {
@@ -464,7 +479,8 @@ void protocol_send(int force) {
     }
 
     timer_stop(TIMER_SEND);
-    counter_set(COUNTER_SEND, stats.nsend);
+    counter_set(COUNTER_SEND,   stats.nsend);
+    counter_set(COUNTER_RESEND, stats.nresend);
 }
 
 static void protocol_send_full(Address *adr, size_t seqno) {

@@ -30,33 +30,10 @@ static void draw_entity(Entity *e) {
     glPopMatrix();
 }
 
-static Entity *launch(Pos x, Pos y, Pos vx, Pos vy, Pos ax, Pos ay, EntityType *t) {
-    Vec _x = {x, y};
-    Vec _v = {vx,vy};
-    Vec _a = {ax,ay};
-    Entity *e = entity_create(t,0,_x,_v);
-    e->a = _a;
-    return e;
-}
-
 int visualization_init() {
     if(!window_open("server viz", 640,480)) return 0;
-
     glTranslatef(0,0,-10);
     glClearColor(0,0,0,0);
-
-    EntityType *ship   = entity_type_get(ENTITY_TYPE_SHIP);
-    EntityType *planet = entity_type_get(ENTITY_TYPE_PLANET);
-
-    Pos k = 0.5;
-    Entity *enterprise = launch(-2, 6, k, 0, 0,0,  ship);
-    Entity *borg       = launch( 2, 7,-k, 0, 0,0,  ship);
-    Entity *pluto      = launch( 0,-2, 0, 0, 0,0,  planet);
-
-    enterprise->active = 1;
-    borg->active = 1;
-    pluto->active = 1;
-
     return 1;
 }
 

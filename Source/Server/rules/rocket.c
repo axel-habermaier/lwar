@@ -15,15 +15,14 @@ static Clock debug_clock;
 
 static EntityType _rocket = {
     ENTITY_TYPE_ROCKET,     /* type id */
+    aim,                    /* activation callback */
+    hit,                    /* collision callback  */
     16,                     /* radius  */
     1,                      /* mass    */
     {500,20},               /* acceleration */
     {20,20},                /* brake   */
     1,                      /* turn speed   */
     100,                    /* max health   */
-    0,                      /* activation I */
-    aim,                    /* activation callback */
-    hit,                    /* collision callback  */
 };
 
 EntityType *type_rocket = &_rocket;

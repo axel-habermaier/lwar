@@ -1,6 +1,6 @@
 enum {
     APP_ID = 0xf27087c5,
-    UPDATE_HEADER_LENGTH = sizeof(uint8_t),
+    UPDATE_HEADER_LENGTH = 2 * sizeof(uint8_t), /* msg type and n */
     UPDATE_LENGTH = 2*sizeof(uint16_t)  /* Id */
                   + 4*sizeof(int16_t)   /* x,v */
                   + sizeof(uint16_t) + sizeof(uint8_t), /* rot,health */

@@ -286,7 +286,7 @@ namespace Lwar.Client.Gameplay
 			}
 
 			ServerProxy.Send(NameMessage.Create(LocalPlayer.Id, Cvars.PlayerName.Value));
-			ServerProxy.Send(SelectionMessage.Create(LocalPlayer.Id, EntityTemplate.Ship, 0));
+			ServerProxy.Send(SelectionMessage.Create(LocalPlayer.Id, EntityTemplate.Ship, 1));
 
 			label.Text = "Awaiting game state...";
 			await context.WaitFor(() => ServerProxy.IsConnected || ServerProxy.IsDropped);

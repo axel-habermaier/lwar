@@ -1,5 +1,5 @@
-#include <math.h>
 #include <assert.h>
+#include <math.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -49,29 +49,19 @@ static void notify(Entity *e) {
     protocol_notify_state(e);
 }
 
-static void entity_action(Entity *e) {
-    if(e->health < 0)
+static void act(Entity *e) {
+    e->age += clock_delta();
+    if(e->type->act)
+        e->type->act(e);
+    if(e->health <= 0)
         entity_remove(e);
-
-    if(!e->type->action)
-        return;
-
-    if(e->active) {
-        if(clock_periodic(&e->activation_periodic,
-                           e->type->activation_interval))
-        {
-            e->type->action(e);
-        }
-    } else {
-        e->activation_periodic = 0;
-    }
 }
 
 void entities_notify_collision(Entity *e0, Entity *e1, Vec v0, Vec v1) {
     EntityType *t0 = e0->type;
     EntityType *t1 = e1->type;
-    if(t0->collision) t0->collision(e0, e1, v0, v1);
-    if(t1->collision) t1->collision(e1, e0, v1, v0);
+    if(t0->collide) t0->collide(e0, e1, v0, v1);
+    if(t1->collide) t1->collide(e1, e0, v1, v0);
 }
 
 void entities_update() {
@@ -79,7 +69,8 @@ void entities_update() {
 
     Entity *e;
     entities_foreach(e) {
-        entity_action(e);
+        act(e);
+        items_update(e);
     }
 
     timer_stop(TIMER_ENTITIES);
@@ -88,10 +79,16 @@ void entities_update() {
 static void entity_ctor(size_t i, void *p) {
     Entity *e = (Entity*)p;
     e->id.n = i;
+    e->dead = 0;
+    INIT_LIST_HEAD(&e->attached);
 }
 
 static void entity_dtor(size_t i, void *p) {
     Entity *e = (Entity*)p;
+    Item *j;
+    attached_foreach(e,j)
+        item_remove(j);
+    /* assert(list_empty(&e->attached)); */
     e->id.gen ++;
 }
 
@@ -112,7 +109,6 @@ Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
     e->phi    = 0;
     e->r      = 0;
     e->health = t->max_health;
-    e->dead   = 0;
     notify(e);
     log_debug("+ entity %d (%.1f,%.1f)", e->id.n, e->x.x, e->x.y);
     return e;
@@ -126,22 +122,15 @@ void entity_remove(Entity *e) {
     }
 }
 
+void entity_attach(Entity *e, Item *j) {
+    assert(list_empty(&j->h));
+    list_add_tail(&j->h, &e->attached);
+}
+
 void entities_init() {
     pool_static(&server->entities, _entities, entity_ctor, entity_dtor);
 }
 
 void entities_cleanup() {
     pool_free_pred(&server->entities, entity_check_obsolete);
-}
-
-EntityType *entity_type_get(size_t id) {
-    if(id < MAX_TYPES)
-        return server->types[id];
-    else return 0;
-}
-
-/* entity type 0 is invalid, should map to NULL */
-void entity_type_register(size_t id, EntityType *t) {
-    if(0 < id && id < MAX_TYPES)
-        server->types[id] = t;
 }

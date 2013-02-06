@@ -7,6 +7,7 @@ enum {
 
     COUNTER_RECV,
     COUNTER_SEND,
+    COUNTER_RESEND,
 };
 
 void timer_start(unsigned int timer);

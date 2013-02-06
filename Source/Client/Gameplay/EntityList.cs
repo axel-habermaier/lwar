@@ -71,8 +71,9 @@ namespace Lwar.Client.Gameplay
 			Assert.ArgumentSatisfies(_entities.Contains(entity), () => entity, "The entity is not in the level.");
 
 			entity.Removed();
-			entity.Dispose();
 			_entities.Remove(entity);
+			_entitiesById[entity.Id.Id] = null;
+			entity.Dispose();
 		}
 
 		/// <summary>

@@ -23,8 +23,11 @@ int server_init() {
 
     protocol_init();
 
-    clients_init();
+    /* order is important */
     entities_init();
+    items_init();
+    clients_init();
+
     rules_init();
 
     server->running = 1;
@@ -57,10 +60,13 @@ int server_update(Clock time, int force) {
 
         protocol_send(force);
         
-        /* remove obsolete messages, clients, and entities */
+        /* remove obsolete messages, clients, and entities
+         * order is important
+         */
         protocol_cleanup();
         clients_cleanup();
         entities_cleanup();
+        items_cleanup();
 
         return 1;
     }

@@ -62,6 +62,12 @@ void *pool_remove(Pool *s, size_t i) {
     return l;
 }
 
+void *pool_alloc_check(Pool *s, size_t size) {
+    assert(s->size == size);
+    return pool_alloc(s);
+}
+
+
 void *pool_alloc(Pool *s) {
     if(list_empty(&s->free))
         return 0;

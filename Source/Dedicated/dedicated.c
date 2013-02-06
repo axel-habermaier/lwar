@@ -1,16 +1,18 @@
 #include <assert.h>
 #include <time.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "server_export.h"
+#include "server.h"
 #include "visualization.h"
 #include "log.h"
 #include "performance.h"
 
-typedef unsigned long long Clock;
+/* typedef unsigned long long Clock; */
 static int visual,stats;
 static Clock base,periodic;
 
@@ -22,7 +24,7 @@ enum {
     MAX_MEASURES = 16,
     FRAME_MS       =  30,
     FRAME_INTERVAL =  FRAME_MS * MS,
-    STAT_S         =  10,
+    STAT_S         =  1,
     STAT_INTERVAL  =  STAT_S * S,
 };
 
@@ -67,16 +69,23 @@ static void print_stats() {
 
     unsigned int crecv = (unsigned int)get(COUNTER_RECV) / STAT_S;
     unsigned int csend = (unsigned int)get(COUNTER_SEND) / STAT_S;
+    unsigned int crtx  = (unsigned int)get(COUNTER_RESEND) / STAT_S;
 
     printf("--- statistics ---\n");
-    printf("cpu       %3.1f%%\n", tall);
-    printf("  recv    %3.1f%%\n", trecv);
-    printf("  send    %3.1f%%\n", tsend);
-    printf("  phys    %3.1f%%\n", tphys);
-    printf("  ai      %3.1f%%\n", tenty);
+    printf("cpu         %3.1f%%\n", tall);
+    printf("  recv      %3.1f%%\n", trecv);
+    printf("  send      %3.1f%%\n", tsend);
+    printf("  phys      %3.1f%%\n", tphys);
+    printf("  ai        %3.1f%%\n", tenty);
     printf("io (packets/s)\n");
-    printf("  recv   %4d\n", crecv);
-    printf("  send   %4d\n", csend);
+    printf("  recv     %4d\n", crecv);
+    printf("  send     %4d\n", csend);
+    printf("  resend   %4d\n", crtx);
+    printf("objects\n");
+    printf("  client   %4ld\n", pool_nused(&server->clients));
+    printf("  entities %4ld\n", pool_nused(&server->entities));
+    printf("  items    %4ld\n", pool_nused(&server->items));
+    printf("  queue    %4ld\n", pool_nused(&server->queue));
     printf("\n");
 }
 

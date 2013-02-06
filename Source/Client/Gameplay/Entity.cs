@@ -14,14 +14,6 @@ namespace Lwar.Client.Gameplay
 		where TEntity : Entity<TEntity>, new()
 	{
 		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		protected Entity()
-		{
-			Id = Identifier.Create();
-		}
-
-		/// <summary>
 		///   Gets the game session the entity belongs to.
 		/// </summary>
 		protected GameSession Session { get; private set; }

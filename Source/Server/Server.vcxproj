@@ -177,6 +177,7 @@
     <ClCompile Include="client.c" />
     <ClCompile Include="connection.c" />
     <ClCompile Include="entity.c" />
+    <ClCompile Include="item.c" />
     <ClCompile Include="log.c" />
     <ClCompile Include="message.c" />
     <ClCompile Include="packet.c" />
@@ -186,6 +187,7 @@
     <ClCompile Include="protocol.c" />
     <ClCompile Include="rules.c" />
     <ClCompile Include="rules\bullet.c" />
+    <ClCompile Include="rules\gun.c" />
     <ClCompile Include="rules\planet.c" />
     <ClCompile Include="rules\rocket.c" />
     <ClCompile Include="rules\ship.c" />
@@ -201,6 +203,7 @@
     <ClInclude Include="log.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="packet.h" />
+    <ClInclude Include="performance.h" />
     <ClInclude Include="pq.h" />
     <ClInclude Include="rules.h" />
     <ClInclude Include="server.h" />

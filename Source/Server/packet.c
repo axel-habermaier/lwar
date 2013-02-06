@@ -1,11 +1,13 @@
 #include <assert.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "server.h"
 #include "message.h"
 #include "packet.h"
 #include "connection.h"
+#include "log.h"
 
 static int check_bounds(Packet *p,size_t n) {
     return    n != 0
@@ -25,6 +27,9 @@ size_t packet_update_n(Packet *p) {
 
 void packet_init(Packet *p, Address *adr, size_t ack, size_t time) {
     Header h = { APP_ID, ack, time };
+    memset(p->p, 0, sizeof(*p->p));
+    p->io_failed = 0;
+
     p->adr  = *adr;
     p->a    = 0;
     p->b    = header_pack(p->p, &h);

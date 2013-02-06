@@ -103,7 +103,8 @@ struct Message {
             uint8_t  down;
             uint8_t  left;
             uint8_t  right;
-            uint8_t  shooting;
+            uint8_t  fire1;
+            uint8_t  fire2;
             uint16_t angle;
         } input;
 

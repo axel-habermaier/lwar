@@ -20,12 +20,11 @@ static void client_ctor(size_t i, void *p) {
     c->dead            = 0;
 
     player_init(&c->player, i);
-
 }
 
 static void client_dtor(size_t i, void *p) {
     Client *c = (Client*)p;
-    entity_remove(c->player.ship);
+    player_clear(&c->player);
     c->player.id.gen ++;
 }
 

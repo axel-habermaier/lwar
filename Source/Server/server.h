@@ -3,10 +3,12 @@
 
 enum {
     MAX_CLIENTS    = 8,
+    MAX_ITEMS      = 1024,
     MAX_ENTITIES   = 1024,
-    MAX_TYPES      = 32,
+    MAX_ENTITY_TYPES = 32,
+    MAX_ITEM_TYPES = 32,
     MAX_COLLISIONS = 32, /* should be n^2-1 for priority queue */
-    MAX_QUEUE      = 1028,
+    MAX_QUEUE      = 1024,
 
     TIMEOUT_INTERVAL  = 15 * 1000 /*ms*/,
     MISBEHAVIOR_LIMIT = 10,
@@ -29,7 +31,9 @@ Time time_add(Time d0, Time d1);
 Time time_sub(Time d0, Time d1);
 
 typedef struct Entity Entity;
+typedef struct Item Item;
 typedef struct EntityType EntityType;
+typedef struct ItemType ItemType;
 typedef struct Player Player;
 
 typedef struct Client Client;
@@ -48,11 +52,13 @@ int   time_cmp(Time d0, Time d1);
 void  time_update(Clock t);
 
 void player_init(Player *p, size_t id);
-void player_input(Player *p, int up, int down, int left, int right, int shooting, Pos phi);
+void player_clear(Player *p);
+void player_input(Player *p, int up, int down, int left, int right, int fire1, int fire2, Pos phi);
 void player_select(Player *p, size_t ship_type, size_t weapon_type);
 void player_rename(Player *p, Str name);
 void player_spawn(Player *p, Vec x);
 void player_notify_state(Entity *e);
+void player_pickup(Player *p, Item *i);
 void player_die(Player *p);
 void players_update();
 
@@ -65,13 +71,6 @@ void client_remove(Client *c);
 Client *client_get(Id player);
 Client *client_lookup(Address *adr);
 
-/*
-void mqueue_init(List *l);
-void mqueue_ack(List *l, uint32_t ack);
-void mqueue_destroy(List *l);
-size_t packet_scan(char *p, size_t n, Address a);
-size_t packet_fmt_queue(Client *c, char *p, size_t n, Address *a);
-*/
 void protocol_init();
 void protocol_recv();
 void protocol_send(int force);
@@ -90,6 +89,13 @@ void entity_push(Entity *e, Vec a);
 void entity_accelerate(Entity *e, Vec a);
 void entity_accelerate_to(Entity *e, Vec v);
 void entity_rotate(Entity *e, Pos r);
+void entity_attach(Entity *e, Item *j);
+
+Item *item_create(ItemType *t);
+void item_remove(Item *j);
+void items_init();
+void items_cleanup();
+void items_update(Entity *e);
 
 Pos    rad(Pos a); /* radians of a */
 size_t deg(Pos a); /* degrees of a */
@@ -99,6 +105,8 @@ void physics_update();
 void rules_init();
 EntityType *entity_type_get(size_t id);
 void entity_type_register(size_t id, EntityType *t);
+ItemType *item_type_get(size_t id);
+void item_type_register(size_t id, ItemType *t);
 
 struct Vec {
     Pos x,y;
@@ -121,51 +129,85 @@ struct Address {
 
 struct Player {
     Id id;
-    Entity *ship;
-    int up,down,left,right;
-    int shooting;
-    Pos phi; /* desired orientation */
-    EntityType *ship_type;
-    EntityType *weapon_type;
     Str name;
+
+    /* gameplay */
+    Entity *ship;
+    Item   *weapon;
+    EntityType *ship_type;   /* selection for next spawn */
+    ItemType   *weapon_type;
+    List inventory;          /* additional items, not activated */
+
+    /* input state */
+    int up,down,left,right;
+    int fire1,fire2;
+    Pos phi; /* desired orientation */
 };
 
+/* Entities have a physical appearance in the world */
 struct Entity {
-    List l;
+    List _l;
+    EntityType *type;
 
+    Id id;
+    int dead;
+    Clock age;
+
+    /* gameplay */
+    Player *player;
+    List  attached; /* of items (weapons, also harvest) */
+
+    /* physics */
     Vec x,v,a;  /* position, velocity, acceleration */
     Pos phi,r;  /* orientation angle, rotation (= delta phi) */
     Pos health;
-    int dead;
-
-    Id id;
-    Player *player;
-    EntityType *type;
-
     Time remaining;
-
-    /* an active entity will fire its type's active function periodically */
-    int active;
-    Clock activation_periodic;
 };
 
 struct EntityType {
     size_t id;
+
+    /* gameplay */
+    void (*act)(Entity *e);
+    void (*collide)(Entity *self, Entity *other, Vec v0, Vec v1);
+
+    /* physics */
     Pos radius;
     Pos mass;
     Vec max_a;      /* max acceleration */
     Vec max_b;      /* max brake        */
     Pos max_r;      /* max rotation     */
     Pos max_health; /* max health       */
+};
 
-    /* for shooting, ... */
-    Clock activation_interval;
-    void (*action)(Entity *e);
-    void (*collision)(Entity *self, Entity *other, Vec v0, Vec v1);
+/* Items, such as weapons, may be attached to players/entities,
+ * but have no manifestation in the world on their own
+ */
+struct Item {
+    List _l;
+    ItemType *type;
+
+    Id id;
+    int dead;
+    List h;
+
+    /* gameplay */
+    unsigned int fire_mask;
+    Clock fire_periodic;
+    size_t ammunition;
+};
+
+struct ItemType {
+    size_t id;
+
+    /* gameplay */
+    void (*fire)(Entity *e, Item *j);
+    Clock fire_interval;
+    size_t initial_ammunition;
 };
 
 struct Client {
-    List l;
+    List _l;
 
     Player player;
     Address adr;
@@ -187,10 +229,12 @@ struct Client {
 struct Server {
     Pool clients;
     Pool entities;
+    Pool items;
     Pool queue;
-    EntityType *types[MAX_TYPES];
+    EntityType *entity_types[MAX_ENTITY_TYPES];
+    ItemType   *item_types[MAX_ITEM_TYPES];
 
-    /* allocated clients */
+    /* set of allocated clients */
     unsigned int client_mask;
 
     int running;
@@ -203,14 +247,12 @@ struct Server {
 
 static const Vec  _0  = {0,0};
 
-#define clients_foreach(c)       pool_foreach(&server->clients, c, Client)
-#define clients_foreach_cont(c)  pool_foreach_cont(&server->clients, c, Client)
-
-#define entities_foreach(e)      pool_foreach(&server->entities, e, Entity)
-#define entities_foreach_cont(e) pool_foreach_cont(&server->entities, e, Entity)
-
-#define queue_foreach(qm)        pool_foreach(&server->queue, qm, QueuedMessage)
-#define queue_foreach_cont(qm)   pool_foreach_cont(&server->queue, qm, QueuedMessage)
+#define clients_foreach(c)  pool_foreach(&server->clients, c, Client)
+#define entities_foreach(e) pool_foreach(&server->entities, e, Entity)
+#define items_foreach(j)    pool_foreach(&server->items, j, Item)
+#define queue_foreach(qm)   pool_foreach(&server->queue, qm, QueuedMessage)
+#define attached_foreach(e,j)  list_for_each_entry(j, Item, &e->attached,  h)
+#define inventory_foreach(p,j) list_for_each_entry(j, Item, &p->inventory, h)
 
 #ifndef max
 #define max(n,m) ((n) < (m) ? (m) : (n))
