@@ -239,9 +239,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="serverEndPoint">The end point of the server that hosts the game session.</param>
 		private async Task Loading(ProcessContext context, IPEndPoint serverEndPoint)
 		{
-#if !DEBUG
 			Commands.ShowConsole.Invoke(false);
-#endif
 			Cleanup();
 
 			Entities = new EntityList(this);

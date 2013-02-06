@@ -183,6 +183,7 @@
     <Compile Include="Platform\Assets\IAssetsCompiler.cs" />
     <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\IMeasurement.cs" />
+    <Compile Include="Platform\Input\InputModes.cs" />
     <Compile Include="Platform\Measurement.cs" />
     <Compile Include="Platform\Time.cs" />
     <Compile Include="Processes\DelegateOperation.cs" />

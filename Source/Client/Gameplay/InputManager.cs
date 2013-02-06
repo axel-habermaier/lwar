@@ -81,11 +81,11 @@ namespace Lwar.Client.Gameplay
 
 			_session = session;
 
-			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed());
-			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed());
-			_left.Input = new LogicalInput(Key.A.IsPressed() | Key.Left.IsPressed());
-			_right.Input = new LogicalInput(Key.D.IsPressed() | Key.Right.IsPressed());
-			_shooting.Input = new LogicalInput(Key.Space.IsPressed() | MouseButton.Left.IsPressed());
+			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed(), InputModes.Game);
+			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed(), InputModes.Game);
+			_left.Input = new LogicalInput(Key.A.IsPressed() | Key.Left.IsPressed(), InputModes.Game);
+			_right.Input = new LogicalInput(Key.D.IsPressed() | Key.Right.IsPressed(), InputModes.Game);
+			_shooting.Input = new LogicalInput(Key.Space.IsPressed() | MouseButton.Left.IsPressed(), InputModes.Game);
 
 			_session.InputDevice.Register(_forward.Input);
 			_session.InputDevice.Register(_backward.Input);

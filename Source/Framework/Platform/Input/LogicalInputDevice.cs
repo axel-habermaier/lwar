@@ -21,9 +21,17 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="mouse">The mouse that should be associated with this logical device.</param>
 		public LogicalInputDevice(Keyboard keyboard, Mouse mouse)
 		{
+			Assert.ArgumentNotNull(keyboard, () => keyboard);
+			Assert.ArgumentNotNull(mouse, () => mouse);
+
 			Keyboard = keyboard;
 			Mouse = mouse;
 		}
+
+		/// <summary>
+		///   Gets or sets the current modes of the input device.
+		/// </summary>
+		public InputModes Modes { get; set; }
 
 		/// <summary>
 		///   Gets the keyboard that is associated with this logical device.
@@ -69,6 +77,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// </summary>
 		internal void Update()
 		{
+			Assert.That(Modes != InputModes.None, "No input mode has been set.");
+
 			foreach (var input in _inputs)
 				input.Update(this);
 		}

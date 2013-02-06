@@ -67,6 +67,7 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void Initialize()
 		{
+			LogicalInputDevice.Modes = InputModes.Game;
 			Window.Closing += Exit;
 			Window.Resized += s => GraphicsDevice.SetViewport(new Rectangle(0, 0, s.Width, s.Height));
 			Window.Title = "lwar";
@@ -79,8 +80,6 @@ namespace Lwar.Client
 			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");
 			Commands.Bind.Invoke(Key.F3.WentDown(), "connect 127.0.0.1:" + ServerProxy.DefaultPort);
 			Commands.Bind.Invoke(Key.F4.WentDown(), "disconnect");
-
-			Commands.ShowConsole.Invoke(true);
 		}
 
 		/// <summary>

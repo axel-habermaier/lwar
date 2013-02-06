@@ -107,6 +107,23 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
+		///   Gets or sets a value indicating whether the console is currently active.
+		/// </summary>
+		private bool Active
+		{
+			get { return _active; }
+			set
+			{
+				if (value == _active)
+					return;
+
+				_active = value;
+				_prompt.Clear();
+				_input.OnActivationChanged(value);
+			}
+		}
+
+		/// <summary>
 		///   Raised when user input has been submitted.
 		/// </summary>
 		public event Action<string> UserInput;
@@ -228,13 +245,10 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			// Check wheter the console should be toggle on or off
 			if (_input.Toggle.IsTriggered)
-			{
-				_active = !_active;
-				_prompt.Clear();
-			}
+				Active = !Active;
 
 			// Don't handle any other input if the console isn't active
-			if (!_active)
+			if (!Active)
 				return;
 
 			if (_input.Submit.IsTriggered)
@@ -283,7 +297,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="show">Indicates whether the console should be shown.</param>
 		private void OnShowConsole(bool show)
 		{
-			_active = show;
+			Active = show;
 		}
 
 		/// <summary>

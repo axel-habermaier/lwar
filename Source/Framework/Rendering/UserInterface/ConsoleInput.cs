@@ -16,6 +16,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private readonly LogicalInputDevice _device;
 
 		/// <summary>
+		///   The input mode the input device should be reset to once the console is deativated.
+		/// </summary>
+		private InputModes _previousInputModes;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The logical input device that provides the user input.</param>
@@ -26,16 +31,16 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			// We don't care which of the two control buttons has been pressed
 			var control = Key.LeftControl.IsPressed() | Key.RightControl.IsPressed();
 
-			Toggle = new LogicalInput(new ScanCodeKeyTrigger(KeyTriggerType.WentDown, PlatformInfo.ConsoleKey));
-			Submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown());
-			Clear = new LogicalInput(control + Key.L.IsPressed());
-			ClearPrompt = new LogicalInput(Key.Escape.WentDown());
-			ShowOlderHistory = new LogicalInput(Key.Up.WentDown());
-			ShowNewerHistory = new LogicalInput(Key.Down.WentDown());
-			ScrollUp = new LogicalInput(Key.PageUp.WentDown());
-			ScrollDown = new LogicalInput(Key.PageDown.WentDown());
-			ScrollToTop = new LogicalInput(control + Key.Home.IsPressed());
-			ScrollToBottom = new LogicalInput(control + Key.End.IsPressed());
+			Toggle = new LogicalInput(new ScanCodeKeyTrigger(KeyTriggerType.WentDown, PlatformInfo.ConsoleKey), InputModes.All);
+			Submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputModes.Console);
+			Clear = new LogicalInput(control + Key.L.IsPressed(), InputModes.Console);
+			ClearPrompt = new LogicalInput(Key.Escape.WentDown(), InputModes.Console);
+			ShowOlderHistory = new LogicalInput(Key.Up.WentDown(), InputModes.Console);
+			ShowNewerHistory = new LogicalInput(Key.Down.WentDown(), InputModes.Console);
+			ScrollUp = new LogicalInput(Key.PageUp.WentDown(), InputModes.Console);
+			ScrollDown = new LogicalInput(Key.PageDown.WentDown(), InputModes.Console);
+			ScrollToTop = new LogicalInput(control + Key.Home.IsPressed(), InputModes.Console);
+			ScrollToBottom = new LogicalInput(control + Key.End.IsPressed(), InputModes.Console);
 
 			device.Register(Toggle);
 			device.Register(Submit);
@@ -100,6 +105,20 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public LogicalInput Submit { get; private set; }
 
 		/// <summary>
+		///   Invoked when the activation state of the console has been changed.
+		/// </summary>
+		public void OnActivationChanged(bool activated)
+		{
+			if (activated)
+			{
+				_previousInputModes = _device.Modes;
+				_device.Modes = InputModes.Console;
+			}
+			else
+				_device.Modes = _previousInputModes;
+		}
+
+		/// <summary>
 		///   Raised when a text character was entered.
 		/// </summary>
 		public event Action<char> CharEntered
@@ -117,6 +136,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			remove { _device.Keyboard.KeyPressed -= value; }
 		}
 
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
 		protected override void OnDisposing()
 		{
 			_device.Remove(Toggle);

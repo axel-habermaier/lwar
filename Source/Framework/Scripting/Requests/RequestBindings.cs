@@ -75,7 +75,7 @@ namespace Pegasus.Framework.Scripting.Requests
 			var reply = new RequestParser().Parse(command);
 			if (reply.Status == ReplyStatus.Success)
 			{
-				var input = new LogicalInput(trigger);
+				var input = new LogicalInput(trigger, InputModes.Debug | InputModes.Menu | InputModes.Game);
 				_device.Register(input);
 				Register(new RequestBinding(input, reply.Result));
 			}
