@@ -144,14 +144,14 @@ namespace Pegasus.Framework
 					console.Resize(Window.Size);
 					Window.Resized += console.Resize;
 
+					// Copy the recorded log history to the console and stop recording
+					console.Copy(logHistory);
+					logHistory.StopRecording();
+
 					// Intialize the statistics
 					Statistics = CreateStatistics();
 					Statistics.Initialize(GraphicsDevice, font);
 					Window.Resized += Statistics.Resize;
-
-					// Copy the recorded log history to the console and stop recording
-					console.Copy(logHistory);
-					logHistory.StopRecording();
 
 					// Initialize commands and cvars
 					console.UserInput += interpreter.Execute;
