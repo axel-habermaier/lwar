@@ -262,6 +262,7 @@
     <Compile Include="Platform\Graphics\BufferType.cs" />
     <Compile Include="Platform\Graphics\Shader.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
+    <Compile Include="Rendering\ICamera.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Pipe4Parser.cs" />

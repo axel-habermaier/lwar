@@ -55,6 +55,11 @@ namespace Lwar.Client.Gameplay
 		private InputManager _inputManager;
 
 		/// <summary>
+		/// The sprite batch that is used to draw the connection state messages.
+		/// </summary>
+		private SpriteBatch _spriteBatch;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public GameSession(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
@@ -63,10 +68,12 @@ namespace Lwar.Client.Gameplay
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 
+			Camera = new Camera();
 			Window = window;
 			GraphicsDevice = graphicsDevice;
 			InputDevice = inputDevice;
 			SpriteBatch = new SpriteBatch(GraphicsDevice);
+			_spriteBatch = new SpriteBatch(GraphicsDevice);
 			Scheduler = new ProcessScheduler();
 			_updateState = StateMachine.Create(Scheduler);
 			_drawScheduler = new ProcessScheduler();
@@ -80,6 +87,11 @@ namespace Lwar.Client.Gameplay
 			Cvars.PlayerName.Changed += PlayerNameChanged;
 			_updateState.ChangeState(Inactive);
 		}
+
+		/// <summary>
+		///   Gets the camera that is used to draw the game session.
+		/// </summary>
+		public Camera Camera { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the window that displays the game session.
@@ -97,7 +109,7 @@ namespace Lwar.Client.Gameplay
 		public GraphicsDevice GraphicsDevice { get; private set; }
 
 		/// <summary>
-		///   Gets the sprite batch that is used to draw all sprites.
+		///   Gets the sprite batch that is used to draw all entities.
 		/// </summary>
 		public SpriteBatch SpriteBatch { get; private set; }
 
@@ -154,6 +166,7 @@ namespace Lwar.Client.Gameplay
 		{
 			Entities.SafeDispose();
 			SpriteBatch.SafeDispose();
+			_spriteBatch.SafeDispose();
 			_inputManager.SafeDispose();
 			_drawState.SafeDispose();
 			_updateState.SafeDispose();
@@ -189,7 +202,9 @@ namespace Lwar.Client.Gameplay
 		public void Draw()
 		{
 			_drawScheduler.RunProcesses();
+
 			SpriteBatch.DrawBatch();
+			_spriteBatch.DrawBatch();
 		}
 
 		/// <summary>
@@ -198,7 +213,11 @@ namespace Lwar.Client.Gameplay
 		/// <param name="windowSize">The new size of the window.</param>
 		private void UpdateProjectionMatrix(Size windowSize)
 		{
-			SpriteBatch.ProjectionMatrix = Matrix.OrthographicProjection(0, windowSize.Width, windowSize.Height, 0, 0, 1);
+			var width = windowSize.Width / 2.0f;
+			var height = windowSize.Height / 2.0f;
+
+			Camera.Projection = Matrix.OrthographicProjection(-width, width, height, -height, 0, 1);
+			_spriteBatch.ProjectionMatrix = Matrix.OrthographicProjection(0, windowSize.Width, windowSize.Height, 0, 0, 1);
 		}
 
 		/// <summary>
@@ -274,10 +293,9 @@ namespace Lwar.Client.Gameplay
 
 			if (!ServerProxy.IsConnected)
 			{
-				if (ServerProxy.IsFaulted)
-					NetworkLog.ClientError("An error occurred during the synchronization of the game state.");
-				else
-					NetworkLog.ClientError("Game state synchronization failed: The server did not respond.");
+				NetworkLog.ClientError(ServerProxy.IsFaulted
+										   ? "An error occurred during the synchronization of the game state."
+										   : "Game state synchronization failed: The server did not respond.");
 
 				Commands.ShowConsole.Invoke(true);
 				_updateState.ChangeStateDelayed(Inactive);
@@ -301,7 +319,7 @@ namespace Lwar.Client.Gameplay
 			while (!context.IsCanceled)
 			{
 				label.Area = new Rectangle(Vector2i.Zero, Window.Size);
-				label.Draw(SpriteBatch);
+				label.Draw(_spriteBatch);
 				await context.NextFrame();
 			}
 		}
@@ -318,6 +336,12 @@ namespace Lwar.Client.Gameplay
 			{
 				Entities.Update();
 
+				if (LocalPlayer.Ship != null)
+				{
+					var position = LocalPlayer.Ship.Position;
+					Camera.View = Matrix.Translation(-position.X, -position.Y, 0);
+				}
+
 				if (ServerProxy.IsLagging)
 					_updateState.ChangeStateDelayed(WaitingForServer);
 
@@ -333,9 +357,20 @@ namespace Lwar.Client.Gameplay
 		{
 			while (!context.IsCanceled)
 			{
-				Entities.Draw();
+				DrawEntities();
 				await context.NextFrame();
 			}
+		}
+
+		/// <summary>
+		///   Draws the entities with the current camera.
+		/// </summary>
+		private void DrawEntities()
+		{
+			SpriteBatch.ProjectionMatrix = Camera.Projection;
+			SpriteBatch.WorldMatrix = Camera.View;
+
+			Entities.Draw();
 		}
 
 		/// <summary>
@@ -376,10 +411,10 @@ namespace Lwar.Client.Gameplay
 		{
 			while (!context.IsCanceled)
 			{
-				Entities.Draw();
+				DrawEntities();
 
 				label.Area = new Rectangle(Vector2i.Zero, Window.Size);
-				label.Draw(SpriteBatch);
+				label.Draw(_spriteBatch);
 
 				await context.NextFrame();
 			}

@@ -3,12 +3,21 @@
 namespace Lwar.Client.Gameplay
 {
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Rendering;
 
-	public class Camera
+	/// <summary>
+	///   The camera that is used during regular game sessions.
+	/// </summary>
+	public class Camera : ICamera
 	{
 		/// <summary>
-		///   Gets the position of the camera.
+		///   Gets or sets the camera's projection matrix.
 		/// </summary>
-		public Vector2 Position { get; set; }
+		public Matrix Projection { get; set; }
+
+		/// <summary>
+		///   Gets or sets the camera's view matrix.
+		/// </summary>
+		public Matrix View { get; set; }
 	}
 }

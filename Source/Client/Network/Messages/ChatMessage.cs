@@ -77,7 +77,10 @@ namespace Lwar.Client.Network.Messages
 			var chatMessage = GetInstance();
 			chatMessage._playerId = player;
 			chatMessage._message = message.TruncateUtf8(Specification.MaximumChatMessageLength);
-			;
+
+			if (message != chatMessage._message)
+				Log.Warn("The chat message exceeds the maximum allowed length and has been truncated.");
+			
 			return chatMessage;
 		}
 	}
