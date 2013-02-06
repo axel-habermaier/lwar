@@ -1,11 +1,10 @@
 ﻿using System;
 
-#if DEBUG
-
 namespace Pegasus.Framework.Platform.Assets
 {
 	using System.Collections.Concurrent;
 	using System.Collections.Generic;
+	using System.Diagnostics;
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
@@ -17,7 +16,7 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Automatically recompiles and reloads assets that have been changed while the application is running.
 	/// </summary>
-	internal class AssetReloader : DisposableObject
+	internal class AssetsReloader : DisposableObject
 	{
 		/// <summary>
 		///   The path of the asset directory containing the uncompiled source assets.
@@ -28,11 +27,6 @@ namespace Pegasus.Framework.Platform.Assets
 		///   The frequency of the file modification checks in Hz.
 		/// </summary>
 		private const int UpdateFrequency = 2;
-
-		/// <summary>
-		///   The assets compiler that is used to compile assets.
-		/// </summary>
-		private readonly IAssetsCompiler _assetsCompiler;
 
 		/// <summary>
 		///   The cancellation token source that can be used to cancel the background process.
@@ -50,14 +44,20 @@ namespace Pegasus.Framework.Platform.Assets
 		private readonly ConcurrentQueue<string> _modifiedAssets = new ConcurrentQueue<string>();
 
 		/// <summary>
+		///   The assets compiler that is used to compile assets.
+		/// </summary>
+		private IAssetsCompiler _assetsCompiler;
+
+		/// <summary>
 		///   The task that represents the background operation.
 		/// </summary>
-		private readonly Task _task;
+		private Task _task;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public AssetReloader()
+		[Conditional("DEBUG")]
+		internal void Initialize()
 		{
 			// Dynamically load the assets compiler assembly instead of adding a reference to it. That way, release builds
 			// do not depend on the assembly at all.
@@ -148,6 +148,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <summary>
 		///   Reloads all modified assets.
 		/// </summary>
+		[Conditional("DEBUG")]
 		internal void ReloadModifiedAssets()
 		{
 			string asset;
@@ -213,5 +214,3 @@ namespace Pegasus.Framework.Platform.Assets
 		}
 	}
 }
-
-#endif

@@ -82,7 +82,7 @@ namespace Pegasus.Framework.Platform.Assets
 					using (var reader = new AssetReader(Path.Combine(AssetDirectory, assetName)))
 						asset.Load(reader);
 				}
-				catch (DirectoryNotFoundException e)
+				catch (IOException e)
 				{
 					Log.Die("Failed to reload asset '{0}': {1}", assetName, e.Message);
 				}
@@ -152,7 +152,7 @@ namespace Pegasus.Framework.Platform.Assets
 				using (var reader = new AssetReader(Path.Combine(AssetDirectory, assetName)))
 					asset.Load(reader);
 			}
-			catch (DirectoryNotFoundException e)
+			catch (IOException e)
 			{
 				Log.Die("Failed to load asset '{0}': {1}", assetName, e.Message);
 			}
