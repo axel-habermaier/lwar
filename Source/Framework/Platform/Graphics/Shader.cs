@@ -42,7 +42,10 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal void Reinitialize(byte[] shaderData)
 		{
 			if (_shader != IntPtr.Zero)
+			{
 				NativeMethods.DestroyShader(_shader);
+				_shader = IntPtr.Zero;
+			}
 
 			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, _type, shaderData);
 		}
