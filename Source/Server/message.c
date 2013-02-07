@@ -227,6 +227,14 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
     return i;
 }
 
+void header_debug(Header *h, const char *s) {
+    log_debug("%sheader: ack %d, time %d", s, h->ack, h->time);
+}
+
+void update_debug(Update *u, const char *s) {
+    log_debug("%s pos %d (%d,%d)", s, u->entity_id.n, u->x, u->y);
+}
+
 void message_debug(Message *m, const char *s) {
     switch(m->type) {
     case MESSAGE_CONNECT:
@@ -270,7 +278,9 @@ void message_debug(Message *m, const char *s) {
         break;
     case MESSAGE_INPUT:
         log_debug("%sinput %d", s, m->input.player_id.n);
+        break;
     case MESSAGE_COLLISION:
         log_debug("%scollision %d, %d", s, m->collision.entity_id[0].n, m->collision.entity_id[1].n);
+        break;
     }
 }

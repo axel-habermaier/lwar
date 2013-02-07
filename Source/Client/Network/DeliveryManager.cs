@@ -77,7 +77,9 @@ namespace Lwar.Client.Network
 		/// <param name="timestamp">The timestamp of the received unreliable messages that should be delivered.</param>
 		public bool AllowUnreliableDelivery(uint timestamp)
 		{
-			if (timestamp > _lastReceivedTimestamp)
+			// We must allow the delivery of unreliable packets with the same timestamp, as they might contain
+			// different data if the packet was split
+			if (timestamp >= _lastReceivedTimestamp)
 			{
 				_lastReceivedTimestamp = timestamp;
 				return true;
