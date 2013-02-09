@@ -129,6 +129,7 @@ static void bounce(Entity *e0, Entity *e1, Vec *v0, Vec *v1) {
     project(e0->v, dx, &p0, v0);
     project(e1->v, dx, &p1, v1);
 
+    /* TODO: consider stationary entities */
     *v0 = add(*v0, scale(p0,(m0-m1)/(m0+m1)));
     *v0 = add(*v0, scale(p1, (2*m1)/(m0+m1)));
 
@@ -158,25 +159,35 @@ static void collision_insert(Entity *e0, Entity *e1, Time d) {
         ncollisions++;
 }
 
+static void find_collisions_for(Entity *e0, Time d0) {
+    Entity *e1;
+
+    entities_foreach(e1) {
+        Time d1;
+        if(   e0->id.n < e1->id.n    /* prevent to compare two entities twice  */
+           && collide(e0,e1,&d1)     /* check for collision, d1 yields the time */
+           && time_cmp(d1,d0) <= 0)  /* only consider if in current frame      */
+        {
+            collision_insert(e0,e1,d1);
+        }
+    }
+}
+
 static void find_collisions(Time d0) {
-    Entity *e0,*e1;
+    Entity *e0;
     ncollisions = 0;
 
     entities_foreach(e0) {
-        entities_foreach(e1) {
-            Time d1;
-            if(   e0->id.n < e1->id.n    /* prevent to compare two entities twice  */
-               && collide(e0,e1,&d1)     /* check for collision, d1 yields the time */
-               && time_cmp(d1,d0) <= 0)  /* only consider if in current frame      */
-            {
-                collision_insert(e0,e1,d1);
-            }
-        }
+        find_collisions_for(e0, d0);
     }
 }
 
 static void handle_collisions(Time d) {
     size_t i;
+    /* TODO: compute collisions by proximity,
+     *       then recollide after each bounce,
+             with close entities
+     */
     for(i=0; i<ncollisions; i++) {
         Collision *c = &collisions[i];
         Vec v0,v1;

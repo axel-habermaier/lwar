@@ -25,8 +25,10 @@ static EntityType _bullet = {
 EntityType *type_bullet = &_bullet;
 
 static void decay(Entity *e) {
-    //if(e->age > 5000)
-        //e->health = 0;
+    /*
+    if(e->age > 5000)
+        e->health = 0;
+        */
 }
 
 static void hit(Entity *e0, Entity *e1, Vec v0, Vec v1) {

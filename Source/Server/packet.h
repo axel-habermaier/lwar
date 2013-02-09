@@ -40,3 +40,5 @@ int  packet_get_u(Packet *p, Update *u);
 
 int  packet_recv(Packet *p);
 int  packet_send(Packet *p);
+
+void packet_debug(Packet *p);

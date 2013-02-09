@@ -12,7 +12,9 @@ size_t update_unpack(const char *s, Update *u);
 size_t message_pack(char *s, Message *m, size_t seqno);
 size_t message_unpack(const char *s, Message *m, size_t *seqno);
 
+void header_debug(Header *h, const char *s);
 void message_debug(Message *m, const char *s);
+void update_debug(Update *u, const char *s);
 
 enum {
     MAX_NAME_LENGTH = 32,

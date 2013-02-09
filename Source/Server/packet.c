@@ -27,7 +27,7 @@ size_t packet_update_n(Packet *p) {
 
 void packet_init(Packet *p, Address *adr, size_t ack, size_t time) {
     Header h = { APP_ID, ack, time };
-    memset(p->p, 0, sizeof(*p->p));
+    memset(p->p, 0, sizeof(p->p));
     p->io_failed = 0;
 
     p->adr  = *adr;
@@ -91,4 +91,30 @@ int packet_send(Packet *p) {
     }
     p->io_failed = 0;
     return 1;
+}
+
+void packet_debug(Packet *p) {
+    size_t a = p->a;
+    size_t b = p->b;
+    Header h;
+    Message m;
+    Update u;
+    size_t seqno;
+
+    log_debug("packet {");
+    p->a = header_unpack(p->p, &h);
+    header_debug(&h, "  ");
+    while(packet_get(p,&m,&seqno)) {
+        message_debug(&m, "  ");
+        if(m.type == MESSAGE_UPDATE) {
+            size_t i;
+            for(i=0; i<m.update.n; i++) {
+                packet_get_u(p, &u);
+                update_debug(&u, "    ");
+            }
+        }
+    }
+    log_debug("}");
+    p->a = a;
+    p->b = b;
 }
