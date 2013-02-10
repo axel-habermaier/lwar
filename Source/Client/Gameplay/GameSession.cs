@@ -216,8 +216,8 @@ namespace Lwar.Client.Gameplay
 			var width = windowSize.Width / 2.0f;
 			var height = windowSize.Height / 2.0f;
 
-			Camera.Projection = Matrix.OrthographicProjection(-width, width, height, -height, 0, 1);
-			_spriteBatch.ProjectionMatrix = Matrix.OrthographicProjection(0, windowSize.Width, windowSize.Height, 0, 0, 1);
+			Camera.Projection = Matrix.CreateOrthographic(-width, width, height, -height, 0, 1);
+			_spriteBatch.ProjectionMatrix = Matrix.CreateOrthographic(0, windowSize.Width, windowSize.Height, 0, 0, 1);
 		}
 
 		/// <summary>

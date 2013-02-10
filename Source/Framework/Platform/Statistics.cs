@@ -97,7 +97,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="size">The new size.</param>
 		internal void Resize(Size size)
 		{
-			_spriteBatch.ProjectionMatrix = Matrix.OrthographicProjection(0, size.Width, size.Height, 0, 0, 1);
+			_spriteBatch.ProjectionMatrix = Matrix.CreateOrthographic(0, size.Width, size.Height, 0, 0, 1);
 			_label.Area = new Rectangle(5, 5, size.Width, size.Height);
 		}
 

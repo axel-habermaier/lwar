@@ -24,7 +24,7 @@ namespace Lwar.Client.Gameplay
 			set
 			{
 				_position = value;
-				View = Matrix.Translation(value.X, value.Y, 0);
+				View = Matrix.CreateTranslation(value.X, value.Y, 0);
 			}
 		}
 

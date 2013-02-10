@@ -334,10 +334,10 @@ namespace Pegasus.Framework.Rendering
 			var shift = new Vector2(- size.Width, - size.Height) * 0.5f;
 			var quad = new Quad(new RectangleF(shift, size), color);
 
-			var rotation = Matrix.RotationZ(angle);
+			var rotation = Matrix.CreateRotationZ(angle);
 			Quad.Transform(ref quad, ref rotation);
 
-			var translation = Matrix.Translation(position.X, position.Y, 0);
+			var translation = Matrix.CreateTranslation(position.X, position.Y, 0);
 			Quad.Transform(ref quad, ref translation);
 
 			Draw(ref quad, texture);
@@ -419,8 +419,8 @@ namespace Pegasus.Framework.Rendering
 			var rotation = MathUtils.ComputeAngle(start, end, new Vector2(1, 0));
 
 			// Construct the transformation matrix and draw the transformed quad
-			var transformMatrix = Matrix.Scale(scale, 1, 1) * Matrix.RotationZ(-rotation) *
-								  Matrix.Translation(start.X, start.Y + width / 2.0f, 0);
+			var transformMatrix = Matrix.CreateScale(scale, 1, 1) * Matrix.CreateRotationZ(-rotation) *
+								  Matrix.CreateTranslation(start.X, start.Y + width / 2.0f, 0);
 
 			Quad.Transform(ref quad, ref transformMatrix);
 			Draw(ref quad, Texture2D.White);

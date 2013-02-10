@@ -105,7 +105,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
             // We then move up the origin by the total label height, such that the newest label's lower edge 
             // is perfectly aligned with the content area's lower edge. And last, we add the current scroll offset.
             var offsetY = _area.Bottom - _labels[0].ActualArea.Top - TotalLabelHeight + _scrollOffset;
-            spriteBatch.WorldMatrix = Matrix.Translation(_area.Left, offsetY, 0);
+            spriteBatch.WorldMatrix = Matrix.CreateTranslation(_area.Left, offsetY, 0);
 
             // Draw the labels, but only those that are at least partially visible
             for (var i = 0; i < _numLabels; ++i)

@@ -1,20 +1,21 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Graphics
+namespace Pegasus.Framework.Rendering
 {
 	using System.Runtime.InteropServices;
 	using Math;
+	using Platform.Graphics;
 
 	/// <summary>
-	///   Holds position, texture coordinates, and color data for a vertex.
+	///   Holds position, texture coordinates, and normal data for a vertex.
 	/// </summary>
 	[StructLayout(LayoutKind.Explicit, Pack = 1)]
-	public struct VertexPositionColorTexture
+	public struct VertexPositionNormalTexture
 	{
 		/// <summary>
 		///   The size in bytes of the structure.
 		/// </summary>
-		public const int Size = 28;
+		public const int Size = 36;
 
 		/// <summary>
 		///   Gets or sets the vertex' position.
@@ -32,7 +33,21 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Gets or sets the vertex' color.
 		/// </summary>
 		[FieldOffset(24)]
-		public Color Color;
+		public Vector3 Normal;
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="position">The position of the vertex.</param>
+		/// <param name="normal">The normal of the vertex.</param>
+		/// <param name="textureCoordinates">The texture coordinates of the vertex.</param>
+		public VertexPositionNormalTexture(Vector4 position, Vector3 normal, Vector2 textureCoordinates)
+			: this()
+		{
+			Position = position;
+			Normal = normal;
+			TextureCoordinates = textureCoordinates;
+		}
 
 		/// <summary>
 		///   Gets a vertex input layout for drawing VertexPositionColorTexture vertices with an appropriate vertex buffer
@@ -46,14 +61,13 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(vertexBuffer, () => vertexBuffer);
-			Assert.That(Marshal.SizeOf(typeof(VertexPositionColorTexture)) == Size, "Unexpected unamanged size.");
+			Assert.That(Marshal.SizeOf(typeof(VertexPositionNormalTexture)) == Size, "Unexpected unamanged size.");
 
 			var inputElements = new[]
 			{
 				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, VertexDataSemantics.Position, Size, 0),
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector2, VertexDataSemantics.TextureCoordinate,
-				                       Size, 16),
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Color, VertexDataSemantics.Color, Size, 24)
+				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector2, VertexDataSemantics.TextureCoordinate, Size, 16),
+				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector3, VertexDataSemantics.Normal, Size, 24)
 			};
 
 			return new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);

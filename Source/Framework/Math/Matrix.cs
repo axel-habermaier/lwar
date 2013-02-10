@@ -271,6 +271,38 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Creates a perspective projection matrix.
+		/// </summary>
+		/// <param name="left">The minimum x-value of the viewing volume.</param>
+		/// <param name="right">The maximum x-value of the viewing volume.</param>
+		/// <param name="bottom">The minimum y-value of the viewing volume.</param>
+		/// <param name="top">The maximum y-value of the viewing volume.</param>
+		/// <param name="znear">The minimum z-value of the viewing volume.</param>
+		/// <param name="zfar">The maximum z-value of the viewing volume.</param>
+		public static Matrix CreatePerspective(float left, float right, float bottom, float top, float znear, float zfar)
+		{
+			var width = right - left;
+			var height = bottom - top;
+			var depth = zfar - znear;
+
+			var a = (right + left) / width;
+			var b = (top + bottom) / height;
+			var c = -((zfar + znear) / depth);
+			var d = -((2 * zfar * znear) / depth);
+
+			return new Matrix
+			{
+				M11 = 2 * znear / width,
+				M13 = a,
+				M22 = 2 * znear / height,
+				M23 = b,
+				M33 = c,
+				M34 = d,
+				M43 = -1
+			};
+		}
+
+		/// <summary>
 		///   Creates a orthographic projection matrix.
 		/// </summary>
 		/// <param name="left">The minimum x-value of the viewing volume.</param>
@@ -279,10 +311,10 @@ namespace Pegasus.Framework.Math
 		/// <param name="top">The maximum y-value of the viewing volume.</param>
 		/// <param name="znear">The minimum z-value of the viewing volume.</param>
 		/// <param name="zfar">The maximum z-value of the viewing volume.</param>
-		public static Matrix OrthographicProjection(float left, float right, float bottom, float top, float znear,
-													float zfar)
+		public static Matrix CreateOrthographic(float left, float right, float bottom, float top, float znear,
+												float zfar)
 		{
-			float zRange = 1.0f / (zfar - znear);
+			var zRange = 1.0f / (zfar - znear);
 
 			var result = Identity;
 			result.M11 = 2.0f / (right - left);
@@ -300,7 +332,7 @@ namespace Pegasus.Framework.Math
 		/// <param name="x">The translation offset in X-direction.</param>
 		/// <param name="y">The translation offset in Y-direction.</param>
 		/// <param name="z">The translation offset in Z-direction.</param>
-		public static Matrix Translation(float x, float y, float z)
+		public static Matrix CreateTranslation(float x, float y, float z)
 		{
 			var matrix = Identity;
 			matrix.M41 = x;
@@ -313,7 +345,43 @@ namespace Pegasus.Framework.Math
 		///   Creates a matrix that rotates around the Z-axis.
 		/// </summary>
 		/// <param name="angle">The angle of the rotation, measured in radians.</param>
-		public static Matrix RotationZ(float angle)
+		public static Matrix CreateRotationX(float angle)
+		{
+			var matrix = Identity;
+			var cos = (float)Math.Cos(angle);
+			var sin = (float)Math.Sin(angle);
+
+			matrix.M22 = cos;
+			matrix.M23 = -sin;
+			matrix.M32 = sin;
+			matrix.M33 = cos;
+
+			return matrix;
+		}
+
+		/// <summary>
+		///   Creates a matrix that rotates around the Z-axis.
+		/// </summary>
+		/// <param name="angle">The angle of the rotation, measured in radians.</param>
+		public static Matrix CreateRotationY(float angle)
+		{
+			var matrix = Identity;
+			var cos = (float)Math.Cos(angle);
+			var sin = (float)Math.Sin(angle);
+
+			matrix.M11 = cos;
+			matrix.M13 = sin;
+			matrix.M31 = -sin;
+			matrix.M33 = cos;
+
+			return matrix;
+		}
+
+		/// <summary>
+		///   Creates a matrix that rotates around the Z-axis.
+		/// </summary>
+		/// <param name="angle">The angle of the rotation, measured in radians.</param>
+		public static Matrix CreateRotationZ(float angle)
 		{
 			var matrix = Identity;
 			var cos = (float)Math.Cos(angle);
@@ -331,9 +399,9 @@ namespace Pegasus.Framework.Math
 		///   Creates a matrix that uniformly changes the scale.
 		/// </summary>
 		/// <param name="scale">The scale in X-direction.</param>
-		public static Matrix Scale(float scale)
+		public static Matrix CreateScale(float scale)
 		{
-			return Scale(scale, scale, scale);
+			return CreateScale(scale, scale, scale);
 		}
 
 		/// <summary>
@@ -342,7 +410,7 @@ namespace Pegasus.Framework.Math
 		/// <param name="x">The scale in X-direction.</param>
 		/// <param name="y">The scale in Y-direction.</param>
 		/// <param name="z">The scale in Z-direction.</param>
-		public static Matrix Scale(float x, float y, float z)
+		public static Matrix CreateScale(float x, float y, float z)
 		{
 			var matrix = Identity;
 			matrix.M11 = x;

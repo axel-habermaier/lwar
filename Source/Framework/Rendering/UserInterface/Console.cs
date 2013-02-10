@@ -227,7 +227,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_size.Height = size.Height / 2;
 
 			// Update the sprite batch's projection matrix
-			_spriteBatch.ProjectionMatrix = Matrix.OrthographicProjection(0, size.Width, size.Height, 0, 0, 1);
+			_spriteBatch.ProjectionMatrix = Matrix.CreateOrthographic(0, size.Width, size.Height, 0, 0, 1);
 
 			// Calculate the prompt area
 			var promptArea = new Rectangle(_margin.Width, _size.Height - _font.LineHeight - _margin.Height,

@@ -8,6 +8,7 @@ namespace Lwar.Client
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Scripting;
 
 	/// <summary>
@@ -49,6 +50,7 @@ namespace Lwar.Client
 			SwapChain.BackBuffer.Clear(ClearTargets.Color, Color.Black);
 
 			_session.Draw();
+			_sphere.Draw(GraphicsDevice);
 		}
 
 		/// <summary>
@@ -58,10 +60,11 @@ namespace Lwar.Client
 		{
 			_session.SafeDispose();
 			_server.SafeDispose();
-
+			_sphere.SafeDispose();
 			base.OnDisposing();
 		}
 
+		private Sphere _sphere;
 		/// <summary>
 		///   Invoked when the application is initializing.
 		/// </summary>
@@ -80,6 +83,7 @@ namespace Lwar.Client
 			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");
 			Commands.Bind.Invoke(Key.F3.WentDown(), "connect 127.0.0.1:" + ServerProxy.DefaultPort);
 			Commands.Bind.Invoke(Key.F4.WentDown(), "disconnect");
+			_sphere = new Sphere(GraphicsDevice, Assets, 100);
 		}
 
 		/// <summary>

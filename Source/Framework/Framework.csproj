@@ -104,6 +104,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x86'">
     <OutputPath>..\..\Binaries\Release\</OutputPath>
@@ -174,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayPool.cs" />
+    <Compile Include="Math\Vector3.cs" />
     <Compile Include="Network\IPacketFactory.cs" />
     <Compile Include="Network\ServicePacketFactory.cs" />
     <Compile Include="ObjectPool.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Processes\DelegateOperation.cs" />
     <Compile Include="Processes\TaskOperation`1.cs" />
     <Compile Include="Processes\TaskOperation.cs" />
+    <Compile Include="Rendering\VertexPositionNormalTexture.cs" />
     <Compile Include="Rendering\GpuProfiler.cs" />
     <Compile Include="Math\Circle.cs">
       <DependentUpon>Circle.tt</DependentUpon>
@@ -263,6 +266,7 @@
     <Compile Include="Platform\Graphics\Shader.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\ICamera.cs" />
+    <Compile Include="Rendering\Sphere.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Pipe4Parser.cs" />
@@ -428,7 +432,7 @@
     <Compile Include="Platform\Graphics\TextureFilter.cs" />
     <Compile Include="Platform\Graphics\VertexDataFormat.cs" />
     <Compile Include="Platform\Graphics\VertexBuffer.cs" />
-    <Compile Include="Platform\Graphics\VertexPositionColorTexture.cs" />
+    <Compile Include="Rendering\VertexPositionColorTexture.cs" />
     <Compile Include="Platform\Graphics\VertexShader.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

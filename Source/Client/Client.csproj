@@ -50,6 +50,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\..\Binaries\Release\</OutputPath>
@@ -142,6 +143,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\Assets\Shaders\SphereFS.hlsl">
+      <Link>Shaders\SphereFS.hlsl</Link>
+    </Content>
+    <Content Include="..\..\Assets\Shaders\SphereVS.hlsl">
+      <Link>Shaders\SphereVS.hlsl</Link>
+    </Content>
     <Content Include="..\..\Assets\Shaders\SpriteFS.hlsl">
       <Link>Shaders\SpriteFS.hlsl</Link>
     </Content>
