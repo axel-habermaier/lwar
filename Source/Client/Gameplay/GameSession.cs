@@ -74,7 +74,7 @@ namespace Lwar.Client.Gameplay
 			Assert.ArgumentNotNull(assets, () => assets);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 
-			Camera = new Camera3D(graphicsDevice) { FieldOfView = 90 };
+			Camera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.PiOver2 };
 			Window = window;
 			GraphicsDevice = graphicsDevice;
 			Assets = assets;

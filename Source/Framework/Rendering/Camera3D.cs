@@ -79,7 +79,8 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="matrix">The matrix that should hold the projection matrix once the method returns.</param>
 		protected override void UpdateProjectionMatrix(out Matrix matrix)
 		{
-			matrix = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / (float)Viewport.Height, -1, -1000);
+			matrix = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / (float)Viewport.Height, 1, 1000);
+			//matrix = Matrix.CreatePerspective(-1, 1, 1, -1, 1, -1000);
 		}
 
 		/// <summary>
