@@ -80,7 +80,6 @@ namespace Pegasus.Framework.Rendering
 		protected override void UpdateProjectionMatrix(out Matrix matrix)
 		{
 			matrix = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / (float)Viewport.Height, 1, 1000);
-			//matrix = Matrix.CreatePerspective(-1, 1, 1, -1, 1, -1000);
 		}
 
 		/// <summary>

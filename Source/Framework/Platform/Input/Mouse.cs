@@ -2,8 +2,8 @@
 
 namespace Pegasus.Framework.Platform.Input
 {
+	using System.Runtime.InteropServices;
 	using Math;
-	using Platform;
 
 	/// <summary>
 	///   Represents the state of the mouse.
@@ -106,6 +106,9 @@ namespace Pegasus.Framework.Platform.Input
 			return _states[(int)button].WentUp;
 		}
 
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
 		protected override void OnDisposing()
 		{
 			_window.MouseMoved -= MouseMoved;

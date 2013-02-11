@@ -181,4 +181,7 @@ PG_API_EXPORT pgVoid pgGetWindowSize(pgWindow* window, pgInt32* width, pgInt32* 
 PG_API_EXPORT pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height);
 PG_API_EXPORT pgVoid pgSetWindowTitle(pgWindow* window, pgString title);
 
+PG_API_EXPORT pgVoid pgCaptureMouse(pgWindow* window);
+PG_API_EXPORT pgVoid pgReleaseMouse(pgWindow* window);
+
 #endif

@@ -23,6 +23,11 @@ namespace Pegasus.Framework.Platform
 		private readonly IntPtr _window;
 
 		/// <summary>
+		///   A value indicating whether the mouse is currently captured by the window.
+		/// </summary>
+		private bool _mouseCaptured;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		internal Window()
@@ -108,6 +113,22 @@ namespace Pegasus.Framework.Platform
 			{
 				Assert.NotDisposed(this);
 				NativeMethods.SetWindowSize(_window, value.Width, value.Height);
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets a value indicating whether the mouse is currently captured by the window.
+		/// </summary>
+		public bool MouseCaptured
+		{
+			get { return _mouseCaptured; }
+			set
+			{
+				_mouseCaptured = value;
+				if (_mouseCaptured)
+					NativeMethods.CaptureMouse(_window);
+				else
+					NativeMethods.ReleaseMouse(_window);
 			}
 		}
 
@@ -274,6 +295,12 @@ namespace Pegasus.Framework.Platform
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowTitle")]
 			public static extern void SetWindowTitle(IntPtr window, string title);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCaptureMouse")]
+			public static extern void CaptureMouse(IntPtr window);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReleaseMouse")]
+			public static extern void ReleaseMouse(IntPtr window);
 
 			[StructLayout(LayoutKind.Sequential)]
 			public struct WindowParams

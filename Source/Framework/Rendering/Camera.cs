@@ -65,7 +65,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Activates this camera instance, causing all subsequent drawing operations to be relative to this camera instance.
 		/// </summary>
-		public void MakeCurrent()
+		public void Bind()
 		{
 			_matricesBuffer.Bind(CameraConstantsSlot);
 		}
@@ -73,7 +73,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override sealed void OnDisposing()
+		protected override void OnDisposing()
 		{
 			_matricesBuffer.SafeDispose();
 		}

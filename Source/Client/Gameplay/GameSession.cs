@@ -36,6 +36,11 @@ namespace Lwar.Client.Gameplay
 		public static Font LoadingFont;
 
 		/// <summary>
+		///   The debug camera that can be used to freely navigate the scene.
+		/// </summary>
+		private readonly DebugCamera _debugCamera;
+
+		/// <summary>
 		///   The process scheduler that schedules all draw processes of the game session.
 		/// </summary>
 		private readonly ProcessScheduler _drawScheduler;
@@ -56,6 +61,11 @@ namespace Lwar.Client.Gameplay
 		private readonly StateMachine _updateState;
 
 		/// <summary>
+		///   The currently active camera that is used to draw the scene.
+		/// </summary>
+		private Camera _activeCamera;
+
+		/// <summary>
 		///   Manages the input state and periodically sends updates to the server.
 		/// </summary>
 		private InputManager _inputManager;
@@ -74,7 +84,6 @@ namespace Lwar.Client.Gameplay
 			Assert.ArgumentNotNull(assets, () => assets);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 
-			Camera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.PiOver2 };
 			Window = window;
 			GraphicsDevice = graphicsDevice;
 			Assets = assets;
@@ -84,13 +93,25 @@ namespace Lwar.Client.Gameplay
 			_updateState = StateMachine.Create(Scheduler);
 			_drawScheduler = new ProcessScheduler();
 			_drawState = StateMachine.Create(_drawScheduler);
-			Window.Resized += WindowResized;
-			WindowResized(Window.Size);
+
+			Camera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.PiOver2 };
+			_debugCamera = new DebugCamera(graphicsDevice, inputDevice, Scheduler)
+			{
+				FieldOfView = MathUtils.PiOver2,
+				Position = Vector3.Zero,
+				Target = new Vector3(0, 0, 1)
+			};
+			_activeCamera = Camera;
+			InputDevice.Modes = InputModes.Game;
 
 			LwarCommands.Connect.Invoked += serverEndPoint => _updateState.ChangeState(ctx => Loading(ctx, serverEndPoint));
 			LwarCommands.Disconnect.Invoked += () => _updateState.ChangeState(Inactive);
 			LwarCommands.Chat.Invoked += ChatMessageEntered;
+			LwarCommands.ToggleDebugCamera.Invoked += ToggleDebugCamera;
 			Cvars.PlayerName.Changed += PlayerNameChanged;
+			Window.Resized += WindowResized;
+
+			WindowResized(Window.Size);
 			_updateState.ChangeState(Inactive);
 		}
 
@@ -145,6 +166,25 @@ namespace Lwar.Client.Gameplay
 		public ServerProxy ServerProxy { get; private set; }
 
 		/// <summary>
+		///   Toggles between the game and the debug camera.
+		/// </summary>
+		private void ToggleDebugCamera()
+		{
+			if (_activeCamera == _debugCamera)
+			{
+				_activeCamera = Camera;
+				InputDevice.Modes = InputModes.Game;
+				Window.MouseCaptured = false;
+			}
+			else
+			{
+				_activeCamera = _debugCamera;
+				InputDevice.Modes = InputModes.Debug;
+				Window.MouseCaptured = true;
+			}
+		}
+
+		/// <summary>
 		///   Invoked when the player changed his or her name.
 		/// </summary>
 		/// <param name="name">The new name of the player.</param>
@@ -169,6 +209,8 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			Camera.SafeDispose();
+			_debugCamera.SafeDispose();
 			Entities.SafeDispose();
 			_spriteBatch.SafeDispose();
 			_inputManager.SafeDispose();
@@ -177,7 +219,6 @@ namespace Lwar.Client.Gameplay
 			ServerProxy.SafeDispose();
 			Scheduler.SafeDispose();
 			_drawScheduler.SafeDispose();
-			Camera.SafeDispose();
 
 			if (Window != null)
 				Window.Resized -= WindowResized;
@@ -207,7 +248,6 @@ namespace Lwar.Client.Gameplay
 		public void Draw()
 		{
 			_drawScheduler.RunProcesses();
-
 			_spriteBatch.DrawBatch();
 		}
 
@@ -217,7 +257,11 @@ namespace Lwar.Client.Gameplay
 		/// <param name="windowSize">The new size of the window.</param>
 		private void WindowResized(Size windowSize)
 		{
-			Camera.Viewport = new Rectangle(0, 0, Window.Size.Width, Window.Size.Height);
+			var viewport = new Rectangle(0, 0, Window.Size.Width, Window.Size.Height);
+
+			Camera.Viewport = viewport;
+			_debugCamera.Viewport = viewport;
+
 			_spriteBatch.ProjectionMatrix = Matrix.CreateOrthographic(0, windowSize.Width, windowSize.Height, 0, 0, 1);
 		}
 
@@ -340,8 +384,8 @@ namespace Lwar.Client.Gameplay
 				if (LocalPlayer.Ship != null)
 				{
 					var position = LocalPlayer.Ship.Position;
-					Camera.Position = new Vector3(0, 0, 200); // new Vector3(-position.X, -position.Y, 100);
-					Camera.Target = new Vector3(0, 0, 0);
+					Camera.Position = new Vector3(-position.X, -position.Y, 100);
+					Camera.Target = new Vector3(position.X, position.Y, 0);
 				}
 
 				if (ServerProxy.IsLagging)
@@ -369,7 +413,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		private void DrawEntities()
 		{
-			Camera.MakeCurrent();
+			_activeCamera.Bind();
 			Entities.Draw();
 		}
 

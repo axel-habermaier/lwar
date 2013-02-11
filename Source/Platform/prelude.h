@@ -183,6 +183,7 @@ pgVoid pgDebugInfo(pgString message, ...);
 struct pgWindow
 {
 	pgWindowParams params;
+	pgBool mouseCaptured;
 	PG_WINDOW_PLATFORM
 };
 
@@ -193,6 +194,9 @@ pgVoid pgProcessWindowEventsCore(pgWindow* window);
 pgVoid pgGetWindowSizeCore(pgWindow* window, pgInt32* width, pgInt32* height);
 pgVoid pgSetWindowSizeCore(pgWindow* window, pgInt32 width, pgInt32 height);
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title);
+
+pgVoid pgCaptureMouseCore(pgWindow* window);
+pgVoid pgReleaseMouseCore(pgWindow* window);
 
 //====================================================================================================================
 // Graphics device

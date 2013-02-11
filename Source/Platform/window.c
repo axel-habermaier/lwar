@@ -71,3 +71,30 @@ pgVoid pgSetWindowTitle(pgWindow* window, pgString title)
 
 	pgSetWindowTitleCore(window, title);
 }
+
+pgVoid pgCaptureMouse(pgWindow* window)
+{
+	PG_ASSERT_NOT_NULL(window);
+	PG_ASSERT(!window->mouseCaptured, "Mouse has already been captured.");
+
+	window->mouseCaptured = PG_TRUE;
+	pgCaptureMouseCore(window);
+
+	if (window->params.mouseMoved != NULL)
+		window->params.mouseMoved(0, 0);
+}
+
+pgVoid pgReleaseMouse(pgWindow* window)
+{
+	pgInt32 width, height;
+
+	PG_ASSERT_NOT_NULL(window);
+	PG_ASSERT(window->mouseCaptured, "Mouse has not been captured.");
+
+	window->mouseCaptured = PG_FALSE;
+	pgReleaseMouseCore(window);
+
+	pgGetWindowSize(window, &width, &height);
+	if (window->params.mouseMoved != NULL)
+		window->params.mouseMoved(width / 2, height / 2);
+}

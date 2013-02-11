@@ -20,6 +20,7 @@ static pgVoid Initialize();
 static pgVoid Shutdown();
 static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc);
 static pgVoid HandleWindowMessages(HWND hwnd);
+static pgVoid CenterCursor(pgWindow* window);
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 static pgKey TranslateKey(UINT virtualKey);
@@ -120,6 +121,17 @@ pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
 		pgWin32Error("Failed to set window title.");
 }
 
+pgVoid pgCaptureMouseCore(pgWindow* window)
+{
+	CenterCursor(window);
+}
+
+pgVoid pgReleaseMouseCore(pgWindow* window)
+{
+	PG_UNUSED(window);
+	// Nothing to do here	
+}
+
 //====================================================================================================================
 // Helper functions
 //====================================================================================================================
@@ -195,6 +207,19 @@ static pgVoid HandleWindowMessages(HWND hwnd)
 	}
 }
 
+static pgVoid CenterCursor(pgWindow* window)
+{
+	POINT point;
+	pgInt32 width, height;
+
+	pgGetWindowSize(window, &width, &height);
+	point.x = width / 2;
+	point.y = height / 2;
+
+	ClientToScreen(window->hwnd, &point);
+    SetCursorPos(point.x, point.y);
+}
+
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	pgWindow* window;
@@ -264,7 +289,26 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		}
 
 		if (params->mouseMoved != NULL)
-			params->mouseMoved(LOWORD(lParam), HIWORD(lParam));
+		{
+			pgInt32 x = LOWORD(lParam), y = HIWORD(lParam);
+
+			if (window->mouseCaptured)
+			{
+				pgInt32 width, height;
+				pgGetWindowSize(window, &width, &height);
+				x -= width / 2;
+				y -= height / 2;
+
+				if (x == 0 && y == 0)
+					break;
+			}
+
+			params->mouseMoved(x, y);
+		}
+
+		if (window->mouseCaptured)
+			CenterCursor(window);
+
 		break;
 	case WM_MOUSELEAVE:
 		window->cursorInside = PG_FALSE;

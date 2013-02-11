@@ -35,5 +35,11 @@ namespace Lwar.Client
 		///   Sends a chat message to all peers.
 		/// </summary>
 		public static readonly Command<string> Chat = new Command<string>("chat", "Sends a chat message to all peers.");
+
+		/// <summary>
+		///   Toggles between the game and the debugging camera.
+		/// </summary>
+		public static readonly Command ToggleDebugCamera = new Command("toggle_debug_cam",
+																	   "Toggles between the game and the debugging camera.");
 	}
 }
