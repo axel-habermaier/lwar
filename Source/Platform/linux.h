@@ -29,6 +29,7 @@ pgVoid pgShutdownX11();
 	Window 		handle;			\
 	Atom		closeAtom;		\
 	XIM			inputMethod;	\
-	XIC			inputContext;
+	XIC			inputContext;	\
+	Cursor		cursor;
 
 #endif

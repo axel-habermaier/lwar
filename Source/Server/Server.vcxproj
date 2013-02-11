@@ -188,6 +188,7 @@
     <ClCompile Include="rules.c" />
     <ClCompile Include="rules\bullet.c" />
     <ClCompile Include="rules\gun.c" />
+    <ClCompile Include="rules\phaser.c" />
     <ClCompile Include="rules\planet.c" />
     <ClCompile Include="rules\rocket.c" />
     <ClCompile Include="rules\ship.c" />

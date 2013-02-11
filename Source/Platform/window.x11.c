@@ -10,6 +10,8 @@
 	FocusChangeMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask | PointerMotionMask | \
 	KeyPressMask | KeyReleaseMask | StructureNotifyMask | EnterWindowMask | LeaveWindowMask
 	
+static void CreateHiddenCursor(pgWindow* window);
+static pgVoid CenterCursor(pgWindow* window);
 static Bool CheckEvent(Display* display, XEvent* e, XPointer userData);
 static pgVoid ProcessEvent(pgWindow* window, XEvent* e);
 static pgMouseButton TranslateButton(unsigned int button);
@@ -54,10 +56,15 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 		
 	XMapWindow(x11State.display, window->handle);
 	XFlush(x11State.display);
+	
+	CreateHiddenCursor(window);
 }
 
 pgVoid pgCloseWindowCore(pgWindow* window)
 {
+	if (window->cursor != NULL)
+		XFreeCursor(x11State.display, window->cursor);
+
 	if (window->inputContext != NULL)
 		XDestroyIC(window->inputContext);
 		
@@ -105,9 +112,58 @@ pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
 	XStoreName(x11State.display, window->handle, title);
 }
 
+pgVoid pgCaptureMouseCore(pgWindow* window)
+{
+	CenterCursor(window);
+	
+	XDefineCursor(x11State.display, window->handle, window->cursor);
+    XFlush(x11State.display);
+}
+
+pgVoid pgReleaseMouseCore(pgWindow* window)
+{
+	XDefineCursor(x11State.display, window->handle, None);
+    XFlush(x11State.display);
+}
+
 //====================================================================================================================
 // Helper functions
 //====================================================================================================================
+
+static void CreateHiddenCursor(pgWindow* window)
+{
+    Pixmap cursorPixmap = XCreatePixmap(x11State.display, window->handle, 1, 1, 1);
+    GC graphicsContext = XCreateGC(x11State.display, cursorPixmap, 0, NULL);
+    XDrawPoint(x11State.display, cursorPixmap, graphicsContext, 0, 0);
+    XFreeGC(x11State.display, graphicsContext);
+
+    XColor color;
+    color.flags = DoRed | DoGreen | DoBlue;
+    color.red = color.blue = color.green = 0;
+    window->cursor = XCreatePixmapCursor(x11State.display, cursorPixmap, cursorPixmap, &color, &color, 0, 0);
+
+    XFreePixmap(x11State.display, cursorPixmap);
+}
+
+static pgVoid CenterCursor(pgWindow* window)
+{
+	pgInt32 width, height;
+
+	pgGetWindowSize(window, &width, &height);
+	width /= 2;
+	height /= 2;
+
+	Window root, child;
+	int gx, gy, x, y;
+	unsigned int buttons;
+	XQueryPointer(x11State.display, window->handle, &root, &child, &gx, &gy, &x, &y, &buttons);
+
+	if (width == x && height == y)
+		return;
+
+	XWarpPointer(x11State.display, None, window->handle, 0, 0, 0, 0, width, height);
+	XFlush(x11State.display);
+}
 
 static Bool CheckEvent(Display* display, XEvent* e, XPointer userData)
 {
@@ -185,6 +241,9 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e)
 	case MotionNotify:
 		if (params->mouseMoved != NULL)
 			params->mouseMoved(e->xmotion.x, e->xmotion.y);
+			
+		if (window->mouseCaptured)
+			CenterCursor(window);
 		break;
 	case EnterNotify:
 		if (params->mouseEntered != NULL)

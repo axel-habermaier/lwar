@@ -103,7 +103,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="matrix">The matrix that should hold the projection matrix once the method returns.</param>
 		protected override void UpdateProjectionMatrix(out Matrix matrix)
 		{
-			matrix = Matrix.CreatePerspectiveFieldOfView(MathUtils.DegToRad(50), Viewport.Width / (float)Viewport.Height, 1, 1000);
+			matrix = Matrix.CreatePerspectiveFieldOfView(MathUtils.DegToRad(30), Viewport.Width / (float)Viewport.Height, 1, 1000);
 		}
 
 		/// <summary>
@@ -156,7 +156,7 @@ namespace Pegasus.Framework.Rendering
 				_position += move * MoveSpeed;
 
 				UpdateViewMatrix();
-				await context.Delay(UpdateFrequency);
+				await context.Delay(1000 / UpdateFrequency);
 			}
 		}
 

@@ -30,6 +30,7 @@
     </ClCompile>
     <ClCompile Include="rules\gun.c" />
     <ClCompile Include="item.c" />
+    <ClCompile Include="rules\phaser.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="connection.h" />

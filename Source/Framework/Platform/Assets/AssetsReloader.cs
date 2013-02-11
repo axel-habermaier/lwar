@@ -68,6 +68,7 @@ namespace Pegasus.Framework.Platform.Assets
 									  .OfType<IAssetsCompiler>()
 									  .Single();
 
+#if Windows
 			// Compile all assets on startup
 			_assetsCompiler.Compile();
 
@@ -81,6 +82,7 @@ namespace Pegasus.Framework.Platform.Assets
 						Thread.Sleep(1000 / UpdateFrequency);
 					}
 				}, token);
+#endif
 		}
 
 		/// <summary>

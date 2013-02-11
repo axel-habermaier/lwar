@@ -84,10 +84,10 @@ unsigned int window_events(int *width, int *height) {
     unsigned int flags = 0;
     char kstr[1];
     int  kn;
-    int  pressed = 0;
 
     while(XPending(display)>0)
     {
+        int pressed = 0;
         XNextEvent(display, &event);
 
         switch(event.type)
@@ -132,4 +132,19 @@ unsigned int window_events(int *width, int *height) {
     }
 
     return flags;
+}
+
+int key_down(unsigned char key) {
+    return keys[key];
+}
+
+int button_down(unsigned char button) {
+    if(button < 3)
+        return buttons[button];
+    return 0;
+}
+
+void mouse_pos(int *x, int *y) {
+    if(x) *x = mx;
+    if(y) *y = my;
 }

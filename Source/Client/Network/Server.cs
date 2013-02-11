@@ -191,7 +191,7 @@ namespace Lwar.Client.Network
 #if Windows
 			private const string LibraryName = "lwar-server.dll";
 #else
-			private const string LibraryName = "libserver.so";
+			private const string LibraryName = "liblwar-server.so";
 #endif
 
 			[DllImport(LibraryName, EntryPoint = "server_init")]

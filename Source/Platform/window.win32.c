@@ -124,12 +124,15 @@ pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
 pgVoid pgCaptureMouseCore(pgWindow* window)
 {
 	CenterCursor(window);
+
+	window->cursor = NULL;
+	SetCursor(window->cursor);
 }
 
 pgVoid pgReleaseMouseCore(pgWindow* window)
 {
-	PG_UNUSED(window);
-	// Nothing to do here	
+	window->cursor = LoadCursor(NULL, IDC_ARROW);
+	SetCursor(window->cursor);
 }
 
 //====================================================================================================================

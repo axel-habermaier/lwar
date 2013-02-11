@@ -164,6 +164,22 @@ struct Entity {
     Time remaining;
 };
 
+/* Rays are essentially entities */
+struct Ray {
+    List _l;
+    EntityType *type;
+
+    Id id;
+    int dead;
+    Clock age;
+
+    Entity *parent;
+
+    Vec x;
+    Pos phi;
+    Pos len;
+};
+
 struct EntityType {
     size_t id;
 

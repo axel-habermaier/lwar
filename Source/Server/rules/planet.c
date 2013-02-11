@@ -16,7 +16,7 @@ static EntityType _planet = {
     gravity,                /* activation callback */
     hit,                    /* collision callback  */
     128,                    /* radius  */
-    200,                    /* mass    */
+    10000,                  /* mass    */
     {0,0},                  /* acceleration */
     {0,0},                  /* brake   */
     0,                      /* turn speed   */

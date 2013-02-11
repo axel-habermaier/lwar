@@ -16,3 +16,7 @@ unsigned int window_events(int *width, int *height);
 
 void window_swap();
 void window_close();
+
+int key_down(unsigned char key);
+int button_down(unsigned char button);
+void mouse_pos(int *x, int *y);
