@@ -3,17 +3,10 @@
 #ifdef OPENGL3
 
 //====================================================================================================================
-// Helper functions and state
+// Helper functions
 //====================================================================================================================
 
-static struct BufferState
-{
-	GLuint vertexBuffer;
-	GLuint indexBuffer;
-	GLuint constantBuffer;
-} state;
-
-static pgVoid Rebind(GLenum bufferType);
+static GLint GetBoundBuffer(GLenum bufferType);
 
 //====================================================================================================================
 // Core functions
@@ -21,15 +14,18 @@ static pgVoid Rebind(GLenum bufferType);
 
 pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage usage, pgVoid* data, pgInt32 size)
 {
+	GLint boundBuffer;
+
 	glGenBuffers(1, &buffer->id);
 	PG_CHECK_GL_HANDLE("Buffer", buffer->id);
 
 	buffer->type = pgConvertBufferType(type);
 	buffer->size = size;
 
+	boundBuffer = GetBoundBuffer(buffer->type);
 	glBindBuffer(buffer->type, buffer->id);
 	glBufferData(buffer->type, size, data, pgConvertResourceUsage(usage));
-	Rebind(buffer->type);
+	glBindBuffer(buffer->type, boundBuffer);
 	
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -43,10 +39,12 @@ pgVoid pgDestroyBufferCore(pgBuffer* buffer)
 pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode)
 {
 	pgVoid* mappedBuffer;
+	GLint boundBuffer;
 
+	boundBuffer = GetBoundBuffer(buffer->type);
 	glBindBuffer(buffer->type, buffer->id);
 	mappedBuffer = glMapBufferRange(buffer->type, 0, buffer->size, pgConvertMapMode(mode));
-	Rebind(buffer->type);
+	glBindBuffer(buffer->type, boundBuffer);
 	PG_ASSERT_NO_GL_ERRORS();
 
 	if (mappedBuffer == NULL)
@@ -58,10 +56,12 @@ pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode)
 pgVoid pgUnmapBufferCore(pgBuffer* buffer)
 {
 	GLboolean success;
+	GLint boundBuffer;
 
+	boundBuffer = GetBoundBuffer(buffer->type);
 	glBindBuffer(buffer->type, buffer->id);
 	success = glUnmapBuffer(buffer->type);
-	Rebind(buffer->type);
+	glBindBuffer(buffer->type, boundBuffer);
 	PG_ASSERT_NO_GL_ERRORS();
 
 	if (!success)
@@ -74,43 +74,32 @@ pgVoid pgBindConstantBufferCore(pgBuffer* buffer, pgInt32 slot)
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, slot, buffer->id);
 	PG_ASSERT_NO_GL_ERRORS();
-
-	switch (buffer->type)
-	{
-	case GL_ELEMENT_ARRAY_BUFFER:
-		state.indexBuffer = buffer->id;
-		break;
-	case GL_ARRAY_BUFFER:
-		state.vertexBuffer = buffer->id;
-		break;
-	case GL_UNIFORM_BUFFER:
-		state.constantBuffer = buffer->id;
-		break;
-	default:
-		PG_NO_SWITCH_DEFAULT;
-	}
 }
 
 //====================================================================================================================
 // Helper functions
 //====================================================================================================================
 
-static pgVoid Rebind(GLenum bufferType)
+static GLint GetBoundBuffer(GLenum bufferType)
 {
+	GLint buffer;
+
 	switch (bufferType)
 	{
 	case GL_ELEMENT_ARRAY_BUFFER:
-		glBindBuffer(bufferType, state.indexBuffer);
+		glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &buffer);
 		break;
 	case GL_ARRAY_BUFFER:
-		glBindBuffer(bufferType, state.vertexBuffer);
+		glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &buffer);
 		break;
 	case GL_UNIFORM_BUFFER:
-		glBindBuffer(bufferType, state.constantBuffer);
+		glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &buffer);
 		break;
 	default:
 		PG_NO_SWITCH_DEFAULT;
 	}
+
+	return buffer;
 }
 
 #endif

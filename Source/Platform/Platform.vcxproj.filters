@@ -111,7 +111,7 @@
       <Filter>Graphics\Direct3D 11</Filter>
     </ClCompile>
     <ClCompile Include="buffer.gl3.c">
-      <Filter>Graphics\OpenGL 3\Bindings</Filter>
+      <Filter>Graphics\OpenGL 3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
