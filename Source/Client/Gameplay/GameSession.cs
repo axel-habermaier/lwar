@@ -96,7 +96,7 @@ namespace Lwar.Client.Gameplay
 			_drawState = StateMachine.Create(_drawScheduler);
 			RenderContext = new RenderContext(graphicsDevice, assets);
 
-			Camera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.PiOver2 };
+			Camera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.DegToRad(20), Up = new Vector3(0, 0, 1) };
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice, Scheduler);
 			RenderContext.Camera = Camera;
 			InputDevice.Modes = InputModes.Game;
@@ -383,8 +383,8 @@ namespace Lwar.Client.Gameplay
 				if (LocalPlayer.Ship != null)
 				{
 					var position = LocalPlayer.Ship.Position;
-					Camera.Position = new Vector3(-position.X, -position.Y, 100);
-					Camera.Target = new Vector3(position.X, position.Y, 0);
+					Camera.Position = new Vector3(position.X, 1500, position.Y);
+					Camera.Target = new Vector3(position.X, 0, position.Y);
 				}
 
 				if (ServerProxy.IsLagging)

@@ -122,6 +122,7 @@
     <Compile Include="Rendering\Model.cs" />
     <Compile Include="Rendering\PlanetRenderer.cs" />
     <Compile Include="Rendering\RenderContext.cs" />
+    <Compile Include="Rendering\ShipRenderer.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="Gameplay\IEntity.cs" />
     <Compile Include="LwarApp.cs" />
@@ -138,11 +139,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Assets\Shaders\QuadFS.glsl">
+      <Link>Shaders\GLSL\QuadFS.glsl</Link>
+    </None>
+    <None Include="..\..\Assets\Shaders\QuadVS.glsl">
+      <Link>Shaders\GLSL\QuadVS.glsl</Link>
+    </None>
+    <None Include="..\..\Assets\Shaders\SphereFS.glsl">
+      <Link>Shaders\GLSL\SphereFS.glsl</Link>
+    </None>
+    <None Include="..\..\Assets\Shaders\SphereVS.glsl">
+      <Link>Shaders\GLSL\SphereVS.glsl</Link>
+    </None>
     <None Include="..\..\Assets\Shaders\SpriteFS.glsl">
-      <Link>Shaders\SpriteFS.glsl</Link>
+      <Link>Shaders\GLSL\SpriteFS.glsl</Link>
     </None>
     <None Include="..\..\Assets\Shaders\SpriteVS.glsl">
-      <Link>Shaders\SpriteVS.glsl</Link>
+      <Link>Shaders\GLSL\SpriteVS.glsl</Link>
     </None>
     <None Include="AssetsLoader.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -150,17 +163,23 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\Assets\Shaders\QuadFS.hlsl">
+      <Link>Shaders\HLSL\QuadFS.hlsl</Link>
+    </Content>
+    <Content Include="..\..\Assets\Shaders\QuadVS.hlsl">
+      <Link>Shaders\HLSL\QuadVS.hlsl</Link>
+    </Content>
     <Content Include="..\..\Assets\Shaders\SphereFS.hlsl">
-      <Link>Shaders\SphereFS.hlsl</Link>
+      <Link>Shaders\HLSL\SphereFS.hlsl</Link>
     </Content>
     <Content Include="..\..\Assets\Shaders\SphereVS.hlsl">
-      <Link>Shaders\SphereVS.hlsl</Link>
+      <Link>Shaders\HLSL\SphereVS.hlsl</Link>
     </Content>
     <Content Include="..\..\Assets\Shaders\SpriteFS.hlsl">
-      <Link>Shaders\SpriteFS.hlsl</Link>
+      <Link>Shaders\HLSL\SpriteFS.hlsl</Link>
     </Content>
     <Content Include="..\..\Assets\Shaders\SpriteVS.hlsl">
-      <Link>Shaders\SpriteVS.hlsl</Link>
+      <Link>Shaders\HLSL\SpriteVS.hlsl</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>

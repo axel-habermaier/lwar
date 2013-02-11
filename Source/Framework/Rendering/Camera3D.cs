@@ -16,16 +16,6 @@ namespace Pegasus.Framework.Rendering
 		private float _fieldOfView;
 
 		/// <summary>
-		///   The camera's position within the world.
-		/// </summary>
-		private Vector3 _position;
-
-		/// <summary>
-		///   The target the camera looks at.
-		/// </summary>
-		private Vector3 _target;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
@@ -48,47 +38,12 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
-		///   Gets or sets the camera's position within the world.
-		/// </summary>
-		public Vector3 Position
-		{
-			get { return _position; }
-			set
-			{
-				_position = value;
-				UpdateViewMatrix();
-			}
-		}
-
-		/// <summary>
-		///   Gets or sets the target the camera looks at.
-		/// </summary>
-		public Vector3 Target
-		{
-			get { return _target; }
-			set
-			{
-				_target = value;
-				UpdateViewMatrix();
-			}
-		}
-
-		/// <summary>
 		///   Updates the projection matrix based on the current camera configuration.
 		/// </summary>
 		/// <param name="matrix">The matrix that should hold the projection matrix once the method returns.</param>
 		protected override void UpdateProjectionMatrix(out Matrix matrix)
 		{
 			matrix = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / (float)Viewport.Height, 1, 1000);
-		}
-
-		/// <summary>
-		///   Updates the view matrix based on the current camera configuration.
-		/// </summary>
-		/// <param name="matrix">The matrix that should hold the view matrix once the method returns.</param>
-		protected override void UpdateViewMatrix(out Matrix matrix)
-		{
-			matrix = Matrix.CreateLookAt(Position, Target, new Vector3(0, 1, 0));
 		}
 	}
 }

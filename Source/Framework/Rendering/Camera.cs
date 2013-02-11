@@ -28,6 +28,21 @@ namespace Pegasus.Framework.Rendering
 		private Matrices _matrices;
 
 		/// <summary>
+		///   The camera's position within the world.
+		/// </summary>
+		private Vector3 _position;
+
+		/// <summary>
+		///   The target the camera looks at.
+		/// </summary>
+		private Vector3 _target;
+
+		/// <summary>
+		///   The up vector.
+		/// </summary>
+		private Vector3 _up;
+
+		/// <summary>
 		///   The camera's viewport.
 		/// </summary>
 		private Rectangle _viewport;
@@ -59,6 +74,45 @@ namespace Pegasus.Framework.Rendering
 			{
 				_viewport = value;
 				UpdateProjectionMatrix();
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the camera's position within the world.
+		/// </summary>
+		public Vector3 Position
+		{
+			get { return _position; }
+			set
+			{
+				_position = value;
+				UpdateViewMatrix();
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the target the camera looks at.
+		/// </summary>
+		public Vector3 Target
+		{
+			get { return _target; }
+			set
+			{
+				_target = value;
+				UpdateViewMatrix();
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the up vector.
+		/// </summary>
+		public Vector3 Up
+		{
+			get { return _up; }
+			set
+			{
+				_up = value;
+				UpdateViewMatrix();
 			}
 		}
 
@@ -117,7 +171,10 @@ namespace Pegasus.Framework.Rendering
 		///   Updates the view matrix based on the current camera configuration.
 		/// </summary>
 		/// <param name="matrix">The matrix that should hold the view matrix once the method returns.</param>
-		protected abstract void UpdateViewMatrix(out Matrix matrix);
+		protected virtual void UpdateViewMatrix(out Matrix matrix)
+		{
+			matrix = Matrix.CreateLookAt(Position, Target, Up);
+		}
 
 		/// <summary>
 		///   Stores the camera matrices.

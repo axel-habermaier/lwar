@@ -32,8 +32,7 @@ namespace Lwar.Client.Network.Messages
 					continue;
 
 				entity.Position = entityUpdate.Position;
-				// TODO: decide where to convert
-				entity.Rotation = - (float)(entityUpdate.Rotation * Math.PI / 180.0);
+				entity.Rotation = MathUtils.DegToRad(entityUpdate.Rotation);
 				entity.Health = entityUpdate.Health;
 			}
 		}

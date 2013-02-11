@@ -83,6 +83,63 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
+		///   Creates a quad with the given width and height, lying in the y = 0 plane.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
+		/// <param name="size">The size of the quad.</param>
+		public static Model CreateQuad(GraphicsDevice graphicsDevice, Size size)
+		{
+			return CreateQuad(graphicsDevice, size.Width, size.Height);
+		}
+
+		/// <summary>
+		///   Creates a quad with the given width and height, lying in the y = 0 plane.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
+		/// <param name="width">The width of the quad.</param>
+		/// <param name="height">The height of the quad.</param>
+		public static Model CreateQuad(GraphicsDevice graphicsDevice, float width, float height)
+		{
+			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentInRange(width, () => width, 0, Single.MaxValue);
+			Assert.ArgumentInRange(height, () => height, 0, Single.MaxValue);
+
+			var vertices = new VertexPositionNormalTexture[4];
+			var indices = new ushort[6];
+
+			width /= 2.0f;
+			height /= 2.0f;
+			vertices[0].Position = new Vector4(-width, 0, -width);
+			vertices[1].Position = new Vector4(-width, 0, width);
+			vertices[2].Position = new Vector4(width, 0, width);
+			vertices[3].Position = new Vector4(width, 0, -width);
+
+			vertices[0].Normal = new Vector3(0, 1, 0);
+			vertices[1].Normal = new Vector3(0, 1, 0);
+			vertices[2].Normal = new Vector3(0, 1, 0);
+			vertices[3].Normal = new Vector3(0, 1, 0);
+
+			var texture = new RectangleF(0, 0, 1, 1);
+			vertices[0].TextureCoordinates = new Vector2(texture.Left, texture.Bottom);
+			vertices[1].TextureCoordinates = new Vector2(texture.Left, texture.Top);
+			vertices[2].TextureCoordinates = new Vector2(texture.Right, texture.Top);
+			vertices[3].TextureCoordinates = new Vector2(texture.Right, texture.Bottom);
+
+			indices[0] = 0;
+			indices[1] = 2;
+			indices[2] = 1;
+			indices[3] = 0;
+			indices[4] = 3;
+			indices[5] = 2;
+
+			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
+			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
+			var layout = VertexPositionNormalTexture.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
+
+			return new Model(graphicsDevice, vertexBuffer, layout, indexBuffer, indices.Length);
+		}
+
+		/// <summary>
 		///   Creates a model of a sphere with the given radius, using the given subdivision factor to determine the smoothness of
 		///   the sphere.
 		/// </summary>
@@ -92,6 +149,7 @@ namespace Lwar.Client.Rendering
 		public static Model CreateSphere(GraphicsDevice graphicsDevice, float radius, int subdivision)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentInRange(subdivision, () => subdivision, 1, 100);
 
 			// Create a cube and project it into a sphere
 			var topLeftFront = new Vector3(-radius, radius, radius);

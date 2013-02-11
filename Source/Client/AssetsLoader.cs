@@ -22,6 +22,8 @@ namespace Lwar.Client
 			Lwar.Client.Gameplay.Ship.Texture = assets.LoadTexture2D("Textures/Ship");
 			Lwar.Client.Rendering.PlanetRenderer.VertexShader = assets.LoadVertexShader("Shaders/SphereVS");
 			Lwar.Client.Rendering.PlanetRenderer.FragmentShader = assets.LoadFragmentShader("Shaders/SphereFS");
+			Lwar.Client.Rendering.ShipRenderer.VertexShader = assets.LoadVertexShader("Shaders/QuadVS");
+			Lwar.Client.Rendering.ShipRenderer.FragmentShader = assets.LoadFragmentShader("Shaders/QuadFS");
 		}
 	}
 }

@@ -48,12 +48,13 @@ namespace Lwar.Client.Rendering
 			Assets = assets;
 
 			_worldTransform = ConstantBuffer.Create(graphicsDevice, Matrix.Identity);
-			_solid = RasterizerState.CullCounterClockwise;
+			_solid = RasterizerState.CullNone;
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 
 			PlanetRenderer = new PlanetRenderer(this);
+			ShipRenderer = new ShipRenderer(this);
 
-			LwarCvars.DrawWireframe.Value = true;
+			//LwarCvars.DrawWireframe.Value = true;
 		}
 
 		/// <summary>
@@ -75,6 +76,11 @@ namespace Lwar.Client.Rendering
 		///   Gets the renderer that is used to draw planets.
 		/// </summary>
 		public PlanetRenderer PlanetRenderer { get; private set; }
+
+		/// <summary>
+		///   Gets the renderer that is used to draw ships.
+		/// </summary>
+		public ShipRenderer ShipRenderer { get; private set; }
 
 		/// <summary>
 		///   Marks the beginning of a frame.

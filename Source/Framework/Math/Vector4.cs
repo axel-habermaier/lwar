@@ -44,7 +44,7 @@ namespace Pegasus.Framework.Math
 		/// <param name="y">The Y-component of the vector.</param>
 		/// <param name="z">The Z-component of the vector.</param>
 		/// <param name="w">The W-component of the vector.</param>
-		public Vector4(float x, float y, float z, float w)
+		public Vector4(float x, float y, float z, float w = 1.0f)
 		{
 			X = x;
 			Y = y;
