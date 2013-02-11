@@ -77,7 +77,6 @@ namespace Pegasus.Framework.Math
 		public override int GetHashCode()
 		{
 			return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode();
-			;
 		}
 
 		/// <summary>
@@ -206,10 +205,11 @@ namespace Pegasus.Framework.Math
 		/// </summary>
 		/// <param name="vector">The vector that should be transformed.</param>
 		/// <param name="matrix">The transformation matrix that should be applied.</param>
-		public static Vector4 Transform(ref Vector3 vector, ref Matrix matrix)
+		public static Vector3 Transform(ref Vector3 vector, ref Matrix matrix)
 		{
 			var v = new Vector4(vector);
-			return Vector4.Transform(ref v, ref matrix);
+			v = Vector4.Transform(ref v, ref matrix);
+			return new Vector3(v.X, v.Y, v.Z);
 		}
 	}
 }

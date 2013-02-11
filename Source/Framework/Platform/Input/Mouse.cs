@@ -2,7 +2,6 @@
 
 namespace Pegasus.Framework.Platform.Input
 {
-	using System.Runtime.InteropServices;
 	using Math;
 
 	/// <summary>
@@ -36,6 +35,15 @@ namespace Pegasus.Framework.Platform.Input
 		///   Gets the position of the mouse.
 		/// </summary>
 		public Vector2i Position { get; private set; }
+
+		/// <summary>
+		///   Raised when the mouse has been moved.
+		/// </summary>
+		public event Action<int, int> Moved
+		{
+			add { _window.MouseMoved += value; }
+			remove { _window.MouseMoved -= value; }
+		}
 
 		/// <summary>
 		///   Invoked when a button has been pressed.

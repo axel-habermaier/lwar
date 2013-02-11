@@ -95,12 +95,7 @@ namespace Lwar.Client.Gameplay
 			_drawState = StateMachine.Create(_drawScheduler);
 
 			Camera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.PiOver2 };
-			_debugCamera = new DebugCamera(graphicsDevice, inputDevice, Scheduler)
-			{
-				FieldOfView = MathUtils.PiOver2,
-				Position = Vector3.Zero,
-				Target = new Vector3(0, 0, 1)
-			};
+			_debugCamera = new DebugCamera(graphicsDevice, inputDevice, Scheduler);
 			_activeCamera = Camera;
 			InputDevice.Modes = InputModes.Game;
 
@@ -181,6 +176,7 @@ namespace Lwar.Client.Gameplay
 				_activeCamera = _debugCamera;
 				InputDevice.Modes = InputModes.Debug;
 				Window.MouseCaptured = true;
+				_debugCamera.Reset();
 			}
 		}
 

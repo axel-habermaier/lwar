@@ -27,6 +27,9 @@ void rules_init() {
     
     Vec x = { 500,500 };
     Entity *p0 = entity_create(type_planet, &server->self->player, x, _0);
+
+	Vec x2 = { 800,500 };
+    Entity *p1 = entity_create(type_planet, &server->self->player, x2, _0);
     
 
     /*

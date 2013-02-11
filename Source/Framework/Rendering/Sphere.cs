@@ -69,6 +69,8 @@ namespace Pegasus.Framework.Rendering
 				_vertices[i] = new VertexPositionNormalTexture { Position = new Vector4(pos3.Normalize() * radius)};
 			}
 
+			AddQuad(new Vector3(-1000, 0, 1000), new Vector3(1000, 0, 1000), new Vector3(-1000, 0, -1000), new Vector3(1000, 0, -1000));
+
 			_vertexBuffer = VertexBuffer.Create(device, _vertices.ToArray());
 			_indexBuffer = IndexBuffer.Create(device, _indices.ToArray());
 
@@ -141,8 +143,6 @@ namespace Pegasus.Framework.Rendering
 		{
 			_indexBuffer.SafeDispose();
 			_vertexBuffer.SafeDispose();
-			_vertexShader.SafeDispose();
-			_fragmentShader.SafeDispose();
 			_rasterizerState.SafeDispose();
 			_layout.SafeDispose();
 			_projection.SafeDispose();

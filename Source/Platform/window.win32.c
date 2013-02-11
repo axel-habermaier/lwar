@@ -209,15 +209,21 @@ static pgVoid HandleWindowMessages(HWND hwnd)
 
 static pgVoid CenterCursor(pgWindow* window)
 {
-	POINT point;
+	POINT point, current;
 	pgInt32 width, height;
 
 	pgGetWindowSize(window, &width, &height);
 	point.x = width / 2;
 	point.y = height / 2;
 
+	GetCursorPos(&current);
+	ScreenToClient(window->hwnd, &current);
+
+	if (current.x == point.x && current.y == point.y)
+		return;
+
 	ClientToScreen(window->hwnd, &point);
-    SetCursorPos(point.x, point.y);
+	SetCursorPos(point.x, point.y);
 }
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -289,22 +295,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		}
 
 		if (params->mouseMoved != NULL)
-		{
-			pgInt32 x = LOWORD(lParam), y = HIWORD(lParam);
-
-			if (window->mouseCaptured)
-			{
-				pgInt32 width, height;
-				pgGetWindowSize(window, &width, &height);
-				x -= width / 2;
-				y -= height / 2;
-
-				if (x == 0 && y == 0)
-					break;
-			}
-
-			params->mouseMoved(x, y);
-		}
+			params->mouseMoved(LOWORD(lParam), HIWORD(lParam));
 
 		if (window->mouseCaptured)
 			CenterCursor(window);

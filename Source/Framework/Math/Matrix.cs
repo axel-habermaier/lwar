@@ -381,20 +381,20 @@ namespace Pegasus.Framework.Math
 		public static Matrix CreateLookAt(Vector3 position, Vector3 target, Vector3 up)
 		{
 			var f = (position - target).Normalize();
-			var s = Vector3.Cross(f, up).Normalize();
-			var u = Vector3.Cross(s, f);
+			var s = Vector3.Cross(up, f).Normalize();
+			var u = Vector3.Cross(f, s);
 
 			return new Matrix
 			{
 				M11 = s.X,
-				M12 = s.Y,
-				M13 = s.Z,
-				M21 = u.X,
+				M21 = s.Y,
+				M31 = s.Z,
+				M12 = u.X,
 				M22 = u.Y,
-				M23 = u.Z,
-				M31 = -f.X,
-				M32 = -f.Y,
-				M33 = -f.Z,
+				M32 = u.Z,
+				M13 = f.X,
+				M23 = f.Y,
+				M33 = f.Z,
 				M41 = -Vector3.Dot(s, position),
 				M42 = -Vector3.Dot(u, position),
 				M43 = -Vector3.Dot(f, position),
