@@ -62,7 +62,7 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 
 pgVoid pgCloseWindowCore(pgWindow* window)
 {
-	if (window->cursor != NULL)
+	if (window->cursor != 0)
 		XFreeCursor(x11State.display, window->cursor);
 
 	if (window->inputContext != NULL)
