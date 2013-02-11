@@ -193,6 +193,7 @@
     <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Rendering\Camera3D.cs" />
     <Compile Include="Rendering\Camera2D.cs" />
+    <Compile Include="Rendering\VertexPositionNormal.cs" />
     <Compile Include="Rendering\DebugCamera.cs" />
     <Compile Include="Rendering\VertexPositionNormalTexture.cs" />
     <Compile Include="Rendering\GpuProfiler.cs" />

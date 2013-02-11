@@ -10,12 +10,12 @@ namespace Pegasus.Framework.Rendering
 	///   Holds position, texture coordinates, and normal data for a vertex.
 	/// </summary>
 	[StructLayout(LayoutKind.Explicit, Pack = 1)]
-	public struct VertexPositionNormalTexture
+	public struct VertexPositionNormal
 	{
 		/// <summary>
 		///   The size in bytes of the structure.
 		/// </summary>
-		public const int Size = 36;
+		public const int Size = 28;
 
 		/// <summary>
 		///   Gets or sets the vertex' position.
@@ -24,15 +24,9 @@ namespace Pegasus.Framework.Rendering
 		public Vector4 Position;
 
 		/// <summary>
-		///   Gets or sets the vertex' texture coordinates.
-		/// </summary>
-		[FieldOffset(16)]
-		public Vector2 TextureCoordinates;
-
-		/// <summary>
 		///   Gets or sets the vertex' color.
 		/// </summary>
-		[FieldOffset(24)]
+		[FieldOffset(16)]
 		public Vector3 Normal;
 
 		/// <summary>
@@ -40,17 +34,15 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		/// <param name="position">The position of the vertex.</param>
 		/// <param name="normal">The normal of the vertex.</param>
-		/// <param name="textureCoordinates">The texture coordinates of the vertex.</param>
-		public VertexPositionNormalTexture(Vector4 position, Vector3 normal, Vector2 textureCoordinates)
+		public VertexPositionNormal(Vector4 position, Vector3 normal)
 			: this()
 		{
 			Position = position;
 			Normal = normal;
-			TextureCoordinates = textureCoordinates;
 		}
 
 		/// <summary>
-		///   Gets a vertex input layout for drawing VertexPositionNormalTexture vertices with an appropriate vertex buffer
+		///   Gets a vertex input layout for drawing VertexPositionNormal vertices with an appropriate vertex buffer
 		///   and vertex shader.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to construct the input layout.</param>
@@ -61,13 +53,12 @@ namespace Pegasus.Framework.Rendering
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(vertexBuffer, () => vertexBuffer);
-			Assert.That(Marshal.SizeOf(typeof(VertexPositionNormalTexture)) == Size, "Unexpected unamanged size.");
+			Assert.That(Marshal.SizeOf(typeof(VertexPositionNormal)) == Size, "Unexpected unamanged size.");
 
 			var inputElements = new[]
 			{
 				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, VertexDataSemantics.Position, Size, 0),
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector2, VertexDataSemantics.TextureCoordinate, Size, 16),
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector3, VertexDataSemantics.Normal, Size, 24)
+				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector3, VertexDataSemantics.Normal, Size, 16)
 			};
 
 			return new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);

@@ -28,6 +28,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>..\..\Binaries\Release\</OutputPath>
@@ -39,6 +40,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>True</DebugSymbols>
@@ -51,6 +53,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\..\Binaries\Release\</OutputPath>
@@ -61,6 +64,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -86,6 +90,7 @@
     <Compile Include="Gameplay\PlayerList.cs" />
     <Compile Include="Gameplay\Ship.cs" />
     <Compile Include="LwarCommands.cs" />
+    <Compile Include="LwarCvars.cs" />
     <Compile Include="Network\DeliveryManager.cs" />
     <Compile Include="Network\Messages\JoinMessage.cs" />
     <Compile Include="Network\Messages\AddMessage.cs" />
@@ -114,6 +119,9 @@
     <Compile Include="Network\Specification.cs" />
     <Compile Include="Network\Server.cs" />
     <Compile Include="Network\ServerProxy.cs" />
+    <Compile Include="Rendering\Model.cs" />
+    <Compile Include="Rendering\PlanetRenderer.cs" />
+    <Compile Include="Rendering\RenderContext.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="Gameplay\IEntity.cs" />
     <Compile Include="LwarApp.cs" />

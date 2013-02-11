@@ -6,6 +6,7 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///   An abstract base class for all entities in a level.
@@ -33,6 +34,14 @@ namespace Lwar.Client.Gameplay
 		protected AssetsManager Assets
 		{
 			get { return Session.Assets; }
+		}
+
+		/// <summary>
+		///   The render context that is used to draw the entity.
+		/// </summary>
+		protected RenderContext RenderContext
+		{
+			get { return Session.RenderContext; }
 		}
 
 		/// <summary>

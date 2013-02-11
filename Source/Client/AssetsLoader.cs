@@ -20,6 +20,8 @@ namespace Lwar.Client
 			Lwar.Client.Gameplay.Planet.Texture = assets.LoadTexture2D("Textures/Planet");
 			Lwar.Client.Gameplay.Rocket.Texture = assets.LoadTexture2D("Textures/Rocket");
 			Lwar.Client.Gameplay.Ship.Texture = assets.LoadTexture2D("Textures/Ship");
+			Lwar.Client.Rendering.PlanetRenderer.VertexShader = assets.LoadVertexShader("Shaders/SphereVS");
+			Lwar.Client.Rendering.PlanetRenderer.FragmentShader = assets.LoadFragmentShader("Shaders/SphereFS");
 		}
 	}
 }

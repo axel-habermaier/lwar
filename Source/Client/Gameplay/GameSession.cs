@@ -17,6 +17,7 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
 	using Pegasus.Framework.Scripting;
+	using Rendering;
 
 	/// <summary>
 	///   Represents a game session.
@@ -61,9 +62,9 @@ namespace Lwar.Client.Gameplay
 		private readonly StateMachine _updateState;
 
 		/// <summary>
-		///   The currently active camera that is used to draw the scene.
+		///   The render context that is used to draw the game session.
 		/// </summary>
-		private Camera _activeCamera;
+		public RenderContext RenderContext { get; private set; }
 
 		/// <summary>
 		///   Manages the input state and periodically sends updates to the server.
@@ -93,10 +94,11 @@ namespace Lwar.Client.Gameplay
 			_updateState = StateMachine.Create(Scheduler);
 			_drawScheduler = new ProcessScheduler();
 			_drawState = StateMachine.Create(_drawScheduler);
+			RenderContext = new RenderContext(graphicsDevice, assets);
 
 			Camera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.PiOver2 };
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice, Scheduler);
-			_activeCamera = Camera;
+			RenderContext.Camera = Camera;
 			InputDevice.Modes = InputModes.Game;
 
 			LwarCommands.Connect.Invoked += serverEndPoint => _updateState.ChangeState(ctx => Loading(ctx, serverEndPoint));
@@ -165,15 +167,15 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		private void ToggleDebugCamera()
 		{
-			if (_activeCamera == _debugCamera)
+			if (RenderContext.Camera == _debugCamera)
 			{
-				_activeCamera = Camera;
+				RenderContext.Camera = Camera;
 				InputDevice.Modes = InputModes.Game;
 				Window.MouseCaptured = false;
 			}
 			else
 			{
-				_activeCamera = _debugCamera;
+				RenderContext.Camera = _debugCamera;
 				InputDevice.Modes = InputModes.Debug;
 				Window.MouseCaptured = true;
 				_debugCamera.Reset();
@@ -205,6 +207,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			RenderContext.SafeDispose();
 			Camera.SafeDispose();
 			_debugCamera.SafeDispose();
 			Entities.SafeDispose();
@@ -409,7 +412,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		private void DrawEntities()
 		{
-			_activeCamera.Bind();
+			RenderContext.BeginFrame();
 			Entities.Draw();
 		}
 
