@@ -21,12 +21,12 @@ namespace Pegasus.Framework.Rendering
 
 		private readonly VertexInputLayout _layout;
 
-		private readonly ConstantBuffer _projection;
+		//private readonly ConstantBuffer _projection;
 		private readonly RasterizerState _rasterizerState;
 		private readonly VertexBuffer _vertexBuffer;
 		private readonly VertexShader _vertexShader;
 		private readonly List<VertexPositionNormalTexture> _vertices = new List<VertexPositionNormalTexture>();
-		private readonly ConstantBuffer _world;
+		//private readonly ConstantBuffer _world;
 
 		private float r;
 
@@ -42,7 +42,7 @@ namespace Pegasus.Framework.Rendering
 			var bottomLeftBack = new Vector3(-radius, -radius, -radius);
 			var bottomRightBack = new Vector3(radius, -radius, -radius);
 
-			var subdivide = 200;
+			var subdivide = 10;
 
 			// Front
 			AddFace(topLeftFront, topRightFront, bottomLeftFront, bottomRightFront, subdivide);
@@ -72,13 +72,13 @@ namespace Pegasus.Framework.Rendering
 			_vertexBuffer = VertexBuffer.Create(device, _vertices.ToArray());
 			_indexBuffer = IndexBuffer.Create(device, _indices.ToArray());
 
-			_rasterizerState = new RasterizerState(device) { CullMode = CullMode.None, FillMode = FillMode.Wireframe };
+			_rasterizerState = new RasterizerState(device) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_vertexShader = assets.LoadVertexShader("Shaders/SphereVS");
 			_fragmentShader = assets.LoadFragmentShader("Shaders/SphereFS");
 
 			_layout = VertexPositionNormalTexture.GetInputLayout(device, _vertexBuffer, _indexBuffer);
-			_projection = ConstantBuffer.Create(device, Matrix.Identity);
-			_world = ConstantBuffer.Create(device, Matrix.Identity);
+			//_projection = ConstantBuffer.Create(device, Matrix.Identity);
+			//_world = ConstantBuffer.Create(device, Matrix.Identity);
 		}
 
 		public void Draw(GraphicsDevice device)
@@ -87,16 +87,17 @@ namespace Pegasus.Framework.Rendering
 			_rasterizerState.Bind();
 			_fragmentShader.Bind();
 			_vertexShader.Bind();
+			device.SetPrimitiveType(PrimitiveType.Triangles);
 
-			var m = Matrix.CreatePerspective(-640, 640, 360, -360, 1, -1000);
-			m.UsePointer(p => _projection.SetData(p, Marshal.SizeOf(m)));
+			//var m = Matrix.CreatePerspectiveFieldOfView(MathUtils.PiOver2, 1280.0f / 720.0f, 1, -1000);
+			//m.UsePointer(p => _projection.SetData(p, Marshal.SizeOf(m)));
 
-			m = Matrix.CreateRotationX(r += 0.0001f);
-			m *= Matrix.CreateTranslation(0, 0, -102);
-			m.UsePointer(p => _world.SetData(p, Marshal.SizeOf(m)));
+			//m = Matrix.CreateRotationX(r += 0.001f);
+			//m *= Matrix.CreateTranslation(0, 0, -200);
+			//m.UsePointer(p => _world.SetData(p, Marshal.SizeOf(m)));
 
-			_projection.Bind(0);
-			_world.Bind(1);
+			//_projection.Bind(0);
+			//_world.Bind(1);
 
 			device.DrawIndexed(_indices.Count);
 		}
@@ -144,8 +145,8 @@ namespace Pegasus.Framework.Rendering
 			_fragmentShader.SafeDispose();
 			_rasterizerState.SafeDispose();
 			_layout.SafeDispose();
-			_projection.SafeDispose();
-			_world.SafeDispose();
+			//_projection.SafeDispose();
+			//_world.SafeDispose();
 		}
 	}
 }

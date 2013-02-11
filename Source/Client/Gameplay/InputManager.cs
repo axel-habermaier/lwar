@@ -137,7 +137,7 @@ namespace Lwar.Client.Gameplay
 				mousePos = new Vector2i(mousePos.X - windowSize.Width / 2, mousePos.Y - windowSize.Height / 2);
 
 				// Now move the mouse position to camera coordiantes
-				var target = new Vector2(mousePos.X, mousePos.Y) - _session.Camera.Position;
+				var target = new Vector2(mousePos.X, mousePos.Y) - new Vector2(_session.Camera.Position.X, _session.Camera.Position.Y);
 
 				// The ship position in camera coordinates
 				var ship = _session.LocalPlayer.Ship.Position;

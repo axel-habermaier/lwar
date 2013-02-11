@@ -3,7 +3,6 @@
 namespace Pegasus.Framework
 {
 	using System.Diagnostics;
-	using Platform;
 
 	/// <summary>
 	///   Base implementation for the IDisposable interface. In debug builds, throws an exception if the finalizer runs

@@ -2,7 +2,9 @@
 
 cbuffer PerFrameConstants : register(b0)
 { 
+	column_major matrix	View;
 	column_major matrix Projection;
+	column_major matrix	ViewProjection;
 };
 
 cbuffer PerObjectConstants : register(b1)
@@ -26,8 +28,8 @@ VS_OUTPUT Main(VS_INPUT input)
 {
 	VS_OUTPUT output;
 
-	float4 position = mul(World, input.Position);
-	output.Position = mul(Projection, position);
+	//float4 position = mul(World, input.Position);
+	output.Position = mul(ViewProjection, input.Position);
 
 	return output;
 }

@@ -13,7 +13,7 @@ namespace Lwar.Client.Gameplay
 		public override void Draw()
 		{
 			var c = Health / 100.0f;
-			SpriteBatch.Draw(Texture, Position, Rotation, new Color(1.0f * c, 0.5f * c, 0.0f * c, 1.0f));
+			//SpriteBatch.Draw(Texture, Position, Rotation, new Color(1.0f * c, 0.5f * c, 0.0f * c, 1.0f));
 		}
 
 		public static Ship Create(Player player)

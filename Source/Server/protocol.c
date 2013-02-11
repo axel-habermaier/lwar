@@ -359,7 +359,7 @@ static int packet_fmt(Client *c, Packet *p, QueuedMessage *qm) {
 
 static int packet_send_init(Client *c, Packet *p) {
     if(packet_hasdata(p)) {
-        packet_debug(p);
+        //packet_debug(p);
         packet_send(p);
         stats.nsend ++;
         if(p->io_failed) return 0;

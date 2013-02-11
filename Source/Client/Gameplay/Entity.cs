@@ -4,7 +4,8 @@ namespace Lwar.Client.Gameplay
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Framework.Platform.Assets;
+	using Pegasus.Framework.Platform.Graphics;
 
 	/// <summary>
 	///   An abstract base class for all entities in a level.
@@ -19,11 +20,19 @@ namespace Lwar.Client.Gameplay
 		protected GameSession Session { get; private set; }
 
 		/// <summary>
-		///   Gets the sprite batch that should be used for drawing.
+		///   Gets the graphics device that is used to draw the entity.
 		/// </summary>
-		protected SpriteBatch SpriteBatch
+		protected GraphicsDevice GraphicsDevice
 		{
-			get { return Session.SpriteBatch; }
+			get { return Session.GraphicsDevice; }
+		}
+
+		/// <summary>
+		///   Gets the assets manager that manages all the assets of all entities.
+		/// </summary>
+		protected AssetsManager Assets
+		{
+			get { return Session.Assets; }
 		}
 
 		/// <summary>

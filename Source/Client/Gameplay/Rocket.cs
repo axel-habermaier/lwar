@@ -13,7 +13,7 @@ namespace Lwar.Client.Gameplay
 		public override void Draw()
 		{
 			var c = Health / 100.0f;
-			SpriteBatch.Draw(Texture, Position, Rotation, new Color(c, 0, 0, 1.0f));
+			//SpriteBatch.Draw(Texture, Position, Rotation, new Color(c, 0, 0, 1.0f));
 		}
 
 		public static Rocket Create(Player player)

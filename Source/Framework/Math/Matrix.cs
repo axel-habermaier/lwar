@@ -303,6 +303,28 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Creates a perspective projection matrix.
+		/// </summary>
+		/// <param name="fieldOfView">The field of view in radians.</param>
+		/// <param name="aspect">The aspect ratio, defined as view space width divided by view space height.</param>
+		/// <param name="znear">The minimum z-value of the viewing volume.</param>
+		/// <param name="zfar">The maximum z-value of the viewing volume.</param>
+		public static Matrix CreatePerspectiveFieldOfView(float fieldOfView, float aspect, float znear, float zfar)
+		{
+			var depth = znear - zfar;
+			var f = 1.0f / (float)Math.Tan(fieldOfView * 0.5);
+
+			return new Matrix
+			{
+				M11 = f / aspect,
+				M22 = f,
+				M33 = (zfar + znear) / depth,
+				M34 = 2 * zfar * znear / depth,
+				M43 = -1
+			};
+		}
+
+		/// <summary>
 		///   Creates a orthographic projection matrix.
 		/// </summary>
 		/// <param name="left">The minimum x-value of the viewing volume.</param>
@@ -339,6 +361,45 @@ namespace Pegasus.Framework.Math
 			matrix.M42 = y;
 			matrix.M43 = z;
 			return matrix;
+		}
+
+		/// <summary>
+		///   Creates a translation matrix.
+		/// </summary>
+		/// <param name="translation">The translation offset in X, Y, and Z direction.</param>
+		public static Matrix CreateTranslation(Vector3 translation)
+		{
+			return CreateTranslation(translation.X, translation.Y, translation.Z);
+		}
+
+		/// <summary>
+		/// Creates a viewing matrix where the camera lies at the given position at looks at the given target.
+		/// </summary>
+		/// <param name="position">The position of the camera.</param>
+		/// <param name="target">The target of the camera.</param>
+		/// <param name="up">The up direction.</param>
+		public static Matrix CreateLookAt(Vector3 position, Vector3 target, Vector3 up)
+		{
+			var f = (position - target).Normalize();
+			var s = Vector3.Cross(f, up).Normalize();
+			var u = Vector3.Cross(s, f);
+
+			return new Matrix
+			{
+				M11 = s.X,
+				M12 = s.Y,
+				M13 = s.Z,
+				M21 = u.X,
+				M22 = u.Y,
+				M23 = u.Z,
+				M31 = -f.X,
+				M32 = -f.Y,
+				M33 = -f.Z,
+				M41 = -Vector3.Dot(s, position),
+				M42 = -Vector3.Dot(u, position),
+				M43 = -Vector3.Dot(f, position),
+				M44 = 1
+			};
 		}
 
 		/// <summary>

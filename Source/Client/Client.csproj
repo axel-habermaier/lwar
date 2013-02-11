@@ -75,7 +75,6 @@
       <DependentUpon>AssetsLoader.tt</DependentUpon>
     </Compile>
     <Compile Include="Gameplay\Bullet.cs" />
-    <Compile Include="Gameplay\Camera.cs" />
     <Compile Include="Gameplay\EntityTemplate.cs" />
     <Compile Include="Gameplay\Identifier.cs" />
     <Compile Include="Gameplay\GameSession.cs" />

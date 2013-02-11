@@ -17,11 +17,6 @@ namespace Lwar.Client
 	internal sealed class LwarApp : App
 	{
 		/// <summary>
-		///   The targeted frame rate in frames per second.
-		/// </summary>
-		private const int TargetFramerate = 60;
-
-		/// <summary>
 		///   The local game server that can be used to hosts game sessions locally.
 		/// </summary>
 		private readonly Server _server = new Server();
@@ -50,7 +45,6 @@ namespace Lwar.Client
 			SwapChain.BackBuffer.Clear(ClearTargets.Color, Color.Black);
 
 			_session.Draw();
-			_sphere.Draw(GraphicsDevice);
 		}
 
 		/// <summary>
@@ -60,11 +54,10 @@ namespace Lwar.Client
 		{
 			_session.SafeDispose();
 			_server.SafeDispose();
-			_sphere.SafeDispose();
+
 			base.OnDisposing();
 		}
 
-		private Sphere _sphere;
 		/// <summary>
 		///   Invoked when the application is initializing.
 		/// </summary>
@@ -77,13 +70,12 @@ namespace Lwar.Client
 			Window.Size = new Size(1280, 720);
 
 			AssetsLoader.Load(Assets);
-			_session = new GameSession(Window, GraphicsDevice, LogicalInputDevice);
+			_session = new GameSession(Window, GraphicsDevice, Assets, LogicalInputDevice);
 
 			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
 			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");
 			Commands.Bind.Invoke(Key.F3.WentDown(), "connect 127.0.0.1:" + ServerProxy.DefaultPort);
 			Commands.Bind.Invoke(Key.F4.WentDown(), "disconnect");
-			_sphere = new Sphere(GraphicsDevice, Assets, 100);
 		}
 
 		/// <summary>

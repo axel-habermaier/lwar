@@ -177,6 +177,31 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Calculates the cross product between the two vectors.
+		/// </summary>
+		/// <param name="v1">The first vector.</param>
+		/// <param name="v2">The second vector.</param>
+		public static Vector3 Cross(Vector3 v1, Vector3 v2)
+		{
+			return new Vector3
+			{
+				X = v1.Y * v2.Z - v1.Z * v2.Y,
+				Y = v1.Z * v2.X - v1.X * v2.Z,
+				Z = v1.X * v2.Y - v1.Y * v2.X
+			};
+		}
+
+		/// <summary>
+		///   Calculates the dot product between the two vectors.
+		/// </summary>
+		/// <param name="v1">The first vector.</param>
+		/// <param name="v2">The second vector.</param>
+		public static float Dot(Vector3 v1, Vector3 v2)
+		{
+			return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
+		}
+
+		/// <summary>
 		///   Applies the given transformation matrix to the vector.
 		/// </summary>
 		/// <param name="vector">The vector that should be transformed.</param>

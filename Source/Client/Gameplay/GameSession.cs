@@ -10,6 +10,7 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Processes;
@@ -45,6 +46,11 @@ namespace Lwar.Client.Gameplay
 		private readonly StateMachine _drawState;
 
 		/// <summary>
+		///   The sprite batch that is used to draw the connection state messages.
+		/// </summary>
+		private readonly SpriteBatch _spriteBatch;
+
+		/// <summary>
 		///   Manages the update state of the game session.
 		/// </summary>
 		private readonly StateMachine _updateState;
@@ -55,31 +61,31 @@ namespace Lwar.Client.Gameplay
 		private InputManager _inputManager;
 
 		/// <summary>
-		/// The sprite batch that is used to draw the connection state messages.
-		/// </summary>
-		private SpriteBatch _spriteBatch;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public GameSession(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
+		/// <param name="window">The window that displays the game session.</param>
+		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
+		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
+		/// <param name="inputDevice">The logical input device that provides all the user input to the game session.</param>
+		public GameSession(Window window, GraphicsDevice graphicsDevice, AssetsManager assets, LogicalInputDevice inputDevice)
 		{
 			Assert.ArgumentNotNull(window, () => window);
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(assets, () => assets);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 
-			Camera = new Camera();
+			Camera = new Camera3D(graphicsDevice) { FieldOfView = 90 };
 			Window = window;
 			GraphicsDevice = graphicsDevice;
+			Assets = assets;
 			InputDevice = inputDevice;
-			SpriteBatch = new SpriteBatch(GraphicsDevice);
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 			Scheduler = new ProcessScheduler();
 			_updateState = StateMachine.Create(Scheduler);
 			_drawScheduler = new ProcessScheduler();
 			_drawState = StateMachine.Create(_drawScheduler);
-			Window.Resized += UpdateProjectionMatrix;
-			UpdateProjectionMatrix(Window.Size);
+			Window.Resized += WindowResized;
+			WindowResized(Window.Size);
 
 			LwarCommands.Connect.Invoked += serverEndPoint => _updateState.ChangeState(ctx => Loading(ctx, serverEndPoint));
 			LwarCommands.Disconnect.Invoked += () => _updateState.ChangeState(Inactive);
@@ -91,7 +97,7 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   Gets the camera that is used to draw the game session.
 		/// </summary>
-		public Camera Camera { get; private set; }
+		public Camera3D Camera { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the window that displays the game session.
@@ -109,9 +115,9 @@ namespace Lwar.Client.Gameplay
 		public GraphicsDevice GraphicsDevice { get; private set; }
 
 		/// <summary>
-		///   Gets the sprite batch that is used to draw all entities.
+		///   Gets the assets manager that manages all assets of the game session.
 		/// </summary>
-		public SpriteBatch SpriteBatch { get; private set; }
+		public AssetsManager Assets { get; private set; }
 
 		/// <summary>
 		///   Gets the process scheduler that schedules all update processes of the game session.
@@ -154,7 +160,6 @@ namespace Lwar.Client.Gameplay
 		/// <param name="message">The message that should be sent.</param>
 		private void ChatMessageEntered(string message)
 		{
-			// TODO: Check size
 			if (ServerProxy != null && ServerProxy.IsConnected)
 				ServerProxy.Send(ChatMessage.Create(LocalPlayer.Id, message));
 		}
@@ -165,7 +170,6 @@ namespace Lwar.Client.Gameplay
 		protected override void OnDisposing()
 		{
 			Entities.SafeDispose();
-			SpriteBatch.SafeDispose();
 			_spriteBatch.SafeDispose();
 			_inputManager.SafeDispose();
 			_drawState.SafeDispose();
@@ -173,9 +177,10 @@ namespace Lwar.Client.Gameplay
 			ServerProxy.SafeDispose();
 			Scheduler.SafeDispose();
 			_drawScheduler.SafeDispose();
+			Camera.SafeDispose();
 
 			if (Window != null)
-				Window.Resized -= UpdateProjectionMatrix;
+				Window.Resized -= WindowResized;
 		}
 
 		/// <summary>
@@ -203,7 +208,6 @@ namespace Lwar.Client.Gameplay
 		{
 			_drawScheduler.RunProcesses();
 
-			SpriteBatch.DrawBatch();
 			_spriteBatch.DrawBatch();
 		}
 
@@ -211,12 +215,9 @@ namespace Lwar.Client.Gameplay
 		///   Updates the projection matrix such that one pixel corresponds to one floating point unit.
 		/// </summary>
 		/// <param name="windowSize">The new size of the window.</param>
-		private void UpdateProjectionMatrix(Size windowSize)
+		private void WindowResized(Size windowSize)
 		{
-			var width = windowSize.Width / 2.0f;
-			var height = windowSize.Height / 2.0f;
-
-			Camera.Projection = Matrix.CreateOrthographic(-width, width, height, -height, 0, 1);
+			Camera.Viewport = new Rectangle(0, 0, Window.Size.Width, Window.Size.Height);
 			_spriteBatch.ProjectionMatrix = Matrix.CreateOrthographic(0, windowSize.Width, windowSize.Height, 0, 0, 1);
 		}
 
@@ -339,7 +340,8 @@ namespace Lwar.Client.Gameplay
 				if (LocalPlayer.Ship != null)
 				{
 					var position = LocalPlayer.Ship.Position;
-					Camera.Position = -position;
+					Camera.Position = new Vector3(0, 0, 200); // new Vector3(-position.X, -position.Y, 100);
+					Camera.Target = new Vector3(0, 0, 0);
 				}
 
 				if (ServerProxy.IsLagging)
@@ -367,9 +369,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		private void DrawEntities()
 		{
-			SpriteBatch.ProjectionMatrix = Camera.Projection;
-			SpriteBatch.WorldMatrix = Camera.View;
-
+			Camera.MakeCurrent();
 			Entities.Draw();
 		}
 
