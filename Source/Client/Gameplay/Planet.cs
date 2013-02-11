@@ -27,7 +27,7 @@ namespace Lwar.Client.Gameplay
 
 		protected override void Added()
 		{
-			Model = Model.CreateSphere(GraphicsDevice, 100, 10);
+			Model = Model.CreateSphere(GraphicsDevice, 100, 25);
 		}
 
 		public static Planet Create(Player player)

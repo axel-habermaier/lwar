@@ -136,14 +136,17 @@ namespace Lwar.Client.Rendering
 					Assert.That(vertices.Count < UInt16.MaxValue, "Too many vertices.");
 					for (var i = 0; i < subdivision; ++i)
 					{
+						var row = i * (subdivision + 1);
+						var nextRow = (i + 1) * (subdivision + 1);
+
 						for (var j = 0; j < subdivision; ++j)
 						{
-							indices.Add((ushort)(indexOffset + i * subdivision + j));
-							indices.Add((ushort)(indexOffset + (i + 1) * subdivision + j));
-							indices.Add((ushort)(indexOffset + (i + 1) * subdivision + j + 1));
-							indices.Add((ushort)(indexOffset + i * subdivision + j));
-							indices.Add((ushort)(indexOffset + (i + 1) * subdivision + j + 1));
-							indices.Add((ushort)(indexOffset + i * subdivision + j + 1));
+							indices.Add((ushort)(indexOffset + row + j));
+							indices.Add((ushort)(indexOffset + nextRow + j));
+							indices.Add((ushort)(indexOffset + nextRow + j + 1));
+							indices.Add((ushort)(indexOffset + row + j));
+							indices.Add((ushort)(indexOffset + nextRow + j + 1));
+							indices.Add((ushort)(indexOffset + row + j + 1));
 						}
 					}
 				};

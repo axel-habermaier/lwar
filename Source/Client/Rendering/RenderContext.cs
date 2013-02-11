@@ -20,19 +20,19 @@ namespace Lwar.Client.Rendering
 		private const int WorldTransformSlot = 1;
 
 		/// <summary>
-		///   The constant buffer that contains the world transform of the object that is currently being rendered.
-		/// </summary>
-		private readonly ConstantBuffer _worldTransform;
-
-		/// <summary>
 		///   The rasterizer state that is used to draw solid geometry.
 		/// </summary>
-		private RasterizerState _solid;
+		private readonly RasterizerState _solid;
 
 		/// <summary>
 		///   The rasterizer state that is used to draw in wireframe mode.
 		/// </summary>
-		private RasterizerState _wireframe;
+		private readonly RasterizerState _wireframe;
+
+		/// <summary>
+		///   The constant buffer that contains the world transform of the object that is currently being rendered.
+		/// </summary>
+		private readonly ConstantBuffer _worldTransform;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -48,10 +48,12 @@ namespace Lwar.Client.Rendering
 			Assets = assets;
 
 			_worldTransform = ConstantBuffer.Create(graphicsDevice, Matrix.Identity);
-			_solid = RasterizerState.CullNone;
-			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.None, FillMode = FillMode.Wireframe };
+			_solid = RasterizerState.CullCounterClockwise;
+			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 
 			PlanetRenderer = new PlanetRenderer(this);
+
+			LwarCvars.DrawWireframe.Value = true;
 		}
 
 		/// <summary>
@@ -96,7 +98,8 @@ namespace Lwar.Client.Rendering
 		/// <param name="entity">The entity for which the world transformation should be set.</param>
 		public unsafe void UpdateWorldTransform(IEntity entity)
 		{
-			var matrix = Matrix.CreateRotationY(entity.Rotation) * Matrix.CreateTranslation(new Vector3(entity.Position, 0));
+			var matrix = Matrix.CreateRotationY(entity.Rotation) *
+						 Matrix.CreateTranslation(new Vector3(entity.Position.X, 0, entity.Position.Y));
 			_worldTransform.SetData(new IntPtr(&matrix), sizeof(Matrix));
 		}
 
