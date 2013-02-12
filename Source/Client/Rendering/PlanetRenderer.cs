@@ -49,6 +49,8 @@ namespace Lwar.Client.Rendering
 			_context.UpdateWorldTransform(planet);
 			VertexShader.Bind();
 			FragmentShader.Bind();
+			Planet.Texture.Bind(0);
+
 			planet.Model.Draw();
 		}
 	}

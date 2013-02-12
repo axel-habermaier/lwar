@@ -8,8 +8,8 @@ namespace Lwar.Client.Gameplay
 
 	public class Planet : Entity<Planet>
 	{
-		[Asset("Textures/Planet")]
-		public static Texture2D Texture;
+		[Asset("Textures/Sun")]
+		public static CubeMap Texture;
 
 		public Model Model { get; private set; }
 
