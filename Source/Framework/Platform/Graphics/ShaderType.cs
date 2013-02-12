@@ -15,6 +15,11 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Indicates that a shader is a fragment shader.
 		/// </summary>
-		FragmentShader = 2602
+		FragmentShader = 2602,
+
+		/// <summary>
+		///   Indicates that a shader is a geometry shader.
+		/// </summary>
+		GeometryShader = 2603
 	}
 }

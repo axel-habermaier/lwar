@@ -17,7 +17,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			Samplers = new SamplerState[GraphicsDevice.SamplerSlotCount];
 			ConstantBuffers = new ConstantBuffer[GraphicsDevice.ConstantBufferSlotCount];
-			Textures = new Texture2D[GraphicsDevice.TextureSlotCount];
+			Textures = new Texture[GraphicsDevice.TextureSlotCount];
 		}
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Gets the currently bound textures.
 		/// </summary>
-		public Texture2D[] Textures { get; private set; }
+		public Texture[] Textures { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the currently bound vertex shader.

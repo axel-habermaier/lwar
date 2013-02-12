@@ -13,7 +13,7 @@ typedef struct pgSwapChain				pgSwapChain;
 typedef struct pgShader					pgShader;
 typedef struct pgBuffer					pgBuffer;
 typedef struct pgInputLayout			pgInputLayout;
-typedef struct pgTexture2D				pgTexture2D;
+typedef struct pgTexture				pgTexture;
 typedef struct pgRenderTarget			pgRenderTarget;
 typedef struct pgBlendState				pgBlendState;
 typedef struct pgRasterizerState		pgRasterizerState;
@@ -200,7 +200,8 @@ typedef enum
 typedef enum
 {
 	PG_VERTEX_SHADER					= 2601,
-	PG_FRAGMENT_SHADER					= 2602
+	PG_FRAGMENT_SHADER					= 2602,
+	PG_GEOMETRY_SHADER					= 2603
 } pgShaderType;
 
 typedef enum
@@ -216,6 +217,12 @@ typedef enum
 	PG_TIMESTAMP_DISJOINT_QUERY			= 2802,
 	PG_OCCLUSION_QUERY					= 2803
 } pgQueryType;
+
+typedef enum
+{
+	PG_TEXTURE_2D						= 2901,
+	PG_TEXTURE_CUBE						= 2902
+} pgTextureType;
 
 typedef struct
 {
@@ -355,19 +362,20 @@ PG_API_EXPORT pgVoid pgDestroyInputLayout(pgInputLayout* inputLayout);
 PG_API_EXPORT pgVoid pgBindInputLayout(pgInputLayout* inputLayout);
 
 //====================================================================================================================
-// Texture2D functions
+// Texture functions
 //====================================================================================================================
 
-PG_API_EXPORT pgTexture2D* pgCreateTexture2D(pgGraphicsDevice* device, pgVoid* data, pgInt32 width, pgInt32 height, pgSurfaceFormat format);
-PG_API_EXPORT pgVoid pgDestroyTexture2D(pgTexture2D* texture2D);
+PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureType type, pgVoid* data,
+										   pgInt32 width, pgInt32 height, pgInt32 depth, pgSurfaceFormat format);
+PG_API_EXPORT pgVoid pgDestroyTexture(pgTexture* texture);
 
-PG_API_EXPORT pgVoid pgBindTexture(pgTexture2D* texture2D, pgInt32 slot);
+PG_API_EXPORT pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot);
 
 //====================================================================================================================
 // Render target functions
 //====================================================================================================================
 
-PG_API_EXPORT pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture2D* texture2D);
+PG_API_EXPORT pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture* texture);
 PG_API_EXPORT pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget);
 
 PG_API_EXPORT pgVoid pgClear(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor color, pgFloat32 depth, pgUint8 stencil);

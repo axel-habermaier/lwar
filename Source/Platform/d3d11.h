@@ -59,7 +59,7 @@
 	pgInputBinding  bindings[PG_INPUT_BINDINGS_COUNT];	\
 	pgInt32			bindingsCount;
 
-#define PG_TEXTURE2D_PLATFORM				\
+#define PG_TEXTURE_PLATFORM					\
 	ID3D11Texture2D*			ptr;		\
 	ID3D11ShaderResourceView*	resourceView;
 

@@ -6,9 +6,9 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgTexture2D* texture2D)
+pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgTexture* texture)
 {
-	D3DCALL(ID3D11Device_CreateRenderTargetView(DEVICE(renderTarget), (ID3D11Resource*)texture2D->ptr, NULL, &renderTarget->rt),
+	D3DCALL(ID3D11Device_CreateRenderTargetView(DEVICE(renderTarget), (ID3D11Resource*)texture->ptr, NULL, &renderTarget->rt),
 		"Failed to create render target.");
 	renderTarget->ds = NULL;
 }

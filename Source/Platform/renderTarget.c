@@ -4,17 +4,17 @@
 // Exported functions
 //====================================================================================================================
 
-pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture2D* texture2D)
+pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture* texture)
 {
 	pgRenderTarget* renderTarget;
 	PG_ASSERT_NOT_NULL(device);
-	PG_ASSERT_NOT_NULL(texture2D);
+	PG_ASSERT_NOT_NULL(texture);
 
 	PG_ALLOC(pgRenderTarget, renderTarget);
 	renderTarget->device = device;
-	renderTarget->width = texture2D->width;
-	renderTarget->height = texture2D->height;
-	pgCreateRenderTargetCore(renderTarget, texture2D);
+	renderTarget->width = texture->width;
+	renderTarget->height = texture->height;
+	pgCreateRenderTargetCore(renderTarget, texture);
 	return renderTarget;
 }
 

@@ -278,18 +278,20 @@ pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout);
 // Texture2D
 //====================================================================================================================
 
-struct pgTexture2D
+struct pgTexture
 {
 	pgGraphicsDevice*	device;
 	pgInt32				width;
 	pgInt32				height;	
-	PG_TEXTURE2D_PLATFORM
+	pgInt32				depth;
+	pgTextureType		type;
+	PG_TEXTURE_PLATFORM
 };
 
-pgVoid pgCreateTexture2DCore(pgTexture2D* texture2D, pgVoid* data, pgSurfaceFormat format);
-pgVoid pgDestroyTexture2DCore(pgTexture2D* texture2D);
+pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data, pgSurfaceFormat format);
+pgVoid pgDestroyTextureCore(pgTexture* texture);
 
-pgVoid pgBindTextureCore(pgTexture2D* texture2D, pgInt32 slot);
+pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot);
 
 //====================================================================================================================
 // Render target
@@ -303,7 +305,7 @@ struct pgRenderTarget
 	PG_RENDER_TARGET_PLATFORM
 };
 
-pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgTexture2D* texture2D);
+pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgTexture* texture);
 pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget);
 
 pgVoid pgClearCore(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor color, pgFloat32 depth, pgUint8 stencil);

@@ -18,7 +18,9 @@ using System;
 namespace LibNoise.Demo
 {
 	using System.Diagnostics;
+	using System.Drawing.Imaging;
 	using System.Globalization;
+	using System.IO;
 	using System.Windows.Forms;
 	using Builder;
 	using Filter;
@@ -53,8 +55,8 @@ namespace LibNoise.Demo
 
 			// Render
 			_cbxGradient.SelectedItem = "Grayscale";
-			_cbxProjection.SelectedItem = "Planar";
-			_cbxSize.SelectedItem = "256 x 256";
+			_cbxProjection.SelectedItem = "CubeMap";
+			_cbxSize.SelectedItem = "512 x 512";
 			_chkbx.Checked = true;
 
 			// Progress
@@ -271,6 +273,10 @@ namespace LibNoise.Demo
 					((NoiseMapBuilderCylinder)projection).SetBounds(-180f, 180f, -10f, 10f);
 					break;
 
+				case "CubeMap":
+					projection = new CubeMapBuilder();
+					break;
+
 				case "Planar":
 				default:
 					float bound = 2f;
@@ -412,7 +418,7 @@ namespace LibNoise.Demo
 			//renderer.Image = image;
 
 			// Dotnet Bitmap Strategy
-			var bmpAdaptater = new BitmapAdapter(width, height);
+			var bmpAdaptater = new BitmapAdapter(noiseMap.Width, noiseMap.Height);
 			renderer.Image = bmpAdaptater;
 
 			renderer.CallBack = delegate(int line)
@@ -493,8 +499,8 @@ namespace LibNoise.Demo
 
 			// Save the file
 			//bmpAdaptater.Bitmap.Save("rendered.png",ImageFormat.Png);
-			_imageRendered.Width = width;
-			_imageRendered.Height = height;
+			_imageRendered.Width = noiseMap.Width;
+			_imageRendered.Height = noiseMap.Height;
 
 			//_imageRendered.Image = _bitmap;
 			_imageRendered.Image = bmpAdaptater.Bitmap;
@@ -726,6 +732,17 @@ namespace LibNoise.Demo
 		private void _btnStart_Click(object sender, EventArgs e)
 		{
 			GenerateNoise();
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			var image = _imageRendered.Image;
+			if (image == null)
+				return;
+
+			saveFileDialog1.InitialDirectory = Path.Combine(Environment.CurrentDirectory, "../../../../Assets");
+			if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+				image.Save(saveFileDialog1.FileName, ImageFormat.Png);
 		}
 	}
 }

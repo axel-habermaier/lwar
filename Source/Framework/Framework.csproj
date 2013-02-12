@@ -184,6 +184,8 @@
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
     <Compile Include="Platform\Assets\IAssetsCompiler.cs" />
     <Compile Include="Platform\Endianess.cs" />
+    <Compile Include="Platform\Graphics\Texture.cs" />
+    <Compile Include="Platform\Graphics\TextureType.cs" />
     <Compile Include="Platform\IMeasurement.cs" />
     <Compile Include="Platform\Input\InputModes.cs" />
     <Compile Include="Platform\Measurement.cs" />

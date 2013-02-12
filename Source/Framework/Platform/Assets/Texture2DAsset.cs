@@ -50,7 +50,7 @@ namespace Pegasus.Framework.Platform.Assets
 			if (Texture == null)
 				Texture = new Texture2D(GraphicsDevice, data, new Size(width, height), format);
 
-			Texture.Reinitialize(data, new Size(width, height), format);
+			Texture.Reinitialize(data, width, height, format);
 
 			for (var i = 0; i < GraphicsDevice.State.Textures.Length; ++i)
 				GraphicsDevice.State.Textures[i] = null;

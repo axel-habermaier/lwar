@@ -33,9 +33,6 @@
     <ClCompile Include="renderTarget.gl3.c">
       <Filter>Graphics\OpenGL 3</Filter>
     </ClCompile>
-    <ClCompile Include="texture2D.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="texture2D.gl3.c">
       <Filter>Graphics\OpenGL 3</Filter>
     </ClCompile>
@@ -82,9 +79,6 @@
     <ClCompile Include="swapChain.d3d11.c">
       <Filter>Graphics\Direct3D 11</Filter>
     </ClCompile>
-    <ClCompile Include="texture2D.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
     <ClCompile Include="inputLayout.d3d11.c">
       <Filter>Graphics\Direct3D 11</Filter>
     </ClCompile>
@@ -112,6 +106,12 @@
     </ClCompile>
     <ClCompile Include="buffer.gl3.c">
       <Filter>Graphics\OpenGL 3</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.c">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.d3d11.c">
+      <Filter>Graphics\Direct3D 11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

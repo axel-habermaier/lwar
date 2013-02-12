@@ -60,6 +60,8 @@
 			this._cbxPrimitive = new System.Windows.Forms.ComboBox();
 			this._tbxSeed = new System.Windows.Forms.TextBox();
 			this._lblSeed = new System.Windows.Forms.Label();
+			this.button1 = new System.Windows.Forms.Button();
+			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			((System.ComponentModel.ISupportInitialize)(this._nstpOctave)).BeginInit();
 			this._gpbxFilter.SuspendLayout();
 			this._gpbxRender.SuspendLayout();
@@ -123,7 +125,7 @@
 			// 
 			this._btnStart.Location = new System.Drawing.Point(2, 406);
 			this._btnStart.Name = "_btnStart";
-			this._btnStart.Size = new System.Drawing.Size(196, 23);
+			this._btnStart.Size = new System.Drawing.Size(95, 23);
 			this._btnStart.TabIndex = 7;
 			this._btnStart.Text = "Generate";
 			this._btnStart.UseVisualStyleBackColor = true;
@@ -294,7 +296,8 @@
 			this._cbxProjection.Items.AddRange(new object[] {
             "Planar",
             "Spherical",
-            "Cylindrical"});
+            "Cylindrical",
+            "CubeMap"});
 			this._cbxProjection.Location = new System.Drawing.Point(78, 71);
 			this._cbxProjection.Name = "_cbxProjection";
 			this._cbxProjection.Size = new System.Drawing.Size(112, 21);
@@ -465,11 +468,29 @@
 			this._lblSeed.TabIndex = 0;
 			this._lblSeed.Text = "Seed :";
 			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(104, 406);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(95, 23);
+			this.button1.TabIndex = 21;
+			this.button1.Text = "Save";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
+			// saveFileDialog1
+			// 
+			this.saveFileDialog1.DefaultExt = "png";
+			this.saveFileDialog1.Filter = "png files (*.png)|*.png";
+			this.saveFileDialog1.RestoreDirectory = true;
+			this.saveFileDialog1.Title = "Save File As";
+			// 
 			// FrmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(729, 551);
+			this.Controls.Add(this.button1);
 			this.Controls.Add(this._gpbxPrimitive);
 			this.Controls.Add(this._lblProgressPercent);
 			this.Controls.Add(this._lblLog);
@@ -536,6 +557,8 @@
 		private System.Windows.Forms.TextBox _tbxGain;
 		private System.Windows.Forms.Label _lblGain;
 		private System.Windows.Forms.CheckBox _chkbx;
+		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 	}
 }
 

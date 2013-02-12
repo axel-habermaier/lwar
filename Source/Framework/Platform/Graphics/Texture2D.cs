@@ -2,19 +2,13 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
-	using System.Runtime.InteropServices;
 	using Math;
 
 	/// <summary>
 	///   A 2D texture manages two-dimensional texel data.
 	/// </summary>
-	public sealed class Texture2D : GraphicsObject
+	public sealed class Texture2D : Texture
 	{
-		/// <summary>
-		///   The native texture instance.
-		/// </summary>
-		private IntPtr _texture;
-
 		/// <summary>
 		///   Initializes a new instance, copying the given byte array to GPU memory.
 		/// </summary>
@@ -23,17 +17,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="size">The size of the texture.</param>
 		/// <param name="format">The format of the texture.</param>
 		public Texture2D(GraphicsDevice graphicsDevice, byte[] data, Size size, SurfaceFormat format)
-			: base(graphicsDevice)
+			: base(graphicsDevice, TextureType.Texture2D, data, size.Width, size.Height, 0, format)
 		{
-			Reinitialize(data, size, format);
-		}
-
-		/// <summary>
-		///   Gets the native texture instance.
-		/// </summary>
-		internal IntPtr NativePtr
-		{
-			get { return _texture; }
 		}
 
 		/// <summary>
@@ -44,26 +29,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Gets the size of the texture.
 		/// </summary>
-		public Size Size { get; private set; }
-
-		/// <summary>
-		///   Reinitializes the texture.
-		/// </summary>
-		/// <param name="data">The data that should be copied into the texture's memory.</param>
-		/// <param name="size">The size of the texture.</param>
-		/// <param name="format">The format of the texture.</param>
-		internal void Reinitialize(byte[] data, Size size, SurfaceFormat format)
+		public Size Size
 		{
-			Assert.ArgumentNotNull(data, () => data);
-			Assert.That(size.Width > 0, "Width must be greater than 0.");
-			Assert.That(size.Height > 0, "Height must be greater than 0.");
-			Assert.InRange(format);
-
-			if (_texture != IntPtr.Zero)
-				NativeMethods.DestroyTexture2D(_texture);
-
-			Size = size;
-			_texture = NativeMethods.CreateTexture2D(GraphicsDevice.NativePtr, data, size.Width, size.Height, format);
+			get { return new Size(Width, Height); }
 		}
 
 		/// <summary>
@@ -76,54 +44,29 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
+		///   Reinitializes the texture.
+		/// </summary>
+		/// <param name="data">The data that should be copied into the texture's memory.</param>
+		/// <param name="width">The width of the texture.</param>
+		/// <param name="height">The height of the texture.</param>
+		/// <param name="format">The format of the texture.</param>
+		internal void Reinitialize(byte[] data, int width, int height, SurfaceFormat format)
+		{
+			Assert.ArgumentNotNull(data, () => data);
+			Assert.ArgumentSatisfies(width > 0, () => width, "Width must be greater than 0.");
+			Assert.ArgumentSatisfies(height >= 0, () => height, "Height must be greater than or equal to 0.");
+			Assert.ArgumentInRange(format, () => format);
+
+			Reinitialize(data, width, height, 0, format);
+		}
+
+		/// <summary>
 		///   Disposes the default instances.
 		/// </summary>
 		internal static void DisposeDefaultInstances()
 		{
 			White.SafeDispose();
 			White = null;
-		}
-
-		/// <summary>
-		///   Binds the texture to the given slot.
-		/// </summary>
-		/// <param name="slot">The slot the texture should be bound to.</param>
-		public void Bind(int slot)
-		{
-			Assert.NotDisposed(this);
-			Assert.InRange(slot, 0, GraphicsDevice.TextureSlotCount);
-
-			if (DeviceState.Textures[slot] == this)
-				return;
-
-			DeviceState.Textures[slot] = this;
-			NativeMethods.BindTexture(_texture, slot);
-		}
-
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			NativeMethods.DestroyTexture2D(_texture);
-		}
-
-		/// <summary>
-		///   Provides access to the native Texture2D functions.
-		/// </summary>
-#if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
-#endif
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateTexture2D")]
-			public static extern IntPtr CreateTexture2D(IntPtr device, byte[] data, int width, int height, SurfaceFormat format);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyTexture2D")]
-			public static extern void DestroyTexture2D(IntPtr texture2D);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindTexture")]
-			public static extern void BindTexture(IntPtr texture2D, int slot);
 		}
 	}
 }
