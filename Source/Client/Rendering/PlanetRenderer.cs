@@ -50,6 +50,7 @@ namespace Lwar.Client.Rendering
 			VertexShader.Bind();
 			FragmentShader.Bind();
 			Planet.Texture.Bind(0);
+			SamplerState.LinearWrap.Bind(0);
 
 			planet.Model.Draw();
 		}

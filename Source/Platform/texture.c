@@ -9,8 +9,8 @@ pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureType type, pgVoid*
 	pgTexture* texture;
 
 	PG_ASSERT_NOT_NULL(device);
-	PG_ASSERT_IN_RANGE(width, 0, 4096);
-	PG_ASSERT_IN_RANGE(height, 0, 4096);
+	PG_ASSERT_IN_RANGE(width, 0, 8192);
+	PG_ASSERT_IN_RANGE(height, 0, 8192);
 
 	PG_ALLOC(pgTexture, texture);
 	texture->device = device;

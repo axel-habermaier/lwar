@@ -258,7 +258,7 @@ GLvoid pgConvertTextureFilter(pgTextureFilter textureFilter, GLenum* minFilter, 
 		*magFilter = GL_NEAREST;
 		break;
 	case PG_TEXTURE_FILTER_BILINEAR:
-		*minFilter = GL_LINEAR_MIPMAP_NEAREST;
+		*minFilter = GL_LINEAR;
 		*magFilter = GL_LINEAR;
 		break;
 	case PG_TEXTURE_FILTER_TRILINEAR:

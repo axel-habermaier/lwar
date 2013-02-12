@@ -10,5 +10,5 @@ out vec4 Output;
 
 void main()
 {
-	Output = texture2D(Tex, TexCoords);
+	Output = texture(Tex, TexCoords);
 }
