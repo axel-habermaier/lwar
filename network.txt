@@ -133,6 +133,8 @@ Messages Payload Data
 								2	Bullet
 								3	Planet
 								4	Rocket
+								5	Ray
+								6	Shock Wave
 		
 	Remove
 		Type		Name 		Description
@@ -170,17 +172,20 @@ Messages Payload Data
 		uint16		ping		The player pings
 		
 	Update
-		Type		Name 		Description
-		---------	----------	------------------------------------------------------------------------
-		uint8		num			The number of entity updates that follow
+        Update messages signal new positions and other properties to the client. If a field is present
+        depends on the entity's type, hence these messages vary in size.
+
+		Type		Name 		Types		Description
+		---------	----------	----------  ------------------------------------------------------------
+		uint8		num						The number of entity updates that follow
 		[for i < num, ++i]
-		uint32(Id)	entityId	The generational identifier of the entity that is updated
-		int16		x			The new x position
-		int16		y			The new y position
-		int16		vx			The new x velocity
-		int16		vy			The new y velocity
-		uint16		orientation	New orientation angle, in degrees
-		uint8		health		The new health
+		uint32(Id)	entityId	all			The generational identifier of the entity that is updated
+		int16		x			all			The new x position
+		int16		y			all			The new y position
+		uint16		orientation	1,4,5		New orientation angle, in degrees
+		uint8		health		1			The new health
+        uint16		length		5			The current length of a ray
+		uint8		radius		6			The new radius of a shock wave
 		
 	Input
 		An input message contains the client's current input state, as well as the previous seven input
@@ -253,7 +258,7 @@ Disconnecting from the server
 	to the server. Upon reception of the message, the server stops sending any messages except for
 	a Leave message with the client's player id that also acknowledges the Disconnect message. 
 
-	The Leave message sent to a disconnecting client will not be acknowledged (similarily, a Full
+	The Leave message sent to a disconnecting client will not be acknowledged (similarly, a Full
 	message sent to a connecting client will not be acknowledged). The server just resends the message
 	until it stops receiving the Disconnect (or Connect) messages from the client. Either, the client
 	received the Leave (Full) message and disconnected successfully (aborted the connection attempt)
@@ -264,9 +269,18 @@ Disconnecting from the server
 	Disconnect timeout, the client's game session ends and/or the server removes the client, sending all 
 	of its remaining clients a Leave message for the disconnected client.
 
+Client-side prediction
+	A client may predict velocity (or acceleration) of an entity with by linear extrapolation
+	with respect to time. The client may thus assume that the velocity (or acceleration) remains constant
+	as long as no updates are received. Velocity can be computed as the difference of two position measures
+	divided by the time interval, acceleration can similarly be obtained from velocity.
+	Client-side prediction leads to a smoother display of the game, especially on bad networks.
+
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	10	  13-02-11	Gidon		Added Ray,Shock Wave as entity types with id 5,6
+                        		Type-specific Update messages, client side prediction
 	 9	  13-02-05	Axel		Added Rocket as entity type with id 4
      8    13-02-04  Gidon		Renamed rot to orientation, added to Input message as well
      							Initial Collision message specification

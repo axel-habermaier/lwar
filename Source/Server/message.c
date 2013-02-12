@@ -232,7 +232,7 @@ void header_debug(Header *h, const char *s) {
 }
 
 void update_debug(Update *u, const char *s) {
-    log_debug("%s pos %d (%d,%d)", s, u->entity_id.n, u->x, u->y);
+    log_debug("%s pos %d (%d,%d)", s, u->entity_id.n, (int)u->x, (int)u->y);
 }
 
 void message_debug(Message *m, const char *s) {

@@ -121,7 +121,8 @@ void players_update() {
         p = &c->player;
 
         if(!p->ship) {
-            Vec x = { 100 + rand() % 600, 100 + rand() % 400 };
+            /* Vec x = { 100 + rand() % 600, 100 + rand() % 400 }; */
+            Vec x = _0;
             player_spawn(p, x);
         }
         player_action(p);
