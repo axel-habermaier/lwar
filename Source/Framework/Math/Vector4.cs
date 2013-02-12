@@ -149,6 +149,15 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Negates the components of a vector.
+		/// </summary>
+		/// <param name="vector">The vector whose components should be negated.</param>
+		public static Vector4 operator -(Vector4 vector)
+		{
+			return new Vector4(-vector.X, -vector.Y, -vector.Z, -vector.W);
+		}
+
+		/// <summary>
 		///   Multiplies a vector with a scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be multiplied.</param>

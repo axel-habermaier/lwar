@@ -48,7 +48,7 @@ namespace Lwar.Client.Rendering
 			Assets = assets;
 
 			_worldTransform = ConstantBuffer.Create(graphicsDevice, Matrix.Identity);
-			_solid = RasterizerState.CullNone;
+			_solid = RasterizerState.CullCounterClockwise;
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 
 			PlanetRenderer = new PlanetRenderer(this);

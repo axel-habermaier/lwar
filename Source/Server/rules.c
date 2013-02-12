@@ -24,7 +24,7 @@ void rules_init() {
     //player_select(&server->self->player, ENTITY_TYPE_ROCKET,0);
     //server->self->player.shooting = 1;
     
-    Vec x = { 1000,1000 };
+    Vec x = { 500,500 };
     Entity *p0 = entity_create(type_planet, &server->self->player, x, _0);
 
 	/*Vec x2 = { 800,500 };

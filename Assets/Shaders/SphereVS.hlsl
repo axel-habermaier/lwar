@@ -20,6 +20,7 @@ struct VS_INPUT
 
 struct VS_OUTPUT
 {
+	float3 Normal		: NORMAL;
 	float4 Position		: SV_Position;
 };
 
@@ -29,6 +30,7 @@ VS_OUTPUT Main(VS_INPUT input)
 
 	float4 position = mul(World, input.Position);
 	output.Position = mul(ViewProjection, position);
+	output.Normal = input.Normal;
 
 	return output;
 }

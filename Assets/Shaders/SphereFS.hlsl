@@ -1,6 +1,11 @@
 #ps_4_0
 
-float4 Main() : SV_Target
+struct PS_INPUT
 {
-	return float4(1, 1, 1, 1);
+	float3 Normal : NORMAL;
+};
+
+float4 Main(PS_INPUT input) : SV_Target
+{
+	return float4(input.Normal, 1);
 }

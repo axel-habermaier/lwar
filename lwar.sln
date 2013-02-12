@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		network.txt = network.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibNoise", "Source\LibNoise\LibNoise.csproj", "{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -121,6 +123,22 @@ Global
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x64.Build.0 = Release|x64
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x86.ActiveCfg = Release|Win32
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x86.Build.0 = Release|Win32
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Debug Direct3D11|x64.ActiveCfg = Debug|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Debug Direct3D11|x64.Build.0 = Debug|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Debug Direct3D11|x86.ActiveCfg = Debug|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Debug Direct3D11|x86.Build.0 = Debug|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Debug OpenGL3|x64.ActiveCfg = Debug|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Debug OpenGL3|x64.Build.0 = Debug|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Debug OpenGL3|x86.ActiveCfg = Debug|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Debug OpenGL3|x86.Build.0 = Debug|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Release Direct3D11|x64.ActiveCfg = Release|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Release Direct3D11|x64.Build.0 = Release|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Release Direct3D11|x86.ActiveCfg = Release|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Release Direct3D11|x86.Build.0 = Release|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Release OpenGL3|x64.ActiveCfg = Release|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Release OpenGL3|x64.Build.0 = Release|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Release OpenGL3|x86.ActiveCfg = Release|Any CPU
+		{9B70FBBB-5313-4D84-B42B-FDD8AB5E1831}.Release OpenGL3|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

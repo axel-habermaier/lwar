@@ -11,3 +11,5 @@ Source/Assets Compiler/obj
 Source/Assets Compiler/bin
 Source/Framework/obj
 Source/Platform/obj
+Source/LibNoise/obj
+Source/LibNoise/bin
