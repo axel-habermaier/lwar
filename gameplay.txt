@@ -1,0 +1,140 @@
+lwar Gameplay Summary
+=====================
+
+Game Physics
+
+    In lwar, each player controls a ship that is equipped with various weapons
+    to fly around in a two-dimensional universe with planets, suns, black holes
+    and so on. The game physics keeps track of the ship and other objects
+    (entities) with a physical appearance in the world. An entity is controlled
+    by acceleration a, which influences its velocity v and therefore position x;
+    and rotation Δφ, that influences its orientation φ. A,v and x are two
+    dimensional vectors, and Δφ, φ are angles, measured in radians 0 to 2π.
+
+    Entities are bounded by a perfect circle with radius r, and have a mass m,
+    except for rays (beams of light), which instead have a length l, measuring
+    from x in the direction of φ.
+
+    The game keeps track of the current game time t (measured in milliseconds),
+    and performs periodic updates to the world. The interval between two
+    updates, denoted by Δt, is used to compute all entities' new positions
+    x'(Δt) during an update by the standard formulas
+
+        v'(t) = t · a  + v
+        x'(t) = t · v' + x
+
+    Similarly, the new orientation φ' of an entity is computed as
+
+        φ' = t · Δφ + φ
+
+    where |Δφ| may be bounded by the type of the entity.
+
+    Entities may collide elastically within the interval 0..Δt, later collisions
+    are delayed to the next update. The algorithm for non-rays is roughly as
+    follows:
+
+        for each entity (I)
+            compute v'
+        
+        for each pair of entities
+            solve for t the quadratic equation
+                | x1'(t) - x2'(t) | = r1 + r2
+            pick the smallest non-negative solution t* <= Δt, if it exists
+            and record the collision between these entities at this point in time
+
+        for each collision
+            move both entities to the collision point,
+            i.e. compute and assign x'(t*)
+
+            compute new velocities v' using the standard formula
+            (momentum and kinetic energy are conserved)
+
+                      mi - mj        2 · mj
+                vi' = ------- vi* + ------- vj* + (vi - vi*)
+                      mi + mj       mi + mj
+
+            where v* is the restriction of v onto the collision plane,
+            i.e., the projection onto the vector (x1 - x2).
+            The summand (vi - vi*) is the movement parallel to the collision plane,
+            which is not affected by the collision.
+
+        for each entity (II)
+            compute and assign x'(Δt)
+            resp. x'(Δt - t*) if the entity had a collision
+
+    The algorithm is slightly inaccurate, since entities are moved in a straight
+    line to the collision point, although the movement is in fact nonlinear.
+    This error is neglected.
+
+    The game implements some adaptions to this algorithm as follows
+
+    - Pairs of intersecting entities are destroyed in a spectacular explosion
+
+    - Planets are considered stationary. If an entity collides with a planet, it
+      maintains its full momentum, i.e., the mass of a planet is approximated by
+      infinity. The formula for vi' then simplifies to
+
+                vi' = vi - 2 · vi*
+
+    - Cascading collisions within the update interval might occur. The game
+      simply iterates collision detection for a limited number of rounds (except
+      for steps I and II). As an optimization, only pairs of entities are
+      considered in these subsequent round, if one of them took part in a
+      collision previously.  (Alternatively, the game might cache some
+      "proximity" information during the first round of collisions).
+
+    Rays are handled differently. These are attached to the nuzzle of a phaser
+    weapon that fires continuously, hence their position and orientation must be
+    updated with respect to the position of the weapon. The current length of a
+    ray is determined whether it hits a target, which is detected as follows
+
+        find position y, velocity w, and orientation φ of the weapon.
+        compute x1' = y + whatever offset applies wrt. φ
+
+        for each entity that is not a ray
+            solve for l the linear equation
+                | x1' + l · unit(φ) - x2 | = r2
+            which yields the current length l of the ray
+            if a positive solution exists,
+            where unit(φ) = (cos(φ, sin(φ))
+
+Weapons and Equipment
+
+    Each player-ship is equipped with at most four weapons of the player's
+    choice, in two categories.
+
+    - Attack weapons, such as lasers, phasers, mini-guns, or rocket launchers,
+      expel particles or emit rays. These are attached to the ship with an
+      offset of position and orientation. A ship has at most two weapons
+
+    - Defensive weapons, such as shock-wave generators may be directed or not.
+      Some defensive weapons are automatic, for example a laser tower that aims
+      at bypassing enemies. A ship may carry most one automatic and one manual
+      defensive weapon.
+
+Planets with Gravity
+
+    Planets influence other entities by a gravity force. The acceleration a
+    caused by a planet with mass m1 at position x1 to an entity x2 with mass m2
+    is proportional to the inverse of the distance. It is computed as
+
+            (m1 + m2) · normalized(x1 - x2)
+        a = -------------------------------
+                   m1 · | x1 - x2| ²
+
+    The term m1 + m2 determines the gravity force, and m1 in the denominator
+    accommodates for the inertia of the entity which is proportional to its mass.
+
+Black Holes
+
+    Black holes affect the perceived speed of passing of time of an entity,
+    which manifests in slower movement and acceleration of that entity.
+    It may be realized by scaling t in the computation of v' and x'.
+    The exact mechanism has not been determined yet.
+
+Revision History
+
+    Rev.    Date        Author      Changes
+    ---------------------------------------------------------------------------
+    1       13-02-11    Gidon       Initial version, documenting physics.c
+                                    and some planned improvements and features
