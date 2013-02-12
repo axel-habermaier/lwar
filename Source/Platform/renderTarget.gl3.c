@@ -6,12 +6,12 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgTexture2D* texture2D)
+pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgTexture* texture)
 {
 	// TODO: Implement
 	renderTarget->id = 0;
 	renderTarget->swapChain = NULL;
-	PG_UNUSED(texture2D);
+	PG_UNUSED(texture);
 }
 
 pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)

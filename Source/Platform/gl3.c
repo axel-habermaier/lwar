@@ -220,13 +220,14 @@ GLenum pgConvertStencilOperation(pgStencilOperation stencilOperation)
 	}
 }
 
-GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFormat, GLenum* format)
+GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFormat, GLenum* format, GLint* length)
 {
 	switch(surfaceFormat)
 	{
 	case PG_SURFACE_COLOR:
 		*internalFormat = GL_RGBA;
 		*format = GL_RGBA;
+		*length = 4;
 		break;
 	default:						
 		PG_NO_SWITCH_DEFAULT;
@@ -340,6 +341,23 @@ GLint pgConvertVertexDataSemantics(pgVertexDataSemantics semantics)
 {
 	PG_ASSERT_IN_RANGE(semantics, 2500, 2509);
 	return (GLint)semantics - 2500;
+}
+
+GLvoid pgConvertTextureType(pgTextureType textureType, GLenum* type, GLenum* boundType)
+{
+	switch (textureType)
+	{
+	case PG_TEXTURE_2D:
+		*type = GL_TEXTURE_2D;
+		*boundType = GL_TEXTURE_BINDING_2D;
+		return;
+	case PG_TEXTURE_CUBE_MAP:
+		*type = GL_TEXTURE_CUBE_MAP;
+		*boundType = GL_TEXTURE_BINDING_CUBE_MAP;
+		return;
+	default:
+		PG_NO_SWITCH_DEFAULT;
+	}
 }
 
 #endif

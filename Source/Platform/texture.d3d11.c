@@ -20,7 +20,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data, pgSurfaceFormat sur
 	case PG_TEXTURE_2D:
 		CreateTexture2D(texture, data, surfaceFormat);
 		break;
-	case PG_TEXTURE_CUBE:
+	case PG_TEXTURE_CUBE_MAP:
 		CreateCubeMap(texture, data, surfaceFormat);
 		break;
 	default:

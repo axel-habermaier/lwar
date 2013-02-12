@@ -13,8 +13,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		Texture2D = 2901,
 
 		/// <summary>
-		///   Indicates that a texture is a cube texture.
+		///   Indicates that a texture is a cube map.
 		/// </summary>
-		Cube = 2902
+		CubeMap = 2902
 	}
 }

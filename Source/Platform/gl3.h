@@ -103,8 +103,10 @@ pgVoid pgSwapBuffers(pgContext* context);
 	GLint			indexSizeInBytes;	\
 	GLint			indexOffset;
 
-#define PG_TEXTURE2D_PLATFORM \
-	GLuint id;
+#define PG_TEXTURE_PLATFORM \
+	GLuint id;				\
+	GLenum glType;			\
+	GLenum glBoundType;	
 
 #define PG_RENDER_TARGET_PLATFORM	\
 	GLuint			id;				\
@@ -138,12 +140,13 @@ GLenum pgConvertMapMode(pgMapMode mapMode);
 GLenum pgConvertPrimitiveType(pgPrimitiveType primitiveType);
 GLenum pgConvertResourceUsage(pgResourceUsage resourceUsage);
 GLenum pgConvertStencilOperation(pgStencilOperation stencilOperation);
-GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFormat, GLenum* format);
+GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFormat, GLenum* format, GLint* length);
 GLenum pgConvertTextureAddressMode(pgTextureAddressMode addressMode);
 GLvoid pgConvertTextureFilter(pgTextureFilter textureFilter, GLenum* minFilter, GLenum* magFilter);
 GLvoid pgConvertVertexDataFormat(pgVertexDataFormat vertexDataFormat, GLenum* type, GLsizei* size);
 GLvoid pgConvertShaderType(pgShaderType shaderType, GLenum* type, GLenum* bit);
 GLenum pgConvertBufferType(pgBufferType bufferType);
 GLint pgConvertVertexDataSemantics(pgVertexDataSemantics semantics);
+GLvoid pgConvertTextureType(pgTextureType textureType, GLenum* type, GLenum* boundType);
 
 #endif

@@ -420,7 +420,7 @@
     <ClCompile Include="swapChain.gl3.c" />
     <ClCompile Include="texture.c" />
     <ClCompile Include="texture.d3d11.c" />
-    <ClCompile Include="texture2D.gl3.c" />
+    <ClCompile Include="texture.gl3.c" />
     <ClCompile Include="inputLayout.c" />
     <ClCompile Include="inputLayout.gl3.c" />
     <ClCompile Include="wglExt.c">

@@ -221,7 +221,7 @@ typedef enum
 typedef enum
 {
 	PG_TEXTURE_2D						= 2901,
-	PG_TEXTURE_CUBE						= 2902
+	PG_TEXTURE_CUBE_MAP					= 2902
 } pgTextureType;
 
 typedef struct

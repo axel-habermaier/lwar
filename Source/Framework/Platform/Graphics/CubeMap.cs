@@ -18,7 +18,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="height">The height of the texture.</param>
 		/// <param name="format">The format of the texture.</param>
 		public CubeMap(GraphicsDevice graphicsDevice, byte[] data, int width, int height, SurfaceFormat format)
-			: base(graphicsDevice, TextureType.Cube, data, width, height, 0, format)
+			: base(graphicsDevice, TextureType.CubeMap, data, width, height, 0, format)
 		{
 		}
 
