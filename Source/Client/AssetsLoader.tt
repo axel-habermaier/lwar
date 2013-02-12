@@ -46,6 +46,9 @@ namespace Lwar.Client
 			if (AssetType.EndsWith("VertexShader"))
 				return "LoadVertexShader";
 
+			if (AssetType.EndsWith("CubeMap"))
+				return "LoadCubeMap";
+
 			throw new InvalidOperationException("Unknown asset type: " + AssetType);
 		}
 	}

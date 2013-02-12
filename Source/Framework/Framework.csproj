@@ -181,9 +181,12 @@
     <Compile Include="ObjectPool.cs" />
     <Compile Include="Platform\Assets\Asset.cs" />
     <Compile Include="Platform\Assets\AssetsReloader.cs" />
+    <Compile Include="Platform\Assets\CubeMapAsset.cs" />
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
     <Compile Include="Platform\Assets\IAssetsCompiler.cs" />
+    <Compile Include="Platform\Assets\Texture2DAsset.cs" />
     <Compile Include="Platform\Endianess.cs" />
+    <Compile Include="Platform\Graphics\CubeMap.cs" />
     <Compile Include="Platform\Graphics\Texture.cs" />
     <Compile Include="Platform\Graphics\TextureType.cs" />
     <Compile Include="Platform\IMeasurement.cs" />
@@ -244,7 +247,7 @@
     <Compile Include="Platform\Assets\AssetReader.cs" />
     <Compile Include="Platform\Assets\FontAsset.cs" />
     <Compile Include="Platform\Assets\VertexShaderAsset.cs" />
-    <Compile Include="Platform\Assets\Texture2DAsset.cs" />
+    <Compile Include="Platform\Assets\TextureAsset.cs" />
     <Compile Include="Platform\BufferReader.cs" />
     <Compile Include="Platform\BufferWriter.cs" />
     <Compile Include="Platform\Graphics\Query.cs" />

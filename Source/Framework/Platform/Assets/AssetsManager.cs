@@ -62,7 +62,7 @@ namespace Pegasus.Framework.Platform.Assets
 		}
 
 		/// <summary>
-		/// Reloads an asset.
+		///   Reloads an asset.
 		/// </summary>
 		/// <param name="assetName">The asset that should be reloaded.</param>
 		private void ReloadAsset(string assetName)
@@ -167,6 +167,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="fontFilePath">The path to the font description file.</param>
 		public Font LoadFont(string fontFilePath)
 		{
+			Assert.ArgumentNotNullOrWhitespace(fontFilePath, () => fontFilePath);
 			return Load<FontAsset>(fontFilePath).Font;
 		}
 
@@ -176,6 +177,8 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="shaderFilePath">The path to the vertex shader file.</param>
 		public VertexShader LoadVertexShader(string shaderFilePath)
 		{
+			Assert.ArgumentNotNullOrWhitespace(shaderFilePath, () => shaderFilePath);
+
 			shaderFilePath = shaderFilePath + ShaderExtension;
 			return Load<VertexShaderAsset>(shaderFilePath).Shader;
 		}
@@ -186,6 +189,8 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="shaderFilePath">The path to the fragment shader file.</param>
 		public FragmentShader LoadFragmentShader(string shaderFilePath)
 		{
+			Assert.ArgumentNotNullOrWhitespace(shaderFilePath, () => shaderFilePath);
+
 			shaderFilePath = shaderFilePath + ShaderExtension;
 			return Load<FragmentShaderAsset>(shaderFilePath).Shader;
 		}
@@ -196,7 +201,18 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="texturePath">The path to the texture file.</param>
 		public Texture2D LoadTexture2D(string texturePath)
 		{
+			Assert.ArgumentNotNullOrWhitespace(texturePath, () => texturePath);
 			return Load<Texture2DAsset>(texturePath).Texture;
+		}
+
+		/// <summary>
+		///   Loads a cube map.
+		/// </summary>
+		/// <param name="cubeMapPath">The path to the cube map file.</param>
+		public CubeMap LoadCubeMap(string cubeMapPath)
+		{
+			Assert.ArgumentNotNullOrWhitespace(cubeMapPath, () => cubeMapPath);
+			return Load<CubeMapAsset>(cubeMapPath).Texture;
 		}
 	}
 }
