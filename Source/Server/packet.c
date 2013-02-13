@@ -68,6 +68,7 @@ int packet_get_u(Packet *p, Update *u) {
 int packet_recv(Packet *p) {
     p->a = 0;
     p->b = MAX_PACKET_LENGTH;
+	address_create(&p->adr, "0.0.0.0", 0); // TODO!!
     if(!conn_recv(p->p, &p->b, &p->adr)) {
         p->io_failed = 1;
         return 0;

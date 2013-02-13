@@ -154,6 +154,8 @@ int conn_recv(char *buf, size_t* size, Address* adr)
 		return 1;
 	}
 
+	adr->ip = from.sin_addr.s_addr;
+	adr->port = from.sin_port;
 	if (socket_error(read_bytes))
 	{
 		conn_error("Receiving failed.");
@@ -161,9 +163,7 @@ int conn_recv(char *buf, size_t* size, Address* adr)
 	}
 
 	*size = read_bytes;
-	adr->ip = from.sin_addr.s_addr;
-	adr->port = from.sin_port;
-
+	
 	return 1;
 }
 

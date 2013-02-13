@@ -40,7 +40,7 @@ namespace Lwar.Client.Network.Messages
 					var ship = Ship.Create(player);
 					entity = ship;
 
-					if (_template == EntityTemplate.Ship || entity.Player == session.LocalPlayer)
+					if (_template == EntityTemplate.Ship && entity.Player == session.LocalPlayer)
 						session.LocalPlayer.Ship = ship;
 					break;
 				case EntityTemplate.Bullet:

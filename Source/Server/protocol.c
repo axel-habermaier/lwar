@@ -318,6 +318,7 @@ static void protocol_send_gamestate(Client *cn) {
     Message *r;
     Client *c;
     clients_foreach(c) {
+		if(c->dead) continue; // TODO: Hack
         if(c == cn) continue;
 
         r = message_unicast(cn, MESSAGE_JOIN);
@@ -330,6 +331,7 @@ static void protocol_send_gamestate(Client *cn) {
 
     Entity *e;
     entities_foreach(e) {
+		if(e->dead) continue; // TODO: Hack
         r = message_unicast(cn, MESSAGE_ADD);
         r->add.entity_id  = e->id;
         r->add.player_id  = e->player->id;
