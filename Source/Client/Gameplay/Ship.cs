@@ -25,7 +25,7 @@ namespace Lwar.Client.Gameplay
 		protected override void Added()
 		{
 			//Model = Model.CreateQuad(GraphicsDevice, Texture.Size);
-			Model = Model.CreateQuad(GraphicsDevice, 100000, 100000);
+			Model = Model.CreateQuad(GraphicsDevice, 100, 100);
 			//Texture.GenerateMipmaps();
 		}
 

@@ -2,6 +2,9 @@
 
 namespace Pegasus.AssetsCompiler
 {
+	using System.Drawing;
+	using System.Drawing.Imaging;
+	using System.Runtime.InteropServices;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
 
@@ -20,10 +23,21 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
 		protected override void Process(byte[] data, int width, int height, SurfaceFormat format, BufferWriter writer)
 		{
+			width /= 6;
 			writer.WriteInt32(width);
 			writer.WriteInt32(height);
 			writer.WriteInt32((int)format);
-			writer.Copy(data);
+
+			var componentCount = ComponentCount(format);
+			var buffer = new byte[width * height * componentCount];
+
+			for (var i = 0; i < 6; ++i)
+			{
+				for (var j = 0; j < height; ++j)
+					Array.Copy(data, i * width * componentCount + j * width * componentCount * 6, buffer, j * width * componentCount, width * componentCount);
+
+				WriteMipmaps(buffer, width, height, format, writer);
+			}
 		}
 	}
 }

@@ -2,8 +2,6 @@
 
 namespace Pegasus.AssetsCompiler
 {
-	using System.Drawing;
-	using System.Linq;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
@@ -31,14 +29,8 @@ namespace Pegasus.AssetsCompiler
 			writer.WriteInt32(width);
 			writer.WriteInt32(height);
 			writer.WriteInt32((int)format);
-			writer.Copy(data);
 
-			var mipmaps = ComputeMipmaps(width, height).ToArray();
-			foreach (var mipmap in mipmaps)
-			{
-				var scale = new Size(width / mipmap.Width, height / mipmap.Height);
-				writer.Copy(GenerateMipmap(data, mipmap, scale, format));
-			}
+			WriteMipmaps(data, width, height, format, writer);
 		}
 	}
 }

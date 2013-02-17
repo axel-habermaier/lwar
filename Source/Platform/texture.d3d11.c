@@ -55,7 +55,7 @@ static pgVoid CreateTexture2D(pgTexture* texture, pgVoid* data, pgSurfaceFormat 
 	pgUint32 i;
 	D3D11_TEXTURE2D_DESC desc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
-	D3D11_SUBRESOURCE_DATA initialData[32];
+	D3D11_SUBRESOURCE_DATA initialData[16];
 	pgUint8* dataPtr = (pgUint8*)data;
 
 	desc.Width = texture->desc.width;
@@ -101,16 +101,17 @@ static pgVoid CreateTexture2D(pgTexture* texture, pgVoid* data, pgSurfaceFormat 
 
 static pgVoid CreateCubeMap(pgTexture* texture, pgVoid* data, pgSurfaceFormat surfaceFormat)
 {
-	pgInt32 length, i, width;
+	pgInt32 length, width, height, level;
+	pgUint32 i, j;
 	D3D11_TEXTURE2D_DESC desc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
-	D3D11_SUBRESOURCE_DATA initialData[6];
+	D3D11_SUBRESOURCE_DATA initialData[6 * 16];
+	pgUint8* dataPtr = (pgUint8*)data;
 	int faces[] = { 5, 1, 4, 0, 3, 2 };  // Maps the Pegasus cubemap order to D3D11 order 
 
-	width = texture->desc.width / 6;
-	desc.Width = width;
+	desc.Width = texture->desc.width;
 	desc.Height = texture->desc.height;
-	desc.MipLevels = 1;//pgMipmapCount(width, texture->desc.height);
+	desc.MipLevels = 0;
 	desc.ArraySize = 6;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
@@ -121,20 +122,43 @@ static pgVoid CreateCubeMap(pgTexture* texture, pgVoid* data, pgSurfaceFormat su
 	
 	pgConvertSurfaceFormat(surfaceFormat, &desc.Format, &length);
 
-	for (i = 0; i < 6; ++i)
+	level = pgMipmapCount(texture->desc.width, texture->desc.height);
+	PG_ASSERT_IN_RANGE(level + 1, 0, sizeof(initialData) / sizeof(D3D11_SUBRESOURCE_DATA) / 6);
+	for (j = 0; j < 6; ++j)
+	{
+		width = texture->desc.width;
+		height = texture->desc.height;
+
+		for (i = 0; i < level + 1; ++i)
+		{
+			pgInt32 index = faces[j] * (level + 1) + i;
+			//index = faces[j] + 6 * i;
+			initialData[index].pSysMem = dataPtr;
+			initialData[index].SysMemPitch = width * length;
+			initialData[index].SysMemSlicePitch = 0;
+			dataPtr += width * length * height;
+			width /= 2;
+			height /= 2;
+
+			width = width < 1 ? 1 : width;
+			height = height < 1 ? 1 : height;
+		}
+	}
+
+	/*for (i = 0; i < 6; ++i)
 	{
 		initialData[faces[i]].pSysMem = (pgInt8*)data + i * (width * length);
 		initialData[faces[i]].SysMemPitch = width * length * 6;
 		initialData[faces[i]].SysMemSlicePitch = 0;
-	}
+	}*/
 
 	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(texture), &desc, initialData, &texture->ptr), "Failed to create cube map.");
 
 	memset(&viewDesc, 0, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 	viewDesc.Format = desc.Format;
 	viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-	viewDesc.TextureCube.MipLevels = desc.MipLevels;
-	viewDesc.TextureCube.MostDetailedMip = desc.MipLevels - 1;
+	viewDesc.TextureCube.MipLevels = (UINT)-1;
+	viewDesc.TextureCube.MostDetailedMip = 0;
 	
 	D3DCALL(ID3D11Device_CreateShaderResourceView(DEVICE(texture), (ID3D11Resource*)texture->ptr, &viewDesc, &texture->resourceView), 
 		"Failed to create shader resource view for cube map.");

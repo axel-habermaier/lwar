@@ -17,7 +17,7 @@ namespace Lwar.Client.Gameplay
 		{
 			var c = Health / 100.0f;
 			//SpriteBatch.Draw(Texture, Position, Rotation, new Color(0.1f * c, 0.3f * c, 0.8f * c, 1.0f));
-			//Session.RenderContext.PlanetRenderer.Draw(this);
+			Session.RenderContext.PlanetRenderer.Draw(this);
 		}
 
 		protected override void OnReturning()
@@ -27,7 +27,7 @@ namespace Lwar.Client.Gameplay
 
 		protected override void Added()
 		{
-			Model = Model.CreateSphere(GraphicsDevice, 100, 25);
+			Model = Model.CreateSphere(GraphicsDevice, 2000, 25);
 			//Texture.GenerateMipmaps();
 		}
 

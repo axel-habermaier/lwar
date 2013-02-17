@@ -5,7 +5,7 @@ namespace Pegasus.AssetsCompiler
 	using System.Collections.Generic;
 	using System.Drawing;
 	using System.Drawing.Imaging;
-	using System.Runtime.InteropServices;
+	using System.Linq;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
@@ -113,7 +113,7 @@ namespace Pegasus.AssetsCompiler
 		///   Gets the number of components from the surface format.
 		/// </summary>
 		/// <param name="format">The surface format.</param>
-		private static byte ComponentCount(SurfaceFormat format)
+		protected static byte ComponentCount(SurfaceFormat format)
 		{
 			switch (format)
 			{
@@ -134,7 +134,7 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		/// <param name="width">The width of the texture.</param>
 		/// <param name="height">The height of the texture.</param>
-		protected IEnumerable<Size> ComputeMipmaps(int width, int height)
+		private IEnumerable<Size> ComputeMipmaps(int width, int height)
 		{
 			while (width > 1 || height > 1)
 			{
@@ -152,7 +152,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="size">The size of the mipmap.</param>
 		/// <param name="scale">The scaling factor between the mipmap and the original texture.</param>
 		/// <param name="format">The format of the texture.</param>
-		protected byte[] GenerateMipmap(byte[] data, Size size, Size scale, SurfaceFormat format)
+		private byte[] GenerateMipmap(byte[] data, Size size, Size scale, SurfaceFormat format)
 		{
 			var width = size.Width;
 			var height = size.Height;
@@ -169,10 +169,10 @@ namespace Pegasus.AssetsCompiler
 						for (var y = 0; y < height; ++y)
 						{
 							var offset = y * stride + (componentCount * x);
-							mipmap[offset] =	  Filter(data, x, y, stride, scale, 0, componentCount);
-							mipmap[offset + 1] =  Filter(data, x, y, stride, scale, 1, componentCount);
-							mipmap[offset + 2] =  Filter(data, x, y, stride, scale, 2, componentCount);
-							mipmap[offset + 3] =  Filter(data, x, y, stride, scale, 3, componentCount);
+							mipmap[offset] = Filter(data, x, y, stride, scale, 0, componentCount);
+							mipmap[offset + 1] = Filter(data, x, y, stride, scale, 1, componentCount);
+							mipmap[offset + 2] = Filter(data, x, y, stride, scale, 2, componentCount);
+							mipmap[offset + 3] = Filter(data, x, y, stride, scale, 3, componentCount);
 						}
 					}
 					break;
@@ -184,16 +184,12 @@ namespace Pegasus.AssetsCompiler
 					throw new InvalidOperationException("Unsupported surface format.");
 			}
 
-			//Make sure to clean up resources
-			var bitmap = new Bitmap(width, height);
-			var bdata = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-			Marshal.Copy(mipmap, 0, bdata.Scan0, mipmap.Length);
-			bitmap.UnlockBits(bdata);
-			bitmap.Save("test.png", ImageFormat.Png);
-
 			return mipmap;
 		}
 
+		/// <summary>
+		///   Averages four neighboring values of the original image to produce the final mipmap value.
+		/// </summary>
 		private static byte Filter(byte[] data, int x, int y, int stride, Size scale, int offset, int componentCount)
 		{
 			x *= scale.Width;
@@ -206,6 +202,26 @@ namespace Pegasus.AssetsCompiler
 			var d = data[(y + 1) * stride + offset + (x + 1) * componentCount];
 
 			return (byte)((a + b + c + d) / 4);
+		}
+
+		/// <summary>
+		///   Computes the mipmapped data for the given mipmap size.
+		/// </summary>
+		/// <param name="data">The texture data.</param>
+		/// <param name="width">The width of the texture.</param>
+		/// <param name="height">The height of the texture.</param>
+		/// <param name="format">The format of the texture.</param>
+		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
+		protected void WriteMipmaps(byte[] data, int width, int height, SurfaceFormat format, BufferWriter writer)
+		{
+			writer.Copy(data);
+
+			var mipmaps = ComputeMipmaps(width, height).ToArray();
+			foreach (var mipmap in mipmaps)
+			{
+				var scale = new Size(width / mipmap.Width, height / mipmap.Height);
+				writer.Copy(GenerateMipmap(data, mipmap, scale, format));
+			}
 		}
 	}
 }

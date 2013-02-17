@@ -15,12 +15,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="path">The path of the file that should be read.</param>
 		public AssetReader(string path)
 		{
-			using (var stream = new FileStream(path + PlatformInfo.AssetExtension, FileMode.Open, FileAccess.Read))
-			{
-				Data = new byte[stream.Length];
-				stream.Read(Data, 0, Data.Length);
-			}
-
+			Data = File.ReadAllBytes(path + PlatformInfo.AssetExtension);
 			Reader = BufferReader.Create(Data);
 		}
 
