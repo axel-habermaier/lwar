@@ -38,14 +38,24 @@ namespace Pegasus.Framework.Platform.Graphics
 		public static SamplerState PointClamp { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with linear filtering and wrap address mode.
+		///   Gets a default sampler state with bilinear filtering and wrap address mode.
 		/// </summary>
-		public static SamplerState LinearWrap { get; private set; }
+		public static SamplerState BilinearWrap { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with linear filtering and clamp address mode.
+		///   Gets a default sampler state with bilinear filtering and clamp address mode.
 		/// </summary>
-		public static SamplerState LinearClamp { get; private set; }
+		public static SamplerState BilinearClamp { get; private set; }
+
+		/// <summary>
+		///   Gets a default sampler state with trilinea filtering and wrap address mode.
+		/// </summary>
+		public static SamplerState TrilinearWrap { get; private set; }
+
+		/// <summary>
+		///   Gets a default sampler state with trilinear filtering and clamp address mode.
+		/// </summary>
+		public static SamplerState TrilinearClamp { get; private set; }
 
 		/// <summary>
 		///   Gets a default sampler state with anisotropic filtering and wrap address mode.
@@ -203,14 +213,24 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			PointClamp = new SamplerState(graphicsDevice) { Filter = TextureFilter.Nearest };
 
-			LinearWrap = new SamplerState(graphicsDevice)
+			BilinearWrap = new SamplerState(graphicsDevice)
 			{
 				AddressU = TextureAddressMode.Wrap,
 				AddressV = TextureAddressMode.Wrap,
 				AddressW = TextureAddressMode.Wrap,
 			};
 
-			LinearClamp = new SamplerState(graphicsDevice);
+			BilinearClamp = new SamplerState(graphicsDevice);
+
+			TrilinearWrap = new SamplerState(graphicsDevice)
+			{
+				AddressU = TextureAddressMode.Wrap,
+				AddressV = TextureAddressMode.Wrap,
+				AddressW = TextureAddressMode.Wrap,
+				Filter = TextureFilter.Trilinear
+			};
+
+			TrilinearClamp = new SamplerState(graphicsDevice) { Filter = TextureFilter.Trilinear };
 
 			AnisotropicWrap = new SamplerState(graphicsDevice)
 			{
@@ -234,11 +254,17 @@ namespace Pegasus.Framework.Platform.Graphics
 			PointClamp.SafeDispose();
 			PointClamp = null;
 
-			LinearWrap.SafeDispose();
-			LinearWrap = null;
+			BilinearWrap.SafeDispose();
+			BilinearWrap = null;
 
-			LinearClamp.SafeDispose();
-			LinearClamp = null;
+			BilinearClamp.SafeDispose();
+			BilinearClamp = null;
+
+			TrilinearWrap.SafeDispose();
+			TrilinearWrap = null;
+
+			TrilinearClamp.SafeDispose();
+			TrilinearClamp = null;
 
 			AnisotropicWrap.SafeDispose();
 			AnisotropicWrap = null;

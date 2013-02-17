@@ -301,6 +301,15 @@ typedef struct
     pgFloat32				mipLodBias;
 } pgSamplerDesc;
 
+typedef struct
+{
+	pgTextureType			type;
+	pgInt32					width;
+	pgInt32					height;
+	pgInt32					depth;
+	pgSurfaceFormat			format;
+	pgBool					renderTarget;
+} pgTextureDesc;
 
 //====================================================================================================================
 // Graphics functions
@@ -367,8 +376,7 @@ PG_API_EXPORT pgVoid pgBindInputLayout(pgInputLayout* inputLayout);
 // Texture functions
 //====================================================================================================================
 
-PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureType type, pgVoid* data,
-										 pgInt32 width, pgInt32 height, pgInt32 depth, pgSurfaceFormat format);
+PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDesc* description, pgVoid* data);
 PG_API_EXPORT pgVoid pgDestroyTexture(pgTexture* texture);
 
 PG_API_EXPORT pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot);

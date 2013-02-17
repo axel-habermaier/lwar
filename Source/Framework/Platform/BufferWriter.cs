@@ -316,10 +316,20 @@ namespace Pegasus.Framework.Platform
 		public void WriteByteArray(byte[] value)
 		{
 			Assert.ArgumentNotNull(value, () => value);
-			Assert.That(value.Length + _writePosition < _buffer.Offset + _buffer.Count, "Buffer overflow.");
 
-			ValidateCanWrite(sizeof(int) + value.Length);
 			WriteInt32(value.Length);
+			Copy(value);
+		}
+
+		/// <summary>
+		///   Copies the given byte array into the buffer.
+		/// </summary>
+		/// <param name="value">The data that should be copied.</param>
+		public void Copy(byte[] value)
+		{
+			Assert.ArgumentNotNull(value, () => value);
+
+			ValidateCanWrite(value.Length);
 			Array.Copy(value, 0, _buffer.Array, _writePosition, value.Length);
 			_writePosition += value.Length;
 		}

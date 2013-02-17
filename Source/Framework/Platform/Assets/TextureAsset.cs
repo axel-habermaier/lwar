@@ -60,7 +60,7 @@ namespace Pegasus.Framework.Platform.Assets
 			var width = reader.ReadInt32();
 			var height = reader.ReadInt32();
 			var format = (SurfaceFormat)reader.ReadInt32();
-			var data = reader.ReadByteArray();
+			var data = reader.ReadToEnd();
 
 			if (Texture == null)
 				Texture = _create(GraphicsDevice, data, width, height, format);

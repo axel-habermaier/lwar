@@ -23,7 +23,7 @@ namespace Pegasus.AssetsCompiler
 			writer.WriteInt32(width);
 			writer.WriteInt32(height);
 			writer.WriteInt32((int)format);
-			writer.WriteByteArray(data);
+			writer.Copy(data);
 		}
 	}
 }

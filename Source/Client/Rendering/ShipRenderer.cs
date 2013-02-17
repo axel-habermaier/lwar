@@ -49,7 +49,7 @@ namespace Lwar.Client.Rendering
 			_context.UpdateWorldTransform(ship);
 			VertexShader.Bind();
 			FragmentShader.Bind();
-			SamplerState.LinearWrap.Bind(0);
+			SamplerState.AnisotropicWrap.Bind(0);
 			
 			Ship.Texture.Bind(0);
 			ship.Model.Draw();

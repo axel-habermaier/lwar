@@ -281,18 +281,16 @@ pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout);
 struct pgTexture
 {
 	pgGraphicsDevice*	device;
-	pgInt32				width;
-	pgInt32				height;	
-	pgInt32				depth;
-	pgTextureType		type;
+	pgTextureDesc		desc;
 	PG_TEXTURE_PLATFORM
 };
 
-pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data, pgSurfaceFormat format);
+pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data);
 pgVoid pgDestroyTextureCore(pgTexture* texture);
 
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot);
 pgVoid pgGenerateMipmapsCore(pgTexture* texture);
+pgInt32 pgMipmapCount(pgInt32 width, pgInt32 height);
 
 //====================================================================================================================
 // Render target

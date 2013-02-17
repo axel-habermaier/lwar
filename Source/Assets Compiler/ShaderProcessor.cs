@@ -34,7 +34,8 @@ namespace Pegasus.AssetsCompiler
 #if DEBUG
 			flags |= ShaderFlags.Debug;
 #endif
-			var result = ShaderBytecode.Compile(File.ReadAllText(source + ".hlsl"), "Main", profile, flags, EffectFlags.None, source);
+			source += ".hlsl";
+			var result = ShaderBytecode.Compile(File.ReadAllText(source), "Main", profile, flags, EffectFlags.None, source);
 			if (result.HasErrors)
 				throw new InvalidOperationException(result.Message);
 

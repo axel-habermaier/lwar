@@ -29,7 +29,7 @@ pgVoid pgCreateShaderCore(pgShader* shader, pgShaderType type, pgVoid* shaderDat
 	buffer.pos = 0;
 
 	skip = ReadInt32(&buffer);
-	buffer.pos += skip;
+	buffer.pos += skip + sizeof(pgUint8);
 	byteCode = (pgUint8*)shaderData + buffer.pos + sizeof(pgInt32);
 
 	byteCodeLength = ReadInt32(&buffer);

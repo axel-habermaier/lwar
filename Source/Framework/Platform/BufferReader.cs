@@ -319,6 +319,17 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		/// Returns all remaining bytes.
+		/// </summary>
+		public byte[] ReadToEnd()
+		{
+			var data = new byte[_buffer.Count - _readPosition];
+			Array.Copy(_buffer.Array, _readPosition, data, 0, data.Length);
+			_readPosition += data.Length;
+			return data;
+		}
+
+		/// <summary>
 		///   Tries to deserialize an object of the given type from the buffer. Either, all reads succeed or the read position of
 		///   the buffer remains unmodified if any reads are out of bounds. Returns true to indicate that the object has been
 		///   successfully deserialized.

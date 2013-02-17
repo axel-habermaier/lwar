@@ -31,14 +31,13 @@ namespace Pegasus.AssetsCompiler
 			writer.WriteInt32(width);
 			writer.WriteInt32(height);
 			writer.WriteInt32((int)format);
-			writer.WriteByteArray(data);
+			writer.Copy(data);
 
 			var mipmaps = ComputeMipmaps(width, height).ToArray();
-			writer.WriteInt32(mipmaps.Length);
 			foreach (var mipmap in mipmaps)
 			{
 				var scale = new Size(width / mipmap.Width, height / mipmap.Height);
-				writer.WriteByteArray(GenerateMipmap(data, mipmap, scale, format));
+				writer.Copy(GenerateMipmap(data, mipmap, scale, format));
 			}
 		}
 	}

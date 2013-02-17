@@ -5,6 +5,7 @@ namespace Pegasus.AssetsCompiler
 	using System.Collections.Generic;
 	using System.Drawing;
 	using System.Drawing.Imaging;
+	using System.Runtime.InteropServices;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
@@ -167,11 +168,11 @@ namespace Pegasus.AssetsCompiler
 					{
 						for (var y = 0; y < height; ++y)
 						{
-							var offset = y * stride + x;
-							mipmap[offset] = Filter(data, x, y, stride, scale, 0);
-							mipmap[offset + 1] = Filter(data, x, y, stride, scale, 1);
-							mipmap[offset + 2] = Filter(data, x, y, stride, scale, 2);
-							mipmap[offset + 3] = Filter(data, x, y, stride, scale, 3);
+							var offset = y * stride + (componentCount * x);
+							mipmap[offset] =	  Filter(data, x, y, stride, scale, 0, componentCount);
+							mipmap[offset + 1] =  Filter(data, x, y, stride, scale, 1, componentCount);
+							mipmap[offset + 2] =  Filter(data, x, y, stride, scale, 2, componentCount);
+							mipmap[offset + 3] =  Filter(data, x, y, stride, scale, 3, componentCount);
 						}
 					}
 					break;
@@ -183,18 +184,26 @@ namespace Pegasus.AssetsCompiler
 					throw new InvalidOperationException("Unsupported surface format.");
 			}
 
+			//Make sure to clean up resources
+			var bitmap = new Bitmap(width, height);
+			var bdata = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+			Marshal.Copy(mipmap, 0, bdata.Scan0, mipmap.Length);
+			bitmap.UnlockBits(bdata);
+			bitmap.Save("test.png", ImageFormat.Png);
+
 			return mipmap;
 		}
 
-		private static byte Filter(byte[] data, int x, int y, int stride, Size scale, int offset)
+		private static byte Filter(byte[] data, int x, int y, int stride, Size scale, int offset, int componentCount)
 		{
 			x *= scale.Width;
 			y *= scale.Height;
+			stride *= scale.Width;
 
-			var a = data[y * stride + offset + x];
-			var b = data[(y + 1) * stride + offset + x];
-			var c = data[y * stride + offset + (x + 1)];
-			var d = data[(y + 1) * stride + offset + (x + 1)];
+			var a = data[y * stride + offset + x * componentCount];
+			var b = data[(y + 1) * stride + offset + x * componentCount];
+			var c = data[y * stride + offset + (x + 1) * componentCount];
+			var d = data[(y + 1) * stride + offset + (x + 1) * componentCount];
 
 			return (byte)((a + b + c + d) / 4);
 		}

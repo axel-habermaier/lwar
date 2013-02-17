@@ -85,7 +85,9 @@ namespace Pegasus.Framework.Platform.Graphics
 			Width = width;
 			Height = height;
 			Depth = depth;
-			_texture = NativeMethods.CreateTexture(GraphicsDevice.NativePtr, _type, data, width, height, depth, format);
+
+			var description = new NativeMethods.TextureDescription(_type, Width, Height, Depth, format, false);
+			_texture = NativeMethods.CreateTexture(GraphicsDevice.NativePtr, ref description, data);
 		}
 
 		/// <summary>
@@ -130,8 +132,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateTexture")]
-			public static extern IntPtr CreateTexture(IntPtr device, TextureType type, byte[] data, int width, int height, int depth,
-													  SurfaceFormat format);
+			public static extern IntPtr CreateTexture(IntPtr device, ref TextureDescription description, byte[] data);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyTexture")]
 			public static extern void DestroyTexture(IntPtr texture2D);
@@ -141,6 +142,27 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGenerateMipmaps")]
 			public static extern void GenerateMipmaps(IntPtr texture);
+
+			[StructLayout(LayoutKind.Sequential)]
+			public struct TextureDescription
+			{
+				public readonly TextureType Type;
+				public readonly int Width;
+				public readonly int Height;
+				public readonly int Depth;
+				public readonly SurfaceFormat Format;
+				public readonly bool RenderTarget;
+
+				public TextureDescription(TextureType type, int width, int height, int depth, SurfaceFormat format, bool renderTarget)
+				{
+					Type = type;
+					Width = width;
+					Height = height;
+					Depth = depth;
+					Format = format;
+					RenderTarget = renderTarget;
+				}
+			}
 		}
 	}
 }
