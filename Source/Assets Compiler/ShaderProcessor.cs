@@ -9,6 +9,11 @@ namespace Pegasus.AssetsCompiler
 
 	public abstract class ShaderProcessor : AssetProcessor
 	{
+		/// <summary>
+		///   Writes an GLSL shader into the buffer.
+		/// </summary>
+		/// <param name="source">The path of the shader source code.</param>
+		/// <param name="writer">The buffer the shader should be written into.</param>
 		protected void WriteGlslShader(string source, BufferWriter writer)
 		{
 			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
@@ -18,6 +23,11 @@ namespace Pegasus.AssetsCompiler
 			writer.WriteByte(0);
 		}
 
+		/// <summary>
+		///   Compiles an HLSL shader of the given profile.
+		/// </summary>
+		/// <param name="source">The path of the shader source code.</param>
+		/// <param name="profile">The profile that should be used to compile the shader.</param>
 		protected ShaderBytecode CompileHlslShader(string source, string profile)
 		{
 			var flags = ShaderFlags.EnableStrictness;
@@ -31,6 +41,10 @@ namespace Pegasus.AssetsCompiler
 			return result.Bytecode;
 		}
 
+		/// <summary>
+		///   Executes the given action only if the platform supports Direct3D.
+		/// </summary>
+		/// <param name="action">The action that should be executed.</param>
 		protected void IfD3DSupported(Action action)
 		{
 			Assert.ArgumentNotNull(action, () => action);
