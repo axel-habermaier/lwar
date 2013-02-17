@@ -3,12 +3,6 @@
 #ifdef OPENGL3
 
 //====================================================================================================================
-// Helper functions
-//====================================================================================================================
-
-static pgVoid CopyCubeMapFace();
-
-//====================================================================================================================
 // Core functions
 //====================================================================================================================
 
@@ -71,6 +65,19 @@ pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(texture->glType, texture->id);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgGenerateMipmapsCore(pgTexture* texture)
+{
+	GLint boundTexture;
+	glGetIntegerv(texture->glBoundType, &boundTexture);
+
+	pgBindTexture(texture, 0);
+	glGenerateMipmap(texture->glType);
+	PG_ASSERT_NO_GL_ERRORS();
+
+	glBindTexture(texture->glType, boundTexture);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

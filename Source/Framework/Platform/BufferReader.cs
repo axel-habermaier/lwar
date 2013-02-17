@@ -295,7 +295,7 @@ namespace Pegasus.Framework.Platform
 		// ReSharper restore InconsistentNaming
 
 		/// <summary>
-		///   Reads a string.
+		///   Reads an UTF8 string.
 		/// </summary>
 		public string ReadString()
 		{

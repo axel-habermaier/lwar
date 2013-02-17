@@ -87,13 +87,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetProcessor.cs" />
+    <Compile Include="Assets.cs" />
     <Compile Include="AssetWriter.cs" />
     <Compile Include="Compiler.cs" />
-    <Compile Include="HlslShaderProcessor.cs" />
+    <Compile Include="CubeMapProcessor.cs" />
+    <Compile Include="Texture2DProcessor.cs" />
+    <Compile Include="FragmentShaderProcessor.cs" />
     <Compile Include="FontProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GlslShaderProcessor.cs" />
+    <Compile Include="ShaderProcessor.cs" />
     <Compile Include="TextureProcessor.cs" />
+    <Compile Include="VertexShaderProcessor.cs" />
     <Compile Include="XmlParser.cs" />
   </ItemGroup>
   <ItemGroup>

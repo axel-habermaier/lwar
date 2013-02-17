@@ -1,5 +1,3 @@
-#ps_4_0
-
 struct PS_INPUT
 {
 	float2 TexCoords	: TEXCOORD0;

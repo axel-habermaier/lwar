@@ -40,6 +40,11 @@ pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)
 	ID3D11DeviceContext_PSSetShaderResources(CONTEXT(texture), slot, 1, &texture->resourceView);
 }
 
+pgVoid pgGenerateMipmapsCore(pgTexture* texture)
+{
+	ID3D11DeviceContext_GenerateMips(CONTEXT(texture), texture->resourceView);
+}
+
 //====================================================================================================================
 // Helper functions
 //====================================================================================================================
@@ -109,7 +114,7 @@ static pgVoid CreateCubeMap(pgTexture* texture, pgVoid* data, pgSurfaceFormat su
 		initialData[faces[i]].SysMemSlicePitch = 0;
 	}
 
-	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(texture), &desc, initialData, &texture->ptr), "Failed to create texture.");
+	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(texture), &desc, initialData, &texture->ptr), "Failed to create cube map.");
 
 	memset(&viewDesc, 0, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 	viewDesc.Format = desc.Format;
@@ -118,7 +123,7 @@ static pgVoid CreateCubeMap(pgTexture* texture, pgVoid* data, pgSurfaceFormat su
 	viewDesc.TextureCube.MostDetailedMip = desc.MipLevels - 1;
 	
 	D3DCALL(ID3D11Device_CreateShaderResourceView(DEVICE(texture), (ID3D11Resource*)texture->ptr, &viewDesc, &texture->resourceView), 
-		"Failed to create shader resource view for texture.");
+		"Failed to create shader resource view for cube map.");
 }
 
 #endif

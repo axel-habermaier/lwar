@@ -1,5 +1,3 @@
-#vs_4_0
-
 cbuffer PerFrameConstants : register(b0)
 { 
 	column_major matrix	View;

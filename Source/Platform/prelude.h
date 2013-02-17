@@ -275,7 +275,7 @@ pgVoid pgDestroyInputLayoutCore(pgInputLayout* inputLayout);
 pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout);
 
 //====================================================================================================================
-// Texture2D
+// Texture
 //====================================================================================================================
 
 struct pgTexture
@@ -292,6 +292,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data, pgSurfaceFormat for
 pgVoid pgDestroyTextureCore(pgTexture* texture);
 
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot);
+pgVoid pgGenerateMipmapsCore(pgTexture* texture);
 
 //====================================================================================================================
 // Render target

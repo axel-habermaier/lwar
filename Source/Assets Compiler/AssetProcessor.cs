@@ -10,20 +10,6 @@ namespace Pegasus.AssetsCompiler
     public abstract class AssetProcessor
     {
         /// <summary>
-        ///   Gets a value indicating whether the file extension should be removed from the compiled asset name.
-        /// </summary>
-        public virtual bool RemoveExtension
-        {
-            get { return true; }
-        }
-
-        /// <summary>
-        ///   Returns true if the processor can process a file with the given extension.
-        /// </summary>
-        /// <param name="extension">The extension of the file that should be processed.</param>
-        public abstract bool CanProcess(string extension);
-
-        /// <summary>
         ///   Processes the given file, writing the compiled output to the given target destination.
         /// </summary>
         /// <param name="source">The source file that should be processed.</param>

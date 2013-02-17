@@ -35,8 +35,6 @@ namespace Pegasus.AssetsCompiler
 		{
 			_assetName = path + PlatformInfo.AssetExtension;
 			Writer = BufferWriter.Create(Buffer);
-
-			Log.Info("Compiling asset '{0}'...", _assetName);
 		}
 
 		/// <summary>

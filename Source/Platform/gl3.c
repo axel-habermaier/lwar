@@ -224,7 +224,7 @@ GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFor
 {
 	switch(surfaceFormat)
 	{
-	case PG_SURFACE_COLOR:
+	case PG_SURFACE_RGBA8:
 		*internalFormat = GL_RGBA;
 		*format = GL_RGBA;
 		*length = 4;

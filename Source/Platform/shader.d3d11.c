@@ -23,10 +23,14 @@ static D3D11_INPUT_ELEMENT_DESC* ReadInputElements(Buffer* buffer, pgInt32* size
 pgVoid pgCreateShaderCore(pgShader* shader, pgShaderType type, pgVoid* shaderData)
 {
 	Buffer buffer;
-	pgInt32 byteCodeLength;
-	pgVoid* byteCode = (pgUint8*)shaderData + 4;
+	pgInt32 byteCodeLength, skip;
+	pgVoid* byteCode;
 	buffer.data = (pgUint8*)shaderData;
 	buffer.pos = 0;
+
+	skip = ReadInt32(&buffer);
+	buffer.pos += skip;
+	byteCode = (pgUint8*)shaderData + buffer.pos + sizeof(pgInt32);
 
 	byteCodeLength = ReadInt32(&buffer);
 	switch (type)
@@ -40,7 +44,7 @@ pgVoid pgCreateShaderCore(pgShader* shader, pgShaderType type, pgVoid* shaderDat
 		D3DCALL(ID3D11Device_CreateVertexShader(DEVICE(shader), byteCode, byteCodeLength, NULL, &shader->ptr.vertexShader),
 			"Failed to create vertex shader.");
 
-		buffer.pos = sizeof(pgInt32) + byteCodeLength;
+		buffer.pos += byteCodeLength;
 		inputDescs = ReadInputElements(&buffer, &inputDescCount);
 		D3DCALL(ID3D11Device_CreateInputLayout(DEVICE(shader), inputDescs, inputDescCount, byteCode, byteCodeLength, &shader->inputLayout), 
 			"Failed to create input layout.");

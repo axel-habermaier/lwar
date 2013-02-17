@@ -57,20 +57,10 @@ namespace Pegasus.Framework.Platform.Assets
 			Assert.ArgumentNotNull(assetReader, () => assetReader);
 
 			var reader = assetReader.Reader;
-			var width = reader.ReadUInt16();
-			var height = reader.ReadUInt16();
-			var componentCount = reader.ReadByte();
-
-			var length = width * height * componentCount;
-			var data = new byte[length];
-			for (var i = 0; i < length; ++i)
-				data[i] = reader.ReadByte();
-
-			var format = SurfaceFormat.Color;
-			if (componentCount == 4)
-				format = SurfaceFormat.Color;
-			else
-				Log.Die("All compiled textures should have 4 channels.");
+			var width = reader.ReadInt32();
+			var height = reader.ReadInt32();
+			var format = (SurfaceFormat)reader.ReadInt32();
+			var data = reader.ReadByteArray();
 
 			if (Texture == null)
 				Texture = _create(GraphicsDevice, data, width, height, format);

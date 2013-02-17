@@ -42,26 +42,6 @@ namespace Pegasus.Framework.Platform.Assets
 		}
 
 		/// <summary>
-		///   Gets the extension that should be appended to shader file names in order to distinguish between different
-		///   shaders for different graphics APIs.
-		/// </summary>
-		private static string ShaderExtension
-		{
-			get
-			{
-				switch (PlatformInfo.GraphicsApi)
-				{
-					case GraphicsApi.Direct3D11:
-						return ".hlsl";
-					case GraphicsApi.OpenGL3:
-						return ".glsl";
-					default:
-						throw new InvalidOperationException("Unknown graphics api.");
-				}
-			}
-		}
-
-		/// <summary>
 		///   Reloads an asset.
 		/// </summary>
 		/// <param name="assetName">The asset that should be reloaded.</param>
@@ -178,8 +158,6 @@ namespace Pegasus.Framework.Platform.Assets
 		public VertexShader LoadVertexShader(string shaderFilePath)
 		{
 			Assert.ArgumentNotNullOrWhitespace(shaderFilePath, () => shaderFilePath);
-
-			shaderFilePath = shaderFilePath + ShaderExtension;
 			return Load<VertexShaderAsset>(shaderFilePath).Shader;
 		}
 
@@ -190,8 +168,6 @@ namespace Pegasus.Framework.Platform.Assets
 		public FragmentShader LoadFragmentShader(string shaderFilePath)
 		{
 			Assert.ArgumentNotNullOrWhitespace(shaderFilePath, () => shaderFilePath);
-
-			shaderFilePath = shaderFilePath + ShaderExtension;
 			return Load<FragmentShaderAsset>(shaderFilePath).Shader;
 		}
 

@@ -2,10 +2,6 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
-	#if Direct3D11
-
-#endif
-
 	/// <summary>
 	///   Base class for all objects belong to a graphics device.
 	/// </summary>

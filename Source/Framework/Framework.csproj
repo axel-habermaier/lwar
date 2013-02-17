@@ -293,7 +293,6 @@
     <Compile Include="Scripting\ICommand.cs" />
     <Compile Include="Scripting\ICvar.cs" />
     <Compile Include="Scripting\Cvars.cs" />
-    <Compile Include="Platform\Graphics\SurfaceFormatExtensions.cs" />
     <Compile Include="DisposableExtensions.cs" />
     <Compile Include="Platform\Input\BinaryInputTriggerType.cs" />
     <Compile Include="Platform\Input\BinaryInputTrigger.cs" />

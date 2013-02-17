@@ -2,7 +2,6 @@
 
 namespace Pegasus.AssetsCompiler
 {
-	using System.IO;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
@@ -11,27 +10,10 @@ namespace Pegasus.AssetsCompiler
 	using SharpDX.Direct3D11;
 
 	/// <summary>
-	///   Processes HLSL shaders.
+	///   Processes vertex shaders.
 	/// </summary>
-	public sealed class HlslShaderProcessor : AssetProcessor
+	public class VertexShaderProcessor : ShaderProcessor
 	{
-		/// <summary>
-		///   Gets a value indicating whether the file extension should be removed from the compiled asset name.
-		/// </summary>
-		public override bool RemoveExtension
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		///   Returns true if the processor can process a file with the given extension.
-		/// </summary>
-		/// <param name="extension">The extension of the file that should be processed.</param>
-		public override bool CanProcess(string extension)
-		{
-			return extension == ".hlsl";
-		}
-
 		/// <summary>
 		///   Processes the given file, writing the compiled output to the given target destination.
 		/// </summary>
@@ -40,37 +22,13 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
 		public override void Process(string source, string sourceRelative, BufferWriter writer)
 		{
-			Assert.ArgumentNotNullOrWhitespace(source, () => source);
-			Assert.ArgumentNotNull(writer, () => writer);
-
-			try
-			{
-				var shaderCode = File.ReadAllText(source);
-				var firstLineEnd = shaderCode.IndexOf("\r\n");
-				if (firstLineEnd == -1)
-					throw new InvalidOperationException("Shader must define profile in first line. No line break found.");
-
-				var profile = shaderCode.Substring(1, firstLineEnd - 1);
-				if (profile != "vs_4_0" && profile != "ps_4_0")
-					throw new InvalidOperationException(String.Format("Unknown shader profile '{0}'", profile));
-
-				var flags = ShaderFlags.EnableStrictness;
-#if DEBUG
-				flags |= ShaderFlags.Debug;
-#endif
-				var result = ShaderBytecode.Compile(shaderCode.Substring(firstLineEnd), "Main", profile, flags, EffectFlags.None, source);
-				if (result.HasErrors)
-					throw new InvalidOperationException(result.Message);
-
-				writer.WriteByteArray(result.Bytecode);
-
-				if (profile.StartsWith("vs_"))
-					CreateInputLayout(result.Bytecode, writer);
-			}
-			catch (DllNotFoundException)
-			{
-				Log.Warn("Ignoring HLSL shader '{0}' because Direct3D is not supported.", source);
-			}
+			WriteGlslShader(source, writer);
+			IfD3DSupported(() =>
+				{
+					var byteCode = CompileHlslShader(source, "vs_4_0");
+					writer.WriteByteArray(byteCode);
+					CreateInputLayout(byteCode, writer);
+				});
 		}
 
 		/// <summary>

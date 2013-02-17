@@ -1,5 +1,3 @@
-#ps_4_0
-
 struct PS_INPUT
 {
 	float2 TexCoords	: TEXCOORD0;
@@ -9,9 +7,6 @@ Texture2D Tex : register(t0);
 
 SamplerState TexSampler : register(s0)
 {
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Wrap;
-	AddressV = Wrap;
 };
 
 float4 Main(PS_INPUT input) : SV_Target

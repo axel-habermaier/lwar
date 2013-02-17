@@ -157,7 +157,9 @@ typedef enum
 
 typedef enum
 {
-	PG_SURFACE_COLOR = 2100
+	PG_SURFACE_RGBA8					= 2101,
+	PG_SURFACE_RGB8						= 2102,
+	PG_SURFACE_R8						= 2103
 } pgSurfaceFormat;
 
 typedef enum
@@ -366,10 +368,11 @@ PG_API_EXPORT pgVoid pgBindInputLayout(pgInputLayout* inputLayout);
 //====================================================================================================================
 
 PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureType type, pgVoid* data,
-										   pgInt32 width, pgInt32 height, pgInt32 depth, pgSurfaceFormat format);
+										 pgInt32 width, pgInt32 height, pgInt32 depth, pgSurfaceFormat format);
 PG_API_EXPORT pgVoid pgDestroyTexture(pgTexture* texture);
 
 PG_API_EXPORT pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot);
+PG_API_EXPORT pgVoid pgGenerateMipmaps(pgTexture* texture);
 
 //====================================================================================================================
 // Render target functions

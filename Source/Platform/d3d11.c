@@ -224,7 +224,7 @@ pgVoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, DXGI_FORMAT* format
 {
 	switch(surfaceFormat)
 	{
-	case PG_SURFACE_COLOR:
+	case PG_SURFACE_RGBA8:
 		*format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		*components = 4;
 		return;

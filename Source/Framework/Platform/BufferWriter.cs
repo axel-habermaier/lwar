@@ -300,7 +300,7 @@ namespace Pegasus.Framework.Platform
 		// ReSharper restore InconsistentNaming
 
 		/// <summary>
-		///   Writes an ASCII string.
+		///   Writes an UTF8 string.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteString(string value)

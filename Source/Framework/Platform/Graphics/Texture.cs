@@ -105,6 +105,15 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
+		///   Generates the mipmaps for this texture.
+		/// </summary>
+		public void GenerateMipmaps()
+		{
+			Assert.NotDisposed(this);
+			NativeMethods.GenerateMipmaps(_texture);
+		}
+
+		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
@@ -129,6 +138,9 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindTexture")]
 			public static extern void BindTexture(IntPtr texture, int slot);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGenerateMipmaps")]
+			public static extern void GenerateMipmaps(IntPtr texture);
 		}
 	}
 }

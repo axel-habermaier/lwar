@@ -37,3 +37,9 @@ pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot)
 
 	pgBindTextureCore(texture, slot);
 }
+
+pgVoid pgGenerateMipmaps(pgTexture* texture)
+{
+	PG_ASSERT_NOT_NULL(texture);
+	pgGenerateMipmapsCore(texture);
+}

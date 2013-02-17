@@ -11,6 +11,11 @@ namespace Pegasus.Framework.Platform.Assets
 	internal sealed class FontAsset : Asset
 	{
 		/// <summary>
+		///   The font texture.
+		/// </summary>
+		private Texture2DAsset _texture;
+
+		/// <summary>
 		///   The font that is managed by this asset instance.
 		/// </summary>
 		internal Font Font { get; private set; }
@@ -91,13 +96,14 @@ namespace Pegasus.Framework.Platform.Assets
 				}
 			}
 
-			var textureName = reader.ReadString();
-			var texture = Assets.LoadTexture2D(textureName);
+			_texture.SafeDispose();
+			_texture = new Texture2DAsset { GraphicsDevice = GraphicsDevice, Assets = Assets };
+			_texture.Load(assetReader);
 
 			if (Font == null)
-				Font = new Font(glyphs, lowestGlyphId, kernings, texture, lineHeight);
+				Font = new Font(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
 
-			Font.Reinitialize(glyphs, lowestGlyphId, kernings, texture, lineHeight);
+			Font.Reinitialize(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
 		}
 
 		/// <summary>
@@ -105,7 +111,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			// Nothing to do here
+			_texture.SafeDispose();
 		}
 	}
 }

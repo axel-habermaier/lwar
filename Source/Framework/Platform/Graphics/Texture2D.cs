@@ -41,7 +41,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
 		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
 		{
-			White = new Texture2D(graphicsDevice, new byte[] { 255, 255, 255, 255 }, 1, 1, SurfaceFormat.Color);
+			White = new Texture2D(graphicsDevice, new byte[] { 255, 255, 255, 255 }, 1, 1, SurfaceFormat.Rgba8);
 		}
 
 		/// <summary>
