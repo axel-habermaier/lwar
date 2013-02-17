@@ -6,12 +6,13 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data, pgSurfaceFormat surfaceFormat)
+pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data)
 {
 	GLenum internalFormat, format;
 	GLint boundTexture;
 	GLint length, i;
-	GLint width = texture->width / 6;
+	GLint width, height;
+	pgUint8* dataPtr = (pgUint8*)data;
 	GLenum faces[] = 
 	{ 
 		GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
@@ -25,25 +26,38 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data, pgSurfaceFormat sur
 	glGenTextures(1, &texture->id);
 	PG_CHECK_GL_HANDLE("Texture", texture->id);
 
-	pgConvertTextureType(texture->type, &texture->glType, &texture->glBoundType);
-	pgConvertSurfaceFormat(surfaceFormat, &internalFormat, &format, &length);
+	pgConvertTextureType(texture->desc.type, &texture->glType, &texture->glBoundType);
+	pgConvertSurfaceFormat(texture->desc.format, &internalFormat, &format, &length);
 
 	glGetIntegerv(texture->glBoundType, &boundTexture);
 	glBindTexture(texture->glType, texture->id);
 
-	switch (texture->type)
+	switch (texture->desc.type)
 	{
 	case PG_TEXTURE_2D:
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, texture->width, texture->height, 0, format, GL_UNSIGNED_BYTE, data);
+		width = texture->desc.width;
+		height = texture->desc.height;
+
+		for (i = 0; i < pgMipmapCount(texture->desc.width, texture->desc.height) + 1; ++i)
+		{
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
+			glTexImage2D(GL_TEXTURE_2D, i, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, dataPtr);
+
+			dataPtr += width * height * length;
+			width /= 2;
+			height /= 2;
+
+			width = width < 1 ? 1 : width;
+			height = height < 1 ? 1 : height;
+		}
 		break;
 	case PG_TEXTURE_CUBE_MAP:
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, texture->width);
-
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, texture->desc.width);
+		width = texture->desc.width / 6;
 		for (i = 0; i < 6; ++i)
 		{
 			pgVoid* faceData = (pgInt8*)data + i * (width * length);
-			glTexImage2D(faces[i], 0, internalFormat, width, texture->height, 0, format, GL_UNSIGNED_BYTE, faceData);
+			glTexImage2D(faces[i], 0, internalFormat, width, texture->desc.height, 0, format, GL_UNSIGNED_BYTE, faceData);
 		}
 		break;
 	default:
