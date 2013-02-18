@@ -111,24 +111,31 @@ namespace Pegasus.Framework.Platform.Assets
 		{
 			Assert.ArgumentNotNull(file, () => file);
 
-			var hash = ComputeFileHash(file);
-
-			FileModificationInfo info;
-			if (!_fileInfos.TryGetValue(file.FullName, out info))
-				_fileInfos.Add(file.FullName, new FileModificationInfo(Path.Combine(path, file.Name), hash));
-			else
+			try
 			{
-				if (info.LoadedHash == hash)
-					return;
+				var hash = ComputeFileHash(file);
 
-				if (info.ModifiedHash == hash)
-				{
-					_modifiedAssets.Enqueue(info.FileName);
-					info.ModifiedHash = null;
-					info.LoadedHash = hash;
-				}
+				FileModificationInfo info;
+				if (!_fileInfos.TryGetValue(file.FullName, out info))
+					_fileInfos.Add(file.FullName, new FileModificationInfo(Path.Combine(path, file.Name), hash));
 				else
-					info.ModifiedHash = hash;
+				{
+					if (info.LoadedHash == hash)
+						return;
+
+					if (info.ModifiedHash == hash)
+					{
+						_modifiedAssets.Enqueue(info.FileName);
+						info.ModifiedHash = null;
+						info.LoadedHash = hash;
+					}
+					else
+						info.ModifiedHash = hash;
+				}
+			}
+			catch (IOException)
+			{
+				// If the file cannot be read because it is still being written, just retry later
 			}
 		}
 

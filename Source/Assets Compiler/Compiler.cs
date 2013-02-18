@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.Collections.Generic;
 	using System.IO;
+	using System.Linq;
 	using Framework;
 	using Framework.Platform.Assets;
 
@@ -60,11 +61,21 @@ namespace Pegasus.AssetsCompiler
 			Log.Info("Processing {0}...", description);
 			foreach (var asset in assets)
 			{
-				Log.Info("   {0}...", asset);
-				var assetName = Path.Combine(Path.GetDirectoryName(asset), Path.GetFileNameWithoutExtension(asset));
-				using (var writer = new AssetWriter(Path.Combine(TargetPath, assetName)))
-					processor.Process(Path.Combine(SourcePath, asset), asset, writer.Writer);
+				Log.Info("   Compiling '{0}'...", asset);
+				Process(processor, asset);
 			}
+		}
+
+		/// <summary>
+		///   Uses the given processor to process the given asset.
+		/// </summary>
+		/// <param name="processor">The processor that should be used to process the asset.</param>
+		/// <param name="asset">The asset that should be processed.</param>
+		private static void Process(AssetProcessor processor, string asset)
+		{
+			var assetName = Path.Combine(Path.GetDirectoryName(asset), Path.GetFileNameWithoutExtension(asset));
+			using (var writer = new AssetWriter(Path.Combine(TargetPath, assetName)))
+				processor.Process(Path.Combine(SourcePath, asset), asset, writer.Writer);
 		}
 
 		/// <summary>
@@ -80,21 +91,58 @@ namespace Pegasus.AssetsCompiler
 			}
 		}
 
-		private static void Main(string[] args)
-		{
-			var compiler = new Compiler();
-			compiler.Compile();
-		}
-
 		/// <summary>
 		///   Compiles the asset at the given path, writing the result to the target directory.
 		/// </summary>
 		/// <param name="asset">The path of the asset that should be compiled, relative to the Assets base directory.</param>
 		public string Compile(string asset)
 		{
-			//Assert.ArgumentNotNullOrWhitespace(asset, () => asset);
-			//return Compile(new FileInfo(Path.Combine(SourcePath, asset)), Path.GetDirectoryName(asset));
-			return null;
+			Assert.ArgumentNotNullOrWhitespace(asset, () => asset);
+
+			var assetName = asset;
+			if (asset.EndsWith(".hlsl") || asset.EndsWith(".glsl"))
+				assetName = asset.Substring(0, asset.Length - 5);
+
+			assetName = assetName.Replace("\\", "/");
+			Log.Info("Compiling '{0}'...", assetName);
+			Process(GetProcessor(assetName), assetName);
+			return Path.Combine(Path.GetDirectoryName(asset), Path.GetFileNameWithoutExtension(asset));
+		}
+
+		/// <summary>
+		///   Gets a processor that can process the given asset.
+		/// </summary>
+		/// <param name="asset">The asset that should be processed.</param>
+		private static AssetProcessor GetProcessor(string asset)
+		{
+			var getProcessors = new Func<string, AssetProcessor>[]
+			{
+				a => GetProcessor<CubeMapProcessor>(Assets.CubeMaps, a),
+				a => GetProcessor<FontProcessor>(Assets.Fonts, a),
+				a => GetProcessor<Texture2DProcessor>(Assets.Textures2D, a),
+				a => GetProcessor<FragmentShaderProcessor>(Assets.FragmentShaders, a),
+				a => GetProcessor<VertexShaderProcessor>(Assets.VertexShaders, a),
+			};
+
+			return getProcessors.Select(p => p(asset)).Single(p => p != null);
+		}
+
+		/// <summary>
+		/// Checks whether the asset is in the given asset list and if so, returns a processor instance.
+		/// </summary>
+		/// <typeparam name="T">The type of the asset processor.</typeparam>
+		/// <param name="assets">The assets that are processed by the processor.</param>
+		/// <param name="asset">The asset that should be processed.</param>
+		private static AssetProcessor GetProcessor<T>(IEnumerable<string> assets, string asset)
+			where T : AssetProcessor, new()
+		{
+			return assets.Any(a => a == asset) ? new T() : null;
+		}
+
+		private static void Main(string[] args)
+		{
+			var compiler = new Compiler();
+			compiler.Compile();
 		}
 	}
 }
