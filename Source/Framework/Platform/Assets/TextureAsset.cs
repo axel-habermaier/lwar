@@ -64,8 +64,8 @@ namespace Pegasus.Framework.Platform.Assets
 
 			if (Texture == null)
 				Texture = _create(GraphicsDevice, data, width, height, format);
-
-			_reinitialize(Texture, data, width, height, format);
+			else
+				_reinitialize(Texture, data, width, height, format);
 
 			for (var i = 0; i < GraphicsDevice.State.Textures.Length; ++i)
 				GraphicsDevice.State.Textures[i] = null;

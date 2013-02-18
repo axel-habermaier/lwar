@@ -102,8 +102,8 @@ namespace Pegasus.Framework.Platform.Assets
 
 			if (Font == null)
 				Font = new Font(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
-
-			Font.Reinitialize(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
+			else
+				Font.Reinitialize(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
 		}
 
 		/// <summary>

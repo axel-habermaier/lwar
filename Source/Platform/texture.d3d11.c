@@ -51,16 +51,16 @@ pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 
 static pgVoid CreateTexture2D(pgTexture* texture, pgVoid* data, pgSurfaceFormat surfaceFormat)
 {
-	pgInt32 length, width, height;
-	pgUint32 i;
+	pgInt32 componentCount, i;
 	D3D11_TEXTURE2D_DESC desc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
-	D3D11_SUBRESOURCE_DATA initialData[16];
-	pgUint8* dataPtr = (pgUint8*)data;
+	D3D11_SUBRESOURCE_DATA initialData[PG_MAX_MIPMAPS];
+	pgMipmap mipmaps[PG_MAX_MIPMAPS];
+	pgInt32 numMipmaps;
 
 	desc.Width = texture->desc.width;
 	desc.Height = texture->desc.height;
-	desc.MipLevels = pgMipmapCount(texture->desc.width, texture->desc.height);
+	desc.MipLevels = 0;
 	desc.ArraySize = 1;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
@@ -69,22 +69,13 @@ static pgVoid CreateTexture2D(pgTexture* texture, pgVoid* data, pgSurfaceFormat 
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 	
-	pgConvertSurfaceFormat(surfaceFormat, &desc.Format, &length);
-
-	PG_ASSERT_IN_RANGE(desc.MipLevels + 1, 0, sizeof(initialData) / sizeof(D3D11_SUBRESOURCE_DATA));
-	width = texture->desc.width;
-	height = texture->desc.height;
-	for (i = 0; i < desc.MipLevels + 1; ++i)
+	pgConvertSurfaceFormat(surfaceFormat, &desc.Format, &componentCount);
+	numMipmaps = pgMipmaps(data, texture->desc.width, texture->desc.height, componentCount, mipmaps);
+	for (i = 0; i < numMipmaps; ++i)
 	{
-		initialData[i].pSysMem = dataPtr;
-		initialData[i].SysMemPitch = width * length;
+		initialData[i].pSysMem = mipmaps[i].data;
+		initialData[i].SysMemPitch = mipmaps[i].width * componentCount;
 		initialData[i].SysMemSlicePitch = 0;
-		dataPtr += initialData[i].SysMemPitch * height;
-		width /= 2;
-		height /= 2;
-
-		width = width < 1 ? 1 : width;
-		height = height < 1 ? 1 : height;
 	}
 
 	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(texture), &desc, initialData, &texture->ptr), "Failed to create texture.");
@@ -101,12 +92,10 @@ static pgVoid CreateTexture2D(pgTexture* texture, pgVoid* data, pgSurfaceFormat 
 
 static pgVoid CreateCubeMap(pgTexture* texture, pgVoid* data, pgSurfaceFormat surfaceFormat)
 {
-	pgInt32 length, width, height, level;
-	pgUint32 i, j;
+	pgInt32 componentCount, i, j;
 	D3D11_TEXTURE2D_DESC desc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
-	D3D11_SUBRESOURCE_DATA initialData[6 * 16];
-	pgUint8* dataPtr = (pgUint8*)data;
+	D3D11_SUBRESOURCE_DATA initialData[6 * PG_MAX_MIPMAPS];
 	int faces[] = { 5, 1, 4, 0, 3, 2 };  // Maps the Pegasus cubemap order to D3D11 order 
 
 	desc.Width = texture->desc.width;
@@ -120,37 +109,22 @@ static pgVoid CreateCubeMap(pgTexture* texture, pgVoid* data, pgSurfaceFormat su
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 	
-	pgConvertSurfaceFormat(surfaceFormat, &desc.Format, &length);
-
-	level = pgMipmapCount(texture->desc.width, texture->desc.height);
-	PG_ASSERT_IN_RANGE(level + 1, 0, sizeof(initialData) / sizeof(D3D11_SUBRESOURCE_DATA) / 6);
-	for (j = 0; j < 6; ++j)
+	pgConvertSurfaceFormat(surfaceFormat, &desc.Format, &componentCount);
+	for (i = 0; i < 6; ++i)
 	{
-		width = texture->desc.width;
-		height = texture->desc.height;
+		pgMipmap mipmaps[PG_MAX_MIPMAPS];
+		pgInt32 numMipmaps = pgMipmaps(data, texture->desc.width, texture->desc.height, componentCount, mipmaps);
+		pgMipmap* last = &mipmaps[numMipmaps - 1];
+		data = (pgUint8*)last->data + last->width * last->height * componentCount;
 
-		for (i = 0; i < level + 1; ++i)
+		for (j = 0; j < numMipmaps; ++j)
 		{
-			pgInt32 index = faces[j] * (level + 1) + i;
-			//index = faces[j] + 6 * i;
-			initialData[index].pSysMem = dataPtr;
-			initialData[index].SysMemPitch = width * length;
+			pgInt32 index = faces[i] * numMipmaps + j;
+			initialData[index].pSysMem = mipmaps[j].data;
+			initialData[index].SysMemPitch = mipmaps[j].width * componentCount;
 			initialData[index].SysMemSlicePitch = 0;
-			dataPtr += width * length * height;
-			width /= 2;
-			height /= 2;
-
-			width = width < 1 ? 1 : width;
-			height = height < 1 ? 1 : height;
 		}
 	}
-
-	/*for (i = 0; i < 6; ++i)
-	{
-		initialData[faces[i]].pSysMem = (pgInt8*)data + i * (width * length);
-		initialData[faces[i]].SysMemPitch = width * length * 6;
-		initialData[faces[i]].SysMemSlicePitch = 0;
-	}*/
 
 	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(texture), &desc, initialData, &texture->ptr), "Failed to create cube map.");
 

@@ -46,17 +46,30 @@ pgVoid pgGenerateMipmaps(pgTexture* texture)
 // Helper functions
 //====================================================================================================================
 
-pgInt32 pgMipmapCount(pgInt32 width, pgInt32 height)
+pgInt32 pgMipmaps(pgVoid* data, pgInt32 width, pgInt32 height, pgInt32 componentCount, pgMipmap* mipmaps)
 {
 	pgInt32 count = 0;
-	while (width > 1 || height > 1)
+	pgUint8* dataPtr = (pgUint8*)data;
+
+	PG_ASSERT_NOT_NULL(data);
+	PG_ASSERT_NOT_NULL(mipmaps);
+
+	while (count < PG_MAX_MIPMAPS && (width > 0 || height > 0))
 	{
-		width /= 2;
-		height /= 2;
-		
 		width = width < 1 ? 1 : width;
 		height = height < 1 ? 1 : height;
+
+		mipmaps[count].data = dataPtr;
+		mipmaps[count].width = width;
+		mipmaps[count].height = height;
+
+		dataPtr += width * height * componentCount;
+		width /= 2;
+		height /= 2;
+
 		++count;
-	}
+		PG_ASSERT_IN_RANGE(count, 0, PG_MAX_MIPMAPS);
+	} 
+
 	return count;
 }

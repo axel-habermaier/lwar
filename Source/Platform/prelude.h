@@ -285,12 +285,21 @@ struct pgTexture
 	PG_TEXTURE_PLATFORM
 };
 
+typedef struct
+{
+	pgVoid*		data;
+	pgInt32		width;
+	pgInt32		height;
+} pgMipmap;
+
+#define PG_MAX_MIPMAPS 16
+
 pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data);
 pgVoid pgDestroyTextureCore(pgTexture* texture);
 
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot);
 pgVoid pgGenerateMipmapsCore(pgTexture* texture);
-pgInt32 pgMipmapCount(pgInt32 width, pgInt32 height);
+pgInt32 pgMipmaps(pgVoid* data, pgInt32 width, pgInt32 height, pgInt32 componentCount, pgMipmap* mipmaps);
 
 //====================================================================================================================
 // Render target

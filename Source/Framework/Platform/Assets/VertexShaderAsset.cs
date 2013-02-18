@@ -30,8 +30,8 @@ namespace Pegasus.Framework.Platform.Assets
 		{
 			if (Shader == null)
 				Shader = new VertexShader(GraphicsDevice, assetReader.Data);
-
-			Shader.Reinitialize(assetReader.Data);
+			else
+				Shader.Reinitialize(assetReader.Data);
 			GraphicsDevice.State.VertexShader = null;
 		}
 
