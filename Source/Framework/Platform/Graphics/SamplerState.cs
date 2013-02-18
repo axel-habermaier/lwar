@@ -227,10 +227,11 @@ namespace Pegasus.Framework.Platform.Graphics
 				AddressU = TextureAddressMode.Wrap,
 				AddressV = TextureAddressMode.Wrap,
 				AddressW = TextureAddressMode.Wrap,
-				Filter = TextureFilter.Trilinear
+				Filter = TextureFilter.Trilinear,
+				MaximumAnisotropy = 1
 			};
 
-			TrilinearClamp = new SamplerState(graphicsDevice) { Filter = TextureFilter.Trilinear };
+			TrilinearClamp = new SamplerState(graphicsDevice) { Filter = TextureFilter.Trilinear, MaximumAnisotropy = 1 };
 
 			AnisotropicWrap = new SamplerState(graphicsDevice)
 			{

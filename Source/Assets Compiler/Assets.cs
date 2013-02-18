@@ -19,7 +19,6 @@ namespace Pegasus.AssetsCompiler
 			"Textures/Planet.png",
 			"Textures/Ship.png",
 			"Textures/Rocket.png",
-			"Textures/Test.png",
 		};
 
 		/// <summary>
