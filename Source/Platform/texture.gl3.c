@@ -10,9 +10,8 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data)
 {
 	GLenum internalFormat, format;
 	GLint boundTexture;
-	GLint length, i;
-	GLint width, height;
-	pgUint8* dataPtr = (pgUint8*)data;
+	pgInt32 componentCount, i, numMipmaps;
+	pgMipmap mipmaps[PG_MAX_MIPMAPS];
 	GLenum faces[] = 
 	{ 
 		GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
@@ -27,7 +26,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data)
 	PG_CHECK_GL_HANDLE("Texture", texture->id);
 
 	pgConvertTextureType(texture->desc.type, &texture->glType, &texture->glBoundType);
-	pgConvertSurfaceFormat(texture->desc.format, &internalFormat, &format, &length);
+	pgConvertSurfaceFormat(texture->desc.format, &internalFormat, &format, &componentCount);
 
 	glGetIntegerv(texture->glBoundType, &boundTexture);
 	glBindTexture(texture->glType, texture->id);
@@ -35,29 +34,27 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data)
 	switch (texture->desc.type)
 	{
 	case PG_TEXTURE_2D:
-		width = texture->desc.width;
-		height = texture->desc.height;
-
-		for (i = 0; i < pgMipmapCount(texture->desc.width, texture->desc.height) + 1; ++i)
+		numMipmaps = pgMipmaps(data, texture->desc.width, texture->desc.height, componentCount, mipmaps);
+		for (i = 0; i < numMipmaps; ++i)
 		{
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
-			glTexImage2D(GL_TEXTURE_2D, i, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, dataPtr);
-
-			dataPtr += width * height * length;
-			width /= 2;
-			height /= 2;
-
-			width = width < 1 ? 1 : width;
-			height = height < 1 ? 1 : height;
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, mipmaps[i].width);
+			glTexImage2D(GL_TEXTURE_2D, i, internalFormat, mipmaps[i].width, mipmaps[i].height, 0, format, GL_UNSIGNED_BYTE, mipmaps[i].data);
 		}
 		break;
 	case PG_TEXTURE_CUBE_MAP:
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, texture->desc.width);
-		width = texture->desc.width / 6;
 		for (i = 0; i < 6; ++i)
 		{
-			pgVoid* faceData = (pgInt8*)data + i * (width * length);
-			glTexImage2D(faces[i], 0, internalFormat, width, texture->desc.height, 0, format, GL_UNSIGNED_BYTE, faceData);
+			pgInt32 j;
+			pgMipmap* last;
+			numMipmaps = pgMipmaps(data, texture->desc.width, texture->desc.height, componentCount, mipmaps);
+			last = &mipmaps[numMipmaps - 1];
+			data = (pgUint8*)last->data + last->width * last->height * componentCount;
+
+			for (j = 0; j < numMipmaps; ++j)
+			{
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, mipmaps[j].width);
+				glTexImage2D(faces[i], j, internalFormat, mipmaps[j].width, mipmaps[j].height, 0, format, GL_UNSIGNED_BYTE, mipmaps[j].data);
+			}
 		}
 		break;
 	default:
