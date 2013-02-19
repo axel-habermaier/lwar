@@ -5,6 +5,7 @@ namespace Pegasus.AssetsCompiler
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
+	using SharpDX.Toolkit.Graphics;
 
 	/// <summary>
 	///   Processes 2D textures, converting them to a premultiplied format.
@@ -31,6 +32,10 @@ namespace Pegasus.AssetsCompiler
 			writer.WriteInt32((int)format);
 
 			WriteMipmaps(data, width, height, format, writer);
+
+			var image = Image.Load("../../Assets/Textures/Sun.dds");
+			var b = image.GetPixelBuffer(0, 0, 0);
+			var b11 = image.GetPixelBuffer(0, 0, 11);
 		}
 	}
 }
