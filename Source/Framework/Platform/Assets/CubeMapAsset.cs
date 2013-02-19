@@ -13,9 +13,16 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Initializes a new instance.
 		/// </summary>
 		public CubeMapAsset()
-			: base((device, data, width, height, format) => new CubeMap(device, data, width, height, format),
-				   (cubeMap, data, width, height, format) => cubeMap.Reinitialize(data, width, height, format))
+			: base((device, format, mipmaps) => new CubeMap(device, format, mipmaps))
 		{
+		}
+
+		/// <summary>
+		///   Gets the friendly name of the asset.
+		/// </summary>
+		internal override string FriendlyName
+		{
+			get { return "Cube Map"; }
 		}
 	}
 }

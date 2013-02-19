@@ -6,7 +6,7 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateTextureCore(pgTexture* texture, pgVoid* data)
+pgVoid pgCreateTextureCore(pgTexture* texture, pgSurfaceFormat format, pgMipmap* mipmaps)
 {
 	GLenum internalFormat, format;
 	GLint boundTexture;

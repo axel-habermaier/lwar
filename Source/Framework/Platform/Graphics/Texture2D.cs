@@ -10,15 +10,13 @@ namespace Pegasus.Framework.Platform.Graphics
 	public sealed class Texture2D : Texture
 	{
 		/// <summary>
-		///   Initializes a new instance, copying the given byte array to GPU memory.
+		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		/// <param name="data">The data that should be copied into the texture's memory.</param>
-		/// <param name="width">The width of the texture.</param>
-		/// <param name="height">The height of the texture.</param>
 		/// <param name="format">The format of the texture.</param>
-		public Texture2D(GraphicsDevice graphicsDevice, byte[] data, int width, int height, SurfaceFormat format)
-			: base(graphicsDevice, TextureType.Texture2D, data, width, height, 0, format)
+		/// <param name="mipmaps">The base texture and its mipmaps that should be uploaded to the GPU.</param>
+		public Texture2D(GraphicsDevice graphicsDevice, SurfaceFormat format, Mipmap[] mipmaps)
+			: base(graphicsDevice, TextureType.CubeMap, format, mipmaps)
 		{
 		}
 
@@ -41,7 +39,18 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
 		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
 		{
-			White = new Texture2D(graphicsDevice, new byte[] { 255, 255, 255, 255 }, 1, 1, SurfaceFormat.Rgba8);
+			var mipmaps = new[]
+			{
+				new Mipmap
+				{
+					Data = new byte[] { 255, 255, 255, 255 },
+					Width = 1,
+					Height = 1,
+					Level = 0,
+					Size = 4
+				}
+			};
+			White = new Texture2D(graphicsDevice, SurfaceFormat.Rgba8, mipmaps);
 		}
 
 		/// <summary>
@@ -51,23 +60,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			White.SafeDispose();
 			White = null;
-		}
-
-		/// <summary>
-		///   Reinitializes the texture.
-		/// </summary>
-		/// <param name="data">The data that should be copied into the texture's memory.</param>
-		/// <param name="width">The width of the texture.</param>
-		/// <param name="height">The height of the texture.</param>
-		/// <param name="format">The format of the texture.</param>
-		internal void Reinitialize(byte[] data, int width, int height, SurfaceFormat format)
-		{
-			Assert.ArgumentNotNull(data, () => data);
-			Assert.ArgumentSatisfies(width > 0, () => width, "Width must be greater than 0.");
-			Assert.ArgumentSatisfies(height > 0, () => height, "Height must be greater than 0.");
-			Assert.ArgumentInRange(format, () => format);
-
-			Reinitialize(data, width, height, 0, format);
 		}
 	}
 }

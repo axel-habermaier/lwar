@@ -159,7 +159,13 @@ typedef enum
 {
 	PG_SURFACE_RGBA8					= 2101,
 	PG_SURFACE_RGB8						= 2102,
-	PG_SURFACE_R8						= 2103
+	PG_SURFACE_RG8						= 2103,
+	PG_SURFACE_R8						= 2104,
+	PG_SURFACE_BC1						= 2105,
+	PG_SURFACE_BC2						= 2106,
+	PG_SURFACE_BC3						= 2107,
+	PG_SURFACE_BC4						= 2108,
+	PG_SURFACE_BC5						= 2109,
 } pgSurfaceFormat;
 
 typedef enum
@@ -305,13 +311,12 @@ typedef struct
 
 typedef struct
 {
-	pgTextureType			type;
 	pgInt32					width;
 	pgInt32					height;
-	pgInt32					depth;
-	pgSurfaceFormat			format;
-	pgBool					renderTarget;
-} pgTextureDesc;
+	pgInt32					size;
+	pgVoid*					data;
+	pgInt32					level;
+} pgMipmap;
 
 //====================================================================================================================
 // Graphics functions
@@ -378,7 +383,7 @@ PG_API_EXPORT pgVoid pgBindInputLayout(pgInputLayout* inputLayout);
 // Texture functions
 //====================================================================================================================
 
-PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDesc* description, pgVoid* data);
+PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureType type, pgSurfaceFormat format, pgMipmap* mipmaps);
 PG_API_EXPORT pgVoid pgDestroyTexture(pgTexture* texture);
 
 PG_API_EXPORT pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot);

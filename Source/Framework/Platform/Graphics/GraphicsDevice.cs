@@ -31,6 +31,11 @@ namespace Pegasus.Framework.Platform.Graphics
 		public const int ConstantBufferSlotCount = 14;
 
 		/// <summary>
+		///   The maximum number of supported mipmap levels per texture.
+		/// </summary>
+		public const int MaxMipmaps = 16;
+
+		/// <summary>
 		///   The native graphics device instance.
 		/// </summary>
 		private readonly IntPtr _device;

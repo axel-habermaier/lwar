@@ -187,6 +187,7 @@
     <Compile Include="Platform\Assets\Texture2DAsset.cs" />
     <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\Graphics\CubeMap.cs" />
+    <Compile Include="Platform\Graphics\Mipmap.cs" />
     <Compile Include="Platform\Graphics\Texture.cs" />
     <Compile Include="Platform\Graphics\TextureType.cs" />
     <Compile Include="Platform\IMeasurement.cs" />

@@ -9,16 +9,6 @@ namespace Pegasus.AssetsCompiler
 	public abstract class TextureProcessor : AssetProcessor
 	{
 		/// <summary>
-		///   The path to the nvcompress executable.
-		/// </summary>
-		protected const string NvCompressPath = "../../Dependencies/nvcompress.exe";
-
-		/// <summary>
-		///   The path to the nvassemble executable.
-		/// </summary>
-		protected const string NvAssemblePath = "../../Dependencies/nvassemble.exe";
-
-		/// <summary>
 		///   Checks whether the given number is a power of two.
 		/// </summary>
 		/// <param name="number">The number that should be checked.</param>
@@ -63,6 +53,34 @@ namespace Pegasus.AssetsCompiler
 					return SurfaceFormat.Rgba8;
 				default:
 					throw new InvalidOperationException(String.Format("Unsupported texture format: {0}.", format));
+			}
+		}
+
+		/// <summary>
+		///   Chooses a suitable compressed format for the given uncompressed format.
+		/// </summary>
+		/// <param name="format">The pixel format for which a suitable compressed format should be chosen.</param>
+		protected static SurfaceFormat ChooseCompression(PixelFormat format)
+		{
+			return ChooseCompression(Convert(format));
+		}
+
+		/// <summary>
+		///   Chooses a suitable compressed format for the given uncompressed format.
+		/// </summary>
+		/// <param name="format">The uncompressed format for which a suitable compressed format should be chosen.</param>
+		protected static SurfaceFormat ChooseCompression(SurfaceFormat format)
+		{
+			switch (format)
+			{
+				case SurfaceFormat.R8:
+					return SurfaceFormat.Bc4;
+				case SurfaceFormat.Rgb8:
+					return SurfaceFormat.Bc1;
+				case SurfaceFormat.Rgba8:
+					return SurfaceFormat.Bc3;
+				default:
+					throw new InvalidOperationException("Unsupported uncompressed format.");
 			}
 		}
 	}

@@ -7,46 +7,28 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Represents a texture asset.
 	/// </summary>
-	internal class TextureAsset<T> : Asset
-		where T : class, IDisposable
+	internal abstract class TextureAsset<T> : Asset
+		where T : Texture, IDisposable
 	{
 		/// <summary>
 		///   Creates a new texture object.
 		/// </summary>
-		private readonly Func<GraphicsDevice, byte[], int, int, SurfaceFormat, T> _create;
-
-		/// <summary>
-		///   Reinitializes the texture object.
-		/// </summary>
-		private readonly Action<T, byte[], int, int, SurfaceFormat> _reinitialize;
+		private readonly Func<GraphicsDevice, SurfaceFormat, Mipmap[], T> _create;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="create">Creates a new texture object.</param>
-		/// <param name="reinitialize">Reinitializes the texture object.</param>
-		public TextureAsset(Func<GraphicsDevice, byte[], int, int, SurfaceFormat, T> create,
-							Action<T, byte[], int, int, SurfaceFormat> reinitialize)
+		protected TextureAsset(Func<GraphicsDevice, SurfaceFormat, Mipmap[], T> create)
 		{
 			Assert.ArgumentNotNull(create, () => create);
-			Assert.ArgumentNotNull(reinitialize, () => reinitialize);
-
 			_create = create;
-			_reinitialize = reinitialize;
 		}
 
 		/// <summary>
 		///   The texture that is managed by this asset instance.
 		/// </summary>
 		internal T Texture { get; private set; }
-
-		/// <summary>
-		///   Gets the friendly name of the asset.
-		/// </summary>
-		internal override string FriendlyName
-		{
-			get { return "2D Texture"; }
-		}
 
 		/// <summary>
 		///   Loads or reloads the asset using the given asset reader.
@@ -57,15 +39,28 @@ namespace Pegasus.Framework.Platform.Assets
 			Assert.ArgumentNotNull(assetReader, () => assetReader);
 
 			var reader = assetReader.Reader;
-			var width = reader.ReadInt32();
-			var height = reader.ReadInt32();
 			var format = (SurfaceFormat)reader.ReadInt32();
-			var data = reader.ReadToEnd();
+			var mipmaps = new Mipmap[GraphicsDevice.MaxMipmaps];
+			var count = 0;
+
+			for (; count < GraphicsDevice.MaxMipmaps; ++count)
+			{
+				mipmaps[count] = new Mipmap
+				{
+					Level = reader.ReadInt32(),
+					Width = reader.ReadInt32(),
+					Height = reader.ReadInt32(),
+					Size = reader.ReadInt32(),
+				};
+
+				mipmaps[count].Data = new byte[mipmaps[count].Size];
+				reader.Copy(mipmaps[count].Data);
+			}
 
 			if (Texture == null)
-				Texture = _create(GraphicsDevice, data, width, height, format);
+				Texture = _create(GraphicsDevice, format, mipmaps);
 			else
-				_reinitialize(Texture, data, width, height, format);
+				Texture.Reinitialize(format, mipmaps);
 
 			for (var i = 0; i < GraphicsDevice.State.Textures.Length; ++i)
 				GraphicsDevice.State.Textures[i] = null;

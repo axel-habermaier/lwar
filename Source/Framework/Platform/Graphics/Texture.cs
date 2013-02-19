@@ -24,20 +24,16 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="type">The type of the texture.</param>
-		/// <param name="data">The data that should be copied into the texture's memory.</param>
-		/// <param name="width">The width of the texture.</param>
-		/// <param name="height">The height of the texture.</param>
-		/// <param name="depth">The depth of the texture.</param>
 		/// <param name="format">The format of the texture.</param>
-		protected Texture(GraphicsDevice graphicsDevice, TextureType type, byte[] data, int width, int height, int depth,
-						  SurfaceFormat format)
+		/// <param name="mipmaps">The base texture and its mipmaps that should be uploaded to the GPU.</param>
+		protected Texture(GraphicsDevice graphicsDevice, TextureType type, SurfaceFormat format, Mipmap[] mipmaps)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentInRange(type, () => type);
 
 			_type = type;
-			Reinitialize(data, width, height, depth, format);
+			Reinitialize(format, mipmaps);
 		}
 
 		/// <summary>
@@ -66,28 +62,21 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Reinitializes the texture.
 		/// </summary>
-		/// <param name="data">The data that should be copied into the texture's memory.</param>
-		/// <param name="width">The width of the texture.</param>
-		/// <param name="height">The height of the texture.</param>
-		/// <param name="depth">The depth of the texture.</param>
 		/// <param name="format">The format of the texture.</param>
-		protected void Reinitialize(byte[] data, int width, int height, int depth, SurfaceFormat format)
+		/// <param name="mipmaps">The base texture and its mipmaps that should be uploaded to the GPU.</param>
+		public void Reinitialize(SurfaceFormat format, Mipmap[] mipmaps)
 		{
-			Assert.ArgumentNotNull(data, () => data);
-			Assert.ArgumentSatisfies(width > 0, () => width, "Width must be greater than 0.");
-			Assert.ArgumentSatisfies(height >= 0, () => height, "Height must be greater than or equal to 0.");
-			Assert.ArgumentSatisfies(depth >= 0, () => depth, "Depth must be greater than or equal to 0.");
+			Assert.ArgumentNotNull(mipmaps, () => mipmaps);
 			Assert.ArgumentInRange(format, () => format);
 
 			if (_texture != IntPtr.Zero)
 				NativeMethods.DestroyTexture(_texture);
 
-			Width = width;
-			Height = height;
-			Depth = depth;
+			Width = mipmaps[0].Width;
+			Height = mipmaps[0].Height;
+			Depth = 0;
 
-			var description = new NativeMethods.TextureDescription(_type, Width, Height, Depth, format, false);
-			_texture = NativeMethods.CreateTexture(GraphicsDevice.NativePtr, ref description, data);
+			_texture = NativeMethods.CreateTexture(GraphicsDevice.NativePtr, format, mipmaps);
 		}
 
 		/// <summary>
@@ -132,7 +121,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateTexture")]
-			public static extern IntPtr CreateTexture(IntPtr device, ref TextureDescription description, byte[] data);
+			public static extern IntPtr CreateTexture(IntPtr device, SurfaceFormat format, Mipmap[] mipmaps);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyTexture")]
 			public static extern void DestroyTexture(IntPtr texture2D);
@@ -142,27 +131,6 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGenerateMipmaps")]
 			public static extern void GenerateMipmaps(IntPtr texture);
-
-			[StructLayout(LayoutKind.Sequential)]
-			public struct TextureDescription
-			{
-				public readonly TextureType Type;
-				public readonly int Width;
-				public readonly int Height;
-				public readonly int Depth;
-				public readonly SurfaceFormat Format;
-				public readonly bool RenderTarget;
-
-				public TextureDescription(TextureType type, int width, int height, int depth, SurfaceFormat format, bool renderTarget)
-				{
-					Type = type;
-					Width = width;
-					Height = height;
-					Depth = depth;
-					Format = format;
-					RenderTarget = renderTarget;
-				}
-			}
 		}
 	}
 }

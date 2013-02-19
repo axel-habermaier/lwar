@@ -77,10 +77,10 @@ namespace Pegasus.Framework.Math
 			if (value == null)
 				return false;
 
-			if (!ReferenceEquals(value.GetType(), typeof(Vector4)))
+			if (!ReferenceEquals(value.GetType(), typeof(Vector3)))
 				return false;
 
-			return Equals((Vector4)value);
+			return Equals((Vector3)value);
 		}
 
 		/// <summary>

@@ -13,9 +13,16 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Initializes a new instance.
 		/// </summary>
 		public Texture2DAsset()
-			: base((device, data, width, height, format) => new Texture2D(device, data, width, height, format),
-				   (texture, data, width, height, format) => texture.Reinitialize(data, width, height, format))
+			: base((device, format, mipmaps) => new Texture2D(device, format, mipmaps))
 		{
+		}
+
+		/// <summary>
+		///   Gets the friendly name of the asset.
+		/// </summary>
+		internal override string FriendlyName
+		{
+			get { return "2D Texture"; }
 		}
 	}
 }

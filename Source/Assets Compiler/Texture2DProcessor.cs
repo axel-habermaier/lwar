@@ -2,10 +2,8 @@
 
 namespace Pegasus.AssetsCompiler
 {
-	using System.Diagnostics;
 	using System.Drawing;
 	using System.IO;
-	using DDS;
 	using Framework;
 	using Framework.Platform;
 
@@ -29,26 +27,14 @@ namespace Pegasus.AssetsCompiler
 				if (bitmap.Height < 1 || bitmap.Height > Int16.MaxValue || !IsPowerOfTwo(bitmap.Height))
 					Log.Die("Invalid texture height '{0}' (must be power-of-two and between 0 and {1}).", bitmap.Height, Int16.MaxValue);
 
-				writer.WriteInt32(bitmap.Width);
-				writer.WriteInt32(bitmap.Height);
-
 				var sourceFile = Path.Combine(Path.GetDirectoryName(sourceRelative), Path.GetFileNameWithoutExtension(sourceRelative));
-				var tempFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + ".dds";
-				var process = new Process
-				{
-					EnableRaisingEvents = true,
-					StartInfo = new ProcessStartInfo(Path.Combine(Environment.CurrentDirectory, NvCompressPath),
-													 String.Format("-dds10 \"{0}\" \"{1}\"", source, tempFile))
-				};
-				process.StartInfo.UseShellExecute = false;
-				process.Start();
-				process.WaitForExit();
+				var outFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + PlatformInfo.AssetExtension;
 
-				using (var image = DDSImage.Load(File.ReadAllBytes(tempFile)))
-				{
-					var pb0 = image.GetPixelBuffer(0, 0, 0);
-					var pb3 = image.GetPixelBuffer(0, 0, 3);
-				}
+				var format = ChooseCompression(bitmap.PixelFormat);
+				ExternalTool.NvCompress(source, outFile, format);
+
+				writer.WriteInt32((int)format);
+				writer.Copy(File.ReadAllBytes(outFile));
 			}
 		}
 	}

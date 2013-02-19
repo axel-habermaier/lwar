@@ -319,14 +319,28 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		/// Returns all remaining bytes.
+		///   Copies the requested number of bytes into the buffer, starting at the given offset.
 		/// </summary>
-		public byte[] ReadToEnd()
+		/// <param name="buffer">The buffer into which the data should be copied.</param>
+		public void Copy(byte[] buffer)
 		{
-			var data = new byte[_buffer.Count - _readPosition];
-			Array.Copy(_buffer.Array, _readPosition, data, 0, data.Length);
-			_readPosition += data.Length;
-			return data;
+			Copy(buffer, 0, buffer.Length);
+		}
+
+		/// <summary>
+		///   Copies the requested number of bytes into the buffer, starting at the given offset.
+		/// </summary>
+		/// <param name="buffer">The buffer into which the data should be copied.</param>
+		/// <param name="offset">The first byte in the buffer that should be written.</param>
+		/// <param name="length">The number of bytes that should be copied.</param>
+		public void Copy(byte[] buffer, int offset, int length)
+		{
+			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.That(offset + length < buffer.Length, "Out of bounds.");
+
+			ValidateCanRead(length);
+			Array.Copy(_buffer.Array, _readPosition, buffer, offset, length);
+			_readPosition += length;
 		}
 
 		/// <summary>

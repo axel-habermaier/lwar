@@ -29,9 +29,6 @@ namespace Pegasus.AssetsCompiler
 				if (bitmap.Height < 1 || bitmap.Height > Int16.MaxValue || !IsPowerOfTwo(bitmap.Height))
 					Log.Die("Invalid texture height '{0}' (must be power-of-two and between 0 and {1}).", bitmap.Height, Int16.MaxValue);
 
-				writer.WriteInt32(width);
-				writer.WriteInt32(bitmap.Height);
-
 				var negativeZ = bitmap.Clone(new Rectangle(0, 0, width, bitmap.Height), bitmap.PixelFormat);
 				var negativeX = bitmap.Clone(new Rectangle(width, 0, width, bitmap.Height), bitmap.PixelFormat);
 				var positiveZ = bitmap.Clone(new Rectangle(2 * width, 0, width, bitmap.Height), bitmap.PixelFormat);
@@ -55,28 +52,15 @@ namespace Pegasus.AssetsCompiler
 				negativeY.Save(negativeYPath);
 				positiveY.Save(positiveYPath);
 
-				var tempDDS = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + ".dds";
-				var process = new Process
-				{
-					EnableRaisingEvents = true,
-					StartInfo = new ProcessStartInfo(Path.Combine(Environment.CurrentDirectory, NvAssemblePath),
-													 String.Format("-cube \"{0}\" \"{1}\" \"{2}\" \"{3}\" \"{4}\" \"{5}\" -o \"{6}\"",
-																   negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath, tempDDS))
-				};
-				process.StartInfo.UseShellExecute = false;
-				process.Start();
-				process.WaitForExit();
+				var assembledFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + ".dds";
+				ExternalTool.NvAssemble(negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath, assembledFile);
 
-				var tempCompressedDds = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + "-compressed.dds";
-				process = new Process
-				{
-					EnableRaisingEvents = true,
-					StartInfo = new ProcessStartInfo(Path.Combine(Environment.CurrentDirectory, NvCompressPath),
-													 String.Format("-dds10 \"{0}\" \"{1}\"", tempDDS, tempCompressedDds))
-				};
-				process.StartInfo.UseShellExecute = false;
-				process.Start();
-				process.WaitForExit();
+				var outFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + "-compressed" + PlatformInfo.AssetExtension;
+				var format = ChooseCompression(bitmap.PixelFormat);
+				ExternalTool.NvCompress(assembledFile, outFile, format);
+
+				writer.WriteInt32((int)format);
+				writer.Copy(File.ReadAllBytes(outFile));
 			}
 		}
 	}
