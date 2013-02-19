@@ -91,6 +91,22 @@
     <Compile Include="AssetWriter.cs" />
     <Compile Include="Compiler.cs" />
     <Compile Include="CubeMapProcessor.cs" />
+    <Compile Include="DDS\CubemapFlags.cs" />
+    <Compile Include="DDS\DDSFlags.cs" />
+    <Compile Include="DDS\DDSReader.cs" />
+    <Compile Include="DDS\Header.cs" />
+    <Compile Include="DDS\HeaderDXT10.cs" />
+    <Compile Include="DDS\HeaderFlags.cs" />
+    <Compile Include="DDS\DDSImage.cs" />
+    <Compile Include="DDS\ImageDescription.cs" />
+    <Compile Include="DDS\MipMapCount.cs" />
+    <Compile Include="DDS\MipMapDescription.cs" />
+    <Compile Include="DDS\PixelBuffer.cs" />
+    <Compile Include="DDS\PixelBufferArray.cs" />
+    <Compile Include="DDS\DDSPixelFormat.cs" />
+    <Compile Include="DDS\PixelFormat.cs" />
+    <Compile Include="DDS\PixelFormatFlags.cs" />
+    <Compile Include="DDS\SurfaceFlags.cs" />
     <Compile Include="Texture2DProcessor.cs" />
     <Compile Include="FragmentShaderProcessor.cs" />
     <Compile Include="FontProcessor.cs" />
@@ -106,6 +122,7 @@
       <Name>Framework</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

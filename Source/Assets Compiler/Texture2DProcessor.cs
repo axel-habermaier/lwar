@@ -5,6 +5,7 @@ namespace Pegasus.AssetsCompiler
 	using System.Diagnostics;
 	using System.Drawing;
 	using System.IO;
+	using DDS;
 	using Framework;
 	using Framework.Platform;
 
@@ -31,7 +32,8 @@ namespace Pegasus.AssetsCompiler
 				writer.WriteInt32(bitmap.Width);
 				writer.WriteInt32(bitmap.Height);
 
-				var tempFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceRelative) + ".dds";
+				var sourceFile = Path.Combine(Path.GetDirectoryName(sourceRelative), Path.GetFileNameWithoutExtension(sourceRelative));
+				var tempFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + ".dds";
 				var process = new Process
 				{
 					EnableRaisingEvents = true,
@@ -41,6 +43,12 @@ namespace Pegasus.AssetsCompiler
 				process.StartInfo.UseShellExecute = false;
 				process.Start();
 				process.WaitForExit();
+
+				using (var image = DDSImage.Load(File.ReadAllBytes(tempFile)))
+				{
+					var pb0 = image.GetPixelBuffer(0, 0, 0);
+					var pb3 = image.GetPixelBuffer(0, 0, 3);
+				}
 			}
 		}
 	}

@@ -39,7 +39,8 @@ namespace Pegasus.AssetsCompiler
 				var negativeY = bitmap.Clone(new Rectangle(4 * width, 0, width, bitmap.Height), bitmap.PixelFormat);
 				var positiveY = bitmap.Clone(new Rectangle(5 * width, 0, width, bitmap.Height), bitmap.PixelFormat);
 
-				var tempPng = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceRelative);
+				var sourceFile = Path.Combine(Path.GetDirectoryName(sourceRelative), Path.GetFileNameWithoutExtension(sourceRelative));
+				var tempPng = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile);
 				var negativeZPath = tempPng + "-Z.png";
 				var negativeXPath = tempPng + "-X.png";
 				var positiveZPath = tempPng + "+Z.png";
@@ -54,24 +55,24 @@ namespace Pegasus.AssetsCompiler
 				negativeY.Save(negativeYPath);
 				positiveY.Save(positiveYPath);
 
-				var tempDds = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceRelative) + ".dds";
+				var tempDDS = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + ".dds";
 				var process = new Process
 				{
 					EnableRaisingEvents = true,
 					StartInfo = new ProcessStartInfo(Path.Combine(Environment.CurrentDirectory, NvAssemblePath),
 													 String.Format("-cube \"{0}\" \"{1}\" \"{2}\" \"{3}\" \"{4}\" \"{5}\" -o \"{6}\"",
-																   negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath, tempDds))
+																   negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath, tempDDS))
 				};
 				process.StartInfo.UseShellExecute = false;
 				process.Start();
 				process.WaitForExit();
 
-				var tempCompressedDds = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceRelative) + "-compressed.dds";
+				var tempCompressedDds = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + "-compressed.dds";
 				process = new Process
 				{
 					EnableRaisingEvents = true,
 					StartInfo = new ProcessStartInfo(Path.Combine(Environment.CurrentDirectory, NvCompressPath),
-													 String.Format("-dds10 \"{0}\" \"{1}\"", tempDds, tempCompressedDds))
+													 String.Format("-dds10 \"{0}\" \"{1}\"", tempDDS, tempCompressedDds))
 				};
 				process.StartInfo.UseShellExecute = false;
 				process.Start();
