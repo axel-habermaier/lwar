@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug Linux|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Source/Assets Compiler/Texture2DProcessor.cs">
+    <Files>
+      <File FileName="Source/Assets Compiler/Texture2DProcessor.cs" Line="36" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/axel/Workspace/lwar/Source/Assets Compiler/Texture2DProcessor.cs" line="36" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
