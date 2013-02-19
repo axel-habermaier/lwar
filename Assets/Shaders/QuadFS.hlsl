@@ -4,10 +4,7 @@ struct PS_INPUT
 };
 
 Texture2D Tex : register(t0);
-
-SamplerState TexSampler : register(s0)
-{
-};
+SamplerState TexSampler : register(s0);
 
 float4 Main(PS_INPUT input) : SV_Target
 {

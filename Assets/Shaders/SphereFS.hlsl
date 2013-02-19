@@ -4,13 +4,7 @@ struct PS_INPUT
 };
 
 TextureCube CubeMap : register(t0);
-
-SamplerState CubeMapSampler : register(s0)
-{
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
+SamplerState CubeMapSampler : register(s0);
 
 float4 Main(PS_INPUT input) : SV_Target
 {
