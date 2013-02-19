@@ -2,10 +2,11 @@
 
 namespace Pegasus.AssetsCompiler
 {
+	using System.Diagnostics;
+	using System.Drawing;
+	using System.IO;
 	using Framework;
 	using Framework.Platform;
-	using Framework.Platform.Graphics;
-	using SharpDX.Toolkit.Graphics;
 
 	/// <summary>
 	///   Processes 2D textures, converting them to a premultiplied format.
@@ -13,29 +14,34 @@ namespace Pegasus.AssetsCompiler
 	public sealed class Texture2DProcessor : TextureProcessor
 	{
 		/// <summary>
-		///   Processes the texture.
+		///   Processes the given file, writing the compiled output to the given target destination.
 		/// </summary>
-		/// <param name="data">The textue data.</param>
-		/// <param name="width">The width of the texture.</param>
-		/// <param name="height">The height of the texture.</param>
-		/// <param name="format">The format of the texture.</param>
+		/// <param name="source">The source file that should be processed.</param>
+		/// <param name="sourceRelative">The path to the source file relative to the Assets root directory.</param>
 		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
-		protected override void Process(byte[] data, int width, int height, SurfaceFormat format, BufferWriter writer)
+		public override void Process(string source, string sourceRelative, BufferWriter writer)
 		{
-			if (width < 1 || width > Int16.MaxValue || !IsPowerOfTwo(width))
-				Log.Die("Invalid texture width '{0}' (must be power-of-two and between 0 and {1}).", width, Int16.MaxValue);
-			if (height < 1 || height > Int16.MaxValue || !IsPowerOfTwo(height))
-				Log.Die("Invalid texture height '{0}' (must be power-of-two and between 0 and {1}).", height, Int16.MaxValue);
+			using (var bitmap = (Bitmap)Image.FromFile(source))
+			{
+				if (bitmap.Width < 1 || bitmap.Width > Int16.MaxValue || !IsPowerOfTwo(bitmap.Width))
+					Log.Die("Invalid texture width '{0}' (must be power-of-two and between 0 and {1}).", bitmap.Width, Int16.MaxValue);
+				if (bitmap.Height < 1 || bitmap.Height > Int16.MaxValue || !IsPowerOfTwo(bitmap.Height))
+					Log.Die("Invalid texture height '{0}' (must be power-of-two and between 0 and {1}).", bitmap.Height, Int16.MaxValue);
 
-			writer.WriteInt32(width);
-			writer.WriteInt32(height);
-			writer.WriteInt32((int)format);
+				writer.WriteInt32(bitmap.Width);
+				writer.WriteInt32(bitmap.Height);
 
-			WriteMipmaps(data, width, height, format, writer);
-
-			var image = Image.Load("../../Assets/Textures/Sun.dds");
-			var b = image.GetPixelBuffer(0, 0, 0);
-			var b11 = image.GetPixelBuffer(0, 0, 11);
+				var tempFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceRelative) + ".dds";
+				var process = new Process
+				{
+					EnableRaisingEvents = true,
+					StartInfo = new ProcessStartInfo(Path.Combine(Environment.CurrentDirectory, NvCompressPath),
+													 String.Format("-dds10 \"{0}\" \"{1}\"", source, tempFile))
+				};
+				process.StartInfo.UseShellExecute = false;
+				process.Start();
+				process.WaitForExit();
+			}
 		}
 	}
 }

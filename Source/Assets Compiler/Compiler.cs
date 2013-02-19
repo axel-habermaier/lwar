@@ -16,17 +16,22 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   The path to the source assets.
 		/// </summary>
-		private const string SourcePath = "../../Assets";
+		public const string SourcePath = "../../Assets";
+
+		/// <summary>
+		///   The path where the temporary asset files should be stored.
+		/// </summary>
+		public const string TempPath = "../../Assets/obj";
 
 #if DEBUG
 		/// <summary>
 		///   The path where the compiled assets should be stored.
 		/// </summary>
-		private const string TargetPath = "../../Binaries/Debug/Assets";
+		public const string TargetPath = "../../Binaries/Debug/Assets";
 #else
-	/// <summary>
-	/// The path where the compiled assets should be stored.
-	/// </summary>
+		/// <summary>
+		/// The path where the compiled assets should be stored.
+		/// </summary>
 		private const string TargetPath = "../../Binaries/Release/Assets";
 #endif
 
@@ -79,13 +84,18 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Ensures that all target paths exist.
+		///   Ensures that all target and temp paths exist.
 		/// </summary>
 		private static void EnsurePathsExist()
 		{
 			foreach (var asset in Assets.All)
 			{
 				var assetPath = Path.Combine(TargetPath, Path.GetDirectoryName(asset));
+
+				if (!Directory.Exists(assetPath))
+					Directory.CreateDirectory(assetPath);
+
+				assetPath = Path.Combine(TempPath, Path.GetDirectoryName(asset));
 				if (!Directory.Exists(assetPath))
 					Directory.CreateDirectory(assetPath);
 			}
