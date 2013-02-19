@@ -9,7 +9,7 @@ namespace Lwar.Client.Gameplay
 
 	public class Ship : Entity<Ship>
 	{
-		[Asset("Textures/Test")]
+		[Asset("Textures/Ship")]
 		public static Texture2D Texture;
 
 		public Model Model { get; private set; }
