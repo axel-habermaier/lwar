@@ -21,37 +21,18 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Converts the pixel format into a surface format.
-		/// </summary>
-		/// <param name="format">The pixel format that should be converted.</param>
-		private static SurfaceFormat Convert(PixelFormat format)
-		{
-			switch (format)
-			{
-				case PixelFormat.Format32bppArgb:
-					return SurfaceFormat.Rgba8;
-				case PixelFormat.Format24bppRgb:
-					return SurfaceFormat.Rgb8;
-				case PixelFormat.Format8bppIndexed:
-					return SurfaceFormat.Rgba8;
-				default:
-					throw new InvalidOperationException(String.Format("Unsupported texture format: {0}.", format));
-			}
-		}
-
-		/// <summary>
 		///   Chooses a suitable compressed format for the given uncompressed format.
 		/// </summary>
 		/// <param name="format">The pixel format for which a suitable compressed format should be chosen.</param>
 		protected static SurfaceFormat ChooseCompression(PixelFormat format)
 		{
-			switch (Convert(format))
+			switch (format)
 			{
-				case SurfaceFormat.R8:
+				case PixelFormat.Format8bppIndexed:
 					return SurfaceFormat.Bc4;
-				case SurfaceFormat.Rgb8:
+				case PixelFormat.Format24bppRgb:
 					return SurfaceFormat.Bc1;
-				case SurfaceFormat.Rgba8:
+				case PixelFormat.Format32bppArgb:
 					return SurfaceFormat.Bc3;
 				default:
 					throw new InvalidOperationException("Unsupported uncompressed format.");
@@ -72,6 +53,7 @@ namespace Pegasus.AssetsCompiler
 			writer.WriteInt32((int)texture.Description.Type);
 			writer.WriteInt32((int)texture.Description.Format);
 			writer.WriteInt32((int)texture.Description.Mipmaps);
+			writer.WriteUInt32(texture.Description.SurfaceCount);
 
 			foreach (var surface in texture.Surfaces)
 			{

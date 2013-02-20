@@ -12,8 +12,8 @@ pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture* textur
 
 	PG_ALLOC(pgRenderTarget, renderTarget);
 	renderTarget->device = device;
-	renderTarget->width = texture->width;
-	renderTarget->height = texture->height;
+	renderTarget->width = texture->desc.width;
+	renderTarget->height = texture->desc.height;
 	pgCreateRenderTargetCore(renderTarget, texture);
 	return renderTarget;
 }

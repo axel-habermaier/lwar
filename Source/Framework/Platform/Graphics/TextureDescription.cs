@@ -44,5 +44,10 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Indicates whether and how the texture uses mipmaps.
 		/// </summary>
 		public Mipmaps Mipmaps;
+
+		/// <summary>
+		///   The total number of surfaces, including all faces and mipmaps.
+		/// </summary>
+		public uint SurfaceCount;
 	}
 }

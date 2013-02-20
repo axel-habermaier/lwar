@@ -220,14 +220,24 @@ D3D11_STENCIL_OP pgConvertStencilOperation(pgStencilOperation stencilOperation)
 	}
 }
 
-pgVoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, DXGI_FORMAT* format, pgInt32* components)
+DXGI_FORMAT pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat)
 {
 	switch(surfaceFormat)
 	{
+	case PG_SURFACE_R8:
+		return DXGI_FORMAT_R8_UNORM;
 	case PG_SURFACE_RGBA8:
-		*format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		*components = 4;
-		return;
+		return DXGI_FORMAT_R8G8B8A8_UNORM;
+	case PG_SURFACE_BC1:
+		return DXGI_FORMAT_BC1_UNORM;
+	case PG_SURFACE_BC2:
+		return DXGI_FORMAT_BC2_UNORM;
+	case PG_SURFACE_BC3:
+		return DXGI_FORMAT_BC3_UNORM;
+	case PG_SURFACE_BC4:
+		return DXGI_FORMAT_BC4_UNORM;
+	case PG_SURFACE_BC5:
+		return DXGI_FORMAT_BC5_UNORM;
 	default:						
 		PG_NO_SWITCH_DEFAULT;
 	}

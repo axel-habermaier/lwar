@@ -280,15 +280,14 @@ pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout);
 
 struct pgTexture
 {
-	pgGraphicsDevice*	device;
-	pgInt32				width;
-	pgInt32				height;
+	pgGraphicsDevice*		device;
+	pgTextureDescription	desc;
 	PG_TEXTURE_PLATFORM
 };
 
 #define PG_MAX_MIPMAPS 16
 
-pgVoid pgCreateTextureCore(pgTexture* texture, pgTextureType type, pgSurfaceFormat format, pgMipmap* mipmaps);
+pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces);
 pgVoid pgDestroyTextureCore(pgTexture* texture);
 
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot);

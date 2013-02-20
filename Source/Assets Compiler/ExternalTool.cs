@@ -69,8 +69,6 @@ namespace Pegasus.AssetsCompiler
 			switch (format)
 			{
 				case SurfaceFormat.R8:
-				case SurfaceFormat.Rg8:
-				case SurfaceFormat.Rgb8:
 				case SurfaceFormat.Rgba8:
 					compressionFormat = "rgb";
 					break;

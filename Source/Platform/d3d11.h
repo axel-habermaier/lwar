@@ -97,7 +97,7 @@ D3D11_MAP pgConvertMapMode(pgMapMode mapMode);
 D3D11_PRIMITIVE_TOPOLOGY pgConvertPrimitiveType(pgPrimitiveType primitiveType);
 D3D11_USAGE pgConvertResourceUsage(pgResourceUsage resourceUsage);
 D3D11_STENCIL_OP pgConvertStencilOperation(pgStencilOperation stencilOperation);
-pgVoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, DXGI_FORMAT* format, pgInt32* components);
+DXGI_FORMAT pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat);
 D3D11_TEXTURE_ADDRESS_MODE pgConvertTextureAddressMode(pgTextureAddressMode addressMode);
 D3D11_FILTER pgConvertTextureFilter(pgTextureFilter textureFilter);
 D3D11_BIND_FLAG pgConvertBufferType(pgBufferType bufferType);

@@ -39,12 +39,39 @@ namespace Pegasus.Framework.Platform.Assets
 			Assert.ArgumentNotNull(assetReader, () => assetReader);
 
 			var reader = assetReader.Reader;
-			
+			var description = new TextureDescription
+			{
+				Width = reader.ReadUInt32(),
+				Height = reader.ReadUInt32(),
+				Depth = reader.ReadUInt32(),
+				ArraySize = reader.ReadUInt32(),
+				Type = (TextureType)reader.ReadInt32(),
+				Format = (SurfaceFormat)reader.ReadInt32(),
+				Mipmaps = (Mipmaps)reader.ReadInt32(),
+				SurfaceCount = reader.ReadUInt32()
+			};
 
+			var surfaces = new Surface[description.SurfaceCount];
+			for (var i = 0; i < description.SurfaceCount; ++i)
+			{
+				surfaces[i] = new Surface
+				{
+					Width = reader.ReadUInt32(),
+					Height = reader.ReadUInt32(),
+					Depth = reader.ReadUInt32(),
+					Size = reader.ReadUInt32(),
+					Stride = reader.ReadUInt32(),
+				};
+
+				surfaces[i].Data = new byte[surfaces[i].Size * surfaces[i].Depth];
+				reader.Copy(surfaces[i].Data);
+			}
+
+			Assert.That(reader.EndOfBuffer, "Not all data has been read.");
 			if (Texture == null)
 				Texture = _createTexture(GraphicsDevice);
-		
-			//Texture.Reinitialize(format, mipmaps);
+
+			Texture.Reinitialize(description, surfaces);
 
 			for (var i = 0; i < GraphicsDevice.State.Textures.Length; ++i)
 				GraphicsDevice.State.Textures[i] = null;

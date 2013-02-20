@@ -158,8 +158,6 @@ typedef enum
 typedef enum
 {
 	PG_SURFACE_RGBA8					= 2101,
-	PG_SURFACE_RGB8						= 2102,
-	PG_SURFACE_RG8						= 2103,
 	PG_SURFACE_R8						= 2104,
 	PG_SURFACE_BC1						= 2105,
 	PG_SURFACE_BC2						= 2106,
@@ -233,6 +231,27 @@ typedef enum
 	PG_TEXTURE_CUBE_MAP					= 2903,
 	PG_TEXTURE_3D						= 2904
 } pgTextureType;
+
+typedef enum
+{
+	PG_MIPMAPS_GENERATE					= -1,
+	PG_MIPMAPS_NONE						= 0,
+	PG_MIPMAPS_ONE						= 1,
+	PG_MIPMAPS_TWO						= 2,
+	PG_MIPMAPS_THREE					= 3,
+	PG_MIPMAPS_FOUR						= 4,
+	PG_MIPMAPS_FIVE						= 5,
+	PG_MIPMAPS_SIX						= 6,
+	PG_MIPMAPS_SEVEN					= 7,
+	PG_MIPMAPS_EIGHT					= 8,
+	PG_MIPMAPS_NINE						= 9,
+	PG_MIPMAPS_TEN						= 10,
+	PG_MIPMAPS_ELEVEN					= 11,
+	PG_MIPMAPS_TWELVE					= 12,
+	PG_MIPMAPS_THIRTEEN					= 13,
+	PG_MIPMAPS_FOURTEEN					= 14,
+	PG_MIPMAPS_FIFTEEN					= 15
+} pgMipmaps;
 
 typedef struct
 {
@@ -311,12 +330,25 @@ typedef struct
 
 typedef struct
 {
-	pgInt32					width;
-	pgInt32					height;
-	pgInt32					size;
-	pgVoid*					data;
-	pgInt32					level;
-} pgMipmap;
+	pgUint32				width;
+	pgUint32				height;
+	pgUint32				depth;
+	pgUint32				arraySize;
+	pgTextureType			type;
+	pgSurfaceFormat			format;
+	pgMipmaps				mipmaps;
+	pgUint32				surfaceCount;
+} pgTextureDescription;
+
+typedef struct
+{
+	pgUint32				width;
+	pgUint32				height;
+	pgUint32				depth;
+	pgUint32				size;
+	pgUint32				stride;
+	pgUint8*				data;
+} pgSurface;
 
 //====================================================================================================================
 // Graphics functions
@@ -383,7 +415,7 @@ PG_API_EXPORT pgVoid pgBindInputLayout(pgInputLayout* inputLayout);
 // Texture functions
 //====================================================================================================================
 
-PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureType type, pgSurfaceFormat format, pgMipmap* mipmaps);
+PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDescription* description, pgSurface* surfaces);
 PG_API_EXPORT pgVoid pgDestroyTexture(pgTexture* texture);
 
 PG_API_EXPORT pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot);

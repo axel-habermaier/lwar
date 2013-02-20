@@ -45,7 +45,8 @@ namespace Pegasus.Framework.Platform.Graphics
 				ArraySize = 1,
 				Type = TextureType.Texture2D,
 				Format = SurfaceFormat.Rgba8,
-				Mipmaps = Mipmaps.None
+				Mipmaps = Mipmaps.None,
+				SurfaceCount = 1
 			};
 
 			var surfaces = new[]

@@ -63,8 +63,12 @@ namespace Pegasus.AssetsCompiler.DDS
 			_description.Type = ToTextureType(dx10Header);
 			_description.Mipmaps = (Mipmaps)((int)Mipmaps.None + header.MipMapCount);
 
-			var faces = _description.Type == TextureType.CubeMap ? _description.ArraySize * 6 : _description.ArraySize;
-			_surfaces = new Surface[faces * header.MipMapCount];
+			var faces = _description.ArraySize;
+			if (_description.Type == TextureType.CubeMap)
+				faces *= 6;
+
+			_description.SurfaceCount = faces * header.MipMapCount;
+			_surfaces = new Surface[_description.SurfaceCount];
 			var index = 0;
 
 			for (var i = 0; i < faces; ++i)

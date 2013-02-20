@@ -13,16 +13,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		Rgba8 = 2101,
 
 		/// <summary>
-		///   Represents an uncompressed format with 8 bits of precision for the red, green, and blue channels.
-		/// </summary>
-		Rgb8 = 2102,
-
-		/// <summary>
-		///   Represents an uncompressed format with 8 bits of precision for the red and green channels.
-		/// </summary>
-		Rg8 = 2103,
-
-		/// <summary>
 		///   Represents an uncompressed format with 8 bits of precision for the red channel.
 		/// </summary>
 		R8 = 2104,

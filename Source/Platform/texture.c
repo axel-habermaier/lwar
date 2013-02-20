@@ -4,18 +4,18 @@
 // Exported functions
 //====================================================================================================================
 
-pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureType type, pgSurfaceFormat format, pgMipmap* mipmaps)
+pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDescription* description, pgSurface* surfaces)
 {
 	pgTexture* texture;
 
 	PG_ASSERT_NOT_NULL(device);
-	PG_ASSERT_NOT_NULL(mipmaps);
+	PG_ASSERT_NOT_NULL(description);
+	PG_ASSERT_NOT_NULL(surfaces);
 
 	PG_ALLOC(pgTexture, texture);
 	texture->device = device;
-	texture->width = mipmaps[0].width;
-	texture->height = mipmaps[0].height;
-	pgCreateTextureCore(texture, type, format, mipmaps);
+	texture->desc = *description;
+	pgCreateTextureCore(texture, surfaces);
 	return texture;
 }
 

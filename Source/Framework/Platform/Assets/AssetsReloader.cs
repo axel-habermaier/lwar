@@ -70,7 +70,7 @@ namespace Pegasus.Framework.Platform.Assets
 
 #if Windows
 			// Compile all assets on startup
-			_assetsCompiler.Compile();
+			//_assetsCompiler.Compile();
 
 			// Periodically check the file system for modified files
 			var token = _cancellation.Token;
