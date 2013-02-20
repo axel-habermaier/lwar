@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.Diagnostics;
 	using Framework;
+	using Framework.Platform;
 	using Framework.Platform.Graphics;
 
 	public static class ExternalTool
@@ -11,12 +12,12 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   The path to the nvcompress executable.
 		/// </summary>
-		private const string NvCompressPath = "../../Tools/nvcompress";
+		private static readonly string NvCompressPath = GetExecutable(PlatformInfo.Platform, "../../Tools/nvcompress");
 
 		/// <summary>
 		///   The path to the nvassemble executable.
 		/// </summary>
-		private const string NvAssemblePath = "../../Tools/nvassemble";
+		private static readonly string NvAssemblePath = GetExecutable(PlatformInfo.Platform, "../../Tools/nvassemble");
 
 		/// <summary>
 		///   Runs an external tool process.
@@ -110,6 +111,16 @@ namespace Pegasus.AssetsCompiler
 		{
 			RunProcess(NvAssemblePath, @"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
 					   negativeZ, negativeX, positiveZ, positiveX, negativeY, positiveY, output);
+		}
+
+		/// <summary>
+		///   Constructs the platform-specific executable path to a tool.
+		/// </summary>
+		/// <param name="platform">The platform for which the tool should be executed.</param>
+		/// <param name="path">The platform-independent path to the tool.</param>
+		private static string GetExecutable(PlatformType platform, string path)
+		{
+			return path + (platform == PlatformType.Windows ? ".exe" : String.Empty);
 		}
 	}
 }
