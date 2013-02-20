@@ -94,7 +94,7 @@
     <Compile Include="DDS\CubemapFlags.cs" />
     <Compile Include="DDS\Dx10Header.cs" />
     <Compile Include="DDS\Header.cs" />
-    <Compile Include="DDS\Image.cs" />
+    <Compile Include="DDS\DirectDrawSurface.cs" />
     <Compile Include="DDS\Format.cs" />
     <Compile Include="DDS\HeaderFlags.cs" />
     <Compile Include="DDS\PixelFormat.cs" />

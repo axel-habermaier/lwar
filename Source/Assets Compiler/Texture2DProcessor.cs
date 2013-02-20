@@ -7,7 +7,6 @@ namespace Pegasus.AssetsCompiler
 	using DDS;
 	using Framework;
 	using Framework.Platform;
-	using Image = DDS.Image;
 
 	/// <summary>
 	///   Processes 2D textures, converting them to a premultiplied format.
@@ -36,11 +35,7 @@ namespace Pegasus.AssetsCompiler
 				ExternalTool.NvCompress(source, outFile, format);
 
 				using (var buffer = BufferReader.Create(File.ReadAllBytes(outFile)))
-				{
-					var dds = new Image(buffer);
-					writer.WriteInt32((int)format);
-					writer.Copy(File.ReadAllBytes(outFile));
-				}
+					Write(new DirectDrawSurface(buffer), writer);
 			}
 		}
 	}

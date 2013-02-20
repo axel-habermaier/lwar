@@ -11,7 +11,7 @@ namespace Pegasus.AssetsCompiler.DDS
 	///   Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at
 	///   http://msdn.microsoft.com/en-us/library/windows/apps/jj651550.aspx.
 	/// </summary>
-	public class Image
+	public class DirectDrawSurface
 	{
 		/// <summary>
 		///   The magic DDS file code "DDS ".
@@ -32,7 +32,7 @@ namespace Pegasus.AssetsCompiler.DDS
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer that contains the contents of the DDS file.</param>
-		public unsafe Image(BufferReader buffer)
+		public unsafe DirectDrawSurface(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
@@ -60,13 +60,14 @@ namespace Pegasus.AssetsCompiler.DDS
 			_description.Depth = Math.Max(header.Depth, 1);
 			_description.Format = ToSurfaceFormat(dx10Header.Format);
 			_description.ArraySize = dx10Header.ArraySize;
-			_description.Type = ToTextureType(dx10Header.ResourceDimension);
+			_description.Type = ToTextureType(dx10Header);
 			_description.Mipmaps = (Mipmaps)((int)Mipmaps.None + header.MipMapCount);
 
-			_surfaces = new Surface[dx10Header.ArraySize * header.MipMapCount];
+			var faces = _description.Type == TextureType.CubeMap ? _description.ArraySize * 6 : _description.ArraySize;
+			_surfaces = new Surface[faces * header.MipMapCount];
 			var index = 0;
 
-			for (var i = 0; i < dx10Header.ArraySize; ++i)
+			for (var i = 0; i < faces; ++i)
 			{
 				var width = _description.Width;
 				var height = _description.Height;
@@ -142,10 +143,13 @@ namespace Pegasus.AssetsCompiler.DDS
 		/// <summary>
 		///   Converts the DDS resource dimension to the corresponding texture type.
 		/// </summary>
-		/// <param name="dimension">The resource dimension that should be converted.</param>
-		private static TextureType ToTextureType(ResourceDimension dimension)
+		/// <param name="header">The header that describes the resource dimensions that should be converted.</param>
+		private static TextureType ToTextureType(Dx10Header header)
 		{
-			switch (dimension)
+			if (header.ResourceDimension == ResourceDimension.Texture2D && header.MiscFlags.HasFlag(ResourceOptionFlags.TextureCube))
+				return TextureType.CubeMap;
+
+			switch (header.ResourceDimension)
 			{
 				case ResourceDimension.Texture1D:
 					return TextureType.Texture1D;

@@ -2,9 +2,11 @@
 
 namespace Pegasus.AssetsCompiler
 {
-	using System.Drawing.Imaging;
+	using DDS;
 	using Framework;
+	using Framework.Platform;
 	using Framework.Platform.Graphics;
+	using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 	public abstract class TextureProcessor : AssetProcessor
 	{
@@ -19,29 +21,10 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Gets the number of components from the surface format.
-		/// </summary>
-		/// <param name="format">The surface format.</param>
-		protected static byte ComponentCount(SurfaceFormat format)
-		{
-			switch (format)
-			{
-				case SurfaceFormat.Rgba8:
-					return 4;
-				case SurfaceFormat.Rgb8:
-					return 3;
-				case SurfaceFormat.R8:
-					return 1;
-				default:
-					throw new InvalidOperationException("Unsupported surface format.");
-			}
-		}
-
-		/// <summary>
 		///   Converts the pixel format into a surface format.
 		/// </summary>
 		/// <param name="format">The pixel format that should be converted.</param>
-		protected static SurfaceFormat Convert(PixelFormat format)
+		private static SurfaceFormat Convert(PixelFormat format)
 		{
 			switch (format)
 			{
@@ -62,16 +45,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="format">The pixel format for which a suitable compressed format should be chosen.</param>
 		protected static SurfaceFormat ChooseCompression(PixelFormat format)
 		{
-			return ChooseCompression(Convert(format));
-		}
-
-		/// <summary>
-		///   Chooses a suitable compressed format for the given uncompressed format.
-		/// </summary>
-		/// <param name="format">The uncompressed format for which a suitable compressed format should be chosen.</param>
-		protected static SurfaceFormat ChooseCompression(SurfaceFormat format)
-		{
-			switch (format)
+			switch (Convert(format))
 			{
 				case SurfaceFormat.R8:
 					return SurfaceFormat.Bc4;
@@ -81,6 +55,32 @@ namespace Pegasus.AssetsCompiler
 					return SurfaceFormat.Bc3;
 				default:
 					throw new InvalidOperationException("Unsupported uncompressed format.");
+			}
+		}
+
+		/// <summary>
+		///   Serializes the given DDS image into the given buffer.
+		/// </summary>
+		/// <param name="texture">The DDS image that should be serialized.</param>
+		/// <param name="writer">The buffer the DDS image should be serialized into.</param>
+		protected static void Write(DirectDrawSurface texture, BufferWriter writer)
+		{
+			writer.WriteUInt32(texture.Description.Width);
+			writer.WriteUInt32(texture.Description.Height);
+			writer.WriteUInt32(texture.Description.Depth);
+			writer.WriteUInt32(texture.Description.ArraySize);
+			writer.WriteInt32((int)texture.Description.Type);
+			writer.WriteInt32((int)texture.Description.Format);
+			writer.WriteInt32((int)texture.Description.Mipmaps);
+
+			foreach (var surface in texture.Surfaces)
+			{
+				writer.WriteUInt32(surface.Width);
+				writer.WriteUInt32(surface.Height);
+				writer.WriteUInt32(surface.Depth);
+				writer.WriteUInt32(surface.Size);
+				writer.WriteUInt32(surface.Stride);
+				writer.Copy(surface.Data);
 			}
 		}
 	}

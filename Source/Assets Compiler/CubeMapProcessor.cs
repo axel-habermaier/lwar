@@ -2,9 +2,9 @@
 
 namespace Pegasus.AssetsCompiler
 {
-	using System.Diagnostics;
 	using System.Drawing;
 	using System.IO;
+	using DDS;
 	using Framework;
 	using Framework.Platform;
 
@@ -53,14 +53,16 @@ namespace Pegasus.AssetsCompiler
 				positiveY.Save(positiveYPath);
 
 				var assembledFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + ".dds";
-				ExternalTool.NvAssemble(negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath, assembledFile);
+				ExternalTool.NvAssemble(negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath,
+										assembledFile);
 
-				var outFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + "-compressed" + PlatformInfo.AssetExtension;
+				var outFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + "-compressed" +
+							  PlatformInfo.AssetExtension;
 				var format = ChooseCompression(bitmap.PixelFormat);
 				ExternalTool.NvCompress(assembledFile, outFile, format);
 
-				writer.WriteInt32((int)format);
-				writer.Copy(File.ReadAllBytes(outFile));
+				using (var buffer = BufferReader.Create(File.ReadAllBytes(outFile)))
+					Write(new DirectDrawSurface(buffer), writer);
 			}
 		}
 	}
