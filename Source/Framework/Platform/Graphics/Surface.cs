@@ -8,7 +8,7 @@ namespace Pegasus.Framework.Platform.Graphics
 	///   Represents the surface of a texture, i.e., a single mipmap and/or face of a texture.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct Surface
+	public unsafe struct Surface
 	{
 		/// <summary>
 		///   The width of the surface.
@@ -38,6 +38,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   The surface data.
 		/// </summary>
-		public byte[] Data;
+		public byte* Data;
 	}
 }

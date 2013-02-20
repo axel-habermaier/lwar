@@ -51,6 +51,14 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Gets a pointer to the current read position of the buffer.
+		/// </summary>
+		public BufferPointer GetPointer()
+		{
+			return new BufferPointer(_buffer.Array, _readPosition, _buffer.Count + _buffer.Offset - _readPosition);
+		}
+
+		/// <summary>
 		///   Creates a new instance. The valid data of the buffer can be found within the
 		///   range [0, buffer.Length).
 		/// </summary>
@@ -104,6 +112,17 @@ namespace Pegasus.Framework.Platform
 		public bool CanRead(int size)
 		{
 			return _readPosition + size <= _buffer.Offset + _buffer.Count;
+		}
+
+		/// <summary>
+		///   Skips the given number of bytes.
+		/// </summary>
+		/// <param name="count">The number of bytes that should be skipped.</param>
+		public void Skip(int count)
+		{
+			Assert.ArgumentInRange(count, () => count, 0, Int32.MaxValue);
+			ValidateCanRead(count);
+			_readPosition += count;
 		}
 
 		/// <summary>

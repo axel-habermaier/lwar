@@ -62,7 +62,8 @@ namespace Pegasus.AssetsCompiler
 				ExternalTool.NvCompress(assembledFile, outFile, format);
 
 				using (var buffer = BufferReader.Create(File.ReadAllBytes(outFile)))
-					Write(new DirectDrawSurface(buffer), writer);
+				using (var ddsImage = new DirectDrawSurface(buffer))
+					Write(ddsImage, writer);
 			}
 		}
 	}

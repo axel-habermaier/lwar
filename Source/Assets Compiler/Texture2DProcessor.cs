@@ -21,7 +21,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
 		public override void Process(string source, string sourceRelative, BufferWriter writer)
 		{
-			using (var bitmap = (Bitmap)System.Drawing.Image.FromFile(source))
+			using (var bitmap = (Bitmap)Image.FromFile(source))
 			{
 				if (bitmap.Width < 1 || bitmap.Width > Int16.MaxValue || !IsPowerOfTwo(bitmap.Width))
 					Log.Die("Invalid texture width '{0}' (must be power-of-two and between 0 and {1}).", bitmap.Width, Int16.MaxValue);
@@ -35,7 +35,8 @@ namespace Pegasus.AssetsCompiler
 				ExternalTool.NvCompress(source, outFile, format);
 
 				using (var buffer = BufferReader.Create(File.ReadAllBytes(outFile)))
-					Write(new DirectDrawSurface(buffer), writer);
+				using (var ddsImage = new DirectDrawSurface(buffer))
+					Write(ddsImage, writer);
 			}
 		}
 	}

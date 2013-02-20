@@ -11,7 +11,7 @@ namespace Pegasus.AssetsCompiler.DDS
 	///   Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at
 	///   http://msdn.microsoft.com/en-us/library/windows/apps/jj651550.aspx.
 	/// </summary>
-	public class DirectDrawSurface
+	public class DirectDrawSurface : DisposableObject
 	{
 		/// <summary>
 		///   The magic DDS file code "DDS ".
@@ -27,6 +27,11 @@ namespace Pegasus.AssetsCompiler.DDS
 		///   The surfaces of the image.
 		/// </summary>
 		private readonly Surface[] _surfaces;
+
+		/// <summary>
+		///   The pointer to the data buffer.
+		/// </summary>
+		private BufferPointer _pointer;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -69,9 +74,10 @@ namespace Pegasus.AssetsCompiler.DDS
 
 			_description.SurfaceCount = faces * header.MipMapCount;
 			_surfaces = new Surface[_description.SurfaceCount];
-			var index = 0;
+			_pointer = buffer.GetPointer();
+			var data = _pointer.Pointer;
 
-			for (var i = 0; i < faces; ++i)
+			for (int i = 0, index=0; i < faces; ++i)
 			{
 				var width = _description.Width;
 				var height = _description.Height;
@@ -89,10 +95,12 @@ namespace Pegasus.AssetsCompiler.DDS
 						Depth = depth,
 						Size = size,
 						Stride = stride,
-						Data = new byte[size * depth],
+						Data = data,
 					};
 
-					buffer.Copy(_surfaces[index].Data);
+					var surfaceSize = depth * size;
+					data += surfaceSize;
+					buffer.Skip((int)surfaceSize);
 
 					width = Math.Max(width >> 1, 1);
 					height = Math.Max(height >> 1, 1);
@@ -371,6 +379,14 @@ namespace Pegasus.AssetsCompiler.DDS
 				default:
 					throw new InvalidOperationException("Unknown DDS format.");
 			}
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_pointer.SafeDispose();
 		}
 	}
 }

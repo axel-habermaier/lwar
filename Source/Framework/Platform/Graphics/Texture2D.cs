@@ -35,7 +35,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Initializes the default instances.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
-		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
+		internal unsafe static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
 		{
 			var description = new TextureDescription
 			{
@@ -49,21 +49,25 @@ namespace Pegasus.Framework.Platform.Graphics
 				SurfaceCount = 1
 			};
 
-			var surfaces = new[]
+			var buffer = new byte[] { 255, 255, 255, 255 };
+			using (var pointer = new BufferPointer(buffer))
 			{
-				new Surface
+				var surfaces = new[]
 				{
-					Data = new byte[] { 255, 255, 255, 255 },
-					Width = 1,
-					Height = 1,
-					Depth = 1,
-					Size = 4,
-					Stride = 4
-				}
-			};
+					new Surface
+					{
+						Data = pointer.Pointer,
+						Width = 1,
+						Height = 1,
+						Depth = 1,
+						Size = 4,
+						Stride = 4
+					}
+				};
 
-			White = new Texture2D(graphicsDevice);
-			White.Reinitialize(description, surfaces);
+				White = new Texture2D(graphicsDevice);
+				White.Reinitialize(description, surfaces);
+			}
 		}
 
 		/// <summary>

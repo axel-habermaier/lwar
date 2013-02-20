@@ -44,7 +44,7 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		/// <param name="texture">The DDS image that should be serialized.</param>
 		/// <param name="writer">The buffer the DDS image should be serialized into.</param>
-		protected static void Write(DirectDrawSurface texture, BufferWriter writer)
+		protected unsafe static void Write(DirectDrawSurface texture, BufferWriter writer)
 		{
 			writer.WriteUInt32(texture.Description.Width);
 			writer.WriteUInt32(texture.Description.Height);
@@ -62,7 +62,9 @@ namespace Pegasus.AssetsCompiler
 				writer.WriteUInt32(surface.Depth);
 				writer.WriteUInt32(surface.Size);
 				writer.WriteUInt32(surface.Stride);
-				writer.Copy(surface.Data);
+				
+				for (var i = 0; i < surface.Size * surface.Depth; ++i)
+					writer.WriteByte(surface.Data[i]);
 			}
 		}
 	}
