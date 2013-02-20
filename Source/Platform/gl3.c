@@ -220,14 +220,37 @@ GLenum pgConvertStencilOperation(pgStencilOperation stencilOperation)
 	}
 }
 
-GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFormat, GLenum* format, GLint* length)
+GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFormat, GLenum* format)
 {
 	switch(surfaceFormat)
 	{
 	case PG_SURFACE_RGBA8:
 		*internalFormat = GL_RGBA;
 		*format = GL_RGBA;
-		*length = 4;
+		break;
+	case PG_SURFACE_R8:
+		*internalFormat = GL_R8;
+		*format = GL_R8;
+		break;
+	case PG_SURFACE_BC1:
+		*format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+		*internalFormat = *format;
+		break;
+	case PG_SURFACE_BC2:
+		*format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+		*internalFormat = *format;
+		break;
+	case PG_SURFACE_BC3:
+		*format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+		*internalFormat = *format;
+		break;
+	case PG_SURFACE_BC4:
+		*format = GL_COMPRESSED_RED_RGTC1;
+		*internalFormat = *format;
+		break;
+	case PG_SURFACE_BC5:
+		*format = GL_COMPRESSED_RG_RGTC2;
+		*internalFormat = *format;
 		break;
 	default:						
 		PG_NO_SWITCH_DEFAULT;

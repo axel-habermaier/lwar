@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.DDS
 {
+	using Framework;
 	using Framework.Platform;
 
 	/// <summary>
@@ -16,6 +17,8 @@ namespace Pegasus.AssetsCompiler.DDS
 		public PixelFormat(BufferReader buffer)
 			: this()
 		{
+			Assert.ArgumentNotNull(buffer, () => buffer);
+
 			Size = buffer.ReadUInt32();
 			Flags = (PixelFormatFlags)buffer.ReadUInt32();
 			FourCC = buffer.ReadUInt32();
@@ -24,6 +27,24 @@ namespace Pegasus.AssetsCompiler.DDS
 			GBitMask = buffer.ReadUInt32();
 			BBitMask = buffer.ReadUInt32();
 			ABitMask = buffer.ReadUInt32();
+		}
+
+		/// <summary>
+		///   Writes the pixel format into the given buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the pixel format should be written into.</param>
+		public void Write(BufferWriter buffer)
+		{
+			Assert.ArgumentNotNull(buffer, () => buffer);
+
+			buffer.WriteUInt32(Size);
+			buffer.WriteUInt32((uint)Flags);
+			buffer.WriteUInt32(FourCC);
+			buffer.WriteUInt32(RgbBitCount);
+			buffer.WriteUInt32(RBitMask);
+			buffer.WriteUInt32(GBitMask);
+			buffer.WriteUInt32(BBitMask);
+			buffer.WriteUInt32(ABitMask);
 		}
 
 		/// <summary>

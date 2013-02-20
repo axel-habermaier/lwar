@@ -174,6 +174,12 @@ extern int ogl_ext_ARB_sampler_objects;
 extern int ogl_ext_ARB_separate_shader_objects;
 extern int ogl_ext_ARB_shading_language_420pack;
 extern int ogl_ext_EXT_texture_filter_anisotropic;
+extern int ogl_ext_EXT_texture_compression_s3tc;
+
+#define GL_COMPRESSED_RGB_S3TC_DXT1_EXT 0x83F0
+#define GL_COMPRESSED_RGBA_S3TC_DXT1_EXT 0x83F1
+#define GL_COMPRESSED_RGBA_S3TC_DXT3_EXT 0x83F2
+#define GL_COMPRESSED_RGBA_S3TC_DXT5_EXT 0x83F3
 
 #define GL_SAMPLER_BINDING 0x8919
 

@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.DDS
 {
 	using System.Collections.Generic;
+	using System.IO;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
@@ -24,14 +25,19 @@ namespace Pegasus.AssetsCompiler.DDS
 		private readonly TextureDescription _description;
 
 		/// <summary>
+		///   The pointer to the data buffer.
+		/// </summary>
+		private readonly BufferPointer _pointer;
+
+		/// <summary>
 		///   The surfaces of the image.
 		/// </summary>
 		private readonly Surface[] _surfaces;
 
 		/// <summary>
-		///   The pointer to the data buffer.
+		///   The DDS file header.
 		/// </summary>
-		private BufferPointer _pointer;
+		private Header _header;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -41,52 +47,50 @@ namespace Pegasus.AssetsCompiler.DDS
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
-			if (buffer.BufferSize < sizeof(uint) + sizeof(Header) + sizeof(Dx10Header))
+			if (buffer.BufferSize < sizeof(uint) + sizeof(Header))
 				Log.Die("Invalid DDS file: Header information is incomplete.");
 
 			if (buffer.ReadUInt32() != MagicCode)
 				Log.Die("Not a DDS file.");
 
-			var header = new Header(buffer);
-			var dx10Header = new Dx10Header(buffer);
-
-			if (header.Size != sizeof(Header) || header.PixelFormat.Size != sizeof(PixelFormat))
+			_header = new Header(buffer);
+			if (_header.Size != 124 || _header.PixelFormat.Size != sizeof(PixelFormat))
 				Log.Die("DDS file is corrupt.");
 
-			if (!header.PixelFormat.Flags.HasFlag(PixelFormatFlags.FourCC) ||
-				header.PixelFormat.FourCC != MakeFourCC('D', 'X', '1', '0'))
+			if (!_header.PixelFormat.Flags.HasFlag(PixelFormatFlags.FourCC) ||
+				_header.PixelFormat.FourCC != MakeFourCC('D', 'X', '1', '0'))
 				Log.Die("DDS file is not in DX10 format.");
 
-			if (dx10Header.ArraySize == 0)
+			if (_header.ArraySize == 0)
 				Log.Die("An array size of 0 is invalid.");
 
-			_description.Width = header.Width;
-			_description.Height = Math.Max(header.Height, 1);
-			_description.Depth = Math.Max(header.Depth, 1);
-			_description.Format = ToSurfaceFormat(dx10Header.Format);
-			_description.ArraySize = dx10Header.ArraySize;
-			_description.Type = ToTextureType(dx10Header);
-			_description.Mipmaps = (Mipmaps)((int)Mipmaps.None + header.MipMapCount);
+			_description.Width = _header.Width;
+			_description.Height = Math.Max(_header.Height, 1);
+			_description.Depth = Math.Max(_header.Depth, 1);
+			_description.Format = ToSurfaceFormat(_header.Format);
+			_description.ArraySize = _header.ArraySize;
+			_description.Type = GetTextureType();
+			_description.Mipmaps = (Mipmaps)((int)Mipmaps.None + _header.MipMapCount);
 
 			var faces = _description.ArraySize;
 			if (_description.Type == TextureType.CubeMap)
 				faces *= 6;
 
-			_description.SurfaceCount = faces * header.MipMapCount;
+			_description.SurfaceCount = faces * _header.MipMapCount;
 			_surfaces = new Surface[_description.SurfaceCount];
 			_pointer = buffer.GetPointer();
 			var data = _pointer.Pointer;
 
-			for (int i = 0, index=0; i < faces; ++i)
+			for (int i = 0, index = 0; i < faces; ++i)
 			{
 				var width = _description.Width;
 				var height = _description.Height;
 				var depth = _description.Depth;
 
-				for (var j = 0; j < header.MipMapCount; ++j, ++index)
+				for (var j = 0; j < _header.MipMapCount; ++j, ++index)
 				{
 					uint size, stride;
-					GetSurfaceInfo(width, height, dx10Header.Format, out size, out stride);
+					GetSurfaceInfo(width, height, _header.Format, out size, out stride);
 
 					_surfaces[index] = new Surface
 					{
@@ -153,15 +157,38 @@ namespace Pegasus.AssetsCompiler.DDS
 		}
 
 		/// <summary>
+		///   Saves the DDS file to disk.
+		/// </summary>
+		/// <param name="path">The path of the file in which the DDS should be stored.</param>
+		public unsafe void Save(string path)
+		{
+			Assert.ArgumentNotNullOrWhitespace(path, () => path);
+
+			var buffer = new byte[64 * 1024 * 1024];
+			using (var writer = BufferWriter.Create(buffer))
+			{
+				writer.WriteUInt32(MagicCode);
+				_header.Write(writer);
+
+				foreach (var surface in _surfaces)
+				{
+					for (var i = 0; i < surface.Size * surface.Depth; ++i)
+						writer.WriteByte(surface.Data[i]);
+				}
+			}
+
+			File.WriteAllBytes(path, buffer);
+		}
+
+		/// <summary>
 		///   Converts the DDS resource dimension to the corresponding texture type.
 		/// </summary>
-		/// <param name="header">The header that describes the resource dimensions that should be converted.</param>
-		private static TextureType ToTextureType(Dx10Header header)
+		private TextureType GetTextureType()
 		{
-			if (header.ResourceDimension == ResourceDimension.Texture2D && header.MiscFlags.HasFlag(ResourceOptionFlags.TextureCube))
+			if (_header.ResourceDimension == ResourceDimension.Texture2D && _header.MiscFlags.HasFlag(ResourceOptionFlags.TextureCube))
 				return TextureType.CubeMap;
 
-			switch (header.ResourceDimension)
+			switch (_header.ResourceDimension)
 			{
 				case ResourceDimension.Texture1D:
 					return TextureType.Texture1D;
@@ -253,7 +280,7 @@ namespace Pegasus.AssetsCompiler.DDS
 			else
 			{
 				var bpp = BitsPerPixel(format);
-				stride = (uint)(width * bpp + 7) / 8; // round up to nearest byte
+				stride = (uint)(width * bpp + 7) / 8;
 				numRows = height;
 			}
 

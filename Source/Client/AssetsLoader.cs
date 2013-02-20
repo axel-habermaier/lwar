@@ -17,7 +17,7 @@ namespace Lwar.Client
 		{
 			Lwar.Client.Gameplay.Bullet.Texture = assets.LoadTexture2D("Textures/Bullet");
 			Lwar.Client.Gameplay.GameSession.LoadingFont = assets.LoadFont("Fonts/Liberation Mono 12");
-			//Lwar.Client.Gameplay.Planet.Texture = assets.LoadCubeMap("Textures/Sun");
+			Lwar.Client.Gameplay.Planet.Texture = assets.LoadCubeMap("Textures/Sun");
 			Lwar.Client.Gameplay.Rocket.Texture = assets.LoadTexture2D("Textures/Rocket");
 			Lwar.Client.Gameplay.Ship.Texture = assets.LoadTexture2D("Textures/Ship");
 			Lwar.Client.Rendering.PlanetRenderer.VertexShader = assets.LoadVertexShader("Shaders/SphereVS");

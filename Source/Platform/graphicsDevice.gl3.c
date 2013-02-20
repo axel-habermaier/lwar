@@ -135,7 +135,8 @@ static pgVoid InitializeOpenGLExtensions()
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_sampler_objects, "GL_ARB_sampler_objects");
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_separate_shader_objects, "GL_ARB_separate_shader_objects");
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_shading_language_420pack, "GL_ARB_shading_language_420pack");
-	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_filter_anisotropic, "EXT_texture_filter_anisotropic");
+	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_filter_anisotropic, "GL_EXT_texture_filter_anisotropic");
+	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_compression_s3tc, "GL_EXT_texture_compression_s3tc");
 
 	if (!glExtsSupported)
 		pgDie("Incompatible graphics card. Not all required OpenGL extenions are supported.");

@@ -106,6 +106,7 @@ int ogl_ext_ARB_sampler_objects = ogl_LOAD_FAILED;
 int ogl_ext_ARB_separate_shader_objects = ogl_LOAD_FAILED;
 int ogl_ext_ARB_shading_language_420pack = ogl_LOAD_FAILED;
 int ogl_ext_EXT_texture_filter_anisotropic = ogl_LOAD_FAILED;
+int ogl_ext_EXT_texture_compression_s3tc = ogl_LOAD_FAILED;
 
 void (CODEGEN_FUNCPTR *_ptrc_glGenSamplers)(GLsizei , GLuint *) = NULL;
 void (CODEGEN_FUNCPTR *_ptrc_glDeleteSamplers)(GLsizei , const GLuint *) = NULL;
@@ -1402,14 +1403,15 @@ typedef struct ogl_StrToExtMap_s
 	PFN_LOADFUNCPOINTERS LoadExtension;
 } ogl_StrToExtMap;
 
-static ogl_StrToExtMap ExtensionMap[4] = {
+static ogl_StrToExtMap ExtensionMap[5] = {
 	{"GL_ARB_sampler_objects", &ogl_ext_ARB_sampler_objects, Load_ARB_sampler_objects},
 	{"GL_ARB_separate_shader_objects", &ogl_ext_ARB_separate_shader_objects, Load_ARB_separate_shader_objects},
 	{"GL_ARB_shading_language_420pack", &ogl_ext_ARB_shading_language_420pack, NULL},
 	{"GL_EXT_texture_filter_anisotropic", &ogl_ext_EXT_texture_filter_anisotropic, NULL},
+	{"GL_EXT_texture_compression_s3tc", &ogl_ext_EXT_texture_compression_s3tc, NULL},
 };
 
-static int g_extensionMapSize = 4;
+static int g_extensionMapSize = 5;
 
 static ogl_StrToExtMap *FindExtEntry(const char *extensionName)
 {
@@ -1430,6 +1432,7 @@ static void ClearExtensionVars()
 	ogl_ext_ARB_separate_shader_objects = ogl_LOAD_FAILED;
 	ogl_ext_ARB_shading_language_420pack = ogl_LOAD_FAILED;
 	ogl_ext_EXT_texture_filter_anisotropic = ogl_LOAD_FAILED;
+	ogl_ext_EXT_texture_compression_s3tc = ogl_LOAD_FAILED;
 }
 
 

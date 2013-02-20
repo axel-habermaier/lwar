@@ -72,7 +72,7 @@ static D3D11_SUBRESOURCE_DATA* InitResourceData(pgTexture* texture, pgSurface* s
 	{
 		data[i].pSysMem = surfaces[i].data;
 		data[i].SysMemPitch = surfaces[i].stride;
-		data[i].SysMemSlicePitch = 0;//surfaces[i].size;
+		data[i].SysMemSlicePitch = surfaces[i].size;
 	}
 
 	return data;
@@ -93,7 +93,7 @@ static pgVoid CreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 
 	desc.Width = texture->desc.width;
 	desc.Height = texture->desc.height;
-	desc.MipLevels = 0;
+	desc.MipLevels = 1;
 	desc.ArraySize = texture->desc.arraySize;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
@@ -123,7 +123,7 @@ static pgVoid CreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 
 	desc.Width = texture->desc.width;
 	desc.Height = texture->desc.height;
-	desc.MipLevels = 0;
+	desc.MipLevels = 1;
 	desc.ArraySize = 6 * texture->desc.arraySize;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;

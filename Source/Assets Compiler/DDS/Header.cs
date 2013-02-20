@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.DDS
 {
+	using Framework;
 	using Framework.Platform;
 
 	/// <summary>
@@ -17,7 +18,40 @@ namespace Pegasus.AssetsCompiler.DDS
 		/// <summary>
 		///   Unused data that is only required to ensure that the Header struct has the correct unmanaged size.
 		/// </summary>
-		private fixed uint _unused [14];
+		private fixed uint _unused [15];
+
+		/// <summary>
+		///   Writes the header into the given buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the header should be written into.</param>
+		public void Write(BufferWriter buffer)
+		{
+			Assert.ArgumentNotNull(buffer, () => buffer);
+
+			buffer.WriteUInt32(Size);
+			buffer.WriteUInt32((uint)Flags);
+			buffer.WriteUInt32(Height);
+			buffer.WriteUInt32(Width);
+			buffer.WriteUInt32(_pitchOrLinearSize);
+			buffer.WriteUInt32(Depth);
+			buffer.WriteUInt32(MipMapCount);
+
+			for (var i = 0; i < 11; ++i)
+				buffer.WriteUInt32(0);
+
+			PixelFormat.Write(buffer);
+			buffer.WriteUInt32((uint)SurfaceFlags);
+			buffer.WriteUInt32((uint)CubeMapFlags);
+
+			for (var i = 0; i < 3; ++i)
+				buffer.WriteUInt32(0);
+
+			buffer.WriteUInt32((uint)Format);
+			buffer.WriteUInt32((uint)ResourceDimension);
+			buffer.WriteUInt32((uint)MiscFlags);
+			buffer.WriteUInt32(ArraySize);
+			buffer.WriteUInt32(0);
+		}
 
 		/// <summary>
 		///   Initializes a new instance from the given buffer.
@@ -26,6 +60,8 @@ namespace Pegasus.AssetsCompiler.DDS
 		public Header(BufferReader buffer)
 			: this()
 		{
+			Assert.ArgumentNotNull(buffer, () => buffer);
+
 			Size = buffer.ReadUInt32();
 			Flags = (HeaderFlags)buffer.ReadUInt32();
 			Height = buffer.ReadUInt32();
@@ -43,7 +79,33 @@ namespace Pegasus.AssetsCompiler.DDS
 
 			for (var i = 0; i < 3; ++i)
 				buffer.ReadUInt32();
+
+			Format = (Format)buffer.ReadUInt32();
+			ResourceDimension = (ResourceDimension)buffer.ReadUInt32();
+			MiscFlags = (ResourceOptionFlags)buffer.ReadUInt32();
+			ArraySize = buffer.ReadUInt32();
+			buffer.ReadUInt32();
 		}
+
+		/// <summary>
+		///   Gets the size of the texture array.
+		/// </summary>
+		public uint ArraySize { get; private set; }
+
+		/// <summary>
+		///   Gets the texture format.
+		/// </summary>
+		public Format Format { get; private set; }
+
+		/// <summary>
+		///   Gets the texture dimension.
+		/// </summary>
+		public ResourceDimension ResourceDimension { get; private set; }
+
+		/// <summary>
+		///   Gets the miscellaneous flags.
+		/// </summary>
+		public ResourceOptionFlags MiscFlags { get; private set; }
 
 		/// <summary>
 		///   Gets the cube map flags.

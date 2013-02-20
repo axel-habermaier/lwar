@@ -36,7 +36,10 @@ namespace Pegasus.AssetsCompiler
 
 				using (var buffer = BufferReader.Create(File.ReadAllBytes(outFile)))
 				using (var ddsImage = new DirectDrawSurface(buffer))
+				{
 					Write(ddsImage, writer);
+					ddsImage.Save(outFile + "resaved.dds");
+				}
 			}
 		}
 	}

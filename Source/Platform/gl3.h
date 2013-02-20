@@ -140,7 +140,7 @@ GLenum pgConvertMapMode(pgMapMode mapMode);
 GLenum pgConvertPrimitiveType(pgPrimitiveType primitiveType);
 GLenum pgConvertResourceUsage(pgResourceUsage resourceUsage);
 GLenum pgConvertStencilOperation(pgStencilOperation stencilOperation);
-GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFormat, GLenum* format, GLint* length);
+GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFormat, GLenum* format);
 GLenum pgConvertTextureAddressMode(pgTextureAddressMode addressMode);
 GLvoid pgConvertTextureFilter(pgTextureFilter textureFilter, GLenum* minFilter, GLenum* magFilter);
 GLvoid pgConvertVertexDataFormat(pgVertexDataFormat vertexDataFormat, GLenum* type, GLsizei* size);
