@@ -13,7 +13,7 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Initializes a new instance.
 		/// </summary>
 		public CubeMapAsset()
-			: base((device, format, mipmaps) => new CubeMap(device, format, mipmaps))
+			: base(device => new CubeMap(device))
 		{
 		}
 

@@ -13,7 +13,7 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Initializes a new instance.
 		/// </summary>
 		public Texture2DAsset()
-			: base((device, format, mipmaps) => new Texture2D(device, format, mipmaps))
+			: base(device => new Texture2D(device))
 		{
 		}
 

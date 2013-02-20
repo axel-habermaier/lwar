@@ -65,35 +65,35 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="format">The format that should be used to compress the texture.</param>
 		public static void NvCompress(string input, string output, SurfaceFormat format)
 		{
-			string formatString;
+			string compressionFormat;
 			switch (format)
 			{
 				case SurfaceFormat.R8:
 				case SurfaceFormat.Rg8:
 				case SurfaceFormat.Rgb8:
 				case SurfaceFormat.Rgba8:
-					formatString = "rgb";
+					compressionFormat = "rgb";
 					break;
 				case SurfaceFormat.Bc1:
-					formatString = "bc1";
+					compressionFormat = "bc1";
 					break;
 				case SurfaceFormat.Bc2:
-					formatString = "bc2";
+					compressionFormat = "bc2";
 					break;
 				case SurfaceFormat.Bc3:
-					formatString = "bc3";
+					compressionFormat = "bc3";
 					break;
 				case SurfaceFormat.Bc4:
-					formatString = "bc4";
+					compressionFormat = "bc4";
 					break;
 				case SurfaceFormat.Bc5:
-					formatString = "bc5";
+					compressionFormat = "bc5";
 					break;
 				default:
 					throw new InvalidOperationException("Unsupported format.");
 			}
 
-			RunProcess(NvCompressPath, @"-dds10 -{2} -premula ""{0}"" ""{1}""", input, output, formatString);
+			RunProcess(NvCompressPath, @"-dds10 -silent -{0} -premula ""{1}"" ""{2}""", compressionFormat, input, output);
 		}
 
 		/// <summary>

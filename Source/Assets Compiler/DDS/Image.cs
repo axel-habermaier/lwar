@@ -2,8 +2,10 @@
 
 namespace Pegasus.AssetsCompiler.DDS
 {
+	using System.Collections.Generic;
 	using Framework;
 	using Framework.Platform;
+	using Framework.Platform.Graphics;
 
 	/// <summary>
 	///   Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at
@@ -15,6 +17,16 @@ namespace Pegasus.AssetsCompiler.DDS
 		///   The magic DDS file code "DDS ".
 		/// </summary>
 		private const int MagicCode = 0x20534444;
+
+		/// <summary>
+		///   The texture description for the image.
+		/// </summary>
+		private readonly TextureDescription _description;
+
+		/// <summary>
+		///   The surfaces of the image.
+		/// </summary>
+		private readonly Surface[] _surfaces;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -42,6 +54,108 @@ namespace Pegasus.AssetsCompiler.DDS
 
 			if (dx10Header.ArraySize == 0)
 				Log.Die("An array size of 0 is invalid.");
+
+			_description.Width = header.Width;
+			_description.Height = Math.Max(header.Height, 1);
+			_description.Depth = Math.Max(header.Depth, 1);
+			_description.Format = ToSurfaceFormat(dx10Header.Format);
+			_description.ArraySize = dx10Header.ArraySize;
+			_description.Type = ToTextureType(dx10Header.ResourceDimension);
+			_description.Mipmaps = (Mipmaps)((int)Mipmaps.None + header.MipMapCount);
+
+			_surfaces = new Surface[dx10Header.ArraySize * header.MipMapCount];
+			var index = 0;
+
+			for (var i = 0; i < dx10Header.ArraySize; ++i)
+			{
+				var width = _description.Width;
+				var height = _description.Height;
+				var depth = _description.Depth;
+
+				for (var j = 0; j < header.MipMapCount; ++j, ++index)
+				{
+					uint size, stride;
+					GetSurfaceInfo(width, height, dx10Header.Format, out size, out stride);
+
+					_surfaces[index] = new Surface
+					{
+						Width = width,
+						Height = height,
+						Depth = depth,
+						Size = size,
+						Stride = stride,
+						Data = new byte[size * depth],
+					};
+
+					buffer.Copy(_surfaces[index].Data);
+
+					width = Math.Max(width >> 1, 1);
+					height = Math.Max(height >> 1, 1);
+					depth = Math.Max(depth >> 1, 1);
+				}
+			}
+
+			Assert.That(buffer.EndOfBuffer, "Failed to process entire DDS file.");
+		}
+
+		/// <summary>
+		///   Gets the texture description for the image.
+		/// </summary>
+		public TextureDescription Description
+		{
+			get { return _description; }
+		}
+
+		/// <summary>
+		///   Gets the surfaces of the image.
+		/// </summary>
+		public IEnumerable<Surface> Surfaces
+		{
+			get { return _surfaces; }
+		}
+
+		/// <summary>
+		///   Converts the DDS data format to the corresponding surface format.
+		/// </summary>
+		/// <param name="format">The data format that should be converted.</param>
+		private static SurfaceFormat ToSurfaceFormat(Format format)
+		{
+			switch (format)
+			{
+				case Format.BC1_Typeless:
+					return SurfaceFormat.Bc1;
+				case Format.BC2_Typeless:
+					return SurfaceFormat.Bc2;
+				case Format.BC3_Typeless:
+					return SurfaceFormat.Bc3;
+				case Format.BC4_Typeless:
+					return SurfaceFormat.Bc4;
+				case Format.BC5_Typeless:
+					return SurfaceFormat.Bc5;
+				case Format.R8G8B8A8_UNorm:
+					return SurfaceFormat.Rgba8;
+				default:
+					throw new InvalidOperationException("Unsupported DDS data format.");
+			}
+		}
+
+		/// <summary>
+		///   Converts the DDS resource dimension to the corresponding texture type.
+		/// </summary>
+		/// <param name="dimension">The resource dimension that should be converted.</param>
+		private static TextureType ToTextureType(ResourceDimension dimension)
+		{
+			switch (dimension)
+			{
+				case ResourceDimension.Texture1D:
+					return TextureType.Texture1D;
+				case ResourceDimension.Texture2D:
+					return TextureType.Texture2D;
+				case ResourceDimension.Texture3D:
+					return TextureType.Texture3D;
+				default:
+					throw new InvalidOperationException("Unsupported resource dimension.");
+			}
 		}
 
 		/// <summary>
@@ -58,11 +172,9 @@ namespace Pegasus.AssetsCompiler.DDS
 		/// <param name="width">The width of the surface.</param>
 		/// <param name="height">The height of the surface.</param>
 		/// <param name="format">The data format of the surface.</param>
-		/// <param name="numBytes">The total number of bytes that are required to store the surface.</param>
-		/// <param name="rowBytes">The total number of bytes that are required to store a row of the surface.</param>
-		/// <param name="numRows">The total number of rows contained in the surface.</param>
-		private static void GetSurfaceInfo(uint width, uint height, Format format,
-										   out uint numBytes, out uint rowBytes, out uint numRows)
+		/// <param name="size">The total number of bytes that are required to store the surface.</param>
+		/// <param name="stride">The total number of bytes that are required to store a row of the surface.</param>
+		private static void GetSurfaceInfo(uint width, uint height, Format format, out uint size, out uint stride)
 		{
 			var blockCompressed = false;
 			var packed = false;
@@ -103,6 +215,7 @@ namespace Pegasus.AssetsCompiler.DDS
 					break;
 			}
 
+			uint numRows;
 			if (blockCompressed)
 			{
 				uint numBlocksWide = 0;
@@ -113,22 +226,22 @@ namespace Pegasus.AssetsCompiler.DDS
 				if (height > 0)
 					numBlocksHigh = Math.Max(1, (height + 3) / 4);
 
-				rowBytes = numBlocksWide * bytesPerBlock;
+				stride = numBlocksWide * bytesPerBlock;
 				numRows = numBlocksHigh;
 			}
 			else if (packed)
 			{
-				rowBytes = ((width + 1) >> 1) * 4;
+				stride = ((width + 1) >> 1) * 4;
 				numRows = height;
 			}
 			else
 			{
 				var bpp = BitsPerPixel(format);
-				rowBytes = (uint)(width * bpp + 7) / 8; // round up to nearest byte
+				stride = (uint)(width * bpp + 7) / 8; // round up to nearest byte
 				numRows = height;
 			}
 
-			numBytes = rowBytes * numRows;
+			size = stride * numRows;
 		}
 
 		/// <summary>

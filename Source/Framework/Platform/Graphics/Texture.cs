@@ -24,16 +24,13 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="type">The type of the texture.</param>
-		/// <param name="format">The format of the texture.</param>
-		/// <param name="mipmaps">The base texture and its mipmaps that should be uploaded to the GPU.</param>
-		protected Texture(GraphicsDevice graphicsDevice, TextureType type, SurfaceFormat format, Mipmap[] mipmaps)
+		protected Texture(GraphicsDevice graphicsDevice, TextureType type)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentInRange(type, () => type);
 
 			_type = type;
-			Reinitialize(format, mipmaps);
 		}
 
 		/// <summary>
@@ -45,38 +42,24 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Gets the width of the texture.
+		/// Gets the description of the texture.
 		/// </summary>
-		protected int Width { get; private set; }
-
-		/// <summary>
-		///   Gets the height of the texture.
-		/// </summary>
-		protected int Height { get; private set; }
-
-		/// <summary>
-		///   Gets the depth of the texture.
-		/// </summary>
-		protected int Depth { get; private set; }
+		protected TextureDescription Description { get; private set; }
 
 		/// <summary>
 		///   Reinitializes the texture.
 		/// </summary>
-		/// <param name="format">The format of the texture.</param>
-		/// <param name="mipmaps">The base texture and its mipmaps that should be uploaded to the GPU.</param>
-		public void Reinitialize(SurfaceFormat format, Mipmap[] mipmaps)
+		/// <param name="description">The description of the texture.</param>
+		/// <param name="surfaces">The surfaces that should be uploaded to the GPU.</param>
+		public void Reinitialize(TextureDescription description, Surface[] surfaces)
 		{
-			Assert.ArgumentNotNull(mipmaps, () => mipmaps);
-			Assert.ArgumentInRange(format, () => format);
+			Assert.ArgumentNotNull(surfaces, () => surfaces);
 
 			if (_texture != IntPtr.Zero)
 				NativeMethods.DestroyTexture(_texture);
 
-			Width = mipmaps[0].Width;
-			Height = mipmaps[0].Height;
-			Depth = 0;
-
-			_texture = NativeMethods.CreateTexture(GraphicsDevice.NativePtr, format, mipmaps);
+			Description = description;
+			_texture = NativeMethods.CreateTexture(GraphicsDevice.NativePtr, ref description, surfaces);
 		}
 
 		/// <summary>
@@ -121,7 +104,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateTexture")]
-			public static extern IntPtr CreateTexture(IntPtr device, SurfaceFormat format, Mipmap[] mipmaps);
+			public static extern IntPtr CreateTexture(IntPtr device, ref TextureDescription description, Surface[] surfaces);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyTexture")]
 			public static extern void DestroyTexture(IntPtr texture2D);

@@ -13,10 +13,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		/// <param name="format">The format of the texture.</param>
-		/// <param name="mipmaps">The base texture and its mipmaps that should be uploaded to the GPU.</param>
-		public Texture2D(GraphicsDevice graphicsDevice, SurfaceFormat format, Mipmap[] mipmaps)
-			: base(graphicsDevice, TextureType.CubeMap, format, mipmaps)
+		public Texture2D(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice, TextureType.CubeMap)
 		{
 		}
 
@@ -30,7 +28,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		public Size Size
 		{
-			get { return new Size(Width, Height); }
+			get { return new Size((int)Description.Width, (int)Description.Height); }
 		}
 
 		/// <summary>
@@ -39,18 +37,32 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
 		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
 		{
-			var mipmaps = new[]
+			var description = new TextureDescription
 			{
-				new Mipmap
+				Width = 1,
+				Height = 1,
+				Depth = 1,
+				ArraySize = 1,
+				Type = TextureType.Texture2D,
+				Format = SurfaceFormat.Rgba8,
+				Mipmaps = Mipmaps.None
+			};
+
+			var surfaces = new[]
+			{
+				new Surface
 				{
 					Data = new byte[] { 255, 255, 255, 255 },
 					Width = 1,
 					Height = 1,
-					Level = 0,
-					Size = 4
+					Depth = 1,
+					Size = 4,
+					Stride = 4
 				}
 			};
-			White = new Texture2D(graphicsDevice, SurfaceFormat.Rgba8, mipmaps);
+
+			White = new Texture2D(graphicsDevice);
+			White.Reinitialize(description, surfaces);
 		}
 
 		/// <summary>

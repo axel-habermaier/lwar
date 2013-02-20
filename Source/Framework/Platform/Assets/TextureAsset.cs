@@ -13,16 +13,16 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <summary>
 		///   Creates a new texture object.
 		/// </summary>
-		private readonly Func<GraphicsDevice, SurfaceFormat, Mipmap[], T> _create;
+		private readonly Func<GraphicsDevice, T> _createTexture;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="create">Creates a new texture object.</param>
-		protected TextureAsset(Func<GraphicsDevice, SurfaceFormat, Mipmap[], T> create)
+		/// <param name="createTexture">Creates a new texture object.</param>
+		protected TextureAsset(Func<GraphicsDevice, T> createTexture)
 		{
-			Assert.ArgumentNotNull(create, () => create);
-			_create = create;
+			Assert.ArgumentNotNull(createTexture, () => createTexture);
+			_createTexture = createTexture;
 		}
 
 		/// <summary>
@@ -39,28 +39,12 @@ namespace Pegasus.Framework.Platform.Assets
 			Assert.ArgumentNotNull(assetReader, () => assetReader);
 
 			var reader = assetReader.Reader;
-			var format = (SurfaceFormat)reader.ReadInt32();
-			var mipmaps = new Mipmap[GraphicsDevice.MaxMipmaps];
-			var count = 0;
-
-			for (; count < GraphicsDevice.MaxMipmaps; ++count)
-			{
-				mipmaps[count] = new Mipmap
-				{
-					Level = reader.ReadInt32(),
-					Width = reader.ReadInt32(),
-					Height = reader.ReadInt32(),
-					Size = reader.ReadInt32(),
-				};
-
-				mipmaps[count].Data = new byte[mipmaps[count].Size];
-				reader.Copy(mipmaps[count].Data);
-			}
+			
 
 			if (Texture == null)
-				Texture = _create(GraphicsDevice, format, mipmaps);
-			else
-				Texture.Reinitialize(format, mipmaps);
+				Texture = _createTexture(GraphicsDevice);
+		
+			//Texture.Reinitialize(format, mipmaps);
 
 			for (var i = 0; i < GraphicsDevice.State.Textures.Length; ++i)
 				GraphicsDevice.State.Textures[i] = null;

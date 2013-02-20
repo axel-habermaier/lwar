@@ -344,7 +344,7 @@ namespace Pegasus.Framework.Platform
 		public void Copy(byte[] buffer, int offset, int length)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
-			Assert.That(offset + length < buffer.Length, "Out of bounds.");
+			Assert.That(offset + length <= buffer.Length, "Out of bounds.");
 
 			ValidateCanRead(length);
 			Array.Copy(_buffer.Array, _readPosition, buffer, offset, length);
