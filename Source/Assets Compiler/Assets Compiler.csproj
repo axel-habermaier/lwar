@@ -91,6 +91,17 @@
     <Compile Include="AssetWriter.cs" />
     <Compile Include="Compiler.cs" />
     <Compile Include="CubeMapProcessor.cs" />
+    <Compile Include="DDS\CubemapFlags.cs" />
+    <Compile Include="DDS\Dx10Header.cs" />
+    <Compile Include="DDS\Header.cs" />
+    <Compile Include="DDS\Image.cs" />
+    <Compile Include="DDS\Format.cs" />
+    <Compile Include="DDS\HeaderFlags.cs" />
+    <Compile Include="DDS\PixelFormat.cs" />
+    <Compile Include="DDS\PixelFormatFlags.cs" />
+    <Compile Include="DDS\ResourceDimension.cs" />
+    <Compile Include="DDS\ResourceOptionFlags.cs" />
+    <Compile Include="DDS\SurfaceFlags.cs" />
     <Compile Include="ExternalTool.cs" />
     <Compile Include="Texture2DProcessor.cs" />
     <Compile Include="FragmentShaderProcessor.cs" />

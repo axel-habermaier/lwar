@@ -43,6 +43,14 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Gets the size of the entire buffer in bytes.
+		/// </summary>
+		public int BufferSize
+		{
+			get { return _buffer.Count; }
+		}
+
+		/// <summary>
 		///   Creates a new instance. The valid data of the buffer can be found within the
 		///   range [0, buffer.Length).
 		/// </summary>

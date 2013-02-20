@@ -93,7 +93,7 @@ namespace Pegasus.AssetsCompiler
 					throw new InvalidOperationException("Unsupported format.");
 			}
 
-			RunProcess(NvCompressPath, @"-pegasus -{2} -premula ""{0}"" ""{1}""", input, output, formatString);
+			RunProcess(NvCompressPath, @"-dds10 -{2} -premula ""{0}"" ""{1}""", input, output, formatString);
 		}
 
 		/// <summary>

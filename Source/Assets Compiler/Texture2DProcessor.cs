@@ -4,8 +4,10 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.Drawing;
 	using System.IO;
+	using DDS;
 	using Framework;
 	using Framework.Platform;
+	using Image = DDS.Image;
 
 	/// <summary>
 	///   Processes 2D textures, converting them to a premultiplied format.
@@ -20,7 +22,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
 		public override void Process(string source, string sourceRelative, BufferWriter writer)
 		{
-			using (var bitmap = (Bitmap)Image.FromFile(source))
+			using (var bitmap = (Bitmap)System.Drawing.Image.FromFile(source))
 			{
 				if (bitmap.Width < 1 || bitmap.Width > Int16.MaxValue || !IsPowerOfTwo(bitmap.Width))
 					Log.Die("Invalid texture width '{0}' (must be power-of-two and between 0 and {1}).", bitmap.Width, Int16.MaxValue);
@@ -28,13 +30,17 @@ namespace Pegasus.AssetsCompiler
 					Log.Die("Invalid texture height '{0}' (must be power-of-two and between 0 and {1}).", bitmap.Height, Int16.MaxValue);
 
 				var sourceFile = Path.Combine(Path.GetDirectoryName(sourceRelative), Path.GetFileNameWithoutExtension(sourceRelative));
-				var outFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + PlatformInfo.AssetExtension;
+				var outFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + ".dds";
 
 				var format = ChooseCompression(bitmap.PixelFormat);
 				ExternalTool.NvCompress(source, outFile, format);
 
-				writer.WriteInt32((int)format);
-				writer.Copy(File.ReadAllBytes(outFile));
+				using (var buffer = BufferReader.Create(File.ReadAllBytes(outFile)))
+				{
+					var dds = new Image(buffer);
+					writer.WriteInt32((int)format);
+					writer.Copy(File.ReadAllBytes(outFile));
+				}
 			}
 		}
 	}
