@@ -27,7 +27,7 @@ namespace Pegasus.AssetsCompiler
 			WriteGlslShader(glsl, writer);
 			IfD3DSupported(() =>
 				{
-					var byteCode = CompileHlslShader(hlsl, "vs_4_0");
+					var byteCode = CompileHlslShader(asset, hlsl, "vs_4_0");
 					writer.WriteByteArray(byteCode);
 					CreateInputLayout(byteCode, writer);
 				});

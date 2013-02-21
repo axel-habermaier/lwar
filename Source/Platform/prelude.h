@@ -293,6 +293,9 @@ pgVoid pgDestroyTextureCore(pgTexture* texture);
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot);
 pgVoid pgGenerateMipmapsCore(pgTexture* texture);
 
+pgBool pgIsCompressedFormat(pgSurfaceFormat format);
+pgBool pgIsFloatingPointFormat(pgSurfaceFormat format);
+
 //====================================================================================================================
 // Render target
 //====================================================================================================================

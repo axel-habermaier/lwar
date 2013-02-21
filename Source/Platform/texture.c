@@ -43,3 +43,17 @@ pgVoid pgGenerateMipmaps(pgTexture* texture)
 	PG_ASSERT_NOT_NULL(texture);
 	pgGenerateMipmapsCore(texture);
 }
+
+//====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+pgBool pgIsCompressedFormat(pgSurfaceFormat format)
+{
+	return format > 2150;
+}
+
+pgBool pgIsFloatingPointFormat(pgSurfaceFormat format)
+{
+	return format > 2120 && format < 2150;
+}

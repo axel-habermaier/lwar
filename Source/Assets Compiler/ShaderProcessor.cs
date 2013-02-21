@@ -42,10 +42,19 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   Compiles an HLSL shader of the given profile.
 		/// </summary>
+		/// <param name="asset">The asset that contains the shader source code.</param>
 		/// <param name="source">The HLSL shader source code.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		protected ShaderBytecode CompileHlslShader(string source, string profile)
+		protected ShaderBytecode CompileHlslShader(Asset asset, string source, string profile)
 		{
+			//var hlslFile = asset.TempPath + ".hlsl";
+			//File.WriteAllText(hlslFile, source);
+
+			//var byteCode = asset.TempPath + ".bytecode";
+			//ExternalTool.Fxc(hlslFile, byteCode, profile);
+
+			//return new ShaderBytecode(File.ReadAllBytes(byteCode));
+
 			var flags = ShaderFlags.EnableStrictness;
 #if DEBUG
 			flags |= ShaderFlags.Debug;

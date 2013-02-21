@@ -95,14 +95,17 @@ pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 
 static pgVoid UploadTexture(pgTexture* texture, pgSurface* surface, GLenum target, GLint level)
 {
-	GLenum internalFormat, format;
-	pgBool isCompressed = texture->desc.format > 2104;
-	pgConvertSurfaceFormat(texture->desc.format, &internalFormat, &format);
+	GLenum internalFormat, format, type;
 
-	if (isCompressed)
+	pgConvertSurfaceFormat(texture->desc.format, &internalFormat, &format);
+	type = pgIsFloatingPointFormat(texture->desc.format) ? GL_FLOAT : GL_UNSIGNED_BYTE;
+
+	if (pgIsCompressedFormat(texture->desc.format))
 		glCompressedTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, surface->size, surface->data);
 	else
-		glTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, format, GL_UNSIGNED_BYTE, surface->data);
+		glTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, format, type, surface->data);
+
+	PG_ASSERT_NO_GL_ERRORS();
 }
 
 #endif

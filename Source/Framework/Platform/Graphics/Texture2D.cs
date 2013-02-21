@@ -44,12 +44,12 @@ namespace Pegasus.Framework.Platform.Graphics
 				Depth = 1,
 				ArraySize = 1,
 				Type = TextureType.Texture2D,
-				Format = SurfaceFormat.Rgba8,
+				Format = SurfaceFormat.Rgba16F,
 				Mipmaps = Mipmaps.One,
 				SurfaceCount = 1
 			};
 
-			var buffer = new byte[] { 255, 255, 255, 255 };
+			var buffer = new byte[] { 255, 255, 255,255,255, 255, 255, 255 };
 			using (var pointer = BufferPointer.Create(buffer))
 			{
 				var surfaces = new[]

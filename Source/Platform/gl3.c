@@ -252,6 +252,10 @@ GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFor
 		*format = GL_COMPRESSED_RG_RGTC2;
 		*internalFormat = *format;
 		break;
+	case PG_SURFACE_RGBA16F:
+		*format = GL_RGBA;
+		*internalFormat = GL_RGBA16F;
+		break;
 	default:						
 		PG_NO_SWITCH_DEFAULT;
 	}

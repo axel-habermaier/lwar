@@ -112,6 +112,23 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
+		/// Runs the DirectX offline shader compiler.
+		/// </summary>
+		/// <param name="input">The shader file that should be compiled.</param>
+		/// <param name="output">The output file that should store the compiled shader.</param>
+		/// <param name="profile">The profile that should be used to compile the shader.</param>
+		public static void Fxc(string input, string output, string profile)
+		{
+			string optimization;
+#if DEBUG
+			optimization = "/Od /Zi";
+#else
+			optimization = "/O3";
+#endif
+			RunProcess("fxc", @"{3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""", profile, output, input, optimization);
+		}
+
+		/// <summary>
 		///   Constructs the platform-specific executable path to a tool.
 		/// </summary>
 		/// <param name="platform">The platform for which the tool should be executed.</param>

@@ -238,6 +238,8 @@ DXGI_FORMAT pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat)
 		return DXGI_FORMAT_BC4_UNORM;
 	case PG_SURFACE_BC5:
 		return DXGI_FORMAT_BC5_UNORM;
+	case PG_SURFACE_RGBA16F:
+		return DXGI_FORMAT_R16G16B16A16_FLOAT;
 	default:						
 		PG_NO_SWITCH_DEFAULT;
 	}

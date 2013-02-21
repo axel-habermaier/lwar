@@ -158,12 +158,13 @@ typedef enum
 typedef enum
 {
 	PG_SURFACE_RGBA8					= 2101,
-	PG_SURFACE_R8						= 2104,
-	PG_SURFACE_BC1						= 2105,
-	PG_SURFACE_BC2						= 2106,
-	PG_SURFACE_BC3						= 2107,
-	PG_SURFACE_BC4						= 2108,
-	PG_SURFACE_BC5						= 2109,
+	PG_SURFACE_R8						= 2102,
+	PG_SURFACE_RGBA16F					= 2121,
+	PG_SURFACE_BC1						= 2151,
+	PG_SURFACE_BC2						= 2152,
+	PG_SURFACE_BC3						= 2153,
+	PG_SURFACE_BC4						= 2154,
+	PG_SURFACE_BC5						= 2155
 } pgSurfaceFormat;
 
 typedef enum
