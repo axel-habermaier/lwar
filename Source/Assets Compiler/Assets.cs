@@ -35,9 +35,9 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		public static readonly string[] VertexShaders =
 		{
-			"Shaders/QuadVS",
-			"Shaders/SphereVS",
-			"Shaders/SpriteVS"
+			"Shaders/QuadVS.shader",
+			"Shaders/SphereVS.shader",
+			"Shaders/SpriteVS.shader"
 		};
 
 		/// <summary>
@@ -45,9 +45,9 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		public static readonly string[] FragmentShaders =
 		{
-			"Shaders/QuadFS",
-			"Shaders/SphereFS",
-			"Shaders/SpriteFS"
+			"Shaders/QuadFS.shader",
+			"Shaders/SphereFS.shader",
+			"Shaders/SpriteFS.shader"
 		};
 
 		/// <summary>

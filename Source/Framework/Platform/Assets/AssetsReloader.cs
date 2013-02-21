@@ -73,15 +73,15 @@ namespace Pegasus.Framework.Platform.Assets
 			//_assetsCompiler.Compile();
 
 			// Periodically check the file system for modified files
-			var token = _cancellation.Token;
-			_task = Task.Factory.StartNew(() =>
-				{
-					while (!token.IsCancellationRequested)
-					{
-						UpdateFileInfos(new DirectoryInfo(AssetPath), "");
-						Thread.Sleep(1000 / UpdateFrequency);
-					}
-				}, token);
+			//var token = _cancellation.Token;
+			//_task = Task.Factory.StartNew(() =>
+			//	{
+			//		while (!token.IsCancellationRequested)
+			//		{
+			//			UpdateFileInfos(new DirectoryInfo(AssetPath), "");
+			//			Thread.Sleep(1000 / UpdateFrequency);
+			//		}
+			//	}, token);
 #endif
 		}
 
@@ -165,8 +165,8 @@ namespace Pegasus.Framework.Platform.Assets
 			{
 				try
 				{
-					var compiledAsset = _assetsCompiler.Compile(asset);
-					Commands.ReloadAsset.Invoke(compiledAsset);
+					//var compiledAsset = _assetsCompiler.Compile(asset);
+					//Commands.ReloadAsset.Invoke(compiledAsset);
 				}
 				catch (Exception e)
 				{

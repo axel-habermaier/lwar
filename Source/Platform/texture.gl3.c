@@ -3,31 +3,25 @@
 #ifdef OPENGL3
 
 //====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+static pgVoid UploadTexture(pgTexture* texture, pgSurface* surface, GLenum target, GLint level);
+
+//====================================================================================================================
 // Core functions
 //====================================================================================================================
 
 pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 {
-	GLenum internalFormat, format;
 	GLint boundTexture;
-	pgInt32 i;
-	pgBool isCompressed = texture->desc.format > 2104;
-	GLenum faces[] = 
-	{ 
-		GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
-		GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
-		GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 
-		GL_TEXTURE_CUBE_MAP_POSITIVE_X, 
-		GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-		GL_TEXTURE_CUBE_MAP_POSITIVE_Y
-	};
-
+	pgUint32 i;
+	
 	glGenTextures(1, &texture->id);
 	PG_CHECK_GL_HANDLE("Texture", texture->id);
 
 	pgConvertTextureType(texture->desc.type, &texture->glType, &texture->glBoundType);
-	pgConvertSurfaceFormat(texture->desc.format, &internalFormat, &format);
-
+	
 	glGetIntegerv(texture->glBoundType, &boundTexture);
 	glBindTexture(texture->glType, texture->id);
 
@@ -35,29 +29,31 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 	{
 	case PG_TEXTURE_2D:
 		for (i = 0; i < texture->desc.surfaceCount; ++i)
-		{
-			if (isCompressed)
-				glCompressedTexImage2D(GL_TEXTURE_2D, i, internalFormat, surfaces[i].width, surfaces[i].height, 0, surfaces[i].size, surfaces[i].data);
-			else
-				glTexImage2D(GL_TEXTURE_2D, i, internalFormat, surfaces[i].width, surfaces[i].height, 0, format, GL_UNSIGNED_BYTE, surfaces[i].data);
-		}
+			UploadTexture(texture, &surfaces[i], GL_TEXTURE_2D, i);
 		break;
 	case PG_TEXTURE_CUBE_MAP:
+	{
+		pgInt32 j;
+		GLenum faces[] = 
+		{ 
+			GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
+			GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
+			GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 
+			GL_TEXTURE_CUBE_MAP_POSITIVE_X, 
+			GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+			GL_TEXTURE_CUBE_MAP_POSITIVE_Y
+		};
+
 		for (i = 0; i < 6; ++i)
 		{
-			/*pgInt32 j;
-			pgMipmap* last;
-			numMipmaps = pgMipmaps(data, texture->desc.width, texture->desc.height, componentCount, mipmaps);
-			last = &mipmaps[numMipmaps - 1];
-			data = (pgUint8*)last->data + last->width * last->height * componentCount;
-
-			for (j = 0; j < numMipmaps; ++j)
+			for (j = 0; j < texture->desc.mipmaps; ++j)
 			{
-				glPixelStorei(GL_UNPACK_ROW_LENGTH, mipmaps[j].width);
-				glTexImage2D(faces[i], j, internalFormat, mipmaps[j].width, mipmaps[j].height, 0, format, GL_UNSIGNED_BYTE, mipmaps[j].data);
-			}*/
+				int index = i * texture->desc.mipmaps + j;
+				UploadTexture(texture, &surfaces[index], faces[i], j);
+			}
 		}
 		break;
+	}
 	default:
 		PG_NO_SWITCH_DEFAULT;
 	}
@@ -91,6 +87,22 @@ pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 
 	glBindTexture(texture->glType, boundTexture);
 	PG_ASSERT_NO_GL_ERRORS();
+}
+
+//====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+static pgVoid UploadTexture(pgTexture* texture, pgSurface* surface, GLenum target, GLint level)
+{
+	GLenum internalFormat, format;
+	pgBool isCompressed = texture->desc.format > 2104;
+	pgConvertSurfaceFormat(texture->desc.format, &internalFormat, &format);
+
+	if (isCompressed)
+		glCompressedTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, surface->size, surface->data);
+	else
+		glTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, format, GL_UNSIGNED_BYTE, surface->data);
 }
 
 #endif

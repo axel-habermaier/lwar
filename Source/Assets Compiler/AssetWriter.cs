@@ -33,7 +33,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="path">The path of the compiled asset.</param>
 		public AssetWriter(string path)
 		{
-			_assetName = path + PlatformInfo.AssetExtension;
+			_assetName = path;
 			Writer = BufferWriter.Create(Buffer);
 		}
 

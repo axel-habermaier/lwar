@@ -16,12 +16,11 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   Processes the given file, writing the compiled output to the given target destination.
 		/// </summary>
-		/// <param name="source">The source file that should be processed.</param>
-		/// <param name="sourceRelative">The path to the source file relative to the Assets root directory.</param>
+		/// <param name="asset">The asset that should be processed.</param>
 		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
-		public override void Process(string source, string sourceRelative, BufferWriter writer)
+		public override void Process(Asset asset, BufferWriter writer)
 		{
-			using (var bitmap = (Bitmap)Image.FromFile(source))
+			using (var bitmap = (Bitmap)Image.FromFile(asset.SourcePath))
 			{
 				var width = bitmap.Width / 6;
 				if (bitmap.Width < 1 || bitmap.Width > Int16.MaxValue || !IsPowerOfTwo(width))
@@ -36,14 +35,12 @@ namespace Pegasus.AssetsCompiler
 				var negativeY = bitmap.Clone(new Rectangle(4 * width, 0, width, bitmap.Height), bitmap.PixelFormat);
 				var positiveY = bitmap.Clone(new Rectangle(5 * width, 0, width, bitmap.Height), bitmap.PixelFormat);
 
-				var sourceFile = Path.Combine(Path.GetDirectoryName(sourceRelative), Path.GetFileNameWithoutExtension(sourceRelative));
-				var tempPng = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile);
-				var negativeZPath = tempPng + "-Z.png";
-				var negativeXPath = tempPng + "-X.png";
-				var positiveZPath = tempPng + "+Z.png";
-				var positiveXPath = tempPng + "+X.png";
-				var negativeYPath = tempPng + "-Y.png";
-				var positiveYPath = tempPng + "+Y.png";
+				var negativeZPath = asset.TempPath + "-Z.png";
+				var negativeXPath = asset.TempPath + "-X.png";
+				var positiveZPath = asset.TempPath + "+Z.png";
+				var positiveXPath = asset.TempPath + "+X.png";
+				var negativeYPath = asset.TempPath + "-Y.png";
+				var positiveYPath = asset.TempPath + "+Y.png";
 
 				negativeZ.Save(negativeZPath);
 				negativeX.Save(negativeXPath);
@@ -52,12 +49,11 @@ namespace Pegasus.AssetsCompiler
 				negativeY.Save(negativeYPath);
 				positiveY.Save(positiveYPath);
 
-				var assembledFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + ".dds";
+				var assembledFile = asset.TempPath + ".dds";
 				ExternalTool.NvAssemble(negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath,
 										assembledFile);
 
-				var outFile = Path.Combine(Environment.CurrentDirectory, Compiler.TempPath, sourceFile) + "-compressed" +
-							  PlatformInfo.AssetExtension;
+				var outFile = asset.TempPath + "-compressed" + PlatformInfo.AssetExtension;
 				var format = ChooseCompression(bitmap.PixelFormat);
 				ExternalTool.NvCompress(assembledFile, outFile, format);
 

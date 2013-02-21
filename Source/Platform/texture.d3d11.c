@@ -68,11 +68,31 @@ static D3D11_SUBRESOURCE_DATA* InitResourceData(pgTexture* texture, pgSurface* s
 	D3D11_SUBRESOURCE_DATA* data = NULL;
 	PG_ALLOC_ARRAY(D3D11_SUBRESOURCE_DATA, texture->desc.surfaceCount, data);
 
-	for (i = 0; i < texture->desc.surfaceCount; ++i)
+	if (texture->desc.type == PG_TEXTURE_CUBE_MAP)
 	{
-		data[i].pSysMem = surfaces[i].data;
-		data[i].SysMemPitch = surfaces[i].stride;
-		data[i].SysMemSlicePitch = surfaces[i].size;
+		int j;
+		int faces[] = { 5, 1, 4, 0, 3, 2 };
+
+		for (i = 0; i < 6; ++i)
+		{
+			for (j = 0; j < texture->desc.mipmaps; ++j)
+			{
+				int d3dIndex = faces[i] * texture->desc.mipmaps + j;
+				int pgIndex = i * texture->desc.mipmaps + j;
+				data[d3dIndex].pSysMem = surfaces[pgIndex].data;
+				data[d3dIndex].SysMemPitch = surfaces[pgIndex].stride;
+				data[d3dIndex].SysMemSlicePitch = surfaces[pgIndex].size;
+			}
+		}
+	}
+	else
+	{
+		for (i = 0; i < texture->desc.surfaceCount; ++i)
+		{
+			data[i].pSysMem = surfaces[i].data;
+			data[i].SysMemPitch = surfaces[i].stride;
+			data[i].SysMemSlicePitch = surfaces[i].size;
+		}
 	}
 
 	return data;
@@ -82,8 +102,6 @@ static pgVoid CreateTexture1D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 {
 	PG_UNUSED(texture);
 	PG_UNUSED(data);
-
-	pgDie("1D textures are currently not supported.");
 }
 
 static pgVoid CreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
@@ -119,7 +137,6 @@ static pgVoid CreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 {
 	D3D11_TEXTURE2D_DESC desc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
-	//int faces[] = { 5, 1, 4, 0, 3, 2 };  // Maps the Pegasus cubemap order to D3D11 order 
 
 	desc.Width = texture->desc.width;
 	desc.Height = texture->desc.height;
@@ -149,8 +166,6 @@ static pgVoid CreateTexture3D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 {
 	PG_UNUSED(texture);
 	PG_UNUSED(data);
-
-	pgDie("3D textures are currently not supported.");
 }
 
 #endif

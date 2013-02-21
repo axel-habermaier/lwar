@@ -86,6 +86,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asset.cs" />
     <Compile Include="AssetProcessor.cs" />
     <Compile Include="Assets.cs" />
     <Compile Include="AssetWriter.cs" />
