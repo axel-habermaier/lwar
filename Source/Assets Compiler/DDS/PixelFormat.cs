@@ -30,24 +30,6 @@ namespace Pegasus.AssetsCompiler.DDS
 		}
 
 		/// <summary>
-		///   Writes the pixel format into the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the pixel format should be written into.</param>
-		public void Write(BufferWriter buffer)
-		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			buffer.WriteUInt32(Size);
-			buffer.WriteUInt32((uint)Flags);
-			buffer.WriteUInt32(FourCC);
-			buffer.WriteUInt32(RgbBitCount);
-			buffer.WriteUInt32(RBitMask);
-			buffer.WriteUInt32(GBitMask);
-			buffer.WriteUInt32(BBitMask);
-			buffer.WriteUInt32(ABitMask);
-		}
-
-		/// <summary>
 		///   Gets the alpha channel bit mask.
 		/// </summary>
 		public uint ABitMask { get; private set; }

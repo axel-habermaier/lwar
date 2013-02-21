@@ -7,38 +7,12 @@ namespace Pegasus.Framework.Platform
 	/// <summary>
 	///   Represents a pointer to a byte buffer.
 	/// </summary>
-	public unsafe class BufferPointer : DisposableObject
+	public unsafe class BufferPointer : PooledObject<BufferPointer>
 	{
 		/// <summary>
 		///   The handle of the pinned byte array.
 		/// </summary>
 		private GCHandle _handle;
-
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="buffer">The buffer the pointer should point to.</param>
-		public BufferPointer(byte[] buffer)
-			: this(buffer, 0, buffer.Length)
-		{
-		}
-
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="buffer">The buffer the pointer should point to.</param>
-		/// <param name="offset">The offset of the first byte the pointer should point to.</param>
-		/// <param name="size">The size in bytes of the buffer.</param>
-		public BufferPointer(byte[] buffer, int offset, int size)
-		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-			Assert.ArgumentInRange(offset, () => offset, 0, buffer.Length - 1);
-			Assert.ArgumentInRange(size, () => size, 1, buffer.Length - offset);
-
-			_handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-			Pointer = (byte*)_handle.AddrOfPinnedObject() + offset;
-			Size = size;
-		}
 
 		/// <summary>
 		///   The pointer to the beginning of the buffer.
@@ -51,9 +25,37 @@ namespace Pegasus.Framework.Platform
 		public int Size { get; private set; }
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///   Initializes a new instance.
 		/// </summary>
-		protected override void OnDisposing()
+		/// <param name="buffer">The buffer the pointer should point to.</param>
+		public static BufferPointer Create(byte[] buffer)
+		{
+			return Create(buffer, 0, buffer.Length);
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="buffer">The buffer the pointer should point to.</param>
+		/// <param name="offset">The offset of the first byte the pointer should point to.</param>
+		/// <param name="size">The size in bytes of the buffer.</param>
+		public static BufferPointer Create(byte[] buffer, int offset, int size)
+		{
+			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentInRange(offset, () => offset, 0, buffer.Length - 1);
+			Assert.ArgumentInRange(size, () => size, 1, buffer.Length - offset);
+
+			var bufferPointer = GetInstance();
+			bufferPointer._handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+			bufferPointer.Pointer = (byte*)bufferPointer._handle.AddrOfPinnedObject() + offset;
+			bufferPointer.Size = size;
+			return bufferPointer;
+		}
+
+		/// <summary>
+		///   Invoked when the pooled instance is returned to the pool.
+		/// </summary>
+		protected override void OnReturning()
 		{
 			if (_handle.IsAllocated)
 				_handle.Free();

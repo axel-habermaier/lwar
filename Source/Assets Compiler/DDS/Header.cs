@@ -13,45 +13,12 @@ namespace Pegasus.AssetsCompiler.DDS
 		/// <summary>
 		///   The pitch or linear size.
 		/// </summary>
-		private uint _pitchOrLinearSize;
+		private readonly uint _pitchOrLinearSize;
 
 		/// <summary>
 		///   Unused data that is only required to ensure that the Header struct has the correct unmanaged size.
 		/// </summary>
 		private fixed uint _unused [15];
-
-		/// <summary>
-		///   Writes the header into the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the header should be written into.</param>
-		public void Write(BufferWriter buffer)
-		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-
-			buffer.WriteUInt32(Size);
-			buffer.WriteUInt32((uint)Flags);
-			buffer.WriteUInt32(Height);
-			buffer.WriteUInt32(Width);
-			buffer.WriteUInt32(_pitchOrLinearSize);
-			buffer.WriteUInt32(Depth);
-			buffer.WriteUInt32(MipMapCount);
-
-			for (var i = 0; i < 11; ++i)
-				buffer.WriteUInt32(0);
-
-			PixelFormat.Write(buffer);
-			buffer.WriteUInt32((uint)SurfaceFlags);
-			buffer.WriteUInt32((uint)CubeMapFlags);
-
-			for (var i = 0; i < 3; ++i)
-				buffer.WriteUInt32(0);
-
-			buffer.WriteUInt32((uint)Format);
-			buffer.WriteUInt32((uint)ResourceDimension);
-			buffer.WriteUInt32((uint)MiscFlags);
-			buffer.WriteUInt32(ArraySize);
-			buffer.WriteUInt32(0);
-		}
 
 		/// <summary>
 		///   Initializes a new instance from the given buffer.

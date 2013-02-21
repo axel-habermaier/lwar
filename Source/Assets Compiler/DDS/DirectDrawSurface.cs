@@ -12,7 +12,7 @@ namespace Pegasus.AssetsCompiler.DDS
 	///   Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at
 	///   http://msdn.microsoft.com/en-us/library/windows/apps/jj651550.aspx.
 	/// </summary>
-	public class DirectDrawSurface : DisposableObject
+	public class DirectDrawSurface
 	{
 		/// <summary>
 		///   The magic DDS file code "DDS ".
@@ -23,11 +23,6 @@ namespace Pegasus.AssetsCompiler.DDS
 		///   The texture description for the image.
 		/// </summary>
 		private readonly TextureDescription _description;
-
-		/// <summary>
-		///   The pointer to the data buffer.
-		/// </summary>
-		private readonly BufferPointer _pointer;
 
 		/// <summary>
 		///   The surfaces of the image.
@@ -78,8 +73,6 @@ namespace Pegasus.AssetsCompiler.DDS
 
 			_description.SurfaceCount = faces * _header.MipMapCount;
 			_surfaces = new Surface[_description.SurfaceCount];
-			_pointer = buffer.GetPointer();
-			var data = _pointer.Pointer;
 
 			for (int i = 0, index = 0; i < faces; ++i)
 			{
@@ -99,11 +92,10 @@ namespace Pegasus.AssetsCompiler.DDS
 						Depth = depth,
 						Size = size,
 						Stride = stride,
-						Data = data
+						Data = buffer.Pointer
 					};
 
 					var surfaceSize = depth * size; 
-					data += surfaceSize;
 					buffer.Skip((int)surfaceSize);
 
 					width = Math.Max(width >> 1, 1);
@@ -154,30 +146,6 @@ namespace Pegasus.AssetsCompiler.DDS
 				default:
 					throw new InvalidOperationException("Unsupported DDS data format.");
 			}
-		}
-
-		/// <summary>
-		///   Saves the DDS file to disk.
-		/// </summary>
-		/// <param name="path">The path of the file in which the DDS should be stored.</param>
-		public unsafe void Save(string path)
-		{
-			Assert.ArgumentNotNullOrWhitespace(path, () => path);
-
-			var buffer = new byte[64 * 1024 * 1024];
-			using (var writer = BufferWriter.Create(buffer))
-			{
-				writer.WriteUInt32(MagicCode);
-				_header.Write(writer);
-
-				foreach (var surface in _surfaces)
-				{
-					for (var i = 0; i < surface.Size * surface.Depth; ++i)
-						writer.WriteByte(surface.Data[i]);
-				}
-			}
-
-			File.WriteAllBytes(path, buffer);
 		}
 
 		/// <summary>
@@ -406,14 +374,6 @@ namespace Pegasus.AssetsCompiler.DDS
 				default:
 					throw new InvalidOperationException("Unknown DDS format.");
 			}
-		}
-
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			_pointer.SafeDispose();
 		}
 	}
 }

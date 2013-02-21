@@ -22,6 +22,11 @@ namespace Pegasus.Framework.Platform
 		private Endianess _endianess;
 
 		/// <summary>
+		///   A pointer to the first byte of the buffer.
+		/// </summary>
+		private BufferPointer _pointer;
+
+		/// <summary>
 		///   The current read position.
 		/// </summary>
 		private int _readPosition;
@@ -51,11 +56,26 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Gets a pointer to the current read position of the buffer.
+		///   Gets a pointer to the next byte of the buffer that should be read.
 		/// </summary>
-		public BufferPointer GetPointer()
+		public unsafe byte* Pointer
 		{
-			return new BufferPointer(_buffer.Array, _readPosition, _buffer.Count + _buffer.Offset - _readPosition);
+			get
+			{
+				if (_pointer == null)
+					_pointer = BufferPointer.Create(_buffer.Array, _buffer.Offset, _buffer.Count);
+
+				return _pointer.Pointer + _readPosition;
+			}
+		}
+
+		/// <summary>
+		///   Invoked when the pooled instance is returned to the pool.
+		/// </summary>
+		protected override void OnReturning()
+		{
+			_pointer.SafeDispose();
+			_pointer = null;
 		}
 
 		/// <summary>

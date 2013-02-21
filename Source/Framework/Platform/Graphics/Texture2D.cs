@@ -50,7 +50,7 @@ namespace Pegasus.Framework.Platform.Graphics
 			};
 
 			var buffer = new byte[] { 255, 255, 255, 255 };
-			using (var pointer = new BufferPointer(buffer))
+			using (var pointer = BufferPointer.Create(buffer))
 			{
 				var surfaces = new[]
 				{

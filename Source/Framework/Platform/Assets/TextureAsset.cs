@@ -34,7 +34,7 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Loads or reloads the asset using the given asset reader.
 		/// </summary>
 		/// <param name="assetReader">The asset reader that should be used to load the asset.</param>
-		internal override unsafe void Load(AssetReader assetReader)
+		internal unsafe override void Load(AssetReader assetReader)
 		{
 			Assert.ArgumentNotNull(assetReader, () => assetReader);
 
@@ -51,35 +51,29 @@ namespace Pegasus.Framework.Platform.Assets
 				SurfaceCount = reader.ReadUInt32()
 			};
 
-			using (var pointer = reader.GetPointer())
+			var surfaces = new Surface[description.SurfaceCount];
+
+			for (var i = 0; i < description.SurfaceCount; ++i)
 			{
-				var data = pointer.Pointer;
-				var surfaces = new Surface[description.SurfaceCount];
-
-				for (var i = 0; i < description.SurfaceCount; ++i)
+				surfaces[i] = new Surface
 				{
-					data += 5 * sizeof(uint);
-					surfaces[i] = new Surface
-					{
-						Width = reader.ReadUInt32(),
-						Height = reader.ReadUInt32(),
-						Depth = reader.ReadUInt32(),
-						Size = reader.ReadUInt32(),
-						Stride = reader.ReadUInt32(),
-						Data = data
-					};
+					Width = reader.ReadUInt32(),
+					Height = reader.ReadUInt32(),
+					Depth = reader.ReadUInt32(),
+					Size = reader.ReadUInt32(),
+					Stride = reader.ReadUInt32(),
+					Data = reader.Pointer
+				};
 
-					var surfaceSize = surfaces[i].Size * surfaces[i].Depth;
-					data += surfaceSize;
-					reader.Skip((int)surfaceSize);
-				}
-
-				Assert.That(reader.EndOfBuffer, "Not all data has been read.");
-				if (Texture == null)
-					Texture = _createTexture(GraphicsDevice);
-
-				Texture.Reinitialize(description, surfaces);
+				var surfaceSize = surfaces[i].Size * surfaces[i].Depth;
+				reader.Skip((int)surfaceSize);
 			}
+
+			Assert.That(reader.EndOfBuffer, "Not all data has been read.");
+			if (Texture == null)
+				Texture = _createTexture(GraphicsDevice);
+
+			Texture.Reinitialize(description, surfaces);
 
 			for (var i = 0; i < GraphicsDevice.State.Textures.Length; ++i)
 				GraphicsDevice.State.Textures[i] = null;
