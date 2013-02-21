@@ -10,11 +10,6 @@ namespace Pegasus.Framework.Platform.Graphics
 	public abstract class Texture : GraphicsObject
 	{
 		/// <summary>
-		///   The type of the texture.
-		/// </summary>
-		private readonly TextureType _type;
-
-		/// <summary>
 		///   The native texture instance.
 		/// </summary>
 		private IntPtr _texture;
@@ -24,13 +19,10 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="type">The type of the texture.</param>
-		protected Texture(GraphicsDevice graphicsDevice, TextureType type)
+		protected Texture(GraphicsDevice graphicsDevice)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentInRange(type, () => type);
-
-			_type = type;
 		}
 
 		/// <summary>

@@ -11,14 +11,9 @@ namespace Pegasus.AssetsCompiler.DDS
 	public unsafe struct Header
 	{
 		/// <summary>
-		///   The pitch or linear size.
-		/// </summary>
-		private readonly uint _pitchOrLinearSize;
-
-		/// <summary>
 		///   Unused data that is only required to ensure that the Header struct has the correct unmanaged size.
 		/// </summary>
-		private fixed uint _unused [15];
+		private fixed uint _unused [16];
 
 		/// <summary>
 		///   Initializes a new instance from the given buffer.
@@ -33,7 +28,7 @@ namespace Pegasus.AssetsCompiler.DDS
 			Flags = (HeaderFlags)buffer.ReadUInt32();
 			Height = buffer.ReadUInt32();
 			Width = buffer.ReadUInt32();
-			_pitchOrLinearSize = buffer.ReadUInt32();
+			buffer.ReadUInt32();
 			Depth = buffer.ReadUInt32();
 			MipMapCount = buffer.ReadUInt32();
 

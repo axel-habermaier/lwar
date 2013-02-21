@@ -6,8 +6,6 @@
 
 #ifndef _MSC_VER
 typedef int bool;
-static const bool true  = 1;
-static const bool false = 0;
 #endif
 
 enum {

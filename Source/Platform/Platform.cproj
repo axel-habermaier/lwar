@@ -69,9 +69,6 @@
     <Compile Include="swapChain.c" />
     <Compile Include="swapChain.d3d11.c" />
     <Compile Include="swapChain.gl3.c" />
-    <Compile Include="texture2D.c" />
-    <Compile Include="texture2D.d3d11.c" />
-    <Compile Include="texture2D.gl3.c" />
     <Compile Include="wglExt.c" />
     <Compile Include="win32.c" />
     <Compile Include="window.c" />
@@ -85,6 +82,9 @@
     <Compile Include="query.c" />
     <Compile Include="query.d3d11.c" />
     <Compile Include="query.gl3.c" />
+    <Compile Include="texture.c" />
+    <Compile Include="texture.d3d11.c" />
+    <Compile Include="texture.gl3.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="d3d11.h" />

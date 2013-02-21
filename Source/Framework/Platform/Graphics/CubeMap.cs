@@ -12,7 +12,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		public CubeMap(GraphicsDevice graphicsDevice)
-			: base(graphicsDevice, TextureType.CubeMap)
+			: base(graphicsDevice)
 		{
 		}
 	}

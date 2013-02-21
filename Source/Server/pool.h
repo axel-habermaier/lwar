@@ -1,6 +1,12 @@
 typedef struct list_head List;
 typedef struct Pool Pool;
 
+#ifndef _MSC_VER
+typedef int bool;
+static const bool true  = 1;
+static const bool false = 0;
+#endif
+
 struct Pool {
     char  *mem;
     size_t n,i;

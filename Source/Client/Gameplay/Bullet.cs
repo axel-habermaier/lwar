@@ -15,7 +15,6 @@ namespace Lwar.Client.Gameplay
 
 		public override void Draw()
 		{
-			var c = Health / 100.0f;
 			//SpriteBatch.Draw(Texture, Position, Rotation, new Color(c, c, c, 1.0f));
 			RenderContext.BulletRenderer.Draw(this);
 		}
@@ -23,6 +22,11 @@ namespace Lwar.Client.Gameplay
 		protected override void Added()
 		{
 			Model = Model.CreateQuad(GraphicsDevice, Texture.Size);
+		}
+
+		protected override void OnReturning()
+		{
+			Model.SafeDispose();
 		}
 
 		public static Bullet Create(Player player)

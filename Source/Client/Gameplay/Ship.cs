@@ -16,7 +16,6 @@ namespace Lwar.Client.Gameplay
 
 		public override void Draw()
 		{
-			var c = Health / 100.0f;
 			//Position = new Vector2(0, 0);
 			//SpriteBatch.Draw(Texture, Position, Rotation, new Color(1.0f * c, 0.5f * c, 0.0f * c, 1.0f));
 			RenderContext.ShipRenderer.Draw(this);
