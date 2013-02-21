@@ -93,7 +93,7 @@ static pgVoid CreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 
 	desc.Width = texture->desc.width;
 	desc.Height = texture->desc.height;
-	desc.MipLevels = 1;
+	desc.MipLevels = 0;
 	desc.ArraySize = texture->desc.arraySize;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
@@ -123,7 +123,7 @@ static pgVoid CreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 
 	desc.Width = texture->desc.width;
 	desc.Height = texture->desc.height;
-	desc.MipLevels = 1;
+	desc.MipLevels = 0;
 	desc.ArraySize = 6 * texture->desc.arraySize;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;

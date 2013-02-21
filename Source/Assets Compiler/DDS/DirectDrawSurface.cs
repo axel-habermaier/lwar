@@ -99,10 +99,10 @@ namespace Pegasus.AssetsCompiler.DDS
 						Depth = depth,
 						Size = size,
 						Stride = stride,
-						Data = data,
+						Data = data
 					};
 
-					var surfaceSize = depth * size;
+					var surfaceSize = depth * size; 
 					data += surfaceSize;
 					buffer.Skip((int)surfaceSize);
 

@@ -34,7 +34,7 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Loads or reloads the asset using the given asset reader.
 		/// </summary>
 		/// <param name="assetReader">The asset reader that should be used to load the asset.</param>
-		internal unsafe override void Load(AssetReader assetReader)
+		internal override unsafe void Load(AssetReader assetReader)
 		{
 			Assert.ArgumentNotNull(assetReader, () => assetReader);
 
@@ -58,6 +58,7 @@ namespace Pegasus.Framework.Platform.Assets
 
 				for (var i = 0; i < description.SurfaceCount; ++i)
 				{
+					data += 5 * sizeof(uint);
 					surfaces[i] = new Surface
 					{
 						Width = reader.ReadUInt32(),
