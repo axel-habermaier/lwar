@@ -13,15 +13,30 @@ namespace Pegasus.AssetsCompiler
 	public sealed class Compiler : IAssetsCompiler
 	{
 		/// <summary>
-		///   Compiles all assets.
+		///   The list of all assets that have been compiled during the last execution of the compiler.
 		/// </summary>
-		public void Compile()
+		private readonly List<string> _compiledAssets = new List<string>();
+
+		/// <summary>
+		///   Compiles all assets and returns the names of the assets that have been changed.
+		/// </summary>
+		public IEnumerable<string> Compile()
 		{
-			Process(new FontProcessor(), Assets.Fonts, "Fonts");
-			Process(new Texture2DProcessor(), Assets.Textures2D, "2D Textures");
-			Process(new CubeMapProcessor(), Assets.CubeMaps, "Cube Maps");
-			Process(new VertexShaderProcessor(), Assets.VertexShaders, "Vertex Shaders");
-			Process(new FragmentShaderProcessor(), Assets.FragmentShaders, "Fragment Shaders");
+			try
+			{
+				_compiledAssets.Clear();
+				Process(new FontProcessor(), Assets.Fonts, "Fonts");
+				Process(new Texture2DProcessor(), Assets.Textures2D, "2D Textures");
+				Process(new CubeMapProcessor(), Assets.CubeMaps, "Cube Maps");
+				Process(new VertexShaderProcessor(), Assets.VertexShaders, "Vertex Shaders");
+				Process(new FragmentShaderProcessor(), Assets.FragmentShaders, "Fragment Shaders");
+			}
+			catch (Exception e)
+			{
+				Log.Error(e.Message);
+			}
+
+			return _compiledAssets;
 		}
 
 		/// <summary>
@@ -30,7 +45,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="processor">The processor that should be used to process the assets.</param>
 		/// <param name="assets">The assets that should be processed.</param>
 		/// <param name="description">A description of the assets that are processed.</param>
-		private static void Process(AssetProcessor processor, IEnumerable<string> assets, string description)
+		private void Process(AssetProcessor processor, IEnumerable<string> assets, string description)
 		{
 			Log.Info("Processing {0}...", description);
 			foreach (var asset in assets)
@@ -42,7 +57,7 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		/// <param name="processor">The processor that should be used to process the asset.</param>
 		/// <param name="asset">The asset that should be processed.</param>
-		private static void Process(AssetProcessor processor, Asset asset)
+		private void Process(AssetProcessor processor, Asset asset)
 		{
 			if (!asset.RequiresCompilation)
 			{
@@ -50,6 +65,7 @@ namespace Pegasus.AssetsCompiler
 				return;
 			}
 
+			_compiledAssets.Add(asset.RelativePathWithoutExtension);
 			Log.Info("   Compiling '{0}'...", asset.RelativePath);
 			asset.UpdateHashFile();
 			using (var writer = new AssetWriter(asset.TargetPath))

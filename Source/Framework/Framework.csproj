@@ -180,7 +180,6 @@
     <Compile Include="Network\ServicePacketFactory.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="Platform\Assets\Asset.cs" />
-    <Compile Include="Platform\Assets\AssetsReloader.cs" />
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
     <Compile Include="Platform\Assets\IAssetsCompiler.cs" />

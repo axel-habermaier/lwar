@@ -115,7 +115,6 @@ namespace Pegasus.Framework
 			// Keep a history of all logs entries that have been generated before the console can
 			// be initialized.
 			using (var logHistory = new LogHistory())
-			using (var assetsReloader = new AssetsReloader())
 			{
 				Log.Info("Starting {0}, version {1}.{2}.", Cvars.AppName.Value, Cvars.AppVersionMajor.Value, Cvars.AppVersionMinor.Value);
 				Log.Info("Running on {0} {1}bit, using {2}.", PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64",
@@ -130,7 +129,6 @@ namespace Pegasus.Framework
 				// Initialize graphics and assets manager
 				GraphicsDevice = new GraphicsDevice();
 				SwapChain = new SwapChain(GraphicsDevice, Window);
-				assetsReloader.Initialize();
 				Assets = new AssetsManager(GraphicsDevice);
 				SpriteBatch.LoadShaders(Assets);
 				SwapChain.BackBuffer.Bind();
@@ -162,8 +160,6 @@ namespace Pegasus.Framework
 
 					while (_running)
 					{
-						assetsReloader.ReloadModifiedAssets();
-
 						// Update the input system and let the console respond to any input
 						using (new Measurement(Statistics.UpdateInput))
 						{

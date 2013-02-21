@@ -28,9 +28,9 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		private static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "../../Binaries/Debug/Assets");
 #else
-	/// <summary>
-	/// The path where the compiled assets should be stored.
-	/// </summary>
+		/// <summary>
+		/// The path where the compiled assets should be stored.
+		/// </summary>
 		private static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "../../Binaries/Release/Assets");
 #endif
 
@@ -58,7 +58,11 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		public string RelativePathWithoutExtension
 		{
-			get { return Path.Combine(Path.GetDirectoryName(RelativePath), Path.GetFileNameWithoutExtension(RelativePath)); }
+			get
+			{
+				var path = Path.Combine(Path.GetDirectoryName(RelativePath), Path.GetFileNameWithoutExtension(RelativePath));
+				return path.Replace("\\", "/");
+			}
 		}
 
 		/// <summary>

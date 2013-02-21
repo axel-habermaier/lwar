@@ -33,9 +33,8 @@ namespace Pegasus.Framework.Scripting
 		public static Command<bool> ShowConsole = new Command<bool>("show_console", "Shows or hides the console.");
 
 		/// <summary>
-		///   Reloads an asset identified by its path and name.
+		///   Reloads all changed assets.
 		/// </summary>
-		public static Command<string> ReloadAsset = new Command<string>("reload_asset",
-																		"Reloads an asset identified by its path and name.");
+		public static Command ReloadAssets = new Command("reload_assets", "Reloads all changed assets.");
 	}
 }

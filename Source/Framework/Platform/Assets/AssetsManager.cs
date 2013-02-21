@@ -4,6 +4,8 @@ namespace Pegasus.Framework.Platform.Assets
 {
 	using System.Collections.Generic;
 	using System.IO;
+	using System.Linq;
+	using System.Reflection;
 	using Graphics;
 	using Rendering.UserInterface;
 	using Scripting;
@@ -30,6 +32,11 @@ namespace Pegasus.Framework.Platform.Assets
 		private readonly GraphicsDevice _device;
 
 		/// <summary>
+		///   The assets compiler that can be used to recompile the assets in debug builds.
+		/// </summary>
+		private IAssetsCompiler _assetsCompiler;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The graphics device that should be used to load the assets.</param>
@@ -38,35 +45,56 @@ namespace Pegasus.Framework.Platform.Assets
 			Assert.ArgumentNotNull(device, () => device);
 
 			_device = device;
-			Commands.ReloadAsset.Invoked += ReloadAsset;
+			Commands.ReloadAssets.Invoked += ReloadAssets;
+
+#if DEBUG
+			// Dynamically load the assets compiler assembly instead of adding a reference to it. That way, release builds
+			// do not depend on the assembly at all.
+			_assetsCompiler = Assembly.LoadFrom("Assets Compiler.exe")
+									  .GetTypes()
+									  .Where(t => t.IsClass && t.GetInterfaces().Contains(typeof(IAssetsCompiler)))
+									  .Select(Activator.CreateInstance)
+									  .OfType<IAssetsCompiler>()
+									  .Single();
+#endif
 		}
 
 		/// <summary>
-		///   Reloads an asset.
+		///   Reloads all changed assets.
 		/// </summary>
-		/// <param name="assetName">The asset that should be reloaded.</param>
-		private void ReloadAsset(string assetName)
+		private void ReloadAssets()
 		{
-			Assert.ArgumentNotNull(assetName, () => assetName);
+#if !DEBUG
+			Log.Warn("This command is not supported in release builds.");
+#else
+			Assert.NotNull(_assetsCompiler);
 
-			Asset asset;
-			assetName = assetName.Replace("\\", "/");
-
-			if (!_assets.TryGetValue(assetName, out asset))
-				Log.Warn("No asset with name '{0}' has been loaded.", assetName);
+			var recompiledAssets = _assetsCompiler.Compile().ToArray();
+			if (recompiledAssets.Length == 0)
+				Log.Warn("No assets have been changed.");
 			else
+				Log.Info("Reloading {0} changed asset(s)...", recompiledAssets.Length);
+
+			foreach (var assetName in recompiledAssets)
 			{
-				try
+				Asset asset;
+				if (!_assets.TryGetValue(assetName, out asset))
+					Log.Warn("   No asset with name '{0}' has been loaded.", assetName);
+				else
 				{
-					Log.Info("Reloading {1} '{0}'...", assetName, asset.FriendlyName);
-					using (var reader = new AssetReader(Path.Combine(AssetDirectory, assetName)))
-						asset.Load(reader);
-				}
-				catch (IOException e)
-				{
-					Log.Die("Failed to reload asset '{0}': {1}", assetName, e.Message);
+					try
+					{
+						Log.Info("   Reloading {1} '{0}'...", assetName, asset.FriendlyName);
+						using (var reader = new AssetReader(Path.Combine(AssetDirectory, assetName)))
+							asset.Load(reader);
+					}
+					catch (IOException e)
+					{
+						Log.Die("   Failed to reload asset '{0}': {1}", assetName, e.Message);
+					}
 				}
 			}
+#endif
 		}
 
 		/// <summary>
@@ -74,7 +102,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Commands.ReloadAsset.Invoked -= ReloadAsset;
+			Commands.ReloadAssets.Invoked -= ReloadAssets;
 
 			_assets.Values.SafeDisposeAll();
 			_assets.Clear();
