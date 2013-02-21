@@ -8,33 +8,33 @@ static inline Vec sub(Vec v0, Vec v1) {
     return v;
 }
 
-static inline Vec scale(Vec v0, Pos s) {
+static inline Vec scale(Vec v0, Real s) {
     Vec v = { v0.x*s, v0.y*s };
     return v;
 }
 
-static inline Pos dot(Vec v0, Vec v1) {
+static inline Real dot(Vec v0, Vec v1) {
     return v0.x*v1.x + v0.y*v1.y;
 }
 
-static inline Pos dot_sq(Vec v) {
+static inline Real dot_sq(Vec v) {
     return dot(v,v);
 }
 
-static inline Pos len(Vec v) {
+static inline Real len(Vec v) {
     return sqrt(dot_sq(v));
 }
 
-static inline Pos dist(Vec v0, Vec v1) {
+static inline Real dist(Vec v0, Vec v1) {
     return len(sub(v0,v1));
 }
 
-static inline Pos dist2(Vec v0, Vec v1) {
+static inline Real dist2(Vec v0, Vec v1) {
     return dot_sq(sub(v0,v1));
 }
 
 static inline Vec normalize(Vec v) {
-    Pos s = len(v);
+    Real s = len(v);
     Vec r = { v.x/s, v.y/s };
     return r;
 }
@@ -42,26 +42,26 @@ static inline Vec normalize(Vec v) {
 /* ( cos phi   - sin phi )  ( x )
  * ( sin phi     cos phi )  ( y )
  */
-static inline Vec rotate(Vec v, Pos phi) {
-    Pos _cos = cos(phi);
-    Pos _sin = sin(phi);
+static inline Vec rotate(Vec v, Real phi) {
+    Real _cos = cos(phi);
+    Real _sin = sin(phi);
     Vec r = { _cos * v.x - _sin * v.y,
               _sin * v.x + _cos * v.y };
     return r;
 }
 
-static inline Vec unit(Pos phi) {
+static inline Vec unit(Real phi) {
     Vec v = { cos(phi), sin(phi) };
     return v;
 }
 
 /* unit for phi + pi/2 */
-static inline Vec ortho(Pos phi) {
+static inline Vec ortho(Real phi) {
     Vec v = { -sin(phi), cos(phi) };
     return v;
 }
 
-static inline Pos arctan(Vec v) {
+static inline Real arctan(Vec v) {
     return atan2(v.y,v.x);
 }
 
@@ -70,7 +70,7 @@ static inline Pos arctan(Vec v) {
  * such that v = p + r and p || b
  */
 static inline void project(Vec v, Vec b, Vec *p, Vec *r) {
-    Pos s = dot(v, b);
+    Real s = dot(v, b);
     *p = scale(b, s);
     *r = sub(v,*p);
 }

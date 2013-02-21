@@ -133,6 +133,10 @@ namespace Pegasus.Framework
 				SpriteBatch.LoadShaders(Assets);
 				SwapChain.BackBuffer.Bind();
 
+#if DEBUG
+				Commands.ReloadAssets.Invoke();
+#endif
+
 				var font = Assets.LoadFont("Fonts/Liberation Mono 12");
 				using (var interpreter = new Interpreter())
 				using (var bindings = new RequestBindings(LogicalInputDevice))

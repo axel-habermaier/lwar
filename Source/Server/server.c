@@ -12,7 +12,7 @@ static Server _server;
 
 Server *server=&_server;
 
-int id_eq(Id id0, Id id1) {
+bool id_eq(Id id0, Id id1) {
     return    id0.n   == id1.n
            && id0.gen == id1.gen;
 }
@@ -23,9 +23,10 @@ int server_init() {
 
     protocol_init();
 
+    physics_init();
+
     /* order is important */
     entities_init();
-    items_init();
     clients_init();
 
     rules_init();
@@ -44,12 +45,12 @@ int server_update(Clock time, int force) {
         time_update(time);
 
         /* skip first frame */
-        if(!server->prev_time)
+        if(!server->prev_clock)
             return 1;
 
         /* heartbeat
         if(clock_periodic(&debug_clock, 1000))
-            log_debug("server time: %d", server->cur_time);
+            log_debug("server time: %d", server->cur_clock);
         */
 
         protocol_recv();
@@ -66,7 +67,6 @@ int server_update(Clock time, int force) {
         protocol_cleanup();
         clients_cleanup();
         entities_cleanup();
-        items_cleanup();
 
         return 1;
     }

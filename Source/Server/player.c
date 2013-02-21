@@ -1,7 +1,8 @@
 #include <assert.h>
 #include <math.h>
-#include <stdint.h>
+#include <stdarg.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #include "server.h"
@@ -9,66 +10,103 @@
 #include "log.h"
 
 void player_init(Player *p, size_t id) {
-    p->id.n   = id;
-    p->ship   = 0;
-    p->weapon = 0;
-    player_input(p, 0,0,0,0,0,0,0);
-    player_select(p, 0,0);
-    INIT_LIST_HEAD(&p->inventory);
+    Slot *s;
+
+    p->id.n = id;
+    p->ship.entity = 0;
+    /* p->name = ""; */
+    slots_foreach(p,s)
+        s->entity = 0;
+    player_input(p, 0,0,0,0,0,0,0,0,0,0,0,0);
+    player_select(p, 0,0,0,0,0);
 }
 
 void player_clear(Player *p) {
-    Item *j;
-    entity_remove(p->ship);
-    inventory_foreach(p, j)
-        item_remove(j);
-    /* assert(list_empty(&p->inventory)); */
+    entity_remove(p->ship.entity);
 }
 
-void player_input(Player *p, int up, int down, int left, int right, int fire1, int fire2, Pos phi) {
-    p->up    = up;
-    p->down  = down;
-    p->left  = left;
-    p->right = right;
-    p->fire1 = fire1;
-    p->fire2 = fire2;
-    p->phi   = phi;
+/* too lazy to update signature each time something changes */
+void player_input(Player *p,
+                  int forwards,    int backwards,
+                  int turn_left,   int turn_right,
+                  int strafe_left, int strafe_right,
+                  int fire1, int fire2, int fire3, int fire4,
+                  int aim_x, int aim_y)
+{
+    Slot *s;
+
+    p->a.x   = forwards    - backwards;
+    p->a.y   = strafe_left - strafe_right;
+
+    p->rot   = turn_right  - turn_left;
+
+    p->aim.x = aim_x;
+    p->aim.y = aim_y;
+
+    s = p->weapons;
+    if(s->entity) { s->entity->active = fire1; } s++;
+    if(s->entity) { s->entity->active = fire2; } s++;
+    if(s->entity) { s->entity->active = fire3; } s++;
+    if(s->entity) { s->entity->active = fire4; } s++;
 }
 
-void player_select(Player *p, size_t ship_type, size_t weapon_type) {
-    p->ship_type   = entity_type_get(ship_type);
-    p->weapon_type = item_type_get(weapon_type);
+void player_select(Player *p,
+                   int ship_type,
+                   int weapon_type1, int weapon_type2,
+                   int weapon_type3, int weapon_type4)
+{
+    Slot *s;
+
+    s = &p->ship;
+    s->selected_type = entity_type_get(ship_type);
+
+    s = p->weapons;
+    s->selected_type = entity_type_get(weapon_type1); s++;
+    s->selected_type = entity_type_get(weapon_type2); s++;
+    s->selected_type = entity_type_get(weapon_type3); s++;
+    s->selected_type = entity_type_get(weapon_type4); s++;
 }
 
-void player_pickup(Player *p, Item *j) {
-    list_move_tail(&j->h, &p->inventory);
+static void slot_spawn(Player *p, Slot *s, Entity *parent, Vec x, Vec v) {
+    assert(!s->entity);
+
+    if(!s->selected_type) return;
+    s->entity = entity_create(s->selected_type, p, x, v);
+    
+    if(!parent) return;
+    entity_attach(parent, s->entity);
 }
 
 void player_spawn(Player *p, Vec x) {
-    assert(!p->ship);
-    assert(!p->weapon);
-
-    if(p->ship_type) {
-        p->ship = entity_create(p->ship_type, p, x, _0);
-
-        if(p->weapon_type && !p->weapon) {
-            p->weapon = item_create(p->weapon_type);
-            entity_attach(p->ship, p->weapon);
+    Slot *s;
+    slot_spawn(p, &p->ship, 0, x, _0);
+    Entity *ship = p->ship.entity;
+    if(ship) {
+        slots_foreach(p,s) {
+            slot_spawn(p, s, ship, x, _0);
         }
     }
 }
 
-void player_notify_state(Entity *e) {
+void player_notify_entity(Entity *e) {
     Player *p = e->player;
     assert(p);
-    if(p->ship == e && e->dead) {
-        p->ship   = 0;
-        p->weapon = 0;
+
+    if(!e->dead) return;
+
+/*
+    if(p->ship == e)
+        p->ship = 0;
+
+    slots_foreach(i) {
+        if(p->weapons[i] == e)
+            p->weapons[i] = 0;
     }
+*/
 }
 
 void player_die(Player *p) {
-    entity_remove(p->ship);
+    entity_remove(p->ship.entity);
 }
 
 void player_rename(Player *p, Str name) {
@@ -76,42 +114,11 @@ void player_rename(Player *p, Str name) {
 }
 
 static void player_action(Player *p) {
-    Entity *e = p->ship;
-    if(!e) return;
+    Entity *ship = p->ship.entity;
+    if(!ship) return;
 
-    Item   *j = p->weapon;
-    if(!j) return;
-
-    /*
-    Vec a = { p->up    - p->down,
-              p->right - p->left };
-              */
-
-    Vec a = { p->up - p->down,
-              0 };
-
-    entity_accelerate(e, a);
-    entity_rotate(e, p->right - p->left);
-
-    /* bypass max_r, a player may look wherever he wants to */
-    /*
-    e->phi = p->phi;
-    e->r   = 0;
-    */
-
-    j->fire_mask = 0;
-    if(p->fire1) j->fire_mask |= 0x1;
-    if(p->fire2) j->fire_mask |= 0x2;
-
-/*
-    if(   j->type->fire
-       && j->fire_mask
-       && clock_periodic(&j->fire_periodic, j->type->fire_interval))
-    {
-        j->type->fire(e, j);
-    }
-*/
-
+    entity_accelerate(ship, p->a);
+    entity_rotate(ship, p->rot);
 }
 
 void players_update() {
@@ -120,7 +127,7 @@ void players_update() {
     clients_foreach(c) {
         p = &c->player;
 
-        if(!p->ship) {
+        if(!p->ship.entity) {
             /* Vec x = { 100 + rand() % 600, 100 + rand() % 400 }; */
             Vec x = _0;
             player_spawn(p, x);

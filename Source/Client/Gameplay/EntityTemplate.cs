@@ -10,6 +10,8 @@ namespace Lwar.Client.Gameplay
 		Ship = 1,
 		Bullet = 2,
 		Planet = 3,
-		Rocket = 4
+		Rocket = 4,
+
+		Gun = 7,
 	}
 }

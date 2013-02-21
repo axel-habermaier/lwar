@@ -29,8 +29,12 @@
       <Filter>Rules</Filter>
     </ClCompile>
     <ClCompile Include="rules\gun.c" />
-    <ClCompile Include="item.c" />
     <ClCompile Include="rules\phaser.c" />
+    <ClCompile Include="rules\ray.c" />
+    <ClCompile Include="format.c" />
+    <ClCompile Include="queue.c" />
+    <ClCompile Include="update.c" />
+    <ClCompile Include="array.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="connection.h" />
@@ -47,6 +51,9 @@
     <ClInclude Include="packet.h" />
     <ClInclude Include="pool.h" />
     <ClInclude Include="performance.h" />
+    <ClInclude Include="update.h" />
+    <ClInclude Include="bitset.h" />
+    <ClInclude Include="array.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Rules">

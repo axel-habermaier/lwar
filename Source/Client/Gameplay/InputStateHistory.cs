@@ -3,41 +3,25 @@
 namespace Lwar.Client.Gameplay
 {
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Math;
 
 	/// <summary>
 	///   Manages the current and the previous seven input stated.
 	/// </summary>
 	public struct InputStateHistory
 	{
-		/// <summary>
-		///   Indicates whether the player moves backwards.
-		/// </summary>
 		private byte _backward;
-
-		/// <summary>
-		///   Indicates whether the player moves foward
-		/// </summary>
 		private byte _forward;
+		private byte _turnLeft;
+		private byte _turnRight;
+		private byte _strafeLeft;
+		private byte _strafeRight;
+		private byte _shooting1;
+		private byte _shooting2;
+		private byte _shooting3;
+		private byte _shooting4;
 
-		/// <summary>
-		///   Indicates whether the player moves to the left.
-		/// </summary>
-		private byte _left;
-
-		/// <summary>
-		///   The orientation of the player.
-		/// </summary>
-		private ushort _orientation;
-
-		/// <summary>
-		///   Indicates whether the player moves to the left.
-		/// </summary>
-		private byte _right;
-
-		/// <summary>
-		///   Indicates whether the player is shooting.
-		/// </summary>
-		private byte _shooting;
+		private Vector2 _target;
 
 		/// <summary>
 		///   The input state version that is incremented each time the input state is changed.
@@ -47,14 +31,20 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   Updates the current input state, also storing the seven previous states.
 		/// </summary>
-		public void Update(bool forward, bool backward, bool left, bool right, bool shooting, ushort orientation)
+		public void Update(bool forward, bool backward, bool turnLeft, bool turnRight, bool strafeLeft, bool strafeRight,
+		                   bool shooting1, bool shooting2, bool shooting3, bool shooting4, Vector2 target)
 		{
 			_forward = Update(_forward, forward);
 			_backward = Update(_backward, backward);
-			_left = Update(_left, left);
-			_right = Update(_right, right);
-			_shooting = Update(_shooting, shooting);
-			_orientation = orientation;
+			_turnLeft = Update(_turnLeft, turnLeft);
+			_turnRight = Update(_turnRight, turnRight);
+			_strafeLeft = Update(_strafeLeft, strafeLeft);
+			_strafeRight = Update(_strafeRight, strafeRight);
+			_shooting1 = Update(_shooting1, shooting1);
+			_shooting2 = Update(_shooting2, shooting2);
+			_shooting3 = Update(_shooting3, shooting3);
+			_shooting4 = Update(_shooting4, shooting4);
+			_target = target;
 
 			_version += 1;
 		}
@@ -68,10 +58,16 @@ namespace Lwar.Client.Gameplay
 			buffer.WriteUInt32(_version);
 			buffer.WriteByte(_forward);
 			buffer.WriteByte(_backward);
-			buffer.WriteByte(_left);
-			buffer.WriteByte(_right);
-			buffer.WriteByte(_shooting);
-			buffer.WriteUInt16(_orientation);
+			buffer.WriteByte(_turnLeft);
+			buffer.WriteByte(_turnRight);
+			buffer.WriteByte(_strafeLeft);
+			buffer.WriteByte(_strafeRight);
+			buffer.WriteByte(_shooting1);
+			buffer.WriteByte(_shooting2);
+			buffer.WriteByte(_shooting3);
+			buffer.WriteByte(_shooting4);
+			buffer.WriteInt16((short)_target.X);
+			buffer.WriteInt16((short)_target.Y);
 		}
 
 		/// <summary>

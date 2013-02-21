@@ -98,7 +98,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions)</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
@@ -117,7 +117,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4267 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions)</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -137,7 +137,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
@@ -160,7 +160,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4267 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4267 wd4800 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
@@ -174,10 +174,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="array.c" />
     <ClCompile Include="client.c" />
     <ClCompile Include="connection.c" />
     <ClCompile Include="entity.c" />
-    <ClCompile Include="item.c" />
+    <ClCompile Include="format.c" />
     <ClCompile Include="log.c" />
     <ClCompile Include="message.c" />
     <ClCompile Include="packet.c" />
@@ -185,19 +186,24 @@
     <ClCompile Include="player.c" />
     <ClCompile Include="pq.c" />
     <ClCompile Include="protocol.c" />
+    <ClCompile Include="queue.c" />
     <ClCompile Include="rules.c" />
     <ClCompile Include="rules\bullet.c" />
     <ClCompile Include="rules\gun.c" />
     <ClCompile Include="rules\phaser.c" />
     <ClCompile Include="rules\planet.c" />
+    <ClCompile Include="rules\ray.c" />
     <ClCompile Include="rules\rocket.c" />
     <ClCompile Include="rules\ship.c" />
     <ClCompile Include="server.c" />
     <ClCompile Include="pool.c" />
     <ClCompile Include="time.c" />
     <ClCompile Include="uint.c" />
+    <ClCompile Include="update.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="array.h" />
+    <ClInclude Include="bitset.h" />
     <ClInclude Include="connection.h" />
     <ClInclude Include="coroutine.h" />
     <ClInclude Include="list.h" />
@@ -211,6 +217,7 @@
     <ClInclude Include="server_export.h" />
     <ClInclude Include="pool.h" />
     <ClInclude Include="uint.h" />
+    <ClInclude Include="update.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

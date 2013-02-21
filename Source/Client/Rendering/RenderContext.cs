@@ -53,8 +53,7 @@ namespace Lwar.Client.Rendering
 
 			PlanetRenderer = new PlanetRenderer(this);
 			ShipRenderer = new ShipRenderer(this);
-
-			//LwarCvars.DrawWireframe.Value = true;
+			BulletRenderer = new BulletRenderer(this);
 		}
 
 		/// <summary>
@@ -81,6 +80,11 @@ namespace Lwar.Client.Rendering
 		///   Gets the renderer that is used to draw ships.
 		/// </summary>
 		public ShipRenderer ShipRenderer { get; private set; }
+
+		/// <summary>
+		///   Gets the renderer that is used to draw bullets.
+		/// </summary>
+		public BulletRenderer BulletRenderer { get; private set; }
 
 		/// <summary>
 		///   Marks the beginning of a frame.

@@ -21,7 +21,11 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   The new weapon type.
 		/// </summary>
-		private byte _weaponType;
+		private EntityTemplate _weaponType1;
+		private EntityTemplate _weaponType2;
+		private EntityTemplate _weaponType3;
+		private EntityTemplate _weaponType4;
+
 
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -45,7 +49,10 @@ namespace Lwar.Client.Network.Messages
 					b.WriteUInt32(m.SequenceNumber);
 					b.WriteIdentifier(m._playerId);
 					b.WriteByte((byte)m._shipType);
-					b.WriteByte(m._weaponType);
+					b.WriteByte((byte)m._weaponType1);
+					b.WriteByte((byte)m._weaponType2);
+					b.WriteByte((byte)m._weaponType3);
+					b.WriteByte((byte)m._weaponType4);
 				});
 		}
 
@@ -65,7 +72,10 @@ namespace Lwar.Client.Network.Messages
 				{
 					m._playerId = b.ReadIdentifier();
 					m._shipType = (EntityTemplate)b.ReadByte();
-					m._weaponType = b.ReadByte();
+					m._weaponType1 = (EntityTemplate)b.ReadByte();
+					m._weaponType2 = (EntityTemplate)b.ReadByte();
+					m._weaponType3 = (EntityTemplate)b.ReadByte();
+					m._weaponType4 = (EntityTemplate)b.ReadByte();
 
 					Assert.InRange(m._shipType);
 				});
@@ -77,12 +87,17 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="playerId">The identifier of the player that changed his or her state.</param>
 		/// <param name="shipType">The new ship type.</param>
 		/// <param name="weaponTemplate">The new weapon type.</param>
-		public static SelectionMessage Create(Identifier playerId, EntityTemplate shipType, byte weaponTemplate)
+		public static SelectionMessage Create(Identifier playerId, EntityTemplate shipType,
+		                                      EntityTemplate weaponTemplate1, EntityTemplate weaponTemplate2,
+		                                      EntityTemplate weaponTemplate3, EntityTemplate weaponTemplate4)
 		{
 			var message = GetInstance();
 			message._playerId = playerId;
 			message._shipType = shipType;
-			message._weaponType = weaponTemplate;
+			message._weaponType1 = weaponTemplate1;
+			message._weaponType2 = weaponTemplate2;
+			message._weaponType3 = weaponTemplate3;
+			message._weaponType4 = weaponTemplate3;
 			return message;
 		}
 	}

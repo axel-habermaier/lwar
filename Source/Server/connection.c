@@ -1,9 +1,8 @@
+#include <assert.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
-#include <stdint.h>
-#include "log.h"
 
 #ifdef __unix__
 #include <arpa/inet.h>
@@ -33,6 +32,7 @@ typedef SOCKET Socket;
 
 #include "server.h"
 #include "connection.h"
+#include "log.h"
 
 enum 
 {
@@ -196,7 +196,7 @@ int address_create(Address *adr, const char *ip, uint16_t port) {
 	return inet_pton(AF_INET, ip, &adr->ip);
 }
 
-int address_eq(Address *adr0, Address *adr1) {
+bool address_eq(Address *adr0, Address *adr1) {
     return    adr0->ip   == adr1->ip
            && adr0->port == adr1->port;
 }

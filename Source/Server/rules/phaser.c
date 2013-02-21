@@ -7,30 +7,40 @@
 #include "rules.h"
 #include "vector.h"
 
-static void shoot(Entity *e, Item *phaser);
+static void shoot(Entity *phaser);
 
-static ItemType _phaser = {
-    ITEM_TYPE_PHASER,  /* type id */
-    shoot,          /* activation callback */
-    0,            /* activation interval */
-    ~0,             /* initial ammunition */
+EntityType type_phaser = {
+    ENTITY_TYPE_PHASER,     /* type id */
+    shoot,                  /* activation callback */
+    0,                      /* collision callback  */
+    0,                      /* interval */
+    1000,                   /* energy */
+    1,                      /* health */
+    0,                      /* length */
+    0,                      /* mass */
+    0,                      /* radius */
+    {0,0},                  /* acceleration */
+    {0,0},                  /* brake */
+    0,                      /* rotation */
 };
 
-ItemType *type_phaser = &_phaser;
-
-static void shoot(Entity *e, Item *phaser) {
-    if(phaser->ammunition <= 0)
+static void shoot(Entity *phaser) {
+    /*
+    if(phaser->energy <= 0)
         return;
 
-    phaser->ammunition --;
+    phaser->energy --;
+    */
 
-    EntityType *ray = entity_type_get(ENTITY_TYPE_RAY);
+    if(!list_empty(&phaser->children))
+        return;
 
-    Vec f = unit(e->phi);
-    Vec x = add(e->x, scale(f, e->type->radius + ray->radius*2));
-    Vec v = add(e->v, scale(f, ray->max_a.y)); /* initial speed */
+    Vec f = unit(phaser->phi);
+    Vec x = add(phaser->x, scale(f, phaser->radius));
+    Vec v = _0;
 
-    entity_create(ray,e->player,x,v);
+    Entity *ray = entity_create(&type_ray,phaser->player,x,v);
+    entity_attach(phaser, ray);
+    ray->active = 1;
 }
-
 

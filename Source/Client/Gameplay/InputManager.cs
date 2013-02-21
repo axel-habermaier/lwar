@@ -16,12 +16,6 @@ namespace Lwar.Client.Gameplay
 	public class InputManager : DisposableObject
 	{
 		/// <summary>
-		///   The minimum distance between the center of the player's ship and the mouse cursor that is required for the ship's
-		///   orientation to be updated.
-		/// </summary>
-		private const int MinimumOrientationUpdateDistance = 30;
-
-		/// <summary>
 		///   The process that updates the input state.
 		/// </summary>
 		private readonly IProcess _inputProcess;
@@ -37,39 +31,24 @@ namespace Lwar.Client.Gameplay
 		private readonly GameSession _session;
 
 		/// <summary>
-		///   Indicates whether the player moves backwards.
-		/// </summary>
-		private InputState _backward;
-
-		/// <summary>
-		///   Indicates whether the player moves foward
-		/// </summary>
-		private InputState _forward;
-
-		/// <summary>
-		///   Indicates whether the player moves to the left.
-		/// </summary>
-		private InputState _left;
-
-		/// <summary>
-		///   The orientation of the player.
-		/// </summary>
-		private ushort _orientation;
-
-		/// <summary>
-		///   Indicates whether the player moves to the left.
-		/// </summary>
-		private InputState _right;
-
-		/// <summary>
-		///   Indicates whether the player is shooting.
-		/// </summary>
-		private InputState _shooting;
-
-		/// <summary>
 		///   The current input state.
 		/// </summary>
 		private InputStateHistory _state = new InputStateHistory();
+
+		#region Input states
+
+		private InputState _backward;
+		private InputState _forward;
+		private InputState _shooting1;
+		private InputState _shooting2;
+		private InputState _shooting3;
+		private InputState _shooting4;
+		private InputState _strafeLeft;
+		private InputState _strafeRight;
+		private InputState _turnLeft;
+		private InputState _turnRight;
+
+		#endregion
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -83,15 +62,25 @@ namespace Lwar.Client.Gameplay
 
 			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed(), InputModes.Game);
 			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed(), InputModes.Game);
-			_left.Input = new LogicalInput(Key.A.IsPressed() | Key.Left.IsPressed(), InputModes.Game);
-			_right.Input = new LogicalInput(Key.D.IsPressed() | Key.Right.IsPressed(), InputModes.Game);
-			_shooting.Input = new LogicalInput(Key.Space.IsPressed() | MouseButton.Left.IsPressed(), InputModes.Game);
+			_turnLeft.Input = new LogicalInput(Key.A.IsPressed() | Key.Left.IsPressed(), InputModes.Game);
+			_turnRight.Input = new LogicalInput(Key.D.IsPressed() | Key.Right.IsPressed(), InputModes.Game);
+			_strafeLeft.Input = new LogicalInput(Key.Q.IsPressed(), InputModes.Game);
+			_strafeRight.Input = new LogicalInput(Key.E.IsPressed(), InputModes.Game);
+			_shooting1.Input = new LogicalInput(MouseButton.Left.IsPressed(), InputModes.Game);
+			_shooting2.Input = new LogicalInput(MouseButton.Right.IsPressed(), InputModes.Game);
+			_shooting3.Input = new LogicalInput(Key.Num1.IsPressed(), InputModes.Game);
+			_shooting4.Input = new LogicalInput(Key.Num2.IsPressed(), InputModes.Game);
 
 			_session.InputDevice.Register(_forward.Input);
 			_session.InputDevice.Register(_backward.Input);
-			_session.InputDevice.Register(_left.Input);
-			_session.InputDevice.Register(_right.Input);
-			_session.InputDevice.Register(_shooting.Input);
+			_session.InputDevice.Register(_turnLeft.Input);
+			_session.InputDevice.Register(_turnRight.Input);
+			_session.InputDevice.Register(_strafeLeft.Input);
+			_session.InputDevice.Register(_strafeRight.Input);
+			_session.InputDevice.Register(_shooting1.Input);
+			_session.InputDevice.Register(_shooting2.Input);
+			_session.InputDevice.Register(_shooting3.Input);
+			_session.InputDevice.Register(_shooting4.Input);
 
 			_inputProcess = _session.Scheduler.CreateProcess(Update);
 			_sendInputProcess = _session.Scheduler.CreateProcess(SendInput);
@@ -107,9 +96,14 @@ namespace Lwar.Client.Gameplay
 			{
 				_forward.Triggered |= _forward.Input.IsTriggered;
 				_backward.Triggered |= _backward.Input.IsTriggered;
-				_left.Triggered |= _left.Input.IsTriggered;
-				_right.Triggered |= _right.Input.IsTriggered;
-				_shooting.Triggered |= _shooting.Input.IsTriggered;
+				_turnLeft.Triggered |= _turnLeft.Input.IsTriggered;
+				_turnRight.Triggered |= _turnRight.Input.IsTriggered;
+				_strafeLeft.Triggered |= _strafeLeft.Input.IsTriggered;
+				_strafeRight.Triggered |= _strafeRight.Input.IsTriggered;
+				_shooting1.Triggered |= _shooting1.Input.IsTriggered;
+				_shooting2.Triggered |= _shooting2.Input.IsTriggered;
+				_shooting3.Triggered |= _shooting3.Input.IsTriggered;
+				_shooting4.Triggered |= _shooting4.Input.IsTriggered;
 
 				await context.NextFrame();
 			}
@@ -143,24 +137,31 @@ namespace Lwar.Client.Gameplay
 				var ship = _session.LocalPlayer.Ship.Position;
 
 				// Don't update if ship and target are too close
-				if ((target - ship).Length > MinimumOrientationUpdateDistance)
+				/*if ((target - ship).Length > MinimumOrientationUpdateDistance)
 				{
 					var orientation = MathUtils.ComputeAngle(ship, target, new Vector2(1, 0));
 					orientation = MathUtils.RadToDeg(orientation);
 					_orientation = (ushort)orientation;
-				}
+				}*/
 
 				_state.Update(_forward.Triggered, _backward.Triggered,
-							  _left.Triggered, _right.Triggered,
-							  _shooting.Triggered, _orientation);
+							  _turnLeft.Triggered, _turnRight.Triggered,
+							  _strafeLeft.Triggered, _strafeRight.Triggered,
+							  _shooting1.Triggered, _shooting2.Triggered, _shooting3.Triggered, _shooting4.Triggered,
+							  target);
 
 				_session.ServerProxy.Send(InputMessage.Create(_session.LocalPlayer.Id, _state));
 
 				_forward.Triggered = false;
 				_backward.Triggered = false;
-				_left.Triggered = false;
-				_right.Triggered = false;
-				_shooting.Triggered = false;
+				_turnLeft.Triggered = false;
+				_turnRight.Triggered = false;
+				_strafeLeft.Triggered = false;
+				_strafeRight.Triggered = false;
+				_shooting1.Triggered = false;
+				_shooting2.Triggered = false;
+				_shooting3.Triggered = false;
+				_shooting4.Triggered = false;
 
 				await context.Delay(1000 / Specification.InputUpdateFrequency);
 			}
@@ -176,9 +177,14 @@ namespace Lwar.Client.Gameplay
 
 			_session.InputDevice.Remove(_forward.Input);
 			_session.InputDevice.Remove(_backward.Input);
-			_session.InputDevice.Remove(_left.Input);
-			_session.InputDevice.Remove(_right.Input);
-			_session.InputDevice.Remove(_shooting.Input);
+			_session.InputDevice.Remove(_turnLeft.Input);
+			_session.InputDevice.Remove(_turnRight.Input);
+			_session.InputDevice.Remove(_strafeLeft.Input);
+			_session.InputDevice.Remove(_strafeRight.Input);
+			_session.InputDevice.Remove(_shooting1.Input);
+			_session.InputDevice.Remove(_shooting2.Input);
+			_session.InputDevice.Remove(_shooting3.Input);
+			_session.InputDevice.Remove(_shooting4.Input);
 		}
 
 		/// <summary>

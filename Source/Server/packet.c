@@ -9,91 +9,77 @@
 #include "connection.h"
 #include "log.h"
 
-static int check_bounds(Packet *p,size_t n) {
+static bool check_bounds(Packet *p,size_t n) {
     return    n != 0
            && p->b <= MAX_PACKET_LENGTH;
 }
 
-int packet_hasdata(Packet *p) {
+bool packet_hasdata(Packet *p) {
     return (p->a + HEADER_LENGTH < p->b);
 }
 
-size_t packet_update_n(Packet *p) {
+size_t packet_update_n(Packet *p, size_t s) {
     size_t i = p->b + UPDATE_HEADER_LENGTH;
     if(i < MAX_PACKET_LENGTH)
-        return (MAX_PACKET_LENGTH - i) / UPDATE_LENGTH;
+        return (MAX_PACKET_LENGTH - i) / s;
     return 0;
 }
 
 void packet_init(Packet *p, Address *adr, size_t ack, size_t time) {
-    Header h = { APP_ID, ack, time };
     memset(p->p, 0, sizeof(p->p));
-    p->io_failed = 0;
-
-    p->adr  = *adr;
-    p->a    = 0;
-    p->b    = header_pack(p->p, &h);
     p->ack  = ack;
     p->time = time;
+    p->adr  = *adr;
+    p->a    = 0;
+    p->b    = header_pack(p->p, APP_ID, p->ack, p->time);
+    p->io_failed = 0;
 }
 
-int packet_put(Packet *p, Message *m, size_t seqno) {
+bool packet_put(Packet *p, Pack *pack, void *u) {
     assert(p->a <= p->b);
-    size_t n = message_pack(p->p + p->b, m, seqno);
+    size_t n = pack(p->p + p->b, u);
     p->b += n;
     return check_bounds(p,n);
 }
 
-int packet_get(Packet *p, Message *m, size_t *seqno) {
-    if(p->a >= p->b) return 0;
-    size_t n = message_unpack(p->p + p->a, m, seqno);
+bool packet_get(Packet *p, Unpack *unpack, void *u) {
+    if(p->a >= p->b) return false;
+    size_t n = unpack(p->p + p->a, u);
     p->a += n;
     return check_bounds(p,n);
 }
 
-int packet_put_u(Packet *p, Update *u) {
-    assert(p->a <= p->b);
-    size_t n = update_pack(p->p + p->b, u);
-    p->b += n;
-    return check_bounds(p,n);
-}
-
-int packet_get_u(Packet *p, Update *u) {
-    if(p->a >= p->b) return 0;
-    size_t n = update_unpack(p->p + p->a, u);
-    p->a += n;
-    return check_bounds(p,n);
-}
-
-int packet_recv(Packet *p) {
+bool packet_recv(Packet *p) {
     p->a = 0;
     p->b = MAX_PACKET_LENGTH;
-	address_create(&p->adr, "0.0.0.0", 0); // TODO!!
+	p->adr = address_none;
     if(!conn_recv(p->p, &p->b, &p->adr)) {
-        p->io_failed = 1;
-        return 0;
+        p->io_failed = true;
+        return false;
     }
-    p->io_failed = 0;
-    if(p->b == 0) return 0; /* EAGAIN */
+    p->io_failed = false;
+    if(p->b == 0) return false; /* EAGAIN */
 
-    Header h;
-    p->a = header_unpack(p->p, &h);
-    if(h.app_id != APP_ID) return 0; /* TODO: warn */
-    p->ack  = h.ack;
-    p->time = h.time;
-    return 1;
+    size_t app_id;
+    p->a = header_unpack(p->p, &app_id, &p->ack, &p->time);
+    if(app_id != APP_ID) return false; /* TODO: warn */
+    return true;
 }
 
-int packet_send(Packet *p) {
+bool packet_send(Packet *p) {
     assert(p->a <= p->b);
+    assert(p->adr.ip   != 0);
+    assert(p->adr.port != 0);
+
     if(!conn_send(p->p, p->b - p->a, &p->adr)) {
-        p->io_failed = 1;
-        return 0;
+        p->io_failed = true;
+        return false;
     }
-    p->io_failed = 0;
-    return 1;
+    p->io_failed = false;
+    return true;
 }
 
+/*
 void packet_debug(Packet *p) {
     size_t a = p->a;
     size_t b = p->b;
@@ -119,3 +105,4 @@ void packet_debug(Packet *p) {
     p->a = a;
     p->b = b;
 }
+*/

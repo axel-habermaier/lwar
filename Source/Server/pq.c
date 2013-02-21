@@ -1,7 +1,18 @@
+#include <assert.h>
 #include <string.h>
 #include <stdint.h>
 
 #include "pq.h"
+
+static void check_i(PrioQueue *pq, void *p) {
+    assert(pq->mem <= (char*)p);
+    assert((char*)p < pq->mem + pq->n * pq->size);
+    assert(((char*)p -  pq->mem) % pq->size == 0);
+}
+
+static size_t get_i(PrioQueue *pq, void *p) {
+    return (((char *)p) - pq->mem) / pq->size;
+}
 
 static size_t parent(size_t i) {
     return i/2;
@@ -29,62 +40,82 @@ static void exch(char* base,size_t size,size_t a,size_t b) {
 
 /* borrowed from http://de.wikipedia.org/wiki/Bin%C3%A4rer_Heap */
 
-static void heapify(char *pq, size_t i, size_t n, size_t s,
-                    int (*compar)(const void *, const void *))
+static void down(char *mem, size_t i, size_t n, size_t s,
+                 int (*cmp)(const void *, const void *))
 {
     for(;;) {
         int j = i;
 
         if(   left(i) < n
-           && compar((char*)pq + left(i)*s, (char*)pq + j*s) < 0)
+           && cmp((char*)mem + left(i)*s, (char*)mem + j*s) < 0)
         {
             j = left(i);
         }
 
         if(   right(i) < n
-           && compar((char*)pq + right(i)*s, (char*)pq + j*s) < 0)
+           && cmp((char*)mem + right(i)*s, (char*)mem + j*s) < 0)
         {
             j = right(i);
         }
 
         if(i == j) break;
 
-        exch(pq,s,i,j);
+        exch(mem,s,i,j);
         i = j;
     }
 }
 
-void pq_add(void *a,
-            void *pq, size_t n, size_t s,
-            int (*compar)(const void *, const void *))
+static void up(char *mem, size_t i, size_t n, size_t s,
+               int (*cmp)(const void *, const void *))
 {
-    size_t i=n;
-    memcpy((char*)pq + i*s,a,s);
-    while(i>0 && compar((char*)pq + i*s, (char*)pq + parent(i)*s) < 0)
+    while(i>0 && cmp((char*)mem + i*s, (char*)mem + parent(i)*s) < 0)
     {
-        exch((char*)pq,s,i,parent(i));
+        exch((char*)mem,s,i,parent(i));
         i = parent(i);
     }
 }
 
-void pq_del(void *a, size_t i,
-            void *pq, size_t n, size_t s,
-            int (*compar)(const void *, const void *))
+void pq_init(PrioQueue *pq, void *p, size_t n, size_t size,
+             int (*cmp)(const void *, const void *))
 {
-    size_t l=n-1;
-    memcpy(a,(char*)pq + i*s,s);
-    exch((char*)pq,s,l,i);
-    heapify((char*)pq,i,n,s,compar);
+    assert(p);
+    assert(cmp);
+    assert(size != 0);
+
+    pq->mem  = (char*)p;
+    pq->n    = n;
+    pq->i    = 0;
+    pq->size = size;
+    pq->cmp  = cmp;
 }
 
-void pq_min(void *a,
-            void *pq, size_t n, size_t s,
-            int (*compar)(const void *, const void *))
-{
-    pq_del(a,0,pq,n,s,compar);
+void *pq_alloc(PrioQueue *pq) {
+    if(pq->i == pq->n)
+        return 0;
+    return pq->mem + pq->size * (pq->i++);
 }
 
-void pq_peek(void *a, void *pq, size_t s)
-{
-    memcpy(a,pq,s);
+void *pq_alloc_check(PrioQueue *pq, size_t size) {
+    assert(pq->size == size);
+    return pq_alloc(pq);
+}
+
+void pq_free_min(PrioQueue *pq) {
+    assert(pq->i != 0);
+    /* swap first and last element */
+    exch(pq->mem,pq->size,pq->i-1,0);
+    /* push down first element */
+    down(pq->mem,0,pq->i,pq->size,pq->cmp);
+    pq->i --;
+}
+
+void  pq_free_all(PrioQueue *pq) {
+    pq->i = 0;
+}
+
+void pq_decreased(PrioQueue *pq, void *p) {
+    check_i(pq, p);
+    size_t i = get_i(pq, p);
+    /* push up the element */
+    up(pq->mem,i,pq->i,pq->size,pq->cmp);
 }

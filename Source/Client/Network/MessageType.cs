@@ -18,9 +18,9 @@ namespace Lwar.Client.Network
 		Name = 9,
 		Synced = 10,
 		Stats = 101,
-		Update = 102,
 		Input = 103,
 		Full = 104,
-		Collision = 105
+		Collision = 105,
+		Update = 110,
 	}
 }

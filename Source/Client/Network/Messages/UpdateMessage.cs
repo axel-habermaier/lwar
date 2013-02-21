@@ -60,7 +60,6 @@ namespace Lwar.Client.Network.Messages
 						{
 							Entity = b.ReadIdentifier(),
 							Position = new Vector2(b.ReadInt16(), b.ReadInt16()),
-							Velocity = new Vector2(b.ReadInt16(), b.ReadInt16()),
 							Rotation = b.ReadUInt16(),
 							Health = b.ReadByte()
 						});
@@ -89,11 +88,6 @@ namespace Lwar.Client.Network.Messages
 			///   The updated rotation.
 			/// </summary>
 			public ushort Rotation;
-
-			/// <summary>
-			///   The updated velocity.
-			/// </summary>
-			public Vector2 Velocity;
 		}
 	}
 }

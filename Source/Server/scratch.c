@@ -65,7 +65,7 @@ int physics_collide(Entity *e0, Entity *e1, Vec *v, clock_t *t) {
     Vec y0 = physics_predict(x0,v0,a0, MAX_DT);
     Vec y1 = physics_predict(x1,v1,a1, MAX_DT);
 
-    Pos r = entity_radius(e0) + entity_radius(e1);
+    Real r = entity_radius(e0) + entity_radius(e1);
 
     /* radius of boundings squared */
     int b0 = dist2(y0,x0);
@@ -88,8 +88,8 @@ int physics_collide(Entity *e0, Entity *e1, Vec *v, clock_t *t) {
 }
 
 /* dist(x0,x1,dt) - r / dist'(x0,x1,dt) */
-static Pos physics_q(Vec x0, Vec v0, Vec a0, Vec x1, Vec v1, Vec a1, Time d) {
-    Pos f = dot_sq(sub(physics_predict(x0,v0,a0,d),
+static Real physics_q(Vec x0, Vec v0, Vec a0, Vec x1, Vec v1, Vec a1, Time d) {
+    Real f = dot_sq(sub(physics_predict(x0,v0,a0,d),
                        physics_predict(x1,v1,a1,d)));
     return -2.0 * f;
 }

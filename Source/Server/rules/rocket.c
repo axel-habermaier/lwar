@@ -9,23 +9,21 @@
 #include "log.h"
 
 static void aim(Entity *e);
-static void hit(Entity *e0, Entity *e1, Vec v0, Vec v1);
 
-static Clock debug_clock;
-
-static EntityType _rocket = {
+EntityType type_rocket = {
     ENTITY_TYPE_ROCKET,     /* type id */
     aim,                    /* activation callback */
-    hit,                    /* collision callback  */
-    16,                     /* radius  */
-    1,                      /* mass    */
+    0,                      /* collision callback */
+    0,                      /* interval */
+    1000,                   /* energy */
+    1,                      /* health */
+    0,                      /* length */
+    1,                      /* mass */
+    16,                     /* radius */
     {500,20},               /* acceleration */
-    {20,20},                /* brake   */
-    1,                      /* turn speed   */
-    100,                    /* max health   */
+    {20,20},                /* brake */
+    1,                      /* rotation */
 };
-
-EntityType *type_rocket = &_rocket;
 
 static void aim(Entity *rocket) {
     Entity *e;
@@ -51,17 +49,12 @@ static void aim(Entity *rocket) {
     }
 
     if(target) {
-        Pos acc   = 1 - fabs(best_v.y);
-        Pos speed = len(rocket->type->max_a) * acc * acc;
+        Real acc   = 1 - fabs(best_v.y);
+        Real speed = len(rocket->type->max_a) * acc * acc;
         Vec v = scale(best_v, speed);
         entity_accelerate_to(rocket, v);
         entity_rotate(rocket, best_v.y);
     } else {
         entity_accelerate_to(rocket, _0);
     }
-}
-
-static void hit(Entity *rocket, Entity *e1, Vec v0, Vec v1) {
-    rocket->health -= 0.1*physics_impact(rocket->v, v0);
-    rocket->v = v0;
 }

@@ -1,23 +1,30 @@
-/* simple implementation of priority queues
- *
- * pq is a pointer to an array of length n (n+1 for insert)
- *                             with elements of size s
- * pq_add receives the new element in a
- * pq_del and pq_add copy the removed element into a
- *
- * compar should have the same semantics as in qsort(3)
- */
+typedef struct PrioQueue PrioQueue;
 
-void pq_add(void *a,
-            void *pq, size_t n, size_t s,
-            int (*compar)(const void *, const void *));
+struct PrioQueue {
+    char  *mem;
+    size_t n,i;
+    size_t size;
+    int  (*cmp)(const void *, const void *);
+};
 
-void pq_del(void *a, size_t i,
-            void *pq, size_t n, size_t s,
-            int (*compar)(const void *, const void *));
+void pq_init(PrioQueue *pq, void *p, size_t n, size_t size,
+             int (*cmp)(const void *, const void *));
 
-void pq_min(void *a,
-            void *pq, size_t n, size_t s,
-            int (*compar)(const void *, const void *));
+void *pq_alloc(PrioQueue *pq);
+void *pq_alloc_check(PrioQueue *pq, size_t size);
 
-void pq_peek(void *a, void *pq, size_t s);
+/* invalidate all iterators */
+void  pq_free_min(PrioQueue *pq);
+void  pq_free_all(PrioQueue *pq);
+void  pq_decreased(PrioQueue *pq, void *p);
+
+#define pq_static(pq,p,c)   pq_init(pq, p, sizeof(p)/sizeof(*p), sizeof(*p), c);
+#define pq_new(pq,t)        ((t*)pq_alloc_check(pq,sizeof(t)))
+#define pq_min(pq,t)        ((t*)(pq)->mem)
+#define pq_empty(pq)        ((pq)->i == 0)
+
+#define pq_foreach(pq,p,t) \
+    for (p = pq_min(pq,t); \
+         !pq_empty(pq); \
+         pq_free_min(pq)) /* note: no need to update p each iteration */
+

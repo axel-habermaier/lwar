@@ -1,14 +1,11 @@
+typedef struct Packet Packet;
+
 enum {
     APP_ID = 0xf27087c5,
-    UPDATE_HEADER_LENGTH = 2 * sizeof(uint8_t), /* msg type and n */
-    UPDATE_LENGTH = 2*sizeof(uint16_t)  /* Id */
-                  + 4*sizeof(int16_t)   /* x,v */
-                  + sizeof(uint16_t) + sizeof(uint8_t), /* rot,health */
-    HEADER_LENGTH = 3*sizeof(uint32_t),
-	MAX_PACKET_LENGTH = 512,
+    UPDATE_HEADER_LENGTH = 2 * sizeof(uint8_t),  /* msg type, n */
+    HEADER_LENGTH        = 3 * sizeof(uint32_t), /* app_id, ack, time */
+	MAX_PACKET_LENGTH    = 512,
 };
-
-typedef struct Packet Packet;
 
 struct Packet {
     /* some stores serialized messages in p+a...p+b */
@@ -22,23 +19,20 @@ struct Packet {
     size_t  ack, time;
 
     /* connection failed */
-    int     io_failed;
+    bool    io_failed;
 };
 
-int  packet_hasdata(Packet *p);
+bool packet_hasdata(Packet *p);
 
 /* return how many updates + 1 header still fit into p */
-size_t packet_update_n(Packet *p);
+size_t packet_update_n(Packet *p, size_t len);
 
 void packet_init(Packet *p, Address *adr, size_t ack, size_t time);
 
-int  packet_put(Packet *p, Message *m, size_t seqno);
-int  packet_get(Packet *p, Message *m, size_t *seqno);
+bool packet_put(Packet *p, Pack *pack, void *u);
+bool packet_get(Packet *p, Unpack *unpack, void *u);
 
-int  packet_put_u(Packet *p, Update *u);
-int  packet_get_u(Packet *p, Update *u);
-
-int  packet_recv(Packet *p);
-int  packet_send(Packet *p);
+bool packet_recv(Packet *p);
+bool packet_send(Packet *p);
 
 void packet_debug(Packet *p);

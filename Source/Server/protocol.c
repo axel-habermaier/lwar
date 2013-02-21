@@ -1,11 +1,13 @@
 #include <assert.h>
 #include <math.h>
+#include <setjmp.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "server.h"
+#include "coroutine.h"
 #include "message.h"
 #include "packet.h"
 #include "log.h"
@@ -17,139 +19,19 @@
 
 enum {
     UPDATE_INTERVAL = 30,
-    RETRANSMIT_INTERVAL = 2*UPDATE_INTERVAL,
 };
 
-static void protocol_send_full(Address *adr, size_t seqno);
-static void protocol_send_gamestate(Client *c);
-static void protocol_timed_out(Client *c);
+static void send_full(Address *adr, size_t ack);
+static void send_kick(Client *c);
+
+void queue_forward(Message *m);
+Message *queue_next(cr_t *state, Client *c, size_t *tries);
 
 static struct {
     size_t nsend,nresend,nrecv;
 } stats;
 
-typedef struct QueuedMessage QueuedMessage;
-typedef struct PerClient     PerClient;
-
-struct PerClient {
-    size_t seqno;
-    size_t tries;
-    Clock last_tx_time;
-};
-
-struct QueuedMessage {
-    List _l;
-    unsigned int dest;
-    /* sequence numbers for each client */
-    PerClient c[MAX_CLIENTS];
-    Message m;
-};
-
-static QueuedMessage _queue[MAX_QUEUE];
-
-static void qm_ctor(size_t i, void *p) {
-    QueuedMessage *qm = (QueuedMessage*)p;
-    qm->dest = 0;
-}
-
-static void qm_dtor(size_t i, void *p) {}
-
-static int qm_check_obsolete(size_t i, void *p) {
-    QueuedMessage *qm = (QueuedMessage*)p;
-    /* only keep qm for receiving clients */
-    return (qm->dest & server->client_mask) == 0;
-}
-
-static int qm_check_dest(Client *c, QueuedMessage *qm) {
-    size_t id = c->player.id.n;
-    return (qm->dest & (1 << id));
-}
-
-static void qm_set_dest(Client *c, QueuedMessage *qm) {
-    size_t id = c->player.id.n;
-    qm->dest |= (1 << id);
-}
-
-static void qm_clear_dest(Client *c, QueuedMessage *qm) {
-    size_t id = c->player.id.n;
-    qm->dest &= ~(1 << id);
-}
-
-#define qm_seqno(c,qm) qm->c[c->player.id.n].seqno
-#define qm_tries(c,qm) qm->c[c->player.id.n].tries
-#define qm_last_tx_time(c,qm) qm->c[c->player.id.n].last_tx_time
-
-static int qm_check_relevant(Client *c, QueuedMessage *qm) {
-    
-    /* message not for c */
-    if(!qm_check_dest(c, qm)) {
-        return 0;
-    }
-
-    if(   qm_tries(c,qm) > 0
-       && qm_last_tx_time(c,qm) + RETRANSMIT_INTERVAL < server->cur_time)
-    {
-        return 0;
-    }
-    else {
-        qm_last_tx_time(c,qm) = server->cur_time;
-    }
-
-    /* unreliable message for c, do not resend */
-    if(!is_reliable(&qm->m)) {
-        qm_clear_dest(c, qm);
-        return 1;
-    }
-
-    /* reliable message for c, already acknowledged */
-    if(qm_seqno(c, qm) <= c->last_in_ack) {
-        qm_clear_dest(c, qm);
-        return 0;
-    }
-
-    /* reliable, unacknowledged message for c */
-    return 1;
-}
-
-static int m_check_seqno(Client *c, Message *m, size_t seqno) {
-    if(c && is_reliable(m)) {
-        if(seqno <= c->last_in_seqno) return 0;
-        c->last_in_seqno = seqno;
-    }
-    return 1;
-}
-
-static QueuedMessage *qm_create() {
-    QueuedMessage *qm = pool_new(&server->queue, QueuedMessage);
-    assert(qm); /* TODO: handle allocation failure */
-    return qm;
-}
-
-static void qm_enqueue(Client *c, QueuedMessage *qm) {
-    qm_set_dest(c,qm);
-    if(is_reliable(&qm->m)) {
-        qm_seqno(c,qm) = (c->next_out_seqno ++);
-        qm_tries(c,qm) = 0;
-    }
-}
-
-static Message *message_unicast(Client *c, MessageType type) {
-    QueuedMessage *qm = qm_create();
-    Message *m = &qm->m;
-    m->type = type;
-    qm_enqueue(c,qm);
-    return m;
-}
-
-static Message *message_broadcast(MessageType type) {
-    QueuedMessage *qm = qm_create();
-    Message *m = &qm->m;
-    Client *c;
-    m->type = type;
-    clients_foreach(c)
-        qm_enqueue(c,qm);
-    return m;
-}
+static jmp_buf io_error_handler;
 
 static const char *src_fmt(Client *c) {
     static char s[16];
@@ -165,7 +47,7 @@ static const char *dest_fmt(Client *c) {
     else    return "<? ";
 }
 
-static int misbehaves(Client *c, int test, const char *msg) {
+static bool check_behavior(Client *c, bool test, const char *msg) {
     if(test) {
         c->misbehavior ++;
 		log_debug("misbehavior of %d: %s", c->player.id.n, msg);
@@ -173,67 +55,69 @@ static int misbehaves(Client *c, int test, const char *msg) {
     return test;
 }
 
-static int misbehaves_id(Client *c, Id id) {
-    return misbehaves(c, !id_eq(c->player.id, id), "wrong player id");
+static bool check_behavior_id(Client *c, Id id) {
+    return check_behavior(c, !id_eq(c->player.id, id), "wrong player id");
+}
+
+static bool check_seqno(Client *c, Message *m, size_t seqno) {
+    if(c && is_reliable(m)) {
+        if(seqno <= c->last_in_seqno) return false;
+        c->last_in_seqno = seqno;
+    }
+    return true;
 }
 
 static void message_handle(Client *c, Address *adr, Message *m, size_t time, size_t seqno) {
-    Message *r;
-
     switch(m->type) {
     case MESSAGE_CONNECT:
         /* TODO: probably allow reconnects */
-        if(misbehaves(c, c != 0, "reconnect")) return;
+        if(check_behavior(c, c != 0, "reconnect")) return;
         c = client_create(adr);
         if(c) {
-            m_check_seqno(c, m, seqno);
-            r = message_broadcast(MESSAGE_JOIN);
-            r->join.player_id = c->player.id;
+            check_seqno(c, m, seqno);
+            c->last_activity = server->cur_clock;
 
-            c->last_activity = server->cur_time;
-            protocol_send_gamestate(c);
+            queue_join(c);
+            queue_gamestate_for(c);
         } else {
-            protocol_send_full(adr, seqno);
+            send_full(adr, seqno);
         }
         break;
 
     case MESSAGE_DISCONNECT:
         if(!c) return;
         c->hasleft = 1; /* do not broadcast leave message on timeout */
-        r = message_broadcast(MESSAGE_LEAVE);
-        r->leave.player_id = c->player.id;
+        queue_leave(c);
         break;
 
     case MESSAGE_CHAT:
         if(!c) return;
-        if(misbehaves_id(c, m->chat.player_id)) return;
-        r = message_broadcast(MESSAGE_CHAT);
-        r->chat.player_id = m->chat.player_id;
-        r->chat.msg       = m->chat.msg;
+        if(check_behavior_id(c, m->chat.player_id)) return;
+        queue_forward(m);
         break;
 
     case MESSAGE_SELECTION:
         if(!c) return;
-        if(misbehaves_id(c, m->selection.player_id)) return;
-        player_select(&c->player, m->selection.ship_type, m->selection.weapon_type);
-        r = message_broadcast(MESSAGE_SELECTION);
-        r->selection.player_id   = m->selection.player_id;
-        r->selection.ship_type   = m->selection.ship_type;
-        r->selection.weapon_type = m->selection.weapon_type;
+        if(check_behavior_id(c, m->selection.player_id)) return;
+        player_select(&c->player,
+                      m->selection.ship_type,
+                      m->selection.weapon_type1,
+                      m->selection.weapon_type2,
+                      m->selection.weapon_type3,
+                      m->selection.weapon_type4);
+        queue_forward(m);
         break;
 
     case MESSAGE_NAME:
         if(!c) return;
-        if(misbehaves_id(c, m->name.player_id)) return;
+        if(check_behavior_id(c, m->name.player_id)) return;
         player_rename(&c->player, m->name.nick);
-        r = message_broadcast(MESSAGE_NAME);
-        r->name.player_id = m->name.player_id;
-        r->name.nick      = m->name.nick;
+        queue_forward(m);
         break;
 
     case MESSAGE_INPUT:
         if(!c) return;
-        if(misbehaves_id(c, m->input.player_id)) return;
+        if(check_behavior_id(c, m->input.player_id)) return;
         {
             if(m->input.frameno < c->last_in_frameno)
                 break;
@@ -241,35 +125,40 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
 			c->last_in_frameno = m->input.frameno;
 
             player_input(&c->player,
-                         mask & m->input.up,
-                         mask & m->input.down,
-                         mask & m->input.left,
-                         mask & m->input.right,
+                         mask & m->input.forwards,
+                         mask & m->input.backwards,
+                         mask & m->input.turn_left,
+                         mask & m->input.turn_right,
+                         mask & m->input.strafe_left,
+                         mask & m->input.strafe_right,
                          mask & m->input.fire1,
                          mask & m->input.fire2,
-                            rad(m->input.angle));
+                         mask & m->input.fire3,
+                         mask & m->input.fire4,
+                                m->input.aim_x,
+                                m->input.aim_y
+                         );
         }
         break;
 
     default:
-        misbehaves(c, c != 0, "invalid message id");
+        check_behavior(c, c != 0, "invalid message id");
     }
 }
 
 static void packet_scan(Packet *p) {
     Message m;
-    size_t seqno;
     Client *c = client_lookup(&p->adr);
     if(c) {
         c->last_in_ack   = max(p->ack, c->last_in_ack);
-        c->last_activity = max(server->cur_time, c->last_activity);
+        c->last_activity = max(server->cur_clock, c->last_activity);
     }
 
-    while(packet_get(p, &m, &seqno)) {
-        if(m_check_seqno(c, &m, seqno)) {
+    while(packet_get(p, message_unpack, &m)) {
+        if(check_seqno(c, &m, m.seqno)) {
             if(is_reliable(&m))
                 message_debug(&m, src_fmt(c));
-            message_handle(c, &p->adr, &m, p->time, seqno);
+            message_handle(c, &p->adr, &m, p->time, m.seqno);
         }
     }
 }
@@ -286,177 +175,143 @@ void protocol_recv() {
     }
     if(p.io_failed) {
         Client *c = client_lookup(&p.adr);
-        if(c) protocol_timed_out(c);
+        if(c) queue_timeout(c);
     }
 
     timer_stop(TIMER_RECV);
     counter_set(COUNTER_RECV, stats.nrecv);
 }
 
-void protocol_notify_state(Entity *e) {
-    Message *m;
-    if(e->dead) {
-        m = message_broadcast(MESSAGE_REMOVE);
-        m->remove.entity_id = e->id;
-    } else {
-        m = message_broadcast(MESSAGE_ADD);
-        m->add.entity_id = e->id;
-        m->add.player_id = e->player->id;
-        m->add.type_id   = e->type->id;
-    }
+void protocol_notify_entity(Entity *e) {
+    if(!e->type->format) return;
+
+    if(e->dead) queue_remove(e);
+    else        queue_add(e);
 }
 
-void protocol_notify_collision(Entity *e0, Entity *e1, Vec v) {
-    Message *m = message_broadcast(MESSAGE_COLLISION);
-    m->collision.entity_id[0] = e0->id;
-    m->collision.entity_id[1] = e1->id;
-    m->collision.x = v.x;
-    m->collision.y = v.y;
-}
-
-static void protocol_send_gamestate(Client *cn) {
-    Message *r;
-    Client *c;
-    clients_foreach(c) {
-		if(c->dead) continue; // TODO: Hack
-        if(c == cn) continue;
-
-        r = message_unicast(cn, MESSAGE_JOIN);
-        r->join.player_id = c->player.id;
-
-        r = message_unicast(cn, MESSAGE_NAME);
-        r->name.player_id = c->player.id;
-        r->name.nick      = c->player.name;
-    }
-
-    Entity *e;
-    entities_foreach(e) {
-		if(e->dead) continue; // TODO: Hack
-        r = message_unicast(cn, MESSAGE_ADD);
-        r->add.entity_id  = e->id;
-        r->add.player_id  = e->player->id;
-        r->add.type_id    = e->type->id;
-    }
-
-    r = message_unicast(cn, MESSAGE_SYNCED);
+void protocol_notify_collision(Collision *c) {
+    queue_collision(c);
 }
 
 static void packet_init_header(Client *c, Packet *p) {
-    packet_init(p, &c->adr, c->last_in_seqno, server->cur_time);
+    packet_init(p, &c->adr, c->last_in_seqno, server->cur_clock);
 }
 
-static int packet_fmt(Client *c, Packet *p, QueuedMessage *qm) {
-    if(!qm_check_relevant(c, qm)) return 1;
-    if(qm_tries(c,qm) == 0 /* && is_reliable(&qm->m) */)
-        message_debug(&qm->m, dest_fmt(c));
+static void send_kick(Client *c) {
+    Packet  p;
+    packet_init_header(c, &p);
 
-    if(packet_put(p, &qm->m, qm_seqno(c, qm))) {
-        if(qm_tries(c,qm) > 0)
-            stats.nresend ++;
-        qm_tries(c,qm) ++;
-        return 1;
-    }
-    return 0;
+    Message m;
+    static char kick_msg[] = "kicked for (protocol) misbehavior";
+    Str kick_msg_s = { strlen(kick_msg), kick_msg };
+    m.type = MESSAGE_CHAT;
+    m.chat.player_id = server->self->player.id;
+    m.chat.msg = kick_msg_s;
+    packet_put(&p, message_pack, &m);
+
+    m.type = MESSAGE_LEAVE;
+    m.leave.player_id = c->player.id;
+    packet_put(&p, message_pack, &m);
+
+    packet_send(&p);
+    stats.nsend ++;
 }
 
-static int packet_send_init(Client *c, Packet *p) {
+static void send_full(Address *adr, size_t ack) {
+    Packet p;
+    packet_init(&p, adr, ack, 0);
+
+    Message m;
+    m.type  = MESSAGE_FULL;
+    m.seqno = 0;
+    packet_put(&p, message_pack, &m);
+
+    packet_send(&p);
+    stats.nsend ++;
+}
+
+static void packet_send_to(Client *c, Packet *p) {
     if(packet_hasdata(p)) {
         //packet_debug(p);
         packet_send(p);
         stats.nsend ++;
-        if(p->io_failed) return 0;
-        packet_init_header(c, p);
+        if(p->io_failed)
+            longjmp(io_error_handler,1);
+        /* packet_init_header(c, p); */
     }
-    return 1;
 }
 
-static int packet_fmt_update_header(Packet *p, size_t n) {
+static void packet_send_to_init(Client *c, Packet *p) {
+    packet_send_to(c,p);
+    packet_init_header(c,p);
+}
+
+bool packet_put_update(Packet *p, size_t type, size_t n) {
     Message m;
-    m.type = MESSAGE_UPDATE;
+    m.type = (MessageType)type;
+    m.seqno = 0;
     m.update.n = n;
-    return packet_put(p, &m, 0);
+    return packet_put(p, message_pack, &m);
 }
 
-static int packet_fmt_update(Packet *p, Entity *e) {
-    Update u;
-    u.entity_id = e->id;
-    u.x   = e->x.x;
-    u.y   = e->x.y;
-    u.vx  = e->v.x;
-    u.vy  = e->v.y;
-    u.angle  = deg(e->phi);
-    u.health = e->health * 100 / e->type->max_health;
-    return packet_put_u(p, &u);
-}
+static void send_queue_for(Client *c, Packet *p) {
+    Message *m;
+    size_t tries;
+    cr_t state = {0};
 
-static int protocol_send_client(Client *c) {
-    Packet p;
-    Entity *e;
-    QueuedMessage *qm;
+    while((m = queue_next(&state, c, &tries))) {
+        if(tries > 0)
+            stats.nresend ++;
+        if(tries == 0 /* && is_reliable(&qm->m) */)
+            message_debug(m, dest_fmt(c));
 
-    packet_init_header(c, &p);
-
-    queue_foreach(qm) {
-    again_qm:
-        if(!packet_fmt(c, &p, qm)) { /* did not fit any more */
-            int ok = packet_send_init(c, &p);
-            if(!ok) return 0;
-            goto again_qm;
+    again_m:
+        if(!packet_put(p, message_pack, m)) {
+            packet_send_to_init(c, p);
+            goto again_m;
         }
     }
+}
 
-    size_t n = 0;
-    size_t k = pool_nused(&server->entities);
-    entities_foreach(e) {
+static void send_updates_for(Client *c, Packet *p, Format *f) {
+    Entity *e;
+    size_t k = 0;
+    size_t n = f->n;
+
+    updates_foreach(f,e) {
+        if(e->dead) continue;
     again_e:
-        if(!n) {
-            n = min(k, packet_update_n(&p));
-            if(n) {
-                assert(packet_fmt_update_header(&p, n));
+        if(!k) {
+            k = min(n, packet_update_n(p,f->len));
+            if(k) {
+                assert(packet_put_update(p, f->id, k));
             } else {
-                int ok = packet_send_init(c, &p);
-                if(!ok) return 0;
+                packet_send_to_init(c, p);
             }
             goto again_e;
         } else {
-            assert(packet_fmt_update(&p, e));
-            n --;
+            assert(packet_put(p, f->pack, e));
             k --;
+            n --;
         }
     }
-    assert(k == 0);
-    
-    return packet_send_init(c, &p);
+    assert(n == 0);
 }
 
-/* If a client times out, its dead flag is set,
- * so that the client can be cleaned up later.
- * If the client has previously sent a disconnect message,
- * then hasleft is set and the other players do not need further notice.
- * client_remove also disables c as message recepient.
- */
-static void protocol_timed_out(Client *c) {
-    Message *r;
-    if(!c->hasleft) {
-        r = message_broadcast(MESSAGE_LEAVE);
-        r->leave.player_id = c->player.id;
-    }
-    client_remove(c);
-}
+static void send_messages_for(Client *c, Packet *p) {
+    Format *f;
 
-/* Client has sent too many confusing messages,
- */
-static void protocol_kick(Client *c) {
-    Message *r;
-    static char kick_msg[] = "kicked for (protocol) misbehavior";
-    Str kick_msg_s = { strlen(kick_msg), kick_msg };
-    r = message_unicast(c, MESSAGE_CHAT);
-    r->chat.player_id = server->self->player.id;
-    r->chat.msg = kick_msg_s;
+    packet_init_header(c, p);
+
+    send_queue_for(c, p);
+    formats_foreach(f)
+        send_updates_for(c, p, f);
+
+    packet_send_to(c, p);
 }
 
 /* (re)send queued messages */
-void protocol_send(int force) {
+void protocol_send(bool force) {
     if(!force && !clock_periodic(&server->update_periodic, UPDATE_INTERVAL))
         return;
 
@@ -466,40 +321,33 @@ void protocol_send(int force) {
 
     Client *c;
     clients_foreach(c) {
-        if(client_isbot(c)) {
+        if(!c->remote) {
             continue;
-        } else if(c->last_activity + TIMEOUT_INTERVAL < server->cur_time) {
-            protocol_timed_out(c);
-        } else if (c->misbehavior > MISBEHAVIOR_LIMIT) {
-            protocol_kick(c);
-            protocol_timed_out(c);
+        }
+        else if(c->last_activity + TIMEOUT_INTERVAL < server->cur_clock) {
+            queue_timeout(c);
+            client_remove(c);
+        }
+        else if (c->misbehavior > MISBEHAVIOR_LIMIT) {
+            send_kick(c);
+            queue_timeout(c);
+            client_remove(c);
+        }
+        else if(setjmp(io_error_handler)) {
+            /* if setjmp returns != 0
+             * there was an error in send_messages_for
+             * thrown in packet_send_init
+             */
+            queue_timeout(c);
+            client_remove(c);
         }
         else {
-            int ok = protocol_send_client(c);
-            /* !ok indicates a socket error */
-            if(!ok) protocol_timed_out(c);
+            Packet p;
+            send_messages_for(c,&p);
         }
     }
 
     timer_stop(TIMER_SEND);
     counter_set(COUNTER_SEND,   stats.nsend);
     counter_set(COUNTER_RESEND, stats.nresend);
-}
-
-static void protocol_send_full(Address *adr, size_t seqno) {
-    Packet p;
-    Message m;
-    m.type = MESSAGE_FULL;
-    packet_init(&p, adr, seqno, 0);
-    packet_put(&p, &m, 0);
-    packet_send(&p);
-    stats.nsend ++;
-}
-
-void protocol_init() {
-    pool_static(&server->queue, _queue, qm_ctor, qm_dtor);
-}
-
-void protocol_cleanup() {
-    pool_free_pred(&server->queue,   qm_check_obsolete);
 }

@@ -70,7 +70,6 @@
     <Compile Include="rules\rocket.c" />
     <Compile Include="rules\gun.c" />
     <Compile Include="rules\phaser.c" />
-    <Compile Include="item.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="connection.h" />

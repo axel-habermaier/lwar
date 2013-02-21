@@ -6,7 +6,6 @@
 #include "log.h"
 
 static Client _clients[MAX_CLIENTS];
-static Address dummy = {0,0};
 
 static void client_ctor(size_t i, void *p) {
     Client *c = (Client*)p;
@@ -28,7 +27,7 @@ static void client_dtor(size_t i, void *p) {
     c->player.id.gen ++;
 }
 
-static int client_check_obsolete(size_t i, void *p) {
+static bool client_check_obsolete(size_t i, void *p) {
     Client *c = (Client *)p;
     return c->dead; /* (server->client_mask & (1 << i)) == 0; */
 }
@@ -37,37 +36,36 @@ Client *client_create(Address *adr) {
     Client *c = pool_new(&server->clients, Client);
     if(c) {
         c->adr = *adr;
-        server->client_mask |= (1 << c->player.id.n);
+        c->remote = 1;
+        set_insert(server->connected, c->player.id.n);
         log_debug("+ client %d", c->player.id.n);
     }
     return c;
 }
 
-Client *bot_create() {
+Client *client_create_local() {
     Client *c = pool_new(&server->clients, Client);
     if(c) {
-        c->adr = dummy;
+        c->adr = address_none;
+        c->remote = 0;
         log_debug("+ bot %d", c->player.id.n);
     }
     return c;
 }
 
-int client_isbot(Client *c) {
-    return address_eq(&c->adr, &dummy);
-}
-
 void client_remove(Client *c) {
     c->dead = 1;
-    server->client_mask &= ~(1 << c->player.id.n);
+    set_remove(server->connected, c->player.id.n);
     log_debug("- client %d", c->player.id.n);
 }
 
 Client *client_lookup(Address *adr) {
     if(!adr) return 0;
     Client *c;
-    clients_foreach(c)
-        if(address_eq(&c->adr, adr))
+    clients_foreach(c) {
+        if(c->remote && address_eq(&c->adr, adr))
             return c;
+    }
     return 0;
 }
 

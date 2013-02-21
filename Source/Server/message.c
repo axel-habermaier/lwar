@@ -27,64 +27,48 @@ static size_t str_unpack(const char *in, Str *out) {
     return i + out->n;
 }
 
-static size_t id_pack(char *out, Id id) {
+size_t id_pack(char *out, Id id) {
     uint16_pack(out,   id.gen);
     uint16_pack(out+2, id.n);
     return 4;
 }
 
-static size_t id_unpack(const char *out, Id *id) {
+size_t id_unpack(const char *out, Id *id) {
     uint16_unpack(out,   &id->gen);
     uint16_unpack(out+2, &id->n);
     return 4;
 }
 
-size_t header_pack(char *s, Header *h) {
+size_t header_pack(char *s, size_t app_id, size_t ack, size_t time) {
     size_t i=0;
-    i += uint32_pack(s+i, h->app_id);
-    i += uint32_pack(s+i, h->ack);
-    i += uint32_pack(s+i, h->time);
+    i += uint32_pack(s+i, app_id);
+    i += uint32_pack(s+i, ack);
+    i += uint32_pack(s+i, time);
     return i;
 }
 
-size_t header_unpack(const char *s, Header *h) {
+size_t header_unpack(const char *s, size_t *app_id, size_t *ack, size_t *time) {
     size_t i=0;
-    i += uint32_unpack(s+i, &h->app_id);
-    i += uint32_unpack(s+i, &h->ack);
-    i += uint32_unpack(s+i, &h->time);
+    uint32_t _app_id,_ack,_time;
+    i += uint32_unpack(s+i, &_app_id);
+    i += uint32_unpack(s+i, &_ack);
+    i += uint32_unpack(s+i, &_time);
+    *app_id = _app_id;
+    *ack    = _ack;
+    *time   = _time;
     return i;
 }
 
-size_t update_pack(char *s, Update *u) {
-    size_t i=0;
-    i += id_pack(s+i, u->entity_id);
-    i += int16_pack(s+i, u->x);
-    i += int16_pack(s+i, u->y);
-    i += int16_pack(s+i, u->vx);
-    i += int16_pack(s+i, u->vy);
-    i += uint16_pack(s+i, u->angle);
-    i += uint8_pack(s+i, u->health);
-    return i;
-}
-
-size_t update_unpack(const char *s, Update *u) {
-    size_t i=0;
-    i += id_unpack(s+i, &u->entity_id);
-    i += int16_unpack(s+i, &u->x);
-    i += int16_unpack(s+i, &u->y);
-    i += int16_unpack(s+i, &u->vx);
-    i += int16_unpack(s+i, &u->vy);
-    i += uint16_unpack(s+i, &u->angle);
-    i += uint8_unpack(s+i, &u->health);
-    return i;
-}
-
-size_t message_pack(char *s, Message *m, size_t seqno) {
+size_t message_pack(char *s, void *p) {
+    Message *m = (Message *)p;
     size_t i=0;
     i += uint8_pack(s+i, m->type);
 
     if(is_reliable(m)) {
-        i += uint32_pack(s+i, seqno);
+        assert(m->seqno);
+        i += uint32_pack(s+i, m->seqno);
+    } else {
+        assert(!m->seqno);
     }
 
     switch(m->type) {
@@ -113,7 +97,10 @@ size_t message_pack(char *s, Message *m, size_t seqno) {
     case MESSAGE_SELECTION:
         i += id_pack(s+i, m->selection.player_id);
         i += uint8_pack(s+i, m->selection.ship_type);
-        i += uint8_pack(s+i, m->selection.weapon_type);
+        i += uint8_pack(s+i, m->selection.weapon_type1);
+        i += uint8_pack(s+i, m->selection.weapon_type2);
+        i += uint8_pack(s+i, m->selection.weapon_type3);
+        i += uint8_pack(s+i, m->selection.weapon_type4);
         break;
     case MESSAGE_NAME:
         i += id_pack(s+i, m->name.player_id);
@@ -127,18 +114,26 @@ size_t message_pack(char *s, Message *m, size_t seqno) {
         assert(0);
         break;
     case MESSAGE_UPDATE:
+    case MESSAGE_UPDATE_POS:
+    case MESSAGE_UPDATE_RAY:
+    case MESSAGE_UPDATE_CIRCLE:
         i += uint8_pack(s+i, m->update.n);
         break;
     case MESSAGE_INPUT:
         i += id_pack(s+i, m->input.player_id);
         i += uint32_pack(s+i, m->input.frameno);
-        i += uint8_pack(s+i, m->input.up);
-        i += uint8_pack(s+i, m->input.down);
-        i += uint8_pack(s+i, m->input.left);
-        i += uint8_pack(s+i, m->input.right);
+        i += uint8_pack(s+i, m->input.forwards);
+        i += uint8_pack(s+i, m->input.backwards);
+        i += uint8_pack(s+i, m->input.turn_left);
+        i += uint8_pack(s+i, m->input.turn_right);
+        i += uint8_pack(s+i, m->input.strafe_left);
+        i += uint8_pack(s+i, m->input.strafe_right);
         i += uint8_pack(s+i, m->input.fire1);
-        // i += uint8_pack(s+i, m->input.fire2);
-        i += uint16_pack(s+i, m->input.angle);
+        i += uint8_pack(s+i, m->input.fire2);
+        i += uint8_pack(s+i, m->input.fire3);
+        i += uint8_pack(s+i, m->input.fire4);
+        i += int16_pack(s+i, m->input.aim_x);
+        i += int16_pack(s+i, m->input.aim_y);
         break;
     case MESSAGE_COLLISION:
         i += id_pack(s+i, m->collision.entity_id[0]);
@@ -150,7 +145,8 @@ size_t message_pack(char *s, Message *m, size_t seqno) {
     return i;
 }
 
-size_t message_unpack(const char *s, Message *m, size_t *seqno) {
+size_t message_unpack(const char *s, void *p) {
+    Message *m = (Message*)p;
     size_t i=0;
     uint8_t _type;
     i += uint8_unpack(s+i, &_type);
@@ -159,8 +155,8 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
     if(is_reliable(m)) {
         uint32_t _seqno;
         i += uint32_unpack(s+i, &_seqno);
-        assert(seqno);
-        *seqno = _seqno;
+        assert(_seqno);
+        m->seqno = _seqno;
     }
 
     switch(m->type) {
@@ -189,7 +185,10 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
     case MESSAGE_SELECTION:
         i += id_unpack(s+i, &m->selection.player_id);
         i += uint8_unpack(s+i, &m->selection.ship_type);
-        i += uint8_unpack(s+i, &m->selection.weapon_type);
+        i += uint8_unpack(s+i, &m->selection.weapon_type1);
+        i += uint8_unpack(s+i, &m->selection.weapon_type2);
+        i += uint8_unpack(s+i, &m->selection.weapon_type3);
+        i += uint8_unpack(s+i, &m->selection.weapon_type4);
         break;
     case MESSAGE_NAME:
         i += id_unpack(s+i, &m->name.player_id);
@@ -203,19 +202,26 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
         assert(0);
         break;
     case MESSAGE_UPDATE:
+    case MESSAGE_UPDATE_POS:
+    case MESSAGE_UPDATE_RAY:
+    case MESSAGE_UPDATE_CIRCLE:
         i += uint8_unpack(s+i, &m->update.n);
         break;
     case MESSAGE_INPUT:
         i += id_unpack(s+i, &m->input.player_id);
         i += uint32_unpack(s+i, &m->input.frameno);
-        i += uint8_unpack(s+i, &m->input.up);
-        i += uint8_unpack(s+i, &m->input.down);
-        i += uint8_unpack(s+i, &m->input.left);
-        i += uint8_unpack(s+i, &m->input.right);
+        i += uint8_unpack(s+i, &m->input.forwards);
+        i += uint8_unpack(s+i, &m->input.backwards);
+        i += uint8_unpack(s+i, &m->input.turn_left);
+        i += uint8_unpack(s+i, &m->input.turn_right);
+        i += uint8_unpack(s+i, &m->input.strafe_left);
+        i += uint8_unpack(s+i, &m->input.strafe_right);
         i += uint8_unpack(s+i, &m->input.fire1);
-        // i += uint8_unpack(s+i, &m->input.fire2);
-        m->input.fire2 = 0;
-        i += uint16_unpack(s+i, &m->input.angle);
+        i += uint8_unpack(s+i, &m->input.fire2);
+        i += uint8_unpack(s+i, &m->input.fire3);
+        i += uint8_unpack(s+i, &m->input.fire4);
+        i += int16_unpack(s+i, &m->input.aim_x);
+        i += int16_unpack(s+i, &m->input.aim_y);
         break;
     case MESSAGE_COLLISION:
         i += id_unpack(s+i, &m->collision.entity_id[0]);
@@ -227,6 +233,7 @@ size_t message_unpack(const char *s, Message *m, size_t *seqno) {
     return i;
 }
 
+/*
 void header_debug(Header *h, const char *s) {
     log_debug("%sheader: ack %d, time %d", s, h->ack, h->time);
 }
@@ -234,6 +241,7 @@ void header_debug(Header *h, const char *s) {
 void update_debug(Update *u, const char *s) {
     log_debug("%s pos %d (%d,%d)", s, u->entity_id.n, (int)u->x, (int)u->y);
 }
+*/
 
 void message_debug(Message *m, const char *s) {
     switch(m->type) {
@@ -259,7 +267,13 @@ void message_debug(Message *m, const char *s) {
         log_debug("%srem %d", s, m->remove.entity_id.n);
         break;
     case MESSAGE_SELECTION:
-        log_debug("%sselect %d: ship %d, weapon %d", s, m->selection.player_id.n, m->selection.ship_type, m->selection.weapon_type);
+        log_debug("%sselect %d: ship %d, weapons [%d,%d,%d,%d]",
+                  s, m->selection.player_id.n,
+                  m->selection.ship_type,
+                  m->selection.weapon_type1,
+                  m->selection.weapon_type2,
+                  m->selection.weapon_type3,
+                  m->selection.weapon_type4);
         break;
     case MESSAGE_NAME:
         log_debug("%sname %d: %.*s", s, m->name.player_id.n, m->name.nick.n, m->name.nick.s);
@@ -274,6 +288,9 @@ void message_debug(Message *m, const char *s) {
         log_debug("%stats", s);
         break;
     case MESSAGE_UPDATE:
+    case MESSAGE_UPDATE_POS:
+    case MESSAGE_UPDATE_RAY:
+    case MESSAGE_UPDATE_CIRCLE:
         log_debug("%supdate #%d", s, m->update.n);
         break;
     case MESSAGE_INPUT:

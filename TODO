@@ -1,0 +1,13 @@
+Features
+========
+
+- client: update messag types for pos,ray,circle,
+- client: render all entity types
+- server: slots need relative placement wrt ship,
+          extend entity type struct for this
+- server/Client: entity types, possible weapons, slots
+
+Bugs
+====
+
+- client: crashes when server times out

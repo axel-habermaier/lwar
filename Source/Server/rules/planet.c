@@ -8,34 +8,34 @@
 #include "vector.h"
 
 static void gravity(Entity *e0);
-static void hit(Entity *e0, Entity *e1, Vec v0, Vec v1);
 
-static const Pos gravity_factor = 10000; // 0.04;
-static EntityType _planet = {
+static const Real gravity_factor = 10000; // 0.04;
+EntityType type_planet = {
     ENTITY_TYPE_PLANET,     /* type id */
     gravity,                /* activation callback */
-    hit,                    /* collision callback  */
-    128,                    /* radius  */
-    10000,                  /* mass    */
+    0,                      /* collision callback */
+    0,                      /* interval */
+    0,                      /* energy */
+    1,                      /* health */
+    0,                      /* length */
+    10000,                  /* mass */
+    128,                    /* radius */
     {0,0},                  /* acceleration */
-    {0,0},                  /* brake   */
-    0,                      /* turn speed   */
-    1000,                   /* max health   */
+    {0,0},                  /* brake */
+    0,                      /* rotation */
 };
-
-EntityType *type_planet = &_planet;
 
 static void gravity(Entity *e0) {
     Entity *e1;
-    Pos m0 = e0->type->mass;
+    Real m0 = e0->mass;
 
     entities_foreach(e1) {
         if(e0->type != e1->type) {
-            Pos m1 = e1->type->mass;
+            Real m1 = e1->mass;
             if(m1 == 0) continue;
 
             Vec dx = sub(e0->x, e1->x);
-            Pos l  = len(dx);
+            Real l  = len(dx);
             Vec r  = normalize(dx);
 
             /* force is quadratic wrt proximity,
@@ -47,7 +47,3 @@ static void gravity(Entity *e0) {
     }
 }
 
-static void hit(Entity *e0, Entity *e1, Vec v0, Vec v1) {
-    /* e0->health -= len(v0);  */
-    /* e0->v = add(e0->v, v0); */
-}

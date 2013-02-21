@@ -4,98 +4,94 @@
 #include "list.h"
 #include "pool.h"
 
-#include "log.h"
-
-static void check_i(Pool *s, void *p) {
-    assert(s->mem <= (char*)p);
-    assert((char*)p < s->mem + s->n * s->size);
-    assert(((char*)p -  s->mem) % s->size == 0);
+static void check_i(Pool *pool, void *p) {
+    assert(pool->mem <= (char*)p);
+    assert((char*)p < pool->mem + pool->n * pool->size);
+    assert(((char*)p -  pool->mem) % pool->size == 0);
 }
 
-static size_t get_i(Pool *s, void *p) {
-    return (((char *)p) - s->mem) / s->size;
+static size_t get_i(Pool *pool, void *p) {
+    return (((char *)p) - pool->mem) / pool->size;
 }
 
-void pool_init(Pool *s, void *p, size_t n, size_t size,
+void pool_init(Pool *pool, void *p, size_t n, size_t size,
                void (*ctor)(size_t, void *),
                void (*dtor)(size_t, void *))
 {
     assert(p);
     assert(size != 0);
 
-    s->mem  = (char*)p;
-    s->n    = n;
-    s->i    = 0;
-    s->size = size;
-    s->ctor = ctor;
-    s->dtor = dtor;
-    INIT_LIST_HEAD(&s->free);
-    INIT_LIST_HEAD(&s->allocated);
-
-    log_debug("Initialized Pool at %x, %d * #%d", p, n, size);
+    pool->mem  = (char*)p;
+    pool->n    = n;
+    pool->i    = 0;
+    pool->size = size;
+    pool->ctor = ctor;
+    pool->dtor = dtor;
+    INIT_LIST_HEAD(&pool->free);
+    INIT_LIST_HEAD(&pool->allocated);
 
     size_t i;
-    for(i = 0; i < s->n; i++) {
-        List *l = (List *)(s->mem + s->size*i);
+    for(i = 0; i < pool->n; i++) {
+        List *l = (List *)(pool->mem + pool->size*i);
         INIT_LIST_HEAD(l);
-        list_add_tail(l, &s->free);
+        list_add_tail(l, &pool->free);
     }
 }
 
-void pool_add(Pool *s, size_t i) {
-    List *l = (List *)s->mem + s->size * i;
-    check_i(s, l);
+void pool_add(Pool *pool, size_t i) {
+    List *l = (List *)pool->mem + pool->size * i;
+    check_i(pool, l);
     INIT_LIST_HEAD(l);
-    list_add_tail(l, &s->free);
+    list_add_tail(l, &pool->free);
 }
 
-void *pool_get(Pool *s, size_t i) {
-    List *l = (List *)s->mem + s->size * i;
-    check_i(s, l);
+void *pool_get(Pool *pool, size_t i) {
+    List *l = (List *)pool->mem + pool->size * i;
+    check_i(pool, l);
     return l;
 }
 
-void *pool_remove(Pool *s, size_t i) {
-    List *l = (List *)s->mem + s->size * i;
-    check_i(s, l);
+void *pool_remove(Pool *pool, size_t i) {
+    List *l = (List *)pool->mem + pool->size * i;
+    check_i(pool, l);
     list_del(l);
     return l;
 }
 
-void *pool_alloc_check(Pool *s, size_t size) {
-    assert(s->size == size);
-    return pool_alloc(s);
+void *pool_alloc_check(Pool *pool, size_t size) {
+    assert(pool->size == size);
+    return pool_alloc(pool);
 }
 
 
-void *pool_alloc(Pool *s) {
-    if(list_empty(&s->free))
+void *pool_alloc(Pool *pool) {
+    if(list_empty(&pool->free))
         return 0;
-    List *l = s->free.next;
+    List *l = pool->free.next;
 
-    check_i(s, l);
-    list_move_tail(l, &s->allocated);
-    if(s->ctor)
-        s->ctor(get_i(s,l), l);
-    s->i ++;
+    check_i(pool, l);
+    list_move_tail(l, &pool->allocated);
+    if(pool->ctor)
+        pool->ctor(get_i(pool,l), l);
+    pool->i ++;
 
     return l;
 }
 
-void pool_free_pred(Pool *s, int (*pred)(size_t , void *)) {
+void pool_free_pred(Pool *pool, bool (*pred)(size_t , void *)) {
     List *l, *n;
-    list_for_each_safe(l,n,&s->allocated) {
-        check_i(s, l);
-        if(pred(get_i(s,l), l))
-            pool_free(s, l);
+    list_for_each_safe(l,n,&pool->allocated) {
+        check_i(pool, l);
+        if(pred(get_i(pool,l), l))
+            pool_free(pool, l);
     }
 }
 
-void pool_free(Pool *s, void *p) {
+void pool_free(Pool *pool, void *p) {
     List *l = (List *)p;
-    check_i(s, l);
-    list_move_tail(l, &s->free);
-    if(s->dtor)
-        s->dtor(get_i(s,l), l);
-    s->i --;
+    check_i(pool, l);
+    list_move_tail(l, &pool->free);
+    if(pool->dtor)
+        pool->dtor(get_i(pool,l), l);
+    pool->i --;
 }
