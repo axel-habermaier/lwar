@@ -1,13 +1,24 @@
-Features
+Client
 ========
 
-- client: update messag types for pos,ray,circle,
-- client: render all entity types
+- Handle ray and circle update messages
+- Render all entity types
+- Refactor entity system (component-oriented/data parallel/object-oriented entity system hybrid)
+- Print out error messages on Windows when the game dies
+
+Platform/Assets
+========
+- C# to HLSL/GLSL cross compiler
+- Convert shaders to C#
+- Manage all assets in a Visual Studio project, compiling them automatically when the solution is compiled
+- Fully support render targets with color and depth/stencil buffers
+- Remove dependency on SharpDX and invoke fxc.exe from the command line to compile HLSL shaders
+- DirectX: Construct the shader input layout from the C# shader code instead of using build-time shader reflection
+- Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
+
+Server
+========
 - server: slots need relative placement wrt ship,
           extend entity type struct for this
 - server/Client: entity types, possible weapons, slots
 
-Bugs
-====
-
-- client: crashes when server times out
