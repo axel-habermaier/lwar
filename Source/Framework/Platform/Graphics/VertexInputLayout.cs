@@ -62,10 +62,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			Assert.ArgumentNotNull(vertexInputBindings, () => vertexInputBindings);
 			Assert.ArgumentInRange(indexOffset, () => indexOffset, 0, Int32.MaxValue);
-			Assert.That(
-				vertexInputBindings.Length > 0 && vertexInputBindings.Length < GraphicsDevice.VertexInputBindingsCount,
-				"The number of vertex input elements must be between 0 and GraphicsDevice.VertexInputBindingsCount - 1.");
-
 			Assert.That(!vertexInputBindings.GroupBy(e => e.Semantics).Select((s, _) => s.Count()).Any(c => c > 1),
 						"The list of vertex input elements contains at least two elements with the same value set for the Semantics property.");
 
@@ -110,11 +106,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void Bind()
 		{
 			Assert.NotDisposed(this);
-
-			if (DeviceState.VertexInputLayout == this)
-				return;
-
-			DeviceState.VertexInputLayout = this;
 			NativeMethods.BindInputLayout(_vertexInputLayout);
 		}
 

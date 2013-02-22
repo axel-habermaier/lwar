@@ -24,15 +24,11 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="type">The type of the shader.</param>
-		/// <param name="shaderData">The shader source data.</param>
-		protected Shader(GraphicsDevice graphicsDevice, ShaderType type, byte[] shaderData)
+		protected Shader(GraphicsDevice graphicsDevice, ShaderType type)
 			: base(graphicsDevice)
 		{
-			Assert.ArgumentNotNull(shaderData, () => shaderData);
 			Assert.ArgumentInRange(type, () => type);
-
 			_type = type;
-			Reinitialize(shaderData);
 		}
 
 		/// <summary>
@@ -61,7 +57,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Binds the shader to the pipeline.
 		/// </summary>
-		protected void BindShader()
+		public void Bind()
 		{
 			NativeMethods.BindShader(_shader);
 		}

@@ -19,18 +19,12 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Binds the buffer to the given slot.
+		///   Binds the constant buffer to the given slot.
 		/// </summary>
 		/// <param name="slot">The slot the constant buffer should be bound to.</param>
 		public void Bind(int slot)
 		{
 			Assert.NotDisposed(this);
-			Assert.InRange(slot, 0, GraphicsDevice.ConstantBufferSlotCount);
-
-			if (DeviceState.ConstantBuffers[slot] == this)
-				return;
-
-			DeviceState.ConstantBuffers[slot] = this;
 			BindBuffer(slot);
 		}
 

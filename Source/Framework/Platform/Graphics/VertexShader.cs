@@ -11,24 +11,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		/// <param name="shaderData">The shader source data.</param>
-		public VertexShader(GraphicsDevice graphicsDevice, byte[] shaderData)
-			: base(graphicsDevice, ShaderType.VertexShader, shaderData)
+		public VertexShader(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice, ShaderType.VertexShader)
 		{
-		}
-
-		/// <summary>
-		///   Binds the vertex shader to the pipeline.
-		/// </summary>
-		public void Bind()
-		{
-			Assert.NotDisposed(this);
-
-			if (DeviceState.VertexShader == this)
-				return;
-
-			DeviceState.VertexShader = this;
-			BindShader();
 		}
 	}
 }

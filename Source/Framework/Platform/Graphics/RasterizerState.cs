@@ -236,13 +236,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void Bind()
 		{
 			Assert.NotDisposed(this);
-
-			if (DeviceState.RasterizerState == this)
-				return;
-
-			DeviceState.RasterizerState = this;
+			
 			CompileIfNecessary();
-
 			NativeMethods.BindRasterizerState(State);
 		}
 

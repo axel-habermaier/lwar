@@ -20,7 +20,7 @@ static D3D11_INPUT_ELEMENT_DESC* ReadInputElements(Buffer* buffer, pgInt32* size
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateShaderCore(pgShader* shader, pgShaderType type, pgVoid* shaderData)
+pgVoid pgCreateShaderCore(pgShader* shader, pgVoid* shaderData)
 {
 	Buffer buffer;
 	pgInt32 byteCodeLength, skip;
@@ -33,7 +33,7 @@ pgVoid pgCreateShaderCore(pgShader* shader, pgShaderType type, pgVoid* shaderDat
 	byteCode = (pgUint8*)shaderData + buffer.pos + sizeof(pgInt32);
 
 	byteCodeLength = ReadInt32(&buffer);
-	switch (type)
+	switch (shader->type)
 	{
 	case PG_VERTEX_SHADER:
 	{
@@ -60,8 +60,6 @@ pgVoid pgCreateShaderCore(pgShader* shader, pgShaderType type, pgVoid* shaderDat
 	default:
 		PG_NO_SWITCH_DEFAULT;
 	}
-
-	shader->type = type;
 }
 
 pgVoid pgDestroyShaderCore(pgShader* shader)

@@ -42,7 +42,6 @@
 	DXGI_FORMAT		format;
 
 #define PG_SHADER_PLATFORM					\
-	pgShaderType type;						\
 	union {									\
 		ID3D11VertexShader*	vertexShader;	\
 		ID3D11PixelShader*	pixelShader;	\

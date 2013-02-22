@@ -22,6 +22,9 @@ pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget)
 {
 	PG_ASSERT_NOT_NULL(renderTarget);
 
+	if (renderTarget->device->state.renderTarget == renderTarget)
+		renderTarget->device->state.renderTarget = NULL;
+
 	pgDestroyRenderTargetCore(renderTarget);
 	PG_FREE(renderTarget);
 }
@@ -35,6 +38,11 @@ pgVoid pgClear(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor col
 pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget)
 {
 	PG_ASSERT_NOT_NULL(renderTarget);
+
+	if (renderTarget->device->state.renderTarget == renderTarget)
+		return;
+
+	renderTarget->device->state.renderTarget = renderTarget;
 	pgBindRenderTargetCore(renderTarget);
 
 	// Reset viewport and scissor rectangle

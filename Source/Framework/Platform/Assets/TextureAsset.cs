@@ -74,9 +74,6 @@ namespace Pegasus.Framework.Platform.Assets
 				Texture = _createTexture(GraphicsDevice);
 
 			Texture.Reinitialize(description, surfaces);
-
-			for (var i = 0; i < GraphicsDevice.State.Textures.Length; ++i)
-				GraphicsDevice.State.Textures[i] = null;
 		}
 
 		/// <summary>

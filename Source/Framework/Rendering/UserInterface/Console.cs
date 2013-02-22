@@ -70,7 +70,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   The console's prompt.
 		/// </summary>
-		private ConsolePrompt _prompt;
+		private readonly ConsolePrompt _prompt;
 
 		/// <summary>
 		///   The current size of the console.

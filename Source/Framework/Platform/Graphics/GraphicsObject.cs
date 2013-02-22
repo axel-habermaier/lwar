@@ -21,13 +21,5 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Gets the graphics device this instance belongs to.
 		/// </summary>
 		internal GraphicsDevice GraphicsDevice { get; private set; }
-
-		/// <summary>
-		///   Gets the current state of the graphics device.
-		/// </summary>
-		internal GraphicsDeviceState DeviceState
-		{
-			get { return GraphicsDevice.State; }
-		}
 	}
 }

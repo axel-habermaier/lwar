@@ -209,13 +209,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void Bind()
 		{
 			Assert.NotDisposed(this);
-
-			if (DeviceState.BlendState == this)
-				return;
-
-			DeviceState.BlendState = this;
+			
 			CompileIfNecessary();
-
 			NativeMethods.BindBlendState(State);
 		}
 

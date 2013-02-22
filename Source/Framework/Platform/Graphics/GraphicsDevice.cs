@@ -11,31 +11,6 @@ namespace Pegasus.Framework.Platform.Graphics
 	public sealed class GraphicsDevice : DisposableObject
 	{
 		/// <summary>
-		///   The maximum number of vertex input bindings that can be bound simultaneously.
-		/// </summary>
-		public const int VertexInputBindingsCount = 8;
-
-		/// <summary>
-		///   The maximum number of textures that can be bound simultaneously.
-		/// </summary>
-		public const int TextureSlotCount = 16;
-
-		/// <summary>
-		///   The maximum number of samplers that can be bound simultaneously.
-		/// </summary>
-		public const int SamplerSlotCount = 16;
-
-		/// <summary>
-		///   The maximum number of constant buffers that can be bound simultaneously.
-		/// </summary>
-		public const int ConstantBufferSlotCount = 14;
-
-		/// <summary>
-		///   The maximum number of supported mipmap levels per texture.
-		/// </summary>
-		public const int MaxMipmaps = 16;
-
-		/// <summary>
 		///   The native graphics device instance.
 		/// </summary>
 		private readonly IntPtr _device;
@@ -46,8 +21,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal GraphicsDevice()
 		{
 			Log.Info("Initializing graphics device...");
-
-			State = new GraphicsDeviceState();
 			_device = NativeMethods.CreateGraphicsDevice();
 
 			RasterizerState.InitializeDefaultInstances(this);
@@ -64,11 +37,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			get { return _device; }
 		}
-
-		/// <summary>
-		///   Gets the current state of the graphics device.
-		/// </summary>
-		internal GraphicsDeviceState State { get; private set; }
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
@@ -117,10 +85,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void SetViewport(Rectangle viewport)
 		{
 			Assert.NotDisposed(this);
-			if (State.Viewport == viewport)
-				return;
-
-			State.Viewport = viewport;
 			NativeMethods.SetViewport(_device, viewport.Left, viewport.Top, viewport.Width, viewport.Height);
 		}
 
@@ -131,10 +95,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void SetPrimitiveType(PrimitiveType primitiveType)
 		{
 			Assert.NotDisposed(this);
-			if (State.PrimitiveType == primitiveType)
-				return;
-
-			State.PrimitiveType = primitiveType;
 			NativeMethods.SetPrimitiveType(_device, primitiveType);
 		}
 
@@ -147,10 +107,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void SetScissorRectangle(Rectangle rectangle)
 		{
 			Assert.NotDisposed(this);
-			if (State.ScissorRectangle == rectangle)
-				return;
-
-			State.ScissorRectangle = rectangle;
 			NativeMethods.SetScissorRect(_device, rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height);
 		}
 

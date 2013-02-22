@@ -199,6 +199,20 @@ pgVoid pgCaptureMouseCore(pgWindow* window);
 pgVoid pgReleaseMouseCore(pgWindow* window);
 
 //====================================================================================================================
+// Rectangle
+//====================================================================================================================
+
+typedef struct
+{
+	pgInt32 left;
+	pgInt32 top;
+	pgInt32 width;
+	pgInt32 height;
+} pgRectangle;
+
+pgBool pgRectangleEqual(pgRectangle* r1, pgRectangle* r2);
+
+//====================================================================================================================
 // Graphics device
 //====================================================================================================================
 
@@ -207,9 +221,26 @@ pgVoid pgReleaseMouseCore(pgWindow* window);
 #define PG_SAMPLER_SLOT_COUNT			16
 #define PG_CONSTANT_BUFFER_SLOT_COUNT	14
 
+typedef struct 
+{
+	pgSamplerState*			samplers[PG_SAMPLER_SLOT_COUNT];
+	pgBuffer*				constantBuffers[PG_CONSTANT_BUFFER_SLOT_COUNT];
+	pgTexture*				textures[PG_TEXTURE_SLOT_COUNT];
+	pgShader*				vertexShader;
+	pgShader*				fragmentShader;
+	pgPrimitiveType			primitiveType;
+	pgDepthStencilState*	depthStencilState;
+	pgBlendState*			blendState;
+	pgRasterizerState*		rasterizerState;
+	pgRectangle				viewport;
+	pgRectangle				scissorRectangle;
+	pgRenderTarget*			renderTarget;
+	pgInputLayout*			inputLayout;
+} pgGraphicsDeviceState;
+
 struct pgGraphicsDevice
 {
-	pgPrimitiveType primitiveType;
+	pgGraphicsDeviceState state;
 	PG_GRAPHICS_DEVICE_PLATFORM
 };
 
@@ -225,6 +256,7 @@ pgVoid pgDrawIndexedCore(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 i
 
 pgInt32 pgPrimitiveCountToVertexCount(pgGraphicsDevice* device, pgInt32 primitiveCount);
 pgVoid pgPrintDeviceInfoCore(pgGraphicsDevice* device);
+pgVoid pgValidateDeviceState(pgGraphicsDevice* device);
 
 //====================================================================================================================
 // Shader
@@ -232,11 +264,12 @@ pgVoid pgPrintDeviceInfoCore(pgGraphicsDevice* device);
 
 struct pgShader
 {
-	pgGraphicsDevice* device;
+	pgGraphicsDevice*	device;
+	pgShaderType		type;
 	PG_SHADER_PLATFORM
 };
 
-pgVoid pgCreateShaderCore(pgShader* shader, pgShaderType type, pgVoid* shaderData);
+pgVoid pgCreateShaderCore(pgShader* shader, pgVoid* shaderData);
 pgVoid pgDestroyShaderCore(pgShader* shader);
 
 pgVoid pgBindShaderCore(pgShader* shader);

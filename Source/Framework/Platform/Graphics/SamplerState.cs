@@ -281,14 +281,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void Bind(int slot)
 		{
 			Assert.NotDisposed(this);
-			Assert.ArgumentInRange(slot, () => slot, 0, GraphicsDevice.SamplerSlotCount);
 
-			if (DeviceState.Samplers[slot] == this)
-				return;
-
-			DeviceState.Samplers[slot] = this;
 			CompileIfNecessary();
-
 			NativeMethods.BindSamplerState(State, slot);
 		}
 

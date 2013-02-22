@@ -61,12 +61,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void Bind(int slot)
 		{
 			Assert.NotDisposed(this);
-			Assert.InRange(slot, 0, GraphicsDevice.TextureSlotCount);
-
-			if (DeviceState.Textures[slot] == this)
-				return;
-
-			DeviceState.Textures[slot] = this;
 			NativeMethods.BindTexture(_texture, slot);
 		}
 

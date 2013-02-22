@@ -22,6 +22,9 @@ pgVoid pgDestroyBlendState(pgBlendState* blendState)
 {
 	PG_ASSERT_NOT_NULL(blendState);
 
+	if (blendState->device->state.blendState == blendState)
+		blendState->device->state.blendState = NULL;
+
 	pgDestroyBlendStateCore(blendState);
 	PG_FREE(blendState);
 }
@@ -29,6 +32,11 @@ pgVoid pgDestroyBlendState(pgBlendState* blendState)
 pgVoid pgBindBlendState(pgBlendState* blendState)
 {
 	PG_ASSERT_NOT_NULL(blendState);
+
+	if (blendState->device->state.blendState == blendState)
+		return;
+
+	blendState->device->state.blendState = blendState;
 	pgBindBlendStateCore(blendState);
 }
 
@@ -67,6 +75,9 @@ pgVoid pgDestroyDepthStencilState(pgDepthStencilState* depthStencilState)
 {
 	PG_ASSERT_NOT_NULL(depthStencilState);
 
+	if (depthStencilState->device->state.depthStencilState == depthStencilState)
+		depthStencilState->device->state.depthStencilState = NULL;
+
 	pgDestroyDepthStencilStateCore(depthStencilState);
 	PG_FREE(depthStencilState);
 }
@@ -74,6 +85,11 @@ pgVoid pgDestroyDepthStencilState(pgDepthStencilState* depthStencilState)
 pgVoid pgBindDepthStencilState(pgDepthStencilState* depthStencilState)
 {
 	PG_ASSERT_NOT_NULL(depthStencilState);
+
+	if (depthStencilState->device->state.depthStencilState == depthStencilState)
+		return;
+
+	depthStencilState->device->state.depthStencilState = depthStencilState;
 	pgBindDepthStencilStateCore(depthStencilState);
 }
 
@@ -118,6 +134,9 @@ pgVoid pgDestroyRasterizerState(pgRasterizerState* rasterizerState)
 {
 	PG_ASSERT_NOT_NULL(rasterizerState);
 
+	if (rasterizerState->device->state.rasterizerState == rasterizerState)
+		rasterizerState->device->state.rasterizerState = NULL;
+
 	pgDestroyRasterizerStateCore(rasterizerState);
 	PG_FREE(rasterizerState);
 }
@@ -125,6 +144,11 @@ pgVoid pgDestroyRasterizerState(pgRasterizerState* rasterizerState)
 pgVoid pgBindRasterizerState(pgRasterizerState* rasterizerState)
 {
 	PG_ASSERT_NOT_NULL(rasterizerState);
+
+	if (rasterizerState->device->state.rasterizerState == rasterizerState)
+		return;
+
+	rasterizerState->device->state.rasterizerState = rasterizerState;
 	pgBindRasterizerStateCore(rasterizerState);
 }
 
@@ -174,6 +198,10 @@ pgVoid pgBindSamplerState(pgSamplerState* samplerState, pgInt32 slot)
 	PG_ASSERT_NOT_NULL(samplerState);
 	PG_ASSERT_IN_RANGE(slot, 0, PG_TEXTURE_SLOT_COUNT);
 
+	if (samplerState->device->state.samplers[slot] == samplerState)
+		return;
+
+	samplerState->device->state.samplers[slot] = samplerState;
 	pgBindSamplerStateCore(samplerState, slot);
 }
 

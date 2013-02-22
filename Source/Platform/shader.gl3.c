@@ -12,7 +12,7 @@ static pgVoid Compile(pgShader* shader, pgUint8* shaderCode)
 	GLint success, logLength;
 	const GLchar* code = (GLchar*)shaderCode;
 
-	shader->id = glCreateShaderProgramv(shader->type, 1, &code);
+	shader->id = glCreateShaderProgramv(shader->glType, 1, &code);
 	PG_CHECK_GL_HANDLE("Shader", shader->id);
 
 	glGetProgramiv(shader->id, GL_LINK_STATUS, &success);
@@ -31,9 +31,9 @@ static pgVoid Compile(pgShader* shader, pgUint8* shaderCode)
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateShaderCore(pgShader* shader, pgShaderType type, pgVoid* shaderData)
+pgVoid pgCreateShaderCore(pgShader* shader, pgVoid* shaderData)
 {
-	pgConvertShaderType(type, &shader->type, &shader->bit);
+	pgConvertShaderType(shader->type, &shader->glType, &shader->bit);
 	Compile(shader, (pgUint8*)shaderData + sizeof(pgInt32));
 }
 

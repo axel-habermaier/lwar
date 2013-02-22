@@ -199,12 +199,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			Assert.NotDisposed(this);
 
-			if (DeviceState.DepthStencilState == this)
-				return;
-
-			DeviceState.DepthStencilState = this;
 			CompileIfNecessary();
-
 			NativeMethods.BindDepthStencilState(State);
 		}
 

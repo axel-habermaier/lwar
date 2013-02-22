@@ -79,8 +79,6 @@ pgVoid pgSwapBuffers(pgContext* context);
 
 #define PG_GRAPHICS_DEVICE_PLATFORM		\
 	pgContext		context;			\
-	pgRenderTarget*	renderTarget;		\
-	pgInputLayout*	inputLayout;		\
 	GLenum			glPrimitiveType;	\
 	GLuint			pipeline;
 
@@ -89,7 +87,7 @@ pgVoid pgSwapBuffers(pgContext* context);
 
 #define PG_SHADER_PLATFORM	\
 	GLuint id;				\
-	GLenum type;			\
+	GLenum glType;			\
 	GLenum bit;
 
 #define PG_BUFFER_PLATFORM	\

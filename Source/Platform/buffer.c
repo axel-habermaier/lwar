@@ -43,5 +43,9 @@ pgVoid pgBindConstantBuffer(pgBuffer* buffer, pgInt32 slot)
 	PG_ASSERT_NOT_NULL(buffer);
 	PG_ASSERT_IN_RANGE(slot, 0, PG_CONSTANT_BUFFER_SLOT_COUNT);
 
+	if (buffer->device->state.constantBuffers[slot] == buffer)
+		return;
+
+	buffer->device->state.constantBuffers[slot] = buffer;
 	pgBindConstantBufferCore(buffer, slot);
 }

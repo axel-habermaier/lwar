@@ -42,8 +42,6 @@ pgVoid pgClearCore(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor
 
 pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 {
-	renderTarget->device->renderTarget = renderTarget;
-
 	// We have to emulate the D3D11 behavior here
 	if (renderTarget->swapChain != NULL)
 		pgMakeCurrent(&renderTarget->swapChain->context);

@@ -11,6 +11,7 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	pgBindContext(&swapChain->context, swapChain->device, window);
 	pgSetPixelFormat(&swapChain->context);
 	swapChain->renderTarget.swapChain = swapChain;
+	swapChain->renderTarget.id = 0;
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -19,8 +20,8 @@ pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain)
 {
 	pgDestroyBoundContext(&swapChain->context);
 
-	if (swapChain->device->renderTarget == &swapChain->renderTarget)
-		swapChain->device->renderTarget = NULL;
+	if (swapChain->device->state.renderTarget == &swapChain->renderTarget)
+		swapChain->device->state.renderTarget = NULL;
 
 	pgMakeCurrent(&swapChain->device->context);
 }

@@ -11,24 +11,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		/// <param name="shaderData">The shader source data.</param>
-		public FragmentShader(GraphicsDevice graphicsDevice, byte[] shaderData)
-			: base(graphicsDevice, ShaderType.FragmentShader, shaderData)
+		public FragmentShader(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice, ShaderType.FragmentShader)
 		{
-		}
-
-		/// <summary>
-		///   Binds the fragment shader to the pipeline.
-		/// </summary>
-		public void Bind()
-		{
-			Assert.NotDisposed(this);
-
-			if (DeviceState.FragmentShader == this)
-				return;
-
-			DeviceState.FragmentShader = this;
-			BindShader();
 		}
 	}
 }

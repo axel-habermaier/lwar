@@ -63,11 +63,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void Bind()
 		{
 			Assert.NotDisposed(this);
-
-			if (DeviceState.RenderTarget == this)
-				return;
-
-			DeviceState.RenderTarget = this;
 			NativeMethods.BindRenderTarget(_renderTarget);
 		}
 

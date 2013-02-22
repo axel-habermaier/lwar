@@ -29,10 +29,9 @@ namespace Pegasus.Framework.Platform.Assets
 		internal override void Load(AssetReader assetReader)
 		{
 			if (Shader == null)
-				Shader = new VertexShader(GraphicsDevice, assetReader.Data);
-			else
-				Shader.Reinitialize(assetReader.Data);
-			GraphicsDevice.State.VertexShader = null;
+				Shader = new VertexShader(GraphicsDevice);
+			
+			Shader.Reinitialize(assetReader.Data);
 		}
 
 		/// <summary>

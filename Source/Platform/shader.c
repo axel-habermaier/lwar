@@ -1,6 +1,12 @@
 #include "prelude.h"
 
 //====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+pgShader** pgGetBoundShader(pgShader* shader);
+
+//====================================================================================================================
 // Exported functions
 //====================================================================================================================
 
@@ -13,14 +19,19 @@ pgShader* pgCreateShader(pgGraphicsDevice* device, pgShaderType type, pgVoid* sh
 
 	PG_ALLOC(pgShader, shader);
 	shader->device = device;
-	pgCreateShaderCore(shader, type, shaderData);
+	shader->type = type;
+	pgCreateShaderCore(shader, shaderData);
 
 	return shader;
 }
 
 pgVoid pgDestroyShader(pgShader* shader)
 {
+	pgShader** boundShader = pgGetBoundShader(shader);
 	PG_ASSERT_NOT_NULL(shader);
+
+	if (*boundShader == shader)
+		*boundShader = NULL;
 
 	pgDestroyShaderCore(shader);
 	PG_FREE(shader);
@@ -28,6 +39,31 @@ pgVoid pgDestroyShader(pgShader* shader)
 
 pgVoid pgBindShader(pgShader* shader)
 {
+	pgShader** boundShader = pgGetBoundShader(shader);
 	PG_ASSERT_NOT_NULL(shader);
+
+	if (*boundShader == shader)
+		return;
+
+	*boundShader = shader;
 	pgBindShaderCore(shader);
+}
+
+//====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+pgShader** pgGetBoundShader(pgShader* shader)
+{
+	PG_ASSERT_NOT_NULL(shader);
+
+	switch (shader->type)
+	{
+	case PG_VERTEX_SHADER:
+		return  &shader->device->state.vertexShader;
+	case PG_FRAGMENT_SHADER:
+		return &shader->device->state.fragmentShader;
+	default:
+		PG_NO_SWITCH_DEFAULT;
+	}
 }
