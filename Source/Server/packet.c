@@ -62,7 +62,7 @@ bool packet_recv(Packet *p) {
 
     size_t app_id;
     p->a = header_unpack(p->p, &app_id, &p->ack, &p->time);
-    if(app_id != APP_ID) return false; /* TODO: warn */
+    if((int32_t)app_id != APP_ID) return false; /* TODO: warn */
     return true;
 }
 

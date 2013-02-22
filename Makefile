@@ -4,9 +4,11 @@ VPATH = Source/Server Source/Dedicated
 BUILD = build/Debug/server
 
 SERVER_H      = server.h
-SERVER_SRC    = client.c connection.c entity.c item.c log.c message.c physics.c packet.c player.c pq.c protocol.c rules.c server.c pool.c time.c uint.c \
-                rules/planet.c rules/ship.c rules/bullet.c rules/rocket.c \
-                rules/gun.c
+SERVER_SRC    = array.c client.c connection.c entity.c format.c log.c message.c     \
+                physics.c packet.c player.c pq.c protocol.c queue.c rules.c \
+                server.c pool.c time.c uint.c update.c \
+                rules/planet.c rules/ship.c rules/bullet.c rules/ray.c rules/rocket.c \
+                rules/gun.c rules/phaser.c
 SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
 SERVER_SO     = $(BUILD)/libserver.so
 SERVER_LIB    = 

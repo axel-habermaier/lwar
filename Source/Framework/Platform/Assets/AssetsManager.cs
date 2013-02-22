@@ -31,10 +31,12 @@ namespace Pegasus.Framework.Platform.Assets
 		/// </summary>
 		private readonly GraphicsDevice _device;
 
+#if DEBUG
 		/// <summary>
 		///   The assets compiler that can be used to recompile the assets in debug builds.
 		/// </summary>
 		private IAssetsCompiler _assetsCompiler;
+#endif
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -65,7 +67,7 @@ namespace Pegasus.Framework.Platform.Assets
 		private void ReloadAssets()
 		{
 #if !DEBUG
-			Log.Warn("This command is not supported in release builds.");
+			Log.Warn("Asset reloading is not supported in release builds.");
 #else
 			Assert.NotNull(_assetsCompiler);
 
