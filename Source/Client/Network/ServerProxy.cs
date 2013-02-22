@@ -34,13 +34,13 @@ namespace Lwar.Client.Network
 		///   The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
 		///   considered to be dropped.
 		/// </summary>
-		public const int DroppedTimeout = 15000;
+		private const int DroppedTimeout = 15000;
 
 		/// <summary>
 		///   The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
 		///   considered to be lagging.
 		/// </summary>
-		public const int LaggingTimeout = 500;
+		private const int LaggingTimeout = 500;
 
 		/// <summary>
 		///   Provides the time that is used to check whether a connection is lagging or dropped.
@@ -437,6 +437,15 @@ namespace Lwar.Client.Network
 					break;
 				case MessageType.Update:
 					message = UpdateMessage.Create(buffer);
+					break;
+				case MessageType.UpdatePosition:
+					message = UpdatePositionMessage.Create(buffer);
+					break;
+				case MessageType.UpdateRay:
+					message = UpdateRayMessage.Create(buffer);
+					break;
+				case MessageType.UpdateCircle:
+					message = UpdateCircleMessage.Create(buffer);
 					break;
 				case MessageType.Full:
 					message = FullMessage.Create(buffer);

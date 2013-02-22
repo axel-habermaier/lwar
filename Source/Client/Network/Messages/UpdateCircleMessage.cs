@@ -6,7 +6,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 
-	public class UpdateMessage : UpdateMessage<UpdateMessage.Data, UpdateMessage>
+	public class UpdateCircleMessage : UpdateMessage<UpdateCircleMessage.Data, UpdateCircleMessage>
 	{
 		/// <summary>
 		///   Processes the message, updating the given game session.
@@ -16,9 +16,7 @@ namespace Lwar.Client.Network.Messages
 		/// <param name="data">The updated data.</param>
 		protected override void Process(GameSession session, IEntity entity, Data data)
 		{
-			entity.Position = data.Position;
-			entity.Rotation = MathUtils.DegToRad(data.Rotation);
-			entity.Health = data.Health;
+			// TODO
 		}
 
 		/// <summary>
@@ -29,17 +27,15 @@ namespace Lwar.Client.Network.Messages
 		{
 			return new Data
 			{
-				Position = new Vector2(buffer.ReadInt16(), buffer.ReadInt16()),
-				Rotation = buffer.ReadUInt16(),
-				Health = buffer.ReadByte()
+				Center = new Vector2(buffer.ReadInt16(), buffer.ReadInt16()),
+				Radius = buffer.ReadUInt16()
 			};
 		}
 
 		public struct Data
 		{
-			public int Health;
-			public Vector2 Position;
-			public ushort Rotation;
+			public Vector2 Center;
+			public float Radius;
 		}
 	}
 }

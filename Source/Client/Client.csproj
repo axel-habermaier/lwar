@@ -139,6 +139,10 @@
     <Compile Include="LwarCommands.cs" />
     <Compile Include="LwarCvars.cs" />
     <Compile Include="Network\DeliveryManager.cs" />
+    <Compile Include="Network\Messages\UpdateCircleMessage.cs" />
+    <Compile Include="Network\Messages\UpdateRayMessage.cs" />
+    <Compile Include="Network\Messages\UpdatePositionMessage.cs" />
+    <Compile Include="Network\Messages\UpdateMessage`2.cs" />
     <Compile Include="Network\Messages\JoinMessage.cs" />
     <Compile Include="Network\Messages\AddMessage.cs" />
     <Compile Include="Network\Messages\ConnectMessage.cs" />

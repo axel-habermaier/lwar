@@ -22,5 +22,8 @@ namespace Lwar.Client.Network
 		Full = 104,
 		Collision = 105,
 		Update = 110,
+		UpdatePosition = 111,
+		UpdateRay = 112,
+		UpdateCircle = 113
 	}
 }

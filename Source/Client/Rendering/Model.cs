@@ -119,7 +119,7 @@ namespace Lwar.Client.Rendering
 			vertices[2].Normal = new Vector3(0, 1, 0);
 			vertices[3].Normal = new Vector3(0, 1, 0);
 
-			var texture = new RectangleF(0, 0, 100, 100);
+			var texture = new RectangleF(0, 0, 1, 1);
 			vertices[0].TextureCoordinates = new Vector2(texture.Left, texture.Bottom);
 			vertices[1].TextureCoordinates = new Vector2(texture.Left, texture.Top);
 			vertices[2].TextureCoordinates = new Vector2(texture.Right, texture.Top);
