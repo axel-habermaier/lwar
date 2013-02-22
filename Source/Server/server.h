@@ -1,12 +1,10 @@
+#include <stdbool.h>
+
 #include "bitset.h"
 #include "list.h"
 #include "array.h"
 #include "pq.h"
 #include "pool.h"
-
-#ifndef _MSC_VER
-typedef int bool;
-#endif
 
 enum {
     MAX_CLIENTS         =    8,
