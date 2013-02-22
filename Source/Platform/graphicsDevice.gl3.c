@@ -43,7 +43,7 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 	glBindProgramPipeline(device->pipeline);
 	PG_ASSERT_NO_GL_ERRORS();
 
-	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	//glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device)
