@@ -1,5 +1,7 @@
 #include <assert.h>
+#ifndef _MSC_VER
 #include <stdbool.h>
+#endif
 #include <stddef.h>
 
 #include "list.h"

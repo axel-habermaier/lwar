@@ -1,4 +1,6 @@
+#ifndef _MSC_VER
 #include <stdbool.h>
+#endif
 
 #include "bitset.h"
 #include "list.h"
