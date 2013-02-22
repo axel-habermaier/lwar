@@ -133,17 +133,6 @@ namespace Lwar.Client.Gameplay
 				// Now move the mouse position to camera coordiantes
 				var target = new Vector2(mousePos.X, mousePos.Y) - new Vector2(_session.Camera.Position.X, _session.Camera.Position.Y);
 
-				// The ship position in camera coordinates
-				var ship = _session.LocalPlayer.Ship.Position;
-
-				// Don't update if ship and target are too close
-				/*if ((target - ship).Length > MinimumOrientationUpdateDistance)
-				{
-					var orientation = MathUtils.ComputeAngle(ship, target, new Vector2(1, 0));
-					orientation = MathUtils.RadToDeg(orientation);
-					_orientation = (ushort)orientation;
-				}*/
-
 				_state.Update(_forward.Triggered, _backward.Triggered,
 							  _turnLeft.Triggered, _turnRight.Triggered,
 							  _strafeLeft.Triggered, _strafeRight.Triggered,

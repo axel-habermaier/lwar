@@ -175,7 +175,11 @@ void protocol_recv() {
     }
     if(p.io_failed) {
         Client *c = client_lookup(&p.adr);
-        if(c) queue_timeout(c);
+        if(c) 
+		{
+			queue_timeout(c);
+			client_remove(c);
+		}
     }
 
     timer_stop(TIMER_RECV);
