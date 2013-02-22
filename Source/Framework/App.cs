@@ -112,8 +112,7 @@ namespace Pegasus.Framework
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
-			// Keep a history of all logs entries that have been generated before the console can
-			// be initialized.
+			// Keep a history of all logs entries that have been generated before the console can be initialized.
 			using (var logHistory = new LogHistory())
 			{
 				Log.Info("Starting {0}, version {1}.{2}.", Cvars.AppName.Value, Cvars.AppVersionMajor.Value, Cvars.AppVersionMinor.Value);

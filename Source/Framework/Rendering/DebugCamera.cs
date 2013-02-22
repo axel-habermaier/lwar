@@ -167,6 +167,9 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="y">The new position in Y direction.</param>
 		private void MouseMoved(int x, int y)
 		{
+			if ((_inputDevice.Modes & InputModes.Debug) == 0)
+				return;
+
 			var delta = new Vector2i(x, y) - new Vector2i(Viewport.Width / 2, Viewport.Height / 2);
 			_rotation += new Vector2(-delta.Y, delta.X) * RotationSpeed;
 

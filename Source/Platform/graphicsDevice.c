@@ -127,6 +127,5 @@ pgVoid pgValidateDeviceState(pgGraphicsDevice* device)
 	PG_ASSERT_NOT_NULL(device->state.renderTarget);
 	PG_ASSERT_NOT_NULL(device->state.inputLayout);
 	PG_ASSERT(device->state.primitiveType != 0, "No primitive type has been set.");
-	PG_ASSERT(device->state.viewport.width != 0 && device->state.viewport.height != 0, "Non-visible viewport.");
-	PG_ASSERT(device->state.scissorRectangle.width != 0 && device->state.scissorRectangle.height != 0, "Non-visible scissor rectangle.");
+	PG_ASSERT(device->state.viewport.width != 0 && device->state.viewport.height != 0, "Bound viewport has an area of 0.");
 }

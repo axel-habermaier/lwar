@@ -102,12 +102,12 @@ namespace Pegasus.Framework
 			/// <summary>
 			///   The type of the log entry.
 			/// </summary>
-			public LogType LogType;
+			public readonly LogType LogType;
 
 			/// <summary>
 			///   The message of the log entry.
 			/// </summary>
-			public string Message;
+			public readonly string Message;
 
 			/// <summary>
 			///   Initializes a new instance.

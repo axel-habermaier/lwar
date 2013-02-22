@@ -44,8 +44,4 @@ pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget)
 
 	renderTarget->device->state.renderTarget = renderTarget;
 	pgBindRenderTargetCore(renderTarget);
-
-	// Reset viewport and scissor rectangle
-	pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
-	pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
 }
