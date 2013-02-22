@@ -160,7 +160,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4267 wd4800 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
