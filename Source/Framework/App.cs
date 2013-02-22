@@ -112,85 +112,89 @@ namespace Pegasus.Framework
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
-			// Keep a history of all logs entries that have been generated before the console can be initialized.
-			using (var logHistory = new LogHistory())
+			using (var logFile = new LogFile())
 			{
-				Log.Info("Starting {0}, version {1}.{2}.", Cvars.AppName.Value, Cvars.AppVersionMajor.Value, Cvars.AppVersionMinor.Value);
-				Log.Info("Running on {0} {1}bit, using {2}.", PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64",
-						 PlatformInfo.GraphicsApi);
+				try
+				{
+					Log.Info("Starting {0}, version {1}.{2}.", Cvars.AppName.Value, Cvars.AppVersionMajor.Value, Cvars.AppVersionMinor.Value);
+					Log.Info("Running on {0} {1}bit, using {2}.", PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64",
+							 PlatformInfo.GraphicsApi);
 
-				// Initialize app window and input
-				Window = new Window();
-				Keyboard = new Keyboard(Window);
-				Mouse = new Mouse(Window);
-				LogicalInputDevice = new LogicalInputDevice(Keyboard, Mouse);
+					// Initialize app window and input
+					Window = new Window();
+					Keyboard = new Keyboard(Window);
+					Mouse = new Mouse(Window);
+					LogicalInputDevice = new LogicalInputDevice(Keyboard, Mouse);
 
-				// Initialize graphics and assets manager
-				GraphicsDevice = new GraphicsDevice();
-				SwapChain = new SwapChain(GraphicsDevice, Window);
-				Assets = new AssetsManager(GraphicsDevice);
-				SpriteBatch.LoadShaders(Assets);
-				SwapChain.BackBuffer.Bind();
+					// Initialize graphics and assets manager
+					GraphicsDevice = new GraphicsDevice();
+					SwapChain = new SwapChain(GraphicsDevice, Window);
+					Assets = new AssetsManager(GraphicsDevice);
+					SpriteBatch.LoadShaders(Assets);
+					SwapChain.BackBuffer.Bind();
 
 #if DEBUG
-				Commands.ReloadAssets.Invoke();
+					Commands.ReloadAssets.Invoke();
 #endif
 
-				var font = Assets.LoadFont("Fonts/Liberation Mono 12");
-				using (var interpreter = new Interpreter())
-				using (var bindings = new RequestBindings(LogicalInputDevice))
-				using (var console = new Console(GraphicsDevice, font, LogicalInputDevice))
-				{
-					// Ensure that the size of the console always matches that of the window
-					console.Resize(Window.Size);
-					Window.Resized += console.Resize;
-
-					// Copy the recorded log history to the console and stop recording
-					console.Copy(logHistory);
-					logHistory.StopRecording();
-
-					// Intialize the statistics
-					Statistics = CreateStatistics();
-					Statistics.Initialize(GraphicsDevice, font);
-					Window.Resized += Statistics.Resize;
-
-					// Initialize commands and cvars
-					console.UserInput += interpreter.Execute;
-					Commands.Exit.Invoked += Exit;
-
-					// Run the application-specific initialization logic
-					Initialize();
-
-					while (_running)
+					var font = Assets.LoadFont("Fonts/Liberation Mono 12");
+					using (var interpreter = new Interpreter())
+					using (var bindings = new RequestBindings(LogicalInputDevice))
+					using (var console = new Console(GraphicsDevice, font, LogicalInputDevice))
 					{
-						// Update the input system and let the console respond to any input
-						using (new Measurement(Statistics.UpdateInput))
+						// Ensure that the size of the console always matches that of the window
+						console.Resize(Window.Size);
+						Window.Resized += console.Resize;
+
+						// Copy the recorded log history to the console and initialize the statistics
+						logFile.WriteToConsole(console);
+						Statistics = CreateStatistics();
+						Statistics.Initialize(GraphicsDevice, font);
+						Window.Resized += Statistics.Resize;
+
+						// Initialize commands and cvars
+						console.UserInput += interpreter.Execute;
+						Commands.Exit.Invoked += Exit;
+
+						// Run the application-specific initialization logic
+						Initialize();
+
+						while (_running)
 						{
-							UpdateInput();
-							console.HandleInput();
+							// Update the input system and let the console respond to any input
+							using (new Measurement(Statistics.UpdateInput))
+							{
+								UpdateInput();
+								console.HandleInput();
+							}
+
+							// Check if any command bindings have been triggered
+							bindings.InvokeTriggeredBindings();
+
+							// Update the application logic 
+							Update();
+							Statistics.Update();
+
+							using (new Measurement(Statistics.GpuFrameTime))
+							using (new Measurement(Statistics.CpuFrameTime))
+							{
+								// Let the application draw the current frame
+								Draw();
+
+								// Draw the console and the statistics on top of the current frame
+								console.Draw();
+								Statistics.Draw();
+							}
+
+							// Present the current frame to the screen
+							SwapChain.Present();
+							logFile.WriteToFile();
 						}
-
-						// Check if any command bindings have been triggered
-						bindings.InvokeTriggeredBindings();
-
-						// Update the application logic 
-						Update();
-						Statistics.Update();
-
-						using (new Measurement(Statistics.GpuFrameTime))
-						using (new Measurement(Statistics.CpuFrameTime))
-						{
-							// Let the application draw the current frame
-							Draw();
-
-							// Draw the console and the statistics on top of the current frame
-							console.Draw();
-							Statistics.Draw();
-						}
-
-						// Present the current frame to the screen
-						SwapChain.Present();
 					}
+				}
+				catch (Exception e)
+				{
+					logFile.LogFatalError(e);
 				}
 			}
 		}

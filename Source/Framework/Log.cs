@@ -3,7 +3,6 @@
 namespace Pegasus.Framework
 {
 	using System.Diagnostics;
-	using System.Runtime.InteropServices;
 	using Scripting;
 
 	/// <summary>
@@ -17,22 +16,11 @@ namespace Pegasus.Framework
 		/// </summary>
 		static Log()
 		{
-			OnFatalError += HandleFatalError;
+			OnFatalError += message => Console.WriteLine("FATAL ERROR: {0}", message);
 			OnError += message => Console.WriteLine("ERROR: {0}", message);
 			OnWarning += message => Console.WriteLine("WARNING: {0}", message);
 			OnInfo += message => Console.WriteLine("INFO: {0}", message);
 			OnDebugInfo += message => Console.WriteLine("DEBUG INFO: {0}", message);
-		}
-
-		/// <summary>
-		///   Handles a fatal error by displaying the error on the console and throwing an InvalidOperationException.
-		/// </summary>
-		/// <param name="message">The fatal error message.</param>
-		[DebuggerHidden]
-		private static void HandleFatalError(string message)
-		{
-			Console.WriteLine("FATAL ERROR: {0}", message);
-			throw new InvalidOperationException(message);
 		}
 
 		/// <summary>
@@ -80,38 +68,6 @@ namespace Pegasus.Framework
 
 			throw new InvalidOperationException(formattedMessage);
 		}
-
-#if Windows
-		/// <summary>
-		///   Raises the OnFatalError event with the given message and terminates the application by throwing
-		///   an InvalidOperationException. The exception message contains further details about the Win32 error that
-		///   occurred.
-		/// </summary>
-		/// <param name="message">
-		///   The message that should be formatted and passed as an argument of the OnFatalError event.
-		/// </param>
-		/// <param name="arguments">The arguments that should be copied into the message.</param>
-		[DebuggerHidden]
-		public static void Win32Die(string message, params object[] arguments)
-		{
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
-			var formattedMessage = String.Format(message, arguments);
-
-			var error = Marshal.GetHRForLastWin32Error();
-			try
-			{
-				Marshal.ThrowExceptionForHR(error);
-			}
-			catch (Exception e)
-			{
-				formattedMessage = String.Format("{0}\n{1}", formattedMessage, e.Message);
-				Die(formattedMessage);
-			}
-
-			formattedMessage = String.Format("{0}\n(Error Code: {1})", formattedMessage, error);
-			Die(formattedMessage);
-		}
-#endif
 
 		/// <summary>
 		///   Raises the OnError event with the given message.

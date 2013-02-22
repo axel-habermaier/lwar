@@ -48,6 +48,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private readonly ConsoleInput _input;
 
 		/// <summary>
+		///   The console's prompt.
+		/// </summary>
+		private readonly ConsolePrompt _prompt;
+
+		/// <summary>
 		///   The sprite batch that is used for drawing.
 		/// </summary>
 		private readonly SpriteBatch _spriteBatch;
@@ -66,11 +71,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   The margin between the console borders and the rows.
 		/// </summary>
 		private Size _margin = new Size(5, 5);
-
-		/// <summary>
-		///   The console's prompt.
-		/// </summary>
-		private readonly ConsolePrompt _prompt;
 
 		/// <summary>
 		///   The current size of the console.
@@ -96,10 +96,10 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_prompt = new ConsolePrompt(_font, InfoColor);
 			_input = new ConsoleInput(inputDevice);
 
-			Log.OnError += OnError;
-			Log.OnWarning += OnWarning;
-			Log.OnInfo += OnInfo;
-			Log.OnDebugInfo += OnDebugInfo;
+			Log.OnError += ShowError;
+			Log.OnWarning += ShowWarning;
+			Log.OnInfo += ShowInfo;
+			Log.OnDebugInfo += ShowDebugInfo;
 			Commands.ShowConsole.Invoked += OnShowConsole;
 
 			_input.CharEntered += OnCharEntered;
@@ -133,10 +133,10 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Log.OnError -= OnError;
-			Log.OnWarning -= OnWarning;
-			Log.OnInfo -= OnInfo;
-			Log.OnDebugInfo -= OnDebugInfo;
+			Log.OnError -= ShowError;
+			Log.OnWarning -= ShowWarning;
+			Log.OnInfo -= ShowInfo;
+			Log.OnDebugInfo -= ShowDebugInfo;
 			Commands.ShowConsole.Invoked -= OnShowConsole;
 
 			_input.CharEntered -= OnCharEntered;
@@ -165,34 +165,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			if (_active)
 				_prompt.InjectKeyPress(key);
-		}
-
-		/// <summary>
-		///   Copies the log history to the console.
-		/// </summary>
-		/// <param name="logHistory">The log history that should be copied.</param>
-		public void Copy(LogHistory logHistory)
-		{
-			foreach (var logEntry in logHistory.LogEntries)
-			{
-				switch (logEntry.LogType)
-				{
-					case LogHistory.LogType.Error:
-						OnError(logEntry.Message);
-						break;
-					case LogHistory.LogType.Warning:
-						OnWarning(logEntry.Message);
-						break;
-					case LogHistory.LogType.Info:
-						OnInfo(logEntry.Message);
-						break;
-					case LogHistory.LogType.DebugInfo:
-						OnDebugInfo(logEntry.Message);
-						break;
-					default:
-						throw new InvalidOperationException("Unknown log entry type.");
-				}
-			}
 		}
 
 		/// <summary>
@@ -305,7 +277,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Outputs an error on the console.
 		/// </summary>
 		/// <param name="message">The error message that should be displayed.</param>
-		private void OnError(string message)
+		public void ShowError(string message)
 		{
 			_content.Add(message, ErrorColor);
 		}
@@ -314,27 +286,27 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Outputs a warning on the console.
 		/// </summary>
 		/// <param name="message">The warning that should be displayed.</param>
-		private void OnWarning(string message)
+		public void ShowWarning(string message)
 		{
 			_content.Add(message, WarningColor);
-		}
-
-		/// <summary>
-		///   Outputs a debug message on the console.
-		/// </summary>
-		/// <param name="message">The warning that should be displayed.</param>
-		private void OnDebugInfo(string message)
-		{
-			_content.Add(message, DebugInfoColor);
 		}
 
 		/// <summary>
 		///   Outputs an informational message on the console.
 		/// </summary>
 		/// <param name="message">The message that should be displayed.</param>
-		private void OnInfo(string message)
+		public void ShowInfo(string message)
 		{
 			_content.Add(message, InfoColor);
+		}
+
+		/// <summary>
+		///   Outputs a debug message on the console.
+		/// </summary>
+		/// <param name="message">The warning that should be displayed.</param>
+		public void ShowDebugInfo(string message)
+		{
+			_content.Add(message, DebugInfoColor);
 		}
 	}
 }
