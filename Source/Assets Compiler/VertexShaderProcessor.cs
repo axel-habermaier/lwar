@@ -15,6 +15,14 @@ namespace Pegasus.AssetsCompiler
 	public class VertexShaderProcessor : ShaderProcessor
 	{
 		/// <summary>
+		///   Gets a description of the asset type.
+		/// </summary>
+		public override string AssetType
+		{
+			get { return "Vertex Shaders"; }
+		}
+
+		/// <summary>
 		///   Processes the given file, writing the compiled output to the given target destination.
 		/// </summary>
 		/// <param name="asset">The asset that should be processed.</param>

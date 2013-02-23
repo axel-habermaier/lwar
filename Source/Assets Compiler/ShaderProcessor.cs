@@ -10,7 +10,7 @@ namespace Pegasus.AssetsCompiler
 	public abstract class ShaderProcessor : AssetProcessor
 	{
 		/// <summary>
-		/// Extracts the GLSL and HLSL shader code from the given shader asset.
+		///   Extracts the GLSL and HLSL shader code from the given shader asset.
 		/// </summary>
 		/// <param name="asset">The asset from which the shader code should be extracted.</param>
 		/// <param name="glsl">The extracted GLSL shader code.</param>

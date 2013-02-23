@@ -14,3 +14,5 @@ Source/Platform/obj
 Source/LibNoise/obj
 Source/LibNoise/bin
 Assets/obj
+Assets/bin
+Assets/temp

@@ -191,24 +191,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Assets\Shaders\QuadFS.shader">
-      <Link>Shaders\QuadFS.shader</Link>
-    </None>
-    <None Include="..\..\Assets\Shaders\QuadVS.shader">
-      <Link>Shaders\QuadVS.shader</Link>
-    </None>
-    <None Include="..\..\Assets\Shaders\SphereFS.shader">
-      <Link>Shaders\SphereFS.shader</Link>
-    </None>
-    <None Include="..\..\Assets\Shaders\SphereVS.shader">
-      <Link>Shaders\SphereVS.shader</Link>
-    </None>
-    <None Include="..\..\Assets\Shaders\SpriteFS.shader">
-      <Link>Shaders\SpriteFS.shader</Link>
-    </None>
-    <None Include="..\..\Assets\Shaders\SpriteVS.shader">
-      <Link>Shaders\SpriteVS.shader</Link>
-    </None>
     <None Include="AssetsLoader.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssetsLoader.cs</LastGenOutput>

@@ -10,43 +10,35 @@ namespace Pegasus.AssetsCompiler
 	/// <summary>
 	///   Represents an asset that is compiled.
 	/// </summary>
-	public struct Asset
+	public class Asset
 	{
-		/// <summary>
-		///   The path to the source assets.
-		/// </summary>
-		private static readonly string SourceDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets");
-
-		/// <summary>
-		///   The path where the temporary asset files should be stored.
-		/// </summary>
-		private static readonly string TempDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets/obj");
-
-#if DEBUG
-		/// <summary>
-		///   The path where the compiled assets should be stored.
-		/// </summary>
-		private static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "../../Binaries/Debug/Assets");
-#else
-		/// <summary>
-		/// The path where the compiled assets should be stored.
-		/// </summary>
-		private static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "../../Binaries/Release/Assets");
-#endif
-
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		public Asset(string relativePath)
-			: this()
 		{
 			Assert.ArgumentNotNullOrWhitespace(relativePath, () => relativePath);
 
 			RelativePath = relativePath;
 			EnsurePathsExist(Path.GetDirectoryName(TargetPath));
 			EnsurePathsExist(Path.GetDirectoryName(TempPath));
+
+			// Try to guess the correct processor for this asset
+			if (relativePath.EndsWith(".png"))
+				Processor = new Texture2DProcessor();
+			if (relativePath.EndsWith(".vs"))
+				Processor = new VertexShaderProcessor();
+			if (relativePath.EndsWith(".fs"))
+				Processor = new FragmentShaderProcessor();
+			if (relativePath.EndsWith(".fnt"))
+				Processor = new FontProcessor();
 		}
+
+		/// <summary>
+		///   Gets or sets the processor that processes the asset.
+		/// </summary>
+		public AssetProcessor Processor { get; set; }
 
 		/// <summary>
 		///   Gets the path to the asset relative to the asset source directory, i.e., Textures/Tex.png.
@@ -70,7 +62,7 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		public string SourcePath
 		{
-			get { return Path.Combine(SourceDirectory, RelativePath); }
+			get { return Path.Combine(Configuration.SourceDirectory, RelativePath); }
 		}
 
 		/// <summary>
@@ -78,7 +70,7 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		public string TargetPath
 		{
-			get { return Path.Combine(TargetDirectory, RelativePathWithoutExtension) + PlatformInfo.AssetExtension; }
+			get { return Path.Combine(Configuration.TargetDirectory, RelativePathWithoutExtension) + PlatformInfo.AssetExtension; }
 		}
 
 		/// <summary>
@@ -87,7 +79,7 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		public string TempPath
 		{
-			get { return Path.Combine(TempDirectory, RelativePathWithoutExtension); }
+			get { return Path.Combine(Configuration.TempDirectory, RelativePathWithoutExtension); }
 		}
 
 		/// <summary>
@@ -96,18 +88,6 @@ namespace Pegasus.AssetsCompiler
 		private string HashPath
 		{
 			get { return TempPath + ".hash"; }
-		}
-
-		/// <summary>
-		///   Ensures that the target and temp paths exist.
-		/// </summary>
-		/// <param name="path">The path that should exist.</param>
-		private static void EnsurePathsExist(string path)
-		{
-			Assert.ArgumentNotNullOrWhitespace(path, () => path);
-
-			if (!Directory.Exists(path))
-				Directory.CreateDirectory(path);
 		}
 
 		/// <summary>
@@ -137,6 +117,18 @@ namespace Pegasus.AssetsCompiler
 
 				return false;
 			}
+		}
+
+		/// <summary>
+		///   Ensures that the target and temp paths exist.
+		/// </summary>
+		/// <param name="path">The path that should exist.</param>
+		private static void EnsurePathsExist(string path)
+		{
+			Assert.ArgumentNotNullOrWhitespace(path, () => path);
+
+			if (!Directory.Exists(path))
+				Directory.CreateDirectory(path);
 		}
 
 		/// <summary>

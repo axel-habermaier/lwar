@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Reflection;
 	using Framework;
 	using Framework.Platform.Assets;
 
@@ -13,99 +14,70 @@ namespace Pegasus.AssetsCompiler
 	public sealed class Compiler : IAssetsCompiler
 	{
 		/// <summary>
-		///   The list of all assets that have been compiled during the last execution of the compiler.
+		///   Gets the list of assets that should be compiled.
 		/// </summary>
-		private readonly List<string> _compiledAssets = new List<string>();
+		private static IEnumerable<Asset> Assets
+		{
+			get
+			{
+				var assembly = Assembly.LoadFile(Configuration.AssetListPath);
+				return assembly.GetTypes()
+							   .Where(t => t.IsClass && t.GetInterfaces().Contains(typeof(IAssetList)))
+							   .Select(Activator.CreateInstance)
+							   .OfType<IAssetList>()
+							   .Single()
+							   .Assets;
+			}
+		}
 
 		/// <summary>
 		///   Compiles all assets and returns the names of the assets that have been changed.
 		/// </summary>
 		public IEnumerable<string> Compile()
 		{
+			var compiledAssets = new List<string>();
+
 			try
 			{
-				_compiledAssets.Clear();
-				Process(new FontProcessor(), Assets.Fonts, "Fonts");
-				Process(new Texture2DProcessor(), Assets.Textures2D, "2D Textures");
-				Process(new CubeMapProcessor(), Assets.CubeMaps, "Cube Maps");
-				Process(new VertexShaderProcessor(), Assets.VertexShaders, "Vertex Shaders");
-				Process(new FragmentShaderProcessor(), Assets.FragmentShaders, "Fragment Shaders");
+				var grouped = Assets.GroupBy(asset => asset.Processor.GetType());
+				foreach (var group in grouped)
+				{
+					var first = group.First();
+					Log.Info("Processing {0}...", first.Processor.AssetType);
+
+					foreach (var asset in group)
+					{
+						if (Process(asset))
+							compiledAssets.Add(asset.RelativePathWithoutExtension);
+					}
+				}
 			}
 			catch (Exception e)
 			{
 				Log.Error(e.Message);
 			}
 
-			return _compiledAssets;
-		}
-
-		/// <summary>
-		///   Uses the given processor to process all given assets.
-		/// </summary>
-		/// <param name="processor">The processor that should be used to process the assets.</param>
-		/// <param name="assets">The assets that should be processed.</param>
-		/// <param name="description">A description of the assets that are processed.</param>
-		private void Process(AssetProcessor processor, IEnumerable<string> assets, string description)
-		{
-			Log.Info("Processing {0}...", description);
-			foreach (var asset in assets)
-				Process(processor, new Asset(asset));
+			return compiledAssets;
 		}
 
 		/// <summary>
 		///   Uses the given processor to process the given asset.
 		/// </summary>
-		/// <param name="processor">The processor that should be used to process the asset.</param>
 		/// <param name="asset">The asset that should be processed.</param>
-		private void Process(AssetProcessor processor, Asset asset)
+		private bool Process(Asset asset)
 		{
 			if (!asset.RequiresCompilation)
 			{
 				Log.Info("   Skipping '{0}' (no changes detected).", asset.RelativePath);
-				return;
+				return false;
 			}
 
-			_compiledAssets.Add(asset.RelativePathWithoutExtension);
 			Log.Info("   Compiling '{0}'...", asset.RelativePath);
 			asset.UpdateHashFile();
 			using (var writer = new AssetWriter(asset.TargetPath))
-				processor.Process(asset, writer.Writer);
-		}
+				asset.Processor.Process(asset, writer.Writer);
 
-		/// <summary>
-		///   Gets a processor that can process the given asset.
-		/// </summary>
-		/// <param name="asset">The asset that should be processed.</param>
-		private static AssetProcessor GetProcessor(string asset)
-		{
-			var getProcessors = new Func<string, AssetProcessor>[]
-			{
-				a => GetProcessor<CubeMapProcessor>(Assets.CubeMaps, a),
-				a => GetProcessor<FontProcessor>(Assets.Fonts, a),
-				a => GetProcessor<Texture2DProcessor>(Assets.Textures2D, a),
-				a => GetProcessor<FragmentShaderProcessor>(Assets.FragmentShaders, a),
-				a => GetProcessor<VertexShaderProcessor>(Assets.VertexShaders, a),
-			};
-
-			return getProcessors.Select(p => p(asset)).Single(p => p != null);
-		}
-
-		/// <summary>
-		///   Checks whether the asset is in the given asset list and if so, returns a processor instance.
-		/// </summary>
-		/// <typeparam name="T">The type of the asset processor.</typeparam>
-		/// <param name="assets">The assets that are processed by the processor.</param>
-		/// <param name="asset">The asset that should be processed.</param>
-		private static AssetProcessor GetProcessor<T>(IEnumerable<string> assets, string asset)
-			where T : AssetProcessor, new()
-		{
-			return assets.Any(a => a == asset) ? new T() : null;
-		}
-
-		private static void Main(string[] args)
-		{
-			var compiler = new Compiler();
-			compiler.Compile();
+			return true;
 		}
 	}
 }

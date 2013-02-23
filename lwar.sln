@@ -26,6 +26,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TODO = TODO
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets", "Assets\Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E80892FA-2200-4A98-8909-239E1A5A790B} = {E80892FA-2200-4A98-8909-239E1A5A790B}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -122,6 +127,22 @@ Global
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x64.Build.0 = Release|x64
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x86.ActiveCfg = Release|Win32
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x86.Build.0 = Release|Win32
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug Direct3D11|x64.ActiveCfg = Debug|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug Direct3D11|x64.Build.0 = Debug|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug Direct3D11|x86.ActiveCfg = Debug|x86
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug Direct3D11|x86.Build.0 = Debug|x86
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug OpenGL3|x64.ActiveCfg = Debug|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug OpenGL3|x64.Build.0 = Debug|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug OpenGL3|x86.ActiveCfg = Debug|x86
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug OpenGL3|x86.Build.0 = Debug|x86
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release Direct3D11|x64.ActiveCfg = Release|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release Direct3D11|x64.Build.0 = Release|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release Direct3D11|x86.ActiveCfg = Release|x86
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release Direct3D11|x86.Build.0 = Release|x86
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release OpenGL3|x64.ActiveCfg = Release|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release OpenGL3|x64.Build.0 = Release|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release OpenGL3|x86.ActiveCfg = Release|x86
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release OpenGL3|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,8 @@
+﻿<#	
+
+	Namespace = "Lwar.Assets";
+	AssetFile = "Assets.csproj";
+
+#>
+
+<#@ include file="../Source/Assets Compiler/AssetList.t4" #><# #>

@@ -8,7 +8,12 @@ namespace Pegasus.Framework.Processes
 	/// <summary>
 	///   Represents an asynchronous process.
 	/// </summary>
-	internal sealed class Process : DisposableObject, IResumableProcess
+	/// <remarks>
+	///   Process are not pooled as the process schedulers typically hold a reference to scheduled processes even after
+	///   they have been disposed. For pooled processes, it would be hard to determine correctly when a process instance
+	///   can safely be returned to the pool.
+	/// </remarks>
+	internal sealed class Process : /* PooledObject<Process> */ DisposableObject, IResumableProcess
 	{
 		/// <summary>
 		///   Gets the asynchronous operation that the process is currently waiting for.
