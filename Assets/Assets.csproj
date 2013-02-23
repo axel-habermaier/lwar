@@ -76,10 +76,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AssetList.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssetList.cs</LastGenOutput>
-    </None>
     <None Include="Fonts\Liberation Mono 12.fnt" />
     <None Include="Shaders\QuadVS.vs" />
     <None Include="Shaders\SphereVS.vs" />
@@ -100,12 +96,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssetList.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AssetList.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AssetList.Overrides.cs" />
+    <Compile Include="AssetList.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Assets Compiler\Assets Compiler.csproj">

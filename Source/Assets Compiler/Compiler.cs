@@ -22,9 +22,9 @@ namespace Pegasus.AssetsCompiler
 			{
 				var assembly = Assembly.LoadFile(Configuration.AssetListPath);
 				return assembly.GetTypes()
-							   .Where(t => t.IsClass && t.GetInterfaces().Contains(typeof(IAssetList)))
+							   .Where(t => t.IsClass && t.BaseType == typeof(AssetList))
 							   .Select(Activator.CreateInstance)
-							   .OfType<IAssetList>()
+							   .OfType<AssetList>()
 							   .Single()
 							   .Assets;
 			}

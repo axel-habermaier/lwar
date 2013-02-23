@@ -15,9 +15,14 @@ namespace Pegasus.AssetsCompiler
 		public static readonly string SourceDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets");
 
 		/// <summary>
-		///   The path to the source assets.
+		///   The path to the assets list.
 		/// </summary>
 		public static readonly string AssetListPath = Path.Combine(SourceDirectory, "Binaries/Assets.dll");
+
+		/// <summary>
+		///   The path to the assets project.
+		/// </summary>
+		public static readonly string AssetsProject = Path.Combine(SourceDirectory, "Assets.csproj");
 
 		/// <summary>
 		///   The path where the temporary asset files should be stored.

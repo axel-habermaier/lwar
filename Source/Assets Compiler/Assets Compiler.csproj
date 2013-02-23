@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Asset.cs" />
+    <Compile Include="AssetList.cs" />
     <Compile Include="AssetProcessor.cs" />
     <Compile Include="Assets.cs" />
     <Compile Include="AssetWriter.cs" />
@@ -104,7 +105,6 @@
     <Compile Include="DDS\ResourceOptionFlags.cs" />
     <Compile Include="DDS\SurfaceFlags.cs" />
     <Compile Include="ExternalTool.cs" />
-    <Compile Include="IAssetList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Texture2DProcessor.cs" />
     <Compile Include="FragmentShaderProcessor.cs" />
@@ -120,9 +120,6 @@
       <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
       <Name>Framework</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="AssetList.t4" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
