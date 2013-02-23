@@ -9,7 +9,6 @@ Platform/Assets
 ========
 - C# to HLSL/GLSL cross compiler
 - Convert shaders to C#
-- Manage all assets in a Visual Studio project, compiling them automatically when the solution is compiled
 - Fully support render targets with color and depth/stencil buffers
 - Remove dependency on SharpDX and invoke fxc.exe from the command line to compile HLSL shaders
 - DirectX: Construct the shader input layout from the C# shader code instead of using build-time shader reflection

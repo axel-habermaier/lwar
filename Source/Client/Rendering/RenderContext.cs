@@ -32,14 +32,14 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   The constant buffer that contains the world transform of the object that is currently being rendered.
 		/// </summary>
-		private readonly ConstantBuffer _worldTransform;
+		private readonly ConstantBuffer<Matrix> _worldTransform;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that the render context should use to draw the scene.</param>
 		/// <param name="assets">The assets manager that should manage the assets of the render context.</param>
-		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets)
+		public unsafe RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
@@ -47,7 +47,7 @@ namespace Lwar.Client.Rendering
 			GraphicsDevice = graphicsDevice;
 			Assets = assets;
 
-			_worldTransform = ConstantBuffer.Create(graphicsDevice, Matrix.Identity);
+			_worldTransform = new ConstantBuffer<Matrix>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
 			_solid = RasterizerState.CullCounterClockwise;
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 
@@ -106,11 +106,11 @@ namespace Lwar.Client.Rendering
 		///   Updates the world transformation constant buffer.
 		/// </summary>
 		/// <param name="entity">The entity for which the world transformation should be set.</param>
-		public unsafe void UpdateWorldTransform(IEntity entity)
+		public void UpdateWorldTransform(IEntity entity)
 		{
-			var matrix = Matrix.CreateRotationY(entity.Rotation) *
-						 Matrix.CreateTranslation(new Vector3(entity.Position.X, 0, entity.Position.Y));
-			_worldTransform.SetData(new IntPtr(&matrix), sizeof(Matrix));
+			_worldTransform.Data = Matrix.CreateRotationY(entity.Rotation) *
+								   Matrix.CreateTranslation(new Vector3(entity.Position.X, 0, entity.Position.Y));
+			_worldTransform.Update();
 		}
 
 		/// <summary>

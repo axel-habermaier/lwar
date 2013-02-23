@@ -20,12 +20,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The constant buffer that holds the per-frame camera-related matrices that are passed to each vertex shader.
 		/// </summary>
-		private readonly ConstantBuffer _matricesBuffer;
-
-		/// <summary>
-		///   The camera matrices.
-		/// </summary>
-		private Matrices _matrices;
+		private readonly ConstantBuffer<Matrices> _matrices;
 
 		/// <summary>
 		///   The camera's position within the world.
@@ -51,17 +46,10 @@ namespace Pegasus.Framework.Rendering
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
-		protected Camera(GraphicsDevice graphicsDevice)
+		protected unsafe Camera(GraphicsDevice graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-
-			_matrices = new Matrices
-			{
-				View = Matrix.Identity,
-				Projection = Matrix.Identity,
-				ViewProjection = Matrix.Identity
-			};
-			_matricesBuffer = ConstantBuffer.Create(graphicsDevice, _matrices);
+			_matrices = new ConstantBuffer<Matrices>(graphicsDevice, (buffer, matrices) => buffer.Copy(&matrices));
 		}
 
 		/// <summary>
@@ -121,7 +109,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		public void Bind()
 		{
-			_matricesBuffer.Bind(CameraConstantsSlot);
+			_matrices.Bind(CameraConstantsSlot);
 		}
 
 		/// <summary>
@@ -129,7 +117,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_matricesBuffer.SafeDispose();
+			_matrices.SafeDispose();
 		}
 
 		/// <summary>
@@ -137,7 +125,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected void UpdateProjectionMatrix()
 		{
-			UpdateProjectionMatrix(out _matrices.Projection);
+			UpdateProjectionMatrix(out _matrices.Data.Projection);
 			UpdateConstantBuffer();
 		}
 
@@ -146,7 +134,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected void UpdateViewMatrix()
 		{
-			UpdateViewMatrix(out _matrices.View);
+			UpdateViewMatrix(out _matrices.Data.View);
 			UpdateConstantBuffer();
 		}
 
@@ -157,8 +145,8 @@ namespace Pegasus.Framework.Rendering
 		{
 			Assert.That(Marshal.SizeOf(typeof(Matrices)) == Matrices.Size, "Unexpected unmanaged size.");
 
-			_matrices.ViewProjection = _matrices.View * _matrices.Projection;
-			_matrices.UsePointer(p => _matricesBuffer.SetData(p, Matrices.Size));
+			_matrices.Data.ViewProjection = _matrices.Data.View * _matrices.Data.Projection;
+			_matrices.Update();
 		}
 
 		/// <summary>

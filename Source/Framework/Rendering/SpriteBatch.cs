@@ -47,7 +47,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The constant buffer for the projection matrix.
 		/// </summary>
-		private readonly ConstantBuffer _projectionMatrixBuffer;
+		private readonly ConstantBuffer<Matrix> _projectionMatrix;
 
 		/// <summary>
 		///   The size of a single quad in bytes.
@@ -87,7 +87,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The constant buffer for the world matrix.
 		/// </summary>
-		private readonly ConstantBuffer _worldMatrixBuffer;
+		private readonly ConstantBuffer<Matrix> _worldMatrix;
 
 		/// <summary>
 		///   The index of the section that is currently in use.
@@ -115,11 +115,6 @@ namespace Pegasus.Framework.Rendering
 		private int _numSections;
 
 		/// <summary>
-		///   The projection matrix used by the sprite batch.
-		/// </summary>
-		private Matrix _projectionMatrix = Matrix.Identity;
-
-		/// <summary>
 		///   The rectangle that should be used for the scissor test.
 		/// </summary>
 		private Rectangle _scissorRectangle;
@@ -130,15 +125,10 @@ namespace Pegasus.Framework.Rendering
 		private bool _useScissorTest;
 
 		/// <summary>
-		///   The world matrix used by the sprite batch.
-		/// </summary>
-		private Matrix _worldMatrix = Matrix.Identity;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The graphics device that should be used for drawing.</param>
-		public SpriteBatch(GraphicsDevice device)
+		public unsafe SpriteBatch(GraphicsDevice device)
 			: base(device)
 		{
 			Assert.ArgumentNotNull(device, () => device);
@@ -163,8 +153,8 @@ namespace Pegasus.Framework.Rendering
 			}
 
 			// Initialize the graphics objects
-			_projectionMatrixBuffer = ConstantBuffer.Create(device, Matrix.Identity);
-			_worldMatrixBuffer = ConstantBuffer.Create(device, Matrix.Identity);
+			_projectionMatrix = new ConstantBuffer<Matrix>(device, (buffer, matrix) => buffer.Copy(&matrix), Matrix.Identity);
+			_worldMatrix = new ConstantBuffer<Matrix>(device, (buffer, matrix) => buffer.Copy(&matrix), Matrix.Identity);
 
 			_vertexBuffer = VertexBuffer.Create<Quad>(device, MaxQuads, ResourceUsage.Dynamic);
 			_indexBuffer = IndexBuffer.Create(device, indices);
@@ -219,12 +209,12 @@ namespace Pegasus.Framework.Rendering
 		///   Gets or sets the world matrix used by the sprite batch. Before the matrix is changed,
 		///   DrawBatch() is called.
 		/// </summary>
-		public unsafe Matrix WorldMatrix
+		public Matrix WorldMatrix
 		{
 			get
 			{
 				Assert.NotDisposed(this);
-				return _worldMatrix;
+				return _worldMatrix.Data;
 			}
 			set
 			{
@@ -232,8 +222,8 @@ namespace Pegasus.Framework.Rendering
 
 				DrawBatch();
 
-				_worldMatrix = value;
-				_worldMatrixBuffer.SetData(new IntPtr(&value), sizeof(Matrix));
+				_worldMatrix.Data = value;
+				_worldMatrix.Update();
 			}
 		}
 
@@ -241,12 +231,12 @@ namespace Pegasus.Framework.Rendering
 		///   Gets or sets the projection matrix used by the sprite batch. Before the matrix is changed,
 		///   DrawBatch() is called.
 		/// </summary>
-		public unsafe Matrix ProjectionMatrix
+		public Matrix ProjectionMatrix
 		{
 			get
 			{
 				Assert.NotDisposed(this);
-				return _projectionMatrix;
+				return _projectionMatrix.Data;
 			}
 			set
 			{
@@ -254,8 +244,8 @@ namespace Pegasus.Framework.Rendering
 
 				DrawBatch();
 
-				_projectionMatrix = value;
-				_projectionMatrixBuffer.SetData(new IntPtr(&value), sizeof(Matrix));
+				_projectionMatrix.Data = value;
+				_projectionMatrix.Update();
 			}
 		}
 
@@ -278,8 +268,8 @@ namespace Pegasus.Framework.Rendering
 		{
 			_vertexBuffer.SafeDispose();
 			_indexBuffer.SafeDispose();
-			_worldMatrixBuffer.SafeDispose();
-			_projectionMatrixBuffer.SafeDispose();
+			_worldMatrix.SafeDispose();
+			_projectionMatrix.SafeDispose();
 			_vertexLayout.SafeDispose();
 			_scissorRasterizerState.SafeDispose();
 		}
@@ -469,8 +459,8 @@ namespace Pegasus.Framework.Rendering
 			// Prepare the graphics pipeline
 			_vertexShader.Bind();
 			_fragmentShader.Bind();
-			_projectionMatrixBuffer.Bind(0);
-			_worldMatrixBuffer.Bind(1);
+			_projectionMatrix.Bind(0);
+			_worldMatrix.Bind(1);
 			_vertexLayout.Bind();
 
 			GraphicsDevice.SetPrimitiveType(PrimitiveType.Triangles);
