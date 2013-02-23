@@ -23,13 +23,34 @@ namespace Pegasus.Framework
 
 #if DEBUG
 		/// <summary>
+		///   A description for the instance in order to make debugging easier.
+		/// </summary>
+		private string _description;
+
+		/// <summary>
 		///   The finalizer ensures that all unmanaged resources are freed.
 		/// </summary>
 		~DisposableObject()
 		{
-			Log.Die("Finalizer runs for a disposable object of type '{0}'.", GetType().Name);
+			Log.Die("Finalizer runs for a disposable object of type '{0}'.\nInstance description: '{1}'",
+					GetType().Name, _description ?? "None");
 		}
 #endif
+
+		/// <summary>
+		///   In debug builds, sets a description for the instance in order to make debugging easier.
+		/// </summary>
+		/// <param name="description">The description of the instance.</param>
+		/// <param name="arguments">The arguments that should be copied into the description.</param>
+		[Conditional("DEBUG")]
+		public void SetDescription(string description, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(description, () => description);
+
+#if DEBUG
+			_description = String.Format(description, arguments);
+#endif
+		}
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.

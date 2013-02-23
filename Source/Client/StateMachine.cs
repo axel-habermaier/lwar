@@ -51,6 +51,9 @@ namespace Lwar.Client
 		public void ChangeState(AsyncAction asyncAction)
 		{
 			_stateProcess.SafeDispose();
+			_stateProcess = null;	// Important, otherwise the same process might be disposed twice
+									// if the creation of the next state process throws an exception
+
 			_stateProcess = _scheduler.CreateProcess(asyncAction);
 		}
 

@@ -21,7 +21,7 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   The path to the log file.
 		/// </summary>
-		private readonly string _filePath;
+		public string FilePath { get; private set; }
 
 		/// <summary>
 		///   The the unwritten log entries that have been generated.
@@ -39,11 +39,11 @@ namespace Pegasus.Framework.Platform
 			Log.OnInfo += OnInfo;
 			Log.OnDebugInfo += OnDebugInfo;
 
-			_filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Cvars.AppName.Value,
+			FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Cvars.AppName.Value,
 									 Cvars.AppName.Value + ".log");
 
-			if (File.Exists(_filePath))
-				File.Delete(_filePath);
+			if (File.Exists(FilePath))
+				File.Delete(FilePath);
 		}
 
 		/// <summary>
@@ -103,11 +103,11 @@ namespace Pegasus.Framework.Platform
 			var logs =
 				_logEntries.Select(l => String.Format("[{0}] ({1}): {2}", l.Time.ToString("HH:mm:ss.ffff"), l.LogType, l.Message));
 
-			var directory = Path.GetDirectoryName(_filePath);
+			var directory = Path.GetDirectoryName(FilePath);
 			if (!Directory.Exists(directory))
 				Directory.CreateDirectory(directory);
 
-			File.AppendAllLines(_filePath, logs);
+			File.AppendAllLines(FilePath, logs);
 			_logEntries.Clear();
 		}
 
@@ -153,23 +153,6 @@ namespace Pegasus.Framework.Platform
 			Log.OnDebugInfo -= OnDebugInfo;
 
 			WriteToFile(true);
-		}
-
-		/// <summary>
-		///   Logs a fatal application error.
-		/// </summary>
-		/// <param name="exception">The exception representing the fatal application error.</param>
-		public void LogFatalError(Exception exception)
-		{
-			Assert.ArgumentNotNull(exception, () => exception);
-			_logEntries.Enqueue(new LogEntry(LogType.FatalError, "Stack trace follows." + Environment.NewLine + exception.StackTrace));
-
-#if Windows
-			const string message = "The application has been terminated after a fatal error. " +
-								   "See the log file for further details.\n\nThe error was: {0}\n\nLog file: {1}";
-
-			MessageBox.ShowMessage(Cvars.AppName.Value + " Fatal Error", message, exception.Message, _filePath);
-#endif
 		}
 	}
 }

@@ -194,7 +194,14 @@ namespace Pegasus.Framework
 				}
 				catch (Exception e)
 				{
-					logFile.LogFatalError(e);
+					var message = "The application has been terminated after a fatal error. " +
+								  "See the log file for further details.\n\nThe error was: {0}\n\nLog file: {1}";
+					message = String.Format(message, e.Message, logFile.FilePath);
+					Log.Error(message);
+					Log.Error("Stack trace:\n" + e.StackTrace);
+#if Windows
+					MessageBox.ShowMessage(Cvars.AppName.Value + " Fatal Error", message);
+#endif
 				}
 			}
 		}

@@ -375,7 +375,7 @@ namespace Lwar.Client.Gameplay
 		private async Task Playing(ProcessContext context)
 		{
 			_drawState.ChangeState(PlayingDraw);
-
+		
 			while (!context.IsCanceled)
 			{
 				Entities.Update();

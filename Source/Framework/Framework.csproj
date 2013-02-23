@@ -201,6 +201,7 @@
     <Compile Include="Platform\Clock.cs" />
     <Compile Include="Platform\MessageBox.cs" />
     <Compile Include="Processes\DelegateOperation.cs" />
+    <Compile Include="Processes\IResumableProcess.cs" />
     <Compile Include="Processes\TaskOperation`1.cs" />
     <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Rendering\Camera3D.cs" />

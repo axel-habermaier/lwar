@@ -4,7 +4,6 @@ Client
 - Handle ray and circle update messages
 - Render all entity types
 - Refactor entity system (component-oriented/data parallel/object-oriented entity system hybrid)
-- Bug: Log.Die(), for instance in Ship.Draw, does not terminate the application.
 
 Platform/Assets
 ========
