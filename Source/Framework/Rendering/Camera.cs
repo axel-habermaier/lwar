@@ -4,7 +4,6 @@ namespace Pegasus.Framework.Rendering
 {
 	using System.Runtime.InteropServices;
 	using Math;
-	using Platform;
 	using Platform.Graphics;
 
 	/// <summary>
