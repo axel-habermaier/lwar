@@ -5,7 +5,7 @@ Client
 - Render all entity types
 - Refactor entity system (component-oriented/data parallel/object-oriented entity system hybrid)
 
-Platform/Assets
+Pegasus
 ========
 - C# to HLSL/GLSL cross compiler
 - Convert shaders to C#
@@ -13,6 +13,13 @@ Platform/Assets
 - Remove dependency on SharpDX and invoke fxc.exe from the command line to compile HLSL shaders
 - DirectX: Construct the shader input layout from the C# shader code instead of using build-time shader reflection
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
+- Move asset compiler to framework
+- Invoke asset compiler when the asset project is compiled
+- Generated shader input layout from C# shaders, read the input layout on the C# side of things and pass it to the platform library
+- Write a reflection-based command line parser for arguments and cvar values
+- Pass asset directories to compiler via command line
+- Implement Clean command for asset compiler
+- Bootstrapper<T> class: Handles command line parsing and exceptions
 
 Server
 ========

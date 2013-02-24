@@ -1,44 +1,49 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler
+namespace Pegasus.Framework.Platform.Assets.Compilation
 {
-	using Framework;
-	using Framework.Platform;
-	using Framework.Platform.Graphics;
+	using Graphics;
 	using SharpDX.D3DCompiler;
 	using SharpDX.DXGI;
 	using SharpDX.Direct3D11;
 
 	/// <summary>
-	///   Processes vertex shaders.
+	///   Compiles vertex shaders.
 	/// </summary>
-	public class VertexShaderProcessor : ShaderProcessor
+	internal class VertexShaderCompiler : ShaderCompiler
 	{
 		/// <summary>
-		///   Gets a description of the asset type.
+		///   Initializes a new instance.
 		/// </summary>
-		public override string AssetType
+		/// <param name="asset">The asset that should be compiled.</param>
+		public VertexShaderCompiler(string asset)
+			: base(asset)
+		{
+		}
+
+		/// <summary>
+		///   Gets a description of the asset type that the compiler supports.
+		/// </summary>
+		internal override string AssetType
 		{
 			get { return "Vertex Shaders"; }
 		}
 
 		/// <summary>
-		///   Processes the given file, writing the compiled output to the given target destination.
+		///   Compiles the asset.
 		/// </summary>
-		/// <param name="asset">The asset that should be processed.</param>
-		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
-		public override void Process(Asset asset, BufferWriter writer)
+		protected override void CompileCore()
 		{
 			string glsl, hlsl;
-			ExtractShaderCode(asset, out glsl, out hlsl);
+			ExtractShaderCode(Asset, out glsl, out hlsl);
 
-			WriteGlslShader(glsl, writer);
+			WriteGlslShader(glsl);
 			IfD3DSupported(() =>
 				{
-					using (var byteCode = CompileHlslShader(asset, hlsl, "vs_4_0"))
+					using (var byteCode = CompileHlslShader(Asset, hlsl, "vs_4_0"))
 					{
-						writer.WriteByteArray(byteCode);
-						CreateInputLayout(byteCode, writer);
+						Buffer.WriteByteArray(byteCode);
+						CreateInputLayout(byteCode);
 					}
 				});
 		}
@@ -67,8 +72,7 @@ namespace Pegasus.AssetsCompiler
 		///   Creates the input layout for the vertex shader using shader reflection.
 		/// </summary>
 		/// <param name="shaderCode">The shader byte code.</param>
-		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
-		private void CreateInputLayout(byte[] shaderCode, BufferWriter writer)
+		private void CreateInputLayout(byte[] shaderCode)
 		{
 			using (var reflectionInfo = new ShaderReflection(shaderCode))
 			{
@@ -140,7 +144,7 @@ namespace Pegasus.AssetsCompiler
 						throw new InvalidOperationException("Unknown usage mask combination.");
 				}
 
-				SerializeInputElements(inputElements, writer);
+				SerializeInputElements(inputElements);
 			}
 		}
 
@@ -148,20 +152,19 @@ namespace Pegasus.AssetsCompiler
 		///   Serializes the input elements.
 		/// </summary>
 		/// <param name="elements">The elements that should be serialized.</param>
-		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
-		private void SerializeInputElements(InputElement[] elements, BufferWriter writer)
+		private void SerializeInputElements(InputElement[] elements)
 		{
-			writer.WriteInt32(elements.Length);
+			Buffer.WriteInt32(elements.Length);
 
 			foreach (var element in elements)
 			{
-				writer.WriteInt32(element.AlignedByteOffset);
-				writer.WriteInt32((int)element.Classification);
-				writer.WriteInt32((int)element.Format);
-				writer.WriteInt32(element.InstanceDataStepRate);
-				writer.WriteInt32(element.SemanticIndex);
-				writer.WriteString(element.SemanticName);
-				writer.WriteInt32(element.Slot);
+				Buffer.WriteInt32(element.AlignedByteOffset);
+				Buffer.WriteInt32((int)element.Classification);
+				Buffer.WriteInt32((int)element.Format);
+				Buffer.WriteInt32(element.InstanceDataStepRate);
+				Buffer.WriteInt32(element.SemanticIndex);
+				Buffer.WriteString(element.SemanticName);
+				Buffer.WriteInt32(element.Slot);
 			}
 		}
 	}

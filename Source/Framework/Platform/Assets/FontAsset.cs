@@ -8,7 +8,7 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Represents a font asset.
 	/// </summary>
-	internal sealed class FontAsset : Asset
+	internal sealed class FontAsset : CompiledAsset
 	{
 		/// <summary>
 		///   The font texture.

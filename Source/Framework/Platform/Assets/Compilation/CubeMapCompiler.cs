@@ -1,34 +1,38 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler
+namespace Pegasus.Framework.Platform.Assets.Compilation
 {
 	using System.Drawing;
 	using System.IO;
-	using DDS;
-	using Framework;
-	using Framework.Platform;
 
 	/// <summary>
-	///   Processes cubemap textures, converting them to a premultiplied format.
+	///   Compiles cubemap textures.
 	/// </summary>
-	public sealed class CubeMapProcessor : TextureProcessor
+	public sealed class CubeMapCompiler : TextureCompiler
 	{
 		/// <summary>
-		///   Gets a description of the asset type.
+		///   Initializes a new instance.
 		/// </summary>
-		public override string AssetType
+		/// <param name="asset">The asset that should be compiled.</param>
+		public CubeMapCompiler(string asset)
+			: base(asset)
+		{
+		}
+
+		/// <summary>
+		///   Gets a description of the asset type that the compiler supports.
+		/// </summary>
+		internal override string AssetType
 		{
 			get { return "Cube Maps"; }
 		}
 
 		/// <summary>
-		///   Processes the given file, writing the compiled output to the given target destination.
+		///   Compiles the asset.
 		/// </summary>
-		/// <param name="asset">The asset that should be processed.</param>
-		/// <param name="writer">The writer that should be used to write the compiled asset file.</param>
-		public override void Process(Asset asset, BufferWriter writer)
+		protected override void CompileCore()
 		{
-			using (var bitmap = (Bitmap)Image.FromFile(asset.SourcePath))
+			using (var bitmap = (Bitmap)Image.FromFile(Asset.SourcePath))
 			{
 				var width = bitmap.Width / 6;
 				if (bitmap.Width < 1 || bitmap.Width > Int16.MaxValue || !IsPowerOfTwo(width))
@@ -43,12 +47,12 @@ namespace Pegasus.AssetsCompiler
 				var negativeY = bitmap.Clone(new Rectangle(4 * width, 0, width, bitmap.Height), bitmap.PixelFormat);
 				var positiveY = bitmap.Clone(new Rectangle(5 * width, 0, width, bitmap.Height), bitmap.PixelFormat);
 
-				var negativeZPath = asset.TempPath + "-Z.png";
-				var negativeXPath = asset.TempPath + "-X.png";
-				var positiveZPath = asset.TempPath + "+Z.png";
-				var positiveXPath = asset.TempPath + "+X.png";
-				var negativeYPath = asset.TempPath + "-Y.png";
-				var positiveYPath = asset.TempPath + "+Y.png";
+				var negativeZPath = Asset.TempPathWithoutExtension + "-Z.png";
+				var negativeXPath = Asset.TempPathWithoutExtension + "-X.png";
+				var positiveZPath = Asset.TempPathWithoutExtension + "+Z.png";
+				var positiveXPath = Asset.TempPathWithoutExtension + "+X.png";
+				var negativeYPath = Asset.TempPathWithoutExtension + "-Y.png";
+				var positiveYPath = Asset.TempPathWithoutExtension + "+Y.png";
 
 				negativeZ.Save(negativeZPath);
 				negativeX.Save(negativeXPath);
@@ -57,18 +61,18 @@ namespace Pegasus.AssetsCompiler
 				negativeY.Save(negativeYPath);
 				positiveY.Save(positiveYPath);
 
-				var assembledFile = asset.TempPath + ".dds";
+				var assembledFile = Asset.TempPathWithoutExtension + ".dds";
 				ExternalTool.NvAssemble(negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath,
 										assembledFile);
 
-				var outFile = asset.TempPath + "-compressed" + PlatformInfo.AssetExtension;
+				var outFile = Asset.TempPathWithoutExtension + "-compressed" + PlatformInfo.AssetExtension;
 				var format = ChooseCompression(bitmap.PixelFormat);
 				ExternalTool.NvCompress(assembledFile, outFile, format);
 
 				using (var buffer = BufferReader.Create(File.ReadAllBytes(outFile)))
 				{
 					var ddsImage = new DirectDrawSurface(buffer);
-					Write(ddsImage, writer);
+					ddsImage.Write(Buffer);
 				}
 			}
 		}

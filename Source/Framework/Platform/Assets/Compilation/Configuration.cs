@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler
+namespace Pegasus.Framework.Platform.Assets.Compilation
 {
 	using System.IO;
 
 	/// <summary>
 	///   Provides access to the asset compiler configuration.
 	/// </summary>
-	public static class Configuration
+	internal static class Configuration
 	{
 		/// <summary>
 		///   The path to the source assets.
@@ -35,9 +35,9 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		public static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "../../Binaries/Debug/Assets");
 #else
-		/// <summary>
-		/// The path where the compiled assets should be stored.
-		/// </summary>
+	/// <summary>
+	/// The path where the compiled assets should be stored.
+	/// </summary>
 		public static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "../../Binaries/Release/Assets");
 #endif
 	}

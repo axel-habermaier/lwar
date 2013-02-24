@@ -1,16 +1,14 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler
+namespace Pegasus.Framework.Platform.Assets.Compilation
 {
 	using System.IO;
-	using Framework;
-	using Framework.Platform;
 
 	/// <summary>
 	///   Writes a compiled asset file. The endianess of the compiled file always matches the endianess of the target
 	///   platform, assuming that the compiler is always running on a little endian platform.
 	/// </summary>
-	public sealed class AssetWriter : DisposableObject
+	internal sealed class AssetWriter : DisposableObject
 	{
 		/// <summary>
 		///   The maximum asset size in megabytes.

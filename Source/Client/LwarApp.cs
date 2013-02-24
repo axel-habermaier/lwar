@@ -2,14 +2,12 @@
 
 namespace Lwar.Client
 {
-	using System.Threading.Tasks;
 	using Gameplay;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Processes;
 	using Pegasus.Framework.Scripting;
 
 	/// <summary>
@@ -80,18 +78,6 @@ namespace Lwar.Client
 			Commands.Bind.Invoke(Key.F5.WentDown(), "reload_assets");
 			Commands.Bind.Invoke(Key.C.WentDown(), "toggle_debug_cam");
 			Commands.Bind.Invoke(Key.Escape.WentDown(), "exit");
-		}
-
-		/// <summary>
-		///   Entry point of the application.
-		/// </summary>
-		/// <param name="args">The arguments the application was started with.</param>
-		private static void Main(string[] args)
-		{
-			Cvars.AppName.Value = "lwar";
-
-			using (var app = new LwarApp())
-				app.Run();
 		}
 	}
 }

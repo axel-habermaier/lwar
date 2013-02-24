@@ -1,13 +1,11 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler
+namespace Pegasus.Framework.Platform.Assets.Compilation
 {
 	using System.Diagnostics;
-	using Framework;
-	using Framework.Platform;
-	using Framework.Platform.Graphics;
+	using Graphics;
 
-	public static class ExternalTool
+	internal static class ExternalTool
 	{
 		/// <summary>
 		///   The path to the nvcompress executable.
@@ -90,7 +88,7 @@ namespace Pegasus.AssetsCompiler
 				default:
 					throw new InvalidOperationException("Unsupported format.");
 			}
-			
+
 			RunProcess(NvCompressPath, @"-dds10 -silent -{0} -premula ""{1}"" ""{2}""", compressionFormat, input, output);
 		}
 
@@ -112,7 +110,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		/// Runs the DirectX offline shader compiler.
+		///   Runs the DirectX offline shader compiler.
 		/// </summary>
 		/// <param name="input">The shader file that should be compiled.</param>
 		/// <param name="output">The output file that should store the compiled shader.</param>

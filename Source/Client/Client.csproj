@@ -136,6 +136,7 @@
     <Compile Include="Gameplay\InputStateHistory.cs" />
     <Compile Include="Gameplay\PlayerList.cs" />
     <Compile Include="Gameplay\Ship.cs" />
+    <Compile Include="LwarBootstrapper.cs" />
     <Compile Include="LwarCommands.cs" />
     <Compile Include="LwarCvars.cs" />
     <Compile Include="Network\DeliveryManager.cs" />

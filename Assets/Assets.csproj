@@ -93,15 +93,12 @@
     <Content Include="Textures\SunHeat.png" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Compile Include="LwarCompilationUnit.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssetList.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Source\Assets Compiler\Assets Compiler.csproj">
-      <Project>{e80892fa-2200-4a98-8909-239e1a5a790b}</Project>
-      <Name>Assets Compiler</Name>
+    <ProjectReference Include="..\Source\Framework\Framework.csproj">
+      <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
+      <Name>Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Represents a fragment shader asset.
 	/// </summary>
-	internal sealed class FragmentShaderAsset : Asset
+	internal sealed class FragmentShaderAsset : CompiledAsset
 	{
 		/// <summary>
 		///   The fragment shader that is managed by this asset instance.

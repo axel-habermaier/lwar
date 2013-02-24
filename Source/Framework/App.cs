@@ -2,9 +2,6 @@
 
 namespace Pegasus.Framework
 {
-	using System.Globalization;
-	using System.Threading;
-	using System.Threading.Tasks;
 	using Platform;
 	using Platform.Assets;
 	using Platform.Graphics;
@@ -106,102 +103,84 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Runs the application. This method does not return until the application is shut down.
 		/// </summary>
-		public void Run()
+		/// <param name="logFile">The log file that writes all generated log entries to the file system.</param>
+		internal void Run(LogFile logFile)
 		{
-			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
-			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+			Assert.ArgumentNotNull(logFile, () => logFile);
 
-			using (var logFile = new LogFile())
-			{
-				try
-				{
-					Log.Info("Starting {0}, version {1}.{2}.", Cvars.AppName.Value, Cvars.AppVersionMajor.Value, Cvars.AppVersionMinor.Value);
-					Log.Info("Running on {0} {1}bit, using {2}.", PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64",
-							 PlatformInfo.GraphicsApi);
+			Log.Info("Starting {0}, version {1}.{2}.", Cvars.AppName.Value, Cvars.AppVersionMajor.Value, Cvars.AppVersionMinor.Value);
+			Log.Info("Running on {0} {1}bit, using {2}.", PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64",
+					 PlatformInfo.GraphicsApi);
 
-					// Initialize app window and input
-					Window = new Window();
-					Keyboard = new Keyboard(Window);
-					Mouse = new Mouse(Window);
-					LogicalInputDevice = new LogicalInputDevice(Keyboard, Mouse);
+			// Initialize app window and input
+			Window = new Window();
+			Keyboard = new Keyboard(Window);
+			Mouse = new Mouse(Window);
+			LogicalInputDevice = new LogicalInputDevice(Keyboard, Mouse);
 
-					// Initialize graphics and assets manager
-					GraphicsDevice = new GraphicsDevice();
-					SwapChain = new SwapChain(GraphicsDevice, Window);
-					Assets = new AssetsManager(GraphicsDevice);
-					SpriteBatch.LoadShaders(Assets);
-					SwapChain.BackBuffer.Bind();
+			// Initialize graphics and assets manager
+			GraphicsDevice = new GraphicsDevice();
+			SwapChain = new SwapChain(GraphicsDevice, Window);
+			Assets = new AssetsManager(GraphicsDevice);
+			SpriteBatch.LoadShaders(Assets);
+			SwapChain.BackBuffer.Bind();
 
 #if DEBUG
-					Commands.ReloadAssets.Invoke();
+			Commands.ReloadAssets.Invoke();
 #endif
 
-					var font = Assets.LoadFont("Fonts/Liberation Mono 12");
-					using (var interpreter = new Interpreter())
-					using (var bindings = new RequestBindings(LogicalInputDevice))
-					using (var console = new Console(GraphicsDevice, font, LogicalInputDevice))
-					{
-						// Ensure that the size of the console always matches that of the window
-						console.Resize(Window.Size);
-						Window.Resized += console.Resize;
+			var font = Assets.LoadFont("Fonts/Liberation Mono 12");
+			using (var interpreter = new Interpreter())
+			using (var bindings = new RequestBindings(LogicalInputDevice))
+			using (var console = new Console(GraphicsDevice, font, LogicalInputDevice))
+			{
+				// Ensure that the size of the console always matches that of the window
+				console.Resize(Window.Size);
+				Window.Resized += console.Resize;
 
-						// Copy the recorded log history to the console and initialize the statistics
-						logFile.WriteToConsole(console);
-						Statistics = CreateStatistics();
-						Statistics.Initialize(GraphicsDevice, font);
-						Window.Resized += Statistics.Resize;
+				// Copy the recorded log history to the console and initialize the statistics
+				logFile.WriteToConsole(console);
+				Statistics = CreateStatistics();
+				Statistics.Initialize(GraphicsDevice, font);
+				Window.Resized += Statistics.Resize;
 
-						// Initialize commands and cvars
-						console.UserInput += interpreter.Execute;
-						Commands.Exit.Invoked += Exit;
+				// Initialize commands and cvars
+				console.UserInput += interpreter.Execute;
+				Commands.Exit.Invoked += Exit;
 
-						// Run the application-specific initialization logic
-						Initialize();
+				// Run the application-specific initialization logic
+				Initialize();
 
-						while (_running)
-						{
-							// Update the input system and let the console respond to any input
-							using (new Measurement(Statistics.UpdateInput))
-							{
-								UpdateInput();
-								console.HandleInput();
-							}
-
-							// Check if any command bindings have been triggered
-							bindings.InvokeTriggeredBindings();
-
-							// Update the application logic 
-							Update();
-							Statistics.Update();
-
-							using (new Measurement(Statistics.GpuFrameTime))
-							using (new Measurement(Statistics.CpuFrameTime))
-							{
-								// Let the application draw the current frame
-								Draw();
-
-								// Draw the console and the statistics on top of the current frame
-								console.Draw();
-								Statistics.Draw();
-							}
-
-							// Present the current frame to the screen
-							SwapChain.Present();
-							logFile.WriteToFile();
-						}
-					}
-				}
-				catch (Exception e)
+				while (_running)
 				{
-					var message = "The application has been terminated after a fatal error. " +
-								  "See the log file for further details.\n\nThe error was: {0}\n\nLog file: {1}";
-					message = String.Format(message, e.Message, logFile.FilePath);
-					Log.Error(message);
-					Log.Error("Stack trace:\n" + e.StackTrace);
-#if Windows
-					MessageBox.ShowMessage(Cvars.AppName.Value + " Fatal Error", message);
-#endif
+					// Update the input system and let the console respond to any input
+					using (new Measurement(Statistics.UpdateInput))
+					{
+						UpdateInput();
+						console.HandleInput();
+					}
+
+					// Check if any command bindings have been triggered
+					bindings.InvokeTriggeredBindings();
+
+					// Update the application logic 
+					Update();
+					Statistics.Update();
+
+					using (new Measurement(Statistics.GpuFrameTime))
+					using (new Measurement(Statistics.CpuFrameTime))
+					{
+						// Let the application draw the current frame
+						Draw();
+
+						// Draw the console and the statistics on top of the current frame
+						console.Draw();
+						Statistics.Draw();
+					}
+
+					// Present the current frame to the screen
+					SwapChain.Present();
+					logFile.WriteToFile();
 				}
 			}
 		}
