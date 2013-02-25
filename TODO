@@ -12,23 +12,23 @@ Client
 - Ship/Weapon selection
 - Scoreboard
 - Chat messages outside of console
-- Playernames over ships
+- Show player names on top of ships
 - Shield effect
 - Weapon effects
 - In-game menu
-- connect command were the port is optional (and if it is missing, the default server port is used)
+- connect command where the port is optional (and if it is missing, the default server port is used)
 
 Pegasus
 ========
 - C# to HLSL/GLSL cross compiler
-- Convert shaders to C#
+	- Convert shaders to C#
+	- Construct the shader input layout from the C# shader code instead of using build-time shader reflection of the DX shader
 - Fully support render targets with color and depth/stencil buffers
-- DirectX: Construct the shader input layout from the C# shader code instead of using build-time shader reflection
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
 - Ensure on app startup that all static cvars are allocated
-- CreateShader(void* data, int length, InputLayout* layout, int length)
+- CreateShader(void* data, int length, ShaderInput* inputLayout, int length)
 	-> OpenGL: Ignore layout, read data until \0 is found
-	-> D3D: Use layout to generate input layout, byte code starts after first \0; byte code length = (data + length) - location of first \0
+	-> D3D: Use ShaderInput to generate input layout, byte code starts after first \0; byte code length = (data + length) - location of first \0
 
 Server
 ========
