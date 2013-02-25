@@ -1,19 +1,21 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
+	using Framework;
+	using Framework.Platform;
 
 	/// <summary>
 	///   Represents a source asset that requires compilation.
 	/// </summary>
-	internal struct SourceAsset
+	internal struct Asset
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		public SourceAsset(string relativePath)
+		public Asset(string relativePath)
 			: this()
 		{
 			Assert.ArgumentNotNullOrWhitespace(relativePath, () => relativePath);

@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.Drawing;
 	using System.IO;
+	using Framework;
+	using Framework.Platform;
 
 	/// <summary>
 	///   Compiles 2D textures.

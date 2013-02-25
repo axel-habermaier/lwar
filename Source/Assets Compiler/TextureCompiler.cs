@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.Drawing.Imaging;
-	using Graphics;
+	using Framework;
+	using Framework.Platform.Graphics;
 
 	/// <summary>
 	///   Provides common methods required for the compilation of textures.

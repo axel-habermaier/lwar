@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Represents a vertex shader asset.
 	/// </summary>
-	internal sealed class VertexShaderAsset : CompiledAsset
+	internal sealed class VertexShaderAsset : Asset
 	{
 		/// <summary>
 		///   The vertex shader that is managed by this asset instance.

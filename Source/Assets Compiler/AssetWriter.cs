@@ -1,8 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
+	using Framework;
+	using Framework.Platform;
 
 	/// <summary>
 	///   Writes a compiled asset file. The endianess of the compiled file always matches the endianess of the target

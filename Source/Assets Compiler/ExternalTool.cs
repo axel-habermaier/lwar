@@ -1,10 +1,13 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
-	using System.Diagnostics;
-	using Graphics;
+	using Framework.Platform;
+	using Framework.Platform.Graphics;
 
+	/// <summary>
+	///   Runs an external asset compilation tool.
+	/// </summary>
 	internal static class ExternalTool
 	{
 		/// <summary>
@@ -16,44 +19,6 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		///   The path to the nvassemble executable.
 		/// </summary>
 		private static readonly string NvAssemblePath = GetExecutable(PlatformInfo.Platform, "../../Tools/nvassemble");
-
-		/// <summary>
-		///   Runs an external tool process.
-		/// </summary>
-		/// <param name="fileName">The file name of the external tool executable.</param>
-		/// <param name="commandLine">The command line arguments that should be passed to the tool.</param>
-		/// <param name="arguments">The arguments that should be copied into the command line.</param>
-		private static void RunProcess(string fileName, string commandLine, params object[] arguments)
-		{
-			var process = new Process
-			{
-				EnableRaisingEvents = true,
-				StartInfo = new ProcessStartInfo(fileName, String.Format(commandLine, arguments))
-				{
-					UseShellExecute = false,
-					RedirectStandardError = true,
-					RedirectStandardInput = true,
-					RedirectStandardOutput = true
-				}
-			};
-
-			process.OutputDataReceived += (o, e) =>
-				{
-					if (!String.IsNullOrWhiteSpace(e.Data))
-						Log.Info(e.Data);
-				};
-			process.ErrorDataReceived += (o, e) =>
-				{
-					if (!String.IsNullOrWhiteSpace(e.Data))
-						Log.Die(e.Data);
-				};
-
-			process.Start();
-
-			process.BeginErrorReadLine();
-			process.BeginOutputReadLine();
-			process.WaitForExit();
-		}
 
 		/// <summary>
 		///   Runs the nvcompress tool with the given arguments.
@@ -89,7 +54,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 					throw new InvalidOperationException("Unsupported format.");
 			}
 
-			RunProcess(NvCompressPath, @"-dds10 -silent -{0} -premula ""{1}"" ""{2}""", compressionFormat, input, output);
+			ExternalProcess.Run(NvCompressPath, @"-dds10 -silent -{0} -premula ""{1}"" ""{2}""", compressionFormat, input, output);
 		}
 
 		/// <summary>
@@ -105,8 +70,8 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		public static void NvAssemble(string negativeZ, string negativeX, string positiveZ, string positiveX, string negativeY,
 									  string positiveY, string output)
 		{
-			RunProcess(NvAssemblePath, @"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
-					   negativeZ, negativeX, positiveZ, positiveX, negativeY, positiveY, output);
+			ExternalProcess.Run(NvAssemblePath, @"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
+								negativeZ, negativeX, positiveZ, positiveX, negativeY, positiveY, output);
 		}
 
 		/// <summary>
@@ -123,7 +88,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 #else
 			optimization = "/O3";
 #endif
-			RunProcess("fxc", @"{3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""", profile, output, input, optimization);
+			ExternalProcess.Run("fxc", @"{3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""", profile, output, input, optimization);
 		}
 
 		/// <summary>

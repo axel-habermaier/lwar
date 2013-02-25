@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
 	using System.Linq;
+	using Framework;
 
 	/// <summary>
 	///   Compiles fonts.

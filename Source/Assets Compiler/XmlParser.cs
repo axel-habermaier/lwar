@@ -1,10 +1,11 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Xml.Linq;
+	using Framework;
 
 	/// <summary>
 	///   Helper methods for XML file parsing.

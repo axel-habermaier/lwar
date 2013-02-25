@@ -1,16 +1,18 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
 	using System.Xml.Linq;
+	using Framework;
+	using Framework.Platform.Assets;
 
 	/// <summary>
 	///   Represents a compilation unit that compiles all assets into a binary format.
 	/// </summary>
-	public abstract class CompilationUnit
+	public abstract class CompilationUnit : ICompilationUnit
 	{
 		/// <summary>
 		///   The list of items that are compiled by the compilation unit.
@@ -18,28 +20,9 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		private readonly List<AssetCompiler> _compilers = new List<AssetCompiler>();
 
 		/// <summary>
-		///   Creates a new instance.
-		/// </summary>
-		/// <returns></returns>
-		internal static CompilationUnit Create()
-		{
-			var assembly = Assembly.LoadFile(Configuration.AssetListPath);
-			var compilationUnit = assembly.GetTypes()
-										  .Where(t => t.IsClass && t.BaseType == typeof(CompilationUnit))
-										  .Select(Activator.CreateInstance)
-										  .OfType<CompilationUnit>()
-										  .Single();
-
-			compilationUnit.AddSpecialAssets();
-			compilationUnit.AddRemainingAssets();
-
-			return compilationUnit;
-		}
-
-		/// <summary>
 		///   Compiles all assets and returns the names of the assets that have been changed.
 		/// </summary>
-		internal IEnumerable<string> Compile()
+		IEnumerable<string> ICompilationUnit.Compile()
 		{
 			var compiledAssets = new List<string>();
 
@@ -67,14 +50,33 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		}
 
 		/// <summary>
-		/// Removes the hash files of all assets, as well as their compiled outputs in the temp and target directories.
+		///   Removes the hash files of all assets, as well as their compiled outputs in the temp and target directories.
 		/// </summary>
-		internal void Clean()
+		void ICompilationUnit.Clean()
 		{
 			Log.Info("Cleaning compiled assets and temporary files...");
 
 			foreach (var compiler in _compilers)
 				compiler.Clean();
+		}
+
+		/// <summary>
+		///   Creates a new instance.
+		/// </summary>
+		/// <returns></returns>
+		internal static ICompilationUnit Create()
+		{
+			var assembly = Assembly.LoadFile(Configuration.AssetListPath);
+			var compilationUnit = assembly.GetTypes()
+										  .Where(t => t.IsClass && t.BaseType == typeof(CompilationUnit))
+										  .Select(Activator.CreateInstance)
+										  .OfType<CompilationUnit>()
+										  .Single();
+
+			compilationUnit.AddSpecialAssets();
+			compilationUnit.AddRemainingAssets();
+
+			return compilationUnit;
 		}
 
 		/// <summary>

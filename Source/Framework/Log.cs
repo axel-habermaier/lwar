@@ -14,17 +14,35 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Wires up the events to write all logged messages to the console.
 		/// </summary>
-		public static void PrintToConsole()
+		/// <param name="ignoreDebugMessages">If true, does not print debug messages to the console.</param>
+		public static void PrintToConsoleColored(bool ignoreDebugMessages)
 		{
 			OnFatalError += message => WriteToConsole(ConsoleColor.Red, message);
 			OnError += message => WriteToConsole(ConsoleColor.Red, message);
 			OnWarning += message => WriteToConsole(ConsoleColor.Yellow, message);
 			OnInfo += message => WriteToConsole(ConsoleColor.White, message);
-			OnDebugInfo += message => WriteToConsole(ConsoleColor.Magenta, message);
+
+			if (!ignoreDebugMessages)
+				OnDebugInfo += message => WriteToConsole(ConsoleColor.Magenta, message);
 		}
 
 		/// <summary>
-		/// Writes a colored message to the console.
+		///   Wires up the events to write all logged messages to the console.
+		/// </summary>
+		/// <param name="ignoreDebugMessages">If true, does not print debug messages to the console.</param>
+		public static void PrintToConsoleUncolored(bool ignoreDebugMessages)
+		{
+			OnFatalError += message => Console.WriteLine("FATAL ERROR: {0}", message);
+			OnError += message => Console.WriteLine("ERROR: {0}", message);
+			OnWarning += message => Console.WriteLine("WARNING: {0}", message);
+			OnInfo += message => Console.WriteLine("INFO: {0}", message);
+
+			if (!ignoreDebugMessages)
+				OnDebugInfo += message => Console.WriteLine("DEBUG: {0}", message);
+		}
+
+		/// <summary>
+		///   Writes a colored message to the console.
 		/// </summary>
 		/// <param name="color">The color of the message.</param>
 		/// <param name="message">The message that should be written to the console.</param>

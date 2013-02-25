@@ -13,12 +13,6 @@ namespace Pegasus.Framework.Platform
 		[DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "MessageBox")]
 		private static extern int ShowMessage(IntPtr hWnd, String text, String caption, MessageBoxStyle options);
 
-		[DllImport("kernel32.dll")]
-		private static extern bool AttachConsole(int dwProcessId);
-
-		[DllImport("kernel32.dll")]
-		private static extern bool FreeConsole();
-
 		/// <summary>
 		///   Shows a Win32 native message box.
 		/// </summary>
@@ -32,24 +26,6 @@ namespace Pegasus.Framework.Platform
 			Assert.ArgumentNotNullOrWhitespace(text, () => text);
 
 			ShowMessage(IntPtr.Zero, String.Format(text, arguments), caption, MessageBoxStyle.IconError | MessageBoxStyle.Ok);
-		}
-
-		/// <summary>
-		///   Attaches a console to the process so that the console output is visible.
-		/// </summary>
-		[Conditional("Windows")]
-		public static void AttachConsole()
-		{
-			AttachConsole(-1);
-		}
-
-		/// <summary>
-		///   Detaches the previously attached console from the process.
-		/// </summary>
-		[Conditional("Windows")]
-		public static void DetachConsole()
-		{
-			FreeConsole();
 		}
 
 		/// <summary>

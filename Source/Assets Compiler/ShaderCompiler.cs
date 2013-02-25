@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
+	using Framework;
 	using SharpDX.D3DCompiler;
 
 	/// <summary>
@@ -25,7 +26,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		/// <param name="asset">The asset from which the shader code should be extracted.</param>
 		/// <param name="glsl">The extracted GLSL shader code.</param>
 		/// <param name="hlsl">The extracted HLSL shader code.</param>
-		protected void ExtractShaderCode(SourceAsset asset, out string glsl, out string hlsl)
+		protected void ExtractShaderCode(Asset asset, out string glsl, out string hlsl)
 		{
 			var split = File.ReadAllText(asset.SourcePath).Split(new[] { "---" }, StringSplitOptions.RemoveEmptyEntries);
 			if (split.Length != 2)
@@ -54,7 +55,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		/// <param name="asset">The asset that contains the shader source code.</param>
 		/// <param name="source">The HLSL shader source code.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		protected ShaderBytecode CompileHlslShader(SourceAsset asset, string source, string profile)
+		protected ShaderBytecode CompileHlslShader(Asset asset, string source, string profile)
 		{
 			//var hlslFile = asset.TempPath + ".hlsl";
 			//File.WriteAllText(hlslFile, source);

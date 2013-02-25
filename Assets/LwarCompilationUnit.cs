@@ -2,8 +2,11 @@
 
 namespace Lwar.Assets
 {
-	using Pegasus.Framework.Platform.Assets.Compilation;
+	using Pegasus.AssetsCompiler;
 
+	/// <summary>
+	///   Represents a compilation unit that compiles all assets into a binary format.
+	/// </summary>
 	public class LwarCompilationUnit : CompilationUnit
 	{
 		/// <summary>

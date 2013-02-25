@@ -170,27 +170,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpDX, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.D3DCompiler, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\SharpDX.D3DCompiler.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\SharpDX.DXGI.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayPool.cs" />
@@ -199,27 +180,14 @@
     <Compile Include="Network\IPacketFactory.cs" />
     <Compile Include="Network\ServicePacketFactory.cs" />
     <Compile Include="ObjectPool.cs" />
-    <Compile Include="Platform\Assets\CompiledAsset.cs" />
-    <Compile Include="Platform\Assets\Compilation\SourceAsset.cs" />
-    <Compile Include="Platform\Assets\Compilation\AssetWriter.cs" />
-    <Compile Include="Platform\Assets\Compilation\CompilationUnit.cs" />
-    <Compile Include="Platform\Assets\Compilation\AssetCompiler.cs" />
-    <Compile Include="Platform\Assets\Compilation\CubeMapCompiler.cs" />
-    <Compile Include="Platform\Assets\Compilation\FontCompiler.cs" />
-    <Compile Include="Platform\Assets\Compilation\FragmentShaderCompiler.cs" />
-    <Compile Include="Platform\Assets\Compilation\ShaderCompiler.cs" />
-    <Compile Include="Platform\Assets\Compilation\Texture2DCompiler.cs" />
-    <Compile Include="Platform\Assets\Compilation\TextureCompiler.cs" />
-    <Compile Include="Platform\Assets\Compilation\VertexShaderCompiler.cs" />
-    <Compile Include="Platform\Assets\Compilation\Configuration.cs" />
-    <Compile Include="Platform\Assets\Compilation\DirectDrawSurface.cs" />
-    <Compile Include="Platform\Assets\Compilation\ExternalTool.cs" />
-    <Compile Include="Platform\Assets\Compilation\XmlParser.cs" />
+    <Compile Include="Platform\Assets\Asset.cs" />
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
+    <Compile Include="Platform\Assets\ICompilationUnit.cs" />
     <Compile Include="Platform\Assets\Texture2DAsset.cs" />
     <Compile Include="Platform\BufferPointer.cs" />
     <Compile Include="Platform\Endianess.cs" />
+    <Compile Include="Platform\ExternalProcess.cs" />
     <Compile Include="Platform\Graphics\CubeMap.cs" />
     <Compile Include="Platform\Graphics\Mipmaps.cs" />
     <Compile Include="Platform\Graphics\Surface.cs" />
@@ -317,7 +285,6 @@
     <Compile Include="Platform\Graphics\Shader.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\Camera.cs" />
-    <Compile Include="Scripting\CommandLine.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />

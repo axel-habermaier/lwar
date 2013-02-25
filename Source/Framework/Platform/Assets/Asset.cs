@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Represents a compiled asset that can be loaded and reloaded.
 	/// </summary>
-	internal abstract class CompiledAsset : DisposableObject
+	internal abstract class Asset : DisposableObject
 	{
 		/// <summary>
 		///   Gets the friendly name of the asset.

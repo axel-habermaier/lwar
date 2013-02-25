@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets", "Assets\Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Source\Assets Compiler\Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -122,6 +124,22 @@ Global
 		{1F608B12-403C-4639-947A-B559E8EF121C}.Release OpenGL3|x64.Build.0 = Release OpenGL3|x64
 		{1F608B12-403C-4639-947A-B559E8EF121C}.Release OpenGL3|x86.ActiveCfg = Release OpenGL3|x86
 		{1F608B12-403C-4639-947A-B559E8EF121C}.Release OpenGL3|x86.Build.0 = Release OpenGL3|x86
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug Direct3D11|x64.ActiveCfg = Debug Direct3D11|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug Direct3D11|x64.Build.0 = Debug Direct3D11|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug Direct3D11|x86.ActiveCfg = Debug Direct3D11|x86
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug Direct3D11|x86.Build.0 = Debug Direct3D11|x86
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug OpenGL3|x64.ActiveCfg = Debug OpenGL3|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug OpenGL3|x64.Build.0 = Debug OpenGL3|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug OpenGL3|x86.ActiveCfg = Debug OpenGL3|x86
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug OpenGL3|x86.Build.0 = Debug OpenGL3|x86
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release Direct3D11|x64.ActiveCfg = Release Direct3D11|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release Direct3D11|x64.Build.0 = Release Direct3D11|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release Direct3D11|x86.ActiveCfg = Release Direct3D11|x86
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release Direct3D11|x86.Build.0 = Release Direct3D11|x86
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release OpenGL3|x64.ActiveCfg = Release OpenGL3|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release OpenGL3|x64.Build.0 = Release OpenGL3|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release OpenGL3|x86.ActiveCfg = Release OpenGL3|x86
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release OpenGL3|x86.Build.0 = Release OpenGL3|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

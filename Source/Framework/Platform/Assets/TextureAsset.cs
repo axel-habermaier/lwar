@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Represents a texture asset.
 	/// </summary>
-	internal abstract class TextureAsset<T> : CompiledAsset
+	internal abstract class TextureAsset<T> : Asset
 		where T : Texture, IDisposable
 	{
 		/// <summary>

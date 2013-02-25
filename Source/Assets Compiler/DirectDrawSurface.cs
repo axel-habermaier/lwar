@@ -1,10 +1,11 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.Collections.Generic;
-	using Graphics;
-	using Math = System.Math;
+	using Framework;
+	using Framework.Platform;
+	using Framework.Platform.Graphics;
 
 	/// <summary>
 	///   Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at
@@ -108,6 +109,22 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		}
 
 		/// <summary>
+		///   Gets the texture description for the image.
+		/// </summary>
+		public TextureDescription Description
+		{
+			get { return _description; }
+		}
+
+		/// <summary>
+		///   Gets the surfaces of the image.
+		/// </summary>
+		public IEnumerable<Surface> Surfaces
+		{
+			get { return _surfaces; }
+		}
+
+		/// <summary>
 		///   Serializes the DDS image into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the DDS image should be serialized into.</param>
@@ -133,22 +150,6 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 				for (var i = 0; i < surface.Size * surface.Depth; ++i)
 					buffer.WriteByte(surface.Data[i]);
 			}
-		}
-
-		/// <summary>
-		///   Gets the texture description for the image.
-		/// </summary>
-		public TextureDescription Description
-		{
-			get { return _description; }
-		}
-
-		/// <summary>
-		///   Gets the surfaces of the image.
-		/// </summary>
-		public IEnumerable<Surface> Surfaces
-		{
-			get { return _surfaces; }
 		}
 
 		/// <summary>

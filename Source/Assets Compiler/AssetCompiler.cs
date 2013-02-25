@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets.Compilation
+namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
 	using System.Security.Cryptography;
+	using Framework;
+	using Framework.Platform;
 
 	/// <summary>
 	///   Represents a compiler that compiles a source asset into a binary format that the runtime can load more efficiently.
@@ -16,7 +18,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		/// <param name="asset">The asset that should be compiled.</param>
 		protected AssetCompiler(string asset)
 		{
-			Asset = new SourceAsset(asset);
+			Asset = new Asset(asset);
 		}
 
 		/// <summary>
@@ -27,7 +29,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		/// <summary>
 		///   Gets the asset that the compiler compiles.
 		/// </summary>
-		internal SourceAsset Asset { get; private set; }
+		internal Asset Asset { get; private set; }
 
 		/// <summary>
 		///   Gets the buffer the processed output should be written to.
