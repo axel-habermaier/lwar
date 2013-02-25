@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.Diagnostics;
 	using System.Globalization;
+	using System.Linq;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Scripting;
@@ -58,6 +59,7 @@ namespace Pegasus.AssetsCompiler
 				Log.Info("Pegasus Asset Compiler, version {1}.{2} ({3} x{4})", Cvars.AppName.Value, Cvars.AppVersionMajor.Value,
 						 Cvars.AppVersionMinor.Value, PlatformInfo.Platform, IntPtr.Size == 4 ? "86" : "64");
 
+				Console.WriteLine();
 				var command = args.Length == 1 ? args[0].Trim().ToLower() : String.Empty;
 				var recompile = command == "recompile";
 				var compile = command == "compile";
@@ -80,6 +82,14 @@ namespace Pegasus.AssetsCompiler
 					if (compile)
 						compilationUnit.Compile();
 				}
+			}
+			catch (AggregateException e)
+			{
+				Log.Error(e.InnerExceptions.First().Message);
+			}
+			catch (Exception e)
+			{
+				Log.Error(e.Message);
 			}
 			finally
 			{

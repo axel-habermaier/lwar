@@ -108,10 +108,6 @@ namespace Pegasus.Framework
 		{
 			Assert.ArgumentNotNull(logFile, () => logFile);
 
-			Log.Info("Starting {0}, version {1}.{2}.", Cvars.AppName.Value, Cvars.AppVersionMajor.Value, Cvars.AppVersionMinor.Value);
-			Log.Info("Running on {0} {1}bit, using {2}.", PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64",
-					 PlatformInfo.GraphicsApi);
-
 			// Initialize app window and input
 			Window = new Window();
 			Keyboard = new Keyboard(Window);
@@ -122,11 +118,6 @@ namespace Pegasus.Framework
 			GraphicsDevice = new GraphicsDevice();
 			SwapChain = new SwapChain(GraphicsDevice, Window);
 			Assets = new AssetsManager(GraphicsDevice);
-
-#if DEBUG
-			Commands.ReloadAssets.Invoke();
-#endif
-
 			SpriteBatch.LoadShaders(Assets);
 			SwapChain.BackBuffer.Bind();
 

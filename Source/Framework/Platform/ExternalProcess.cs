@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Platform
 {
+	using System.Collections.Concurrent;
+	using System.Collections.Generic;
 	using System.Diagnostics;
 
 	/// <summary>
@@ -15,8 +17,11 @@ namespace Pegasus.Framework.Platform
 		/// <param name="fileName">The file name of the external tool executable.</param>
 		/// <param name="commandLine">The command line arguments that should be passed to the tool.</param>
 		/// <param name="arguments">The arguments that should be copied into the command line.</param>
-		public static void Run(string fileName, string commandLine, params object[] arguments)
+		public static IEnumerable<LogEntry> Run(string fileName, string commandLine = "", params object[] arguments)
 		{
+			Assert.ArgumentNotNullOrWhitespace(fileName, () => fileName);
+			Assert.ArgumentNotNull(commandLine, () => commandLine);
+
 			var process = new Process
 			{
 				EnableRaisingEvents = true,
@@ -29,15 +34,16 @@ namespace Pegasus.Framework.Platform
 				}
 			};
 
+			var logEntries = new ConcurrentQueue<LogEntry>();
 			process.OutputDataReceived += (o, e) =>
 				{
 					if (!String.IsNullOrWhiteSpace(e.Data))
-						Log.Info("{0}: {1}", fileName, e.Data);
+						logEntries.Enqueue(new LogEntry(LogType.Info, e.Data));
 				};
 			process.ErrorDataReceived += (o, e) =>
 				{
 					if (!String.IsNullOrWhiteSpace(e.Data))
-						Log.Die("{0}: {1}", fileName, e.Data);
+						logEntries.Enqueue(new LogEntry(LogType.Error, e.Data));
 				};
 
 			process.Start();
@@ -45,6 +51,8 @@ namespace Pegasus.Framework.Platform
 			process.BeginErrorReadLine();
 			process.BeginOutputReadLine();
 			process.WaitForExit();
+
+			return logEntries;
 		}
 	}
 }

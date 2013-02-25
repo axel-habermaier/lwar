@@ -96,7 +96,7 @@ namespace Pegasus.AssetsCompiler
 					using (var writer = new AssetWriter(Asset.TempPath, Asset.TargetPath))
 					{
 						Buffer = writer.Writer;
-						CompileCore();
+						CompileAndLogExceptions();
 					}
 					return true;
 				default:
@@ -115,7 +115,25 @@ namespace Pegasus.AssetsCompiler
 
 			Asset = Asset;
 			Buffer = buffer;
-			CompileCore();
+			CompileAndLogExceptions();
+		}
+
+		/// <summary>
+		///   Compiles the asset and logs the exception that might occur during the compilation.
+		/// </summary>
+		private void CompileAndLogExceptions()
+		{
+			try
+			{
+				CompileCore();
+			}
+			catch (ApplicationAbortedException)
+			{
+			}
+			catch (Exception e)
+			{
+				Log.Error("   {0}", e.Message);
+			}
 		}
 
 		/// <summary>

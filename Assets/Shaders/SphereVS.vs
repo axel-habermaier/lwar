@@ -58,7 +58,7 @@ VS_OUTPUT Main(VS_INPUT input)
 
 	float4 position = mul(World, input.Position);
 	output.Position = mul(ViewProjection, position);
-	output.Normal = input.Normal;
+	output.Normal = input.Normal.xyz;
 
 	return output;
 }

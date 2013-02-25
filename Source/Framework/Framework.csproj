@@ -180,6 +180,7 @@
     <Compile Include="Network\IPacketFactory.cs" />
     <Compile Include="Network\ServicePacketFactory.cs" />
     <Compile Include="ObjectPool.cs" />
+    <Compile Include="Platform\ApplicationAbortedException.cs" />
     <Compile Include="Platform\Assets\Asset.cs" />
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />

@@ -2,8 +2,10 @@
 
 namespace Pegasus.AssetsCompiler
 {
+	using System.ComponentModel;
 	using System.IO;
 	using Framework;
+	using Framework.Platform;
 	using SharpDX.D3DCompiler;
 
 	/// <summary>
@@ -15,6 +17,45 @@ namespace Pegasus.AssetsCompiler
 		///   The object used for thread synchronization.
 		/// </summary>
 		private static readonly object SyncObject = new object();
+
+		/// <summary>
+		///   Indicates whether HLSL shaders should be compiled.
+		/// </summary>
+		protected static readonly bool CompileHlsl;
+
+		/// <summary>
+		///   Initializes the type.
+		/// </summary>
+		static ShaderCompiler()
+		{
+			try
+			{
+				ExternalProcess.Run("fxc", "/?");
+				CompileHlsl = true;
+			}
+			catch (Win32Exception e)
+			{
+				if (e.NativeErrorCode == 2)
+				{
+					Log.Warn("HLSL shaders will not be compiled as fxc.exe could not be found.");
+					switch (PlatformInfo.Platform)
+					{
+						case PlatformType.Linux:
+							Log.Warn("HLSL shader compilation is not supported on Linux.");
+							break;
+						case PlatformType.Windows:
+							Log.Warn("fxc.exe must be in the system path.");
+							break;
+						default:
+							throw new InvalidOperationException("Unknown platform.");
+					}
+				}
+				else
+					Log.Error("Unable to invoke the HLSL compiler; HLSL shaders will not be compiled: {0}", e.Message);
+
+				CompileHlsl = false;
+			}
+		}
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -62,24 +103,13 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
 		protected ShaderBytecode CompileHlslShader(Asset asset, string source, string profile)
 		{
-			//var hlslFile = asset.TempPath + ".hlsl";
-			//File.WriteAllText(hlslFile, source);
+			var hlslFile = asset.TempPathWithoutExtension + ".hlsl";
+			File.WriteAllText(hlslFile, source);
 
-			//var byteCode = asset.TempPath + ".bytecode";
-			//ExternalTool.Fxc(hlslFile, byteCode, profile);
+			var byteCode = asset.TempPathWithoutExtension + ".fxo";
+			ExternalTool.Fxc(hlslFile, byteCode, profile);
 
-			//return new ShaderBytecode(File.ReadAllBytes(byteCode));
-
-			var flags = ShaderFlags.EnableStrictness;
-#if DEBUG
-			flags |= ShaderFlags.Debug;
-#endif
-
-			var result = ShaderBytecode.Compile(source, "Main", profile, flags, EffectFlags.None, source);
-			if (result.HasErrors)
-				throw new InvalidOperationException(result.Message);
-
-			return result.Bytecode;
+			return new ShaderBytecode(File.ReadAllBytes(byteCode));
 		}
 
 		/// <summary>
@@ -90,14 +120,9 @@ namespace Pegasus.AssetsCompiler
 		{
 			Assert.ArgumentNotNull(action, () => action);
 
-			try
-			{
+			if (CompileHlsl)
 				lock (SyncObject)
 					action();
-			}
-			catch (DllNotFoundException)
-			{
-			}
 		}
 	}
 }

@@ -2,6 +2,8 @@
 
 namespace Pegasus.AssetsCompiler
 {
+	using System.Linq;
+	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
 
@@ -54,7 +56,12 @@ namespace Pegasus.AssetsCompiler
 					throw new InvalidOperationException("Unsupported format.");
 			}
 
-			ExternalProcess.Run(NvCompressPath, @"-dds10 -silent -{0} -premula ""{1}"" ""{2}""", compressionFormat, input, output);
+			var logEntries = ExternalProcess.Run(NvCompressPath,
+												 @"-dds10 -silent -{0} -premula ""{1}"" ""{2}""",
+												 compressionFormat, input, output);
+
+			foreach (var log in logEntries)
+				log.RaiseLogEvent();
 		}
 
 		/// <summary>
@@ -70,8 +77,12 @@ namespace Pegasus.AssetsCompiler
 		public static void NvAssemble(string negativeZ, string negativeX, string positiveZ, string positiveX, string negativeY,
 									  string positiveY, string output)
 		{
-			ExternalProcess.Run(NvAssemblePath, @"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
-								negativeZ, negativeX, positiveZ, positiveX, negativeY, positiveY, output);
+			var logEntries = ExternalProcess.Run(NvAssemblePath,
+												 @"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
+												 negativeZ, negativeX, positiveZ, positiveX, negativeY, positiveY, output);
+
+			foreach (var log in logEntries)
+				log.RaiseLogEvent();
 		}
 
 		/// <summary>
@@ -88,7 +99,18 @@ namespace Pegasus.AssetsCompiler
 #else
 			optimization = "/O3";
 #endif
-			ExternalProcess.Run("fxc", @"{3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""", profile, output, input, optimization);
+			var logEntries = ExternalProcess.Run("fxc",
+												 @"/nologo {3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""",
+												 profile, output, input, optimization);
+
+			foreach (var log in logEntries.Where(l => l.LogType != LogType.Info))
+			{
+				var message = log.Message.Replace("{", "{{").Replace("}", "}}");
+				if (message.Contains(": warning X"))
+					Log.Warn(message);
+				else
+					Log.Die(message);
+			}
 		}
 
 		/// <summary>

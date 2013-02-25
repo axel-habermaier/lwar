@@ -19,11 +19,6 @@ namespace Pegasus.Framework.Platform
 		private const int BatchSize = 100;
 
 		/// <summary>
-		///   The path to the log file.
-		/// </summary>
-		public string FilePath { get; private set; }
-
-		/// <summary>
 		///   The the unwritten log entries that have been generated.
 		/// </summary>
 		private readonly Queue<LogEntry> _logEntries = new Queue<LogEntry>();
@@ -40,11 +35,16 @@ namespace Pegasus.Framework.Platform
 			Log.OnDebugInfo += OnDebugInfo;
 
 			FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Cvars.AppName.Value,
-									 Cvars.AppName.Value + ".log");
+									Cvars.AppName.Value + ".log");
 
 			if (File.Exists(FilePath))
 				File.Delete(FilePath);
 		}
+
+		/// <summary>
+		///   The path to the log file.
+		/// </summary>
+		public string FilePath { get; private set; }
 
 		/// <summary>
 		///   Invoked when a debug information message has been generated.
@@ -123,6 +123,9 @@ namespace Pegasus.Framework.Platform
 			{
 				switch (logEntry.LogType)
 				{
+					case LogType.FatalError:
+						console.ShowError(logEntry.Message);
+						break;
 					case LogType.Error:
 						console.ShowError(logEntry.Message);
 						break;

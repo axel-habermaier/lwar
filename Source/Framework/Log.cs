@@ -3,6 +3,7 @@
 namespace Pegasus.Framework
 {
 	using System.Diagnostics;
+	using Platform;
 	using Scripting;
 
 	/// <summary>
@@ -54,7 +55,7 @@ namespace Pegasus.Framework
 			if (OnFatalError != null)
 				OnFatalError(formattedMessage);
 
-			throw new InvalidOperationException(formattedMessage);
+			throw new ApplicationAbortedException(formattedMessage);
 		}
 
 		/// <summary>

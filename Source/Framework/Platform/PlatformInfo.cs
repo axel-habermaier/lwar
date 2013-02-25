@@ -31,7 +31,7 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   The type of the platform the application is running on.
 		/// </summary>
-		public const PlatformType Platform = PlatformType.Windows;
+		public static readonly PlatformType Platform = PlatformType.Windows;
 
 		/// <summary>
 		///    The scancode of the console key.

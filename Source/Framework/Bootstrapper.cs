@@ -3,6 +3,7 @@
 namespace Pegasus.Framework
 {
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
@@ -26,11 +27,20 @@ namespace Pegasus.Framework
 		/// </summary>
 		public void ParseCommandLine()
 		{
+			Log.Info("Parsing the command line arguments '{0}'...", Environment.CommandLine);
 			var reply = new CommandLineParser().Parse(Environment.CommandLine);
 			if (reply.Status != ReplyStatus.Success)
-				Log.Die(reply.Errors.ErrorMessage);
+			{
+				Log.Error(reply.Errors.ErrorMessage);
+				Log.Warn("All cvar values set via the command line were discarded.");
+			}
 			else
 			{
+				if (reply.Result.Any())
+					Log.Info("Setting cvar values passed via the command line...");
+				else
+					Log.Info("No cvar values have been provided via the command line.");
+
 				foreach (var cvar in reply.Result)
 					cvar.Execute();
 			}
@@ -63,6 +73,16 @@ namespace Pegasus.Framework
 				try
 				{
 					PrintToConsole();
+
+					Log.Info("Starting {0}, version {1}.{2} ({3} x{4}, {5}).",
+							 Cvars.AppName.Value,
+							 Cvars.AppVersionMajor.Value,
+							 Cvars.AppVersionMinor.Value,
+							 PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64",
+							 PlatformInfo.GraphicsApi);
+
+					ParseCommandLine();
+
 					using (var app = new TApp())
 						app.Run(logFile);
 				}

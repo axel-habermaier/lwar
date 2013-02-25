@@ -25,14 +25,16 @@ namespace Pegasus.Framework.Processes
 		///   Creates a new process that the scheduler is responsible for.
 		/// </summary>
 		/// <param name="asyncAction">The asynchronous action that the process should execute.</param>
-		public IProcess CreateProcess(AsyncAction asyncAction, [CallerFilePath] string path = "")
+		/// <param name="path">The file name of the caller.</param>
+		/// <param name="line">The line number of the caller.</param>
+		public IProcess CreateProcess(AsyncAction asyncAction, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
 		{
 			Assert.ArgumentNotNull(asyncAction, () => asyncAction);
 
 			var process = new Process();
 			try
 			{
-				process.SetDescription(path);
+				process.SetDescription(String.Format("{0}:{1}", path, line));
 				process.Run(asyncAction);
 				_added.Add(process);
 				return process;
@@ -49,13 +51,17 @@ namespace Pegasus.Framework.Processes
 		/// </summary>
 		/// <typeparam name="TResult">The type of the result of the process.</typeparam>
 		/// <param name="asyncFunc">The asynchronous function that the process should execute.</param>
-		public IProcess<TResult> CreateProcess<TResult>(AsyncFunc<TResult> asyncFunc)
+		/// <param name="path">The file name of the caller.</param>
+		/// <param name="line">The line number of the caller.</param>
+		public IProcess<TResult> CreateProcess<TResult>(AsyncFunc<TResult> asyncFunc, [CallerFilePath] string path = "",
+														[CallerLineNumber] int line = 0)
 		{
 			Assert.ArgumentNotNull(asyncFunc, () => asyncFunc);
 
 			var process = new Process<TResult>();
 			try
 			{
+				process.SetDescription(String.Format("{0}:{1}", path, line));
 				process.Run(asyncFunc);
 				_added.Add(process);
 				return process;
