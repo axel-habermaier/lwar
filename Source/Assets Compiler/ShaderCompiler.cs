@@ -7,10 +7,15 @@ namespace Pegasus.AssetsCompiler
 	using SharpDX.D3DCompiler;
 
 	/// <summary>
-	/// Provides common methods required for the compilation of shaders.
+	///   Provides common methods required for the compilation of shaders.
 	/// </summary>
 	internal abstract class ShaderCompiler : AssetCompiler
 	{
+		/// <summary>
+		///   The object used for thread synchronization.
+		/// </summary>
+		private static readonly object SyncObject = new object();
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -87,7 +92,8 @@ namespace Pegasus.AssetsCompiler
 
 			try
 			{
-				action();
+				lock (SyncObject)
+					action();
 			}
 			catch (DllNotFoundException)
 			{

@@ -23,7 +23,8 @@ pgSwapChain* pgCreateSwapChain(pgGraphicsDevice* device, pgWindow* window)
 
 pgVoid pgDestroySwapChain(pgSwapChain* swapChain)
 {
-	PG_ASSERT_NOT_NULL(swapChain);
+	if (swapChain == NULL)
+		return;
 
 	pgDestroySwapChainCore(swapChain);
 	PG_FREE(swapChain);

@@ -16,7 +16,8 @@ pgGraphicsDevice* pgCreateGraphicsDevice()
 
 pgVoid pgDestroyGraphicsDevice(pgGraphicsDevice* device)
 {
-	PG_ASSERT_NOT_NULL(device);
+	if (device == NULL)
+		return;
 
 	pgDestroyGraphicsDeviceCore(device);
 	PG_FREE(device);

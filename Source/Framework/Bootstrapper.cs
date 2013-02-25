@@ -37,6 +37,18 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
+		///   Wires up the log events to write all logged messages to the console.
+		/// </summary>
+		private static void PrintToConsole()
+		{
+			Log.OnFatalError += message => Console.WriteLine("FATAL ERROR: {0}", message);
+			Log.OnError += message => Console.WriteLine("ERROR: {0}", message);
+			Log.OnWarning += message => Console.WriteLine("WARNING: {0}", message);
+			Log.OnInfo += message => Console.WriteLine("INFO: {0}", message);
+			Log.OnDebugInfo += message => Console.WriteLine("DEBUG: {0}", message);
+		}
+
+		/// <summary>
 		///   Runs the application. This method does not return until the application is shut down.
 		/// </summary>
 		protected void Run()
@@ -50,7 +62,7 @@ namespace Pegasus.Framework
 			{
 				try
 				{
-					Log.PrintToConsoleUncolored(false);
+					PrintToConsole();
 					using (var app = new TApp())
 						app.Run(logFile);
 				}

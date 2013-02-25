@@ -134,21 +134,24 @@ namespace Pegasus.Framework.Platform.Assets
 			if (asset != null)
 				return asset;
 
+			asset = new TAsset { GraphicsDevice = _device, Assets = this };
 			try
 			{
-				asset = new TAsset { GraphicsDevice = _device, Assets = this };
 				Log.Info("Loading {0} '{1}'...", asset.FriendlyName, assetName);
 
 				using (var reader = new AssetReader(Path.Combine(AssetDirectory, assetName)))
-					asset.Load(reader); 
+					asset.Load(reader);
+
+				_assets.Add(assetName, asset);
+				return asset;
 			}
-			catch (IOException e)
+			catch (Exception e)
 			{
+				asset.SafeDispose();
 				Log.Die("Failed to load asset '{0}': {1}", assetName, e.Message);
 			}
 
-			_assets.Add(assetName, asset);
-			return asset;
+			return null;
 		}
 
 		/// <summary>

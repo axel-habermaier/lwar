@@ -23,7 +23,8 @@ pgInputLayout* pgCreateInputLayout(pgGraphicsDevice* device, pgBuffer* indexBuff
 
 pgVoid pgDestroyInputLayout(pgInputLayout* inputLayout)
 {
-	PG_ASSERT_NOT_NULL(inputLayout);
+	if (inputLayout == NULL)
+		return;
 
 	if (inputLayout->device->state.inputLayout == inputLayout)
 		inputLayout->device->state.inputLayout = NULL;

@@ -7,12 +7,11 @@ namespace Pegasus.AssetsCompiler
 	using System.Reflection;
 	using System.Xml.Linq;
 	using Framework;
-	using Framework.Platform.Assets;
 
 	/// <summary>
 	///   Represents a compilation unit that compiles all assets into a binary format.
 	/// </summary>
-	public abstract class CompilationUnit : ICompilationUnit
+	public abstract class CompilationUnit
 	{
 		/// <summary>
 		///   The list of items that are compiled by the compilation unit.
@@ -22,10 +21,8 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   Compiles all assets and returns the names of the assets that have been changed.
 		/// </summary>
-		IEnumerable<string> ICompilationUnit.Compile()
+		public void Compile()
 		{
-			var compiledAssets = new List<string>();
-
 			try
 			{
 				var grouped = _compilers.GroupBy(compiler => compiler.GetType());
@@ -34,25 +31,19 @@ namespace Pegasus.AssetsCompiler
 					var first = group.First();
 					Log.Info("Processing {0}...", first.AssetType);
 
-					foreach (var compiler in group)
-					{
-						if (compiler.Compile())
-							compiledAssets.Add(compiler.Asset.RelativePathWithoutExtension);
-					}
+					group.AsParallel().ForAll(compiler => compiler.Compile());
 				}
 			}
 			catch (Exception e)
 			{
 				Log.Error(e.Message);
 			}
-
-			return compiledAssets;
 		}
 
 		/// <summary>
 		///   Removes the hash files of all assets, as well as their compiled outputs in the temp and target directories.
 		/// </summary>
-		void ICompilationUnit.Clean()
+		public void Clean()
 		{
 			Log.Info("Cleaning compiled assets and temporary files...");
 
@@ -64,7 +55,7 @@ namespace Pegasus.AssetsCompiler
 		///   Creates a new instance.
 		/// </summary>
 		/// <returns></returns>
-		internal static ICompilationUnit Create()
+		internal static CompilationUnit Create()
 		{
 			var assembly = Assembly.LoadFile(Configuration.AssetListPath);
 			var compilationUnit = assembly.GetTypes()

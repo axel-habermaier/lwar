@@ -24,7 +24,8 @@ pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDescription* descr
 
 pgVoid pgDestroyTexture(pgTexture* texture)
 {
-	PG_ASSERT_NOT_NULL(texture);
+	if (texture == NULL)
+		return;
 
 	pgDestroyTextureCore(texture);
 	PG_FREE(texture);

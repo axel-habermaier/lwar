@@ -22,11 +22,6 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Gets a description of the asset type that the compiler supports.
-		/// </summary>
-		internal abstract string AssetType { get; }
-
-		/// <summary>
 		///   Gets the asset that the compiler compiles.
 		/// </summary>
 		internal Asset Asset { get; private set; }
@@ -35,6 +30,19 @@ namespace Pegasus.AssetsCompiler
 		///   Gets the buffer the processed output should be written to.
 		/// </summary>
 		protected BufferWriter Buffer { get; private set; }
+
+		/// <summary>
+		///   Gets a description of the type of the asset that is compiled by the compiler.
+		/// </summary>
+		internal abstract string AssetType { get; }
+
+		/// <summary>
+		///   Gets a value indicating whether several instances of the compiler can be run concurrently.
+		/// </summary>
+		internal virtual bool SupportsParallelCompilation
+		{
+			get { return true; }
+		}
 
 		/// <summary>
 		///   Gets a value indicating which action the compiler has to take.

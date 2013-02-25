@@ -199,8 +199,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			if (State != IntPtr.Zero)
-				NativeMethods.DestroyBlendState(State);
+			NativeMethods.DestroyBlendState(State);
 		}
 
 		/// <summary>
@@ -209,7 +208,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void Bind()
 		{
 			Assert.NotDisposed(this);
-			
+
 			CompileIfNecessary();
 			NativeMethods.BindBlendState(State);
 		}

@@ -20,7 +20,8 @@ pgBlendState* pgCreateBlendState(pgGraphicsDevice* device, pgBlendDesc* descript
 
 pgVoid pgDestroyBlendState(pgBlendState* blendState)
 {
-	PG_ASSERT_NOT_NULL(blendState);
+	if (blendState == NULL)
+		return;
 
 	if (blendState->device->state.blendState == blendState)
 		blendState->device->state.blendState = NULL;
@@ -73,7 +74,8 @@ pgDepthStencilState* pgCreateDepthStencilState(pgGraphicsDevice* device, pgDepth
 
 pgVoid pgDestroyDepthStencilState(pgDepthStencilState* depthStencilState)
 {
-	PG_ASSERT_NOT_NULL(depthStencilState);
+	if (depthStencilState == NULL)
+		return;
 
 	if (depthStencilState->device->state.depthStencilState == depthStencilState)
 		depthStencilState->device->state.depthStencilState = NULL;
@@ -132,7 +134,8 @@ pgRasterizerState* pgCreateRasterizerState(pgGraphicsDevice* device, pgRasterize
 
 pgVoid pgDestroyRasterizerState(pgRasterizerState* rasterizerState)
 {
-	PG_ASSERT_NOT_NULL(rasterizerState);
+	if (rasterizerState == NULL)
+		return;
 
 	if (rasterizerState->device->state.rasterizerState == rasterizerState)
 		rasterizerState->device->state.rasterizerState = NULL;
@@ -187,7 +190,8 @@ pgSamplerState* pgCreateSamplerState(pgGraphicsDevice* device, pgSamplerDesc* de
 
 pgVoid pgDestroySamplerState(pgSamplerState* samplerState)
 {
-	PG_ASSERT_NOT_NULL(samplerState);
+	if (samplerState == NULL)
+		return;
 
 	pgDestroySamplerStateCore(samplerState);
 	PG_FREE(samplerState);

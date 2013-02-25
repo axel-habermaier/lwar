@@ -28,8 +28,11 @@ pgShader* pgCreateShader(pgGraphicsDevice* device, pgShaderType type, pgVoid* sh
 pgVoid pgDestroyShader(pgShader* shader)
 {
 	pgShader** boundShader = pgGetBoundShader(shader);
-	PG_ASSERT_NOT_NULL(shader);
 
+	if (shader == NULL)
+		return;
+
+	PG_ASSERT_NOT_NULL(boundShader);
 	if (*boundShader == shader)
 		*boundShader = NULL;
 
@@ -55,7 +58,8 @@ pgVoid pgBindShader(pgShader* shader)
 
 pgShader** pgGetBoundShader(pgShader* shader)
 {
-	PG_ASSERT_NOT_NULL(shader);
+	if (shader == NULL)
+		return NULL;
 
 	switch (shader->type)
 	{

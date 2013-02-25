@@ -20,7 +20,9 @@ pgQuery* pgCreateQuery(pgGraphicsDevice* device, pgQueryType type)
 
 pgVoid pgDestroyQuery(pgQuery* query)
 {
-	PG_ASSERT_NOT_NULL(query);
+	if (query == NULL)
+		return;
+
 	PG_ASSERT(!query->isActive, "Cannot destroy active query.");
 
 	pgDestroyQueryCore(query);

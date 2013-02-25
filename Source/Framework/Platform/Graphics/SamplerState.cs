@@ -299,8 +299,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			if (State != IntPtr.Zero)
-				NativeMethods.DestroySamplerState(State);
+			NativeMethods.DestroySamplerState(State);
 		}
 
 		/// <summary>

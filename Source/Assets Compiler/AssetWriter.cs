@@ -20,7 +20,7 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   The buffer that stores the asset's data.
 		/// </summary>
-		private static readonly byte[] Buffer = new byte[MaxAssetSize * 1024 * 1024];
+		private readonly byte[] _buffer = new byte[MaxAssetSize * 1024 * 1024];
 
 		/// <summary>
 		///   The target path of the compiled asset.
@@ -44,7 +44,7 @@ namespace Pegasus.AssetsCompiler
 
 			_tempPath = tempPath;
 			_targetPath = targetPath;
-			Writer = BufferWriter.Create(Buffer);
+			Writer = BufferWriter.Create(_buffer);
 		}
 
 		/// <summary>
@@ -58,10 +58,10 @@ namespace Pegasus.AssetsCompiler
 		protected override void OnDisposing()
 		{
 			using (var stream = new FileStream(_tempPath, FileMode.Create))
-				stream.Write(Buffer, 0, Writer.Count);
+				stream.Write(_buffer, 0, Writer.Count);
 
 			using (var stream = new FileStream(_targetPath, FileMode.Create))
-				stream.Write(Buffer, 0, Writer.Count);
+				stream.Write(_buffer, 0, Writer.Count);
 
 			Writer.SafeDispose();
 		}

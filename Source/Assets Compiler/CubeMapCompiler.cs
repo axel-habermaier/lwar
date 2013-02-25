@@ -22,7 +22,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Gets a description of the asset type that the compiler supports.
+		///   Gets a description of the type of the asset that is compiled by the compiler.
 		/// </summary>
 		internal override string AssetType
 		{

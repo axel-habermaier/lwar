@@ -188,8 +188,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			if (State != IntPtr.Zero)
-				NativeMethods.DestroyDepthStencilState(State);
+			NativeMethods.DestroyDepthStencilState(State);
 		}
 
 		/// <summary>

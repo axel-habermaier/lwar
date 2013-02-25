@@ -226,8 +226,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			if (State != IntPtr.Zero)
-				NativeMethods.DestroyRasterizerState(State);
+			NativeMethods.DestroyRasterizerState(State);
 		}
 
 		/// <summary>

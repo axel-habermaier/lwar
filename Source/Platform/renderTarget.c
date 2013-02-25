@@ -20,7 +20,8 @@ pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture* textur
 
 pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget)
 {
-	PG_ASSERT_NOT_NULL(renderTarget);
+	if (renderTarget == NULL)
+		return;
 
 	if (renderTarget->device->state.renderTarget == renderTarget)
 		renderTarget->device->state.renderTarget = NULL;

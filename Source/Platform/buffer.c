@@ -20,7 +20,8 @@ pgBuffer* pgCreateBuffer(pgGraphicsDevice* device, pgBufferType type, pgResource
 
 pgVoid pgDestroyBuffer(pgBuffer* buffer)
 {
-	PG_ASSERT_NOT_NULL(buffer);
+	if (buffer == NULL)
+		return;
 
 	pgDestroyBufferCore(buffer);
 	PG_FREE(buffer);

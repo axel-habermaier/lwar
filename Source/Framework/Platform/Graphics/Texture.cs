@@ -47,8 +47,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			Assert.ArgumentNotNull(surfaces, () => surfaces);
 
-			if (_texture != IntPtr.Zero)
-				NativeMethods.DestroyTexture(_texture);
+			NativeMethods.DestroyTexture(_texture);
+			_texture = IntPtr.Zero;
 
 			Description = description;
 			_texture = NativeMethods.CreateTexture(GraphicsDevice.NativePtr, ref description, surfaces);

@@ -183,7 +183,6 @@
     <Compile Include="Platform\Assets\Asset.cs" />
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
-    <Compile Include="Platform\Assets\ICompilationUnit.cs" />
     <Compile Include="Platform\Assets\Texture2DAsset.cs" />
     <Compile Include="Platform\BufferPointer.cs" />
     <Compile Include="Platform\Endianess.cs" />
