@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug Linux|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Source/Assets Compiler/Texture2DProcessor.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/LwarCompilationUnit.cs">
     <Files>
-      <File FileName="Source/Assets Compiler/Texture2DProcessor.cs" Line="36" Column="1" />
+      <File FileName="Assets/LwarCompilationUnit.cs" Line="12" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

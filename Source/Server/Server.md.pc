@@ -1,5 +1,5 @@
 Name: Server
 Description: 
 Version: 0.1
-Libs: -L"/home/axel/Workspace/lwar/Binaries/Debug" -llwar-server
+Libs: -L"/home/axel/Workspace/lwar/Binaries x64/Release OpenGL3/" -llwar-server
 Cflags: -I"/home/axel/Workspace/lwar/Source/Server"

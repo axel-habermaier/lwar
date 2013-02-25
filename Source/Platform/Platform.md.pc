@@ -1,5 +1,5 @@
 Name: Platform
 Description: 
 Version: 0.1
-Libs: -L"/home/axel/Workspace/lwar/Binaries/Debug" -lPlatform
+Libs: -L"/home/axel/Workspace/lwar/Binaries x64/Release OpenGL3/" -lPlatform
 Cflags: -I"/home/axel/Workspace/lwar/Source/Platform"
