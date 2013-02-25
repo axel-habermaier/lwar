@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Assets
 {
 	using System.Collections.Generic;
+	using System.ComponentModel;
 	using System.IO;
 	using Graphics;
 	using Rendering.UserInterface;
@@ -51,19 +52,30 @@ namespace Pegasus.Framework.Platform.Assets
 		/// </summary>
 		private void ReloadAssets()
 		{
-			ExternalProcess.Run(AssetCompiler, "compile");
-			foreach (var pair in _assets)
+			try
 			{
-				try
+				ExternalProcess.Run(AssetCompiler, "compile");
+
+				foreach (var pair in _assets)
 				{
-					Log.Info("Reloading {1} '{0}'...", pair.Key, pair.Value.FriendlyName);
-					using (var reader = new AssetReader(Path.Combine(AssetDirectory, pair.Key)))
-						pair.Value.Load(reader);
+					try
+					{
+						Log.Info("Reloading {1} '{0}'...", pair.Key, pair.Value.FriendlyName);
+						using (var reader = new AssetReader(Path.Combine(AssetDirectory, pair.Key)))
+							pair.Value.Load(reader);
+					}
+					catch (IOException e)
+					{
+						Log.Die("Failed to reload asset '{0}': {1}", pair.Key, e.Message);
+					}
 				}
-				catch (IOException e)
-				{
-					Log.Die("Failed to reload asset '{0}': {1}", pair.Key, e.Message);
-				}
+			}
+			catch (Win32Exception e)
+			{
+				if (e.NativeErrorCode == 2)
+					Log.Warn("{0} not found.", AssetCompiler);
+				else
+					Log.Error("{0} failed: {1}", AssetCompiler, e.Message);
 			}
 		}
 

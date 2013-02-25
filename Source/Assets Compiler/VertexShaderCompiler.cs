@@ -109,7 +109,7 @@ namespace Pegasus.AssetsCompiler
 					{
 						if (paramDesc.ComponentType == RegisterComponentType.UInt32)
 							inputElements[i].Format = Format.R32G32B32A32_UInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.Sint32)
+						else if (paramDesc.ComponentType == RegisterComponentType.SInt32)
 							inputElements[i].Format = Format.R32G32B32A32_SInt;
 						else if (paramDesc.ComponentType == RegisterComponentType.Float32)
 							inputElements[i].Format = Format.R32G32B32A32_Float;
@@ -118,7 +118,7 @@ namespace Pegasus.AssetsCompiler
 					{
 						if (paramDesc.ComponentType == RegisterComponentType.UInt32)
 							inputElements[i].Format = Format.R32G32B32_UInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.Sint32)
+						else if (paramDesc.ComponentType == RegisterComponentType.SInt32)
 							inputElements[i].Format = Format.R32G32B32_SInt;
 						else if (paramDesc.ComponentType == RegisterComponentType.Float32)
 							inputElements[i].Format = Format.R32G32B32_Float;
@@ -127,7 +127,7 @@ namespace Pegasus.AssetsCompiler
 					{
 						if (paramDesc.ComponentType == RegisterComponentType.UInt32)
 							inputElements[i].Format = Format.R32G32_UInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.Sint32)
+						else if (paramDesc.ComponentType == RegisterComponentType.SInt32)
 							inputElements[i].Format = Format.R32G32_SInt;
 						else if (paramDesc.ComponentType == RegisterComponentType.Float32)
 							inputElements[i].Format = Format.R32G32_Float;
@@ -136,7 +136,7 @@ namespace Pegasus.AssetsCompiler
 					{
 						if (paramDesc.ComponentType == RegisterComponentType.UInt32)
 							inputElements[i].Format = Format.R32_UInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.Sint32)
+						else if (paramDesc.ComponentType == RegisterComponentType.SInt32)
 							inputElements[i].Format = Format.R32_SInt;
 						else if (paramDesc.ComponentType == RegisterComponentType.Float32)
 							inputElements[i].Format = Format.R32_Float;
