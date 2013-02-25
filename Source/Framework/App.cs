@@ -122,12 +122,13 @@ namespace Pegasus.Framework
 			GraphicsDevice = new GraphicsDevice();
 			SwapChain = new SwapChain(GraphicsDevice, Window);
 			Assets = new AssetsManager(GraphicsDevice);
-			SpriteBatch.LoadShaders(Assets);
-			SwapChain.BackBuffer.Bind();
 
 #if DEBUG
 			Commands.ReloadAssets.Invoke();
 #endif
+
+			SpriteBatch.LoadShaders(Assets);
+			SwapChain.BackBuffer.Bind();
 
 			var font = Assets.LoadFont("Fonts/Liberation Mono 12");
 			using (var interpreter = new Interpreter())

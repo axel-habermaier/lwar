@@ -24,7 +24,7 @@
     <DefineConstants>TRACE;DEBUG;Direct3D11; Windows</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
@@ -49,7 +49,7 @@
     <DefineConstants>TRACE;DEBUG;OpenGL3; Windows</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
@@ -61,7 +61,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
@@ -74,7 +74,7 @@
     <DefineConstants>TRACE;DEBUG;OpenGL3; Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
@@ -86,7 +86,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
