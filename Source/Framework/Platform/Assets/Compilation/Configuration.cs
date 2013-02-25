@@ -17,7 +17,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		/// <summary>
 		///   The path to the assets list.
 		/// </summary>
-		public static readonly string AssetListPath = Path.Combine(SourceDirectory, "Binaries/Assets.dll");
+		public static readonly string AssetListPath = Path.Combine(Environment.CurrentDirectory, "Assets.dll");
 
 		/// <summary>
 		///   The path to the assets project.
@@ -29,16 +29,9 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		/// </summary>
 		public static readonly string TempDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets/obj");
 
-#if DEBUG
 		/// <summary>
 		///   The path where the compiled assets should be stored.
 		/// </summary>
-		public static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "../../Binaries/Debug/Assets");
-#else
-	/// <summary>
-	/// The path where the compiled assets should be stored.
-	/// </summary>
-		public static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "../../Binaries/Release/Assets");
-#endif
+		public static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "Assets");
 	}
 }
