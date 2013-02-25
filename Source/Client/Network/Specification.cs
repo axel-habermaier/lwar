@@ -40,6 +40,6 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   The default server port.
 		/// </summary>
-		public const ushort DefaultPort = 32422;
+		public const ushort DefaultServerPort = 32422;
 	}
 }

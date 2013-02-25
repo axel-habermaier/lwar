@@ -62,11 +62,6 @@ namespace Lwar.Client.Gameplay
 		private readonly StateMachine _updateState;
 
 		/// <summary>
-		///   The render context that is used to draw the game session.
-		/// </summary>
-		public RenderContext RenderContext { get; private set; }
-
-		/// <summary>
 		///   Manages the input state and periodically sends updates to the server.
 		/// </summary>
 		private InputManager _inputManager;
@@ -101,7 +96,8 @@ namespace Lwar.Client.Gameplay
 			RenderContext.Camera = Camera;
 			InputDevice.Modes = InputModes.Game;
 
-			LwarCommands.Connect.Invoked += (ipAddress, port) => _updateState.ChangeState(ctx => Loading(ctx, ipAddress, port));
+			LwarCommands.Connect.Invoked += ipAddress => Connect(new IPEndPoint(ipAddress, Specification.DefaultServerPort));
+			LwarCommands.ConnectPort.Invoked += Connect;
 			LwarCommands.Disconnect.Invoked += () => _updateState.ChangeState(Inactive);
 			LwarCommands.Chat.Invoked += ChatMessageEntered;
 			LwarCommands.ToggleDebugCamera.Invoked += ToggleDebugCamera;
@@ -111,6 +107,11 @@ namespace Lwar.Client.Gameplay
 			WindowResized(Window.Size);
 			_updateState.ChangeState(Inactive);
 		}
+
+		/// <summary>
+		///   The render context that is used to draw the game session.
+		/// </summary>
+		public RenderContext RenderContext { get; private set; }
 
 		/// <summary>
 		///   Gets the camera that is used to draw the game session.
@@ -161,6 +162,16 @@ namespace Lwar.Client.Gameplay
 		///   Gets the proxy to the server that hosts the game session.
 		/// </summary>
 		public ServerProxy ServerProxy { get; private set; }
+
+		/// <summary>
+		///   Connects to a game session on the server identified by the given end point.
+		/// </summary>
+		/// <param name="endPoint">The end point of the server that hosts the game session.</param>
+		private void Connect(IPEndPoint endPoint)
+		{
+			Assert.ArgumentNotNull(endPoint, () => endPoint);
+			_updateState.ChangeState(ctx => Loading(ctx, endPoint));
+		}
 
 		/// <summary>
 		///   Toggles between the game and the debug camera.
@@ -299,12 +310,10 @@ namespace Lwar.Client.Gameplay
 		///   Active when a connection to a server is established and the game is loaded.
 		/// </summary>
 		/// <param name="context">The context in which the state function should be executed.</param>
-		/// <param name="serverIPAddress">The IP address of the server that hosts the game session.</param>
-		/// <param name="serverPort">The port of the server that hosts the game session.</param>
-		private async Task Loading(ProcessContext context, IPAddress serverIPAddress, ushort serverPort)
+		/// <param name="serverEndPoint">The IP end point of the server that hosts the game session.</param>
+		private async Task Loading(ProcessContext context, IPEndPoint serverEndPoint)
 		{
-			Assert.ArgumentNotNull(serverIPAddress, () => serverIPAddress);
-			var serverEndPoint = new IPEndPoint(serverIPAddress, serverPort == 0 ? Specification.DefaultPort : serverPort);
+			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
 
 			Commands.ShowConsole.Invoke(false);
 			Cleanup();
@@ -379,7 +388,7 @@ namespace Lwar.Client.Gameplay
 		private async Task Playing(ProcessContext context)
 		{
 			_drawState.ChangeState(PlayingDraw);
-		
+
 			while (!context.IsCanceled)
 			{
 				Entities.Update();
