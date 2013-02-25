@@ -11,7 +11,8 @@ namespace Lwar.Client.Gameplay
 		Bullet = 2,
 		Planet = 3,
 		Rocket = 4,
-
+		Ray = 5,
+		ShockWave = 6,
 		Gun = 7,
 	}
 }

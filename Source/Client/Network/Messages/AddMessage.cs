@@ -52,6 +52,18 @@ namespace Lwar.Client.Network.Messages
 				case EntityTemplate.Rocket:
 					entity = Rocket.Create(player);
 					break;
+				case EntityTemplate.Ray:
+					// TODO
+					entity = Bullet.Create(player);
+					break;
+				case EntityTemplate.ShockWave:
+					// TODO
+					entity = Bullet.Create(player);
+					break;
+				case EntityTemplate.Gun:
+					// TODO
+					entity = Bullet.Create(player);
+					break;
 				default:
 					throw new InvalidOperationException("Unknown entity template.");
 			}
