@@ -48,11 +48,11 @@ namespace Lwar.Client.Network
 		{
 			_logCallbacks = new NativeMethods.LogCallbacks
 			{
-				Die = s => _logs.Enqueue(() => Log.Die("(Server) {0}", RemoveTrailingNewline(s))),
-				Error = s => _logs.Enqueue(() => Log.Error("(Server) {0}", RemoveTrailingNewline(s))),
-				Warning = s => _logs.Enqueue(() => Log.Warn("(Server) {0}", RemoveTrailingNewline(s))),
-				Info = s => _logs.Enqueue(() => Log.Info("(Server) {0}", RemoveTrailingNewline(s))),
-				Debug = s => _logs.Enqueue(() => NetworkLog.DebugInfo("(Server) {0}", RemoveTrailingNewline(s)))
+				Die = s => _logs.Enqueue(() => Log.Die("(Server) {0}", RemoveTrailingNewlines(s))),
+				Error = s => _logs.Enqueue(() => Log.Error("(Server) {0}", RemoveTrailingNewlines(s))),
+				Warning = s => _logs.Enqueue(() => Log.Warn("(Server) {0}", RemoveTrailingNewlines(s))),
+				Info = s => _logs.Enqueue(() => Log.Info("(Server) {0}", RemoveTrailingNewlines(s))),
+				Debug = s => _logs.Enqueue(() => NetworkLog.DebugInfo("(Server) {0}", RemoveTrailingNewlines(s)))
 			};
 
 			LwarCommands.StartServer.Invoked += Run;
@@ -83,9 +83,11 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Removes a trailing newline.
 		/// </summary>
-		private static string RemoveTrailingNewline(string s)
+		private static string RemoveTrailingNewlines(string s)
 		{
-			return s.EndsWith("\n") ? s.Substring(0, s.Length - 1) : s;
+			while (s.EndsWith("\n") || s.EndsWith("\r"))
+				s = s.Substring(0, s.Length - 1);
+			return s;
 		}
 
 		/// <summary>
