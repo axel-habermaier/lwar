@@ -1,8 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release Linux|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/LwarCompilationUnit.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Shaders/SphereFS.fs">
     <Files>
-      <File FileName="Assets/LwarCompilationUnit.cs" Line="19" Column="4" />
+      <File FileName="Assets/LwarCompilationUnit.cs" Line="15" Column="2" />
+      <File FileName="Assets/Shaders/SphereFS.fs" Line="5" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

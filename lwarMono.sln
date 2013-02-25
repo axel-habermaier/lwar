@@ -22,16 +22,16 @@ Global
 		Release Linux|x86 = Release Linux|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug Linux|x86.ActiveCfg = Debug OpenGL3|x64
-		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug Linux|x86.Build.0 = Debug OpenGL3|x64
-		{1F608B12-403C-4639-947A-B559E8EF121C}.Release Linux|x86.ActiveCfg = Release OpenGL3|x64
-		{1F608B12-403C-4639-947A-B559E8EF121C}.Release Linux|x86.Build.0 = Release OpenGL3|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug Linux|x86.ActiveCfg = Debug Linux|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug Linux|x86.Build.0 = Debug Linux|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release Linux|x86.ActiveCfg = Release Linux|x64
+		{1F608B12-403C-4639-947A-B559E8EF121C}.Release Linux|x86.Build.0 = Release Linux|x64
 		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Linux|x86.ActiveCfg = Debug Linux|Any CPU
 		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Linux|x86.Build.0 = Debug Linux|Any CPU
 		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Linux|x86.ActiveCfg = Release Linux|Any CPU
 		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Linux|x86.Build.0 = Release Linux|Any CPU
-		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug Linux|x86.ActiveCfg = Debug OpenGL3|Any CPU
-		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug Linux|x86.Build.0 = Debug OpenGL3|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug Linux|x86.ActiveCfg = Debug Linux|Any CPU
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Debug Linux|x86.Build.0 = Debug Linux|Any CPU
 		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release Linux|x86.ActiveCfg = Release Linux|Any CPU
 		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release Linux|x86.Build.0 = Release Linux|Any CPU
 		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}.Debug Linux|x86.ActiveCfg = Debug|Any CPU
