@@ -3,11 +3,13 @@
 namespace Lwar.Client
 {
 	using System.Net;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Scripting;
 
 	/// <summary>
 	///   Provides access to lwar-specific commands.
 	/// </summary>
+	[ForceInitialization]
 	public class LwarCommands
 	{
 		/// <summary>

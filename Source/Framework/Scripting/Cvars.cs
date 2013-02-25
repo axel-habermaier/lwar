@@ -7,6 +7,7 @@ namespace Pegasus.Framework.Scripting
 	/// <summary>
 	///   Provides access to all build-in cvars.
 	/// </summary>
+	[ForceInitialization]
 	public static class Cvars
 	{
 		/// <summary>

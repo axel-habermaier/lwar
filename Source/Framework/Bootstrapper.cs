@@ -4,6 +4,7 @@ namespace Pegasus.Framework
 {
 	using System.Globalization;
 	using System.Linq;
+	using System.Reflection;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
@@ -21,6 +22,36 @@ namespace Pegasus.Framework
 		///   Gets the name of the application.
 		/// </summary>
 		protected abstract string AppName { get; }
+
+		/// <summary>
+		///   Ensures that all classes with the ForceInitialization attribute have executed their type initializer.
+		/// </summary>
+		private static void ForceInitialization()
+		{
+			var types = AppDomain.CurrentDomain.GetAssemblies()
+								 .SelectMany(assembly => assembly.GetTypes())
+								 .Where(type => type.IsClass && type.GetCustomAttribute<ForceInitializationAttribute>() != null)
+								 .Select(type =>
+										 new
+										 {
+											 Name = type.FullName,
+											 Field = type.GetFields().FirstOrDefault(),
+											 Property = type.GetProperties().FirstOrDefault()
+										 });
+
+			// Access some public field or property in order to ensure that the type initializer has run
+			foreach (var type in types)
+			{
+				if (type.Field != null)
+					type.Field.GetValue(null);
+				else if (type.Property != null)
+					type.Property.GetValue(null);
+				else
+					Log.Warn(
+						"The type '{0}' has the ForceInitialization attribute applied but does not expose any public fields or properties. " +
+						"The type initializer might not have been executed.", type.Name);
+			}
+		}
 
 		/// <summary>
 		///   Parses the command line and sets all cvars to the requested values.
@@ -81,6 +112,7 @@ namespace Pegasus.Framework
 							 PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64",
 							 PlatformInfo.GraphicsApi);
 
+					ForceInitialization();
 					ParseCommandLine();
 
 					using (var app = new TApp())

@@ -2,11 +2,13 @@
 
 namespace Lwar.Client
 {
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Scripting;
 
 	/// <summary>
 	///   Provides access to lwar-specific cvars.
 	/// </summary>
+	[ForceInitialization]
 	public static class LwarCvars
 	{
 		/// <summary>

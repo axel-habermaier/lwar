@@ -2,11 +2,13 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using Platform;
 	using Platform.Input;
 
 	/// <summary>
 	///   Provides access to all build-in command instances.
 	/// </summary>
+	[ForceInitialization]
 	public static class Commands
 	{
 		/// <summary>

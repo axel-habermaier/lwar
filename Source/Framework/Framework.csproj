@@ -188,6 +188,7 @@
     <Compile Include="Platform\BufferPointer.cs" />
     <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\ExternalProcess.cs" />
+    <Compile Include="Platform\ForceInitializationAttribute.cs" />
     <Compile Include="Platform\Graphics\CubeMap.cs" />
     <Compile Include="Platform\Graphics\Mipmaps.cs" />
     <Compile Include="Platform\Graphics\Surface.cs" />
