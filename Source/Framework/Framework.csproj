@@ -178,6 +178,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Network\IPacketFactory.cs" />
+    <Compile Include="Network\IPEndPointExtensions.cs" />
     <Compile Include="Network\ServicePacketFactory.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="Platform\ApplicationAbortedException.cs" />

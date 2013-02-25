@@ -274,8 +274,7 @@ namespace Lwar.Client.Network
 					{
 						using (packet)
 						{
-							// TODO: Check server address
-							if (sender.Port != _serverEndPoint.Port)
+							if (!sender.SameEndPoint(_serverEndPoint))
 							{
 								NetworkLog.ClientWarn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
 													  sender, _serverEndPoint);

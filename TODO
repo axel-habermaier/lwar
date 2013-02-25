@@ -17,7 +17,6 @@ Client
 - Weapon effects
 - In-game menu
 - Add support for IPv6 under Linux
-- Check server address of incoming messages
 
 Pegasus
 ========
