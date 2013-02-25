@@ -13,7 +13,6 @@ Pegasus
 - Remove dependency on SharpDX and invoke fxc.exe from the command line to compile HLSL shaders
 - DirectX: Construct the shader input layout from the C# shader code instead of using build-time shader reflection
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
-- Invoke asset compiler when the asset project is compiled
 - Generated shader input layout from C# shaders, read the input layout on the C# side of things and pass it to the platform library
 
 Server

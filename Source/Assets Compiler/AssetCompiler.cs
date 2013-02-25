@@ -150,9 +150,14 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		internal void Clean()
 		{
-			File.Delete(Asset.TempPath);
-			File.Delete(Asset.TargetPath);
-			File.Delete(Asset.HashPath);
+			if (File.Exists(Asset.TempPath))
+				File.Delete(Asset.TempPath);
+
+			if (File.Exists(Asset.TargetPath))
+				File.Delete(Asset.TargetPath);
+
+			if (File.Exists(Asset.HashPath))
+				File.Delete(Asset.HashPath);
 		}
 
 		/// <summary>

@@ -29,7 +29,7 @@ namespace Pegasus.AssetsCompiler
 				foreach (var group in grouped)
 				{
 					var first = group.First();
-					Log.Info("Processing {0}...", first.AssetType);
+					Log.Info("Compiling {0}...", first.AssetType);
 
 					group.AsParallel().ForAll(compiler => compiler.Compile());
 				}
