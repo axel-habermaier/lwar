@@ -33,7 +33,7 @@ pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout)
 	for (i = 0; i < inputLayout->bindingsCount; ++i)
 	{
 		pgInputBinding* binding = &inputLayout->bindings[i];
-		UINT slot = pgConvertVertexDataSemantics(binding->semantics);
+		UINT slot = pgGetInputSlot(binding->semantics);
 		UINT stride = binding->stride;
 		UINT offset = binding->offset;
 

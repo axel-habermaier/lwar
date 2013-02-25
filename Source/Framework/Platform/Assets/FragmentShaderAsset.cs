@@ -25,13 +25,13 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <summary>
 		///   Loads or reloads the asset using the given asset reader.
 		/// </summary>
-		/// <param name="assetReader">The asset reader that should be used to load the asset.</param>
-		internal override void Load(AssetReader assetReader)
+		/// <param name="buffer">The buffer that should be used to load the asset.</param>
+		internal override unsafe void Load(BufferReader buffer)
 		{
 			if (Shader == null)
 				Shader = new FragmentShader(GraphicsDevice);
-			
-			Shader.Reinitialize(assetReader.Data);
+
+			Shader.Reinitialize(buffer.Pointer, buffer.BufferSize);
 		}
 
 		/// <summary>

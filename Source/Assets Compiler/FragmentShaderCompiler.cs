@@ -32,12 +32,13 @@ namespace Pegasus.AssetsCompiler
 			string glsl, hlsl;
 			ExtractShaderCode(Asset, out glsl, out hlsl);
 
+			Buffer.WriteByte(0); // No shader inputs
 			WriteGlslShader(glsl);
-			IfD3DSupported(() =>
-				{
-					using (var byteCode = CompileHlslShader(Asset, hlsl, "ps_4_0"))
-						Buffer.WriteByteArray(byteCode);
-				});
+			if (CompileHlsl)
+			{
+				using (var byteCode = CompileHlslShader(Asset, hlsl, "ps_4_0"))
+					Buffer.Copy(byteCode);
+			}
 		}
 	}
 }

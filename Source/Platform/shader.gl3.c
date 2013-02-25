@@ -6,6 +6,38 @@
 // Helper functions
 //====================================================================================================================
 
+static pgVoid Compile(pgShader* shader, pgUint8* shaderCode);
+
+//====================================================================================================================
+// Core functions
+//====================================================================================================================
+
+pgVoid pgCreateShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* input, pgInt32 inputCount)
+{
+	PG_UNUSED(end);
+	PG_UNUSED(input);
+	PG_UNUSED(inputCount);
+
+	pgConvertShaderType(shader->type, &shader->glType, &shader->bit);
+	Compile(shader, shaderData);
+}
+
+pgVoid pgDestroyShaderCore(pgShader* shader)
+{
+	glDeleteProgram(shader->id);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgBindShaderCore(pgShader* shader)
+{
+	glUseProgramStages(shader->device->pipeline, shader->bit, shader->id);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+//====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
 static pgVoid Compile(pgShader* shader, pgUint8* shaderCode)
 {
 	static GLchar buffer[4096];
@@ -24,28 +56,6 @@ static pgVoid Compile(pgShader* shader, pgUint8* shaderCode)
 	if (logLength != 0)
 		pgWarn("%s", buffer);
 
-	PG_ASSERT_NO_GL_ERRORS();
-}
-
-//====================================================================================================================
-// Core functions
-//====================================================================================================================
-
-pgVoid pgCreateShaderCore(pgShader* shader, pgVoid* shaderData)
-{
-	pgConvertShaderType(shader->type, &shader->glType, &shader->bit);
-	Compile(shader, (pgUint8*)shaderData + sizeof(pgInt32));
-}
-
-pgVoid pgDestroyShaderCore(pgShader* shader)
-{
-	glDeleteProgram(shader->id);
-	PG_ASSERT_NO_GL_ERRORS();
-}
-
-pgVoid pgBindShaderCore(pgShader* shader)
-{
-	glUseProgramStages(shader->device->pipeline, shader->bit, shader->id);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

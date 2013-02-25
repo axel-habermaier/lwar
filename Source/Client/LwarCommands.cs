@@ -23,8 +23,8 @@ namespace Lwar.Client
 		/// <summary>
 		///   Connects to a game session on a server.
 		/// </summary>
-		public static readonly Command<IPEndPoint> Connect = new Command<IPEndPoint>("connect",
-																					 "Connects to a game session on a server.");
+		public static readonly Command<IPAddress, ushort> Connect = new Command<IPAddress, ushort>("connect",
+																								   "Connects to a game session on a server. Specify 0 as the port if the default port should be used.");
 
 		/// <summary>
 		///   Disconnects from the current game session.

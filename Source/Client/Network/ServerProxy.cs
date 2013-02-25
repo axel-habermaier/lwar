@@ -26,11 +26,6 @@ namespace Lwar.Client.Network
 		private const int RetryDelay = 100;
 
 		/// <summary>
-		///   The default server port.
-		/// </summary>
-		public const ushort DefaultPort = 32422;
-
-		/// <summary>
 		///   The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
 		///   considered to be dropped.
 		/// </summary>

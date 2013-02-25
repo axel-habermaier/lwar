@@ -254,7 +254,6 @@
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Network\SocketExtensions.cs" />
     <Compile Include="Network\TcpSocket.cs" />
-    <Compile Include="Platform\Assets\AssetReader.cs" />
     <Compile Include="Platform\Assets\FontAsset.cs" />
     <Compile Include="Platform\Assets\VertexShaderAsset.cs" />
     <Compile Include="Platform\Assets\TextureAsset.cs" />
@@ -287,6 +286,7 @@
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\IPAddressParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Pipe4Parser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Pipe3Parser.cs" />

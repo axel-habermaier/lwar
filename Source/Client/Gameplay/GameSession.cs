@@ -101,7 +101,7 @@ namespace Lwar.Client.Gameplay
 			RenderContext.Camera = Camera;
 			InputDevice.Modes = InputModes.Game;
 
-			LwarCommands.Connect.Invoked += serverEndPoint => _updateState.ChangeState(ctx => Loading(ctx, serverEndPoint));
+			LwarCommands.Connect.Invoked += (ipAddress, port) => _updateState.ChangeState(ctx => Loading(ctx, ipAddress, port));
 			LwarCommands.Disconnect.Invoked += () => _updateState.ChangeState(Inactive);
 			LwarCommands.Chat.Invoked += ChatMessageEntered;
 			LwarCommands.ToggleDebugCamera.Invoked += ToggleDebugCamera;
@@ -299,9 +299,13 @@ namespace Lwar.Client.Gameplay
 		///   Active when a connection to a server is established and the game is loaded.
 		/// </summary>
 		/// <param name="context">The context in which the state function should be executed.</param>
-		/// <param name="serverEndPoint">The end point of the server that hosts the game session.</param>
-		private async Task Loading(ProcessContext context, IPEndPoint serverEndPoint)
+		/// <param name="serverIPAddress">The IP address of the server that hosts the game session.</param>
+		/// <param name="serverPort">The port of the server that hosts the game session.</param>
+		private async Task Loading(ProcessContext context, IPAddress serverIPAddress, ushort serverPort)
 		{
+			Assert.ArgumentNotNull(serverIPAddress, () => serverIPAddress);
+			var serverEndPoint = new IPEndPoint(serverIPAddress, serverPort == 0 ? Specification.DefaultPort : serverPort);
+
 			Commands.ShowConsole.Invoke(false);
 			Cleanup();
 

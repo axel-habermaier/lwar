@@ -10,46 +10,46 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Indicates that the vertex data describes positions.
 		/// </summary>
-		Position = 2500,
+		Position = 200,
 
 		/// <summary>
 		///   Indicates that the vertex data describes colors.
 		/// </summary>
-		Color = 2501,
+		Color = 201,
 
 		/// <summary>
 		///   Indicates that the vertex data describes texture coordinates.
 		/// </summary>
-		TextureCoordinate = 2502,
+		TextureCoordinate = 202,
 
 		/// <summary>
 		///   Indicates that the vertex data describes normals.
 		/// </summary>
-		Normal = 2503,
+		Normal = 203,
 
 		/// <summary>
 		///   Indicates that the vertex data describes binormals.
 		/// </summary>
-		Binormal = 2504,
+		Binormal = 204,
 
 		/// <summary>
 		///   Indicates that the vertex data describes tangents.
 		/// </summary>
-		Tangent = 2505,
+		Tangent = 205,
 
 		/// <summary>
 		///   Indicates that the vertex data describes blend indices.
 		/// </summary>
-		BlendIndices = 2506,
+		BlendIndices = 206,
 
 		/// <summary>
 		///   Indicates that the vertex data describes blend weights.
 		/// </summary>
-		BlendWeight = 2507,
+		BlendWeight = 207,
 
 		/// <summary>
 		///   Indicates that the vertex data describes depth values.
 		/// </summary>
-		Depth = 2508,
+		Depth = 208,
 	}
 }

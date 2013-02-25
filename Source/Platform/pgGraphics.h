@@ -184,24 +184,24 @@ typedef enum
 
 typedef enum
 {
-	PG_VERTEX_FORMAT_SINGLE				= 2400,
-	PG_VERTEX_FORMAT_VECTOR2			= 2401,
-	PG_VERTEX_FORMAT_VECTOR3			= 2402,
-	PG_VERTEX_FORMAT_VECTOR4			= 2403,
-	PG_VERTEX_FORMAT_COLOR				= 2404
+	PG_VERTEX_FORMAT_SINGLE				= 100,
+	PG_VERTEX_FORMAT_VECTOR2			= 101,
+	PG_VERTEX_FORMAT_VECTOR3			= 102,
+	PG_VERTEX_FORMAT_VECTOR4			= 103,
+	PG_VERTEX_FORMAT_COLOR				= 104
 } pgVertexDataFormat;
 
 typedef enum
 {
-	PG_VERTEX_SEMANTICS_POSITION		= 2500,
-	PG_VERTEX_SEMANTICS_COLOR			= 2501,
-	PG_VERTEX_SEMANTICS_TEXTURE			= 2502,
-	PG_VERTEX_SEMANTICS_NORMAL			= 2503,
-	PG_VERTEX_SEMANTICS_BINORMAL		= 2504,
-	PG_VERTEX_SEMANTICS_TANGENT			= 2505,
-	PG_VERTEX_SEMANTICS_BLEND_INDICES	= 2506,
-	PG_VERTEX_SEMANTICS_BLEND_WEIGHT	= 2507,
-	PG_VERTEX_SEMANTICS_DEPTH			= 2508
+	PG_VERTEX_SEMANTICS_POSITION		= 200,
+	PG_VERTEX_SEMANTICS_COLOR			= 201,
+	PG_VERTEX_SEMANTICS_TEXTURE			= 202,
+	PG_VERTEX_SEMANTICS_NORMAL			= 203,
+	PG_VERTEX_SEMANTICS_BINORMAL		= 204,
+	PG_VERTEX_SEMANTICS_TANGENT			= 205,
+	PG_VERTEX_SEMANTICS_BLEND_INDICES	= 206,
+	PG_VERTEX_SEMANTICS_BLEND_WEIGHT	= 207,
+	PG_VERTEX_SEMANTICS_DEPTH			= 208
 } pgVertexDataSemantics;
 
 typedef enum
@@ -386,7 +386,7 @@ PG_API_EXPORT pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pg
 // Shader functions
 //====================================================================================================================
 
-PG_API_EXPORT pgShader* pgCreateShader(pgGraphicsDevice* device, pgShaderType type, pgVoid* shaderData);
+PG_API_EXPORT pgShader* pgCreateShader(pgGraphicsDevice* device, pgShaderType type, pgVoid* shaderData, pgInt32 length);
 PG_API_EXPORT pgVoid pgDestroyShader(pgShader* shader);
 
 PG_API_EXPORT pgVoid pgBindShader(pgShader* shader);

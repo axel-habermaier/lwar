@@ -206,11 +206,6 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		protected static readonly Parser<string, TUserState> StringLiteral = new QuotedStringParser<TUserState>();
 
-		/// <summary>
-		///   Parses an IP endpoint in the format of IP address [:port].
-		/// </summary>
-		protected static readonly Parser<IPEndPoint, TUserState> IPEndPoint = new IPEndPointParser<TUserState>();
-
 		#endregion
 
 		#region Basic parsers convenience functions

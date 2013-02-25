@@ -31,24 +31,21 @@ namespace Pegasus.Framework.Platform.Assets
 		internal T Texture { get; private set; }
 
 		/// <summary>
-		///   Loads or reloads the asset using the given asset reader.
+		///   Loads or reloads the asset using the given asset buffer.
 		/// </summary>
-		/// <param name="assetReader">The asset reader that should be used to load the asset.</param>
-		internal unsafe override void Load(AssetReader assetReader)
+		/// <param name="buffer">The buffer that should be used to load the asset.</param>
+		internal override unsafe void Load(BufferReader buffer)
 		{
-			Assert.ArgumentNotNull(assetReader, () => assetReader);
-
-			var reader = assetReader.Reader;
 			var description = new TextureDescription
 			{
-				Width = reader.ReadUInt32(),
-				Height = reader.ReadUInt32(),
-				Depth = reader.ReadUInt32(),
-				ArraySize = reader.ReadUInt32(),
-				Type = (TextureType)reader.ReadInt32(),
-				Format = (SurfaceFormat)reader.ReadInt32(),
-				Mipmaps = (Mipmaps)reader.ReadInt32(),
-				SurfaceCount = reader.ReadUInt32()
+				Width = buffer.ReadUInt32(),
+				Height = buffer.ReadUInt32(),
+				Depth = buffer.ReadUInt32(),
+				ArraySize = buffer.ReadUInt32(),
+				Type = (TextureType)buffer.ReadInt32(),
+				Format = (SurfaceFormat)buffer.ReadInt32(),
+				Mipmaps = (Mipmaps)buffer.ReadInt32(),
+				SurfaceCount = buffer.ReadUInt32()
 			};
 
 			var surfaces = new Surface[description.SurfaceCount];
@@ -57,19 +54,19 @@ namespace Pegasus.Framework.Platform.Assets
 			{
 				surfaces[i] = new Surface
 				{
-					Width = reader.ReadUInt32(),
-					Height = reader.ReadUInt32(),
-					Depth = reader.ReadUInt32(),
-					Size = reader.ReadUInt32(),
-					Stride = reader.ReadUInt32(),
-					Data = reader.Pointer
+					Width = buffer.ReadUInt32(),
+					Height = buffer.ReadUInt32(),
+					Depth = buffer.ReadUInt32(),
+					Size = buffer.ReadUInt32(),
+					Stride = buffer.ReadUInt32(),
+					Data = buffer.Pointer
 				};
 
 				var surfaceSize = surfaces[i].Size * surfaces[i].Depth;
-				reader.Skip((int)surfaceSize);
+				buffer.Skip((int)surfaceSize);
 			}
 
-			Assert.That(reader.EndOfBuffer, "Not all data has been read.");
+			Assert.That(buffer.EndOfBuffer, "Not all data has been read.");
 			if (Texture == null)
 				Texture = _createTexture(GraphicsDevice);
 

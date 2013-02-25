@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 {
 	using System.Collections.Generic;
 	using System.Net;
+	using BasicParsers;
 	using Platform.Input;
 
 	/// <summary>
@@ -31,7 +32,8 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 			{ typeof(string), AsObject(StringLiteral) },
 			{ typeof(InputTrigger), AsObject(new InputTriggerParser<TUserState>()) },
 			{ typeof(bool), AsObject(Boolean) },
-			{ typeof(IPEndPoint), AsObject(IPEndPoint) }
+			{ typeof(IPEndPoint), AsObject(new IPEndPointParser<TUserState>()) },
+			{ typeof(IPAddress), AsObject(new IPAddressParser<TUserState>()) }
 		};
 
 		/// <summary>

@@ -16,7 +16,8 @@ Client
 - Shield effect
 - Weapon effects
 - In-game menu
-- connect command where the port is optional (and if it is missing, the default server port is used)
+- Add support for IPv6 under Linux
+- Check server address of incoming messages
 
 Pegasus
 ========
@@ -25,10 +26,13 @@ Pegasus
 	- Construct the shader input layout from the C# shader code instead of using build-time shader reflection of the DX shader
 - Fully support render targets with color and depth/stencil buffers
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
-- Ensure on app startup that all static cvars are allocated
-- CreateShader(void* data, int length, ShaderInput* inputLayout, int length)
-	-> OpenGL: Ignore layout, read data until \0 is found
-	-> D3D: Use ShaderInput to generate input layout, byte code starts after first \0; byte code length = (data + length) - location of first \0
+- Ensure on app startup that all static cvars and commands are allocated
+- Load cvars from config file
+- Persist cvars in config file
+- System cvars (read-only)
+- Commands with optional parameters
+- Better command help (explain meaning of parameters)
+- Ranged cvars
 
 Server
 ========

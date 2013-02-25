@@ -35,12 +35,13 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Reinitializes the shader.
 		/// </summary>
 		/// <param name="shaderData">The shader source data.</param>
-		internal void Reinitialize(byte[] shaderData)
+		/// <param name="length">The length of the shader data in bytes.</param>
+		internal unsafe void Reinitialize(byte* shaderData, int length)
 		{
 			NativeMethods.DestroyShader(_shader);
 			_shader = IntPtr.Zero;
 
-			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, _type, shaderData);
+			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, _type, shaderData, length);
 		}
 
 		/// <summary>
@@ -68,7 +69,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateShader")]
-			public static extern IntPtr CreateShader(IntPtr device, ShaderType type, byte[] shaderData);
+			public static extern unsafe IntPtr CreateShader(IntPtr device, ShaderType type, byte* shaderData, int length);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyShader")]
 			public static extern void DestroyShader(IntPtr shader);

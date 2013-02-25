@@ -29,39 +29,35 @@ namespace Pegasus.Framework.Platform.Assets
 		}
 
 		/// <summary>
-		///   Loads or reloads the asset using the given asset reader.
+		///   Loads or reloads the asset using the given asset buffer.
 		/// </summary>
-		/// <param name="assetReader">The asset reader that should be used to load the asset.</param>
-		internal override void Load(AssetReader assetReader)
+		/// <param name="buffer">The buffer that should be used to load the asset.</param>
+		internal override void Load(BufferReader buffer)
 		{
-			Assert.ArgumentNotNull(assetReader, () => assetReader);
-
-			var reader = assetReader.Reader;
-
 			// Load the font metadata
-			var scaleW = reader.ReadUInt16();
-			var scaleH = reader.ReadUInt16();
-			var lineHeight = reader.ReadUInt16();
+			var scaleW = buffer.ReadUInt16();
+			var scaleH = buffer.ReadUInt16();
+			var lineHeight = buffer.ReadUInt16();
 
 			// Load the glyph metadata
-			var numGlyphs = reader.ReadUInt16();
-			var lowestGlyphId = reader.ReadUInt16();
-			var highestGlyphId = reader.ReadUInt16();
+			var numGlyphs = buffer.ReadUInt16();
+			var lowestGlyphId = buffer.ReadUInt16();
+			var highestGlyphId = buffer.ReadUInt16();
 			var glyphs = new Glyph[highestGlyphId - lowestGlyphId + 1];
 
 			for (var i = 0; i < numGlyphs; ++i)
 			{
-				var id = reader.ReadUInt16();
+				var id = buffer.ReadUInt16();
 				var index = id - lowestGlyphId;
 
-				glyphs[index].Area.Width = reader.ReadUInt16();
-				glyphs[index].Area.Height = reader.ReadUInt16();
-				glyphs[index].Area.Left = reader.ReadInt16();
-				glyphs[index].Area.Top = reader.ReadInt16();
-				glyphs[index].AdvanceX = reader.ReadInt16();
+				glyphs[index].Area.Width = buffer.ReadUInt16();
+				glyphs[index].Area.Height = buffer.ReadUInt16();
+				glyphs[index].Area.Left = buffer.ReadInt16();
+				glyphs[index].Area.Top = buffer.ReadInt16();
+				glyphs[index].AdvanceX = buffer.ReadInt16();
 
-				var x = reader.ReadUInt16();
-				var y = reader.ReadUInt16();
+				var x = buffer.ReadUInt16();
+				var y = buffer.ReadUInt16();
 
 				var textureLeft = x / (float)scaleW;
 				var textureRight = (x + glyphs[index].Area.Width) / (float)scaleW;
@@ -75,7 +71,7 @@ namespace Pegasus.Framework.Platform.Assets
 			}
 
 			// Load the kerning data
-			var kerningCount = reader.ReadUInt16();
+			var kerningCount = buffer.ReadUInt16();
 			KerningPair[] kernings = null;
 			if (kerningCount != 0)
 			{
@@ -83,9 +79,9 @@ namespace Pegasus.Framework.Platform.Assets
 
 				for (var i = 0; i < kerningCount; ++i)
 				{
-					var first = reader.ReadUInt16();
-					var second = reader.ReadUInt16();
-					var offset = reader.ReadInt16();
+					var first = buffer.ReadUInt16();
+					var second = buffer.ReadUInt16();
+					var offset = buffer.ReadInt16();
 
 					kernings[i] = new KerningPair((char)first, (char)second, offset);
 
@@ -98,7 +94,7 @@ namespace Pegasus.Framework.Platform.Assets
 
 			_texture.SafeDispose();
 			_texture = new Texture2DAsset { GraphicsDevice = GraphicsDevice, Assets = Assets };
-			_texture.Load(assetReader);
+			_texture.Load(buffer);
 
 			if (Font == null)
 				Font = new Font(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);

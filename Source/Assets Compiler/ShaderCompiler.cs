@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.ComponentModel;
 	using System.IO;
+	using System.Text;
 	using Framework;
 	using Framework.Platform;
 	using SharpDX.D3DCompiler;
@@ -13,11 +14,6 @@ namespace Pegasus.AssetsCompiler
 	/// </summary>
 	internal abstract class ShaderCompiler : AssetCompiler
 	{
-		/// <summary>
-		///   The object used for thread synchronization.
-		/// </summary>
-		private static readonly object SyncObject = new object();
-
 		/// <summary>
 		///   Indicates whether HLSL shaders should be compiled.
 		/// </summary>
@@ -91,7 +87,7 @@ namespace Pegasus.AssetsCompiler
 			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
 						 "#extension GL_ARB_separate_shader_objects : enable\n" + source;
 
-			Buffer.WriteString(shader);
+			Buffer.Copy(Encoding.UTF8.GetBytes(shader));
 			Buffer.WriteByte(0);
 		}
 
@@ -110,19 +106,6 @@ namespace Pegasus.AssetsCompiler
 			ExternalTool.Fxc(hlslFile, byteCode, profile);
 
 			return new ShaderBytecode(File.ReadAllBytes(byteCode));
-		}
-
-		/// <summary>
-		///   Executes the given action only if the platform supports Direct3D.
-		/// </summary>
-		/// <param name="action">The action that should be executed.</param>
-		protected void IfD3DSupported(Action action)
-		{
-			Assert.ArgumentNotNull(action, () => action);
-
-			if (CompileHlsl)
-				lock (SyncObject)
-					action();
 		}
 	}
 }

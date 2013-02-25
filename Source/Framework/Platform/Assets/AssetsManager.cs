@@ -48,6 +48,18 @@ namespace Pegasus.Framework.Platform.Assets
 		}
 
 		/// <summary>
+		/// Loads the given asset.
+		/// </summary>
+		/// <param name="asset">The asset that should be loaded.</param>
+		/// <param name="assetName">The name of the asset that should be loaded.</param>
+		private static void Load(Asset asset, string assetName)
+		{
+			var path = Path.Combine(AssetDirectory, assetName) + PlatformInfo.AssetExtension;
+			using (var reader = BufferReader.Create(File.ReadAllBytes(path)))
+				asset.Load(reader);
+		}
+
+		/// <summary>
 		///   Reloads all changed assets.
 		/// </summary>
 		private void ReloadAssets()
@@ -61,8 +73,7 @@ namespace Pegasus.Framework.Platform.Assets
 					try
 					{
 						Log.Info("Reloading {1} '{0}'...", pair.Key, pair.Value.FriendlyName);
-						using (var reader = new AssetReader(Path.Combine(AssetDirectory, pair.Key)))
-							pair.Value.Load(reader);
+						Load(pair.Value, pair.Key);
 					}
 					catch (IOException e)
 					{
@@ -138,9 +149,7 @@ namespace Pegasus.Framework.Platform.Assets
 			try
 			{
 				Log.Info("Loading {0} '{1}'...", asset.FriendlyName, assetName);
-
-				using (var reader = new AssetReader(Path.Combine(AssetDirectory, assetName)))
-					asset.Load(reader);
+				Load(asset, assetName);
 
 				_assets.Add(assetName, asset);
 				return asset;

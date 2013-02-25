@@ -5,8 +5,6 @@ namespace Pegasus.AssetsCompiler
 	using Framework;
 	using Framework.Platform.Graphics;
 	using SharpDX.D3DCompiler;
-	using SharpDX.DXGI;
-	using SharpDX.Direct3D11;
 
 	/// <summary>
 	///   Compiles vertex shaders.
@@ -38,15 +36,20 @@ namespace Pegasus.AssetsCompiler
 			string glsl, hlsl;
 			ExtractShaderCode(Asset, out glsl, out hlsl);
 
+			ShaderBytecode byteCode = null;
+			if (CompileHlsl)
+			{
+				byteCode = CompileHlslShader(Asset, hlsl, "vs_4_0");
+				CreateInputLayout(byteCode);
+			}
+			else
+				Buffer.WriteByte(0);
+
 			WriteGlslShader(glsl);
-			IfD3DSupported(() =>
-				{
-					using (var byteCode = CompileHlslShader(Asset, hlsl, "vs_4_0"))
-					{
-						Buffer.WriteByteArray(byteCode);
-						CreateInputLayout(byteCode);
-					}
-				});
+			if (CompileHlsl)
+				Buffer.Copy(byteCode);
+
+			byteCode.SafeDispose();
 		}
 
 		/// <summary>
@@ -78,94 +81,44 @@ namespace Pegasus.AssetsCompiler
 			using (var reflectionInfo = new ShaderReflection(shaderCode))
 			{
 				var shaderDesc = reflectionInfo.Description;
+				Assert.InRange(shaderDesc.InputParameters, 0, Byte.MaxValue);
+				Buffer.WriteByte((byte)shaderDesc.InputParameters);
 
-				var inputElements = new InputElement[shaderDesc.InputParameters];
 				for (var i = 0; i < shaderDesc.InputParameters; i++)
 				{
 					var paramDesc = reflectionInfo.GetInputParameterDescription(i);
 
 					var semantics = ConvertSemanticName(paramDesc.SemanticName);
-					inputElements[i].Slot = (int)semantics;
-					inputElements[i].SemanticName = paramDesc.SemanticName;
-					inputElements[i].SemanticIndex = paramDesc.SemanticIndex;
-					inputElements[i].AlignedByteOffset = 0;
-					inputElements[i].Classification = InputClassification.PerVertexData;
-					inputElements[i].InstanceDataStepRate = 0;
+					Buffer.WriteByte((byte)semantics);
 
+					if (paramDesc.ComponentType == RegisterComponentType.UInt32 || paramDesc.ComponentType == RegisterComponentType.SInt32)
+						Log.Die("Unsupported shader input parameter type.");
+
+					VertexDataFormat format;
 					var xUsed = paramDesc.UsageMask.HasFlag(RegisterComponentMaskFlags.ComponentX);
 					var yUsed = paramDesc.UsageMask.HasFlag(RegisterComponentMaskFlags.ComponentY);
 					var zUsed = paramDesc.UsageMask.HasFlag(RegisterComponentMaskFlags.ComponentZ);
 					var wUsed = paramDesc.UsageMask.HasFlag(RegisterComponentMaskFlags.ComponentW);
 
-					// The type of color inputs is Vector4; change that to RGBA8 to save 12 bytes per vertex!
+					// The type of color inputs is Vector4; change that to RGBA8 to save 12 bytes per vertex
 					if (semantics == VertexDataSemantics.Color)
 					{
 						Assert.That(xUsed && yUsed && zUsed && wUsed, "Colors should always have 4 channels.");
-						inputElements[i].Format = Format.R8G8B8A8_UNorm;
-						continue;
+						format = VertexDataFormat.Color;
 					}
-
-					if (xUsed && yUsed && zUsed && wUsed)
-					{
-						if (paramDesc.ComponentType == RegisterComponentType.UInt32)
-							inputElements[i].Format = Format.R32G32B32A32_UInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.SInt32)
-							inputElements[i].Format = Format.R32G32B32A32_SInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.Float32)
-							inputElements[i].Format = Format.R32G32B32A32_Float;
-					}
+					else if (xUsed && yUsed && zUsed && wUsed)
+						format = VertexDataFormat.Vector4;
 					else if (xUsed && yUsed && zUsed)
-					{
-						if (paramDesc.ComponentType == RegisterComponentType.UInt32)
-							inputElements[i].Format = Format.R32G32B32_UInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.SInt32)
-							inputElements[i].Format = Format.R32G32B32_SInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.Float32)
-							inputElements[i].Format = Format.R32G32B32_Float;
-					}
+						format = VertexDataFormat.Vector3;
 					else if (xUsed && yUsed)
-					{
-						if (paramDesc.ComponentType == RegisterComponentType.UInt32)
-							inputElements[i].Format = Format.R32G32_UInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.SInt32)
-							inputElements[i].Format = Format.R32G32_SInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.Float32)
-							inputElements[i].Format = Format.R32G32_Float;
-					}
+						format = VertexDataFormat.Vector2;
 					else if (xUsed)
-					{
-						if (paramDesc.ComponentType == RegisterComponentType.UInt32)
-							inputElements[i].Format = Format.R32_UInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.SInt32)
-							inputElements[i].Format = Format.R32_SInt;
-						else if (paramDesc.ComponentType == RegisterComponentType.Float32)
-							inputElements[i].Format = Format.R32_Float;
-					}
+						format = VertexDataFormat.Single;
 					else
 						throw new InvalidOperationException("Unknown usage mask combination.");
+
+					Buffer.WriteByte((byte)format);
 				}
-
-				SerializeInputElements(inputElements);
-			}
-		}
-
-		/// <summary>
-		///   Serializes the input elements.
-		/// </summary>
-		/// <param name="elements">The elements that should be serialized.</param>
-		private void SerializeInputElements(InputElement[] elements)
-		{
-			Buffer.WriteInt32(elements.Length);
-
-			foreach (var element in elements)
-			{
-				Buffer.WriteInt32(element.AlignedByteOffset);
-				Buffer.WriteInt32((int)element.Classification);
-				Buffer.WriteInt32((int)element.Format);
-				Buffer.WriteInt32(element.InstanceDataStepRate);
-				Buffer.WriteInt32(element.SemanticIndex);
-				Buffer.WriteString(element.SemanticName);
-				Buffer.WriteInt32(element.Slot);
 			}
 		}
 	}

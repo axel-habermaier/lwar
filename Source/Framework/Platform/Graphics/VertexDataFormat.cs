@@ -10,26 +10,26 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Indicates that the vertex data is a list of one-component float values.
 		/// </summary>
-		Single = 2400,
+		Single = 100,
 
 		/// <summary>
 		///   Indicates that the vertex data is a list of two-component float values.
 		/// </summary>
-		Vector2 = 2401,
+		Vector2 = 101,
 
 		/// <summary>
 		///   Indicates that the vertex data is a list of three-component float values.
 		/// </summary>
-		Vector3 = 2402,
+		Vector3 = 102,
 
 		/// <summary>
 		///   Indicates that the vertex data is a list of four-component float values.
 		/// </summary>
-		Vector4 = 2403,
+		Vector4 = 103,
 
 		/// <summary>
 		///   Indicates that the vertex data is a list of color values.
 		/// </summary>
-		Color = 2404
+		Color = 104
 	}
 }

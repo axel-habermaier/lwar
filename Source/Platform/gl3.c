@@ -366,8 +366,8 @@ GLenum pgConvertBufferType(pgBufferType bufferType)
 
 GLint pgConvertVertexDataSemantics(pgVertexDataSemantics semantics)
 {
-	PG_ASSERT_IN_RANGE(semantics, 2500, 2509);
-	return (GLint)semantics - 2500;
+	PG_ASSERT_IN_RANGE(semantics, 200, 209);
+	return (GLint)semantics - 200;
 }
 
 GLvoid pgConvertTextureType(pgTextureType textureType, GLenum* type, GLenum* boundType)

@@ -6,55 +6,33 @@
 // Helper functions
 //====================================================================================================================
 
-typedef struct
-{
-	pgUint8* data;
-	pgInt32  pos;
-} Buffer;
-
-static pgInt32 ReadInt32(Buffer* buffer);
-static pgString ReadString(Buffer* buffer);
-static D3D11_INPUT_ELEMENT_DESC* ReadInputElements(Buffer* buffer, pgInt32* size);
+static pgVoid pgFillInputDescs(D3D11_INPUT_ELEMENT_DESC* descs, pgShaderInput* input, pgInt32 inputCount);
+static pgVoid pgGetByteCode(pgUint8** shaderData, pgUint8* end);
 
 //====================================================================================================================
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateShaderCore(pgShader* shader, pgVoid* shaderData)
+pgVoid pgCreateShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* inputs, pgInt32 inputCount)
 {
-	Buffer buffer;
-	pgInt32 byteCodeLength, skip;
-	pgVoid* byteCode;
-	buffer.data = (pgUint8*)shaderData;
-	buffer.pos = 0;
+	size_t byteCodeLength;
+	D3D11_INPUT_ELEMENT_DESC inputDescs[PG_INPUT_BINDINGS_COUNT];
+	pgFillInputDescs(inputDescs, inputs, inputCount);
 
-	skip = ReadInt32(&buffer);
-	buffer.pos += skip + sizeof(pgUint8);
-	byteCode = (pgUint8*)shaderData + buffer.pos + sizeof(pgInt32);
+	pgGetByteCode(&shaderData, end);
+	byteCodeLength = end - shaderData;
 
-	byteCodeLength = ReadInt32(&buffer);
 	switch (shader->type)
 	{
 	case PG_VERTEX_SHADER:
-	{
-		D3D11_INPUT_ELEMENT_DESC* inputDescs;
-		pgInt32 inputDescCount;
-		int i;
-
-		D3DCALL(ID3D11Device_CreateVertexShader(DEVICE(shader), byteCode, byteCodeLength, NULL, &shader->ptr.vertexShader),
+		D3DCALL(ID3D11Device_CreateVertexShader(DEVICE(shader), shaderData, byteCodeLength, NULL, &shader->ptr.vertexShader),
 			"Failed to create vertex shader.");
 
-		buffer.pos += byteCodeLength;
-		inputDescs = ReadInputElements(&buffer, &inputDescCount);
-		D3DCALL(ID3D11Device_CreateInputLayout(DEVICE(shader), inputDescs, inputDescCount, byteCode, byteCodeLength, &shader->inputLayout), 
+		D3DCALL(ID3D11Device_CreateInputLayout(DEVICE(shader), inputDescs, inputCount, shaderData, byteCodeLength, &shader->inputLayout), 
 			"Failed to create input layout.");
-
-		for (i = 0; i < inputDescCount; ++i)
-			PG_FREE(inputDescs[i].SemanticName);
 		break;
-	}
 	case PG_FRAGMENT_SHADER:
-		D3DCALL(ID3D11Device_CreatePixelShader(shader->device->ptr, byteCode, byteCodeLength, NULL, &shader->ptr.pixelShader), 
+		D3DCALL(ID3D11Device_CreatePixelShader(shader->device->ptr, shaderData, byteCodeLength, NULL, &shader->ptr.pixelShader), 
 			"Failed to create pixel shader.");
 		break;
 	default:
@@ -98,53 +76,34 @@ pgVoid pgBindShaderCore(pgShader* shader)
 // Helper functions
 //====================================================================================================================
 
-static pgInt32 ReadInt32(Buffer* buffer)
+static pgVoid pgFillInputDescs(D3D11_INPUT_ELEMENT_DESC* descs, pgShaderInput* input, pgInt32 inputCount)
 {
-	pgInt32 res = buffer->data[buffer->pos] | buffer->data[buffer->pos + 1] << 8 | buffer->data[buffer->pos + 2] << 16 | 
-		buffer->data[buffer->pos + 3] << 24;
-	buffer->pos += 4;
-
-	return res;
-}
-
-static pgString ReadString(Buffer* buffer)
-{
-	pgChar* str;
-	pgInt32 size;
-
-	PG_ASSERT_NOT_NULL(buffer);
-	
-	size = ReadInt32(buffer);
-	PG_ALLOC_ARRAY(pgChar, size + 1, str);
-
-	memcpy(str, buffer->data + buffer->pos, size);
-	str[size] = '\0';
-	buffer->pos += size;
-
-	return str;
-}
-
-static D3D11_INPUT_ELEMENT_DESC* ReadInputElements(Buffer* buffer, pgInt32* size)
-{
-	static D3D11_INPUT_ELEMENT_DESC descs[PG_INPUT_BINDINGS_COUNT];
 	pgInt32 i;
-	
-	PG_ASSERT_NOT_NULL(buffer);
-	PG_ASSERT_NOT_NULL(size);
 
-	*size = ReadInt32(buffer);
-	for (i = 0; i < *size; ++i)
+	for (i = 0; i < inputCount; ++i)
 	{
-		descs[i].AlignedByteOffset = ReadInt32(buffer);
-		descs[i].InputSlotClass = (D3D11_INPUT_CLASSIFICATION)ReadInt32(buffer);
-		descs[i].Format = (DXGI_FORMAT)ReadInt32(buffer);
-		descs[i].InstanceDataStepRate = ReadInt32(buffer);
-		descs[i].SemanticIndex = ReadInt32(buffer);
-		descs[i].SemanticName = ReadString(buffer);
-		descs[i].InputSlot = pgConvertVertexDataSemantics((pgVertexDataSemantics)ReadInt32(buffer));
-	}
+		pgInt32 semanticIndex;
+		pgString semanticName;
+		pgConvertVertexDataSemantics(input[i].semantics, &semanticIndex, &semanticName);
 
-	return descs;
+		descs[i].AlignedByteOffset = 0;
+		descs[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		descs[i].InstanceDataStepRate = 0;
+		descs[i].Format = pgConvertVertexDataFormat(input[i].format);
+		descs[i].SemanticIndex = semanticIndex;
+		descs[i].SemanticName = semanticName;
+		descs[i].InputSlot = pgGetInputSlot(input[i].semantics);
+	}
+}
+
+static pgVoid pgGetByteCode(pgUint8** shaderData, pgUint8* end)
+{
+	while (**shaderData != 0 && *shaderData < end)
+		++(*shaderData);
+
+	++(*shaderData);
+	if (*shaderData >= end)
+		pgDie("The HLSL version of the shader has not been compiled.");
 }
 
 #endif

@@ -292,10 +292,52 @@ D3D11_BIND_FLAG pgConvertBufferType(pgBufferType bufferType)
 	}
 }
 
-UINT pgConvertVertexDataSemantics(pgVertexDataSemantics semantics)
+UINT pgGetInputSlot(pgVertexDataSemantics semantics)
 {
-	PG_ASSERT_IN_RANGE(semantics, 2500, 2509);
-	return (UINT)semantics - 2500;
+	PG_ASSERT_IN_RANGE(semantics, 200, 209);
+	return (UINT)semantics - 200;
+}
+
+pgVoid pgConvertVertexDataSemantics(pgVertexDataSemantics semantics, pgInt32* semanticIndex, pgString* semanticName)
+{
+	*semanticIndex = 0;
+
+	switch (semantics)
+	{
+	case PG_VERTEX_SEMANTICS_POSITION:
+		*semanticName = "POSITION";
+		break;
+	case PG_VERTEX_SEMANTICS_COLOR:		
+		*semanticName = "COLOR";
+		break;
+	case PG_VERTEX_SEMANTICS_TEXTURE:			
+		*semanticName = "TEXCOORD";
+		break;
+	case PG_VERTEX_SEMANTICS_NORMAL:	
+		*semanticName = "NORMAL";
+		break;
+	default:
+		PG_NO_SWITCH_DEFAULT;
+	}
+}
+
+DXGI_FORMAT pgConvertVertexDataFormat(pgVertexDataFormat format)
+{
+	switch (format)
+	{
+	case PG_VERTEX_FORMAT_SINGLE:
+		return DXGI_FORMAT_R32_FLOAT;
+	case PG_VERTEX_FORMAT_VECTOR2:
+		return DXGI_FORMAT_R32G32_FLOAT;
+	case PG_VERTEX_FORMAT_VECTOR3:
+		return DXGI_FORMAT_R32G32B32_FLOAT;
+	case PG_VERTEX_FORMAT_VECTOR4:
+		return DXGI_FORMAT_R32G32B32A32_FLOAT;
+	case PG_VERTEX_FORMAT_COLOR:
+		return DXGI_FORMAT_R8G8B8A8_UNORM;
+	default:
+		PG_NO_SWITCH_DEFAULT;
+	}
 }
 
 D3D11_QUERY pgConvertQueryType(pgQueryType type)

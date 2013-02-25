@@ -100,7 +100,9 @@ DXGI_FORMAT pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat);
 D3D11_TEXTURE_ADDRESS_MODE pgConvertTextureAddressMode(pgTextureAddressMode addressMode);
 D3D11_FILTER pgConvertTextureFilter(pgTextureFilter textureFilter);
 D3D11_BIND_FLAG pgConvertBufferType(pgBufferType bufferType);
-UINT pgConvertVertexDataSemantics(pgVertexDataSemantics semantics);
+UINT pgGetInputSlot(pgVertexDataSemantics semantics);
+pgVoid pgConvertVertexDataSemantics(pgVertexDataSemantics semantics, pgInt32* semanticIndex, pgString* semanticName);
+DXGI_FORMAT pgConvertVertexDataFormat(pgVertexDataFormat format);
 D3D11_QUERY pgConvertQueryType(pgQueryType type);
 
 #endif

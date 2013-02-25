@@ -36,5 +36,10 @@ namespace Lwar.Client.Network
 		///   The frequency in Hz that determines how often the user input is sent to the server.
 		/// </summary>
 		public const int InputUpdateFrequency = 30;
+
+		/// <summary>
+		///   The default server port.
+		/// </summary>
+		public const ushort DefaultPort = 32422;
 	}
 }

@@ -73,7 +73,7 @@ namespace Lwar.Client
 
 			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
 			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");
-			Commands.Bind.Invoke(Key.F3.WentDown(), "connect 127.0.0.1:" + ServerProxy.DefaultPort);
+			Commands.Bind.Invoke(Key.F3.WentDown(), "connect 127.0.0.1 " + Specification.DefaultPort);
 			Commands.Bind.Invoke(Key.F4.WentDown(), "disconnect");
 			Commands.Bind.Invoke(Key.F5.WentDown(), "reload_assets");
 			Commands.Bind.Invoke(Key.C.WentDown(), "toggle_debug_cam");
