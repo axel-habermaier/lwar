@@ -68,7 +68,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|AnyCPU'">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries\Debug\</OutputPath>
+    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -93,7 +93,7 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|AnyCPU'">
-    <OutputPath>..\..\Binaries\Release\</OutputPath>
+    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>

@@ -88,6 +88,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="&quot;$(TargetDir)/pgc.exe&quot; compile" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="&quot;$(TargetDir)/pgc.exe&quot; clean" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
     <OutputPath>..\Binaries x86\Release OpenGL3\</OutputPath>
@@ -110,6 +116,12 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="&quot;$(TargetDir)/pgc.exe&quot; compile" workingdir="${TargetDir}" />
+        <Command type="BeforeClean" command="&quot;$(TargetDir)/pgc.exe&quot; clean" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
