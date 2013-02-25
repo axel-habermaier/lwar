@@ -67,6 +67,17 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		}
 
 		/// <summary>
+		/// Removes the hash files of all assets, as well as their compiled outputs in the temp and target directories.
+		/// </summary>
+		internal void Clean()
+		{
+			Log.Info("Cleaning compiled assets and temporary files...");
+
+			foreach (var compiler in _compilers)
+				compiler.Clean();
+		}
+
+		/// <summary>
 		///   Adds the remaining assets to the compilation unit that do not require any special compilation settings.
 		/// </summary>
 		private void AddRemainingAssets()
@@ -94,7 +105,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 				else if (asset.EndsWith(".fnt"))
 					Add(new FontCompiler(asset));
 				else
-					Log.Error("Ignoring asset '{0}': Unable to determine compilation settings.", asset);
+					Log.Warn("Ignoring asset '{0}': Unable to determine compilation settings.", asset);
 			}
 		}
 

@@ -14,13 +14,24 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Wires up the events to write all logged messages to the console.
 		/// </summary>
-		static Log()
+		public static void PrintToConsole()
 		{
-			OnFatalError += message => Console.WriteLine("FATAL ERROR: {0}", message);
-			OnError += message => Console.WriteLine("ERROR: {0}", message);
-			OnWarning += message => Console.WriteLine("WARNING: {0}", message);
-			OnInfo += message => Console.WriteLine("INFO: {0}", message);
-			OnDebugInfo += message => Console.WriteLine("DEBUG INFO: {0}", message);
+			OnFatalError += message => WriteToConsole(ConsoleColor.Red, message);
+			OnError += message => WriteToConsole(ConsoleColor.Red, message);
+			OnWarning += message => WriteToConsole(ConsoleColor.Yellow, message);
+			OnInfo += message => WriteToConsole(ConsoleColor.White, message);
+			OnDebugInfo += message => WriteToConsole(ConsoleColor.Magenta, message);
+		}
+
+		/// <summary>
+		/// Writes a colored message to the console.
+		/// </summary>
+		/// <param name="color">The color of the message.</param>
+		/// <param name="message">The message that should be written to the console.</param>
+		private static void WriteToConsole(ConsoleColor color, string message)
+		{
+			Console.ForegroundColor = color;
+			Console.WriteLine(message);
 		}
 
 		/// <summary>

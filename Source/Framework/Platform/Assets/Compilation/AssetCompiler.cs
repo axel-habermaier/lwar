@@ -83,7 +83,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 					Log.Info("   Compiling '{0}'...", Asset.RelativePath);
 
 					File.WriteAllBytes(Asset.HashPath, ComputeHash());
-					using (var writer = new AssetWriter(Asset.TargetPath))
+					using (var writer = new AssetWriter(Asset.TempPath, Asset.TargetPath))
 					{
 						Buffer = writer.Writer;
 						CompileCore();
@@ -119,7 +119,7 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		private byte[] ComputeHash()
 		{
 			using (var cryptoProvider = new MD5CryptoServiceProvider())
-			using (var file = new FileStream(Asset.HashPath, FileMode.Open, FileAccess.Read))
+			using (var file = new FileStream(Asset.SourcePath, FileMode.Open, FileAccess.Read))
 				return cryptoProvider.ComputeHash(file);
 		}
 
@@ -133,6 +133,16 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 
 			if (!Directory.Exists(path))
 				Directory.CreateDirectory(path);
+		}
+
+		/// <summary>
+		///   Removes the hash file of the asset, as well as its compiled outputs in the temp and target directories.
+		/// </summary>
+		internal void Clean()
+		{
+			File.Delete(Asset.TempPath);
+			File.Delete(Asset.TargetPath);
+			File.Delete(Asset.HashPath);
 		}
 
 		/// <summary>

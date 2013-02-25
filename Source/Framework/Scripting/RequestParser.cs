@@ -2,11 +2,8 @@
 
 namespace Pegasus.Framework.Scripting
 {
-	using System.Collections.Generic;
-	using System.Net;
 	using Parsing;
 	using Parsing.Combinators;
-	using Platform.Input;
 	using Requests;
 
 	/// <summary>
@@ -33,37 +30,6 @@ namespace Pegasus.Framework.Scripting
 		///   Skips any number of whitespaces and then expects the end of the input.
 		/// </summary>
 		private static readonly SkipParser<None> EndOfRequest = ~(WhiteSpaces + ~EndOfInput);
-
-		/// <summary>
-		///   Indicates which parser should be used to parse an input of a given type.
-		/// </summary>
-		private static readonly Dictionary<Type, Parser<object, None>> TypeParsers = new Dictionary<Type, Parser<object, None>>
-		{
-			{ typeof(byte), AsObject(UInt8) },
-			{ typeof(sbyte), AsObject(Int8) },
-			{ typeof(short), AsObject(Int16) },
-			{ typeof(ushort), AsObject(UInt16) },
-			{ typeof(int), AsObject(Int32) },
-			{ typeof(uint), AsObject(UInt32) },
-			{ typeof(long), AsObject(Int64) },
-			{ typeof(ulong), AsObject(UInt64) },
-			{ typeof(double), AsObject(Float64) },
-			{ typeof(float), AsObject(Float32) },
-			{ typeof(string), AsObject(StringLiteral) },
-			{ typeof(InputTrigger), AsObject(new InputTriggerParser()) },
-			{ typeof(bool), AsObject(Boolean) },
-			{ typeof(IPEndPoint), AsObject(IPEndPoint) }
-		};
-
-		/// <summary>
-		///   Returns the result of the given parser as an object instance.
-		/// </summary>
-		/// <typeparam name="T">The type of the parser's result.</typeparam>
-		/// <param name="parser">The parser whose result should be returned as an object instance.</param>
-		private static Parser<object, None> AsObject<T>(Parser<T, None> parser)
-		{
-			return parser.Apply(r => (object)r);
-		}
 
 		/// <summary>
 		///   Parses the given input string and returns the user command.
@@ -101,17 +67,14 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		/// <param name="cvar">The cvar referenced by the user request.</param>
-		private Reply<IRequest> Parse(InputStream<None> inputStream, ICvar cvar)
+		private static Reply<IRequest> Parse(InputStream<None> inputStream, ICvar cvar)
 		{
 			var cvarDisplay = EndOfRequest.Apply<IRequest>(_ => new DisplayCvar(cvar));
 
 			var cvarHelp = (~WhiteSpaces1 + Character('?') + EndOfRequest)
 				.Apply<IRequest>(_ => new DescribeCvar(cvar));
 
-			Assert.That(TypeParsers.ContainsKey(cvar.ValueType), "No parser has been registered for type '{0}'.", cvar.ValueType.Name);
-			var parameterParser = TypeParsers[cvar.ValueType];
-
-			var cvarSet = (~WhiteSpaces1 + parameterParser + EndOfRequest)
+			var cvarSet = (~WhiteSpaces1 + new TypeParser<None>(cvar.ValueType) + EndOfRequest)
 				.Apply<IRequest>(v => new SetCvar(cvar, v));
 
 			var cvarParser = Attempt(cvarDisplay) | Attempt(cvarHelp) | cvarSet;
@@ -192,9 +155,7 @@ namespace Pegasus.Framework.Scripting
 
 					inputStream.SkipWhiteSpaces();
 
-					Assert.That(TypeParsers.ContainsKey(types[i]), "No parser has been registered for type '{0}'.", types[i]);
-					var reply = TypeParsers[types[i]].Parse(inputStream);
-
+					var reply = new TypeParser<None>(types[i]).Parse(inputStream);
 					if (reply.Status == ReplyStatus.Success)
 						parameters[i] = reply.Result;
 					else

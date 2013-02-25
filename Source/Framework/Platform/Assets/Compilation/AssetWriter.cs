@@ -21,17 +21,27 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		private static readonly byte[] Buffer = new byte[MaxAssetSize * 1024 * 1024];
 
 		/// <summary>
-		///   The name of the asset.
+		///   The target path of the compiled asset.
 		/// </summary>
-		private readonly string _assetName;
+		private readonly string _targetPath;
+
+		/// <summary>
+		///   The temp path of the compiled asset.
+		/// </summary>
+		private readonly string _tempPath;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="path">The path of the compiled asset.</param>
-		public AssetWriter(string path)
+		/// <param name="tempPath">The temp path of the compiled asset.</param>
+		/// <param name="targetPath">The target path of the compiled asset.</param>
+		public AssetWriter(string tempPath, string targetPath)
 		{
-			_assetName = path;
+			Assert.ArgumentNotNullOrWhitespace(tempPath, () => tempPath);
+			Assert.ArgumentNotNullOrWhitespace(targetPath, () => targetPath);
+
+			_tempPath = tempPath;
+			_targetPath = targetPath;
 			Writer = BufferWriter.Create(Buffer);
 		}
 
@@ -45,7 +55,10 @@ namespace Pegasus.Framework.Platform.Assets.Compilation
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			using (var stream = new FileStream(_assetName, FileMode.Create))
+			using (var stream = new FileStream(_tempPath, FileMode.Create))
+				stream.Write(Buffer, 0, Writer.Count);
+
+			using (var stream = new FileStream(_targetPath, FileMode.Create))
 				stream.Write(Buffer, 0, Writer.Count);
 
 			Writer.SafeDispose();

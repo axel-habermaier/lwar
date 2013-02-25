@@ -233,7 +233,7 @@
     <Compile Include="Platform\LogType.cs" />
     <Compile Include="Platform\Measurement.cs" />
     <Compile Include="Platform\Clock.cs" />
-    <Compile Include="Platform\MessageBox.cs" />
+    <Compile Include="Platform\Win32.cs" />
     <Compile Include="Processes\DelegateOperation.cs" />
     <Compile Include="Processes\IResumableProcess.cs" />
     <Compile Include="Processes\TaskOperation`1.cs" />
@@ -317,8 +317,7 @@
     <Compile Include="Platform\Graphics\Shader.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\Camera.cs" />
-    <Compile Include="Scripting\CommandLineArgumentAttribute.cs" />
-    <Compile Include="Scripting\CommandLineArguments.cs" />
+    <Compile Include="Scripting\CommandLine.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
@@ -492,6 +491,7 @@
     <Compile Include="Rendering\UserInterface\Font.cs" />
     <Compile Include="Platform\Statistics.cs" />
     <Compile Include="Platform\AveragedValue.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\TypeParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
