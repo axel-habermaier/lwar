@@ -17,10 +17,16 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSession session)
+		public override void Process(GameSessionOld session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
-			session.Entities.Remove(_entityId);
+
+			var entity = session.GameSession.EntityMap[_entityId];
+			Assert.NotNull(entity, "Server sent a remove message for an unknown entity.");
+
+			session.GameSession.EntityMap.Remove(entity);
+			session.GameSession.Entities.Remove(entity);
+			entity.Removed(session.GameSession, session.RenderContext);
 		}
 
 		/// <summary>

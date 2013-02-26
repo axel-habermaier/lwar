@@ -23,7 +23,7 @@ namespace Lwar.Client
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
 			buffer.WriteUInt16(identifier.Generation);
-			buffer.WriteUInt16(identifier.Id);
+			buffer.WriteUInt16(identifier.Identity);
 		}
 
 		/// <summary>

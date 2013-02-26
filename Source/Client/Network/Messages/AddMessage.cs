@@ -3,6 +3,7 @@
 namespace Lwar.Client.Network.Messages
 {
 	using Gameplay;
+	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
@@ -27,49 +28,40 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSession session)
+		public override void Process(GameSessionOld session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
 
-			var player = session.Players[_playerId];
 			IEntity entity;
-
 			switch (_template)
 			{
 				case EntityTemplate.Ship:
-					var ship = Ship.Create(player);
+					var ship = Ship.Create(_entityId, session.GameSession.PlayerMap[_playerId]);
 					entity = ship;
 
-					if (_template == EntityTemplate.Ship && entity.Player == session.LocalPlayer)
-						session.LocalPlayer.Ship = ship;
+					if (_template == EntityTemplate.Ship && ship.Player == session.GameSession.LocalPlayer)
+						session.GameSession.LocalPlayer.Ship = ship;
 					break;
 				case EntityTemplate.Bullet:
-					entity = Bullet.Create(player);
+					entity = Bullet.Create(_entityId);
 					break;
 				case EntityTemplate.Planet:
-					entity = Planet.Create(player);
+					entity = Planet.Create(_entityId);
 					break;
 				case EntityTemplate.Rocket:
-					entity = Rocket.Create(player);
-					break;
 				case EntityTemplate.Ray:
-					// TODO
-					entity = Bullet.Create(player);
-					break;
 				case EntityTemplate.ShockWave:
-					// TODO
-					entity = Bullet.Create(player);
-					break;
 				case EntityTemplate.Gun:
 					// TODO
-					entity = Bullet.Create(player);
+					entity = null;
 					break;
 				default:
 					throw new InvalidOperationException("Unknown entity template.");
 			}
 
-			entity.Id = _entityId;
-			session.Entities.Add(entity);
+			session.GameSession.Entities.Add(entity);
+			session.GameSession.EntityMap.Add(entity);
+			entity.Added(session.GameSession, session.RenderContext);
 		}
 
 		/// <summary>

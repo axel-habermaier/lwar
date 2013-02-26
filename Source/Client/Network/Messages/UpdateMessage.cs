@@ -2,44 +2,88 @@
 
 namespace Lwar.Client.Network.Messages
 {
+	using System.Collections.Generic;
 	using Gameplay;
+	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 
-	public class UpdateMessage : UpdateMessage<UpdateMessage.Data, UpdateMessage>
+	public class UpdateMessage : Message<UpdateMessage>, IUnreliableMessage
 	{
+		/// <summary>
+		///   The updated entity data.
+		/// </summary>
+		private readonly List<UpdateRecord> _updates = new List<UpdateRecord>();
+
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		/// <param name="entity">The entity that should be updated.</param>
-		/// <param name="data">The updated data.</param>
-		protected override void Process(GameSession session, IEntity entity, Data data)
+		public override sealed void Process(GameSessionOld session)
 		{
-			entity.Position = data.Position;
-			entity.Rotation = MathUtils.DegToRad(data.Rotation);
-			entity.Health = data.Health;
+			Assert.ArgumentNotNull(session, () => session);
+
+			foreach (var update in _updates)
+			{
+				var entity = session.GameSession.EntityMap[update.EntityId];
+
+				// Entity generation mismatch
+				if (entity == null)
+					continue;
+
+				entity.RemoteUpdate(update, Timestamp);
+			}
 		}
 
 		/// <summary>
-		///   Extracts an update set from the buffer.
+		///   Gets or sets the timestamp of the message.
 		/// </summary>
-		/// <param name="buffer">The buffer from which the update set should be extracted.</param>
-		protected override Data Extract(BufferReader buffer)
-		{
-			return new Data
-			{
-				Position = new Vector2(buffer.ReadInt16(), buffer.ReadInt16()),
-				Rotation = buffer.ReadUInt16(),
-				Health = buffer.ReadByte()
-			};
-		}
+		public uint Timestamp { get; set; }
 
-		public struct Data
+		/// <summary>
+		///   Creates a new instance.
+		/// </summary>
+		/// <param name="buffer">The buffer from which the instance should be deserialized.</param>
+		/// <param name="type">The type of the update records contained in the message.</param>
+		public static UpdateMessage Create(BufferReader buffer, UpdateRecordType type)
 		{
-			public int Health;
-			public Vector2 Position;
-			public ushort Rotation;
+			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentInRange(type, () => type);
+
+			return Deserialize(buffer, (b, m) =>
+				{
+					m._updates.Clear();
+
+					var count = buffer.ReadByte();
+					for (var i = 0; i < count; ++i)
+					{
+						var record = new UpdateRecord { EntityId = b.ReadIdentifier(), Type = type };
+						switch (type)
+						{
+							case UpdateRecordType.Full:
+								record.Full.Position = new Vector2(b.ReadInt16(), b.ReadInt16());
+								record.Full.Rotation = b.ReadUInt16();
+								record.Full.Health = b.ReadByte();
+								break;
+							case UpdateRecordType.Position:
+								record.Position = new Vector2(b.ReadInt16(), b.ReadInt16());
+								break;
+							case UpdateRecordType.Ray:
+								record.Ray.Origin = new Vector2(b.ReadInt16(), b.ReadInt16());
+								record.Ray.Direction = b.ReadUInt16();
+								record.Ray.Length = b.ReadUInt16();
+								break;
+							case UpdateRecordType.Circle:
+								record.Circle.Center = new Vector2(b.ReadInt16(), b.ReadInt16());
+								record.Circle.Radius = b.ReadUInt16();
+								break;
+							default:
+								throw new InvalidOperationException("Unknown update record type.");
+						}
+
+						m._updates.Add(record);
+					}
+				});
 		}
 	}
 }

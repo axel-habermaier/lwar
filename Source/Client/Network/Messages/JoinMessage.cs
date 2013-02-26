@@ -22,13 +22,16 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSession session)
+		public override void Process(GameSessionOld session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
-			session.Players.Add(_playerId);
+
+			var player = new Player(_playerId);
+			session.GameSession.Players.Add(player);
+			session.GameSession.PlayerMap.Add(player);
 
 			if (IsLocalPlayer)
-				session.LocalPlayer = session.Players[_playerId];
+				session.GameSession.LocalPlayer = player;
 		}
 
 		/// <summary>

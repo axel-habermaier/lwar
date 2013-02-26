@@ -1,21 +1,24 @@
 Client
 ========
 
-- Handle ray and circle update messages
-- Render all entity types
 - Refactor entity system (component-oriented/data parallel/object-oriented entity system hybrid)
-- Sun effect
-- Render different types of planets
-- Skybox
-- Nebulae
+	- Handle ray and circle update messages
+	- Render all entity types
+- Effects
+	- Sun effect
+	- Render different types of planets
+	- Skybox
+	- Nebulae
+	- Shield effect
+	- Weapon effects
+	- Particle system
 - Entity interpolation
-- Ship/Weapon selection
-- Scoreboard
-- Chat messages outside of console
-- Show player names on top of ships
-- Shield effect
-- Weapon effects
-- In-game menu
+- UI
+	- Ship/Weapon selection
+	- Scoreboard
+	- Chat messages outside of console
+	- Show player names on top of ships
+	- In-game menu
 
 Pegasus
 ========
@@ -24,16 +27,19 @@ Pegasus
 	- Construct the shader input layout from the C# shader code instead of using build-time shader reflection of the DX shader
 - Fully support render targets with color and depth/stencil buffers
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
-- Load cvars from config file
-- Persist cvars in config file
-- System cvars (read-only)
-- Commands with optional parameters
-- Better command help (explain meaning of parameters)
-- Ranged cvars
+- Improve cvar/command system
+	- Load cvars from config file
+	- Persist cvars in config file
+	- System cvars (read-only)
+	- Commands with optional parameters
+	- Better command help (explain meaning of parameters)
+	- Ranged cvars
+- Remove static VS/FS properties from sprite batch and replace by instance variables
 
 Server
 ========
-- server: slots need relative placement wrt ship,
-          extend entity type struct for this
-- server/Client: entity types, possible weapons, slots
-- BUG: Assertion "assert(n == 0);" violated in protocol.c line 302 when server is started twice and client connects (start client and press F1 twice, then F3)
+- slots need relative placement wrt ship,
+  extend entity type struct for this
+- server/client: entity types, possible weapons, slots
+- server_init: remove static variables, use dynamic allocation
+- server: copy string to player, free memory

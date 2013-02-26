@@ -32,14 +32,14 @@ namespace Lwar.Client.Gameplay
 		public Identifier(ushort identifier, ushort generation)
 			: this()
 		{
-			Id = identifier;
+			Identity = identifier;
 			Generation = generation;
 		}
 
 		/// <summary>
-		///   Gets the unique identifier of the instance.
+		///   Gets the identity of the instance.
 		/// </summary>
-		public ushort Id { get; private set; }
+		public ushort Identity { get; private set; }
 
 		/// <summary>
 		///   Gets the generation of the instance.
@@ -52,7 +52,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="other">An identifier to compare with this identifier.</param>
 		public bool Equals(Identifier other)
 		{
-			return Id == other.Id && Generation == other.Generation;
+			return Identity == other.Identity && Generation == other.Generation;
 		}
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace Lwar.Client.Gameplay
 		public Identifier IncreaseGenerationCount()
 		{
 			Assert.InRange(Generation, 0, UInt16.MaxValue - 1);
-			return new Identifier(Id, (ushort)(Generation + 1));
+			return new Identifier(Identity, (ushort)(Generation + 1));
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return (Id.GetHashCode() * 397) ^ Generation.GetHashCode();
+			return (Identity.GetHashCode() * 397) ^ Generation.GetHashCode();
 		}
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public override string ToString()
 		{
-			return String.Format("{0} (gen {1})", Id, Generation);
+			return String.Format("{0} (gen {1})", Identity, Generation);
 		}
 	}
 }

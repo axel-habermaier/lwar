@@ -18,19 +18,19 @@ namespace Lwar.Client
 		/// <summary>
 		///   The local game server that can be used to hosts game sessions locally.
 		/// </summary>
-		private readonly Server _server = new Server();
+		private readonly LocalServer _localServer = new LocalServer();
 
 		/// <summary>
 		///   The game session.
 		/// </summary>
-		private GameSession _session;
+		private GameSessionOld _session;
 
 		/// <summary>
 		///   Invoked when the application should update the game state.
 		/// </summary>
 		protected override void Update()
 		{
-			_server.Update();
+			_localServer.Update();
 			_session.Update();
 		}
 
@@ -52,7 +52,7 @@ namespace Lwar.Client
 		protected override void OnDisposing()
 		{
 			_session.SafeDispose();
-			_server.SafeDispose();
+			_localServer.SafeDispose();
 
 			base.OnDisposing();
 		}
@@ -69,7 +69,7 @@ namespace Lwar.Client
 			Window.Size = new Size(1280, 720);
 
 			AssetsLoader.Load(Assets);
-			_session = new GameSession(Window, GraphicsDevice, Assets, LogicalInputDevice);
+			_session = new GameSessionOld(Window, GraphicsDevice, Assets, LogicalInputDevice);
 
 			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
 			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");

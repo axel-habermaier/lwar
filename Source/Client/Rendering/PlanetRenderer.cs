@@ -3,56 +3,90 @@
 namespace Lwar.Client.Rendering
 {
 	using Gameplay;
+	using Gameplay.Entities;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 
 	/// <summary>
 	///   Renders planets into a 3D scene.
 	/// </summary>
-	public struct PlanetRenderer
+	public class PlanetRenderer : Renderer<Planet, PlanetRenderer.PlanetDrawState>
 	{
 		/// <summary>
-		///   The vertex shader that is used to draw the planets.
+		///   The fragment shader that is used to draw the ships.
 		/// </summary>
-		[Asset("Shaders/SphereVS")]
-		public static VertexShader VertexShader;
+		private readonly FragmentShader _fragmentShader;
 
 		/// <summary>
-		///   The fragment shader that is used to draw the planets.
+		///   The transformation constant buffer.
 		/// </summary>
-		[Asset("Shaders/SphereFS")]
-		public static FragmentShader FragmentShader;
+		private readonly ConstantBuffer<Matrix> _transform;
 
 		/// <summary>
-		///   The context in which the planets are rendered.
+		///   The vertex shader that is used to draw the ships.
 		/// </summary>
-		private readonly RenderContext _context;
+		private readonly VertexShader _vertexShader;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="context">The context in which the planet should be rendered.</param>
-		public PlanetRenderer(RenderContext context)
+		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
+		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
+		public unsafe PlanetRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(context, () => context);
-			_context = context;
+			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(assets, () => assets);
+
+			_vertexShader = assets.LoadVertexShader("Shaders/SphereVS");
+			_fragmentShader = assets.LoadFragmentShader("Shaders/SphereFS");
+			_transform = new ConstantBuffer<Matrix>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
 		}
 
 		/// <summary>
-		///   Draws the planet.
+		///   Invoked when an element has been added to the renderer.
 		/// </summary>
-		/// <param name="planet">The planet that should be drawn.</param>
-		public void Draw(Planet planet)
+		/// <param name="element">The element that should be drawn by the renderer.</param>
+		protected override PlanetDrawState OnAdded(Planet element)
 		{
-			Assert.ArgumentNotNull(planet, () => planet);
+			return new PlanetDrawState();
+		}
 
-			_context.UpdateWorldTransform(planet);
-			VertexShader.Bind();
-			FragmentShader.Bind();
-			Planet.Texture.Bind(0);
-			SamplerState.BilinearClamp.Bind(0);
+		/// <summary>
+		///   Draws all registered elements.
+		/// </summary>
+		public void Draw()
+		{
+			_transform.Bind(1);
+			_vertexShader.Bind();
+			_fragmentShader.Bind();
+			SamplerState.TrilinearClamp.Bind(0);
 
-			planet.Model.Draw();
+			foreach (var planet in RegisteredElements)
+			{
+				_transform.Data = planet.Transformation.Matrix;
+				_transform.Update();
+			}
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_transform.SafeDispose();
+		}
+
+		/// <summary>
+		///   The state required for drawing a planet.
+		/// </summary>
+		public struct PlanetDrawState
+		{
+			/// <summary>
+			///   The transformation of the planet.
+			/// </summary>
+			public Transformation Transformation;
 		}
 	}
 }

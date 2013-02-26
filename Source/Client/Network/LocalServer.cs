@@ -11,9 +11,9 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework.Platform;
 
 	/// <summary>
-	///   Represents the server hosting a game session.
+	///   Represents a local server hosting a game session.
 	/// </summary>
-	public class Server : DisposableObject
+	public class LocalServer : DisposableObject
 	{
 		/// <summary>
 		///   The update frequency of the server in Hz.
@@ -44,7 +44,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public Server()
+		public LocalServer()
 		{
 			_logCallbacks = new NativeMethods.LogCallbacks
 			{
@@ -184,6 +184,9 @@ namespace Lwar.Client.Network
 		protected override void OnDisposing()
 		{
 			Shutdown();
+
+			LwarCommands.StartServer.Invoked -= Run;
+			LwarCommands.StopServer.Invoked -= Shutdown;
 		}
 
 		/// <summary>

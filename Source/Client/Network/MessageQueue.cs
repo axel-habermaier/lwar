@@ -8,7 +8,7 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework.Platform;
 
 	/// <summary>
-	///   The message queue that is responsible for packing all queued messages into a packet and sending it to the remote
+	///   The message queue is responsible for packing all queued messages into a packet and sending it to the remote
 	///   peer. Reliable messages will be resent until their reception has been acknowledged by the remote peer.
 	/// </summary>
 	public class MessageQueue : DisposableObject

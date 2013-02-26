@@ -17,7 +17,7 @@ namespace Lwar.Client.Network
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public virtual void Process(GameSession session)
+		public virtual void Process(GameSessionOld session)
 		{
 			Assert.That(false, "The client cannot process this type of message.");
 		}

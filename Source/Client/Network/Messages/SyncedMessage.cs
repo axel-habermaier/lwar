@@ -2,21 +2,11 @@
 
 namespace Lwar.Client.Network.Messages
 {
-	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 
 	public class SyncedMessage : Message<SyncedMessage>, IReliableMessage
 	{
-		/// <summary>
-		///   Processes the message, updating the given game session.
-		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSession session)
-		{
-			// Nothing to do here
-		}
-
 		/// <summary>
 		///   Gets or sets the sequence number of the message.
 		/// </summary>

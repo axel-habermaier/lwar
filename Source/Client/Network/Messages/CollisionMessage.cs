@@ -33,19 +33,19 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSession session)
+		public override void Process(GameSessionOld session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
 
-			var entity1 = session.Entities.Find(_entity1);
-			var entity2 = session.Entities.Find(_entity2);
+			//var entity1 = session.Entities.Find(_entity1);
+			//var entity2 = session.Entities.Find(_entity2);
 
-			// There's nothing we can do if either of the entities has already been removed
-			if (entity1 == null || entity2 == null)
-				return;
+			//// There's nothing we can do if either of the entities has already been removed
+			//if (entity1 == null || entity2 == null)
+			//	return;
 
-			entity1.OnCollision(entity2, _impactPosition);
-			entity2.OnCollision(entity1, _impactPosition);
+			//entity1.OnCollision(entity2, _impactPosition);
+			//entity2.OnCollision(entity1, _impactPosition);
 		}
 
 		/// <summary>

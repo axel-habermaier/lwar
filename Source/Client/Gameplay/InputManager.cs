@@ -28,7 +28,7 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   The game session the input manager belongs to.
 		/// </summary>
-		private readonly GameSession _session;
+		private readonly GameSessionOld _session;
 
 		/// <summary>
 		///   The current input state.
@@ -54,7 +54,7 @@ namespace Lwar.Client.Gameplay
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="session">The game session the input manager belongs to.</param>
-		public InputManager(GameSession session)
+		public InputManager(GameSessionOld session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
 
@@ -117,7 +117,7 @@ namespace Lwar.Client.Gameplay
 		{
 			while (!context.IsCanceled)
 			{
-				if (_session.LocalPlayer.Ship == null)
+				if (_session.GameSession.LocalPlayer.Ship == null)
 				{
 					await context.NextFrame();
 					continue;
@@ -139,7 +139,7 @@ namespace Lwar.Client.Gameplay
 							  _shooting1.Triggered, _shooting2.Triggered, _shooting3.Triggered, _shooting4.Triggered,
 							  target);
 
-				_session.ServerProxy.Send(InputMessage.Create(_session.LocalPlayer.Id, _state));
+				_session.ServerConnection.Send(InputMessage.Create(_session.GameSession.LocalPlayer.Id, _state));
 
 				_forward.Triggered = false;
 				_backward.Triggered = false;

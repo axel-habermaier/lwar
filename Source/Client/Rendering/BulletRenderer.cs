@@ -3,56 +3,90 @@
 namespace Lwar.Client.Rendering
 {
 	using Gameplay;
+	using Gameplay.Entities;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 
 	/// <summary>
 	///   Renders bullets into a 3D scene.
 	/// </summary>
-	public struct BulletRenderer
+	public class BulletRenderer : Renderer<Bullet, BulletRenderer.BulletDrawState>
 	{
-		/// <summary>
-		///   The vertex shader that is used to draw the ships.
-		/// </summary>
-		[Asset("Shaders/QuadVS")]
-		public static VertexShader VertexShader;
-
 		/// <summary>
 		///   The fragment shader that is used to draw the ships.
 		/// </summary>
-		[Asset("Shaders/QuadFS")]
-		public static FragmentShader FragmentShader;
+		private readonly FragmentShader _fragmentShader;
 
 		/// <summary>
-		///   The context in which the ships are rendered.
+		///   The transformation constant buffer.
 		/// </summary>
-		private readonly RenderContext _context;
+		private readonly ConstantBuffer<Matrix> _transform;
+
+		/// <summary>
+		///   The vertex shader that is used to draw the ships.
+		/// </summary>
+		private readonly VertexShader _vertexShader;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="context">The context in which the ships should be rendered.</param>
-		public BulletRenderer(RenderContext context)
+		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
+		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
+		public unsafe BulletRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(context, () => context);
-			_context = context;
+			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(assets, () => assets);
+
+			_vertexShader = assets.LoadVertexShader("Shaders/QuadVS");
+			_fragmentShader = assets.LoadFragmentShader("Shaders/QuadFS");
+			_transform = new ConstantBuffer<Matrix>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
 		}
 
 		/// <summary>
-		///   Draws the bullet.
+		///   Invoked when an element has been added to the renderer.
 		/// </summary>
-		/// <param name="bullet">The bullet that should be drawn.</param>
-		public void Draw(Bullet bullet)
+		/// <param name="element">The element that should be drawn by the renderer.</param>
+		protected override BulletDrawState OnAdded(Bullet element)
 		{
-			Assert.ArgumentNotNull(bullet, () => bullet);
+			return new BulletDrawState();
+		}
 
-			_context.UpdateWorldTransform(bullet);
-			VertexShader.Bind();
-			FragmentShader.Bind();
-			SamplerState.PointWrap.Bind(0);
+		/// <summary>
+		///   Draws all registered elements.
+		/// </summary>
+		public void Draw()
+		{
+			_transform.Bind(1);
+			_vertexShader.Bind();
+			_fragmentShader.Bind();
+			SamplerState.TrilinearClamp.Bind(0);
 
-			Ship.Texture.Bind(0);
-			bullet.Model.Draw();
+			foreach (var bullet in RegisteredElements)
+			{
+				_transform.Data = bullet.Transformation.Matrix;
+				_transform.Update();
+			}
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_transform.SafeDispose();
+		}
+
+		/// <summary>
+		///   The state required for drawing a bullet.
+		/// </summary>
+		public struct BulletDrawState
+		{
+			/// <summary>
+			///   The transformation of the bullet.
+			/// </summary>
+			public Transformation Transformation;
 		}
 	}
 }

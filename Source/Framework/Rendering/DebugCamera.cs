@@ -2,22 +2,16 @@
 
 namespace Pegasus.Framework.Rendering
 {
-	using System.Threading.Tasks;
 	using Math;
+	using Platform;
 	using Platform.Graphics;
 	using Platform.Input;
-	using Processes;
 
 	/// <summary>
 	///   Represents a six-degrees-of-freedom debug camera.
 	/// </summary>
 	public class DebugCamera : Camera
 	{
-		/// <summary>
-		///   The update frequency of the camera in Hz.
-		/// </summary>
-		private const int UpdateFrequency = 60;
-
 		/// <summary>
 		///   The rotation speed of the camera.
 		/// </summary>
@@ -32,6 +26,11 @@ namespace Pegasus.Framework.Rendering
 		///   Triggered when the user wants to move backward.
 		/// </summary>
 		private readonly LogicalInput _backward;
+
+		/// <summary>
+		///   The clock that is used to scale the movement of the camera.
+		/// </summary>
+		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
 		///   Triggered when the user wants to move forward.
@@ -54,11 +53,6 @@ namespace Pegasus.Framework.Rendering
 		private readonly LogicalInput _right;
 
 		/// <summary>
-		///   The process that updates the position and viewing angle of the camera based on the input provided by the user.
-		/// </summary>
-		private readonly IProcess _updateProcess;
-
-		/// <summary>
 		///   The current position of the camera.
 		/// </summary>
 		private Vector3 _position;
@@ -73,8 +67,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		/// <param name="inputDevice">The logical input device that provides the input for the camera.</param>
-		/// <param name="scheduler">The scheduler that should be used to schedule the camera's update process.</param>
-		public DebugCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, ProcessScheduler scheduler)
+		public DebugCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
@@ -93,7 +86,6 @@ namespace Pegasus.Framework.Rendering
 			inputDevice.Register(_left);
 			inputDevice.Register(_right);
 
-			_updateProcess = scheduler.CreateProcess(UpdateAsync);
 			Reset();
 		}
 
@@ -124,7 +116,7 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
-		/// Resets the debug camera.
+		///   Resets the debug camera.
 		/// </summary>
 		public void Reset()
 		{
@@ -135,29 +127,24 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Updates the position and viewing angle of the camera based on the input provided by the user.
 		/// </summary>
-		/// <param name="context">The context in which the process should be executed.</param>
-		private async Task UpdateAsync(ProcessContext context)
+		public void UpdateAsync()
 		{
-			while (!context.IsCanceled)
-			{
-				var move = Vector3.Zero;
+			var move = Vector3.Zero;
 
-				if (_forward.IsTriggered)
-					move.Z += 1;
-				if (_backward.IsTriggered)
-					move.Z -= 1;
-				if (_left.IsTriggered)
-					move.X += 1;
-				if (_right.IsTriggered)
-					move.X -= 1;
+			if (_forward.IsTriggered)
+				move.Z += 1;
+			if (_backward.IsTriggered)
+				move.Z -= 1;
+			if (_left.IsTriggered)
+				move.X += 1;
+			if (_right.IsTriggered)
+				move.X -= 1;
 
-				var rotation = Matrix.CreateRotationX(_rotation.X) * Matrix.CreateRotationY(_rotation.Y);
-				move = Vector3.Transform(ref move, ref rotation).Normalize();
-				_position += move * MoveSpeed;
+			var rotation = Matrix.CreateRotationX(_rotation.X) * Matrix.CreateRotationY(_rotation.Y);
+			move = Vector3.Transform(ref move, ref rotation).Normalize();
+			_position += move * MoveSpeed * (float)_clock.Milliseconds;
 
-				UpdateViewMatrix();
-				await context.Delay(1000 / UpdateFrequency);
-			}
+			UpdateViewMatrix();
 		}
 
 		/// <summary>
@@ -195,7 +182,7 @@ namespace Pegasus.Framework.Rendering
 			_inputDevice.Remove(_backward);
 			_inputDevice.Remove(_left);
 			_inputDevice.Remove(_right);
-			_updateProcess.SafeDispose();
+			_clock.SafeDispose();
 
 			base.OnDisposing();
 		}

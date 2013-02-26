@@ -117,6 +117,22 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Gets the width of the window's rendering area.
+		/// </summary>
+		public int Width
+		{
+			get { return Size.Width; }
+		}
+
+		/// <summary>
+		///   Gets the height of the window's rendering area.
+		/// </summary>
+		public int Height
+		{
+			get { return Size.Height; }
+		}
+
+		/// <summary>
 		///   Gets or sets a value indicating whether the mouse is currently captured by the window.
 		/// </summary>
 		public bool MouseCaptured

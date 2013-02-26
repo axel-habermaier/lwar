@@ -17,12 +17,16 @@ namespace Lwar.Client.Network.Messages
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSession session)
+		public override void Process(GameSessionOld session)
 		{
 			Assert.ArgumentNotNull(session, () => session);
-			Assert.That(_playerId != session.LocalPlayer.Id, "Cannot remove the local player.");
+			Assert.That(_playerId != session.GameSession.LocalPlayer.Id, "Cannot remove the local player.");
 
-			session.Players.Remove(_playerId);
+			var player = session.GameSession.PlayerMap[_playerId];
+			Assert.NotNull(player, "Server sent a remove message for an unknown player.");
+
+			session.GameSession.PlayerMap.Remove(player);
+			session.GameSession.Players.Remove(player);
 		}
 
 		/// <summary>

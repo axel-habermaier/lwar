@@ -14,7 +14,7 @@ namespace Lwar.Client.Network
 		///   Processes the message, updating the given game session.
 		/// </summary>
 		/// <param name="session">The game session that should be updated.</param>
-		void Process(GameSession session);
+		void Process(GameSessionOld session);
 
 		/// <summary>
 		///   Writes the message into the given buffer.
