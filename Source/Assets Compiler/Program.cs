@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.Diagnostics;
 	using System.Globalization;
-	using System.Linq;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Scripting;
@@ -81,22 +80,27 @@ namespace Pegasus.AssetsCompiler
 
 					if (compile)
 						compilationUnit.Compile();
+
+					var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
+
+					Console.WriteLine();
+					if (clean && !(recompile || compile))
+						Log.Info("Assets cleaned.");
+					else
+						Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds.ToString(CultureInfo.InvariantCulture));
 				}
 			}
 			catch (AggregateException e)
 			{
-				Log.Error(e.InnerExceptions.First().Message);
+				foreach (var exception in e.InnerExceptions)
+					Log.Error(exception.Message);
+
+				Log.Error(e.StackTrace);
 			}
 			catch (Exception e)
 			{
 				Log.Error(e.Message);
-			}
-			finally
-			{
-				var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
-
-				Console.WriteLine();
-				Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds.ToString(CultureInfo.InvariantCulture));
+				Log.Error(e.StackTrace);
 			}
 		}
 	}
