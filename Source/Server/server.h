@@ -145,8 +145,9 @@ struct Id {
 };
 
 struct Address {
-	uint32_t ip;
+	uint8_t ip[16];
 	uint16_t port;
+	bool isIPv6;
 };
 
 struct Slot {

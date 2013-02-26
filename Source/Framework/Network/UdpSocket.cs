@@ -23,21 +23,18 @@ namespace Pegasus.Framework.Network
 		private readonly Socket _socket;
 
 		/// <summary>
-		///   Initializes a new instance. On Windows, dual mode is enabled to support both IPv6 and IPv4. On Linux, only IPv4 is
-		///   supported.
+		///   Initializes a new instance.
 		/// </summary>
 		public UdpSocket(IPacketFactory packetFactory)
 		{
 			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
 			_packetFactory = packetFactory;
 
-#if Windows
-			_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp) { DualMode = true };
-#elif Linux
-			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-#endif
-
+			_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
+			_socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0); // Socket.DualMode not available in Mono
 			_socket.Blocking = false;
+
+			Assert.That((int)_socket.GetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only) == 0, "Not a dual-stack socket.");
 		}
 
 		/// <summary>

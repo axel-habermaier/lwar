@@ -54,9 +54,8 @@ namespace Pegasus.Framework.Network
 		{
 			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
 			Assert.ArgumentNotNull(socket, () => socket);
-#if Windows
-			Assert.ArgumentSatisfies(socket.DualMode, () => socket, "Socket is not in dual mode.");
-#endif
+			Assert.ArgumentSatisfies((int)_socket.GetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only) == 0,
+									 () => socket, "Socket is not in dual mode.");
 
 			_packetFactory = packetFactory;
 			_socket = socket;
@@ -109,16 +108,13 @@ namespace Pegasus.Framework.Network
 		}
 
 		/// <summary>
-		///   Creates a new socket instance that uses Tcp as the transport protocol. On Windows, dual mode is enabled to support
-		///   both IPv6 and IPv4. On Linux, only IPv4 is supported.
+		///   Creates a new socket instance that uses Tcp as the transport protocol.
 		/// </summary>
 		internal static Socket Create()
 		{
-#if Windows
-			return new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp) { DualMode = true };
-#elif Linux
-			return new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-#endif
+			var socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+			socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0); // Socket.DualMode not available in Mono;
+			return socket;
 		}
 
 		/// <summary>

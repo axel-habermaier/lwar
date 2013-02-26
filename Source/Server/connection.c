@@ -78,7 +78,7 @@ int conn_init()
 	}
 #endif
 
-	connection.socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	connection.socket = socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
 	if (socket_invalid(connection.socket))
 	{
 		conn_error("Unable to initialize socket.");
@@ -102,6 +102,14 @@ int conn_init()
 		return 0;
 	}
 
+	int ipv6only = 0;
+	if (setsockopt(connection.socket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&ipv6only, sizeof(ipv6only)) != 0)
+	{
+		conn_error("Unable to switch to dual-stack mode.");
+		conn_shutdown();
+		return 0;
+	}
+
 	return 1;
 }
 
@@ -121,12 +129,13 @@ void conn_shutdown()
 
 int conn_bind()
 {
-	struct sockaddr_in addr;
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = INADDR_ANY;
-	addr.sin_port = htons(SERVER_PORT);
+	struct sockaddr_in6 addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin6_family = AF_INET6;
+	addr.sin6_addr = in6addr_any;
+	addr.sin6_port = htons(SERVER_PORT);
 
-	if (socket_error(bind(connection.socket, (struct sockaddr*)&addr, sizeof(struct sockaddr_in))))
+	if (socket_error(bind(connection.socket, (struct sockaddr*)&addr, sizeof(addr))))
 	{
 		conn_error("Unable to bind socket.");
 		conn_shutdown();
@@ -138,10 +147,13 @@ int conn_bind()
 
 int conn_recv(char *buf, size_t* size, Address* adr)
 {
-	struct sockaddr_in from;
-	memset(&from, 0, sizeof(struct sockaddr_in));
-	socklen_t len = sizeof(struct sockaddr_in);
+	struct sockaddr_storage from;
+	struct sockaddr_in6* from6;
+	struct sockaddr_in* from4;
+	socklen_t len = sizeof(from);
 
+	memset(&from, 0, len);
+	
 	int read_bytes = recvfrom(connection.socket, buf, *size, 0, (struct sockaddr*)&from, &len);
 #ifdef _MSC_VER
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
@@ -153,9 +165,26 @@ int conn_recv(char *buf, size_t* size, Address* adr)
 		*size = 0;
 		return 1;
 	}
+	
+	switch (from.ss_family)
+	{
+	case AF_INET:
+		from4 = (struct sockaddr_in*)&from;
+		adr->port = from4->sin_port;
+		memset(adr->ip, 0, sizeof(adr->ip));
+		memcpy(adr->ip, &from4->sin_addr, sizeof(int32_t));
+		adr->isIPv6 = false;
+		break;
+	case AF_INET6:
+		from6 = (struct sockaddr_in6*)&from;
+		adr->port = from6->sin6_port;
+		memcpy(adr->ip, &from6->sin6_addr, sizeof(adr->ip));
+		adr->isIPv6 = true;
+		break;
+	default:
+		log_die("Unsupported address family.");
+	}
 
-	adr->ip = from.sin_addr.s_addr;
-	adr->port = from.sin_port;
 	if (socket_error(read_bytes))
 	{
 		conn_error("Receiving failed.");
@@ -169,13 +198,31 @@ int conn_recv(char *buf, size_t* size, Address* adr)
 
 int conn_send(const char *buf, size_t size, Address* adr)
 {
-	struct sockaddr_in addr;
-	memset(&addr, 0, sizeof(struct sockaddr_in));
-	addr.sin_family = AF_INET;
-	addr.sin_port = adr->port;
-	addr.sin_addr.s_addr = adr->ip;
+	struct sockaddr_in addr4;
+	struct sockaddr_in6 addr6;
+	struct sockaddr* addr;
+	socklen_t len;
 
-	int sent = sendto(connection.socket, buf, size, 0, (struct sockaddr*)&addr, sizeof(struct sockaddr_in));
+	if (adr->isIPv6)
+	{
+		memset(&addr6, 0, sizeof(addr6));
+		addr6.sin6_family = AF_INET6;
+		addr6.sin6_port = adr->port;
+		memcpy(&addr6.sin6_addr, adr->ip, sizeof(adr->ip));
+		addr = (struct sockaddr*)&addr6;
+		len = sizeof(addr6);
+	}
+	else
+	{
+		memset(&addr4, 0, sizeof(addr4));
+		addr4.sin_family = AF_INET;
+		addr4.sin_port = adr->port;
+		memcpy(&addr4.sin_addr, adr->ip, sizeof(int32_t));
+		addr = (struct sockaddr*)&addr4;
+		len = sizeof(addr4);
+	}
+
+	int sent = sendto(connection.socket, buf, size, 0, addr, len);
 	if (socket_error(sent))
 	{
 		conn_error("Sending failed");
@@ -191,12 +238,17 @@ int conn_send(const char *buf, size_t size, Address* adr)
 	return 1;
 }
 
-int address_create(Address *adr, const char *ip, uint16_t port) {
-	adr->port = htons(port);
-	return inet_pton(AF_INET, ip, &adr->ip);
-}
-
 bool address_eq(Address *adr0, Address *adr1) {
-    return    adr0->ip   == adr1->ip
-           && adr0->port == adr1->port;
+	int32_t i;
+
+    if (adr0->port != adr1->port)
+		return false;
+
+	for (i = 0; i < sizeof(adr0->ip); ++i)
+	{
+		if (adr0->ip[0] != adr1->ip[1])
+			return false;
+	}
+
+	return true;
 }

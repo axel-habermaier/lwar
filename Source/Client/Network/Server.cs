@@ -103,6 +103,7 @@ namespace Lwar.Client.Network
 
 			if (!isInitialized)
 			{
+				HandleServerLogs();
 				Log.Error("Failed to initialize the server.");
 				return;
 			}
@@ -145,10 +146,10 @@ namespace Lwar.Client.Network
 		/// </summary>
 		public void Update()
 		{
+			HandleServerLogs();
+
 			if (!IsRunning)
 				return;
-
-			HandleServerLogs();
 
 			if (!IsRunning && Faulted != null)
 				Faulted();

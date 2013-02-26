@@ -29,7 +29,6 @@ Pegasus
 - System cvars (read-only)
 - Commands with optional parameters
 - Better command help (explain meaning of parameters)
-- Move socket implementation to Platform and share between client and server
 - Ranged cvars
 
 Server
