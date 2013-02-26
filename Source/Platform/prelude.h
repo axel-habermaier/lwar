@@ -173,7 +173,7 @@ pgVoid pgDebugInfo(pgString message, ...);
 	#include "linux.h"	
 	#include "gl3.h"
 #else
-	#error Unsupported compiler, operation system, or operating system/graphics API combination
+	#error Unsupported compiler, operating system, or operating system/graphics API combination
 #endif
 
 //====================================================================================================================
@@ -221,7 +221,7 @@ pgBool pgRectangleEqual(pgRectangle* r1, pgRectangle* r2);
 #define PG_SAMPLER_SLOT_COUNT			16
 #define PG_CONSTANT_BUFFER_SLOT_COUNT	14
 
-typedef struct 
+struct pgGraphicsDevice
 {
 	pgSamplerState*			samplers[PG_SAMPLER_SLOT_COUNT];
 	pgBuffer*				constantBuffers[PG_CONSTANT_BUFFER_SLOT_COUNT];
@@ -236,11 +236,6 @@ typedef struct
 	pgRectangle				scissorRectangle;
 	pgRenderTarget*			renderTarget;
 	pgInputLayout*			inputLayout;
-} pgGraphicsDeviceState;
-
-struct pgGraphicsDevice
-{
-	pgGraphicsDeviceState state;
 	PG_GRAPHICS_DEVICE_PLATFORM
 };
 

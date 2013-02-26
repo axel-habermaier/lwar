@@ -20,8 +20,8 @@ pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain)
 {
 	pgDestroyBoundContext(&swapChain->context);
 
-	if (swapChain->device->state.renderTarget == &swapChain->renderTarget)
-		swapChain->device->state.renderTarget = NULL;
+	if (swapChain->device->renderTarget == &swapChain->renderTarget)
+		swapChain->device->renderTarget = NULL;
 
 	pgMakeCurrent(&swapChain->device->context);
 }

@@ -26,8 +26,8 @@ pgVoid pgDestroyInputLayout(pgInputLayout* inputLayout)
 	if (inputLayout == NULL)
 		return;
 
-	if (inputLayout->device->state.inputLayout == inputLayout)
-		inputLayout->device->state.inputLayout = NULL;
+	if (inputLayout->device->inputLayout == inputLayout)
+		inputLayout->device->inputLayout = NULL;
 
 	pgDestroyInputLayoutCore(inputLayout);
 	PG_FREE(inputLayout);
@@ -37,9 +37,9 @@ pgVoid pgBindInputLayout(pgInputLayout* inputLayout)
 {
 	PG_ASSERT_NOT_NULL(inputLayout);
 
-	if (inputLayout->device->state.inputLayout == inputLayout)
+	if (inputLayout->device->inputLayout == inputLayout)
 		return;
 
-	inputLayout->device->state.inputLayout = inputLayout;
+	inputLayout->device->inputLayout = inputLayout;
 	pgBindInputLayoutCore(inputLayout);
 }

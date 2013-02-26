@@ -23,8 +23,8 @@ pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget)
 	if (renderTarget == NULL)
 		return;
 
-	if (renderTarget->device->state.renderTarget == renderTarget)
-		renderTarget->device->state.renderTarget = NULL;
+	if (renderTarget->device->renderTarget == renderTarget)
+		renderTarget->device->renderTarget = NULL;
 
 	pgDestroyRenderTargetCore(renderTarget);
 	PG_FREE(renderTarget);
@@ -40,9 +40,9 @@ pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget)
 {
 	PG_ASSERT_NOT_NULL(renderTarget);
 
-	if (renderTarget->device->state.renderTarget == renderTarget)
+	if (renderTarget->device->renderTarget == renderTarget)
 		return;
 
-	renderTarget->device->state.renderTarget = renderTarget;
+	renderTarget->device->renderTarget = renderTarget;
 	pgBindRenderTargetCore(renderTarget);
 }

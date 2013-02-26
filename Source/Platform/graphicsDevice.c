@@ -37,10 +37,10 @@ pgVoid pgSetViewport(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt3
 	PG_ASSERT_IN_RANGE(width, 0, 4096);
 	PG_ASSERT_IN_RANGE(height, 0, 4096);
 
-	if (pgRectangleEqual(&viewport, &device->state.viewport))
+	if (pgRectangleEqual(&viewport, &device->viewport))
 		return;
 
-	device->state.viewport = viewport;
+	device->viewport = viewport;
 	pgSetViewportCore(device, left, top, width, height);
 }
 
@@ -58,10 +58,10 @@ pgVoid pgSetScissorRect(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgI
 	PG_ASSERT_IN_RANGE(width, 0, 4096);
 	PG_ASSERT_IN_RANGE(height, 0, 4096);
 
-	if (pgRectangleEqual(&scissor, &device->state.scissorRectangle))
+	if (pgRectangleEqual(&scissor, &device->scissorRectangle))
 		return;
 
-	device->state.scissorRectangle = scissor;
+	device->scissorRectangle = scissor;
 	pgSetScissorRectCore(device, left, top, width, height);
 }
 
@@ -69,10 +69,10 @@ pgVoid pgSetPrimitiveType(pgGraphicsDevice* device, pgPrimitiveType primitiveTyp
 {
 	PG_ASSERT_NOT_NULL(device);
 
-	if (device->state.primitiveType == primitiveType)
+	if (device->primitiveType == primitiveType)
 		return;
 
-	device->state.primitiveType = primitiveType;
+	device->primitiveType = primitiveType;
 	pgSetPrimitiveTypeCore(device, primitiveType);
 }
 
@@ -103,7 +103,7 @@ pgVoid pgDrawIndexed(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 index
 
 pgInt32 pgPrimitiveCountToVertexCount(pgGraphicsDevice* device, pgInt32 primitiveCount)
 {
-	switch (device->state.primitiveType)
+	switch (device->primitiveType)
 	{
 	case PG_PRIMITIVE_TRIANGLES:
 		return primitiveCount * 3;
@@ -120,13 +120,13 @@ pgInt32 pgPrimitiveCountToVertexCount(pgGraphicsDevice* device, pgInt32 primitiv
 
 pgVoid pgValidateDeviceState(pgGraphicsDevice* device)
 {
-	PG_ASSERT_NOT_NULL(device->state.vertexShader);
-	PG_ASSERT_NOT_NULL(device->state.fragmentShader);
-	PG_ASSERT_NOT_NULL(device->state.depthStencilState);
-	PG_ASSERT_NOT_NULL(device->state.blendState);
-	PG_ASSERT_NOT_NULL(device->state.rasterizerState);
-	PG_ASSERT_NOT_NULL(device->state.renderTarget);
-	PG_ASSERT_NOT_NULL(device->state.inputLayout);
-	PG_ASSERT(device->state.primitiveType != 0, "No primitive type has been set.");
-	PG_ASSERT(device->state.viewport.width != 0 && device->state.viewport.height != 0, "Bound viewport has an area of 0.");
+	PG_ASSERT_NOT_NULL(device->vertexShader);
+	PG_ASSERT_NOT_NULL(device->fragmentShader);
+	PG_ASSERT_NOT_NULL(device->depthStencilState);
+	PG_ASSERT_NOT_NULL(device->blendState);
+	PG_ASSERT_NOT_NULL(device->rasterizerState);
+	PG_ASSERT_NOT_NULL(device->renderTarget);
+	PG_ASSERT_NOT_NULL(device->inputLayout);
+	PG_ASSERT(device->primitiveType != 0, "No primitive type has been set.");
+	PG_ASSERT(device->viewport.width != 0 && device->viewport.height != 0, "Bound viewport has an area of 0.");
 }

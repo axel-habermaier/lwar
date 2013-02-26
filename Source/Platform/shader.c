@@ -72,9 +72,9 @@ pgShader** pgGetBoundShader(pgShader* shader)
 	switch (shader->type)
 	{
 	case PG_VERTEX_SHADER:
-		return  &shader->device->state.vertexShader;
+		return  &shader->device->vertexShader;
 	case PG_FRAGMENT_SHADER:
-		return &shader->device->state.fragmentShader;
+		return &shader->device->fragmentShader;
 	default:
 		PG_NO_SWITCH_DEFAULT;
 	}

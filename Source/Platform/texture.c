@@ -36,10 +36,10 @@ pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot)
 	PG_ASSERT_NOT_NULL(texture);
 	PG_ASSERT_IN_RANGE(slot, 0, PG_TEXTURE_SLOT_COUNT);
 
-	if (texture->device->state.textures[slot] == texture)
+	if (texture->device->textures[slot] == texture)
 		return;
 
-	texture->device->state.textures[slot] = texture;
+	texture->device->textures[slot] = texture;
 	pgBindTextureCore(texture, slot);
 }
 

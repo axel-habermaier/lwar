@@ -32,8 +32,8 @@ pgVoid pgClearCore(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor
     if ((targets & PG_CLEAR_STENCIL) == PG_CLEAR_STENCIL)
         glTargets |= GL_STENCIL_BUFFER_BIT;
 
-	viewport = renderTarget->device->state.viewport;
-	scissor = renderTarget->device->state.scissorRectangle;
+	viewport = renderTarget->device->viewport;
+	scissor = renderTarget->device->scissorRectangle;
 	pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
 	pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
 

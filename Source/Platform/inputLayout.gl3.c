@@ -59,8 +59,8 @@ pgVoid pgDestroyInputLayoutCore(pgInputLayout* inputLayout)
 	glDeleteVertexArrays(1, &inputLayout->id);
 	PG_ASSERT_NO_GL_ERRORS();
 
-	if (inputLayout->device->state.inputLayout == inputLayout)
-		inputLayout->device->state.inputLayout = NULL;
+	if (inputLayout->device->inputLayout == inputLayout)
+		inputLayout->device->inputLayout = NULL;
 }
 
 pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout)
@@ -68,7 +68,7 @@ pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout)
 	glBindVertexArray(inputLayout->id);
 	PG_ASSERT_NO_GL_ERRORS();
 
-	inputLayout->device->state.inputLayout = inputLayout;
+	inputLayout->device->inputLayout = inputLayout;
 }
 
 #endif

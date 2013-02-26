@@ -82,8 +82,8 @@ pgVoid pgDrawCore(pgGraphicsDevice* device, pgInt32 primitiveCount, pgInt32 offs
 
 pgVoid pgDrawIndexedCore(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 indexOffset, pgInt32 vertexOffset)
 {
-	void* offset = (void*)(size_t)((indexOffset + device->state.inputLayout->indexOffset) * device->state.inputLayout->indexSizeInBytes);
-	glDrawElementsBaseVertex(device->glPrimitiveType, indexCount, device->state.inputLayout->indexType, offset, vertexOffset);
+	void* offset = (void*)(size_t)((indexOffset + device->inputLayout->indexOffset) * device->inputLayout->indexSizeInBytes);
+	glDrawElementsBaseVertex(device->glPrimitiveType, indexCount, device->inputLayout->indexType, offset, vertexOffset);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -140,7 +140,7 @@ static pgVoid InitializeOpenGLExtensions()
 
 static pgInt32 FlipY(pgGraphicsDevice* device, pgInt32 top, pgInt32 height)
 {
-	return device->state.renderTarget->height - height - top;
+	return device->renderTarget->height - height - top;
 }
 
 #endif
