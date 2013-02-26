@@ -5,24 +5,40 @@ namespace Pegasus.Framework.Platform
 	using System.Collections.Concurrent;
 	using System.Collections.Generic;
 	using System.Diagnostics;
+	using System.Threading.Tasks;
 
 	/// <summary>
-	///   Starts and manages an external process.
+	///   Represents external process.
 	/// </summary>
-	public static class ExternalProcess
+	public class ExternalProcess : DisposableObject
 	{
 		/// <summary>
-		///   Runs an external tool process.
+		///   The external process.
 		/// </summary>
-		/// <param name="fileName">The file name of the external tool executable.</param>
-		/// <param name="commandLine">The command line arguments that should be passed to the tool.</param>
+		private readonly Process _process;
+
+		/// <summary>
+		///   The log entries generated during the execution of the process.
+		/// </summary>
+		private ConcurrentQueue<LogEntry> _logEntries;
+
+		/// <summary>
+		///   Indicates whether the process is currently running.
+		/// </summary>
+		private bool _running;
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="fileName">The file name of the external executable.</param>
+		/// <param name="commandLine">The command line arguments that should be passed to the executable.</param>
 		/// <param name="arguments">The arguments that should be copied into the command line.</param>
-		public static IEnumerable<LogEntry> Run(string fileName, string commandLine = "", params object[] arguments)
+		public ExternalProcess(string fileName, string commandLine = "", params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(fileName, () => fileName);
 			Assert.ArgumentNotNull(commandLine, () => commandLine);
 
-			var process = new Process
+			_process = new Process
 			{
 				EnableRaisingEvents = true,
 				StartInfo = new ProcessStartInfo(fileName, String.Format(commandLine, arguments))
@@ -34,25 +50,77 @@ namespace Pegasus.Framework.Platform
 				}
 			};
 
-			var logEntries = new ConcurrentQueue<LogEntry>();
-			process.OutputDataReceived += (o, e) =>
+			_process.OutputDataReceived += (o, e) =>
 				{
 					if (!String.IsNullOrWhiteSpace(e.Data))
-						logEntries.Enqueue(new LogEntry(LogType.Info, e.Data));
+						_logEntries.Enqueue(new LogEntry(LogType.Info, String.Format("{0}: {1}", fileName, e.Data)));
 				};
-			process.ErrorDataReceived += (o, e) =>
+			_process.ErrorDataReceived += (o, e) =>
 				{
 					if (!String.IsNullOrWhiteSpace(e.Data))
-						logEntries.Enqueue(new LogEntry(LogType.Error, e.Data));
+						_logEntries.Enqueue(new LogEntry(LogType.Error, String.Format("{0}: {1}", fileName, e.Data)));
 				};
+		}
 
-			process.Start();
+		/// <summary>
+		///   Runs the process.
+		/// </summary>
+		public IEnumerable<LogEntry> Run()
+		{
+			Assert.That(!_running, "The process is already running.");
 
-			process.BeginErrorReadLine();
-			process.BeginOutputReadLine();
-			process.WaitForExit();
+			_running = true;
+			try
+			{
+				_logEntries = new ConcurrentQueue<LogEntry>();
+				_process.Start();
 
-			return logEntries;
+				_process.BeginErrorReadLine();
+				_process.BeginOutputReadLine();
+
+				_process.WaitForExit();
+
+				return _logEntries;
+			}
+			finally
+			{
+				_running = false;
+			}
+		}
+
+		/// <summary>
+		///   Asynchronously runs the process.
+		/// </summary>
+		public Task<IEnumerable<LogEntry>> RunAsync()
+		{
+			Assert.That(!_running, "The process is already running.");
+
+			_running = true;
+			try
+			{
+				_logEntries = new ConcurrentQueue<LogEntry>();
+				var tcs = new TaskCompletionSource<IEnumerable<LogEntry>>();
+
+				_process.Exited += (o, e) => tcs.SetResult(_logEntries);
+				_process.Start();
+
+				_process.BeginErrorReadLine();
+				_process.BeginOutputReadLine();
+
+				return tcs.Task;
+			}
+			finally
+			{
+				_running = false;
+			}
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_process.SafeDispose();
 		}
 	}
 }

@@ -48,7 +48,7 @@ namespace Pegasus.Framework.Platform.Assets
 		}
 
 		/// <summary>
-		/// Loads the given asset.
+		///   Loads the given asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be loaded.</param>
 		/// <param name="assetName">The name of the asset that should be loaded.</param>
@@ -66,7 +66,9 @@ namespace Pegasus.Framework.Platform.Assets
 		{
 			try
 			{
-				ExternalProcess.Run(AssetCompiler, "compile");
+				using (var compiler = new ExternalProcess(AssetCompiler, "compile"))
+					foreach (var output in compiler.Run())
+						output.RaiseLogEvent();
 
 				foreach (var pair in _assets)
 				{

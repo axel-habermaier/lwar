@@ -184,22 +184,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssetCompiler.cs" />
+    <Compile Include="Assets\FragmentShaderAsset.cs" />
+    <Compile Include="Assets\VertexShaderAsset.cs" />
+    <Compile Include="Compilers\AssetCompiler.cs" />
     <Compile Include="AssetWriter.cs" />
     <Compile Include="CompilationUnit.cs" />
+    <Compile Include="Compilers\IAssetCompiler.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="CubeMapCompiler.cs" />
+    <Compile Include="Assets\CSharpAsset.cs" />
+    <Compile Include="Assets\CubeMapAsset.cs" />
+    <Compile Include="Compilers\CubeMapCompiler.cs" />
     <Compile Include="DirectDrawSurface.cs" />
     <Compile Include="ExternalTool.cs" />
-    <Compile Include="FontCompiler.cs" />
-    <Compile Include="FragmentShaderCompiler.cs" />
+    <Compile Include="Assets\FontAsset.cs" />
+    <Compile Include="Compilers\FontCompiler.cs" />
+    <Compile Include="Compilers\FragmentShaderCompiler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShaderCompiler.cs" />
-    <Compile Include="Asset.cs" />
-    <Compile Include="Texture2DCompiler.cs" />
-    <Compile Include="TextureCompiler.cs" />
-    <Compile Include="VertexShaderCompiler.cs" />
+    <Compile Include="Compilers\ShaderCompiler.cs" />
+    <Compile Include="Assets\Asset.cs" />
+    <Compile Include="Assets\Texture2DAsset.cs" />
+    <Compile Include="Compilers\Texture2DCompiler.cs" />
+    <Compile Include="Compilers\TextureCompiler.cs" />
+    <Compile Include="Compilers\VertexShaderCompiler.cs" />
     <Compile Include="XmlParser.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,53 +1,40 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler
+namespace Pegasus.AssetsCompiler.Compilers
 {
+	using System.Threading.Tasks;
+	using Assets;
 	using Framework;
+	using Framework.Platform;
 	using Framework.Platform.Graphics;
 	using SharpDX.D3DCompiler;
 
 	/// <summary>
 	///   Compiles vertex shaders.
 	/// </summary>
-	internal class VertexShaderCompiler : ShaderCompiler
+	internal class VertexShaderCompiler : ShaderCompiler<VertexShaderAsset>
 	{
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="asset">The asset that should be compiled.</param>
-		public VertexShaderCompiler(string asset)
-			: base(asset)
-		{
-		}
-
-		/// <summary>
-		///   Gets a description of the type of the asset that is compiled by the compiler.
-		/// </summary>
-		internal override string AssetType
-		{
-			get { return "Vertex Shaders"; }
-		}
-
 		/// <summary>
 		///   Compiles the asset.
 		/// </summary>
-		protected override void CompileCore()
+		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
+		protected override async Task CompileCore(Asset asset, BufferWriter buffer)
 		{
 			string glsl, hlsl;
-			ExtractShaderCode(Asset, out glsl, out hlsl);
+			ExtractShaderCode(asset, out glsl, out hlsl);
 
 			ShaderBytecode byteCode = null;
 			if (CompileHlsl)
 			{
-				byteCode = CompileHlslShader(Asset, hlsl, "vs_4_0");
-				CreateInputLayout(byteCode);
+				byteCode = await CompileHlslShader(asset, hlsl, "vs_4_0");
+				CreateInputLayout(buffer, byteCode);
 			}
 			else
-				Buffer.WriteByte(0);
+				buffer.WriteByte(0);
 
-			WriteGlslShader(glsl);
+			WriteGlslShader(buffer, glsl);
 			if (CompileHlsl)
-				Buffer.Copy(byteCode);
+				buffer.Copy(byteCode);
 
 			byteCode.SafeDispose();
 		}
@@ -76,20 +63,21 @@ namespace Pegasus.AssetsCompiler
 		///   Creates the input layout for the vertex shader using shader reflection.
 		/// </summary>
 		/// <param name="shaderCode">The shader byte code.</param>
-		private void CreateInputLayout(byte[] shaderCode)
+		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
+		private static void CreateInputLayout(BufferWriter buffer, byte[] shaderCode)
 		{
 			using (var reflectionInfo = new ShaderReflection(shaderCode))
 			{
 				var shaderDesc = reflectionInfo.Description;
 				Assert.InRange(shaderDesc.InputParameters, 0, Byte.MaxValue);
-				Buffer.WriteByte((byte)shaderDesc.InputParameters);
+				buffer.WriteByte((byte)shaderDesc.InputParameters);
 
 				for (var i = 0; i < shaderDesc.InputParameters; i++)
 				{
 					var paramDesc = reflectionInfo.GetInputParameterDescription(i);
 
 					var semantics = ConvertSemanticName(paramDesc.SemanticName);
-					Buffer.WriteByte((byte)semantics);
+					buffer.WriteByte((byte)semantics);
 
 					if (paramDesc.ComponentType == RegisterComponentType.UInt32 || paramDesc.ComponentType == RegisterComponentType.SInt32)
 						Log.Die("Unsupported shader input parameter type.");
@@ -117,7 +105,7 @@ namespace Pegasus.AssetsCompiler
 					else
 						throw new InvalidOperationException("Unknown usage mask combination.");
 
-					Buffer.WriteByte((byte)format);
+					buffer.WriteByte((byte)format);
 				}
 			}
 		}

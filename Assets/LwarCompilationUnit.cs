@@ -3,6 +3,7 @@
 namespace Lwar.Assets
 {
 	using Pegasus.AssetsCompiler;
+	using Pegasus.AssetsCompiler.Assets;
 
 	/// <summary>
 	///   Represents a compilation unit that compiles all assets into a binary format.
@@ -14,8 +15,8 @@ namespace Lwar.Assets
 		/// </summary>
 		protected override void AddSpecialAssets()
 		{
-			Add(new CubeMapCompiler("Textures/Sun.png"));
-			Add(new CubeMapCompiler("Textures/SunHeat.png"));
+			Add(new CubeMapAsset("Textures/Sun.png"));
+			Add(new CubeMapAsset("Textures/SunHeat.png"));
 		}
 	}
 }

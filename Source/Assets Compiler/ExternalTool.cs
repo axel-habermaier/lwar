@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler
 {
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
@@ -28,7 +29,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="input">The path of the input file that should be processed.</param>
 		/// <param name="output">The path of the output file that should be generated.</param>
 		/// <param name="format">The format that should be used to compress the texture.</param>
-		public static void NvCompress(string input, string output, SurfaceFormat format)
+		public static async Task NvCompress(string input, string output, SurfaceFormat format)
 		{
 			string compressionFormat;
 			switch (format)
@@ -56,12 +57,15 @@ namespace Pegasus.AssetsCompiler
 					throw new InvalidOperationException("Unsupported format.");
 			}
 
-			var logEntries = ExternalProcess.Run(NvCompressPath,
-												 @"-dds10 -silent -{0} -premula ""{1}"" ""{2}""",
-												 compressionFormat, input, output);
+			using (var nvcompress = new ExternalProcess(NvCompressPath,
+														@"-dds10 -silent -{0} -premula ""{1}"" ""{2}""",
+														compressionFormat, input, output))
+			{
+				var logEntries = await nvcompress.RunAsync();
 
-			foreach (var log in logEntries)
-				log.RaiseLogEvent();
+				foreach (var log in logEntries)
+					log.RaiseLogEvent();
+			}
 		}
 
 		/// <summary>
@@ -74,15 +78,19 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="negativeY">The path of the negative Y input file that should be processed.</param>
 		/// <param name="positiveY">The path of the positive Y input file that should be processed.</param>
 		/// <param name="output">The path of the output file that should be generated.</param>
-		public static void NvAssemble(string negativeZ, string negativeX, string positiveZ, string positiveX, string negativeY,
-									  string positiveY, string output)
+		public static async Task NvAssemble(string negativeZ, string negativeX, string positiveZ, string positiveX,
+											string negativeY,
+											string positiveY, string output)
 		{
-			var logEntries = ExternalProcess.Run(NvAssemblePath,
-												 @"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
-												 negativeZ, negativeX, positiveZ, positiveX, negativeY, positiveY, output);
+			using (var nvassemble = new ExternalProcess(NvAssemblePath,
+														@"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
+														negativeZ, negativeX, positiveZ, positiveX, negativeY, positiveY, output))
+			{
+				var logEntries = await nvassemble.RunAsync();
 
-			foreach (var log in logEntries)
-				log.RaiseLogEvent();
+				foreach (var log in logEntries)
+					log.RaiseLogEvent();
+			}
 		}
 
 		/// <summary>
@@ -91,7 +99,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="input">The shader file that should be compiled.</param>
 		/// <param name="output">The output file that should store the compiled shader.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		public static void Fxc(string input, string output, string profile)
+		public static async Task Fxc(string input, string output, string profile)
 		{
 			string optimization;
 #if DEBUG
@@ -99,17 +107,21 @@ namespace Pegasus.AssetsCompiler
 #else
 			optimization = "/O3";
 #endif
-			var logEntries = ExternalProcess.Run("fxc",
-												 @"/nologo {3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""",
-												 profile, output, input, optimization);
 
-			foreach (var log in logEntries.Where(l => l.LogType != LogType.Info))
+			using (var fxc = new ExternalProcess("fxc",
+												 @"/nologo {3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""",
+												 profile, output, input, optimization))
 			{
-				var message = log.Message.Replace("{", "{{").Replace("}", "}}");
-				if (message.Contains(": warning X"))
-					Log.Warn(message);
-				else
-					Log.Die(message);
+				var logEntries = await fxc.RunAsync();
+
+				foreach (var log in logEntries.Where(l => l.LogType != LogType.Info))
+				{
+					var message = log.Message.Replace("{", "{{").Replace("}", "}}");
+					if (message.Contains(": warning X"))
+						Log.Warn(message);
+					else
+						Log.Die(message);
+				}
 			}
 		}
 

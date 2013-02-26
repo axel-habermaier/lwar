@@ -1,25 +1,19 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler
+namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.Drawing.Imaging;
+	using Assets;
 	using Framework;
 	using Framework.Platform.Graphics;
 
 	/// <summary>
 	///   Provides common methods required for the compilation of textures.
 	/// </summary>
-	public abstract class TextureCompiler : AssetCompiler
+	/// <typeparam name="TTexture">The type of the texture that is compiled.</typeparam>
+	internal abstract class TextureCompiler<TTexture> : AssetCompiler<TTexture>
+		where TTexture : Asset
 	{
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="asset">The asset that should be compiled.</param>
-		protected TextureCompiler(string asset)
-			: base(asset)
-		{
-		}
-
 		/// <summary>
 		///   Checks whether the given number is a power of two.
 		/// </summary>

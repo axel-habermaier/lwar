@@ -3,9 +3,12 @@
 namespace Pegasus.AssetsCompiler
 {
 	using System.Collections.Generic;
+	using System.IO;
 	using System.Linq;
 	using System.Reflection;
 	using System.Xml.Linq;
+	using Assets;
+	using Compilers;
 	using Framework;
 
 	/// <summary>
@@ -14,9 +17,27 @@ namespace Pegasus.AssetsCompiler
 	public abstract class CompilationUnit
 	{
 		/// <summary>
-		///   The list of items that are compiled by the compilation unit.
+		///   The list of asset compilers that is used to compile the assets.
 		/// </summary>
-		private readonly List<AssetCompiler> _compilers = new List<AssetCompiler>();
+		private static readonly IAssetCompiler[] Compilers;
+
+		/// <summary>
+		///   The list of assets that are compiled by the compilation unit.
+		/// </summary>
+		private readonly List<Asset> _assets = new List<Asset>();
+
+		/// <summary>
+		///   Initializes the type.
+		/// </summary>
+		static CompilationUnit()
+		{
+			Compilers = Assembly.GetExecutingAssembly()
+								 .GetTypes()
+								 .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IAssetCompiler)))
+								 .Select(Activator.CreateInstance)
+								 .Cast<IAssetCompiler>()
+								 .ToArray();
+		}
 
 		/// <summary>
 		///   Compiles all assets and returns the names of the assets that have been changed.
@@ -25,14 +46,8 @@ namespace Pegasus.AssetsCompiler
 		{
 			try
 			{
-				var grouped = _compilers.GroupBy(compiler => compiler.GetType());
-				foreach (var group in grouped)
-				{
-					var first = group.First();
-					Log.Info("Compiling {0}...", first.AssetType);
-
-					group.AsParallel().ForAll(compiler => compiler.Compile());
-				}
+				foreach (var compiler in Compilers)
+					compiler.Compile(_assets);
 			}
 			catch (Exception e)
 			{
@@ -47,8 +62,17 @@ namespace Pegasus.AssetsCompiler
 		{
 			Log.Info("Cleaning compiled assets and temporary files...");
 
-			foreach (var compiler in _compilers)
-				compiler.Clean();
+			foreach (var asset in _assets)
+			{
+				if (File.Exists(asset.TempPath))
+					File.Delete(asset.TempPath);
+
+				if (File.Exists(asset.TargetPath))
+					File.Delete(asset.TargetPath);
+
+				if (File.Exists(asset.HashPath))
+					File.Delete(asset.HashPath);
+			}
 		}
 
 		/// <summary>
@@ -84,19 +108,18 @@ namespace Pegasus.AssetsCompiler
 							 .Select(element => element.Attribute("Include").Value)
 							 .Select(asset => asset.Replace("\\", "/"));
 
-			foreach (var asset in assets.Except(_compilers.Select(c => c.Asset.RelativePath)).ToArray())
+			foreach (var asset in assets.Where(path => _assets.All(a => a.RelativePath != path)).ToArray())
 			{
-				if (_compilers.Any(c => c.Asset.RelativePath == asset))
-					continue;
-
 				if (asset.EndsWith(".png"))
-					Add(new Texture2DCompiler(asset));
+					Add(new Texture2DAsset(asset));
 				else if (asset.EndsWith(".vs"))
-					Add(new VertexShaderCompiler(asset));
+					Add(new VertexShaderAsset(asset));
 				else if (asset.EndsWith(".fs"))
-					Add(new FragmentShaderCompiler(asset));
+					Add(new FragmentShaderAsset(asset));
 				else if (asset.EndsWith(".fnt"))
-					Add(new FontCompiler(asset));
+					Add(new FontAsset(asset));
+				else if (asset.EndsWith(".cs"))
+					Add(new CSharpAsset(asset));
 				else
 					Log.Warn("Ignoring asset '{0}': Unable to determine compilation settings.", asset);
 			}
@@ -110,19 +133,13 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   Adds a compiler to the compilation unit.
 		/// </summary>
-		/// <param name="compiler">The compiler that should be added.</param>
-		protected void Add(AssetCompiler compiler)
+		/// <param name="asset">The compiler that should be added.</param>
+		protected void Add(Asset asset)
 		{
-			Assert.ArgumentNotNull(compiler, () => compiler);
+			Assert.ArgumentNotNull(asset, () => asset);
+			Assert.That(_assets.All(a => a.RelativePath != asset.RelativePath), "The asset has already been added.");
 
-			var oldSettings = _compilers.SingleOrDefault(c => c.Asset.RelativePath == compiler.Asset.RelativePath);
-			if (oldSettings != null)
-			{
-				Log.Warn("Overriding compilation settings for asset '{0}'.", compiler.Asset.RelativePath);
-				_compilers.Remove(oldSettings);
-			}
-
-			_compilers.Add(compiler);
+			_assets.Add(asset);
 		}
 	}
 }

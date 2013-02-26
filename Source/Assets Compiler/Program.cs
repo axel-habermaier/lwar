@@ -94,7 +94,9 @@ namespace Pegasus.AssetsCompiler
 			finally
 			{
 				var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
-				Log.Info("Done ({0:F2}s).", elapsedSeconds.ToString(CultureInfo.InvariantCulture));
+
+				Console.WriteLine();
+				Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds.ToString(CultureInfo.InvariantCulture));
 			}
 		}
 	}

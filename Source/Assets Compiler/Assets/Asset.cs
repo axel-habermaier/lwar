@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler
+namespace Pegasus.AssetsCompiler.Assets
 {
 	using System.IO;
 	using Framework;
@@ -9,14 +9,13 @@ namespace Pegasus.AssetsCompiler
 	/// <summary>
 	///   Represents a source asset that requires compilation.
 	/// </summary>
-	internal struct Asset
+	public abstract class Asset
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		public Asset(string relativePath)
-			: this()
+		protected Asset(string relativePath)
 		{
 			Assert.ArgumentNotNullOrWhitespace(relativePath, () => relativePath);
 			RelativePath = relativePath;
@@ -79,6 +78,14 @@ namespace Pegasus.AssetsCompiler
 		public string HashPath
 		{
 			get { return TempPathWithoutExtension + ".hash"; }
+		}
+
+		/// <summary>
+		///   Returns a string that represents the current object.
+		/// </summary>
+		public override string ToString()
+		{
+			return String.Format("{0} '{1}'", GetType().Name, RelativePath);
 		}
 	}
 }

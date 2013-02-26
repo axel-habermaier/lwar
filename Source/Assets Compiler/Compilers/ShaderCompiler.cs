@@ -1,10 +1,12 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler
+namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.ComponentModel;
 	using System.IO;
 	using System.Text;
+	using System.Threading.Tasks;
+	using Assets;
 	using Framework;
 	using Framework.Platform;
 	using SharpDX.D3DCompiler;
@@ -12,7 +14,9 @@ namespace Pegasus.AssetsCompiler
 	/// <summary>
 	///   Provides common methods required for the compilation of shaders.
 	/// </summary>
-	internal abstract class ShaderCompiler : AssetCompiler
+	/// <typeparam name="TShader">The type of the shader that is compiled.</typeparam>
+	internal abstract class ShaderCompiler<TShader> : AssetCompiler<TShader>
+		where TShader : Asset
 	{
 		/// <summary>
 		///   Indicates whether HLSL shaders should be compiled.
@@ -26,7 +30,8 @@ namespace Pegasus.AssetsCompiler
 		{
 			try
 			{
-				ExternalProcess.Run("fxc", "/?");
+				using (var fxc = new ExternalProcess("fxc", "/?"))
+					fxc.Run();
 				CompileHlsl = true;
 			}
 			catch (Win32Exception e)
@@ -54,15 +59,6 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="asset">The asset that should be compiled.</param>
-		protected ShaderCompiler(string asset)
-			: base(asset)
-		{
-		}
-
-		/// <summary>
 		///   Extracts the GLSL and HLSL shader code from the given shader asset.
 		/// </summary>
 		/// <param name="asset">The asset from which the shader code should be extracted.</param>
@@ -81,14 +77,15 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   Writes an GLSL shader into the buffer.
 		/// </summary>
+		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		/// <param name="source">The GLSL shader source code.</param>
-		protected void WriteGlslShader(string source)
+		protected static void WriteGlslShader(BufferWriter buffer, string source)
 		{
 			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
 						 "#extension GL_ARB_separate_shader_objects : enable\n" + source;
 
-			Buffer.Copy(Encoding.UTF8.GetBytes(shader));
-			Buffer.WriteByte(0);
+			buffer.Copy(Encoding.UTF8.GetBytes(shader));
+			buffer.WriteByte(0);
 		}
 
 		/// <summary>
@@ -97,13 +94,13 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="asset">The asset that contains the shader source code.</param>
 		/// <param name="source">The HLSL shader source code.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		protected ShaderBytecode CompileHlslShader(Asset asset, string source, string profile)
+		protected async Task<ShaderBytecode> CompileHlslShader(Asset asset, string source, string profile)
 		{
 			var hlslFile = asset.TempPathWithoutExtension + ".hlsl";
 			File.WriteAllText(hlslFile, source);
 
 			var byteCode = asset.TempPathWithoutExtension + ".fxo";
-			ExternalTool.Fxc(hlslFile, byteCode, profile);
+			await ExternalTool.Fxc(hlslFile, byteCode, profile);
 
 			return new ShaderBytecode(File.ReadAllBytes(byteCode));
 		}
