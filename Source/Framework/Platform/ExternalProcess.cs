@@ -50,16 +50,19 @@ namespace Pegasus.Framework.Platform
 				}
 			};
 
-			_process.OutputDataReceived += (o, e) =>
-				{
-					if (!String.IsNullOrWhiteSpace(e.Data))
-						_logEntries.Enqueue(new LogEntry(LogType.Info, String.Format("{0}: {1}", fileName, e.Data)));
-				};
-			_process.ErrorDataReceived += (o, e) =>
-				{
-					if (!String.IsNullOrWhiteSpace(e.Data))
-						_logEntries.Enqueue(new LogEntry(LogType.Error, String.Format("{0}: {1}", fileName, e.Data)));
-				};
+			_process.OutputDataReceived += (o, e) => LogMessage(LogType.Info, e.Data);
+			_process.ErrorDataReceived += (o, e) => LogMessage(LogType.Error, e.Data);
+		}
+
+		/// <summary>
+		///   Adds the message to the log entry queue.
+		/// </summary>
+		/// <param name="type">The type of the log entry.</param>
+		/// <param name="message">The message that should be added.</param>
+		private void LogMessage(LogType type, string message)
+		{
+			if (!String.IsNullOrWhiteSpace(message))
+				_logEntries.Enqueue(new LogEntry(type, String.Format("{0}: {1}", _process.StartInfo.FileName, message)));
 		}
 
 		/// <summary>
