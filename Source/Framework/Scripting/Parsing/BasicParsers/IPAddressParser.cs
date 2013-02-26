@@ -22,20 +22,28 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		public override Reply<IPAddress> Parse(InputStream<TUserState> inputStream)
 		{
 			var state = inputStream.State;
+			IPAddress address;
 
-			var length = inputStream.Skip(c => !Char.IsWhiteSpace(c));
-			var ipAddress = inputStream.Substring(state.Position, length);
+			// Try to find out whether it is an IPv4 or IPv6 address
+			var ipv4 = inputStream.Skip(c => c != '.');
+			inputStream.State = state;
+			var ipv6 = inputStream.Skip(c => c != ':');
+			inputStream.State = state;
 
-			// Convert the IP address, excluding the brackets
-			try
-			{
-				return Success(IPAddress.Parse(ipAddress));
-			}
-			catch (FormatException)
-			{
-				inputStream.State = state;
-				return Expected(Description);
-			}
+			var isIPv6 = ipv6 < ipv4;
+			var length = 0;
+
+			if (isIPv6)
+				length =
+					inputStream.Skip(c => Char.IsDigit(c) || c == ':' || c == '.' || (Char.ToLower(c) >= 'a' && Char.ToLower(c) <= 'f'));
+			else
+				length = inputStream.Skip(c => Char.IsDigit(c) || c == '.');
+
+			if (IPAddress.TryParse(inputStream.Substring(state.Position, length), out address))
+				return Success(address);
+
+			inputStream.State = state;
+			return Expected(Description);
 		}
 	}
 }

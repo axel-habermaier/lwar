@@ -290,6 +290,7 @@
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPAddressParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\OptionalParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Pipe4Parser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Pipe3Parser.cs" />
     <Compile Include="Scripting\Requests\RequestBinding.cs" />

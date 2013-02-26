@@ -16,7 +16,6 @@ Client
 - Shield effect
 - Weapon effects
 - In-game menu
-- Add support for IPv6 under Linux
 
 Pegasus
 ========
@@ -30,6 +29,7 @@ Pegasus
 - System cvars (read-only)
 - Commands with optional parameters
 - Better command help (explain meaning of parameters)
+- Move socket implementation to Platform and share between client and server
 - Ranged cvars
 
 Server

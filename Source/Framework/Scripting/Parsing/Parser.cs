@@ -276,13 +276,23 @@ namespace Pegasus.Framework.Scripting.Parsing
 		#region Combinator convenience functions
 
 		/// <summary>
-		///   Applies the given parser and replaces the parser's error message by the given description in case of failure. The
+		///   Applies the parser and replaces the parser's error message by the given description in case of failure. The
 		///   given description is returned as an expected error.
 		/// </summary>
 		/// <param name="description">The description that should be returned in the case of failure.</param>
 		public Parser<TResult, TUserState> Named(string description)
 		{
 			return new DescriptionParser<TResult, TUserState>(this, description);
+		}
+
+		/// <summary>
+		///   Applies the parser and returns the result if it succeeds. If it does not succeed, the given default element is
+		///   returned and the optional parser is successful anyway.
+		/// </summary>
+		/// <param name="defaultValue">The default value that should be returned when the given parser fails.</param>
+		public Parser<TResult, TUserState> Optional(TResult defaultValue)
+		{
+			return new OptionalParser<TResult, TUserState>(this, defaultValue);
 		}
 
 		/// <summary>

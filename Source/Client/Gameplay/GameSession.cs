@@ -96,8 +96,7 @@ namespace Lwar.Client.Gameplay
 			RenderContext.Camera = Camera;
 			InputDevice.Modes = InputModes.Game;
 
-			LwarCommands.Connect.Invoked += ipAddress => Connect(new IPEndPoint(ipAddress, Specification.DefaultServerPort));
-			LwarCommands.ConnectPort.Invoked += Connect;
+			LwarCommands.Connect.Invoked += Connect;
 			LwarCommands.Disconnect.Invoked += () => _updateState.ChangeState(Inactive);
 			LwarCommands.Chat.Invoked += ChatMessageEntered;
 			LwarCommands.ToggleDebugCamera.Invoked += ToggleDebugCamera;
@@ -170,6 +169,10 @@ namespace Lwar.Client.Gameplay
 		private void Connect(IPEndPoint endPoint)
 		{
 			Assert.ArgumentNotNull(endPoint, () => endPoint);
+
+			if (endPoint.Port == 0)
+				endPoint.Port = Specification.DefaultServerPort;
+
 			_updateState.ChangeState(ctx => Loading(ctx, endPoint));
 		}
 
