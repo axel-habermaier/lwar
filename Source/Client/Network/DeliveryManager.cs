@@ -41,7 +41,7 @@ namespace Lwar.Client.Network
 		/// <param name="buffer">The buffer the header should be written into.</param>
 		public void WriteHeader(BufferWriter buffer)
 		{
-			var header = new Header(_lastReceivedSequenceNumber, (uint)_clock.Milliseconds);
+			var header = new PacketHeader(_lastReceivedSequenceNumber, (uint)_clock.Milliseconds);
 			header.Write(buffer);
 		}
 

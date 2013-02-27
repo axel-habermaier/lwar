@@ -58,7 +58,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Entities.SafeDisposeAll();
+			Entities.SafeDispose();
 			RootTransform.SafeDispose();
 		}
 

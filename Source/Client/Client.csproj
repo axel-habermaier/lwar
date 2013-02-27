@@ -171,10 +171,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameStates\MessageBox.cs" />
-    <Compile Include="GameStates\WaitingForServerState.cs" />
-    <Compile Include="GameStates\MainMenuState.cs" />
+    <Compile Include="GameStates\WaitingForServer.cs" />
+    <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\GameState.cs" />
-    <Compile Include="GameStates\LoadingState.cs" />
+    <Compile Include="GameStates\Loading.cs" />
     <Compile Include="AssetAttribute.cs" />
     <Compile Include="AssetsLoader.cs">
       <AutoGen>True</AutoGen>
@@ -184,7 +184,7 @@
     <Compile Include="Gameplay\Entities\Bullet.cs" />
     <Compile Include="Gameplay\CameraManager.cs" />
     <Compile Include="Gameplay\IdentifierMap.cs" />
-    <Compile Include="Gameplay\DeferredList.cs" />
+    <Compile Include="DeferredList.cs" />
     <Compile Include="Gameplay\EntityType.cs" />
     <Compile Include="Gameplay\GameSession.cs" />
     <Compile Include="Gameplay\Identifier.cs" />
@@ -194,18 +194,19 @@
     <Compile Include="Gameplay\Entities\Ship.cs" />
     <Compile Include="Gameplay\IGenerationalIdentity.cs" />
     <Compile Include="Gameplay\Transformation.cs" />
-    <Compile Include="GameStates\PlayingState.cs" />
+    <Compile Include="GameStates\Playing.cs" />
     <Compile Include="GameStates\StateManager.cs" />
     <Compile Include="LwarBootstrapper.cs" />
     <Compile Include="LwarCommands.cs" />
     <Compile Include="LwarCvars.cs" />
     <Compile Include="Network\ConnectionState.cs" />
     <Compile Include="Network\DeliveryManager.cs" />
+    <Compile Include="Network\MessageDispatcher.cs" />
     <Compile Include="Network\MessageSerialization.cs" />
     <Compile Include="Network\Message.cs" />
     <Compile Include="Network\MessageQueue.cs" />
     <Compile Include="Network\MessageTypeExtensions.cs" />
-    <Compile Include="Network\Header.cs" />
+    <Compile Include="Network\PacketHeader.cs" />
     <Compile Include="Network\MessageType.cs" />
     <Compile Include="Network\LwarPacketFactory.cs" />
     <Compile Include="Network\NetworkSession.cs" />

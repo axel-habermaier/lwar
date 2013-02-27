@@ -48,7 +48,7 @@ namespace Lwar.Client
 
 			AssetsLoader.Load(Assets);
 			_stateManager = new StateManager(Window, GraphicsDevice, Assets, LogicalInputDevice);
-			_stateManager.Add(new MainMenuState());
+			_stateManager.Add(new MainMenu());
 
 			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
 			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");
@@ -106,7 +106,7 @@ namespace Lwar.Client
 				serverEndPoint.Port = Specification.DefaultServerPort;
 
 			Disconnect();
-			_stateManager.Add(new PlayingState(serverEndPoint));
+			_stateManager.Add(new Playing(serverEndPoint));
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace Lwar.Client
 		private void Disconnect()
 		{
 			_stateManager.Clear();
-			_stateManager.Add(new MainMenuState());
+			_stateManager.Add(new MainMenu());
 		}
 	}
 }

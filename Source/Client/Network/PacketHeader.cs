@@ -9,7 +9,7 @@ namespace Lwar.Client.Network
 	/// <summary>
 	///   Represents the header of a packet.
 	/// </summary>
-	public struct Header
+	public struct PacketHeader
 	{
 		/// <summary>
 		///   The application identifier that is used to determine whether a packet has been sent by another application.
@@ -21,7 +21,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		/// <param name="acknowledgement">The acknowledged sequence number of the packet.</param>
 		/// <param name="timestamp">The timestamp of the unreliable messages contained within the packet.</param>
-		public Header(uint acknowledgement, uint timestamp)
+		public PacketHeader(uint acknowledgement, uint timestamp)
 			: this()
 		{
 			Acknowledgement = acknowledgement;
@@ -42,7 +42,7 @@ namespace Lwar.Client.Network
 		///   Initializes a new instance from a buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the header data should be read from.</param>
-		public static Header? Create(BufferReader buffer)
+		public static PacketHeader? Create(BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer, () => buffer);
 
@@ -58,7 +58,7 @@ namespace Lwar.Client.Network
 				return null;
 			}
 
-			var header = new Header();
+			var header = new PacketHeader();
 			header.Acknowledgement = buffer.ReadUInt32();
 			header.Timestamp = buffer.ReadUInt32();
 			return header;

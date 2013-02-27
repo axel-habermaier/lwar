@@ -158,7 +158,7 @@ namespace Lwar.Client.Network
 			Assert.ArgumentNotNull(packet, () => packet);
 
 			var buffer = packet.Reader;
-			var header = Header.Create(buffer);
+			var header = PacketHeader.Create(buffer);
 
 			if (header == null)
 				return;

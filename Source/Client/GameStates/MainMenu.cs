@@ -8,7 +8,7 @@ namespace Lwar.Client.GameStates
 	/// <summary>
 	///   Shows the main menu.
 	/// </summary>
-	public class MainMenuState : GameState
+	public class MainMenu : GameState
 	{
 		/// <summary>
 		///   The label that is used to draw the menu.

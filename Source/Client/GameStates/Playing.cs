@@ -12,7 +12,7 @@ namespace Lwar.Client.GameStates
 	/// <summary>
 	///   Displays a game session.
 	/// </summary>
-	public class PlayingState : GameState
+	public class Playing : GameState
 	{
 		/// <summary>
 		///   The game session that is played.
@@ -53,7 +53,7 @@ namespace Lwar.Client.GameStates
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
-		public PlayingState(IPEndPoint serverEndPoint)
+		public Playing(IPEndPoint serverEndPoint)
 		{
 			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
 
@@ -93,7 +93,7 @@ namespace Lwar.Client.GameStates
 			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
 			_inputManager = new InputManager(InputDevice);
 
-			StateManager.Add(new LoadingState(_gameSession, _networkSession));
+			StateManager.Add(new Loading(_gameSession, _networkSession));
 		}
 
 		/// <summary>
@@ -110,7 +110,7 @@ namespace Lwar.Client.GameStates
 			}
 
 			_timer.Update();
-			_networkSession.Update(_gameSession, _renderContext);
+			_networkSession.Update();
 
 			if (_networkSession.IsConnected)
 			{
@@ -125,7 +125,7 @@ namespace Lwar.Client.GameStates
 				ShowMessageBox("The game session has been aborted due to a network error.", LogType.Error, true);
 
 			if (_networkSession.IsLagging && topmost)
-				StateManager.Add(new WaitingForServerState(_networkSession));
+				StateManager.Add(new WaitingForServer(_networkSession));
 		}
 
 		/// <summary>

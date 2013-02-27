@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.GameStates
 {
-	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
@@ -84,7 +83,7 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_states.SafeDisposeAll();
+			_states.SafeDispose();
 			SpriteBatch.SafeDispose();
 			Window.Resized -= ResizeSpriteBatch;
 		}

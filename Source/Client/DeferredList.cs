@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace Lwar.Client.Gameplay
+namespace Lwar.Client
 {
-	using System.Collections;
 	using System.Collections.Generic;
 	using Pegasus.Framework;
 
@@ -10,7 +9,7 @@ namespace Lwar.Client.Gameplay
 	///   Represents a list where additions and removals are deferred until some later point in time.
 	/// </summary>
 	/// <typeparam name="T">The type of the elements contained in the list.</typeparam>
-	public sealed class DeferredList<T> : IEnumerable<T>
+	public class DeferredList<T> : DisposableObject
 		where T : class, IDisposable
 	{
 		/// <summary>
@@ -50,7 +49,11 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public int Count
 		{
-			get { return _items.Count; }
+			get
+			{
+				Assert.NotDisposed(this);
+				return _items.Count;
+			}
 		}
 
 		/// <summary>
@@ -61,25 +64,11 @@ namespace Lwar.Client.Gameplay
 		{
 			get
 			{
+				Assert.NotDisposed(this);
 				Assert.ArgumentInRange(index, () => index, 0, _items.Count);
+
 				return _items[index];
 			}
-		}
-
-		/// <summary>
-		///   Enumerates all items in the list.
-		/// </summary>
-		IEnumerator<T> IEnumerable<T>.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
-
-		/// <summary>
-		///   Enumerates all items in the list.
-		/// </summary>
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
 		}
 
 		/// <summary>
@@ -87,6 +76,8 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public void Update()
 		{
+			Assert.NotDisposed(this);
+
 			foreach (var removedItem in _removedItems)
 			{
 				if (_preserveOrder)
@@ -116,6 +107,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="item">The item that should be added to the list.</param>
 		public void Add(T item)
 		{
+			Assert.NotDisposed(this);
 			Assert.ArgumentSatisfies(!_addedItems.Contains(item), () => item, "The item has already been added to the list.");
 			Assert.ArgumentSatisfies(!_items.Contains(item), () => item, "The item is already contained in the list.");
 			Assert.ArgumentSatisfies(!_removedItems.Contains(item), () => item, "The item has already been removed from the list.");
@@ -129,6 +121,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="item">The item that should be removed from the list.</param>
 		public void Remove(T item)
 		{
+			Assert.NotDisposed(this);
 			Assert.ArgumentSatisfies(!_addedItems.Contains(item), () => item, "The item is being added to the list.");
 			Assert.ArgumentSatisfies(_items.Contains(item), () => item, "The item is not contained in the list.");
 			Assert.ArgumentSatisfies(!_removedItems.Contains(item), () => item, "The item has already been removed from the list.");
@@ -137,11 +130,13 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
-		///   Removes all items and newly added items from the list. The actual removal is deferred until the next time the list is
-		///   updated.
+		///   Removes all items and newly added items from the list. The actual clearing is deferred until the
+		///   next time the list is updated.
 		/// </summary>
 		public void Clear()
 		{
+			Assert.NotDisposed(this);
+
 			_removedItems.AddRange(_addedItems);
 			_removedItems.AddRange(_items);
 		}
@@ -151,7 +146,18 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public List<T>.Enumerator GetEnumerator()
 		{
+			Assert.NotDisposed(this);
 			return _items.GetEnumerator();
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_removedItems.SafeDisposeAll();
+			_addedItems.SafeDisposeAll();
+			_items.SafeDisposeAll();
 		}
 	}
 }

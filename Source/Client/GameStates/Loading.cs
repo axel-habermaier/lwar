@@ -13,7 +13,7 @@ namespace Lwar.Client.GameStates
 	/// <summary>
 	///   Loads a game session.
 	/// </summary>
-	public class LoadingState : GameState
+	public class Loading : GameState
 	{
 		/// <summary>
 		///   The game session that is loaded.
@@ -35,7 +35,7 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		/// <param name="gameSession">The game session that should be loaded.</param>
 		/// <param name="networkSession">The network session that synchronizes the game state between the client and the server.</param>
-		public LoadingState(GameSession gameSession, NetworkSession networkSession)
+		public Loading(GameSession gameSession, NetworkSession networkSession)
 		{
 			Assert.ArgumentNotNull(gameSession, () => gameSession);
 			Assert.ArgumentNotNull(networkSession, () => networkSession);

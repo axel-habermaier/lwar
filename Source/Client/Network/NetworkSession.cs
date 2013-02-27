@@ -51,6 +51,11 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		///   Gets the message dispatcher that dispatches received messages.
+		/// </summary>
+		public MessageDispatcher Dispatcher { get; private set; }
+
+		/// <summary>
 		///   Gets the endpoint of the server.
 		/// </summary>
 		public IPEndPoint ServerEndPoint
@@ -118,18 +123,13 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Updates the state of the network session.
 		/// </summary>
-		/// <param name="gameSession">The game session that handles the updates sent by the server.</param>
-		/// <param name="renderContext">The render context that is affected by the changes to the game session.</param>
-		public void Update(GameSession gameSession, RenderContext renderContext)
+		public void Update()
 		{
-			Assert.ArgumentNotNull(gameSession, () => gameSession);
-			Assert.ArgumentNotNull(renderContext, () => renderContext);
-
 			_connection.Receive(_receivedMessages, _deliveryManager);
 			_connection.Send(_outgoingMessages);
 			_connection.Update();
 
-			_receivedMessages.Clear();
+			Dispatcher.Dispatch(_receivedMessages);
 		}
 
 		/// <summary>

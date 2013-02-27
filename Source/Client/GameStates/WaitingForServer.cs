@@ -10,7 +10,7 @@ namespace Lwar.Client.GameStates
 	/// <summary>
 	///   Informs the user that the network session is waiting for new messages from the server.
 	/// </summary>
-	public class WaitingForServerState : GameState
+	public class WaitingForServer : GameState
 	{
 		/// <summary>
 		///   The network session that is waiting for new messages from the server.
@@ -26,7 +26,7 @@ namespace Lwar.Client.GameStates
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="networkSession">The network session that is waiting for new messages from the server.</param>
-		public WaitingForServerState(NetworkSession networkSession)
+		public WaitingForServer(NetworkSession networkSession)
 		{
 			Assert.ArgumentNotNull(networkSession, () => networkSession);
 
