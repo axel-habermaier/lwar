@@ -20,6 +20,16 @@ namespace Lwar.Client.Rendering
 		private readonly FragmentShader _fragmentShader;
 
 		/// <summary>
+		///   The model that is used to draw the bullets.
+		/// </summary>
+		private readonly Model _model;
+
+		/// <summary>
+		///   The texture that is used to draw the bullets.
+		/// </summary>
+		private readonly Texture2D _texture;
+
+		/// <summary>
 		///   The transformation constant buffer.
 		/// </summary>
 		private readonly ConstantBuffer<Matrix> _transform;
@@ -42,6 +52,8 @@ namespace Lwar.Client.Rendering
 			_vertexShader = assets.LoadVertexShader("Shaders/QuadVS");
 			_fragmentShader = assets.LoadFragmentShader("Shaders/QuadFS");
 			_transform = new ConstantBuffer<Matrix>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
+			_texture = assets.LoadTexture2D("Textures/Bullet");
+			_model = Model.CreateQuad(graphicsDevice, _texture.Size);
 		}
 
 		/// <summary>
@@ -61,12 +73,15 @@ namespace Lwar.Client.Rendering
 			_transform.Bind(1);
 			_vertexShader.Bind();
 			_fragmentShader.Bind();
+			_texture.Bind(0);
 			SamplerState.TrilinearClamp.Bind(0);
 
 			foreach (var bullet in RegisteredElements)
 			{
 				_transform.Data = bullet.Transform.Matrix;
 				_transform.Update();
+
+				_model.Draw();
 			}
 		}
 
@@ -75,6 +90,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_model.SafeDispose();
 			_transform.SafeDispose();
 		}
 

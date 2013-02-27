@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Gameplay\EntityList.cs" />
+    <Compile Include="Gameplay\GameCamera.cs" />
     <Compile Include="Gameplay\PlayerList.cs" />
     <Compile Include="GameStates\MessageBox.cs" />
     <Compile Include="GameStates\WaitingForServer.cs" />

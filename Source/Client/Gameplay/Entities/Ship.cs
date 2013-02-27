@@ -2,7 +2,9 @@
 
 namespace Lwar.Client.Gameplay.Entities
 {
+	using Network;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Rendering;
 
 	/// <summary>
@@ -70,19 +72,18 @@ namespace Lwar.Client.Gameplay.Entities
 		{
 		}
 
-		///// <summary>
-		/////   Applies the remote update record to the entity's state.
-		///// </summary>
-		///// <param name="update">The update record that has been sent by the server for this entity.</param>
-		///// <param name="timestamp">The timestamp that indicates when the update record has been sent.</param>
-		//public void RemoteUpdate(UpdateRecord update, uint timestamp)
-		//{
-		//	Assert.That(update.Type == UpdateRecordType.Full, "Unsupported update type.");
+		/// <summary>
+		///   Applies the update message sent by the server to the entity's state.
+		/// </summary>
+		/// <param name="message">The update message that should be processed.</param>
+		public void RemoteUpdate(ref Message message)
+		{
+			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
 
-		//	Transform.Position = new Vector3(update.Full.Position.X, 0, update.Full.Position.Y);
-		//	Transform.Rotation = new Vector3(0, update.Full.Rotation, 0);
-		//	Health = update.Full.Health;
-		//}
+			Transform.Position = new Vector3(message.Update.Position.X, 0, message.Update.Position.Y);
+			Transform.Rotation = new Vector3(0, MathUtils.DegToRad(message.Update.Rotation), 0);
+			Health = message.Update.Health;
+		}
 
 		/// <summary>
 		///   Creates a new instance.
@@ -96,6 +97,7 @@ namespace Lwar.Client.Gameplay.Entities
 			var ship = GetInstance();
 			ship.Id = id;
 			ship.Player = player;
+			player.Ship = ship;
 			return ship;
 		}
 

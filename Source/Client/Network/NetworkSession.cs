@@ -45,7 +45,7 @@ namespace Lwar.Client.Network
 			_connection = new ServerConnection(serverEndPoint, packetFactory);
 
 			_outgoingMessages = new MessageQueue(packetFactory, _deliveryManager);
-			Send(Message.Connect());
+			Send(new Message { Type = MessageType.Connect });
 		}
 
 		/// <summary>

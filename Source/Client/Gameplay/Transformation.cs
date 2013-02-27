@@ -31,17 +31,17 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
-		///   Gets the matrix representing the global transformation.
+		///   Gets the absolute transformation matrix.
 		/// </summary>
 		public Matrix Matrix { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the position.
+		///   Gets or sets the position relative to the parent.
 		/// </summary>
 		public Vector3 Position { get; set; }
 
 		/// <summary>
-		///   Gets or sets the rotation.
+		///   Gets or sets the rotation relative to the parent.
 		/// </summary>
 		public Vector3 Rotation { get; set; }
 
@@ -66,6 +66,9 @@ namespace Lwar.Client.Gameplay
 		public void Attach(Transformation parent)
 		{
 			Assert.ArgumentNotNull(parent, () => parent);
+
+			if (_parent == parent)
+				return;
 
 			if (_parent != null)
 			{
@@ -95,7 +98,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public void Update()
 		{
-			Matrix = Matrix.CreateTranslation(Position) * Matrix.CreateRotationY(Rotation.Y);
+			Matrix = Matrix.CreateRotationY(Rotation.Y) * Matrix.CreateTranslation(Position);
 
 			if (_parent != null)
 				Matrix *= _parent.Matrix;

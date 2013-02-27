@@ -44,7 +44,7 @@ namespace Lwar.Client.Gameplay
 			_window = window;
 			_inputDevice = inputDevice;
 
-			GameCamera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.DegToRad(20), Up = new Vector3(0, 0, 1) };
+			GameCamera = new GameCamera(graphicsDevice, inputDevice);
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);
 
 			ActiveCamera = GameCamera;
@@ -52,12 +52,13 @@ namespace Lwar.Client.Gameplay
 
 			LwarCommands.ToggleDebugCamera.Invoked += ToggleDebugCamera;
 			_window.Resized += WindowResized;
+			WindowResized(_window.Size);
 		}
 
 		/// <summary>
 		///   Gets the game camera that provides a top-down view of the scene and follows the local ship.
 		/// </summary>
-		public Camera3D GameCamera { get; private set; }
+		public GameCamera GameCamera { get; private set; }
 
 		/// <summary>
 		///   Gets the active camera that should be used to draw the scene.
@@ -103,6 +104,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public void Update()
 		{
+			GameCamera.Update();
 			_debugCamera.Update();
 		}
 

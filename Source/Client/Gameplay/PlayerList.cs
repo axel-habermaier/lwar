@@ -43,6 +43,7 @@ namespace Lwar.Client.Gameplay
 		public void Add(Identifier playerId, bool isLocalPlayer)
 		{
 			Assert.That(_playerMap[playerId] == null, "A player with the same id has already been added.");
+			Assert.That(!isLocalPlayer || LocalPlayer == null, "Cannot change the local player.");
 
 			var player = Player.Create(playerId);
 			_players.Add(player);
@@ -103,6 +104,9 @@ namespace Lwar.Client.Gameplay
 
 			var player = _playerMap[playerId];
 			Assert.NotNull(player, "Cannot change the name of an unknown player.");
+
+			if (!String.IsNullOrWhiteSpace(player.Name) && player.Name != name)
+				Log.Info("{0} was renamed to {1}.", player.Name, name);
 
 			player.Name = name;
 		}

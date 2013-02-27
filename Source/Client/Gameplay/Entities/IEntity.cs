@@ -2,6 +2,7 @@
 
 namespace Lwar.Client.Gameplay.Entities
 {
+	using Network;
 	using Rendering;
 
 	/// <summary>
@@ -28,5 +29,11 @@ namespace Lwar.Client.Gameplay.Entities
 		///   Updates the entity's internal state.
 		/// </summary>
 		void Update();
+
+		/// <summary>
+		///   Applies the update message sent by the server to the entity's state.
+		/// </summary>
+		/// <param name="message">The update message that should be processed.</param>
+		void RemoteUpdate(ref Message message);
 	}
 }

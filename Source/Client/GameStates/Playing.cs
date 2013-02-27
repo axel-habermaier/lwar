@@ -6,7 +6,6 @@ namespace Lwar.Client.GameStates
 	using Gameplay;
 	using Network;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Rendering;
 
@@ -15,11 +14,6 @@ namespace Lwar.Client.GameStates
 	/// </summary>
 	public class Playing : GameState
 	{
-		/// <summary>
-		///   The game session that is played.
-		/// </summary>
-		private GameSession _gameSession;
-
 		/// <summary>
 		///   The network session that synchronizes the game state between the client and the server.
 		/// </summary>
@@ -34,6 +28,11 @@ namespace Lwar.Client.GameStates
 		///   Manages the game and debug cameras.
 		/// </summary>
 		private CameraManager _cameraManager;
+
+		/// <summary>
+		///   The game session that is played.
+		/// </summary>
+		private GameSession _gameSession;
 
 		/// <summary>
 		///   Manages the input provided by the user.
@@ -65,7 +64,7 @@ namespace Lwar.Client.GameStates
 
 			_networkSession = new NetworkSession(serverEndPoint);
 			IsOpaque = true;
-			_timer.Timeout += SendInput;
+			_timer.Timeout += SendInputTimeout;
 
 			Log.Info("Connecting to {0}...", serverEndPoint);
 		}
@@ -75,7 +74,7 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_timer.Timeout -= SendInput;
+			_timer.Timeout -= SendInputTimeout;
 			_timer.SafeDispose();
 
 			_cameraManager.SafeDispose();
@@ -108,13 +107,7 @@ namespace Lwar.Client.GameStates
 		/// <param name="topmost">Indicates whether the game state is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
-			if (_sendInput && _networkSession.IsConnected)
-			{
-				var message = _inputManager.CreateInputMessage(_gameSession.Players.LocalPlayer, _cameraManager.GameCamera, Window.Size);
-				_networkSession.Send(message);
-				_sendInput = false;
-			}
-
+			SendInput();
 			_timer.Update();
 			_networkSession.Update(_messageDispatcher);
 
@@ -122,6 +115,8 @@ namespace Lwar.Client.GameStates
 			{
 				_gameSession.Update();
 				_inputManager.Update();
+
+				_cameraManager.GameCamera.Ship = _gameSession.Players.LocalPlayer.Ship;
 				_cameraManager.Update();
 			}
 
@@ -136,9 +131,25 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Ensures that the user input is sent to the server during the next input cycle.
+		///   Sends the input to the server, if required.
 		/// </summary>
 		private void SendInput()
+		{
+			if (!_sendInput || !_networkSession.IsConnected)
+				return;
+
+			var message = _inputManager.CreateInputMessage();
+			message.Input.Player = _gameSession.Players.LocalPlayer.Id;
+			message.Input.Target = _cameraManager.GameCamera.ToWorldCoordinates(message.Input.Target);
+
+			_networkSession.Send(message);
+			_sendInput = false;
+		}
+
+		/// <summary>
+		///   Ensures that the user input is sent to the server during the next input cycle.
+		/// </summary>
+		private void SendInputTimeout()
 		{
 			_sendInput = true;
 		}
@@ -148,7 +159,6 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public override void Draw()
 		{
-			_cameraManager.ActiveCamera.Viewport=new Rectangle(0, 0, Window.Size.Width, Window.Size.Height);
 			_renderContext.Draw(_cameraManager.ActiveCamera);
 		}
 	}

@@ -4,6 +4,7 @@ namespace Lwar.Client.Gameplay
 {
 	using System.Collections.Generic;
 	using Entities;
+	using Network;
 	using Pegasus.Framework;
 	using Rendering;
 
@@ -111,6 +112,19 @@ namespace Lwar.Client.Gameplay
 		protected override void OnDisposing()
 		{
 			_entities.SafeDispose();
+		}
+
+		/// <summary>
+		/// Updates the entity referenced in the update message.
+		/// </summary>
+		/// <param name="message">The remote update message that should be processed.</param>
+		public void RemoteUpdate(ref Message message)
+		{
+			var entity = _entityMap[message.Update.Entity];
+			if (entity == null)
+				return;
+
+			entity.RemoteUpdate(ref message);
 		}
 	}
 }

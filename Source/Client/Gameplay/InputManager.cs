@@ -6,7 +6,6 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Rendering;
 
 	/// <summary>
 	///   Manages the input state of the local player.
@@ -89,26 +88,19 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
-		///   Creates an input message that is subsequently sent to the server..
+		///   Copies the current input state into the returned message. The returned message is missing the identifier of the local
+		///   player and the target is given in screen coordinates instead of world coordinates.
 		/// </summary>
-		/// <param name="localPlayer">The local player that generated the input.</param>
-		/// <param name="camera">The camera that should be used to convert the mouse position into world coordinates.</param>
-		/// <param name="windowSize">
-		///   The size of the window that should be used to convert the mouse position into world coordinates.
-		/// </param>
-		public Message CreateInputMessage(Player localPlayer, Camera camera, Size windowSize)
+		public Message CreateInputMessage()
 		{
-			Assert.ArgumentNotNull(localPlayer, () => localPlayer);
-			Assert.ArgumentNotNull(camera, () => camera);
-
 			// The mouse position in window coordinates
-			var mousePos = _inputDevice.Mouse.Position;
+			//_inputMessage.Target = _inputDevice.Mouse.Position;
 
 			// Move the origin of the mouse position to the center of the window
-			mousePos = new Vector2i(mousePos.X - windowSize.Width / 2, mousePos.Y - windowSize.Height / 2);
+			//mousePos = new Vector2i(mousePos.X - windowSize.Width / 2, mousePos.Y - windowSize.Height / 2);
 
 			// Translate the target to into world coordinates
-			_inputMessage.Target = new Vector2(mousePos.X, mousePos.Y) - new Vector2(camera.Position.X, camera.Position.Z);
+			//_inputMessage.Target = new Vector2(mousePos.X, mousePos.Y) - new Vector2(camera.Position.X, camera.Position.Z);
 
 			Update(ref _inputMessage.Forward, _forward.Triggered);
 			Update(ref _inputMessage.Backward, _backward.Triggered);
@@ -132,8 +124,9 @@ namespace Lwar.Client.Gameplay
 			_shooting3.Triggered = false;
 			_shooting4.Triggered = false;
 
+			_inputMessage.Target = new Vector2(_inputDevice.Mouse.Position.X, _inputDevice.Mouse.Position.Y);
 			++_inputMessage.FrameNumber;
-			_inputMessage.Player = localPlayer.Id;
+
 			return new Message
 			{
 				Type = MessageType.Input,

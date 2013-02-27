@@ -14,28 +14,6 @@ namespace Lwar.Client.Network
 	public struct Message
 	{
 		/// <summary>
-		///   Creates a Connect message.
-		/// </summary>
-		public static Message Connect()
-		{
-			return new Message
-			{
-				Type = MessageType.Connect
-			};
-		}
-
-		/// <summary>
-		///   Creates a Disconnect message.
-		/// </summary>
-		public static Message Disconnect()
-		{
-			return new Message
-			{
-				Type = MessageType.Disconnect
-			};
-		}
-
-		/// <summary>
 		///   Creates a message that instructs the server to change the name of the given player.
 		/// </summary>
 		/// <param name="player">The player whose name should be changed.</param>
@@ -446,6 +424,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of an Update message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct UpdatePayload
 		{
 			/// <summary>
@@ -472,6 +451,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of an UpdatePosition message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct UpdatePositionPayload
 		{
 			/// <summary>
@@ -488,17 +468,18 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of an UpdateRay message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct UpdateRayPayload
 		{
-			/// <summary>
-			///   The new ray direction.
-			/// </summary>
-			public float Direction;
-
 			/// <summary>
 			///   The entity that is updated.
 			/// </summary>
 			public Identifier Entity;
+
+			/// <summary>
+			///   The new ray direction.
+			/// </summary>
+			public float Direction;
 
 			/// <summary>
 			///   The new ray length.
@@ -514,17 +495,18 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of an UpdateCircle message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct UpdateCirclePayload
 		{
-			/// <summary>
-			///   The new circle center.
-			/// </summary>
-			public Vector2 Center;
-
 			/// <summary>
 			///   The entity that is updated.
 			/// </summary>
 			public Identifier Entity;
+
+			/// <summary>
+			///   The new circle center.
+			/// </summary>
+			public Vector2 Center;
 
 			/// <summary>
 			///   The new circle radius.

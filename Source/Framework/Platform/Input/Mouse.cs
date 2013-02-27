@@ -46,6 +46,15 @@ namespace Pegasus.Framework.Platform.Input
 		}
 
 		/// <summary>
+		///   Raised when the mouse wheel is scrolled.
+		/// </summary>
+		public event Action<int> Wheel
+		{
+			add { _window.MouseWheel += value; }
+			remove { _window.MouseWheel -= value; }
+		}
+
+		/// <summary>
 		///   Invoked when a button has been pressed.
 		/// </summary>
 		/// <param name="button">Identifies the mouse button that has been pressed.</param>

@@ -38,6 +38,7 @@ namespace Lwar.Client.Network
 				switch (message.Type)
 				{
 					case MessageType.Chat:
+						// TODO
 						break;
 					case MessageType.Name:
 						_gameSession.Players.ChangeName(message.Name.Player, message.Name.Name);
@@ -61,12 +62,10 @@ namespace Lwar.Client.Network
 					case MessageType.Stats:
 						break;
 					case MessageType.Update:
-						break;
 					case MessageType.UpdatePosition:
-						break;
 					case MessageType.UpdateRay:
-						break;
 					case MessageType.UpdateCircle:
+						_gameSession.Entities.RemoteUpdate(ref message);
 						break;
 					default:
 						throw new InvalidOperationException("Unexpected message type.");
@@ -88,10 +87,7 @@ namespace Lwar.Client.Network
 			switch (type)
 			{
 				case EntityType.Ship:
-					Assert.NotNull(player, "A valid player must be associated with a ship.");
-
 					entity = Ship.Create(entityId, player);
-					player.Ship = (Ship)entity;
 					break;
 				case EntityType.Planet:
 					entity = Planet.Create(entityId);

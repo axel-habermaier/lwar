@@ -2,6 +2,7 @@
 
 namespace Lwar.Client.Gameplay.Entities
 {
+	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Rendering;
@@ -59,18 +60,17 @@ namespace Lwar.Client.Gameplay.Entities
 		/// </summary>
 		public void Update()
 		{
-			Transform.Position= new Vector3(200, 0, 200);
 		}
 
-		///// <summary>
-		/////   Applies the remote update record to the entity's state.
-		///// </summary>
-		///// <param name="update">The update record that has been sent by the server for this entity.</param>
-		///// <param name="timestamp">The timestamp that indicates when the update record has been sent.</param>
-		//public void RemoteUpdate(UpdateRecord update, uint timestamp)
-		//{
-		//	Assert.That(false, "Server updates are not supported for planets.");
-		//}
+		/// <summary>
+		///   Applies the update message sent by the server to the entity's state.
+		/// </summary>
+		/// <param name="message">The update message that should be processed.</param>
+		public void RemoteUpdate(ref Message message)
+		{
+			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
+			Transform.Position = new Vector3(message.Update.Position.X, 0, message.Update.Position.Y);
+		}
 
 		/// <summary>
 		///   Creates a new instance.

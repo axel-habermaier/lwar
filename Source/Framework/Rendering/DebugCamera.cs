@@ -15,12 +15,12 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The rotation speed of the camera.
 		/// </summary>
-		private const float RotationSpeed = 10.0f;
+		private const float RotationSpeed = 15.0f;
 
 		/// <summary>
 		///   The move speed of the camera.
 		/// </summary>
-		private const float MoveSpeed = 100.0f;
+		private const float MoveSpeed = 200.0f;
 
 		/// <summary>
 		///   Triggered when the user wants to move backward.
