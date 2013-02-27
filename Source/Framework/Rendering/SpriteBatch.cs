@@ -32,12 +32,12 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The fragment shader that is used for drawing.
 		/// </summary>
-		private static FragmentShader _fragmentShader;
+		private FragmentShader _fragmentShader;
 
 		/// <summary>
 		///   The vertex shader that is used for drawing.
 		/// </summary>
-		private static VertexShader _vertexShader;
+		private VertexShader _vertexShader;
 
 		/// <summary>
 		///   The index buffer that is used for drawing.
@@ -128,10 +128,12 @@ namespace Pegasus.Framework.Rendering
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The graphics device that should be used for drawing.</param>
-		public unsafe SpriteBatch(GraphicsDevice device)
+		/// <param name="assets">The assets manager that should be used to load the shaders.</param>
+		public unsafe SpriteBatch(GraphicsDevice device, AssetsManager assets)
 			: base(device)
 		{
 			Assert.ArgumentNotNull(device, () => device);
+			Assert.ArgumentNotNull(assets, () => assets);
 
 			// Initialize the indices; this can be done once, so after the indices are copied to the index buffer,
 			// we never have to change the index buffer again
@@ -159,6 +161,9 @@ namespace Pegasus.Framework.Rendering
 			_vertexBuffer = VertexBuffer.Create<Quad>(device, MaxQuads, ResourceUsage.Dynamic);
 			_indexBuffer = IndexBuffer.Create(device, indices);
 			_vertexLayout = VertexPositionColorTexture.GetInputLayout(device, _vertexBuffer, _indexBuffer);
+
+			_vertexShader = assets.LoadVertexShader("Shaders/SpriteVS");
+			_fragmentShader = assets.LoadFragmentShader("Shaders/SpriteFS");
 
 			_scissorRasterizerState = new RasterizerState(device)
 			{
@@ -247,18 +252,6 @@ namespace Pegasus.Framework.Rendering
 				_projectionMatrix.Data = value;
 				_projectionMatrix.Update();
 			}
-		}
-
-		/// <summary>
-		///   Loads the vertex and fragment shader shared by all sprite batch instances.
-		/// </summary>
-		/// <param name="assets">The assets manager that should be used to create the shaders.</param>
-		internal static void LoadShaders(AssetsManager assets)
-		{
-			Assert.ArgumentNotNull(assets, () => assets);
-
-			_vertexShader = assets.LoadVertexShader("Shaders/SpriteVS");
-			_fragmentShader = assets.LoadFragmentShader("Shaders/SpriteFS");
 		}
 
 		/// <summary>

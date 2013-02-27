@@ -3,10 +3,9 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Text;
-	using System.Threading.Tasks;
+	using Assets;
 	using Graphics;
 	using Math;
-	using Processes;
 	using Rendering;
 	using Rendering.UserInterface;
 
@@ -16,7 +15,7 @@ namespace Pegasus.Framework.Platform
 	public class Statistics : DisposableObject
 	{
 		/// <summary>
-		///   The number of update of the statistic output per second.
+		///   The update frequency of the statistics in Hz.
 		/// </summary>
 		private const int UpdateFrequency = 30;
 
@@ -32,9 +31,9 @@ namespace Pegasus.Framework.Platform
 		private readonly WeakReference _gcCheck = new WeakReference(new object());
 
 		/// <summary>
-		///   The scheduler for the update process.
+		///   The timer that is used to periodically update the statistics.
 		/// </summary>
-		private readonly ProcessScheduler _scheduler = new ProcessScheduler();
+		private readonly Timer _timer = Timer.Create(1000.0 / UpdateFrequency);
 
 		/// <summary>
 		///   The approximate amount of garbage collections that have occurred since the application has been started.
@@ -50,11 +49,6 @@ namespace Pegasus.Framework.Platform
 		///   The sprite batch that is used for drawing.
 		/// </summary>
 		private SpriteBatch _spriteBatch;
-
-		/// <summary>
-		///   The update process.
-		/// </summary>
-		private IProcess _updateProcess;
 
 		/// <summary>
 		///   Gets the GPU frame time measurements.
@@ -75,20 +69,19 @@ namespace Pegasus.Framework.Platform
 		///   Initializes the statistics.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="font">The font that should be used for drawing.</param>
-		internal void Initialize(GraphicsDevice graphicsDevice, Font font)
+		/// <param name="assets">The assets manager that should be used to load the required assets.</param>
+		internal void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(font, () => font);
+			Assert.ArgumentNotNull(assets, () => assets);
 
-			_spriteBatch = new SpriteBatch(graphicsDevice);
-			_label = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
+			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
+			_label = new Label(assets.LoadFont("Fonts/Liberation Mono 12")) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
+			_timer.Timeout += UpdateStatistics;
 
 			GpuFrameTime = new GpuProfiler(graphicsDevice);
 			CpuFrameTime = new AveragedValue();
 			UpdateInput = new AveragedValue();
-
-			_updateProcess = _scheduler.CreateProcess(UpdateAsync);
 		}
 
 		/// <summary>
@@ -106,41 +99,35 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		internal void Update()
 		{
+			_timer.Update();
+		}
+
+		/// <summary>
+		///   Updates the statistics.
+		/// </summary>
+		private void UpdateStatistics()
+		{
 			if (!_gcCheck.IsAlive)
 			{
 				++_garbageCollections;
 				_gcCheck.Target = new object();
 			}
 
-			_scheduler.RunProcesses();
-		}
+			_builder.Clear();
+			_builder.Append("Platform: ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
+			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug).Append("\n");
+			_builder.Append("Renderer: ").Append(PlatformInfo.GraphicsApi).Append("\n");
+			_builder.Append("# of GCs: ").Append(_garbageCollections).Append("\n\n");
 
-		/// <summary>
-		///   Updates the statistics periodically.
-		/// </summary>
-		/// <param name="context">The context in which the statistics should be updated.</param>
-		private async Task UpdateAsync(ProcessContext context)
-		{
-			while (!context.IsCanceled)
-			{
-				_builder.Clear();
-				_builder.Append("Platform: ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
-				_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug).Append("\n");
-				_builder.Append("Renderer: ").Append(PlatformInfo.GraphicsApi).Append("\n");
-				_builder.Append("# of GCs: ").Append(_garbageCollections).Append("\n\n");
+			WriteMeasurement(GpuFrameTime, "GPU Frame Time");
+			WriteMeasurement(CpuFrameTime, "CPU Frame Time");
 
-				WriteMeasurement(GpuFrameTime, "GPU Frame Time");
-				WriteMeasurement(CpuFrameTime, "CPU Frame Time");
+			_builder.Append("\n");
 
-				_builder.Append("\n");
+			WriteMeasurement(UpdateInput, "Update Input");
+			WriteMeasurements(_builder);
 
-				WriteMeasurement(UpdateInput, "Update Input");
-				WriteMeasurements(_builder);
-
-				_label.Text = _builder.ToString();
-
-				await context.Delay(1000 / UpdateFrequency);
-			}
+			_label.Text = _builder.ToString();
 		}
 
 		/// <summary>
@@ -177,10 +164,10 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_timer.Timeout -= UpdateStatistics;
+			_timer.SafeDispose();
 			_spriteBatch.SafeDispose();
 			GpuFrameTime.SafeDispose();
-			_updateProcess.SafeDispose();
-			_scheduler.SafeDispose();
 		}
 	}
 }

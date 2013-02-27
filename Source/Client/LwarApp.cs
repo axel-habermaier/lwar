@@ -2,6 +2,7 @@
 
 namespace Lwar.Client
 {
+	using GameStates;
 	using Gameplay;
 	using Network;
 	using Pegasus.Framework;
@@ -21,9 +22,9 @@ namespace Lwar.Client
 		private readonly LocalServer _localServer = new LocalServer();
 
 		/// <summary>
-		///   The game session.
+		/// The screen manager that manages the game screens of the application..
 		/// </summary>
-		private GameSessionOld _session;
+		private StateManager _stateManager;
 
 		/// <summary>
 		///   Invoked when the application should update the game state.
@@ -31,7 +32,7 @@ namespace Lwar.Client
 		protected override void Update()
 		{
 			_localServer.Update();
-			_session.Update();
+			_stateManager.Update();
 		}
 
 		/// <summary>
@@ -43,7 +44,7 @@ namespace Lwar.Client
 			RasterizerState.CullNone.Bind();
 			SwapChain.BackBuffer.Clear(ClearTargets.Color, Color.Black);
 
-			_session.Draw();
+			_stateManager.Draw();
 		}
 
 		/// <summary>
@@ -51,7 +52,7 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_session.SafeDispose();
+			_stateManager.SafeDispose();
 			_localServer.SafeDispose();
 
 			base.OnDisposing();
@@ -69,7 +70,8 @@ namespace Lwar.Client
 			Window.Size = new Size(1280, 720);
 
 			AssetsLoader.Load(Assets);
-			_session = new GameSessionOld(Window, GraphicsDevice, Assets, LogicalInputDevice);
+			_stateManager = new StateManager(Window, GraphicsDevice, Assets, LogicalInputDevice);
+			_stateManager.Add(new MainMenuState());
 
 			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
 			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");

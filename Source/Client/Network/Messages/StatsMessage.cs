@@ -6,6 +6,7 @@ namespace Lwar.Client.Network.Messages
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
+	using Rendering;
 
 	public class StatsMessage : Message<StatsMessage>, IUnreliableMessage
 	{
@@ -17,8 +18,9 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSessionOld session)
+		/// <param name="gameSession">The game session that should be affected by the message.</param>
+		/// <param name="renderContext">The render context that should be affected by the message.</param>
+		public override void Process(GameSession gameSession, RenderContext renderContext)
 		{
 			// TODO
 		}

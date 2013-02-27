@@ -5,6 +5,7 @@ namespace Lwar.Client.Network.Messages
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
+	using Rendering;
 
 	public class JoinMessage : Message<JoinMessage>, IReliableMessage
 	{
@@ -21,17 +22,16 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSessionOld session)
+		/// <param name="gameSession">The game session that should be affected by the message.</param>
+		/// <param name="renderContext">The render context that should be affected by the message.</param>
+		public override void Process(GameSession gameSession, RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(session, () => session);
+			//var player = new Player(_playerId);
+			//session.GameSession.Players.Add(player);
+			//session.GameSession.PlayerMap.Add(player);
 
-			var player = new Player(_playerId);
-			session.GameSession.Players.Add(player);
-			session.GameSession.PlayerMap.Add(player);
-
-			if (IsLocalPlayer)
-				session.GameSession.LocalPlayer = player;
+			//if (IsLocalPlayer)
+			//	session.GameSession.LocalPlayer = player;
 		}
 
 		/// <summary>

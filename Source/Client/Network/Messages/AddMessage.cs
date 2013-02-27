@@ -6,6 +6,7 @@ namespace Lwar.Client.Network.Messages
 	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
+	using Rendering;
 
 	public class AddMessage : Message<AddMessage>, IReliableMessage
 	{
@@ -27,41 +28,40 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSessionOld session)
+		/// <param name="gameSession">The game session that should be affected by the message.</param>
+		/// <param name="renderContext">The render context that should be affected by the message.</param>
+		public override void Process(GameSession gameSession, RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(session, () => session);
+			//IEntity entity;
+			//switch (_template)
+			//{
+			//	case EntityTemplate.Ship:
+			//		var ship = Ship.Create(_entityId, session.GameSession.PlayerMap[_playerId]);
+			//		entity = ship;
 
-			IEntity entity;
-			switch (_template)
-			{
-				case EntityTemplate.Ship:
-					var ship = Ship.Create(_entityId, session.GameSession.PlayerMap[_playerId]);
-					entity = ship;
+			//		if (_template == EntityTemplate.Ship && ship.Player == session.GameSession.LocalPlayer)
+			//			session.GameSession.LocalPlayer.Ship = ship;
+			//		break;
+			//	case EntityTemplate.Bullet:
+			//		entity = Bullet.Create(_entityId);
+			//		break;
+			//	case EntityTemplate.Planet:
+			//		entity = Planet.Create(_entityId);
+			//		break;
+			//	case EntityTemplate.Rocket:
+			//	case EntityTemplate.Ray:
+			//	case EntityTemplate.ShockWave:
+			//	case EntityTemplate.Gun:
+			//		// TODO
+			//		entity = null;
+			//		break;
+			//	default:
+			//		throw new InvalidOperationException("Unknown entity template.");
+			//}
 
-					if (_template == EntityTemplate.Ship && ship.Player == session.GameSession.LocalPlayer)
-						session.GameSession.LocalPlayer.Ship = ship;
-					break;
-				case EntityTemplate.Bullet:
-					entity = Bullet.Create(_entityId);
-					break;
-				case EntityTemplate.Planet:
-					entity = Planet.Create(_entityId);
-					break;
-				case EntityTemplate.Rocket:
-				case EntityTemplate.Ray:
-				case EntityTemplate.ShockWave:
-				case EntityTemplate.Gun:
-					// TODO
-					entity = null;
-					break;
-				default:
-					throw new InvalidOperationException("Unknown entity template.");
-			}
-
-			session.GameSession.Entities.Add(entity);
-			session.GameSession.EntityMap.Add(entity);
-			entity.Added(session.GameSession, session.RenderContext);
+			//session.GameSession.Entities.Add(entity);
+			//session.GameSession.EntityMap.Add(entity);
+			//entity.Added(session.GameSession, session.RenderContext);
 		}
 
 		/// <summary>

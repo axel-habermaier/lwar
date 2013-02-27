@@ -7,6 +7,7 @@ namespace Lwar.Client.Network.Messages
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
+	using Rendering;
 
 	public class UpdateMessage : Message<UpdateMessage>, IUnreliableMessage
 	{
@@ -18,21 +19,22 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public override sealed void Process(GameSessionOld session)
+		/// <param name="gameSession">The game session that should be affected by the message.</param>
+		/// <param name="renderContext">The render context that should be affected by the message.</param>
+		public override void Process(GameSession gameSession, RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(session, () => session);
+			//Assert.ArgumentNotNull(session, () => session);
 
-			foreach (var update in _updates)
-			{
-				var entity = session.GameSession.EntityMap[update.EntityId];
+			//foreach (var update in _updates)
+			//{
+			//	var entity = session.GameSession.EntityMap[update.EntityId];
 
-				// Entity generation mismatch
-				if (entity == null)
-					continue;
+			//	// Entity generation mismatch
+			//	if (entity == null)
+			//		continue;
 
-				entity.RemoteUpdate(update, Timestamp);
-			}
+			//	entity.RemoteUpdate(update, Timestamp);
+			//}
 		}
 
 		/// <summary>

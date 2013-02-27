@@ -5,6 +5,7 @@ namespace Lwar.Client.Network.Messages
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
+	using Rendering;
 
 	public class LeaveMessage : Message<LeaveMessage>, IReliableMessage
 	{
@@ -16,17 +17,18 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSessionOld session)
+		/// <param name="gameSession">The game session that should be affected by the message.</param>
+		/// <param name="renderContext">The render context that should be affected by the message.</param>
+		public override void Process(GameSession gameSession, RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(session, () => session);
-			Assert.That(_playerId != session.GameSession.LocalPlayer.Id, "Cannot remove the local player.");
+			//Assert.ArgumentNotNull(session, () => session);
+			//Assert.That(_playerId != session.GameSession.LocalPlayer.Id, "Cannot remove the local player.");
 
-			var player = session.GameSession.PlayerMap[_playerId];
-			Assert.NotNull(player, "Server sent a remove message for an unknown player.");
+			//var player = session.GameSession.PlayerMap[_playerId];
+			//Assert.NotNull(player, "Server sent a remove message for an unknown player.");
 
-			session.GameSession.PlayerMap.Remove(player);
-			session.GameSession.Players.Remove(player);
+			//session.GameSession.PlayerMap.Remove(player);
+			//session.GameSession.Players.Remove(player);
 		}
 
 		/// <summary>

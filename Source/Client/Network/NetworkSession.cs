@@ -43,12 +43,11 @@ namespace Lwar.Client.Network
 		{
 			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
 
-			var packetFactory = new LwarPacketFactory();
-
 			_deliveryManager = new DeliveryManager();
-			_outgoingMessages = new MessageQueue(packetFactory, _deliveryManager);
+			var packetFactory = new LwarPacketFactory();
 			_connection = new ServerConnection(serverEndPoint, packetFactory);
 
+			_outgoingMessages = new MessageQueue(packetFactory, _deliveryManager);
 			_outgoingMessages.Enqueue(ConnectMessage.Create());
 		}
 

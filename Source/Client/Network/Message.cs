@@ -5,6 +5,7 @@ namespace Lwar.Client.Network
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
+	using Rendering;
 
 	/// <summary>
 	///   Represents a message that is used for the communication between the server and the clients.
@@ -16,8 +17,9 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public virtual void Process(GameSessionOld session)
+		/// <param name="gameSession">The game session that should be affected by the message.</param>
+		/// <param name="renderContext">The render context that should be affected by the message.</param>
+		public virtual void Process(GameSession gameSession, RenderContext renderContext)
 		{
 			Assert.That(false, "The client cannot process this type of message.");
 		}

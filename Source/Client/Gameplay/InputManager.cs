@@ -2,13 +2,10 @@
 
 namespace Lwar.Client.Gameplay
 {
-	using System.Threading.Tasks;
-	using Network;
-	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Processes;
+	using Pegasus.Framework.Rendering;
 
 	/// <summary>
 	///   Manages the input state of the local player.
@@ -16,19 +13,9 @@ namespace Lwar.Client.Gameplay
 	public class InputManager : DisposableObject
 	{
 		/// <summary>
-		///   The process that updates the input state.
+		///   The input device that provides the input by the user.
 		/// </summary>
-		private readonly IProcess _inputProcess;
-
-		/// <summary>
-		///   The process that sends the current input state to the server.
-		/// </summary>
-		private readonly IProcess _sendInputProcess;
-
-		/// <summary>
-		///   The game session the input manager belongs to.
-		/// </summary>
-		private readonly GameSessionOld _session;
+		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
 		///   The current input state.
@@ -53,12 +40,12 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="session">The game session the input manager belongs to.</param>
-		public InputManager(GameSessionOld session)
+		/// <param name="inputDevice">The input device that provides the input by the user.</param>
+		public InputManager(LogicalInputDevice inputDevice)
 		{
-			Assert.ArgumentNotNull(session, () => session);
+			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 
-			_session = session;
+			_inputDevice = inputDevice;
 
 			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed(), InputModes.Game);
 			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed(), InputModes.Game);
@@ -71,89 +58,74 @@ namespace Lwar.Client.Gameplay
 			_shooting3.Input = new LogicalInput(Key.Num1.IsPressed(), InputModes.Game);
 			_shooting4.Input = new LogicalInput(Key.Num2.IsPressed(), InputModes.Game);
 
-			_session.InputDevice.Register(_forward.Input);
-			_session.InputDevice.Register(_backward.Input);
-			_session.InputDevice.Register(_turnLeft.Input);
-			_session.InputDevice.Register(_turnRight.Input);
-			_session.InputDevice.Register(_strafeLeft.Input);
-			_session.InputDevice.Register(_strafeRight.Input);
-			_session.InputDevice.Register(_shooting1.Input);
-			_session.InputDevice.Register(_shooting2.Input);
-			_session.InputDevice.Register(_shooting3.Input);
-			_session.InputDevice.Register(_shooting4.Input);
-
-			_inputProcess = _session.Scheduler.CreateProcess(Update);
-			_sendInputProcess = _session.Scheduler.CreateProcess(SendInput);
+			_inputDevice.Register(_forward.Input);
+			_inputDevice.Register(_backward.Input);
+			_inputDevice.Register(_turnLeft.Input);
+			_inputDevice.Register(_turnRight.Input);
+			_inputDevice.Register(_strafeLeft.Input);
+			_inputDevice.Register(_strafeRight.Input);
+			_inputDevice.Register(_shooting1.Input);
+			_inputDevice.Register(_shooting2.Input);
+			_inputDevice.Register(_shooting3.Input);
+			_inputDevice.Register(_shooting4.Input);
 		}
 
 		/// <summary>
-		///   Updates the current input state.
+		///   Updates the current input state, periodically sending the input to the server.
 		/// </summary>
-		/// <param name="context">The context in which the input should be handled.</param>
-		private async Task Update(ProcessContext context)
+		public void Update()
 		{
-			while (!context.IsCanceled)
-			{
-				_forward.Triggered |= _forward.Input.IsTriggered;
-				_backward.Triggered |= _backward.Input.IsTriggered;
-				_turnLeft.Triggered |= _turnLeft.Input.IsTriggered;
-				_turnRight.Triggered |= _turnRight.Input.IsTriggered;
-				_strafeLeft.Triggered |= _strafeLeft.Input.IsTriggered;
-				_strafeRight.Triggered |= _strafeRight.Input.IsTriggered;
-				_shooting1.Triggered |= _shooting1.Input.IsTriggered;
-				_shooting2.Triggered |= _shooting2.Input.IsTriggered;
-				_shooting3.Triggered |= _shooting3.Input.IsTriggered;
-				_shooting4.Triggered |= _shooting4.Input.IsTriggered;
-
-				await context.NextFrame();
-			}
+			_forward.Triggered |= _forward.Input.IsTriggered;
+			_backward.Triggered |= _backward.Input.IsTriggered;
+			_turnLeft.Triggered |= _turnLeft.Input.IsTriggered;
+			_turnRight.Triggered |= _turnRight.Input.IsTriggered;
+			_strafeLeft.Triggered |= _strafeLeft.Input.IsTriggered;
+			_strafeRight.Triggered |= _strafeRight.Input.IsTriggered;
+			_shooting1.Triggered |= _shooting1.Input.IsTriggered;
+			_shooting2.Triggered |= _shooting2.Input.IsTriggered;
+			_shooting3.Triggered |= _shooting3.Input.IsTriggered;
+			_shooting4.Triggered |= _shooting4.Input.IsTriggered;
 		}
 
 		/// <summary>
 		///   Periodically sends the current input state to the server.
 		/// </summary>
-		/// <param name="context">The context in which the input should be handled.</param>
-		private async Task SendInput(ProcessContext context)
+		/// <param name="camera">The camera that should be used to convert the mouse position into world coordinates.</param>
+		/// <param name="windowSize">
+		///   The size of the window that should be used to convert the mouse position into world coordinates.
+		/// </param>
+		public InputStateHistory GetUpdatedInputState(Camera camera, Size windowSize)
 		{
-			while (!context.IsCanceled)
-			{
-				if (_session.GameSession.LocalPlayer.Ship == null)
-				{
-					await context.NextFrame();
-					continue;
-				}
+			if (_inputDevice.Modes != InputModes.Game)
+				return _state;
 
-				// The mouse position in window coordinates
-				var mousePos = _session.InputDevice.Mouse.Position;
+			// The mouse position in window coordinates
+			var mousePos = _inputDevice.Mouse.Position;
 
-				// Move the origin of the mouse position to the center of the window
-				var windowSize = _session.Window.Size;
-				mousePos = new Vector2i(mousePos.X - windowSize.Width / 2, mousePos.Y - windowSize.Height / 2);
+			// Move the origin of the mouse position to the center of the window
+			mousePos = new Vector2i(mousePos.X - windowSize.Width / 2, mousePos.Y - windowSize.Height / 2);
 
-				// Now move the mouse position to camera coordiantes
-				var target = new Vector2(mousePos.X, mousePos.Y) - new Vector2(_session.Camera.Position.X, _session.Camera.Position.Y);
+			// Now move the mouse position to camera coordiantes
+			var target = new Vector2(mousePos.X, mousePos.Y) - new Vector2(camera.Position.X, camera.Position.Z);
 
-				_state.Update(_forward.Triggered, _backward.Triggered,
-							  _turnLeft.Triggered, _turnRight.Triggered,
-							  _strafeLeft.Triggered, _strafeRight.Triggered,
-							  _shooting1.Triggered, _shooting2.Triggered, _shooting3.Triggered, _shooting4.Triggered,
-							  target);
+			_state.Update(_forward.Triggered, _backward.Triggered,
+						  _turnLeft.Triggered, _turnRight.Triggered,
+						  _strafeLeft.Triggered, _strafeRight.Triggered,
+						  _shooting1.Triggered, _shooting2.Triggered, _shooting3.Triggered, _shooting4.Triggered,
+						  target);
 
-				_session.ServerConnection.Send(InputMessage.Create(_session.GameSession.LocalPlayer.Id, _state));
+			_forward.Triggered = false;
+			_backward.Triggered = false;
+			_turnLeft.Triggered = false;
+			_turnRight.Triggered = false;
+			_strafeLeft.Triggered = false;
+			_strafeRight.Triggered = false;
+			_shooting1.Triggered = false;
+			_shooting2.Triggered = false;
+			_shooting3.Triggered = false;
+			_shooting4.Triggered = false;
 
-				_forward.Triggered = false;
-				_backward.Triggered = false;
-				_turnLeft.Triggered = false;
-				_turnRight.Triggered = false;
-				_strafeLeft.Triggered = false;
-				_strafeRight.Triggered = false;
-				_shooting1.Triggered = false;
-				_shooting2.Triggered = false;
-				_shooting3.Triggered = false;
-				_shooting4.Triggered = false;
-
-				await context.Delay(1000 / Specification.InputUpdateFrequency);
-			}
+			return _state;
 		}
 
 		/// <summary>
@@ -161,19 +133,16 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_inputProcess.SafeDispose();
-			_sendInputProcess.SafeDispose();
-
-			_session.InputDevice.Remove(_forward.Input);
-			_session.InputDevice.Remove(_backward.Input);
-			_session.InputDevice.Remove(_turnLeft.Input);
-			_session.InputDevice.Remove(_turnRight.Input);
-			_session.InputDevice.Remove(_strafeLeft.Input);
-			_session.InputDevice.Remove(_strafeRight.Input);
-			_session.InputDevice.Remove(_shooting1.Input);
-			_session.InputDevice.Remove(_shooting2.Input);
-			_session.InputDevice.Remove(_shooting3.Input);
-			_session.InputDevice.Remove(_shooting4.Input);
+			_inputDevice.Remove(_forward.Input);
+			_inputDevice.Remove(_backward.Input);
+			_inputDevice.Remove(_turnLeft.Input);
+			_inputDevice.Remove(_turnRight.Input);
+			_inputDevice.Remove(_strafeLeft.Input);
+			_inputDevice.Remove(_strafeRight.Input);
+			_inputDevice.Remove(_shooting1.Input);
+			_inputDevice.Remove(_shooting2.Input);
+			_inputDevice.Remove(_shooting3.Input);
+			_inputDevice.Remove(_shooting4.Input);
 		}
 
 		/// <summary>

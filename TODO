@@ -19,6 +19,7 @@ Client
 	- Chat messages outside of console
 	- Show player names on top of ships
 	- In-game menu
+- Messages in one struct? Introduce MessageDispatcher + Events for processing?
 
 Pegasus
 ========
@@ -34,7 +35,6 @@ Pegasus
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
-- Remove static VS/FS properties from sprite batch and replace by instance variables
 
 Server
 ========

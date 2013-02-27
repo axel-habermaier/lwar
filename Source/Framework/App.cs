@@ -118,13 +118,12 @@ namespace Pegasus.Framework
 			GraphicsDevice = new GraphicsDevice();
 			SwapChain = new SwapChain(GraphicsDevice, Window);
 			Assets = new AssetsManager(GraphicsDevice);
-			SpriteBatch.LoadShaders(Assets);
 			SwapChain.BackBuffer.Bind();
 
 			var font = Assets.LoadFont("Fonts/Liberation Mono 12");
 			using (var interpreter = new Interpreter())
 			using (var bindings = new RequestBindings(LogicalInputDevice))
-			using (var console = new Console(GraphicsDevice, font, LogicalInputDevice))
+			using (var console = new Console(GraphicsDevice, Assets, LogicalInputDevice))
 			{
 				// Ensure that the size of the console always matches that of the window
 				console.Resize(Window.Size);
@@ -133,7 +132,7 @@ namespace Pegasus.Framework
 				// Copy the recorded log history to the console and initialize the statistics
 				logFile.WriteToConsole(console);
 				Statistics = CreateStatistics();
-				Statistics.Initialize(GraphicsDevice, font);
+				Statistics.Initialize(GraphicsDevice, Assets);
 				Window.Resized += Statistics.Resize;
 
 				// Initialize commands and cvars

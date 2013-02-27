@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lwar.Client.GameScreens
+namespace Lwar.Client.GameStates
 {
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Rendering.UserInterface;
@@ -8,7 +8,7 @@ namespace Lwar.Client.GameScreens
 	/// <summary>
 	///   Shows the main menu.
 	/// </summary>
-	public class MainMenuScreen : GameScreen
+	public class MainMenuState : GameState
 	{
 		/// <summary>
 		///   The label that is used to draw the menu.
@@ -16,7 +16,7 @@ namespace Lwar.Client.GameScreens
 		private Label _label;
 
 		/// <summary>
-		///   Initializes the game screen.
+		///   Initializes the game state.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -28,7 +28,7 @@ namespace Lwar.Client.GameScreens
 		}
 
 		/// <summary>
-		///   Updates the game screen.
+		///   Updates the game state.
 		/// </summary>
 		/// <param name="topmost">Indicates whether the game screen is the topmost one.</param>
 		public override void Update(bool topmost)
@@ -37,7 +37,7 @@ namespace Lwar.Client.GameScreens
 		}
 
 		/// <summary>
-		///   Draws the game screen.
+		///   Draws the game state.
 		/// </summary>
 		public override void Draw()
 		{

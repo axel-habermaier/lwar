@@ -8,7 +8,7 @@ namespace Pegasus.Framework.Platform
 	/// <summary>
 	///   Represents a clock.
 	/// </summary>
-	public class Clock : PooledObject<Clock>
+	public sealed class Clock : PooledObject<Clock>
 	{
 		/// <summary>
 		///   Indicates whether the clock is affected by the current time scale factor.
@@ -61,6 +61,15 @@ namespace Pegasus.Framework.Platform
 		{
 			// Update the current time with the old factor
 			Update();
+		}
+
+		/// <summary>
+		///   Resets the clock to zero.
+		/// </summary>
+		public void Reset()
+		{
+			_offset = SystemTime;
+			_time = 0;
 		}
 
 		/// <summary>

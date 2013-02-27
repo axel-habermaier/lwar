@@ -203,6 +203,7 @@
     <Compile Include="Platform\LogType.cs" />
     <Compile Include="Platform\Measurement.cs" />
     <Compile Include="Platform\Clock.cs" />
+    <Compile Include="Platform\Timer.cs" />
     <Compile Include="Platform\Win32.cs" />
     <Compile Include="Processes\DelegateOperation.cs" />
     <Compile Include="Processes\IResumableProcess.cs" />

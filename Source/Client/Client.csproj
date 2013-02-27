@@ -170,9 +170,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameScreens\MainMenuScreen.cs" />
-    <Compile Include="GameScreens\GameScreen.cs" />
-    <Compile Include="GameScreens\LoadingScreen.cs" />
+    <Compile Include="GameStates\MessageBox.cs" />
+    <Compile Include="GameStates\WaitingForServerState.cs" />
+    <Compile Include="GameStates\MainMenuState.cs" />
+    <Compile Include="GameStates\GameState.cs" />
+    <Compile Include="GameStates\LoadingState.cs" />
     <Compile Include="AssetAttribute.cs" />
     <Compile Include="AssetsLoader.cs">
       <AutoGen>True</AutoGen>
@@ -193,8 +195,8 @@
     <Compile Include="Gameplay\Entities\Ship.cs" />
     <Compile Include="Gameplay\IGenerationalIdentity.cs" />
     <Compile Include="Gameplay\Transformation.cs" />
-    <Compile Include="GameScreens\PlayingScreen.cs" />
-    <Compile Include="GameScreens\ScreenManager.cs" />
+    <Compile Include="GameStates\PlayingState.cs" />
+    <Compile Include="GameStates\StateManager.cs" />
     <Compile Include="LwarBootstrapper.cs" />
     <Compile Include="LwarCommands.cs" />
     <Compile Include="LwarCvars.cs" />

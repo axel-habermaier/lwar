@@ -5,6 +5,7 @@ namespace Lwar.Client.Network.Messages
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
+	using Rendering;
 
 	public class NameMessage : Message<NameMessage>, IReliableMessage
 	{
@@ -21,18 +22,19 @@ namespace Lwar.Client.Network.Messages
 		/// <summary>
 		///   Processes the message, updating the given game session.
 		/// </summary>
-		/// <param name="session">The game session that should be updated.</param>
-		public override void Process(GameSessionOld session)
+		/// <param name="gameSession">The game session that should be affected by the message.</param>
+		/// <param name="renderContext">The render context that should be affected by the message.</param>
+		public override void Process(GameSession gameSession, RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(session, () => session);
+			//Assert.ArgumentNotNull(session, () => session);
 
-			var player = session.GameSession.PlayerMap[_playerId];
-			Assert.NotNull(player);
+			//var player = session.GameSession.PlayerMap[_playerId];
+			//Assert.NotNull(player);
 
-			if (player.Name != null && player.Name != _name)
-				Log.Info("{0} was renamed to {1}.", player.Name, _name);
+			//if (player.Name != null && player.Name != _name)
+			//	Log.Info("{0} was renamed to {1}.", player.Name, _name);
 
-			player.Name = _name;
+			//player.Name = _name;
 		}
 
 		/// <summary>

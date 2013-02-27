@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using Math;
+	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Input;
 	using Scripting;
@@ -81,16 +82,16 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="font">The font that should be used to draw the console's text.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
 		/// <param name="inputDevice">The input device that provides the user input.</param>
-		public Console(GraphicsDevice graphicsDevice, Font font, LogicalInputDevice inputDevice)
+		public Console(GraphicsDevice graphicsDevice, AssetsManager assets, LogicalInputDevice inputDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(font, () => font);
+			Assert.ArgumentNotNull(assets, () => assets);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 
-			_spriteBatch = new SpriteBatch(graphicsDevice);
-			_font = font;
+			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
+			_font = assets.LoadFont("Fonts/Liberation Mono 12");
 
 			_content = new ConsoleContent(_font);
 			_prompt = new ConsolePrompt(_font, InfoColor);

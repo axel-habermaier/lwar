@@ -20,11 +20,6 @@ namespace Lwar.Client.Gameplay
 		private readonly DebugCamera _debugCamera;
 
 		/// <summary>
-		///   The game camera that provides a top-down view of the scene and follows the local ship.
-		/// </summary>
-		private readonly Camera3D _gameCamera;
-
-		/// <summary>
 		///   The logical input device that provides the user input for the cameras.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
@@ -49,15 +44,20 @@ namespace Lwar.Client.Gameplay
 			_window = window;
 			_inputDevice = inputDevice;
 
-			_gameCamera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.DegToRad(20), Up = new Vector3(0, 0, 1) };
+			GameCamera = new Camera3D(graphicsDevice) { FieldOfView = MathUtils.DegToRad(20), Up = new Vector3(0, 0, 1) };
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);
 
-			ActiveCamera = _gameCamera;
+			ActiveCamera = GameCamera;
 			_inputDevice.Modes = InputModes.Game;
 
 			LwarCommands.ToggleDebugCamera.Invoked += ToggleDebugCamera;
 			_window.Resized += WindowResized;
 		}
+
+		/// <summary>
+		///   Gets the game camera that provides a top-down view of the scene and follows the local ship.
+		/// </summary>
+		public Camera3D GameCamera { get; private set; }
 
 		/// <summary>
 		///   Gets the active camera that should be used to draw the scene.
@@ -72,7 +72,7 @@ namespace Lwar.Client.Gameplay
 		{
 			var viewport = new Rectangle(0, 0, windowSize.Width, windowSize.Height);
 
-			_gameCamera.Viewport = viewport;
+			GameCamera.Viewport = viewport;
 			_debugCamera.Viewport = viewport;
 		}
 
@@ -83,7 +83,7 @@ namespace Lwar.Client.Gameplay
 		{
 			if (ActiveCamera == _debugCamera)
 			{
-				ActiveCamera = _gameCamera;
+				ActiveCamera = GameCamera;
 
 				_inputDevice.Modes = InputModes.Game;
 				_window.MouseCaptured = false;
@@ -104,7 +104,7 @@ namespace Lwar.Client.Gameplay
 		protected override void OnDisposing()
 		{
 			_debugCamera.SafeDispose();
-			_gameCamera.SafeDispose();
+			GameCamera.SafeDispose();
 
 			LwarCommands.ToggleDebugCamera.Invoked -= ToggleDebugCamera;
 			_window.Resized -= WindowResized;
