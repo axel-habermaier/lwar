@@ -96,6 +96,14 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		///   Returns a string representation of the message.
+		/// </summary>
+		public override string ToString()
+		{
+			return Type.ToString();
+		}
+
+		/// <summary>
 		///   The offset of payload fields that contain strings at offset 0.
 		/// </summary>
 		private const int StringPayloadOffset = 8;
@@ -104,9 +112,9 @@ namespace Lwar.Client.Network
 		///   The offset of the payload fields that contain native types only.
 		/// </summary>
 		/// <remarks>
-		/// These fields must lie at offsets after the string, which ends at offset 16 in 64 bit builds.
+		///   These fields must lie at offsets after the string, which ends at offset 16 in 64 bit builds.
 		/// </remarks>
-		private const int PayloadOffset = 16; 
+		private const int PayloadOffset = 16;
 
 		/// <summary>
 		///   The type of the message.

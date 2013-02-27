@@ -18,8 +18,7 @@ namespace Lwar.Client.Gameplay
 		{
 			Entities = new DeferredList<IEntity>(false);
 			EntityMap = new IdentifierMap<IEntity>();
-			Players = new List<Player>();
-			PlayerMap = new IdentifierMap<Player>();
+			Players = new PlayerList();
 			RootTransform = Transformation.Create();
 		}
 
@@ -36,17 +35,7 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   The players that are currently playing.
 		/// </summary>
-		public List<Player> Players { get; private set; }
-
-		/// <summary>
-		///   Maps generational identifiers to player instances.
-		/// </summary>
-		public IdentifierMap<Player> PlayerMap { get; private set; }
-
-		/// <summary>
-		///   Gets or sets the player instance of the local player.
-		/// </summary>
-		public Player LocalPlayer { get; set; }
+		public PlayerList Players { get; private set; }
 
 		/// <summary>
 		///   Gets the root transformation.
@@ -59,6 +48,7 @@ namespace Lwar.Client.Gameplay
 		protected override void OnDisposing()
 		{
 			Entities.SafeDispose();
+			Players.SafeDispose();
 			RootTransform.SafeDispose();
 		}
 
@@ -67,6 +57,8 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public void Update()
 		{
+			Players.Update();
+
 			foreach (var entity in Entities)
 				entity.Update();
 		}

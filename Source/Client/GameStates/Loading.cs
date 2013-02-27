@@ -69,10 +69,11 @@ namespace Lwar.Client.GameStates
 
 			if (_networkSession.IsConnected)
 			{
-				Assert.NotNull(_gameSession.LocalPlayer, "Game state synced but local player is unknown.");
+				var localPlayer = _gameSession.Players.LocalPlayer;
+				Assert.NotNull(localPlayer, "Game state synced but local player is unknown.");
 
-				_networkSession.Send(Message.ChangePlayerName(_gameSession.LocalPlayer, Cvars.PlayerName.Value));
-				_networkSession.Send(Message.ChangeSelection(_gameSession.LocalPlayer, EntityType.Ship,
+				_networkSession.Send(Message.ChangePlayerName(localPlayer, Cvars.PlayerName.Value));
+				_networkSession.Send(Message.ChangeSelection(localPlayer, EntityType.Ship,
 															 EntityType.Gun, EntityType.Gun,
 															 EntityType.Gun, EntityType.Gun));
 			}

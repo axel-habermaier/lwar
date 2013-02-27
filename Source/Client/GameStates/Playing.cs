@@ -40,6 +40,11 @@ namespace Lwar.Client.GameStates
 		private InputManager _inputManager;
 
 		/// <summary>
+		///   The message dispatcher that is used to dispatch messages received from the server.
+		/// </summary>
+		private MessageDispatcher _messageDispatcher;
+
+		/// <summary>
 		///   The render context that is used to render the game session.
 		/// </summary>
 		private RenderContext _renderContext;
@@ -59,6 +64,7 @@ namespace Lwar.Client.GameStates
 
 			_networkSession = new NetworkSession(serverEndPoint);
 			_gameSession = new GameSession();
+			_messageDispatcher = new MessageDispatcher(_gameSession);
 
 			IsOpaque = true;
 			_timer.Timeout += SendInput;
@@ -104,13 +110,13 @@ namespace Lwar.Client.GameStates
 		{
 			if (_sendInput && _networkSession.IsConnected)
 			{
-				var message = _inputManager.CreateInputMessage(_gameSession.LocalPlayer, _cameraManager.GameCamera, Window.Size);
+				var message = _inputManager.CreateInputMessage(_gameSession.Players.LocalPlayer, _cameraManager.GameCamera, Window.Size);
 				_networkSession.Send(message);
 				_sendInput = false;
 			}
 
 			_timer.Update();
-			_networkSession.Update();
+			_networkSession.Update(_messageDispatcher);
 
 			if (_networkSession.IsConnected)
 			{

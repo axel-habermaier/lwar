@@ -26,6 +26,9 @@ namespace Lwar.Client.Gameplay
 			get
 			{
 				var obj = _map[identifier.Identity];
+				if (obj == null)
+					return null;
+
 				return obj.Id.Generation == identifier.Generation ? obj : null;
 			}
 		}

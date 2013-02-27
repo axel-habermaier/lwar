@@ -170,6 +170,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gameplay\PlayerList.cs" />
     <Compile Include="GameStates\MessageBox.cs" />
     <Compile Include="GameStates\WaitingForServer.cs" />
     <Compile Include="GameStates\MainMenu.cs" />

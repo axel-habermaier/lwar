@@ -4,9 +4,7 @@ namespace Lwar.Client.Network
 {
 	using System.Collections.Generic;
 	using System.Net;
-	using Gameplay;
 	using Pegasus.Framework;
-	using Rendering;
 
 	/// <summary>
 	///   Represents a network session that implements the lwar network protocol.
@@ -49,11 +47,6 @@ namespace Lwar.Client.Network
 			_outgoingMessages = new MessageQueue(packetFactory, _deliveryManager);
 			Send(Message.Connect());
 		}
-
-		/// <summary>
-		///   Gets the message dispatcher that dispatches received messages.
-		/// </summary>
-		public MessageDispatcher Dispatcher { get; private set; }
 
 		/// <summary>
 		///   Gets the endpoint of the server.
@@ -123,13 +116,16 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Updates the state of the network session.
 		/// </summary>
-		public void Update()
+		/// <param name="dispatcher">The message dispatcher that should be used to dispatch the received server messages.</param>
+		public void Update(MessageDispatcher dispatcher)
 		{
+			Assert.ArgumentNotNull(dispatcher, () => dispatcher);
+
 			_connection.Receive(_receivedMessages, _deliveryManager);
 			_connection.Send(_outgoingMessages);
 			_connection.Update();
 
-			Dispatcher.Dispatch(_receivedMessages);
+			dispatcher.Dispatch(_receivedMessages);
 		}
 
 		/// <summary>

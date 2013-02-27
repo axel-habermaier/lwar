@@ -1,0 +1,85 @@
+﻿using System;
+
+namespace Lwar.Client.Gameplay
+{
+	using System.Collections.Generic;
+	using Pegasus.Framework;
+
+	/// <summary>
+	///   Manages the active players that participate a game session.
+	/// </summary>
+	public sealed class PlayerList : DisposableObject
+	{
+		/// <summary>
+		///   Maps generational identifiers to player instances.
+		/// </summary>
+		private readonly IdentifierMap<Player> _playerMap = new IdentifierMap<Player>();
+
+		/// <summary>
+		///   The list of active players.
+		/// </summary>
+		private readonly DeferredList<Player> _players = new DeferredList<Player>(false);
+
+		/// <summary>
+		///   Gets the local player.
+		/// </summary>
+		public Player LocalPlayer { get; private set; }
+
+		/// <summary>
+		///   Adds the given player to the list.
+		/// </summary>
+		/// <param name="playerId">The identifier of the player that should be added.</param>
+		/// <param name="isLocalPlayer">Indicates whether the new player is the local one.</param>
+		public void Add(Identifier playerId, bool isLocalPlayer)
+		{
+			Assert.That(_playerMap[playerId] == null, "A player with the same id has already been added.");
+
+			var player = Player.Create(playerId);
+			_players.Add(player);
+			_playerMap.Add(player);
+
+			if (isLocalPlayer)
+				LocalPlayer = player;
+		}
+
+		/// <summary>
+		///   Removes player with the given id from the list.
+		/// </summary>
+		/// <param name="playerId">The id of the player that should be removed.</param>
+		public void Remove(Identifier playerId)
+		{
+			Assert.ArgumentSatisfies(LocalPlayer == null || playerId != LocalPlayer.Id, () => playerId,
+									 "Cannot remove the local player.");
+
+			var player = _playerMap[playerId];
+			Assert.NotNull(player, "Cannot remove unknown player.");
+
+			_players.Remove(player);
+			_playerMap.Remove(player);
+		}
+
+		/// <summary>
+		///   Updates the player list.
+		/// </summary>
+		public void Update()
+		{
+			_players.Update();
+		}
+
+		/// <summary>
+		///   Enumerates all active players.
+		/// </summary>
+		public List<Player>.Enumerator GetEnumerator()
+		{
+			return _players.GetEnumerator();
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_players.SafeDispose();
+		}
+	}
+}
