@@ -2,9 +2,8 @@
 
 namespace Lwar.Client.Gameplay
 {
-	using System.Collections.Generic;
-	using Entities;
 	using Pegasus.Framework;
+	using Rendering;
 
 	/// <summary>
 	///   Represents a game session, managing the state of entities, players, etc.
@@ -14,23 +13,20 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public GameSession()
+		/// <param name="renderContext">The render context that is used to draw the game session.</param>
+		public GameSession(RenderContext renderContext)
 		{
-			Entities = new DeferredList<IEntity>(false);
-			EntityMap = new IdentifierMap<IEntity>();
+			Assert.ArgumentNotNull(renderContext, () => renderContext);
+
+			Entities = new EntityList(this, renderContext);
 			Players = new PlayerList();
-			RootTransform = Transformation.Create();
+			RootTransform = new Transformation();
 		}
 
 		/// <summary>
 		///   The entities that are currently active.
 		/// </summary>
-		public DeferredList<IEntity> Entities { get; private set; }
-
-		/// <summary>
-		///   Maps generational identifiers to entity instances.
-		/// </summary>
-		public IdentifierMap<IEntity> EntityMap { get; private set; }
+		public EntityList Entities { get; private set; }
 
 		/// <summary>
 		///   The players that are currently playing.
@@ -49,7 +45,6 @@ namespace Lwar.Client.Gameplay
 		{
 			Entities.SafeDispose();
 			Players.SafeDispose();
-			RootTransform.SafeDispose();
 		}
 
 		/// <summary>
@@ -61,6 +56,8 @@ namespace Lwar.Client.Gameplay
 
 			foreach (var entity in Entities)
 				entity.Update();
+
+			RootTransform.Update();
 		}
 	}
 }

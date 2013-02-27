@@ -11,6 +11,14 @@ namespace Lwar.Client.Gameplay.Entities
 	public class Bullet : PooledObject<Bullet>, IEntity
 	{
 		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		public Bullet()
+		{
+			Transform = new Transformation();
+		}
+
+		/// <summary>
 		///   Gets the transformation of the bullet.
 		/// </summary>
 		public Transformation Transform { get; private set; }
@@ -27,7 +35,9 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <param name="renderContext">The render context the entity should be added to.</param>
 		public void Added(GameSession gameSession, RenderContext renderContext)
 		{
-			Transform = Transformation.Create(gameSession.RootTransform);
+			Transform.Reset();
+			Transform.Attach(gameSession.RootTransform);
+
 			renderContext.BulletRenderer.Add(this);
 		}
 
@@ -36,10 +46,11 @@ namespace Lwar.Client.Gameplay.Entities
 		/// </summary>
 		/// <param name="gameSession">The game state the entity should be removed from.</param>
 		/// <param name="renderContext">The render context the entity should be removed from.</param>
+		/// <remarks> The remove method is not called when the game session is shut down.</remarks>
 		public void Removed(GameSession gameSession, RenderContext renderContext)
 		{
 			renderContext.BulletRenderer.Remove(this);
-			Transform.SafeDispose();
+			Transform.Detach();
 		}
 
 		/// <summary>

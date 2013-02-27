@@ -30,6 +30,16 @@ namespace Lwar.Client.Rendering
 		private readonly VertexShader _vertexShader;
 
 		/// <summary>
+		///   The planet model.
+		/// </summary>
+		private readonly Model _model;
+
+		/// <summary>
+		///   The planet cube map.
+		/// </summary>
+		private readonly CubeMap _cubeMap;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
@@ -42,15 +52,17 @@ namespace Lwar.Client.Rendering
 			_vertexShader = assets.LoadVertexShader("Shaders/SphereVS");
 			_fragmentShader = assets.LoadFragmentShader("Shaders/SphereFS");
 			_transform = new ConstantBuffer<Matrix>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
+			_cubeMap = assets.LoadCubeMap("Textures/Sun");
+			_model = Model.CreateSphere(graphicsDevice, 100, 25);
 		}
 
 		/// <summary>
 		///   Invoked when an element has been added to the renderer.
 		/// </summary>
-		/// <param name="element">The element that should be drawn by the renderer.</param>
-		protected override PlanetDrawState OnAdded(Planet element)
+		/// <param name="planet">The element that should be drawn by the renderer.</param>
+		protected override PlanetDrawState OnAdded(Planet planet)
 		{
-			return new PlanetDrawState();
+			return new PlanetDrawState { Transform = planet.Transform };
 		}
 
 		/// <summary>
@@ -62,11 +74,14 @@ namespace Lwar.Client.Rendering
 			_vertexShader.Bind();
 			_fragmentShader.Bind();
 			SamplerState.TrilinearClamp.Bind(0);
+			_cubeMap.Bind(0);
 
 			foreach (var planet in RegisteredElements)
 			{
-				_transform.Data = planet.Transformation.Matrix;
+				_transform.Data = planet.Transform.Matrix;
 				_transform.Update();
+
+				_model.Draw();
 			}
 		}
 
@@ -75,6 +90,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_model.SafeDispose();
 			_transform.SafeDispose();
 		}
 
@@ -86,7 +102,7 @@ namespace Lwar.Client.Rendering
 			/// <summary>
 			///   The transformation of the planet.
 			/// </summary>
-			public Transformation Transformation;
+			public Transformation Transform;
 		}
 	}
 }

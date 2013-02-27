@@ -21,6 +21,7 @@ namespace Lwar.Client.Gameplay.Entities
 		/// </summary>
 		/// <param name="gameSession">The game state the entity should be removed from.</param>
 		/// <param name="renderContext">The render context the entity should be removed from.</param>
+		/// <remarks> The remove method is not called when the game session is shut down.</remarks>
 		void Removed(GameSession gameSession, RenderContext renderContext);
 
 		/// <summary>

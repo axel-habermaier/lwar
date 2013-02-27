@@ -170,6 +170,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gameplay\EntityList.cs" />
     <Compile Include="Gameplay\PlayerList.cs" />
     <Compile Include="GameStates\MessageBox.cs" />
     <Compile Include="GameStates\WaitingForServer.cs" />
@@ -177,11 +178,6 @@
     <Compile Include="GameStates\GameState.cs" />
     <Compile Include="GameStates\Loading.cs" />
     <Compile Include="AssetAttribute.cs" />
-    <Compile Include="AssetsLoader.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AssetsLoader.tt</DependentUpon>
-    </Compile>
     <Compile Include="Gameplay\Entities\Bullet.cs" />
     <Compile Include="Gameplay\CameraManager.cs" />
     <Compile Include="Gameplay\IdentifierMap.cs" />
@@ -189,7 +185,6 @@
     <Compile Include="Gameplay\EntityType.cs" />
     <Compile Include="Gameplay\GameSession.cs" />
     <Compile Include="Gameplay\Identifier.cs" />
-    <Compile Include="Gameplay\GameSessionOld.cs" />
     <Compile Include="BufferExtensions.cs" />
     <Compile Include="Gameplay\InputManager.cs" />
     <Compile Include="Gameplay\Entities\Ship.cs" />
@@ -233,12 +228,6 @@
       <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
       <Name>Framework</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="AssetsLoader.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssetsLoader.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

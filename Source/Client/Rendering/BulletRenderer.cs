@@ -47,10 +47,10 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   Invoked when an element has been added to the renderer.
 		/// </summary>
-		/// <param name="element">The element that should be drawn by the renderer.</param>
-		protected override BulletDrawState OnAdded(Bullet element)
+		/// <param name="bullet">The element that should be drawn by the renderer.</param>
+		protected override BulletDrawState OnAdded(Bullet bullet)
 		{
-			return new BulletDrawState();
+			return new BulletDrawState { Transform = bullet.Transform };
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace Lwar.Client.Rendering
 
 			foreach (var bullet in RegisteredElements)
 			{
-				_transform.Data = bullet.Transformation.Matrix;
+				_transform.Data = bullet.Transform.Matrix;
 				_transform.Update();
 			}
 		}
@@ -86,7 +86,7 @@ namespace Lwar.Client.Rendering
 			/// <summary>
 			///   The transformation of the bullet.
 			/// </summary>
-			public Transformation Transformation;
+			public Transformation Transform;
 		}
 	}
 }

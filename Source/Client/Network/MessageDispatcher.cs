@@ -4,6 +4,8 @@ namespace Lwar.Client.Network
 {
 	using System.Collections.Generic;
 	using Gameplay;
+	using Gameplay.Entities;
+	using Pegasus.Framework;
 
 	/// <summary>
 	///   Dispatches messages received from the server.
@@ -38,10 +40,12 @@ namespace Lwar.Client.Network
 					case MessageType.Chat:
 						break;
 					case MessageType.Name:
+						_gameSession.Players.ChangeName(message.Name.Player, message.Name.Name);
 						break;
 					case MessageType.Selection:
 						break;
 					case MessageType.Add:
+						AddEntity(message.Add.Entity, message.Add.Type, message.Add.Player);
 						break;
 					case MessageType.Collision:
 						break;
@@ -52,6 +56,7 @@ namespace Lwar.Client.Network
 						_gameSession.Players.Remove(message.Remove);
 						break;
 					case MessageType.Remove:
+						_gameSession.Entities.Remove(message.Remove);
 						break;
 					case MessageType.Stats:
 						break;
@@ -67,6 +72,38 @@ namespace Lwar.Client.Network
 						throw new InvalidOperationException("Unexpected message type.");
 				}
 			}
+		}
+
+		/// <summary>
+		///   Adds a new entity to the game session.
+		/// </summary>
+		/// <param name="entityId">The identifier of the new entity.</param>
+		/// <param name="type">The type of the new entity.</param>
+		/// <param name="playerId">The identifier of the player the new entity belongs to.</param>
+		private void AddEntity(Identifier entityId, EntityType type, Identifier playerId)
+		{
+			var player = _gameSession.Players[playerId];
+			IEntity entity;
+
+			switch (type)
+			{
+				case EntityType.Ship:
+					Assert.NotNull(player, "A valid player must be associated with a ship.");
+
+					entity = Ship.Create(entityId, player);
+					player.Ship = (Ship)entity;
+					break;
+				case EntityType.Planet:
+					entity = Planet.Create(entityId);
+					break;
+				case EntityType.Bullet:
+					entity = Bullet.Create(entityId);
+					break;
+				default:
+					throw new InvalidOperationException("Unexpected entity type.");
+			}
+
+			_gameSession.Entities.Add(entity);
 		}
 	}
 }

@@ -6,7 +6,7 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework;
 
 	/// <summary>
-	///   Manages the active players that participate a game session.
+	///   Manages the active players that participate in a game session.
 	/// </summary>
 	public sealed class PlayerList : DisposableObject
 	{
@@ -26,6 +26,16 @@ namespace Lwar.Client.Gameplay
 		public Player LocalPlayer { get; private set; }
 
 		/// <summary>
+		///   Gets the player that corresponds to the given identifier. Returns null if no player with the given identifier could
+		///   be found, or if the generation did not match.
+		/// </summary>
+		/// <param name="identifier">The identifier of the player that should be returned.</param>
+		public Player this[Identifier identifier]
+		{
+			get { return _playerMap[identifier]; }
+		}
+
+		/// <summary>
 		///   Adds the given player to the list.
 		/// </summary>
 		/// <param name="playerId">The identifier of the player that should be added.</param>
@@ -43,7 +53,7 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
-		///   Removes player with the given id from the list.
+		///   Removes the player with the given id from the list.
 		/// </summary>
 		/// <param name="playerId">The id of the player that should be removed.</param>
 		public void Remove(Identifier playerId)
@@ -80,6 +90,21 @@ namespace Lwar.Client.Gameplay
 		protected override void OnDisposing()
 		{
 			_players.SafeDispose();
+		}
+
+		/// <summary>
+		///   Changes the name of the player with the given id.
+		/// </summary>
+		/// <param name="playerId">The id of the player whose name should be changed.</param>
+		/// <param name="name">The new name of the player.</param>
+		public void ChangeName(Identifier playerId, string name)
+		{
+			Assert.ArgumentNotNull(name, () => name);
+
+			var player = _playerMap[playerId];
+			Assert.NotNull(player, "Cannot change the name of an unknown player.");
+
+			player.Name = name;
 		}
 	}
 }

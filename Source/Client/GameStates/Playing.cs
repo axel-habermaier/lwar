@@ -6,6 +6,7 @@ namespace Lwar.Client.GameStates
 	using Gameplay;
 	using Network;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Rendering;
 
@@ -17,7 +18,7 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   The game session that is played.
 		/// </summary>
-		private readonly GameSession _gameSession;
+		private GameSession _gameSession;
 
 		/// <summary>
 		///   The network session that synchronizes the game state between the client and the server.
@@ -63,9 +64,6 @@ namespace Lwar.Client.GameStates
 			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
 
 			_networkSession = new NetworkSession(serverEndPoint);
-			_gameSession = new GameSession();
-			_messageDispatcher = new MessageDispatcher(_gameSession);
-
 			IsOpaque = true;
 			_timer.Timeout += SendInput;
 
@@ -96,6 +94,8 @@ namespace Lwar.Client.GameStates
 		public override void Initialize()
 		{
 			_renderContext = new RenderContext(Window, GraphicsDevice, Assets);
+			_gameSession = new GameSession(_renderContext);
+			_messageDispatcher = new MessageDispatcher(_gameSession);
 			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
 			_inputManager = new InputManager(InputDevice);
 
@@ -122,6 +122,7 @@ namespace Lwar.Client.GameStates
 			{
 				_gameSession.Update();
 				_inputManager.Update();
+				_cameraManager.Update();
 			}
 
 			if (_networkSession.IsDropped)
@@ -147,6 +148,7 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public override void Draw()
 		{
+			_cameraManager.ActiveCamera.Viewport=new Rectangle(0, 0, Window.Size.Width, Window.Size.Height);
 			_renderContext.Draw(_cameraManager.ActiveCamera);
 		}
 	}

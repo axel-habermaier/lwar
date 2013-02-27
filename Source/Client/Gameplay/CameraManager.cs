@@ -99,6 +99,14 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
+		///   Updates the camera manager.
+		/// </summary>
+		public void Update()
+		{
+			_debugCamera.Update();
+		}
+
+		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()

@@ -20,6 +20,16 @@ namespace Lwar.Client.Rendering
 		private readonly FragmentShader _fragmentShader;
 
 		/// <summary>
+		///   The ship model.
+		/// </summary>
+		private readonly Model _model;
+
+		/// <summary>
+		///   The texture of the ship.
+		/// </summary>
+		private readonly Texture2D _texture;
+
+		/// <summary>
 		///   The transformation constant buffer.
 		/// </summary>
 		private readonly ConstantBuffer<Matrix> _transform;
@@ -42,15 +52,17 @@ namespace Lwar.Client.Rendering
 			_vertexShader = assets.LoadVertexShader("Shaders/QuadVS");
 			_fragmentShader = assets.LoadFragmentShader("Shaders/QuadFS");
 			_transform = new ConstantBuffer<Matrix>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
+			_texture = assets.LoadTexture2D("Textures/Ship");
+			_model = Model.CreateQuad(graphicsDevice, _texture.Size);
 		}
 
 		/// <summary>
 		///   Invoked when an element has been added to the renderer.
 		/// </summary>
-		/// <param name="element">The element that should be drawn by the renderer.</param>
-		protected override ShipDrawState OnAdded(Ship element)
+		/// <param name="ship">The element that should be drawn by the renderer.</param>
+		protected override ShipDrawState OnAdded(Ship ship)
 		{
-			return new ShipDrawState();
+			return new ShipDrawState { Transform = ship.Transform };
 		}
 
 		/// <summary>
@@ -62,11 +74,14 @@ namespace Lwar.Client.Rendering
 			_vertexShader.Bind();
 			_fragmentShader.Bind();
 			SamplerState.TrilinearClamp.Bind(0);
+			_texture.Bind(0);
 
 			foreach (var ship in RegisteredElements)
 			{
-				_transform.Data = ship.Transformation.Matrix;
+				_transform.Data = ship.Transform.Matrix;
 				_transform.Update();
+
+				_model.Draw();
 			}
 		}
 
@@ -75,6 +90,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_model.SafeDispose();
 			_transform.SafeDispose();
 		}
 
@@ -86,7 +102,7 @@ namespace Lwar.Client.Rendering
 			/// <summary>
 			///   The transformation of the bullet.
 			/// </summary>
-			public Transformation Transformation;
+			public Transformation Transform;
 		}
 	}
 }

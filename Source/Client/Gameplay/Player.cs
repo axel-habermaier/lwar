@@ -37,5 +37,13 @@ namespace Lwar.Client.Gameplay
 			player.Name = String.Empty;
 			return player;
 		}
+
+		/// <summary>
+		///   Returns a string that represents the current object.
+		/// </summary>
+		public override string ToString()
+		{
+			return String.Format("'{0}' ({1})", Name, Id);
+		}
 	}
 }

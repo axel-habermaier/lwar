@@ -11,6 +11,14 @@ namespace Lwar.Client.Gameplay.Entities
 	public class Ship : PooledObject<Ship>, IEntity
 	{
 		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		public Ship()
+		{
+			Transform = new Transformation();
+		}
+
+		/// <summary>
 		///   Gets or sets the player the ship belongs to.
 		/// </summary>
 		public Player Player { get; private set; }
@@ -37,7 +45,9 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <param name="renderContext">The render context the entity should be added to.</param>
 		public void Added(GameSession gameSession, RenderContext renderContext)
 		{
-			Transform = Transformation.Create(gameSession.RootTransform);
+			Transform.Reset();
+			Transform.Attach(gameSession.RootTransform);
+
 			renderContext.ShipRenderer.Add(this);
 		}
 
@@ -46,10 +56,11 @@ namespace Lwar.Client.Gameplay.Entities
 		/// </summary>
 		/// <param name="gameSession">The game state the entity should be removed from.</param>
 		/// <param name="renderContext">The render context the entity should be removed from.</param>
+		/// <remarks> The remove method is not called when the game session is shut down.</remarks>
 		public void Removed(GameSession gameSession, RenderContext renderContext)
 		{
 			renderContext.ShipRenderer.Remove(this);
-			Transform.SafeDispose();
+			Transform.Detach();
 		}
 
 		/// <summary>
@@ -86,6 +97,14 @@ namespace Lwar.Client.Gameplay.Entities
 			ship.Id = id;
 			ship.Player = player;
 			return ship;
+		}
+
+		/// <summary>
+		///   Returns a string that represents the current object.
+		/// </summary>
+		public override string ToString()
+		{
+			return String.Format("Ship {0}, Player: {1}", Id, Player);
 		}
 	}
 }

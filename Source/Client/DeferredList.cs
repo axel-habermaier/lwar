@@ -3,6 +3,7 @@
 namespace Lwar.Client
 {
 	using System.Collections.Generic;
+	using System.Linq;
 	using Pegasus.Framework;
 
 	/// <summary>
@@ -139,6 +140,7 @@ namespace Lwar.Client
 
 			_removedItems.AddRange(_addedItems);
 			_removedItems.AddRange(_items);
+			_addedItems.Clear();
 		}
 
 		/// <summary>

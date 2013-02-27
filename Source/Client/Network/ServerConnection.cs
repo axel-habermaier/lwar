@@ -26,6 +26,11 @@ namespace Lwar.Client.Network
 		private const int LaggingTimeout = 500;
 
 		/// <summary>
+		///   Cached delegate of the message deserialization function.
+		/// </summary>
+		private static readonly Func<BufferReader, List<Message>> MessageDeserializer = MessageSerialization.Deserialize;
+
+		/// <summary>
 		///   Provides the time that is used to check whether a connection is lagging or dropped.
 		/// </summary>
 		private readonly Clock _clock = Clock.Create();
@@ -170,7 +175,7 @@ namespace Lwar.Client.Network
 			while (!buffer.EndOfBuffer)
 			{
 				List<Message> messages;
-				if (!buffer.TryRead(out messages, MessageSerialization.Deserialize))
+				if (!buffer.TryRead(out messages, MessageDeserializer))
 					continue;
 
 				for (var i = 0; i < messages.Count; ++i)

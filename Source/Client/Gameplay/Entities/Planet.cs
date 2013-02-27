@@ -3,6 +3,7 @@
 namespace Lwar.Client.Gameplay.Entities
 {
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Rendering;
 
 	/// <summary>
@@ -10,6 +11,14 @@ namespace Lwar.Client.Gameplay.Entities
 	/// </summary>
 	public class Planet : PooledObject<Planet>, IEntity
 	{
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		public Planet()
+		{
+			Transform = new Transformation();
+		}
+
 		/// <summary>
 		///   Gets the transformation of the planet.
 		/// </summary>
@@ -27,7 +36,9 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <param name="renderContext">The render context the entity should be added to.</param>
 		public void Added(GameSession gameSession, RenderContext renderContext)
 		{
-			Transform = Transformation.Create(gameSession.RootTransform);
+			Transform.Reset();
+			Transform.Attach(gameSession.RootTransform);
+
 			renderContext.PlanetRenderer.Add(this);
 		}
 
@@ -36,10 +47,11 @@ namespace Lwar.Client.Gameplay.Entities
 		/// </summary>
 		/// <param name="gameSession">The game state the entity should be removed from.</param>
 		/// <param name="renderContext">The render context the entity should be removed from.</param>
+		/// <remarks> The remove method is not called when the game session is shut down.</remarks>
 		public void Removed(GameSession gameSession, RenderContext renderContext)
 		{
 			renderContext.PlanetRenderer.Remove(this);
-			Transform.SafeDispose();
+			Transform.Detach();
 		}
 
 		/// <summary>
@@ -47,6 +59,7 @@ namespace Lwar.Client.Gameplay.Entities
 		/// </summary>
 		public void Update()
 		{
+			Transform.Position= new Vector3(200, 0, 200);
 		}
 
 		///// <summary>

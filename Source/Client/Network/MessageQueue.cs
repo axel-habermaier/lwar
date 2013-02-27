@@ -14,6 +14,11 @@ namespace Lwar.Client.Network
 	public class MessageQueue
 	{
 		/// <summary>
+		///   Cached delegate of the message serialization function.
+		/// </summary>
+		private static readonly Action<BufferWriter, Message> MessageSerializer = MessageSerialization.Serialize;
+
+		/// <summary>
 		///   The delivery manager that is used to enforce the message delivery constraints.
 		/// </summary>
 		private readonly DeliveryManager _deliveryManager;
@@ -111,7 +116,7 @@ namespace Lwar.Client.Network
 		{
 			foreach (var message in messages)
 			{
-				if (!buffer.TryWrite(message, MessageSerialization.Serialize))
+				if (!buffer.TryWrite(message, MessageSerializer))
 					return;
 			}
 		}
