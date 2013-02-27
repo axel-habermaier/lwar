@@ -20,6 +20,8 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public override void Initialize()
 		{
+			IsOpaque = true;
+
 			_label = new Label(Assets.LoadFont("Fonts/Liberation Mono 12"))
 			{
 				Text = "Welcome to lwar!",

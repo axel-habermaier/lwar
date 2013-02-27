@@ -94,7 +94,6 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public void Clear()
 		{
-			_states.SafeDisposeAll();
 			_states.Clear();
 		}
 
@@ -129,7 +128,7 @@ namespace Lwar.Client.GameStates
 		{
 			_states.Update();
 
-			for (var i = _states.Count - 1; i >= 0; --i)
+			for (var i = 0; i < _states.Count; ++i)
 				_states[i].Update(i == _states.Count - 1);
 		}
 
@@ -139,15 +138,16 @@ namespace Lwar.Client.GameStates
 		public void Draw()
 		{
 			// Find the first state that we need to draw
-			var firstScreen = _states.Count;
-			while (firstScreen > 0 && !_states[firstScreen - 1].IsOpaque)
+			var firstScreen = _states.Count - 1;
+			while (firstScreen > 0 && !_states[firstScreen].IsOpaque)
 				--firstScreen;
 
 			// Draw from bottom to top
 			for (var i = firstScreen; i < _states.Count; ++i)
+			{
 				_states[i].Draw();
-
-			SpriteBatch.DrawBatch();
+				SpriteBatch.DrawBatch();
+			}
 		}
 	}
 }

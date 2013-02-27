@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Gameplay.Entities
 {
-	using Network.Messages;
 	using Rendering;
 
 	/// <summary>
@@ -28,12 +27,5 @@ namespace Lwar.Client.Gameplay.Entities
 		///   Updates the entity's internal state.
 		/// </summary>
 		void Update();
-
-		/// <summary>
-		///   Applies the remote update record to the entity's state.
-		/// </summary>
-		/// <param name="update">The update record that has been sent by the server for this entity.</param>
-		/// <param name="timestamp">The timestamp that indicates when the update record has been sent.</param>
-		void RemoteUpdate(UpdateRecord update, uint timestamp);
 	}
 }

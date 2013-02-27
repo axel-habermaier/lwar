@@ -398,19 +398,20 @@ namespace Pegasus.Framework.Platform
 		/// <typeparam name="T">The type of the object that should be deserialized.</typeparam>
 		/// <param name="obj">The object that the deserialized values should be written to.</param>
 		/// <param name="deserializer">The deserializer that should be used to deserialize the object.</param>
-		public bool TryRead<T>(T obj, Action<BufferReader, T> deserializer)
+		public bool TryRead<T>(out T obj, Func<BufferReader, T> deserializer)
 		{
 			Assert.ArgumentNotNull(deserializer, () => deserializer);
 
 			var offset = _readPosition;
 			try
 			{
-				deserializer(this, obj);
+				obj = deserializer(this);
 				return true;
 			}
 			catch (IndexOutOfRangeException)
 			{
 				_readPosition = offset;
+				obj = default(T);
 				return false;
 			}
 		}

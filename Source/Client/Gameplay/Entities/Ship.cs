@@ -2,9 +2,7 @@
 
 namespace Lwar.Client.Gameplay.Entities
 {
-	using Network.Messages;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 	using Rendering;
 
 	/// <summary>
@@ -61,19 +59,19 @@ namespace Lwar.Client.Gameplay.Entities
 		{
 		}
 
-		/// <summary>
-		///   Applies the remote update record to the entity's state.
-		/// </summary>
-		/// <param name="update">The update record that has been sent by the server for this entity.</param>
-		/// <param name="timestamp">The timestamp that indicates when the update record has been sent.</param>
-		public void RemoteUpdate(UpdateRecord update, uint timestamp)
-		{
-			Assert.That(update.Type == UpdateRecordType.Full, "Unsupported update type.");
+		///// <summary>
+		/////   Applies the remote update record to the entity's state.
+		///// </summary>
+		///// <param name="update">The update record that has been sent by the server for this entity.</param>
+		///// <param name="timestamp">The timestamp that indicates when the update record has been sent.</param>
+		//public void RemoteUpdate(UpdateRecord update, uint timestamp)
+		//{
+		//	Assert.That(update.Type == UpdateRecordType.Full, "Unsupported update type.");
 
-			Transform.Position = new Vector3(update.Full.Position.X, 0, update.Full.Position.Y);
-			Transform.Rotation = new Vector3(0, update.Full.Rotation, 0);
-			Health = update.Full.Health;
-		}
+		//	Transform.Position = new Vector3(update.Full.Position.X, 0, update.Full.Position.Y);
+		//	Transform.Rotation = new Vector3(0, update.Full.Rotation, 0);
+		//	Health = update.Full.Health;
+		//}
 
 		/// <summary>
 		///   Creates a new instance.

@@ -5,7 +5,6 @@ namespace Lwar.Client.Network
 	using System.Collections.Generic;
 	using System.Net;
 	using Gameplay;
-	using Messages;
 	using Pegasus.Framework;
 	using Rendering;
 
@@ -33,7 +32,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   A cached queue that is used to retreive the received messages from the server connection.
 		/// </summary>
-		private readonly Queue<IMessage> _receivedMessages = new Queue<IMessage>();
+		private readonly Queue<Message> _receivedMessages = new Queue<Message>();
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -48,7 +47,7 @@ namespace Lwar.Client.Network
 			_connection = new ServerConnection(serverEndPoint, packetFactory);
 
 			_outgoingMessages = new MessageQueue(packetFactory, _deliveryManager);
-			_outgoingMessages.Enqueue(ConnectMessage.Create());
+			Send(Message.Connect());
 		}
 
 		/// <summary>
@@ -130,29 +129,16 @@ namespace Lwar.Client.Network
 			_connection.Send(_outgoingMessages);
 			_connection.Update();
 
-			foreach (var message in _receivedMessages)
-				message.Process(gameSession, renderContext);
-
-			_receivedMessages.SafeDisposeAll();
 			_receivedMessages.Clear();
-		}
-
-		/// <summary>
-		///   Sends the given unreliable message to the server.
-		/// </summary>
-		/// <param name="message">The message that should be sent.</param>
-		public void Send(IUnreliableMessage message)
-		{
-			_outgoingMessages.Enqueue(message);
 		}
 
 		/// <summary>
 		///   Sends the given reliable message to the server.
 		/// </summary>
 		/// <param name="message">The message that should be sent.</param>
-		public void Send(IReliableMessage message)
+		public void Send(Message message)
 		{
-			_outgoingMessages.Enqueue(message);
+			_outgoingMessages.Enqueue(ref message);
 		}
 
 		/// <summary>
@@ -162,7 +148,6 @@ namespace Lwar.Client.Network
 		{
 			_connection.SafeDispose();
 			_deliveryManager.SafeDispose();
-			_outgoingMessages.SafeDispose();
 		}
 	}
 }

@@ -2,8 +2,8 @@
 
 namespace Lwar.Client
 {
+	using System.Net;
 	using GameStates;
-	using Gameplay;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
@@ -22,9 +22,42 @@ namespace Lwar.Client
 		private readonly LocalServer _localServer = new LocalServer();
 
 		/// <summary>
-		/// The screen manager that manages the game screens of the application..
+		///   The state manager that manages the states of the application.
 		/// </summary>
 		private StateManager _stateManager;
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		public LwarApp()
+		{
+			LwarCommands.Connect.Invoked += Connect;
+			LwarCommands.Disconnect.Invoked += Disconnect;
+		}
+
+		/// <summary>
+		///   Invoked when the application is initializing.
+		/// </summary>
+		protected override void Initialize()
+		{
+			LogicalInputDevice.Modes = InputModes.Game;
+			Window.Closing += Exit;
+			Window.Resized += s => GraphicsDevice.SetViewport(new Rectangle(0, 0, s.Width, s.Height));
+			Window.Title = "lwar";
+			Window.Size = new Size(1280, 720);
+
+			AssetsLoader.Load(Assets);
+			_stateManager = new StateManager(Window, GraphicsDevice, Assets, LogicalInputDevice);
+			_stateManager.Add(new MainMenuState());
+
+			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
+			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");
+			Commands.Bind.Invoke(Key.F3.WentDown(), "connect 127.0.0.1");
+			Commands.Bind.Invoke(Key.F4.WentDown(), "disconnect");
+			Commands.Bind.Invoke(Key.F5.WentDown(), "reload_assets");
+			Commands.Bind.Invoke(Key.C.WentDown(), "toggle_debug_cam");
+			Commands.Bind.Invoke(Key.Escape.WentDown(), "exit");
+		}
 
 		/// <summary>
 		///   Invoked when the application should update the game state.
@@ -52,6 +85,9 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			LwarCommands.Connect.Invoked -= Connect;
+			LwarCommands.Disconnect.Invoked -= Disconnect;
+
 			_stateManager.SafeDispose();
 			_localServer.SafeDispose();
 
@@ -59,27 +95,27 @@ namespace Lwar.Client
 		}
 
 		/// <summary>
-		///   Invoked when the application is initializing.
+		///   Connects to the server at the given end point and joins the game session.
 		/// </summary>
-		protected override void Initialize()
+		/// <param name="serverEndPoint">The remote end point of the server that hosts the game session.</param>
+		private void Connect(IPEndPoint serverEndPoint)
 		{
-			LogicalInputDevice.Modes = InputModes.Game;
-			Window.Closing += Exit;
-			Window.Resized += s => GraphicsDevice.SetViewport(new Rectangle(0, 0, s.Width, s.Height));
-			Window.Title = "lwar";
-			Window.Size = new Size(1280, 720);
+			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
 
-			AssetsLoader.Load(Assets);
-			_stateManager = new StateManager(Window, GraphicsDevice, Assets, LogicalInputDevice);
+			if (serverEndPoint.Port == 0)
+				serverEndPoint.Port = Specification.DefaultServerPort;
+
+			Disconnect();
+			_stateManager.Add(new PlayingState(serverEndPoint));
+		}
+
+		/// <summary>
+		///   Disconnects from the game session the client is currently connected to.
+		/// </summary>
+		private void Disconnect()
+		{
+			_stateManager.Clear();
 			_stateManager.Add(new MainMenuState());
-
-			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
-			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");
-			Commands.Bind.Invoke(Key.F3.WentDown(), "connect 127.0.0.1");
-			Commands.Bind.Invoke(Key.F4.WentDown(), "disconnect");
-			Commands.Bind.Invoke(Key.F5.WentDown(), "reload_assets");
-			Commands.Bind.Invoke(Key.C.WentDown(), "toggle_debug_cam");
-			Commands.Bind.Invoke(Key.Escape.WentDown(), "exit");
 		}
 	}
 }

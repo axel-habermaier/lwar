@@ -4,7 +4,6 @@ namespace Lwar.Client.Network
 {
 	using System.Collections.Generic;
 	using System.Net;
-	using Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
@@ -112,7 +111,7 @@ namespace Lwar.Client.Network
 		/// <param name="deliveryManager">
 		///   The delivery manager that is used to determine whether a message should be added to the queue.
 		/// </param>
-		public void Receive(Queue<IMessage> messageQueue, DeliveryManager deliveryManager)
+		public void Receive(Queue<Message> messageQueue, DeliveryManager deliveryManager)
 		{
 			Assert.ArgumentNotNull(messageQueue, () => messageQueue);
 			Assert.ArgumentNotNull(deliveryManager, () => deliveryManager);
@@ -130,7 +129,7 @@ namespace Lwar.Client.Network
 					using (packet)
 					{
 						if (sender.SameEndPoint(ServerEndPoint))
-							HandleMessages(packet, messageQueue, deliveryManager);
+							HandlePacket(packet, messageQueue, deliveryManager);
 						else
 						{
 							NetworkLog.ClientWarn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
@@ -147,14 +146,14 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		///   Handles all messages in the incoming packet.
+		///   Handles the incoming packet.
 		/// </summary>
-		/// <param name="packet">The packet from which the messages should be deserialized.</param>
+		/// <param name="packet">The packet that should be handled.</param>
 		/// <param name="messageQueue">The message queue the received messages should be added to.</param>
 		/// <param name="deliveryManager">
 		///   The delivery manager that is used to determine whether a message should be added to the queue.
 		/// </param>
-		private void HandleMessages(IncomingPacket packet, Queue<IMessage> messageQueue, DeliveryManager deliveryManager)
+		private void HandlePacket(IncomingPacket packet, Queue<Message> messageQueue, DeliveryManager deliveryManager)
 		{
 			Assert.ArgumentNotNull(packet, () => packet);
 
@@ -170,164 +169,66 @@ namespace Lwar.Client.Network
 
 			while (!buffer.EndOfBuffer)
 			{
-				var type = (MessageType)buffer.ReadByte();
-				IMessage message = null;
+				List<Message> messages;
+				if (!buffer.TryRead(out messages, MessageSerialization.Deserialize))
+					continue;
 
-				if (type.IsReliable())
-					message = HandleReliableMessage(buffer, type, deliveryManager);
-				else if (type.IsUnreliable())
-					message = HandleUnreliableMessage(buffer, type, allowUnreliableDelivery);
-				else
-					Assert.That(false, "Unclassified message type.");
+				for (var i = 0; i < messages.Count; ++i)
+				{
+					var message = messages[i];
 
-				// Only enqueue the message if we actually have a valid message to handle
-				if (message != null)
-					messageQueue.Enqueue(message);
+					if (message.Type.IsReliable() && !deliveryManager.AllowReliableDelivery(message.SequenceNumber))
+						continue;
+
+					if (message.Type.IsUnreliable() && !allowUnreliableDelivery)
+						continue;
+
+					if (message.Type.IsUnreliable())
+						message.Timestamp = header.Value.Timestamp;
+
+					HandleMessage(ref message, messageQueue);
+				}
 			}
 		}
 
 		/// <summary>
-		///   Deserializes a reliable message of the given type from the buffer, returning null if the message should
-		///   be ignored.
+		///   Handles internal messages and adds external messages to the queue.
 		/// </summary>
-		/// <param name="buffer">The buffer the message should be deserialized from.</param>
-		/// <param name="type">The type of the reliable message.</param>
-		/// <param name="deliveryManager">
-		///   The delivery manager that is used to determine whether a message should be added to the queue.
-		/// </param>
-		private IReliableMessage HandleReliableMessage(BufferReader buffer, MessageType type, DeliveryManager deliveryManager)
+		/// <param name="message">The message that should be handled.</param>
+		/// <param name="messageQueue">The message queue an external message should be added to.</param>
+		private void HandleMessage(ref Message message, Queue<Message> messageQueue)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-			Assert.ArgumentInRange(type, () => type);
-			Assert.ArgumentSatisfies(type.IsReliable(), () => type, "Not a reliable message type.");
-
-			if (!buffer.CanRead(sizeof(uint)))
-				return null;
-
-			IReliableMessage message;
-
-			var sequenceNumber = buffer.ReadUInt32();
-			var allowDelivery = deliveryManager.AllowReliableDelivery(sequenceNumber);
-
-			switch (type)
+			switch (message.Type)
 			{
 				case MessageType.Join:
-					message = JoinMessage.Create(buffer);
-
-					// If this is the first packet that we received from the server, it means we're syncing the game state
-					if (allowDelivery && sequenceNumber == 1)
+					// If the first message we get from the server is a join message, we know that the server has
+					// accepted the connection and starts syncing the game state.
+					// The first join sent by the server is the join for the local player.
+					if (message.SequenceNumber == 1)
 					{
-						((JoinMessage)message).IsLocalPlayer = true;
+						message.Join.IsLocalPlayer = true;
 						State = ConnectionState.Syncing;
 					}
-					break;
-				case MessageType.Leave:
-					message = LeaveMessage.Create(buffer);
-					break;
-				case MessageType.Chat:
-					message = ChatMessage.Create(buffer);
-					break;
-				case MessageType.Add:
-					message = AddMessage.Create(buffer);
-					break;
-				case MessageType.Remove:
-					message = RemoveMessage.Create(buffer);
-					break;
-				case MessageType.Selection:
-					message = SelectionMessage.Create(buffer);
-					break;
-				case MessageType.Name:
-					message = NameMessage.Create(buffer);
+					messageQueue.Enqueue(message);
 					break;
 				case MessageType.Synced:
-					message = SyncedMessage.Create(buffer);
-
 					// We should only receive a sync packet if we're actually syncing
-					if (allowDelivery && State != ConnectionState.Syncing)
-						NetworkLog.ClientWarn("Ignored an unexpected synced message.");
-					else if (allowDelivery)
+					if (State != ConnectionState.Syncing)
+						NetworkLog.ClientWarn("Ignored an unexpected Synced message.");
+					else
 						State = ConnectionState.Connected;
-
-					allowDelivery = false;
-					break;
-				case MessageType.Connect:
-				case MessageType.Disconnect:
-					NetworkLog.ClientWarn("Received an unexpected reliable message of type {0}. The rest of the packet is ignored.", type);
-					return null;
-				default:
-					NetworkLog.ClientWarn("Received a message of unknown reliable type. The rest of the packet is ignored.");
-					return null;
-			}
-
-			if (!allowDelivery)
-			{
-				message.SafeDispose();
-				return null;
-			}
-
-			message.SequenceNumber = sequenceNumber;
-			return message;
-		}
-
-		/// <summary>
-		///   Deserializes a reliable message of the given type from the buffer
-		/// </summary>
-		/// <param name="buffer">The buffer the message should be deserialized from.</param>
-		/// <param name="type">The type of the unreliable message.</param>
-		/// <param name="allowDelivery">Indicates whether the message is allowed to be delivered.</param>
-		private IUnreliableMessage HandleUnreliableMessage(BufferReader buffer, MessageType type, bool allowDelivery)
-		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-			Assert.ArgumentInRange(type, () => type);
-			Assert.ArgumentSatisfies(type.IsUnreliable(), () => type, "Not an unreliable message type.");
-
-			IUnreliableMessage message;
-			switch (type)
-			{
-				case MessageType.Stats:
-					message = StatsMessage.Create(buffer);
-					break;
-				case MessageType.Update:
-					message = UpdateMessage.Create(buffer, UpdateRecordType.Full);
-					break;
-				case MessageType.UpdatePosition:
-					message = UpdateMessage.Create(buffer, UpdateRecordType.Position);
-					break;
-				case MessageType.UpdateRay:
-					message = UpdateMessage.Create(buffer, UpdateRecordType.Ray);
-					break;
-				case MessageType.UpdateCircle:
-					message = UpdateMessage.Create(buffer, UpdateRecordType.Circle);
 					break;
 				case MessageType.Full:
-					message = FullMessage.Create(buffer);
-
 					// Only the first message can be a server full message
-					if (allowDelivery && State != ConnectionState.Connecting)
+					if (State != ConnectionState.Connecting)
 						NetworkLog.ClientWarn("Ignored an unexpected server full message.");
-					else if (allowDelivery)
+					else
 						State = ConnectionState.Full;
-
-					allowDelivery = false;
 					break;
-				case MessageType.Collision:
-					message = CollisionMessage.Create(buffer);
-					break;
-				case MessageType.Input:
-					NetworkLog.ClientWarn("Received an unexpected unreliable message of type {0}. The rest of the packet is ignored.", type);
-					return null;
 				default:
-					NetworkLog.ClientWarn("Received an unreliable message of unknown type. The rest of the packet is ignored.");
-					return null;
+					messageQueue.Enqueue(message);
+					break;
 			}
-
-			if (!allowDelivery)
-			{
-				message.SafeDispose();
-				return null;
-			}
-
-			return message;
 		}
 
 		/// <summary>
@@ -350,9 +251,6 @@ namespace Lwar.Client.Network
 		{
 			_clock.SafeDispose();
 			_socket.SafeDispose();
-
-			if (State == ConnectionState.Connected || State == ConnectionState.Syncing)
-				NetworkLog.ClientInfo("Disconnected from {0}.", ServerEndPoint);
 		}
 	}
 }

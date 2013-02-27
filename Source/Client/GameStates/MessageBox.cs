@@ -4,6 +4,7 @@ namespace Lwar.Client.GameStates
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Rendering.UserInterface;
 
@@ -37,7 +38,6 @@ namespace Lwar.Client.GameStates
 
 			_message = message;
 			_continue = new LogicalInput(Key.Space.WentDown(), InputModes.Game);
-			InputDevice.Register(_continue);
 		}
 
 		/// <summary>
@@ -58,6 +58,8 @@ namespace Lwar.Client.GameStates
 				Text = _message + "\n\nPress [Space] to continue...",
 				Alignment = TextAlignment.Middle | TextAlignment.Centered
 			};
+
+			InputDevice.Register(_continue);
 		}
 
 		/// <summary>
@@ -77,6 +79,7 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public override void Draw()
 		{
+			SpriteBatch.Draw(_messageLabel.ActualArea, Texture2D.White, new Color(0xEE333333));
 			_messageLabel.Draw(SpriteBatch);
 		}
 	}

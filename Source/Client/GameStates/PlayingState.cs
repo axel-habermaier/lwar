@@ -5,7 +5,6 @@ namespace Lwar.Client.GameStates
 	using System.Net;
 	using Gameplay;
 	using Network;
-	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 	using Rendering;
@@ -21,11 +20,6 @@ namespace Lwar.Client.GameStates
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///   Manages the input provided by the user.
-		/// </summary>
-		private readonly InputManager _inputManager;
-
-		/// <summary>
 		///   The network session that synchronizes the game state between the client and the server.
 		/// </summary>
 		private readonly NetworkSession _networkSession;
@@ -39,6 +33,11 @@ namespace Lwar.Client.GameStates
 		///   Manages the game and debug cameras.
 		/// </summary>
 		private CameraManager _cameraManager;
+
+		/// <summary>
+		///   Manages the input provided by the user.
+		/// </summary>
+		private InputManager _inputManager;
 
 		/// <summary>
 		///   The render context that is used to render the game session.
@@ -60,9 +59,11 @@ namespace Lwar.Client.GameStates
 
 			_networkSession = new NetworkSession(serverEndPoint);
 			_gameSession = new GameSession();
-			_inputManager = new InputManager(InputDevice);
 
+			IsOpaque = true;
 			_timer.Timeout += SendInput;
+
+			Log.Info("Connecting to {0}...", serverEndPoint);
 		}
 
 		/// <summary>
@@ -79,6 +80,8 @@ namespace Lwar.Client.GameStates
 			_networkSession.SafeDispose();
 			_gameSession.SafeDispose();
 			_renderContext.SafeDispose();
+
+			Log.Info("The game session has ended.");
 		}
 
 		/// <summary>
@@ -88,8 +91,9 @@ namespace Lwar.Client.GameStates
 		{
 			_renderContext = new RenderContext(Window, GraphicsDevice, Assets);
 			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
+			_inputManager = new InputManager(InputDevice);
 
-			StateManager.Add(new LoadingState(_networkSession));
+			StateManager.Add(new LoadingState(_gameSession, _networkSession));
 		}
 
 		/// <summary>
@@ -100,12 +104,19 @@ namespace Lwar.Client.GameStates
 		{
 			if (_sendInput && _networkSession.IsConnected)
 			{
-				var inputState = _inputManager.GetUpdatedInputState(_cameraManager.GameCamera, Window.Size);
-				_networkSession.Send(InputMessage.Create(_gameSession.LocalPlayer.Id, inputState));
+				var message = _inputManager.CreateInputMessage(_gameSession.LocalPlayer, _cameraManager.GameCamera, Window.Size);
+				_networkSession.Send(message);
 				_sendInput = false;
 			}
 
+			_timer.Update();
 			_networkSession.Update(_gameSession, _renderContext);
+
+			if (_networkSession.IsConnected)
+			{
+				_gameSession.Update();
+				_inputManager.Update();
+			}
 
 			if (_networkSession.IsDropped)
 				ShowMessageBox("The connection to the server has been lost.", LogType.Error, true);
@@ -115,12 +126,6 @@ namespace Lwar.Client.GameStates
 
 			if (_networkSession.IsLagging && topmost)
 				StateManager.Add(new WaitingForServerState(_networkSession));
-
-			if (_networkSession.IsConnected)
-			{
-				_gameSession.Update();
-				_inputManager.Update();
-			}
 		}
 
 		/// <summary>

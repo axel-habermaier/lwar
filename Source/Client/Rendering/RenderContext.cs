@@ -37,11 +37,6 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
-		///   Gets or sets the camera that the render context uses to draw the scene.
-		/// </summary>
-		public Camera Camera { get; set; }
-
-		/// <summary>
 		///   Gets the renderer that is used to draw planets.
 		/// </summary>
 		public PlanetRenderer PlanetRenderer { get; private set; }
@@ -63,7 +58,7 @@ namespace Lwar.Client.Rendering
 		public void Draw(Camera camera)
 		{
 			Assert.ArgumentNotNull(camera, () => camera);
-			Camera.Bind();
+			camera.Bind();
 
 			if (LwarCvars.DrawWireframe.Value)
 				_wireframe.Bind();
@@ -80,6 +75,10 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			PlanetRenderer.SafeDispose();
+			BulletRenderer.SafeDispose();
+			ShipRenderer.SafeDispose();
+
 			_wireframe.SafeDispose();
 		}
 	}

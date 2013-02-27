@@ -46,11 +46,12 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		///   Checks whether the reception of the given message has been acknowledged by the remote peer.
+		///   Checks whether the reception of the given reliable message has been acknowledged by the remote peer.
 		/// </summary>
 		/// <param name="message">The message that should be checked.</param>
-		public bool IsAcknowledged(IReliableMessage message)
+		public bool IsAcknowledged(ref Message message)
 		{
+			Assert.That(message.Type.IsReliable(), "The reception of unreliable messages cannot be acknowledged.");
 			return message.SequenceNumber <= _lastAckedSequenceNumber;
 		}
 
@@ -102,8 +103,9 @@ namespace Lwar.Client.Network
 		///   Assigns a sequence number to the reliable message.
 		/// </summary>
 		/// <param name="message">The reliable message the sequence number should be assigned to.</param>
-		public void AssignSequenceNumber(IReliableMessage message)
+		public void AssignSequenceNumber(ref Message message)
 		{
+			Assert.That(message.Type.IsReliable(), "Cannot assign a sequence number to an unreliable message.");
 			message.SequenceNumber = ++_lastAssignedSequenceNumber;
 		}
 

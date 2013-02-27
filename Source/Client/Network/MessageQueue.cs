@@ -11,7 +11,7 @@ namespace Lwar.Client.Network
 	///   The message queue is responsible for packing all queued messages into a packet and sending it to the remote
 	///   peer. Reliable messages will be resent until their reception has been acknowledged by the remote peer.
 	/// </summary>
-	public class MessageQueue : DisposableObject
+	public class MessageQueue
 	{
 		/// <summary>
 		///   The delivery manager that is used to enforce the message delivery constraints.
@@ -26,12 +26,12 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   The queued reliable messages that have not yet been sent or that have not yet been acknowledged.
 		/// </summary>
-		private readonly Queue<IReliableMessage> _reliableMessages = new Queue<IReliableMessage>();
+		private readonly Queue<Message> _reliableMessages = new Queue<Message>();
 
 		/// <summary>
 		///   The queued unreliable messages that have not yet been sent.
 		/// </summary>
-		private readonly Queue<IUnreliableMessage> _unreliableMessages = new Queue<IUnreliableMessage>();
+		private readonly Queue<Message> _unreliableMessages = new Queue<Message>();
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -56,31 +56,18 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			_reliableMessages.SafeDisposeAll();
-			_unreliableMessages.SafeDisposeAll();
-		}
-
-		/// <summary>
 		///   Enqueues the reliable message.
 		/// </summary>
-		/// <param name="message">The reliable message that should be enqueued.</param>
-		public void Enqueue(IReliableMessage message)
+		/// <param name="message">The message that should be enqueued.</param>
+		public void Enqueue(ref Message message)
 		{
-			_deliveryManager.AssignSequenceNumber(message);
-			_reliableMessages.Enqueue(message);
-		}
-
-		/// <summary>
-		///   Enqueues the unreliable message.
-		/// </summary>
-		/// <param name="message">The unreliable message that should be enqueued.</param>
-		public void Enqueue(IUnreliableMessage message)
-		{
-			_unreliableMessages.Enqueue(message);
+			if (message.Type.IsReliable())
+			{
+				_deliveryManager.AssignSequenceNumber(ref message);
+				_reliableMessages.Enqueue(message);
+			}
+			else
+				_unreliableMessages.Enqueue(message);
 		}
 
 		/// <summary>
@@ -95,9 +82,8 @@ namespace Lwar.Client.Network
 
 			AddMessages(_reliableMessages, packet.Writer);
 			AddMessages(_unreliableMessages, packet.Writer);
-
-			_unreliableMessages.SafeDisposeAll();
 			_unreliableMessages.Clear();
+
 			return packet;
 		}
 
@@ -108,11 +94,9 @@ namespace Lwar.Client.Network
 		{
 			while (_reliableMessages.Count != 0)
 			{
-				if (_deliveryManager.IsAcknowledged(_reliableMessages.Peek()))
-				{
-					var message = _reliableMessages.Dequeue();
-					message.Dispose();
-				}
+				var message = _reliableMessages.Peek();
+				if (_deliveryManager.IsAcknowledged(ref message))
+					_reliableMessages.Dequeue();
 				else
 					break;
 			}
@@ -123,12 +107,12 @@ namespace Lwar.Client.Network
 		/// </summary>
 		/// <param name="messages">The messages that should be written to the buffer.</param>
 		/// <param name="buffer">The buffer the messages should be written into.</param>
-		private static void AddMessages(IEnumerable<IMessage> messages, BufferWriter buffer)
+		private static void AddMessages(IEnumerable<Message> messages, BufferWriter buffer)
 		{
 			foreach (var message in messages)
 			{
-				if (!message.Write(buffer))
-					break;
+				if (!buffer.TryWrite(message, MessageSerialization.Serialize))
+					return;
 			}
 		}
 	}
