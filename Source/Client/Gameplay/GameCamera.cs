@@ -111,7 +111,12 @@ namespace Lwar.Client.Gameplay
 		/// <param name="screenCoordinates">The screen coordinates that should be converted to world coordinates.</param>
 		public Vector2 ToWorldCoordinates(Vector2 screenCoordinates)
 		{
-			return screenCoordinates;
+			// The projection places the origin into the center of the window; translate the screen coordinates accordingly
+			var center = new Vector2(Viewport.Width, Viewport.Height) / 2.0f;
+			var centered = screenCoordinates - center;
+
+			// TODO: This is nonsense -- needs to take the current projection matrix into account and find the intersection with the XZ plane
+			return centered;
 		}
 
 		/// <summary>

@@ -93,15 +93,6 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public Message CreateInputMessage()
 		{
-			// The mouse position in window coordinates
-			//_inputMessage.Target = _inputDevice.Mouse.Position;
-
-			// Move the origin of the mouse position to the center of the window
-			//mousePos = new Vector2i(mousePos.X - windowSize.Width / 2, mousePos.Y - windowSize.Height / 2);
-
-			// Translate the target to into world coordinates
-			//_inputMessage.Target = new Vector2(mousePos.X, mousePos.Y) - new Vector2(camera.Position.X, camera.Position.Z);
-
 			Update(ref _inputMessage.Forward, _forward.Triggered);
 			Update(ref _inputMessage.Backward, _backward.Triggered);
 			Update(ref _inputMessage.TurnLeft, _turnLeft.Triggered);

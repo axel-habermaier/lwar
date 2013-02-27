@@ -178,6 +178,16 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Divides a vector by a scalar value.
+		/// </summary>
+		/// <param name="vector">The vector that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static Vector2 operator /(Vector2 vector, float factor)
+		{
+			return new Vector2(vector.X / factor, vector.Y / factor);
+		}
+
+		/// <summary>
 		///   Computes the dot product of the two vectors.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
@@ -355,6 +365,16 @@ namespace Pegasus.Framework.Math
 		public static Vector2i operator *(int factor, Vector2i vector)
 		{
 			return new Vector2i(factor * vector.X, factor * vector.Y);
+		}
+
+		/// <summary>
+		///   Divides a vector by a scalar value.
+		/// </summary>
+		/// <param name="vector">The vector that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static Vector2i operator /(Vector2i vector, int factor)
+		{
+			return new Vector2i(vector.X / factor, vector.Y / factor);
 		}
 
 		/// <summary>
@@ -538,6 +558,16 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Divides a vector by a scalar value.
+		/// </summary>
+		/// <param name="vector">The vector that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static Vector2f8 operator /(Vector2f8 vector, Fixed8 factor)
+		{
+			return new Vector2f8(vector.X / factor, vector.Y / factor);
+		}
+
+		/// <summary>
 		///   Computes the dot product of the two vectors.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
@@ -715,6 +745,16 @@ namespace Pegasus.Framework.Math
 		public static Vector2f16 operator *(Fixed16 factor, Vector2f16 vector)
 		{
 			return new Vector2f16(factor * vector.X, factor * vector.Y);
+		}
+
+		/// <summary>
+		///   Divides a vector by a scalar value.
+		/// </summary>
+		/// <param name="vector">The vector that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static Vector2f16 operator /(Vector2f16 vector, Fixed16 factor)
+		{
+			return new Vector2f16(vector.X / factor, vector.Y / factor);
 		}
 
 		/// <summary>

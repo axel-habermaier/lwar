@@ -186,6 +186,16 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Divides a vector by a scalar value.
+		/// </summary>
+		/// <param name="vector">The vector that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static Vector2<#= info.Name #> operator /(Vector2<#= info.Name #> vector, <#= info.Type #> factor)
+		{
+			return new Vector2<#= info.Name #>(vector.X / factor, vector.Y / factor);
+		}
+
+		/// <summary>
 		///   Computes the dot product of the two vectors.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
