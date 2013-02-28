@@ -6,7 +6,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using System.IO;
 	using System.Linq;
 	using System.Security.Cryptography;
-	using System.Threading.Tasks;
 	using Assets;
 	using Framework;
 	using Framework.Platform;
@@ -22,17 +21,19 @@ namespace Pegasus.AssetsCompiler.Compilers
 		///   Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The asset that should be compiled.</param>
-		public void Compile(IEnumerable<Asset> assets)
+		public bool Compile(IEnumerable<Asset> assets)
 		{
-			var tasks = assets.OfType<TAsset>().Select(Compile).ToArray();
-			Task.WaitAll(tasks);
+			var success = true;
+			foreach (var asset in assets.OfType<TAsset>())
+				success &= Compile(asset);
+			return success;
 		}
 
 		/// <summary>
 		///   Gets a value indicating which action the compiler has to take.
 		/// </summary>
 		/// <param name="asset">The asset for which the required action should be determined.</param>
-		private static CompilationAction GetRequiredAction(Asset asset)
+		private static CompilationAction GetRequiredAction(TAsset asset)
 		{
 			if (!File.Exists(asset.TempPath))
 				return CompilationAction.Process;
@@ -59,7 +60,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		///   Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		private async Task Compile(Asset asset)
+		private bool Compile(TAsset asset)
 		{
 			EnsurePathsExist(Path.GetDirectoryName(asset.TargetPath));
 			EnsurePathsExist(Path.GetDirectoryName(asset.TempPathWithoutExtension));
@@ -70,18 +71,17 @@ namespace Pegasus.AssetsCompiler.Compilers
 			{
 				case CompilationAction.Skip:
 					Log.Info("Skipping '{0}' (no changes detected).", asset.RelativePath);
-					return;
+					return true;
 				case CompilationAction.Copy:
 					Log.Info("Copying '{0}' to target directory (compilation skipped; no changes detected).", asset.RelativePath);
 					File.Copy(asset.TempPath, asset.TargetPath, true);
-					return;
+					return true;
 				case CompilationAction.Process:
 					Log.Info("Compiling '{0}'...", asset.RelativePath);
 
 					File.WriteAllBytes(asset.HashPath, ComputeHash(asset));
 					using (var writer = new AssetWriter(asset.TempPath, asset.TargetPath))
-						await CompileAndLogExceptions(asset, writer.Writer);
-					break;
+						return CompileAndLogExceptions(asset, writer.Writer);
 				default:
 					throw new InvalidOperationException("Unknown action type.");
 			}
@@ -92,12 +92,12 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		internal Task Compile(Asset asset, BufferWriter buffer)
+		internal void Compile(TAsset asset, BufferWriter buffer)
 		{
 			EnsurePathsExist(Path.GetDirectoryName(asset.TargetPath));
 			EnsurePathsExist(Path.GetDirectoryName(asset.TempPathWithoutExtension));
 
-			return CompileAndLogExceptions(asset, buffer);
+			CompileAndLogExceptions(asset, buffer);
 		}
 
 		/// <summary>
@@ -105,19 +105,23 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		private async Task CompileAndLogExceptions(Asset asset, BufferWriter buffer)
+		private bool CompileAndLogExceptions(TAsset asset, BufferWriter buffer)
 		{
 			try
 			{
-				await CompileCore(asset, buffer);
+				CompileCore(asset, buffer);
+				return true;
 			}
 			catch (ApplicationAbortedException)
 			{
 			}
 			catch (Exception e)
 			{
-				Log.Error("   {0}", e.Message);
+				Log.Error("{0}", e.Message);
 			}
+
+			File.Delete(asset.HashPath);
+			return false;
 		}
 
 		/// <summary>
@@ -125,7 +129,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected abstract Task CompileCore(Asset asset, BufferWriter buffer);
+		protected abstract void CompileCore(TAsset asset, BufferWriter buffer);
 
 		/// <summary>
 		///   Computes the hash of the current source file.

@@ -61,14 +61,27 @@ namespace Pegasus.Framework.Platform
 		/// <param name="message">The message that should be added.</param>
 		private void LogMessage(LogType type, string message)
 		{
-			if (!String.IsNullOrWhiteSpace(message))
-				_logEntries.Enqueue(new LogEntry(type, String.Format("{0}: {1}", _process.StartInfo.FileName, message)));
+			if (String.IsNullOrWhiteSpace(message))
+				return;
+
+			message = message.Replace("{", "{{").Replace("}", "}}");
+			_logEntries.Enqueue(new LogEntry(type, String.Format("{0}: {1}", _process.StartInfo.FileName, message)));
 		}
 
 		/// <summary>
 		///   Runs the process.
 		/// </summary>
 		public IEnumerable<LogEntry> Run()
+		{
+			int exitCode;
+			return Run(out exitCode);
+		}
+
+		/// <summary>
+		///   Runs the process.
+		/// </summary>
+		/// <param name="exitCode">Returns the exit code of the process.</param>
+		public IEnumerable<LogEntry> Run(out int exitCode)
 		{
 			Assert.That(!_running, "The process is already running.");
 
@@ -82,6 +95,7 @@ namespace Pegasus.Framework.Platform
 				_process.BeginOutputReadLine();
 
 				_process.WaitForExit();
+				exitCode = _process.ExitCode;
 
 				return _logEntries;
 			}

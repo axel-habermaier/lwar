@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.IO;
 	using System.Linq;
-	using System.Threading.Tasks;
 	using Assets;
 	using Framework;
 	using Framework.Platform;
@@ -24,21 +23,22 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override async Task CompileCore(Asset asset, BufferWriter buffer)
+		protected override void CompileCore(FontAsset asset, BufferWriter buffer)
 		{
 			_parser = new XmlParser(asset.SourcePath);
 
 			ProcessCommon(buffer);
 			ProcessCharacters(buffer);
 			ProcessKerning(buffer);
-			await ProcessTexture(asset, buffer);
+			ProcessTexture(asset, buffer);
 		}
 
 		/// <summary>
 		///   Finds the texture name and writes it to the compiled asset file.
 		/// </summary>
+		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		private async Task ProcessTexture(Asset asset, BufferWriter buffer)
+		private void ProcessTexture(Asset asset, BufferWriter buffer)
 		{
 			var pages = _parser.FindElement(_parser.Root, "pages");
 			var pagesList = _parser.FindElements(pages, "page").ToArray();
@@ -48,7 +48,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 			var page = pagesList.Single();
 			var textureFile = _parser.ReadAttributeString(page, "file");
 			var texture = Path.Combine(Path.GetDirectoryName(asset.RelativePath), textureFile);
-			await new Texture2DCompiler().Compile(new Texture2DAsset(texture), buffer);
+			new Texture2DCompiler().Compile(new Texture2DAsset(texture), buffer);
 		}
 
 		/// <summary>

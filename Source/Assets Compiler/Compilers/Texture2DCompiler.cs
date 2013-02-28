@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.Drawing;
 	using System.IO;
-	using System.Threading.Tasks;
 	using Assets;
 	using Framework;
 	using Framework.Platform;
@@ -17,8 +16,9 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <summary>
 		///   Compiles the asset.
 		/// </summary>
+		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override async Task CompileCore(Asset asset, BufferWriter buffer)
+		protected override void CompileCore(Texture2DAsset asset, BufferWriter buffer)
 		{
 			using (var bitmap = (Bitmap)Image.FromFile(asset.SourcePath))
 			{
@@ -29,7 +29,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 
 				var outFile = asset.TempPathWithoutExtension + ".dds";
 				var format = ChooseCompression(bitmap.PixelFormat);
-				await ExternalTool.NvCompress(asset.SourcePath, outFile, format);
+				ExternalTool.NvCompress(asset.SourcePath, outFile, format, asset.Mipmaps);
 
 				using (var ddsBuffer = BufferReader.Create(File.ReadAllBytes(outFile)))
 				{

@@ -32,26 +32,30 @@ namespace Pegasus.AssetsCompiler
 		static CompilationUnit()
 		{
 			Compilers = Assembly.GetExecutingAssembly()
-								 .GetTypes()
-								 .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IAssetCompiler)))
-								 .Select(Activator.CreateInstance)
-								 .Cast<IAssetCompiler>()
-								 .ToArray();
+								.GetTypes()
+								.Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IAssetCompiler)))
+								.Select(Activator.CreateInstance)
+								.Cast<IAssetCompiler>()
+								.ToArray();
 		}
 
 		/// <summary>
-		///   Compiles all assets and returns the names of the assets that have been changed.
+		///   Compiles all assets and returns the names of the assets that have been changed. Returns true to indicate that the
+		///   compilation of all assets has been successful.
 		/// </summary>
-		public void Compile()
+		public bool Compile()
 		{
 			try
 			{
+				var success = true;
 				foreach (var compiler in Compilers)
-					compiler.Compile(_assets);
+					success &= compiler.Compile(_assets);
+				return success;
 			}
 			catch (Exception e)
 			{
 				Log.Error(e.Message);
+				return false;
 			}
 		}
 

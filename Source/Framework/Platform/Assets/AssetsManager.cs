@@ -59,16 +59,23 @@ namespace Pegasus.Framework.Platform.Assets
 				asset.Load(reader);
 		}
 
-		/// <summary>
+		/// <summary> 
 		///   Reloads all changed assets.
 		/// </summary>
 		private void ReloadAssets()
 		{
 			try
 			{
+				int exitCode;
 				using (var compiler = new ExternalProcess(AssetCompiler, "compile"))
-					foreach (var output in compiler.Run())
+					foreach (var output in compiler.Run(out exitCode))
 						output.RaiseLogEvent();
+
+				if (exitCode != 0)
+				{
+					Log.Error("Errors occurred during asset compilation. Asset reloading aborted.");
+					return;
+				}
 
 				foreach (var pair in _assets)
 				{

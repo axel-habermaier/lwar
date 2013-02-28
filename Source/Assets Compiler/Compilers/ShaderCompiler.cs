@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using System.ComponentModel;
 	using System.IO;
 	using System.Text;
-	using System.Threading.Tasks;
 	using Assets;
 	using Framework;
 	using Framework.Platform;
@@ -94,13 +93,13 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <param name="asset">The asset that contains the shader source code.</param>
 		/// <param name="source">The HLSL shader source code.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		protected async Task<ShaderBytecode> CompileHlslShader(Asset asset, string source, string profile)
+		protected ShaderBytecode CompileHlslShader(Asset asset, string source, string profile)
 		{
 			var hlslFile = asset.TempPathWithoutExtension + ".hlsl";
 			File.WriteAllText(hlslFile, source);
 
 			var byteCode = asset.TempPathWithoutExtension + ".fxo";
-			await ExternalTool.Fxc(hlslFile, byteCode, profile);
+			ExternalTool.Fxc(hlslFile, byteCode, profile);
 
 			return new ShaderBytecode(File.ReadAllBytes(byteCode));
 		}

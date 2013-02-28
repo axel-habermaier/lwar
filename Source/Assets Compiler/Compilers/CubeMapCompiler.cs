@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.Drawing;
 	using System.IO;
-	using System.Threading.Tasks;
 	using Assets;
 	using Framework;
 	using Framework.Platform;
@@ -19,7 +18,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override async Task CompileCore(Asset asset, BufferWriter buffer)
+		protected override void CompileCore(CubeMapAsset asset, BufferWriter buffer)
 		{
 			using (var bitmap = (Bitmap)Image.FromFile(asset.SourcePath))
 			{
@@ -51,12 +50,12 @@ namespace Pegasus.AssetsCompiler.Compilers
 				positiveY.Save(positiveYPath);
 
 				var assembledFile = asset.TempPathWithoutExtension + ".dds";
-				await ExternalTool.NvAssemble(negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath,
-											  assembledFile);
+				ExternalTool.NvAssemble(negativeZPath, negativeXPath, positiveZPath, positiveXPath, negativeYPath, positiveYPath,
+										assembledFile);
 
 				var outFile = asset.TempPathWithoutExtension + "-compressed" + PlatformInfo.AssetExtension;
 				var format = ChooseCompression(bitmap.PixelFormat);
-				await ExternalTool.NvCompress(assembledFile, outFile, format);
+				ExternalTool.NvCompress(assembledFile, outFile, format, asset.Mipmaps);
 
 				using (var ddsBuffer = BufferReader.Create(File.ReadAllBytes(outFile)))
 				{

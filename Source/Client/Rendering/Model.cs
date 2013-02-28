@@ -140,6 +140,52 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
+		///   Creates a skybox cube.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used to draw the skybox.</param>
+		public unsafe static Model CreateSkyBox(GraphicsDevice graphicsDevice)
+		{
+			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.That(sizeof(Vector4) == 4 * sizeof(float), "Vector4 has an unexpected unmanaged size.");
+
+			var vertices = new[]
+			{
+				new Vector4(-1.0f,-1.0f,-1.0f),
+                new Vector4(-1.0f, 1.0f,-1.0f),
+                new Vector4( 1.0f, 1.0f,-1.0f),
+                new Vector4( 1.0f,-1.0f,-1.0f),
+                new Vector4(-1.0f,-1.0f, 1.0f),
+                new Vector4( 1.0f,-1.0f, 1.0f),
+                new Vector4( 1.0f, 1.0f, 1.0f),
+                new Vector4(-1.0f, 1.0f, 1.0f)
+			};
+
+			//for (var i = 0; i < vertices.Length; ++i)
+				//vertices[i] *= 1000;
+
+			var indices = new ushort[]
+			{
+				0,1,2, 2,3,0, 4,5,6,
+                        6,7,4, 0,3,5, 5,4,0,
+                        3,2,6, 6,5,3, 2,1,7,
+                        7,6,2, 1,0,4, 4,7,1
+			};
+
+			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
+			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
+
+			
+			var inputElements = new[]
+			{
+				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, VertexDataSemantics.Position, sizeof(Vector4), 0),
+			};
+
+			var layout = new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);
+
+			return new Model(graphicsDevice, vertexBuffer, layout, indexBuffer, indices.Length);
+		}
+
+		/// <summary>
 		///   Creates a model of a sphere with the given radius, using the given subdivision factor to determine the smoothness of
 		///   the sphere.
 		/// </summary>

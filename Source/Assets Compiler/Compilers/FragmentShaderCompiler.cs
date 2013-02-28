@@ -2,7 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.Compilers
 {
-	using System.Threading.Tasks;
 	using Assets;
 	using Framework.Platform;
 
@@ -14,8 +13,9 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <summary>
 		///   Compiles the asset.
 		/// </summary>
+		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override async Task CompileCore(Asset asset, BufferWriter buffer)
+		protected override void CompileCore(FragmentShaderAsset asset, BufferWriter buffer)
 		{
 			string glsl, hlsl;
 			ExtractShaderCode(asset, out glsl, out hlsl);
@@ -24,7 +24,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 			WriteGlslShader(buffer, glsl);
 			if (CompileHlsl)
 			{
-				using (var byteCode = await CompileHlslShader(asset, hlsl, "ps_4_0"))
+				using (var byteCode = CompileHlslShader(asset, hlsl, "ps_4_0"))
 					buffer.Copy(byteCode);
 			}
 		}

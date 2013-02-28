@@ -216,6 +216,7 @@
     <Compile Include="Rendering\PlanetRenderer.cs" />
     <Compile Include="Rendering\RenderContext.cs" />
     <Compile Include="Rendering\ShipRenderer.cs" />
+    <Compile Include="Rendering\SkyBoxRenderer.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="Gameplay\Entities\IEntity.cs" />
     <Compile Include="LwarApp.cs" />

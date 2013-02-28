@@ -3,7 +3,6 @@
 namespace Pegasus.AssetsCompiler
 {
 	using System.Linq;
-	using System.Threading.Tasks;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
@@ -29,7 +28,8 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="input">The path of the input file that should be processed.</param>
 		/// <param name="output">The path of the output file that should be generated.</param>
 		/// <param name="format">The format that should be used to compress the texture.</param>
-		public static async Task NvCompress(string input, string output, SurfaceFormat format)
+		/// <param name="mipmaps">Indicates whether mipmaps should be generated.</param>
+		public static void NvCompress(string input, string output, SurfaceFormat format, bool mipmaps)
 		{
 			string compressionFormat;
 			switch (format)
@@ -58,10 +58,10 @@ namespace Pegasus.AssetsCompiler
 			}
 
 			using (var nvcompress = new ExternalProcess(NvCompressPath,
-														@"-dds10 -silent -{0} -premula ""{1}"" ""{2}""",
-														compressionFormat, input, output))
+														@"-dds10 -silent {3} -{0} -premula ""{1}"" ""{2}""",
+														compressionFormat, input, output, mipmaps ? String.Empty : "-nomips"))
 			{
-				var logEntries = await nvcompress.RunAsync();
+				var logEntries = nvcompress.Run();
 
 				foreach (var log in logEntries)
 					log.RaiseLogEvent();
@@ -78,15 +78,15 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="negativeY">The path of the negative Y input file that should be processed.</param>
 		/// <param name="positiveY">The path of the positive Y input file that should be processed.</param>
 		/// <param name="output">The path of the output file that should be generated.</param>
-		public static async Task NvAssemble(string negativeZ, string negativeX, string positiveZ, string positiveX,
-											string negativeY,
-											string positiveY, string output)
+		public static void NvAssemble(string negativeZ, string negativeX, string positiveZ, string positiveX,
+									  string negativeY,
+									  string positiveY, string output)
 		{
 			using (var nvassemble = new ExternalProcess(NvAssemblePath,
 														@"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
 														negativeZ, negativeX, positiveZ, positiveX, negativeY, positiveY, output))
 			{
-				var logEntries = await nvassemble.RunAsync();
+				var logEntries = nvassemble.Run();
 
 				foreach (var log in logEntries)
 					log.RaiseLogEvent();
@@ -94,12 +94,12 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Runs the DirectX offline shader compiler.
+		///   Runs the DirectX offline shader compiler. Returns false to indicate that compiler errors have occurred.
 		/// </summary>
 		/// <param name="input">The shader file that should be compiled.</param>
 		/// <param name="output">The output file that should store the compiled shader.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		public static async Task Fxc(string input, string output, string profile)
+		public static void Fxc(string input, string output, string profile)
 		{
 			string optimization;
 #if DEBUG
@@ -112,16 +112,18 @@ namespace Pegasus.AssetsCompiler
 												 @"/nologo {3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""",
 												 profile, output, input, optimization))
 			{
-				var logEntries = await fxc.RunAsync();
+				var logEntries = fxc.Run();
 
 				foreach (var log in logEntries.Where(l => l.LogType != LogType.Info))
 				{
-					var message = log.Message.Replace("{", "{{").Replace("}", "}}");
-					if (message.Contains(": warning X"))
-						Log.Warn(message);
+					if (log.Message.Contains(": warning X"))
+						Log.Warn(log.Message);
 					else
-						Log.Die(message);
+						Log.Error(log.Message);
 				}
+
+				if (logEntries.Any(l => l.LogType == LogType.Error))
+					throw new InvalidOperationException("HLSL shader code contains errors. No shader file has been generated.");
 			}
 		}
 

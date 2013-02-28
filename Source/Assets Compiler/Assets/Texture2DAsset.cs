@@ -11,9 +11,16 @@ namespace Pegasus.AssetsCompiler.Assets
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		public Texture2DAsset(string relativePath)
+		/// <param name="mipmaps">Indicates whether mipmaps should be generated for the cube map.</param>
+		public Texture2DAsset(string relativePath, bool mipmaps = true)
 			: base(relativePath)
 		{
+			Mipmaps = mipmaps;
 		}
+
+		/// <summary>
+		///   Gets a value indicating whether mipmaps should be generated for the cube map.
+		/// </summary>
+		public bool Mipmaps { get; private set; }
 	}
 }

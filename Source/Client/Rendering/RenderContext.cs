@@ -14,6 +14,11 @@ namespace Lwar.Client.Rendering
 	public class RenderContext : DisposableObject
 	{
 		/// <summary>
+		///   The renderer that is used to draw the skybox.
+		/// </summary>
+		private readonly SkyBoxRenderer _skyBoxRenderer;
+
+		/// <summary>
 		///   The rasterizer state that is used to draw in wireframe mode.
 		/// </summary>
 		private readonly RasterizerState _wireframe;
@@ -31,6 +36,8 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(assets, () => assets);
 
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
+			_skyBoxRenderer = new SkyBoxRenderer(graphicsDevice, assets);
+
 			PlanetRenderer = new PlanetRenderer(graphicsDevice, assets);
 			ShipRenderer = new ShipRenderer(graphicsDevice, assets);
 			BulletRenderer = new BulletRenderer(graphicsDevice, assets);
@@ -65,6 +72,7 @@ namespace Lwar.Client.Rendering
 			else
 				RasterizerState.CullCounterClockwise.Bind();
 
+			_skyBoxRenderer.Draw();
 			PlanetRenderer.Draw();
 			ShipRenderer.Draw();
 			BulletRenderer.Draw();
@@ -79,6 +87,7 @@ namespace Lwar.Client.Rendering
 			BulletRenderer.SafeDispose();
 			ShipRenderer.SafeDispose();
 
+			_skyBoxRenderer.SafeDispose();
 			_wireframe.SafeDispose();
 		}
 	}

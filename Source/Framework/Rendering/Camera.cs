@@ -17,9 +17,9 @@ namespace Pegasus.Framework.Rendering
 		private const int CameraConstantsSlot = 0;
 
 		/// <summary>
-		///   The constant buffer that holds the per-frame camera-related matrices that are passed to each vertex shader.
+		///   The constant buffer that holds the per-frame camera-related data that is passed to each vertex shader.
 		/// </summary>
-		private readonly ConstantBuffer<Matrices> _matrices;
+		private readonly ConstantBuffer<CameraData> _cameraBuffer;
 
 		/// <summary>
 		///   The camera's position within the world.
@@ -48,7 +48,7 @@ namespace Pegasus.Framework.Rendering
 		protected unsafe Camera(GraphicsDevice graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			_matrices = new ConstantBuffer<Matrices>(graphicsDevice, (buffer, matrices) => buffer.Copy(&matrices));
+			_cameraBuffer = new ConstantBuffer<CameraData>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
 		}
 
 		/// <summary>
@@ -60,6 +60,7 @@ namespace Pegasus.Framework.Rendering
 			set
 			{
 				_viewport = value;
+				_cameraBuffer.Data.ViewportSize = new Vector2(_viewport.Width, _viewport.Height);
 				UpdateProjectionMatrix();
 			}
 		}
@@ -108,7 +109,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		public void Bind()
 		{
-			_matrices.Bind(CameraConstantsSlot);
+			_cameraBuffer.Bind(CameraConstantsSlot);
 		}
 
 		/// <summary>
@@ -116,7 +117,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_matrices.SafeDispose();
+			_cameraBuffer.SafeDispose();
 		}
 
 		/// <summary>
@@ -124,7 +125,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected void UpdateProjectionMatrix()
 		{
-			UpdateProjectionMatrix(out _matrices.Data.Projection);
+			UpdateProjectionMatrix(out _cameraBuffer.Data.Projection);
 			UpdateConstantBuffer();
 		}
 
@@ -133,7 +134,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected void UpdateViewMatrix()
 		{
-			UpdateViewMatrix(out _matrices.Data.View);
+			UpdateViewMatrix(out _cameraBuffer.Data.View);
 			UpdateConstantBuffer();
 		}
 
@@ -142,10 +143,10 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		private void UpdateConstantBuffer()
 		{
-			Assert.That(Marshal.SizeOf(typeof(Matrices)) == Matrices.Size, "Unexpected unmanaged size.");
+			Assert.That(Marshal.SizeOf(typeof(CameraData)) == CameraData.Size, "Unexpected unmanaged size.");
 
-			_matrices.Data.ViewProjection = _matrices.Data.View * _matrices.Data.Projection;
-			_matrices.Update();
+			_cameraBuffer.Data.ViewProjection = _cameraBuffer.Data.View * _cameraBuffer.Data.Projection;
+			_cameraBuffer.Update();
 		}
 
 		/// <summary>
@@ -164,15 +165,15 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
-		///   Stores the camera matrices.
+		///   Stores the camera data that is passed to the vertex shaders.
 		/// </summary>
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
-		private struct Matrices
+		[StructLayout(LayoutKind.Sequential, Pack = 1, Size = Size)]
+		private struct CameraData
 		{
 			/// <summary>
 			///   The size of the struct in bytes.
 			/// </summary>
-			public const int Size = 192;
+			public const int Size = 208;
 
 			/// <summary>
 			///   The view matrix, where the camera lies in the origin.
@@ -188,6 +189,11 @@ namespace Pegasus.Framework.Rendering
 			///   The product of the view and the projection matrix that is pre-calculated on the CPU.
 			/// </summary>
 			public Matrix ViewProjection;
+
+			/// <summary>
+			///   The size of the viewport in pixels.
+			/// </summary>
+			public Vector2 ViewportSize;
 		}
 	}
 }
