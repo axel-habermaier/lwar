@@ -13,7 +13,7 @@ namespace Pegasus.Framework.Network
 	internal static class SocketExtensions
 	{
 #if Linux
-		[DllImport("libc", EntryPoint = "setsockopt")]
+		[System.Runtime.InteropServices.DllImport("libc", EntryPoint = "setsockopt")]
 		private static extern int SetSocketOption(IntPtr socket, int level, int optname, ref int optval, int optlen);
 #endif
 
