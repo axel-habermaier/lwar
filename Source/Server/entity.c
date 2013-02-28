@@ -143,7 +143,7 @@ Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
     e->collides = (e->radius > 0);   /* TODO: this is a hacky-heuristics */
     e->bounces  = (e->mass < 1000);
     notify(e);
-    log_debug("+ entity %d (%.1f,%.1f)", e->id.n, e->x.x, e->x.y);
+    log_debug("+ entity %d pos = (%.1f,%.1f) v = (%.1f,%.1f)", e->id.n, e->x.x, e->x.y, e->v.x, e->v.y);
     return e;
 }
 

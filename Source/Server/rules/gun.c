@@ -7,6 +7,7 @@
 #include "server.h"
 #include "rules.h"
 #include "vector.h"
+#include "log.h"
 
 static void shoot(Entity *gun);
 
@@ -32,9 +33,9 @@ static void shoot(Entity *gun) {
     gun->energy --;
 
     Vec f = unit(gun->phi);
-    Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
-    Vec v = add(gun->v, scale(f, type_bullet.max_a.y)); /* initial speed */
-
+	Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
+	Vec dir = normalize(sub((gun->player->aim), x));
+	Vec v = scale(dir, type_bullet.max_a.y); /* initial speed */
     entity_create(&type_bullet,gun->player,x,v);
 }
 

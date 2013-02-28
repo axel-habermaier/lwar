@@ -123,7 +123,6 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
                 break;
             uint8_t mask = ~(0xff << (m->input.frameno - c->last_in_frameno));
 			c->last_in_frameno = m->input.frameno;
-
             player_input(&c->player,
                          mask & m->input.forwards,
                          mask & m->input.backwards,

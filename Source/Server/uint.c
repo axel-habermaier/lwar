@@ -21,7 +21,7 @@ size_t uint16_pack(char *out,uint16_t in) {
 
 size_t uint16_unpack(const char *in,uint16_t *out) {
     *out =   (((uint16_t)(unsigned char)in[0]) << 8)
-           |   (uint16_t)in[1];
+           |   (uint16_t)(unsigned char)in[1];
     return 2;
 }
 

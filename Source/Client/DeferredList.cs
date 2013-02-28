@@ -123,10 +123,10 @@ namespace Lwar.Client
 		public void Remove(T item)
 		{
 			Assert.NotDisposed(this);
-			Assert.ArgumentSatisfies(!_addedItems.Contains(item), () => item, "The item is being added to the list.");
 			Assert.ArgumentSatisfies(_items.Contains(item), () => item, "The item is not contained in the list.");
 			Assert.ArgumentSatisfies(!_removedItems.Contains(item), () => item, "The item has already been removed from the list.");
 
+			_addedItems.Remove(item);
 			_removedItems.Add(item);
 		}
 
