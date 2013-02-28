@@ -42,12 +42,12 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   The maximum value.
 		/// </summary>
-		private double _max;
+		private double _max = -1000;
 
 		/// <summary>
 		///   The minimum value.
 		/// </summary>
-		private double _min;
+		private double _min = 1000;
 
 		/// <summary>
 		///   Invoked when the measurement should begin.
