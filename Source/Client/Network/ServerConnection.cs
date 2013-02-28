@@ -126,7 +126,7 @@ namespace Lwar.Client.Network
 
 			try
 			{
-				var sender = new IPEndPoint(IPAddress.Any, 0);
+				var sender = new IPEndPoint(IPAddress.IPv6Any, 0);
 				IncomingPacket packet;
 
 				while (_socket.TryReceive(ref sender, out packet))
@@ -241,7 +241,7 @@ namespace Lwar.Client.Network
 		/// </summary>
 		public void Update()
 		{
-			if (State != ConnectionState.Syncing && State != ConnectionState.Connected)
+			if (State != ConnectionState.Connecting && State != ConnectionState.Syncing && State != ConnectionState.Connected)
 				return;
 
 			var delta = _clock.Milliseconds - _lastPacketTimestamp;

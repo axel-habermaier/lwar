@@ -141,7 +141,6 @@ namespace Lwar.Client.GameStates
 			var message = _inputManager.CreateInputMessage();
 			message.Input.Player = _gameSession.Players.LocalPlayer.Id;
 			message.Input.Target = _cameraManager.GameCamera.ToWorldCoordinates(message.Input.Target);
-			Log.Info(message.Input.Target.ToString());
 
 			_networkSession.Send(message);
 			_sendInput = false;

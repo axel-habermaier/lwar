@@ -53,10 +53,7 @@ namespace Lwar.Client.Gameplay
 		public void Update()
 		{
 			Players.Update();
-
-			foreach (var entity in Entities)
-				entity.Update();
-
+			Entities.Update();
 			RootTransform.Update();
 		}
 	}
