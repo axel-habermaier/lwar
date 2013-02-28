@@ -38,7 +38,7 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   The clock that is used to animate changes of the XZ plane distance.
 		/// </summary>
-		private readonly Clock _clock = Clock.Create(true);
+		private readonly Clock _clock = Clock.Create(false);
 
 		/// <summary>
 		///   The input device that provides the input for the camera.

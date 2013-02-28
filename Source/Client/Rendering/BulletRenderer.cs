@@ -73,8 +73,8 @@ namespace Lwar.Client.Rendering
 			_transform.Bind(1);
 			_vertexShader.Bind();
 			_fragmentShader.Bind();
-			_texture.Bind(0);
 			SamplerState.TrilinearClamp.Bind(0);
+			_texture.Bind(0);
 
 			foreach (var bullet in RegisteredElements)
 			{

@@ -109,10 +109,10 @@ namespace Lwar.Client.Rendering
 
 			width /= 2.0f;
 			height /= 2.0f;
-			vertices[0].Position = new Vector4(-width, 0, -width);
-			vertices[1].Position = new Vector4(-width, 0, width);
-			vertices[2].Position = new Vector4(width, 0, width);
-			vertices[3].Position = new Vector4(width, 0, -width);
+			vertices[0].Position = new Vector4(-width, 0, -height);
+			vertices[1].Position = new Vector4(-width, 0, height);
+			vertices[2].Position = new Vector4(width, 0, height);
+			vertices[3].Position = new Vector4(width, 0, -height);
 
 			vertices[0].Normal = new Vector3(0, 1, 0);
 			vertices[1].Normal = new Vector3(0, 1, 0);

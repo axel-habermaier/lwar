@@ -15,7 +15,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The rotation speed of the camera.
 		/// </summary>
-		private const float RotationSpeed = 15.0f;
+		private const float RotationSpeed = 0.01f;
 
 		/// <summary>
 		///   The move speed of the camera.
@@ -144,7 +144,8 @@ namespace Pegasus.Framework.Rendering
 			if (_right.IsTriggered)
 				move.X -= 1;
 
-			_rotation += new Vector2(-_mouseDelta.Y, _mouseDelta.X) * RotationSpeed * (float)_clock.Seconds;
+			_rotation += new Vector2(-_mouseDelta.Y, _mouseDelta.X) * RotationSpeed;
+			//Log.Info("{0} {1}",MathUtils.RadToDeg(_rotation.X), MathUtils.RadToDeg(_rotation.Y));
 			_mouseDelta = Vector2i.Zero;
 			
 			if (_rotation.Y < -MathUtils.TwoPi)
@@ -181,7 +182,7 @@ namespace Pegasus.Framework.Rendering
 			if ((_inputDevice.Modes & InputModes.Debug) == 0)
 				return;
 
-			_mouseDelta += new Vector2i(x, y) - new Vector2i(Viewport.Width / 2, Viewport.Height / 2);
+			_mouseDelta += new Vector2i(x, y) - new Vector2i(Viewport.Width, Viewport.Height) / 2;
 		}
 
 		/// <summary>

@@ -30,11 +30,8 @@ namespace Pegasus.Framework.Network
 			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
 			_packetFactory = packetFactory;
 
-			_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
-			_socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0); // Socket.DualMode not available in Mono
-			_socket.Blocking = false;
-
-			Assert.That((int)_socket.GetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only) == 0, "Not a dual-stack socket.");
+			_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp) { Blocking = false };
+			_socket.EnableDualMode();
 		}
 
 		/// <summary>

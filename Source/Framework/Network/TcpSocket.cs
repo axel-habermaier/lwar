@@ -113,7 +113,7 @@ namespace Pegasus.Framework.Network
 		internal static Socket Create()
 		{
 			var socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
-			socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0); // Socket.DualMode not available in Mono;
+			socket.EnableDualMode();
 			return socket;
 		}
 
@@ -127,7 +127,8 @@ namespace Pegasus.Framework.Network
 			Assert.ArgumentNotNull(remoteEndPoint, () => remoteEndPoint);
 			Assert.That(!IsConnected && !IsConnecting, "Already connected or connecting.");
 
-			_socket = _socket.Reinitialize();
+			_socket.SafeDispose();
+			_socket = Create();
 			RemoteEndPoint = remoteEndPoint;
 			_state = State.Connecting;
 

@@ -157,8 +157,7 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_removedItems.SafeDisposeAll();
-			_addedItems.SafeDisposeAll();
+			Update();
 			_items.SafeDisposeAll();
 		}
 	}

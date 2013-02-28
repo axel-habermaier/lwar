@@ -19,9 +19,7 @@ Client
 	- Chat messages outside of console
 	- Show player names on top of ships
 	- In-game menu
-- Fix Model.Quad not using height
-- PInvoke into setsockopt on Linux to set IPV6_ONLY
-- Check undisposed objects when socket constructor throws an exception
+- OpenGL flickering bug?
 
 Pegasus
 ========
