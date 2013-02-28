@@ -1,24 +1,27 @@
 Client
 ========
-
-- Refactor entity system (component-oriented/data parallel/object-oriented entity system hybrid)
-	- Handle ray and circle update messages
-	- Render all entity types
+- Handle ray and circle update messages
+- Add Sun, Rocket entities
 - Effects
 	- Sun effect
-	- Render different types of planets
+	- Different types of planets
 	- Skybox
 	- Nebulae
 	- Shield effect
 	- Weapon effects
 	- Particle system
 - Entity interpolation
+	- Reusable interpolation class?
 - UI
 	- Ship/Weapon selection
 	- Scoreboard
 	- Chat messages outside of console
+	- 'Event log' outside of console: Player rename, x killed y, x left, etc.
 	- Show player names on top of ships
-	- In-game menu
+	- Menus
+		* Main menu
+		* Server browser
+		* Configuration (graphics settings, input settings, ...)
 
 Pegasus
 ========
@@ -34,6 +37,11 @@ Pegasus
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
+
+Network Specification
+========
+- Add reason to Leave message: PlayerLeft, ConnectionDropped, Misbehaved (only Misbehaved Leave message may contain the local player id)
+- Add sun entity type
 
 Server
 ========

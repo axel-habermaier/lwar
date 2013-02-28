@@ -15,7 +15,7 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   The maximum asset size in megabytes.
 		/// </summary>
-		private const int MaxAssetSize = 16;
+		private const int MaxAssetSize = 32;
 
 		/// <summary>
 		///   The buffer that stores the asset's data.

@@ -105,11 +105,11 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		private Task CompileAndLogExceptions(Asset asset, BufferWriter buffer)
+		private async Task CompileAndLogExceptions(Asset asset, BufferWriter buffer)
 		{
 			try
 			{
-				return CompileCore(asset, buffer);
+				await CompileCore(asset, buffer);
 			}
 			catch (ApplicationAbortedException)
 			{
@@ -118,8 +118,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 			{
 				Log.Error("   {0}", e.Message);
 			}
-
-			return Task.FromResult(true);
 		}
 
 		/// <summary>

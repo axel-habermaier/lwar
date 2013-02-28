@@ -200,6 +200,7 @@
     <Content Include="Textures\Planet.png" />
     <Content Include="Textures\Rocket.png" />
     <Content Include="Textures\Ship.png" />
+    <Content Include="Textures\Space.png" />
     <Content Include="Textures\Sun.png" />
     <Content Include="Textures\SunHeat.png" />
   </ItemGroup>
