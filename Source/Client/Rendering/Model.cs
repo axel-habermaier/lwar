@@ -104,33 +104,40 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentInRange(width, () => width, 0, Single.MaxValue);
 			Assert.ArgumentInRange(height, () => height, 0, Single.MaxValue);
 
-			var vertices = new VertexPositionNormalTexture[4];
-			var indices = new ushort[6];
-
 			width /= 2.0f;
 			height /= 2.0f;
-			vertices[0].Position = new Vector4(-width, 0, -height);
-			vertices[1].Position = new Vector4(-width, 0, height);
-			vertices[2].Position = new Vector4(width, 0, height);
-			vertices[3].Position = new Vector4(width, 0, -height);
-
-			vertices[0].Normal = new Vector3(0, 1, 0);
-			vertices[1].Normal = new Vector3(0, 1, 0);
-			vertices[2].Normal = new Vector3(0, 1, 0);
-			vertices[3].Normal = new Vector3(0, 1, 0);
 
 			var texture = new RectangleF(0, 0, 1, 1);
-			vertices[0].TextureCoordinates = new Vector2(texture.Left, texture.Bottom);
-			vertices[1].TextureCoordinates = new Vector2(texture.Left, texture.Top);
-			vertices[2].TextureCoordinates = new Vector2(texture.Right, texture.Top);
-			vertices[3].TextureCoordinates = new Vector2(texture.Right, texture.Bottom);
 
-			indices[0] = 0;
-			indices[1] = 2;
-			indices[2] = 1;
-			indices[3] = 0;
-			indices[4] = 3;
-			indices[5] = 2;
+			var vertices = new[]
+			{
+				new VertexPositionNormalTexture
+				{
+					Position = new Vector4(-width, 0, -height),
+					Normal = new Vector3(0, 1, 0),
+					TextureCoordinates = new Vector2(texture.Left, texture.Bottom)
+				},
+				new VertexPositionNormalTexture
+				{
+					Position = new Vector4(-width, 0, height),
+					Normal = new Vector3(0, 1, 0),
+					TextureCoordinates = new Vector2(texture.Left, texture.Top),
+				},
+				new VertexPositionNormalTexture
+				{
+					Position = new Vector4(width, 0, height),
+					Normal = new Vector3(0, 1, 0),
+					TextureCoordinates = new Vector2(texture.Right, texture.Top)
+				},
+				new VertexPositionNormalTexture
+				{
+					Position = new Vector4(width, 0, -height),
+					Normal = new Vector3(0, 1, 0),
+					TextureCoordinates = new Vector2(texture.Right, texture.Bottom)
+				}
+			};
+
+			var indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
 
 			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
 			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
@@ -173,7 +180,7 @@ namespace Lwar.Client.Rendering
 
 			var inputElements = new[]
 			{
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, VertexDataSemantics.Position, sizeof(Vector4), 0),
+				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, VertexDataSemantics.Position, sizeof(Vector4), 0)
 			};
 
 			var layout = new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);
