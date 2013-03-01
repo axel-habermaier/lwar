@@ -9,7 +9,7 @@ namespace Pegasus.AssetsCompiler.Assets
 	/// <summary>
 	///   Represents a source asset that requires compilation.
 	/// </summary>
-	public abstract class Asset
+	public abstract class Asset : DisposableObject
 	{
 		/// <summary>
 		///   Initializes a new instance.
@@ -78,6 +78,14 @@ namespace Pegasus.AssetsCompiler.Assets
 		public string HashPath
 		{
 			get { return TempPathWithoutExtension + ".hash"; }
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			// Default implementation
 		}
 
 		/// <summary>

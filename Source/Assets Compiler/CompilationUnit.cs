@@ -14,7 +14,7 @@ namespace Pegasus.AssetsCompiler
 	/// <summary>
 	///   Represents a compilation unit that compiles all assets into a binary format.
 	/// </summary>
-	public abstract class CompilationUnit
+	public abstract class CompilationUnit : DisposableObject
 	{
 		/// <summary>
 		///   The list of asset compilers that is used to compile the assets.
@@ -37,6 +37,14 @@ namespace Pegasus.AssetsCompiler
 								.Select(Activator.CreateInstance)
 								.Cast<IAssetCompiler>()
 								.ToArray();
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_assets.SafeDisposeAll();
 		}
 
 		/// <summary>

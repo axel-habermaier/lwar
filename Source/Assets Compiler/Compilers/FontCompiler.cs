@@ -47,8 +47,10 @@ namespace Pegasus.AssetsCompiler.Compilers
 
 			var page = pagesList.Single();
 			var textureFile = _parser.ReadAttributeString(page, "file");
-			var texture = Path.Combine(Path.GetDirectoryName(asset.RelativePath), textureFile);
-			new Texture2DCompiler().Compile(new Texture2DAsset(texture) { Mipmaps = false }, buffer);
+			var path = Path.Combine(Path.GetDirectoryName(asset.RelativePath), textureFile);
+
+			using (var texture = new Texture2DAsset(path) { Mipmaps = false })
+				new Texture2DCompiler().Compile(texture, buffer);
 		}
 
 		/// <summary>

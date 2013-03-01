@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler
 {
+	using System.Collections.Generic;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
@@ -10,7 +11,7 @@ namespace Pegasus.AssetsCompiler
 	///   Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at
 	///   http://msdn.microsoft.com/en-us/library/windows/apps/jj651550.aspx.
 	/// </summary>
-	internal class DirectDrawSurface : Image
+	internal class DirectDrawSurface
 	{
 		// ReSharper restore InconsistentNaming
 
@@ -18,6 +19,16 @@ namespace Pegasus.AssetsCompiler
 		///   The magic DDS file code "DDS ".
 		/// </summary>
 		private const int MagicCode = 0x20534444;
+
+		/// <summary>
+		///   The texture description for the image.
+		/// </summary>
+		private readonly TextureDescription _description;
+
+		/// <summary>
+		///   The surfaces of the image.
+		/// </summary>
+		private readonly Surface[] _surfaces;
 
 		/// <summary>
 		///   The DDS file header.
@@ -49,36 +60,33 @@ namespace Pegasus.AssetsCompiler
 			if (_header.ArraySize == 0)
 				Log.Die("An array size of 0 is invalid.");
 
-			var description = new TextureDescription
-			{
-				Width = _header.Width,
-				Height = Math.Max(_header.Height, 1),
-				Depth = Math.Max(_header.Depth, 1),
-				Format = ToSurfaceFormat(_header.Format),
-				ArraySize = _header.ArraySize,
-				Type = GetTextureType(),
-				Mipmaps = (Mipmaps)((int)Mipmaps.None + _header.MipMapCount)
-			};
+			_description.Width = _header.Width;
+			_description.Height = Math.Max(_header.Height, 1);
+			_description.Depth = Math.Max(_header.Depth, 1);
+			_description.Format = ToSurfaceFormat(_header.Format);
+			_description.ArraySize = _header.ArraySize;
+			_description.Type = GetTextureType();
+			_description.Mipmaps = (Mipmaps)((int)Mipmaps.None + _header.MipMapCount);
 
-			var faces = description.ArraySize;
-			if (description.Type == TextureType.CubeMap)
+			var faces = _description.ArraySize;
+			if (_description.Type == TextureType.CubeMap)
 				faces *= 6;
 
-			description.SurfaceCount = faces * _header.MipMapCount;
-			var surfaces = new Surface[description.SurfaceCount];
+			_description.SurfaceCount = faces * _header.MipMapCount;
+			_surfaces = new Surface[_description.SurfaceCount];
 
 			for (int i = 0, index = 0; i < faces; ++i)
 			{
-				var width = description.Width;
-				var height = description.Height;
-				var depth = description.Depth;
+				var width = _description.Width;
+				var height = _description.Height;
+				var depth = _description.Depth;
 
 				for (var j = 0; j < _header.MipMapCount; ++j, ++index)
 				{
 					uint size, stride;
 					GetSurfaceInfo(width, height, _header.Format, out size, out stride);
 
-					surfaces[index] = new Surface
+					_surfaces[index] = new Surface
 					{
 						Width = width,
 						Height = height,
@@ -98,9 +106,50 @@ namespace Pegasus.AssetsCompiler
 			}
 
 			Assert.That(buffer.EndOfBuffer, "Failed to process entire DDS file.");
+		}
 
-			Description = description;
-			Surfaces = surfaces;
+		/// <summary>
+		///   Gets the texture description for the image.
+		/// </summary>
+		public TextureDescription Description
+		{
+			get { return _description; }
+		}
+
+		/// <summary>
+		///   Gets the surfaces of the image.
+		/// </summary>
+		public IEnumerable<Surface> Surfaces
+		{
+			get { return _surfaces; }
+		}
+
+		/// <summary>
+		///   Serializes the DDS image into the given buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the DDS image should be serialized into.</param>
+		internal unsafe void Write(BufferWriter buffer)
+		{
+			buffer.WriteUInt32(Description.Width);
+			buffer.WriteUInt32(Description.Height);
+			buffer.WriteUInt32(Description.Depth);
+			buffer.WriteUInt32(Description.ArraySize);
+			buffer.WriteInt32((int)Description.Type);
+			buffer.WriteInt32((int)Description.Format);
+			buffer.WriteInt32((int)Description.Mipmaps);
+			buffer.WriteUInt32(Description.SurfaceCount);
+
+			foreach (var surface in Surfaces)
+			{
+				buffer.WriteUInt32(surface.Width);
+				buffer.WriteUInt32(surface.Height);
+				buffer.WriteUInt32(surface.Depth);
+				buffer.WriteUInt32(surface.Size);
+				buffer.WriteUInt32(surface.Stride);
+
+				for (var i = 0; i < surface.Size * surface.Depth; ++i)
+					buffer.WriteByte(surface.Data[i]);
+			}
 		}
 
 		/// <summary>
@@ -147,14 +196,6 @@ namespace Pegasus.AssetsCompiler
 				default:
 					throw new InvalidOperationException("Unsupported resource dimension.");
 			}
-		}
-
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			// Nothing to do here
 		}
 
 		/// <summary>
@@ -501,7 +542,7 @@ namespace Pegasus.AssetsCompiler
 			/// <summary>
 			///   Unused data that is only required to ensure that the Header struct has the correct unmanaged size.
 			/// </summary>
-			private fixed uint _unused [16];
+			private fixed uint _unused[16];
 
 			/// <summary>
 			///   Initializes a new instance from the given buffer.

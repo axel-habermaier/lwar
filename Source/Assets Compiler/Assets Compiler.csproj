@@ -188,8 +188,6 @@
     <Compile Include="Assets\FragmentShaderAsset.cs" />
     <Compile Include="Assets\TextureAsset.cs" />
     <Compile Include="Assets\VertexShaderAsset.cs" />
-    <Compile Include="CubeMap.cs" />
-    <Compile Include="Image2D.cs" />
     <Compile Include="Compilers\AssetCompiler.cs" />
     <Compile Include="AssetWriter.cs" />
     <Compile Include="CompilationUnit.cs" />
@@ -203,14 +201,12 @@
     <Compile Include="Assets\FontAsset.cs" />
     <Compile Include="Compilers\FontCompiler.cs" />
     <Compile Include="Compilers\FragmentShaderCompiler.cs" />
-    <Compile Include="Image.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compilers\ShaderCompiler.cs" />
     <Compile Include="Assets\Asset.cs" />
     <Compile Include="Assets\Texture2DAsset.cs" />
     <Compile Include="Compilers\Texture2DCompiler.cs" />
-    <Compile Include="Compilers\TextureCompiler.cs" />
     <Compile Include="Compilers\VertexShaderCompiler.cs" />
     <Compile Include="XmlParser.cs" />
   </ItemGroup>

@@ -80,22 +80,23 @@ namespace Pegasus.AssetsCompiler
 				}
 
 				var success = true;
-				var compilationUnit = CompilationUnit.Create();
-
-				if (clean)
-					compilationUnit.Clean();
-
-				if (compile)
-					success = compilationUnit.Compile();
-
-				var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
-
-				if (clean && !(recompile || compile))
-					Log.Info("Done.");
-				else
+				using (var compilationUnit = CompilationUnit.Create())
 				{
-					Console.WriteLine();
-					Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds.ToString(CultureInfo.InvariantCulture));
+					if (clean)
+						compilationUnit.Clean();
+
+					if (compile)
+						success = compilationUnit.Compile();
+
+					var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
+
+					if (clean && !(recompile || compile))
+						Log.Info("Done.");
+					else
+					{
+						Console.WriteLine();
+						Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds.ToString(CultureInfo.InvariantCulture));
+					}
 				}
 
 				return success ? 0 : -1;
