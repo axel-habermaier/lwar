@@ -6,7 +6,7 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgTexture* texture)
+pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgAttachment* attachments, pgInt32 count)
 {
 	// TODO: Implement
 	renderTarget->id = 0;

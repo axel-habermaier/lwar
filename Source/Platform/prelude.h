@@ -220,6 +220,8 @@ pgBool pgRectangleEqual(pgRectangle* r1, pgRectangle* r2);
 #define PG_TEXTURE_SLOT_COUNT			16
 #define PG_SAMPLER_SLOT_COUNT			16
 #define PG_CONSTANT_BUFFER_SLOT_COUNT	14
+#define PG_MAX_MIPMAPS					16
+#define PG_MAX_ATTACHMENTS				 5
 
 struct pgGraphicsDevice
 {
@@ -319,8 +321,6 @@ struct pgTexture
 	PG_TEXTURE_PLATFORM
 };
 
-#define PG_MAX_MIPMAPS 16
-
 pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces);
 pgVoid pgDestroyTextureCore(pgTexture* texture);
 
@@ -338,11 +338,11 @@ struct pgRenderTarget
 {
 	pgGraphicsDevice*	device;
 	pgInt32				width;
-	pgInt32				height;	
+	pgInt32				height;
 	PG_RENDER_TARGET_PLATFORM
 };
 
-pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgTexture* texture);
+pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgAttachment* attachments, pgInt32 count);
 pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget);
 
 pgVoid pgClearCore(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor color, pgFloat32 depth, pgUint8 stencil);

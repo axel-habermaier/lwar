@@ -62,9 +62,9 @@
 	ID3D11Texture2D*			ptr;		\
 	ID3D11ShaderResourceView*	resourceView;
 
-#define PG_RENDER_TARGET_PLATFORM	\
-	ID3D11RenderTargetView* rt;		\
-	ID3D11DepthStencilView* ds;
+#define PG_RENDER_TARGET_PLATFORM						\
+	ID3D11RenderTargetView* rt[PG_MAX_ATTACHMENTS - 1];	\
+	ID3D11DepthStencilView* ds;						
 
 #define PG_BLEND_STATE_PLATFORM \
 	ID3D11BlendState* ptr;

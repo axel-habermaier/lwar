@@ -429,7 +429,7 @@ PG_API_EXPORT pgVoid pgGenerateMipmaps(pgTexture* texture);
 // Render target functions
 //====================================================================================================================
 
-PG_API_EXPORT pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture* texture);
+PG_API_EXPORT pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgAttachment* attachments, pgInt32 count);
 PG_API_EXPORT pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget);
 
 PG_API_EXPORT pgVoid pgClear(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor color, pgFloat32 depth, pgUint8 stencil);

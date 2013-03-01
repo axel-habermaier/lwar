@@ -6,17 +6,44 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgTexture* texture)
+pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgAttachment* attachments, pgInt32 count)
 {
-	D3DCALL(ID3D11Device_CreateRenderTargetView(DEVICE(renderTarget), (ID3D11Resource*)texture->ptr, NULL, &renderTarget->rt),
-		"Failed to create render target.");
-	renderTarget->ds = NULL;
+	pgInt32 i;
+	for (i = 0; i < count; ++i)
+	{
+		ID3D11RenderTargetView* renderTargetView;
+		if (attachments[i].attachment != PG_DEPTH_STENCIL_ATTACHMENT)
+		{
+			D3DCALL(ID3D11Device_CreateRenderTargetView(DEVICE(renderTarget), (ID3D11Resource*)texture->ptr, NULL, renderTargetView),
+				"Failed to create render target.");
+		}
+
+		switch (attachments[i].attachment)
+		{
+		case PG_DEPTH_STENCIL_ATTACHMENT:
+			break;
+		case PG_COLOR_ATTACHMENT_0:
+			break;
+		case PG_COLOR_ATTACHMENT_1:
+			break;
+		case PG_COLOR_ATTACHMENT_2:
+			break;
+		case PG_COLOR_ATTACHMENT_3:
+			break;
+		default:
+			PG_NO_SWITCH_DEFAULT;
+		}
+	}
+	/*
+	renderTarget->ds = NULL;*/
 }
 
 pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)
 {
+	pgInt32
 	if (renderTarget->ds != NULL)
 		ID3D11DepthStencilView_Release(renderTarget->ds);
+
 
 	ID3D11RenderTargetView_Release(renderTarget->rt);
 }
