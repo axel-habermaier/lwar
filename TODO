@@ -22,6 +22,7 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
+- OpenGL 64bit: Skybox not drawn
 
 Pegasus
 ========
