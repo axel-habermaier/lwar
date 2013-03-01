@@ -120,7 +120,6 @@ namespace Pegasus.Framework
 			Assets = new AssetsManager(GraphicsDevice);
 			SwapChain.BackBuffer.Bind();
 
-			var font = Assets.LoadFont("Fonts/Liberation Mono 12");
 			using (var interpreter = new Interpreter())
 			using (var bindings = new RequestBindings(LogicalInputDevice))
 			using (var console = new Console(GraphicsDevice, Assets, LogicalInputDevice))

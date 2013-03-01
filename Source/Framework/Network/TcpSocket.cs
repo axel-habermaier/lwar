@@ -54,8 +54,6 @@ namespace Pegasus.Framework.Network
 		{
 			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
 			Assert.ArgumentNotNull(socket, () => socket);
-			Assert.ArgumentSatisfies((int)_socket.GetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only) == 0,
-									 () => socket, "Socket is not in dual mode.");
 
 			_packetFactory = packetFactory;
 			_socket = socket;
