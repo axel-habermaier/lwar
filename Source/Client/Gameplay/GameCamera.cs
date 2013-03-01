@@ -117,40 +117,14 @@ namespace Lwar.Client.Gameplay
 			centered.X /= Viewport.Width;
 			centered.Y /= Viewport.Height;
 
-
-			
-			//float3 dir = normalize(cameraDir + (dx + dy).xyz * 2.0);
-			// TODO: This is nonsense -- needs to take the current projection matrix into account and find the intersection with the XZ plane
-
-			//Log.Info(result.ToString());
-
-
 			var origin = Position;
-			var direction = new Vector3(centered.X, Viewport.Height / (float)Viewport.Width, centered.Y);
-			//var distance = -origin.Y / direction.Y;
-
-			// o + d *dir = pos
-			// 
-			//distance = _zoom;
-			//var x = origin.X + distance * direction.X;
-			//var z = origin.Z + distance * direction.Z;
-
-			//var rot = Matrix.CreateRotationX(MathUtils.PiOver2);
-			//Vector3.Transform(ref direction, ref rot);
-			direction = direction.Normalize();
+			var direction = new Vector3(centered.X, Viewport.Height / (float)Viewport.Width, centered.Y).Normalize();
 
 			var distance = -origin.Y / direction.Y;
-
-			// o + d *dir = pos
-			// 
-			//distance = _zoom;
 			var x = origin.X + distance * direction.X;
 			var z = origin.Z + distance * direction.Z;
 
-			var result = new Vector2(x, z);
-			//Log.Info("Screen: {0} // Direction: {1} // Result: {2} // Distance: {3}", screenCoordinates, direction, result.ToString(), distance);
-			//Log.Info("{0}, {1}", (int)x,(int)z);
-			return result;
+			return new Vector2(x, z);
 		}
 
 		/// <summary>
@@ -170,7 +144,8 @@ namespace Lwar.Client.Gameplay
 		/// <param name="delta">The delta that should be applied to the camera's distance to the XZ plane.</param>
 		private void OnZoomChanged(int delta)
 		{
-			_targetZoom = MathUtils.Clamp(_targetZoom + -1 * delta * DeltaScale, MinZoom, MaxZoom);
+			if (_inputDevice.Modes == InputModes.Game)
+				_targetZoom = MathUtils.Clamp(_targetZoom + -1 * delta * DeltaScale, MinZoom, MaxZoom);
 		}
 	}
 }
