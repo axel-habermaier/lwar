@@ -25,6 +25,18 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Indicates that the texture filtering method is anisotropic filtering.
 		/// </summary>
-		Anisotropic = 2304
+		Anisotropic = 2304,
+
+		/// <summary>
+		///   Indicates that the texture filtering method is point filtering, without using any mipmap levels other than the most
+		///   detailed one.
+		/// </summary>
+		NearestNoMipmaps = 2305,
+
+		/// <summary>
+		///   Indicates that the texture filtering method is bilinear filtering, without using any mipmap levels other than the
+		///   most detailed one.
+		/// </summary>
+		BilinearNoMipmaps = 2306,
 	}
 }

@@ -22,7 +22,6 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
-- OpenGL 64bit: Skybox not drawn
 
 Pegasus
 ========
@@ -38,6 +37,7 @@ Pegasus
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
+- Support for uncompressed textures
 
 Network Specification
 ========

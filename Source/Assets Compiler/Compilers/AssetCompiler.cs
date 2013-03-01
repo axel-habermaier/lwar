@@ -42,7 +42,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 				return CompilationAction.Process;
 
 			var oldHash = File.ReadAllBytes(asset.HashPath);
-			var newHash = ComputeHash(asset);
+			var newHash = ComputeHash(asset.SourcePath);
 
 			for (var i = 0; i < oldHash.Length; ++i)
 			{
@@ -52,6 +52,15 @@ namespace Pegasus.AssetsCompiler.Compilers
 
 			if (!File.Exists(asset.TargetPath))
 				return CompilationAction.Copy;
+
+			var targetHash = ComputeHash(asset.TargetPath);
+			var tempHash = ComputeHash(asset.TempPath);
+
+			for (var i = 0; i < targetHash.Length; ++i)
+			{
+				if (targetHash[i] != tempHash[i])
+					return CompilationAction.Copy;
+			}
 
 			return CompilationAction.Skip;
 		}
@@ -79,7 +88,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 				case CompilationAction.Process:
 					Log.Info("Compiling '{0}'...", asset.RelativePath);
 
-					File.WriteAllBytes(asset.HashPath, ComputeHash(asset));
+					File.WriteAllBytes(asset.HashPath, ComputeHash(asset.SourcePath));
 					using (var writer = new AssetWriter(asset.TempPath, asset.TargetPath))
 						return CompileAndLogExceptions(asset, writer.Writer);
 				default:
@@ -134,11 +143,11 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <summary>
 		///   Computes the hash of the current source file.
 		/// </summary>
-		/// <param name="asset">The asset for which the hash should be computed.</param>
-		private static byte[] ComputeHash(Asset asset)
+		/// <param name="path">The path to the asset for which the hash should be computed.</param>
+		private static byte[] ComputeHash(string path)
 		{
 			using (var cryptoProvider = new MD5CryptoServiceProvider())
-			using (var file = new FileStream(asset.SourcePath, FileMode.Open, FileAccess.Read))
+			using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
 				return cryptoProvider.ComputeHash(file);
 		}
 

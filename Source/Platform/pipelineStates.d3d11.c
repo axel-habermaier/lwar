@@ -1,4 +1,5 @@
 #include "prelude.h"
+#include <float.h>
 
 #ifdef DIRECT3D11
 
@@ -121,6 +122,14 @@ pgVoid pgCreateSamplerStateCore(pgSamplerState* samplerState, pgSamplerDesc* des
 	desc.MaxLOD = description->maximumLod;
 	desc.MinLOD = description->minimumLod;
 	desc.MipLODBias = description->mipLodBias;
+
+	if (description->filter == PG_TEXTURE_FILTER_NEAREST_NO_MIPMAPS || description->filter == PG_TEXTURE_FILTER_BILINEAR_NO_MIPMAPS)
+	{
+		if (desc.MaxLOD == FLT_MAX)
+			desc.MaxLOD = 0;
+		if (desc.MinLOD == FLT_MIN)
+			desc.MinLOD = 0;
+	}
 
 	D3DCALL(ID3D11Device_CreateSamplerState(DEVICE(samplerState), &desc, &samplerState->ptr), "Failed to create sampler state.");
 }

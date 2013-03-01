@@ -27,6 +27,11 @@ namespace Lwar.Client.Rendering
 		private readonly Model _model;
 
 		/// <summary>
+		///   The bilinear, no-mipmaps texture sampler for the skybox texture.
+		/// </summary>
+		private readonly SamplerState _sampler;
+
+		/// <summary>
 		///   The vertex shader that is used to draw the ships.
 		/// </summary>
 		private readonly VertexShader _vertexShader;
@@ -45,6 +50,8 @@ namespace Lwar.Client.Rendering
 			_fragmentShader = assets.LoadFragmentShader("Shaders/SkyboxFS");
 			_model = Model.CreateSkyBox(graphicsDevice);
 			_cubeMap = assets.LoadCubeMap("Textures/Space");
+
+			_sampler = new SamplerState(graphicsDevice) { Filter = TextureFilter.BilinearNoMipmaps };
 		}
 
 		/// <summary>
@@ -54,7 +61,7 @@ namespace Lwar.Client.Rendering
 		{
 			_vertexShader.Bind();
 			_fragmentShader.Bind();
-			SamplerState.BilinearClamp.Bind(0);
+			_sampler.Bind(0);
 			_cubeMap.Bind(0);
 
 			_model.Draw();
@@ -65,6 +72,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_sampler.SafeDispose();
 			_model.SafeDispose();
 		}
 	}

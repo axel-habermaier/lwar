@@ -123,50 +123,50 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Configuration)\</IntDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>Pegasus.Platform</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|x64'">
     <TargetName>Pegasus.Platform</TargetName>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Configuration)\</IntDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Configuration)\</IntDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>Pegasus.Platform</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|x64'">
     <TargetName>Pegasus.Platform</TargetName>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Configuration)\</IntDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Direct3D11|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Configuration)\</IntDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>Pegasus.Platform</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Direct3D11|x64'">
     <TargetName>Pegasus.Platform</TargetName>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Configuration)\</IntDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenGL3|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Configuration)\</IntDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>Pegasus.Platform</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenGL3|x64'">
     <TargetName>Pegasus.Platform</TargetName>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Configuration)\</IntDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$Binaries\Release</OutDir>
