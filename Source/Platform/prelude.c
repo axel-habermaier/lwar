@@ -42,4 +42,5 @@ PG_ASSERT_SIZE(pgTextureType, 4);
 PG_ASSERT_SIZE(pgQueryType, 4);
 PG_ASSERT_SIZE(pgBufferType, 4);
 PG_ASSERT_SIZE(pgShaderType, 4);
-PG_ASSERT_SIZE(pgMipmaps, 4);
+PG_ASSERT_SIZE(pgTextureFlags, 4);
+PG_ASSERT_SIZE(pgAttachmentPoint, 4);

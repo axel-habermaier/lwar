@@ -6,7 +6,7 @@
 // Helper functions
 //====================================================================================================================
 
-static pgVoid UploadTexture(pgTexture* texture, pgSurface* surface, GLenum target, GLint level);
+static pgVoid pgUploadTexture(pgTexture* texture, pgSurface* surface, GLenum target, GLint level);
 
 //====================================================================================================================
 // Core functions
@@ -29,11 +29,11 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 	{
 	case PG_TEXTURE_2D:
 		for (i = 0; i < texture->desc.surfaceCount; ++i)
-			UploadTexture(texture, &surfaces[i], GL_TEXTURE_2D, i);
+			pgUploadTexture(texture, &surfaces[i], GL_TEXTURE_2D, i);
 		break;
 	case PG_TEXTURE_CUBE_MAP:
 	{
-		pgInt32 j;
+		pgUint32 j;
 		GLenum faces[] = 
 		{ 
 			GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
@@ -49,7 +49,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 			for (j = 0; j < texture->desc.mipmaps; ++j)
 			{
 				int index = i * texture->desc.mipmaps + j;
-				UploadTexture(texture, &surfaces[index], faces[i], j);
+				pgUploadTexture(texture, &surfaces[index], faces[i], j);
 			}
 		}
 		break;
@@ -93,7 +93,7 @@ pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 // Helper functions
 //====================================================================================================================
 
-static pgVoid UploadTexture(pgTexture* texture, pgSurface* surface, GLenum target, GLint level)
+static pgVoid pgUploadTexture(pgTexture* texture, pgSurface* surface, GLenum target, GLint level)
 {
 	GLenum internalFormat, format, type;
 

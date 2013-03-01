@@ -6,11 +6,12 @@
 // Helper functions
 //====================================================================================================================
 
-static D3D11_SUBRESOURCE_DATA* InitResourceData(pgTexture* texture, pgSurface* surface);
-static pgVoid CreateTexture1D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data);
-static pgVoid CreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data);
-static pgVoid CreateTexture3D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data);
-static pgVoid CreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data);
+static pgVoid pgInitTextureDesc2D(pgTexture* texture, D3D11_TEXTURE2D_DESC* desc);
+static D3D11_SUBRESOURCE_DATA* pgInitResourceData(pgTexture* texture, pgSurface* surface);
+static pgVoid pgCreateTexture1D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data);
+static pgVoid pgCreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data);
+static pgVoid pgCreateTexture3D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data);
+static pgVoid pgCreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data);
 
 //====================================================================================================================
 // Core functions
@@ -18,21 +19,21 @@ static pgVoid CreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data);
 
 pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 {
-	D3D11_SUBRESOURCE_DATA* data = InitResourceData(texture, surfaces);
+	D3D11_SUBRESOURCE_DATA* data = pgInitResourceData(texture, surfaces);
 
 	switch (texture->desc.type)
 	{
 	case PG_TEXTURE_1D:
-		CreateTexture1D(texture, data);
+		pgCreateTexture1D(texture, data);
 		break;
 	case PG_TEXTURE_2D:
-		CreateTexture2D(texture, data);
+		pgCreateTexture2D(texture, data);
 		break;
 	case PG_TEXTURE_CUBE_MAP:
-		CreateCubeMap(texture, data);
+		pgCreateCubeMap(texture, data);
 		break;
 	case PG_TEXTURE_3D:
-		CreateTexture3D(texture, data);
+		pgCreateTexture3D(texture, data);
 		break;
 	default:
 		PG_NO_SWITCH_DEFAULT;
@@ -62,16 +63,43 @@ pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 // Helper functions
 //====================================================================================================================
 
-static D3D11_SUBRESOURCE_DATA* InitResourceData(pgTexture* texture, pgSurface* surfaces)
+static pgVoid pgInitTextureDesc2D(pgTexture* texture, D3D11_TEXTURE2D_DESC* desc)
+{
+	desc->Width = texture->desc.width;
+	desc->Height = texture->desc.height;
+	desc->MipLevels = texture->desc.mipmaps;
+	desc->ArraySize = texture->desc.arraySize;
+	desc->SampleDesc.Count = 1;
+	desc->SampleDesc.Quality = 0;
+	desc->Usage = D3D11_USAGE_DEFAULT;
+	desc->BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc->CPUAccessFlags = 0;
+	desc->MiscFlags = 0;
+	desc->Format = pgConvertSurfaceFormat(texture->desc.format);
+
+	if (texture->desc.flags & PG_TEXTURE_RENDERABLE)
+		desc->BindFlags |= D3D11_BIND_RENDER_TARGET;
+
+	if (texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS)
+	{
+		desc->MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		desc->BindFlags |= D3D11_BIND_RENDER_TARGET;
+	}
+}
+
+static D3D11_SUBRESOURCE_DATA* pgInitResourceData(pgTexture* texture, pgSurface* surfaces)
 {
 	pgUint32 i;
 	D3D11_SUBRESOURCE_DATA* data = NULL;
 	PG_ALLOC_ARRAY(D3D11_SUBRESOURCE_DATA, texture->desc.surfaceCount, data);
 
+	if (texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS)
+		texture->desc.mipmaps = 0; // Autogenerate all mipmap levels
+
 	if (texture->desc.type == PG_TEXTURE_CUBE_MAP)
 	{
-		int j;
-		int faces[] = { 5, 1, 4, 0, 3, 2 };
+		pgUint32 j;
+		pgUint32 faces[] = { 5, 1, 4, 0, 3, 2 };
 
 		for (i = 0; i < 6; ++i)
 		{
@@ -98,29 +126,18 @@ static D3D11_SUBRESOURCE_DATA* InitResourceData(pgTexture* texture, pgSurface* s
 	return data;
 }
 
-static pgVoid CreateTexture1D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
+static pgVoid pgCreateTexture1D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 {
 	PG_UNUSED(texture);
 	PG_UNUSED(data);
 }
 
-static pgVoid CreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
+static pgVoid pgCreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 {
 	D3D11_TEXTURE2D_DESC desc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
 
-	desc.Width = texture->desc.width;
-	desc.Height = texture->desc.height;
-	desc.MipLevels = texture->desc.mipmaps;
-	desc.ArraySize = texture->desc.arraySize;
-	desc.SampleDesc.Count = 1;
-	desc.SampleDesc.Quality = 0;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = 0;
-	desc.Format = pgConvertSurfaceFormat(texture->desc.format);
-
+	pgInitTextureDesc2D(texture, &desc);
 	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(texture), &desc, data, &texture->ptr), "Failed to create texture.");
 
 	memset(&viewDesc, 0, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
@@ -133,22 +150,14 @@ static pgVoid CreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 		"Failed to create shader resource view for texture.");
 }
 
-static pgVoid CreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
+static pgVoid pgCreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 {
 	D3D11_TEXTURE2D_DESC desc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
 
-	desc.Width = texture->desc.width;
-	desc.Height = texture->desc.height;
-	desc.MipLevels = texture->desc.mipmaps;
-	desc.ArraySize = 6 * texture->desc.arraySize;
-	desc.SampleDesc.Count = 1;
-	desc.SampleDesc.Quality = 0;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
-	desc.Format = pgConvertSurfaceFormat(texture->desc.format);
+	pgInitTextureDesc2D(texture, &desc);
+	desc.ArraySize *= 6;
+	desc.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
 	
 	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(texture), &desc, data, &texture->ptr), "Failed to create cube map.");
 
@@ -162,7 +171,7 @@ static pgVoid CreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 		"Failed to create shader resource view for cube map.");
 }
 
-static pgVoid CreateTexture3D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
+static pgVoid pgCreateTexture3D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 {
 	PG_UNUSED(texture);
 	PG_UNUSED(data);

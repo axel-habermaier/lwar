@@ -44,7 +44,7 @@ namespace Pegasus.Framework.Platform.Assets
 				ArraySize = buffer.ReadUInt32(),
 				Type = (TextureType)buffer.ReadInt32(),
 				Format = (SurfaceFormat)buffer.ReadInt32(),
-				Mipmaps = (Mipmaps)buffer.ReadInt32(),
+				Mipmaps = buffer.ReadUInt32(),
 				SurfaceCount = buffer.ReadUInt32()
 			};
 

@@ -192,10 +192,10 @@
     <Compile Include="Platform\ExternalProcess.cs" />
     <Compile Include="Platform\ForceInitializationAttribute.cs" />
     <Compile Include="Platform\Graphics\CubeMap.cs" />
-    <Compile Include="Platform\Graphics\Mipmaps.cs" />
     <Compile Include="Platform\Graphics\Surface.cs" />
     <Compile Include="Platform\Graphics\Texture.cs" />
     <Compile Include="Platform\Graphics\TextureDescription.cs" />
+    <Compile Include="Platform\Graphics\TextureFlags.cs" />
     <Compile Include="Platform\Graphics\TextureType.cs" />
     <Compile Include="Platform\IMeasurement.cs" />
     <Compile Include="Platform\Input\InputModes.cs" />

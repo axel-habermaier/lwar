@@ -66,7 +66,7 @@ namespace Pegasus.AssetsCompiler
 			_description.Format = ToSurfaceFormat(_header.Format);
 			_description.ArraySize = _header.ArraySize;
 			_description.Type = GetTextureType();
-			_description.Mipmaps = (Mipmaps)((int)Mipmaps.None + _header.MipMapCount);
+			_description.Mipmaps = _header.MipMapCount;
 
 			var faces = _description.ArraySize;
 			if (_description.Type == TextureType.CubeMap)
@@ -136,7 +136,7 @@ namespace Pegasus.AssetsCompiler
 			buffer.WriteUInt32(Description.ArraySize);
 			buffer.WriteInt32((int)Description.Type);
 			buffer.WriteInt32((int)Description.Format);
-			buffer.WriteInt32((int)Description.Mipmaps);
+			buffer.WriteUInt32(Description.Mipmaps);
 			buffer.WriteUInt32(Description.SurfaceCount);
 
 			foreach (var surface in Surfaces)

@@ -14,6 +14,9 @@ pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDescription* descr
 	PG_ASSERT(description->arraySize == 1, "Texture arrays are currently not supported.");
 	PG_ASSERT(description->type != PG_TEXTURE_1D, "1D textures are currently not supported.");
 	PG_ASSERT(description->type != PG_TEXTURE_3D, "3D textures are currently not supported.");
+	PG_ASSERT_IN_RANGE(description->mipmaps, 1, PG_MAX_MIPMAPS);
+	PG_ASSERT((description->flags & PG_TEXTURE_GENERATE_MIPMAPS) == 0 || description->mipmaps == 1, 
+		"Cannot set mipmaps for a texture that has the generate mipmaps flag set.");
 
 	PG_ALLOC(pgTexture, texture);
 	texture->device = device;

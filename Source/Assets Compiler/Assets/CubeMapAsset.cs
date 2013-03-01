@@ -42,7 +42,7 @@ namespace Pegasus.AssetsCompiler.Assets
 				Format = ToSurfaceFormat(Bitmap.PixelFormat, out componentCount),
 				ArraySize = 1,
 				Type = TextureType.CubeMap,
-				Mipmaps = Framework.Platform.Graphics.Mipmaps.One,
+				Mipmaps = 1,
 				SurfaceCount = 6
 			};
 

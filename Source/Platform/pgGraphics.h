@@ -237,24 +237,18 @@ typedef enum
 
 typedef enum
 {
-	PG_MIPMAPS_GENERATE						= -1,
-	PG_MIPMAPS_NONE							= 0,
-	PG_MIPMAPS_ONE							= 1,
-	PG_MIPMAPS_TWO							= 2,
-	PG_MIPMAPS_THREE						= 3,
-	PG_MIPMAPS_FOUR							= 4,
-	PG_MIPMAPS_FIVE							= 5,
-	PG_MIPMAPS_SIX							= 6,
-	PG_MIPMAPS_SEVEN						= 7,
-	PG_MIPMAPS_EIGHT						= 8,
-	PG_MIPMAPS_NINE							= 9,
-	PG_MIPMAPS_TEN							= 10,
-	PG_MIPMAPS_ELEVEN						= 11,
-	PG_MIPMAPS_TWELVE						= 12,
-	PG_MIPMAPS_THIRTEEN						= 13,
-	PG_MIPMAPS_FOURTEEN						= 14,
-	PG_MIPMAPS_FIFTEEN						= 15
-} pgMipmaps;
+	PG_TEXTURE_GENERATE_MIPMAPS				= 1,
+	PG_TEXTURE_RENDERABLE					= 2
+} pgTextureFlags;
+
+typedef enum
+{
+	PG_DEPTH_STENCIL_ATTACHMENT				= 3001,
+	PG_COLOR_ATTACHMENT_0					= 3002,
+	PG_COLOR_ATTACHMENT_1					= 3003,
+	PG_COLOR_ATTACHMENT_2					= 3004,
+	PG_COLOR_ATTACHMENT_3					= 3005,
+} pgAttachmentPoint;
 
 typedef struct
 {
@@ -339,8 +333,9 @@ typedef struct
 	pgUint32				arraySize;
 	pgTextureType			type;
 	pgSurfaceFormat			format;
-	pgMipmaps				mipmaps;
+	pgUint32				mipmaps;
 	pgUint32				surfaceCount;
+	pgTextureFlags			flags;
 } pgTextureDescription;
 
 typedef struct
@@ -352,6 +347,12 @@ typedef struct
 	pgUint32				stride;
 	pgUint8*				data;
 } pgSurface;
+
+typedef struct
+{
+	pgAttachmentPoint		attachment;
+	pgTexture*				texture;
+} pgAttachment;
 
 //====================================================================================================================
 // Graphics functions

@@ -87,7 +87,7 @@ namespace Pegasus.AssetsCompiler.Assets
 			buffer.WriteUInt32(Description.ArraySize);
 			buffer.WriteInt32((int)Description.Type);
 			buffer.WriteInt32((int)Description.Format);
-			buffer.WriteInt32((int)Description.Mipmaps);
+			buffer.WriteUInt32(Description.Mipmaps);
 			buffer.WriteUInt32(Description.SurfaceCount);
 
 			foreach (var surface in Surfaces)
