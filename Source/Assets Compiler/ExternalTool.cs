@@ -71,20 +71,13 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   Runs the nvassemble tool with the given arguments.
 		/// </summary>
-		/// <param name="negativeZ">The path of the negative Z input file that should be processed.</param>
-		/// <param name="negativeX">The path of the negative X input file that should be processed.</param>
-		/// <param name="positiveZ">The path of the positive Z input file that should be processed.</param>
-		/// <param name="positiveX">The path of the positive X input file that should be processed.</param>
-		/// <param name="negativeY">The path of the negative Y input file that should be processed.</param>
-		/// <param name="positiveY">The path of the positive Y input file that should be processed.</param>
+		/// <param name="paths">The paths of the cube map faces.</param>
 		/// <param name="output">The path of the output file that should be generated.</param>
-		public static void NvAssemble(string negativeZ, string negativeX, string positiveZ, string positiveX,
-									  string negativeY,
-									  string positiveY, string output)
+		public static void NvAssemble(string[] paths, string output)
 		{
 			using (var nvassemble = new ExternalProcess(NvAssemblePath,
 														@"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
-														negativeZ, negativeX, positiveZ, positiveX, negativeY, positiveY, output))
+														paths[0], paths[1], paths[2], paths[3], paths[4], paths[5], output))
 			{
 				var logEntries = nvassemble.Run();
 

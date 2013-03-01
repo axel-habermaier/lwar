@@ -32,12 +32,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The fragment shader that is used for drawing.
 		/// </summary>
-		private FragmentShader _fragmentShader;
-
-		/// <summary>
-		///   The vertex shader that is used for drawing.
-		/// </summary>
-		private VertexShader _vertexShader;
+		private readonly FragmentShader _fragmentShader;
 
 		/// <summary>
 		///   The index buffer that is used for drawing.
@@ -83,6 +78,11 @@ namespace Pegasus.Framework.Rendering
 		///   The vertex input layout used by the sprite batch.
 		/// </summary>
 		private readonly VertexInputLayout _vertexLayout;
+
+		/// <summary>
+		///   The vertex shader that is used for drawing.
+		/// </summary>
+		private readonly VertexShader _vertexShader;
 
 		/// <summary>
 		///   The constant buffer for the world matrix.
@@ -458,7 +458,7 @@ namespace Pegasus.Framework.Rendering
 
 			GraphicsDevice.SetPrimitiveType(PrimitiveType.Triangles);
 			DepthStencilState.DepthDisabled.Bind();
-			SamplerState.PointClamp.Bind(0);
+			SamplerState.PointClampNoMipmaps.Bind(0);
 			BlendState.Premultiplied.Bind();
 
 			if (!UseScissorTest)

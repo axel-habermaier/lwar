@@ -29,6 +29,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|AnyCPU' ">
     <OutputPath>..\..\Binaries x64\Release Direct3D11\</OutputPath>
@@ -185,7 +186,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\FragmentShaderAsset.cs" />
+    <Compile Include="Assets\TextureAsset.cs" />
     <Compile Include="Assets\VertexShaderAsset.cs" />
+    <Compile Include="CubeMap.cs" />
+    <Compile Include="Image2D.cs" />
     <Compile Include="Compilers\AssetCompiler.cs" />
     <Compile Include="AssetWriter.cs" />
     <Compile Include="CompilationUnit.cs" />
@@ -199,6 +203,7 @@
     <Compile Include="Assets\FontAsset.cs" />
     <Compile Include="Compilers\FontCompiler.cs" />
     <Compile Include="Compilers\FragmentShaderCompiler.cs" />
+    <Compile Include="Image.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compilers\ShaderCompiler.cs" />

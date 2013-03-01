@@ -32,10 +32,8 @@ namespace Pegasus.AssetsCompiler.Compilers
 				ExternalTool.NvCompress(asset.SourcePath, outFile, format, asset.Mipmaps);
 
 				using (var ddsBuffer = BufferReader.Create(File.ReadAllBytes(outFile)))
-				{
-					var ddsImage = new DirectDrawSurface(ddsBuffer);
+				using (var ddsImage = new DirectDrawSurface(ddsBuffer))
 					ddsImage.Write(buffer);
-				}
 			}
 		}
 	}

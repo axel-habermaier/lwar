@@ -37,7 +37,6 @@ Pegasus
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
-- Support for uncompressed textures
 
 Network Specification
 ========

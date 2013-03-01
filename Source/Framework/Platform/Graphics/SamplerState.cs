@@ -38,6 +38,16 @@ namespace Pegasus.Framework.Platform.Graphics
 		public static SamplerState PointClamp { get; private set; }
 
 		/// <summary>
+		///   Gets a default sampler state with point-filtering and wrap address mode for textures without mipmaps.
+		/// </summary>
+		public static SamplerState PointWrapNoMipmaps { get; private set; }
+
+		/// <summary>
+		///   Gets a default sampler state with point-filtering and clamp address mode for textures without mipmaps.
+		/// </summary>
+		public static SamplerState PointClampNoMipmaps { get; private set; }
+
+		/// <summary>
 		///   Gets a default sampler state with bilinear filtering and wrap address mode.
 		/// </summary>
 		public static SamplerState BilinearWrap { get; private set; }
@@ -46,6 +56,16 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Gets a default sampler state with bilinear filtering and clamp address mode.
 		/// </summary>
 		public static SamplerState BilinearClamp { get; private set; }
+
+		/// <summary>
+		///   Gets a default sampler state with bilinear filtering and wrap address mode for textures without mipmaps.
+		/// </summary>
+		public static SamplerState BilinearWrapNoMipmaps { get; private set; }
+
+		/// <summary>
+		///   Gets a default sampler state with bilinear filtering and clamp address mode for textures without mipmaps.
+		/// </summary>
+		public static SamplerState BilinearClampNoMipmaps { get; private set; }
 
 		/// <summary>
 		///   Gets a default sampler state with trilinea filtering and wrap address mode.
@@ -213,6 +233,16 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			PointClamp = new SamplerState(graphicsDevice) { Filter = TextureFilter.Nearest };
 
+			PointWrapNoMipmaps = new SamplerState(graphicsDevice)
+			{
+				AddressU = TextureAddressMode.Wrap,
+				AddressV = TextureAddressMode.Wrap,
+				AddressW = TextureAddressMode.Wrap,
+				Filter = TextureFilter.NearestNoMipmaps
+			};
+
+			PointClampNoMipmaps = new SamplerState(graphicsDevice) { Filter = TextureFilter.NearestNoMipmaps };
+
 			BilinearWrap = new SamplerState(graphicsDevice)
 			{
 				AddressU = TextureAddressMode.Wrap,
@@ -221,6 +251,16 @@ namespace Pegasus.Framework.Platform.Graphics
 			};
 
 			BilinearClamp = new SamplerState(graphicsDevice);
+
+			BilinearWrapNoMipmaps = new SamplerState(graphicsDevice)
+			{
+				AddressU = TextureAddressMode.Wrap,
+				AddressV = TextureAddressMode.Wrap,
+				AddressW = TextureAddressMode.Wrap,
+				Filter = TextureFilter.BilinearNoMipmaps
+			};
+
+			BilinearClampNoMipmaps = new SamplerState(graphicsDevice) { Filter = TextureFilter.BilinearNoMipmaps };
 
 			TrilinearWrap = new SamplerState(graphicsDevice)
 			{
@@ -250,28 +290,20 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal static void DisposeDefaultInstances()
 		{
 			PointWrap.SafeDispose();
-			PointWrap = null;
-
 			PointClamp.SafeDispose();
-			PointClamp = null;
+			PointWrapNoMipmaps.SafeDispose();
+			PointClampNoMipmaps.SafeDispose();
 
 			BilinearWrap.SafeDispose();
-			BilinearWrap = null;
-
 			BilinearClamp.SafeDispose();
-			BilinearClamp = null;
+			BilinearWrapNoMipmaps.SafeDispose();
+			BilinearClampNoMipmaps.SafeDispose();
 
 			TrilinearWrap.SafeDispose();
-			TrilinearWrap = null;
-
 			TrilinearClamp.SafeDispose();
-			TrilinearClamp = null;
 
 			AnisotropicWrap.SafeDispose();
-			AnisotropicWrap = null;
-
 			AnisotropicClamp.SafeDispose();
-			AnisotropicClamp = null;
 		}
 
 		/// <summary>

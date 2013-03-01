@@ -3,7 +3,7 @@ layout(std140, binding = 0) uniform PerFrameConstants
 	mat4 View;
 	mat4 Projection;
 	mat4 ViewProjection;
-	//vec2 ViewportSize;
+	vec2 ViewportSize;
 };
 
 layout(location = 0) in vec4 VertexPosition;
@@ -22,8 +22,14 @@ void main()
 	rotationMatrix[3][1] = 0;
 	rotationMatrix[3][2] = 0;
 
-	vec4 position = rotationMatrix * VertexPosition;
-	position = Projection * position;
+	mat4 projection = Projection;
+	float f = 1.0 / tan(0.9 * 0.5);
+	projection[0][0] = f * ViewportSize.y / ViewportSize.x;
+	projection[1][1] = f;
+
+	vec4 position = VertexPosition;
+	position = rotationMatrix * position;
+	position = projection * position;
 	position.z += 1;
 
 	gl_Position = position; 
@@ -60,8 +66,14 @@ VS_OUTPUT Main(VS_INPUT input)
 	rotationMatrix[1][3] = 0;
 	rotationMatrix[2][3] = 0;
 
-	float4 position = mul(rotationMatrix, input.Position);
-	position = mul(Projection, position);
+	float4x4 projection = Projection;
+	float f = 1.0 / tan(0.9 * 0.5);
+	projection[0][0] = f * ViewportSize.y / ViewportSize.x;
+	projection[1][1] = f;
+
+	float4 position = input.Position;
+	position = mul(rotationMatrix, position);
+	position = mul(projection, position);
 	position.z += 1;
 
 	output.Position = position; 
