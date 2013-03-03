@@ -6,12 +6,11 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget, pgAttachment* attachments, pgInt32 count)
+pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget)
 {
 	// TODO: Implement
 	renderTarget->id = 0;
 	renderTarget->swapChain = NULL;
-	PG_UNUSED(texture);
 }
 
 pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)
@@ -20,16 +19,32 @@ pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)
 	PG_UNUSED(renderTarget);
 }
 
-pgVoid pgClearCore(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor color, pgFloat32 depth, pgUint8 stencil)
+pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
+{
+	pgRectangle viewport, scissor;
+
+	viewport = renderTarget->device->viewport;
+	scissor = renderTarget->device->scissorRectangle;
+	pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
+	pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
+
+    glClearColor(color.red, color.green, color.blue, color.alpha);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+	pgSetViewport(renderTarget->device, viewport.left, viewport.top, viewport.width, viewport.height);
+	pgSetScissorRect(renderTarget->device, scissor.left, scissor.top, scissor.width, scissor.height);
+
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
 {
 	pgInt32 glTargets = 0;
 	pgRectangle viewport, scissor;
 
-    if ((targets & PG_CLEAR_COLOR) == PG_CLEAR_COLOR)
-        glTargets |= GL_COLOR_BUFFER_BIT;
-    if ((targets & PG_CLEAR_DEPTH) == PG_CLEAR_DEPTH)
+    if (clearDepth)
         glTargets |= GL_DEPTH_BUFFER_BIT;
-    if ((targets & PG_CLEAR_STENCIL) == PG_CLEAR_STENCIL)
+    if (clearStencil)
         glTargets |= GL_STENCIL_BUFFER_BIT;
 
 	viewport = renderTarget->device->viewport;
@@ -37,8 +52,6 @@ pgVoid pgClearCore(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor
 	pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
 	pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
 
-	pgBindRenderTarget(renderTarget);
-    glClearColor(color.red, color.green, color.blue, color.alpha);
     glClearDepth(depth);
     glClearStencil(stencil);
     glClear(glTargets);

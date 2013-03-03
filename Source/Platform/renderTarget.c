@@ -60,6 +60,8 @@ pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget)
 pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color)
 {
 	PG_ASSERT_NOT_NULL(renderTarget);
+	PG_ASSERT(renderTarget->device->renderTarget == renderTarget, "Cannot clear color of unbound render target.");
+
 	pgClearColorCore(renderTarget, color);
 }
 
@@ -67,6 +69,7 @@ pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBo
 {
 	PG_ASSERT_NOT_NULL(renderTarget);
 	PG_ASSERT(clearDepth || clearStencil, "Either depth or stencil clearing must be enabled.");
+	PG_ASSERT(renderTarget->device->renderTarget == renderTarget, "Cannot clear depth stencil of unbound render target.");
 
 	pgClearDepthStencilCore(renderTarget, clearDepth, clearStencil, depth, stencil);
 }
