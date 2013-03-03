@@ -46,10 +46,10 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	// mode; this doesn't work reliably
 	IDXGIFactory_MakeWindowAssociation(swapChain->device->factory, window->hwnd, DXGI_MWA_NO_ALT_ENTER);
 
-	InitializeBackBuffer(swapChain);
-
 	// Initially, we set the viewport to match the back buffer size
 	pgSetViewport(swapChain->device, 0, 0, width, height);
+
+	pgResizeSwapChain(swapChain, width, height);
 }
 
 pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain)
@@ -68,6 +68,9 @@ pgVoid pgPresentCore(pgSwapChain* swapChain)
 
 pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
 {
+	swapChain->renderTarget.width = width;
+	swapChain->renderTarget.height = height;
+
 	ReleaseBackBuffer(swapChain);
 	IDXGISwapChain_ResizeBuffers(swapChain->ptr, 2, width, height, swapChain->format, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 	InitializeBackBuffer(swapChain);
@@ -80,6 +83,7 @@ pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 static pgVoid InitializeBackBuffer(pgSwapChain* swapChain)
 {
 	ID3D11Texture2D* tex;
+	D3D11_TEXTURE2D_DESC depthStencilDesc;
 
 	D3DCALL(IDXGISwapChain_GetBuffer(swapChain->ptr, 0, &IID_ID3D11Texture2D, &tex), 
 		"Failed to get backbuffer from swap chain.");
@@ -88,6 +92,27 @@ static pgVoid InitializeBackBuffer(pgSwapChain* swapChain)
 		"Failed to initialize backbuffer render target.");
 
 	ID3D11Texture2D_Release(tex);
+
+	depthStencilDesc.Width = swapChain->renderTarget.width;
+	depthStencilDesc.Height = swapChain->renderTarget.height;
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.ArraySize = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilDesc.SampleDesc.Count = 1;
+	depthStencilDesc.SampleDesc.Quality = 0;
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags = 0;
+
+	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(swapChain), &depthStencilDesc, NULL, &tex), 
+		"Failed to initialize depth stencil buffer of swap chain.");
+
+	D3DCALL(ID3D11Device_CreateDepthStencilView(DEVICE(swapChain), (ID3D11Resource*)tex, NULL, &swapChain->renderTarget.dsPtr),
+		"Failed to initialize depth stencil view of swap chain.");
+
+	ID3D11Texture2D_Release(tex);
+
 	pgBindRenderTarget(&swapChain->renderTarget);
 }
 
@@ -100,7 +125,10 @@ static pgVoid ReleaseBackBuffer(pgSwapChain* swapChain)
 	ID3D11DeviceContext_OMSetRenderTargets(CONTEXT(swapChain), 0, NULL, NULL);
 
 	ID3D11RenderTargetView_Release(swapChain->renderTarget.cbPtr[0]);
+	ID3D11DepthStencilView_Release(swapChain->renderTarget.dsPtr);
+
 	swapChain->renderTarget.cbPtr[0] = NULL;
+	swapChain->renderTarget.dsPtr = NULL;
 }
 
 #endif

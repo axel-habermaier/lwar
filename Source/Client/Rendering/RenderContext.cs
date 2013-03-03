@@ -65,6 +65,8 @@ namespace Lwar.Client.Rendering
 		public void Draw(Camera camera)
 		{
 			Assert.ArgumentNotNull(camera, () => camera);
+
+			DepthStencilState.Default.Bind();
 			camera.Bind();
 
 			if (LwarCvars.DrawWireframe.Value)
