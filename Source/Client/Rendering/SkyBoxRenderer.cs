@@ -17,7 +17,7 @@ namespace Lwar.Client.Rendering
 		private readonly CubeMap _cubeMap;
 
 		/// <summary>
-		///   The fragment shader that is used to draw the ships.
+		///   The fragment shader that is used to draw the skybox.
 		/// </summary>
 		private readonly FragmentShader _fragmentShader;
 
@@ -27,7 +27,7 @@ namespace Lwar.Client.Rendering
 		private readonly Model _model;
 
 		/// <summary>
-		///   The vertex shader that is used to draw the ships.
+		///   The vertex shader that is used to draw the skybox.
 		/// </summary>
 		private readonly VertexShader _vertexShader;
 

@@ -90,7 +90,7 @@ namespace Lwar.Client.Network
 					entity = Ship.Create(entityId, player);
 					break;
 				case EntityType.Planet:
-					entity = Planet.Create(entityId);
+					entity = Sun.Create(entityId);
 					break;
 				case EntityType.Bullet:
 					entity = Bullet.Create(entityId);

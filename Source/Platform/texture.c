@@ -17,6 +17,10 @@ pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDescription* descr
 	PG_ASSERT_IN_RANGE(description->mipmaps, 1, PG_MAX_MIPMAPS);
 	PG_ASSERT((description->flags & PG_TEXTURE_GENERATE_MIPMAPS) == 0 || description->mipmaps == 1, 
 		"Cannot set mipmaps for a texture that has the generate mipmaps flag set.");
+	PG_ASSERT((description->flags & PG_TEXTURE_BIND_DEPTH_STENCIL) == 0 || !pgIsCompressedFormat(description->format),
+		"The bind depth stencil flag is invalid for compressed textures.");
+	PG_ASSERT((description->flags & PG_TEXTURE_BIND_RENDER_TARGET) == 0 || !pgIsCompressedFormat(description->format),
+		"The bind render target flag is invalid for compressed textures.");
 
 	PG_ALLOC(pgTexture, texture);
 	texture->device = device;

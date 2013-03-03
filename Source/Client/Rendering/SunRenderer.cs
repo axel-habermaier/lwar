@@ -10,23 +10,26 @@ namespace Lwar.Client.Rendering
 	using Pegasus.Framework.Platform.Graphics;
 
 	/// <summary>
-	///   Renders bullets into a 3D scene.
+	///   Renders suns into a 3D scene.
 	/// </summary>
-	public class BulletRenderer : Renderer<Bullet, BulletRenderer.BulletDrawState>
+	public class SunRenderer : Renderer<Sun, SunRenderer.SunDrawState>
 	{
 		/// <summary>
-		///   The fragment shader that is used to draw the bullets.
+		///   The sun cube map.
+		/// </summary>
+		private readonly CubeMap _cubeMap;
+
+		/// <summary>
+		///   The fragment shader that is used to draw the suns.
 		/// </summary>
 		private readonly FragmentShader _fragmentShader;
 
 		/// <summary>
-		///   The model that is used to draw the bullets.
+		///   The sun model.
 		/// </summary>
 		private readonly Model _model;
 
-		/// <summary>
-		///   The texture that is used to draw the bullets.
-		/// </summary>
+		private readonly RenderTarget _renderTarget;
 		private readonly Texture2D _texture;
 
 		/// <summary>
@@ -35,7 +38,7 @@ namespace Lwar.Client.Rendering
 		private readonly ConstantBuffer<Matrix> _transform;
 
 		/// <summary>
-		///   The vertex shader that is used to draw the bullets.
+		///   The vertex shader that is used to draw the suns.
 		/// </summary>
 		private readonly VertexShader _vertexShader;
 
@@ -44,25 +47,28 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public unsafe BulletRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
+		public unsafe SunRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			_vertexShader = assets.LoadVertexShader("Shaders/QuadVS");
-			_fragmentShader = assets.LoadFragmentShader("Shaders/QuadFS");
+			_vertexShader = assets.LoadVertexShader("Shaders/SphereVS");
+			_fragmentShader = assets.LoadFragmentShader("Shaders/SphereFS");
 			_transform = new ConstantBuffer<Matrix>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
-			_texture = assets.LoadTexture2D("Textures/Bullet");
-			_model = Model.CreateQuad(graphicsDevice, _texture.Size);
+			_cubeMap = assets.LoadCubeMap("Textures/Sun");
+			_model = Model.CreateSphere(graphicsDevice, 200, 25);
+
+			_texture = new Texture2D(graphicsDevice, 512, 512, SurfaceFormat.Rgba8,
+									 TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget);
 		}
 
 		/// <summary>
 		///   Invoked when an element has been added to the renderer.
 		/// </summary>
-		/// <param name="bullet">The element that should be drawn by the renderer.</param>
-		protected override BulletDrawState OnAdded(Bullet bullet)
+		/// <param name="sun">The element that should be drawn by the renderer.</param>
+		protected override SunDrawState OnAdded(Sun sun)
 		{
-			return new BulletDrawState { Transform = bullet.Transform };
+			return new SunDrawState { Transform = sun.Transform };
 		}
 
 		/// <summary>
@@ -74,11 +80,11 @@ namespace Lwar.Client.Rendering
 			_vertexShader.Bind();
 			_fragmentShader.Bind();
 			SamplerState.TrilinearClamp.Bind(0);
-			_texture.Bind(0);
+			_cubeMap.Bind(0);
 
-			foreach (var bullet in RegisteredElements)
+			foreach (var planet in RegisteredElements)
 			{
-				_transform.Data = bullet.Transform.Matrix;
+				_transform.Data = planet.Transform.Matrix;
 				_transform.Update();
 
 				_model.Draw();
@@ -92,15 +98,17 @@ namespace Lwar.Client.Rendering
 		{
 			_model.SafeDispose();
 			_transform.SafeDispose();
+			_texture.SafeDispose();
+			_renderTarget.SafeDispose();
 		}
 
 		/// <summary>
-		///   The state required for drawing a bullet.
+		///   The state required for drawing a planet.
 		/// </summary>
-		public struct BulletDrawState
+		public struct SunDrawState
 		{
 			/// <summary>
-			///   The transformation of the bullet.
+			///   The transformation of the planet.
 			/// </summary>
 			public Transformation Transform;
 		}

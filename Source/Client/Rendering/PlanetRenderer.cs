@@ -15,7 +15,7 @@ namespace Lwar.Client.Rendering
 	public class PlanetRenderer : Renderer<Planet, PlanetRenderer.PlanetDrawState>
 	{
 		/// <summary>
-		///   The fragment shader that is used to draw the ships.
+		///   The fragment shader that is used to draw the planets.
 		/// </summary>
 		private readonly FragmentShader _fragmentShader;
 
@@ -25,7 +25,7 @@ namespace Lwar.Client.Rendering
 		private readonly ConstantBuffer<Matrix> _transform;
 
 		/// <summary>
-		///   The vertex shader that is used to draw the ships.
+		///   The vertex shader that is used to draw the planets.
 		/// </summary>
 		private readonly VertexShader _vertexShader;
 

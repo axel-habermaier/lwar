@@ -38,7 +38,6 @@ Pegasus
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
-- Enable depth buffering
 
 Network Specification
 ========

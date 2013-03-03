@@ -170,6 +170,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gameplay\Entities\Sun.cs" />
     <Compile Include="Gameplay\EntityList.cs" />
     <Compile Include="Gameplay\GameCamera.cs" />
     <Compile Include="Gameplay\PlayerList.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Network\LocalServer.cs" />
     <Compile Include="Network\ServerConnection.cs" />
     <Compile Include="Rendering\BulletRenderer.cs" />
+    <Compile Include="Rendering\SunRenderer.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\Model.cs" />
     <Compile Include="Rendering\PlanetRenderer.cs" />

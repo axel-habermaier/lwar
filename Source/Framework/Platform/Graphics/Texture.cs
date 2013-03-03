@@ -45,8 +45,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="surfaces">The surfaces that should be uploaded to the GPU.</param>
 		public void Reinitialize(TextureDescription description, Surface[] surfaces)
 		{
-			Assert.ArgumentNotNull(surfaces, () => surfaces);
-
 			NativeMethods.DestroyTexture(_texture);
 			_texture = IntPtr.Zero;
 

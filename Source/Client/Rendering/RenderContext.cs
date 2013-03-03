@@ -38,6 +38,7 @@ namespace Lwar.Client.Rendering
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_skyBoxRenderer = new SkyBoxRenderer(graphicsDevice, assets);
 
+			SunRenderer = new SunRenderer(graphicsDevice, assets);
 			PlanetRenderer = new PlanetRenderer(graphicsDevice, assets);
 			ShipRenderer = new ShipRenderer(graphicsDevice, assets);
 			BulletRenderer = new BulletRenderer(graphicsDevice, assets);
@@ -59,6 +60,11 @@ namespace Lwar.Client.Rendering
 		public BulletRenderer BulletRenderer { get; private set; }
 
 		/// <summary>
+		///   Gets the renderer that is used to draw suns.
+		/// </summary>
+		public SunRenderer SunRenderer { get; private set; }
+
+		/// <summary>
 		///   Renders a frame.
 		/// </summary>
 		/// <param name="camera">The camera that should be used to render the frame.</param>
@@ -75,6 +81,8 @@ namespace Lwar.Client.Rendering
 				RasterizerState.CullCounterClockwise.Bind();
 
 			_skyBoxRenderer.Draw();
+
+			SunRenderer.Draw();
 			PlanetRenderer.Draw();
 			ShipRenderer.Draw();
 			BulletRenderer.Draw();
@@ -85,6 +93,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			SunRenderer.SafeDispose();
 			PlanetRenderer.SafeDispose();
 			BulletRenderer.SafeDispose();
 			ShipRenderer.SafeDispose();
