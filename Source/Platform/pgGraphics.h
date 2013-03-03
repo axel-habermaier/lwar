@@ -63,13 +63,6 @@ typedef enum
 
 typedef enum
 {
-	PG_CLEAR_COLOR							= 1,
-	PG_CLEAR_DEPTH							= 2,
-	PG_CLEAR_STENCIL						= 4
-} pgClearTargets;
-
-typedef enum
-{
 	PG_COLOR_WRITE_ENABLE_NONE				= 0,
 	PG_COLOR_WRITE_ENABLE_RED				= 1,
 	PG_COLOR_WRITE_ENABLE_GREEN				= 2,
@@ -238,7 +231,8 @@ typedef enum
 typedef enum
 {
 	PG_TEXTURE_GENERATE_MIPMAPS				= 1,
-	PG_TEXTURE_RENDERABLE					= 2
+	PG_TEXTURE_BIND_RENDER_TARGET			= 2,
+	PG_TEXTURE_BIND_DEPTH_STENCIL			= 4,
 } pgTextureFlags;
 
 typedef enum
@@ -348,12 +342,6 @@ typedef struct
 	pgUint8*				data;
 } pgSurface;
 
-typedef struct
-{
-	pgAttachmentPoint		attachment;
-	pgTexture*				texture;
-} pgAttachment;
-
 //====================================================================================================================
 // Graphics functions
 //====================================================================================================================
@@ -429,10 +417,11 @@ PG_API_EXPORT pgVoid pgGenerateMipmaps(pgTexture* texture);
 // Render target functions
 //====================================================================================================================
 
-PG_API_EXPORT pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgAttachment* attachments, pgInt32 count);
+PG_API_EXPORT pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture** colorBuffers, pgInt32 count, pgTexture* depthStencil);
 PG_API_EXPORT pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget);
 
-PG_API_EXPORT pgVoid pgClear(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor color, pgFloat32 depth, pgUint8 stencil);
+PG_API_EXPORT pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color);
+PG_API_EXPORT pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil);
 PG_API_EXPORT pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget);
 
 //====================================================================================================================

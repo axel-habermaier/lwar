@@ -75,7 +75,7 @@ namespace Lwar.Client
 		{
 			SwapChain.BackBuffer.Bind();
 			RasterizerState.CullNone.Bind();
-			SwapChain.BackBuffer.Clear(ClearTargets.Color, Color.Black);
+			SwapChain.BackBuffer.Clear(Color.Black);
 
 			_stateManager.Draw();
 		}

@@ -77,8 +77,11 @@ static pgVoid pgInitTextureDesc2D(pgTexture* texture, D3D11_TEXTURE2D_DESC* desc
 	desc->MiscFlags = 0;
 	desc->Format = pgConvertSurfaceFormat(texture->desc.format);
 
-	if (texture->desc.flags & PG_TEXTURE_RENDERABLE)
+	if (texture->desc.flags & PG_TEXTURE_BIND_RENDER_TARGET)
 		desc->BindFlags |= D3D11_BIND_RENDER_TARGET;
+
+	if (texture->desc.flags & PG_TEXTURE_BIND_DEPTH_STENCIL)
+		desc->BindFlags |= D3D11_BIND_DEPTH_STENCIL;
 
 	if (texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS)
 	{

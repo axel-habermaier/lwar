@@ -22,7 +22,6 @@ PG_ASSERT_SIZE(pgMouseButton, 4);
 PG_ASSERT_SIZE(pgGraphicsApi, 4);
 PG_ASSERT_SIZE(pgBlendOperation, 4);
 PG_ASSERT_SIZE(pgBlendOption, 4);
-PG_ASSERT_SIZE(pgClearTargets, 4);
 PG_ASSERT_SIZE(pgColorWriteChannels, 4);
 PG_ASSERT_SIZE(pgComparison, 4);
 PG_ASSERT_SIZE(pgCullMode, 4);

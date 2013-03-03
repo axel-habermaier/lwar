@@ -448,7 +448,6 @@
     <Compile Include="Platform\Graphics\StencilOperationDescription.cs" />
     <Compile Include="Platform\Graphics\SurfaceFormat.cs" />
     <Compile Include="Platform\Graphics\TextureAddressMode.cs" />
-    <Compile Include="Platform\Graphics\ClearTargets.cs" />
     <Compile Include="Platform\Graphics\GraphicsApi.cs" />
     <Compile Include="Platform\Graphics\GraphicsDevice.cs" />
     <Compile Include="Platform\Graphics\GraphicsObject.cs" />

@@ -45,16 +45,26 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Clears the current render target.
+		///   Clears the color buffers of the render target.
 		/// </summary>
-		/// <param name="targets">Indicates which buffers to clear.</param>
 		/// <param name="color">The color the color buffer should be set to.</param>
-		/// <param name="depth">The value the depth buffer should be set to.</param>
-		/// <param name="stencil">The value the stencil buffer should be set to.</param>
-		public void Clear(ClearTargets targets, Color color, float depth = 0.0f, byte stencil = 0)
+		public void Clear(Color color)
 		{
 			Assert.NotDisposed(this);
-			NativeMethods.Clear(_renderTarget, targets, color, depth, stencil);
+			NativeMethods.ClearColor(_renderTarget, color);
+		}
+
+		/// <summary>
+		///   Clears the depth stencil buffer of the render target.
+		/// </summary>
+		/// <param name="clearDepth">Indicates whether the depth buffer should be cleared.</param>
+		/// <param name="clearStencil">Indicates whether the stencil buffer should be cleared.</param>
+		/// <param name="depth">The value the depth buffer should be set to.</param>
+		/// <param name="stencil">The value the stencil buffer should be set to.</param>
+		public void Clear(bool clearDepth, bool clearStencil, float depth = 0.0f, byte stencil = 0)
+		{
+			Assert.NotDisposed(this);
+			NativeMethods.ClearDepthStencil(_renderTarget, clearDepth, clearStencil, depth, stencil);
 		}
 
 		/// <summary>
@@ -89,8 +99,11 @@ namespace Pegasus.Framework.Platform.Graphics
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyRenderTarget")]
 			public static extern void DestroyRenderTarget(IntPtr renderTarget);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgClear")]
-			public static extern void Clear(IntPtr renderTarget, ClearTargets targets, Color color, float depth, byte stencil);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgClearColor")]
+			public static extern void ClearColor(IntPtr renderTarget, Color color);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgClearDepthStencil")]
+			public static extern void ClearDepthStencil(IntPtr renderTarget, bool clearDepth, bool clearnStencil, float depth, byte stencil);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindRenderTarget")]
 			public static extern void BindRenderTarget(IntPtr renderTarget);

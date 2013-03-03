@@ -4,25 +4,44 @@
 // Helper functions
 //====================================================================================================================
 
-static pgVoid pgValidateAttachments(pgAttachment* attachments, pgInt32 count);
+static pgVoid pgValidate(pgTexture** colorBuffers, pgInt32 count, pgTexture* depthStencil);
 
 //====================================================================================================================
 // Exported functions
 //====================================================================================================================
 
-pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgAttachment* attachments, pgInt32 count)
+pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture** colorBuffers, pgInt32 count, pgTexture* depthStencil)
 {
+	pgInt32 i;
 	pgRenderTarget* renderTarget;
+
 	PG_ASSERT_NOT_NULL(device);
-	PG_ASSERT_NOT_NULL(attachments);
-	PG_ASSERT_IN_RANGE(count, 1, PG_MAX_ATTACHMENTS);
-	pgValidateAttachments(attachments, count);
+	PG_ASSERT_NOT_NULL(colorBuffers);
+	PG_ASSERT_IN_RANGE(count, 0, PG_MAX_COLOR_ATTACHMENTS);
+	PG_ASSERT_NOT_NULL(depthStencil);
+	PG_ASSERT(count > 0 || depthStencil != NULL, "Cannot create render target without any buffer.");
+	pgValidate(colorBuffers, count, depthStencil);
 
 	PG_ALLOC(pgRenderTarget, renderTarget);
 	renderTarget->device = device;
-	renderTarget->width = attachments[0].texture->desc.width;
-	renderTarget->height = attachments[0].texture->desc.height;
-	pgCreateRenderTargetCore(renderTarget, attachments, count);
+	renderTarget->depthStencil = depthStencil;
+	renderTarget->count = count;
+
+	for (i = 0; i < count; ++i)
+		renderTarget->colorBuffers[i] = colorBuffers[i];
+
+	if (count > 0)
+	{
+		renderTarget->width = colorBuffers[0]->desc.width;
+		renderTarget->height = colorBuffers[0]->desc.height;
+	}
+	else
+	{
+		renderTarget->width = depthStencil->desc.width;
+		renderTarget->height = depthStencil->desc.height;
+	}
+
+	pgCreateRenderTargetCore(renderTarget);
 	return renderTarget;
 }
 
@@ -38,10 +57,18 @@ pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget)
 	PG_FREE(renderTarget);
 }
 
-pgVoid pgClear(pgRenderTarget* renderTarget, pgClearTargets targets, pgColor color, pgFloat32 depth, pgUint8 stencil)
+pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color)
 {
 	PG_ASSERT_NOT_NULL(renderTarget);
-	pgClearCore(renderTarget, targets, color, depth, stencil);
+	pgClearColorCore(renderTarget, color);
+}
+
+pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
+{
+	PG_ASSERT_NOT_NULL(renderTarget);
+	PG_ASSERT(clearDepth || clearStencil, "Either depth or stencil clearing must be enabled.");
+
+	pgClearDepthStencilCore(renderTarget, clearDepth, clearStencil, depth, stencil);
 }
 
 pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget)
@@ -59,29 +86,27 @@ pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget)
 // Helper functions
 //====================================================================================================================
 
-static pgVoid pgValidateAttachments(pgAttachment* attachments, pgInt32 count)
+static pgVoid pgValidate(pgTexture** colorBuffers, pgInt32 count, pgTexture* depthStencil)
 {
 	pgInt32 i, j;
 
-	pgUint32 width = attachments[0].texture->desc.width;
-	pgUint32 height = attachments[0].texture->desc.height;
-	pgUint32 depth = attachments[0].texture->desc.depth;
-	pgTextureType type = attachments[0].texture->desc.type;
+	pgUint32 width = colorBuffers[0]->desc.width;
+	pgUint32 height = colorBuffers[0]->desc.height;
+	pgUint32 depth = colorBuffers[0]->desc.depth;
+	pgTextureType type = colorBuffers[0]->desc.type;
+
+	PG_ASSERT(depthStencil == NULL || depthStencil->desc.flags & PG_TEXTURE_BIND_DEPTH_STENCIL, 
+		"The texture cannot be attached as a depth stencil buffer.");
 
 	for (i = 0; i < count; ++i)
 	{
-		PG_ASSERT(attachments[i].texture->desc.width == width, "All attached textures must have the same width.");
-		PG_ASSERT(attachments[i].texture->desc.height == height, "All attached textures must have the same height.");
-		PG_ASSERT(attachments[i].texture->desc.depth == depth, "All attached textures must have the same depth.");
-		PG_ASSERT(attachments[i].texture->desc.type == type, "All attached textures must be of the same type.");
-		PG_ASSERT(attachments[i].texture->desc.flags & PG_TEXTURE_RENDERABLE, "The texture cannot be attached to a render target.");
+		PG_ASSERT(colorBuffers[i]->desc.width == width, "All attached textures must have the same width.");
+		PG_ASSERT(colorBuffers[i]->desc.height == height, "All attached textures must have the same height.");
+		PG_ASSERT(colorBuffers[i]->desc.depth == depth, "All attached textures must have the same depth.");
+		PG_ASSERT(colorBuffers[i]->desc.type == type, "All attached textures must be of the same type.");
+		PG_ASSERT(colorBuffers[i]->desc.flags & PG_TEXTURE_BIND_RENDER_TARGET, "The texture cannot be attached as a color buffer.");
 
 		for (j = 0; j < i; ++j)
-		{
-			PG_ASSERT(attachments[i].attachment != attachments[j].attachment, 
-				"An attempt was made to attach more than one texture to the same attachment point.");
-			PG_ASSERT(attachments[i].texture != attachments[j].texture, 
-				"An attempt was made to attach the same texture to more than one attachment point.");
-		}
+			PG_ASSERT(colorBuffers[i] != colorBuffers[j], "An attempt was made to attach the same texture more than once.");
 	}
 }

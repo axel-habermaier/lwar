@@ -22,6 +22,7 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
+- Model.CreateQuad: Specify normal
 
 Pegasus
 ========
@@ -37,6 +38,7 @@ Pegasus
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
+- Enable depth buffering
 
 Network Specification
 ========

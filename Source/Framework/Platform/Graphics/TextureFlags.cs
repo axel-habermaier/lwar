@@ -14,8 +14,13 @@ namespace Pegasus.Framework.Platform.Graphics
 		GenerateMipmaps = 1,
 
 		/// <summary>
-		///   Indicates that the texture can be attached to a render target.
+		///   Indicates that the texture can be attached as a color buffer of a render target.
 		/// </summary>
-		Renderable = 2
+		RenderTarget = 2,
+
+		/// <summary>
+		///   Indicates that the texture can be attached as a depth stencil buffer of a render target.
+		/// </summary>
+		DepthStencil = 4,
 	}
 }

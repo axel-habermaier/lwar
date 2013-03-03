@@ -19,6 +19,9 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	DXGI_SWAP_CHAIN_DESC desc;
 	pgGetWindowSize(window, &width, &height);
 
+	swapChain->renderTarget.count = 1;
+	swapChain->renderTarget.dsPtr = NULL;
+	swapChain->renderTarget.cbPtr[0] = NULL;
 	swapChain->format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 	memset(&desc, 0, sizeof(DXGI_SWAP_CHAIN_DESC));
@@ -43,8 +46,6 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	// mode; this doesn't work reliably
 	IDXGIFactory_MakeWindowAssociation(swapChain->device->factory, window->hwnd, DXGI_MWA_NO_ALT_ENTER);
 
-	swapChain->renderTarget.rt = NULL;
-	swapChain->renderTarget.ds = NULL;
 	InitializeBackBuffer(swapChain);
 
 	// Initially, we set the viewport to match the back buffer size
@@ -83,21 +84,23 @@ static pgVoid InitializeBackBuffer(pgSwapChain* swapChain)
 	D3DCALL(IDXGISwapChain_GetBuffer(swapChain->ptr, 0, &IID_ID3D11Texture2D, &tex), 
 		"Failed to get backbuffer from swap chain.");
 
-	D3DCALL(ID3D11Device_CreateRenderTargetView(DEVICE(swapChain), (ID3D11Resource*)tex, NULL, &swapChain->renderTarget.rt), 
+	D3DCALL(ID3D11Device_CreateRenderTargetView(DEVICE(swapChain), (ID3D11Resource*)tex, NULL, &swapChain->renderTarget.cbPtr[0]), 
 		"Failed to initialize backbuffer render target.");
 
 	ID3D11Texture2D_Release(tex);
-	ID3D11DeviceContext_OMSetRenderTargets(CONTEXT(swapChain), 1, &swapChain->renderTarget.rt, NULL);
+	pgBindRenderTarget(&swapChain->renderTarget);
 }
 
 static pgVoid ReleaseBackBuffer(pgSwapChain* swapChain)
 {
-	if (swapChain->renderTarget.rt == NULL)
+	if (swapChain->renderTarget.cbPtr[0] == NULL)
 		return;
 
+	swapChain->device->renderTarget = NULL;
 	ID3D11DeviceContext_OMSetRenderTargets(CONTEXT(swapChain), 0, NULL, NULL);
-	ID3D11RenderTargetView_Release(swapChain->renderTarget.rt);
-	swapChain->renderTarget.rt = NULL;
+
+	ID3D11RenderTargetView_Release(swapChain->renderTarget.cbPtr[0]);
+	swapChain->renderTarget.cbPtr[0] = NULL;
 }
 
 #endif
