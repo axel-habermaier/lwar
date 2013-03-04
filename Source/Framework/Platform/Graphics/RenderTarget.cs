@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using System.Linq;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
@@ -36,11 +37,24 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		/// <param name="texture">The underlying texture for the render target.</param>
-		internal RenderTarget(GraphicsDevice graphicsDevice, Texture2D texture)
+		/// <param name="colorBuffers">The color buffers that should be bound to the render target.</param>
+		/// <param name="depthStencil">The depth stencil buffer that should be bound to the render target.</param>
+		public RenderTarget(GraphicsDevice graphicsDevice, Texture[] colorBuffers, Texture2D depthStencil)
 			: base(graphicsDevice)
 		{
-			_renderTarget = NativeMethods.CreateRenderTarget(graphicsDevice.NativePtr, texture.NativePtr);
+			IntPtr[] colorBuffersPtrs = null;
+			var count = 0;
+			if (colorBuffers != null)
+			{
+				colorBuffersPtrs = colorBuffers.Select(b => b.NativePtr).ToArray();
+				count = colorBuffers.Length;
+			}
+
+			var depthStencilPtr = IntPtr.Zero;
+			if (depthStencil != null)
+				depthStencilPtr = depthStencil.NativePtr;
+
+			_renderTarget = NativeMethods.CreateRenderTarget(graphicsDevice.NativePtr, colorBuffersPtrs, count, depthStencilPtr);
 			_ownsNativeObject = true;
 		}
 
@@ -103,7 +117,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateRenderTarget")]
-			public static extern IntPtr CreateRenderTarget(IntPtr device, IntPtr texture);
+			public static extern IntPtr CreateRenderTarget(IntPtr device, IntPtr[] colorBuffers, int count, IntPtr depthStencil);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyRenderTarget")]
 			public static extern void DestroyRenderTarget(IntPtr renderTarget);
@@ -112,7 +126,8 @@ namespace Pegasus.Framework.Platform.Graphics
 			public static extern void ClearColor(IntPtr renderTarget, Color color);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgClearDepthStencil")]
-			public static extern void ClearDepthStencil(IntPtr renderTarget, bool clearDepth, bool clearnStencil, float depth, byte stencil);
+			public static extern void ClearDepthStencil(IntPtr renderTarget, bool clearDepth, bool clearnStencil, float depth,
+														byte stencil);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindRenderTarget")]
 			public static extern void BindRenderTarget(IntPtr renderTarget);

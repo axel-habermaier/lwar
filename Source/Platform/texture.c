@@ -10,7 +10,6 @@ pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDescription* descr
 
 	PG_ASSERT_NOT_NULL(device);
 	PG_ASSERT_NOT_NULL(description);
-	PG_ASSERT_NOT_NULL(surfaces);
 	PG_ASSERT(description->arraySize == 1, "Texture arrays are currently not supported.");
 	PG_ASSERT(description->type != PG_TEXTURE_1D, "1D textures are currently not supported.");
 	PG_ASSERT(description->type != PG_TEXTURE_3D, "3D textures are currently not supported.");

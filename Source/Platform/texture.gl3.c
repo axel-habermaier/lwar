@@ -25,37 +25,40 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 	glGetIntegerv(texture->glBoundType, &boundTexture);
 	glBindTexture(texture->glType, texture->id);
 
-	switch (texture->desc.type)
+	if (surfaces != NULL)
 	{
-	case PG_TEXTURE_2D:
-		for (i = 0; i < texture->desc.surfaceCount; ++i)
-			pgUploadTexture(texture, &surfaces[i], GL_TEXTURE_2D, i);
-		break;
-	case PG_TEXTURE_CUBE_MAP:
-	{
-		pgUint32 j;
-		GLenum faces[] = 
-		{ 
-			GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
-			GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
-			GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 
-			GL_TEXTURE_CUBE_MAP_POSITIVE_X, 
-			GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-			GL_TEXTURE_CUBE_MAP_POSITIVE_Y
-		};
-
-		for (i = 0; i < 6; ++i)
+		switch (texture->desc.type)
 		{
-			for (j = 0; j < texture->desc.mipmaps; ++j)
+		case PG_TEXTURE_2D:
+			for (i = 0; i < texture->desc.surfaceCount; ++i)
+				pgUploadTexture(texture, &surfaces[i], GL_TEXTURE_2D, i);
+			break;
+		case PG_TEXTURE_CUBE_MAP:
+		{
+			pgUint32 j;
+			GLenum faces[] = 
+			{ 
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
+				GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X, 
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+				GL_TEXTURE_CUBE_MAP_POSITIVE_Y
+			};
+
+			for (i = 0; i < 6; ++i)
 			{
-				int index = i * texture->desc.mipmaps + j;
-				pgUploadTexture(texture, &surfaces[index], faces[i], j);
+				for (j = 0; j < texture->desc.mipmaps; ++j)
+				{
+					int index = i * texture->desc.mipmaps + j;
+					pgUploadTexture(texture, &surfaces[index], faces[i], j);
+				}
 			}
+			break;
 		}
-		break;
-	}
-	default:
-		PG_NO_SWITCH_DEFAULT;
+		default:
+			PG_NO_SWITCH_DEFAULT;
+		}
 	}
 
 	glBindTexture(texture->glType, boundTexture);

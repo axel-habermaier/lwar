@@ -212,6 +212,7 @@
     <Compile Include="Network\LocalServer.cs" />
     <Compile Include="Network\ServerConnection.cs" />
     <Compile Include="Rendering\BulletRenderer.cs" />
+    <Compile Include="Rendering\FullscreenQuad.cs" />
     <Compile Include="Rendering\SunRenderer.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\Model.cs" />

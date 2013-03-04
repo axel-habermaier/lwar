@@ -189,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Fonts\Liberation Mono 12.fnt" />
+    <None Include="Shaders\FullscreenQuadVS.vs" />
     <None Include="Shaders\SkyboxVS.vs" />
     <None Include="Shaders\QuadVS.vs" />
     <None Include="Shaders\SphereVS.vs" />

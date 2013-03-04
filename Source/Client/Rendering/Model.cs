@@ -101,8 +101,6 @@ namespace Lwar.Client.Rendering
 		public static Model CreateQuad(GraphicsDevice graphicsDevice, float width, float height)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentInRange(width, () => width, 0, Single.MaxValue);
-			Assert.ArgumentInRange(height, () => height, 0, Single.MaxValue);
 
 			width /= 2.0f;
 			height /= 2.0f;

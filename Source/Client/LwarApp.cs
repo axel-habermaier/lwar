@@ -47,7 +47,7 @@ namespace Lwar.Client
 			Window.Title = "lwar";
 			Window.Size = new Size(1280, 720);
 
-			_stateManager = new StateManager(Window, GraphicsDevice, Assets, LogicalInputDevice);
+			_stateManager = new StateManager(Window, GraphicsDevice, SwapChain.BackBuffer, Assets, LogicalInputDevice);
 			_stateManager.Add(new MainMenu());
 
 			Commands.Bind.Invoke(Key.F1.WentDown(), "start");

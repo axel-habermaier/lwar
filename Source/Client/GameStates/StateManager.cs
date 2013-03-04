@@ -25,17 +25,21 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		/// <param name="window">The window that displays the game.</param>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game.</param>
+		/// <param name="renderTarget">The render target that the states should render into.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game.</param>
 		/// <param name="inputDevice">The logical input device that provides all the user input to the game.</param>
-		public StateManager(Window window, GraphicsDevice graphicsDevice, AssetsManager assets, LogicalInputDevice inputDevice)
+		public StateManager(Window window, GraphicsDevice graphicsDevice, RenderTarget renderTarget, AssetsManager assets,
+							LogicalInputDevice inputDevice)
 		{
 			Assert.ArgumentNotNull(window, () => window);
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(renderTarget, () => renderTarget);
 			Assert.ArgumentNotNull(assets, () => assets);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 
 			Window = window;
 			GraphicsDevice = graphicsDevice;
+			RenderTarget = renderTarget;
 			Assets = assets;
 			InputDevice = inputDevice;
 
@@ -43,6 +47,11 @@ namespace Lwar.Client.GameStates
 			ResizeSpriteBatch(Window.Size);
 			Window.Resized += ResizeSpriteBatch;
 		}
+
+		/// <summary>
+		///   Gets the render target that the states should render into.
+		/// </summary>
+		public RenderTarget RenderTarget { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the window that displays the game.

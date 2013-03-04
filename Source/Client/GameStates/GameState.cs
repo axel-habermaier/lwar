@@ -44,6 +44,14 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
+		///   Gets the render target that the state should render into.
+		/// </summary>
+		public RenderTarget RenderTarget
+		{
+			get { return StateManager.RenderTarget; }
+		}
+
+		/// <summary>
 		///   Gets the assets manager that manages all assets of the game.
 		/// </summary>
 		public AssetsManager Assets

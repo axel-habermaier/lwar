@@ -28,17 +28,19 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		/// <param name="window">The window that displays the game session.</param>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
+		/// <param name="renderTarget">The render target the render context should draw into.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public RenderContext(Window window, GraphicsDevice graphicsDevice, AssetsManager assets)
+		public RenderContext(Window window, GraphicsDevice graphicsDevice, RenderTarget renderTarget, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(window, () => window);
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(renderTarget, () => renderTarget);
 			Assert.ArgumentNotNull(assets, () => assets);
 
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_skyBoxRenderer = new SkyBoxRenderer(graphicsDevice, assets);
 
-			SunRenderer = new SunRenderer(graphicsDevice, assets);
+			SunRenderer = new SunRenderer(graphicsDevice, renderTarget, assets);
 			PlanetRenderer = new PlanetRenderer(graphicsDevice, assets);
 			ShipRenderer = new ShipRenderer(graphicsDevice, assets);
 			BulletRenderer = new BulletRenderer(graphicsDevice, assets);

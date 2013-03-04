@@ -17,13 +17,14 @@ pgShader* pgCreateShader(pgGraphicsDevice* device, pgShaderType type, pgVoid* sh
 	pgUint8* data = (pgUint8*)shaderData;
 	pgUint8* end = data + length;
 	pgShaderInput inputs[PG_INPUT_BINDINGS_COUNT];
-	pgInt32 inputCount;
+	pgInt32 inputCount = 0;
 
 	PG_ASSERT_NOT_NULL(device);
 	PG_ASSERT_NOT_NULL(shaderData);
 	PG_ASSERT_IN_RANGE(length, 0, INT32_MAX);
 
-	inputCount = pgReadShaderInputs(&data, end, inputs);
+	if (type == PG_VERTEX_SHADER)
+		inputCount = pgReadShaderInputs(&data, end, inputs);
 
 	PG_ALLOC(pgShader, shader);
 	shader->device = device;

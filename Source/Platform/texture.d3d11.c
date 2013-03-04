@@ -94,6 +94,10 @@ static D3D11_SUBRESOURCE_DATA* pgInitResourceData(pgTexture* texture, pgSurface*
 {
 	pgUint32 i;
 	D3D11_SUBRESOURCE_DATA* data = NULL;
+
+	if (surfaces == NULL)
+		return NULL;
+
 	PG_ALLOC_ARRAY(D3D11_SUBRESOURCE_DATA, texture->desc.surfaceCount, data);
 
 	if (texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS)

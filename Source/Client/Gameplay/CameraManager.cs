@@ -119,8 +119,11 @@ namespace Lwar.Client.Gameplay
 			LwarCommands.ToggleDebugCamera.Invoked -= ToggleDebugCamera;
 			_window.Resized -= WindowResized;
 
-			_window.MouseCaptured = false;
-			_inputDevice.Modes = InputModes.Game;
+			if (ActiveCamera == _debugCamera)
+			{
+				_window.MouseCaptured = false;
+				_inputDevice.Modes = InputModes.Game;
+			}
 		}
 	}
 }

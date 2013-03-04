@@ -16,9 +16,7 @@ pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture** color
 	pgRenderTarget* renderTarget;
 
 	PG_ASSERT_NOT_NULL(device);
-	PG_ASSERT_NOT_NULL(colorBuffers);
 	PG_ASSERT_IN_RANGE(count, 0, PG_MAX_COLOR_ATTACHMENTS);
-	PG_ASSERT_NOT_NULL(depthStencil);
 	PG_ASSERT(count > 0 || depthStencil != NULL, "Cannot create render target without any buffer.");
 	pgValidate(colorBuffers, count, depthStencil);
 

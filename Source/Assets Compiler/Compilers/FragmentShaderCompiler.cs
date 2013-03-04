@@ -20,7 +20,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 			string glsl, hlsl;
 			ExtractShaderCode(asset, out glsl, out hlsl);
 
-			buffer.WriteByte(0); // No shader inputs
 			WriteGlslShader(buffer, glsl);
 			if (CompileHlsl)
 			{

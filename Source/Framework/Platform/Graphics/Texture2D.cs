@@ -42,18 +42,7 @@ namespace Pegasus.Framework.Platform.Graphics
 				Type = TextureType.Texture2D
 			};
 
-			Reinitialize(description, new[]
-			{
-				new Surface
-				{
-					Width = width,
-					Height = height,
-					Depth = 1,
-					Data = null,
-					Size = 0,
-					Stride = 0,
-				}
-			});
+			Reinitialize(description, null);
 		}
 
 		/// <summary>
