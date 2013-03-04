@@ -16,6 +16,21 @@ namespace Pegasus.Framework.Platform.Graphics
 		private readonly IntPtr _device;
 
 		/// <summary>
+		///   The current primitive type of the input assembler stage.
+		/// </summary>
+		private PrimitiveType _primitiveType;
+
+		/// <summary>
+		///   The current scissor rectangle of the rasterizer stage of the device.
+		/// </summary>
+		private Rectangle _scissor;
+
+		/// <summary>
+		///   The current viewport of the rasterizer stage of the device.
+		/// </summary>
+		private Rectangle _viewport;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		internal GraphicsDevice()
@@ -36,6 +51,63 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal IntPtr NativePtr
 		{
 			get { return _device; }
+		}
+
+		/// <summary>
+		///   Gets or sets the current viewport of the rasterizer stage of the device.
+		/// </summary>
+		public Rectangle Viewport
+		{
+			get
+			{
+				Assert.NotDisposed(this);
+				return _viewport;
+			}
+			set
+			{
+				Assert.NotDisposed(this);
+
+				_viewport = value;
+				NativeMethods.SetViewport(_device, value.Left, value.Top, value.Width, value.Height);
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the current scissor rectangle of the rasterizer stage of the device.
+		/// </summary>
+		public Rectangle ScissorRectangle
+		{
+			get
+			{
+				Assert.NotDisposed(this);
+				return _scissor;
+			}
+			set
+			{
+				Assert.NotDisposed(this);
+
+				_scissor = value;
+				NativeMethods.SetScissorRect(_device, value.Left, value.Top, value.Width, value.Height);
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the current primitive type of the input assembler stage.
+		/// </summary>
+		public PrimitiveType PrimitiveType
+		{
+			get
+			{
+				Assert.NotDisposed(this);
+				return _primitiveType;
+			}
+			set
+			{
+				Assert.NotDisposed(this);
+
+				_primitiveType = value;
+				NativeMethods.SetPrimitiveType(_device, _primitiveType);
+			}
 		}
 
 		/// <summary>
@@ -74,40 +146,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			Assert.NotDisposed(this);
 			NativeMethods.DrawIndexed(_device, indexCount, indexOffset, vertexOffset);
-		}
-
-		/// <summary>
-		///   Binds the given viewport to the rasterizer stage of the device. The given viewport is only
-		///   valid for the currently bound render target; once another render target is bound, the viewport
-		///   is reset.
-		/// </summary>
-		/// <param name="viewport">The viewport that should be set.</param>
-		public void SetViewport(Rectangle viewport)
-		{
-			Assert.NotDisposed(this);
-			NativeMethods.SetViewport(_device, viewport.Left, viewport.Top, viewport.Width, viewport.Height);
-		}
-
-		/// <summary>
-		///   Sets the primitive type of the input assembler stage.
-		/// </summary>
-		/// <param name="primitiveType">The primitive type that should be set.</param>
-		public void SetPrimitiveType(PrimitiveType primitiveType)
-		{
-			Assert.NotDisposed(this);
-			NativeMethods.SetPrimitiveType(_device, primitiveType);
-		}
-
-		/// <summary>
-		///   Binds the scissor rectangle to the rasterizer stage of the device. The given rectangle is only
-		///   valid for the currently bound render target; once another render target is bound, the scissor
-		///   rectangle is reset.
-		/// </summary>
-		/// <param name="rectangle">The scissor rectangle.</param>
-		public void SetScissorRectangle(Rectangle rectangle)
-		{
-			Assert.NotDisposed(this);
-			NativeMethods.SetScissorRect(_device, rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height);
 		}
 
 		/// <summary>

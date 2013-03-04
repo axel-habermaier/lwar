@@ -78,7 +78,7 @@ namespace Lwar.Client.Rendering
 		public void Draw()
 		{
 			_layout.Bind();
-			_graphicsDevice.SetPrimitiveType(PrimitiveType.Triangles);
+			_graphicsDevice.PrimitiveType = PrimitiveType.Triangles;
 			_graphicsDevice.DrawIndexed(_indexCount);
 		}
 

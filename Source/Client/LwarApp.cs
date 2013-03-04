@@ -43,7 +43,7 @@ namespace Lwar.Client
 		{
 			LogicalInputDevice.Modes = InputModes.Game;
 			Window.Closing += Exit;
-			Window.Resized += s => GraphicsDevice.SetViewport(new Rectangle(0, 0, s.Width, s.Height));
+			Window.Resized += s => GraphicsDevice.Viewport = new Rectangle(0, 0, s.Width, s.Height);
 			Window.Title = "lwar";
 			Window.Size = new Size(1280, 720);
 

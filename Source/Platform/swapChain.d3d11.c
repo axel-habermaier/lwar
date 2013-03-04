@@ -46,9 +46,6 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	// mode; this doesn't work reliably
 	IDXGIFactory_MakeWindowAssociation(swapChain->device->factory, window->hwnd, DXGI_MWA_NO_ALT_ENTER);
 
-	// Initially, we set the viewport to match the back buffer size
-	pgSetViewport(swapChain->device, 0, 0, width, height);
-
 	pgResizeSwapChain(swapChain, width, height);
 }
 

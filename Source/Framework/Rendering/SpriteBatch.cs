@@ -456,7 +456,7 @@ namespace Pegasus.Framework.Rendering
 			_worldMatrix.Bind(1);
 			_vertexLayout.Bind();
 
-			GraphicsDevice.SetPrimitiveType(PrimitiveType.Triangles);
+			GraphicsDevice.PrimitiveType = PrimitiveType.Triangles;
 			DepthStencilState.DepthDisabled.Bind();
 			SamplerState.PointClampNoMipmaps.Bind(0);
 			BlendState.Premultiplied.Bind();
@@ -466,7 +466,7 @@ namespace Pegasus.Framework.Rendering
 			else
 			{
 				_scissorRasterizerState.Bind();
-				GraphicsDevice.SetScissorRectangle(ScissorRectangle);
+				GraphicsDevice.ScissorRectangle = ScissorRectangle;
 			}
 
 			// Prepare the vertex buffer

@@ -59,6 +59,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		private readonly VertexShader _vertexShader;
 
+		private GraphicsDevice g;
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -70,7 +71,7 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(renderTarget, () => renderTarget);
 			Assert.ArgumentNotNull(assets, () => assets);
-
+			g = graphicsDevice;
 			_renderTarget = renderTarget;
 			_vertexShader = assets.LoadVertexShader("Shaders/SphereVS");
 			_fragmentShader = assets.LoadFragmentShader("Shaders/SphereFS");
@@ -111,6 +112,8 @@ namespace Lwar.Client.Rendering
 				_cubeMap.Bind(0);
 				_model.Draw();
 
+				var viewport = g.Viewport;
+				g.Viewport =new Rectangle(0, 0, 512,512);
 				_effectTarget.Bind();
 
 				_effectTarget.Clear(new Color(0, 0, 0, 0));
@@ -121,6 +124,7 @@ namespace Lwar.Client.Rendering
 				_model.Draw();
 
 				_renderTarget.Bind();
+				g.Viewport = viewport;
 				_effectTexture.GenerateMipmaps();
 				_fullscreenQuad.Draw(_effectTexture);
 			}
