@@ -47,7 +47,7 @@ namespace Lwar.Client.Rendering
 		/// <param name="texture">The texture the full-screen quad should be drawn with.</param>
 		public void Draw(Texture2D texture)
 		{
-			SamplerState.BilinearClampNoMipmaps.Bind(0);
+			SamplerState.BilinearClamp.Bind(0);
 			texture.Bind(0);
 
 			_vertexShader.Bind();

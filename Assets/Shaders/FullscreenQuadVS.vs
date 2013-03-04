@@ -28,14 +28,6 @@ void main()
 
 ---
 
-cbuffer PerFrameConstants : register(b0)
-{ 
-	column_major matrix	View;
-	column_major matrix Projection;
-	column_major matrix	ViewProjection;
-	float2 ViewportSize;
-};
-
 struct VS_INPUT
 {
 	float4 Position		: POSITION;

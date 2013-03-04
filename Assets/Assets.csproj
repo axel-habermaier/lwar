@@ -189,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Fonts\Liberation Mono 12.fnt" />
+    <None Include="Shaders\SunHeatVS.vs" />
     <None Include="Shaders\FullscreenQuadVS.vs" />
     <None Include="Shaders\SkyboxVS.vs" />
     <None Include="Shaders\QuadVS.vs" />
@@ -196,11 +197,13 @@
     <None Include="Shaders\SpriteVS.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Shaders\SunHeatFS.fs" />
     <Content Include="Shaders\SkyboxFS.fs" />
     <Content Include="Shaders\QuadFS.fs" />
     <Content Include="Shaders\SphereFS.fs" />
     <Content Include="Shaders\SpriteFS.fs" />
     <Content Include="Textures\Bullet.png" />
+    <Content Include="Textures\Heat.png" />
     <Content Include="Textures\Planet.png" />
     <Content Include="Textures\Rocket.png" />
     <Content Include="Textures\Ship.png" />

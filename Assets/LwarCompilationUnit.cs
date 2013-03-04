@@ -18,6 +18,7 @@ namespace Lwar.Assets
 			Add(new CubeMapAsset("Textures/Sun.png"));
 			Add(new CubeMapAsset("Textures/SunHeat.png"));
 			Add(new CubeMapAsset("Textures/Space.png") { Mipmaps = false, Uncompressed = true });
+			Add(new Texture2DAsset("Textures/Heat.png") { Mipmaps = false, Uncompressed = true });
 		}
 	}
 }

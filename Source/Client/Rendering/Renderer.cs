@@ -12,7 +12,7 @@ namespace Lwar.Client.Rendering
 	/// <typeparam name="TDrawState">The type of the draw states of the elements that the renderer draws.</typeparam>
 	public abstract class Renderer<TElement, TDrawState> : DisposableObject
 		where TElement : class
-		where TDrawState : struct
+		//where TDrawState : struct
 	{
 		/// <summary>
 		///   The draw state of the elements that the renderer draws into the scene.
