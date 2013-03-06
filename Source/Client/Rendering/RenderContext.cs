@@ -82,7 +82,7 @@ namespace Lwar.Client.Rendering
 			else
 				RasterizerState.CullCounterClockwise.Bind();
 
-			_skyBoxRenderer.Draw();
+			//_skyBoxRenderer.Draw();
 
 			SunRenderer.Draw();
 			PlanetRenderer.Draw();

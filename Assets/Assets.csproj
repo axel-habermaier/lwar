@@ -197,6 +197,9 @@
     <None Include="Shaders\SpriteVS.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Shaders\CombineBlurFS.fs" />
+    <Content Include="Shaders\HorizontalBlurFS.fs" />
+    <Content Include="Shaders\VerticalBlurFS.fs" />
     <Content Include="Shaders\SunHeatFS.fs" />
     <Content Include="Shaders\SkyboxFS.fs" />
     <Content Include="Shaders\QuadFS.fs" />

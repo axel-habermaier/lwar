@@ -59,6 +59,38 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
+		///   Gets the width of the texture.
+		/// </summary>
+		public uint Width
+		{
+			get { return Description.Width; }
+		}
+
+		/// <summary>
+		///   Gets the height of the texture.
+		/// </summary>
+		public uint Height
+		{
+			get { return Description.Height; }
+		}
+
+		/// <summary>
+		///   Gets the format of the texture.
+		/// </summary>
+		public SurfaceFormat Format
+		{
+			get { return Description.Format; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether automatic mipmap generation is supported for this texture.
+		/// </summary>
+		public bool AutogenerateMipmaps
+		{
+			get { return (Description.Flags & TextureFlags.GenerateMipmaps) != 0; }
+		}
+
+		/// <summary>
 		///   Initializes the default instances.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>

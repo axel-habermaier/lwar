@@ -39,7 +39,7 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   The fragment shader that is used to draw the suns.
 		/// </summary>
-		private readonly FragmentShader _fragmentShader, _heatFS;
+		private readonly FragmentShader _fragmentShader, _heatFS, _quadFS;
 
 		/// <summary>
 		///   The full-screen quad that is used to draw the sun special effects.
@@ -78,6 +78,8 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		private readonly VertexShader _vertexShader, _heatVS;
 
+		private GaussianBlur _blur;
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -97,6 +99,7 @@ namespace Lwar.Client.Rendering
 			_fragmentShader = assets.LoadFragmentShader("Shaders/SphereFS");
 			_heatVS= assets.LoadVertexShader("Shaders/SunHeatVS");
 			_heatFS = assets.LoadFragmentShader("Shaders/SunHeatFS");
+			_quadFS = assets.LoadFragmentShader("Shaders/QuadFS");
 			_transform = new ConstantBuffer<SunData>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
 			_sunCubeMap = assets.LoadCubeMap("Textures/Sun");
 			_heatCubeMap = assets.LoadCubeMap("Textures/SunHeat");
@@ -107,6 +110,7 @@ namespace Lwar.Client.Rendering
 			_effectTexture = new Texture2D(graphicsDevice, 512, 512, SurfaceFormat.Rgba16F,
 										   TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget);
 			_effectTarget = new RenderTarget(graphicsDevice, new Texture[] { _effectTexture }, null);
+			_blur = new GaussianBlur(graphicsDevice, assets, _effectTexture);
 		}
 
 		/// <summary>
@@ -128,8 +132,8 @@ namespace Lwar.Client.Rendering
 			foreach (var sun in RegisteredElements)
 			{
 				_transform.Data.World = sun.Transform.Matrix;
-				_transform.Data.Rotation1 = Matrix.CreateRotationX(sun.rot1+=0.0001f) * Matrix.CreateRotationY(sun.rot1 * 2f);
-				_transform.Data.Rotation2 = Matrix.CreateRotationY(sun.rot2-=0.0005f) * Matrix.CreateRotationZ(sun.rot1*3f);
+				_transform.Data.Rotation1 = Matrix.CreateRotationX(sun.rot1+=0.00001f) * Matrix.CreateRotationY(sun.rot1 * 2f);
+				_transform.Data.Rotation2 = Matrix.CreateRotationY(sun.rot2-=0.00005f) * Matrix.CreateRotationZ(sun.rot1*3f);
 				_transform.Update();
 
 				_vertexShader.Bind();
@@ -152,12 +156,18 @@ namespace Lwar.Client.Rendering
 
 				_model.Draw();
 
+				_renderTarget.Bind();
+				_blur.Blur(_renderTarget);
+
 				DepthStencilState.DepthDisabled.Bind();
 				BlendState.Additive.Bind();
 				_renderTarget.Bind();
 				_graphicsDevice.Viewport = viewport;
-				_effectTexture.GenerateMipmaps();
-				_fullscreenQuad.Draw(_effectTexture);
+				//_effectTexture.Bind(0);
+				_quadFS.Bind();
+				SamplerState.BilinearClampNoMipmaps.Bind(0);
+
+				_fullscreenQuad.Draw();
 
 				BlendState.Premultiplied.Bind();
 				DepthStencilState.Default.Bind();
@@ -169,6 +179,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_blur.SafeDispose();
 			_model.SafeDispose();
 			_transform.SafeDispose();
 			_effectTexture.SafeDispose();

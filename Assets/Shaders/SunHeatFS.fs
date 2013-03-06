@@ -29,8 +29,8 @@ float4 Main(PS_INPUT input) : SV_Target
     float sample2 = CubeMap.Sample(CubeMapSampler, input.TexCoords1).r;
 
     float result = sample1 + sample2;
-//    if (result > 0.5)
-        return HeatTexture.Sample(HeatSampler, float2(result , 0));
-//    else
-//        return float4(0, 0, 0, 0);
+    if (result > 1)
+        return HeatTexture.Sample(HeatSampler, float2(result /2, 0));
+    else
+        return float4(0, 0, 0, 0);
 }

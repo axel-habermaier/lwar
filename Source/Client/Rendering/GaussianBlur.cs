@@ -2,19 +2,26 @@
 
 namespace Lwar.Client.Rendering
 {
+	using System.Runtime.InteropServices;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 
 	/// <summary>
 	///   Represents a GPU-based gaussian blur filter than can be applied to a texture.
 	/// </summary>
-	public class GaussianBlur
+	public class GaussianBlur : DisposableObject
 	{
 		/// <summary>
 		///   The minimum size of the temporary textures.
 		/// </summary>
-		private const int MinimumSize = 16;
+		private const uint MinimumSize = 16;
+
+		/// <summary>
+		///   The full-screen quad that is used to blur the textures.
+		/// </summary>
+		private readonly FullscreenQuad _fullscreenQuad;
 
 		/// <summary>
 		///   The temporary render targets that are required to blur the input texture.
@@ -22,14 +29,14 @@ namespace Lwar.Client.Rendering
 		private readonly RenderTarget[] _renderTargets;
 
 		/// <summary>
+		///   The input texture that is blurred.
+		/// </summary>
+		private readonly Texture2D _texture;
+
+		/// <summary>
 		///   The temporary textures that are required to blur the input texture.
 		/// </summary>
 		private readonly Texture2D[] _textures;
-
-		/// <summary>
-		///   The full-screen quad that is used to blur the textures.
-		/// </summary>
-		private FullscreenQuad _fullscreenQuad;
 
 		/// <summary>
 		///   The fragment shader that applies the horizontal blur.
@@ -37,33 +44,47 @@ namespace Lwar.Client.Rendering
 		private FragmentShader _horizontalBlurShader;
 
 		/// <summary>
-		///   The size of the input texture that is blurred.
-		/// </summary>
-		private int _textureSize;
-
-		/// <summary>
 		///   The fragment shader that applies the vertical blur.
 		/// </summary>
-		private FragmentShader _verticalBlurShader;
+		private FragmentShader _verticalBlurShader, _combineShader;
+
+		/// <summary>
+		/// The graphics device that is used to apply the blur effect.
+		/// </summary>
+		private GraphicsDevice _graphicsDevice;
+
+		[StructLayout(LayoutKind.Sequential, Size =16)]
+		struct ShaderData
+		{
+			public int Size;
+			public int Mipmap;
+		}
+
+		private ConstantBuffer<ShaderData> _data;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to apply the blur effect.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
-		/// <param name="textureSize">The size of the texture that should be blurred.</param>
-		public GaussianBlur(GraphicsDevice graphicsDevice, AssetsManager assets, int textureSize)
+		/// <param name="texture">The texture that should be blurred.</param>
+		public unsafe GaussianBlur(GraphicsDevice graphicsDevice, AssetsManager assets, Texture2D texture)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
-			Assert.ArgumentInRange(textureSize, () => textureSize, 32, 1024);
+			Assert.ArgumentNotNull(texture, () => texture);
+			Assert.InRange(texture.Width, MinimumSize, 1024u);
+			Assert.ArgumentSatisfies(texture.Width == texture.Height, () => texture, "Rectangular textures are not supported.");
 
-			_textureSize = textureSize;
+			_graphicsDevice = graphicsDevice;
+			_texture = texture;
 			_verticalBlurShader = assets.LoadFragmentShader("Shaders/VerticalBlurFS");
 			_horizontalBlurShader = assets.LoadFragmentShader("Shaders/HorizontalBlurFS");
+			_combineShader = assets.LoadFragmentShader("Shaders/CombineBlurFS");
 			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);
+			_data = new ConstantBuffer<ShaderData>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
 
-			var size = textureSize;
+			var size = texture.Width;
 			var count = 0;
 			while (size > 0)
 			{
@@ -74,19 +95,97 @@ namespace Lwar.Client.Rendering
 					break;
 			}
 
+			++count;
 			Assert.That(size == MinimumSize, "Only power-of-two textures can be blurred.");
 			_textures = new Texture2D[count * 2];
 			_renderTargets = new RenderTarget[count * 2];
 
-			size = textureSize;
+			size = texture.Width;
 			for (var i = 0; i < count; ++i)
 			{
-				_textures[2 * i] = new Texture2D(graphicsDevice, size, size, SurfaceFormat.Rgba16F, TextureFlags.RenderTarget);
-				_textures[2 * i + 1] = new Texture2D(graphicsDevice, size, size, SurfaceFormat.Rgba16F, TextureFlags.RenderTarget);
+				_textures[2 * i] = new Texture2D(graphicsDevice, size, size, texture.Format, TextureFlags.RenderTarget);
+				_textures[2 * i + 1] = new Texture2D(graphicsDevice, size, size, texture.Format, TextureFlags.RenderTarget);
+
+				size /= 2;
 			}
 
 			for (var i = 0; i < _renderTargets.Length; ++i)
 				_renderTargets[i] = new RenderTarget(graphicsDevice, new[] { _textures[i] }, null);
+		}
+
+		/// <summary>
+		///   Blurs the input texture.
+		/// </summary>
+		public void Blur(RenderTarget rt)
+		{
+			_texture.GenerateMipmaps();
+
+			var viewport = _graphicsDevice.Viewport;
+
+			var size = _texture.Width;
+			var i = 0;
+			_texture.Bind(0);
+			DepthStencilState.DepthDisabled.Bind();
+			
+			SamplerState.BilinearClamp.Bind(0);
+			SamplerState.BilinearClamp.Bind(1);
+			BlendState.Opaque.Bind();
+
+			while (size >= MinimumSize)
+			{
+				_data.Data.Mipmap = 0;
+				_data.Data.Size = (int)_textures[2 * i].Width;
+				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, new Size((int)size, (int)size));
+				_renderTargets[2 * i].Bind();
+				_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
+				_verticalBlurShader.Bind();
+
+				_fullscreenQuad.Draw();
+
+				//rt.Bind();
+				_renderTargets[2 * i + 1].Bind();
+				_renderTargets[2*i + 1].Clear(new Color(0, 0, 0, 0));
+				_textures[2 * i].Bind(0);
+				_horizontalBlurShader.Bind();
+				_fullscreenQuad.Draw();
+
+				size /= 2;
+				++i;
+			}
+
+			size = MinimumSize * 2;
+			BlendState.Additive.Bind();
+			i-=2;
+			while (size <= _texture.Width)
+			{
+				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, new Size((int)size, (int)size));
+				_renderTargets[2 * i + 1].Bind();
+				//_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
+				_textures[2 * (i + 1) + 1].Bind(0);
+				//_textures[2 * i + 1].Bind(1);
+
+				_combineShader.Bind();
+				_fullscreenQuad.Draw();
+
+				size *= 2;
+				--i;
+			}
+
+
+			rt.Bind();
+			_graphicsDevice.Viewport = viewport;
+			_textures[01].Bind(0);
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_fullscreenQuad.SafeDispose();
+			_renderTargets.SafeDisposeAll();
+			_textures.SafeDisposeAll();
+			_data.SafeDispose();
 		}
 	}
 }
