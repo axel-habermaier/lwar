@@ -2,6 +2,7 @@
 
 namespace Lwar.Client.Rendering
 {
+	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
@@ -62,6 +63,8 @@ namespace Lwar.Client.Rendering
 
 		private ConstantBuffer<ShaderData> _data;
 
+		private Size[] _sizes;
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -73,8 +76,8 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 			Assert.ArgumentNotNull(texture, () => texture);
-			Assert.InRange(texture.Width, MinimumSize, 1024u);
-			Assert.ArgumentSatisfies(texture.Width == texture.Height, () => texture, "Rectangular textures are not supported.");
+			Assert.InRange(texture.Width, MinimumSize, 2048u);
+			//Assert.ArgumentSatisfies(texture.Width == texture.Height, () => texture, "Rectangular textures are not supported.");
 
 			_graphicsDevice = graphicsDevice;
 			_texture = texture;
@@ -84,29 +87,33 @@ namespace Lwar.Client.Rendering
 			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);
 			_data = new ConstantBuffer<ShaderData>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
 
-			var size = texture.Width;
+			var width = texture.Width;
+			var height = texture.Height;
 			var count = 0;
-			while (size > 0)
+			var sizes = new List<Size>(){texture.Size};
+			while (width > MinimumSize && height > MinimumSize)
 			{
 				++count;
-				size /= 2;
-
-				if (size == MinimumSize)
-					break;
+				width /= 2;
+				height /= 2;
+				sizes.Add(new Size((int)width, (int)height));
 			}
+			_sizes = sizes.ToArray();
 
 			++count;
-			Assert.That(size == MinimumSize, "Only power-of-two textures can be blurred.");
+			//Assert.That(size == MinimumSize, "Only power-of-two textures can be blurred.");
 			_textures = new Texture2D[count * 2];
 			_renderTargets = new RenderTarget[count * 2];
 
-			size = texture.Width;
+			width = texture.Width;
+			height = texture.Height; 
 			for (var i = 0; i < count; ++i)
 			{
-				_textures[2 * i] = new Texture2D(graphicsDevice, size, size, texture.Format, TextureFlags.RenderTarget);
-				_textures[2 * i + 1] = new Texture2D(graphicsDevice, size, size, texture.Format, TextureFlags.RenderTarget);
+				_textures[2 * i] = new Texture2D(graphicsDevice, width, height, texture.Format, TextureFlags.RenderTarget);
+				_textures[2 * i + 1] = new Texture2D(graphicsDevice, width, height, texture.Format, TextureFlags.RenderTarget);
 
-				size /= 2;
+				width /= 2;
+				height /= 2;
 			}
 
 			for (var i = 0; i < _renderTargets.Length; ++i)
@@ -122,20 +129,21 @@ namespace Lwar.Client.Rendering
 
 			var viewport = _graphicsDevice.Viewport;
 
-			var size = _texture.Width;
-			var i = 0;
 			_texture.Bind(0);
 			DepthStencilState.DepthDisabled.Bind();
 			
 			SamplerState.BilinearClamp.Bind(0);
 			SamplerState.BilinearClamp.Bind(1);
 			BlendState.Opaque.Bind();
+			_data.Bind(3);
 
-			while (size >= MinimumSize)
+			int i = 0;
+			foreach (var size in _sizes)
 			{
 				_data.Data.Mipmap = 0;
-				_data.Data.Size = (int)_textures[2 * i].Width;
-				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, new Size((int)size, (int)size));
+				_data.Data.Size = size.Height;
+				_data.Update();
+				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, size);
 				_renderTargets[2 * i].Bind();
 				_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
 				_verticalBlurShader.Bind();
@@ -143,38 +151,41 @@ namespace Lwar.Client.Rendering
 				_fullscreenQuad.Draw();
 
 				//rt.Bind();
+				_data.Data.Mipmap = 0;
+				_data.Data.Size = size.Width;
+				_data.Update();
 				_renderTargets[2 * i + 1].Bind();
 				_renderTargets[2*i + 1].Clear(new Color(0, 0, 0, 0));
 				_textures[2 * i].Bind(0);
 				_horizontalBlurShader.Bind();
 				_fullscreenQuad.Draw();
 
-				size /= 2;
 				++i;
 			}
 
-			size = MinimumSize * 2;
-			BlendState.Additive.Bind();
-			i-=2;
-			while (size <= _texture.Width)
+			--i;
+			--i;
+	
+
+			//BlendState.Additive.Bind();
+			while (i >= 0)
 			{
-				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, new Size((int)size, (int)size));
-				_renderTargets[2 * i + 1].Bind();
-				//_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
-				_textures[2 * (i + 1) + 1].Bind(0);
-				//_textures[2 * i + 1].Bind(1);
+				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, _sizes[i]);
+				_renderTargets[2 * i].Bind();
+				_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
+				_textures[2 * (i + 1)].Bind(0);
+				_textures[2 * i + 1].Bind(1);
 
 				_combineShader.Bind();
 				_fullscreenQuad.Draw();
 
-				size *= 2;
 				--i;
 			}
 
 
 			rt.Bind();
 			_graphicsDevice.Viewport = viewport;
-			_textures[01].Bind(0);
+			_textures[0].Bind(0);
 		}
 
 		/// <summary>

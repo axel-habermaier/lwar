@@ -20,7 +20,7 @@ void main(void)
 
 ---
 
-cbuffer Data : register(b0)
+cbuffer Data : register(b3)
 { 
 	int Size;
     int Mipmap;

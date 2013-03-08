@@ -6,6 +6,7 @@ namespace Lwar.Client.Rendering
 	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 
@@ -80,6 +81,8 @@ namespace Lwar.Client.Rendering
 
 		private GaussianBlur _blur;
 
+		private Clock _clock = Clock.Create(true);
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -119,7 +122,7 @@ namespace Lwar.Client.Rendering
 		/// <param name="sun">The element that should be drawn by the renderer.</param>
 		protected override SunDrawState OnAdded(Sun sun)
 		{
-			return new SunDrawState { Transform = sun.Transform };
+			return new SunDrawState { Transform = sun.Transform, rot1 = 4};
 		}
 
 		/// <summary>
@@ -131,16 +134,20 @@ namespace Lwar.Client.Rendering
 
 			foreach (var sun in RegisteredElements)
 			{
-				_transform.Data.World = sun.Transform.Matrix;
-				_transform.Data.Rotation1 = Matrix.CreateRotationX(sun.rot1+=0.00001f) * Matrix.CreateRotationY(sun.rot1 * 2f);
-				_transform.Data.Rotation2 = Matrix.CreateRotationY(sun.rot2-=0.00005f) * Matrix.CreateRotationZ(sun.rot1*3f);
+				var elapsed = (float)_clock.Seconds;
+				_clock.Reset();
+				sun.rot1 += 0.01f * elapsed;
+				sun.rot2-=0.05f * elapsed;
+				_transform.Data.World = Matrix.CreateRotationY(-sun.rot1 * 2) * sun.Transform.Matrix;
+				_transform.Data.Rotation1 = Matrix.CreateRotationY(-sun.rot1);
+				_transform.Data.Rotation2 = Matrix.CreateRotationY(-sun.rot2);
 				_transform.Update();
 
 				_vertexShader.Bind();
 				_fragmentShader.Bind();
 				SamplerState.TrilinearClamp.Bind(0);
 				_sunCubeMap.Bind(0);
-				//_model.Draw();
+				_model.Draw();
 
 				DepthStencilState.DepthRead.Bind();
 				_heatVS.Bind();
@@ -156,6 +163,8 @@ namespace Lwar.Client.Rendering
 
 				_model.Draw();
 
+				_effectTexture.GenerateMipmaps();
+
 				_renderTarget.Bind();
 				_blur.Blur(_renderTarget);
 
@@ -165,6 +174,7 @@ namespace Lwar.Client.Rendering
 				_graphicsDevice.Viewport = viewport;
 				//_effectTexture.Bind(0);
 				_quadFS.Bind();
+				//_effectTexture.Bind(0);
 				SamplerState.BilinearClampNoMipmaps.Bind(0);
 
 				_fullscreenQuad.Draw();
@@ -179,6 +189,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_clock.SafeDispose();
 			_blur.SafeDispose();
 			_model.SafeDispose();
 			_transform.SafeDispose();
