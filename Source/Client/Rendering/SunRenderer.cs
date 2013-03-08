@@ -136,11 +136,11 @@ namespace Lwar.Client.Rendering
 			{
 				var elapsed = (float)_clock.Seconds;
 				_clock.Reset();
-				sun.rot1 += 0.01f * elapsed;
+				sun.rot1 += 0.1f * elapsed;
 				sun.rot2-=0.05f * elapsed;
 				_transform.Data.World = Matrix.CreateRotationY(-sun.rot1 * 2) * sun.Transform.Matrix;
-				_transform.Data.Rotation1 = Matrix.CreateRotationY(-sun.rot1);
-				_transform.Data.Rotation2 = Matrix.CreateRotationY(-sun.rot2);
+				_transform.Data.Rotation1 = Matrix.CreateRotationY(-sun.rot1) * Matrix.CreateRotationX(sun.rot2 * 2);
+				_transform.Data.Rotation2 = Matrix.CreateRotationY(-sun.rot2) * Matrix.CreateRotationZ(sun.rot1 * 2);
 				_transform.Update();
 
 				_vertexShader.Bind();
@@ -175,7 +175,7 @@ namespace Lwar.Client.Rendering
 				//_effectTexture.Bind(0);
 				_quadFS.Bind();
 				//_effectTexture.Bind(0);
-				SamplerState.BilinearClampNoMipmaps.Bind(0);
+				SamplerState.PointClampNoMipmaps.Bind(0);
 
 				_fullscreenQuad.Draw();
 

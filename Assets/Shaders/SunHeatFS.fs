@@ -29,9 +29,21 @@ float4 Main(PS_INPUT input) : SV_Target
     float sample2 = CubeMap.Sample(CubeMapSampler, input.TexCoords1).r;
 
     float result = sample1 + sample2;
-    float delta = 1;
-    if (result > delta)
-        return HeatTexture.Sample(HeatSampler, float2(result-delta, 0));
-    else
-        return float4(0, 0, 0, 0);
+//     float delta = 1;
+//   if (result > delta)
+//   {
+        float4 color = HeatTexture.Sample(HeatSampler, float2(result - 1, 0)) ;
+        
+//        if (result < 1)
+//            return float4(0,0,0,0);
+
+//        if (result > 1.1)
+//            return color;
+//
+//        color *= clamp((1.1 - result) / 10, 0, 1);
+
+        return color;//* (1 - (2 - result));
+//    }
+//    else
+//       return float4(0, 0, 0, 0);
 }

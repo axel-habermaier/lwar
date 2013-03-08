@@ -18,6 +18,11 @@ namespace Pegasus.Framework.Platform.Graphics
 		R8 = 2102,
 
 		/// <summary>
+		///   Represents an uncompressed format with 24 bits of depth precision and 8 bits of stencil precision.
+		/// </summary>
+		Depth24Stencil8 = 2103,
+
+		/// <summary>
 		///   Represents an uncompressed floating point format with 16 bits of precision for the red, green, blue, and alpha
 		///   channels.
 		/// </summary>

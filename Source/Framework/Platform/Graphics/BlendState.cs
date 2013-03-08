@@ -147,6 +147,11 @@ namespace Pegasus.Framework.Platform.Graphics
 		public static BlendState Additive { get; private set; }
 
 		/// <summary>
+		///   Gets a default blend state for alpha blending.
+		/// </summary>
+		public static BlendState Alpha { get; private set; }
+
+		/// <summary>
 		///   Initializes the default instances.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
@@ -168,6 +173,13 @@ namespace Pegasus.Framework.Platform.Graphics
 				DestinationBlend = BlendOption.One
 			};
 
+			Alpha = new BlendState(graphicsDevice)
+			{
+				BlendEnabled = true,
+				SourceBlend = BlendOption.SourceAlpha,
+				DestinationBlend = BlendOption.InverseSourceAlpha
+			};
+
 			Opaque.Bind();
 		}
 
@@ -177,13 +189,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal static void DisposeDefaultInstances()
 		{
 			Opaque.SafeDispose();
-			Opaque = null;
-
 			Premultiplied.SafeDispose();
-			Premultiplied = null;
-
 			Additive.SafeDispose();
-			Additive = null;
+			Alpha.SafeDispose();
 		}
 
 		/// <summary>

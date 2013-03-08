@@ -44,7 +44,9 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 
 pgVoid pgDestroyTextureCore(pgTexture* texture)
 {
-	ID3D11ShaderResourceView_Release(texture->resourceView);
+	if (texture->resourceView != NULL)
+		ID3D11ShaderResourceView_Release(texture->resourceView);
+
 	ID3D11Texture2D_Release(texture->ptr);
 }
 
@@ -81,7 +83,7 @@ static pgVoid pgInitTextureDesc2D(pgTexture* texture, D3D11_TEXTURE2D_DESC* desc
 		desc->BindFlags |= D3D11_BIND_RENDER_TARGET;
 
 	if (texture->desc.flags & PG_TEXTURE_BIND_DEPTH_STENCIL)
-		desc->BindFlags |= D3D11_BIND_DEPTH_STENCIL;
+		desc->BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
 	if (texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS)
 	{
@@ -152,6 +154,12 @@ static pgVoid pgCreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data
 	viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	viewDesc.Texture2D.MipLevels = (UINT)-1;
 	viewDesc.Texture2D.MostDetailedMip = 0;
+
+	if (texture->desc.flags & PG_TEXTURE_BIND_DEPTH_STENCIL)
+	{
+		texture->resourceView = NULL;
+		return;
+	}
 	
 	D3DCALL(ID3D11Device_CreateShaderResourceView(DEVICE(texture), (ID3D11Resource*)texture->ptr, &viewDesc, &texture->resourceView), 
 		"Failed to create shader resource view for texture.");

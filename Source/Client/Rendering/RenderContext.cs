@@ -13,6 +13,13 @@ namespace Lwar.Client.Rendering
 	/// </summary>
 	public class RenderContext : DisposableObject
 	{
+		private readonly RenderTarget _backBuffer;
+		private readonly Texture2D _depth;
+		private readonly FullscreenQuad _fsQuad;
+		private readonly FragmentShader _quadShader;
+		private readonly RenderTarget _rt;
+		private readonly Texture2D _screen;
+
 		/// <summary>
 		///   The renderer that is used to draw the skybox.
 		/// </summary>
@@ -39,8 +46,15 @@ namespace Lwar.Client.Rendering
 
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_skyBoxRenderer = new SkyBoxRenderer(graphicsDevice, assets);
+			_backBuffer = renderTarget;
 
-			SunRenderer = new SunRenderer(graphicsDevice, renderTarget, assets);
+			_fsQuad = new FullscreenQuad(graphicsDevice, assets);
+			_quadShader = assets.LoadFragmentShader("Shaders/QuadFS");
+			_screen = new Texture2D(graphicsDevice, 1280, 720, SurfaceFormat.Rgba16F, TextureFlags.RenderTarget);
+			_depth = new Texture2D(graphicsDevice, 1280, 720, SurfaceFormat.Depth24Stencil8, TextureFlags.DepthStencil);
+			_rt = new RenderTarget(graphicsDevice, new[] { _screen }, _depth);
+
+			SunRenderer = new SunRenderer(graphicsDevice, _rt, assets);
 			PlanetRenderer = new PlanetRenderer(graphicsDevice, assets);
 			ShipRenderer = new ShipRenderer(graphicsDevice, assets);
 			BulletRenderer = new BulletRenderer(graphicsDevice, assets);
@@ -82,12 +96,23 @@ namespace Lwar.Client.Rendering
 			else
 				RasterizerState.CullCounterClockwise.Bind();
 
-			//_skyBoxRenderer.Draw();
+			_skyBoxRenderer.Draw();
+
+			_rt.Bind();
+			_rt.Clear(new Color(0, 0, 0, 0));
+			_rt.ClearDepth();
 
 			SunRenderer.Draw();
 			PlanetRenderer.Draw();
 			ShipRenderer.Draw();
 			BulletRenderer.Draw();
+
+			DepthStencilState.DepthDisabled.Bind();
+			_backBuffer.Bind();
+			_screen.Bind(0);
+			SamplerState.PointClampNoMipmaps.Bind(0);
+			_quadShader.Bind();
+			_fsQuad.Draw();
 		}
 
 		/// <summary>
@@ -95,6 +120,11 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_fsQuad.SafeDispose();
+			_screen.SafeDispose();
+			_depth.SafeDispose();
+			_rt.SafeDispose();
+
 			SunRenderer.SafeDispose();
 			PlanetRenderer.SafeDispose();
 			BulletRenderer.SafeDispose();

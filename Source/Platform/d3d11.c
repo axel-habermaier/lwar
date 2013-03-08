@@ -228,6 +228,8 @@ DXGI_FORMAT pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat)
 		return DXGI_FORMAT_R8_UNORM;
 	case PG_SURFACE_RGBA8:
 		return DXGI_FORMAT_R8G8B8A8_UNORM;
+	case PG_SURFACE_DEPTH24_STENCIL8:
+		return DXGI_FORMAT_D24_UNORM_S8_UINT;
 	case PG_SURFACE_BC1:
 		return DXGI_FORMAT_BC1_UNORM;
 	case PG_SURFACE_BC2:
