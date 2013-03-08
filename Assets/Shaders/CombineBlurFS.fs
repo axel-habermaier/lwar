@@ -33,6 +33,7 @@ SamplerState InputSampler2 : register(s1);
 
 float4 Main(PS_INPUT input) : SV_TARGET
 {
-    float4 color = InputTexture.Sample(InputSampler, input.TexCoords);
-    return color+InputTexture2.Sample(InputSampler2, input.TexCoords);
+//    float4 color = InputTexture.Sample(InputSampler, input.TexCoords);
+//    return color+InputTexture2.Sample(InputSampler2, input.TexCoords);
+return InputTexture.Sample(InputSampler, input.TexCoords);
 }

@@ -164,7 +164,7 @@ namespace Pegasus.Framework.Platform.Graphics
 			Additive = new BlendState(graphicsDevice)
 			{
 				BlendEnabled = true,
-				SourceBlend = BlendOption.SourceAlpha,
+				SourceBlend = BlendOption.One,
 				DestinationBlend = BlendOption.One
 			};
 

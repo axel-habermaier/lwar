@@ -110,7 +110,7 @@ namespace Lwar.Client.Rendering
 			_model = Model.CreateSphere(graphicsDevice, 200, 25);
 
 			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);
-			_effectTexture = new Texture2D(graphicsDevice, 512, 512, SurfaceFormat.Rgba16F,
+			_effectTexture = new Texture2D(graphicsDevice, 1280, 720, SurfaceFormat.Rgba16F,
 										   TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget);
 			_effectTarget = new RenderTarget(graphicsDevice, new Texture[] { _effectTexture }, null);
 			_blur = new GaussianBlur(graphicsDevice, assets, _effectTexture);
@@ -155,7 +155,7 @@ namespace Lwar.Client.Rendering
 				_heatTexture.Bind(1);
 				SamplerState.BilinearClamp.Bind(1);
 				var viewport = _graphicsDevice.Viewport;
-				_graphicsDevice.Viewport = new Rectangle(0, 0, 512, 512);
+				_graphicsDevice.Viewport = new Rectangle(0, 0, 1280, 720);
 				_effectTarget.Bind();
 
 				_effectTarget.Clear(new Color(0, 0, 0, 0));

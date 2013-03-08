@@ -165,16 +165,17 @@ namespace Lwar.Client.Rendering
 
 			--i;
 			--i;
-	
 
-			//BlendState.Additive.Bind();
+			_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, _sizes[0]);
+			_renderTargets[1].Bind();
+			BlendState.Additive.Bind();
 			while (i >= 0)
 			{
-				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, _sizes[i]);
-				_renderTargets[2 * i].Bind();
-				_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
-				_textures[2 * (i + 1)].Bind(0);
-				_textures[2 * i + 1].Bind(1);
+				
+				
+				//_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
+				_textures[2 * (i + 1) + 1].Bind(0);
+				//_textures[2 * i + 1].Bind(1);
 
 				_combineShader.Bind();
 				_fullscreenQuad.Draw();
@@ -185,7 +186,7 @@ namespace Lwar.Client.Rendering
 
 			rt.Bind();
 			_graphicsDevice.Viewport = viewport;
-			_textures[0].Bind(0);
+			_textures[1].Bind(0);
 		}
 
 		/// <summary>
