@@ -21,32 +21,32 @@ pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage u
 	desc.StructureByteStride = 0;
 	desc.Usage = pgConvertResourceUsage(usage);
 	
-	D3DCALL(ID3D11Device_CreateBuffer(DEVICE(buffer), &desc, data == NULL ? NULL : &dataResource, &buffer->ptr), 
+	PG_D3DCALL(ID3D11Device_CreateBuffer(PG_DEVICE(buffer), &desc, data == NULL ? NULL : &dataResource, &buffer->ptr), 
 		"Failed to create buffer.");
 }
 
 pgVoid pgDestroyBufferCore(pgBuffer* buffer)
 {
-	ID3D11Buffer_Release(buffer->ptr);
+	PG_SAFE_RELEASE(ID3D11Buffer, buffer->ptr);
 }
 
 pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode)
 {
 	D3D11_MAPPED_SUBRESOURCE subResource;
-	D3DCALL(ID3D11DeviceContext_Map(CONTEXT(buffer), (ID3D11Resource*)buffer->ptr, 0, pgConvertMapMode(mode), 0, &subResource), 
+	PG_D3DCALL(ID3D11DeviceContext_Map(PG_CONTEXT(buffer), (ID3D11Resource*)buffer->ptr, 0, pgConvertMapMode(mode), 0, &subResource), 
 		"Failed to map buffer.");
 	return subResource.pData;
 }
 
 pgVoid pgUnmapBufferCore(pgBuffer* buffer)
 {
-	ID3D11DeviceContext_Unmap(CONTEXT(buffer), (ID3D11Resource*)buffer->ptr, 0);
+	ID3D11DeviceContext_Unmap(PG_CONTEXT(buffer), (ID3D11Resource*)buffer->ptr, 0);
 }
 
 pgVoid pgBindConstantBufferCore(pgBuffer* buffer, pgInt32 slot)
 {
-	ID3D11DeviceContext_VSSetConstantBuffers(CONTEXT(buffer), slot, 1, &buffer->ptr);
-	ID3D11DeviceContext_PSSetConstantBuffers(CONTEXT(buffer), slot, 1, &buffer->ptr);
+	ID3D11DeviceContext_VSSetConstantBuffers(PG_CONTEXT(buffer), slot, 1, &buffer->ptr);
+	ID3D11DeviceContext_PSSetConstantBuffers(PG_CONTEXT(buffer), slot, 1, &buffer->ptr);
 }
 
 #endif

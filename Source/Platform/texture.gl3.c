@@ -17,9 +17,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 	GLint boundTexture;
 	pgUint32 i;
 	
-	glGenTextures(1, &texture->id);
-	PG_CHECK_GL_HANDLE("Texture", texture->id);
-
+	PG_GL_ALLOC("Texture", glGenTextures, texture->id);
 	pgConvertTextureType(texture->desc.type, &texture->glType, &texture->glBoundType);
 	
 	glGetIntegerv(texture->glBoundType, &boundTexture);
@@ -68,8 +66,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 
 pgVoid pgDestroyTextureCore(pgTexture* texture)
 {
-	glDeleteTextures(1, &texture->id);
-	PG_ASSERT_NO_GL_ERRORS();
+	PG_GL_FREE(glDeleteTextures, texture->id);
 }
 
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)

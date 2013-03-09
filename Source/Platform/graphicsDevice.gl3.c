@@ -37,19 +37,14 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 		areOpenGLExtsInitialized = PG_TRUE;
 	}
 
-	glGenProgramPipelines(1, &device->pipeline);
-	PG_CHECK_GL_HANDLE("Program Pipeline", device->pipeline);
-
+	PG_GL_ALLOC("Program Pipeline", glGenProgramPipelines, device->pipeline);
 	glBindProgramPipeline(device->pipeline);
 	PG_ASSERT_NO_GL_ERRORS();
-
-	//glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device)
 {
-	glDeleteProgramPipelines(1, &device->pipeline);
-	PG_ASSERT_NO_GL_ERRORS();
+	PG_GL_FREE(glDeleteProgramPipelines, device->pipeline);
 
 	pgDestroyContext(&device->context);
 	pgDestroyContextWindow(&device->context);

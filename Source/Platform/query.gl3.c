@@ -11,8 +11,7 @@ pgVoid pgCreateQueryCore(pgQuery* query)
 	if (query->type == PG_TIMESTAMP_DISJOINT_QUERY)
 		return;
 
-	glGenQueries(1, &query->id);
-	PG_CHECK_GL_HANDLE("Query", query->id);
+	PG_GL_ALLOC("Query", glGenQueries, query->id);
 }
 
 pgVoid pgDestroyQueryCore(pgQuery* query)
@@ -20,8 +19,7 @@ pgVoid pgDestroyQueryCore(pgQuery* query)
 	if (query->type == PG_TIMESTAMP_DISJOINT_QUERY)
 		return;
 
-	glDeleteQueries(1, &query->id);
-	PG_ASSERT_NO_GL_ERRORS();
+	PG_GL_FREE(glDeleteQueries, query->id);
 }
 
 pgVoid pgBeginQueryCore(pgQuery* query)

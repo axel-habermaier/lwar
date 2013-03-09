@@ -37,11 +37,11 @@ pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout)
 		UINT stride = binding->stride;
 		UINT offset = binding->offset;
 
-		ID3D11DeviceContext_IASetVertexBuffers(CONTEXT(inputLayout), slot, 1, &binding->vertexBuffer->ptr, &stride, &offset);
+		ID3D11DeviceContext_IASetVertexBuffers(PG_CONTEXT(inputLayout), slot, 1, &binding->vertexBuffer->ptr, &stride, &offset);
 	}
 	
 	if (inputLayout->indexBuffer != NULL)
-		ID3D11DeviceContext_IASetIndexBuffer(CONTEXT(inputLayout), inputLayout->indexBuffer->ptr, inputLayout->indexFormat, inputLayout->indexOffset);
+		ID3D11DeviceContext_IASetIndexBuffer(PG_CONTEXT(inputLayout), inputLayout->indexBuffer->ptr, inputLayout->indexFormat, inputLayout->indexOffset);
 }
 
 #endif

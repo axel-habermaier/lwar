@@ -13,13 +13,13 @@ pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget)
 	renderTarget->dsPtr = NULL;
 	if (renderTarget->depthStencil != NULL)
 	{
-		D3DCALL(ID3D11Device_CreateDepthStencilView(DEVICE(renderTarget), (ID3D11Resource*)renderTarget->depthStencil->ptr, NULL, &renderTarget->dsPtr),
+		PG_D3DCALL(ID3D11Device_CreateDepthStencilView(PG_DEVICE(renderTarget), (ID3D11Resource*)renderTarget->depthStencil->ptr, NULL, &renderTarget->dsPtr),
 			"Failed to create depth stencil view.");
 	}
 
 	for (i = 0; i < renderTarget->count; ++i)
 	{
-		D3DCALL(ID3D11Device_CreateRenderTargetView(DEVICE(renderTarget), (ID3D11Resource*)renderTarget->colorBuffers[i]->ptr, NULL, &renderTarget->cbPtr[i]),
+		PG_D3DCALL(ID3D11Device_CreateRenderTargetView(PG_DEVICE(renderTarget), (ID3D11Resource*)renderTarget->colorBuffers[i]->ptr, NULL, &renderTarget->cbPtr[i]),
 			"Failed to create render target view.");
 	}
 }
@@ -28,10 +28,9 @@ pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)
 {
 	pgInt32 i;
 	for (i = 0; i < renderTarget->count; ++i)
-		ID3D11RenderTargetView_Release(renderTarget->cbPtr[i]);
+		PG_SAFE_RELEASE(ID3D11RenderTargetView, renderTarget->cbPtr[i]);
 
-	if (renderTarget->depthStencil != NULL)
-		ID3D11DepthStencilView_Release(renderTarget->dsPtr);
+	PG_SAFE_RELEASE(ID3D11DepthStencilView, renderTarget->dsPtr);
 }
 
 pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
@@ -44,7 +43,7 @@ pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 	d3dColor[3] = color.alpha;
 
 	for (i = 0; i < renderTarget->count; ++i)
-		ID3D11DeviceContext_ClearRenderTargetView(CONTEXT(renderTarget), renderTarget->cbPtr[i], d3dColor);
+		ID3D11DeviceContext_ClearRenderTargetView(PG_CONTEXT(renderTarget), renderTarget->cbPtr[i], d3dColor);
 }
 
 pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
@@ -55,12 +54,12 @@ pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, 
 	if (clearStencil)
 		flags |= D3D11_CLEAR_STENCIL;
 
-	ID3D11DeviceContext_ClearDepthStencilView(CONTEXT(renderTarget), renderTarget->dsPtr, flags, depth, stencil);
+	ID3D11DeviceContext_ClearDepthStencilView(PG_CONTEXT(renderTarget), renderTarget->dsPtr, flags, depth, stencil);
 }
 
 pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 {
-	ID3D11DeviceContext_OMSetRenderTargets(CONTEXT(renderTarget), renderTarget->count, renderTarget->cbPtr, renderTarget->dsPtr);
+	ID3D11DeviceContext_OMSetRenderTargets(PG_CONTEXT(renderTarget), renderTarget->count, renderTarget->cbPtr, renderTarget->dsPtr);
 }
 
 #endif

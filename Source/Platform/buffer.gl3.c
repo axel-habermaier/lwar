@@ -16,9 +16,7 @@ pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage u
 {
 	GLint boundBuffer;
 
-	glGenBuffers(1, &buffer->id);
-	PG_CHECK_GL_HANDLE("Buffer", buffer->id);
-
+	PG_GL_ALLOC("Buffer", glGenBuffers, buffer->id);
 	buffer->type = pgConvertBufferType(type);
 	buffer->size = size;
 
@@ -32,8 +30,7 @@ pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage u
 
 pgVoid pgDestroyBufferCore(pgBuffer* buffer)
 {
-	glDeleteBuffers(1, &buffer->id);
-	PG_ASSERT_NO_GL_ERRORS();
+	PG_GL_FREE(glDeleteBuffers, buffer->id);
 }
 
 pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode)

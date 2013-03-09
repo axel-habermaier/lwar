@@ -39,7 +39,7 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	desc.SampleDesc.Quality = 0;
 	desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-	D3DCALL(IDXGIFactory_CreateSwapChain(swapChain->device->factory, (IUnknown*)DEVICE(swapChain), &desc, &swapChain->ptr), 
+	PG_D3DCALL(IDXGIFactory_CreateSwapChain(swapChain->device->factory, (IUnknown*)PG_DEVICE(swapChain), &desc, &swapChain->ptr), 
 		"Failed to create swap chain.");
 
 	// Instruct the runtime to ignore the user pressing ALT+Enter to switch between fullscreen and windowed
@@ -52,10 +52,10 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain)
 {
 	// Full screen mode must be left before the swap chain can be destroyed safely
-	D3DCALL(IDXGISwapChain_SetFullscreenState(swapChain->ptr, PG_FALSE, NULL), "Error while leaving fullscreen mode.");
+	PG_D3DCALL(IDXGISwapChain_SetFullscreenState(swapChain->ptr, PG_FALSE, NULL), "Error while leaving fullscreen mode.");
 
 	ReleaseBackBuffer(swapChain);
-	IDXGISwapChain_Release(swapChain->ptr);
+	PG_SAFE_RELEASE(IDXGISwapChain, swapChain->ptr);
 }
 
 pgVoid pgPresentCore(pgSwapChain* swapChain)
@@ -82,10 +82,10 @@ static pgVoid InitializeBackBuffer(pgSwapChain* swapChain)
 	ID3D11Texture2D* tex;
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
 
-	D3DCALL(IDXGISwapChain_GetBuffer(swapChain->ptr, 0, &IID_ID3D11Texture2D, &tex), 
+	PG_D3DCALL(IDXGISwapChain_GetBuffer(swapChain->ptr, 0, &IID_ID3D11Texture2D, &tex), 
 		"Failed to get backbuffer from swap chain.");
 
-	D3DCALL(ID3D11Device_CreateRenderTargetView(DEVICE(swapChain), (ID3D11Resource*)tex, NULL, &swapChain->renderTarget.cbPtr[0]), 
+	PG_D3DCALL(ID3D11Device_CreateRenderTargetView(PG_DEVICE(swapChain), (ID3D11Resource*)tex, NULL, &swapChain->renderTarget.cbPtr[0]), 
 		"Failed to initialize backbuffer render target.");
 
 	ID3D11Texture2D_Release(tex);
@@ -102,10 +102,10 @@ static pgVoid InitializeBackBuffer(pgSwapChain* swapChain)
 	depthStencilDesc.CPUAccessFlags = 0;
 	depthStencilDesc.MiscFlags = 0;
 
-	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(swapChain), &depthStencilDesc, NULL, &tex), 
+	PG_D3DCALL(ID3D11Device_CreateTexture2D(PG_DEVICE(swapChain), &depthStencilDesc, NULL, &tex), 
 		"Failed to initialize depth stencil buffer of swap chain.");
 
-	D3DCALL(ID3D11Device_CreateDepthStencilView(DEVICE(swapChain), (ID3D11Resource*)tex, NULL, &swapChain->renderTarget.dsPtr),
+	PG_D3DCALL(ID3D11Device_CreateDepthStencilView(PG_DEVICE(swapChain), (ID3D11Resource*)tex, NULL, &swapChain->renderTarget.dsPtr),
 		"Failed to initialize depth stencil view of swap chain.");
 
 	ID3D11Texture2D_Release(tex);
@@ -119,7 +119,7 @@ static pgVoid ReleaseBackBuffer(pgSwapChain* swapChain)
 		return;
 
 	swapChain->device->renderTarget = NULL;
-	ID3D11DeviceContext_OMSetRenderTargets(CONTEXT(swapChain), 0, NULL, NULL);
+	ID3D11DeviceContext_OMSetRenderTargets(PG_CONTEXT(swapChain), 0, NULL, NULL);
 
 	ID3D11RenderTargetView_Release(swapChain->renderTarget.cbPtr[0]);
 	ID3D11DepthStencilView_Release(swapChain->renderTarget.dsPtr);

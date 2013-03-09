@@ -38,7 +38,7 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 	D3D_FEATURE_LEVEL featureLevel;
 	UINT flags;
 
-	D3DCALL(CreateDXGIFactory(&IID_IDXGIFactory, &device->factory), "Failed to create DXGI factory.");
+	PG_D3DCALL(CreateDXGIFactory(&IID_IDXGIFactory, &device->factory), "Failed to create DXGI factory.");
 	if (IDXGIFactory_EnumAdapters(device->factory, 0, &device->adapter) == DXGI_ERROR_NOT_FOUND)
 		pgDie("Failed to get DXGI adapter.");
 	
@@ -48,7 +48,7 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 	flags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	D3DCALL(D3D11CreateDevice(device->adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, NULL, 0, D3D11_SDK_VERSION, &device->ptr, &featureLevel, &device->context),
+	PG_D3DCALL(D3D11CreateDevice(device->adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, NULL, 0, D3D11_SDK_VERSION, &device->ptr, &featureLevel, &device->context),
 		"Failed to create Direct3D 11 device.");
 
 	if (featureLevel < REQUIRED_FEATURE_LEVEL)
@@ -58,23 +58,16 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 
 pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device)
 {
-//#if DEBUG
-//	ID3D11Debug* debug;
-//#endif
+	if (device->context != NULL)
+	{
+		ID3D11DeviceContext_ClearState(device->context);
+		ID3D11DeviceContext_Flush(device->context);
+		ID3D11DeviceContext_Release(device->context);
+	}
 
-	ID3D11DeviceContext_ClearState(device->context);
-	ID3D11DeviceContext_Flush(device->context);
-	ID3D11DeviceContext_Release(device->context);
-
-//#if DEBUG
-//	ID3D11Device_QueryInterface(device->ptr, &IID_ID3D11Debug, &debug);
-//	ID3D11Debug_ReportLiveDeviceObjects(debug, D3D11_RLDO_DETAIL);
-//	ID3D11Debug_Release(debug);
-//#endif
-
-	IDXGIAdapter_Release(device->adapter);
-	ID3D11Device_Release(device->ptr);
-	IDXGIFactory_Release(device->factory);
+	PG_SAFE_RELEASE(IDXGIAdapter, device->adapter);
+	PG_SAFE_RELEASE(ID3D11Device, device->ptr);
+	PG_SAFE_RELEASE(IDXGIFactory, device->factory);
 }
 
 pgVoid pgSetViewportCore(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height)

@@ -21,17 +21,17 @@ pgVoid pgCreateBlendStateCore(pgBlendState* blendState, pgBlendDesc* description
 	desc.RenderTarget[0].DestBlendAlpha = pgConvertBlendOption(description->destinationBlendAlpha);
 	desc.RenderTarget[0].RenderTargetWriteMask = pgConvertColorWriteChannels(description->writeMask);
 
-	D3DCALL(ID3D11Device_CreateBlendState(DEVICE(blendState), &desc, &blendState->ptr), "Failed to create blend state.");
+	PG_D3DCALL(ID3D11Device_CreateBlendState(PG_DEVICE(blendState), &desc, &blendState->ptr), "Failed to create blend state.");
 }
 
 pgVoid pgDestroyBlendStateCore(pgBlendState* blendState)
 {
-	ID3D11BlendState_Release(blendState->ptr);
+	PG_SAFE_RELEASE(ID3D11BlendState, blendState->ptr);
 }
 
 pgVoid pgBindBlendStateCore(pgBlendState* blendState)
 {
-	ID3D11DeviceContext_OMSetBlendState(CONTEXT(blendState), blendState->ptr, NULL, INT32_MAX);
+	ID3D11DeviceContext_OMSetBlendState(PG_CONTEXT(blendState), blendState->ptr, NULL, INT32_MAX);
 }
 
 //====================================================================================================================
@@ -52,18 +52,18 @@ pgVoid pgCreateRasterizerStateCore(pgRasterizerState* rasterizerState, pgRasteri
 	desc.ScissorEnable = description->scissorEnabled;
 	desc.SlopeScaledDepthBias = description->slopeScaledDepthBias;
 
-	D3DCALL(ID3D11Device_CreateRasterizerState(DEVICE(rasterizerState), &desc, &rasterizerState->ptr), 
+	PG_D3DCALL(ID3D11Device_CreateRasterizerState(PG_DEVICE(rasterizerState), &desc, &rasterizerState->ptr), 
 		"Failed to create rasterizer state.");
 }
 
 pgVoid pgDestroyRasterizerStateCore(pgRasterizerState* rasterizerState)
 {
-	ID3D11RasterizerState_Release(rasterizerState->ptr);
+	PG_SAFE_RELEASE(ID3D11RasterizerState, rasterizerState->ptr);
 }
 
 pgVoid pgBindRasterizerStateCore(pgRasterizerState* rasterizerState)
 {
-	ID3D11DeviceContext_RSSetState(CONTEXT(rasterizerState), rasterizerState->ptr);
+	ID3D11DeviceContext_RSSetState(PG_CONTEXT(rasterizerState), rasterizerState->ptr);
 }
 
 //====================================================================================================================
@@ -88,18 +88,18 @@ pgVoid pgCreateDepthStencilStateCore(pgDepthStencilState* depthStencilState, pgD
 	desc.StencilReadMask = description->stencilReadMask;
 	desc.StencilWriteMask = description->stencilWriteMask;
 
-	D3DCALL(ID3D11Device_CreateDepthStencilState(DEVICE(depthStencilState), &desc, &depthStencilState->ptr), 
+	PG_D3DCALL(ID3D11Device_CreateDepthStencilState(PG_DEVICE(depthStencilState), &desc, &depthStencilState->ptr), 
 		"Failed to create depth stencil state.");
 }
 
 pgVoid pgDestroyDepthStencilStateCore(pgDepthStencilState* depthStencilState)
 {
-	ID3D11DepthStencilState_Release(depthStencilState->ptr);
+	PG_SAFE_RELEASE(ID3D11DepthStencilState, depthStencilState->ptr);
 }
 
 pgVoid pgBindDepthStencilStateCore(pgDepthStencilState* depthStencilState)
 {
-	ID3D11DeviceContext_OMSetDepthStencilState(CONTEXT(depthStencilState), depthStencilState->ptr, 0);
+	ID3D11DeviceContext_OMSetDepthStencilState(PG_CONTEXT(depthStencilState), depthStencilState->ptr, 0);
 }
 
 //====================================================================================================================
@@ -131,18 +131,18 @@ pgVoid pgCreateSamplerStateCore(pgSamplerState* samplerState, pgSamplerDesc* des
 			desc.MinLOD = 0;
 	}
 
-	D3DCALL(ID3D11Device_CreateSamplerState(DEVICE(samplerState), &desc, &samplerState->ptr), "Failed to create sampler state.");
+	PG_D3DCALL(ID3D11Device_CreateSamplerState(PG_DEVICE(samplerState), &desc, &samplerState->ptr), "Failed to create sampler state.");
 }
 
 pgVoid pgDestroySamplerStateCore(pgSamplerState* samplerState)
 {
-	ID3D11SamplerState_Release(samplerState->ptr);
+	PG_SAFE_RELEASE(ID3D11SamplerState, samplerState->ptr);
 }
 
 pgVoid pgBindSamplerStateCore(pgSamplerState* samplerState, pgInt32 slot)
 {
-	ID3D11DeviceContext_VSSetSamplers(CONTEXT(samplerState), slot, 1, &samplerState->ptr);
-	ID3D11DeviceContext_PSSetSamplers(CONTEXT(samplerState), slot, 1, &samplerState->ptr);
+	ID3D11DeviceContext_VSSetSamplers(PG_CONTEXT(samplerState), slot, 1, &samplerState->ptr);
+	ID3D11DeviceContext_PSSetSamplers(PG_CONTEXT(samplerState), slot, 1, &samplerState->ptr);
 }
 
 #endif

@@ -80,7 +80,7 @@ pgVoid pgDestroyRasterizerStateCore(pgRasterizerState* rasterizerState)
 
 pgVoid pgBindRasterizerStateCore(pgRasterizerState* rasterizerState)
 {
-	// FIXME: What about depth bias?
+	// TODO: What about depth bias?
 	pgRasterizerDesc* desc = &rasterizerState->description;
 
 	glPolygonMode(GL_FRONT_AND_BACK, pgConvertFillMode(desc->fillMode));
@@ -166,8 +166,7 @@ pgVoid pgCreateSamplerStateCore(pgSamplerState* samplerState, pgSamplerDesc* des
 	borderColor[2] = description->borderColor.blue;
 	borderColor[3] = description->borderColor.alpha;
 
-	glGenSamplers(1, &samplerState->id);
-	PG_CHECK_GL_HANDLE("Sampler State", samplerState->id);
+	PG_GL_ALLOC("Sampler State", glGenSamplers, samplerState->id);
 
 	pgConvertTextureFilter(description->filter, &minFilter, &magFilter);
 	glSamplerParameteri(samplerState->id, GL_TEXTURE_MIN_FILTER, minFilter);
@@ -186,8 +185,7 @@ pgVoid pgCreateSamplerStateCore(pgSamplerState* samplerState, pgSamplerDesc* des
 
 pgVoid pgDestroySamplerStateCore(pgSamplerState* samplerState)
 {
-	glDeleteSamplers(1, &samplerState->id);
-	PG_ASSERT_NO_GL_ERRORS();
+	PG_GL_FREE(glDeleteSamplers, samplerState->id);
 }
 
 pgVoid pgBindSamplerStateCore(pgSamplerState* samplerState, pgInt32 slot)

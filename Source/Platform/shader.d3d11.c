@@ -25,14 +25,14 @@ pgVoid pgCreateShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, p
 	switch (shader->type)
 	{
 	case PG_VERTEX_SHADER:
-		D3DCALL(ID3D11Device_CreateVertexShader(DEVICE(shader), shaderData, byteCodeLength, NULL, &shader->ptr.vertexShader),
+		PG_D3DCALL(ID3D11Device_CreateVertexShader(PG_DEVICE(shader), shaderData, byteCodeLength, NULL, &shader->ptr.vertexShader),
 			"Failed to create vertex shader.");
 
-		D3DCALL(ID3D11Device_CreateInputLayout(DEVICE(shader), inputDescs, inputCount, shaderData, byteCodeLength, &shader->inputLayout), 
+		PG_D3DCALL(ID3D11Device_CreateInputLayout(PG_DEVICE(shader), inputDescs, inputCount, shaderData, byteCodeLength, &shader->inputLayout), 
 			"Failed to create input layout.");
 		break;
 	case PG_FRAGMENT_SHADER:
-		D3DCALL(ID3D11Device_CreatePixelShader(shader->device->ptr, shaderData, byteCodeLength, NULL, &shader->ptr.pixelShader), 
+		PG_D3DCALL(ID3D11Device_CreatePixelShader(shader->device->ptr, shaderData, byteCodeLength, NULL, &shader->ptr.pixelShader), 
 			"Failed to create pixel shader.");
 		break;
 	default:
@@ -45,11 +45,11 @@ pgVoid pgDestroyShaderCore(pgShader* shader)
 	switch (shader->type)
 	{
 	case PG_VERTEX_SHADER:
-		ID3D11VertexShader_Release(shader->ptr.vertexShader);
-		ID3D11InputLayout_Release(shader->inputLayout);
+		PG_SAFE_RELEASE(ID3D11VertexShader, shader->ptr.vertexShader);
+		PG_SAFE_RELEASE(ID3D11InputLayout, shader->inputLayout);
 		break;
 	case PG_FRAGMENT_SHADER:
-		ID3D11PixelShader_Release(shader->ptr.pixelShader);
+		PG_SAFE_RELEASE(ID3D11PixelShader, shader->ptr.pixelShader);
 		break;
 	default:
 		PG_NO_SWITCH_DEFAULT;
@@ -61,11 +61,11 @@ pgVoid pgBindShaderCore(pgShader* shader)
 	switch (shader->type)
 	{
 	case PG_VERTEX_SHADER:
-		ID3D11DeviceContext_VSSetShader(CONTEXT(shader), shader->ptr.vertexShader, NULL, 0);
-		ID3D11DeviceContext_IASetInputLayout(CONTEXT(shader), shader->inputLayout);
+		ID3D11DeviceContext_VSSetShader(PG_CONTEXT(shader), shader->ptr.vertexShader, NULL, 0);
+		ID3D11DeviceContext_IASetInputLayout(PG_CONTEXT(shader), shader->inputLayout);
 		break;
 	case PG_FRAGMENT_SHADER:
-		ID3D11DeviceContext_PSSetShader(CONTEXT(shader), shader->ptr.pixelShader, NULL, 0);
+		ID3D11DeviceContext_PSSetShader(PG_CONTEXT(shader), shader->ptr.pixelShader, NULL, 0);
 		break;
 	default:
 		PG_NO_SWITCH_DEFAULT;

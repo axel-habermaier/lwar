@@ -44,21 +44,19 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 
 pgVoid pgDestroyTextureCore(pgTexture* texture)
 {
-	if (texture->resourceView != NULL)
-		ID3D11ShaderResourceView_Release(texture->resourceView);
-
-	ID3D11Texture2D_Release(texture->ptr);
+	PG_SAFE_RELEASE(ID3D11ShaderResourceView, texture->resourceView);
+	PG_SAFE_RELEASE(ID3D11Texture2D, texture->ptr);
 }
 
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)
 {
-	ID3D11DeviceContext_VSSetShaderResources(CONTEXT(texture), slot, 1, &texture->resourceView);
-	ID3D11DeviceContext_PSSetShaderResources(CONTEXT(texture), slot, 1, &texture->resourceView);
+	ID3D11DeviceContext_VSSetShaderResources(PG_CONTEXT(texture), slot, 1, &texture->resourceView);
+	ID3D11DeviceContext_PSSetShaderResources(PG_CONTEXT(texture), slot, 1, &texture->resourceView);
 }
 
 pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 {
-	ID3D11DeviceContext_GenerateMips(CONTEXT(texture), texture->resourceView);
+	ID3D11DeviceContext_GenerateMips(PG_CONTEXT(texture), texture->resourceView);
 }
 
 //====================================================================================================================
@@ -147,7 +145,7 @@ static pgVoid pgCreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
 
 	pgInitTextureDesc2D(texture, &desc);
-	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(texture), &desc, data, &texture->ptr), "Failed to create texture.");
+	PG_D3DCALL(ID3D11Device_CreateTexture2D(PG_DEVICE(texture), &desc, data, &texture->ptr), "Failed to create texture.");
 
 	memset(&viewDesc, 0, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 	viewDesc.Format = desc.Format;
@@ -161,7 +159,7 @@ static pgVoid pgCreateTexture2D(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data
 		return;
 	}
 	
-	D3DCALL(ID3D11Device_CreateShaderResourceView(DEVICE(texture), (ID3D11Resource*)texture->ptr, &viewDesc, &texture->resourceView), 
+	PG_D3DCALL(ID3D11Device_CreateShaderResourceView(PG_DEVICE(texture), (ID3D11Resource*)texture->ptr, &viewDesc, &texture->resourceView), 
 		"Failed to create shader resource view for texture.");
 }
 
@@ -174,7 +172,7 @@ static pgVoid pgCreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 	desc.ArraySize *= 6;
 	desc.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
 	
-	D3DCALL(ID3D11Device_CreateTexture2D(DEVICE(texture), &desc, data, &texture->ptr), "Failed to create cube map.");
+	PG_D3DCALL(ID3D11Device_CreateTexture2D(PG_DEVICE(texture), &desc, data, &texture->ptr), "Failed to create cube map.");
 
 	memset(&viewDesc, 0, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 	viewDesc.Format = desc.Format;
@@ -182,7 +180,7 @@ static pgVoid pgCreateCubeMap(pgTexture* texture, D3D11_SUBRESOURCE_DATA* data)
 	viewDesc.TextureCube.MipLevels = (UINT)-1;
 	viewDesc.TextureCube.MostDetailedMip = 0;
 	
-	D3DCALL(ID3D11Device_CreateShaderResourceView(DEVICE(texture), (ID3D11Resource*)texture->ptr, &viewDesc, &texture->resourceView), 
+	PG_D3DCALL(ID3D11Device_CreateShaderResourceView(PG_DEVICE(texture), (ID3D11Resource*)texture->ptr, &viewDesc, &texture->resourceView), 
 		"Failed to create shader resource view for cube map.");
 }
 
