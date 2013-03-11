@@ -168,7 +168,7 @@ namespace Lwar.Client.Rendering
 
 			_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, _sizes[0]);
 			_renderTargets[1].Bind();
-			BlendState.Additive.Bind();
+			BlendState.Premultiplied.Bind();
 			while (i >= 0)
 			{
 				

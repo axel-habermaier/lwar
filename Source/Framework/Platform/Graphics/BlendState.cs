@@ -163,21 +163,27 @@ namespace Pegasus.Framework.Platform.Graphics
 			{
 				BlendEnabled = true,
 				SourceBlend = BlendOption.One,
-				DestinationBlend = BlendOption.InverseSourceAlpha
+				DestinationBlend = BlendOption.InverseSourceAlpha,
+				SourceBlendAlpha = BlendOption.One,
+				DestinationBlendAlpha = BlendOption.InverseSourceAlpha
 			};
 
 			Additive = new BlendState(graphicsDevice)
 			{
 				BlendEnabled = true,
 				SourceBlend = BlendOption.One,
-				DestinationBlend = BlendOption.One
+				DestinationBlend = BlendOption.One,
+				SourceBlendAlpha = BlendOption.One,
+				DestinationBlendAlpha = BlendOption.One
 			};
 
 			Alpha = new BlendState(graphicsDevice)
 			{
 				BlendEnabled = true,
 				SourceBlend = BlendOption.SourceAlpha,
-				DestinationBlend = BlendOption.InverseSourceAlpha
+				DestinationBlend = BlendOption.InverseSourceAlpha,
+				SourceBlendAlpha = BlendOption.SourceAlpha,
+				DestinationBlendAlpha = BlendOption.InverseSourceAlpha
 			};
 
 			Opaque.Bind();

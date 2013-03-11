@@ -111,8 +111,11 @@ namespace Lwar.Client.Rendering
 			_backBuffer.Bind();
 			_screen.Bind(0);
 			SamplerState.PointClampNoMipmaps.Bind(0);
+			BlendState.Premultiplied.Bind();
 			_quadShader.Bind();
 			_fsQuad.Draw();
+
+			BlendState.Premultiplied.Bind();
 		}
 
 		/// <summary>

@@ -110,7 +110,7 @@ namespace Lwar.Client.Rendering
 			_model = Model.CreateSphere(graphicsDevice, 200, 25);
 
 			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);
-			_effectTexture = new Texture2D(graphicsDevice, 1280, 720, SurfaceFormat.Rgba16F,
+			_effectTexture = new Texture2D(graphicsDevice, 640, 360, SurfaceFormat.Rgba8,
 										   TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget);
 			_effectTarget = new RenderTarget(graphicsDevice, new Texture[] { _effectTexture }, null);
 			_blur = new GaussianBlur(graphicsDevice, assets, _effectTexture);
@@ -153,9 +153,10 @@ namespace Lwar.Client.Rendering
 				_heatVS.Bind();
 				_heatFS.Bind();
 				_heatTexture.Bind(1);
+				_sunCubeMap.Bind(2);
 				SamplerState.BilinearClamp.Bind(1);
 				var viewport = _graphicsDevice.Viewport;
-				_graphicsDevice.Viewport = new Rectangle(0, 0, 1280, 720);
+				_graphicsDevice.Viewport = new Rectangle(0, 0, 640, 360);
 				_effectTarget.Bind();
 
 				_effectTarget.Clear(new Color(0, 0, 0, 0));
@@ -169,13 +170,13 @@ namespace Lwar.Client.Rendering
 				_blur.Blur(_renderTarget);
 
 				DepthStencilState.DepthDisabled.Bind();
-				BlendState.Additive.Bind();
+				BlendState.Premultiplied.Bind();
 				_renderTarget.Bind();
 				_graphicsDevice.Viewport = viewport;
 				//_effectTexture.Bind(0);
 				_quadFS.Bind();
 				//_effectTexture.Bind(0);
-				SamplerState.PointClampNoMipmaps.Bind(0);
+				SamplerState.BilinearClampNoMipmaps.Bind(0);
 
 				_fullscreenQuad.Draw();
 
