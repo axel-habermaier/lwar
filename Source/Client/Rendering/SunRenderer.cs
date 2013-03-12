@@ -15,17 +15,9 @@ namespace Lwar.Client.Rendering
 	/// </summary>
 	public class SunRenderer : Renderer<Sun, SunRenderer.SunDrawState>
 	{
-		/// <summary>
-		///   The sun cube map.
-		/// </summary>
-		private readonly CubeMap _sunCubeMap;
+		private readonly GaussianBlur _blur;
 
-		/// <summary>
-		/// The heat cube map.
-		/// </summary>
-		private readonly CubeMap _heatCubeMap;
-
-		private Texture2D _heatTexture;
+		private readonly Clock _clock = Clock.Create(true);
 
 		/// <summary>
 		///   The render target that is used to draw the sun effect.
@@ -40,7 +32,7 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   The fragment shader that is used to draw the suns.
 		/// </summary>
-		private readonly FragmentShader _fragmentShader, _heatFS, _quadFS;
+		private readonly FragmentShader _fragmentShader;
 
 		/// <summary>
 		///   The full-screen quad that is used to draw the sun special effects.
@@ -53,21 +45,41 @@ namespace Lwar.Client.Rendering
 		private readonly GraphicsDevice _graphicsDevice;
 
 		/// <summary>
+		///   The heat cube map.
+		/// </summary>
+		private readonly CubeMap _heatCubeMap;
+
+		/// <summary>
+		///   The fragment shader that is used to draw the suns.
+		/// </summary>
+		private readonly FragmentShader _heatFS;
+
+		private readonly Texture2D _heatTexture;
+
+		/// <summary>
+		///   The vertex shader that is used to draw the suns.
+		/// </summary>
+		private readonly VertexShader _heatVS;
+
+		/// <summary>
 		///   The sun model.
 		/// </summary>
 		private readonly Model _model;
+
+		/// <summary>
+		///   The fragment shader that is used to draw the suns.
+		/// </summary>
+		private readonly FragmentShader _quadFS;
 
 		/// <summary>
 		///   The render target the sun is rendered into.
 		/// </summary>
 		private readonly RenderTarget _renderTarget;
 
-		struct SunData
-		{
-			public Matrix World;
-			public Matrix Rotation1;
-			public Matrix Rotation2;
-		}
+		/// <summary>
+		///   The sun cube map.
+		/// </summary>
+		private readonly CubeMap _sunCubeMap;
 
 		/// <summary>
 		///   The transformation constant buffer.
@@ -77,11 +89,7 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   The vertex shader that is used to draw the suns.
 		/// </summary>
-		private readonly VertexShader _vertexShader, _heatVS;
-
-		private GaussianBlur _blur;
-
-		private Clock _clock = Clock.Create(true);
+		private readonly VertexShader _vertexShader;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -100,7 +108,7 @@ namespace Lwar.Client.Rendering
 
 			_vertexShader = assets.LoadVertexShader("Shaders/SphereVS");
 			_fragmentShader = assets.LoadFragmentShader("Shaders/SphereFS");
-			_heatVS= assets.LoadVertexShader("Shaders/SunHeatVS");
+			_heatVS = assets.LoadVertexShader("Shaders/SunHeatVS");
 			_heatFS = assets.LoadFragmentShader("Shaders/SunHeatFS");
 			_quadFS = assets.LoadFragmentShader("Shaders/QuadFS");
 			_transform = new ConstantBuffer<SunData>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
@@ -122,7 +130,7 @@ namespace Lwar.Client.Rendering
 		/// <param name="sun">The element that should be drawn by the renderer.</param>
 		protected override SunDrawState OnAdded(Sun sun)
 		{
-			return new SunDrawState { Transform = sun.Transform, rot1 = 4};
+			return new SunDrawState { Transform = sun.Transform, rot1 = 4 };
 		}
 
 		/// <summary>
@@ -137,7 +145,7 @@ namespace Lwar.Client.Rendering
 				var elapsed = (float)_clock.Seconds;
 				_clock.Reset();
 				sun.rot1 += 0.1f * elapsed;
-				sun.rot2-=0.05f * elapsed;
+				sun.rot2 -= 0.05f * elapsed;
 				_transform.Data.World = Matrix.CreateRotationY(-sun.rot1 * 2) * sun.Transform.Matrix;
 				_transform.Data.Rotation1 = Matrix.CreateRotationY(-sun.rot1) * Matrix.CreateRotationX(sun.rot2 * 2);
 				_transform.Data.Rotation2 = Matrix.CreateRotationY(-sun.rot2) * Matrix.CreateRotationZ(sun.rot1 * 2);
@@ -182,6 +190,8 @@ namespace Lwar.Client.Rendering
 
 				BlendState.Premultiplied.Bind();
 				DepthStencilState.Default.Bind();
+
+				_renderTarget.Bind();
 			}
 		}
 
@@ -197,6 +207,13 @@ namespace Lwar.Client.Rendering
 			_effectTexture.SafeDispose();
 			_effectTarget.SafeDispose();
 			_fullscreenQuad.SafeDispose();
+		}
+
+		private struct SunData
+		{
+			public Matrix Rotation1;
+			public Matrix Rotation2;
+			public Matrix World;
 		}
 
 		/// <summary>

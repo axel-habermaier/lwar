@@ -54,7 +54,7 @@ namespace Lwar.Client.Rendering
 			_depth = new Texture2D(graphicsDevice, 1280, 720, SurfaceFormat.Depth24Stencil8, TextureFlags.DepthStencil);
 			_rt = new RenderTarget(graphicsDevice, new[] { _screen }, _depth);
 
-			SunRenderer = new SunRenderer(graphicsDevice, _rt, assets);
+			SunRenderer = new SunRenderer(graphicsDevice, renderTarget, assets);
 			PlanetRenderer = new PlanetRenderer(graphicsDevice, assets);
 			ShipRenderer = new ShipRenderer(graphicsDevice, assets);
 			BulletRenderer = new BulletRenderer(graphicsDevice, assets);
@@ -88,7 +88,7 @@ namespace Lwar.Client.Rendering
 		{
 			Assert.ArgumentNotNull(camera, () => camera);
 
-			DepthStencilState.Default.Bind();
+			
 			camera.Bind();
 
 			if (LwarCvars.DrawWireframe.Value)
@@ -96,25 +96,27 @@ namespace Lwar.Client.Rendering
 			else
 				RasterizerState.CullCounterClockwise.Bind();
 
+			DepthStencilState.DepthDisabled.Bind();
 			_skyBoxRenderer.Draw();
-
-			_rt.Bind();
-			_rt.Clear(new Color(0, 0, 0, 0));
-			_rt.ClearDepth();
+			DepthStencilState.Default.Bind();
+			//_rt.Bind();
+			//_rt.Clear(new Color(0, 0, 0, 0));
+			//_rt.ClearDepth();
 
 			SunRenderer.Draw();
 			PlanetRenderer.Draw();
 			ShipRenderer.Draw();
 			BulletRenderer.Draw();
 
+			//DepthStencilState.DepthDisabled.Bind();
+			//_backBuffer.Bind();
+			//_screen.Bind(0);
+			//SamplerState.PointClampNoMipmaps.Bind(0);
+			//BlendState.Premultiplied.Bind();
+			//_quadShader.Bind();
+			//_fsQuad.Draw();
 			DepthStencilState.DepthDisabled.Bind();
-			_backBuffer.Bind();
-			_screen.Bind(0);
-			SamplerState.PointClampNoMipmaps.Bind(0);
-			BlendState.Premultiplied.Bind();
-			_quadShader.Bind();
-			_fsQuad.Draw();
-
+			
 			BlendState.Premultiplied.Bind();
 		}
 
