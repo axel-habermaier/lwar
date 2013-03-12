@@ -2,6 +2,7 @@
 
 namespace Lwar.Client.Rendering
 {
+	using System.Runtime.InteropServices;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Pegasus.Framework;
@@ -157,6 +158,9 @@ namespace Lwar.Client.Rendering
 				_sunCubeMap.Bind(0);
 				_model.Draw();
 
+				if (PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3)
+					return;
+
 				DepthStencilState.DepthRead.Bind();
 				_heatVS.Bind();
 				_heatFS.Bind();
@@ -209,11 +213,12 @@ namespace Lwar.Client.Rendering
 			_fullscreenQuad.SafeDispose();
 		}
 
+		[StructLayout(LayoutKind.Sequential)]
 		private struct SunData
 		{
+			public Matrix World;
 			public Matrix Rotation1;
 			public Matrix Rotation2;
-			public Matrix World;
 		}
 
 		/// <summary>

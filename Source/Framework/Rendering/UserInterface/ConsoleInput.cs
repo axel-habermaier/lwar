@@ -39,8 +39,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			ShowNewerHistory = new LogicalInput(Key.Down.WentDown(), InputModes.Console);
 			ScrollUp = new LogicalInput(Key.PageUp.IsRepeated(), InputModes.Console);
 			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated(), InputModes.Console);
-			ScrollToTop = new LogicalInput(Key.Home.IsPressed(), InputModes.Console);
-			ScrollToBottom = new LogicalInput(Key.End.IsPressed(), InputModes.Console);
+			ScrollToTop = new LogicalInput(control + Key.Home.IsPressed(), InputModes.Console);
+			ScrollToBottom = new LogicalInput(control + Key.End.IsPressed(), InputModes.Console);
 
 			device.Register(Toggle);
 			device.Register(Submit);
