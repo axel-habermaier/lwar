@@ -1,15 +1,3 @@
-layout(std140, binding = 0) uniform PerFrameConstants
-{ 
-	mat4 View;
-	mat4 Projection;
-	mat4 ViewProjection;
-};
-
-layout(std140, binding = 1) uniform PerObjectConstants
-{ 
-	mat4 World;
-};
-
 layout(location = 0) in vec4 VertexPosition;
 layout(location = 2) in vec2 VertexTexCoords;
 
@@ -22,8 +10,8 @@ out vec2 TexCoords;
 
 void main()
 {
-	gl_Position = ViewProjection * World * VertexPosition;
-	TexCoords = VertexTexCoords;
+	gl_Position = vec4(VertexPosition.x * -1, VertexPosition.z, 1, 1);
+	TexCoords = vec2(1 - VertexPosition.x, VertexPosition.y);
 }
 
 ---

@@ -1,12 +1,21 @@
-in vec3 Normal;
+in vec3 TexCoords0;
+in vec3 TexCoords1;
+
 out vec4 Output;
 
 layout(binding = 0) uniform samplerCube CubeMap;
+layout(binding = 1) uniform sampler2D HeatTexture;
 
 void main()
 {
-	vec3 color = texture(CubeMap, Normal).xyz;
-	Output = vec4(color, 1);
+	float sample1 = texture(CubeMap, TexCoords0).r;
+    float sample2 = texture(CubeMap, TexCoords1).r;
+
+    float result = sample1 + sample2;
+    float blend = result / 2;
+
+    vec4 color = texture(HeatTexture, vec2(blend, 0));
+    Output = vec4(color.rgb * blend, result / 4);
 }
 
 ---
@@ -20,8 +29,6 @@ struct PS_INPUT
 TextureCube CubeMap : register(t0);
 SamplerState CubeMapSampler : register(s0);
 
-TextureCube CubeMap2 : register(t2);
-
 Texture2D HeatTexture : register(t1);
 SamplerState HeatSampler : register(s1);
 
@@ -31,28 +38,9 @@ float4 Main(PS_INPUT input) : SV_Target
     float sample2 = CubeMap.Sample(CubeMapSampler, input.TexCoords1).r;
 
     float result = sample1 + sample2;
-//     float delta = 1;
-//   if (result > delta)
-//   {
-        float4 color = HeatTexture.Sample(HeatSampler, float2(result /2, 0)) ;
-        float4 dist = CubeMap2.Sample(CubeMapSampler, input.TexCoords0) ;
-//        if (result < 1)
-//            return float4(0,0,0,0);
 
-//        if (result > 1.1)
-//            return color;
-//
-//        color *= clamp((1.1 - result) / 10, 0, 1);
-//result -= 1;
-//        return float4(color.xyz * result, result) ;//* (1 - (2 - result));
-//return color;
-return float4(color.rgb*result/1.5,result/5);
-//color += dist;
-//color = dist;
-//return color;
-float blend = result/2;
-return float4(color.rgb*blend,result/3);
-//    }
-//    else
-//       return float4(0, 0, 0, 0);
+    float4 color = HeatTexture.Sample(HeatSampler, float2(result / 2, 0));
+
+    float blend = result / 2;
+    return float4(color.rgb * blend, result / 4);
 }

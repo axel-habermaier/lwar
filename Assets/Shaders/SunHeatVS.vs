@@ -7,23 +7,27 @@ layout(std140, binding = 0) uniform PerFrameConstants
 
 layout(std140, binding = 1) uniform PerObjectConstants
 { 
-	mat4 Model;
+	mat4 World;
+	mat4 Rotation1;
+	mat4 Rotation2;
 };
 
 layout(location = 0) in vec4 VertexPosition;
-layout(location = 3) in vec3 VertexNormal;
+layout(location = 3) in vec4 VertexNormal;
 
 out gl_PerVertex
 {
     vec4 gl_Position;
 };
 
-out vec3 Normal;
+out vec3 TexCoords0;
+out vec3 TexCoords1;
 
 void main()
 {
-	gl_Position = ViewProjection * Model * VertexPosition;
-	Normal = VertexNormal;
+	gl_Position = ViewProjection * World * VertexPosition;
+	TexCoords0 = (Rotation1 * VertexNormal).xyz;
+	TexCoords1 = (Rotation2 * VertexNormal).xyz;
 }
 
 ---
