@@ -93,14 +93,6 @@ typedef enum
 
 typedef enum
 {
-	PG_DEPTH_NONE							= 1400,
-	PG_DEPTH16								= 1401,
-	PG_DEPTH24								= 1402,
-	PG_DEPTH24_STENCIL8						= 1403
-} pgDepthFormat;
-
-typedef enum
-{
 	PG_FILL_WIREFRAME						= 1501,
 	PG_FILL_SOLID							= 1502
 } pgFillMode;

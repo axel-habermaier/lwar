@@ -1,7 +1,7 @@
 in vec3 TexCoords0;
 in vec3 TexCoords1;
 
-out vec4 Output;
+layout(location = 0) out vec4 Output;
 
 layout(binding = 0) uniform samplerCube CubeMap;
 layout(binding = 1) uniform sampler2D HeatTexture;
@@ -15,7 +15,7 @@ void main()
     float blend = result / 2;
 
     vec4 color = texture(HeatTexture, vec2(blend, 0));
-    Output = vec4(color.rgb * blend, result / 4);
+    Output = vec4(0,1,0,1);// vec4(color.rgb * blend, result / 4);
 }
 
 ---

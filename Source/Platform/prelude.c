@@ -25,7 +25,6 @@ PG_ASSERT_SIZE(pgBlendOption, 4);
 PG_ASSERT_SIZE(pgColorWriteChannels, 4);
 PG_ASSERT_SIZE(pgComparison, 4);
 PG_ASSERT_SIZE(pgCullMode, 4);
-PG_ASSERT_SIZE(pgDepthFormat, 4);
 PG_ASSERT_SIZE(pgFillMode, 4);
 PG_ASSERT_SIZE(pgIndexSize, 4);
 PG_ASSERT_SIZE(pgMapMode, 4);

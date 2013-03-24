@@ -7,6 +7,7 @@
 //====================================================================================================================
 
 static pgVoid pgUploadTexture(pgTexture* texture, pgSurface* surface, GLenum target, GLint level);
+static pgVoid pgAllocTextureData(pgTexture* texture);
 
 //====================================================================================================================
 // Core functions
@@ -58,6 +59,8 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 			PG_NO_SWITCH_DEFAULT;
 		}
 	}
+	else
+		pgAllocTextureData(texture);
 
 	glBindTexture(texture->glType, boundTexture);
 
@@ -100,12 +103,41 @@ static pgVoid pgUploadTexture(pgTexture* texture, pgSurface* surface, GLenum tar
 	pgConvertSurfaceFormat(texture->desc.format, &internalFormat, &format);
 	type = pgIsFloatingPointFormat(texture->desc.format) ? GL_FLOAT : GL_UNSIGNED_BYTE;
 
+	if (pgIsDepthStencilFormat(texture->desc.format))
+		type = GL_UNSIGNED_INT_24_8;
+
 	if (pgIsCompressedFormat(texture->desc.format))
 		glCompressedTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, surface->size, surface->data);
 	else
 		glTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, format, type, surface->data);
 
 	PG_ASSERT_NO_GL_ERRORS();
+}
+
+static pgVoid pgAllocTextureData(pgTexture* texture)
+{
+	pgSurface surface;
+	memset(&surface, 0, sizeof(surface));
+
+	surface.width = texture->desc.width;
+	surface.height = texture->desc.height;
+
+	switch (texture->desc.type)
+	{
+	case PG_TEXTURE_2D:
+		pgUploadTexture(texture, &surface, GL_TEXTURE_2D, 0);
+		break;
+	case PG_TEXTURE_CUBE_MAP:
+		pgUploadTexture(texture, &surface, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0);
+		pgUploadTexture(texture, &surface, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0);
+		pgUploadTexture(texture, &surface, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0);
+		pgUploadTexture(texture, &surface, GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
+		pgUploadTexture(texture, &surface, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0);
+		pgUploadTexture(texture, &surface, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0);
+		break;
+	default:
+		PG_NO_SWITCH_DEFAULT;
+	}
 }
 
 #endif

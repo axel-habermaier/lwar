@@ -430,7 +430,6 @@
     <Compile Include="Platform\Graphics\ConstantBuffer.cs" />
     <Compile Include="Platform\Graphics\IndexBuffer.cs" />
     <Compile Include="Platform\Graphics\FragmentShader.cs" />
-    <Compile Include="Platform\Graphics\DepthFormat.cs" />
     <Compile Include="Platform\Graphics\DepthStencilState.cs" />
     <Compile Include="Platform\Graphics\IndexSize.cs" />
     <Compile Include="Platform\Graphics\Texture2D.cs" />

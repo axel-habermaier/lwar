@@ -132,8 +132,8 @@ namespace Lwar.Client.Rendering
 			_texture.Bind(0);
 			DepthStencilState.DepthDisabled.Bind();
 			
-			SamplerState.BilinearClamp.Bind(0);
-			SamplerState.BilinearClamp.Bind(1);
+			SamplerState.BilinearClampNoMipmaps.Bind(0);
+			SamplerState.BilinearClampNoMipmaps.Bind(1);
 			BlendState.Opaque.Bind();
 			_data.Bind(3);
 

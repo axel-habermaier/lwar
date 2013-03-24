@@ -68,3 +68,8 @@ pgBool pgIsFloatingPointFormat(pgSurfaceFormat format)
 {
 	return format > 2120 && format < 2150;
 }
+
+pgBool pgIsDepthStencilFormat(pgSurfaceFormat format)
+{
+	return format == PG_SURFACE_DEPTH24_STENCIL8;
+}

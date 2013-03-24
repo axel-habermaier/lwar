@@ -329,6 +329,7 @@ pgVoid pgGenerateMipmapsCore(pgTexture* texture);
 
 pgBool pgIsCompressedFormat(pgSurfaceFormat format);
 pgBool pgIsFloatingPointFormat(pgSurfaceFormat format);
+pgBool pgIsDepthStencilFormat(pgSurfaceFormat format);
 
 //====================================================================================================================
 // Render target

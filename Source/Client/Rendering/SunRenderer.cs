@@ -158,34 +158,31 @@ namespace Lwar.Client.Rendering
 				_sunCubeMap.Bind(0);
 				_model.Draw();
 
-				if (PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3)
-					return;
-
 				DepthStencilState.DepthRead.Bind();
 				_heatVS.Bind();
 				_heatFS.Bind();
 				_heatTexture.Bind(1);
 				_sunCubeMap.Bind(2);
-				SamplerState.BilinearClamp.Bind(1);
+				SamplerState.BilinearClampNoMipmaps.Bind(1);
 				var viewport = _graphicsDevice.Viewport;
 				_graphicsDevice.Viewport = new Rectangle(0, 0, 640, 360);
 				_effectTarget.Bind();
 
-				_effectTarget.Clear(new Color(0, 0, 0, 0));
+				_effectTarget.Clear(new Color(128, 0, 0, 0));
 				_heatCubeMap.Bind(0);
 
 				_model.Draw();
 
-				_effectTexture.GenerateMipmaps();
+				//_effectTexture.GenerateMipmaps();
 
 				_renderTarget.Bind();
-				_blur.Blur(_renderTarget);
+				//_blur.Blur(_renderTarget);
 
 				DepthStencilState.DepthDisabled.Bind();
 				BlendState.Premultiplied.Bind();
 				_renderTarget.Bind();
-				_graphicsDevice.Viewport = viewport;
-				//_effectTexture.Bind(0);
+				//_graphicsDevice.Viewport = viewport;
+				_effectTexture.Bind(0);
 				_quadFS.Bind();
 				//_effectTexture.Bind(0);
 				SamplerState.BilinearClampNoMipmaps.Bind(0);
@@ -194,7 +191,7 @@ namespace Lwar.Client.Rendering
 
 				BlendState.Premultiplied.Bind();
 				DepthStencilState.Default.Bind();
-
+				_graphicsDevice.Viewport = viewport;
 				_renderTarget.Bind();
 			}
 		}

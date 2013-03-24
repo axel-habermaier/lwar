@@ -38,6 +38,8 @@ Pegasus
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
 - Use input triggers for console prompt input
+- Implement OpenGL render targets
+- Check whether viewport and scissor affect render target clearing
 
 Network Specification
 ========

@@ -3,20 +3,44 @@
 #ifdef OPENGL3
 
 //====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+static pgVoid pgValidateFramebufferCompleteness();
+
+//====================================================================================================================
 // Core functions
 //====================================================================================================================
 
 pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget)
 {
-	// TODO: Implement
-	renderTarget->id = 0;
-	renderTarget->swapChain = NULL;
+	pgInt32 i;
+	GLint boundFramebuffer;
+
+	PG_GL_ALLOC("Framebuffer", glGenFramebuffers, renderTarget->id);
+	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &boundFramebuffer);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
+
+	if (renderTarget->depthStencil != NULL)
+	{
+		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, renderTarget->depthStencil->glType, 
+			renderTarget->depthStencil->id, 0);
+	}
+
+	for (i = 0; i < renderTarget->count; ++i)
+	{
+		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, renderTarget->colorBuffers[i]->glType, 
+			renderTarget->colorBuffers[i]->id, 0);
+	}
+
+	pgValidateFramebufferCompleteness();
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, boundFramebuffer);
+	PG_ASSERT_NO_GL_ERRORS();
 }
 
 pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)
 {
-	// TODO: Implement
-	PG_UNUSED(renderTarget);
+	PG_GL_FREE(glDeleteFramebuffers, renderTarget->id);
 }
 
 pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
@@ -64,12 +88,61 @@ pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, 
 
 pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 {
-	// We have to emulate the D3D11 behavior here
 	if (renderTarget->swapChain != NULL)
+	{
 		pgMakeCurrent(&renderTarget->swapChain->context);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glDrawBuffer(GL_BACK);
+	}
+	else
+	{
+		static GLenum buffers[] = 
+		{
+			GL_COLOR_ATTACHMENT0,
+			GL_COLOR_ATTACHMENT1,
+			GL_COLOR_ATTACHMENT2,
+			GL_COLOR_ATTACHMENT3,
+		};
 
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
+		PG_ASSERT(PG_MAX_COLOR_ATTACHMENTS == sizeof(buffers) / sizeof(GLenum), "Attachment count mismatch.");
+
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
+		glDrawBuffers(renderTarget->count, buffers);
+	}
+
 	PG_ASSERT_NO_GL_ERRORS();
+}
+
+//====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+static pgVoid pgValidateFramebufferCompleteness()
+{
+	GLenum status = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+	PG_ASSERT_NO_GL_ERRORS();
+
+	switch (status)
+	{
+	case GL_FRAMEBUFFER_COMPLETE:
+		return;
+	case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT.");
+	case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT.");
+	case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER.");
+	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER.");
+	case GL_FRAMEBUFFER_UNSUPPORTED:
+		pgDie("Frame buffer status: GL_FRAMEBUFFER_UNSUPPORTED.");
+	case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE.");
+	case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS.");
+	default:
+		pgDie("The frame buffer is incomplete for an unknown reason.");
+	}
 }
 
 #endif

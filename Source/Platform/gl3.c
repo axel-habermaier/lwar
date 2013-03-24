@@ -256,6 +256,10 @@ GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFor
 		*format = GL_RGBA;
 		*internalFormat = GL_RGBA16F;
 		break;
+	case PG_SURFACE_DEPTH24_STENCIL8:
+		*format = GL_DEPTH_STENCIL;
+		*internalFormat = GL_DEPTH24_STENCIL8;
+		break;
 	default:						
 		PG_NO_SWITCH_DEFAULT;
 	}
