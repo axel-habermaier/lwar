@@ -125,7 +125,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		public void Blur(RenderTarget rt)
 		{
-			_texture.GenerateMipmaps();
+			//_texture.GenerateMipmaps();
 
 			var viewport = _graphicsDevice.Viewport;
 
