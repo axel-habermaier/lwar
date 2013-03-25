@@ -45,18 +45,17 @@ pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)
 
 pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 {
-	pgRectangle viewport, scissor;
+	GLboolean scissorEnabled;
+	glGetBooleanv(GL_SCISSOR_TEST, &scissorEnabled);
+	glDisable(GL_SCISSOR_TEST);
 
-	viewport = renderTarget->device->viewport;
-	scissor = renderTarget->device->scissorRectangle;
-	//pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
-	//pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
+	PG_UNUSED(renderTarget);
 
     glClearColor(color.red, color.green, color.blue, color.alpha);
     glClear(GL_COLOR_BUFFER_BIT);
 
-	//pgSetViewport(renderTarget->device, viewport.left, viewport.top, viewport.width, viewport.height);
-	//pgSetScissorRect(renderTarget->device, scissor.left, scissor.top, scissor.width, scissor.height);
+	if (scissorEnabled)
+		glEnable(GL_SCISSOR_TEST);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -64,7 +63,9 @@ pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
 {
 	pgInt32 glTargets = 0;
-	pgRectangle viewport, scissor;
+	GLboolean scissorEnabled;
+	glGetBooleanv(GL_SCISSOR_TEST, &scissorEnabled);
+	glDisable(GL_SCISSOR_TEST);
 
 	PG_ASSERT(renderTarget->swapChain != NULL || renderTarget->depthStencil != NULL, 
 		"Cannot clear depth stencil of a render target without a depth stencil buffer.");
@@ -74,23 +75,22 @@ pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, 
     if (clearStencil)
         glTargets |= GL_STENCIL_BUFFER_BIT;
 
-	viewport = renderTarget->device->viewport;
-	scissor = renderTarget->device->scissorRectangle;
-	//pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
-	//pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
-
     glClearDepth(depth);
     glClearStencil(stencil);
     glClear(glTargets);
 
-	//pgSetViewport(renderTarget->device, viewport.left, viewport.top, viewport.width, viewport.height);
-	//pgSetScissorRect(renderTarget->device, scissor.left, scissor.top, scissor.width, scissor.height);
+	if (scissorEnabled)
+		glEnable(GL_SCISSOR_TEST);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
 pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 {
+	pgGraphicsDevice* device = renderTarget->device;
+	pgRectangle viewport = renderTarget->device->viewport;
+	pgRectangle scissor = renderTarget->device->scissorRectangle;
+
 	if (renderTarget->swapChain != NULL)
 	{
 		pgMakeCurrent(&renderTarget->swapChain->context);
@@ -111,11 +111,17 @@ pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
 		glDrawBuffers(renderTarget->count, buffers);
-
-		//glViewport(0, 0, 640, 360);
 	}
 
 	PG_ASSERT_NO_GL_ERRORS();
+
+	// We have to update the viewport and scissor rectangle as the the new render target might have a different size 
+	// than the old one; viewports and scissor rectangles depend on the size of the currently bound render target
+	// as the Y coordinate has to be inverted.
+	// Without the following two lines, code that sets the viewport/scissor rectangle before binding the render
+	// target would not work correctly
+	pgSetViewportCore(device, viewport.left, viewport.top, viewport.width, viewport.height);
+	pgSetScissorRectCore(device, scissor.left, scissor.top, scissor.width, scissor.height);
 }
 
 //====================================================================================================================
