@@ -29,18 +29,19 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_device = device;
 
 			// We don't care which of the two control buttons has been pressed
-			var control = Key.LeftControl.IsPressed() | Key.RightControl.IsPressed();
+			var controlPressed = Key.LeftControl.IsPressed() | Key.RightControl.IsPressed();
+			var controlReleased = Key.LeftControl.IsReleased() | Key.RightControl.IsReleased();
 
 			Toggle = new LogicalInput(new ScanCodeKeyTrigger(KeyTriggerType.WentDown, PlatformInfo.ConsoleKey), InputModes.All);
 			Submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputModes.Console);
-			Clear = new LogicalInput(control + Key.L.IsPressed(), InputModes.Console);
+			Clear = new LogicalInput(controlPressed + Key.L.IsPressed(), InputModes.Console);
 			ClearPrompt = new LogicalInput(Key.Escape.WentDown(), InputModes.Console);
 			ShowOlderHistory = new LogicalInput(Key.Up.WentDown(), InputModes.Console);
 			ShowNewerHistory = new LogicalInput(Key.Down.WentDown(), InputModes.Console);
-			ScrollUp = new LogicalInput(Key.PageUp.IsRepeated(), InputModes.Console);
-			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated(), InputModes.Console);
-			ScrollToTop = new LogicalInput(control + Key.Home.IsPressed(), InputModes.Console);
-			ScrollToBottom = new LogicalInput(control + Key.End.IsPressed(), InputModes.Console);
+			ScrollUp = new LogicalInput(Key.PageUp.IsRepeated() & controlReleased, InputModes.Console);
+			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated() & controlReleased, InputModes.Console);
+			ScrollToTop = new LogicalInput(controlPressed + Key.PageUp.IsPressed(), InputModes.Console);
+			ScrollToBottom = new LogicalInput(controlPressed + Key.PageDown.IsPressed(), InputModes.Console);
 
 			device.Register(Toggle);
 			device.Register(Submit);
