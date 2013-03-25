@@ -52,6 +52,9 @@ pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot)
 pgVoid pgGenerateMipmaps(pgTexture* texture)
 {
 	PG_ASSERT_NOT_NULL(texture);
+	PG_ASSERT((texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS) != 0, 
+		"Cannot generate mipmaps for a texture that does not have the corresponding flag set.");
+
 	pgGenerateMipmapsCore(texture);
 }
 

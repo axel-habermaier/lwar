@@ -11,7 +11,7 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	pgBindContext(&swapChain->context, swapChain->device, window);
 	pgSetPixelFormat(&swapChain->context);
 	swapChain->renderTarget.swapChain = swapChain;
-	swapChain->renderTarget.id = 0;
+	swapChain->renderTarget.count = 1;
 
 	PG_ASSERT_NO_GL_ERRORS();
 }

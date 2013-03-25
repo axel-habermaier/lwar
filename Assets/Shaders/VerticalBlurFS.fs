@@ -4,7 +4,7 @@ layout(binding = 0) uniform sampler2D InputTexture;
 
 out vec4 Output;
 
-layout(std140, binding = 0) uniform Data
+layout(std140, binding = 3) uniform Data
 { 
 	int Size;
     int Mipmap;

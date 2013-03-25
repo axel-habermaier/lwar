@@ -40,6 +40,7 @@ Pegasus
 - Use input triggers for console prompt input
 - Implement OpenGL render targets
 - Check whether viewport and scissor affect render target clearing
+- OpenGL: Fix set viewport/bind render target ordering bug
 
 Network Specification
 ========

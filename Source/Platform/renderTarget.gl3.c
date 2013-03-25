@@ -49,14 +49,14 @@ pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 
 	viewport = renderTarget->device->viewport;
 	scissor = renderTarget->device->scissorRectangle;
-	pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
-	pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
+	//pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
+	//pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
 
     glClearColor(color.red, color.green, color.blue, color.alpha);
     glClear(GL_COLOR_BUFFER_BIT);
 
-	pgSetViewport(renderTarget->device, viewport.left, viewport.top, viewport.width, viewport.height);
-	pgSetScissorRect(renderTarget->device, scissor.left, scissor.top, scissor.width, scissor.height);
+	//pgSetViewport(renderTarget->device, viewport.left, viewport.top, viewport.width, viewport.height);
+	//pgSetScissorRect(renderTarget->device, scissor.left, scissor.top, scissor.width, scissor.height);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -66,6 +66,9 @@ pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, 
 	pgInt32 glTargets = 0;
 	pgRectangle viewport, scissor;
 
+	PG_ASSERT(renderTarget->swapChain != NULL || renderTarget->depthStencil != NULL, 
+		"Cannot clear depth stencil of a render target without a depth stencil buffer.");
+
     if (clearDepth)
         glTargets |= GL_DEPTH_BUFFER_BIT;
     if (clearStencil)
@@ -73,15 +76,15 @@ pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, 
 
 	viewport = renderTarget->device->viewport;
 	scissor = renderTarget->device->scissorRectangle;
-	pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
-	pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
+	//pgSetViewport(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
+	//pgSetScissorRect(renderTarget->device, 0, 0, renderTarget->width, renderTarget->height);
 
     glClearDepth(depth);
     glClearStencil(stencil);
     glClear(glTargets);
 
-	pgSetViewport(renderTarget->device, viewport.left, viewport.top, viewport.width, viewport.height);
-	pgSetScissorRect(renderTarget->device, scissor.left, scissor.top, scissor.width, scissor.height);
+	//pgSetViewport(renderTarget->device, viewport.left, viewport.top, viewport.width, viewport.height);
+	//pgSetScissorRect(renderTarget->device, scissor.left, scissor.top, scissor.width, scissor.height);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -108,6 +111,8 @@ pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
 		glDrawBuffers(renderTarget->count, buffers);
+
+		//glViewport(0, 0, 640, 360);
 	}
 
 	PG_ASSERT_NO_GL_ERRORS();

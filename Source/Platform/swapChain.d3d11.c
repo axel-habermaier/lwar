@@ -20,8 +20,6 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	pgGetWindowSize(window, &width, &height);
 
 	swapChain->renderTarget.count = 1;
-	swapChain->renderTarget.dsPtr = NULL;
-	swapChain->renderTarget.cbPtr[0] = NULL;
 	swapChain->format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 	memset(&desc, 0, sizeof(DXGI_SWAP_CHAIN_DESC));

@@ -62,6 +62,9 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 	else
 		pgAllocTextureData(texture);
 
+	if ((texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS) != 0)
+		glGenerateMipmap(texture->glType);
+
 	glBindTexture(texture->glType, boundTexture);
 
 	PG_ASSERT_NO_GL_ERRORS();
@@ -84,7 +87,7 @@ pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 	GLint boundTexture;
 	glGetIntegerv(texture->glBoundType, &boundTexture);
 
-	pgBindTexture(texture, 0);
+	glBindTexture(texture->glType, texture->id);
 	glGenerateMipmap(texture->glType);
 	PG_ASSERT_NO_GL_ERRORS();
 

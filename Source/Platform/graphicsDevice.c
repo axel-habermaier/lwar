@@ -37,8 +37,8 @@ pgVoid pgSetViewport(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt3
 	PG_ASSERT_IN_RANGE(width, 0, 4096);
 	PG_ASSERT_IN_RANGE(height, 0, 4096);
 
-	if (pgRectangleEqual(&viewport, &device->viewport))
-		return;
+	//if (pgRectangleEqual(&viewport, &device->viewport))
+		//return;
 
 	device->viewport = viewport;
 	pgSetViewportCore(device, left, top, width, height);

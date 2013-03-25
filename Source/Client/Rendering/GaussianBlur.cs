@@ -143,8 +143,8 @@ namespace Lwar.Client.Rendering
 				_data.Data.Mipmap = 0;
 				_data.Data.Size = size.Height;
 				_data.Update();
-				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, size);
 				_renderTargets[2 * i].Bind();
+				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, size);
 				_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
 				_verticalBlurShader.Bind();
 
@@ -156,6 +156,7 @@ namespace Lwar.Client.Rendering
 				_data.Update();
 				_renderTargets[2 * i + 1].Bind();
 				_renderTargets[2*i + 1].Clear(new Color(0, 0, 0, 0));
+				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, size);
 				_textures[2 * i].Bind(0);
 				_horizontalBlurShader.Bind();
 				_fullscreenQuad.Draw();
@@ -166,8 +167,8 @@ namespace Lwar.Client.Rendering
 			--i;
 			--i;
 
-			_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, _sizes[0]);
 			_renderTargets[1].Bind();
+			_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, _sizes[0]);
 			BlendState.Premultiplied.Bind();
 			while (i >= 0)
 			{

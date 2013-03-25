@@ -11,7 +11,7 @@ out vec2 TexCoords;
 void main()
 {
 	gl_Position = vec4(VertexPosition.x * -1, VertexPosition.z, 1, 1);
-	TexCoords = vec2(1 - VertexPosition.x, VertexPosition.y);
+	TexCoords = vec2(1 - VertexTexCoords.x, 1 - VertexTexCoords.y);
 }
 
 ---

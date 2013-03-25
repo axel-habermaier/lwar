@@ -165,24 +165,26 @@ namespace Lwar.Client.Rendering
 				_sunCubeMap.Bind(2);
 				SamplerState.BilinearClampNoMipmaps.Bind(1);
 				var viewport = _graphicsDevice.Viewport;
-				_graphicsDevice.Viewport = new Rectangle(0, 0, 640, 360);
 				_effectTarget.Bind();
+				_graphicsDevice.Viewport = new Rectangle(0, 0, 640, 360);
 
-				_effectTarget.Clear(new Color(128, 0, 0, 0));
+				_effectTarget.Clear(new Color(0, 0, 0, 0));
 				_heatCubeMap.Bind(0);
 
 				_model.Draw();
 
-				//_effectTexture.GenerateMipmaps();
+				
 
 				_renderTarget.Bind();
-				//_blur.Blur(_renderTarget);
+				_blur.Blur(_renderTarget);
+				//_graphicsDevice.Viewport = viewport;
+				//_effectTexture.GenerateMipmaps();
 
 				DepthStencilState.DepthDisabled.Bind();
 				BlendState.Premultiplied.Bind();
 				_renderTarget.Bind();
-				//_graphicsDevice.Viewport = viewport;
-				_effectTexture.Bind(0);
+				_graphicsDevice.Viewport = viewport;
+				//_effectTexture.Bind(0);
 				_quadFS.Bind();
 				//_effectTexture.Bind(0);
 				SamplerState.BilinearClampNoMipmaps.Bind(0);

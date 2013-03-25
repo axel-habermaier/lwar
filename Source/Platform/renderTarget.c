@@ -58,6 +58,7 @@ pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget)
 pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color)
 {
 	PG_ASSERT_NOT_NULL(renderTarget);
+	PG_ASSERT(renderTarget->count > 0, "Cannot clear color of a render target without any color buffers.");
 	PG_ASSERT(renderTarget->device->renderTarget == renderTarget, "Cannot clear color of unbound render target.");
 
 	pgClearColorCore(renderTarget, color);

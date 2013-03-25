@@ -15,7 +15,7 @@ void main()
     float blend = result / 2;
 
     vec4 color = texture(HeatTexture, vec2(blend, 0));
-    Output = vec4(0,1,0,1);// vec4(color.rgb * blend, result / 4);
+    Output = vec4(color.rgb * blend, result / 4);
 }
 
 ---

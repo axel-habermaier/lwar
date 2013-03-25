@@ -49,6 +49,9 @@ pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
 {
 	UINT flags = 0;
+
+	PG_ASSERT(renderTarget->dsPtr != NULL, "Cannot clear depth stencil of a render target without a depth stencil buffer.");
+
 	if (clearDepth)
 		flags |= D3D11_CLEAR_DEPTH;
 	if (clearStencil)
