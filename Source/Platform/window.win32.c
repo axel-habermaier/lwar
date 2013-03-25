@@ -183,7 +183,6 @@ static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc)
 {
 	WNDCLASS wndClass;
 
-	// Register the input window class
 	memset(&wndClass, 0, sizeof(WNDCLASS));
 	wndClass.style = 0;
 	wndClass.lpfnWndProc = wndProc;

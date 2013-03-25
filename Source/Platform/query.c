@@ -42,7 +42,7 @@ pgVoid pgBeginQuery(pgQuery* query)
 pgVoid pgEndQuery(pgQuery* query)
 {
 	PG_ASSERT_NOT_NULL(query);
-	PG_ASSERT(query->type == PG_TIMESTAMP_QUERY || query->isActive, "Non-timestamp uery is currently not active.");
+	PG_ASSERT(query->type == PG_TIMESTAMP_QUERY || query->isActive, "Non-timestamp query is currently not active.");
 
 	pgEndQueryCore(query);
 	query->isActive = PG_FALSE;

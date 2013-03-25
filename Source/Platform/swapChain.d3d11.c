@@ -42,8 +42,7 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	PG_D3DCALL(IDXGIFactory_CreateSwapChain(swapChain->device->factory, (IUnknown*)PG_DEVICE(swapChain), &desc, &swapChain->ptr), 
 		"Failed to create swap chain.");
 
-	// Instruct the runtime to ignore the user pressing ALT+Enter to switch between fullscreen and windowed
-	// mode; this doesn't work reliably
+	// Ignore the user pressing Alt+Enter to switch between fullscreen and windowed mode; this doesn't work reliably
 	IDXGIFactory_MakeWindowAssociation(swapChain->device->factory, window->hwnd, DXGI_MWA_NO_ALT_ENTER);
 
 	pgResizeSwapChain(swapChain, width, height);

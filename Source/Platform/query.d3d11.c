@@ -56,7 +56,6 @@ pgVoid pgGetQueryDataCore(pgQuery* query, pgVoid* data, pgInt32 size)
 		PG_NO_SWITCH_DEFAULT;
 	}
 	
-	
 	PG_ASSERT(hr == S_OK, "Tried to get data from a query that has not yet completed.");
 }
 

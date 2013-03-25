@@ -88,11 +88,8 @@ namespace Pegasus.Framework.Rendering
         ///   Draws a single line of non-layouted, non-cached text.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch that should be used to draw the text.</param>
-        /// <param name="font">
-        ///   The font that was used to layout the text and that should be used
-        ///   to draw the text.
-        /// </param>
-        /// <param name="text">The text that was layouted and should be drawn.</param>
+        /// <param name="font">The font that should be used to draw the text.</param>
+        /// <param name="text">The text that should be drawn.</param>
         /// <param name="color">The color that should be used to draw the text.</param>
         /// <param name="position">The position of the text's top left corner.</param>
         internal static void Draw(SpriteBatch spriteBatch, Font font, string text, Color color, Vector2i position)
