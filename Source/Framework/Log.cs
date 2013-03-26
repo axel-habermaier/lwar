@@ -47,6 +47,7 @@ namespace Pegasus.Framework
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[DebuggerHidden]
+		[StringFormatMethod("message")]
 		public static void Die(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
@@ -65,6 +66,7 @@ namespace Pegasus.Framework
 		///   The message that should be formatted and passed as an argument of the OnError event.
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[StringFormatMethod("message")]
 		public static void Error(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
@@ -80,6 +82,7 @@ namespace Pegasus.Framework
 		///   The message that should be formatted and passed as an argument of the OnWarning event.
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[StringFormatMethod("message")]
 		public static void Warn(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
@@ -95,6 +98,7 @@ namespace Pegasus.Framework
 		///   The message that should be formatted and passed as an argument of the OnInfo event.
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[StringFormatMethod("message")]
 		public static void Info(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
@@ -111,6 +115,7 @@ namespace Pegasus.Framework
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[Conditional("DEBUG")]
+		[StringFormatMethod("message")]
 		public static void DebugInfo(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
@@ -127,6 +132,7 @@ namespace Pegasus.Framework
 		///   The message that should be formatted and passed as an argument of the OnDebugInfo event.
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[StringFormatMethod("message")]
 		public static void DebugInfo(Cvar<bool> enabled, string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNull(enabled, () => enabled);

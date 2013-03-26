@@ -58,7 +58,6 @@ PS_OUTPUT Main(PS_INPUT input)
         color += InputTexture.SampleLevel(InputSampler, (input.TexCoords * Size + offset) / Size, Mipmap) * weights[i];
         color += InputTexture.SampleLevel(InputSampler, (input.TexCoords * Size - offset) / Size, Mipmap) * weights[i];
     }
-
     PS_OUTPUT output;
     output.Color = color;
     return output;

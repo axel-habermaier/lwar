@@ -175,6 +175,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations.cs" />
     <Compile Include="ArrayPool.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Math\Vector3.cs" />
