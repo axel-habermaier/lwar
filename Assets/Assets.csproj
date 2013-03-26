@@ -216,7 +216,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompilationSettings.cs" />
-    <Compile Include="Shaders\BlurShader.cs" />
+    <Compile Include="Shaders\BlurEffect.cs" />
+    <Compile Include="Shaders\FullscreenQuad.cs" />
     <Compile Include="Shaders\SunHeat.cs" />
   </ItemGroup>
   <ItemGroup>

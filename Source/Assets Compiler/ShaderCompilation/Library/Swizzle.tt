@@ -1,0 +1,102 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+namespace Pegasus.AssetsCompiler.ShaderCompilation.Library
+{
+	public partial struct Vector2
+	{<##>
+<# foreach (var swizzle in SwizzleMasks(new[] { "X", "Y" }).Concat(SwizzleMasks(new[] { "R", "G" }))) { #>
+
+		public <#= swizzle.Type #> <#= swizzle.Mask #> 
+		{
+			get { throw new NotImplementedException(); }
+<# if (!swizzle.ReadOnly) { #>
+			set { throw new NotImplementedException(); }
+<# } #>
+		}
+<# } #>
+	}
+
+	public partial struct Vector3
+	{<##>
+<# foreach (var swizzle in SwizzleMasks(new[] { "X", "Y", "Z" }).Concat(SwizzleMasks(new[] { "R", "G", "B" }))) { #>
+
+		public <#= swizzle.Type #> <#= swizzle.Mask #> 
+		{
+			get { throw new NotImplementedException(); }
+<# if (!swizzle.ReadOnly) { #>
+			set { throw new NotImplementedException(); }
+<# } #>
+		}
+<# } #>
+	}
+
+	public partial struct Vector4
+	{<##>
+<# foreach (var swizzle in SwizzleMasks(new[] { "X", "Y", "Z", "W" }).Concat(SwizzleMasks(new[] { "R", "G", "B", "A" }))) { #>
+
+		public <#= swizzle.Type #> <#= swizzle.Mask #> 
+		{
+			get { throw new NotImplementedException(); }
+<# if (!swizzle.ReadOnly) { #>
+			set { throw new NotImplementedException(); }
+<# } #>
+		}
+<# } #>
+	}
+}
+
+<#+
+
+	class Swizzle
+	{
+		public string Mask;
+		public bool ReadOnly;
+		public string Type;
+
+		public Swizzle(IEnumerable<string> mask)
+		{
+			Mask = mask.Aggregate((str, c) => str + c.ToLower());
+			ReadOnly = mask.Distinct().Count() != mask.Count();
+
+			switch (mask.Count())
+			{
+				case 1:
+					Type = "float";
+					break;
+				case 2:
+					Type = "Vector2";
+					break;
+				case 3:
+					Type = "Vector3";
+					break;
+				case 4:
+					Type = "Vector4";
+					break;
+			}
+		}
+	}
+
+	private IEnumerable<Swizzle> SwizzleMasks(IEnumerable<string> operators)
+	{
+		for (var i = 1; i <= operators.Count(); ++i)
+		{
+			foreach (var mask in ComputePermutations(operators, i))
+				yield return new Swizzle(mask);
+		}
+	}
+
+	private IEnumerable<IEnumerable<T>> ComputePermutations<T>(IEnumerable<T> list, int length)
+	{
+		if (length == 1)
+			return list.Select(t => new T[] { t });
+
+		return ComputePermutations(list, length - 1).SelectMany(t => list, (t1, t2) => t1.Concat(new T[] { t2 }));
+	}
+
+#>
