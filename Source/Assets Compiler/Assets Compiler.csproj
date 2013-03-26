@@ -218,7 +218,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Swizzle.tt</DependentUpon>
     </Compile>
+    <Compile Include="ShaderCompilation\MetaModel\ConstantBuffer.cs" />
     <Compile Include="ShaderCompilation\MetaModel\EffectClass.cs" />
+    <Compile Include="ShaderCompilation\MetaModel\ShaderConstant.cs" />
     <Compile Include="ShaderCompilation\MetaModel\ShaderMethod.cs" />
     <Compile Include="ShaderCompilation\MetaModel\ShaderParameter.cs" />
     <Compile Include="ShaderCompilation\ShaderConstantAttribute.cs" />

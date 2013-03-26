@@ -9,14 +9,14 @@ namespace Lwar.Assets.Shaders
 	[Effect]
 	public class SunHeat : Effect
 	{
-		public CubeMap CubeMap;
-		public Texture2D HeatMap;
+		public readonly CubeMap CubeMap;
+		public readonly Texture2D HeatMap;
 
 		[ShaderConstant(ChangeFrequency.PerDrawCall)]
-		public Matrix Rotation1;
+		public readonly Matrix Rotation1;
 
 		[ShaderConstant(ChangeFrequency.PerDrawCall)]
-		public Matrix Rotation2;
+		public readonly Matrix Rotation2;
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,

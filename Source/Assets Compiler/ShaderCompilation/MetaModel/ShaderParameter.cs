@@ -50,9 +50,14 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
 		public SemanticsAttribute Semantics { get; private set; }
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the parameter is a shader output or input.
+		///   Gets a value indicating whether the parameter is a shader output.
 		/// </summary>
 		public bool IsOutput { get; private set; }
+
+		/// <summary>
+		///   Gets the type of the parameter.
+		/// </summary>
+		public TypeInfo Type { get; private set; }
 
 		/// <summary>
 		///   Returns a string that represents the current object.

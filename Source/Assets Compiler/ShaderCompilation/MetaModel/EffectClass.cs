@@ -2,9 +2,11 @@
 
 namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
 {
+	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
 	using Framework;
+	using Library;
 
 	/// <summary>
 	///   Represents a C# class that contains cross-compiled shader code and shader constants.
@@ -28,6 +30,35 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
 
 			if (FragmentShaders.Length == 0)
 				Log.Error("Effect '{0}' must declare at least one fragment shader.", Name);
+
+			Constants = effectType
+				.DeclaredFields
+				.Select(f => new ShaderConstant(f))
+				.ToArray();
+
+			var slot = 0;
+			foreach (var texture in Constants.Where(c => c.IsTexture2D || c.IsCubeMap))
+				texture.Slot = slot++;
+
+			foreach (var property in effectType.DeclaredProperties)
+				Log.Error("Unexpected property '{1}' declared by effect '{0}'.", Name, property.Name);
+
+			var view = new ShaderConstant("View", typeof(Matrix));
+			var projection = new ShaderConstant("Projection", typeof(Matrix));
+			var viewProjection = new ShaderConstant("ViewProjection", typeof(Matrix));
+			var viewportSize = new ShaderConstant("ViewportSize", typeof(Vector2));
+
+			var constantBuffers = new List<ConstantBuffer>
+			{
+				new ConstantBuffer("CameraConstants", 0, new[] { view, projection, viewProjection }),
+				new ConstantBuffer("ViewportConstants", 1, new[] { viewportSize })
+			};
+
+			var count = constantBuffers.Count;
+			foreach (var group in Constants.Where(c => c.IsConstantBufferMember).GroupBy(c => c.ChangeFrequency))
+				constantBuffers.Add(new ConstantBuffer(count++, group.ToArray()));
+
+			ConstantBuffers = constantBuffers.ToArray();
 		}
 
 		/// <summary>
@@ -39,6 +70,16 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
 		///   Gets the fragment shaders defined by the effect.
 		/// </summary>
 		public ShaderMethod[] FragmentShaders { get; private set; }
+
+		/// <summary>
+		///   Gets the constants accessed by the effect.
+		/// </summary>
+		public ShaderConstant[] Constants { get; private set; }
+
+		/// <summary>
+		///   Gets the constant buffers that are accessed by the effect.
+		/// </summary>
+		public ConstantBuffer[] ConstantBuffers { get; private set; }
 
 		/// <summary>
 		///   Gets the name of the effect.
