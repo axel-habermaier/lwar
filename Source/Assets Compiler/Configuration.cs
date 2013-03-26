@@ -63,9 +63,9 @@ namespace Pegasus.AssetsCompiler
 		public static bool CompileHlsl { get; private set; }
 
 		/// <summary>
-		///   Checks the prerequisites of the shader compiler.
+		///   Checks whether the HLSL compiler is available and disable HLSL shader compilation if the compiler cannot be invoked.
 		/// </summary>
-		public static bool CheckShaderCompilationPrerequisites()
+		public static void CheckFxcAvailability()
 		{
 			try
 			{
@@ -95,19 +95,6 @@ namespace Pegasus.AssetsCompiler
 
 				CompileHlsl = false;
 			}
-
-			try
-			{
-				using (var fsi = new ExternalProcess("fsi", "--help"))
-					fsi.Run();
-			}
-			catch (Win32Exception e)
-			{
-				Log.Error("Unable to invoke F# Interactive. Check whether fsi.exe is in your path. The error was: {0}", e.Message);
-				return false;
-			}
-
-			return true;
 		}
 	}
 }

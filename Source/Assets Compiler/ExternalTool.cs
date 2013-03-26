@@ -121,22 +121,6 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Executes the given F# script file.
-		/// </summary>
-		/// <param name="scriptFile">The script file that should be executed.</param>
-		/// <param name="arguments">The command line arguments that should be passed to the script file.</param>
-		public static void Fsi(string scriptFile, string arguments)
-		{
-			using (var fsi = new ExternalProcess("fsi", "{0} {1}", scriptFile, arguments))
-			{
-				var logEntries = fsi.Run();
-
-				foreach (var log in logEntries)
-					log.RaiseLogEvent();
-			}
-		}
-
-		/// <summary>
 		///   Constructs the platform-specific executable path to a tool.
 		/// </summary>
 		/// <param name="platform">The platform for which the tool should be executed.</param>

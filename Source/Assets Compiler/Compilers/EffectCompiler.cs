@@ -4,7 +4,10 @@ namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Reflection;
 	using Assets;
+	using ShaderCompilation;
+	using ShaderCompilation.MetaModel;
 
 	/// <summary>
 	///   Cross-compiles shaders written in C# to HLSL and GLSL.
@@ -18,9 +21,13 @@ namespace Pegasus.AssetsCompiler.Compilers
 		public bool Compile(IEnumerable<Asset> assets)
 		{
 			var files = assets.OfType<CSharpAsset>().Select(cs => cs.SourcePath).ToList();
-			files.Insert(0, Configuration.AssetListPath);
 
-			ExternalTool.Fsi("ShaderCompiler.fsx", String.Join(" ", files.Select(f => String.Format("\"{0}\"", f))));
+			var effects = Configuration.AssetListAssembly
+									   .GetTypes()
+									   .Select(t => t.GetTypeInfo())
+									   .Where(t => t.GetCustomAttribute<EffectAttribute>() != null)
+									   .Select(t => new EffectClass(t))
+									   .ToArray();
 
 			return true;
 		}
