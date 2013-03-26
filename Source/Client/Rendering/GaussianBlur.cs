@@ -145,7 +145,7 @@ namespace Lwar.Client.Rendering
 				_data.Update();
 				_renderTargets[2 * i].Bind();
 				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, size);
-				_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
+				//_renderTargets[2 * i].Clear(new Color(0, 0, 0, 0));
 				_verticalBlurShader.Bind();
 
 				_fullscreenQuad.Draw();
@@ -155,7 +155,7 @@ namespace Lwar.Client.Rendering
 				_data.Data.Size = size.Width;
 				_data.Update();
 				_renderTargets[2 * i + 1].Bind();
-				_renderTargets[2*i + 1].Clear(new Color(0, 0, 0, 0));
+				//_renderTargets[2*i + 1].Clear(new Color(0, 0, 0, 0));
 				_graphicsDevice.Viewport = new Rectangle(Vector2i.Zero, size);
 				_textures[2 * i].Bind(0);
 				_horizontalBlurShader.Bind();

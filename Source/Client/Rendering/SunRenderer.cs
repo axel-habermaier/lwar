@@ -158,6 +158,9 @@ namespace Lwar.Client.Rendering
 				_sunCubeMap.Bind(0);
 				_model.Draw();
 
+				_transform.Data.World = Matrix.CreateScale(1.03f) * Matrix.CreateRotationY(-sun.rot1 * 2) * sun.Transform.Matrix;
+				_transform.Update();
+
 				DepthStencilState.DepthRead.Bind();
 				_heatVS.Bind();
 				_heatFS.Bind();
