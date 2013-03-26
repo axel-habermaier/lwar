@@ -24,7 +24,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 			ExtractShaderCode(asset, out glsl, out hlsl);
 
 			ShaderBytecode byteCode = null;
-			if (CompileHlsl)
+			if (Configuration.CompileHlsl)
 			{
 				byteCode = CompileHlslShader(asset, hlsl, "vs_4_0");
 				CreateInputLayout(buffer, byteCode);
@@ -33,7 +33,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 				buffer.WriteByte(0);
 
 			WriteGlslShader(buffer, glsl);
-			if (CompileHlsl)
+			if (Configuration.CompileHlsl)
 				buffer.Copy(byteCode);
 
 			byteCode.SafeDispose();

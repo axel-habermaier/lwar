@@ -79,6 +79,9 @@ namespace Pegasus.AssetsCompiler
 					clean = true;
 				}
 
+				if (!Configuration.CheckShaderCompilationPrerequisites())
+					return -1;
+
 				var success = true;
 				using (var compilationUnit = new CompilationUnit())
 				{

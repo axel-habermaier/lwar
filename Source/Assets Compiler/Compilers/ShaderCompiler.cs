@@ -18,46 +18,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 		where TShader : Asset
 	{
 		/// <summary>
-		///   Indicates whether HLSL shaders should be compiled.
-		/// </summary>
-		protected static readonly bool CompileHlsl;
-
-		/// <summary>
-		///   Initializes the type.
-		/// </summary>
-		static ShaderCompiler()
-		{
-			try
-			{
-				using (var fxc = new ExternalProcess("fxc", "/?"))
-					fxc.Run();
-				CompileHlsl = true;
-			}
-			catch (Win32Exception e)
-			{
-				if (e.NativeErrorCode == 2)
-				{
-					Log.Warn("HLSL shaders will not be compiled as fxc.exe could not be found.");
-					switch (PlatformInfo.Platform)
-					{
-						case PlatformType.Linux:
-							Log.Warn("HLSL shader compilation is not supported on Linux.");
-							break;
-						case PlatformType.Windows:
-							Log.Warn("fxc.exe must be in the system path.");
-							break;
-						default:
-							throw new InvalidOperationException("Unknown platform.");
-					}
-				}
-				else
-					Log.Error("Unable to invoke the HLSL compiler; HLSL shaders will not be compiled: {0}", e.Message);
-
-				CompileHlsl = false;
-			}
-		}
-
-		/// <summary>
 		///   Extracts the GLSL and HLSL shader code from the given shader asset.
 		/// </summary>
 		/// <param name="asset">The asset from which the shader code should be extracted.</param>

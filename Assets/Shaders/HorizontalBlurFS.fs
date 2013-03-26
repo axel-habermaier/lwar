@@ -10,8 +10,8 @@ layout(std140, binding = 3) uniform Data
     int Mipmap;
 };
 
-uniform float offsets[3] = float[](0.0, 1.3846153846, 3.2307692308);
-uniform float weights[3] = float[](0.2270270270, 0.3162162162, 0.0702702703);
+const float offsets[3] = float[](0.0, 1.3846153846, 3.2307692308);
+const float weights[3] = float[](0.2270270270, 0.3162162162, 0.0702702703);
 
 void main()
 {
