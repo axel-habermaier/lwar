@@ -194,6 +194,7 @@
     <Compile Include="Compilers\AssetCompiler.cs" />
     <Compile Include="AssetWriter.cs" />
     <Compile Include="CompilationUnit.cs" />
+    <Compile Include="Compilers\EffectCompiler.cs" />
     <Compile Include="Compilers\IAssetCompiler.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Assets\CSharpAsset.cs" />
@@ -250,6 +251,9 @@
       <LastGenOutput>Swizzle.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="ShaderCompilation\ShaderCompiler.fsx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
@@ -262,4 +266,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild">
+    <Copy DestinationFolder="$(OutputPath)" SourceFiles="ShaderCompilation/ShaderCompiler.fsx" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

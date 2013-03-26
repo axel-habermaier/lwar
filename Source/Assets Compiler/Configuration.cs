@@ -21,7 +21,7 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   The path to the assets list.
 		/// </summary>
-		private static readonly string AssetListPath = Path.Combine(Environment.CurrentDirectory, "Assets.dll");
+		public static readonly string AssetListPath = Path.Combine(Environment.CurrentDirectory, "Assets.dll");
 
 		/// <summary>
 		///   The asset list assembly.

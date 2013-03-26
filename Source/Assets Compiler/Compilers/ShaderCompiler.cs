@@ -2,7 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.Compilers
 {
-	using System.ComponentModel;
 	using System.IO;
 	using System.Text;
 	using Assets;
