@@ -2,26 +2,21 @@
 
 namespace Lwar.Assets.Shaders
 {
-	using Pegasus.Framework.Math;
-
-	public class SunHeat : VertexShader
+	public class SunHeat : Effect
 	{
-		[Slot(0)]
-		private PerFrameConstants _perFrame = new PerFrameConstants();
+		public Matrix Rotation1 { get; set; }
+		public Matrix Rotation2 { get; set; }
 
-		[Slot(1)]
-		private PerObjectConstants _perObject = new PerObjectConstants();
-
-		public void Main([Position] Vector4 position,
-						 [Normal] Vector4 normal,
-						 [TexCoords(0)] out Vector3 texCoords1,
-						 [TexCoords(1)] out Vector3 texCoords2)
+		[VertexShader]
+		private void Main([Position] Vector4 position,
+						  [Normal] Vector4 normal,
+						  [Position] out Vector4 outPosition,
+						  [TexCoords(0)] out Vector3 texCoords1,
+						  [TexCoords(1)] out Vector3 texCoords2)
 		{
-			//Position = _perObject.World * _perFrame.ViewProjection * position;
-			//texCoords1 = _perObject.Rotation1 * normal;
-			//texCoords2 = _perObject.Rotation2 * normal;
-			texCoords1 = new Vector3();
-			texCoords2=new Vector3();
+			outPosition = World * ViewProjection * position;
+			texCoords1 = Rotation1 * normal;
+			texCoords2 = Rotation2 * normal;
 		}
 	}
 }

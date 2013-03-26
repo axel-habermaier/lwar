@@ -3,42 +3,51 @@
 namespace Lwar.Assets.Shaders
 {
 	using System.Runtime.InteropServices;
-	using Pegasus.Framework.Math;
+	using Pegasus.Framework;
+	using Pegasus.Framework.Platform.Assets;
+	using Pegasus.Framework.Platform.Graphics;
 
-	public class BlurShader : FragmentShader
+	public partial class BlurEffect : Effect
 	{
 		private static readonly float[] Offsets = new[] { 0.0f, 1.3846153846f, 3.2307692308f };
 		private static readonly float[] Weights = new[] { 0.2270270270f, 0.3162162162f, 0.0702702703f };
 
-		[Slot(3)]
-		private BlurConstants _blurConstants = new BlurConstants();
+		public Texture2D Texture;
 
-		[Slot(0)]
-		private Texture _texture = new Texture();
-
-		#region BlurConstants
-
-		private readonly int Mipmap;
-		private readonly int Size;
-
-		#endregion
-
-		public void HorizontalBlur([TexCoords(0)] Vector2 texCoords)
+		[ConstantBuffer]
+		[StructLayout(LayoutKind.Sequential)]
+		private struct Constants
 		{
-			Blur(texCoords, true);
+			public int Size;
+			public int Mipmap;
 		}
 
-		public void VerticalBlur([TexCoords(0)] Vector2 texCoords)
+		[FragmentShader]
+		private void HorizontalBlur([TexCoords(0)] Vector2 texCoords,
+									[Color] out Vector4 color)
 		{
-			Blur(texCoords, false);
+			color = Blur(texCoords, true);
 		}
 
-		private void Blur(Vector2 texCoords, bool horizontal)
+		[FragmentShader]
+		private void VerticalBlur([TexCoords(0)] Vector2 texCoords,
+								  [Color] out Vector4 color)
 		{
-			var size = _blurConstants.Size;
-			var mipmap = _blurConstants.Mipmap;
+			color = Blur(texCoords, false);
+		}
 
-			var color = _texture.Sample(texCoords, mipmap) * Weights[0];
+		[VertexShader]
+		private void VertexShader([Position] Vector4 position,
+								  [TexCoords] Vector2 texCoords,
+								  [Position] out Vector4 outPosition,
+								  [TexCoords] out Vector2 outTexCoords)
+		{
+			FullscreenQuadVertexShader(position, texCoords, out outPosition, out outTexCoords);
+		}
+
+		private Vector4 Blur(Vector2 texCoords, bool horizontal)
+		{
+			var color = Texture.Sample(texCoords, Mipmap) * Weights[0];
 
 			for (var i = 1; i < 3; ++i)
 			{
@@ -48,55 +57,254 @@ namespace Lwar.Assets.Shaders
 				else
 					offset = new Vector2(0, Offsets[i]);
 
-				color += _texture.Sample((texCoords * size + offset) / size, Mipmap) * Weights[i];
-				color += _texture.Sample((texCoords * size - offset) / size, Mipmap) * Weights[i];
+				color += Texture.Sample((texCoords * Size + offset) / Size, Mipmap) * Weights[i];
+				color += Texture.Sample((texCoords * Size - offset) / Size, Mipmap) * Weights[i];
 			}
 
-			Output = color;
+			return color;
+		}
+
+		public void VerticalBlur()
+		{
+			Bind(VertexShader, VerticalBlur);
+		}
+
+		public void HorizontalBlur()
+		{
+			Bind(VertexShader, HorizontalBlur);
 		}
 	}
 
-	public class VertexShader
+	public delegate void VS(Vector4 v, Vector2 t, out Vector4 op, out Vector2 ot);
+
+	public delegate void FS(Vector2 t, out Vector4 c);
+
+	public partial class BlurEffect
 	{
-		public Vector4 Position { private get; set; }
+		public int Size;
+		public int Mipmap;
+
+		private void SilenceWarnings()
+		{
+			Size = 2;
+			Mipmap = 3;
+			var c = new Constants { Mipmap = Mipmap, Size = Size };
+			Texture = null;
+		}
 	}
 
-	[ConstantBuffer]
-	[StructLayout(LayoutKind.Sequential)]
-	public struct PerFrameConstants
+	public class BlurEffectGenerated
 	{
-		public Matrix View;
-		public Matrix Projection;
-		public Matrix ViewProjection;
+		private readonly ConstantBuffer<Constants> _constantBuffer;
+		private readonly FragmentShader _horizontalBlur;
+		private readonly VertexShader _vertexShader;
+		private readonly FragmentShader _verticalBlur;
+
+		public Texture2D Texture;
+
+		public unsafe BlurEffectGenerated(GraphicsDevice graphicsDevice, AssetsManager assets)
+		{
+			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(assets, () => assets);
+
+			_vertexShader = assets.LoadVertexShader("Shaders/Lwar.Assets.Shaders.BlurEffect.VertexShader");
+			_horizontalBlur = assets.LoadFragmentShader("Shaders/Lwar.Assets.Shaders.BlurEffect.HorizontalBlur");
+			_verticalBlur = assets.LoadFragmentShader("Shaders/Lwar.Assets.Shaders.BlurEffect.VerticalBlur");
+
+			_constantBuffer = new ConstantBuffer<Constants>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
+		}
+
+		private void Bind(VertexShader vs, FragmentShader fs)
+		{
+			Texture.Bind(0);
+			//Texture.Sampler.Bind(0);
+
+			var changed = false;
+
+			if (_constantBuffer.Data.Mipmap != Mipmap)
+			{
+				changed = true;
+				_constantBuffer.Data.Mipmap = Mipmap;
+			}
+
+			if (_constantBuffer.Data.Size != Size)
+			{
+				changed = true;
+				_constantBuffer.Data.Size = Size;
+			}
+
+			if (changed)
+				_constantBuffer.Update();
+
+			_constantBuffer.Bind(2);
+			vs.Bind();
+			fs.Bind();
+		}
+
+		public int Size;
+		public int Mipmap;
+
+		[StructLayout(LayoutKind.Sequential, Size = 16)]
+		private struct Constants
+		{
+			public int Size;
+			public int Mipmap;
+		}
 	}
 
-	[ConstantBuffer]
-	[StructLayout(LayoutKind.Sequential)]
-	public struct PerObjectConstants
+	
+	public struct Vector4
 	{
-		public Matrix World;
-		public Matrix Rotation1;
-		public Matrix Rotation2;
+		public float W;
+		public float X, Y, Z;
+
+		public Vector4(float f, float f1, int i, int i1)
+		{
+			throw new NotImplementedException();
+		}
+
+		public static Vector4 operator *(Vector4 v, float f)
+		{
+			return new Vector4();
+		}
+
+		public static Vector4 operator /(Vector4 v, float f)
+		{
+			return new Vector4();
+		}
+
+		public static Vector4 operator +(Vector4 v, Vector4 q)
+		{
+			return new Vector4();
+		}
+	}
+
+	public struct Vector2
+	{
+		public float X, Y;
+
+		public Vector2(float x, float y)
+			: this()
+		{
+		}
+
+		public static Vector2 operator *(Vector2 v, float f)
+		{
+			return new Vector2();
+		}
+
+		public static Vector2 operator /(Vector2 v, float f)
+		{
+			return new Vector2();
+		}
+
+		public static Vector2 operator +(Vector2 v, Vector2 q)
+		{
+			return new Vector2();
+		}
+
+		public static Vector2 operator -(Vector2 v, Vector2 q)
+		{
+			return new Vector2();
+		}
+	}
+
+	public struct Vector3
+	{
+		public float X, Y, Z;
+
+		public Vector3(float x, float y)
+			: this()
+		{
+		}
+
+		public static implicit operator Vector3(Vector4 v)
+		{
+			return new Vector3();
+		}
+
+		public static Vector3 operator *(Vector3 v, float f)
+		{
+			return new Vector3();
+		}
+
+		public static Vector3 operator /(Vector3 v, float f)
+		{
+			return new Vector3();
+		}
+
+		public static Vector3 operator +(Vector3 v, Vector3 q)
+		{
+			return new Vector3();
+		}
+
+		public static Vector3 operator -(Vector3 v, Vector3 q)
+		{
+			return new Vector3();
+		}
+	}
+
+	public struct Matrix
+	{
+		public static Vector4 operator *(Matrix m, Vector4 v)
+		{
+			return new Vector4();
+		}
+
+		public static Matrix operator *(Matrix m, Matrix v)
+		{
+			return new Matrix();
+		}
+
+		public static Vector4 operator *(Matrix m, Vector3 v)
+		{
+			return new Vector4();
+		}
+	}
+
+	public class VertexShaderAttribute : Attribute
+	{
+	}
+
+	public class FragmentShaderAttribute : Attribute
+	{
 	}
 
 	#region Infrastructure
 
-	public struct Texture
+	public static class Texture2DExtensions
 	{
-		public Vector4 Sample(Vector2 texCoord)
+		public static Vector4 Sample(this Texture2D texture, Vector2 texCoord)
 		{
 			return new Vector4();
 		}
 
-		public Vector4 Sample(Vector2 texCoord, int mipmap)
+		public static Vector4 Sample(this Texture2D texture, Vector2 texCoord, int mipmap)
 		{
 			return new Vector4();
 		}
 	}
 
-	public class FragmentShader
+	public class Effect
 	{
-		public Vector4 Output { private get; set; }
+		protected Matrix Projection { get; private set; }
+		protected Matrix View { get; private set; }
+		protected Matrix ViewProjection { get; private set; }
+		protected Matrix World { get; private set; }
+
+		protected void FullscreenQuadVertexShader(Vector4 position,
+												  Vector2 texCoords,
+												  out Vector4 outPosition,
+												  out Vector2 outTexCoords)
+		{
+			outPosition = new Vector4(position.X * -1, position.Z, 1, 1);
+			outTexCoords = new Vector2(1 - texCoords.X, texCoords.Y);
+		}
+
+		protected void Bind(VS vs, FS fs)
+		{
+		}
+
 	}
 
 	[AttributeUsage(AttributeTargets.Struct)]
@@ -117,7 +325,26 @@ namespace Lwar.Assets.Shaders
 	[AttributeUsage(AttributeTargets.Parameter)]
 	public class TexCoordsAttribute : Attribute
 	{
+		public TexCoordsAttribute()
+		{
+		}
+
 		public TexCoordsAttribute(int slot)
+		{
+			Slot = slot;
+		}
+
+		public int Slot { get; private set; }
+	}
+
+	[AttributeUsage(AttributeTargets.Parameter)]
+	public class ColorAttribute : Attribute
+	{
+		public ColorAttribute()
+		{
+		}
+
+		public ColorAttribute(int slot)
 		{
 			Slot = slot;
 		}
@@ -134,14 +361,6 @@ namespace Lwar.Assets.Shaders
 		}
 
 		public int Slot { get; private set; }
-	}
-
-	[ConstantBuffer]
-	[StructLayout(LayoutKind.Sequential)]
-	public struct BlurConstants
-	{
-		public int Size;
-		public int Mipmap;
 	}
 
 	#endregion

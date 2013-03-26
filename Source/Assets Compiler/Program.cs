@@ -80,7 +80,7 @@ namespace Pegasus.AssetsCompiler
 				}
 
 				var success = true;
-				using (var compilationUnit = CompilationUnit.Create())
+				using (var compilationUnit = new CompilationUnit())
 				{
 					if (clean)
 						compilationUnit.Clean();

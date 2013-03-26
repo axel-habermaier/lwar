@@ -62,7 +62,7 @@ struct VS_OUTPUT
 VS_OUTPUT Main(VS_INPUT input)
 {
 	VS_OUTPUT output;
-
+	
 	float4 position = mul(World, input.Position);
 	output.Position = mul(ViewProjection, position);
 

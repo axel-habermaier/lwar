@@ -8,13 +8,14 @@ namespace Pegasus.AssetsCompiler
 	using System.Reflection;
 	using System.Xml.Linq;
 	using Assets;
+	using Assets.Attributes;
 	using Compilers;
 	using Framework;
 
 	/// <summary>
 	///   Represents a compilation unit that compiles all assets into a binary format.
 	/// </summary>
-	public abstract class CompilationUnit : DisposableObject
+	public class CompilationUnit : DisposableObject
 	{
 		/// <summary>
 		///   The list of asset compilers that is used to compile the assets.
@@ -37,6 +38,15 @@ namespace Pegasus.AssetsCompiler
 								.Select(Activator.CreateInstance)
 								.Cast<IAssetCompiler>()
 								.ToArray();
+		}
+
+		/// <summary>
+		///   Creates a new instance.
+		/// </summary>
+		public CompilationUnit()
+		{
+			AddSpecialAssets();
+			AddRemainingAssets();
 		}
 
 		/// <summary>
@@ -88,25 +98,6 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Creates a new instance.
-		/// </summary>
-		/// <returns></returns>
-		internal static CompilationUnit Create()
-		{
-			var assembly = Assembly.LoadFile(Configuration.AssetListPath);
-			var compilationUnit = assembly.GetTypes()
-										  .Where(t => t.IsClass && t.BaseType == typeof(CompilationUnit))
-										  .Select(Activator.CreateInstance)
-										  .OfType<CompilationUnit>()
-										  .Single();
-
-			compilationUnit.AddSpecialAssets();
-			compilationUnit.AddRemainingAssets();
-
-			return compilationUnit;
-		}
-
-		/// <summary>
 		///   Adds the remaining assets to the compilation unit that do not require any special compilation settings.
 		/// </summary>
 		private void AddRemainingAssets()
@@ -140,13 +131,20 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   Adds assets to the compilation unit that require special compilation settings.
 		/// </summary>
-		protected abstract void AddSpecialAssets();
+		private void AddSpecialAssets()
+		{
+			var assembly = Assembly.LoadFile(Configuration.AssetListPath);
+			var assets = assembly.GetCustomAttributes<AssetAttribute>();
+
+			foreach (var asset in assets)
+				Add(asset.Asset);
+		}
 
 		/// <summary>
 		///   Adds a compiler to the compilation unit.
 		/// </summary>
 		/// <param name="asset">The compiler that should be added.</param>
-		protected void Add(Asset asset)
+		private void Add(Asset asset)
 		{
 			Assert.ArgumentNotNull(asset, () => asset);
 			Assert.That(_assets.All(a => a.RelativePath != asset.RelativePath), "The asset has already been added.");

@@ -185,6 +185,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Attributes\AssetAttribute.cs" />
+    <Compile Include="Assets\Attributes\CubeMapAttribute.cs" />
+    <Compile Include="Assets\Attributes\Texture2DAttribute.cs" />
     <Compile Include="Assets\FragmentShaderAsset.cs" />
     <Compile Include="Assets\TextureAsset.cs" />
     <Compile Include="Assets\VertexShaderAsset.cs" />

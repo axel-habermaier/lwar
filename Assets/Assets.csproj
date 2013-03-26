@@ -215,7 +215,7 @@
     <Content Include="Textures\SunHeat.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LwarCompilationUnit.cs" />
+    <Compile Include="CompilationSettings.cs" />
     <Compile Include="Shaders\BlurShader.cs" />
     <Compile Include="Shaders\SunHeat.cs" />
   </ItemGroup>
