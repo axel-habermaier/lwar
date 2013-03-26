@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
+	using System.Reflection;
 
 	/// <summary>
 	///   Provides access to the asset compiler configuration.
@@ -17,7 +18,12 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   The path to the assets list.
 		/// </summary>
-		public static readonly string AssetListPath = Path.Combine(Environment.CurrentDirectory, "Assets.dll");
+		private static readonly string AssetListPath = Path.Combine(Environment.CurrentDirectory, "Assets.dll");
+
+		/// <summary>
+		///   The asset list assembly.
+		/// </summary>
+		private static Assembly _assetListAssembly;
 
 		/// <summary>
 		///   The path to the assets project.
@@ -33,5 +39,19 @@ namespace Pegasus.AssetsCompiler
 		///   The path where the compiled assets should be stored.
 		/// </summary>
 		public static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "Assets");
+
+		/// <summary>
+		///   Get the asset list assembly.
+		/// </summary>
+		public static Assembly AssetListAssembly
+		{
+			get
+			{
+				if (_assetListAssembly == null)
+					_assetListAssembly = Assembly.LoadFile(AssetListPath);
+
+				return _assetListAssembly;
+			}
+		}
 	}
 }

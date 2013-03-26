@@ -133,8 +133,7 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		private void AddSpecialAssets()
 		{
-			var assembly = Assembly.LoadFile(Configuration.AssetListPath);
-			var assets = assembly.GetCustomAttributes<AssetAttribute>();
+			var assets = Configuration.AssetListAssembly.GetCustomAttributes<AssetAttribute>();
 
 			foreach (var asset in assets)
 				Add(asset.Asset);
