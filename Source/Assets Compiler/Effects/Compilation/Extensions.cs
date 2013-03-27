@@ -94,6 +94,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Gets the constant value of the expression.
 		/// </summary>
+		/// <typeparam name="T">The type of the constant value that should be returned.</typeparam>
 		/// <param name="expression">The expression whose constant value should be returned.</param>
 		/// <param name="context">The context of the compilation.</param>
 		public static T GetConstantValue<T>(this Expression expression, CompilationContext context)
@@ -106,6 +107,23 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				return (T)resolved.ConstantValue;
 
 			return default(T);
+		}
+
+		/// <summary>
+		///   Gets the constant values of the array expression.
+		/// </summary>
+		/// <param name="expression">The expression whose constant value should be returned.</param>
+		/// <param name="context">The context of the compilation.</param>
+		public static object[] GetConstantValues(this Expression expression, CompilationContext context)
+		{
+			Assert.ArgumentNotNull(expression, () => expression);
+			Assert.ArgumentNotNull(context, () => context);
+
+			var resolved = context.Resolve<ArrayCreateResolveResult>(expression);
+			if (resolved.InitializerElements.All(element => element.IsCompileTimeConstant))
+				return resolved.InitializerElements.Select(element => element.ConstantValue).ToArray();
+
+			return null;
 		}
 
 		/// <summary>
@@ -140,34 +158,38 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Assert.ArgumentNotNull(type, () => type);
 
-			if (type.FullName == typeof(bool).FullName)
+			var typeName = type.FullName;
+			if (type.FullName.EndsWith("[]"))
+				typeName = typeName.Substring(0, typeName.Length - 2);
+
+			if (typeName == typeof(bool).FullName)
 				return DataType.Boolean;
 
-			if (type.FullName == typeof(int).FullName)
+			if (typeName == typeof(int).FullName)
 				return DataType.Integer;
 
-			if (type.FullName == typeof(float).FullName)
+			if (typeName == typeof(float).FullName)
 				return DataType.Float;
 
-			if (type.FullName == typeof(Vector2).FullName)
+			if (typeName == typeof(Vector2).FullName)
 				return DataType.Vector2;
 
-			if (type.FullName == typeof(Vector3).FullName)
+			if (typeName == typeof(Vector3).FullName)
 				return DataType.Vector3;
 
-			if (type.FullName == typeof(Vector4).FullName)
+			if (typeName == typeof(Vector4).FullName)
 				return DataType.Vector4;
 
-			if (type.FullName == typeof(Matrix).FullName)
+			if (typeName == typeof(Matrix).FullName)
 				return DataType.Matrix;
 
-			if (type.FullName == typeof(Texture2D).FullName)
+			if (typeName == typeof(Texture2D).FullName)
 				return DataType.Texture2D;
 
-			if (type.FullName == typeof(CubeMap).FullName)
+			if (typeName == typeof(CubeMap).FullName)
 				return DataType.CubeMap;
 
-			if (type.FullName == typeof(Matrix).FullName)
+			if (typeName == typeof(Matrix).FullName)
 				return DataType.Matrix;
 
 			return DataType.Unknown;

@@ -5,6 +5,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.Linq;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
 	///   Represents a field of an effect class that is part of a constant buffer.
@@ -60,6 +61,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public DataType Type { get; private set; }
 
 		/// <summary>
+		///   Gets a value indicating whether the literal is an array.
+		/// </summary>
+		public bool IsArray { get; private set; }
+
+		/// <summary>
 		///   Gets the change frequency of the constant.
 		/// </summary>
 		public ChangeFrequency ChangeFrequency { get; private set; }
@@ -80,6 +86,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Name = _variable.Name;
 			Type = _field.GetDataType(context);
+			IsArray = _field.GetType(context).Kind == TypeKind.Array;
 
 			if (Type == DataType.Unknown)
 				context.Error(_variable,
@@ -87,7 +94,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 							  Name, _field.GetType(context).FullName);
 
 			if (_field.Modifiers != (Modifiers.Public | Modifiers.Readonly))
-				context.Error(_variable, "Shader constant '{0}' should be a public, non-static, and readonly.", Name);
+				context.Error(_variable, "Shader constant '{0}' must be public, non-static, and readonly.", Name);
 
 			if (!_variable.Initializer.IsNull)
 				context.Error(_variable.Initializer, "Shader constant '{0}' cannot be initialized.", Name);

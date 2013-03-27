@@ -85,9 +85,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ShaderMethod[] FragmentShaders { get; private set; }
 
 		/// <summary>
-		///   Gets the constants accessed by the effect.
+		///   Gets the shader constants accessed by the effect.
 		/// </summary>
 		public ShaderConstant[] Constants { get; private set; }
+
+		/// <summary>
+		///   Gets the compile-time constant literals accessed by the effect.
+		/// </summary>
+		public ShaderLiteral[] Literals { get; private set; }
 
 		/// <summary>
 		///   Gets the constant buffers that are accessed by the effect.
@@ -138,6 +143,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="context">The context of the compilation.</param>
 		private void GetShaderLiterals(CompilationContext context)
 		{
+			var literals = from field in _type.Descendants.OfType<FieldDeclaration>()
+						   where !field.HasAttribute<ShaderConstantAttribute>(context)
+						   let dataType = field.GetDataType(context)
+						   where dataType != DataType.Texture2D && dataType != DataType.CubeMap
+						   from variable in field.Descendants.OfType<VariableInitializer>()
+						   select new ShaderLiteral(field, variable);
+
+			Literals = literals.ToArray();
+
+			foreach (var literal in Literals)
+				literal.Compile(context);
 		}
 
 		/// <summary>
@@ -146,13 +162,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="context">The context of the compilation.</param>
 		private void GetShaderConstants(CompilationContext context)
 		{
-			var shaderConstants = from field in _type.Descendants.OfType<FieldDeclaration>()
-								  let attribute = field.GetAttribute<ShaderConstantAttribute>(context)
-								  where attribute != null
-								  from variable in field.Descendants.OfType<VariableInitializer>()
-								  select new ShaderConstant(field, variable);
+			var constants = from field in _type.Descendants.OfType<FieldDeclaration>()
+							let attribute = field.GetAttribute<ShaderConstantAttribute>(context)
+							where attribute != null
+							from variable in field.Descendants.OfType<VariableInitializer>()
+							select new ShaderConstant(field, variable);
 
-			Constants = shaderConstants.ToArray();
+			Constants = constants.ToArray();
 
 			foreach (var constant in Constants)
 				constant.Compile(context);
