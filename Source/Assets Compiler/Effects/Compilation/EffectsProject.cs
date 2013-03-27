@@ -30,7 +30,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="assets">The C# assets that should be added to the project.</param>
-		public EffectsProject(IEnumerable<CSharpAsset> assets)
+		public EffectsProject(CSharpAsset[] assets)
 		{
 			Assert.ArgumentNotNull(assets, () => assets);
 

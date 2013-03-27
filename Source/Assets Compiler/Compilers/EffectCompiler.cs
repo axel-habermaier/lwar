@@ -21,7 +21,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		{
 			Log.Info("Cross-compiling effects to GLSL and HLSL...");
 
-			var project = new EffectsProject(assets.OfType<CSharpAsset>());
+			var project = new EffectsProject(assets.OfType<CSharpAsset>().ToArray());
 			return project.Compile();
 		}
 	}

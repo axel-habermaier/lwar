@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.TypeSystem;
+	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
@@ -52,6 +53,40 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public void Compile(CompilationContext context)
 		{
 			PrintParserErrorsAndWarnings(context);
+
+			var effects = SyntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()
+									.Where(t => t.ClassType == ClassType.Class)
+									.Where(t =>
+										{
+											var resolved = (TypeResolveResult)context.Resolver.Resolve(t);
+
+											var hasBaseType = resolved.Type.DirectBaseTypes
+																	  .Any(b => b.FullName == typeof(Effect).FullName);
+
+											var hasAttribute = t.Attributes
+																.SelectMany(s => s.Attributes)
+																.Select(a => context.Resolver.Resolve(a))
+																.Any(a => a.Type.FullName == typeof(EffectAttribute).FullName);
+
+											if (hasBaseType && !hasAttribute)
+												context.Warn(t.NameToken.StartLocation, t.NameToken.EndLocation,
+															 "Expected attribute '{0}' to be declared on effect '{1}'.",
+															 typeof(EffectAttribute).FullName, resolved.Type.FullName);
+
+											if (!hasBaseType && hasAttribute)
+												context.Warn(t.NameToken.StartLocation, t.NameToken.EndLocation,
+															 "Expected effect '{0}' to have base type '{1}'.",
+															 resolved.Type.FullName, typeof(Effect).FullName);
+
+											return hasBaseType || hasAttribute;
+										})
+									.Select(t => new EffectClass(t));
+
+			foreach (var effect in effects)
+			{
+				context.Effect = effect;
+				effect.Compile(context);
+			}
 		}
 
 		/// <summary>
@@ -65,30 +100,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				switch (error.ErrorType)
 				{
 					default:
-						context.Error(error.Message, error.Region.Begin, error.Region.End);
+						context.Error(error.Region.Begin, error.Region.End, error.Message);
 						break;
 					case ErrorType.Warning:
-						context.Warn(error.Message, error.Region.Begin, error.Region.End);
+						context.Warn(error.Region.Begin, error.Region.End, error.Message);
 						break;
 				}
 			}
 		}
-
-		//private static void Compile(ICompilation compilation, CSharpUnresolvedFile file, SyntaxTree syntaxTree)
-		//{
-		//	var resolver = new CSharpAstResolver(compilation, syntaxTree, file);
-		//	var effects = syntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()
-		//							.Where(t => t.ClassType == ClassType.Class);
-		//	// && t.BaseTypes.Any(b => b.ToTypeReference().Resolve(resolver.TypeResolveContext).));
-
-		//	if (!effects.Any())
-		//		return;
-
-		//	var resolved = resolver.Resolve(effects.First()) as TypeResolveResult;
-		//	var baseType = resolved.Type.DirectBaseTypes.First();
-		//	var s = baseType.FullName == typeof(Effect).FullName;
-
-		//	return;
-		//}
 	}
 }

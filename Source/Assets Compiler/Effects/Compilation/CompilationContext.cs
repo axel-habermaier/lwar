@@ -37,10 +37,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="message">The error message.</param>
 		/// <param name="begin">The beginning of the error location in the source file.</param>
 		/// <param name="end">The end of the error location in the source file.</param>
-		public void Error(string message, TextLocation begin, TextLocation end)
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[StringFormatMethod("message")]
+		public void Error(TextLocation begin, TextLocation end, string message, params object[] arguments)
 		{
 			HasErrors = true;
-			Output(s => Log.Error(s), "error", message, begin, end);
+			Output(s => Log.Error(s), "error", String.Format(message, arguments), begin, end);
 		}
 
 		/// <summary>
@@ -49,9 +51,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="message">The message of the warning.</param>
 		/// <param name="begin">The beginning of the warning location in the source file.</param>
 		/// <param name="end">The end of the warning location in the source file.</param>
-		public void Warn(string message, TextLocation begin, TextLocation end)
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[StringFormatMethod("message")]
+		public void Warn(TextLocation begin, TextLocation end, string message, params object[] arguments)
 		{
-			Output(s => Log.Warn(s), "warning", message, begin, end);
+			Output(s => Log.Warn(s), "warning", String.Format(message, arguments), begin, end);
 		}
 
 		/// <summary>
