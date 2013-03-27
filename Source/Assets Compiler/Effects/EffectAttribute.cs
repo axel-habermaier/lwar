@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation
+namespace Pegasus.AssetsCompiler.Effects
 {
 	using Framework;
 
 	/// <summary>
 	///   Must be applied to classes that contain methods that should be cross-compiled to GPU shader code.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	[MeansImplicitUse(ImplicitUseKindFlags.Assign | ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.WithMembers)]
 	[BaseTypeRequired(typeof(Effect))]
 	public class EffectAttribute : Attribute

@@ -1,24 +1,19 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation.Library
+namespace Pegasus.AssetsCompiler.Effects.Math
 {
 	using System.Runtime.InteropServices;
 
+	/// <summary>
+	///   Represents a two-component vector.
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public partial struct Vector3
+	public partial struct Vector2
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public Vector3(float x, float y, float z)
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		///   Implicitely converts a four-component vector to a three-component one.
-		/// </summary>
-		public static implicit operator Vector3(Vector4 v)
+		public Vector2(float x, float y)
 		{
 			throw new NotImplementedException();
 		}
@@ -26,7 +21,7 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.Library
 		/// <summary>
 		///   Multiplies a vector by a scalar value.
 		/// </summary>
-		public static Vector3 operator *(Vector3 v, float f)
+		public static Vector2 operator *(Vector2 v, float f)
 		{
 			throw new NotImplementedException();
 		}
@@ -34,7 +29,7 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.Library
 		/// <summary>
 		///   Multiplies a vector by a scalar value.
 		/// </summary>
-		public static Vector3 operator *(float f, Vector3 v)
+		public static Vector2 operator *(float f, Vector2 v)
 		{
 			throw new NotImplementedException();
 		}
@@ -42,7 +37,7 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.Library
 		/// <summary>
 		///   Divides a vector by a scalar value.
 		/// </summary>
-		public static Vector3 operator /(Vector3 v, float f)
+		public static Vector2 operator /(Vector2 v, float f)
 		{
 			throw new NotImplementedException();
 		}
@@ -50,7 +45,7 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.Library
 		/// <summary>
 		///   Adds two vectors.
 		/// </summary>
-		public static Vector3 operator +(Vector3 v1, Vector3 v2)
+		public static Vector2 operator +(Vector2 v1, Vector2 v2)
 		{
 			throw new NotImplementedException();
 		}
@@ -58,7 +53,7 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.Library
 		/// <summary>
 		///   Subtracts a vector from another.
 		/// </summary>
-		public static Vector3 operator -(Vector3 v1, Vector3 v2)
+		public static Vector2 operator -(Vector2 v1, Vector2 v2)
 		{
 			throw new NotImplementedException();
 		}

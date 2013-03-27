@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
+namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
 	using Framework;
-	using Library;
+	using Math;
 
 	/// <summary>
 	///   Represents a C# class that contains cross-compiled shader code and shader constants.
 	/// </summary>
-	public class EffectClass
+	internal class EffectClass
 	{
 		/// <summary>
 		///   Initializes a new instance.

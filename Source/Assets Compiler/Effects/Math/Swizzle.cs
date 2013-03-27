@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation.Library
+namespace Pegasus.AssetsCompiler.Effects.Math
 {
 	public partial struct Vector2
 	{

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
+namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Linq;
 	using System.Reflection;
@@ -11,7 +11,7 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
 	/// <summary>
 	///   Represents a C# method that is cross-compiled to GLSL or HLSL.
 	/// </summary>
-	public class ShaderMethod
+	internal class ShaderMethod
 	{
 		/// <summary>
 		///   Initializes a new instance.

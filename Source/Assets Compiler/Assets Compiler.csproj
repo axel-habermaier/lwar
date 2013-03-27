@@ -210,6 +210,9 @@
     <Compile Include="Assets\CubeMapAsset.cs" />
     <Compile Include="Compilers\CubeMapCompiler.cs" />
     <Compile Include="DirectDrawSurface.cs" />
+    <Compile Include="Effects\Compilation\CompilationContext.cs" />
+    <Compile Include="Effects\Compilation\EffectFile.cs" />
+    <Compile Include="Effects\Compilation\EffectsProject.cs" />
     <Compile Include="ExternalTool.cs" />
     <Compile Include="Assets\FontAsset.cs" />
     <Compile Include="Compilers\FontCompiler.cs" />
@@ -221,33 +224,33 @@
     <Compile Include="Assets\Texture2DAsset.cs" />
     <Compile Include="Compilers\Texture2DCompiler.cs" />
     <Compile Include="Compilers\VertexShaderCompiler.cs" />
-    <Compile Include="ShaderCompilation\ChangeFrequency.cs" />
-    <Compile Include="ShaderCompilation\Library\Swizzle.cs">
+    <Compile Include="Effects\ChangeFrequency.cs" />
+    <Compile Include="Effects\Math\Swizzle.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Swizzle.tt</DependentUpon>
     </Compile>
-    <Compile Include="ShaderCompilation\MetaModel\ConstantBuffer.cs" />
-    <Compile Include="ShaderCompilation\MetaModel\EffectClass.cs" />
-    <Compile Include="ShaderCompilation\MetaModel\ShaderConstant.cs" />
-    <Compile Include="ShaderCompilation\MetaModel\ShaderMethod.cs" />
-    <Compile Include="ShaderCompilation\MetaModel\ShaderParameter.cs" />
-    <Compile Include="ShaderCompilation\ShaderConstantAttribute.cs" />
-    <Compile Include="ShaderCompilation\Effect.cs" />
-    <Compile Include="ShaderCompilation\EffectAttribute.cs" />
-    <Compile Include="ShaderCompilation\FragmentShaderAttribute.cs" />
-    <Compile Include="ShaderCompilation\Library\CubeMap.cs" />
-    <Compile Include="ShaderCompilation\Library\Matrix.cs" />
-    <Compile Include="ShaderCompilation\Library\Texture2D.cs" />
-    <Compile Include="ShaderCompilation\Library\Vector2.cs" />
-    <Compile Include="ShaderCompilation\Library\Vector3.cs" />
-    <Compile Include="ShaderCompilation\Library\Vector4.cs" />
-    <Compile Include="ShaderCompilation\Semantics\ColorAttribute.cs" />
-    <Compile Include="ShaderCompilation\Semantics\NormalAttribute.cs" />
-    <Compile Include="ShaderCompilation\Semantics\PositionAttribute.cs" />
-    <Compile Include="ShaderCompilation\Semantics\SemanticsAttribute.cs" />
-    <Compile Include="ShaderCompilation\Semantics\TexCoordsAttribute.cs" />
-    <Compile Include="ShaderCompilation\VertexShaderAttribute.cs" />
+    <Compile Include="Effects\Compilation\ConstantBuffer.cs" />
+    <Compile Include="Effects\Compilation\EffectClass.cs" />
+    <Compile Include="Effects\Compilation\ShaderConstant.cs" />
+    <Compile Include="Effects\Compilation\ShaderMethod.cs" />
+    <Compile Include="Effects\Compilation\ShaderParameter.cs" />
+    <Compile Include="Effects\ShaderConstantAttribute.cs" />
+    <Compile Include="Effects\Effect.cs" />
+    <Compile Include="Effects\EffectAttribute.cs" />
+    <Compile Include="Effects\FragmentShaderAttribute.cs" />
+    <Compile Include="Effects\CubeMap.cs" />
+    <Compile Include="Effects\Math\Matrix.cs" />
+    <Compile Include="Effects\Texture2D.cs" />
+    <Compile Include="Effects\Math\Vector2.cs" />
+    <Compile Include="Effects\Math\Vector3.cs" />
+    <Compile Include="Effects\Math\Vector4.cs" />
+    <Compile Include="Effects\Semantics\ColorAttribute.cs" />
+    <Compile Include="Effects\Semantics\NormalAttribute.cs" />
+    <Compile Include="Effects\Semantics\PositionAttribute.cs" />
+    <Compile Include="Effects\Semantics\SemanticsAttribute.cs" />
+    <Compile Include="Effects\Semantics\TexCoordsAttribute.cs" />
+    <Compile Include="Effects\VertexShaderAttribute.cs" />
     <Compile Include="XmlParser.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -260,14 +263,12 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ShaderCompilation\Library\Swizzle.tt">
+    <None Include="Effects\Math\Swizzle.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Swizzle.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ShaderCompilation\MetaModel\Visitors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

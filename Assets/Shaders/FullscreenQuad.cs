@@ -2,7 +2,8 @@
 
 namespace Lwar.Assets.Shaders
 {
-	using Pegasus.AssetsCompiler.ShaderCompilation.Library;
+	using Pegasus.AssetsCompiler.Effects.Math;
+	using Vector4 = Pegasus.AssetsCompiler.Effects.Math.Vector4;
 
 	public static class FullscreenQuad
 	{

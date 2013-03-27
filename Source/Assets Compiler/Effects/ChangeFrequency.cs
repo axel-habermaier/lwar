@@ -1,6 +1,6 @@
 using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation
+namespace Pegasus.AssetsCompiler.Effects
 {
 	/// <summary>
 	///   Indicates how often a value that is part of a constant buffer changes.

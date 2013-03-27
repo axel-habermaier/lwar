@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation
+namespace Pegasus.AssetsCompiler.Effects
 {
 	/// <summary>
 	///   When applied to a field, indicates that the field is part of a constant buffer.

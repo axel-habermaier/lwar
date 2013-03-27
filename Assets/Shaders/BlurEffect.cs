@@ -2,9 +2,9 @@
 
 namespace Lwar.Assets.Shaders
 {
-	using Pegasus.AssetsCompiler.ShaderCompilation;
-	using Pegasus.AssetsCompiler.ShaderCompilation.Library;
-	using Pegasus.AssetsCompiler.ShaderCompilation.Semantics;
+	using Pegasus.AssetsCompiler.Effects;
+	using Pegasus.AssetsCompiler.Effects.Math;
+	using Pegasus.AssetsCompiler.Effects.Semantics;
 
 	[Effect]
 	public class BlurEffect : Effect

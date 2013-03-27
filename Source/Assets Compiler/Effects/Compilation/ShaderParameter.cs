@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
+namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Linq;
 	using System.Reflection;
@@ -10,7 +10,7 @@ namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
 	/// <summary>
 	///   Represents a parameter of a shader.
 	/// </summary>
-	public class ShaderParameter
+	internal class ShaderParameter
 	{
 		/// <summary>
 		///   Initializes a new instance.

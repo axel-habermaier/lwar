@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
+namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using Framework;
 
 	/// <summary>
 	///   Represents a constant buffer that groups shader constants.
 	/// </summary>
-	public class ConstantBuffer
+	internal class ConstantBuffer
 	{
 		/// <summary>
 		///   Initializes a new instance.

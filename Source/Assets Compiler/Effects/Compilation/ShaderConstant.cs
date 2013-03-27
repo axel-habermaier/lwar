@@ -1,15 +1,14 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation.MetaModel
+namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Reflection;
 	using Framework;
-	using Library;
 
 	/// <summary>
 	///   Represents a field of an effect class that acts as a shader constant.
 	/// </summary>
-	public class ShaderConstant
+	internal class ShaderConstant
 	{
 		/// <summary>
 		///   Initializes a new instance.

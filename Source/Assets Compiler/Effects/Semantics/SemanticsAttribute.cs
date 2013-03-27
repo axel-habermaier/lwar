@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation.Semantics
+namespace Pegasus.AssetsCompiler.Effects.Semantics
 {
 	/// <summary>
 	///   Describes the semantics of a shader argument or return value.

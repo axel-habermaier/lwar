@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.ShaderCompilation
+namespace Pegasus.AssetsCompiler.Effects
 {
-	using Library;
+	using Math;
 
 	/// <summary>
 	///   Represents an effect that provides shaders for drawing operations.
