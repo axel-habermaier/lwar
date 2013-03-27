@@ -166,6 +166,15 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.NRefactory">
+      <HintPath>..\..\Dependencies\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>..\..\Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\Dependencies\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>..\..\Dependencies\SharpDX.dll</HintPath>
     </Reference>
@@ -255,6 +264,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Swizzle.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ShaderCompilation\MetaModel\Visitors\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
