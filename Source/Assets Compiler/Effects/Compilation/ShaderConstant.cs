@@ -2,61 +2,51 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
-	using System.Reflection;
+	using System.Linq;
 	using Framework;
+	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
-	///   Represents a field of an effect class that acts as a shader constant.
+	///   Represents a field of an effect class that is part of a constant buffer.
 	/// </summary>
 	internal class ShaderConstant
 	{
 		/// <summary>
+		///   The declaration of the field that represents the constant.
+		/// </summary>
+		private readonly FieldDeclaration _field;
+
+		/// <summary>
+		///   The declaration of the field variable that represents the constant.
+		/// </summary>
+		private readonly VariableInitializer _variable;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="field">The field of the effect class that represents the shader constant.</param>
-		public ShaderConstant(FieldInfo field)
+		/// <param name="field">The declaration of the field that represents the constant.</param>
+		/// <param name="variable">The declaration of the field variable that represents the constant.</param>
+		public ShaderConstant(FieldDeclaration field, VariableInitializer variable)
 		{
 			Assert.ArgumentNotNull(field, () => field);
+			Assert.ArgumentNotNull(variable, () => variable);
 
-			Name = field.Name;
-			FullName = String.Format("{0}:{1}", field.DeclaringType.FullName, field.Name);
-			Type = field.FieldType.GetTypeInfo();
-
-			var attribute = field.GetCustomAttribute<ShaderConstantAttribute>();
-			if (attribute != null)
-			{
-				ChangeFrequency = attribute.ChangeFrequency;
-				IsConstantBufferMember = true;
-			}
-			else
-				ChangeFrequency = ChangeFrequency.PerDrawCall;
-
-			if (ChangeFrequency == ChangeFrequency.Unknown)
-				Log.Error("'{0}' is not a valid value for the change frequency of shader constant '{1}'.", ChangeFrequency, FullName);
-
-			if (field.IsStatic || field.IsLiteral)
-				Value = field.GetValue(null);
-
-			if (Type.IsArray && Value == null)
-				Log.Error("A value must be assigned to shader constant '{0}'.", FullName);
-
-			if (!field.IsLiteral && !field.IsInitOnly)
-				Log.Error("Shader constant '{0}' must be constant or read-only.", FullName);
+			_field = field;
+			_variable = variable;
 		}
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="name">The name of the constant.</param>
-		/// <param name="type">The type of the constant.</param>
-		public ShaderConstant(string name, Type type)
+		/// <param name="name">The name of the shader constant.</param>
+		/// <param name="type">The type of the shader constant.</param>
+		public ShaderConstant(string name, DataType type)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
-			Assert.ArgumentNotNull(type, () => type);
+			Assert.ArgumentInRange(type, () => type);
 
 			Name = name;
-			FullName = name;
-			Type = type.GetTypeInfo();
+			Type = type;
 		}
 
 		/// <summary>
@@ -65,40 +55,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public string Name { get; private set; }
 
 		/// <summary>
-		///   Gets the full name of the shader constant.
-		/// </summary>
-		public string FullName { get; private set; }
-
-		/// <summary>
-		///   Gets the value of the constant or null if no value is defined.
-		/// </summary>
-		public object Value { get; private set; }
-
-		/// <summary>
-		///   Gets or sets the slot the constant is bound to.
-		/// </summary>
-		public int Slot { get; set; }
-
-		/// <summary>
 		///   Gets the type of the constant.
 		/// </summary>
-		public TypeInfo Type { get; private set; }
-
-		/// <summary>
-		///   Gets a value indicating whether the constant is a 2D texture.
-		/// </summary>
-		public bool IsTexture2D
-		{
-			get { return Type == typeof(Texture2D); }
-		}
-
-		/// <summary>
-		///   Gets a value indicating whether the constant is a cubemap
-		/// </summary>
-		public bool IsCubeMap
-		{
-			get { return Type == typeof(CubeMap); }
-		}
+		public DataType Type { get; private set; }
 
 		/// <summary>
 		///   Gets the change frequency of the constant.
@@ -106,16 +65,39 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ChangeFrequency ChangeFrequency { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating that the constant should be a member of a constant buffer.
-		/// </summary>
-		public bool IsConstantBufferMember { get; private set; }
-
-		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{
-			return string.Format("Name: {0}, Type: {1}, Value: {2}", Name, Type, Value);
+			return string.Format("{0} : {1} [{2}]", Name, Type, ChangeFrequency);
+		}
+
+		/// <summary>
+		///   Compiles the shader constant.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		public void Compile(CompilationContext context)
+		{
+			Name = _variable.Name;
+			Type = _field.GetDataType(context);
+
+			if (Type == DataType.Unknown)
+				context.Error(_variable,
+							  "Shader constant '{0}' is declared with unknown or unsupported data type '{1}'.",
+							  Name, _field.GetType(context).FullName);
+
+			if (_field.Modifiers != (Modifiers.Public | Modifiers.Readonly))
+				context.Error(_variable, "Shader constant '{0}' should be a public, non-static, and readonly.", Name);
+
+			if (!_variable.Initializer.IsNull)
+				context.Error(_variable.Initializer, "Shader constant '{0}' cannot be initialized.", Name);
+
+			var attribute = _field.GetAttribute<ShaderConstantAttribute>(context);
+			var argument = attribute.Arguments.Single();
+			ChangeFrequency = argument.GetConstantValue<ChangeFrequency>(context);
+
+			if (ChangeFrequency == ChangeFrequency.Unknown)
+				context.Error(_variable, "Change frequency of shader constant '{0}' must be specified.", Name);
 		}
 	}
 }

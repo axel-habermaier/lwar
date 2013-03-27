@@ -211,6 +211,10 @@
     <Compile Include="Compilers\CubeMapCompiler.cs" />
     <Compile Include="DirectDrawSurface.cs" />
     <Compile Include="Effects\Compilation\CompilationContext.cs" />
+    <Compile Include="Effects\Compilation\DataType.cs" />
+    <Compile Include="Effects\Compilation\Extensions.cs" />
+    <Compile Include="Effects\Compilation\ShaderTexture.cs" />
+    <Compile Include="Effects\Compilation\ShaderLiteral.cs" />
     <Compile Include="Effects\Compilation\EffectFile.cs" />
     <Compile Include="Effects\Compilation\EffectsProject.cs" />
     <Compile Include="ExternalTool.cs" />

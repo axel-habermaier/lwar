@@ -8,7 +8,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.TypeSystem;
-	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
@@ -54,38 +53,29 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			PrintParserErrorsAndWarnings(context);
 
-			var effects = SyntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()
-									.Where(t => t.ClassType == ClassType.Class)
-									.Where(t =>
-										{
-											var resolved = (TypeResolveResult)context.Resolver.Resolve(t);
-
-											var hasBaseType = resolved.Type.DirectBaseTypes
-																	  .Any(b => b.FullName == typeof(Effect).FullName);
-
-											var hasAttribute = t.Attributes
-																.SelectMany(s => s.Attributes)
-																.Select(a => context.Resolver.Resolve(a))
-																.Any(a => a.Type.FullName == typeof(EffectAttribute).FullName);
-
-											if (hasBaseType && !hasAttribute)
-												context.Warn(t.NameToken.StartLocation, t.NameToken.EndLocation,
-															 "Expected attribute '{0}' to be declared on effect '{1}'.",
-															 typeof(EffectAttribute).FullName, resolved.Type.FullName);
-
-											if (!hasBaseType && hasAttribute)
-												context.Warn(t.NameToken.StartLocation, t.NameToken.EndLocation,
-															 "Expected effect '{0}' to have base type '{1}'.",
-															 resolved.Type.FullName, typeof(Effect).FullName);
-
-											return hasBaseType || hasAttribute;
-										})
-									.Select(t => new EffectClass(t));
+			var effects = from type in SyntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()
+						  where type.ClassType == ClassType.Class
+						  let hasBaseType = type.IsDerivedFrom<Effect>(context)
+						  let hasAttribute = type.HasAttribute<EffectAttribute>(context)
+						  where hasBaseType || hasAttribute
+						  select new { Type = type, HasAttribute = hasAttribute, HasBaseType = hasBaseType };
 
 			foreach (var effect in effects)
 			{
-				context.Effect = effect;
-				effect.Compile(context);
+				var type = effect.Type;
+
+				if (effect.HasBaseType && !effect.HasAttribute)
+					context.Warn(type.NameToken,
+								 "Expected attribute '{0}' to be declared on effect '{1}'.",
+								 typeof(EffectAttribute).FullName, type.GetFullName(context));
+
+				if (!effect.HasBaseType && effect.HasAttribute)
+					context.Warn(type.NameToken,
+								 "Expected effect '{0}' to have base type '{1}'.",
+								 type.GetFullName(context), typeof(Effect).FullName);
+
+				context.Effect = new EffectClass(effect.Type);
+				context.Effect.Compile(context);
 			}
 		}
 

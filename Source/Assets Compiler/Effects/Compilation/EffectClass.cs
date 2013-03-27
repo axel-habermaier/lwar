@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Linq;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 
@@ -13,7 +14,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   The declaration of the class that represents the effect.
 		/// </summary>
-		private TypeDeclaration _type;
+		private readonly TypeDeclaration _type;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -127,6 +128,54 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="context">The context of the compilation.</param>
 		public void Compile(CompilationContext context)
 		{
+			GetShaderLiterals(context);
+			GetShaderConstants(context);
+		}
+
+		/// <summary>
+		///   Gets the shader literals from the effect.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		private void GetShaderLiterals(CompilationContext context)
+		{
+		}
+
+		/// <summary>
+		///   Gets the shader constants from the effect.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		private void GetShaderConstants(CompilationContext context)
+		{
+			var shaderConstants = from field in _type.Descendants.OfType<FieldDeclaration>()
+								  let attribute = field.GetAttribute<ShaderConstantAttribute>(context)
+								  where attribute != null
+								  from variable in field.Descendants.OfType<VariableInitializer>()
+								  select new ShaderConstant(field, variable);
+
+			Constants = shaderConstants.ToArray();
+
+			foreach (var constant in Constants)
+				constant.Compile(context);
+
+			var view = new ShaderConstant("View", DataType.Matrix);
+			var projection = new ShaderConstant("Projection", DataType.Matrix);
+			var viewProjection = new ShaderConstant("ViewProjection", DataType.Matrix);
+			var viewportSize = new ShaderConstant("ViewportSize", DataType.Vector2);
+
+			var constantBuffers = new[]
+			{
+				new ConstantBuffer(0, new[] { view, projection, viewProjection }, true),
+				new ConstantBuffer(1, new[] { viewportSize }, true)
+			};
+
+			var count = constantBuffers.Length;
+			ConstantBuffers = Constants.GroupBy(constant => constant.ChangeFrequency)
+									   .Select(group => new ConstantBuffer(count++, group.ToArray()))
+									   .Union(constantBuffers)
+									   .ToArray();
+
+			var defaultConstants = new[] { view, projection, viewProjection, viewportSize };
+			Constants = Constants.Union(defaultConstants).ToArray();
 		}
 	}
 }

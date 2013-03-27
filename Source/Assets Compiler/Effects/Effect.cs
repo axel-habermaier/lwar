@@ -7,46 +7,31 @@ namespace Pegasus.AssetsCompiler.Effects
 	/// <summary>
 	///   Represents an effect that provides shaders for drawing operations.
 	/// </summary>
-	public class Effect
+	public abstract class Effect
 	{
 		/// <summary>
-		///   Gets the projection matrix that should be used to project the geometry onto the screen.
+		///   The projection matrix that should be used to project the geometry onto the screen.
 		/// </summary>
-		protected Matrix Projection
-		{
-			get { throw new NotSupportedException(); }
-		}
+		protected readonly Matrix Projection;
 
 		/// <summary>
-		///   Gets the view matrix of the camera that should be used to render the geometry.
+		///   The view matrix of the camera that should be used to render the geometry.
 		/// </summary>
-		protected Matrix View
-		{
-			get { throw new NotSupportedException(); }
-		}
+		protected readonly Matrix View;
 
 		/// <summary>
-		///   Gets the view matrix multiplied with the projection matrix.
+		///   The view matrix multiplied with the projection matrix.
 		/// </summary>
-		protected Matrix ViewProjection
-		{
-			get { throw new NotSupportedException(); }
-		}
+		protected readonly Matrix ViewProjection;
 
 		/// <summary>
-		///   Gets the world matrix that should be used to transform the geometry.
+		///   The size of the viewport.
 		/// </summary>
-		protected Matrix World
-		{
-			get { throw new NotSupportedException(); }
-		}
+		protected readonly Vector2 ViewportSize;
 
 		/// <summary>
-		///   Gets the size of the viewport.
+		///   The world matrix that should be used to transform the geometry.
 		/// </summary>
-		protected Vector2 ViewportSize
-		{
-			get { throw new NotSupportedException(); }
-		}
+		protected readonly Matrix World;
 	}
 }

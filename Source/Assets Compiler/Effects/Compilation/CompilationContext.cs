@@ -4,7 +4,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using Framework;
 	using ICSharpCode.NRefactory;
+	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using ICSharpCode.NRefactory.Semantics;
 
 	/// <summary>
 	///   Represents the context of an effect compilation.
@@ -30,6 +32,51 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Gets or sets the C# AST resolver that should be used to resolve symbols of the effect file currently being compiled.
 		/// </summary>
 		public CSharpAstResolver Resolver { get; set; }
+
+		/// <summary>
+		///   Resolves the semantics of the given node.
+		/// </summary>
+		/// <typeparam name="T">The type of the returned result.</typeparam>
+		/// <param name="node">The node that should be resolved.</param>
+		public T Resolve<T>(AstNode node)
+			where T : ResolveResult
+		{
+			return Resolver.Resolve(node) as T;
+		}
+
+		/// <summary>
+		///   Resolves the semantics of the given node.
+		/// </summary>
+		/// <typeparam name="T">The type of the returned result.</typeparam>
+		/// <param name="node">The node that should be resolved.</param>
+		public ResolveResult Resolve(AstNode node)
+		{
+			return Resolver.Resolve(node);
+		}
+
+		/// <summary>
+		///   Logs a compilation error.
+		/// </summary>
+		/// <param name="message">The error message.</param>
+		/// <param name="node">The node for which the error should be reported.</param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[StringFormatMethod("message")]
+		public void Error(AstNode node, string message, params object[] arguments)
+		{
+			Error(node.StartLocation, node.EndLocation, message, arguments);
+		}
+
+		/// <summary>
+		///   Logs a compilation warning.
+		/// </summary>
+		/// <param name="message">The message of the warning.</param>
+		/// <param name="node">The node for which the warning should be raised.</param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[StringFormatMethod("message")]
+		public void Warn(AstNode node, string message, params object[] arguments)
+		{
+			Warn(node.StartLocation, node.EndLocation, message, arguments);
+		}
 
 		/// <summary>
 		///   Logs a compilation error.
@@ -77,8 +124,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			else
 				location = String.Format("({0},{1},{2},{3})", begin.Line, begin.Column, end.Line, end.Column);
 
+			var file = File.Asset.RelativePath.Replace("/", "\\");
 			message = message.Replace("{", "{{").Replace("}", "}}");
-			var logMessage = String.Format("{0}{1}: {2}: {3}", File.Asset.RelativePath, location, type, message);
+			var logMessage = String.Format("{0}{1}: {2}: {3}", file, location, type, message);
 
 			log(logMessage);
 		}
