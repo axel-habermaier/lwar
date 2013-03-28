@@ -63,10 +63,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="assets">The assets that should be loaded into the project.</param>
 		private void LoadAssets(IEnumerable<CSharpAsset> assets)
 		{
-			_files = assets.Select(a => new EffectFile(a)).ToArray();
-
-			foreach (var file in _files)
-				_project = _project.AddOrUpdateFiles(file.UnresolvedFile);
+			_files = assets.Select(asset =>
+				{
+					var file = new EffectFile(asset);
+					_project = _project.AddOrUpdateFiles(file.UnresolvedFile);
+					return file;
+				}).ToArray();
 		}
 
 		/// <summary>

@@ -140,5 +140,13 @@ namespace Pegasus.AssetsCompiler.Assets
 			if (!Directory.Exists(path))
 				Directory.CreateDirectory(path);
 		}
+
+		/// <summary>
+		///   Writes a hash of the source asset to disk.
+		/// </summary>
+		internal void WriteHash()
+		{
+			Hash.Compute(SourcePath).WriteTo(HashPath);
+		}
 	}
 }

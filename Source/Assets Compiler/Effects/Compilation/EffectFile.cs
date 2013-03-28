@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.IO;
 	using System.Linq;
 	using Assets;
+	using Compilers;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.TypeSystem;
@@ -52,7 +53,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="context">The context of the compilation.</param>
 		public IEnumerable<EffectClass> Compile(CompilationContext context)
 		{
-			Log.Info("Cross-compiling '{0}'...", context.File.Asset.RelativePath);
+			var oldHash = Hash.FromFile(Asset.HashPath);
+			var newHash = Hash.Compute(Asset.SourcePath);
+
+			//if (oldHash == newHash)
+			//{
+			//	CompilationAction.Skip.Describe(Asset);
+			//	yield break;
+			//}
+
+			CompilationAction.Process.Describe(Asset);
+			Asset.WriteHash();
 			PrintParserErrorsAndWarnings(context);
 
 			var effectClasses = from type in SyntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()

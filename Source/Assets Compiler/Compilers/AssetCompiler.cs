@@ -45,7 +45,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 					File.Copy(asset.TempPath, asset.TargetPath, true);
 					return true;
 				case CompilationAction.Process:
-					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
+					asset.WriteHash();
 					using (var writer = new AssetWriter(asset.TempPath, asset.TargetPath))
 						return CompileAndLogExceptions(asset, writer.Writer);
 				default:
