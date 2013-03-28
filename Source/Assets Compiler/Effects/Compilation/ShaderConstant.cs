@@ -10,15 +10,15 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a field of an effect class that is part of a constant buffer.
 	/// </summary>
-	internal class ShaderConstant : ShaderDataObject
+	internal class ShaderConstant : ShaderDataObject<FieldDeclaration>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="field">The declaration of the field that represents the constant.</param>
+		/// <param name="declaration">The declaration of the field that represents the constant.</param>
 		/// <param name="variable">The declaration of the field variable that represents the constant.</param>
-		public ShaderConstant(FieldDeclaration field, VariableInitializer variable)
-			: base(field, variable)
+		public ShaderConstant(FieldDeclaration declaration, VariableInitializer variable)
+			: base(declaration, variable)
 		{
 		}
 
@@ -56,21 +56,21 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public void Compile(CompilationContext context)
 		{
 			Name = Variable.Name;
-			Type = Field.GetDataType(context);
-			IsArray = Field.GetType(context).Kind == TypeKind.Array;
+			Type = Declaration.GetDataType(context);
+			IsArray = Declaration.GetType(context).Kind == TypeKind.Array;
 
 			if (Type == DataType.Unknown)
 				context.Error(Variable,
 							  "Shader constant '{0}' is declared with unknown or unsupported data type '{1}'.",
-							  Name, Field.GetType(context).FullName);
+							  Name, Declaration.GetType(context).FullName);
 
-			if (Field.Modifiers != (Modifiers.Public | Modifiers.Readonly))
+			if (Declaration.Modifiers != (Modifiers.Public | Modifiers.Readonly))
 				context.Error(Variable, "Shader constant '{0}' must be public, non-static, and readonly.", Name);
 
 			if (!Variable.Initializer.IsNull)
 				context.Error(Variable.Initializer, "Shader constant '{0}' cannot be initialized.", Name);
 
-			var attribute = Field.GetAttribute<ShaderConstantAttribute>(context);
+			var attribute = Declaration.GetAttribute<ShaderConstantAttribute>(context);
 			var argument = attribute.Arguments.Single();
 			ChangeFrequency = argument.GetConstantValue<ChangeFrequency>(context);
 

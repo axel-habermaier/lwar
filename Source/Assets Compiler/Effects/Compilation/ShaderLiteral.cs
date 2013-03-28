@@ -8,15 +8,15 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a field of an effect class that acts as compile-time constant literal shader value.
 	/// </summary>
-	internal class ShaderLiteral : ShaderDataObject
+	internal class ShaderLiteral : ShaderDataObject<FieldDeclaration>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="field">The declaration of the field that represents the literal.</param>
+		/// <param name="declaration">The declaration of the field that represents the literal.</param>
 		/// <param name="variable">The declaration of the field variable that represents the literal.</param>
-		public ShaderLiteral(FieldDeclaration field, VariableInitializer variable)
-			: base(field, variable)
+		public ShaderLiteral(FieldDeclaration declaration, VariableInitializer variable)
+			: base(declaration, variable)
 		{
 		}
 
@@ -40,17 +40,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public void Compile(CompilationContext context)
 		{
 			Name = Variable.Name;
-			Type = Field.GetDataType(context);
-			IsArray = Field.GetType(context).Kind == TypeKind.Array;
+			Type = Declaration.GetDataType(context);
+			IsArray = Declaration.GetType(context).Kind == TypeKind.Array;
 
 			if (Type == DataType.Unknown)
 				context.Error(Variable,
 							  "Shader literal '{0}' is declared with unknown or unsupported data type '{1}'.",
-							  Name, Field.GetType(context).FullName);
+							  Name, Declaration.GetType(context).FullName);
 
-			if (Field.Modifiers != (Modifiers.Private | Modifiers.Static | Modifiers.Readonly) &&
-				Field.Modifiers != (Modifiers.Private | Modifiers.Static | Modifiers.Const))
-				context.Error(Variable, "Shader literal '{0}' must be private, static, and either readonly or constant.", Name);
+			if (Declaration.Modifiers != (Modifiers.Private | Modifiers.Static | Modifiers.Readonly) &&
+				Declaration.Modifiers != (Modifiers.Private | Modifiers.Const))
+				context.Error(Variable, "Shader literal '{0}' must be private and either static, readonly or constant.", Name);
 
 			if (Variable.Initializer.IsNull)
 				context.Error(Variable.Initializer, "Shader literal '{0}' must be initialized.", Name);

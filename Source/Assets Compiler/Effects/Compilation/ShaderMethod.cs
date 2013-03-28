@@ -2,11 +2,11 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Collections.Generic;
 	using System.Linq;
-	using System.Reflection;
 	using Framework;
 	using Framework.Platform.Graphics;
-	using Semantics;
+	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
 	///   Represents a C# method that is cross-compiled to GLSL or HLSL.
@@ -14,41 +14,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	internal class ShaderMethod
 	{
 		/// <summary>
+		///   The declaration of the method that represents the shader.
+		/// </summary>
+		private readonly MethodDeclaration _method;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="method">The method that represents the shader.</param>
-		public ShaderMethod(MethodInfo method)
+		/// <param name="method">The declaration of the method that represents the shader.</param>
+		/// <param name="type">The type of the shader.</param>
+		public ShaderMethod(MethodDeclaration method, ShaderType type)
 		{
 			Assert.ArgumentNotNull(method, () => method);
-			Name = String.Format("{0}.{1}", method.DeclaringType.FullName, method.Name);
+			Assert.ArgumentInRange(type, () => type);
 
-			if (method.GetCustomAttribute<VertexShaderAttribute>() != null)
-				Type = ShaderType.VertexShader;
-			else if (method.GetCustomAttribute<FragmentShaderAttribute>() != null)
-				Type = ShaderType.FragmentShader;
-			else
-				Log.Error("'{0}': Unknown shader type.", Name);
-
-			if (method.ReturnType != typeof(void))
-				Log.Error("'{0}': Expected return type 'void'.");
-
-			Inputs = GetParameters(method, p => !p.IsOut);
-			Outputs = GetParameters(method, p => p.IsOut);
-
-			switch (Type)
-			{
-				case ShaderType.VertexShader:
-					if (Outputs.All(o => o.Semantics.GetType() != typeof(PositionAttribute)))
-						Log.Error("Vertex shader '{0}' must declare an output parameter with the 'Position' semantics.", Name);
-					break;
-				case ShaderType.FragmentShader:
-					if (Outputs.All(o => o.Semantics.GetType() != typeof(ColorAttribute)))
-						Log.Error("Fragment shader '{0}' must declare an output parameter with the 'Color' semantics.", Name);
-					break;
-				default:
-					Log.Die("Unsupported shader type.");
-					break;
-			}
+			_method = method;
+			Type = type;
 		}
 
 		/// <summary>
@@ -76,21 +57,82 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		public override string ToString()
 		{
-			return String.Format("Name: {0}, Type: {1}", Name, Type);
+			return String.Format("{0} ({1})", Name, Type);
 		}
 
 		/// <summary>
-		///   Gets the parameters defined by the given method.
+		///   Compiles the shader method.
 		/// </summary>
-		/// <param name="method">The method that represents the shader.</param>
-		/// <param name="predicate">The predicate that should be used to determine whether the parameter should be returned.</param>
-		private static ShaderParameter[] GetParameters(MethodInfo method, Func<ParameterInfo, bool> predicate)
+		/// <param name="context">The context of the compilation.</param>
+		public void Compile(CompilationContext context)
 		{
-			return method
-				.GetParameters()
-				.Where(predicate)
-				.Select(p => new ShaderParameter(p))
-				.ToArray();
+			Name = _method.Name;
+			GetParameters(context);
+
+			if (_method.GetType(context).FullName != typeof(void).FullName)
+				context.Error(_method, "Shader method '{0}' must have return type 'void'.", Name);
+
+			if (_method.TypeParameters.Any() || _method.Modifiers != Modifiers.Public)
+				context.Error(_method, "Shader '{0}' must be a public, non-static, non-partial, non-abstract, non-sealed, " +
+									   "non-virtual method without any type arguments.", Name);
+
+			switch (Type)
+			{
+				case ShaderType.VertexShader:
+					if (Outputs.All(o => o.Semantics != DataSemantics.Position))
+						context.Error(_method, "Vertex shader '{0}' must declare an output parameter with the 'Position' semantics.", Name);
+					break;
+				case ShaderType.FragmentShader:
+					if (Outputs.All(o => o.Semantics != DataSemantics.Color0))
+						context.Error(_method, "Fragment shader '{0}' must declare an output parameter with the 'Color(0)' semantics.", Name);
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported shader type.");
+			}
+
+			CheckDistinctSemantics(context, Inputs, "input");
+			CheckDistinctSemantics(context, Outputs, "output");
+		}
+
+		/// <summary>
+		///   Gets the parameters of the shader.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		private void GetParameters(CompilationContext context)
+		{
+			var parameters = _method.Descendants.OfType<ParameterDeclaration>()
+									.Select(parameter =>
+										{
+											var shaderParameter = new ShaderParameter(parameter);
+											shaderParameter.Compile(context);
+											return shaderParameter;
+										})
+									.ToArray();
+
+			Inputs = parameters.Where(parameter => !parameter.IsOutput).ToArray();
+			Outputs = parameters.Where(parameter => parameter.IsOutput).ToArray();
+		}
+
+		/// <summary>
+		///   Checks whether the given parameters are declared with distinct semantics.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		/// <param name="parameters">The parameters that should be checked.</param>
+		/// <param name="direction">A description of the parameter direction.</param>
+		private void CheckDistinctSemantics(CompilationContext context, IEnumerable<ShaderParameter> parameters, string direction)
+		{
+			var groups = parameters.GroupBy(parameter => parameter.Semantics).Where(group => group.Count() > 1);
+			foreach (var semanticsGroup in groups)
+			{
+				var semantics = semanticsGroup.First().Semantics.ToString();
+				var lastCharacter = semantics[semantics.Length - 1];
+
+				if (Char.IsDigit(lastCharacter))
+					semantics = String.Format("{0}({1})", semantics.Substring(0, semantics.Length - 1), lastCharacter);
+
+				context.Error(_method, "Shader '{0}' declares multiple {2} parameters with the '{1}' semantics.",
+							  Name, semantics, direction);
+			}
 		}
 	}
 }

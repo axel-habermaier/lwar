@@ -211,6 +211,7 @@
     <Compile Include="Compilers\CubeMapCompiler.cs" />
     <Compile Include="DirectDrawSurface.cs" />
     <Compile Include="Effects\Compilation\CompilationContext.cs" />
+    <Compile Include="Effects\Compilation\DataSemantics.cs" />
     <Compile Include="Effects\Compilation\DataType.cs" />
     <Compile Include="Effects\Compilation\Extensions.cs" />
     <Compile Include="Effects\Compilation\ShaderTexture.cs" />
@@ -253,7 +254,6 @@
     <Compile Include="Effects\Semantics\ColorAttribute.cs" />
     <Compile Include="Effects\Semantics\NormalAttribute.cs" />
     <Compile Include="Effects\Semantics\PositionAttribute.cs" />
-    <Compile Include="Effects\Semantics\SemanticsAttribute.cs" />
     <Compile Include="Effects\Semantics\TexCoordsAttribute.cs" />
     <Compile Include="Effects\VertexShaderAttribute.cs" />
     <Compile Include="XmlParser.cs" />

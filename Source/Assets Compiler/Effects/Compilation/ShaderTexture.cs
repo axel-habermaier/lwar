@@ -9,16 +9,16 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a field of an effect class that allows access to a texture or cubemap.
 	/// </summary>
-	internal class ShaderTexture : ShaderDataObject
+	internal class ShaderTexture : ShaderDataObject<FieldDeclaration>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="field">The declaration of the field that represents the texture.</param>
+		/// <param name="declaration">The declaration of the field that represents the texture.</param>
 		/// <param name="variable">The declaration of the field variable that represents the texture.</param>
 		/// <param name="slot">The slot the texture object should be bound to.</param>
-		public ShaderTexture(FieldDeclaration field, VariableInitializer variable, int slot)
-			: base(field, variable)
+		public ShaderTexture(FieldDeclaration declaration, VariableInitializer variable, int slot)
+			: base(declaration, variable)
 		{
 			Assert.ArgumentInRange(slot, () => slot, 0, 16);
 			Slot = slot;
@@ -44,18 +44,18 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public void Compile(CompilationContext context)
 		{
 			Name = Variable.Name;
-			Type = Field.GetDataType(context);
+			Type = Declaration.GetDataType(context);
 
-			if (Field.GetType(context).Kind == TypeKind.Array)
+			if (Declaration.GetType(context).Kind == TypeKind.Array)
 				context.Error(Variable, "Shader texture object '{0}' cannot be an array type.", Name);
 
-			if (Field.Modifiers != (Modifiers.Public | Modifiers.Readonly))
+			if (Declaration.Modifiers != (Modifiers.Public | Modifiers.Readonly))
 				context.Error(Variable, "Shader texture object '{0}' must be public, non-static, and readonly.", Name);
 
 			if (!Variable.Initializer.IsNull)
 				context.Error(Variable.Initializer, "Shader texture object '{0}' cannot be initialized.", Name);
 
-			if (Field.HasAttribute<ShaderConstantAttribute>(context))
+			if (Declaration.HasAttribute<ShaderConstantAttribute>(context))
 				context.Error(Variable, "Shader texture object '{0}' cannot be part of a constant buffer.", Name);
 		}
 	}

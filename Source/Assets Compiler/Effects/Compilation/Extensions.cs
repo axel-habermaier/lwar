@@ -40,17 +40,44 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Gets all declared attributes of the given type.
 		/// </summary>
 		/// <typeparam name="T">The type of the attributes.</typeparam>
+		/// <param name="attributes">The attributes that should be checked.</param>
+		/// <param name="context">The context of the compilation.</param>
+		public static IEnumerable<CSharpAttribute> GetAttributes<T>(this AstNodeCollection<AttributeSection> attributes,
+																	CompilationContext context)
+			where T : Attribute
+		{
+			Assert.ArgumentNotNull(attributes, () => attributes);
+			Assert.ArgumentNotNull(context, () => context);
+
+			return attributes
+				.SelectMany(s => s.Attributes)
+				.Where(a => context.Resolve(a).Type.FullName == typeof(T).FullName);
+		}
+
+		/// <summary>
+		///   Gets all declared attributes of the given type.
+		/// </summary>
+		/// <typeparam name="T">The type of the attributes.</typeparam>
+		/// <param name="attributes">The attributes that should be checked.</param>
+		/// <param name="context">The context of the compilation.</param>
+		public static CSharpAttribute GetAttribute<T>(this AstNodeCollection<AttributeSection> attributes,
+													  CompilationContext context)
+			where T : Attribute
+		{
+			return attributes.GetAttributes<T>(context).SingleOrDefault();
+		}
+
+		/// <summary>
+		///   Gets all declared attributes of the given type.
+		/// </summary>
+		/// <typeparam name="T">The type of the attributes.</typeparam>
 		/// <param name="declaration">The entity declaration that should be checked.</param>
 		/// <param name="context">The context of the compilation.</param>
 		public static IEnumerable<CSharpAttribute> GetAttributes<T>(this EntityDeclaration declaration, CompilationContext context)
 			where T : Attribute
 		{
 			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(context, () => context);
-
-			return declaration.Attributes
-							  .SelectMany(s => s.Attributes)
-							  .Where(a => context.Resolve(a).Type.FullName == typeof(T).FullName);
+			return declaration.Attributes.GetAttributes<T>(context);
 		}
 
 		/// <summary>

@@ -8,12 +8,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a data object that can be read by a shader.
 	/// </summary>
-	internal abstract class ShaderDataObject
+	internal abstract class ShaderDataObject<T>
+		where T : AstNode
 	{
 		/// <summary>
 		///   The declaration of the field that represents the shader data object.
 		/// </summary>
-		protected readonly FieldDeclaration Field;
+		protected readonly T Declaration;
 
 		/// <summary>
 		///   The declaration of the field variable that represents the shader data object.
@@ -23,15 +24,25 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="field">The declaration of the field that represents the shader data object.</param>
+		/// <param name="declaration">The declaration of the field that represents the shader data object.</param>
 		/// <param name="variable">The declaration of the field variable that represents the shader data object.</param>
-		protected ShaderDataObject(FieldDeclaration field, VariableInitializer variable)
+		protected ShaderDataObject(T declaration, VariableInitializer variable)
 		{
-			Assert.ArgumentNotNull(field, () => field);
+			Assert.ArgumentNotNull(declaration, () => declaration);
 			Assert.ArgumentNotNull(variable, () => variable);
 
-			Field = field;
+			Declaration = declaration;
 			Variable = variable;
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="declaration">The declaration of the field that represents the shader data object.</param>
+		protected ShaderDataObject(T declaration)
+		{
+			Assert.ArgumentNotNull(declaration, () => declaration);
+			Declaration = declaration;
 		}
 
 		/// <summary>

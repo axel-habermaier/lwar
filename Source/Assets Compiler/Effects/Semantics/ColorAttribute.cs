@@ -5,7 +5,8 @@ namespace Pegasus.AssetsCompiler.Effects.Semantics
 	/// <summary>
 	///   Indicates that a shader argument or return value represents a color.
 	/// </summary>
-	public class ColorAttribute : SemanticsAttribute
+	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	public class ColorAttribute : Attribute
 	{
 		/// <summary>
 		///   Initializes a new instance with index 0.

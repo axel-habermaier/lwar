@@ -15,7 +15,7 @@ namespace Lwar.Assets.Shaders
 		public readonly Texture2D Texture;
 
 		[FragmentShader]
-		private void HorizontalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
+		public void HorizontalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
 		{
 			color = Texture.Sample(texCoords) * Weights[0];
 
@@ -31,7 +31,7 @@ namespace Lwar.Assets.Shaders
 		}
 
 		[FragmentShader]
-		private void VerticalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
+		public void VerticalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
 		{
 			color = Texture.Sample(texCoords) * Weights[0];
 
@@ -47,10 +47,10 @@ namespace Lwar.Assets.Shaders
 		}
 
 		[VertexShader]
-		private void VertexShader([Position] Vector4 position,
-								  [TexCoords] Vector2 texCoords,
-								  [Position] out Vector4 outPosition,
-								  [TexCoords] out Vector2 outTexCoords)
+		public void VertexShader([Position] Vector4 position,
+								 [TexCoords] Vector2 texCoords,
+								 [Position] out Vector4 outPosition,
+								 [TexCoords] out Vector2 outTexCoords)
 		{
 			FullscreenQuad.ProcessVertex(position, texCoords, out outPosition, out outTexCoords);
 		}

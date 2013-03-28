@@ -5,7 +5,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a data type.
 	/// </summary>
-	public enum DataType
+	internal enum DataType
 	{
 		/// <summary>
 		///   Indicates that the data type is unknown or unsupported.
