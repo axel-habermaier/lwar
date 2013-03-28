@@ -8,7 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Cross-compiles a C# shader method to GLSL.
 	/// </summary>
-	internal class GlslCrossCompiler : CrossCompiler
+	internal sealed class GlslCrossCompiler : CrossCompiler
 	{
 		/// <summary>
 		///   Generates the shader code for shader literals.
@@ -16,7 +16,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="literal">The shader literal that should be generated.</param>
 		protected override void GenerateLiteral(ShaderLiteral literal)
 		{
-			Writer.Append("const {0} {1}", ToGlsl(literal.Type), literal.Name);
+			Writer.Append("const {0} {1}", ToShaderType(literal.Type), literal.Name);
 
 			if (literal.IsArray)
 				Writer.Append("[]");
@@ -45,7 +45,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Writer.AppendBlockStatement(() =>
 				{
 					foreach (var constant in constantBuffer.Constants)
-						Writer.AppendLine("{0} {1};", ToGlsl(constant.Type), constant.Name);
+						Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), constant.Name);
 				});
 			Writer.Newline();
 		}
@@ -56,7 +56,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="texture">The shader texture that should be generated.</param>
 		protected override void GenerateTextureObject(ShaderTexture texture)
 		{
-			Writer.AppendLine("layout(binding = {0}) uniform {1} {2};", texture.Slot, ToGlsl(texture.Type), texture.Name);
+			Writer.AppendLine("layout(binding = {0}) uniform {1} {2};", texture.Slot, ToShaderType(texture.Type), texture.Name);
 		}
 
 		/// <summary>
@@ -70,10 +70,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				{
 					case ShaderType.VertexShader:
 						var slot = ToVertexDataSlot(input.Semantics);
-						Writer.AppendLine("layout(location = {0}) in {1} {2};", slot, ToGlsl(input.Type), input.Name);
+						Writer.AppendLine("layout(location = {0}) in {1} {2};", slot, ToShaderType(input.Type), input.Name);
 						break;
 					case ShaderType.FragmentShader:
-						Writer.AppendLine("in {0} {1};", ToGlsl(input.Type), input.Name);
+						Writer.AppendLine("in {0} {1};", ToShaderType(input.Type), input.Name);
 						break;
 					default:
 						throw new InvalidOperationException("Unsupported shader type.");
@@ -94,10 +94,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					Writer.AppendBlockStatement(() => Writer.AppendLine("vec4 gl_Position;"));
 				}
 				else if (Shader.Type == ShaderType.FragmentShader)
-					Writer.AppendLine("layout(location = {2}) out {0} {1};", ToGlsl(output.Type), output.Name,
+					Writer.AppendLine("layout(location = {2}) out {0} {1};", ToShaderType(output.Type), output.Name,
 									  output.Semantics - DataSemantics.Color0);
 				else
-					Writer.AppendLine("out {0} {1};", ToGlsl(output.Type), output.Name);
+					Writer.AppendLine("out {0} {1};", ToShaderType(output.Type), output.Name);
 			}
 		}
 
@@ -107,17 +107,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateMainMethod()
 		{
 			Writer.AppendLine("void main()");
-			Writer.AppendBlockStatement(() =>
-			{
-				Shader.ShaderCode.AcceptVisitor(this);
-			});
+			Writer.AppendBlockStatement(() => {  });
 		}
 
 		/// <summary>
 		///   Gets the corresponding GLSL type.
 		/// </summary>
 		/// <param name="type">The data type that should be converted.</param>
-		private static string ToGlsl(DataType type)
+		protected override string ToShaderType(DataType type)
 		{
 			switch (type)
 			{

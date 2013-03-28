@@ -26,6 +26,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public object Value { get; private set; }
 
 		/// <summary>
+		///   Gets a value indicating whether the literal is an array.
+		/// </summary>
+		public bool IsArray { get; protected set; }
+
+		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()

@@ -213,6 +213,11 @@
     <Compile Include="Assets\CubeMapAsset.cs" />
     <Compile Include="Compilers\CubeMapCompiler.cs" />
     <Compile Include="DirectDrawSurface.cs" />
+    <Compile Include="Effects\Ast\AstCreator.cs" />
+    <Compile Include="Effects\Ast\AstCreator.NotImplemented.cs" />
+    <Compile Include="Effects\Ast\AstCreator.Unsupported.cs" />
+    <Compile Include="Effects\Ast\AstCreator.Supported.cs" />
+    <Compile Include="Effects\Ast\ShaderAstNode.cs" />
     <Compile Include="Effects\Compilation\CodeWriter.cs" />
     <Compile Include="Effects\Compilation\CompilationContext.cs" />
     <Compile Include="Effects\Compilation\DataType.cs" />

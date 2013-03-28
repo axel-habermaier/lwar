@@ -59,7 +59,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			context.ValidateIdentifier(Variable.NameToken);
 
 			Type = Declaration.GetDataType(context);
-			IsArray = Declaration.GetType(context).Kind == TypeKind.Array;
+
+			if (Declaration.GetType(context).Kind == TypeKind.Array)
+				context.Error(Variable, "Shader constant '{0}' cannot be an array.", Name);
 
 			if (Type == DataType.Unknown)
 				context.Error(Variable,

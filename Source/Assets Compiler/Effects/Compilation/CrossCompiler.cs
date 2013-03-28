@@ -3,12 +3,11 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using Framework;
-	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method.
 	/// </summary>
-	internal abstract class CrossCompiler : DepthFirstAstVisitor
+	internal abstract class CrossCompiler
 	{
 		/// <summary>
 		///   The C# shader method that is cross-compiled.
@@ -100,5 +99,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Generates the shader entry point.
 		/// </summary>
 		protected abstract void GenerateMainMethod();
+
+		/// <summary>
+		///   Gets the corresponding shader type.
+		/// </summary>
+		/// <param name="type">The data type that should be converted.</param>
+		protected abstract string ToShaderType(DataType type);
 	}
 }

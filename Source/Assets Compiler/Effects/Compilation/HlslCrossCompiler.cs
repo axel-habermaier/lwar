@@ -3,12 +3,11 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using Framework.Platform.Graphics;
-	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to HLSL.
 	/// </summary>
-	internal class HlslCrossCompiler : CrossCompiler
+	internal sealed class HlslCrossCompiler : CrossCompiler
 	{
 		/// <summary>
 		///   The name of the shader output structure.
@@ -36,7 +35,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="literal">The shader literal that should be generated.</param>
 		protected override void GenerateLiteral(ShaderLiteral literal)
 		{
-			Writer.Append("static const {0} {1}", ToHlsl(literal.Type), literal.Name);
+			Writer.Append("static const {0} {1}", ToShaderType(literal.Type), literal.Name);
 
 			if (literal.IsArray)
 				Writer.Append("[]");
@@ -69,7 +68,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						if (constant.Type == DataType.Matrix)
 							Writer.Append("column_major ");
 
-						Writer.AppendLine("{0} {1};", ToHlsl(constant.Type), constant.Name);
+						Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), constant.Name);
 					}
 				});
 			Writer.Newline();
@@ -81,7 +80,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="texture">The shader texture that should be generated.</param>
 		protected override void GenerateTextureObject(ShaderTexture texture)
 		{
-			Writer.AppendLine("{0} {1} : register(t{2});", ToHlsl(texture.Type), texture.Name, texture.Slot);
+			Writer.AppendLine("{0} {1} : register(t{2});", ToShaderType(texture.Type), texture.Name, texture.Slot);
 			Writer.AppendLine("SamplerState {0}Sampler : register(s{1});", texture.Name, texture.Slot);
 			Writer.Newline();
 		}
@@ -95,7 +94,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Writer.AppendBlockStatement(() =>
 				{
 					foreach (var input in Shader.Inputs)
-						Writer.AppendLine("{0} {1} : {2};", ToHlsl(input.Type), input.Name, ToHlsl(input.Semantics));
+						Writer.AppendLine("{0} {1} : {2};", ToShaderType(input.Type), input.Name, ToHlsl(input.Semantics));
 				}, true);
 		}
 
@@ -111,7 +110,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					{
 						if (Shader.Type == ShaderType.VertexShader && output.Semantics == DataSemantics.Position)
 						{
-							Writer.AppendLine("{0} {1} : SV_Position;", ToHlsl(output.Type), output.Name);
+							Writer.AppendLine("{0} {1} : SV_Position;", ToShaderType(output.Type), output.Name);
 							continue;
 						}
 
@@ -125,7 +124,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color3)
 							semantics = "SV_Target3";
 
-						Writer.AppendLine("{0} {1} : {2};", ToHlsl(output.Type), output.Name, semantics);
+						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), output.Name, semantics);
 					}
 				}, true);
 		}
@@ -141,7 +140,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					Writer.AppendLine("{0} {1};", OutputStructName, OutputVariableName);
 					Writer.Newline();
 
-					Shader.ShaderCode.AcceptVisitor(this);
 
 					Writer.Newline();
 					Writer.AppendLine("return {0};", OutputVariableName);
@@ -152,7 +150,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Gets the corresponding HLSL type.
 		/// </summary>
 		/// <param name="type">The data type that should be converted.</param>
-		private static string ToHlsl(DataType type)
+		protected override string ToShaderType(DataType type)
 		{
 			switch (type)
 			{

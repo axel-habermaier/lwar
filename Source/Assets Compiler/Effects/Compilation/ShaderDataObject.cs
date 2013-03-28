@@ -61,10 +61,5 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Gets the type of the texture.
 		/// </summary>
 		public DataType Type { get; protected set; }
-
-		/// <summary>
-		///   Gets a value indicating whether the literal is an array.
-		/// </summary>
-		public bool IsArray { get; protected set; }
 	}
 }

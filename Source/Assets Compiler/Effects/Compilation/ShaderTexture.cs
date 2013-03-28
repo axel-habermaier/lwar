@@ -48,7 +48,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Type = Declaration.GetDataType(context);
 
 			if (Declaration.GetType(context).Kind == TypeKind.Array)
-				context.Error(Variable, "Shader texture object '{0}' cannot be an array type.", Name);
+				context.Error(Variable, "Shader texture object '{0}' cannot be an array.", Name);
 
 			if (Declaration.Modifiers != (Modifiers.Public | Modifiers.Readonly))
 				context.Error(Variable, "Shader texture object '{0}' must be public, non-static, and readonly.", Name);

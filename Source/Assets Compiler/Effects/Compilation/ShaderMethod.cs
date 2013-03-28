@@ -5,6 +5,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.Collections.Generic;
 	using System.Linq;
 	using Assets;
+	using Ast;
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
@@ -67,6 +68,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Gets the syntax tree for the shader.
+		/// </summary>
+		public ShaderAstNode SyntaxTree { get; private set; }
+
+		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
@@ -78,7 +84,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Compiles the shader method.
 		/// </summary>
 		/// <param name="context">The context of the compilation.</param>
-		public void Compile(CompilationContext context)
+		/// <param name="effect">The effect the shader belongs to.</param>
+		public void Compile(CompilationContext context, EffectClass effect)
 		{
 			Name = _method.Name;
 			GetParameters(context);
@@ -119,6 +126,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			CheckDistinctSemantics(context, Inputs, "input");
 			CheckDistinctSemantics(context, Outputs, "output");
+
+			SyntaxTree = new AstCreator().CreateAst(context, effect, this);
 		}
 
 		/// <summary>

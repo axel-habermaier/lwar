@@ -198,7 +198,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 									  method.Declaration.Name);
 
 					var shaderMethod = new ShaderMethod(method.Declaration, method.Type);
-					shaderMethod.Compile(context);
+					shaderMethod.Compile(context,this);
 					return shaderMethod;
 				}).ToArray();
 		}
