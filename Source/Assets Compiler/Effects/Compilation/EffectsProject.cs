@@ -43,12 +43,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		private void LoadAssemblies()
 		{
-			var cecilLoader = new CecilLoader();
+			var loader = new CecilLoader();
 
 			var assemblies = new[] { typeof(int).Assembly, typeof(EffectCompiler).Assembly };
 			foreach (var assembly in assemblies)
 			{
-				var loadedAssembly = cecilLoader.LoadAssemblyFile(assembly.Location);
+				var loadedAssembly = loader.LoadAssemblyFile(assembly.Location);
 				_project = _project.AddAssemblyReferences(loadedAssembly);
 			}
 		}

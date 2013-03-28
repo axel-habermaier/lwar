@@ -52,7 +52,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		public override string ToString()
 		{
-			return string.Format("Constant Buffer (Slot {0}, shared: {1})", Slot, Shared);
+			return string.Format("Constant Buffer (Slot {0}, Shared: {1})", Slot, Shared);
 		}
 	}
 }

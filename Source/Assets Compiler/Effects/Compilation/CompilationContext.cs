@@ -42,7 +42,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Resolves the semantics of the given node.
 		/// </summary>
-		/// <typeparam name="T">The type of the returned result.</typeparam>
 		/// <param name="node">The node that should be resolved.</param>
 		public ResolveResult Resolve(AstNode node)
 		{
