@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.Assets
 {
 	using System.IO;
+	using Compilers;
 	using Framework;
 	using Framework.Platform;
 
@@ -19,6 +20,9 @@ namespace Pegasus.AssetsCompiler.Assets
 		{
 			Assert.ArgumentNotNullOrWhitespace(relativePath, () => relativePath);
 			RelativePath = relativePath;
+
+			EnsurePathsExist(Path.GetDirectoryName(TargetPath));
+			EnsurePathsExist(Path.GetDirectoryName(TempPathWithoutExtension));
 		}
 
 		/// <summary>
@@ -94,6 +98,47 @@ namespace Pegasus.AssetsCompiler.Assets
 		public override string ToString()
 		{
 			return String.Format("{0} '{1}'", GetType().Name, RelativePath);
+		}
+
+		/// <summary>
+		///   Gets a value indicating which action the compiler has to take.
+		/// </summary>
+		internal CompilationAction GetRequiredAction()
+		{
+			if (!File.Exists(TempPath))
+				return CompilationAction.Process;
+
+			if (!File.Exists(HashPath))
+				return CompilationAction.Process;
+
+			var oldHash = Hash.FromFile(HashPath);
+			var newHash = Hash.Compute(SourcePath);
+
+			if (oldHash != newHash)
+				return CompilationAction.Process;
+
+			if (!File.Exists(TargetPath))
+				return CompilationAction.Copy;
+
+			var targetHash = Hash.Compute(TargetPath);
+			var tempHash = Hash.Compute(TempPath);
+
+			if (targetHash != tempHash)
+				return CompilationAction.Copy;
+
+			return CompilationAction.Skip;
+		}
+
+		/// <summary>
+		///   Ensures that the given paths exist.
+		/// </summary>
+		/// <param name="path">The path that should exist.</param>
+		private static void EnsurePathsExist(string path)
+		{
+			Assert.ArgumentNotNullOrWhitespace(path, () => path);
+
+			if (!Directory.Exists(path))
+				Directory.CreateDirectory(path);
 		}
 	}
 }

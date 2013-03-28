@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
-	using System.Security.Cryptography;
 	using Assets;
 	using Framework;
 	using Framework.Platform;
@@ -30,65 +29,23 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Gets a value indicating which action the compiler has to take.
-		/// </summary>
-		/// <param name="asset">The asset for which the required action should be determined.</param>
-		private static CompilationAction GetRequiredAction(TAsset asset)
-		{
-			if (!File.Exists(asset.TempPath))
-				return CompilationAction.Process;
-
-			if (!File.Exists(asset.HashPath))
-				return CompilationAction.Process;
-
-			var oldHash = File.ReadAllBytes(asset.HashPath);
-			var newHash = ComputeHash(asset.SourcePath);
-
-			for (var i = 0; i < oldHash.Length; ++i)
-			{
-				if (oldHash[i] != newHash[i])
-					return CompilationAction.Process;
-			}
-
-			if (!File.Exists(asset.TargetPath))
-				return CompilationAction.Copy;
-
-			var targetHash = ComputeHash(asset.TargetPath);
-			var tempHash = ComputeHash(asset.TempPath);
-
-			for (var i = 0; i < targetHash.Length; ++i)
-			{
-				if (targetHash[i] != tempHash[i])
-					return CompilationAction.Copy;
-			}
-
-			return CompilationAction.Skip;
-		}
-
-		/// <summary>
 		///   Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		private bool Compile(TAsset asset)
 		{
-			EnsurePathsExist(Path.GetDirectoryName(asset.TargetPath));
-			EnsurePathsExist(Path.GetDirectoryName(asset.TempPathWithoutExtension));
-
-			var action = GetRequiredAction(asset);
+			var action = asset.GetRequiredAction();
+			action.Describe(asset);
 
 			switch (action)
 			{
 				case CompilationAction.Skip:
-					Log.Info("Skipping '{0}' (no changes detected).", asset.RelativePath);
 					return true;
 				case CompilationAction.Copy:
-					Log.Info("Copying '{0}' to target directory (compilation skipped; no changes detected).", asset.RelativePath);
 					File.Copy(asset.TempPath, asset.TargetPath, true);
 					return true;
 				case CompilationAction.Process:
-					Log.Info("Compiling '{0}'...", asset.RelativePath);
-
-					File.WriteAllBytes(asset.HashPath, ComputeHash(asset.SourcePath));
+					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 					using (var writer = new AssetWriter(asset.TempPath, asset.TargetPath))
 						return CompileAndLogExceptions(asset, writer.Writer);
 				default:
@@ -103,9 +60,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		internal void Compile(TAsset asset, BufferWriter buffer)
 		{
-			EnsurePathsExist(Path.GetDirectoryName(asset.TargetPath));
-			EnsurePathsExist(Path.GetDirectoryName(asset.TempPathWithoutExtension));
-
 			CompileAndLogExceptions(asset, buffer);
 		}
 
@@ -139,51 +93,5 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		protected abstract void CompileCore(TAsset asset, BufferWriter buffer);
-
-		/// <summary>
-		///   Computes the hash of the current source file.
-		/// </summary>
-		/// <param name="path">The path to the asset for which the hash should be computed.</param>
-		private static byte[] ComputeHash(string path)
-		{
-			using (var cryptoProvider = new MD5CryptoServiceProvider())
-			using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
-				return cryptoProvider.ComputeHash(file);
-		}
-
-		/// <summary>
-		///   Ensures that the given paths exist.
-		/// </summary>
-		/// <param name="path">The path that should exist.</param>
-		private static void EnsurePathsExist(string path)
-		{
-			Assert.ArgumentNotNullOrWhitespace(path, () => path);
-
-			if (!Directory.Exists(path))
-				Directory.CreateDirectory(path);
-		}
-
-		/// <summary>
-		///   Indicates the action that the Compiler must take.
-		/// </summary>
-		private enum CompilationAction
-		{
-			/// <summary>
-			///   Indicates that the Compiler can skip the asset as the latest version of the processed asset is already at the target
-			///   location.
-			/// </summary>
-			Skip,
-
-			/// <summary>
-			///   Indicates that the Compiler does not have to process the asset, but must copy the latest version of the processed
-			///   asset to the target location.
-			/// </summary>
-			Copy,
-
-			/// <summary>
-			///   Indicates that the Compiler has to process the asset.
-			/// </summary>
-			Process,
-		}
 	}
 }
