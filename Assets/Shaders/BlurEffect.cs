@@ -18,7 +18,7 @@ namespace Lwar.Assets.Shaders
 		public void HorizontalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
 		{
 			color = Texture.Sample(texCoords) * Weights[0];
-
+			
 			for (var i = 1; i < 3; ++i)
 			{
 				var coordinates = new Vector2(texCoords.X, texCoords.X) * ViewportSize.X;

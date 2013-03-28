@@ -8,7 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a data object that can be read by a shader.
 	/// </summary>
-	internal abstract class ShaderDataObject<T>
+	internal abstract class ShaderDataObject<T> : IShaderDataObject
 		where T : AstNode
 	{
 		/// <summary>

@@ -244,6 +244,7 @@
     <Compile Include="Effects\Compilation\GlslCrossCompiler.cs" />
     <Compile Include="Effects\Compilation\HlslCrossCompiler.cs" />
     <Compile Include="Effects\Compilation\IntrinsicFunction.cs" />
+    <Compile Include="Effects\Compilation\IShaderDataObject.cs" />
     <Compile Include="Effects\Compilation\ShaderTexture.cs" />
     <Compile Include="Effects\Compilation\ShaderLiteral.cs" />
     <Compile Include="Effects\Compilation\EffectFile.cs" />

@@ -2,30 +2,60 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.TypeSystem;
+
 	/// <summary>
 	///   Represents a local variable of a shader.
 	/// </summary>
-	internal class ShaderVariable
+	internal class ShaderVariable : ShaderDataObject<VariableDeclarationStatement>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="name">The name of the variable.</param>
-		/// <param name="type">The type of the variable.</param>
-		public ShaderVariable(string name, DataType type)
+		/// <param name="declaration">The declaration of the field that represents the shader data object.</param>
+		/// <param name="variable">The declaration of the field variable that represents the shader data object.</param>
+		public ShaderVariable(VariableDeclarationStatement declaration, VariableInitializer variable)
+			: base(declaration, variable)
 		{
-			Name = name;
-			Type = type;
 		}
 
 		/// <summary>
-		///   Gets the name of the variable.
+		///   Returns a string that represents the current object.
 		/// </summary>
-		public string Name { get; private set; }
+		public override string ToString()
+		{
+			return String.Format("{0} : {1}", Name, Type);
+		}
 
 		/// <summary>
-		///   Gets the type of the variable.
+		///   Compiles the shader variable.
 		/// </summary>
-		public DataType Type { get; private set; }
+		/// <param name="context">The context of the compilation.</param>
+		public void Compile(CompilationContext context)
+		{
+			Name = Variable.Name;
+			context.ValidateIdentifier(Variable.NameToken);
+
+			var type = context.Resolve(Variable).Type;
+			Type = type.ToDataType();
+
+			if (type.Kind == TypeKind.Array)
+				context.Error(Variable, "Local variable '{0}' cannot be an array.", Name);
+
+			if (Type == DataType.Unknown)
+				context.Error(Variable, "Local variable '{0}' is declared with unknown or unsupported data type '{1}'.",
+							  Name, type.FullName);
+		}
+
+		/// <summary>
+		///   Checks whether this variable and the given variable are the same.
+		/// </summary>
+		/// <param name="variable">The variable that should be checked.</param>
+		public bool IsSame(IVariable variable)
+		{
+			var region = Variable.NameToken.Region;
+			return region.Begin == variable.Region.Begin && region.End == variable.Region.End;
+		}
 	}
 }

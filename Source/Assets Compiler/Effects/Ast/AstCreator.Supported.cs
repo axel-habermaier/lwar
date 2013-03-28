@@ -95,13 +95,27 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 					var parameter = _shader.Parameters.Single(p => p.Name == local.Variable.Name);
 					return new VariableReference<ShaderParameter>(parameter);
 				}
-				
-				var variable = 0;//Get local variables during compilation.
+
+				var variable = _shader.Variables.Single(v => v.IsSame(local.Variable));
+				return new VariableReference<ShaderVariable>(variable);
 			}
 
 			var member = _context.Resolve<MemberResolveResult>(identifierExpression);
-			//if (member != null)
-			//	return new
+			if (member != null)
+			{
+				var constant = _effect.Constants.SingleOrDefault(v => v.Name == member.Member.Name);
+				if (constant != null)
+					return new VariableReference<ShaderConstant>(constant);
+
+				var literal = _effect.Literals.SingleOrDefault(v => v.Name == member.Member.Name);
+				if (literal != null)
+					return new VariableReference<ShaderLiteral>(literal);
+
+				var texture = _effect.Textures.SingleOrDefault(v => v.Name == member.Member.Name);
+				if (texture != null)
+					return new VariableReference<ShaderTexture>(texture);
+			}
+
 			return null;
 		}
 

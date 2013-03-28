@@ -60,7 +60,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ShaderParameter[] Outputs { get; private set; }
 
 		/// <summary>
-		/// Gets the shader parameters, both inputs and outputs.
+		///   Gets the local variables of the shader.
+		/// </summary>
+		public ShaderVariable[] Variables { get; private set; }
+
+		/// <summary>
+		///   Gets the shader parameters, both inputs and outputs.
 		/// </summary>
 		public IEnumerable<ShaderParameter> Parameters
 		{
@@ -135,6 +140,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			CheckDistinctSemantics(context, Inputs, "input");
 			CheckDistinctSemantics(context, Outputs, "output");
 
+			GetLocalVariables(context, effect);
 			SyntaxTree = new AstCreator().CreateAst(context, effect, this);
 		}
 
@@ -160,6 +166,37 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			Inputs = parameters.Where(parameter => !parameter.IsOutput).ToArray();
 			Outputs = parameters.Where(parameter => parameter.IsOutput).ToArray();
+		}
+
+		/// <summary>
+		///   Gets the local variables of the shader.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		/// <param name="effect">The effect the shader belongs to.</param>
+		private void GetLocalVariables(CompilationContext context, EffectClass effect)
+		{
+			Variables = _method.Descendants.OfType<VariableDeclarationStatement>()
+							   .SelectMany(declaration => declaration.Variables.Select(variable =>
+								   {
+									   var shaderVariable = new ShaderVariable(declaration, variable);
+									   shaderVariable.Compile(context);
+
+									   if (Parameters.Any(parameter => parameter.Name == variable.Name))
+										   context.Error(variable, "Local variable '{0}' hides parameter of the same name.", shaderVariable.Name);
+
+									   if (effect.Textures.Any(texture => texture.Name == variable.Name))
+										   context.Error(variable, "Local variable '{0}' hides shader texture object of the same name.",
+														 shaderVariable.Name);
+
+									   if (effect.Constants.Any(constant => constant.Name == variable.Name))
+										   context.Error(variable, "Local variable '{0}' hides shader constant of the same name.", shaderVariable.Name);
+
+									   if (effect.Literals.Any(literal => literal.Name == variable.Name))
+										   context.Error(variable, "Local variable '{0}' hides shader literal of the same name.", shaderVariable.Name);
+
+									   return shaderVariable;
+								   }))
+							   .ToArray();
 		}
 
 		/// <summary>
