@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Linq;
 	using Framework;
 
 	/// <summary>
@@ -23,7 +24,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			Name = "ConstantBuffer" + slot;
 			Slot = slot;
-			Constants = constants;
+			Constants = constants.OrderBy(constant => constant.Name).ToArray();
 			Shared = shared;
 		}
 

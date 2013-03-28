@@ -31,8 +31,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="message">The message that should be written to the console.</param>
 		private static void WriteToConsole(ConsoleColor color, string message)
 		{
-			Console.ForegroundColor = color;
-			Console.WriteLine(message);
+			WriteColored(color, () => Console.WriteLine(message));
 		}
 
 		/// <summary>
@@ -42,8 +41,20 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="message">The message that should be written to the console.</param>
 		private static void WriteToError(ConsoleColor color, string message)
 		{
+			WriteColored(color, () => Console.Error.WriteLine(message));
+		}
+
+		/// <summary>
+		///   Writes a colored message to the console, ensuring that the color is reset afterwards.
+		/// </summary>
+		/// <param name="color">The color of the message.</param>
+		/// <param name="action">Writes the message to the console.</param>
+		private static void WriteColored(ConsoleColor color, Action action)
+		{
+			var currentColor = Console.ForegroundColor;
 			Console.ForegroundColor = color;
-			Console.Error.WriteLine(message);
+			action();
+			Console.ForegroundColor = currentColor;
 		}
 
 		/// <summary>

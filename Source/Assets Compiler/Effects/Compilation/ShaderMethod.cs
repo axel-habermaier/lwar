@@ -169,7 +169,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					throw new InvalidOperationException("Unsupported shader type.");
 			}
 
-			new CrossCompiler(this).GenerateCode(context, effect);
+			var writer = new CodeWriter();
+			new GlslCrossCompiler().GenerateCode(context, effect, this, writer);
+			writer.AppendLine("---");
+			new HlslCrossCompiler().GenerateCode(context, effect, this, writer);
+
+			writer.WriteToFile(Asset.SourcePath);
 		}
 	}
 }

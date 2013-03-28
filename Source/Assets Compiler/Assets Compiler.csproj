@@ -219,6 +219,8 @@
     <Compile Include="Effects\Compilation\DataType.cs" />
     <Compile Include="Effects\Compilation\Extensions.cs" />
     <Compile Include="Effects\Compilation\CrossCompiler.cs" />
+    <Compile Include="Effects\Compilation\GlslCrossCompiler.cs" />
+    <Compile Include="Effects\Compilation\HlslCrossCompiler.cs" />
     <Compile Include="Effects\Compilation\ShaderTexture.cs" />
     <Compile Include="Effects\Compilation\ShaderLiteral.cs" />
     <Compile Include="Effects\Compilation\EffectFile.cs" />
