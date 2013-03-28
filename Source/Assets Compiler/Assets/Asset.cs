@@ -13,12 +13,30 @@ namespace Pegasus.AssetsCompiler.Assets
 	public abstract class Asset : DisposableObject
 	{
 		/// <summary>
+		///   The source directory of the asset.
+		/// </summary>
+		private readonly string _sourceDirectory;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		protected Asset(string relativePath)
+			: this(relativePath, Configuration.SourceDirectory)
+		{
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
+		/// <param name="sourceDirectory">The source directory of the asset.</param>
+		protected Asset(string relativePath, string sourceDirectory)
 		{
 			Assert.ArgumentNotNullOrWhitespace(relativePath, () => relativePath);
+			Assert.ArgumentNotNullOrWhitespace(sourceDirectory, () => sourceDirectory);
+
+			_sourceDirectory = sourceDirectory;
 			RelativePath = relativePath;
 
 			EnsurePathsExist(Path.GetDirectoryName(TargetPath));
@@ -47,7 +65,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// </summary>
 		public string SourcePath
 		{
-			get { return Path.Combine(Configuration.SourceDirectory, RelativePath); }
+			get { return Path.Combine(_sourceDirectory, RelativePath); }
 		}
 
 		/// <summary>

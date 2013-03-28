@@ -15,5 +15,15 @@ namespace Pegasus.AssetsCompiler.Assets
 			: base(relativePath)
 		{
 		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
+		/// <param name="sourceDirectory">The source directory of the asset.</param>
+		public VertexShaderAsset(string relativePath, string sourceDirectory)
+			: base(relativePath, sourceDirectory)
+		{
+		}
 	}
 }

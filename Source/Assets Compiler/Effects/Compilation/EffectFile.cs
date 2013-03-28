@@ -51,16 +51,19 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Compiles the effect file.
 		/// </summary>
 		/// <param name="context">The context of the compilation.</param>
-		public IEnumerable<EffectClass> Compile(CompilationContext context)
+		public IEnumerable<Asset> Compile(CompilationContext context)
 		{
-			var oldHash = Hash.FromFile(Asset.HashPath);
-			var newHash = Hash.Compute(Asset.SourcePath);
+			if (File.Exists(Asset.HashPath))
+			{
+				var oldHash = Hash.FromFile(Asset.HashPath);
+				var newHash = Hash.Compute(Asset.SourcePath);
 
-			//if (oldHash == newHash)
-			//{
-			//	CompilationAction.Skip.Describe(Asset);
-			//	yield break;
-			//}
+				//if (oldHash == newHash)
+				//{
+				//	CompilationAction.Skip.Describe(Asset);
+				//	yield break;
+				//}
+			}
 
 			CompilationAction.Process.Describe(Asset);
 			Asset.WriteHash();
@@ -88,7 +91,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 								 type.GetFullName(context), typeof(Effect).FullName);
 
 				effectClass.Effect.Compile(context);
-				yield return effectClass.Effect;
+				foreach (var shader in effectClass.Effect.FragmentShaders.Union(effectClass.Effect.VertexShaders))
+					yield return shader.Asset;
 			}
 		}
 

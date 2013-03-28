@@ -79,7 +79,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			var compilation = _project.CreateCompilation();
 			var context = new CompilationContext();
 
-			var effects = _files.SelectMany(file =>
+			ShaderAssets = _files.SelectMany(file =>
 				{
 					context.File = file;
 					context.Resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
@@ -87,7 +87,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					return file.Compile(context);
 				}).ToArray();
 
-			ShaderAssets = new Asset[0];
 			return !context.HasErrors;
 		}
 	}

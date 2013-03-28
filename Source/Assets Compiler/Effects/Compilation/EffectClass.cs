@@ -63,6 +63,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public string Name { get; private set; }
 
 		/// <summary>
+		///   Gets the full name of the effect.
+		/// </summary>
+		public string FullName { get; private set; }
+
+		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
@@ -77,6 +82,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public void Compile(CompilationContext context)
 		{
 			Name = _type.GetFullName(context);
+			FullName = _type.GetFullName(context);
 
 			GetShaderLiterals(context);
 			GetShaderConstants(context);
@@ -195,7 +201,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 									  method.Declaration.Name);
 
 					var shaderMethod = new ShaderMethod(method.Declaration, method.Type);
-					shaderMethod.Compile(context);
+					shaderMethod.Compile(context, this);
 					return shaderMethod;
 				}).ToArray();
 

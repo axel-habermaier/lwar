@@ -3,7 +3,9 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
+	using System.IO;
 	using System.Linq;
+	using Assets;
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
@@ -31,6 +33,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			_method = method;
 			Type = type;
 		}
+
+		/// <summary>
+		///   Gets the cross-compiled shader asset that can subsequently compiled into the binary format.
+		/// </summary>
+		public Asset Asset { get; private set; }
 
 		/// <summary>
 		///   Gets the type of the shader.
@@ -64,7 +71,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Compiles the shader method.
 		/// </summary>
 		/// <param name="context">The context of the compilation.</param>
-		public void Compile(CompilationContext context)
+		/// <param name="effect">The effect the shader belongs to.</param>
+		public void Compile(CompilationContext context, EffectClass effect)
 		{
 			Name = _method.Name;
 			GetParameters(context);
@@ -76,13 +84,18 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				context.Error(_method, "Shader '{0}' must be a public, non-static, non-partial, non-abstract, non-sealed, " +
 									   "non-virtual method without any type arguments.", Name);
 
+			var assetPath = String.Format("{0}_{1}_{2}", context.File.Asset.RelativePath, effect.FullName, Name);
 			switch (Type)
 			{
 				case ShaderType.VertexShader:
+					Asset = new VertexShaderAsset(String.Format("{0}.vs", assetPath), Configuration.TempDirectory);
+
 					if (Outputs.All(o => o.Semantics != DataSemantics.Position))
 						context.Error(_method, "Vertex shader '{0}' must declare an output parameter with the 'Position' semantics.", Name);
 					break;
 				case ShaderType.FragmentShader:
+					Asset = new FragmentShaderAsset(String.Format("{0}.fs", assetPath), Configuration.TempDirectory);
+
 					if (Outputs.All(o => o.Semantics != DataSemantics.Color0))
 						context.Error(_method, "Fragment shader '{0}' must declare an output parameter with the 'Color(0)' semantics.", Name);
 					break;
