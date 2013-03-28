@@ -3,7 +3,6 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
-	using System.IO;
 	using System.Linq;
 	using Assets;
 	using Framework;
@@ -60,6 +59,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ShaderParameter[] Outputs { get; private set; }
 
 		/// <summary>
+		///   Gets the C# shader code.
+		/// </summary>
+		public AstNode ShaderCode
+		{
+			get { return _method.Body; }
+		}
+
+		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
@@ -71,8 +78,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Compiles the shader method.
 		/// </summary>
 		/// <param name="context">The context of the compilation.</param>
-		/// <param name="effect">The effect the shader belongs to.</param>
-		public void Compile(CompilationContext context, EffectClass effect)
+		public void Compile(CompilationContext context)
 		{
 			Name = _method.Name;
 			GetParameters(context);
@@ -84,18 +90,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				context.Error(_method, "Shader '{0}' must be a public, non-static, non-partial, non-abstract, non-sealed, " +
 									   "non-virtual method without any type arguments.", Name);
 
-			var assetPath = String.Format("{0}_{1}_{2}", context.File.Asset.RelativePath, effect.FullName, Name);
 			switch (Type)
 			{
 				case ShaderType.VertexShader:
-					Asset = new VertexShaderAsset(String.Format("{0}.vs", assetPath), Configuration.TempDirectory);
-
 					if (Outputs.All(o => o.Semantics != DataSemantics.Position))
 						context.Error(_method, "Vertex shader '{0}' must declare an output parameter with the 'Position' semantics.", Name);
 					break;
 				case ShaderType.FragmentShader:
-					Asset = new FragmentShaderAsset(String.Format("{0}.fs", assetPath), Configuration.TempDirectory);
-
 					if (Outputs.All(o => o.Semantics != DataSemantics.Color0))
 						context.Error(_method, "Fragment shader '{0}' must declare an output parameter with the 'Color(0)' semantics.", Name);
 					break;
@@ -146,6 +147,29 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				context.Error(_method, "Shader '{0}' declares multiple {2} parameters with the '{1}' semantics.",
 							  Name, semantics, direction);
 			}
+		}
+
+		/// <summary>
+		///   Generates the code for the shader.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		/// <param name="effect">The effect the shader belongs to.</param>
+		public void GenerateCode(CompilationContext context, EffectClass effect)
+		{
+			var assetPath = String.Format("{0}_{1}_{2}", context.File.Asset.RelativePath, effect.FullName, Name);
+			switch (Type)
+			{
+				case ShaderType.VertexShader:
+					Asset = new VertexShaderAsset(String.Format("{0}.vs", assetPath), Configuration.TempDirectory);
+					break;
+				case ShaderType.FragmentShader:
+					Asset = new FragmentShaderAsset(String.Format("{0}.fs", assetPath), Configuration.TempDirectory);
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported shader type.");
+			}
+
+			new CrossCompiler(this).GenerateCode(context, effect);
 		}
 	}
 }

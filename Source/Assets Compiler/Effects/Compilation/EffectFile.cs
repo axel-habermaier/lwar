@@ -91,7 +91,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 								 type.GetFullName(context), typeof(Effect).FullName);
 
 				effectClass.Effect.Compile(context);
-				foreach (var shader in effectClass.Effect.FragmentShaders.Union(effectClass.Effect.VertexShaders))
+				foreach (var shader in effectClass.Effect.Shaders)
 					yield return shader.Asset;
 			}
 		}

@@ -28,14 +28,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Gets the vertex shaders defined by the effect.
+		///   Gets the shaders defined by the effect.
 		/// </summary>
-		public ShaderMethod[] VertexShaders { get; private set; }
-
-		/// <summary>
-		///   Gets the fragment shaders defined by the effect.
-		/// </summary>
-		public ShaderMethod[] FragmentShaders { get; private set; }
+		public ShaderMethod[] Shaders { get; private set; }
 
 		/// <summary>
 		///   Gets the shader constants accessed by the effect.
@@ -97,11 +92,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			foreach (var property in _type.Descendants.OfType<PropertyDeclaration>())
 				context.Error(property.NameToken, "Unexpected property '{0}' declared by effect '{1}'.", property.Name, Name);
 
-			if (VertexShaders.Length == 0)
+			if (Shaders.All(shader => shader.Type != ShaderType.VertexShader))
 				context.Error(_type, "Effect '{0}' must declare at least one vertex shader.", Name);
 
-			if (FragmentShaders.Length == 0)
+			if (Shaders.All(shader => shader.Type != ShaderType.FragmentShader))
 				context.Error(_type, "Effect '{0}' must declare at least one fragment shader.", Name);
+
+			GenerateCode(context);
 		}
 
 		/// <summary>
@@ -194,19 +191,26 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						  where isVertexShader || isFragmentShader
 						  select new { Declaration = method, Type = shaderType, HasUnknownType = isVertexShader && isFragmentShader };
 
-			var shaderMethods = methods.Select(method =>
+			Shaders = methods.Select(method =>
 				{
 					if (method.HasUnknownType)
 						context.Error(method.Declaration, "Shader method '{0}' cannot be both a vertex shader and a fragment shader.",
 									  method.Declaration.Name);
 
 					var shaderMethod = new ShaderMethod(method.Declaration, method.Type);
-					shaderMethod.Compile(context, this);
+					shaderMethod.Compile(context);
 					return shaderMethod;
 				}).ToArray();
+		}
 
-			VertexShaders = shaderMethods.Where(shader => shader.Type == ShaderType.VertexShader).ToArray();
-			FragmentShaders = shaderMethods.Where(shader => shader.Type == ShaderType.FragmentShader).ToArray();
+		/// <summary>
+		///   Generates the code for the effect.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		private void GenerateCode(CompilationContext context)
+		{
+			foreach (var shader in Shaders)
+				shader.GenerateCode(context, this);
 		}
 	}
 }
