@@ -46,9 +46,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="context">The context of the compilation.</param>
 		public void Compile(CompilationContext context)
 		{
-			var type = context.Resolve(Declaration).Type;
-
 			Name = Declaration.Name;
+			context.ValidateIdentifier(Declaration.NameToken);
+
+			var type = context.Resolve(Declaration).Type;
 			Type = type.ToDataType();
 			GetSemantics(context);
 

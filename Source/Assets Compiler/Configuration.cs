@@ -14,6 +14,11 @@ namespace Pegasus.AssetsCompiler
 	internal static class Configuration
 	{
 		/// <summary>
+		///   The separator that is used to separate GLSL shader code from HLSL shader code.
+		/// </summary>
+		public const string ShaderSeparator = "---";
+
+		/// <summary>
 		///   The path to the source assets.
 		/// </summary>
 		public static readonly string SourceDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets");

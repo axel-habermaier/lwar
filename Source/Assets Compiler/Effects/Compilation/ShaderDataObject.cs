@@ -14,7 +14,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   The declaration of the field that represents the shader data object.
 		/// </summary>
-		public readonly T Declaration;
+		protected readonly T Declaration;
 
 		/// <summary>
 		///   The declaration of the field variable that represents the shader data object.

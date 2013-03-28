@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Linq;
 	using Framework;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
@@ -46,6 +47,26 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ResolveResult Resolve(AstNode node)
 		{
 			return Resolver.Resolve(node);
+		}
+
+		/// <summary>
+		///   Checks whether the given identifier uses a reserved name.
+		/// </summary>
+		/// <param name="identifier">The identifier that should be checked.</param>
+		public void ValidateIdentifier(Identifier identifier)
+		{
+			Assert.ArgumentNotNull(identifier, () => identifier);
+
+			var reserved = new[]
+			{
+				HlslCrossCompiler.OutputStructName,
+				HlslCrossCompiler.OutputVariableName,
+				HlslCrossCompiler.InputStructName,
+				HlslCrossCompiler.InputVariableName
+			};
+
+			if (reserved.Any(name => name == identifier.Name))
+				Error(identifier, "Name '{0}' is reserved for internal use.", identifier.Name);
 		}
 
 		/// <summary>

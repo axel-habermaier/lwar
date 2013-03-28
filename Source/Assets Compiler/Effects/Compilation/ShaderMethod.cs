@@ -110,15 +110,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					}
 					break;
 				case ShaderType.FragmentShader:
-					if (Outputs.All(o => o.Semantics != DataSemantics.Color0))
-						context.Error(_method, "Fragment shader '{0}' must declare an output parameter with the '{1}' semantics.",
-									  Name, DataSemantics.Color0.ToDisplayString());
-
-					foreach (var output in Outputs.Where(o => !o.Semantics.IsColor()))
-					{
-						context.Error(output.Declaration, "Fragment shader '{0}' cannot assign '{2}' semantics to output parameter '{1}'.",
-									  Name, output.Name, output.Semantics.ToDisplayString());
-					}
+					if (Outputs.All(o => !o.Semantics.IsColor()))
+						context.Error(_method, "Fragment shader '{0}' must declare an output parameter with the 'Color' semantics.", Name);
 					break;
 				default:
 					throw new InvalidOperationException("Unsupported shader type.");
@@ -139,6 +132,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 										{
 											var shaderParameter = new ShaderParameter(parameter);
 											shaderParameter.Compile(context);
+
+											if (shaderParameter.IsOutput && Type == ShaderType.FragmentShader && !shaderParameter.Semantics.IsColor())
+												context.Error(parameter, "Fragment shader '{0}' cannot assign '{2}' semantics to output parameter '{1}'.",
+															  Name, shaderParameter.Name, shaderParameter.Semantics.ToDisplayString());
+
 											return shaderParameter;
 										})
 									.ToArray();
@@ -187,7 +185,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			new GlslCrossCompiler().GenerateCode(context, effect, this, writer);
 
 			writer.Newline();
-			writer.AppendLine("---");
+			writer.AppendLine(Configuration.ShaderSeparator);
 			writer.Newline();
 
 			new HlslCrossCompiler().GenerateCode(context, effect, this, writer);

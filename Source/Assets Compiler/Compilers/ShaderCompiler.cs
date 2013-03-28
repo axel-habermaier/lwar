@@ -24,9 +24,10 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <param name="hlsl">The extracted HLSL shader code.</param>
 		protected static void ExtractShaderCode(Asset asset, out string glsl, out string hlsl)
 		{
-			var split = File.ReadAllText(asset.SourcePath).Split(new[] { "---" }, StringSplitOptions.RemoveEmptyEntries);
+			var split = File.ReadAllText(asset.SourcePath)
+							.Split(new[] { Configuration.ShaderSeparator }, StringSplitOptions.RemoveEmptyEntries);
 			if (split.Length != 2)
-				Log.Die("GLSL and HLSL shader code must be separated by '---'.");
+				Log.Die("GLSL and HLSL shader code must be separated by '{0}'.", Configuration.ShaderSeparator);
 
 			glsl = split[0];
 			hlsl = split[1];

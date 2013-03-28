@@ -2,8 +2,8 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
-	using System.Linq;
 	using Framework.Platform.Graphics;
+	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to HLSL.
@@ -13,12 +13,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   The name of the shader output structure.
 		/// </summary>
-		private const string OutputStructName = "__OUTPUT";
+		public const string OutputStructName = "__OUTPUT";
 
 		/// <summary>
 		///   The name of the shader input structure.
 		/// </summary>
-		private const string InputStructName = "__INPUT";
+		public const string InputStructName = "__INPUT";
+
+		/// <summary>
+		///   The name of the shader input variable.
+		/// </summary>
+		public const string InputVariableName = "__input";
+
+		/// <summary>
+		///   The name of the shader input variable.
+		/// </summary>
+		public const string OutputVariableName = "__output";
 
 		/// <summary>
 		///   Generates the shader code for shader literals.
@@ -118,6 +128,24 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						Writer.AppendLine("{0} {1} : {2};", ToHlsl(output.Type), output.Name, semantics);
 					}
 				}, true);
+		}
+
+		/// <summary>
+		///   Generates the shader entry point.
+		/// </summary>
+		protected override void GenerateMainMethod()
+		{
+			Writer.AppendLine("{0} Main({1} {2})", OutputStructName, InputStructName, InputVariableName);
+			Writer.AppendBlockStatement(() =>
+				{
+					Writer.AppendLine("{0} {1};", OutputStructName, OutputVariableName);
+					Writer.Newline();
+
+					Shader.ShaderCode.AcceptVisitor(this);
+
+					Writer.Newline();
+					Writer.AppendLine("return {0};", OutputVariableName);
+				});
 		}
 
 		/// <summary>

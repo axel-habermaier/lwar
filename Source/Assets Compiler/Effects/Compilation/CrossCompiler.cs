@@ -65,7 +65,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			GenerateOutputs();
 			Writer.Newline();
 
-			shader.ShaderCode.AcceptVisitor(this);
+			GenerateMainMethod();
 		}
 
 		/// <summary>
@@ -95,5 +95,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Generates the shader outputs.
 		/// </summary>
 		protected abstract void GenerateOutputs();
+
+		/// <summary>
+		///   Generates the shader entry point.
+		/// </summary>
+		protected abstract void GenerateMainMethod();
 	}
 }

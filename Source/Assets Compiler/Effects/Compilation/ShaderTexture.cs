@@ -44,6 +44,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public void Compile(CompilationContext context)
 		{
 			Name = Variable.Name;
+			context.ValidateIdentifier(Variable.NameToken);
 			Type = Declaration.GetDataType(context);
 
 			if (Declaration.GetType(context).Kind == TypeKind.Array)

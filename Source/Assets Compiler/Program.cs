@@ -4,6 +4,8 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.Diagnostics;
 	using System.Globalization;
+	using System.Threading;
+	using System.Threading.Tasks;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Scripting;
@@ -63,6 +65,10 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="args"></param>
 		public static int Main(string[] args)
 		{
+			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
 			var watch = new Stopwatch();
 			watch.Start();
 

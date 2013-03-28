@@ -102,6 +102,18 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Generates the shader entry point.
+		/// </summary>
+		protected override void GenerateMainMethod()
+		{
+			Writer.AppendLine("void main()");
+			Writer.AppendBlockStatement(() =>
+			{
+				Shader.ShaderCode.AcceptVisitor(this);
+			});
+		}
+
+		/// <summary>
 		///   Gets the corresponding GLSL type.
 		/// </summary>
 		/// <param name="type">The data type that should be converted.</param>
