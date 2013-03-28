@@ -9,6 +9,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
+	using VariableDeclarationStatement = ICSharpCode.NRefactory.CSharp.VariableDeclarationStatement;
 
 	/// <summary>
 	///   Represents a C# method that is cross-compiled to GLSL or HLSL.

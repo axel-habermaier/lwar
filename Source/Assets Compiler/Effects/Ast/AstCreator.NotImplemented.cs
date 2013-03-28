@@ -190,7 +190,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			throw new NotImplementedException();
 		}
 
-		public IAstNode VisitPatternPlaceholder(ICSharpCode.NRefactory.CSharp.AstNode placeholder, Pattern pattern)
+		public IAstNode VisitPatternPlaceholder(AstNode placeholder, Pattern pattern)
 		{
 			throw new NotImplementedException();
 		}

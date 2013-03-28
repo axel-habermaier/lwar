@@ -40,9 +40,11 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			return new ForStatement(initializers, condition, actions, body);
 		}
 
-		public IAstNode VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement)
+		public IAstNode VisitVariableDeclarationStatement(
+			ICSharpCode.NRefactory.CSharp.VariableDeclarationStatement variableDeclarationStatement)
 		{
-			return null;
+			var initializers = variableDeclarationStatement.Variables.Visit<VariableInitializer>(this);
+			return new VariableDeclarationStatement(initializers);
 		}
 
 		public IAstNode VisitWhileStatement(ICSharpCode.NRefactory.CSharp.WhileStatement whileStatement)
@@ -70,9 +72,13 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			return new BinaryOperatorExpression(left, leftType, binaryOperatorExpression.Operator, right, rightType);
 		}
 
-		public IAstNode VisitVariableInitializer(VariableInitializer variableInitializer)
+		public IAstNode VisitVariableInitializer(ICSharpCode.NRefactory.CSharp.VariableInitializer variableInitializer)
 		{
-			return null;
+			var resolved = _context.Resolve<LocalResolveResult>(variableInitializer);
+			var expression = variableInitializer.Initializer.Visit<Expression>(this);
+			var variable = _shader.Variables.Single(v => v.IsSame(resolved.Variable));
+
+			return new VariableInitializer(variable, expression);
 		}
 
 		public IAstNode VisitCastExpression(CastExpression castExpression)
@@ -152,14 +158,21 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			return null;
 		}
 
-		public IAstNode VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
+		public IAstNode VisitMemberReferenceExpression(
+			ICSharpCode.NRefactory.CSharp.MemberReferenceExpression memberReferenceExpression)
 		{
-			return null;
+			var target = memberReferenceExpression.Target.Visit<Expression>(this);
+			var resolved = _context.Resolve<MemberResolveResult>(memberReferenceExpression);
+
+			return new MemberReferenceExpression(target, resolved.TargetResult.Type.ToDataType(), memberReferenceExpression.MemberName);
 		}
 
 		public IAstNode VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)
 		{
-			return null;
+			var resolved = _context.Resolve(objectCreateExpression);
+			var arguments = objectCreateExpression.Arguments.Visit<Expression>(this);
+
+			return new ObjectCreationExpression(resolved.Type.ToDataType(), arguments);
 		}
 
 		public IAstNode VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
@@ -182,9 +195,12 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			return null;
 		}
 
-		public IAstNode VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression)
+		public IAstNode VisitUnaryOperatorExpression(ICSharpCode.NRefactory.CSharp.UnaryOperatorExpression unaryOperatorExpression)
 		{
-			return null;
+			var expression = unaryOperatorExpression.Expression.Visit<Expression>(this);
+			var type = _context.Resolve(unaryOperatorExpression.Expression).Type.ToDataType();
+
+			return new UnaryOperatorExpression(expression, type, unaryOperatorExpression.Operator);
 		}
 
 		public IAstNode VisitArraySpecifier(ArraySpecifier arraySpecifier)

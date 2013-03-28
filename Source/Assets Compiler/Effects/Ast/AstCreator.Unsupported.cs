@@ -302,7 +302,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// </summary>
 		/// <param name="node">The node that should be reported as unsupported.</param>
 		/// <param name="description">The description of the unsupported C# feature.</param>
-		private void UnsupportedCSharpFeature(ICSharpCode.NRefactory.CSharp.AstNode node, string description)
+		private void UnsupportedCSharpFeature(AstNode node, string description)
 		{
 			_context.Error(node, "Unsupported C# feature used: {0}.", description);
 		}

@@ -36,5 +36,13 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		///   Gets the assignment operator.
 		/// </summary>
 		public AssignmentOperatorType Operator { get; private set; }
+
+		/// Accepts a visitor, calling the appropriate Visit method on the visitor.
+		/// </summary>
+		/// <param name="visitor">The visitor whose Visit method should be called.</param>
+		public override void AcceptVisitor(IAstVisitor visitor)
+		{
+			visitor.VisitAssignmentExpression(this);
+		}
 	}
 }

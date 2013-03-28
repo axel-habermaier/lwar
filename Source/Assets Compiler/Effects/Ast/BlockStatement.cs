@@ -23,5 +23,14 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		///   Gets the statements that the statement block consists of.
 		/// </summary>
 		public Statement[] Statements { get; private set; }
+
+		/// <summary>
+		///   Accepts a visitor, calling the appropriate Visit method on the visitor.
+		/// </summary>
+		/// <param name="visitor">The visitor whose Visit method should be called.</param>
+		public override void AcceptVisitor(IAstVisitor visitor)
+		{
+			visitor.VisitBlockStatement(this);
+		}
 	}
 }

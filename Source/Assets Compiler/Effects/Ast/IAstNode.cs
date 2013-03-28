@@ -7,5 +7,10 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 	/// </summary>
 	internal interface IAstNode
 	{
+		/// <summary>
+		///   Accepts a visitor, calling the appropriate Visit method on the visitor.
+		/// </summary>
+		/// <param name="visitor">The visitor whose Visit method should be called.</param>
+		void AcceptVisitor(IAstVisitor visitor);
 	}
 }

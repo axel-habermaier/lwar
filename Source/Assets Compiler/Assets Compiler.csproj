@@ -228,6 +228,12 @@
     <Compile Include="Effects\Ast\ExpressionStatement.cs" />
     <Compile Include="Effects\Ast\Extensions.cs" />
     <Compile Include="Effects\Ast\ForStatement.cs" />
+    <Compile Include="Effects\Ast\IAstVisitor.cs" />
+    <Compile Include="Effects\Ast\MemberReferenceExpression.cs" />
+    <Compile Include="Effects\Ast\ObjectCreationExpression.cs" />
+    <Compile Include="Effects\Ast\UnaryOperatorExpression.cs" />
+    <Compile Include="Effects\Ast\VariableDeclarationStatement.cs" />
+    <Compile Include="Effects\Ast\VariableInitializer.cs" />
     <Compile Include="Effects\Ast\VariableReference.cs" />
     <Compile Include="Effects\Ast\IfElseStatement.cs" />
     <Compile Include="Effects\Ast\IndexerExpression.cs" />

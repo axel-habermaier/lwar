@@ -52,7 +52,9 @@ namespace Lwar.Assets.Shaders
 								 [Position] out Vector4 outPosition,
 								 [TexCoords] out Vector2 outTexCoords)
 		{
-			FullscreenQuad.ProcessVertex(position, texCoords, out outPosition, out outTexCoords);
+			//FullscreenQuad.ProcessVertex(position, texCoords, out outPosition, out outTexCoords);
+			outPosition = position;
+			outTexCoords = texCoords;
 		}
 	}
 

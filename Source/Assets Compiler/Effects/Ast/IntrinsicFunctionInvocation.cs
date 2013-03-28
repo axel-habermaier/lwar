@@ -29,5 +29,14 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		///   Gets the arguments of the function invocation.
 		/// </summary>
 		public Expression[] Arguments { get; private set; }
+
+		/// <summary>
+		///   Accepts a visitor, calling the appropriate Visit method on the visitor.
+		/// </summary>
+		/// <param name="visitor">The visitor whose Visit method should be called.</param>
+		public override void AcceptVisitor(IAstVisitor visitor)
+		{
+			visitor.VisitIntrinsicFunctionInvocation(this);
+		}
 	}
 }

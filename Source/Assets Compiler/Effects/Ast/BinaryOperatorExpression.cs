@@ -52,5 +52,14 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		///   Gets the binary operator that combines the two expressions.
 		/// </summary>
 		public BinaryOperatorType Operator { get; private set; }
+
+		/// <summary>
+		///   Accepts a visitor, calling the appropriate Visit method on the visitor.
+		/// </summary>
+		/// <param name="visitor">The visitor whose Visit method should be called.</param>
+		public override void AcceptVisitor(IAstVisitor visitor)
+		{
+			visitor.VisitBinaryOperatorExpression(this);
+		}
 	}
 }

@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.Effects.Ast
 {
 	using System.Collections.Generic;
+	using System.Diagnostics;
 	using System.Linq;
 	using ICSharpCode.NRefactory.CSharp;
 
@@ -17,8 +18,8 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// <typeparam name="TShaderNode">The type of the shader nodes that should be returned.</typeparam>
 		/// <param name="nodes">The list of C# nodes that should be visited.</param>
 		/// <param name="visitor">The visitor that should be used.</param>
-		public static TShaderNode[] Visit<TShaderNode>(this IEnumerable<ICSharpCode.NRefactory.CSharp.AstNode> nodes,
-													   IAstVisitor<IAstNode> visitor)
+		[DebuggerHidden]
+		public static TShaderNode[] Visit<TShaderNode>(this IEnumerable<AstNode> nodes, IAstVisitor<IAstNode> visitor)
 			where TShaderNode : IAstNode
 		{
 			return nodes.Select(initializer => initializer.AcceptVisitor(visitor))
@@ -32,8 +33,8 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// <typeparam name="TShaderNode">The type of the shader node that should be returned.</typeparam>
 		/// <param name="node">The C# node that should be visited.</param>
 		/// <param name="visitor">The visitor that should be used.</param>
-		public static TShaderNode Visit<TShaderNode>(this ICSharpCode.NRefactory.CSharp.AstNode node,
-													 IAstVisitor<IAstNode> visitor)
+		[DebuggerHidden]
+		public static TShaderNode Visit<TShaderNode>(this AstNode node, IAstVisitor<IAstNode> visitor)
 			where TShaderNode : IAstNode
 		{
 			return (TShaderNode)node.AcceptVisitor(visitor);

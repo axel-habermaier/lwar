@@ -53,20 +53,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="context">The context of the compilation.</param>
 		public IEnumerable<Asset> Compile(CompilationContext context)
 		{
-			if (File.Exists(Asset.HashPath))
-			{
-				var oldHash = Hash.FromFile(Asset.HashPath);
-				var newHash = Hash.Compute(Asset.SourcePath);
-
-				//if (oldHash == newHash)
-				//{
-				//	CompilationAction.Skip.Describe(Asset);
-				//	yield break;
-				//}
-			}
-
-			CompilationAction.Process.Describe(Asset);
-			Asset.WriteHash();
+			Log.Info("Cross-compiling '{0}'...", Asset.RelativePath);
 			PrintParserErrorsAndWarnings(context);
 
 			var effectClasses = from type in SyntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()
