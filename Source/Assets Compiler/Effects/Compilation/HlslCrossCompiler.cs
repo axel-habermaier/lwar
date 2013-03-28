@@ -2,11 +2,24 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Linq;
+	using Framework.Platform.Graphics;
+
 	/// <summary>
 	///   Cross-compiles a C# shader method to HLSL.
 	/// </summary>
 	internal class HlslCrossCompiler : CrossCompiler
 	{
+		/// <summary>
+		///   The name of the shader output structure.
+		/// </summary>
+		private const string OutputStructName = "__OUTPUT";
+
+		/// <summary>
+		///   The name of the shader input structure.
+		/// </summary>
+		private const string InputStructName = "__INPUT";
+
 		/// <summary>
 		///   Generates the shader code for shader literals.
 		/// </summary>
@@ -64,6 +77,53 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Generates the shader inputs.
+		/// </summary>
+		protected override void GenerateInputs()
+		{
+			Writer.AppendLine("struct {0}", InputStructName);
+			Writer.AppendBlockStatement(() =>
+				{
+					foreach (var input in Shader.Inputs)
+						Writer.AppendLine("{0} {1} : {2};", ToHlsl(input.Type), input.Name, ToHlsl(input.Semantics));
+				}, true);
+		}
+
+		/// <summary>
+		///   Generates the shader outputs.
+		/// </summary>
+		protected override void GenerateOutputs()
+		{
+			Writer.AppendLine("struct {0}", OutputStructName);
+			Writer.AppendBlockStatement(() =>
+				{
+					foreach (var output in Shader.Outputs)
+					{
+						if (Shader.Type == ShaderType.VertexShader && output.Semantics == DataSemantics.Position)
+							continue;
+
+						var semantics = ToHlsl(output.Semantics);
+						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color0)
+							semantics = "SV_Target0";
+						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color1)
+							semantics = "SV_Target1";
+						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color2)
+							semantics = "SV_Target2";
+						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color3)
+							semantics = "SV_Target3";
+
+						Writer.AppendLine("{0} {1} : {2};", ToHlsl(output.Type), output.Name, semantics);
+					}
+
+					if (Shader.Type == ShaderType.VertexShader)
+					{
+						var position = Shader.Outputs.SingleOrDefault(output => output.Semantics == DataSemantics.Position);
+						Writer.AppendLine("{0} {1} : SV_Position;", ToHlsl(position.Type), position.Name);
+					}
+				}, true);
+		}
+
+		/// <summary>
 		///   Gets the corresponding HLSL type.
 		/// </summary>
 		/// <param name="type">The data type that should be converted.</param>
@@ -91,6 +151,39 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					return "TextureCube";
 				default:
 					return "unknown-type";
+			}
+		}
+
+		/// <summary>
+		///   Gets the corresponding HLSL semantics.
+		/// </summary>
+		/// <param name="semantics">The data semantics that should be converted.</param>
+		private static string ToHlsl(DataSemantics semantics)
+		{
+			switch (semantics)
+			{
+				case DataSemantics.Position:
+					return "POSITION";
+				case DataSemantics.Color0:
+					return "COLOR0";
+				case DataSemantics.Color1:
+					return "COLOR1";
+				case DataSemantics.Color2:
+					return "COLOR2";
+				case DataSemantics.Color3:
+					return "COLOR3";
+				case DataSemantics.Normal:
+					return "NORMAL";
+				case DataSemantics.TexCoords0:
+					return "TEXCOORD0";
+				case DataSemantics.TexCoords1:
+					return "TEXCOORD1";
+				case DataSemantics.TexCoords2:
+					return "TEXCOORD2";
+				case DataSemantics.TexCoords3:
+					return "TEXCOORD3";
+				default:
+					return "unknown-semantics";
 			}
 		}
 	}

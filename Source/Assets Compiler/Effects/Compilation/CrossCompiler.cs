@@ -59,6 +59,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			foreach (var texture in effect.Textures)
 				GenerateTextureObject(texture);
 
+			GenerateInputs();
+			Writer.Newline();
+
+			GenerateOutputs();
+			Writer.Newline();
+
 			shader.ShaderCode.AcceptVisitor(this);
 		}
 
@@ -79,5 +85,15 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <param name="texture">The shader texture that should be generated.</param>
 		protected abstract void GenerateTextureObject(ShaderTexture texture);
+
+		/// <summary>
+		///   Generates the shader inputs.
+		/// </summary>
+		protected abstract void GenerateInputs();
+
+		/// <summary>
+		///   Generates the shader outputs.
+		/// </summary>
+		protected abstract void GenerateOutputs();
 	}
 }

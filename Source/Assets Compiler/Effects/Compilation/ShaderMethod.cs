@@ -171,7 +171,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			var writer = new CodeWriter();
 			new GlslCrossCompiler().GenerateCode(context, effect, this, writer);
+
+			writer.Newline();
 			writer.AppendLine("---");
+			writer.Newline();
+
 			new HlslCrossCompiler().GenerateCode(context, effect, this, writer);
 
 			writer.WriteToFile(Asset.SourcePath);

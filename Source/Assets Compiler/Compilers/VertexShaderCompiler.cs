@@ -49,7 +49,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 				case "POSITION":
 					return VertexDataSemantics.Position;
 				case "TEXCOORD":
-					return VertexDataSemantics.TextureCoordinate;
+					return VertexDataSemantics.TexCoords;
 				case "COLOR":
 					return VertexDataSemantics.Color;
 				case "NORMAL":

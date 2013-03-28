@@ -106,7 +106,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Generates the content that should be placed within the block statement by calling Append methods
 		///   of this code writer instance.
 		/// </param>
-		public void AppendBlockStatement(Action content)
+		/// <param name="terminateWithSemicolon">Indicates whether the closing brace should be followed by a semicolon.</param>
+		public void AppendBlockStatement(Action content, bool terminateWithSemicolon = false)
 		{
 			Assert.ArgumentNotNull(content, () => content);
 
@@ -118,7 +119,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			EnsureNewLine();
 			DecreaseIndent();
-			AppendLine("}}");
+			Append("}}");
+
+			if (terminateWithSemicolon)
+				Append(";");
+
+			Newline();
 		}
 
 		/// <summary>

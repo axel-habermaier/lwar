@@ -20,7 +20,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Indicates that the vertex data describes texture coordinates.
 		/// </summary>
-		TextureCoordinate = 202,
+		TexCoords = 202,
 
 		/// <summary>
 		///   Indicates that the vertex data describes normals.
