@@ -22,7 +22,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <param name="asset">The asset from which the shader code should be extracted.</param>
 		/// <param name="glsl">The extracted GLSL shader code.</param>
 		/// <param name="hlsl">The extracted HLSL shader code.</param>
-		protected void ExtractShaderCode(Asset asset, out string glsl, out string hlsl)
+		protected static void ExtractShaderCode(Asset asset, out string glsl, out string hlsl)
 		{
 			var split = File.ReadAllText(asset.SourcePath).Split(new[] { "---" }, StringSplitOptions.RemoveEmptyEntries);
 			if (split.Length != 2)

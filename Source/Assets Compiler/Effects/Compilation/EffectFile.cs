@@ -52,6 +52,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="context">The context of the compilation.</param>
 		public IEnumerable<EffectClass> Compile(CompilationContext context)
 		{
+			Log.Info("Cross-compiling '{0}'...", context.File.Asset.RelativePath);
 			PrintParserErrorsAndWarnings(context);
 
 			var effectClasses = from type in SyntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()

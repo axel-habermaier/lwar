@@ -195,6 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Attributes\AssetAttribute.cs" />
+    <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
     <Compile Include="Assets\Attributes\CubeMapAttribute.cs" />
     <Compile Include="Assets\Attributes\Texture2DAttribute.cs" />
     <Compile Include="Assets\FragmentShaderAsset.cs" />
@@ -203,7 +204,6 @@
     <Compile Include="Compilers\AssetCompiler.cs" />
     <Compile Include="AssetWriter.cs" />
     <Compile Include="CompilationUnit.cs" />
-    <Compile Include="Compilers\EffectCompiler.cs" />
     <Compile Include="Compilers\IAssetCompiler.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Assets\CSharpAsset.cs" />

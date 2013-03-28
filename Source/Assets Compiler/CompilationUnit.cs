@@ -10,6 +10,7 @@ namespace Pegasus.AssetsCompiler
 	using Assets;
 	using Assets.Attributes;
 	using Compilers;
+	using Effects.Compilation;
 	using Framework;
 
 	/// <summary>
@@ -65,9 +66,13 @@ namespace Pegasus.AssetsCompiler
 		{
 			try
 			{
-				var success = true;
+				var project = new EffectsProject(_assets.OfType<CSharpAsset>().ToArray());
+				var success = project.Compile();
+				_assets.AddRange(project.ShaderAssets);
+
 				foreach (var compiler in Compilers)
 					success &= compiler.Compile(_assets);
+
 				return success;
 			}
 			catch (Exception e)
@@ -111,7 +116,11 @@ namespace Pegasus.AssetsCompiler
 							 .Select(element => element.Attribute("Include").Value)
 							 .Select(asset => asset.Replace("\\", "/"));
 
-			foreach (var asset in assets.Where(path => _assets.All(a => a.RelativePath != path)).ToArray())
+			var ignoredAssets = Configuration.AssetListAssembly.GetCustomAttributes<IgnoreAttribute>().Select(ignore => ignore.Name);
+			assets = assets.Where(path => _assets.All(a => a.RelativePath != path));
+			assets = assets.Except(ignoredAssets);
+
+			foreach (var asset in assets)
 			{
 				if (asset.EndsWith(".png"))
 					Add(new Texture2DAsset(asset));

@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.Collections.Generic;
 	using System.Linq;
 	using Assets;
-	using Compilers;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
@@ -39,13 +38,18 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Gets the cross-compiled shader assets.
+		/// </summary>
+		public IEnumerable<Asset> ShaderAssets { get; private set; }
+
+		/// <summary>
 		///   Loads the required assemblies into the project.
 		/// </summary>
 		private void LoadAssemblies()
 		{
 			var loader = new CecilLoader();
 
-			var assemblies = new[] { typeof(int).Assembly, typeof(EffectCompiler).Assembly };
+			var assemblies = new[] { typeof(int).Assembly, typeof(EffectsProject).Assembly };
 			foreach (var assembly in assemblies)
 			{
 				var loadedAssembly = loader.LoadAssemblyFile(assembly.Location);
@@ -81,6 +85,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					return file.Compile(context);
 				}).ToArray();
 
+			ShaderAssets = new Asset[0];
 			return !context.HasErrors;
 		}
 	}
