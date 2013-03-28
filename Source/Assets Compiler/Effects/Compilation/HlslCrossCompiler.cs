@@ -100,7 +100,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					foreach (var output in Shader.Outputs)
 					{
 						if (Shader.Type == ShaderType.VertexShader && output.Semantics == DataSemantics.Position)
+						{
+							Writer.AppendLine("{0} {1} : SV_Position;", ToHlsl(output.Type), output.Name);
 							continue;
+						}
 
 						var semantics = ToHlsl(output.Semantics);
 						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color0)
@@ -113,12 +116,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 							semantics = "SV_Target3";
 
 						Writer.AppendLine("{0} {1} : {2};", ToHlsl(output.Type), output.Name, semantics);
-					}
-
-					if (Shader.Type == ShaderType.VertexShader)
-					{
-						var position = Shader.Outputs.SingleOrDefault(output => output.Semantics == DataSemantics.Position);
-						Writer.AppendLine("{0} {1} : SV_Position;", ToHlsl(position.Type), position.Name);
 					}
 				}, true);
 		}

@@ -93,20 +93,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					Writer.AppendLine("out gl_PerVertex");
 					Writer.AppendBlockStatement(() => Writer.AppendLine("vec4 gl_Position;"));
 				}
+				else if (Shader.Type == ShaderType.FragmentShader)
+					Writer.AppendLine("layout(location = {2}) out {0} {1};", ToGlsl(output.Type), output.Name,
+									  output.Semantics - DataSemantics.Color0);
 				else
-				{
-					var binding = "";
-					if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color0)
-						binding = "layout(location = 0) ";
-					else if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color1)
-						binding = "layout(location = 1) ";
-					else if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color2)
-						binding = "layout(location = 2) ";
-					else if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color3)
-						binding = "layout(location = 3) ";
-
-					Writer.AppendLine("{2}out {0} {1};", ToGlsl(output.Type), output.Name, binding);
-				}
+					Writer.AppendLine("out {0} {1};", ToGlsl(output.Type), output.Name);
 			}
 		}
 
@@ -147,30 +138,30 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="semantics">The semantics that should be converted.</param>
 		private int ToVertexDataSlot(DataSemantics semantics)
 		{
-			VertexDataSemantics vertexSemantics;
+			DataSemantics vertexSemantics;
 
 			switch (semantics)
 			{
 				case DataSemantics.Position:
-					vertexSemantics = VertexDataSemantics.Position;
+					vertexSemantics = DataSemantics.Position;
 					break;
 				case DataSemantics.Normal:
-					vertexSemantics = VertexDataSemantics.Normal;
+					vertexSemantics = DataSemantics.Normal;
 					break;
 				case DataSemantics.TexCoords0:
-					vertexSemantics = VertexDataSemantics.TexCoords;
+					vertexSemantics = DataSemantics.TexCoords0;
 					break;
 				case DataSemantics.Color0:
-					vertexSemantics = VertexDataSemantics.Color;
+					vertexSemantics = DataSemantics.Color0;
 					break;
 				default:
 					Context.Error(Shader.ShaderCode,
 								  "Vertex shader '{0}' uses an unsupported input semantics '{1}'.", Shader.Name, semantics);
-					vertexSemantics = VertexDataSemantics.Position;
+					vertexSemantics = DataSemantics.Position;
 					break;
 			}
 
-			var slot = (int)vertexSemantics - (int)VertexDataSemantics.Position;
+			var slot = (int)vertexSemantics - (int)DataSemantics.Position;
 			Assert.InRange(slot, 0, 16);
 			return slot;
 		}

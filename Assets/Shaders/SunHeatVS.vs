@@ -13,7 +13,7 @@ layout(std140, binding = 1) uniform PerObjectConstants
 };
 
 layout(location = 0) in vec4 VertexPosition;
-layout(location = 3) in vec4 VertexNormal;
+layout(location = 9) in vec4 VertexNormal;
 
 out gl_PerVertex
 {

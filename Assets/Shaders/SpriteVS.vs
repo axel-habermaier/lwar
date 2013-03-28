@@ -10,7 +10,7 @@ layout(std140, binding = 1) uniform PerObjectConstants
 
 layout(location = 0) in vec4 VertexPosition;
 layout(location = 1) in vec4 VertexColor;
-layout(location = 2) in vec2 VertexTexCoords;
+layout(location = 5) in vec2 VertexTexCoords;
 
 out gl_PerVertex
 {

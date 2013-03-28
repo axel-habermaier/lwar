@@ -51,9 +51,9 @@ namespace Pegasus.Framework.Rendering
 
 			var inputElements = new[]
 			{
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, VertexDataSemantics.Position, Size, 0),
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector2, VertexDataSemantics.TexCoords, Size, 16),
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Color, VertexDataSemantics.Color, Size, 24)
+				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, DataSemantics.Position, Size, 0),
+				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector2, DataSemantics.TexCoords0, Size, 16),
+				new VertexInputBinding(vertexBuffer, VertexDataFormat.Color, DataSemantics.Color0, Size, 24)
 			};
 
 			return new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);

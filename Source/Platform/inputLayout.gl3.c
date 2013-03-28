@@ -30,7 +30,7 @@ pgVoid pgCreateInputLayoutCore(pgInputLayout* inputLayout, pgBuffer* indexBuffer
 		GLenum type;
 		GLsizei size;
 		GLboolean normalize;
-		GLuint slot = pgConvertVertexDataSemantics(inputBindings[i].semantics);
+		GLuint slot = (GLuint)inputBindings[i].semantics;
 
 		PG_ASSERT_NOT_NULL(inputBindings[i].vertexBuffer);
 		PG_ASSERT(inputBindings[i].vertexBuffer->type == GL_ARRAY_BUFFER, "Invalid vertex buffer.");
@@ -42,7 +42,10 @@ pgVoid pgCreateInputLayoutCore(pgInputLayout* inputLayout, pgBuffer* indexBuffer
 		pgConvertVertexDataFormat(inputBindings[i].format, &type, &size);
 
 		// Color values must be normalized
-		normalize = inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR;
+		normalize = inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR0 ||
+			inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR1 ||
+			inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR2 ||
+			inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR3;
 		glVertexAttribPointer(slot, size, type, normalize, inputBindings[i].stride, (void*)(size_t)inputBindings[i].offset);
 		PG_ASSERT_NO_GL_ERRORS();
 	}

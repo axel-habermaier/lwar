@@ -90,7 +90,7 @@ static pgInt32 pgReadShaderInputs(pgUint8** shaderData, pgUint8* end, pgShaderIn
 
 	for (i = 0; i < count && *shaderData < end; ++i)
 	{
-		inputs[i].semantics = (pgVertexDataSemantics)**shaderData;
+		inputs[i].semantics = (pgDataSemantics)**shaderData;
 		++(*shaderData);
 		inputs[i].format = (pgVertexDataFormat)**shaderData;
 		++(*shaderData);

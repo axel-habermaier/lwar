@@ -154,7 +154,6 @@ GLvoid pgConvertTextureFilter(pgTextureFilter textureFilter, GLenum* minFilter, 
 GLvoid pgConvertVertexDataFormat(pgVertexDataFormat vertexDataFormat, GLenum* type, GLsizei* size);
 GLvoid pgConvertShaderType(pgShaderType shaderType, GLenum* type, GLenum* bit);
 GLenum pgConvertBufferType(pgBufferType bufferType);
-GLint pgConvertVertexDataSemantics(pgVertexDataSemantics semantics);
 GLvoid pgConvertTextureType(pgTextureType textureType, GLenum* type, GLenum* boundType);
 
 #endif

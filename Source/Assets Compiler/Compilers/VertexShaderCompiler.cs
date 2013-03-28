@@ -40,20 +40,20 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Converts a semantic name string into its corresponding VertexDataSemantics value.
+		///   Converts a semantic name string into its corresponding DataSemantics value.
 		/// </summary>
-		private static VertexDataSemantics ConvertSemanticName(string semanticName)
+		private static DataSemantics ConvertSemanticName(string semanticName)
 		{
 			switch (semanticName.ToUpper())
 			{
 				case "POSITION":
-					return VertexDataSemantics.Position;
+					return DataSemantics.Position;
 				case "TEXCOORD":
-					return VertexDataSemantics.TexCoords;
+					return DataSemantics.TexCoords0;
 				case "COLOR":
-					return VertexDataSemantics.Color;
+					return DataSemantics.Color0;
 				case "NORMAL":
-					return VertexDataSemantics.Normal;
+					return DataSemantics.Normal;
 				default:
 					throw new InvalidOperationException(String.Format("Unknown semantic name: '{0}'.", semanticName));
 			}
@@ -89,7 +89,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 					var wUsed = paramDesc.UsageMask.HasFlag(RegisterComponentMaskFlags.ComponentW);
 
 					// The type of color inputs is Vector4; change that to RGBA8 to save 12 bytes per vertex
-					if (semantics == VertexDataSemantics.Color)
+					if (semantics == DataSemantics.Color0)
 					{
 						Assert.That(xUsed && yUsed && zUsed && wUsed, "Colors should always have 4 channels.");
 						format = VertexDataFormat.Color;

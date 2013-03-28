@@ -94,11 +94,31 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			{
 				case ShaderType.VertexShader:
 					if (Outputs.All(o => o.Semantics != DataSemantics.Position))
-						context.Error(_method, "Vertex shader '{0}' must declare an output parameter with the 'Position' semantics.", Name);
+						context.Error(_method, "Vertex shader '{0}' must declare an output parameter with the '{1}' semantics.",
+									  Name, DataSemantics.Position.ToDisplayString());
+
+					for (var i = 0; i < Outputs.Length; ++i)
+					{
+						if (Outputs[i].Semantics == DataSemantics.Position)
+						{
+							var output = Outputs[i];
+							var lastIndex = Outputs.Length - 1;
+							Outputs[i] = Outputs[lastIndex];
+							Outputs[lastIndex] = output;
+							break;
+						}
+					}
 					break;
 				case ShaderType.FragmentShader:
 					if (Outputs.All(o => o.Semantics != DataSemantics.Color0))
-						context.Error(_method, "Fragment shader '{0}' must declare an output parameter with the 'Color(0)' semantics.", Name);
+						context.Error(_method, "Fragment shader '{0}' must declare an output parameter with the '{1}' semantics.",
+									  Name, DataSemantics.Color0.ToDisplayString());
+
+					foreach (var output in Outputs.Where(o => !o.Semantics.IsColor()))
+					{
+						context.Error(output.Declaration, "Fragment shader '{0}' cannot assign '{2}' semantics to output parameter '{1}'.",
+									  Name, output.Name, output.Semantics.ToDisplayString());
+					}
 					break;
 				default:
 					throw new InvalidOperationException("Unsupported shader type.");
@@ -138,14 +158,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			var groups = parameters.GroupBy(parameter => parameter.Semantics).Where(group => group.Count() > 1);
 			foreach (var semanticsGroup in groups)
 			{
-				var semantics = semanticsGroup.First().Semantics.ToString();
-				var lastCharacter = semantics[semantics.Length - 1];
-
-				if (Char.IsDigit(lastCharacter))
-					semantics = String.Format("{0}({1})", semantics.Substring(0, semantics.Length - 1), lastCharacter);
-
 				context.Error(_method, "Shader '{0}' declares multiple {2} parameters with the '{1}' semantics.",
-							  Name, semantics, direction);
+							  Name, semanticsGroup.First().Semantics.ToDisplayString(), direction);
 			}
 		}
 

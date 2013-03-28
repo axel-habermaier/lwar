@@ -5,12 +5,15 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.Collections.Generic;
 	using System.Linq;
 	using Framework;
+	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Math;
 	using Attribute = System.Attribute;
 	using CSharpAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
+	using CubeMap = Effects.CubeMap;
+	using Texture2D = Effects.Texture2D;
 
 	/// <summary>
 	///   Provides extension methods on NRefactory AST types.
@@ -220,6 +223,33 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				return DataType.Matrix;
 
 			return DataType.Unknown;
+		}
+
+		/// <summary>
+		///   Converts the semantics into its display string.
+		/// </summary>
+		/// <param name="semantics">The semantics that should be converted.</param>
+		public static string ToDisplayString(this DataSemantics semantics)
+		{
+			var semanticsString = semantics.ToString();
+			var lastCharacter = semanticsString[semanticsString.Length - 1];
+
+			if (Char.IsDigit(lastCharacter))
+				return String.Format("{0}({1})", semanticsString.Substring(0, semanticsString.Length - 1), lastCharacter);
+
+			return semanticsString;
+		}
+
+		/// <summary>
+		///   Checks whether the semantics represents one of the color semantics, regardless of the semantic index.
+		/// </summary>
+		/// <param name="semantics">The semantics that should be checked.</param>
+		public static bool IsColor(this DataSemantics semantics)
+		{
+			return semantics == DataSemantics.Color0 ||
+				   semantics == DataSemantics.Color1 ||
+				   semantics == DataSemantics.Color2 ||
+				   semantics == DataSemantics.Color3;
 		}
 	}
 }

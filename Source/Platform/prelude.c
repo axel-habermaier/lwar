@@ -35,7 +35,7 @@ PG_ASSERT_SIZE(pgSurfaceFormat, 4);
 PG_ASSERT_SIZE(pgTextureAddressMode, 4);
 PG_ASSERT_SIZE(pgTextureFilter, 4);
 PG_ASSERT_SIZE(pgVertexDataFormat, 4);
-PG_ASSERT_SIZE(pgVertexDataSemantics, 4);
+PG_ASSERT_SIZE(pgDataSemantics, 4);
 PG_ASSERT_SIZE(pgTextureType, 4);
 PG_ASSERT_SIZE(pgQueryType, 4);
 PG_ASSERT_SIZE(pgBufferType, 4);

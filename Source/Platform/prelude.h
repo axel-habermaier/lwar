@@ -269,7 +269,7 @@ struct pgShader
 typedef struct
 {
 	pgVertexDataFormat		format;
-	pgVertexDataSemantics	semantics;
+	pgDataSemantics			semantics;
 } pgShaderInput;
 
 pgVoid pgCreateShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* inputs, pgInt32 inputCount);

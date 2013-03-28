@@ -21,7 +21,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   The offset in bytes. The offset should point to the first byte of
 		///   the first data value in the associated vertex buffer.
 		/// </param>
-		public VertexInputBinding(VertexBuffer vertexBuffer, VertexDataFormat format, VertexDataSemantics semantics,
+		public VertexInputBinding(VertexBuffer vertexBuffer, VertexDataFormat format, DataSemantics semantics,
 								  int stride, int offset)
 			: this()
 		{
@@ -40,7 +40,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   A value indicating the usage scenario of the vertex data.
 		/// </summary>
-		internal VertexDataSemantics Semantics;
+		internal DataSemantics Semantics;
 
 		/// <summary>
 		///   The stride in bytes between each data element.

@@ -296,13 +296,7 @@ D3D11_BIND_FLAG pgConvertBufferType(pgBufferType bufferType)
 	}
 }
 
-UINT pgGetInputSlot(pgVertexDataSemantics semantics)
-{
-	PG_ASSERT_IN_RANGE(semantics, 200, 209);
-	return (UINT)semantics - 200;
-}
-
-pgVoid pgConvertVertexDataSemantics(pgVertexDataSemantics semantics, pgInt32* semanticIndex, pgString* semanticName)
+pgVoid pgConvertVertexDataSemantics(pgDataSemantics semantics, pgInt32* semanticIndex, pgString* semanticName)
 {
 	*semanticIndex = 0;
 
@@ -311,11 +305,37 @@ pgVoid pgConvertVertexDataSemantics(pgVertexDataSemantics semantics, pgInt32* se
 	case PG_VERTEX_SEMANTICS_POSITION:
 		*semanticName = "POSITION";
 		break;
-	case PG_VERTEX_SEMANTICS_COLOR:		
+	case PG_VERTEX_SEMANTICS_COLOR0:		
 		*semanticName = "COLOR";
+		*semanticIndex = 0;
 		break;
-	case PG_VERTEX_SEMANTICS_TEXTURE:			
+	case PG_VERTEX_SEMANTICS_COLOR1:		
+		*semanticName = "COLOR";
+		*semanticIndex = 1;
+		break;
+	case PG_VERTEX_SEMANTICS_COLOR2:		
+		*semanticName = "COLOR";
+		*semanticIndex = 2;
+		break;
+	case PG_VERTEX_SEMANTICS_COLOR3:		
+		*semanticName = "COLOR";
+		*semanticIndex = 3;
+		break;
+	case PG_VERTEX_SEMANTICS_TEXCOORDS0:			
 		*semanticName = "TEXCOORD";
+		*semanticIndex = 0;
+		break;
+	case PG_VERTEX_SEMANTICS_TEXCOORDS1:			
+		*semanticName = "TEXCOORD";
+		*semanticIndex = 1;
+		break;
+	case PG_VERTEX_SEMANTICS_TEXCOORDS2:			
+		*semanticName = "TEXCOORD";
+		*semanticIndex = 2;
+		break;
+	case PG_VERTEX_SEMANTICS_TEXCOORDS3:			
+		*semanticName = "TEXCOORD";
+		*semanticIndex = 3;
 		break;
 	case PG_VERTEX_SEMANTICS_NORMAL:	
 		*semanticName = "NORMAL";

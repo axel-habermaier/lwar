@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Linq;
+	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Semantics;
@@ -129,7 +130,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			var index = (int)resolved.ConstantValue;
 
 			if (index < 0 || index > 3)
+			{
 				context.Error(Declaration, "Semantic index of parameter '{0}' must be between 0 and 3.", Name);
+				return 0;
+			}
 
 			return index;
 		}

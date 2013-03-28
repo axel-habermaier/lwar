@@ -435,7 +435,7 @@
     <Compile Include="Platform\Graphics\IndexSize.cs" />
     <Compile Include="Platform\Graphics\Texture2D.cs" />
     <Compile Include="Platform\Graphics\VertexInputBinding.cs" />
-    <Compile Include="Platform\Graphics\VertexDataSemantics.cs" />
+    <Compile Include="Platform\Graphics\DataSemantics.cs" />
     <Compile Include="Platform\Graphics\VertexInputLayout.cs" />
     <Compile Include="Platform\Graphics\PipelineState.cs" />
     <Compile Include="Platform\Graphics\PrimitiveType.cs" />

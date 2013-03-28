@@ -178,7 +178,7 @@ namespace Lwar.Client.Rendering
 
 			var inputElements = new[]
 			{
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, VertexDataSemantics.Position, sizeof(Vector4), 0)
+				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, DataSemantics.Position, sizeof(Vector4), 0)
 			};
 
 			var layout = new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);

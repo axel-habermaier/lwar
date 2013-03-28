@@ -58,11 +58,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				var oldHash = Hash.FromFile(Asset.HashPath);
 				var newHash = Hash.Compute(Asset.SourcePath);
 
-				//if (oldHash == newHash)
-				//{
-				//	CompilationAction.Skip.Describe(Asset);
-				//	yield break;
-				//}
+				if (oldHash == newHash)
+				{
+					CompilationAction.Skip.Describe(Asset);
+					yield break;
+				}
 			}
 
 			CompilationAction.Process.Describe(Asset);

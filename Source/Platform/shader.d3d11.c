@@ -92,7 +92,7 @@ static pgVoid pgFillInputDescs(D3D11_INPUT_ELEMENT_DESC* descs, pgShaderInput* i
 		descs[i].Format = pgConvertVertexDataFormat(input[i].format);
 		descs[i].SemanticIndex = semanticIndex;
 		descs[i].SemanticName = semanticName;
-		descs[i].InputSlot = pgGetInputSlot(input[i].semantics);
+		descs[i].InputSlot = (pgInt32)input[i].semantics;
 	}
 }
 

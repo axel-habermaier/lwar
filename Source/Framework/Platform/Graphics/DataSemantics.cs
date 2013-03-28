@@ -1,65 +1,60 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Compilation
+namespace Pegasus.Framework.Platform.Graphics
 {
 	/// <summary>
-	///   Describesthe semantics of a shader data object.
+	///   Describes the usage scenario of an input element.
 	/// </summary>
-	internal enum DataSemantics
+	public enum DataSemantics
 	{
-		/// <summary>
-		///   Indicates that the semantics of the data are unknown.
-		/// </summary>
-		Unknown = 0,
-
 		/// <summary>
 		///   Indicates that the data describes positions.
 		/// </summary>
-		Position,
+		Position = 0,
 
 		/// <summary>
 		///   Indicates that the data describes colors at semantic index 0.
 		/// </summary>
-		Color0,
+		Color0 = 1,
 
 		/// <summary>
 		///   Indicates that the data describes colors at semantic index 1.
 		/// </summary>
-		Color1,
+		Color1 = 2,
 
 		/// <summary>
 		///   Indicates that the data describes colors at semantic index 2.
 		/// </summary>
-		Color2,
+		Color2 = 3,
 
 		/// <summary>
 		///   Indicates that the data describes colors at semantic index 3.
 		/// </summary>
-		Color3,
+		Color3 = 4,
 
 		/// <summary>
 		///   Indicates that the data describes texture coordinates at semantic index 0.
 		/// </summary>
-		TexCoords0,
+		TexCoords0 = 5,
 
 		/// <summary>
 		///   Indicates that the data describes texture coordinates at semantic index 1.
 		/// </summary>
-		TexCoords1,
+		TexCoords1 = 6,
 
 		/// <summary>
 		///   Indicates that the data describes texture coordinates at semantic index 2.
 		/// </summary>
-		TexCoords2,
+		TexCoords2 = 7,
 
 		/// <summary>
 		///   Indicates that the data describes texture coordinates at semantic index 3.
 		/// </summary>
-		TexCoords3,
+		TexCoords3 = 8,
 
 		/// <summary>
 		///   Indicates that the data describes normals.
 		/// </summary>
-		Normal
+		Normal = 9
 	}
 }
