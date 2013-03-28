@@ -1,0 +1,33 @@
+﻿using System;
+
+namespace Pegasus.AssetsCompiler.Effects.Ast
+{
+	using Compilation;
+
+	/// <summary>
+	///   Represents the invocation of an intrinsic function.
+	/// </summary>
+	internal class IntrinsicFunctionInvocation : Expression
+	{
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="function">The intrinsic function that should be invoked.</param>
+		/// <param name="arguments">The arguments of the function invocation.</param>
+		public IntrinsicFunctionInvocation(IntrinsicFunction function, Expression[] arguments)
+		{
+			Function = function;
+			Arguments = arguments;
+		}
+
+		/// <summary>
+		///   Gets the intrinsic function that should be invoked.
+		/// </summary>
+		public IntrinsicFunction Function { get; private set; }
+
+		/// <summary>
+		///   Gets the arguments of the function invocation.
+		/// </summary>
+		public Expression[] Arguments { get; private set; }
+	}
+}

@@ -7,269 +7,293 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 	/// <summary>
 	///   Creates an abstract syntax tree for the shader code from the syntax tree of a C# method.
 	/// </summary>
-	internal partial class AstCreator : IAstVisitor<ShaderAstNode>
+	internal partial class AstCreator
 	{
-		public ShaderAstNode VisitPreProcessorDirective(PreProcessorDirective preProcessorDirective)
+		public IAstNode VisitPreProcessorDirective(PreProcessorDirective preProcessorDirective)
 		{
 			UnsupportedCSharpFeature(preProcessorDirective, "preprocessor directive");
 			return null;
 		}
 
-		public ShaderAstNode VisitCheckedStatement(CheckedStatement checkedStatement)
+		public IAstNode VisitCheckedStatement(CheckedStatement checkedStatement)
 		{
 			UnsupportedCSharpFeature(checkedStatement, "checked");
 			return null;
 		}
 
-		public ShaderAstNode VisitFixedStatement(FixedStatement fixedStatement)
+		public IAstNode VisitFixedStatement(FixedStatement fixedStatement)
 		{
 			UnsupportedCSharpFeature(fixedStatement, "fixed");
 			return null;
 		}
 
-		public ShaderAstNode VisitGotoCaseStatement(GotoCaseStatement gotoCaseStatement)
+		public IAstNode VisitGotoCaseStatement(GotoCaseStatement gotoCaseStatement)
 		{
 			UnsupportedCSharpFeature(gotoCaseStatement, "goto");
 			return null;
 		}
 
-		public ShaderAstNode VisitGotoDefaultStatement(GotoDefaultStatement gotoDefaultStatement)
+		public IAstNode VisitForeachStatement(ForeachStatement foreachStatement)
+		{
+			UnsupportedCSharpFeature(foreachStatement, "foreach");
+			return null;
+		}
+
+		public IAstNode VisitGotoDefaultStatement(GotoDefaultStatement gotoDefaultStatement)
 		{
 			UnsupportedCSharpFeature(gotoDefaultStatement, "goto");
 			return null;
 		}
 
-		public ShaderAstNode VisitGotoStatement(GotoStatement gotoStatement)
+		public IAstNode VisitGotoStatement(GotoStatement gotoStatement)
 		{
 			UnsupportedCSharpFeature(gotoStatement, "goto");
 			return null;
 		}
 
-		public ShaderAstNode VisitLabelStatement(LabelStatement labelStatement)
+		public IAstNode VisitLabelStatement(LabelStatement labelStatement)
 		{
 			UnsupportedCSharpFeature(labelStatement, "label");
 			return null;
 		}
 
-		public ShaderAstNode VisitLockStatement(LockStatement lockStatement)
+		public IAstNode VisitLockStatement(LockStatement lockStatement)
 		{
 			UnsupportedCSharpFeature(lockStatement, "lock");
 			return null;
 		}
 
-		public ShaderAstNode VisitThrowStatement(ThrowStatement throwStatement)
+		public IAstNode VisitThrowStatement(ThrowStatement throwStatement)
 		{
 			UnsupportedCSharpFeature(throwStatement, "throw");
 			return null;
 		}
 
-		public ShaderAstNode VisitTryCatchStatement(TryCatchStatement tryCatchStatement)
+		public IAstNode VisitTryCatchStatement(TryCatchStatement tryCatchStatement)
 		{
 			UnsupportedCSharpFeature(tryCatchStatement, "try-catch");
 			return null;
 		}
 
-		public ShaderAstNode VisitCatchClause(CatchClause catchClause)
+		public IAstNode VisitCatchClause(CatchClause catchClause)
 		{
 			UnsupportedCSharpFeature(catchClause, "catch");
 			return null;
 		}
 
-		public ShaderAstNode VisitUncheckedStatement(UncheckedStatement uncheckedStatement)
+		public IAstNode VisitUncheckedStatement(UncheckedStatement uncheckedStatement)
 		{
 			UnsupportedCSharpFeature(uncheckedStatement, "unchecked");
 			return null;
 		}
 
-		public ShaderAstNode VisitUnsafeStatement(UnsafeStatement unsafeStatement)
+		public IAstNode VisitUnsafeStatement(UnsafeStatement unsafeStatement)
 		{
 			UnsupportedCSharpFeature(unsafeStatement, "unsafe");
 			return null;
 		}
 
-		public ShaderAstNode VisitUsingStatement(UsingStatement usingStatement)
+		public IAstNode VisitUsingStatement(UsingStatement usingStatement)
 		{
 			UnsupportedCSharpFeature(usingStatement, "using");
 			return null;
 		}
 
-		public ShaderAstNode VisitYieldBreakStatement(YieldBreakStatement yieldBreakStatement)
+		public IAstNode VisitYieldBreakStatement(YieldBreakStatement yieldBreakStatement)
 		{
 			UnsupportedCSharpFeature(yieldBreakStatement, "yield break");
 			return null;
 		}
 
-		public ShaderAstNode VisitYieldReturnStatement(YieldReturnStatement yieldReturnStatement)
+		public IAstNode VisitYieldReturnStatement(YieldReturnStatement yieldReturnStatement)
 		{
 			UnsupportedCSharpFeature(yieldReturnStatement, "yield return");
 			return null;
 		}
 
-		public ShaderAstNode VisitAnonymousMethodExpression(AnonymousMethodExpression anonymousMethodExpression)
+		public IAstNode VisitAnonymousMethodExpression(AnonymousMethodExpression anonymousMethodExpression)
 		{
 			UnsupportedCSharpFeature(anonymousMethodExpression, "anonymous method");
 			return null;
 		}
 
-		public ShaderAstNode VisitLambdaExpression(LambdaExpression lambdaExpression)
+		public IAstNode VisitLambdaExpression(LambdaExpression lambdaExpression)
 		{
 			UnsupportedCSharpFeature(lambdaExpression, "lambda function");
 			return null;
 		}
 
-		public ShaderAstNode VisitBaseReferenceExpression(BaseReferenceExpression baseReferenceExpression)
+		public IAstNode VisitBaseReferenceExpression(BaseReferenceExpression baseReferenceExpression)
 		{
 			UnsupportedCSharpFeature(baseReferenceExpression, "base");
 			return null;
 		}
 
-		public ShaderAstNode VisitCheckedExpression(CheckedExpression checkedExpression)
+		public IAstNode VisitCheckedExpression(CheckedExpression checkedExpression)
 		{
 			UnsupportedCSharpFeature(checkedExpression, "checked");
 			return null;
 		}
 
-		public ShaderAstNode VisitNullReferenceExpression(NullReferenceExpression nullReferenceExpression)
+		public IAstNode VisitNullReferenceExpression(NullReferenceExpression nullReferenceExpression)
 		{
 			UnsupportedCSharpFeature(nullReferenceExpression, "null");
 			return null;
 		}
 
-		public ShaderAstNode VisitAnonymousTypeCreateExpression(AnonymousTypeCreateExpression anonymousTypeCreateExpression)
+		public IAstNode VisitAnonymousTypeCreateExpression(AnonymousTypeCreateExpression anonymousTypeCreateExpression)
 		{
 			UnsupportedCSharpFeature(anonymousTypeCreateExpression, "anonymous type");
 			return null;
 		}
 
-		public ShaderAstNode VisitArrayCreateExpression(ArrayCreateExpression arrayCreateExpression)
+		public IAstNode VisitArrayCreateExpression(ArrayCreateExpression arrayCreateExpression)
 		{
 			UnsupportedCSharpFeature(arrayCreateExpression, "dynamic array initialization");
 			return null;
 		}
 
-		public ShaderAstNode VisitPointerReferenceExpression(PointerReferenceExpression pointerReferenceExpression)
+		public IAstNode VisitPointerReferenceExpression(PointerReferenceExpression pointerReferenceExpression)
 		{
 			UnsupportedCSharpFeature(pointerReferenceExpression, "pointer");
 			return null;
 		}
 
-		public ShaderAstNode VisitSizeOfExpression(SizeOfExpression sizeOfExpression)
+		public IAstNode VisitSizeOfExpression(SizeOfExpression sizeOfExpression)
 		{
 			UnsupportedCSharpFeature(sizeOfExpression, "sizeof");
 			return null;
 		}
 
-		public ShaderAstNode VisitStackAllocExpression(StackAllocExpression stackAllocExpression)
+		public IAstNode VisitStackAllocExpression(StackAllocExpression stackAllocExpression)
 		{
 			UnsupportedCSharpFeature(stackAllocExpression, "stackalloc");
 			return null;
 		}
 
-		public ShaderAstNode VisitTypeOfExpression(TypeOfExpression typeOfExpression)
+		public IAstNode VisitTypeOfExpression(TypeOfExpression typeOfExpression)
 		{
 			UnsupportedCSharpFeature(typeOfExpression, "typeof");
 			return null;
 		}
 
-		public ShaderAstNode VisitUncheckedExpression(UncheckedExpression uncheckedExpression)
+		public IAstNode VisitUncheckedExpression(UncheckedExpression uncheckedExpression)
 		{
 			UnsupportedCSharpFeature(uncheckedExpression, "unchecked");
 			return null;
 		}
 
-		public ShaderAstNode VisitQueryExpression(QueryExpression queryExpression)
+		public IAstNode VisitQueryExpression(QueryExpression queryExpression)
 		{
 			UnsupportedCSharpFeature(queryExpression, "query");
 			return null;
 		}
 
-		public ShaderAstNode VisitQueryContinuationClause(QueryContinuationClause queryContinuationClause)
+		public IAstNode VisitQueryContinuationClause(QueryContinuationClause queryContinuationClause)
 		{
 			UnsupportedCSharpFeature(queryContinuationClause, "query");
 			return null;
 		}
 
-		public ShaderAstNode VisitQueryFromClause(QueryFromClause queryFromClause)
+		public IAstNode VisitQueryFromClause(QueryFromClause queryFromClause)
 		{
 			UnsupportedCSharpFeature(queryFromClause, "from");
 			return null;
 		}
 
-		public ShaderAstNode VisitQueryLetClause(QueryLetClause queryLetClause)
+		public IAstNode VisitQueryLetClause(QueryLetClause queryLetClause)
 		{
 			UnsupportedCSharpFeature(queryLetClause, "let");
 			return null;
 		}
 
-		public ShaderAstNode VisitQueryWhereClause(QueryWhereClause queryWhereClause)
+		public IAstNode VisitQueryWhereClause(QueryWhereClause queryWhereClause)
 		{
 			UnsupportedCSharpFeature(queryWhereClause, "where");
 			return null;
 		}
 
-		public ShaderAstNode VisitQueryJoinClause(QueryJoinClause queryJoinClause)
+		public IAstNode VisitQueryJoinClause(QueryJoinClause queryJoinClause)
 		{
 			UnsupportedCSharpFeature(queryJoinClause, "join");
 			return null;
 		}
 
-		public ShaderAstNode VisitQueryOrderClause(QueryOrderClause queryOrderClause)
+		public IAstNode VisitQueryOrderClause(QueryOrderClause queryOrderClause)
 		{
 			UnsupportedCSharpFeature(queryOrderClause, "orderby");
 			return null;
 		}
 
-		public ShaderAstNode VisitQueryOrdering(QueryOrdering queryOrdering)
+		public IAstNode VisitQueryOrdering(QueryOrdering queryOrdering)
 		{
 			UnsupportedCSharpFeature(queryOrdering, "ordering");
 			return null;
 		}
 
-		public ShaderAstNode VisitQuerySelectClause(QuerySelectClause querySelectClause)
+		public IAstNode VisitQuerySelectClause(QuerySelectClause querySelectClause)
 		{
 			UnsupportedCSharpFeature(querySelectClause, "select");
 			return null;
 		}
 
-		public ShaderAstNode VisitQueryGroupClause(QueryGroupClause queryGroupClause)
+		public IAstNode VisitQueryGroupClause(QueryGroupClause queryGroupClause)
 		{
 			UnsupportedCSharpFeature(queryGroupClause, "groupby");
 			return null;
 		}
 
-		public ShaderAstNode VisitAsExpression(AsExpression asExpression)
+		public IAstNode VisitAsExpression(AsExpression asExpression)
 		{
 			UnsupportedCSharpFeature(asExpression, "as");
 			return null;
 		}
 
-		public ShaderAstNode VisitIsExpression(IsExpression isExpression)
+		public IAstNode VisitIsExpression(IsExpression isExpression)
 		{
 			UnsupportedCSharpFeature(isExpression, "is");
 			return null;
 		}
 
-		public ShaderAstNode VisitDefaultValueExpression(DefaultValueExpression defaultValueExpression)
+		public IAstNode VisitDefaultValueExpression(DefaultValueExpression defaultValueExpression)
 		{
 			UnsupportedCSharpFeature(defaultValueExpression, "default");
 			return null;
 		}
 
-		public ShaderAstNode VisitUndocumentedExpression(UndocumentedExpression undocumentedExpression)
+		public IAstNode VisitUndocumentedExpression(UndocumentedExpression undocumentedExpression)
 		{
 			UnsupportedCSharpFeature(undocumentedExpression, "undocumented expression");
 			return null;
 		}
 
-		public ShaderAstNode VisitArrayInitializerExpression(ArrayInitializerExpression arrayInitializerExpression)
+		public IAstNode VisitArrayInitializerExpression(ArrayInitializerExpression arrayInitializerExpression)
 		{
 			UnsupportedCSharpFeature(arrayInitializerExpression, "dynamic array initialization");
 			return null;
 		}
 
-		public ShaderAstNode VisitNamedArgumentExpression(NamedArgumentExpression namedArgumentExpression)
+		public IAstNode VisitNamedArgumentExpression(NamedArgumentExpression namedArgumentExpression)
 		{
 			UnsupportedCSharpFeature(namedArgumentExpression, "named arguments");
+			return null;
+		}
+
+		public IAstNode VisitSwitchStatement(SwitchStatement switchStatement)
+		{
+			UnsupportedCSharpFeature(switchStatement, "switch statement");
+			return null;
+		}
+
+		public IAstNode VisitSwitchSection(SwitchSection switchSection)
+		{
+			UnsupportedCSharpFeature(switchSection, "switch statement");
+			return null;
+		}
+
+		public IAstNode VisitCaseLabel(CaseLabel caseLabel)
+		{
+			UnsupportedCSharpFeature(caseLabel, "case label");
 			return null;
 		}
 
@@ -278,7 +302,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// </summary>
 		/// <param name="node">The node that should be reported as unsupported.</param>
 		/// <param name="description">The description of the unsupported C# feature.</param>
-		private void UnsupportedCSharpFeature(AstNode node, string description)
+		private void UnsupportedCSharpFeature(ICSharpCode.NRefactory.CSharp.AstNode node, string description)
 		{
 			_context.Error(node, "Unsupported C# feature used: {0}.", description);
 		}

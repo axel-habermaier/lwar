@@ -2,174 +2,213 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Ast
 {
+	using System.Linq;
+	using Compilation;
+	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.Semantics;
 
 	/// <summary>
 	///   Creates an abstract syntax tree for the shader code from the syntax tree of a C# method.
 	/// </summary>
-	internal partial class AstCreator : IAstVisitor<ShaderAstNode>
+	internal partial class AstCreator
 	{
-		public ShaderAstNode VisitBlockStatement(BlockStatement blockStatement)
+		public IAstNode VisitBlockStatement(ICSharpCode.NRefactory.CSharp.BlockStatement blockStatement)
+		{
+			var statements = blockStatement.Statements.Visit<Statement>(this);
+			return new BlockStatement(statements);
+		}
+
+		public IAstNode VisitEmptyStatement(EmptyStatement emptyStatement)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitEmptyStatement(EmptyStatement emptyStatement)
+		public IAstNode VisitExpressionStatement(ICSharpCode.NRefactory.CSharp.ExpressionStatement expressionStatement)
+		{
+			return new ExpressionStatement((Expression)expressionStatement.Expression.AcceptVisitor(this));
+		}
+
+		public IAstNode VisitForStatement(ICSharpCode.NRefactory.CSharp.ForStatement forStatement)
+		{
+			var initializers = forStatement.Initializers.Visit<Statement>(this);
+			var actions = forStatement.Iterators.Visit<Statement>(this);
+
+			var condition = forStatement.Condition.Visit<Expression>(this);
+			var body = forStatement.EmbeddedStatement.Visit<Statement>(this);
+
+			return new ForStatement(initializers, condition, actions, body);
+		}
+
+		public IAstNode VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitExpressionStatement(ExpressionStatement expressionStatement)
+		public IAstNode VisitWhileStatement(ICSharpCode.NRefactory.CSharp.WhileStatement whileStatement)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitBreakStatement(BreakStatement breakStatement)
+		public IAstNode VisitAssignmentExpression(ICSharpCode.NRefactory.CSharp.AssignmentExpression assignmentExpression)
+		{
+			var left = assignmentExpression.Left.Visit<Expression>(this);
+			var right = assignmentExpression.Right.Visit<Expression>(this);
+
+			return new AssignmentExpression(left, assignmentExpression.Operator, right);
+		}
+
+		public IAstNode VisitBinaryOperatorExpression(
+			ICSharpCode.NRefactory.CSharp.BinaryOperatorExpression binaryOperatorExpression)
+		{
+			var left = binaryOperatorExpression.Left.Visit<Expression>(this);
+			var right = binaryOperatorExpression.Right.Visit<Expression>(this);
+
+			var leftType = _context.Resolve(binaryOperatorExpression.Left).Type.ToDataType();
+			var rightType = _context.Resolve(binaryOperatorExpression.Right).Type.ToDataType();
+
+			return new BinaryOperatorExpression(left, leftType, binaryOperatorExpression.Operator, right, rightType);
+		}
+
+		public IAstNode VisitVariableInitializer(VariableInitializer variableInitializer)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitContinueStatement(ContinueStatement continueStatement)
+		public IAstNode VisitCastExpression(CastExpression castExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitDoWhileStatement(DoWhileStatement doWhileStatement)
+		public IAstNode VisitConditionalExpression(ConditionalExpression conditionalExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitForeachStatement(ForeachStatement foreachStatement)
+		public IAstNode VisitIdentifierExpression(IdentifierExpression identifierExpression)
+		{
+			var local = _context.Resolve<LocalResolveResult>(identifierExpression);
+			if (local != null)
+			{
+				if (local.IsParameter)
+				{
+					var parameter = _shader.Parameters.Single(p => p.Name == local.Variable.Name);
+					return new VariableReference<ShaderParameter>(parameter);
+				}
+				
+				var variable = 0;//Get local variables during compilation.
+			}
+
+			var member = _context.Resolve<MemberResolveResult>(identifierExpression);
+			//if (member != null)
+			//	return new
+			return null;
+		}
+
+		public IAstNode VisitIndexerExpression(ICSharpCode.NRefactory.CSharp.IndexerExpression indexerExpression)
+		{
+			var target = indexerExpression.Target.Visit<Expression>(this);
+			var arguments = indexerExpression.Arguments.Visit<Expression>(this);
+
+			return new IndexerExpression(target, arguments);
+		}
+
+		public IAstNode VisitInvocationExpression(InvocationExpression invocationExpression)
+		{
+			var arguments = invocationExpression.Arguments.Visit<Expression>(this);
+
+			var method = _context.Resolve<MemberResolveResult>(invocationExpression).Member;
+			var dataType = method.DeclaringType.ToDataType();
+			if (dataType == DataType.Texture2D || dataType == DataType.CubeMap)
+			{
+				if (method.Name == "Sample" && arguments.Length == 1)
+					return new IntrinsicFunctionInvocation(IntrinsicFunction.Sample, arguments);
+
+				if (method.Name == "Sample" && arguments.Length == 2)
+					return new IntrinsicFunctionInvocation(IntrinsicFunction.SampleLevel, arguments);
+
+				Assert.That(false, "Unsupported texture function.");
+			}
+
+			throw new InvalidOperationException("Unsupported function invocation.");
+		}
+
+		public IAstNode VisitDirectionExpression(DirectionExpression directionExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitForStatement(ForStatement forStatement)
+		public IAstNode VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitIfElseStatement(IfElseStatement ifElseStatement)
+		public IAstNode VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitReturnStatement(ReturnStatement returnStatement)
+		public IAstNode VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitSwitchStatement(SwitchStatement switchStatement)
+		public IAstNode VisitPrimitiveExpression(PrimitiveExpression primitiveExpression)
+		{
+			return new LiteralValue(primitiveExpression.Value);
+		}
+
+		public IAstNode VisitThisReferenceExpression(ThisReferenceExpression thisReferenceExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitSwitchSection(SwitchSection switchSection)
+		public IAstNode VisitTypeReferenceExpression(TypeReferenceExpression typeReferenceExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitCaseLabel(CaseLabel caseLabel)
+		public IAstNode VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement)
+		public IAstNode VisitArraySpecifier(ArraySpecifier arraySpecifier)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitWhileStatement(WhileStatement whileStatement)
+		public IAstNode VisitNamedExpression(NamedExpression namedExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitAssignmentExpression(AssignmentExpression assignmentExpression)
+		public IAstNode VisitEmptyExpression(EmptyExpression emptyExpression)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
+		public IAstNode VisitBreakStatement(ICSharpCode.NRefactory.CSharp.BreakStatement breakStatement)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitCastExpression(CastExpression castExpression)
+		public IAstNode VisitContinueStatement(ICSharpCode.NRefactory.CSharp.ContinueStatement continueStatement)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitConditionalExpression(ConditionalExpression conditionalExpression)
+		public IAstNode VisitDoWhileStatement(ICSharpCode.NRefactory.CSharp.DoWhileStatement doWhileStatement)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitIdentifierExpression(IdentifierExpression identifierExpression)
+		public IAstNode VisitIfElseStatement(ICSharpCode.NRefactory.CSharp.IfElseStatement ifElseStatement)
 		{
 			return null;
 		}
 
-		public ShaderAstNode VisitIndexerExpression(IndexerExpression indexerExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitInvocationExpression(InvocationExpression invocationExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitDirectionExpression(DirectionExpression directionExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitPrimitiveExpression(PrimitiveExpression primitiveExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitThisReferenceExpression(ThisReferenceExpression thisReferenceExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitTypeReferenceExpression(TypeReferenceExpression typeReferenceExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitArraySpecifier(ArraySpecifier arraySpecifier)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitNamedExpression(NamedExpression namedExpression)
-		{
-			return null;
-		}
-
-		public ShaderAstNode VisitEmptyExpression(EmptyExpression emptyExpression)
+		public IAstNode VisitReturnStatement(ICSharpCode.NRefactory.CSharp.ReturnStatement returnStatement)
 		{
 			return null;
 		}

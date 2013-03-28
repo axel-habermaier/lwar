@@ -60,6 +60,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ShaderParameter[] Outputs { get; private set; }
 
 		/// <summary>
+		/// Gets the shader parameters, both inputs and outputs.
+		/// </summary>
+		public IEnumerable<ShaderParameter> Parameters
+		{
+			get { return Inputs.Union(Outputs); }
+		}
+
+		/// <summary>
 		///   Gets the C# shader code.
 		/// </summary>
 		public AstNode ShaderCode
@@ -70,7 +78,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Gets the syntax tree for the shader.
 		/// </summary>
-		public ShaderAstNode SyntaxTree { get; private set; }
+		public IAstNode SyntaxTree { get; private set; }
 
 		/// <summary>
 		///   Returns a string that represents the current object.

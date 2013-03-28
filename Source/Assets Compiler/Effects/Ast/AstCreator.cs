@@ -9,7 +9,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 	/// <summary>
 	///   Creates an abstract syntax tree for the shader code from the syntax tree of a C# method.
 	/// </summary>
-	internal partial class AstCreator : IAstVisitor<ShaderAstNode>
+	internal partial class AstCreator : IAstVisitor<IAstNode>
 	{
 		/// <summary>
 		///   The context of the compilation.
@@ -32,7 +32,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// <param name="context">The context of the compilation.</param>
 		/// <param name="effect">The effect class the shader method belongs to.</param>
 		/// <param name="shader">The C# shader method that should be cross-compiled.</param>
-		public ShaderAstNode CreateAst(CompilationContext context, EffectClass effect, ShaderMethod shader)
+		public IAstNode CreateAst(CompilationContext context, EffectClass effect, ShaderMethod shader)
 		{
 			Assert.ArgumentNotNull(context, () => context);
 			Assert.ArgumentNotNull(effect, () => effect);
