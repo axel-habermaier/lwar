@@ -2,9 +2,9 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
-	using System.Reflection;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
 	///   Represents a field of an effect class that allows access to a texture or cubemap.
@@ -12,18 +12,30 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	internal class ShaderTexture
 	{
 		/// <summary>
-		///   The declaration of the field that represents the texture object.
+		///   The declaration of the field that represents the texture.
 		/// </summary>
-		private FieldDeclaration _field;
+		private readonly FieldDeclaration _field;
+
+		/// <summary>
+		///   The declaration of the field variable that represents the texture.
+		/// </summary>
+		private readonly VariableInitializer _variable;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="field">The declaration of the field that represents the texture object.</param>
-		public ShaderTexture(FieldDeclaration field)
+		/// <param name="field">The declaration of the field that represents the texture.</param>
+		/// <param name="variable">The declaration of the field variable that represents the texture.</param>
+		/// <param name="slot">The slot the texture object should be bound to.</param>
+		public ShaderTexture(FieldDeclaration field, VariableInitializer variable, int slot)
 		{
 			Assert.ArgumentNotNull(field, () => field);
+			Assert.ArgumentNotNull(variable, () => variable);
+			Assert.ArgumentInRange(slot, () => slot, 0, 16);
+
 			_field = field;
+			_variable = variable;
+			Slot = slot;
 		}
 
 		/// <summary>
@@ -37,23 +49,38 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public int Slot { get; set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the constant is a 2D texture.
+		///   Gets the type of the texture.
 		/// </summary>
-		public bool IsTexture2D { get; private set; }
-
-		/// <summary>
-		///   Gets a value indicating whether the constant is a cubemap
-		/// </summary>
-		public bool IsCubeMap { get; private set; }
-
-		
+		public DataType Type { get; private set; }
 
 		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{
-			return string.Format("Name: {0}, Type: {1}, Value: {2}", Name);
+			return String.Format("{0} : {1} (Slot {2})", Name, Type, Slot);
+		}
+
+		/// <summary>
+		///   Compiles the shader constant.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		public void Compile(CompilationContext context)
+		{
+			Name = _variable.Name;
+			Type = _field.GetDataType(context);
+
+			if (_field.GetType(context).Kind == TypeKind.Array)
+				context.Error(_variable, "Shader texture object '{0}' cannot be an array type.", Name);
+
+			if (_field.Modifiers != (Modifiers.Public | Modifiers.Readonly))
+				context.Error(_variable, "Shader texture object '{0}' must be public, non-static, and readonly.", Name);
+
+			if (!_variable.Initializer.IsNull)
+				context.Error(_variable.Initializer, "Shader texture object '{0}' cannot be initialized.", Name);
+
+			if (_field.HasAttribute<ShaderConstantAttribute>(context))
+				context.Error(_variable, "Shader texture object '{0}' cannot be part of a constant buffer.", Name);
 		}
 	}
 }

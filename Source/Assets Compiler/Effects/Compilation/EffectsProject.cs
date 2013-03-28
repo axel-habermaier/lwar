@@ -73,13 +73,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			var compilation = _project.CreateCompilation();
 			var context = new CompilationContext();
 
-			foreach (var file in _files)
-			{
-				context.File = file;
-				context.Resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
+			var effects = _files.SelectMany(file =>
+				{
+					context.File = file;
+					context.Resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
 
-				file.Compile(context);
-			}
+					return file.Compile(context);
+				}).ToArray();
 
 			return !context.HasErrors;
 		}

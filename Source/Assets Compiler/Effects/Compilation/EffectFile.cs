@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using Assets;
@@ -49,33 +50,33 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Compiles the effect file.
 		/// </summary>
 		/// <param name="context">The context of the compilation.</param>
-		public void Compile(CompilationContext context)
+		public IEnumerable<EffectClass> Compile(CompilationContext context)
 		{
 			PrintParserErrorsAndWarnings(context);
 
-			var effects = from type in SyntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()
-						  where type.ClassType == ClassType.Class
-						  let hasBaseType = type.IsDerivedFrom<Effect>(context)
-						  let hasAttribute = type.HasAttribute<EffectAttribute>(context)
-						  where hasBaseType || hasAttribute
-						  select new { Type = type, HasAttribute = hasAttribute, HasBaseType = hasBaseType };
+			var effectClasses = from type in SyntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()
+								where type.ClassType == ClassType.Class
+								let hasBaseType = type.IsDerivedFrom<Effect>(context)
+								let hasAttribute = type.HasAttribute<EffectAttribute>(context)
+								where hasBaseType || hasAttribute
+								select new { Effect = new EffectClass(type), Type = type, HasAttribute = hasAttribute, HasBaseType = hasBaseType };
 
-			foreach (var effect in effects)
+			foreach (var effectClass in effectClasses)
 			{
-				var type = effect.Type;
+				var type = effectClass.Type;
 
-				if (effect.HasBaseType && !effect.HasAttribute)
+				if (effectClass.HasBaseType && !effectClass.HasAttribute)
 					context.Warn(type.NameToken,
 								 "Expected attribute '{0}' to be declared on effect '{1}'.",
 								 typeof(EffectAttribute).FullName, type.GetFullName(context));
 
-				if (!effect.HasBaseType && effect.HasAttribute)
+				if (!effectClass.HasBaseType && effectClass.HasAttribute)
 					context.Warn(type.NameToken,
 								 "Expected effect '{0}' to have base type '{1}'.",
 								 type.GetFullName(context), typeof(Effect).FullName);
 
-				context.Effect = new EffectClass(effect.Type);
-				context.Effect.Compile(context);
+				effectClass.Effect.Compile(context);
+				yield return effectClass.Effect;
 			}
 		}
 

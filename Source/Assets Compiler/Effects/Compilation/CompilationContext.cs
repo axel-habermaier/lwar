@@ -19,11 +19,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public bool HasErrors { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the effect class that is currently being compiled.
-		/// </summary>
-		public EffectClass Effect { get; set; }
-
-		/// <summary>
 		///   Gets or sets the C# effect file that is currently being compiled.
 		/// </summary>
 		public EffectFile File { get; set; }

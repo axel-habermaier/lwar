@@ -95,6 +95,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ShaderLiteral[] Literals { get; private set; }
 
 		/// <summary>
+		///   Gets the texture objects accessed by the effect.
+		/// </summary>
+		public ShaderTexture[] Textures { get; private set; }
+
+		/// <summary>
 		///   Gets the constant buffers that are accessed by the effect.
 		/// </summary>
 		public ConstantBuffer[] ConstantBuffers { get; private set; }
@@ -133,8 +138,19 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="context">The context of the compilation.</param>
 		public void Compile(CompilationContext context)
 		{
+			Name = _type.GetFullName(context);
+
 			GetShaderLiterals(context);
 			GetShaderConstants(context);
+			GetShaderTextures(context);
+
+			if (_type.TypeParameters.Any() || _type.Modifiers != (Modifiers.Public))
+				context.Error(_type,
+							  "Effect '{0}' must be a public, non-static, non-partial, non-abstract, non-sealed class without any type arguments.",
+							  Name);
+
+			foreach (var property in _type.Descendants.OfType<PropertyDeclaration>())
+				context.Error(property.NameToken, "Unexpected property '{0}' declared by effect '{1}'.", property.Name, Name);
 		}
 
 		/// <summary>
@@ -192,6 +208,25 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			var defaultConstants = new[] { view, projection, viewProjection, viewportSize };
 			Constants = Constants.Union(defaultConstants).ToArray();
+		}
+
+		/// <summary>
+		///   Gets the shader textures from the effect.
+		/// </summary>
+		/// <param name="context">The context of the compilation.</param>
+		private void GetShaderTextures(CompilationContext context)
+		{
+			var slot = 0;
+			var textures = from field in _type.Descendants.OfType<FieldDeclaration>()
+						   let dataType = field.GetDataType(context)
+						   where dataType == DataType.Texture2D || dataType == DataType.CubeMap
+						   from variable in field.Descendants.OfType<VariableInitializer>()
+						   select new ShaderTexture(field, variable, slot++);
+
+			Textures = textures.ToArray();
+
+			foreach (var texture in Textures)
+				texture.Compile(context);
 		}
 	}
 }

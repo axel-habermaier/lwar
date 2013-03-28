@@ -60,7 +60,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		public override string ToString()
 		{
-			return string.Format("{0} : {1} = {2}", Name, Type, Value);
+			return String.Format("{0} : {1} = {2}", Name, Type, Value);
 		}
 
 		/// <summary>
