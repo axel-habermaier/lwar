@@ -3,59 +3,42 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
-	using System.IO;
 	using System.Linq;
 	using Assets;
-	using Compilers;
-	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
-	using ICSharpCode.NRefactory.CSharp.TypeSystem;
-	using ICSharpCode.NRefactory.TypeSystem;
+	using ICSharpCode.NRefactory.CSharp.Resolver;
 
 	/// <summary>
 	///   Represents a C# source code file that possibly contains one or more effect declarations.
 	/// </summary>
-	internal class EffectFile
+	internal class EffectFile : CompiledElement
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="asset">The C# asset file that the effect file should represent.</param>
-		public EffectFile(CSharpAsset asset)
+		/// <param name="syntaxTree">The parsed syntax tree of the effect file.</param>
+		/// <param name="resolver"> The C# AST resolver that should be used to resolve symbols of the effect file.</param>
+		public EffectFile(SyntaxTree syntaxTree, CSharpAstResolver resolver)
+			: base(syntaxTree.FileName, resolver)
 		{
-			Assert.ArgumentNotNull(asset, () => asset);
-
-			var parser = new CSharpParser();
-
-			SyntaxTree = parser.Parse(File.ReadAllText(asset.SourcePath), asset.SourcePath);
-			UnresolvedFile = SyntaxTree.ToTypeSystem();
-			Asset = asset;
+			SyntaxTree = syntaxTree;
 		}
-
-		/// <summary>
-		///   Gets the C# asset file that the effect file represents.
-		/// </summary>
-		public CSharpAsset Asset { get; private set; }
 
 		/// <summary>
 		///   Gets the C# syntax tree of the effect file.
 		/// </summary>
 		public SyntaxTree SyntaxTree { get; private set; }
 
-		/// <summary>
-		///   Gets the unresolved file that represents the effect file in the project.
-		/// </summary>
-		public CSharpUnresolvedFile UnresolvedFile { get; private set; }
+		public IEnumerable<Asset> ShaderAssets {get
+		{
+			f
+		}}
 
 		/// <summary>
 		///   Compiles the effect file.
 		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		public IEnumerable<Asset> Compile(CompilationContext context)
+		public void Compile()
 		{
-			Log.Info("Cross-compiling '{0}'...", Asset.RelativePath);
-			PrintParserErrorsAndWarnings(context);
-
 			var effectClasses = from type in SyntaxTree.DescendantsAndSelf.OfType<TypeDeclaration>()
 								where type.ClassType == ClassType.Class
 								let hasBaseType = type.IsDerivedFrom<Effect>(context)
@@ -80,26 +63,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				effectClass.Effect.Compile(context);
 				foreach (var shader in effectClass.Effect.Shaders)
 					yield return shader.Asset;
-			}
-		}
-
-		/// <summary>
-		///   Prints all parser errors and warnings.
-		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		private void PrintParserErrorsAndWarnings(CompilationContext context)
-		{
-			foreach (var error in UnresolvedFile.Errors)
-			{
-				switch (error.ErrorType)
-				{
-					default:
-						context.Error(error.Region.Begin, error.Region.End, error.Message);
-						break;
-					case ErrorType.Warning:
-						context.Warn(error.Region.Begin, error.Region.End, error.Message);
-						break;
-				}
 			}
 		}
 	}

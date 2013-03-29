@@ -244,7 +244,7 @@
     <Compile Include="Effects\Ast\Statement.cs" />
     <Compile Include="Effects\Ast\WhileStatement.cs" />
     <Compile Include="Effects\Compilation\CodeWriter.cs" />
-    <Compile Include="Effects\Compilation\CompilationContext.cs" />
+    <Compile Include="Effects\Compilation\CompiledElement.cs" />
     <Compile Include="Effects\Compilation\DataType.cs" />
     <Compile Include="Effects\Compilation\Extensions.cs" />
     <Compile Include="Effects\Compilation\CrossCompiler.cs" />

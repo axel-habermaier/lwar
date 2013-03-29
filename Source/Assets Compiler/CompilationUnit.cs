@@ -66,8 +66,8 @@ namespace Pegasus.AssetsCompiler
 		{
 			try
 			{
-				var project = new EffectsProject(_assets.OfType<CSharpAsset>().ToArray());
-				var success = project.Compile();
+				var project = new EffectsProject();
+				var success = project.Compile(_assets.OfType<CSharpAsset>().ToArray());
 				_assets.AddRange(project.ShaderAssets);
 
 				foreach (var compiler in Compilers)
