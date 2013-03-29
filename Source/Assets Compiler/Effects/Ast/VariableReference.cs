@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 	///   Represents a reference to a shader variable, parameter, texture object, constant or literal.
 	/// </summary>
 	internal class VariableReference<T> : Expression
+		where T : IShaderDataObject
 	{
 		/// <summary>
 		///   Initializes a new instance.
@@ -29,16 +30,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// <param name="visitor">The visitor whose Visit method should be called.</param>
 		public override void AcceptVisitor(IAstVisitor visitor)
 		{
-			if (typeof(T) == typeof(ShaderConstant))
-				visitor.VisitVariableReference((VariableReference<ShaderConstant>)(object)this);
-			else if (typeof(T) == typeof(ShaderLiteral))
-				visitor.VisitVariableReference((VariableReference<ShaderLiteral>)(object)this);
-			else if (typeof(T) == typeof(ShaderTexture))
-				visitor.VisitVariableReference((VariableReference<ShaderTexture>)(object)this);
-			else if (typeof(T) == typeof(ShaderVariable))
-				visitor.VisitVariableReference((VariableReference<ShaderVariable>)(object)this);
-			else
-				throw new InvalidOperationException("Unknown variable reference type.");
+			visitor.VisitVariableReference(this);
 		}
 	}
 }

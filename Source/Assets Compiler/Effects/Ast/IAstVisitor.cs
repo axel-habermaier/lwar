@@ -27,10 +27,10 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		void VisitUnaryOperatorStatement(UnaryOperatorExpression unaryOperatorExpression);
 		void VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement);
 		void VisitVariableInitializer(VariableInitializer variableInitializer);
-		void VisitVariableReference(VariableReference<ShaderLiteral> variableReference);
-		void VisitVariableReference(VariableReference<ShaderConstant> variableReference);
-		void VisitVariableReference(VariableReference<ShaderTexture> variableReference);
-		void VisitVariableReference(VariableReference<ShaderVariable> variableReference);
+
+		void VisitVariableReference<T>(VariableReference<T> variableReference)
+			where T : IShaderDataObject;
+
 		void VisitWhileStatement(WhileStatement whileStatement);
 	}
 }

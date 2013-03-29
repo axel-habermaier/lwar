@@ -107,7 +107,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateMainMethod()
 		{
 			Writer.AppendLine("void main()");
-			Writer.AppendBlockStatement(() => {  });
+			Writer.AppendBlockStatement(GenerateShaderCode);
 		}
 
 		/// <summary>

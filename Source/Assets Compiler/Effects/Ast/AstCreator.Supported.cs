@@ -69,7 +69,14 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			var leftType = _context.Resolve(binaryOperatorExpression.Left).Type.ToDataType();
 			var rightType = _context.Resolve(binaryOperatorExpression.Right).Type.ToDataType();
 
-			return new BinaryOperatorExpression(left, leftType, binaryOperatorExpression.Operator, right, rightType);
+			var binaryOperator = binaryOperatorExpression.Operator;
+			if (binaryOperator == BinaryOperatorType.NullCoalescing)
+			{
+				binaryOperator = BinaryOperatorType.Add;
+				UnsupportedCSharpFeature(binaryOperatorExpression, "?? operator");
+			}
+
+			return new BinaryOperatorExpression(left, leftType, binaryOperator, right, rightType);
 		}
 
 		public IAstNode VisitVariableInitializer(ICSharpCode.NRefactory.CSharp.VariableInitializer variableInitializer)
@@ -200,7 +207,21 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			var expression = unaryOperatorExpression.Expression.Visit<Expression>(this);
 			var type = _context.Resolve(unaryOperatorExpression.Expression).Type.ToDataType();
 
-			return new UnaryOperatorExpression(expression, type, unaryOperatorExpression.Operator);
+			var unaryOperator = unaryOperatorExpression.Operator;
+			Action<UnaryOperatorType,string> checkOperator = (op,token) =>
+				{
+					if (unaryOperator == op)
+					{
+						unaryOperator = UnaryOperatorType.Plus;
+						UnsupportedCSharpFeature(unaryOperatorExpression, String.Format("operator {0}", token));
+					}
+				};
+
+			checkOperator(UnaryOperatorType.Dereference, "*");
+			checkOperator(UnaryOperatorType.Await, "await");
+			checkOperator(UnaryOperatorType.AddressOf, "&");
+
+			return new UnaryOperatorExpression(expression, type, unaryOperator);
 		}
 
 		public IAstNode VisitArraySpecifier(ArraySpecifier arraySpecifier)

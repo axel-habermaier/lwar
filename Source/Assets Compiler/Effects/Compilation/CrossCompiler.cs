@@ -2,12 +2,31 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using Ast;
 	using Framework;
+	using ICSharpCode.NRefactory.CSharp;
+	using AssignmentExpression = Ast.AssignmentExpression;
+	using BinaryOperatorExpression = Ast.BinaryOperatorExpression;
+	using BlockStatement = Ast.BlockStatement;
+	using BreakStatement = Ast.BreakStatement;
+	using ContinueStatement = Ast.ContinueStatement;
+	using DoWhileStatement = Ast.DoWhileStatement;
+	using ExpressionStatement = Ast.ExpressionStatement;
+	using ForStatement = Ast.ForStatement;
+	using IAstVisitor = Ast.IAstVisitor;
+	using IfElseStatement = Ast.IfElseStatement;
+	using IndexerExpression = Ast.IndexerExpression;
+	using MemberReferenceExpression = Ast.MemberReferenceExpression;
+	using ReturnStatement = Ast.ReturnStatement;
+	using UnaryOperatorExpression = Ast.UnaryOperatorExpression;
+	using VariableDeclarationStatement = Ast.VariableDeclarationStatement;
+	using VariableInitializer = Ast.VariableInitializer;
+	using WhileStatement = Ast.WhileStatement;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method.
 	/// </summary>
-	internal abstract class CrossCompiler
+	internal abstract class CrossCompiler : IAstVisitor
 	{
 		/// <summary>
 		///   The C# shader method that is cross-compiled.
@@ -28,6 +47,136 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   The code writer the generated code should be written to.
 		/// </summary>
 		protected CodeWriter Writer { get; private set; }
+
+		public virtual void VisitAssignmentExpression(AssignmentExpression assignmentExpression)
+		{
+			assignmentExpression.Left.AcceptVisitor(this);
+			Writer.Append(" {0} ", GetToken(assignmentExpression.Operator));
+			assignmentExpression.Right.AcceptVisitor(this);
+		}
+
+		public virtual void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
+		{
+			binaryOperatorExpression.Left.AcceptVisitor(this);
+			Writer.Append(" {0} ", GetToken(binaryOperatorExpression.Operator));
+			binaryOperatorExpression.Right.AcceptVisitor(this);
+		}
+
+		public virtual void VisitBlockStatement(BlockStatement blockStatement)
+		{
+			Writer.AppendBlockStatement(() => blockStatement.Statements.AcceptVisitor(this));
+		}
+
+		public virtual void VisitBreakStatement(BreakStatement breakStatement)
+		{
+			Writer.AppendLine("break;");
+		}
+
+		public virtual void VisitContinueStatement(ContinueStatement continueStatement)
+		{
+			Writer.AppendLine("continue;");
+		}
+
+		public virtual void VisitDoWhileStatement(DoWhileStatement doWhileStatement)
+		{
+			throw new NotImplementedException();
+		}
+
+		public virtual void VisitExpressionStatement(ExpressionStatement expressionStatement)
+		{
+			expressionStatement.Expression.AcceptVisitor(this);
+			Writer.AppendLine(";");
+		}
+
+		public virtual void VisitForStatement(ForStatement forStatement)
+		{
+			Writer.Append("for (");
+			Writer.Append(")");
+			forStatement.Body.AcceptVisitor(this);
+		}
+
+		public virtual void VisitIfElseStatement(IfElseStatement ifElseStatement)
+		{
+			throw new NotImplementedException();
+		}
+
+		public virtual void VisitIndexerExpression(IndexerExpression indexerExpression)
+		{
+			indexerExpression.Target.AcceptVisitor(this);
+			Writer.Append("[");
+			indexerExpression.Arguments.AcceptVisitor(this);
+			Writer.Append("]");
+		}
+
+		public virtual void VisitIntrinsicFunctionInvocation(IntrinsicFunctionInvocation intrinsicFunctionInvocation)
+		{
+		}
+
+		public virtual void VisitLiteralValue(LiteralValue literalValue)
+		{
+			Writer.Append(literalValue.ToString());
+		}
+
+		public virtual void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
+		{
+			memberReferenceExpression.Target.AcceptVisitor(this);
+			Writer.Append(".{0}", memberReferenceExpression.Member);
+		}
+
+		public virtual void VisitObjectCreationExpression(ObjectCreationExpression objectCreationExpression)
+		{
+			Writer.Append("{0}(", ToShaderType(objectCreationExpression.Type));
+			objectCreationExpression.Arguments.AcceptVisitor(this);
+			Writer.Append(")");
+		}
+
+		public virtual void VisitReturnStatement(ReturnStatement returnStatement)
+		{
+			Writer.AppendLine("return;");
+		}
+
+		public virtual void VisitUnaryOperatorStatement(UnaryOperatorExpression unaryOperatorExpression)
+		{
+			if (unaryOperatorExpression.Operator == UnaryOperatorType.PostDecrement ||
+				unaryOperatorExpression.Operator == UnaryOperatorType.PostIncrement)
+			{
+				unaryOperatorExpression.Expression.AcceptVisitor(this);
+				Writer.Append(GetToken(unaryOperatorExpression.Operator));
+			}
+			else
+			{
+				Writer.Append(GetToken(unaryOperatorExpression.Operator));
+				unaryOperatorExpression.Expression.AcceptVisitor(this);
+			}
+		}
+
+		public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement)
+		{
+		}
+
+		public virtual void VisitVariableInitializer(VariableInitializer variableInitializer)
+		{
+		}
+
+		public virtual void VisitVariableReference<T>(VariableReference<T> variableReference)
+			where T : IShaderDataObject
+		{
+			Writer.Append(variableReference.Variable.Name);
+		}
+
+		public virtual void VisitWhileStatement(WhileStatement whileStatement)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Generates the shader code.
+		/// </summary>
+		protected void GenerateShaderCode()
+		{
+			var blockStatement = (BlockStatement)Shader.SyntaxTree;
+			blockStatement.Statements.AcceptVisitor(this);
+		}
 
 		/// <summary>
 		///   Cross-compiles the C# shader method.
@@ -105,5 +254,118 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <param name="type">The data type that should be converted.</param>
 		protected abstract string ToShaderType(DataType type);
+
+		/// <summary>
+		///   Gets the token for the given assignment operator.
+		/// </summary>
+		/// <param name="assignmentOperator">The assignment operator for which the token should be returned.</param>
+		private string GetToken(AssignmentOperatorType assignmentOperator)
+		{
+			switch (assignmentOperator)
+			{
+				case AssignmentOperatorType.Assign:
+					return "=";
+				case AssignmentOperatorType.Add:
+					return "+=";
+				case AssignmentOperatorType.Subtract:
+					return "-=";
+				case AssignmentOperatorType.Multiply:
+					return "*=";
+				case AssignmentOperatorType.Divide:
+					return "/=";
+				case AssignmentOperatorType.Modulus:
+					return "%=";
+				case AssignmentOperatorType.ShiftLeft:
+					return "<<=";
+				case AssignmentOperatorType.ShiftRight:
+					return ">>=";
+				case AssignmentOperatorType.BitwiseAnd:
+					return "&=";
+				case AssignmentOperatorType.BitwiseOr:
+					return "|=";
+				case AssignmentOperatorType.ExclusiveOr:
+					return "^=";
+				default:
+					throw new InvalidOperationException("Unsupported assignment operator type.");
+			}
+		}
+
+		/// <summary>
+		///   Gets the token for the given unary operator.
+		/// </summary>
+		/// <param name="unaryOperator">The unary operator for which the token should be returned.</param>
+		private string GetToken(UnaryOperatorType unaryOperator)
+		{
+			switch (unaryOperator)
+			{
+				case UnaryOperatorType.Not:
+					return "";
+				case UnaryOperatorType.BitNot:
+					return "";
+				case UnaryOperatorType.Minus:
+					return "";
+				case UnaryOperatorType.Plus:
+					return "";
+				case UnaryOperatorType.Increment:
+					return "";
+				case UnaryOperatorType.Decrement:
+					return "";
+				case UnaryOperatorType.PostIncrement:
+					return "";
+				case UnaryOperatorType.PostDecrement:
+					return "";
+				default:
+					throw new InvalidOperationException("Unsupported unary operator type.");
+			}
+		}
+
+		/// <summary>
+		///   Gets the token for the given binary operator.
+		/// </summary>
+		/// <param name="binaryOperator">The binary operator for which the token should be returned.</param>
+		private string GetToken(BinaryOperatorType binaryOperator)
+		{
+			switch (binaryOperator)
+			{
+				case BinaryOperatorType.BitwiseAnd:
+					return "&";
+				case BinaryOperatorType.BitwiseOr:
+					return "|";
+				case BinaryOperatorType.ConditionalAnd:
+					return "&&";
+				case BinaryOperatorType.ConditionalOr:
+					return "||";
+				case BinaryOperatorType.ExclusiveOr:
+					return "^";
+				case BinaryOperatorType.GreaterThan:
+					return ">";
+				case BinaryOperatorType.GreaterThanOrEqual:
+					return ">=";
+				case BinaryOperatorType.Equality:
+					return "==";
+				case BinaryOperatorType.InEquality:
+					return "!=";
+				case BinaryOperatorType.LessThan:
+					return "<";
+				case BinaryOperatorType.LessThanOrEqual:
+					return "<=";
+				case BinaryOperatorType.Add:
+					return "+";
+				case BinaryOperatorType.Subtract:
+					return "-";
+				case BinaryOperatorType.Multiply:
+					return "*";
+				case BinaryOperatorType.Divide:
+					return "/";
+				case BinaryOperatorType.Modulus:
+					return "%";
+				case BinaryOperatorType.ShiftLeft:
+					return "<<";
+				case BinaryOperatorType.ShiftRight:
+					return ">>";
+				default:
+					throw new InvalidOperationException("Unsupported binary operator type.");
+			}
+		}
 	}
 }

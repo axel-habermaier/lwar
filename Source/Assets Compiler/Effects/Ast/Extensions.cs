@@ -39,5 +39,16 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		{
 			return (TShaderNode)node.AcceptVisitor(visitor);
 		}
+
+		/// <summary>
+		///   Calls the AcceptVisitor method on all nodes.
+		/// </summary>
+		/// <param name="nodes">The nodes on which the AcceptVisitor method should be called.</param>
+		/// <param name="visitor">The visitor that should be passed to the AcceptVisitor method.</param>
+		public static void AcceptVisitor(this IEnumerable<IAstNode> nodes, IAstVisitor visitor)
+		{
+			foreach (var node in nodes)
+				node.AcceptVisitor(visitor);
+		}
 	}
 }

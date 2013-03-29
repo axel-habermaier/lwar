@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using Ast;
 	using Framework.Platform.Graphics;
 
 	/// <summary>
@@ -140,6 +141,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					Writer.AppendLine("{0} {1};", OutputStructName, OutputVariableName);
 					Writer.Newline();
 
+					GenerateShaderCode();
 
 					Writer.Newline();
 					Writer.AppendLine("return {0};", OutputVariableName);
@@ -208,6 +210,20 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				default:
 					return "unknown-semantics";
 			}
+		}
+
+		public override void VisitVariableReference<T>(VariableReference<T> variableReference)
+		{
+			if (typeof(T) == typeof(ShaderParameter))
+			{
+				var parameter = (ShaderParameter)(object)variableReference.Variable;
+				if (parameter.IsOutput)
+					Writer.Append("{0}.{1}", OutputVariableName, parameter.Name);
+				else
+					Writer.Append("{0}.{1}", InputVariableName, parameter.Name);
+			}
+			else
+			base.VisitVariableReference(variableReference);
 		}
 	}
 }
