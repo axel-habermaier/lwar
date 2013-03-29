@@ -31,7 +31,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
 			Assert.ArgumentInRange(type, () => type);
-
+			// Build AST node
 			Name = name;
 			Type = type;
 		}

@@ -18,17 +18,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   The list of child elements that are compiled when the current element is compiled.
 		/// </summary>
-		private readonly List<CompiledElement> _children = new List<CompiledElement>();
+		private readonly List<CompiledElement> _childElements = new List<CompiledElement>();
 
 		/// <summary>
 		///   The path to the C# effect file that contains the compiled element.
 		/// </summary>
-		private readonly string _file;
+		private string _file;
 
 		/// <summary>
 		///   Indicates whether any errors occurred during the compilation of the element.
 		/// </summary>
 		private bool _hasErrors;
+
+		/// <summary>
+		///   The current state of the compiled element.
+		/// </summary>
+		private State _state = State.Uninitialized;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -60,13 +65,116 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		public bool HasErrors
 		{
-			get { return _hasErrors || _children.Any(child => child.HasErrors); }
+			get { return _hasErrors || _childElements.Any(child => child.HasErrors); }
 		}
 
 		/// <summary>
 		///   Gets the C# AST resolver that should be used to resolve symbols of the effect file currently being compiled.
 		/// </summary>
 		protected CSharpAstResolver Resolver { get; private set; }
+
+		/// <summary>
+		///   Initializes the compiled element and all of its children.
+		/// </summary>
+		public void InitializeElement()
+		{
+			Assert.That(_state == State.Uninitialized, "This method must be called while the element is still uinitialized.");
+
+			Initialize();
+			foreach (var child in _childElements)
+				child.InitializeElement();
+
+			_state = State.Initialized;
+		}
+
+		/// <summary>
+		///   Validates the compiled element and all of its children. This method has no effect if any errors occurred during
+		///   initialization.
+		/// </summary>
+		public void ValidateElement()
+		{
+			Assert.That(_state != State.Initialized, "This method must be called when the element is initialized.");
+
+			if (HasErrors)
+				return;
+
+			Validate();
+			foreach (var child in _childElements)
+				child.ValidateElement();
+
+			_state = State.Validated;
+		}
+
+		/// <summary>
+		///   Compiles the element and all of its children. This method has no effect if any errors occurred during initialization
+		///   or validation.
+		/// </summary>
+		public void CompileElement()
+		{
+			Assert.That(_state != State.Validated, "This method must be called when the element is validated.");
+
+			if (HasErrors)
+				return;
+
+			Compile();
+			foreach (var child in _childElements)
+				child.CompileElement();
+
+			_state = State.Compiled;
+		}
+
+		/// <summary>
+		///   Adds the given elements to the current element.
+		/// </summary>
+		/// <param name="elements">The elements that should be added.</param>
+		protected void AddElements(IEnumerable<CompiledElement> elements)
+		{
+			Assert.ArgumentNotNull(elements, () => elements);
+
+			foreach (var element in elements)
+				AddElement(element);
+		}
+
+		/// <summary>
+		///   Adds the given element to the current element.
+		/// </summary>
+		/// <param name="element">The element that should be added.</param>
+		protected void AddElement(CompiledElement element)
+		{
+			Assert.ArgumentNotNull(element, () => element);
+			Assert.That(_state == State.Uninitialized, "No child elements can be added once the element has already been initialized.");
+
+			element._file = _file;
+			element.Resolver = Resolver;
+			_childElements.Add(element);
+		}
+
+		/// <summary>
+		///   Returns all child elements of the given type.
+		/// </summary>
+		/// <typeparam name="T">The type of the elements that should be returned.</typeparam>
+		protected IEnumerable<T> GetChildElements<T>()
+			where T : CompiledElement
+		{
+			return _childElements.OfType<T>();
+		}
+
+		/// <summary>
+		///   Invoked when the element should initialize itself.
+		/// </summary>
+		protected abstract void Initialize();
+
+		/// <summary>
+		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///   initialization.
+		/// </summary>
+		protected abstract void Validate();
+
+		/// <summary>
+		///   Invoked when the element should compile itself. This method is invoked only if no errors occurred during
+		///   initialization and validation.
+		/// </summary>
+		protected abstract void Compile();
 
 		/// <summary>
 		///   Resolves the semantics of the given node.
@@ -120,6 +228,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			var formattedMessage = String.Format(message, arguments);
 			EffectsProject.OutputMessage(LogType.Warning, _file, formattedMessage, node.StartLocation, node.EndLocation);
+		}
+
+		/// <summary>
+		///   Describes the state of a compiled element.
+		/// </summary>
+		private enum State
+		{
+			Uninitialized,
+			Initialized,
+			Validated,
+			Compiled
 		}
 	}
 }

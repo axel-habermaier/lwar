@@ -74,7 +74,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				}).ToArray();
 
 			foreach (var file in effectFiles)
-				file.Compile();
+			{
+				file.InitializeElement();
+				file.ValidateElement();
+				file.CompileElement();
+			}
 
 			ShaderAssets = effectFiles.SelectMany(file => file.ShaderAssets);
 			return effectFiles.All(file => !file.HasErrors);

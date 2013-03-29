@@ -2,19 +2,15 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
-	using System.Collections.Generic;
 	using System.Linq;
-	using Assets;
-	using Ast;
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
-	using VariableDeclarationStatement = ICSharpCode.NRefactory.CSharp.VariableDeclarationStatement;
 
 	/// <summary>
 	///   Represents a C# method that is cross-compiled to GLSL or HLSL.
 	/// </summary>
-	internal class ShaderMethod
+	internal class ShaderMethod : CompiledElement
 	{
 		/// <summary>
 		///   The declaration of the method that represents the shader.
@@ -25,25 +21,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="method">The declaration of the method that represents the shader.</param>
-		/// <param name="type">The type of the shader.</param>
-		public ShaderMethod(MethodDeclaration method, ShaderType type)
+		public ShaderMethod(MethodDeclaration method)
 		{
 			Assert.ArgumentNotNull(method, () => method);
-			Assert.ArgumentInRange(type, () => type);
-
 			_method = method;
-			Type = type;
 		}
-
-		/// <summary>
-		///   Gets the cross-compiled shader asset that can subsequently compiled into the binary format.
-		/// </summary>
-		public Asset Asset { get; private set; }
-
-		/// <summary>
-		///   Gets the type of the shader.
-		/// </summary>
-		public ShaderType Type { get; private set; }
 
 		/// <summary>
 		///   Gets the name of the shader.
@@ -51,201 +33,257 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public string Name { get; private set; }
 
 		/// <summary>
-		///   Gets the shader inputs.
+		///   Gets the type of the shader.
 		/// </summary>
-		public ShaderParameter[] Inputs { get; private set; }
+		public ShaderType Type { get; private set; }
 
 		/// <summary>
-		///   Gets the shader outputs.
+		///   Invoked when the element should initialize itself.
 		/// </summary>
-		public ShaderParameter[] Outputs { get; private set; }
-
-		/// <summary>
-		///   Gets the local variables of the shader.
-		/// </summary>
-		public ShaderVariable[] Variables { get; private set; }
-
-		/// <summary>
-		///   Gets the shader parameters, both inputs and outputs.
-		/// </summary>
-		public IEnumerable<ShaderParameter> Parameters
+		protected override void Initialize()
 		{
-			get { return Inputs.Union(Outputs); }
-		}
-
-		/// <summary>
-		///   Gets the C# shader code.
-		/// </summary>
-		public AstNode ShaderCode
-		{
-			get { return _method.Body; }
-		}
-
-		/// <summary>
-		///   Gets the syntax tree for the shader.
-		/// </summary>
-		public IAstNode SyntaxTree { get; private set; }
-
-		/// <summary>
-		///   Returns a string that represents the current object.
-		/// </summary>
-		public override string ToString()
-		{
-			return String.Format("{0} ({1})", Name, Type);
-		}
-
-		/// <summary>
-		///   Compiles the shader method.
-		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		/// <param name="effect">The effect the shader belongs to.</param>
-		public void Compile(CompilationContext context, EffectClass effect)
-		{
+			// Determine the name of the shader
 			Name = _method.Name;
-			GetParameters(context);
 
-			if (_method.GetType(context).FullName != typeof(void).FullName)
-				context.Error(_method, "Shader method '{0}' must have return type 'void'.", Name);
+			// Determine the shader type
+			if (_method.Attributes.Contain<VertexShaderAttribute>(Resolver))
+				Type = ShaderType.VertexShader;
 
-			if (_method.TypeParameters.Any() || _method.Modifiers != Modifiers.Public)
-				context.Error(_method, "Shader '{0}' must be a public, non-static, non-partial, non-abstract, non-sealed, " +
-									   "non-virtual method without any type arguments.", Name);
+			if (_method.Attributes.Contain<FragmentShaderAttribute>(Resolver))
+				Type = ShaderType.FragmentShader;
 
-			switch (Type)
-			{
-				case ShaderType.VertexShader:
-					if (Outputs.All(o => o.Semantics != DataSemantics.Position))
-						context.Error(_method, "Vertex shader '{0}' must declare an output parameter with the '{1}' semantics.",
-									  Name, DataSemantics.Position.ToDisplayString());
-
-					for (var i = 0; i < Outputs.Length; ++i)
-					{
-						if (Outputs[i].Semantics == DataSemantics.Position)
-						{
-							var output = Outputs[i];
-							var lastIndex = Outputs.Length - 1;
-							Outputs[i] = Outputs[lastIndex];
-							Outputs[lastIndex] = output;
-							break;
-						}
-					}
-					break;
-				case ShaderType.FragmentShader:
-					if (Outputs.All(o => !o.Semantics.IsColor()))
-						context.Error(_method, "Fragment shader '{0}' must declare an output parameter with the 'Color' semantics.", Name);
-					break;
-				default:
-					throw new InvalidOperationException("Unsupported shader type.");
-			}
-
-			CheckDistinctSemantics(context, Inputs, "input");
-			CheckDistinctSemantics(context, Outputs, "output");
-
-			GetLocalVariables(context, effect);
-			SyntaxTree = new AstCreator().CreateAst(context, effect, this);
+			// Add all shader parameters
+			AddElements(from parameter in _method.Descendants.OfType<ParameterDeclaration>()
+						select new ShaderParameter(parameter));
 		}
 
 		/// <summary>
-		///   Gets the parameters of the shader.
+		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///   initialization.
 		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		private void GetParameters(CompilationContext context)
+		protected override void Validate()
 		{
-			var parameters = _method.Descendants.OfType<ParameterDeclaration>()
-									.Select(parameter =>
-										{
-											var shaderParameter = new ShaderParameter(parameter);
-											shaderParameter.Compile(context);
-
-											if (shaderParameter.IsOutput && Type == ShaderType.FragmentShader && !shaderParameter.Semantics.IsColor())
-												context.Error(parameter, "Fragment shader '{0}' cannot assign '{2}' semantics to output parameter '{1}'.",
-															  Name, shaderParameter.Name, shaderParameter.Semantics.ToDisplayString());
-
-											return shaderParameter;
-										})
-									.ToArray();
-
-			Inputs = parameters.Where(parameter => !parameter.IsOutput).ToArray();
-			Outputs = parameters.Where(parameter => parameter.IsOutput).ToArray();
+			//if (method.HasUnknownType)
+				//				context.Error(method.Declaration, "Shader method '{0}' cannot be both a vertex shader and a fragment shader.",
+				//							  method.Declaration.Name);
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
-		///   Gets the local variables of the shader.
+		///   Invoked when the element should compile itself. This method is invoked only if no errors occurred during
+		///   initialization and validation.
 		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		/// <param name="effect">The effect the shader belongs to.</param>
-		private void GetLocalVariables(CompilationContext context, EffectClass effect)
+		protected override void Compile()
 		{
-			Variables = _method.Descendants.OfType<VariableDeclarationStatement>()
-							   .SelectMany(declaration => declaration.Variables.Select(variable =>
-								   {
-									   var shaderVariable = new ShaderVariable(declaration, variable);
-									   shaderVariable.Compile(context);
-
-									   if (Parameters.Any(parameter => parameter.Name == variable.Name))
-										   context.Error(variable, "Local variable '{0}' hides parameter of the same name.", shaderVariable.Name);
-
-									   if (effect.Textures.Any(texture => texture.Name == variable.Name))
-										   context.Error(variable, "Local variable '{0}' hides shader texture object of the same name.",
-														 shaderVariable.Name);
-
-									   if (effect.Constants.Any(constant => constant.Name == variable.Name))
-										   context.Error(variable, "Local variable '{0}' hides shader constant of the same name.", shaderVariable.Name);
-
-									   if (effect.Literals.Any(literal => literal.Name == variable.Name))
-										   context.Error(variable, "Local variable '{0}' hides shader literal of the same name.", shaderVariable.Name);
-
-									   return shaderVariable;
-								   }))
-							   .ToArray();
+			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		///   Checks whether the given parameters are declared with distinct semantics.
-		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		/// <param name="parameters">The parameters that should be checked.</param>
-		/// <param name="direction">A description of the parameter direction.</param>
-		private void CheckDistinctSemantics(CompilationContext context, IEnumerable<ShaderParameter> parameters, string direction)
-		{
-			var groups = parameters.GroupBy(parameter => parameter.Semantics).Where(group => group.Count() > 1);
-			foreach (var semanticsGroup in groups)
-			{
-				context.Error(_method, "Shader '{0}' declares multiple {2} parameters with the '{1}' semantics.",
-							  Name, semanticsGroup.First().Semantics.ToDisplayString(), direction);
-			}
-		}
+		///// <summary>
+		/////   Gets the cross-compiled shader asset that can subsequently compiled into the binary format.
+		///// </summary>
+		//public Asset Asset { get; private set; }
 
-		/// <summary>
-		///   Generates the code for the shader.
-		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		/// <param name="effect">The effect the shader belongs to.</param>
-		public void GenerateCode(CompilationContext context, EffectClass effect)
-		{
-			var assetPath = String.Format("{0}_{1}_{2}", context.File.Asset.RelativePath, effect.FullName, Name);
-			switch (Type)
-			{
-				case ShaderType.VertexShader:
-					Asset = new VertexShaderAsset(String.Format("{0}.vs", assetPath), Configuration.TempDirectory);
-					break;
-				case ShaderType.FragmentShader:
-					Asset = new FragmentShaderAsset(String.Format("{0}.fs", assetPath), Configuration.TempDirectory);
-					break;
-				default:
-					throw new InvalidOperationException("Unsupported shader type.");
-			}
+		///// <summary>
+		/////   Gets the name of the shader.
+		///// </summary>
+		//public string Name { get; private set; }
 
-			var writer = new CodeWriter();
-			new GlslCrossCompiler().GenerateCode(context, effect, this, writer);
+		///// <summary>
+		/////   Gets the shader inputs.
+		///// </summary>
+		//public ShaderParameter[] Inputs { get; private set; }
 
-			writer.Newline();
-			writer.AppendLine(Configuration.ShaderSeparator);
-			writer.Newline();
+		///// <summary>
+		/////   Gets the shader outputs.
+		///// </summary>
+		//public ShaderParameter[] Outputs { get; private set; }
 
-			new HlslCrossCompiler().GenerateCode(context, effect, this, writer);
+		///// <summary>
+		/////   Gets the local variables of the shader.
+		///// </summary>
+		//public ShaderVariable[] Variables { get; private set; }
 
-			writer.WriteToFile(Asset.SourcePath);
-		}
+		///// <summary>
+		/////   Gets the shader parameters, both inputs and outputs.
+		///// </summary>
+		//public IEnumerable<ShaderParameter> Parameters
+		//{
+		//	get { return Inputs.Union(Outputs); }
+		//}
+
+		///// <summary>
+		/////   Gets the C# shader code.
+		///// </summary>
+		//public AstNode ShaderCode
+		//{
+		//	get { return _method.Body; }
+		//}
+
+		///// <summary>
+		/////   Gets the syntax tree for the shader.
+		///// </summary>
+		//public IAstNode SyntaxTree { get; private set; }
+
+		///// <summary>
+		/////   Returns a string that represents the current object.
+		///// </summary>
+		//public override string ToString()
+		//{
+		//	return String.Format("{0} ({1})", Name, Type);
+		//}
+
+		///// <summary>
+		/////   Compiles the shader method.
+		///// </summary>
+		///// <param name="context">The context of the compilation.</param>
+		///// <param name="effect">The effect the shader belongs to.</param>
+		//public void Compile(CompilationContext context, EffectClass effect)
+		//{
+		//	Name = _method.Name;
+		//	GetParameters(context);
+
+		//	if (_method.GetType(context).FullName != typeof(void).FullName)
+		//		context.Error(_method, "Shader method '{0}' must have return type 'void'.", Name);
+
+		//	if (_method.TypeParameters.Any() || _method.Modifiers != Modifiers.Public)
+		//		context.Error(_method, "Shader '{0}' must be a public, non-static, non-partial, non-abstract, non-sealed, " +
+		//							   "non-virtual method without any type arguments.", Name);
+
+		//	switch (Type)
+		//	{
+		//		case ShaderType.VertexShader:
+		//			if (Outputs.All(o => o.Semantics != DataSemantics.Position))
+		//				context.Error(_method, "Vertex shader '{0}' must declare an output parameter with the '{1}' semantics.",
+		//							  Name, DataSemantics.Position.ToDisplayString());
+
+		//			for (var i = 0; i < Outputs.Length; ++i)
+		//			{
+		//				if (Outputs[i].Semantics == DataSemantics.Position)
+		//				{
+		//					var output = Outputs[i];
+		//					var lastIndex = Outputs.Length - 1;
+		//					Outputs[i] = Outputs[lastIndex];
+		//					Outputs[lastIndex] = output;
+		//					break;
+		//				}
+		//			}
+		//			break;
+		//		case ShaderType.FragmentShader:
+		//			if (Outputs.All(o => !o.Semantics.IsColor()))
+		//				context.Error(_method, "Fragment shader '{0}' must declare an output parameter with the 'Color' semantics.", Name);
+		//			break;
+		//		default:
+		//			throw new InvalidOperationException("Unsupported shader type.");
+		//	}
+
+		//	CheckDistinctSemantics(context, Inputs, "input");
+		//	CheckDistinctSemantics(context, Outputs, "output");
+
+		//	GetLocalVariables(context, effect);
+		//	SyntaxTree = new AstCreator().CreateAst(context, effect, this);
+		//}
+
+		///// <summary>
+		/////   Gets the parameters of the shader.
+		///// </summary>
+		///// <param name="context">The context of the compilation.</param>
+		//private void GetParameters(CompilationContext context)
+		//{
+		//	var parameters = _method.Descendants.OfType<ParameterDeclaration>()
+		//							.Select(parameter =>
+		//								{
+		//									var shaderParameter = new ShaderParameter(parameter);
+		//									shaderParameter.Compile(context);
+
+		//									if (shaderParameter.IsOutput && Type == ShaderType.FragmentShader && !shaderParameter.Semantics.IsColor())
+		//										context.Error(parameter, "Fragment shader '{0}' cannot assign '{2}' semantics to output parameter '{1}'.",
+		//													  Name, shaderParameter.Name, shaderParameter.Semantics.ToDisplayString());
+
+		//									return shaderParameter;
+		//								})
+		//							.ToArray();
+
+		//	Inputs = parameters.Where(parameter => !parameter.IsOutput).ToArray();
+		//	Outputs = parameters.Where(parameter => parameter.IsOutput).ToArray();
+		//}
+
+		///// <summary>
+		/////   Gets the local variables of the shader.
+		///// </summary>
+		///// <param name="context">The context of the compilation.</param>
+		///// <param name="effect">The effect the shader belongs to.</param>
+		//private void GetLocalVariables(CompilationContext context, EffectClass effect)
+		//{
+		//	Variables = _method.Descendants.OfType<VariableDeclarationStatement>()
+		//					   .SelectMany(declaration => declaration.Variables.Select(variable =>
+		//						   {
+		//							   var shaderVariable = new ShaderVariable(declaration, variable);
+		//							   shaderVariable.Compile(context);
+
+		//							   if (Parameters.Any(parameter => parameter.Name == variable.Name))
+		//								   context.Error(variable, "Local variable '{0}' hides parameter of the same name.", shaderVariable.Name);
+
+		//							   if (effect.Textures.Any(texture => texture.Name == variable.Name))
+		//								   context.Error(variable, "Local variable '{0}' hides shader texture object of the same name.",
+		//												 shaderVariable.Name);
+
+		//							   if (effect.Constants.Any(constant => constant.Name == variable.Name))
+		//								   context.Error(variable, "Local variable '{0}' hides shader constant of the same name.", shaderVariable.Name);
+
+		//							   if (effect.Literals.Any(literal => literal.Name == variable.Name))
+		//								   context.Error(variable, "Local variable '{0}' hides shader literal of the same name.", shaderVariable.Name);
+
+		//							   return shaderVariable;
+		//						   }))
+		//					   .ToArray();
+		//}
+
+		///// <summary>
+		/////   Checks whether the given parameters are declared with distinct semantics.
+		///// </summary>
+		///// <param name="context">The context of the compilation.</param>
+		///// <param name="parameters">The parameters that should be checked.</param>
+		///// <param name="direction">A description of the parameter direction.</param>
+		//private void CheckDistinctSemantics(CompilationContext context, IEnumerable<ShaderParameter> parameters, string direction)
+		//{
+		//	var groups = parameters.GroupBy(parameter => parameter.Semantics).Where(group => group.Count() > 1);
+		//	foreach (var semanticsGroup in groups)
+		//	{
+		//		context.Error(_method, "Shader '{0}' declares multiple {2} parameters with the '{1}' semantics.",
+		//					  Name, semanticsGroup.First().Semantics.ToDisplayString(), direction);
+		//	}
+		//}
+
+		///// <summary>
+		/////   Generates the code for the shader.
+		///// </summary>
+		///// <param name="context">The context of the compilation.</param>
+		///// <param name="effect">The effect the shader belongs to.</param>
+		//public void GenerateCode(CompilationContext context, EffectClass effect)
+		//{
+		//	var assetPath = String.Format("{0}_{1}_{2}", context.File.Asset.RelativePath, effect.FullName, Name);
+		//	switch (Type)
+		//	{
+		//		case ShaderType.VertexShader:
+		//			Asset = new VertexShaderAsset(String.Format("{0}.vs", assetPath), Configuration.TempDirectory);
+		//			break;
+		//		case ShaderType.FragmentShader:
+		//			Asset = new FragmentShaderAsset(String.Format("{0}.fs", assetPath), Configuration.TempDirectory);
+		//			break;
+		//		default:
+		//			throw new InvalidOperationException("Unsupported shader type.");
+		//	}
+
+		//	var writer = new CodeWriter();
+		//	new GlslCrossCompiler().GenerateCode(context, effect, this, writer);
+
+		//	writer.Newline();
+		//	writer.AppendLine(Configuration.ShaderSeparator);
+		//	writer.Newline();
+
+		//	new HlslCrossCompiler().GenerateCode(context, effect, this, writer);
+
+		//	writer.WriteToFile(Asset.SourcePath);
+		//}
 	}
 }

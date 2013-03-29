@@ -7,6 +7,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Math;
@@ -25,17 +26,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <typeparam name="T">The type of the base class.</typeparam>
 		/// <param name="declaration">The class declaration that should be checked.</param>
-		/// <param name="context">The context of the compilation.</param>
-		public static bool IsDerivedFrom<T>(this TypeDeclaration declaration, CompilationContext context)
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static bool IsDerivedFrom<T>(this TypeDeclaration declaration, CSharpAstResolver resolver)
 			where T : class
 		{
 			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(context, () => context);
+			Assert.ArgumentNotNull(resolver, () => resolver);
 
 			if (declaration.ClassType != ClassType.Class)
 				return false;
 
-			var resolvedDeclaration = context.Resolve<TypeResolveResult>(declaration);
+			var resolvedDeclaration = (TypeResolveResult)resolver.Resolve(declaration);
 			return resolvedDeclaration.Type.DirectBaseTypes.Any(b => b.FullName == typeof(T).FullName);
 		}
 
@@ -44,112 +45,86 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <typeparam name="T">The type of the attributes.</typeparam>
 		/// <param name="attributes">The attributes that should be checked.</param>
-		/// <param name="context">The context of the compilation.</param>
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
 		public static IEnumerable<CSharpAttribute> GetAttributes<T>(this AstNodeCollection<AttributeSection> attributes,
-																	CompilationContext context)
+																	CSharpAstResolver resolver)
 			where T : Attribute
 		{
 			Assert.ArgumentNotNull(attributes, () => attributes);
-			Assert.ArgumentNotNull(context, () => context);
+			Assert.ArgumentNotNull(resolver, () => resolver);
 
 			return attributes
 				.SelectMany(s => s.Attributes)
-				.Where(a => context.Resolve(a).Type.FullName == typeof(T).FullName);
+				.Where(a => resolver.Resolve(a).Type.FullName == typeof(T).FullName);
 		}
 
 		/// <summary>
-		///   Gets all declared attributes of the given type.
+		///   Gets the declared attribute of the given type.
 		/// </summary>
 		/// <typeparam name="T">The type of the attributes.</typeparam>
 		/// <param name="attributes">The attributes that should be checked.</param>
-		/// <param name="context">The context of the compilation.</param>
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
 		public static CSharpAttribute GetAttribute<T>(this AstNodeCollection<AttributeSection> attributes,
-													  CompilationContext context)
+													  CSharpAstResolver resolver)
 			where T : Attribute
 		{
-			return attributes.GetAttributes<T>(context).SingleOrDefault();
+			return attributes.GetAttributes<T>(resolver).SingleOrDefault();
 		}
 
 		/// <summary>
-		///   Gets all declared attributes of the given type.
-		/// </summary>
-		/// <typeparam name="T">The type of the attributes.</typeparam>
-		/// <param name="declaration">The entity declaration that should be checked.</param>
-		/// <param name="context">The context of the compilation.</param>
-		public static IEnumerable<CSharpAttribute> GetAttributes<T>(this EntityDeclaration declaration, CompilationContext context)
-			where T : Attribute
-		{
-			Assert.ArgumentNotNull(declaration, () => declaration);
-			return declaration.Attributes.GetAttributes<T>(context);
-		}
-
-		/// <summary>
-		///   Gets all declared attributes of the given type.
-		/// </summary>
-		/// <typeparam name="T">The type of the attributes.</typeparam>
-		/// <param name="declaration">The entity declaration that should be checked.</param>
-		/// <param name="context">The context of the compilation.</param>
-		public static CSharpAttribute GetAttribute<T>(this EntityDeclaration declaration, CompilationContext context)
-			where T : Attribute
-		{
-			return declaration.GetAttributes<T>(context).SingleOrDefault();
-		}
-
-		/// <summary>
-		///   Checks whether the declared entity has at least one attribute of the given type.
+		///   Checks whether there is at least one declared attribute of the given type.
 		/// </summary>
 		/// <typeparam name="T">The type of the attribute.</typeparam>
-		/// <param name="declaration">The entity declaration that should be checked.</param>
-		/// <param name="context">The context of the compilation.</param>
-		public static bool HasAttribute<T>(this EntityDeclaration declaration, CompilationContext context)
+		/// <param name="attributes">The attributes that should be checked.</param>
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static bool Contain<T>(this AstNodeCollection<AttributeSection> attributes, CSharpAstResolver resolver)
 			where T : Attribute
 		{
-			return declaration.GetAttributes<T>(context).Any();
+			return attributes.GetAttributes<T>(resolver).Any();
 		}
 
 		/// <summary>
 		///   Gets the full name of the entity declaration.
 		/// </summary>
 		/// <param name="declaration">The entity declaration whose full name should be returned.</param>
-		/// <param name="context">The context of the compilation.</param>
-		public static string GetFullName(this EntityDeclaration declaration, CompilationContext context)
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static string GetFullName(this EntityDeclaration declaration, CSharpAstResolver resolver)
 		{
 			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(context, () => context);
+			Assert.ArgumentNotNull(resolver, () => resolver);
 
-			var resolved = context.Resolve<TypeResolveResult>(declaration);
+			var resolved = (TypeResolveResult)resolver.Resolve(declaration);
 			return resolved.Type.FullName;
 		}
 
 		/// <summary>
 		///   Gets the constant value of the expression.
 		/// </summary>
-		/// <typeparam name="T">The type of the constant value that should be returned.</typeparam>
 		/// <param name="expression">The expression whose constant value should be returned.</param>
-		/// <param name="context">The context of the compilation.</param>
-		public static T GetConstantValue<T>(this Expression expression, CompilationContext context)
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static object GetConstantValue(this Expression expression, CSharpAstResolver resolver)
 		{
 			Assert.ArgumentNotNull(expression, () => expression);
-			Assert.ArgumentNotNull(context, () => context);
+			Assert.ArgumentNotNull(resolver, () => resolver);
 
-			var resolved = context.Resolve(expression);
+			var resolved = resolver.Resolve(expression);
 			if (resolved.IsCompileTimeConstant)
-				return (T)resolved.ConstantValue;
+				return resolved.ConstantValue;
 
-			return default(T);
+			return null;
 		}
 
 		/// <summary>
 		///   Gets the constant values of the array expression.
 		/// </summary>
 		/// <param name="expression">The expression whose constant value should be returned.</param>
-		/// <param name="context">The context of the compilation.</param>
-		public static object[] GetConstantValues(this Expression expression, CompilationContext context)
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static object[] GetConstantValues(this Expression expression, CSharpAstResolver resolver)
 		{
 			Assert.ArgumentNotNull(expression, () => expression);
-			Assert.ArgumentNotNull(context, () => context);
+			Assert.ArgumentNotNull(resolver, () => resolver);
 
-			var resolved = context.Resolve<ArrayCreateResolveResult>(expression);
+			var resolved = (ArrayCreateResolveResult)resolver.Resolve(expression);
 			if (resolved.InitializerElements.All(element => element.IsCompileTimeConstant))
 				return resolved.InitializerElements.Select(element => element.ConstantValue).ToArray();
 
@@ -157,27 +132,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Gets the type of an entity declaration.
+		///   Gets the resolved type of an entity declaration.
 		/// </summary>
 		/// <param name="declaration">The entity declaration whose type should be returned.</param>
-		/// <param name="context">The context of the compilation.</param>
-		public static IType GetType(this EntityDeclaration declaration, CompilationContext context)
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static IType ResolveType(this EntityDeclaration declaration, CSharpAstResolver resolver)
 		{
 			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(context, () => context);
+			Assert.ArgumentNotNull(resolver, () => resolver);
 
-			var resolved = context.Resolve(declaration.ReturnType);
+			var resolved = resolver.Resolve(declaration.ReturnType);
 			return resolved.Type;
-		}
-
-		/// <summary>
-		///   Gets the data type of an entity declaration.
-		/// </summary>
-		/// <param name="declaration">The entity declaration whose type should be returned.</param>
-		/// <param name="context">The context of the compilation.</param>
-		public static DataType GetDataType(this EntityDeclaration declaration, CompilationContext context)
-		{
-			return declaration.GetType(context).ToDataType();
 		}
 
 		/// <summary>
