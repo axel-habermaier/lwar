@@ -31,12 +31,27 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Gets the name of the shader.
 		/// </summary>
-		public string Name { get; private set; }
+		public string Name
+		{
+			get { return _method.Name; }
+		}
 
 		/// <summary>
 		///   Gets the type of the shader.
 		/// </summary>
-		public ShaderType Type { get; private set; }
+		public ShaderType Type
+		{
+			get
+			{
+				if (_method.Attributes.Contain<VertexShaderAttribute>(Resolver))
+					return ShaderType.VertexShader;
+
+				if (_method.Attributes.Contain<FragmentShaderAttribute>(Resolver))
+					return ShaderType.FragmentShader;
+
+				throw new InvalidOperationException("Unsupported shader type.");
+			}
+		}
 
 		/// <summary>
 		///   Gets the input parameters declared by the shader method.
@@ -59,16 +74,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		protected override void Initialize()
 		{
-			// Determine the name of the shader
-			Name = _method.Name;
-
-			// Determine the shader type
-			if (_method.Attributes.Contain<VertexShaderAttribute>(Resolver))
-				Type = ShaderType.VertexShader;
-
-			if (_method.Attributes.Contain<FragmentShaderAttribute>(Resolver))
-				Type = ShaderType.FragmentShader;
-
 			// Add all shader parameters
 			AddElements(from parameter in _method.Descendants.OfType<ParameterDeclaration>()
 						select new ShaderParameter(parameter));
@@ -111,7 +116,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			ValidateSemantics(Inputs, "input");
 			ValidateSemantics(Outputs, "output");
 
-			// Check whether the name of any declared variable starts with double underscore
+			// Check whether the name of any declared local variable is reserved
 			ValidateLocalVariableNames();
 		}
 
@@ -131,7 +136,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="direction">A description of the parameter direction.</param>
 		private void ValidateSemantics(IEnumerable<ShaderParameter> parameters, string direction)
 		{
-			var groups = parameters.GroupBy(parameter => parameter.Semantics).Where(group => group.Count() > 1);
+			var groups = from parameter in parameters
+						 group parameter by parameter.Semantics
+						 into semantics
+						 where semantics.Count() > 1
+						 select semantics;
+
 			foreach (var group in groups)
 			{
 				var semantics = group.First().Semantics;
@@ -140,17 +150,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Check whether the name of any locally declared variable starts with double underscore.
+		///   Check whether the name of any locally declared variable is reserved.
 		/// </summary>
 		private void ValidateLocalVariableNames()
 		{
 			var variables = from variableDeclaration in _method.Descendants.OfType<VariableDeclarationStatement>()
 							from variable in variableDeclaration.Variables
 							where variable.Name.StartsWith(Configuration.ReservedVariablePrefix)
-							select new { Node = (AstNode)variable, variable.Name };
+							select variable;
 
 			foreach (var variable in variables)
-				Error(variable.Node, "Variable '{0}' uses a reserved name.", variable.Name);
+				ValidateIdentifier(variable.NameToken);
 		}
 
 		///// <summary>

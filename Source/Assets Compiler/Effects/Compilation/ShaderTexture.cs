@@ -9,55 +9,82 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a field of an effect class that allows access to a texture or cubemap.
 	/// </summary>
-	internal class ShaderTexture : ShaderDataObject<FieldDeclaration>
+	internal class ShaderTexture : CompiledElement
 	{
+		/// <summary>
+		///   The declaration of the field that represents the texture object.
+		/// </summary>
+		private readonly FieldDeclaration _field;
+
+		/// <summary>
+		///   The variable that represents the texture object.
+		/// </summary>
+		private readonly VariableInitializer _variable;
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="declaration">The declaration of the field that represents the texture.</param>
-		/// <param name="variable">The declaration of the field variable that represents the texture.</param>
+		/// <param name="field">The declaration of the field that represents the texture object.</param>
+		/// <param name="variable">The declaration of the field variable that represents the texture object.</param>
 		/// <param name="slot">The slot the texture object should be bound to.</param>
-		public ShaderTexture(FieldDeclaration declaration, VariableInitializer variable, int slot)
-			: base(declaration, variable)
+		public ShaderTexture(FieldDeclaration field, VariableInitializer variable, int slot)
 		{
+			Assert.ArgumentNotNull(field, () => field);
+			Assert.ArgumentNotNull(variable, () => variable);
 			Assert.ArgumentInRange(slot, () => slot, 0, 16);
+
+			_field = field;
+			_variable = variable;
 			Slot = slot;
 		}
 
 		/// <summary>
-		///   Gets or sets the slot the constant is bound to.
+		///   Gets the name of the texture object.
 		/// </summary>
-		public int Slot { get; set; }
-
-		/// <summary>
-		///   Returns a string that represents the current object.
-		/// </summary>
-		public override string ToString()
+		public string Name
 		{
-			return String.Format("{0} : {1} (Slot {2})", Name, Type, Slot);
+			get { return _variable.Name; }
 		}
 
 		/// <summary>
-		///   Compiles the shader constant.
+		///   Gets the type of the texture object.
 		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		public void Compile(CompilationContext context)
+		public DataType Type
 		{
-			Name = Variable.Name;
-			context.ValidateIdentifier(Variable.NameToken);
-			Type = Declaration.GetDataType(context);
+			get { return _field.ResolveType(Resolver).ToDataType(); }
+		}
 
-			if (Declaration.GetType(context).Kind == TypeKind.Array)
-				context.Error(Variable, "Shader texture object '{0}' cannot be an array.", Name);
+		/// <summary>
+		///   Gets the slot the texture object is bound to.
+		/// </summary>
+		public int Slot { get; private set; }
 
-			if (Declaration.Modifiers != (Modifiers.Public | Modifiers.Readonly))
-				context.Error(Variable, "Shader texture object '{0}' must be public, non-static, and readonly.", Name);
+		/// <summary>
+		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///   initialization.
+		/// </summary>
+		protected override void Validate()
+		{
+			// Check whether the name is reserved
+			ValidateIdentifier(_variable.NameToken);
 
-			if (!Variable.Initializer.IsNull)
-				context.Error(Variable.Initializer, "Shader texture object '{0}' cannot be initialized.", Name);
+			// Check whether the texture object is declared with a known type
+			ValidateType(_variable, _field.ResolveType(Resolver));
 
-			if (Declaration.HasAttribute<ShaderConstantAttribute>(context))
-				context.Error(Variable, "Shader texture object '{0}' cannot be part of a constant buffer.", Name);
+			// Check whether the texture object is an array type
+			if (_field.ResolveType(Resolver).Kind == TypeKind.Array)
+				Error(_variable, "Unexpected array declaration.");
+
+			// Check whether the declared modifiers match the expected ones
+			ValidateModifiers(_field, _field.ModifierTokens, new[] { Modifiers.Public | Modifiers.Readonly });
+
+			// Check whether the texture object is initialized
+			if (!_variable.Initializer.IsNull)
+				Error(_variable.Initializer, "Unexpected initialization of shader texture object.");
+
+			// Check whether the texture object should be part of a constant buffer
+			if (_field.Attributes.Contain<ShaderConstantAttribute>(Resolver))
+				Error(_variable, "Shader texture object '{0}' cannot be part of a constant buffer.", Name);
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   The context of the compilation.
 		/// </summary>
-		protected CompilationContext Context { get; private set; }
+		//protected CompilationContext Context { get; private set; }
 
 		/// <summary>
 		///   The effect class the shader method belongs to.
@@ -222,36 +222,36 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="effect">The effect class the shader method belongs to.</param>
 		/// <param name="shader">The C# shader method that should be cross-compiled.</param>
 		/// <param name="writer">The code writer the generated code should be written to.</param>
-		public void GenerateCode(CompilationContext context, EffectClass effect, ShaderMethod shader, CodeWriter writer)
-		{
-			Assert.ArgumentNotNull(context, () => context);
-			Assert.ArgumentNotNull(effect, () => effect);
-			Assert.ArgumentNotNull(shader, () => shader);
-			Assert.ArgumentNotNull(writer, () => writer);
+		//public void GenerateCode(CompilationContext context, EffectClass effect, ShaderMethod shader, CodeWriter writer)
+		//{
+		//	Assert.ArgumentNotNull(context, () => context);
+		//	Assert.ArgumentNotNull(effect, () => effect);
+		//	Assert.ArgumentNotNull(shader, () => shader);
+		//	Assert.ArgumentNotNull(writer, () => writer);
 
-			Context = context;
-			Effect = effect;
-			Shader = shader;
-			Writer = writer;
+		//	Context = context;
+		//	Effect = effect;
+		//	Shader = shader;
+		//	Writer = writer;
 
-			foreach (var literal in effect.Literals)
-				GenerateLiteral(literal);
+		//	foreach (var literal in effect.Literals)
+		//		GenerateLiteral(literal);
 
-			Writer.Newline();
-			foreach (var constantBuffer in effect.ConstantBuffers)
-				GenerateConstantBuffer(constantBuffer);
+		//	Writer.Newline();
+		//	foreach (var constantBuffer in effect.ConstantBuffers)
+		//		GenerateConstantBuffer(constantBuffer);
 
-			foreach (var texture in effect.Textures)
-				GenerateTextureObject(texture);
+		//	foreach (var texture in effect.Textures)
+		//		GenerateTextureObject(texture);
 
-			GenerateInputs();
-			Writer.Newline();
+		//	GenerateInputs();
+		//	Writer.Newline();
 
-			GenerateOutputs();
-			Writer.Newline();
+		//	GenerateOutputs();
+		//	Writer.Newline();
 
-			GenerateMainMethod();
-		}
+		//	GenerateMainMethod();
+		//}
 
 		/// <summary>
 		///   Generates the shader code for shader literals.

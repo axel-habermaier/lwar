@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Linq;
+	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
@@ -11,132 +12,135 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a parameter of a shader.
 	/// </summary>
-	internal class ShaderParameter : ShaderDataObject<ParameterDeclaration>
+	internal class ShaderParameter : CompiledElement
 	{
+		/// <summary>
+		///   The declaration of the method parameter that represents the shader parameter.
+		/// </summary>
+		private readonly ParameterDeclaration _parameter;
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parameter">The declaration of the method parameter that represents the shader parameter.</param>
 		public ShaderParameter(ParameterDeclaration parameter)
-			: base(parameter)
 		{
+			Assert.ArgumentNotNull(parameter, () => parameter);
+			_parameter = parameter;
+		}
+
+		/// <summary>
+		///   Gets the name of the parameter
+		/// </summary>
+		public string Name
+		{
+			get { return _parameter.Name; }
+		}
+
+		/// <summary>
+		///   Gets the type of the parameter.
+		/// </summary>
+		public DataType Type
+		{
+			get { return _parameter.ResolveType(Resolver).ToDataType(); }
 		}
 
 		/// <summary>
 		///   Gets the semantics of the shader parameter.
 		/// </summary>
-		public DataSemantics Semantics { get; private set; }
+		public DataSemantics Semantics
+		{
+			get
+			{
+				var position = _parameter.Attributes.Contain<PositionAttribute>(Resolver);
+				var normal = _parameter.Attributes.Contain<NormalAttribute>(Resolver);
+				var texCoords = _parameter.Attributes.GetAttribute<TexCoordsAttribute>(Resolver);
+				var color = _parameter.Attributes.GetAttribute<ColorAttribute>(Resolver);
+
+				if (position)
+					return DataSemantics.Position;
+
+				if (normal)
+					return DataSemantics.Normal;
+
+				if (texCoords != null)
+				{
+					var index = GetSemanticIndex(texCoords);
+					return DataSemantics.TexCoords0 + index;
+				}
+
+				if (color != null)
+				{
+					var index = GetSemanticIndex(color);
+					return DataSemantics.Color0 + index;
+				}
+
+				throw new InvalidOperationException("Unknown shader parameter semantics.");
+			}
+		}
 
 		/// <summary>
 		///   Gets a value indicating whether the parameter is a shader output.
 		/// </summary>
-		public bool IsOutput { get; private set; }
-
-		/// <summary>
-		///   Returns a string that represents the current object.
-		/// </summary>
-		public override string ToString()
+		public bool IsOutput
 		{
-			return String.Format("[{2}] {0} : {1} (IsOutput: {3})", Name, Type, Semantics, IsOutput);
+			get { return _parameter.ParameterModifier == ParameterModifier.Out; }
 		}
 
 		/// <summary>
-		///   Compiles the shader parameter.
+		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///   initialization.
 		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		public void Compile(CompilationContext context)
+		protected override void Validate()
 		{
-			Name = Declaration.Name;
-			context.ValidateIdentifier(Declaration.NameToken);
+			// Check whether the name is reserved
+			ValidateIdentifier(_parameter.NameToken);
 
-			var type = context.Resolve(Declaration).Type;
-			Type = type.ToDataType();
-			GetSemantics(context);
+			// Check whether the parameter is declared with a known type
+			ValidateType(_parameter, _parameter.ResolveType(Resolver));
 
-			if (Type == DataType.Unknown)
-				context.Error(Declaration, "Parameter '{0}' is declared with unknown or unsupported data type '{1}'.", Name,
-							  type.FullName);
+			// Check whether the parameter is an array type
+			if (_parameter.ResolveType(Resolver).Kind == TypeKind.Array)
+				Error(_parameter, "Unexpected array declaration.");
 
-			if (type.Kind == TypeKind.Array)
-				context.Error(Declaration, "Parameter '{0}' cannot be an array.", Name);
+			// Check whether the parameter is declared with modifier 'out' or no modifier at all
+			if (_parameter.ParameterModifier != ParameterModifier.Out && _parameter.ParameterModifier != ParameterModifier.None)
+				Error(_parameter, "Unexpected modifier '{0}'.", _parameter.ParameterModifier.ToString().ToLower());
 
-			switch (Declaration.ParameterModifier)
-			{
-				case ParameterModifier.None:
-					break;
-				case ParameterModifier.Ref:
-					context.Error(Declaration, "Parameter '{0}' cannot be declared with modifier 'ref'.", Name);
-					break;
-				case ParameterModifier.Out:
-					IsOutput = true;
-					break;
-				case ParameterModifier.Params:
-					context.Error(Declaration, "Parameter '{0}' cannot be declared with modifier 'params'.", Name);
-					break;
-				case ParameterModifier.This:
-					context.Error(Declaration, "Parameter '{0}' cannot be declared with modifier 'this'.", Name);
-					break;
-				default:
-					throw new InvalidOperationException("Unknown parameter modifier.");
-			}
-		}
+			// Check whether the parameter is declared with any semantics or with multiple semantics
+			var position = _parameter.Attributes.Contain<PositionAttribute>(Resolver);
+			var normal = _parameter.Attributes.Contain<NormalAttribute>(Resolver);
+			var texCoords = _parameter.Attributes.Contain<TexCoordsAttribute>(Resolver);
+			var color = _parameter.Attributes.Contain<ColorAttribute>(Resolver);
 
-		/// <summary>
-		///   Gets the semantics of the parameter.
-		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		private void GetSemantics(CompilationContext context)
-		{
-			var position = Declaration.Attributes.GetAttribute<PositionAttribute>(context);
-			var normal = Declaration.Attributes.GetAttribute<NormalAttribute>(context);
-			var texCoords = Declaration.Attributes.GetAttribute<TexCoordsAttribute>(context);
-			var color = Declaration.Attributes.GetAttribute<ColorAttribute>(context);
-
-			var semanticsCount = new[] { position, normal, color, texCoords }.Count(attribute => attribute != null);
+			var semanticsCount = new[] { position, normal, color, texCoords }.Count(attribute => attribute);
 			if (semanticsCount > 1)
-				context.Error(Declaration, "Parameter '{0}' cannot have multiple semantics.", Name);
+				Error(_parameter, "Parameter '{0}' cannot have multiple semantics.", Name);
 			if (semanticsCount == 0)
-				context.Error(Declaration, "Parameter '{0}' is missing a semantics declaration.", Name);
+				Error(_parameter, "Parameter '{0}' is missing a semantics declaration.", Name);
 
-			if (position != null)
-				Semantics = DataSemantics.Position;
+			// Check whether the semantic index is out of range
+			var attributes = from attributeSection in _parameter.Attributes
+							 from attribute in attributeSection.Attributes
+							 let index = GetSemanticIndex(attribute)
+							 where index < 0 || index > 3
+							 select attribute;
 
-			if (normal != null)
-				Semantics = DataSemantics.Normal;
-
-			if (texCoords != null)
-			{
-				var index = GetSemanticIndex(context, texCoords);
-				Semantics = DataSemantics.TexCoords0 + index;
-			}
-
-			if (color != null)
-			{
-				var index = GetSemanticIndex(context, color);
-				Semantics = DataSemantics.Color0 + index;
-			}
+			foreach (var attribute in attributes)
+				Error(attribute, "Semantic index is out of range.");
 		}
 
 		/// <summary>
 		///   Gets the semantic index of the given attribute.
 		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
 		/// <param name="attribute">The attribute whose semantic index specification should be returned.</param>
-		private int GetSemanticIndex(CompilationContext context, Attribute attribute)
+		private int GetSemanticIndex(Attribute attribute)
 		{
 			if (!attribute.HasArgumentList)
 				return 0;
 
-			var resolved = context.Resolve(attribute.Arguments.Single());
-			var index = (int)resolved.ConstantValue;
-
-			if (index < 0 || index > 3)
-			{
-				context.Error(Declaration, "Semantic index of parameter '{0}' must be between 0 and 3.", Name);
-				return 0;
-			}
-
-			return index;
+			var resolved = Resolver.Resolve(attribute.Arguments.Single());
+			return (int)resolved.ConstantValue;
 		}
 	}
 }

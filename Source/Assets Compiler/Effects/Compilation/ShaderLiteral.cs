@@ -2,73 +2,102 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Collections.Generic;
+	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
 	///   Represents a field of an effect class that acts as compile-time constant literal shader value.
 	/// </summary>
-	internal class ShaderLiteral : ShaderDataObject<FieldDeclaration>
+	internal class ShaderLiteral : CompiledElement
 	{
+		/// <summary>
+		///   The declaration of the field that represents the literal.
+		/// </summary>
+		private readonly FieldDeclaration _field;
+
+		/// <summary>
+		///   The variable that represents the literal.
+		/// </summary>
+		private readonly VariableInitializer _variable;
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="declaration">The declaration of the field that represents the literal.</param>
+		/// <param name="field">The declaration of the field that represents the literal.</param>
 		/// <param name="variable">The declaration of the field variable that represents the literal.</param>
-		public ShaderLiteral(FieldDeclaration declaration, VariableInitializer variable)
-			: base(declaration, variable)
+		public ShaderLiteral(FieldDeclaration field, VariableInitializer variable)
 		{
+			Assert.ArgumentNotNull(field, () => field);
+			Assert.ArgumentNotNull(variable, () => variable);
+
+			_field = field;
+			_variable = variable;
+		}
+
+		/// <summary>
+		///   Gets the name of the literal.
+		/// </summary>
+		public string Name
+		{
+			get { return _variable.Name; }
+		}
+
+		/// <summary>
+		///   Gets the type of the literal.
+		/// </summary>
+		public DataType Type
+		{
+			get { return _field.ResolveType(Resolver).ToDataType(); }
 		}
 
 		/// <summary>
 		///   Gets the value of the literal.
 		/// </summary>
-		public object Value { get; private set; }
+		public object Value
+		{
+			get
+			{
+				if (IsArray)
+					return _variable.Initializer.GetConstantValues(Resolver);
+
+				return _variable.Initializer.GetConstantValue(Resolver);
+			}
+		}
 
 		/// <summary>
 		///   Gets a value indicating whether the literal is an array.
 		/// </summary>
-		public bool IsArray { get; protected set; }
-
-		/// <summary>
-		///   Returns a string that represents the current object.
-		/// </summary>
-		public override string ToString()
+		public bool IsArray
 		{
-			return String.Format("{0} : {1} = {2}", Name, Type, Value);
+			get { return _field.ResolveType(Resolver).Kind == TypeKind.Array; }
 		}
 
 		/// <summary>
-		///   Compiles the shader constant.
+		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///   initialization.
 		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		public void Compile(CompilationContext context)
+		protected override void Validate()
 		{
-			Name = Variable.Name;
-			context.ValidateIdentifier(Variable.NameToken);
+			// Check whether the name is reserved
+			ValidateIdentifier(_variable.NameToken);
 
-			Type = Declaration.GetDataType(context);
-			IsArray = Declaration.GetType(context).Kind == TypeKind.Array;
+			// Check whether the literal is declared with a known type
+			ValidateType(_variable, _field.ResolveType(Resolver));
 
-			if (Type == DataType.Unknown)
-				context.Error(Variable,
-							  "Shader literal '{0}' is declared with unknown or unsupported data type '{1}'.",
-							  Name, Declaration.GetType(context).FullName);
+			// Check whether the declared modifiers match the expected ones
+			var constModifiers = new[] { Modifiers.Private, Modifiers.Const };
+			var readonlyModifiers = new[] { Modifiers.Private, Modifiers.Static, Modifiers.Readonly };
+			ValidateModifiers(_field, _field.Modifiers, new IEnumerable<Modifiers>[] { constModifiers, readonlyModifiers });
 
-			if (Declaration.Modifiers != (Modifiers.Private | Modifiers.Static | Modifiers.Readonly) &&
-				Declaration.Modifiers != (Modifiers.Private | Modifiers.Const))
-				context.Error(Variable, "Shader literal '{0}' must be private and either static, readonly or constant.", Name);
+			// Check whether the literal is initialized
+			if (_variable.Initializer.IsNull)
+				Error(_variable, "Shader literal '{0}' must be initialized.", Name);
 
-			if (Variable.Initializer.IsNull)
-				context.Error(Variable.Initializer, "Shader literal '{0}' must be initialized.", Name);
-
-			if (IsArray)
-				Value = Variable.Initializer.GetConstantValues(context);
-			else
-				Value = Variable.Initializer.GetConstantValue<object>(context);
-
-			if (Value == null)
-				context.Error(Variable.Initializer, "Shader literal '{0}' must be initialized with a compile-time constant value.", Name);
+			// Check whether the literal is initialized with a compile-time constant
+			if (!_variable.Initializer.IsNull && Value == null)
+				Error(_variable.Initializer, "Shader literal '{0}' must be initialized with a compile-time constant value.", Name);
 		}
 	}
 }

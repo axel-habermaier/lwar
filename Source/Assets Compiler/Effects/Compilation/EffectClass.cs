@@ -121,7 +121,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				Error(_type, "Expected a declaration of at least one fragment shaders.");
 
 			// Check whether that all local variables and parameters do not hide a shader literal, constant, or texture object
-			CheckForVariableHiding();
+			ValidateVariableNames();
 		}
 
 		/// <summary>
@@ -136,7 +136,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Checks whether there are any local variables or parameters that hide a shader literal, constant, or texture object.
 		/// </summary>
-		private void CheckForVariableHiding()
+		private void ValidateVariableNames()
 		{
 			var localVariables = from methodDeclaration in _type.Descendants.OfType<MethodDeclaration>()
 								 from variableDeclaration in methodDeclaration.Descendants.OfType<VariableDeclarationStatement>()

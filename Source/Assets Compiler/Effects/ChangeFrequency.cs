@@ -8,11 +8,6 @@ namespace Pegasus.AssetsCompiler.Effects
 	public enum ChangeFrequency
 	{
 		/// <summary>
-		///   Indicates that the change frequency of the value is unknown.
-		/// </summary>
-		Unknown = 0,
-
-		/// <summary>
 		///   Indicates that the value usually changes once per frame.
 		/// </summary>
 		PerFrame,

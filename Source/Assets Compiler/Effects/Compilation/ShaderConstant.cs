@@ -10,16 +10,30 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a field of an effect class that is part of a constant buffer.
 	/// </summary>
-	internal class ShaderConstant : ShaderDataObject<FieldDeclaration>
+	internal class ShaderConstant : CompiledElement
 	{
+		/// <summary>
+		///   The declaration of the field that represents the shader constant
+		/// </summary>
+		private readonly FieldDeclaration _field;
+
+		/// <summary>
+		///   The variable that represents the shader constant.
+		/// </summary>
+		private readonly VariableInitializer _variable;
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="declaration">The declaration of the field that represents the constant.</param>
-		/// <param name="variable">The declaration of the field variable that represents the constant.</param>
-		public ShaderConstant(FieldDeclaration declaration, VariableInitializer variable)
-			: base(declaration, variable)
+		/// <param name="field">The declaration of the field that represents the shader constant.</param>
+		/// <param name="variable">The declaration of the field variable that represents the shader constant.</param>
+		public ShaderConstant(FieldDeclaration field, VariableInitializer variable)
 		{
+			Assert.ArgumentNotNull(field, () => field);
+			Assert.ArgumentNotNull(variable, () => variable);
+
+			_field = field;
+			_variable = variable;
 		}
 
 		/// <summary>
@@ -31,10 +45,21 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
 			Assert.ArgumentInRange(type, () => type);
-			// Build AST node
+
 			Name = name;
 			Type = type;
+			IsSpecial = true;
 		}
+
+		/// <summary>
+		///   Gets the name of the shader constant.
+		/// </summary>
+		public string Name { get; private set; }
+
+		/// <summary>
+		///   Gets the type of the shader constant.
+		/// </summary>
+		public DataType Type { get; private set; }
 
 		/// <summary>
 		///   Gets the change frequency of the constant.
@@ -42,44 +67,52 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ChangeFrequency ChangeFrequency { get; private set; }
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///   Gets a value indicating whether this constant is a special system-provided constant and not a user-defined one. If
+		///   true is returned, the change frequency of the constant has no meaning.
 		/// </summary>
-		public override string ToString()
+		public bool IsSpecial { get; private set; }
+
+		/// <summary>
+		///   Invoked when the element should initialize itself.
+		/// </summary>
+		protected override void Initialize()
 		{
-			return string.Format("{0} : {1} [{2}]", Name, Type, ChangeFrequency);
+			if (IsSpecial)
+				return;
+
+			Name = _variable.Name;
+			Type = _field.ResolveType(Resolver).ToDataType();
+
+			var attribute = _field.Attributes.GetAttribute<ShaderConstantAttribute>(Resolver);
+			var argument = attribute.Arguments.Single();
+			ChangeFrequency = (ChangeFrequency)argument.GetConstantValue(Resolver);
 		}
 
 		/// <summary>
-		///   Compiles the shader constant.
+		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///   initialization.
 		/// </summary>
-		/// <param name="context">The context of the compilation.</param>
-		public void Compile(CompilationContext context)
+		protected override void Validate()
 		{
-			Name = Variable.Name;
-			context.ValidateIdentifier(Variable.NameToken);
+			if (IsSpecial)
+				return;
 
-			Type = Declaration.GetDataType(context);
+			// Check whether the name is reserved
+			ValidateIdentifier(_variable.NameToken);
 
-			if (Declaration.GetType(context).Kind == TypeKind.Array)
-				context.Error(Variable, "Shader constant '{0}' cannot be an array.", Name);
+			// Check whether the constant is declared with a known type
+			ValidateType(_variable, _field.ResolveType(Resolver));
 
-			if (Type == DataType.Unknown)
-				context.Error(Variable,
-							  "Shader constant '{0}' is declared with unknown or unsupported data type '{1}'.",
-							  Name, Declaration.GetType(context).FullName);
+			// Check whether the constant is an array type
+			if (_field.ResolveType(Resolver).Kind == TypeKind.Array)
+				Error(_variable, "Unexpected array declaration.");
 
-			if (Declaration.Modifiers != (Modifiers.Public | Modifiers.Readonly))
-				context.Error(Variable, "Shader constant '{0}' must be public, non-static, and readonly.", Name);
+			// Check whether the declared modifiers match the expected ones
+			ValidateModifiers(_field, _field.ModifierTokens, new[] { Modifiers.Public | Modifiers.Readonly });
 
-			if (!Variable.Initializer.IsNull)
-				context.Error(Variable.Initializer, "Shader constant '{0}' cannot be initialized.", Name);
-
-			var attribute = Declaration.GetAttribute<ShaderConstantAttribute>(context);
-			var argument = attribute.Arguments.Single();
-			ChangeFrequency = argument.GetConstantValue<ChangeFrequency>(context);
-
-			if (ChangeFrequency == ChangeFrequency.Unknown)
-				context.Error(Variable, "Change frequency of shader constant '{0}' must be specified.", Name);
+			// Check whether the constant is initialized
+			if (!_variable.Initializer.IsNull)
+				Error(_variable.Initializer, "Unexpected initialization of shader constant.");
 		}
 	}
 }

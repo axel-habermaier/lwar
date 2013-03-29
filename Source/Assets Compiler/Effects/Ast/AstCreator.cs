@@ -14,7 +14,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// <summary>
 		///   The context of the compilation.
 		/// </summary>
-		private CompilationContext _context;
+		//private CompilationContext _context;
 
 		/// <summary>
 		///   The effect class the shader method belongs to.
@@ -32,17 +32,17 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// <param name="context">The context of the compilation.</param>
 		/// <param name="effect">The effect class the shader method belongs to.</param>
 		/// <param name="shader">The C# shader method that should be cross-compiled.</param>
-		public IAstNode CreateAst(CompilationContext context, EffectClass effect, ShaderMethod shader)
-		{
-			Assert.ArgumentNotNull(context, () => context);
-			Assert.ArgumentNotNull(effect, () => effect);
-			Assert.ArgumentNotNull(shader, () => shader);
+		//public IAstNode CreateAst(CompilationContext context, EffectClass effect, ShaderMethod shader)
+		//{
+		//	Assert.ArgumentNotNull(context, () => context);
+		//	Assert.ArgumentNotNull(effect, () => effect);
+		//	Assert.ArgumentNotNull(shader, () => shader);
 
-			_context = context;
-			_effect = effect;
-			_shader = shader;
+		//	_context = context;
+		//	_effect = effect;
+		//	_shader = shader;
 
-			return shader.ShaderCode.AcceptVisitor(this);
-		}
+		//	return shader.ShaderCode.AcceptVisitor(this);
+		//}
 	}
 }

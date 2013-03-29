@@ -9,6 +9,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.Semantics;
+	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
 	///   Represents an element that takes part in the effect compilation.
@@ -162,19 +163,25 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Invoked when the element should initialize itself.
 		/// </summary>
-		protected abstract void Initialize();
+		protected virtual void Initialize()
+		{
+		}
 
 		/// <summary>
 		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
 		///   initialization.
 		/// </summary>
-		protected abstract void Validate();
+		protected virtual void Validate()
+		{
+		}
 
 		/// <summary>
 		///   Invoked when the element should compile itself. This method is invoked only if no errors occurred during
 		///   initialization and validation.
 		/// </summary>
-		protected abstract void Compile();
+		protected virtual void Compile()
+		{
+		}
 
 		/// <summary>
 		///   Resolves the semantics of the given node.
@@ -231,25 +238,67 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Checks whether the given identifier is reserved.
+		/// </summary>
+		/// <param name="identifier">The identifier that should be checked.</param>
+		protected void ValidateIdentifier(Identifier identifier)
+		{
+			if (identifier.Name.StartsWith(Configuration.ReservedVariablePrefix))
+				Error(identifier, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedVariablePrefix);
+		}
+
+		/// <summary>
+		///   Checks whether the given type is valid.
+		/// </summary>
+		/// <param name="node">The node whose type should be checked.</param>
+		/// <param name="resolvedType">The declared type of the node.</param>
+		protected void ValidateType(AstNode node, IType resolvedType)
+		{
+			if (resolvedType.ToDataType() == DataType.Unknown)
+				Error(node, "Type '{0}' is not a supported data type.", resolvedType.FullName);
+		}
+
+		/// <summary>
 		///   Checks whether the declared modifiers match the expected ones.
 		/// </summary>
 		/// <param name="declaration">The declaration that is affected by the modifiers.</param>
 		/// <param name="declaredModifiers">The modifiers that have actually been declared.</param>
 		/// <param name="expectedModifiers">The modifiers that should have been declared.</param>
 		protected void ValidateModifiers(AstNode declaration, IEnumerable<CSharpModifierToken> declaredModifiers,
-						 IEnumerable<Modifiers> expectedModifiers)
+										 IEnumerable<Modifiers> expectedModifiers)
 		{
 			Assert.ArgumentNotNull(declaration, () => declaration);
 			Assert.ArgumentNotNull(declaredModifiers, () => declaredModifiers);
 			Assert.ArgumentNotNull(expectedModifiers, () => expectedModifiers);
 
-			// Check whether any modifiers other than the exepcted ones are declared on the effect
-			foreach (var modifier in declaredModifiers.Where(modifier => !expectedModifiers.Contains(modifier.Modifier)))
+			ValidateModifiers(declaration, declaredModifiers, new[] { expectedModifiers });
+		}
+
+		/// <summary>
+		///   Checks whether the declared modifiers match the expected ones.
+		/// </summary>
+		/// <param name="declaration">The declaration that is affected by the modifiers.</param>
+		/// <param name="declaredModifiers">The modifiers that have actually been declared.</param>
+		/// <param name="expectedModifiers">The set of modifiers, one of which should have been declared.</param>
+		protected void ValidateModifiers(AstNode declaration, IEnumerable<CSharpModifierToken> declaredModifiers,
+										 IEnumerable<IEnumerable<Modifiers>> expectedModifiers)
+		{
+			Assert.ArgumentNotNull(declaration, () => declaration);
+			Assert.ArgumentNotNull(declaredModifiers, () => declaredModifiers);
+			Assert.ArgumentNotNull(expectedModifiers, () => expectedModifiers);
+
+			// Check whether any modifiers other than the exepcted ones are declared 
+			foreach (var modifier in declaredModifiers.Where(modifier => !expectedModifiers.Any(m => m.Contains(modifier.Modifier))))
 				Error(modifier, "Unexpected modifier '{0}'.", modifier.Modifier.ToString().ToLower());
 
 			// Check that the expected modifiers are present
-			foreach (var modifier in expectedModifiers.Where(modifier => declaredModifiers.All(m => m.Modifier != modifier)))
-				Error(declaration, "Expected '{0}' modifier.", modifier.ToString().ToLower());
+			if (!expectedModifiers.Any(modifiers => modifiers.All(m => declaredModifiers.Any(declared => declared.Modifier == m))))
+			{
+				Func<IEnumerable<Modifiers>, string> listModifiers =
+					modifiers => String.Join(", ", modifiers.Select(modifier => String.Format("'{0}'", modifier.ToString().ToLower())));
+
+				Error(declaration, "Expected modifiers {0}.", String.Join(" or ", expectedModifiers.Select(listModifiers)));
+			}
 		}
 
 		/// <summary>

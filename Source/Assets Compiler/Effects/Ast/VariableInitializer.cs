@@ -9,21 +9,21 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 	/// </summary>
 	internal class VariableInitializer : IAstNode
 	{
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="variable">The declared variable.</param>
-		/// <param name="expression">The initialization expression, if any, or null if the variable is not initialized.</param>
-		public VariableInitializer(ShaderVariable variable, Expression expression)
-		{
-			Variable = variable;
-			Expression = expression;
-		}
+		///// <summary>
+		/////   Initializes a new instance.
+		///// </summary>
+		///// <param name="variable">The declared variable.</param>
+		///// <param name="expression">The initialization expression, if any, or null if the variable is not initialized.</param>
+		//public VariableInitializer(ShaderVariable variable, Expression expression)
+		//{
+		//	Variable = variable;
+		//	Expression = expression;
+		//}
 
-		/// <summary>
-		///   Gets the declared variable.
-		/// </summary>
-		public ShaderVariable Variable { get; private set; }
+		///// <summary>
+		/////   Gets the declared variable.
+		///// </summary>
+		//public ShaderVariable Variable { get; private set; }
 
 		/// <summary>
 		///   Gets the initialization expression, if any, or null if the variable is not initialized.

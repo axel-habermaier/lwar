@@ -54,23 +54,5 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						where type.IsDerivedFrom<Effect>(Resolver) || type.Attributes.Contain<EffectAttribute>(Resolver)
 						select new EffectClass(type));
 		}
-
-		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
-		/// </summary>
-		protected override void Validate()
-		{
-			// Nothing to do here
-		}
-
-		/// <summary>
-		///   Invoked when the element should compile itself. This method is invoked only if no errors occurred during
-		///   initialization and validation.
-		/// </summary>
-		protected override void Compile()
-		{
-			// Nothing to do here
-		}
 	}
 }

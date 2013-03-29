@@ -132,7 +132,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Gets the resolved type of an entity declaration.
+		///   Gets the resolved type of the entity declaration.
 		/// </summary>
 		/// <param name="declaration">The entity declaration whose type should be returned.</param>
 		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
@@ -142,6 +142,20 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Assert.ArgumentNotNull(resolver, () => resolver);
 
 			var resolved = resolver.Resolve(declaration.ReturnType);
+			return resolved.Type;
+		}
+
+		/// <summary>
+		///   Gets the resolved type of the parameter declaration.
+		/// </summary>
+		/// <param name="declaration">The parameter declaration whose type should be returned.</param>
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static IType ResolveType(this ParameterDeclaration declaration, CSharpAstResolver resolver)
+		{
+			Assert.ArgumentNotNull(declaration, () => declaration);
+			Assert.ArgumentNotNull(resolver, () => resolver);
+
+			var resolved = resolver.Resolve(declaration.Type);
 			return resolved.Type;
 		}
 
