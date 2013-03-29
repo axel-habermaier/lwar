@@ -47,13 +47,5 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   The ordered set of constant that are contained in the constant buffer.
 		/// </summary>
 		public ShaderConstant[] Constants { get; private set; }
-
-		/// <summary>
-		///   Returns a string that represents the current object.
-		/// </summary>
-		public override string ToString()
-		{
-			return string.Format("Constant Buffer (Slot {0}, Shared: {1})", Slot, Shared);
-		}
 	}
 }

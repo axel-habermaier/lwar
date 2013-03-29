@@ -51,37 +51,47 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			LoadAssemblies();
-
-			var parser = new CSharpParser();
-			var parsedFiles = assets.Select(asset =>
-				{
-					var syntaxTree = parser.Parse(File.ReadAllText(asset.SourcePath), asset.SourcePath);
-					syntaxTree.FileName = asset.RelativePath;
-					PrintParserErrorsAndWarnings(asset.RelativePath, parser.ErrorsAndWarnings.ToArray());
-
-					var unresolvedFile = syntaxTree.ToTypeSystem();
-					_project = _project.AddOrUpdateFiles(unresolvedFile);
-
-					return new { FileName = asset.RelativePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
-				});
-
-			var compilation = _project.CreateCompilation();
-			var effectFiles = parsedFiles.Select(file =>
-				{
-					var resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
-					return new EffectFile(file.SyntaxTree, resolver);
-				}).ToArray();
-
-			foreach (var file in effectFiles)
+			try
 			{
-				file.InitializeElement();
-				file.ValidateElement();
-				file.CompileElement();
-			}
+				LoadAssemblies();
 
-			ShaderAssets = effectFiles.SelectMany(file => file.ShaderAssets);
-			return effectFiles.All(file => !file.HasErrors);
+				var parser = new CSharpParser();
+				var parsedFiles = assets.Select(asset =>
+					{
+						var syntaxTree = parser.Parse(File.ReadAllText(asset.SourcePath), asset.SourcePath);
+						syntaxTree.FileName = asset.RelativePath;
+						PrintParserErrorsAndWarnings(asset.RelativePath, parser.ErrorsAndWarnings.ToArray());
+
+						var unresolvedFile = syntaxTree.ToTypeSystem();
+						_project = _project.AddOrUpdateFiles(unresolvedFile);
+
+						return new { FileName = asset.RelativePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
+					});
+
+				var compilation = _project.CreateCompilation();
+				var effectFiles = parsedFiles.Select(file =>
+					{
+						var resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
+						return new EffectFile(file.SyntaxTree, resolver);
+					}).ToArray();
+
+				foreach (var file in effectFiles)
+				{
+					file.InitializeElement();
+					file.ValidateElement();
+					file.CompileElement();
+				}
+
+				ShaderAssets = effectFiles.SelectMany(file => file.ShaderAssets);
+				return effectFiles.All(file => !file.HasErrors);
+			}
+			catch (Exception e)
+			{
+				Log.Error("Effect cross-compilation failed: {0}", e.Message);
+
+				ShaderAssets = new Asset[0];
+				return false;
+			}
 		}
 
 		/// <summary>

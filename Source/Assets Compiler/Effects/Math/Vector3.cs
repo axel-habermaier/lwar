@@ -4,8 +4,11 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 {
 	using System.Runtime.InteropServices;
 
+	/// <summary>
+	///   Represents a three-component vector.
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public partial struct Vector3
+	public partial class Vector3
 	{
 		/// <summary>
 		///   Initializes a new instance.

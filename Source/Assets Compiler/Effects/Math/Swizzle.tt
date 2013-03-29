@@ -8,7 +8,7 @@ using System;
 
 namespace Pegasus.AssetsCompiler.Effects.Math
 {
-	public partial struct Vector2
+	public partial class Vector2
 	{<##>
 <# foreach (var swizzle in SwizzleMasks(new[] { "X", "Y" }).Concat(SwizzleMasks(new[] { "R", "G" }))) { #>
 
@@ -22,7 +22,7 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 <# } #>
 	}
 
-	public partial struct Vector3
+	public partial class Vector3
 	{<##>
 <# foreach (var swizzle in SwizzleMasks(new[] { "X", "Y", "Z" }).Concat(SwizzleMasks(new[] { "R", "G", "B" }))) { #>
 
@@ -36,7 +36,7 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 <# } #>
 	}
 
-	public partial struct Vector4
+	public partial class Vector4
 	{<##>
 <# foreach (var swizzle in SwizzleMasks(new[] { "X", "Y", "Z", "W" }).Concat(SwizzleMasks(new[] { "R", "G", "B", "A" }))) { #>
 

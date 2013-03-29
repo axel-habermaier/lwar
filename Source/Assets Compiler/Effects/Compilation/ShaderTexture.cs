@@ -68,15 +68,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			// Check whether the name is reserved
 			ValidateIdentifier(_variable.NameToken);
 
-			// Check whether the texture object is declared with a known type
-			ValidateType(_variable, _field.ResolveType(Resolver));
-
 			// Check whether the texture object is an array type
 			if (_field.ResolveType(Resolver).Kind == TypeKind.Array)
-				Error(_variable, "Unexpected array declaration.");
+				Error(_field, "Unexpected array declaration.");
 
 			// Check whether the declared modifiers match the expected ones
-			ValidateModifiers(_field, _field.ModifierTokens, new[] { Modifiers.Public | Modifiers.Readonly });
+			ValidateModifiers(_field, _field.ModifierTokens, new[] { Modifiers.Public, Modifiers.Readonly });
 
 			// Check whether the texture object is initialized
 			if (!_variable.Initializer.IsNull)

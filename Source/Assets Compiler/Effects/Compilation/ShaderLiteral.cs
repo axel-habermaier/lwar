@@ -2,7 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
-	using System.Collections.Generic;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
@@ -84,12 +83,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			ValidateIdentifier(_variable.NameToken);
 
 			// Check whether the literal is declared with a known type
-			ValidateType(_variable, _field.ResolveType(Resolver));
+			ValidateType(_field, _field.ResolveType(Resolver));
 
 			// Check whether the declared modifiers match the expected ones
 			var constModifiers = new[] { Modifiers.Private, Modifiers.Const };
 			var readonlyModifiers = new[] { Modifiers.Private, Modifiers.Static, Modifiers.Readonly };
-			ValidateModifiers(_field, _field.Modifiers, new IEnumerable<Modifiers>[] { constModifiers, readonlyModifiers });
+			ValidateModifiers(_field, _field.ModifierTokens, new[] { constModifiers, readonlyModifiers });
 
 			// Check whether the literal is initialized
 			if (_variable.Initializer.IsNull)
@@ -97,7 +96,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			// Check whether the literal is initialized with a compile-time constant
 			if (!_variable.Initializer.IsNull && Value == null)
-				Error(_variable.Initializer, "Shader literal '{0}' must be initialized with a compile-time constant value.", Name);
+				Error(_variable.Initializer, "Shader literal '{0}' must be initialized with a non-null compile-time constant value.", Name);
 		}
 	}
 }

@@ -75,7 +75,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					return DataSemantics.Color0 + index;
 				}
 
-				throw new InvalidOperationException("Unknown shader parameter semantics.");
+				// Just assign some meaningless default semantics...
+				// This error will be catched during the validation of the parameter
+				return DataSemantics.TexCoords0;
 			}
 		}
 
@@ -115,9 +117,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			var semanticsCount = new[] { position, normal, color, texCoords }.Count(attribute => attribute);
 			if (semanticsCount > 1)
-				Error(_parameter, "Parameter '{0}' cannot have multiple semantics.", Name);
+				Error(_parameter, "Unexpected declaration of multiple semantics attributes.");
 			if (semanticsCount == 0)
-				Error(_parameter, "Parameter '{0}' is missing a semantics declaration.", Name);
+				Error(_parameter, "Expected declaration of a semantics attribute.");
 
 			// Check whether the semantic index is out of range
 			var attributes = from attributeSection in _parameter.Attributes
@@ -127,7 +129,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 							 select attribute;
 
 			foreach (var attribute in attributes)
-				Error(attribute, "Semantic index is out of range.");
+				Error(attribute, "Semantic index is out of range or could not be determined.");
 		}
 
 		/// <summary>
@@ -140,6 +142,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				return 0;
 
 			var resolved = Resolver.Resolve(attribute.Arguments.Single());
+			if (resolved.ConstantValue == null)
+				return -1;
+
 			return (int)resolved.ConstantValue;
 		}
 	}

@@ -62,9 +62,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public DataType Type { get; private set; }
 
 		/// <summary>
-		///   Gets the change frequency of the constant.
+		///   Gets the change frequency of the constant. This property cannot be called if the constant is not user-defined.
 		/// </summary>
-		public ChangeFrequency ChangeFrequency { get; private set; }
+		public ChangeFrequency ChangeFrequency
+		{
+			get
+			{
+				var attribute = _field.Attributes.GetAttribute<ShaderConstantAttribute>(Resolver);
+				var argument = attribute.Arguments.Single();
+				return (ChangeFrequency)argument.GetConstantValue(Resolver);
+			}
+		}
 
 		/// <summary>
 		///   Gets a value indicating whether this constant is a special system-provided constant and not a user-defined one. If
@@ -82,10 +90,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			Name = _variable.Name;
 			Type = _field.ResolveType(Resolver).ToDataType();
-
-			var attribute = _field.Attributes.GetAttribute<ShaderConstantAttribute>(Resolver);
-			var argument = attribute.Arguments.Single();
-			ChangeFrequency = (ChangeFrequency)argument.GetConstantValue(Resolver);
 		}
 
 		/// <summary>
@@ -101,14 +105,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			ValidateIdentifier(_variable.NameToken);
 
 			// Check whether the constant is declared with a known type
-			ValidateType(_variable, _field.ResolveType(Resolver));
+			ValidateType(_field, _field.ResolveType(Resolver));
 
 			// Check whether the constant is an array type
 			if (_field.ResolveType(Resolver).Kind == TypeKind.Array)
-				Error(_variable, "Unexpected array declaration.");
+				Error(_field, "Unexpected array declaration.");
 
 			// Check whether the declared modifiers match the expected ones
-			ValidateModifiers(_field, _field.ModifierTokens, new[] { Modifiers.Public | Modifiers.Readonly });
+			ValidateModifiers(_field, _field.ModifierTokens, new[] { Modifiers.Public, Modifiers.Readonly });
 
 			// Check whether the constant is initialized
 			if (!_variable.Initializer.IsNull)

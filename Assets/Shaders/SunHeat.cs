@@ -21,6 +21,9 @@ namespace Lwar.Assets.Shaders
 		[ShaderConstant(ChangeFrequency.PerDrawCall)]
 		public readonly Matrix World;
 
+		[ShaderConstant(ChangeFrequency.PerDrawCall)]
+		public readonly Vector4 World2;
+
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,
 								 [Normal] Vector4 normal,
@@ -35,12 +38,12 @@ namespace Lwar.Assets.Shaders
 
 		[FragmentShader]
 		public void FragmentShader([TexCoords(0)] Vector3 texCoords0,
-								   [TexCoords(1)] Vector3 texCoords1,
+								   [TexCoords(1)]  Vector3 texCoords1,
 								   [Color] out Vector4 color)
 		{
 			var sample1 = CubeMap.Sample(texCoords0).R;
 			var sample2 = CubeMap.Sample(texCoords1).R;
-			
+
 			var result = sample1 + sample2;
 			var blend = result / 2.0f;
 

@@ -121,15 +121,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Invoked when the element should compile itself. This method is invoked only if no errors occurred during
-		///   initialization and validation.
-		/// </summary>
-		protected override void Compile()
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
 		///   Checks whether the given parameters are declared with distinct semantics.
 		/// </summary>
 		/// <param name="parameters">The parameters that should be checked.</param>

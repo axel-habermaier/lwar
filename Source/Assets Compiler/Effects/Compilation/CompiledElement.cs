@@ -94,15 +94,15 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		public void ValidateElement()
 		{
-			Assert.That(_state != State.Initialized, "This method must be called when the element is initialized.");
+			Assert.That(_state == State.Initialized, "This method must be called when the element is initialized.");
 
 			if (HasErrors)
 				return;
-
-			Validate();
+			
 			foreach (var child in _childElements)
 				child.ValidateElement();
 
+			Validate();
 			_state = State.Validated;
 		}
 
@@ -112,7 +112,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		public void CompileElement()
 		{
-			Assert.That(_state != State.Validated, "This method must be called when the element is validated.");
+			Assert.That(_state == State.Validated, "This method must be called when the element is validated.");
 
 			if (HasErrors)
 				return;

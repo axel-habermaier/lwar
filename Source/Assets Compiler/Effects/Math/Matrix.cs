@@ -8,7 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 	///   Represents a 4x4 matrix.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct Matrix
+	public class Matrix
 	{
 		/// <summary>
 		///   Multiplies a matrix with a vector.

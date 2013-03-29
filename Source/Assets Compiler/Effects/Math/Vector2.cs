@@ -8,7 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 	///   Represents a two-component vector.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public partial struct Vector2
+	public partial class Vector2
 	{
 		/// <summary>
 		///   Initializes a new instance.

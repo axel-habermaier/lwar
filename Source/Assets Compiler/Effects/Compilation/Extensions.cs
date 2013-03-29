@@ -36,8 +36,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			if (declaration.ClassType != ClassType.Class)
 				return false;
 
-			var resolvedDeclaration = (TypeResolveResult)resolver.Resolve(declaration);
-			return resolvedDeclaration.Type.DirectBaseTypes.Any(b => b.FullName == typeof(T).FullName);
+			return declaration.BaseTypes
+							  .Select(type => resolver.Resolve(type))
+							  .OfType<TypeResolveResult>()
+							  .Any(type => type.Type.FullName == typeof(T).FullName);
 		}
 
 		/// <summary>
@@ -124,7 +126,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Assert.ArgumentNotNull(expression, () => expression);
 			Assert.ArgumentNotNull(resolver, () => resolver);
 
-			var resolved = (ArrayCreateResolveResult)resolver.Resolve(expression);
+			var resolved = resolver.Resolve(expression) as ArrayCreateResolveResult;
+			if (resolved == null)
+				return null;
+
 			if (resolved.InitializerElements.All(element => element.IsCompileTimeConstant))
 				return resolved.InitializerElements.Select(element => element.ConstantValue).ToArray();
 

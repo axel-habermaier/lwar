@@ -36,10 +36,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			get
 			{
-				if (HasErrors)
+				//if (HasErrors)
 					return new Asset[0];
 
-				return GetChildElements<EffectClass>().SelectMany(effect => effect.ShaderAssets);
+				//return GetChildElements<EffectClass>().SelectMany(effect => effect.ShaderAssets);
 			}
 		}
 
