@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 	using Compilation;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.Semantics;
 
 	/// <summary>
@@ -143,16 +144,18 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		public IAstNode VisitInvocationExpression(InvocationExpression invocationExpression)
 		{
 			var arguments = invocationExpression.Arguments.Visit<Expression>(this);
-
+			var target = invocationExpression.Target.Visit<Expression>(this);
 			var method = _context.Resolve<MemberResolveResult>(invocationExpression).Member;
 			var dataType = method.DeclaringType.ToDataType();
+
+			// Das Zeugs hier weg und normale InvokeExpr erzeugen
 			if (dataType == DataType.Texture2D || dataType == DataType.CubeMap)
 			{
 				if (method.Name == "Sample" && arguments.Length == 1)
-					return new IntrinsicFunctionInvocation(IntrinsicFunction.Sample, arguments);
+					return new IntrinsicFunctionInvocation(target, IntrinsicFunction.Sample, arguments);
 
 				if (method.Name == "Sample" && arguments.Length == 2)
-					return new IntrinsicFunctionInvocation(IntrinsicFunction.SampleLevel, arguments);
+					return new IntrinsicFunctionInvocation(target, IntrinsicFunction.SampleLevel, arguments);
 
 				Assert.That(false, "Unsupported texture function.");
 			}
@@ -168,10 +171,9 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		public IAstNode VisitMemberReferenceExpression(
 			ICSharpCode.NRefactory.CSharp.MemberReferenceExpression memberReferenceExpression)
 		{
+			// Hier je nach Member: Property-Zugriff, Intrinsic Func, ...
 			var target = memberReferenceExpression.Target.Visit<Expression>(this);
-			var resolved = _context.Resolve<MemberResolveResult>(memberReferenceExpression);
-
-			return new MemberReferenceExpression(target, resolved.TargetResult.Type.ToDataType(), memberReferenceExpression.MemberName);
+			return new MemberReferenceExpression(target, DataType.Unknown, memberReferenceExpression.MemberName);
 		}
 
 		public IAstNode VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)
@@ -182,9 +184,9 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			return new ObjectCreationExpression(resolved.Type.ToDataType(), arguments);
 		}
 
-		public IAstNode VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
+		public IAstNode VisitParenthesizedExpression(ICSharpCode.NRefactory.CSharp.ParenthesizedExpression parenthesizedExpression)
 		{
-			return null;
+			return new ParenthesizedExpression(parenthesizedExpression.Expression.Visit<Expression>(this));
 		}
 
 		public IAstNode VisitPrimitiveExpression(PrimitiveExpression primitiveExpression)
@@ -208,7 +210,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			var type = _context.Resolve(unaryOperatorExpression.Expression).Type.ToDataType();
 
 			var unaryOperator = unaryOperatorExpression.Operator;
-			Action<UnaryOperatorType,string> checkOperator = (op,token) =>
+			Action<UnaryOperatorType, string> checkOperator = (op, token) =>
 				{
 					if (unaryOperator == op)
 					{

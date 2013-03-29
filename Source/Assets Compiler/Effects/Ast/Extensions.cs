@@ -5,6 +5,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Linq;
+	using Pegasus.Framework;
 	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
@@ -22,6 +23,9 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		public static TShaderNode[] Visit<TShaderNode>(this IEnumerable<AstNode> nodes, IAstVisitor<IAstNode> visitor)
 			where TShaderNode : IAstNode
 		{
+			Assert.ArgumentNotNull(nodes, () => nodes);
+			Assert.ArgumentNotNull(visitor, () => visitor);
+
 			return nodes.Select(initializer => initializer.AcceptVisitor(visitor))
 						.Cast<TShaderNode>()
 						.ToArray();
@@ -37,6 +41,9 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		public static TShaderNode Visit<TShaderNode>(this AstNode node, IAstVisitor<IAstNode> visitor)
 			where TShaderNode : IAstNode
 		{
+			Assert.ArgumentNotNull(node, () => node);
+			Assert.ArgumentNotNull(visitor, () => visitor);
+
 			return (TShaderNode)node.AcceptVisitor(visitor);
 		}
 
@@ -45,10 +52,23 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// </summary>
 		/// <param name="nodes">The nodes on which the AcceptVisitor method should be called.</param>
 		/// <param name="visitor">The visitor that should be passed to the AcceptVisitor method.</param>
-		public static void AcceptVisitor(this IEnumerable<IAstNode> nodes, IAstVisitor visitor)
+		/// <param name="action">
+		///   An action that should be invoked between visiting two nodes; the action is not invoked after the
+		///   last node has been visited.
+		/// </param>
+		public static void AcceptVisitor<T>(this T[] nodes, IAstVisitor visitor, Action action = null)
+			where T : IAstNode
 		{
-			foreach (var node in nodes)
-				node.AcceptVisitor(visitor);
+			Assert.ArgumentNotNull(nodes, () => nodes);
+			Assert.ArgumentNotNull(visitor, () => visitor);
+			
+			for (var i = 0; i < nodes.Length; ++i)
+			{
+				nodes[i].AcceptVisitor(visitor);
+
+				if (i < nodes.Length - 1 && action != null)
+					action();
+			}
 		}
 	}
 }

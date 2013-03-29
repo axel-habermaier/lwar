@@ -231,6 +231,7 @@
     <Compile Include="Effects\Ast\IAstVisitor.cs" />
     <Compile Include="Effects\Ast\MemberReferenceExpression.cs" />
     <Compile Include="Effects\Ast\ObjectCreationExpression.cs" />
+    <Compile Include="Effects\Ast\ParenthesizedExpression.cs" />
     <Compile Include="Effects\Ast\UnaryOperatorExpression.cs" />
     <Compile Include="Effects\Ast\VariableDeclarationStatement.cs" />
     <Compile Include="Effects\Ast\VariableInitializer.cs" />

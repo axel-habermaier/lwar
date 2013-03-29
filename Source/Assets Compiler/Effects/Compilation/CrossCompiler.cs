@@ -17,6 +17,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using IfElseStatement = Ast.IfElseStatement;
 	using IndexerExpression = Ast.IndexerExpression;
 	using MemberReferenceExpression = Ast.MemberReferenceExpression;
+	using ParenthesizedExpression = Ast.ParenthesizedExpression;
 	using ReturnStatement = Ast.ReturnStatement;
 	using UnaryOperatorExpression = Ast.UnaryOperatorExpression;
 	using VariableDeclarationStatement = Ast.VariableDeclarationStatement;
@@ -82,6 +83,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			throw new NotImplementedException();
 		}
 
+		public void VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
+		{
+			Writer.Append("(");
+			parenthesizedExpression.Expression.AcceptVisitor(this);
+			Writer.Append(")");
+		}
+
 		public virtual void VisitExpressionStatement(ExpressionStatement expressionStatement)
 		{
 			expressionStatement.Expression.AcceptVisitor(this);
@@ -110,23 +118,44 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 		public virtual void VisitIntrinsicFunctionInvocation(IntrinsicFunctionInvocation intrinsicFunctionInvocation)
 		{
+			switch (intrinsicFunctionInvocation.Function)
+			{
+				case IntrinsicFunction.Sample:
+					intrinsicFunctionInvocation.Target.AcceptVisitor(this);
+					break;
+				case IntrinsicFunction.SampleLevel:
+					intrinsicFunctionInvocation.Target.AcceptVisitor(this);
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported intrinsic function.");
+			}
+
+			Writer.Append("(");
+			intrinsicFunctionInvocation.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
+			Writer.Append(")");
 		}
 
 		public virtual void VisitLiteralValue(LiteralValue literalValue)
 		{
-			Writer.Append(literalValue.ToString());
+			Writer.Append(literalValue.Value.ToString());
 		}
 
 		public virtual void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
 		{
 			memberReferenceExpression.Target.AcceptVisitor(this);
-			Writer.Append(".{0}", memberReferenceExpression.Member);
+			var member = memberReferenceExpression.Member;
+			var type = memberReferenceExpression.Type;
+
+			if (type == DataType.Vector2 || type == DataType.Vector3 || type == DataType.Vector4 || type == DataType.Matrix)
+				member = member.ToLower();
+
+			Writer.Append(".{0}", member);
 		}
 
 		public virtual void VisitObjectCreationExpression(ObjectCreationExpression objectCreationExpression)
 		{
 			Writer.Append("{0}(", ToShaderType(objectCreationExpression.Type));
-			objectCreationExpression.Arguments.AcceptVisitor(this);
+			objectCreationExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
 			Writer.Append(")");
 		}
 
@@ -152,10 +181,18 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 		public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement)
 		{
+			variableDeclarationStatement.Variables.AcceptVisitor(this, () => Writer.AppendLine(";"));
+			Writer.AppendLine(";");
 		}
 
 		public virtual void VisitVariableInitializer(VariableInitializer variableInitializer)
 		{
+			Writer.Append("{0} {1}", ToShaderType(variableInitializer.Variable.Type), variableInitializer.Variable.Name);
+			if (variableInitializer.Expression != null)
+			{
+				Writer.Append(" = ");
+				variableInitializer.Expression.AcceptVisitor(this);
+			}
 		}
 
 		public virtual void VisitVariableReference<T>(VariableReference<T> variableReference)

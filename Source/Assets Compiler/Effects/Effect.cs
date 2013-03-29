@@ -28,10 +28,5 @@ namespace Pegasus.AssetsCompiler.Effects
 		///   The size of the viewport.
 		/// </summary>
 		protected readonly Vector2 ViewportSize;
-
-		/// <summary>
-		///   The world matrix that should be used to transform the geometry.
-		/// </summary>
-		protected readonly Matrix World;
 	}
 }

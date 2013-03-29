@@ -32,5 +32,6 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 			where T : IShaderDataObject;
 
 		void VisitWhileStatement(WhileStatement whileStatement);
+		void VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression);
 	}
 }

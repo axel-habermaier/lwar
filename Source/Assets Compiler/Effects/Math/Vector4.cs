@@ -24,14 +24,6 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 		}
 
 		/// <summary>
-		///   Implicitely converts a three-component vector to a four-component one.
-		/// </summary>
-		public static implicit operator Vector4(Vector3 v)
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
 		///   Multiplies a vector by a scalar value.
 		/// </summary>
 		public static Vector4 operator *(Vector4 v, float f)

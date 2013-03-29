@@ -4,6 +4,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using Ast;
 	using Framework.Platform.Graphics;
+	using ICSharpCode.NRefactory.CSharp;
+	using BinaryOperatorExpression = Ast.BinaryOperatorExpression;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to HLSL.
@@ -223,7 +225,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					Writer.Append("{0}.{1}", InputVariableName, parameter.Name);
 			}
 			else
-			base.VisitVariableReference(variableReference);
+				base.VisitVariableReference(variableReference);
+		}
+
+		public override void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
+		{
+			if (binaryOperatorExpression.Operator == BinaryOperatorType.Multiply &&
+				(binaryOperatorExpression.LeftType == DataType.Matrix | binaryOperatorExpression.RightType == DataType.Matrix))
+			{
+				Writer.Append("mul(");
+				binaryOperatorExpression.Left.AcceptVisitor(this);
+				Writer.Append(", ");
+				binaryOperatorExpression.Right.AcceptVisitor(this);
+				Writer.Append(")");
+			}
+			else
+				base.VisitBinaryOperatorExpression(binaryOperatorExpression);
 		}
 	}
 }
