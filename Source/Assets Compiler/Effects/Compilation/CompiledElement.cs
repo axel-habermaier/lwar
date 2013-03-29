@@ -231,6 +231,28 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Checks whether the declared modifiers match the expected ones.
+		/// </summary>
+		/// <param name="declaration">The declaration that is affected by the modifiers.</param>
+		/// <param name="declaredModifiers">The modifiers that have actually been declared.</param>
+		/// <param name="expectedModifiers">The modifiers that should have been declared.</param>
+		protected void ValidateModifiers(AstNode declaration, IEnumerable<CSharpModifierToken> declaredModifiers,
+						 IEnumerable<Modifiers> expectedModifiers)
+		{
+			Assert.ArgumentNotNull(declaration, () => declaration);
+			Assert.ArgumentNotNull(declaredModifiers, () => declaredModifiers);
+			Assert.ArgumentNotNull(expectedModifiers, () => expectedModifiers);
+
+			// Check whether any modifiers other than the exepcted ones are declared on the effect
+			foreach (var modifier in declaredModifiers.Where(modifier => !expectedModifiers.Contains(modifier.Modifier)))
+				Error(modifier, "Unexpected modifier '{0}'.", modifier.Modifier.ToString().ToLower());
+
+			// Check that the expected modifiers are present
+			foreach (var modifier in expectedModifiers.Where(modifier => declaredModifiers.All(m => m.Modifier != modifier)))
+				Error(declaration, "Expected '{0}' modifier.", modifier.ToString().ToLower());
+		}
+
+		/// <summary>
 		///   Describes the state of a compiled element.
 		/// </summary>
 		private enum State

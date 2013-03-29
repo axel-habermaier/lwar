@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Collections.Generic;
 	using System.Linq;
 	using Framework;
 	using Framework.Platform.Graphics;
@@ -38,6 +39,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ShaderType Type { get; private set; }
 
 		/// <summary>
+		///   Gets the input parameters declared by the shader method.
+		/// </summary>
+		private IEnumerable<ShaderParameter> Inputs
+		{
+			get { return GetChildElements<ShaderParameter>().Where(parameter => !parameter.IsOutput); }
+		}
+
+		/// <summary>
+		///   Gets the output parameters declared by the shader method.
+		/// </summary>
+		private IEnumerable<ShaderParameter> Outputs
+		{
+			get { return GetChildElements<ShaderParameter>().Where(parameter => parameter.IsOutput); }
+		}
+
+		/// <summary>
 		///   Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
@@ -63,10 +80,39 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		protected override void Validate()
 		{
-			//if (method.HasUnknownType)
-				//				context.Error(method.Declaration, "Shader method '{0}' cannot be both a vertex shader and a fragment shader.",
-				//							  method.Declaration.Name);
-			throw new NotImplementedException();
+			// Check whether both the vertex and fragment shader attributes are declared on the method
+			var isVertexShader = _method.Attributes.Contain<VertexShaderAttribute>(Resolver);
+			var isFragmentShader = _method.Attributes.Contain<FragmentShaderAttribute>(Resolver);
+
+			if (isVertexShader && isFragmentShader)
+				Error(_method.Attributes.First(), "Unexpected declaration of both '{0}' and '{1}'.",
+					  typeof(VertexShaderAttribute).FullName, typeof(FragmentShaderAttribute).FullName);
+
+			// Check whether the method returns void
+			if (_method.ResolveType(Resolver).FullName != typeof(void).FullName)
+				Error(_method.ReturnType, "Expected return type 'void'.");
+
+			// Check whether 'public' is the only declared modifier 
+			ValidateModifiers(_method, _method.ModifierTokens, new[] { Modifiers.Public });
+
+			// Check whether the shader depends on any type arguments
+			foreach (var parameter in _method.TypeParameters)
+				Error(parameter, "Unexpected type parameter '{0}'.", parameter.Name);
+
+			// Check whether the vertex shader declares an output parameter with the Position semantics
+			if (Type == ShaderType.VertexShader && Outputs.All(output => output.Semantics != DataSemantics.Position))
+				Error(_method, "Expected an output parameter with the '{0}' semantics.", DataSemantics.Position.ToDisplayString());
+
+			// Check whether the fragment shader declares an output parameter with the Color semantics
+			if (Type == ShaderType.FragmentShader && Outputs.All(output => !output.Semantics.IsColor()))
+				Error(_method, "Expected an output parameter with the 'Color' semantics.");
+
+			// Check whether the all inputs and outputs have distinct semantics
+			ValidateSemantics(Inputs, "input");
+			ValidateSemantics(Outputs, "output");
+
+			// Check whether the name of any declared variable starts with double underscore
+			ValidateLocalVariableNames();
 		}
 
 		/// <summary>
@@ -76,6 +122,35 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void Compile()
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Checks whether the given parameters are declared with distinct semantics.
+		/// </summary>
+		/// <param name="parameters">The parameters that should be checked.</param>
+		/// <param name="direction">A description of the parameter direction.</param>
+		private void ValidateSemantics(IEnumerable<ShaderParameter> parameters, string direction)
+		{
+			var groups = parameters.GroupBy(parameter => parameter.Semantics).Where(group => group.Count() > 1);
+			foreach (var group in groups)
+			{
+				var semantics = group.First().Semantics;
+				Error(_method, "Semantics '{0}' is applied to more than one {1} parameter.", semantics.ToDisplayString(), direction);
+			}
+		}
+
+		/// <summary>
+		///   Check whether the name of any locally declared variable starts with double underscore.
+		/// </summary>
+		private void ValidateLocalVariableNames()
+		{
+			var variables = from variableDeclaration in _method.Descendants.OfType<VariableDeclarationStatement>()
+							from variable in variableDeclaration.Variables
+							where variable.Name.StartsWith(Configuration.ReservedVariablePrefix)
+							select new { Node = (AstNode)variable, variable.Name };
+
+			foreach (var variable in variables)
+				Error(variable.Node, "Variable '{0}' uses a reserved name.", variable.Name);
 		}
 
 		///// <summary>

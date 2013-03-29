@@ -96,37 +96,32 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			var hasAttribute = _type.Attributes.Contain<EffectAttribute>(Resolver);
 
 			if (hasBaseType && !hasAttribute)
-				Warn(_type.NameToken, "Expected attribute '{0}' to be declared on effect '{1}'.",
-					 typeof(EffectAttribute).FullName, _type.GetFullName(Resolver));
+				Warn(_type.NameToken, "Effect is missing attribute '{0}'.", typeof(EffectAttribute).FullName);
 
 			if (!hasBaseType && hasAttribute)
-				Warn(_type.NameToken, "Expected effect '{0}' to have base type '{1}'.",
-					 _type.GetFullName(Resolver), typeof(Effect).FullName);
+				Warn(_type.NameToken, "Expected base type '{0}'.", typeof(Effect).FullName);
 
-			// Check whether any modifiers other than 'public' are declared on the effect
-			foreach (var modifier in _type.ModifierTokens.Where(modifier => modifier.Modifier != Modifiers.Public))
-				Error(modifier, "Unexpected modifier '{0}' used in the declaration of effect '{1}'.",
-					  modifier.Modifier.ToString().ToLower(), Name);
-
-			// Check that the public modifier is present
-			if (_type.ModifierTokens.All(modifier => modifier.Modifier != Modifiers.Public))
-				Error(_type, "Expected effect '{0}' to be public.", Name);
+			// Check whether 'public' is the only declared modifier 
+			ValidateModifiers(_type, _type.ModifierTokens, new[] { Modifiers.Public });
 
 			// Check whether the effect depends on any type arguments
 			foreach (var parameter in _type.TypeParameters)
-				Error(parameter, "Unexpected type parameter '{0}' declared by effect '{1}'.", parameter.Name, Name);
+				Error(parameter, "Unexpected type parameter '{0}'.", parameter.Name);
 
 			// Check whether the effect declares any properties
 			foreach (var property in _type.Descendants.OfType<PropertyDeclaration>())
-				Error(property.NameToken, "Unexpected property '{0}' declared by effect '{1}'.", property.Name, Name);
+				Error(property.NameToken, "Unexpected property '{0}'.", property.Name);
 
 			// Check that the effect declares at least one vertex shader
 			if (Shaders.All(shader => shader.Type != ShaderType.VertexShader))
-				Error(_type, "Effect '{0}' does not declare any vertex shaders.", Name);
+				Error(_type, "Expected a declaration of at least one vertex shaders.");
 
 			// Check that the effect declares at least one fragment shader
 			if (Shaders.All(shader => shader.Type != ShaderType.FragmentShader))
-				Error(_type, "Effect '{0}' does not declare any fragment shaders.", Name);
+				Error(_type, "Expected a declaration of at least one fragment shaders.");
+
+			// Check whether that all local variables and parameters do not hide a shader literal, constant, or texture object
+			CheckForVariableHiding();
 		}
 
 		/// <summary>
@@ -136,6 +131,30 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void Compile()
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Checks whether there are any local variables or parameters that hide a shader literal, constant, or texture object.
+		/// </summary>
+		private void CheckForVariableHiding()
+		{
+			var localVariables = from methodDeclaration in _type.Descendants.OfType<MethodDeclaration>()
+								 from variableDeclaration in methodDeclaration.Descendants.OfType<VariableDeclarationStatement>()
+								 from variable in variableDeclaration.Variables
+								 select new { Node = (AstNode)variable, variable.Name };
+
+			var parameters = from methodDeclaration in _type.Descendants.OfType<MethodDeclaration>()
+							 from parameterDeclaration in methodDeclaration.Descendants.OfType<ParameterDeclaration>()
+							 select new { Node = (AstNode)parameterDeclaration, parameterDeclaration.Name };
+
+			var classVariables = from fieldDeclaration in _type.Descendants.OfType<FieldDeclaration>()
+								 from variable in fieldDeclaration.Variables
+								 select variable.Name;
+
+			var methodVariables = localVariables.Union(parameters);
+
+			foreach (var variable in methodVariables.Where(variable => classVariables.Contains(variable.Name)))
+				Error(variable.Node, "Local variable or parameter '{0}' hides field of the same name.", variable.Name);
 		}
 
 		///// <summary>

@@ -19,6 +19,11 @@ namespace Pegasus.AssetsCompiler
 		public const string ShaderSeparator = "---";
 
 		/// <summary>
+		///   The prefix that is used for internally generated shader variables.
+		/// </summary>
+		public const string ReservedVariablePrefix = "__";
+
+		/// <summary>
 		///   The path to the source assets.
 		/// </summary>
 		public static readonly string SourceDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets");

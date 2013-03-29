@@ -40,7 +40,7 @@ namespace Lwar.Assets.Shaders
 		{
 			var sample1 = CubeMap.Sample(texCoords0).R;
 			var sample2 = CubeMap.Sample(texCoords1).R;
-
+			
 			var result = sample1 + sample2;
 			var blend = result / 2.0f;
 
