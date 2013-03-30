@@ -8,7 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 	///   Represents a reference to a shader variable, parameter, texture object, constant or literal.
 	/// </summary>
 	internal class VariableReference<T> : Expression
-		where T : IShaderDataObject
+		//where T : IShaderDataObject
 	{
 		/// <summary>
 		///   Initializes a new instance.
@@ -30,7 +30,7 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		/// <param name="visitor">The visitor whose Visit method should be called.</param>
 		public override void AcceptVisitor(IAstVisitor visitor)
 		{
-			visitor.VisitVariableReference(this);
+			//visitor.VisitVariableReference(this);
 		}
 	}
 }

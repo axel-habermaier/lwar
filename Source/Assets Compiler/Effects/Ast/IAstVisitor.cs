@@ -28,8 +28,8 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		void VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement);
 		void VisitVariableInitializer(VariableInitializer variableInitializer);
 
-		void VisitVariableReference<T>(VariableReference<T> variableReference)
-			where T : IShaderDataObject;
+		void VisitVariableReference<T>(VariableReference<T> variableReference);
+			//where T : IShaderDataObject;
 
 		void VisitWhileStatement(WhileStatement whileStatement);
 		void VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression);

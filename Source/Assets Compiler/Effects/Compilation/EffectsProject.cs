@@ -44,6 +44,35 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Loads the C# files into the project.
+		/// </summary>
+		/// <param name="assets">The C# assets that should be compiled.</param>
+		private IEnumerable<EffectFile> LoadFiles(CSharpAsset[] assets)
+		{
+			Assert.ArgumentNotNull(assets, () => assets);
+
+			var parser = new CSharpParser();
+			var parsedFiles = assets.Select(asset =>
+				{
+					var syntaxTree = parser.Parse(File.ReadAllText(asset.SourcePath), asset.SourcePath);
+					syntaxTree.FileName = asset.RelativePath;
+					PrintParserErrors(asset.RelativePath, parser.Errors.ToArray());
+
+					var unresolvedFile = syntaxTree.ToTypeSystem();
+					_project = _project.AddOrUpdateFiles(unresolvedFile);
+
+					return new { FileName = asset.RelativePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
+				});
+
+			var compilation = _project.CreateCompilation();
+			return parsedFiles.Select(file =>
+				{
+					var resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
+					return new EffectFile(file.SyntaxTree, resolver);
+				});
+		}
+
+		/// <summary>
 		///   Compiles all effects. Returns false to indicate that compilation errors have occurred.
 		/// </summary>
 		/// <param name="assets">The C# assets that should be compiled.</param>
@@ -54,32 +83,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			try
 			{
 				LoadAssemblies();
-
-				var parser = new CSharpParser();
-				var parsedFiles = assets.Select(asset =>
-					{
-						var syntaxTree = parser.Parse(File.ReadAllText(asset.SourcePath), asset.SourcePath);
-						syntaxTree.FileName = asset.RelativePath;
-						PrintParserErrorsAndWarnings(asset.RelativePath, parser.ErrorsAndWarnings.ToArray());
-
-						var unresolvedFile = syntaxTree.ToTypeSystem();
-						_project = _project.AddOrUpdateFiles(unresolvedFile);
-
-						return new { FileName = asset.RelativePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
-					});
-
-				var compilation = _project.CreateCompilation();
-				var effectFiles = parsedFiles.Select(file =>
-					{
-						var resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
-						return new EffectFile(file.SyntaxTree, resolver);
-					}).ToArray();
+				var effectFiles = LoadFiles(assets).ToArray();
 
 				foreach (var file in effectFiles)
 				{
 					file.InitializeElement();
 					file.ValidateElement();
-					file.CompileElement();
+					file.Compile();
 				}
 
 				ShaderAssets = effectFiles.SelectMany(file => file.ShaderAssets);
@@ -89,26 +99,23 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			{
 				Log.Error("Effect cross-compilation failed: {0}", e.Message);
 
-				ShaderAssets = new Asset[0];
+				ShaderAssets = Enumerable.Empty<Asset>();
 				return false;
 			}
 		}
 
 		/// <summary>
-		///   Prints all parser errors and warnings.
+		///   Prints all parser errors.
 		/// </summary>
 		/// <param name="file">The file for which the parser messages should be printed.</param>
-		/// <param name="errors">The parser errors and warnings that should be printed.</param>
-		private static void PrintParserErrorsAndWarnings(string file, Error[] errors)
+		/// <param name="errors">The parser errors that should be printed.</param>
+		private static void PrintParserErrors(string file, Error[] errors)
 		{
 			Assert.ArgumentNotNull(errors, () => errors);
 			Assert.ArgumentNotNullOrWhitespace(file, () => file);
 
 			foreach (var error in errors)
-			{
-				var type = error.ErrorType == ErrorType.Warning ? LogType.Warning : LogType.Error;
-				OutputMessage(type, file, error.Message, error.Region.Begin, error.Region.End);
-			}
+				OutputMessage(LogType.Error, file, error.Message, error.Region.Begin, error.Region.End);
 		}
 
 		/// <summary>

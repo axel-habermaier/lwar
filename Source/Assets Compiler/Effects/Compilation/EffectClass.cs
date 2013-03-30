@@ -29,17 +29,25 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   The name of the effect class.
+		///   Gets the name of the effect class.
 		/// </summary>
-		private string Name
+		public string Name
 		{
 			get { return _type.Name; }
 		}
 
 		/// <summary>
+		///   Gets the full name of the effect class.
+		/// </summary>
+		public string FullName
+		{
+			get { return _type.GetFullName(Resolver); }
+		}
+
+		/// <summary>
 		///   Gets the shaders declared by the effect.
 		/// </summary>
-		private IEnumerable<ShaderMethod> Shaders
+		public IEnumerable<ShaderMethod> Shaders
 		{
 			get { return GetChildElements<ShaderMethod>(); }
 		}
@@ -50,11 +58,27 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public ConstantBuffer[] ConstantBuffers { get; private set; }
 
 		/// <summary>
-		///   Gets the constants declared by the effect.
+		///   Gets the shader constants declared by the effect.
 		/// </summary>
 		private IEnumerable<ShaderConstant> Constants
 		{
 			get { return GetChildElements<ShaderConstant>(); }
+		}
+
+		/// <summary>
+		///   Gets the shader literals declared by the effect.
+		/// </summary>
+		public IEnumerable<ShaderLiteral> Literals
+		{
+			get { return GetChildElements<ShaderLiteral>(); }
+		}
+
+		/// <summary>
+		///   Gets the shader texture objects declared by the effect.
+		/// </summary>
+		public IEnumerable<ShaderTexture> Textures
+		{
+			get { return GetChildElements<ShaderTexture>(); }
 		}
 
 		/// <summary>

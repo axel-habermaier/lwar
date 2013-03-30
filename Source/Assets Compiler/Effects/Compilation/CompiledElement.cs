@@ -107,24 +107,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Compiles the element and all of its children. This method has no effect if any errors occurred during initialization
-		///   or validation.
-		/// </summary>
-		public void CompileElement()
-		{
-			Assert.That(_state == State.Validated, "This method must be called when the element is validated.");
-
-			if (HasErrors)
-				return;
-
-			Compile();
-			foreach (var child in _childElements)
-				child.CompileElement();
-
-			_state = State.Compiled;
-		}
-
-		/// <summary>
 		///   Adds the given elements to the current element.
 		/// </summary>
 		/// <param name="elements">The elements that should be added.</param>
@@ -172,14 +154,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   initialization.
 		/// </summary>
 		protected virtual void Validate()
-		{
-		}
-
-		/// <summary>
-		///   Invoked when the element should compile itself. This method is invoked only if no errors occurred during
-		///   initialization and validation.
-		/// </summary>
-		protected virtual void Compile()
 		{
 		}
 
@@ -308,8 +282,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Uninitialized,
 			Initialized,
-			Validated,
-			Compiled
+			Validated
 		}
 	}
 }

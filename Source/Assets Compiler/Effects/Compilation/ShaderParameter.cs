@@ -75,8 +75,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					return DataSemantics.Color0 + index;
 				}
 
-				// Just assign some meaningless default semantics...
-				// This error will be catched during the validation of the parameter
+				// Just return some meaningless default semantics; this error will be catched during the validation of the parameter.
 				return DataSemantics.TexCoords0;
 			}
 		}
