@@ -115,7 +115,7 @@ namespace Pegasus.AssetsCompiler
 						Log.Error(log.Message);
 				}
 
-				if (logEntries.Any(l => l.LogType == LogType.Error))
+				if (logEntries.Any(l => l.Message.Contains("error")))
 					throw new InvalidOperationException("HLSL shader code contains errors. No shader file has been generated.");
 			}
 		}

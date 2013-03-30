@@ -63,7 +63,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Ensures that the subsequent write operation is performed on a new line.
 		/// </summary>
-		private void EnsureNewLine()
+		public void EnsureNewLine()
 		{
 			if (!_atBeginningOfLine)
 				Newline();

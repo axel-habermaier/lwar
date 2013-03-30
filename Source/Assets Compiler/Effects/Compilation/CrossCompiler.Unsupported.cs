@@ -37,11 +37,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			throw new NotSupportedException();
 		}
 
-		public void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
-		{
-			throw new NotSupportedException();
-		}
-
 		public void VisitCastExpression(CastExpression castExpression)
 		{
 			throw new NotSupportedException();
@@ -107,14 +102,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			throw new NotSupportedException();
 		}
 
-		
-
 		public void VisitAnonymousTypeCreateExpression(AnonymousTypeCreateExpression anonymousTypeCreateExpression)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
 		{
 			throw new NotSupportedException();
 		}
@@ -145,11 +133,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		public void VisitTypeReferenceExpression(TypeReferenceExpression typeReferenceExpression)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression)
 		{
 			throw new NotSupportedException();
 		}
@@ -349,11 +332,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			throw new NotSupportedException();
 		}
 
-		public void VisitVariableInitializer(VariableInitializer variableInitializer)
-		{
-			throw new NotSupportedException();
-		}
-
 		public void VisitFixedFieldDeclaration(FixedFieldDeclaration fixedFieldDeclaration)
 		{
 			throw new NotSupportedException();
@@ -424,27 +402,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			throw new NotSupportedException();
 		}
 
-		public void VisitBlockStatement(BlockStatement blockStatement)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitBreakStatement(BreakStatement breakStatement)
-		{
-			throw new NotSupportedException();
-		}
-
 		public void VisitCheckedStatement(CheckedStatement checkedStatement)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitContinueStatement(ContinueStatement continueStatement)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitDoWhileStatement(DoWhileStatement doWhileStatement)
 		{
 			throw new NotSupportedException();
 		}
@@ -464,11 +422,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			throw new NotSupportedException();
 		}
 
-		public void VisitForStatement(ForStatement forStatement)
-		{
-			throw new NotSupportedException();
-		}
-
 		public void VisitGotoCaseStatement(GotoCaseStatement gotoCaseStatement)
 		{
 			throw new NotSupportedException();
@@ -480,11 +433,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		public void VisitGotoStatement(GotoStatement gotoStatement)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitIfElseStatement(IfElseStatement ifElseStatement)
 		{
 			throw new NotSupportedException();
 		}
@@ -545,16 +493,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		public void VisitUsingStatement(UsingStatement usingStatement)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitWhileStatement(WhileStatement whileStatement)
 		{
 			throw new NotSupportedException();
 		}

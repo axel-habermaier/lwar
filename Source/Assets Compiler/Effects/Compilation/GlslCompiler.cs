@@ -120,7 +120,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateMainMethod()
 		{
 			Writer.AppendLine("void main()");
-			Writer.AppendBlockStatement(() => Shader.MethodBody.Statements.AcceptVisitor(this));
+			Writer.AppendBlockStatement(() => Shader.MethodBody.AcceptVisitor(this));
 		}
 
 		/// <summary>

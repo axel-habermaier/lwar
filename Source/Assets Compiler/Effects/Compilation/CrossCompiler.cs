@@ -3,14 +3,11 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
-	using Ast;
+	using System.Linq;
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
-	using AssignmentExpression = ICSharpCode.NRefactory.CSharp.AssignmentExpression;
-	using ExpressionStatement = ICSharpCode.NRefactory.CSharp.ExpressionStatement;
-	using IAstVisitor = ICSharpCode.NRefactory.CSharp.IAstVisitor;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method.
@@ -23,7 +20,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected CodeWriter Writer { get; private set; }
 
 		/// <summary>
-		/// Gets the shader that is compiled.
+		///   Gets the shader that is compiled.
 		/// </summary>
 		protected ShaderMethod Shader { get; private set; }
 
@@ -39,44 +36,53 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			assignmentExpression.Right.AcceptVisitor(this);
 		}
 
-		//public virtual void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
-		//{
-		//	binaryOperatorExpression.Left.AcceptVisitor(this);
-		//	Writer.Append(" {0} ", GetToken(binaryOperatorExpression.Operator));
-		//	binaryOperatorExpression.Right.AcceptVisitor(this);
-		//}
+		public virtual void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
+		{
+			Writer.Append("(");
+			binaryOperatorExpression.Left.AcceptVisitor(this);
+			Writer.Append(" {0} ", GetToken(binaryOperatorExpression.Operator));
+			binaryOperatorExpression.Right.AcceptVisitor(this);
+			Writer.Append(")");
+		}
 
-		//public virtual void VisitBlockStatement(BlockStatement blockStatement)
-		//{
-		//	Writer.AppendBlockStatement(() => blockStatement.Statements.AcceptVisitor(this));
-		//}
+		public virtual void VisitBlockStatement(BlockStatement blockStatement)
+		{
+			Writer.AppendBlockStatement(() => blockStatement.Statements.AcceptVisitor(this, node =>
+				{
+					if (!OmitTerminatingSemicolon(node))
+						Writer.AppendLine(";");
+				},true));
+		}
 
-		//public virtual void VisitBreakStatement(BreakStatement breakStatement)
-		//{
-		//	Writer.AppendLine("break;");
-		//}
+		public virtual void VisitBreakStatement(BreakStatement breakStatement)
+		{
+			Writer.AppendLine("break;");
+		}
 
-		//public virtual void VisitContinueStatement(ContinueStatement continueStatement)
-		//{
-		//	Writer.AppendLine("continue;");
-		//}
+		public virtual void VisitContinueStatement(ContinueStatement continueStatement)
+		{
+			Writer.AppendLine("continue;");
+		}
 
-		//public virtual void VisitDoWhileStatement(DoWhileStatement doWhileStatement)
-		//{
-		//	throw new NotImplementedException();
-		//}
+		public virtual void VisitDoWhileStatement(DoWhileStatement doWhileStatement)
+		{
+			Writer.AppendLine("do");
+			VisitStatementBlock(doWhileStatement.EmbeddedStatement);
+			Writer.Append("while (");
+			doWhileStatement.Condition.AcceptVisitor(this);
+			Writer.Append(")");
+		}
 
-		//public void VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
-		//{
-		//	Writer.Append("(");
-		//	parenthesizedExpression.Expression.AcceptVisitor(this);
-		//	Writer.Append(")");
-		//}
+		public void VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
+		{
+			Writer.Append("(");
+			parenthesizedExpression.Expression.AcceptVisitor(this);
+			Writer.Append(")");
+		}
 
 		public virtual void VisitExpressionStatement(ExpressionStatement expressionStatement)
 		{
 			expressionStatement.Expression.AcceptVisitor(this);
-			Writer.AppendLine(";");
 		}
 
 		public virtual void VisitIdentifierExpression(IdentifierExpression identifierExpression)
@@ -84,17 +90,35 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Writer.Append(identifierExpression.Identifier);
 		}
 
-		//public virtual void VisitForStatement(ForStatement forStatement)
-		//{
-		//	Writer.Append("for (");
-		//	Writer.Append(")");
-		//	forStatement.Body.AcceptVisitor(this);
-		//}
+		public virtual void VisitForStatement(ForStatement forStatement)
+		{
+			Writer.Append("for (");
 
-		//public virtual void VisitIfElseStatement(IfElseStatement ifElseStatement)
-		//{
-		//	throw new NotImplementedException();
-		//}
+			forStatement.Initializers.AcceptVisitor(this, () => Writer.Append(", "));
+			Writer.Append("; ");
+
+			forStatement.Condition.AcceptVisitor(this);
+			Writer.Append("; ");
+
+			forStatement.Iterators.AcceptVisitor(this, () => Writer.Append(", "));
+			Writer.Append(")");
+
+			VisitStatementBlock(forStatement.EmbeddedStatement);
+		}
+
+		public virtual void VisitIfElseStatement(IfElseStatement ifElseStatement)
+		{
+			Writer.Append("if (");
+			ifElseStatement.Condition.AcceptVisitor(this);
+			Writer.AppendLine(")");
+			VisitStatementBlock(ifElseStatement.TrueStatement);
+
+			if (ifElseStatement.FalseStatement.IsNull)
+				return;
+
+			Writer.Append("else ");
+			VisitStatementBlock(ifElseStatement.FalseStatement);
+		}
 
 		//public virtual void VisitIndexerExpression(IndexerExpression indexerExpression)
 		//{
@@ -125,7 +149,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 		public virtual void VisitPrimitiveExpression(PrimitiveExpression primitiveExpression)
 		{
-			Writer.Append(primitiveExpression.Value.ToString());
+			Writer.Append(primitiveExpression.Value.ToString().ToLower());
 		}
 
 		//public virtual void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
@@ -154,41 +178,47 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		//	Writer.AppendLine("return;");
 		//}
 
-		//public virtual void VisitUnaryOperatorStatement(UnaryOperatorExpression unaryOperatorExpression)
-		//{
-		//	if (unaryOperatorExpression.Operator == UnaryOperatorType.PostDecrement ||
-		//		unaryOperatorExpression.Operator == UnaryOperatorType.PostIncrement)
-		//	{
-		//		unaryOperatorExpression.Expression.AcceptVisitor(this);
-		//		Writer.Append(GetToken(unaryOperatorExpression.Operator));
-		//	}
-		//	else
-		//	{
-		//		Writer.Append(GetToken(unaryOperatorExpression.Operator));
-		//		unaryOperatorExpression.Expression.AcceptVisitor(this);
-		//	}
-		//}
+		public virtual void VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression)
+		{
+			if (unaryOperatorExpression.Operator == UnaryOperatorType.PostDecrement ||
+				unaryOperatorExpression.Operator == UnaryOperatorType.PostIncrement)
+			{
+				unaryOperatorExpression.Expression.AcceptVisitor(this);
+				Writer.Append(GetToken(unaryOperatorExpression.Operator));
+			}
+			else
+			{
+				Writer.Append(GetToken(unaryOperatorExpression.Operator));
+				unaryOperatorExpression.Expression.AcceptVisitor(this);
+			}
+		}
 
-		//public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement)
-		//{
-		//	variableDeclarationStatement.Variables.AcceptVisitor(this, () => Writer.AppendLine(";"));
-		//	Writer.AppendLine(";");
-		//}
+		public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement)
+		{
+			var resolved = Resolver.Resolve(variableDeclarationStatement.Variables.First());
+			Writer.Append("{0} ", ToShaderType(resolved.Type.ToDataType()));
 
-		//public virtual void VisitVariableInitializer(VariableInitializer variableInitializer)
-		//{
-		//	Writer.Append("{0} {1}", ToShaderType(variableInitializer.Variable.Type), variableInitializer.Variable.Name);
-		//	if (variableInitializer.Expression != null)
-		//	{
-		//		Writer.Append(" = ");
-		//		variableInitializer.Expression.AcceptVisitor(this);
-		//	}
-		//}
+			variableDeclarationStatement.Variables.AcceptVisitor(this, () => Writer.Append(", "));
+		}
 
-		//public virtual void VisitWhileStatement(WhileStatement whileStatement)
-		//{
-		//	throw new NotImplementedException();
-		//}
+		public virtual void VisitVariableInitializer(VariableInitializer variableInitializer)
+		{
+			Writer.Append(variableInitializer.Name);
+
+			if (variableInitializer.Initializer.IsNull)
+				return;
+
+			Writer.Append(" = ");
+			variableInitializer.Initializer.AcceptVisitor(this);
+		}
+
+		public virtual void VisitWhileStatement(WhileStatement whileStatement)
+		{
+			Writer.Append("while (");
+			whileStatement.Condition.AcceptVisitor(this);
+			Writer.AppendLine(")");
+			VisitStatementBlock(whileStatement.EmbeddedStatement);
+		}
 
 		/// <summary>
 		///   Cross-compiles the C# shader method.
@@ -335,21 +365,19 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			switch (unaryOperator)
 			{
 				case UnaryOperatorType.Not:
-					return "";
+					return "!";
 				case UnaryOperatorType.BitNot:
-					return "";
+					return "~";
 				case UnaryOperatorType.Minus:
-					return "";
+					return "-";
 				case UnaryOperatorType.Plus:
-					return "";
-				case UnaryOperatorType.Increment:
-					return "";
-				case UnaryOperatorType.Decrement:
-					return "";
+					return "+";
 				case UnaryOperatorType.PostIncrement:
-					return "";
+				case UnaryOperatorType.Increment:
+					return "++";
 				case UnaryOperatorType.PostDecrement:
-					return "";
+				case UnaryOperatorType.Decrement:
+					return "--";
 				default:
 					throw new NotSupportedException("Unsupported unary operator type.");
 			}
@@ -402,6 +430,42 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				default:
 					throw new NotSupportedException("Unsupported binary operator type.");
 			}
+		}
+
+		/// <summary>
+		/// Visits the given statement, treating it as a single-line block statement if it is not a block statement. 
+		/// </summary>
+		/// <param name="statement">The statement that should be visited.</param>
+		private void VisitStatementBlock(Statement statement)
+		{
+			if (statement is BlockStatement)
+				statement.AcceptVisitor(this);
+			else if (statement is IfElseStatement)
+			{
+				// Start a statement block in order to ensure that the semantics match those of C#
+				Writer.AppendBlockStatement(()=>statement.AcceptVisitor(this));
+			}
+			else
+			{
+				Writer.EnsureNewLine();
+				Writer.IncreaseIndent();
+
+				statement.AcceptVisitor(this);
+
+				if (!OmitTerminatingSemicolon(statement))
+					Writer.AppendLine(";");
+
+				Writer.DecreaseIndent();
+			}
+		}
+
+		/// <summary>
+		/// Checks whether the terminating semicolon can be safely omitted from the statement.
+		/// </summary>
+		/// <param name="node">The node that should be checked.</param>
+		private bool OmitTerminatingSemicolon(AstNode node)
+		{
+			return node is BlockStatement || node is ForStatement || node is WhileStatement || node is IfElseStatement;
 		}
 	}
 }

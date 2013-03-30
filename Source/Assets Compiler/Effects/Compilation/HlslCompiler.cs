@@ -143,7 +143,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						Assert.InRange(index, 0, SemanticsAttribute.MaximumIndex);
 						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), output.Name, semantics);
 					}
-				});
+				}, true);
 		}
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					Writer.AppendLine("{0} {1};", OutputStructName, OutputVariableName);
 					Writer.Newline();
 
-					Shader.MethodBody.Statements.AcceptVisitor(this);
+					Shader.MethodBody.AcceptVisitor(this);
 
 					Writer.Newline();
 					Writer.AppendLine("return {0};", OutputVariableName);
@@ -253,39 +253,34 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						Writer.Append("{0}.{1}", OutputVariableName, identifierExpression.Identifier);
 					else
 						Writer.Append("{0}.{1}", InputVariableName, identifierExpression.Identifier);
+
+					return;
 				}
 			}
-			else
-				base.VisitIdentifierExpression(identifierExpression);
+			
+			base.VisitIdentifierExpression(identifierExpression);
 		}
 
-		//public override void VisitVariableReference<T>(VariableReference<T> variableReference)
-		//{
-		//	if (typeof(T) == typeof(ShaderParameter))
-		//	{
-		//		var parameter = (ShaderParameter)(object)variableReference.Variable;
-		//		if (parameter.IsOutput)
-		//			Writer.Append("{0}.{1}", OutputVariableName, parameter.Name);
-		//		else
-		//			Writer.Append("{0}.{1}", InputVariableName, parameter.Name);
-		//	}
-		//	else
-		//		base.VisitVariableReference(variableReference);
-		//}
+		public override void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
+		{
+			if (binaryOperatorExpression.Operator == BinaryOperatorType.Multiply)
+			{
+				var leftType = Resolver.Resolve(binaryOperatorExpression.Left).Type.ToDataType();
+				var rightType = Resolver.Resolve(binaryOperatorExpression.Left).Type.ToDataType();
 
-		//public override void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
-		//{
-		//	if (binaryOperatorExpression.Operator == BinaryOperatorType.Multiply &&
-		//		(binaryOperatorExpression.LeftType == DataType.Matrix | binaryOperatorExpression.RightType == DataType.Matrix))
-		//	{
-		//		Writer.Append("mul(");
-		//		binaryOperatorExpression.Left.AcceptVisitor(this);
-		//		Writer.Append(", ");
-		//		binaryOperatorExpression.Right.AcceptVisitor(this);
-		//		Writer.Append(")");
-		//	}
-		//	else
-		//		base.VisitBinaryOperatorExpression(binaryOperatorExpression);
-		//}
+				if (leftType == DataType.Matrix || rightType == DataType.Matrix)
+				{
+					Writer.Append("mul(");
+					binaryOperatorExpression.Left.AcceptVisitor(this);
+					Writer.Append(", ");
+					binaryOperatorExpression.Right.AcceptVisitor(this);
+					Writer.Append(")");
+
+					return;
+				}
+			}
+			
+			base.VisitBinaryOperatorExpression(binaryOperatorExpression);
+		}
 	}
 }

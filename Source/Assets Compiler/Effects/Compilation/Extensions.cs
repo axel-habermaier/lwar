@@ -306,11 +306,31 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <param name="nodesCollection">The nodes on which the AcceptVisitor method should be called.</param>
 		/// <param name="visitor">The visitor that should be passed to the AcceptVisitor method.</param>
+		/// <param name="action">An action that should be invoked between visiting two nodes.</param>
+		/// <param name="afterLast">Indicates whether the action should also be called after the last node has been visited.</param>
+		public static void AcceptVisitor<T>(this AstNodeCollection<T> nodesCollection, IAstVisitor visitor, Action action = null,
+											bool afterLast = false)
+			where T : AstNode
+		{
+			nodesCollection.AcceptVisitor(visitor, _ =>
+				{
+					if (action != null)
+						action();
+				}, afterLast);
+		}
+
+		/// <summary>
+		///   Calls the AcceptVisitor method on all nodes.
+		/// </summary>
+		/// <param name="nodesCollection">The nodes on which the AcceptVisitor method should be called.</param>
+		/// <param name="visitor">The visitor that should be passed to the AcceptVisitor method.</param>
 		/// <param name="action">
-		///   An action that should be invoked between visiting two nodes; the action is not invoked after the
-		///   last node has been visited.
+		///   An action that should be invoked between visiting two nodes. The node that has just been visited
+		///   is passed as an argument.
 		/// </param>
-		public static void AcceptVisitor<T>(this AstNodeCollection<T> nodesCollection, IAstVisitor visitor, Action action = null)
+		/// <param name="afterLast">Indicates whether the action should also be called after the last node has been visited.</param>
+		public static void AcceptVisitor<T>(this AstNodeCollection<T> nodesCollection, IAstVisitor visitor, Action<AstNode> action,
+											bool afterLast = false)
 			where T : AstNode
 		{
 			Assert.ArgumentNotNull(nodesCollection, () => nodesCollection);
@@ -321,8 +341,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			{
 				nodes[i].AcceptVisitor(visitor);
 
-				if (i < nodes.Length - 1 && action != null)
-					action();
+				if (action != null && ((!afterLast && i < nodes.Length - 1) || afterLast))
+					action(nodes[i]);
 			}
 		}
 	}
