@@ -28,6 +28,11 @@ namespace Lwar.Assets.Shaders
 		[ShaderConstant(ChangeFrequency.PerDrawCall)]
 		public readonly Matrix World;
 
+		private static readonly int[]ar = new[]
+		{
+		1,2
+		};
+
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,
 								 [Normal] Vector4 normal,
@@ -39,9 +44,12 @@ namespace Lwar.Assets.Shaders
 			//texCoords1 = (Rotation1 * normal).Xyz;
 			//texCoords2 = (Rotation2 * normal).Xyz;
 			//position.T();
-
+			var q = Rotation1[2, 0];
 			outPosition = new Vector4(1, 1, 1, 1);
 			texCoords1 = new Vector3(1, 1, 1);
+			texCoords1[1] = 3;
+			var v2 = new Vector2(1, 1);
+			v2[1] = ar[0];
 			texCoords2 = new Vector3(1, 1, 1);
 		}
 

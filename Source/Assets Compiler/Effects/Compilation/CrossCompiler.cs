@@ -73,7 +73,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Writer.Append(")");
 		}
 
-		public void VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
+		public virtual void VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression)
 		{
 			Writer.Append("(");
 			parenthesizedExpression.Expression.AcceptVisitor(this);
@@ -131,13 +131,35 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 		public virtual void VisitIndexerExpression(IndexerExpression indexerExpression)
 		{
+			var resolved = Resolver.Resolve(indexerExpression.Target);
+			var type = resolved.Type.ToDataType();
+
+			indexerExpression.Target.AcceptVisitor(this);
+
+			if (type == DataType.Matrix)
+			{
+				Expression firstExpression, secondExpression;
+				GetMatrixIndices(indexerExpression.Arguments, out firstExpression, out secondExpression);
+
+				Writer.Append("[");
+				firstExpression.AcceptVisitor(this);
+				Writer.Append("][");
+				secondExpression.AcceptVisitor(this);
+				Writer.Append("]");
+			}
+			else
+			{
+				Writer.Append("[");
+				indexerExpression.Arguments.Single().AcceptVisitor(this);
+				Writer.Append("]");
+			}
 		}
 
-		public void VisitEmptyStatement(EmptyStatement emptyStatement)
+		public virtual void VisitEmptyStatement(EmptyStatement emptyStatement)
 		{
 		}
 
-		public void VisitInvocationExpression(InvocationExpression invocationExpression)
+		public virtual void VisitInvocationExpression(InvocationExpression invocationExpression)
 		{
 		}
 
@@ -233,7 +255,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 				Writer.Newline();
 			}
-			
+
 			foreach (var constantBuffer in effect.ConstantBuffers)
 				GenerateConstantBuffer(constantBuffer);
 
@@ -315,6 +337,15 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <param name="type">The data type that should be converted.</param>
 		protected abstract string ToShaderType(DataType type);
+
+		/// <summary>
+		///   Extracts the column and row indices from the list of indexer arguments.
+		/// </summary>
+		/// <param name="indexerArguments">The list of indexer arguments.</param>
+		/// <param name="first">The expression that should be used as the first index.</param>
+		/// <param name="second">The expression that should be used as the second index.</param>
+		protected abstract void GetMatrixIndices(AstNodeCollection<Expression> indexerArguments, out Expression first,
+												 out Expression second);
 
 		/// <summary>
 		///   Gets the token for the given assignment operator.

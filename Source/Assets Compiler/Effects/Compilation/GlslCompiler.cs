@@ -3,8 +3,10 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
+	using System.Linq;
 	using Framework;
 	using Framework.Platform.Graphics;
+	using ICSharpCode.NRefactory.CSharp;
 	using Semantics;
 
 	/// <summary>
@@ -152,6 +154,19 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				default:
 					throw new NotSupportedException("Unsupported data type.");
 			}
+		}
+
+		/// <summary>
+		///   Extracts the column and row indices from the list of indexer arguments.
+		/// </summary>
+		/// <param name="indexerArguments">The list of indexer arguments.</param>
+		/// <param name="first">The expression that should be used as the first index.</param>
+		/// <param name="second">The expression that should be used as the second index.</param>
+		protected override void GetMatrixIndices(AstNodeCollection<Expression> indexerArguments, out Expression first,
+												 out Expression second)
+		{
+			first = indexerArguments.Skip(1).Single();
+			second = indexerArguments.First();
 		}
 	}
 }

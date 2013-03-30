@@ -145,89 +145,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			// Check whether the all inputs and outputs have distinct semantics
 			ValidateSemantics(Inputs, "input");
 			ValidateSemantics(Outputs, "output");
-
-			// Check whether the name of any declared local variable is reserved
-			ValidateLocalVariableNames();
-
-			// Check that no unsupported C# features are used by the method body
-			CheckUnsupportedCSharpFeatureUsed<PreProcessorDirective>("preprocessor directive");
-			CheckUnsupportedCSharpFeatureUsed<CheckedStatement>("checked");
-			CheckUnsupportedCSharpFeatureUsed<FixedStatement>("fixed");
-			CheckUnsupportedCSharpFeatureUsed<GotoCaseStatement>("goto");
-			CheckUnsupportedCSharpFeatureUsed<ForeachStatement>("foreach");
-			CheckUnsupportedCSharpFeatureUsed<GotoDefaultStatement>("goto");
-			CheckUnsupportedCSharpFeatureUsed<GotoStatement>("goto");
-			CheckUnsupportedCSharpFeatureUsed<LabelStatement>("label");
-			CheckUnsupportedCSharpFeatureUsed<LockStatement>("lock");
-			CheckUnsupportedCSharpFeatureUsed<ThrowStatement>("throw");
-			CheckUnsupportedCSharpFeatureUsed<TryCatchStatement>("try-catch");
-			CheckUnsupportedCSharpFeatureUsed<CatchClause>("catch");
-			CheckUnsupportedCSharpFeatureUsed<UncheckedStatement>("unchecked");
-			CheckUnsupportedCSharpFeatureUsed<UnsafeStatement>("unsafe");
-			CheckUnsupportedCSharpFeatureUsed<UsingStatement>("using");
-			CheckUnsupportedCSharpFeatureUsed<YieldBreakStatement>("yield break");
-			CheckUnsupportedCSharpFeatureUsed<YieldReturnStatement>("yield return");
-			CheckUnsupportedCSharpFeatureUsed<AnonymousMethodExpression>("anonymous method");
-			CheckUnsupportedCSharpFeatureUsed<LambdaExpression>("lambda function");
-			CheckUnsupportedCSharpFeatureUsed<BaseReferenceExpression>("base");
-			CheckUnsupportedCSharpFeatureUsed<CheckedExpression>("checked");
-			CheckUnsupportedCSharpFeatureUsed<NullReferenceExpression>("null");
-			CheckUnsupportedCSharpFeatureUsed<AnonymousTypeCreateExpression>("anonymous type");
-			CheckUnsupportedCSharpFeatureUsed<ArrayCreateExpression>("dynamic array initialization");
-			CheckUnsupportedCSharpFeatureUsed<PointerReferenceExpression>("pointer");
-			CheckUnsupportedCSharpFeatureUsed<SizeOfExpression>("sizeof");
-			CheckUnsupportedCSharpFeatureUsed<StackAllocExpression>("stackalloc");
-			CheckUnsupportedCSharpFeatureUsed<TypeOfExpression>("typeof");
-			CheckUnsupportedCSharpFeatureUsed<UncheckedExpression>("unchecked");
-			CheckUnsupportedCSharpFeatureUsed<QueryExpression>("query");
-			CheckUnsupportedCSharpFeatureUsed<QueryContinuationClause>("query");
-			CheckUnsupportedCSharpFeatureUsed<QueryFromClause>("from");
-			CheckUnsupportedCSharpFeatureUsed<QueryLetClause>("let");
-			CheckUnsupportedCSharpFeatureUsed<QueryWhereClause>("where");
-			CheckUnsupportedCSharpFeatureUsed<QueryJoinClause>("join");
-			CheckUnsupportedCSharpFeatureUsed<QueryOrderClause>("orderby");
-			CheckUnsupportedCSharpFeatureUsed<QueryOrdering>("ordering");
-			CheckUnsupportedCSharpFeatureUsed<QuerySelectClause>("select");
-			CheckUnsupportedCSharpFeatureUsed<QueryGroupClause>("groupby");
-			CheckUnsupportedCSharpFeatureUsed<AsExpression>("as");
-			CheckUnsupportedCSharpFeatureUsed<IsExpression>("is");
-			CheckUnsupportedCSharpFeatureUsed<DefaultValueExpression>("default");
-			CheckUnsupportedCSharpFeatureUsed<UndocumentedExpression>("undocumented expression");
-			CheckUnsupportedCSharpFeatureUsed<ArrayInitializerExpression>("dynamic array initialization");
-			CheckUnsupportedCSharpFeatureUsed<NamedArgumentExpression>("named arguments");
-			CheckUnsupportedCSharpFeatureUsed<SwitchStatement>("switch statement");
-			CheckUnsupportedCSharpFeatureUsed<SwitchSection>("switch statement");
-			CheckUnsupportedCSharpFeatureUsed<CaseLabel>("case label");
-
-			// Check for unsupported unary operators
-			foreach (var unaryOperatorExpression in _method.Descendants.OfType<UnaryOperatorExpression>())
-			{
-				if (unaryOperatorExpression.Operator == UnaryOperatorType.Dereference)
-					Error(unaryOperatorExpression.OperatorToken, "Use of unsupported dereference operator.");
-
-				if (unaryOperatorExpression.Operator == UnaryOperatorType.Await)
-					Error(unaryOperatorExpression.OperatorToken, "Use of unsupported await operator.");
-
-				if (unaryOperatorExpression.Operator == UnaryOperatorType.AddressOf)
-					Error(unaryOperatorExpression.OperatorToken, "Use of unsupported address-of operator.");
-			}
-
-			// Check for unsupported binary operators
-			foreach (var binaryOperatorExpression in _method.Descendants.OfType<BinaryOperatorExpression>())
-			{
-				if (binaryOperatorExpression.Operator == BinaryOperatorType.NullCoalescing)
-					Error(binaryOperatorExpression.OperatorToken, "Use of unsupported null-coalescing operator.");
-			}
-
-			// Check for local variable declarations with unsupported data types
-			foreach (var variable in from declaration in _method.Descendants.OfType<VariableDeclarationStatement>()
-									 from variable in declaration.Variables
-									 let type = Resolver.Resolve(variable).Type
-									 where type.ToDataType() == DataType.Unknown
-									 select new { Declaration = declaration, Type = type })
-			{
-				Error(variable.Declaration, "Unsupported data type: '{0}'.", variable.Type.FullName);
-			}
 		}
 
 		/// <summary>
@@ -248,31 +165,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				var semantics = group.First().Semantics;
 				Error(_method, "Semantics '{0}' is applied to more than one {1} parameter.", semantics.ToDisplayString(), direction);
 			}
-		}
-
-		/// <summary>
-		///   Check whether the name of any locally declared variable is reserved.
-		/// </summary>
-		private void ValidateLocalVariableNames()
-		{
-			var variables = from variableDeclaration in _method.Descendants.OfType<VariableDeclarationStatement>()
-							from variable in variableDeclaration.Variables
-							select variable;
-
-			foreach (var variable in variables)
-				ValidateIdentifier(variable.NameToken);
-		}
-
-		/// <summary>
-		///   Reports any usage of the given node type in the shader method's body as an unsupported C# feature.
-		/// </summary>
-		/// <typeparam name="T">The type of the unsupported C# syntax element.</typeparam>
-		/// <param name="description">The description of the unsupported C# feature.</param>
-		private void CheckUnsupportedCSharpFeatureUsed<T>(string description)
-			where T : AstNode
-		{
-			foreach (var node in _method.Body.Descendants.OfType<T>())
-				Error(node, "Unsupported C# feature used: {0}.", description);
 		}
 	}
 }

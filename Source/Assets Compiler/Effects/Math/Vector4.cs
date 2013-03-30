@@ -65,5 +65,15 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 		{
 			throw new NotImplementedException();
 		}
+
+		/// <summary>
+		///   Gets the value of the vector component at the given index.
+		/// </summary>
+		/// <param name="index">The index of the element that should be returned.</param>
+		public float this[int index]
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
 	}
 }

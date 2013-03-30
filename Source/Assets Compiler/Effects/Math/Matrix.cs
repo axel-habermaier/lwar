@@ -25,5 +25,16 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 		{
 			throw new NotImplementedException();
 		}
+
+		/// <summary>
+		///   Gets the element of the matrix at the given column and the given row.
+		/// </summary>
+		/// <param name="column">The column index of the element that should be returned.</param>
+		/// <param name="row">The row index of the element that should be returned.</param>
+		public float this[int column, int row]
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
 	}
 }
