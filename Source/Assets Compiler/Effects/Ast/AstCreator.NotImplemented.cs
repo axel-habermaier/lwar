@@ -2,6 +2,8 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Ast
 {
+	using Compilation;
+	using Framework.Platform;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.PatternMatching;
 
@@ -199,5 +201,15 @@ namespace Pegasus.AssetsCompiler.Effects.Ast
 		{
 			throw new NotImplementedException();
 		}
+
+		///// <summary>
+		/////   Reports the node as an unsupported C# feature.
+		///// </summary>
+		///// <param name="node">The node that should be reported as unsupported.</param>
+		///// <param name="description">The description of the unsupported C# feature.</param>
+		//private void UnsupportedCSharpFeature(AstNode node, string description)
+		//{
+		//	EffectsProject.OutputMessage(LogType.Error, node, "Unsupported C# feature used: {0}.", description);
+		//}
 	}
 }

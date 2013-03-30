@@ -297,14 +297,6 @@
 //			return null;
 //		}
 
-//		/// <summary>
-//		///   Reports the node as an unsupported C# feature.
-//		/// </summary>
-//		/// <param name="node">The node that should be reported as unsupported.</param>
-//		/// <param name="description">The description of the unsupported C# feature.</param>
-//		private void UnsupportedCSharpFeature(AstNode node, string description)
-//		{
-//			_context.Error(node, "Unsupported C# feature used: {0}.", description);
-//		}
+
 //	}
 //}

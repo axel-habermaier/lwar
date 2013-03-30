@@ -144,7 +144,19 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			// Check whether the effect declares any properties
 			foreach (var property in _type.Descendants.OfType<PropertyDeclaration>())
-				Error(property.NameToken, "Unexpected property '{0}'.", property.Name);
+				Error(property, "Unexpected property declaration.");
+
+			// Check whether the effect declares any events
+			foreach (var eventDeclaration in _type.Descendants.OfType<EventDeclaration>())
+				Error(eventDeclaration, "Unexpected event declaration.");
+
+			// Check whether the effect declares any indexers
+			foreach (var indexer in _type.Descendants.OfType<IndexerDeclaration>())
+				Error(indexer, "Unexpected indexer declaration.");
+
+			// Check whether the effect declares any operators
+			foreach (var operatorDeclaration in _type.Descendants.OfType<OperatorDeclaration>())
+				Error(operatorDeclaration, "Unexpected operator declaration.");
 
 			// Check that the effect declares at least one vertex shader
 			if (Shaders.All(shader => shader.Type != ShaderType.VertexShader))

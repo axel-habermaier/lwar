@@ -6,6 +6,13 @@ namespace Lwar.Assets.Shaders
 	using Pegasus.AssetsCompiler.Effects.Math;
 	using Pegasus.AssetsCompiler.Effects.Semantics;
 
+	static class Ext
+	{
+		public static void T(this Vector4 v)
+	{
+		
+	}
+	}
 	[Effect]
 	public class SunHeat : Effect
 	{
@@ -34,6 +41,7 @@ namespace Lwar.Assets.Shaders
 			outPosition = World * ViewProjection * position;
 			texCoords1 = (Rotation1 * normal).Xyz;
 			texCoords2 = (Rotation2 * normal).Xyz;
+			position.T();
 		}
 
 		[FragmentShader]
