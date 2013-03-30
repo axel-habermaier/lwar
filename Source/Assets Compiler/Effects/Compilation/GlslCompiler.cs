@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Collections.Generic;
 	using Framework;
 	using Framework.Platform.Graphics;
 
@@ -60,44 +61,55 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Generates the shader inputs.
+		///   Generates the shader inputs if the shader is a vertex shader.
 		/// </summary>
-		protected override void GenerateInputs()
+		/// <param name="inputs">The shader inputs that should be generated.</param>
+		protected override void GenerateVertexShaderInputs(IEnumerable<ShaderParameter> inputs)
 		{
-			foreach (var input in Shader.Inputs)
-			{
-				switch (Shader.Type)
-				{
-					case ShaderType.VertexShader:
-						var slot = ToVertexDataSlot(input.Semantics);
-						Writer.AppendLine("layout(location = {0}) in {1} {2};", slot, ToShaderType(input.Type), input.Name);
-						break;
-					case ShaderType.FragmentShader:
-						Writer.AppendLine("in {0} {1};", ToShaderType(input.Type), input.Name);
-						break;
-					default:
-						throw new InvalidOperationException("Unsupported shader type.");
-				}
-			}
+			foreach (var input in inputs)
+				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type), input.Name);
 		}
 
 		/// <summary>
-		///   Generates the shader outputs.
+		///   Generates the shader outputs if the shader is a vertex shader.
 		/// </summary>
-		protected override void GenerateOutputs()
+		/// <param name="outputs">The shader outputs that should be generated.</param>
+		protected override void GenerateVertexShaderOutputs(IEnumerable<ShaderParameter> outputs)
 		{
-			foreach (var output in Shader.Outputs)
+			foreach (var output in outputs)
 			{
-				if (Shader.Type == ShaderType.VertexShader && output.Semantics == DataSemantics.Position)
+				if (output.Semantics == DataSemantics.Position)
 				{
 					Writer.AppendLine("out gl_PerVertex");
 					Writer.AppendBlockStatement(() => Writer.AppendLine("vec4 gl_Position;"));
 				}
-				else if (Shader.Type == ShaderType.FragmentShader)
-					Writer.AppendLine("layout(location = {2}) out {0} {1};", ToShaderType(output.Type), output.Name,
-									  output.Semantics - DataSemantics.Color0);
 				else
 					Writer.AppendLine("out {0} {1};", ToShaderType(output.Type), output.Name);
+			}
+		}
+
+		/// <summary>
+		///   Generates the shader inputs if the shader is a fragment shader.
+		/// </summary>
+		/// <param name="inputs">The shader inputs that should be generated.</param>
+		protected override void GenerateFragmentShaderInputs(IEnumerable<ShaderParameter> inputs)
+		{
+			foreach (var input in inputs)
+				Writer.AppendLine("in {0} {1};", ToShaderType(input.Type), input.Name);
+		}
+
+		/// <summary>
+		///   Generates the shader outputs if the shader is a fragment shader.
+		/// </summary>
+		/// <param name="outputs">The shader outputs that should be generated.</param>
+		protected override void GenerateFragmentShaderOutputs(IEnumerable<ShaderParameter> outputs)
+		{
+			foreach (var output in outputs)
+			{
+				var slot = output.Semantics - DataSemantics.Color0;
+				Assert.InRange(slot, 0, 3);
+
+				Writer.AppendLine("layout(location = {2}) out {0} {1};", ToShaderType(output.Type), output.Name, slot);
 			}
 		}
 
@@ -139,40 +151,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				default:
 					return "unknown-type";
 			}
-		}
-
-		/// <summary>
-		///   Converts the data semantics to a vertex data slot.
-		/// </summary>
-		/// <param name="semantics">The semantics that should be converted.</param>
-		private int ToVertexDataSlot(DataSemantics semantics)
-		{
-			DataSemantics vertexSemantics;
-
-			switch (semantics)
-			{
-				case DataSemantics.Position:
-					vertexSemantics = DataSemantics.Position;
-					break;
-				case DataSemantics.Normal:
-					vertexSemantics = DataSemantics.Normal;
-					break;
-				case DataSemantics.TexCoords0:
-					vertexSemantics = DataSemantics.TexCoords0;
-					break;
-				case DataSemantics.Color0:
-					vertexSemantics = DataSemantics.Color0;
-					break;
-				default:
-					//Context.Error(Shader.ShaderCode,
-					//"Vertex shader '{0}' uses an unsupported input semantics '{1}'.", Shader.Name, semantics);
-					vertexSemantics = DataSemantics.Position;
-					break;
-			}
-
-			var slot = (int)vertexSemantics - (int)DataSemantics.Position;
-			Assert.InRange(slot, 0, 16);
-			return slot;
 		}
 	}
 }

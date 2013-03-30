@@ -11,6 +11,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Math;
+	using Semantics;
 	using Attribute = System.Attribute;
 	using CSharpAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
 	using CubeMap = Effects.CubeMap;
@@ -234,6 +235,70 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				   semantics == DataSemantics.Color1 ||
 				   semantics == DataSemantics.Color2 ||
 				   semantics == DataSemantics.Color3;
+		}
+
+		/// <summary>
+		///   Gets the semantics attributes that are applied to the parameter.
+		/// </summary>
+		/// <param name="parameter">The parameter whose semantics attributes should be returned.</param>
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static IEnumerable<CSharpAttribute> GetSemantics(this ParameterDeclaration parameter, CSharpAstResolver resolver)
+		{
+			var attributes = new[]
+			{
+				parameter.Attributes.GetAttribute<PositionAttribute>(resolver),
+				parameter.Attributes.GetAttribute<NormalAttribute>(resolver),
+				parameter.Attributes.GetAttribute<TexCoordsAttribute>(resolver),
+				parameter.Attributes.GetAttribute<ColorAttribute>(resolver)
+			};
+
+			return attributes.Where(attribute => attribute != null);
+		}
+
+		/// <summary>
+		///   Gets the semantics attributes that are applied to the parameter.
+		/// </summary>
+		/// <param name="parameter">The parameter whose semantics attributes should be returned.</param>
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static IEnumerable<SemanticsAttribute> GetSemanticsAttributes(this ParameterDeclaration parameter,
+																			 CSharpAstResolver resolver)
+		{
+			foreach (var semantics in parameter.GetSemantics(resolver))
+				yield return semantics.ToSemanticsAttribute(resolver);
+		}
+
+		/// <summary>
+		///   Gets the corresponding semantics attribute instance from the C# attribute.
+		/// </summary>
+		/// <param name="attribute">The attribute that should be converted.</param>
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static SemanticsAttribute ToSemanticsAttribute(this CSharpAttribute attribute, CSharpAstResolver resolver)
+		{
+			var index = 0;
+			if (attribute.HasArgumentList)
+			{
+				var resolved = resolver.Resolve(attribute.Arguments.Single());
+				if (resolved.ConstantValue == null)
+					index = -1;
+				else
+					index = (int)resolved.ConstantValue;
+			}
+
+			var type = resolver.Resolve(attribute).Type.FullName;
+
+			if (type == typeof(PositionAttribute).FullName)
+				return new PositionAttribute();
+
+			if (type == typeof(NormalAttribute).FullName)
+				return new NormalAttribute();
+
+			if (type == typeof(TexCoordsAttribute).FullName)
+				return new TexCoordsAttribute(index);
+
+			if (type == typeof(ColorAttribute).FullName)
+				return new ColorAttribute(index);
+
+			return null;
 		}
 	}
 }

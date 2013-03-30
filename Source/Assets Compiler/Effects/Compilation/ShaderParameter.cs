@@ -52,30 +52,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			get
 			{
-				var position = _parameter.Attributes.Contain<PositionAttribute>(Resolver);
-				var normal = _parameter.Attributes.Contain<NormalAttribute>(Resolver);
-				var texCoords = _parameter.Attributes.GetAttribute<TexCoordsAttribute>(Resolver);
-				var color = _parameter.Attributes.GetAttribute<ColorAttribute>(Resolver);
+				var semantics = _parameter.GetSemanticsAttributes(Resolver).FirstOrDefault();
+				if (semantics != null)
+					return semantics.Semantics;
 
-				if (position)
-					return DataSemantics.Position;
-
-				if (normal)
-					return DataSemantics.Normal;
-
-				if (texCoords != null)
-				{
-					var index = GetSemanticIndex(texCoords);
-					return DataSemantics.TexCoords0 + index;
-				}
-
-				if (color != null)
-				{
-					var index = GetSemanticIndex(color);
-					return DataSemantics.Color0 + index;
-				}
-
-				// Just return some meaningless default semantics; this error will be catched during the validation of the parameter.
+				// If no semantics attribute has been specified, just return some meaningless default semantics; 
+				// this error will be caught during the validation of the parameter.
 				return DataSemantics.TexCoords0;
 			}
 		}
@@ -109,42 +91,20 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				Error(_parameter, "Unexpected modifier '{0}'.", _parameter.ParameterModifier.ToString().ToLower());
 
 			// Check whether the parameter is declared with any semantics or with multiple semantics
-			var position = _parameter.Attributes.Contain<PositionAttribute>(Resolver);
-			var normal = _parameter.Attributes.Contain<NormalAttribute>(Resolver);
-			var texCoords = _parameter.Attributes.Contain<TexCoordsAttribute>(Resolver);
-			var color = _parameter.Attributes.Contain<ColorAttribute>(Resolver);
-
-			var semanticsCount = new[] { position, normal, color, texCoords }.Count(attribute => attribute);
+			var semanticsCount = _parameter.GetSemantics(Resolver).Count();
 			if (semanticsCount > 1)
 				Error(_parameter, "Unexpected declaration of multiple semantics attributes.");
 			if (semanticsCount == 0)
 				Error(_parameter, "Expected declaration of a semantics attribute.");
 
 			// Check whether the semantic index is out of range
-			var attributes = from attributeSection in _parameter.Attributes
-							 from attribute in attributeSection.Attributes
-							 let index = GetSemanticIndex(attribute)
-							 where index < 0 || index > 3
-							 select attribute;
+			var invalidSemantics = from attribute in _parameter.GetSemantics(Resolver)
+								   let semantics = attribute.ToSemanticsAttribute(Resolver)
+								   where semantics.Index < 0 || semantics.Index > SemanticsAttribute.MaximumIndex
+								   select attribute;
 
-			foreach (var attribute in attributes)
-				Error(attribute, "Semantic index is out of range or could not be determined.");
-		}
-
-		/// <summary>
-		///   Gets the semantic index of the given attribute.
-		/// </summary>
-		/// <param name="attribute">The attribute whose semantic index specification should be returned.</param>
-		private int GetSemanticIndex(Attribute attribute)
-		{
-			if (!attribute.HasArgumentList)
-				return 0;
-
-			var resolved = Resolver.Resolve(attribute.Arguments.Single());
-			if (resolved.ConstantValue == null)
-				return -1;
-
-			return (int)resolved.ConstantValue;
+			foreach (var attribute in invalidSemantics)
+				Error(attribute.Arguments.First(), "Semantic index is out of range.");
 		}
 	}
 }

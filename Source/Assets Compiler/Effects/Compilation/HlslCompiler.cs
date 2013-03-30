@@ -2,10 +2,10 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
-	using Ast;
+	using System.Collections.Generic;
+	using System.Linq;
+	using Framework;
 	using Framework.Platform.Graphics;
-	using ICSharpCode.NRefactory.CSharp;
-	using BinaryOperatorExpression = Ast.BinaryOperatorExpression;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to HLSL.
@@ -89,46 +89,67 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Generates the shader inputs.
+		///   Generates the shader inputs if the shader is a vertex shader.
 		/// </summary>
-		protected override void GenerateInputs()
+		/// <param name="inputs">The shader inputs that should be generated.</param>
+		protected override void GenerateVertexShaderInputs(IEnumerable<ShaderParameter> inputs)
 		{
-			Writer.AppendLine("struct {0}", InputStructName);
-			Writer.AppendBlockStatement(() =>
-				{
-					foreach (var input in Shader.Inputs)
-						Writer.AppendLine("{0} {1} : {2};", ToShaderType(input.Type), input.Name, ToHlsl(input.Semantics));
-				}, true);
+			GenerateInputs(inputs);
 		}
 
 		/// <summary>
-		///   Generates the shader outputs.
+		///   Generates the shader outputs if the shader is a vertex shader.
 		/// </summary>
-		protected override void GenerateOutputs()
+		/// <param name="outputs">The shader outputs that should be generated.</param>
+		protected override void GenerateVertexShaderOutputs(IEnumerable<ShaderParameter> outputs)
 		{
 			Writer.AppendLine("struct {0}", OutputStructName);
 			Writer.AppendBlockStatement(() =>
 				{
-					foreach (var output in Shader.Outputs)
-					{
-						if (Shader.Type == ShaderType.VertexShader && output.Semantics == DataSemantics.Position)
-						{
-							Writer.AppendLine("{0} {1} : SV_Position;", ToShaderType(output.Type), output.Name);
-							continue;
-						}
+					var position = outputs.Single(output => output.Semantics == DataSemantics.Position);
+					foreach (var output in outputs.Except(new[] { position }))
+						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), output.Name, ToHlsl(output.Semantics));
 
-						var semantics = ToHlsl(output.Semantics);
-						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color0)
-							semantics = "SV_Target0";
-						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color1)
-							semantics = "SV_Target1";
-						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color2)
-							semantics = "SV_Target2";
-						if (Shader.Type == ShaderType.FragmentShader && output.Semantics == DataSemantics.Color3)
-							semantics = "SV_Target3";
+					Writer.AppendLine("{0} {1} : SV_Position;", ToShaderType(position.Type), position.Name);
+				}, true);
+		}
 
-						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), output.Name, semantics);
-					}
+		/// <summary>
+		///   Generates the shader inputs if the shader is a fragment shader.
+		/// </summary>
+		/// <param name="inputs">The shader inputs that should be generated.</param>
+		protected override void GenerateFragmentShaderInputs(IEnumerable<ShaderParameter> inputs)
+		{
+			GenerateInputs(inputs);
+		}
+
+		/// <summary>
+		///   Generates the shader outputs if the shader is a fragment shader.
+		/// </summary>
+		/// <param name="outputs">The shader outputs that should be generated.</param>
+		protected override void GenerateFragmentShaderOutputs(IEnumerable<ShaderParameter> outputs)
+		{
+			Writer.AppendLine("struct {0}", OutputStructName);
+			foreach (var output in outputs)
+			{
+				var index = output.Semantics - DataSemantics.Color0;
+				var semantics = "SV_Target" + index;
+
+				Assert.InRange(index, 0, 3);
+				Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), output.Name, semantics);
+			}
+		}
+
+		/// <summary>
+		///   Generates the shader inputs.
+		/// </summary>
+		private void GenerateInputs(IEnumerable<ShaderParameter> inputs)
+		{
+			Writer.AppendLine("struct {0}", InputStructName);
+			Writer.AppendBlockStatement(() =>
+				{
+					foreach (var input in inputs)
+						Writer.AppendLine("{0} {1} : {2};", ToShaderType(input.Type), input.Name, ToHlsl(input.Semantics));
 				}, true);
 		}
 

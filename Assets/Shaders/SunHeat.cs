@@ -6,13 +6,13 @@ namespace Lwar.Assets.Shaders
 	using Pegasus.AssetsCompiler.Effects.Math;
 	using Pegasus.AssetsCompiler.Effects.Semantics;
 
-	static class Ext
+	internal static class Ext
 	{
 		public static void T(this Vector4 v)
-	{
-		
+		{
+		}
 	}
-	}
+
 	[Effect]
 	public class SunHeat : Effect
 	{
@@ -27,9 +27,6 @@ namespace Lwar.Assets.Shaders
 
 		[ShaderConstant(ChangeFrequency.PerDrawCall)]
 		public readonly Matrix World;
-
-		[ShaderConstant(ChangeFrequency.PerDrawCall)]
-		public readonly Vector4 World2;
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,
@@ -46,7 +43,7 @@ namespace Lwar.Assets.Shaders
 
 		[FragmentShader]
 		public void FragmentShader([TexCoords(0)] Vector3 texCoords0,
-								   [TexCoords(1)]  Vector3 texCoords1,
+								   [TexCoords(1)] Vector3 texCoords1,
 								   [Color] out Vector4 color)
 		{
 			var sample1 = CubeMap.Sample(texCoords0).R;

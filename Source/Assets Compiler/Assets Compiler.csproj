@@ -254,6 +254,7 @@
     <Compile Include="Effects\Compilation\ShaderLiteral.cs" />
     <Compile Include="Effects\Compilation\EffectFile.cs" />
     <Compile Include="Effects\Compilation\EffectsProject.cs" />
+    <Compile Include="Effects\Semantics\SemanticsAttribute.cs" />
     <Compile Include="ExternalTool.cs" />
     <Compile Include="Assets\FontAsset.cs" />
     <Compile Include="Compilers\FontCompiler.cs" />

@@ -2,7 +2,9 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Collections.Generic;
 	using Framework;
+	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
@@ -10,16 +12,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// </summary>
 	internal abstract class CrossCompiler
 	{
-		/// <summary>
-		///   The C# shader method that is cross-compiled.
-		/// </summary>
-		protected ShaderMethod Shader { get; private set; }
-
-		/// <summary>
-		///   The effect class the shader method belongs to.
-		/// </summary>
-		protected EffectClass Effect { get; private set; }
-
 		/// <summary>
 		///   The code writer the generated code should be written to.
 		/// </summary>
@@ -184,20 +176,19 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			//var blockStatement = (BlockStatement)Shader.SyntaxTree;
 			//blockStatement.Statements.AcceptVisitor(this);
 		}
+
 		/// <summary>
 		///   Cross-compiles the C# shader method.
 		/// </summary>
 		/// <param name="effect">The effect class the shader method belongs to.</param>
 		/// <param name="shader">The C# shader method that should be cross-compiled.</param>
 		/// <param name="writer">The code writer the generated code should be written to.</param>
-		public void Compile( EffectClass effect, ShaderMethod shader, CodeWriter writer)
+		public void Compile(EffectClass effect, ShaderMethod shader, CodeWriter writer)
 		{
 			Assert.ArgumentNotNull(effect, () => effect);
 			Assert.ArgumentNotNull(shader, () => shader);
 			Assert.ArgumentNotNull(writer, () => writer);
 
-			Effect = effect;
-			Shader = shader;
 			Writer = writer;
 
 			foreach (var literal in effect.Literals)
@@ -210,15 +201,26 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			foreach (var texture in effect.Textures)
 				GenerateTextureObject(texture);
 
-			GenerateInputs();
-			Writer.Newline();
+			if (shader.Type == ShaderType.VertexShader)
+			{
+				GenerateVertexShaderInputs(shader.Inputs);
+				Writer.Newline();
 
-			GenerateOutputs();
-			Writer.Newline();
+				GenerateVertexShaderOutputs(shader.Outputs);
+				Writer.Newline();
+			}
+			else
+			{
+				GenerateFragmentShaderInputs(shader.Inputs);
+				Writer.Newline();
+
+				GenerateFragmentShaderOutputs(shader.Outputs);
+				Writer.Newline();
+			}
 
 			GenerateMainMethod();
 		}
-		
+
 		/// <summary>
 		///   Generates the shader code for shader literals.
 		/// </summary>
@@ -238,14 +240,28 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected abstract void GenerateTextureObject(ShaderTexture texture);
 
 		/// <summary>
-		///   Generates the shader inputs.
+		///   Generates the shader inputs if the shader is a vertex shader.
 		/// </summary>
-		protected abstract void GenerateInputs();
+		/// <param name="inputs">The shader inputs that should be generated.</param>
+		protected abstract void GenerateVertexShaderInputs(IEnumerable<ShaderParameter> inputs);
 
 		/// <summary>
-		///   Generates the shader outputs.
+		///   Generates the shader outputs if the shader is a vertex shader.
 		/// </summary>
-		protected abstract void GenerateOutputs();
+		/// <param name="outputs">The shader outputs that should be generated.</param>
+		protected abstract void GenerateVertexShaderOutputs(IEnumerable<ShaderParameter> outputs);
+
+		/// <summary>
+		///   Generates the shader inputs if the shader is a fragment shader.
+		/// </summary>
+		/// <param name="inputs">The shader inputs that should be generated.</param>
+		protected abstract void GenerateFragmentShaderInputs(IEnumerable<ShaderParameter> inputs);
+
+		/// <summary>
+		///   Generates the shader outputs if the shader is a fragment shader.
+		/// </summary>
+		/// <param name="outputs">The shader outputs that should be generated.</param>
+		protected abstract void GenerateFragmentShaderOutputs(IEnumerable<ShaderParameter> outputs);
 
 		/// <summary>
 		///   Generates the shader entry point.

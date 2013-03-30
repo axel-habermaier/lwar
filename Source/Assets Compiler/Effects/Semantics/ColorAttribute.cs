@@ -2,11 +2,12 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Semantics
 {
+	using Framework.Platform.Graphics;
+
 	/// <summary>
 	///   Indicates that a shader argument or return value represents a color.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-	public class ColorAttribute : Attribute
+	public class ColorAttribute : SemanticsAttribute
 	{
 		/// <summary>
 		///   Initializes a new instance with index 0.
@@ -20,13 +21,22 @@ namespace Pegasus.AssetsCompiler.Effects.Semantics
 		/// </summary>
 		/// <param name="index">The index of the color.</param>
 		public ColorAttribute(int index)
+			: base(index)
 		{
-			Index = index;
 		}
 
 		/// <summary>
-		///   Gets the index of the color that is used to distinguish between multiple color inputs or outputs.
+		///   Gets the corresponding data semantics literal.
 		/// </summary>
-		public int Index { get; private set; }
+		internal override DataSemantics Semantics
+		{
+			get
+			{
+				if (Index < 0 || Index > MaximumIndex)
+					return DataSemantics.Color0;
+
+				return DataSemantics.Color0 + Index;
+			}
+		}
 	}
 }

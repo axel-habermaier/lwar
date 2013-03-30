@@ -112,6 +112,20 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			if (Type == ShaderType.FragmentShader && Outputs.All(output => !output.Semantics.IsColor()))
 				Error(_method, "Expected an output parameter with the 'Color' semantics.");
 
+			// Check whether the fragment shader declares any output parameters that do not have the color semantics
+			if (Type == ShaderType.FragmentShader)
+			{
+				foreach (var output in from parameter in _method.Descendants.OfType<ParameterDeclaration>()
+									   where parameter.ParameterModifier == ParameterModifier.Out
+									   from attribute in parameter.GetSemantics(Resolver)
+									   let semantics = attribute.ToSemanticsAttribute(Resolver)
+									   where !semantics.Semantics.IsColor()
+									   select new { Attribute = attribute, semantics.Semantics })
+				{
+					Error(output.Attribute, "Unexpected '{0}' semantics.", output.Semantics.ToDisplayString());
+				}
+			}
+
 			// Check whether the all inputs and outputs have distinct semantics
 			ValidateSemantics(Inputs, "input");
 			ValidateSemantics(Outputs, "output");
