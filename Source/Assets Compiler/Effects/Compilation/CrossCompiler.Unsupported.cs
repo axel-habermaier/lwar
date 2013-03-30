@@ -447,11 +447,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			throw new NotSupportedException();
 		}
 
-		public void VisitReturnStatement(ReturnStatement returnStatement)
-		{
-			throw new NotSupportedException();
-		}
-
 		public void VisitSwitchStatement(SwitchStatement switchStatement)
 		{
 			throw new NotSupportedException();

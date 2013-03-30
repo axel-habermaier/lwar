@@ -39,6 +39,7 @@ namespace Lwar.Assets.Shaders
 			//texCoords1 = (Rotation1 * normal).Xyz;
 			//texCoords2 = (Rotation2 * normal).Xyz;
 			//position.T();
+		
 			outPosition = new Vector4(1, 1, 1, 1);
 			texCoords1 = new Vector3(1, -1, 1 + 1 / 123 * 3 ^ 4 % 3);
 			{
@@ -57,7 +58,8 @@ namespace Lwar.Assets.Shaders
 			int a, b22;
 			for (a = 2, b22= a; false; ++b22,--a)
 			{
-
+				continue;
+				break;
 			}
 
 			do
@@ -66,7 +68,7 @@ namespace Lwar.Assets.Shaders
 
 			while (b22 == 0)
 				--a;
-
+			
 			if (true)
 				--a;
 
@@ -87,6 +89,9 @@ namespace Lwar.Assets.Shaders
 
 			var m = World * ViewProjection;
 			texCoords2 = texCoords1;
+
+			return;
+			--a;
 		}
 
 		[FragmentShader]

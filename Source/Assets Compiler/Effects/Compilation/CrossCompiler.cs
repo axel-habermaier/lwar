@@ -56,12 +56,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 		public virtual void VisitBreakStatement(BreakStatement breakStatement)
 		{
-			Writer.AppendLine("break;");
+			Writer.Append("break");
 		}
 
 		public virtual void VisitContinueStatement(ContinueStatement continueStatement)
 		{
-			Writer.AppendLine("continue;");
+			Writer.Append("continue");
 		}
 
 		public virtual void VisitDoWhileStatement(DoWhileStatement doWhileStatement)
@@ -173,13 +173,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Writer.Append(")");
 		}
 
-		//public virtual void VisitReturnStatement(ReturnStatement returnStatement)
-		//{
-		//	Writer.AppendLine("return;");
-		//}
+		public virtual void VisitReturnStatement(ReturnStatement returnStatement)
+		{
+			Writer.Append("return");
+		}
 
 		public virtual void VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression)
 		{
+			Writer.Append("(");
 			if (unaryOperatorExpression.Operator == UnaryOperatorType.PostDecrement ||
 				unaryOperatorExpression.Operator == UnaryOperatorType.PostIncrement)
 			{
@@ -191,6 +192,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				Writer.Append(GetToken(unaryOperatorExpression.Operator));
 				unaryOperatorExpression.Expression.AcceptVisitor(this);
 			}
+			Writer.Append(")");
 		}
 
 		public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement)
@@ -433,30 +435,20 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		/// Visits the given statement, treating it as a single-line block statement if it is not a block statement. 
+		/// Visits the given statement, treating it as a single-line block statement if it is not actually a block statement. 
 		/// </summary>
 		/// <param name="statement">The statement that should be visited.</param>
 		private void VisitStatementBlock(Statement statement)
 		{
 			if (statement is BlockStatement)
 				statement.AcceptVisitor(this);
-			else if (statement is IfElseStatement)
-			{
-				// Start a statement block in order to ensure that the semantics match those of C#
-				Writer.AppendBlockStatement(()=>statement.AcceptVisitor(this));
-			}
 			else
-			{
-				Writer.EnsureNewLine();
-				Writer.IncreaseIndent();
-
-				statement.AcceptVisitor(this);
-
-				if (!OmitTerminatingSemicolon(statement))
-					Writer.AppendLine(";");
-
-				Writer.DecreaseIndent();
-			}
+				Writer.AppendBlockStatement(() =>
+					{
+						statement.AcceptVisitor(this);
+						if (!OmitTerminatingSemicolon(statement))
+							Writer.Append(";");
+					});
 		}
 
 		/// <summary>

@@ -282,5 +282,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			
 			base.VisitBinaryOperatorExpression(binaryOperatorExpression);
 		}
+
+		public override void VisitReturnStatement(ReturnStatement returnStatement)
+		{
+			Writer.Append("return {0}", OutputVariableName);
+		}
 	}
 }
