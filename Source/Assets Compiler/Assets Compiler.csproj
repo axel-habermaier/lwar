@@ -213,6 +213,7 @@
     <Compile Include="Assets\CubeMapAsset.cs" />
     <Compile Include="Compilers\CubeMapCompiler.cs" />
     <Compile Include="DirectDrawSurface.cs" />
+    <Compile Include="Effects\Compilation\CrossCompiler.Supported.cs" />
     <Compile Include="Effects\Compilation\CrossCompiler.Unsupported.cs" />
     <Compile Include="Effects\Compilation\CodeWriter.cs" />
     <Compile Include="Effects\Compilation\CompiledElement.cs" />
@@ -225,6 +226,8 @@
     <Compile Include="Effects\Compilation\ShaderLiteral.cs" />
     <Compile Include="Effects\Compilation\EffectFile.cs" />
     <Compile Include="Effects\Compilation\EffectsProject.cs" />
+    <Compile Include="Effects\Intrinsic.cs" />
+    <Compile Include="Effects\MapsToAttribute.cs" />
     <Compile Include="Effects\Semantics\SemanticsAttribute.cs" />
     <Compile Include="ExternalTool.cs" />
     <Compile Include="Assets\FontAsset.cs" />

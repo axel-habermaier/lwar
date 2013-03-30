@@ -28,5 +28,15 @@ namespace Pegasus.AssetsCompiler.Effects
 		///   The size of the viewport.
 		/// </summary>
 		protected readonly Vector2 ViewportSize;
+
+		/// <summary>
+		///   Computes the cosinus of the given value.
+		/// </summary>
+		/// <param name="v">The value whose cosinus should be computed.</param>
+		[MapsTo(Intrinsic.Cosinus)]
+		protected float Cos(float v)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

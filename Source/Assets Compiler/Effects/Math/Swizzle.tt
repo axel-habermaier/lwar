@@ -61,7 +61,7 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 
 		public Swizzle(IEnumerable<string> mask)
 		{
-			Mask = mask.Aggregate((str, c) => str + c.ToLower());
+			Mask = mask.Aggregate((str, c) => str + c).ToLower();
 			ReadOnly = mask.Distinct().Count() != mask.Count();
 
 			switch (mask.Count())

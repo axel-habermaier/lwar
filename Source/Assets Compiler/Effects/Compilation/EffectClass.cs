@@ -2,7 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
-	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
 	using Framework;
@@ -320,7 +319,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						literalOutOfBounds = value >= ((object[])literal.Value).Length;
 				}
 
-				if (value < 0 || matrix || vector4 || vector3||vector2 || literalOutOfBounds)
+				if (value < 0 || matrix || vector4 || vector3 || vector2 || literalOutOfBounds)
 					Error(indexArgument.Argument, "Array index is out of bounds.");
 			}
 		}

@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Reflection;
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
@@ -163,6 +164,48 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			var resolved = resolver.Resolve(declaration.Type);
 			return resolved.Type;
+		}
+
+		/// <summary>
+		///   Resolves the intrinsic that the given invocation expression represents.
+		/// </summary>
+		/// <param name="invocationExpression">The invocation expression that should be resolved.</param>
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static Intrinsic ResolveIntrinsic(this InvocationExpression invocationExpression, CSharpAstResolver resolver)
+		{
+			var resolvedTarget = (MethodGroupResolveResult)resolver.Resolve(invocationExpression.Target);
+			var resolvedArguments = invocationExpression.Arguments.Select(argument => resolver.Resolve(argument)).ToArray();
+
+			var invokedMethod = resolvedTarget.PerformOverloadResolution(resolver.Compilation, resolvedArguments).BestCandidate;
+
+			var type = Type.GetType(invokedMethod.DeclaringType.FullName).GetTypeInfo();
+			var method = type.DeclaredMethods.Where(m => m.Name == invokedMethod.Name)
+							 .Where(m =>
+								 {
+									 var declaredParameters = m.GetParameters();
+									 var invokedParameters = invokedMethod.Parameters;
+
+									 if (declaredParameters.Length != invokedParameters.Count)
+										 return false;
+
+									 for (var i = 0; i < declaredParameters.Length; ++i)
+									 {
+										 if (declaredParameters[i].Name != invokedParameters[i].Name)
+											 return false;
+
+										 if (declaredParameters[i].ParameterType.FullName != invokedParameters[i].Type.FullName)
+											 return false;
+									 }
+
+									 return true;
+								 })
+								 .Single();
+
+			var mapsTo = method.GetCustomAttribute<MapsToAttribute>();
+			if (mapsTo == null)
+				return Intrinsic.Unknown;
+
+			return mapsTo.Intrinsic;
 		}
 
 		/// <summary>

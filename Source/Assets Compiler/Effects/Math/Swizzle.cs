@@ -4,70 +4,70 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 {
 	public partial class Vector2
 	{
-		public float X 
+		public float x 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float Y 
+		public float y 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Xx 
+		public Vector2 xx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Xy 
-		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
-		}
-
-		public Vector2 Yx 
+		public Vector2 xy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Yy 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public float R 
+		public Vector2 yx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float G 
+		public Vector2 yy 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public float r 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Rr 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector2 Rg 
+		public float g 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Gr 
+		public Vector2 rr 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector2 rg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Gg 
+		public Vector2 gr 
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
+
+		public Vector2 gg 
 		{
 			get { throw new NotImplementedException(); }
 		}
@@ -75,422 +75,422 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 
 	public partial class Vector3
 	{
-		public float X 
+		public float x 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float Y 
+		public float y 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float Z 
+		public float z 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Xx 
+		public Vector2 xx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Xy 
-		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
-		}
-
-		public Vector2 Xz 
+		public Vector2 xy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Yx 
+		public Vector2 xz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Yy 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector2 Yz 
+		public Vector2 yx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Zx 
+		public Vector2 yy 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector2 yz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Zy 
+		public Vector2 zx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Zz 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Xxx 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Xxy 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Xxz 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Xyx 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Xyy 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Xyz 
+		public Vector2 zy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xzx 
+		public Vector2 zz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xzy 
-		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Xzz 
+		public Vector3 xxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yxx 
+		public Vector3 xxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yxy 
+		public Vector3 xxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yxz 
-		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Yyx 
+		public Vector3 xyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yyy 
+		public Vector3 xyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yyz 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Yzx 
+		public Vector3 xyz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yzy 
+		public Vector3 xzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yzz 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Zxx 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Zxy 
+		public Vector3 xzy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zxz 
+		public Vector3 xzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zyx 
-		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Zyy 
+		public Vector3 yxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zyz 
+		public Vector3 yxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zzx 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Zzy 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Zzz 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public float R 
+		public Vector3 yxz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float G 
+		public Vector3 yyx 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 yyy 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 yyz 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 yzx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float B 
+		public Vector3 yzy 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 yzz 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 zxx 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 zxy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Rr 
+		public Vector3 zxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Rg 
-		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
-		}
-
-		public Vector2 Rb 
+		public Vector3 zyx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Gr 
+		public Vector3 zyy 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 zyz 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 zzx 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 zzy 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 zzz 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public float r 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Gg 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector2 Gb 
+		public float g 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Br 
+		public float b 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Bg 
+		public Vector2 rr 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector2 rg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Bb 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Rrr 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Rrg 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Rrb 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Rgr 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Rgg 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Rgb 
+		public Vector2 rb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rbr 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Rbg 
+		public Vector2 gr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rbb 
+		public Vector2 gg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Grr 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Grg 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Grb 
+		public Vector2 gb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Ggr 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Ggg 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Ggb 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Gbr 
+		public Vector2 br 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gbg 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Gbb 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Brr 
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		public Vector3 Brg 
+		public Vector2 bg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Brb 
+		public Vector2 bb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bgr 
+		public Vector3 rrr 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 rrg 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 rrb 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 rgr 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 rgg 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 rgb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bgg 
+		public Vector3 rbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bgb 
+		public Vector3 rbg 
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
+
+		public Vector3 rbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bbr 
+		public Vector3 grr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bbg 
+		public Vector3 grg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bbb 
+		public Vector3 grb 
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
+
+		public Vector3 ggr 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 ggg 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 ggb 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 gbr 
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
+
+		public Vector3 gbg 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 gbb 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 brr 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 brg 
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
+
+		public Vector3 brb 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 bgr 
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
+
+		public Vector3 bgg 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 bgb 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 bbr 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 bbg 
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Vector3 bbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
@@ -498,3530 +498,3530 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 
 	public partial class Vector4
 	{
-		public float X 
+		public float x 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float Y 
+		public float y 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float Z 
+		public float z 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float W 
+		public float w 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Xx 
+		public Vector2 xx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Xy 
+		public Vector2 xy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Xz 
+		public Vector2 xz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Xw 
+		public Vector2 xw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Yx 
+		public Vector2 yx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Yy 
+		public Vector2 yy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Yz 
+		public Vector2 yz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Yw 
+		public Vector2 yw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Zx 
+		public Vector2 zx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Zy 
+		public Vector2 zy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Zz 
+		public Vector2 zz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Zw 
+		public Vector2 zw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Wx 
+		public Vector2 wx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Wy 
+		public Vector2 wy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Wz 
+		public Vector2 wz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Ww 
+		public Vector2 ww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xxx 
+		public Vector3 xxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xxy 
+		public Vector3 xxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xxz 
+		public Vector3 xxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xxw 
+		public Vector3 xxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xyx 
+		public Vector3 xyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xyy 
+		public Vector3 xyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xyz 
+		public Vector3 xyz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xyw 
+		public Vector3 xyw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xzx 
+		public Vector3 xzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xzy 
+		public Vector3 xzy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xzz 
+		public Vector3 xzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xzw 
+		public Vector3 xzw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xwx 
+		public Vector3 xwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xwy 
+		public Vector3 xwy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xwz 
+		public Vector3 xwz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Xww 
+		public Vector3 xww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yxx 
+		public Vector3 yxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yxy 
+		public Vector3 yxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yxz 
+		public Vector3 yxz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yxw 
+		public Vector3 yxw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yyx 
+		public Vector3 yyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yyy 
+		public Vector3 yyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yyz 
+		public Vector3 yyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yyw 
+		public Vector3 yyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yzx 
+		public Vector3 yzx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yzy 
+		public Vector3 yzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yzz 
+		public Vector3 yzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yzw 
+		public Vector3 yzw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Ywx 
+		public Vector3 ywx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Ywy 
+		public Vector3 ywy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Ywz 
+		public Vector3 ywz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Yww 
+		public Vector3 yww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zxx 
+		public Vector3 zxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zxy 
+		public Vector3 zxy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zxz 
+		public Vector3 zxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zxw 
+		public Vector3 zxw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zyx 
+		public Vector3 zyx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zyy 
+		public Vector3 zyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zyz 
+		public Vector3 zyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zyw 
+		public Vector3 zyw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zzx 
+		public Vector3 zzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zzy 
+		public Vector3 zzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zzz 
+		public Vector3 zzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zzw 
+		public Vector3 zzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zwx 
+		public Vector3 zwx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zwy 
+		public Vector3 zwy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zwz 
+		public Vector3 zwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Zww 
+		public Vector3 zww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wxx 
+		public Vector3 wxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wxy 
+		public Vector3 wxy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wxz 
+		public Vector3 wxz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wxw 
+		public Vector3 wxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wyx 
+		public Vector3 wyx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wyy 
+		public Vector3 wyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wyz 
+		public Vector3 wyz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wyw 
+		public Vector3 wyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wzx 
+		public Vector3 wzx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wzy 
+		public Vector3 wzy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wzz 
+		public Vector3 wzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wzw 
+		public Vector3 wzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wwx 
+		public Vector3 wwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wwy 
+		public Vector3 wwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Wwz 
+		public Vector3 wwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Www 
+		public Vector3 www 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxxx 
+		public Vector4 xxxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxxy 
+		public Vector4 xxxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxxz 
+		public Vector4 xxxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxxw 
+		public Vector4 xxxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxyx 
+		public Vector4 xxyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxyy 
+		public Vector4 xxyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxyz 
+		public Vector4 xxyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxyw 
+		public Vector4 xxyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxzx 
+		public Vector4 xxzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxzy 
+		public Vector4 xxzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxzz 
+		public Vector4 xxzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxzw 
+		public Vector4 xxzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxwx 
+		public Vector4 xxwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxwy 
+		public Vector4 xxwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxwz 
+		public Vector4 xxwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xxww 
+		public Vector4 xxww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyxx 
+		public Vector4 xyxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyxy 
+		public Vector4 xyxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyxz 
+		public Vector4 xyxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyxw 
+		public Vector4 xyxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyyx 
+		public Vector4 xyyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyyy 
+		public Vector4 xyyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyyz 
+		public Vector4 xyyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyyw 
+		public Vector4 xyyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyzx 
+		public Vector4 xyzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyzy 
+		public Vector4 xyzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyzz 
+		public Vector4 xyzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyzw 
+		public Vector4 xyzw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xywx 
+		public Vector4 xywx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xywy 
+		public Vector4 xywy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xywz 
+		public Vector4 xywz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xyww 
+		public Vector4 xyww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzxx 
+		public Vector4 xzxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzxy 
+		public Vector4 xzxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzxz 
+		public Vector4 xzxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzxw 
+		public Vector4 xzxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzyx 
+		public Vector4 xzyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzyy 
+		public Vector4 xzyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzyz 
+		public Vector4 xzyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzyw 
+		public Vector4 xzyw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzzx 
+		public Vector4 xzzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzzy 
+		public Vector4 xzzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzzz 
+		public Vector4 xzzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzzw 
+		public Vector4 xzzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzwx 
+		public Vector4 xzwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzwy 
+		public Vector4 xzwy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzwz 
+		public Vector4 xzwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xzww 
+		public Vector4 xzww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwxx 
+		public Vector4 xwxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwxy 
+		public Vector4 xwxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwxz 
+		public Vector4 xwxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwxw 
+		public Vector4 xwxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwyx 
+		public Vector4 xwyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwyy 
+		public Vector4 xwyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwyz 
+		public Vector4 xwyz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwyw 
+		public Vector4 xwyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwzx 
+		public Vector4 xwzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwzy 
+		public Vector4 xwzy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwzz 
+		public Vector4 xwzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwzw 
+		public Vector4 xwzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwwx 
+		public Vector4 xwwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwwy 
+		public Vector4 xwwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwwz 
+		public Vector4 xwwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Xwww 
+		public Vector4 xwww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxxx 
+		public Vector4 yxxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxxy 
+		public Vector4 yxxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxxz 
+		public Vector4 yxxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxxw 
+		public Vector4 yxxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxyx 
+		public Vector4 yxyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxyy 
+		public Vector4 yxyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxyz 
+		public Vector4 yxyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxyw 
+		public Vector4 yxyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxzx 
+		public Vector4 yxzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxzy 
+		public Vector4 yxzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxzz 
+		public Vector4 yxzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxzw 
+		public Vector4 yxzw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxwx 
+		public Vector4 yxwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxwy 
+		public Vector4 yxwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxwz 
+		public Vector4 yxwz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yxww 
+		public Vector4 yxww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyxx 
+		public Vector4 yyxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyxy 
+		public Vector4 yyxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyxz 
+		public Vector4 yyxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyxw 
+		public Vector4 yyxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyyx 
+		public Vector4 yyyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyyy 
+		public Vector4 yyyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyyz 
+		public Vector4 yyyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyyw 
+		public Vector4 yyyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyzx 
+		public Vector4 yyzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyzy 
+		public Vector4 yyzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyzz 
+		public Vector4 yyzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyzw 
+		public Vector4 yyzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yywx 
+		public Vector4 yywx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yywy 
+		public Vector4 yywy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yywz 
+		public Vector4 yywz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yyww 
+		public Vector4 yyww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzxx 
+		public Vector4 yzxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzxy 
+		public Vector4 yzxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzxz 
+		public Vector4 yzxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzxw 
+		public Vector4 yzxw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzyx 
+		public Vector4 yzyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzyy 
+		public Vector4 yzyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzyz 
+		public Vector4 yzyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzyw 
+		public Vector4 yzyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzzx 
+		public Vector4 yzzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzzy 
+		public Vector4 yzzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzzz 
+		public Vector4 yzzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzzw 
+		public Vector4 yzzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzwx 
+		public Vector4 yzwx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzwy 
+		public Vector4 yzwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzwz 
+		public Vector4 yzwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Yzww 
+		public Vector4 yzww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywxx 
+		public Vector4 ywxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywxy 
+		public Vector4 ywxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywxz 
+		public Vector4 ywxz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywxw 
+		public Vector4 ywxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywyx 
+		public Vector4 ywyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywyy 
+		public Vector4 ywyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywyz 
+		public Vector4 ywyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywyw 
+		public Vector4 ywyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywzx 
+		public Vector4 ywzx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywzy 
+		public Vector4 ywzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywzz 
+		public Vector4 ywzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywzw 
+		public Vector4 ywzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywwx 
+		public Vector4 ywwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywwy 
+		public Vector4 ywwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywwz 
+		public Vector4 ywwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ywww 
+		public Vector4 ywww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxxx 
+		public Vector4 zxxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxxy 
+		public Vector4 zxxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxxz 
+		public Vector4 zxxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxxw 
+		public Vector4 zxxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxyx 
+		public Vector4 zxyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxyy 
+		public Vector4 zxyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxyz 
+		public Vector4 zxyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxyw 
+		public Vector4 zxyw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxzx 
+		public Vector4 zxzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxzy 
+		public Vector4 zxzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxzz 
+		public Vector4 zxzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxzw 
+		public Vector4 zxzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxwx 
+		public Vector4 zxwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxwy 
+		public Vector4 zxwy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxwz 
+		public Vector4 zxwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zxww 
+		public Vector4 zxww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyxx 
+		public Vector4 zyxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyxy 
+		public Vector4 zyxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyxz 
+		public Vector4 zyxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyxw 
+		public Vector4 zyxw 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyyx 
+		public Vector4 zyyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyyy 
+		public Vector4 zyyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyyz 
+		public Vector4 zyyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyyw 
+		public Vector4 zyyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyzx 
+		public Vector4 zyzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyzy 
+		public Vector4 zyzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyzz 
+		public Vector4 zyzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyzw 
+		public Vector4 zyzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zywx 
+		public Vector4 zywx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zywy 
+		public Vector4 zywy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zywz 
+		public Vector4 zywz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zyww 
+		public Vector4 zyww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzxx 
+		public Vector4 zzxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzxy 
+		public Vector4 zzxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzxz 
+		public Vector4 zzxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzxw 
+		public Vector4 zzxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzyx 
+		public Vector4 zzyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzyy 
+		public Vector4 zzyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzyz 
+		public Vector4 zzyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzyw 
+		public Vector4 zzyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzzx 
+		public Vector4 zzzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzzy 
+		public Vector4 zzzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzzz 
+		public Vector4 zzzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzzw 
+		public Vector4 zzzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzwx 
+		public Vector4 zzwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzwy 
+		public Vector4 zzwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzwz 
+		public Vector4 zzwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zzww 
+		public Vector4 zzww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwxx 
+		public Vector4 zwxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwxy 
+		public Vector4 zwxy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwxz 
+		public Vector4 zwxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwxw 
+		public Vector4 zwxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwyx 
+		public Vector4 zwyx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwyy 
+		public Vector4 zwyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwyz 
+		public Vector4 zwyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwyw 
+		public Vector4 zwyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwzx 
+		public Vector4 zwzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwzy 
+		public Vector4 zwzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwzz 
+		public Vector4 zwzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwzw 
+		public Vector4 zwzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwwx 
+		public Vector4 zwwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwwy 
+		public Vector4 zwwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwwz 
+		public Vector4 zwwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Zwww 
+		public Vector4 zwww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxxx 
+		public Vector4 wxxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxxy 
+		public Vector4 wxxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxxz 
+		public Vector4 wxxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxxw 
+		public Vector4 wxxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxyx 
+		public Vector4 wxyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxyy 
+		public Vector4 wxyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxyz 
+		public Vector4 wxyz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxyw 
+		public Vector4 wxyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxzx 
+		public Vector4 wxzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxzy 
+		public Vector4 wxzy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxzz 
+		public Vector4 wxzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxzw 
+		public Vector4 wxzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxwx 
+		public Vector4 wxwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxwy 
+		public Vector4 wxwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxwz 
+		public Vector4 wxwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wxww 
+		public Vector4 wxww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyxx 
+		public Vector4 wyxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyxy 
+		public Vector4 wyxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyxz 
+		public Vector4 wyxz 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyxw 
+		public Vector4 wyxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyyx 
+		public Vector4 wyyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyyy 
+		public Vector4 wyyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyyz 
+		public Vector4 wyyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyyw 
+		public Vector4 wyyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyzx 
+		public Vector4 wyzx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyzy 
+		public Vector4 wyzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyzz 
+		public Vector4 wyzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyzw 
+		public Vector4 wyzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wywx 
+		public Vector4 wywx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wywy 
+		public Vector4 wywy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wywz 
+		public Vector4 wywz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wyww 
+		public Vector4 wyww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzxx 
+		public Vector4 wzxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzxy 
+		public Vector4 wzxy 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzxz 
+		public Vector4 wzxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzxw 
+		public Vector4 wzxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzyx 
+		public Vector4 wzyx 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzyy 
+		public Vector4 wzyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzyz 
+		public Vector4 wzyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzyw 
+		public Vector4 wzyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzzx 
+		public Vector4 wzzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzzy 
+		public Vector4 wzzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzzz 
+		public Vector4 wzzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzzw 
+		public Vector4 wzzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzwx 
+		public Vector4 wzwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzwy 
+		public Vector4 wzwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzwz 
+		public Vector4 wzwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wzww 
+		public Vector4 wzww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwxx 
+		public Vector4 wwxx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwxy 
+		public Vector4 wwxy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwxz 
+		public Vector4 wwxz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwxw 
+		public Vector4 wwxw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwyx 
+		public Vector4 wwyx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwyy 
+		public Vector4 wwyy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwyz 
+		public Vector4 wwyz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwyw 
+		public Vector4 wwyw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwzx 
+		public Vector4 wwzx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwzy 
+		public Vector4 wwzy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwzz 
+		public Vector4 wwzz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwzw 
+		public Vector4 wwzw 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwwx 
+		public Vector4 wwwx 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwwy 
+		public Vector4 wwwy 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwwz 
+		public Vector4 wwwz 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Wwww 
+		public Vector4 wwww 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public float R 
+		public float r 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float G 
+		public float g 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float B 
+		public float b 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public float A 
+		public float a 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Rr 
+		public Vector2 rr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Rg 
+		public Vector2 rg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Rb 
+		public Vector2 rb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Ra 
+		public Vector2 ra 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Gr 
+		public Vector2 gr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Gg 
+		public Vector2 gg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Gb 
+		public Vector2 gb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Ga 
+		public Vector2 ga 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Br 
+		public Vector2 br 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Bg 
+		public Vector2 bg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Bb 
+		public Vector2 bb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Ba 
+		public Vector2 ba 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Ar 
+		public Vector2 ar 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Ag 
+		public Vector2 ag 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Ab 
+		public Vector2 ab 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector2 Aa 
+		public Vector2 aa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rrr 
+		public Vector3 rrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rrg 
+		public Vector3 rrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rrb 
+		public Vector3 rrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rra 
+		public Vector3 rra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rgr 
+		public Vector3 rgr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rgg 
+		public Vector3 rgg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rgb 
+		public Vector3 rgb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rga 
+		public Vector3 rga 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rbr 
+		public Vector3 rbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rbg 
+		public Vector3 rbg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rbb 
+		public Vector3 rbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rba 
+		public Vector3 rba 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rar 
+		public Vector3 rar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rag 
+		public Vector3 rag 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Rab 
+		public Vector3 rab 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Raa 
+		public Vector3 raa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Grr 
+		public Vector3 grr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Grg 
+		public Vector3 grg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Grb 
+		public Vector3 grb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gra 
+		public Vector3 gra 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Ggr 
+		public Vector3 ggr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Ggg 
+		public Vector3 ggg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Ggb 
+		public Vector3 ggb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gga 
+		public Vector3 gga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gbr 
+		public Vector3 gbr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gbg 
+		public Vector3 gbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gbb 
+		public Vector3 gbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gba 
+		public Vector3 gba 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gar 
+		public Vector3 gar 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gag 
+		public Vector3 gag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gab 
+		public Vector3 gab 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Gaa 
+		public Vector3 gaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Brr 
+		public Vector3 brr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Brg 
+		public Vector3 brg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Brb 
+		public Vector3 brb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bra 
+		public Vector3 bra 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bgr 
+		public Vector3 bgr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bgg 
+		public Vector3 bgg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bgb 
+		public Vector3 bgb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bga 
+		public Vector3 bga 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bbr 
+		public Vector3 bbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bbg 
+		public Vector3 bbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bbb 
+		public Vector3 bbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bba 
+		public Vector3 bba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bar 
+		public Vector3 bar 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bag 
+		public Vector3 bag 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Bab 
+		public Vector3 bab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Baa 
+		public Vector3 baa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Arr 
+		public Vector3 arr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Arg 
+		public Vector3 arg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Arb 
+		public Vector3 arb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Ara 
+		public Vector3 ara 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Agr 
+		public Vector3 agr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Agg 
+		public Vector3 agg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Agb 
+		public Vector3 agb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Aga 
+		public Vector3 aga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Abr 
+		public Vector3 abr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Abg 
+		public Vector3 abg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Abb 
+		public Vector3 abb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Aba 
+		public Vector3 aba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Aar 
+		public Vector3 aar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Aag 
+		public Vector3 aag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Aab 
+		public Vector3 aab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector3 Aaa 
+		public Vector3 aaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrrr 
+		public Vector4 rrrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrrg 
+		public Vector4 rrrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrrb 
+		public Vector4 rrrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrra 
+		public Vector4 rrra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrgr 
+		public Vector4 rrgr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrgg 
+		public Vector4 rrgg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrgb 
+		public Vector4 rrgb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrga 
+		public Vector4 rrga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrbr 
+		public Vector4 rrbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrbg 
+		public Vector4 rrbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrbb 
+		public Vector4 rrbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrba 
+		public Vector4 rrba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrar 
+		public Vector4 rrar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrag 
+		public Vector4 rrag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rrab 
+		public Vector4 rrab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rraa 
+		public Vector4 rraa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgrr 
+		public Vector4 rgrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgrg 
+		public Vector4 rgrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgrb 
+		public Vector4 rgrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgra 
+		public Vector4 rgra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rggr 
+		public Vector4 rggr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rggg 
+		public Vector4 rggg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rggb 
+		public Vector4 rggb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgga 
+		public Vector4 rgga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgbr 
+		public Vector4 rgbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgbg 
+		public Vector4 rgbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgbb 
+		public Vector4 rgbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgba 
+		public Vector4 rgba 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgar 
+		public Vector4 rgar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgag 
+		public Vector4 rgag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgab 
+		public Vector4 rgab 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rgaa 
+		public Vector4 rgaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbrr 
+		public Vector4 rbrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbrg 
+		public Vector4 rbrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbrb 
+		public Vector4 rbrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbra 
+		public Vector4 rbra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbgr 
+		public Vector4 rbgr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbgg 
+		public Vector4 rbgg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbgb 
+		public Vector4 rbgb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbga 
+		public Vector4 rbga 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbbr 
+		public Vector4 rbbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbbg 
+		public Vector4 rbbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbbb 
+		public Vector4 rbbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbba 
+		public Vector4 rbba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbar 
+		public Vector4 rbar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbag 
+		public Vector4 rbag 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbab 
+		public Vector4 rbab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rbaa 
+		public Vector4 rbaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rarr 
+		public Vector4 rarr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rarg 
+		public Vector4 rarg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rarb 
+		public Vector4 rarb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rara 
+		public Vector4 rara 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ragr 
+		public Vector4 ragr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ragg 
+		public Vector4 ragg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ragb 
+		public Vector4 ragb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Raga 
+		public Vector4 raga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rabr 
+		public Vector4 rabr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rabg 
+		public Vector4 rabg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Rabb 
+		public Vector4 rabb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Raba 
+		public Vector4 raba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Raar 
+		public Vector4 raar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Raag 
+		public Vector4 raag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Raab 
+		public Vector4 raab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Raaa 
+		public Vector4 raaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grrr 
+		public Vector4 grrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grrg 
+		public Vector4 grrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grrb 
+		public Vector4 grrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grra 
+		public Vector4 grra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grgr 
+		public Vector4 grgr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grgg 
+		public Vector4 grgg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grgb 
+		public Vector4 grgb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grga 
+		public Vector4 grga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grbr 
+		public Vector4 grbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grbg 
+		public Vector4 grbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grbb 
+		public Vector4 grbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grba 
+		public Vector4 grba 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grar 
+		public Vector4 grar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grag 
+		public Vector4 grag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Grab 
+		public Vector4 grab 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Graa 
+		public Vector4 graa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggrr 
+		public Vector4 ggrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggrg 
+		public Vector4 ggrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggrb 
+		public Vector4 ggrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggra 
+		public Vector4 ggra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gggr 
+		public Vector4 gggr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gggg 
+		public Vector4 gggg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gggb 
+		public Vector4 gggb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggga 
+		public Vector4 ggga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggbr 
+		public Vector4 ggbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggbg 
+		public Vector4 ggbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggbb 
+		public Vector4 ggbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggba 
+		public Vector4 ggba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggar 
+		public Vector4 ggar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggag 
+		public Vector4 ggag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggab 
+		public Vector4 ggab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Ggaa 
+		public Vector4 ggaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbrr 
+		public Vector4 gbrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbrg 
+		public Vector4 gbrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbrb 
+		public Vector4 gbrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbra 
+		public Vector4 gbra 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbgr 
+		public Vector4 gbgr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbgg 
+		public Vector4 gbgg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbgb 
+		public Vector4 gbgb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbga 
+		public Vector4 gbga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbbr 
+		public Vector4 gbbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbbg 
+		public Vector4 gbbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbbb 
+		public Vector4 gbbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbba 
+		public Vector4 gbba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbar 
+		public Vector4 gbar 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbag 
+		public Vector4 gbag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbab 
+		public Vector4 gbab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gbaa 
+		public Vector4 gbaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Garr 
+		public Vector4 garr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Garg 
+		public Vector4 garg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Garb 
+		public Vector4 garb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gara 
+		public Vector4 gara 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gagr 
+		public Vector4 gagr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gagg 
+		public Vector4 gagg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gagb 
+		public Vector4 gagb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gaga 
+		public Vector4 gaga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gabr 
+		public Vector4 gabr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gabg 
+		public Vector4 gabg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gabb 
+		public Vector4 gabb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gaba 
+		public Vector4 gaba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gaar 
+		public Vector4 gaar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gaag 
+		public Vector4 gaag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gaab 
+		public Vector4 gaab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Gaaa 
+		public Vector4 gaaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brrr 
+		public Vector4 brrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brrg 
+		public Vector4 brrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brrb 
+		public Vector4 brrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brra 
+		public Vector4 brra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brgr 
+		public Vector4 brgr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brgg 
+		public Vector4 brgg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brgb 
+		public Vector4 brgb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brga 
+		public Vector4 brga 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brbr 
+		public Vector4 brbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brbg 
+		public Vector4 brbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brbb 
+		public Vector4 brbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brba 
+		public Vector4 brba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brar 
+		public Vector4 brar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brag 
+		public Vector4 brag 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Brab 
+		public Vector4 brab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Braa 
+		public Vector4 braa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgrr 
+		public Vector4 bgrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgrg 
+		public Vector4 bgrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgrb 
+		public Vector4 bgrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgra 
+		public Vector4 bgra 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bggr 
+		public Vector4 bggr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bggg 
+		public Vector4 bggg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bggb 
+		public Vector4 bggb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgga 
+		public Vector4 bgga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgbr 
+		public Vector4 bgbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgbg 
+		public Vector4 bgbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgbb 
+		public Vector4 bgbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgba 
+		public Vector4 bgba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgar 
+		public Vector4 bgar 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgag 
+		public Vector4 bgag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgab 
+		public Vector4 bgab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bgaa 
+		public Vector4 bgaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbrr 
+		public Vector4 bbrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbrg 
+		public Vector4 bbrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbrb 
+		public Vector4 bbrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbra 
+		public Vector4 bbra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbgr 
+		public Vector4 bbgr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbgg 
+		public Vector4 bbgg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbgb 
+		public Vector4 bbgb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbga 
+		public Vector4 bbga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbbr 
+		public Vector4 bbbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbbg 
+		public Vector4 bbbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbbb 
+		public Vector4 bbbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbba 
+		public Vector4 bbba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbar 
+		public Vector4 bbar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbag 
+		public Vector4 bbag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbab 
+		public Vector4 bbab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bbaa 
+		public Vector4 bbaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Barr 
+		public Vector4 barr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Barg 
+		public Vector4 barg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Barb 
+		public Vector4 barb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bara 
+		public Vector4 bara 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bagr 
+		public Vector4 bagr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bagg 
+		public Vector4 bagg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Bagb 
+		public Vector4 bagb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Baga 
+		public Vector4 baga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Babr 
+		public Vector4 babr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Babg 
+		public Vector4 babg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Babb 
+		public Vector4 babb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Baba 
+		public Vector4 baba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Baar 
+		public Vector4 baar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Baag 
+		public Vector4 baag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Baab 
+		public Vector4 baab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Baaa 
+		public Vector4 baaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arrr 
+		public Vector4 arrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arrg 
+		public Vector4 arrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arrb 
+		public Vector4 arrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arra 
+		public Vector4 arra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Argr 
+		public Vector4 argr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Argg 
+		public Vector4 argg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Argb 
+		public Vector4 argb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arga 
+		public Vector4 arga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arbr 
+		public Vector4 arbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arbg 
+		public Vector4 arbg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arbb 
+		public Vector4 arbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arba 
+		public Vector4 arba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arar 
+		public Vector4 arar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arag 
+		public Vector4 arag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Arab 
+		public Vector4 arab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Araa 
+		public Vector4 araa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agrr 
+		public Vector4 agrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agrg 
+		public Vector4 agrg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agrb 
+		public Vector4 agrb 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agra 
+		public Vector4 agra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aggr 
+		public Vector4 aggr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aggg 
+		public Vector4 aggg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aggb 
+		public Vector4 aggb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agga 
+		public Vector4 agga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agbr 
+		public Vector4 agbr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agbg 
+		public Vector4 agbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agbb 
+		public Vector4 agbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agba 
+		public Vector4 agba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agar 
+		public Vector4 agar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agag 
+		public Vector4 agag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agab 
+		public Vector4 agab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Agaa 
+		public Vector4 agaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abrr 
+		public Vector4 abrr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abrg 
+		public Vector4 abrg 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abrb 
+		public Vector4 abrb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abra 
+		public Vector4 abra 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abgr 
+		public Vector4 abgr 
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abgg 
+		public Vector4 abgg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abgb 
+		public Vector4 abgb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abga 
+		public Vector4 abga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abbr 
+		public Vector4 abbr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abbg 
+		public Vector4 abbg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abbb 
+		public Vector4 abbb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abba 
+		public Vector4 abba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abar 
+		public Vector4 abar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abag 
+		public Vector4 abag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abab 
+		public Vector4 abab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Abaa 
+		public Vector4 abaa 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aarr 
+		public Vector4 aarr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aarg 
+		public Vector4 aarg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aarb 
+		public Vector4 aarb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aara 
+		public Vector4 aara 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aagr 
+		public Vector4 aagr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aagg 
+		public Vector4 aagg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aagb 
+		public Vector4 aagb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aaga 
+		public Vector4 aaga 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aabr 
+		public Vector4 aabr 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aabg 
+		public Vector4 aabg 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aabb 
+		public Vector4 aabb 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aaba 
+		public Vector4 aaba 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aaar 
+		public Vector4 aaar 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aaag 
+		public Vector4 aaag 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aaab 
+		public Vector4 aaab 
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Vector4 Aaaa 
+		public Vector4 aaaa 
 		{
 			get { throw new NotImplementedException(); }
 		}

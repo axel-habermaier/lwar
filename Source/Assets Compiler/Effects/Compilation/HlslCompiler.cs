@@ -242,7 +242,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		/// Gets the sampler name for the given texture name.
+		///   Gets the sampler name for the given texture name.
 		/// </summary>
 		/// <param name="textureName">The texture name that should be converted.</param>
 		private static string GetSamplerName(string textureName)
@@ -266,7 +266,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					return;
 				}
 			}
-			
+
 			base.VisitIdentifierExpression(identifierExpression);
 		}
 
@@ -288,13 +288,42 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					return;
 				}
 			}
-			
+
 			base.VisitBinaryOperatorExpression(binaryOperatorExpression);
 		}
 
 		public override void VisitReturnStatement(ReturnStatement returnStatement)
 		{
 			Writer.Append("return {0}", OutputVariableName);
+		}
+
+		public override void VisitInvocationExpression(InvocationExpression invocationExpression)
+		{
+			var intrinsic = invocationExpression.ResolveIntrinsic(Resolver);
+			if (intrinsic != Intrinsic.Sample && intrinsic != Intrinsic.SampleLevel)
+			{
+				base.VisitInvocationExpression(invocationExpression);
+				return;
+			}
+
+			var target = (IdentifierExpression)((MemberReferenceExpression)invocationExpression.Target).Target;
+			Writer.Append("{0}.", target.Identifier);
+
+			if (intrinsic == Intrinsic.Sample)
+				Writer.Append("Sample(");
+
+			if (intrinsic == Intrinsic.SampleLevel)
+				Writer.Append("SampleLevel(");
+
+			Writer.Append(GetSamplerName(target.Identifier));
+
+			if (invocationExpression.Arguments.Count > 0)
+			{
+				Writer.Append(", ");
+				invocationExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
+			}
+
+			Writer.Append(")");
 		}
 
 		/// <summary>
