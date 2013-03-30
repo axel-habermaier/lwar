@@ -62,8 +62,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					_project = _project.AddOrUpdateFiles(unresolvedFile);
 
 					return new { FileName = asset.RelativePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
-				});
-
+				}).ToArray();
+			
 			var compilation = _project.CreateCompilation();
 			return parsedFiles.Select(file =>
 				{
