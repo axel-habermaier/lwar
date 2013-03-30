@@ -87,7 +87,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateTextureObject(ShaderTexture texture)
 		{
 			Writer.AppendLine("{0} {1} : register(t{2});", ToShaderType(texture.Type), texture.Name, texture.Slot);
-			Writer.AppendLine("SamplerState {0}Sampler : register(s{1});", texture.Name, texture.Slot);
+			Writer.AppendLine("SamplerState {0} : register(s{1});", GetSamplerName(texture.Name), texture.Slot);
 			Writer.Newline();
 		}
 
@@ -239,6 +239,15 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				default:
 					throw new NotSupportedException("Unsupported semantics.");
 			}
+		}
+
+		/// <summary>
+		/// Gets the sampler name for the given texture name.
+		/// </summary>
+		/// <param name="textureName">The texture name that should be converted.</param>
+		private static string GetSamplerName(string textureName)
+		{
+			return String.Format("{0}{1}Sampler", Configuration.ReservedVariablePrefix, textureName);
 		}
 
 		public override void VisitIdentifierExpression(IdentifierExpression identifierExpression)

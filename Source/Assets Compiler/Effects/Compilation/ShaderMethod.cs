@@ -257,7 +257,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			var variables = from variableDeclaration in _method.Descendants.OfType<VariableDeclarationStatement>()
 							from variable in variableDeclaration.Variables
-							where variable.Name.StartsWith(Configuration.ReservedVariablePrefix)
 							select variable;
 
 			foreach (var variable in variables)

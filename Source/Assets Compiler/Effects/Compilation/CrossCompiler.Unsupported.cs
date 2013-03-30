@@ -47,11 +47,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			throw new NotSupportedException();
 		}
 
-		public void VisitConditionalExpression(ConditionalExpression conditionalExpression)
-		{
-			throw new NotSupportedException();
-		}
-
 		public void VisitDefaultValueExpression(DefaultValueExpression defaultValueExpression)
 		{
 			throw new NotSupportedException();
@@ -62,27 +57,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			throw new NotSupportedException();
 		}
 
-		public void VisitIndexerExpression(IndexerExpression indexerExpression)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitInvocationExpression(InvocationExpression invocationExpression)
-		{
-			throw new NotSupportedException();
-		}
-
 		public void VisitIsExpression(IsExpression isExpression)
 		{
 			throw new NotSupportedException();
 		}
 
 		public void VisitLambdaExpression(LambdaExpression lambdaExpression)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
 		{
 			throw new NotSupportedException();
 		}
@@ -403,11 +383,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		public void VisitCheckedStatement(CheckedStatement checkedStatement)
-		{
-			throw new NotSupportedException();
-		}
-
-		public void VisitEmptyStatement(EmptyStatement emptyStatement)
 		{
 			throw new NotSupportedException();
 		}

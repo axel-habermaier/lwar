@@ -199,6 +199,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			if (identifier.Name.StartsWith(Configuration.ReservedVariablePrefix))
 				Error(identifier, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedVariablePrefix);
+
+			const string glPrefix = "gl_";
+			if (identifier.Name.StartsWith(glPrefix))
+				Error(identifier, "Identifiers starting with '{0}' are reserved.", glPrefix);
 		}
 
 		/// <summary>

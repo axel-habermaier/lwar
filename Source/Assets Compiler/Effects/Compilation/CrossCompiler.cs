@@ -51,7 +51,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				{
 					if (!OmitTerminatingSemicolon(node))
 						Writer.AppendLine(";");
-				},true));
+				}, true));
 		}
 
 		public virtual void VisitBreakStatement(BreakStatement breakStatement)
@@ -120,49 +120,35 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			VisitStatementBlock(ifElseStatement.FalseStatement);
 		}
 
-		//public virtual void VisitIndexerExpression(IndexerExpression indexerExpression)
-		//{
-		//	indexerExpression.Target.AcceptVisitor(this);
-		//	Writer.Append("[");
-		//	indexerExpression.Arguments.AcceptVisitor(this);
-		//	Writer.Append("]");
-		//}
+		public virtual void VisitConditionalExpression(ConditionalExpression conditionalExpression)
+		{
+			conditionalExpression.Condition.AcceptVisitor(this);
+			Writer.Append(" ? ");
+			conditionalExpression.TrueExpression.AcceptVisitor(this);
+			Writer.Append(" : ");
+			conditionalExpression.FalseExpression.AcceptVisitor(this);
+		}
 
-		//public virtual void VisitIntrinsicFunctionInvocation(IntrinsicFunctionInvocation intrinsicFunctionInvocation)
-		//{
-		//	switch (intrinsicFunctionInvocation.Function)
-		//	{
-		//		case IntrinsicFunction.Sample:
-		//			intrinsicFunctionInvocation.Target.AcceptVisitor(this);
-		//			break;
-		//		case IntrinsicFunction.SampleLevel:
-		//			intrinsicFunctionInvocation.Target.AcceptVisitor(this);
-		//			break;
-		//		default:
-		//			throw new InvalidOperationException("Unsupported intrinsic function.");
-		//	}
+		public virtual void VisitIndexerExpression(IndexerExpression indexerExpression)
+		{
+		}
 
-		//	Writer.Append("(");
-		//	intrinsicFunctionInvocation.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
-		//	Writer.Append(")");
-		//}
+		public void VisitEmptyStatement(EmptyStatement emptyStatement)
+		{
+		}
+
+		public void VisitInvocationExpression(InvocationExpression invocationExpression)
+		{
+		}
 
 		public virtual void VisitPrimitiveExpression(PrimitiveExpression primitiveExpression)
 		{
 			Writer.Append(primitiveExpression.Value.ToString().ToLower());
 		}
 
-		//public virtual void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
-		//{
-		//	memberReferenceExpression.Target.AcceptVisitor(this);
-		//	var member = memberReferenceExpression.Member;
-		//	var type = memberReferenceExpression.Type;
-
-		//	if (type == DataType.Vector2 || type == DataType.Vector3 || type == DataType.Vector4 || type == DataType.Matrix)
-		//		member = member.ToLower();
-
-		//	Writer.Append(".{0}", member);
-		//}
+		public virtual void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
+		{
+		}
 
 		public virtual void VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)
 		{
@@ -240,15 +226,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Resolver = resolver;
 			Shader = shader;
 
-			foreach (var literal in effect.Literals)
-				GenerateLiteral(literal);
+			if (effect.Literals.Any())
+			{
+				foreach (var literal in effect.Literals)
+					GenerateLiteral(literal);
 
-			Writer.Newline();
+				Writer.Newline();
+			}
+			
 			foreach (var constantBuffer in effect.ConstantBuffers)
 				GenerateConstantBuffer(constantBuffer);
 
-			foreach (var texture in effect.Textures)
-				GenerateTextureObject(texture);
+			if (effect.Textures.Any())
+			{
+				foreach (var texture in effect.Textures)
+					GenerateTextureObject(texture);
+			}
 
 			if (shader.Type == ShaderType.VertexShader)
 			{
@@ -435,7 +428,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		/// Visits the given statement, treating it as a single-line block statement if it is not actually a block statement. 
+		///   Visits the given statement, treating it as a single-line block statement if it is not actually a block statement.
 		/// </summary>
 		/// <param name="statement">The statement that should be visited.</param>
 		private void VisitStatementBlock(Statement statement)
@@ -452,7 +445,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		/// Checks whether the terminating semicolon can be safely omitted from the statement.
+		///   Checks whether the terminating semicolon can be safely omitted from the statement.
 		/// </summary>
 		/// <param name="node">The node that should be checked.</param>
 		private bool OmitTerminatingSemicolon(AstNode node)

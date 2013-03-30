@@ -19,7 +19,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Indicates whether the writer is currently at the beginning of a new line.
 		/// </summary>
-		private bool _atBeginningOfLine;
+		private bool _atBeginningOfLine = true;
 
 		/// <summary>
 		///   The number of tabs that are placed at the beginning of the next line.
