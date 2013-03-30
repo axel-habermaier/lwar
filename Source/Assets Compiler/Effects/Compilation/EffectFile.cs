@@ -81,13 +81,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			var hlslCompiler = new HlslCompiler();
 			var glslCompiler = new GlslCompiler();
 
-			glslCompiler.Compile(effect, shader, writer);
+			glslCompiler.Compile(effect, shader, writer, Resolver);
 
 			writer.Newline();
 			writer.AppendLine(Configuration.ShaderSeparator);
 			writer.Newline();
 
-			hlslCompiler.Compile(effect, shader, writer);
+			hlslCompiler.Compile(effect, shader, writer, Resolver);
 
 			writer.WriteToFile(asset.SourcePath);
 			return asset;

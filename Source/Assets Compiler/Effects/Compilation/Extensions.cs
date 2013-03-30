@@ -300,5 +300,30 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			return null;
 		}
+
+		/// <summary>
+		///   Calls the AcceptVisitor method on all nodes.
+		/// </summary>
+		/// <param name="nodesCollection">The nodes on which the AcceptVisitor method should be called.</param>
+		/// <param name="visitor">The visitor that should be passed to the AcceptVisitor method.</param>
+		/// <param name="action">
+		///   An action that should be invoked between visiting two nodes; the action is not invoked after the
+		///   last node has been visited.
+		/// </param>
+		public static void AcceptVisitor<T>(this AstNodeCollection<T> nodesCollection, IAstVisitor visitor, Action action = null)
+			where T : AstNode
+		{
+			Assert.ArgumentNotNull(nodesCollection, () => nodesCollection);
+			Assert.ArgumentNotNull(visitor, () => visitor);
+
+			var nodes = nodesCollection.ToArray();
+			for (var i = 0; i < nodes.Length; ++i)
+			{
+				nodes[i].AcceptVisitor(visitor);
+
+				if (i < nodes.Length - 1 && action != null)
+					action();
+			}
+		}
 	}
 }

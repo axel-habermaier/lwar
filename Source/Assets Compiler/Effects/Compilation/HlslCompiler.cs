@@ -6,6 +6,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.Linq;
 	using Framework;
 	using Framework.Platform.Graphics;
+	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.Semantics;
+	using Semantics;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to HLSL.
@@ -130,14 +133,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateFragmentShaderOutputs(IEnumerable<ShaderParameter> outputs)
 		{
 			Writer.AppendLine("struct {0}", OutputStructName);
-			foreach (var output in outputs)
-			{
-				var index = output.Semantics - DataSemantics.Color0;
-				var semantics = "SV_Target" + index;
+			Writer.AppendBlockStatement(() =>
+				{
+					foreach (var output in outputs)
+					{
+						var index = output.Semantics - DataSemantics.Color0;
+						var semantics = "SV_Target" + index;
 
-				Assert.InRange(index, 0, 3);
-				Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), output.Name, semantics);
-			}
+						Assert.InRange(index, 0, SemanticsAttribute.MaximumIndex);
+						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), output.Name, semantics);
+					}
+				});
 		}
 
 		/// <summary>
@@ -164,7 +170,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					Writer.AppendLine("{0} {1};", OutputStructName, OutputVariableName);
 					Writer.Newline();
 
-					GenerateShaderCode();
+					Shader.MethodBody.Statements.AcceptVisitor(this);
 
 					Writer.Newline();
 					Writer.AppendLine("return {0};", OutputVariableName);
@@ -233,6 +239,24 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				default:
 					return "unknown-semantics";
 			}
+		}
+
+		public override void VisitIdentifierExpression(IdentifierExpression identifierExpression)
+		{
+			var local = Resolver.Resolve(identifierExpression) as LocalResolveResult;
+			if (local != null)
+			{
+				if (local.IsParameter)
+				{
+					var parameter = Shader.Parameters.Single(p => p.Name == local.Variable.Name);
+					if (parameter.IsOutput)
+						Writer.Append("{0}.{1}", OutputVariableName, identifierExpression.Identifier);
+					else
+						Writer.Append("{0}.{1}", InputVariableName, identifierExpression.Identifier);
+				}
+			}
+			else
+				base.VisitIdentifierExpression(identifierExpression);
 		}
 
 		//public override void VisitVariableReference<T>(VariableReference<T> variableReference)

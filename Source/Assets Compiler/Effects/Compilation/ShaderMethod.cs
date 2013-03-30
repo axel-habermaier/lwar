@@ -54,6 +54,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Gets the syntax tree of the shader method's body.
+		/// </summary>
+		public BlockStatement MethodBody
+		{
+			get { return _method.Body; }
+		}
+
+		/// <summary>
 		///   Gets the input parameters declared by the shader method.
 		/// </summary>
 		public IEnumerable<ShaderParameter> Inputs
@@ -67,6 +75,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public IEnumerable<ShaderParameter> Outputs
 		{
 			get { return GetChildElements<ShaderParameter>().Where(parameter => parameter.IsOutput); }
+		}
+
+		/// <summary>
+		///   Gets all parameters declared by the shader method.
+		/// </summary>
+		public IEnumerable<ShaderParameter> Parameters
+		{
+			get { return GetChildElements<ShaderParameter>(); }
 		}
 
 		/// <summary>

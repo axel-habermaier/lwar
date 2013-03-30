@@ -3,26 +3,41 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
+	using Ast;
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using AssignmentExpression = ICSharpCode.NRefactory.CSharp.AssignmentExpression;
+	using ExpressionStatement = ICSharpCode.NRefactory.CSharp.ExpressionStatement;
+	using IAstVisitor = ICSharpCode.NRefactory.CSharp.IAstVisitor;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method.
 	/// </summary>
-	internal abstract class CrossCompiler
+	internal abstract partial class CrossCompiler : IAstVisitor
 	{
 		/// <summary>
-		///   The code writer the generated code should be written to.
+		///   Gets the code writer the generated code should be written to.
 		/// </summary>
 		protected CodeWriter Writer { get; private set; }
 
-		//public virtual void VisitAssignmentExpression(AssignmentExpression assignmentExpression)
-		//{
-		//	assignmentExpression.Left.AcceptVisitor(this);
-		//	Writer.Append(" {0} ", GetToken(assignmentExpression.Operator));
-		//	assignmentExpression.Right.AcceptVisitor(this);
-		//}
+		/// <summary>
+		/// Gets the shader that is compiled.
+		/// </summary>
+		protected ShaderMethod Shader { get; private set; }
+
+		/// <summary>
+		///   Gets the resolver that should be used to resolve type information.
+		/// </summary>
+		protected CSharpAstResolver Resolver { get; private set; }
+
+		public virtual void VisitAssignmentExpression(AssignmentExpression assignmentExpression)
+		{
+			assignmentExpression.Left.AcceptVisitor(this);
+			Writer.Append(" {0} ", GetToken(assignmentExpression.Operator));
+			assignmentExpression.Right.AcceptVisitor(this);
+		}
 
 		//public virtual void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
 		//{
@@ -58,11 +73,16 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		//	Writer.Append(")");
 		//}
 
-		//public virtual void VisitExpressionStatement(ExpressionStatement expressionStatement)
-		//{
-		//	expressionStatement.Expression.AcceptVisitor(this);
-		//	Writer.AppendLine(";");
-		//}
+		public virtual void VisitExpressionStatement(ExpressionStatement expressionStatement)
+		{
+			expressionStatement.Expression.AcceptVisitor(this);
+			Writer.AppendLine(";");
+		}
+
+		public virtual void VisitIdentifierExpression(IdentifierExpression identifierExpression)
+		{
+			Writer.Append(identifierExpression.Identifier);
+		}
 
 		//public virtual void VisitForStatement(ForStatement forStatement)
 		//{
@@ -103,10 +123,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		//	Writer.Append(")");
 		//}
 
-		//public virtual void VisitLiteralValue(LiteralValue literalValue)
-		//{
-		//	Writer.Append(literalValue.Value.ToString());
-		//}
+		public virtual void VisitPrimitiveExpression(PrimitiveExpression primitiveExpression)
+		{
+			Writer.Append(primitiveExpression.Value.ToString());
+		}
 
 		//public virtual void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
 		//{
@@ -120,12 +140,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		//	Writer.Append(".{0}", member);
 		//}
 
-		//public virtual void VisitObjectCreationExpression(ObjectCreationExpression objectCreationExpression)
-		//{
-		//	Writer.Append("{0}(", ToShaderType(objectCreationExpression.Type));
-		//	objectCreationExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
-		//	Writer.Append(")");
-		//}
+		public virtual void VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)
+		{
+			var resolved = Resolver.Resolve(objectCreateExpression);
+
+			Writer.Append("{0}(", ToShaderType(resolved.Type.ToDataType()));
+			objectCreateExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
+			Writer.Append(")");
+		}
 
 		//public virtual void VisitReturnStatement(ReturnStatement returnStatement)
 		//{
@@ -169,27 +191,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		//}
 
 		/// <summary>
-		///   Generates the shader code.
-		/// </summary>
-		protected void GenerateShaderCode()
-		{
-			//var blockStatement = (BlockStatement)Shader.SyntaxTree;
-			//blockStatement.Statements.AcceptVisitor(this);
-		}
-
-		/// <summary>
 		///   Cross-compiles the C# shader method.
 		/// </summary>
 		/// <param name="effect">The effect class the shader method belongs to.</param>
 		/// <param name="shader">The C# shader method that should be cross-compiled.</param>
 		/// <param name="writer">The code writer the generated code should be written to.</param>
-		public void Compile(EffectClass effect, ShaderMethod shader, CodeWriter writer)
+		/// <param name="resolver">The C# resolver that should be used to resolve type information.</param>
+		public void Compile(EffectClass effect, ShaderMethod shader, CodeWriter writer, CSharpAstResolver resolver)
 		{
 			Assert.ArgumentNotNull(effect, () => effect);
 			Assert.ArgumentNotNull(shader, () => shader);
 			Assert.ArgumentNotNull(writer, () => writer);
+			Assert.ArgumentNotNull(resolver, () => resolver);
 
 			Writer = writer;
+			Resolver = resolver;
+			Shader = shader;
 
 			foreach (var literal in effect.Literals)
 				GenerateLiteral(literal);

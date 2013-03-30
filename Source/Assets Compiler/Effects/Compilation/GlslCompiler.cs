@@ -5,6 +5,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.Collections.Generic;
 	using Framework;
 	using Framework.Platform.Graphics;
+	using Semantics;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to GLSL.
@@ -107,7 +108,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			foreach (var output in outputs)
 			{
 				var slot = output.Semantics - DataSemantics.Color0;
-				Assert.InRange(slot, 0, 3);
+				Assert.InRange(slot, 0, SemanticsAttribute.MaximumIndex);
 
 				Writer.AppendLine("layout(location = {2}) out {0} {1};", ToShaderType(output.Type), output.Name, slot);
 			}
@@ -119,7 +120,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateMainMethod()
 		{
 			Writer.AppendLine("void main()");
-			Writer.AppendBlockStatement(GenerateShaderCode);
+			Writer.AppendBlockStatement(() => Shader.MethodBody.Statements.AcceptVisitor(this));
 		}
 
 		/// <summary>

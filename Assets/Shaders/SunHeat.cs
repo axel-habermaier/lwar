@@ -35,10 +35,14 @@ namespace Lwar.Assets.Shaders
 								 [TexCoords(0)] out Vector3 texCoords1,
 								 [TexCoords(1)] out Vector3 texCoords2)
 		{
-			outPosition = World * ViewProjection * position;
-			texCoords1 = (Rotation1 * normal).Xyz;
-			texCoords2 = (Rotation2 * normal).Xyz;
-			position.T();
+			//outPosition = World * ViewProjection * position;
+			//texCoords1 = (Rotation1 * normal).Xyz;
+			//texCoords2 = (Rotation2 * normal).Xyz;
+			//position.T();
+
+			outPosition = new Vector4(1,1,1,1);
+			texCoords1 = new Vector3(1,1,1);
+			texCoords2 = texCoords1;
 		}
 
 		[FragmentShader]
@@ -46,14 +50,15 @@ namespace Lwar.Assets.Shaders
 								   [TexCoords(1)] Vector3 texCoords1,
 								   [Color] out Vector4 color)
 		{
-			var sample1 = CubeMap.Sample(texCoords0).R;
-			var sample2 = CubeMap.Sample(texCoords1).R;
+			//var sample1 = CubeMap.Sample(texCoords0).R;
+			//var sample2 = CubeMap.Sample(texCoords1).R;
 
-			var result = sample1 + sample2;
-			var blend = result / 2.0f;
+			//var result = sample1 + sample2;
+			//var blend = result / 2.0f;
 
-			color = HeatMap.Sample(new Vector2(blend, 0));
-			color = new Vector4(color.Rgb * blend, result / 4.0f);
+			//color = HeatMap.Sample(new Vector2(blend, 0));
+			//color = new Vector4(color.Rgb * blend, result / 4.0f);
+			color = new Vector4(1, 0, 1 , 0);
 		}
 	}
 }
