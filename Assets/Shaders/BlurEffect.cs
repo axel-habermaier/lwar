@@ -1,122 +1,122 @@
-﻿//using System;
+﻿using System;
 
-//namespace Lwar.Assets.Shaders
-//{
-//	using Pegasus.AssetsCompiler.Effects;
-//	using Pegasus.AssetsCompiler.Effects.Math;
-//	using Pegasus.AssetsCompiler.Effects.Semantics;
+namespace Lwar.Assets.Shaders
+{
+	using Pegasus.AssetsCompiler.Effects;
+	using Pegasus.AssetsCompiler.Effects.Math;
+	using Pegasus.AssetsCompiler.Effects.Semantics;
 
-//	[Effect]
-//	public class BlurEffect : Effect
-//	{
-//		private static readonly float[] Offsets = new[] { 0.0f, 1.3846153846f, 3.2307692308f };
-//		private static readonly float[] Weights = new[] { 0.2270270270f, 0.3162162162f, 0.0702702703f };
-		
-//		public readonly Texture2D Texture;
+	[Effect]
+	public class BlurEffect : Effect
+	{
+		private static readonly float[] Offsets = new[] { 0.0f, 1.3846153846f, 3.2307692308f };
+		private static readonly float[] Weights = new[] { 0.2270270270f, 0.3162162162f, 0.0702702703f };
 
-//		[FragmentShader]
-//		public void HorizontalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
-//		{
-//			color = Texture.Sample(texCoords) * Weights[0];
-			
-//			for (var i = 1; i < 3; ++i)
-//			{
-//				var coordinates = new Vector2(texCoords.X, texCoords.X) * ViewportSize.X;
-//				coordinates += new Vector2(Offsets[i], -Offsets[i]);
-//				coordinates /= ViewportSize.X;
+		public readonly Texture2D Texture;
 
-//				color += Texture.Sample(new Vector2(coordinates.X, texCoords.Y)) * Weights[i];
-//				color += Texture.Sample(new Vector2(coordinates.Y, texCoords.Y)) * Weights[i];
-//			}
-//		}
+		[FragmentShader]
+		public void HorizontalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
+		{
+			color = Texture.Sample(texCoords) * Weights[0];
 
-//		[FragmentShader]
-//		public void VerticalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
-//		{
-//			color = Texture.Sample(texCoords) * Weights[0];
+			for (var i = 1; i < 3; ++i)
+			{
+				var coordinates = new Vector2(texCoords.x, texCoords.x) * ViewportSize.x;
+				coordinates += new Vector2(Offsets[i], -Offsets[i]);
+				coordinates /= ViewportSize.x;
 
-//			for (var i = 1; i < 3; ++i)
-//			{
-//				var coordinates = new Vector2(texCoords.Y, texCoords.Y) * ViewportSize.Y;
-//				coordinates += new Vector2(Offsets[i], -Offsets[i]);
-//				coordinates /= ViewportSize.Y;
+				color += Texture.Sample(new Vector2(coordinates.x, texCoords.y)) * Weights[i];
+				color += Texture.Sample(new Vector2(coordinates.y, texCoords.y)) * Weights[i];
+			}
+		}
 
-//				color += Texture.Sample(new Vector2(texCoords.X, coordinates.X)) * Weights[i];
-//				color += Texture.Sample(new Vector2(texCoords.X, coordinates.Y)) * Weights[i];
-//			}
-//		}
+		[FragmentShader]
+		public void VerticalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
+		{
+			color = Texture.Sample(texCoords) * Weights[0];
 
-//		[VertexShader]
-//		public void VertexShader([Position] Vector4 position,
-//								 [TexCoords] Vector2 texCoords,
-//								 [Position] out Vector4 outPosition,
-//								 [TexCoords] out Vector2 outTexCoords)
-//		{
-//			//FullscreenQuad.ProcessVertex(position, texCoords, out outPosition, out outTexCoords);
-//			outPosition = position;
-//			outTexCoords = texCoords;
-//		}
-//	}
+			for (var i = 1; i < 3; ++i)
+			{
+				var coordinates = new Vector2(texCoords.y, texCoords.y) * ViewportSize.y;
+				coordinates += new Vector2(Offsets[i], -Offsets[i]);
+				coordinates /= ViewportSize.y;
 
-//	//public class BlurEffectGenerated
-//	//{
-//	//	private readonly ConstantBuffer<Constants> _constantBuffer;
-//	//	private readonly Pegasus.Framework.Platform.Graphics.FragmentShader _horizontalBlur;
-//	//	private readonly VertexShader _vertexShader;
-//	//	private readonly Pegasus.Framework.Platform.Graphics.FragmentShader _verticalBlur;
-//	//	public int Mipmap;
-//	//	public int Size;
+				color += Texture.Sample(new Vector2(texCoords.x, coordinates.x)) * Weights[i];
+				color += Texture.Sample(new Vector2(texCoords.x, coordinates.y)) * Weights[i];
+			}
+		}
 
-//	//	public Texture2D Texture;
+		[VertexShader]
+		public void VertexShader([Position] Vector4 position,
+								 [TexCoords] Vector2 texCoords,
+								 [Position] out Vector4 outPosition,
+								 [TexCoords] out Vector2 outTexCoords)
+		{
+			//FullscreenQuad.ProcessVertex(position, texCoords, out outPosition, out outTexCoords);
+			outPosition = position;
+			outTexCoords = texCoords;
+		}
+	}
 
-//	//	public unsafe BlurEffectGenerated(GraphicsDevice graphicsDevice, AssetsManager assets)
-//	//	{
-//	//		Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-//	//		Assert.ArgumentNotNull(assets, () => assets);
+	//public class BlurEffectGenerated
+	//{
+	//	private readonly ConstantBuffer<Constants> _constantBuffer;
+	//	private readonly Pegasus.Framework.Platform.Graphics.FragmentShader _horizontalBlur;
+	//	private readonly VertexShader _vertexShader;
+	//	private readonly Pegasus.Framework.Platform.Graphics.FragmentShader _verticalBlur;
+	//	public int Mipmap;
+	//	public int Size;
 
-//	//		_vertexShader = assets.LoadVertexShader("Shaders/Lwar.Assets.Shaders.BlurEffect.VertexShader");
-//	//		_horizontalBlur = assets.LoadFragmentShader("Shaders/Lwar.Assets.Shaders.BlurEffect.HorizontalBlur");
-//	//		_verticalBlur = assets.LoadFragmentShader("Shaders/Lwar.Assets.Shaders.BlurEffect.VerticalBlur");
+	//	public Texture2D Texture;
 
-//	//		_constantBuffer = new ConstantBuffer<Constants>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
-//	//	}
+	//	public unsafe BlurEffectGenerated(GraphicsDevice graphicsDevice, AssetsManager assets)
+	//	{
+	//		Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+	//		Assert.ArgumentNotNull(assets, () => assets);
 
-//	//	public void Bind(FragmentShader fs)
-//	//	{
-//	//	}
+	//		_vertexShader = assets.LoadVertexShader("Shaders/Lwar.Assets.Shaders.BlurEffect.VertexShader");
+	//		_horizontalBlur = assets.LoadFragmentShader("Shaders/Lwar.Assets.Shaders.BlurEffect.HorizontalBlur");
+	//		_verticalBlur = assets.LoadFragmentShader("Shaders/Lwar.Assets.Shaders.BlurEffect.VerticalBlur");
 
-//	//	private void Bind(VertexShader vs, FragmentShader fs)
-//	//	{
-//	//		//Texture.Bind(0);
-//	//		//Texture.Sampler.Bind(0);
+	//		_constantBuffer = new ConstantBuffer<Constants>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
+	//	}
 
-//	//		var changed = false;
+	//	public void Bind(FragmentShader fs)
+	//	{
+	//	}
 
-//	//		if (_constantBuffer.Data.Mipmap != Mipmap)
-//	//		{
-//	//			changed = true;
-//	//			_constantBuffer.Data.Mipmap = Mipmap;
-//	//		}
+	//	private void Bind(VertexShader vs, FragmentShader fs)
+	//	{
+	//		//Texture.Bind(0);
+	//		//Texture.Sampler.Bind(0);
 
-//	//		if (_constantBuffer.Data.Size != Size)
-//	//		{
-//	//			changed = true;
-//	//			_constantBuffer.Data.Size = Size;
-//	//		}
+	//		var changed = false;
 
-//	//		if (changed)
-//	//			_constantBuffer.Update();
+	//		if (_constantBuffer.Data.Mipmap != Mipmap)
+	//		{
+	//			changed = true;
+	//			_constantBuffer.Data.Mipmap = Mipmap;
+	//		}
 
-//	//		_constantBuffer.Bind(2);
-//	//		vs.Bind();
-//	//		fs.Bind();
-//	//	}
+	//		if (_constantBuffer.Data.Size != Size)
+	//		{
+	//			changed = true;
+	//			_constantBuffer.Data.Size = Size;
+	//		}
 
-//	//	[StructLayout(LayoutKind.Sequential, Size = 16)]
-//	//	private struct Constants
-//	//	{
-//	//		public int Size;
-//	//		public int Mipmap;
-//	//	}
-//	//}
-//}
+	//		if (changed)
+	//			_constantBuffer.Update();
+
+	//		_constantBuffer.Bind(2);
+	//		vs.Bind();
+	//		fs.Bind();
+	//	}
+
+	//	[StructLayout(LayoutKind.Sequential, Size = 16)]
+	//	private struct Constants
+	//	{
+	//		public int Size;
+	//		public int Mipmap;
+	//	}
+	//}
+}

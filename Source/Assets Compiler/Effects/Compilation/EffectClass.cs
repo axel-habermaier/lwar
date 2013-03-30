@@ -227,6 +227,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			CheckUnsupportedCSharpFeatureUsed<AnonymousMethodExpression>("anonymous method");
 			CheckUnsupportedCSharpFeatureUsed<LambdaExpression>("lambda function");
 			CheckUnsupportedCSharpFeatureUsed<BaseReferenceExpression>("base");
+			CheckUnsupportedCSharpFeatureUsed<ThisReferenceExpression>("this");
 			CheckUnsupportedCSharpFeatureUsed<CheckedExpression>("checked");
 			CheckUnsupportedCSharpFeatureUsed<NullReferenceExpression>("null");
 			CheckUnsupportedCSharpFeatureUsed<AnonymousTypeCreateExpression>("anonymous type");
@@ -321,6 +322,16 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 				if (value < 0 || matrix || vector4 || vector3 || vector2 || literalOutOfBounds)
 					Error(indexArgument.Argument, "Array index is out of bounds.");
+			}
+
+			// Check for unsupported method invocations
+			foreach (var invocation in from method in _type.Descendants.OfType<MethodDeclaration>()
+									   from invocation in method.Descendants.OfType<InvocationExpression>()
+									   let intrinsic = invocation.ResolveIntrinsic(Resolver)
+									   where intrinsic == Intrinsic.Unknown
+									   select invocation)
+			{
+				Error(invocation, "Invocation of unsupported method.");
 			}
 		}
 
