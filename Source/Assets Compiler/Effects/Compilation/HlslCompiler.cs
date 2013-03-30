@@ -204,7 +204,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				case DataType.CubeMap:
 					return "TextureCube";
 				default:
-					return "unknown-type";
+					throw new NotSupportedException("Unsupported data type.");
 			}
 		}
 
@@ -237,7 +237,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				case DataSemantics.TexCoords3:
 					return "TEXCOORD3";
 				default:
-					return "unknown-semantics";
+					throw new NotSupportedException("Unsupported semantics.");
 			}
 		}
 

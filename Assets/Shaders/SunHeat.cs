@@ -39,7 +39,6 @@ namespace Lwar.Assets.Shaders
 			//texCoords1 = (Rotation1 * normal).Xyz;
 			//texCoords2 = (Rotation2 * normal).Xyz;
 			//position.T();
-
 			outPosition = new Vector4(1,1,1,1);
 			texCoords1 = new Vector3(1,1,1);
 			texCoords2 = texCoords1;

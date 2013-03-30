@@ -218,6 +218,16 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				if (binaryOperatorExpression.Operator == BinaryOperatorType.NullCoalescing)
 					Error(binaryOperatorExpression.OperatorToken, "Use of unsupported null-coalescing operator.");
 			}
+
+			// Check for local variable declarations with unsupported data types
+			foreach (var variable in from declaration in _method.Descendants.OfType<VariableDeclarationStatement>()
+									 from variable in declaration.Variables
+									 let type = Resolver.Resolve(variable).Type
+									 where type.ToDataType() == DataType.Unknown
+									 select new { Declaration = declaration, Type = type })
+			{
+				Error(variable.Declaration, "Unsupported data type: '{0}'.", variable.Type.FullName);
+			}
 		}
 
 		/// <summary>

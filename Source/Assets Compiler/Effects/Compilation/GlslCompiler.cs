@@ -150,7 +150,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				case DataType.CubeMap:
 					return "samplerCube";
 				default:
-					return "unknown-type";
+					throw new NotSupportedException("Unsupported data type.");
 			}
 		}
 	}

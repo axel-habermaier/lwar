@@ -322,7 +322,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				case AssignmentOperatorType.ExclusiveOr:
 					return "^=";
 				default:
-					throw new InvalidOperationException("Unsupported assignment operator type.");
+					throw new NotSupportedException("Unsupported assignment operator type.");
 			}
 		}
 
@@ -351,7 +351,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				case UnaryOperatorType.PostDecrement:
 					return "";
 				default:
-					throw new InvalidOperationException("Unsupported unary operator type.");
+					throw new NotSupportedException("Unsupported unary operator type.");
 			}
 		}
 
@@ -400,7 +400,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				case BinaryOperatorType.ShiftRight:
 					return ">>";
 				default:
-					throw new InvalidOperationException("Unsupported binary operator type.");
+					throw new NotSupportedException("Unsupported binary operator type.");
 			}
 		}
 	}
