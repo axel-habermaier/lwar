@@ -89,7 +89,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				{
 					file.InitializeElement();
 					file.ValidateElement();
-					file.Compile();
+
+					if (!file.HasErrors)
+						file.Compile();
 				}
 
 				ShaderAssets = effectFiles.SelectMany(file => file.ShaderAssets);

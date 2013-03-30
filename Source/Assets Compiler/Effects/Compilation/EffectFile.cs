@@ -34,6 +34,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			_syntaxTree = syntaxTree;
 			_file = syntaxTree.FileName;
+
+			ShaderAssets = Enumerable.Empty<Asset>();
 		}
 
 		/// <summary>
@@ -78,7 +80,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			var writer = new CodeWriter();
 			var hlslCompiler = new HlslCompiler();
 			var glslCompiler = new GlslCompiler();
-			
+
 			glslCompiler.Compile(effect, shader, writer);
 
 			writer.Newline();
