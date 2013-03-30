@@ -178,8 +178,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			var invokedMethod = resolvedTarget.PerformOverloadResolution(resolver.Compilation, resolvedArguments).BestCandidate;
 
-			var type = Type.GetType(invokedMethod.DeclaringType.FullName).GetTypeInfo();
-			var method = type.DeclaredMethods.Where(m => m.Name == invokedMethod.Name)
+			var type = Type.GetType(invokedMethod.DeclaringType.FullName);
+			if (type == null)
+				return Intrinsic.Unknown;
+
+			var method = type.GetTypeInfo().DeclaredMethods.Where(m => m.Name == invokedMethod.Name)
 							 .Where(m =>
 								 {
 									 var declaredParameters = m.GetParameters();

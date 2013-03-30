@@ -8,7 +8,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework.Platform;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
-	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
@@ -98,7 +97,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			if (HasErrors)
 				return;
-			
+
 			foreach (var child in _childElements)
 				child.ValidateElement();
 

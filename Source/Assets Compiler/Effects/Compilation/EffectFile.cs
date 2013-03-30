@@ -5,6 +5,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.Collections.Generic;
 	using System.Linq;
 	using Assets;
+	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
@@ -60,11 +61,30 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		public void Compile()
 		{
-			var assets = from effect in GetChildElements<EffectClass>()
-						 from shader in effect.Shaders
-						 select Compile(effect, shader);
+			var elements = (from effect in GetChildElements<EffectClass>()
+							from shader in effect.Shaders
+							let assetPath = String.Format("{0}_{1}_{2}", _file, effect.FullName, shader.Name)
+							select new { Effect = effect, Shader = shader, Asset = CreateAsset(shader.Type, assetPath) }).ToArray();
 
-			ShaderAssets = assets.ToArray();
+			ShaderAssets = elements.Select(element => element.Asset);
+
+			try
+			{
+				foreach (var element in elements)
+				{
+					var writer = new CodeWriter();
+					Compile(element.Effect, element.Shader, writer);
+					writer.WriteToFile(element.Asset.SourcePath);
+				}
+			}
+			catch (Exception)
+			{
+				foreach (var asset in ShaderAssets)
+					asset.SafeDispose();
+
+				ShaderAssets = Enumerable.Empty<Asset>();
+				throw;
+			}
 		}
 
 		/// <summary>
@@ -72,12 +92,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <param name="effect">The effect that declares the shader method that should be compiled.</param>
 		/// <param name="shader">The shader method that should be compiled.</param>
-		private Asset Compile(EffectClass effect, ShaderMethod shader)
+		/// <param name="writer">The writer that should be used to write the compiled output.</param>
+		private void Compile(EffectClass effect, ShaderMethod shader, CodeWriter writer)
 		{
-			var assetPath = String.Format("{0}_{1}_{2}", _file, effect.FullName, shader.Name);
-			var asset = CreateAsset(shader.Type, assetPath);
-
-			var writer = new CodeWriter();
 			var hlslCompiler = new HlslCompiler();
 			var glslCompiler = new GlslCompiler();
 
@@ -88,9 +105,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			writer.Newline();
 
 			hlslCompiler.Compile(effect, shader, writer, Resolver);
-
-			writer.WriteToFile(asset.SourcePath);
-			return asset;
 		}
 
 		/// <summary>
