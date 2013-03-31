@@ -30,11 +30,31 @@ namespace Pegasus.AssetsCompiler.Effects
 		protected readonly Vector2 ViewportSize;
 
 		/// <summary>
-		///   Computes the cosinus of the given value.
+		///   Computes the sine of the given value.
 		/// </summary>
-		/// <param name="v">The value whose cosinus should be computed.</param>
-		[MapsTo(Intrinsic.Cosinus)]
-		protected float Cos(float v)
+		/// <param name="value">The value (in radians) whose sine should be computed.</param>
+		[MapsTo(Intrinsic.Sine)]
+		protected float Sin(float value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Computes the cosine of the given value.
+		/// </summary>
+		/// <param name="value">The value (in radians) whose cosine should be computed.</param>
+		[MapsTo(Intrinsic.Cosine)]
+		protected float Cos(float value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Computes the tangent of the given value.
+		/// </summary>
+		/// <param name="value">The value (in radians) whose tangent should be computed.</param>
+		[MapsTo(Intrinsic.Tangent)]
+		protected float Tan(float value)
 		{
 			throw new NotImplementedException();
 		}

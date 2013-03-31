@@ -7,6 +7,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.Semantics;
 	using Semantics;
 
 	/// <summary>
@@ -154,6 +155,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				default:
 					throw new NotSupportedException("Unsupported data type.");
 			}
+		}
+
+		public override void VisitIdentifierExpression(IdentifierExpression identifierExpression)
+		{
+			var local = Resolver.Resolve(identifierExpression) as LocalResolveResult;
+			if (Shader.Type == ShaderType.VertexShader && local != null && local.IsParameter)
+			{
+				var parameter = Shader.Parameters.Single(p => p.Name == local.Variable.Name);
+				if (parameter.IsOutput && parameter.Semantics == DataSemantics.Position)
+				{
+					Writer.Append("gl_Position");
+					return;
+				}
+			}
+
+			base.VisitIdentifierExpression(identifierExpression);
 		}
 
 		public override void VisitInvocationExpression(InvocationExpression invocationExpression)

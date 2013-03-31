@@ -10,6 +10,8 @@ namespace Pegasus.AssetsCompiler.Effects
 		Unknown,
 		Sample,
 		SampleLevel,
-		Cosinus
+		Sine,
+		Cosine,
+		Tangent
 	}
 }

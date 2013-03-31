@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.Collections.Generic;
 	using System.Linq;
 	using Assets;
-	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
@@ -66,24 +65,13 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 							let assetPath = String.Format("{0}_{1}_{2}", _file, effect.FullName, shader.Name)
 							select new { Effect = effect, Shader = shader, Asset = CreateAsset(shader.Type, assetPath) }).ToArray();
 
-			ShaderAssets = elements.Select(element => element.Asset);
+			ShaderAssets = elements.Select(element => element.Asset).ToArray();
 
-			try
+			foreach (var element in elements)
 			{
-				foreach (var element in elements)
-				{
-					var writer = new CodeWriter();
-					Compile(element.Effect, element.Shader, writer);
-					writer.WriteToFile(element.Asset.SourcePath);
-				}
-			}
-			catch (Exception)
-			{
-				foreach (var asset in ShaderAssets)
-					asset.SafeDispose();
-
-				ShaderAssets = Enumerable.Empty<Asset>();
-				throw;
+				var writer = new CodeWriter();
+				Compile(element.Effect, element.Shader, writer);
+				writer.WriteToFile(element.Asset.SourcePath);
 			}
 		}
 

@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Lwar.Assets.Shaders
+namespace Lwar.Assets.Effects
 {
 	using Pegasus.AssetsCompiler.Effects;
 	using Pegasus.AssetsCompiler.Effects.Math;
 	using Pegasus.AssetsCompiler.Effects.Semantics;
 
 	[Effect]
-	public class SunHeat : Effect
+	public class SunEffect : Effect
 	{
 		public readonly CubeMap CubeMap;
 		public readonly Texture2D HeatMap;
@@ -28,7 +28,8 @@ namespace Lwar.Assets.Shaders
 								 [TexCoords(0)] out Vector3 texCoords1,
 								 [TexCoords(1)] out Vector3 texCoords2)
 		{
-			outPosition = World * ViewProjection * position;
+			outPosition = World * position;
+			outPosition = ViewProjection * outPosition;
 			texCoords1 = (Rotation1 * normal).xyz;
 			texCoords2 = (Rotation2 * normal).xyz;
 		}

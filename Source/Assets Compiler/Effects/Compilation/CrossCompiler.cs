@@ -256,6 +256,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					throw new NotSupportedException("Unsupported binary operator type.");
 			}
 		}
+
 		/// <summary>
 		///   Gets the token for the given intrinsic function.
 		/// </summary>
@@ -264,8 +265,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			switch (intrinsic)
 			{
-				case Intrinsic.Cosinus:
+				case Intrinsic.Sine:
+					return "sin";
+				case Intrinsic.Cosine:
 					return "cos";
+				case Intrinsic.Tangent:
+					return "tan";
 				default:
 					throw new NotSupportedException("Unsupported intrinsic function.");
 			}

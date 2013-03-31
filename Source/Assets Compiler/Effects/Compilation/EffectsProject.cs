@@ -80,10 +80,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Assert.ArgumentNotNull(assets, () => assets);
 
+			var effectFiles = new EffectFile[0];
 			try
 			{
 				LoadAssemblies();
-				var effectFiles = LoadFiles(assets).ToArray();
+				effectFiles = LoadFiles(assets).ToArray();
 
 				foreach (var file in effectFiles)
 				{
@@ -93,7 +94,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					if (!file.HasErrors)
 						file.Compile();
 				}
-
+				
 				ShaderAssets = effectFiles.SelectMany(file => file.ShaderAssets);
 				return effectFiles.All(file => !file.HasErrors);
 			}
@@ -101,6 +102,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			{
 				Log.Error("Effect cross-compilation failed: {0}", e.Message);
 
+				effectFiles.SelectMany(file => file.ShaderAssets).ToArray().SafeDisposeAll();
 				ShaderAssets = Enumerable.Empty<Asset>();
 				return false;
 			}

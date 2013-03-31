@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lwar.Assets.Shaders
+namespace Lwar.Assets.Effects
 {
 	using Pegasus.AssetsCompiler.Effects;
 	using Pegasus.AssetsCompiler.Effects.Math;
@@ -13,6 +13,16 @@ namespace Lwar.Assets.Shaders
 		private static readonly float[] Weights = new[] { 0.2270270270f, 0.3162162162f, 0.0702702703f };
 
 		public readonly Texture2D Texture;
+
+		[VertexShader]
+		public void VertexShader([Position] Vector4 position,
+								 [TexCoords] Vector2 texCoords,
+								 [Position] out Vector4 outPosition,
+								 [TexCoords] out Vector2 outTexCoords)
+		{
+			outPosition = new Vector4(position.x * -1, position.z, 1, 1);
+			outTexCoords = new Vector2(1 - texCoords.x, texCoords.y);
+		}
 
 		[FragmentShader]
 		public void HorizontalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
@@ -44,17 +54,6 @@ namespace Lwar.Assets.Shaders
 				color += Texture.Sample(new Vector2(texCoords.x, coordinates.x)) * Weights[i];
 				color += Texture.Sample(new Vector2(texCoords.x, coordinates.y)) * Weights[i];
 			}
-		}
-
-		[VertexShader]
-		public void VertexShader([Position] Vector4 position,
-								 [TexCoords] Vector2 texCoords,
-								 [Position] out Vector4 outPosition,
-								 [TexCoords] out Vector2 outTexCoords)
-		{
-			//FullscreenQuad.ProcessVertex(position, texCoords, out outPosition, out outTexCoords);
-			outPosition = position;
-			outTexCoords = texCoords;
 		}
 	}
 

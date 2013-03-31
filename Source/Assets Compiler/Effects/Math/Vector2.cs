@@ -35,6 +35,14 @@ namespace Pegasus.AssetsCompiler.Effects.Math
 		}
 
 		/// <summary>
+		///   Performs a component-wise multiplication.
+		/// </summary>
+		public static Vector2 operator *(Vector2 v1, Vector2 v2)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		///   Divides a vector by a scalar value.
 		/// </summary>
 		public static Vector2 operator /(Vector2 v, float f)

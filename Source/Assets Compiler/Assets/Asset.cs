@@ -36,6 +36,8 @@ namespace Pegasus.AssetsCompiler.Assets
 			Assert.ArgumentNotNullOrWhitespace(relativePath, () => relativePath);
 			Assert.ArgumentNotNullOrWhitespace(sourceDirectory, () => sourceDirectory);
 
+			SetDescription(relativePath);
+
 			_sourceDirectory = sourceDirectory;
 			RelativePath = relativePath;
 
