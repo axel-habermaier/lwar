@@ -11,8 +11,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
-	using Math;
-	using Semantics;
+	using Effects;
 	using Attribute = System.Attribute;
 	using CSharpAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
 	using CubeMap = Effects.CubeMap;

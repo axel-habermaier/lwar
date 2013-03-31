@@ -3,8 +3,6 @@
 namespace Lwar.Assets.Effects
 {
 	using Pegasus.AssetsCompiler.Effects;
-	using Pegasus.AssetsCompiler.Effects.Math;
-	using Pegasus.AssetsCompiler.Effects.Semantics;
 
 	[Effect]
 	public class TexturedQuadEffect : Effect
@@ -23,6 +21,8 @@ namespace Lwar.Assets.Effects
 			outPosition = World * position;
 			outPosition = ViewProjection * outPosition;
 			outTexCoords = texCoords;
+			var f = position.Length;
+			var q = Normalize(position).x;
 		}
 
 		[FragmentShader]

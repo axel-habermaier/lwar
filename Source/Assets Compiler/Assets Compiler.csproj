@@ -228,7 +228,13 @@
     <Compile Include="Effects\Compilation\EffectsProject.cs" />
     <Compile Include="Effects\Intrinsic.cs" />
     <Compile Include="Effects\MapsToAttribute.cs" />
-    <Compile Include="Effects\Semantics\SemanticsAttribute.cs" />
+    <Compile Include="Effects\Operators.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Operators.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Effects\Vectors.cs" />
+    <Compile Include="Effects\SemanticsAttribute.cs" />
     <Compile Include="ExternalTool.cs" />
     <Compile Include="Assets\FontAsset.cs" />
     <Compile Include="Compilers\FontCompiler.cs" />
@@ -241,7 +247,7 @@
     <Compile Include="Compilers\Texture2DCompiler.cs" />
     <Compile Include="Compilers\VertexShaderCompiler.cs" />
     <Compile Include="Effects\ChangeFrequency.cs" />
-    <Compile Include="Effects\Math\Swizzle.cs">
+    <Compile Include="Effects\Swizzle.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Swizzle.tt</DependentUpon>
@@ -256,15 +262,12 @@
     <Compile Include="Effects\EffectAttribute.cs" />
     <Compile Include="Effects\FragmentShaderAttribute.cs" />
     <Compile Include="Effects\CubeMap.cs" />
-    <Compile Include="Effects\Math\Matrix.cs" />
+    <Compile Include="Effects\Matrix.cs" />
     <Compile Include="Effects\Texture2D.cs" />
-    <Compile Include="Effects\Math\Vector2.cs" />
-    <Compile Include="Effects\Math\Vector3.cs" />
-    <Compile Include="Effects\Math\Vector4.cs" />
-    <Compile Include="Effects\Semantics\ColorAttribute.cs" />
-    <Compile Include="Effects\Semantics\NormalAttribute.cs" />
-    <Compile Include="Effects\Semantics\PositionAttribute.cs" />
-    <Compile Include="Effects\Semantics\TexCoordsAttribute.cs" />
+    <Compile Include="Effects\ColorAttribute.cs" />
+    <Compile Include="Effects\NormalAttribute.cs" />
+    <Compile Include="Effects\PositionAttribute.cs" />
+    <Compile Include="Effects\TexCoordsAttribute.cs" />
     <Compile Include="Effects\VertexShaderAttribute.cs" />
     <Compile Include="XmlParser.cs" />
   </ItemGroup>
@@ -278,12 +281,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Effects\Math\Swizzle.tt">
+    <None Include="Effects\Operators.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Operators.cs</LastGenOutput>
+    </None>
+    <None Include="Effects\Swizzle.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Swizzle.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -154,9 +154,23 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 		public virtual void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
 		{
-			memberReferenceExpression.Target.AcceptVisitor(this);
-			Writer.Append(".");
-			Writer.Append(memberReferenceExpression.MemberName);
+			var resolved = Resolver.Resolve(memberReferenceExpression.Target);
+
+			var vectorName = typeof(Vector2).FullName;
+			vectorName = vectorName.Substring(0, vectorName.Length - 1);
+
+			if (resolved.Type.FullName.StartsWith(vectorName) && memberReferenceExpression.MemberName == "Length")
+			{
+				Writer.Append("length(");
+				memberReferenceExpression.Target.AcceptVisitor(this);
+				Writer.Append(")");
+			}
+			else
+			{
+				memberReferenceExpression.Target.AcceptVisitor(this);
+				Writer.Append(".");
+				Writer.Append(memberReferenceExpression.MemberName);
+			}
 		}
 
 		public virtual void VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)

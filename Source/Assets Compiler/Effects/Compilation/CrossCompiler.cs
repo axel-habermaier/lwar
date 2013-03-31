@@ -261,7 +261,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Gets the token for the given intrinsic function.
 		/// </summary>
 		/// <param name="intrinsic">The intrinsic function for which the token should be returned.</param>
-		private string GetToken(Intrinsic intrinsic)
+		protected virtual string GetToken(Intrinsic intrinsic)
 		{
 			switch (intrinsic)
 			{
@@ -271,6 +271,40 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					return "cos";
 				case Intrinsic.Tangent:
 					return "tan";
+				case Intrinsic.ArcSine:
+					return "asin";
+				case Intrinsic.ArcCosine:
+					return "acos";
+				case Intrinsic.ArcTangent:
+					return "atan";
+				case Intrinsic.Ceil:
+					return "ceil";
+				case Intrinsic.Floor:
+					return "floor";
+				case Intrinsic.Clamp:
+					return "clamp";
+				case Intrinsic.SquareRoot:
+					return "sqrt";
+				case Intrinsic.Exponential:
+					return "exp";
+				case Intrinsic.Power:
+					return "pow";
+				case Intrinsic.Absolute:
+					return "abs";
+				case Intrinsic.Round:
+					return "round";
+				case Intrinsic.Max:
+					return "max";
+				case Intrinsic.Min:
+					return "min";
+				case Intrinsic.Cross:
+					return "cross";
+				case Intrinsic.Dot:
+					return "dot";
+				case Intrinsic.Distance:
+					return "distance";
+				case Intrinsic.Normalize:
+					return "normalize";
 				default:
 					throw new NotSupportedException("Unsupported intrinsic function.");
 			}

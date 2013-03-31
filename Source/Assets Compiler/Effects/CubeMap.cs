@@ -2,7 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects
 {
-	using Math;
+	using Effects;
 
 	/// <summary>
 	///   Represents a 2-dimensional cubemap object from which a shader can retrieve texel data.

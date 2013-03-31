@@ -1,0 +1,104 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+namespace Pegasus.AssetsCompiler.Effects
+{
+	using Framework;
+<# foreach (var vector in new [] { "Vector2", "Vector3", "Vector4" }) { #>
+
+	public partial class <#= vector #>
+	{
+		/// <summary>
+		///   Multiplies each component of the vector by the scalar value.
+		/// </summary>
+		/// <param name="vector">The vector that should be multiplied.</param>
+		/// <param name="value">The scalar value each component of the vector should be multiplied with.</param>
+		public static <#= vector #> operator *(<#= vector #> vector, float value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Multiplies ach component of the vector by the scalar value.
+		/// </summary>
+		/// <param name="vector">The vector that should be multiplied.</param>
+		/// <param name="value">The scalar value each component of the vector should be multiplied with.</param>
+		public static <#= vector #> operator *(float value, <#= vector #> vector)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Performs a component-wise multiplication.
+		/// </summary>
+		/// <param name="vector1">The first vector that should be multiplied.</param>
+		/// <param name="vector2">The second vector that should be multiplied.</param>
+		public static <#= vector #> operator *(<#= vector #> vector1, <#= vector #> vector2)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Divides ach component of the vector by the scalar value.
+		/// </summary>
+		/// <param name="vector">The vector that should be divided.</param>
+		/// <param name="value">The scalar value each component of the vector should be divided by.</param>
+		public static <#= vector #> operator /(<#= vector #> vector, float value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Performs a component-wise addition.
+		/// </summary>
+		/// <param name="vector1">The first vector that should be added.</param>
+		/// <param name="vector2">The second vector that should be added.</param>
+		public static <#= vector #> operator +(<#= vector #> vector1, <#= vector #> vector2)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Performs a component-wise subtraction.
+		/// </summary>
+		/// <param name="vector1">The vector that the second vector should be subtracted from.</param>
+		/// <param name="vector2">The vector that should be subtracted.</param>
+		public static <#= vector #> operator -(<#= vector #> vector1, <#= vector #> vector2)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Performs a component-wise negation.
+		/// </summary>
+		/// <param name="vector">The vector whose components should be negated.</param>
+		public static <#= vector #> operator -(<#= vector #> vector)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Gets the value of the vector component at the given index.
+		/// </summary>
+		/// <param name="index">The index of the vector component that should be returned.</param>
+		public float this[int index]
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
+
+		/// <summary>
+		///   Gets the length of the vector.
+		/// </summary>
+		public float Length
+		{
+			get { throw new NotImplementedException(); }
+		}
+	}
+<# } #>
+}

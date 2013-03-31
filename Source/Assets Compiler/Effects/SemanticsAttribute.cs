@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Semantics
+namespace Pegasus.AssetsCompiler.Effects
 {
 	using Framework.Platform.Graphics;
 

@@ -8,7 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
-	using Semantics;
+	using Effects;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to HLSL.
@@ -238,6 +238,21 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					return "TEXCOORD3";
 				default:
 					throw new NotSupportedException("Unsupported semantics.");
+			}
+		}
+
+		/// <summary>
+		///   Gets the token for the given intrinsic function.
+		/// </summary>
+		/// <param name="intrinsic">The intrinsic function for which the token should be returned.</param>
+		protected override string GetToken(Intrinsic intrinsic)
+		{
+			switch (intrinsic)
+			{
+				case Intrinsic.InverseSquareRoot:
+					return "rsqrt";
+				default:
+					return base.GetToken(intrinsic);
 			}
 		}
 

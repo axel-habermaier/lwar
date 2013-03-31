@@ -12,6 +12,24 @@ namespace Pegasus.AssetsCompiler.Effects
 		SampleLevel,
 		Sine,
 		Cosine,
-		Tangent
+		Tangent,
+		ArcSine,
+		ArcCosine,
+		ArcTangent,
+		Ceil,
+		Floor,
+		Clamp,
+		SquareRoot,
+		InverseSquareRoot,
+		Exponential,
+		Power,
+		Absolute,
+		Round,
+		Max,
+		Min,
+		Distance,
+		Dot,
+		Cross,
+		Normalize
 	}
 }

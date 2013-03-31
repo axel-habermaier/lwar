@@ -1,26 +1,26 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Semantics
+namespace Pegasus.AssetsCompiler.Effects
 {
 	using Framework.Platform.Graphics;
 
 	/// <summary>
-	///   Indicates that a shader argument or return value represents a color.
+	///   Indicates that a shader argument or return value represents a texture coordinate.
 	/// </summary>
-	public class ColorAttribute : SemanticsAttribute
+	public class TexCoordsAttribute : SemanticsAttribute
 	{
 		/// <summary>
 		///   Initializes a new instance with index 0.
 		/// </summary>
-		public ColorAttribute()
+		public TexCoordsAttribute()
 		{
 		}
 
 		/// <summary>
 		///   Initializes a new instance with the given index.
 		/// </summary>
-		/// <param name="index">The index of the color.</param>
-		public ColorAttribute(int index)
+		/// <param name="index">The index of the texture coordinates.</param>
+		public TexCoordsAttribute(int index)
 			: base(index)
 		{
 		}
@@ -33,9 +33,9 @@ namespace Pegasus.AssetsCompiler.Effects.Semantics
 			get
 			{
 				if (Index < 0 || Index > MaximumIndex)
-					return DataSemantics.Color0;
+					return DataSemantics.TexCoords0;
 
-				return DataSemantics.Color0 + Index;
+				return DataSemantics.TexCoords0 + Index;
 			}
 		}
 	}

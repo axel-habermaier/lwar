@@ -7,7 +7,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
-	using Semantics;
+	using Effects;
 
 	/// <summary>
 	///   Represents a parameter of a shader.

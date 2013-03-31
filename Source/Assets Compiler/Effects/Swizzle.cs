@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Math
+namespace Pegasus.AssetsCompiler.Effects
 {
 	public partial class Vector2
 	{

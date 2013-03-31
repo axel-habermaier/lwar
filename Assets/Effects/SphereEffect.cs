@@ -3,8 +3,6 @@
 namespace Lwar.Assets.Effects
 {
 	using Pegasus.AssetsCompiler.Effects;
-	using Pegasus.AssetsCompiler.Effects.Math;
-	using Pegasus.AssetsCompiler.Effects.Semantics;
 
 	[Effect]
 	public class SphereEffect : Effect
