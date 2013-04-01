@@ -24,7 +24,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			Name = "ConstantBuffer" + slot;
 			Slot = slot;
-			Constants = constants.OrderBy(constant => constant.Name).ToArray();
+			Constants = constants;
 			Shared = shared;
 		}
 
@@ -44,8 +44,50 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public bool Shared { get; private set; }
 
 		/// <summary>
+		///   Gets the size of the constant buffer's contents in bytes.
+		/// </summary>
+		public int Size
+		{
+			get
+			{
+				var size = Constants.Sum(constant => SizeInBytes(constant.Type));
+				if (size % 16 != 0)
+					size = 16 * (size / 16 + 1);
+
+				return size;
+			}
+		}
+
+		/// <summary>
 		///   The ordered set of constant that are contained in the constant buffer.
 		/// </summary>
 		public ShaderConstant[] Constants { get; private set; }
+
+		/// <summary>
+		///   Returns the size in bytes required to store a value of the given data type.
+		/// </summary>
+		/// <param name="dataType">The data type whose size should be returned.</param>
+		private static int SizeInBytes(DataType dataType)
+		{
+			switch (dataType)
+			{
+				case DataType.Boolean:
+					return 4;
+				case DataType.Integer:
+					return 4;
+				case DataType.Float:
+					return 4;
+				case DataType.Vector2:
+					return 8;
+				case DataType.Vector3:
+					return 12;
+				case DataType.Vector4:
+					return 16;
+				case DataType.Matrix:
+					return 64;
+				default:
+					throw new NotSupportedException("Unsupported data type.");
+			}
+		}
 	}
 }

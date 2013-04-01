@@ -13,4 +13,18 @@ namespace Pegasus.AssetsCompiler.Effects
 	public class EffectAttribute : Attribute
 	{
 	}
+
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	[MeansImplicitUse(ImplicitUseKindFlags.Assign | ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.WithMembers)]
+	[BaseTypeRequired(typeof(Effect))]
+	public class Expose : Attribute
+	{
+		public Expose(string name)
+		{
+			
+		}
+
+		public string VertexShader { get; set; }
+		public string FragmentShader { get; set; }
+	}
 }

@@ -87,20 +87,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Gets the full name of the entity declaration.
-		/// </summary>
-		/// <param name="declaration">The entity declaration whose full name should be returned.</param>
-		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
-		public static string GetFullName(this EntityDeclaration declaration, CSharpAstResolver resolver)
-		{
-			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(resolver, () => resolver);
-
-			var resolved = (TypeResolveResult)resolver.Resolve(declaration);
-			return resolved.Type.FullName;
-		}
-
-		/// <summary>
 		///   Gets the constant value of the expression.
 		/// </summary>
 		/// <param name="expression">The expression whose constant value should be returned.</param>

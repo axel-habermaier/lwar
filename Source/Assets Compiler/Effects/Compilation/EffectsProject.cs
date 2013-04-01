@@ -63,7 +63,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 					return new { FileName = asset.RelativePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
 				}).ToArray();
-			
+
 			var compilation = _project.CreateCompilation();
 			return parsedFiles.Select(file =>
 				{
@@ -86,14 +86,18 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				LoadAssemblies();
 				effectFiles = LoadFiles(assets).ToArray();
 
-				foreach (var file in effectFiles)
+				using (var generator = new CSharpCodeGenerator())
 				{
-					file.InitializeElement();
-					file.ValidateElement();
+					foreach (var file in effectFiles)
+					{
+						file.InitializeElement();
+						file.ValidateElement();
 
-					if (!file.HasErrors)
-						file.Compile();
+						if (!file.HasErrors)
+							file.Compile(generator);
+					}
 				}
+
 				
 				ShaderAssets = effectFiles.SelectMany(file => file.ShaderAssets);
 				return effectFiles.All(file => !file.HasErrors);

@@ -7,6 +7,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.Semantics;
 
 	/// <summary>
 	///   Represents a C# class that contains cross-compiled shader code and shader constants.
@@ -41,7 +42,23 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		public string FullName
 		{
-			get { return _type.GetFullName(Resolver); }
+			get
+			{
+				var resolved = (TypeResolveResult)Resolver.Resolve(_type);
+				return resolved.Type.FullName;
+			}
+		}
+
+		/// <summary>
+		///   Gets the namespace in which the effect class is declared.
+		/// </summary>
+		public string Namespace
+		{
+			get
+			{
+				var resolved = (TypeResolveResult)Resolver.Resolve(_type);
+				return resolved.Type.Namespace;
+			}
 		}
 
 		/// <summary>

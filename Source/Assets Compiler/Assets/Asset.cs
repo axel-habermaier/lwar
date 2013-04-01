@@ -41,8 +41,8 @@ namespace Pegasus.AssetsCompiler.Assets
 			_sourceDirectory = sourceDirectory;
 			RelativePath = relativePath;
 
-			EnsurePathsExist(Path.GetDirectoryName(TargetPath));
-			EnsurePathsExist(Path.GetDirectoryName(TempPathWithoutExtension));
+			Directory.CreateDirectory(Path.GetDirectoryName(TargetPath));
+			Directory.CreateDirectory(Path.GetDirectoryName(TempPathWithoutExtension));
 		}
 
 		/// <summary>
@@ -147,18 +147,6 @@ namespace Pegasus.AssetsCompiler.Assets
 				return CompilationAction.Copy;
 
 			return CompilationAction.Skip;
-		}
-
-		/// <summary>
-		///   Ensures that the given paths exist.
-		/// </summary>
-		/// <param name="path">The path that should exist.</param>
-		private static void EnsurePathsExist(string path)
-		{
-			Assert.ArgumentNotNullOrWhitespace(path, () => path);
-
-			if (!Directory.Exists(path))
-				Directory.CreateDirectory(path);
 		}
 
 		/// <summary>

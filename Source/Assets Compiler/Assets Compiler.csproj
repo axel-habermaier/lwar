@@ -217,6 +217,7 @@
     <Compile Include="Effects\Compilation\CrossCompiler.Unsupported.cs" />
     <Compile Include="Effects\Compilation\CodeWriter.cs" />
     <Compile Include="Effects\Compilation\CompiledElement.cs" />
+    <Compile Include="Effects\Compilation\CSharpCodeGenerator.cs" />
     <Compile Include="Effects\Compilation\DataType.cs" />
     <Compile Include="Effects\Compilation\Extensions.cs" />
     <Compile Include="Effects\Compilation\CrossCompiler.cs" />

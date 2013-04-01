@@ -170,6 +170,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Assets\Effects\Effects.cs">
+      <Link>Effects.cs</Link>
+    </Compile>
     <Compile Include="Gameplay\Entities\Sun.cs" />
     <Compile Include="Gameplay\EntityList.cs" />
     <Compile Include="Gameplay\GameCamera.cs" />

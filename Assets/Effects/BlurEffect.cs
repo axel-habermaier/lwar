@@ -5,6 +5,7 @@ namespace Lwar.Assets.Effects
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]
+	[Expose("BlurHorizontal", VertexShader = "VertexShader", FragmentShader = "HorizontalBlur")]
 	public class BlurEffect : Effect
 	{
 		private static readonly float[] Offsets = new[] { 0.0f, 1.3846153846f, 3.2307692308f };

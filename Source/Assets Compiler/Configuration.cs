@@ -21,7 +21,7 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   The prefix that is used for internally generated shader variables.
 		/// </summary>
-		public const string ReservedVariablePrefix = "__";
+		public const string ReservedVariablePrefix = "_";
 
 		/// <summary>
 		///   The path to the source assets.
@@ -52,6 +52,11 @@ namespace Pegasus.AssetsCompiler
 		///   The path where the compiled assets should be stored.
 		/// </summary>
 		public static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "Assets");
+
+		/// <summary>
+		///   The path to the C# file that should contain the generated effect code.
+		/// </summary>
+		public static readonly string CSharpEffectFile = Path.Combine(SourceDirectory, "Effects", "Effects.cs");
 
 		/// <summary>
 		///   Get the asset list assembly.
