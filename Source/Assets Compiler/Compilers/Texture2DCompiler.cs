@@ -10,6 +10,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	/// <summary>
 	///   Compiles 2D textures.
 	/// </summary>
+	[UsedImplicitly]
 	internal sealed class Texture2DCompiler : AssetCompiler<Texture2DAsset>
 	{
 		/// <summary>

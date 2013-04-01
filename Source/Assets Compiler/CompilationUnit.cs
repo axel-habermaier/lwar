@@ -124,10 +124,6 @@ namespace Pegasus.AssetsCompiler
 			{
 				if (asset.EndsWith(".png"))
 					Add(new Texture2DAsset(asset));
-				else if (asset.EndsWith(".vs"))
-					Add(new VertexShaderAsset(asset));
-				else if (asset.EndsWith(".fs"))
-					Add(new FragmentShaderAsset(asset));
 				else if (asset.EndsWith(".fnt"))
 					Add(new FontAsset(asset));
 				else if (asset.EndsWith(".cs"))

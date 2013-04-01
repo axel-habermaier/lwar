@@ -86,6 +86,47 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Gets the input layout for the shader.
+		/// </summary>
+		public IEnumerable<ShaderInput> InputLayout
+		{
+			get
+			{
+				Assert.That(Type == ShaderType.VertexShader, "The input layout is only required for vertex shaders.");
+				foreach (var input in Inputs)
+				{
+					VertexDataFormat format;
+					switch (input.Type)
+					{
+						case DataType.Float:
+							format = VertexDataFormat.Float;
+							break;
+						case DataType.Vector2:
+							format = VertexDataFormat.Vector2;
+							break;
+						case DataType.Vector3:
+							format = VertexDataFormat.Vector3;
+							break;
+						case DataType.Vector4:
+							if (input.Semantics.IsColor())
+								format = VertexDataFormat.Color;
+							else
+								format = VertexDataFormat.Vector4;
+							break;
+						default:
+							throw new InvalidOperationException("Unsupported data format.");
+					}
+
+					yield return new ShaderInput
+					{
+						Semantics = input.Semantics,
+						Format = format
+					};
+				}
+			}
+		}
+
+		/// <summary>
 		///   Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()

@@ -10,7 +10,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Indicates that the vertex data is a list of one-component float values.
 		/// </summary>
-		Single = 100,
+		Float = 100,
 
 		/// <summary>
 		///   Indicates that the vertex data is a list of two-component float values.

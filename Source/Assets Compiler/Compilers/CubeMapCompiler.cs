@@ -11,6 +11,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	/// <summary>
 	///   Compiles cubemap textures.
 	/// </summary>
+	[UsedImplicitly]
 	internal sealed class CubeMapCompiler : AssetCompiler<CubeMapAsset>
 	{
 		/// <summary>

@@ -7,7 +7,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
-	using Effects;
 
 	/// <summary>
 	///   Represents a parameter of a shader.
@@ -79,12 +78,18 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			// Check whether the name is reserved
 			ValidateIdentifier(_parameter.NameToken);
 
-			// Check whether the parameter is declared with a known type
-			ValidateType(_parameter, _parameter.ResolveType(Resolver));
+			// Check whether the parameter is declared with a valid type
+			var types = new[] { DataType.Float, DataType.Vector2, DataType.Vector3, DataType.Vector4 };
+			if (!types.Contains(Type))
+				Error(_parameter.Type, "Unexpected data type.");
+
+			// Check whether the parameter has type Vector4 if it has the color semantics
+			if (Semantics.IsColor() && Type != DataType.Vector4)
+				Error(_parameter, "Parameters with the 'Color' semantics must be of type '{0}'.", typeof(Vector4).FullName);
 
 			// Check whether the parameter is an array type
 			if (_parameter.ResolveType(Resolver).Kind == TypeKind.Array)
-				Error(_parameter, "Unexpected array declaration.");
+				Error(_parameter.Type, "Unexpected array declaration.");
 
 			// Check whether the parameter is declared with modifier 'out' or no modifier at all
 			if (_parameter.ParameterModifier != ParameterModifier.Out && _parameter.ParameterModifier != ParameterModifier.None)

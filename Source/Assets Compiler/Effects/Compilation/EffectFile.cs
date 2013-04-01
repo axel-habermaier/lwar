@@ -73,7 +73,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			var elements = (from effect in Effects
 							from shader in effect.Shaders
 							let assetPath = String.Format("{0}.{1}", effect.FullName, shader.Name)
-							select new { Effect = effect, Shader = shader, Asset = CreateAsset(shader.Type, assetPath) }).ToArray();
+							select new { Effect = effect, Shader = shader, Asset = CreateAsset(shader, assetPath) }).ToArray();
 
 			ShaderAssets = elements.Select(element => element.Asset).ToArray();
 
@@ -91,17 +91,18 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Creates the appropriate asset for the given shader type and source path.
 		/// </summary>
-		/// <param name="type">The type of the shader for which the asset should be created.</param>
+		/// <param name="shader">The shader for which the asset should be created.</param>
 		/// <param name="path">The source path of the asset.</param>
-		private Asset CreateAsset(ShaderType type, string path)
+		private Asset CreateAsset(ShaderMethod shader, string path)
 		{
 			if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName(_file)))
 				path = Path.Combine(Path.GetDirectoryName(_file), path);
 
-			switch (type)
+			path = path.Replace("\\", "/");
+			switch (shader.Type)
 			{
 				case ShaderType.VertexShader:
-					return new VertexShaderAsset(String.Format("{0}.vs", path), Configuration.TempDirectory);
+					return new VertexShaderAsset(String.Format("{0}.vs", path), Configuration.TempDirectory, shader.InputLayout.ToArray());
 				case ShaderType.FragmentShader:
 					return new FragmentShaderAsset(String.Format("{0}.fs", path), Configuration.TempDirectory);
 				default:

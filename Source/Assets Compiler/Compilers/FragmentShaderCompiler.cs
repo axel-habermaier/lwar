@@ -3,11 +3,13 @@
 namespace Pegasus.AssetsCompiler.Compilers
 {
 	using Assets;
+	using Framework;
 	using Framework.Platform;
 
 	/// <summary>
 	///   Compiles fragment shaders.
 	/// </summary>
+	[UsedImplicitly]
 	internal class FragmentShaderCompiler : ShaderCompiler<FragmentShaderAsset>
 	{
 		/// <summary>
@@ -20,12 +22,9 @@ namespace Pegasus.AssetsCompiler.Compilers
 			string glsl, hlsl;
 			ExtractShaderCode(asset, out glsl, out hlsl);
 
-			WriteGlslShader(buffer, glsl);
+			CompileGlslShader(buffer, glsl);
 			if (Configuration.CompileHlsl)
-			{
-				using (var byteCode = CompileHlslShader(asset, hlsl, "ps_4_0"))
-					buffer.Copy(byteCode);
-			}
+				CompileHlslShader(asset, buffer, hlsl, "ps_4_0");
 		}
 	}
 }

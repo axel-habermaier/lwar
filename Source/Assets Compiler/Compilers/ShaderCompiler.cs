@@ -3,12 +3,10 @@
 namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.IO;
-	using System.Linq;
 	using System.Text;
 	using Assets;
 	using Framework;
 	using Framework.Platform;
-	using SharpDX.D3DCompiler;
 
 	/// <summary>
 	///   Provides common methods required for the compilation of shaders.
@@ -35,11 +33,11 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Writes an GLSL shader into the buffer.
+		///   Compiles the GLSL shader and writes the generated code into the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		/// <param name="source">The GLSL shader source code.</param>
-		protected static void WriteGlslShader(BufferWriter buffer, string source)
+		protected static void CompileGlslShader(BufferWriter buffer, string source)
 		{
 			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
 						 "#extension GL_ARB_separate_shader_objects : enable\n" + source;
@@ -51,12 +49,13 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Compiles an HLSL shader of the given profile.
+		///   Compiles the HLSL shader of the given profile and writes the generated code into the buffer.
 		/// </summary>
 		/// <param name="asset">The asset that contains the shader source code.</param>
+		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		/// <param name="source">The HLSL shader source code.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		protected ShaderBytecode CompileHlslShader(Asset asset, string source, string profile)
+		protected void CompileHlslShader(Asset asset, BufferWriter buffer, string source, string profile)
 		{
 			var hlslFile = asset.TempPathWithoutExtension + ".hlsl";
 			File.WriteAllText(hlslFile, source);
@@ -64,7 +63,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 			var byteCode = asset.TempPathWithoutExtension + ".fxo";
 			ExternalTool.Fxc(hlslFile, byteCode, profile);
 
-			return new ShaderBytecode(File.ReadAllBytes(byteCode));
+			buffer.Copy(File.ReadAllBytes(byteCode));
 		}
 	}
 }

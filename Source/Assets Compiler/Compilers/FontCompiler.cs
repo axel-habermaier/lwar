@@ -11,6 +11,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	/// <summary>
 	///   Compiles fonts.
 	/// </summary>
+	[UsedImplicitly]
 	internal sealed class FontCompiler : AssetCompiler<FontAsset>
 	{
 		/// <summary>

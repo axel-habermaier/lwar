@@ -2,6 +2,9 @@
 
 namespace Pegasus.AssetsCompiler.Assets
 {
+	using Framework;
+	using Framework.Platform.Graphics;
+
 	/// <summary>
 	///   Represents a vertex shader that requires compilation.
 	/// </summary>
@@ -21,9 +24,17 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		/// <param name="sourceDirectory">The source directory of the asset.</param>
-		public VertexShaderAsset(string relativePath, string sourceDirectory)
+		/// <param name="shaderInput">Describes the vertex data input layout of the vertex shader.</param>
+		public VertexShaderAsset(string relativePath, string sourceDirectory, ShaderInput[] shaderInput)
 			: base(relativePath, sourceDirectory)
 		{
+			Assert.ArgumentNotNull(shaderInput, () => shaderInput);
+			ShaderInputs = shaderInput;
 		}
+
+		/// <summary>
+		///   Gets the input layout for the vertex shader.
+		/// </summary>
+		public ShaderInput[] ShaderInputs { get; private set; }
 	}
 }
