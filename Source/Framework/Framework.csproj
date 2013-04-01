@@ -190,7 +190,7 @@
     <Compile Include="Platform\Graphics\EffectTechnique.cs" />
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
     <Compile Include="Platform\Assets\Texture2DAsset.cs" />
-    <Compile Include="Platform\Assets\TextureBinding.cs" />
+    <Compile Include="Platform\Graphics\TextureBinding.cs" />
     <Compile Include="Platform\BufferPointer.cs" />
     <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\ExternalProcess.cs" />

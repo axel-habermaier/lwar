@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Collections.Generic;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
@@ -96,7 +97,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			// Check whether the literal is initialized with a compile-time constant
 			if (!_variable.Initializer.IsNull && Value == null)
-				Error(_variable.Initializer, "Shader literal '{0}' must be initialized with a non-null compile-time constant value.", Name);
+				Error(_variable.Initializer, "Shader literal '{0}' must be initialized with a non-null compile-time constant value.",
+					  Name);
 		}
 	}
 }

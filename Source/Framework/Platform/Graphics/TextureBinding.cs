@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets
+namespace Pegasus.Framework.Platform.Graphics
 {
-	using Graphics;
+	using System;
 
 	/// <summary>
 	///   Binds a texture and a sampler to be used by an effect.

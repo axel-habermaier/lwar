@@ -4,24 +4,36 @@ namespace Lwar.Assets.Effects
 {
 	using Pegasus.AssetsCompiler.Effects;
 
+	/// <summary>
+	///   Applies a Gaussian blur filter to a texture.
+	/// </summary>
 	[Effect]
 	public class BlurEffect : Effect
 	{
 		private static readonly float[] Offsets = new[] { 0.0f, 1.3846153846f, 3.2307692308f };
 		private static readonly float[] Weights = new[] { 0.2270270270f, 0.3162162162f, 0.0702702703f };
 
+		/// <summary>
+		///   Applies a horizontal Gaussian blur filter.
+		/// </summary>
 		public readonly Technique BlurHorizontally = new Technique
 		{
 			VertexShader = "VertexShader",
 			FragmentShader = "HorizontalBlur"
 		};
 
+		/// <summary>
+		///   Applies a vertical Gaussian blur filter.
+		/// </summary>
 		public readonly Technique BlurVertically = new Technique
 		{
 			VertexShader = "VertexShader",
 			FragmentShader = "VerticalBlur"
 		};
 
+		/// <summary>
+		///   The texture that is blurred.
+		/// </summary>
 		public readonly Texture2D Texture;
 
 		[VertexShader]

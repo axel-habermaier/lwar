@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Collections.Generic;
 	using System.Linq;
 	using Framework;
 	using Framework.Platform.Graphics;
@@ -40,6 +41,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			VertexShader = String.Empty;
 			FragmentShader = String.Empty;
+		}
+
+		/// <summary>
+		///   Gets the documentation of the effect.
+		/// </summary>
+		public IEnumerable<string> Documentation
+		{
+			get { return _field.GetDocumentation(); }
 		}
 
 		/// <summary>
@@ -126,7 +135,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		/// Checks whether the technique's shader of the given type is not declared, null, or an empty string.
+		///   Checks whether the technique's shader of the given type is not declared, null, or an empty string.
 		/// </summary>
 		/// <param name="shaderType">The type of the shader that should be checked.</param>
 		private void ValidateShaderDeclaration(ShaderType shaderType)

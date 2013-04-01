@@ -63,6 +63,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Gets the documentation of the effect.
+		/// </summary>
+		public IEnumerable<string> Documentation
+		{
+			get { return _type.GetDocumentation(); }
+		}
+
+		/// <summary>
 		///   Gets the shaders declared by the effect.
 		/// </summary>
 		public IEnumerable<ShaderMethod> Shaders

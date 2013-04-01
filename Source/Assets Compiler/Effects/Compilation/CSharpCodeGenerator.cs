@@ -97,6 +97,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			_writer.AppendLine("namespace {0}", _effect.Namespace);
 			_writer.AppendBlockStatement(() =>
 				{
+					WriteDocumentation(_effect.Documentation);
 					_writer.AppendLine("public sealed class {0} : Effect", _effect.Name);
 					_writer.AppendBlockStatement(GenerateClass);
 				});
@@ -178,6 +179,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		private void GenerateConstructor()
 		{
+			_writer.AppendLine("/// <summary>");
+			_writer.AppendLine("///   Initializes a new instance.");
+			_writer.AppendLine("/// </summary>");
+			_writer.AppendLine("/// <param name=\"graphicsDevice\">The graphics device this instance belongs to.</param>");
+			_writer.AppendLine("/// <param name=\"assets\">The assets manager that should be used to load required assets.</param>");
 			_writer.AppendLine("public {0}(GraphicsDevice graphicsDevice, AssetsManager assets)", _effect.Name);
 			_writer.AppendLine("\t: base(graphicsDevice)");
 			_writer.AppendBlockStatement(() =>
@@ -211,6 +217,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			{
 				foreach (var constant in buffer.Constants)
 				{
+					WriteDocumentation(constant.Documentation);
 					_writer.AppendLine("public {0} {1}", ToCSharpType(constant.Type), constant.Name);
 					_writer.AppendBlockStatement(() =>
 						{
@@ -233,7 +240,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		private void GenerateTextureProperties()
 		{
 			foreach (var texture in _effect.Textures)
+			{
+				WriteDocumentation(texture.Documentation);
 				_writer.AppendLine("public TextureBinding<{0}> {1} {{ get; set; }}", ToCSharpType(texture.Type), texture.Name);
+			}
 
 			if (_effect.Textures.Any())
 				_writer.Newline();
@@ -246,6 +256,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			foreach (var technique in _effect.Techniques)
 			{
+				WriteDocumentation(technique.Documentation);
 				_writer.AppendLine("public EffectTechnique {0}", technique.Name);
 				_writer.AppendBlockStatement(() =>
 					{
@@ -268,6 +279,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		private void GenerateBindMethod()
 		{
+			_writer.AppendLine("/// <summary>");
+			_writer.AppendLine("///   Binds all textures and non-shared constant buffers required by the effect.");
+			_writer.AppendLine("/// </summary>");
 			_writer.Append("private ");
 			if (Constants.Any())
 				_writer.Append("unsafe ");
@@ -275,6 +289,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			_writer.AppendLine("void {0}()", BindMethodName);
 			_writer.AppendBlockStatement(() =>
 				{
+					if (!ConstantBuffers.Any() && !_effect.Textures.Any())
+						_writer.AppendLine("// Nothing to do here");
+
 					foreach (var buffer in ConstantBuffers)
 					{
 						_writer.AppendLine("if ({0})", GetDirtyFlagName(buffer.Name));
@@ -306,6 +323,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		private void GenerateOnDisposingMethod()
 		{
+			_writer.AppendLine("/// <summary>");
+			_writer.AppendLine("///   Disposes the object, releasing all managed and unmanaged resources.");
+			_writer.AppendLine("/// </summary>");
 			_writer.AppendLine("protected override void OnDisposing()");
 			_writer.AppendBlockStatement(() =>
 				{
@@ -402,6 +422,16 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		private static string GetDirtyFlagName(string name)
 		{
 			return String.Format("_dirty{0}", name);
+		}
+
+		/// <summary>
+		///   Writes the given documentation to the output.
+		/// </summary>
+		/// <param name="documentation">The documentation that should be written.</param>
+		private void WriteDocumentation(IEnumerable<string> documentation)
+		{
+			foreach (var line in documentation)
+				_writer.AppendLine("///{0}", line);
 		}
 	}
 }

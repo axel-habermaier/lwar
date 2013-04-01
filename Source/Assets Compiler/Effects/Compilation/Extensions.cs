@@ -11,7 +11,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
-	using Effects;
 	using Attribute = System.Attribute;
 	using CSharpAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
 	using CubeMap = Effects.CubeMap;
@@ -22,6 +21,24 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// </summary>
 	internal static class Extensions
 	{
+		/// <summary>
+		///   Gets the documentation of the given node. Only documentation comments immediately preceeding the given node are
+		///   returned.
+		/// </summary>
+		/// <param name="node">The node whose documentation should be returned.</param>
+		public static IEnumerable<string> GetDocumentation(this AstNode node)
+		{
+			var sibling = node;
+			while (sibling.PrevSibling as Comment != null && ((Comment)sibling.PrevSibling).IsDocumentation)
+				sibling = sibling.PrevSibling;
+
+			while (sibling != node)
+			{
+				yield return ((Comment)sibling).Content;
+				sibling = sibling.NextSibling;
+			}
+		}
+
 		/// <summary>
 		///   Checks whether the declared class is derived from the given base class.
 		/// </summary>
@@ -187,7 +204,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 									 return true;
 								 })
-								 .Single();
+							 .Single();
 
 			var mapsTo = method.GetCustomAttribute<MapsToAttribute>();
 			if (mapsTo == null)

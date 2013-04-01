@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
+	using System.Collections.Generic;
 	using System.Linq;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
@@ -60,6 +61,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Gets the type of the shader constant.
 		/// </summary>
 		public DataType Type { get; private set; }
+
+		/// <summary>
+		///   Gets the documentation of the effect.
+		/// </summary>
+		public IEnumerable<string> Documentation
+		{
+			get { return _field.GetDocumentation(); }
+		}
 
 		/// <summary>
 		///   Gets the change frequency of the constant. This property cannot be called if the constant is not user-defined.
