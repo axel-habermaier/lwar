@@ -7,6 +7,12 @@ namespace Lwar.Assets.Effects
 	[Effect]
 	public class TexturedQuadEffect : Effect
 	{
+		public readonly Technique DrawQuad = new Technique
+		{
+			VertexShader = "VertexShader",
+			FragmentShader = "FragmentShader"
+		};
+
 		public readonly Texture2D Texture;
 
 		[ShaderConstant(ChangeFrequency.PerDrawCall)]

@@ -219,6 +219,7 @@
     <Compile Include="Effects\Compilation\CompiledElement.cs" />
     <Compile Include="Effects\Compilation\CSharpCodeGenerator.cs" />
     <Compile Include="Effects\Compilation\DataType.cs" />
+    <Compile Include="Effects\Compilation\EffectTechnique.cs" />
     <Compile Include="Effects\Compilation\Extensions.cs" />
     <Compile Include="Effects\Compilation\CrossCompiler.cs" />
     <Compile Include="Effects\Compilation\GlslCompiler.cs" />
@@ -234,6 +235,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Operators.tt</DependentUpon>
     </Compile>
+    <Compile Include="Effects\Technique.cs" />
     <Compile Include="Effects\Vectors.cs" />
     <Compile Include="Effects\SemanticsAttribute.cs" />
     <Compile Include="ExternalTool.cs" />

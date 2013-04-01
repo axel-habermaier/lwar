@@ -7,6 +7,12 @@ namespace Lwar.Assets.Effects
 	[Effect]
 	public class SphereEffect : Effect
 	{
+		public readonly Technique DrawSphere = new Technique
+		{
+			VertexShader = "VertexShader",
+			FragmentShader = "FragmentShader"
+		};
+
 		public readonly CubeMap SphereTexture;
 
 		[ShaderConstant(ChangeFrequency.PerDrawCall)]

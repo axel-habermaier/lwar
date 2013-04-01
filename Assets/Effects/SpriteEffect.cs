@@ -7,6 +7,12 @@ namespace Lwar.Assets.Effects
 	[Effect]
 	public class SpriteEffect : Effect
 	{
+		public readonly Technique DrawSprite = new Technique
+		{
+			VertexShader = "VertexShader",
+			FragmentShader = "FragmentShader"
+		};
+
 		public readonly Texture2D Sprite;
 
 		[ShaderConstant(ChangeFrequency.PerDrawCall)]

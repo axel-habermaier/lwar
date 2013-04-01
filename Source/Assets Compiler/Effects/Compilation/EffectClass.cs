@@ -99,6 +99,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Gets the techniques declared by the effect.
+		/// </summary>
+		public IEnumerable<EffectTechnique> Techniques
+		{
+			get { return GetChildElements<EffectTechnique>(); }
+		}
+
+		/// <summary>
 		///   Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
@@ -108,6 +116,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						where !field.Attributes.Contain<ShaderConstantAttribute>(Resolver)
 						let dataType = field.ResolveType(Resolver).ToDataType()
 						where dataType != DataType.Texture2D && dataType != DataType.CubeMap
+						where field.ResolveType(Resolver).FullName != typeof(Technique).FullName
 						from variable in field.Descendants.OfType<VariableInitializer>()
 						select new ShaderLiteral(field, variable));
 
@@ -158,6 +167,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			AddElement(projection);
 			AddElement(viewProjection);
 			AddElement(viewportSize);
+
+			// Add all techniques
+			AddElements(from field in _type.Descendants.OfType<FieldDeclaration>()
+						where field.ResolveType(Resolver).FullName == typeof(Technique).FullName
+						from variable in field.Descendants.OfType<VariableInitializer>()
+						select new EffectTechnique(field, variable));
 		}
 
 		/// <summary>
@@ -207,7 +222,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			if (Shaders.All(shader => shader.Type != ShaderType.FragmentShader))
 				Error(_type, "Expected a declaration of at least one fragment shader.");
 
-			// Check whether that all local variables and parameters do not hide a shader literal, constant, or texture object
+			// Check whether that all local variables and parameters do not hide a shader literal, technique, constant, or texture object
 			ValidateVariableNames();
 
 			// Check for assignments to shader constants
@@ -218,6 +233,36 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 									   select assignment)
 			{
 				Error(assignment, "Unexpected assignment to shader constant.");
+			}
+
+			// Check whether at least one technique is declared
+			if (!Techniques.Any())
+				Error(_type, "Expected a declaration of at least one technique.");
+
+			// Check whether all shaders referenced by the declared techniques are actually declared
+			foreach (var shader in from field in _type.Descendants.OfType<FieldDeclaration>()
+								   where field.ResolveType(Resolver).FullName == typeof(Technique).FullName
+								   from variable in field.Variables
+								   from namedExpression in variable.Descendants.OfType<NamedExpression>()
+								   let shaderType = (ShaderType)Enum.Parse(typeof(ShaderType), namedExpression.Name)
+								   let resolved = Resolver.Resolve(namedExpression.Expression)
+								   where resolved.IsCompileTimeConstant
+								   let name = (string)resolved.ConstantValue
+								   where !String.IsNullOrWhiteSpace(name)
+								   where !Shaders.Any(shader => shader.Name == name && shader.Type == shaderType)
+								   select new { namedExpression.Expression, Type = shaderType })
+			{
+				switch (shader.Type)
+				{
+					case ShaderType.VertexShader:
+						Error(shader.Expression, "Reference to unknown vertex shader.");
+						break;
+					case ShaderType.FragmentShader:
+						Error(shader.Expression, "Reference to unknown fragment shader.");
+						break;
+					default:
+						throw new InvalidOperationException("Unsupported shader type.");
+				}
 			}
 
 			// Check whether the name of any declared local variable is reserved
@@ -353,7 +398,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Checks whether there are any local variables or parameters that hide a shader literal, constant, or texture object.
+		///   Checks whether there are any local variables or parameters that hide a shader literal, constant, technique, or
+		///   texture object.
 		/// </summary>
 		private void ValidateVariableNames()
 		{

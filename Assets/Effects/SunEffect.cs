@@ -8,6 +8,13 @@ namespace Lwar.Assets.Effects
 	public class SunEffect : Effect
 	{
 		public readonly CubeMap CubeMap;
+
+		public readonly Technique DrawSun = new Technique
+		{
+			VertexShader = "VertexShader",
+			FragmentShader = "FragmentShader"
+		};
+
 		public readonly Texture2D HeatMap;
 
 		[ShaderConstant(ChangeFrequency.PerDrawCall)]

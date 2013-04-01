@@ -13,7 +13,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	internal class ShaderConstant : CompiledElement
 	{
 		/// <summary>
-		///   The declaration of the field that represents the shader constant
+		///   The declaration of the field that represents the shader constant.
 		/// </summary>
 		private readonly FieldDeclaration _field;
 

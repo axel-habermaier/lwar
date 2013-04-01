@@ -5,11 +5,22 @@ namespace Lwar.Assets.Effects
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]
-	[Expose("BlurHorizontal", VertexShader = "VertexShader", FragmentShader = "HorizontalBlur")]
 	public class BlurEffect : Effect
 	{
 		private static readonly float[] Offsets = new[] { 0.0f, 1.3846153846f, 3.2307692308f };
 		private static readonly float[] Weights = new[] { 0.2270270270f, 0.3162162162f, 0.0702702703f };
+
+		public readonly Technique BlurHorizontally = new Technique
+		{
+			VertexShader = "VertexShader",
+			FragmentShader = "HorizontalBlur"
+		};
+
+		public readonly Technique BlurVertically = new Technique
+		{
+			VertexShader = "VertexShader",
+			FragmentShader = "VerticalBlur"
+		};
 
 		public readonly Texture2D Texture;
 
@@ -55,66 +66,4 @@ namespace Lwar.Assets.Effects
 			}
 		}
 	}
-
-	//public class BlurEffectGenerated
-	//{
-	//	private readonly ConstantBuffer<Constants> _constantBuffer;
-	//	private readonly Pegasus.Framework.Platform.Graphics.FragmentShader _horizontalBlur;
-	//	private readonly VertexShader _vertexShader;
-	//	private readonly Pegasus.Framework.Platform.Graphics.FragmentShader _verticalBlur;
-	//	public int Mipmap;
-	//	public int Size;
-
-	//	public Texture2D Texture;
-
-	//	public unsafe BlurEffectGenerated(GraphicsDevice graphicsDevice, AssetsManager assets)
-	//	{
-	//		Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-	//		Assert.ArgumentNotNull(assets, () => assets);
-
-	//		_vertexShader = assets.LoadVertexShader("Shaders/Lwar.Assets.Shaders.BlurEffect.VertexShader");
-	//		_horizontalBlur = assets.LoadFragmentShader("Shaders/Lwar.Assets.Shaders.BlurEffect.HorizontalBlur");
-	//		_verticalBlur = assets.LoadFragmentShader("Shaders/Lwar.Assets.Shaders.BlurEffect.VerticalBlur");
-
-	//		_constantBuffer = new ConstantBuffer<Constants>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
-	//	}
-
-	//	public void Bind(FragmentShader fs)
-	//	{
-	//	}
-
-	//	private void Bind(VertexShader vs, FragmentShader fs)
-	//	{
-	//		//Texture.Bind(0);
-	//		//Texture.Sampler.Bind(0);
-
-	//		var changed = false;
-
-	//		if (_constantBuffer.Data.Mipmap != Mipmap)
-	//		{
-	//			changed = true;
-	//			_constantBuffer.Data.Mipmap = Mipmap;
-	//		}
-
-	//		if (_constantBuffer.Data.Size != Size)
-	//		{
-	//			changed = true;
-	//			_constantBuffer.Data.Size = Size;
-	//		}
-
-	//		if (changed)
-	//			_constantBuffer.Update();
-
-	//		_constantBuffer.Bind(2);
-	//		vs.Bind();
-	//		fs.Bind();
-	//	}
-
-	//	[StructLayout(LayoutKind.Sequential, Size = 16)]
-	//	private struct Constants
-	//	{
-	//		public int Size;
-	//		public int Mipmap;
-	//	}
-	//}
 }

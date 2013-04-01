@@ -7,6 +7,12 @@ namespace Lwar.Assets.Effects
 	[Effect]
 	public class SkyboxEffect : Effect
 	{
+		public readonly Technique DrawSkybox = new Technique
+		{
+			VertexShader = "VertexShader",
+			FragmentShader = "FragmentShader"
+		};
+
 		public readonly CubeMap Skybox;
 
 		[VertexShader]
