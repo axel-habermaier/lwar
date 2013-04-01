@@ -14,7 +14,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   The name of the method that binds the constant buffers and textures.
 		/// </summary>
-		private const string Bind = "Bind";
+		private const string BindMethodName = "Bind";
 
 		/// <summary>
 		///   The writer that should be used to write the generated code.
@@ -118,8 +118,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			GenerateConstantsProperties();
 			GenerateTextureProperties();
+			GenerateTechniqueProperties();
 
-			GenerateObjectBindingMethod();
+			GenerateBindMethod();
+			GenerateOnDisposingMethod();
 
 			GenerateConstantBufferStructs();
 		}
@@ -177,6 +179,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		private void GenerateConstructor()
 		{
 			_writer.AppendLine("public {0}(GraphicsDevice graphicsDevice, AssetsManager assets)", _effect.Name);
+			_writer.AppendLine("\t: base(graphicsDevice)");
 			_writer.AppendBlockStatement(() =>
 				{
 					_writer.AppendLine("Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);");
@@ -237,15 +240,39 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
+		///   Generates the properties for all techniques declared by the effect.
+		/// </summary>
+		private void GenerateTechniqueProperties()
+		{
+			foreach (var technique in _effect.Techniques)
+			{
+				_writer.AppendLine("public EffectTechnique {0}", technique.Name);
+				_writer.AppendBlockStatement(() =>
+					{
+						_writer.AppendLine("get");
+						_writer.AppendBlockStatement(() =>
+							{
+								var vertexShader = GetFieldName(technique.VertexShader);
+								var fragmentShader = GetFieldName(technique.FragmentShader);
+
+								_writer.AppendLine("{0}();", BindMethodName);
+								_writer.AppendLine("return CreateTechnique({0}, {1});", vertexShader, fragmentShader);
+							});
+					});
+				_writer.Newline();
+			}
+		}
+
+		/// <summary>
 		///   Generates the state binding method.
 		/// </summary>
-		private void GenerateObjectBindingMethod()
+		private void GenerateBindMethod()
 		{
 			_writer.Append("private ");
 			if (Constants.Any())
 				_writer.Append("unsafe ");
-			
-			_writer.AppendLine("void {0}()", Bind);
+
+			_writer.AppendLine("void {0}()", BindMethodName);
 			_writer.AppendBlockStatement(() =>
 				{
 					foreach (var buffer in ConstantBuffers)
@@ -269,6 +296,24 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 					foreach (var buffer in ConstantBuffers)
 						_writer.AppendLine("Bind({0});", GetFieldName(buffer.Name));
+				});
+
+			_writer.Newline();
+		}
+
+		/// <summary>
+		///   Generates the OnDisposing() method.
+		/// </summary>
+		private void GenerateOnDisposingMethod()
+		{
+			_writer.AppendLine("protected override void OnDisposing()");
+			_writer.AppendBlockStatement(() =>
+				{
+					if (!ConstantBuffers.Any())
+						_writer.AppendLine("// Nothing to do here");
+
+					foreach (var buffer in ConstantBuffers)
+						_writer.AppendLine("{0}.SafeDispose();", GetFieldName(buffer.Name));
 				});
 
 			if (ConstantBuffers.Any())

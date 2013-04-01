@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Assets;
+	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;

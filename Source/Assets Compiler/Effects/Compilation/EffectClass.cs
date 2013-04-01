@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
+	using Effect = Effects.Effect;
 
 	/// <summary>
 	///   Represents a C# class that contains cross-compiled shader code and shader constants.

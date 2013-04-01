@@ -16,6 +16,11 @@ namespace Pegasus.Framework.Platform.Graphics
 		private readonly IntPtr _device;
 
 		/// <summary>
+		///   The effect that is currently active.
+		/// </summary>
+		private Effect _activeEffect;
+
+		/// <summary>
 		///   The current primitive type of the input assembler stage.
 		/// </summary>
 		private PrimitiveType _primitiveType;
@@ -43,6 +48,19 @@ namespace Pegasus.Framework.Platform.Graphics
 			DepthStencilState.InitializeDefaultInstances(this);
 			BlendState.InitializeDefaultInstances(this);
 			Texture2D.InitializeDefaultInstances(this);
+		}
+
+		/// <summary>
+		///   Gets or sets the effect that is currently active.
+		/// </summary>
+		internal Effect ActiveEffect
+		{
+			get { return _activeEffect; }
+			set
+			{
+				Assert.That(value == null || _activeEffect == null, "Another effect is currently active.");
+				_activeEffect = value;
+			}
 		}
 
 		/// <summary>

@@ -1,14 +1,48 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets
+namespace Pegasus.Framework.Platform.Graphics
 {
-	using Graphics;
+	using Assets;
 
 	/// <summary>
 	///   Represents a shader-based rendering effect.
 	/// </summary>
-	public abstract class Effect
+	public abstract class Effect : GraphicsObject
 	{
+		/// <summary>
+		///   A value indicating whether a technique of the effect is currently active.
+		/// </summary>
+		private bool _isActive;
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
+		protected Effect(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice)
+		{
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether a technique of the effect is currently active.
+		/// </summary>
+		public bool IsActive
+		{
+			get { return _isActive; }
+			internal set
+			{
+				Assert.That(!value || !_isActive, "The effect is already active.");
+				Assert.That(value || _isActive, "The effect is not active.");
+
+				_isActive = value;
+
+				if (_isActive)
+					GraphicsDevice.ActiveEffect = this;
+				else
+					GraphicsDevice.ActiveEffect = null;
+			}
+		}
+
 		/// <summary>
 		///   Creates a texture binding for the given texture and sampler state.
 		/// </summary>
@@ -91,6 +125,21 @@ namespace Pegasus.Framework.Platform.Assets
 			Assert.That(data != null, "The pointer to the data cannot be null.");
 
 			buffer.CopyData(data);
+		}
+
+		/// <summary>
+		/// Creates a new effect technique instance.
+		/// </summary>
+		/// <param name="vertexShader">The vertex shader that should be used by the technique.</param>
+		/// <param name="fragmentShader">The fragment shader that should be used by the technique.</param>
+		protected EffectTechnique CreateTechnique(VertexShader vertexShader, FragmentShader fragmentShader)
+		{
+			Assert.ArgumentNotNull(vertexShader, () => vertexShader);
+			Assert.ArgumentNotNull(fragmentShader, () => fragmentShader);
+
+			vertexShader.Bind();
+			fragmentShader.Bind();
+			return new EffectTechnique(this);
 		}
 	}
 }
