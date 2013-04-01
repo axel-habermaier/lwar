@@ -7,13 +7,13 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Represents a 2D texture asset.
 	/// </summary>
-	internal sealed class Texture2DAsset : TextureAsset<Texture2D>
+	internal sealed class Texture2DAsset : TextureAsset<Graphics.Texture2D>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public Texture2DAsset()
-			: base(device => new Texture2D(device))
+			: base(device => new Graphics.Texture2D(device))
 		{
 		}
 

@@ -94,24 +94,30 @@ namespace Pegasus.Framework.Platform.Graphics
 		private readonly int _size;
 
 		/// <summary>
+		///   The slot the constant buffer is bound to.
+		/// </summary>
+		private readonly int _slot;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="size">The size of the constant buffer's contents in bytes.</param>
-		public ConstantBuffer(GraphicsDevice graphicsDevice, int size)
+		/// <param name="slot">The slot the constant buffer should be bound to.</param>
+		internal ConstantBuffer(GraphicsDevice graphicsDevice, int size, int slot)
 			: base(graphicsDevice, BufferType.ConstantBuffer, ResourceUsage.Dynamic, IntPtr.Zero, size)
 		{
 			_size = size;
+			_slot = slot;
 		}
 
 		/// <summary>
 		///   Binds the constant buffer to the given slot without uploading any possible changes of the buffer to the GPU.
 		/// </summary>
-		/// <param name="slot">The slot the constant buffer should be bound to.</param>
-		public void Bind(int slot)
+		internal void Bind()
 		{
 			Assert.NotDisposed(this);
-			BindBuffer(slot);
+			BindBuffer(_slot);
 		}
 
 		/// <summary>
@@ -119,7 +125,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   constructor of this instance.
 		/// </summary>
 		/// <param name="data">The data that should be copied into the buffer.</param>
-		public unsafe void CopyData(void* data)
+		internal unsafe void CopyData(void* data)
 		{
 			Assert.NotDisposed(this);
 			CopyData(new IntPtr(data), _size);

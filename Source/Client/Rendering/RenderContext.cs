@@ -7,6 +7,7 @@ namespace Lwar.Client.Rendering
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
+	using Texture2D = Pegasus.Framework.Platform.Graphics.Texture2D;
 
 	/// <summary>
 	///   Represents the context in which rendering operations are performed.

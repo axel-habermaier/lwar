@@ -186,8 +186,10 @@
     <Compile Include="Platform\ApplicationAbortedException.cs" />
     <Compile Include="Platform\Assets\Asset.cs" />
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
+    <Compile Include="Platform\Assets\Effect.cs" />
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
     <Compile Include="Platform\Assets\Texture2DAsset.cs" />
+    <Compile Include="Platform\Assets\TextureBinding.cs" />
     <Compile Include="Platform\BufferPointer.cs" />
     <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\ExternalProcess.cs" />

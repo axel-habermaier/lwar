@@ -28,7 +28,8 @@ Pegasus
 - C# to HLSL/GLSL cross compiler
 	- Construct the shader input layout from the C# shader code instead of using build-time shader reflection of the DX shader
 	- Prefix all shader-code variables with _ to avoid name clashes with reserved HLSL/GLSL keywords/built-in vars/intrinsics
-	- Verify that no variable with name ConstantBufferX and BindGraphicsObjects is declared
+	- Copy documentation from effect to generated C# class
+	- Verify that no variable with name ConstantBufferX and Bind is declared
 	- Implement Expose() attribute (and check for name clashes)
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
 - Improve cvar/command system

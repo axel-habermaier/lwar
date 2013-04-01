@@ -8,6 +8,7 @@ namespace Lwar.Client.Rendering
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
+	using Texture2D = Pegasus.Framework.Platform.Graphics.Texture2D;
 
 	/// <summary>
 	///   Represents a GPU-based gaussian blur filter than can be applied to a texture.

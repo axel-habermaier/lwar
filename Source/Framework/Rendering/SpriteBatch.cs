@@ -8,6 +8,7 @@ namespace Pegasus.Framework.Rendering
 	using Platform.Assets;
 	using Platform.Graphics;
 	using Math = System.Math;
+	using Texture2D = Platform.Graphics.Texture2D;
 
 	/// <summary>
 	///   Efficiently draws large amounts of 2D sprites by batching together quads with the same texture.

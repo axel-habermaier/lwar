@@ -59,7 +59,7 @@ namespace Pegasus.Framework.Platform.Assets
 				asset.Load(reader);
 		}
 
-		/// <summary> 
+		/// <summary>
 		///   Reloads all changed assets.
 		/// </summary>
 		private void ReloadAssets()

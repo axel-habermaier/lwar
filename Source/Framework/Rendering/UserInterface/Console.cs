@@ -7,6 +7,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Platform.Graphics;
 	using Platform.Input;
 	using Scripting;
+	using Texture2D = Platform.Graphics.Texture2D;
 
 	/// <summary>
 	///   A Quake-like in-game console.
