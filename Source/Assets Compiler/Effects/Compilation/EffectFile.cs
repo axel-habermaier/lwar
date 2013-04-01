@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
+	using System.IO;
 	using System.Linq;
 	using Assets;
 	using Framework.Platform.Graphics;
@@ -71,7 +72,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			var elements = (from effect in Effects
 							from shader in effect.Shaders
-							let assetPath = String.Format("{0}_{1}_{2}", _file, effect.FullName, shader.Name)
+							let assetPath = String.Format("{0}.{1}", effect.FullName, shader.Name)
 							select new { Effect = effect, Shader = shader, Asset = CreateAsset(shader.Type, assetPath) }).ToArray();
 
 			ShaderAssets = elements.Select(element => element.Asset).ToArray();
@@ -84,7 +85,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			}
 
 			foreach (var effect in Effects)
-				generator.GenerateCode(effect);
+				generator.GenerateCode(effect, Path.GetDirectoryName(_file));
 		}
 
 		/// <summary>

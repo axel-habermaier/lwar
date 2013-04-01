@@ -28,6 +28,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		private EffectClass _effect;
 
 		/// <summary>
+		///   The path of the C# effect file that declared the effect.
+		/// </summary>
+		private string _path;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public CSharpCodeGenerator()
@@ -47,6 +52,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			_writer.AppendLine("using System.Runtime.InteropServices;");
 			_writer.AppendLine("using Pegasus.Framework;");
 			_writer.AppendLine("using Pegasus.Framework.Math;");
+			_writer.AppendLine("using Pegasus.Framework.Platform.Assets;");
 			_writer.AppendLine("using Pegasus.Framework.Platform.Graphics;");
 			_writer.Newline();
 		}
@@ -81,10 +87,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Generates the C# effect code.
 		/// </summary>
 		/// <param name="effect">The effect for which the C# code should be generated.</param>
-		public void GenerateCode(EffectClass effect)
+		/// <param name="path">The path of the C# effect file that declared the effect.</param>
+		public void GenerateCode(EffectClass effect, string path)
 		{
 			Assert.ArgumentNotNull(effect, () => effect);
+			Assert.ArgumentNotNullOrWhitespace(path, () => path);
+
 			_effect = effect;
+			_path = path;
 
 			_writer.AppendLine("namespace {0}", _effect.Namespace);
 			_writer.AppendBlockStatement(() =>
@@ -104,6 +114,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			GenerateDirtyFields();
 			GenerateConstantBufferFields();
 			GenerateConstantsFields();
+			GenerateShaderFields();
 
 			GenerateConstructor();
 
@@ -121,7 +132,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		private void GenerateDirtyFields()
 		{
 			foreach (var buffer in ConstantBuffers)
-				_writer.AppendLine("private bool _dirty{0} = true;", buffer.Name);
+				_writer.AppendLine("private bool {0} = true;", GetDirtyFlagName(buffer.Name));
 
 			if (ConstantBuffers.Any())
 				_writer.Newline();
@@ -133,7 +144,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		private void GenerateConstantBufferFields()
 		{
 			foreach (var buffer in ConstantBuffers)
-				_writer.AppendLine("private readonly ConstantBuffer _{0};", Decapitalize(buffer.Name));
+				_writer.AppendLine("private readonly ConstantBuffer {0};", GetFieldName(buffer.Name));
 
 			if (ConstantBuffers.Any())
 				_writer.Newline();
@@ -145,22 +156,46 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		private void GenerateConstantsFields()
 		{
 			foreach (var constant in Constants)
-				_writer.AppendLine("private {0} _{1};", ToCSharpType(constant.Type), Decapitalize(constant.Name));
+				_writer.AppendLine("private {0} {1};", ToCSharpType(constant.Type), GetFieldName(constant.Name));
 
 			if (Constants.Any())
 				_writer.Newline();
 		}
 
 		/// <summary>
-		/// Generates the constructor.
+		///   Generates the fields for all shaders declared by the effect.
+		/// </summary>
+		private void GenerateShaderFields()
+		{
+			foreach (var shader in _effect.Shaders)
+				_writer.AppendLine("private readonly {0} {1};", shader.Type, GetFieldName(shader.Name));
+
+			_writer.Newline();
+		}
+
+		/// <summary>
+		///   Generates the constructor.
 		/// </summary>
 		private void GenerateConstructor()
 		{
-			_writer.AppendLine("public {0}(GraphicsDevice graphicsDevice)", _effect.Name);
+			_writer.AppendLine("public {0}(GraphicsDevice graphicsDevice, AssetsManager assets)", _effect.Name);
 			_writer.AppendBlockStatement(() =>
 				{
+					_writer.AppendLine("Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);");
+					_writer.AppendLine("Assert.ArgumentNotNull(assets, () => assets);");
+					_writer.Newline();
+
+					foreach (var shader in _effect.Shaders)
+					{
+						_writer.AppendLine("{0} = assets.Load{1}(\"{2}/{3}.{4}\");", GetFieldName(shader.Name), shader.Type, _path,
+										   _effect.FullName, shader.Name);
+					}
+
+					if (ConstantBuffers.Any())
+						_writer.Newline();
+
 					foreach (var buffer in ConstantBuffers)
-						_writer.AppendLine("_{0} = new ConstantBuffer(graphicsDevice, {1});", Decapitalize(buffer.Name), buffer.Size);
+						_writer.AppendLine("{0} = new ConstantBuffer(graphicsDevice, {1});", GetFieldName(buffer.Name), buffer.Size);
 				});
 			_writer.Newline();
 		}
@@ -177,12 +212,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					_writer.AppendLine("public {0} {1}", ToCSharpType(constant.Type), constant.Name);
 					_writer.AppendBlockStatement(() =>
 						{
-							_writer.AppendLine("get {{ return _{0}; }}", Decapitalize(constant.Name));
+							_writer.AppendLine("get {{ return {0}; }}", GetFieldName(constant.Name));
 							_writer.AppendLine("set");
 							_writer.AppendBlockStatement(() =>
 								{
-									_writer.AppendLine("_{0} = value;", Decapitalize(constant.Name));
-									_writer.AppendLine("_dirty{0} = true;", buffer.Name);
+									_writer.AppendLine("{0} = value;", GetFieldName(constant.Name));
+									_writer.AppendLine("{0} = true;", GetDirtyFlagName(buffer.Name));
 								});
 						});
 					_writer.Newline();
@@ -221,7 +256,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 					foreach (var buffer in ConstantBuffers)
 					{
-						_writer.AppendLine("if (_dirty{0})", buffer.Name);
+						_writer.AppendLine("if ({0})", GetDirtyFlagName(buffer.Name));
 						_writer.AppendBlockStatement(() =>
 							{
 								_writer.AppendLine("{0} data = new {0}();", buffer.Name);
@@ -229,18 +264,18 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 									_writer.AppendLine("data.{0} = {0};", constant.Name);
 
 								_writer.Newline();
-								_writer.AppendLine("_dirty{0} = false;", buffer.Name);
-								_writer.AppendLine("_{0}.CopyData(&data);", Decapitalize(buffer.Name));
+								_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
+								_writer.AppendLine("{0}.CopyData(&data);", GetFieldName(buffer.Name));
 							});
 						_writer.Newline();
 					}
 
 					foreach (var buffer in ConstantBuffers)
-						_writer.AppendLine("_{0}.Bind({1});", Decapitalize(buffer.Name), buffer.Slot);
+						_writer.AppendLine("{0}.Bind({1});", GetFieldName(buffer.Name), buffer.Slot);
 				});
 
 			if (ConstantBuffers.Any())
-			_writer.Newline();
+				_writer.Newline();
 		}
 
 		/// <summary>
@@ -307,6 +342,24 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void OnDisposing()
 		{
 			_writer.WriteToFile(Configuration.CSharpEffectFile);
+		}
+
+		/// <summary>
+		///   Gets the name of the corresponding field.
+		/// </summary>
+		/// <param name="name">The name whose field name should be returned.</param>
+		private static string GetFieldName(string name)
+		{
+			return String.Format("_{0}", Decapitalize(name));
+		}
+
+		/// <summary>
+		///   Gets the name of the corresponding dirty flag.
+		/// </summary>
+		/// <param name="name">The name whose dirty flag name should be returned.</param>
+		private static string GetDirtyFlagName(string name)
+		{
+			return String.Format("_dirty{0}", name);
 		}
 	}
 }
