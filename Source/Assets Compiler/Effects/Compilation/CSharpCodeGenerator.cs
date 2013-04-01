@@ -241,7 +241,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		private void GenerateObjectBindingMethod()
 		{
-			_writer.AppendLine("private unsafe void {0}()", Bind);
+			_writer.Append("private ");
+			if (Constants.Any())
+				_writer.Append("unsafe ");
+			
+			_writer.AppendLine("void {0}()", Bind);
 			_writer.AppendBlockStatement(() =>
 				{
 					foreach (var buffer in ConstantBuffers)

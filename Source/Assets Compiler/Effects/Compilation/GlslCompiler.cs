@@ -21,7 +21,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="literal">The shader literal that should be generated.</param>
 		protected override void GenerateLiteral(ShaderLiteral literal)
 		{
-			Writer.Append("const {0} {1}", ToShaderType(literal.Type), literal.Name);
+			Writer.Append("const {0} {1}", ToShaderType(literal.Type), Escape(literal.Name));
 
 			if (literal.IsArray)
 				Writer.Append("[]");
@@ -50,7 +50,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Writer.AppendBlockStatement(() =>
 				{
 					foreach (var constant in constantBuffer.Constants)
-						Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), constant.Name);
+						Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
 				});
 			Writer.Newline();
 		}
@@ -61,7 +61,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="texture">The shader texture that should be generated.</param>
 		protected override void GenerateTextureObject(ShaderTexture texture)
 		{
-			Writer.AppendLine("layout(binding = {0}) uniform {1} {2};", texture.Slot, ToShaderType(texture.Type), texture.Name);
+			Writer.AppendLine("layout(binding = {0}) uniform {1} {2};", texture.Slot, ToShaderType(texture.Type), Escape(texture.Name));
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateVertexShaderInputs(IEnumerable<ShaderParameter> inputs)
 		{
 			foreach (var input in inputs)
-				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type), input.Name);
+				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type), Escape(input.Name));
 		}
 
 		/// <summary>
@@ -88,7 +88,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					Writer.AppendBlockStatement(() => Writer.AppendLine("vec4 gl_Position;"));
 				}
 				else
-					Writer.AppendLine("out {0} {1};", ToShaderType(output.Type), output.Name);
+					Writer.AppendLine("out {0} {1};", ToShaderType(output.Type), Escape(output.Name));
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateFragmentShaderInputs(IEnumerable<ShaderParameter> inputs)
 		{
 			foreach (var input in inputs)
-				Writer.AppendLine("in {0} {1};", ToShaderType(input.Type), input.Name);
+				Writer.AppendLine("in {0} {1};", ToShaderType(input.Type), Escape(input.Name));
 		}
 
 		/// <summary>
@@ -113,7 +113,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				var slot = output.Semantics - DataSemantics.Color0;
 				Assert.InRange(slot, 0, SemanticsAttribute.MaximumIndex);
 
-				Writer.AppendLine("layout(location = {2}) out {0} {1};", ToShaderType(output.Type), output.Name, slot);
+				Writer.AppendLine("layout(location = {2}) out {0} {1};", ToShaderType(output.Type), Escape(output.Name), slot);
 			}
 		}
 

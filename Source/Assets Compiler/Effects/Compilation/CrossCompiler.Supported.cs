@@ -65,7 +65,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 		public virtual void VisitIdentifierExpression(IdentifierExpression identifierExpression)
 		{
-			Writer.Append(identifierExpression.Identifier);
+			Writer.Append(Escape(identifierExpression.Identifier));
 		}
 
 		public virtual void VisitForStatement(ForStatement forStatement)
@@ -214,7 +214,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 		public virtual void VisitVariableInitializer(VariableInitializer variableInitializer)
 		{
-			Writer.Append(variableInitializer.Name);
+			Writer.Append(Escape(variableInitializer.Name));
 
 			if (variableInitializer.Initializer.IsNull)
 				return;

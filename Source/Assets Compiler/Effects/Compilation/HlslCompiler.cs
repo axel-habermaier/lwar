@@ -41,7 +41,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="literal">The shader literal that should be generated.</param>
 		protected override void GenerateLiteral(ShaderLiteral literal)
 		{
-			Writer.Append("static const {0} {1}", ToShaderType(literal.Type), literal.Name);
+			Writer.Append("static const {0} {1}", ToShaderType(literal.Type), Escape(literal.Name));
 
 			if (literal.IsArray)
 				Writer.Append("[]");
@@ -74,7 +74,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						if (constant.Type == DataType.Matrix)
 							Writer.Append("column_major ");
 
-						Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), constant.Name);
+						Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
 					}
 				});
 			Writer.Newline();
@@ -86,7 +86,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="texture">The shader texture that should be generated.</param>
 		protected override void GenerateTextureObject(ShaderTexture texture)
 		{
-			Writer.AppendLine("{0} {1} : register(t{2});", ToShaderType(texture.Type), texture.Name, texture.Slot);
+			Writer.AppendLine("{0} {1} : register(t{2});", ToShaderType(texture.Type), Escape(texture.Name), texture.Slot);
 			Writer.AppendLine("SamplerState {0} : register(s{1});", GetSamplerName(texture.Name), texture.Slot);
 			Writer.Newline();
 		}
@@ -111,9 +111,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				{
 					var position = outputs.Single(output => output.Semantics == DataSemantics.Position);
 					foreach (var output in outputs.Except(new[] { position }))
-						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), output.Name, ToHlsl(output.Semantics));
+						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), Escape(output.Name), ToHlsl(output.Semantics));
 
-					Writer.AppendLine("{0} {1} : SV_Position;", ToShaderType(position.Type), position.Name);
+					Writer.AppendLine("{0} {1} : SV_Position;", ToShaderType(position.Type), Escape(position.Name));
 				}, true);
 		}
 
@@ -141,7 +141,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						var semantics = "SV_Target" + index;
 
 						Assert.InRange(index, 0, SemanticsAttribute.MaximumIndex);
-						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), output.Name, semantics);
+						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), Escape(output.Name), semantics);
 					}
 				}, true);
 		}
@@ -155,7 +155,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Writer.AppendBlockStatement(() =>
 				{
 					foreach (var input in inputs)
-						Writer.AppendLine("{0} {1} : {2};", ToShaderType(input.Type), input.Name, ToHlsl(input.Semantics));
+						Writer.AppendLine("{0} {1} : {2};", ToShaderType(input.Type), Escape(input.Name), ToHlsl(input.Semantics));
 				}, true);
 		}
 
@@ -274,9 +274,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				{
 					var parameter = Shader.Parameters.Single(p => p.Name == local.Variable.Name);
 					if (parameter.IsOutput)
-						Writer.Append("{0}.{1}", OutputVariableName, identifierExpression.Identifier);
+						Writer.Append("{0}.{1}", OutputVariableName, Escape(identifierExpression.Identifier));
 					else
-						Writer.Append("{0}.{1}", InputVariableName, identifierExpression.Identifier);
+						Writer.Append("{0}.{1}", InputVariableName, Escape(identifierExpression.Identifier));
 
 					return;
 				}
@@ -322,7 +322,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			}
 
 			var target = (IdentifierExpression)((MemberReferenceExpression)invocationExpression.Target).Target;
-			Writer.Append("{0}.", target.Identifier);
+			Writer.Append("{0}.", Escape(target.Identifier));
 
 			if (intrinsic == Intrinsic.Sample)
 				Writer.Append("Sample(");

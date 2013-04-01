@@ -335,5 +335,16 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			return node is BlockStatement || node is ForStatement || node is WhileStatement || node is IfElseStatement;
 		}
+
+		/// <summary>
+		///   Returns an escaped version of the name that is guaranteed not to clash with any shader built-in variables, keywords
+		///   or intrinsics.
+		/// </summary>
+		/// <param name="name">The name that should be escaped.</param>
+		protected static string Escape(string name)
+		{
+			Assert.ArgumentNotNullOrWhitespace(name, () => name);
+			return String.Format("{0}{1}", Configuration.ReservedVariablePrefix, name);
+		}
 	}
 }

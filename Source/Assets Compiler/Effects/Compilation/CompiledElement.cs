@@ -4,8 +4,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Reflection;
 	using Framework;
 	using Framework.Platform;
+	using Framework.Platform.Assets;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
@@ -196,12 +198,20 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="identifier">The identifier that should be checked.</param>
 		protected void ValidateIdentifier(Identifier identifier)
 		{
-			if (identifier.Name.StartsWith(Configuration.ReservedVariablePrefix))
-				Error(identifier, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedVariablePrefix);
+			Action<string> startsWith = prefix =>
+				{
+					if (identifier.Name.StartsWith(prefix))
+						Error(identifier, "Identifiers starting with '{0}' are reserved.", prefix);
+				};
 
-			const string glPrefix = "gl_";
-			if (identifier.Name.StartsWith(glPrefix))
-				Error(identifier, "Identifiers starting with '{0}' are reserved.", glPrefix);
+			startsWith(Configuration.ReservedVariablePrefix);
+			startsWith("gl_");
+			startsWith("ConstantBuffer");
+
+			var type = typeof(Effect).GetTypeInfo();
+			var reserved = type.DeclaredMethods.Select(method => method.Name);
+			if (reserved.Contains(identifier.Name))
+				Error(identifier, "Identifier '{0}' is reserved.", identifier.Name);
 		}
 
 		/// <summary>

@@ -93,8 +93,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <param name="type">The type of the shader for which the asset should be created.</param>
 		/// <param name="path">The source path of the asset.</param>
-		private static Asset CreateAsset(ShaderType type, string path)
+		private Asset CreateAsset(ShaderType type, string path)
 		{
+			if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName(_file)))
+				path = Path.Combine(Path.GetDirectoryName(_file), path);
+
 			switch (type)
 			{
 				case ShaderType.VertexShader:
