@@ -12,13 +12,23 @@ static pgVoid Compile(pgShader* shader, pgUint8* shaderCode);
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* input, pgInt32 inputCount)
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* input, pgInt32 inputCount)
 {
 	PG_UNUSED(end);
 	PG_UNUSED(input);
 	PG_UNUSED(inputCount);
 
-	pgConvertShaderType(shader->type, &shader->glType, &shader->bit);
+	shader->glType = GL_VERTEX_SHADER;
+	shader->bit = GL_VERTEX_SHADER_BIT;
+	Compile(shader, shaderData);
+}
+
+pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end)
+{
+	PG_UNUSED(end);
+
+	shader->glType = GL_FRAGMENT_SHADER;
+	shader->bit = GL_FRAGMENT_SHADER_BIT;
 	Compile(shader, shaderData);
 }
 

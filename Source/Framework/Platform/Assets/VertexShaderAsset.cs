@@ -7,13 +7,8 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Represents a vertex shader asset.
 	/// </summary>
-	internal sealed class VertexShaderAsset : Asset
+	internal sealed class VertexShaderAsset : ShaderAsset<VertexShader>
 	{
-		/// <summary>
-		///   The vertex shader that is managed by this asset instance.
-		/// </summary>
-		internal VertexShader Shader { get; private set; }
-
 		/// <summary>
 		///   Gets the friendly name of the asset.
 		/// </summary>
@@ -31,15 +26,22 @@ namespace Pegasus.Framework.Platform.Assets
 			if (Shader == null)
 				Shader = new VertexShader(GraphicsDevice);
 
-			Shader.Reinitialize(buffer.Pointer, buffer.BufferSize);
-		}
+			var inputCount = buffer.ReadByte();
+			var inputs = new ShaderInput[inputCount];
 
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			Shader.SafeDispose();
+			for (var i = 0; i < inputCount; ++i)
+			{
+				inputs[i] = new ShaderInput
+				{
+					Format = (VertexDataFormat)buffer.ReadByte(),
+					Semantics = (DataSemantics)buffer.ReadByte()
+				};
+			}
+
+			byte* data;
+			int length;
+			ExtractShaderCode(buffer, out data, out length);
+			Shader.Reinitialize(data, length, inputs);
 		}
 	}
 }

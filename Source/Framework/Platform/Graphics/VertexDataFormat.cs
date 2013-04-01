@@ -28,7 +28,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		Vector4 = 103,
 
 		/// <summary>
-		///   Indicates that the vertex data is a list of color values.
+		///   Indicates that the vertex data is a list of four-component color values.
 		/// </summary>
 		Color = 104
 	}

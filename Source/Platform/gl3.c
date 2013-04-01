@@ -344,23 +344,6 @@ GLvoid pgConvertVertexDataFormat(pgVertexDataFormat vertexDataFormat, GLenum* ty
 	}
 }
 
-GLvoid pgConvertShaderType(pgShaderType shaderType, GLenum* type, GLenum* bit)
-{
-	switch (shaderType)
-	{
-	case PG_VERTEX_SHADER:
-		*type = GL_VERTEX_SHADER;
-		*bit = GL_VERTEX_SHADER_BIT;
-		return;
-	case PG_FRAGMENT_SHADER:
-		*type = GL_FRAGMENT_SHADER;
-		*bit = GL_FRAGMENT_SHADER_BIT;
-		return;
-	default:
-		PG_NO_SWITCH_DEFAULT;
-	}
-}
-
 GLenum pgConvertBufferType(pgBufferType bufferType)
 {
 	switch (bufferType)

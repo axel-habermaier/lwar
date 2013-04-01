@@ -7,13 +7,8 @@ namespace Pegasus.Framework.Platform.Assets
 	/// <summary>
 	///   Represents a fragment shader asset.
 	/// </summary>
-	internal sealed class FragmentShaderAsset : Asset
+	internal sealed class FragmentShaderAsset : ShaderAsset<FragmentShader>
 	{
-		/// <summary>
-		///   The fragment shader that is managed by this asset instance.
-		/// </summary>
-		internal FragmentShader Shader { get; private set; }
-
 		/// <summary>
 		///   Gets the friendly name of the asset.
 		/// </summary>
@@ -31,15 +26,10 @@ namespace Pegasus.Framework.Platform.Assets
 			if (Shader == null)
 				Shader = new FragmentShader(GraphicsDevice);
 
-			Shader.Reinitialize(buffer.Pointer, buffer.BufferSize);
-		}
-
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			Shader.SafeDispose();
+			byte* data;
+			int length;
+			ExtractShaderCode(buffer, out data, out length);
+			Shader.Reinitialize(data, length);
 		}
 	}
 }

@@ -7,37 +7,30 @@
 //====================================================================================================================
 
 static pgVoid pgFillInputDescs(D3D11_INPUT_ELEMENT_DESC* descs, pgShaderInput* input, pgInt32 inputCount);
-static pgVoid pgGetByteCode(pgUint8** shaderData, pgUint8* end);
 
 //====================================================================================================================
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* inputs, pgInt32 inputCount)
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* inputs, pgInt32 inputCount)
 {
-	size_t byteCodeLength;
+	size_t byteCodeLength = end - shaderData;
 	D3D11_INPUT_ELEMENT_DESC inputDescs[PG_INPUT_BINDINGS_COUNT];
 	pgFillInputDescs(inputDescs, inputs, inputCount);
 
-	pgGetByteCode(&shaderData, end);
-	byteCodeLength = end - shaderData;
+	PG_D3DCALL(ID3D11Device_CreateVertexShader(PG_DEVICE(shader), shaderData, byteCodeLength, NULL, &shader->ptr.vertexShader),
+		"Failed to create vertex shader.");
 
-	switch (shader->type)
-	{
-	case PG_VERTEX_SHADER:
-		PG_D3DCALL(ID3D11Device_CreateVertexShader(PG_DEVICE(shader), shaderData, byteCodeLength, NULL, &shader->ptr.vertexShader),
-			"Failed to create vertex shader.");
+	PG_D3DCALL(ID3D11Device_CreateInputLayout(PG_DEVICE(shader), inputDescs, inputCount, shaderData, byteCodeLength, &shader->inputLayout), 
+		"Failed to create input layout.");
+}
 
-		PG_D3DCALL(ID3D11Device_CreateInputLayout(PG_DEVICE(shader), inputDescs, inputCount, shaderData, byteCodeLength, &shader->inputLayout), 
-			"Failed to create input layout.");
-		break;
-	case PG_FRAGMENT_SHADER:
-		PG_D3DCALL(ID3D11Device_CreatePixelShader(shader->device->ptr, shaderData, byteCodeLength, NULL, &shader->ptr.pixelShader), 
-			"Failed to create pixel shader.");
-		break;
-	default:
-		PG_NO_SWITCH_DEFAULT;
-	}
+pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end)
+{
+	size_t byteCodeLength = end - shaderData;
+
+	PG_D3DCALL(ID3D11Device_CreatePixelShader(shader->device->ptr, shaderData, byteCodeLength, NULL, &shader->ptr.pixelShader), 
+		"Failed to create pixel shader.");
 }
 
 pgVoid pgDestroyShaderCore(pgShader* shader)
@@ -94,16 +87,6 @@ static pgVoid pgFillInputDescs(D3D11_INPUT_ELEMENT_DESC* descs, pgShaderInput* i
 		descs[i].SemanticName = semanticName;
 		descs[i].InputSlot = (pgInt32)input[i].semantics;
 	}
-}
-
-static pgVoid pgGetByteCode(pgUint8** shaderData, pgUint8* end)
-{
-	while (**shaderData != 0 && *shaderData < end)
-		++(*shaderData);
-
-	++(*shaderData);
-	if (*shaderData >= end)
-		pgDie("The HLSL version of the shader has not been compiled.");
 }
 
 #endif

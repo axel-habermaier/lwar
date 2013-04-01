@@ -186,10 +186,12 @@
     <Compile Include="Platform\ApplicationAbortedException.cs" />
     <Compile Include="Platform\Assets\Asset.cs" />
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
+    <Compile Include="Platform\Assets\ShaderAsset.cs" />
     <Compile Include="Platform\Graphics\Effect.cs" />
     <Compile Include="Platform\Graphics\EffectTechnique.cs" />
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
     <Compile Include="Platform\Assets\Texture2DAsset.cs" />
+    <Compile Include="Platform\Graphics\ShaderInput.cs" />
     <Compile Include="Platform\Graphics\TextureBinding.cs" />
     <Compile Include="Platform\BufferPointer.cs" />
     <Compile Include="Platform\Endianess.cs" />
@@ -291,7 +293,6 @@
     <Compile Include="Processes\Process`1.cs" />
     <Compile Include="Network\SocketOperation.cs" />
     <Compile Include="Platform\Graphics\BufferType.cs" />
-    <Compile Include="Platform\Graphics\Shader.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />

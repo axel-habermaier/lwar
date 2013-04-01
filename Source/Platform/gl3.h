@@ -152,7 +152,6 @@ GLvoid pgConvertSurfaceFormat(pgSurfaceFormat surfaceFormat, GLenum* internalFor
 GLenum pgConvertTextureAddressMode(pgTextureAddressMode addressMode);
 GLvoid pgConvertTextureFilter(pgTextureFilter textureFilter, GLenum* minFilter, GLenum* magFilter);
 GLvoid pgConvertVertexDataFormat(pgVertexDataFormat vertexDataFormat, GLenum* type, GLsizei* size);
-GLvoid pgConvertShaderType(pgShaderType shaderType, GLenum* type, GLenum* bit);
 GLenum pgConvertBufferType(pgBufferType bufferType);
 GLvoid pgConvertTextureType(pgTextureType textureType, GLenum* type, GLenum* boundType);
 

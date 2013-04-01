@@ -5,31 +5,45 @@
 //====================================================================================================================
 
 pgShader** pgGetBoundShader(pgShader* shader);
-static pgInt32 pgReadShaderInputs(pgUint8** shaderData, pgUint8* end, pgShaderInput* inputs);
 
 //====================================================================================================================
 // Exported functions
 //====================================================================================================================
 
-pgShader* pgCreateShader(pgGraphicsDevice* device, pgShaderType type, pgVoid* shaderData, pgInt32 length)
+pgShader* pgCreateVertexShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length, pgShaderInput* inputs, pgInt32 inputCount)
 {
 	pgShader* shader;
 	pgUint8* data = (pgUint8*)shaderData;
 	pgUint8* end = data + length;
-	pgShaderInput inputs[PG_INPUT_BINDINGS_COUNT];
-	pgInt32 inputCount = 0;
+
+	PG_ASSERT_NOT_NULL(device);
+	PG_ASSERT_NOT_NULL(shaderData);
+	PG_ASSERT_IN_RANGE(length, 0, INT32_MAX);
+	PG_ASSERT_NOT_NULL(inputs);
+	PG_ASSERT_IN_RANGE(inputCount, 0, INT32_MAX);
+
+	PG_ALLOC(pgShader, shader);
+	shader->device = device;
+	shader->type = PG_VERTEX_SHADER;
+	pgCreateVertexShaderCore(shader, data, end, inputs, inputCount);
+
+	return shader;
+}
+
+pgShader* pgCreateFragmentShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length)
+{
+	pgShader* shader;
+	pgUint8* data = (pgUint8*)shaderData;
+	pgUint8* end = data + length;
 
 	PG_ASSERT_NOT_NULL(device);
 	PG_ASSERT_NOT_NULL(shaderData);
 	PG_ASSERT_IN_RANGE(length, 0, INT32_MAX);
 
-	if (type == PG_VERTEX_SHADER)
-		inputCount = pgReadShaderInputs(&data, end, inputs);
-
 	PG_ALLOC(pgShader, shader);
 	shader->device = device;
-	shader->type = type;
-	pgCreateShaderCore(shader, data, end, inputs, inputCount);
+	shader->type = PG_FRAGMENT_SHADER;
+	pgCreateFragmentShaderCore(shader, data, end);
 
 	return shader;
 }
@@ -79,25 +93,4 @@ pgShader** pgGetBoundShader(pgShader* shader)
 	default:
 		PG_NO_SWITCH_DEFAULT;
 	}
-}
-
-static pgInt32 pgReadShaderInputs(pgUint8** shaderData, pgUint8* end, pgShaderInput* inputs)
-{
-	pgInt32 i, count;
-
-	count = **shaderData;
-	++(*shaderData);
-
-	for (i = 0; i < count && *shaderData < end; ++i)
-	{
-		inputs[i].semantics = (pgDataSemantics)**shaderData;
-		++(*shaderData);
-		inputs[i].format = (pgVertexDataFormat)**shaderData;
-		++(*shaderData);
-	}
-
-	if (*shaderData >= end)
-		pgDie("Incomplete shader input specification.");
-
-	return count;
 }

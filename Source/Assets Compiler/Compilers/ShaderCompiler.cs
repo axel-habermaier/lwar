@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.IO;
+	using System.Linq;
 	using System.Text;
 	using Assets;
 	using Framework;
@@ -43,7 +44,9 @@ namespace Pegasus.AssetsCompiler.Compilers
 			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
 						 "#extension GL_ARB_separate_shader_objects : enable\n" + source;
 
-			buffer.Copy(Encoding.UTF8.GetBytes(shader));
+			var glslCode = Encoding.UTF8.GetBytes(shader);
+			buffer.WriteInt32(glslCode.Length + 1);
+			buffer.Copy(glslCode);
 			buffer.WriteByte(0);
 		}
 

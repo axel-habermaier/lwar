@@ -248,6 +248,12 @@ typedef struct
 {
 	pgVertexDataFormat		format;
 	pgDataSemantics			semantics;
+} pgShaderInput;
+
+typedef struct
+{
+	pgVertexDataFormat		format;
+	pgDataSemantics			semantics;
 	pgInt32					stride;
 	pgInt32					offset;
 	pgBuffer*				vertexBuffer;
@@ -371,7 +377,8 @@ PG_API_EXPORT pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pg
 // Shader functions
 //====================================================================================================================
 
-PG_API_EXPORT pgShader* pgCreateShader(pgGraphicsDevice* device, pgShaderType type, pgVoid* shaderData, pgInt32 length);
+PG_API_EXPORT pgShader* pgCreateVertexShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length, pgShaderInput* inputs, pgInt32 inputCount);
+PG_API_EXPORT pgShader* pgCreateFragmentShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length);
 PG_API_EXPORT pgVoid pgDestroyShader(pgShader* shader);
 
 PG_API_EXPORT pgVoid pgBindShader(pgShader* shader);

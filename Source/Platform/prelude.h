@@ -266,13 +266,8 @@ struct pgShader
 	PG_SHADER_PLATFORM
 };
 
-typedef struct
-{
-	pgVertexDataFormat		format;
-	pgDataSemantics			semantics;
-} pgShaderInput;
-
-pgVoid pgCreateShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* inputs, pgInt32 inputCount);
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* inputs, pgInt32 inputCount);
+pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end);
 pgVoid pgDestroyShaderCore(pgShader* shader);
 
 pgVoid pgBindShaderCore(pgShader* shader);

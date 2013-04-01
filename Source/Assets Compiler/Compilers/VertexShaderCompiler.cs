@@ -75,9 +75,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 				for (var i = 0; i < shaderDesc.InputParameters; i++)
 				{
 					var paramDesc = reflectionInfo.GetInputParameterDescription(i);
-
 					var semantics = ConvertSemanticName(paramDesc.SemanticName);
-					buffer.WriteByte((byte)semantics);
 
 					if (paramDesc.ComponentType == RegisterComponentType.UInt32 || paramDesc.ComponentType == RegisterComponentType.SInt32)
 						Log.Die("Unsupported shader input parameter type.");
@@ -106,8 +104,11 @@ namespace Pegasus.AssetsCompiler.Compilers
 						throw new InvalidOperationException("Unknown usage mask combination.");
 
 					buffer.WriteByte((byte)format);
+					buffer.WriteByte((byte)semantics);
 				}
 			}
 		}
+
+		
 	}
 }
