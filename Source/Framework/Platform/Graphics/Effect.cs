@@ -9,8 +9,17 @@ namespace Pegasus.Framework.Platform.Graphics
 	/// <summary>
 	///   Represents a shader-based rendering effect.
 	/// </summary>
-	public abstract class Effect
+	/// <remarks>
+	///   The effect cannot be derived from DisposableObject, as that might introduce name clashes with variable names used by
+	///   the effect.
+	/// </remarks>
+	public abstract class Effect : IDisposable
 	{
+		/// <summary>
+		///   Indicates whether the effect has already been disposed.
+		/// </summary>
+		private bool _isDisposed;
+
 		/// <summary>
 		///   The context of the effect that can be used to load and bind effect resources.
 		/// </summary>
@@ -43,6 +52,35 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			return new TextureBinding<T>(texture, sampler);
 		}
+
+#if DEBUG
+		/// <summary>
+		///   Ensures that the instance has been disposed.
+		/// </summary>
+		~Effect()
+		{
+			Log.Die("Finalizer runs for effect '{0}'", GetType().FullName);
+		}
+#endif
+
+		/// <summary>
+		///   Disposes the effect, releasing all managed and unmanaged resources.
+		/// </summary>
+		void IDisposable.Dispose()
+		{
+			Assert.That(!_isDisposed, "The effect has already been disposed.");
+
+			__OnDisposing();
+			_isDisposed = true;
+#if DEBUG
+			GC.SuppressFinalize(this);
+#endif
+		}
+
+		/// <summary>
+		///   Disposes the effect, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected abstract void __OnDisposing();
 	}
 
 	// ReSharper restore InconsistentNaming

@@ -123,7 +123,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			// Add all shader literals
 			AddElements(from field in _type.Descendants.OfType<FieldDeclaration>()
-						where !field.Attributes.Contain<ConstantBufferAttribute>(Resolver)
+						where !field.Attributes.Contain<ConstantAttribute>(Resolver)
 						let dataType = field.ResolveType(Resolver).ToDataType()
 						where dataType != DataType.Texture2D && dataType != DataType.CubeMap
 						where field.ResolveType(Resolver).FullName != typeof(Technique).FullName
@@ -147,7 +147,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			// Add all shader constants
 			AddElements(from field in _type.Descendants.OfType<FieldDeclaration>()
-						where field.Attributes.Contain<ConstantBufferAttribute>(Resolver)
+						where field.Attributes.Contain<ConstantAttribute>(Resolver)
 						from variable in field.Descendants.OfType<VariableInitializer>()
 						select new ShaderConstant(field, variable));
 
@@ -462,7 +462,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 											.ToArray();
 
 			var buffers = (from field in _type.Descendants.OfType<FieldDeclaration>()
-						   let attribute = field.Attributes.GetAttribute<ConstantBufferAttribute>(Resolver)
+						   let attribute = field.Attributes.GetAttribute<ConstantAttribute>(Resolver)
 						   where attribute != null
 						   let argument = attribute.Arguments.FirstOrDefault()
 						   where argument != null

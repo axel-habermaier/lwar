@@ -15,7 +15,7 @@ namespace Lwar.Assets.Effects
 
 		public readonly Texture2D Sprite;
 
-		[ConstantBuffer]
+		[Constant]
 		public readonly Matrix World;
 
 		[VertexShader]

@@ -78,7 +78,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			get
 			{
-				var attribute = _field.Attributes.GetAttribute<ConstantBufferAttribute>(Resolver);
+				var attribute = _field.Attributes.GetAttribute<ConstantAttribute>(Resolver);
 				if (!attribute.Arguments.Any())
 					return null;
 

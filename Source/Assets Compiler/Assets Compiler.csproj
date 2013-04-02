@@ -247,7 +247,7 @@
     <Compile Include="Effects\Compilation\ShaderConstant.cs" />
     <Compile Include="Effects\Compilation\ShaderMethod.cs" />
     <Compile Include="Effects\Compilation\ShaderParameter.cs" />
-    <Compile Include="Effects\ConstantBufferAttribute.cs" />
+    <Compile Include="Effects\ConstantAttribute.cs" />
     <Compile Include="Effects\Effect.cs" />
     <Compile Include="Effects\EffectAttribute.cs" />
     <Compile Include="Effects\FragmentShaderAttribute.cs" />

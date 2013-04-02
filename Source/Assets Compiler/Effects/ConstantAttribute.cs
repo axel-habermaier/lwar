@@ -9,13 +9,13 @@ namespace Pegasus.AssetsCompiler.Effects
 	///   is chosen.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-	public class ConstantBufferAttribute : Attribute
+	public class ConstantAttribute : Attribute
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="constantBuffer">The name of the constant buffer the constant should be placed in.</param>
-		public ConstantBufferAttribute(string constantBuffer = "")
+		public ConstantAttribute(string constantBuffer = "")
 		{
 		}
 	}

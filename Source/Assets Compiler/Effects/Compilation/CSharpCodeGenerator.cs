@@ -104,7 +104,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			_writer.AppendBlockStatement(() =>
 				{
 					WriteDocumentation(_effect.Documentation);
-					_writer.AppendLine("public sealed class {0} : Effect, IDisposable", _effect.Name);
+					_writer.AppendLine("public sealed class {0} : Effect", _effect.Name);
 					_writer.AppendBlockStatement(GenerateClass);
 				});
 
@@ -127,7 +127,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			GenerateTechniqueProperties();
 
 			GenerateBindMethod();
-			GenerateIDisposableImplementation();
+			GenerateOnDisposingMethod();
 
 			GenerateConstantBufferStructs();
 		}
@@ -310,75 +310,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Generates the implementation of the IDisposable interface.
+		///   Generates the implementation of the OnDisposing() method.
 		/// </summary>
-		/// <remarks>
-		///   The effect cannot be derived from DisposableObject, as that might introduce name clashes with variable names used by
-		///   the effect.
-		/// </remarks>
-		private void GenerateIDisposableImplementation()
+		private void GenerateOnDisposingMethod()
 		{
-			_writer.AppendLine("#region IDisposable implementation");
-			_writer.Newline();
-
-			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Indicates whether the object has already been disposed.");
-			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("private bool _{0}isDisposed;", Configuration.ReservedVariablePrefix);
-			_writer.Newline();
-			_writer.AppendLine("#if DEBUG");
-			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   A description for the instance in order to make debugging easier.");
-			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("private string _{0}description;", Configuration.ReservedVariablePrefix);
-			_writer.Newline();
-			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Ensures that the instance has been disposed.");
-			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("~{0}()", _effect.Name);
-			_writer.AppendLine("{{");
-			_writer.AppendLine("	Log.Die(\"Finalizer runs for effect '{0}/{1}'.\\nInstance description: '{{1}}'\",", _path, _effect.FullName);
-			_writer.AppendLine("			GetType().Name, _{0}description ?? \"None\");", Configuration.ReservedVariablePrefix);
-			_writer.AppendLine("}}");
-			_writer.AppendLine("#endif");
-			_writer.Newline();
-			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   In debug builds, sets a description for the instance in order to make debugging easier.");
-			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("/// <param name=\"description\">The description of the instance.</param>");
-			_writer.AppendLine("/// <param name=\"arguments\">The arguments that should be copied into the description.</param>");
-			_writer.AppendLine("[Conditional(\"DEBUG\")]");
-			_writer.AppendLine("public void SetDescription(string description, params object[] arguments)");
-			_writer.AppendLine("{{");
-			_writer.AppendLine("	Assert.ArgumentNotNullOrWhitespace(description, () => description);");
-			_writer.AppendLine("");
-			_writer.AppendLine("	#if DEBUG");
-			_writer.AppendLine("	_{0}description = String.Format(description, arguments);", Configuration.ReservedVariablePrefix);
-			_writer.AppendLine("	#endif");
-			_writer.AppendLine("}}");
-			_writer.Newline();
-
 			_writer.AppendLine("/// <summary>");
 			_writer.AppendLine("///   Disposes the object, releasing all managed and unmanaged resources.");
 			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("void IDisposable.Dispose()");
+			_writer.AppendLine("protected override void __OnDisposing()");
 			_writer.AppendBlockStatement(() =>
 				{
-					_writer.AppendLine("Assert.That(!_{0}isDisposed, \"The effect has already been disposed.\");", Configuration.ReservedVariablePrefix);
-					_writer.Newline();
+					if (!ConstantBuffers.Any())
+						_writer.AppendLine("// Nothing to do here");
 
 					foreach (var buffer in ConstantBuffers)
 						_writer.AppendLine("{0}.SafeDispose();", GetFieldName(buffer.Name));
-
-					_writer.Newline();
-					_writer.AppendLine("_{0}isDisposed = true;", Configuration.ReservedVariablePrefix);
-					_writer.AppendLine("#if DEBUG");
-					_writer.AppendLine("GC.SuppressFinalize(this);");
-					_writer.AppendLine("#endif");
 				});
-
-			_writer.Newline();
-			_writer.AppendLine("#endregion");
 
 			if (ConstantBuffers.Any())
 				_writer.Newline();
@@ -468,7 +415,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="name">The name whose dirty flag name should be returned.</param>
 		private static string GetDirtyFlagName(string name)
 		{
-			return String.Format("_{1}dirty{0}", name, Configuration.ReservedVariablePrefix);
+			return String.Format("_{1}{0}Dirty", name, Configuration.ReservedVariablePrefix);
 		}
 
 		/// <summary>

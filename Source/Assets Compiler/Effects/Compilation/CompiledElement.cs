@@ -199,14 +199,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="identifier">The identifier that should be checked.</param>
 		protected void ValidateIdentifier(Identifier identifier)
 		{
-			Action<string> startsWith = prefix =>
-				{
-					if (identifier.Name.StartsWith(prefix))
-						Error(identifier, "Identifiers starting with '{0}' are reserved.", prefix);
-				};
-
-			startsWith(Configuration.ReservedVariablePrefix);
-			startsWith("gl_");
+			if (identifier.Name.StartsWith(Configuration.ReservedVariablePrefix))
+				Error(identifier, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedVariablePrefix);
 		}
 
 		/// <summary>
