@@ -2,8 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.Effects
 {
-	using Effects;
-
 	/// <summary>
 	///   Represents a 2-dimensional texture object from which a shader can retrieve texel data.
 	/// </summary>

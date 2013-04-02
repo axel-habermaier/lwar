@@ -38,7 +38,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// <summary>
 		///   Gets the texture description.
 		/// </summary>
-		public TextureDescription Description { get; protected set; }
+		protected TextureDescription Description { get; set; }
 
 		/// <summary>
 		///   Gets the surfaces of the texture.

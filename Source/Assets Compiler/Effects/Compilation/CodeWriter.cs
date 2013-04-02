@@ -9,7 +9,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Writes code with a C-like syntax to an in-memory buffer.
 	/// </summary>
-	public class CodeWriter
+	internal class CodeWriter
 	{
 		/// <summary>
 		///   The buffer that contains the written code.
@@ -135,6 +135,14 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Assert.ArgumentNotNullOrWhitespace(file, () => file);
 			File.WriteAllText(file, _buffer.ToString());
+		}
+
+		/// <summary>
+		///   Returns a string that represents the current object.
+		/// </summary>
+		public override string ToString()
+		{
+			return _buffer.ToString();
 		}
 	}
 }

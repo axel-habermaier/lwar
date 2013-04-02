@@ -189,6 +189,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			_writer.AppendLine("\t: base(graphicsDevice, assets)");
 			_writer.AppendBlockStatement(() =>
 				{
+					foreach (var buffer in ConstantBuffers)
+						_writer.AppendLine("Assert.That(Marshal.SizeOf(typeof({0})) == {0}.Size, \"Unexpected unmanaged size.\");",
+										   GetStructName(buffer));
+
 					foreach (var technique in _effect.Techniques)
 					{
 						const string path = "{0}/{1}.{2}";
@@ -339,12 +343,24 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			var buffers = ConstantBuffers.ToArray();
 			for (var i = 0; i < buffers.Length; ++i)
 			{
-				_writer.AppendLine("[StructLayout(LayoutKind.Sequential, Size = {0})]", buffers[i].Size);
+				_writer.AppendLine("[StructLayout(LayoutKind.Sequential, Size = Size, Pack = 1)]");
 				_writer.AppendLine("private struct {0}", GetStructName(buffers[i]));
 				_writer.AppendBlockStatement(() =>
 					{
-						foreach (var constant in buffers[i].Constants)
-							_writer.AppendLine("public {0} {1};", ToCSharpType(constant.Type), constant.Name);
+						_writer.AppendLine("/// <summary>");
+						_writer.AppendLine("///   The size of the struct in bytes.");
+						_writer.AppendLine("/// </summary>");
+						_writer.AppendLine("public const int Size = {0};", buffers[i].Size);
+						_writer.Newline();
+
+						for (var j = 0; j < buffers[i].Constants.Length; ++j)
+						{
+							WriteDocumentation(buffers[i].Constants[j].Documentation);
+							_writer.AppendLine("public {0} {1};", ToCSharpType(buffers[i].Constants[j].Type), buffers[i].Constants[j].Name);
+
+							if (j < buffers[i].Constants.Length - 1)
+								_writer.Newline();
+						}
 					});
 
 				if (i < buffers.Length - 1)

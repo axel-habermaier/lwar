@@ -35,18 +35,20 @@ namespace Pegasus.AssetsCompiler.Compilers
 		private bool Compile(TAsset asset)
 		{
 			var action = asset.GetRequiredAction();
-			action.Describe(asset);
 
 			switch (action)
 			{
 				case CompilationAction.Skip:
+					Log.Info("Skipping '{0}' (no changes detected).", asset.RelativePath);
 					return true;
 				case CompilationAction.Copy:
+					Log.Info("Copying '{0}' to target directory (compilation skipped; no changes detected).", asset.RelativePath);
 					File.Copy(asset.TempPath, asset.TargetPath, true);
 					return true;
 				case CompilationAction.Process:
+					Log.Info("Compiling '{0}'...", asset.RelativePath);
 					asset.WriteHash();
-					using (var writer = new AssetWriter(asset.TempPath, asset.TargetPath))
+					using (var writer = new AssetWriter(asset))
 						return CompileAndLogExceptions(asset, writer.Writer);
 				default:
 					throw new InvalidOperationException("Unknown action type.");

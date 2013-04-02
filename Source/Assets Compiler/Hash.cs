@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Compilers
+namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
 	using System.Security.Cryptography;
@@ -30,7 +30,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		public static Hash Compute(string file)
 		{
 			Assert.ArgumentNotNullOrWhitespace(file, () => file);
-			
+
 			using (var cryptoProvider = new MD5CryptoServiceProvider())
 			using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read))
 				return new Hash { _hash = cryptoProvider.ComputeHash(stream) };

@@ -5,8 +5,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
+	using System.Text;
 	using Assets;
 	using Framework;
+	using Framework.Platform;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
@@ -36,14 +38,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			_syntaxTree = syntaxTree;
 			_file = syntaxTree.FileName;
-
-			ShaderAssets = Enumerable.Empty<Asset>();
 		}
-
-		/// <summary>
-		///   Gets the shader assets that have been generated during the compilation process.
-		/// </summary>
-		public IEnumerable<Asset> ShaderAssets { get; private set; }
 
 		/// <summary>
 		///   Gets the effects that are declared in the file.
@@ -76,17 +71,19 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 							let assetPath = String.Format("{0}.{1}", effect.FullName, shader.Name)
 							select new { Effect = effect, Shader = shader, Asset = CreateAsset(shader, assetPath) }).ToArray();
 
-			ShaderAssets = elements.Select(element => element.Asset).ToArray();
-
-			foreach (var element in elements)
+			var assets = elements.Select(element => element.Asset).ToArray();
+			try
 			{
-				var writer = new CodeWriter();
-				CompileShaderCode(element.Effect, element.Shader, writer);
-				writer.WriteToFile(element.Asset.SourcePath);
-			}
+				foreach (var element in elements)
+					CompileShaderCode(element.Asset, element.Effect, element.Shader);
 
-			foreach (var effect in Effects)
-				generator.GenerateCode(effect, Path.GetDirectoryName(_file));
+				foreach (var effect in Effects)
+					generator.GenerateCode(effect, Path.GetDirectoryName(_file));
+			}
+			finally
+			{
+				assets.SafeDisposeAll();
+			}
 		}
 
 		/// <summary>
@@ -100,35 +97,88 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				path = Path.Combine(Path.GetDirectoryName(_file), path);
 
 			path = path.Replace("\\", "/");
-			switch (shader.Type)
-			{
-				case ShaderType.VertexShader:
-					return new VertexShaderAsset(String.Format("{0}.vs", path), Configuration.TempDirectory, shader.InputLayout.ToArray());
-				case ShaderType.FragmentShader:
-					return new FragmentShaderAsset(String.Format("{0}.fs", path), Configuration.TempDirectory);
-				default:
-					throw new InvalidOperationException("Unsupported shader type.");
-			}
+			return new ShaderAsset(String.Format("{0}.{1}", path, shader.Type), Configuration.TempDirectory);
 		}
 
 		/// <summary>
 		///   Generates the GLSL and HLSL shader code for the given shader method of the given effect.
 		/// </summary>
+		/// <param name="asset">The asset that represents the compiled shader.</param>
 		/// <param name="effect">The effect that declares the shader method that should be compiled.</param>
 		/// <param name="shader">The shader method that should be compiled.</param>
-		/// <param name="writer">The writer that should be used to write the compiled output.</param>
-		private void CompileShaderCode(EffectClass effect, ShaderMethod shader, CodeWriter writer)
+		private void CompileShaderCode(Asset asset, EffectClass effect, ShaderMethod shader)
 		{
-			var hlslCompiler = new HlslCompiler();
-			var glslCompiler = new GlslCompiler();
+			using (var writer = new AssetWriter(asset))
+			{
+				var buffer = writer.Writer;
+				string profile;
 
-			glslCompiler.Compile(effect, shader, writer, Resolver);
+				switch (shader.Type)
+				{
+					case ShaderType.VertexShader:
+						buffer.WriteByte((byte)shader.InputLayout.Count());
+						foreach (var input in shader.InputLayout)
+						{
+							buffer.WriteByte((byte)input.Format);
+							buffer.WriteByte((byte)input.Semantics);
+						}
 
-			writer.Newline();
-			writer.AppendLine(Configuration.ShaderSeparator);
-			writer.Newline();
+						profile = "vs_4_0";
+						break;
+					case ShaderType.FragmentShader:
+						profile = "ps_4_0";
+						break;
+					default:
+						throw new InvalidOperationException("Unsupported shader type.");
+				}
 
-			hlslCompiler.Compile(effect, shader, writer, Resolver);
+				var codeWriter = new CodeWriter();
+				var glslCompiler = new GlslCompiler();
+				glslCompiler.Compile(effect, shader, codeWriter, Resolver);
+				CompileGlslShader(buffer, codeWriter.ToString());
+
+				codeWriter = new CodeWriter();
+				var hlslCompiler = new HlslCompiler();
+				hlslCompiler.Compile(effect, shader, codeWriter, Resolver);
+				CompileHlslShader(asset, buffer, codeWriter.ToString(), profile);
+			}
+		}
+
+		/// <summary>
+		///   Writes the generated GLSL shader code to the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
+		/// <param name="source">The GLSL shader source code.</param>
+		private static void CompileGlslShader(BufferWriter buffer, string source)
+		{
+			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
+						 "#extension GL_ARB_separate_shader_objects : enable\n" + source;
+
+			var code = Encoding.UTF8.GetBytes(shader);
+			buffer.WriteInt32(code.Length + 1);
+			buffer.Copy(code);
+			buffer.WriteByte(0);
+		}
+
+		/// <summary>
+		///   Compiles the HLSL shader of the given profile and writes the generated code into the buffer.
+		/// </summary>
+		/// <param name="asset">The asset that contains the shader source code.</param>
+		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
+		/// <param name="source">The HLSL shader source code.</param>
+		/// <param name="profile">The profile that should be used to compile the shader.</param>
+		protected static void CompileHlslShader(Asset asset, BufferWriter buffer, string source, string profile)
+		{
+			if (!Configuration.CompileHlsl)
+				return;
+
+			var hlslFile = asset.TempPathWithoutExtension + ".hlsl";
+			File.WriteAllText(hlslFile, source);
+
+			var byteCode = asset.TempPathWithoutExtension + ".fxo";
+			ExternalTool.Fxc(hlslFile, byteCode, profile);
+
+			buffer.Copy(File.ReadAllBytes(byteCode));
 		}
 	}
 }

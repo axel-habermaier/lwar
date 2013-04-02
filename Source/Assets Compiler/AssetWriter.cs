@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
+	using Assets;
 	using Framework;
 	using Framework.Platform;
 
@@ -35,15 +36,13 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="tempPath">The temp path of the compiled asset.</param>
-		/// <param name="targetPath">The target path of the compiled asset.</param>
-		public AssetWriter(string tempPath, string targetPath)
+		/// <param name="asset">The asset that should be written.</param>
+		public AssetWriter(Asset asset)
 		{
-			Assert.ArgumentNotNullOrWhitespace(tempPath, () => tempPath);
-			Assert.ArgumentNotNullOrWhitespace(targetPath, () => targetPath);
+			Assert.ArgumentNotNull(asset, () => asset);
 
-			_tempPath = tempPath;
-			_targetPath = targetPath;
+			_tempPath = asset.TempPath;
+			_targetPath = asset.TargetPath;
 			Writer = BufferWriter.Create(_buffer);
 		}
 

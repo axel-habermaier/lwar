@@ -8,7 +8,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
-	using Effects;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to HLSL.
@@ -66,7 +65,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="constantBuffer">The constant buffer that should be generated.</param>
 		protected override void GenerateConstantBuffer(ConstantBuffer constantBuffer)
 		{
-			Writer.Append("cbuffer {2}{0} : register(b{1})", constantBuffer.Name, constantBuffer.Slot, Configuration.ReservedVariablePrefix);
+			Writer.Append("cbuffer {2}{0} : register(b{1})", constantBuffer.Name, constantBuffer.Slot,
+						  Configuration.ReservedVariablePrefix);
 			Writer.AppendBlockStatement(() =>
 				{
 					foreach (var constant in constantBuffer.Constants)

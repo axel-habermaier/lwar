@@ -14,11 +14,6 @@ namespace Pegasus.AssetsCompiler
 	internal static class Configuration
 	{
 		/// <summary>
-		///   The separator that is used to separate GLSL shader code from HLSL shader code.
-		/// </summary>
-		public const string ShaderSeparator = "---";
-
-		/// <summary>
 		///   The prefix that is used for internally generated shader variables.
 		/// </summary>
 		public const string ReservedVariablePrefix = "_";

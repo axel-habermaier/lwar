@@ -295,7 +295,7 @@ namespace Pegasus.AssetsCompiler.Effects
 		/// </summary>
 		/// <param name="vector1">The first vector of the cross product.</param>
 		/// <param name="vector2">The second vector of the cross product.</param>
-		[MapsTo(Intrinsic.Cross)]	
+		[MapsTo(Intrinsic.Cross)]
 		protected float Cross(Vector4 vector1, Vector4 vector2)
 		{
 			throw new NotImplementedException();

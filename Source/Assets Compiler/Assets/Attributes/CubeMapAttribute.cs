@@ -39,7 +39,7 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 		/// <summary>
 		///   Gets the asset that should be compiled.
 		/// </summary>
-		public override Asset Asset
+		internal override Asset Asset
 		{
 			get { return new CubeMapAsset(_name) { Mipmaps = Mipmaps, Uncompressed = Uncompressed }; }
 		}

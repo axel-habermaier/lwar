@@ -51,7 +51,7 @@ namespace Lwar.Assets.Effects
 		{
 			color = Texture.Sample(texCoords) * Weights[0];
 
-			for (var i = 1; i < 3; ++i) 
+			for (var i = 1; i < 3; ++i)
 			{
 				var coordinates = new Vector2(texCoords.x, texCoords.x) * ViewportSize.x;
 				coordinates += new Vector2(Offsets[i], -Offsets[i]);

@@ -186,16 +186,14 @@
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
     <Compile Include="Assets\Attributes\CubeMapAttribute.cs" />
     <Compile Include="Assets\Attributes\Texture2DAttribute.cs" />
-    <Compile Include="Assets\FragmentShaderAsset.cs" />
+    <Compile Include="Assets\ShaderAsset.cs" />
     <Compile Include="Assets\TextureAsset.cs" />
-    <Compile Include="Assets\VertexShaderAsset.cs" />
     <Compile Include="Compilers\AssetCompiler.cs" />
     <Compile Include="AssetWriter.cs" />
     <Compile Include="CompilationUnit.cs" />
     <Compile Include="Compilers\CompilationAction.cs" />
     <Compile Include="Compilers\EffectCompiler.cs" />
-    <Compile Include="Compilers\Extensions.cs" />
-    <Compile Include="Compilers\Hash.cs" />
+    <Compile Include="Hash.cs" />
     <Compile Include="Compilers\IAssetCompiler.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Assets\CSharpAsset.cs" />
@@ -230,14 +228,11 @@
     <Compile Include="ExternalTool.cs" />
     <Compile Include="Assets\FontAsset.cs" />
     <Compile Include="Compilers\FontCompiler.cs" />
-    <Compile Include="Compilers\FragmentShaderCompiler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Compilers\ShaderCompiler.cs" />
     <Compile Include="Assets\Asset.cs" />
     <Compile Include="Assets\Texture2DAsset.cs" />
     <Compile Include="Compilers\Texture2DCompiler.cs" />
-    <Compile Include="Compilers\VertexShaderCompiler.cs" />
     <Compile Include="Effects\Swizzle.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

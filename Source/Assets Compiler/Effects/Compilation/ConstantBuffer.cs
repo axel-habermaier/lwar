@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Linq;
 	using Framework;
-	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
 	///   Represents a constant buffer that groups shader constants.

@@ -24,11 +24,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		private IProjectContent _project = new CSharpProjectContent();
 
 		/// <summary>
-		///   Gets the cross-compiled shader assets.
-		/// </summary>
-		public IEnumerable<Asset> ShaderAssets { get; private set; }
-
-		/// <summary>
 		///   Loads the required assemblies into the project.
 		/// </summary>
 		private void LoadAssemblies()
@@ -80,11 +75,10 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			var effectFiles = new EffectFile[0];
 			try
 			{
 				LoadAssemblies();
-				effectFiles = LoadFiles(assets).ToArray();
+				var effectFiles = LoadFiles(assets).ToArray();
 
 				using (var generator = new CSharpCodeGenerator())
 				{
@@ -98,16 +92,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					}
 				}
 
-				
-				ShaderAssets = effectFiles.SelectMany(file => file.ShaderAssets);
 				return effectFiles.All(file => !file.HasErrors);
 			}
 			catch (Exception e)
 			{
 				Log.Error("Effect cross-compilation failed: {0}", e.Message);
-
-				effectFiles.SelectMany(file => file.ShaderAssets).ToArray().SafeDisposeAll();
-				ShaderAssets = Enumerable.Empty<Asset>();
 				return false;
 			}
 		}

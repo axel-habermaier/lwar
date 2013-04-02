@@ -542,7 +542,7 @@ namespace Pegasus.AssetsCompiler
 			/// <summary>
 			///   Unused data that is only required to ensure that the Header struct has the correct unmanaged size.
 			/// </summary>
-			private fixed uint _unused[16];
+			private fixed uint _unused [16];
 
 			/// <summary>
 			///   Initializes a new instance from the given buffer.

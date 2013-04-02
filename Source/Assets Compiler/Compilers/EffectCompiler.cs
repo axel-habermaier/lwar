@@ -22,52 +22,47 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <param name="assets">The assets that should be compiled.</param>
 		public bool Compile(IEnumerable<Asset> assets)
 		{
+			var csharpAssets = assets.OfType<CSharpAsset>().ToArray();
+
+			if (DetermineAction(csharpAssets) == CompilationAction.Skip)
+			{
+				Log.Info("Skipping effect compilation (no changes detected).");
+				return true;
+			}
+
+			Log.Info("Compiling effects...");
 			var project = new EffectsProject();
-			var success = project.Compile(GetChangedAssets(assets).ToArray());
-			var shaders = project.ShaderAssets.ToArray();
+			var success = project.Compile(csharpAssets);
 
-			var vertexShaderCompiler = new VertexShaderCompiler();
-			var fragmentShaderCompiler = new FragmentShaderCompiler();
-
-			try
-			{
-				success &= vertexShaderCompiler.Compile(shaders);
-				success &= fragmentShaderCompiler.Compile(shaders);
-			}
-			finally
-			{
-				shaders.SafeDisposeAll();
-			}
+			foreach (var asset in csharpAssets)
+				Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 
 			return success;
 		}
 
 		/// <summary>
-		/// Gets the C# assets that have changed and require compilation.
+		///   Checks whether any of the C# effect assets have changed.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
-		private IEnumerable<CSharpAsset> GetChangedAssets(IEnumerable<Asset> assets)
+		private static CompilationAction DetermineAction(IEnumerable<Asset> assets)
 		{
+			var action = CompilationAction.Skip;
+
 			foreach (var asset in assets.OfType<CSharpAsset>())
 			{
-				var action = CompilationAction.Process;
-				if (File.Exists(asset.HashPath))
+				if (!File.Exists(asset.HashPath))
+					action = CompilationAction.Process;
+				else
 				{
 					var oldHash = Hash.FromFile(asset.HashPath);
 					var newHash = Hash.Compute(asset.SourcePath);
 
-					if (oldHash == newHash)
-						action = CompilationAction.Skip;
-				}
-
-				action.Describe(asset);
-
-				if (action == CompilationAction.Process)
-				{
-					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
-					yield return asset;
+					if (oldHash != newHash)
+						action = CompilationAction.Process;
 				}
 			}
+
+			return action;
 		}
 	}
 }

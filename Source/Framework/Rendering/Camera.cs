@@ -48,6 +48,8 @@ namespace Pegasus.Framework.Rendering
 		protected unsafe Camera(GraphicsDevice graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.That(Marshal.SizeOf(typeof(CameraData)) == CameraData.Size, "Unexpected unmanaged size.");
+			
 			_cameraBuffer = new ConstantBuffer<CameraData>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
 		}
 
@@ -143,7 +145,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		private void UpdateConstantBuffer()
 		{
-			Assert.That(Marshal.SizeOf(typeof(CameraData)) == CameraData.Size, "Unexpected unmanaged size.");
+			
 
 			_cameraBuffer.Data.ViewProjection = _cameraBuffer.Data.View * _cameraBuffer.Data.Projection;
 			_cameraBuffer.Update();
