@@ -65,7 +65,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Disposes the effect, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected abstract void __OnDisposing();
+		protected virtual void __OnDisposing()
+		{
+		}
 	}
 
 	// ReSharper restore InconsistentNaming

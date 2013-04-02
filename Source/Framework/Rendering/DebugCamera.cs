@@ -145,7 +145,6 @@ namespace Pegasus.Framework.Rendering
 				move.X -= 1;
 
 			_rotation += new Vector2(-_mouseDelta.Y, _mouseDelta.X) * RotationSpeed;
-			//Log.Info("{0} {1}",MathUtils.RadToDeg(_rotation.X), MathUtils.RadToDeg(_rotation.Y));
 			_mouseDelta = Vector2i.Zero;
 			
 			if (_rotation.Y < -MathUtils.TwoPi)

@@ -14,7 +14,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   The name of the method that binds the constant buffers and textures.
 		/// </summary>
-		private const string BindMethodName = "Bind";
+		private readonly string _bindMethodName = String.Format("_{0}Bind", Configuration.ReservedVariablePrefix);
 
 		/// <summary>
 		///   The name of the context variable of the Effect base class.
@@ -185,22 +185,24 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			_writer.AppendLine("/// </summary>");
 			_writer.AppendLine("/// <param name=\"graphicsDevice\">The graphics device this instance belongs to.</param>");
 			_writer.AppendLine("/// <param name=\"assets\">The assets manager that should be used to load required assets.</param>");
-			_writer.AppendLine("public {0}(GraphicsDevice graphicsDevice, AssetsManager assets)", _effect.Name);
+
+			_writer.Append("public ");
+			if (ConstantBuffers.Any())
+				_writer.Append("unsafe ");
+
+			_writer.AppendLine("{0}(GraphicsDevice graphicsDevice, AssetsManager assets)", _effect.Name);
 			_writer.AppendLine("\t: base(graphicsDevice, assets)");
 			_writer.AppendBlockStatement(() =>
 				{
-					foreach (var buffer in ConstantBuffers)
-						_writer.AppendLine("Assert.That(Marshal.SizeOf(typeof({0})) == {0}.Size, \"Unexpected unmanaged size.\");",
-										   GetStructName(buffer));
-
 					foreach (var technique in _effect.Techniques)
 					{
 						const string path = "{0}/{1}.{2}";
 						var vertexShader = String.Format(path, _path, _effect.FullName, technique.VertexShader.Name);
 						var fragmentShader = String.Format(path, _path, _effect.FullName, technique.FragmentShader.Name);
 
-						_writer.AppendLine("{0} = {3}.CreateTechnique(\"{1}\", \"{2}\");", technique.Name, vertexShader, fragmentShader,
-										   ContextVariableName);
+						_writer.AppendLine("{0} = {1}.CreateTechnique({2},", technique.Name, ContextVariableName, _bindMethodName);
+						_writer.AppendLine("\t\"{0}\", ", vertexShader);
+						_writer.AppendLine("\t\"{0}\");", fragmentShader);
 					}
 
 					if (ConstantBuffers.Any())
@@ -280,37 +282,38 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			if (Constants.Any())
 				_writer.Append("unsafe ");
 
-			_writer.AppendLine("void {0}()", BindMethodName);
+			_writer.AppendLine("void {0}()", _bindMethodName);
 			_writer.AppendBlockStatement(() =>
+			{
+				if (!ConstantBuffers.Any() && !_effect.Textures.Any())
+					_writer.AppendLine("// Nothing to do here");
+
+				foreach (var buffer in ConstantBuffers)
 				{
-					if (!ConstantBuffers.Any() && !_effect.Textures.Any())
-						_writer.AppendLine("// Nothing to do here");
-
-					foreach (var buffer in ConstantBuffers)
+					_writer.AppendLine("if ({0})", GetDirtyFlagName(buffer.Name));
+					_writer.AppendBlockStatement(() =>
 					{
-						_writer.AppendLine("if ({0})", GetDirtyFlagName(buffer.Name));
-						_writer.AppendBlockStatement(() =>
-							{
-								_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), Configuration.ReservedVariablePrefix);
-								foreach (var constant in buffer.Constants)
-									_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedVariablePrefix);
+						_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), Configuration.ReservedVariablePrefix);
+						foreach (var constant in buffer.Constants)
+							_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedVariablePrefix);
 
-								_writer.Newline();
-								_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
-								_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
-												   Configuration.ReservedVariablePrefix, ContextVariableName);
-							});
 						_writer.Newline();
-					}
+						_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
+						_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
+										   Configuration.ReservedVariablePrefix, ContextVariableName);
+					});
+					_writer.Newline();
+				}
 
-					foreach (var texture in _effect.Textures)
-						_writer.AppendLine("{2}.Bind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
+				foreach (var texture in _effect.Textures)
+					_writer.AppendLine("{2}.Bind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
 
-					foreach (var buffer in ConstantBuffers)
-						_writer.AppendLine("{1}.Bind({0});", GetFieldName(buffer.Name), ContextVariableName);
-				});
+				foreach (var buffer in ConstantBuffers)
+					_writer.AppendLine("{1}.Bind({0});", GetFieldName(buffer.Name), ContextVariableName);
+			});
 
-			_writer.Newline();
+			if (ConstantBuffers.Any())
+				_writer.Newline();
 		}
 
 		/// <summary>
@@ -318,6 +321,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		private void GenerateOnDisposingMethod()
 		{
+			if (!ConstantBuffers.Any())
+				return;
+
 			_writer.AppendLine("/// <summary>");
 			_writer.AppendLine("///   Disposes the object, releasing all managed and unmanaged resources.");
 			_writer.AppendLine("/// </summary>");

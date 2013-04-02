@@ -14,32 +14,14 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The constant buffer slot that is used to pass the camera matrices to the vertex shader.
 		/// </summary>
-		private const int CameraConstantsSlot = 0;
+		private const int CameraBufferSlot = 0;
+
+		public Rectangle Viewport;
 
 		/// <summary>
 		///   The constant buffer that holds the per-frame camera-related data that is passed to each vertex shader.
 		/// </summary>
-		private readonly ConstantBuffer<CameraData> _cameraBuffer;
-
-		/// <summary>
-		///   The camera's position within the world.
-		/// </summary>
-		private Vector3 _position;
-
-		/// <summary>
-		///   The target the camera looks at.
-		/// </summary>
-		private Vector3 _target;
-
-		/// <summary>
-		///   The up vector.
-		/// </summary>
-		private Vector3 _up;
-
-		/// <summary>
-		///   The camera's viewport.
-		/// </summary>
-		private Rectangle _viewport;
+		private readonly ConstantBuffer<CameraBuffer> _cameraBuffer;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -48,62 +30,9 @@ namespace Pegasus.Framework.Rendering
 		protected unsafe Camera(GraphicsDevice graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.That(Marshal.SizeOf(typeof(CameraData)) == CameraData.Size, "Unexpected unmanaged size.");
-			
-			_cameraBuffer = new ConstantBuffer<CameraData>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
-		}
+			Assert.That(Marshal.SizeOf(typeof(CameraBuffer)) == CameraBuffer.Size, "Unexpected unmanaged size.");
 
-		/// <summary>
-		///   Gets or sets the camera's viewport.
-		/// </summary>
-		public Rectangle Viewport
-		{
-			get { return _viewport; }
-			set
-			{
-				_viewport = value;
-				_cameraBuffer.Data.ViewportSize = new Vector2(_viewport.Width, _viewport.Height);
-				UpdateProjectionMatrix();
-			}
-		}
-
-		/// <summary>
-		///   Gets or sets the camera's position within the world.
-		/// </summary>
-		public Vector3 Position
-		{
-			get { return _position; }
-			set
-			{
-				_position = value;
-				UpdateViewMatrix();
-			}
-		}
-
-		/// <summary>
-		///   Gets or sets the target the camera looks at.
-		/// </summary>
-		public Vector3 Target
-		{
-			get { return _target; }
-			set
-			{
-				_target = value;
-				UpdateViewMatrix();
-			}
-		}
-
-		/// <summary>
-		///   Gets or sets the up vector.
-		/// </summary>
-		public Vector3 Up
-		{
-			get { return _up; }
-			set
-			{
-				_up = value;
-				UpdateViewMatrix();
-			}
+			_cameraBuffer = new ConstantBuffer<CameraBuffer>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
 		}
 
 		/// <summary>
@@ -111,7 +40,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		public void Bind()
 		{
-			_cameraBuffer.Bind(CameraConstantsSlot);
+			_cameraBuffer.Bind(CameraBufferSlot);
 		}
 
 		/// <summary>
@@ -145,8 +74,6 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		private void UpdateConstantBuffer()
 		{
-			
-
 			_cameraBuffer.Data.ViewProjection = _cameraBuffer.Data.View * _cameraBuffer.Data.Projection;
 			_cameraBuffer.Update();
 		}
@@ -161,21 +88,18 @@ namespace Pegasus.Framework.Rendering
 		///   Updates the view matrix based on the current camera configuration.
 		/// </summary>
 		/// <param name="matrix">The matrix that should hold the view matrix once the method returns.</param>
-		protected virtual void UpdateViewMatrix(out Matrix matrix)
-		{
-			matrix = Matrix.CreateLookAt(Position, Target, Up);
-		}
+		protected abstract void UpdateViewMatrix(out Matrix matrix);
 
 		/// <summary>
 		///   Stores the camera data that is passed to the vertex shaders.
 		/// </summary>
 		[StructLayout(LayoutKind.Sequential, Pack = 1, Size = Size)]
-		private struct CameraData
+		private struct CameraBuffer
 		{
 			/// <summary>
 			///   The size of the struct in bytes.
 			/// </summary>
-			public const int Size = 208;
+			public const int Size = 192;
 
 			/// <summary>
 			///   The view matrix, where the camera lies in the origin.
@@ -191,11 +115,6 @@ namespace Pegasus.Framework.Rendering
 			///   The product of the view and the projection matrix that is pre-calculated on the CPU.
 			/// </summary>
 			public Matrix ViewProjection;
-
-			/// <summary>
-			///   The size of the viewport in pixels.
-			/// </summary>
-			public Vector2 ViewportSize;
 		}
 	}
 }

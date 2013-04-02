@@ -18,17 +18,25 @@ namespace Pegasus.Framework.Platform.Graphics
 		private readonly VertexShader _vertexShader;
 
 		/// <summary>
+		///   The action that must be invoked to bind the required textures and constant buffers.
+		/// </summary>
+		private Action _bind;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="vertexShader">The vertex shader that should be used by the technique.</param>
 		/// <param name="fragmentShader">The fragment shader that should be used by the technique.</param>
-		internal EffectTechnique(VertexShader vertexShader, FragmentShader fragmentShader)
+		/// <param name="bind">The action that should be invoked to bind the required textures and constant buffers.</param>
+		internal EffectTechnique(VertexShader vertexShader, FragmentShader fragmentShader, Action bind)
 		{
 			Assert.ArgumentNotNull(vertexShader, () => vertexShader);
 			Assert.ArgumentNotNull(fragmentShader, () => fragmentShader);
+			Assert.ArgumentNotNull(bind, () => bind);
 
 			_vertexShader = vertexShader;
 			_fragmentShader = fragmentShader;
+			_bind = bind;
 		}
 
 		/// <summary>
@@ -38,7 +46,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			Assert.NotNull(_vertexShader, "No vertex shader has been set.");
 			Assert.NotNull(_fragmentShader, "No fragment shader has been set.");
+			Assert.NotNull(_bind, "No bind action has been set.");
 
+			_bind();
 			_vertexShader.Bind();
 			_fragmentShader.Bind();
 		}

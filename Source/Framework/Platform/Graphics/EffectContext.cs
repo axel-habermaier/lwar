@@ -101,15 +101,17 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Creates a new effect technique instance.
 		/// </summary>
+		/// <param name="bind">The action that should be invoked to bind the required textures and constant buffers.</param>
 		/// <param name="vertexShader">The vertex shader that should be used by the technique.</param>
 		/// <param name="fragmentShader">The fragment shader that should be used by the technique.</param>
-		public EffectTechnique CreateTechnique(string vertexShader, string fragmentShader)
+		public EffectTechnique CreateTechnique(Action bind, string vertexShader, string fragmentShader)
 		{
 			Assert.ArgumentNotNullOrWhitespace(vertexShader, () => vertexShader);
 			Assert.ArgumentNotNullOrWhitespace(fragmentShader, () => fragmentShader);
+			Assert.ArgumentNotNull(bind, () => bind);
 			ValidateInitialization();
 
-			return new EffectTechnique(_assets.LoadVertexShader(vertexShader), _assets.LoadFragmentShader(fragmentShader));
+			return new EffectTechnique(_assets.LoadVertexShader(vertexShader), _assets.LoadFragmentShader(fragmentShader), bind);
 		}
 
 		/// <summary>
