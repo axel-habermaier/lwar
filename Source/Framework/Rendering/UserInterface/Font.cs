@@ -26,19 +26,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private int _lowestGlyphId;
 
 		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="glyphs">The glyphs of the font.</param>
-		/// <param name="lowestGlyphId">The lowest glyph id.</param>
-		/// <param name="kerning">The kerning information of the font.</param>
-		/// <param name="texture">The texture containing the font's glyph images.</param>
-		/// <param name="lineHeight">The height of a single line.</param>
-		internal Font(Glyph[] glyphs, int lowestGlyphId, KerningPair[] kerning, Texture2D texture, int lineHeight)
-		{
-			Reinitialize(glyphs, lowestGlyphId, kerning, texture, lineHeight);
-		}
-
-		/// <summary>
 		///   Gets a value indicating whether the font supportes kerning.
 		/// </summary>
 		public bool KerningSupported

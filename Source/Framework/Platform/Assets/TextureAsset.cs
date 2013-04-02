@@ -78,7 +78,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			DisposableExtensions.SafeDispose(Texture);
+			Texture.SafeDispose();
 		}
 	}
 }

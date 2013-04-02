@@ -34,6 +34,12 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
 		internal override void Load(BufferReader buffer)
 		{
+			if (Font == null)
+				Font = new Font();
+
+			if (_texture == null)
+				_texture = new Texture2DAsset { GraphicsDevice = GraphicsDevice, Assets = Assets };
+
 			// Load the font metadata
 			var scaleW = buffer.ReadUInt16();
 			var scaleH = buffer.ReadUInt16();
@@ -92,14 +98,8 @@ namespace Pegasus.Framework.Platform.Assets
 				}
 			}
 
-			_texture.SafeDispose();
-			_texture = new Texture2DAsset { GraphicsDevice = GraphicsDevice, Assets = Assets };
 			_texture.Load(buffer);
-
-			if (Font == null)
-				Font = new Font(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
-			else
-				Font.Reinitialize(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
+			Font.Reinitialize(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
 		}
 
 		/// <summary>
