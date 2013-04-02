@@ -104,7 +104,7 @@ namespace Pegasus.AssetsCompiler
 							 .Select(element => element.Attribute("Include").Value)
 							 .Select(asset => asset.Replace("\\", "/"));
 
-			var ignoredAssets = Configuration.AssetListAssembly.GetCustomAttributes()
+			var ignoredAssets = Configuration.AssetListAssembly.GetCustomAttributes(false)
 											 .OfType<IgnoreAttribute>()
 											 .Select(ignore => ignore.Name);
 			assets = assets.Where(path => _assets.All(a => a.RelativePath != path));
@@ -128,7 +128,7 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		private void AddSpecialAssets()
 		{
-			var assets = Configuration.AssetListAssembly.GetCustomAttributes<AssetAttribute>();
+			var assets = Configuration.AssetListAssembly.GetCustomAttributes(false).OfType<AssetAttribute>();
 
 			foreach (var asset in assets)
 				Add(asset.Asset);

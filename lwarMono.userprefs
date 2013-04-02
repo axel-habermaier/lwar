@@ -1,14 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release Linux|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Shaders/SphereFS.fs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug Linux|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Source/Assets Compiler/Effects/Compilation/EffectsProject.cs">
     <Files>
-      <File FileName="Assets/LwarCompilationUnit.cs" Line="15" Column="2" />
-      <File FileName="Assets/Shaders/SphereFS.fs" Line="5" Column="1" />
+      <File FileName="Source/Assets Compiler/Effects/Compilation/EffectsProject.cs" Line="99" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/axel/Workspace/lwar/Source/Assets Compiler/Texture2DProcessor.cs" line="36" column="1" />
+      <Breakpoint file="/home/axel/Workspace/lwar/Source/Assets Compiler/Effects/Compilation/EffectsProject.cs" line="79" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
