@@ -71,15 +71,19 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Gets the change frequency of the constant. This property cannot be called if the constant is not user-defined.
+		///   Gets the name of the constant buffer the constant should be placed in. This property cannot be called if the constant
+		///   is not user-defined.
 		/// </summary>
-		public ChangeFrequency ChangeFrequency
+		public string ConstantBufferName
 		{
 			get
 			{
-				var attribute = _field.Attributes.GetAttribute<ShaderConstantAttribute>(Resolver);
+				var attribute = _field.Attributes.GetAttribute<ConstantBufferAttribute>(Resolver);
+				if (!attribute.Arguments.Any())
+					return null;
+
 				var argument = attribute.Arguments.Single();
-				return (ChangeFrequency)argument.GetConstantValue(Resolver);
+				return (string)argument.GetConstantValue(Resolver);
 			}
 		}
 

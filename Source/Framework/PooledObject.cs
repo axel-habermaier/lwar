@@ -31,13 +31,13 @@ namespace Pegasus.Framework
 		private string _description;
 
 		/// <summary>
-		///   The finalizer ensures that all unmanaged resources are freed.
+		///   Checks whether the instance has been returned to the pool.
 		/// </summary>
 		~PooledObject()
 		{
 			if (!IsAvailable)
-				Log.Die("A pooled object of type '{0}' was not returned to the pool. Pooled objects must always be returned to " +
-						"the pool using the Dispose() method.\nInstance description: '{1}'", GetType().Name, _description ?? "None");
+				Log.Die("A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
+						GetType().Name, _description ?? "None");
 		}
 #endif
 
@@ -95,7 +95,7 @@ namespace Pegasus.Framework
 		///   Returns the instance to the pool.
 		/// </summary>
 		[DebuggerHidden]
-		public void Dispose()
+		void IDisposable.Dispose()
 		{
 			Assert.That(!IsAvailable, "The instance has already been returned.");
 

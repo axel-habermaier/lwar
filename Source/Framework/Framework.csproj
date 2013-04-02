@@ -188,9 +188,11 @@
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
     <Compile Include="Platform\Assets\ShaderAsset.cs" />
     <Compile Include="Platform\Graphics\Effect.cs" />
+    <Compile Include="Platform\Graphics\EffectContext.cs" />
     <Compile Include="Platform\Graphics\EffectTechnique.cs" />
     <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
     <Compile Include="Platform\Assets\Texture2DAsset.cs" />
+    <Compile Include="Platform\Graphics\Shader.cs" />
     <Compile Include="Platform\Graphics\ShaderInput.cs" />
     <Compile Include="Platform\Graphics\TextureBinding.cs" />
     <Compile Include="Platform\BufferPointer.cs" />

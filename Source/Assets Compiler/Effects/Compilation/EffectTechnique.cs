@@ -22,6 +22,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		private readonly FieldDeclaration _field;
 
 		/// <summary>
+		///   The shaders declared by the effect the technique belongs to.
+		/// </summary>
+		private readonly ShaderMethod[] _shaders;
+
+		/// <summary>
 		///   The variable that represents the technique.
 		/// </summary>
 		private readonly VariableInitializer _variable;
@@ -31,16 +36,16 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <param name="field">The declaration of the field that represents the technique.</param>
 		/// <param name="variable">The variable that represents the technique.</param>
-		public EffectTechnique(FieldDeclaration field, VariableInitializer variable)
+		/// <param name="shaders">The shaders declared by the effect the technique belongs to.</param>
+		public EffectTechnique(FieldDeclaration field, VariableInitializer variable, ShaderMethod[] shaders)
 		{
 			Assert.ArgumentNotNull(field, () => field);
 			Assert.ArgumentNotNull(variable, () => variable);
+			Assert.ArgumentNotNull(shaders, () => shaders);
 
 			_field = field;
 			_variable = variable;
-
-			VertexShader = String.Empty;
-			FragmentShader = String.Empty;
+			_shaders = shaders;
 		}
 
 		/// <summary>
@@ -62,12 +67,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Gets the vertex shader that should be bound.
 		/// </summary>
-		public string VertexShader { get; private set; }
+		public ShaderMethod VertexShader { get; private set; }
 
 		/// <summary>
 		///   Gets the fragment shader that should be bound.
 		/// </summary>
-		public string FragmentShader { get; private set; }
+		public ShaderMethod FragmentShader { get; private set; }
 
 		/// <summary>
 		///   Invoked when the element should initialize itself.
@@ -83,7 +88,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 					if (!resolved.IsCompileTimeConstant)
 						continue;
 
-					var shader = (string)resolved.ConstantValue;
+					var shader = _shaders.SingleOrDefault(s => s.Name == (string)resolved.ConstantValue);
 					if (expression.Name == "VertexShader")
 						VertexShader = shader;
 					else if (expression.Name == "FragmentShader")
@@ -131,6 +136,29 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 				ValidateShaderDeclaration(ShaderType.VertexShader);
 				ValidateShaderDeclaration(ShaderType.FragmentShader);
+			}
+
+			// Check whether all shaders referenced by the declared techniques are actually declared
+			foreach (var shader in from namedExpression in _variable.Descendants.OfType<NamedExpression>()
+								   let shaderType = (ShaderType)Enum.Parse(typeof(ShaderType), namedExpression.Name)
+								   let resolved = Resolver.Resolve(namedExpression.Expression)
+								   where resolved.IsCompileTimeConstant
+								   let name = (string)resolved.ConstantValue
+								   where !String.IsNullOrWhiteSpace(name)
+								   where !_shaders.Any(shader => shader.Name == name && shader.Type == shaderType)
+								   select new { namedExpression.Expression, Type = shaderType })
+			{
+				switch (shader.Type)
+				{
+					case ShaderType.VertexShader:
+						Error(shader.Expression, "Reference to unknown vertex shader.");
+						break;
+					case ShaderType.FragmentShader:
+						Error(shader.Expression, "Reference to unknown fragment shader.");
+						break;
+					default:
+						throw new InvalidOperationException("Unsupported shader type.");
+				}
 			}
 		}
 

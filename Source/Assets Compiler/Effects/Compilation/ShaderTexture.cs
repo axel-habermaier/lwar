@@ -89,7 +89,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				Error(_variable.Initializer, "Unexpected initialization of shader texture object.");
 
 			// Check whether the texture object should be part of a constant buffer
-			if (_field.Attributes.Contain<ShaderConstantAttribute>(Resolver))
+			if (_field.Attributes.Contain<ConstantBufferAttribute>(Resolver))
 				Error(_variable, "Shader texture object '{0}' cannot be part of a constant buffer.", Name);
 		}
 	}

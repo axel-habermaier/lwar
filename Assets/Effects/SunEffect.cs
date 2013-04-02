@@ -17,13 +17,13 @@ namespace Lwar.Assets.Effects
 
 		public readonly Texture2D HeatMap;
 
-		[ShaderConstant(ChangeFrequency.PerDrawCall)]
+		[ConstantBuffer]
 		public readonly Matrix Rotation1;
 
-		[ShaderConstant(ChangeFrequency.PerDrawCall)]
+		[ConstantBuffer]
 		public readonly Matrix Rotation2;
 
-		[ShaderConstant(ChangeFrequency.PerDrawCall)]
+		[ConstantBuffer]
 		public readonly Matrix World;
 
 		[VertexShader]

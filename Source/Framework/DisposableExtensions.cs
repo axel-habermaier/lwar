@@ -43,7 +43,7 @@ namespace Pegasus.Framework
 		public static void SafeDispose(this DisposableObject obj)
 		{
 			if (obj != null && !obj.IsDisposed)
-				obj.Dispose();
+				((IDisposable)obj).Dispose();
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace Pegasus.Framework
 			where T : PooledObject<T>, new()
 		{
 			if (obj != null && !obj.IsAvailable)
-				obj.Dispose();
+				((IDisposable)obj).Dispose();
 		}
 	}
 }

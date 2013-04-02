@@ -143,7 +143,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			_input.CharEntered -= OnCharEntered;
 			_input.KeyPressed -= OnKeyPressed;
-			_input.Dispose();
+			_input.SafeDispose();
 
 			_spriteBatch.SafeDispose();
 			_prompt.SafeDispose();

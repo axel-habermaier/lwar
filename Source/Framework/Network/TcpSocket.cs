@@ -224,7 +224,7 @@ namespace Pegasus.Framework.Network
 				// If we did not return the packet to due some exception (socket error, process cancellation), we
 				// have to dispose it
 				if (packet != null && !packetReturned)
-					packet.Dispose();
+					packet.SafeDispose();
 			}
 		}
 

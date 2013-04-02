@@ -237,7 +237,6 @@
     <Compile Include="Assets\Texture2DAsset.cs" />
     <Compile Include="Compilers\Texture2DCompiler.cs" />
     <Compile Include="Compilers\VertexShaderCompiler.cs" />
-    <Compile Include="Effects\ChangeFrequency.cs" />
     <Compile Include="Effects\Swizzle.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -248,7 +247,7 @@
     <Compile Include="Effects\Compilation\ShaderConstant.cs" />
     <Compile Include="Effects\Compilation\ShaderMethod.cs" />
     <Compile Include="Effects\Compilation\ShaderParameter.cs" />
-    <Compile Include="Effects\ShaderConstantAttribute.cs" />
+    <Compile Include="Effects\ConstantBufferAttribute.cs" />
     <Compile Include="Effects\Effect.cs" />
     <Compile Include="Effects\EffectAttribute.cs" />
     <Compile Include="Effects\FragmentShaderAttribute.cs" />

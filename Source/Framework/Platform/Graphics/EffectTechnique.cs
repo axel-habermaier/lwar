@@ -5,32 +5,42 @@ namespace Pegasus.Framework.Platform.Graphics
 	/// <summary>
 	///   Represents a combination of shaders that are currently set on the GPU to create a rendering effect.
 	/// </summary>
-	public struct EffectTechnique : IDisposable
+	public struct EffectTechnique
 	{
 		/// <summary>
-		///   The effect the running technique belongs to.
+		///   The fragment shader that is used by the technique.
 		/// </summary>
-		private readonly Effect _effect;
+		private readonly FragmentShader _fragmentShader;
+
+		/// <summary>
+		///   The vertex shader that is used by the technique.
+		/// </summary>
+		private readonly VertexShader _vertexShader;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="effect">The effect the technique should belong to.</param>
-		internal EffectTechnique(Effect effect)
+		/// <param name="vertexShader">The vertex shader that should be used by the technique.</param>
+		/// <param name="fragmentShader">The fragment shader that should be used by the technique.</param>
+		internal EffectTechnique(VertexShader vertexShader, FragmentShader fragmentShader)
 		{
-			Assert.ArgumentNotNull(effect, () => effect);
+			Assert.ArgumentNotNull(vertexShader, () => vertexShader);
+			Assert.ArgumentNotNull(fragmentShader, () => fragmentShader);
 
-			_effect = effect;
-			_effect.IsActive = true;
+			_vertexShader = vertexShader;
+			_fragmentShader = fragmentShader;
 		}
 
 		/// <summary>
-		///   Marks the effect the technique belongs to as no longer used.
+		///   Binds the shaders used by the technique.
 		/// </summary>
-		void IDisposable.Dispose()
+		internal void Bind()
 		{
-			Assert.NotNull(_effect, "No effect has been set.");
-			_effect.IsActive = false;
+			Assert.NotNull(_vertexShader, "No vertex shader has been set.");
+			Assert.NotNull(_fragmentShader, "No fragment shader has been set.");
+
+			_vertexShader.Bind();
+			_fragmentShader.Bind();
 		}
 	}
 }

@@ -8,7 +8,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
-	using Effects;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to GLSL.
@@ -46,7 +45,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <param name="constantBuffer">The constant buffer that should be generated.</param>
 		protected override void GenerateConstantBuffer(ConstantBuffer constantBuffer)
 		{
-			Writer.AppendLine("layout(std140, binding = {0}) uniform {1}", constantBuffer.Slot, constantBuffer.Name);
+			Writer.AppendLine("layout(std140, binding = {0}) uniform {2}{1}", constantBuffer.Slot, constantBuffer.Name,
+							  Configuration.ReservedVariablePrefix);
 			Writer.AppendBlockStatement(() =>
 				{
 					foreach (var constant in constantBuffer.Constants)
@@ -71,7 +71,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateVertexShaderInputs(IEnumerable<ShaderParameter> inputs)
 		{
 			foreach (var input in inputs)
-				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type), Escape(input.Name));
+				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type),
+								  Escape(input.Name));
 		}
 
 		/// <summary>
@@ -207,7 +208,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			if (invocationExpression.Arguments.Count > 0)
 			{
 				Writer.Append(", ");
-				invocationExpression.Arguments.AcceptVisitor(this, ()=>Writer.Append(", "));
+				invocationExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
 			}
 
 			Writer.Append(")");

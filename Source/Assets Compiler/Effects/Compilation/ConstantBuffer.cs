@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Linq;
 	using Framework;
+	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
 	///   Represents a constant buffer that groups shader constants.
@@ -13,16 +14,17 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="name">The name of the constant buffer;</param>
 		/// <param name="slot">The slot the constant buffer should be bound to.</param>
 		/// <param name="constants">The constant that should be contained in the constant buffer.</param>
 		/// <param name="shared">Indicating whether the constant buffer should be shared between different effects.</param>
-		public ConstantBuffer(int slot, ShaderConstant[] constants, bool shared = false)
+		public ConstantBuffer(string name, int slot, ShaderConstant[] constants, bool shared = false)
 		{
 			Assert.ArgumentInRange(slot, () => slot, 0, 16);
 			Assert.ArgumentNotNull(constants, () => constants);
 			Assert.ArgumentSatisfies(constants.Length > 0, () => constants, "A constant buffer must contain at least one constant.");
 
-			Name = "ConstantBuffer" + slot;
+			Name = name ?? "ConstantBuffer" + slot;
 			Slot = slot;
 			Constants = constants;
 			Shared = shared;

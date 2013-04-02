@@ -15,7 +15,7 @@ namespace Lwar.Assets.Effects
 
 		public readonly CubeMap SphereTexture;
 
-		[ShaderConstant(ChangeFrequency.PerDrawCall)]
+		[ConstantBuffer]
 		public readonly Matrix World;
 
 		[VertexShader]

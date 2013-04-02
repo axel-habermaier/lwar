@@ -7,13 +7,8 @@ namespace Pegasus.Framework.Platform.Graphics
 	/// <summary>
 	///   A fragment shader is a program that controls the fragment-shader stage.
 	/// </summary>
-	public sealed class FragmentShader : GraphicsObject
+	public sealed class FragmentShader : Shader
 	{
-		/// <summary>
-		///   The native shader instance.
-		/// </summary>
-		private IntPtr _shader;
-
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -30,26 +25,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="length">The length of the shader code in bytes.</param>
 		internal unsafe void Reinitialize(byte* shaderCode, int length)
 		{
-			NativeMethods.DestroyShader(_shader);
-			_shader = IntPtr.Zero;
-
+			DestroyShader();
 			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, shaderCode, length);
-		}
-
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			NativeMethods.DestroyShader(_shader);
-		}
-
-		/// <summary>
-		///   Binds the shader to the pipeline.
-		/// </summary>
-		public void Bind()
-		{
-			NativeMethods.BindShader(_shader);
 		}
 
 		/// <summary>
@@ -62,12 +39,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateFragmentShader")]
 			public static extern unsafe IntPtr CreateShader(IntPtr device, byte* shaderData, int length);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyShader")]
-			public static extern void DestroyShader(IntPtr shader);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindShader")]
-			public static extern void BindShader(IntPtr shader);
 		}
 	}
 }

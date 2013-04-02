@@ -7,13 +7,8 @@ namespace Pegasus.Framework.Platform.Graphics
 	/// <summary>
 	///   A vertex shader is a program that controls the vertex-shader stage.
 	/// </summary>
-	public sealed class VertexShader : GraphicsObject
+	public sealed class VertexShader : Shader
 	{
-		/// <summary>
-		///   The native shader instance.
-		/// </summary>
-		private IntPtr _shader;
-
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -34,26 +29,8 @@ namespace Pegasus.Framework.Platform.Graphics
 			Assert.ArgumentNotNull(inputs, () => inputs);
 			Assert.ArgumentSatisfies(inputs.Length > 0, () => inputs, "The shader must have at least one input.");
 
-			NativeMethods.DestroyShader(_shader);
-			_shader = IntPtr.Zero;
-
+			DestroyShader();
 			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, shaderCode, length, inputs, inputs.Length);
-		}
-
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			NativeMethods.DestroyShader(_shader);
-		}
-
-		/// <summary>
-		///   Binds the shader to the pipeline.
-		/// </summary>
-		public void Bind()
-		{
-			NativeMethods.BindShader(_shader);
 		}
 
 		/// <summary>
@@ -67,12 +44,6 @@ namespace Pegasus.Framework.Platform.Graphics
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateVertexShader")]
 			public static extern unsafe IntPtr CreateShader(IntPtr device, byte* shaderData, int length, ShaderInput[] inputs,
 															int inputCount);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyShader")]
-			public static extern void DestroyShader(IntPtr shader);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindShader")]
-			public static extern void BindShader(IntPtr shader);
 		}
 	}
 }

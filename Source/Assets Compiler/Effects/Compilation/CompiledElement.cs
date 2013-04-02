@@ -207,12 +207,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			startsWith(Configuration.ReservedVariablePrefix);
 			startsWith("gl_");
-			startsWith("ConstantBuffer");
-
-			var type = typeof(Effect).GetTypeInfo();
-			var reserved = type.DeclaredMethods.Select(method => method.Name);
-			if (reserved.Contains(identifier.Name))
-				Error(identifier, "Identifier '{0}' is reserved.", identifier.Name);
 		}
 
 		/// <summary>

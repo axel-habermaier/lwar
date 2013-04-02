@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
+	using Microsoft.CSharp;
 	using Effect = Effects.Effect;
 
 	/// <summary>
@@ -122,7 +123,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			// Add all shader literals
 			AddElements(from field in _type.Descendants.OfType<FieldDeclaration>()
-						where !field.Attributes.Contain<ShaderConstantAttribute>(Resolver)
+						where !field.Attributes.Contain<ConstantBufferAttribute>(Resolver)
 						let dataType = field.ResolveType(Resolver).ToDataType()
 						where dataType != DataType.Texture2D && dataType != DataType.CubeMap
 						where field.ResolveType(Resolver).FullName != typeof(Technique).FullName
@@ -146,7 +147,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 
 			// Add all shader constants
 			AddElements(from field in _type.Descendants.OfType<FieldDeclaration>()
-						where field.Attributes.Contain<ShaderConstantAttribute>(Resolver)
+						where field.Attributes.Contain<ConstantBufferAttribute>(Resolver)
 						from variable in field.Descendants.OfType<VariableInitializer>()
 						select new ShaderConstant(field, variable));
 
@@ -159,15 +160,15 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			// Create the default constant buffers
 			var constantBuffers = new[]
 			{
-				new ConstantBuffer(0, new[] { view, projection, viewProjection }, true),
-				new ConstantBuffer(1, new[] { viewportSize }, true)
+				new ConstantBuffer("CameraBuffer", 0, new[] { view, projection, viewProjection }, true),
+				new ConstantBuffer("ViewportBuffer", 1, new[] { viewportSize }, true)
 			};
 
 			// Create the user defined constant buffers
 			var count = constantBuffers.Length;
-			ConstantBuffers = Constants.GroupBy(constant => constant.ChangeFrequency)
-									   .Select(group => new ConstantBuffer(count++, group.ToArray()))
-									   .Union(constantBuffers)
+			ConstantBuffers = Constants.GroupBy(constant => constant.ConstantBufferName)
+									   .Select(group => new ConstantBuffer(group.Key, count++, group.ToArray()))
+									   .Concat(constantBuffers)
 									   .OrderBy(buffer => buffer.Slot)
 									   .ToArray();
 
@@ -181,7 +182,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			AddElements(from field in _type.Descendants.OfType<FieldDeclaration>()
 						where field.ResolveType(Resolver).FullName == typeof(Technique).FullName
 						from variable in field.Descendants.OfType<VariableInitializer>()
-						select new EffectTechnique(field, variable));
+						select new EffectTechnique(field, variable, Shaders.ToArray()));
 		}
 
 		/// <summary>
@@ -248,34 +249,20 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			if (!Techniques.Any())
 				Error(_type, "Expected a declaration of at least one technique.");
 
-			// Check whether all shaders referenced by the declared techniques are actually declared
-			foreach (var shader in from field in _type.Descendants.OfType<FieldDeclaration>()
-								   where field.ResolveType(Resolver).FullName == typeof(Technique).FullName
-								   from variable in field.Variables
-								   from namedExpression in variable.Descendants.OfType<NamedExpression>()
-								   let shaderType = (ShaderType)Enum.Parse(typeof(ShaderType), namedExpression.Name)
-								   let resolved = Resolver.Resolve(namedExpression.Expression)
-								   where resolved.IsCompileTimeConstant
-								   let name = (string)resolved.ConstantValue
-								   where !String.IsNullOrWhiteSpace(name)
-								   where !Shaders.Any(shader => shader.Name == name && shader.Type == shaderType)
-								   select new { namedExpression.Expression, Type = shaderType })
-			{
-				switch (shader.Type)
-				{
-					case ShaderType.VertexShader:
-						Error(shader.Expression, "Reference to unknown vertex shader.");
-						break;
-					case ShaderType.FragmentShader:
-						Error(shader.Expression, "Reference to unknown fragment shader.");
-						break;
-					default:
-						throw new InvalidOperationException("Unsupported shader type.");
-				}
-			}
-
 			// Check whether the name of any declared local variable is reserved
 			ValidateLocalVariableNames();
+
+			// Check whether the names assigned to all declared constant buffers are valid identifiers
+			ValidateConstantBufferNames();
+
+			// Check whether any shader texture object or shader constant hides the name of a constant buffer
+			foreach (var variable in from field in _type.Descendants.OfType<FieldDeclaration>()
+									 from variable in field.Variables
+									 where ConstantBuffers.Any(buffer => buffer.Name == variable.Name)
+									 select variable)
+			{
+				Error(variable, "Field '{0}' hides constant buffer of the same name.", variable.Name);
+			}
 
 			// Check that no unsupported C# features are used by the method body
 			CheckUnsupportedCSharpFeatureUsed<PreProcessorDirective>("preprocessor directive");
@@ -425,7 +412,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 								 from variable in fieldDeclaration.Variables
 								 select variable.Name;
 
-			var methodVariables = localVariables.Union(parameters);
+			var methodVariables = localVariables.Concat(parameters);
 
 			foreach (var variable in methodVariables.Where(variable => classVariables.Contains(variable.Name)))
 				Error(variable.Node, "Local variable or parameter '{0}' hides field of the same name.", variable.Name);
@@ -459,6 +446,38 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			{
 				Error(node, "Unsupported C# feature used: {0}.", description);
 			}
+		}
+
+		/// <summary>
+		///   Checks whether the names assigned to all declared constant buffers are valid identifiers.
+		/// </summary>
+		private void ValidateConstantBufferNames()
+		{
+			var provider = new CSharpCodeProvider();
+			var validCharacters = Enumerable.Range('A', 'Z' - 'A' + 1)
+											.Concat(Enumerable.Range('a', 'z' - 'a' + 1))
+											.Concat(Enumerable.Range('0', '9' - '0' + 1))
+											.Concat(new[] { (int)'_' })
+											.Select(c => (char)c)
+											.ToArray();
+
+			var buffers = (from field in _type.Descendants.OfType<FieldDeclaration>()
+						   let attribute = field.Attributes.GetAttribute<ConstantBufferAttribute>(Resolver)
+						   where attribute != null
+						   let argument = attribute.Arguments.FirstOrDefault()
+						   where argument != null
+						   let resolved = Resolver.Resolve(argument)
+						   where resolved.IsCompileTimeConstant
+						   let name = (string)resolved.ConstantValue
+						   select new { Argument = argument, Name = name }).ToArray();
+
+			foreach (var buffer in buffers.Where(buffer => buffer.Name.StartsWith(Configuration.ReservedVariablePrefix)))
+				Error(buffer.Argument, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedVariablePrefix);
+
+			foreach (
+				var buffer in
+					buffers.Where(buffer => !provider.IsValidIdentifier(buffer.Name) || buffer.Name.Any(c => !validCharacters.Contains(c))))
+				Error(buffer.Argument, "Invalid constant buffer name '{0}'.", buffer.Name);
 		}
 	}
 }

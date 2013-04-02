@@ -12,12 +12,12 @@ namespace Pegasus.Framework
 	public abstract class DisposableObject : IDisposable
 	{
 		/// <summary>
-		///   Indicates whether the object has already been disposed.
+		///   Gets a value indicating whether the object has already been disposed.
 		/// </summary>
 		public bool IsDisposed { get; private set; }
 
 		/// <summary>
-		///   Indicates whether the object is currently being disposed.
+		///   Gets a value indicating  whether the object is currently being disposed.
 		/// </summary>
 		protected bool IsDisposing { get; private set; }
 
@@ -28,7 +28,7 @@ namespace Pegasus.Framework
 		private string _description;
 
 		/// <summary>
-		///   The finalizer ensures that all unmanaged resources are freed.
+		///   Ensures that the instance has been disposed.
 		/// </summary>
 		~DisposableObject()
 		{
@@ -54,12 +54,11 @@ namespace Pegasus.Framework
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
-		///   Throws an ObjectDisposedException if the object has already been disposed.
 		/// </summary>
 		[DebuggerHidden]
-		public void Dispose()
+		void IDisposable.Dispose()
 		{
-			Assert.That(!IsDisposed, "Dispose() can only be invoked once per object.");
+			Assert.That(!IsDisposed, "The instance has already been disposed.");
 
 			IsDisposing = true;
 			OnDisposing();
