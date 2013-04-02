@@ -129,8 +129,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Draws primitiveCount-many primitives of the given type, starting at the given offset
-		///   into the currently bound vertex buffers.
+		///   Draws primitiveCount-many primitives, starting at the given offset into the currently bound vertex buffers.
 		/// </summary>
 		/// <param name="primitiveCount">The number of primitives that should be drawn.</param>
 		/// <param name="offset">The offset into the vertex buffers.</param>
@@ -141,11 +140,12 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Draws indexed geometry.
+		///   Draws indexCount-many indices, starting at the given index offset into the currently bound index buffer, where the
+		///   vertex offset is added to each index before accessing the currently bound vertex buffers.
 		/// </summary>
 		/// <param name="indexCount">The number of indices to draw.</param>
 		/// <param name="indexOffset">The location of the first index read by the GPU from the index buffer.</param>
-		/// <param name="vertexOffset">A value added to each index before reading a vertex from the vertex buffer.</param>
+		/// <param name="vertexOffset">The value that should be added to each index before reading a vertex from the vertex buffer.</param>
 		public void DrawIndexed(int indexCount, int indexOffset = 0, int vertexOffset = 0)
 		{
 			Assert.NotDisposed(this);

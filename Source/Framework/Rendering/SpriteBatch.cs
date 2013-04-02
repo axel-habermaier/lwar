@@ -5,15 +5,13 @@ namespace Pegasus.Framework.Rendering
 	using System.Runtime.InteropServices;
 	using Math;
 	using Platform;
-	using Platform.Assets;
 	using Platform.Graphics;
 	using Math = System.Math;
-	using Texture2D = Platform.Graphics.Texture2D;
 
 	/// <summary>
 	///   Efficiently draws large amounts of 2D sprites by batching together quads with the same texture.
 	/// </summary>
-	public sealed class SpriteBatch : GraphicsObject
+	public sealed class SpriteBatch : DisposableObject
 	{
 		/// <summary>
 		///   The maximum number of quads that can be queued.
@@ -31,9 +29,14 @@ namespace Pegasus.Framework.Rendering
 		private const int MaxSectionLists = 16;
 
 		/// <summary>
-		///   The fragment shader that is used for drawing.
+		///   The effect that is used to draw the sprites.
 		/// </summary>
-		private readonly FragmentShader _fragmentShader;
+		private readonly ISpriteEffect _effect;
+
+		/// <summary>
+		///   The graphics device that should be used to draw the sprites.
+		/// </summary>
+		private readonly GraphicsDevice _graphicsDevice;
 
 		/// <summary>
 		///   The index buffer that is used for drawing.
@@ -41,9 +44,9 @@ namespace Pegasus.Framework.Rendering
 		private readonly IndexBuffer _indexBuffer;
 
 		/// <summary>
-		///   The constant buffer for the projection matrix.
+		///   The output that should be used for drawing.
 		/// </summary>
-		private readonly ConstantBuffer<Matrix> _projectionMatrix;
+		private readonly RenderOutput _output;
 
 		/// <summary>
 		///   The size of a single quad in bytes.
@@ -81,16 +84,6 @@ namespace Pegasus.Framework.Rendering
 		private readonly VertexInputLayout _vertexLayout;
 
 		/// <summary>
-		///   The vertex shader that is used for drawing.
-		/// </summary>
-		private readonly VertexShader _vertexShader;
-
-		/// <summary>
-		///   The constant buffer for the world matrix.
-		/// </summary>
-		private readonly ConstantBuffer<Matrix> _worldMatrix;
-
-		/// <summary>
 		///   The index of the section that is currently in use.
 		/// </summary>
 		private int _currentSection;
@@ -118,7 +111,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The rectangle that should be used for the scissor test.
 		/// </summary>
-		private Rectangle _scissorRectangle;
+		private Rectangle _scissorArea;
 
 		/// <summary>
 		///   Indicates whether a scissor test should be performed during rendering.
@@ -126,15 +119,25 @@ namespace Pegasus.Framework.Rendering
 		private bool _useScissorTest;
 
 		/// <summary>
+		///   The current world matrix used by the sprite batch.
+		/// </summary>
+		private Matrix _worldMatrix;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="device">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load the shaders.</param>
-		public unsafe SpriteBatch(GraphicsDevice device, AssetsManager assets)
-			: base(device)
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="output">The output that should be used for drawing.</param>
+		/// <param name="effect">The effect that should be used to draw the sprites.</param>
+		public SpriteBatch(GraphicsDevice graphicsDevice, RenderOutput output, ISpriteEffect effect)
 		{
-			Assert.ArgumentNotNull(device, () => device);
-			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(output, () => output);
+			Assert.ArgumentNotNull(effect, () => effect);
+
+			_graphicsDevice = graphicsDevice;
+			_output = output;
+			_effect = effect;
 
 			// Initialize the indices; this can be done once, so after the indices are copied to the index buffer,
 			// we never have to change the index buffer again
@@ -156,17 +159,11 @@ namespace Pegasus.Framework.Rendering
 			}
 
 			// Initialize the graphics objects
-			_projectionMatrix = new ConstantBuffer<Matrix>(device, (buffer, matrix) => buffer.Copy(&matrix), Matrix.Identity);
-			_worldMatrix = new ConstantBuffer<Matrix>(device, (buffer, matrix) => buffer.Copy(&matrix), Matrix.Identity);
+			_vertexBuffer = VertexBuffer.Create<Quad>(graphicsDevice, MaxQuads, ResourceUsage.Dynamic);
+			_indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
+			_vertexLayout = VertexPositionColorTexture.GetInputLayout(graphicsDevice, _vertexBuffer, _indexBuffer);
 
-			_vertexBuffer = VertexBuffer.Create<Quad>(device, MaxQuads, ResourceUsage.Dynamic);
-			_indexBuffer = IndexBuffer.Create(device, indices);
-			_vertexLayout = VertexPositionColorTexture.GetInputLayout(device, _vertexBuffer, _indexBuffer);
-
-			_vertexShader = assets.LoadVertexShader("Shaders/SpriteVS");
-			_fragmentShader = assets.LoadFragmentShader("Shaders/SpriteFS");
-
-			_scissorRasterizerState = new RasterizerState(device)
+			_scissorRasterizerState = new RasterizerState(graphicsDevice)
 			{
 				CullMode = CullMode.None,
 				ScissorEnabled = true
@@ -174,27 +171,27 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
-		///   Gets or sets the rectangle that should be used for the scissor test. Before a new rectangle is set,
-		///   DrawBatch() is called.
+		///   Gets or sets the scissor area that should be used for the scissor test. All batched sprites are drawn before the area
+		///   is changed.
 		/// </summary>
-		public Rectangle ScissorRectangle
+		public Rectangle ScissorArea
 		{
-			get { return _scissorRectangle; }
+			get { return _scissorArea; }
 			set
 			{
 				Assert.NotDisposed(this);
 
-				if (_scissorRectangle == value)
+				if (_scissorArea == value)
 					return;
 
 				DrawBatch();
-				_scissorRectangle = value;
+				_scissorArea = value;
 			}
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether a scissor test should be performed during rendering.
-		///   Before the value is changed, DrawBatch() is called.
+		///   Gets or sets a value indicating whether a scissor test should be performed during rendering. All batched sprites are
+		///   drawn before the scissor test is enabled or disabled.
 		/// </summary>
 		public bool UseScissorTest
 		{
@@ -212,46 +209,22 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
-		///   Gets or sets the world matrix used by the sprite batch. Before the matrix is changed,
-		///   DrawBatch() is called.
+		///   Gets or sets the world matrix used by the sprite batch. All batched sprites are drawn before the world matrix is
+		///   changed.
 		/// </summary>
 		public Matrix WorldMatrix
 		{
 			get
 			{
 				Assert.NotDisposed(this);
-				return _worldMatrix.Data;
+				return _worldMatrix;
 			}
 			set
 			{
 				Assert.NotDisposed(this);
 
 				DrawBatch();
-
-				_worldMatrix.Data = value;
-				_worldMatrix.Update();
-			}
-		}
-
-		/// <summary>
-		///   Gets or sets the projection matrix used by the sprite batch. Before the matrix is changed,
-		///   DrawBatch() is called.
-		/// </summary>
-		public Matrix ProjectionMatrix
-		{
-			get
-			{
-				Assert.NotDisposed(this);
-				return _projectionMatrix.Data;
-			}
-			set
-			{
-				Assert.NotDisposed(this);
-
-				DrawBatch();
-
-				_projectionMatrix.Data = value;
-				_projectionMatrix.Update();
+				_worldMatrix = value;
 			}
 		}
 
@@ -262,8 +235,6 @@ namespace Pegasus.Framework.Rendering
 		{
 			_vertexBuffer.SafeDispose();
 			_indexBuffer.SafeDispose();
-			_worldMatrix.SafeDispose();
-			_projectionMatrix.SafeDispose();
 			_vertexLayout.SafeDispose();
 			_scissorRasterizerState.SafeDispose();
 		}
@@ -451,15 +422,11 @@ namespace Pegasus.Framework.Rendering
 				return;
 
 			// Prepare the graphics pipeline
-			_vertexShader.Bind();
-			_fragmentShader.Bind();
-			_projectionMatrix.Bind(0);
-			_worldMatrix.Bind(1);
+			_effect.World = _worldMatrix;
 			_vertexLayout.Bind();
 
-			GraphicsDevice.PrimitiveType = PrimitiveType.Triangles;
+			_graphicsDevice.PrimitiveType = PrimitiveType.Triangles;
 			DepthStencilState.DepthDisabled.Bind();
-			SamplerState.PointClampNoMipmaps.Bind(0);
 			BlendState.Premultiplied.Bind();
 
 			if (!UseScissorTest)
@@ -467,7 +434,7 @@ namespace Pegasus.Framework.Rendering
 			else
 			{
 				_scissorRasterizerState.Bind();
-				GraphicsDevice.ScissorArea = ScissorRectangle;
+				_output.ScissorArea = ScissorArea;
 			}
 
 			// Prepare the vertex buffer
@@ -478,11 +445,11 @@ namespace Pegasus.Framework.Rendering
 			for (var i = 0; i < _numSectionLists; ++i)
 			{
 				// Bind the texture
-				_sectionLists[i].Texture.Bind(0);
+				_effect.Sprite = new Texture2DView(_sectionLists[i].Texture, SamplerState.PointClampNoMipmaps);
 
 				// Draw and increase the offset
 				var numIndices = _sectionLists[i].NumQuads * 6;
-				GraphicsDevice.DrawIndexed(numIndices, offset);
+				_output.DrawIndexed(numIndices, offset);
 				offset += numIndices;
 			}
 
@@ -560,8 +527,7 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
-		///   Checks whether the current texture has to be changed, and if so, creates a new section and possibly section
-		///   list.
+		///   Checks whether the current texture has to be changed, and if so, creates a new section and possibly section list.
 		/// </summary>
 		/// <param name="texture">The texture that should be used for newly added quads.</param>
 		private void ChangeTexture(Texture2D texture)

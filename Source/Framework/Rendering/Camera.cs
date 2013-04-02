@@ -12,14 +12,24 @@ namespace Pegasus.Framework.Rendering
 	public abstract class Camera : DisposableObject
 	{
 		/// <summary>
-		///   The constant buffer slot that is used to pass the camera matrices to the vertex shader.
+		///   The constant buffer that holds the camera-related data that is passed to each vertex shader.
 		/// </summary>
-		private const int CameraBufferSlot = 0;
+		private readonly ConstantBuffer _cameraBuffer;
 
 		/// <summary>
-		///   The constant buffer that holds the per-frame camera-related data that is passed to each vertex shader.
+		///   Indicates whether the contents of the camera buffer are outdated.
 		/// </summary>
-		private readonly ConstantBuffer<CameraBuffer> _cameraBuffer;
+		private bool _bufferUpdateRequired = true;
+
+		/// <summary>
+		///   The camera's projection matrix.
+		/// </summary>
+		private Matrix _projection;
+
+		/// <summary>
+		///   The camera's view matrix.
+		/// </summary>
+		private Matrix _view;
 
 		/// <summary>
 		///   The camera's viewport.
@@ -30,12 +40,12 @@ namespace Pegasus.Framework.Rendering
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
-		protected unsafe Camera(GraphicsDevice graphicsDevice)
+		protected Camera(GraphicsDevice graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.That(Marshal.SizeOf(typeof(CameraBuffer)) == CameraBuffer.Size, "Unexpected unmanaged size.");
 
-			_cameraBuffer = new ConstantBuffer<CameraBuffer>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
+			_cameraBuffer = new ConstantBuffer(graphicsDevice, CameraBuffer.Size, CameraBuffer.Slot);
 		}
 
 		/// <summary>
@@ -44,7 +54,7 @@ namespace Pegasus.Framework.Rendering
 		public Rectangle Viewport
 		{
 			get { return _viewport; }
-			set
+			internal set
 			{
 				if (_viewport == value)
 					return;
@@ -57,9 +67,17 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Activates this camera instance, causing all subsequent drawing operations to be relative to this camera instance.
 		/// </summary>
-		public void Bind()
+		internal unsafe void Bind()
 		{
-			_cameraBuffer.Bind(CameraBufferSlot);
+			if (_bufferUpdateRequired)
+			{
+				var bufferData = new CameraBuffer(_view, _projection);
+				_cameraBuffer.CopyData(&bufferData);
+
+				_bufferUpdateRequired = false;
+			}
+
+			_cameraBuffer.Bind();
 		}
 
 		/// <summary>
@@ -75,8 +93,8 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected void UpdateProjectionMatrix()
 		{
-			UpdateProjectionMatrix(out _cameraBuffer.Data.Projection);
-			UpdateConstantBuffer();
+			UpdateProjectionMatrix(out _projection);
+			_bufferUpdateRequired = true;
 		}
 
 		/// <summary>
@@ -84,17 +102,8 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected void UpdateViewMatrix()
 		{
-			UpdateViewMatrix(out _cameraBuffer.Data.View);
-			UpdateConstantBuffer();
-		}
-
-		/// <summary>
-		///   Updates the matrices constant buffer.
-		/// </summary>
-		private void UpdateConstantBuffer()
-		{
-			_cameraBuffer.Data.ViewProjection = _cameraBuffer.Data.View * _cameraBuffer.Data.Projection;
-			_cameraBuffer.Update();
+			UpdateViewMatrix(out _view);
+			_bufferUpdateRequired = true;
 		}
 
 		/// <summary>
@@ -121,19 +130,36 @@ namespace Pegasus.Framework.Rendering
 			public const int Size = 192;
 
 			/// <summary>
-			///   The view matrix, where the camera lies in the origin.
+			///   The slot that is used to pass the camera buffer to the vertex shaders.
 			/// </summary>
-			public Matrix View;
+			public const int Slot = 0;
 
 			/// <summary>
-			///   The projection matrix used by the camera.
+			///   The view matrix of the camera.
 			/// </summary>
-			public Matrix Projection;
+			private readonly Matrix View;
+
+			/// <summary>
+			///   The projection matrix of the camera.
+			/// </summary>
+			private readonly Matrix Projection;
 
 			/// <summary>
 			///   The product of the view and the projection matrix that is pre-calculated on the CPU.
 			/// </summary>
-			public Matrix ViewProjection;
+			private readonly Matrix ViewProjection;
+
+			/// <summary>
+			///   Initializes a new instance.
+			/// </summary>
+			/// <param name="view">The view matrix of the camera.</param>
+			/// <param name="projection"> The projection matrix of the camera.</param>
+			public CameraBuffer(Matrix view, Matrix projection)
+			{
+				View = view;
+				Projection = projection;
+				ViewProjection = view * projection;
+			}
 		}
 	}
 }

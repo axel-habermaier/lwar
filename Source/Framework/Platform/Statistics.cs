@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Text;
-	using Assets;
 	using Graphics;
 	using Math;
 	using Rendering;
@@ -69,29 +68,21 @@ namespace Pegasus.Framework.Platform
 		///   Initializes the statistics.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load the required assets.</param>
-		internal void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
+		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
+		/// <param name="font">The font that should be used for drawing.</param>
+		internal void Initialize(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Font font)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(spriteBatch, () => spriteBatch);
+			Assert.ArgumentNotNull(font, () => font);
 
-			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
-			_label = new Label(assets.LoadFont("Fonts/Liberation Mono 12")) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
+			_spriteBatch = spriteBatch;
+			_label = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom, Area = new Rectangle(5, 5, 1000, 1000) };
 			_timer.Timeout += UpdateStatistics;
 
 			GpuFrameTime = new GpuProfiler(graphicsDevice);
 			CpuFrameTime = new AveragedValue();
 			UpdateInput = new AveragedValue();
-		}
-
-		/// <summary>
-		///   Sets the statistic's output size.
-		/// </summary>
-		/// <param name="size">The new size.</param>
-		internal void Resize(Size size)
-		{
-			_spriteBatch.ProjectionMatrix = Matrix.CreateOrthographic(0, size.Width, size.Height, 0, 0, 1);
-			_label.Area = new Rectangle(5, 5, size.Width, size.Height);
 		}
 
 		/// <summary>

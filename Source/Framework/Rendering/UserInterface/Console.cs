@@ -3,11 +3,9 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using Math;
-	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Input;
 	using Scripting;
-	using Texture2D = Platform.Graphics.Texture2D;
 
 	/// <summary>
 	///   A Quake-like in-game console.
@@ -83,16 +81,18 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
 		/// <param name="inputDevice">The input device that provides the user input.</param>
-		public Console(GraphicsDevice graphicsDevice, AssetsManager assets, LogicalInputDevice inputDevice)
+		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
+		/// <param name="font">The font that should be used for drawing.</param>
+		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, SpriteBatch spriteBatch, Font font)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
+			Assert.ArgumentNotNull(spriteBatch, () => spriteBatch);
+			Assert.ArgumentNotNull(font, () => font);
 
-			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
-			_font = assets.LoadFont("Fonts/Liberation Mono 12");
+			_spriteBatch = spriteBatch;
+			_font = font;
 
 			_content = new ConsoleContent(_font);
 			_prompt = new ConsolePrompt(_font, InfoColor);
@@ -201,9 +201,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			_size.Width = size.Width;
 			_size.Height = size.Height / 2;
-
-			// Update the sprite batch's projection matrix
-			_spriteBatch.ProjectionMatrix = Matrix.CreateOrthographic(0, size.Width, size.Height, 0, 0, 1);
 
 			// Calculate the prompt area
 			var promptArea = new Rectangle(_margin.Width, _size.Height - _font.LineHeight - _margin.Height,

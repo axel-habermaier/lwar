@@ -3,7 +3,6 @@
 namespace Lwar.Client.Gameplay
 {
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
@@ -51,8 +50,6 @@ namespace Lwar.Client.Gameplay
 			_inputDevice.Modes = InputModes.Game;
 
 			LwarCommands.ToggleDebugCamera.Invoked += ToggleDebugCamera;
-			_window.Resized += WindowResized;
-			WindowResized(_window.Size);
 		}
 
 		/// <summary>
@@ -64,18 +61,6 @@ namespace Lwar.Client.Gameplay
 		///   Gets the active camera that should be used to draw the scene.
 		/// </summary>
 		public Camera ActiveCamera { get; private set; }
-
-		/// <summary>
-		///   Updates the viewports of the cameras.
-		/// </summary>
-		/// <param name="windowSize">The new size of the window.</param>
-		private void WindowResized(Size windowSize)
-		{
-			var viewport = new Rectangle(0, 0, windowSize.Width, windowSize.Height);
-
-			GameCamera.Viewport = viewport;
-			_debugCamera.Viewport = viewport;
-		}
 
 		/// <summary>
 		///   Toggles between the game and the debug camera.
@@ -113,17 +98,16 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			LwarCommands.ToggleDebugCamera.Invoked -= ToggleDebugCamera;
+
+			if (ActiveCamera != _debugCamera)
+				return;
+
+			_window.MouseCaptured = false;
+			_inputDevice.Modes = InputModes.Game;
+
 			_debugCamera.SafeDispose();
 			GameCamera.SafeDispose();
-
-			LwarCommands.ToggleDebugCamera.Invoked -= ToggleDebugCamera;
-			_window.Resized -= WindowResized;
-
-			if (ActiveCamera == _debugCamera)
-			{
-				_window.MouseCaptured = false;
-				_inputDevice.Modes = InputModes.Game;
-			}
 		}
 	}
 }

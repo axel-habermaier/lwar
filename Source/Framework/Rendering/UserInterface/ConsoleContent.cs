@@ -95,7 +95,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
                 return;
 
             spriteBatch.UseScissorTest = true;
-            spriteBatch.ScissorRectangle = _area;
+            spriteBatch.ScissorArea = _area;
 
             // We draw the labels aligned to the bottom of the content area. Therefore, we apply an offset
             // to all label positions using the sprite batch's world matrix (this is a lot faster than 

@@ -8,6 +8,11 @@ namespace Pegasus.Framework.Platform.Graphics
 	public struct EffectTechnique
 	{
 		/// <summary>
+		///   The action that must be invoked to bind the required textures and constant buffers.
+		/// </summary>
+		private readonly Action _bind;
+
+		/// <summary>
 		///   The fragment shader that is used by the technique.
 		/// </summary>
 		private readonly FragmentShader _fragmentShader;
@@ -16,11 +21,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   The vertex shader that is used by the technique.
 		/// </summary>
 		private readonly VertexShader _vertexShader;
-
-		/// <summary>
-		///   The action that must be invoked to bind the required textures and constant buffers.
-		/// </summary>
-		private Action _bind;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -42,7 +42,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Binds the shaders used by the technique.
 		/// </summary>
-		internal void Bind()
+		public void Bind()
 		{
 			Assert.NotNull(_vertexShader, "No vertex shader has been set.");
 			Assert.NotNull(_fragmentShader, "No fragment shader has been set.");

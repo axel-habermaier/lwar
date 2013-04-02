@@ -43,9 +43,7 @@ namespace Lwar.Client.GameStates
 			Assets = assets;
 			InputDevice = inputDevice;
 
-			SpriteBatch = new SpriteBatch(graphicsDevice, assets);
-			ResizeSpriteBatch(Window.Size);
-			Window.Resized += ResizeSpriteBatch;
+			SpriteBatch = new SpriteBatch(graphicsDevice, null, null);
 		}
 
 		/// <summary>
@@ -79,22 +77,12 @@ namespace Lwar.Client.GameStates
 		public SpriteBatch SpriteBatch { get; private set; }
 
 		/// <summary>
-		///   Updates the projection matrix of the sprite batch.
-		/// </summary>
-		/// <param name="size">The new size of the window.</param>
-		private void ResizeSpriteBatch(Size size)
-		{
-			SpriteBatch.ProjectionMatrix = Matrix.CreateOrthographic(0, size.Width, size.Height, 0, 0, 1);
-		}
-
-		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
 			_states.SafeDispose();
 			SpriteBatch.SafeDispose();
-			Window.Resized -= ResizeSpriteBatch;
 		}
 
 		/// <summary>

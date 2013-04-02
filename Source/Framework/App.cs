@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework
 {
+	using Math;
 	using Platform;
 	using Platform.Assets;
 	using Platform.Graphics;
@@ -122,7 +123,10 @@ namespace Pegasus.Framework
 
 			using (var interpreter = new Interpreter())
 			using (var bindings = new RequestBindings(LogicalInputDevice))
-			using (var console = new Console(GraphicsDevice, Assets, LogicalInputDevice))
+			using (var camera2D = new Camera2D(GraphicsDevice))
+			using (var output2D = new RenderOutput(GraphicsDevice) { Camera = camera2D, RenderTarget = SwapChain.BackBuffer })
+			using (var spriteBatch = new SpriteBatch(GraphicsDevice, output2D, null))
+			using (var console = new Console(GraphicsDevice, LogicalInputDevice, spriteBatch, null))
 			{
 				// Ensure that the size of the console always matches that of the window
 				console.Resize(Window.Size);
@@ -131,8 +135,7 @@ namespace Pegasus.Framework
 				// Copy the recorded log history to the console and initialize the statistics
 				logFile.WriteToConsole(console);
 				Statistics = CreateStatistics();
-				Statistics.Initialize(GraphicsDevice, Assets);
-				Window.Resized += Statistics.Resize;
+				Statistics.Initialize(GraphicsDevice, spriteBatch, null);
 
 				// Initialize commands and cvars
 				console.UserInput += interpreter.Execute;
@@ -164,11 +167,12 @@ namespace Pegasus.Framework
 						Draw();
 
 						// Draw the console and the statistics on top of the current frame
+						output2D.Viewport = new Rectangle(Vector2i.Zero, Window.Size);
 						console.Draw();
 						Statistics.Draw();
 					}
 
-					// Present the current frame to the screen
+					// Present the current frame to the screen and write the log file, if necessary
 					SwapChain.Present();
 					logFile.WriteToFile();
 				}

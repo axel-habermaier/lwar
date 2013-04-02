@@ -89,8 +89,6 @@ namespace Lwar.Client.Rendering
 		{
 			Assert.ArgumentNotNull(camera, () => camera);
 
-			
-			camera.Bind();
 
 			if (LwarCvars.DrawWireframe.Value)
 				_wireframe.Bind();
