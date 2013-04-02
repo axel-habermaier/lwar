@@ -202,14 +202,6 @@ pgVoid pgReleaseMouseCore(pgWindow* window);
 // Rectangle
 //====================================================================================================================
 
-typedef struct
-{
-	pgInt32 left;
-	pgInt32 top;
-	pgInt32 width;
-	pgInt32 height;
-} pgRectangle;
-
 pgBool pgRectangleEqual(pgRectangle* r1, pgRectangle* r2);
 
 //====================================================================================================================
@@ -235,7 +227,7 @@ struct pgGraphicsDevice
 	pgBlendState*			blendState;
 	pgRasterizerState*		rasterizerState;
 	pgRectangle				viewport;
-	pgRectangle				scissorRectangle;
+	pgRectangle				scissorArea;
 	pgRenderTarget*			renderTarget;
 	pgInputLayout*			inputLayout;
 	PG_GRAPHICS_DEVICE_PLATFORM
@@ -244,8 +236,8 @@ struct pgGraphicsDevice
 pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device);
 pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device);
 
-pgVoid pgSetViewportCore(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height);
-pgVoid pgSetScissorRectCore(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height);
+pgVoid pgSetViewportCore(pgGraphicsDevice* device, pgRectangle viewport);
+pgVoid pgSetScissorAreaCore(pgGraphicsDevice* device, pgRectangle scissorArea);
 pgVoid pgSetPrimitiveTypeCore(pgGraphicsDevice* device, pgPrimitiveType primitiveType);
 
 pgVoid pgDrawCore(pgGraphicsDevice* device, pgInt32 primitiveCount, pgInt32 offset);

@@ -16,11 +16,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		private readonly IntPtr _device;
 
 		/// <summary>
-		///   The effect that is currently active.
-		/// </summary>
-		private Effect _activeEffect;
-
-		/// <summary>
 		///   The current primitive type of the input assembler stage.
 		/// </summary>
 		private PrimitiveType _primitiveType;
@@ -51,24 +46,15 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Gets or sets the effect that is currently active.
-		/// </summary>
-		internal Effect ActiveEffect
-		{
-			get { return _activeEffect; }
-			set
-			{
-				Assert.That(value == null || _activeEffect == null, "Another effect is currently active.");
-				_activeEffect = value;
-			}
-		}
-
-		/// <summary>
 		///   Gets the native graphics device instance.
 		/// </summary>
 		internal IntPtr NativePtr
 		{
-			get { return _device; }
+			get
+			{
+				Assert.NotDisposed(this);
+				return _device;
+			}
 		}
 
 		/// <summary>
@@ -86,14 +72,14 @@ namespace Pegasus.Framework.Platform.Graphics
 				Assert.NotDisposed(this);
 
 				_viewport = value;
-				NativeMethods.SetViewport(_device, value.Left, value.Top, value.Width, value.Height);
+				NativeMethods.SetViewport(_device, value);
 			}
 		}
 
 		/// <summary>
-		///   Gets or sets the current scissor rectangle of the rasterizer stage of the device.
+		///   Gets or sets the current scissor area of the rasterizer stage of the device.
 		/// </summary>
-		public Rectangle ScissorRectangle
+		public Rectangle ScissorArea
 		{
 			get
 			{
@@ -105,7 +91,7 @@ namespace Pegasus.Framework.Platform.Graphics
 				Assert.NotDisposed(this);
 
 				_scissor = value;
-				NativeMethods.SetScissorRect(_device, value.Left, value.Top, value.Width, value.Height);
+				NativeMethods.SetScissorArea(_device, value);
 			}
 		}
 
@@ -181,10 +167,10 @@ namespace Pegasus.Framework.Platform.Graphics
 			public static extern void DestroyGraphicsDevice(IntPtr device);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetViewport")]
-			public static extern void SetViewport(IntPtr device, int left, int top, int width, int height);
+			public static extern void SetViewport(IntPtr device, Rectangle viewport);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetScissorRect")]
-			public static extern void SetScissorRect(IntPtr device, int left, int top, int width, int height);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetScissorArea")]
+			public static extern void SetScissorArea(IntPtr device, Rectangle scissorArea);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetPrimitiveType")]
 			public static extern void SetPrimitiveType(IntPtr device, PrimitiveType primitiveType);

@@ -89,7 +89,7 @@ pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 {
 	pgGraphicsDevice* device = renderTarget->device;
 	pgRectangle viewport = renderTarget->device->viewport;
-	pgRectangle scissor = renderTarget->device->scissorRectangle;
+	pgRectangle scissorArea = renderTarget->device->scissorArea;
 
 	if (renderTarget->swapChain != NULL)
 	{
@@ -120,8 +120,8 @@ pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 	// as the Y coordinate has to be inverted.
 	// Without the following two lines, code that sets the viewport/scissor rectangle before binding the render
 	// target would not work correctly
-	pgSetViewportCore(device, viewport.left, viewport.top, viewport.width, viewport.height);
-	pgSetScissorRectCore(device, scissor.left, scissor.top, scissor.width, scissor.height);
+	pgSetViewportCore(device, viewport);
+	pgSetScissorAreaCore(device, scissorArea);
 }
 
 //====================================================================================================================

@@ -172,7 +172,7 @@ namespace Lwar.Client.Rendering
 				_effectTarget.Bind();
 				_graphicsDevice.Viewport = new Rectangle(0, 0, 640, 360);
 
-				_effectTarget.Clear(new Color(0, 0, 0, 0));
+				_effectTarget.ClearColor(new Color(0, 0, 0, 0));
 				_heatCubeMap.Bind(0);
 
 				_model.Draw();

@@ -13,7 +13,7 @@ namespace Lwar.Assets.Effects
 		private static readonly float[] Offsets = new[] { 0.0f, 1.3846153846f, 3.2307692308f };
 		private static readonly float[] Weights = new[] { 0.2270270270f, 0.3162162162f, 0.0702702703f };
 
-		/// <summary> 
+		/// <summary>
 		///   Applies a horizontal Gaussian blur filter.
 		/// </summary>
 		public readonly Technique BlurHorizontally = new Technique

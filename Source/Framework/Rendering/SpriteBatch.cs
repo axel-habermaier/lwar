@@ -467,7 +467,7 @@ namespace Pegasus.Framework.Rendering
 			else
 			{
 				_scissorRasterizerState.Bind();
-				GraphicsDevice.ScissorRectangle = ScissorRectangle;
+				GraphicsDevice.ScissorArea = ScissorRectangle;
 			}
 
 			// Prepare the vertex buffer

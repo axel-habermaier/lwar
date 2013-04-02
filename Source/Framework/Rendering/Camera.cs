@@ -16,12 +16,15 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		private const int CameraBufferSlot = 0;
 
-		public Rectangle Viewport;
-
 		/// <summary>
 		///   The constant buffer that holds the per-frame camera-related data that is passed to each vertex shader.
 		/// </summary>
 		private readonly ConstantBuffer<CameraBuffer> _cameraBuffer;
+
+		/// <summary>
+		///   The camera's viewport.
+		/// </summary>
+		private Rectangle _viewport;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -33,6 +36,22 @@ namespace Pegasus.Framework.Rendering
 			Assert.That(Marshal.SizeOf(typeof(CameraBuffer)) == CameraBuffer.Size, "Unexpected unmanaged size.");
 
 			_cameraBuffer = new ConstantBuffer<CameraBuffer>(graphicsDevice, (buffer, data) => buffer.Copy(&data));
+		}
+
+		/// <summary>
+		///   Gets or sets the camera's viewport.
+		/// </summary>
+		public Rectangle Viewport
+		{
+			get { return _viewport; }
+			set
+			{
+				if (_viewport == value)
+					return;
+
+				_viewport = value;
+				UpdateProjectionMatrix();
+			}
 		}
 
 		/// <summary>

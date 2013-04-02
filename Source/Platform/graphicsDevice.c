@@ -23,46 +23,34 @@ pgVoid pgDestroyGraphicsDevice(pgGraphicsDevice* device)
 	PG_FREE(device);
 }
 
-pgVoid pgSetViewport(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height)
+pgVoid pgSetViewport(pgGraphicsDevice* device, pgRectangle viewport)
 {
-	pgRectangle viewport;
-	viewport.left = left;
-	viewport.top = top;
-	viewport.width = width;
-	viewport.height = height;
-
 	PG_ASSERT_NOT_NULL(device);
-	PG_ASSERT_IN_RANGE(left, 0, 4096);
-	PG_ASSERT_IN_RANGE(top, 0, 4096);
-	PG_ASSERT_IN_RANGE(width, 0, 4096);
-	PG_ASSERT_IN_RANGE(height, 0, 4096);
+	PG_ASSERT_IN_RANGE(viewport.left, 0, 4096);
+	PG_ASSERT_IN_RANGE(viewport.top, 0, 4096);
+	PG_ASSERT_IN_RANGE(viewport.width, 0, 4096);
+	PG_ASSERT_IN_RANGE(viewport.height, 0, 4096);
 
-	//if (pgRectangleEqual(&viewport, &device->viewport))
-		//return;
-
-	device->viewport = viewport;
-	pgSetViewportCore(device, left, top, width, height);
-}
-
-pgVoid pgSetScissorRect(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height)
-{
-	pgRectangle scissor;
-	scissor.left = left;
-	scissor.top = top;
-	scissor.width = width;
-	scissor.height = height;
-
-	PG_ASSERT_NOT_NULL(device);
-	PG_ASSERT_IN_RANGE(left, 0, 4096);
-	PG_ASSERT_IN_RANGE(top, 0, 4096);
-	PG_ASSERT_IN_RANGE(width, 0, 4096);
-	PG_ASSERT_IN_RANGE(height, 0, 4096);
-
-	if (pgRectangleEqual(&scissor, &device->scissorRectangle))
+	if (pgRectangleEqual(&viewport, &device->viewport))
 		return;
 
-	device->scissorRectangle = scissor;
-	pgSetScissorRectCore(device, left, top, width, height);
+	device->viewport = viewport;
+	pgSetViewportCore(device, viewport);
+}
+
+pgVoid pgSetScissorArea(pgGraphicsDevice* device, pgRectangle scissorArea)
+{
+	PG_ASSERT_NOT_NULL(device);
+	PG_ASSERT_IN_RANGE(scissorArea.left, 0, 4096);
+	PG_ASSERT_IN_RANGE(scissorArea.top, 0, 4096);
+	PG_ASSERT_IN_RANGE(scissorArea.width, 0, 4096);
+	PG_ASSERT_IN_RANGE(scissorArea.height, 0, 4096);
+
+	if (pgRectangleEqual(&scissorArea, &device->scissorArea))
+		return;
+
+	device->scissorArea = scissorArea;
+	pgSetScissorAreaCore(device, scissorArea);
 }
 
 pgVoid pgSetPrimitiveType(pgGraphicsDevice* device, pgPrimitiveType primitiveType)

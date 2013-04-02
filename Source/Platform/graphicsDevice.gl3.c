@@ -50,17 +50,17 @@ pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device)
 	pgDestroyContextWindow(&device->context);
 }
 
-pgVoid pgSetViewportCore(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height)
+pgVoid pgSetViewportCore(pgGraphicsDevice* device, pgRectangle viewport)
 {
-	top = FlipY(device, top, height);
-	glViewport(left, top, width, height);
+	pgInt32 top = FlipY(device, viewport.top, viewport.height);
+	glViewport(viewport.left, top, viewport.width, viewport.height);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
-pgVoid pgSetScissorRectCore(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height)
+pgVoid pgSetScissorAreaCore(pgGraphicsDevice* device, pgRectangle scissorArea)
 {
-	top = FlipY(device, top, height);
-	glScissor(left, top, width, height);
+	pgInt32 top = FlipY(device, scissorArea.top, scissorArea.height);
+	glScissor(scissorArea.left, top, scissorArea.width, scissorArea.height);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

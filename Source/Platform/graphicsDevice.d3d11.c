@@ -70,26 +70,26 @@ pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device)
 	PG_SAFE_RELEASE(IDXGIFactory, device->factory);
 }
 
-pgVoid pgSetViewportCore(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height)
+pgVoid pgSetViewportCore(pgGraphicsDevice* device, pgRectangle viewport)
 {
 	D3D11_VIEWPORT vp;
-	vp.TopLeftX = (FLOAT)left;
-	vp.TopLeftY = (FLOAT)top;
-	vp.Width = (FLOAT)width;
-	vp.Height = (FLOAT)height;
+	vp.TopLeftX = (FLOAT)viewport.left;
+	vp.TopLeftY = (FLOAT)viewport.top;
+	vp.Width = (FLOAT)viewport.width;
+	vp.Height = (FLOAT)viewport.height;
 	vp.MaxDepth = 1;
 	vp.MinDepth = 0;
 
 	ID3D11DeviceContext_RSSetViewports(device->context, 1, &vp);
 }
 
-pgVoid pgSetScissorRectCore(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height)
+pgVoid pgSetScissorAreaCore(pgGraphicsDevice* device, pgRectangle scissorArea)
 {
 	D3D11_RECT rect;
-	rect.left = left;
-	rect.top = top;
-	rect.right = left + width;
-	rect.bottom = top + height;
+	rect.left = scissorArea.left;
+	rect.top = scissorArea.top;
+	rect.right = scissorArea.left + scissorArea.width;
+	rect.bottom = scissorArea.top + scissorArea.height;
 
 	ID3D11DeviceContext_RSSetScissorRects(device->context, 1, &rect);
 }

@@ -342,6 +342,14 @@ typedef struct
 	pgUint8*				data;
 } pgSurface;
 
+typedef struct
+{
+	pgInt32 left;
+	pgInt32 top;
+	pgInt32 width;
+	pgInt32 height;
+} pgRectangle;
+
 //====================================================================================================================
 // Graphics functions
 //====================================================================================================================
@@ -355,8 +363,8 @@ PG_API_EXPORT pgGraphicsApi pgGetGraphicsApi();
 PG_API_EXPORT pgGraphicsDevice* pgCreateGraphicsDevice();
 PG_API_EXPORT pgVoid pgDestroyGraphicsDevice(pgGraphicsDevice* device);
 
-PG_API_EXPORT pgVoid pgSetViewport(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height);
-PG_API_EXPORT pgVoid pgSetScissorRect(pgGraphicsDevice* device, pgInt32 left, pgInt32 top, pgInt32 width, pgInt32 height);
+PG_API_EXPORT pgVoid pgSetViewport(pgGraphicsDevice* device, pgRectangle viewport);
+PG_API_EXPORT pgVoid pgSetScissorArea(pgGraphicsDevice* device, pgRectangle scissorArea);
 PG_API_EXPORT pgVoid pgSetPrimitiveType(pgGraphicsDevice* device, pgPrimitiveType primitiveType);
 
 PG_API_EXPORT pgVoid pgDraw(pgGraphicsDevice* device, pgInt32 primitiveCount, pgInt32 offset);

@@ -11,19 +11,9 @@ namespace Pegasus.Framework.Rendering
 	public class Camera2D : Camera
 	{
 		/// <summary>
-		///   The distance of the camera to the X,Z plane.
-		/// </summary>
-		private float _distance;
-
-		/// <summary>
 		///   The camera's position within the world.
 		/// </summary>
 		private Vector2 _position;
-
-		/// <summary>
-		///   The camera's viewport.
-		/// </summary>
-		private Rectangle _viewport;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -32,19 +22,6 @@ namespace Pegasus.Framework.Rendering
 		public Camera2D(GraphicsDevice graphicsDevice)
 			: base(graphicsDevice)
 		{
-		}
-
-		/// <summary>
-		///   Gets or sets the distance of the camera to the X,Z plane.
-		/// </summary>
-		public float Distance
-		{
-			get { return _distance; }
-			set
-			{
-				_distance = value;
-				UpdateViewMatrix();
-			}
 		}
 
 		/// <summary>
@@ -57,19 +34,6 @@ namespace Pegasus.Framework.Rendering
 			{
 				_position = value;
 				UpdateViewMatrix();
-			}
-		}
-
-		/// <summary>
-		///   Gets or sets the camera's viewport.
-		/// </summary>
-		public new  Rectangle Viewport
-		{
-			get { return _viewport; }
-			set
-			{
-				_viewport = value;
-				UpdateProjectionMatrix();
 			}
 		}
 
@@ -88,7 +52,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="matrix">The matrix that should hold the view matrix once the method returns.</param>
 		protected override void UpdateViewMatrix(out Matrix matrix)
 		{
-			matrix = Matrix.CreateLookAt(new Vector3(Position.X, Distance, Position.Y),
+			matrix = Matrix.CreateLookAt(new Vector3(Position.X, 1, Position.Y),
 										 new Vector3(Position.X, 0, Position.Y),
 										 new Vector3(1, 0, 0));
 		}
