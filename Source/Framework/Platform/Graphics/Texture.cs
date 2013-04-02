@@ -34,9 +34,25 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		/// Gets the description of the texture.
+		///   Gets the description of the texture.
 		/// </summary>
 		protected TextureDescription Description { get; private set; }
+
+		/// <summary>
+		///   Gets a value indicating whether the texture has mipmaps, either loaded explicitely or generated automatically.
+		/// </summary>
+		public bool HasMipmaps
+		{
+			get { return AutogenerateMipmaps || Description.Mipmaps > 1; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether automatic mipmap generation is supported for this texture.
+		/// </summary>
+		public bool AutogenerateMipmaps
+		{
+			get { return (Description.Flags & TextureFlags.GenerateMipmaps) != 0; }
+		}
 
 		/// <summary>
 		///   Reinitializes the texture.

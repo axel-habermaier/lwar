@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Rendering
 {
-	using System.Runtime.InteropServices;
 	using Assets.Effects;
 	using Gameplay;
 	using Gameplay.Entities;
@@ -37,11 +36,6 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		private readonly FullscreenQuad _fullscreenQuad;
 
-		/// <summary>
-		///   The graphics device that is used to draw the game session.
-		/// </summary>
-		private readonly GraphicsDevice _graphicsDevice;
-
 		private readonly RenderOutput _heatOutput;
 
 		/// <summary>
@@ -51,17 +45,7 @@ namespace Lwar.Client.Rendering
 
 		private readonly TexturedQuadEffect _quadEffect;
 
-		/// <summary>
-		///   The render target the sun is rendered into.
-		/// </summary>
-		private readonly RenderTarget _renderTarget;
-
 		private readonly SphereEffect _sphereEffect;
-
-		/// <summary>
-		///   The sun cube map.
-		/// </summary>
-		private readonly CubeMap _sunCubeMap;
 
 		private readonly SunEffect _sunEffect;
 
@@ -76,9 +60,6 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(renderTarget, () => renderTarget);
 			Assert.ArgumentNotNull(assets, () => assets);
-
-			_graphicsDevice = graphicsDevice;
-			_renderTarget = renderTarget;
 
 			var sun = assets.LoadCubeMap("Textures/Sun");
 			var turbulence = assets.LoadCubeMap("Textures/SunHeat");
@@ -96,13 +77,19 @@ namespace Lwar.Client.Rendering
 				HeatMap = new Texture2DView(heat, SamplerState.BilinearClampNoMipmaps)
 			};
 
-			_effectTexture = new Texture2D(graphicsDevice, 640, 360, SurfaceFormat.Rgba8,
+			uint w = 640;
+			uint h = 360;
+			_effectTexture = new Texture2D(graphicsDevice, w, h, SurfaceFormat.Rgba8,
 										   TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget);
 			_effectTarget = new RenderTarget(graphicsDevice, null, _effectTexture);
-			_heatOutput = new RenderOutput(graphicsDevice) { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, 640, 360) };
+			_heatOutput = new RenderOutput(graphicsDevice)
+			{
+				RenderTarget = _effectTarget,
+				Viewport = new Rectangle(0, 0, (int)w, (int)h)
+			};
 
 			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);
-			_quadEffect = new TexturedQuadEffect(graphicsDevice, assets){World = Matrix.Identity};
+			_quadEffect = new TexturedQuadEffect(graphicsDevice, assets) { World = Matrix.Identity };
 
 			_blur = new GaussianBlur(graphicsDevice, assets, _effectTexture);
 		}
@@ -149,27 +136,6 @@ namespace Lwar.Client.Rendering
 				_fullscreenQuad.Draw(output, _quadEffect.FullScreen);
 
 				DepthStencilState.DepthEnabled.Bind();
-
-				//	_renderTarget.Bind();
-				//	_blur.Blur(_renderTarget);
-				//	//_graphicsDevice.Viewport = viewport;
-				//	//_effectTexture.GenerateMipmaps();
-
-				//	DepthStencilState.DepthDisabled.Bind();
-				//	BlendState.Premultiplied.Bind();
-				//	_renderTarget.Bind();
-				//	_graphicsDevice.Viewport = viewport;
-				//	//_effectTexture.Bind(0);
-				//	_quadFS.Bind();
-				//	//_effectTexture.Bind(0);
-				//	SamplerState.BilinearClampNoMipmaps.Bind(0);
-
-				//	_fullscreenQuad.Draw();
-
-				//	BlendState.Premultiplied.Bind();
-				//	DepthStencilState.Default.Bind();
-				//	_graphicsDevice.Viewport = viewport;
-				//	_renderTarget.Bind();
 			}
 		}
 
@@ -188,14 +154,6 @@ namespace Lwar.Client.Rendering
 			_fullscreenQuad.SafeDispose();
 			_heatOutput.SafeDispose();
 			_blur.SafeDispose();
-		}
-
-		[StructLayout(LayoutKind.Sequential)]
-		private struct SunData
-		{
-			public readonly Matrix World;
-			public readonly Matrix Rotation1;
-			public readonly Matrix Rotation2;
 		}
 
 		/// <summary>

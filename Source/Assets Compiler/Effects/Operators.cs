@@ -2,6 +2,8 @@
 
 namespace Pegasus.AssetsCompiler.Effects
 {
+	using Framework;
+
 	public partial class Vector2
 	{
 		/// <summary>
@@ -30,6 +32,16 @@ namespace Pegasus.AssetsCompiler.Effects
 		/// <param name="vector1">The first vector that should be multiplied.</param>
 		/// <param name="vector2">The second vector that should be multiplied.</param>
 		public static Vector2 operator *(Vector2 vector1, Vector2 vector2)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Performs a component-wise division.
+		/// </summary>
+		/// <param name="vector1">The vector that should be divided.</param>
+		/// <param name="vector2">The vector that the first vector should be divided by.</param>
+		public static Vector2 operator /(Vector2 vector1, Vector2 vector2)
 		{
 			throw new NotImplementedException();
 		}
@@ -125,6 +137,16 @@ namespace Pegasus.AssetsCompiler.Effects
 		}
 
 		/// <summary>
+		///   Performs a component-wise division.
+		/// </summary>
+		/// <param name="vector1">The vector that should be divided.</param>
+		/// <param name="vector2">The vector that the first vector should be divided by.</param>
+		public static Vector3 operator /(Vector3 vector1, Vector3 vector2)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		///   Divides ach component of the vector by the scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be divided.</param>
@@ -210,6 +232,16 @@ namespace Pegasus.AssetsCompiler.Effects
 		/// <param name="vector1">The first vector that should be multiplied.</param>
 		/// <param name="vector2">The second vector that should be multiplied.</param>
 		public static Vector4 operator *(Vector4 vector1, Vector4 vector2)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///   Performs a component-wise division.
+		/// </summary>
+		/// <param name="vector1">The vector that should be divided.</param>
+		/// <param name="vector2">The vector that the first vector should be divided by.</param>
+		public static Vector4 operator /(Vector4 vector1, Vector4 vector2)
 		{
 			throw new NotImplementedException();
 		}

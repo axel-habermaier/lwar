@@ -10,25 +10,13 @@ namespace Lwar.Assets.Effects
 	[Effect]
 	public class BlurEffect : Effect
 	{
-		private static readonly float[] Offsets = new[] { 0.0f, 1.3846153846f, 3.2307692308f };
-		private static readonly float[] Weights = new[] { 0.2270270270f, 0.3162162162f, 0.0702702703f };
-
 		/// <summary>
-		///   Applies a horizontal Gaussian blur filter.
+		///   Applies a single-pass Gaussian blur filter.
 		/// </summary>
-		public readonly Technique BlurHorizontally = new Technique
+		public readonly Technique Gaussian = new Technique
 		{
 			VertexShader = "VertexShader",
-			FragmentShader = "HorizontalBlur"
-		};
-
-		/// <summary>
-		///   Applies a vertical Gaussian blur filter.
-		/// </summary>
-		public readonly Technique BlurVertically = new Technique
-		{
-			VertexShader = "VertexShader",
-			FragmentShader = "VerticalBlur"
+			FragmentShader = "GaussianBlur"
 		};
 
 		/// <summary>
@@ -47,33 +35,15 @@ namespace Lwar.Assets.Effects
 		}
 
 		[FragmentShader]
-		public void HorizontalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
+		public void GaussianBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
 		{
-			color = Texture.Sample(texCoords) * Weights[0];
+			var offset = new Vector2(1.5f, 1.5f) / ViewportSize;
 
-			for (var i = 1; i < 3; ++i)
-			{
-				var positiveOffset = texCoords + new Vector2(Offsets[i], 0) / ViewportSize.x;
-				var negativeOffset = texCoords - new Vector2(Offsets[i], 0) / ViewportSize.x;
-
-				color += Texture.Sample(positiveOffset) * Weights[i];
-				color += Texture.Sample(negativeOffset) * Weights[i];
-			}
-		}
-
-		[FragmentShader]
-		public void VerticalBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
-		{
-			color = Texture.Sample(texCoords) * Weights[0];
-
-			for (var i = 1; i < 3; ++i)
-			{
-				var positiveOffset = texCoords + new Vector2(0, Offsets[i]) / ViewportSize.y;
-				var negativeOffset = texCoords - new Vector2(0, Offsets[i]) / ViewportSize.y;
-
-				color += Texture.Sample(positiveOffset) * Weights[i];
-				color += Texture.Sample(negativeOffset) * Weights[i];
-			}
+			color = Texture.Sample(texCoords + new Vector2(offset.x, offset.y));
+			color += Texture.Sample(texCoords + new Vector2(-offset.x, offset.y));
+			color += Texture.Sample(texCoords + new Vector2(offset.x, -offset.y));
+			color += Texture.Sample(texCoords + new Vector2(-offset.x, -offset.y));
+			color /= 4;
 		}
 	}
 }

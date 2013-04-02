@@ -83,14 +83,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether automatic mipmap generation is supported for this texture.
-		/// </summary>
-		public bool AutogenerateMipmaps
-		{
-			get { return (Description.Flags & TextureFlags.GenerateMipmaps) != 0; }
-		}
-
-		/// <summary>
 		///   Initializes the default instances.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>

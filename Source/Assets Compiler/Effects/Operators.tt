@@ -44,6 +44,16 @@ namespace Pegasus.AssetsCompiler.Effects
 		}
 
 		/// <summary>
+		///   Performs a component-wise division.
+		/// </summary>
+		/// <param name="vector1">The vector that should be divided.</param>
+		/// <param name="vector2">The vector that the first vector should be divided by.</param>
+		public static <#= vector #> operator /(<#= vector #> vector1, <#= vector #> vector2)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		///   Divides ach component of the vector by the scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be divided.</param>

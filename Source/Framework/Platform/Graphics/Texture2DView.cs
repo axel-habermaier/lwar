@@ -17,6 +17,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		{
 			Assert.ArgumentNotNull(texture, () => texture);
 			Assert.ArgumentNotNull(sampler, () => sampler);
+			Assert.That(sampler.Filter >= TextureFilter.NearestNoMipmaps || texture.HasMipmaps,
+						"Texture filter '{0}' cannot be used to sample a 2D texture without any mipmaps.", sampler.Filter);
 
 			Texture = texture;
 			Sampler = sampler;
