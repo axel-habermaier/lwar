@@ -184,7 +184,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			if (type == null)
 				return Intrinsic.Unknown;
 
-			var method = type.GetTypeInfo().DeclaredMethods.Where(m => m.Name == invokedMethod.Name)
+			var flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+			var method = type.GetMethods(flags).Where(m => m.Name == invokedMethod.Name)
 							 .Where(m =>
 								 {
 									 var declaredParameters = m.GetParameters();

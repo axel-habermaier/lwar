@@ -104,7 +104,9 @@ namespace Pegasus.AssetsCompiler
 							 .Select(element => element.Attribute("Include").Value)
 							 .Select(asset => asset.Replace("\\", "/"));
 
-			var ignoredAssets = Configuration.AssetListAssembly.GetCustomAttributes<IgnoreAttribute>().Select(ignore => ignore.Name);
+			var ignoredAssets = Configuration.AssetListAssembly.GetCustomAttributes()
+											 .OfType<IgnoreAttribute>()
+											 .Select(ignore => ignore.Name);
 			assets = assets.Where(path => _assets.All(a => a.RelativePath != path));
 			assets = assets.Except(ignoredAssets);
 
