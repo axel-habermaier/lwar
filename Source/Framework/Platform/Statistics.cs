@@ -90,6 +90,12 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		internal void Update()
 		{
+			if (!_gcCheck.IsAlive)
+			{
+				++_garbageCollections;
+				_gcCheck.Target = new object();
+			}
+
 			_timer.Update();
 		}
 
@@ -98,12 +104,6 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		private void UpdateStatistics()
 		{
-			if (!_gcCheck.IsAlive)
-			{
-				++_garbageCollections;
-				_gcCheck.Target = new object();
-			}
-
 			_builder.Clear();
 			_builder.Append("Platform: ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
 			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug).Append("\n");

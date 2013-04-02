@@ -37,9 +37,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		/// <param name="colorBuffers">The color buffers that should be bound to the render target.</param>
 		/// <param name="depthStencil">The depth stencil buffer that should be bound to the render target.</param>
-		public RenderTarget(GraphicsDevice graphicsDevice, Texture[] colorBuffers, Texture2D depthStencil)
+		/// <param name="colorBuffers">The color buffers that should be bound to the render target.</param>
+		public RenderTarget(GraphicsDevice graphicsDevice, Texture2D depthStencil, params Texture[] colorBuffers)
 			: base(graphicsDevice)
 		{
 			IntPtr[] colorBuffersPtrs = null;

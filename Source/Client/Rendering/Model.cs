@@ -5,6 +5,7 @@ namespace Lwar.Client.Rendering
 	using System.Collections.Generic;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
 
@@ -149,10 +150,64 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
+		///   Creates a full-screen quad.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
+		public static Model CreateFullScreenQuad(GraphicsDevice graphicsDevice)
+		{
+			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+
+			// For OpenGL, we have to flip the quad upside-down and change its winding, because OpenGL's window
+			// coordinate origins are at the bottom left corner
+			ushort[] indices;
+			if (PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3)
+				indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
+			else
+				indices = new ushort[] { 0, 1, 2, 0, 2, 3 };
+
+			var flip = PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3 ? -1 : 1;
+			var texture = new RectangleF(0, 0, 1, 1);
+
+			var vertices = new[]
+			{
+				new VertexPositionNormalTexture
+				{
+					Position = new Vector4(-1, -1 * flip, 1),
+					Normal = new Vector3(0, 1, 0),
+					TextureCoordinates = new Vector2(texture.Left, texture.Bottom)
+				},
+				new VertexPositionNormalTexture
+				{
+					Position = new Vector4(-1, 1 * flip, 1),
+					Normal = new Vector3(0, 1, 0),
+					TextureCoordinates = new Vector2(texture.Left, texture.Top),
+				},
+				new VertexPositionNormalTexture
+				{
+					Position = new Vector4(1, 1 * flip, 1),
+					Normal = new Vector3(0, 1, 0),
+					TextureCoordinates = new Vector2(texture.Right, texture.Top)
+				},
+				new VertexPositionNormalTexture
+				{
+					Position = new Vector4(1, -1 * flip, 1),
+					Normal = new Vector3(0, 1, 0),
+					TextureCoordinates = new Vector2(texture.Right, texture.Bottom)
+				}
+			};
+
+			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
+			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
+			var layout = VertexPositionNormalTexture.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
+
+			return new Model(graphicsDevice, vertexBuffer, layout, indexBuffer, indices.Length);
+		}
+
+		/// <summary>
 		///   Creates a skybox cube.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the skybox.</param>
-		public static unsafe Model CreateSkyBox(GraphicsDevice graphicsDevice)
+		public static unsafe Model CreateSkybox(GraphicsDevice graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.That(sizeof(Vector4) == 4 * sizeof(float), "Vector4 has an unexpected unmanaged size.");

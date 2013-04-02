@@ -23,9 +23,9 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			Writer.Append("const {0} {1}", ToShaderType(literal.Type), Escape(literal.Name));
 
 			if (literal.IsArray)
-				Writer.Append("[]");
+				Writer.Append("[{0}]", ((object[])literal.Value).Length);
 
-			Writer.Append(" = ");
+			Writer.Append(" = new {0}[] ", ToShaderType(literal.Type));
 
 			if (literal.IsArray)
 			{

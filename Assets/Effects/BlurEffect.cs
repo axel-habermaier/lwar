@@ -42,8 +42,8 @@ namespace Lwar.Assets.Effects
 								 [Position] out Vector4 outPosition,
 								 [TexCoords] out Vector2 outTexCoords)
 		{
-			outPosition = new Vector4(position.x * -1, position.z, 1, 1);
-			outTexCoords = new Vector2(1 - texCoords.x, texCoords.y);
+			outPosition = position;
+			outTexCoords = texCoords;
 		}
 
 		[FragmentShader]
@@ -53,12 +53,11 @@ namespace Lwar.Assets.Effects
 
 			for (var i = 1; i < 3; ++i)
 			{
-				var coordinates = new Vector2(texCoords.x, texCoords.x) * ViewportSize.x;
-				coordinates += new Vector2(Offsets[i], -Offsets[i]);
-				coordinates /= ViewportSize.x;
+				var positiveOffset = texCoords + new Vector2(Offsets[i], 0) / ViewportSize.x;
+				var negativeOffset = texCoords - new Vector2(Offsets[i], 0) / ViewportSize.x;
 
-				color += Texture.Sample(new Vector2(coordinates.x, texCoords.y)) * Weights[i];
-				color += Texture.Sample(new Vector2(coordinates.y, texCoords.y)) * Weights[i];
+				color += Texture.Sample(positiveOffset) * Weights[i];
+				color += Texture.Sample(negativeOffset) * Weights[i];
 			}
 		}
 
@@ -69,12 +68,11 @@ namespace Lwar.Assets.Effects
 
 			for (var i = 1; i < 3; ++i)
 			{
-				var coordinates = new Vector2(texCoords.y, texCoords.y) * ViewportSize.y;
-				coordinates += new Vector2(Offsets[i], -Offsets[i]);
-				coordinates /= ViewportSize.y;
+				var positiveOffset = texCoords + new Vector2(0, Offsets[i]) / ViewportSize.y;
+				var negativeOffset = texCoords - new Vector2(0, Offsets[i]) / ViewportSize.y;
 
-				color += Texture.Sample(new Vector2(texCoords.x, coordinates.x)) * Weights[i];
-				color += Texture.Sample(new Vector2(texCoords.x, coordinates.y)) * Weights[i];
+				color += Texture.Sample(positiveOffset) * Weights[i];
+				color += Texture.Sample(negativeOffset) * Weights[i];
 			}
 		}
 	}

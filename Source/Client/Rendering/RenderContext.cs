@@ -87,7 +87,7 @@ namespace Lwar.Client.Rendering
 			_renderOutput.Camera = camera;
 			_skyboxRenderer.Draw(_renderOutput);
 
-			DepthStencilState.DepthTest.Bind();
+			DepthStencilState.DepthEnabled.Bind();
 
 			SunRenderer.Draw(_renderOutput);
 			PlanetRenderer.Draw(_renderOutput);

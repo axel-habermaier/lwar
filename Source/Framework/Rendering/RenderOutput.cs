@@ -109,13 +109,39 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
+		///   Clears the color buffers of the render target.
+		/// </summary>
+		/// <param name="color">The color the color buffer should be set to.</param>
+		public void ClearColor(Color color)
+		{
+			Assert.NotDisposed(this);
+			Assert.NotNull(RenderTarget, "No render target has been set.");
+
+			RenderTarget.Bind();
+			RenderTarget.ClearColor(color);
+		}
+
+		/// <summary>
+		///   Clears the depth buffer of the render target.
+		/// </summary>
+		/// <param name="depth">The value the depth buffer should be set to.</param>
+		public void ClearDepth(float depth = 1.0f)
+		{
+			Assert.NotDisposed(this);
+			Assert.NotNull(RenderTarget, "No render target has been set.");
+
+			RenderTarget.Bind();
+			RenderTarget.ClearDepthStencil(true, false, depth);
+		}
+
+		/// <summary>
 		///   Binds the required state to the graphics device.
 		/// </summary>
 		private unsafe void Bind()
 		{
 			Assert.NotDisposed(this);
 			Assert.NotNull(_graphicsDevice, "No graphics device has been set.");
-			Assert.NotNull(RenderTarget, "No graphics device has been set.");
+			Assert.NotNull(RenderTarget, "No render target has been set.");
 			Assert.NotNull(Camera, "No camera has been set.");
 			Assert.That(Viewport.Width * Viewport.Height > 0, "Viewport has area 0.");
 

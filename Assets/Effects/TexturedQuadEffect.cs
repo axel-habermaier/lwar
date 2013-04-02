@@ -13,6 +13,12 @@ namespace Lwar.Assets.Effects
 			FragmentShader = "FragmentShader"
 		};
 
+		public readonly Technique FullScreen = new Technique
+		{
+			VertexShader = "FullScreenVertexShader",
+			FragmentShader = "FragmentShader"
+		};
+
 		public readonly Texture2D Texture;
 
 		[Constant]
@@ -27,8 +33,16 @@ namespace Lwar.Assets.Effects
 			outPosition = World * position;
 			outPosition = ViewProjection * outPosition;
 			outTexCoords = texCoords;
-			var f = position.Length;
-			var q = Normalize(position).x;
+		}
+
+		[VertexShader]
+		public void FullScreenVertexShader([Position] Vector4 position,
+								 [TexCoords] Vector2 texCoords,
+								 [Position] out Vector4 outPosition,
+								 [TexCoords] out Vector2 outTexCoords)
+		{
+			outPosition = position;
+			outTexCoords = texCoords;
 		}
 
 		[FragmentShader]
