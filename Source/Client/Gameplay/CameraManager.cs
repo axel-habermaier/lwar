@@ -100,11 +100,11 @@ namespace Lwar.Client.Gameplay
 		{
 			LwarCommands.ToggleDebugCamera.Invoked -= ToggleDebugCamera;
 
-			if (ActiveCamera != _debugCamera)
-				return;
-
-			_window.MouseCaptured = false;
-			_inputDevice.Modes = InputModes.Game;
+			if (ActiveCamera == _debugCamera)
+			{
+				_window.MouseCaptured = false;
+				_inputDevice.Modes = InputModes.Game;
+			}
 
 			_debugCamera.SafeDispose();
 			GameCamera.SafeDispose();

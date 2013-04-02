@@ -132,10 +132,10 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Gets the default depth stencil state with depth read and write enabled, less comparison operation
+		///   Gets a default depth stencil state with depth read and write enabled, less comparison operation
 		///   and stencil operations disabled.
 		/// </summary>
-		public static DepthStencilState Default { get; private set; }
+		public static DepthStencilState DepthTest { get; private set; }
 
 		/// <summary>
 		///   Gets a default depth stencil state with all depth and stencil operations disabled.
@@ -153,7 +153,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
 		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
 		{
-			Default = new DepthStencilState(graphicsDevice);
+			DepthTest = new DepthStencilState(graphicsDevice);
 			DepthDisabled = new DepthStencilState(graphicsDevice) { DepthEnabled = false, DepthWriteEnabled = false };
 			DepthRead = new DepthStencilState(graphicsDevice) { DepthWriteEnabled = false };
 
@@ -165,8 +165,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		internal static void DisposeDefaultInstances()
 		{
-			Default.SafeDispose();
-			Default = null;
+			DepthTest.SafeDispose();
+			DepthTest = null;
 
 			DepthDisabled.SafeDispose();
 			DepthDisabled = null;

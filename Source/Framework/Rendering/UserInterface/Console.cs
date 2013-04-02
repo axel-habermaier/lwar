@@ -145,7 +145,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_input.KeyPressed -= OnKeyPressed;
 			_input.SafeDispose();
 
-			_spriteBatch.SafeDispose();
 			_prompt.SafeDispose();
 		}
 
@@ -191,6 +190,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_prompt.Draw(_spriteBatch);
 			_content.Draw(_spriteBatch);
 			_spriteBatch.DrawBatch();
+
+			_spriteBatch.UseScissorTest = false;
+			_spriteBatch.WorldMatrix = Matrix.Identity;
 		}
 
 		/// <summary>

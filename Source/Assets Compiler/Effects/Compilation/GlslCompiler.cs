@@ -51,7 +51,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				{
 					foreach (var constant in constantBuffer.Constants)
 						Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
-				});
+				}, true);
 			Writer.Newline();
 		}
 
@@ -71,8 +71,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateVertexShaderInputs(IEnumerable<ShaderParameter> inputs)
 		{
 			foreach (var input in inputs)
-				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type),
-								  Escape(input.Name));
+				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type), Escape(input.Name));
 		}
 
 		/// <summary>
@@ -86,7 +85,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 				if (output.Semantics == DataSemantics.Position)
 				{
 					Writer.AppendLine("out gl_PerVertex");
-					Writer.AppendBlockStatement(() => Writer.AppendLine("vec4 gl_Position;"));
+					Writer.AppendBlockStatement(() => Writer.AppendLine("vec4 gl_Position;"), true);
 				}
 				else
 					Writer.AppendLine("out {0} {1};", ToShaderType(output.Type), Escape(output.Name));

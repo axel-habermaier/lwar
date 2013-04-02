@@ -46,6 +46,8 @@ namespace Pegasus.Framework.Rendering
 			Assert.That(Marshal.SizeOf(typeof(CameraBuffer)) == CameraBuffer.Size, "Unexpected unmanaged size.");
 
 			_cameraBuffer = new ConstantBuffer(graphicsDevice, CameraBuffer.Size, CameraBuffer.Slot);
+			UpdateProjectionMatrix();
+			UpdateViewMatrix();
 		}
 
 		/// <summary>

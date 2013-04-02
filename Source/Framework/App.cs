@@ -63,9 +63,19 @@ namespace Pegasus.Framework
 		protected LogicalInputDevice LogicalInputDevice { get; private set; }
 
 		/// <summary>
-		///   Gets the statistics manager that is used to measure performance values.
+		///   Gets or sets the statistics manager that is used to measure performance values.
 		/// </summary>
-		protected Statistics Statistics { get; private set; }
+		protected Statistics Statistics { get; set; }
+
+		/// <summary>
+		///   Gets or sets the default font that is used to draw the console and the statistics.
+		/// </summary>
+		protected Font DefaultFont { get; set; }
+
+		/// <summary>
+		///   Gets or sets a the sprite effect instance that is used to draw the console and the statistics.
+		/// </summary>
+		protected ISpriteEffectAdaptor SpriteEffect { get; set; }
 
 		/// <summary>
 		///   Invoked when the application should update the game state.
@@ -76,6 +86,12 @@ namespace Pegasus.Framework
 		///   Invoked when the application should draw a frame.
 		/// </summary>
 		protected abstract void Draw();
+
+		/// <summary>
+		///   Invoked when the application should draw the user interface.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		protected abstract void DrawUserInterface(SpriteBatch spriteBatch);
 
 		/// <summary>
 		///   Exists the application.
@@ -91,14 +107,6 @@ namespace Pegasus.Framework
 		/// </summary>
 		protected virtual void Initialize()
 		{
-		}
-
-		/// <summary>
-		///   Creates the statistics manager that is used to measure performance values.
-		/// </summary>
-		protected virtual Statistics CreateStatistics()
-		{
-			return new Statistics();
 		}
 
 		/// <summary>
@@ -125,56 +133,66 @@ namespace Pegasus.Framework
 			using (var bindings = new RequestBindings(LogicalInputDevice))
 			using (var camera2D = new Camera2D(GraphicsDevice))
 			using (var output2D = new RenderOutput(GraphicsDevice) { Camera = camera2D, RenderTarget = SwapChain.BackBuffer })
-			using (var spriteBatch = new SpriteBatch(GraphicsDevice, output2D, null))
-			using (var console = new Console(GraphicsDevice, LogicalInputDevice, spriteBatch, null))
 			{
-				// Ensure that the size of the console always matches that of the window
-				console.Resize(Window.Size);
-				Window.Resized += console.Resize;
-
-				// Copy the recorded log history to the console and initialize the statistics
-				logFile.WriteToConsole(console);
-				Statistics = CreateStatistics();
-				Statistics.Initialize(GraphicsDevice, spriteBatch, null);
-
-				// Initialize commands and cvars
-				console.UserInput += interpreter.Execute;
-				Commands.Exit.Invoked += Exit;
-
 				// Run the application-specific initialization logic
 				Initialize();
+				Assert.NotNull(DefaultFont, "The Initialize() method must set the DefaultFont property.");
+				Assert.NotNull(Statistics, "The Initialize() method must set the Statistics property.");
+				Assert.NotNull(SpriteEffect, "The Initialize() method must set the SpriteEffect property.");
 
-				while (_running)
+				using (var spriteBatch = new SpriteBatch(GraphicsDevice, output2D, SpriteEffect))
+				using (var console = new Console(GraphicsDevice, LogicalInputDevice, spriteBatch, DefaultFont))
 				{
-					// Update the input system and let the console respond to any input
-					using (new Measurement(Statistics.UpdateInput))
+					Statistics.Initialize(GraphicsDevice, spriteBatch, DefaultFont);
+
+					// Initialize commands and cvars
+					console.UserInput += interpreter.Execute;
+					Commands.Exit.Invoked += Exit;
+
+					// Ensure that the size of the console and the statistics always matches that of the window
+					console.Resize(Window.Size);
+					Statistics.Resize(Window.Size);
+
+					Window.Resized += console.Resize;
+					Window.Resized += Statistics.Resize;
+
+					// Copy the recorded log history to the console
+					logFile.WriteToConsole(console);
+
+					while (_running)
 					{
-						UpdateInput();
-						console.HandleInput();
-					}
+						// Update the input system and let the console respond to any input
+						using (new Measurement(Statistics.UpdateInput))
+						{
+							UpdateInput();
+							console.HandleInput();
+						}
 
-					// Check if any command bindings have been triggered
-					bindings.InvokeTriggeredBindings();
+						// Check if any command bindings have been triggered
+						bindings.InvokeTriggeredBindings();
 
-					// Update the application logic 
-					Update();
-					Statistics.Update();
+						// Update the application logic 
+						Update();
 
-					using (new Measurement(Statistics.GpuFrameTime))
-					using (new Measurement(Statistics.CpuFrameTime))
-					{
-						// Let the application draw the current frame
-						Draw();
-
-						// Draw the console and the statistics on top of the current frame
 						output2D.Viewport = new Rectangle(Vector2i.Zero, Window.Size);
-						console.Draw();
-						Statistics.Draw();
-					}
+						Statistics.Update();
 
-					// Present the current frame to the screen and write the log file, if necessary
-					SwapChain.Present();
-					logFile.WriteToFile();
+						using (new Measurement(Statistics.GpuFrameTime))
+						using (new Measurement(Statistics.CpuFrameTime))
+						{
+							// Let the application draw the current frame
+							Draw();
+							DrawUserInterface(spriteBatch);
+
+							// Draw the console and the statistics on top of the current frame
+							console.Draw();
+							Statistics.Draw();
+						}
+
+						// Present the current frame to the screen and write the log file, if necessary
+						SwapChain.Present();
+						logFile.WriteToFile();
+					}
 				}
 			}
 		}
@@ -201,6 +219,7 @@ namespace Pegasus.Framework
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			SpriteEffect.SafeDispose();
 			Statistics.SafeDispose();
 			Keyboard.SafeDispose();
 			Mouse.SafeDispose();

@@ -77,7 +77,7 @@ namespace Pegasus.Framework.Platform
 			Assert.ArgumentNotNull(font, () => font);
 
 			_spriteBatch = spriteBatch;
-			_label = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom, Area = new Rectangle(5, 5, 1000, 1000) };
+			_label = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
 			_timer.Timeout += UpdateStatistics;
 
 			GpuFrameTime = new GpuProfiler(graphicsDevice);
@@ -122,12 +122,20 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Resizes the output of the statistic.
+		/// </summary>
+		/// <param name="size">The new size.</param>
+		internal void Resize(Size size)
+		{
+			_label.Area = new Rectangle(5, 5, size.Width, size.Height);
+		}
+
+		/// <summary>
 		///   Draws the statistics.
 		/// </summary>
 		internal void Draw()
 		{
 			_label.Draw(_spriteBatch);
-			_spriteBatch.DrawBatch();
 		}
 
 		/// <summary>

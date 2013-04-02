@@ -43,7 +43,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="matrix">The matrix that should hold the projection matrix once the method returns.</param>
 		protected override void UpdateProjectionMatrix(out Matrix matrix)
 		{
-			matrix = Matrix.CreateOrthographic(Viewport.Left, Viewport.Right, Viewport.Bottom, Viewport.Height, 1, -1);
+			matrix = Matrix.CreateOrthographic(Viewport.Left, Viewport.Right, Viewport.Bottom, Viewport.Top, -1, 0);
 		}
 
 		/// <summary>
@@ -52,8 +52,8 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="matrix">The matrix that should hold the view matrix once the method returns.</param>
 		protected override void UpdateViewMatrix(out Matrix matrix)
 		{
-			matrix = Matrix.CreateLookAt(new Vector3(Position.X, 1, Position.Y),
-										 new Vector3(Position.X, 0, Position.Y),
+			matrix = Matrix.CreateLookAt(new Vector3(Position.X, Position.Y, 0),
+										 new Vector3(Position.X, Position.Y, -1),
 										 new Vector3(1, 0, 0));
 		}
 	}

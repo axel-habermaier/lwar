@@ -31,7 +31,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The effect that is used to draw the sprites.
 		/// </summary>
-		private readonly ISpriteEffect _effect;
+		private readonly ISpriteEffectAdaptor _effect;
 
 		/// <summary>
 		///   The graphics device that should be used to draw the sprites.
@@ -121,7 +121,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The current world matrix used by the sprite batch.
 		/// </summary>
-		private Matrix _worldMatrix;
+		private Matrix _worldMatrix = Matrix.Identity;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -129,7 +129,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="output">The output that should be used for drawing.</param>
 		/// <param name="effect">The effect that should be used to draw the sprites.</param>
-		public SpriteBatch(GraphicsDevice graphicsDevice, RenderOutput output, ISpriteEffect effect)
+		public SpriteBatch(GraphicsDevice graphicsDevice, RenderOutput output, ISpriteEffectAdaptor effect)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(output, () => output);
@@ -423,9 +423,10 @@ namespace Pegasus.Framework.Rendering
 
 			// Prepare the graphics pipeline
 			_effect.World = _worldMatrix;
-			_vertexLayout.Bind();
 
+			_vertexLayout.Bind();
 			_graphicsDevice.PrimitiveType = PrimitiveType.Triangles;
+
 			DepthStencilState.DepthDisabled.Bind();
 			BlendState.Premultiplied.Bind();
 
@@ -449,7 +450,7 @@ namespace Pegasus.Framework.Rendering
 
 				// Draw and increase the offset
 				var numIndices = _sectionLists[i].NumQuads * 6;
-				_output.DrawIndexed(numIndices, offset);
+				_output.DrawIndexed(_effect.Technique, numIndices, offset);
 				offset += numIndices;
 			}
 

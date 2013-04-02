@@ -42,7 +42,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Binds the shaders used by the technique.
 		/// </summary>
-		public void Bind()
+		internal void Bind()
 		{
 			Assert.NotNull(_vertexShader, "No vertex shader has been set.");
 			Assert.NotNull(_fragmentShader, "No fragment shader has been set.");

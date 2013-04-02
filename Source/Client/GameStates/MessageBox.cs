@@ -6,6 +6,7 @@ namespace Lwar.Client.GameStates
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
 
 	/// <summary>
@@ -75,12 +76,13 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Draws the game state.
+		///   Draws the user interface elements of the game state.
 		/// </summary>
-		public override void Draw()
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		public override void DrawUserInterface(SpriteBatch spriteBatch)
 		{
-			SpriteBatch.Draw(_messageLabel.ActualArea, Texture2D.White, new Color(0xEE333333));
-			_messageLabel.Draw(SpriteBatch);
+			spriteBatch.Draw(_messageLabel.ActualArea, Texture2D.White, new Color(0xEE333333));
+			_messageLabel.Draw(spriteBatch);
 		}
 	}
 }

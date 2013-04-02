@@ -7,7 +7,7 @@ namespace Lwar.Assets.Effects
 	[Effect]
 	public class SphereEffect : Effect
 	{
-		public readonly Technique DrawSphere = new Technique
+		public readonly Technique Default = new Technique
 		{
 			VertexShader = "VertexShader",
 			FragmentShader = "FragmentShader"

@@ -3,7 +3,6 @@
 namespace Lwar.Client.GameStates
 {
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
@@ -42,8 +41,6 @@ namespace Lwar.Client.GameStates
 			RenderTarget = renderTarget;
 			Assets = assets;
 			InputDevice = inputDevice;
-
-			SpriteBatch = new SpriteBatch(graphicsDevice, null, null);
 		}
 
 		/// <summary>
@@ -72,17 +69,11 @@ namespace Lwar.Client.GameStates
 		public AssetsManager Assets { get; private set; }
 
 		/// <summary>
-		///   Gets the sprite batch that all game states should use to draw 2D content on the screen.
-		/// </summary>
-		public SpriteBatch SpriteBatch { get; private set; }
-
-		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
 			_states.SafeDispose();
-			SpriteBatch.SafeDispose();
 		}
 
 		/// <summary>
@@ -133,17 +124,32 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public void Draw()
 		{
-			// Find the first state that we need to draw
+			for (var i = GetFirstVisibleScreen(); i < _states.Count; ++i)
+				_states[i].Draw();
+		}
+
+		/// <summary>
+		///   Draws the user interface elements of all visible states from top to bottom.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		public void DrawUserInterface(SpriteBatch spriteBatch)
+		{
+			for (var i = GetFirstVisibleScreen(); i < _states.Count; ++i)
+			{
+				_states[i].DrawUserInterface(spriteBatch);
+				spriteBatch.DrawBatch();
+			}
+		}
+
+		/// <summary>
+		///   Gets the index of the first visible screen that must be drawn.
+		/// </summary>
+		private int GetFirstVisibleScreen()
+		{
 			var firstScreen = _states.Count - 1;
 			while (firstScreen > 0 && !_states[firstScreen].IsOpaque)
 				--firstScreen;
-
-			// Draw from bottom to top
-			for (var i = firstScreen; i < _states.Count; ++i)
-			{
-				_states[i].Draw();
-				SpriteBatch.DrawBatch();
-			}
+			return firstScreen;
 		}
 	}
 }

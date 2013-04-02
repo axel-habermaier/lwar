@@ -75,11 +75,15 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   Draws the model.
 		/// </summary>
-		public void Draw()
+		/// <param name="output">The output the model should be rendered to.</param>
+		/// <param name="effect">The effect technique that should be used for rendering.</param>
+		public void Draw(RenderOutput output, EffectTechnique effect)
 		{
+			Assert.ArgumentNotNull(output, () => output);
+
 			_layout.Bind();
 			_graphicsDevice.PrimitiveType = PrimitiveType.Triangles;
-			_graphicsDevice.DrawIndexed(_indexCount);
+			output.DrawIndexed(effect, _indexCount);
 		}
 
 		/// <summary>

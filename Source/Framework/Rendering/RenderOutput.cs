@@ -65,7 +65,7 @@ namespace Pegasus.Framework.Rendering
 			get { return _viewport; }
 			set
 			{
-				if (_viewport != value)
+				if (_viewport == value)
 					return;
 
 				_viewportHasChanged = true;
@@ -81,11 +81,14 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Draws primitiveCount-many primitives, starting at the given offset into the currently bound vertex buffers.
 		/// </summary>
+		/// <param name="effect">The effect that should be used for drawing.</param>
 		/// <param name="primitiveCount">The number of primitives that should be drawn.</param>
 		/// <param name="offset">The offset into the vertex buffers.</param>
-		public void Draw(int primitiveCount, int offset)
+		public void Draw(EffectTechnique effect, int primitiveCount, int offset)
 		{
 			Bind();
+			effect.Bind();
+
 			_graphicsDevice.Draw(primitiveCount, offset);
 		}
 
@@ -93,12 +96,15 @@ namespace Pegasus.Framework.Rendering
 		///   Draws indexCount-many indices, starting at the given index offset into the currently bound index buffer, where the
 		///   vertex offset is added to each index before accessing the currently bound vertex buffers.
 		/// </summary>
+		/// <param name="effect">The effect that should be used for drawing.</param>
 		/// <param name="indexCount">The number of indices to draw.</param>
 		/// <param name="indexOffset">The location of the first index read by the GPU from the index buffer.</param>
 		/// <param name="vertexOffset">The value that should be added to each index before reading a vertex from the vertex buffer.</param>
-		public void DrawIndexed(int indexCount, int indexOffset = 0, int vertexOffset = 0)
+		public void DrawIndexed(EffectTechnique effect, int indexCount, int indexOffset = 0, int vertexOffset = 0)
 		{
 			Bind();
+			effect.Bind();
+
 			_graphicsDevice.DrawIndexed(indexCount, indexOffset, vertexOffset);
 		}
 

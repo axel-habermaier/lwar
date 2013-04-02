@@ -22,7 +22,7 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Gets or sets the window that displays the game.
 		/// </summary>
-		public Window Window
+		protected Window Window
 		{
 			get { return StateManager.Window; }
 		}
@@ -30,7 +30,7 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Gets the logical input device that provides all the user input to the game.
 		/// </summary>
-		public LogicalInputDevice InputDevice
+		protected LogicalInputDevice InputDevice
 		{
 			get { return StateManager.InputDevice; }
 		}
@@ -38,7 +38,7 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Gets the graphics device that is used to draw the game.
 		/// </summary>
-		public GraphicsDevice GraphicsDevice
+		protected GraphicsDevice GraphicsDevice
 		{
 			get { return StateManager.GraphicsDevice; }
 		}
@@ -46,7 +46,7 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Gets the render target that the state should render into.
 		/// </summary>
-		public RenderTarget RenderTarget
+		protected RenderTarget RenderTarget
 		{
 			get { return StateManager.RenderTarget; }
 		}
@@ -54,17 +54,9 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Gets the assets manager that manages all assets of the game.
 		/// </summary>
-		public AssetsManager Assets
+		protected AssetsManager Assets
 		{
 			get { return StateManager.Assets; }
-		}
-
-		/// <summary>
-		///   Gets the sprite batch that all game states should use to draw 2D content on the screen.
-		/// </summary>
-		public SpriteBatch SpriteBatch
-		{
-			get { return StateManager.SpriteBatch; }
 		}
 
 		/// <summary>
@@ -86,7 +78,17 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Draws the game state.
 		/// </summary>
-		public abstract void Draw();
+		public virtual void Draw()
+		{
+		}
+
+		/// <summary>
+		///   Draws the user interface elements of the game state.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		public virtual void DrawUserInterface(SpriteBatch spriteBatch)
+		{
+		}
 
 		/// <summary>
 		///   Shows a message box with the given message, optionally removing the current state from the state manager.

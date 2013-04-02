@@ -217,13 +217,14 @@
     <Compile Include="Rendering\BulletRenderer.cs" />
     <Compile Include="Rendering\FullscreenQuad.cs" />
     <Compile Include="Rendering\GaussianBlur.cs" />
+    <Compile Include="Rendering\SpriteEffectAdaptor.cs" />
     <Compile Include="Rendering\SunRenderer.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\Model.cs" />
     <Compile Include="Rendering\PlanetRenderer.cs" />
     <Compile Include="Rendering\RenderContext.cs" />
     <Compile Include="Rendering\ShipRenderer.cs" />
-    <Compile Include="Rendering\SkyBoxRenderer.cs" />
+    <Compile Include="Rendering\SkyboxRenderer.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="Gameplay\Entities\IEntity.cs" />
     <Compile Include="LwarApp.cs" />

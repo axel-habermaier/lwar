@@ -2,62 +2,51 @@
 
 namespace Lwar.Client.Rendering
 {
+	using Assets.Effects;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
+	using Pegasus.Framework.Rendering;
 
 	/// <summary>
 	///   Renders a skybox.
 	/// </summary>
-	public class SkyBoxRenderer : DisposableObject
+	public class SkyboxRenderer : DisposableObject
 	{
-		/// <summary>
-		///   The skybox cube map.
-		/// </summary>
-		private readonly CubeMap _cubeMap;
-
-		/// <summary>
-		///   The fragment shader that is used to draw the skybox.
-		/// </summary>
-		private readonly FragmentShader _fragmentShader;
-
 		/// <summary>
 		///   The skybox model.
 		/// </summary>
 		private readonly Model _model;
 
 		/// <summary>
-		///   The vertex shader that is used to draw the skybox.
+		///   The effect that is used to draw the skybox.
 		/// </summary>
-		private readonly VertexShader _vertexShader;
+		private readonly SkyboxEffect  _effect;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public SkyBoxRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
+		public SkyboxRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			_vertexShader = assets.LoadVertexShader("Shaders/SkyboxVS");
-			_fragmentShader = assets.LoadFragmentShader("Shaders/SkyboxFS");
 			_model = Model.CreateSkyBox(graphicsDevice);
-			_cubeMap = assets.LoadCubeMap("Textures/Space");
+			_effect = new SkyboxEffect(graphicsDevice, assets)
+			{
+				Skybox = new CubeMapView(assets.LoadCubeMap("Textures/Space"), SamplerState.BilinearClampNoMipmaps)
+			};
 		}
 
 		/// <summary>
 		///   Draws the skybox.
 		/// </summary>
-		public void Draw()
+		/// <param name="output">The output that the bullets should be rendered to.</param>
+		public void Draw(RenderOutput output)
 		{
-			_vertexShader.Bind();
-			_fragmentShader.Bind();
-			SamplerState.BilinearClampNoMipmaps.Bind(0);
-			_cubeMap.Bind(0);
-
-			_model.Draw();
+			_model.Draw(output, _effect.Default);
 		}
 
 		/// <summary>
@@ -65,6 +54,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_effect.SafeDispose();
 			_model.SafeDispose();
 		}
 	}

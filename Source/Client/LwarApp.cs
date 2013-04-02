@@ -10,7 +10,9 @@ namespace Lwar.Client
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Scripting;
+	using Rendering;
 
 	/// <summary>
 	///   Represents the lwar client.
@@ -41,9 +43,12 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void Initialize()
 		{
+			DefaultFont = Assets.LoadFont("Fonts/Liberation Mono 12");
+			Statistics = new Statistics();
+			SpriteEffect = new SpriteEffectAdaptor(GraphicsDevice, Assets);
+
 			LogicalInputDevice.Modes = InputModes.Game;
 			Window.Closing += Exit;
-			Window.Resized += s => GraphicsDevice.Viewport = new Rectangle(0, 0, s.Width, s.Height);
 			Window.Title = "lwar";
 			Window.Size = new Size(1280, 720);
 
@@ -79,6 +84,15 @@ namespace Lwar.Client
 			SwapChain.BackBuffer.ClearDepth();
 
 			_stateManager.Draw();
+		}
+
+		/// <summary>
+		///   Invoked when the application should draw the user interface.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		protected override void DrawUserInterface(SpriteBatch spriteBatch)
+		{
+			_stateManager.DrawUserInterface(spriteBatch);
 		}
 
 		/// <summary>

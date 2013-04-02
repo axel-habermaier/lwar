@@ -6,9 +6,9 @@ namespace Pegasus.Framework.Rendering
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents an effect that can be used to draw 2D sprites.
+	///   An adaptor to an effect that can be used to draw 2D sprites.
 	/// </summary>
-	public interface ISpriteEffect
+	public interface ISpriteEffectAdaptor : IDisposable
 	{
 		/// <summary>
 		///   Sets the texture view that should be used to draw the sprites.
@@ -21,8 +21,8 @@ namespace Pegasus.Framework.Rendering
 		Matrix World { set; }
 
 		/// <summary>
-		///   Binds the effect to the graphics device.
+		///   Gets the effect technique that should be is draw the sprites.
 		/// </summary>
-		void Bind();
+		EffectTechnique Technique { get; }
 	}
 }

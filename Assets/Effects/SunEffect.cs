@@ -9,7 +9,7 @@ namespace Lwar.Assets.Effects
 	{
 		public readonly CubeMap CubeMap;
 
-		public readonly Technique DrawSun = new Technique
+		public readonly Technique Default = new Technique
 		{
 			VertexShader = "VertexShader",
 			FragmentShader = "FragmentShader"

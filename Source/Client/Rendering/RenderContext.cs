@@ -3,28 +3,25 @@
 namespace Lwar.Client.Rendering
 {
 	using Pegasus.Framework;
-	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
-	using Texture2D = Pegasus.Framework.Platform.Graphics.Texture2D;
 
 	/// <summary>
 	///   Represents the context in which rendering operations are performed.
 	/// </summary>
 	public class RenderContext : DisposableObject
 	{
-		private readonly RenderTarget _backBuffer;
-		private readonly Texture2D _depth;
-		private readonly FullscreenQuad _fsQuad;
-		private readonly FragmentShader _quadShader;
-		private readonly RenderTarget _rt;
-		private readonly Texture2D _screen;
+		/// <summary>
+		///   The output the render context renders to.
+		/// </summary>
+		private readonly RenderOutput _renderOutput;
 
 		/// <summary>
 		///   The renderer that is used to draw the skybox.
 		/// </summary>
-		private readonly SkyBoxRenderer _skyBoxRenderer;
+		private readonly SkyboxRenderer _skyboxRenderer;
 
 		/// <summary>
 		///   The rasterizer state that is used to draw in wireframe mode.
@@ -34,31 +31,24 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="window">The window that displays the game session.</param>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
-		/// <param name="renderTarget">The render target the render context should draw into.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public RenderContext(Window window, GraphicsDevice graphicsDevice, RenderTarget renderTarget, AssetsManager assets)
+		/// <param name="renderTarget">The render target the render context should draw into.</param>
+		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets, RenderTarget renderTarget)
 		{
-			Assert.ArgumentNotNull(window, () => window);
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(renderTarget, () => renderTarget);
 			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(renderTarget, () => renderTarget);
 
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
-			_skyBoxRenderer = new SkyBoxRenderer(graphicsDevice, assets);
-			_backBuffer = renderTarget;
-
-			_fsQuad = new FullscreenQuad(graphicsDevice, assets);
-			_quadShader = assets.LoadFragmentShader("Shaders/QuadFS");
-			_screen = new Texture2D(graphicsDevice, 1280, 720, SurfaceFormat.Rgba16F, TextureFlags.RenderTarget);
-			_depth = new Texture2D(graphicsDevice, 1280, 720, SurfaceFormat.Depth24Stencil8, TextureFlags.DepthStencil);
-			_rt = new RenderTarget(graphicsDevice, new[] { _screen }, _depth);
+			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 
 			SunRenderer = new SunRenderer(graphicsDevice, renderTarget, assets);
 			PlanetRenderer = new PlanetRenderer(graphicsDevice, assets);
 			ShipRenderer = new ShipRenderer(graphicsDevice, assets);
 			BulletRenderer = new BulletRenderer(graphicsDevice, assets);
+
+			_renderOutput = new RenderOutput(graphicsDevice) { RenderTarget = renderTarget };
 		}
 
 		/// <summary>
@@ -89,34 +79,32 @@ namespace Lwar.Client.Rendering
 		{
 			Assert.ArgumentNotNull(camera, () => camera);
 
-
 			if (LwarCvars.DrawWireframe.Value)
 				_wireframe.Bind();
 			else
 				RasterizerState.CullCounterClockwise.Bind();
 
-			DepthStencilState.DepthDisabled.Bind();
-			_skyBoxRenderer.Draw();
-			DepthStencilState.Default.Bind();
-			//_rt.Bind();
-			//_rt.Clear(new Color(0, 0, 0, 0));
-			//_rt.ClearDepth();
+			_renderOutput.Camera = camera;
+			_skyboxRenderer.Draw(_renderOutput);
 
-			SunRenderer.Draw();
-			PlanetRenderer.Draw();
-			ShipRenderer.Draw();
-			BulletRenderer.Draw();
+			DepthStencilState.DepthTest.Bind();
 
-			//DepthStencilState.DepthDisabled.Bind();
-			//_backBuffer.Bind();
-			//_screen.Bind(0);
-			//SamplerState.PointClampNoMipmaps.Bind(0);
-			//BlendState.Premultiplied.Bind();
-			//_quadShader.Bind();
-			//_fsQuad.Draw();
+			SunRenderer.Draw(_renderOutput);
+			PlanetRenderer.Draw(_renderOutput);
+
 			DepthStencilState.DepthDisabled.Bind();
-			
-			BlendState.Premultiplied.Bind();
+
+			ShipRenderer.Draw(_renderOutput);
+			BulletRenderer.Draw(_renderOutput);
+		}
+
+		/// <summary>
+		///   Resizes the viewport of the rendering output.
+		/// </summary>
+		/// <param name="size">The new size.</param>
+		public void Resize(Size size)
+		{
+			_renderOutput.Viewport = new Rectangle(Vector2i.Zero, size);
 		}
 
 		/// <summary>
@@ -124,18 +112,14 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_fsQuad.SafeDispose();
-			_screen.SafeDispose();
-			_depth.SafeDispose();
-			_rt.SafeDispose();
-
 			SunRenderer.SafeDispose();
 			PlanetRenderer.SafeDispose();
 			BulletRenderer.SafeDispose();
 			ShipRenderer.SafeDispose();
 
-			_skyBoxRenderer.SafeDispose();
+			_skyboxRenderer.SafeDispose();
 			_wireframe.SafeDispose();
+			_renderOutput.SafeDispose();
 		}
 	}
 }

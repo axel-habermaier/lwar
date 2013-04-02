@@ -92,7 +92,7 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public override void Initialize()
 		{
-			_renderContext = new RenderContext(Window, GraphicsDevice, RenderTarget, Assets);
+			_renderContext = new RenderContext(GraphicsDevice, Assets, RenderTarget);
 			_gameSession = new GameSession(_renderContext);
 			_messageDispatcher = new MessageDispatcher(_gameSession);
 			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
@@ -159,6 +159,7 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public override void Draw()
 		{
+			_renderContext.Resize(Window.Size);
 			_renderContext.Draw(_cameraManager.ActiveCamera);
 		}
 	}

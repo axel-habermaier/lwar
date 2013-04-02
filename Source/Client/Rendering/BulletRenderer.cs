@@ -2,13 +2,13 @@
 
 namespace Lwar.Client.Rendering
 {
+	using Assets.Effects;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
-	using Texture2D = Pegasus.Framework.Platform.Graphics.Texture2D;
+	using Pegasus.Framework.Rendering;
 
 	/// <summary>
 	///   Renders bullets into a 3D scene.
@@ -16,9 +16,9 @@ namespace Lwar.Client.Rendering
 	public class BulletRenderer : Renderer<Bullet, BulletRenderer.BulletDrawState>
 	{
 		/// <summary>
-		///   The fragment shader that is used to draw the bullets.
+		///   The effect that is used to draw the bullets.
 		/// </summary>
-		private readonly FragmentShader _fragmentShader;
+		private readonly TexturedQuadEffect _effect;
 
 		/// <summary>
 		///   The model that is used to draw the bullets.
@@ -26,35 +26,22 @@ namespace Lwar.Client.Rendering
 		private readonly Model _model;
 
 		/// <summary>
-		///   The texture that is used to draw the bullets.
-		/// </summary>
-		private readonly Texture2D _texture;
-
-		/// <summary>
-		///   The transformation constant buffer.
-		/// </summary>
-		private readonly ConstantBuffer<Matrix> _transform;
-
-		/// <summary>
-		///   The vertex shader that is used to draw the bullets.
-		/// </summary>
-		private readonly VertexShader _vertexShader;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public unsafe BulletRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
+		public BulletRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			_vertexShader = assets.LoadVertexShader("Shaders/QuadVS");
-			_fragmentShader = assets.LoadFragmentShader("Shaders/QuadFS");
-			_transform = new ConstantBuffer<Matrix>(graphicsDevice, (buffer, matrix) => buffer.Copy(&matrix));
-			_texture = assets.LoadTexture2D("Textures/Bullet");
-			_model = Model.CreateQuad(graphicsDevice, _texture.Size);
+			var texture = assets.LoadTexture2D("Textures/Bullet");
+
+			_model = Model.CreateQuad(graphicsDevice, texture.Size);
+			_effect = new TexturedQuadEffect(graphicsDevice, assets)
+			{
+				Texture = new Texture2DView(texture, SamplerState.TrilinearClamp)
+			};
 		}
 
 		/// <summary>
@@ -69,20 +56,13 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   Draws all registered elements.
 		/// </summary>
-		public void Draw()
+		/// <param name="output">The output that the bullets should be rendered to.</param>
+		public void Draw(RenderOutput output)
 		{
-			_transform.Bind(1);
-			_vertexShader.Bind();
-			_fragmentShader.Bind();
-			SamplerState.TrilinearClamp.Bind(0);
-			_texture.Bind(0);
-
 			foreach (var bullet in RegisteredElements)
 			{
-				_transform.Data = bullet.Transform.Matrix;
-				_transform.Update();
-
-				_model.Draw();
+				_effect.World = bullet.Transform.Matrix;
+				_model.Draw(output, _effect.Default);
 			}
 		}
 
@@ -91,8 +71,8 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_effect.SafeDispose();
 			_model.SafeDispose();
-			_transform.SafeDispose();
 		}
 
 		/// <summary>
