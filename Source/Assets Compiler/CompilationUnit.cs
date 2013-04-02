@@ -10,7 +10,6 @@ namespace Pegasus.AssetsCompiler
 	using Assets;
 	using Assets.Attributes;
 	using Compilers;
-	using Effects.Compilation;
 	using Framework;
 
 	/// <summary>
@@ -66,9 +65,7 @@ namespace Pegasus.AssetsCompiler
 		{
 			try
 			{
-				var project = new EffectsProject();
-				var success = project.Compile(_assets.OfType<CSharpAsset>().ToArray());
-				_assets.AddRange(project.ShaderAssets);
+				var success = true;
 
 				foreach (var compiler in Compilers)
 					success &= compiler.Compile(_assets);
@@ -83,23 +80,14 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Removes the hash files of all assets, as well as their compiled outputs in the temp and target directories.
+		///   Removes the temp and target directories.
 		/// </summary>
-		public void Clean()
+		public static void Clean()
 		{
 			Log.Info("Cleaning compiled assets and temporary files...");
 
-			foreach (var asset in _assets)
-			{
-				if (File.Exists(asset.TempPath))
-					File.Delete(asset.TempPath);
-
-				if (File.Exists(asset.TargetPath))
-					File.Delete(asset.TargetPath);
-
-				if (File.Exists(asset.HashPath))
-					File.Delete(asset.HashPath);
-			}
+			Directory.Delete(Configuration.TempDirectory, true);
+			Directory.Delete(Configuration.TargetDirectory, true);
 		}
 
 		/// <summary>

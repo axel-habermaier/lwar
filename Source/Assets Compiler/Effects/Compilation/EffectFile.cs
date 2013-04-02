@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using System.IO;
 	using System.Linq;
 	using Assets;
+	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;

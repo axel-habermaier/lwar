@@ -102,7 +102,7 @@ namespace Pegasus.AssetsCompiler
 				using (var compilationUnit = new CompilationUnit())
 				{
 					if (clean)
-						compilationUnit.Clean();
+						CompilationUnit.Clean();
 
 					if (compile)
 						success = compilationUnit.Compile();

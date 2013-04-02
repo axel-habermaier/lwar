@@ -33,8 +33,6 @@ Pegasus
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
-- Asset cleaning: Compiled effects are not cleaned up
-- Do not compile effect files when none of them have changed for performance reasons
 
 Network Specification
 ========

@@ -101,7 +101,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// </summary>
 		public string HashPath
 		{
-			get { return TempPathWithoutExtension + ".hash"; }
+			get { return TempPathWithoutExtension + ".md5"; }
 		}
 
 		/// <summary>
