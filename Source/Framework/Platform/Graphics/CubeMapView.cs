@@ -2,34 +2,30 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
-	using System;
-
 	/// <summary>
-	///   Binds a texture and a sampler to be used by an effect.
+	///   Represents a cubemap associated with a sampler state that can be used by an effect.
 	/// </summary>
-	/// <typeparam name="T">The type of the texture that is bound.</typeparam>
-	public struct TextureBinding<T>
-		where T : Texture
+	public struct CubeMapView
 	{
 		/// <summary>
-		/// Initializes a new instance.
+		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="texture">The texture that should be bound.</param>
+		/// <param name="cubeMap">The texture that should be bound.</param>
 		/// <param name="sampler">The sampler that should be bound.</param>
-		internal TextureBinding(T texture, SamplerState sampler)
+		public CubeMapView(CubeMap cubeMap, SamplerState sampler)
 			: this()
 		{
-			Assert.ArgumentNotNull(texture, () => texture);
+			Assert.ArgumentNotNull(cubeMap, () => cubeMap);
 			Assert.ArgumentNotNull(sampler, () => sampler);
 
-			Texture = texture;
+			CubeMap = cubeMap;
 			Sampler = sampler;
 		}
 
 		/// <summary>
 		///   Gets the bound texture.
 		/// </summary>
-		public T Texture { get; private set; }
+		public CubeMap CubeMap { get; private set; }
 
 		/// <summary>
 		///   Gets the bound sampler state.
@@ -37,15 +33,15 @@ namespace Pegasus.Framework.Platform.Graphics
 		public SamplerState Sampler { get; private set; }
 
 		/// <summary>
-		/// Binds the texture and sampler state to the GPU.
+		///   Binds the texture and sampler state to the GPU.
 		/// </summary>
 		/// <param name="slot">The slot the texture and sampler state should be bound to.</param>
 		internal void Bind(int slot)
 		{
-			Assert.NotNull(Texture, "No texture has been set.");
+			Assert.NotNull(CubeMap, "No texture has been set.");
 			Assert.NotNull(Sampler, "No sampler state has been set.");
 
-			Texture.Bind(slot);
+			CubeMap.Bind(slot);
 			Sampler.Bind(slot);
 		}
 	}

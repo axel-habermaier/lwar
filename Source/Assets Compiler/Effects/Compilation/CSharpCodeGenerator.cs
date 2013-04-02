@@ -244,7 +244,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			foreach (var texture in _effect.Textures)
 			{
 				WriteDocumentation(texture.Documentation);
-				_writer.AppendLine("public TextureBinding<{0}> {1} {{ get; set; }}", ToCSharpType(texture.Type), texture.Name);
+				_writer.AppendLine("public {0}View {1} {{ get; set; }}", ToCSharpType(texture.Type), texture.Name);
 			}
 
 			if (_effect.Textures.Any())

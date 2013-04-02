@@ -39,16 +39,25 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Binds the given texture binding to the GPU.
+		///   Binds the given texture view to the GPU.
 		/// </summary>
-		/// <typeparam name="T">The type of the texture that should be bound.</typeparam>
-		/// <param name="binding">The texture and sampler state that should be bound.</param>
-		/// <param name="slot">The slot the texture and sampler state should be bound to.</param>
-		public void Bind<T>(TextureBinding<T> binding, int slot)
-			where T : Texture
+		/// <param name="view">The texture view that should be bound.</param>
+		/// <param name="slot">The slot the texture view should be bound to.</param>
+		public void Bind(Texture2DView view, int slot)
 		{
 			ValidateInitialization();
-			binding.Bind(slot);
+			view.Bind(slot);
+		}
+
+		/// <summary>
+		///   Binds the given texture view to the GPU.
+		/// </summary>
+		/// <param name="view">The texture view that should be bound.</param>
+		/// <param name="slot">The slot the texture view should be bound to.</param>
+		public void Bind(CubeMapView view, int slot)
+		{
+			ValidateInitialization();
+			view.Bind(slot);
 		}
 
 		/// <summary>
