@@ -486,4 +486,20 @@ PG_API_EXPORT pgVoid pgEndQuery(pgQuery* query);
 PG_API_EXPORT pgVoid pgGetQueryData(pgQuery* query, pgVoid* data, pgInt32 size);
 PG_API_EXPORT pgBool pgIsQueryDataAvailable(pgQuery* query);
 
+//====================================================================================================================
+// Set debug names functions
+//====================================================================================================================
+
+#ifdef DEBUG
+PG_API_EXPORT pgVoid pgSetTextureName(pgTexture* texture, pgString name);
+PG_API_EXPORT pgVoid pgSetShaderName(pgShader* shader, pgString name);
+PG_API_EXPORT pgVoid pgSetBufferName(pgBuffer* buffer, pgString name);
+PG_API_EXPORT pgVoid pgSetRenderTargetName(pgRenderTarget* renderTarget, pgString name);
+PG_API_EXPORT pgVoid pgSetBlendStateName(pgBlendState* blendState, pgString name);
+PG_API_EXPORT pgVoid pgSetDepthStencilStateName(pgDepthStencilState* depthStencilState, pgString name);
+PG_API_EXPORT pgVoid pgSetRasterizerStateName(pgRasterizerState* rasterizerState, pgString name);
+PG_API_EXPORT pgVoid pgSetSamplerStateName(pgSamplerState* samplerState, pgString name);
+PG_API_EXPORT pgVoid pgSetQueryName(pgQuery* query, pgString name);
+#endif
+
 #endif

@@ -31,7 +31,69 @@ pgVoid pgCheckGLError(pgString file, pgInt32 line)
 }
 
 //====================================================================================================================
-// OpenGL enumeration value conversion functions
+// Set debug names functions
+//====================================================================================================================
+
+#ifdef DEBUG
+
+PG_API_EXPORT pgVoid pgSetTextureName(pgTexture* texture, pgString name)
+{
+	PG_UNUSED(texture);
+	PG_UNUSED(name);
+}
+
+PG_API_EXPORT pgVoid pgSetShaderName(pgShader* shader, pgString name)
+{
+	PG_UNUSED(shader);
+	PG_UNUSED(name);
+}
+
+PG_API_EXPORT pgVoid pgSetBufferName(pgBuffer* buffer, pgString name)
+{
+	PG_UNUSED(buffer);
+	PG_UNUSED(name);
+}
+
+PG_API_EXPORT pgVoid pgSetRenderTargetName(pgRenderTarget* renderTarget, pgString name)
+{
+	PG_UNUSED(renderTarget);
+	PG_UNUSED(name);
+}
+
+PG_API_EXPORT pgVoid pgSetBlendStateName(pgBlendState* blendState, pgString name)
+{
+	PG_UNUSED(blendState);
+	PG_UNUSED(name);
+}
+
+PG_API_EXPORT pgVoid pgSetDepthStencilStateName(pgDepthStencilState* depthStencilState, pgString name)
+{
+	PG_UNUSED(depthStencilState);
+	PG_UNUSED(name);
+}
+
+PG_API_EXPORT pgVoid pgSetRasterizerStateName(pgRasterizerState* rasterizerState, pgString name)
+{
+	PG_UNUSED(rasterizerState);
+	PG_UNUSED(name);
+}
+
+PG_API_EXPORT pgVoid pgSetSamplerStateName(pgSamplerState* samplerState, pgString name)
+{
+	PG_UNUSED(samplerState);
+	PG_UNUSED(name);
+}
+
+PG_API_EXPORT pgVoid pgSetQueryName(pgQuery* query, pgString name)
+{
+	PG_UNUSED(query);
+	PG_UNUSED(name);
+}
+
+#endif
+
+//====================================================================================================================
+// Enumeration value conversion functions
 //====================================================================================================================
 
 GLenum pgConvertBlendOperation(pgBlendOperation blendOperation)

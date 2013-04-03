@@ -125,9 +125,9 @@ namespace Pegasus.Framework
 			using (var bindings = new RequestBindings(LogicalInputDevice))
 			using (var camera2D = new Camera2D(GraphicsDevice))
 			using (var sceneOutput = new RenderOutput(GraphicsDevice) { RenderTarget = swapChain.BackBuffer })
-			using (
-				var userInterfaceOuput = new RenderOutput(GraphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
+			using (var uiOutput = new RenderOutput(GraphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
 			{
+				swapChain.BackBuffer.SetName("Back Buffer");
 				Assets = new AssetsManager(GraphicsDevice);
 
 				// Run the application-specific initialization logic
@@ -136,7 +136,7 @@ namespace Pegasus.Framework
 				Assert.NotNull(Statistics, "The Initialize() method must set the Statistics property.");
 				Assert.NotNull(SpriteEffect, "The Initialize() method must set the SpriteEffect property.");
 
-				using (var spriteBatch = new SpriteBatch(GraphicsDevice, userInterfaceOuput, SpriteEffect))
+				using (var spriteBatch = new SpriteBatch(GraphicsDevice, uiOutput, SpriteEffect))
 				using (var console = new Console(GraphicsDevice, LogicalInputDevice, spriteBatch, DefaultFont))
 				{
 					Statistics.Initialize(GraphicsDevice, spriteBatch, DefaultFont);
@@ -172,7 +172,7 @@ namespace Pegasus.Framework
 
 						var viewport = new Rectangle(Vector2i.Zero, Window.Size);
 						sceneOutput.Viewport = viewport;
-						userInterfaceOuput.Viewport = viewport;
+						uiOutput.Viewport = viewport;
 
 						Statistics.Update();
 

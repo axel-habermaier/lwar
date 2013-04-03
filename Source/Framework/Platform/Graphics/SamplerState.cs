@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
@@ -282,6 +283,20 @@ namespace Pegasus.Framework.Platform.Graphics
 			};
 
 			AnisotropicClamp = new SamplerState(graphicsDevice) { Filter = TextureFilter.Anisotropic };
+
+			PointWrap.SetName("PointWrap");
+			PointClamp.SetName("PointClamp");
+			PointWrapNoMipmaps.SetName("PointWrapNoMipmaps");
+			PointClampNoMipmaps.SetName("PointClampNoMipmaps");
+			BilinearWrap.SetName("BilinearWrap");
+			BilinearClamp.SetName("BilinearClamp");
+			PointWrap.SetName("PointWrap");
+			BilinearWrapNoMipmaps.SetName("BilinearWrapNoMipmaps");
+			BilinearClampNoMipmaps.SetName("BilinearClampNoMipmaps");
+			TrilinearWrap.SetName("TrilinearWrap");
+			TrilinearClamp.SetName("TrilinearClamp");
+			AnisotropicWrap.SetName("AnisotropicWrap");
+			AnisotropicClamp.SetName("AnisotropicClamp");
 		}
 
 		/// <summary>
@@ -334,6 +349,17 @@ namespace Pegasus.Framework.Platform.Graphics
 			NativeMethods.DestroySamplerState(State);
 		}
 
+#if DEBUG
+		/// <summary>
+		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
+		protected override void OnRenamed()
+		{
+			if (State != IntPtr.Zero)
+				NativeMethods.SetName(State, Name);
+		}
+#endif
+
 		/// <summary>
 		///   Provides access to the native sampler state functions.
 		/// </summary>
@@ -353,6 +379,10 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetSamplerDescDefaults")]
 			public static extern void SetSamplerDescDefaults(out SamplerDescription description);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetSamplerStateName")]
+			[Conditional("DEBUG")]
+			public static extern void SetName(IntPtr samplerState, string name);
 		}
 
 		/// <summary>

@@ -38,7 +38,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 	default:
 		PG_NO_SWITCH_DEFAULT;
 	}
-
+	
 	PG_FREE(data);
 }
 

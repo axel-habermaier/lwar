@@ -3,7 +3,109 @@
 #ifdef DIRECT3D11
 
 //====================================================================================================================
-// Conversion functions
+// Set debug names functions
+//====================================================================================================================
+
+#ifdef DEBUG
+
+#define PG_SET_NAME(type, obj) \
+	type##_SetPrivateData(obj, &WKPDID_D3DDebugObjectName, (UINT)strlen(name) + 1, name);
+
+PG_API_EXPORT pgVoid pgSetTextureName(pgTexture* texture, pgString name)
+{
+	PG_ASSERT_NOT_NULL(texture);
+	PG_ASSERT_NOT_NULL(name);
+
+	PG_SET_NAME(ID3D11Texture2D, texture->ptr);
+	PG_SET_NAME(ID3D11ShaderResourceView, texture->resourceView);
+}
+
+PG_API_EXPORT pgVoid pgSetShaderName(pgShader* shader, pgString name)
+{
+	PG_ASSERT_NOT_NULL(shader);
+	PG_ASSERT_NOT_NULL(name);
+
+	switch (shader->type)
+	{
+	case PG_VERTEX_SHADER:
+		PG_SET_NAME(ID3D11VertexShader, shader->ptr.vertexShader);
+		break;
+	case PG_GEOMETRY_SHADER:
+		PG_SET_NAME(ID3D11GeometryShader, shader->ptr.geometryShader);
+		break;
+	case PG_FRAGMENT_SHADER:
+		PG_SET_NAME(ID3D11PixelShader, shader->ptr.pixelShader);
+		break;
+	default:
+		PG_NO_SWITCH_DEFAULT;
+	}
+}
+
+PG_API_EXPORT pgVoid pgSetBufferName(pgBuffer* buffer, pgString name)
+{
+	PG_ASSERT_NOT_NULL(buffer);
+	PG_ASSERT_NOT_NULL(name);
+
+	PG_SET_NAME(ID3D11Buffer, buffer->ptr);
+}
+
+PG_API_EXPORT pgVoid pgSetRenderTargetName(pgRenderTarget* renderTarget, pgString name)
+{
+	pgInt32 i;
+
+	PG_ASSERT_NOT_NULL(renderTarget);
+	PG_ASSERT_NOT_NULL(name);
+	
+	for (i = 0; i < renderTarget->count; ++i)
+		PG_SET_NAME(ID3D11RenderTargetView, renderTarget->cbPtr[i]);
+
+	PG_SET_NAME(ID3D11DepthStencilView, renderTarget->dsPtr);
+}
+
+PG_API_EXPORT pgVoid pgSetBlendStateName(pgBlendState* blendState, pgString name)
+{
+	PG_ASSERT_NOT_NULL(blendState);
+	PG_ASSERT_NOT_NULL(name);
+
+	PG_SET_NAME(ID3D11BlendState, blendState->ptr);
+}
+
+PG_API_EXPORT pgVoid pgSetDepthStencilStateName(pgDepthStencilState* depthStencilState, pgString name)
+{
+	PG_ASSERT_NOT_NULL(depthStencilState);
+	PG_ASSERT_NOT_NULL(name);
+
+	PG_SET_NAME(ID3D11DepthStencilState, depthStencilState->ptr);
+}
+
+PG_API_EXPORT pgVoid pgSetRasterizerStateName(pgRasterizerState* rasterizerState, pgString name)
+{
+	PG_ASSERT_NOT_NULL(rasterizerState);
+	PG_ASSERT_NOT_NULL(name);
+
+	PG_SET_NAME(ID3D11RasterizerState, rasterizerState->ptr);
+}
+
+PG_API_EXPORT pgVoid pgSetSamplerStateName(pgSamplerState* samplerState, pgString name)
+{
+	PG_ASSERT_NOT_NULL(samplerState);
+	PG_ASSERT_NOT_NULL(name);
+
+	PG_SET_NAME(ID3D11SamplerState, samplerState->ptr);
+}
+
+PG_API_EXPORT pgVoid pgSetQueryName(pgQuery* query, pgString name)
+{
+	PG_ASSERT_NOT_NULL(query);
+	PG_ASSERT_NOT_NULL(name);
+
+	PG_SET_NAME(ID3D11Query, query->ptr);
+}
+
+#endif
+
+//====================================================================================================================
+// Enumeration value conversion functions
 //====================================================================================================================
 
 D3D11_BLEND_OP pgConvertBlendOperation(pgBlendOperation blendOperation)

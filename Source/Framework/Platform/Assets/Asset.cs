@@ -28,6 +28,7 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Loads or reloads the asset using the given asset reader.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
-		internal abstract void Load(BufferReader buffer);
+		/// <param name="name">The name of the asset.</param>
+		internal abstract void Load(BufferReader buffer, string name);
 	}
 }

@@ -168,6 +168,7 @@ namespace Pegasus.Framework.Rendering
 				CullMode = CullMode.None,
 				ScissorEnabled = true
 			};
+			_scissorRasterizerState.SetName("SpriteBatch.Scissor");
 		}
 
 		/// <summary>

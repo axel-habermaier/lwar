@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
@@ -186,6 +187,11 @@ namespace Pegasus.Framework.Platform.Graphics
 				DestinationBlendAlpha = BlendOption.InverseSourceAlpha
 			};
 
+			Opaque.SetName("Opaque");
+			Premultiplied.SetName("Premultiplied");
+			Additive.SetName("Additive");
+			Alpha.SetName("Alpha");
+
 			Opaque.Bind();
 		}
 
@@ -227,6 +233,17 @@ namespace Pegasus.Framework.Platform.Graphics
 			NativeMethods.BindBlendState(State);
 		}
 
+#if DEBUG
+		/// <summary>
+		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
+		protected override void OnRenamed()
+		{
+			if (State != IntPtr.Zero)
+				NativeMethods.SetName(State, Name);
+		}
+#endif
+
 		/// <summary>
 		///   Describes the blend state.
 		/// </summary>
@@ -262,6 +279,10 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetBlendDescDefaults")]
 			public static extern void SetBlendDescDefaults(out BlendDescription description);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetBlendStateName")]
+			[Conditional("DEBUG")]
+			public static extern void SetName(IntPtr blendState, string name);
 		}
 	}
 }

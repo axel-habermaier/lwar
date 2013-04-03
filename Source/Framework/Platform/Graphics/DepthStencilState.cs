@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
@@ -157,6 +158,11 @@ namespace Pegasus.Framework.Platform.Graphics
 			DepthDisabled = new DepthStencilState(graphicsDevice) { DepthTestEnabled = false, DepthWriteEnabled = false };
 			DepthRead = new DepthStencilState(graphicsDevice) { DepthWriteEnabled = false };
 
+
+			DepthEnabled.SetName("DepthEnabled");
+			DepthDisabled.SetName("DepthDisabled");
+			DepthRead.SetName("DepthRead");
+
 			DepthDisabled.Bind();
 		}
 
@@ -166,13 +172,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal static void DisposeDefaultInstances()
 		{
 			DepthEnabled.SafeDispose();
-			DepthEnabled = null;
-
 			DepthDisabled.SafeDispose();
-			DepthDisabled = null;
-
 			DepthRead.SafeDispose();
-			DepthRead = null;
 		}
 
 		/// <summary>
@@ -201,6 +202,17 @@ namespace Pegasus.Framework.Platform.Graphics
 			CompileIfNecessary();
 			NativeMethods.BindDepthStencilState(State);
 		}
+
+#if DEBUG
+		/// <summary>
+		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
+		protected override void OnRenamed()
+		{
+			if (State != IntPtr.Zero)
+				NativeMethods.SetName(State, Name);
+		}
+#endif
 
 		/// <summary>
 		///   Describes the depth stencil state.
@@ -237,6 +249,10 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetDepthStencilDescDefaults")]
 			public static extern void SetDepthStencilDescDefaults(out DepthStencilDescription description);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetDepthStencilStateName")]
+			[Conditional("DEBUG")]
+			public static extern void SetName(IntPtr depthStencilState, string name);
 		}
 	}
 }

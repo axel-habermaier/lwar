@@ -32,7 +32,8 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Loads or reloads the asset using the given asset buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
-		internal override void Load(BufferReader buffer)
+		/// <param name="name">The name of the asset.</param>
+		internal override void Load(BufferReader buffer, string name)
 		{
 			if (Font == null)
 				Font = new Font();
@@ -98,7 +99,7 @@ namespace Pegasus.Framework.Platform.Assets
 				}
 			}
 
-			_texture.Load(buffer);
+			_texture.Load(buffer, name);
 			Font.Reinitialize(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
 		}
 

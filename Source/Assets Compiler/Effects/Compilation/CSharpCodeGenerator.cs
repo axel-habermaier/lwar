@@ -203,8 +203,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 						_writer.Newline();
 
 					foreach (var buffer in ConstantBuffers)
+					{
 						_writer.AppendLine("{0} = {3}.CreateConstantBuffer({1}, {2});", GetFieldName(buffer.Name), buffer.Size,
 										   buffer.Slot, ContextVariableName);
+						_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
+						_writer.Newline();
+					}
 				});
 
 			_writer.Newline();

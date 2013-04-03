@@ -77,8 +77,10 @@ namespace Lwar.Client.Rendering
 
 			uint w = 640;
 			uint h = 360;
-			_effectTexture = new Texture2D(graphicsDevice, w, h, SurfaceFormat.Rgba8,
-										   TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget);
+			var flags = TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget;
+			_effectTexture = new Texture2D(graphicsDevice, w, h, SurfaceFormat.Rgba8,flags);
+			_effectTexture.SetName("SunRenderer.EffectTexture");
+
 			_effectTarget = new RenderTarget(graphicsDevice, null, _effectTexture);
 			_heatOutput = new RenderOutput(graphicsDevice)
 			{

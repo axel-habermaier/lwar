@@ -13,12 +13,6 @@ namespace Pegasus.Framework.Platform.Graphics
 	public abstract class PipelineState : GraphicsObject
 	{
 		/// <summary>
-		///   Indicates whether this state instance has already been compiled pipeline. If true,
-		///   changes to any of its properties are no longer allowed.
-		/// </summary>
-		private bool _isCompiled;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
@@ -37,11 +31,12 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		protected void CompileIfNecessary()
 		{
-			if (_isCompiled)
-				return;
+			if (State == IntPtr.Zero)
+				Compile();
 
-			Compile();
-			_isCompiled = true;
+#if DEBUG
+			SetName(Name);
+#endif
 		}
 
 		/// <summary>
@@ -56,7 +51,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		protected void CheckIfCompiledOrDisposed()
 		{
 			Assert.NotDisposed(this);
-			Assert.That(!_isCompiled, "The object cannot be changed as it has already been bound to the pipeline.");
+			Assert.That(State == IntPtr.Zero, "The object cannot be changed as it has already been bound to the pipeline.");
 		}
 	}
 }

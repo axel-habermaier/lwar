@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
@@ -48,6 +49,17 @@ namespace Pegasus.Framework.Platform.Graphics
 			NativeMethods.BindShader(_shader);
 		}
 
+#if DEBUG
+		/// <summary>
+		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
+		protected override void OnRenamed()
+		{
+			if (_shader != IntPtr.Zero)
+				NativeMethods.SetName(_shader, Name);
+		}
+#endif
+
 		/// <summary>
 		///   Provides access to the native shader functions.
 		/// </summary>
@@ -61,6 +73,10 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindShader")]
 			public static extern void BindShader(IntPtr shader);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetShaderName")]
+			[Conditional("DEBUG")]
+			public static extern void SetName(IntPtr texture, string name);
 		}
 	}
 }

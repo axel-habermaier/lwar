@@ -54,13 +54,23 @@ namespace Pegasus.Framework.Rendering
 			_renderTime = new AveragedValue();
 
 			for (var i = 0; i < BufferSize; ++i)
+			{
 				_beginQueries[i] = new TimestampQuery(graphicsDevice);
+				_beginQueries[i].SetName("GpuProfiler.BeginQuery" + i);
+			}
+				
 
 			for (var i = 0; i < BufferSize; ++i)
+			{
 				_endQueries[i] = new TimestampQuery(graphicsDevice);
+				_endQueries[i].SetName("GpuProfiler.EndQuery" + i);
+			}
 
 			for (var i = 0; i < BufferSize; ++i)
+			{
 				_disjointQueries[i] = new TimestampDisjointQuery(graphicsDevice);
+				_disjointQueries[i].SetName("GpuProfiler.DisjointQuery" + i);
+			}
 		}
 
 		/// <summary>

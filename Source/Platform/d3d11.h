@@ -48,11 +48,12 @@
 	IDXGISwapChain*			ptr;	\
 	DXGI_FORMAT				format;	
 
-#define PG_SHADER_PLATFORM					\
-	union {									\
-		ID3D11VertexShader*	vertexShader;	\
-		ID3D11PixelShader*	pixelShader;	\
-	} ptr;									\
+#define PG_SHADER_PLATFORM						\
+	union {										\
+		ID3D11VertexShader*		vertexShader;	\
+		ID3D11GeometryShader*	geometryShader;	\
+		ID3D11PixelShader*		pixelShader;	\
+	} ptr;										\
 	ID3D11InputLayout* inputLayout;
 
 #define PG_BUFFER_PLATFORM	\

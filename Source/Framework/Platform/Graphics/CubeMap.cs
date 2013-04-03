@@ -11,7 +11,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		public CubeMap(GraphicsDevice graphicsDevice)
+		internal CubeMap(GraphicsDevice graphicsDevice)
 			: base(graphicsDevice)
 		{
 		}

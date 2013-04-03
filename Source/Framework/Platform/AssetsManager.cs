@@ -57,7 +57,7 @@ namespace Pegasus.Framework.Platform
 		{
 			var path = Path.Combine(AssetDirectory, assetName) + PlatformInfo.AssetExtension;
 			using (var reader = BufferReader.Create(File.ReadAllBytes(path)))
-				asset.Load(reader);
+				asset.Load(reader, assetName);
 		}
 
 		/// <summary>

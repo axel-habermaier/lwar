@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
@@ -195,6 +196,10 @@ namespace Pegasus.Framework.Platform.Graphics
 				FrontIsCounterClockwise = false
 			};
 
+			CullNone.SetName("CullNone");
+			CullClockwise.SetName("CullClockwise");
+			CullCounterClockwise.SetName("CullCounterClockwise");
+
 			CullNone.Bind();
 		}
 
@@ -204,13 +209,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal static void DisposeDefaultInstances()
 		{
 			CullNone.SafeDispose();
-			CullNone = null;
-
 			CullClockwise.SafeDispose();
-			CullClockwise = null;
-
 			CullCounterClockwise.SafeDispose();
-			CullCounterClockwise = null;
 		}
 
 		/// <summary>
@@ -240,6 +240,17 @@ namespace Pegasus.Framework.Platform.Graphics
 			NativeMethods.BindRasterizerState(State);
 		}
 
+#if DEBUG
+		/// <summary>
+		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
+		protected override void OnRenamed()
+		{
+			if (State != IntPtr.Zero)
+				NativeMethods.SetName(State, Name);
+		}
+#endif
+
 		/// <summary>
 		///   Provides access to the native rasterizer state functions.
 		/// </summary>
@@ -259,6 +270,10 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetRasterizerDescDefaults")]
 			public static extern void SetRasterizerDescDefaults(out RasterizerDescription description);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetRasterizerStateName")]
+			[Conditional("DEBUG")]
+			public static extern void SetName(IntPtr rasterizerState, string name);
 		}
 
 		/// <summary>

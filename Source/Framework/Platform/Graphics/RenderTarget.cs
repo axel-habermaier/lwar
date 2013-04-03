@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using System.Diagnostics;
 	using System.Linq;
 	using System.Runtime.InteropServices;
 
@@ -99,6 +100,17 @@ namespace Pegasus.Framework.Platform.Graphics
 				NativeMethods.DestroyRenderTarget(_renderTarget);
 		}
 
+#if DEBUG
+		/// <summary>
+		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
+		protected override void OnRenamed()
+		{
+			if (_renderTarget != IntPtr.Zero)
+				NativeMethods.SetName(_renderTarget, Name);
+		}
+#endif
+
 		/// <summary>
 		///   Provides access to the native render target functions.
 		/// </summary>
@@ -122,6 +134,10 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindRenderTarget")]
 			public static extern void BindRenderTarget(IntPtr renderTarget);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetRenderTargetName")]
+			[Conditional("DEBUG")]
+			public static extern void SetName(IntPtr renderTarget, string name);
 		}
 	}
 }

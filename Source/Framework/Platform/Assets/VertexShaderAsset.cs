@@ -21,7 +21,8 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Loads or reloads the asset using the given asset reader.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
-		internal override unsafe void Load(BufferReader buffer)
+		/// <param name="name">The name of the asset.</param>
+		internal override unsafe void Load(BufferReader buffer, string name)
 		{
 			if (Shader == null)
 				Shader = new VertexShader(GraphicsDevice);
@@ -41,7 +42,9 @@ namespace Pegasus.Framework.Platform.Assets
 			byte* data;
 			int length;
 			ExtractShaderCode(buffer, out data, out length);
+
 			Shader.Reinitialize(data, length, inputs);
+			Shader.SetName(name);
 		}
 	}
 }

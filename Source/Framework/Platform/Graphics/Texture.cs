@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
@@ -18,7 +19,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Initializes a new instance, copying the given byte array to GPU memory.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		/// <param name="type">The type of the texture.</param>
 		protected Texture(GraphicsDevice graphicsDevice)
 			: base(graphicsDevice)
 		{
@@ -59,7 +59,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		/// <param name="description">The description of the texture.</param>
 		/// <param name="surfaces">The surfaces that should be uploaded to the GPU.</param>
-		public void Reinitialize(TextureDescription description, Surface[] surfaces)
+		internal void Reinitialize(TextureDescription description, Surface[] surfaces)
 		{
 			NativeMethods.DestroyTexture(_texture);
 			_texture = IntPtr.Zero;
@@ -72,7 +72,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Binds the texture to the given slot.
 		/// </summary>
 		/// <param name="slot">The slot the texture should be bound to.</param>
-		public void Bind(int slot)
+		internal void Bind(int slot)
 		{
 			Assert.NotDisposed(this);
 			NativeMethods.BindTexture(_texture, slot);
@@ -95,6 +95,17 @@ namespace Pegasus.Framework.Platform.Graphics
 			NativeMethods.DestroyTexture(_texture);
 		}
 
+#if DEBUG
+		/// <summary>
+		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
+		protected override void OnRenamed()
+		{
+			if (_texture != IntPtr.Zero)
+				NativeMethods.SetName(_texture, Name);
+		}
+#endif
+
 		/// <summary>
 		///   Provides access to the native Texture2D functions.
 		/// </summary>
@@ -114,6 +125,10 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGenerateMipmaps")]
 			public static extern void GenerateMipmaps(IntPtr texture);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetTextureName")]
+			[Conditional("DEBUG")]
+			public static extern void SetName(IntPtr texture, string name);
 		}
 	}
 }

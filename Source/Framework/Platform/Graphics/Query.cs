@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
@@ -68,6 +69,17 @@ namespace Pegasus.Framework.Platform.Graphics
 			NativeMethods.GetQueryData(_query, data, size);
 		}
 
+#if DEBUG
+		/// <summary>
+		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
+		protected override void OnRenamed()
+		{
+			if (_query != IntPtr.Zero)
+				NativeMethods.SetName(_query, Name);
+		}
+#endif
+
 		/// <summary>
 		///   Provides access to the native query functions.
 		/// </summary>
@@ -93,6 +105,10 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgIsQueryDataAvailable")]
 			public static extern bool IsQueryDataAvailable(IntPtr query);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetQueryName")]
+			[Conditional("DEBUG")]
+			public static extern void SetName(IntPtr query, string name);
 		}
 	}
 }

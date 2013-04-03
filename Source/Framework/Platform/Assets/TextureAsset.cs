@@ -34,7 +34,8 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Loads or reloads the asset using the given asset buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
-		internal override unsafe void Load(BufferReader buffer)
+		/// <param name="name">The name of the asset.</param>
+		internal override unsafe void Load(BufferReader buffer, string name)
 		{
 			var description = new TextureDescription
 			{
@@ -71,6 +72,7 @@ namespace Pegasus.Framework.Platform.Assets
 				Texture = _createTexture(GraphicsDevice);
 
 			Texture.Reinitialize(description, surfaces);
+			Texture.SetName(name);
 		}
 
 		/// <summary>
