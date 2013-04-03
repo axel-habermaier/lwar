@@ -303,7 +303,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		/// <param name="quad">The quad that should be added.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
-		public void Draw(ref Quad quad, Texture2D texture)
+		internal void Draw(ref Quad quad, Texture2D texture)
 		{
 			Assert.NotDisposed(this);
 			Assert.ArgumentNotNull(texture, () => texture);
@@ -387,7 +387,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="quads">The quads that should be added.</param>
 		/// <param name="count">The number of quads to draw.</param>
 		/// <param name="texture">The texture that should be used to draw the quads.</param>
-		public void Draw(Quad[] quads, int count, Texture2D texture)
+		internal void Draw(Quad[] quads, int count, Texture2D texture)
 		{
 			Assert.NotDisposed(this);
 			Assert.ArgumentNotNull(quads, () => quads);

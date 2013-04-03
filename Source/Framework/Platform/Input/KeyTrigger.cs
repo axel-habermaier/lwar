@@ -5,7 +5,7 @@ namespace Pegasus.Framework.Platform.Input
 	/// <summary>
 	///   Represents a trigger that triggers if a key is in a certain state.
 	/// </summary>
-	public sealed class KeyTrigger : InputTrigger
+	internal sealed class KeyTrigger : InputTrigger
 	{
 		/// <summary>
 		///   The key that is monitored by the trigger.

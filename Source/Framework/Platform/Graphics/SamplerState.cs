@@ -310,7 +310,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Binds the state on the given slot.
 		/// </summary>
 		/// <param name="slot">The slot the sampler state should be bound to.</param>
-		public void Bind(int slot)
+		internal void Bind(int slot)
 		{
 			Assert.NotDisposed(this);
 

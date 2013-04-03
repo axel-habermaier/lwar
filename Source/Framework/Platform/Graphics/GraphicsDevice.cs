@@ -60,7 +60,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Gets or sets the current viewport of the rasterizer stage of the device.
 		/// </summary>
-		public Rectangle Viewport
+		internal Rectangle Viewport
 		{
 			get
 			{
@@ -79,7 +79,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Gets or sets the current scissor area of the rasterizer stage of the device.
 		/// </summary>
-		public Rectangle ScissorArea
+		internal Rectangle ScissorArea
 		{
 			get
 			{
@@ -98,7 +98,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Gets or sets the current primitive type of the input assembler stage.
 		/// </summary>
-		public PrimitiveType PrimitiveType
+		internal PrimitiveType PrimitiveType
 		{
 			get
 			{
@@ -133,7 +133,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		/// <param name="primitiveCount">The number of primitives that should be drawn.</param>
 		/// <param name="offset">The offset into the vertex buffers.</param>
-		public void Draw(int primitiveCount, int offset)
+		internal void Draw(int primitiveCount, int offset = 0)
 		{
 			Assert.NotDisposed(this);
 			NativeMethods.Draw(_device, primitiveCount, offset);
@@ -146,7 +146,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="indexCount">The number of indices to draw.</param>
 		/// <param name="indexOffset">The location of the first index read by the GPU from the index buffer.</param>
 		/// <param name="vertexOffset">The value that should be added to each index before reading a vertex from the vertex buffer.</param>
-		public void DrawIndexed(int indexCount, int indexOffset = 0, int vertexOffset = 0)
+		internal void DrawIndexed(int indexCount, int indexOffset = 0, int vertexOffset = 0)
 		{
 			Assert.NotDisposed(this);
 			NativeMethods.DrawIndexed(_device, indexCount, indexOffset, vertexOffset);

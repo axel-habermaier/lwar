@@ -8,7 +8,7 @@ namespace Pegasus.Framework.Platform.Input
 	///   Represents a trigger with the actual trigger evaluation being performed by a trigger held by a cvar. The cvar's value
 	///   can be changed at any time, changing the behavior of the configurable trigger accordingly.
 	/// </summary>
-	public class ConfigurableTrigger : InputTrigger
+	internal class ConfigurableTrigger : InputTrigger
 	{
 		/// <summary>
 		///   The cvar that holds the actual trigger.

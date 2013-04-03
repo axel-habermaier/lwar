@@ -52,7 +52,7 @@ namespace Lwar.Client
 			Window.Title = "lwar";
 			Window.Size = new Size(1280, 720);
 
-			_stateManager = new StateManager(Window, GraphicsDevice, SwapChain.BackBuffer, Assets, LogicalInputDevice);
+			_stateManager = new StateManager(Window, GraphicsDevice, Assets, LogicalInputDevice);
 			_stateManager.Add(new MainMenu());
 
 			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
@@ -76,14 +76,13 @@ namespace Lwar.Client
 		/// <summary>
 		///   Invoked when the application should draw a frame.
 		/// </summary>
-		protected override void Draw()
+		/// <param name="output">The output that the scene should be rendered to.</param>
+		protected override void Draw(RenderOutput output)
 		{
-			SwapChain.BackBuffer.Bind();
-			RasterizerState.CullNone.Bind();
-			SwapChain.BackBuffer.ClearColor(Color.Black);
-			SwapChain.BackBuffer.ClearDepth();
+			output.ClearColor(new Color(0, 0, 0, 0));
+			output.ClearDepth();
 
-			_stateManager.Draw();
+			_stateManager.Draw(output);
 		}
 
 		/// <summary>

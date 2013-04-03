@@ -5,7 +5,7 @@ namespace Pegasus.Framework.Platform.Input
 	/// <summary>
 	///   Represents a binary trigger that combines two sub-triggers.
 	/// </summary>
-	public sealed class BinaryInputTrigger : InputTrigger
+	internal sealed class BinaryInputTrigger : InputTrigger
 	{
 		/// <summary>
 		///   The left sub-trigger.

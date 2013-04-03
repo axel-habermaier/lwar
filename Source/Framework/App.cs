@@ -4,7 +4,6 @@ namespace Pegasus.Framework
 {
 	using Math;
 	using Platform;
-	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Input;
 	using Rendering;
@@ -31,11 +30,6 @@ namespace Pegasus.Framework
 		///   Gets the graphics device.
 		/// </summary>
 		protected GraphicsDevice GraphicsDevice { get; private set; }
-
-		/// <summary>
-		///   Gets the swap chain that is used for rendering to the window.
-		/// </summary>
-		protected SwapChain SwapChain { get; private set; }
 
 		/// <summary>
 		///   Gets the application window.
@@ -85,7 +79,8 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Invoked when the application should draw a frame.
 		/// </summary>
-		protected abstract void Draw();
+		/// <param name="output">The output that the scene should be rendered to.</param>
+		protected abstract void Draw(RenderOutput output);
 
 		/// <summary>
 		///   Invoked when the application should draw the user interface.
@@ -125,22 +120,23 @@ namespace Pegasus.Framework
 
 			// Initialize graphics and assets manager
 			GraphicsDevice = new GraphicsDevice();
-			SwapChain = new SwapChain(GraphicsDevice, Window);
-			Assets = new AssetsManager(GraphicsDevice);
-			SwapChain.BackBuffer.Bind();
-
+			using (var swapChain = new SwapChain(GraphicsDevice, Window))
 			using (var interpreter = new Interpreter())
 			using (var bindings = new RequestBindings(LogicalInputDevice))
 			using (var camera2D = new Camera2D(GraphicsDevice))
-			using (var output2D = new RenderOutput(GraphicsDevice) { Camera = camera2D, RenderTarget = SwapChain.BackBuffer })
+			using (var sceneOutput = new RenderOutput(GraphicsDevice) { RenderTarget = swapChain.BackBuffer })
+			using (
+				var userInterfaceOuput = new RenderOutput(GraphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
 			{
+				Assets = new AssetsManager(GraphicsDevice);
+
 				// Run the application-specific initialization logic
 				Initialize();
 				Assert.NotNull(DefaultFont, "The Initialize() method must set the DefaultFont property.");
 				Assert.NotNull(Statistics, "The Initialize() method must set the Statistics property.");
 				Assert.NotNull(SpriteEffect, "The Initialize() method must set the SpriteEffect property.");
 
-				using (var spriteBatch = new SpriteBatch(GraphicsDevice, output2D, SpriteEffect))
+				using (var spriteBatch = new SpriteBatch(GraphicsDevice, userInterfaceOuput, SpriteEffect))
 				using (var console = new Console(GraphicsDevice, LogicalInputDevice, spriteBatch, DefaultFont))
 				{
 					Statistics.Initialize(GraphicsDevice, spriteBatch, DefaultFont);
@@ -174,14 +170,17 @@ namespace Pegasus.Framework
 						// Update the application logic 
 						Update();
 
-						output2D.Viewport = new Rectangle(Vector2i.Zero, Window.Size);
+						var viewport = new Rectangle(Vector2i.Zero, Window.Size);
+						sceneOutput.Viewport = viewport;
+						userInterfaceOuput.Viewport = viewport;
+
 						Statistics.Update();
 
 						using (new Measurement(Statistics.GpuFrameTime))
 						using (new Measurement(Statistics.CpuFrameTime))
 						{
 							// Let the application draw the current frame
-							Draw();
+							Draw(sceneOutput);
 							DrawUserInterface(spriteBatch);
 
 							// Draw the console and the statistics on top of the current frame
@@ -190,7 +189,7 @@ namespace Pegasus.Framework
 						}
 
 						// Present the current frame to the screen and write the log file, if necessary
-						SwapChain.Present();
+						swapChain.Present();
 						logFile.WriteToFile();
 					}
 				}
@@ -224,7 +223,6 @@ namespace Pegasus.Framework
 			Keyboard.SafeDispose();
 			Mouse.SafeDispose();
 			Assets.SafeDispose();
-			SwapChain.SafeDispose();
 			GraphicsDevice.SafeDispose();
 			Window.SafeDispose();
 			_nativeLibrary.SafeDispose();

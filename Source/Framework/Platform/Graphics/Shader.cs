@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Platform.Graphics
 	/// <summary>
 	///   Represents a shader that controls a programmable stage of the graphics pipeline.
 	/// </summary>
-	public abstract class Shader : GraphicsObject
+	internal abstract class Shader : GraphicsObject
 	{
 		/// <summary>
 		///   The native shader instance.

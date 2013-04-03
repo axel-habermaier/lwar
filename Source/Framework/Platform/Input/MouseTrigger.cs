@@ -5,7 +5,7 @@ namespace Pegasus.Framework.Platform.Input
 	/// <summary>
 	///   Represents a trigger that triggers if a mouse button is in a certain state.
 	/// </summary>
-	public class MouseTrigger : InputTrigger
+	internal class MouseTrigger : InputTrigger
 	{
 		/// <summary>
 		///   The mouse button that is monitored by the trigger.

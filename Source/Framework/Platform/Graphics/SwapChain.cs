@@ -34,6 +34,8 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr);
 			BackBuffer = new RenderTarget(graphicsDevice, NativeMethods.GetBackBuffer(_swapChain));
+
+			BackBuffer.Bind();
 		}
 
 		/// <summary>

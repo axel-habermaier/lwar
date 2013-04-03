@@ -4,7 +4,6 @@ namespace Lwar.Client.GameStates
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Rendering;
@@ -44,14 +43,6 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Gets the render target that the state should render into.
-		/// </summary>
-		protected RenderTarget RenderTarget
-		{
-			get { return StateManager.RenderTarget; }
-		}
-
-		/// <summary>
 		///   Gets the assets manager that manages all assets of the game.
 		/// </summary>
 		protected AssetsManager Assets
@@ -78,7 +69,8 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Draws the game state.
 		/// </summary>
-		public virtual void Draw()
+		/// <param name="output">The output that the state should render to.</param>
+		public virtual void Draw(RenderOutput output)
 		{
 		}
 

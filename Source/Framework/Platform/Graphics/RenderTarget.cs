@@ -62,7 +62,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Clears the color buffers of the render target.
 		/// </summary>
 		/// <param name="color">The color the color buffer should be set to.</param>
-		public void ClearColor(Color color)
+		internal void ClearColor(Color color)
 		{
 			Assert.NotDisposed(this);
 			NativeMethods.ClearColor(_renderTarget, color);
@@ -75,25 +75,16 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="clearStencil">Indicates whether the stencil buffer should be cleared.</param>
 		/// <param name="depth">The value the depth buffer should be set to.</param>
 		/// <param name="stencil">The value the stencil buffer should be set to.</param>
-		public void ClearDepthStencil(bool clearDepth, bool clearStencil, float depth = 1.0f, byte stencil = 0)
+		internal void ClearDepthStencil(bool clearDepth, bool clearStencil, float depth = 1.0f, byte stencil = 0)
 		{
 			Assert.NotDisposed(this);
 			NativeMethods.ClearDepthStencil(_renderTarget, clearDepth, clearStencil, depth, stencil);
 		}
 
 		/// <summary>
-		///   Clears the depth buffer of the render target.
-		/// </summary>
-		/// <param name="depth">The value the depth buffer should be set to.</param>
-		public void ClearDepth(float depth = 1.0f)
-		{
-			ClearDepthStencil(true, false, depth);
-		}
-
-		/// <summary>
 		///   Binds the render target to the output merger state.
 		/// </summary>
-		public void Bind()
+		internal void Bind()
 		{
 			Assert.NotDisposed(this);
 			NativeMethods.BindRenderTarget(_renderTarget);

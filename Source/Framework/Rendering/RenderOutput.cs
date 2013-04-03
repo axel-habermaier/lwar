@@ -84,11 +84,14 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="effect">The effect that should be used for drawing.</param>
 		/// <param name="primitiveCount">The number of primitives that should be drawn.</param>
 		/// <param name="offset">The offset into the vertex buffers.</param>
-		public void Draw(EffectTechnique effect, int primitiveCount, int offset)
+		/// <param name="primitiveType">The type of the primitives that should be drawn.</param>
+		public void Draw(EffectTechnique effect, int primitiveCount, int offset = 0,
+						 PrimitiveType primitiveType = PrimitiveType.Triangles)
 		{
 			Bind();
 			effect.Bind();
 
+			_graphicsDevice.PrimitiveType = primitiveType;
 			_graphicsDevice.Draw(primitiveCount, offset);
 		}
 
@@ -100,11 +103,14 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="indexCount">The number of indices to draw.</param>
 		/// <param name="indexOffset">The location of the first index read by the GPU from the index buffer.</param>
 		/// <param name="vertexOffset">The value that should be added to each index before reading a vertex from the vertex buffer.</param>
-		public void DrawIndexed(EffectTechnique effect, int indexCount, int indexOffset = 0, int vertexOffset = 0)
+		/// <param name="primitiveType">The type of the primitives that should be drawn.</param>
+		public void DrawIndexed(EffectTechnique effect, int indexCount, int indexOffset = 0, int vertexOffset = 0,
+								PrimitiveType primitiveType = PrimitiveType.Triangles)
 		{
 			Bind();
 			effect.Bind();
 
+			_graphicsDevice.PrimitiveType = primitiveType;
 			_graphicsDevice.DrawIndexed(indexCount, indexOffset, vertexOffset);
 		}
 

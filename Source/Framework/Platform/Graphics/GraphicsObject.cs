@@ -20,6 +20,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Gets the graphics device this instance belongs to.
 		/// </summary>
-		internal GraphicsDevice GraphicsDevice { get; private set; }
+		protected GraphicsDevice GraphicsDevice { get; private set; }
 	}
 }

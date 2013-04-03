@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Platform.Graphics
 	/// <summary>
 	///   A vertex shader is a program that controls the vertex-shader stage.
 	/// </summary>
-	public sealed class VertexShader : Shader
+	internal sealed class VertexShader : Shader
 	{
 		/// <summary>
 		///   Initializes a new instance.

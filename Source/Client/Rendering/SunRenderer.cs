@@ -53,12 +53,10 @@ namespace Lwar.Client.Rendering
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the game session.</param>
-		/// <param name="renderTarget">The render target the sun should be rendered into.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public SunRenderer(GraphicsDevice graphicsDevice, RenderTarget renderTarget, AssetsManager assets)
+		public SunRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(renderTarget, () => renderTarget);
 			Assert.ArgumentNotNull(assets, () => assets);
 
 			var sun = assets.LoadCubeMap("Textures/Sun");

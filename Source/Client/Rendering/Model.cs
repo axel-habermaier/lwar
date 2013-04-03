@@ -83,7 +83,6 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(output, () => output);
 
 			_layout.Bind();
-			_graphicsDevice.PrimitiveType = PrimitiveType.Triangles;
 			output.DrawIndexed(effect, _indexCount);
 		}
 
@@ -158,7 +157,7 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 
 			// For OpenGL, we have to flip the quad upside-down and change its winding, because OpenGL's window
-			// coordinate origins are at the bottom left corner
+			// coordinate origins are at the bottom left corner... annoying
 			ushort[] indices;
 			if (PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3)
 				indices = new ushort[] { 0, 2, 1, 0, 3, 2 };

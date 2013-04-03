@@ -1,10 +1,11 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets
+namespace Pegasus.Framework.Platform
 {
 	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.IO;
+	using Assets;
 	using Graphics;
 	using Rendering.UserInterface;
 	using Scripting;
@@ -186,7 +187,7 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Loads a vertex shader.
 		/// </summary>
 		/// <param name="shaderFilePath">The path to the vertex shader file.</param>
-		public VertexShader LoadVertexShader(string shaderFilePath)
+		internal VertexShader LoadVertexShader(string shaderFilePath)
 		{
 			Assert.ArgumentNotNullOrWhitespace(shaderFilePath, () => shaderFilePath);
 			return Load<VertexShaderAsset>(shaderFilePath).Shader;
@@ -196,7 +197,7 @@ namespace Pegasus.Framework.Platform.Assets
 		///   Loads a fragment shader.
 		/// </summary>
 		/// <param name="shaderFilePath">The path to the fragment shader file.</param>
-		public FragmentShader LoadFragmentShader(string shaderFilePath)
+		internal FragmentShader LoadFragmentShader(string shaderFilePath)
 		{
 			Assert.ArgumentNotNullOrWhitespace(shaderFilePath, () => shaderFilePath);
 			return Load<FragmentShaderAsset>(shaderFilePath).Shader;

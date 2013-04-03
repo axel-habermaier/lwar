@@ -6,6 +6,7 @@ namespace Lwar.Client.Rendering
 	using Assets.Effects;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;

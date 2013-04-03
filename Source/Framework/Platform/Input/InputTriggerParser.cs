@@ -12,7 +12,7 @@ namespace Pegasus.Framework.Platform.Input
 	///   parsed by the parser describes the same input trigger as if it had been written directly in C#.
 	/// </summary>
 	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class InputTriggerParser<TUserState> : CombinedParser<InputTrigger, TUserState>
+	internal class InputTriggerParser<TUserState> : CombinedParser<InputTrigger, TUserState>
 	{
 		/// <summary>
 		///   Initializes a new instance.

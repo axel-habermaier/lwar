@@ -4,7 +4,7 @@ namespace Lwar.Client.Rendering
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Assets;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
 
@@ -13,11 +13,6 @@ namespace Lwar.Client.Rendering
 	/// </summary>
 	public class RenderContext : DisposableObject
 	{
-		/// <summary>
-		///   The output the render context renders to.
-		/// </summary>
-		private readonly RenderOutput _renderOutput;
-
 		/// <summary>
 		///   The renderer that is used to draw the skybox.
 		/// </summary>
@@ -33,22 +28,18 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		/// <param name="renderTarget">The render target the render context should draw into.</param>
-		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets, RenderTarget renderTarget)
+		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
-			Assert.ArgumentNotNull(renderTarget, () => renderTarget);
 
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 
-			SunRenderer = new SunRenderer(graphicsDevice, renderTarget, assets);
+			SunRenderer = new SunRenderer(graphicsDevice, assets);
 			PlanetRenderer = new PlanetRenderer(graphicsDevice, assets);
 			ShipRenderer = new ShipRenderer(graphicsDevice, assets);
 			BulletRenderer = new BulletRenderer(graphicsDevice, assets);
-
-			_renderOutput = new RenderOutput(graphicsDevice) { RenderTarget = renderTarget };
 		}
 
 		/// <summary>
@@ -74,37 +65,27 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   Renders a frame.
 		/// </summary>
-		/// <param name="camera">The camera that should be used to render the frame.</param>
-		public void Draw(Camera camera)
+		/// <param name="output">The output that the render context should render to.</param>
+		public void Draw(RenderOutput output)
 		{
-			Assert.ArgumentNotNull(camera, () => camera);
+			Assert.ArgumentNotNull(output, () => output);
 
 			if (LwarCvars.DrawWireframe.Value)
 				_wireframe.Bind();
 			else
 				RasterizerState.CullCounterClockwise.Bind();
 
-			_renderOutput.Camera = camera;
-			_skyboxRenderer.Draw(_renderOutput);
+			_skyboxRenderer.Draw(output);
 
 			DepthStencilState.DepthEnabled.Bind();
 
-			SunRenderer.Draw(_renderOutput);
-			PlanetRenderer.Draw(_renderOutput);
+			SunRenderer.Draw(output);
+			PlanetRenderer.Draw(output);
 
 			DepthStencilState.DepthDisabled.Bind();
 
-			ShipRenderer.Draw(_renderOutput);
-			BulletRenderer.Draw(_renderOutput);
-		}
-
-		/// <summary>
-		///   Resizes the viewport of the rendering output.
-		/// </summary>
-		/// <param name="size">The new size.</param>
-		public void Resize(Size size)
-		{
-			_renderOutput.Viewport = new Rectangle(Vector2i.Zero, size);
+			ShipRenderer.Draw(output);
+			BulletRenderer.Draw(output);
 		}
 
 		/// <summary>
@@ -119,7 +100,6 @@ namespace Lwar.Client.Rendering
 
 			_skyboxRenderer.SafeDispose();
 			_wireframe.SafeDispose();
-			_renderOutput.SafeDispose();
 		}
 	}
 }

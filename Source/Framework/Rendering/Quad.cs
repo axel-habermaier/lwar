@@ -10,7 +10,7 @@ namespace Pegasus.Framework.Rendering
 	///   Represents a rectangle with possibly non-axis aligned edges.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct Quad
+	internal struct Quad
 	{
 		/// <summary>
 		///   The vertex that conceptually represents the bottom left corner of the quad.

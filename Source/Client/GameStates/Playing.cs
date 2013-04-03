@@ -7,6 +7,7 @@ namespace Lwar.Client.GameStates
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Rendering;
 	using Rendering;
 
 	/// <summary>
@@ -92,7 +93,7 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public override void Initialize()
 		{
-			_renderContext = new RenderContext(GraphicsDevice, Assets, RenderTarget);
+			_renderContext = new RenderContext(GraphicsDevice, Assets);
 			_gameSession = new GameSession(_renderContext);
 			_messageDispatcher = new MessageDispatcher(_gameSession);
 			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
@@ -157,10 +158,13 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Draws the game state.
 		/// </summary>
-		public override void Draw()
+		/// <param name="output">The output that the state should render to.</param>
+		public override void Draw(RenderOutput output)
 		{
-			_renderContext.Resize(Window.Size);
-			_renderContext.Draw(_cameraManager.ActiveCamera);
+			Assert.ArgumentNotNull(output, () => output);
+
+			output.Camera = _cameraManager.ActiveCamera;
+			_renderContext.Draw(output);
 		}
 	}
 }

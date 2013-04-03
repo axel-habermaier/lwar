@@ -54,7 +54,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			_writer.AppendLine("using System.Runtime.InteropServices;");
 			_writer.AppendLine("using Pegasus.Framework;");
 			_writer.AppendLine("using Pegasus.Framework.Math;");
-			_writer.AppendLine("using Pegasus.Framework.Platform.Assets;");
+			_writer.AppendLine("using Pegasus.Framework.Platform;");
 			_writer.AppendLine("using Pegasus.Framework.Platform.Graphics;");
 			_writer.Newline();
 		}

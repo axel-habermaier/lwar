@@ -4,7 +4,6 @@ namespace Lwar.Client.GameStates
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Rendering;
@@ -24,29 +23,20 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		/// <param name="window">The window that displays the game.</param>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game.</param>
-		/// <param name="renderTarget">The render target that the states should render into.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game.</param>
 		/// <param name="inputDevice">The logical input device that provides all the user input to the game.</param>
-		public StateManager(Window window, GraphicsDevice graphicsDevice, RenderTarget renderTarget, AssetsManager assets,
-							LogicalInputDevice inputDevice)
+		public StateManager(Window window, GraphicsDevice graphicsDevice, AssetsManager assets, LogicalInputDevice inputDevice)
 		{
 			Assert.ArgumentNotNull(window, () => window);
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(renderTarget, () => renderTarget);
 			Assert.ArgumentNotNull(assets, () => assets);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 
 			Window = window;
 			GraphicsDevice = graphicsDevice;
-			RenderTarget = renderTarget;
 			Assets = assets;
 			InputDevice = inputDevice;
 		}
-
-		/// <summary>
-		///   Gets the render target that the states should render into.
-		/// </summary>
-		public RenderTarget RenderTarget { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the window that displays the game.
@@ -122,10 +112,13 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Draws all visible states from top to bottom.
 		/// </summary>
-		public void Draw()
+		/// <param name="output">The output that the states should render to.</param>
+		public void Draw(RenderOutput output)
 		{
+			Assert.ArgumentNotNull(output, () => output);
+
 			for (var i = GetFirstVisibleScreen(); i < _states.Count; ++i)
-				_states[i].Draw();
+				_states[i].Draw(output);
 		}
 
 		/// <summary>
