@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using Assets;
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
@@ -11,7 +12,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a C# method that is cross-compiled to GLSL or HLSL.
 	/// </summary>
-	internal class ShaderMethod : CompiledElement
+	internal class ShaderMethod : EffectElement
 	{
 		/// <summary>
 		///   The declaration of the method that represents the shader.
@@ -168,7 +169,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			// Check whether the fragment shader declares an output parameter with the Color semantics
 			if (Type == ShaderType.FragmentShader && Outputs.All(output => !output.Semantics.IsColor()))
 				Error(_method, "Expected an output parameter with the 'Color' semantics.");
-
+			
 			// Check whether the fragment shader declares any output parameters that do not have the color semantics
 			if (Type == ShaderType.FragmentShader)
 			{

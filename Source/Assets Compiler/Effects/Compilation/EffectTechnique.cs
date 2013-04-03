@@ -14,7 +14,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	///   Represents a field of an effect class that defines the combination of shaders that should be set on the GPU to create
 	///   a graphical effect.
 	/// </summary>
-	internal class EffectTechnique : CompiledElement
+	internal class EffectTechnique : EffectElement
 	{
 		/// <summary>
 		///   The declaration of the field that represents the technique.

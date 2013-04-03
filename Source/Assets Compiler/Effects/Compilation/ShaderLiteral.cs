@@ -9,7 +9,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a field of an effect class that acts as compile-time constant literal shader value.
 	/// </summary>
-	internal class ShaderLiteral : CompiledElement
+	internal class ShaderLiteral : EffectElement
 	{
 		/// <summary>
 		///   The declaration of the field that represents the literal.

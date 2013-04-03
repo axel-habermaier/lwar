@@ -14,7 +14,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a C# class that contains cross-compiled shader code and shader constants.
 	/// </summary>
-	internal class EffectClass : CompiledElement
+	internal class EffectClass : EffectElement
 	{
 		/// <summary>
 		///   The declaration of the class that represents the effect.

@@ -75,30 +75,22 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		{
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			try
-			{
-				LoadAssemblies();
-				var effectFiles = LoadFiles(assets).ToArray();
+			LoadAssemblies();
+			var effectFiles = LoadFiles(assets).ToArray();
 
-				using (var generator = new CSharpCodeGenerator())
+			using (var generator = new CSharpCodeGenerator())
+			{
+				foreach (var file in effectFiles)
 				{
-					foreach (var file in effectFiles)
-					{
-						file.InitializeElement();
-						file.ValidateElement();
+					file.InitializeElement();
+					file.ValidateElement();
 
-						if (!file.HasErrors)
-							file.Compile(generator);
-					}
+					if (!file.HasErrors)
+						file.Compile(generator);
 				}
+			}
 
-				return effectFiles.All(file => !file.HasErrors);
-			}
-			catch (Exception e)
-			{
-				Log.Error("Effect cross-compilation failed: {0}", e.Message);
-				return false;
-			}
+			return effectFiles.All(file => !file.HasErrors);
 		}
 
 		/// <summary>

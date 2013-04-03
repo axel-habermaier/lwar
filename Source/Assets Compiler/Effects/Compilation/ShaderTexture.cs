@@ -10,7 +10,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a field of an effect class that allows access to a texture or cubemap.
 	/// </summary>
-	internal class ShaderTexture : CompiledElement
+	internal class ShaderTexture : EffectElement
 	{
 		/// <summary>
 		///   The declaration of the field that represents the texture object.

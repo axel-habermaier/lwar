@@ -210,10 +210,6 @@
     <Compile Include="Effects\TexturedQuadEffect.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Source\Framework\Framework.csproj">
-      <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
-      <Name>Framework</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Source\Assets Compiler\Assets Compiler.csproj">
       <Project>{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}</Project>
       <Name>Assets Compiler</Name>

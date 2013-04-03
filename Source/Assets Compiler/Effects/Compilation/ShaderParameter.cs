@@ -11,7 +11,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a parameter of a shader.
 	/// </summary>
-	internal class ShaderParameter : CompiledElement
+	internal class ShaderParameter : EffectElement
 	{
 		/// <summary>
 		///   The declaration of the method parameter that represents the shader parameter.

@@ -8,7 +8,7 @@ namespace Lwar.Assets.Effects
 	///   Applies a Gaussian blur filter to a texture.
 	/// </summary>
 	[Effect]
-	public class BlurEffect : Effect
+	public class BlurEffect : Effect 
 	{
 		/// <summary>
 		///   Applies a single-pass Gaussian blur filter.
@@ -17,7 +17,7 @@ namespace Lwar.Assets.Effects
 		{
 			VertexShader = "VertexShader",
 			FragmentShader = "GaussianBlur"
-		};
+		}; 
 
 		/// <summary>
 		///   The texture that is blurred.

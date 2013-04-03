@@ -11,39 +11,38 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
-	///   Represents an element that takes part in the effect compilation.
+	///   Represents an element of an effect declaration.
 	/// </summary>
-	internal abstract class CompiledElement
+	internal abstract class EffectElement
 	{
 		/// <summary>
-		///   The list of child elements that are compiled when the current element is compiled.
+		///   The list of child elements that this element consists of.
 		/// </summary>
-		private readonly List<CompiledElement> _childElements = new List<CompiledElement>();
+		private readonly List<EffectElement> _childElements = new List<EffectElement>();
 
 		/// <summary>
-		///   The path to the C# effect file that contains the compiled element.
+		///   The path to the C# effect file that contains the element.
 		/// </summary>
 		private string _file;
 
 		/// <summary>
-		///   Indicates whether any errors occurred during the compilation of the element.
+		///   Indicates whether any errors occurred during the validation of the element.
 		/// </summary>
 		private bool _hasErrors;
 
 		/// <summary>
-		///   The current state of the compiled element.
+		///   The current state of the element.
 		/// </summary>
 		private State _state = State.Uninitialized;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="file"> The path to the C# effect file that contains the compiled element.</param>
+		/// <param name="file"> The path to the C# effect file that contains the element.</param>
 		/// <param name="resolver">
-		///   The C# AST resolver that should be used to resolve symbols of the effect file currently being
-		///   compiled.
+		///   The C# AST resolver that should be used to resolve symbols of the effect file currently being analyzed.
 		/// </param>
-		protected CompiledElement(string file, CSharpAstResolver resolver)
+		protected EffectElement(string file, CSharpAstResolver resolver)
 		{
 			Assert.ArgumentNotNullOrWhitespace(file, () => file);
 			Assert.ArgumentNotNull(resolver, () => resolver);
@@ -55,12 +54,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		protected CompiledElement()
+		protected EffectElement()
 		{
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether there have been any errors during the compilation of the element or any of its
+		///   Gets a value indicating whether there have been any errors during the validation of the element or any of its
 		///   children.
 		/// </summary>
 		public bool HasErrors
@@ -69,12 +68,12 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Gets the C# AST resolver that should be used to resolve symbols of the effect file currently being compiled.
+		///   Gets the C# AST resolver that should be used to resolve symbols of the effect file currently being analyzed.
 		/// </summary>
 		protected CSharpAstResolver Resolver { get; private set; }
 
 		/// <summary>
-		///   Initializes the compiled element and all of its children.
+		///   Initializes the element and all of its children.
 		/// </summary>
 		public void InitializeElement()
 		{
@@ -88,7 +87,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Validates the compiled element and all of its children. This method has no effect if any errors occurred during
+		///   Validates the element and all of its children. This method has no effect if any errors occurred during
 		///   initialization.
 		/// </summary>
 		public void ValidateElement()
@@ -109,7 +108,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Adds the given elements to the current element.
 		/// </summary>
 		/// <param name="elements">The elements that should be added.</param>
-		protected void AddElements(IEnumerable<CompiledElement> elements)
+		protected void AddElements(IEnumerable<EffectElement> elements)
 		{
 			Assert.ArgumentNotNull(elements, () => elements);
 
@@ -121,7 +120,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		///   Adds the given element to the current element.
 		/// </summary>
 		/// <param name="element">The element that should be added.</param>
-		protected void AddElement(CompiledElement element)
+		protected void AddElement(EffectElement element)
 		{
 			Assert.ArgumentNotNull(element, () => element);
 			Assert.That(_state == State.Uninitialized, "No child elements can be added once the element has already been initialized.");
@@ -136,7 +135,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// </summary>
 		/// <typeparam name="T">The type of the elements that should be returned.</typeparam>
 		protected IEnumerable<T> GetChildElements<T>()
-			where T : CompiledElement
+			where T : EffectElement
 		{
 			return _childElements.OfType<T>();
 		}

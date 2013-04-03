@@ -128,16 +128,6 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		}
 
 		/// <summary>
-		///   Writes the contents of the buffer to the given file.
-		/// </summary>
-		/// <param name="file">The file the buffer should be written to.</param>
-		public void WriteToFile(string file)
-		{
-			Assert.ArgumentNotNullOrWhitespace(file, () => file);
-			File.WriteAllText(file, _buffer.ToString());
-		}
-
-		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()

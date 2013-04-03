@@ -195,6 +195,7 @@
     <Compile Include="CompilationUnit.cs" />
     <Compile Include="Compilers\CompilationAction.cs" />
     <Compile Include="Compilers\EffectCompiler.cs" />
+    <Compile Include="Effects\ShaderAttribute.cs" />
     <Compile Include="Hash.cs" />
     <Compile Include="Compilers\IAssetCompiler.cs" />
     <Compile Include="Configuration.cs" />
@@ -205,7 +206,7 @@
     <Compile Include="Effects\Compilation\CrossCompiler.Supported.cs" />
     <Compile Include="Effects\Compilation\CrossCompiler.Unsupported.cs" />
     <Compile Include="Effects\Compilation\CodeWriter.cs" />
-    <Compile Include="Effects\Compilation\CompiledElement.cs" />
+    <Compile Include="Effects\Compilation\EffectElement.cs" />
     <Compile Include="Effects\Compilation\CSharpCodeGenerator.cs" />
     <Compile Include="Effects\Compilation\DataType.cs" />
     <Compile Include="Effects\Compilation\EffectTechnique.cs" />
@@ -260,12 +261,6 @@
     <Compile Include="XmlParser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Framework\Framework.csproj">
-      <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
-      <Name>Framework</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +272,12 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Swizzle.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
+      <Name>Framework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

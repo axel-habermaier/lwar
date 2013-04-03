@@ -11,7 +11,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 	/// <summary>
 	///   Represents a field of an effect class that is part of a constant buffer.
 	/// </summary>
-	internal class ShaderConstant : CompiledElement
+	internal class ShaderConstant : EffectElement
 	{
 		/// <summary>
 		///   The declaration of the field that represents the shader constant.

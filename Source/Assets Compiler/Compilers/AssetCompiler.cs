@@ -20,7 +20,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		///   Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
-		public bool Compile(IEnumerable<Asset> assets)
+		public virtual bool Compile(IEnumerable<Asset> assets)
 		{
 			var success = true;
 			foreach (var asset in assets.OfType<TAsset>())
@@ -32,7 +32,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		///   Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		private bool Compile(TAsset asset)
+		protected bool Compile(TAsset asset)
 		{
 			var action = asset.GetRequiredAction();
 
@@ -47,9 +47,15 @@ namespace Pegasus.AssetsCompiler.Compilers
 					return true;
 				case CompilationAction.Process:
 					Log.Info("Compiling '{0}'...", asset.RelativePath);
-					asset.WriteHash();
+					bool success;
+
 					using (var writer = new AssetWriter(asset))
-						return CompileAndLogExceptions(asset, writer.Writer);
+						success = CompileAndLogExceptions(asset, writer.Writer);
+
+					if (success)
+						asset.WriteHash();
+
+					return success;
 				default:
 					throw new InvalidOperationException("Unknown action type.");
 			}
