@@ -80,14 +80,14 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Removes the temp and target directories.
+		///   Removes all compiled assets and temporary files.
 		/// </summary>
-		public static void Clean()
+		public void Clean()
 		{
 			Log.Info("Cleaning compiled assets and temporary files...");
 
-			Directory.Delete(Configuration.TempDirectory, true);
-			Directory.Delete(Configuration.TargetDirectory, true);
+			foreach (var compiler in Compilers)
+				compiler.Clean(_assets);
 		}
 
 		/// <summary>

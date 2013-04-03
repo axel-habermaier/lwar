@@ -24,7 +24,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override void CompileCore(FontAsset asset, BufferWriter buffer)
+		protected override void Compile(FontAsset asset, BufferWriter buffer)
 		{
 			_parser = new XmlParser(asset.SourcePath);
 
@@ -35,23 +35,50 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
+		///   Removes the compiled asset and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="asset">The asset that should be cleaned.</param>
+		protected override void Clean(FontAsset asset)
+		{
+			_parser = new XmlParser(asset.SourcePath);
+
+			var path = GetTexturePath(asset);
+			if (path == null)
+				return;
+
+			using (var texture = new Texture2DAsset(path) { Mipmaps = false })
+				new Texture2DCompiler().Clean(new[] { texture });
+		}
+
+		/// <summary>
+		///   Gets the path to the font's texture.
+		/// </summary>
+		/// <param name="asset">The asset that should be used to get the path.</param>
+		private string GetTexturePath(Asset asset)
+		{
+			var pages = _parser.FindElement(_parser.Root, "pages");
+			var pagesList = _parser.FindElements(pages, "page").ToArray();
+			if (pagesList.Length != 1)
+				return null;
+
+			var page = pagesList.Single();
+			var textureFile = _parser.ReadAttributeString(page, "file");
+			return Path.Combine(Path.GetDirectoryName(asset.RelativePath), textureFile);
+		}
+
+		/// <summary>
 		///   Finds the texture name and writes it to the compiled asset file.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		private void ProcessTexture(Asset asset, BufferWriter buffer)
 		{
-			var pages = _parser.FindElement(_parser.Root, "pages");
-			var pagesList = _parser.FindElements(pages, "page").ToArray();
-			if (pagesList.Length != 1)
-				Log.Die("Expected exactly one page.");
-
-			var page = pagesList.Single();
-			var textureFile = _parser.ReadAttributeString(page, "file");
-			var path = Path.Combine(Path.GetDirectoryName(asset.RelativePath), textureFile);
+			var path = GetTexturePath(asset);
+			if (path == null)
+				Log.Die("Could not retrieve texture path from font. Maybe more than one texture is used.");
 
 			using (var texture = new Texture2DAsset(path) { Mipmaps = false })
-				new Texture2DCompiler().Compile(texture, buffer);
+				new Texture2DCompiler().CompileSingle(texture, buffer);
 		}
 
 		/// <summary>

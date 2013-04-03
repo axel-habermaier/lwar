@@ -16,5 +16,11 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
 		bool Compile(IEnumerable<Asset> assets);
+
+		/// <summary>
+		///   Removes the compiled assets and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="assets">The assets that should be cleaned.</param>
+		void Clean(IEnumerable<Asset> assets);
 	}
 }

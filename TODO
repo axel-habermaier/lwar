@@ -33,7 +33,6 @@ Pegasus
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
-- Asset cleaning: Exception when Explorer is open
 - OpenGL window coordinates problem with render targets
 
 Network Specification

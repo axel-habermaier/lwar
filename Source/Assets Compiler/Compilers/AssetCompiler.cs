@@ -29,6 +29,22 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
+		///   Removes the compiled assets and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="assets">The assets that should be cleaned.</param>
+		public virtual void Clean(IEnumerable<Asset> assets)
+		{
+			foreach (var asset in assets.OfType<TAsset>())
+			{
+				File.Delete(asset.TempPath);
+				File.Delete(asset.TargetPath);
+				File.Delete(asset.HashPath);
+
+				Clean(asset);
+			}
+		}
+
+		/// <summary>
 		///   Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
@@ -66,7 +82,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		internal void Compile(TAsset asset, BufferWriter buffer)
+		internal void CompileSingle(TAsset asset, BufferWriter buffer)
 		{
 			CompileAndLogExceptions(asset, buffer);
 		}
@@ -80,7 +96,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		{
 			try
 			{
-				CompileCore(asset, buffer);
+				Compile(asset, buffer);
 				return true;
 			}
 			catch (ApplicationAbortedException)
@@ -100,6 +116,14 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected abstract void CompileCore(TAsset asset, BufferWriter buffer);
+		protected abstract void Compile(TAsset asset, BufferWriter buffer);
+
+		/// <summary>
+		///   Removes the compiled asset and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="asset">The asset that should be cleaned.</param>
+		protected virtual void Clean(TAsset asset)
+		{
+		}
 	}
 }

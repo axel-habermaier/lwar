@@ -18,7 +18,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override void CompileCore(Texture2DAsset asset, BufferWriter buffer)
+		protected override void Compile(Texture2DAsset asset, BufferWriter buffer)
 		{
 			asset.Load();
 
@@ -26,6 +26,15 @@ namespace Pegasus.AssetsCompiler.Compilers
 				asset.Write(buffer);
 			else
 				CompileCompressed(asset, buffer);
+		}
+
+		/// <summary>
+		///   Removes the compiled asset and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="asset">The asset that should be cleaned.</param>
+		protected override void Clean(Texture2DAsset asset)
+		{
+			File.Delete(GetAssembledFilePath(asset));
 		}
 
 		/// <summary>
@@ -38,7 +47,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 			if (!asset.IsPowerOfTwo())
 				Log.Die("All texture dimensions must be power-of-two.");
 
-			var outFile = asset.TempPathWithoutExtension + ".dds";
+			var outFile = GetAssembledFilePath(asset);
 			ExternalTool.NvCompress(asset.SourcePath, outFile, asset.CompressedFormat, asset.Mipmaps);
 
 			using (var ddsBuffer = BufferReader.Create(File.ReadAllBytes(outFile)))
@@ -46,6 +55,15 @@ namespace Pegasus.AssetsCompiler.Compilers
 				var ddsImage = new DirectDrawSurface(ddsBuffer);
 				ddsImage.Write(buffer);
 			}
+		}
+
+		/// <summary>
+		///   Gets the path of the temporary assembled texture file.
+		/// </summary>
+		/// <param name="asset">The asset the path should be returned for.</param>
+		private static string GetAssembledFilePath(Asset asset)
+		{
+			return asset.TempPathWithoutExtension + ".dds";
 		}
 	}
 }

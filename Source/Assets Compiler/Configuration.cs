@@ -41,7 +41,7 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   The path where the temporary asset files should be stored.
 		/// </summary>
-		public static readonly string TempDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets/obj/Assets");
+		public static readonly string TempDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets/obj");
 
 		/// <summary>
 		///   The path where the compiled assets should be stored.

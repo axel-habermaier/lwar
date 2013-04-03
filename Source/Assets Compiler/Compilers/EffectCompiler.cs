@@ -66,6 +66,29 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
+		///   Removes the compiled assets and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="assets">The assets that should be cleaned.</param>
+		public override void Clean(IEnumerable<Asset> assets)
+		{
+			var shaderAssets = CreateAssets().ToArray();
+			try
+			{
+				base.Clean(shaderAssets);
+
+				foreach (var asset in shaderAssets)
+					File.Delete(asset.SourcePath);
+
+				foreach (var asset in assets.OfType<CSharpAsset>())
+					File.Delete(asset.HashPath);
+			}
+			finally
+			{
+				shaderAssets.SafeDisposeAll();
+			}
+		}
+
+		/// <summary>
 		///   Checks whether any of the C# effect assets have changed.
 		/// </summary>
 		/// <param name="shaderAssets">The shader assets that should be checked to determine the compilation action.</param>
@@ -109,7 +132,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override void CompileCore(ShaderAsset asset, BufferWriter buffer)
+		protected override void Compile(ShaderAsset asset, BufferWriter buffer)
 		{
 			using (var reader = BufferReader.Create(File.ReadAllBytes(asset.SourcePath)))
 			{
@@ -141,6 +164,16 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
+		///   Removes the compiled asset and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="asset">The asset that should be cleaned.</param>
+		protected override void Clean(ShaderAsset asset)
+		{
+			File.Delete(GetHlslPath(asset));
+			File.Delete(GetCompiledHlslShaderPath(asset));
+		}
+
+		/// <summary>
 		///   Writes the generated GLSL shader code to the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -168,13 +201,31 @@ namespace Pegasus.AssetsCompiler.Compilers
 			if (!Configuration.CompileHlsl)
 				return;
 
-			var hlslFile = asset.TempPathWithoutExtension + ".hlsl";
+			var hlslFile = GetHlslPath(asset);
 			File.WriteAllText(hlslFile, source);
 
-			var byteCode = asset.TempPathWithoutExtension + ".fxo";
+			var byteCode = GetCompiledHlslShaderPath(asset);
 			ExternalTool.Fxc(hlslFile, byteCode, profile);
 
 			buffer.Copy(File.ReadAllBytes(byteCode));
+		}
+
+		/// <summary>
+		///   Gets the path of the temporary HLSL shader file.
+		/// </summary>
+		/// <param name="asset">The asset the path should be returned for.</param>
+		private static string GetHlslPath(Asset asset)
+		{
+			return asset.TempPathWithoutExtension + ".hlsl";
+		}
+
+		/// <summary>
+		///   Gets the path of the temporary compile HLSL shader file.
+		/// </summary>
+		/// <param name="asset">The asset the path should be returned for.</param>
+		private static string GetCompiledHlslShaderPath(Asset asset)
+		{
+			return asset.TempPathWithoutExtension + ".fxo";
 		}
 	}
 }
