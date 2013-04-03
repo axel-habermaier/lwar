@@ -15,11 +15,6 @@ namespace Lwar.Client.Rendering
 	public class Model : DisposableObject
 	{
 		/// <summary>
-		///   The graphics device that is used to draw the model.
-		/// </summary>
-		private readonly GraphicsDevice _graphicsDevice;
-
-		/// <summary>
 		///   The index buffer containing the model's indices.
 		/// </summary>
 		private readonly IndexBuffer _indexBuffer;
@@ -47,16 +42,14 @@ namespace Lwar.Client.Rendering
 		/// <param name="layout">The layout of the vertex buffer.</param>
 		/// <param name="indexBuffer">The index buffer containing the model's indices.</param>
 		/// <param name="indexCount">The number of indices in the index buffer.</param>
-		public Model(GraphicsDevice graphicsDevice, VertexBuffer vertexBuffer, VertexInputLayout layout, IndexBuffer indexBuffer,
+		private Model(VertexBuffer vertexBuffer, VertexInputLayout layout, IndexBuffer indexBuffer,
 					 int indexCount)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(vertexBuffer, () => vertexBuffer);
 			Assert.ArgumentNotNull(layout, () => layout);
 			Assert.ArgumentNotNull(indexBuffer, () => indexBuffer);
 			Assert.ArgumentInRange(indexCount, () => indexCount, 0, Int32.MaxValue);
 
-			_graphicsDevice = graphicsDevice;
 			_vertexBuffer = vertexBuffer;
 			_indexBuffer = indexBuffer;
 			_indexCount = indexCount;
@@ -145,7 +138,7 @@ namespace Lwar.Client.Rendering
 			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
 			var layout = VertexPositionNormalTexture.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
 
-			return new Model(graphicsDevice, vertexBuffer, layout, indexBuffer, indices.Length);
+			return new Model(vertexBuffer, layout, indexBuffer, indices.Length);
 		}
 
 		/// <summary>
@@ -199,7 +192,7 @@ namespace Lwar.Client.Rendering
 			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
 			var layout = VertexPositionNormalTexture.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
 
-			return new Model(graphicsDevice, vertexBuffer, layout, indexBuffer, indices.Length);
+			return new Model( vertexBuffer, layout, indexBuffer, indices.Length);
 		}
 
 		/// <summary>
@@ -241,7 +234,7 @@ namespace Lwar.Client.Rendering
 
 			var layout = new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);
 
-			return new Model(graphicsDevice, vertexBuffer, layout, indexBuffer, indices.Length);
+			return new Model(vertexBuffer, layout, indexBuffer, indices.Length);
 		}
 
 		/// <summary>
@@ -327,7 +320,7 @@ namespace Lwar.Client.Rendering
 			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices.ToArray());
 			var layout = VertexPositionNormal.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
 
-			return new Model(graphicsDevice, vertexBuffer, layout, indexBuffer, indices.Count);
+			return new Model(vertexBuffer, layout, indexBuffer, indices.Count);
 		}
 	}
 }

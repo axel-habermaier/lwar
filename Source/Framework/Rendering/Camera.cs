@@ -139,17 +139,17 @@ namespace Pegasus.Framework.Rendering
 			/// <summary>
 			///   The view matrix of the camera.
 			/// </summary>
-			private readonly Matrix View;
+			public readonly Matrix View;
 
 			/// <summary>
 			///   The projection matrix of the camera.
 			/// </summary>
-			private readonly Matrix Projection;
+			public readonly Matrix Projection;
 
 			/// <summary>
 			///   The product of the view and the projection matrix that is pre-calculated on the CPU.
 			/// </summary>
-			private readonly Matrix ViewProjection;
+			public readonly Matrix ViewProjection;
 
 			/// <summary>
 			///   Initializes a new instance.

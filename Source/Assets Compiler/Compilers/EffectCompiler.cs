@@ -122,7 +122,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 			return from type in Configuration.AssetListAssembly.GetTypes()
 				   where type.BaseType == typeof(Effect)
 				   from method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-				   let attribute = method.GetCustomAttributes().OfType<ShaderAttribute>().SingleOrDefault()
+				   let attribute = method.GetCustomAttributes(false).OfType<ShaderAttribute>().SingleOrDefault()
 				   where attribute != null
 				   select new ShaderAsset(type.FullName, method.Name, attribute.ShaderType);
 		}
