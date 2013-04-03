@@ -302,6 +302,11 @@
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
+    <Compile Include="Scripting\Cvars.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Cvars.tt</DependentUpon>
+    </Compile>
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPAddressParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
@@ -321,7 +326,7 @@
     <Compile Include="Scripting\CvarRegistry.cs" />
     <Compile Include="Scripting\ICommand.cs" />
     <Compile Include="Scripting\ICvar.cs" />
-    <Compile Include="Scripting\Cvars.cs" />
+    <Compile Include="Scripting\Cvars_old.cs" />
     <Compile Include="DisposableExtensions.cs" />
     <Compile Include="Platform\Input\BinaryInputTriggerType.cs" />
     <Compile Include="Platform\Input\BinaryInputTrigger.cs" />
@@ -503,8 +508,12 @@
     </None>
     <None Include="Network\ServiceCodegen.t4">
     </None>
+    <None Include="Scripting\Cvars.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Cvars.cs</LastGenOutput>
+    </None>
+    <None Include="Scripting\CvarsGenerator.t4" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

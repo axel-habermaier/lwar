@@ -1,0 +1,288 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(SolutionDir)Dependencies/ICSharpCode.NRefactory.dll" #>
+<#@ assembly name="$(SolutionDir)Dependencies/ICSharpCode.NRefactory.CSharp.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="ICSharpCode.NRefactory" #>
+<#@ import namespace="ICSharpCode.NRefactory.CSharp" #>
+<#@ import namespace="ICSharpCode.NRefactory.CSharp.Resolver" #>
+<#@ import namespace="ICSharpCode.NRefactory.TypeSystem" #>
+<#@ output extension=".cs" #>
+<# #>
+<# Namespace = "Pegasus.Framework.Scripting"; #>
+<# ClassName = "CvarRegistry2"; #>
+<# BaseClass = "CvarRegistry"; #>
+<# SourceFile = "Cvars_old.cs"; #>
+<# #>
+<# #>
+<# var parseResult = Parse(SourceFile); #>
+<# #>
+using System;
+
+namespace <#= Namespace #>
+{
+	/// <summary>
+	///   Provides access to cvars.
+	/// </summary>
+	public class <#= ClassName #> : <#= BaseClass #>
+	{
+<# foreach (var cvar in parseResult.Cvars) { #>
+		<#= GetXmlDocumentation(cvar.Documentation, 2) #>
+		private readonly Cvar<<#= cvar.Type #>> <#= GetFieldName(cvar.Name) #>;
+
+<# } #>
+<# foreach (var command in parseResult.Commands) { #>
+		<#= command.GetSummary(2) #>
+		private readonly Command<#= command.TypeArguments #> <#= GetFieldName(command.Name) #>;
+
+<# } #>
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		public <#= ClassName #>()
+		{
+<# foreach (var cvar in parseResult.Cvars) { #>
+			<#= GetFieldName(cvar.Name) #> = new Cvar<<#= cvar.Type #>>("<#= cvar.CvarName #>", <#= cvar.DefaultValue #>, "<#= cvar.Description #>");
+<# } #>
+
+<# foreach (var command in parseResult.Commands) { #>
+			<#= GetFieldName(command.Name) #> = new Command<#= command.TypeArguments #>("<#= command.CommandName #>", "<#= command.Description #>");
+<# } #>
+
+<# foreach (var cvar in parseResult.Cvars) { #>
+			Register(<#= GetFieldName(cvar.Name) #>);
+<# } #>
+
+<# foreach (var command in parseResult.Commands) { #>
+			Register(<#= GetFieldName(command.Name) #>);
+<# } #>
+		}
+<# foreach (var cvar in parseResult.Cvars) { #>
+
+		<#= GetXmlDocumentation(cvar.Documentation, 2) #>
+		public <#= cvar.Type #> <#= cvar.Name #>
+		{
+			get { return <#= GetFieldName(cvar.Name) #>.Value; }
+			set { <#= GetFieldName(cvar.Name) #>.Value = value; }
+		}
+<# } #>
+<# foreach (var command in parseResult.Commands) { #>
+
+		<#= GetXmlDocumentation(command.Documentation, 2) #>
+		public void <#= command.Name #>(<#= command.Arguments #>)
+		{
+			<#= GetFieldName(command.Name) #>.Invoke(<#= command.ArgumentList #>);
+		}
+<# } #>
+<# foreach (var command in parseResult.Commands) { #>
+
+		<#= command.GetSummary(2) #>
+		public event Action<#= command.TypeArguments #> On<#= command.Name #>
+		{
+			add { <#= GetFieldName(command.Name) #>.Invoked += value; }
+			remove { <#= GetFieldName(command.Name) #>.Invoked -= value; }
+		}
+<# } #>
+	}
+}
+
+<#+
+
+	string SourceFile;
+	string Namespace;
+	string ClassName;
+	string BaseClass;
+
+	class Cvar
+	{
+		public string Name;
+		public string Type;
+		public string[] Documentation;
+		public string DefaultValue;
+
+		public string CvarName { get { return GetRuntimeName(Name).Aggregate("", (s, c) => s + c); } }
+		public string Description { get { return GetDescription(Documentation); } }
+	}
+
+	class Command
+	{
+		public string Name;
+		public Parameter[] Parameters;
+		public string[] Documentation;
+
+		public string TypeArguments 
+		{ 
+			get 
+			{ 
+				var types = String.Join(", ", Parameters.Select(p => p.Type)); 
+				if (!String.IsNullOrWhiteSpace(types))
+					return "<" + types + ">";
+					
+				return "";
+			} 
+		}
+
+		public string Arguments { get { return String.Join(", ", Parameters.Select(p => p.Type + " " + p.Name)); } }
+		public string ArgumentList { get { return String.Join(", ", Parameters.Select(p => p.Name)); } }
+		public string CommandName { get { return GetRuntimeName(Name).Aggregate("", (s, c) => s + c); } }
+		public string Description { get { return GetDescription(Documentation); } }
+
+		public string GetSummary(int indentation)
+		{
+			// TODO: Multi-line params
+			return GetXmlDocumentation(Documentation.Where(doc => !doc.Contains("<param name=")).ToArray(), indentation);
+		}
+	}
+
+	class Parameter
+	{
+		public string Name;
+		public string Type;
+	}
+
+	class ParseResult
+	{
+		public Command[] Commands;
+		public Cvar[] Cvars;
+	}
+
+	ParseResult Parse(string file)
+	{
+		var parser = new CSharpParser();
+		var syntaxTree = parser.Parse(File.ReadAllText(Host.ResolvePath(file)), file);
+
+		if (parser.HasErrors)
+			throw new InvalidOperationException(file + " contains errors.");
+
+		return new ParseResult
+		{
+			Cvars = ParseCvars(syntaxTree).ToArray(),
+			Commands = ParseCommands(syntaxTree).ToArray()
+		};
+	}
+
+	IEnumerable<Cvar> ParseCvars(AstNode node)
+	{
+		foreach (var cvar in from type in node.Descendants.OfType<TypeDeclaration>()
+								 where type.ClassType == ClassType.Interface
+								 from property in type.Descendants.OfType<PropertyDeclaration>()
+								 let attributes = property.Attributes.SelectMany(section => section.Attributes)
+								 let attribute = attributes.SingleOrDefault(attribute => attribute.Type.ToString() == "Cvar")
+								 where attribute != null
+								 select new { Property = property, DefaultValue = attribute.Arguments.Single().ToString() })
+		{
+			yield return new Cvar
+			{
+				Name = cvar.Property.Name,
+				Type = cvar.Property.ReturnType.ToString(),
+				DefaultValue = cvar.DefaultValue,
+				Documentation = GetDocumentation(cvar.Property).ToArray()
+			};
+		}
+	}
+
+	IEnumerable<Command> ParseCommands(AstNode node)
+	{
+		foreach (var method in from type in node.Descendants.OfType<TypeDeclaration>()
+							   where type.ClassType == ClassType.Interface
+							   from method in type.Descendants.OfType<MethodDeclaration>()
+							   let attributes = method.Attributes.SelectMany(section => section.Attributes)
+							   where attributes.Any(attribute => attribute.Type.ToString() == "Command")
+							   select method)
+		{
+			if (method.ReturnType.ToString() != "void")
+				throw new InvalidOperationException(method.Name + " must return void.");
+
+			yield return new Command
+			{
+				Name = method.Name,
+				Documentation = GetDocumentation(method).ToArray(),
+				Parameters = ParseParameters(method).ToArray()
+			};
+		}
+	}
+
+	IEnumerable<Parameter> ParseParameters(MethodDeclaration method)
+	{
+		foreach (var parameter in method.Descendants.OfType<ParameterDeclaration>())
+		{
+			if (parameter.ParameterModifier != ParameterModifier.None)
+				throw new InvalidOperationException(String.Format("Parameter '{0}' of command '{1}' cannot use modifier '{2}'.", 
+					parameter.Name, method.Name, parameter.ParameterModifier));
+				
+			yield return new Parameter
+			{
+				Name = parameter.Name,
+				Type = parameter.Type.ToString()
+			};
+		}
+	}
+
+	static IEnumerable<string> GetDocumentation(AstNode node)
+	{
+		var sibling = node;
+		while (sibling.PrevSibling is NewLineNode ||
+				(sibling.PrevSibling as Comment != null && ((Comment)sibling.PrevSibling).IsDocumentation))
+			sibling = sibling.PrevSibling;
+
+		while (sibling != node)
+		{
+			var comment = sibling as Comment;
+			if (comment != null)
+				yield return comment.Content;
+
+			sibling = sibling.NextSibling;
+		}
+	}
+
+	string GetFieldName(string name)
+	{
+		return "_" + Char.ToLower(name[0]) + name.Substring(1);
+	}
+
+	static string GetXmlDocumentation(string[] comment, int indentation)
+	{
+		var result = String.Empty;
+		for (var i = 0; i < comment.Length; ++i)
+		{
+			for (var j = 0; j < indentation && i != 0; ++j)
+				result += "\t";
+			result += "///" + comment[i];
+				
+			if (i < comment.Length - 1)
+				result += Environment.NewLine;
+		}
+		return result;
+	}
+
+	static IEnumerable<char> GetRuntimeName(string name)
+	{
+		yield return Char.ToLower(name[0]);
+
+		foreach (var c in name.Skip(1))
+		{
+			if (Char.IsUpper(c))
+			{
+				yield return '_';
+				yield return Char.ToLower(c);
+			}
+			else
+				yield return c;
+		}
+	}
+
+	static string GetDescription(string[] comments)
+	{
+		var comment = String.Join(" ", comments.Select(c => c.Trim()));
+		var match = Regex.Match(comment, "<summary>(.*)</summary>");
+
+		var description = match.Groups[1].Value;
+		return description.Trim();
+	}
+
+#>

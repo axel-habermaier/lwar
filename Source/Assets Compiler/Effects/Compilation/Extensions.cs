@@ -29,12 +29,16 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		public static IEnumerable<string> GetDocumentation(this AstNode node)
 		{
 			var sibling = node;
-			while (sibling.PrevSibling as Comment != null && ((Comment)sibling.PrevSibling).IsDocumentation)
+			while (sibling.PrevSibling is NewLineNode ||
+				   (sibling.PrevSibling as Comment != null && ((Comment)sibling.PrevSibling).IsDocumentation))
 				sibling = sibling.PrevSibling;
 
 			while (sibling != node)
 			{
-				yield return ((Comment)sibling).Content;
+				var comment = sibling as Comment;
+				if (comment != null)
+					yield return comment.Content;
+
 				sibling = sibling.NextSibling;
 			}
 		}

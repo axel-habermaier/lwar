@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Scripting
 	/// <summary>
 	///   Provides access to all cvar instances.
 	/// </summary>
-	public static class CvarRegistry
+	public class CvarRegistry
 	{
 		/// <summary>
 		///   The cvar instances.
@@ -26,6 +26,20 @@ namespace Pegasus.Framework.Scripting
 			Assert.That(!RegisteredCvars.ContainsKey(cvar.Name), "A cvar called '{0}' has already been registered.", cvar.Name);
 
 			RegisteredCvars.Add(cvar.Name, cvar);
+		}
+
+		/// <summary>
+		///   Registers the given cvar.
+		/// </summary>
+		/// <param name="cvar">The cvar that should be registered.</param>
+		internal static void Register(ICommand cvar)
+		{
+			//Assert.ArgumentNotNull(cvar, () => cvar);
+			//Assert.ArgumentSatisfies(!String.IsNullOrWhiteSpace(cvar.Name), () => cvar, "Invalid cvar name.");
+			//Assert.That(CommandRegistry.Find(cvar.Name) == null, "A command with the same name already exists.");
+			//Assert.That(!RegisteredCvars.ContainsKey(cvar.Name), "A cvar called '{0}' has already been registered.", cvar.Name);
+
+			//RegisteredCvars.Add(cvar.Name, cvar);
 		}
 
 		/// <summary>

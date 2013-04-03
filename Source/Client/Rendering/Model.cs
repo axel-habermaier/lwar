@@ -37,7 +37,6 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the model.</param>
 		/// <param name="vertexBuffer">The vertex buffer containing the vertex data of the model.</param>
 		/// <param name="layout">The layout of the vertex buffer.</param>
 		/// <param name="indexBuffer">The index buffer containing the model's indices.</param>
