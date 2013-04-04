@@ -194,6 +194,8 @@
     <Compile Include="CodeGeneration\CodeProject.cs" />
     <Compile Include="CodeGeneration\Extensions.cs" />
     <Compile Include="CodeGeneration\IErrorReporter.cs" />
+    <Compile Include="CodeGeneration\Scripting\Command.cs" />
+    <Compile Include="CodeGeneration\Scripting\CommandParameter.cs" />
     <Compile Include="CodeGeneration\Scripting\CSharpCodeGenerator.cs" />
     <Compile Include="CodeGeneration\Scripting\RegistryElement.cs" />
     <Compile Include="CodeGeneration\Scripting\RegistryFile.cs" />

@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 {
+	using System.Collections.Generic;
 	using System.Linq;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
@@ -26,6 +27,20 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
+		///   Gets the name of the registry.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				if (_type.Name.StartsWith("I"))
+					return _type.Name.Substring(1);
+
+				return _type.Name;
+			}
+		}
+
+		/// <summary>
 		///   Gets the namespace the registry is declared in.
 		/// </summary>
 		public string Namespace
@@ -38,6 +53,40 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
+		///   Gets the namespaces that are imported by the registry.
+		/// </summary>
+		public IEnumerable<string> ImportedNamespaces
+		{
+			get
+			{
+				var imports = from ancestor in _type.AncestorsAndSelf
+							  from import in ancestor.Descendants.OfType<UsingDeclaration>()
+							  let importedNamespace = import.Import.ToString()
+							  where importedNamespace != "System"
+							  orderby importedNamespace
+							  select importedNamespace;
+
+				return imports.Distinct();
+			}
+		}
+
+		/// <summary>
+		///   Gets the cvars declared by the registry.
+		/// </summary>
+		public IEnumerable<Cvar> Cvars
+		{
+			get { return GetChildElements<Cvar>(); }
+		}
+
+		/// <summary>
+		///   Gets the commands declared by the registry.
+		/// </summary>
+		public IEnumerable<Command> Commands
+		{
+			get { return GetChildElements<Command>(); }
+		}
+
+		/// <summary>
 		///   Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
@@ -45,9 +94,16 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			// Add all cvars
 			AddElements(from property in _type.Descendants.OfType<PropertyDeclaration>()
 						let attributes = property.Attributes.SelectMany(section => section.Attributes)
-						let attribute = attributes.SingleOrDefault(attribute => attribute.Type.ToString() == "Cvar")
-						where attribute != null
+						where attributes.Any(attribute => attribute.Type.ToString() == "Cvar") ||
+							  attributes.Any(attribute => attribute.Type.ToString() == "CvarAttribute")
 						select new Cvar(property));
+
+			// Add all commands
+			AddElements(from method in _type.Descendants.OfType<MethodDeclaration>()
+						let attributes = method.Attributes.SelectMany(section => section.Attributes)
+						where attributes.Any(attribute => attribute.Type.ToString() == "Command") ||
+							  attributes.Any(attribute => attribute.Type.ToString() == "CommandAttribute")
+						select new Command(method));
 		}
 
 		/// <summary>
@@ -59,11 +115,21 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			// Check if there are any properties without the cvar attribute
 			foreach (var property in from property in _type.Descendants.OfType<PropertyDeclaration>()
 									 let attributes = property.Attributes.SelectMany(section => section.Attributes)
-									 let attribute = attributes.SingleOrDefault(attribute => attribute.Type.ToString() == "Cvar")
-									 where attribute == null
+									 where attributes.All(attribute => attribute.Type.ToString() != "Cvar") &&
+										   attributes.All(attribute => attribute.Type.ToString() != "CvarAttribute")
 									 select property)
 			{
 				Error(property, "Expected 'Cvar' attribute to be declared.");
+			}
+
+			// Check if there are any methods without the command attribute
+			foreach (var method in from method in _type.Descendants.OfType<MethodDeclaration>()
+								   let attributes = method.Attributes.SelectMany(section => section.Attributes)
+								   where attributes.All(attribute => attribute.Type.ToString() != "Command") &&
+										 attributes.All(attribute => attribute.Type.ToString() != "CommandAttribute")
+								   select method)
+			{
+				Error(method, "Expected 'Command' attribute to be declared.");
 			}
 
 			// Check if there are any indexer declaration

@@ -8,7 +8,7 @@ namespace Pegasus.Framework.Scripting
 	/// <summary>
 	///   Provides access to cvars.
 	/// </summary>
-	public class CvarRegistry2 : CvarRegistry
+	public class CvarRegistry3 : CvarRegistry
 	{
 		/// <summary>
 		///   The applications major version number.
@@ -69,7 +69,7 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public CvarRegistry2()
+		public CvarRegistry3()
 		{
 			_appVersionMajor = new Cvar<int>("app_version_major", 0, "The applications major version number.");
 			_appVersionMinor = new Cvar<int>("app_version_minor", 1, "The applications minor version number.");

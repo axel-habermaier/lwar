@@ -8,7 +8,7 @@
 	using (var generator = new RegistryGenerator
 		{
 			SourceFile = Host.ResolvePath("ICvarRegistry.cs"),
-			BaseClass = "CvarRegistryBase"
+			BaseClass = "CvarRegistry"
 		})
 	{
 		generator.GenerateRegistry();

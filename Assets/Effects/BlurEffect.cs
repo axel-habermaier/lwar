@@ -15,7 +15,7 @@ namespace Lwar.Assets.Effects
 		/// </summary>
 		public readonly Technique Gaussian = new Technique
 		{
-			VertexShader = "VertexShader",
+			VertexShader = "VertexShader", 
 			FragmentShader = "GaussianBlur"
 		}; 
 

@@ -2,52 +2,43 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 {
-	using System.Collections.Generic;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
-	///   Represents a cvar property of the registry interface.
+	///   Represents a parameter of a command method.
 	/// </summary>
-	internal class Cvar : RegistryElement
+	internal class CommandParameter : RegistryElement
 	{
 		/// <summary>
-		///   The declaration of the property that represents the cvar.
+		///   The declaration of the parameter that represents the command parameter.
 		/// </summary>
-		private readonly PropertyDeclaration _property;
+		private readonly ParameterDeclaration _parameter;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="property">The declaration of the property that represents the cvar.</param>
-		public Cvar(PropertyDeclaration property)
+		/// <param name="parameter">The declaration of the parameter that represents the command parameter.</param>
+		public CommandParameter(ParameterDeclaration parameter)
 		{
-			Assert.ArgumentNotNull(property, () => property);
-			_property = property;
+			Assert.ArgumentNotNull(parameter, () => parameter);
+			_parameter = parameter;
 		}
 
 		/// <summary>
-		///   Gets the name of the cvar.
+		///   Gets the name of the parameter.
 		/// </summary>
 		public string Name
 		{
-			get { return _property.Name; }
+			get { return _parameter.Name; }
 		}
 
 		/// <summary>
-		///   Gets the type of the cvar.
+		///   Gets the type of the parameter.
 		/// </summary>
 		public string Type
 		{
-			get { return _property.ReturnType.ToString(); }
-		}
-
-		/// <summary>
-		///   Gets the documentation of the cvar.
-		/// </summary>
-		public IEnumerable<string> Documentation
-		{
-			get { return _property.GetDocumentation(); }
+			get { return _parameter.Type.ToString(); }
 		}
 
 		/// <summary>

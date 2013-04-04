@@ -83,7 +83,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			var writer = new CodeWriter();
 
 			var generator = new CSharpCodeGenerator(writer, file.Registry);
-			generator.GenerateCode();
+			generator.GenerateCode(BaseClass);
 
 			GeneratedCode = writer.ToString();
 		}

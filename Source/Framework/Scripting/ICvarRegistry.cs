@@ -5,7 +5,7 @@ namespace Pegasus.Framework.Scripting
 	using Platform;
 	using Platform.Input;
 
-	public interface ICvarRegistry
+	public interface ICvarRegistry2
 	{
 		/// <summary>
 		///   The applications major version number.
@@ -52,7 +52,10 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   Executes the given argument.
 		/// </summary>
-		/// <param name="command">The command that should be executed.</param>
+		/// <param name="command">
+		///   The command that should be executed. It will be executed immediately, synchronously, so don't
+		///   exepcted any fancy stuff to happen!
+		/// </param>
 		[Command]
 		void Execute(string command);
 
