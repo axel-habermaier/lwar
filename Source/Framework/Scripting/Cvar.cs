@@ -15,6 +15,11 @@ namespace Pegasus.Framework.Scripting
 		private readonly T _defaultValue;
 
 		/// <summary>
+		///   Indicates whether the cvar's value can be changed by the user.
+		/// </summary>
+		private readonly bool _userChangeable;
+
+		/// <summary>
 		///   The current value of the cvar.
 		/// </summary>
 		private T _value;
@@ -25,15 +30,20 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="name">The external name of the cvar.</param>
 		/// <param name="defaultValue">The default value of the cvar.</param>
 		/// <param name="description">A description of the cvar's purpose.</param>
-		public Cvar(string name, T defaultValue, string description)
+		/// <param name="userChangeable">Indicates whether the cvar's value can be changed by the user.</param>
+		/// <param name="persistent">Indicates whether the cvar's value should be persisted across sessions.</param>
+		public Cvar(string name, T defaultValue, string description, bool userChangeable, bool persistent)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
 			Assert.ArgumentNotNullOrWhitespace(description, () => description);
 
 			Name = name;
 			Description = description;
+
 			_defaultValue = defaultValue;
 			_value = defaultValue;
+			_userChangeable = userChangeable;
+			Persistent = persistent;
 		}
 
 		/// <summary>
@@ -63,6 +73,28 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
+		///   Gets or sets the value of the cvar.
+		/// </summary>
+		object ICvar.Value
+		{
+			get { return _value; }
+			set
+			{
+				Assert.ArgumentNotNull(value, () => value);
+
+				if (!_userChangeable)
+					Log.Error("The value of the cvar cannot be changed via the command line.");
+				else
+					Value = (T)value;
+			}
+		}
+
+		/// <summary>
+		///   Indicates whether the cvar's value is persisted across sessions.
+		/// </summary>
+		public bool Persistent { get; private set; }
+
+		/// <summary>
 		///   Gets the external name of the cvar that is used to refer to the cvar in the console, for instance.
 		/// </summary>
 		public string Name { get; private set; }
@@ -78,16 +110,6 @@ namespace Pegasus.Framework.Scripting
 		Type ICvar.ValueType
 		{
 			get { return typeof(T); }
-		}
-
-		/// <summary>
-		///   Sets the cvar's value to the given value.
-		/// </summary>
-		/// <param name="value">The new value of the cvar.</param>
-		void ICvar.SetValue(object value)
-		{
-			Assert.ArgumentNotNull(value, () => value);
-			Value = (T)value;
 		}
 
 		/// <summary>

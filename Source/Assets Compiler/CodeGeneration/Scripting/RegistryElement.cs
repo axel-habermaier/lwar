@@ -41,7 +41,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
 
 			var attributes = from attribute in attributeSections.SelectMany(section => section.Attributes)
-							 where attribute.Type.ToString() == "Cvar" || attribute.Type.ToString() != "CvarAttribute"
+							 where attribute.Type.ToString() == name || attribute.Type.ToString() == name + "Attribute"
 							 select attribute;
 
 			return attributes.FirstOrDefault();

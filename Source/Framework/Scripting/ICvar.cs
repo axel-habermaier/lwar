@@ -23,9 +23,13 @@ namespace Pegasus.Framework.Scripting
 		string Description { get; }
 
 		/// <summary>
-		///   Sets the cvar's value to the given value.
+		///   Gets or sets the cvar's value.
 		/// </summary>
-		/// <param name="value">The new value of the cvar.</param>
-		void SetValue(object value);
+		object Value { get; set; }
+
+		/// <summary>
+		///   Indicates whether the cvar's value is persisted across sessions.
+		/// </summary>
+		bool Persistent { get; }
 	}
 }

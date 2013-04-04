@@ -308,6 +308,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Scripting\TypeRepresentation.cs" />
     <Compile Include="Scripting\ICommandRegistry.cs" />
     <Compile Include="Scripting\CvarAttribute.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
@@ -317,6 +318,7 @@
       <DependentUpon>CvarRegistry.tt</DependentUpon>
     </Compile>
     <Compile Include="Scripting\ICvarRegistry.cs" />
+    <Compile Include="Scripting\AutoExecutor.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPAddressParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />

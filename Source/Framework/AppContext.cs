@@ -3,6 +3,7 @@
 namespace Pegasus.Framework
 {
 	using System.Diagnostics;
+	using System.Linq;
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Input;
@@ -77,6 +78,14 @@ namespace Pegasus.Framework
 			Assert.NotNull(Cvars, "The cvar registry has not been set.");
 			Assert.NotNull(SpriteEffect, "The sprite effect adapter has not been set.");
 			Assert.NotNull(Statistics, "The statistics instance adapter has not been set.");
+
+			var duplicateName = Cvars.Instances.Select(cvar => cvar.Name)
+									 .Concat(Commands.Instances.Select(command => command.Name))
+									 .GroupBy(name => name)
+									 .FirstOrDefault(group => group.Count() > 1);
+
+			if (duplicateName != null)
+				Assert.That(false, "There is both a cvar and a command called '{0}'.", duplicateName.First());
 		}
 	}
 }

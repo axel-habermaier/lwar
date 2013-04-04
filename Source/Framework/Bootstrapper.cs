@@ -46,8 +46,11 @@ namespace Pegasus.Framework
 
 					ParseCommandLine(context.Cvars);
 
-					var app = new TApp();
-					app.Run(context, logFile);
+					using (new AutoExecutor(context.Commands, context.Cvars, context.AppName))
+					{
+						var app = new TApp();
+						app.Run(context, logFile);
+					}
 				}
 				catch (Exception e)
 				{

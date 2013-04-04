@@ -67,6 +67,22 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
+		///   Gets a value indicating whether the cvar's value can be changed by the user.
+		/// </summary>
+		public bool UserChangeable
+		{
+			get { return GetAttribute(_property.Attributes, "UserChangeable") != null; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the cvar's value is persisted across sessions.
+		/// </summary>
+		public bool Persistent
+		{
+			get { return GetAttribute(_property.Attributes, "Persistent") != null; }
+		}
+
+		/// <summary>
 		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
 		///   initialization.
 		/// </summary>

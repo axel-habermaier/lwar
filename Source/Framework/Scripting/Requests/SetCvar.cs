@@ -29,7 +29,7 @@ namespace Pegasus.Framework.Scripting.Requests
 		/// </summary>
 		public override void Execute()
 		{
-			Cvar.SetValue(_value);
+			Cvar.Value = _value;
 		}
 	}
 }

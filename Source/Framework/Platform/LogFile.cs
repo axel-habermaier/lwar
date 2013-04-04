@@ -41,7 +41,7 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   The path to the log file.
+		///   Gets the path of the log file.
 		/// </summary>
 		public string FilePath { get; private set; }
 
