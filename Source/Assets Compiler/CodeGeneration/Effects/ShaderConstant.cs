@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Compilation
+namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using AssetsCompiler.Effects;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Compilation
+namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.PatternMatching;

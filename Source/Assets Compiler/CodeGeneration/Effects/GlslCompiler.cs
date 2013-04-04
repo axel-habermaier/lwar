@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Compilation
+namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using AssetsCompiler.Effects;
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
@@ -71,7 +72,8 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		protected override void GenerateVertexShaderInputs(IEnumerable<ShaderParameter> inputs)
 		{
 			foreach (var input in inputs)
-				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type), Escape(input.Name));
+				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type),
+								  Escape(input.Name));
 		}
 
 		/// <summary>

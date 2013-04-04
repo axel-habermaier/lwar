@@ -190,6 +190,15 @@
     <Compile Include="Assets\Attributes\Texture2DAttribute.cs" />
     <Compile Include="Assets\ShaderAsset.cs" />
     <Compile Include="Assets\TextureAsset.cs" />
+    <Compile Include="CodeGeneration\CodeElement.cs" />
+    <Compile Include="CodeGeneration\CodeProject.cs" />
+    <Compile Include="CodeGeneration\Extensions.cs" />
+    <Compile Include="CodeGeneration\IErrorReporter.cs" />
+    <Compile Include="CodeGeneration\Scripting\CSharpCodeGenerator.cs" />
+    <Compile Include="CodeGeneration\Scripting\RegistryElement.cs" />
+    <Compile Include="CodeGeneration\Scripting\RegistryFile.cs" />
+    <Compile Include="CodeGeneration\Scripting\Registry.cs" />
+    <Compile Include="CodeGeneration\Scripting\RegistryProject.cs" />
     <Compile Include="Compilers\AssetCompiler.cs" />
     <Compile Include="AssetWriter.cs" />
     <Compile Include="CompilationUnit.cs" />
@@ -203,21 +212,21 @@
     <Compile Include="Assets\CubeMapAsset.cs" />
     <Compile Include="Compilers\CubeMapCompiler.cs" />
     <Compile Include="DirectDrawSurface.cs" />
-    <Compile Include="Effects\Compilation\CrossCompiler.Supported.cs" />
-    <Compile Include="Effects\Compilation\CrossCompiler.Unsupported.cs" />
-    <Compile Include="Effects\Compilation\CodeWriter.cs" />
-    <Compile Include="Effects\Compilation\EffectElement.cs" />
-    <Compile Include="Effects\Compilation\CSharpCodeGenerator.cs" />
-    <Compile Include="Effects\Compilation\DataType.cs" />
-    <Compile Include="Effects\Compilation\EffectTechnique.cs" />
-    <Compile Include="Effects\Compilation\Extensions.cs" />
-    <Compile Include="Effects\Compilation\CrossCompiler.cs" />
-    <Compile Include="Effects\Compilation\GlslCompiler.cs" />
-    <Compile Include="Effects\Compilation\HlslCompiler.cs" />
-    <Compile Include="Effects\Compilation\ShaderTexture.cs" />
-    <Compile Include="Effects\Compilation\ShaderLiteral.cs" />
-    <Compile Include="Effects\Compilation\EffectFile.cs" />
-    <Compile Include="Effects\Compilation\EffectsProject.cs" />
+    <Compile Include="CodeGeneration\Effects\CrossCompiler.Supported.cs" />
+    <Compile Include="CodeGeneration\Effects\CrossCompiler.Unsupported.cs" />
+    <Compile Include="CodeGeneration\CodeWriter.cs" />
+    <Compile Include="CodeGeneration\Effects\EffectElement.cs" />
+    <Compile Include="CodeGeneration\Effects\CSharpCodeGenerator.cs" />
+    <Compile Include="CodeGeneration\Effects\DataType.cs" />
+    <Compile Include="CodeGeneration\Effects\EffectTechnique.cs" />
+    <Compile Include="CodeGeneration\Effects\Extensions.cs" />
+    <Compile Include="CodeGeneration\Effects\CrossCompiler.cs" />
+    <Compile Include="CodeGeneration\Effects\GlslCompiler.cs" />
+    <Compile Include="CodeGeneration\Effects\HlslCompiler.cs" />
+    <Compile Include="CodeGeneration\Effects\ShaderTexture.cs" />
+    <Compile Include="CodeGeneration\Effects\ShaderLiteral.cs" />
+    <Compile Include="CodeGeneration\Effects\EffectFile.cs" />
+    <Compile Include="CodeGeneration\Effects\EffectsProject.cs" />
     <Compile Include="Effects\Intrinsic.cs" />
     <Compile Include="Effects\MapsToAttribute.cs" />
     <Compile Include="Effects\Operators.cs">
@@ -241,11 +250,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Swizzle.tt</DependentUpon>
     </Compile>
-    <Compile Include="Effects\Compilation\ConstantBuffer.cs" />
-    <Compile Include="Effects\Compilation\EffectClass.cs" />
-    <Compile Include="Effects\Compilation\ShaderConstant.cs" />
-    <Compile Include="Effects\Compilation\ShaderMethod.cs" />
-    <Compile Include="Effects\Compilation\ShaderParameter.cs" />
+    <Compile Include="CodeGeneration\Effects\ConstantBuffer.cs" />
+    <Compile Include="CodeGeneration\Effects\EffectClass.cs" />
+    <Compile Include="CodeGeneration\Effects\ShaderConstant.cs" />
+    <Compile Include="CodeGeneration\Effects\ShaderMethod.cs" />
+    <Compile Include="CodeGeneration\Effects\ShaderParameter.cs" />
     <Compile Include="Effects\ConstantAttribute.cs" />
     <Compile Include="Effects\Effect.cs" />
     <Compile Include="Effects\EffectAttribute.cs" />
@@ -258,6 +267,8 @@
     <Compile Include="Effects\PositionAttribute.cs" />
     <Compile Include="Effects\TexCoordsAttribute.cs" />
     <Compile Include="Effects\VertexShaderAttribute.cs" />
+    <Compile Include="CodeGeneration\Scripting\Cvar.cs" />
+    <Compile Include="CodeGeneration\Scripting\RegistryGenerator.cs" />
     <Compile Include="XmlParser.cs" />
   </ItemGroup>
   <ItemGroup>

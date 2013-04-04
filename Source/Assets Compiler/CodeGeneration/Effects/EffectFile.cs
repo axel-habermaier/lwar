@@ -1,15 +1,17 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Compilation
+namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using Assets;
+	using AssetsCompiler.Effects;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using Effect = Framework.Platform.Graphics.Effect;
 
 	/// <summary>
 	///   Represents a C# source code file that possibly contains one or more effect declarations.
@@ -24,10 +26,11 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="errorReporter">The error reporter that should be used to report validation errors.</param>
 		/// <param name="syntaxTree">The parsed syntax tree of the effect file.</param>
 		/// <param name="resolver"> The C# AST resolver that should be used to resolve symbols of the effect file.</param>
-		public EffectFile(SyntaxTree syntaxTree, CSharpAstResolver resolver)
-			: base(syntaxTree.FileName, resolver)
+		public EffectFile(IErrorReporter errorReporter, SyntaxTree syntaxTree, CSharpAstResolver resolver)
+			: base(errorReporter, syntaxTree.FileName, resolver)
 		{
 			_syntaxTree = syntaxTree;
 		}

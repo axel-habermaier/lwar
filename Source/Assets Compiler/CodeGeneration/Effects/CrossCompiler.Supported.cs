@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Compilation
+namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using System.Linq;
+	using AssetsCompiler.Effects;
 	using ICSharpCode.NRefactory.CSharp;
 
 	internal partial class CrossCompiler

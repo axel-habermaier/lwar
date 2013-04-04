@@ -301,18 +301,27 @@
     <Compile Include="Platform\Graphics\BufferType.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\Camera.cs" />
+    <Compile Include="Scripting\CommandAttribute.cs" />
+    <Compile Include="Scripting\CvarAttribute.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
+    <Compile Include="Scripting\CvarRegistry.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CvarRegistry.tt</DependentUpon>
+    </Compile>
     <Compile Include="Scripting\Cvars.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Cvars.tt</DependentUpon>
     </Compile>
+    <Compile Include="Scripting\ICvarRegistry.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPAddressParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\OptionalParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Pipe4Parser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Pipe3Parser.cs" />
+    <Compile Include="Scripting\PersistentAttribute.cs" />
     <Compile Include="Scripting\Requests\RequestBinding.cs" />
     <Compile Include="Platform\Input\InputTriggerParser.cs" />
     <Compile Include="Platform\Graphics\Color.cs" />
@@ -323,7 +332,7 @@
     <Compile Include="Scripting\Command`3.cs" />
     <Compile Include="Scripting\Command`2.cs" />
     <Compile Include="Scripting\Cvar.cs" />
-    <Compile Include="Scripting\CvarRegistry.cs" />
+    <Compile Include="Scripting\CvarRegistry_old.cs" />
     <Compile Include="Scripting\ICommand.cs" />
     <Compile Include="Scripting\ICvar.cs" />
     <Compile Include="Scripting\Cvars_old.cs" />
@@ -480,12 +489,12 @@
     <Compile Include="Platform\Statistics.cs" />
     <Compile Include="Platform\AveragedValue.cs" />
     <Compile Include="Scripting\Parsing\Combinators\TypeParser.cs" />
+    <Compile Include="Scripting\UserChangeableAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Platform\CodeModel.t4" />
     <None Include="Math\Circle.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Circle.cs</LastGenOutput>
@@ -506,13 +515,14 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Vector2.cs</LastGenOutput>
     </None>
-    <None Include="Network\ServiceCodegen.t4">
+    <None Include="Scripting\CvarRegistry.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CvarRegistry.cs</LastGenOutput>
     </None>
     <None Include="Scripting\Cvars.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Cvars.cs</LastGenOutput>
     </None>
-    <None Include="Scripting\CvarsGenerator.t4" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

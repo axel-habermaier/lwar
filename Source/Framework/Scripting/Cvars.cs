@@ -2,6 +2,9 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using Platform;
+	using Platform.Input;
+
 	/// <summary>
 	///   Provides access to cvars.
 	/// </summary>

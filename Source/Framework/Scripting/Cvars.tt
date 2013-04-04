@@ -2,6 +2,7 @@
 <#@ assembly name="System.Core" #>
 <#@ assembly name="$(SolutionDir)Dependencies/ICSharpCode.NRefactory.dll" #>
 <#@ assembly name="$(SolutionDir)Dependencies/ICSharpCode.NRefactory.CSharp.dll" #>
+<#@ assembly name="$(TargetDir)pgc.exe" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Linq" #>
@@ -214,7 +215,7 @@ namespace <#= Namespace #>
 			if (parameter.ParameterModifier != ParameterModifier.None)
 				throw new InvalidOperationException(String.Format("Parameter '{0}' of command '{1}' cannot use modifier '{2}'.", 
 					parameter.Name, method.Name, parameter.ParameterModifier));
-				
+			
 			yield return new Parameter
 			{
 				Name = parameter.Name,
@@ -229,7 +230,7 @@ namespace <#= Namespace #>
 		while (sibling.PrevSibling is NewLineNode ||
 				(sibling.PrevSibling as Comment != null && ((Comment)sibling.PrevSibling).IsDocumentation))
 			sibling = sibling.PrevSibling;
-
+			
 		while (sibling != node)
 		{
 			var comment = sibling as Comment;

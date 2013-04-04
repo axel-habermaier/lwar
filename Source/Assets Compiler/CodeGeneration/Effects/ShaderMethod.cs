@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.Effects.Compilation
+namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using Assets;
+	using AssetsCompiler.Effects;
 	using Framework;
 	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
@@ -169,7 +169,7 @@ namespace Pegasus.AssetsCompiler.Effects.Compilation
 			// Check whether the fragment shader declares an output parameter with the Color semantics
 			if (Type == ShaderType.FragmentShader && Outputs.All(output => !output.Semantics.IsColor()))
 				Error(_method, "Expected an output parameter with the 'Color' semantics.");
-			
+
 			// Check whether the fragment shader declares any output parameters that do not have the color semantics
 			if (Type == ShaderType.FragmentShader)
 			{

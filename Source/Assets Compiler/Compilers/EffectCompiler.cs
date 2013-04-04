@@ -8,8 +8,8 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using System.Reflection;
 	using System.Text;
 	using Assets;
+	using CodeGeneration.Effects;
 	using Effects;
-	using Effects.Compilation;
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
@@ -43,9 +43,11 @@ namespace Pegasus.AssetsCompiler.Compilers
 					foreach (var asset in csharpAssets)
 						Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 
-					var project = new EffectsProject();
-					if (!project.Compile(csharpAssets))
-						return false;
+					using (var project = new EffectsProject { CSharpFiles = csharpAssets })
+					{
+						if (!project.Compile())
+							return false;
+					}
 				}
 
 				var success = true;

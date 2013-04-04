@@ -10,7 +10,7 @@ namespace Lwar.Client
 	///   Provides access to lwar-specific commands.
 	/// </summary>
 	[ForceInitialization]
-	public class LwarCommands
+	public static class LwarCommands
 	{
 		/// <summary>
 		///   Starts up a new server instance.
@@ -26,7 +26,7 @@ namespace Lwar.Client
 		///   Connects to a game session on a server.
 		/// </summary>
 		public static readonly Command<IPEndPoint> Connect = new Command<IPEndPoint>("connect",
-																				   "Connects to a game session on a server.");
+																					 "Connects to a game session on a server.");
 
 		/// <summary>
 		///   Disconnects from the current game session.
