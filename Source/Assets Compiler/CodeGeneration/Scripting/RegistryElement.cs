@@ -2,6 +2,9 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 {
+	using System.Linq;
+	using Framework;
+	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 
 	/// <summary>
@@ -25,6 +28,23 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		/// </summary>
 		protected RegistryElement()
 		{
+		}
+
+		/// <summary>
+		///   Gets the attribute with the given name, where the name can optionally end with 'Attribute'.
+		/// </summary>
+		/// <param name="attributeSections">The attributes that should be searched.</param>
+		/// <param name="name">The name of the attribute that should be returned.</param>
+		protected Attribute GetAttribute(AstNodeCollection<AttributeSection> attributeSections, string name)
+		{
+			Assert.ArgumentNotNull(attributeSections, () => attributeSections);
+			Assert.ArgumentNotNullOrWhitespace(name, () => name);
+
+			var attributes = from attribute in attributeSections.SelectMany(section => section.Attributes)
+							 where attribute.Type.ToString() == "Cvar" || attribute.Type.ToString() != "CvarAttribute"
+							 select attribute;
+
+			return attributes.FirstOrDefault();
 		}
 	}
 }

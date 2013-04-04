@@ -1,0 +1,29 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="$(TargetDir)pgc.exe" #>
+<#@ import namespace="Pegasus.AssetsCompiler.CodeGeneration.Scripting" #>
+<#@ output extension=".cs" #>
+<#
+	string GeneratedCode = "";
+
+	if (String.IsNullOrWhiteSpace(SourceFile))
+		Error("'SourceFile' must be set.");
+	else if (String.IsNullOrWhiteSpace(BaseClass))
+		Error("'BaseClass' must be set.");
+	else
+	{
+		using (var generator = new RegistryGenerator { SourceFile = Host.ResolvePath(SourceFile), BaseClass = BaseClass })
+		{
+			generator.GenerateRegistry();
+
+			foreach (var error in generator.Errors)
+				Error(error);
+
+			GeneratedCode = generator.GeneratedCode;
+		}
+	}
+#>
+<#= GeneratedCode #>
+<#+
+	protected string SourceFile;
+	protected string BaseClass;
+#>

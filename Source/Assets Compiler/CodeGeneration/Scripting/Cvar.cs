@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 {
 	using System.Collections.Generic;
+	using System.Linq;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 
@@ -51,11 +52,18 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///   Gets the default value of the cvar.
 		/// </summary>
-		protected override void Initialize()
+		public string DefaultValue
 		{
-			base.Initialize();
+			get
+			{
+				var attribute = GetAttribute(_property.Attributes, "Cvar");
+				if (attribute.Arguments.Count() != 1)
+					return String.Format("default({0})", Type);
+
+				return attribute.Arguments.First().ToString();
+			}
 		}
 
 		/// <summary>
@@ -64,7 +72,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		/// </summary>
 		protected override void Validate()
 		{
-			base.Validate();
+			// Check if the cvar attribute is applied to the property
+			if (GetAttribute(_property.Attributes, "Cvar") == null)
+				Error(_property, "Expected 'Cvar' attribute to be declared.");
 		}
 	}
 }

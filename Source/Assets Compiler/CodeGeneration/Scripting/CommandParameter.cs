@@ -42,20 +42,17 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
-		/// </summary>
-		protected override void Initialize()
-		{
-			base.Initialize();
-		}
-
-		/// <summary>
 		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
 		///   initialization.
 		/// </summary>
 		protected override void Validate()
 		{
-			base.Validate();
+			// Check whether the parameter has any modifiers set
+			if (_parameter.ParameterModifier != ParameterModifier.None)
+				Error(_parameter, "Unexpected modifier '{0}'.", _parameter.ParameterModifier.ToString().ToLower());
+
+			if (_parameter.Type is ComposedType)
+				Error(_parameter, "Unexepcted array declaration.");
 		}
 	}
 }

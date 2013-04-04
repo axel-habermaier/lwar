@@ -76,7 +76,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			{
 				WriteDocumentation(cvar.Documentation);
 				_writer.AppendLine("private readonly Cvar<{0}> {1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\");",
-								   cvar.Type, GetFieldName(cvar.Name), GetRuntimeName(cvar.Name), "", GetSummaryText(cvar.Documentation));
+								   cvar.Type, GetFieldName(cvar.Name), GetRuntimeName(cvar.Name), cvar.DefaultValue, GetSummaryText(cvar.Documentation));
 
 				_writer.Newline();
 			}
@@ -91,7 +91,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			{
 				WriteDocumentation(GetSummary(command.Documentation));
 				_writer.AppendLine("private readonly Command{0} {1} = new Command{0}(\"{2}\", \"{3}\");",
-								   command.TypeArguments, GetFieldName(command.Name), 
+								   GetTypeArguments(command), GetFieldName(command.Name),
 								   GetRuntimeName(command.Name), GetSummaryText(command.Documentation));
 
 				_writer.Newline();
@@ -121,41 +121,39 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
-		/// Generates the command methods.
+		///   Generates the command methods.
 		/// </summary>
 		private void GenerateCommandMethods()
 		{
 			foreach (var command in _registry.Commands)
 			{
-				WriteDocumentation(command.Documentation);
-				_writer.AppendLine("public void {0}()", command.Name);
-				_writer.AppendBlockStatement(() =>
-					{
-						
-					});
-
 				_writer.Newline();
+
+				WriteDocumentation(command.Documentation);
+				_writer.AppendLine("public void {0}({1})", command.Name, GetArgumentDeclarations(command));
+				_writer.AppendBlockStatement(
+					() => _writer.AppendLine("{0}.Invoke({1});", GetFieldName(command.Name), GetInvocationArguments(command)));
 			}
 		}
 
 		/// <summary>
-		/// Generates the command events.
+		///   Generates the command events.
 		/// </summary>
 		private void GenerateCommandEvents()
 		{
 			foreach (var command in _registry.Commands)
 			{
+				_writer.Newline();
+
 				_writer.AppendLine("/// <summary>");
 				_writer.AppendLine("///   Raised when the {0} command is invoked.", command.Name);
 				_writer.AppendLine("/// </summary>");
-				_writer.AppendLine("public event Action{0} On{1}", command.TypeArguments, command.Name);
+				_writer.AppendLine("public event Action{0} On{1}", GetTypeArguments(command), command.Name);
 				_writer.AppendBlockStatement(() =>
-				{
-					_writer.AppendLine("add {{ {0}.Invoked += value; }}", GetFieldName(command.Name));
-					_writer.AppendLine("remove {{ {0}.Invoked -= value; }}", GetFieldName(command.Name));
-				});
-
-				_writer.Newline();
+					{
+						_writer.AppendLine("add {{ {0}.Invoked += value; }}", GetFieldName(command.Name));
+						_writer.AppendLine("remove {{ {0}.Invoked -= value; }}", GetFieldName(command.Name));
+					});
 			}
 		}
 
@@ -229,6 +227,37 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			yield return " <summary>";
 			yield return "   " + GetSummaryText(documentation);
 			yield return " </summary>";
+		}
+
+		/// <summary>
+		///   Gets the type arguments for the given command.
+		/// </summary>
+		/// <param name="command">The command for which the type arguments should be returned.</param>
+		private string GetTypeArguments(Command command)
+		{
+			var types = String.Join(", ", command.Parameters.Select(parameter => parameter.Type));
+			if (String.IsNullOrWhiteSpace(types))
+				return String.Empty;
+
+			return String.Format("<{0}>", types);
+		}
+
+		/// <summary>
+		///   Gets the argument declarations for the given command.
+		/// </summary>
+		/// <param name="command">The command for which the argument declarations should be returned.</param>
+		private string GetArgumentDeclarations(Command command)
+		{
+			return String.Join(", ", command.Parameters.Select(parameter => String.Format("{0} {1}", parameter.Type, parameter.Name)));
+		}
+
+		/// <summary>
+		///   Gets the arguments required to invoke the command.
+		/// </summary>
+		/// <param name="command">The command for which the arguments should be returned.</param>
+		private string GetInvocationArguments(Command command)
+		{
+			return String.Join(", ", command.Parameters.Select(parameter => parameter.Name));
 		}
 	}
 }

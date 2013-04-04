@@ -10,7 +10,7 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   The applications major version number.
 		/// </summary>
-		[Cvar(0)]
+		[Cvar]
 		int AppVersionMajor { get; set; }
 
 		/// <summary>

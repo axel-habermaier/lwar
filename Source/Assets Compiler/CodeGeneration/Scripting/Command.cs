@@ -36,21 +36,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
-		///   Gets the type arguments of the command.
-		/// </summary>
-		public string TypeArguments
-		{
-			get
-			{
-				var types = String.Join(", ", Parameters.Select(parameter => parameter.Type));
-				if (String.IsNullOrWhiteSpace(types))
-					return String.Empty;
-
-				return String.Format("<{0}>", types);
-			}
-		}
-
-		/// <summary>
 		///   Gets the command's parameters.
 		/// </summary>
 		public IEnumerable<CommandParameter> Parameters
@@ -82,7 +67,17 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		/// </summary>
 		protected override void Validate()
 		{
-			base.Validate();
+			// Check whether the method returns void
+			if (_method.ResolveType(Resolver).FullName != typeof(void).FullName)
+				Error(_method, "Expected return type 'void'.");
+
+			// Check if the command attribute is applied to the method
+			if (GetAttribute(_method.Attributes, "Command") == null)
+				Error(_method, "Expected 'Command' attribute to be declared.");
+
+			// Check if there are any type parameters
+			foreach (var parameter in _method.TypeParameters)
+				Error(parameter, "Unexpected type parameter '{0}'.", parameter.Name);
 		}
 	}
 }

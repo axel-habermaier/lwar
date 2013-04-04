@@ -309,11 +309,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CvarRegistry.tt</DependentUpon>
     </Compile>
-    <Compile Include="Scripting\Cvars.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Cvars.tt</DependentUpon>
-    </Compile>
     <Compile Include="Scripting\ICvarRegistry.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPAddressParser.cs" />
@@ -519,10 +514,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CvarRegistry.cs</LastGenOutput>
     </None>
-    <None Include="Scripting\Cvars.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Cvars.cs</LastGenOutput>
-    </None>
+    <None Include="Scripting\RegistryGenerator.tt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -53,20 +53,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		/// </summary>
 		public void GenerateRegistry()
 		{
-			GeneratedCode = String.Empty;
+			Assert.NotNullOrWhitespace(SourceFile);
+			Assert.NotNullOrWhitespace(BaseClass);
 
-			if (String.IsNullOrWhiteSpace(SourceFile))
-				Errors = new[] { "'SourceFile' property cannot be null or consist of whitespace only." };
-			else if (String.IsNullOrWhiteSpace(BaseClass))
-				Errors = new[] { "'BaseClass' property cannot be null or consist of whitespace only." };
-			else
-			{
-				_project = new RegistryProject { CSharpFiles = new[] { new CSharpAsset(SourceFile) }, BaseClass = BaseClass };
-				_project.Compile();
+			_project = new RegistryProject { CSharpFiles = new[] { new CSharpAsset(SourceFile) }, BaseClass = BaseClass };
+			_project.Compile();
 
-				Errors = _project.Errors.Select(error => error.Message);
-				GeneratedCode = _project.GeneratedCode;
-			}
+			Errors = _project.Errors.Select(error => error.Message);
+			GeneratedCode = _project.GeneratedCode;
 		}
 	}
 }

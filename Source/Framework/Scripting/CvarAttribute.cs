@@ -13,6 +13,13 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		public CvarAttribute()
+		{
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
 		/// <param name="defaultValue">The default value of the cvar.</param>
 		public CvarAttribute(object defaultValue)
 		{

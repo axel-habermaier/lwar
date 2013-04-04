@@ -112,26 +112,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		/// </summary>
 		protected override void Validate()
 		{
-			// Check if there are any properties without the cvar attribute
-			foreach (var property in from property in _type.Descendants.OfType<PropertyDeclaration>()
-									 let attributes = property.Attributes.SelectMany(section => section.Attributes)
-									 where attributes.All(attribute => attribute.Type.ToString() != "Cvar") &&
-										   attributes.All(attribute => attribute.Type.ToString() != "CvarAttribute")
-									 select property)
-			{
-				Error(property, "Expected 'Cvar' attribute to be declared.");
-			}
-
-			// Check if there are any methods without the command attribute
-			foreach (var method in from method in _type.Descendants.OfType<MethodDeclaration>()
-								   let attributes = method.Attributes.SelectMany(section => section.Attributes)
-								   where attributes.All(attribute => attribute.Type.ToString() != "Command") &&
-										 attributes.All(attribute => attribute.Type.ToString() != "CommandAttribute")
-								   select method)
-			{
-				Error(method, "Expected 'Command' attribute to be declared.");
-			}
-
 			// Check if there are any indexer declaration
 			foreach (var indexer in _type.Descendants.OfType<IndexerDeclaration>())
 				Error(indexer, "Unexpected indexer declaration.");
@@ -139,6 +119,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			// Check if there are any event declarations
 			foreach (var declaration in _type.Descendants.OfType<EventDeclaration>())
 				Error(declaration, "Unexpected event declaration.");
+
+			// Check if there are any type parameters
+			foreach (var parameter in _type.TypeParameters)
+				Error(parameter, "Unexpected type parameter '{0}'.", parameter.Name);
 		}
 	}
 }

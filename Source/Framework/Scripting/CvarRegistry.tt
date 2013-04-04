@@ -1,22 +1,5 @@
-﻿<#@ template debug="false" hostspecific="true" language="C#" #>
-<#@ assembly name="$(TargetDir)pgc.exe" #>
-<#@ import namespace="Pegasus.AssetsCompiler.CodeGeneration.Scripting" #>
-<#@ output extension=".cs" #>
-<#
-	string GeneratedCode = "";
-
-	using (var generator = new RegistryGenerator
-		{
-			SourceFile = Host.ResolvePath("ICvarRegistry.cs"),
-			BaseClass = "CvarRegistry"
-		})
-	{
-		generator.GenerateRegistry();
-
-		foreach (var error in generator.Errors)
-			Error(error);
-
-		GeneratedCode = generator.GeneratedCode;
-	}
+﻿<#
+	SourceFile = "ICvarRegistry.cs";
+	BaseClass = "CvarRegistry";
 #>
-<#= GeneratedCode #>
+<#@ include file="RegistryGenerator.tt" #>
