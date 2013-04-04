@@ -7,6 +7,7 @@ namespace Lwar.Client.GameStates
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Rendering;
+	using Scripting;
 
 	/// <summary>
 	///   Represents a game state that shows and manages, for instance, a menu or a game session.
@@ -48,6 +49,22 @@ namespace Lwar.Client.GameStates
 		protected AssetsManager Assets
 		{
 			get { return StateManager.Assets; }
+		}
+
+		/// <summary>
+		///   Gets the command registry that handles the application commands.
+		/// </summary>
+		protected CommandRegistry Commands
+		{
+			get { return StateManager.Commands; }
+		}
+
+		/// <summary>
+		///   Gets the cvar registry that handles the application cvars.
+		/// </summary>
+		protected CvarRegistry Cvars
+		{
+			get { return StateManager.Cvars; }
 		}
 
 		/// <summary>

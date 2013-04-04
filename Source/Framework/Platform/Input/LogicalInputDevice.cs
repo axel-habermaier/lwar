@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Platform.Input
 	/// <summary>
 	///   Manages logical inputs that are triggered by input triggers.
 	/// </summary>
-	public class LogicalInputDevice
+	public class LogicalInputDevice : DisposableObject
 	{
 		/// <summary>
 		///   The logical inputs that are currently registered on the device.
@@ -81,6 +81,14 @@ namespace Pegasus.Framework.Platform.Input
 
 			foreach (var input in _inputs)
 				input.Update(this);
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			// Nothing to do here
 		}
 	}
 }

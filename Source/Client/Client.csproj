@@ -173,6 +173,16 @@
     <Compile Include="..\..\Assets\Effects\Effects.cs">
       <Link>Effects.cs</Link>
     </Compile>
+    <Compile Include="Scripting\CommandRegistry.cs">
+      <DependentUpon>CommandRegistry.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Scripting\CvarRegistry.cs">
+      <DependentUpon>CvarRegistry.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Gameplay\Entities\Sun.cs" />
     <Compile Include="Gameplay\EntityList.cs" />
     <Compile Include="Gameplay\GameCamera.cs" />
@@ -197,9 +207,9 @@
     <Compile Include="Gameplay\Transformation.cs" />
     <Compile Include="GameStates\Playing.cs" />
     <Compile Include="GameStates\StateManager.cs" />
-    <Compile Include="LwarBootstrapper.cs" />
-    <Compile Include="LwarCommands.cs" />
-    <Compile Include="LwarCvars.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Scripting\ICommandRegistry.cs" />
+    <Compile Include="Scripting\ICvarRegistry.cs" />
     <Compile Include="Network\ConnectionState.cs" />
     <Compile Include="Network\DeliveryManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />
@@ -217,7 +227,7 @@
     <Compile Include="Rendering\BulletRenderer.cs" />
     <Compile Include="Rendering\FullscreenQuad.cs" />
     <Compile Include="Rendering\GaussianBlur.cs" />
-    <Compile Include="Rendering\SpriteEffectAdaptor.cs" />
+    <Compile Include="Rendering\SpriteEffectAdapter.cs" />
     <Compile Include="Rendering\SunRenderer.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\Model.cs" />
@@ -227,7 +237,7 @@
     <Compile Include="Rendering\SkyboxRenderer.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="Gameplay\Entities\IEntity.cs" />
-    <Compile Include="LwarApp.cs" />
+    <Compile Include="App.cs" />
     <Compile Include="Gameplay\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
@@ -241,6 +251,16 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripting\CommandRegistry.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CommandRegistry.cs</LastGenOutput>
+    </None>
+    <None Include="Scripting\CvarRegistry.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CvarRegistry.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

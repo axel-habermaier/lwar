@@ -7,12 +7,18 @@ namespace Lwar.Client.GameStates
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Rendering;
+	using Scripting;
 
 	/// <summary>
 	///   Manages several layered game states.
 	/// </summary>
 	public sealed class StateManager : DisposableObject
 	{
+		/// <summary>
+		///   The context of the application, providing access to all framework objects that can be used by the application.
+		/// </summary>
+		private readonly IAppContext _context;
+
 		/// <summary>
 		///   The stack of layered game states.
 		/// </summary>
@@ -21,42 +27,62 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="window">The window that displays the game.</param>
-		/// <param name="graphicsDevice">The graphics device that is used to draw the game.</param>
-		/// <param name="assets">The assets manager that manages all assets of the game.</param>
-		/// <param name="inputDevice">The logical input device that provides all the user input to the game.</param>
-		public StateManager(Window window, GraphicsDevice graphicsDevice, AssetsManager assets, LogicalInputDevice inputDevice)
+		/// <param name="context">
+		///   The context of the application, providing access to all framework objects that can be used by the application.
+		/// </param>
+		public StateManager(IAppContext context)
 		{
-			Assert.ArgumentNotNull(window, () => window);
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
-			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
-
-			Window = window;
-			GraphicsDevice = graphicsDevice;
-			Assets = assets;
-			InputDevice = inputDevice;
+			Assert.ArgumentNotNull(context, () => context);
+			_context = context;
 		}
 
 		/// <summary>
-		///   Gets or sets the window that displays the game.
+		///   Gets the window that displays the game.
 		/// </summary>
-		public Window Window { get; private set; }
+		public Window Window
+		{
+			get { return _context.Window; }
+		}
 
 		/// <summary>
 		///   Gets the logical input device that provides all the user input to the game.
 		/// </summary>
-		public LogicalInputDevice InputDevice { get; private set; }
+		public LogicalInputDevice InputDevice
+		{
+			get { return _context.LogicalInputDevice; }
+		}
 
 		/// <summary>
 		///   Gets the graphics device that is used to draw the game.
 		/// </summary>
-		public GraphicsDevice GraphicsDevice { get; private set; }
+		public GraphicsDevice GraphicsDevice
+		{
+			get { return _context.GraphicsDevice; }
+		}
 
 		/// <summary>
 		///   Gets the assets manager that manages all assets of the game.
 		/// </summary>
-		public AssetsManager Assets { get; private set; }
+		public AssetsManager Assets
+		{
+			get { return _context.Assets; }
+		}
+
+		/// <summary>
+		///   Gets the command registry that handles the application commands.
+		/// </summary>
+		public CommandRegistry Commands
+		{
+			get { return (CommandRegistry)_context.Commands; }
+		}
+
+		/// <summary>
+		///   Gets the cvar registry that handles the application cvars.
+		/// </summary>
+		public CvarRegistry Cvars
+		{
+			get { return (CvarRegistry)_context.Cvars; }
+		}
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.

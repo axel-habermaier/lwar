@@ -6,7 +6,6 @@ namespace Pegasus.Framework.Platform
 	using System.IO;
 	using System.Linq;
 	using Rendering.UserInterface;
-	using Scripting;
 
 	/// <summary>
 	///   Captures all generated logs and outputs them to a log file.
@@ -26,19 +25,19 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public LogFile()
+		/// <param name="appName">The name of the application.</param>
+		public LogFile(string appName)
 		{
+			Assert.ArgumentNotNullOrWhitespace(appName, () => appName);
+
 			Log.OnFatalError += OnFatalError;
 			Log.OnError += OnError;
 			Log.OnWarning += OnWarning;
 			Log.OnInfo += OnInfo;
 			Log.OnDebugInfo += OnDebugInfo;
 
-			FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Cvars.AppName.Value,
-									Cvars.AppName.Value + ".log");
-
-			if (File.Exists(FilePath))
-				File.Delete(FilePath);
+			FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), appName, appName + ".log");
+			File.Delete(FilePath);
 		}
 
 		/// <summary>

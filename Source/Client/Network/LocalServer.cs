@@ -9,6 +9,7 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
+	using Scripting;
 
 	/// <summary>
 	///   Represents a local server hosting a game session.
@@ -19,6 +20,11 @@ namespace Lwar.Client.Network
 		///   The update frequency of the server in Hz.
 		/// </summary>
 		private const int UpdateFrequency = 30;
+
+		/// <summary>
+		///   The command registry that manages the application commands.
+		/// </summary>
+		private readonly CommandRegistry _commands;
 
 		/// <summary>
 		///   The log callbacks that have been passed to the native code. We must keep a reference in order to prevent
@@ -44,8 +50,11 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public LocalServer()
+		/// <param name="commands">The command registry that manages the application commands.</param>
+		public LocalServer(CommandRegistry commands)
 		{
+			Assert.ArgumentNotNull(commands, () => commands);
+
 			_logCallbacks = new NativeMethods.LogCallbacks
 			{
 				Die = s => _logs.Enqueue(() => Log.Die("(Server) {0}", RemoveTrailingNewlines(s))),
@@ -55,8 +64,9 @@ namespace Lwar.Client.Network
 				Debug = s => _logs.Enqueue(() => NetworkLog.DebugInfo("(Server) {0}", RemoveTrailingNewlines(s)))
 			};
 
-			LwarCommands.StartServer.Invoked += Run;
-			LwarCommands.StopServer.Invoked += Shutdown;
+			_commands = commands;
+			commands.OnStartServer += Run;
+			commands.OnStopServer += Shutdown;
 		}
 
 		/// <summary>
@@ -74,11 +84,6 @@ namespace Lwar.Client.Network
 		{
 			get { return IsInitialized && !_cancellation.IsCancellationRequested; }
 		}
-
-		/// <summary>
-		///   Raised when the server terminated unexpectedly.
-		/// </summary>
-		public event Action Faulted;
 
 		/// <summary>
 		///   Removes a trailing newline.
@@ -147,12 +152,6 @@ namespace Lwar.Client.Network
 		public void Update()
 		{
 			HandleServerLogs();
-
-			if (!IsRunning)
-				return;
-
-			if (!IsRunning && Faulted != null)
-				Faulted();
 		}
 
 		/// <summary>
@@ -185,8 +184,8 @@ namespace Lwar.Client.Network
 		{
 			Shutdown();
 
-			LwarCommands.StartServer.Invoked -= Run;
-			LwarCommands.StopServer.Invoked -= Shutdown;
+			_commands.OnStartServer -= Run;
+			_commands.OnStopServer -= Shutdown;
 		}
 
 		/// <summary>
@@ -216,7 +215,9 @@ namespace Lwar.Client.Network
 			public static extern void SetCallbacks(PerformanceCallbacks callbacks);
 
 			public delegate void LogCallback(string message);
+
 			public delegate void TimerCallback(uint timer);
+
 			public delegate void CounterCallback(uint counter, uint value);
 
 			[StructLayout(LayoutKind.Sequential)]
@@ -232,9 +233,9 @@ namespace Lwar.Client.Network
 			[StructLayout(LayoutKind.Sequential)]
 			public struct PerformanceCallbacks
 			{
-				public TimerCallback start;
-				public TimerCallback stop;
-				public CounterCallback counted;
+				public readonly TimerCallback start;
+				public readonly TimerCallback stop;
+				public readonly CounterCallback counted;
 			}
 		}
 	}

@@ -93,10 +93,10 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public override void Initialize()
 		{
-			_renderContext = new RenderContext(GraphicsDevice, Assets);
+			_renderContext = new RenderContext(GraphicsDevice, Assets, Cvars);
 			_gameSession = new GameSession(_renderContext);
 			_messageDispatcher = new MessageDispatcher(_gameSession);
-			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
+			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice, Commands);
 			_inputManager = new InputManager(InputDevice);
 
 			StateManager.Add(new Loading(_gameSession, _networkSession));

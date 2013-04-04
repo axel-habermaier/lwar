@@ -177,8 +177,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations.cs" />
+    <Compile Include="AppContext.cs" />
     <Compile Include="ArrayPool.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="IAppContext.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Network\IPacketFactory.cs" />
     <Compile Include="Network\IPEndPointExtensions.cs" />
@@ -200,7 +202,6 @@
     <Compile Include="Platform\BufferPointer.cs" />
     <Compile Include="Platform\Endianess.cs" />
     <Compile Include="Platform\ExternalProcess.cs" />
-    <Compile Include="Platform\ForceInitializationAttribute.cs" />
     <Compile Include="Platform\Graphics\Attachment.cs" />
     <Compile Include="Platform\Graphics\AttachmentPoint.cs" />
     <Compile Include="Platform\Graphics\CubeMap.cs" />
@@ -224,7 +225,7 @@
     <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Rendering\Camera3D.cs" />
     <Compile Include="Rendering\Camera2D.cs" />
-    <Compile Include="Rendering\ISpriteEffectAdaptor.cs" />
+    <Compile Include="Rendering\ISpriteEffectAdapter.cs" />
     <Compile Include="Rendering\RenderOutput.cs" />
     <Compile Include="Rendering\VertexPositionNormal.cs" />
     <Compile Include="Rendering\DebugCamera.cs" />
@@ -302,6 +303,12 @@
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Scripting\CommandAttribute.cs" />
+    <Compile Include="Scripting\CommandRegistry.cs">
+      <DependentUpon>CommandRegistry.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Scripting\ICommandRegistry.cs" />
     <Compile Include="Scripting\CvarAttribute.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
     <Compile Include="Scripting\CvarRegistry.cs">
@@ -321,16 +328,13 @@
     <Compile Include="Platform\Input\InputTriggerParser.cs" />
     <Compile Include="Platform\Graphics\Color.cs" />
     <Compile Include="Scripting\Command`0.cs" />
-    <Compile Include="Scripting\Commands.cs" />
-    <Compile Include="Scripting\CommandRegistry.cs" />
     <Compile Include="Scripting\Command`1.cs" />
     <Compile Include="Scripting\Command`3.cs" />
     <Compile Include="Scripting\Command`2.cs" />
     <Compile Include="Scripting\Cvar.cs" />
-    <Compile Include="Scripting\CvarRegistry_old.cs" />
+    <Compile Include="Scripting\Registry.cs" />
     <Compile Include="Scripting\ICommand.cs" />
     <Compile Include="Scripting\ICvar.cs" />
-    <Compile Include="Scripting\Cvars_old.cs" />
     <Compile Include="DisposableExtensions.cs" />
     <Compile Include="Platform\Input\BinaryInputTriggerType.cs" />
     <Compile Include="Platform\Input\BinaryInputTrigger.cs" />
@@ -509,6 +513,10 @@
     <None Include="Math\Vector2.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Vector2.cs</LastGenOutput>
+    </None>
+    <None Include="Scripting\CommandRegistry.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CommandRegistry.cs</LastGenOutput>
     </None>
     <None Include="Scripting\CvarRegistry.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

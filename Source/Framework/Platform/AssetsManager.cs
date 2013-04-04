@@ -8,7 +8,6 @@ namespace Pegasus.Framework.Platform
 	using Assets;
 	using Graphics;
 	using Rendering.UserInterface;
-	using Scripting;
 
 	/// <summary>
 	///   Tracks all assets that it loaded. If an asset has already been loaded and it is
@@ -45,7 +44,6 @@ namespace Pegasus.Framework.Platform
 			Assert.ArgumentNotNull(device, () => device);
 
 			_device = device;
-			Commands.ReloadAssets.Invoked += ReloadAssets;
 		}
 
 		/// <summary>
@@ -61,9 +59,9 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Reloads all changed assets.
+		///   Reloads all assets.
 		/// </summary>
-		private void ReloadAssets()
+		internal void ReloadAssets()
 		{
 			try
 			{
@@ -105,8 +103,6 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Commands.ReloadAssets.Invoked -= ReloadAssets;
-
 			_assets.Values.SafeDisposeAll();
 			_assets.Clear();
 		}

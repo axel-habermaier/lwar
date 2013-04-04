@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Platform
 {
+	using Scripting;
+
 	/// <summary>
 	///   Represents a timer that periodically raises a timeout event.
 	/// </summary>
@@ -26,11 +28,11 @@ namespace Pegasus.Framework.Platform
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="timeout">The timeout in milliseconds after which the timeout event should be raised.</param>
-		/// <param name="allowScaling">Indicates whether the timer should be affected by the current time scale factor.</param>
-		public static Timer Create(double timeout, bool allowScaling = false)
+		/// <param name="scale">Scales the passing of time. If null, time advances in constant steps.</param>
+		public static Timer Create(double timeout, Cvar<double> scale = null)
 		{
 			var timer = GetInstance();
-			timer._clock = Clock.Create(allowScaling);
+			timer._clock = Clock.Create(scale);
 			timer._timeout = timeout;
 			return timer;
 		}

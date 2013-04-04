@@ -199,7 +199,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		public static void DebugInfo(string message, params object[] arguments)
 		{
-			Log.DebugInfo(Cvars.NetworkDebugging, message, arguments);
+			//Log.DebugInfo(Cvars.NetworkDebugging, message, arguments);
+			Log.DebugInfo(message, arguments);
 		}
 
 		/// <summary>
@@ -215,7 +216,8 @@ namespace Pegasus.Framework.Network
 			Assert.ArgumentNotNullOrWhitespace(source, () => source);
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
 
-			Log.DebugInfo(Cvars.NetworkDebugging, String.Format("({1}) {0}", message, source), arguments);
+			Log.DebugInfo(String.Format("({1}) {0}", message, source), arguments);
+			//Log.DebugInfo(Cvars.NetworkDebugging, String.Format("({1}) {0}", message, source), arguments);
 		}
 
 		/// <summary>

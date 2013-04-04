@@ -1,0 +1,50 @@
+﻿using System;
+
+namespace Pegasus.Framework.Scripting
+{
+	using Platform.Input;
+
+	/// <summary>
+	///   Declares the commands required by the framework.
+	/// </summary>
+	public interface ICommandRegistry
+	{
+		/// <summary>
+		///   Immediately exits the application.
+		/// </summary>
+		[Command]
+		void Exit();
+
+		/// <summary>
+		///   Executes the given argument.
+		/// </summary>
+		/// <param name="command">
+		///   The command that should be executed. It will be executed immediately, synchronously, so don't
+		///   exepcted any fancy stuff to happen!
+		/// </param>
+		[Command]
+		void Execute(string command);
+
+		/// <summary>
+		///   Binds a command invocation to a logical input. Whenever the input is triggered, the command is invoked with the
+		///   specified arguments.
+		/// </summary>
+		/// <param name="trigger">The trigger that triggers the command.</param>
+		/// <param name="command">The command (including the arguments) that should be executed when the trigger is fired.</param>
+		[Command]
+		void Bind(InputTrigger trigger, string command);
+
+		/// <summary>
+		///   Shows or hides the console.
+		/// </summary>
+		/// <param name="show">A value of 'true' indicates that the console should be shown.</param>
+		[Command]
+		void ShowConsole(bool show);
+
+		/// <summary>
+		///   Reloads all changed assets.
+		/// </summary>
+		[Command]
+		void ReloadAssets();
+	}
+}

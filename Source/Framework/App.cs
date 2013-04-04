@@ -14,62 +14,17 @@ namespace Pegasus.Framework
 	/// <summary>
 	///   Represents the application.
 	/// </summary>
-	public abstract class App : DisposableObject
+	public abstract class App
 	{
-		/// <summary>
-		///   The native platform library instance.
-		/// </summary>
-		private readonly NativeLibrary _nativeLibrary = new NativeLibrary();
-
 		/// <summary>
 		///   Indicates whether the application should continue to run.
 		/// </summary>
 		private bool _running = true;
 
 		/// <summary>
-		///   Gets the graphics device.
+		///   Gets the context of the application, providing access to all framework objects that can be used by the application.
 		/// </summary>
-		protected GraphicsDevice GraphicsDevice { get; private set; }
-
-		/// <summary>
-		///   Gets the application window.
-		/// </summary>
-		protected Window Window { get; private set; }
-
-		/// <summary>
-		///   Gets the asset manager of the application.
-		/// </summary>
-		protected AssetsManager Assets { get; private set; }
-
-		/// <summary>
-		///   Gets the keyboard that handles all keyboard inputs for the window.
-		/// </summary>
-		protected Keyboard Keyboard { get; private set; }
-
-		/// <summary>
-		///   Gets the mouse that handles all mouse inputs for the window.
-		/// </summary>
-		protected Mouse Mouse { get; private set; }
-
-		/// <summary>
-		///   Gets the logical input device that handles all input.
-		/// </summary>
-		protected LogicalInputDevice LogicalInputDevice { get; private set; }
-
-		/// <summary>
-		///   Gets or sets the statistics manager that is used to measure performance values.
-		/// </summary>
-		protected Statistics Statistics { get; set; }
-
-		/// <summary>
-		///   Gets or sets the default font that is used to draw the console and the statistics.
-		/// </summary>
-		protected Font DefaultFont { get; set; }
-
-		/// <summary>
-		///   Gets or sets a the sprite effect instance that is used to draw the console and the statistics.
-		/// </summary>
-		protected ISpriteEffectAdaptor SpriteEffect { get; set; }
+		protected IAppContext Context { get; private set; }
 
 		/// <summary>
 		///   Invoked when the application should update the game state.
@@ -93,7 +48,6 @@ namespace Pegasus.Framework
 		/// </summary>
 		protected void Exit()
 		{
-			Assert.NotDisposed(this);
 			_running = false;
 		}
 
@@ -105,52 +59,64 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected virtual void Dispose()
+		{
+		}
+
+		/// <summary>
 		///   Runs the application. This method does not return until the application is shut down.
 		/// </summary>
+		/// <param name="context">
+		///   The context of the application, providing access to all framework objects that can be used by the application.
+		/// </param>
 		/// <param name="logFile">The log file that writes all generated log entries to the file system.</param>
-		internal void Run(LogFile logFile)
+		internal void Run(AppContext context, LogFile logFile)
 		{
+			Assert.ArgumentNotNull(context, () => context);
 			Assert.ArgumentNotNull(logFile, () => logFile);
 
-			// Initialize app window and input
-			Window = new Window();
-			Keyboard = new Keyboard(Window);
-			Mouse = new Mouse(Window);
-			LogicalInputDevice = new LogicalInputDevice(Keyboard, Mouse);
-
-			// Initialize graphics and assets manager
-			GraphicsDevice = new GraphicsDevice();
-			using (var swapChain = new SwapChain(GraphicsDevice, Window))
-			using (var interpreter = new Interpreter())
-			using (var bindings = new RequestBindings(LogicalInputDevice))
-			using (var camera2D = new Camera2D(GraphicsDevice))
-			using (var sceneOutput = new RenderOutput(GraphicsDevice) { RenderTarget = swapChain.BackBuffer })
-			using (var uiOutput = new RenderOutput(GraphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
+			using (new NativeLibrary())
+			using (context.Window = new Window())
+			using (context.GraphicsDevice = new GraphicsDevice())
+			using (context.Statistics)
+			using (context.SpriteEffect)
+			using (var swapChain = new SwapChain(context.GraphicsDevice, context.Window))
+			using (context.Assets = new AssetsManager(context.GraphicsDevice))
+			using (var keyboard = new Keyboard(context.Window))
+			using (var mouse = new Mouse(context.Window))
+			using (context.LogicalInputDevice = new LogicalInputDevice(keyboard, mouse))
+			using (var interpreter = new Interpreter(context.Cvars, context.Commands))
+			using (var bindings = new RequestBindings(context.LogicalInputDevice, context.Cvars, context.Commands))
+			using (var camera2D = new Camera2D(context.GraphicsDevice))
+			using (var sceneOutput = new RenderOutput(context.GraphicsDevice) { RenderTarget = swapChain.BackBuffer })
+			using (var uiOutput = new RenderOutput(context.GraphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
 			{
 				swapChain.BackBuffer.SetName("Back Buffer");
-				Assets = new AssetsManager(GraphicsDevice);
+				context.SpriteEffect.Initialize(context.GraphicsDevice, context.Assets);
 
-				// Run the application-specific initialization logic
+				Context = context;
 				Initialize();
-				Assert.NotNull(DefaultFont, "The Initialize() method must set the DefaultFont property.");
-				Assert.NotNull(Statistics, "The Initialize() method must set the Statistics property.");
-				Assert.NotNull(SpriteEffect, "The Initialize() method must set the SpriteEffect property.");
 
-				using (var spriteBatch = new SpriteBatch(GraphicsDevice, uiOutput, SpriteEffect))
-				using (var console = new Console(GraphicsDevice, LogicalInputDevice, spriteBatch, DefaultFont))
+				var defaultFont = context.Assets.LoadFont(context.DefaultFontName);
+				using (var spriteBatch = new SpriteBatch(context.GraphicsDevice, uiOutput, context.SpriteEffect))
+				using (var console = new Console(context.GraphicsDevice, context.LogicalInputDevice, spriteBatch, defaultFont))
 				{
-					Statistics.Initialize(GraphicsDevice, spriteBatch, DefaultFont);
+					context.Statistics.Initialize(context.GraphicsDevice, spriteBatch, defaultFont);
 
 					// Initialize commands and cvars
 					console.UserInput += interpreter.Execute;
-					Commands.Exit.Invoked += Exit;
+					context.Commands.OnExit += Exit;
 
 					// Ensure that the size of the console and the statistics always matches that of the window
-					console.Resize(Window.Size);
-					Statistics.Resize(Window.Size);
+					console.Resize(context.Window.Size);
+					context.Statistics.Resize(context.Window.Size);
 
-					Window.Resized += console.Resize;
-					Window.Resized += Statistics.Resize;
+					context.Window.Resized += console.Resize;
+					context.Window.Resized += context.Statistics.Resize;
+					context.Commands.OnReloadAssets += context.Assets.ReloadAssets;
+					context.Commands.OnShowConsole += console.ShowConsole;
 
 					// Copy the recorded log history to the console
 					logFile.WriteToConsole(console);
@@ -158,9 +124,18 @@ namespace Pegasus.Framework
 					while (_running)
 					{
 						// Update the input system and let the console respond to any input
-						using (new Measurement(Statistics.UpdateInput))
+						using (new Measurement(context.Statistics.UpdateInput))
 						{
-							UpdateInput();
+							// Update the keyboard and mouse state first (this ensures that WentDown returns 
+							// false for all keys and buttons, etc.)
+							context.LogicalInputDevice.Keyboard.Update();
+							context.LogicalInputDevice.Mouse.Update();
+
+							// Process all new input; this might set WentDown, etc. to true for some keys and buttons
+							context.Window.ProcessEvents();
+
+							// Update the logical inputs based on the new state of the input system
+							context.LogicalInputDevice.Update();
 							console.HandleInput();
 						}
 
@@ -170,14 +145,14 @@ namespace Pegasus.Framework
 						// Update the application logic 
 						Update();
 
-						var viewport = new Rectangle(Vector2i.Zero, Window.Size);
+						var viewport = new Rectangle(Vector2i.Zero, context.Window.Size);
 						sceneOutput.Viewport = viewport;
 						uiOutput.Viewport = viewport;
 
-						Statistics.Update();
+						context.Statistics.Update();
 
-						using (new Measurement(Statistics.GpuFrameTime))
-						using (new Measurement(Statistics.CpuFrameTime))
+						using (new Measurement(context.Statistics.GpuFrameTime))
+						using (new Measurement(context.Statistics.CpuFrameTime))
 						{
 							// Let the application draw the current frame
 							Draw(sceneOutput);
@@ -185,47 +160,17 @@ namespace Pegasus.Framework
 
 							// Draw the console and the statistics on top of the current frame
 							console.Draw();
-							Statistics.Draw();
+							context.Statistics.Draw();
 						}
 
 						// Present the current frame to the screen and write the log file, if necessary
 						swapChain.Present();
 						logFile.WriteToFile();
 					}
+
+					Dispose();
 				}
 			}
-		}
-
-		/// <summary>
-		///   Updates the input devices.
-		/// </summary>
-		private void UpdateInput()
-		{
-			// Update the keyboard and mouse state first (this ensures that WentDown returns 
-			// false for all keys and buttons, etc.)
-			Keyboard.Update();
-			Mouse.Update();
-
-			// Process all new input; this might set WentDown, etc. to true for some keys and buttons
-			Window.ProcessEvents();
-
-			// Update the logical inputs based on the new state of the input system
-			LogicalInputDevice.Update();
-		}
-
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			SpriteEffect.SafeDispose();
-			Statistics.SafeDispose();
-			Keyboard.SafeDispose();
-			Mouse.SafeDispose();
-			Assets.SafeDispose();
-			GraphicsDevice.SafeDispose();
-			Window.SafeDispose();
-			_nativeLibrary.SafeDispose();
 		}
 	}
 }

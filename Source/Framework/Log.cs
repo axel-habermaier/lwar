@@ -4,7 +4,6 @@ namespace Pegasus.Framework
 {
 	using System.Diagnostics;
 	using Platform;
-	using Scripting;
 
 	/// <summary>
 	///   Provides functions to log fatal errors, errors, warnings, informational messages, and debug-time only
@@ -121,24 +120,6 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
 
 			if (OnDebugInfo != null)
-				OnDebugInfo(String.Format(message, arguments));
-		}
-
-		/// <summary>
-		///   Raises the OnDebugInfo event with the given message if the given cvar is set to true.
-		/// </summary>
-		/// <param name="enabled">The cvar that determines whether the message should be logged.</param>
-		/// <param name="message">
-		///   The message that should be formatted and passed as an argument of the OnDebugInfo event.
-		/// </param>
-		/// <param name="arguments">The arguments that should be copied into the message.</param>
-		[StringFormatMethod("message")]
-		public static void DebugInfo(Cvar<bool> enabled, string message, params object[] arguments)
-		{
-			Assert.ArgumentNotNull(enabled, () => enabled);
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
-
-			if (enabled.Value && OnDebugInfo != null)
 				OnDebugInfo(String.Format(message, arguments));
 		}
 	}

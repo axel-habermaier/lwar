@@ -7,22 +7,20 @@ namespace Lwar.Client
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Rendering;
-	using Pegasus.Framework.Scripting;
-	using Rendering;
+	using Scripting;
 
 	/// <summary>
 	///   Represents the lwar client.
 	/// </summary>
-	internal sealed class LwarApp : App
+	internal sealed class App : Pegasus.Framework.App
 	{
 		/// <summary>
 		///   The local game server that can be used to hosts game sessions locally.
 		/// </summary>
-		private readonly LocalServer _localServer = new LocalServer();
+		private LocalServer _localServer;
 
 		/// <summary>
 		///   The state manager that manages the states of the application.
@@ -30,38 +28,30 @@ namespace Lwar.Client
 		private StateManager _stateManager;
 
 		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		public LwarApp()
-		{
-			LwarCommands.Connect.Invoked += Connect;
-			LwarCommands.Disconnect.Invoked += Disconnect;
-		}
-
-		/// <summary>
 		///   Invoked when the application is initializing.
 		/// </summary>
 		protected override void Initialize()
 		{
-			DefaultFont = Assets.LoadFont("Fonts/Liberation Mono 12");
-			Statistics = new Statistics();
-			SpriteEffect = new SpriteEffectAdaptor(GraphicsDevice, Assets);
+			var commands = (CommandRegistry)Context.Commands;
+			commands.OnConnect += Connect;
+			commands.OnDisconnect += Disconnect;
 
-			LogicalInputDevice.Modes = InputModes.Game;
-			Window.Closing += Exit;
-			Window.Title = "lwar";
-			Window.Size = new Size(1280, 720);
+			Context.LogicalInputDevice.Modes = InputModes.Game;
+			Context.Window.Closing += Exit;
+			Context.Window.Title = "lwar";
+			Context.Window.Size = new Size(1280, 720);
 
-			_stateManager = new StateManager(Window, GraphicsDevice, Assets, LogicalInputDevice);
+			_localServer = new LocalServer(commands);
+			_stateManager = new StateManager(Context);
 			_stateManager.Add(new MainMenu());
 
-			Commands.Bind.Invoke(Key.F1.WentDown(), "start");
-			Commands.Bind.Invoke(Key.F2.WentDown(), "stop");
-			Commands.Bind.Invoke(Key.F3.WentDown(), "connect 127.0.0.1");
-			Commands.Bind.Invoke(Key.F4.WentDown(), "disconnect");
-			Commands.Bind.Invoke(Key.F5.WentDown(), "reload_assets");
-			Commands.Bind.Invoke(Key.C.WentDown(), "toggle_debug_cam");
-			Commands.Bind.Invoke(Key.Escape.WentDown(), "exit");
+			commands.Bind(Key.F1.WentDown(), "start_server");
+			commands.Bind(Key.F2.WentDown(), "stop_server");
+			commands.Bind(Key.F3.WentDown(), "connect 127.0.0.1");
+			commands.Bind(Key.F4.WentDown(), "disconnect");
+			commands.Bind(Key.F5.WentDown(), "reload_assets");
+			commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
+			commands.Bind(Key.Escape.WentDown(), "exit");
 		}
 
 		/// <summary>
@@ -97,15 +87,14 @@ namespace Lwar.Client
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		protected override void Dispose()
 		{
-			LwarCommands.Connect.Invoked -= Connect;
-			LwarCommands.Disconnect.Invoked -= Disconnect;
+			var commands = (CommandRegistry)Context.Commands;
+			commands.OnConnect -= Connect;
+			commands.OnDisconnect -= Disconnect;
 
 			_stateManager.SafeDispose();
 			_localServer.SafeDispose();
-
-			base.OnDisposing();
 		}
 
 		/// <summary>

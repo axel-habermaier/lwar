@@ -32,6 +32,32 @@ namespace Pegasus.Framework.Scripting
 		private static readonly SkipParser<None> EndOfRequest = ~(WhiteSpaces + ~EndOfInput);
 
 		/// <summary>
+		///   The command registry that is used to look up cvars referenced by a user request.
+		/// </summary>
+		private readonly CommandRegistry _commandRegistry;
+
+		/// <summary>
+		///   The cvar registry that is used to look up cvars referenced by a user request.
+		/// </summary>
+		private readonly CvarRegistry _cvarRegistry;
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="cvarRegistry">The cvar registry that should be used to look up cvars referenced by a user request.</param>
+		/// <param name="commandRegistry">
+		///   The command registry that should be used to look up commands referenced by a user request.
+		/// </param>
+		public RequestParser(CvarRegistry cvarRegistry, CommandRegistry commandRegistry)
+		{
+			Assert.ArgumentNotNull(cvarRegistry, () => cvarRegistry);
+			Assert.ArgumentNotNull(commandRegistry, () => commandRegistry);
+
+			_cvarRegistry = cvarRegistry;
+			_commandRegistry = commandRegistry;
+		}
+
+		/// <summary>
 		///   Parses the given input string and returns the user command.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
@@ -48,13 +74,13 @@ namespace Pegasus.Framework.Scripting
 
 			// Check if a cvar has been referenced and if so, return the appropriate user request
 			var name = reply.Result;
-			var cvar = CvarRegistry.Find(name);
-			if (cvar != null)
+			ICvar cvar;
+			if (_cvarRegistry.TryFind(name, out cvar))
 				return Parse(inputStream, cvar);
 
 			// Check if a command has been referenced and if so, return the appropriate user request
-			var command = CommandRegistry.Find(name);
-			if (command != null)
+			ICommand command;
+			if (_commandRegistry.TryFind(name, out command))
 				return Parse(inputStream, command);
 
 			// If the name refers to neither a cvar nor a command, return an error message

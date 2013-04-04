@@ -94,15 +94,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			// Add all cvars
 			AddElements(from property in _type.Descendants.OfType<PropertyDeclaration>()
 						let attributes = property.Attributes.SelectMany(section => section.Attributes)
-						where attributes.Any(attribute => attribute.Type.ToString() == "Cvar") ||
-							  attributes.Any(attribute => attribute.Type.ToString() == "CvarAttribute")
 						select new Cvar(property));
 
 			// Add all commands
 			AddElements(from method in _type.Descendants.OfType<MethodDeclaration>()
 						let attributes = method.Attributes.SelectMany(section => section.Attributes)
-						where attributes.Any(attribute => attribute.Type.ToString() == "Command") ||
-							  attributes.Any(attribute => attribute.Type.ToString() == "CommandAttribute")
 						select new Command(method));
 		}
 

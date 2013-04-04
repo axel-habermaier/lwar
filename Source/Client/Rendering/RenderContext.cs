@@ -3,16 +3,21 @@
 namespace Lwar.Client.Rendering
 {
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
+	using Scripting;
 
 	/// <summary>
 	///   Represents the context in which rendering operations are performed.
 	/// </summary>
 	public class RenderContext : DisposableObject
 	{
+		/// <summary>
+		///   The cvar registry that handles the application cvars.
+		/// </summary>
+		private readonly CvarRegistry _cvars;
+
 		/// <summary>
 		///   The renderer that is used to draw the skybox.
 		/// </summary>
@@ -28,11 +33,14 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets)
+		/// <param name="cvars"> The cvar registry that handles the application cvars.</param>
+		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets, CvarRegistry cvars)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(cvars, () => cvars);
 
+			_cvars = cvars;
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 
@@ -70,7 +78,7 @@ namespace Lwar.Client.Rendering
 		{
 			Assert.ArgumentNotNull(output, () => output);
 
-			if (LwarCvars.DrawWireframe.Value)
+			if (_cvars.DrawWireframe)
 				_wireframe.Bind();
 			else
 				RasterizerState.CullCounterClockwise.Bind();

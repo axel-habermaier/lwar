@@ -5,7 +5,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Math;
 	using Platform.Graphics;
 	using Platform.Input;
-	using Scripting;
 
 	/// <summary>
 	///   A Quake-like in-game console.
@@ -102,7 +101,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Log.OnWarning += ShowWarning;
 			Log.OnInfo += ShowInfo;
 			Log.OnDebugInfo += ShowDebugInfo;
-			Commands.ShowConsole.Invoked += OnShowConsole;
 
 			_input.CharEntered += OnCharEntered;
 			_input.KeyPressed += OnKeyPressed;
@@ -139,7 +137,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Log.OnWarning -= ShowWarning;
 			Log.OnInfo -= ShowInfo;
 			Log.OnDebugInfo -= ShowDebugInfo;
-			Commands.ShowConsole.Invoked -= OnShowConsole;
 
 			_input.CharEntered -= OnCharEntered;
 			_input.KeyPressed -= OnKeyPressed;
@@ -271,7 +268,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Shows or hides the console.
 		/// </summary>
 		/// <param name="show">Indicates whether the console should be shown.</param>
-		private void OnShowConsole(bool show)
+		public void ShowConsole(bool show)
 		{
 			Active = show;
 		}

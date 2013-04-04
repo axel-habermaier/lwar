@@ -34,8 +34,6 @@ namespace Pegasus.Framework.Scripting
 			Description = description;
 			_defaultValue = defaultValue;
 			_value = defaultValue;
-
-			CvarRegistry.Register(this);
 		}
 
 		/// <summary>

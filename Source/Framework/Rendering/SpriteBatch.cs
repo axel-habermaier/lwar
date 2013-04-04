@@ -31,7 +31,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The effect that is used to draw the sprites.
 		/// </summary>
-		private readonly ISpriteEffectAdaptor _effect;
+		private readonly ISpriteEffectAdapter _effect;
 
 		/// <summary>
 		///   The graphics device that should be used to draw the sprites.
@@ -129,7 +129,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="output">The output that should be used for drawing.</param>
 		/// <param name="effect">The effect that should be used to draw the sprites.</param>
-		public SpriteBatch(GraphicsDevice graphicsDevice, RenderOutput output, ISpriteEffectAdaptor effect)
+		public SpriteBatch(GraphicsDevice graphicsDevice, RenderOutput output, ISpriteEffectAdapter effect)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(output, () => output);

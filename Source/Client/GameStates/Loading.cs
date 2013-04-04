@@ -56,7 +56,7 @@ namespace Lwar.Client.GameStates
 				Text = String.Format("Connecting to {0}...", _networkSession.ServerEndPoint)
 			};
 
-			Commands.ShowConsole.Invoke(false);
+			Commands.ShowConsole(false);
 		}
 
 		/// <summary>
@@ -73,7 +73,7 @@ namespace Lwar.Client.GameStates
 				var localPlayer = _gameSession.Players.LocalPlayer;
 				Assert.NotNull(localPlayer, "Game state synced but local player is unknown.");
 
-				_networkSession.Send(Message.ChangePlayerName(localPlayer, Cvars.PlayerName.Value));
+				_networkSession.Send(Message.ChangePlayerName(localPlayer, Cvars.PlayerName));
 				_networkSession.Send(Message.ChangeSelection(localPlayer, EntityType.Ship,
 															 EntityType.Gun, EntityType.Gun,
 															 EntityType.Gun, EntityType.Gun));

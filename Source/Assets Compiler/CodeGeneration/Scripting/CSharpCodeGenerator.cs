@@ -53,6 +53,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 						_writer.AppendLine("using {0};", import);
 
 					_writer.Newline();
+
 					_writer.AppendLine("public class {0} : {1}", _registry.Name, baseClass);
 					_writer.AppendBlockStatement(() =>
 						{
@@ -61,6 +62,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 
 							GenerateConstructor();
 
+							GenerateCvarProperties();
 							GenerateCommandMethods();
 							GenerateCommandEvents();
 						});
@@ -76,7 +78,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			{
 				WriteDocumentation(cvar.Documentation);
 				_writer.AppendLine("private readonly Cvar<{0}> {1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\");",
-								   cvar.Type, GetFieldName(cvar.Name), GetRuntimeName(cvar.Name), cvar.DefaultValue, GetSummaryText(cvar.Documentation));
+								   cvar.Type, GetFieldName(cvar.Name), GetRuntimeName(cvar.Name), cvar.DefaultValue,
+								   GetSummaryText(cvar.Documentation));
 
 				_writer.Newline();
 			}
@@ -110,14 +113,33 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			_writer.AppendBlockStatement(() =>
 				{
 					foreach (var cvar in _registry.Cvars)
-						_writer.AppendLine("Register({0});", GetFieldName(cvar.Name));
+						_writer.AppendLine("Register({0}, \"{1}\");", GetFieldName(cvar.Name), GetRuntimeName(cvar.Name));
 
 					if (_registry.Cvars.Any() && _registry.Commands.Any())
 						_writer.Newline();
 
 					foreach (var command in _registry.Commands)
-						_writer.AppendLine("Register({0});", GetFieldName(command.Name));
+						_writer.AppendLine("Register({0}, \"{1}\");", GetFieldName(command.Name), GetRuntimeName(command.Name));
 				});
+		}
+
+		/// <summary>
+		///   Generates the cvar properties
+		/// </summary>
+		private void GenerateCvarProperties()
+		{
+			foreach (var cvar in _registry.Cvars)
+			{
+				_writer.Newline();
+
+				WriteDocumentation(cvar.Documentation);
+				_writer.AppendLine("public {0} {1}", cvar.Type, cvar.Name);
+				_writer.AppendBlockStatement(() =>
+					{
+						_writer.AppendLine("get {{ return {0}.Value; }}", GetFieldName(cvar.Name));
+						_writer.AppendLine("set {{ {0}.Value = value; }}", GetFieldName(cvar.Name));
+					});
+			}
 		}
 
 		/// <summary>

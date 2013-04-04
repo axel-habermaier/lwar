@@ -26,8 +26,6 @@ namespace Pegasus.Framework.Scripting
 
 			Name = name;
 			Description = description;
-
-			CommandRegistry.Register(this);
 		}
 
 		/// <summary>

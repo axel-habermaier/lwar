@@ -11,14 +11,14 @@ namespace Pegasus.Framework.Platform
 	public sealed class Clock : PooledObject<Clock>
 	{
 		/// <summary>
-		///   Indicates whether the clock is affected by the current time scale factor.
-		/// </summary>
-		private bool _allowScaling;
-
-		/// <summary>
 		///   The offset that is applied to all times returned by this instance.
 		/// </summary>
 		private double _offset;
+
+		/// <summary>
+		///   Scales the passing of time. If null, time advances in constant steps.
+		/// </summary>
+		private Cvar<double> _scale;
 
 		/// <summary>
 		///   The current time in seconds.
@@ -83,23 +83,23 @@ namespace Pegasus.Framework.Platform
 			_offset = systemTime;
 
 			// Scale the elapsedTime with the current scaling factor and add it to the internal time
-			var scale = _allowScaling ? Cvars.TimeScaleFactor.Value : 1;
+			var scale = _scale == null ? 1 : _scale.Value;
 			_time += elapsedTime * scale;
 		}
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="allowScaling">Indicates whether the clock should be affected by the current time scale factor.</param>
-		public static Clock Create(bool allowScaling = false)
+		/// <param name="scale">Scales the passing of time. If null, time advances in constant steps.</param>
+		public static Clock Create(Cvar<double> scale = null)
 		{
 			var clock = GetInstance();
 			clock._time = 0;
 			clock._offset = SystemTime;
-			clock._allowScaling = allowScaling;
+			clock._scale = scale;
 
-			if (allowScaling)
-				Cvars.TimeScaleFactor.Changing += clock.TimeScaleChanging;
+			if (scale != null)
+				scale.Changing += clock.TimeScaleChanging;
 
 			return clock;
 		}
@@ -109,8 +109,8 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnReturning()
 		{
-			if (_allowScaling)
-				Cvars.TimeScaleFactor.Changing -= TimeScaleChanging;
+			if (_scale != null)
+				_scale.Changing -= TimeScaleChanging;
 		}
 
 		/// <summary>

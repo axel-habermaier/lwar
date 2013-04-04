@@ -75,8 +75,7 @@ namespace Pegasus.AssetsCompiler
 			try
 			{
 				PrintToConsole();
-				Log.Info("Pegasus Asset Compiler, version {0}.{1} ({2} x{3})", Cvars.AppVersionMajor.Value,
-						 Cvars.AppVersionMinor.Value, PlatformInfo.Platform, IntPtr.Size == 4 ? "86" : "64");
+				Log.Info("Pegasus Asset Compiler ({0} x{1})", PlatformInfo.Platform, IntPtr.Size == 4 ? "86" : "64");
 
 				Console.WriteLine();
 				var command = args.Length == 1 ? args[0].Trim().ToLower() : String.Empty;

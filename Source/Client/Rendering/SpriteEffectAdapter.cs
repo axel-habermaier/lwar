@@ -6,32 +6,19 @@ namespace Lwar.Client.Rendering
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
 
 	/// <summary>
 	///   An adaptor to an effect that can be used to draw 2D sprites.
 	/// </summary>
-	public class SpriteEffectAdaptor : DisposableObject, ISpriteEffectAdaptor
+	[UsedImplicitly]
+	public class SpriteEffectAdapter : DisposableObject, ISpriteEffectAdapter
 	{
 		/// <summary>
 		///   The sprite effect that is adapted.
 		/// </summary>
-		private readonly SpriteEffect _effect;
-
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
-		/// <param name="assets">The assets manager that should be used to load required assets.</param>
-		public SpriteEffectAdaptor(GraphicsDevice graphicsDevice, AssetsManager assets)
-		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
-
-			_effect = new SpriteEffect(graphicsDevice, assets);
-		}
+		private SpriteEffect _effect;
 
 		/// <summary>
 		///   Sets the texture view that should be used to draw the sprites.
@@ -55,6 +42,19 @@ namespace Lwar.Client.Rendering
 		public EffectTechnique Technique
 		{
 			get { return _effect.Default; }
+		}
+
+		/// <summary>
+		///   Initializes a the sprite effect.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
+		/// <param name="assets">The assets manager that should be used to load required assets.</param>
+		public void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
+		{
+			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(assets, () => assets);
+
+			_effect = new SpriteEffect(graphicsDevice, assets);
 		}
 
 		/// <summary>

@@ -2,6 +2,8 @@
 
 namespace Pegasus.AssetsCompiler.Effects
 {
+	using Framework;
+
 	public partial class Vector2
 	{
 		/// <summary>

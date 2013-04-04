@@ -8,7 +8,6 @@ namespace Lwar.Client.Rendering
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
 
@@ -19,7 +18,7 @@ namespace Lwar.Client.Rendering
 	{
 		private readonly GaussianBlur _blur;
 
-		private readonly Clock _clock = Clock.Create(true);
+		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
 		///   The render target that is used to draw the sun effect.
@@ -78,7 +77,7 @@ namespace Lwar.Client.Rendering
 			uint w = 640;
 			uint h = 360;
 			var flags = TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget;
-			_effectTexture = new Texture2D(graphicsDevice, w, h, SurfaceFormat.Rgba8,flags);
+			_effectTexture = new Texture2D(graphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
 			_effectTexture.SetName("SunRenderer.EffectTexture");
 
 			_effectTarget = new RenderTarget(graphicsDevice, null, _effectTexture);
