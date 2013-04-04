@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Math;
 
 	/// <summary>
@@ -77,7 +78,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Provides access to the native swap chain functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

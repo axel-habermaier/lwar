@@ -7,7 +7,6 @@ namespace Lwar.Client.Network
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
 	using Scripting;
 
@@ -61,7 +60,7 @@ namespace Lwar.Client.Network
 				Error = s => _logs.Enqueue(() => Log.Error("(Server) {0}", RemoveTrailingNewlines(s))),
 				Warning = s => _logs.Enqueue(() => Log.Warn("(Server) {0}", RemoveTrailingNewlines(s))),
 				Info = s => _logs.Enqueue(() => Log.Info("(Server) {0}", RemoveTrailingNewlines(s))),
-				Debug = s => _logs.Enqueue(() => NetworkLog.DebugInfo("(Server) {0}", RemoveTrailingNewlines(s)))
+				Debug = s => _logs.Enqueue(() => Log.DebugInfo("(Server) {0}", RemoveTrailingNewlines(s)))
 			};
 
 			_commands = commands;

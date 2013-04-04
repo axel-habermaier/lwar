@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 
 namespace Pegasus.Framework.Math
 {
@@ -168,8 +167,8 @@ namespace Pegasus.Framework.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(Rectangle other)
 		{
-			return Left == other.Left && Top == other.Top && 
-				Width == other.Width && Height == other.Height;
+			return Left == other.Left && Top == other.Top &&
+				   Width == other.Width && Height == other.Height;
 		}
 
 		/// <summary>
@@ -234,10 +233,10 @@ namespace Pegasus.Framework.Math
 		public bool Intersects(Rectangle rectangle)
 		{
 			var xOverlap = (Left >= rectangle.Left && Left <= rectangle.Right) ||
-				(rectangle.Left >= Left && rectangle.Left <= Right);
+						   (rectangle.Left >= Left && rectangle.Left <= Right);
 
 			var yOverlap = (Top >= rectangle.Top && Top <= rectangle.Bottom) ||
-				(rectangle.Top >= Top && rectangle.Top <= Bottom);
+						   (rectangle.Top >= Top && rectangle.Top <= Bottom);
 
 			return xOverlap && yOverlap;
 		}
@@ -423,8 +422,8 @@ namespace Pegasus.Framework.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(RectangleF other)
 		{
-			return MathUtils.FloatEquality(Left, other.Left) && MathUtils.FloatEquality(Top, other.Top) && 
-				MathUtils.FloatEquality(Width, other.Width) && MathUtils.FloatEquality(Height, other.Height);
+			return MathUtils.FloatEquality(Left, other.Left) && MathUtils.FloatEquality(Top, other.Top) &&
+				   MathUtils.FloatEquality(Width, other.Width) && MathUtils.FloatEquality(Height, other.Height);
 		}
 
 		/// <summary>
@@ -489,10 +488,10 @@ namespace Pegasus.Framework.Math
 		public bool Intersects(RectangleF rectangle)
 		{
 			var xOverlap = (Left >= rectangle.Left && Left <= rectangle.Right) ||
-				(rectangle.Left >= Left && rectangle.Left <= Right);
+						   (rectangle.Left >= Left && rectangle.Left <= Right);
 
 			var yOverlap = (Top >= rectangle.Top && Top <= rectangle.Bottom) ||
-				(rectangle.Top >= Top && rectangle.Top <= Bottom);
+						   (rectangle.Top >= Top && rectangle.Top <= Bottom);
 
 			return xOverlap && yOverlap;
 		}
@@ -517,7 +516,8 @@ namespace Pegasus.Framework.Math
 	}
 
 	/// <summary>
-	///   Represents a rectangle with the left, top, width, and height stored as 32-bit signed fixed-point (in 24.8 format) values.
+	///   Represents a rectangle with the left, top, width, and height stored as 32-bit signed fixed-point (in 24.8 format)
+	///   values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct RectangleF8 : IEquatable<RectangleF8>
@@ -678,8 +678,8 @@ namespace Pegasus.Framework.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(RectangleF8 other)
 		{
-			return Left == other.Left && Top == other.Top && 
-				Width == other.Width && Height == other.Height;
+			return Left == other.Left && Top == other.Top &&
+				   Width == other.Width && Height == other.Height;
 		}
 
 		/// <summary>
@@ -744,10 +744,10 @@ namespace Pegasus.Framework.Math
 		public bool Intersects(RectangleF8 rectangle)
 		{
 			var xOverlap = (Left >= rectangle.Left && Left <= rectangle.Right) ||
-				(rectangle.Left >= Left && rectangle.Left <= Right);
+						   (rectangle.Left >= Left && rectangle.Left <= Right);
 
 			var yOverlap = (Top >= rectangle.Top && Top <= rectangle.Bottom) ||
-				(rectangle.Top >= Top && rectangle.Top <= Bottom);
+						   (rectangle.Top >= Top && rectangle.Top <= Bottom);
 
 			return xOverlap && yOverlap;
 		}
@@ -772,7 +772,8 @@ namespace Pegasus.Framework.Math
 	}
 
 	/// <summary>
-	///   Represents a rectangle with the left, top, width, and height stored as 32-bit signed fixed-point (in 16.16 format) values.
+	///   Represents a rectangle with the left, top, width, and height stored as 32-bit signed fixed-point (in 16.16 format)
+	///   values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct RectangleF16 : IEquatable<RectangleF16>
@@ -933,8 +934,8 @@ namespace Pegasus.Framework.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(RectangleF16 other)
 		{
-			return Left == other.Left && Top == other.Top && 
-				Width == other.Width && Height == other.Height;
+			return Left == other.Left && Top == other.Top &&
+				   Width == other.Width && Height == other.Height;
 		}
 
 		/// <summary>
@@ -999,10 +1000,10 @@ namespace Pegasus.Framework.Math
 		public bool Intersects(RectangleF16 rectangle)
 		{
 			var xOverlap = (Left >= rectangle.Left && Left <= rectangle.Right) ||
-				(rectangle.Left >= Left && rectangle.Left <= Right);
+						   (rectangle.Left >= Left && rectangle.Left <= Right);
 
 			var yOverlap = (Top >= rectangle.Top && Top <= rectangle.Bottom) ||
-				(rectangle.Top >= Top && rectangle.Top <= Bottom);
+						   (rectangle.Top >= Top && rectangle.Top <= Bottom);
 
 			return xOverlap && yOverlap;
 		}
@@ -1026,4 +1027,3 @@ namespace Pegasus.Framework.Math
 		}
 	}
 }
-

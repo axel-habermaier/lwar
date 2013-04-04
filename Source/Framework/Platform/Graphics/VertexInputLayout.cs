@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Platform.Graphics
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///   An input-layout holds a definition of how to feed vertex data that
@@ -69,11 +70,11 @@ namespace Pegasus.Framework.Platform.Graphics
 			_indexBuffer = indexBuffer;
 
 			if (indexBuffer == null)
-				_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, IntPtr.Zero, 0, IndexSize.SixteenBits, 
-				                                                     _vertexInputBindings, _vertexInputBindings.Length);
+				_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, IntPtr.Zero, 0, IndexSize.SixteenBits,
+																	 _vertexInputBindings, _vertexInputBindings.Length);
 			else
 				_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, indexBuffer.NativePtr, indexOffset,
-			                                                   		 indexBuffer.IndexSize, _vertexInputBindings, _vertexInputBindings.Length);
+																	 indexBuffer.IndexSize, _vertexInputBindings, _vertexInputBindings.Length);
 		}
 
 		/// <summary>
@@ -113,7 +114,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Provides access to the native vertex input layout functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

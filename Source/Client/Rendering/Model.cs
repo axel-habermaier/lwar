@@ -42,7 +42,7 @@ namespace Lwar.Client.Rendering
 		/// <param name="indexBuffer">The index buffer containing the model's indices.</param>
 		/// <param name="indexCount">The number of indices in the index buffer.</param>
 		private Model(VertexBuffer vertexBuffer, VertexInputLayout layout, IndexBuffer indexBuffer,
-					 int indexCount)
+					  int indexCount)
 		{
 			Assert.ArgumentNotNull(vertexBuffer, () => vertexBuffer);
 			Assert.ArgumentNotNull(layout, () => layout);
@@ -191,7 +191,7 @@ namespace Lwar.Client.Rendering
 			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
 			var layout = VertexPositionNormalTexture.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
 
-			return new Model( vertexBuffer, layout, indexBuffer, indices.Length);
+			return new Model(vertexBuffer, layout, indexBuffer, indices.Length);
 		}
 
 		/// <summary>

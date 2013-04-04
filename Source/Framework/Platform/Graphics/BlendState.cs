@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///   Describes a blend state of the output merger pipeline stage. Objects of this class are immutable once
@@ -234,9 +235,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 #if DEBUG
-		/// <summary>
-		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
+	/// <summary>
+	///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+	/// </summary>
 		protected override void OnRenamed()
 		{
 			if (State != IntPtr.Zero)
@@ -264,7 +265,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Provides access to the native blend state functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

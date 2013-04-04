@@ -6,7 +6,7 @@ namespace Pegasus.Framework.Platform.Graphics
 
 	/// <summary>
 	///   Represents a query that records the frequency of the GPU timer that can be used to interpret the result of timestamp
-	///   queries. It also indicates whether a GPU event invalidates all timestamp results. 
+	///   queries. It also indicates whether a GPU event invalidates all timestamp results.
 	/// </summary>
 	public class TimestampDisjointQuery : Query
 	{

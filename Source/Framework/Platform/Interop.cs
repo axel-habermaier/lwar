@@ -3,12 +3,13 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///   Provides access to certain native functions in a platform-independent way.
 	/// </summary>
 #if !DEBUG
-	[System.Security.SuppressUnmanagedCodeSecurity]
+	[SuppressUnmanagedCodeSecurity]
 #endif
 	internal static class Interop
 	{
@@ -19,7 +20,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="src">The address of the first byte that should be read.</param>
 		/// <param name="count">The number of bytes that should be copied.</param>
 #if Windows
-        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl)]
 #elif Linux
 		[DllImport("libc", EntryPoint = "memcpy")]
 #endif

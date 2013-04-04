@@ -5,7 +5,6 @@ namespace Lwar.Client.Network
 	using System.Collections.Generic;
 	using Gameplay;
 	using Gameplay.Entities;
-	using Pegasus.Framework;
 
 	/// <summary>
 	///   Dispatches messages received from the server.

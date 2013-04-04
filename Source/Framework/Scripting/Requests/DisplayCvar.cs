@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework.Scripting.Requests
 {
-	using Platform;
-
 	/// <summary>
 	///   A user request that instructs the system to display the cvar's current value.
 	/// </summary>

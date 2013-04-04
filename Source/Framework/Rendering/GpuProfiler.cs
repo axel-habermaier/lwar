@@ -58,7 +58,6 @@ namespace Pegasus.Framework.Rendering
 				_beginQueries[i] = new TimestampQuery(graphicsDevice);
 				_beginQueries[i].SetName("GpuProfiler.BeginQuery" + i);
 			}
-				
 
 			for (var i = 0; i < BufferSize; ++i)
 			{

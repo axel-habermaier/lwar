@@ -7,7 +7,6 @@ namespace Lwar.Client.Rendering
 	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
 

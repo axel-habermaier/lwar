@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework.Platform.Input
 {
-	using Platform;
-
 	/// <summary>
 	///   Represents the state of the keyboard.
 	/// </summary>

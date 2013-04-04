@@ -53,6 +53,11 @@ namespace Pegasus.Framework.Rendering
 		private readonly LogicalInput _right;
 
 		/// <summary>
+		///   The mouse movement since the last update.
+		/// </summary>
+		private Vector2i _mouseDelta;
+
+		/// <summary>
 		///   The current position of the camera.
 		/// </summary>
 		private Vector3 _position;
@@ -146,7 +151,7 @@ namespace Pegasus.Framework.Rendering
 
 			_rotation += new Vector2(-_mouseDelta.Y, _mouseDelta.X) * RotationSpeed;
 			_mouseDelta = Vector2i.Zero;
-			
+
 			if (_rotation.Y < -MathUtils.TwoPi)
 				_rotation.Y += MathUtils.TwoPi;
 			else if (_rotation.Y > MathUtils.TwoPi)
@@ -165,11 +170,6 @@ namespace Pegasus.Framework.Rendering
 			_clock.Reset();
 			UpdateViewMatrix();
 		}
-
-		/// <summary>
-		/// The mouse movement since the last update.
-		/// </summary>
-		private Vector2i _mouseDelta;
 
 		/// <summary>
 		///   Invoked when the position of the mouse has changed.

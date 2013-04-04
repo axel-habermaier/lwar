@@ -1,9 +1,9 @@
-﻿
-using System;
+﻿using System;
 
 namespace Pegasus.Framework.Math
 {
 	using System.Globalization;
+	using Math = System.Math;
 
 	/// <summary>
 	///   Represents a 32-bit signed fixed-point value, with 8 bits being used for the fractional part of the value.
@@ -16,26 +16,6 @@ namespace Pegasus.Framework.Math
 		private const int FractionalBits = 8;
 
 		/// <summary>
-		///   Epsilon value for fixed-point equality comparisons.
-		/// </summary>
-		public static readonly Fixed8 Epsilon = MathUtils.Epsilon;
-
-		/// <summary>
-		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
-		/// </summary>
-		public static readonly Fixed8 Pi = System.Math.PI;
-
-		/// <summary>
-		///   Represents a 360 degree rotation.
-		/// </summary>
-		public static readonly Fixed8 TwoPi = System.Math.PI * 2;
-
-		/// <summary>
-		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
-		/// </summary>
-		public static readonly Fixed8 PiOver2 = System.Math.PI / 2;
-
-		/// <summary>
 		///   Represents the largest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MaxValue = Int32.MaxValue >> FractionalBits;
@@ -44,6 +24,26 @@ namespace Pegasus.Framework.Math
 		///   Represents the smallest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MinValue = Int32.MinValue >> FractionalBits;
+
+		/// <summary>
+		///   Epsilon value for fixed-point equality comparisons.
+		/// </summary>
+		public static readonly Fixed8 Epsilon = MathUtils.Epsilon;
+
+		/// <summary>
+		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
+		/// </summary>
+		public static readonly Fixed8 Pi = Math.PI;
+
+		/// <summary>
+		///   Represents a 360 degree rotation.
+		/// </summary>
+		public static readonly Fixed8 TwoPi = Math.PI * 2;
+
+		/// <summary>
+		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
+		/// </summary>
+		public static readonly Fixed8 PiOver2 = Math.PI / 2;
 
 		/// <summary>
 		///   The raw value stored as a 32-bit signed integer.
@@ -67,7 +67,7 @@ namespace Pegasus.Framework.Math
 		public Fixed8(float value)
 		{
 			Assert.ArgumentInRange(value, () => value, MinValue, MaxValue);
-			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace Pegasus.Framework.Math
 		public Fixed8(double value)
 		{
 			Assert.ArgumentInRange(value, () => value, MinValue, MaxValue);
-			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
@@ -335,7 +335,7 @@ namespace Pegasus.Framework.Math
 		#region Functions
 
 		/// <summary>
-		/// Returns the absolute value of a fixed-point value.
+		///   Returns the absolute value of a fixed-point value.
 		/// </summary>
 		/// <param name="value">The value whose absolute should be returned.</param>
 		public static Fixed8 Abs(Fixed8 value)
@@ -410,26 +410,6 @@ namespace Pegasus.Framework.Math
 		private const int FractionalBits = 16;
 
 		/// <summary>
-		///   Epsilon value for fixed-point equality comparisons.
-		/// </summary>
-		public static readonly Fixed16 Epsilon = MathUtils.Epsilon;
-
-		/// <summary>
-		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
-		/// </summary>
-		public static readonly Fixed16 Pi = System.Math.PI;
-
-		/// <summary>
-		///   Represents a 360 degree rotation.
-		/// </summary>
-		public static readonly Fixed16 TwoPi = System.Math.PI * 2;
-
-		/// <summary>
-		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
-		/// </summary>
-		public static readonly Fixed16 PiOver2 = System.Math.PI / 2;
-
-		/// <summary>
 		///   Represents the largest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MaxValue = Int32.MaxValue >> FractionalBits;
@@ -438,6 +418,26 @@ namespace Pegasus.Framework.Math
 		///   Represents the smallest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MinValue = Int32.MinValue >> FractionalBits;
+
+		/// <summary>
+		///   Epsilon value for fixed-point equality comparisons.
+		/// </summary>
+		public static readonly Fixed16 Epsilon = MathUtils.Epsilon;
+
+		/// <summary>
+		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
+		/// </summary>
+		public static readonly Fixed16 Pi = Math.PI;
+
+		/// <summary>
+		///   Represents a 360 degree rotation.
+		/// </summary>
+		public static readonly Fixed16 TwoPi = Math.PI * 2;
+
+		/// <summary>
+		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
+		/// </summary>
+		public static readonly Fixed16 PiOver2 = Math.PI / 2;
 
 		/// <summary>
 		///   The raw value stored as a 32-bit signed integer.
@@ -461,7 +461,7 @@ namespace Pegasus.Framework.Math
 		public Fixed16(float value)
 		{
 			Assert.ArgumentInRange(value, () => value, MinValue, MaxValue);
-			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
@@ -471,7 +471,7 @@ namespace Pegasus.Framework.Math
 		public Fixed16(double value)
 		{
 			Assert.ArgumentInRange(value, () => value, MinValue, MaxValue);
-			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
@@ -729,7 +729,7 @@ namespace Pegasus.Framework.Math
 		#region Functions
 
 		/// <summary>
-		/// Returns the absolute value of a fixed-point value.
+		///   Returns the absolute value of a fixed-point value.
 		/// </summary>
 		/// <param name="value">The value whose absolute should be returned.</param>
 		public static Fixed16 Abs(Fixed16 value)

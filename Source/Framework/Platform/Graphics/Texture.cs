@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///   Represents a GPU texture.
@@ -96,9 +97,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 #if DEBUG
-		/// <summary>
-		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
+	/// <summary>
+	///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+	/// </summary>
 		protected override void OnRenamed()
 		{
 			if (_texture != IntPtr.Zero)
@@ -110,7 +111,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Provides access to the native Texture2D functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

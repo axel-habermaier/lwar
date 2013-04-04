@@ -17,7 +17,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <summary>
 		///   The input modes in which the input can be triggered.
 		/// </summary>
-		private InputModes _modes;
+		private readonly InputModes _modes;
 
 		/// <summary>
 		///   Initializes a new instance.

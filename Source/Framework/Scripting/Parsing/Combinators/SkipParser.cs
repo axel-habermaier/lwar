@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 
 namespace Pegasus.Framework.Scripting.Parsing.Combinators
 {
@@ -11,7 +9,6 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	public abstract class SkipParser<TUserState> : Parser<None, TUserState>
 	{
 	}
-
 
 	/// <summary>
 	///   Skips over the input parsed by the given parser and ignores the parser's result.

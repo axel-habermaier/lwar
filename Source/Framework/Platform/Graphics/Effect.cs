@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
-	using Assets;
-
 	// ReSharper disable InconsistentNaming
 
 	/// <summary>
@@ -39,9 +37,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 #if DEBUG
-		/// <summary>
-		///   Ensures that the instance has been disposed.
-		/// </summary>
+	/// <summary>
+	///   Ensures that the instance has been disposed.
+	/// </summary>
 		~Effect()
 		{
 			Log.Die("Finalizer runs for effect '{0}'", GetType().FullName);

@@ -2,9 +2,6 @@
 
 namespace Pegasus.Framework.Network
 {
-	using Platform;
-	using Scripting;
-
 	/// <summary>
 	///   Provides logging helper functions for network-related information.
 	/// </summary>
@@ -193,19 +190,6 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   Raises the Log.OnDebugInfo event for the given message if network debugging is enabled.
 		/// </summary>
-		/// <param name="message">
-		///   The message that should be formatted and passed as an argument of the OnDebugInfo event.
-		/// </param>
-		/// <param name="arguments">The arguments that should be copied into the message.</param>
-		public static void DebugInfo(string message, params object[] arguments)
-		{
-			//Log.DebugInfo(Cvars.NetworkDebugging, message, arguments);
-			Log.DebugInfo(message, arguments);
-		}
-
-		/// <summary>
-		///   Raises the Log.OnDebugInfo event for the given message if network debugging is enabled.
-		/// </summary>
 		/// <param name="source">The source of the network message.</param>
 		/// <param name="message">
 		///   The message that should be formatted and passed as an argument of the OnDebugInfo event.
@@ -217,7 +201,6 @@ namespace Pegasus.Framework.Network
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
 
 			Log.DebugInfo(String.Format("({1}) {0}", message, source), arguments);
-			//Log.DebugInfo(Cvars.NetworkDebugging, String.Format("({1}) {0}", message, source), arguments);
 		}
 
 		/// <summary>

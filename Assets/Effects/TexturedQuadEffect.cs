@@ -37,9 +37,9 @@ namespace Lwar.Assets.Effects
 
 		[VertexShader]
 		public void FullScreenVertexShader([Position] Vector4 position,
-								 [TexCoords] Vector2 texCoords,
-								 [Position] out Vector4 outPosition,
-								 [TexCoords] out Vector2 outTexCoords)
+										   [TexCoords] Vector2 texCoords,
+										   [Position] out Vector4 outPosition,
+										   [TexCoords] out Vector2 outTexCoords)
 		{
 			outPosition = position;
 			outTexCoords = texCoords;

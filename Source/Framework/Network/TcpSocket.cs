@@ -270,7 +270,7 @@ namespace Pegasus.Framework.Network
 			}
 			catch (SocketException e)
 			{
-				NetworkLog.DebugInfo("When calling shutdown on socket connected to {0}: {1}.", RemoteEndPoint, e.Message);
+				Log.DebugInfo("When calling shutdown on socket connected to {0}: {1}.", RemoteEndPoint, e.Message);
 			}
 
 			_socket.Close();

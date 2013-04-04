@@ -5,7 +5,7 @@ namespace Pegasus.Framework.Platform
 	/// <summary>
 	///   Indicates the platform on which the application is running.
 	/// </summary>
-	public enum PlatformType 
+	public enum PlatformType
 	{
 		/// <summary>
 		///   Indicates that the application is running as a Windows desktop application.

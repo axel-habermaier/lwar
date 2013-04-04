@@ -115,7 +115,7 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
-		/// Updates the entity referenced in the update message.
+		///   Updates the entity referenced in the update message.
 		/// </summary>
 		/// <param name="message">The remote update message that should be processed.</param>
 		public void RemoteUpdate(ref Message message)

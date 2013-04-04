@@ -8,7 +8,6 @@ namespace Pegasus.AssetsCompiler
 	using System.Threading.Tasks;
 	using Framework;
 	using Framework.Platform;
-	using Framework.Scripting;
 
 	/// <summary>
 	///   Executes the asset compiler.

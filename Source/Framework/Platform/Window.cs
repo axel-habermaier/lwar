@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Input;
 	using Math;
 
@@ -262,7 +263,7 @@ namespace Pegasus.Framework.Platform
 		///   Provides access to the native window-related types and functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

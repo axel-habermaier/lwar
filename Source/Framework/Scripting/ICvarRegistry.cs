@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework.Scripting
 {
-	using Platform;
-
 	/// <summary>
 	///   Declares the cvars required by the framework.
 	/// </summary>
@@ -14,12 +12,6 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		[Cvar("UnnamedPlayer"), Persistent, UserChangeable]
 		string PlayerName { get; set; }
-
-		/// <summary>
-		///   If enabled, network debug output is printed to the console.
-		/// </summary>
-		[Cvar(PlatformInfo.IsDebug), Persistent, UserChangeable]
-		bool NetworkDebugging { get; set; }
 
 		/// <summary>
 		///   The scaling factor that is applied to all timing values.

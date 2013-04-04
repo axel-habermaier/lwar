@@ -2,8 +2,6 @@ using System;
 
 namespace Pegasus.Framework.Scripting.Requests
 {
-	using Platform;
-
 	/// <summary>
 	///   A user request that instructs the system to show the affected command's help description.
 	/// </summary>

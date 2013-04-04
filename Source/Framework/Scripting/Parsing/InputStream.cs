@@ -137,7 +137,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 		}
 
 		/// <summary>
-		///   Skips the given string and returns false if either the end of the input has been reached or there were any other characters in the stream.
+		///   Skips the given string and returns false if either the end of the input has been reached or there were any other
+		///   characters in the stream.
 		/// </summary>
 		/// <param name="s">The string that should be skipped.</param>
 		internal bool Skip(string s)

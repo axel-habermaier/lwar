@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Graphics;
 
 	/// <summary>
@@ -11,9 +12,9 @@ namespace Pegasus.Framework.Platform
 	internal class NativeLibrary : DisposableObject
 	{
 #if Linux
-		/// <summary>
-		///   The name of the native Pegasus.Platform library.
-		/// </summary>
+	/// <summary>
+	///   The name of the native Pegasus.Platform library.
+	/// </summary>
 		internal const string LibraryName = "libPlatform.so";
 #else
 		/// <summary>
@@ -83,7 +84,7 @@ namespace Pegasus.Framework.Platform
 		///   Provides access to the native platform types and functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

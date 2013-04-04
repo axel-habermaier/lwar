@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///   A vertex shader is a program that controls the vertex-shader stage.
@@ -37,7 +38,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Provides access to the native shader functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

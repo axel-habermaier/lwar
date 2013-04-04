@@ -4,7 +4,6 @@ namespace Lwar.Client.Rendering
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
 

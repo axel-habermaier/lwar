@@ -14,7 +14,7 @@ namespace Pegasus.Framework.Processes
 		/// <summary>
 		///   The actual process that is being executed.
 		/// </summary>
-		private Process _process = new Process();
+		private readonly Process _process = new Process();
 
 		/// <summary>
 		///   Gets the result of the process if the execution of the process is complete.

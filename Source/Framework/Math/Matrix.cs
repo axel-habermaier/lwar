@@ -373,7 +373,7 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
-		/// Creates a viewing matrix where the camera lies at the given position at looks at the given target.
+		///   Creates a viewing matrix where the camera lies at the given position at looks at the given target.
 		/// </summary>
 		/// <param name="position">The position of the camera.</param>
 		/// <param name="target">The target of the camera.</param>

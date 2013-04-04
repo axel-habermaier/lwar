@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///   Base class for graphics buffers.
@@ -93,9 +94,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 #if DEBUG
-		/// <summary>
-		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
+	/// <summary>
+	///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+	/// </summary>
 		protected override void OnRenamed()
 		{
 			if (_buffer != IntPtr.Zero)
@@ -107,7 +108,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Provides access to the native buffer functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

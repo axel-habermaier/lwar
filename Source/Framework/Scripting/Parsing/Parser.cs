@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Scripting.Parsing
 {
 	using System.Collections.Generic;
-	using System.Net;
 	using BasicParsers;
 	using Combinators;
 

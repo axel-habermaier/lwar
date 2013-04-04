@@ -5,7 +5,6 @@ namespace Lwar.Client.Rendering
 	using Assets.Effects;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
 
@@ -15,14 +14,14 @@ namespace Lwar.Client.Rendering
 	public class SkyboxRenderer : DisposableObject
 	{
 		/// <summary>
+		///   The effect that is used to draw the skybox.
+		/// </summary>
+		private readonly SkyboxEffect _effect;
+
+		/// <summary>
 		///   The skybox model.
 		/// </summary>
 		private readonly Model _model;
-
-		/// <summary>
-		///   The effect that is used to draw the skybox.
-		/// </summary>
-		private readonly SkyboxEffect  _effect;
 
 		/// <summary>
 		///   Initializes a new instance.

@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///   A fragment shader is a program that controls the fragment-shader stage.
@@ -33,7 +34,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Provides access to the native shader functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{
