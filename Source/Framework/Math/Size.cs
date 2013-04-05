@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 
 namespace Pegasus.Framework.Math
 {
@@ -409,3 +410,4 @@ namespace Pegasus.Framework.Math
 		}
 	}
 }
+

@@ -77,10 +77,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			foreach (var cvar in _registry.Cvars)
 			{
 				WriteDocumentation(cvar.Documentation);
-				_writer.AppendLine("private readonly Cvar<{0}> {1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {5}, {6});",
+				_writer.AppendLine("private readonly Cvar<{0}> {1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {5});",
 								   cvar.Type, GetFieldName(cvar.Name), GetRuntimeName(cvar.Name), cvar.DefaultValue,
-								   GetSummaryText(cvar.Documentation), cvar.UserChangeable.ToString().ToLower(),
-								   cvar.Persistent.ToString().ToLower());
+								   GetSummaryText(cvar.Documentation), cvar.Persistent.ToString().ToLower());
 
 				_writer.Newline();
 			}

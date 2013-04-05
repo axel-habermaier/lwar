@@ -74,7 +74,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
-		internal override string AsString()
+		public override string ToString()
 		{
 			return String.Format("Key({1}, {0})", _triggerType, _key);
 		}

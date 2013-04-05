@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Scripting
 {
 	using System.Collections.Generic;
+	using Platform.Input;
 
 	/// <summary>
 	///   Gets a string representation of a type's value that can be parsed by the cvar/command parser.
@@ -17,7 +18,8 @@ namespace Pegasus.Framework.Scripting
 			{ typeof(bool), o => o.ToString().ToLower() },
 			{ typeof(float), o => ((float)o).ToString("F") },
 			{ typeof(double), o => ((float)o).ToString("F") },
-			{ typeof(string), o => String.Format("\"{0}\"", o.ToString().Replace("\"", "\\\"")) }
+			{ typeof(string), o => String.Format("\"{0}\"", o.ToString().Replace("\"", "\\\"")) },
+			{ typeof(InputTrigger), o => String.Format("[{0}]", o) }
 		};
 
 		/// <summary>

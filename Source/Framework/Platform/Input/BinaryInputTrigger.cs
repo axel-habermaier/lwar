@@ -109,9 +109,9 @@ namespace Pegasus.Framework.Platform.Input
 		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
-		internal override string AsString()
+		public override string ToString()
 		{
-			return String.Format("({0} {2} {1})", _left.AsString(), _right.AsString(), _triggerType.ToExpressionString());
+			return String.Format("({0} {2} {1})", _left, _right, _triggerType.ToExpressionString());
 		}
 	}
 }

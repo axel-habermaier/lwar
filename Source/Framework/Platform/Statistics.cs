@@ -106,7 +106,7 @@ namespace Pegasus.Framework.Platform
 		{
 			_builder.Clear();
 			_builder.Append("Platform: ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
-			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug).Append("\n");
+			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
 			_builder.Append("Renderer: ").Append(PlatformInfo.GraphicsApi).Append("\n");
 			_builder.Append("# of GCs: ").Append(_garbageCollections).Append("\n\n");
 

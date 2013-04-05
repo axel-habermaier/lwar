@@ -186,6 +186,7 @@
     <Compile Include="Network\IPEndPointExtensions.cs" />
     <Compile Include="Network\ServicePacketFactory.cs" />
     <Compile Include="ObjectPool.cs" />
+    <Compile Include="Platform\AppFile.cs" />
     <Compile Include="Platform\ApplicationAbortedException.cs" />
     <Compile Include="Platform\Assets\Asset.cs" />
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
@@ -318,7 +319,6 @@
       <DependentUpon>CvarRegistry.tt</DependentUpon>
     </Compile>
     <Compile Include="Scripting\ICvarRegistry.cs" />
-    <Compile Include="Scripting\AutoExecutor.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPAddressParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
@@ -490,7 +490,6 @@
     <Compile Include="Platform\Statistics.cs" />
     <Compile Include="Platform\AveragedValue.cs" />
     <Compile Include="Scripting\Parsing\Combinators\TypeParser.cs" />
-    <Compile Include="Scripting\UserChangeableAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -15,11 +15,6 @@ namespace Pegasus.Framework.Scripting
 		private readonly T _defaultValue;
 
 		/// <summary>
-		///   Indicates whether the cvar's value can be changed by the user.
-		/// </summary>
-		private readonly bool _userChangeable;
-
-		/// <summary>
 		///   The current value of the cvar.
 		/// </summary>
 		private T _value;
@@ -30,9 +25,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="name">The external name of the cvar.</param>
 		/// <param name="defaultValue">The default value of the cvar.</param>
 		/// <param name="description">A description of the cvar's purpose.</param>
-		/// <param name="userChangeable">Indicates whether the cvar's value can be changed by the user.</param>
 		/// <param name="persistent">Indicates whether the cvar's value should be persisted across sessions.</param>
-		public Cvar(string name, T defaultValue, string description, bool userChangeable, bool persistent)
+		public Cvar(string name, T defaultValue, string description, bool persistent)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
 			Assert.ArgumentNotNullOrWhitespace(description, () => description);
@@ -42,7 +36,6 @@ namespace Pegasus.Framework.Scripting
 
 			_defaultValue = defaultValue;
 			_value = defaultValue;
-			_userChangeable = userChangeable;
 			Persistent = persistent;
 		}
 
@@ -81,12 +74,16 @@ namespace Pegasus.Framework.Scripting
 			set
 			{
 				Assert.ArgumentNotNull(value, () => value);
-
-				if (!_userChangeable)
-					Log.Error("The value of the cvar cannot be changed via the command line.");
-				else
-					Value = (T)value;
+				Value = (T)value;
 			}
+		}
+
+		/// <summary>
+		///   Gets the cvar's value as a string.
+		/// </summary>
+		string ICvar.StringValue
+		{
+			get { return TypeRepresentation.ToString(Value); }
 		}
 
 		/// <summary>

@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Collections.Generic;
-	using System.IO;
 	using System.Linq;
 	using Rendering.UserInterface;
 
@@ -18,6 +17,11 @@ namespace Pegasus.Framework.Platform
 		private const int BatchSize = 100;
 
 		/// <summary>
+		///   The file the log is written to.
+		/// </summary>
+		private readonly AppFile _file;
+
+		/// <summary>
 		///   The the unwritten log entries that have been generated.
 		/// </summary>
 		private readonly Queue<LogEntry> _logEntries = new Queue<LogEntry>();
@@ -28,22 +32,23 @@ namespace Pegasus.Framework.Platform
 		/// <param name="appName">The name of the application.</param>
 		public LogFile(string appName)
 		{
-			Assert.ArgumentNotNullOrWhitespace(appName, () => appName);
-
 			Log.OnFatalError += OnFatalError;
 			Log.OnError += OnError;
 			Log.OnWarning += OnWarning;
 			Log.OnInfo += OnInfo;
 			Log.OnDebugInfo += OnDebugInfo;
 
-			FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), appName, appName + ".log");
-			File.Delete(FilePath);
+			_file = new AppFile(appName, String.Format("{0}.log", appName));
+			_file.Delete(e => Log.Warn("Failed to delete the current contents of the log file: {0}", e.Message));
 		}
 
 		/// <summary>
 		///   Gets the path of the log file.
 		/// </summary>
-		public string FilePath { get; private set; }
+		public string FilePath
+		{
+			get { return _file.AbsolutePath; }
+		}
 
 		/// <summary>
 		///   Invoked when a debug information message has been generated.
@@ -99,14 +104,9 @@ namespace Pegasus.Framework.Platform
 			if (!force && _logEntries.Count < BatchSize)
 				return;
 
-			var logs =
-				_logEntries.Select(l => String.Format("[{0}] ({1}): {2}", l.Time.ToString("HH:mm:ss.ffff"), l.LogType, l.Message));
+			var logs = _logEntries.Select(l => String.Format("[{0}] ({1}): {2}", l.Time.ToString("HH:mm:ss.ffff"), l.LogType, l.Message));
 
-			var directory = Path.GetDirectoryName(FilePath);
-			if (!Directory.Exists(directory))
-				Directory.CreateDirectory(directory);
-
-			File.AppendAllLines(FilePath, logs);
+			_file.Append(logs, e => Log.Warn("Failed to append to log file: {0}", e.Message));
 			_logEntries.Clear();
 		}
 

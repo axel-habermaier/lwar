@@ -51,7 +51,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <summary>
 		///   Returns a string that represents the current object.
 		/// </summary>
-		internal override string AsString()
+		public override string ToString()
 		{
 			return String.Format("Cvar({0}: {1})", _trigger.Name, _trigger.Value);
 		}

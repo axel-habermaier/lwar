@@ -28,6 +28,11 @@ namespace Pegasus.Framework.Scripting
 		object Value { get; set; }
 
 		/// <summary>
+		///   Gets the cvar's value as a string.
+		/// </summary>
+		string StringValue { get; }
+
+		/// <summary>
 		///   Indicates whether the cvar's value is persisted across sessions.
 		/// </summary>
 		bool Persistent { get; }

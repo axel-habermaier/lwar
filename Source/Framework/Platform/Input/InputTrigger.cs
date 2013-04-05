@@ -94,18 +94,5 @@ namespace Pegasus.Framework.Platform.Input
 
 			return new BinaryInputTrigger(BinaryInputTriggerType.Alias, left, right);
 		}
-
-		/// <summary>
-		///   Returns a string that represents the current object.
-		/// </summary>
-		internal abstract string AsString();
-
-		/// <summary>
-		///   Returns a string that represents the current object.
-		/// </summary>
-		public override sealed string ToString()
-		{
-			return String.Format("[{0}]", AsString());
-		}
 	}
 }

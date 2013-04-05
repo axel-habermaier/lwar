@@ -29,10 +29,10 @@ Pegasus
 - Improve cvar/command system
 	- Load cvars from config file
 	- Persist cvars in config file
-	- System cvars (read-only)
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
+	- Expose Command/Cvar objects
 
 Network Specification
 ========

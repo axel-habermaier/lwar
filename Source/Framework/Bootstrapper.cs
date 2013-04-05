@@ -46,11 +46,10 @@ namespace Pegasus.Framework
 
 					ParseCommandLine(context.Cvars);
 
-					using (new AutoExecutor(context.Commands, context.Cvars, context.AppName))
-					{
-						var app = new TApp();
-						app.Run(context, logFile);
-					}
+					var app = new TApp();
+					app.Run(context, logFile);
+
+					Log.Info("{0} has shut down.", context.AppName);
 				}
 				catch (Exception e)
 				{
