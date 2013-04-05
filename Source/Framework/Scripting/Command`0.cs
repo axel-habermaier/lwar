@@ -2,17 +2,13 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Collections.Generic;
+
 	/// <summary>
 	///   Represents a parameterless command.
 	/// </summary>
 	public sealed class Command : ICommand
 	{
-		/// <summary>
-		///   The types of the command's parameters. This is an empty array in this case, as the command does not have any
-		///   parameters at all.
-		/// </summary>
-		private static readonly Type[] CachedParameterTypes = new Type[0];
-
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -28,11 +24,11 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Gets the types of the command's parameters.
+		///   Gets the command's parameters.
 		/// </summary>
-		Type[] ICommand.ParameterTypes
+		public IEnumerable<CommandParameter> Parameters
 		{
-			get { return CachedParameterTypes; }
+			get { yield break; }
 		}
 
 		/// <summary>
@@ -44,14 +40,6 @@ namespace Pegasus.Framework.Scripting
 		///   Gets a string describing the usage and the purpose of the command.
 		/// </summary>
 		public string Description { get; private set; }
-
-		/// <summary>
-		///   Gets a representation of the command's signature, e.g. Name [type of parameter 1] [type of parameter 2] ...
-		/// </summary>
-		public string Signature
-		{
-			get { return String.Format("{0} [no parameters]", Name); }
-		}
 
 		/// <summary>
 		///   Invokes the command, extracting the command's parameters (if any) from the given parameters array.

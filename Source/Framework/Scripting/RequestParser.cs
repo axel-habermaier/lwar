@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Linq;
 	using Parsing;
 	using Parsing.Combinators;
 	using Requests;
@@ -116,7 +117,7 @@ namespace Pegasus.Framework.Scripting
 
 			// Depending on whether the command actually has any parameters, modify the grammar to get better error messages
 			Parser<IRequest, None> commandParser;
-			if (command.ParameterTypes.Length == 0)
+			if (command.Parameters.Count() == 0)
 			{
 				var invokeCommand = EndOfRequest.Apply<IRequest>(_ => new InvokeCommand(command, new object[0]));
 				commandParser = Attempt(invokeCommand) | (~WhiteSpaces1 + commandHelp + EndOfRequest);
@@ -162,7 +163,7 @@ namespace Pegasus.Framework.Scripting
 			/// <param name="inputStream">The input stream that should be parsed.</param>
 			public override Reply<object[]> Parse(InputStream<None> inputStream)
 			{
-				var types = _command.ParameterTypes;
+				var types = _command.Parameters.Select(parameter => parameter.Type).ToArray();
 				var parameters = new object[types.Length];
 
 				for (var i = 0; i < parameters.Length; ++i)
@@ -170,7 +171,8 @@ namespace Pegasus.Framework.Scripting
 					// Show an unexpected end of input error message if we've reached the end of the input already (otherwise an 
 					// 'expected white space' message would be shown)
 					if (inputStream.EndOfInput)
-						return Errors(ErrorMessage.UnexpectedEndOfInput, new ErrorMessage(ErrorType.Message, "Usage: " + _command.Signature),
+						return Errors(ErrorMessage.UnexpectedEndOfInput,
+									  new ErrorMessage(ErrorType.Message, DescribeCommand.GetCommandDescription(_command)),
 									  new ErrorMessage(ErrorType.Expected, TypeDescription.GetDescription(types[i])));
 
 					// The argument must be separated from the previous input by at least one white space character
@@ -183,7 +185,7 @@ namespace Pegasus.Framework.Scripting
 					if (reply.Status == ReplyStatus.Success)
 						parameters[i] = reply.Result;
 					else
-						return ForwardError(reply, "Usage: " + _command.Signature);
+						return ForwardError(reply, DescribeCommand.GetCommandDescription(_command));
 				}
 
 				return Success(parameters);

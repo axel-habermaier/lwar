@@ -2,28 +2,47 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Collections.Generic;
+
 	/// <summary>
 	///   Represents a command with three parameters.
 	/// </summary>
 	public sealed class Command<T1, T2, T3> : ICommand
 	{
 		/// <summary>
-		///   The types of the command's parameters.
+		///   The representation the command's first parameter.
 		/// </summary>
-		private static readonly Type[] CachedParameterTypes = new[] { typeof(T1), typeof(T2), typeof(T3) };
+		private readonly CommandParameter _parameter1;
+
+		/// <summary>
+		///   The representation the command's second parameter.
+		/// </summary>
+		private readonly CommandParameter _parameter2;
+
+		/// <summary>
+		///   The representation the command's third parameter.
+		/// </summary>
+		private readonly CommandParameter _parameter3;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="name">The external name of the command that is used to refer to the command in the console, for instance.</param>
 		/// <param name="description">A string describing the usage and the purpose of the command.</param>
-		public Command(string name, string description)
+		/// <param name="parameter1">The representation of the command's first parameter.</param>
+		/// <param name="parameter2">The representation of the command's second parameter.</param>
+		/// <param name="parameter3">The representation of the command's third parameter.</param>
+		public Command(string name, string description, CommandParameter parameter1, CommandParameter parameter2, CommandParameter parameter3)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
 			Assert.ArgumentNotNullOrWhitespace(description, () => description);
 
 			Name = name;
 			Description = description;
+
+			_parameter1 = parameter1;
+			_parameter2 = parameter2;
+			_parameter3 = parameter3;
 		}
 
 		/// <summary>
@@ -37,11 +56,16 @@ namespace Pegasus.Framework.Scripting
 		public string Description { get; private set; }
 
 		/// <summary>
-		///   Gets the types of the command's parameters.
+		///   Gets the command's parameters.
 		/// </summary>
-		Type[] ICommand.ParameterTypes
+		public IEnumerable<CommandParameter> Parameters
 		{
-			get { return CachedParameterTypes; }
+			get
+			{
+				yield return _parameter1;
+				yield return _parameter2;
+				yield return _parameter3;
+			}
 		}
 
 		/// <summary>
@@ -53,19 +77,6 @@ namespace Pegasus.Framework.Scripting
 			Assert.ArgumentNotNull(parameters, () => parameters);
 			Assert.ArgumentSatisfies(parameters.Length == 3, () => parameters, "Argument count mismatch.");
 			Invoke((T1)parameters[0], (T2)parameters[1], (T3)parameters[2]);
-		}
-
-		/// <summary>
-		///   Gets a representation of the command's signature, e.g. Name [type of parameter 1] [type of parameter 2] ...
-		/// </summary>
-		public string Signature
-		{
-			get
-			{
-				return String.Format("{0} [{1}] [{2}] [{3}]", Name, TypeDescription.GetDescription<T1>(),
-									 TypeDescription.GetDescription<T2>(),
-									 TypeDescription.GetDescription<T3>());
-			}
 		}
 
 		/// <summary>

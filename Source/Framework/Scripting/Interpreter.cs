@@ -104,7 +104,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="fileName">The name of the file in the application's user directory that the cvars should be written to.</param>
 		private void OnPersist(string fileName)
 		{
-			var configFile = new ConfigurationFile(_parser,_appName, fileName);
+			var configFile = new ConfigurationFile(_parser, _appName, fileName);
 			configFile.Persist(_cvars.AllInstances.Where(cvar => cvar.Persistent));
 		}
 	}

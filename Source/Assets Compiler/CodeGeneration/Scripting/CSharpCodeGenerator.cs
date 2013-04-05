@@ -204,9 +204,12 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 
 					foreach (var command in _registry.Commands)
 					{
-						_writer.AppendLine("{1} = new Command{0}(\"{2}\", \"{3}\");",
-										   GetTypeArguments(command), command.Name,
-										   GetRuntimeName(command.Name), GetSummaryText(command.Documentation));
+						_writer.Append("{1} = new Command{0}(\"{2}\", \"{3}\"",
+									   GetTypeArguments(command), command.Name,
+									   GetRuntimeName(command.Name), GetSummaryText(command.Documentation));
+
+						GenerateCommandParameters(command);
+						_writer.AppendLine(");");
 					}
 				});
 		}
@@ -237,6 +240,34 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 				WriteDocumentation(GetSummary(command.Documentation));
 				_writer.AppendLine("public Command{0} {1} {{ get; private set; }}", GetTypeArguments(command), command.Name);
 			}
+		}
+
+		/// <summary>
+		///   Generates the command parameter argument list for the command.
+		/// </summary>
+		/// <param name="command">The command for which the parameter should be returned.</param>
+		private void GenerateCommandParameters(Command command)
+		{
+			if (!command.Parameters.Any())
+				return;
+
+			_writer.IncreaseIndent();
+			_writer.AppendLine(", ");
+
+			var i = 0;
+			foreach (var parameter in from parameter in command.Parameters
+									  let description = GetParameterTag(command.Documentation, parameter.Name)
+									  select String.Format("new CommandParameter(\"{0}\", typeof({2}), {1}, default({2}), \"{3}\")",
+														   parameter.Name, "false", parameter.Type, description))
+			{
+				if (i == command.Parameters.Count() - 1)
+					_writer.Append(parameter);
+				else
+					_writer.AppendLine("{0}, ", parameter);
+				++i;
+			}
+
+			_writer.DecreaseIndent();
 		}
 
 		/// <summary>
@@ -282,19 +313,32 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		///   Gets the text from the summary tag in the documentation.
 		/// </summary>
 		/// <param name="documentation">The documentation the summary should be extracted from.</param>
-		private string GetSummaryText(IEnumerable<string> documentation)
+		private static string GetSummaryText(IEnumerable<string> documentation)
 		{
 			var comment = String.Join(" ", documentation.Select(c => c.Trim()));
 			var match = Regex.Match(comment, "<summary>(.*)</summary>");
 
-			return match.Groups[1].Value.Trim();
+			return Escape(match.Groups[1].Value.Trim());
+		}
+
+		/// <summary>
+		///   Gets the text from parameter tag for the given parameter from the documentation.
+		/// </summary>
+		/// <param name="documentation">The documentation the parameter tag should be extracted from.</param>
+		/// <param name="parameter">The name of the parameter for which the parameter tag should be returned.</param>
+		private static string GetParameterTag(IEnumerable<string> documentation, string parameter)
+		{
+			var comment = String.Join(" ", documentation.Select(c => c.Trim()));
+			var match = Regex.Match(comment, String.Format("<param name=\"{0}\">(.*?)</param>", parameter));
+
+			return Escape(match.Groups[1].Value.Trim());
 		}
 
 		/// <summary>
 		///   Gets the summary tag from the documentation.
 		/// </summary>
 		/// <param name="documentation">The documentation the summary tag should be extracted from.</param>
-		private IEnumerable<string> GetSummary(IEnumerable<string> documentation)
+		private static IEnumerable<string> GetSummary(IEnumerable<string> documentation)
 		{
 			yield return " <summary>";
 			yield return "   " + GetSummaryText(documentation);
@@ -305,7 +349,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		///   Gets the type arguments for the given command.
 		/// </summary>
 		/// <param name="command">The command for which the type arguments should be returned.</param>
-		private string GetTypeArguments(Command command)
+		private static string GetTypeArguments(Command command)
 		{
 			var types = String.Join(", ", command.Parameters.Select(parameter => parameter.Type));
 			if (String.IsNullOrWhiteSpace(types))
@@ -318,7 +362,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		///   Gets the argument declarations for the given command.
 		/// </summary>
 		/// <param name="command">The command for which the argument declarations should be returned.</param>
-		private string GetArgumentDeclarations(Command command)
+		private static string GetArgumentDeclarations(Command command)
 		{
 			return String.Join(", ", command.Parameters.Select(parameter => String.Format("{0} {1}", parameter.Type, parameter.Name)));
 		}
@@ -327,9 +371,18 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		///   Gets the arguments required to invoke the command.
 		/// </summary>
 		/// <param name="command">The command for which the arguments should be returned.</param>
-		private string GetInvocationArguments(Command command)
+		private static string GetInvocationArguments(Command command)
 		{
 			return String.Join(", ", command.Parameters.Select(parameter => parameter.Name));
+		}
+
+		/// <summary>
+		///   Escapes quotes and backslashes.
+		/// </summary>
+		/// <param name="input">The input that should be escaped.</param>
+		private static string Escape(string input)
+		{
+			return input.Replace("\\", "\\\\").Replace("\"", "\\\"");
 		}
 	}
 }

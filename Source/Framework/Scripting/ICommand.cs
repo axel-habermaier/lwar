@@ -2,6 +2,8 @@ using System;
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Collections.Generic;
+
 	/// <summary>
 	///   A common interface for commands with zero or more parameters.
 	/// </summary>
@@ -18,14 +20,9 @@ namespace Pegasus.Framework.Scripting
 		string Description { get; }
 
 		/// <summary>
-		///   Gets the types of the command's parameters.
+		///   Gets the command's parameters.
 		/// </summary>
-		Type[] ParameterTypes { get; }
-
-		/// <summary>
-		///   Gets a representation of the command's signature, e.g. Name [type of parameter 1] [type of parameter 2] ...
-		/// </summary>
-		string Signature { get; }
+		IEnumerable<CommandParameter> Parameters { get; }
 
 		/// <summary>
 		///   Invokes the command, extracting the command's parameters (if any) from the given parameters array.

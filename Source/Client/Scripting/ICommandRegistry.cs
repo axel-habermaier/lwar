@@ -25,6 +25,7 @@ namespace Lwar.Client.Scripting
 		/// <summary>
 		///   Connects to a game session on a server.
 		/// </summary>
+		/// <param name="endPoint">The remote endpoint of the server.</param>
 		[Command]
 		void Connect(IPEndPoint endPoint);
 
@@ -37,6 +38,7 @@ namespace Lwar.Client.Scripting
 		/// <summary>
 		///   Sends a chat message to all peers.
 		/// </summary>
+		/// <param name="message">The message that should be sent.</param>
 		[Command]
 		void Chat(string message);
 

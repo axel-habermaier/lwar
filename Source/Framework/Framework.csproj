@@ -304,6 +304,7 @@
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Scripting\CommandAttribute.cs" />
+    <Compile Include="Scripting\CommandParameter.cs" />
     <Compile Include="Scripting\CommandRegistry.cs">
       <DependentUpon>CommandRegistry.tt</DependentUpon>
       <AutoGen>True</AutoGen>
