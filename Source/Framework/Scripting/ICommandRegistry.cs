@@ -16,6 +16,13 @@ namespace Pegasus.Framework.Scripting
 		void Exit();
 
 		/// <summary>
+		///   Describes the usage and the purpose of the the cvar or command with the given name.
+		/// </summary>
+		/// <param name="name">The name of the cvar or the command for which the description should be displayed.</param>
+		[Command]
+		void Help(string name);
+
+		/// <summary>
 		///   Executes the given argument.
 		/// </summary>
 		/// <param name="command">

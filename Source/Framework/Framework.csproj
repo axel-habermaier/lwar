@@ -311,6 +311,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Scripting\ConfigurationFile.cs" />
+    <Compile Include="Scripting\Instruction.cs" />
     <Compile Include="Scripting\TypeRepresentation.cs" />
     <Compile Include="Scripting\ICommandRegistry.cs" />
     <Compile Include="Scripting\CvarAttribute.cs" />
@@ -328,7 +329,7 @@
     <Compile Include="Scripting\Parsing\Combinators\Pipe4Parser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Pipe3Parser.cs" />
     <Compile Include="Scripting\PersistentAttribute.cs" />
-    <Compile Include="Scripting\Requests\RequestBinding.cs" />
+    <Compile Include="Scripting\Binding.cs" />
     <Compile Include="Platform\Input\InputTriggerParser.cs" />
     <Compile Include="Platform\Graphics\Color.cs" />
     <Compile Include="Scripting\Command`0.cs" />
@@ -396,16 +397,10 @@
     <Compile Include="Scripting\Parsing\BasicParsers\UInt32Parser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\Int32Parser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\NumberParser.cs" />
-    <Compile Include="Scripting\Requests\CommandRequest.cs" />
-    <Compile Include="Scripting\Requests\DisplayCvar.cs" />
-    <Compile Include="Scripting\Requests\DescribeCvar.cs" />
-    <Compile Include="Scripting\Requests\CvarRequest.cs" />
-    <Compile Include="Scripting\Requests\InvokeCommand.cs" />
-    <Compile Include="Scripting\Requests\IRequest.cs" />
-    <Compile Include="Scripting\RequestParser.cs" />
+    <Compile Include="Scripting\InstructionParser.cs" />
     <Compile Include="Rendering\UserInterface\ConsoleInput.cs" />
     <Compile Include="Platform\Input\InputState.cs" />
-    <Compile Include="Scripting\Requests\RequestBindings.cs" />
+    <Compile Include="Scripting\Bindings.cs" />
     <Compile Include="Platform\Input\Keyboard.cs" />
     <Compile Include="Platform\Input\LogicalInputDevice.cs" />
     <Compile Include="Platform\Input\Mouse.cs" />
@@ -417,8 +412,6 @@
     <Compile Include="Rendering\UserInterface\KerningPair.cs" />
     <Compile Include="Rendering\UserInterface\ConsoleContent.cs" />
     <Compile Include="Rendering\UserInterface\TextAlignmentExtensions.cs" />
-    <Compile Include="Scripting\Requests\DescribeCommand.cs" />
-    <Compile Include="Scripting\Requests\SetCvar.cs" />
     <Compile Include="Math\MathUtils.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Platform\Graphics\MapMode.cs" />

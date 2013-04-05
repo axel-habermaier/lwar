@@ -28,7 +28,7 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   The parser that is used to parse a user request.
 		/// </summary>
-		private readonly RequestParser _parser;
+		private readonly InstructionParser _parser;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -45,8 +45,9 @@ namespace Pegasus.Framework.Scripting
 			_appName = appName;
 			_commands = commands;
 			_cvars = cvars;
-			_parser = new RequestParser(_commands, cvars);
+			_parser = new InstructionParser(_commands, cvars);
 
+			_commands.OnHelp += OnHelp;
 			_commands.OnExecute += OnExecuteCommand;
 			_commands.OnProcess += OnProcess;
 			_commands.OnPersist += OnPersist;
@@ -57,6 +58,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_commands.OnHelp -= OnHelp;
 			_commands.OnExecute -= OnExecuteCommand;
 			_commands.OnProcess -= OnProcess;
 			_commands.OnPersist -= OnPersist;
@@ -76,6 +78,38 @@ namespace Pegasus.Framework.Scripting
 				reply.Result.Execute();
 			else
 				Log.Error(reply.Errors.ErrorMessage);
+		}
+
+		/// <summary>
+		///   Invoked when a description of the cvar or command with the given name should be displayed.
+		/// </summary>
+		/// <param name="name">The name of the cvar or the command for which the help should be displayed.</param>
+		private void OnHelp(string name)
+		{
+			ICvar cvar;
+			ICommand command;
+
+			name = name.Trim();
+			if (_cvars.TryFind(name, out cvar))
+			{
+				Log.Info("'{0}' : {1} = {2} (default: {3}): {4}", cvar.Name, TypeDescription.GetDescription(cvar.ValueType),
+						 cvar.StringValue, cvar.DefaultValue, cvar.Description);
+			}
+			else if (_commands.TryFind(name, out command))
+			{
+				Log.Info("'{0}': {1}", command.Name, command.Description);
+				foreach (var parameter in command.Parameters)
+				{
+					var type = TypeDescription.GetDescription(parameter.Type);
+					var defaultValue = String.Empty;
+					if (parameter.HasDefaultValue)
+						defaultValue = String.Format(" = {0}", TypeRepresentation.ToString(parameter.DefaultValue));
+
+					Log.Info("    {0} : [{1}]{3}  {2}", parameter.Name, type, parameter.Description, defaultValue);
+				}
+			}
+			else
+				Log.Error("'{0}' is not a cvar or command.", name);
 		}
 
 		/// <summary>

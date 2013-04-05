@@ -66,7 +66,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="instance">The instance with the given name, if it is found.</param>
 		internal bool TryFind(string name, out T instance)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
+			Assert.ArgumentNotNull(name, () => name);
 			return _instances.TryGetValue(name, out instance);
 		}
 

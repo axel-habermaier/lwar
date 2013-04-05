@@ -149,6 +149,20 @@ namespace Pegasus.Framework.Scripting.Parsing
 		}
 
 		/// <summary>
+		///   Checks whether the remainder of the input consists of whitespace only.
+		/// </summary>
+		internal bool WhiteSpaceUntilEndOfInput()
+		{
+			for (var i = State.Position; i < _input.Length; ++i)
+			{
+				if (!Char.IsWhiteSpace(_input[i]))
+					return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>
 		///   Returns true if the given character represents a newline token.
 		/// </summary>
 		/// <param name="character">The character that should be checked.</param>

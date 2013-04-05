@@ -42,6 +42,22 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
+		///   Gets a value indicating whether the parameter has a default value.
+		/// </summary>
+		public bool HasDefaultValue
+		{
+			get { return !_parameter.DefaultExpression.IsNull; }
+		}
+
+		/// <summary>
+		///   Gets the default value of the parameter, if any.
+		/// </summary>
+		public string DefaultValue
+		{
+			get { return _parameter.DefaultExpression.ToString(); }
+		}
+
+		/// <summary>
 		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
 		///   initialization.
 		/// </summary>

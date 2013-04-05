@@ -5,14 +5,12 @@ namespace Pegasus.Framework.Scripting
 	using System.Collections.Generic;
 	using Parsing;
 	using Parsing.Combinators;
-	using Requests;
 
 	/// <summary>
-	///   Parses the command line. The command line consists of a list of cvar set requests and/or verbs. For instance, the
-	///   command line "compile -time_scale 0.01" returns a CommandLine instance where the CompileAssets field is set to true
-	///   as well as a single set cvar request that sets the value of the time scale cvar to 0.01.
+	///   Parses the command line, consisting of a string of cvar set requests. For instance, the
+	///   command line "-time_scale 0.01" sets the value of the time scale cvar to 0.01.
 	/// </summary>
-	internal class CommandLineParser : Parser<IEnumerable<SetCvar>, None>
+	internal class CommandLineParser : Parser<IEnumerable<Instruction>, None>
 	{
 		/// <summary>
 		///   The cvar registry that is used to look up cvars referenced by command line argument.
@@ -35,7 +33,7 @@ namespace Pegasus.Framework.Scripting
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<IEnumerable<SetCvar>> Parse(InputStream<None> inputStream)
+		public override Reply<IEnumerable<Instruction>> Parse(InputStream<None> inputStream)
 		{
 			var endOrWhitespace = ~(Attempt(WhiteSpaces + ~EndOfInput) | WhiteSpaces1);
 			var appPath = ~((StringLiteral | String(c => c != ' ', "application path")) + ~endOrWhitespace);
@@ -45,7 +43,7 @@ namespace Pegasus.Framework.Scripting
 			if (reply.Status != ReplyStatus.Success)
 				return ForwardError(reply);
 
-			var setCvars = new List<SetCvar>();
+			var setCvars = new List<Instruction>();
 			var identifier = String(c => Char.IsLetter(c) || c == '_', c => Char.IsLetterOrDigit(c) || c == '_', "identifier");
 
 			// Parse all cvar set requests until we reach the end of the command line
@@ -78,7 +76,7 @@ namespace Pegasus.Framework.Scripting
 				if (argumentReply.Status != ReplyStatus.Success)
 					return ForwardError(argumentReply);
 
-				setCvars.Add(new SetCvar(cvar, argumentReply.Result));
+				setCvars.Add(new Instruction(cvar, argumentReply.Result));
 			}
 
 			return Success(setCvars);

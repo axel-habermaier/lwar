@@ -257,8 +257,12 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			var i = 0;
 			foreach (var parameter in from parameter in command.Parameters
 									  let description = GetParameterTag(command.Documentation, parameter.Name)
-									  select String.Format("new CommandParameter(\"{0}\", typeof({2}), {1}, default({2}), \"{3}\")",
-														   parameter.Name, "false", parameter.Type, description))
+									  select String.Format("new CommandParameter(\"{0}\", typeof({1}), {2}, {3}, \"{4}\")",
+														   parameter.Name,
+														   parameter.Type,
+														   parameter.HasDefaultValue.ToString().ToLower(),
+														   parameter.HasDefaultValue ? parameter.DefaultValue : String.Format("default({0})", parameter.Type),
+														   description))
 			{
 				if (i == command.Parameters.Count() - 1)
 					_writer.Append(parameter);

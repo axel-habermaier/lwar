@@ -43,6 +43,15 @@ namespace Lwar.Client.Scripting
 		void Chat(string message);
 
 		/// <summary>
+		///   Sends a chat message to all peers.
+		/// </summary>
+		/// <param name="i">The message that should be sent.</param>
+		/// <param name="a">The message that should be sent.</param>
+		/// <param name="c">The message that should be sent.</param>
+		[Command]
+		void Test(int i = 1, float a = 2131412412232.14f, string c = "fe");
+
+		/// <summary>
 		///   Toggles between the game and the debugging camera.
 		/// </summary>
 		[Command]

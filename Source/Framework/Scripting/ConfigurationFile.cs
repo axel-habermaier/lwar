@@ -6,7 +6,6 @@ namespace Pegasus.Framework.Scripting
 	using System.Linq;
 	using Parsing;
 	using Platform;
-	using Requests;
 
 	/// <summary>
 	///   Represents a configuration file that can be processed by the application, changed, and/or written to disk.
@@ -31,7 +30,7 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   The parser that is used to parse the file.
 		/// </summary>
-		private readonly RequestParser _parser;
+		private readonly InstructionParser _parser;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -39,7 +38,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="parser"> The parser that should be used to parse the file.</param>
 		/// <param name="appName">The name of the application.</param>
 		/// <param name="fileName">The name of the configuration file.</param>
-		public ConfigurationFile(RequestParser parser, string appName, string fileName)
+		public ConfigurationFile(InstructionParser parser, string appName, string fileName)
 		{
 			Assert.ArgumentNotNull(parser, () => parser);
 			Assert.ArgumentNotNullOrWhitespace(appName, () => appName);
@@ -91,13 +90,9 @@ namespace Pegasus.Framework.Scripting
 		{
 			var inputStream = new InputStream<None>(line, _file.FileName, lineNumber);
 			var reply = _parser.Parse(inputStream);
-			IRequest request = null;
 
 			if (reply.Status == ReplyStatus.Success)
-			{
-				if (reply.Result is InvokeCommand || reply.Result is SetCvar)
-					request = reply.Result;
-			}
+				return new Line(line, reply.Result);
 			else
 			{
 				// Check if there's a comment at the end of the line, try again with the comment removed
@@ -110,7 +105,7 @@ namespace Pegasus.Framework.Scripting
 
 					var parsedLine = ParseLine(line.Substring(0, endRequest), lineNumber, silent);
 
-					return new Line(line, parsedLine.Request, endRequest);
+					return new Line(line, parsedLine.Instruction, endRequest);
 				}
 
 				if (!silent)
@@ -118,9 +113,9 @@ namespace Pegasus.Framework.Scripting
 					reply.GenerateErrorMessage(inputStream);
 					Log.Error(reply.Errors.ErrorMessage);
 				}
-			}
 
-			return new Line(line, request);
+				return new Line(line);
+			}
 		}
 
 		/// <summary>
@@ -132,8 +127,8 @@ namespace Pegasus.Framework.Scripting
 				return;
 
 			Log.Info("Processing '{0}'...", _file.FileName);
-			foreach (var line in ParseLines(false).Where(line => line.Request != null))
-				line.Request.Execute();
+			foreach (var line in ParseLines(false).Where(line => line.HasInstruction))
+				line.Instruction.Execute();
 		}
 
 		/// <summary>
@@ -151,7 +146,7 @@ namespace Pegasus.Framework.Scripting
 			foreach (var cvar in cvars)
 			{
 				var content = String.Format("{0} {1}", cvar.Name, cvar.StringValue);
-				var line = lines.LastOrDefault(l => l.Request is SetCvar && ((SetCvar)l.Request).Cvar == cvar);
+				var line = lines.LastOrDefault(l => l.HasInstruction && l.Instruction.HasTarget(cvar));
 
 				if (line == null)
 					lines.Add(new Line(content));
@@ -173,13 +168,25 @@ namespace Pegasus.Framework.Scripting
 			///   Initializes a new instance.
 			/// </summary>
 			/// <param name="content">The content of the line.</param>
-			/// <param name="request">The parsed user request of the line.</param>
-			/// <param name="endOfRequest">The index of the column where the request ended and a comment started.</param>
-			public Line(string content, IRequest request = null, int endOfRequest = -1)
+			public Line(string content)
 			{
 				Content = content;
-				Request = request;
+				EndOfRequest = Content.Length;
+				HasInstruction = false;
+			}
+
+			/// <summary>
+			///   Initializes a new instance.
+			/// </summary>
+			/// <param name="content">The content of the line.</param>
+			/// <param name="instruction">The parsed instruction of the line.</param>
+			/// <param name="endOfRequest">The index of the column where the request ended and a comment started.</param>
+			public Line(string content, Instruction instruction, int endOfRequest = -1)
+			{
+				Content = content;
+				Instruction = instruction;
 				EndOfRequest = endOfRequest == -1 ? Content.Length : endOfRequest;
+				HasInstruction = true;
 			}
 
 			/// <summary>
@@ -188,12 +195,17 @@ namespace Pegasus.Framework.Scripting
 			public string Content { get; set; }
 
 			/// <summary>
-			///   Gets parsed user request of the line.
+			///   Gets parsed instruction of the line.
 			/// </summary>
-			public IRequest Request { get; private set; }
+			public Instruction Instruction { get; private set; }
 
 			/// <summary>
-			///   Gets or sets the index of the column where the request ended and a comment started.
+			///   Gets a value indicating whether the line has an instruction.
+			/// </summary>
+			public bool HasInstruction { get; private set; }
+
+			/// <summary>
+			///   Gets or sets the index of the column where the instruction ended and a comment started.
 			/// </summary>
 			public int EndOfRequest { get; private set; }
 		}

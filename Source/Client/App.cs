@@ -35,6 +35,7 @@ namespace Lwar.Client
 			var commands = (CommandRegistry)Context.Commands;
 			commands.OnConnect += Connect;
 			commands.OnDisconnect += Disconnect;
+			commands.OnTest += (a,b,c) => Log.Info("{0}/{1}/{2}", a,b,c);
 
 			Context.LogicalInputDevice.Modes = InputModes.Game;
 			Context.Window.Closing += Exit;

@@ -5,21 +5,21 @@ namespace Pegasus.Framework.Scripting
 	using System.Linq;
 	using Parsing;
 	using Parsing.Combinators;
-	using Requests;
 
 	/// <summary>
-	///   Parses a user request.
+	///   Parses an instruction.
 	/// </summary>
 	/// <remarks>
 	///   This parser is written in a very low-level way. There are two reasons for this: First of all, the parser is
 	///   highly dynamic, meaning that it does not parse a statically defined grammar. Instead, depending on the cvar name or
 	///   command name that is found at the beginning of the input, the remainder of the parser is configured dynamically to
-	///   parse exactly the possible arguments of a cvar or command request. Therefore, the parser is already responsible for
+	///   parse exactly the possible arguments of a cvar or command instruction. Therefore, the parser is already responsible
+	///   for
 	///   the type checks of the arguments. Secondly, the requirement that the cvar/command name and all arguments are
 	///   separated by white space requires some backtracking by the parser, making it harder to generate good error
 	///   messages. Most of the complexity of this parser is a result of the generation of good error messages.
 	/// </remarks>
-	internal class RequestParser : Parser<IRequest, None>
+	internal class InstructionParser : Parser<Instruction, None>
 	{
 		/// <summary>
 		///   A parser for identifiers.
@@ -30,7 +30,7 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   Skips any number of whitespaces and then expects the end of the input.
 		/// </summary>
-		private static readonly SkipParser<None> EndOfRequest = ~(WhiteSpaces + ~EndOfInput);
+		private static readonly SkipParser<None> EndOfInstruction = ~(WhiteSpaces + ~EndOfInput);
 
 		/// <summary>
 		///   The command registry that is used to look up cvars.
@@ -47,7 +47,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <param name="commands">The command registry that should be used to look up commands.</param>
 		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
-		public RequestParser(CommandRegistry commands, CvarRegistry cvars)
+		public InstructionParser(CommandRegistry commands, CvarRegistry cvars)
 		{
 			Assert.ArgumentNotNull(cvars, () => cvars);
 			Assert.ArgumentNotNull(commands, () => commands);
@@ -57,10 +57,10 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Parses the given input string and returns the user command.
+		///   Parses the given input string and returns the instruction.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<IRequest> Parse(InputStream<None> inputStream)
+		public override Reply<Instruction> Parse(InputStream<None> inputStream)
 		{
 			// Skip all leading white space
 			inputStream.SkipWhiteSpaces();
@@ -71,13 +71,13 @@ namespace Pegasus.Framework.Scripting
 			if (reply.Status != ReplyStatus.Success)
 				return ForwardError(reply);
 
-			// Check if a cvar has been referenced and if so, return the appropriate user request
+			// Check if a cvar has been referenced and if so, return the appropriate instruction
 			var name = reply.Result;
 			ICvar cvar;
 			if (_cvars.TryFind(name, out cvar))
 				return Parse(inputStream, cvar);
 
-			// Check if a command has been referenced and if so, return the appropriate user request
+			// Check if a command has been referenced and if so, return the appropriate instruction
 			ICommand command;
 			if (_commands.TryFind(name, out command))
 				return Parse(inputStream, command);
@@ -88,50 +88,36 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Parses a cvar user request.
+		///   Parses a cvar instruction.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		/// <param name="cvar">The cvar referenced by the user request.</param>
-		private static Reply<IRequest> Parse(InputStream<None> inputStream, ICvar cvar)
+		/// <param name="cvar">The cvar referenced by the instruction.</param>
+		private static Reply<Instruction> Parse(InputStream<None> inputStream, ICvar cvar)
 		{
-			var cvarDisplay = EndOfRequest.Apply<IRequest>(_ => new DisplayCvar(cvar));
+			var cvarDisplay = EndOfInstruction.Apply(_ => new Instruction(cvar, null));
 
-			var cvarHelp = (~WhiteSpaces1 + Character('?') + EndOfRequest)
-				.Apply<IRequest>(_ => new DescribeCvar(cvar));
+			var cvarSet = (~WhiteSpaces1 + new TypeParser<None>(cvar.ValueType) + EndOfInstruction)
+				.Apply(v => new Instruction(cvar, v));
 
-			var cvarSet = (~WhiteSpaces1 + new TypeParser<None>(cvar.ValueType) + EndOfRequest)
-				.Apply<IRequest>(v => new SetCvar(cvar, v));
-
-			var cvarParser = Attempt(cvarDisplay) | Attempt(cvarHelp) | cvarSet;
+			var cvarParser = Attempt(cvarDisplay) | cvarSet;
 			return cvarParser.Parse(inputStream);
 		}
 
 		/// <summary>
-		///   Parses a command user request.
+		///   Parses a command invocation.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		/// <param name="command">The command referenced by the user request.</param>
-		private Reply<IRequest> Parse(InputStream<None> inputStream, ICommand command)
+		/// <param name="command">The command referenced by the instruction.</param>
+		private static Reply<Instruction> Parse(InputStream<None> inputStream, ICommand command)
 		{
-			var commandHelp = Character('?').Apply<IRequest>(_ => new DescribeCommand(command));
-
 			// Depending on whether the command actually has any parameters, modify the grammar to get better error messages
-			Parser<IRequest, None> commandParser;
-			if (command.Parameters.Count() == 0)
-			{
-				var invokeCommand = EndOfRequest.Apply<IRequest>(_ => new InvokeCommand(command, new object[0]));
-				commandParser = Attempt(invokeCommand) | (~WhiteSpaces1 + commandHelp + EndOfRequest);
-			}
+			Parser<Instruction, None> commandParser;
+			if (!command.Parameters.Any())
+				commandParser = EndOfInstruction.Apply(_ => new Instruction(command, new object[0]));
 			else
 			{
-				// Show an unexpected end of input error message if we've reached the end of the input already (otherwise an 
-				// 'expected white space' message would be shown)
-				if (inputStream.EndOfInput)
-					return UnexpectedEndOfInput();
-
-				var invokeCommand = new ArgumentListParser(command)
-					.Apply<IRequest>(parameters => new InvokeCommand(command, parameters));
-				commandParser = ~WhiteSpaces1 + (commandHelp | invokeCommand) + EndOfRequest;
+				var parser = new ArgumentListParser(command).Apply(parameters => new Instruction(command, parameters));
+				commandParser = parser + ~EndOfInstruction;
 			}
 
 			return commandParser.Parse(inputStream);
@@ -163,32 +149,50 @@ namespace Pegasus.Framework.Scripting
 			/// <param name="inputStream">The input stream that should be parsed.</param>
 			public override Reply<object[]> Parse(InputStream<None> inputStream)
 			{
-				var types = _command.Parameters.Select(parameter => parameter.Type).ToArray();
-				var parameters = new object[types.Length];
+				var parameters = _command.Parameters.ToArray();
+				var values = new object[parameters.Length];
 
 				for (var i = 0; i < parameters.Length; ++i)
 				{
 					// Show an unexpected end of input error message if we've reached the end of the input already (otherwise an 
 					// 'expected white space' message would be shown)
-					if (inputStream.EndOfInput)
+					if (inputStream.EndOfInput && !parameters[i].HasDefaultValue)
 						return Errors(ErrorMessage.UnexpectedEndOfInput,
-									  new ErrorMessage(ErrorType.Message, DescribeCommand.GetCommandDescription(_command)),
-									  new ErrorMessage(ErrorType.Expected, TypeDescription.GetDescription(types[i])));
+									  new ErrorMessage(ErrorType.Message, GetHelpText(_command)),
+									  new ErrorMessage(ErrorType.Expected, TypeDescription.GetDescription(parameters[i].Type)));
+
+					// We've reached the end of the input, and all subsequent parameters should use their default value
+					if (inputStream.WhiteSpaceUntilEndOfInput() && parameters[i].HasDefaultValue)
+					{
+						for (var j = i; j < parameters.Length; ++j)
+							values[j] = parameters[j].DefaultValue;
+
+						return Success(values);
+					}
 
 					// The argument must be separated from the previous input by at least one white space character
-					if (i != 0 && !Char.IsWhiteSpace(inputStream.Peek()))
+					if (!Char.IsWhiteSpace(inputStream.Peek()))
 						return Expected("whitespace");
 
 					inputStream.SkipWhiteSpaces();
 
-					var reply = new TypeParser<None>(types[i]).Parse(inputStream);
+					var reply = new TypeParser<None>(parameters[i].Type).Parse(inputStream);
 					if (reply.Status == ReplyStatus.Success)
-						parameters[i] = reply.Result;
+						values[i] = reply.Result;
 					else
-						return ForwardError(reply, DescribeCommand.GetCommandDescription(_command));
+						return ForwardError(reply, GetHelpText(_command));
 				}
 
-				return Success(parameters);
+				return Success(values);
+			}
+
+			/// <summary>
+			///   Gets a help string for the given command.
+			/// </summary>
+			/// <param name="command">The command for which the help string should be returned.</param>
+			private static string GetHelpText(ICommand command)
+			{
+				return string.Format("Use 'help \"{0}\"' for details about the usage of '{0}'.", command.Name);
 			}
 		}
 	}
