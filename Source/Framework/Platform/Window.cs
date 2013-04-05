@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Input;
 	using Math;
 
@@ -29,6 +28,11 @@ namespace Pegasus.Framework.Platform
 		private bool _mouseCaptured;
 
 		/// <summary>
+		///   The size of the rendering area of the window.
+		/// </summary>
+		private Size _size;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		internal Window()
@@ -42,7 +46,11 @@ namespace Pegasus.Framework.Platform
 				Title = "Pegasus",
 				Closing = () => Closing(),
 				Closed = () => Closed(),
-				Resized = (w, h) => Resized(new Size(w, h)),
+				Resized = (w, h) =>
+					{
+						_size = new Size(w, h);
+						Resized(_size);
+					},
 				LostFocus = () => LostFocus(),
 				GainedFocus = () => GainedFocus(),
 				CharacterEntered = c => CharacterEntered((char)c),
@@ -108,12 +116,17 @@ namespace Pegasus.Framework.Platform
 
 				int width, height;
 				NativeMethods.GetWindowSize(_window, out width, out height);
+
+				if (width == 0 || height == 0)
+					return _size;
+
 				return new Size(width, height);
 			}
 			set
 			{
 				Assert.NotDisposed(this);
 				NativeMethods.SetWindowSize(_window, value.Width, value.Height);
+				_size = new Size(value.Width, value.Height);
 			}
 		}
 

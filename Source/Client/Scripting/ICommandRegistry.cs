@@ -3,6 +3,7 @@
 namespace Lwar.Client.Scripting
 {
 	using System.Net;
+	using Network;
 	using Pegasus.Framework.Scripting;
 
 	/// <summary>
@@ -23,11 +24,15 @@ namespace Lwar.Client.Scripting
 		void StopServer();
 
 		/// <summary>
-		///   Connects to a game session on a server.
+		///   Connects to a game session on a remote or local server.
 		/// </summary>
-		/// <param name="endPoint">The remote endpoint of the server.</param>
+		/// <param name="ipAddress">
+		///   The IP address of the server in either IPv4 or IPv6 format. For instance, either 127.0.0.1 or ::1 can be used to
+		///   connect to a local server.
+		/// </param>
+		/// <param name="port">The port of the server.</param>
 		[Command]
-		void Connect(IPEndPoint endPoint);
+		void Connect(IPAddress ipAddress, ushort port = Specification.DefaultServerPort);
 
 		/// <summary>
 		///   Disconnects from the current game session.
@@ -41,15 +46,6 @@ namespace Lwar.Client.Scripting
 		/// <param name="message">The message that should be sent.</param>
 		[Command]
 		void Chat(string message);
-
-		/// <summary>
-		///   Sends a chat message to all peers.
-		/// </summary>
-		/// <param name="i">The message that should be sent.</param>
-		/// <param name="a">The message that should be sent.</param>
-		/// <param name="c">The message that should be sent.</param>
-		[Command]
-		void Test(int i = 1, float a = 2131412412232.14f, string c = "fe");
 
 		/// <summary>
 		///   Toggles between the game and the debugging camera.

@@ -45,9 +45,13 @@ namespace Pegasus.Framework
 							 PlatformInfo.GraphicsApi);
 
 					ParseCommandLine(context.Cvars);
-
-					var app = new TApp();
-					app.Run(context, logFile);
+					// Exec autoexe here, then exec command lines, remove allof that from app
+					// readd execute command, connect console and interpreter via this command
+					using (var interpreter = new Interpreter(context.AppName, context.Commands, context.Cvars))
+					{
+						var app = new TApp();
+						app.Run(context, logFile);
+					}
 
 					Log.Info("{0} has shut down.", context.AppName);
 				}

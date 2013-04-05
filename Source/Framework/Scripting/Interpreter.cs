@@ -48,7 +48,6 @@ namespace Pegasus.Framework.Scripting
 			_parser = new InstructionParser(_commands, cvars);
 
 			_commands.OnHelp += OnHelp;
-			_commands.OnExecute += OnExecuteCommand;
 			_commands.OnProcess += OnProcess;
 			_commands.OnPersist += OnPersist;
 		}
@@ -59,7 +58,6 @@ namespace Pegasus.Framework.Scripting
 		protected override void OnDisposing()
 		{
 			_commands.OnHelp -= OnHelp;
-			_commands.OnExecute -= OnExecuteCommand;
 			_commands.OnProcess -= OnProcess;
 			_commands.OnPersist -= OnPersist;
 		}
@@ -110,16 +108,6 @@ namespace Pegasus.Framework.Scripting
 			}
 			else
 				Log.Error("'{0}' is not a cvar or command.", name);
-		}
-
-		/// <summary>
-		///   Invoked when the given string should be executed.
-		/// </summary>
-		/// <param name="input">The input that should be executed.</param>
-		private void OnExecuteCommand(string input)
-		{
-			if (!String.IsNullOrWhiteSpace(input))
-				Execute(input);
 		}
 
 		/// <summary>

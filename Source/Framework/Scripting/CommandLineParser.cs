@@ -63,7 +63,7 @@ namespace Pegasus.Framework.Scripting
 					return ForwardError(cvarReply);
 
 				ICvar cvar;
-				if (_cvarRegistry.TryFind(cvarReply.Result, out cvar))
+				if (!_cvarRegistry.TryFind(cvarReply.Result, out cvar))
 				{
 					// Reset the state so that the error is reported right after the '-'
 					inputStream.State = state;

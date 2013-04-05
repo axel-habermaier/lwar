@@ -35,7 +35,6 @@ namespace Lwar.Client
 			var commands = (CommandRegistry)Context.Commands;
 			commands.OnConnect += Connect;
 			commands.OnDisconnect += Disconnect;
-			commands.OnTest += (a,b,c) => Log.Info("{0}/{1}/{2}", a,b,c);
 
 			Context.LogicalInputDevice.Modes = InputModes.Game;
 			Context.Window.Closing += Exit;
@@ -101,16 +100,14 @@ namespace Lwar.Client
 		/// <summary>
 		///   Connects to the server at the given end point and joins the game session.
 		/// </summary>
-		/// <param name="serverEndPoint">The remote end point of the server that hosts the game session.</param>
-		private void Connect(IPEndPoint serverEndPoint)
+		/// <param name="address">The IP address of the server.</param>
+		/// <param name="port">The port of the server.</param>
+		private void Connect(IPAddress address, ushort port)
 		{
-			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
-
-			if (serverEndPoint.Port == 0)
-				serverEndPoint.Port = Specification.DefaultServerPort;
+			Assert.ArgumentNotNull(address, () => address);
 
 			Disconnect();
-			_stateManager.Add(new Playing(serverEndPoint));
+			_stateManager.Add(new Playing(new IPEndPoint(address, port)));
 		}
 
 		/// <summary>

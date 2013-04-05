@@ -23,16 +23,6 @@ namespace Pegasus.Framework.Scripting
 		void Help(string name);
 
 		/// <summary>
-		///   Executes the given argument.
-		/// </summary>
-		/// <param name="command">
-		///   The command that should be executed. It will be executed immediately, synchronously, so don't
-		///   exepcted any fancy stuff to happen!
-		/// </param>
-		[Command]
-		void Execute(string command);
-
-		/// <summary>
 		///   Processes the commands in the given file.
 		/// </summary>
 		/// <param name="fileName">The name of the file in the application's user directory that should be processed.</param>
