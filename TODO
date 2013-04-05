@@ -33,6 +33,7 @@ Pegasus
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
 	- Expose Command/Cvar objects
+- Console: Input auto completion
 
 Network Specification
 ========

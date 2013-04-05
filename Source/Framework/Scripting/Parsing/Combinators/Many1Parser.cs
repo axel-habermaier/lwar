@@ -12,7 +12,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser's result.</typeparam>
 	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class Many1Parser<TResult, TUserState> : Parser<List<TResult>, TUserState>
+	public class Many1Parser<TResult, TUserState> : Parser<TResult[], TUserState>
 	{
 		/// <summary>
 		///   The parser that is applied zero or more times.
@@ -33,7 +33,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<List<TResult>> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TResult[]> Parse(InputStream<TUserState> inputStream)
 		{
 			var results = new List<TResult>();
 
@@ -60,7 +60,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 					return ForwardError(reply);
 			}
 
-			return Success(results);
+			return Success(results.ToArray());
 		}
 	}
 }

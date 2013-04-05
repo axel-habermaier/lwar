@@ -18,9 +18,9 @@ namespace Pegasus.Framework.Scripting.Requests
 		}
 
 		/// <summary>
-		///   The cvar that is affected by the command.
+		///   Gets the cvar that is affected by the command.
 		/// </summary>
-		protected ICvar Cvar { get; private set; }
+		public ICvar Cvar { get; private set; }
 
 		/// <summary>
 		///   Executes the user command.

@@ -313,7 +313,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <typeparam name="T">The type of the given parser's result.</typeparam>
 		/// <param name="parser">The parser that should be applied zero or more times.</param>
-		protected static Parser<List<T>, TUserState> Many<T>(Parser<T, TUserState> parser)
+		protected static Parser<T[], TUserState> Many<T>(Parser<T, TUserState> parser)
 		{
 			return new ManyParser<T, TUserState>(parser);
 		}
@@ -326,7 +326,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <typeparam name="T">The type of the given parser's result.</typeparam>
 		/// <param name="parser">The parser that should be applied zero or more times.</param>
-		protected static Parser<List<T>, TUserState> Many1<T>(Parser<T, TUserState> parser)
+		protected static Parser<T[], TUserState> Many1<T>(Parser<T, TUserState> parser)
 		{
 			return new Many1Parser<T, TUserState>(parser);
 		}

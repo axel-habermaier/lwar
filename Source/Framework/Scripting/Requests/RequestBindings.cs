@@ -17,9 +17,9 @@ namespace Pegasus.Framework.Scripting.Requests
 		private readonly List<RequestBinding> _bindings = new List<RequestBinding>();
 
 		/// <summary>
-		///   The command registry that is used to look up commands referenced by a user request.
+		///   The command registry that is used to look up commands.
 		/// </summary>
-		private readonly CommandRegistry _commandRegistry;
+		private readonly CommandRegistry _commands;
 
 		/// <summary>
 		///   The logical input device that is used to determine whether the logical inputs are triggered.
@@ -29,27 +29,25 @@ namespace Pegasus.Framework.Scripting.Requests
 		/// <summary>
 		///   The parser that is used to parse the user requests.
 		/// </summary>
-		private readonly RequestParser _parser;
+		private readonly Parser<IRequest, None> _parser;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The logical input device that is used to determine whether the logical inputs are triggered.</param>
-		/// <param name="cvarRegistry">The cvar registry that should be used to look up cvars referenced by a user request.</param>
-		/// <param name="commandRegistry">
-		///   The command registry that should be used to look up commands referenced by a user request.
-		/// </param>
-		public RequestBindings(LogicalInputDevice device, CvarRegistry cvarRegistry, CommandRegistry commandRegistry)
+		/// <param name="commands">The command registry that should be used to look up commands.</param>
+		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
+		public RequestBindings(LogicalInputDevice device, CommandRegistry commands, CvarRegistry cvars)
 		{
 			Assert.ArgumentNotNull(device, () => device);
-			Assert.ArgumentNotNull(cvarRegistry, () => cvarRegistry);
-			Assert.ArgumentNotNull(commandRegistry, () => commandRegistry);
+			Assert.ArgumentNotNull(cvars, () => cvars);
+			Assert.ArgumentNotNull(commands, () => commands);
 
 			_device = device;
-			_commandRegistry = commandRegistry;
-			_parser = new RequestParser(cvarRegistry, _commandRegistry);
+			_commands = commands;
+			_parser = new RequestParser(_commands, cvars);
 
-			commandRegistry.OnBind += OnBindCommand;
+			commands.OnBind += OnBindCommand;
 		}
 
 		/// <summary>
@@ -75,7 +73,7 @@ namespace Pegasus.Framework.Scripting.Requests
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_commandRegistry.OnBind -= OnBindCommand;
+			_commands.OnBind -= OnBindCommand;
 		}
 
 		/// <summary>

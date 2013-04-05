@@ -2,22 +2,14 @@
 
 namespace Pegasus.Framework.Scripting
 {
-	using System.IO;
 	using System.Linq;
-	using System.Text;
 	using Parsing;
-	using Platform;
 
 	/// <summary>
 	///   Interprets user-provided input to set and view cvars and invoke commands.
 	/// </summary>
 	internal class Interpreter : DisposableObject
 	{
-		/// <summary>
-		///   The file extension that is appended to all configuration files.
-		/// </summary>
-		private const string ConfigFileExtension = ".cfg";
-
 		/// <summary>
 		///   The name of the application.
 		/// </summary>
@@ -34,7 +26,7 @@ namespace Pegasus.Framework.Scripting
 		private readonly CvarRegistry _cvars;
 
 		/// <summary>
-		///   The parser that is used to parse the user requests.
+		///   The parser that is used to parse a user request.
 		/// </summary>
 		private readonly RequestParser _parser;
 
@@ -53,7 +45,7 @@ namespace Pegasus.Framework.Scripting
 			_appName = appName;
 			_commands = commands;
 			_cvars = cvars;
-			_parser = new RequestParser(cvars, _commands);
+			_parser = new RequestParser(_commands, cvars);
 
 			_commands.OnExecute += OnExecuteCommand;
 			_commands.OnProcess += OnProcess;
@@ -102,6 +94,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="fileName">The name of the file in the application's user directory that should be processed.</param>
 		private void OnProcess(string fileName)
 		{
+			var configFile = new ConfigurationFile(_parser, _appName, fileName);
+			configFile.Process();
 		}
 
 		/// <summary>
@@ -110,33 +104,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="fileName">The name of the file in the application's user directory that the cvars should be written to.</param>
 		private void OnPersist(string fileName)
 		{
-			if (String.IsNullOrWhiteSpace(fileName))
-			{
-				Log.Error("The file name cannot consist of whitespace only.");
-				return;
-			}
-
-			fileName += ConfigFileExtension;
-			var file = new AppFile(_appName, fileName);
-			if (!file.IsValid)
-			{
-				Log.Error("'{0}' is not a valid file name.", fileName);
-				return;
-			}
-
-			var builder = new StringBuilder();
-			foreach (var cvar in _cvars.Instances.Where(cvar => cvar.Persistent))
-				builder.AppendFormat("{0} {1};", cvar.Name, cvar.StringValue).AppendLine();
-
-			try
-			{
-				file.Write(builder.ToString());
-				Log.Info("'{0}' has been written.", fileName);
-			}
-			catch (IOException e)
-			{
-				Log.Error("Failed to persist cvars into '{0}': {1}", fileName, e.Message);
-			}
+			var configFile = new ConfigurationFile(_parser,_appName, fileName);
+			configFile.Persist(_cvars.Instances.Where(cvar => cvar.Persistent));
 		}
 	}
 }

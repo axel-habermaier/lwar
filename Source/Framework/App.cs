@@ -89,7 +89,7 @@ namespace Pegasus.Framework
 			using (var mouse = new Mouse(context.Window))
 			using (context.LogicalInputDevice = new LogicalInputDevice(keyboard, mouse))
 			using (var interpreter = new Interpreter(context.AppName, context.Commands, context.Cvars))
-			using (var bindings = new RequestBindings(context.LogicalInputDevice, context.Cvars, context.Commands))
+			using (var bindings = new RequestBindings(context.LogicalInputDevice, context.Commands, context.Cvars))
 			using (var camera2D = new Camera2D(context.GraphicsDevice))
 			using (var sceneOutput = new RenderOutput(context.GraphicsDevice) { RenderTarget = swapChain.BackBuffer })
 			using (var uiOutput = new RenderOutput(context.GraphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
@@ -98,6 +98,7 @@ namespace Pegasus.Framework
 				context.SpriteEffect.Initialize(context.GraphicsDevice, context.Assets);
 
 				Context = context;
+				Context.Commands.Process(ConfigurationFile.AutoExec);
 				Initialize();
 
 				var defaultFont = context.Assets.LoadFont(context.DefaultFontName);
@@ -170,7 +171,7 @@ namespace Pegasus.Framework
 					}
 
 					Dispose();
-					context.Commands.Persist(AppFile.AutoExec);
+					context.Commands.Persist(ConfigurationFile.AutoExec);
 				}
 			}
 		}

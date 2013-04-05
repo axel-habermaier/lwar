@@ -33,6 +33,11 @@ namespace Pegasus.Framework.Scripting
 		string StringValue { get; }
 
 		/// <summary>
+		///   Gets the cvar's default value as a string.
+		/// </summary>
+		string DefaultValue { get; }
+
+		/// <summary>
 		///   Indicates whether the cvar's value is persisted across sessions.
 		/// </summary>
 		bool Persistent { get; }

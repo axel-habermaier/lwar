@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework.Scripting.Parsing
 {
-	using System.Diagnostics;
-
 	/// <summary>
 	///   Provides read-access to a sequence of UTF-16 characters. The only supported newline token is \n.
 	/// </summary>
@@ -19,15 +17,18 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="input">The string that should be parsed.</param>
-		/// <param name="userState">The initial user state.</param>
 		/// <param name="name">The name of the input stream.</param>
-		public InputStream(string input, TUserState userState = default(TUserState), string name = null)
+		/// <param name="line">If set to a number greater than 0, sets the number of the line that line counting starts at.</param>
+		/// <param name="userState">The initial user state.</param>
+		public InputStream(string input, string name = null, int line = -1, TUserState userState = default(TUserState))
 		{
 			Assert.ArgumentNotNull(input, () => input);
 
 			_input = input;
-			State = new InputStreamState<TUserState>(0, 1, 0, userState);
 			Name = name ?? String.Empty;
+
+			var lineNumber = line > 0 ? line : 1;
+			State = new InputStreamState<TUserState>(0, lineNumber, 0, userState);
 		}
 
 		/// <summary>
@@ -58,17 +59,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 				var lineEnd = _input.IndexOf('\n', State.LineBegin);
 				lineEnd = lineEnd == -1 ? _input.Length : lineEnd;
 
-				return _input.Substring(State.LineBegin, lineEnd);
+				return _input.Substring(State.LineBegin, lineEnd - State.LineBegin);
 			}
-		}
-
-		/// <summary>
-		///   In debug builds, validates that the end of the input stream has not yet been reached.
-		/// </summary>
-		[Conditional("DEBUG"), DebuggerHidden]
-		private void AssertNotEndOfInput()
-		{
-			Assert.That(!EndOfInput, "The end of the input has already been reached.");
 		}
 
 		/// <summary>

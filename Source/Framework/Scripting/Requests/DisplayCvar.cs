@@ -21,7 +21,8 @@ namespace Pegasus.Framework.Scripting.Requests
 		/// </summary>
 		public override void Execute()
 		{
-			Log.Info(Cvar.ToString());
+			Log.Info("'{0}' is '{1}', default '{2}' [{3}]", Cvar.Name, Cvar.StringValue, Cvar.DefaultValue,
+					 TypeDescription.GetDescription(Cvar.ValueType));
 		}
 	}
 }

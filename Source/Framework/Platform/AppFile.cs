@@ -12,11 +12,6 @@ namespace Pegasus.Framework.Platform
 	internal class AppFile
 	{
 		/// <summary>
-		///   The name of the automatically executed configuration file.
-		/// </summary>
-		public const string AutoExec = "autoexec";
-
-		/// <summary>
 		///   The maximum allowed length of a file name.
 		/// </summary>
 		private const int MaximumFileNameLength = 50;
@@ -62,76 +57,93 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Writes the given content into the file, overwriting all previous content.
+		///   Writes the given content into the file, overwriting all previous content. Returns true to indicate that the file
+		///   operation has been successful.
 		/// </summary>
 		/// <param name="content">The content that should be written into the file.</param>
 		/// <param name="onException">
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		public void Write(string content, Action<IOException> onException = null)
+		public bool Write(string content, Action<IOException> onException = null)
 		{
 			Assert.ArgumentNotNull(content, () => content);
 			Assert.That(IsValid, "The file name is invalid.");
 
-			Execute(() => File.WriteAllText(AbsolutePath, content), onException);
+			return Execute(() => File.WriteAllText(AbsolutePath, content), onException);
 		}
 
 		/// <summary>
-		///   Appends the given lines to the file.
+		///   Appends the given lines to the file. Returns true to indicate that the file operation has been successful.
 		/// </summary>
 		/// <param name="lines">The lines that should be appended to the file.</param>
 		/// <param name="onException">
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		public void Append(IEnumerable<string> lines, Action<IOException> onException = null)
+		public bool Append(IEnumerable<string> lines, Action<IOException> onException = null)
 		{
 			Assert.ArgumentNotNull(lines, () => lines);
 			Assert.That(IsValid, "The file name is invalid.");
 
-			Execute(() => File.AppendAllLines(AbsolutePath, lines), onException);
+			return Execute(() => File.AppendAllLines(AbsolutePath, lines), onException);
 		}
 
 		/// <summary>
-		///   Reads the content of the given file.
+		///   Reads the content of the given file, with the line endings normalized to '\n'. Returns true to indicate that the file
+		///   operation has been successful.
+		/// </summary>
+		/// <param name="content">The content that has been read from the file.</param>
+		/// <param name="onException">
+		///   The action that should be executed if an I/O exception occurs during the execution of the
+		///   method. If null, the exception is propagated to the calling scope.
+		/// </param>
+		public bool Read(out string content, Action<IOException> onException = null)
+		{
+			Assert.That(IsValid, "The file name is invalid.");
+
+			var fileContent = String.Empty;
+			var success = Execute(() => fileContent = File.ReadAllText(AbsolutePath), onException);
+
+			content = NormalizeLineEndings(fileContent);
+			return success;
+		}
+
+		/// <summary>
+		/// Normalizes the line endings of the given input string to '\n'.
+		/// </summary>
+		/// <param name="input">The input whose line endings should be normalized.</param>
+		private static string NormalizeLineEndings(string input)
+		{
+			var result = input.Replace("\r\n", "\n");
+			result = result.Replace("\r", "\n");
+			return result;
+		}
+
+		/// <summary>
+		///   Deletes the file. Returns true to indicate that the file operation has been successful.
 		/// </summary>
 		/// <param name="onException">
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		public string Read(Action<IOException> onException = null)
+		public bool Delete(Action<IOException> onException = null)
 		{
 			Assert.That(IsValid, "The file name is invalid.");
-
-			var content = String.Empty;
-			Execute(() => content = File.ReadAllText(AbsolutePath), onException);
-			return content;
-		}
-
-		/// <summary>
-		///   Deletes the file.
-		/// </summary>
-		/// <param name="onException">
-		///   The action that should be executed if an I/O exception occurs during the execution of the
-		///   method. If null, the exception is propagated to the calling scope.
-		/// </param>
-		public void Delete(Action<IOException> onException = null)
-		{
-			Assert.That(IsValid, "The file name is invalid.");
-			Execute(() => File.Delete(AbsolutePath), onException);
+			return Execute(() => File.Delete(AbsolutePath), onException);
 		}
 
 		/// <summary>
 		///   Executes the given file action. If an exception handler is provided and an I/O exception is thrown, the exception
-		///   handler is invoked. Otherwise, I/O exception propagate to the calling scope.
+		///   handler is invoked. Otherwise, I/O exception propagate to the calling scope. Returns true to indicate that the file
+		///   operation has been successful.
 		/// </summary>
 		/// <param name="action">The file action that should be executed.</param>
 		/// <param name="onException">
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		private void Execute(Action action, Action<IOException> onException)
+		private bool Execute(Action action, Action<IOException> onException)
 		{
 			Assert.ArgumentNotNull(action, () => action);
 
@@ -139,6 +151,7 @@ namespace Pegasus.Framework.Platform
 			{
 				EnsureDirectoryExists();
 				action();
+				return true;
 			}
 			catch (IOException e)
 			{
@@ -146,6 +159,7 @@ namespace Pegasus.Framework.Platform
 					throw;
 
 				onException(e);
+				return false;
 			}
 		}
 

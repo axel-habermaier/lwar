@@ -87,6 +87,14 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
+		///   Gets the cvar's default value as a string.
+		/// </summary>
+		string ICvar.DefaultValue
+		{
+			get { return TypeRepresentation.ToString(_defaultValue); }
+		}
+
+		/// <summary>
 		///   Indicates whether the cvar's value is persisted across sessions.
 		/// </summary>
 		public bool Persistent { get; private set; }
@@ -118,14 +126,5 @@ namespace Pegasus.Framework.Scripting
 		///   Raised when the value of the cvar has changed, passing the old value to the event handlers.
 		/// </summary>
 		public event Action<T> Changed;
-
-		/// <summary>
-		///   Returns a string that represents the current object.
-		/// </summary>
-		public override string ToString()
-		{
-			return String.Format("'{0}' is '{1}', default '{2}' [{3}]", Name, Value, _defaultValue,
-								 TypeDescription.GetDescription<T>());
-		}
 	}
 }

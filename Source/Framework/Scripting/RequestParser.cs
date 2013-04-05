@@ -32,29 +32,27 @@ namespace Pegasus.Framework.Scripting
 		private static readonly SkipParser<None> EndOfRequest = ~(WhiteSpaces + ~EndOfInput);
 
 		/// <summary>
-		///   The command registry that is used to look up cvars referenced by a user request.
+		///   The command registry that is used to look up cvars.
 		/// </summary>
-		private readonly CommandRegistry _commandRegistry;
+		private readonly CommandRegistry _commands;
 
 		/// <summary>
-		///   The cvar registry that is used to look up cvars referenced by a user request.
+		///   The cvar registry that is used to look up cvars.
 		/// </summary>
-		private readonly CvarRegistry _cvarRegistry;
+		private readonly CvarRegistry _cvars;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="cvarRegistry">The cvar registry that should be used to look up cvars referenced by a user request.</param>
-		/// <param name="commandRegistry">
-		///   The command registry that should be used to look up commands referenced by a user request.
-		/// </param>
-		public RequestParser(CvarRegistry cvarRegistry, CommandRegistry commandRegistry)
+		/// <param name="commands">The command registry that should be used to look up commands.</param>
+		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
+		public RequestParser(CommandRegistry commands, CvarRegistry cvars)
 		{
-			Assert.ArgumentNotNull(cvarRegistry, () => cvarRegistry);
-			Assert.ArgumentNotNull(commandRegistry, () => commandRegistry);
+			Assert.ArgumentNotNull(cvars, () => cvars);
+			Assert.ArgumentNotNull(commands, () => commands);
 
-			_cvarRegistry = cvarRegistry;
-			_commandRegistry = commandRegistry;
+			_cvars = cvars;
+			_commands = commands;
 		}
 
 		/// <summary>
@@ -75,17 +73,17 @@ namespace Pegasus.Framework.Scripting
 			// Check if a cvar has been referenced and if so, return the appropriate user request
 			var name = reply.Result;
 			ICvar cvar;
-			if (_cvarRegistry.TryFind(name, out cvar))
+			if (_cvars.TryFind(name, out cvar))
 				return Parse(inputStream, cvar);
 
 			// Check if a command has been referenced and if so, return the appropriate user request
 			ICommand command;
-			if (_commandRegistry.TryFind(name, out command))
+			if (_commands.TryFind(name, out command))
 				return Parse(inputStream, command);
 
 			// If the name refers to neither a cvar nor a command, return an error message
 			inputStream.State = state;
-			return Message(string.Format("Unknown command '{0}'.", name));
+			return Message(System.String.Format("Unknown command '{0}'.", name));
 		}
 
 		/// <summary>
