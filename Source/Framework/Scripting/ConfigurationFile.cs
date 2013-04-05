@@ -103,10 +103,14 @@ namespace Pegasus.Framework.Scripting
 				// Check if there's a comment at the end of the line, try again with the comment removed
 				if (inputStream.Skip(CommentToken))
 				{
-					var length = inputStream.State.Column - CommentToken.Length - 1;
-					var parsedLine = ParseLine(line.Substring(0, length), lineNumber, silent);
+					var endRequest = inputStream.State.Column - CommentToken.Length - 1;
+					// Find the first non-whitespace token
+					while (endRequest - 1 > 0 && Char.IsWhiteSpace(line[endRequest - 1]))
+						--endRequest;
 
-					return new Line(line, parsedLine.Request, length);
+					var parsedLine = ParseLine(line.Substring(0, endRequest), lineNumber, silent);
+
+					return new Line(line, parsedLine.Request, endRequest);
 				}
 
 				if (!silent)
