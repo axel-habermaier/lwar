@@ -105,7 +105,7 @@ namespace Pegasus.Framework.Scripting
 		private void OnPersist(string fileName)
 		{
 			var configFile = new ConfigurationFile(_parser,_appName, fileName);
-			configFile.Persist(_cvars.Instances.Where(cvar => cvar.Persistent));
+			configFile.Persist(_cvars.AllInstances.Where(cvar => cvar.Persistent));
 		}
 	}
 }

@@ -17,11 +17,33 @@ namespace Pegasus.Framework.Scripting
 		private readonly Dictionary<string, T> _instances = new Dictionary<string, T>();
 
 		/// <summary>
-		///   Gets the registered instances.
+		///   Initializes a new instance.
 		/// </summary>
-		internal IEnumerable<T> Instances
+		protected Registry()
+		{
+			Initialize(null);
+		}
+
+		/// <summary>
+		///   Gets all registered instances.
+		/// </summary>
+		internal IEnumerable<T> AllInstances
 		{
 			get { return _instances.Values; }
+		}
+
+		/// <summary>
+		///   Provides access to the actual instances managed by the registry.
+		/// </summary>
+		public InstanceList Instances { get; private set; }
+
+		/// <summary>
+		///   Initializes the registry.
+		/// </summary>
+		/// <param name="instances">The instances that are registered on the registry.</param>
+		protected virtual void Initialize(object instances)
+		{
+			Instances = (InstanceList)instances;
 		}
 
 		/// <summary>
@@ -46,6 +68,13 @@ namespace Pegasus.Framework.Scripting
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
 			return _instances.TryGetValue(name, out instance);
+		}
+
+		/// <summary>
+		///   Stores the instances of the registry.
+		/// </summary>
+		public abstract class InstanceList
+		{
 		}
 	}
 }

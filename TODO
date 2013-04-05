@@ -27,12 +27,9 @@ Pegasus
 ========
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
 - Improve cvar/command system
-	- Load cvars from config file
-	- Persist cvars in config file
 	- Commands with optional parameters
 	- Better command help (explain meaning of parameters)
 	- Ranged cvars
-	- Expose Command/Cvar objects
 - Console: Input auto completion
 
 Network Specification

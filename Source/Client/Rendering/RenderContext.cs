@@ -78,12 +78,12 @@ namespace Lwar.Client.Rendering
 		{
 			Assert.ArgumentNotNull(output, () => output);
 
+			_skyboxRenderer.Draw(output);
+
 			if (_cvars.DrawWireframe)
 				_wireframe.Bind();
 			else
 				RasterizerState.CullCounterClockwise.Bind();
-
-			_skyboxRenderer.Draw(output);
 
 			DepthStencilState.DepthEnabled.Bind();
 

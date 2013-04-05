@@ -79,8 +79,8 @@ namespace Pegasus.Framework
 			Assert.NotNull(SpriteEffect, "The sprite effect adapter has not been set.");
 			Assert.NotNull(Statistics, "The statistics instance adapter has not been set.");
 
-			var duplicateName = Cvars.Instances.Select(cvar => cvar.Name)
-									 .Concat(Commands.Instances.Select(command => command.Name))
+			var duplicateName = Cvars.AllInstances.Select(cvar => cvar.Name)
+									 .Concat(Commands.AllInstances.Select(command => command.Name))
 									 .GroupBy(name => name)
 									 .FirstOrDefault(group => group.Count() > 1);
 

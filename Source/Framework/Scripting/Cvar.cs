@@ -58,7 +58,7 @@ namespace Pegasus.Framework.Scripting
 
 				var oldValue = _value;
 				_value = value;
-				Log.Info("'{0}' is now '{1}'.", Name, value);
+				Log.Info("'{0}' is now '{1}'.", Name, StringValue);
 
 				if (Changed != null)
 					Changed(oldValue);
@@ -81,7 +81,7 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   Gets the cvar's value as a string.
 		/// </summary>
-		string ICvar.StringValue
+		public string StringValue
 		{
 			get { return TypeRepresentation.ToString(Value); }
 		}
