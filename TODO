@@ -26,10 +26,7 @@ Client
 Pegasus
 ========
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
-- Improve cvar/command system
-	- Ranged cvars
 - Console: Input auto completion
-- Validation attributes also on command params
 
 Network Specification
 ========

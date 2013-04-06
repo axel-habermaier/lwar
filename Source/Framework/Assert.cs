@@ -24,7 +24,8 @@ namespace Pegasus.Framework
 				throw new ArgumentNullException("argumentName");
 
 			if (argument == null)
-				throw new ArgumentNullException(argumentName.GetReferencedVariableName());
+				throw new ArgumentNullException(argumentName.GetReferencedVariableName(),
+												String.Format("Parameter '{0}' cannot be null.", argumentName.GetReferencedVariableName()));
 		}
 
 		/// <summary>
@@ -39,7 +40,8 @@ namespace Pegasus.Framework
 				throw new ArgumentNullException("argumentName");
 
 			if (ptr == IntPtr.Zero)
-				throw new ArgumentNullException(argumentName.GetReferencedVariableName());
+				throw new ArgumentNullException(argumentName.GetReferencedVariableName(),
+												String.Format("Parameter '{0}' cannot be null.", argumentName.GetReferencedVariableName()));
 		}
 
 		/// <summary>
@@ -59,8 +61,9 @@ namespace Pegasus.Framework
 
 			if (String.IsNullOrWhiteSpace(argument))
 			{
-				throw new ArgumentException("String cannot be empty or consist of whitespace only.",
+				var message = String.Format("String parameter '{0}' cannot be empty or consist of whitespace only.",
 											argumentName.GetReferencedVariableName());
+				throw new ArgumentException(message, argumentName.GetReferencedVariableName());
 			}
 		}
 
@@ -284,8 +287,7 @@ namespace Pegasus.Framework
 			var memberExpression = expression.Body as MemberExpression;
 			if (memberExpression == null)
 			{
-				throw new ArgumentException("Expression must be of the form () => var, where var is a locally defined variable.",
-											"expression");
+				throw new ArgumentException("Expression must be of the form () => var, where var is a locally defined variable.", "expression");
 			}
 
 			return memberExpression.Member.Name;

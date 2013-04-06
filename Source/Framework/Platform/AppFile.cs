@@ -43,7 +43,8 @@ namespace Pegasus.Framework.Platform
 		public string AbsolutePath { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the file name is valid, i.e., is not an absolute or relative file path.
+		///   Gets a value indicating whether the file name is valid, i.e., is not an absolute or relative file path and does not
+		///   contain any invalid characters.
 		/// </summary>
 		public bool IsValid
 		{
@@ -110,7 +111,7 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		/// Normalizes the line endings of the given input string to '\n'.
+		///   Normalizes the line endings of the given input string to '\n'.
 		/// </summary>
 		/// <param name="input">The input whose line endings should be normalized.</param>
 		private static string NormalizeLineEndings(string input)

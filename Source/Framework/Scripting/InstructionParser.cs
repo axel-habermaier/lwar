@@ -132,7 +132,7 @@ namespace Pegasus.Framework.Scripting
 				{
 					inputStream.SkipWhiteSpaces(); // To get the correct column in the error message
 					return Errors(new ErrorMessage(ErrorType.Expected, TypeDescription.GetDescription(parameters[i].Type)),
-								  new ErrorMessage(ErrorType.Message, GetHelpText(command)));
+								  new ErrorMessage(ErrorType.Message, Help.GetHint(command.Name)));
 				}
 
 				// The argument must be separated from the previous one by at least one white space character
@@ -146,19 +146,12 @@ namespace Pegasus.Framework.Scripting
 				if (reply.Status == ReplyStatus.Success)
 					values[i] = reply.Result;
 				else
-					return ForwardError(reply, GetHelpText(command));
+					return ForwardError(reply, Help.GetHint(command.Name));
 			}
 
 			return Success(new Instruction(command, values));
 		}
 
-		/// <summary>
-		///   Gets a help string for the given command.
-		/// </summary>
-		/// <param name="command">The command for which the help string should be returned.</param>
-		private static string GetHelpText(ICommand command)
-		{
-			return string.Format("Use 'help {0}' for details about the usage of '{0}'.", command.Name);
-		}
+		
 	}
 }

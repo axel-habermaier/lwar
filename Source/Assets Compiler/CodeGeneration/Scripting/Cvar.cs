@@ -52,6 +52,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
+		///   Gets the validators that have been declared for the cvar.
+		/// </summary>
+		public IEnumerable<Validator> Validators
+		{
+			get { return GetChildElements<Validator>(); }
+		}
+
+		/// <summary>
 		///   Gets the default value of the cvar.
 		/// </summary>
 		public string DefaultValue
@@ -72,6 +80,18 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		public bool Persistent
 		{
 			get { return GetAttribute(_property.Attributes, "Persistent") != null; }
+		}
+
+		/// <summary>
+		///   Invoked when the element should initialize itself.
+		/// </summary>
+		protected override void Initialize()
+		{
+			// Add all validators declared for the cvar
+			AddElements(from section in _property.Attributes
+						from attribute in section.Attributes
+						where !AttributeHasType(attribute, "Cvar") && !AttributeHasType(attribute, "Persistent")
+						select new Validator(attribute));
 		}
 
 		/// <summary>

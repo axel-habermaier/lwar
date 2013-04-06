@@ -99,8 +99,6 @@ namespace Pegasus.Framework
 				Context = context;
 				Initialize();
 
-				context.Commands.OnTest += (s,j, i) => Log.Info("{0}/{1}/{2}", s,j, i);
-
 				var defaultFont = context.Assets.LoadFont(context.DefaultFontName);
 				using (var spriteBatch = new SpriteBatch(context.GraphicsDevice, uiOutput, context.SpriteEffect))
 				using (var console = new Console(context.GraphicsDevice, context.LogicalInputDevice, spriteBatch, defaultFont,
@@ -116,8 +114,9 @@ namespace Pegasus.Framework
 					context.Window.Resized += context.Statistics.Resize;
 					context.Commands.OnReloadAssets += context.Assets.ReloadAssets;
 
-					// Copy the recorded log history to the console
+					// Copy the recorded log history to the console and explain the usage of the console
 					logFile.WriteToConsole(console);
+					context.Commands.Help();
 
 					while (_running)
 					{

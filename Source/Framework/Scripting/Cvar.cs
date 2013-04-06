@@ -15,6 +15,11 @@ namespace Pegasus.Framework.Scripting
 		private readonly T _defaultValue;
 
 		/// <summary>
+		///   The validators that are used to validate a new value that should be set.
+		/// </summary>
+		private readonly ValidatorAttribute[] _validators;
+
+		/// <summary>
 		///   The current value of the cvar.
 		/// </summary>
 		private T _value;
@@ -26,17 +31,19 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="defaultValue">The default value of the cvar.</param>
 		/// <param name="description">A description of the cvar's purpose.</param>
 		/// <param name="persistent">Indicates whether the cvar's value should be persisted across sessions.</param>
-		public Cvar(string name, T defaultValue, string description, bool persistent)
+		/// <param name="validators">The validators that should be used to validate a new cvar value before it is set.</param>
+		public Cvar(string name, T defaultValue, string description, bool persistent, params ValidatorAttribute[] validators)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
 			Assert.ArgumentNotNullOrWhitespace(description, () => description);
 
 			Name = name;
 			Description = description;
+			Persistent = persistent;
 
 			_defaultValue = defaultValue;
 			_value = defaultValue;
-			Persistent = persistent;
+			_validators = validators ?? new ValidatorAttribute[0];
 		}
 
 		/// <summary>
@@ -50,6 +57,16 @@ namespace Pegasus.Framework.Scripting
 				if (_value.Equals(value))
 				{
 					Log.Warn("'{0}' has not been changed, because the new and the old value are the same.", Name);
+					return;
+				}
+
+				foreach (var validator in _validators)
+				{
+					if (validator.Validate(value))
+						continue;
+
+					Log.Error("'{0}' could not be set to '{1}': {2}", Name, value, validator.Description);
+					Log.Info(Help.GetHint(Name));
 					return;
 				}
 

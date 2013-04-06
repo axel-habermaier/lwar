@@ -49,6 +49,7 @@ namespace Pegasus.Framework.Scripting
 		{
 			Assert.ArgumentNotNull(parameters, () => parameters);
 			Assert.ArgumentSatisfies(parameters.Length == 0, () => parameters, "Argument count mismatch.");
+
 			Invoke();
 		}
 

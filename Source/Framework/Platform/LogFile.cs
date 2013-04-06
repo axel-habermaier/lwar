@@ -106,8 +106,8 @@ namespace Pegasus.Framework.Platform
 
 			var logs = _logEntries.Select(l => String.Format("[{0}] ({1}): {2}", l.Time.ToString("HH:mm:ss.ffff"), l.LogType, l.Message));
 
-			_file.Append(logs, e => Log.Warn("Failed to append to log file: {0}", e.Message));
-			_logEntries.Clear();
+			if (_file.Append(logs, e => Log.Warn("Failed to append to log file: {0}", e.Message)))
+				_logEntries.Clear();
 		}
 
 		/// <summary>

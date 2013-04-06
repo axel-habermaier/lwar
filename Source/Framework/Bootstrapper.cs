@@ -44,6 +44,7 @@ namespace Pegasus.Framework
 							 IntPtr.Size == 4 ? "32" : "64",
 							 PlatformInfo.GraphicsApi);
 				
+					using (new Help(context.Commands, context.Cvars))
 					using (new Interpreter(context.AppName, context.Commands, context.Cvars))
 					{
 						context.Commands.Process(ConfigurationFile.AutoExec);

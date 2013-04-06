@@ -63,10 +63,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 							  from import in ancestor.Descendants.OfType<UsingDeclaration>()
 							  let importedNamespace = import.Import.ToString()
 							  where importedNamespace != "System"
-							  orderby importedNamespace
 							  select importedNamespace;
 
-				return imports.Distinct();
+				return imports.Concat(new[] { "Pegasus.Framework" }).Distinct();
 			}
 		}
 

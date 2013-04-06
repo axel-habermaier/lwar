@@ -2,6 +2,8 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration
 {
+	using System.Collections.Generic;
+	using System.Linq;
 	using System.Text;
 	using Framework;
 
@@ -124,6 +126,54 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 				Append(";");
 
 			Newline();
+		}
+
+		/// <summary>
+		///   Appends a list of values to the current line, with each value being separated by the given separator.
+		/// </summary>
+		/// <param name="source">The source values, for each of which the content is generated.</param>
+		/// <param name="separator">The separator that separates to successive values.</param>
+		/// <param name="content">
+		///   Generates the content that should be appended for each value in source by calling Append methods
+		///   of this code writer instance.
+		/// </param>
+		public void AppendSeparated<T>(IEnumerable<T> source, string separator, Action<T> content)
+		{
+			Assert.ArgumentNotNull(source, () => source);
+			Assert.ArgumentNotNull(separator, () => separator);
+			Assert.ArgumentNotNull(content, () => content);
+
+			AppendSeparated(source, () => Append(separator), content);
+		}
+
+		/// <summary>
+		///   Appends a list of values to the current line, with each value being separated by the given separator.
+		/// </summary>
+		/// <param name="source">The source values, for each of which the content is generated.</param>
+		/// <param name="separator">
+		///   Generates the separator that should be appended between two consecutive values by calling Append methods
+		///   of this code writer instance.
+		/// </param>
+		/// <param name="content">
+		///   Generates the content that should be appended for each value in source by calling Append methods
+		///   of this code writer instance.
+		/// </param>
+		public void AppendSeparated<T>(IEnumerable<T> source, Action separator, Action<T> content)
+		{
+			Assert.ArgumentNotNull(source, () => source);
+			Assert.ArgumentNotNull(separator, () => separator);
+			Assert.ArgumentNotNull(content, () => content);
+
+			var count = source.Count();
+			var i = 0;
+			foreach (var value in source)
+			{
+				content(value);
+				if (i < count - 1)
+					separator();
+
+				++i;
+			}
 		}
 
 		/// <summary>

@@ -2,6 +2,8 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 {
+	using System.Collections.Generic;
+	using System.Linq;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 
@@ -55,6 +57,26 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		public string DefaultValue
 		{
 			get { return _parameter.DefaultExpression.ToString(); }
+		}
+
+		/// <summary>
+		///   Gets the validators that have been declared for the parameter.
+		/// </summary>
+		public IEnumerable<Validator> Validators
+		{
+			get { return GetChildElements<Validator>(); }
+		}
+
+		/// <summary>
+		///   Invoked when the element should initialize itself.
+		/// </summary>
+		protected override void Initialize()
+		{
+			// Add all validators declared for the parameter
+			AddElements(from section in _parameter.Attributes
+						from attribute in section.Attributes
+						where !AttributeHasType(attribute, "Cvar") && !AttributeHasType(attribute, "Persistent")
+						select new Validator(attribute));
 		}
 
 		/// <summary>

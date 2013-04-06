@@ -31,20 +31,30 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		}
 
 		/// <summary>
-		///   Gets the attribute with the given name, where the name can optionally end with 'Attribute'.
+		///   Gets the attribute with the given type, where the type can optionally end with 'Attribute'.
 		/// </summary>
 		/// <param name="attributeSections">The attributes that should be searched.</param>
-		/// <param name="name">The name of the attribute that should be returned.</param>
-		protected Attribute GetAttribute(AstNodeCollection<AttributeSection> attributeSections, string name)
+		/// <param name="type">The type of the attribute that should be returned.</param>
+		protected Attribute GetAttribute(AstNodeCollection<AttributeSection> attributeSections, string type)
 		{
 			Assert.ArgumentNotNull(attributeSections, () => attributeSections);
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
+			Assert.ArgumentNotNullOrWhitespace(type, () => type);
 
 			var attributes = from attribute in attributeSections.SelectMany(section => section.Attributes)
-							 where attribute.Type.ToString() == name || attribute.Type.ToString() == name + "Attribute"
+							 where AttributeHasType(attribute, type)
 							 select attribute;
 
 			return attributes.FirstOrDefault();
+		}
+
+		/// <summary>
+		///   Checks whether the attribute is of the given type, where the type can optionally end with 'Attribute'.
+		/// </summary>
+		/// <param name="attribute">The attribute that should be checked.</param>
+		/// <param name="type">The type of the attribute that should be checked.</param>
+		protected bool AttributeHasType(Attribute attribute, string type)
+		{
+			return attribute.Type.ToString() == type || attribute.Type.ToString() == type + "Attribute";
 		}
 	}
 }

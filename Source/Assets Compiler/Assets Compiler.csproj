@@ -201,6 +201,7 @@
     <Compile Include="CodeGeneration\Scripting\RegistryFile.cs" />
     <Compile Include="CodeGeneration\Scripting\Registry.cs" />
     <Compile Include="CodeGeneration\Scripting\RegistryProject.cs" />
+    <Compile Include="CodeGeneration\Scripting\Validator.cs" />
     <Compile Include="Compilers\AssetCompiler.cs" />
     <Compile Include="AssetWriter.cs" />
     <Compile Include="CompilationUnit.cs" />

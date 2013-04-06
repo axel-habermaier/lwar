@@ -68,18 +68,25 @@ namespace Pegasus.Framework.Scripting
 		{
 			Assert.ArgumentNotNull(parameters, () => parameters);
 			Assert.ArgumentSatisfies(parameters.Length == 2, () => parameters, "Argument count mismatch.");
+
 			Invoke((T1)parameters[0], (T2)parameters[1]);
 		}
 
 		/// <summary>
 		///   Invokes the command.
 		/// </summary>
-		/// <param name="parameter1">The value of the first parameter of the command.</param>
-		/// <param name="parameter2">The value of the second parameter of the command.</param>
-		public void Invoke(T1 parameter1, T2 parameter2)
+		/// <param name="value1">The value of the first parameter of the command.</param>
+		/// <param name="value2">The value of the second parameter of the command.</param>
+		public void Invoke(T1 value1, T2 value2)
 		{
+			if (!_parameter1.Validate(value1) | !_parameter2.Validate(value2))
+			{
+				Log.Info(Help.GetHint(Name));
+				return;
+			}
+
 			if (Invoked != null)
-				Invoked(parameter1, parameter2);
+				Invoked(value1, value2);
 		}
 
 		/// <summary>

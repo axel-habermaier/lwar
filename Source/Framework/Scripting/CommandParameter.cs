@@ -8,6 +8,11 @@ namespace Pegasus.Framework.Scripting
 	public struct CommandParameter
 	{
 		/// <summary>
+		///   The validators that are used to validate a parameter value.
+		/// </summary>
+		private readonly ValidatorAttribute[] _validators;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="name">The name of the parameter.</param>
@@ -15,7 +20,9 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="hasDefaultValue">Indicates whether the parameter has a default value.</param>
 		/// <param name="defaultValue">The default value that should be used if no value has been specified.</param>
 		/// <param name="description">The description of the parameter.</param>
-		public CommandParameter(string name, Type type, bool hasDefaultValue, object defaultValue, string description)
+		/// <param name="validators">The validators that should be used to validate a parameter value.</param>
+		public CommandParameter(string name, Type type, bool hasDefaultValue, object defaultValue, string description,
+								params ValidatorAttribute[] validators)
 			: this()
 		{
 			Assert.ArgumentNotNullOrWhitespace(name, () => name);
@@ -27,6 +34,7 @@ namespace Pegasus.Framework.Scripting
 			HasDefaultValue = hasDefaultValue;
 			DefaultValue = defaultValue;
 			Description = description;
+			_validators = validators ?? new ValidatorAttribute[0];
 		}
 
 		/// <summary>
@@ -53,5 +61,26 @@ namespace Pegasus.Framework.Scripting
 		///   Gets the description of the parameter.
 		/// </summary>
 		public string Description { get; private set; }
+
+		/// <summary>
+		///   Validates the given value.
+		/// </summary>
+		/// <param name="value">The value that should be validated.</param>
+		[Pure]
+		internal bool Validate(object value)
+		{
+			Assert.ArgumentNotNull(value, () => value);
+
+			foreach (var validator in _validators)
+			{
+				if (validator.Validate(value))
+					continue;
+
+				Log.Error("'{0}' is not a valid value for parameter '{1}': {2}", value, Name, validator.Description);
+				return false;
+			}
+
+			return true;
+		}
 	}
 }

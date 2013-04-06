@@ -44,12 +44,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		{
 			_writer.WriterHeader("//");
 			_writer.AppendLine("using System;");
+			_writer.AppendLine("using System.Diagnostics;");
 			_writer.Newline();
 
 			_writer.AppendLine("namespace {0}", _registry.Namespace);
 			_writer.AppendBlockStatement(() =>
 				{
-					foreach (var import in _registry.ImportedNamespaces)
+					foreach (var import in _registry.ImportedNamespaces.OrderBy(import => import))
 						_writer.AppendLine("using {0};", import);
 
 					if (_registry.ImportedNamespaces.Any())
@@ -87,7 +88,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 				_writer.AppendBlockStatement(() =>
 					{
 						_writer.AppendLine("get {{ return Instances.{0}.Value; }}", cvar.Name);
-						_writer.AppendLine("set {{ Instances.{0}.Value = value; }}", cvar.Name);
+						_writer.AppendLine("[DebuggerHidden]");
+						_writer.AppendLine("set");
+						_writer.AppendBlockStatement(() =>
+							{
+								_writer.AppendLine("Assert.ArgumentNotNull((object)value, () => value);");
+								_writer.AppendLine("Instances.{0}.Value = value;", cvar.Name);
+							});
 					});
 
 				_writer.Newline();
@@ -102,9 +109,15 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 			foreach (var command in _registry.Commands)
 			{
 				WriteDocumentation(command.Documentation);
+				_writer.AppendLine("[DebuggerHidden]");
 				_writer.AppendLine("public void {0}({1})", command.Name, GetArgumentDeclarations(command));
-				_writer.AppendBlockStatement(
-					() => _writer.AppendLine("Instances.{0}.Invoke({1});", command.Name, GetInvocationArguments(command)));
+				_writer.AppendBlockStatement(() =>
+					{
+						foreach (var parameter in command.Parameters)
+							_writer.AppendLine("Assert.ArgumentNotNull((object){0}, () => {0});", parameter.Name);
+
+						_writer.AppendLine("Instances.{0}.Invoke({1});", command.Name, GetInvocationArguments(command));
+					});
 
 				_writer.Newline();
 			}
@@ -194,9 +207,12 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 				{
 					foreach (var cvar in _registry.Cvars)
 					{
-						_writer.AppendLine("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {5});",
-										   cvar.Type, cvar.Name, GetRuntimeName(cvar.Name), cvar.DefaultValue,
-										   GetSummaryText(cvar.Documentation), cvar.Persistent.ToString().ToLower());
+						_writer.Append("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {5}",
+									   cvar.Type, cvar.Name, GetRuntimeName(cvar.Name), cvar.DefaultValue,
+									   GetSummaryText(cvar.Documentation), cvar.Persistent.ToString().ToLower());
+
+						AppendValidators(cvar.Validators);
+						_writer.AppendLine(");");
 					}
 
 					if (_registry.Cvars.Any() && _registry.Commands.Any())
@@ -211,6 +227,24 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 						GenerateCommandParameters(command);
 						_writer.AppendLine(");");
 					}
+				});
+		}
+
+		/// <summary>
+		///   Appends the validator creation expressions to the current line.
+		/// </summary>
+		/// <param name="validators">The validators that should be added.</param>
+		private void AppendValidators(IEnumerable<Validator> validators)
+		{
+			if (!validators.Any())
+				return;
+
+			_writer.Append(", ");
+			_writer.AppendSeparated(validators, ", ", validator =>
+				{
+					_writer.Append("new {0}(", validator.Name);
+					_writer.AppendSeparated(validator.Arguments, ", ", argument => _writer.Append(argument));
+					_writer.Append(")");
 				});
 		}
 
@@ -253,23 +287,18 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 
 			_writer.IncreaseIndent();
 			_writer.AppendLine(", ");
+			_writer.AppendSeparated(command.Parameters, () => _writer.AppendLine(","), parameter =>
+				{
+					_writer.Append("new CommandParameter(\"{0}\", typeof({1}), {2}, {3}, \"{4}\"",
+								   parameter.Name,
+								   parameter.Type,
+								   parameter.HasDefaultValue.ToString().ToLower(),
+								   parameter.HasDefaultValue ? parameter.DefaultValue : String.Format("default({0})", parameter.Type),
+								   GetParameterTag(command.Documentation, parameter.Name));
 
-			var i = 0;
-			foreach (var parameter in from parameter in command.Parameters
-									  let description = GetParameterTag(command.Documentation, parameter.Name)
-									  select String.Format("new CommandParameter(\"{0}\", typeof({1}), {2}, {3}, \"{4}\")",
-														   parameter.Name,
-														   parameter.Type,
-														   parameter.HasDefaultValue.ToString().ToLower(),
-														   parameter.HasDefaultValue ? parameter.DefaultValue : String.Format("default({0})", parameter.Type),
-														   description))
-			{
-				if (i == command.Parameters.Count() - 1)
-					_writer.Append(parameter);
-				else
-					_writer.AppendLine("{0}, ", parameter);
-				++i;
-			}
+					AppendValidators(parameter.Validators);
+					_writer.Append(")");
+				});
 
 			_writer.DecreaseIndent();
 		}
@@ -368,7 +397,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Scripting
 		/// <param name="command">The command for which the argument declarations should be returned.</param>
 		private static string GetArgumentDeclarations(Command command)
 		{
-			return String.Join(", ", command.Parameters.Select(parameter => String.Format("{0} {1}", parameter.Type, parameter.Name)));
+			return String.Join(", ", command.Parameters.Select(parameter =>
+				{
+					if (parameter.HasDefaultValue)
+						return String.Format("{0} {1} = {2}", parameter.Type, parameter.Name, parameter.DefaultValue);
+						
+					return String.Format("{0} {1}", parameter.Type, parameter.Name);
+				}));
 		}
 
 		/// <summary>
