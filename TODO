@@ -29,7 +29,7 @@ Pegasus
 - Improve cvar/command system
 	- Ranged cvars
 - Console: Input auto completion
-- Fix crash when the game is minimized
+- Validation attributes also on command params
 
 Network Specification
 ========

@@ -29,7 +29,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 			{ typeof(ulong), AsObject(UInt64) },
 			{ typeof(double), AsObject(Float64) },
 			{ typeof(float), AsObject(Float32) },
-			{ typeof(string), AsObject(StringLiteral) },
+			{ typeof(string), AsObject(QuotedStringLiteral) },
 			{ typeof(InputTrigger), AsObject(new InputTriggerParser<TUserState>()) },
 			{ typeof(bool), AsObject(Boolean) },
 			{ typeof(IPEndPoint), AsObject(new IPEndPointParser<TUserState>()) },
@@ -40,12 +40,16 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="type">The type that should be parsed.</param>
-		public TypeParser(Type type)
+		/// <param name="requireQuotesForString">Indicates whether strings must be enclosed by quotes.</param>
+		public TypeParser(Type type, bool requireQuotesForString = true)
 		{
 			Assert.ArgumentNotNull(type, () => type);
 			Assert.That(TypeParsers.ContainsKey(type), "No parser has been registered for type '{0}'.", type.FullName);
 
 			Parser = TypeParsers[type];
+
+			if (type == typeof(string) && !requireQuotesForString)
+				Parser = Parser | AsObject(String(c => true, "string"));
 		}
 
 		/// <summary>

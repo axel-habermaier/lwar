@@ -43,14 +43,16 @@ namespace Pegasus.Framework
 							 PlatformInfo.Platform,
 							 IntPtr.Size == 4 ? "32" : "64",
 							 PlatformInfo.GraphicsApi);
-
-					ParseCommandLine(context.Cvars);
-					// Exec autoexe here, then exec command lines, remove allof that from app
-					// readd execute command, connect console and interpreter via this command
-					using (var interpreter = new Interpreter(context.AppName, context.Commands, context.Cvars))
+				
+					using (new Interpreter(context.AppName, context.Commands, context.Cvars))
 					{
+						context.Commands.Process(ConfigurationFile.AutoExec);
+						ParseCommandLine(context.Cvars);
+
 						var app = new TApp();
 						app.Run(context, logFile);
+
+						context.Commands.Persist(ConfigurationFile.AutoExec);
 					}
 
 					Log.Info("{0} has shut down.", context.AppName);

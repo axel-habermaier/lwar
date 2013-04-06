@@ -18,7 +18,7 @@ namespace Pegasus.Framework.Scripting
 			{ typeof(bool), o => o.ToString().ToLower() },
 			{ typeof(float), o => ((float)o).ToString("F") },
 			{ typeof(double), o => ((double)o).ToString("F") },
-			{ typeof(string), o => String.Format("\"{0}\"", o.ToString().Replace("\"", "\\\"")) },
+			{ typeof(string), o => (string)o },
 			{ typeof(InputTrigger), o => String.Format("[{0}]", o) }
 		};
 

@@ -36,7 +36,7 @@ namespace Pegasus.Framework.Scripting
 		public override Reply<IEnumerable<Instruction>> Parse(InputStream<None> inputStream)
 		{
 			var endOrWhitespace = ~(Attempt(WhiteSpaces + ~EndOfInput) | WhiteSpaces1);
-			var appPath = ~((StringLiteral | String(c => c != ' ', "application path")) + ~endOrWhitespace);
+			var appPath = ~((QuotedStringLiteral | String(c => c != ' ', "application path")) + ~endOrWhitespace);
 
 			// Ignore the application path at the beginning of the command line
 			var reply = appPath.Parse(inputStream);

@@ -23,6 +23,22 @@ namespace Pegasus.Framework.Scripting
 		void Help(string name);
 
 		/// <summary>
+		/// asdf
+		/// </summary>
+		/// <param name="n">fd</param>
+		/// <param name="j">fd</param>
+		/// <param name="i">fd</param>
+		[Command]
+		void Test(string n, int j ,int i = 22);
+
+		/// <summary>
+		///   Executes the given command.
+		/// </summary>
+		/// <param name="command">The command that should be executed, including its arguments.</param>
+		[Command]
+		void Execute(string command);
+
+		/// <summary>
 		///   Processes the commands in the given file.
 		/// </summary>
 		/// <param name="fileName">The name of the file in the application's user directory that should be processed.</param>

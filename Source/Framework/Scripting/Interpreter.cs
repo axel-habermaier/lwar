@@ -47,6 +47,7 @@ namespace Pegasus.Framework.Scripting
 			_cvars = cvars;
 			_parser = new InstructionParser(_commands, cvars);
 
+			_commands.OnExecute += OnExecute;
 			_commands.OnHelp += OnHelp;
 			_commands.OnProcess += OnProcess;
 			_commands.OnPersist += OnPersist;
@@ -57,6 +58,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_commands.OnExecute -= OnExecute;
 			_commands.OnHelp -= OnHelp;
 			_commands.OnProcess -= OnProcess;
 			_commands.OnPersist -= OnPersist;
@@ -66,9 +68,12 @@ namespace Pegasus.Framework.Scripting
 		///   Executes the given user-provided input.
 		/// </summary>
 		/// <param name="input">The input that should be executed.</param>
-		public void Execute(string input)
+		private void OnExecute(string input)
 		{
-			Assert.ArgumentNotNullOrWhitespace(input, () => input);
+			Assert.ArgumentNotNull(input, () => input);
+
+			if (String.IsNullOrWhiteSpace(input))
+				return;
 
 			var reply = _parser.Parse(input);
 
@@ -90,7 +95,7 @@ namespace Pegasus.Framework.Scripting
 			name = name.Trim();
 			if (_cvars.TryFind(name, out cvar))
 			{
-				Log.Info("'{0}' : {1} = {2} (default: {3}): {4}", cvar.Name, TypeDescription.GetDescription(cvar.ValueType),
+				Log.Info("'{0}' : {1} = '{2}' (default: '{3}'): {4}", cvar.Name, TypeDescription.GetDescription(cvar.ValueType),
 						 cvar.StringValue, cvar.DefaultValue, cvar.Description);
 			}
 			else if (_commands.TryFind(name, out command))
@@ -101,7 +106,7 @@ namespace Pegasus.Framework.Scripting
 					var type = TypeDescription.GetDescription(parameter.Type);
 					var defaultValue = String.Empty;
 					if (parameter.HasDefaultValue)
-						defaultValue = String.Format(" = {0}", TypeRepresentation.ToString(parameter.DefaultValue));
+						defaultValue = String.Format(" = '{0}'", TypeRepresentation.ToString(parameter.DefaultValue));
 
 					Log.Info("    {0} : [{1}]{3}  {2}", parameter.Name, type, parameter.Description, defaultValue);
 				}

@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Linq;
+
 	/// <summary>
 	///   Represents an interpreted instruction that invokes a command, sets a cvar, or displays the value of a cvar.
 	/// </summary>
@@ -25,7 +27,10 @@ namespace Pegasus.Framework.Scripting
 		public Instruction(object target, object parameter)
 		{
 			Assert.ArgumentNotNull(target, () => target);
-			Assert.That(!(target is ICommand) || parameter != null, "A parameter must be specified for an command invocation.");
+			Assert.That(!(target is ICommand) || (parameter is object[] && ((object[])parameter).Length == ((ICommand)target).Parameters.Count()),
+						"Incorrect command parameters.");
+			Assert.That(!(target is ICvar) || (parameter == null || parameter.GetType() == ((ICvar)target).ValueType),
+						"Incorrect cvar parameters.");
 
 			_target = target;
 			_parameter = parameter;

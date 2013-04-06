@@ -203,7 +203,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   Parses a string literal enclosed in double quotes. Double quotes can be used inside the string literal if they are
 		///   escaped by a backslash '\"'.
 		/// </summary>
-		protected static readonly Parser<string, TUserState> StringLiteral = new QuotedStringParser<TUserState>();
+		protected static readonly Parser<string, TUserState> QuotedStringLiteral = new QuotedStringParser<TUserState>();
 
 		#endregion
 

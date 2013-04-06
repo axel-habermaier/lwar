@@ -14,8 +14,7 @@ namespace Pegasus.Framework.Scripting
 	///   highly dynamic, meaning that it does not parse a statically defined grammar. Instead, depending on the cvar name or
 	///   command name that is found at the beginning of the input, the remainder of the parser is configured dynamically to
 	///   parse exactly the possible arguments of a cvar or command instruction. Therefore, the parser is already responsible
-	///   for
-	///   the type checks of the arguments. Secondly, the requirement that the cvar/command name and all arguments are
+	///   for the type checks of the arguments. Secondly, the requirement that the cvar/command name and all arguments are
 	///   separated by white space requires some backtracking by the parser, making it harder to generate good error
 	///   messages. Most of the complexity of this parser is a result of the generation of good error messages.
 	/// </remarks>
@@ -96,7 +95,7 @@ namespace Pegasus.Framework.Scripting
 		{
 			var cvarDisplay = EndOfInstruction.Apply(_ => new Instruction(cvar, null));
 
-			var cvarSet = (~WhiteSpaces1 + new TypeParser<None>(cvar.ValueType) + EndOfInstruction)
+			var cvarSet = (~WhiteSpaces1 + new TypeParser<None>(cvar.ValueType, false) + EndOfInstruction)
 				.Apply(v => new Instruction(cvar, v));
 
 			var cvarParser = Attempt(cvarDisplay) | cvarSet;
@@ -108,92 +107,58 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		/// <param name="command">The command referenced by the instruction.</param>
-		private static Reply<Instruction> Parse(InputStream<None> inputStream, ICommand command)
+		private Reply<Instruction> Parse(InputStream<None> inputStream, ICommand command)
 		{
 			// Depending on whether the command actually has any parameters, modify the grammar to get better error messages
-			Parser<Instruction, None> commandParser;
 			if (!command.Parameters.Any())
-				commandParser = EndOfInstruction.Apply(_ => new Instruction(command, new object[0]));
-			else
+				return EndOfInstruction.Apply(_ => new Instruction(command, new object[0])).Parse(inputStream);
+
+			var parameters = command.Parameters.ToArray();
+			var values = new object[parameters.Length];
+
+			for (var i = 0; i < parameters.Length; ++i)
 			{
-				var parser = new ArgumentListParser(command).Apply(parameters => new Instruction(command, parameters));
-				commandParser = parser + ~EndOfInstruction;
+				// We've reached the end of the input, and all subsequent parameters should use their default value, we're done
+				if (inputStream.WhiteSpaceUntilEndOfInput() && parameters[i].HasDefaultValue)
+				{
+					for (var j = i; j < parameters.Length; ++j)
+						values[j] = parameters[j].DefaultValue;
+
+					break;
+				}
+				
+				// We've reached the end of the input, but we're missing at least one parameter
+				if (inputStream.WhiteSpaceUntilEndOfInput() && !parameters[i].HasDefaultValue)
+				{
+					inputStream.SkipWhiteSpaces(); // To get the correct column in the error message
+					return Errors(new ErrorMessage(ErrorType.Expected, TypeDescription.GetDescription(parameters[i].Type)),
+								  new ErrorMessage(ErrorType.Message, GetHelpText(command)));
+				}
+
+				// The argument must be separated from the previous one by at least one white space character
+				if (!Char.IsWhiteSpace(inputStream.Peek()))
+					return Expected("whitespace");
+
+				inputStream.SkipWhiteSpaces();
+
+				var isLastParameter = i == parameters.Length - 1;
+				var reply = new TypeParser<None>(parameters[i].Type, !isLastParameter).Parse(inputStream);
+				if (reply.Status == ReplyStatus.Success)
+					values[i] = reply.Result;
+				else
+					return ForwardError(reply, GetHelpText(command));
 			}
 
-			return commandParser.Parse(inputStream);
+			return Success(new Instruction(command, values));
 		}
 
 		/// <summary>
-		///   Parses an arguments list for a command invocation.
+		///   Gets a help string for the given command.
 		/// </summary>
-		private class ArgumentListParser : Parser<object[], None>
+		/// <param name="command">The command for which the help string should be returned.</param>
+		private static string GetHelpText(ICommand command)
 		{
-			/// <summary>
-			///   The command for which the argument list is parsed.
-			/// </summary>
-			private readonly ICommand _command;
-
-			/// <summary>
-			///   Initializes a new instance.
-			/// </summary>
-			/// <param name="command">The command for which the argument list should be parsed.</param>
-			public ArgumentListParser(ICommand command)
-			{
-				Assert.ArgumentNotNull(command, () => command);
-				_command = command;
-			}
-
-			/// <summary>
-			///   Parses the given input string and returns the command arguments.
-			/// </summary>
-			/// <param name="inputStream">The input stream that should be parsed.</param>
-			public override Reply<object[]> Parse(InputStream<None> inputStream)
-			{
-				var parameters = _command.Parameters.ToArray();
-				var values = new object[parameters.Length];
-
-				for (var i = 0; i < parameters.Length; ++i)
-				{
-					// Show an unexpected end of input error message if we've reached the end of the input already (otherwise an 
-					// 'expected white space' message would be shown)
-					if (inputStream.EndOfInput && !parameters[i].HasDefaultValue)
-						return Errors(ErrorMessage.UnexpectedEndOfInput,
-									  new ErrorMessage(ErrorType.Message, GetHelpText(_command)),
-									  new ErrorMessage(ErrorType.Expected, TypeDescription.GetDescription(parameters[i].Type)));
-
-					// We've reached the end of the input, and all subsequent parameters should use their default value
-					if (inputStream.WhiteSpaceUntilEndOfInput() && parameters[i].HasDefaultValue)
-					{
-						for (var j = i; j < parameters.Length; ++j)
-							values[j] = parameters[j].DefaultValue;
-
-						return Success(values);
-					}
-
-					// The argument must be separated from the previous input by at least one white space character
-					if (!Char.IsWhiteSpace(inputStream.Peek()))
-						return Expected("whitespace");
-
-					inputStream.SkipWhiteSpaces();
-
-					var reply = new TypeParser<None>(parameters[i].Type).Parse(inputStream);
-					if (reply.Status == ReplyStatus.Success)
-						values[i] = reply.Result;
-					else
-						return ForwardError(reply, GetHelpText(_command));
-				}
-
-				return Success(values);
-			}
-
-			/// <summary>
-			///   Gets a help string for the given command.
-			/// </summary>
-			/// <param name="command">The command for which the help string should be returned.</param>
-			private static string GetHelpText(ICommand command)
-			{
-				return string.Format("Use 'help \"{0}\"' for details about the usage of '{0}'.", command.Name);
-			}
+			return string.Format("Use 'help {0}' for details about the usage of '{0}'.", command.Name);
 		}
 	}
 }

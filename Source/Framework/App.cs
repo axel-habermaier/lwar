@@ -95,19 +95,18 @@ namespace Pegasus.Framework
 				swapChain.BackBuffer.SetName("Back Buffer");
 				context.SpriteEffect.Initialize(context.GraphicsDevice, context.Assets);
 
+				context.Commands.OnExit += Exit;
 				Context = context;
-				Context.Commands.Process(ConfigurationFile.AutoExec);
 				Initialize();
+
+				context.Commands.OnTest += (s,j, i) => Log.Info("{0}/{1}/{2}", s,j, i);
 
 				var defaultFont = context.Assets.LoadFont(context.DefaultFontName);
 				using (var spriteBatch = new SpriteBatch(context.GraphicsDevice, uiOutput, context.SpriteEffect))
-				using (var console = new Console(context.GraphicsDevice, context.LogicalInputDevice, spriteBatch, defaultFont))
+				using (var console = new Console(context.GraphicsDevice, context.LogicalInputDevice, spriteBatch, defaultFont,
+												 context.Commands.Instances.Execute, context.Commands.Instances.ShowConsole))
 				{
 					context.Statistics.Initialize(context.GraphicsDevice, spriteBatch, defaultFont);
-
-					// Initialize commands and cvars
-					console.UserInput += interpreter.Execute;
-					context.Commands.OnExit += Exit;
 
 					// Ensure that the size of the console and the statistics always matches that of the window
 					console.Resize(context.Window.Size);
@@ -116,7 +115,6 @@ namespace Pegasus.Framework
 					context.Window.Resized += console.Resize;
 					context.Window.Resized += context.Statistics.Resize;
 					context.Commands.OnReloadAssets += context.Assets.ReloadAssets;
-					context.Commands.OnShowConsole += console.ShowConsole;
 
 					// Copy the recorded log history to the console
 					logFile.WriteToConsole(console);
@@ -169,7 +167,6 @@ namespace Pegasus.Framework
 					}
 
 					Dispose();
-					context.Commands.Persist(ConfigurationFile.AutoExec);
 				}
 			}
 		}

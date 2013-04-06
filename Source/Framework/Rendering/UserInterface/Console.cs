@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Math;
 	using Platform.Graphics;
 	using Platform.Input;
+	using Scripting;
 
 	/// <summary>
 	///   A Quake-like in-game console.
@@ -37,6 +38,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private static readonly Color DebugInfoColor = new Color(1.0f, 0.0f, 1.0f, 1.0f);
 
 		/// <summary>
+		///   The execute command that the console invokes when the user submits the input.
+		/// </summary>
+		private readonly Command<string> _execute;
+
+		/// <summary>
 		///   The font used by the console.
 		/// </summary>
 		private readonly Font _font;
@@ -50,6 +56,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   The console's prompt.
 		/// </summary>
 		private readonly ConsolePrompt _prompt;
+
+		/// <summary>
+		///   The show command that determines whether the console is visible.
+		/// </summary>
+		private readonly Command<bool> _show;
 
 		/// <summary>
 		///   The sprite batch that is used for drawing.
@@ -83,12 +94,17 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="inputDevice">The input device that provides the user input.</param>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
-		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, SpriteBatch spriteBatch, Font font)
+		/// <param name="execute"> The execute command that the console should invoke when the user submits the input.</param>
+		/// <param name="show">The show command that should be used to determine whether the console is visible.</param>
+		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, SpriteBatch spriteBatch, Font font,
+					   Command<string> execute, Command<bool> show)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 			Assert.ArgumentNotNull(spriteBatch, () => spriteBatch);
 			Assert.ArgumentNotNull(font, () => font);
+			Assert.ArgumentNotNull(execute, () => execute);
+			Assert.ArgumentNotNull(show, () => show);
 
 			_spriteBatch = spriteBatch;
 			_font = font;
@@ -96,7 +112,10 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_content = new ConsoleContent(_font);
 			_prompt = new ConsolePrompt(_font, InfoColor);
 			_input = new ConsoleInput(inputDevice);
+			_execute = execute;
+			_show = show;
 
+			_show.Invoked += ShowConsole;
 			Log.OnError += ShowError;
 			Log.OnWarning += ShowWarning;
 			Log.OnInfo += ShowInfo;
@@ -124,15 +143,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Raised when user input has been submitted.
-		/// </summary>
-		public event Action<string> UserInput;
-
-		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_show.Invoked -= ShowConsole;
 			Log.OnError -= ShowError;
 			Log.OnWarning -= ShowWarning;
 			Log.OnInfo -= ShowInfo;
@@ -231,8 +246,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				{
 					Log.Info("{0}{1}", ConsolePrompt.Prompt, input);
 
-					if (UserInput != null)
-						UserInput(input);
+					_execute.Invoke(input);
 				}
 			}
 
@@ -268,7 +282,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Shows or hides the console.
 		/// </summary>
 		/// <param name="show">Indicates whether the console should be shown.</param>
-		public void ShowConsole(bool show)
+		private void ShowConsole(bool show)
 		{
 			Active = show;
 		}
