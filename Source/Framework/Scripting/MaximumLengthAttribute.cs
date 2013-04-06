@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Text;
+
 	/// <summary>
 	///   Ensures that the validated string has a length less than or equal to the maximum allowed length.
 	/// </summary>
@@ -11,9 +13,14 @@ namespace Pegasus.Framework.Scripting
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="maximum">The maximum allowed length of the string value.</param>
-		public MaximumLengthAttribute(int maximum)
+		/// <param name="checkUtf8Length">
+		///   Indicates whether instead of checking the number of characters in the string, the size of the UTF8-encoded
+		///   representation of the string should be checked checked.
+		/// </param>
+		public MaximumLengthAttribute(int maximum, bool checkUtf8Length = false)
 		{
 			Maximum = maximum;
+			CheckUtf8Length = checkUtf8Length;
 		}
 
 		/// <summary>
@@ -21,13 +28,19 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		public override string Description
 		{
-			get { return String.Format("The given string exceeds the maximum allowed length of {0} characters.", Maximum); }
+			get { return String.Format("The given string exceeds the maximum allowed length."); }
 		}
 
 		/// <summary>
 		///   Gets the maximum allowed length of the string value.
 		/// </summary>
 		public int Maximum { get; private set; }
+
+		/// <summary>
+		///   Gets a value indicating whether instead of checking the number of characters in the string, the size of the
+		///   UTF8-encoded representation of the string is checked.
+		/// </summary>
+		public bool CheckUtf8Length { get; private set; }
 
 		/// <summary>
 		///   Validates the given value, returning true to indicate that validation succeeded.
@@ -38,7 +51,12 @@ namespace Pegasus.Framework.Scripting
 			Assert.ArgumentNotNull(value, () => value);
 			Assert.ArgumentSatisfies(value is string, () => value, "The value must be a string.");
 
-			var length = ((string)value).Length;
+			int length;
+			if (CheckUtf8Length)
+				length = Encoding.UTF8.GetByteCount((string)value);
+			else
+				length = ((string)value).Length;
+
 			return length <= Maximum;
 		}
 	}

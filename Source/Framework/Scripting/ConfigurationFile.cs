@@ -63,7 +63,11 @@ namespace Pegasus.Framework.Scripting
 		private IEnumerable<Line> ParseLines(bool silent)
 		{
 			string input;
-			if (!_file.Read(out input, e => Log.Error("Unable to read '{0}': {1}", _file.FileName, e.Message)))
+			if (!_file.Read(out input, e =>
+				{
+					if (!silent)
+						Log.Error("Unable to read '{0}': {1}", _file.FileName, e.Message);
+				}))
 				yield break;
 
 			var lineNumber = 0;
