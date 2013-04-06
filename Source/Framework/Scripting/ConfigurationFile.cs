@@ -60,7 +60,7 @@ namespace Pegasus.Framework.Scripting
 		///   Parses the individual lines of the configuration file.
 		/// </summary>
 		/// <param name="silent">Indicates whether parser errors should be silently ignored.</param>
-		private IEnumerable<Line> ParseLines(bool silent)
+		private IEnumerable<ConfigurationLine> ParseLines(bool silent)
 		{
 			string input;
 			if (!_file.Read(out input, e =>
@@ -76,7 +76,7 @@ namespace Pegasus.Framework.Scripting
 				++lineNumber;
 				if (String.IsNullOrWhiteSpace(line) || line.Trim().StartsWith(CommentToken))
 				{
-					yield return new Line(line);
+					yield return new ConfigurationLine(line);
 					continue;
 				}
 
@@ -90,36 +90,34 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="line">The line that should be parsed.</param>
 		/// <param name="lineNumber">The number of the line that should be parsed.</param>
 		/// <param name="silent">Indicates whether parser errors should be silently ignored.</param>
-		private Line ParseLine(string line, int lineNumber, bool silent)
+		private ConfigurationLine ParseLine(string line, int lineNumber, bool silent)
 		{
 			var inputStream = new InputStream<None>(line, _file.FileName, lineNumber);
 			var reply = _parser.Parse(inputStream);
 
 			if (reply.Status == ReplyStatus.Success)
-				return new Line(line, reply.Result);
-			else
+				return new ConfigurationLine(line, reply.Result);
+
+			// Check if there's a comment at the end of the line, try again with the comment removed
+			if (inputStream.Skip(CommentToken))
 			{
-				// Check if there's a comment at the end of the line, try again with the comment removed
-				if (inputStream.Skip(CommentToken))
-				{
-					var endRequest = inputStream.State.Column - CommentToken.Length - 1;
-					// Find the first non-whitespace token
-					while (endRequest - 1 > 0 && Char.IsWhiteSpace(line[endRequest - 1]))
-						--endRequest;
+				var endRequest = inputStream.State.Column - CommentToken.Length - 1;
+				// Find the first non-whitespace token
+				while (endRequest - 1 > 0 && Char.IsWhiteSpace(line[endRequest - 1]))
+					--endRequest;
 
-					var parsedLine = ParseLine(line.Substring(0, endRequest), lineNumber, silent);
+				var parsedLine = ParseLine(line.Substring(0, endRequest), lineNumber, silent);
 
-					return new Line(line, parsedLine.Instruction, endRequest);
-				}
-
-				if (!silent)
-				{
-					reply.GenerateErrorMessage(inputStream);
-					Log.Error(reply.Errors.ErrorMessage);
-				}
-
-				return new Line(line);
+				return new ConfigurationLine(line, parsedLine.Instruction, endRequest);
 			}
+
+			if (!silent)
+			{
+				reply.GenerateErrorMessage(inputStream);
+				Log.Error(reply.Errors.ErrorMessage);
+			}
+
+			return new ConfigurationLine(line);
 		}
 
 		/// <summary>
@@ -153,7 +151,7 @@ namespace Pegasus.Framework.Scripting
 				var line = lines.LastOrDefault(l => l.HasInstruction && l.Instruction.HasTarget(cvar));
 
 				if (line == null)
-					lines.Add(new Line(content));
+					lines.Add(new ConfigurationLine(content));
 				else
 					line.Content = content + line.Content.Substring(line.EndOfRequest);
 			}
@@ -161,57 +159,6 @@ namespace Pegasus.Framework.Scripting
 			var fileContent = String.Join(Environment.NewLine, lines.Select(line => line.Content));
 			if (_file.Write(fileContent, e => Log.Error("Failed to write '{0}': {1}", _file.FileName, e.Message)))
 				Log.Info("'{0}' has been written.", _file.FileName);
-		}
-
-		/// <summary>
-		///   Represents a line of the configuration file.
-		/// </summary>
-		private class Line
-		{
-			/// <summary>
-			///   Initializes a new instance.
-			/// </summary>
-			/// <param name="content">The content of the line.</param>
-			public Line(string content)
-			{
-				Content = content;
-				EndOfRequest = Content.Length;
-				HasInstruction = false;
-			}
-
-			/// <summary>
-			///   Initializes a new instance.
-			/// </summary>
-			/// <param name="content">The content of the line.</param>
-			/// <param name="instruction">The parsed instruction of the line.</param>
-			/// <param name="endOfRequest">The index of the column where the request ended and a comment started.</param>
-			public Line(string content, Instruction instruction, int endOfRequest = -1)
-			{
-				Content = content;
-				Instruction = instruction;
-				EndOfRequest = endOfRequest == -1 ? Content.Length : endOfRequest;
-				HasInstruction = true;
-			}
-
-			/// <summary>
-			///   Gets or sets the line content.
-			/// </summary>
-			public string Content { get; set; }
-
-			/// <summary>
-			///   Gets parsed instruction of the line.
-			/// </summary>
-			public Instruction Instruction { get; private set; }
-
-			/// <summary>
-			///   Gets a value indicating whether the line has an instruction.
-			/// </summary>
-			public bool HasInstruction { get; private set; }
-
-			/// <summary>
-			///   Gets or sets the index of the column where the instruction ended and a comment started.
-			/// </summary>
-			public int EndOfRequest { get; private set; }
 		}
 	}
 }

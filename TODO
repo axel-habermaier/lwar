@@ -22,6 +22,7 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
+- Fix sun viewport bug
 
 Pegasus
 ========

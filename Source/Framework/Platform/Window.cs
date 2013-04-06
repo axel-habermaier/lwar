@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Input;
 	using Math;
 

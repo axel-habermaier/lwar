@@ -311,6 +311,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Scripting\ConfigurationFile.cs" />
+    <Compile Include="Scripting\ConfigurationLine.cs" />
     <Compile Include="Scripting\FileNameAttribute.cs" />
     <Compile Include="Scripting\Help.cs" />
     <Compile Include="Scripting\Instruction.cs" />
