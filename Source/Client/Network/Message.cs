@@ -3,6 +3,7 @@
 namespace Lwar.Client.Network
 {
 	using System.Runtime.InteropServices;
+	using System.Text;
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
@@ -22,10 +23,7 @@ namespace Lwar.Client.Network
 		{
 			Assert.ArgumentNotNull(player, () => player);
 			Assert.ArgumentNotNullOrWhitespace(playerName, () => playerName);
-
-			var name = playerName.TruncateUtf8(Specification.MaximumPlayerNameLength);
-			if (name.Length != playerName.Length)
-				Log.Warn("Your player name '{0}' is too long and has been truncated to '{1}'.", name, playerName);
+			Assert.That(Encoding.UTF8.GetByteCount(playerName) <= Specification.MaximumPlayerNameLength, "Player name is too long.");
 
 			return new Message
 			{
@@ -33,7 +31,7 @@ namespace Lwar.Client.Network
 				Name = new NamePayload
 				{
 					Player = player.Id,
-					Name = name
+					Name = playerName
 				}
 			};
 		}

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lwar.Client
+namespace Lwar.Client.Network
 {
 	using System.Text;
 	using Gameplay;

@@ -171,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Assets\Effects\Effects.cs">
-      <Link>Effects.cs</Link>
+      <Link>Rendering\Effects.cs</Link>
     </Compile>
     <Compile Include="Gameplay\Entities\Entity.cs" />
     <Compile Include="Rendering\Renderers\IRenderer.cs" />
@@ -194,7 +194,6 @@
     <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\GameState.cs" />
     <Compile Include="GameStates\Loading.cs" />
-    <Compile Include="AssetAttribute.cs" />
     <Compile Include="Gameplay\Entities\Bullet.cs" />
     <Compile Include="Gameplay\CameraManager.cs" />
     <Compile Include="Gameplay\IdentifierMap.cs" />
@@ -202,7 +201,7 @@
     <Compile Include="Gameplay\EntityType.cs" />
     <Compile Include="Gameplay\GameSession.cs" />
     <Compile Include="Gameplay\Identifier.cs" />
-    <Compile Include="BufferExtensions.cs" />
+    <Compile Include="Network\BufferExtensions.cs" />
     <Compile Include="Gameplay\InputManager.cs" />
     <Compile Include="Gameplay\Entities\Ship.cs" />
     <Compile Include="Gameplay\IGenerationalIdentity.cs" />
@@ -236,12 +235,10 @@
     <Compile Include="Rendering\Renderers\PlanetRenderer.cs" />
     <Compile Include="Rendering\RenderContext.cs" />
     <Compile Include="Rendering\Renderers\ShipRenderer.cs" />
-    <Compile Include="StateMachine.cs" />
     <Compile Include="Gameplay\Entities\IEntity.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Gameplay\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringExtensions.cs" />
     <Compile Include="Gameplay\Entities\Planet.cs" />
     <Compile Include="Rendering\Renderers\SkyBoxRenderer.cs" />
   </ItemGroup>
