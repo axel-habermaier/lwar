@@ -1,10 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug Linux|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Source/Assets Compiler/Effects/Compilation/EffectsProject.cs">
-    <Files>
-      <File FileName="Source/Assets Compiler/Effects/Compilation/EffectsProject.cs" Line="99" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/axel/Workspace/lwar/Source/Assets Compiler/Texture2DProcessor.cs" line="36" column="1" />

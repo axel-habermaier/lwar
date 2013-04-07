@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Source\Client\Client.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework", "Source\Framework\Framework.csproj", "{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E008FA73-A930-40B5-93A4-959A4D30492D} = {E008FA73-A930-40B5-93A4-959A4D30492D}
-	EndProjectSection
 EndProject
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Platform", "Source\Platform\Platform.cproj", "{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}"
 EndProject
