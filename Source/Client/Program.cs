@@ -10,7 +10,7 @@ namespace Lwar.Client
 	/// <summary>
 	///   Starts up and configures the application.
 	/// </summary>
-	internal static class Bootstrapper
+	internal static class Program
 	{
 		/// <summary>
 		///   The entry point of the application.
@@ -27,7 +27,7 @@ namespace Lwar.Client
 				Statistics = new Statistics()
 			};
 
-			Bootstrapper<App>.Run(context);
+			Bootstrapper<LwarClient>.Run(context);
 		}
 	}
 }

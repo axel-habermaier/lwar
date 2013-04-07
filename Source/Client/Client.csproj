@@ -208,7 +208,7 @@
     <Compile Include="Gameplay\Transformation.cs" />
     <Compile Include="GameStates\Playing.cs" />
     <Compile Include="GameStates\StateManager.cs" />
-    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Scripting\ICommandRegistry.cs" />
     <Compile Include="Scripting\ICvarRegistry.cs" />
     <Compile Include="Network\ConnectionState.cs" />
@@ -236,7 +236,7 @@
     <Compile Include="Rendering\RenderContext.cs" />
     <Compile Include="Rendering\Renderers\ShipRenderer.cs" />
     <Compile Include="Gameplay\Entities\IEntity.cs" />
-    <Compile Include="App.cs" />
+    <Compile Include="LwarClient.cs" />
     <Compile Include="Gameplay\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gameplay\Entities\Planet.cs" />

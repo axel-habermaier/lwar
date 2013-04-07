@@ -15,7 +15,7 @@ namespace Lwar.Client
 	/// <summary>
 	///   Represents the lwar client.
 	/// </summary>
-	internal sealed class App : Pegasus.Framework.App
+	internal sealed class LwarClient : App
 	{
 		/// <summary>
 		///   The local game server that can be used to hosts game sessions locally.
