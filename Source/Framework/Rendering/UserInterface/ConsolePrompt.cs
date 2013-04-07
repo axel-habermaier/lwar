@@ -2,9 +2,13 @@
 
 namespace Pegasus.Framework.Rendering.UserInterface
 {
+	using System.Collections.Generic;
+	using System.Globalization;
+	using System.Linq;
 	using Math;
 	using Platform.Graphics;
 	using Platform.Input;
+	using Scripting;
 
 	/// <summary>
 	///   The input prompt of the console.
@@ -20,6 +24,16 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   The maximum history size.
 		/// </summary>
 		private const int MaxHistory = 64;
+
+		/// <summary>
+		///   The command registry that is used to look up commands.
+		/// </summary>
+		private readonly CommandRegistry _commands;
+
+		/// <summary>
+		///   The cvar registry that is used to look up cvars.
+		/// </summary>
+		private readonly CvarRegistry _cvars;
 
 		/// <summary>
 		///   The input history.
@@ -42,6 +56,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private Rectangle _area;
 
 		/// <summary>
+		///   The currently active auto completion list.
+		/// </summary>
+		private IEnumerator<string> _autoCompletionList;
+
+		/// <summary>
 		///   Stores the current index into the input history.
 		/// </summary>
 		private int _historyIndex;
@@ -56,13 +75,19 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		/// <param name="font">The font that should be used to draw the prompt.</param>
 		/// <param name="color">The text color of the prompt.</param>
-		public ConsolePrompt(Font font, Color color)
+		/// <param name="commands">The command registry that should be used to look up commands.</param>
+		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
+		public ConsolePrompt(Font font, Color color, CommandRegistry commands, CvarRegistry cvars)
 		{
 			Assert.ArgumentNotNull(font, () => font);
+			Assert.ArgumentNotNull(commands, () => commands);
+			Assert.ArgumentNotNull(cvars, () => cvars);
 
 			_history = new string[MaxHistory];
 			_input = new TextBox(font) { Color = color };
 			_prompt = new Label(font, Prompt) { Color = color };
+			_commands = commands;
+			_cvars = cvars;
 		}
 
 		/// <summary>
@@ -112,6 +137,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public void InsertCharacter(char c)
 		{
 			_input.InsertCharacter(c);
+			_autoCompletionList = null;
 		}
 
 		/// <summary>
@@ -150,6 +176,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			_input.Text = String.Empty;
 			_historyIndex = _numHistory;
+			_autoCompletionList = null;
 		}
 
 		/// <summary>
@@ -166,6 +193,48 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public void ShowOlderHistoryEntry()
 		{
 			ShowHistory(_historyIndex - 1);
+		}
+
+		/// <summary>
+		///   Shows the next auto-completed value if completion is possible.
+		/// </summary>
+		public void AutoComplete()
+		{
+			if (_autoCompletionList == null)
+				_autoCompletionList = GetAutoCompletionList();
+
+			if (_autoCompletionList.MoveNext())
+				_input.Text = _autoCompletionList.Current + " ";
+			else
+				_autoCompletionList = null;
+		}
+
+		/// <summary>
+		///   Gets the auto completion list for the current input.
+		/// </summary>
+		private IEnumerator<string> GetAutoCompletionList()
+		{
+			if (String.IsNullOrWhiteSpace(_input.Text))
+				yield break;
+
+			var commands = _commands.AllInstances
+									.Where(command => command.Name.ToLower().StartsWith(_input.Text.ToLower()))
+									.Select(command => command.Name);
+
+			var cvars = _cvars.AllInstances
+							  .Where(cvar => cvar.Name.ToLower().StartsWith(_input.Text.ToLower()))
+							  .Select(cvar => cvar.Name);
+
+			var items = cvars.Union(commands).OrderBy(item => item).ToArray();
+			if (items.Length == 0)
+				yield break;
+
+			var i = 0;
+			while (true)
+			{
+				yield return items[i];
+				i = (i + 1) % items.Length;
+			}
 		}
 
 		/// <summary>
@@ -191,6 +260,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				_input.Text = _history[index];
 
 			_historyIndex = index;
+			_autoCompletionList = null;
 		}
 
 		/// <summary>

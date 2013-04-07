@@ -149,7 +149,7 @@ namespace Pegasus.Framework.Scripting
 			Assert.ArgumentNotNullOrWhitespace(pattern, () => pattern);
 
 			if (pattern.Trim() == "*")
-				return source;
+				return source.OrderBy(selector);
 
 			return source.Where(item => selector(item).ToLower().Contains(pattern.ToLower())).OrderBy(selector);
 		}

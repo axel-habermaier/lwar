@@ -38,9 +38,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private static readonly Color DebugInfoColor = new Color(1.0f, 0.0f, 1.0f, 1.0f);
 
 		/// <summary>
-		///   The execute command that the console invokes when the user submits the input.
+		///   The command registry that is used to look up commands.
 		/// </summary>
-		private readonly Command<string> _execute;
+		private readonly CommandRegistry _commands;
 
 		/// <summary>
 		///   The font used by the console.
@@ -56,11 +56,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   The console's prompt.
 		/// </summary>
 		private readonly ConsolePrompt _prompt;
-
-		/// <summary>
-		///   The show command that determines whether the console is visible.
-		/// </summary>
-		private readonly Command<bool> _show;
 
 		/// <summary>
 		///   The sprite batch that is used for drawing.
@@ -94,28 +89,27 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="inputDevice">The input device that provides the user input.</param>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
-		/// <param name="execute"> The execute command that the console should invoke when the user submits the input.</param>
-		/// <param name="show">The show command that should be used to determine whether the console is visible.</param>
+		/// <param name="commands">The command registry that should be used to look up commands.</param>
+		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
 		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, SpriteBatch spriteBatch, Font font,
-					   Command<string> execute, Command<bool> show)
+					   CommandRegistry commands, CvarRegistry cvars)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
 			Assert.ArgumentNotNull(spriteBatch, () => spriteBatch);
 			Assert.ArgumentNotNull(font, () => font);
-			Assert.ArgumentNotNull(execute, () => execute);
-			Assert.ArgumentNotNull(show, () => show);
+			Assert.ArgumentNotNull(commands, () => commands);
+			Assert.ArgumentNotNull(cvars, () => cvars);
 
 			_spriteBatch = spriteBatch;
 			_font = font;
 
 			_content = new ConsoleContent(_font);
-			_prompt = new ConsolePrompt(_font, InfoColor);
+			_prompt = new ConsolePrompt(_font, InfoColor, commands, cvars);
 			_input = new ConsoleInput(inputDevice);
-			_execute = execute;
-			_show = show;
+			_commands = commands;
 
-			_show.Invoked += ShowConsole;
+			_commands.OnShowConsole += ShowConsole;
 			Log.OnError += ShowError;
 			Log.OnWarning += ShowWarning;
 			Log.OnInfo += ShowInfo;
@@ -147,7 +141,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_show.Invoked -= ShowConsole;
+			_commands.OnShowConsole -= ShowConsole;
 			Log.OnError -= ShowError;
 			Log.OnWarning -= ShowWarning;
 			Log.OnInfo -= ShowInfo;
@@ -245,8 +239,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				if (!String.IsNullOrWhiteSpace(input))
 				{
 					Log.Info("{0}{1}", ConsolePrompt.Prompt, input);
-
-					_execute.Invoke(input);
+					_commands.Execute(input);
 				}
 			}
 
@@ -276,6 +269,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			if (_input.ScrollToBottom.IsTriggered)
 				_content.ScrollToBottom();
+
+			if (_input.AutoComplete.IsTriggered)
+				_prompt.AutoComplete();
 		}
 
 		/// <summary>

@@ -102,7 +102,7 @@ namespace Pegasus.Framework
 				var defaultFont = context.Assets.LoadFont(context.DefaultFontName);
 				using (var spriteBatch = new SpriteBatch(context.GraphicsDevice, uiOutput, context.SpriteEffect))
 				using (var console = new Console(context.GraphicsDevice, context.LogicalInputDevice, spriteBatch, defaultFont,
-												 context.Commands.Instances.Execute, context.Commands.Instances.ShowConsole))
+												 context.Commands, context.Cvars))
 				{
 					context.Statistics.Initialize(context.GraphicsDevice, spriteBatch, defaultFont);
 

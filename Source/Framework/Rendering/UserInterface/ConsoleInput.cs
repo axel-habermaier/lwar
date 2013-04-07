@@ -42,6 +42,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated() & controlReleased, InputModes.Console);
 			ScrollToTop = new LogicalInput(controlPressed + Key.PageUp.IsPressed(), InputModes.Console);
 			ScrollToBottom = new LogicalInput(controlPressed + Key.PageDown.IsPressed(), InputModes.Console);
+			AutoComplete = new LogicalInput(Key.Tab.WentDown(), InputModes.Console);
 
 			device.Register(Toggle);
 			device.Register(Submit);
@@ -53,6 +54,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			device.Register(ScrollDown);
 			device.Register(ScrollToTop);
 			device.Register(ScrollToBottom);
+			device.Register(AutoComplete);
 		}
 
 		/// <summary>
@@ -106,6 +108,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public LogicalInput Submit { get; private set; }
 
 		/// <summary>
+		/// Gets the logical input for the console's auto-completion action.
+		/// </summary>
+		public LogicalInput AutoComplete { get; private set; }
+
+		/// <summary>
 		///   Invoked when the activation state of the console has been changed.
 		/// </summary>
 		public void OnActivationChanged(bool activated)
@@ -152,6 +159,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_device.Remove(ScrollDown);
 			_device.Remove(ScrollToTop);
 			_device.Remove(ScrollToBottom);
+			_device.Remove(AutoComplete);
 		}
 	}
 }
