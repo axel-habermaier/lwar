@@ -148,8 +148,10 @@ namespace Pegasus.Framework.Scripting
 			Assert.ArgumentNotNull(selector, () => selector);
 			Assert.ArgumentNotNullOrWhitespace(pattern, () => pattern);
 
-			var regex = new Regex(pattern.Replace("*", ".*"), RegexOptions.IgnoreCase);
-			return source.Where(item => regex.Match(selector(item)).Success).OrderBy(selector);
+			if (pattern.Trim() == "*")
+				return source;
+
+			return source.Where(item => selector(item).ToLower().Contains(pattern.ToLower())).OrderBy(selector);
 		}
 	}
 }
