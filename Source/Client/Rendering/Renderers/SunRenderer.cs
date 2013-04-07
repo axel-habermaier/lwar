@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Lwar.Client.Rendering
+namespace Lwar.Client.Rendering.Renderers
 {
 	using Assets.Effects;
-	using Gameplay;
 	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
@@ -14,46 +13,46 @@ namespace Lwar.Client.Rendering
 	/// <summary>
 	///   Renders suns into a 3D scene.
 	/// </summary>
-	public class SunRenderer : Renderer<Sun, SunRenderer.SunDrawState>
+	public class SunRenderer : Renderer<Sun>
 	{
-		private readonly GaussianBlur _blur;
-
 		private readonly Clock _clock = Clock.Create();
+		private GaussianBlur _blur;
 
 		/// <summary>
 		///   The render target that is used to draw the sun effect.
 		/// </summary>
-		private readonly RenderTarget _effectTarget;
+		private RenderTarget _effectTarget;
 
 		/// <summary>
 		///   The texture that is bound to the effect render target.
 		/// </summary>
-		private readonly Texture2D _effectTexture;
+		private Texture2D _effectTexture;
 
 		/// <summary>
 		///   The full-screen quad that is used to draw the sun special effects.
 		/// </summary>
-		private readonly FullscreenQuad _fullscreenQuad;
+		private FullscreenQuad _fullscreenQuad;
 
-		private readonly RenderOutput _heatOutput;
+		private RenderOutput _heatOutput;
 
 		/// <summary>
 		///   The sun model.
 		/// </summary>
-		private readonly Model _model;
+		private Model _model;
 
-		private readonly TexturedQuadEffect _quadEffect;
+		private TexturedQuadEffect _quadEffect;
+		private Vector2 _rotation = new Vector2(0, 4);
 
-		private readonly SphereEffect _sphereEffect;
+		private SphereEffect _sphereEffect;
 
-		private readonly SunEffect _sunEffect;
+		private SunEffect _sunEffect;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///   Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the game session.</param>
-		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public SunRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public override void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
@@ -94,34 +93,25 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
-		///   Invoked when an element has been added to the renderer.
-		/// </summary>
-		/// <param name="sun">The element that should be drawn by the renderer.</param>
-		protected override SunDrawState OnAdded(Sun sun)
-		{
-			return new SunDrawState { Transform = sun.Transform, rot1 = 4 };
-		}
-
-		/// <summary>
 		///   Draws all registered elements.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
-		public void Draw(RenderOutput output)
+		public override void Draw(RenderOutput output)
 		{
-			foreach (var sun in RegisteredElements)
+			foreach (var sun in Elements)
 			{
 				var elapsed = (float)_clock.Seconds;
 				_clock.Reset();
 
-				sun.rot1 += 0.1f * elapsed;
-				sun.rot2 -= 0.05f * elapsed;
+				_rotation.X += 0.1f * elapsed;
+				_rotation.Y -= 0.05f * elapsed;
 
-				_sphereEffect.World = Matrix.CreateRotationY(-sun.rot1 * 2) * sun.Transform.Matrix;
+				_sphereEffect.World = Matrix.CreateRotationY(-_rotation.X * 2) * sun.Transform.Matrix;
 				_model.Draw(output, _sphereEffect.Default);
 
-				_sunEffect.World = Matrix.CreateScale(1.03f) * Matrix.CreateRotationY(-sun.rot1 * 2) * sun.Transform.Matrix;
-				_sunEffect.Rotation1 = Matrix.CreateRotationY(-sun.rot1) * Matrix.CreateRotationX(sun.rot2 * 2);
-				_sunEffect.Rotation2 = Matrix.CreateRotationY(-sun.rot2) * Matrix.CreateRotationZ(sun.rot1 * 2);
+				_sunEffect.World = Matrix.CreateScale(1.03f) * Matrix.CreateRotationY(-_rotation.X * 2) * sun.Transform.Matrix;
+				_sunEffect.Rotation1 = Matrix.CreateRotationY(-_rotation.X) * Matrix.CreateRotationX(_rotation.Y * 2);
+				_sunEffect.Rotation2 = Matrix.CreateRotationY(-_rotation.Y) * Matrix.CreateRotationZ(_rotation.X * 2);
 
 				DepthStencilState.DepthRead.Bind();
 				_heatOutput.ClearColor(new Color(0, 0, 0, 0));
@@ -153,19 +143,6 @@ namespace Lwar.Client.Rendering
 			_fullscreenQuad.SafeDispose();
 			_heatOutput.SafeDispose();
 			_blur.SafeDispose();
-		}
-
-		/// <summary>
-		///   The state required for drawing a sun.
-		/// </summary>
-		public class SunDrawState
-		{
-			/// <summary>
-			///   The transformation of the sun.
-			/// </summary>
-			public Transformation Transform;
-
-			public float rot1, rot2;
 		}
 	}
 }

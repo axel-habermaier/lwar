@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Lwar.Client.Rendering
+namespace Lwar.Client.Rendering.Renderers
 {
 	using Assets.Effects;
-	using Gameplay;
 	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
@@ -13,24 +12,24 @@ namespace Lwar.Client.Rendering
 	/// <summary>
 	///   Renders planets into a 3D scene.
 	/// </summary>
-	public class PlanetRenderer : Renderer<Planet, PlanetRenderer.PlanetDrawState>
+	public class PlanetRenderer : Renderer<Planet>
 	{
 		/// <summary>
 		///   The effect that is used to draw the planets.
 		/// </summary>
-		private readonly SphereEffect _effect;
+		private SphereEffect _effect;
 
 		/// <summary>
 		///   The planet model.
 		/// </summary>
-		private readonly Model _model;
+		private Model _model;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///   Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
-		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public PlanetRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public override void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
@@ -43,21 +42,12 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
-		///   Invoked when an element has been added to the renderer.
-		/// </summary>
-		/// <param name="planet">The element that should be drawn by the renderer.</param>
-		protected override PlanetDrawState OnAdded(Planet planet)
-		{
-			return new PlanetDrawState { Transform = planet.Transform };
-		}
-
-		/// <summary>
 		///   Draws all registered elements.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
-		public void Draw(RenderOutput output)
+		public override void Draw(RenderOutput output)
 		{
-			foreach (var planet in RegisteredElements)
+			foreach (var planet in Elements)
 			{
 				_effect.World = planet.Transform.Matrix;
 				_model.Draw(output, _effect.Default);
@@ -71,17 +61,6 @@ namespace Lwar.Client.Rendering
 		{
 			_effect.SafeDispose();
 			_model.SafeDispose();
-		}
-
-		/// <summary>
-		///   The state required for drawing a planet.
-		/// </summary>
-		public struct PlanetDrawState
-		{
-			/// <summary>
-			///   The transformation of the planet.
-			/// </summary>
-			public Transformation Transform;
 		}
 	}
 }

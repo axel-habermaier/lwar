@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lwar.Client.Rendering
+namespace Lwar.Client.Rendering.Renderers
 {
 	using Assets.Effects;
 	using Pegasus.Framework;

@@ -84,7 +84,7 @@ namespace Lwar.Client.Gameplay
 			_entities.Remove(entity);
 			_entityMap.Remove(entity);
 
-			entity.Removed(_gameSession, _renderContext);
+			entity.Removed();
 		}
 
 		/// <summary>

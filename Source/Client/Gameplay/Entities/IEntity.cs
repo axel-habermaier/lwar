@@ -11,19 +11,17 @@ namespace Lwar.Client.Gameplay.Entities
 	public interface IEntity : IGenerationalIdentity, IDisposable
 	{
 		/// <summary>
-		///   Adds the entity to the game state and the render context.
+		///   Adds the entity to the game session and the render context.
 		/// </summary>
-		/// <param name="gameSession">The game state the entity should be added to.</param>
+		/// <param name="gameSession">The game session the entity should be added to.</param>
 		/// <param name="renderContext">The render context the entity should be added to.</param>
 		void Added(GameSession gameSession, RenderContext renderContext);
 
 		/// <summary>
-		///   Removes the entity from the game state and the render context.
+		///   Removes the entity from the game session and the render context.
 		/// </summary>
-		/// <param name="gameSession">The game state the entity should be removed from.</param>
-		/// <param name="renderContext">The render context the entity should be removed from.</param>
-		/// <remarks> The remove method is not called when the game session is shut down.</remarks>
-		void Removed(GameSession gameSession, RenderContext renderContext);
+		/// <remarks>This method is not called when the game session is shut down.</remarks>
+		void Removed();
 
 		/// <summary>
 		///   Updates the entity's internal state.

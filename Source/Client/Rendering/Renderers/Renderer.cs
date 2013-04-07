@@ -1,35 +1,45 @@
 ﻿using System;
 
-namespace Lwar.Client.Rendering
+namespace Lwar.Client.Rendering.Renderers
 {
 	using System.Collections.Generic;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Graphics;
+	using Pegasus.Framework.Rendering;
 
 	/// <summary>
 	///   Renders elements into a 3D scene.
 	/// </summary>
 	/// <typeparam name="TElement">The type of the elements that the renderer draws.</typeparam>
-	/// <typeparam name="TDrawState">The type of the draw states of the elements that the renderer draws.</typeparam>
-	public abstract class Renderer<TElement, TDrawState> : DisposableObject
+	public abstract class Renderer<TElement> : DisposableObject, IRenderer
 		where TElement : class
 	{
-		/// <summary>
-		///   The draw state of the elements that the renderer draws into the scene.
-		/// </summary>
-		private readonly List<TDrawState> _drawStates = new List<TDrawState>();
-
 		/// <summary>
 		///   The elements that the renderer draws into the scene.
 		/// </summary>
 		private readonly List<TElement> _elements = new List<TElement>();
 
 		/// <summary>
-		///   Gets an enumerator that enumerates all registered draw states.
+		///   Gets the elements that the renderer should draw into the scene.
 		/// </summary>
-		protected DrawStateEnumerator RegisteredElements
+		protected Enumerator Elements
 		{
-			get { return new DrawStateEnumerator(_drawStates.GetEnumerator()); }
+			get { return new Enumerator(_elements.GetEnumerator()); }
 		}
+
+		/// <summary>
+		///   Initializes the renderer.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public abstract void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets);
+
+		/// <summary>
+		///   Draws all registered elements.
+		/// </summary>
+		/// <param name="output">The output that the bullets should be rendered to.</param>
+		public abstract void Draw(RenderOutput output);
 
 		/// <summary>
 		///   Adds the element to the renderer.
@@ -38,16 +48,16 @@ namespace Lwar.Client.Rendering
 		public void Add(TElement element)
 		{
 			Assert.ArgumentNotNull(element, () => element);
-
 			_elements.Add(element);
-			_drawStates.Add(OnAdded(element));
 		}
 
 		/// <summary>
 		///   Invoked when an element has been added to the renderer.
 		/// </summary>
 		/// <param name="element">The element that should be drawn by the renderer.</param>
-		protected abstract TDrawState OnAdded(TElement element);
+		protected virtual void OnAdded(TElement element)
+		{
+		}
 
 		/// <summary>
 		///   Removes the element from the renderer.
@@ -63,26 +73,23 @@ namespace Lwar.Client.Rendering
 
 			_elements[index] = _elements[last];
 			_elements.RemoveAt(last);
-
-			_drawStates[index] = _drawStates[last];
-			_drawStates.RemoveAt(last);
 		}
 
 		/// <summary>
 		///   Provides an GetEnumerator() method that allows the given enumerator to be used in C#'s foreach statement.
 		/// </summary>
-		protected struct DrawStateEnumerator
+		protected struct Enumerator
 		{
 			/// <summary>
 			///   The enumerator that can be used in a foreach statement.
 			/// </summary>
-			private readonly List<TDrawState>.Enumerator _enumerator;
+			private readonly List<TElement>.Enumerator _enumerator;
 
 			/// <summary>
 			///   Initializes a new instance.
 			/// </summary>
 			/// <param name="enumerator">The enumerator that should be used in a foreach statement.</param>
-			public DrawStateEnumerator(List<TDrawState>.Enumerator enumerator)
+			public Enumerator(List<TElement>.Enumerator enumerator)
 			{
 				_enumerator = enumerator;
 			}
@@ -90,7 +97,7 @@ namespace Lwar.Client.Rendering
 			/// <summary>
 			///   Gets the enumerator.
 			/// </summary>
-			public List<TDrawState>.Enumerator GetEnumerator()
+			public List<TElement>.Enumerator GetEnumerator()
 			{
 				return _enumerator;
 			}

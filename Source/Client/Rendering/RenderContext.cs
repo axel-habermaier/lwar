@@ -2,10 +2,13 @@
 
 namespace Lwar.Client.Rendering
 {
+	using System.Linq;
+	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
+	using Renderers;
 	using Scripting;
 
 	/// <summary>
@@ -17,6 +20,17 @@ namespace Lwar.Client.Rendering
 		///   The cvar registry that handles the application cvars.
 		/// </summary>
 		private readonly CvarRegistry _cvars;
+
+		/// <summary>
+		///   The renderers that the context uses to render the scene.
+		/// </summary>
+		private readonly IRenderer[] _renderers = new IRenderer[]
+		{
+			new SunRenderer(),
+			new PlanetRenderer(),
+			new ShipRenderer(),
+			new BulletRenderer()
+		};
 
 		/// <summary>
 		///   The renderer that is used to draw the skybox.
@@ -44,31 +58,33 @@ namespace Lwar.Client.Rendering
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 
-			SunRenderer = new SunRenderer(graphicsDevice, assets);
-			PlanetRenderer = new PlanetRenderer(graphicsDevice, assets);
-			ShipRenderer = new ShipRenderer(graphicsDevice, assets);
-			BulletRenderer = new BulletRenderer(graphicsDevice, assets);
+			foreach (var renderer in _renderers)
+				renderer.Initialize(graphicsDevice, assets);
 		}
 
 		/// <summary>
-		///   Gets the renderer that is used to draw planets.
+		///   Adds the given entity to the appropriate renderer.
 		/// </summary>
-		public PlanetRenderer PlanetRenderer { get; private set; }
+		/// <typeparam name="TEntity">The type of the entity that should be added.</typeparam>
+		/// <param name="entity">The entity that should be added.</param>
+		public void Add<TEntity>(TEntity entity)
+			where TEntity : class, IEntity
+		{
+			Assert.ArgumentNotNull(entity, () => entity);
+			_renderers.OfType<Renderer<TEntity>>().Single().Add(entity);
+		}
 
 		/// <summary>
-		///   Gets the renderer that is used to draw ships.
+		///   Removes the given entity from the appropriate renderer.
 		/// </summary>
-		public ShipRenderer ShipRenderer { get; private set; }
-
-		/// <summary>
-		///   Gets the renderer that is used to draw bullets.
-		/// </summary>
-		public BulletRenderer BulletRenderer { get; private set; }
-
-		/// <summary>
-		///   Gets the renderer that is used to draw suns.
-		/// </summary>
-		public SunRenderer SunRenderer { get; private set; }
+		/// <typeparam name="TEntity">The type of the entity that should be removed.</typeparam>
+		/// <param name="entity">The entity that should be removed.</param>
+		public void Remove<TEntity>(TEntity entity)
+			where TEntity : class, IEntity
+		{
+			Assert.ArgumentNotNull(entity, () => entity);
+			_renderers.OfType<Renderer<TEntity>>().Single().Remove(entity);
+		}
 
 		/// <summary>
 		///   Renders a frame.
@@ -88,13 +104,8 @@ namespace Lwar.Client.Rendering
 
 			DepthStencilState.DepthEnabled.Bind();
 
-			SunRenderer.Draw(output);
-			PlanetRenderer.Draw(output);
-
-			DepthStencilState.DepthDisabled.Bind();
-
-			ShipRenderer.Draw(output);
-			BulletRenderer.Draw(output);
+			foreach (var renderer in _renderers)
+				renderer.Draw(output);
 		}
 
 		/// <summary>
@@ -102,10 +113,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			SunRenderer.SafeDispose();
-			PlanetRenderer.SafeDispose();
-			BulletRenderer.SafeDispose();
-			ShipRenderer.SafeDispose();
+			_renderers.SafeDisposeAll();
 
 			_skyboxRenderer.SafeDispose();
 			_wireframe.SafeDispose();
