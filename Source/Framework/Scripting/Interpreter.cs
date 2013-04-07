@@ -83,7 +83,7 @@ namespace Pegasus.Framework.Scripting
 			if (reply.Status == ReplyStatus.Success)
 				reply.Result.Execute();
 			else
-				Log.Error(reply.Errors.ErrorMessage);
+				Log.Error("{0}", reply.Errors.ErrorMessage);
 		}
 
 		/// <summary>

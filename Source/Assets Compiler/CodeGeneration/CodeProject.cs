@@ -141,10 +141,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 			Assert.ArgumentNotNullOrWhitespace(file, () => file);
 
 			foreach (var error in errors)
-			{
-				var message = error.Message.Replace("{", "{{").Replace("}", "}}");
-				Report(LogType.Error, file, message, error.Region.Begin, error.Region.End);
-			}
+				Report(LogType.Error, file, error.Message, error.Region.Begin, error.Region.End);
 		}
 
 		/// <summary>

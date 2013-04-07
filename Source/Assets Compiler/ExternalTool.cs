@@ -110,9 +110,9 @@ namespace Pegasus.AssetsCompiler
 				foreach (var log in logEntries.Where(l => l.LogType != LogType.Info))
 				{
 					if (log.Message.Contains(": warning X"))
-						Log.Warn(log.Message);
+						Log.Warn("{0}", log.Message);
 					else
-						Log.Error(log.Message);
+						Log.Error("{0}", log.Message);
 				}
 
 				if (logEntries.Any(l => l.Message.Contains("error")))

@@ -43,19 +43,19 @@ namespace Pegasus.Framework.Platform
 			switch (LogType)
 			{
 				case LogType.FatalError:
-					Log.Die(Message);
+					Log.Die("{0}", Message);
 					break;
 				case LogType.Error:
-					Log.Error(Message);
+					Log.Error("{0}", Message);
 					break;
 				case LogType.Warning:
-					Log.Warn(Message);
+					Log.Warn("{0}", Message);
 					break;
 				case LogType.Info:
-					Log.Info(Message);
+					Log.Info("{0}", Message);
 					break;
 				case LogType.DebugInfo:
-					Log.DebugInfo(Message);
+					Log.DebugInfo("{0}", Message);
 					break;
 				default:
 					throw new InvalidOperationException("Unknown log entry type.");

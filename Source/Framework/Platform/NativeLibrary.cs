@@ -42,11 +42,11 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		private readonly NativeMethods.LogCallbacks _logCallbacks = new NativeMethods.LogCallbacks
 		{
-			Die = s => Log.Die(EscapeBraces(s)),
-			Error = s => Log.Error(EscapeBraces(s)),
-			Warning = s => Log.Warn(EscapeBraces(s)),
-			Info = s => Log.Info(EscapeBraces(s)),
-			Debug = s => Log.DebugInfo(EscapeBraces(s))
+			Die = s => Log.Die("{0}", s),
+			Error = s => Log.Error("{0}", s),
+			Warning = s => Log.Warn("{0}", s),
+			Info = s => Log.Info("{0}", s),
+			Debug = s => Log.DebugInfo("{0}", s)
 		};
 
 		/// <summary>
@@ -59,15 +59,6 @@ namespace Pegasus.Framework.Platform
 			Log.Info("Initializing native platform library...");
 			NativeMethods.Initialize(ref _logCallbacks);
 			_isInitialized = true;
-		}
-
-		/// <summary>
-		///   Escape curly braces that might be contained in a string in order to be able to pass it to the log functions.
-		/// </summary>
-		/// <param name="s">The string that should be escaped.</param>
-		private static string EscapeBraces(string s)
-		{
-			return s.Replace("{", "{{").Replace("}", "}}");
 		}
 
 		/// <summary>
