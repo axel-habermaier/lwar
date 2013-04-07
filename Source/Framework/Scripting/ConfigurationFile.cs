@@ -114,7 +114,7 @@ namespace Pegasus.Framework.Scripting
 			if (!silent)
 			{
 				reply.GenerateErrorMessage(inputStream);
-				Log.Error(reply.Errors.ErrorMessage);
+				Log.Error("{0}", reply.Errors.ErrorMessage);
 			}
 
 			return new ConfigurationLine(line);
@@ -147,7 +147,7 @@ namespace Pegasus.Framework.Scripting
 			var lines = ParseLines(true).ToList();
 			foreach (var cvar in cvars)
 			{
-				var content = String.Format("{0} {1}", cvar.Name, cvar.StringValue);
+				var content = String.Format("{0} {1}", cvar.Name, TypeRepresentation.ToString(cvar.Value, true));
 				var line = lines.LastOrDefault(l => l.HasInstruction && l.Instruction.HasTarget(cvar));
 
 				if (line == null)

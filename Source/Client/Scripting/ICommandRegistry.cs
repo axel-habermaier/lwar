@@ -24,6 +24,15 @@ namespace Lwar.Client.Scripting
 		void StopServer();
 
 		/// <summary>
+		/// fef
+		/// </summary>
+		/// <param name="s">af</param>
+		/// <param name="i">af</param>
+		/// <param name="q">af</param>
+		[Command]
+		void Test(string s, int i, string q = "");
+
+		/// <summary>
 		///   Connects to a game session on a remote or local server.
 		/// </summary>
 		/// <param name="ipAddress">

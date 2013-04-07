@@ -81,7 +81,7 @@ namespace Pegasus.Framework.Scripting
 		{
 			if (!_parameter1.Validate(value1) | !_parameter2.Validate(value2))
 			{
-				Log.Info(Help.GetHint(Name));
+				Log.Info("{0}", Help.GetHint(Name));
 				return;
 			}
 

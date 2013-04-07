@@ -50,10 +50,8 @@ namespace Pegasus.Framework
 		public static void Die(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
-			Assert.ArgumentNotNull(arguments, () => arguments);
 
 			var formattedMessage = String.Format(message, arguments);
-
 			if (OnFatalError != null)
 				OnFatalError(formattedMessage);
 
@@ -71,7 +69,6 @@ namespace Pegasus.Framework
 		public static void Error(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
-			Assert.ArgumentNotNull(arguments, () => arguments);
 
 			if (OnError != null)
 				OnError(String.Format(message, arguments));
@@ -88,7 +85,6 @@ namespace Pegasus.Framework
 		public static void Warn(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
-			Assert.ArgumentNotNull(arguments, () => arguments);
 
 			if (OnWarning != null)
 				OnWarning(String.Format(message, arguments));
@@ -105,7 +101,6 @@ namespace Pegasus.Framework
 		public static void Info(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
-			Assert.ArgumentNotNull(arguments, () => arguments);
 
 			if (OnInfo != null)
 				OnInfo(String.Format(message, arguments));
@@ -123,7 +118,6 @@ namespace Pegasus.Framework
 		public static void DebugInfo(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message, () => message);
-			Assert.ArgumentNotNull(arguments, () => arguments);
 
 			if (OnDebugInfo != null)
 				OnDebugInfo(String.Format(message, arguments));

@@ -11,7 +11,7 @@ namespace Lwar.Client.Scripting
 	public interface ICvarRegistry
 	{
 		/// <summary>
-		///   The name of the player that identifies the player in networked games.
+		///   The name of the player.
 		/// </summary>
 		[Cvar("UnnamedPlayer"), Persistent, NotEmpty, MaximumLength(Specification.MaximumPlayerNameLength, true)]
 		string PlayerName { get; set; }

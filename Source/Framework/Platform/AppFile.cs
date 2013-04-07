@@ -17,6 +17,11 @@ namespace Pegasus.Framework.Platform
 		private const int MaximumFileNameLength = 50;
 
 		/// <summary>
+		/// The number of spaces per tab.
+		/// </summary>
+		private const int SpacesPerTab = 4;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="appName">The name of the application.</param>
@@ -106,18 +111,19 @@ namespace Pegasus.Framework.Platform
 			var fileContent = String.Empty;
 			var success = Execute(() => fileContent = File.ReadAllText(AbsolutePath), onException);
 
-			content = NormalizeLineEndings(fileContent);
+			content = Normalize(fileContent);
 			return success;
 		}
 
 		/// <summary>
-		///   Normalizes the line endings of the given input string to '\n'.
+		///   Normalizes the line endings of the given input string to '\n', and replaces all tabs with spaces.
 		/// </summary>
 		/// <param name="input">The input whose line endings should be normalized.</param>
-		private static string NormalizeLineEndings(string input)
+		private static string Normalize(string input)
 		{
 			var result = input.Replace("\r\n", "\n");
 			result = result.Replace("\r", "\n");
+			result = result.Replace("\t", String.Join(" ", Enumerable.Range(0, SpacesPerTab).Select(_ => String.Empty)));
 			return result;
 		}
 

@@ -52,6 +52,9 @@ namespace Lwar.Client
 			commands.Bind(Key.F5.WentDown(), "reload_assets");
 			commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
 			commands.Bind(Key.Escape.WentDown(), "exit");
+
+			commands.OnChat += m => Log.Info( m);
+			commands.OnTest += (a, b, c) => Log.Info("{0}/{1}/{2}", a, b, c);
 		}
 
 		/// <summary>

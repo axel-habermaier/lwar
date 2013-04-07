@@ -63,8 +63,8 @@ namespace Pegasus.Framework
 					var message = "The application has been terminated after a fatal error. " +
 								  "See the log file for further details.\n\nThe error was: {0}\n\nLog file: {1}";
 					message = String.Format(message, e.Message, logFile.FilePath);
-					Log.Error(message);
-					Log.Error("Stack trace:\n" + e.StackTrace);
+					Log.Error("{0}", message);
+					Log.Error("Stack trace:\n{0}", e.StackTrace);
 					Win32.ShowMessage(context.AppName + " Fatal Error", message);
 				}
 			}
@@ -82,7 +82,7 @@ namespace Pegasus.Framework
 			var reply = new CommandLineParser(cvarRegistry).Parse(Environment.CommandLine);
 			if (reply.Status != ReplyStatus.Success)
 			{
-				Log.Error(reply.Errors.ErrorMessage);
+				Log.Error("{0}", reply.Errors.ErrorMessage);
 				Log.Warn("All cvar values set via the command line were discarded.");
 			}
 			else

@@ -43,7 +43,7 @@ namespace Pegasus.Framework.Scripting
 
 			_defaultValue = defaultValue;
 			_value = defaultValue;
-			_validators = validators ?? new ValidatorAttribute[0];
+			_validators = validators;
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace Pegasus.Framework.Scripting
 						continue;
 
 					Log.Error("'{0}' could not be set to '{1}': {2}", Name, value, validator.Description);
-					Log.Info(Help.GetHint(Name));
+					Log.Info("{0}", Help.GetHint(Name));
 					return;
 				}
 

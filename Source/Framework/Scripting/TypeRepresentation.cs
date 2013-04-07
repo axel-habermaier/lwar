@@ -26,8 +26,12 @@ namespace Pegasus.Framework.Scripting
 		///   Gets the string representation of the given value.
 		/// </summary>
 		/// <param name="value">The value for which the string representation should be returned.</param>
-		public static string ToString(object value)
+		/// <param name="requireQuotes">A value indicating whether string values require quotes.</param>
+		public static string ToString(object value, bool requireQuotes = false)
 		{
+			if (value is string && requireQuotes)
+				return String.Format("\"{0}\"", value);
+
 			Func<object, string> toString;
 			if (Map.TryGetValue(value.GetType(), out toString))
 				return toString(value);

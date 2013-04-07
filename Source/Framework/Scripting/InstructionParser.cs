@@ -95,7 +95,7 @@ namespace Pegasus.Framework.Scripting
 		{
 			var cvarDisplay = EndOfInstruction.Apply(_ => new Instruction(cvar, null));
 
-			var cvarSet = (~WhiteSpaces1 + new TypeParser<None>(cvar.ValueType, false) + EndOfInstruction)
+			var cvarSet = (~WhiteSpaces1 + new TypeParser<None>(cvar.ValueType) + EndOfInstruction)
 				.Apply(v => new Instruction(cvar, v));
 
 			var cvarParser = Attempt(cvarDisplay) | cvarSet;
@@ -109,10 +109,6 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="command">The command referenced by the instruction.</param>
 		private Reply<Instruction> Parse(InputStream<None> inputStream, ICommand command)
 		{
-			// Depending on whether the command actually has any parameters, modify the grammar to get better error messages
-			if (!command.Parameters.Any())
-				return EndOfInstruction.Apply(_ => new Instruction(command, new object[0])).Parse(inputStream);
-
 			var parameters = command.Parameters.ToArray();
 			var values = new object[parameters.Length];
 
@@ -141,17 +137,14 @@ namespace Pegasus.Framework.Scripting
 
 				inputStream.SkipWhiteSpaces();
 
-				var isLastParameter = i == parameters.Length - 1;
-				var reply = new TypeParser<None>(parameters[i].Type, !isLastParameter).Parse(inputStream);
+				var reply = new TypeParser<None>(parameters[i].Type).Parse(inputStream);
 				if (reply.Status == ReplyStatus.Success)
 					values[i] = reply.Result;
 				else
 					return ForwardError(reply, Help.GetHint(command.Name));
 			}
 
-			return Success(new Instruction(command, values));
+			return EndOfInstruction.Apply(_ => new Instruction(command, values)).Parse(inputStream);
 		}
-
-		
 	}
 }

@@ -34,7 +34,7 @@ namespace Pegasus.Framework.Scripting
 			HasDefaultValue = hasDefaultValue;
 			DefaultValue = defaultValue;
 			Description = description;
-			_validators = validators ?? new ValidatorAttribute[0];
+			_validators = validators;
 		}
 
 		/// <summary>
