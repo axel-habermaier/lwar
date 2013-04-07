@@ -2,7 +2,9 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Collections.Generic;
 	using System.Linq;
+	using System.Text.RegularExpressions;
 	using Parsing;
 
 	/// <summary>
@@ -50,6 +52,8 @@ namespace Pegasus.Framework.Scripting
 			_commands.OnExecute += OnExecute;
 			_commands.OnProcess += OnProcess;
 			_commands.OnPersist += OnPersist;
+			_commands.OnCommands += OnListCommands;
+			_commands.OnCvars += OnListCvars;
 		}
 
 		/// <summary>
@@ -60,6 +64,8 @@ namespace Pegasus.Framework.Scripting
 			_commands.OnExecute -= OnExecute;
 			_commands.OnProcess -= OnProcess;
 			_commands.OnPersist -= OnPersist;
+			_commands.OnCommands -= OnListCommands;
+			_commands.OnCvars -= OnListCvars;
 		}
 
 		/// <summary>
@@ -99,6 +105,51 @@ namespace Pegasus.Framework.Scripting
 		{
 			var configFile = new ConfigurationFile(_parser, _appName, fileName);
 			configFile.Persist(_cvars.AllInstances.Where(cvar => cvar.Persistent));
+		}
+
+		/// <summary>
+		///   Invoked when all commands with a matching name should be listed.
+		/// </summary>
+		/// <param name="pattern">The name pattern of the commands that should be listed.</param>
+		private void OnListCommands(string pattern)
+		{
+			var commands = PatternMatches(_commands.AllInstances, command => command.Name, pattern).ToArray();
+			if (commands.Length == 0)
+				Log.Warn("No commands found matching search pattern '{0}'.", pattern);
+
+			foreach (var command in commands)
+				Log.Info("'{0}': {1}", command.Name, command.Description);
+		}
+
+		/// <summary>
+		///   Invoked when all cvars with a matching name should be listed.
+		/// </summary>
+		/// <param name="pattern">The name pattern of the cvars that should be listed.</param>
+		private void OnListCvars(string pattern)
+		{
+			var cvars = PatternMatches(_cvars.AllInstances, cvar => cvar.Name, pattern).ToArray();
+			if (cvars.Length == 0)
+				Log.Warn("No cvars found matching search pattern '{0}'.", pattern);
+
+			foreach (var cvar in cvars)
+				Log.Info("'{0}': {1}", cvar.Name, cvar.Description);
+		}
+
+		/// <summary>
+		///   Returns an ordered sequence of all elements of the source sequence, whose selected property matches the given pattern.
+		/// </summary>
+		/// <typeparam name="T">The type of the items that should be checked.</typeparam>
+		/// <param name="source">The items that should be checked.</param>
+		/// <param name="selector">The selector function that selects the item property that should be checked.</param>
+		/// <param name="pattern">The pattern that should be checked.</param>
+		private static IEnumerable<T> PatternMatches<T>(IEnumerable<T> source, Func<T, string> selector, string pattern)
+		{
+			Assert.ArgumentNotNull(source, () => source);
+			Assert.ArgumentNotNull(selector, () => selector);
+			Assert.ArgumentNotNullOrWhitespace(pattern, () => pattern);
+
+			var regex = new Regex(pattern.Replace("*", ".*"), RegexOptions.IgnoreCase);
+			return source.Where(item => regex.Match(selector(item)).Success).OrderBy(selector);
 		}
 	}
 }

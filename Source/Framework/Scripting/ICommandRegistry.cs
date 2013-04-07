@@ -24,6 +24,26 @@ namespace Pegasus.Framework.Scripting
 		void Help(string name = "");
 
 		/// <summary>
+		///   Lists all cvars with names that match the search pattern.
+		/// </summary>
+		/// <param name="pattern">
+		///   The search pattern of the cvars that should be listed. For instance, 'draw' lists all cvars that have the string
+		///   'draw' in their name. The pattern is case-insensitive; use '*' to list all cvars.
+		/// </param>
+		[Command]
+		void Cvars([NotEmpty] string pattern = "*");
+
+		/// <summary>
+		///   Lists all commands with names that match the search pattern.
+		/// </summary>
+		/// <param name="pattern">
+		///   The search pattern of the commands that should be listed. For instance, 'draw' lists all commands that have the
+		///   string 'draw' in their name. The pattern is case-insensitive; use '*' to list all commands.
+		/// </param>
+		[Command]
+		void Commands([NotEmpty] string pattern = "*");
+
+		/// <summary>
 		///   Executes the given command.
 		/// </summary>
 		/// <param name="command">The command that should be executed, including its arguments.</param>
