@@ -145,6 +145,7 @@ namespace Pegasus.Framework
 						var viewport = new Rectangle(Vector2i.Zero, context.Window.Size);
 						sceneOutput.Viewport = viewport;
 						uiOutput.Viewport = viewport;
+						camera2D.Viewport = viewport;
 
 						context.Statistics.Update();
 

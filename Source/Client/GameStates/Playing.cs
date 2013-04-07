@@ -164,6 +164,8 @@ namespace Lwar.Client.GameStates
 			Assert.ArgumentNotNull(output, () => output);
 
 			output.Camera = _cameraManager.ActiveCamera;
+			output.Camera.Viewport = output.Viewport;
+
 			_renderContext.Draw(output);
 		}
 	}

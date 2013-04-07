@@ -56,7 +56,7 @@ namespace Pegasus.Framework.Rendering
 		public Rectangle Viewport
 		{
 			get { return _viewport; }
-			internal set
+			set
 			{
 				if (_viewport == value)
 					return;

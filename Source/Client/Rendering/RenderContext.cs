@@ -78,6 +78,7 @@ namespace Lwar.Client.Rendering
 		{
 			Assert.ArgumentNotNull(output, () => output);
 
+			RasterizerState.CullCounterClockwise.Bind();
 			_skyboxRenderer.Draw(output);
 
 			if (_cvars.DrawWireframe)

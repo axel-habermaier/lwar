@@ -22,12 +22,10 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
-- Fix sun viewport bug
 
 Pegasus
 ========
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
-- Console: Input auto completion
 
 Network Specification
 ========

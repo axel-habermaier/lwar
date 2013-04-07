@@ -152,8 +152,6 @@ namespace Pegasus.Framework.Rendering
 			Assert.That(Viewport.Width * Viewport.Height > 0, "Viewport has area 0.");
 
 			RenderTarget.Bind();
-
-			Camera.Viewport = Viewport;
 			Camera.Bind();
 
 			_graphicsDevice.Viewport = Viewport;
