@@ -50,10 +50,12 @@ namespace Pegasus.Framework.Scripting
 				Log.Info("   Type 'cvar-name' to view the current value of the cvar.");
 				Log.Info("   Type 'cvar-name value' to set a cvar to a new value.");
 				Log.Info("   Type 'help cvar-name' to view a description of the usage and purpose of the cvar.");
+				Log.Info("   Type 'cvars' to list all available cvars.");
 				Log.Info("Commands:");
 				Log.Info("   Type 'command-name value1 value2 ...' to invoke the command with parameters value1, value2, ... " +
 						 "Optional parameters can be omitted at the end of the command invocation.");
 				Log.Info("   Type 'help command-name' to view a description of the usage and purpose of the command.");
+				Log.Info("   Type 'commands' to list all available commands.");
 			}
 			else if (_cvars.TryFind(name, out cvar))
 			{

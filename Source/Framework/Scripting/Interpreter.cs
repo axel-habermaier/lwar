@@ -4,7 +4,6 @@ namespace Pegasus.Framework.Scripting
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Text.RegularExpressions;
 	using Parsing;
 
 	/// <summary>
@@ -136,7 +135,8 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Returns an ordered sequence of all elements of the source sequence, whose selected property matches the given pattern.
+		///   Returns an ordered sequence of all elements of the source sequence, whose selected property matches the given
+		///   pattern.
 		/// </summary>
 		/// <typeparam name="T">The type of the items that should be checked.</typeparam>
 		/// <param name="source">The items that should be checked.</param>
