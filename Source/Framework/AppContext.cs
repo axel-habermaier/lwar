@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework
 {
-	using System.Diagnostics;
-	using System.Linq;
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Input;
@@ -65,27 +63,5 @@ namespace Pegasus.Framework
 		///   Gets the logical input device that handles all user input to the application..
 		/// </summary>
 		public LogicalInputDevice LogicalInputDevice { get; internal set; }
-
-		/// <summary>
-		///   In debug builds, validates the context's data.
-		/// </summary>
-		[Conditional("DEBUG")]
-		internal void Validate()
-		{
-			Assert.That(!String.IsNullOrWhiteSpace(AppName), "The application name has not been set.");
-			Assert.That(!String.IsNullOrWhiteSpace(DefaultFontName), "The default font name has not been set.");
-			Assert.NotNull(Commands, "The command registry has not been set.");
-			Assert.NotNull(Cvars, "The cvar registry has not been set.");
-			Assert.NotNull(SpriteEffect, "The sprite effect adapter has not been set.");
-			Assert.NotNull(Statistics, "The statistics instance adapter has not been set.");
-
-			var duplicateName = Cvars.AllInstances.Select(cvar => cvar.Name)
-									 .Concat(Commands.AllInstances.Select(command => command.Name))
-									 .GroupBy(name => name)
-									 .FirstOrDefault(group => group.Count() > 1);
-
-			if (duplicateName != null)
-				Assert.That(false, "There is both a cvar and a command called '{0}'.", duplicateName.First());
-		}
 	}
 }

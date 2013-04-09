@@ -4,59 +4,19 @@ namespace Lwar.Client.GameStates
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Rendering;
 	using Scripting;
 
 	/// <summary>
 	///   Represents a game state that shows and manages, for instance, a menu or a game session.
 	/// </summary>
-	public abstract class GameState : DisposableObject
+	public abstract class GameState : AppState
 	{
-		/// <summary>
-		///   Gets or sets the state manager this game state belongs to.
-		/// </summary>
-		public StateManager StateManager { get; set; }
-
-		/// <summary>
-		///   Gets or sets the window that displays the game.
-		/// </summary>
-		protected Window Window
-		{
-			get { return StateManager.Window; }
-		}
-
-		/// <summary>
-		///   Gets the logical input device that provides all the user input to the game.
-		/// </summary>
-		protected LogicalInputDevice InputDevice
-		{
-			get { return StateManager.InputDevice; }
-		}
-
-		/// <summary>
-		///   Gets the graphics device that is used to draw the game.
-		/// </summary>
-		protected GraphicsDevice GraphicsDevice
-		{
-			get { return StateManager.GraphicsDevice; }
-		}
-
-		/// <summary>
-		///   Gets the assets manager that manages all assets of the game.
-		/// </summary>
-		protected AssetsManager Assets
-		{
-			get { return StateManager.Assets; }
-		}
-
 		/// <summary>
 		///   Gets the command registry that handles the application commands.
 		/// </summary>
 		protected CommandRegistry Commands
 		{
-			get { return StateManager.Commands; }
+			get { return (CommandRegistry)Context.Commands; }
 		}
 
 		/// <summary>
@@ -64,39 +24,7 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		protected CvarRegistry Cvars
 		{
-			get { return StateManager.Cvars; }
-		}
-
-		/// <summary>
-		///   Gets a value indicating whether the state is opaque and all game state below it do not need to be drawn.
-		/// </summary>
-		public bool IsOpaque { get; protected set; }
-
-		/// <summary>
-		///   Initializes the game state.
-		/// </summary>
-		public abstract void Initialize();
-
-		/// <summary>
-		///   Updates the game state.
-		/// </summary>
-		/// <param name="topmost">Indicates whether the game state is the topmost one.</param>
-		public abstract void Update(bool topmost);
-
-		/// <summary>
-		///   Draws the game state.
-		/// </summary>
-		/// <param name="output">The output that the state should render to.</param>
-		public virtual void Draw(RenderOutput output)
-		{
-		}
-
-		/// <summary>
-		///   Draws the user interface elements of the game state.
-		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
-		public virtual void DrawUserInterface(SpriteBatch spriteBatch)
-		{
+			get { return (CvarRegistry)Context.Cvars; }
 		}
 
 		/// <summary>

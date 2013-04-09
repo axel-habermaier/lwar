@@ -1,6 +1,6 @@
 ﻿<#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ assembly name="$(TargetDir)pgc.exe" #>
-<#@ import namespace="Pegasus.AssetsCompiler.CodeGeneration.Scripting" #>
+<#@ import namespace="Pegasus.AssetsCompiler.CodeGeneration.Registries" #>
 <#@ output extension=".cs" #>
 <#
 	string GeneratedCode = "";

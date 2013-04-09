@@ -25,7 +25,7 @@ namespace Lwar.Client
 		/// <summary>
 		///   The state manager that manages the states of the application.
 		/// </summary>
-		private StateManager _stateManager;
+		private AppStateManager _stateManager;
 
 		/// <summary>
 		///   Invoked when the application is initializing.
@@ -38,11 +38,10 @@ namespace Lwar.Client
 
 			Context.LogicalInputDevice.Modes = InputModes.Game;
 			Context.Window.Closing += Exit;
-			Context.Window.Title = "lwar";
 			Context.Window.Size = new Size(1280, 720);
 
 			_localServer = new LocalServer(commands);
-			_stateManager = new StateManager(Context);
+			_stateManager = new AppStateManager(Context);
 			_stateManager.Add(new MainMenu());
 
 			commands.Bind(Key.F1.WentDown(), "start_server");
@@ -55,7 +54,7 @@ namespace Lwar.Client
 		}
 
 		/// <summary>
-		///   Invoked when the application should update the game state.
+		///   Invoked when the application should update the its state.
 		/// </summary>
 		protected override void Update()
 		{

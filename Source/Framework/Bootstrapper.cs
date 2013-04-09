@@ -26,7 +26,18 @@ namespace Pegasus.Framework
 		public static void Run(AppContext context)
 		{
 			Assert.ArgumentNotNull(context, () => context);
-			context.Validate();
+			Assert.ArgumentSatisfies(!String.IsNullOrWhiteSpace(context.AppName), () => context, "The application name has not been set.");
+			Assert.ArgumentSatisfies(!String.IsNullOrWhiteSpace(context.DefaultFontName), () => context, "The default font name has not been set.");
+			Assert.ArgumentSatisfies(context.Commands != null, () => context, "The command registry has not been set.");
+			Assert.ArgumentSatisfies(context.Cvars != null, () => context, "The cvar registry has not been set.");
+			Assert.ArgumentSatisfies(context.SpriteEffect != null, () => context, "The sprite effect adapter has not been set.");
+			Assert.ArgumentSatisfies(context.Statistics != null, () => context, "The statistics instance adapter has not been set.");
+			Assert.ArgumentSatisfies(context.Cvars.AllInstances.Select(cvar => cvar.Name)
+											.Concat(context.Commands.AllInstances.Select(command => command.Name))
+											.GroupBy(name => name)
+											.Where(group => group.Count() > 1)
+											.Select(group => group.First())
+											.FirstOrDefault() == null, () => context, "There is a cvar and a command with the same name.");
 
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -43,7 +54,7 @@ namespace Pegasus.Framework
 							 PlatformInfo.Platform,
 							 IntPtr.Size == 4 ? "32" : "64",
 							 PlatformInfo.GraphicsApi);
-				
+
 					using (new Help(context.Commands, context.Cvars))
 					using (new Interpreter(context.AppName, context.Commands, context.Cvars))
 					{

@@ -1,13 +1,11 @@
 ﻿using System;
 
-namespace Lwar.Client.Rendering
+namespace Pegasus.Framework.Rendering
 {
 	using System.Collections.Generic;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Rendering;
+	using Math;
+	using Platform;
+	using Platform.Graphics;
 
 	/// <summary>
 	///   Represents a 3D model.

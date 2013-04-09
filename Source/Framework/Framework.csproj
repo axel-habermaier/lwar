@@ -180,6 +180,7 @@
     <Compile Include="AppContext.cs" />
     <Compile Include="ArrayPool.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="AppState.cs" />
     <Compile Include="IAppContext.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Network\IPacketFactory.cs" />
@@ -226,7 +227,9 @@
     <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Rendering\Camera3D.cs" />
     <Compile Include="Rendering\Camera2D.cs" />
+    <Compile Include="Rendering\FullscreenQuad.cs" />
     <Compile Include="Rendering\ISpriteEffectAdapter.cs" />
+    <Compile Include="Rendering\Model.cs" />
     <Compile Include="Rendering\RenderOutput.cs" />
     <Compile Include="Rendering\VertexPositionNormal.cs" />
     <Compile Include="Rendering\DebugCamera.cs" />
@@ -306,10 +309,21 @@
     <Compile Include="Scripting\CommandAttribute.cs" />
     <Compile Include="Scripting\CommandParameter.cs" />
     <Compile Include="Scripting\CommandRegistry.cs">
-      <DependentUpon>CommandRegistry.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>CommandRegistry.tt</DependentUpon>
     </Compile>
+    <Compile Include="Scripting\CvarRegistry.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CvarRegistry.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Scripting\ICommandRegistry.cs" >
+	
+	</Compile>
+    <Compile Include="Scripting\ICvarRegistry.cs" >
+
+	</Compile>
     <Compile Include="Scripting\ConfigurationFile.cs" />
     <Compile Include="Scripting\ConfigurationLine.cs" />
     <Compile Include="Scripting\FileNameAttribute.cs" />
@@ -319,15 +333,9 @@
     <Compile Include="Scripting\NotEmptyAttribute.cs" />
     <Compile Include="Scripting\RangeAttribute.cs" />
     <Compile Include="Scripting\TypeRepresentation.cs" />
-    <Compile Include="Scripting\ICommandRegistry.cs" />
+    <Compile Include="Scripting\IRegistry.cs" />
     <Compile Include="Scripting\CvarAttribute.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
-    <Compile Include="Scripting\CvarRegistry.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CvarRegistry.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Scripting\ICvarRegistry.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPAddressParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
@@ -492,12 +500,14 @@
     <Compile Include="Platform\AveragedValue.cs" />
     <Compile Include="Scripting\Parsing\Combinators\TypeParser.cs" />
     <Compile Include="Scripting\ValidatorAttribute.cs" />
+    <Compile Include="AppStateManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Math\Circle.tt">
+		
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Circle.cs</LastGenOutput>
     </None>
@@ -518,10 +528,12 @@
       <LastGenOutput>Vector2.cs</LastGenOutput>
     </None>
     <None Include="Scripting\CommandRegistry.tt">
+	<DependentUpon>ICommandRegistry.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CommandRegistry.cs</LastGenOutput>
     </None>
     <None Include="Scripting\CvarRegistry.tt">
+	<DependentUpon>ICvarRegistry.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CvarRegistry.cs</LastGenOutput>
     </None>

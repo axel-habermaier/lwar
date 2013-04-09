@@ -207,7 +207,6 @@
     <Compile Include="Gameplay\IGenerationalIdentity.cs" />
     <Compile Include="Gameplay\Transformation.cs" />
     <Compile Include="GameStates\Playing.cs" />
-    <Compile Include="GameStates\StateManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Scripting\ICommandRegistry.cs" />
     <Compile Include="Scripting\ICvarRegistry.cs" />
@@ -226,12 +225,10 @@
     <Compile Include="Network\LocalServer.cs" />
     <Compile Include="Network\ServerConnection.cs" />
     <Compile Include="Rendering\Renderers\BulletRenderer.cs" />
-    <Compile Include="Rendering\FullscreenQuad.cs" />
     <Compile Include="Rendering\GaussianBlur.cs" />
     <Compile Include="Rendering\SpriteEffectAdapter.cs" />
     <Compile Include="Rendering\Renderers\SunRenderer.cs" />
     <Compile Include="Rendering\Renderers\Renderer.cs" />
-    <Compile Include="Rendering\Model.cs" />
     <Compile Include="Rendering\Renderers\PlanetRenderer.cs" />
     <Compile Include="Rendering\RenderContext.cs" />
     <Compile Include="Rendering\Renderers\ShipRenderer.cs" />
@@ -253,10 +250,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripting\CommandRegistry.tt">
+	<DependentUpon>ICommandRegistry.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CommandRegistry.cs</LastGenOutput>
     </None>
     <None Include="Scripting\CvarRegistry.tt">
+	<DependentUpon>ICvarRegistry.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CvarRegistry.cs</LastGenOutput>
     </None>
