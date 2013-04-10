@@ -318,12 +318,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CvarRegistry.tt</DependentUpon>
     </Compile>
-    <Compile Include="Scripting\ICommandRegistry.cs" >
-	
-	</Compile>
-    <Compile Include="Scripting\ICvarRegistry.cs" >
-
-	</Compile>
+    <Compile Include="Scripting\ICommandRegistry.cs">
+    </Compile>
+    <Compile Include="Scripting\ICvarRegistry.cs">
+    </Compile>
     <Compile Include="Scripting\ConfigurationFile.cs" />
     <Compile Include="Scripting\ConfigurationLine.cs" />
     <Compile Include="Scripting\FileNameAttribute.cs" />
@@ -333,7 +331,6 @@
     <Compile Include="Scripting\NotEmptyAttribute.cs" />
     <Compile Include="Scripting\RangeAttribute.cs" />
     <Compile Include="Scripting\TypeRepresentation.cs" />
-    <Compile Include="Scripting\IRegistry.cs" />
     <Compile Include="Scripting\CvarAttribute.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
@@ -507,7 +504,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Math\Circle.tt">
-		
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Circle.cs</LastGenOutput>
     </None>
@@ -528,12 +524,12 @@
       <LastGenOutput>Vector2.cs</LastGenOutput>
     </None>
     <None Include="Scripting\CommandRegistry.tt">
-	<DependentUpon>ICommandRegistry.cs</DependentUpon>
+      <DependentUpon>ICommandRegistry.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CommandRegistry.cs</LastGenOutput>
     </None>
     <None Include="Scripting\CvarRegistry.tt">
-	<DependentUpon>ICvarRegistry.cs</DependentUpon>
+      <DependentUpon>ICvarRegistry.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CvarRegistry.cs</LastGenOutput>
     </None>
