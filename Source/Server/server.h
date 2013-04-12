@@ -233,7 +233,7 @@ struct Format {
     size_t id;
 
     Pack *pack;
-    Pack *unpack;
+    Unpack *unpack;
     List  all;
     size_t len;
     size_t n;
