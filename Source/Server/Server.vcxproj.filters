@@ -12,35 +12,15 @@
     <ClCompile Include="server.c" />
     <ClCompile Include="time.c" />
     <ClCompile Include="uint.c" />
-    <ClCompile Include="rules\bullet.c">
-      <Filter>Rules</Filter>
-    </ClCompile>
-    <ClCompile Include="rules\planet.c">
-      <Filter>Rules</Filter>
-    </ClCompile>
-    <ClCompile Include="rules\ship.c">
-      <Filter>Rules</Filter>
-    </ClCompile>
     <ClCompile Include="packet.c" />
     <ClCompile Include="pool.c" />
     <ClCompile Include="player.c" />
     <ClCompile Include="rules.c" />
-    <ClCompile Include="rules\rocket.c">
-      <Filter>Rules</Filter>
-    </ClCompile>
     <ClCompile Include="format.c" />
     <ClCompile Include="queue.c" />
     <ClCompile Include="update.c" />
     <ClCompile Include="array.c" />
-    <ClCompile Include="rules\gun.c">
-      <Filter>Rules</Filter>
-    </ClCompile>
-    <ClCompile Include="rules\ray.c">
-      <Filter>Rules</Filter>
-    </ClCompile>
-    <ClCompile Include="rules\phaser.c">
-      <Filter>Rules</Filter>
-    </ClCompile>
+    <ClCompile Include="templates.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="connection.h" />
@@ -60,10 +40,5 @@
     <ClInclude Include="update.h" />
     <ClInclude Include="bitset.h" />
     <ClInclude Include="array.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Rules">
-      <UniqueIdentifier>{48537878-3998-4180-b8f8-54c892fbdd68}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

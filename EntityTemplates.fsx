@@ -10,10 +10,9 @@ open System.Reflection
 //====================================================================================================================
 type Vector2 = { X : float; Y : float }
 
-type EntityType = | Bullet | Ship | Planet | Rocket | Ray | Shockwave | Gun | Phaser | Sun
+type EntityType = Bullet | Ship | Planet | Rocket | Ray | Shockwave | Gun | Phaser | Sun
 
 type Template = {
-    Name            : string;
     Type            : EntityType;
     Act             : string;
     Collide         : string;
@@ -33,22 +32,6 @@ type Template = {
 //====================================================================================================================
 let templates = seq {
     yield {
-        Name            = "A";
-        Type            = EntityType.Ship;
-        Act             = "hi";
-        Collide         = "gnah";
-        Interval        = 3;
-        Energy          = 1.04;
-        Health          = 3.14;
-        Length          = 1.0;
-        Mass            = 10.0;
-        Radius          = 15.0;
-        Acceleration    = { X = 1.0; Y = 2.0 };
-        Decelaration    = { X = 2.0; Y = 3.43 };
-        Rotation        = 17.0;
-    }
-    yield {
-        Name            = "Bullet";
         Type            = EntityType.Bullet;
         Act             = "decay";
         Collide         = null;
@@ -62,6 +45,90 @@ let templates = seq {
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0;  
     }
+    yield {
+        Type            = EntityType.Gun;
+        Act             = "gun_shoot";
+        Collide         = null;
+        Interval        = 300;
+        Energy          = 1000.0;
+        Health          = 1.0;
+        Length          = 0.0;
+        Mass            = 0.0;
+        Radius          = 0.0;
+        Acceleration    = { X = 0.0; Y = 0.0 };
+        Decelaration    = { X = 0.0; Y = 0.0 };
+        Rotation        = 0.0;  
+    }
+    yield {
+        Type            = EntityType.Phaser;
+        Act             = "phaser_shoot";
+        Collide         = null;
+        Interval        = 0;
+        Energy          = 1000.0;
+        Health          = 1.0;
+        Length          = 0.0;
+        Mass            = 0.0;
+        Radius          = 0.0;
+        Acceleration    = { X = 0.0; Y = 0.0 };
+        Decelaration    = { X = 0.0; Y = 0.0 };
+        Rotation        = 0.0;  
+    }
+    yield {
+        Type            = EntityType.Planet;
+        Act             = "gravity";
+        Collide         = null;
+        Interval        = 0;
+        Energy          = 0.0;
+        Health          = 1.0;
+        Length          = 0.0;
+        Mass            = 10000.;
+        Radius          = 128.0;
+        Acceleration    = { X = 0.0; Y = 0.0 };
+        Decelaration    = { X = 0.0; Y = 0.0 };
+        Rotation        = 0.0;  
+    }
+    yield {
+        Type            = EntityType.Ray;
+        Act             = "ray_act";
+        Collide         = null;
+        Interval        = 0;
+        Energy          = 0.0;
+        Health          = 1.0;
+        Length          = 0.0;
+        Mass            = 0.0;
+        Radius          = 512.0;
+        Acceleration    = { X = 0.0; Y = 0.0 };
+        Decelaration    = { X = 0.0; Y = 0.0 };
+        Rotation        = 0.0;  
+    }
+    yield {
+        Type            = EntityType.Rocket;
+        Act             = "aim";
+        Collide         = null;
+        Interval        = 0;
+        Energy          = 1000.0;
+        Health          = 1.0;
+        Length          = 0.0;
+        Mass            = 1.0;
+        Radius          = 16.0;
+        Acceleration    = { X = 500.0; Y = 20.0 };
+        Decelaration    = { X = 20.0; Y = 20.0 };
+        Rotation        = 1.0;  
+    }
+    yield {
+        Type            = EntityType.Ship;
+        Act             = null;
+        Collide         = null;
+        Interval        = 0;
+        Energy          = 1000.0;
+        Health          = 200.0;
+        Length          = 0.0;
+        Mass            = 1.0;
+        Radius          = 32.0;
+        Acceleration    = { X = 200.0; Y = 200.0 };
+        Decelaration    = { X = 200.0; Y = 200.0 };
+        Rotation        = 3.0;  
+    }
 }
 
 //====================================================================================================================
@@ -70,12 +137,15 @@ let templates = seq {
 let clientOutput = "Source/Client/Gameplay/Templates.cs"
 let serverOutput = "Source/Server/templates.c"
 
+// Set the thread culture to the invariant culture so that we don't get localized ToString() output for floating
+// point values
 Thread.CurrentThread.CurrentCulture <- CultureInfo.InvariantCulture;
 Thread.CurrentThread.CurrentUICulture <- CultureInfo.InvariantCulture;
 
+// Generate the server code
 let generateServer =
     let output = new StringBuilder()
-    let templateName t = (sprintf "type_%s" t).ToLower()
+    let templateName t = (sprintf "type_%A" t).ToLower()
     let functionName f = if String.IsNullOrWhiteSpace(f) then "NULL" else f
     let setField (v : obj) = output.AppendFormat("   {0}, ", v).AppendLine() |> ignore
     let setVectorField v = output.AppendFormat("   {{ {0}, {1} }}, ", v.X, v.Y).AppendLine() |> ignore
@@ -84,7 +154,7 @@ let generateServer =
         for f in templates |> Seq.filter (fun t -> not (String.IsNullOrWhiteSpace(projection t))) do
             output.AppendFormat(format, projection f).AppendLine() |> ignore
 
-    // Output required includes
+    // Write required includes
     output.AppendLine("#include <math.h>")
         .AppendLine("#include <stdint.h>")
         .AppendLine("#include <stddef.h>")
@@ -96,14 +166,14 @@ let generateServer =
         .AppendLine()
         |> ignore
 
-    // Output function prototypes
+    // Write function prototypes
     prototypes (fun t -> t.Act) "void {0}(Entity *self);"
     prototypes (fun t -> t.Collide) "void {0}(Entity *self, Entity *other);"
     output.AppendLine() |> ignore
 
-    // Output template definitions
+    // Write template definitions
     for t in templates do
-        output.AppendFormat("EntityType {0} =", templateName t.Name).AppendLine().AppendLine("{") |> ignore
+        output.AppendFormat("EntityType {0} =", templateName t.Type).AppendLine().AppendLine("{") |> ignore
         setField(entityType t.Type) 
         setField(functionName t.Act)
         setField(functionName t.Collide)
