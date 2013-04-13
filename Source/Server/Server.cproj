@@ -60,21 +60,15 @@
     <Compile Include="server.c" />
     <Compile Include="time.c" />
     <Compile Include="uint.c" />
-    <Compile Include="rules\bullet.c" />
-    <Compile Include="rules\planet.c" />
-    <Compile Include="rules\ship.c" />
     <Compile Include="packet.c" />
     <Compile Include="pool.c" />
     <Compile Include="player.c" />
     <Compile Include="rules.c" />
-    <Compile Include="rules\rocket.c" />
-    <Compile Include="rules\gun.c" />
-    <Compile Include="rules\phaser.c" />
     <Compile Include="array.c" />
     <Compile Include="format.c" />
     <Compile Include="queue.c" />
     <Compile Include="update.c" />
-    <Compile Include="rules\ray.c" />
+    <Compile Include="templates.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="connection.h" />

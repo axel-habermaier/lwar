@@ -250,12 +250,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripting\CommandRegistry.tt">
-	<DependentUpon>ICommandRegistry.cs</DependentUpon>
+      <DependentUpon>ICommandRegistry.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CommandRegistry.cs</LastGenOutput>
     </None>
     <None Include="Scripting\CvarRegistry.tt">
-	<DependentUpon>ICvarRegistry.cs</DependentUpon>
+      <DependentUpon>ICvarRegistry.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CvarRegistry.cs</LastGenOutput>
     </None>

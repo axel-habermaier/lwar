@@ -1,6 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug Linux|x86" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release Linux|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Source/Framework/Platform/Graphics/RasterizerState.cs">
+    <Files>
+      <File FileName="Source/Platform/gl3.c" Line="74" Column="1" />
+      <File FileName="Source/Framework/Platform/Graphics/RasterizerState.cs" Line="279" Column="3" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/axel/Workspace/lwar/Source/Assets Compiler/Texture2DProcessor.cs" line="36" column="1" />
