@@ -106,7 +106,7 @@ EntityType type_rocket =
     ENTITY_TYPE_ROCKET, 
     aim, 
     NULL, 
-    0, 
+    10, 
     1000.0, 
     1.0, 
     0.0, 

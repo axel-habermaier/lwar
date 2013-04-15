@@ -84,13 +84,16 @@ namespace Lwar.Client.Network
 					entity = Ship.Create(entityId, player);
 					break;
 				case EntityType.Planet:
-					entity = Sun.Create(entityId);// TODO: Create planet instead
+					entity = Sun.Create(entityId); // TODO: Create planet instead
 					break;
 				case EntityType.Sun:
 					entity = Sun.Create(entityId);
 					break;
 				case EntityType.Bullet:
 					entity = Bullet.Create(entityId);
+					break;
+				case EntityType.Rocket:
+					entity = Rocket.Create(entityId);
 					break;
 				case EntityType.Phaser:
 					entity = Phaser.Create(entityId);

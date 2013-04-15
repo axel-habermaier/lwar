@@ -39,6 +39,11 @@ void rules_init() {
 
     Vec x = { 500,500 };
     Entity *p0 = entity_create(&type_planet, &server->self->player, x, _0);
+	p0->active=true;
+	p0->mass = 100;
+	Vec x2 = { -500, 0 };
+	p0 =entity_create(&type_rocket, &server->self->player, x2, _0);
+	p0->active=true;
 }
 
 EntityType *entity_type_get(size_t id) {

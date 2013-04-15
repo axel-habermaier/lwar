@@ -1,11 +1,8 @@
 Client
 ========
-- Handle ray and circle update messages
-- Add Sun, Rocket entities
 - Effects
 	- Sun effect
 	- Different types of planets
-	- Skybox
 	- Nebulae
 	- Shield effect
 	- Weapon effects
@@ -30,7 +27,6 @@ Pegasus
 Network Specification
 ========
 - Add reason to Leave message: PlayerLeft, ConnectionDropped, Misbehaved (only Misbehaved Leave message may contain the local player id)
-- Add sun entity type
 
 Server
 ========

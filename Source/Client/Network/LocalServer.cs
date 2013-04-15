@@ -18,7 +18,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   The update frequency of the server in Hz.
 		/// </summary>
-		private const int UpdateFrequency = 30;
+		private const int UpdateFrequency = 55;// 30;
 
 		/// <summary>
 		///   The command registry that manages the application commands.

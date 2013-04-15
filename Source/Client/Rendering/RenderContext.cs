@@ -32,7 +32,8 @@ namespace Lwar.Client.Rendering
 			new BulletRenderer(),
 			new PhaserRenderer(),
 			new RayRenderer(),
-			new ShockwaveRenderer()
+			new ShockwaveRenderer(),
+			new RocketRenderer()
 		};
 
 		/// <summary>

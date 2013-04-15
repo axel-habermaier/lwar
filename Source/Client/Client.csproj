@@ -173,10 +173,12 @@
     <Compile Include="..\..\Assets\Effects\Effects.cs">
       <Link>Rendering\Effects.cs</Link>
     </Compile>
+    <Compile Include="Gameplay\Entities\Rocket.cs" />
     <Compile Include="Gameplay\Entities\Shockwave.cs" />
     <Compile Include="Gameplay\Entities\Ray.cs" />
     <Compile Include="Gameplay\Entities\Phaser.cs" />
     <Compile Include="Gameplay\Entities\Entity.cs" />
+    <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShockwaveRenderer.cs" />
     <Compile Include="Rendering\Renderers\RayRenderer.cs" />
     <Compile Include="Rendering\Renderers\PhaserRenderer.cs" />
