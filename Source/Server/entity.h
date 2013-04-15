@@ -5,18 +5,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Lwar.Client.Gameplay
+enum
 {
-    public enum EntityType
-    {
-        Bullet = 1, 
-        Ship = 2, 
-        Planet = 3, 
-        Rocket = 4, 
-        Gun = 5, 
-        Phaser = 6, 
-        Sun = 7, 
-        Ray = 8, 
-        Shockwave = 9, 
-    }
-}
+    ENTITY_TYPE_BULLET = 1, 
+    ENTITY_TYPE_SHIP = 2, 
+    ENTITY_TYPE_PLANET = 3, 
+    ENTITY_TYPE_ROCKET = 4, 
+    ENTITY_TYPE_GUN = 5, 
+    ENTITY_TYPE_PHASER = 6, 
+    ENTITY_TYPE_SUN = 7, 
+    ENTITY_TYPE_RAY = 8, 
+    ENTITY_TYPE_SHOCKWAVE = 9, 
+};

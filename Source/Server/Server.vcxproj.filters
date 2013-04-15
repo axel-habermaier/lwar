@@ -40,5 +40,6 @@
     <ClInclude Include="update.h" />
     <ClInclude Include="bitset.h" />
     <ClInclude Include="array.h" />
+    <ClInclude Include="entity.h" />
   </ItemGroup>
 </Project>

@@ -16,14 +16,4 @@ extern Format     format_pos;
 extern Format     format_ray;
 extern Format     format_circle;
 
-enum {
-    ENTITY_TYPE_SHIP      =   1,
-    ENTITY_TYPE_BULLET    =   2,
-    ENTITY_TYPE_PLANET    =   3,
-    ENTITY_TYPE_ROCKET    =   4,
-    ENTITY_TYPE_RAY       =   5,
-    ENTITY_TYPE_SHOCKWAVE =   6,
-
-    ENTITY_TYPE_GUN       =   7,
-    ENTITY_TYPE_PHASER    =   8,
-};
+#include "entity.h"

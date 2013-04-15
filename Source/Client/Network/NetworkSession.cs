@@ -125,7 +125,8 @@ namespace Lwar.Client.Network
 			_connection.Send(_outgoingMessages);
 			_connection.Update();
 
-			dispatcher.Dispatch(_receivedMessages);
+			while (_receivedMessages.Count != 0)
+				dispatcher.Dispatch(_receivedMessages.Dequeue());
 		}
 
 		/// <summary>

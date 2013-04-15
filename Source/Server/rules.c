@@ -88,7 +88,7 @@ void phaser_shoot(Entity *phaser) {
     Vec x = add(phaser->x, scale(f, phaser->radius));
     Vec v = _0;
 
-    Entity *ray = entity_create(&type_ray,phaser->player,x,v);
+    Entity *ray = entity_create(&type_phaser,phaser->player,x,v);
     entity_attach(phaser, ray);
     ray->active = 1;
 }

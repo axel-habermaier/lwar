@@ -361,6 +361,7 @@
     <ClInclude Include="bitset.h" />
     <ClInclude Include="connection.h" />
     <ClInclude Include="coroutine.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="message.h" />

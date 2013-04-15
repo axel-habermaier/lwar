@@ -62,10 +62,7 @@ namespace Lwar.Client.Rendering.Renderers
 			var heat = assets.LoadTexture2D("Textures/Heat");
 
 			_model = Model.CreateSphere(graphicsDevice, 200, 25);
-			_sphereEffect = new SphereEffect(graphicsDevice, assets)
-			{
-				SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp)
-			};
+			_sphereEffect = new SphereEffect(graphicsDevice, assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };
 
 			_sunEffect = new SunEffect(graphicsDevice, assets)
 			{
@@ -80,11 +77,7 @@ namespace Lwar.Client.Rendering.Renderers
 			_effectTexture.SetName("SunRenderer.EffectTexture");
 
 			_effectTarget = new RenderTarget(graphicsDevice, null, _effectTexture);
-			_heatOutput = new RenderOutput(graphicsDevice)
-			{
-				RenderTarget = _effectTarget,
-				Viewport = new Rectangle(0, 0, (int)w, (int)h)
-			};
+			_heatOutput = new RenderOutput(graphicsDevice) { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, (int)w, (int)h) };
 
 			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);
 			_quadEffect = new TexturedQuadEffect(graphicsDevice, assets) { World = Matrix.Identity };
@@ -93,7 +86,7 @@ namespace Lwar.Client.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Draws all registered elements.
+		///   Draws all suns.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)

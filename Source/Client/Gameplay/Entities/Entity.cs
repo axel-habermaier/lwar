@@ -4,6 +4,7 @@ namespace Lwar.Client.Gameplay.Entities
 {
 	using Network;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Rendering;
 
 	/// <summary>
@@ -35,6 +36,15 @@ namespace Lwar.Client.Gameplay.Entities
 		///   Gets the transformation of the entity.
 		/// </summary>
 		public Transformation Transform { get; private set; }
+
+		/// <summary>
+		///   Gets or sets the entity's position relative to its parent.
+		/// </summary>
+		public Vector2 Position
+		{
+			get { return new Vector2(Transform.Position.X, Transform.Position.Z); }
+			set { Transform.Position = new Vector3(value.X, 0, value.Y); }
+		}
 
 		/// <summary>
 		///   Gets or sets the generational identifier of the entity.

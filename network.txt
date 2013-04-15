@@ -134,13 +134,8 @@ Messages Payload Data
 		---------	----------	------------------------------------------------------------------------
 		uint32(Id)	entityId	The generational identifier of the entity that is added
 		uint32(Id)	playerId	The generational identifier of the player the entity belongs to
-		uint8		typeId		The identifier of the entity type template; possible values are:
-								1	Ship
-								2	Bullet
-								3	Planet
-								4	Rocket
-								5	Ray
-								6	Shock Wave
+		uint8		typeId		The identifier of the entity type template; the possible values are
+								determined by the EntityTemplates.fsx code generation script
 		
 	Remove
 		Type		Name 		Description
@@ -314,6 +309,8 @@ Client-side prediction
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	12	  15-04-12  Axel		Removed entity types; these are now determined by the F# code 
+								generation script
 	11	  17-02-11	Gidon		Now type-specific updates have their own message ids,
                         		four types possible so far: ships, just position, rays, circular areas.
                                 Fixed selection + shooting for several slots.

@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Network
 {
-	using System.Collections.Generic;
 	using Gameplay;
 	using Gameplay.Entities;
 
@@ -26,49 +25,45 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		///   Dispatches the messages contained in the queue.
+		///   Dispatches the given message.
 		/// </summary>
-		/// <param name="messages">The messages that should be dispatched.</param>
-		public void Dispatch(Queue<Message> messages)
+		/// <param name="message">The message that should be dispatched.</param>
+		public void Dispatch(Message message)
 		{
-			while (messages.Count != 0)
+			switch (message.Type)
 			{
-				var message = messages.Dequeue();
-				switch (message.Type)
-				{
-					case MessageType.Chat:
-						// TODO
-						break;
-					case MessageType.Name:
-						_gameSession.Players.ChangeName(message.Name.Player, message.Name.Name);
-						break;
-					case MessageType.Selection:
-						break;
-					case MessageType.Add:
-						AddEntity(message.Add.Entity, message.Add.Type, message.Add.Player);
-						break;
-					case MessageType.Collision:
-						break;
-					case MessageType.Join:
-						_gameSession.Players.Add(message.Join.Player, message.Join.IsLocalPlayer);
-						break;
-					case MessageType.Leave:
-						_gameSession.Players.Remove(message.Remove);
-						break;
-					case MessageType.Remove:
-						_gameSession.Entities.Remove(message.Remove);
-						break;
-					case MessageType.Stats:
-						break;
-					case MessageType.Update:
-					case MessageType.UpdatePosition:
-					case MessageType.UpdateRay:
-					case MessageType.UpdateCircle:
-						_gameSession.Entities.RemoteUpdate(ref message);
-						break;
-					default:
-						throw new InvalidOperationException("Unexpected message type.");
-				}
+				case MessageType.Chat:
+					// TODO
+					break;
+				case MessageType.Name:
+					_gameSession.Players.ChangeName(message.Name.Player, message.Name.Name);
+					break;
+				case MessageType.Selection:
+					break;
+				case MessageType.Add:
+					AddEntity(message.Add.Entity, message.Add.Type, message.Add.Player);
+					break;
+				case MessageType.Collision:
+					break;
+				case MessageType.Join:
+					_gameSession.Players.Add(message.Join.Player, message.Join.IsLocalPlayer);
+					break;
+				case MessageType.Leave:
+					_gameSession.Players.Remove(message.Remove);
+					break;
+				case MessageType.Remove:
+					_gameSession.Entities.Remove(message.Remove);
+					break;
+				case MessageType.Stats:
+					break;
+				case MessageType.Update:
+				case MessageType.UpdatePosition:
+				case MessageType.UpdateRay:
+				case MessageType.UpdateCircle:
+					_gameSession.Entities.RemoteUpdate(ref message);
+					break;
+				default:
+					throw new InvalidOperationException("Unexpected message type.");
 			}
 		}
 
@@ -93,6 +88,9 @@ namespace Lwar.Client.Network
 					break;
 				case EntityType.Bullet:
 					entity = Bullet.Create(entityId);
+					break;
+				case EntityType.Phaser:
+					entity = Phaser.Create(entityId);
 					break;
 				default:
 					throw new InvalidOperationException("Unexpected entity type.");

@@ -96,10 +96,10 @@ namespace Lwar.Client.Gameplay
 			// Compute the weighted average
 			_zoom = ((zoom * (slowDownFactor - 1)) + targetZoom) / slowDownFactor;
 
-			// Scale back to the [MinZoom,MaxZoom] range
+			// Scale back to the [MinZoom, MaxZoom] range
 			_zoom *= MaxZoom;
 
-			Position = new Vector3(Ship.Transform.Position.X, _zoom, Ship.Transform.Position.Z);
+			Position = new Vector3(Ship.Position.X, _zoom, Ship.Position.Y);
 			Target = new Vector3(Position.X, 0, Position.Z);
 
 			_clock.Reset();

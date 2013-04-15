@@ -10,17 +10,17 @@ namespace Lwar.Client.Rendering.Renderers
 	using Pegasus.Framework.Rendering;
 
 	/// <summary>
-	///   Renders bullets into a 3D scene.
+	///   Renders phasers into a 3D scene.
 	/// </summary>
-	public class BulletRenderer : Renderer<Bullet>
+	public class PhaserRenderer : Renderer<Phaser>
 	{
 		/// <summary>
-		///   The effect that is used to draw the bullets.
+		///   The effect that is used to draw the phasers.
 		/// </summary>
 		private TexturedQuadEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the bullets.
+		///   The model that is used to draw the phasers.
 		/// </summary>
 		private Model _model;
 
@@ -34,16 +34,16 @@ namespace Lwar.Client.Rendering.Renderers
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			var texture = assets.LoadTexture2D("Textures/Bullet");
+			var texture = assets.LoadTexture2D("Textures/Ship");
 
 			_model = Model.CreateQuad(graphicsDevice, texture.Size);
 			_effect = new TexturedQuadEffect(graphicsDevice, assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };
 		}
 
 		/// <summary>
-		///   Draws all bullets.
+		///   Draws all phasers.
 		/// </summary>
-		/// <param name="output">The output that the bullets should be rendered to.</param>
+		/// <param name="output">The output that the phasers should be rendered to.</param>
 		public override void Draw(RenderOutput output)
 		{
 			foreach (var bullet in Elements)

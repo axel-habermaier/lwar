@@ -35,15 +35,13 @@ namespace Lwar.Client.Rendering.Renderers
 			Assert.ArgumentNotNull(assets, () => assets);
 
 			var texture = assets.LoadTexture2D("Textures/Ship");
+
 			_model = Model.CreateQuad(graphicsDevice, texture.Size);
-			_effect = new TexturedQuadEffect(graphicsDevice, assets)
-			{
-				Texture = new Texture2DView(texture, SamplerState.TrilinearClamp)
-			};
+			_effect = new TexturedQuadEffect(graphicsDevice, assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };
 		}
 
 		/// <summary>
-		///   Draws all registered elements.
+		///   Draws all ships.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)

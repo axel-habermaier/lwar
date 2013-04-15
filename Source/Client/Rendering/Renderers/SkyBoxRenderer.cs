@@ -33,11 +33,10 @@ namespace Lwar.Client.Rendering.Renderers
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 
+			var cubemap = assets.LoadCubeMap("Textures/Space");
+
 			_model = Model.CreateSkybox(graphicsDevice);
-			_effect = new SkyboxEffect(graphicsDevice, assets)
-			{
-				Skybox = new CubeMapView(assets.LoadCubeMap("Textures/Space"), SamplerState.BilinearClampNoMipmaps)
-			};
+			_effect = new SkyboxEffect(graphicsDevice, assets) { Skybox = new CubeMapView(cubemap, SamplerState.BilinearClampNoMipmaps) };
 		}
 
 		/// <summary>

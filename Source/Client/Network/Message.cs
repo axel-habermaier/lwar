@@ -197,6 +197,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of a Join message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct JoinPayload
 		{
 			/// <summary>
@@ -230,6 +231,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of an Add message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct AddPayload
 		{
 			/// <summary>
@@ -251,6 +253,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of a Selection message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct SelectionPayload
 		{
 			/// <summary>
@@ -304,6 +307,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of a Stats message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct StatsPayload
 		{
 			/// <summary>
@@ -330,6 +334,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of an Input message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct InputPayload
 		{
 			/// <summary>
@@ -401,6 +406,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Holds the payload of a Collision message.
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
 		public struct CollisionPayload
 		{
 			/// <summary>

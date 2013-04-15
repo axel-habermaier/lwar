@@ -34,15 +34,14 @@ namespace Lwar.Client.Rendering.Renderers
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 
+			var cubemap = assets.LoadCubeMap("Textures/Sun");
+
 			_model = Model.CreateSphere(graphicsDevice, 100, 25);
-			_effect = new SphereEffect(graphicsDevice, assets)
-			{
-				SphereTexture = new CubeMapView(assets.LoadCubeMap("Textures/Sun"), SamplerState.TrilinearClamp)
-			};
+			_effect = new SphereEffect(graphicsDevice, assets) { SphereTexture = new CubeMapView(cubemap, SamplerState.TrilinearClamp) };
 		}
 
 		/// <summary>
-		///   Draws all registered elements.
+		///   Draws all planets.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
