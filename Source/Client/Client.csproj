@@ -178,6 +178,7 @@
     <Compile Include="Gameplay\Entities\Ray.cs" />
     <Compile Include="Gameplay\Entities\Phaser.cs" />
     <Compile Include="Gameplay\Entities\Entity.cs" />
+    <Compile Include="Gameplay\InterpolatedValue.cs" />
     <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShockwaveRenderer.cs" />
     <Compile Include="Rendering\Renderers\RayRenderer.cs" />
