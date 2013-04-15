@@ -30,7 +30,8 @@ namespace Lwar.Client.Rendering
 			new PlanetRenderer(),
 			new ShipRenderer(),
 			new BulletRenderer(),
-			new PhaserRenderer()
+			new PhaserRenderer(),
+			new RayRenderer()
 		};
 
 		/// <summary>

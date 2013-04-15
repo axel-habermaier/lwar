@@ -92,6 +92,9 @@ namespace Lwar.Client.Network
 				case EntityType.Phaser:
 					entity = Phaser.Create(entityId);
 					break;
+				case EntityType.Ray:
+					entity = Ray.Create(entityId);
+					break;
 				default:
 					throw new InvalidOperationException("Unexpected entity type.");
 			}

@@ -29,8 +29,8 @@ namespace Lwar.Client.Gameplay.Entities
 		{
 			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
 
-			Transform.Position = new Vector3(message.Update.Position.X, 0, message.Update.Position.Y);
-			Transform.Rotation = new Vector3(0, MathUtils.DegToRad(message.Update.Rotation), 0);
+			Position = message.Update.Position;
+			Rotation = MathUtils.DegToRad(message.Update.Rotation);
 			Health = message.Update.Health;
 		}
 

@@ -81,9 +81,12 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
 		/// <param name="size">The size of the quad.</param>
-		public static Model CreateQuad(GraphicsDevice graphicsDevice, Size size)
+		/// <param name="offset">
+		///   The offset that should be applied to the generated quad. By default, the center of the quad lies in the origin.
+		/// </param>
+		public static Model CreateQuad(GraphicsDevice graphicsDevice, Size size, Vector2 offset = default(Vector2))
 		{
-			return CreateQuad(graphicsDevice, size.Width, size.Height);
+			return CreateQuad(graphicsDevice, size.Width, size.Height, offset);
 		}
 
 		/// <summary>
@@ -92,38 +95,39 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
 		/// <param name="width">The width of the quad.</param>
 		/// <param name="height">The height of the quad.</param>
-		public static Model CreateQuad(GraphicsDevice graphicsDevice, float width, float height)
+		/// <param name="offset">
+		///   The offset that should be applied to the generated quad. By default, the center of the quad lies in the origin.
+		/// </param>
+		public static Model CreateQuad(GraphicsDevice graphicsDevice, float width, float height, Vector2 offset = default(Vector2))
 		{
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 
-			width /= 2.0f;
-			height /= 2.0f;
-
+			var rectangle = new RectangleF(-width / 2.0f + offset.X, -height / 2.0f + offset.Y, width, height);
 			var texture = new RectangleF(0, 0, 1, 1);
 
 			var vertices = new[]
 			{
 				new VertexPositionNormalTexture
 				{
-					Position = new Vector4(-width, 0, -height),
+					Position = new Vector4(rectangle.Left, 0, rectangle.Top),
 					Normal = new Vector3(0, 1, 0),
 					TextureCoordinates = new Vector2(texture.Left, texture.Bottom)
 				},
 				new VertexPositionNormalTexture
 				{
-					Position = new Vector4(-width, 0, height),
+					Position = new Vector4(rectangle.Left, 0, rectangle.Bottom),
 					Normal = new Vector3(0, 1, 0),
 					TextureCoordinates = new Vector2(texture.Left, texture.Top),
 				},
 				new VertexPositionNormalTexture
 				{
-					Position = new Vector4(width, 0, height),
+					Position = new Vector4(rectangle.Right, 0, rectangle.Bottom),
 					Normal = new Vector3(0, 1, 0),
 					TextureCoordinates = new Vector2(texture.Right, texture.Top)
 				},
 				new VertexPositionNormalTexture
 				{
-					Position = new Vector4(width, 0, -height),
+					Position = new Vector4(rectangle.Right, 0, rectangle.Top),
 					Normal = new Vector3(0, 1, 0),
 					TextureCoordinates = new Vector2(texture.Right, texture.Bottom)
 				}

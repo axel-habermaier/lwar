@@ -4,7 +4,6 @@ namespace Lwar.Client.Gameplay.Entities
 {
 	using Network;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 
 	/// <summary>
 	///   Represents a phaser.
@@ -17,8 +16,8 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <param name="message">The update message that should be processed.</param>
 		public override void RemoteUpdate(ref Message message)
 		{
-			Assert.That(message.Type == MessageType.UpdateRay, "Unsupported update type.");
-			Transform.Position = new Vector3(message.UpdateRay.Origin.X, 0, message.UpdateRay.Origin.Y);
+			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
+			Position = message.Update.Position;
 		}
 
 		/// <summary>

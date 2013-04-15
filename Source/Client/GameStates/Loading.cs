@@ -74,7 +74,7 @@ namespace Lwar.Client.GameStates
 
 				_networkSession.Send(Message.ChangePlayerName(localPlayer, Cvars.PlayerName));
 				_networkSession.Send(Message.ChangeSelection(localPlayer, EntityType.Ship,
-															 EntityType.Gun, EntityType.Gun,
+															 EntityType.Gun, EntityType.Phaser,
 															 EntityType.Gun, EntityType.Gun));
 			}
 

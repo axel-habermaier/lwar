@@ -47,6 +47,15 @@ namespace Lwar.Client.Gameplay.Entities
 		}
 
 		/// <summary>
+		///   Gets or sets the entity's rotation relative to its parent.
+		/// </summary>
+		public float Rotation
+		{
+			get { return Transform.Rotation.Y; }
+			set { Transform.Rotation = new Vector3(0, value, 0); }
+		}
+
+		/// <summary>
 		///   Gets or sets the generational identifier of the entity.
 		/// </summary>
 		public Identifier Id { get; protected set; }

@@ -193,6 +193,7 @@
   <ItemGroup>
     <Content Include="Textures\Bullet.png" />
     <Content Include="Textures\Heat.png" />
+    <Content Include="Textures\Phaser.png" />
     <Content Include="Textures\Planet.png" />
     <Content Include="Textures\Rocket.png" />
     <Content Include="Textures\Ship.png" />

@@ -282,7 +282,7 @@ static void send_updates_for(Client *c, Packet *p, Format *f) {
     size_t n = f->n;
 
     updates_foreach(f,e) {
-        if(e->dead) continue;
+		if(e->dead) { n --; continue; }
     again_e:
         if(!k) {
             k = min(n, packet_update_n(p,f->len));

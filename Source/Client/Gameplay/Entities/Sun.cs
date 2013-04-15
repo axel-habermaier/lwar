@@ -4,7 +4,6 @@ namespace Lwar.Client.Gameplay.Entities
 {
 	using Network;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 
 	/// <summary>
 	///   Represents a sun.
@@ -18,7 +17,7 @@ namespace Lwar.Client.Gameplay.Entities
 		public override void RemoteUpdate(ref Message message)
 		{
 			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
-			Transform.Position = new Vector3(message.Update.Position.X, 0, message.Update.Position.Y);
+			Position = message.Update.Position;
 		}
 
 		/// <summary>

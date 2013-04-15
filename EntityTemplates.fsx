@@ -273,6 +273,7 @@ let generateServerCode =
     // Write the header file
     output.WriteToFile serverHeaderOutput
 
+// Generate the client code
 let generateClientCode =
     let output = new CodeWriter()
 
