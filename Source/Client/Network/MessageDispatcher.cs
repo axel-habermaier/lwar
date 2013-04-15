@@ -84,6 +84,9 @@ namespace Lwar.Client.Network
 					entity = Ship.Create(entityId, player);
 					break;
 				case EntityType.Planet:
+					entity = Sun.Create(entityId);// TODO: Create planet instead
+					break;
+				case EntityType.Sun:
 					entity = Sun.Create(entityId);
 					break;
 				case EntityType.Bullet:
@@ -94,6 +97,9 @@ namespace Lwar.Client.Network
 					break;
 				case EntityType.Ray:
 					entity = Ray.Create(entityId);
+					break;
+				case EntityType.Shockwave:
+					entity = Shockwave.Create(entityId);
 					break;
 				default:
 					throw new InvalidOperationException("Unexpected entity type.");

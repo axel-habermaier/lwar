@@ -11,17 +11,17 @@ namespace Lwar.Client.Rendering.Renderers
 	using Pegasus.Framework.Rendering;
 
 	/// <summary>
-	///   Renders rays into a 3D scene.
+	///   Renders shockwaves into a 3D scene.
 	/// </summary>
-	public class RayRenderer : Renderer<Ray>
+	public class ShockwaveRenderer : Renderer<Shockwave>
 	{
 		/// <summary>
-		///   The effect that is used to draw the rays.
+		///   The effect that is used to draw the shockwaves.
 		/// </summary>
-		private TexturedQuadEffect _effect;
+		private SphereEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the rays.
+		///   The model that is used to draw the shockwaves.
 		/// </summary>
 		private Model _model;
 
@@ -35,21 +35,21 @@ namespace Lwar.Client.Rendering.Renderers
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			var texture = assets.LoadTexture2D("Textures/Phaser");
+			var texture = assets.LoadCubeMap("Textures/SunHeat");
 
-			_model = Model.CreateQuad(graphicsDevice, texture.Size, new Vector2(texture.Size.Width / 2.0f, 0));
-			_effect = new TexturedQuadEffect(graphicsDevice, assets) { Texture = new Texture2DView(texture, SamplerState.BilinearClampNoMipmaps) };
+			_model = Model.CreateSphere(graphicsDevice, 1, 10);
+			_effect = new SphereEffect(graphicsDevice, assets) { SphereTexture = new CubeMapView(texture, SamplerState.BilinearClampNoMipmaps) };
 		}
 
 		/// <summary>
-		///   Draws all rays.
+		///   Draws all shockwaves.
 		/// </summary>
-		/// <param name="output">The output that the rays should be rendered to.</param>
+		/// <param name="output">The output that the shockwaves should be rendered to.</param>
 		public override void Draw(RenderOutput output)
 		{
-			foreach (var ray in Elements)
+			foreach (var shockwave in Elements)
 			{
-				_effect.World = Matrix.CreateScale(ray.Length, 1, 1) * ray.Transform.Matrix;
+				_effect.World = Matrix.CreateScale(shockwave.Radius) * shockwave.Transform.Matrix;
 				_model.Draw(output, _effect.Default);
 			}
 		}
