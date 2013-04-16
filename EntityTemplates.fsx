@@ -83,7 +83,7 @@ let templates = seq {
         Health          = 1.0;
         Length          = 0.0;
         Mass            = 10000.;
-        Radius          = 128.0;
+        Radius          = 256.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0;  
@@ -97,7 +97,7 @@ let templates = seq {
         Health          = 1.0;
         Length          = 0.0;
         Mass            = 0.0;
-        Radius          = 512.0;
+        Radius          = 2048.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0;  
@@ -125,7 +125,7 @@ let templates = seq {
         Health          = 200.0;
         Length          = 0.0;
         Mass            = 1.0;
-        Radius          = 32.0;
+        Radius          = 64.0;
         Acceleration    = { X = 200.0; Y = 200.0 };
         Decelaration    = { X = 200.0; Y = 200.0 };
         Rotation        = 3.0;  
@@ -145,8 +145,7 @@ type CodeWriter() as this =
         this.AddIndentation()
         output.Append s |> ignore
 
-    member public this.AppendLine (s : string) =
-        this.AddIndentation()
+    member public this.AppendLine s =
         this.Append s
         this.Newline()
 

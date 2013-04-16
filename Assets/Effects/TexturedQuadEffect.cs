@@ -7,22 +7,31 @@ namespace Lwar.Assets.Effects
 	[Effect]
 	public class TexturedQuadEffect : Effect
 	{
-		public readonly Technique Default = new Technique
+		public readonly Technique TexturedQuad = new Technique
 		{
 			VertexShader = "VertexShader",
-			FragmentShader = "FragmentShader"
+			FragmentShader = "TexturedQuadFragmentShader"
+		};
+
+		public readonly Technique ColoredTexturedQuad = new Technique
+		{
+			VertexShader = "VertexShader",
+			FragmentShader = "ColoredTexturedQuadFragmentShader"
 		};
 
 		public readonly Technique FullScreen = new Technique
 		{
 			VertexShader = "FullScreenVertexShader",
-			FragmentShader = "FragmentShader"
+			FragmentShader = "TexturedQuadFragmentShader"
 		};
 
 		public readonly Texture2D Texture;
 
 		[Constant]
 		public readonly Matrix World;
+
+		[Constant]
+		public readonly Vector4 Color;
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,
@@ -46,9 +55,15 @@ namespace Lwar.Assets.Effects
 		}
 
 		[FragmentShader]
-		public void FragmentShader([TexCoords] Vector2 texCoords, [Color] out Vector4 color)
+		public void TexturedQuadFragmentShader([TexCoords] Vector2 texCoords, [Color] out Vector4 color)
 		{
 			color = Texture.Sample(texCoords);
+		}
+
+		[FragmentShader]
+		public void ColoredTexturedQuadFragmentShader([TexCoords] Vector2 texCoords, [Color] out Vector4 color)
+		{
+			color = Texture.Sample(texCoords) * Color;
 		}
 	}
 }

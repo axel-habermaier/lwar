@@ -27,6 +27,7 @@ Pegasus
 Network Specification
 ========
 - Add reason to Leave message: PlayerLeft, ConnectionDropped, Misbehaved (only Misbehaved Leave message may contain the local player id)
+- Add gameplay event message: X killed himself, X killed Y
 
 Server
 ========

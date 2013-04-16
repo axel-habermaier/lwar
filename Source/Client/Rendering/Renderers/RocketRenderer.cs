@@ -49,7 +49,7 @@ namespace Lwar.Client.Rendering.Renderers
 			foreach (var rocket in Elements)
 			{
 				_effect.World = rocket.Transform.Matrix;
-				_model.Draw(output, _effect.Default);
+				_model.Draw(output, _effect.TexturedQuad);
 			}
 		}
 

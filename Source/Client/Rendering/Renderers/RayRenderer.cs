@@ -23,7 +23,9 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   The model that is used to draw the rays.
 		/// </summary>
-		private Model _model;
+		private Model _model, _model2;
+
+		private Texture2D _texture, _texture2;
 
 		/// <summary>
 		///   Initializes the renderer.
@@ -35,10 +37,12 @@ namespace Lwar.Client.Rendering.Renderers
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			var texture = assets.LoadTexture2D("Textures/Phaser");
+			_texture = assets.LoadTexture2D("Textures/Phaser");
+			_texture2 = assets.LoadTexture2D("Textures/PhaserGlow");
 
-			_model = Model.CreateQuad(graphicsDevice, texture.Size, new Vector2(texture.Size.Width / 2.0f, 0));
-			_effect = new TexturedQuadEffect(graphicsDevice, assets) { Texture = new Texture2DView(texture, SamplerState.BilinearClampNoMipmaps) };
+			_model = Model.CreateQuad(graphicsDevice, _texture.Size, new Vector2(_texture.Size.Width / 2.0f, 0));
+			_model2 = Model.CreateQuad(graphicsDevice,_texture2.Size, new Vector2(_texture2.Size.Width / 2.0f, 0));
+			_effect = new TexturedQuadEffect(graphicsDevice, assets);
 		}
 
 		/// <summary>
@@ -47,11 +51,23 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="output">The output that the rays should be rendered to.</param>
 		public override void Draw(RenderOutput output)
 		{
+			BlendState.Additive.Bind();
+			DepthStencilState.DepthDisabled.Bind();
+
 			foreach (var ray in Elements)
 			{
+				_effect.Texture = new Texture2DView(_texture2, SamplerState.BilinearClampNoMipmaps);
 				_effect.World = Matrix.CreateScale(ray.Length, 1, 1) * ray.Transform.Matrix;
-				_model.Draw(output, _effect.Default);
+				_effect.Color = new Vector4(1, 0, 0, 1);
+				_model2.Draw(output, _effect.ColoredTexturedQuad);
+
+				_effect.Texture = new Texture2DView(_texture, SamplerState.BilinearClampNoMipmaps);
+				_effect.Color = new Vector4(1, 1,1,1);
+				_model.Draw(output, _effect.ColoredTexturedQuad);
 			}
+
+			DepthStencilState.DepthEnabled.Bind();
+			BlendState.Premultiplied.Bind();
 		}
 
 		/// <summary>
@@ -61,6 +77,7 @@ namespace Lwar.Client.Rendering.Renderers
 		{
 			_effect.SafeDispose();
 			_model.SafeDispose();
+			_model2.SafeDispose();
 		}
 	}
 }
