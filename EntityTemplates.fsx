@@ -41,8 +41,8 @@ let templates = seq {
         Health          = 100.0;
         Length          = 0.0;
         Mass            = 0.1;
-        Radius          = 8.0;
-        Acceleration    = { X = 0.0; Y = 500.0 };
+        Radius          = 16.0;
+        Acceleration    = { X = 0.0; Y = 1000.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0;  
     }
@@ -126,8 +126,8 @@ let templates = seq {
         Length          = 0.0;
         Mass            = 1.0;
         Radius          = 64.0;
-        Acceleration    = { X = 200.0; Y = 200.0 };
-        Decelaration    = { X = 200.0; Y = 200.0 };
+        Acceleration    = { X = 500.0; Y = 500.0 };
+        Decelaration    = { X = 500.0; Y = 500.0 };
         Rotation        = 3.0;  
     }
 }

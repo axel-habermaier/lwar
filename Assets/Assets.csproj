@@ -192,6 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Textures\Bullet.png" />
+    <Content Include="Textures\BulletGlow.png" />
     <Content Include="Textures\Heat.png" />
     <Content Include="Textures\Phaser.png" />
     <Content Include="Textures\PhaserGlow.png" />

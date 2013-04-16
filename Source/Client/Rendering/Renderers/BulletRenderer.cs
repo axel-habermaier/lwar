@@ -5,6 +5,7 @@ namespace Lwar.Client.Rendering.Renderers
 	using Assets.Effects;
 	using Gameplay.Entities;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Rendering;
@@ -24,6 +25,8 @@ namespace Lwar.Client.Rendering.Renderers
 		/// </summary>
 		private Model _model;
 
+		private Texture2D _texture, _texture2;
+
 		/// <summary>
 		///   Initializes the renderer.
 		/// </summary>
@@ -34,10 +37,11 @@ namespace Lwar.Client.Rendering.Renderers
 			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
 			Assert.ArgumentNotNull(assets, () => assets);
 
-			var texture = assets.LoadTexture2D("Textures/Bullet");
+			_texture = assets.LoadTexture2D("Textures/Bullet");
+			_texture2 = assets.LoadTexture2D("Textures/BulletGlow");
 
-			_model = Model.CreateQuad(graphicsDevice, texture.Size);
-			_effect = new TexturedQuadEffect(graphicsDevice, assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };
+			_model = Model.CreateQuad(graphicsDevice, _texture.Size);
+			_effect = new TexturedQuadEffect(graphicsDevice, assets);
 		}
 
 		/// <summary>
@@ -46,11 +50,23 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
 		{
+			BlendState.Additive.Bind();
+			DepthStencilState.DepthDisabled.Bind();
+
 			foreach (var bullet in Elements)
 			{
 				_effect.World = bullet.Transform.Matrix;
-				_model.Draw(output, _effect.TexturedQuad);
+				_effect.Texture = new Texture2DView(_texture2, SamplerState.BilinearClampNoMipmaps);
+				_effect.Color = new Vector4(0, 1, 0, 1);
+				_model.Draw(output, _effect.ColoredTexturedQuad);
+
+				_effect.Color = new Vector4(1, 1, 1, 1);
+				_effect.Texture = new Texture2DView(_texture, SamplerState.BilinearClampNoMipmaps);
+				_model.Draw(output, _effect.ColoredTexturedQuad);
 			}
+
+			BlendState.Premultiplied.Bind();
+			DepthStencilState.DepthEnabled.Bind();
 		}
 
 		/// <summary>

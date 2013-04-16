@@ -18,6 +18,7 @@ namespace Lwar.Client.Gameplay.Entities
 		{
 			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
 			Position = message.Update.Position;
+			Rotation = message.Update.Rotation;
 		}
 
 		/// <summary>
