@@ -6,7 +6,7 @@ namespace Pegasus.Framework.Rendering
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a rendering output configuration that can be used to draw geometry on the configured render target.
+	///   Represents a rendering output configuration that can be used to draw geometry into the configured render target.
 	/// </summary>
 	public class RenderOutput : DisposableObject
 	{

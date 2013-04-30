@@ -10,10 +10,9 @@ namespace Lwar.Client.Rendering
 	using Pegasus.Framework.Rendering;
 
 	/// <summary>
-	///   An adaptor to an effect that can be used to draw 2D sprites.
+	///   An adapter to to the 2D sprite effect used by lwar.
 	/// </summary>
-	[UsedImplicitly]
-	public class SpriteEffectAdapter : DisposableObject, ISpriteEffectAdapter
+	internal class SpriteEffectAdapter : DisposableObject, ISpriteEffectAdapter
 	{
 		/// <summary>
 		///   The sprite effect that is adapted.

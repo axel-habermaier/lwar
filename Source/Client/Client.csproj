@@ -66,6 +66,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|AnyCPU'">
     <DebugSymbols>True</DebugSymbols>
