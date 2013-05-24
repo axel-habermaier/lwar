@@ -332,8 +332,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		///   Checks whether the terminating semicolon can be safely omitted from the statement.
 		/// </summary>
 		/// <param name="node">The node that should be checked.</param>
-		private bool OmitTerminatingSemicolon(AstNode node)
+		private static bool OmitTerminatingSemicolon(AstNode node)
 		{
+			Assert.ArgumentNotNull(node, () => node);
 			return node is BlockStatement || node is ForStatement || node is WhileStatement || node is IfElseStatement;
 		}
 

@@ -420,7 +420,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		}
 
 		/// <summary>
-		///   Check whether the name of any locally declared variable is reserved.
+		///   Checks whether the name of any locally declared variable is reserved.
 		/// </summary>
 		private void ValidateLocalVariableNames()
 		{
