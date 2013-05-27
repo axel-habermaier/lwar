@@ -61,7 +61,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="eventArgs">The event args that report the completion of the socket operation.</param>
 		public static SocketOperation<TResult> Create(SocketAsyncEventArgs eventArgs)
 		{
-			Assert.ArgumentNotNull(eventArgs, () => eventArgs);
+			Assert.ArgumentNotNull(eventArgs);
 
 			var process = GetInstance();
 			process.SetDescription("Waiting for socket operation");
@@ -97,7 +97,7 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		private void OnCompleted(SocketAsyncEventArgs eventArgs)
 		{
-			Assert.ArgumentNotNull(eventArgs, () => eventArgs);
+			Assert.ArgumentNotNull(eventArgs);
 			lock (_lockObj)
 			{
 				if (eventArgs.SocketError == SocketError.Success)
@@ -114,7 +114,7 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		internal void OnSynchronouslyCompleted(SocketAsyncEventArgs eventArgs)
 		{
-			Assert.ArgumentNotNull(eventArgs, () => eventArgs);
+			Assert.ArgumentNotNull(eventArgs);
 			if (eventArgs.SocketError == SocketError.Success)
 				Result = ((Func<SocketAsyncEventArgs, TResult>)eventArgs.UserToken)(eventArgs);
 			else

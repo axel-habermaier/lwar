@@ -80,9 +80,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
 		public ConsolePrompt(Font font, Color color, CommandRegistry commands, CvarRegistry cvars)
 		{
-			Assert.ArgumentNotNull(font, () => font);
-			Assert.ArgumentNotNull(commands, () => commands);
-			Assert.ArgumentNotNull(cvars, () => cvars);
+			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNull(commands);
+			Assert.ArgumentNotNull(cvars);
 
 			_history = new string[MaxHistory];
 			_input = new TextBox(font) { Color = color };

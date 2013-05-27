@@ -24,8 +24,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="button">The mouse button that is monitored by the trigger.</param>
 		internal MouseTrigger(MouseTriggerType triggerType, MouseButton button)
 		{
-			Assert.ArgumentInRange(triggerType, () => triggerType);
-			Assert.ArgumentInRange(button, () => button);
+			Assert.ArgumentInRange(triggerType);
+			Assert.ArgumentInRange(button);
 
 			_triggerType = triggerType;
 			_button = button;
@@ -52,7 +52,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="device">The logical input device that should be used to evaluate the trigger.</param>
 		internal override bool Evaluate(LogicalInputDevice device)
 		{
-			Assert.ArgumentNotNull(device, () => device);
+			Assert.ArgumentNotNull(device);
 
 			switch (_triggerType)
 			{

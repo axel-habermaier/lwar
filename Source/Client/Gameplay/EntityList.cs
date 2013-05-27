@@ -41,8 +41,8 @@ namespace Lwar.Client.Gameplay
 		/// <param name="renderContext">The render context that should be used to draw the entities.</param>
 		public EntityList(GameSession gameSession, RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(gameSession, () => gameSession);
-			Assert.ArgumentNotNull(renderContext, () => renderContext);
+			Assert.ArgumentNotNull(gameSession);
+			Assert.ArgumentNotNull(renderContext);
 
 			_gameSession = gameSession;
 			_renderContext = renderContext;
@@ -64,7 +64,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="entity">The entity that should be added.</param>
 		public void Add(IEntity entity)
 		{
-			Assert.ArgumentNotNull(entity, () => entity);
+			Assert.ArgumentNotNull(entity);
 			Assert.That(_entityMap[entity.Id] == null, "An entity with the same id has already been added.");
 
 			_entities.Add(entity);

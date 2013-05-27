@@ -62,9 +62,9 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="layoutData">The layouting data for the individual characters of the text.</param>
 		internal void RebuildCache(Font font, string text, Rectangle[] layoutData)
 		{
-			Assert.ArgumentNotNull(font, () => font);
-			Assert.ArgumentNotNull(text, () => text);
-			Assert.ArgumentNotNull(layoutData, () => layoutData);
+			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNull(text);
+			Assert.ArgumentNotNull(layoutData);
 			Assert.That(text.Length <= layoutData.Length, "Layout data missing.");
 
 			_numQuads = 0;
@@ -94,8 +94,8 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="position">The position of the text's top left corner.</param>
 		internal static void Draw(SpriteBatch spriteBatch, Font font, string text, Color color, Vector2i position)
 		{
-			Assert.ArgumentNotNull(font, () => font);
-			Assert.ArgumentNotNull(text, () => text);
+			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNull(text);
 
 			if (String.IsNullOrWhiteSpace(text))
 				return;

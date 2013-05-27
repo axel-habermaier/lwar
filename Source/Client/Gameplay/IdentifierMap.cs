@@ -39,7 +39,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="obj">The object that should be mapped.</param>
 		public void Add(T obj)
 		{
-			Assert.ArgumentNotNull(obj, () => obj);
+			Assert.ArgumentNotNull(obj);
 			Assert.That(_map[obj.Id.Identity] == null, "There already is a mapping for the object's identifier.");
 
 			_map[obj.Id.Identity] = obj;
@@ -51,7 +51,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="obj">The object whose mapping should be removed.</param>
 		public void Remove(T obj)
 		{
-			Assert.ArgumentNotNull(obj, () => obj);
+			Assert.ArgumentNotNull(obj);
 			Assert.That(_map[obj.Id.Identity] != null, "The object is not mapped.");
 			Assert.That(_map[obj.Id.Identity].Id.Generation == obj.Id.Generation,
 						"Attempted to unmap an object of a different generation.");

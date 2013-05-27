@@ -64,7 +64,7 @@ namespace Lwar.Client.Gameplay
 		public GameCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
 			: base(graphicsDevice)
 		{
-			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
+			Assert.ArgumentNotNull(inputDevice);
 
 			FieldOfView = MathUtils.DegToRad(20);
 			Up = new Vector3(0, 0, 1);

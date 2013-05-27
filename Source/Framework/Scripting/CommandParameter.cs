@@ -27,9 +27,9 @@ namespace Pegasus.Framework.Scripting
 								params ValidatorAttribute[] validators)
 			: this()
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
-			Assert.ArgumentNotNull(type, () => type);
-			Assert.ArgumentNotNullOrWhitespace(description, () => description);
+			Assert.ArgumentNotNullOrWhitespace(name);
+			Assert.ArgumentNotNull(type);
+			Assert.ArgumentNotNullOrWhitespace(description);
 
 			Name = name;
 			Type = type;
@@ -71,7 +71,7 @@ namespace Pegasus.Framework.Scripting
 		[Pure]
 		internal bool Validate(object value)
 		{
-			Assert.ArgumentNotNull(value, () => value);
+			Assert.ArgumentNotNull(value);
 
 			foreach (var validator in _validators)
 			{

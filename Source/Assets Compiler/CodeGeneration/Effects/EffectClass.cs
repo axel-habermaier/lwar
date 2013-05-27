@@ -28,7 +28,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="type">The declaration of the class that represents the effect.</param>
 		public EffectClass(TypeDeclaration type)
 		{
-			Assert.ArgumentNotNull(type, () => type);
+			Assert.ArgumentNotNull(type);
 			_type = type;
 		}
 

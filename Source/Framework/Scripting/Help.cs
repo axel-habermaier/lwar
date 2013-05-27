@@ -26,8 +26,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="cvars">The command registry that should be used to look up commands.</param>
 		public Help(CommandRegistry commands, CvarRegistry cvars)
 		{
-			Assert.ArgumentNotNull(commands, () => commands);
-			Assert.ArgumentNotNull(cvars, () => cvars);
+			Assert.ArgumentNotNull(commands);
+			Assert.ArgumentNotNull(cvars);
 
 			_commands = commands;
 			_cvars = cvars;

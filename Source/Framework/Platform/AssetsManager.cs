@@ -42,7 +42,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="device">The graphics device that should be used to load the assets.</param>
 		internal AssetsManager(GraphicsDevice device)
 		{
-			Assert.ArgumentNotNull(device, () => device);
+			Assert.ArgumentNotNull(device);
 
 			_device = device;
 		}
@@ -118,7 +118,7 @@ namespace Pegasus.Framework.Platform
 			where TAsset : class
 		{
 			Assert.NotDisposed(this);
-			Assert.ArgumentNotNullOrWhitespace(assetName, () => assetName);
+			Assert.ArgumentNotNullOrWhitespace(assetName);
 			Asset asset;
 
 			if (_assets.TryGetValue(assetName, out asset))
@@ -144,7 +144,7 @@ namespace Pegasus.Framework.Platform
 			where TAsset : Asset, new()
 		{
 			Assert.NotDisposed(this);
-			Assert.ArgumentNotNullOrWhitespace(assetName, () => assetName);
+			Assert.ArgumentNotNullOrWhitespace(assetName);
 
 			assetName = assetName.Replace("\\", "/");
 			var asset = Find<TAsset>(assetName);
@@ -176,7 +176,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="fontFilePath">The path to the font description file.</param>
 		public Font LoadFont(string fontFilePath)
 		{
-			Assert.ArgumentNotNullOrWhitespace(fontFilePath, () => fontFilePath);
+			Assert.ArgumentNotNullOrWhitespace(fontFilePath);
 			return Load<FontAsset>(fontFilePath).Font;
 		}
 
@@ -186,7 +186,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="shaderFilePath">The path to the vertex shader file.</param>
 		internal VertexShader LoadVertexShader(string shaderFilePath)
 		{
-			Assert.ArgumentNotNullOrWhitespace(shaderFilePath, () => shaderFilePath);
+			Assert.ArgumentNotNullOrWhitespace(shaderFilePath);
 			return Load<VertexShaderAsset>(shaderFilePath).Shader;
 		}
 
@@ -196,7 +196,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="shaderFilePath">The path to the fragment shader file.</param>
 		internal FragmentShader LoadFragmentShader(string shaderFilePath)
 		{
-			Assert.ArgumentNotNullOrWhitespace(shaderFilePath, () => shaderFilePath);
+			Assert.ArgumentNotNullOrWhitespace(shaderFilePath);
 			return Load<FragmentShaderAsset>(shaderFilePath).Shader;
 		}
 
@@ -206,7 +206,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="texturePath">The path to the texture file.</param>
 		public Texture2D LoadTexture2D(string texturePath)
 		{
-			Assert.ArgumentNotNullOrWhitespace(texturePath, () => texturePath);
+			Assert.ArgumentNotNullOrWhitespace(texturePath);
 			return Load<Texture2DAsset>(texturePath).Texture;
 		}
 
@@ -216,7 +216,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="cubeMapPath">The path to the cube map file.</param>
 		public CubeMap LoadCubeMap(string cubeMapPath)
 		{
-			Assert.ArgumentNotNullOrWhitespace(cubeMapPath, () => cubeMapPath);
+			Assert.ArgumentNotNullOrWhitespace(cubeMapPath);
 			return Load<CubeMapAsset>(cubeMapPath).Texture;
 		}
 	}

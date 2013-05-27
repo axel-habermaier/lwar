@@ -58,7 +58,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public ConsoleContent(Font font)
 			: this()
 		{
-			Assert.ArgumentNotNull(font, () => font);
+			Assert.ArgumentNotNull(font);
 
 			_lineHeight = font.LineHeight;
 			_labels = new Label[MaxLabels];

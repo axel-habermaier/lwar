@@ -84,7 +84,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="effect">The effect for which the C# code should be generated.</param>
 		public void GenerateCode(EffectClass effect)
 		{
-			Assert.ArgumentNotNull(effect, () => effect);
+			Assert.ArgumentNotNull(effect);
 
 			_effect = effect;
 

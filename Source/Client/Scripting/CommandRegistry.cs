@@ -54,8 +54,8 @@ namespace Lwar.Client.Scripting
 		[DebuggerHidden]
 		public void Connect(IPAddress ipAddress, ushort port = Specification.DefaultServerPort)
 		{
-			Assert.ArgumentNotNull((object)ipAddress, () => ipAddress);
-			Assert.ArgumentNotNull((object)port, () => port);
+			Assert.ArgumentNotNull((object)ipAddress);
+			Assert.ArgumentNotNull((object)port);
 			Instances.Connect.Invoke(ipAddress, port);
 		}
 
@@ -75,7 +75,7 @@ namespace Lwar.Client.Scripting
 		[DebuggerHidden]
 		public void Chat(string message)
 		{
-			Assert.ArgumentNotNull((object)message, () => message);
+			Assert.ArgumentNotNull((object)message);
 			Instances.Chat.Invoke(message);
 		}
 

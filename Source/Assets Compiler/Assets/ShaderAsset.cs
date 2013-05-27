@@ -48,9 +48,9 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// <param name="type">The type of the shader.</param>
 		public static string GetPath(string effect, string name, ShaderType type)
 		{
-			Assert.ArgumentNotNullOrWhitespace(effect, () => effect);
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
-			Assert.ArgumentInRange(type, () => type);
+			Assert.ArgumentNotNullOrWhitespace(effect);
+			Assert.ArgumentNotNullOrWhitespace(name);
+			Assert.ArgumentInRange(type);
 
 			var extension = type.ToString().Where(Char.IsUpper).Aggregate(String.Empty, (s, c) => s + c).ToLower();
 			return String.Format("Effects/{0}.{1}.{2}", effect, name, extension);

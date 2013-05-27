@@ -20,7 +20,7 @@ namespace Pegasus.Framework.Platform.Memory
 		[DebuggerHidden]
 		internal static void UsePointer<T>(this T obj, Action<IntPtr> action)
 		{
-			Assert.ArgumentNotNull(action, () => action);
+			Assert.ArgumentNotNull(action);
 
 			var handle = GCHandle.Alloc(obj, GCHandleType.Pinned);
 			try
@@ -44,7 +44,7 @@ namespace Pegasus.Framework.Platform.Memory
 		[DebuggerHidden]
 		internal static TReturn UsePointer<TObject, TReturn>(this TObject obj, Func<IntPtr, TReturn> action)
 		{
-			Assert.ArgumentNotNull(action, () => action);
+			Assert.ArgumentNotNull(action);
 
 			var handle = GCHandle.Alloc(obj, GCHandleType.Pinned);
 			try
@@ -76,7 +76,7 @@ namespace Pegasus.Framework.Platform.Memory
 		internal static int Size<T>(this T[] obj)
 			where T : struct
 		{
-			Assert.ArgumentNotNull(obj, () => obj);
+			Assert.ArgumentNotNull(obj);
 			return Marshal.SizeOf(typeof(T)) * obj.Length;
 		}
 	}

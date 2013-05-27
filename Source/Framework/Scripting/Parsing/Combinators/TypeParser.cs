@@ -48,7 +48,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="type">The type that should be parsed.</param>
 		public TypeParser(Type type)
 		{
-			Assert.ArgumentNotNull(type, () => type);
+			Assert.ArgumentNotNull(type);
 			Assert.That(TypeParsers.ContainsKey(type), "No parser has been registered for type '{0}'.", type.FullName);
 
 			Parser = TypeParsers[type];

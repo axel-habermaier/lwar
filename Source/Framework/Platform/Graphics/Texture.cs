@@ -23,7 +23,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		protected Texture(GraphicsDevice graphicsDevice)
 			: base(graphicsDevice)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(graphicsDevice);
 		}
 
 		/// <summary>

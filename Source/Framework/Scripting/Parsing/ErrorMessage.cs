@@ -20,8 +20,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 		internal ErrorMessage(ErrorType type, string message)
 			: this()
 		{
-			Assert.ArgumentInRange(type, () => type);
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			Assert.ArgumentInRange(type);
+			Assert.ArgumentNotNullOrWhitespace(message);
 
 			Type = type;
 			Message = message;

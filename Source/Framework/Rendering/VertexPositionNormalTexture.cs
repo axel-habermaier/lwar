@@ -59,8 +59,8 @@ namespace Pegasus.Framework.Rendering
 		public static VertexInputLayout GetInputLayout(GraphicsDevice graphicsDevice, VertexBuffer vertexBuffer,
 													   IndexBuffer indexBuffer)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(vertexBuffer, () => vertexBuffer);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(vertexBuffer);
 			Assert.That(Marshal.SizeOf(typeof(VertexPositionNormalTexture)) == Size, "Unexpected unamanged size.");
 
 			var inputElements = new[]

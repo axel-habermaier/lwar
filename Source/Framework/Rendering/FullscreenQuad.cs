@@ -23,8 +23,8 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="assets">The assets manager that should be used to load the quad resources.</param>
 		public FullscreenQuad(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
 
 			_model = Model.CreateFullScreenQuad(graphicsDevice);
 		}

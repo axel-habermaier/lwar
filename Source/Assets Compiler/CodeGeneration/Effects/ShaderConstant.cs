@@ -31,8 +31,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="variable">The declaration of the field variable that represents the shader constant.</param>
 		public ShaderConstant(FieldDeclaration field, VariableInitializer variable)
 		{
-			Assert.ArgumentNotNull(field, () => field);
-			Assert.ArgumentNotNull(variable, () => variable);
+			Assert.ArgumentNotNull(field);
+			Assert.ArgumentNotNull(variable);
 
 			_field = field;
 			_variable = variable;
@@ -45,8 +45,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="type">The type of the shader constant.</param>
 		public ShaderConstant(string name, DataType type)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
-			Assert.ArgumentInRange(type, () => type);
+			Assert.ArgumentNotNullOrWhitespace(name);
+			Assert.ArgumentInRange(type);
 
 			Name = name;
 			Type = type;

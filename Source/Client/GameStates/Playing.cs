@@ -62,7 +62,7 @@ namespace Lwar.Client.GameStates
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public Playing(IPEndPoint serverEndPoint)
 		{
-			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
+			Assert.ArgumentNotNull(serverEndPoint);
 
 			_networkSession = new NetworkSession(serverEndPoint);
 			IsOpaque = true;
@@ -162,7 +162,7 @@ namespace Lwar.Client.GameStates
 		/// <param name="output">The output that the state should render to.</param>
 		public override void Draw(RenderOutput output)
 		{
-			Assert.ArgumentNotNull(output, () => output);
+			Assert.ArgumentNotNull(output);
 
 			output.Camera = _cameraManager.ActiveCamera;
 			output.Camera.Viewport = output.Viewport;

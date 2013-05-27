@@ -19,7 +19,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		/// <param name="str">The string that should be parsed.</param>
 		public SkipStringParser(string str)
 		{
-			Assert.ArgumentNotNullOrWhitespace(str, () => str);
+			Assert.ArgumentNotNullOrWhitespace(str);
 			_string = str;
 		}
 

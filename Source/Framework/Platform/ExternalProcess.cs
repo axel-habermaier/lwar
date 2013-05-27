@@ -36,8 +36,8 @@ namespace Pegasus.Framework.Platform
 		/// <param name="arguments">The arguments that should be copied into the command line.</param>
 		public ExternalProcess(string fileName, string commandLine = "", params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(fileName, () => fileName);
-			Assert.ArgumentNotNull(commandLine, () => commandLine);
+			Assert.ArgumentNotNullOrWhitespace(fileName);
+			Assert.ArgumentNotNull(commandLine);
 
 			_process = new Process
 			{

@@ -48,8 +48,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
 		public InstructionParser(CommandRegistry commands, CvarRegistry cvars)
 		{
-			Assert.ArgumentNotNull(cvars, () => cvars);
-			Assert.ArgumentNotNull(commands, () => commands);
+			Assert.ArgumentNotNull(cvars);
+			Assert.ArgumentNotNull(commands);
 
 			_cvars = cvars;
 			_commands = commands;

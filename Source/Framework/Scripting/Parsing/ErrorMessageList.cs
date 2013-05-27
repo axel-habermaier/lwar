@@ -61,7 +61,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		internal ErrorMessageList(ErrorMessageList errorList, ErrorMessage errorMessage)
 			: this()
 		{
-			Assert.ArgumentSatisfies(errorList._errorMessages != null, () => errorList, "Uninitializes error list.");
+			Assert.ArgumentSatisfies(errorList._errorMessages != null, "Uninitializes error list.");
 
 			_errorMessages = new ErrorMessage[errorList._errorMessages.Length + 1];
 			Array.Copy(errorList._errorMessages, _errorMessages, errorList._errorMessages.Length);
@@ -76,8 +76,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 		internal ErrorMessageList(ErrorMessageList first, ErrorMessageList second)
 			: this()
 		{
-			Assert.ArgumentSatisfies(first._errorMessages != null, () => first, "Uninitializes error list.");
-			Assert.ArgumentSatisfies(second._errorMessages != null, () => second, "Uninitializes error list.");
+			Assert.ArgumentSatisfies(first._errorMessages != null, "Uninitializes error list.");
+			Assert.ArgumentSatisfies(second._errorMessages != null, "Uninitializes error list.");
 
 			_errorMessages = new ErrorMessage[first._errorMessages.Length + second._errorMessages.Length];
 			Array.Copy(first._errorMessages, _errorMessages, first._errorMessages.Length);

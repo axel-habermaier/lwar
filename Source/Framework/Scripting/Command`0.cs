@@ -16,8 +16,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="description">A string describing the usage and the purpose of the command.</param>
 		public Command(string name, string description)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
-			Assert.ArgumentNotNullOrWhitespace(description, () => description);
+			Assert.ArgumentNotNullOrWhitespace(name);
+			Assert.ArgumentNotNullOrWhitespace(description);
 
 			Name = name;
 			Description = description;
@@ -47,8 +47,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="parameters">The parameters that should be used to invoke the command.</param>
 		void ICommand.Invoke(object[] parameters)
 		{
-			Assert.ArgumentNotNull(parameters, () => parameters);
-			Assert.ArgumentSatisfies(parameters.Length == 0, () => parameters, "Argument count mismatch.");
+			Assert.ArgumentNotNull(parameters);
+			Assert.ArgumentSatisfies(parameters.Length == 0, "Argument count mismatch.");
 
 			Invoke();
 		}

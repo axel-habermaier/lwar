@@ -28,7 +28,7 @@ namespace Pegasus.Framework.Network
 		/// </summary>
 		public UdpSocket(IPacketFactory packetFactory)
 		{
-			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
+			Assert.ArgumentNotNull(packetFactory);
 			_packetFactory = packetFactory;
 
 			_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp) { Blocking = false };
@@ -42,8 +42,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="remoteEndPoint">The endpoint of the peer the packet should be sent to.</param>
 		public void Send(OutgoingPacket packet, IPEndPoint remoteEndPoint)
 		{
-			Assert.ArgumentNotNull(packet, () => packet);
-			Assert.ArgumentNotNull(remoteEndPoint, () => remoteEndPoint);
+			Assert.ArgumentNotNull(packet);
+			Assert.ArgumentNotNull(remoteEndPoint);
 			Assert.InRange(packet.Size, 1, Packet.MaxSize);
 
 			using (packet)
@@ -67,8 +67,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="remoteEndPoint">The endpoint of the peer the packet should be sent to.</param>
 		public async Task SendAsync(ProcessContext context, OutgoingPacket packet, IPEndPoint remoteEndPoint)
 		{
-			Assert.ArgumentNotNull(packet, () => packet);
-			Assert.ArgumentNotNull(remoteEndPoint, () => remoteEndPoint);
+			Assert.ArgumentNotNull(packet);
+			Assert.ArgumentNotNull(remoteEndPoint);
 			Assert.InRange(packet.Size, 1, Packet.MaxSize);
 
 			using (packet)
@@ -155,7 +155,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="localEndPoint">The local endpoint the socket should be bound to.</param>
 		public void Bind(IPEndPoint localEndPoint)
 		{
-			Assert.ArgumentNotNull(localEndPoint, () => localEndPoint);
+			Assert.ArgumentNotNull(localEndPoint);
 
 			try
 			{

@@ -44,7 +44,7 @@ namespace Lwar.Client.Network
 		/// <param name="buffer">The buffer the header data should be read from.</param>
 		public static PacketHeader? Create(BufferReader buffer)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 
 			if (!buffer.CanRead(Specification.HeaderSize))
 			{
@@ -70,7 +70,7 @@ namespace Lwar.Client.Network
 		/// <param name="buffer">The buffer the header should be written into.</param>
 		public void Write(BufferWriter buffer)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 
 			buffer.WriteUInt32(AppIdentifier);
 			buffer.WriteUInt32(Acknowledgement);

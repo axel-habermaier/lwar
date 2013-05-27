@@ -36,9 +36,9 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		public BetweenParser(Parser<TResult, TUserState> parser, Parser<TLeft, TUserState> leftParser,
 							 Parser<TRight, TUserState> rightParser)
 		{
-			Assert.ArgumentNotNull(parser, () => parser);
-			Assert.ArgumentNotNull(leftParser, () => leftParser);
-			Assert.ArgumentNotNull(rightParser, () => rightParser);
+			Assert.ArgumentNotNull(parser);
+			Assert.ArgumentNotNull(leftParser);
+			Assert.ArgumentNotNull(rightParser);
 
 			_parser = parser;
 			_leftParser = leftParser;

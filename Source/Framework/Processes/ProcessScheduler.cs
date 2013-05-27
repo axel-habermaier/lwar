@@ -30,7 +30,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="line">The line number of the caller.</param>
 		public IProcess CreateProcess(AsyncAction asyncAction, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
 		{
-			Assert.ArgumentNotNull(asyncAction, () => asyncAction);
+			Assert.ArgumentNotNull(asyncAction);
 
 			var process = new Process();
 			try
@@ -57,7 +57,7 @@ namespace Pegasus.Framework.Processes
 		public IProcess<TResult> CreateProcess<TResult>(AsyncFunc<TResult> asyncFunc, [CallerFilePath] string path = "",
 														[CallerLineNumber] int line = 0)
 		{
-			Assert.ArgumentNotNull(asyncFunc, () => asyncFunc);
+			Assert.ArgumentNotNull(asyncFunc);
 
 			var process = new Process<TResult>();
 			try

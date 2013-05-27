@@ -172,7 +172,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="hostEndPoint">The endpoint that the host is listening on for new connections.</param>
 		public async Task ConnectAsync(ProcessContext context, IPEndPoint hostEndPoint)
 		{
-			Assert.ArgumentNotNull(hostEndPoint, () => hostEndPoint);
+			Assert.ArgumentNotNull(hostEndPoint);
 			Assert.That(!IsConnected, "Service proxy is already connected.");
 
 			NetworkLog.ClientInfo("Connecting to service host at {0}.", hostEndPoint);
@@ -203,9 +203,9 @@ namespace Pegasus.Framework.Network
 														   Func<BufferReader, TResult> resultDeserializer,
 														   double timeout)
 		{
-			Assert.ArgumentNotNull(argumentSerializer, () => argumentSerializer);
-			Assert.ArgumentNotNull(resultDeserializer, () => resultDeserializer);
-			Assert.ArgumentInRange(operationIdentifier, () => operationIdentifier, 0, Byte.MaxValue);
+			Assert.ArgumentNotNull(argumentSerializer);
+			Assert.ArgumentNotNull(resultDeserializer);
+			Assert.ArgumentInRange(operationIdentifier, 0, Byte.MaxValue);
 			Assert.That(IsConnected, "The proxy is not connected to the host.");
 
 			var requestIdentifier = ++_invokeCount;
@@ -245,8 +245,8 @@ namespace Pegasus.Framework.Network
 										 Action<BufferWriter> argumentSerializer,
 										 double timeout)
 		{
-			Assert.ArgumentNotNull(argumentSerializer, () => argumentSerializer);
-			Assert.ArgumentInRange(operationIdentifier, () => operationIdentifier, 0, Byte.MaxValue);
+			Assert.ArgumentNotNull(argumentSerializer);
+			Assert.ArgumentInRange(operationIdentifier, 0, Byte.MaxValue);
 			Assert.That(IsConnected, "The proxy is not connected to the host.");
 
 			var requestIdentifier = ++_invokeCount;

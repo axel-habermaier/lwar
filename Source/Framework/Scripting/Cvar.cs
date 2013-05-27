@@ -34,8 +34,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="validators">The validators that should be used to validate a new cvar value before it is set.</param>
 		public Cvar(string name, T defaultValue, string description, bool persistent, params ValidatorAttribute[] validators)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
-			Assert.ArgumentNotNullOrWhitespace(description, () => description);
+			Assert.ArgumentNotNullOrWhitespace(name);
+			Assert.ArgumentNotNullOrWhitespace(description);
 
 			Name = name;
 			Description = description;
@@ -90,7 +90,7 @@ namespace Pegasus.Framework.Scripting
 			get { return _value; }
 			set
 			{
-				Assert.ArgumentNotNull(value, () => value);
+				Assert.ArgumentNotNull(value);
 				Value = (T)value;
 			}
 		}

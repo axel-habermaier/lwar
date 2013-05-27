@@ -30,8 +30,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="assets">The assets manager that should be used to load the effect assets.</param>
 		internal EffectContext(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
 
 			_graphicsDevice = graphicsDevice;
 			_assets = assets;
@@ -76,7 +76,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="buffer">The constant buffer that should be bound.</param>
 		public void Bind(ConstantBuffer buffer)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 			ValidateInitialization();
 
 			buffer.Bind();
@@ -90,7 +90,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="data">The data that should be copied to the GPU.</param>
 		public unsafe void Update(ConstantBuffer buffer, void* data)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 			Assert.That(data != null, "The pointer to the data cannot be null.");
 			ValidateInitialization();
 
@@ -105,9 +105,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="fragmentShader">The fragment shader that should be used by the technique.</param>
 		public EffectTechnique CreateTechnique(Action bind, string vertexShader, string fragmentShader)
 		{
-			Assert.ArgumentNotNullOrWhitespace(vertexShader, () => vertexShader);
-			Assert.ArgumentNotNullOrWhitespace(fragmentShader, () => fragmentShader);
-			Assert.ArgumentNotNull(bind, () => bind);
+			Assert.ArgumentNotNullOrWhitespace(vertexShader);
+			Assert.ArgumentNotNullOrWhitespace(fragmentShader);
+			Assert.ArgumentNotNull(bind);
 			ValidateInitialization();
 
 			return new EffectTechnique(_assets.LoadVertexShader(vertexShader), _assets.LoadFragmentShader(fragmentShader), bind);

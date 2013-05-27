@@ -23,7 +23,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// <param name="property">The declaration of the property that represents the cvar.</param>
 		public Cvar(PropertyDeclaration property)
 		{
-			Assert.ArgumentNotNull(property, () => property);
+			Assert.ArgumentNotNull(property);
 			_property = property;
 		}
 

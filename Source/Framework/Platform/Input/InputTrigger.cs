@@ -60,8 +60,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="right">The second sub-trigger.</param>
 		public static InputTrigger operator &(InputTrigger left, InputTrigger right)
 		{
-			Assert.ArgumentNotNull(left, () => left);
-			Assert.ArgumentNotNull(right, () => right);
+			Assert.ArgumentNotNull(left);
+			Assert.ArgumentNotNull(right);
 
 			return new BinaryInputTrigger(BinaryInputTriggerType.Chord, left, right);
 		}
@@ -75,8 +75,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="right">The second sub-trigger.</param>
 		public static InputTrigger operator +(InputTrigger left, InputTrigger right)
 		{
-			Assert.ArgumentNotNull(left, () => left);
-			Assert.ArgumentNotNull(right, () => right);
+			Assert.ArgumentNotNull(left);
+			Assert.ArgumentNotNull(right);
 
 			return new BinaryInputTrigger(BinaryInputTriggerType.ChordOnce, left, right);
 		}
@@ -89,8 +89,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="right">The second sub-trigger.</param>
 		public static InputTrigger operator |(InputTrigger left, InputTrigger right)
 		{
-			Assert.ArgumentNotNull(left, () => left);
-			Assert.ArgumentNotNull(right, () => right);
+			Assert.ArgumentNotNull(left);
+			Assert.ArgumentNotNull(right);
 
 			return new BinaryInputTrigger(BinaryInputTriggerType.Alias, left, right);
 		}

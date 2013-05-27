@@ -26,8 +26,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="modes">The input modes in which the input should be triggered.</param>
 		public LogicalInput(InputTrigger trigger, InputModes modes)
 		{
-			Assert.ArgumentNotNull(trigger, () => trigger);
-			Assert.ArgumentSatisfies(modes != InputModes.None, () => modes, "Invalid input mode.");
+			Assert.ArgumentNotNull(trigger);
+			Assert.ArgumentSatisfies(modes != InputModes.None, "Invalid input mode.");
 
 			Trigger = trigger;
 			_modes = modes;

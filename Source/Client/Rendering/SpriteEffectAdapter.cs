@@ -51,8 +51,8 @@ namespace Lwar.Client.Rendering
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
 		public void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
 
 			_effect = new SpriteEffect(graphicsDevice, assets);
 		}

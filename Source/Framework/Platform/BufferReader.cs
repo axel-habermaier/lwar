@@ -141,7 +141,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="count">The number of bytes that should be skipped.</param>
 		public void Skip(int count)
 		{
-			Assert.ArgumentInRange(count, () => count, 0, Int32.MaxValue);
+			Assert.ArgumentInRange(count, 0, Int32.MaxValue);
 			ValidateCanRead(count);
 			_readPosition += count;
 		}
@@ -383,7 +383,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="length">The number of bytes that should be copied.</param>
 		public void Copy(byte[] buffer, int offset, int length)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 			Assert.That(offset + length <= buffer.Length, "Out of bounds.");
 
 			ValidateCanRead(length);
@@ -401,7 +401,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="deserializer">The deserializer that should be used to deserialize the object.</param>
 		public bool TryRead<T>(out T obj, Func<BufferReader, T> deserializer)
 		{
-			Assert.ArgumentNotNull(deserializer, () => deserializer);
+			Assert.ArgumentNotNull(deserializer);
 
 			var offset = _readPosition;
 			try

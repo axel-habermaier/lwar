@@ -36,8 +36,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="text">The text that should be displayed.</param>
 		public Label(Font font, string text)
 		{
-			Assert.ArgumentNotNull(font, () => font);
-			Assert.ArgumentNotNull(text, () => text);
+			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNull(text);
 
 			_layout = new TextLayout(font, text);
 			_layout.LayoutChanged += () => _textRenderer.RebuildCache(Font, Text, _layout.LayoutData);

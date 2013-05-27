@@ -74,8 +74,8 @@ namespace Pegasus.Framework
 		/// <param name="logFile">The log file that writes all generated log entries to the file system.</param>
 		internal void Run(AppContext context, LogFile logFile)
 		{
-			Assert.ArgumentNotNull(context, () => context);
-			Assert.ArgumentNotNull(logFile, () => logFile);
+			Assert.ArgumentNotNull(context);
+			Assert.ArgumentNotNull(logFile);
 
 			using (new NativeLibrary())
 			using (var window = context.Window = new Window())

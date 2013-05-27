@@ -37,7 +37,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		/// <param name="description">A textual description of the type of the number that is parsed.</param>
 		protected NumberParser(bool allowNegative, bool allowDecimal, string description)
 		{
-			Assert.ArgumentNotNull(description, () => description);
+			Assert.ArgumentNotNull(description);
 
 			_allowDecimal = allowDecimal;
 			_allowNegative = allowNegative;

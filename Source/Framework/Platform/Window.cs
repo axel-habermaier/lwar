@@ -100,7 +100,7 @@ namespace Pegasus.Framework.Platform
 		{
 			set
 			{
-				Assert.ArgumentNotNull(value, () => value);
+				Assert.ArgumentNotNull(value);
 				Assert.NotDisposed(this);
 
 				NativeMethods.SetWindowTitle(_window, value);

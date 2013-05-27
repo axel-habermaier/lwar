@@ -65,7 +65,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="parent">The parent the transformation should be attached to.</param>
 		public void Attach(Transformation parent)
 		{
-			Assert.ArgumentNotNull(parent, () => parent);
+			Assert.ArgumentNotNull(parent);
 
 			if (_parent == parent)
 				return;

@@ -28,8 +28,8 @@ namespace Pegasus.Framework.Platform
 		/// <param name="fileName">The name of the file that should be read or written.</param>
 		public AppFile(string appName, string fileName)
 		{
-			Assert.ArgumentNotNullOrWhitespace(appName, () => appName);
-			Assert.ArgumentNotNullOrWhitespace(fileName, () => fileName);
+			Assert.ArgumentNotNullOrWhitespace(appName);
+			Assert.ArgumentNotNullOrWhitespace(fileName);
 
 			FileName = fileName;
 
@@ -73,7 +73,7 @@ namespace Pegasus.Framework.Platform
 		/// </param>
 		public bool Write(string content, Action<IOException> onException = null)
 		{
-			Assert.ArgumentNotNull(content, () => content);
+			Assert.ArgumentNotNull(content);
 			Assert.That(IsValid, "The file name is invalid.");
 
 			return Execute(() => File.WriteAllText(AbsolutePath, content), onException);
@@ -89,7 +89,7 @@ namespace Pegasus.Framework.Platform
 		/// </param>
 		public bool Append(IEnumerable<string> lines, Action<IOException> onException = null)
 		{
-			Assert.ArgumentNotNull(lines, () => lines);
+			Assert.ArgumentNotNull(lines);
 			Assert.That(IsValid, "The file name is invalid.");
 
 			return Execute(() => File.AppendAllLines(AbsolutePath, lines), onException);
@@ -152,7 +152,7 @@ namespace Pegasus.Framework.Platform
 		/// </param>
 		private bool Execute(Action action, Action<IOException> onException)
 		{
-			Assert.ArgumentNotNull(action, () => action);
+			Assert.ArgumentNotNull(action);
 
 			try
 			{

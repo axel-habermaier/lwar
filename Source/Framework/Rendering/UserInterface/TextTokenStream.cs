@@ -42,9 +42,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public TextTokenStream(Font font, string text, int maxLineWidth)
 			: this()
 		{
-			Assert.ArgumentNotNull(font, () => font);
-			Assert.ArgumentNotNull(text, () => text);
-			Assert.ArgumentSatisfies(maxLineWidth > 0, () => maxLineWidth, "Line width too small.");
+			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNull(text);
+			Assert.ArgumentSatisfies(maxLineWidth > 0, "Line width too small.");
 
 			_font = font;
 			_text = text;

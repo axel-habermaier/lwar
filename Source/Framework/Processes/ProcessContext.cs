@@ -37,7 +37,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="asyncOperation">The asynchronous operation that the process should wait for.</param>
 		public Awaiter WaitFor(IAsyncOperation asyncOperation)
 		{
-			Assert.ArgumentNotNull(asyncOperation, () => asyncOperation);
+			Assert.ArgumentNotNull(asyncOperation);
 
 			_process.WaitFor(asyncOperation);
 			return new Awaiter(_process, asyncOperation);
@@ -50,7 +50,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="asyncOperation">The asynchronous operation that the process should wait for.</param>
 		public Awaiter<TResult> WaitFor<TResult>(IAsyncOperation<TResult> asyncOperation)
 		{
-			Assert.ArgumentNotNull(asyncOperation, () => asyncOperation);
+			Assert.ArgumentNotNull(asyncOperation);
 
 			_process.WaitFor(asyncOperation);
 			return new Awaiter<TResult>(_process, asyncOperation);
@@ -62,7 +62,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="action">The action that the process should wait for.</param>
 		public Awaiter WaitForTask(Action action)
 		{
-			Assert.ArgumentNotNull(action, () => action);
+			Assert.ArgumentNotNull(action);
 			return WaitFor(TaskOperation.Create(action));
 		}
 
@@ -73,7 +73,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="func">The function that the process should wait for.</param>
 		public Awaiter<TResult> WaitForTask<TResult>(Func<TResult> func)
 		{
-			Assert.ArgumentNotNull(func, () => func);
+			Assert.ArgumentNotNull(func);
 			return WaitFor(TaskOperation<TResult>.Create(func));
 		}
 
@@ -83,7 +83,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="func">The function that the process should wait for.</param>
 		public Awaiter WaitFor(Func<bool> func)
 		{
-			Assert.ArgumentNotNull(func, () => func);
+			Assert.ArgumentNotNull(func);
 			return WaitFor(DelegateOperation.Create(func));
 		}
 

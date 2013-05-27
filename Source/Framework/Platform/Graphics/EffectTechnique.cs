@@ -30,9 +30,9 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="bind">The action that should be invoked to bind the required textures and constant buffers.</param>
 		internal EffectTechnique(VertexShader vertexShader, FragmentShader fragmentShader, Action bind)
 		{
-			Assert.ArgumentNotNull(vertexShader, () => vertexShader);
-			Assert.ArgumentNotNull(fragmentShader, () => fragmentShader);
-			Assert.ArgumentNotNull(bind, () => bind);
+			Assert.ArgumentNotNull(vertexShader);
+			Assert.ArgumentNotNull(fragmentShader);
+			Assert.ArgumentNotNull(bind);
 
 			_vertexShader = vertexShader;
 			_fragmentShader = fragmentShader;

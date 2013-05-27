@@ -44,7 +44,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="inputDevice">The input device that provides the input by the user.</param>
 		public InputManager(LogicalInputDevice inputDevice)
 		{
-			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
+			Assert.ArgumentNotNull(inputDevice);
 
 			_inputDevice = inputDevice;
 

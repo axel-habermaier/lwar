@@ -22,8 +22,8 @@ namespace Pegasus.Framework.Platform
 		[Conditional("Windows")]
 		public static void ShowMessage(string caption, string text, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(caption, () => text);
-			Assert.ArgumentNotNullOrWhitespace(text, () => text);
+			Assert.ArgumentNotNullOrWhitespace(caption);
+			Assert.ArgumentNotNullOrWhitespace(text);
 
 			ShowMessage(IntPtr.Zero, String.Format(text, arguments), caption, MessageBoxStyle.IconError | MessageBoxStyle.Ok);
 		}

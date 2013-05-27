@@ -44,10 +44,10 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		public Pipe3Parser(Parser<TResultFirst, TUserState> first, Parser<TResultSecond, TUserState> second,
 						   Parser<TResultThird, TUserState> third, Func<TResultFirst, TResultSecond, TResultThird, TResult> function)
 		{
-			Assert.ArgumentNotNull(first, () => first);
-			Assert.ArgumentNotNull(second, () => second);
-			Assert.ArgumentNotNull(third, () => third);
-			Assert.ArgumentNotNull(function, () => function);
+			Assert.ArgumentNotNull(first);
+			Assert.ArgumentNotNull(second);
+			Assert.ArgumentNotNull(third);
+			Assert.ArgumentNotNull(function);
 
 			_first = first;
 			_second = second;

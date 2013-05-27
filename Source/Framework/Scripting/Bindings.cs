@@ -40,9 +40,9 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
 		public Bindings(LogicalInputDevice device, CommandRegistry commands, CvarRegistry cvars)
 		{
-			Assert.ArgumentNotNull(device, () => device);
-			Assert.ArgumentNotNull(cvars, () => cvars);
-			Assert.ArgumentNotNull(commands, () => commands);
+			Assert.ArgumentNotNull(device);
+			Assert.ArgumentNotNull(cvars);
+			Assert.ArgumentNotNull(commands);
 
 			_device = device;
 			_commands = commands;

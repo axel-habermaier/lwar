@@ -40,9 +40,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="shaders">The shaders declared by the effect the technique belongs to.</param>
 		public EffectTechnique(FieldDeclaration field, VariableInitializer variable, ShaderMethod[] shaders)
 		{
-			Assert.ArgumentNotNull(field, () => field);
-			Assert.ArgumentNotNull(variable, () => variable);
-			Assert.ArgumentNotNull(shaders, () => shaders);
+			Assert.ArgumentNotNull(field);
+			Assert.ArgumentNotNull(variable);
+			Assert.ArgumentNotNull(shaders);
 
 			_field = field;
 			_variable = variable;

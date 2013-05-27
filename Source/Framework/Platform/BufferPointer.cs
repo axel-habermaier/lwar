@@ -42,9 +42,9 @@ namespace Pegasus.Framework.Platform
 		/// <param name="size">The size in bytes of the buffer.</param>
 		public static BufferPointer Create(byte[] buffer, int offset, int size)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-			Assert.ArgumentInRange(offset, () => offset, 0, buffer.Length - 1);
-			Assert.ArgumentInRange(size, () => size, 1, buffer.Length - offset);
+			Assert.ArgumentNotNull(buffer);
+			Assert.ArgumentInRange(offset, 0, buffer.Length - 1);
+			Assert.ArgumentInRange(size, 1, buffer.Length - offset);
 
 			var bufferPointer = GetInstance();
 			bufferPointer._handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);

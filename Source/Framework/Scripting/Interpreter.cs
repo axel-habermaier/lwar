@@ -40,9 +40,9 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
 		public Interpreter(string appName, CommandRegistry commands, CvarRegistry cvars)
 		{
-			Assert.ArgumentNotNullOrWhitespace(appName, () => appName);
-			Assert.ArgumentNotNull(cvars, () => cvars);
-			Assert.ArgumentNotNull(commands, () => commands);
+			Assert.ArgumentNotNullOrWhitespace(appName);
+			Assert.ArgumentNotNull(cvars);
+			Assert.ArgumentNotNull(commands);
 
 			_appName = appName;
 			_commands = commands;
@@ -74,7 +74,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="input">The input that should be executed.</param>
 		private void OnExecute(string input)
 		{
-			Assert.ArgumentNotNull(input, () => input);
+			Assert.ArgumentNotNull(input);
 
 			if (String.IsNullOrWhiteSpace(input))
 				return;
@@ -145,9 +145,9 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="pattern">The pattern that should be checked.</param>
 		private static IEnumerable<T> PatternMatches<T>(IEnumerable<T> source, Func<T, string> selector, string pattern)
 		{
-			Assert.ArgumentNotNull(source, () => source);
-			Assert.ArgumentNotNull(selector, () => selector);
-			Assert.ArgumentNotNullOrWhitespace(pattern, () => pattern);
+			Assert.ArgumentNotNull(source);
+			Assert.ArgumentNotNull(selector);
+			Assert.ArgumentNotNullOrWhitespace(pattern);
 
 			if (pattern.Trim() == "*")
 				return source.OrderBy(selector);

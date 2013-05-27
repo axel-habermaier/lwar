@@ -45,8 +45,8 @@ namespace Lwar.Client.Network
 		/// <param name="deliveryManager">The delivery manager that is used to enforce the message delivery constraints.</param>
 		public MessageQueue(IPacketFactory packetFactory, DeliveryManager deliveryManager)
 		{
-			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
-			Assert.ArgumentNotNull(deliveryManager, () => deliveryManager);
+			Assert.ArgumentNotNull(packetFactory);
+			Assert.ArgumentNotNull(deliveryManager);
 
 			_packetFactory = packetFactory;
 			_deliveryManager = deliveryManager;

@@ -34,8 +34,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="parameter3">The representation of the command's third parameter.</param>
 		public Command(string name, string description, CommandParameter parameter1, CommandParameter parameter2, CommandParameter parameter3)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
-			Assert.ArgumentNotNullOrWhitespace(description, () => description);
+			Assert.ArgumentNotNullOrWhitespace(name);
+			Assert.ArgumentNotNullOrWhitespace(description);
 
 			Name = name;
 			Description = description;
@@ -74,8 +74,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="parameters">The parameters that should be used to invoke the command.</param>
 		void ICommand.Invoke(object[] parameters)
 		{
-			Assert.ArgumentNotNull(parameters, () => parameters);
-			Assert.ArgumentSatisfies(parameters.Length == 3, () => parameters, "Argument count mismatch.");
+			Assert.ArgumentNotNull(parameters);
+			Assert.ArgumentSatisfies(parameters.Length == 3, "Argument count mismatch.");
 
 			Invoke((T1)parameters[0], (T2)parameters[1], (T3)parameters[2]);
 		}

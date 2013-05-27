@@ -24,7 +24,7 @@ namespace Pegasus.Framework
 		/// </param>
 		public AppStateManager(IAppContext context)
 		{
-			Assert.ArgumentNotNull(context, () => context);
+			Assert.ArgumentNotNull(context);
 			Context = context;
 		}
 
@@ -56,7 +56,7 @@ namespace Pegasus.Framework
 		/// <param name="appState">The app state that should be added.</param>
 		public void Add(AppState appState)
 		{
-			Assert.ArgumentNotNull(appState, () => appState);
+			Assert.ArgumentNotNull(appState);
 
 			_states.Add(appState);
 
@@ -70,7 +70,7 @@ namespace Pegasus.Framework
 		/// <param name="appState">The app state that should be removed.</param>
 		public void Remove(AppState appState)
 		{
-			Assert.ArgumentNotNull(appState, () => appState);
+			Assert.ArgumentNotNull(appState);
 
 			if (_states.Remove(appState))
 				appState.SafeDispose();
@@ -91,7 +91,7 @@ namespace Pegasus.Framework
 		/// <param name="output">The output that the states should render to.</param>
 		public void Draw(RenderOutput output)
 		{
-			Assert.ArgumentNotNull(output, () => output);
+			Assert.ArgumentNotNull(output);
 
 			for (var i = GetFirstVisibleScreen(); i < _states.Count; ++i)
 				_states[i].Draw(output);

@@ -53,8 +53,8 @@ namespace Lwar.Client.Network
 		/// <param name="packetFactory">The packet factory that should be used to create incoming packets.</param>
 		public ServerConnection(IPEndPoint serverEndPoint, IPacketFactory packetFactory)
 		{
-			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
-			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
+			Assert.ArgumentNotNull(serverEndPoint);
+			Assert.ArgumentNotNull(packetFactory);
 
 			_socket = new UdpSocket(packetFactory);
 			ServerEndPoint = serverEndPoint;
@@ -119,8 +119,8 @@ namespace Lwar.Client.Network
 		/// </param>
 		public void Receive(Queue<Message> messageQueue, DeliveryManager deliveryManager)
 		{
-			Assert.ArgumentNotNull(messageQueue, () => messageQueue);
-			Assert.ArgumentNotNull(deliveryManager, () => deliveryManager);
+			Assert.ArgumentNotNull(messageQueue);
+			Assert.ArgumentNotNull(deliveryManager);
 
 			if (State != ConnectionState.Connecting && State != ConnectionState.Connected && State != ConnectionState.Syncing)
 				return;
@@ -161,7 +161,7 @@ namespace Lwar.Client.Network
 		/// </param>
 		private void HandlePacket(IncomingPacket packet, Queue<Message> messageQueue, DeliveryManager deliveryManager)
 		{
-			Assert.ArgumentNotNull(packet, () => packet);
+			Assert.ArgumentNotNull(packet);
 
 			var buffer = packet.Reader;
 			var header = PacketHeader.Create(buffer);

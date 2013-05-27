@@ -19,9 +19,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="shared">Indicating whether the constant buffer should be shared between different effects.</param>
 		public ConstantBuffer(string name, int slot, ShaderConstant[] constants, bool shared = false)
 		{
-			Assert.ArgumentInRange(slot, () => slot, 0, 16);
-			Assert.ArgumentNotNull(constants, () => constants);
-			Assert.ArgumentSatisfies(constants.Length > 0, () => constants, "A constant buffer must contain at least one constant.");
+			Assert.ArgumentInRange(slot, 0, 16);
+			Assert.ArgumentNotNull(constants);
+			Assert.ArgumentSatisfies(constants.Length > 0, "A constant buffer must contain at least one constant.");
 
 			Name = name ?? "ConstantBuffer" + slot;
 			Slot = slot;

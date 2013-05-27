@@ -16,7 +16,7 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 		/// <param name="name">The name of the asset that should be ignored.</param>
 		public IgnoreAttribute(string name)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
+			Assert.ArgumentNotNullOrWhitespace(name);
 			Name = name;
 		}
 

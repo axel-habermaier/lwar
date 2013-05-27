@@ -31,8 +31,8 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
 		public SkyboxRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
 
 			var cubemap = assets.LoadCubeMap("Textures/Space");
 

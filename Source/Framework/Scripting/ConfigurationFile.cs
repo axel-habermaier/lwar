@@ -40,8 +40,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="fileName">The name of the configuration file.</param>
 		public ConfigurationFile(InstructionParser parser, string appName, string fileName)
 		{
-			Assert.ArgumentNotNull(parser, () => parser);
-			Assert.ArgumentNotNullOrWhitespace(appName, () => appName);
+			Assert.ArgumentNotNull(parser);
+			Assert.ArgumentNotNullOrWhitespace(appName);
 
 			if (String.IsNullOrWhiteSpace(fileName))
 			{
@@ -139,7 +139,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="cvars">The cvars that should be persisted in the file.</param>
 		public void Persist(IEnumerable<ICvar> cvars)
 		{
-			Assert.ArgumentNotNull(cvars, () => cvars);
+			Assert.ArgumentNotNull(cvars);
 
 			if (!_file.IsValid)
 				return;

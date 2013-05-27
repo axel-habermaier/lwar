@@ -28,8 +28,8 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="function">The function that is applied to the parser's result.</param>
 		public ApplyParser(Parser<TParserResult, TUserState> parser, Func<TParserResult, TFuncResult> function)
 		{
-			Assert.ArgumentNotNull(parser, () => parser);
-			Assert.ArgumentNotNull(function, () => function);
+			Assert.ArgumentNotNull(parser);
+			Assert.ArgumentNotNull(function);
 
 			_parser = parser;
 			_function = function;

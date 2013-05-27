@@ -62,9 +62,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		protected void ValidateModifiers(AstNode declaration, IEnumerable<CSharpModifierToken> declaredModifiers,
 										 IEnumerable<Modifiers> expectedModifiers)
 		{
-			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(declaredModifiers, () => declaredModifiers);
-			Assert.ArgumentNotNull(expectedModifiers, () => expectedModifiers);
+			Assert.ArgumentNotNull(declaration);
+			Assert.ArgumentNotNull(declaredModifiers);
+			Assert.ArgumentNotNull(expectedModifiers);
 
 			ValidateModifiers(declaration, declaredModifiers, new[] { expectedModifiers });
 		}
@@ -78,9 +78,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		protected void ValidateModifiers(AstNode declaration, IEnumerable<CSharpModifierToken> declaredModifiers,
 										 IEnumerable<IEnumerable<Modifiers>> expectedModifiers)
 		{
-			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(declaredModifiers, () => declaredModifiers);
-			Assert.ArgumentNotNull(expectedModifiers, () => expectedModifiers);
+			Assert.ArgumentNotNull(declaration);
+			Assert.ArgumentNotNull(declaredModifiers);
+			Assert.ArgumentNotNull(expectedModifiers);
 
 			// Check whether any modifiers other than the exepcted ones are declared 
 			foreach (var modifier in declaredModifiers.Where(modifier => !expectedModifiers.Any(m => m.Contains(modifier.Modifier))))

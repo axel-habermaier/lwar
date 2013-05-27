@@ -117,7 +117,7 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public void WriteToConsole(Console console)
 		{
-			Assert.ArgumentNotNull(console, () => console);
+			Assert.ArgumentNotNull(console);
 
 			foreach (var logEntry in _logEntries)
 			{

@@ -28,7 +28,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		protected Buffer(GraphicsDevice graphicsDevice, BufferType type, ResourceUsage usage, IntPtr data, int size)
 			: base(graphicsDevice)
 		{
-			Assert.ArgumentSatisfies(size > 0, () => size, "A buffer must have a size greater than 0.");
+			Assert.ArgumentSatisfies(size > 0, "A buffer must have a size greater than 0.");
 			_buffer = NativeMethods.CreateBuffer(graphicsDevice.NativePtr, type, usage, data, size);
 		}
 
@@ -76,8 +76,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="size">The size of the data that should be copied in bytes.</param>
 		protected void CopyData(IntPtr data, int size)
 		{
-			Assert.ArgumentNotNull(data, () => data);
-			Assert.ArgumentSatisfies(size >= 0, () => size, "Invalid size.");
+			Assert.ArgumentNotNull(data);
+			Assert.ArgumentSatisfies(size >= 0, "Invalid size.");
 			Assert.NotDisposed(this);
 
 			var gpuData = Map(MapMode.WriteDiscard);

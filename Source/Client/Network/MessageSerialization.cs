@@ -25,7 +25,7 @@ namespace Lwar.Client.Network
 		/// <param name="message">The message that should be serialized.</param>
 		public static void Serialize(BufferWriter buffer, Message message)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 
 			buffer.WriteByte((byte)message.Type);
 			if (message.Type.IsReliable())
@@ -98,7 +98,7 @@ namespace Lwar.Client.Network
 		/// <param name="buffer">The buffer from which the message should be deserialized.</param>
 		public static List<Message> Deserialize(BufferReader buffer)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 
 			int count;
 			var message = new Message { Type = (MessageType)buffer.ReadByte() };

@@ -96,7 +96,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="key">The key that should be checked.</param>
 		public bool IsPressed(Key key)
 		{
-			Assert.ArgumentInRange(key, () => key);
+			Assert.ArgumentInRange(key);
 			return _states[(int)key].IsPressed;
 		}
 
@@ -107,7 +107,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="key">The key that should be checked.</param>
 		public bool WentDown(Key key)
 		{
-			Assert.ArgumentInRange(key, () => key);
+			Assert.ArgumentInRange(key);
 			return _states[(int)key].WentDown;
 		}
 
@@ -118,7 +118,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="key">The key that should be checked.</param>
 		public bool WentUp(Key key)
 		{
-			Assert.ArgumentInRange(key, () => key);
+			Assert.ArgumentInRange(key);
 			return _states[(int)key].WentUp;
 		}
 
@@ -129,7 +129,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="key">The key that should be checked.</param>
 		public bool IsRepeated(Key key)
 		{
-			Assert.ArgumentInRange(key, () => key);
+			Assert.ArgumentInRange(key);
 			return _states[(int)key].IsRepeated;
 		}
 	}

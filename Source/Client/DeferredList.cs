@@ -66,7 +66,7 @@ namespace Lwar.Client
 			get
 			{
 				Assert.NotDisposed(this);
-				Assert.ArgumentInRange(index, () => index, 0, _items.Count);
+				Assert.ArgumentInRange(index, 0, _items.Count);
 
 				return _items[index];
 			}
@@ -109,9 +109,9 @@ namespace Lwar.Client
 		public void Add(T item)
 		{
 			Assert.NotDisposed(this);
-			Assert.ArgumentSatisfies(!_addedItems.Contains(item), () => item, "The item has already been added to the list.");
-			Assert.ArgumentSatisfies(!_items.Contains(item), () => item, "The item is already contained in the list.");
-			Assert.ArgumentSatisfies(!_removedItems.Contains(item), () => item, "The item has already been removed from the list.");
+			Assert.ArgumentSatisfies(!_addedItems.Contains(item), "The item has already been added to the list.");
+			Assert.ArgumentSatisfies(!_items.Contains(item), "The item is already contained in the list.");
+			Assert.ArgumentSatisfies(!_removedItems.Contains(item), "The item has already been removed from the list.");
 
 			_addedItems.Add(item);
 		}
@@ -123,8 +123,8 @@ namespace Lwar.Client
 		public void Remove(T item)
 		{
 			Assert.NotDisposed(this);
-			Assert.ArgumentSatisfies(_items.Contains(item), () => item, "The item is not contained in the list.");
-			Assert.ArgumentSatisfies(!_removedItems.Contains(item), () => item, "The item has already been removed from the list.");
+			Assert.ArgumentSatisfies(_items.Contains(item), "The item is not contained in the list.");
+			Assert.ArgumentSatisfies(!_removedItems.Contains(item), "The item has already been removed from the list.");
 
 			_addedItems.Remove(item);
 			_removedItems.Add(item);

@@ -41,7 +41,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="buffer">The buffer that contains the contents of the DDS file.</param>
 		public unsafe DirectDrawSurface(BufferReader buffer)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 
 			if (buffer.BufferSize < sizeof(uint) + sizeof(Header))
 				Log.Die("Invalid DDS file: Header information is incomplete.");
@@ -551,7 +551,7 @@ namespace Pegasus.AssetsCompiler
 			public Header(BufferReader buffer)
 				: this()
 			{
-				Assert.ArgumentNotNull(buffer, () => buffer);
+				Assert.ArgumentNotNull(buffer);
 
 				Size = buffer.ReadUInt32();
 				Flags = (HeaderFlags)buffer.ReadUInt32();
@@ -668,7 +668,7 @@ namespace Pegasus.AssetsCompiler
 			public PixelFormat(BufferReader buffer)
 				: this()
 			{
-				Assert.ArgumentNotNull(buffer, () => buffer);
+				Assert.ArgumentNotNull(buffer);
 
 				Size = buffer.ReadUInt32();
 				Flags = (PixelFormatFlags)buffer.ReadUInt32();

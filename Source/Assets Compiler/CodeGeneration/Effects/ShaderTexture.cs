@@ -31,9 +31,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="slot">The slot the texture object should be bound to.</param>
 		public ShaderTexture(FieldDeclaration field, VariableInitializer variable, int slot)
 		{
-			Assert.ArgumentNotNull(field, () => field);
-			Assert.ArgumentNotNull(variable, () => variable);
-			Assert.ArgumentInRange(slot, () => slot, 0, 16);
+			Assert.ArgumentNotNull(field);
+			Assert.ArgumentNotNull(variable);
+			Assert.ArgumentInRange(slot, 0, 16);
 
 			_field = field;
 			_variable = variable;

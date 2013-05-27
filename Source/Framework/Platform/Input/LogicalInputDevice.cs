@@ -22,8 +22,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="mouse">The mouse that should be associated with this logical device.</param>
 		public LogicalInputDevice(Keyboard keyboard, Mouse mouse)
 		{
-			Assert.ArgumentNotNull(keyboard, () => keyboard);
-			Assert.ArgumentNotNull(mouse, () => mouse);
+			Assert.ArgumentNotNull(keyboard);
+			Assert.ArgumentNotNull(mouse);
 
 			Keyboard = keyboard;
 			Mouse = mouse;
@@ -51,8 +51,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="input">The logical input that should be registered on the device.</param>
 		public void Register(LogicalInput input)
 		{
-			Assert.ArgumentNotNull(input, () => input);
-			Assert.ArgumentSatisfies(!input.IsRegistered, () => input, "The input is already registered on a device.");
+			Assert.ArgumentNotNull(input);
+			Assert.ArgumentSatisfies(!input.IsRegistered, "The input is already registered on a device.");
 
 			_inputs.Add(input);
 			input.IsRegisteredOn(this);
@@ -66,8 +66,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="input">The logical input that should be removed.</param>
 		public void Remove(LogicalInput input)
 		{
-			Assert.ArgumentNotNull(input, () => input);
-			Assert.ArgumentSatisfies(input.IsRegistered, () => input, "The input trigger is not registered.");
+			Assert.ArgumentNotNull(input);
+			Assert.ArgumentSatisfies(input.IsRegistered, "The input trigger is not registered.");
 
 			if (_inputs.Remove(input))
 				input.IsRegisteredOn(null);

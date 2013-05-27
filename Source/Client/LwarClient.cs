@@ -104,7 +104,7 @@ namespace Lwar.Client
 		/// <param name="port">The port of the server.</param>
 		private void Connect(IPAddress address, ushort port)
 		{
-			Assert.ArgumentNotNull(address, () => address);
+			Assert.ArgumentNotNull(address);
 
 			Disconnect();
 			_stateManager.Add(new Playing(new IPEndPoint(address, port)));

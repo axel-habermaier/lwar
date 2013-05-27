@@ -28,7 +28,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="parser">The parser that is skipped.</param>
 		public SkipParser(Parser<TResult, TUserState> parser)
 		{
-			Assert.ArgumentNotNull(parser, () => parser);
+			Assert.ArgumentNotNull(parser);
 			_parser = parser;
 		}
 

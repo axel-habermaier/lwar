@@ -53,7 +53,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			get { return _text; }
 			set
 			{
-				Assert.ArgumentNotNull(value, () => value);
+				Assert.ArgumentNotNull(value);
 
 				if (_text != value)
 					_position = value.Length;
@@ -84,7 +84,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="text">The new text.</param>
 		private void ChangeText(string text)
 		{
-			Assert.ArgumentNotNull(text, () => text);
+			Assert.ArgumentNotNull(text);
 
 			if (_text == text)
 				return;

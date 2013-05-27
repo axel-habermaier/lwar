@@ -98,7 +98,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="button">The button that should be checked.</param>
 		public bool IsPressed(MouseButton button)
 		{
-			Assert.ArgumentInRange(button, () => button);
+			Assert.ArgumentInRange(button);
 			return _states[(int)button].IsPressed;
 		}
 
@@ -109,7 +109,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="button">The button that should be checked.</param>
 		public bool WentDown(MouseButton button)
 		{
-			Assert.ArgumentInRange(button, () => button);
+			Assert.ArgumentInRange(button);
 			return _states[(int)button].WentDown;
 		}
 
@@ -120,7 +120,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="button">The button that should be checked.</param>
 		public bool WentUp(MouseButton button)
 		{
-			Assert.ArgumentInRange(button, () => button);
+			Assert.ArgumentInRange(button);
 			return _states[(int)button].WentUp;
 		}
 

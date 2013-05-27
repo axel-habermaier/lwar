@@ -34,8 +34,8 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// <param name="sourceDirectory">The source directory of the asset.</param>
 		protected Asset(string relativePath, string sourceDirectory)
 		{
-			Assert.ArgumentNotNullOrWhitespace(relativePath, () => relativePath);
-			Assert.ArgumentNotNullOrWhitespace(sourceDirectory, () => sourceDirectory);
+			Assert.ArgumentNotNullOrWhitespace(relativePath);
+			Assert.ArgumentNotNullOrWhitespace(sourceDirectory);
 
 			SetDescription(relativePath);
 

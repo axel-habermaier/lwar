@@ -306,7 +306,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteString(string value)
 		{
-			Assert.ArgumentNotNull(value, () => value);
+			Assert.ArgumentNotNull(value);
 			WriteByteArray(Encoding.UTF8.GetBytes(value));
 		}
 
@@ -316,7 +316,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The value that should be written.</param>
 		public void WriteByteArray(byte[] value)
 		{
-			Assert.ArgumentNotNull(value, () => value);
+			Assert.ArgumentNotNull(value);
 
 			WriteInt32(value.Length);
 			Copy(value);
@@ -328,7 +328,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="value">The data that should be copied.</param>
 		public void Copy(byte[] value)
 		{
-			Assert.ArgumentNotNull(value, () => value);
+			Assert.ArgumentNotNull(value);
 
 			ValidateCanWrite(value.Length);
 			Array.Copy(value, 0, _buffer.Array, _writePosition, value.Length);
@@ -344,7 +344,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="serializer">The serializer that should be used to atomically modify the buffer.</param>
 		public bool TryWrite<T>(T obj, Action<BufferWriter, T> serializer)
 		{
-			Assert.ArgumentNotNull(serializer, () => serializer);
+			Assert.ArgumentNotNull(serializer);
 
 			var offset = _writePosition;
 			try

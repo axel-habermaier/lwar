@@ -15,8 +15,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		public CubeMapView(CubeMap cubeMap, SamplerState sampler)
 			: this()
 		{
-			Assert.ArgumentNotNull(cubeMap, () => cubeMap);
-			Assert.ArgumentNotNull(sampler, () => sampler);
+			Assert.ArgumentNotNull(cubeMap);
+			Assert.ArgumentNotNull(sampler);
 			Assert.That(sampler.Filter >= TextureFilter.NearestNoMipmaps || cubeMap.HasMipmaps,
 						"Texture filter '{0}' cannot be used to sample a cubemap without any mipmaps.", sampler.Filter);
 

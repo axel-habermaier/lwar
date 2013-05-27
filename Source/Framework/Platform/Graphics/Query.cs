@@ -24,7 +24,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		protected Query(GraphicsDevice graphicsDevice, QueryType type)
 			: base(graphicsDevice)
 		{
-			Assert.ArgumentInRange(type, () => type);
+			Assert.ArgumentInRange(type);
 			_query = NativeMethods.CreateQuery(graphicsDevice.NativePtr, type);
 		}
 

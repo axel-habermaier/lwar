@@ -40,7 +40,7 @@ namespace Pegasus.Framework.Scripting
 		[DebuggerHidden]
 		public void Help(string name = "")
 		{
-			Assert.ArgumentNotNull((object)name, () => name);
+			Assert.ArgumentNotNull((object)name);
 			Instances.Help.Invoke(name);
 		}
 
@@ -54,7 +54,7 @@ namespace Pegasus.Framework.Scripting
 		[DebuggerHidden]
 		public void Cvars(string pattern = "*")
 		{
-			Assert.ArgumentNotNull((object)pattern, () => pattern);
+			Assert.ArgumentNotNull((object)pattern);
 			Instances.Cvars.Invoke(pattern);
 		}
 
@@ -68,7 +68,7 @@ namespace Pegasus.Framework.Scripting
 		[DebuggerHidden]
 		public void Commands(string pattern = "*")
 		{
-			Assert.ArgumentNotNull((object)pattern, () => pattern);
+			Assert.ArgumentNotNull((object)pattern);
 			Instances.Commands.Invoke(pattern);
 		}
 
@@ -79,7 +79,7 @@ namespace Pegasus.Framework.Scripting
 		[DebuggerHidden]
 		public void Execute(string command)
 		{
-			Assert.ArgumentNotNull((object)command, () => command);
+			Assert.ArgumentNotNull((object)command);
 			Instances.Execute.Invoke(command);
 		}
 
@@ -90,7 +90,7 @@ namespace Pegasus.Framework.Scripting
 		[DebuggerHidden]
 		public void Process(string fileName)
 		{
-			Assert.ArgumentNotNull((object)fileName, () => fileName);
+			Assert.ArgumentNotNull((object)fileName);
 			Instances.Process.Invoke(fileName);
 		}
 
@@ -101,7 +101,7 @@ namespace Pegasus.Framework.Scripting
 		[DebuggerHidden]
 		public void Persist(string fileName)
 		{
-			Assert.ArgumentNotNull((object)fileName, () => fileName);
+			Assert.ArgumentNotNull((object)fileName);
 			Instances.Persist.Invoke(fileName);
 		}
 
@@ -114,8 +114,8 @@ namespace Pegasus.Framework.Scripting
 		[DebuggerHidden]
 		public void Bind(InputTrigger trigger, string command)
 		{
-			Assert.ArgumentNotNull((object)trigger, () => trigger);
-			Assert.ArgumentNotNull((object)command, () => command);
+			Assert.ArgumentNotNull((object)trigger);
+			Assert.ArgumentNotNull((object)command);
 			Instances.Bind.Invoke(trigger, command);
 		}
 
@@ -126,7 +126,7 @@ namespace Pegasus.Framework.Scripting
 		[DebuggerHidden]
 		public void ShowConsole(bool show)
 		{
-			Assert.ArgumentNotNull((object)show, () => show);
+			Assert.ArgumentNotNull((object)show);
 			Instances.ShowConsole.Invoke(show);
 		}
 

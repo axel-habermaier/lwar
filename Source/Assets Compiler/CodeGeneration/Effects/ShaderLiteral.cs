@@ -28,8 +28,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="variable">The declaration of the field variable that represents the literal.</param>
 		public ShaderLiteral(FieldDeclaration field, VariableInitializer variable)
 		{
-			Assert.ArgumentNotNull(field, () => field);
-			Assert.ArgumentNotNull(variable, () => variable);
+			Assert.ArgumentNotNull(field);
+			Assert.ArgumentNotNull(variable);
 
 			_field = field;
 			_variable = variable;

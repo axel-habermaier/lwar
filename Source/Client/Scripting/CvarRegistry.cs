@@ -33,7 +33,7 @@ namespace Lwar.Client.Scripting
 			[DebuggerHidden]
 			set
 			{
-				Assert.ArgumentNotNull((object)value, () => value);
+				Assert.ArgumentNotNull((object)value);
 				Instances.PlayerName.Value = value;
 			}
 		}
@@ -47,7 +47,7 @@ namespace Lwar.Client.Scripting
 			[DebuggerHidden]
 			set
 			{
-				Assert.ArgumentNotNull((object)value, () => value);
+				Assert.ArgumentNotNull((object)value);
 				Instances.DrawWireframe.Value = value;
 			}
 		}

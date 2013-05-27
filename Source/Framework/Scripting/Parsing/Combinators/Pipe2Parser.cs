@@ -37,9 +37,9 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		public Pipe2Parser(Parser<TResultFirst, TUserState> first, Parser<TResultSecond, TUserState> second,
 						   Func<TResultFirst, TResultSecond, TResult> function)
 		{
-			Assert.ArgumentNotNull(first, () => first);
-			Assert.ArgumentNotNull(second, () => second);
-			Assert.ArgumentNotNull(function, () => function);
+			Assert.ArgumentNotNull(first);
+			Assert.ArgumentNotNull(second);
+			Assert.ArgumentNotNull(function);
 
 			_first = first;
 			_second = second;

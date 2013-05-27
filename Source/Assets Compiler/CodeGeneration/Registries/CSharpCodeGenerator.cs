@@ -29,8 +29,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// <param name="registry">The registry the code should be generated for.</param>
 		public CSharpCodeGenerator(CodeWriter writer, Registry registry)
 		{
-			Assert.ArgumentNotNull(writer, () => writer);
-			Assert.ArgumentNotNull(registry, () => registry);
+			Assert.ArgumentNotNull(writer);
+			Assert.ArgumentNotNull(registry);
 
 			_writer = writer;
 			_registry = registry;

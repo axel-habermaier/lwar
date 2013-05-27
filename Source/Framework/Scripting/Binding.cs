@@ -26,7 +26,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="instruction">The instruction that should be executed when the input is triggered.</param>
 		public Binding(LogicalInput input, Instruction instruction)
 		{
-			Assert.ArgumentNotNull(input, () => input);
+			Assert.ArgumentNotNull(input);
 
 			_input = input;
 			_instruction = instruction;

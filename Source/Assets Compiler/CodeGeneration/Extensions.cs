@@ -27,8 +27,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		public static bool IsDerivedFrom<T>(this TypeDeclaration declaration, CSharpAstResolver resolver)
 			where T : class
 		{
-			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(resolver, () => resolver);
+			Assert.ArgumentNotNull(declaration);
+			Assert.ArgumentNotNull(resolver);
 
 			if (declaration.ClassType != ClassType.Class)
 				return false;
@@ -49,8 +49,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 																	CSharpAstResolver resolver)
 			where T : Attribute
 		{
-			Assert.ArgumentNotNull(attributes, () => attributes);
-			Assert.ArgumentNotNull(resolver, () => resolver);
+			Assert.ArgumentNotNull(attributes);
+			Assert.ArgumentNotNull(resolver);
 
 			return attributes
 				.SelectMany(s => s.Attributes)
@@ -89,8 +89,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
 		public static object GetConstantValue(this Expression expression, CSharpAstResolver resolver)
 		{
-			Assert.ArgumentNotNull(expression, () => expression);
-			Assert.ArgumentNotNull(resolver, () => resolver);
+			Assert.ArgumentNotNull(expression);
+			Assert.ArgumentNotNull(resolver);
 
 			var resolved = resolver.Resolve(expression);
 			if (resolved.IsCompileTimeConstant)
@@ -106,8 +106,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
 		public static object[] GetConstantValues(this Expression expression, CSharpAstResolver resolver)
 		{
-			Assert.ArgumentNotNull(expression, () => expression);
-			Assert.ArgumentNotNull(resolver, () => resolver);
+			Assert.ArgumentNotNull(expression);
+			Assert.ArgumentNotNull(resolver);
 
 			var resolved = resolver.Resolve(expression) as ArrayCreateResolveResult;
 			if (resolved == null)
@@ -126,8 +126,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
 		public static IType ResolveType(this EntityDeclaration declaration, CSharpAstResolver resolver)
 		{
-			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(resolver, () => resolver);
+			Assert.ArgumentNotNull(declaration);
+			Assert.ArgumentNotNull(resolver);
 
 			var resolved = resolver.Resolve(declaration.ReturnType);
 			return resolved.Type;
@@ -140,8 +140,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
 		public static IType ResolveType(this ParameterDeclaration declaration, CSharpAstResolver resolver)
 		{
-			Assert.ArgumentNotNull(declaration, () => declaration);
-			Assert.ArgumentNotNull(resolver, () => resolver);
+			Assert.ArgumentNotNull(declaration);
+			Assert.ArgumentNotNull(resolver);
 
 			var resolved = resolver.Resolve(declaration.Type);
 			return resolved.Type;
@@ -156,7 +156,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <param name="end">The end of the message location in the source file.</param>
 		public static string ToLocationString(this string file, TextLocation begin, TextLocation end)
 		{
-			Assert.ArgumentNotNullOrWhitespace(file, () => file);
+			Assert.ArgumentNotNullOrWhitespace(file);
 
 			string location;
 			if (end.IsEmpty)
@@ -221,8 +221,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 											bool afterLast = false)
 			where T : AstNode
 		{
-			Assert.ArgumentNotNull(nodesCollection, () => nodesCollection);
-			Assert.ArgumentNotNull(visitor, () => visitor);
+			Assert.ArgumentNotNull(nodesCollection);
+			Assert.ArgumentNotNull(visitor);
 
 			var nodes = nodesCollection.ToArray();
 			for (var i = 0; i < nodes.Length; ++i)

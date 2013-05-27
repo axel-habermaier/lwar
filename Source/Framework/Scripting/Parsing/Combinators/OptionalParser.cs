@@ -27,7 +27,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="defaultValue">The default value that should be returned when the given parser fails.</param>
 		public OptionalParser(Parser<TParserResult, TUserState> parser, TParserResult defaultValue)
 		{
-			Assert.ArgumentNotNull(parser, () => parser);
+			Assert.ArgumentNotNull(parser);
 
 			_parser = parser;
 			_default = defaultValue;

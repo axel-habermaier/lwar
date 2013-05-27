@@ -25,7 +25,7 @@ namespace Pegasus.Framework.Platform.Memory
 		/// <param name="size">The size of the pooled arrays.</param>
 		public ArrayPool(int size)
 		{
-			Assert.ArgumentInRange(size, () => size, 1, Int32.MaxValue);
+			Assert.ArgumentInRange(size, 1, Int32.MaxValue);
 			_size = size;
 		}
 

@@ -40,7 +40,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="asset">The asset that should be written.</param>
 		public AssetWriter(Asset asset)
 		{
-			Assert.ArgumentNotNull(asset, () => asset);
+			Assert.ArgumentNotNull(asset);
 
 			_tempPath = asset.TempPath;
 			_targetPath = asset.TargetPath;

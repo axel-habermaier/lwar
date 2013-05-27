@@ -60,7 +60,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="playerId">The id of the player that should be removed.</param>
 		public void Remove(Identifier playerId)
 		{
-			Assert.ArgumentSatisfies(LocalPlayer == null || playerId != LocalPlayer.Id, () => playerId,
+			Assert.ArgumentSatisfies(LocalPlayer == null || playerId != LocalPlayer.Id,
 									 "Cannot remove the local player.");
 
 			var player = _playerMap[playerId];
@@ -101,7 +101,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="name">The new name of the player.</param>
 		public void ChangeName(Identifier playerId, string name)
 		{
-			Assert.ArgumentNotNull(name, () => name);
+			Assert.ArgumentNotNull(name);
 
 			var player = _playerMap[playerId];
 			Assert.NotNull(player, "Cannot change the name of an unknown player.");

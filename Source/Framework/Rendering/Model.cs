@@ -43,10 +43,10 @@ namespace Pegasus.Framework.Rendering
 		private Model(VertexBuffer vertexBuffer, VertexInputLayout layout, IndexBuffer indexBuffer,
 					  int indexCount)
 		{
-			Assert.ArgumentNotNull(vertexBuffer, () => vertexBuffer);
-			Assert.ArgumentNotNull(layout, () => layout);
-			Assert.ArgumentNotNull(indexBuffer, () => indexBuffer);
-			Assert.ArgumentInRange(indexCount, () => indexCount, 0, Int32.MaxValue);
+			Assert.ArgumentNotNull(vertexBuffer);
+			Assert.ArgumentNotNull(layout);
+			Assert.ArgumentNotNull(indexBuffer);
+			Assert.ArgumentInRange(indexCount, 0, Int32.MaxValue);
 
 			_vertexBuffer = vertexBuffer;
 			_indexBuffer = indexBuffer;
@@ -71,7 +71,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="effect">The effect technique that should be used for rendering.</param>
 		public void Draw(RenderOutput output, EffectTechnique effect)
 		{
-			Assert.ArgumentNotNull(output, () => output);
+			Assert.ArgumentNotNull(output);
 
 			_layout.Bind();
 			output.DrawIndexed(effect, _indexCount);
@@ -101,7 +101,7 @@ namespace Pegasus.Framework.Rendering
 		/// </param>
 		public static Model CreateQuad(GraphicsDevice graphicsDevice, float width, float height, Vector2 offset = default(Vector2))
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(graphicsDevice);
 
 			var rectangle = new RectangleF(-width / 2.0f + offset.X, -height / 2.0f + offset.Y, width, height);
 			var texture = new RectangleF(0, 0, 1, 1);
@@ -149,7 +149,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
 		public static Model CreateFullScreenQuad(GraphicsDevice graphicsDevice)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(graphicsDevice);
 
 			// For OpenGL, we have to flip the quad upside-down and change its winding, because OpenGL's window
 			// coordinate origins are at the bottom left corner... annoying
@@ -203,7 +203,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the skybox.</param>
 		public static unsafe Model CreateSkybox(GraphicsDevice graphicsDevice)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.That(sizeof(Vector4) == 4 * sizeof(float), "Vector4 has an unexpected unmanaged size.");
 
 			var vertices = new[]
@@ -248,8 +248,8 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="subdivision">The subdivision factor; the higher the value, the smoother the sphere.</param>
 		public static Model CreateSphere(GraphicsDevice graphicsDevice, float radius, int subdivision)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentInRange(subdivision, () => subdivision, 1, 100);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentInRange(subdivision, 1, 100);
 
 			// Create a cube and project it into a sphere
 			var topLeftFront = new Vector3(-radius, radius, radius);

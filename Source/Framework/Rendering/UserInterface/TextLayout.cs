@@ -73,8 +73,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public TextLayout(Font font, string text)
 			: this()
 		{
-			Assert.ArgumentNotNull(font, () => font);
-			Assert.ArgumentNotNull(text, () => text);
+			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNull(text);
 
 			_characterAreas = new Rectangle[MaxTextLength];
 			_lines = new TextLine[MaxLineCount];
@@ -99,8 +99,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			get { return _text; }
 			set
 			{
-				Assert.ArgumentNotNull(value, () => value);
-				Assert.ArgumentSatisfies(value.Length < MaxTextLength, () => value, "Text too long.");
+				Assert.ArgumentNotNull(value);
+				Assert.ArgumentSatisfies(value.Length < MaxTextLength, "Text too long.");
 
 				if (_text == value)
 					return;
@@ -158,7 +158,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			get { return _font; }
 			set
 			{
-				Assert.ArgumentNotNull(value, () => value);
+				Assert.ArgumentNotNull(value);
 
 				if (_font == value)
 					return;

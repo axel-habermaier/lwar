@@ -39,7 +39,7 @@ namespace Lwar.Client.Network
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public NetworkSession(IPEndPoint serverEndPoint)
 		{
-			Assert.ArgumentNotNull(serverEndPoint, () => serverEndPoint);
+			Assert.ArgumentNotNull(serverEndPoint);
 
 			_deliveryManager = new DeliveryManager();
 			var packetFactory = new LwarPacketFactory();
@@ -120,7 +120,7 @@ namespace Lwar.Client.Network
 		/// <param name="dispatcher">The message dispatcher that should be used to dispatch the received server messages.</param>
 		public void Update(MessageDispatcher dispatcher)
 		{
-			Assert.ArgumentNotNull(dispatcher, () => dispatcher);
+			Assert.ArgumentNotNull(dispatcher);
 
 			_connection.Receive(_receivedMessages, _deliveryManager);
 			_connection.Send(_outgoingMessages);

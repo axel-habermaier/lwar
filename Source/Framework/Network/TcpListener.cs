@@ -30,8 +30,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="localEndPoint">The local endpoint that should be used to listen for the new connections.</param>
 		public TcpListener(IPacketFactory packetFactory, IPEndPoint localEndPoint)
 		{
-			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
-			Assert.ArgumentNotNull(localEndPoint, () => localEndPoint);
+			Assert.ArgumentNotNull(packetFactory);
+			Assert.ArgumentNotNull(localEndPoint);
 
 			_packetFactory = packetFactory;
 			_localEndPoint = localEndPoint;

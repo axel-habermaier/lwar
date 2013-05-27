@@ -20,7 +20,7 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 		/// <param name="name">The name of the asset.</param>
 		public CubeMapAttribute(string name)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
+			Assert.ArgumentNotNullOrWhitespace(name);
 
 			_name = name;
 			Mipmaps = true;

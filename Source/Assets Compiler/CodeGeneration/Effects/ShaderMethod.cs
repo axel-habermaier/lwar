@@ -25,7 +25,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="method">The declaration of the method that represents the shader.</param>
 		public ShaderMethod(MethodDeclaration method)
 		{
-			Assert.ArgumentNotNull(method, () => method);
+			Assert.ArgumentNotNull(method);
 			_method = method;
 		}
 

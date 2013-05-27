@@ -27,8 +27,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="inputs">The shader input data layout.</param>
 		internal unsafe void Reinitialize(byte* shaderCode, int length, ShaderInput[] inputs)
 		{
-			Assert.ArgumentNotNull(inputs, () => inputs);
-			Assert.ArgumentSatisfies(inputs.Length > 0, () => inputs, "The shader must have at least one input.");
+			Assert.ArgumentNotNull(inputs);
+			Assert.ArgumentSatisfies(inputs.Length > 0, "The shader must have at least one input.");
 
 			DestroyShader();
 			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, shaderCode, length, inputs, inputs.Length);

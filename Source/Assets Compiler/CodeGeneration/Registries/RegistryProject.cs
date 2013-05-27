@@ -55,7 +55,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// <param name="end">The end of the message location in the source file.</param>
 		public override void Report(LogType type, string file, string message, TextLocation begin, TextLocation end)
 		{
-			Assert.ArgumentSatisfies(type == LogType.Error, () => type, "Unsupported log type.");
+			Assert.ArgumentSatisfies(type == LogType.Error, "Unsupported log type.");
 
 			file = file.ToLocationString(begin, end);
 			file = file.Replace("/", "\\");

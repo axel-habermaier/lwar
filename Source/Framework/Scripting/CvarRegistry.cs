@@ -31,7 +31,7 @@ namespace Pegasus.Framework.Scripting
 			[DebuggerHidden]
 			set
 			{
-				Assert.ArgumentNotNull((object)value, () => value);
+				Assert.ArgumentNotNull((object)value);
 				Instances.TimeScale.Value = value;
 			}
 		}

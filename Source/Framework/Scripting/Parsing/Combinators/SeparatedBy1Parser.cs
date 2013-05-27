@@ -30,8 +30,8 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="separationParser">The separation parser.</param>
 		public SeparatedBy1Parser(Parser<TResult, TUserState> parser, Parser<TSeparate, TUserState> separationParser)
 		{
-			Assert.ArgumentNotNull(parser, () => parser);
-			Assert.ArgumentNotNull(separationParser, () => separationParser);
+			Assert.ArgumentNotNull(parser);
+			Assert.ArgumentNotNull(separationParser);
 
 			_parser = parser;
 			_separationParser = separationParser;

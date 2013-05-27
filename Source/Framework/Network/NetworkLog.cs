@@ -197,8 +197,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		private static void DebugInfo(string source, string message, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(source, () => source);
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			Assert.ArgumentNotNullOrWhitespace(source);
+			Assert.ArgumentNotNullOrWhitespace(message);
 
 			Log.DebugInfo(String.Format("({1}) {0}", message, source), arguments);
 		}
@@ -213,8 +213,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		private static void Info(string source, string message, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(source, () => source);
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			Assert.ArgumentNotNullOrWhitespace(source);
+			Assert.ArgumentNotNullOrWhitespace(message);
 
 			Log.Info(String.Format("({1}) {0}", message, source), arguments);
 		}
@@ -229,8 +229,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		private static void Warn(string source, string message, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(source, () => source);
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			Assert.ArgumentNotNullOrWhitespace(source);
+			Assert.ArgumentNotNullOrWhitespace(message);
 
 			Log.Warn(String.Format("({1}) {0}", message, source), arguments);
 		}
@@ -245,8 +245,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		private static void Error(string source, string message, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(source, () => source);
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			Assert.ArgumentNotNullOrWhitespace(source);
+			Assert.ArgumentNotNullOrWhitespace(message);
 
 			Log.Error(String.Format("({1}) {0}", message, source), arguments);
 		}
@@ -261,8 +261,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		private static void Die(string source, string message, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(source, () => source);
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			Assert.ArgumentNotNullOrWhitespace(source);
+			Assert.ArgumentNotNullOrWhitespace(message);
 
 			Log.Die(String.Format("({1}) {0}", message, source), arguments);
 		}

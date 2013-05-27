@@ -30,8 +30,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
 		protected Effect(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
 
 			__context = new EffectContext(graphicsDevice, assets);
 		}

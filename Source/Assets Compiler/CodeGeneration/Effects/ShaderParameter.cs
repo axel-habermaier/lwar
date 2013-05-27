@@ -25,7 +25,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="parameter">The declaration of the method parameter that represents the shader parameter.</param>
 		public ShaderParameter(ParameterDeclaration parameter)
 		{
-			Assert.ArgumentNotNull(parameter, () => parameter);
+			Assert.ArgumentNotNull(parameter);
 			_parameter = parameter;
 		}
 

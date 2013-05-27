@@ -48,7 +48,7 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="element">The element that should be drawn by the renderer.</param>
 		public void Add(TElement element)
 		{
-			Assert.ArgumentNotNull(element, () => element);
+			Assert.ArgumentNotNull(element);
 			_elements.Add(element);
 		}
 
@@ -66,8 +66,8 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="element">The element that should be removed from the renderer.</param>
 		public void Remove(TElement element)
 		{
-			Assert.ArgumentNotNull(element, () => element);
-			Assert.ArgumentSatisfies(_elements.Contains(element), () => element, "The element is not drawn by this renderer.");
+			Assert.ArgumentNotNull(element);
+			Assert.ArgumentSatisfies(_elements.Contains(element), "The element is not drawn by this renderer.");
 
 			var index = _elements.IndexOf(element);
 			var last = _elements.Count - 1;

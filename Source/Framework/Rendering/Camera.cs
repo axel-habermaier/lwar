@@ -43,7 +43,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		protected Camera(GraphicsDevice graphicsDevice)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.That(Marshal.SizeOf(typeof(CameraBuffer)) == CameraBuffer.Size, "Unexpected unmanaged size.");
 
 			_cameraBuffer = new ConstantBuffer(graphicsDevice, CameraBuffer.Size, CameraBuffer.Slot);

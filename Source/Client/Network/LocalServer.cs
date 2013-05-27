@@ -53,7 +53,7 @@ namespace Lwar.Client.Network
 		/// <param name="commands">The command registry that manages the application commands.</param>
 		public LocalServer(CommandRegistry commands)
 		{
-			Assert.ArgumentNotNull(commands, () => commands);
+			Assert.ArgumentNotNull(commands);
 
 			_logCallbacks = new NativeMethods.LogCallbacks
 			{

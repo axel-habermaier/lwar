@@ -73,9 +73,9 @@ namespace Pegasus.Framework.Platform
 		/// <param name="font">The font that should be used for drawing.</param>
 		internal void Initialize(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Font font)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(spriteBatch, () => spriteBatch);
-			Assert.ArgumentNotNull(font, () => font);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(spriteBatch);
+			Assert.ArgumentNotNull(font);
 
 			_spriteBatch = spriteBatch;
 			_label = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };

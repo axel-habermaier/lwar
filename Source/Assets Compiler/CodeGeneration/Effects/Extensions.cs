@@ -72,7 +72,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="type">The type that should be converted.</param>
 		public static DataType ToDataType(this IType type)
 		{
-			Assert.ArgumentNotNull(type, () => type);
+			Assert.ArgumentNotNull(type);
 
 			var typeName = type.FullName;
 			if (type.FullName.EndsWith("[]"))

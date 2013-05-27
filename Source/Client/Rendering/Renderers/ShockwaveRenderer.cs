@@ -33,8 +33,8 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
 		public override void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
 
 			var texture = assets.LoadCubeMap("Textures/SunHeat");
 

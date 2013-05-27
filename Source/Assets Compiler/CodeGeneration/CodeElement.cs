@@ -48,9 +48,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <param name="resolver">The resolver that should be used to resolve symbols of the C# file currently being analyzed.</param>
 		protected CodeElement(IErrorReporter errorReporter, string sourceFile, CSharpAstResolver resolver)
 		{
-			Assert.ArgumentNotNull(errorReporter, () => errorReporter);
-			Assert.ArgumentNotNullOrWhitespace(sourceFile, () => sourceFile);
-			Assert.ArgumentNotNull(resolver, () => resolver);
+			Assert.ArgumentNotNull(errorReporter);
+			Assert.ArgumentNotNullOrWhitespace(sourceFile);
+			Assert.ArgumentNotNull(resolver);
 
 			_errorReporter = errorReporter;
 			_sourceFile = sourceFile;
@@ -116,7 +116,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <param name="elements">The elements that should be added.</param>
 		protected void AddElements(IEnumerable<CodeElement> elements)
 		{
-			Assert.ArgumentNotNull(elements, () => elements);
+			Assert.ArgumentNotNull(elements);
 
 			foreach (var element in elements)
 				AddElement(element);
@@ -128,7 +128,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <param name="element">The element that should be added.</param>
 		protected void AddElement(CodeElement element)
 		{
-			Assert.ArgumentNotNull(element, () => element);
+			Assert.ArgumentNotNull(element);
 			Assert.That(_state == State.Uninitialized, "No child elements can be added once the element has already been initialized.");
 
 			element._sourceFile = _sourceFile;
@@ -172,7 +172,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		[StringFormatMethod("message")]
 		protected void Error(AstNode node, string message, params object[] arguments)
 		{
-			Assert.ArgumentNotNull(node, () => node);
+			Assert.ArgumentNotNull(node);
 			Error(node.StartLocation, node.EndLocation, message, arguments);
 		}
 
@@ -185,7 +185,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		[StringFormatMethod("message")]
 		protected void Warn(AstNode node, string message, params object[] arguments)
 		{
-			Assert.ArgumentNotNull(node, () => node);
+			Assert.ArgumentNotNull(node);
 			Warn(node.StartLocation, node.EndLocation, message, arguments);
 		}
 
@@ -199,7 +199,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		[StringFormatMethod("message")]
 		protected void Error(TextLocation begin, TextLocation end, string message, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			Assert.ArgumentNotNullOrWhitespace(message);
 
 			_errorReporter.Report(LogType.Error, _sourceFile, String.Format(message, arguments), begin, end);
 			_hasErrors = true;
@@ -215,7 +215,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		[StringFormatMethod("message")]
 		protected void Warn(TextLocation begin, TextLocation end, string message, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			Assert.ArgumentNotNullOrWhitespace(message);
 			_errorReporter.Report(LogType.Warning, _sourceFile, String.Format(message, arguments), begin, end);
 		}
 

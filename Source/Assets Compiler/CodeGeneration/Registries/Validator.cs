@@ -23,7 +23,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// <param name="attribute">The declaration of the attribute that represents the validator.</param>
 		public Validator(Attribute attribute)
 		{
-			Assert.ArgumentNotNull(attribute, () => attribute);
+			Assert.ArgumentNotNull(attribute);
 			_attribute = attribute;
 		}
 

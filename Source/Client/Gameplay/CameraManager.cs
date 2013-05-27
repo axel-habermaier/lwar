@@ -44,10 +44,10 @@ namespace Lwar.Client.Gameplay
 		/// <param name="commands">The command registry that handles the application commands.</param>
 		public CameraManager(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, CommandRegistry commands)
 		{
-			Assert.ArgumentNotNull(window, () => window);
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
-			Assert.ArgumentNotNull(commands, () => commands);
+			Assert.ArgumentNotNull(window);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(inputDevice);
+			Assert.ArgumentNotNull(commands);
 
 			_window = window;
 			_inputDevice = inputDevice;

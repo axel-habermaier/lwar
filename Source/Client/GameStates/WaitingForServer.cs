@@ -29,7 +29,7 @@ namespace Lwar.Client.GameStates
 		/// <param name="networkSession">The network session that is waiting for new messages from the server.</param>
 		public WaitingForServer(NetworkSession networkSession)
 		{
-			Assert.ArgumentNotNull(networkSession, () => networkSession);
+			Assert.ArgumentNotNull(networkSession);
 
 			IsOpaque = false;
 			_networkSession = networkSession;

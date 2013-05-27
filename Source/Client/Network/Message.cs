@@ -21,8 +21,8 @@ namespace Lwar.Client.Network
 		/// <param name="playerName">The new player name.</param>
 		public static Message ChangePlayerName(Player player, string playerName)
 		{
-			Assert.ArgumentNotNull(player, () => player);
-			Assert.ArgumentNotNullOrWhitespace(playerName, () => playerName);
+			Assert.ArgumentNotNull(player);
+			Assert.ArgumentNotNullOrWhitespace(playerName);
 			Assert.That(Encoding.UTF8.GetByteCount(playerName) <= Specification.MaximumPlayerNameLength, "Player name is too long.");
 
 			return new Message
@@ -49,12 +49,12 @@ namespace Lwar.Client.Network
 											  EntityType weapon1, EntityType weapon2,
 											  EntityType weapon3, EntityType weapon4)
 		{
-			Assert.ArgumentNotNull(player, () => player);
-			Assert.ArgumentInRange(ship, () => ship);
-			Assert.ArgumentInRange(weapon1, () => weapon1);
-			Assert.ArgumentInRange(weapon2, () => weapon2);
-			Assert.ArgumentInRange(weapon3, () => weapon3);
-			Assert.ArgumentInRange(weapon4, () => weapon4);
+			Assert.ArgumentNotNull(player);
+			Assert.ArgumentInRange(ship);
+			Assert.ArgumentInRange(weapon1);
+			Assert.ArgumentInRange(weapon2);
+			Assert.ArgumentInRange(weapon3);
+			Assert.ArgumentInRange(weapon4);
 
 			return new Message
 			{

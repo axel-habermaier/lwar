@@ -68,8 +68,8 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <param name="renderContext">The render context the entity should be added to.</param>
 		public void Added(GameSession gameSession, RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(gameSession, () => gameSession);
-			Assert.ArgumentNotNull(renderContext, () => renderContext);
+			Assert.ArgumentNotNull(gameSession);
+			Assert.ArgumentNotNull(renderContext);
 
 			GameSession = gameSession;
 			RenderContext = renderContext;

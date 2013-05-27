@@ -75,8 +75,8 @@ namespace Pegasus.Framework.Platform.Memory
 		/// <param name="item">The object that should be returned to the pool.</param>
 		public void Return(T item)
 		{
-			Assert.ArgumentNotNull(item, () => item);
-			Assert.ArgumentSatisfies(!_items.Contains(item), () => item, "The item has already been returned.");
+			Assert.ArgumentNotNull(item);
+			Assert.ArgumentSatisfies(!_items.Contains(item), "The item has already been returned.");
 			Assert.That(_items.Count < _allocationCount, "More items returned than allocated.");
 
 			_items.Add(item);

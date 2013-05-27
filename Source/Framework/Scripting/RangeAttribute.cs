@@ -14,10 +14,10 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="upperBound">The upper bound of the range.</param>
 		public RangeAttribute(object lowerBound, object upperBound)
 		{
-			Assert.ArgumentNotNull(lowerBound, () => lowerBound);
-			Assert.ArgumentNotNull(upperBound, () => upperBound);
+			Assert.ArgumentNotNull(lowerBound);
+			Assert.ArgumentNotNull(upperBound);
 			Assert.That(lowerBound.GetType() == upperBound.GetType(), "The types of the lower and upper bounds do not match.");
-			Assert.ArgumentSatisfies(lowerBound is IComparable, () => lowerBound,
+			Assert.ArgumentSatisfies(lowerBound is IComparable,
 									 "The types of the lower and upper bounds must implement IComparable.");
 
 			LowerBound = (IComparable)lowerBound;
@@ -48,8 +48,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="value">The value that should be validated.</param>
 		public override bool Validate(object value)
 		{
-			Assert.ArgumentNotNull(value, () => value);
-			Assert.ArgumentSatisfies(value.GetType() == LowerBound.GetType(), () => value, "The value does not have the same type as the bounds.");
+			Assert.ArgumentNotNull(value);
+			Assert.ArgumentSatisfies(value.GetType() == LowerBound.GetType(), "The value does not have the same type as the bounds.");
 
 			return LowerBound.CompareTo(value) <= 0 && UpperBound.CompareTo(value) >= 0;
 		}

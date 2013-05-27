@@ -132,9 +132,9 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="effect">The effect that should be used to draw the sprites.</param>
 		public SpriteBatch(GraphicsDevice graphicsDevice, RenderOutput output, ISpriteEffectAdapter effect)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(output, () => output);
-			Assert.ArgumentNotNull(effect, () => effect);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(output);
+			Assert.ArgumentNotNull(effect);
 
 			_graphicsDevice = graphicsDevice;
 			_output = output;
@@ -308,7 +308,7 @@ namespace Pegasus.Framework.Rendering
 		internal void Draw(ref Quad quad, Texture2D texture)
 		{
 			Assert.NotDisposed(this);
-			Assert.ArgumentNotNull(texture, () => texture);
+			Assert.ArgumentNotNull(texture);
 
 			DrawBatch(texture, 1);
 			ChangeTexture(texture);
@@ -360,7 +360,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="width">The width of the line.</param>
 		public void DrawLine(Vector2 start, Vector2 end, Color color, int width)
 		{
-			Assert.ArgumentInRange(width, () => width, 1, Int32.MaxValue);
+			Assert.ArgumentInRange(width, 1, Int32.MaxValue);
 			Assert.That(start != end, "Start and end must differ from each other.");
 
 			// We first define a default quad to draw a line that goes from left to right with a length of 1 and the given width
@@ -392,10 +392,10 @@ namespace Pegasus.Framework.Rendering
 		internal void Draw(Quad[] quads, int count, Texture2D texture)
 		{
 			Assert.NotDisposed(this);
-			Assert.ArgumentNotNull(quads, () => quads);
-			Assert.ArgumentNotNull(texture, () => texture);
-			Assert.ArgumentSatisfies(count >= 0, () => count, "Out of bounds.");
-			Assert.ArgumentSatisfies(count <= quads.Length, () => count, "Out of bounds.");
+			Assert.ArgumentNotNull(quads);
+			Assert.ArgumentNotNull(texture);
+			Assert.ArgumentSatisfies(count >= 0, "Out of bounds.");
+			Assert.ArgumentSatisfies(count <= quads.Length, "Out of bounds.");
 
 			if (count == 0)
 				return;
@@ -472,8 +472,8 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="quadCount">The additional quads that should be drawn.</param>
 		private void DrawBatch(Texture2D texture, int quadCount)
 		{
-			Assert.ArgumentSatisfies(quadCount >= 0, () => quadCount, "Out of bounds.");
-			Assert.ArgumentSatisfies(quadCount < MaxQuads, () => quadCount, "Quad batch size exceeds limits.");
+			Assert.ArgumentSatisfies(quadCount >= 0, "Out of bounds.");
+			Assert.ArgumentSatisfies(quadCount < MaxQuads, "Quad batch size exceeds limits.");
 
 			// Check whether we would overflow if we added the given batch.
 			// For section lists, this is not an accurate measure (if we already know the texture, we would not add

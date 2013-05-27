@@ -22,7 +22,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <param name="createTexture">Creates a new texture object.</param>
 		protected TextureAsset(Func<GraphicsDevice, T> createTexture)
 		{
-			Assert.ArgumentNotNull(createTexture, () => createTexture);
+			Assert.ArgumentNotNull(createTexture);
 			_createTexture = createTexture;
 		}
 

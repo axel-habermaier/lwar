@@ -53,9 +53,9 @@ namespace Lwar.Client.Rendering
 		/// <param name="texture">The texture that should be blurred.</param>
 		public GaussianBlur(GraphicsDevice graphicsDevice, AssetsManager assets, Texture2D texture)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
-			Assert.ArgumentNotNull(texture, () => texture);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
+			Assert.ArgumentNotNull(texture);
 			Assert.InRange(texture.Width, MinimumSize, 2048u);
 
 			_texture = texture;

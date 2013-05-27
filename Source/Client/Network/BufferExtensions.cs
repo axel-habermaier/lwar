@@ -20,7 +20,7 @@ namespace Lwar.Client.Network
 		/// <param name="identifier">The identifier that should be written into the buffer.</param>
 		public static void WriteIdentifier(this BufferWriter buffer, Identifier identifier)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 
 			buffer.WriteUInt16(identifier.Generation);
 			buffer.WriteUInt16(identifier.Identity);
@@ -32,7 +32,7 @@ namespace Lwar.Client.Network
 		/// <param name="buffer">The buffer the identifier should be read from.</param>
 		public static Identifier ReadIdentifier(this BufferReader buffer)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
+			Assert.ArgumentNotNull(buffer);
 
 			var generation = buffer.ReadUInt16();
 			var id = buffer.ReadUInt16();
@@ -47,10 +47,10 @@ namespace Lwar.Client.Network
 		/// <param name="length">The maximum length of the string.</param>
 		public static void WriteString(this BufferWriter buffer, string s, int length)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-			Assert.ArgumentNotNull(s, () => s);
-			Assert.ArgumentInRange(length, () => length, 1, Byte.MaxValue);
-			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) <= length, () => s, "String is too long.");
+			Assert.ArgumentNotNull(buffer);
+			Assert.ArgumentNotNull(s);
+			Assert.ArgumentInRange(length, 1, Byte.MaxValue);
+			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) <= length, "String is too long.");
 
 			var bytes = Encoding.UTF8.GetBytes(s);
 			buffer.WriteByte((byte)bytes.Length);
@@ -65,8 +65,8 @@ namespace Lwar.Client.Network
 		/// <param name="length">The maximum length of the string.</param>
 		public static string ReadString(this BufferReader buffer, int length)
 		{
-			Assert.ArgumentNotNull(buffer, () => buffer);
-			Assert.ArgumentInRange(length, () => length, 1, Byte.MaxValue);
+			Assert.ArgumentNotNull(buffer);
+			Assert.ArgumentInRange(length, 1, Byte.MaxValue);
 
 			int size = buffer.ReadByte();
 			var skipBytes = 0;

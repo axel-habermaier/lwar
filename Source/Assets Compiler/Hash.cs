@@ -29,7 +29,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="file">The file that should be hashed.</param>
 		public static Hash Compute(string file)
 		{
-			Assert.ArgumentNotNullOrWhitespace(file, () => file);
+			Assert.ArgumentNotNullOrWhitespace(file);
 
 			using (var cryptoProvider = new MD5CryptoServiceProvider())
 			using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read))
@@ -42,7 +42,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="file">The file that contains the hash.</param>
 		public static Hash FromFile(string file)
 		{
-			Assert.ArgumentNotNullOrWhitespace(file, () => file);
+			Assert.ArgumentNotNullOrWhitespace(file);
 			return new Hash { _hash = File.ReadAllBytes(file) };
 		}
 
@@ -52,7 +52,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="file">The file that the hash should be written to.</param>
 		public void WriteTo(string file)
 		{
-			Assert.ArgumentNotNullOrWhitespace(file, () => file);
+			Assert.ArgumentNotNullOrWhitespace(file);
 			File.WriteAllBytes(file, _hash);
 		}
 

@@ -22,7 +22,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="userState">The initial user state.</param>
 		public InputStream(string input, string name = null, int line = -1, TUserState userState = default(TUserState))
 		{
-			Assert.ArgumentNotNull(input, () => input);
+			Assert.ArgumentNotNull(input);
 
 			_input = input;
 			Name = name ?? String.Empty;
@@ -83,8 +83,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="length">The length of the substring.</param>
 		internal string Substring(int position, int length)
 		{
-			Assert.ArgumentInRange(position, () => position, 0, Int32.MaxValue);
-			Assert.ArgumentInRange(length, () => length, 0, Int32.MaxValue);
+			Assert.ArgumentInRange(position, 0, Int32.MaxValue);
+			Assert.ArgumentInRange(length, 0, Int32.MaxValue);
 			Assert.That(position + length <= _input.Length, "Buffer overflow");
 
 			return _input.Substring(position, length);
@@ -96,7 +96,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="count">The number of characters that should be skipped.</param>
 		internal void Skip(int count)
 		{
-			Assert.ArgumentInRange(count, () => count, 0, Int32.MaxValue);
+			Assert.ArgumentInRange(count, 0, Int32.MaxValue);
 
 			for (var i = 0; i < count && !EndOfInput; ++i)
 				State = State.Advance(IsNewline(Peek()));
@@ -117,7 +117,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="predicate">The predicate that is used to decide how many characters to skip.</param>
 		internal int Skip(Predicate<char> predicate)
 		{
-			Assert.ArgumentNotNull(predicate, () => predicate);
+			Assert.ArgumentNotNull(predicate);
 
 			var count = 0;
 			while (!EndOfInput && predicate(Peek()))
@@ -135,7 +135,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="s">The string that should be skipped.</param>
 		internal bool Skip(string s)
 		{
-			Assert.ArgumentNotNull(s, () => s);
+			Assert.ArgumentNotNull(s);
 
 			foreach (var character in s)
 			{

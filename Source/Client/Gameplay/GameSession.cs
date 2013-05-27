@@ -17,7 +17,7 @@ namespace Lwar.Client.Gameplay
 		/// <param name="renderContext">The render context that is used to draw the game session.</param>
 		public GameSession(RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(renderContext, () => renderContext);
+			Assert.ArgumentNotNull(renderContext);
 
 			Entities = new EntityList(this, renderContext);
 			Players = new PlayerList();

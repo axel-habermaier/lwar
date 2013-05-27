@@ -48,8 +48,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="value">The value that should be validated.</param>
 		public override bool Validate(object value)
 		{
-			Assert.ArgumentNotNull(value, () => value);
-			Assert.ArgumentSatisfies(value is string, () => value, "The value must be a string.");
+			Assert.ArgumentNotNull(value);
+			Assert.ArgumentSatisfies(value is string, "The value must be a string.");
 
 			int length;
 			if (CheckUtf8Length)

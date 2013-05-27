@@ -34,9 +34,9 @@ namespace Pegasus.Framework.Platform.Graphics
 											 ResourceUsage usage = ResourceUsage.Static)
 			where T : struct
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(data, () => data);
-			Assert.ArgumentSatisfies(data.Length > 0, () => data, "The data array must not be empty.");
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(data);
+			Assert.ArgumentSatisfies(data.Length > 0, "The data array must not be empty.");
 
 			return data.UsePointer(ptr => new VertexBuffer(graphicsDevice, usage, ptr, data.Size()));
 		}
@@ -52,8 +52,8 @@ namespace Pegasus.Framework.Platform.Graphics
 											 ResourceUsage usage = ResourceUsage.Static)
 			where T : struct
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentInRange(elementCount, () => elementCount, 0, Int32.MaxValue);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentInRange(elementCount, 0, Int32.MaxValue);
 
 			return new VertexBuffer(graphicsDevice, usage, IntPtr.Zero, Marshal.SizeOf(typeof(T)) * elementCount);
 		}

@@ -128,7 +128,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="asyncAction">The asynchronous action that the process should execute.</param>
 		internal void Run(AsyncAction asyncAction)
 		{
-			Assert.ArgumentNotNull(asyncAction, () => asyncAction);
+			Assert.ArgumentNotNull(asyncAction);
 			Task = asyncAction(Context);
 		}
 
@@ -138,7 +138,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="asyncOperation">The asynchronous operation that the process should wait for.</param>
 		internal void WaitFor(IAsyncOperation asyncOperation)
 		{
-			Assert.ArgumentNotNull(asyncOperation, () => asyncOperation);
+			Assert.ArgumentNotNull(asyncOperation);
 			Assert.That(_asyncOperation == null, "The process is already waiting for an asynchronous operation.");
 
 			if (asyncOperation.IsCompleted)

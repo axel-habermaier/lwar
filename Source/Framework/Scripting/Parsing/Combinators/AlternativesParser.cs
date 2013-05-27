@@ -32,8 +32,8 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="second">The parser that is applied second.</param>
 		public AlternativesParser(Parser<TResult, TUserState> first, Parser<TResult, TUserState> second)
 		{
-			Assert.ArgumentNotNull(first, () => first);
-			Assert.ArgumentNotNull(second, () => second);
+			Assert.ArgumentNotNull(first);
+			Assert.ArgumentNotNull(second);
 
 			_first = first;
 			_second = second;

@@ -43,7 +43,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		internal Reply(ReplyStatus status, ErrorMessageList errors)
 			: this()
 		{
-			Assert.ArgumentInRange(status, () => status);
+			Assert.ArgumentInRange(status);
 
 			Status = status;
 			Result = default(TResult);

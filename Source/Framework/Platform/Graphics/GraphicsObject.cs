@@ -16,7 +16,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
 		protected GraphicsObject(GraphicsDevice graphicsDevice)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(graphicsDevice);
 			GraphicsDevice = graphicsDevice;
 
 			SetName("Unnamed");
@@ -34,7 +34,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		public void SetName(string name)
 		{
 #if DEBUG
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
+			Assert.ArgumentNotNullOrWhitespace(name);
 			Name = name;
 			OnRenamed();
 			SetDescription(name);

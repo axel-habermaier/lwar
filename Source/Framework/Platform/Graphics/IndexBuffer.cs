@@ -41,9 +41,9 @@ namespace Pegasus.Framework.Platform.Graphics
 											ResourceUsage usage = ResourceUsage.Static)
 			where T : struct
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(indices, () => indices);
-			Assert.ArgumentSatisfies(indices.Length > 0, () => indices, "The index array must not be empty.");
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(indices);
+			Assert.ArgumentSatisfies(indices.Length > 0, "The index array must not be empty.");
 			Assert.That(typeof(T) == typeof(uint) || typeof(T) == typeof(ushort),
 						"Unsupported index type '{0}'. Indices must be of type uint or ushort.", typeof(T).FullName);
 
@@ -62,8 +62,8 @@ namespace Pegasus.Framework.Platform.Graphics
 											ResourceUsage usage = ResourceUsage.Static)
 			where T : struct
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentInRange(indexCount, () => indexCount, 0, typeof(T) == typeof(uint) ? Int32.MaxValue : UInt16.MaxValue);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentInRange(indexCount, 0, typeof(T) == typeof(uint) ? Int32.MaxValue : UInt16.MaxValue);
 			Assert.That(typeof(T) == typeof(uint) || typeof(T) == typeof(ushort),
 						"Unsupported index type '{0}'. Indices must be of type uint or ushort.", typeof(T).FullName);
 

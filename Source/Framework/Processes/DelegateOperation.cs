@@ -46,7 +46,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="func">The function that should be awaited to return true.</param>
 		public static DelegateOperation Create(Func<bool> func)
 		{
-			Assert.ArgumentNotNull(func, () => func);
+			Assert.ArgumentNotNull(func);
 
 			var operation = GetInstance();
 			operation._delegate = func;

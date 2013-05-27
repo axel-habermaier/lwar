@@ -37,8 +37,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// <param name="type">The type of the attribute that should be returned.</param>
 		protected Attribute GetAttribute(AstNodeCollection<AttributeSection> attributeSections, string type)
 		{
-			Assert.ArgumentNotNull(attributeSections, () => attributeSections);
-			Assert.ArgumentNotNullOrWhitespace(type, () => type);
+			Assert.ArgumentNotNull(attributeSections);
+			Assert.ArgumentNotNullOrWhitespace(type);
 
 			var attributes = from attribute in attributeSections.SelectMany(section => section.Attributes)
 							 where AttributeHasType(attribute, type)

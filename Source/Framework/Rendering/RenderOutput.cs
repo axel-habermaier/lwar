@@ -42,7 +42,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="graphicsDevice">The graphics device that should be used for rendering.</param>
 		public RenderOutput(GraphicsDevice graphicsDevice)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
+			Assert.ArgumentNotNull(graphicsDevice);
 
 			_graphicsDevice = graphicsDevice;
 			_viewportBuffer = new ConstantBuffer(graphicsDevice, 16, ViewportBufferSlot);

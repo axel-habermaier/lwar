@@ -48,7 +48,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="serviceIdentifier">The identifier of the service that the service host hosts.</param>
 		protected ServiceHost(TService service, ServiceIdentifier serviceIdentifier)
 		{
-			Assert.ArgumentNotNull(service, () => service);
+			Assert.ArgumentNotNull(service);
 
 			Service = service;
 			_serviceIdentifier = serviceIdentifier;
@@ -68,7 +68,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="endPoint">The endpoint on which the server should listen for new client connections.</param>
 		public async Task StartAsync(ProcessContext context, IPEndPoint endPoint)
 		{
-			Assert.ArgumentNotNull(endPoint, () => endPoint);
+			Assert.ArgumentNotNull(endPoint);
 			Assert.That(!_isRunning, "Already running.");
 
 			NetworkLog.ServerInfo("Service host for service '{0}' is started.", typeof(TService).FullName);
@@ -113,7 +113,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="connection">The new connection that has been established.</param>
 		private void OnClientConnected(TcpSocket connection)
 		{
-			Assert.ArgumentNotNull(connection, () => connection);
+			Assert.ArgumentNotNull(connection);
 			_clientProcesses.Add(_scheduler.CreateProcess(ctx => ProcessClientRequests(ctx, connection)));
 		}
 
@@ -124,7 +124,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="connection">The connection that should be used to communicate with the client.</param>
 		private async Task ProcessClientRequests(ProcessContext context, TcpSocket connection)
 		{
-			Assert.ArgumentNotNull(connection, () => connection);
+			Assert.ArgumentNotNull(connection);
 
 			try
 			{

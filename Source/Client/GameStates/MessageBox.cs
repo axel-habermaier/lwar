@@ -35,7 +35,7 @@ namespace Lwar.Client.GameStates
 		/// <param name="message">The message that should be displayed to the user.</param>
 		public MessageBox(string message)
 		{
-			Assert.ArgumentNotNullOrWhitespace(message, () => message);
+			Assert.ArgumentNotNullOrWhitespace(message);
 
 			_message = message;
 			_continue = new LogicalInput(Key.Space.WentDown(), InputModes.Game);

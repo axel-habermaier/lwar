@@ -28,8 +28,8 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="second">The parser that is applied second.</param>
 		public SequenceFirstParser(Parser<TResultFirst, TUserState> first, Parser<TResultSecond, TUserState> second)
 		{
-			Assert.ArgumentNotNull(first, () => first);
-			Assert.ArgumentNotNull(second, () => second);
+			Assert.ArgumentNotNull(first);
+			Assert.ArgumentNotNull(second);
 
 			_first = first;
 			_second = second;

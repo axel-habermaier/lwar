@@ -40,7 +40,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="packetFactory">The packet factory that should be used to create incoming and outgoing packets.</param>
 		internal TcpSocket(IPacketFactory packetFactory)
 		{
-			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
+			Assert.ArgumentNotNull(packetFactory);
 
 			_packetFactory = packetFactory;
 			_state = State.Disconnected;
@@ -53,8 +53,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="socket">The underlying socket that should be used to send and receive packets.</param>
 		internal TcpSocket(IPacketFactory packetFactory, Socket socket)
 		{
-			Assert.ArgumentNotNull(packetFactory, () => packetFactory);
-			Assert.ArgumentNotNull(socket, () => socket);
+			Assert.ArgumentNotNull(packetFactory);
+			Assert.ArgumentNotNull(socket);
 
 			_packetFactory = packetFactory;
 			_socket = socket;
@@ -123,7 +123,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="remoteEndPoint">The remote endpoint of the connection.</param>
 		public async Task ConnectAsync(ProcessContext context, IPEndPoint remoteEndPoint)
 		{
-			Assert.ArgumentNotNull(remoteEndPoint, () => remoteEndPoint);
+			Assert.ArgumentNotNull(remoteEndPoint);
 			Assert.That(!IsConnected && !IsConnecting, "Already connected or connecting.");
 
 			_socket.SafeDispose();
@@ -152,7 +152,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="packet">The packet that should be sent. The packet is returned to the pool before this function returns.</param>
 		public async Task SendAsync(ProcessContext context, OutgoingPacket packet)
 		{
-			Assert.ArgumentNotNull(packet, () => packet);
+			Assert.ArgumentNotNull(packet);
 			Assert.That(IsConnected, "Cannot send: Not connected.");
 			Assert.InRange(packet.Size, 1, Packet.MaxSize);
 

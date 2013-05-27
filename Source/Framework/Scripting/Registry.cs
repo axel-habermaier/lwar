@@ -53,8 +53,8 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="name">The name of the instance.</param>
 		protected void Register(T instance, string name)
 		{
-			Assert.ArgumentNotNull(instance, () => instance);
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
+			Assert.ArgumentNotNull(instance);
+			Assert.ArgumentNotNullOrWhitespace(name);
 
 			_instances.Add(name, instance);
 		}
@@ -66,7 +66,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="instance">The instance with the given name, if it is found.</param>
 		internal bool TryFind(string name, out T instance)
 		{
-			Assert.ArgumentNotNull(name, () => name);
+			Assert.ArgumentNotNull(name);
 			return _instances.TryGetValue(name, out instance);
 		}
 

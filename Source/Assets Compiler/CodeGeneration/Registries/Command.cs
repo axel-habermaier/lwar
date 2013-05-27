@@ -23,7 +23,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// <param name="method">The declaration of the method that represents the command.</param>
 		public Command(MethodDeclaration method)
 		{
-			Assert.ArgumentNotNull(method, () => method);
+			Assert.ArgumentNotNull(method);
 			_method = method;
 		}
 

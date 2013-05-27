@@ -71,7 +71,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="asyncFunc">The asynchronous function that the process should execute.</param>
 		internal void Run(AsyncFunc<TResult> asyncFunc)
 		{
-			Assert.ArgumentNotNull(asyncFunc, () => asyncFunc);
+			Assert.ArgumentNotNull(asyncFunc);
 			_process.Task = asyncFunc(_process.Context);
 		}
 

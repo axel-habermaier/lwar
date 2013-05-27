@@ -47,7 +47,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="packet">The packet that contains the result returned by the server.</param>
 		public void SetResult(IncomingPacket packet)
 		{
-			Assert.ArgumentNotNull(packet, () => packet);
+			Assert.ArgumentNotNull(packet);
 			IsCompleted = true;
 		}
 
@@ -57,7 +57,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="exception">The exception that has been thrown.</param>
 		public void SetException(Exception exception)
 		{
-			Assert.ArgumentNotNull(exception, () => exception);
+			Assert.ArgumentNotNull(exception);
 
 			Exception = exception;
 			IsCompleted = true;

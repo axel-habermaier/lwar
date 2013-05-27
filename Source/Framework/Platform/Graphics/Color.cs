@@ -182,8 +182,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="color">The array to which the color information should be copied.</param>
 		public void ToFloatArray(float[] color)
 		{
-			Assert.ArgumentNotNull(color, () => color);
-			Assert.ArgumentSatisfies(color.Length == 4, () => color, "Array has wrong size.");
+			Assert.ArgumentNotNull(color);
+			Assert.ArgumentSatisfies(color.Length == 4, "Array has wrong size.");
 			color[0] = ToFloat(Red);
 			color[1] = ToFloat(Green);
 			color[2] = ToFloat(Blue);

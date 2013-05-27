@@ -35,9 +35,9 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="right">The right sub-trigger.</param>
 		internal BinaryInputTrigger(BinaryInputTriggerType triggerType, InputTrigger left, InputTrigger right)
 		{
-			Assert.ArgumentInRange(triggerType, () => triggerType);
-			Assert.ArgumentNotNull(left, () => left);
-			Assert.ArgumentNotNull(right, () => right);
+			Assert.ArgumentInRange(triggerType);
+			Assert.ArgumentNotNull(left);
+			Assert.ArgumentNotNull(right);
 
 			_triggerType = triggerType;
 			_left = left;
@@ -65,7 +65,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="device">The logical input device that should be used to evaluate the trigger.</param>
 		internal override bool Evaluate(LogicalInputDevice device)
 		{
-			Assert.ArgumentNotNull(device, () => device);
+			Assert.ArgumentNotNull(device);
 
 			switch (_triggerType)
 			{

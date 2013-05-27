@@ -26,7 +26,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="parameter">The parameter of the instruction.</param>
 		public Instruction(object target, object parameter)
 		{
-			Assert.ArgumentNotNull(target, () => target);
+			Assert.ArgumentNotNull(target);
 			Assert.That(!(target is ICommand) || (parameter is object[] && ((object[])parameter).Length == ((ICommand)target).Parameters.Count()),
 						"Incorrect command parameters.");
 			Assert.That(!(target is ICvar) || (parameter == null || parameter.GetType() == ((ICvar)target).ValueType),
@@ -60,7 +60,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="target">The object that should be checked.</param>
 		public bool HasTarget(object target)
 		{
-			Assert.ArgumentNotNull(target, () => target);
+			Assert.ArgumentNotNull(target);
 			return _target == target;
 		}
 	}

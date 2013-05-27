@@ -76,8 +76,8 @@ namespace Pegasus.Framework.Rendering
 		public DebugCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
 			: base(graphicsDevice)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(inputDevice);
 
 			_inputDevice = inputDevice;
 			_inputDevice.Mouse.Moved += MouseMoved;

@@ -24,8 +24,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="key">The key that is monitored by the trigger.</param>
 		internal KeyTrigger(KeyTriggerType triggerType, Key key)
 		{
-			Assert.ArgumentInRange(triggerType, () => triggerType);
-			Assert.ArgumentInRange(key, () => key);
+			Assert.ArgumentInRange(triggerType);
+			Assert.ArgumentInRange(key);
 
 			_triggerType = triggerType;
 			_key = key;
@@ -52,7 +52,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="device">The logical input device that should be used to evaluate the trigger.</param>
 		internal override bool Evaluate(LogicalInputDevice device)
 		{
-			Assert.ArgumentNotNull(device, () => device);
+			Assert.ArgumentNotNull(device);
 
 			switch (_triggerType)
 			{

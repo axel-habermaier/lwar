@@ -58,7 +58,7 @@ namespace Pegasus.Framework.Platform.Memory
 		[Conditional("DEBUG")]
 		public void SetDescription(string description, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(description, () => description);
+			Assert.ArgumentNotNullOrWhitespace(description);
 
 #if DEBUG
 			_description = String.Format(description, arguments);

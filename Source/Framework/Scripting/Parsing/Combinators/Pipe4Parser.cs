@@ -53,11 +53,11 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 						   Parser<TResultThird, TUserState> third, Parser<TResultFourth, TUserState> fourth,
 						   Func<TResultFirst, TResultSecond, TResultThird, TResultFourth, TResult> function)
 		{
-			Assert.ArgumentNotNull(first, () => first);
-			Assert.ArgumentNotNull(second, () => second);
-			Assert.ArgumentNotNull(third, () => third);
-			Assert.ArgumentNotNull(fourth, () => fourth);
-			Assert.ArgumentNotNull(function, () => function);
+			Assert.ArgumentNotNull(first);
+			Assert.ArgumentNotNull(second);
+			Assert.ArgumentNotNull(third);
+			Assert.ArgumentNotNull(fourth);
+			Assert.ArgumentNotNull(function);
 
 			_first = first;
 			_second = second;

@@ -36,7 +36,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="scanCode">The scan code of the key that the trigger monitors.</param>
 		internal ScanCodeKeyTrigger(KeyTriggerType triggerType, int scanCode)
 		{
-			Assert.ArgumentInRange(triggerType, () => triggerType);
+			Assert.ArgumentInRange(triggerType);
 
 			_triggerType = triggerType;
 			_scanCode = scanCode;

@@ -39,10 +39,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="resolver">The C# resolver that should be used to resolve type information.</param>
 		public void Compile(EffectClass effect, ShaderMethod shader, CodeWriter writer, CSharpAstResolver resolver)
 		{
-			Assert.ArgumentNotNull(effect, () => effect);
-			Assert.ArgumentNotNull(shader, () => shader);
-			Assert.ArgumentNotNull(writer, () => writer);
-			Assert.ArgumentNotNull(resolver, () => resolver);
+			Assert.ArgumentNotNull(effect);
+			Assert.ArgumentNotNull(shader);
+			Assert.ArgumentNotNull(writer);
+			Assert.ArgumentNotNull(resolver);
 
 			Writer = writer;
 			Resolver = resolver;
@@ -334,7 +334,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="node">The node that should be checked.</param>
 		private static bool OmitTerminatingSemicolon(AstNode node)
 		{
-			Assert.ArgumentNotNull(node, () => node);
+			Assert.ArgumentNotNull(node);
 			return node is BlockStatement || node is ForStatement || node is WhileStatement || node is IfElseStatement;
 		}
 
@@ -345,7 +345,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="name">The name that should be escaped.</param>
 		protected static string Escape(string name)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name, () => name);
+			Assert.ArgumentNotNullOrWhitespace(name);
 			return String.Format("{0}{1}", Configuration.ReservedVariablePrefix, name);
 		}
 	}

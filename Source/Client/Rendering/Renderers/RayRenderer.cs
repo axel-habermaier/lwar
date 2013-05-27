@@ -35,8 +35,8 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
 		public override void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
 
 			_texture = assets.LoadTexture2D("Textures/Phaser");
 			_texture2 = assets.LoadTexture2D("Textures/PhaserGlow");

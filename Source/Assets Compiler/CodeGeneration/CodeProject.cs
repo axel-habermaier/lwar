@@ -138,8 +138,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <param name="errors">The parser errors that should be printed.</param>
 		private void PrintParserErrors(string file, Error[] errors)
 		{
-			Assert.ArgumentNotNull(errors, () => errors);
-			Assert.ArgumentNotNullOrWhitespace(file, () => file);
+			Assert.ArgumentNotNull(errors);
+			Assert.ArgumentNotNullOrWhitespace(file);
 
 			foreach (var error in errors)
 				Report(LogType.Error, file, error.Message, error.Region.Begin, error.Region.End);

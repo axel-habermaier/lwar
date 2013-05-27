@@ -55,7 +55,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="func">The function that should be executed on another thread and whose completion should be awaited.</param>
 		public static TaskOperation<TResult> Create(Func<TResult> func)
 		{
-			Assert.ArgumentNotNull(func, () => func);
+			Assert.ArgumentNotNull(func);
 
 			var operation = GetInstance();
 			operation._task = Task.Factory.StartNew(func);

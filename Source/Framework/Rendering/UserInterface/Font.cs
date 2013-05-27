@@ -53,8 +53,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="lineHeight">The height of a single line.</param>
 		internal void Reinitialize(Glyph[] glyphs, int lowestGlyphId, KerningPair[] kerning, Texture2D texture, int lineHeight)
 		{
-			Assert.ArgumentNotNull(glyphs, () => glyphs);
-			Assert.ArgumentNotNull(texture, () => texture);
+			Assert.ArgumentNotNull(glyphs);
+			Assert.ArgumentNotNull(texture);
 
 			_glyphs = glyphs;
 			_lowestGlyphId = lowestGlyphId;
@@ -69,7 +69,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="text">The text whose width should be computed.</param>
 		public int MeasureWidth(string text)
 		{
-			Assert.ArgumentNotNull(text, () => text);
+			Assert.ArgumentNotNull(text);
 			return MeasureWidth(text, 0, text.Length);
 		}
 
@@ -81,9 +81,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="end">The index of the first character that is not measured.</param>
 		public int MeasureWidth(string text, int start, int end)
 		{
-			Assert.ArgumentNotNull(text, () => text);
-			Assert.ArgumentSatisfies(start >= 0, () => start, "Out of bounds.");
-			Assert.ArgumentSatisfies(end <= text.Length, () => start, "Out of bounds.");
+			Assert.ArgumentNotNull(text);
+			Assert.ArgumentSatisfies(start >= 0, "Out of bounds.");
+			Assert.ArgumentSatisfies(end <= text.Length, "Out of bounds.");
 			Assert.That(start <= end, "Start must be less than or equal to end.");
 
 			var width = 0;
@@ -133,11 +133,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <returns></returns>
 		internal Rectangle GetGlyphArea(string text, int start, int index, ref Vector2i offset)
 		{
-			Assert.ArgumentNotNull(text, () => text);
-			Assert.ArgumentSatisfies(start >= 0, () => start, "Out of bounds.");
-			Assert.ArgumentSatisfies(start < text.Length, () => start, "Out of bounds.");
-			Assert.ArgumentSatisfies(index >= 0, () => index, "Out of bounds.");
-			Assert.ArgumentSatisfies(index < text.Length, () => index, "Out of bounds.");
+			Assert.ArgumentNotNull(text);
+			Assert.ArgumentSatisfies(start >= 0, "Out of bounds.");
+			Assert.ArgumentSatisfies(start < text.Length, "Out of bounds.");
+			Assert.ArgumentSatisfies(index >= 0, "Out of bounds.");
+			Assert.ArgumentSatisfies(index < text.Length, "Out of bounds.");
 			Assert.That(start <= index, "Start must be less than or equal to index.");
 
 			var glyph = GetGlyph(text[index]);

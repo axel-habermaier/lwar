@@ -41,7 +41,7 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <param name="player">The player the ship belongs to.</param>
 		public static Ship Create(Identifier id, Player player)
 		{
-			Assert.ArgumentNotNull(player, () => player);
+			Assert.ArgumentNotNull(player);
 
 			var ship = GetInstance();
 			ship.Id = id;

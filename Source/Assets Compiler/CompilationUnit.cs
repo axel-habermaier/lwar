@@ -140,7 +140,7 @@ namespace Pegasus.AssetsCompiler
 		/// <param name="asset">The compiler that should be added.</param>
 		private void Add(Asset asset)
 		{
-			Assert.ArgumentNotNull(asset, () => asset);
+			Assert.ArgumentNotNull(asset);
 			Assert.That(_assets.All(a => a.RelativePath != asset.RelativePath), "The asset has already been added.");
 
 			_assets.Add(asset);

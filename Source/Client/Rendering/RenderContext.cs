@@ -55,9 +55,9 @@ namespace Lwar.Client.Rendering
 		/// <param name="cvars"> The cvar registry that handles the application cvars.</param>
 		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets, CvarRegistry cvars)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(assets, () => assets);
-			Assert.ArgumentNotNull(cvars, () => cvars);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
+			Assert.ArgumentNotNull(cvars);
 
 			_cvars = cvars;
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
@@ -75,7 +75,7 @@ namespace Lwar.Client.Rendering
 		public void Add<TEntity>(TEntity entity)
 			where TEntity : class, IEntity
 		{
-			Assert.ArgumentNotNull(entity, () => entity);
+			Assert.ArgumentNotNull(entity);
 			_renderers.OfType<Renderer<TEntity>>().Single().Add(entity);
 		}
 
@@ -87,7 +87,7 @@ namespace Lwar.Client.Rendering
 		public void Remove<TEntity>(TEntity entity)
 			where TEntity : class, IEntity
 		{
-			Assert.ArgumentNotNull(entity, () => entity);
+			Assert.ArgumentNotNull(entity);
 			_renderers.OfType<Renderer<TEntity>>().Single().Remove(entity);
 		}
 
@@ -97,7 +97,7 @@ namespace Lwar.Client.Rendering
 		/// <param name="output">The output that the render context should render to.</param>
 		public void Draw(RenderOutput output)
 		{
-			Assert.ArgumentNotNull(output, () => output);
+			Assert.ArgumentNotNull(output);
 
 			RasterizerState.CullCounterClockwise.Bind();
 			_skyboxRenderer.Draw(output);

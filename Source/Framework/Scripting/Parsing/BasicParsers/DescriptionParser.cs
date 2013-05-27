@@ -27,8 +27,8 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		/// <param name="description">The description that should be returned in the case of failure.</param>
 		public DescriptionParser(Parser<TResult, TUserState> parser, string description)
 		{
-			Assert.ArgumentNotNull(parser, () => parser);
-			Assert.ArgumentNotNullOrWhitespace(description, () => description);
+			Assert.ArgumentNotNull(parser);
+			Assert.ArgumentNotNullOrWhitespace(description);
 
 			_parser = parser;
 			_description = description;

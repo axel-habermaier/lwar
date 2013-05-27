@@ -45,7 +45,7 @@ namespace Pegasus.Framework.Processes
 		/// <param name="continuation">The action to invoke when the operation completes.</param>
 		public void OnCompleted(Action continuation)
 		{
-			Assert.ArgumentNotNull(continuation, () => continuation);
+			Assert.ArgumentNotNull(continuation);
 			_process.Continuation = continuation;
 		}
 

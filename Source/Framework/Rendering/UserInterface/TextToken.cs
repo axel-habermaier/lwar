@@ -36,8 +36,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <returns></returns>
 		public static TextToken Next(string text, int offset)
 		{
-			Assert.ArgumentNotNull(text, () => text);
-			Assert.ArgumentSatisfies(offset >= 0, () => offset, "Out of bounds.");
+			Assert.ArgumentNotNull(text);
+			Assert.ArgumentSatisfies(offset >= 0, "Out of bounds.");
 
 			if (offset >= text.Length)
 				return EndOfText;

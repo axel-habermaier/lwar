@@ -20,9 +20,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		public InputStreamState(int position, int line, int lineBegin, TUserState userState)
 			: this()
 		{
-			Assert.ArgumentInRange(position, () => position, 0, Int32.MaxValue);
-			Assert.ArgumentInRange(line, () => line, 1, Int32.MaxValue);
-			Assert.ArgumentInRange(lineBegin, () => lineBegin, 0, Int32.MaxValue);
+			Assert.ArgumentInRange(position, 0, Int32.MaxValue);
+			Assert.ArgumentInRange(line, 1, Int32.MaxValue);
+			Assert.ArgumentInRange(lineBegin, 0, Int32.MaxValue);
 
 			Position = position;
 			Line = line;

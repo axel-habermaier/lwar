@@ -95,12 +95,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, SpriteBatch spriteBatch, Font font,
 					   CommandRegistry commands, CvarRegistry cvars)
 		{
-			Assert.ArgumentNotNull(graphicsDevice, () => graphicsDevice);
-			Assert.ArgumentNotNull(inputDevice, () => inputDevice);
-			Assert.ArgumentNotNull(spriteBatch, () => spriteBatch);
-			Assert.ArgumentNotNull(font, () => font);
-			Assert.ArgumentNotNull(commands, () => commands);
-			Assert.ArgumentNotNull(cvars, () => cvars);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(inputDevice);
+			Assert.ArgumentNotNull(spriteBatch);
+			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNull(commands);
+			Assert.ArgumentNotNull(cvars);
 
 			_spriteBatch = spriteBatch;
 			_font = font;

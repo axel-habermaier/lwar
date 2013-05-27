@@ -25,7 +25,7 @@ namespace Pegasus.Framework.Scripting
 		/// </param>
 		public CommandLineParser(CvarRegistry cvarRegistry)
 		{
-			Assert.ArgumentNotNull(cvarRegistry, () => cvarRegistry);
+			Assert.ArgumentNotNull(cvarRegistry);
 			_cvarRegistry = cvarRegistry;
 		}
 

@@ -23,7 +23,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// <param name="parameter">The declaration of the parameter that represents the command parameter.</param>
 		public CommandParameter(ParameterDeclaration parameter)
 		{
-			Assert.ArgumentNotNull(parameter, () => parameter);
+			Assert.ArgumentNotNull(parameter);
 			_parameter = parameter;
 		}
 

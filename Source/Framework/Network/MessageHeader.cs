@@ -40,7 +40,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="packet">The outgoing packet the header should be written into.</param>
 		public void Write(OutgoingPacket packet)
 		{
-			Assert.ArgumentNotNull(packet, () => packet);
+			Assert.ArgumentNotNull(packet);
 
 			packet.Writer.WriteUInt64(ServiceIdentifier.FirstPart);
 			packet.Writer.WriteUInt64(ServiceIdentifier.SecondPart);
@@ -53,7 +53,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="packet">The incoming packet the header should be read from.</param>
 		public static MessageHeader Read(IncomingPacket packet)
 		{
-			Assert.ArgumentNotNull(packet, () => packet);
+			Assert.ArgumentNotNull(packet);
 
 			return new MessageHeader
 			{

@@ -15,7 +15,7 @@ namespace Lwar.Client.Network
 		/// <param name="type">The type that should be checked.</param>
 		public static bool IsReliable(this MessageType type)
 		{
-			Assert.ArgumentInRange(type, () => type);
+			Assert.ArgumentInRange(type);
 			return (int)type < 100;
 		}
 
@@ -25,7 +25,7 @@ namespace Lwar.Client.Network
 		/// <param name="type">The type that should be checked.</param>
 		public static bool IsUnreliable(this MessageType type)
 		{
-			Assert.ArgumentInRange(type, () => type);
+			Assert.ArgumentInRange(type);
 			return (int)type > 100;
 		}
 	}

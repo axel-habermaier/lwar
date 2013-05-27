@@ -23,8 +23,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="socket">The socket for which dual mode should be enabled.</param>
 		public static void EnableDualMode(this Socket socket)
 		{
-			Assert.ArgumentNotNull(socket, () => socket);
-			Assert.ArgumentSatisfies(socket.AddressFamily == AddressFamily.InterNetworkV6, () => socket, "Not an IPv6 socket.");
+			Assert.ArgumentNotNull(socket);
+			Assert.ArgumentSatisfies(socket.AddressFamily == AddressFamily.InterNetworkV6, "Not an IPv6 socket.");
 
 #if Windows
 			socket.DualMode = true;
@@ -48,8 +48,8 @@ namespace Pegasus.Framework.Network
 		/// <param name="endPoint">The remote endpoint of the connection.</param>
 		public static Awaiter<bool> ConnectAsync(this Socket socket, ProcessContext context, IPEndPoint endPoint)
 		{
-			Assert.ArgumentNotNull(socket, () => socket);
-			Assert.ArgumentNotNull(endPoint, () => endPoint);
+			Assert.ArgumentNotNull(socket);
+			Assert.ArgumentNotNull(endPoint);
 
 			var eventArgs = new SocketAsyncEventArgs { RemoteEndPoint = endPoint };
 			return ExecuteAsync(context, eventArgs, socket.ConnectAsync, e => e.SocketError == SocketError.Success);
@@ -62,7 +62,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
 		public static Awaiter<Socket> AcceptAsync(this Socket socket, ProcessContext context)
 		{
-			Assert.ArgumentNotNull(socket, () => socket);
+			Assert.ArgumentNotNull(socket);
 			return ExecuteAsync(context, new SocketAsyncEventArgs(), socket.AcceptAsync, e => e.AcceptSocket);
 		}
 
@@ -74,7 +74,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="buffer">The buffer into which the received data should be copied.</param>
 		public static Awaiter<int> ReceiveAsync(this Socket socket, ProcessContext context, ArraySegment<byte> buffer)
 		{
-			Assert.ArgumentNotNull(socket, () => socket);
+			Assert.ArgumentNotNull(socket);
 
 			var eventArgs = new SocketAsyncEventArgs { SocketFlags = SocketFlags.None };
 			eventArgs.SetBuffer(buffer.Array, buffer.Offset, buffer.Count);
@@ -91,7 +91,7 @@ namespace Pegasus.Framework.Network
 		public static async Task<int> ReceiveFromAsync(this Socket socket, ProcessContext context, ArraySegment<byte> buffer,
 													   IPEndPoint remoteEndPoint)
 		{
-			Assert.ArgumentNotNull(socket, () => socket);
+			Assert.ArgumentNotNull(socket);
 
 			var eventArgs = new SocketAsyncEventArgs { SocketFlags = SocketFlags.None };
 			eventArgs.SetBuffer(buffer.Array, buffer.Offset, buffer.Count);
@@ -114,7 +114,7 @@ namespace Pegasus.Framework.Network
 		/// <param name="buffer">The buffer from which the sent data should be copied.</param>
 		public static Awaiter<object> SendAsync(this Socket socket, ProcessContext context, ArraySegment<byte> buffer)
 		{
-			Assert.ArgumentNotNull(socket, () => socket);
+			Assert.ArgumentNotNull(socket);
 
 			var eventArgs = new SocketAsyncEventArgs { SocketFlags = SocketFlags.None };
 			eventArgs.SetBuffer(buffer.Array, buffer.Offset, buffer.Count);
@@ -131,8 +131,8 @@ namespace Pegasus.Framework.Network
 		public static Awaiter<object> SendToAsync(this Socket socket, ProcessContext context, ArraySegment<byte> buffer,
 												  IPEndPoint remoteEndPoint)
 		{
-			Assert.ArgumentNotNull(socket, () => socket);
-			Assert.ArgumentNotNull(remoteEndPoint, () => remoteEndPoint);
+			Assert.ArgumentNotNull(socket);
+			Assert.ArgumentNotNull(remoteEndPoint);
 
 			var eventArgs = new SocketAsyncEventArgs { SocketFlags = SocketFlags.None, RemoteEndPoint = remoteEndPoint };
 			eventArgs.SetBuffer(buffer.Array, buffer.Offset, buffer.Count);
@@ -155,9 +155,9 @@ namespace Pegasus.Framework.Network
 															  Func<SocketAsyncEventArgs, bool> asyncOperation,
 															  Func<SocketAsyncEventArgs, TResult> getResult)
 		{
-			Assert.ArgumentNotNull(eventArgs, () => eventArgs);
-			Assert.ArgumentNotNull(asyncOperation, () => asyncOperation);
-			Assert.ArgumentNotNull(getResult, () => getResult);
+			Assert.ArgumentNotNull(eventArgs);
+			Assert.ArgumentNotNull(asyncOperation);
+			Assert.ArgumentNotNull(getResult);
 
 			eventArgs.UserToken = getResult;
 			var process = SocketOperation<TResult>.Create(eventArgs);
