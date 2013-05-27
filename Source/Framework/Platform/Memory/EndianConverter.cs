@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Framework.Platform.Memory
 {
 	/// <summary>
 	///   Converts between little and big endian encoding.

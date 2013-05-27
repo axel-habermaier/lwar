@@ -9,6 +9,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using AssetsCompiler.Effects;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
+	using Framework.Platform.Memory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using Effect = Framework.Platform.Graphics.Effect;

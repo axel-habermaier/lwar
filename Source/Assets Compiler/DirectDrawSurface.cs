@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
+	using Framework.Platform.Memory;
 
 	/// <summary>
 	///   Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at

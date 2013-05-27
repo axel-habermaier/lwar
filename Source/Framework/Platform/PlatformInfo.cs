@@ -3,7 +3,7 @@
 namespace Pegasus.Framework.Platform
 {
 	using Graphics;
-	using EndianessType = Endianess;
+	using EndianessType = Memory.Endianess;
 
 	/// <summary>
 	///   Provides further information about the platform the application is running on.

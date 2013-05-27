@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Network
 {
-	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform.Memory;
 

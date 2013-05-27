@@ -6,6 +6,7 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
 	///   The message queue is responsible for packing all queued messages into a packet and sending it to the remote

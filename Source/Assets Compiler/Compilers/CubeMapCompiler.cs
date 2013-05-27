@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using Assets;
 	using Framework;
 	using Framework.Platform;
+	using Framework.Platform.Memory;
 
 	/// <summary>
 	///   Compiles cubemap textures.

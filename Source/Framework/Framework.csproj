@@ -202,8 +202,8 @@
     <Compile Include="Platform\Graphics\Shader.cs" />
     <Compile Include="Platform\Graphics\ShaderInput.cs" />
     <Compile Include="Platform\Graphics\Texture2DView.cs" />
-    <Compile Include="Platform\BufferPointer.cs" />
-    <Compile Include="Platform\Endianess.cs" />
+    <Compile Include="Platform\Memory\BufferPointer.cs" />
+    <Compile Include="Platform\Memory\Endianess.cs" />
     <Compile Include="Platform\ExternalProcess.cs" />
     <Compile Include="Platform\Graphics\Attachment.cs" />
     <Compile Include="Platform\Graphics\AttachmentPoint.cs" />
@@ -281,8 +281,8 @@
     <Compile Include="Platform\Assets\FontAsset.cs" />
     <Compile Include="Platform\Assets\VertexShaderAsset.cs" />
     <Compile Include="Platform\Assets\TextureAsset.cs" />
-    <Compile Include="Platform\BufferReader.cs" />
-    <Compile Include="Platform\BufferWriter.cs" />
+    <Compile Include="Platform\Memory\BufferReader.cs" />
+    <Compile Include="Platform\Memory\BufferWriter.cs" />
     <Compile Include="Platform\Graphics\Query.cs" />
     <Compile Include="Platform\Graphics\QueryType.cs" />
     <Compile Include="Platform\Graphics\TimestampDisjointQuery.cs" />
@@ -431,7 +431,7 @@
     <Compile Include="Platform\Graphics\SwapChain.cs" />
     <Compile Include="Platform\Input\KeyEventArgs.cs" />
     <Compile Include="Platform\Input\MouseEventArgs.cs" />
-    <Compile Include="Platform\EndianConverter.cs" />
+    <Compile Include="Platform\Memory\EndianConverter.cs" />
     <Compile Include="Platform\Memory\Interop.cs" />
     <Compile Include="Platform\PlatformType.cs" />
     <Compile Include="Platform\PlatformInfo.cs" />

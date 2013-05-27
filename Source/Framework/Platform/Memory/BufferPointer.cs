@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Framework.Platform.Memory
 {
 	using System.Runtime.InteropServices;
-	using Memory;
 
 	/// <summary>
 	///   Represents a pointer to a byte buffer.

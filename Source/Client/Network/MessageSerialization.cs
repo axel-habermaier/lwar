@@ -7,6 +7,7 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
 	///   Serializes and deserializes messages from and to buffers.

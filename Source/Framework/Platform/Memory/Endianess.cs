@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Framework.Platform.Memory
 {
 	/// <summary>
 	///   Specifies whether a little endian or big endian encoding is used.
