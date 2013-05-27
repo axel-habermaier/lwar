@@ -7,6 +7,7 @@ namespace Pegasus.Framework
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
+	using Platform.Logging;
 	using Scripting;
 	using Scripting.Parsing;
 

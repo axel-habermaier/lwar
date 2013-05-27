@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>

@@ -8,6 +8,7 @@ namespace Lwar.Client.Network
 	using System.Threading.Tasks;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 	using Scripting;
 

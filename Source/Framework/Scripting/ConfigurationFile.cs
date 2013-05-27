@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Scripting
 	using System.Linq;
 	using Parsing;
 	using Platform;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Represents a configuration file that can be processed by the application, changed, and/or written to disk.

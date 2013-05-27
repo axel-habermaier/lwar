@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Memory
 {
 	using System.Diagnostics;
+	using Logging;
 
 	/// <summary>
 	///   An abstract base class for objects whose instances are pooled in order to reduce the pressure on the garbage

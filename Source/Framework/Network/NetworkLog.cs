@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Network
 {
+	using Platform.Logging;
+
 	/// <summary>
 	///   Provides logging helper functions for network-related information.
 	/// </summary>

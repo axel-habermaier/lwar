@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Memory
 {
 	using System.Diagnostics;
+	using Logging;
 
 	/// <summary>
 	///   Base implementation for the IDisposable interface. In debug builds, throws an exception if the finalizer runs

@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Platform
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Input;
+	using Logging;
 	using Math;
 	using Memory;
 

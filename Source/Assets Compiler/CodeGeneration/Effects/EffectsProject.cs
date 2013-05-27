@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using Framework;
 	using Framework.Platform;
+	using Framework.Platform.Logging;
 	using Framework.Platform.Memory;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;

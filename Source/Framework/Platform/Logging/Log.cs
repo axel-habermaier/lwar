@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.Framework
+namespace Pegasus.Framework.Platform.Logging
 {
 	using System.Diagnostics;
-	using Platform;
 
 	/// <summary>
 	///   Provides functions to log fatal errors, errors, warnings, informational messages, and debug-time only

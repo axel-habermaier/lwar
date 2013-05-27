@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using Logging;
 	using Math;
 	using Memory;
 

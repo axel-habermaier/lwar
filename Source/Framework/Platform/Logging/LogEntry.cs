@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Framework.Platform.Logging
 {
 	/// <summary>
 	///   Represents a log entry with a specific type and message.

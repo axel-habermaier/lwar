@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Input
 {
 	using System.Collections.Generic;
+	using Logging;
 	using Memory;
 
 	/// <summary>

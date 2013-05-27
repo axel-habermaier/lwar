@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 	using System.Linq;
 	using Framework;
 	using Framework.Platform;
+	using Framework.Platform.Logging;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;

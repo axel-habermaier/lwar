@@ -13,6 +13,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
+	using Framework.Platform.Logging;
 	using Framework.Platform.Memory;
 	using Effect = Effects.Effect;
 

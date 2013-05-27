@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Math;
 	using Platform.Graphics;
 	using Platform.Input;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;
 

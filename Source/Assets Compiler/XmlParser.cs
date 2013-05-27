@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler
 	using System.Linq;
 	using System.Xml.Linq;
 	using Framework;
+	using Framework.Platform.Logging;
 
 	/// <summary>
 	///   Helper methods for XML file parsing.

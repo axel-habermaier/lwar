@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
+	using Framework.Platform.Logging;
 
 	/// <summary>
 	///   Runs an external asset compilation tool.

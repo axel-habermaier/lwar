@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Scripting
 {
 	using Platform;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Represents a parameter of a command.

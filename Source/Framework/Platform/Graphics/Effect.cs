@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using Logging;
+
 	// ReSharper disable InconsistentNaming
 
 	/// <summary>

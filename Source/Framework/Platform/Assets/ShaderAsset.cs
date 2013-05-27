@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Assets
 {
 	using Graphics;
+	using Logging;
 	using Memory;
 
 	/// <summary>

@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Scripting
 {
 	using System.Linq;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Represents an interpreted instruction that invokes a command, sets a cvar, or displays the value of a cvar.

@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Scripting
 	using System.Collections.Generic;
 	using Parsing;
 	using Platform.Input;
+	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>

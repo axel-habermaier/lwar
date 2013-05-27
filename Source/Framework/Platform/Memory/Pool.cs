@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Memory
 {
 	using System.Collections.Generic;
+	using Logging;
 
 	/// <summary>
 	///   Base implementation of pooled allocators.

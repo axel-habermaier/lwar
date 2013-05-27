@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using Platform.Logging;
+
 	/// <summary>
 	///   Represents a configurable value.
 	/// </summary>

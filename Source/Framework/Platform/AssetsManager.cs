@@ -7,6 +7,7 @@ namespace Pegasus.Framework.Platform
 	using System.IO;
 	using Assets;
 	using Graphics;
+	using Logging;
 	using Memory;
 	using Rendering.UserInterface;
 
