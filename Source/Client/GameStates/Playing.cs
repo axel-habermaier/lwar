@@ -69,7 +69,7 @@ namespace Lwar.Client.GameStates
 			IsOpaque = true;
 			_timer.Timeout += SendInputTimeout;
 
-			Log.Info("Connecting to {0}...", serverEndPoint);
+			Log.Info(LogCategory.Client, "Connecting to {0}...", serverEndPoint);
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace Lwar.Client.GameStates
 			_gameSession.SafeDispose();
 			_renderContext.SafeDispose();
 
-			Log.Info("The game session has ended.");
+			Log.Info(LogCategory.Client, "The game session has ended.");
 		}
 
 		/// <summary>
