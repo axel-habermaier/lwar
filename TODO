@@ -1,7 +1,6 @@
 Client
 ========
 - Effects
-	- Sun effect
 	- Different types of planets
 	- Nebulae
 	- Shield effect
@@ -23,6 +22,7 @@ Client
 Pegasus
 ========
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
+- Fullscreen mode
 
 Network Specification
 ========
