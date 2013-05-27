@@ -3,6 +3,7 @@
 namespace Pegasus.Framework
 {
 	using System.Collections.Generic;
+	using Platform.Memory;
 	using Rendering;
 
 	/// <summary>

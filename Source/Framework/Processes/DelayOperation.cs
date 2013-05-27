@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Processes
 {
 	using Platform;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents an asynchronous operation that just waits for a given amount of time to elapse.

@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Platform
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using Memory;
 	using Rendering.UserInterface;
 
 	/// <summary>

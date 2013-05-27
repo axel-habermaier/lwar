@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Platform
 	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Threading.Tasks;
+	using Memory;
 
 	/// <summary>
 	///   Represents external process.

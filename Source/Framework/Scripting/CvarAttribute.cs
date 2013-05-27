@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using Platform;
+
 	/// <summary>
 	///   Must be applied to a property in a registry specification interface in order to indicate that the property
 	///   represents a cvar and to provide a default value.

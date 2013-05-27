@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Processes
 {
+	using Platform.Memory;
+
 	/// <summary>
 	///   Represents an asynchronous operation that waits for a delegate to return true.
 	/// </summary>

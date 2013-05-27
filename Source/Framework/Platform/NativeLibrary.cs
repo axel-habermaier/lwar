@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Platform
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Graphics;
+	using Memory;
 
 	/// <summary>
 	///   Manages the initialization and shutdown of the native platform library.

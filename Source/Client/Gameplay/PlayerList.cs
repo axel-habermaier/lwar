@@ -4,6 +4,7 @@ namespace Lwar.Client.Gameplay
 {
 	using System.Collections.Generic;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
 	///   Manages the active players that participate in a game session.

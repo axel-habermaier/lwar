@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Rendering
 	using System.Threading;
 	using Platform;
 	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Manages timestamp queries to profile the time the GPU spends on rendering each frame.

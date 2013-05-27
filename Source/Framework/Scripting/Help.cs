@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using Platform.Memory;
+
 	/// <summary>
 	///   Explains the usage of the cvar and command system.
 	/// </summary>

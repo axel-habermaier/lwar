@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Network
 {
+	using Platform.Memory;
+
 	/// <summary>
 	///   Provides methods to create instances of incoming and outgoing packets.
 	/// </summary>

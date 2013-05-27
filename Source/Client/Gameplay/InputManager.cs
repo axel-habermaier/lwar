@@ -6,6 +6,7 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
 	///   Manages the input state of the local player.

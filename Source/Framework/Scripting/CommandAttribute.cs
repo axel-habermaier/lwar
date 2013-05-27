@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using Platform;
+
 	/// <summary>
 	///   Must be applied to a method in a registry specification interface in order to indicate that the method represents
 	///   a command.

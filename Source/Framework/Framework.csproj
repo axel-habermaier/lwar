@@ -177,9 +177,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Annotations.cs" />
+    <Compile Include="Platform\ResharperAnnotations.cs" />
     <Compile Include="AppContext.cs" />
-    <Compile Include="ArrayPool.cs" />
+    <Compile Include="Platform\Memory\ArrayPool.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="AppState.cs" />
     <Compile Include="IAppContext.cs" />
@@ -187,9 +187,9 @@
     <Compile Include="Network\IPacketFactory.cs" />
     <Compile Include="Network\IPEndPointExtensions.cs" />
     <Compile Include="Network\ServicePacketFactory.cs" />
-    <Compile Include="ObjectPool.cs" />
+    <Compile Include="Platform\Memory\ObjectPool.cs" />
     <Compile Include="Platform\AppFile.cs" />
-    <Compile Include="Platform\ApplicationAbortedException.cs" />
+    <Compile Include="AppException.cs" />
     <Compile Include="Platform\Assets\Asset.cs" />
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
     <Compile Include="Platform\Assets\ShaderAsset.cs" />
@@ -288,8 +288,8 @@
     <Compile Include="Platform\Graphics\TimestampDisjointQuery.cs" />
     <Compile Include="Platform\Graphics\TimestampQuery.cs" />
     <Compile Include="Platform\NativeLibrary.cs" />
-    <Compile Include="Pool.cs" />
-    <Compile Include="PooledObject.cs" />
+    <Compile Include="Platform\Memory\Pool.cs" />
+    <Compile Include="Platform\Memory\PooledObject.cs" />
     <Compile Include="Processes\AsyncAction.cs" />
     <Compile Include="Processes\AsyncFunc.cs" />
     <Compile Include="Processes\Awaiter.cs" />
@@ -352,7 +352,7 @@
     <Compile Include="Scripting\Registry.cs" />
     <Compile Include="Scripting\ICommand.cs" />
     <Compile Include="Scripting\ICvar.cs" />
-    <Compile Include="DisposableExtensions.cs" />
+    <Compile Include="Platform\Memory\DisposableExtensions.cs" />
     <Compile Include="Platform\Input\BinaryInputTriggerType.cs" />
     <Compile Include="Platform\Input\BinaryInputTrigger.cs" />
     <Compile Include="Platform\Input\ConfigurableTrigger.cs" />
@@ -417,7 +417,7 @@
     <Compile Include="Platform\Input\LogicalInputDevice.cs" />
     <Compile Include="Platform\Input\Mouse.cs" />
     <Compile Include="Scripting\Interpreter.cs" />
-    <Compile Include="Platform\InteropExtensions.cs" />
+    <Compile Include="Platform\Memory\NativeMemoryExtensions.cs" />
     <Compile Include="Scripting\TypeDescription.cs" />
     <Compile Include="Rendering\UserInterface\ConsolePrompt.cs" />
     <Compile Include="Rendering\UserInterface\Glyph.cs" />
@@ -432,7 +432,7 @@
     <Compile Include="Platform\Input\KeyEventArgs.cs" />
     <Compile Include="Platform\Input\MouseEventArgs.cs" />
     <Compile Include="Platform\EndianConverter.cs" />
-    <Compile Include="Platform\Interop.cs" />
+    <Compile Include="Platform\Memory\Interop.cs" />
     <Compile Include="Platform\PlatformType.cs" />
     <Compile Include="Platform\PlatformInfo.cs" />
     <Compile Include="Rendering\Quad.cs" />
@@ -453,7 +453,7 @@
     <Compile Include="Platform\Window.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="App.cs" />
-    <Compile Include="DisposableObject.cs" />
+    <Compile Include="Platform\Memory\DisposableObject.cs" />
     <Compile Include="Platform\Graphics\BlendOption.cs" />
     <Compile Include="Platform\Graphics\BlendOperation.cs" />
     <Compile Include="Platform\Graphics\BlendState.cs" />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Framework.Platform.Memory
 {
 	using System.Runtime.InteropServices;
 	using System.Security;
@@ -25,17 +25,5 @@ namespace Pegasus.Framework.Platform
 		[DllImport("libc", EntryPoint = "memcpy")]
 #endif
 		public static extern IntPtr Copy(IntPtr dest, IntPtr src, int count);
-
-		/// <summary>
-		///   Converts the given function pointer into a delegate instance of the given type.
-		/// </summary>
-		/// <typeparam name="TDelegate">The type of the function.</typeparam>
-		/// <param name="function">The function pointer that should be converted to a delegate.</param>
-		/// <returns>Returns a delegate to the function.</returns>
-		public static TDelegate ConvertToDelegate<TDelegate>(IntPtr function)
-			where TDelegate : class
-		{
-			return Marshal.GetDelegateForFunctionPointer(function, typeof(TDelegate)) as TDelegate;
-		}
 	}
 }

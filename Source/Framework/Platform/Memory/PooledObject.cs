@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework
+namespace Pegasus.Framework.Platform.Memory
 {
 	using System.Diagnostics;
 
@@ -25,9 +25,9 @@ namespace Pegasus.Framework
 		private static readonly ObjectPool<TObject> Pool = new ObjectPool<TObject>();
 
 #if DEBUG
-	/// <summary>
-	///   A description for the instance in order to make debugging easier.
-	/// </summary>
+		/// <summary>
+		///   A description for the instance in order to make debugging easier.
+		/// </summary>
 		private string _description;
 
 		/// <summary>

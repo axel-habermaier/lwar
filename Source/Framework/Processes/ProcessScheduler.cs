@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Processes
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Runtime.CompilerServices;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a scheduler for asynchronous processes that always schedules the processes non-concurrently.

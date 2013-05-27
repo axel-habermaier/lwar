@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using Assets;
 	using Framework;
 	using Framework.Platform.Graphics;
+	using Framework.Platform.Memory;
 
 	/// <summary>
 	///   Generates a C# class for an effect.
@@ -47,6 +48,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			_writer.AppendLine("using Pegasus.Framework.Math;");
 			_writer.AppendLine("using Pegasus.Framework.Platform;");
 			_writer.AppendLine("using Pegasus.Framework.Platform.Graphics;");
+			_writer.AppendLine("using Pegasus.Framework.Platform.Memory;");
 			_writer.Newline();
 		}
 

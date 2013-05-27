@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Platform
 	using System.Security;
 	using Input;
 	using Math;
+	using Memory;
 
 	/// <summary>
 	///   The window of the application.

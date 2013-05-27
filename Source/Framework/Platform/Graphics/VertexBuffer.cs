@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Runtime.InteropServices;
+	using Memory;
 
 	/// <summary>
 	///   A vertex buffer holds vertex data such as position, texture coordinates, or color information for

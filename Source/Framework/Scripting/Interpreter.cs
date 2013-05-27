@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Scripting
 	using System.Collections.Generic;
 	using System.Linq;
 	using Parsing;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Interprets user-provided input to set and view cvars and invoke commands.

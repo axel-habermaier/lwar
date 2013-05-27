@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Math;
 	using Platform;
 	using Platform.Graphics;
+	using Platform.Memory;
 	using Math = System.Math;
 
 	/// <summary>

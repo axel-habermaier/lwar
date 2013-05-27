@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using Math;
+	using Memory;
 
 	/// <summary>
 	///   A 2D texture manages two-dimensional texel data.

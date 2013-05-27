@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Platform
 	using System.Text;
 	using Graphics;
 	using Math;
+	using Memory;
 	using Rendering;
 	using Rendering.UserInterface;
 

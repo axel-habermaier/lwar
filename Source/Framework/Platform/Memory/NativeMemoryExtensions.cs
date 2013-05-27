@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Framework.Platform.Memory
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
-	///   Provides helper extension methods for native interop.
+	///   Provides helper extension methods for native memory operations.
 	/// </summary>
-	internal static class InteropExtensions
+	internal static class NativeMemoryExtensions
 	{
 		/// <summary>
 		///   Pins the given object in memory, gets a pointer to it and passes the pointer to the given action.

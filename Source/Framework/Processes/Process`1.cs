@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Processes
 {
 	using System.Threading.Tasks;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a wrapper around an asynchronous process that in additional to the regular process behavior also returns a

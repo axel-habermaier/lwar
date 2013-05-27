@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
+	using Memory;
 
 	/// <summary>
 	///   Represents a pointer to a byte buffer.

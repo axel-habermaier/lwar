@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler.Assets
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
+	using Framework.Platform.Memory;
 
 	/// <summary>
 	///   Represents a cube map asset that requires compilation.

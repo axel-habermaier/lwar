@@ -4,6 +4,7 @@ namespace Lwar.Client
 {
 	using System.Collections.Generic;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
 	///   Represents a list where additions and removals are deferred until some later point in time.

@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Platform.Graphics
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using Memory;
 
 	/// <summary>
 	///   Describes a sampler state of a shader pipeline stage. Objects of this class are immutable once

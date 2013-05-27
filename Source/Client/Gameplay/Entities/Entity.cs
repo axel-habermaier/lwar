@@ -5,6 +5,7 @@ namespace Lwar.Client.Gameplay.Entities
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform.Memory;
 	using Rendering;
 
 	/// <summary>

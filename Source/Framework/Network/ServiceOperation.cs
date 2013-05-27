@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Network
 {
 	using Platform;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents an awaitable service operation that does not return a result.

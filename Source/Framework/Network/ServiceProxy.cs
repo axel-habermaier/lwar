@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Network
 	using System.Net;
 	using System.Threading.Tasks;
 	using Platform;
+	using Platform.Memory;
 	using Processes;
 
 	/// <summary>

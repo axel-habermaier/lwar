@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Runtime.InteropServices;
+	using Memory;
 
 	/// <summary>
 	///   An index buffer holds indices that are used to index into vertex buffers.

@@ -3,6 +3,7 @@
 namespace Lwar.Client.Gameplay
 {
 	using Pegasus.Framework;
+	using Pegasus.Framework.Platform.Memory;
 	using Rendering;
 
 	/// <summary>

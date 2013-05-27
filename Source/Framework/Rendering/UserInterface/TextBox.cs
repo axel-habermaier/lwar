@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Math;
 	using Platform.Graphics;
 	using Platform.Input;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Control for text input.

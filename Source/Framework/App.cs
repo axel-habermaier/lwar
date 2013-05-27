@@ -140,16 +140,17 @@ namespace Pegasus.Framework
 						// Check if any command bindings have been triggered
 						bindings.Update();
 
-						// Update the application logic 
+						// Update the application logic and the statistics
 						Update();
+						statistics.Update();
 
+						// React to window size changes
 						var viewport = new Rectangle(Vector2i.Zero, window.Size);
 						sceneOutput.Viewport = viewport;
 						uiOutput.Viewport = viewport;
 						camera2D.Viewport = viewport;
 
-						statistics.Update();
-
+						// Draw the current frame
 						using (new Measurement(statistics.GpuFrameTime))
 						using (new Measurement(statistics.CpuFrameTime))
 						{
@@ -167,6 +168,7 @@ namespace Pegasus.Framework
 						logFile.WriteToFile();
 					}
 
+					// The game loop has been exited; time to clean up
 					Dispose();
 				}
 			}

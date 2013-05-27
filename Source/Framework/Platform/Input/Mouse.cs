@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Input
 {
 	using Math;
+	using Memory;
 
 	/// <summary>
 	///   Represents the state of the mouse.

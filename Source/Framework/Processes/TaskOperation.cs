@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Processes
 {
 	using System.Threading.Tasks;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents an asynchronous operation that waits for the completion of a task.

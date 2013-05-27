@@ -55,7 +55,7 @@ namespace Pegasus.Framework
 			if (OnFatalError != null)
 				OnFatalError(formattedMessage);
 
-			throw new ApplicationAbortedException(formattedMessage);
+			throw new AppException(formattedMessage);
 		}
 
 		/// <summary>

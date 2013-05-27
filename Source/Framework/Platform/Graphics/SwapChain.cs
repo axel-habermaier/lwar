@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Platform.Graphics
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Math;
+	using Memory;
 
 	/// <summary>
 	///   A swap chain provides a front buffer and a back buffer for a window that can be used as the target of a

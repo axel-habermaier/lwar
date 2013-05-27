@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Rendering
 	using Math;
 	using Platform;
 	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a 3D model.

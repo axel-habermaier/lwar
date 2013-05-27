@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Network
 {
 	using Platform;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents an incoming packet.

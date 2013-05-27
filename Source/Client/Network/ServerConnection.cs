@@ -7,6 +7,7 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
 	///   Represents a proxy of an lwar server that a client can use to communicate with the server.

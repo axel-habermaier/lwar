@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Scripting
 	using System.Collections.Generic;
 	using Parsing;
 	using Platform.Input;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Manages all registered instruction bindings.

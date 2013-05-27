@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using Platform;
 	using Platform.Input;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Manages the input functions for the console.

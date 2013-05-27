@@ -7,6 +7,7 @@ namespace Lwar.Client.Rendering.Renderers
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
+	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 
 	/// <summary>

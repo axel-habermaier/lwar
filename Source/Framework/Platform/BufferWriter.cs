@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Platform
 	using System.Diagnostics;
 	using System.Text;
 	using Math;
+	using Memory;
 
 	/// <summary>
 	///   Wraps a byte buffer, providing methods for writing fundamental data types to the buffer.

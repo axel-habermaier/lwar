@@ -99,7 +99,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 				Compile(asset, buffer);
 				return true;
 			}
-			catch (ApplicationAbortedException)
+			catch (AppException)
 			{
 			}
 			catch (Exception e)

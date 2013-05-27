@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Rendering
 {
 	using Math;
 	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a rendering output configuration that can be used to draw geometry into the configured render target.

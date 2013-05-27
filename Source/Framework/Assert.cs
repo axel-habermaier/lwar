@@ -4,6 +4,7 @@ namespace Pegasus.Framework
 {
 	using System.Diagnostics;
 	using System.Linq.Expressions;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Defines assertion helpers that can be used to check for errors. The checks are only performed in debug builds.

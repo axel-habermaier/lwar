@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using Platform;
+
 	/// <summary>
 	///   Represents a parameter of a command.
 	/// </summary>

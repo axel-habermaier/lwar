@@ -5,6 +5,7 @@ namespace Lwar.Client.Network
 	using System.Collections.Generic;
 	using System.Net;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
 	///   Represents a network session that implements the lwar network protocol.

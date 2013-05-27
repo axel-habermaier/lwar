@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Assets
 {
 	using Math;
+	using Memory;
 	using Rendering.UserInterface;
 
 	/// <summary>

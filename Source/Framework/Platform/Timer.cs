@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform
 {
+	using Memory;
 	using Scripting;
 
 	/// <summary>

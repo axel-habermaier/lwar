@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Input
 {
 	using System.Collections.Generic;
+	using Memory;
 
 	/// <summary>
 	///   Manages logical inputs that are triggered by input triggers.

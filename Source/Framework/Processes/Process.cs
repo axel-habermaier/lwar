@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Processes
 {
 	using System.Runtime.ExceptionServices;
 	using System.Threading.Tasks;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents an asynchronous process.

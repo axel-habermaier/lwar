@@ -9,6 +9,7 @@ namespace Lwar.Client
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Scripting;
 

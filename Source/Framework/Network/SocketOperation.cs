@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Network
 {
 	using System.Net.Sockets;
+	using Platform.Memory;
 	using Processes;
 
 	/// <summary>

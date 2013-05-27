@@ -1,6 +1,7 @@
 *.sdf
 *.user
 /Binaries
+/Build
 /ipch
 /.svn
 *.suo

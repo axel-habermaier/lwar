@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler.Assets
 	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
+	using Framework.Platform.Memory;
 
 	/// <summary>
 	///   Represents a texture asset that requires compilation.

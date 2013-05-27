@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Diagnostics;
+	using Memory;
 
 	/// <summary>
 	///   Base class for all objects belong to a graphics device.
