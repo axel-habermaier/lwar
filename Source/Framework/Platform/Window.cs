@@ -173,28 +173,6 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Changes the window's icon
-		/// </summary>
-		/// <param name="width">The icon's width, in pixels.</param>
-		/// <param name="height">The icon's height, in pixels.</param>
-		/// <param name="pixels">An array of pixels of the appropriate size; format must be RGBA 32 bits.</param>
-		public void SetIcon(uint width, uint height, byte[] pixels)
-		{
-			Assert.NotDisposed(this);
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		///   Shows or hides the mouse cursor.
-		/// </summary>
-		/// <param name="show">True to show the cursor, false to hide it.</param>
-		public void ShowCursor(bool show)
-		{
-			Assert.NotDisposed(this);
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
 		///   Processes all pending window events.
 		/// </summary>
 		public void ProcessEvents()

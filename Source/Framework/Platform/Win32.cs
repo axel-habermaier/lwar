@@ -6,7 +6,7 @@ namespace Pegasus.Framework.Platform
 	using System.Runtime.InteropServices;
 
 	/// <summary>
-	///   Provides access to the native Win32 API functions.
+	///   Provides access to some native Win32 API functions.
 	/// </summary>
 	public static class Win32
 	{
