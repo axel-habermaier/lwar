@@ -23,7 +23,7 @@ namespace Pegasus.Framework.Math
 		public int Left;
 
 		/// <summary>
-		///   The X-coordinate of the top edge of the rectangle.
+		///   The Y-coordinate of the top edge of the rectangle.
 		/// </summary>
 		public int Top;
 
@@ -33,7 +33,7 @@ namespace Pegasus.Framework.Math
 		public int Width;
 
 		/// <summary>
-		///   The width of the rectangle.
+		///   The height of the rectangle.
 		/// </summary>
 		public int Height;
 
@@ -278,7 +278,7 @@ namespace Pegasus.Framework.Math
 		public float Left;
 
 		/// <summary>
-		///   The X-coordinate of the top edge of the rectangle.
+		///   The Y-coordinate of the top edge of the rectangle.
 		/// </summary>
 		public float Top;
 
@@ -288,7 +288,7 @@ namespace Pegasus.Framework.Math
 		public float Width;
 
 		/// <summary>
-		///   The width of the rectangle.
+		///   The height of the rectangle.
 		/// </summary>
 		public float Height;
 
@@ -533,7 +533,7 @@ namespace Pegasus.Framework.Math
 		public Fixed8 Left;
 
 		/// <summary>
-		///   The X-coordinate of the top edge of the rectangle.
+		///   The Y-coordinate of the top edge of the rectangle.
 		/// </summary>
 		public Fixed8 Top;
 
@@ -543,7 +543,7 @@ namespace Pegasus.Framework.Math
 		public Fixed8 Width;
 
 		/// <summary>
-		///   The width of the rectangle.
+		///   The height of the rectangle.
 		/// </summary>
 		public Fixed8 Height;
 
@@ -788,7 +788,7 @@ namespace Pegasus.Framework.Math
 		public Fixed16 Left;
 
 		/// <summary>
-		///   The X-coordinate of the top edge of the rectangle.
+		///   The Y-coordinate of the top edge of the rectangle.
 		/// </summary>
 		public Fixed16 Top;
 
@@ -798,7 +798,7 @@ namespace Pegasus.Framework.Math
 		public Fixed16 Width;
 
 		/// <summary>
-		///   The width of the rectangle.
+		///   The height of the rectangle.
 		/// </summary>
 		public Fixed16 Height;
 

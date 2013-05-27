@@ -38,7 +38,7 @@ namespace Pegasus.Framework.Platform.Assets
 				case GraphicsApi.Direct3D11:
 					buffer.Skip(buffer.ReadInt32());
 					if (buffer.EndOfBuffer)
-						Log.Die("The HLSL version of the shader cannot be loaded as it was not compiled into the shader asset file.");
+						Log.Die(LogCategory.Assets, "The HLSL version of the shader cannot be loaded as it was not compiled into the shader asset file.");
 
 					shaderCode = buffer.Pointer;
 					length = buffer.BufferSize - buffer.Count;

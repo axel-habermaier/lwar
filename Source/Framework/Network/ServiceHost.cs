@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Network
 	using System.Net;
 	using System.Threading.Tasks;
 	using Platform;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Processes;
 
@@ -71,7 +72,7 @@ namespace Pegasus.Framework.Network
 			Assert.ArgumentNotNull(endPoint);
 			Assert.That(!_isRunning, "Already running.");
 
-			NetworkLog.ServerInfo("Service host for service '{0}' is started.", typeof(TService).FullName);
+			Log.Info(LogCategory.Server, "Service host for service '{0}' is started.", typeof(TService).FullName);
 			_isRunning = true;
 
 			var listener = new TcpListener(PacketFactory, endPoint);
@@ -85,7 +86,7 @@ namespace Pegasus.Framework.Network
 					{
 						if (listener.IsFaulted)
 						{
-							NetworkLog.ServerError("The host is no longer able to respond to new client connections.");
+							Log.Error(LogCategory.Server, "The host is no longer able to respond to new client connections.");
 							break;
 						}
 
@@ -103,7 +104,7 @@ namespace Pegasus.Framework.Network
 
 				_scheduler.SafeDispose();
 
-				NetworkLog.ServerInfo("Service host for service '{0}' has shut down.", typeof(TService).FullName);
+				Log.Info(LogCategory.Server, "Service host for service '{0}' has shut down.", typeof(TService).FullName);
 			}
 		}
 
@@ -147,9 +148,9 @@ namespace Pegasus.Framework.Network
 			catch (SocketOperationException e)
 			{
 				if (connection.IsFaulted)
-					NetworkLog.ServerError(e.Message);
+					Log.Error(LogCategory.Server, e.Message);
 				else
-					NetworkLog.ServerInfo(e.Message);
+					Log.Info(LogCategory.Server, e.Message);
 			}
 			finally
 			{
@@ -182,13 +183,13 @@ namespace Pegasus.Framework.Network
 			var header = new MessageHeader(_serviceIdentifier, MessageType.ServiceIdentifierMismatch);
 			header.Write(packet);
 
-			NetworkLog.ServerWarn("Rejected request from {0} because of a service identifier mismatch.", connection.RemoteEndPoint);
+			Log.Warn(LogCategory.Server, "Rejected request from {0} because of a service identifier mismatch.", connection.RemoteEndPoint);
 			await connection.SendAsync(context, packet);
 			return false;
 		}
 
 		/// <summary>
-		///   Checks whether the client requested an operation invication. If not, informs the client about the invalid message
+		///   Checks whether the client requested an operation invocation. If not, informs the client about the invalid message
 		///   type and returns false.
 		/// </summary>
 		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
@@ -203,7 +204,7 @@ namespace Pegasus.Framework.Network
 			var header = new MessageHeader(_serviceIdentifier, MessageType.InvalidMessageType);
 			header.Write(packet);
 
-			NetworkLog.ServerWarn("Rejected request from {0} because of the message type was invalid.", connection.RemoteEndPoint);
+			Log.Warn(LogCategory.Server, "Rejected request from {0} because of the message type was invalid.", connection.RemoteEndPoint);
 			await connection.SendAsync(context, packet);
 			return true;
 		}

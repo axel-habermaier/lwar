@@ -177,6 +177,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Platform\Logging\LogCategory.cs" />
+    <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\ResharperAnnotations.cs" />
     <Compile Include="AppContext.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />
@@ -273,7 +275,6 @@
     <Compile Include="Network\ServiceProxy.cs" />
     <Compile Include="Network\TcpListener.cs" />
     <Compile Include="Network\IncomingPacket.cs" />
-    <Compile Include="Network\NetworkLog.cs" />
     <Compile Include="Network\OutgoingPacket.cs" />
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Network\SocketExtensions.cs" />

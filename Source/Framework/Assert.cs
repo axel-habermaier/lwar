@@ -103,7 +103,6 @@ namespace Pegasus.Framework
 		/// <param name="parameters">The parameters for the error message.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
 		public static void ArgumentSatisfies(bool condition, string formatMessage, params object[] parameters)
-
 		{
 			ArgumentNotNull(formatMessage);
 

@@ -34,7 +34,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			file = file.Replace("/", "\\");
 
 			var logMessage = String.Format("{0}: {1}: {2}", file, type, message);
-			new LogEntry(type, logMessage).RaiseLogEvent();
+			new LogEntry(LogCategory.Assets, type, logMessage).RaiseLogEvent();
 		}
 
 		/// <summary>

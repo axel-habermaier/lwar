@@ -40,7 +40,7 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		internal Window()
 		{
-			Log.Info("Initializing window...");
+			Log.Info(LogCategory.Platform, "Initializing window...");
 
 			_params = new NativeMethods.WindowParams
 			{

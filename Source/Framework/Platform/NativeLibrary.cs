@@ -14,9 +14,9 @@ namespace Pegasus.Framework.Platform
 	internal class NativeLibrary : DisposableObject
 	{
 #if Linux
-	/// <summary>
-	///   The name of the native Pegasus.Platform library.
-	/// </summary>
+		/// <summary>
+		///   The name of the native Pegasus.Platform library.
+		/// </summary>
 		internal const string LibraryName = "libPlatform.so";
 #else
 		/// <summary>
@@ -44,11 +44,11 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		private readonly NativeMethods.LogCallbacks _logCallbacks = new NativeMethods.LogCallbacks
 		{
-			Die = s => Log.Die("{0}", s),
-			Error = s => Log.Error("{0}", s),
-			Warning = s => Log.Warn("{0}", s),
-			Info = s => Log.Info("{0}", s),
-			Debug = s => Log.DebugInfo("{0}", s)
+			Die = s => Log.Die(LogCategory.Graphics, "{0}", s),
+			Error = s => Log.Error(LogCategory.Graphics, "{0}", s),
+			Warning = s => Log.Warn(LogCategory.Graphics, "{0}", s),
+			Info = s => Log.Info(LogCategory.Graphics, "{0}", s),
+			Debug = s => Log.DebugInfo(LogCategory.Graphics, "{0}", s)
 		};
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace Pegasus.Framework.Platform
 		{
 			Assert.That(!_isInitialized, "The library has already been initialized.");
 
-			Log.Info("Initializing native platform library...");
+			Log.Info(LogCategory.Platform, "Initializing native platform library...");
 			NativeMethods.Initialize(ref _logCallbacks);
 			_isInitialized = true;
 		}
@@ -68,7 +68,7 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Log.Info("Shutting down native platform library...");
+			Log.Info(LogCategory.Platform, "Shutting down native platform library...");
 			NativeMethods.Shutdown();
 			_isInitialized = false;
 		}

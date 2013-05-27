@@ -58,11 +58,11 @@ namespace Lwar.Client.Network
 
 			_logCallbacks = new NativeMethods.LogCallbacks
 			{
-				Die = s => _logs.Enqueue(() => Log.Die("(Server) {0}", RemoveTrailingNewlines(s))),
-				Error = s => _logs.Enqueue(() => Log.Error("(Server) {0}", RemoveTrailingNewlines(s))),
-				Warning = s => _logs.Enqueue(() => Log.Warn("(Server) {0}", RemoveTrailingNewlines(s))),
-				Info = s => _logs.Enqueue(() => Log.Info("(Server) {0}", RemoveTrailingNewlines(s))),
-				Debug = s => _logs.Enqueue(() => Log.DebugInfo("(Server) {0}", RemoveTrailingNewlines(s)))
+				Die = s => _logs.Enqueue(() => Log.Die(LogCategory.Server, "{0}", RemoveTrailingNewlines(s))),
+				Error = s => _logs.Enqueue(() => Log.Error(LogCategory.Server, "{0}", RemoveTrailingNewlines(s))),
+				Warning = s => _logs.Enqueue(() => Log.Warn(LogCategory.Server, "{0}", RemoveTrailingNewlines(s))),
+				Info = s => _logs.Enqueue(() => Log.Info(LogCategory.Server, "{0}", RemoveTrailingNewlines(s))),
+				Debug = s => _logs.Enqueue(() => Log.DebugInfo(LogCategory.Server, "{0}", RemoveTrailingNewlines(s)))
 			};
 
 			_commands = commands;

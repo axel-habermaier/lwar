@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Network
 	using System.Net;
 	using System.Threading.Tasks;
 	using Platform;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Processes;
 
@@ -71,7 +72,7 @@ namespace Pegasus.Framework.Network
 		{
 			Assert.That(!_isRunning, "Already running.");
 
-			NetworkLog.ClientInfo("Service proxy is started.");
+			Log.Info(LogCategory.Client, "Service proxy is started.");
 			_isRunning = true;
 
 			try
@@ -91,11 +92,11 @@ namespace Pegasus.Framework.Network
 			{
 				if (_connection.IsFaulted)
 				{
-					NetworkLog.ClientError(e.Message);
+					Log.Error(LogCategory.Client, e.Message);
 					IsFaulted = true;
 				}
 				else
-					NetworkLog.ClientInfo(e.Message);
+					Log.Info(LogCategory.Client, e.Message);
 
 				IsConnected = false;
 			}
@@ -103,7 +104,7 @@ namespace Pegasus.Framework.Network
 			{
 				_connection.SafeDispose();
 				_isRunning = false;
-				NetworkLog.ClientInfo("Service proxy has shut down.");
+				Log.Info(LogCategory.Client, "Service proxy has shut down.");
 			}
 		}
 
@@ -115,16 +116,16 @@ namespace Pegasus.Framework.Network
 			var header = MessageHeader.Read(packet);
 
 			if (header.MessageType == MessageType.ServiceIdentifierMismatch)
-				NetworkLog.ClientError("The host is incompatible: It probably uses a newer or older version of the software.");
+				Log.Error(LogCategory.Client, "The host is incompatible: It probably uses a newer or older version of the software.");
 			else if (header.MessageType != MessageType.OperationException && header.MessageType != MessageType.OperationResult)
-				NetworkLog.ClientDebug("The server sent an unexpected message type: {0}.", header.MessageType);
+				Log.DebugInfo(LogCategory.Client, "The server sent an unexpected message type: {0}.", header.MessageType);
 			else
 			{
 				var requestIdentifier = packet.Reader.ReadUInt32();
 				IServiceOperation operation;
 
 				if (!_invocations.TryGetValue(requestIdentifier, out operation))
-					NetworkLog.ClientInfo("Received a response for a service operation after the operation has timed out.");
+					Log.Info(LogCategory.Client, "Received a response for a service operation after the operation has timed out.");
 				else
 				{
 					switch (header.MessageType)
@@ -159,7 +160,7 @@ namespace Pegasus.Framework.Network
 			}
 			catch (Exception e)
 			{
-				NetworkLog.ClientDebug("An exception occurred while trying to deserialize an exception of type '{0}': {1}",
+				Log.DebugInfo(LogCategory.Client, "An exception occurred while trying to deserialize an exception of type '{0}': {1}",
 									   exceptionType, e.Message);
 				operation.SetException(new Exception(exceptionMessage));
 			}
@@ -175,14 +176,14 @@ namespace Pegasus.Framework.Network
 			Assert.ArgumentNotNull(hostEndPoint);
 			Assert.That(!IsConnected, "Service proxy is already connected.");
 
-			NetworkLog.ClientInfo("Connecting to service host at {0}.", hostEndPoint);
+			Log.Info(LogCategory.Client, "Connecting to service host at {0}.", hostEndPoint);
 
 			_connection.SafeDispose();
 			_connection = new TcpSocket(PacketFactory);
 			await _connection.ConnectAsync(context, hostEndPoint);
 
 			IsConnected = true;
-			NetworkLog.ClientInfo("Established connection to service host at {0}.", hostEndPoint);
+			Log.Info(LogCategory.Client, "Established connection to service host at {0}.", hostEndPoint);
 		}
 
 		/// <summary>

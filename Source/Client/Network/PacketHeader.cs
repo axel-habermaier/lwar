@@ -5,6 +5,7 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
@@ -49,13 +50,13 @@ namespace Lwar.Client.Network
 
 			if (!buffer.CanRead(Specification.HeaderSize))
 			{
-				NetworkLog.ClientWarn("Received a packet with an incomplete header.");
+				Log.Warn(LogCategory.Client, "Received a packet with an incomplete header.");
 				return null;
 			}
 
 			if (buffer.ReadUInt32() != AppIdentifier)
 			{
-				NetworkLog.ClientWarn("Received a packet with an invalid application identifier from the server.");
+				Log.Warn(LogCategory.Client, "Received a packet with an invalid application identifier from the server.");
 				return null;
 			}
 

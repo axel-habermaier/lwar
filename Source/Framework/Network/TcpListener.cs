@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Network
 	using System.Net;
 	using System.Net.Sockets;
 	using System.Threading.Tasks;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Processes;
 
@@ -73,12 +74,12 @@ namespace Pegasus.Framework.Network
 						{
 							socket.Bind(_localEndPoint);
 							socket.Listen(Int32.MaxValue);
-							NetworkLog.ServerDebug("Ready to accept client connections on {0}.", _localEndPoint);
+							Log.DebugInfo(LogCategory.Server, "Ready to accept client connections on {0}.", _localEndPoint);
 
 							while (!context.IsCanceled)
 							{
 								var acceptedSocket = await socket.AcceptAsync(context);
-								NetworkLog.ServerDebug("Accepted connection from {0}.", acceptedSocket.RemoteEndPoint);
+								Log.DebugInfo(LogCategory.Server, "Accepted connection from {0}.", acceptedSocket.RemoteEndPoint);
 
 								retryCount = RetryCount;
 								if (Connected != null)
@@ -90,7 +91,7 @@ namespace Pegasus.Framework.Network
 					}
 					catch (SocketException e)
 					{
-						NetworkLog.ServerError("Failed to listen on {0}: {1}.", _localEndPoint, e.Message);
+						Log.Error(LogCategory.Server, "Failed to listen on {0}: {1}.", _localEndPoint, e.Message);
 						--retryCount;
 					}
 				} while (retryCount > 0 && !context.IsCanceled);

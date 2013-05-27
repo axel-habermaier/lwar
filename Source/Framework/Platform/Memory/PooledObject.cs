@@ -8,7 +8,7 @@ namespace Pegasus.Framework.Platform.Memory
 	/// <summary>
 	///   An abstract base class for objects whose instances are pooled in order to reduce the pressure on the garbage
 	///   collector. Pooled types should perform all their initialization in the OnReusing() method, which is called whenever
-	///   the instance is reused. Similarily, all cleanup logic that must be run when an instance is returned to the pool
+	///   the instance is reused. Similarly, all cleanup logic that must be run when an instance is returned to the pool
 	///   should be done in the OnReturning method.
 	/// </summary>
 	/// <typeparam name="TObject">The concrete type of the pooled object.</typeparam>
@@ -21,7 +21,7 @@ namespace Pegasus.Framework.Platform.Memory
 		public bool IsAvailable { get; private set; }
 
 		/// <summary>
-		///   The pool that manages the instaces of type TObject.
+		///   The pool that manages the instances of type TObject.
 		/// </summary>
 		private static readonly ObjectPool<TObject> Pool = new ObjectPool<TObject>();
 
@@ -37,7 +37,7 @@ namespace Pegasus.Framework.Platform.Memory
 		~PooledObject()
 		{
 			if (!IsAvailable)
-				Log.Die("A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
+				Log.Die(LogCategory.Memory, "A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
 						GetType().Name, _description ?? "None");
 		}
 #endif

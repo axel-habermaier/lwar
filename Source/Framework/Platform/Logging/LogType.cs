@@ -10,7 +10,7 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <summary>
 		///   Indicates that the log entry represents a fatal error.
 		/// </summary>
-		FatalError,
+		Fatal,
 
 		/// <summary>
 		///   Indicates that the log entry represents an error.
@@ -30,6 +30,6 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <summary>
 		///   Indicates that the log entry represents debugging information.
 		/// </summary>
-		DebugInfo
+		Debug
 	}
 }

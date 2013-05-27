@@ -33,14 +33,14 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <param name="appName">The name of the application.</param>
 		public LogFile(string appName)
 		{
-			Log.OnFatalError += OnFatalError;
-			Log.OnError += OnError;
-			Log.OnWarning += OnWarning;
-			Log.OnInfo += OnInfo;
-			Log.OnDebugInfo += OnDebugInfo;
+			Log.OnFatalError += _logEntries.Enqueue;
+			Log.OnError += _logEntries.Enqueue;
+			Log.OnWarning += _logEntries.Enqueue;
+			Log.OnInfo += _logEntries.Enqueue;
+			Log.OnDebugInfo += _logEntries.Enqueue;
 
 			_file = new AppFile(appName, String.Format("{0}.log", appName));
-			_file.Delete(e => Log.Warn("Failed to delete the current contents of the log file: {0}", e.Message));
+			_file.Delete(e => Log.Warn(LogCategory.FileSystem, "Failed to delete the current contents of the log file: {0}", e.Message));
 		}
 
 		/// <summary>
@@ -52,51 +52,6 @@ namespace Pegasus.Framework.Platform.Logging
 		}
 
 		/// <summary>
-		///   Invoked when a debug information message has been generated.
-		/// </summary>
-		/// <param name="s">The message that has been logged.</param>
-		private void OnDebugInfo(string s)
-		{
-			_logEntries.Enqueue(new LogEntry(LogType.DebugInfo, s));
-		}
-
-		/// <summary>
-		///   Invoked when a information message has been generated.
-		/// </summary>
-		/// <param name="s">The message that has been logged.</param>
-		private void OnInfo(string s)
-		{
-			_logEntries.Enqueue(new LogEntry(LogType.Info, s));
-		}
-
-		/// <summary>
-		///   Invoked when a warning has been generated.
-		/// </summary>
-		/// <param name="s">The message that has been logged.</param>
-		private void OnWarning(string s)
-		{
-			_logEntries.Enqueue(new LogEntry(LogType.Warning, s));
-		}
-
-		/// <summary>
-		///   Invoked when an error has been generated.
-		/// </summary>
-		/// <param name="s">The message that has been logged.</param>
-		private void OnError(string s)
-		{
-			_logEntries.Enqueue(new LogEntry(LogType.Error, s));
-		}
-
-		/// <summary>
-		///   Invoked when a fatal error has been generated.
-		/// </summary>
-		/// <param name="s">The message that has been logged.</param>
-		private void OnFatalError(string s)
-		{
-			_logEntries.Enqueue(new LogEntry(LogType.FatalError, s));
-		}
-
-		/// <summary>
 		///   Writes the generated log messages into the log file.
 		/// </summary>
 		/// <param name="force">If true, all unwritten messages are written; otherwise, writes are batched to improve performance.</param>
@@ -105,9 +60,10 @@ namespace Pegasus.Framework.Platform.Logging
 			if (!force && _logEntries.Count < BatchSize)
 				return;
 
-			var logs = _logEntries.Select(l => String.Format("[{0}] ({1}): {2}", l.Time.ToString("HH:mm:ss.ffff"), l.LogType, l.Message));
+			var logs = _logEntries.Select(l => String.Format("{0} [{3}] [{1}] {2}",
+				l.Time.ToString("HH:mm:ss.ffff"), l.LogType.ToDisplayString(), l.Message, l.Category.ToDisplayString()));
 
-			if (_file.Append(logs, e => Log.Warn("Failed to append to log file: {0}", e.Message)))
+			if (_file.Append(logs, e => Log.Warn(LogCategory.FileSystem, "Failed to append to log file: {0}", e.Message)))
 				_logEntries.Clear();
 		}
 
@@ -123,20 +79,20 @@ namespace Pegasus.Framework.Platform.Logging
 			{
 				switch (logEntry.LogType)
 				{
-					case LogType.FatalError:
-						console.ShowError(logEntry.Message);
+					case LogType.Fatal:
+						console.ShowError(logEntry);
 						break;
 					case LogType.Error:
-						console.ShowError(logEntry.Message);
+						console.ShowError(logEntry);
 						break;
 					case LogType.Warning:
-						console.ShowWarning(logEntry.Message);
+						console.ShowWarning(logEntry);
 						break;
 					case LogType.Info:
-						console.ShowInfo(logEntry.Message);
+						console.ShowInfo(logEntry);
 						break;
-					case LogType.DebugInfo:
-						console.ShowDebugInfo(logEntry.Message);
+					case LogType.Debug:
+						console.ShowDebugInfo(logEntry);
 						break;
 					default:
 						throw new InvalidOperationException("Unknown log entry type.");
@@ -149,11 +105,11 @@ namespace Pegasus.Framework.Platform.Logging
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Log.OnFatalError -= OnFatalError;
-			Log.OnError -= OnError;
-			Log.OnWarning -= OnWarning;
-			Log.OnInfo -= OnInfo;
-			Log.OnDebugInfo -= OnDebugInfo;
+			Log.OnFatalError -= _logEntries.Enqueue;
+			Log.OnError -= _logEntries.Enqueue;
+			Log.OnWarning -= _logEntries.Enqueue;
+			Log.OnInfo -= _logEntries.Enqueue;
+			Log.OnDebugInfo -= _logEntries.Enqueue;
 
 			WriteToFile(true);
 		}

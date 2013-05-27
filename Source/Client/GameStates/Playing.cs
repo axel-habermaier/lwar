@@ -124,10 +124,10 @@ namespace Lwar.Client.GameStates
 			}
 
 			if (_networkSession.IsDropped)
-				ShowMessageBox("The connection to the server has been lost.", LogType.Error, true);
+				ShowMessageBox(new LogEntry(LogCategory.Network, LogType.Error, "The connection to the server has been lost."), true);
 
 			if (_networkSession.IsFaulted)
-				ShowMessageBox("The game session has been aborted due to a network error.", LogType.Error, true);
+				ShowMessageBox(new LogEntry(LogCategory.Network, LogType.Error, "The game session has been aborted due to a network error."), true);
 
 			if (_networkSession.IsLagging && topmost)
 				StateManager.Add(new WaitingForServer(_networkSession));

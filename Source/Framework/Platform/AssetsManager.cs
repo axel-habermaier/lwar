@@ -74,7 +74,7 @@ namespace Pegasus.Framework.Platform
 
 				if (exitCode != 0)
 				{
-					Log.Error("Errors occurred during asset compilation. Asset reloading aborted.");
+					Log.Error(LogCategory.Assets, "Errors occurred during asset compilation. Asset reloading aborted.");
 					return;
 				}
 
@@ -82,21 +82,21 @@ namespace Pegasus.Framework.Platform
 				{
 					try
 					{
-						Log.Info("Reloading {1} '{0}'...", pair.Key, pair.Value.FriendlyName);
+						Log.Info(LogCategory.Assets, "Reloading {1} '{0}'...", pair.Key, pair.Value.FriendlyName);
 						Load(pair.Value, pair.Key);
 					}
 					catch (IOException e)
 					{
-						Log.Die("Failed to reload asset '{0}': {1}", pair.Key, e.Message);
+						Log.Die(LogCategory.Assets, "Failed to reload asset '{0}': {1}", pair.Key, e.Message);
 					}
 				}
 			}
 			catch (Win32Exception e)
 			{
 				if (e.NativeErrorCode == 2)
-					Log.Warn("{0} not found.", AssetCompiler);
+					Log.Warn(LogCategory.Assets, "{0} not found.", AssetCompiler);
 				else
-					Log.Error("{0} failed: {1}", AssetCompiler, e.Message);
+					Log.Error(LogCategory.Assets, "{0} failed: {1}", AssetCompiler, e.Message);
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace Pegasus.Framework.Platform
 				if (typedAsset == null)
 				{
 					const string message = "Asset '{0}' is already loaded and has type '{1}'.";
-					Log.Die(message, assetName, asset.FriendlyName);
+					Log.Die(LogCategory.Assets, message, assetName, asset.FriendlyName);
 				}
 				return typedAsset;
 			}
@@ -156,7 +156,7 @@ namespace Pegasus.Framework.Platform
 			asset = new TAsset { GraphicsDevice = _device, Assets = this };
 			try
 			{
-				Log.Info("Loading {0} '{1}'...", asset.FriendlyName, assetName);
+				Log.Info(LogCategory.Assets, "Loading {0} '{1}'...", asset.FriendlyName, assetName);
 				Load(asset, assetName);
 
 				_assets.Add(assetName, asset);
@@ -165,7 +165,7 @@ namespace Pegasus.Framework.Platform
 			catch (Exception e)
 			{
 				asset.SafeDispose();
-				Log.Die("Failed to load asset '{0}': {1}", assetName, e.Message);
+				Log.Die(LogCategory.Assets, "Failed to load asset '{0}': {1}", assetName, e.Message);
 			}
 
 			return null;

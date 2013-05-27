@@ -114,11 +114,11 @@ namespace Pegasus.Framework
 		/// </summary>
 		private static void PrintToConsole()
 		{
-			Log.OnFatalError += message => Console.WriteLine("FATAL ERROR: {0}", message);
-			Log.OnError += message => Console.WriteLine("ERROR: {0}", message);
-			Log.OnWarning += message => Console.WriteLine("WARNING: {0}", message);
-			Log.OnInfo += message => Console.WriteLine("INFO: {0}", message);
-			Log.OnDebugInfo += message => Console.WriteLine("DEBUG: {0}", message);
+			Log.OnFatalError += entry => Console.WriteLine("[{1}] FATAL:   {0}", entry.Message, entry.Category.ToDisplayString());
+			Log.OnError += entry => Console.WriteLine("[{1}] ERROR:   {0}", entry.Message, entry.Category.ToDisplayString());
+			Log.OnWarning += entry => Console.WriteLine("[{1}] WARNING: {0}", entry.Message, entry.Category.ToDisplayString());
+			Log.OnInfo += entry => Console.WriteLine("[{1}] INFO:    {0}", entry.Message, entry.Category.ToDisplayString());
+			Log.OnDebugInfo += entry => Console.WriteLine("[{1}] DEBUG:   {0}", entry.Message, entry.Category.ToDisplayString());
 		}
 	}
 }

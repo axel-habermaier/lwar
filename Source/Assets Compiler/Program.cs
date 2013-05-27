@@ -20,10 +20,10 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		private static void PrintToConsole()
 		{
-			Log.OnFatalError += message => WriteToError(ConsoleColor.Red, message);
-			Log.OnError += message => WriteToError(ConsoleColor.Red, message);
-			Log.OnWarning += message => WriteToConsole(ConsoleColor.Yellow, message);
-			Log.OnInfo += message => WriteToConsole(ConsoleColor.White, message);
+			Log.OnFatalError += entry => WriteToError(ConsoleColor.Red, entry.Message);
+			Log.OnError += entry => WriteToError(ConsoleColor.Red, entry.Message);
+			Log.OnWarning += entry => WriteToConsole(ConsoleColor.Yellow, entry.Message);
+			Log.OnInfo += entry => WriteToConsole(ConsoleColor.White, entry.Message);
 		}
 
 		/// <summary>

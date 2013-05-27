@@ -7,6 +7,7 @@ namespace Lwar.Client.Network
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
@@ -74,7 +75,7 @@ namespace Lwar.Client.Network
 
 			if (size > length)
 			{
-				NetworkLog.ClientWarn("Received a string that exceeds the maximum allowed length. String truncated.");
+				Log.Warn(LogCategory.Client, "Received a string that exceeds the maximum allowed length. String truncated.");
 				skipBytes = size - length;
 				size = length;
 			}

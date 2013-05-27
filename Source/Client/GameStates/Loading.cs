@@ -83,7 +83,7 @@ namespace Lwar.Client.GameStates
 				StateManager.Remove(this);
 
 			if (_networkSession.ServerIsFull)
-				ShowMessageBox("The server is full.", LogType.Error, true);
+				ShowMessageBox(new LogEntry(LogCategory.Server, LogType.Error, "The server is full."), true);
 
 			_statusMessage.Area = new Rectangle(0, 0, Window.Width, Window.Height);
 		}

@@ -485,7 +485,7 @@ namespace Pegasus.Framework.Rendering
 
 			if (tooManyQuads || tooManySections || tooManySectionLists)
 			{
-				Log.DebugInfo(
+				Log.DebugInfo(LogCategory.Graphics, 
 					"Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
 					_numQuads, MaxQuads, quadCount);
 

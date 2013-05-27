@@ -38,7 +38,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		internal GraphicsDevice()
 		{
-			Log.Info("Initializing graphics device...");
+			Log.Info(LogCategory.Graphics, "Initializing graphics device...");
 			_device = NativeMethods.CreateGraphicsDevice();
 
 			RasterizerState.InitializeDefaultInstances(this);

@@ -288,37 +288,50 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Outputs an error on the console.
 		/// </summary>
-		/// <param name="message">The error message that should be displayed.</param>
-		public void ShowError(string message)
+		/// <param name="entry">The log entry that should be displayed.</param>
+		public void ShowError(LogEntry entry)
 		{
-			_content.Add(message, ErrorColor);
+			ShowLogEntry(entry, ErrorColor);
 		}
 
 		/// <summary>
 		///   Outputs a warning on the console.
 		/// </summary>
-		/// <param name="message">The warning that should be displayed.</param>
-		public void ShowWarning(string message)
+		/// <param name="entry">The warning that should be displayed.</param>
+		public void ShowWarning(LogEntry entry)
 		{
-			_content.Add(message, WarningColor);
+			ShowLogEntry(entry, WarningColor);
 		}
 
 		/// <summary>
 		///   Outputs an informational message on the console.
 		/// </summary>
-		/// <param name="message">The message that should be displayed.</param>
-		public void ShowInfo(string message)
+		/// <param name="entry">The message that should be displayed.</param>
+		public void ShowInfo(LogEntry entry)
 		{
-			_content.Add(message, InfoColor);
+			ShowLogEntry(entry, InfoColor);
 		}
 
 		/// <summary>
 		///   Outputs a debug message on the console.
 		/// </summary>
-		/// <param name="message">The warning that should be displayed.</param>
-		public void ShowDebugInfo(string message)
+		/// <param name="entry">The warning that should be displayed.</param>
+		public void ShowDebugInfo(LogEntry entry)
 		{
-			_content.Add(message, DebugInfoColor);
+			ShowLogEntry(entry, DebugInfoColor);
+		}
+
+		/// <summary>
+		/// Shows the given entry on the console.
+		/// </summary>
+		/// <param name="entry">The entry that should be shown.</param>
+		/// <param name="color">The color that should be used to colorize the message.</param>
+		private void ShowLogEntry(LogEntry entry, Color color)
+		{
+			if (entry.Category == LogCategory.Unclassified)
+				_content.Add(entry.Message, color);
+			else
+				_content.Add(String.Format("[{0}] {1}", entry.Category.ToDisplayString(), entry.Message), color);
 		}
 	}
 }
