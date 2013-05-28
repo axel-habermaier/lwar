@@ -189,7 +189,8 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 		if (modes)
 		{
 			// Check all modes until a matching one is found
-			for (int i = 0; i < numModes; ++i)
+			int i;
+			for (i = 0; i < numModes; ++i)
 			{
 				if (modes[i].width == width && modes[i].height == height)
 				{

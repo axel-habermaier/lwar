@@ -1,9 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release Linux|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Source/Framework/Platform/Graphics/RasterizerState.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug Linux|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Source/Assets Compiler/Configuration.cs">
     <Files>
-      <File FileName="Source/Platform/gl3.c" Line="74" Column="1" />
-      <File FileName="Source/Framework/Platform/Graphics/RasterizerState.cs" Line="279" Column="3" />
+      <File FileName="Source/Server/templates.c" Line="12" Column="1" />
+      <File FileName="Source/Platform/context.glx.c" Line="193" Column="9" />
+      <File FileName="Source/Platform/glExt.c" Line="1483" Column="22" />
+      <File FileName="Source/Assets Compiler/Configuration.cs" Line="102" Column="7" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

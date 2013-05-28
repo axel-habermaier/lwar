@@ -24,6 +24,7 @@
       <Libs>
         <Lib>X11</Lib>
         <Lib>GL</Lib>
+        <Lib>Xrandr</Lib>
       </Libs>
     </Libs>
   </PropertyGroup>
@@ -39,6 +40,7 @@
       <Libs>
         <Lib>X11</Lib>
         <Lib>GL</Lib>
+        <Lib>Xrandr</Lib>
       </Libs>
     </Libs>
   </PropertyGroup>
