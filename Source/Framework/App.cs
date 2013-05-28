@@ -88,7 +88,7 @@ namespace Pegasus.Framework
 			using (var statistics = context.Statistics)
 			using (var spriteEffect = context.SpriteEffect)
 			using (var swapChain = new SwapChain(graphicsDevice, window))
-			using (var resolutionManager = new ResolutionManager(window, swapChain, cvars, commands))
+			using (var resolutionManager = new ResolutionManager(window, swapChain, cvars))
 			using (var assets = context.Assets = new AssetsManager(graphicsDevice))
 			using (var keyboard = new Keyboard(window))
 			using (var mouse = new Mouse(window))
@@ -115,9 +115,11 @@ namespace Pegasus.Framework
 					statistics.Resize(window.Size);
 
 					window.Resized += console.Resize;
-					window.Resized += size => Log.Warn("NEW SIZE ---->>>> {0}", size);
 					window.Resized += statistics.Resize;
+
+					// Setup some command handlers
 					commands.OnReloadAssets += assets.ReloadAssets;
+					commands.OnRestartGraphics += resolutionManager.UpdateGraphicsState;
 					commands.OnExit += Exit;
 
 					// Copy the recorded log history to the console and explain the usage of the console

@@ -14,11 +14,6 @@ namespace Pegasus.Framework.Platform
 	internal class ResolutionManager : DisposableObject
 	{
 		/// <summary>
-		///   The command registry that is used.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
 		///   The cvar registry that is used to persist resolution and window size changes.
 		/// </summary>
 		private readonly CvarRegistry _cvars;
@@ -39,20 +34,16 @@ namespace Pegasus.Framework.Platform
 		/// <param name="window">The window that is affected by resolution changes.</param>
 		/// <param name="swapChain">The swap chain that should be affected by resolution changes.</param>
 		/// <param name="cvars">The cvar registry that should be used to persist resolution and window size changes.</param>
-		/// <param name="commands">The command registry that should be used.</param>
-		public ResolutionManager(Window window, SwapChain swapChain, CvarRegistry cvars, CommandRegistry commands)
+		public ResolutionManager(Window window, SwapChain swapChain, CvarRegistry cvars)
 		{
 			Assert.ArgumentNotNull(window);
 			Assert.ArgumentNotNull(swapChain);
 			Assert.ArgumentNotNull(cvars);
-			Assert.ArgumentNotNull(commands);
 
 			_window = window;
 			_swapChain = swapChain;
 			_cvars = cvars;
-			_commands = commands;
 
-			_commands.OnRestartGraphics += UpdateGraphicsState;
 			_cvars.Instances.WindowWidth.Changed += UpdateWindowSize;
 			_cvars.Instances.WindowHeight.Changed += UpdateWindowSize;
 
@@ -81,13 +72,12 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Updates the state of the graphics subsystem, handling transitions in and out of fullscreen mode.
 		/// </summary>
-		private void UpdateGraphicsState()
+		public void UpdateGraphicsState()
 		{
 			// Execute all deferred cvar updates
 			_cvars.ExecuteDeferredUpdates(UpdateMode.OnGraphicsRestart);
 
 			// Resize and update the window and the swap chain depending on whether we're in fullscreen or windowed mode
-			int width, height;
 			if (_cvars.Fullscreen)
 			{
 				Log.Info("Switching to fullscreen resolution {0}x{1}.", _cvars.ResolutionWidth, _cvars.ResolutionHeight);
@@ -119,7 +109,6 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_commands.OnRestartGraphics -= UpdateGraphicsState;
 			_cvars.Instances.WindowWidth.Changed -= UpdateWindowSize;
 			_cvars.Instances.WindowHeight.Changed -= UpdateWindowSize;
 		}

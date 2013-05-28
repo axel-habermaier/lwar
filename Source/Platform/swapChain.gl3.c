@@ -38,4 +38,10 @@ pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 	swapChain->renderTarget.height = height;
 }
 
+pgVoid pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen)
+{
+	pgMakeCurrent(&swapChain->context);
+	pgUpdateContextState(&swapChain->context, width, height, fullscreen);
+}
+
 #endif

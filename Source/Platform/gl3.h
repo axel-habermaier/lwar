@@ -18,6 +18,11 @@
 		HWND	hwnd;
 		HDC		hdc;
 		HGLRC	hrc;
+		LONG	wndStyle;
+		LONG	wndExStyle;
+		pgInt32	width;
+		pgInt32	height;
+		pgBool	fullscreen;
 	} pgContext;
 
 #elif defined(LINUX)
@@ -78,6 +83,7 @@ pgVoid pgDestroyBoundContext(pgContext* context);
 pgVoid pgCreateContextWindow(pgContext* context);
 pgVoid pgDestroyContextWindow(pgContext* context);
 pgVoid pgSetPixelFormat(pgContext* context);
+pgVoid pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, pgBool fullscreen);
 
 pgVoid pgInitializeContextExtensions(pgContext* context);
 pgVoid pgMakeCurrent(pgContext* context);
