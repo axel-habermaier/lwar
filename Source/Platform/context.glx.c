@@ -10,6 +10,7 @@ static pgBool ctxErrorOccurred;
 static int ErrorHandler(Display* display, XErrorEvent* e);
 static pgBool GlxExtSupported(int extension, pgString extensionName);
 static pgVoid SwitchToWindowedMode(pgContext* context);
+static pgVoid SetFullscreenWindow(pgContext* context, pgBool fullscreen);
 
 //====================================================================================================================
 // Core functions 
@@ -215,26 +216,16 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 		// Grab the mouse and the keyboard
 		XGrabPointer(x11State.display, context->window, PG_TRUE, 0, GrabModeAsync, GrabModeAsync, context->window, None, CurrentTime);
 		XGrabKeyboard(x11State.display, context->window, PG_TRUE, GrabModeAsync, GrabModeAsync, CurrentTime);
+
+		// Store the current window size so that we can restore it when we return from fullscreen mode
+		XWindowAttributes attributes;
+		if (XGetWindowAttributes(x11State.display, context->handle, &attributes) == 0)
+			pgDie("Failed to get the window attributes.");
+
+		context->width = attributes.width;
+		context->height = attributes.height;
 		
-		Atom wm_state = XInternAtom(x11State.display, "_NET_WM_STATE", False);
-    	Atom fullscreen = XInternAtom(x11State.display, "_NET_WM_STATE_FULLSCREEN", False);
-    	
-    	XEvent xev;
-	    memset(&xev, 0, sizeof(xev));
-	    xev.type = ClientMessage;
-	    xev.xclient.window = context->window;
-	    xev.xclient.message_type = wm_state;
-	    xev.xclient.format = 32;
-	    xev.xclient.data.l[0] = 1;
-	    xev.xclient.data.l[1] = fullscreen;
-	    xev.xclient.data.l[2] = 0;
-
-	    XMapWindow(x11State.display, context->window);
-
-	    XSendEvent (x11State.display, DefaultRootWindow(x11State.display), False,
-	                    SubstructureRedirectMask | SubstructureNotifyMask, &xev);
-
-	    XFlush(x11State.display);
+		SetFullscreenWindow(context, PG_TRUE);
 
 		context->fullscreen = PG_TRUE;
 		return PG_TRUE;
@@ -325,27 +316,36 @@ static pgVoid SwitchToWindowedMode(pgContext* context)
 		XRRFreeScreenConfigInfo(config);
 	} 
 	
-	Atom wm_state = XInternAtom(x11State.display, "_NET_WM_STATE", False);
-	Atom fullscreen = XInternAtom(x11State.display, "_NET_WM_STATE_FULLSCREEN", False);
-	
-	XEvent xev;
-    memset(&xev, 0, sizeof(xev));
-    xev.type = ClientMessage;
-    xev.xclient.window = context->window;
-    xev.xclient.message_type = wm_state;
-    xev.xclient.format = 32;
-    xev.xclient.data.l[0] = 0;
-    xev.xclient.data.l[1] = fullscreen;
-    xev.xclient.data.l[2] = 0;
+	SetFullscreenWindow(context, PG_FALSE);
 
-    XMapWindow(x11State.display, context->window);
-
-    XSendEvent (x11State.display, DefaultRootWindow(x11State.display), False,
-                    SubstructureRedirectMask | SubstructureNotifyMask, &xev);
-
-    XFlush(x11State.display);
+	// Restore the original window size
+	XResizeWindow(x11State.display, context->handle, context->width, context->height);
+	XFlush(x11State.display);
 
 	context->fullscreen = PG_FALSE;
+}
+
+static pgVoid SetFullscreenWindow(pgContext* context, pgBool fullscreen)
+{
+	Atom wm_state = XInternAtom(x11State.display, "_NET_WM_STATE", False);
+	Atom fullscreenAtom = XInternAtom(x11State.display, "_NET_WM_STATE_FULLSCREEN", False);
+
+	XEvent xev;
+	memset(&xev, 0, sizeof(xev));
+	xev.type = ClientMessage;
+	xev.xclient.window = context->window;
+	xev.xclient.message_type = wm_state;
+	xev.xclient.format = 32;
+	xev.xclient.data.l[0] = fullscreen;
+	xev.xclient.data.l[1] = fullscreenAtom;
+	xev.xclient.data.l[2] = 0;
+
+	XMapWindow(x11State.display, context->window);
+
+	XSendEvent (x11State.display, DefaultRootWindow(x11State.display), False,
+		SubstructureRedirectMask | SubstructureNotifyMask, &xev);
+
+	XFlush(x11State.display);
 }
 
 #endif
