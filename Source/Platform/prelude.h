@@ -416,6 +416,7 @@ pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain);
 
 pgVoid pgPresentCore(pgSwapChain* swapChain);
 pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
+pgVoid pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen);
 
 //====================================================================================================================
 // Query

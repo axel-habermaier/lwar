@@ -39,6 +39,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		public string GeneratedCode { get; private set; }
 
 		/// <summary>
+		///   Gets or sets a value indicating whether the generated C# class should be a partial class.
+		/// </summary>
+		public bool IsPartial { get; set; }
+
+		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		public void Dispose()
@@ -57,7 +62,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			Assert.NotNullOrWhitespace(SourceFile);
 			Assert.NotNullOrWhitespace(BaseClass);
 
-			_project = new RegistryProject { CSharpFiles = new[] { new CSharpAsset(SourceFile) }, BaseClass = BaseClass };
+			_project = new RegistryProject { CSharpFiles = new[] { new CSharpAsset(SourceFile) }, BaseClass = BaseClass, IsPartial = IsPartial };
 			_project.Compile();
 
 			Errors = _project.Errors.Select(error => error.Message);

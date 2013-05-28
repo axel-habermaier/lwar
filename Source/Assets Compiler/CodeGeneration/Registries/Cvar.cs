@@ -67,10 +67,22 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			get
 			{
 				var attribute = GetAttribute(_property.Attributes, "Cvar");
-				if (attribute.Arguments.Count() != 1)
-					return String.Format("default({0})", Type);
-
 				return attribute.Arguments.First().ToString();
+			}
+		}
+
+		/// <summary>
+		///   Gets the update mode of the cvar.
+		/// </summary>
+		public string UpdateMode
+		{
+			get
+			{
+				var attribute = GetAttribute(_property.Attributes, "Cvar");
+				if (attribute.Arguments.Count() < 2)
+					return "UpdateMode.Immediate";
+
+				return attribute.Arguments.Skip(1).First().ToString();
 			}
 		}
 

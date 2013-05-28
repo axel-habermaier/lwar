@@ -273,6 +273,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		break;
 	case WM_GETMINMAXINFO:
 		{
+			// Set the minimum and maximum allowed window sizes
 			MINMAXINFO* info = (MINMAXINFO*)lParam;
 			info->ptMaxTrackSize.x = 1920;
 			info->ptMaxTrackSize.y = 1200;

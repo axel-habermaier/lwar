@@ -50,3 +50,12 @@ pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
 
 	pgResizeSwapChainCore(swapChain, width, height);
 }
+
+pgVoid pgUpdateSwapChainState(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen)
+{
+	PG_ASSERT_NOT_NULL(swapChain);
+	PG_ASSERT_IN_RANGE(width, 0, 4096);
+	PG_ASSERT_IN_RANGE(height, 0, 4096);
+
+	pgUpdateSwapChainStateCore(swapChain, width, height, fullscreen);
+}

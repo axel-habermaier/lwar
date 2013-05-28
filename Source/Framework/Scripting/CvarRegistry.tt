@@ -1,5 +1,6 @@
 ﻿<#
 	SourceFile = "ICvarRegistry.cs";
 	BaseClass = "Registry<ICvar>";
+	IsPartial = true;
 #>
 <#@ include file="RegistryGenerator.tt" #>

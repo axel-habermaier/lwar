@@ -40,7 +40,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		///   Generates the registry class.
 		/// </summary>
 		/// <param name="baseClass">The class that the generated registry class should be derived from.</param>
-		public void GenerateCode(string baseClass)
+		/// <param name="isPartial">Indicates whether the generated C# class should be a partial class.</param>
+		public void GenerateCode(string baseClass, bool isPartial)
 		{
 			_writer.WriterHeader("//");
 			_writer.AppendLine("using System;");
@@ -56,7 +57,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 					if (_registry.ImportedNamespaces.Any())
 						_writer.Newline();
 
-					_writer.AppendLine("public class {0} : {1}", _registry.Name, baseClass);
+					_writer.AppendLine("public {2}class {0} : {1}", _registry.Name, baseClass, isPartial ? "partial " : String.Empty);
 					_writer.AppendBlockStatement(() =>
 						{
 							_writer.AppendLine("/// <summary>");
@@ -207,9 +208,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 				{
 					foreach (var cvar in _registry.Cvars)
 					{
-						_writer.Append("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {5}",
+						_writer.Append("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {6}, {5}",
 									   cvar.Type, cvar.Name, GetRuntimeName(cvar.Name), cvar.DefaultValue,
-									   GetSummaryText(cvar.Documentation), cvar.Persistent.ToString().ToLower());
+									   GetSummaryText(cvar.Documentation), cvar.Persistent.ToString().ToLower(), cvar.UpdateMode);
 
 						AppendValidators(cvar.Validators);
 						_writer.AppendLine(");");

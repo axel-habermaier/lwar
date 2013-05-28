@@ -49,7 +49,17 @@ namespace Pegasus.Framework.Scripting
 				command.Invoke((object[])_parameter);
 
 			if (cvar != null && _parameter == null)
-				Log.Info("'{0}' is '{1}', default '{2}'", cvar.Name, cvar.StringValue, cvar.DefaultValue);
+			{
+				var deferred = String.Empty;
+				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
+					deferred = String.Format(", pending update: '{0}'", TypeRepresentation.ToString(cvar.DeferredValue));
+
+				Log.Info("'{0}' is '{1}', default '{2}'{3}", cvar.Name, TypeRepresentation.ToString(cvar.Value),
+					TypeRepresentation.ToString(cvar.DefaultValue), deferred);
+
+				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
+					Log.Warn("{0}", cvar.UpdateMode.ToDisplayString());
+			}
 
 			if (cvar != null && _parameter != null)
 				cvar.Value = _parameter;

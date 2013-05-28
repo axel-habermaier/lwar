@@ -28,8 +28,8 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	desc.Windowed = PG_TRUE;
 	desc.BufferDesc.Width = width;
 	desc.BufferDesc.Height = height;
-	desc.BufferDesc.RefreshRate.Numerator = 60;
-	desc.BufferDesc.RefreshRate.Denominator = 1;
+	desc.BufferDesc.RefreshRate.Numerator = 0;
+	desc.BufferDesc.RefreshRate.Denominator = 0;
 	desc.BufferDesc.Format = swapChain->format;
 	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	desc.OutputWindow = window->hwnd;
@@ -41,7 +41,8 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 		"Failed to create swap chain.");
 
 	// Ignore the user pressing Alt+Enter to switch between fullscreen and windowed mode; this doesn't work reliably
-	IDXGIFactory_MakeWindowAssociation(swapChain->device->factory, window->hwnd, DXGI_MWA_NO_ALT_ENTER);
+	PG_D3DCALL(IDXGIFactory_MakeWindowAssociation(swapChain->device->factory, window->hwnd, DXGI_MWA_NO_WINDOW_CHANGES),
+		"Failed to make window association.");
 
 	pgResizeSwapChain(swapChain, width, height);
 }
@@ -68,6 +69,29 @@ pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 	ReleaseBackBuffer(swapChain);
 	IDXGISwapChain_ResizeBuffers(swapChain->ptr, 2, width, height, swapChain->format, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 	InitializeBackBuffer(swapChain);
+}
+
+pgVoid pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen)
+{
+	// See also http://msdn.microsoft.com/en-us/library/windows/desktop/ee417025(v=vs.85).aspx#full-screen_issues
+
+	DXGI_MODE_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+	desc.Format = swapChain->format;
+	desc.Width = width;
+	desc.Height = height;
+	desc.RefreshRate.Numerator = 0;
+	desc.RefreshRate.Denominator = 0;
+
+	PG_D3DCALL(IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc), "Error while resizing swap chain target.");
+	PG_D3DCALL(IDXGISwapChain_SetFullscreenState(swapChain->ptr, fullscreen, NULL), "Error while entering or leaving fullscreen mode.");
+
+	desc.RefreshRate.Numerator = 0;
+	desc.RefreshRate.Denominator = 0;
+	PG_D3DCALL(IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc), "Error while resizing swap chain target with default refresh rate.");
+
+	pgResizeSwapChain(swapChain, width, height);
+	pgPresent(swapChain);
 }
 
 //====================================================================================================================

@@ -2,7 +2,6 @@
 
 namespace Pegasus.Framework.Scripting
 {
-	using System.Linq;
 	using Platform.Logging;
 
 	/// <summary>
@@ -33,15 +32,18 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="name">The external name of the cvar.</param>
 		/// <param name="defaultValue">The default value of the cvar.</param>
 		/// <param name="description">A description of the cvar's purpose.</param>
+		/// <param name="mode">The update mode of the cvar.</param>
 		/// <param name="persistent">Indicates whether the cvar's value should be persisted across sessions.</param>
 		/// <param name="validators">The validators that should be used to validate a new cvar value before it is set.</param>
-		public Cvar(string name, T defaultValue, string description, bool persistent, params ValidatorAttribute[] validators)
+		public Cvar(string name, T defaultValue, string description, UpdateMode mode, bool persistent, params ValidatorAttribute[] validators)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
 			Assert.ArgumentNotNullOrWhitespace(description);
+			Assert.InRange(mode);
 
 			Name = name;
 			Description = description;
+			UpdateMode = mode;
 			Persistent = persistent;
 
 			_defaultValue = defaultValue;
@@ -57,33 +59,49 @@ namespace Pegasus.Framework.Scripting
 			get { return _value; }
 			set
 			{
-				if (_value.Equals(value))
-				{
-					Log.Warn("'{0}' has not been changed, because the new and the old value are the same.", Name);
+				if (!ValidateValue(value))
 					return;
-				}
 
-				foreach (var validator in _validators)
-				{
-					if (validator.Validate(value))
-						continue;
-
-					Log.Error("'{0}' could not be set to '{1}': {2}", Name, value, validator.Description);
-					Log.Info("{0}", Help.GetHint(Name));
-					return;
-				}
-
-				if (Changing != null)
-					Changing(value);
-
-				var oldValue = _value;
-				_value = value;
-				Log.Info("'{0}' is now '{1}'.", Name, StringValue);
-
-				if (Changed != null)
-					Changed(oldValue);
+				if (UpdateMode != UpdateMode.Immediate)
+					DeferredUpdate(value);
+				else
+					UpdateValue(value);
 			}
 		}
+
+		/// <summary>
+		///   Gets the deferred value of the cvar that will be set the next time it is updated. This property has no meaning
+		///   if the cvar's update mode is immediate.
+		/// </summary>
+		public T DeferredValue { get; private set; }
+
+		/// <summary>
+		///   Sets the cvar's current value to the deferred one.
+		/// </summary>
+		public void SetDeferredValue()
+		{
+			Assert.That(HasDeferredValue, "The cvar does not have a deferred value.");
+			SetImmediate(DeferredValue);
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the cvar has a deferred update pending.
+		/// </summary>
+		public bool HasDeferredValue { get; private set; }
+
+		/// <summary>
+		///   Gets the deferred value of the cvar that will be set the next time it is updated. This property has no meaning
+		///   if the cvar's update mode is immediate.
+		/// </summary>
+		object ICvar.DeferredValue
+		{
+			get { return DeferredValue; }
+		}
+
+		/// <summary>
+		///   Gets the update mode of the cvar.
+		/// </summary>
+		public UpdateMode UpdateMode { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the value of the cvar.
@@ -99,19 +117,11 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Gets the cvar's value as a string.
-		/// </summary>
-		public string StringValue
-		{
-			get { return TypeRepresentation.ToString(Value); }
-		}
-
-		/// <summary>
 		///   Gets the cvar's default value as a string.
 		/// </summary>
-		string ICvar.DefaultValue
+		object ICvar.DefaultValue
 		{
-			get { return TypeRepresentation.ToString(_defaultValue); }
+			get { return _defaultValue; }
 		}
 
 		/// <summary>
@@ -138,12 +148,87 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the given value is a valid value for the cvar.
+		///   Immediately sets the cvar to the given value, even if its update mode is not immediate.
 		/// </summary>
-		/// <param name="value">The value that should be checked.</param>
-		public bool IsValidValue(T value)
+		/// <param name="value">The value the cvar should be set to.</param>
+		public void SetImmediate(T value)
 		{
-			return _validators.All(validator => validator.Validate(value));
+			UpdateValue(value);
+			DeferredValue = default(T);
+			HasDeferredValue = false;
+		}
+
+		/// <summary>
+		///   Validates the given value, returning true if the value is valid.
+		/// </summary>
+		/// <param name="value">The value that should be validated.</param>
+		private bool ValidateValue(T value)
+		{
+			foreach (var validator in _validators)
+			{
+				if (validator.Validate(value))
+					continue;
+
+				Log.Error("'{0}' could not be set to '{1}': {2}", Name, value, validator.Description);
+				Log.Info("{0}", Help.GetHint(Name));
+				return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		///   Sets the cvar's current value to the new one.
+		/// </summary>
+		/// <param name="value">The value the cvar should be set to.</param>
+		private void UpdateValue(T value)
+		{
+			if (_value.Equals(value))
+			{
+				Log.Warn("'{0}' has not been changed, because the new and the old value are the same.", Name);
+				return;
+			}
+
+			if (Changing != null)
+				Changing(value);
+
+			var oldValue = _value;
+			_value = value;
+			Log.Info("'{0}' is now '{1}'.", Name, TypeRepresentation.ToString(value));
+
+			if (Changed != null)
+				Changed(oldValue);
+		}
+
+		/// <summary>
+		///   Sets the cvar's deferred value.
+		/// </summary>
+		/// <param name="value"></param>
+		private void DeferredUpdate(T value)
+		{
+			// If both the current and the deferred value are the same as the given one, do nothing
+			if (_value.Equals(value) && (!HasDeferredValue || DeferredValue.Equals(value)))
+			{
+				Log.Warn("'{0}' will not be changed, because the new and the old value are the same.", Name);
+				return;
+			}
+
+			// If the given value resets the deferred update to the current value, cancel the deferred update
+			if (_value.Equals(value) && HasDeferredValue && !DeferredValue.Equals(value))
+			{
+				HasDeferredValue = false;
+				DeferredValue = default(T);
+
+				Log.Info("'{0}' is now '{1}'.", Name, TypeRepresentation.ToString(value));
+				return;
+			}
+
+			// Otherwise, store the deferred value
+			DeferredValue = value;
+			HasDeferredValue = true;
+
+			Log.Info("'{0}' will be set to '{1}'.", Name, TypeRepresentation.ToString(value));
+			Log.Warn("{0}", UpdateMode.ToDisplayString());
 		}
 
 		/// <summary>

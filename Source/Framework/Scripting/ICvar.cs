@@ -28,18 +28,34 @@ namespace Pegasus.Framework.Scripting
 		object Value { get; set; }
 
 		/// <summary>
-		///   Gets the cvar's value as a string.
+		///   Gets the deferred value of the cvar that will be set the next time it is updated. This property has no meaning
+		///   if the cvar's update mode is immediate.
 		/// </summary>
-		string StringValue { get; }
+		object DeferredValue { get; }
 
 		/// <summary>
 		///   Gets the cvar's default value as a string.
 		/// </summary>
-		string DefaultValue { get; }
+		object DefaultValue { get; }
 
 		/// <summary>
 		///   Indicates whether the cvar's value is persisted across sessions.
 		/// </summary>
 		bool Persistent { get; }
+
+		/// <summary>
+		///   Gets a value indicating whether the cvar has a deferred update pending.
+		/// </summary>
+		bool HasDeferredValue { get; }
+
+		/// <summary>
+		///   Gets the update mode of the cvar.
+		/// </summary>
+		UpdateMode UpdateMode { get; }
+
+		/// <summary>
+		///   Sets the cvar's current value to the deferred one.
+		/// </summary>
+		void SetDeferredValue();
 	}
 }

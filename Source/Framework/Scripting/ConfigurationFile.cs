@@ -148,7 +148,13 @@ namespace Pegasus.Framework.Scripting
 			var lines = ParseLines(true).ToList();
 			foreach (var cvar in cvars)
 			{
-				var content = String.Format("{0} {1}", cvar.Name, TypeRepresentation.ToString(cvar.Value, true));
+				string value;
+				if (cvar.HasDeferredValue)
+					value = TypeRepresentation.ToString(cvar.DeferredValue, true);
+				else
+					value = TypeRepresentation.ToString(cvar.Value, true);
+
+				var content = String.Format("{0} {1}", cvar.Name, value);
 				var line = lines.LastOrDefault(l => l.HasInstruction && l.Instruction.HasTarget(cvar));
 
 				if (line == null)

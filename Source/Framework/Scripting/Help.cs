@@ -62,8 +62,12 @@ namespace Pegasus.Framework.Scripting
 			}
 			else if (_cvars.TryFind(name, out cvar))
 			{
-				Log.Info("'{0}' : {1} = '{2}' (default: '{3}'): {4}", cvar.Name, TypeDescription.GetDescription(cvar.ValueType),
-						 cvar.StringValue, cvar.DefaultValue, cvar.Description);
+				var deferredValue = String.Empty;
+				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
+					deferredValue = String.Format(", pending update: '{0}'", TypeRepresentation.ToString(cvar.DeferredValue));
+
+				Log.Info("'{0}' : {1} = '{2}' (default: '{3}'{5}): {4}", cvar.Name, TypeDescription.GetDescription(cvar.ValueType),
+						 TypeRepresentation.ToString(cvar.Value), TypeRepresentation.ToString(cvar.DefaultValue), cvar.Description, deferredValue);
 			}
 			else if (_commands.TryFind(name, out command))
 			{

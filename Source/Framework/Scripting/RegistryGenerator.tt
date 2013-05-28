@@ -11,7 +11,7 @@
 		Error("'BaseClass' must be set.");
 	else
 	{
-		using (var generator = new RegistryGenerator { SourceFile = Host.ResolvePath(SourceFile), BaseClass = BaseClass })
+		using (var generator = new RegistryGenerator { SourceFile = Host.ResolvePath(SourceFile), BaseClass = BaseClass, IsPartial = IsPartial })
 		{
 			generator.GenerateRegistry();
 
@@ -26,4 +26,5 @@
 <#+
 	protected string SourceFile;
 	protected string BaseClass;
+	protected bool IsPartial;
 #>

@@ -42,6 +42,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		public string BaseClass { get; set; }
 
 		/// <summary>
+		///   Gets or sets a value indicating whether the generated C# class should be a partial class.
+		/// </summary>
+		public bool IsPartial { get; set; }
+
+		/// <summary>
 		///   Gets the generated code.
 		/// </summary>
 		public string GeneratedCode { get; private set; }
@@ -84,7 +89,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			var writer = new CodeWriter();
 
 			var generator = new CSharpCodeGenerator(writer, file.Registry);
-			generator.GenerateCode(BaseClass);
+			generator.GenerateCode(BaseClass, IsPartial);
 
 			GeneratedCode = writer.ToString();
 		}

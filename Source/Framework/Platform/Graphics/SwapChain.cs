@@ -76,6 +76,17 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
+		///   Reinitializes the swap chain, taking the current resolution and video mode into account.
+		/// </summary>
+		/// <param name="width">The width of the swap chain's back buffer.</param>
+		/// <param name="height">The width of the swap chain's back buffer.</param>
+		/// <param name="fullscreen">Indicates whether the swap chain should be set to fullscreen mode.</param>
+		public void UpdateState(int width, int height, bool fullscreen)
+		{
+			NativeMethods.UpdateState(_swapChain, width, height, fullscreen);
+		}
+
+		/// <summary>
 		///   Provides access to the native swap chain functions.
 		/// </summary>
 #if !DEBUG
@@ -97,6 +108,9 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgResizeSwapChain")]
 			public static extern void ResizeSwapChain(IntPtr swapChain, int width, int height);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgUpdateSwapChainState")]
+			public static extern void UpdateState(IntPtr swapChain, int width, int height, bool fullscreen);
 		}
 	}
 }

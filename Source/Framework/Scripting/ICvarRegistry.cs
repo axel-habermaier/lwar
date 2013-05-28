@@ -16,21 +16,36 @@ namespace Pegasus.Framework.Scripting
 		double TimeScale { get; set; }
 
 		/// <summary>
-		///   The width of the screen resolution used by the application.
+		///   The width of the screen resolution used by the application in fullscreen mode. Any changes to this cvar require a
+		///   restart of the graphics subsystem.
 		/// </summary>
-		[Cvar(640), Range(640, 1920), Persistent]
+		[Cvar(640, UpdateMode.OnGraphicsRestart), Range(320, 4096), Persistent]
 		int ResolutionWidth { get; set; }
 
 		/// <summary>
-		///   The height of the screen resolution used by the application.
+		///   The height of the screen resolution used by the application in fullscreen mode. Any changes to this cvar require a
+		///   restart of the graphics subsystem.
 		/// </summary>
-		[Cvar(360), Range(360, 1200), Persistent]
+		[Cvar(360, UpdateMode.OnGraphicsRestart), Range(240, 4096), Persistent]
 		int ResolutionHeight { get; set; }
 
 		/// <summary>
-		///   If true, the application is run in fullscreen mode.
+		///   If true, the application is run in fullscreen mode. Any changes to this cvar require a restart of the graphics
+		///   subsystem.
 		/// </summary>
-		[Cvar(!PlatformInfo.IsDebug), Persistent]
+		[Cvar(!PlatformInfo.IsDebug, UpdateMode.OnGraphicsRestart), Persistent]
 		bool Fullscreen { get; set; }
+
+		/// <summary>
+		///   The width of the application's window in non-fullscreen mode.
+		/// </summary>
+		[Cvar(640), Range(320, 4096), Persistent]
+		int WindowWidth { get; set; }
+
+		/// <summary>
+		///   The height of the application's window in non-fullscreen mode.
+		/// </summary>
+		[Cvar(360), Range(240, 4096), Persistent]
+		int WindowHeight { get; set; }
 	}
 }

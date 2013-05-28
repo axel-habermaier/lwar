@@ -77,19 +77,23 @@ namespace Pegasus.Framework
 		{
 			Assert.ArgumentNotNull(context);
 			Assert.ArgumentNotNull(logFile);
+
 			Context = context;
+			var cvars = context.Cvars;
+			var commands = context.Commands;
 
 			using (new NativeLibrary())
-			using (var window = context.Window = new Window(context.Cvars.ResolutionWidth, context.Cvars.ResolutionHeight))
+			using (var window = context.Window = new Window(cvars.ResolutionWidth, cvars.ResolutionHeight))
 			using (var graphicsDevice = context.GraphicsDevice = new GraphicsDevice())
 			using (var statistics = context.Statistics)
 			using (var spriteEffect = context.SpriteEffect)
 			using (var swapChain = new SwapChain(graphicsDevice, window))
+			using (var resolutionManager = new ResolutionManager(window, swapChain, cvars, commands))
 			using (var assets = context.Assets = new AssetsManager(graphicsDevice))
 			using (var keyboard = new Keyboard(window))
 			using (var mouse = new Mouse(window))
 			using (var inputDevice =context.LogicalInputDevice = new LogicalInputDevice(keyboard, mouse))
-			using (var bindings = new Bindings(inputDevice, context.Commands, context.Cvars))
+			using (var bindings = new Bindings(inputDevice, commands, cvars))
 			using (var camera2D = new Camera2D(graphicsDevice))
 			using (var sceneOutput = new RenderOutput(graphicsDevice) { RenderTarget = swapChain.BackBuffer })
 			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
@@ -97,16 +101,12 @@ namespace Pegasus.Framework
 				window.Title = context.AppName;
 				spriteEffect.Initialize(context.GraphicsDevice, context.Assets);
 
-				//context.Commands.OnRestartGraphics += swapChain.Reinitialize;
-				context.Commands.OnExit += Exit;
-
 				// Let the application initialize itself
 				Initialize();
 
 				var defaultFont = assets.LoadFont(context.DefaultFontName);
 				using (var spriteBatch = new SpriteBatch(graphicsDevice, uiOutput, spriteEffect))
-				using (var console = new Console(graphicsDevice, inputDevice, spriteBatch, defaultFont,
-												 context.Commands, context.Cvars))
+				using (var console = new Console(graphicsDevice, inputDevice, spriteBatch, defaultFont, commands, cvars))
 				{
 					statistics.Initialize(graphicsDevice, spriteBatch, defaultFont);
 
@@ -115,12 +115,14 @@ namespace Pegasus.Framework
 					statistics.Resize(window.Size);
 
 					window.Resized += console.Resize;
+					window.Resized += size => Log.Warn("NEW SIZE ---->>>> {0}", size);
 					window.Resized += statistics.Resize;
-					context.Commands.OnReloadAssets += assets.ReloadAssets;
+					commands.OnReloadAssets += assets.ReloadAssets;
+					commands.OnExit += Exit;
 
 					// Copy the recorded log history to the console and explain the usage of the console
 					logFile.WriteToConsole(console);
-					context.Commands.Help();
+					commands.Help();
 
 					while (_running)
 					{
@@ -132,8 +134,9 @@ namespace Pegasus.Framework
 							inputDevice.Keyboard.Update();
 							inputDevice.Mouse.Update();
 
-							// Process all new input; this might set WentDown, etc. to true for some keys and buttons
+							// Process all window events and update the resolution manager
 							window.ProcessEvents();
+							resolutionManager.Update();
 
 							// Update the logical inputs based on the new state of the input system
 							inputDevice.Update();

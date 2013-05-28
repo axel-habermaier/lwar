@@ -222,6 +222,7 @@
     <Compile Include="Platform\Logging\LogType.cs" />
     <Compile Include="Platform\Measurement.cs" />
     <Compile Include="Platform\Clock.cs" />
+    <Compile Include="Platform\ResolutionManager.cs" />
     <Compile Include="Platform\Timer.cs" />
     <Compile Include="Platform\Win32.cs" />
     <Compile Include="Processes\DelegateOperation.cs" />
@@ -320,6 +321,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CvarRegistry.tt</DependentUpon>
     </Compile>
+    <Compile Include="Scripting\CvarRegistry.Deferred.cs" />
     <Compile Include="Scripting\ICommandRegistry.cs">
     </Compile>
     <Compile Include="Scripting\ICvarRegistry.cs">
@@ -498,6 +500,7 @@
     <Compile Include="Platform\Statistics.cs" />
     <Compile Include="Platform\AveragedValue.cs" />
     <Compile Include="Scripting\Parsing\Combinators\TypeParser.cs" />
+    <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\ValidatorAttribute.cs" />
     <Compile Include="AppStateManager.cs" />
   </ItemGroup>
