@@ -159,12 +159,6 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 		}
 		else
 		{
-			// Store the current window size so that we can restore it when we return from fullscreen mode
-			RECT rect;
-			GetClientRect(context->hwnd, &rect);
-			context->width = rect.right - rect.left;
-			context->height = rect.bottom - rect.top;
-
 			// Make the window compatible with fullscreen mode
 			SetWindowLong(context->hwnd, GWL_STYLE, WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
 			SetWindowLong(context->hwnd, GWL_EXSTYLE, WS_EX_APPWINDOW);
@@ -261,10 +255,6 @@ static pgVoid SwitchToWindowedMode(pgContext* context)
 	// Reset the original window flags
 	SetWindowLong(context->hwnd, GWL_STYLE, context->wndStyle);
 	SetWindowLong(context->hwnd, GWL_EXSTYLE, context->wndExStyle);
-
-	// Resize the window to its original size
-	SetWindowPos(context->hwnd, HWND_TOP, 0, 0, context->width, context->height, SWP_FRAMECHANGED);
-	ShowWindow(context->hwnd, SW_SHOW);
 
 	context->fullscreen = PG_FALSE;
 }

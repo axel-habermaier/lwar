@@ -79,7 +79,7 @@ namespace Pegasus.Framework.Platform
 			}
 
 			// We do not care about the window size in fullscreen mode
-			if (_cvars.Fullscreen)
+			if (_cvars.Fullscreen || _toggleMode.IsTriggered)
 				return;
 
 			// If we set the window width and height cvars only to the values sent by the window's resize event, we would
@@ -107,7 +107,7 @@ namespace Pegasus.Framework.Platform
 			if (_cvars.Fullscreen)
 			{
 				Log.Info("Switching to fullscreen resolution {0}x{1}.", _cvars.ResolutionWidth, _cvars.ResolutionHeight);
-				if (!_swapChain.UpdateState(_cvars.ResolutionWidth, _cvars.ResolutionHeight, _cvars.Fullscreen))
+				if (!_swapChain.UpdateState(_cvars.ResolutionWidth, _cvars.ResolutionHeight, true))
 				{
 					_cvars.Instances.Fullscreen.SetImmediate(false);
 					UpdateGraphicsState();
@@ -117,10 +117,8 @@ namespace Pegasus.Framework.Platform
 			{
 				Log.Info("Switching to windowed resolution {0}x{1}.", _cvars.WindowWidth, _cvars.WindowHeight);
 
-				// It's important to set the window's size first and then to use the actual size of the window
-				// (which might be smaller than the requested one) to update the swap chain
+				_swapChain.UpdateState(_cvars.WindowWidth, _cvars.WindowHeight, false);
 				_window.Size = new Size(_cvars.WindowWidth, _cvars.WindowHeight);
-				_swapChain.UpdateState(_window.Size.Width, _window.Size.Height, _cvars.Fullscreen);
 			}
 		}
 

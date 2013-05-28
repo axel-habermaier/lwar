@@ -20,8 +20,6 @@
 		HGLRC	hrc;
 		LONG	wndStyle;
 		LONG	wndExStyle;
-		pgInt32	width;
-		pgInt32	height;
 		pgBool	fullscreen;
 	} pgContext;
 
