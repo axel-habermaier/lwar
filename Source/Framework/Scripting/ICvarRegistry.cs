@@ -18,14 +18,14 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   The width of the screen resolution used by the application.
 		/// </summary>
-		[Cvar(640), Range(640u, 1920u), Persistent]
-		uint ResolutionWidth { get; set; }
+		[Cvar(640), Range(640, 1920), Persistent]
+		int ResolutionWidth { get; set; }
 
 		/// <summary>
 		///   The height of the screen resolution used by the application.
 		/// </summary>
-		[Cvar(360), Range(360u, 1200u), Persistent]
-		uint ResolutionHeight { get; set; }
+		[Cvar(360), Range(360, 1200), Persistent]
+		int ResolutionHeight { get; set; }
 
 		/// <summary>
 		///   If true, the application is run in fullscreen mode.

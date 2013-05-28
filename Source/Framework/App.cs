@@ -77,9 +77,10 @@ namespace Pegasus.Framework
 		{
 			Assert.ArgumentNotNull(context);
 			Assert.ArgumentNotNull(logFile);
+			Context = context;
 
 			using (new NativeLibrary())
-			using (var window = context.Window = new Window())
+			using (var window = context.Window = new Window(context.Cvars.ResolutionWidth, context.Cvars.ResolutionHeight))
 			using (var graphicsDevice = context.GraphicsDevice = new GraphicsDevice())
 			using (var statistics = context.Statistics)
 			using (var spriteEffect = context.SpriteEffect)
@@ -94,11 +95,12 @@ namespace Pegasus.Framework
 			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
 			{
 				window.Title = context.AppName;
-				swapChain.BackBuffer.SetName("Back Buffer");
 				spriteEffect.Initialize(context.GraphicsDevice, context.Assets);
 
+				//context.Commands.OnRestartGraphics += swapChain.Reinitialize;
 				context.Commands.OnExit += Exit;
-				Context = context;
+
+				// Let the application initialize itself
 				Initialize();
 
 				var defaultFont = assets.LoadFont(context.DefaultFontName);

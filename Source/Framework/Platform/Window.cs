@@ -38,14 +38,16 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		internal Window()
+		/// <param name="width">The width of the window's rendering area.</param>
+		/// <param name="height">The height of the window's rendering area.</param>
+		internal Window(int width, int height)
 		{
 			Log.Info(LogCategory.Platform, "Initializing window...");
 
 			_params = new NativeMethods.WindowParams
 			{
-				Width = 640,
-				Height = 480,
+				Width = width,
+				Height = height,
 				Title = "Pegasus",
 				Closing = () => Closing(),
 				Closed = () => Closed(),

@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Linq;
 	using Platform.Logging;
 
 	/// <summary>
@@ -134,6 +135,15 @@ namespace Pegasus.Framework.Scripting
 		Type ICvar.ValueType
 		{
 			get { return typeof(T); }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the given value is a valid value for the cvar.
+		/// </summary>
+		/// <param name="value">The value that should be checked.</param>
+		public bool IsValidValue(T value)
+		{
+			return _validators.All(validator => validator.Validate(value));
 		}
 
 		/// <summary>

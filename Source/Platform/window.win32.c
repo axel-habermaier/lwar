@@ -263,12 +263,21 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		return 0;
 	case WM_SIZE:
 		// Ignore size events triggered by a minimize (size == 0 in that case)
-		if (params->resized != NULL && wParam != SIZE_MINIMIZED)
+		if (window->hwnd != NULL && params->resized != NULL && wParam != SIZE_MINIMIZED)
 		{
 			// Get the new size
 			RECT rectangle;
 			GetClientRect(window->hwnd, &rectangle);
 			params->resized(rectangle.right - rectangle.left, rectangle.bottom - rectangle.top);
+		}
+		break;
+	case WM_GETMINMAXINFO:
+		{
+			MINMAXINFO* info = (MINMAXINFO*)lParam;
+			info->ptMaxTrackSize.x = 1920;
+			info->ptMaxTrackSize.y = 1200;
+			info->ptMinTrackSize.x = 640;
+			info->ptMinTrackSize.y = 360;
 		}
 		break;
 	case WM_SETFOCUS:

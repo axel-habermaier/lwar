@@ -39,7 +39,6 @@ namespace Lwar.Client
 
 			Context.LogicalInputDevice.Modes = InputModes.Game;
 			Context.Window.Closing += Exit;
-			Context.Window.Size = new Size(1280, 720);
 
 			_localServer = new LocalServer(commands);
 			_stateManager = new AppStateManager(Context);
