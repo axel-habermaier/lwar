@@ -35,6 +35,8 @@
 		GLXContext		ctx;
 		GLXFBConfig*	configs;
 		XVisualInfo*	visuals;
+		SizeID			prevMode;
+		pgBool			fullscreen;
 	} pgContext;
 
 #else

@@ -178,13 +178,7 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 		}
 	}
 
-	// Switch to windowed mode
-	if (!fullscreen && context->fullscreen)
-	{
-		SwitchToWindowedMode(context);
-		context->fullscreen = PG_FALSE;
-	}
-
+	SwitchToWindowedMode(context);
 	return PG_TRUE;
 }
 
@@ -258,6 +252,9 @@ static pgBool WglExtSupported(int extension, pgString extensionName)
 
 static pgVoid SwitchToWindowedMode(pgContext* context)
 {
+	if (!context->fullscreen)
+		return;
+
 	// Return to the default mode
 	ChangeDisplaySettings(NULL, 0);
 
@@ -268,6 +265,8 @@ static pgVoid SwitchToWindowedMode(pgContext* context)
 	// Resize the window to its original size
 	SetWindowPos(context->hwnd, HWND_TOP, 0, 0, context->width, context->height, SWP_FRAMECHANGED);
 	ShowWindow(context->hwnd, SW_SHOW);
+
+	context->fullscreen = PG_FALSE;
 }
 
 #endif

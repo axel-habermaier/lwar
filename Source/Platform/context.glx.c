@@ -9,6 +9,7 @@
 static pgBool ctxErrorOccurred;
 static int ErrorHandler(Display* display, XErrorEvent* e);
 static pgBool GlxExtSupported(int extension, pgString extensionName);
+static pgVoid SwitchToWindowedMode(pgContext* context);
 
 //====================================================================================================================
 // Core functions 
@@ -159,7 +160,67 @@ pgVoid pgSetPixelFormat(pgContext* context)
 
 pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, pgBool fullscreen)
 {
-	
+	if (fullscreen)
+	{
+		// Check for the XRandR extension
+		int version;
+		if (!XQueryExtension(x11State.display, "RANDR", &version, &version, &version))
+		{
+			pgError("XRandR extension not found. Fullscreen mode is not supported on this system.");
+			return PG_FALSE;
+		}
+
+		// Get the current screen configuration from XRandR
+		XRRScreenConfiguration* config = XRRGetScreenInfo(x11State.display, RootWindow(x11State.display, x11State.screen));
+		if (!config)
+		{
+			pgError("Failed to get the current screen configuration. Fullscreen mode is not supported on this system.");
+			return PG_FALSE;
+		}
+
+		// Select a video mode
+		Rotation currentRotation;
+		pgInt32 numModes;
+		pgBool modeFound = PG_FALSE;
+
+		context->prevMode = XRRConfigCurrentConfiguration(config, &currentRotation);
+		XRRScreenSize* modes = XRRConfigSizes(config, &numModes);
+
+		if (modes)
+		{
+			// Check all modes until a matching one is found
+			for (int i = 0; i < numModes; ++i)
+			{
+				if (modes[i].width == width && modes[i].height == height)
+				{
+					// Switch to fullscreen mode
+					XRRSetScreenConfig(x11State.display, config, RootWindow(x11State.display, x11State.screen), i, currentRotation, CurrentTime);
+
+					modeFound = PG_TRUE;
+					break;
+				}
+			}
+		}
+
+		// Free the configuration instance
+		XRRFreeScreenConfigInfo(config);
+
+		if (!modeFound)
+		{
+			pgError("No fullscreen mode of the desired size has been found.");
+			return PG_FALSE;
+		}
+
+		// Grab the mouse and the keyboard
+		XGrabPointer(x11State.display, context->window, PG_TRUE, 0, GrabModeAsync, GrabModeAsync, context->window, None, CurrentTime);
+		XGrabKeyboard(x11State.display, context->window, PG_TRUE, GrabModeAsync, GrabModeAsync, CurrentTime);
+
+		context->fullscreen = PG_TRUE;
+		return PG_TRUE;
+	}
+
+	SwitchToWindowedMode(context);
+	return PG_TRUE;
 }
 
 pgVoid pgInitializeContextExtensions(pgContext* context)
@@ -221,6 +282,29 @@ static pgBool GlxExtSupported(int extension, pgString extensionName)
 	}
 
 	return PG_TRUE;
+}
+
+static pgVoid SwitchToWindowedMode(pgContext* context)
+{
+	if (!context->fullscreen)
+		return;
+
+	// Release the mouse and the keyboard
+	XUngrabPointer(x11State.display, CurrentTime);
+	XUngrabKeyboard(x11State.display, CurrentTime);
+
+	// Restore the original video mode
+	XRRScreenConfiguration* config = XRRGetScreenInfo(x11State.display, RootWindow(x11State.display, x11State.screen));
+	if (config) 
+	{
+		Rotation currentRotation;
+		XRRConfigCurrentConfiguration(config, &currentRotation);
+
+		XRRSetScreenConfig(x11State.display, config, RootWindow(x11State.display, x11State.screen), context->prevMode, currentRotation, CurrentTime);
+		XRRFreeScreenConfigInfo(config);
+	} 
+
+	context->fullscreen = PG_FALSE;
 }
 
 #endif
