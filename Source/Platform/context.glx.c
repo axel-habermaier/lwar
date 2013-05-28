@@ -216,14 +216,6 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 		// Grab the mouse and the keyboard
 		XGrabPointer(x11State.display, context->window, PG_TRUE, 0, GrabModeAsync, GrabModeAsync, context->window, None, CurrentTime);
 		XGrabKeyboard(x11State.display, context->window, PG_TRUE, GrabModeAsync, GrabModeAsync, CurrentTime);
-
-		// Store the current window size so that we can restore it when we return from fullscreen mode
-		XWindowAttributes attributes;
-		if (XGetWindowAttributes(x11State.display, context->handle, &attributes) == 0)
-			pgDie("Failed to get the window attributes.");
-
-		context->width = attributes.width;
-		context->height = attributes.height;
 		
 		SetFullscreenWindow(context, PG_TRUE);
 
@@ -317,10 +309,6 @@ static pgVoid SwitchToWindowedMode(pgContext* context)
 	} 
 	
 	SetFullscreenWindow(context, PG_FALSE);
-
-	// Restore the original window size
-	XResizeWindow(x11State.display, context->handle, context->width, context->height);
-	XFlush(x11State.display);
 
 	context->fullscreen = PG_FALSE;
 }

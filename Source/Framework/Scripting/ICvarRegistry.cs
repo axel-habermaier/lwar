@@ -19,14 +19,14 @@ namespace Pegasus.Framework.Scripting
 		///   The width of the screen resolution used by the application in fullscreen mode. Any changes to this cvar require a
 		///   restart of the graphics subsystem.
 		/// </summary>
-		[Cvar(640, UpdateMode.OnGraphicsRestart), Range(320, 4096), Persistent]
+		[Cvar(1024, UpdateMode.OnGraphicsRestart), Range(320, 4096), Persistent]
 		int ResolutionWidth { get; set; }
 
 		/// <summary>
 		///   The height of the screen resolution used by the application in fullscreen mode. Any changes to this cvar require a
 		///   restart of the graphics subsystem.
 		/// </summary>
-		[Cvar(360, UpdateMode.OnGraphicsRestart), Range(240, 4096), Persistent]
+		[Cvar(768, UpdateMode.OnGraphicsRestart), Range(240, 4096), Persistent]
 		int ResolutionHeight { get; set; }
 
 		/// <summary>

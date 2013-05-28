@@ -189,9 +189,21 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e)
 			params->lostFocus();
 		break;
 	case ConfigureNotify:
-		if (params->resized != NULL)
-			params->resized(e->xconfigure.width, e->xconfigure.height);
-		break;
+		{
+			pgInt32 width = pgClamp(e->xconfigure.width, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MAX_WIDTH);
+			pgInt32 height = pgClamp(e->xconfigure.height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
+
+			if (width != e->xconfigure.width || height != e->xconfigure.height)
+			{
+				pgSetWindowSize(window, width, height);
+				break;
+			}
+
+			if (params->resized != NULL)
+				params->resized(e->xconfigure.width, e->xconfigure.height);
+
+			break;
+		}
 	case ClientMessage:
 		if (params->closing != NULL && e->xclient.format == 32 && e->xclient.data.l[0] == window->closeAtom)
 			params->closing();

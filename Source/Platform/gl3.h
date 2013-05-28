@@ -35,8 +35,6 @@
 		XVisualInfo*	visuals;
 		SizeID			prevMode;
 		pgBool			fullscreen;
-		pgInt32			width;
-		pgInt32			height;
 	} pgContext;
 
 #else

@@ -198,11 +198,17 @@ pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title);
 pgVoid pgCaptureMouseCore(pgWindow* window);
 pgVoid pgReleaseMouseCore(pgWindow* window);
 
+#define PG_WINDOW_MIN_WIDTH 640
+#define PG_WINDOW_MIN_HEIGHT 360
+#define PG_WINDOW_MAX_WIDTH 1920
+#define PG_WINDOW_MAX_HEIGHT 1200
+
 //====================================================================================================================
-// Rectangle
+// Helper functions
 //====================================================================================================================
 
 pgBool pgRectangleEqual(pgRectangle* r1, pgRectangle* r2);
+pgInt32 pgClamp(pgInt32 value, pgInt32 min, pgInt32 max);
 
 //====================================================================================================================
 // Graphics device

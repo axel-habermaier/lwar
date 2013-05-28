@@ -275,10 +275,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		{
 			// Set the minimum and maximum allowed window sizes
 			MINMAXINFO* info = (MINMAXINFO*)lParam;
-			info->ptMaxTrackSize.x = 1920;
-			info->ptMaxTrackSize.y = 1200;
-			info->ptMinTrackSize.x = 640;
-			info->ptMinTrackSize.y = 360;
+			info->ptMaxTrackSize.x = PG_WINDOW_MAX_WIDTH;
+			info->ptMaxTrackSize.y = PG_WINDOW_MAX_HEIGHT;
+			info->ptMinTrackSize.x = PG_WINDOW_MIN_WIDTH;
+			info->ptMinTrackSize.y = PG_WINDOW_MIN_HEIGHT;
 		}
 		break;
 	case WM_SETFOCUS:
