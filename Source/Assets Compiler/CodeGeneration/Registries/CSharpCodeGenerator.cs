@@ -92,7 +92,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 						_writer.AppendLine("set");
 						_writer.AppendBlockStatement(() =>
 							{
-								_writer.AppendLine("Assert.ArgumentNotNull((object)value, () => value);");
+								_writer.AppendLine("Assert.ArgumentNotNull((object)value);");
 								_writer.AppendLine("Instances.{0}.Value = value;", cvar.Name);
 							});
 					});
@@ -114,7 +114,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 				_writer.AppendBlockStatement(() =>
 					{
 						foreach (var parameter in command.Parameters)
-							_writer.AppendLine("Assert.ArgumentNotNull((object){0}, () => {0});", parameter.Name);
+							_writer.AppendLine("Assert.ArgumentNotNull((object){0});", parameter.Name);
 
 						_writer.AppendLine("Instances.{0}.Invoke({1});", command.Name, GetInvocationArguments(command));
 					});

@@ -85,5 +85,11 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		[Command]
 		void ReloadAssets();
+
+		/// <summary>
+		///   Restarts the graphics subsystem after a resolution or video mode change.
+		/// </summary>
+		[Command]
+		void RestartGraphics();
 	}
 }

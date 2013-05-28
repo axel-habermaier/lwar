@@ -60,7 +60,7 @@ namespace Pegasus.Framework.Math
 		/// <param name="value">The integer value that should be converted.</param>
 		public Fixed<#= fractionalBits #>(int value)
 		{
-			Assert.ArgumentInRange(value, () => value, MinValue, MaxValue);
+			Assert.ArgumentInRange(value, MinValue, MaxValue);
 			_rawValue = value << FractionalBits;
 		}
 
@@ -70,7 +70,7 @@ namespace Pegasus.Framework.Math
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public Fixed<#= fractionalBits #>(float value)
 		{
-			Assert.ArgumentInRange(value, () => value, MinValue, MaxValue);
+			Assert.ArgumentInRange(value, MinValue, MaxValue);
 			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
 		}
 
@@ -80,7 +80,7 @@ namespace Pegasus.Framework.Math
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public Fixed<#= fractionalBits #>(double value)
 		{
-			Assert.ArgumentInRange(value, () => value, MinValue, MaxValue);
+			Assert.ArgumentInRange(value, MinValue, MaxValue);
 			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
 		}
 
@@ -356,7 +356,7 @@ namespace Pegasus.Framework.Math
 		/// <param name="value">The value for which the square root should be computed.</param>
 		public static Fixed<#= fractionalBits #> Sqrt(Fixed<#= fractionalBits #> value)
 		{
-			Assert.ArgumentSatisfies(value._rawValue >= 0, () => value, "Value must be greater than 0.");
+			Assert.ArgumentSatisfies(value._rawValue >= 0, "Value must be greater than 0.");
 
 			if (value == 0)
 				return 0;
