@@ -88,12 +88,12 @@ namespace Pegasus.Framework
 			using (var statistics = context.Statistics)
 			using (var spriteEffect = context.SpriteEffect)
 			using (var swapChain = new SwapChain(graphicsDevice, window))
-			using (var resolutionManager = new ResolutionManager(window, swapChain, cvars))
 			using (var assets = context.Assets = new AssetsManager(graphicsDevice))
 			using (var keyboard = new Keyboard(window))
 			using (var mouse = new Mouse(window))
 			using (var inputDevice =context.LogicalInputDevice = new LogicalInputDevice(keyboard, mouse))
 			using (var bindings = new Bindings(inputDevice, commands, cvars))
+			using (var resolutionManager = new ResolutionManager(window, swapChain, inputDevice, cvars))
 			using (var camera2D = new Camera2D(graphicsDevice))
 			using (var sceneOutput = new RenderOutput(graphicsDevice) { RenderTarget = swapChain.BackBuffer })
 			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
@@ -136,17 +136,17 @@ namespace Pegasus.Framework
 							inputDevice.Keyboard.Update();
 							inputDevice.Mouse.Update();
 
-							// Process all window events and update the resolution manager
+							// Process all window events 
 							window.ProcessEvents();
-							resolutionManager.Update();
-
+							
 							// Update the logical inputs based on the new state of the input system
 							inputDevice.Update();
 							console.HandleInput();
 						}
 
-						// Check if any command bindings have been triggered
+						// Check if any command bindings have been triggered and update the resolution manager
 						bindings.Update();
+						resolutionManager.Update();
 
 						// Update the application logic and the statistics
 						Update();

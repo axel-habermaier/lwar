@@ -15,7 +15,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		private static readonly Dictionary<Type, Func<object, string>> Map = new Dictionary<Type, Func<object, string>>
 		{
-			{ typeof(bool), o => o.ToString().ToLower() },
+			{ typeof(bool), o => (bool)o ? "true" : "false" },
 			{ typeof(float), o => ((float)o).ToString("F") },
 			{ typeof(double), o => ((double)o).ToString("F") },
 			{ typeof(string), o => (string)o },

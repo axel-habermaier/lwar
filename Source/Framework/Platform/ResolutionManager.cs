@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform
 {
 	using Graphics;
+	using Input;
 	using Logging;
 	using Math;
 	using Memory;
@@ -19,9 +20,19 @@ namespace Pegasus.Framework.Platform
 		private readonly CvarRegistry _cvars;
 
 		/// <summary>
+		///   The logical input device that is used to toggle between fullscreen and windowed mode.
+		/// </summary>
+		private readonly LogicalInputDevice _device;
+
+		/// <summary>
 		///   The swap chain that is affected by resolution changes.
 		/// </summary>
 		private readonly SwapChain _swapChain;
+
+		/// <summary>
+		///   The logical input that toggles between fullscreen and windowed mode (Alt+Enter).
+		/// </summary>
+		private readonly LogicalInput _toggleMode = new LogicalInput(Key.LeftAlt.IsPressed() + Key.Return.IsPressed(), InputModes.All);
 
 		/// <summary>
 		///   The window that is affected by resolution changes.
@@ -33,25 +44,40 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		/// <param name="window">The window that is affected by resolution changes.</param>
 		/// <param name="swapChain">The swap chain that should be affected by resolution changes.</param>
+		/// <param name="device">The logical input device that should be used to toggle between fullscreen and windowed mode.</param>
 		/// <param name="cvars">The cvar registry that should be used to persist resolution and window size changes.</param>
-		public ResolutionManager(Window window, SwapChain swapChain, CvarRegistry cvars)
+		public ResolutionManager(Window window, SwapChain swapChain, LogicalInputDevice device, CvarRegistry cvars)
 		{
 			Assert.ArgumentNotNull(window);
 			Assert.ArgumentNotNull(swapChain);
+			Assert.ArgumentNotNull(device);
 			Assert.ArgumentNotNull(cvars);
 
 			_window = window;
 			_swapChain = swapChain;
+			_device = device;
 			_cvars = cvars;
 
 			_cvars.Instances.WindowWidth.Changed += UpdateWindowSize;
 			_cvars.Instances.WindowHeight.Changed += UpdateWindowSize;
 
 			UpdateGraphicsState();
+			_device.Register(_toggleMode);
 		}
 
+		/// <summary>
+		///   Updates the resolution manager, ensuring that the application state remains consistent and that Alt+Enter mode toggle
+		///   requests are handled.
+		/// </summary>
 		public void Update()
 		{
+			// Check if the user wants to toggle between fullscreen and windowed mode
+			if (_toggleMode.IsTriggered)
+			{
+				_cvars.Instances.Fullscreen.SetImmediate(!_cvars.Fullscreen);
+				UpdateGraphicsState();
+			}
+
 			// We do not care about the window size in fullscreen mode
 			if (_cvars.Fullscreen)
 				return;
@@ -111,6 +137,7 @@ namespace Pegasus.Framework.Platform
 		{
 			_cvars.Instances.WindowWidth.Changed -= UpdateWindowSize;
 			_cvars.Instances.WindowHeight.Changed -= UpdateWindowSize;
+			_device.Remove(_toggleMode);
 		}
 	}
 }
