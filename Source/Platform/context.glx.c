@@ -157,6 +157,11 @@ pgVoid pgSetPixelFormat(pgContext* context)
 	context->configs = configs;
 }
 
+pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, pgBool fullscreen)
+{
+	
+}
+
 pgVoid pgInitializeContextExtensions(pgContext* context)
 {
 	pgBool glxExtsSupported = PG_TRUE;

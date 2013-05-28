@@ -107,7 +107,11 @@ namespace Pegasus.Framework.Platform
 			if (_cvars.Fullscreen)
 			{
 				Log.Info("Switching to fullscreen resolution {0}x{1}.", _cvars.ResolutionWidth, _cvars.ResolutionHeight);
-				_swapChain.UpdateState(_cvars.ResolutionWidth, _cvars.ResolutionHeight, _cvars.Fullscreen);
+				if (!_swapChain.UpdateState(_cvars.ResolutionWidth, _cvars.ResolutionHeight, _cvars.Fullscreen))
+				{
+					_cvars.Instances.Fullscreen.SetImmediate(false);
+					UpdateGraphicsState();
+				}
 			}
 			else
 			{

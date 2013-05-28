@@ -83,7 +83,7 @@ pgVoid pgDestroyBoundContext(pgContext* context);
 pgVoid pgCreateContextWindow(pgContext* context);
 pgVoid pgDestroyContextWindow(pgContext* context);
 pgVoid pgSetPixelFormat(pgContext* context);
-pgVoid pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, pgBool fullscreen);
+pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, pgBool fullscreen);
 
 pgVoid pgInitializeContextExtensions(pgContext* context);
 pgVoid pgMakeCurrent(pgContext* context);

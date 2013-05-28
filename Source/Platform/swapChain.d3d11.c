@@ -71,7 +71,7 @@ pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 	InitializeBackBuffer(swapChain);
 }
 
-pgVoid pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen)
+pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen)
 {
 	// See also http://msdn.microsoft.com/en-us/library/windows/desktop/ee417025(v=vs.85).aspx#full-screen_issues
 
@@ -83,15 +83,27 @@ pgVoid pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32
 	desc.RefreshRate.Numerator = 0;
 	desc.RefreshRate.Denominator = 0;
 
-	PG_D3DCALL(IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc), "Error while resizing swap chain target.");
-	PG_D3DCALL(IDXGISwapChain_SetFullscreenState(swapChain->ptr, fullscreen, NULL), "Error while entering or leaving fullscreen mode.");
+	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
+	{
+		pgError("Error while resizing swap chain target.");
+		return PG_FALSE;
+	}
 
-	desc.RefreshRate.Numerator = 0;
-	desc.RefreshRate.Denominator = 0;
-	PG_D3DCALL(IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc), "Error while resizing swap chain target with default refresh rate.");
+	if (IDXGISwapChain_SetFullscreenState(swapChain->ptr, fullscreen, NULL) != S_OK)
+	{
+		pgError("Error while entering or leaving fullscreen mode.");
+		return PG_FALSE;
+	}
+
+	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
+	{
+		pgError("Error while resizing swap chain target.");
+		return PG_FALSE;
+	}
 
 	pgResizeSwapChain(swapChain, width, height);
 	pgPresent(swapChain);
+	return PG_TRUE;
 }
 
 //====================================================================================================================

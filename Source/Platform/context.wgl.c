@@ -139,21 +139,24 @@ pgVoid pgSetPixelFormat(pgContext* context)
 		pgWin32Error("Failed to set pixel format.");
 }
 
-pgVoid pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, pgBool fullscreen)
+pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, pgBool fullscreen)
 {
-	DEVMODE devMode;
-	memset(&devMode, 0, sizeof(devMode));
-	devMode.dmSize = sizeof(devMode);
-	devMode.dmPelsWidth = width;
-	devMode.dmPelsHeight = height;
-	devMode.dmBitsPerPel = 32;
-	devMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
-
 	// Switch to fullscreen mode
 	if (fullscreen)
 	{
+		DEVMODE devMode;
+		memset(&devMode, 0, sizeof(devMode));
+		devMode.dmSize = sizeof(devMode);
+		devMode.dmPelsWidth = width;
+		devMode.dmPelsHeight = height;
+		devMode.dmBitsPerPel = 32;
+		devMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
+
 		if (ChangeDisplaySettings(&devMode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
+		{
 			pgError("Failed to switch to fullscreen mode.");
+			return PG_FALSE;
+		}
 		else
 		{
 			// Store the current window size so that we can restore it when we return from fullscreen mode
@@ -171,6 +174,7 @@ pgVoid pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 			ShowWindow(context->hwnd, SW_SHOW);
 
 			context->fullscreen = PG_TRUE;
+			return PG_TRUE;
 		}
 	}
 
@@ -180,6 +184,8 @@ pgVoid pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 		SwitchToWindowedMode(context);
 		context->fullscreen = PG_FALSE;
 	}
+
+	return PG_TRUE;
 }
 
 pgVoid pgInitializeContextExtensions(pgContext* context)
