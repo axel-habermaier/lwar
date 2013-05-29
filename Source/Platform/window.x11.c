@@ -291,7 +291,8 @@ static pgMouseButton TranslateButton(unsigned int button)
 static pgKey TranslateKey(unsigned int keyCode)
 {
 	KeySym lower;
-	KeySym key = XKeycodeToKeysym(x11State.display, keyCode, 0);
+	int num;
+	KeySym key = *XGetKeyboardMapping(x11State.display, keyCode, 1, &num);
 
 	switch (key)
 	{
