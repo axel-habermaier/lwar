@@ -17,6 +17,8 @@ Source/Framework/obj
 Source/Platform/obj
 Source/LibNoise/obj
 Source/LibNoise/bin
+Source/Platform/Platform.md.pc
+Source/Server/Server.md.pc
 Assets/obj
 Assets/bin
 Assets/temp

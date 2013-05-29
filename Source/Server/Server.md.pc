@@ -1,5 +1,0 @@
-Name: Server
-Description: 
-Version: 0.1
-Libs: -L"/home/axel/lwar/Binaries x64/Release OpenGL3/" -llwar-server
-Cflags: -I"/home/axel/lwar/Source/Server"
