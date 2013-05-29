@@ -83,7 +83,7 @@ pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32
 	desc.RefreshRate.Numerator = 0;
 	desc.RefreshRate.Denominator = 0;
 
-	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
+	if (fullscreen && IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
 	{
 		PG_ERROR("Error while resizing swap chain target.");
 		return PG_FALSE;
@@ -95,7 +95,7 @@ pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32
 		return PG_FALSE;
 	}
 
-	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
+	if (fullscreen && IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
 	{
 		PG_ERROR("Error while resizing swap chain target.");
 		return PG_FALSE;
