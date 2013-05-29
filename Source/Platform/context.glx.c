@@ -39,12 +39,12 @@ pgVoid pgCreateContext(pgContext* context)
 	
 	XSync(x11State.display, PG_FALSE);
 	if (ctxErrorOccurred || context->ctx == NULL)
-		pgDie("Failed to initialize the OpenGL context.");
+		PG_DIE("Failed to initialize the OpenGL context.");
 
 	XSetErrorHandler(oldHandler);
 	
 	if (!glXIsDirect(x11State.display, context->ctx))
-		pgDie("No direct rendering context could be established.");
+		PG_DIE("No direct rendering context could be established.");
 }
 
 pgVoid pgDestroyContext(pgContext* context)
@@ -53,7 +53,7 @@ pgVoid pgDestroyContext(pgContext* context)
 	XFree(context->configs);
 
 	if (!glXMakeCurrent(x11State.display, 0, NULL))
-		pgDie("Unable to unset the current OpenGL context.");
+		PG_DIE("Unable to unset the current OpenGL context.");
 		
 	if (context->ctx != NULL)
 		glXDestroyContext(x11State.display, context->ctx);
@@ -79,7 +79,7 @@ pgVoid pgCreateContextWindow(pgContext* context)
 		DefaultDepth(x11State.display, x11State.screen), InputOutput, DefaultVisual(x11State.display, x11State.screen), 0, NULL);
 	
 	if (!context->window)
-		pgDie("Failed to initialize the OpenGL initialization window.");
+		PG_DIE("Failed to initialize the OpenGL initialization window.");
 
 	XFlush(x11State.display);
 }
@@ -89,7 +89,7 @@ pgVoid pgDestroyContextWindow(pgContext* context)
 	if (context->window)
 	{
 		if (!XDestroyWindow(x11State.display, context->window))
-			pgDie("Failed to destroy the OpenGL initialization window.");
+			PG_DIE("Failed to destroy the OpenGL initialization window.");
 			
 		XFlush(x11State.display);
 	}
@@ -101,7 +101,7 @@ pgVoid pgSetPixelFormat(pgContext* context)
 {
 	XWindowAttributes windowAttributes;
 	if (!XGetWindowAttributes(x11State.display, context->window, &windowAttributes))
-		pgDie("Failed to get the window attributes.");
+		PG_DIE("Failed to get the window attributes.");
 
 	XVisualInfo visualInfo;
 	visualInfo.depth = windowAttributes.depth;
@@ -113,7 +113,7 @@ pgVoid pgSetPixelFormat(pgContext* context)
 	if (visuals == NULL || count == 0)
 	{
 		XFree(visuals);
-		pgDie("Failed to get any visuals for window.");
+		PG_DIE("Failed to get any visuals for window.");
 	}
 
 	XVisualInfo* bestVisual = NULL;
@@ -142,13 +142,13 @@ pgVoid pgSetPixelFormat(pgContext* context)
 	}
 
 	if (bestVisual == NULL)
-		pgDie("Unable to find a matching frame buffer configuration.");
+		PG_DIE("Unable to find a matching frame buffer configuration.");
 
 	GLXFBConfig* configs = glXChooseFBConfig(x11State.display, x11State.screen, NULL, &count);
 	if (configs == NULL || count == 0)
 	{
 		XFree(configs);
-		pgDie("Failed to get frame buffer configuration.");
+		PG_DIE("Failed to get frame buffer configuration.");
 	}
 
 	Window root = RootWindow(x11State.display, x11State.screen);
@@ -167,7 +167,7 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 		int version;
 		if (!XQueryExtension(x11State.display, "RANDR", &version, &version, &version))
 		{
-			pgError("XRandR extension not found. Fullscreen mode is not supported on this system.");
+			PG_ERROR("XRandR extension not found. Fullscreen mode is not supported on this system.");
 			return PG_FALSE;
 		}
 
@@ -175,7 +175,7 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 		XRRScreenConfiguration* config = XRRGetScreenInfo(x11State.display, RootWindow(x11State.display, x11State.screen));
 		if (!config)
 		{
-			pgError("Failed to get the current screen configuration. Fullscreen mode is not supported on this system.");
+			PG_ERROR("Failed to get the current screen configuration. Fullscreen mode is not supported on this system.");
 			return PG_FALSE;
 		}
 
@@ -209,7 +209,7 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 
 		if (!modeFound)
 		{
-			pgError("No fullscreen mode of the desired size has been found.");
+			PG_ERROR("No fullscreen mode of the desired size has been found.");
 			return PG_FALSE;
 		}
 
@@ -233,19 +233,19 @@ pgVoid pgInitializeContextExtensions(pgContext* context)
 	int major, minor;
  
 	if (!glXQueryVersion(x11State.display, &major, &minor))
-		pgDie("Failed to retrieve the GLX version.");
+		PG_DIE("Failed to retrieve the GLX version.");
 	
 	if ((major == 1 && minor < 3) ||  major < 1)
-		pgDie("GLX version 1.3 is required but found version %d.%d only.", major, minor);
+		PG_DIE("GLX version 1.3 is required but found version %d.%d only.", major, minor);
 
 	if (glx_LoadFunctions(x11State.display, x11State.screen) == glx_LOAD_FAILED)
-		pgDie("GLX initialization failed.");
+		PG_DIE("GLX initialization failed.");
 
 	glxExtsSupported &= GlxExtSupported(glx_ext_ARB_create_context_profile, "GLX_ARB_create_context_profile");
 	glxExtsSupported &= GlxExtSupported(glx_ext_ARB_create_context, "GLX_ARB_create_context");
 
 	if (!glxExtsSupported)
-		pgDie("Not all required GLX extensions are supported.");
+		PG_DIE("Not all required GLX extensions are supported.");
 }
 
 pgVoid pgMakeCurrent(pgContext* context)
@@ -256,7 +256,7 @@ pgVoid pgMakeCurrent(pgContext* context)
 
 	current = context;
 	if (!glXMakeCurrent(x11State.display, context->window, context->ctx))
-		pgDie("Failed to make OpenGL context current.");
+		PG_DIE("Failed to make OpenGL context current.");
 }
 
 pgVoid pgSwapBuffers(pgContext* context)
@@ -281,7 +281,7 @@ static pgBool GlxExtSupported(int extension, pgString extensionName)
 {
 	if (extension != glx_LOAD_SUCCEEDED)
 	{
-		pgError("Extension '%s' is not supported.", extensionName);
+		PG_ERROR("Extension '%s' is not supported.", extensionName);
 		return PG_FALSE;
 	}
 

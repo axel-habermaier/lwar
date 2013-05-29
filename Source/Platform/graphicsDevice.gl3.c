@@ -87,9 +87,9 @@ pgVoid pgPrintDeviceInfoCore(pgGraphicsDevice* device)
 {
 	pgMakeCurrent(&device->context);
 
-	pgInfo("OpenGL renderer: %s (%s)", glGetString(GL_RENDERER), glGetString(GL_VENDOR));
-	pgInfo("OpenGL version: %s", glGetString(GL_VERSION));
-	pgInfo("OpenGL GLSL version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	PG_INFO("OpenGL renderer: %s (%s)", glGetString(GL_RENDERER), glGetString(GL_VENDOR));
+	PG_INFO("OpenGL version: %s", glGetString(GL_VERSION));
+	PG_INFO("OpenGL GLSL version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -102,7 +102,7 @@ static pgBool GlExtSupported(int extension, pgString extensionName)
 {
 	if (extension != ogl_LOAD_SUCCEEDED)
 	{
-		pgError("Extension '%s' is not supported.", extensionName);
+		PG_ERROR("Extension '%s' is not supported.", extensionName);
 		return PG_FALSE;
 	}
 
@@ -115,13 +115,13 @@ static pgVoid InitializeOpenGLExtensions()
 	pgBool glExtsSupported = PG_TRUE;
 
 	if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
-		pgDie("OpenGL initialization failed.");
+		PG_DIE("OpenGL initialization failed.");
 
 	glGetIntegerv(GL_MAJOR_VERSION, &major);
 	glGetIntegerv(GL_MINOR_VERSION, &minor);
 
 	if (major < 3 || (major == 3 && minor < 3))
-		pgDie("Only OpenGL %d.%d seems to be supported. OpenGL 3.3 is required.", major, minor);
+		PG_DIE("Only OpenGL %d.%d seems to be supported. OpenGL 3.3 is required.", major, minor);
 
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_sampler_objects, "GL_ARB_sampler_objects");
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_separate_shader_objects, "GL_ARB_separate_shader_objects");
@@ -130,7 +130,7 @@ static pgVoid InitializeOpenGLExtensions()
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_compression_s3tc, "GL_EXT_texture_compression_s3tc");
 
 	if (!glExtsSupported)
-		pgDie("Incompatible graphics card. Not all required OpenGL extenions are supported.");
+		PG_DIE("Incompatible graphics card. Not all required OpenGL extenions are supported.");
 }
 
 static pgInt32 FlipY(pgGraphicsDevice* device, pgInt32 top, pgInt32 height)

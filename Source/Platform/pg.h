@@ -39,24 +39,24 @@ typedef pgInt32				pgBool;
 // Pegasus library types
 //====================================================================================================================
 
-typedef pgVoid (*pgLogCallback)(pgString message);
-
-typedef struct
+typedef enum
 {
-	// The die callback is expected to terminate the application. If it does not, the resulting behavior of the
-	// Pegasus library is undefined.
-	pgLogCallback die;
-	pgLogCallback error;
-	pgLogCallback warning;
-	pgLogCallback info;
-	pgLogCallback debug;
-} pgLogCallbacks;
+	PG_LOGTYPE_FATAL	= 1,
+	PG_LOGTYPE_ERROR	= 2,
+	PG_LOGTYPE_WARNING	= 3,
+	PG_LOGTYPE_INFO		= 4,
+	PG_LOGTYPE_DEBUG	= 5
+} pgLogType;
+
+// The callback is expected to terminate the application if type == PG_LOGTYPE_FATAL. If it does not, the resulting 
+// behavior of the Pegasus library is undefined.
+typedef pgVoid (*pgLogCallback)(pgLogType type, pgString message);
 
 //====================================================================================================================
 // Pegasus library functions
 //====================================================================================================================
 
-PG_API_EXPORT pgVoid pgInitialize(pgLogCallbacks* callbacks);
+PG_API_EXPORT pgVoid pgInitialize(pgLogCallback callback);
 PG_API_EXPORT pgVoid pgShutdown();
 PG_API_EXPORT pgFloat64 pgGetTime();
 

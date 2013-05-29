@@ -27,13 +27,13 @@ pgVoid pgBeginQueryCore(pgQuery* query)
 	switch (query->type)
 	{
 	case PG_TIMESTAMP_QUERY:
-		pgDie("Not supported.");
+		PG_DIE("Not supported.");
 		break;
 	case PG_TIMESTAMP_DISJOINT_QUERY:
 		// Not required by OpenGL
 		break;
 	case PG_OCCLUSION_QUERY:
-		pgDie("Not implemented.");
+		PG_DIE("Not implemented.");
 		break;
 	default:
 		PG_NO_SWITCH_DEFAULT;
@@ -53,7 +53,7 @@ pgVoid pgEndQueryCore(pgQuery* query)
 		// Not required by OpenGL
 		break;
 	case PG_OCCLUSION_QUERY:
-		pgDie("Not implemented.");
+		PG_DIE("Not implemented.");
 		break;
 	default:
 		PG_NO_SWITCH_DEFAULT;
@@ -82,7 +82,7 @@ pgVoid pgGetQueryDataCore(pgQuery* query, pgVoid* data, pgInt32 size)
 		break;
 	}
 	case PG_OCCLUSION_QUERY:
-		pgDie("Not implemented.");
+		PG_DIE("Not implemented.");
 		break;
 	default:
 		PG_NO_SWITCH_DEFAULT;

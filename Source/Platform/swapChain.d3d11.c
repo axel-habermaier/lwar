@@ -85,19 +85,19 @@ pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32
 
 	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
 	{
-		pgError("Error while resizing swap chain target.");
+		PG_ERROR("Error while resizing swap chain target.");
 		return PG_FALSE;
 	}
 
 	if (IDXGISwapChain_SetFullscreenState(swapChain->ptr, fullscreen, NULL) != S_OK)
 	{
-		pgError("Error while entering or leaving fullscreen mode.");
+		PG_ERROR("Error while entering or leaving fullscreen mode.");
 		return PG_FALSE;
 	}
 
 	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
 	{
-		pgError("Error while resizing swap chain target.");
+		PG_ERROR("Error while resizing swap chain target.");
 		return PG_FALSE;
 	}
 

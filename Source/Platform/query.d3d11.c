@@ -50,7 +50,7 @@ pgVoid pgGetQueryDataCore(pgQuery* query, pgVoid* data, pgInt32 size)
 		break;
 	}
 	case PG_OCCLUSION_QUERY:
-		pgDie("Not implemented.");
+		PG_DIE("Not implemented.");
 		break;
 	default:
 		PG_NO_SWITCH_DEFAULT;

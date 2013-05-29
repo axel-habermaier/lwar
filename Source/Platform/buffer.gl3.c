@@ -45,7 +45,7 @@ pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode)
 	PG_ASSERT_NO_GL_ERRORS();
 
 	if (mappedBuffer == NULL)
-		pgDie("Failed to map buffer.");
+		PG_DIE("Failed to map buffer.");
 	
 	return mappedBuffer;
 }
@@ -62,7 +62,7 @@ pgVoid pgUnmapBufferCore(pgBuffer* buffer)
 	PG_ASSERT_NO_GL_ERRORS();
 
 	if (!success)
-		pgDie("Failed to unmap buffer.");
+		PG_DIE("Failed to unmap buffer.");
 }
 
 pgVoid pgBindConstantBufferCore(pgBuffer* buffer, pgInt32 slot)

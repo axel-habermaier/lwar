@@ -138,21 +138,21 @@ static pgVoid pgValidateFramebufferCompleteness()
 	case GL_FRAMEBUFFER_COMPLETE:
 		return;
 	case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT.");
+		PG_DIE("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT.");
 	case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT.");
+		PG_DIE("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT.");
 	case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER.");
+		PG_DIE("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER.");
 	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER.");
+		PG_DIE("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER.");
 	case GL_FRAMEBUFFER_UNSUPPORTED:
-		pgDie("Frame buffer status: GL_FRAMEBUFFER_UNSUPPORTED.");
+		PG_DIE("Frame buffer status: GL_FRAMEBUFFER_UNSUPPORTED.");
 	case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE.");
+		PG_DIE("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE.");
 	case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
-		pgDie("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS.");
+		PG_DIE("Frame buffer status: GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS.");
 	default:
-		pgDie("The frame buffer is incomplete for an unknown reason.");
+		PG_DIE("The frame buffer is incomplete for an unknown reason.");
 	}
 }
 

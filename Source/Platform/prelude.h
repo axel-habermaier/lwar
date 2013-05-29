@@ -82,7 +82,7 @@
 	PG_MULTILINE_MACRO_BEGIN \
 	(ptr) = (type*)malloc(sizeof(type)); \
 	if ((ptr) == NULL) \
-		pgDie("Out of memory: Failed to allocate %d bytes for an object of type '" #type "'.", sizeof(type)); \
+		PG_DIE("Out of memory: Failed to allocate %d bytes for an object of type '" #type "'.", sizeof(type)); \
 	memset((void*)(ptr), 0, sizeof(type)); \
 	PG_MULTILINE_MACRO_END
 
@@ -92,7 +92,7 @@
 	PG_MULTILINE_MACRO_BEGIN \
 	(ptr) = (type*)malloc(sizeof(type) * length); \
 	if ((ptr) == NULL) \
-		pgDie("Out of memory: Failed to allocate %d bytes for an array of type '" #type "'.", sizeof(type) * length); \
+		PG_DIE("Out of memory: Failed to allocate %d bytes for an array of type '" #type "'.", sizeof(type) * length); \
 	memset((void*)(ptr), 0, sizeof(type) * length); \
 	PG_MULTILINE_MACRO_END
 
@@ -103,13 +103,13 @@
 		PG_MULTILINE_MACRO_BEGIN											\
 		if (!(cond))														\
 		{																	\
-			pgError("Assertion '" #cond "' failed. " fmt, ##__VA_ARGS__);	\
+			PG_ERROR("Assertion '" #cond "' failed. " fmt, ##__VA_ARGS__);	\
 			PG_DEBUG_BREAK;													\
-			pgDie("Aborted due to assertion violation");					\
+			PG_DIE("Aborted due to assertion violation");					\
 		}																	\
 		PG_MULTILINE_MACRO_END
 
-	#define PG_ASSERT_NOT_REACHED(fmt, ...) pgDie(fmt, ##__VA_ARGS__)
+	#define PG_ASSERT_NOT_REACHED(fmt, ...) PG_DIE(fmt, ##__VA_ARGS__)
 	#define PG_ASSERT_NOT_NULL(ptr) PG_ASSERT((ptr) != NULL, "Pointer '" #ptr "' is null.")
 	#define PG_ASSERT_NULL(ptr) PG_ASSERT((ptr) == NULL, "Pointer '" #ptr "' must be null.")
 	#define PG_ASSERT_IN_RANGE(v, lower, upper) PG_ASSERT(v >= lower && v < upper, "'" #v "' is out of range.")
@@ -139,22 +139,36 @@
 #include "pgGraphics.h"
 
 //====================================================================================================================
-// Pegasus state and internal functions
+// Pegasus logging, state and internal functions
 //====================================================================================================================
 
 typedef struct
 {
 	pgBool			initialized;
-	pgLogCallbacks	logCallbacks;
-} LibraryState;
+	pgLogCallback	logCallback;
+} pgLibraryState;
 
-extern LibraryState libraryState;
+extern pgLibraryState pgState;
 
-PG_NORETURN pgVoid pgDie(pgString message, ...);
-pgVoid pgError(pgString message, ...);
-pgVoid pgWarn(pgString message, ...);
-pgVoid pgInfo(pgString message, ...);
-pgVoid pgDebugInfo(pgString message, ...);
+pgString pgFormat(pgString message, ...);
+PG_NORETURN pgVoid pgNoReturn();
+
+#define PG_DIE(fmt, ...)													\
+	PG_MULTILINE_MACRO_BEGIN												\
+	pgState.logCallback(PG_LOGTYPE_FATAL, pgFormat(fmt, ##__VA_ARGS__));    \
+	PG_DEBUG_BREAK;															\
+	pgNoReturn();															\
+	PG_MULTILINE_MACRO_END
+
+#define PG_ERROR(fmt, ...) pgState.logCallback(PG_LOGTYPE_ERROR, pgFormat(fmt, __VA_ARGS__))
+#define PG_WARN(fmt, ...) pgState.logCallback(PG_LOGTYPE_WARNING, pgFormat(fmt, __VA_ARGS__))
+#define PG_INFO(fmt, ...) pgState.logCallback(PG_LOGTYPE_INFO, pgFormat(fmt, __VA_ARGS__))
+
+#ifdef DEBUG
+	#define PG_DEBUG(fmt, ...) pgState.logCallback(PG_LOGTYPE_DEBUG, pgFormat(fmt, __VA_ARGS__))
+#else
+	#define PG_DEBUG(fmt, ...)
+#endif
 
 //====================================================================================================================
 // Platform-specific includes

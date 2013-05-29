@@ -706,7 +706,7 @@ static pgKey TranslateKey(UINT virtualKey)
 		return PG_KEY_NUM9;
 	}
 
-	pgDebugInfo("An unknown key was pressed. Virtual key code: '%d'.", virtualKey);
+	PG_DEBUG("An unknown key was pressed. Virtual key code: '%d'.", virtualKey);
 	return PG_KEY_UNKNOWN;
 }
 

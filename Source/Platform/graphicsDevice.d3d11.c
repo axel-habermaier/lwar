@@ -40,7 +40,7 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 
 	PG_D3DCALL(CreateDXGIFactory(&IID_IDXGIFactory, &device->factory), "Failed to create DXGI factory.");
 	if (IDXGIFactory_EnumAdapters(device->factory, 0, &device->adapter) == DXGI_ERROR_NOT_FOUND)
-		pgDie("Failed to get DXGI adapter.");
+		PG_DIE("Failed to get DXGI adapter.");
 	
 	
 	flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
@@ -52,7 +52,7 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 		"Failed to create Direct3D 11 device.");
 
 	if (featureLevel < REQUIRED_FEATURE_LEVEL)
-		pgDie("Incompatible graphics card: Only feature level %s is supported, but feature level %s is required.", 
+		PG_DIE("Incompatible graphics card: Only feature level %s is supported, but feature level %s is required.", 
 			FeatureLevelToString(featureLevel), FeatureLevelToString(REQUIRED_FEATURE_LEVEL));
 }
 
@@ -118,8 +118,8 @@ pgVoid pgPrintDeviceInfoCore(pgGraphicsDevice* device)
 	IDXGIAdapter_GetDesc(device->adapter, &adapterDesc);
 	wcstombs(buffer, adapterDesc.Description, sizeof(buffer));
 
-	pgInfo("Direct3D renderer: %s", buffer);
-	pgInfo("Direct3D feature level: %s", featureLevel);
+	PG_INFO("Direct3D renderer: %s", buffer);
+	PG_INFO("Direct3D feature level: %s", featureLevel);
 }
 
 #endif

@@ -22,12 +22,12 @@ pgVoid pgCheckGLError(pgString file, pgInt32 line)
 		case GL_OUT_OF_MEMORY:		msg = "GL_OUT_OF_MEMORY";		break;		
 		}		
 
-		pgError("OpenGL error at %s(%d): %s", file, line, msg);			
+		PG_ERROR("OpenGL error at %s(%d): %s", file, line, msg);			
 		glErrorOccurred = GL_TRUE;												
 	}		
 
 	if (glErrorOccurred)														
-		pgDie("Stopped after OpenGL error.");	
+		PG_DIE("Stopped after OpenGL error.");	
 }
 
 //====================================================================================================================

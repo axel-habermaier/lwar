@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Platform.Logging
 {
+	using System.Diagnostics;
+
 	/// <summary>
 	///   Represents a log entry with a specific type and message.
 	/// </summary>
@@ -49,6 +51,7 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <summary>
 		///   Raises the appropriate log event for the log entries.
 		/// </summary>
+		[DebuggerHidden]
 		public void RaiseLogEvent()
 		{
 			switch (LogType)

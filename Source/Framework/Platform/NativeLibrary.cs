@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Graphics;
@@ -39,17 +40,10 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   The log callbacks that have been passed to the native code. We must keep a reference in order to prevent
-		///   the garbage collector from freeing the delegates while they are still being used by native code.
+		///   The log callback that has been passed to the native code. We must keep a reference in order to prevent
+		///   the garbage collector from freeing the delegate while it is still being used by native code.
 		/// </summary>
-		private readonly NativeMethods.LogCallbacks _logCallbacks = new NativeMethods.LogCallbacks
-		{
-			Die = s => Log.Die(LogCategory.Graphics, "{0}", s),
-			Error = s => Log.Error(LogCategory.Graphics, "{0}", s),
-			Warning = s => Log.Warn(LogCategory.Graphics, "{0}", s),
-			Info = s => Log.Info(LogCategory.Graphics, "{0}", s),
-			Debug = s => Log.DebugInfo(LogCategory.Graphics, "{0}", s)
-		};
+		private readonly NativeMethods.LogCallback _logCallback;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -58,8 +52,11 @@ namespace Pegasus.Framework.Platform
 		{
 			Assert.That(!_isInitialized, "The library has already been initialized.");
 
+			_logCallback = OnLoggedMessage;
+			
 			Log.Info(LogCategory.Platform, "Initializing native platform library...");
-			NativeMethods.Initialize(ref _logCallbacks);
+			NativeMethods.Initialize(_logCallback);
+
 			_isInitialized = true;
 		}
 
@@ -74,6 +71,21 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		/// Invoked when the native library generates a log entry.
+		/// </summary>
+		/// <param name="type">The type of the generated log entry.</param>
+		/// <param name="message">The message that has been generated.</param>
+		[DebuggerHidden]
+		private static void OnLoggedMessage(LogType type, string message)
+		{
+			Assert.InRange(type);
+			Assert.ArgumentNotNullOrWhitespace(message);
+
+			var logEntry = new LogEntry(LogCategory.Graphics, type, message);
+			logEntry.RaiseLogEvent();
+		}
+
+		/// <summary>
 		///   Provides access to the native platform types and functions.
 		/// </summary>
 #if !DEBUG
@@ -81,26 +93,16 @@ namespace Pegasus.Framework.Platform
 #endif
 		private static class NativeMethods
 		{
-			public delegate void LogCallback(string message);
+			public delegate void LogCallback(LogType type, string message);
 
 			[DllImport(LibraryName, EntryPoint = "pgInitialize")]
-			public static extern void Initialize(ref LogCallbacks callbacks);
+			public static extern void Initialize(LogCallback callback);
 
 			[DllImport(LibraryName, EntryPoint = "pgShutdown")]
 			public static extern void Shutdown();
 
 			[DllImport(LibraryName, EntryPoint = "pgGetGraphicsApi")]
 			public static extern GraphicsApi GetGraphicsApi();
-
-			[StructLayout(LayoutKind.Sequential)]
-			public struct LogCallbacks
-			{
-				public LogCallback Die;
-				public LogCallback Error;
-				public LogCallback Warning;
-				public LogCallback Info;
-				public LogCallback Debug;
-			}
 		}
 	}
 }

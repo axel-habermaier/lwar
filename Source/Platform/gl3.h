@@ -59,7 +59,7 @@ pgVoid pgCheckGLError(pgString file, pgInt32 line);
 	func(1, &(handle));																	\
 	PG_ASSERT_NO_GL_ERRORS();															\
 	if ((handle) == 0)																	\
-		pgDie("Failed to allocate an OpenGL object of type '%s'.", type);				\
+		PG_DIE("Failed to allocate an OpenGL object of type '%s'.", type);				\
 	PG_MULTILINE_MACRO_END
 
 #define PG_GL_FREE(func, handle)														\

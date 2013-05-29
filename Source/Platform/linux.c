@@ -17,7 +17,7 @@ pgVoid pgInitializeX11()
 
 	x11State.display = XOpenDisplay(NULL);
 	if (x11State.display == NULL)
-		pgDie("Unable to connect to X11.");
+		PG_DIE("Unable to connect to X11.");
 
 	x11State.screen = XDefaultScreen(x11State.display);
 }

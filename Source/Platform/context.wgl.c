@@ -123,16 +123,16 @@ pgVoid pgSetPixelFormat(pgContext* context)
 		pgWin32Error("Failed to get pixel format description.");
 
 	if (descriptor.cColorBits != colorBits)
-		pgDie("Chosen pixel format has a %d bits per color; expected %d bits.", descriptor.cColorBits, colorBits);
+		PG_DIE("Chosen pixel format has a %d bits per color; expected %d bits.", descriptor.cColorBits, colorBits);
 
 	if (descriptor.cAlphaBits != alphaBits)
-		pgDie("Chosen pixel format has a %d alpha bits; expected %d bits.", descriptor.cAlphaBits, alphaBits);
+		PG_DIE("Chosen pixel format has a %d alpha bits; expected %d bits.", descriptor.cAlphaBits, alphaBits);
 
 	if (descriptor.cDepthBits != depthBits)
-		pgDie("Chosen pixel format has a %d bit depth buffer; expected %d bits.", descriptor.cDepthBits, depthBits);
+		PG_DIE("Chosen pixel format has a %d bit depth buffer; expected %d bits.", descriptor.cDepthBits, depthBits);
 
 	if (descriptor.cStencilBits != stencilBits)
-		pgDie("Chosen pixel format has a %d bit stencil buffer; expected %d bits.", descriptor.cStencilBits, stencilBits);
+		PG_DIE("Chosen pixel format has a %d bit stencil buffer; expected %d bits.", descriptor.cStencilBits, stencilBits);
 
 	// Set the chosen pixel format
 	if (!SetPixelFormat(context->hdc, bestMatch, &descriptor))
@@ -154,7 +154,7 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 
 		if (ChangeDisplaySettings(&devMode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 		{
-			pgError("Failed to switch to fullscreen mode.");
+			PG_ERROR("Failed to switch to fullscreen mode.");
 			return PG_FALSE;
 		}
 		else
@@ -189,7 +189,7 @@ pgVoid pgInitializeContextExtensions(pgContext* context)
 		pgWin32Error("Failed to make the legacy OpenGL context current.");
 
 	if (wgl_LoadFunctions(context->hdc) == wgl_LOAD_FAILED)
-		pgDie("WGL initialization failed.");
+		PG_DIE("WGL initialization failed.");
 
 	wglExtsSupported &= WglExtSupported(wgl_ext_ARB_extensions_string, "WGL_ARB_extensions_string");
 	wglExtsSupported &= WglExtSupported(wgl_ext_ARB_create_context, "WGL_ARB_create_context");
@@ -197,7 +197,7 @@ pgVoid pgInitializeContextExtensions(pgContext* context)
 	wglExtsSupported &= WglExtSupported(wgl_ext_ARB_pixel_format, "WGL_ARB_pixel_format");
 
 	if (!wglExtsSupported)
-		pgDie("Not all required WGL extensions are supported.");
+		PG_DIE("Not all required WGL extensions are supported.");
 	
 	if (!wglMakeCurrent(NULL, NULL))
 		pgWin32Error("Unable to unset the legacy OpenGL context.");
@@ -237,7 +237,7 @@ static pgBool WglExtSupported(int extension, pgString extensionName)
 {
 	if (extension != wgl_LOAD_SUCCEEDED)
 	{
-		pgError("Extension '%s' is not supported.", extensionName);
+		PG_ERROR("Extension '%s' is not supported.", extensionName);
 		return PG_FALSE;
 	}
 

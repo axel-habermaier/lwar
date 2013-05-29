@@ -47,9 +47,9 @@ pgVoid pgDieWin32Error(pgString message, DWORD error)
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer,	sizeof(buffer), NULL);
 
 	if (success)
-		pgDie("%s %s", message, buffer);
+		PG_DIE("%s %s", message, buffer);
 	else
-		pgDie("%s (error code: 0x%X)", message, error);
+		PG_DIE("%s (error code: 0x%X)", message, error);
 }
 
 #endif

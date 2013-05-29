@@ -37,7 +37,7 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 		CWEventMask | CWOverrideRedirect, &attributes);
 		
 	if (!window->handle)
-		pgDie("Failed to create X11 window.");
+		PG_DIE("Failed to create X11 window.");
 		
 	pgSetWindowTitle(window, window->params.title);
 	
@@ -46,13 +46,13 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 	
 	window->inputMethod = XOpenIM(x11State.display, NULL, NULL, NULL);
 	if (window->inputMethod == NULL)
-		pgDie("Failed to get input method for X11 window.");
+		PG_DIE("Failed to get input method for X11 window.");
 		
 	window->inputContext = XCreateIC(window->inputMethod, XNClientWindow, window->handle, XNFocusWindow, window->handle,
 		XNInputStyle, XIMPreeditNothing | XIMStatusNothing, NULL);
 		
 	if (window->inputContext == NULL)
-		pgDie("Failed to create input context for X11 window.");
+		PG_DIE("Failed to create input context for X11 window.");
 		
 	XMapWindow(x11State.display, window->handle);
 	XFlush(x11State.display);
@@ -74,7 +74,7 @@ pgVoid pgCloseWindowCore(pgWindow* window)
 	if (window->handle)
 	{
 		if (!XDestroyWindow(x11State.display, window->handle))
-			pgDie("Failed to destroy the window.");
+			PG_DIE("Failed to destroy the window.");
 		XFlush(x11State.display);
 	}
 	
@@ -95,7 +95,7 @@ pgVoid pgGetWindowSizeCore(pgWindow* window, pgInt32* width, pgInt32* height)
 {
 	XWindowAttributes attributes;
 	if (XGetWindowAttributes(x11State.display, window->handle, &attributes) == 0)
-		pgDie("Failed to get the window attributes.");
+		PG_DIE("Failed to get the window attributes.");
 
 	*width = attributes.width;
 	*height = attributes.height;
@@ -223,7 +223,7 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e)
 			{
 				long symbol = KeySymbolToUtf16(keySym);
 				if (symbol > UINT16_MAX)
-					pgDebugInfo("The unicode character exceeds the limits of a 2-byte unsigned integer.");
+					PG_DEBUG("The unicode character exceeds the limits of a 2-byte unsigned integer.");
 					
 				if (symbol > 31)
 					params->characterEntered((pgUint16)symbol);

@@ -3,106 +3,58 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-LibraryState libraryState;
+pgLibraryState pgState;
 
 //====================================================================================================================
 // Exported functions
 //====================================================================================================================
 
-pgVoid pgInitialize(pgLogCallbacks* callbacks)
+pgVoid pgInitialize(pgLogCallback callback)
 {
 	// We have to use the default C assert() here, as we are about to initialize the infrastructure for the 
 	// PG_ASSERT macros
-	assert(callbacks != NULL);
-	assert(callbacks->die != NULL);
-	assert(callbacks->error != NULL);
-	assert(callbacks->warning != NULL);
-	assert(callbacks->info != NULL);
-	assert(callbacks->debug != NULL);
-	assert(libraryState.initialized == PG_FALSE);
+	assert(callback != NULL);
+	assert(pgState.initialized == PG_FALSE);
 
-	libraryState.initialized = PG_TRUE;
-	libraryState.logCallbacks = *callbacks;
+	pgState.initialized = PG_TRUE;
+	pgState.logCallback = callback;
 }
 
 pgVoid pgShutdown()
 {
-	PG_ASSERT(libraryState.initialized == PG_TRUE, "Library is not initialized.");
-	libraryState.initialized = PG_FALSE;
+	PG_ASSERT(pgState.initialized == PG_TRUE, "Library is not initialized.");
+	pgState.initialized = PG_FALSE;
 }
 
 //====================================================================================================================
 // Internal functions
 //====================================================================================================================
 
-static pgString pgFormat(pgString message, va_list vl)
+pgString pgFormat(pgString message, ...)
 {
-	static pgChar buffer[4096];
+	static char buffer[4096];
+	va_list vl;
+
 	PG_ASSERT_NOT_NULL(message);
+
+	va_start(vl, message);
 
 	if (vsnprintf((char*)buffer, sizeof(buffer), (char*)message, vl) < 0)
-		pgDie("Error while generating log message.");
-	else
-		return buffer;
+		PG_DIE("Error while generating log message.");
+	
+	va_end(vl);
+	return buffer;
 }
 
-PG_NORETURN pgVoid pgDie(pgString message, ...)
+pgVoid pgNoReturn()
 {
-	va_list vl;
-	PG_ASSERT_NOT_NULL(message);
+	// A dummy non-returning function that is needed by the PG_DIE macro. Visual studio does not try to verify
+	// whether the function actually returns, whereas GCC and clang do.
 
-	va_start(vl, message);
-	libraryState.logCallbacks.die(pgFormat(message, vl));
-	va_end(vl);
-
-#ifndef _MSC_VER
-    for(;;);
+#ifndef WINDOWS
+	for(;;) {}
 #endif
 }
-
-pgVoid pgError(pgString message, ...)
-{
-	va_list vl;
-	PG_ASSERT_NOT_NULL(message);
-
-	va_start(vl, message);
-	libraryState.logCallbacks.error(pgFormat(message, vl));
-	va_end(vl);
-}
-
-pgVoid pgWarn(pgString message, ...)
-{
-	va_list vl;
-	PG_ASSERT_NOT_NULL(message);
-
-	va_start(vl, message);
-	libraryState.logCallbacks.warning(pgFormat(message, vl));
-	va_end(vl);
-}
-
-pgVoid pgInfo(pgString message, ...)
-{
-	va_list vl;
-	PG_ASSERT_NOT_NULL(message);
-
-	va_start(vl, message);
-	libraryState.logCallbacks.info(pgFormat(message, vl));
-	va_end(vl);
-}
-
-pgVoid pgDebugInfo(pgString message, ...)
-{
-	va_list vl;
-	PG_ASSERT_NOT_NULL(message);
-
-	va_start(vl, message);
-	libraryState.logCallbacks.debug(pgFormat(message, vl));
-	va_end(vl);
-}
-
-//====================================================================================================================
-// Internal functions
-//====================================================================================================================
 
 pgBool pgRectangleEqual(pgRectangle* r1, pgRectangle* r2)
 {

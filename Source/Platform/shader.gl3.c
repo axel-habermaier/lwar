@@ -57,16 +57,16 @@ static pgVoid Compile(pgShader* shader, pgUint8* shaderCode)
 	shader->id = glCreateShaderProgramv(shader->glType, 1, &code);
 	PG_ASSERT_NO_GL_ERRORS();
 	if (shader->id == 0)
-		pgDie("Failed to create OpenGL shader object.");
+		PG_DIE("Failed to create OpenGL shader object.");
 
 	glGetProgramiv(shader->id, GL_LINK_STATUS, &success);
 	glGetProgramInfoLog(shader->id, sizeof(buffer), &logLength, buffer);
 
 	if (success == GL_FALSE)
-		pgDie("Shader compilation failed: %s", buffer);
+		PG_DIE("Shader compilation failed: %s", buffer);
 
 	if (logLength != 0)
-		pgWarn("%s", buffer);
+		PG_WARN("%s", buffer);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
