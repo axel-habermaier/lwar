@@ -62,7 +62,7 @@ namespace Lwar.Client.Rendering.Renderers
 				_model.Draw(output, _effect.ColoredTexturedQuad);
 
 				_effect.Texture = new Texture2DView(_texture, SamplerState.BilinearClampNoMipmaps);
-				_effect.Color = new Vector4(1, 1,1,1);
+				_effect.Color = new Vector4(1, 1, 1, 1);
 				_model.Draw(output, _effect.ColoredTexturedQuad);
 			}
 

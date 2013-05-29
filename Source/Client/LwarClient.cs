@@ -6,7 +6,6 @@ namespace Lwar.Client
 	using GameStates;
 	using Network;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Platform.Memory;

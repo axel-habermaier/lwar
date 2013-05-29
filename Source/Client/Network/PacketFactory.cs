@@ -8,7 +8,7 @@ namespace Lwar.Client.Network
 	/// <summary>
 	///   Provides methods to create instances of incoming and outgoing packets.
 	/// </summary>
-	internal class LwarPacketFactory : IPacketFactory
+	internal class PacketFactory : IPacketFactory
 	{
 		/// <summary>
 		///   The pool that pools the byte arrays of the service packets.

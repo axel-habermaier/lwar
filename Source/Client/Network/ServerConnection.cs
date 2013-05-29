@@ -140,7 +140,7 @@ namespace Lwar.Client.Network
 						else
 						{
 							Log.Warn(LogCategory.Client, "Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
-												  sender, ServerEndPoint);
+									 sender, ServerEndPoint);
 						}
 					}
 				}

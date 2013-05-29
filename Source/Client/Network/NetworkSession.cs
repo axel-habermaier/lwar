@@ -42,7 +42,7 @@ namespace Lwar.Client.Network
 			Assert.ArgumentNotNull(serverEndPoint);
 
 			_deliveryManager = new DeliveryManager();
-			var packetFactory = new LwarPacketFactory();
+			var packetFactory = new PacketFactory();
 			_connection = new ServerConnection(serverEndPoint, packetFactory);
 
 			_outgoingMessages = new MessageQueue(packetFactory, _deliveryManager);

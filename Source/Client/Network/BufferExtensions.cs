@@ -5,8 +5,6 @@ namespace Lwar.Client.Network
 	using System.Text;
 	using Gameplay;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Network;
-	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 

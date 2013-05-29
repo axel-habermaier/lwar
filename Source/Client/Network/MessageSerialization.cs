@@ -6,7 +6,6 @@ namespace Lwar.Client.Network
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>

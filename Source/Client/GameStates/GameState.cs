@@ -3,7 +3,6 @@
 namespace Lwar.Client.GameStates
 {
 	using Pegasus.Framework;
-	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Logging;
 	using Scripting;
 

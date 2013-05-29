@@ -142,9 +142,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public void Add(string message, Color color)
 		{
 			// If all labels are used, remove the oldest one by shifting the entire array up one
-			// index and add the oldest label to the end of the array; this is not terribly efficient, however, 
-			// it's good enough for now because it only copies MaxLabels * ReferenceSize bytes instead of
-			// relayouting all lines.
+			// index and add the oldest label to the end of the array (in order to re-use the label instance for 
+			// the new message); this is not terribly efficient, however, it's good enough for now because it 
+			// only copies MaxLabels * ReferenceSize bytes instead of relayouting all lines.
 			// After the copy operations, the oldest label's y value will have increased. We have to take that
 			// into account when drawing and scrolling. However, this is a lot faster than repositioning all labels
 			// after the copy operations.

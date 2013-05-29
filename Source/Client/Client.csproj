@@ -229,7 +229,7 @@
     <Compile Include="Network\MessageTypeExtensions.cs" />
     <Compile Include="Network\PacketHeader.cs" />
     <Compile Include="Network\MessageType.cs" />
-    <Compile Include="Network\LwarPacketFactory.cs" />
+    <Compile Include="Network\PacketFactory.cs" />
     <Compile Include="Network\NetworkSession.cs" />
     <Compile Include="Network\Specification.cs" />
     <Compile Include="Network\LocalServer.cs" />
