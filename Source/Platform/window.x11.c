@@ -30,10 +30,10 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 	attributes.event_mask = EVENT_MASK;
 	attributes.override_redirect = 0;
 
-	window->handle = XCreateWindow(x11State.display, XRootWindow(x11State.display, x11State.screen),
+	window->handle = XCreateWindow(x11.display, XRootWindow(x11.display, x11.screen),
 		0, 0, window->params.width, window->params.height, 0,
-		XDefaultDepth(x11State.display, x11State.screen), InputOutput,
-		XDefaultVisual(x11State.display, x11State.screen),
+		XDefaultDepth(x11.display, x11.screen), InputOutput,
+		XDefaultVisual(x11.display, x11.screen),
 		CWEventMask | CWOverrideRedirect, &attributes);
 		
 	if (!window->handle)
@@ -41,10 +41,10 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 		
 	pgSetWindowTitle(window, window->params.title);
 	
-	window->closeAtom = XInternAtom(x11State.display, "WM_DELETE_WINDOW", PG_FALSE);
-	XSetWMProtocols(x11State.display, window->handle, &window->closeAtom, 1);
+	window->closeAtom = XInternAtom(x11.display, "WM_DELETE_WINDOW", PG_FALSE);
+	XSetWMProtocols(x11.display, window->handle, &window->closeAtom, 1);
 	
-	window->inputMethod = XOpenIM(x11State.display, NULL, NULL, NULL);
+	window->inputMethod = XOpenIM(x11.display, NULL, NULL, NULL);
 	if (window->inputMethod == NULL)
 		PG_DIE("Failed to get input method for X11 window.");
 		
@@ -54,8 +54,8 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 	if (window->inputContext == NULL)
 		PG_DIE("Failed to create input context for X11 window.");
 		
-	XMapWindow(x11State.display, window->handle);
-	XFlush(x11State.display);
+	XMapWindow(x11.display, window->handle);
+	XFlush(x11.display);
 	
 	CreateHiddenCursor(window);
 }
@@ -63,7 +63,7 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 pgVoid pgCloseWindowCore(pgWindow* window)
 {
 	if (window->cursor != 0)
-		XFreeCursor(x11State.display, window->cursor);
+		XFreeCursor(x11.display, window->cursor);
 
 	if (window->inputContext != NULL)
 		XDestroyIC(window->inputContext);
@@ -73,9 +73,9 @@ pgVoid pgCloseWindowCore(pgWindow* window)
 		
 	if (window->handle)
 	{
-		if (!XDestroyWindow(x11State.display, window->handle))
+		if (!XDestroyWindow(x11.display, window->handle))
 			PG_DIE("Failed to destroy the window.");
-		XFlush(x11State.display);
+		XFlush(x11.display);
 	}
 	
 	pgShutdownX11();
@@ -87,14 +87,14 @@ pgVoid pgProcessWindowEventsCore(pgWindow* window)
 	
 	// Check whether the display has become NULL during every iteration; this happens when the
 	// last window is closed by the closing event handler
-	while (x11State.display != NULL && XCheckIfEvent(x11State.display, &e, CheckEvent, (XPointer)window))
+	while (x11.display != NULL && XCheckIfEvent(x11.display, &e, CheckEvent, (XPointer)window))
 		ProcessEvent(window, &e);
 }
 
 pgVoid pgGetWindowSizeCore(pgWindow* window, pgInt32* width, pgInt32* height)
 {
 	XWindowAttributes attributes;
-	if (XGetWindowAttributes(x11State.display, window->handle, &attributes) == 0)
+	if (XGetWindowAttributes(x11.display, window->handle, &attributes) == 0)
 		PG_DIE("Failed to get the window attributes.");
 
 	*width = attributes.width;
@@ -103,27 +103,27 @@ pgVoid pgGetWindowSizeCore(pgWindow* window, pgInt32* width, pgInt32* height)
 
 pgVoid pgSetWindowSizeCore(pgWindow* window, pgInt32 width, pgInt32 height)
 {
-	XResizeWindow(x11State.display, window->handle, width, height);
-	XFlush(x11State.display);
+	XResizeWindow(x11.display, window->handle, width, height);
+	XFlush(x11.display);
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
 {
-	XStoreName(x11State.display, window->handle, title);
+	XStoreName(x11.display, window->handle, title);
 }
 
 pgVoid pgCaptureMouseCore(pgWindow* window)
 {
 	CenterCursor(window);
 	
-	XDefineCursor(x11State.display, window->handle, window->cursor);
-    XFlush(x11State.display);
+	XDefineCursor(x11.display, window->handle, window->cursor);
+    XFlush(x11.display);
 }
 
 pgVoid pgReleaseMouseCore(pgWindow* window)
 {
-	XDefineCursor(x11State.display, window->handle, None);
-    XFlush(x11State.display);
+	XDefineCursor(x11.display, window->handle, None);
+    XFlush(x11.display);
 }
 
 //====================================================================================================================
@@ -132,17 +132,17 @@ pgVoid pgReleaseMouseCore(pgWindow* window)
 
 static void CreateHiddenCursor(pgWindow* window)
 {
-    Pixmap cursorPixmap = XCreatePixmap(x11State.display, window->handle, 1, 1, 1);
-    GC graphicsContext = XCreateGC(x11State.display, cursorPixmap, 0, NULL);
-    XDrawPoint(x11State.display, cursorPixmap, graphicsContext, 0, 0);
-    XFreeGC(x11State.display, graphicsContext);
+    Pixmap cursorPixmap = XCreatePixmap(x11.display, window->handle, 1, 1, 1);
+    GC graphicsContext = XCreateGC(x11.display, cursorPixmap, 0, NULL);
+    XDrawPoint(x11.display, cursorPixmap, graphicsContext, 0, 0);
+    XFreeGC(x11.display, graphicsContext);
 
     XColor color;
     color.flags = DoRed | DoGreen | DoBlue;
     color.red = color.blue = color.green = 0;
-    window->cursor = XCreatePixmapCursor(x11State.display, cursorPixmap, cursorPixmap, &color, &color, 0, 0);
+    window->cursor = XCreatePixmapCursor(x11.display, cursorPixmap, cursorPixmap, &color, &color, 0, 0);
 
-    XFreePixmap(x11State.display, cursorPixmap);
+    XFreePixmap(x11.display, cursorPixmap);
 }
 
 static pgVoid CenterCursor(pgWindow* window)
@@ -156,13 +156,13 @@ static pgVoid CenterCursor(pgWindow* window)
 	Window root, child;
 	int gx, gy, x, y;
 	unsigned int buttons;
-	XQueryPointer(x11State.display, window->handle, &root, &child, &gx, &gy, &x, &y, &buttons);
+	XQueryPointer(x11.display, window->handle, &root, &child, &gx, &gy, &x, &y, &buttons);
 
 	if (width == x && height == y)
 		return;
 
-	XWarpPointer(x11State.display, None, window->handle, 0, 0, 0, 0, width, height);
-	XFlush(x11State.display);
+	XWarpPointer(x11.display, None, window->handle, 0, 0, 0, 0, width, height);
+	XFlush(x11.display);
 }
 
 static Bool CheckEvent(Display* display, XEvent* e, XPointer userData)
@@ -190,7 +190,9 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e)
 		break;
 	case ConfigureNotify:
 		{
-			pgInt32 width = pgClamp(e->xconfigure.width, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MAX_WIDTH);
+			PG_WARN("---->>>> NEW SIZE: %d, %d", e->xconfigure.width, e->xconfigure.height);
+		
+			/*pgInt32 width = pgClamp(e->xconfigure.width, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MAX_WIDTH);
 			pgInt32 height = pgClamp(e->xconfigure.height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
 
 			// FIXME: Ugly hack that doesn't really work. Find a way to set the minimum/maximum allowed size of a window
@@ -198,7 +200,7 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e)
 			{
 				pgSetWindowSize(window, width, height);
 				break;
-			}
+			}*/
 
 			if (params->resized != NULL)
 				params->resized(e->xconfigure.width, e->xconfigure.height);
@@ -292,7 +294,7 @@ static pgKey TranslateKey(unsigned int keyCode)
 {
 	KeySym lower;
 	int num;
-	KeySym key = *XGetKeyboardMapping(x11State.display, keyCode, 1, &num);
+	KeySym key = *XGetKeyboardMapping(x11.display, keyCode, 1, &num);
 
 	switch (key)
 	{

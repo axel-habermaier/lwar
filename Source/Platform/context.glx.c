@@ -35,15 +35,15 @@ pgVoid pgCreateContext(pgContext* context)
 	ctxErrorOccurred = PG_FALSE;
 	int (*oldHandler)(Display*, XErrorEvent*) = XSetErrorHandler(&ErrorHandler);
 
-	context->ctx = glXCreateContextAttribsARB(x11State.display, *context->configs, NULL, PG_TRUE, attributes);
+	context->ctx = glXCreateContextAttribsARB(x11.display, *context->configs, NULL, PG_TRUE, attributes);
 	
-	XSync(x11State.display, PG_FALSE);
+	XSync(x11.display, PG_FALSE);
 	if (ctxErrorOccurred || context->ctx == NULL)
 		PG_DIE("Failed to initialize the OpenGL context.");
 
 	XSetErrorHandler(oldHandler);
 	
-	if (!glXIsDirect(x11State.display, context->ctx))
+	if (!glXIsDirect(x11.display, context->ctx))
 		PG_DIE("No direct rendering context could be established.");
 }
 
@@ -52,11 +52,11 @@ pgVoid pgDestroyContext(pgContext* context)
 	XFree(context->visuals);
 	XFree(context->configs);
 
-	if (!glXMakeCurrent(x11State.display, 0, NULL))
+	if (!glXMakeCurrent(x11.display, 0, NULL))
 		PG_DIE("Unable to unset the current OpenGL context.");
 		
 	if (context->ctx != NULL)
-		glXDestroyContext(x11State.display, context->ctx);
+		glXDestroyContext(x11.display, context->ctx);
 }
 
 pgVoid pgBindContext(pgContext* context, pgGraphicsDevice* device, pgWindow* window)
@@ -75,23 +75,23 @@ pgVoid pgCreateContextWindow(pgContext* context)
 {
 	pgInitializeX11();
 
-	context->window = XCreateWindow(x11State.display, RootWindow(x11State.display, x11State.screen), 0, 0, 100, 100, 0,
-		DefaultDepth(x11State.display, x11State.screen), InputOutput, DefaultVisual(x11State.display, x11State.screen), 0, NULL);
+	context->window = XCreateWindow(x11.display, RootWindow(x11.display, x11.screen), 0, 0, 100, 100, 0,
+		DefaultDepth(x11.display, x11.screen), InputOutput, DefaultVisual(x11.display, x11.screen), 0, NULL);
 	
 	if (!context->window)
 		PG_DIE("Failed to initialize the OpenGL initialization window.");
 
-	XFlush(x11State.display);
+	XFlush(x11.display);
 }
 
 pgVoid pgDestroyContextWindow(pgContext* context)
 {
 	if (context->window)
 	{
-		if (!XDestroyWindow(x11State.display, context->window))
+		if (!XDestroyWindow(x11.display, context->window))
 			PG_DIE("Failed to destroy the OpenGL initialization window.");
 			
-		XFlush(x11State.display);
+		XFlush(x11.display);
 	}
 	
 	pgShutdownX11();
@@ -100,16 +100,16 @@ pgVoid pgDestroyContextWindow(pgContext* context)
 pgVoid pgSetPixelFormat(pgContext* context)
 {
 	XWindowAttributes windowAttributes;
-	if (!XGetWindowAttributes(x11State.display, context->window, &windowAttributes))
+	if (!XGetWindowAttributes(x11.display, context->window, &windowAttributes))
 		PG_DIE("Failed to get the window attributes.");
 
 	XVisualInfo visualInfo;
 	visualInfo.depth = windowAttributes.depth;
 	visualInfo.visualid = XVisualIDFromVisual(windowAttributes.visual);
-	visualInfo.screen = x11State.screen;
+	visualInfo.screen = x11.screen;
 
 	int count = 0;
-	XVisualInfo* visuals = XGetVisualInfo(x11State.display, VisualDepthMask | VisualIDMask | VisualScreenMask, &visualInfo, &count);
+	XVisualInfo* visuals = XGetVisualInfo(x11.display, VisualDepthMask | VisualIDMask | VisualScreenMask, &visualInfo, &count);
 	if (visuals == NULL || count == 0)
 	{
 		XFree(visuals);
@@ -122,14 +122,14 @@ pgVoid pgSetPixelFormat(pgContext* context)
 	{
 		int rgba, red, green, blue, alpha, stencil, depth, doubleBuffered;
 
-		glXGetConfig(x11State.display, &visuals[i], GLX_RGBA, &rgba);
-		glXGetConfig(x11State.display, &visuals[i], GLX_RED_SIZE, &red);
-		glXGetConfig(x11State.display, &visuals[i], GLX_GREEN_SIZE, &green);
-		glXGetConfig(x11State.display, &visuals[i], GLX_BLUE_SIZE, &blue);
-		glXGetConfig(x11State.display, &visuals[i], GLX_ALPHA_SIZE, &alpha);
-		glXGetConfig(x11State.display, &visuals[i], GLX_DEPTH_SIZE, &depth);
-		glXGetConfig(x11State.display, &visuals[i], GLX_STENCIL_SIZE, &stencil);
-		glXGetConfig(x11State.display, &visuals[i], GLX_DOUBLEBUFFER, &doubleBuffered);
+		glXGetConfig(x11.display, &visuals[i], GLX_RGBA, &rgba);
+		glXGetConfig(x11.display, &visuals[i], GLX_RED_SIZE, &red);
+		glXGetConfig(x11.display, &visuals[i], GLX_GREEN_SIZE, &green);
+		glXGetConfig(x11.display, &visuals[i], GLX_BLUE_SIZE, &blue);
+		glXGetConfig(x11.display, &visuals[i], GLX_ALPHA_SIZE, &alpha);
+		glXGetConfig(x11.display, &visuals[i], GLX_DEPTH_SIZE, &depth);
+		glXGetConfig(x11.display, &visuals[i], GLX_STENCIL_SIZE, &stencil);
+		glXGetConfig(x11.display, &visuals[i], GLX_DOUBLEBUFFER, &doubleBuffered);
 
 		if (rgba == 0 || doubleBuffered == 0)
 			continue;
@@ -144,16 +144,16 @@ pgVoid pgSetPixelFormat(pgContext* context)
 	if (bestVisual == NULL)
 		PG_DIE("Unable to find a matching frame buffer configuration.");
 
-	GLXFBConfig* configs = glXChooseFBConfig(x11State.display, x11State.screen, NULL, &count);
+	GLXFBConfig* configs = glXChooseFBConfig(x11.display, x11.screen, NULL, &count);
 	if (configs == NULL || count == 0)
 	{
 		XFree(configs);
 		PG_DIE("Failed to get frame buffer configuration.");
 	}
 
-	Window root = RootWindow(x11State.display, x11State.screen);
-	Colormap colorMap = XCreateColormap(x11State.display, root, bestVisual->visual, AllocNone);
-	XSetWindowColormap(x11State.display, context->window, colorMap);
+	Window root = RootWindow(x11.display, x11.screen);
+	Colormap colorMap = XCreateColormap(x11.display, root, bestVisual->visual, AllocNone);
+	XSetWindowColormap(x11.display, context->window, colorMap);
 
 	context->visuals = visuals;
 	context->configs = configs;
@@ -161,18 +161,26 @@ pgVoid pgSetPixelFormat(pgContext* context)
 
 pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, pgBool fullscreen)
 {
+	/*if (fullscreen)
+	{
+		PG_ERROR("Fullscreen mode is not supported under Linux.");
+		return PG_FALSE;
+	}
+	
+	return PG_TRUE;*/
+
 	if (fullscreen)
 	{
 		// Check for the XRandR extension
 		int version;
-		if (!XQueryExtension(x11State.display, "RANDR", &version, &version, &version))
+		if (!XQueryExtension(x11.display, "RANDR", &version, &version, &version))
 		{
 			PG_ERROR("XRandR extension not found. Fullscreen mode is not supported on this system.");
 			return PG_FALSE;
 		}
 
 		// Get the current screen configuration from XRandR
-		XRRScreenConfiguration* config = XRRGetScreenInfo(x11State.display, RootWindow(x11State.display, x11State.screen));
+		XRRScreenConfiguration* config = XRRGetScreenInfo(x11.display, RootWindow(x11.display, x11.screen));
 		if (!config)
 		{
 			PG_ERROR("Failed to get the current screen configuration. Fullscreen mode is not supported on this system.");
@@ -196,7 +204,7 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 				if (modes[i].width == width && modes[i].height == height)
 				{
 					// Switch to fullscreen mode
-					XRRSetScreenConfig(x11State.display, config, RootWindow(x11State.display, x11State.screen), i, currentRotation, CurrentTime);
+					//XRRSetScreenConfig(x11.display, config, RootWindow(x11.display, x11.screen), i, currentRotation, CurrentTime);
 
 					modeFound = PG_TRUE;
 					break;
@@ -214,8 +222,8 @@ pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, p
 		}
 
 		// Grab the mouse and the keyboard
-		XGrabPointer(x11State.display, context->window, PG_TRUE, 0, GrabModeAsync, GrabModeAsync, context->window, None, CurrentTime);
-		XGrabKeyboard(x11State.display, context->window, PG_TRUE, GrabModeAsync, GrabModeAsync, CurrentTime);
+		XGrabPointer(x11.display, context->window, PG_TRUE, 0, GrabModeAsync, GrabModeAsync, context->window, None, CurrentTime);
+		XGrabKeyboard(x11.display, context->window, PG_TRUE, GrabModeAsync, GrabModeAsync, CurrentTime);
 		
 		SetFullscreenWindow(context, PG_TRUE);
 
@@ -232,13 +240,13 @@ pgVoid pgInitializeContextExtensions(pgContext* context)
 	pgBool glxExtsSupported = PG_TRUE;
 	int major, minor;
  
-	if (!glXQueryVersion(x11State.display, &major, &minor))
+	if (!glXQueryVersion(x11.display, &major, &minor))
 		PG_DIE("Failed to retrieve the GLX version.");
 	
 	if ((major == 1 && minor < 3) ||  major < 1)
 		PG_DIE("GLX version 1.3 is required but found version %d.%d only.", major, minor);
 
-	if (glx_LoadFunctions(x11State.display, x11State.screen) == glx_LOAD_FAILED)
+	if (glx_LoadFunctions(x11.display, x11.screen) == glx_LOAD_FAILED)
 		PG_DIE("GLX initialization failed.");
 
 	glxExtsSupported &= GlxExtSupported(glx_ext_ARB_create_context_profile, "GLX_ARB_create_context_profile");
@@ -255,13 +263,13 @@ pgVoid pgMakeCurrent(pgContext* context)
 		return;
 
 	current = context;
-	if (!glXMakeCurrent(x11State.display, context->window, context->ctx))
+	if (!glXMakeCurrent(x11.display, context->window, context->ctx))
 		PG_DIE("Failed to make OpenGL context current.");
 }
 
 pgVoid pgSwapBuffers(pgContext* context)
 {
-	glXSwapBuffers(x11State.display, context->window);
+	glXSwapBuffers(x11.display, context->window);
 }
 
 //====================================================================================================================
@@ -294,17 +302,17 @@ static pgVoid SwitchToWindowedMode(pgContext* context)
 		return;
 
 	// Release the mouse and the keyboard
-	XUngrabPointer(x11State.display, CurrentTime);
-	XUngrabKeyboard(x11State.display, CurrentTime);
+	XUngrabPointer(x11.display, CurrentTime);
+	XUngrabKeyboard(x11.display, CurrentTime);
 
 	// Restore the original video mode
-	XRRScreenConfiguration* config = XRRGetScreenInfo(x11State.display, RootWindow(x11State.display, x11State.screen));
+	XRRScreenConfiguration* config = XRRGetScreenInfo(x11.display, RootWindow(x11.display, x11.screen));
 	if (config) 
 	{
 		Rotation currentRotation;
 		XRRConfigCurrentConfiguration(config, &currentRotation);
 
-		XRRSetScreenConfig(x11State.display, config, RootWindow(x11State.display, x11State.screen), context->prevMode, currentRotation, CurrentTime);
+		//XRRSetScreenConfig(x11.display, config, RootWindow(x11.display, x11.screen), context->prevMode, currentRotation, CurrentTime);
 		XRRFreeScreenConfigInfo(config);
 	} 
 	
@@ -315,8 +323,8 @@ static pgVoid SwitchToWindowedMode(pgContext* context)
 
 static pgVoid SetFullscreenWindow(pgContext* context, pgBool fullscreen)
 {
-	Atom wm_state = XInternAtom(x11State.display, "_NET_WM_STATE", False);
-	Atom fullscreenAtom = XInternAtom(x11State.display, "_NET_WM_STATE_FULLSCREEN", False);
+	Atom wm_state = XInternAtom(x11.display, "_NET_WM_STATE", False);
+	Atom fullscreenAtom = XInternAtom(x11.display, "_NET_WM_STATE_FULLSCREEN", False);
 
 	XEvent xev;
 	memset(&xev, 0, sizeof(xev));
@@ -328,12 +336,12 @@ static pgVoid SetFullscreenWindow(pgContext* context, pgBool fullscreen)
 	xev.xclient.data.l[1] = fullscreenAtom;
 	xev.xclient.data.l[2] = 0;
 
-	XMapWindow(x11State.display, context->window);
+	XMapWindow(x11.display, context->window);
 
-	XSendEvent (x11State.display, DefaultRootWindow(x11State.display), False,
+	XSendEvent (x11.display, DefaultRootWindow(x11.display), False,
 		SubstructureRedirectMask | SubstructureNotifyMask, &xev);
 
-	XFlush(x11State.display);
+	XFlush(x11.display);
 }
 
 #endif

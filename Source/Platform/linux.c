@@ -8,30 +8,30 @@
 // X11 state helper functions
 //====================================================================================================================
 
-X11State x11State;
+X11State x11;
 
 pgVoid pgInitializeX11()
 {
-	if (x11State.refCount++ != 0)
+	if (x11.refCount++ != 0)
 		return;
 
-	x11State.display = XOpenDisplay(NULL);
-	if (x11State.display == NULL)
+	x11.display = XOpenDisplay(NULL);
+	if (x11.display == NULL)
 		PG_DIE("Unable to connect to X11.");
 
-	x11State.screen = XDefaultScreen(x11State.display);
+	x11.screen = XDefaultScreen(x11.display);
 }
 
 pgVoid pgShutdownX11()
 {
-	PG_ASSERT(x11State.refCount > 0, "More shutdown requests than initialization requests.");
+	PG_ASSERT(x11.refCount > 0, "More shutdown requests than initialization requests.");
 
-	if (--x11State.refCount != 0)
+	if (--x11.refCount != 0)
 		return;
 
-	XCloseDisplay(x11State.display);
-	x11State.display = NULL;
-	x11State.screen = 0;
+	XCloseDisplay(x11.display);
+	x11.display = NULL;
+	x11.screen = 0;
 }
 
 //====================================================================================================================

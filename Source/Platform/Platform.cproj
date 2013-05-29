@@ -45,7 +45,6 @@
     </Libs>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="buffer.c" />
     <Compile Include="buffer.d3d11.c" />
     <Compile Include="buffer.gl3.c" />
     <Compile Include="context.wgl.c" />
@@ -87,6 +86,7 @@
     <Compile Include="texture.c" />
     <Compile Include="texture.d3d11.c" />
     <Compile Include="texture.gl3.c" />
+    <Compile Include="buffer.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="d3d11.h" />

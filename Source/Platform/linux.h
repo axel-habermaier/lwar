@@ -18,7 +18,7 @@ typedef struct
 	int			refCount;
 } X11State;
 
-extern X11State x11State;
+extern X11State x11;
 
 pgVoid pgInitializeX11();
 pgVoid pgShutdownX11();
