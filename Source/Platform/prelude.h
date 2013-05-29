@@ -160,12 +160,12 @@ PG_NORETURN pgVoid pgNoReturn();
 	pgNoReturn();															\
 	PG_MULTILINE_MACRO_END
 
-#define PG_ERROR(fmt, ...) pgState.logCallback(PG_LOGTYPE_ERROR, pgFormat(fmt, __VA_ARGS__))
-#define PG_WARN(fmt, ...) pgState.logCallback(PG_LOGTYPE_WARNING, pgFormat(fmt, __VA_ARGS__))
-#define PG_INFO(fmt, ...) pgState.logCallback(PG_LOGTYPE_INFO, pgFormat(fmt, __VA_ARGS__))
+#define PG_ERROR(fmt, ...) pgState.logCallback(PG_LOGTYPE_ERROR, pgFormat(fmt, ##__VA_ARGS__))
+#define PG_WARN(fmt, ...) pgState.logCallback(PG_LOGTYPE_WARNING, pgFormat(fmt, ##__VA_ARGS__))
+#define PG_INFO(fmt, ...) pgState.logCallback(PG_LOGTYPE_INFO, pgFormat(fmt, ##__VA_ARGS__))
 
 #ifdef DEBUG
-	#define PG_DEBUG(fmt, ...) pgState.logCallback(PG_LOGTYPE_DEBUG, pgFormat(fmt, __VA_ARGS__))
+	#define PG_DEBUG(fmt, ...) pgState.logCallback(PG_LOGTYPE_DEBUG, pgFormat(fmt, ##__VA_ARGS__))
 #else
 	#define PG_DEBUG(fmt, ...)
 #endif

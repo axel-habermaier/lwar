@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Source\Client\Client.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Platform", "Source\Platform\Platform.cproj", "{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework", "Source\Framework\Framework.csproj", "{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}"
 EndProject
-Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Platform", "Source\Platform\Platform.cproj", "{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}"
-EndProject
-Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Server", "Source\Server\Server.cproj", "{F35D340A-310C-4414-BE7F-87F061CE7C83}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Source\Assets Compiler\Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets", "Assets\Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Source\Assets Compiler\Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Source\Client\Client.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
+EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Server", "Source\Server\Server.cproj", "{F35D340A-310C-4414-BE7F-87F061CE7C83}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E8E7A13F-DCB1-4A21-8490-48212FF64CA1}"
 	ProjectSection(SolutionItems) = preProject
