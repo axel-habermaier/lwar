@@ -193,6 +193,7 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e)
 			pgInt32 width = pgClamp(e->xconfigure.width, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MAX_WIDTH);
 			pgInt32 height = pgClamp(e->xconfigure.height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
 
+			// FIXME: Ugly hack that doesn't really work. Find a way to set the minimum/maximum allowed size of a window
 			if (width != e->xconfigure.width || height != e->xconfigure.height)
 			{
 				pgSetWindowSize(window, width, height);

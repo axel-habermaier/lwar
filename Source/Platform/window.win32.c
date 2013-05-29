@@ -368,10 +368,15 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	pgWindowParams* params = &windowState.activeWindow->params;
+	pgWindowParams* params;
 	RAWINPUT input;
 	UINT size;
 	pgInt32 outSize;
+
+	if (windowState.activeWindow != NULL)
+		params = &windowState.activeWindow->params;
+	else
+		return DefWindowProc(hwnd, msg, wParam, lParam);;
 
 	if (msg != WM_INPUT)
 		return DefWindowProc(hwnd, msg, wParam, lParam);

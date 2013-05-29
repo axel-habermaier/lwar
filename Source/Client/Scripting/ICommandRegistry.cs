@@ -12,7 +12,8 @@ namespace Lwar.Client.Scripting
 	public interface ICommandRegistry
 	{
 		/// <summary>
-		///   Starts up a new server instance.
+		///   Starts up a new local server instance. If a local server is currently running, it is shut down before the new server
+		///   is started.
 		/// </summary>
 		[Command]
 		void StartServer();
@@ -45,7 +46,7 @@ namespace Lwar.Client.Scripting
 		/// </summary>
 		/// <param name="message">The message that should be sent.</param>
 		[Command]
-		void Chat(string message);
+		void Say(string message);
 
 		/// <summary>
 		///   Toggles between the game and the debugging camera.
