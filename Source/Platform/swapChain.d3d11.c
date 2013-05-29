@@ -101,8 +101,6 @@ pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32
 		return PG_FALSE;
 	}
 
-	pgResizeSwapChain(swapChain, width, height);
-	pgPresent(swapChain);
 	return PG_TRUE;
 }
 
