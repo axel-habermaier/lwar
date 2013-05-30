@@ -15,7 +15,7 @@ static pgVoid CenterCursor(pgWindow* window);
 static Bool CheckEvent(Display* display, XEvent* e, XPointer userData);
 static pgVoid ProcessEvent(pgWindow* window, XEvent* e);
 static pgMouseButton TranslateButton(unsigned int button);
-static pgKey TranslateKey(unsigned int keyCode);
+static pgKey TranslateKey(XKeyEvent* keyEvent);
 static long KeySymbolToUtf16(KeySym keySym);
 
 //====================================================================================================================
@@ -213,7 +213,7 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e)
 		break;
 	case KeyPress:
 		if (params->keyPressed != NULL)
-			params->keyPressed(TranslateKey(e->xkey.keycode), e->xkey.keycode);
+			params->keyPressed(TranslateKey(&e->xkey), e->xkey.keycode);
 			
 		if (params->characterEntered != NULL && !XFilterEvent(e, 0))
 		{
@@ -234,7 +234,7 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e)
 		break;
 	case KeyRelease:
 		if (params->keyReleased != NULL)
-			params->keyReleased(TranslateKey(e->xkey.keycode), e->xkey.keycode);
+			params->keyReleased(TranslateKey(&e->xkey), e->xkey.keycode);
 		break;
 	case ButtonPress:
 	{
@@ -290,11 +290,11 @@ static pgMouseButton TranslateButton(unsigned int button)
 	}
 }
 
-static pgKey TranslateKey(unsigned int keyCode)
+static pgKey TranslateKey(XKeyEvent* keyEvent)
 {
 	KeySym lower;
 	int num;
-	KeySym key = *XGetKeyboardMapping(x11.display, keyCode, 1, &num);
+	KeySym key = *XGetKeyboardMapping(x11.display, keyEvent->keycode, 1, &num);
 
 	switch (key)
 	{
@@ -336,12 +336,10 @@ static pgKey TranslateKey(unsigned int keyCode)
 		return PG_KEY_COMMA;
 	case XK_period:
 		return PG_KEY_PERIOD;
-	case XK_dead_acute:
+	case XK_apostrophe:
 		return PG_KEY_QUOTE;
 	case XK_backslash:
 		return PG_KEY_BACKSLASH;
-	case XK_dead_grave:
-		return PG_KEY_GRAVE;
 	case XK_space:
 		return PG_KEY_SPACE;
 	case XK_Return:
@@ -418,26 +416,32 @@ static pgKey TranslateKey(unsigned int keyCode)
 		return PG_KEY_UP;
 	case XK_Down:
 		return PG_KEY_DOWN;
-	case XK_KP_0:
+	case XK_KP_Delete:
+		return PG_KEY_NUMPADDECIMAL;
+	case XK_KP_Insert:
 		return PG_KEY_NUMPAD0;
-	case XK_KP_1:
+	case XK_KP_End:
 		return PG_KEY_NUMPAD1;
-	case XK_KP_2:
+	case XK_KP_Down:
 		return PG_KEY_NUMPAD2;
-	case XK_KP_3:
+	case XK_KP_Page_Down:
 		return PG_KEY_NUMPAD3;
-	case XK_KP_4:
+	case XK_KP_Left:
 		return PG_KEY_NUMPAD4;
-	case XK_KP_5:
+	case XK_KP_Begin:
 		return PG_KEY_NUMPAD5;
-	case XK_KP_6:
+	case XK_KP_Right:
 		return PG_KEY_NUMPAD6;
-	case XK_KP_7:
+	case XK_KP_Home:
 		return PG_KEY_NUMPAD7;
-	case XK_KP_8:
+	case XK_KP_Up:
 		return PG_KEY_NUMPAD8;
-	case XK_KP_9:
+	case XK_KP_Page_Up:
 		return PG_KEY_NUMPAD9;
+	case XK_Scroll_Lock:
+		return PG_KEY_SCROLL;
+	case XK_less:
+		return PG_KEY_BACKSLASH2;
 	}
 
 	XConvertCase(key, &lower, &key);
