@@ -46,7 +46,10 @@ namespace Pegasus.Framework
 		/// </summary>
 		public void Clear()
 		{
-			_states.SafeDisposeAll();
+			// Copy the list, otherwise we would get problems if a state modified the list during its disposal
+			var states = _states.ToArray();
+			states.SafeDisposeAll();
+
 			_states.Clear();
 		}
 
