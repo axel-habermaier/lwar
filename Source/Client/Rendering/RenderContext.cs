@@ -23,6 +23,11 @@ namespace Lwar.Client.Rendering
 		private readonly CvarRegistry _cvars;
 
 		/// <summary>
+		///   The renderer that is used to draw the parallax scrolling effect.
+		/// </summary>
+		private readonly ParallaxRenderer _parallaxRenderer;
+
+		/// <summary>
 		///   The renderers that the context uses to render the scene.
 		/// </summary>
 		private readonly IRenderer[] _renderers = new IRenderer[]
@@ -62,6 +67,7 @@ namespace Lwar.Client.Rendering
 			_cvars = cvars;
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
+			_parallaxRenderer = new ParallaxRenderer(graphicsDevice, assets);
 
 			foreach (var renderer in _renderers)
 				renderer.Initialize(graphicsDevice, assets);
@@ -107,6 +113,7 @@ namespace Lwar.Client.Rendering
 			else
 				RasterizerState.CullCounterClockwise.Bind();
 
+			_parallaxRenderer.Draw(output);
 			DepthStencilState.DepthEnabled.Bind();
 
 			foreach (var renderer in _renderers)
@@ -121,6 +128,7 @@ namespace Lwar.Client.Rendering
 			_renderers.SafeDisposeAll();
 
 			_skyboxRenderer.SafeDispose();
+			_parallaxRenderer.SafeDispose();
 			_wireframe.SafeDispose();
 		}
 	}

@@ -6,6 +6,7 @@ Client
 	- Shield effect
 	- Weapon effects
 	- Particle system
+	- Parallax scrolling
 - Entity interpolation
 	- Reusable interpolation class?
 - UI
@@ -24,6 +25,7 @@ Pegasus
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
 - Linux: Fullscreen mode does not work reliably
 - Linux: Set minimum/maximum allowed window size
+- Disallow assignments to shader input variables
 
 Network Specification
 ========

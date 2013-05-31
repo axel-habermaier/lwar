@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Xml.Linq;
-	using Framework;
 	using Framework.Platform.Logging;
 
 	/// <summary>

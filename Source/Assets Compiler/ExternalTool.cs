@@ -3,7 +3,6 @@
 namespace Pegasus.AssetsCompiler
 {
 	using System.Linq;
-	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Graphics;
 	using Framework.Platform.Logging;

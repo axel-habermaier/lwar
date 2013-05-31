@@ -346,7 +346,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		protected static string Escape(string name)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
-			return String.Format("{0}{1}", Configuration.ReservedVariablePrefix, name);
+			return String.Format("{0}{1}", Configuration.ReservedIdentifierPrefix, name);
 		}
 	}
 }

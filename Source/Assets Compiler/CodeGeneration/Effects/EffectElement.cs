@@ -38,8 +38,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="identifier">The identifier that should be checked.</param>
 		protected void ValidateIdentifier(Identifier identifier)
 		{
-			if (identifier.Name.StartsWith(Configuration.ReservedVariablePrefix))
-				Error(identifier, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedVariablePrefix);
+			if (identifier.Name.StartsWith(Configuration.ReservedIdentifierPrefix))
+				Error(identifier, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedIdentifierPrefix);
 		}
 
 		/// <summary>

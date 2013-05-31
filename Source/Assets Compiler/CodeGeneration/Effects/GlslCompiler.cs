@@ -47,7 +47,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		protected override void GenerateConstantBuffer(ConstantBuffer constantBuffer)
 		{
 			Writer.AppendLine("layout(std140, binding = {0}) uniform {2}{1}", constantBuffer.Slot, constantBuffer.Name,
-							  Configuration.ReservedVariablePrefix);
+							  Configuration.ReservedInternalIdentifierPrefix);
 			Writer.AppendBlockStatement(() =>
 				{
 					foreach (var constant in constantBuffer.Constants)
@@ -125,7 +125,15 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		protected override void GenerateMainMethod()
 		{
 			Writer.AppendLine("void main()");
-			Shader.MethodBody.AcceptVisitor(this);
+			Writer.AppendBlockStatement(() =>
+				{
+					foreach (var input in Shader.Inputs)
+						Writer.AppendLine("{0} {1}{2} = {3};", ToShaderType(input.Type),
+										  Configuration.ReservedInternalIdentifierPrefix, input.Name, Escape(input.Name));
+
+					Writer.Newline();
+					Shader.MethodBody.AcceptVisitor(this);
+				});
 		}
 
 		/// <summary>
@@ -183,6 +191,12 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				if (parameter.IsOutput && parameter.Semantics == DataSemantics.Position)
 				{
 					Writer.Append("gl_Position");
+					return;
+				}
+
+				if (!parameter.IsOutput)
+				{
+					Writer.Append("{0}{1}", Configuration.ReservedInternalIdentifierPrefix, identifierExpression.Identifier);
 					return;
 				}
 			}

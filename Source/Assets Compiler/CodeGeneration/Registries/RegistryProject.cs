@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 {
 	using System.Collections.Generic;
 	using Framework;
-	using Framework.Platform;
 	using Framework.Platform.Logging;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;

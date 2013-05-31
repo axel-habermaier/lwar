@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.Collections.Generic;
 	using Framework;
-	using Framework.Platform;
 	using Framework.Platform.Graphics;
 	using Framework.Platform.Logging;
 	using Framework.Platform.Memory;

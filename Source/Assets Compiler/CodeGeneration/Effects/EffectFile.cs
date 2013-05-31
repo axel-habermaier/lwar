@@ -7,7 +7,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using System.Linq;
 	using Assets;
 	using AssetsCompiler.Effects;
-	using Framework.Platform;
 	using Framework.Platform.Graphics;
 	using Framework.Platform.Memory;
 	using ICSharpCode.NRefactory.CSharp;

@@ -2,7 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration
 {
-	using Framework.Platform;
 	using Framework.Platform.Logging;
 	using ICSharpCode.NRefactory;
 

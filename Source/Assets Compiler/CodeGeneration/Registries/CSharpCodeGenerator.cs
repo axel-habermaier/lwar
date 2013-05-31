@@ -402,7 +402,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 				{
 					if (parameter.HasDefaultValue)
 						return String.Format("{0} {1} = {2}", parameter.Type, parameter.Name, parameter.DefaultValue);
-						
+
 					return String.Format("{0} {1}", parameter.Type, parameter.Name);
 				}));
 		}

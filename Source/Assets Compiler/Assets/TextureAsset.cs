@@ -6,7 +6,6 @@ namespace Pegasus.AssetsCompiler.Assets
 	using System.Drawing.Imaging;
 	using System.Runtime.InteropServices;
 	using Framework;
-	using Framework.Platform;
 	using Framework.Platform.Graphics;
 	using Framework.Platform.Memory;
 

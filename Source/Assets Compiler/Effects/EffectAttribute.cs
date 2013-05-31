@@ -2,7 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.Effects
 {
-	using Framework;
 	using Framework.Platform;
 
 	/// <summary>

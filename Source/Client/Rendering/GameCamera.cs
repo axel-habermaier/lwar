@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Lwar.Client.Gameplay
+namespace Lwar.Client.Rendering
 {
-	using Entities;
+	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
@@ -27,6 +27,11 @@ namespace Lwar.Client.Gameplay
 		private const float MinZoom = 500.0f;
 
 		/// <summary>
+		///   The default distance to the XZ plane.
+		/// </summary>
+		private const float DefaultZoom = 1500.0f;
+
+		/// <summary>
 		///   Determines how fast the zoom level changes when the user scrolls the mouse wheel.
 		/// </summary>
 		private const float DeltaScale = 200.0f;
@@ -35,6 +40,11 @@ namespace Lwar.Client.Gameplay
 		///   Determines how fast the camera changes the distance to the XZ plane.
 		/// </summary>
 		private const float ZoomChangeSpeed = 100.0f;
+
+		/// <summary>
+		///   The factor that is applied to the zoom value when the starfield zoom mode is selected.
+		/// </summary>
+		private const float StarfieldZoomFactor = 0.25f;
 
 		/// <summary>
 		///   The clock that is used to animate changes of the XZ plane distance.
@@ -54,7 +64,12 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   The current distance to the XZ plane.
 		/// </summary>
-		private float _zoom = 1500.0f;
+		private float _zoom = DefaultZoom;
+
+		/// <summary>
+		///   The camera's current zoom mode.
+		/// </summary>
+		private ZoomMode _zoomMode = ZoomMode.Default;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -72,6 +87,22 @@ namespace Lwar.Client.Gameplay
 			_inputDevice = inputDevice;
 			_inputDevice.Mouse.Wheel += OnZoomChanged;
 			_targetZoom = _zoom;
+		}
+
+		/// <summary>
+		///   Gets or sets the camera's zoom mode.
+		/// </summary>
+		public ZoomMode ZoomMode
+		{
+			get { return _zoomMode; }
+			set
+			{
+				if (_zoomMode == value)
+					return;
+
+				_zoomMode = value;
+				UpdatePosition();
+			}
 		}
 
 		/// <summary>
@@ -100,10 +131,34 @@ namespace Lwar.Client.Gameplay
 			// Scale back to the [MinZoom, MaxZoom] range
 			_zoom *= MaxZoom;
 
-			Position = new Vector3(Ship.Position.X, _zoom, Ship.Position.Y);
+			UpdatePosition();
 			Target = new Vector3(Position.X, 0, Position.Z);
 
 			_clock.Reset();
+		}
+
+		/// <summary>
+		///   Updates the camera's position.
+		/// </summary>
+		private void UpdatePosition()
+		{
+			if (Ship == null)
+				return;
+
+			float zoom;
+			switch (_zoomMode)
+			{
+				case ZoomMode.Default:
+					zoom = _zoom;
+					break;
+				case ZoomMode.Starfield:
+					zoom = _zoom * StarfieldZoomFactor;
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported zoom mode.");
+			}
+
+			Position = new Vector3(Ship.Position.X, zoom, Ship.Position.Y);
 		}
 
 		/// <summary>

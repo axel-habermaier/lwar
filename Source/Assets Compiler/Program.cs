@@ -6,7 +6,6 @@ namespace Pegasus.AssetsCompiler
 	using System.Globalization;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Logging;
 

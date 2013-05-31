@@ -194,6 +194,7 @@
     <Content Include="Textures\Bullet.png" />
     <Content Include="Textures\BulletGlow.png" />
     <Content Include="Textures\Heat.png" />
+    <Content Include="Textures\Parallax.png" />
     <Content Include="Textures\Phaser.png" />
     <Content Include="Textures\PhaserGlow.png" />
     <Content Include="Textures\Planet.png" />
@@ -206,6 +207,7 @@
   <ItemGroup>
     <Compile Include="CompilationSettings.cs" />
     <Compile Include="Effects\BlurEffect.cs" />
+    <Compile Include="Effects\ParallaxEffect.cs" />
     <Compile Include="Effects\SkyboxEffect.cs" />
     <Compile Include="Effects\SphereEffect.cs" />
     <Compile Include="Effects\SpriteEffect.cs" />

@@ -472,8 +472,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 						   let name = (string)resolved.ConstantValue
 						   select new { Argument = argument, Name = name }).ToArray();
 
-			foreach (var buffer in buffers.Where(buffer => buffer.Name.StartsWith(Configuration.ReservedVariablePrefix)))
-				Error(buffer.Argument, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedVariablePrefix);
+			foreach (var buffer in buffers.Where(buffer => buffer.Name.StartsWith(Configuration.ReservedIdentifierPrefix)))
+				Error(buffer.Argument, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedIdentifierPrefix);
 
 			foreach (
 				var buffer in

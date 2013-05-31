@@ -23,7 +23,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <summary>
 		///   The name of the method that binds the constant buffers and textures.
 		/// </summary>
-		private readonly string _bindMethodName = String.Format("_{0}Bind", Configuration.ReservedVariablePrefix);
+		private readonly string _bindMethodName = String.Format("_{0}Bind", Configuration.ReservedIdentifierPrefix);
 
 		/// <summary>
 		///   The writer that is used to write the generated code.
@@ -284,14 +284,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 						_writer.AppendLine("if ({0})", GetDirtyFlagName(buffer.Name));
 						_writer.AppendBlockStatement(() =>
 							{
-								_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), Configuration.ReservedVariablePrefix);
+								_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), Configuration.ReservedIdentifierPrefix);
 								foreach (var constant in buffer.Constants)
-									_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedVariablePrefix);
+									_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedIdentifierPrefix);
 
 								_writer.Newline();
 								_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
 								_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
-												   Configuration.ReservedVariablePrefix, ContextVariableName);
+												   Configuration.ReservedIdentifierPrefix, ContextVariableName);
 							});
 						_writer.Newline();
 					}
@@ -419,7 +419,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="buffer">The buffer whose struct name should be returned.</param>
 		private static string GetStructName(ConstantBuffer buffer)
 		{
-			return String.Format("_{1}{0}", buffer.Name, Configuration.ReservedVariablePrefix);
+			return String.Format("_{1}{0}", buffer.Name, Configuration.ReservedIdentifierPrefix);
 		}
 
 		/// <summary>
@@ -428,7 +428,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="name">The name whose dirty flag name should be returned.</param>
 		private static string GetDirtyFlagName(string name)
 		{
-			return String.Format("_{1}{0}Dirty", name, Configuration.ReservedVariablePrefix);
+			return String.Format("_{1}{0}Dirty", name, Configuration.ReservedIdentifierPrefix);
 		}
 
 		/// <summary>

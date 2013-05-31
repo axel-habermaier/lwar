@@ -18,22 +18,22 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <summary>
 		///   The name of the shader output structure.
 		/// </summary>
-		public const string OutputStructName = Configuration.ReservedVariablePrefix + "OUTPUT";
+		public const string OutputStructName = Configuration.ReservedInternalIdentifierPrefix + "OUTPUT";
 
 		/// <summary>
 		///   The name of the shader input structure.
 		/// </summary>
-		public const string InputStructName = Configuration.ReservedVariablePrefix + "INPUT";
+		public const string InputStructName = Configuration.ReservedInternalIdentifierPrefix + "INPUT";
 
 		/// <summary>
 		///   The name of the shader input variable.
 		/// </summary>
-		public const string InputVariableName = Configuration.ReservedVariablePrefix + "input";
+		public const string InputVariableName = Configuration.ReservedInternalIdentifierPrefix + "input";
 
 		/// <summary>
 		///   The name of the shader input variable.
 		/// </summary>
-		public const string OutputVariableName = Configuration.ReservedVariablePrefix + "output";
+		public const string OutputVariableName = Configuration.ReservedInternalIdentifierPrefix + "output";
 
 		/// <summary>
 		///   Generates the shader code for shader literals.
@@ -67,7 +67,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		protected override void GenerateConstantBuffer(ConstantBuffer constantBuffer)
 		{
 			Writer.Append("cbuffer {2}{0} : register(b{1})", constantBuffer.Name, constantBuffer.Slot,
-						  Configuration.ReservedVariablePrefix);
+						  Configuration.ReservedInternalIdentifierPrefix);
 			Writer.AppendBlockStatement(() =>
 				{
 					foreach (var constant in constantBuffer.Constants)
@@ -263,7 +263,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="textureName">The texture name that should be converted.</param>
 		private static string GetSamplerName(string textureName)
 		{
-			return String.Format("{0}{1}Sampler", Configuration.ReservedVariablePrefix, textureName);
+			return String.Format("{0}{1}Sampler", Configuration.ReservedInternalIdentifierPrefix, textureName);
 		}
 
 		public override void VisitIdentifierExpression(IdentifierExpression identifierExpression)

@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler
 	using System.IO;
 	using Assets;
 	using Framework;
-	using Framework.Platform;
 	using Framework.Platform.Memory;
 
 	/// <summary>

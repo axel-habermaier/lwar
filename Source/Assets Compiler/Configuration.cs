@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler
 	using System.ComponentModel;
 	using System.IO;
 	using System.Reflection;
-	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Logging;
 
@@ -15,9 +14,14 @@ namespace Pegasus.AssetsCompiler
 	internal static class Configuration
 	{
 		/// <summary>
-		///   The prefix that is used for internally generated shader variables.
+		///   The prefix that is used for reserved shader identifiers.
 		/// </summary>
-		public const string ReservedVariablePrefix = "_";
+		public const string ReservedIdentifierPrefix = "_";
+
+		/// <summary>
+		///   The prefix that is used for internally generated shader identifiers.
+		/// </summary>
+		public const string ReservedInternalIdentifierPrefix = "_pg_";
 
 		/// <summary>
 		///   The path to the source assets.
@@ -88,7 +92,7 @@ namespace Pegasus.AssetsCompiler
 			{
 				if (e.NativeErrorCode == 2)
 					Log.Warn("HLSL shaders will not be compiled as fxc.exe could not be found (fxc.exe must be in the system path). " +
-					         "On Linux, HLSL shader compilation is not supported.");
+							 "On Linux, HLSL shader compilation is not supported.");
 				else
 					Log.Error("Unable to invoke the HLSL compiler; HLSL shaders will not be compiled: {0}", e.Message);
 

@@ -180,11 +180,13 @@
     <Compile Include="Gameplay\Entities\Phaser.cs" />
     <Compile Include="Gameplay\Entities\Entity.cs" />
     <Compile Include="Gameplay\InterpolatedValue.cs" />
+    <Compile Include="Rendering\Renderers\ParallaxRenderer.cs" />
     <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShockwaveRenderer.cs" />
     <Compile Include="Rendering\Renderers\RayRenderer.cs" />
     <Compile Include="Rendering\Renderers\PhaserRenderer.cs" />
     <Compile Include="Rendering\Renderers\IRenderer.cs" />
+    <Compile Include="Rendering\ZoomMode.cs" />
     <Compile Include="Scripting\CommandRegistry.cs">
       <DependentUpon>CommandRegistry.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -197,7 +199,7 @@
     </Compile>
     <Compile Include="Gameplay\Entities\Sun.cs" />
     <Compile Include="Gameplay\EntityList.cs" />
-    <Compile Include="Gameplay\GameCamera.cs" />
+    <Compile Include="Rendering\GameCamera.cs" />
     <Compile Include="Gameplay\PlayerList.cs" />
     <Compile Include="GameStates\MessageBox.cs" />
     <Compile Include="GameStates\WaitingForServer.cs" />
@@ -205,7 +207,7 @@
     <Compile Include="GameStates\GameState.cs" />
     <Compile Include="GameStates\Loading.cs" />
     <Compile Include="Gameplay\Entities\Bullet.cs" />
-    <Compile Include="Gameplay\CameraManager.cs" />
+    <Compile Include="Rendering\CameraManager.cs" />
     <Compile Include="Gameplay\IdentifierMap.cs" />
     <Compile Include="DeferredList.cs" />
     <Compile Include="Gameplay\EntityType.cs" />
