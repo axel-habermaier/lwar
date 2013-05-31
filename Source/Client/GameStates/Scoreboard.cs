@@ -81,7 +81,8 @@ namespace Lwar.Client.GameStates
 			var visibleRows = 0;
 			foreach (var player in _gameSession.Players
 											   .Where(player => player.Id.Identity != 0)
-											   .OrderBy(player => player.Kills))
+											   .OrderBy(player => player.Kills)
+											   .ThenBy(player => player.Name))
 				_rows[visibleRows++].UpdateContents(player);
 
 			// Set all remaining rows to invisible
@@ -90,7 +91,7 @@ namespace Lwar.Client.GameStates
 
 			// Compute the new area of the scoreboard
 			var width = _header.Width;
-			var height = (visibleRows + 1) * _rows[0].Height;
+			var height = _rows[0].Height + visibleRows * _rows[0].Height;
 			var x = (Window.Width - _header.Width) / 2;
 			var y = (Window.Height - height) / 2;
 			_area = new Rectangle(x, y, width, height);
@@ -99,7 +100,7 @@ namespace Lwar.Client.GameStates
 			_header.UpdateLayout(new Vector2i(x, y));
 
 			for (var i = 0; i < _rows.Length; ++i)
-				_rows[i].UpdateLayout(new Vector2i(x, y + (i + 1) * _header.Height));
+				_rows[i].UpdateLayout(new Vector2i(x, y + _header.Height + i * _rows[0].Height));
 		}
 
 		/// <summary>
@@ -112,7 +113,7 @@ namespace Lwar.Client.GameStates
 			spriteBatch.Draw(_area.Enlarge(BorderWidth), Texture2D.White, new Color(32, 32, 32, 16));
 
 			// Draw a line that separates the header from the rows
-			var line = new RectangleF(_area.Left, _area.Top + _header.Height - Row.RowSpan, _area.Width, 1);
+			var line = new RectangleF(_area.Left, _area.Top + _header.Height - Row.RowSpan - 2, _area.Width, 1);
 			spriteBatch.Draw(line, Texture2D.White, Color.White);
 
 			// Draw the header and the rows
@@ -173,9 +174,9 @@ namespace Lwar.Client.GameStates
 
 				// Initialize the labels
 				_name = new Label(font) { Area = new Rectangle(0, 0, nameWidth, 0) };
-				_kills = new Label(font) { Area = new Rectangle(0, 0, deathWidth, 0) };
-				_deaths = new Label(font) { Area = new Rectangle(0, 0, deathWidth, 0) };
-				_ping = new Label(font) { Area = new Rectangle(0, 0, deathWidth, 0) };
+				_kills = new Label(font) { Area = new Rectangle(0, 0, deathWidth, 0), Alignment = TextAlignment.Right };
+				_deaths = new Label(font) { Area = new Rectangle(0, 0, deathWidth, 0), Alignment = TextAlignment.Right };
+				_ping = new Label(font) { Area = new Rectangle(0, 0, deathWidth, 0), Alignment = TextAlignment.Right };
 
 				// Compute the width and the height of the row
 				Width = nameWidth + 3 * deathWidth + 3 * ColumnSpan;

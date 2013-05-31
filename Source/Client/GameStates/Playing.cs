@@ -111,7 +111,7 @@ namespace Lwar.Client.GameStates
 			_gameSession = new GameSession(_renderContext);
 			_messageDispatcher = new MessageDispatcher(_gameSession);
 			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice, Commands);
-			_inputManager = new InputManager(InputDevice);
+			_inputManager = new InputManager(InputDevice, Commands);
 
 			Commands.OnShowScoreboard += OnShowScoreboard;
 			Commands.OnSay += OnSay;

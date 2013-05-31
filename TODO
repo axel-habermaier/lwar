@@ -17,6 +17,7 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
+- Bug: Crash when closing the app with scoreboard open
 
 Pegasus
 ========

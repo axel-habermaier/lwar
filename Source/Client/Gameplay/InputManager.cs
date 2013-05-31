@@ -7,12 +7,18 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Platform.Memory;
+	using Scripting;
 
 	/// <summary>
 	///   Manages the input state of the local player.
 	/// </summary>
 	public class InputManager : DisposableObject
 	{
+		/// <summary>
+		///   The command registry providing the commands that can be triggered by the input manager.
+		/// </summary>
+		private readonly CommandRegistry _commands;
+
 		/// <summary>
 		///   The input device that provides the input by the user.
 		/// </summary>
@@ -38,15 +44,25 @@ namespace Lwar.Client.Gameplay
 
 		#endregion
 
+		#region Client-only inputs
+
+		private readonly LogicalInput _hideScoreboard = new LogicalInput(Key.Tab.WentUp(), InputModes.Game);
+		private readonly LogicalInput _showScoreboard = new LogicalInput(Key.Tab.WentDown(), InputModes.Game);
+
+		#endregion
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="inputDevice">The input device that provides the input by the user.</param>
-		public InputManager(LogicalInputDevice inputDevice)
+		/// <param name="commands">The command registry providing the commands that can be triggered by the input manager.</param>
+		public InputManager(LogicalInputDevice inputDevice, CommandRegistry commands)
 		{
 			Assert.ArgumentNotNull(inputDevice);
+			Assert.ArgumentNotNull(commands);
 
 			_inputDevice = inputDevice;
+			_commands = commands;
 
 			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed(), InputModes.Game);
 			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed(), InputModes.Game);
@@ -69,6 +85,9 @@ namespace Lwar.Client.Gameplay
 			_inputDevice.Register(_shooting2.Input);
 			_inputDevice.Register(_shooting3.Input);
 			_inputDevice.Register(_shooting4.Input);
+
+			_inputDevice.Register(_showScoreboard);
+			_inputDevice.Register(_hideScoreboard);
 		}
 
 		/// <summary>
@@ -86,6 +105,11 @@ namespace Lwar.Client.Gameplay
 			_shooting2.Triggered |= _shooting2.Input.IsTriggered;
 			_shooting3.Triggered |= _shooting3.Input.IsTriggered;
 			_shooting4.Triggered |= _shooting4.Input.IsTriggered;
+
+			if (_showScoreboard.IsTriggered)
+				_commands.ShowScoreboard(true);
+			if (_hideScoreboard.IsTriggered)
+				_commands.ShowScoreboard(false);
 		}
 
 		/// <summary>
@@ -151,6 +175,9 @@ namespace Lwar.Client.Gameplay
 			_inputDevice.Remove(_shooting2.Input);
 			_inputDevice.Remove(_shooting3.Input);
 			_inputDevice.Remove(_shooting4.Input);
+
+			_inputDevice.Remove(_showScoreboard);
+			_inputDevice.Remove(_hideScoreboard);
 		}
 
 		/// <summary>
