@@ -53,6 +53,11 @@ namespace Lwar.Client.GameStates
 		private RenderContext _renderContext;
 
 		/// <summary>
+		///   The scoreboard that is currently being shown, or null if the scoreboard is invisible.
+		/// </summary>
+		private Scoreboard _scoreboard;
+
+		/// <summary>
 		///   Indicates whether the user input should be sent to the server during the next update cycle.
 		/// </summary>
 		private bool _sendInput;
@@ -77,6 +82,9 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			if (_scoreboard != null)
+				StateManager.Remove(_scoreboard);
+
 			_timer.Timeout -= SendInputTimeout;
 			_timer.SafeDispose();
 
@@ -86,6 +94,10 @@ namespace Lwar.Client.GameStates
 			_networkSession.SafeDispose();
 			_gameSession.SafeDispose();
 			_renderContext.SafeDispose();
+
+			Commands.OnShowScoreboard -= OnShowScoreboard;
+			Commands.OnSay -= OnSay;
+			Cvars.Instances.PlayerName.Changed -= OnPlayerNameChanged;
 
 			Log.Info(LogCategory.Client, "The game session has ended.");
 		}
@@ -100,6 +112,10 @@ namespace Lwar.Client.GameStates
 			_messageDispatcher = new MessageDispatcher(_gameSession);
 			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice, Commands);
 			_inputManager = new InputManager(InputDevice);
+
+			Commands.OnShowScoreboard += OnShowScoreboard;
+			Commands.OnSay += OnSay;
+			Cvars.Instances.PlayerName.Changed += OnPlayerNameChanged;
 
 			StateManager.Add(new Loading(_gameSession, _networkSession));
 		}
@@ -134,6 +150,20 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
+		///   Draws the game state.
+		/// </summary>
+		/// <param name="output">The output that the state should render to.</param>
+		public override void Draw(RenderOutput output)
+		{
+			Assert.ArgumentNotNull(output);
+
+			output.Camera = _cameraManager.ActiveCamera;
+			output.Camera.Viewport = output.Viewport;
+
+			_renderContext.Draw(output);
+		}
+
+		/// <summary>
 		///   Sends the input to the server, if required.
 		/// </summary>
 		private void SendInput()
@@ -158,17 +188,45 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Draws the game state.
+		///   Shows or hides the scoreboard.
 		/// </summary>
-		/// <param name="output">The output that the state should render to.</param>
-		public override void Draw(RenderOutput output)
+		/// <param name="show">If true, the scoreboard is shown.</param>
+		private void OnShowScoreboard(bool show)
 		{
-			Assert.ArgumentNotNull(output);
+			if (show)
+			{
+				if (_scoreboard != null)
+					return;
 
-			output.Camera = _cameraManager.ActiveCamera;
-			output.Camera.Viewport = output.Viewport;
+				_scoreboard = new Scoreboard(_gameSession);
+				StateManager.Add(_scoreboard);
+			}
+			else
+			{
+				if (_scoreboard == null)
+					return;
 
-			_renderContext.Draw(output);
+				StateManager.Remove(_scoreboard);
+				_scoreboard = null;
+			}
+		}
+
+		/// <summary>
+		/// Invoked when the local player changed his or her name.
+		/// </summary>
+		/// <param name="name">The previous name of the local player.</param>
+		private void OnPlayerNameChanged(string name)
+		{
+			_networkSession.Send(Message.ChangePlayerName(_gameSession.Players.LocalPlayer, Cvars.PlayerName));
+		}
+
+		/// <summary>
+		/// Invoked when the local player entered a chat message.
+		/// </summary>
+		/// <param name="message">The message that the local player wants to send.</param>
+		private void OnSay(string message)
+		{
+			_networkSession.Send(Message.Say(_gameSession.Players.LocalPlayer, message));
 		}
 	}
 }

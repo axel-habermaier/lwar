@@ -50,6 +50,8 @@ namespace Lwar.Client
 			commands.Bind(Key.F5.WentDown(), "reload_assets");
 			commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
 			commands.Bind(Key.Escape.WentDown(), "exit");
+			commands.Bind(Key.Tab.WentDown(), "show_scoreboard true");
+			commands.Bind(Key.Tab.WentUp(), "show_scoreboard false");
 		}
 
 		/// <summary>

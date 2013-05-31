@@ -37,6 +37,28 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
+		///   Creates a chat message that the server broadcasts to all players.
+		/// </summary>
+		/// <param name="player">The player who wrote the chat message.</param>
+		/// <param name="message">The message that should be sent.</param>
+		public static Message Say(Player player, string message)
+		{
+			Assert.ArgumentNotNull(player);
+			Assert.ArgumentNotNullOrWhitespace(message);
+			Assert.That(Encoding.UTF8.GetByteCount(message) <= Specification.MaximumChatMessageLength, "Chat message is too long.");
+
+			return new Message
+			{
+				Type = MessageType.Chat,
+				Chat = new ChatPayload
+				{
+					Player = player.Id,
+					Message = message
+				}
+			};
+		}
+
+		/// <summary>
 		///   Creates a message that instructs the server to change the ship and weapon types of the given player.
 		/// </summary>
 		/// <param name="player">The player whose ship and weapon types should be changed.</param>

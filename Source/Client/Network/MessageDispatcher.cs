@@ -4,6 +4,7 @@ namespace Lwar.Client.Network
 {
 	using Gameplay;
 	using Gameplay.Entities;
+	using Pegasus.Framework.Platform.Logging;
 
 	/// <summary>
 	///   Dispatches messages received from the server.
@@ -34,6 +35,9 @@ namespace Lwar.Client.Network
 			{
 				case MessageType.Chat:
 					// TODO
+					var player = _gameSession.Players[message.Chat.Player];
+					if (player != null)
+						Log.Info("{0}: {1}", player.Name, message.Chat.Message);
 					break;
 				case MessageType.Name:
 					_gameSession.Players.ChangeName(message.Name.Player, message.Name.Name);

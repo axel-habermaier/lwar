@@ -6,12 +6,10 @@ Client
 	- Shield effect
 	- Weapon effects
 	- Particle system
-	- Parallax scrolling
 - Entity interpolation
 	- Reusable interpolation class?
 - UI
 	- Ship/Weapon selection
-	- Scoreboard
 	- Chat messages outside of console
 	- 'Event log' outside of console: Player rename, x killed y, x left, etc.
 	- Show player names on top of ships
@@ -25,7 +23,6 @@ Pegasus
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
 - Linux: Fullscreen mode does not work reliably
 - Linux: Set minimum/maximum allowed window size
-- Disallow assignments to shader input variables
 
 Network Specification
 ========

@@ -39,7 +39,7 @@ Network-related constants
 	Reliable Message Header Size:	  5 bytes	
 	Unreliable Message Header Size:	  1 byte	
 	Max Player Name Length: 	 	 32 bytes 		
-	Max Chat Message Length: 		128 bytes 		
+	Max Chat Message Length: 		255 bytes 		
 	Max Player Count:				  8 players
 	Stats Message Frequency:		 ~2 Hz			Clients do not have to be up-to-date all the time
 	Input Message Frequency:		~30	Hz			Should be relatively high to reduce latency
@@ -309,6 +309,7 @@ Client-side prediction
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	13	  13-05-31  Axel		Increased maximum allowed chat message length to 255 bytes 
 	12	  15-04-12  Axel		Removed entity types; these are now determined by the F# code 
 								generation script
 	11	  17-02-11	Gidon		Now type-specific updates have their own message ids,

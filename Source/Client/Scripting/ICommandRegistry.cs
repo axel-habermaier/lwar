@@ -46,12 +46,19 @@ namespace Lwar.Client.Scripting
 		/// </summary>
 		/// <param name="message">The message that should be sent.</param>
 		[Command]
-		void Say(string message);
+		void Say([NotEmpty, MaximumLength(Specification.MaximumChatMessageLength, true)] string message);
 
 		/// <summary>
 		///   Toggles between the game and the debugging camera.
 		/// </summary>
 		[Command]
 		void ToggleDebugCamera();
+
+		/// <summary>
+		///   Shows or hides the scoreboard during an active game session.
+		/// </summary>
+		/// <param name="show">If true, the scoreboard is shown.</param>
+		[Command]
+		void ShowScoreboard(bool show);
 	}
 }

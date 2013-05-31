@@ -2,6 +2,7 @@
 
 namespace Lwar.Client.Gameplay
 {
+	using System.Collections;
 	using System.Collections.Generic;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Logging;
@@ -10,7 +11,7 @@ namespace Lwar.Client.Gameplay
 	/// <summary>
 	///   Manages the active players that participate in a game session.
 	/// </summary>
-	public sealed class PlayerList : DisposableObject
+	public sealed class PlayerList : DisposableObject, IEnumerable<Player>
 	{
 		/// <summary>
 		///   Maps generational identifiers to player instances.
@@ -35,6 +36,22 @@ namespace Lwar.Client.Gameplay
 		public Player this[Identifier identifier]
 		{
 			get { return _playerMap[identifier]; }
+		}
+
+		/// <summary>
+		///   Returns an enumerator that iterates through the collection.
+		/// </summary>
+		IEnumerator<Player> IEnumerable<Player>.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		/// <summary>
+		///   Returns an enumerator that iterates through the collection.
+		/// </summary>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 
 		/// <summary>
@@ -107,7 +124,7 @@ namespace Lwar.Client.Gameplay
 			var player = _playerMap[playerId];
 			Assert.NotNull(player, "Cannot change the name of an unknown player.");
 
-			if (!String.IsNullOrWhiteSpace(player.Name) && player.Name != name)
+			if (!String.IsNullOrWhiteSpace(player.Name) && player.Name != name && player != LocalPlayer)
 				Log.Info("{0} was renamed to {1}.", player.Name, name);
 
 			player.Name = name;

@@ -16,6 +16,21 @@ namespace Lwar.Client.Gameplay
 		public string Name { get; set; }
 
 		/// <summary>
+		///   Gets or sets the player's ping.
+		/// </summary>
+		public int Ping { get; set; }
+
+		/// <summary>
+		///   Gets or sets the number of kills that the player has scored.
+		/// </summary>
+		public int Kills { get; set; }
+
+		/// <summary>
+		///   Gets or sets the number of deaths.
+		/// </summary>
+		public int Deaths { get; set; }
+
+		/// <summary>
 		///   Gets or sets the player's ship.
 		/// </summary>
 		public Ship Ship { get; set; }

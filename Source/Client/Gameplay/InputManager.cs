@@ -23,7 +23,7 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		private Message.InputPayload _inputMessage;
 
-		#region Input states
+		#region Network-synced input states
 
 		private InputState _backward;
 		private InputState _forward;

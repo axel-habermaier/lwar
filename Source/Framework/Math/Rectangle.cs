@@ -69,6 +69,20 @@ namespace Pegasus.Framework.Math
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="left">The X-coordinate of the left edge of the rectangle.</param>
+		/// <param name="top">The Y-coordinate of the left edge of the rectangle.</param>
+		/// <param name="size">The size of the rectangle.</param>
+		public Rectangle(int left, int top, Size size)
+		{
+			Left = left;
+			Top = top;
+			Width = size.Width;
+			Height = size.Height;
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
 		/// <param name="position">The position of the rectangle's top left corner.</param>
 		/// <param name="size">The size of the rectangle.</param>
 		public Rectangle(Vector2i position, Size size)
@@ -160,6 +174,37 @@ namespace Pegasus.Framework.Math
 		public Rectangle Offset(Vector2i offset)
 		{
 			return Offset(offset.X, offset.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public Rectangle Enlarge(int amount)
+		{
+			return Enlarge(amount, amount);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public Rectangle Enlarge(Vector2i amount)
+		{
+			return Enlarge(amount.X, amount.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
+		/// <param name="y">The amount that the rectangle should be enlarged in Y-direction.</param>
+		public Rectangle Enlarge(int x, int y)
+		{
+			return new Rectangle(Left - x, Top - y, Width + 2 * x, Height + 2 * y);
 		}
 
 		/// <summary>
@@ -324,6 +369,20 @@ namespace Pegasus.Framework.Math
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="left">The X-coordinate of the left edge of the rectangle.</param>
+		/// <param name="top">The Y-coordinate of the left edge of the rectangle.</param>
+		/// <param name="size">The size of the rectangle.</param>
+		public RectangleF(float left, float top, SizeF size)
+		{
+			Left = left;
+			Top = top;
+			Width = size.Width;
+			Height = size.Height;
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
 		/// <param name="position">The position of the rectangle's top left corner.</param>
 		/// <param name="size">The size of the rectangle.</param>
 		public RectangleF(Vector2 position, SizeF size)
@@ -415,6 +474,37 @@ namespace Pegasus.Framework.Math
 		public RectangleF Offset(Vector2 offset)
 		{
 			return Offset(offset.X, offset.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public RectangleF Enlarge(float amount)
+		{
+			return Enlarge(amount, amount);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public RectangleF Enlarge(Vector2 amount)
+		{
+			return Enlarge(amount.X, amount.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
+		/// <param name="y">The amount that the rectangle should be enlarged in Y-direction.</param>
+		public RectangleF Enlarge(float x, float y)
+		{
+			return new RectangleF(Left - x, Top - y, Width + 2 * x, Height + 2 * y);
 		}
 
 		/// <summary>
@@ -579,6 +669,20 @@ namespace Pegasus.Framework.Math
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="left">The X-coordinate of the left edge of the rectangle.</param>
+		/// <param name="top">The Y-coordinate of the left edge of the rectangle.</param>
+		/// <param name="size">The size of the rectangle.</param>
+		public RectangleF8(Fixed8 left, Fixed8 top, SizeF8 size)
+		{
+			Left = left;
+			Top = top;
+			Width = size.Width;
+			Height = size.Height;
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
 		/// <param name="position">The position of the rectangle's top left corner.</param>
 		/// <param name="size">The size of the rectangle.</param>
 		public RectangleF8(Vector2f8 position, SizeF8 size)
@@ -670,6 +774,37 @@ namespace Pegasus.Framework.Math
 		public RectangleF8 Offset(Vector2f8 offset)
 		{
 			return Offset(offset.X, offset.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public RectangleF8 Enlarge(Fixed8 amount)
+		{
+			return Enlarge(amount, amount);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public RectangleF8 Enlarge(Vector2f8 amount)
+		{
+			return Enlarge(amount.X, amount.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
+		/// <param name="y">The amount that the rectangle should be enlarged in Y-direction.</param>
+		public RectangleF8 Enlarge(Fixed8 x, Fixed8 y)
+		{
+			return new RectangleF8(Left - x, Top - y, Width + 2 * x, Height + 2 * y);
 		}
 
 		/// <summary>
@@ -834,6 +969,20 @@ namespace Pegasus.Framework.Math
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="left">The X-coordinate of the left edge of the rectangle.</param>
+		/// <param name="top">The Y-coordinate of the left edge of the rectangle.</param>
+		/// <param name="size">The size of the rectangle.</param>
+		public RectangleF16(Fixed16 left, Fixed16 top, SizeF16 size)
+		{
+			Left = left;
+			Top = top;
+			Width = size.Width;
+			Height = size.Height;
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
 		/// <param name="position">The position of the rectangle's top left corner.</param>
 		/// <param name="size">The size of the rectangle.</param>
 		public RectangleF16(Vector2f16 position, SizeF16 size)
@@ -925,6 +1074,37 @@ namespace Pegasus.Framework.Math
 		public RectangleF16 Offset(Vector2f16 offset)
 		{
 			return Offset(offset.X, offset.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public RectangleF16 Enlarge(Fixed16 amount)
+		{
+			return Enlarge(amount, amount);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public RectangleF16 Enlarge(Vector2f16 amount)
+		{
+			return Enlarge(amount.X, amount.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
+		/// <param name="y">The amount that the rectangle should be enlarged in Y-direction.</param>
+		public RectangleF16 Enlarge(Fixed16 x, Fixed16 y)
+		{
+			return new RectangleF16(Left - x, Top - y, Width + 2 * x, Height + 2 * y);
 		}
 
 		/// <summary>
