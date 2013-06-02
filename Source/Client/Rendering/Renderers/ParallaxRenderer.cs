@@ -36,6 +36,11 @@ namespace Lwar.Client.Rendering.Renderers
 		private const float StarLayer = -2000.0f;
 
 		/// <summary>
+		///   The allowed range of the star's relative distance to the viewer.
+		/// </summary>
+		private static readonly Vector2 DistanceRange = new Vector2(0.1f, 0.8f);
+
+		/// <summary>
 		///   The effect that is used to draw the parallax scrolling star field.
 		/// </summary>
 		private readonly ParallaxEffect _effect;
@@ -80,7 +85,7 @@ namespace Lwar.Client.Rendering.Renderers
 			{
 				// Randomly place a star, selecting a random distance to the viewer and a random star type
 				var position = new Vector2(random.Next(-Range, Range), random.Next(-Range, Range));
-				var distance = MathUtils.Clamp((float)random.NextDouble(), 0.1f, 0.9f);
+				var distance = MathUtils.Clamp((float)random.NextDouble(), DistanceRange.X, DistanceRange.Y);
 				var textureIdx = random.Next(0, StarTypeCount);
 
 				// Store the positions of the vertices of the star
