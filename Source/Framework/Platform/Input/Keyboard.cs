@@ -30,7 +30,6 @@ namespace Pegasus.Framework.Platform.Input
 			_window = window;
 			_window.KeyPressed += OnKeyPressed;
 			_window.KeyReleased += OnKeyReleased;
-			_window.LostFocus += OnLostFocus;
 		}
 
 		/// <summary>
@@ -67,7 +66,6 @@ namespace Pegasus.Framework.Platform.Input
 		{
 			_window.KeyPressed -= OnKeyPressed;
 			_window.KeyReleased -= OnKeyReleased;
-			_window.LostFocus -= OnLostFocus;
 		}
 
 		/// <summary>
@@ -86,15 +84,6 @@ namespace Pegasus.Framework.Platform.Input
 		private void OnKeyPressed(KeyEventArgs key)
 		{
 			_states[(int)key.Key].KeyPressed();
-		}
-
-		/// <summary>
-		///   Invoked when the window has lost the focus. Resets all keys to unpressed.
-		/// </summary>
-		private void OnLostFocus()
-		{
-			for (var i = 0; i < _states.Length; ++i)
-				_states[i].KeyReleased();
 		}
 
 		/// <summary>

@@ -263,13 +263,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		return 0;
 	case WM_SIZE:
 		// Ignore size events triggered by a minimize (size == 0 in that case)
-		if (window->hwnd != NULL && params->resized != NULL && wParam != SIZE_MINIMIZED)
-		{
-			// Get the new size
-			RECT rectangle;
-			GetClientRect(window->hwnd, &rectangle);
-			params->resized(rectangle.right - rectangle.left, rectangle.bottom - rectangle.top);
-		}
+		if (window->hwnd != NULL && wParam != SIZE_MINIMIZED)
+			pgGetWindowSize(window, &window->width, &window->height);
 		break;
 	case WM_GETMINMAXINFO:
 		{
@@ -285,11 +280,22 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		windowState.activeWindow = window;
 		if (params->gainedFocus != NULL)
 			params->gainedFocus();
+
+		if (window->swapChain != NULL)
+			pgSwapChainWindowActive(window->swapChain, PG_TRUE);
 		break;
 	case WM_KILLFOCUS:
-		if (params->lostFocus != NULL)
-			params->lostFocus();
-		break;
+		{
+			POINT point;
+			if (!GetCursorPos(&point))
+				pgWin32Error("Failed to get mouse cursor position");
+
+			pgWindowLostFocus(window, point.x, point.y);
+			if (window->swapChain != NULL)
+				pgSwapChainWindowActive(window->swapChain, PG_FALSE);
+
+			break;
+		}
 	case WM_MOUSEMOVE:
 		// If the cursor is entering the window, raise the mouse entered event and tell Windows to inform
 		// us when the cursor leaves the window.
@@ -319,36 +325,28 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 			params->mouseLeft();
 		break;
 	case WM_LBUTTONDOWN:
-		if (params->mousePressed != NULL)
-			params->mousePressed(PG_MOUSE_LEFT, LOWORD(lParam), HIWORD(lParam));
+		pgWindowButtonDown(window, PG_MOUSE_LEFT, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_LBUTTONUP:
-		if (params->mouseReleased != NULL)
-			params->mouseReleased(PG_MOUSE_LEFT, LOWORD(lParam), HIWORD(lParam));
+		pgWindowButtonUp(window, PG_MOUSE_LEFT, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_RBUTTONDOWN:
-		if (params->mousePressed != NULL)
-			params->mousePressed(PG_MOUSE_RIGHT, LOWORD(lParam), HIWORD(lParam));
+		pgWindowButtonDown(window, PG_MOUSE_RIGHT, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_RBUTTONUP:
-		if (params->mouseReleased != NULL)
-			params->mouseReleased(PG_MOUSE_RIGHT, LOWORD(lParam), HIWORD(lParam));
+		pgWindowButtonUp(window, PG_MOUSE_RIGHT, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_MBUTTONDOWN:
-		if (params->mousePressed != NULL)
-			params->mousePressed(PG_MOUSE_MIDDLE, LOWORD(lParam), HIWORD(lParam));
+		pgWindowButtonDown(window, PG_MOUSE_MIDDLE, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_MBUTTONUP:
-		if (params->mouseReleased != NULL)
-			params->mouseReleased(PG_MOUSE_MIDDLE, LOWORD(lParam), HIWORD(lParam));
+		pgWindowButtonUp(window, PG_MOUSE_MIDDLE, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_XBUTTONDOWN:
-		if (params->mousePressed != NULL)
-			params->mousePressed(HIWORD(wParam) == XBUTTON1? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2, LOWORD(lParam), HIWORD(lParam));
+		pgWindowButtonDown(window, HIWORD(wParam) == XBUTTON1? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_XBUTTONUP:
-		if (params->mouseReleased != NULL)
-			params->mouseReleased(HIWORD(wParam) == XBUTTON1? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2, LOWORD(lParam), HIWORD(lParam));
+		pgWindowButtonUp(window, HIWORD(wParam) == XBUTTON1? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_MOUSEWHEEL:
 		if (params->mouseWheel != NULL)
@@ -489,10 +487,10 @@ static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		}
 
 		// Raise the key event
-		if (released && params->keyReleased != NULL)
-			params->keyReleased(key, scanCode);
-		else if (!released && params->keyPressed != NULL)
-			params->keyPressed(key, scanCode);
+		if (released)
+			pgWindowKeyUp(windowState.activeWindow, key, scanCode);
+		else if (!released)
+			pgWindowKeyDown(windowState.activeWindow, key, scanCode);
 	}
 
 	return 0;

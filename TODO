@@ -13,6 +13,7 @@ Client
 	- Chat messages outside of console
 	- 'Event log' outside of console: Player rename, x killed y, x left, etc.
 	- Show player names on top of ships
+	- Minimap
 	- Menus
 		* Main menu
 		* Server browser
@@ -23,6 +24,8 @@ Pegasus
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
 - Linux: Fullscreen mode does not work reliably
 - Linux: Set minimum/maximum allowed window size
+- Linux: Window key/button event handling
+- Linux: Alt+Tab and fullscreen?
 - Windows: Alt+Tab out of fullscreen game not behaving nicely
 
 Network Specification

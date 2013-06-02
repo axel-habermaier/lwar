@@ -95,13 +95,21 @@ pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32
 		return PG_FALSE;
 	}
 
-	if (fullscreen && IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
+	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
 	{
 		PG_ERROR("Error while resizing swap chain target.");
 		return PG_FALSE;
 	}
 
 	return PG_TRUE;
+}
+
+pgVoid pgSwapChainWindowActive(pgSwapChain* swapChain, pgBool focus)
+{
+	PG_ASSERT_NOT_NULL(swapChain);
+
+	if (swapChain->fullscreen && focus)
+		pgUpdateSwapChainStateCore(swapChain, swapChain->fullscreenWidth, swapChain->fullscreenHeight, focus);
 }
 
 //====================================================================================================================

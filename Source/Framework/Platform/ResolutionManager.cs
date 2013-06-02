@@ -117,9 +117,7 @@ namespace Pegasus.Framework.Platform
 			else
 			{
 				Log.Info("Switching to windowed mode, resolution {0}x{1}.", _cvars.WindowWidth, _cvars.WindowHeight);
-
 				_swapChain.UpdateState(_cvars.WindowWidth, _cvars.WindowHeight, false);
-				_window.Size = new Size(_cvars.WindowWidth, _cvars.WindowHeight);
 			}
 		}
 

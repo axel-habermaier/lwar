@@ -44,4 +44,12 @@ pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32
 	return pgUpdateContextState(&swapChain->context, width, height, fullscreen);
 }
 
+pgVoid pgSwapChainWindowActive(pgSwapChain* swapChain, pgBool focus)
+{
+	PG_ASSERT_NOT_NULL(swapChain);
+
+	if (swapChain->fullscreen && focus)
+		pgUpdateSwapChainStateCore(swapChain, swapChain->fullscreenWidth, swapChain->fullscreenHeight, focus);
+}
+
 #endif

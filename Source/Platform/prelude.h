@@ -112,7 +112,7 @@
 	#define PG_ASSERT_NOT_REACHED(fmt, ...) PG_DIE(fmt, ##__VA_ARGS__)
 	#define PG_ASSERT_NOT_NULL(ptr) PG_ASSERT((ptr) != NULL, "Pointer '" #ptr "' is null.")
 	#define PG_ASSERT_NULL(ptr) PG_ASSERT((ptr) == NULL, "Pointer '" #ptr "' must be null.")
-	#define PG_ASSERT_IN_RANGE(v, lower, upper) PG_ASSERT(v >= lower && v < upper, "'" #v "' is out of range.")
+	#define PG_ASSERT_IN_RANGE(v, lower, upper) PG_ASSERT(v >= lower && v <= upper, "'" #v "' is out of range.")
 #else
 	#define PG_ASSERT(cond, fmt, ...) PG_UNUSED(cond)
 	#define PG_ASSERT_NOT_REACHED(fmt, ...) 
@@ -194,10 +194,23 @@ PG_NORETURN pgVoid pgNoReturn();
 // Window
 //====================================================================================================================
 
+#define PG_WINDOW_MIN_WIDTH 640
+#define PG_WINDOW_MIN_HEIGHT 360
+#define PG_WINDOW_MAX_WIDTH 1920
+#define PG_WINDOW_MAX_HEIGHT 1200
+#define PG_KEY_COUNT 108
+#define PG_BUTTON_COUNT 5
+
 struct pgWindow
 {
-	pgWindowParams params;
-	pgBool mouseCaptured;
+	pgWindowParams	params;
+	pgSwapChain*	swapChain;
+	pgBool			mouseCaptured;
+	pgBool			keyState[PG_KEY_COUNT];
+	pgInt32			scanCode[PG_KEY_COUNT];
+	pgBool			buttonState[PG_BUTTON_COUNT];
+	pgInt32			width;
+	pgInt32			height;
 	PG_WINDOW_PLATFORM
 };
 
@@ -212,10 +225,11 @@ pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title);
 pgVoid pgCaptureMouseCore(pgWindow* window);
 pgVoid pgReleaseMouseCore(pgWindow* window);
 
-#define PG_WINDOW_MIN_WIDTH 640
-#define PG_WINDOW_MIN_HEIGHT 360
-#define PG_WINDOW_MAX_WIDTH 1920
-#define PG_WINDOW_MAX_HEIGHT 1200
+pgVoid pgWindowKeyUp(pgWindow* window, pgKey key, pgInt32 scanCode);
+pgVoid pgWindowKeyDown(pgWindow* window, pgKey key, pgInt32 scanCode);
+pgVoid pgWindowButtonUp(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y);
+pgVoid pgWindowButtonDown(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y);
+pgVoid pgWindowLostFocus(pgWindow* window, pgInt32 x, pgInt32 y);
 
 //====================================================================================================================
 // Helper functions
@@ -428,6 +442,12 @@ struct pgSwapChain
 {
 	pgGraphicsDevice*	device;
 	pgRenderTarget		renderTarget;
+	pgWindow*			window;
+	pgBool				fullscreen;
+	pgInt32				windowedWidth;
+	pgInt32				windowedHeight;
+	pgInt32				fullscreenWidth;
+	pgInt32				fullscreenHeight;
 	PG_SWAP_CHAIN_PLATFORM
 };
 
@@ -437,6 +457,7 @@ pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain);
 pgVoid pgPresentCore(pgSwapChain* swapChain);
 pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen);
+pgVoid pgSwapChainWindowActive(pgSwapChain* swapChain, pgBool focus);
 
 //====================================================================================================================
 // Query
