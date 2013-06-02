@@ -61,7 +61,6 @@ namespace Pegasus.Framework.Platform.Input
 			WentUp = IsPressed;
 			IsPressed = false;
 			IsRepeated = false;
-			//WentDown = false;
 		}
 
 		/// <summary>

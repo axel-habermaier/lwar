@@ -17,13 +17,13 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
-- Bug: Chat message sending (might be server bug?)
 
 Pegasus
 ========
 - Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
 - Linux: Fullscreen mode does not work reliably
 - Linux: Set minimum/maximum allowed window size
+- Windows: Alt+Tab out of fullscreen game not behaving nicely
 
 Network Specification
 ========

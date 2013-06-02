@@ -13,7 +13,6 @@
 // Prevent Windows from polluting the global namespace with too many things
 #define NOGDICAPMASKS
 #define NOMENUS
-#define NOSYSCOMMANDS
 #define NORASTEROPS
 #define NOATOM
 #define NODRAWTEXT

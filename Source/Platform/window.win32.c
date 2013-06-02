@@ -354,6 +354,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		if (params->mouseWheel != NULL)
 			params->mouseWheel(GET_WHEEL_DELTA_WPARAM(wParam) / 120);
 		break;
+	case WM_SYSCOMMAND:
+		if (wParam == SC_KEYMENU)
+			return 0;
+		break;
 	case WM_CHAR:
 		// Ignore all non-printable characters below 32 (= single white-space). Otherwise, character entered 
 		// events would also be raised for the enter and back space keys, for instance. The character that is
