@@ -44,7 +44,7 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   The factor that is applied to the zoom value when the starfield zoom mode is selected.
 		/// </summary>
-		private const float StarfieldZoomFactor = 0.25f;
+		private const float StarfieldZoomFactor = 0.2f;
 
 		/// <summary>
 		///   The clock that is used to animate changes of the XZ plane distance.

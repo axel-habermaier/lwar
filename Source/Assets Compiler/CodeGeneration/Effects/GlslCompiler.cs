@@ -26,11 +26,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			if (literal.IsArray)
 				Writer.Append("[{0}]", ((object[])literal.Value).Length);
 
-			Writer.Append(" = new {0}[] ", ToShaderType(literal.Type));
+			Writer.Append(" = ");
 
 			if (literal.IsArray)
 			{
-				Writer.Append("( ");
+				Writer.Append("new {0}[] ( ",  ToShaderType(literal.Type));
 				Writer.Append(String.Join(", ", (object[])literal.Value));
 				Writer.Append(" )");
 			}
