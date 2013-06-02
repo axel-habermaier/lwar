@@ -34,7 +34,6 @@ namespace Lwar.Client.Network
 			switch (message.Type)
 			{
 				case MessageType.Chat:
-					buffer.WriteUInt32(message.SequenceNumber);
 					buffer.WriteIdentifier(message.Chat.Player);
 					buffer.WriteString(message.Chat.Message, Specification.MaximumChatMessageLength);
 					break;
