@@ -23,8 +23,68 @@ internal interface ICvars
 	bool DrawWireframe { get; set; }
 
 	/// <summary>
-	/// The key that show s us
+	///   When triggered, shows the scoreboard in an active game session.
 	/// </summary>
-	[Cvar(DefaultExpression = "Key.Tab.WentDown()")]
-	InputTrigger KeyShowScoreboard { get; set; }
+	[Cvar(DefaultExpression = "Key.Tab.IsPressed()"), Persistent]
+	InputTrigger InputShowScoreboard { get; set; }
+
+	/// <summary>
+	///   When triggered, moves the player forwards in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "Key.W.IsPressed() | Key.Up.IsPressed()"), Persistent]
+	InputTrigger InputForward { get; set; }
+
+	/// <summary>
+	///   When triggered, moves the player backwards in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "Key.S.IsPressed() | Key.Down.IsPressed()"), Persistent]
+	InputTrigger InputBackward { get; set; }
+
+	/// <summary>
+	///   When triggered, turns the player to the left in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "Key.A.IsPressed() | Key.Left.IsPressed()"), Persistent]
+	InputTrigger InputTurnLeft { get; set; }
+
+	/// <summary>
+	///   When triggered, turns the player to the right in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "Key.D.IsPressed() | Key.Right.IsPressed()"), Persistent]
+	InputTrigger InputTurnRight { get; set; }
+
+	/// <summary>
+	///   When triggered, moves the player to the left in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "Key.Q.IsPressed()"), Persistent]
+	InputTrigger InputStrafeLeft { get; set; }
+
+	/// <summary>
+	///   When triggered, moves the player to the right in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "Key.E.IsPressed()"), Persistent]
+	InputTrigger InputStrafeRight { get; set; }
+
+	/// <summary>
+	///   When triggered, fires the player's primary weapon in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "MouseButton.Left.IsPressed()"), Persistent]
+	InputTrigger InputPrimaryWeapon { get; set; }
+
+	/// <summary>
+	///   When triggered, fires the player's secondary weapon in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "MouseButton.Right.IsPressed()"), Persistent]
+	InputTrigger InputSecondaryWeapon { get; set; }
+
+	/// <summary>
+	///   When triggered, fires the player's tertiary weapon in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "Key.Num1.IsPressed()"), Persistent]
+	InputTrigger InputTertiaryWeapon { get; set; }
+
+	/// <summary>
+	///   When triggered, fires the player's quaternary weapon in an active game session.
+	/// </summary>
+	[Cvar(DefaultExpression = "Key.Num2.IsPressed()"), Persistent]
+	InputTrigger InputQuaternaryWeapon { get; set; }
 }

@@ -13,6 +13,7 @@ namespace Lwar.Client.Screens
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
+	using Scripting;
 
 	/// <summary>
 	///   Displays the score board.
@@ -42,7 +43,7 @@ namespace Lwar.Client.Screens
 		/// <summary>
 		///   The input that causes the scoreboard to be shown.
 		/// </summary>
-		private readonly LogicalInput _showScoreboard = new LogicalInput(Key.Tab.IsPressed(), InputLayers.Game);
+		private readonly LogicalInput _showScoreboard = new LogicalInput(Cvars.InputShowScoreboardCvar, InputLayers.Game);
 
 		/// <summary>
 		///   The header row that shows a label for each column.

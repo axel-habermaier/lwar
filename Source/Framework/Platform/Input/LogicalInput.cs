@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Platform.Input
 {
+	using Scripting;
+
 	/// <summary>
 	///   Represents a logical input, that is, an abstraction of physical input device states. In the simplest case, a logical
 	///   input corresponds to a key press or mouse button press. More complex chords, i.e., mixtures of several physical
@@ -30,6 +32,17 @@ namespace Pegasus.Framework.Platform.Input
 
 			Trigger = trigger;
 			_layers = layers;
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="configurableTrigger">The configurable trigger that triggers the logical input.</param>
+		/// <param name="layers">The input layer(s) that must be active for the input to be triggered.</param>
+		public LogicalInput(Cvar<InputTrigger> configurableTrigger, InputLayer layers)
+			: this(configurableTrigger.ToTrigger(), layers)
+		{
+			Assert.ArgumentNotNull(configurableTrigger);
 		}
 
 		/// <summary>

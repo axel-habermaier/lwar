@@ -7,6 +7,7 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Platform.Memory;
+	using Scripting;
 
 	/// <summary>
 	///   Manages the input state of the local player.
@@ -48,16 +49,16 @@ namespace Lwar.Client.Gameplay
 
 			_inputDevice = inputDevice;
 
-			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed(), InputLayers.Game);
-			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed(), InputLayers.Game);
-			_turnLeft.Input = new LogicalInput(Key.A.IsPressed() | Key.Left.IsPressed(), InputLayers.Game);
-			_turnRight.Input = new LogicalInput(Key.D.IsPressed() | Key.Right.IsPressed(), InputLayers.Game);
-			_strafeLeft.Input = new LogicalInput(Key.Q.IsPressed(), InputLayers.Game);
-			_strafeRight.Input = new LogicalInput(Key.E.IsPressed(), InputLayers.Game);
-			_shooting1.Input = new LogicalInput(MouseButton.Left.IsPressed(), InputLayers.Game);
-			_shooting2.Input = new LogicalInput(MouseButton.Right.IsPressed(), InputLayers.Game);
-			_shooting3.Input = new LogicalInput(Key.Num1.IsPressed(), InputLayers.Game);
-			_shooting4.Input = new LogicalInput(Key.Num2.IsPressed(), InputLayers.Game);
+			_forward.Input = new LogicalInput(Cvars.InputForwardCvar, InputLayers.Game);
+			_backward.Input = new LogicalInput(Cvars.InputBackwardCvar, InputLayers.Game);
+			_turnLeft.Input = new LogicalInput(Cvars.InputTurnLeftCvar, InputLayers.Game);
+			_turnRight.Input = new LogicalInput(Cvars.InputTurnRightCvar, InputLayers.Game);
+			_strafeLeft.Input = new LogicalInput(Cvars.InputStrafeLeftCvar, InputLayers.Game);
+			_strafeRight.Input = new LogicalInput(Cvars.InputStrafeRightCvar, InputLayers.Game);
+			_shooting1.Input = new LogicalInput(Cvars.InputPrimaryWeaponCvar, InputLayers.Game);
+			_shooting2.Input = new LogicalInput(Cvars.InputSecondaryWeaponCvar, InputLayers.Game);
+			_shooting3.Input = new LogicalInput(Cvars.InputTertiaryWeaponCvar, InputLayers.Game);
+			_shooting4.Input = new LogicalInput(Cvars.InputQuaternaryWeaponCvar, InputLayers.Game);
 
 			_inputDevice.Add(_forward.Input);
 			_inputDevice.Add(_backward.Input);

@@ -68,7 +68,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 					_writer.AppendLine("internal static class {0}", _registry.Name);
 					_writer.AppendBlockStatement(() =>
 						{
-							GenerateFields();
+							GenerateProperties();
 
 							GenerateCvarProperties();
 							GenerateCvarEvents();
@@ -83,21 +83,21 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		}
 
 		/// <summary>
-		///   Generates the cvar and command fields.
+		///   Generates the cvar and command properties.
 		/// </summary>
-		private void GenerateFields()
+		private void GenerateProperties()
 		{
 			foreach (var cvar in _registry.Cvars.Concat(_importedRegistry.Cvars))
 			{
 				WriteDocumentation(cvar.Documentation);
-				_writer.AppendLine("private static Cvar<{0}> {1};", cvar.Type, GetFieldName(cvar.Name));
+				_writer.AppendLine("public static Cvar<{0}> {1} {{ get; private set; }}", cvar.Type, GetPropertyName(cvar.Name));
 				_writer.Newline();
 			}
 
 			foreach (var command in _registry.Commands.Concat(_importedRegistry.Commands))
 			{
 				WriteDocumentation(GetSummary(command.Documentation));
-				_writer.AppendLine("private static Command{0} {1};", GetTypeArguments(command), GetFieldName(command.Name));
+				_writer.AppendLine("public static Command{0} {1} {{ get; private set; }}", GetTypeArguments(command), GetPropertyName(command.Name));
 				_writer.Newline();
 			}
 		}
@@ -113,13 +113,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 				_writer.AppendLine("public static {0} {1}", cvar.Type, cvar.Name);
 				_writer.AppendBlockStatement(() =>
 					{
-						_writer.AppendLine("get {{ return {0}.Value; }}", GetFieldName(cvar.Name));
+						_writer.AppendLine("get {{ return {0}.Value; }}", GetPropertyName(cvar.Name));
 						_writer.AppendLine("[DebuggerHidden]");
 						_writer.AppendLine("set");
 						_writer.AppendBlockStatement(() =>
 							{
 								_writer.AppendLine("Assert.ArgumentNotNull((object)value);");
-								_writer.AppendLine("{0}.Value = value;", GetFieldName(cvar.Name));
+								_writer.AppendLine("{0}.Value = value;", GetPropertyName(cvar.Name));
 							});
 					});
 
@@ -140,8 +140,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 				_writer.AppendLine("public static event Action<{0}> {1}Changing", cvar.Type, cvar.Name);
 				_writer.AppendBlockStatement(() =>
 					{
-						_writer.AppendLine("add {{ {0}.Changing += value; }}", GetFieldName(cvar.Name));
-						_writer.AppendLine("remove {{ {0}.Changing -= value; }}", GetFieldName(cvar.Name));
+						_writer.AppendLine("add {{ {0}.Changing += value; }}", GetPropertyName(cvar.Name));
+						_writer.AppendLine("remove {{ {0}.Changing -= value; }}", GetPropertyName(cvar.Name));
 					});
 
 				_writer.Newline();
@@ -152,8 +152,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 				_writer.AppendLine("public static event Action<{0}> {1}Changed", cvar.Type, cvar.Name);
 				_writer.AppendBlockStatement(() =>
 					{
-						_writer.AppendLine("add {{ {0}.Changed += value; }}", GetFieldName(cvar.Name));
-						_writer.AppendLine("remove {{ {0}.Changed -= value; }}", GetFieldName(cvar.Name));
+						_writer.AppendLine("add {{ {0}.Changed += value; }}", GetPropertyName(cvar.Name));
+						_writer.AppendLine("remove {{ {0}.Changed -= value; }}", GetPropertyName(cvar.Name));
 					});
 
 				_writer.Newline();
@@ -175,7 +175,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 						foreach (var parameter in command.Parameters)
 							_writer.AppendLine("Assert.ArgumentNotNull((object){0});", parameter.Name);
 
-						_writer.AppendLine("{0}.Invoke({1});", GetFieldName(command.Name), GetInvocationArguments(command));
+						_writer.AppendLine("{0}.Invoke({1});", GetPropertyName(command.Name), GetInvocationArguments(command));
 					});
 
 				_writer.Newline();
@@ -195,8 +195,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 				_writer.AppendLine("public static event Action{0} On{1}", GetTypeArguments(command), command.Name);
 				_writer.AppendBlockStatement(() =>
 					{
-						_writer.AppendLine("add {{ {0}.Invoked += value; }}", GetFieldName(command.Name));
-						_writer.AppendLine("remove {{ {0}.Invoked -= value; }}", GetFieldName(command.Name));
+						_writer.AppendLine("add {{ {0}.Invoked += value; }}", GetPropertyName(command.Name));
+						_writer.AppendLine("remove {{ {0}.Invoked -= value; }}", GetPropertyName(command.Name));
 					});
 
 				_writer.Newline();
@@ -230,7 +230,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			foreach (var cvar in _registry.Cvars)
 			{
 				_writer.Append("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {6}, {5}",
-							   cvar.Type, GetFieldName(cvar.Name), GetRuntimeName(cvar.Name), cvar.DefaultValue,
+							   cvar.Type, GetPropertyName(cvar.Name), GetRuntimeName(cvar.Name), cvar.DefaultValue,
 							   GetSummaryText(cvar.Documentation), cvar.Persistent.ToString().ToLower(), cvar.UpdateMode);
 
 				AppendValidators(cvar.Validators);
@@ -243,7 +243,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			foreach (var command in _registry.Commands)
 			{
 				_writer.Append("{1} = new Command{0}(\"{2}\", \"{3}\"",
-							   GetTypeArguments(command), GetFieldName(command.Name),
+							   GetTypeArguments(command), GetPropertyName(command.Name),
 							   GetRuntimeName(command.Name), GetSummaryText(command.Documentation));
 
 				GenerateCommandParameters(command);
@@ -257,13 +257,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		private void GenerateInstanceRegistration()
 		{
 			foreach (var cvar in _registry.Cvars)
-				_writer.AppendLine("CvarRegistry.Register({0});", GetFieldName(cvar.Name));
+				_writer.AppendLine("CvarRegistry.Register({0});", GetPropertyName(cvar.Name));
 
 			if (_registry.Cvars.Any() && _registry.Commands.Any())
 				_writer.Newline();
 
 			foreach (var command in _registry.Commands)
-				_writer.AppendLine("CommandRegistry.Register({0});", GetFieldName(command.Name));
+				_writer.AppendLine("CommandRegistry.Register({0});", GetPropertyName(command.Name));
 		}
 
 		/// <summary>
@@ -278,7 +278,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			_writer.AppendBlockStatement(() =>
 				{
 					foreach (var cvar in _importedRegistry.Cvars)
-						_writer.AppendLine("{2} = CvarRegistry.Resolve<{1}>(\"{0}\");", GetRuntimeName(cvar.Name), cvar.Type, GetFieldName(cvar.Name));
+						_writer.AppendLine("{2} = CvarRegistry.Resolve<{1}>(\"{0}\");", GetRuntimeName(cvar.Name), cvar.Type, GetPropertyName(cvar.Name));
 
 					if (_importedRegistry.Cvars.Any() && _importedRegistry.Commands.Any())
 						_writer.Newline();
@@ -286,7 +286,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 					foreach (var command in _importedRegistry.Commands)
 					{
 						_writer.AppendLine("{2} = CommandRegistry.Resolve{1}(\"{0}\");", GetRuntimeName(command.Name), GetTypeArguments(command),
-										   GetFieldName(command.Name));
+										   GetPropertyName(command.Name));
 					}
 				});
 		}
@@ -379,9 +379,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		///   Gets the field name of the given name.
 		/// </summary>
 		/// <param name="name">The name whose field name should be returned.</param>
-		private static string GetFieldName(string name)
+		private static string GetPropertyName(string name)
 		{
-			return String.Format("_{0}{1}", Char.ToLower(name[0]), name.Substring(1));
+			return String.Format("{0}Cvar", name);
 		}
 
 		/// <summary>
