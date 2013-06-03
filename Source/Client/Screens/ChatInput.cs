@@ -7,6 +7,7 @@ namespace Lwar.Client.Screens
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Platform.Memory;
@@ -16,13 +17,8 @@ namespace Lwar.Client.Screens
 	/// <summary>
 	///   Shows the chat input field during an active game session.
 	/// </summary>
-	public class ChatInput : Screen
+	public class ChatInput : DisposableObject
 	{
-		/// <summary>
-		///   The width of the chat input's background border.
-		/// </summary>
-		private const int BorderWidth = 5;
-
 		/// <summary>
 		///   The margin of the chat input and the border of the screen.
 		/// </summary>
@@ -34,14 +30,39 @@ namespace Lwar.Client.Screens
 		private readonly LogicalInput _cancel = new LogicalInput(Key.Escape.WentDown(), InputModes.Chat);
 
 		/// <summary>
+		///   The frame around the chat input.
+		/// </summary>
+		private readonly Frame _frame = new Frame();
+
+		/// <summary>
 		///   The game session that is loaded.
 		/// </summary>
 		private readonly GameSession _gameSession;
 
 		/// <summary>
+		///   The input device that is used to check for user input.
+		/// </summary>
+		private readonly LogicalInputDevice _inputDevice;
+
+		/// <summary>
+		///   The label that informs the user if the text is too long.
+		/// </summary>
+		private readonly Label _lengthWarning;
+
+		/// <summary>
 		///   The network session that is used to synchronize the game state between the client and the server.
 		/// </summary>
 		private readonly NetworkSession _networkSession;
+
+		/// <summary>
+		///   The chat input prompt.
+		/// </summary>
+		private readonly Label _prompt;
+
+		/// <summary>
+		///   The chat input text box.
+		/// </summary>
+		private readonly TextBox _textBox;
 
 		/// <summary>
 		///   The input trigger that is used to determine whether the chat input should be shown or whether the chat input
@@ -51,37 +72,35 @@ namespace Lwar.Client.Screens
 																  InputModes.Game | InputModes.Chat);
 
 		/// <summary>
-		///   The area covered by the chat input.
-		/// </summary>
-		private Rectangle _area;
-
-		/// <summary>
-		///   The label that informs the user if the text is too long.
-		/// </summary>
-		private Label _lengthWarning;
-
-		/// <summary>
-		///   The chat input prompt.
-		/// </summary>
-		private Label _prompt;
-
-		/// <summary>
-		///   The chat input text box.
-		/// </summary>
-		private TextBox _textBox;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="inputDevice">The input device that should be used to check for user input.</param>
+		/// <param name="assets">The assets manager that should be used to load required assets.</param>
 		/// <param name="gameSession">The game session that should be loaded.</param>
 		/// <param name="networkSession">The network session that synchronizes the game state between the client and the server.</param>
-		public ChatInput(GameSession gameSession, NetworkSession networkSession)
+		public ChatInput(LogicalInputDevice inputDevice, AssetsManager assets, GameSession gameSession, NetworkSession networkSession)
 		{
+			Assert.ArgumentNotNull(inputDevice);
 			Assert.ArgumentNotNull(gameSession);
 			Assert.ArgumentNotNull(networkSession);
 
+			_inputDevice = inputDevice;
 			_gameSession = gameSession;
 			_networkSession = networkSession;
+
+			_inputDevice.Register(_trigger);
+			_inputDevice.Register(_cancel);
+
+			_inputDevice.Keyboard.CharEntered += OnCharEntered;
+			_inputDevice.Keyboard.KeyPressed += OnKeyPressed;
+
+			var font = assets.LoadFont("Fonts/Liberation Mono 12");
+			_prompt = new Label(font, "Say: ");
+			_textBox = new TextBox(font);
+			_lengthWarning = new Label(font, "The message exceeds the maximum allowed width for a chat message and cannot be sent.")
+			{
+				Color = new Color(255, 0, 0, 255)
+			};
 		}
 
 		/// <summary>
@@ -97,7 +116,7 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		private bool Active
 		{
-			get { return (InputDevice.Modes & InputModes.Chat) == InputModes.Chat; }
+			get { return (_inputDevice.Modes & InputModes.Chat) == InputModes.Chat; }
 		}
 
 		/// <summary>
@@ -105,53 +124,35 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			InputDevice.Keyboard.CharEntered -= OnCharEntered;
-			InputDevice.Keyboard.KeyPressed -= OnKeyPressed;
+			_inputDevice.Keyboard.CharEntered -= OnCharEntered;
+			_inputDevice.Keyboard.KeyPressed -= OnKeyPressed;
 
-			InputDevice.Remove(_trigger);
-			InputDevice.Remove(_cancel);
+			_inputDevice.Modes &= ~InputModes.Chat;
+			_inputDevice.Modes |= InputModes.Game;
+			_inputDevice.Remove(_trigger);
+			_inputDevice.Remove(_cancel);
 			_textBox.SafeDispose();
 		}
 
 		/// <summary>
-		///   Initializes the screen.
+		///   Updates the chat input's state.
 		/// </summary>
-		public override void Initialize()
-		{
-			InputDevice.Register(_trigger);
-			InputDevice.Register(_cancel);
-
-			InputDevice.Keyboard.CharEntered += OnCharEntered;
-			InputDevice.Keyboard.KeyPressed += OnKeyPressed;
-
-			var font = Assets.LoadFont("Fonts/Liberation Mono 12");
-			_prompt = new Label(font, "Say: ");
-			_textBox = new TextBox(font);
-			_lengthWarning = new Label(font, "The message exceeds the maximum allowed width for a chat message and cannot be sent.")
-			{
-				Color = new Color(255, 0, 0, 255)
-			};
-		}
-
-		/// <summary>
-		///   Updates the screen.
-		/// </summary>
-		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
-		public override void Update(bool topmost)
+		/// <param name="size">The size of the window.</param>
+		public void Update(Size size)
 		{
 			// Show or hide the chat input
 			if (_trigger.IsTriggered && !Active)
 			{
-				Assert.That(InputDevice.Modes == InputModes.Game, "Unexpected input state.");
-				InputDevice.Modes = InputModes.Chat;
+				Assert.That(_inputDevice.Modes == InputModes.Game, "Unexpected input state.");
+				_inputDevice.Modes = InputModes.Chat;
 			}
 			else if ((_cancel.IsTriggered || _trigger.IsTriggered) && Active)
 			{
 				// Do not do anything if the user tries to send a message that is too long
 				if (!_trigger.IsTriggered || !LengthExceeded)
 				{
-					InputDevice.Modes &= ~InputModes.Chat;
-					InputDevice.Modes |= InputModes.Game;
+					_inputDevice.Modes &= ~InputModes.Chat;
+					_inputDevice.Modes |= InputModes.Game;
 
 					// If a message has been entered, send it to the server and hide the chat input
 					if (!_cancel.IsTriggered && !String.IsNullOrWhiteSpace(_textBox.Text))
@@ -165,7 +166,7 @@ namespace Lwar.Client.Screens
 				return;
 
 			// Update the chat input's layout
-			var right = Window.Width - Margin;
+			var right = size.Width - Margin;
 			_prompt.Area = new Rectangle(Margin, Margin, _prompt.Font.MeasureWidth(_prompt.Text), 0);
 
 			var messageLeft = _prompt.ActualArea.Right;
@@ -176,20 +177,20 @@ namespace Lwar.Client.Screens
 			if (LengthExceeded)
 				bottom = _lengthWarning.ActualArea.Bottom;
 
-			_area = new Rectangle(Margin, Margin, right - Margin, bottom - Margin);
+			_frame.ContentArea = new Rectangle(Margin, Margin, right - Margin, bottom - Margin);
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the app screen.
+		///   Draws the chat input, if it is active.
 		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
-		public override void DrawUserInterface(SpriteBatch spriteBatch)
+		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
+		public void Draw(SpriteBatch spriteBatch)
 		{
 			if (!Active)
 				return;
 
-			// Draw a background
-			spriteBatch.Draw(_area.Enlarge(BorderWidth), Texture2D.White, new Color(32, 32, 32, 16));
+			// Draw the frame
+			_frame.Draw(spriteBatch);
 
 			// Draw the prompt and the textbox
 			_prompt.Draw(spriteBatch);

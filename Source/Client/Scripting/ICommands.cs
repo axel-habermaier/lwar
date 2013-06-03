@@ -52,11 +52,4 @@ internal interface ICommands
 	/// </summary>
 	[Command]
 	void ToggleDebugCamera();
-
-	/// <summary>
-	///   Shows or hides the scoreboard during an active game session.
-	/// </summary>
-	/// <param name="show">A value of 'true' indicates that the scoreboard should be shown.</param>
-	[Command]
-	void ShowScoreboard(bool show);
 }

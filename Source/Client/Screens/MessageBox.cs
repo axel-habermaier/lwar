@@ -21,6 +21,11 @@ namespace Lwar.Client.Screens
 		private readonly LogicalInput _continue;
 
 		/// <summary>
+		///   The frame defining the out edges of the message box.
+		/// </summary>
+		private readonly Frame _frame = new Frame { FrameColor = new Color(0xFF333333), Margin = 10 };
+
+		/// <summary>
 		///   The message that is displayed to the user.
 		/// </summary>
 		private readonly string _message;
@@ -69,6 +74,7 @@ namespace Lwar.Client.Screens
 		public override void Update(bool topmost)
 		{
 			_messageLabel.Area = new Rectangle(0, 0, Window.Width, Window.Height);
+			_frame.ContentArea = _messageLabel.ActualArea;
 
 			if (topmost && _continue.IsTriggered)
 				ScreenManager.Remove(this);
@@ -80,7 +86,7 @@ namespace Lwar.Client.Screens
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)
 		{
-			spriteBatch.Draw(_messageLabel.ActualArea, Texture2D.White, new Color(0xEE333333));
+			_frame.Draw(spriteBatch);
 			_messageLabel.Draw(spriteBatch);
 		}
 

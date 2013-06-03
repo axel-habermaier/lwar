@@ -7,19 +7,22 @@ namespace Lwar.Client.Screens
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
+	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
 
 	/// <summary>
 	///   Displays the score board.
 	/// </summary>
-	public class Scoreboard : Screen
+	public class Scoreboard : DisposableObject
 	{
 		/// <summary>
-		///   The width of the scoreboard's background border.
+		///   The frame around the scoreboard.
 		/// </summary>
-		private const int BorderWidth = 5;
+		private readonly Frame _frame = new Frame();
 
 		/// <summary>
 		///   The game session that is played.
@@ -27,14 +30,24 @@ namespace Lwar.Client.Screens
 		private readonly GameSession _gameSession;
 
 		/// <summary>
+		///   The input that causes the scoreboard to be hidden.
+		/// </summary>
+		private readonly LogicalInput _hideScoreboard = new LogicalInput(Key.Tab.WentUp(), InputModes.Game);
+
+		/// <summary>
+		///   The input device that is used to check for user input.
+		/// </summary>
+		private readonly LogicalInputDevice _inputDevice;
+
+		/// <summary>
 		///   The rows that show the stats of all active players.
 		/// </summary>
 		private readonly Row[] _rows = new Row[Specification.MaxPlayers];
 
 		/// <summary>
-		///   The area covered by the scoreboard.
+		///   The input that causes the scoreboard to be shown.
 		/// </summary>
-		private Rectangle _area;
+		private readonly LogicalInput _showScoreboard = new LogicalInput(Key.Tab.WentDown(), InputModes.Game);
 
 		/// <summary>
 		///   The header row that shows a label for each column.
@@ -42,41 +55,51 @@ namespace Lwar.Client.Screens
 		private Row _header;
 
 		/// <summary>
+		///   A value indicating whether the scoreboard is visible.
+		/// </summary>
+		private bool _visible;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="inputDevice">The input device that should be used to check for user input.</param>
+		/// <param name="assets">The assets manager that should be used to load required assets.</param>
 		/// <param name="gameSession">The game session that is played.</param>
-		public Scoreboard(GameSession gameSession)
+		public Scoreboard(LogicalInputDevice inputDevice, AssetsManager assets, GameSession gameSession)
 		{
+			Assert.ArgumentNotNull(inputDevice);
+			Assert.ArgumentNotNull(assets);
 			Assert.ArgumentNotNull(gameSession);
+
+			_inputDevice = inputDevice;
 			_gameSession = gameSession;
-		}
 
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			// Nothing to do here
-		}
-
-		/// <summary>
-		///   Initializes the screen.
-		/// </summary>
-		public override void Initialize()
-		{
-			var font = Assets.LoadFont("Fonts/Liberation Mono 12");
+			var font = assets.LoadFont("Fonts/Liberation Mono 12");
 			_header = Row.CreateHeader(font);
 
 			for (var i = 0; i < _rows.Length; ++i)
 				_rows[i] = new Row(font);
+
+			_inputDevice.Register(_showScoreboard);
+			_inputDevice.Register(_hideScoreboard);
 		}
 
 		/// <summary>
-		///   Updates the screen.
+		///   Updates the scoreboard.
 		/// </summary>
-		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
-		public override void Update(bool topmost)
+		/// <param name="size">The size of the window.</param>
+		public void Update(Size size)
 		{
+			// Check whether the scoreboard should be shown or hidden
+			if (_hideScoreboard.IsTriggered)
+				_visible = false;
+
+			if (_showScoreboard.IsTriggered)
+				_visible = true;
+
+			if (!_visible)
+				return;
+
 			// Update the visible row contents
 			var visibleRows = 0;
 			foreach (var player in _gameSession.Players
@@ -92,9 +115,9 @@ namespace Lwar.Client.Screens
 			// Compute the new area of the scoreboard
 			var width = _header.Width;
 			var height = _rows[0].Height + visibleRows * _rows[0].Height;
-			var x = (Window.Width - _header.Width) / 2;
-			var y = (Window.Height - height) / 2;
-			_area = new Rectangle(x, y, width, height);
+			var x = (size.Width - _header.Width) / 2;
+			var y = (size.Height - height) / 2;
+			_frame.ContentArea = new Rectangle(x, y, width, height);
 
 			// Update the header and the row layouts
 			_header.UpdateLayout(new Vector2i(x, y));
@@ -104,16 +127,20 @@ namespace Lwar.Client.Screens
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the app screen.
+		///   Draws the scoreboard.
 		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
-		public override void DrawUserInterface(SpriteBatch spriteBatch)
+		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
+		public void Draw(SpriteBatch spriteBatch)
 		{
-			// Draw a background
-			spriteBatch.Draw(_area.Enlarge(BorderWidth), Texture2D.White, new Color(32, 32, 32, 16));
+			if (!_visible)
+				return;
+
+			// Draw the frame
+			_frame.Draw(spriteBatch);
 
 			// Draw a line that separates the header from the rows
-			var line = new RectangleF(_area.Left, _area.Top + _header.Height - Row.RowSpan - 2, _area.Width, 1);
+			var area = _frame.ContentArea;
+			var line = new RectangleF(area.Left, area.Top + _header.Height - Row.RowSpan - 2, area.Width, 1);
 			spriteBatch.Draw(line, Texture2D.White, Color.White);
 
 			// Draw the header and the rows
@@ -121,6 +148,15 @@ namespace Lwar.Client.Screens
 
 			foreach (var row in _rows)
 				row.Draw(spriteBatch);
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_inputDevice.Remove(_showScoreboard);
+			_inputDevice.Remove(_hideScoreboard);
 		}
 
 		/// <summary>

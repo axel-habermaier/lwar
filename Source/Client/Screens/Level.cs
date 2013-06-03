@@ -54,9 +54,14 @@ namespace Lwar.Client.Screens
 		private RenderContext _renderContext;
 
 		/// <summary>
-		///   The scoreboard that is currently being shown, or null if the scoreboard is invisible.
+		///   The scoreboard that displays the scores of the current session.
 		/// </summary>
 		private Scoreboard _scoreboard;
+
+		/// <summary>
+		/// The chat input that allows the user to send chat messages to all players of the current session.
+		/// </summary>
+		private ChatInput _chatInput;
 
 		/// <summary>
 		///   Indicates whether the user input should be sent to the server during the next update cycle.
@@ -83,20 +88,17 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			if (_scoreboard != null)
-				ScreenManager.Remove(_scoreboard);
-
 			_timer.Timeout -= SendInputTimeout;
 			_timer.SafeDispose();
 
 			_cameraManager.SafeDispose();
 			_inputManager.SafeDispose();
-
 			_networkSession.SafeDispose();
 			_gameSession.SafeDispose();
 			_renderContext.SafeDispose();
+			_scoreboard.SafeDispose();
+			_chatInput.SafeDispose();
 
-			Commands.OnShowScoreboard -= OnShowScoreboard;
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
 
@@ -114,11 +116,13 @@ namespace Lwar.Client.Screens
 			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
 			_inputManager = new InputManager(InputDevice);
 
-			Commands.OnShowScoreboard += OnShowScoreboard;
 			Commands.OnSay += OnSay;
 			Cvars.PlayerNameChanged += OnPlayerNameChanged;
 
 			ScreenManager.Add(new Loading(_gameSession, _networkSession));
+
+			_scoreboard = new Scoreboard(InputDevice, Assets, _gameSession);
+			_chatInput = new ChatInput(InputDevice, Assets, _gameSession, _networkSession);
 		}
 
 		/// <summary>
@@ -141,13 +145,25 @@ namespace Lwar.Client.Screens
 			}
 
 			if (_networkSession.IsDropped)
+			{
 				MessageBox.Show(this, LogCategory.Client, LogType.Error, "The connection to the server has been lost.", true);
+				return;
+			}
 
 			if (_networkSession.IsFaulted)
+			{
 				MessageBox.Show(this, LogCategory.Client, LogType.Error, "The game session has been aborted due to a network error.", true);
+				return;
+			}
 
 			if (_networkSession.IsLagging && topmost)
 				ScreenManager.Add(new WaitingForServer(_networkSession));
+
+			if (!_networkSession.IsSyncing)
+			{
+				_scoreboard.Update(Window.Size);
+				_chatInput.Update(Window.Size);
+			}
 		}
 
 		/// <summary>
@@ -162,6 +178,16 @@ namespace Lwar.Client.Screens
 			output.Camera.Viewport = output.Viewport;
 
 			_renderContext.Draw(output);
+		}
+
+		/// <summary>
+		///   Draws the user interface elements of the app screen.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		public override void DrawUserInterface(SpriteBatch spriteBatch)
+		{
+			_scoreboard.Draw(spriteBatch);
+			_chatInput.Draw(spriteBatch);
 		}
 
 		/// <summary>
@@ -186,30 +212,6 @@ namespace Lwar.Client.Screens
 		private void SendInputTimeout()
 		{
 			_sendInput = true;
-		}
-
-		/// <summary>
-		///   Shows or hides the scoreboard.
-		/// </summary>
-		/// <param name="show">If true, the scoreboard is shown.</param>
-		private void OnShowScoreboard(bool show)
-		{
-			if (show)
-			{
-				if (_scoreboard != null)
-					return;
-
-				_scoreboard = new Scoreboard(_gameSession);
-				ScreenManager.Add(_scoreboard);
-			}
-			else
-			{
-				if (_scoreboard == null)
-					return;
-
-				ScreenManager.Remove(_scoreboard);
-				_scoreboard = null;
-			}
 		}
 
 		/// <summary>

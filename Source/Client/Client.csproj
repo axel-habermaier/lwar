@@ -181,6 +181,7 @@
     <Compile Include="Gameplay\Entities\Entity.cs" />
     <Compile Include="Gameplay\InterpolatedValue.cs" />
     <Compile Include="Screens\ChatInput.cs" />
+    <Compile Include="Screens\Frame.cs" />
     <Compile Include="Screens\Scoreboard.cs" />
     <Compile Include="Rendering\Renderers\ParallaxRenderer.cs" />
     <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
