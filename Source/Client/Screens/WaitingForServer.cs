@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lwar.Client.GameStates
+namespace Lwar.Client.Screens
 {
 	using Network;
 	using Pegasus.Framework;
@@ -11,7 +11,7 @@ namespace Lwar.Client.GameStates
 	/// <summary>
 	///   Informs the user that the network session is waiting for new messages from the server.
 	/// </summary>
-	public class WaitingForServer : GameState
+	public class WaitingForServer : Screen
 	{
 		/// <summary>
 		///   The network session that is waiting for new messages from the server.
@@ -43,7 +43,7 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Initializes the game state.
+		///   Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -54,20 +54,20 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Updates the game state.
+		///   Updates the screen.
 		/// </summary>
-		/// <param name="topmost">Indicates whether the game screen is the topmost one.</param>
+		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
 			if (!_networkSession.IsLagging || _networkSession.IsDropped)
-				StateManager.Remove(this);
+				ScreenManager.Remove(this);
 
 			_timeoutLabel.Area = new Rectangle(0, 0, Window.Width, Window.Height);
 			_timeoutLabel.Text = String.Format("Waiting for server ({0} seconds)...", (int)(_networkSession.TimeToDrop / 1000) + 1);
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the game state.
+		///   Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)

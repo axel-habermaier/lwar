@@ -1,6 +1,6 @@
 using System;
 
-namespace Lwar.Client.GameStates
+namespace Lwar.Client.Screens
 {
 	using System.Linq;
 	using Gameplay;
@@ -14,7 +14,7 @@ namespace Lwar.Client.GameStates
 	/// <summary>
 	///   Displays the score board.
 	/// </summary>
-	public class Scoreboard : GameState
+	public class Scoreboard : Screen
 	{
 		/// <summary>
 		///   The width of the scoreboard's background border.
@@ -60,7 +60,7 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Initializes the game state.
+		///   Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -72,9 +72,9 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Updates the game state.
+		///   Updates the screen.
 		/// </summary>
-		/// <param name="topmost">Indicates whether the game state is the topmost one.</param>
+		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
 			// Update the visible row contents
@@ -104,7 +104,7 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the app state.
+		///   Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)

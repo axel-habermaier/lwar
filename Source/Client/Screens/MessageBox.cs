@@ -1,18 +1,19 @@
 ﻿using System;
 
-namespace Lwar.Client.GameStates
+namespace Lwar.Client.Screens
 {
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
 
 	/// <summary>
 	///   Displays a message to the user.
 	/// </summary>
-	public class MessageBox : GameState
+	public class MessageBox : Screen
 	{
 		/// <summary>
 		///   The input that, when triggered, closes the message box.
@@ -32,12 +33,10 @@ namespace Lwar.Client.GameStates
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="message">The message that should be displayed to the user.</param>
-		public MessageBox(string message)
+		/// <param name="entry">The entry that should be displayed to the user.</param>
+		private MessageBox(LogEntry entry)
 		{
-			Assert.ArgumentNotNullOrWhitespace(message);
-
-			_message = message;
+			_message = entry.Message;
 			_continue = new LogicalInput(Key.Space.WentDown(), InputModes.Game);
 		}
 
@@ -50,7 +49,7 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Initializes the game state.
+		///   Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -64,25 +63,49 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Updates the game state.
+		///   Updates the screen.
 		/// </summary>
-		/// <param name="topmost">Indicates whether the game screen is the topmost one.</param>
+		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
 			_messageLabel.Area = new Rectangle(0, 0, Window.Width, Window.Height);
 
 			if (topmost && _continue.IsTriggered)
-				StateManager.Remove(this);
+				ScreenManager.Remove(this);
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the game state.
+		///   Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(_messageLabel.ActualArea, Texture2D.White, new Color(0xEE333333));
 			_messageLabel.Draw(spriteBatch);
+		}
+
+		/// <summary>
+		///   Shows a message box with the given message, optionally removing the current state from the state manager.
+		/// </summary>
+		/// <param name="screen">The screen that should be considered to be the parent of the message box.</param>
+		/// <param name="type">The type of the message that should be shown.</param>
+		/// <param name="category">The category of the message that should be shown.</param>
+		/// <param name="message">The message that should be displayed by the message box.</param>
+		/// <param name="removeState">Indicates whether the current screen should be removed from the state manager.</param>
+		public static void Show(Screen screen, LogCategory category, LogType type, string message, bool removeState = false)
+		{
+			Assert.ArgumentNotNull(screen);
+			Assert.InRange(category);
+			Assert.InRange(type);
+			Assert.ArgumentNotNullOrWhitespace(message);
+
+			var entry = new LogEntry(category, type, message);
+			entry.RaiseLogEvent();
+
+			screen.ScreenManager.Add(new MessageBox(entry));
+
+			if (removeState)
+				screen.ScreenManager.Remove(screen);
 		}
 	}
 }

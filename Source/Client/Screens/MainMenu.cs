@@ -1,7 +1,8 @@
 ﻿using System;
 
-namespace Lwar.Client.GameStates
+namespace Lwar.Client.Screens
 {
+	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
@@ -9,7 +10,7 @@ namespace Lwar.Client.GameStates
 	/// <summary>
 	///   Shows the main menu.
 	/// </summary>
-	public class MainMenu : GameState
+	public class MainMenu : Screen
 	{
 		/// <summary>
 		///   The label that is used to draw the menu.
@@ -17,7 +18,7 @@ namespace Lwar.Client.GameStates
 		private Label _label;
 
 		/// <summary>
-		///   Initializes the game state.
+		///   Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -31,16 +32,16 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Updates the game state.
+		///   Updates the screen.
 		/// </summary>
-		/// <param name="topmost">Indicates whether the game screen is the topmost one.</param>
+		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
 			_label.Area = new Rectangle(0, 0, Window.Width, Window.Height);
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the game state.
+		///   Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)

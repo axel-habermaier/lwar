@@ -3,7 +3,7 @@
 namespace Lwar.Client
 {
 	using System.Net;
-	using GameStates;
+	using Screens;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Graphics;
@@ -25,7 +25,7 @@ namespace Lwar.Client
 		/// <summary>
 		///   The state manager that manages the states of the application.
 		/// </summary>
-		private AppStateManager _stateManager;
+		private ScreenManager _stateManager;
 
 		/// <summary>
 		///   Invoked when the application is initializing.
@@ -42,7 +42,7 @@ namespace Lwar.Client
 			Context.Window.Closing += Exit;
 
 			_localServer = new LocalServer();
-			_stateManager = new AppStateManager(Context);
+			_stateManager = new ScreenManager(Context);
 			_stateManager.Add(new MainMenu());
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");
@@ -107,7 +107,7 @@ namespace Lwar.Client
 			Assert.ArgumentNotNull(address);
 
 			Disconnect();
-			_stateManager.Add(new Playing(new IPEndPoint(address, port)));
+			_stateManager.Add(new Level(new IPEndPoint(address, port)));
 		}
 
 		/// <summary>

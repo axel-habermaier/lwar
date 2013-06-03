@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lwar.Client.GameStates
+namespace Lwar.Client.Screens
 {
 	using Gameplay;
 	using Network;
@@ -14,7 +14,7 @@ namespace Lwar.Client.GameStates
 	/// <summary>
 	///   Loads a game session.
 	/// </summary>
-	public class Loading : GameState
+	public class Loading : Screen
 	{
 		/// <summary>
 		///   The game session that is loaded.
@@ -46,7 +46,7 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Initializes the game state.
+		///   Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -60,9 +60,9 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Updates the game state.
+		///   Updates the screen.
 		/// </summary>
-		/// <param name="topmost">Indicates whether the game state is the topmost one.</param>
+		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
 			if (_networkSession.IsSyncing)
@@ -80,16 +80,16 @@ namespace Lwar.Client.GameStates
 			}
 
 			if (_networkSession.IsConnected || _networkSession.IsDropped || _networkSession.IsFaulted)
-				StateManager.Remove(this);
+				ScreenManager.Remove(this);
 
 			if (_networkSession.ServerIsFull)
-				ShowMessageBox(new LogEntry(LogCategory.Server, LogType.Error, "The server is full."), true);
+				MessageBox.Show(this, LogCategory.Server, LogType.Error, "The server is full.", true);
 
 			_statusMessage.Area = new Rectangle(0, 0, Window.Width, Window.Height);
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the game state.
+		///   Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)

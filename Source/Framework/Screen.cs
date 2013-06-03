@@ -9,21 +9,21 @@ namespace Pegasus.Framework
 	using Rendering;
 
 	/// <summary>
-	///   Represents an app state that shows and manages, for instance, a menu or an app session.
+	///   Represents an app screen that shows and manages, for instance, a menu or an app session.
 	/// </summary>
-	public abstract class AppState : DisposableObject
+	public abstract class Screen : DisposableObject
 	{
 		/// <summary>
-		///   Gets or sets the state manager this app state belongs to.
+		///   Gets or sets the screen manager this app screen belongs to.
 		/// </summary>
-		public AppStateManager StateManager { get; internal set; }
+		public ScreenManager ScreenManager { get; internal set; }
 
 		/// <summary>
 		///   Gets the context of the application, providing access to all framework objects that can be used by the application.
 		/// </summary>
 		protected AppContext Context
 		{
-			get { return StateManager.Context; }
+			get { return ScreenManager.Context; }
 		}
 
 		/// <summary>
@@ -59,31 +59,31 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the state is opaque and all app states below it do not need to be drawn.
+		///   Gets a value indicating whether the screen is opaque and all app screens below it do not need to be drawn.
 		/// </summary>
 		public bool IsOpaque { get; protected set; }
 
 		/// <summary>
-		///   Initializes the game state.
+		///   Initializes the screen.
 		/// </summary>
 		public abstract void Initialize();
 
 		/// <summary>
-		///   Updates the app state.
+		///   Updates the screen.
 		/// </summary>
-		/// <param name="topmost">Indicates whether the app state is the topmost one.</param>
+		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public abstract void Update(bool topmost);
 
 		/// <summary>
-		///   Draws the app state.
+		///   Draws the screen.
 		/// </summary>
-		/// <param name="output">The output that the state should render to.</param>
+		/// <param name="output">The output that the screen should render to.</param>
 		public virtual void Draw(RenderOutput output)
 		{
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the app state.
+		///   Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public virtual void DrawUserInterface(SpriteBatch spriteBatch)

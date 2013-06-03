@@ -183,7 +183,7 @@
     <Compile Include="Platform\ResharperAnnotations.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="AppState.cs" />
+    <Compile Include="Screen.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Network\IPacketFactory.cs" />
     <Compile Include="Network\IPEndPointExtensions.cs" />
@@ -501,7 +501,7 @@
     <Compile Include="Scripting\Parsing\Combinators\TypeParser.cs" />
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\ValidatorAttribute.cs" />
-    <Compile Include="AppStateManager.cs" />
+    <Compile Include="ScreenManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

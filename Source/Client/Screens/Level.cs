@@ -1,6 +1,6 @@
 using System;
 
-namespace Lwar.Client.GameStates
+namespace Lwar.Client.Screens
 {
 	using System.Net;
 	using Gameplay;
@@ -14,9 +14,9 @@ namespace Lwar.Client.GameStates
 	using Scripting;
 
 	/// <summary>
-	///   Displays a game session.
+	///   Displays the entities of a game session.
 	/// </summary>
-	public class Playing : GameState
+	public class Level : Screen
 	{
 		/// <summary>
 		///   The network session that synchronizes the game state between the client and the server.
@@ -67,7 +67,7 @@ namespace Lwar.Client.GameStates
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
-		public Playing(IPEndPoint serverEndPoint)
+		public Level(IPEndPoint serverEndPoint)
 		{
 			Assert.ArgumentNotNull(serverEndPoint);
 
@@ -84,7 +84,7 @@ namespace Lwar.Client.GameStates
 		protected override void OnDisposing()
 		{
 			if (_scoreboard != null)
-				StateManager.Remove(_scoreboard);
+				ScreenManager.Remove(_scoreboard);
 
 			_timer.Timeout -= SendInputTimeout;
 			_timer.SafeDispose();
@@ -104,7 +104,7 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		///   Initializes the game state.
+		///   Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -118,13 +118,13 @@ namespace Lwar.Client.GameStates
 			Commands.OnSay += OnSay;
 			Cvars.PlayerNameChanged += OnPlayerNameChanged;
 
-			StateManager.Add(new Loading(_gameSession, _networkSession));
+			ScreenManager.Add(new Loading(_gameSession, _networkSession));
 		}
 
 		/// <summary>
-		///   Updates the game state.
+		///   Updates the screen.
 		/// </summary>
-		/// <param name="topmost">Indicates whether the game state is the topmost one.</param>
+		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
 			SendInput();
@@ -141,19 +141,19 @@ namespace Lwar.Client.GameStates
 			}
 
 			if (_networkSession.IsDropped)
-				ShowMessageBox(new LogEntry(LogCategory.Client, LogType.Error, "The connection to the server has been lost."), true);
+				MessageBox.Show(this, LogCategory.Client, LogType.Error, "The connection to the server has been lost.", true);
 
 			if (_networkSession.IsFaulted)
-				ShowMessageBox(new LogEntry(LogCategory.Client, LogType.Error, "The game session has been aborted due to a network error."), true);
+				MessageBox.Show(this, LogCategory.Client, LogType.Error, "The game session has been aborted due to a network error.", true);
 
 			if (_networkSession.IsLagging && topmost)
-				StateManager.Add(new WaitingForServer(_networkSession));
+				ScreenManager.Add(new WaitingForServer(_networkSession));
 		}
 
 		/// <summary>
-		///   Draws the game state.
+		///   Draws the screen.
 		/// </summary>
-		/// <param name="output">The output that the state should render to.</param>
+		/// <param name="output">The output that the screen should render to.</param>
 		public override void Draw(RenderOutput output)
 		{
 			Assert.ArgumentNotNull(output);
@@ -200,20 +200,20 @@ namespace Lwar.Client.GameStates
 					return;
 
 				_scoreboard = new Scoreboard(_gameSession);
-				StateManager.Add(_scoreboard);
+				ScreenManager.Add(_scoreboard);
 			}
 			else
 			{
 				if (_scoreboard == null)
 					return;
 
-				StateManager.Remove(_scoreboard);
+				ScreenManager.Remove(_scoreboard);
 				_scoreboard = null;
 			}
 		}
 
 		/// <summary>
-		/// Invoked when the local player changed his or her name.
+		///   Invoked when the local player changed his or her name.
 		/// </summary>
 		/// <param name="name">The previous name of the local player.</param>
 		private void OnPlayerNameChanged(string name)
@@ -222,7 +222,7 @@ namespace Lwar.Client.GameStates
 		}
 
 		/// <summary>
-		/// Invoked when the local player entered a chat message.
+		///   Invoked when the local player entered a chat message.
 		/// </summary>
 		/// <param name="message">The message that the local player wants to send.</param>
 		private void OnSay(string message)
