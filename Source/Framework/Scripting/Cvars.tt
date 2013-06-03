@@ -1,0 +1,5 @@
+﻿<#
+	SourceFile = "ICvars.cs";
+	Namespace = "Pegasus.Framework.Scripting";
+#>
+<#@ include file="RegistryGenerator.tt" #>

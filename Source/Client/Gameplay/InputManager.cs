@@ -15,11 +15,6 @@ namespace Lwar.Client.Gameplay
 	public class InputManager : DisposableObject
 	{
 		/// <summary>
-		///   The command registry providing the commands that can be triggered by the input manager.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
 		///   The input device that provides the input by the user.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
@@ -55,14 +50,11 @@ namespace Lwar.Client.Gameplay
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="inputDevice">The input device that provides the input by the user.</param>
-		/// <param name="commands">The command registry providing the commands that can be triggered by the input manager.</param>
-		public InputManager(LogicalInputDevice inputDevice, CommandRegistry commands)
+		public InputManager(LogicalInputDevice inputDevice)
 		{
 			Assert.ArgumentNotNull(inputDevice);
-			Assert.ArgumentNotNull(commands);
 
 			_inputDevice = inputDevice;
-			_commands = commands;
 
 			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed(), InputModes.Game);
 			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed(), InputModes.Game);
@@ -107,9 +99,9 @@ namespace Lwar.Client.Gameplay
 			_shooting4.Triggered |= _shooting4.Input.IsTriggered;
 
 			if (_showScoreboard.IsTriggered)
-				_commands.ShowScoreboard(true);
+				Commands.ShowScoreboard(true);
 			if (_hideScoreboard.IsTriggered)
-				_commands.ShowScoreboard(false);
+				Commands.ShowScoreboard(false);
 		}
 
 		/// <summary>

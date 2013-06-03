@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 	using System.Collections.Generic;
 	using System.Linq;
 	using Assets;
-	using Framework;
 	using Framework.Platform.Memory;
 
 	/// <summary>
@@ -29,9 +28,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		public string SourceFile { get; set; }
 
 		/// <summary>
-		///   Gets or sets the base class the generated C# class should be derived from.
+		///   Gets or sets the file defining the cvars or commands that should be imported.
 		/// </summary>
-		public string BaseClass { get; set; }
+		public string Import { get; set; }
 
 		/// <summary>
 		///   Gets the generated code.
@@ -39,9 +38,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		public string GeneratedCode { get; private set; }
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the generated C# class should be a partial class.
+		///   Gets or sets the namespace in which the generated class should live.
 		/// </summary>
-		public bool IsPartial { get; set; }
+		public string Namespace { get; set; }
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
@@ -59,14 +58,34 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// </summary>
 		public void GenerateRegistry()
 		{
-			Assert.NotNullOrWhitespace(SourceFile);
-			Assert.NotNullOrWhitespace(BaseClass);
-
-			_project = new RegistryProject { CSharpFiles = new[] { new CSharpAsset(SourceFile) }, BaseClass = BaseClass, IsPartial = IsPartial };
+			_project = new RegistryProject
+			{
+				CSharpFiles = new[] { new CSharpAsset(SourceFile) },
+				ImportedRegistry = GetImportedRegistry(),
+				Namespace = Namespace
+			};
 			_project.Compile();
 
 			Errors = _project.Errors.Select(error => error.Message);
 			GeneratedCode = _project.GeneratedCode;
+		}
+
+		/// <summary>
+		///   Gets the imported registry.
+		/// </summary>
+		private Registry GetImportedRegistry()
+		{
+			if (String.IsNullOrWhiteSpace(Import))
+				return new Registry();
+
+			using (var project = new RegistryProject { CSharpFiles = new[] { new CSharpAsset(Import) } })
+			{
+				RegistryFile[] file;
+				project.TryGetValidatedFiles(out file);
+
+				project.CSharpFiles.SafeDisposeAll();
+				return file[0].Registry;
+			}
 		}
 	}
 }

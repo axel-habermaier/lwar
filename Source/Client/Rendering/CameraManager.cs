@@ -16,11 +16,6 @@ namespace Lwar.Client.Rendering
 	public class CameraManager : DisposableObject
 	{
 		/// <summary>
-		///   The command registry that handles the application commands.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
 		///   The debug camera that can be used to freely navigate the scene.
 		/// </summary>
 		private readonly DebugCamera _debugCamera;
@@ -41,17 +36,14 @@ namespace Lwar.Client.Rendering
 		/// <param name="window">The window that displays the scene rendered from the point of view of the active camera.</param>
 		/// <param name="graphicsDevice">The graphics device the cameras are created for.</param>
 		/// <param name="inputDevice">The logical input device that provides the user input for the cameras.</param>
-		/// <param name="commands">The command registry that handles the application commands.</param>
-		public CameraManager(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, CommandRegistry commands)
+		public CameraManager(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
 		{
 			Assert.ArgumentNotNull(window);
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
-			Assert.ArgumentNotNull(commands);
 
 			_window = window;
 			_inputDevice = inputDevice;
-			_commands = commands;
 
 			GameCamera = new GameCamera(graphicsDevice, inputDevice);
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);
@@ -59,7 +51,7 @@ namespace Lwar.Client.Rendering
 			ActiveCamera = GameCamera;
 			_inputDevice.Modes = InputModes.Game;
 
-			commands.OnToggleDebugCamera += ToggleDebugCamera;
+			Commands.OnToggleDebugCamera += ToggleDebugCamera;
 		}
 
 		/// <summary>
@@ -108,7 +100,7 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_commands.OnToggleDebugCamera -= ToggleDebugCamera;
+			Commands.OnToggleDebugCamera -= ToggleDebugCamera;
 
 			if (ActiveCamera == _debugCamera)
 			{

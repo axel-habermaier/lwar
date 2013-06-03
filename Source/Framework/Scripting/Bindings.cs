@@ -19,11 +19,6 @@ namespace Pegasus.Framework.Scripting
 		private readonly List<Binding> _bindings = new List<Binding>();
 
 		/// <summary>
-		///   The command registry that is used to look up commands.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
 		///   The logical input device that is used to determine whether the logical inputs are triggered.
 		/// </summary>
 		private readonly LogicalInputDevice _device;
@@ -37,19 +32,14 @@ namespace Pegasus.Framework.Scripting
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The logical input device that is used to determine whether the logical inputs are triggered.</param>
-		/// <param name="commands">The command registry that should be used to look up commands.</param>
-		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
-		public Bindings(LogicalInputDevice device, CommandRegistry commands, CvarRegistry cvars)
+		public Bindings(LogicalInputDevice device)
 		{
 			Assert.ArgumentNotNull(device);
-			Assert.ArgumentNotNull(cvars);
-			Assert.ArgumentNotNull(commands);
 
 			_device = device;
-			_commands = commands;
-			_parser = new InstructionParser(_commands, cvars);
+			_parser = new InstructionParser();
 
-			commands.OnBind += OnBindCommand;
+			Commands.OnBind += OnBindCommand;
 		}
 
 		/// <summary>
@@ -75,7 +65,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_commands.OnBind -= OnBindCommand;
+			Commands.OnBind -= OnBindCommand;
 		}
 
 		/// <summary>

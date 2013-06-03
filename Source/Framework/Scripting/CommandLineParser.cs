@@ -13,23 +13,6 @@ namespace Pegasus.Framework.Scripting
 	internal class CommandLineParser : Parser<IEnumerable<Instruction>, None>
 	{
 		/// <summary>
-		///   The cvar registry that is used to look up cvars referenced by command line argument.
-		/// </summary>
-		private readonly CvarRegistry _cvarRegistry;
-
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="cvarRegistry">
-		///   The cvar registry that should be used to look up cvars referenced by a command line argument.
-		/// </param>
-		public CommandLineParser(CvarRegistry cvarRegistry)
-		{
-			Assert.ArgumentNotNull(cvarRegistry);
-			_cvarRegistry = cvarRegistry;
-		}
-
-		/// <summary>
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
@@ -63,7 +46,7 @@ namespace Pegasus.Framework.Scripting
 					return ForwardError(cvarReply);
 
 				ICvar cvar;
-				if (!_cvarRegistry.TryFind(cvarReply.Result, out cvar))
+				if (!CvarRegistry.TryFind(cvarReply.Result, out cvar))
 				{
 					// Reset the state so that the error is reported right after the '-'
 					inputStream.State = state;

@@ -20,6 +20,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		public Registry()
+		{
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
 		/// <param name="type">The declaration of the interface that represents the registry.</param>
 		public Registry(TypeDeclaration type)
 		{
@@ -41,31 +48,27 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		}
 
 		/// <summary>
-		///   Gets the namespace the registry is declared in.
-		/// </summary>
-		public string Namespace
-		{
-			get
-			{
-				var resolved = (TypeResolveResult)Resolver.Resolve(_type);
-				return resolved.Type.Namespace;
-			}
-		}
-
-		/// <summary>
 		///   Gets the namespaces that are imported by the registry.
 		/// </summary>
 		public IEnumerable<string> ImportedNamespaces
 		{
 			get
 			{
+				if (_type == null)
+					return Enumerable.Empty<string>();
+
 				var imports = from ancestor in _type.AncestorsAndSelf
 							  from import in ancestor.Descendants.OfType<UsingDeclaration>()
 							  let importedNamespace = import.Import.ToString()
 							  where importedNamespace != "System"
 							  select importedNamespace;
 
-				return imports.Concat(new[] { "Pegasus.Framework" }).Distinct();
+				return imports.Union(new[]
+				{
+					"Pegasus.Framework", 
+					"Pegasus.Framework.Platform.Logging",
+					"Pegasus.Framework.Scripting"
+				});
 			}
 		}
 

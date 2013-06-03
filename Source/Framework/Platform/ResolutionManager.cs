@@ -15,11 +15,6 @@ namespace Pegasus.Framework.Platform
 	internal class ResolutionManager : DisposableObject
 	{
 		/// <summary>
-		///   The cvar registry that is used to persist resolution and window size changes.
-		/// </summary>
-		private readonly CvarRegistry _cvars;
-
-		/// <summary>
 		///   The logical input device that is used to toggle between fullscreen and windowed mode.
 		/// </summary>
 		private readonly LogicalInputDevice _device;
@@ -45,21 +40,18 @@ namespace Pegasus.Framework.Platform
 		/// <param name="window">The window that is affected by resolution changes.</param>
 		/// <param name="swapChain">The swap chain that should be affected by resolution changes.</param>
 		/// <param name="device">The logical input device that should be used to toggle between fullscreen and windowed mode.</param>
-		/// <param name="cvars">The cvar registry that should be used to persist resolution and window size changes.</param>
-		public ResolutionManager(Window window, SwapChain swapChain, LogicalInputDevice device, CvarRegistry cvars)
+		public ResolutionManager(Window window, SwapChain swapChain, LogicalInputDevice device)
 		{
 			Assert.ArgumentNotNull(window);
 			Assert.ArgumentNotNull(swapChain);
 			Assert.ArgumentNotNull(device);
-			Assert.ArgumentNotNull(cvars);
 
 			_window = window;
 			_swapChain = swapChain;
 			_device = device;
-			_cvars = cvars;
 
-			_cvars.Instances.WindowWidth.Changed += UpdateWindowSize;
-			_cvars.Instances.WindowHeight.Changed += UpdateWindowSize;
+			Cvars.WindowWidthChanged += UpdateWindowSize;
+			Cvars.WindowHeightChanged += UpdateWindowSize;
 
 			UpdateGraphicsState();
 			_device.Register(_toggleMode);
@@ -74,13 +66,13 @@ namespace Pegasus.Framework.Platform
 			// Check if the user wants to toggle between fullscreen and windowed mode
 			if (_toggleMode.IsTriggered)
 			{
-				_cvars.Instances.Fullscreen.SetImmediate(!_cvars.Fullscreen);
+				Cvars.Fullscreen = !Cvars.Fullscreen;
 				UpdateGraphicsState();
 			}
 
 			// We do not care about the window size in fullscreen mode; and if we're currently toggling the mode, ignore
 			// the window size as well, as it might be outdated for the current frame
-			if (_cvars.Fullscreen || _toggleMode.IsTriggered)
+			if (Cvars.Fullscreen || _toggleMode.IsTriggered)
 				return;
 
 			// If we set the window width and height cvars only to the values sent by the window's resize event, we would
@@ -89,11 +81,11 @@ namespace Pegasus.Framework.Platform
 			// cvars to the windows actual size each frame
 			var size = _window.Size;
 
-			if (_cvars.WindowWidth != size.Width)
-				_cvars.WindowWidth = size.Width;
+			if (Cvars.WindowWidth != size.Width)
+				Cvars.WindowWidth = size.Width;
 
-			if (_cvars.WindowHeight != size.Height)
-				_cvars.WindowHeight = size.Height;
+			if (Cvars.WindowHeight != size.Height)
+				Cvars.WindowHeight = size.Height;
 		}
 
 		/// <summary>
@@ -102,22 +94,22 @@ namespace Pegasus.Framework.Platform
 		public void UpdateGraphicsState()
 		{
 			// Execute all deferred cvar updates
-			_cvars.ExecuteDeferredUpdates(UpdateMode.OnGraphicsRestart);
+			CvarRegistry.ExecuteDeferredUpdates(UpdateMode.OnGraphicsRestart);
 
 			// Resize and update the window and the swap chain depending on whether we're in fullscreen or windowed mode
-			if (_cvars.Fullscreen)
+			if (Cvars.Fullscreen)
 			{
-				Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", _cvars.ResolutionWidth, _cvars.ResolutionHeight);
-				if (!_swapChain.UpdateState(_cvars.ResolutionWidth, _cvars.ResolutionHeight, true))
+				Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", Cvars.ResolutionWidth, Cvars.ResolutionHeight);
+				if (!_swapChain.UpdateState(Cvars.ResolutionWidth, Cvars.ResolutionHeight, true))
 				{
-					_cvars.Instances.Fullscreen.SetImmediate(false);
+					Cvars.Fullscreen = false;
 					UpdateGraphicsState();
 				}
 			}
 			else
 			{
-				Log.Info("Switching to windowed mode, resolution {0}x{1}.", _cvars.WindowWidth, _cvars.WindowHeight);
-				_swapChain.UpdateState(_cvars.WindowWidth, _cvars.WindowHeight, false);
+				Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowWidth, Cvars.WindowHeight);
+				_swapChain.UpdateState(Cvars.WindowWidth, Cvars.WindowHeight, false);
 			}
 		}
 
@@ -127,8 +119,8 @@ namespace Pegasus.Framework.Platform
 		private void UpdateWindowSize(int value)
 		{
 			// Ignore the changes while in fullscreen mode
-			if (!_cvars.Fullscreen)
-				_window.Size = new Size(_cvars.WindowWidth, _cvars.WindowHeight);
+			if (!Cvars.Fullscreen)
+				_window.Size = new Size(Cvars.WindowWidth, Cvars.WindowHeight);
 		}
 
 		/// <summary>
@@ -136,8 +128,8 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_cvars.Instances.WindowWidth.Changed -= UpdateWindowSize;
-			_cvars.Instances.WindowHeight.Changed -= UpdateWindowSize;
+			Cvars.WindowWidthChanged -= UpdateWindowSize;
+			Cvars.WindowHeightChanged -= UpdateWindowSize;
 			_device.Remove(_toggleMode);
 		}
 	}

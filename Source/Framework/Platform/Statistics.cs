@@ -8,6 +8,7 @@ namespace Pegasus.Framework.Platform
 	using Memory;
 	using Rendering;
 	using Rendering.UserInterface;
+	using Scripting;
 
 	/// <summary>
 	///   Manages statistics about the performance of the application.
@@ -84,6 +85,8 @@ namespace Pegasus.Framework.Platform
 			GpuFrameTime = new GpuProfiler(graphicsDevice);
 			CpuFrameTime = new AveragedValue();
 			UpdateInput = new AveragedValue();
+
+			Commands.OnToggleStats += ToggleVisibility;
 		}
 
 		/// <summary>
@@ -105,6 +108,9 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		private void UpdateStatistics()
 		{
+			if (!Cvars.ShowStats)
+				return;
+
 			_builder.Clear();
 			_builder.Append("Platform: ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
 			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
@@ -136,6 +142,9 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		internal void Draw()
 		{
+			if (!Cvars.ShowStats)
+				return;
+
 			_label.Draw(_spriteBatch);
 		}
 
@@ -160,11 +169,21 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
+		///   Toggles the visibility of the statistics.
+		/// </summary>
+		private void ToggleVisibility()
+		{
+			Cvars.ShowStats = !Cvars.ShowStats;
+		}
+
+		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
 			_timer.Timeout -= UpdateStatistics;
+			Commands.OnToggleStats -= ToggleVisibility;
+
 			_timer.SafeDispose();
 			_spriteBatch.SafeDispose();
 			GpuFrameTime.SafeDispose();

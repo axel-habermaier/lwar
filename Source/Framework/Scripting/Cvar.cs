@@ -81,7 +81,10 @@ namespace Pegasus.Framework.Scripting
 		public void SetDeferredValue()
 		{
 			Assert.That(HasDeferredValue, "The cvar does not have a deferred value.");
-			SetImmediate(DeferredValue);
+
+			UpdateValue(DeferredValue);
+			DeferredValue = default(T);
+			HasDeferredValue = false;
 		}
 
 		/// <summary>
@@ -145,17 +148,6 @@ namespace Pegasus.Framework.Scripting
 		Type ICvar.ValueType
 		{
 			get { return typeof(T); }
-		}
-
-		/// <summary>
-		///   Immediately sets the cvar to the given value, even if its update mode is not immediate.
-		/// </summary>
-		/// <param name="value">The value the cvar should be set to.</param>
-		public void SetImmediate(T value)
-		{
-			UpdateValue(value);
-			DeferredValue = default(T);
-			HasDeferredValue = false;
 		}
 
 		/// <summary>

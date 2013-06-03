@@ -32,30 +32,6 @@ namespace Pegasus.Framework.Scripting
 		private static readonly SkipParser<None> EndOfInstruction = ~(WhiteSpaces + ~EndOfInput);
 
 		/// <summary>
-		///   The command registry that is used to look up cvars.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
-		///   The cvar registry that is used to look up cvars.
-		/// </summary>
-		private readonly CvarRegistry _cvars;
-
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="commands">The command registry that should be used to look up commands.</param>
-		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
-		public InstructionParser(CommandRegistry commands, CvarRegistry cvars)
-		{
-			Assert.ArgumentNotNull(cvars);
-			Assert.ArgumentNotNull(commands);
-
-			_cvars = cvars;
-			_commands = commands;
-		}
-
-		/// <summary>
 		///   Parses the given input string and returns the instruction.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
@@ -73,12 +49,12 @@ namespace Pegasus.Framework.Scripting
 			// Check if a cvar has been referenced and if so, return the appropriate instruction
 			var name = reply.Result;
 			ICvar cvar;
-			if (_cvars.TryFind(name, out cvar))
+			if (CvarRegistry.TryFind(name, out cvar))
 				return Parse(inputStream, cvar);
 
 			// Check if a command has been referenced and if so, return the appropriate instruction
 			ICommand command;
-			if (_commands.TryFind(name, out command))
+			if (CommandRegistry.TryFind(name, out command))
 				return Parse(inputStream, command);
 
 			// If the name refers to neither a cvar nor a command, return an error message

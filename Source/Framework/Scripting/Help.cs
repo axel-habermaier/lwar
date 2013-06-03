@@ -11,29 +11,11 @@ namespace Pegasus.Framework.Scripting
 	internal class Help : DisposableObject
 	{
 		/// <summary>
-		///   The command registry that is used to look up commands.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
-		///   The cvar registry that is used to look up cvars.
-		/// </summary>
-		private readonly CvarRegistry _cvars;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="commands">The command registry that should be used to look up commands.</param>
-		/// <param name="cvars">The command registry that should be used to look up commands.</param>
-		public Help(CommandRegistry commands, CvarRegistry cvars)
+		public Help()
 		{
-			Assert.ArgumentNotNull(commands);
-			Assert.ArgumentNotNull(cvars);
-
-			_commands = commands;
-			_cvars = cvars;
-
-			_commands.OnHelp += OnHelp;
+			Commands.OnHelp += OnHelp;
 		}
 
 		/// <summary>
@@ -53,14 +35,14 @@ namespace Pegasus.Framework.Scripting
 				Log.Info("   Type 'cvar-name' to view the current value of the cvar.");
 				Log.Info("   Type 'cvar-name value' to set a cvar to a new value.");
 				Log.Info("   Type 'help cvar-name' to view a description of the usage and purpose of the cvar.");
-				Log.Info("   Type 'cvars' to list all available cvars.");
+				Log.Info("   Type 'list_cvars' to list all available cvars.");
 				Log.Info("Commands:");
 				Log.Info("   Type 'command-name value1 value2 ...' to invoke the command with parameters value1, value2, ... " +
 						 "Optional parameters can be omitted at the end of the command invocation.");
 				Log.Info("   Type 'help command-name' to view a description of the usage and purpose of the command.");
-				Log.Info("   Type 'commands' to list all available commands.");
+				Log.Info("   Type 'list_commands' to list all available commands.");
 			}
-			else if (_cvars.TryFind(name, out cvar))
+			else if (CvarRegistry.TryFind(name, out cvar))
 			{
 				var deferredValue = String.Empty;
 				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
@@ -69,7 +51,7 @@ namespace Pegasus.Framework.Scripting
 				Log.Info("'{0}' : {1} = '{2}' (default: '{3}'{5}): {4}", cvar.Name, TypeDescription.GetDescription(cvar.ValueType),
 						 TypeRepresentation.ToString(cvar.Value), TypeRepresentation.ToString(cvar.DefaultValue), cvar.Description, deferredValue);
 			}
-			else if (_commands.TryFind(name, out command))
+			else if (CommandRegistry.TryFind(name, out command))
 			{
 				Log.Info("'{0}': {1}", command.Name, command.Description);
 				foreach (var parameter in command.Parameters)
@@ -100,7 +82,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_commands.OnHelp -= OnHelp;
+			Commands.OnHelp -= OnHelp;
 		}
 	}
 }

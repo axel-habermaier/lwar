@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using System.Collections.Generic;
-	using System.Globalization;
 	using System.Linq;
 	using Math;
 	using Platform.Graphics;
@@ -25,16 +24,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   The maximum history size.
 		/// </summary>
 		private const int MaxHistory = 64;
-
-		/// <summary>
-		///   The command registry that is used to look up commands.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
-		///   The cvar registry that is used to look up cvars.
-		/// </summary>
-		private readonly CvarRegistry _cvars;
 
 		/// <summary>
 		///   The input history.
@@ -76,19 +65,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		/// <param name="font">The font that should be used to draw the prompt.</param>
 		/// <param name="color">The text color of the prompt.</param>
-		/// <param name="commands">The command registry that should be used to look up commands.</param>
-		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
-		public ConsolePrompt(Font font, Color color, CommandRegistry commands, CvarRegistry cvars)
+		public ConsolePrompt(Font font, Color color)
 		{
 			Assert.ArgumentNotNull(font);
-			Assert.ArgumentNotNull(commands);
-			Assert.ArgumentNotNull(cvars);
 
 			_history = new string[MaxHistory];
 			_input = new TextBox(font) { Color = color };
 			_prompt = new Label(font, Prompt) { Color = color };
-			_commands = commands;
-			_cvars = cvars;
 		}
 
 		/// <summary>
@@ -218,13 +201,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (String.IsNullOrWhiteSpace(_input.Text))
 				yield break;
 
-			var commands = _commands.AllInstances
-									.Where(command => command.Name.ToLower().StartsWith(_input.Text.ToLower()))
-									.Select(command => command.Name);
+			var commands = CommandRegistry.All
+										  .Where(command => command.Name.ToLower().StartsWith(_input.Text.ToLower()))
+										  .Select(command => command.Name);
 
-			var cvars = _cvars.AllInstances
-							  .Where(cvar => cvar.Name.ToLower().StartsWith(_input.Text.ToLower()))
-							  .Select(cvar => cvar.Name);
+			var cvars = CvarRegistry.All
+									.Where(cvar => cvar.Name.ToLower().StartsWith(_input.Text.ToLower()))
+									.Select(cvar => cvar.Name);
 
 			var items = cvars.Union(commands).OrderBy(item => item).ToArray();
 			if (items.Length == 0)

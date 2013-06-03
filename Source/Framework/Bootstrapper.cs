@@ -29,16 +29,8 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(context);
 			Assert.ArgumentSatisfies(!String.IsNullOrWhiteSpace(context.AppName), "The application name has not been set.");
 			Assert.ArgumentSatisfies(!String.IsNullOrWhiteSpace(context.DefaultFontName), "The default font name has not been set.");
-			Assert.ArgumentSatisfies(context.Commands != null, "The command registry has not been set.");
-			Assert.ArgumentSatisfies(context.Cvars != null, "The cvar registry has not been set.");
 			Assert.ArgumentSatisfies(context.SpriteEffect != null, "The sprite effect adapter has not been set.");
 			Assert.ArgumentSatisfies(context.Statistics != null, "The statistics instance adapter has not been set.");
-			Assert.ArgumentSatisfies(context.Cvars.AllInstances.Select(cvar => cvar.Name)
-											.Concat(context.Commands.AllInstances.Select(command => command.Name))
-											.GroupBy(name => name)
-											.Where(group => @group.Count() > 1)
-											.Select(group => @group.First())
-											.FirstOrDefault() == null, "There is a cvar and a command with the same name.");
 
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -56,16 +48,19 @@ namespace Pegasus.Framework
 							 IntPtr.Size == 4 ? "32" : "64",
 							 PlatformInfo.GraphicsApi);
 
-					using (new Help(context.Commands, context.Cvars))
-					using (new Interpreter(context.AppName, context.Commands, context.Cvars))
+					Commands.Initialize();
+					Cvars.Initialize();
+
+					using (new Help())
+					using (new Interpreter(context.AppName))
 					{
-						context.Commands.Process(ConfigurationFile.AutoExec);
-						ParseCommandLine(context.Cvars);
+						Commands.Process(ConfigurationFile.AutoExec);
+						ParseCommandLine();
 
 						var app = new TApp();
 						app.Run(context, logFile);
 
-						context.Commands.Persist(ConfigurationFile.AutoExec);
+						Commands.Persist(ConfigurationFile.AutoExec);
 					}
 
 					Log.Info("{0} has shut down.", context.AppName);
@@ -85,13 +80,10 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Parses the command line and sets all cvars to the requested values.
 		/// </summary>
-		/// <param name="cvarRegistry">
-		///   The cvar registry that should be used to look up cvars referenced by a command line argument.
-		/// </param>
-		private static void ParseCommandLine(CvarRegistry cvarRegistry)
+		private static void ParseCommandLine()
 		{
 			Log.Info("Parsing the command line arguments '{0}'...", Environment.CommandLine);
-			var reply = new CommandLineParser(cvarRegistry).Parse(Environment.CommandLine);
+			var reply = new CommandLineParser().Parse(Environment.CommandLine);
 			if (reply.Status != ReplyStatus.Success)
 			{
 				Log.Error("{0}", reply.Errors.ErrorMessage);

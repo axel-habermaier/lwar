@@ -9,6 +9,7 @@ namespace Lwar.Client.GameStates
 	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
+	using Scripting;
 
 	/// <summary>
 	///   Loads a game session.

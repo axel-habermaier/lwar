@@ -110,19 +110,29 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// </summary>
 		public bool Compile()
 		{
-			LoadAssemblies();
-			var effectFiles = LoadFiles().ToArray();
+			T[] files;
+			TryGetValidatedFiles(out files);
 
-			foreach (var file in effectFiles)
+			foreach (var file in files.Where(file => !file.HasErrors))
+				Compile(file);
+
+			return files.All(file => !file.HasErrors);
+		}
+
+		/// <summary>
+		///   Gets all validated file elements.
+		/// </summary>
+		/// <param name="files">Returns the validated file elements.</param>
+		public void TryGetValidatedFiles(out T[] files)
+		{
+			LoadAssemblies();
+			files = LoadFiles().ToArray();
+
+			foreach (var file in files)
 			{
 				file.InitializeElement();
 				file.ValidateElement();
-
-				if (!file.HasErrors)
-					Compile(file);
 			}
-
-			return effectFiles.All(file => !file.HasErrors);
 		}
 
 		/// <summary>

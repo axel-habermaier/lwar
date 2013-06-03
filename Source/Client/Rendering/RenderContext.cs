@@ -18,11 +18,6 @@ namespace Lwar.Client.Rendering
 	public class RenderContext : DisposableObject
 	{
 		/// <summary>
-		///   The cvar registry that handles the application cvars.
-		/// </summary>
-		private readonly CvarRegistry _cvars;
-
-		/// <summary>
 		///   The renderer that is used to draw the parallax scrolling effect.
 		/// </summary>
 		private readonly ParallaxRenderer _parallaxRenderer;
@@ -57,14 +52,11 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		/// <param name="cvars"> The cvar registry that handles the application cvars.</param>
-		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets, CvarRegistry cvars)
+		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
-			Assert.ArgumentNotNull(cvars);
 
-			_cvars = cvars;
 			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 			_parallaxRenderer = new ParallaxRenderer(graphicsDevice, assets);
@@ -108,7 +100,7 @@ namespace Lwar.Client.Rendering
 			RasterizerState.CullCounterClockwise.Bind();
 			_skyboxRenderer.Draw(output);
 
-			if (_cvars.DrawWireframe)
+			if (Cvars.DrawWireframe)
 				_wireframe.Bind();
 			else
 				RasterizerState.CullCounterClockwise.Bind();

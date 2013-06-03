@@ -20,13 +20,13 @@ namespace Lwar.Client
 			var context = new AppContext
 			{
 				AppName = "lwar",
-				Commands = new CommandRegistry(),
-				Cvars = new CvarRegistry(),
 				DefaultFontName = "Fonts/Liberation Mono 12",
 				SpriteEffect = new SpriteEffectAdapter(),
 				Statistics = new Statistics()
 			};
 
+			Commands.Initialize();
+			Cvars.Initialize();
 			Bootstrapper<LwarClient>.Run(context);
 		}
 	}

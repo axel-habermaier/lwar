@@ -28,6 +28,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		}
 
 		/// <summary>
+		///   Gets or sets the namespace in which the generated class should live.
+		/// </summary>
+		public string Namespace { get; set; }
+
+		/// <summary>
 		///   Gets the errors that have been raised during the compilation of the project.
 		/// </summary>
 		public IEnumerable<LogEntry> Errors
@@ -36,19 +41,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		}
 
 		/// <summary>
-		///   Gets or sets the base class the generated C# class should be derived from.
-		/// </summary>
-		public string BaseClass { get; set; }
-
-		/// <summary>
-		///   Gets or sets a value indicating whether the generated C# class should be a partial class.
-		/// </summary>
-		public bool IsPartial { get; set; }
-
-		/// <summary>
 		///   Gets the generated code.
 		/// </summary>
 		public string GeneratedCode { get; private set; }
+
+		/// <summary>
+		///   Gets or sets the imported registry.
+		/// </summary>
+		public Registry ImportedRegistry { get; set; }
 
 		/// <summary>
 		///   Outputs a compilation message.
@@ -87,8 +87,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		{
 			var writer = new CodeWriter();
 
-			var generator = new CSharpCodeGenerator(writer, file.Registry);
-			generator.GenerateCode(BaseClass, IsPartial);
+			var generator = new CSharpCodeGenerator(writer, file.Registry, ImportedRegistry);
+			generator.GenerateCode(Namespace);
 
 			GeneratedCode = writer.ToString();
 		}

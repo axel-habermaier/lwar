@@ -1,5 +1,0 @@
-﻿<#
-	SourceFile = "ICommandRegistry.cs";
-	BaseClass = "Pegasus.Framework.Scripting.CommandRegistry";
-#>
-<#@ include file="../../Framework/Scripting/RegistryGenerator.tt" #>

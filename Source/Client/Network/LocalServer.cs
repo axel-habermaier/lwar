@@ -23,11 +23,6 @@ namespace Lwar.Client.Network
 		private const int UpdateFrequency = 60;
 
 		/// <summary>
-		///   The command registry that manages the application commands.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
 		///   The log callbacks that have been passed to the native code. We must keep a reference in order to prevent
 		///   the garbage collector from freeing the delegates while they are still being used by native code.
 		/// </summary>
@@ -51,11 +46,8 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="commands">The command registry that manages the application commands.</param>
-		public LocalServer(CommandRegistry commands)
+		public LocalServer()
 		{
-			Assert.ArgumentNotNull(commands);
-
 			_logCallbacks = new NativeMethods.LogCallbacks
 			{
 				Die = message => EnqueueLogEntry(LogType.Fatal, message),
@@ -65,9 +57,8 @@ namespace Lwar.Client.Network
 				Debug = message => EnqueueLogEntry(LogType.Debug, message)
 			};
 
-			_commands = commands;
-			commands.OnStartServer += Run;
-			commands.OnStopServer += Shutdown;
+			Commands.OnStartServer += Run;
+			Commands.OnStopServer += Shutdown;
 		}
 
 		/// <summary>
@@ -198,8 +189,8 @@ namespace Lwar.Client.Network
 		{
 			Shutdown();
 
-			_commands.OnStartServer -= Run;
-			_commands.OnStopServer -= Shutdown;
+			Commands.OnStartServer -= Run;
+			Commands.OnStopServer -= Shutdown;
 		}
 
 		/// <summary>

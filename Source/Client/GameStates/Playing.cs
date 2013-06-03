@@ -11,6 +11,7 @@ namespace Lwar.Client.GameStates
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Rendering;
+	using Scripting;
 
 	/// <summary>
 	///   Displays a game session.
@@ -97,7 +98,7 @@ namespace Lwar.Client.GameStates
 
 			Commands.OnShowScoreboard -= OnShowScoreboard;
 			Commands.OnSay -= OnSay;
-			Cvars.Instances.PlayerName.Changed -= OnPlayerNameChanged;
+			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
 
 			Log.Info(LogCategory.Client, "The game session has ended.");
 		}
@@ -107,15 +108,15 @@ namespace Lwar.Client.GameStates
 		/// </summary>
 		public override void Initialize()
 		{
-			_renderContext = new RenderContext(GraphicsDevice, Assets, Cvars);
+			_renderContext = new RenderContext(GraphicsDevice, Assets);
 			_gameSession = new GameSession(_renderContext);
 			_messageDispatcher = new MessageDispatcher(_gameSession);
-			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice, Commands);
-			_inputManager = new InputManager(InputDevice, Commands);
+			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
+			_inputManager = new InputManager(InputDevice);
 
 			Commands.OnShowScoreboard += OnShowScoreboard;
 			Commands.OnSay += OnSay;
-			Cvars.Instances.PlayerName.Changed += OnPlayerNameChanged;
+			Cvars.PlayerNameChanged += OnPlayerNameChanged;
 
 			StateManager.Add(new Loading(_gameSession, _networkSession));
 		}

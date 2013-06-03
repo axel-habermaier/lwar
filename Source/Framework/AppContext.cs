@@ -6,7 +6,6 @@ namespace Pegasus.Framework
 	using Platform.Graphics;
 	using Platform.Input;
 	using Rendering;
-	using Scripting;
 
 	/// <summary>
 	///   Represents the context of an application, providing access to all framework objects that can be used by an
@@ -28,16 +27,6 @@ namespace Pegasus.Framework
 		///   Gets or sets the name of the application.
 		/// </summary>
 		public string AppName { get; set; }
-
-		/// <summary>
-		///   Gets or sets the command registry that is used to handle application commands.
-		/// </summary>
-		public CommandRegistry Commands { get; set; }
-
-		/// <summary>
-		///   Gets or sets the cvar registry that is used to retrieve and store configuration values.
-		/// </summary>
-		public CvarRegistry Cvars { get; set; }
 
 		/// <summary>
 		///   Gets or sets the statistics instance that is used for statistical measurements.

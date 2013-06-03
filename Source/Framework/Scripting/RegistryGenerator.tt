@@ -7,11 +7,14 @@
 
 	if (String.IsNullOrWhiteSpace(SourceFile))
 		Error("'SourceFile' must be set.");
-	else if (String.IsNullOrWhiteSpace(BaseClass))
-		Error("'BaseClass' must be set.");
 	else
 	{
-		using (var generator = new RegistryGenerator { SourceFile = Host.ResolvePath(SourceFile), BaseClass = BaseClass, IsPartial = IsPartial })
+		using (var generator = new RegistryGenerator 
+			{ 
+				SourceFile = Host.ResolvePath(SourceFile), 
+				Import = String.IsNullOrWhiteSpace(Import) ? String.Empty : Host.ResolvePath(Import),
+				Namespace = Namespace
+			})
 		{
 			generator.GenerateRegistry();
 
@@ -25,6 +28,6 @@
 <#= GeneratedCode #>
 <#+
 	protected string SourceFile;
-	protected string BaseClass;
-	protected bool IsPartial;
+	protected string Import;
+	protected string Namespace;
 #>

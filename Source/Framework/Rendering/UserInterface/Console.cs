@@ -40,11 +40,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private static readonly Color DebugInfoColor = new Color(1.0f, 0.0f, 1.0f, 1.0f);
 
 		/// <summary>
-		///   The command registry that is used to look up commands.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
 		///   The font used by the console.
 		/// </summary>
 		private readonly Font _font;
@@ -91,27 +86,21 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="inputDevice">The input device that provides the user input.</param>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
-		/// <param name="commands">The command registry that should be used to look up commands.</param>
-		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
-		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, SpriteBatch spriteBatch, Font font,
-					   CommandRegistry commands, CvarRegistry cvars)
+		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, SpriteBatch spriteBatch, Font font)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
 			Assert.ArgumentNotNull(spriteBatch);
 			Assert.ArgumentNotNull(font);
-			Assert.ArgumentNotNull(commands);
-			Assert.ArgumentNotNull(cvars);
 
 			_spriteBatch = spriteBatch;
 			_font = font;
 
 			_content = new ConsoleContent(_font);
-			_prompt = new ConsolePrompt(_font, InfoColor, commands, cvars);
+			_prompt = new ConsolePrompt(_font, InfoColor);
 			_input = new ConsoleInput(inputDevice);
-			_commands = commands;
 
-			_commands.OnShowConsole += ShowConsole;
+			Commands.OnShowConsole += ShowConsole;
 			Log.OnError += ShowError;
 			Log.OnWarning += ShowWarning;
 			Log.OnInfo += ShowInfo;
@@ -143,7 +132,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_commands.OnShowConsole -= ShowConsole;
+			Commands.OnShowConsole -= ShowConsole;
 			Log.OnError -= ShowError;
 			Log.OnWarning -= ShowWarning;
 			Log.OnInfo -= ShowInfo;
@@ -241,7 +230,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				if (!String.IsNullOrWhiteSpace(input))
 				{
 					Log.Info("{0}{1}", ConsolePrompt.Prompt, input);
-					_commands.Execute(input);
+					Commands.Execute(input);
 				}
 			}
 

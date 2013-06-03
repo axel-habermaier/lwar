@@ -1,5 +1,0 @@
-﻿<#
-	SourceFile = "ICommandRegistry.cs";
-	BaseClass = "Registry<ICommand>";
-#>
-<#@ include file="RegistryGenerator.tt" #>

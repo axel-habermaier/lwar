@@ -1,5 +1,0 @@
-﻿<#
-	SourceFile = "ICvarRegistry.cs";
-	BaseClass = "Pegasus.Framework.Scripting.CvarRegistry";
-#>
-<#@ include file="../../Framework/Scripting/RegistryGenerator.tt" #>

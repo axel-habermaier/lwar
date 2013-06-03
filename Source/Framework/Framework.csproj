@@ -311,20 +311,20 @@
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Scripting\CommandAttribute.cs" />
     <Compile Include="Scripting\CommandParameter.cs" />
-    <Compile Include="Scripting\CommandRegistry.cs">
+    <Compile Include="Scripting\Commands.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CommandRegistry.tt</DependentUpon>
+      <DependentUpon>Commands.tt</DependentUpon>
     </Compile>
-    <Compile Include="Scripting\CvarRegistry.cs">
+    <Compile Include="Scripting\CommandRegistry.cs" />
+    <Compile Include="Scripting\Cvars.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CvarRegistry.tt</DependentUpon>
+      <DependentUpon>Cvars.tt</DependentUpon>
     </Compile>
-    <Compile Include="Scripting\CvarRegistry.Deferred.cs" />
-    <Compile Include="Scripting\ICommandRegistry.cs">
+    <Compile Include="Scripting\ICommands.cs">
     </Compile>
-    <Compile Include="Scripting\ICvarRegistry.cs">
+    <Compile Include="Scripting\ICvars.cs">
     </Compile>
     <Compile Include="Scripting\ConfigurationFile.cs" />
     <Compile Include="Scripting\ConfigurationLine.cs" />
@@ -352,7 +352,7 @@
     <Compile Include="Scripting\Command`3.cs" />
     <Compile Include="Scripting\Command`2.cs" />
     <Compile Include="Scripting\Cvar.cs" />
-    <Compile Include="Scripting\Registry.cs" />
+    <Compile Include="Scripting\CvarRegistry.cs" />
     <Compile Include="Scripting\ICommand.cs" />
     <Compile Include="Scripting\ICvar.cs" />
     <Compile Include="Platform\Memory\DisposableExtensions.cs" />
@@ -528,15 +528,15 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Vector2.cs</LastGenOutput>
     </None>
-    <None Include="Scripting\CommandRegistry.tt">
-      <DependentUpon>ICommandRegistry.cs</DependentUpon>
+    <None Include="Scripting\Commands.tt">
+      <DependentUpon>ICommands.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CommandRegistry.cs</LastGenOutput>
+      <LastGenOutput>Commands.cs</LastGenOutput>
     </None>
-    <None Include="Scripting\CvarRegistry.tt">
-      <DependentUpon>ICvarRegistry.cs</DependentUpon>
+    <None Include="Scripting\Cvars.tt">
+      <DependentUpon>ICvars.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CvarRegistry.cs</LastGenOutput>
+      <LastGenOutput>Cvars.cs</LastGenOutput>
     </None>
     <None Include="Scripting\RegistryGenerator.tt" />
   </ItemGroup>

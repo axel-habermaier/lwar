@@ -32,24 +32,27 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void Initialize()
 		{
-			var commands = (CommandRegistry)Context.Commands;
-			commands.OnConnect += Connect;
-			commands.OnDisconnect += Disconnect;
+			Commands.Resolve();
+			Cvars.Resolve();
+
+			Commands.OnConnect += Connect;
+			Commands.OnDisconnect += Disconnect;
 
 			Context.LogicalInputDevice.Modes = InputModes.Game;
 			Context.Window.Closing += Exit;
 
-			_localServer = new LocalServer(commands);
+			_localServer = new LocalServer();
 			_stateManager = new AppStateManager(Context);
 			_stateManager.Add(new MainMenu());
 
-			commands.Bind(Key.F1.WentDown(), "start_server");
-			commands.Bind(Key.F2.WentDown(), "stop_server");
-			commands.Bind(Key.F3.WentDown(), "connect 127.0.0.1");
-			commands.Bind(Key.F4.WentDown(), "disconnect");
-			commands.Bind(Key.F5.WentDown(), "reload_assets");
-			commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
-			commands.Bind(Key.Escape.WentDown(), "exit");
+			Commands.Bind(Key.F1.WentDown(), "start_server");
+			Commands.Bind(Key.F2.WentDown(), "stop_server");
+			Commands.Bind(Key.F3.WentDown(), "connect 127.0.0.1");
+			Commands.Bind(Key.F4.WentDown(), "disconnect");
+			Commands.Bind(Key.F5.WentDown(), "reload_assets");
+			Commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
+			Commands.Bind(Key.Escape.WentDown(), "exit");
+			Commands.Bind(Key.F11.WentDown(), "toggle_stats");
 		}
 
 		/// <summary>
@@ -87,9 +90,8 @@ namespace Lwar.Client
 		/// </summary>
 		protected override void Dispose()
 		{
-			var commands = (CommandRegistry)Context.Commands;
-			commands.OnConnect -= Connect;
-			commands.OnDisconnect -= Disconnect;
+			Commands.OnConnect -= Connect;
+			Commands.OnDisconnect -= Disconnect;
 
 			_stateManager.SafeDispose();
 			_localServer.SafeDispose();

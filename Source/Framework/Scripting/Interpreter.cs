@@ -19,16 +19,6 @@ namespace Pegasus.Framework.Scripting
 		private readonly string _appName;
 
 		/// <summary>
-		///   The command registry that is used to look up commands.
-		/// </summary>
-		private readonly CommandRegistry _commands;
-
-		/// <summary>
-		///   The cvar registry that is used to look up cvars.
-		/// </summary>
-		private readonly CvarRegistry _cvars;
-
-		/// <summary>
 		///   The parser that is used to parse a user request.
 		/// </summary>
 		private readonly InstructionParser _parser;
@@ -37,24 +27,18 @@ namespace Pegasus.Framework.Scripting
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="appName">The name of the application.</param>
-		/// <param name="commands">The command registry that should be used to look up commands.</param>
-		/// <param name="cvars">The cvar registry that should be used to look up cvars.</param>
-		public Interpreter(string appName, CommandRegistry commands, CvarRegistry cvars)
+		public Interpreter(string appName)
 		{
 			Assert.ArgumentNotNullOrWhitespace(appName);
-			Assert.ArgumentNotNull(cvars);
-			Assert.ArgumentNotNull(commands);
 
 			_appName = appName;
-			_commands = commands;
-			_cvars = cvars;
-			_parser = new InstructionParser(_commands, cvars);
+			_parser = new InstructionParser();
 
-			_commands.OnExecute += OnExecute;
-			_commands.OnProcess += OnProcess;
-			_commands.OnPersist += OnPersist;
-			_commands.OnCommands += OnListCommands;
-			_commands.OnCvars += OnListCvars;
+			Commands.OnExecute += OnExecute;
+			Commands.OnProcess += OnProcess;
+			Commands.OnPersist += OnPersist;
+			Commands.OnListCommands += OnListCommands;
+			Commands.OnListCvars += OnListCvars;
 		}
 
 		/// <summary>
@@ -62,11 +46,11 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_commands.OnExecute -= OnExecute;
-			_commands.OnProcess -= OnProcess;
-			_commands.OnPersist -= OnPersist;
-			_commands.OnCommands -= OnListCommands;
-			_commands.OnCvars -= OnListCvars;
+			Commands.OnExecute -= OnExecute;
+			Commands.OnProcess -= OnProcess;
+			Commands.OnPersist -= OnPersist;
+			Commands.OnListCommands -= OnListCommands;
+			Commands.OnListCvars -= OnListCvars;
 		}
 
 		/// <summary>
@@ -105,7 +89,7 @@ namespace Pegasus.Framework.Scripting
 		private void OnPersist(string fileName)
 		{
 			var configFile = new ConfigurationFile(_parser, _appName, fileName);
-			configFile.Persist(_cvars.AllInstances.Where(cvar => cvar.Persistent));
+			configFile.Persist(CvarRegistry.All.Where(cvar => cvar.Persistent));
 		}
 
 		/// <summary>
@@ -114,7 +98,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="pattern">The name pattern of the commands that should be listed.</param>
 		private void OnListCommands(string pattern)
 		{
-			var commands = PatternMatches(_commands.AllInstances, command => command.Name, pattern).ToArray();
+			var commands = PatternMatches(CommandRegistry.All, command => command.Name, pattern).ToArray();
 			if (commands.Length == 0)
 				Log.Warn("No commands found matching search pattern '{0}'.", pattern);
 
@@ -128,7 +112,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="pattern">The name pattern of the cvars that should be listed.</param>
 		private void OnListCvars(string pattern)
 		{
-			var cvars = PatternMatches(_cvars.AllInstances, cvar => cvar.Name, pattern).ToArray();
+			var cvars = PatternMatches(CvarRegistry.All, cvar => cvar.Name, pattern).ToArray();
 			if (cvars.Length == 0)
 				Log.Warn("No cvars found matching search pattern '{0}'.", pattern);
 

@@ -79,11 +79,9 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(logFile);
 
 			Context = context;
-			var cvars = context.Cvars;
-			var commands = context.Commands;
 
 			using (new NativeLibrary())
-			using (var window = context.Window = new Window(cvars.WindowWidth, cvars.WindowHeight))
+			using (var window = context.Window = new Window(Cvars.WindowWidth, Cvars.WindowHeight))
 			using (var graphicsDevice = context.GraphicsDevice = new GraphicsDevice())
 			using (var statistics = context.Statistics)
 			using (var spriteEffect = context.SpriteEffect)
@@ -92,8 +90,8 @@ namespace Pegasus.Framework
 			using (var keyboard = new Keyboard(window))
 			using (var mouse = new Mouse(window))
 			using (var inputDevice =context.LogicalInputDevice = new LogicalInputDevice(keyboard, mouse))
-			using (var bindings = new Bindings(inputDevice, commands, cvars))
-			using (var resolutionManager = new ResolutionManager(window, swapChain, inputDevice, cvars))
+			using (var bindings = new Bindings(inputDevice))
+			using (var resolutionManager = new ResolutionManager(window, swapChain, inputDevice))
 			using (var camera2D = new Camera2D(graphicsDevice))
 			using (var sceneOutput = new RenderOutput(graphicsDevice) { RenderTarget = swapChain.BackBuffer })
 			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
@@ -106,7 +104,7 @@ namespace Pegasus.Framework
 
 				var defaultFont = assets.LoadFont(context.DefaultFontName);
 				using (var spriteBatch = new SpriteBatch(graphicsDevice, uiOutput, spriteEffect))
-				using (var console = new Console(graphicsDevice, inputDevice, spriteBatch, defaultFont, commands, cvars))
+				using (var console = new Console(graphicsDevice, inputDevice, spriteBatch, defaultFont))
 				{
 					statistics.Initialize(graphicsDevice, spriteBatch, defaultFont);
 
@@ -118,13 +116,13 @@ namespace Pegasus.Framework
 					window.Resized += statistics.Resize;
 
 					// Setup some command handlers
-					commands.OnReloadAssets += assets.ReloadAssets;
-					commands.OnRestartGraphics += resolutionManager.UpdateGraphicsState;
-					commands.OnExit += Exit;
+					Commands.OnReloadAssets += assets.ReloadAssets;
+					Commands.OnRestartGraphics += resolutionManager.UpdateGraphicsState;
+					Commands.OnExit += Exit;
 
 					// Copy the recorded log history to the console and explain the usage of the console
 					logFile.WriteToConsole(console);
-					commands.Help();
+					Commands.Help();
 
 					while (_running)
 					{

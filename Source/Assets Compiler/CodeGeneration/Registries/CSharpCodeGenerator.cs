@@ -13,6 +13,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 	internal class CSharpCodeGenerator
 	{
 		/// <summary>
+		///   The imported registry.
+		/// </summary>
+		private readonly Registry _importedRegistry;
+
+		/// <summary>
 		///   The registry the code is generated for.
 		/// </summary>
 		private readonly Registry _registry;
@@ -27,75 +32,128 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// </summary>
 		/// <param name="writer">The writer that should be used to write the generated code.</param>
 		/// <param name="registry">The registry the code should be generated for.</param>
-		public CSharpCodeGenerator(CodeWriter writer, Registry registry)
+		/// <param name="importedRegistry">The imported registry.</param>
+		public CSharpCodeGenerator(CodeWriter writer, Registry registry, Registry importedRegistry)
 		{
 			Assert.ArgumentNotNull(writer);
 			Assert.ArgumentNotNull(registry);
+			Assert.ArgumentNotNull(importedRegistry);
 
 			_writer = writer;
 			_registry = registry;
+			_importedRegistry = importedRegistry;
 		}
 
 		/// <summary>
 		///   Generates the registry class.
 		/// </summary>
-		/// <param name="baseClass">The class that the generated registry class should be derived from.</param>
-		/// <param name="isPartial">Indicates whether the generated C# class should be a partial class.</param>
-		public void GenerateCode(string baseClass, bool isPartial)
+		/// <param name="namespaceName">The namespace in which the generated class should live.</param>
+		public void GenerateCode(string namespaceName)
 		{
 			_writer.WriterHeader("//");
 			_writer.AppendLine("using System;");
 			_writer.AppendLine("using System.Diagnostics;");
 			_writer.Newline();
 
-			_writer.AppendLine("namespace {0}", _registry.Namespace);
+			_writer.AppendLine("namespace {0}", namespaceName);
 			_writer.AppendBlockStatement(() =>
 				{
-					foreach (var import in _registry.ImportedNamespaces.OrderBy(import => import))
+					foreach (var import in _registry.ImportedNamespaces
+													.Union(_importedRegistry.ImportedNamespaces)
+													.OrderBy(import => import))
 						_writer.AppendLine("using {0};", import);
 
-					if (_registry.ImportedNamespaces.Any())
-						_writer.Newline();
+					_writer.Newline();
 
-					_writer.AppendLine("public {2}class {0} : {1}", _registry.Name, baseClass, isPartial ? "partial " : String.Empty);
+					_writer.AppendLine("internal static class {0}", _registry.Name);
 					_writer.AppendBlockStatement(() =>
 						{
-							_writer.AppendLine("/// <summary>");
-							_writer.AppendLine("///   Provides access to the actual instances of the cvars or commands managed by the registry.");
-							_writer.AppendLine("/// </summary>");
-							_writer.AppendLine("public new InstanceList Instances {{ get; private set; }}");
-							_writer.Newline();
+							GenerateFields();
 
 							GenerateCvarProperties();
+							GenerateCvarEvents();
+
 							GenerateCommandMethods();
 							GenerateCommandEvents();
 
 							GenerateInitializeMethod();
-
-							GenerateNestedClass(baseClass);
+							GenerateResolveMethod();
 						});
 				});
 		}
 
 		/// <summary>
-		///   Generates the cvar properties
+		///   Generates the cvar and command fields.
+		/// </summary>
+		private void GenerateFields()
+		{
+			foreach (var cvar in _registry.Cvars.Concat(_importedRegistry.Cvars))
+			{
+				WriteDocumentation(cvar.Documentation);
+				_writer.AppendLine("private static Cvar<{0}> {1};", cvar.Type, GetFieldName(cvar.Name));
+				_writer.Newline();
+			}
+
+			foreach (var command in _registry.Commands.Concat(_importedRegistry.Commands))
+			{
+				WriteDocumentation(GetSummary(command.Documentation));
+				_writer.AppendLine("private static Command{0} {1};", GetTypeArguments(command), GetFieldName(command.Name));
+				_writer.Newline();
+			}
+		}
+
+		/// <summary>
+		///   Generates the cvar properties.
 		/// </summary>
 		private void GenerateCvarProperties()
 		{
-			foreach (var cvar in _registry.Cvars)
+			foreach (var cvar in _registry.Cvars.Concat(_importedRegistry.Cvars))
 			{
 				WriteDocumentation(cvar.Documentation);
-				_writer.AppendLine("public {0} {1}", cvar.Type, cvar.Name);
+				_writer.AppendLine("public static {0} {1}", cvar.Type, cvar.Name);
 				_writer.AppendBlockStatement(() =>
 					{
-						_writer.AppendLine("get {{ return Instances.{0}.Value; }}", cvar.Name);
+						_writer.AppendLine("get {{ return {0}.Value; }}", GetFieldName(cvar.Name));
 						_writer.AppendLine("[DebuggerHidden]");
 						_writer.AppendLine("set");
 						_writer.AppendBlockStatement(() =>
 							{
 								_writer.AppendLine("Assert.ArgumentNotNull((object)value);");
-								_writer.AppendLine("Instances.{0}.Value = value;", cvar.Name);
+								_writer.AppendLine("{0}.Value = value;", GetFieldName(cvar.Name));
 							});
+					});
+
+				_writer.Newline();
+			}
+		}
+
+		/// <summary>
+		///   Generates the cvar events.
+		/// </summary>
+		private void GenerateCvarEvents()
+		{
+			foreach (var cvar in _registry.Cvars.Concat(_importedRegistry.Cvars))
+			{
+				_writer.AppendLine("/// <summary>");
+				_writer.AppendLine("///   Raised when the '{0}' cvar is changing. The new value is passed to the event handler.", cvar.Name);
+				_writer.AppendLine("/// </summary>");
+				_writer.AppendLine("public static event Action<{0}> {1}Changing", cvar.Type, cvar.Name);
+				_writer.AppendBlockStatement(() =>
+					{
+						_writer.AppendLine("add {{ {0}.Changing += value; }}", GetFieldName(cvar.Name));
+						_writer.AppendLine("remove {{ {0}.Changing -= value; }}", GetFieldName(cvar.Name));
+					});
+
+				_writer.Newline();
+
+				_writer.AppendLine("/// <summary>");
+				_writer.AppendLine("///   Raised when the '{0}' cvar is changed. The previous value is passed to the event handler.", cvar.Name);
+				_writer.AppendLine("/// </summary>");
+				_writer.AppendLine("public static event Action<{0}> {1}Changed", cvar.Type, cvar.Name);
+				_writer.AppendBlockStatement(() =>
+					{
+						_writer.AppendLine("add {{ {0}.Changed += value; }}", GetFieldName(cvar.Name));
+						_writer.AppendLine("remove {{ {0}.Changed -= value; }}", GetFieldName(cvar.Name));
 					});
 
 				_writer.Newline();
@@ -107,17 +165,17 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// </summary>
 		private void GenerateCommandMethods()
 		{
-			foreach (var command in _registry.Commands)
+			foreach (var command in _registry.Commands.Concat(_importedRegistry.Commands))
 			{
 				WriteDocumentation(command.Documentation);
 				_writer.AppendLine("[DebuggerHidden]");
-				_writer.AppendLine("public void {0}({1})", command.Name, GetArgumentDeclarations(command));
+				_writer.AppendLine("public static void {0}({1})", command.Name, GetArgumentDeclarations(command));
 				_writer.AppendBlockStatement(() =>
 					{
 						foreach (var parameter in command.Parameters)
 							_writer.AppendLine("Assert.ArgumentNotNull((object){0});", parameter.Name);
 
-						_writer.AppendLine("Instances.{0}.Invoke({1});", command.Name, GetInvocationArguments(command));
+						_writer.AppendLine("{0}.Invoke({1});", GetFieldName(command.Name), GetInvocationArguments(command));
 					});
 
 				_writer.Newline();
@@ -129,16 +187,16 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// </summary>
 		private void GenerateCommandEvents()
 		{
-			foreach (var command in _registry.Commands)
+			foreach (var command in _registry.Commands.Concat(_importedRegistry.Commands))
 			{
 				_writer.AppendLine("/// <summary>");
-				_writer.AppendLine("///   Raised when the {0} command is invoked.", command.Name);
+				_writer.AppendLine("///   Raised when the '{0}' command is invoked.", command.Name);
 				_writer.AppendLine("/// </summary>");
-				_writer.AppendLine("public event Action{0} On{1}", GetTypeArguments(command), command.Name);
+				_writer.AppendLine("public static event Action{0} On{1}", GetTypeArguments(command), command.Name);
 				_writer.AppendBlockStatement(() =>
 					{
-						_writer.AppendLine("add {{ Instances.{0}.Invoked += value; }}", command.Name);
-						_writer.AppendLine("remove {{ Instances.{0}.Invoked -= value; }}", command.Name);
+						_writer.AppendLine("add {{ {0}.Invoked += value; }}", GetFieldName(command.Name));
+						_writer.AppendLine("remove {{ {0}.Invoked -= value; }}", GetFieldName(command.Name));
 					});
 
 				_writer.Newline();
@@ -151,82 +209,85 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		private void GenerateInitializeMethod()
 		{
 			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Initializes the registry.");
+			_writer.AppendLine("///   Initializes the instances declared by the registry.");
 			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("protected override void Initialize(object instances)");
+			_writer.AppendLine("public static void Initialize()");
 			_writer.AppendBlockStatement(() =>
 				{
-					_writer.AppendLine("if (instances == null)");
-					_writer.AppendLine("	instances = new InstanceList();");
+					GenerateInstanceInitialization();
 					_writer.Newline();
 
-					_writer.AppendLine("Instances = (InstanceList)instances;");
-					_writer.AppendLine("base.Initialize(instances);");
+					GenerateInstanceRegistration();
 					_writer.Newline();
-
-					foreach (var cvar in _registry.Cvars)
-						_writer.AppendLine("Register(Instances.{0}, \"{1}\");", cvar.Name, GetRuntimeName(cvar.Name));
-
-					if (_registry.Cvars.Any() && _registry.Commands.Any())
-						_writer.Newline();
-
-					foreach (var command in _registry.Commands)
-						_writer.AppendLine("Register(Instances.{0}, \"{1}\");", command.Name, GetRuntimeName(command.Name));
 				});
-
 			_writer.Newline();
 		}
 
 		/// <summary>
-		///   Generates the nested class.
+		///   Generates the code for the initialization of the cvar and command instances.
 		/// </summary>
-		/// <param name="baseClass">The class that the generated registry class should be derived from.</param>
-		private void GenerateNestedClass(string baseClass)
+		private void GenerateInstanceInitialization()
 		{
-			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Stores the actual instances of the cvars or commands managed by the registry.");
-			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("public new class InstanceList : {0}.InstanceList", baseClass);
-			_writer.AppendBlockStatement(() =>
-				{
-					GenerateConstructor();
-					GenerateCvarInstanceProperties();
-					GenerateCommandInstanceProperties();
-				});
+			foreach (var cvar in _registry.Cvars)
+			{
+				_writer.Append("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {6}, {5}",
+							   cvar.Type, GetFieldName(cvar.Name), GetRuntimeName(cvar.Name), cvar.DefaultValue,
+							   GetSummaryText(cvar.Documentation), cvar.Persistent.ToString().ToLower(), cvar.UpdateMode);
+
+				AppendValidators(cvar.Validators);
+				_writer.AppendLine(");");
+			}
+
+			if (_registry.Cvars.Any() && _registry.Commands.Any())
+				_writer.Newline();
+
+			foreach (var command in _registry.Commands)
+			{
+				_writer.Append("{1} = new Command{0}(\"{2}\", \"{3}\"",
+							   GetTypeArguments(command), GetFieldName(command.Name),
+							   GetRuntimeName(command.Name), GetSummaryText(command.Documentation));
+
+				GenerateCommandParameters(command);
+				_writer.AppendLine(");");
+			}
 		}
 
 		/// <summary>
-		///   Generates the constructor.
+		///   Generates the code for the registration of the cvar and command instances.
 		/// </summary>
-		private void GenerateConstructor()
+		private void GenerateInstanceRegistration()
+		{
+			foreach (var cvar in _registry.Cvars)
+				_writer.AppendLine("CvarRegistry.Register({0});", GetFieldName(cvar.Name));
+
+			if (_registry.Cvars.Any() && _registry.Commands.Any())
+				_writer.Newline();
+
+			foreach (var command in _registry.Commands)
+				_writer.AppendLine("CommandRegistry.Register({0});", GetFieldName(command.Name));
+		}
+
+		/// <summary>
+		///   Generates the code for the lookup of imported cvar and command instances.
+		/// </summary>
+		private void GenerateResolveMethod()
 		{
 			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Initializes a new instance.");
+			_writer.AppendLine("///   Initializes the instances imported by the registry.");
 			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("public InstanceList()");
+			_writer.AppendLine("public static void Resolve()");
 			_writer.AppendBlockStatement(() =>
 				{
-					foreach (var cvar in _registry.Cvars)
-					{
-						_writer.Append("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {6}, {5}",
-									   cvar.Type, cvar.Name, GetRuntimeName(cvar.Name), cvar.DefaultValue,
-									   GetSummaryText(cvar.Documentation), cvar.Persistent.ToString().ToLower(), cvar.UpdateMode);
+					foreach (var cvar in _importedRegistry.Cvars)
+						_writer.AppendLine("{2} = CvarRegistry.Resolve<{1}>(\"{0}\");", GetRuntimeName(cvar.Name), cvar.Type, GetFieldName(cvar.Name));
 
-						AppendValidators(cvar.Validators);
-						_writer.AppendLine(");");
-					}
-
-					if (_registry.Cvars.Any() && _registry.Commands.Any())
+					if (_importedRegistry.Cvars.Any() && _importedRegistry.Commands.Any())
 						_writer.Newline();
 
-					foreach (var command in _registry.Commands)
+					foreach (var command in _importedRegistry.Commands)
 					{
-						_writer.Append("{1} = new Command{0}(\"{2}\", \"{3}\"",
-									   GetTypeArguments(command), command.Name,
-									   GetRuntimeName(command.Name), GetSummaryText(command.Documentation));
-
-						GenerateCommandParameters(command);
-						_writer.AppendLine(");");
+						_writer.AppendLine("{2} = CommandRegistry.Resolve{1}(\"{0}\");", GetRuntimeName(command.Name), GetTypeArguments(command),
+										   GetFieldName(command.Name));
 					}
 				});
 		}
@@ -247,34 +308,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 					_writer.AppendSeparated(validator.Arguments, ", ", argument => _writer.Append(argument));
 					_writer.Append(")");
 				});
-		}
-
-		/// <summary>
-		///   Generates the cvar instance properties
-		/// </summary>
-		private void GenerateCvarInstanceProperties()
-		{
-			foreach (var cvar in _registry.Cvars)
-			{
-				_writer.Newline();
-
-				WriteDocumentation(cvar.Documentation);
-				_writer.AppendLine("public Cvar<{0}> {1} {{ get; private set; }}", cvar.Type, cvar.Name);
-			}
-		}
-
-		/// <summary>
-		///   Generates the command instance properties
-		/// </summary>
-		private void GenerateCommandInstanceProperties()
-		{
-			foreach (var command in _registry.Commands)
-			{
-				_writer.Newline();
-
-				WriteDocumentation(GetSummary(command.Documentation));
-				_writer.AppendLine("public Command{0} {1} {{ get; private set; }}", GetTypeArguments(command), command.Name);
-			}
 		}
 
 		/// <summary>
@@ -341,6 +374,15 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		private static IEnumerable<char> GetRuntimeName(string name)
 		{
 			return MakeUnderscoreName(name).Aggregate(String.Empty, (s, c) => s + c);
+		}
+
+		/// <summary>
+		///   Gets the field name of the given name.
+		/// </summary>
+		/// <param name="name">The name whose field name should be returned.</param>
+		private static string GetFieldName(string name)
+		{
+			return String.Format("_{0}{1}", Char.ToLower(name[0]), name.Substring(1));
 		}
 
 		/// <summary>

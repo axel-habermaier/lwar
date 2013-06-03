@@ -28,7 +28,7 @@ Pegasus
 - Linux: Alt+Tab and fullscreen?
 - Windows: Alt+Tab out of fullscreen game not behaving nicely
 - Persist window maximized/minimized state
-- Toggle statistics on/off
+- Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 
 Network Specification
 ========
