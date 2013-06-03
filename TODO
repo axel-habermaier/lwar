@@ -27,6 +27,8 @@ Pegasus
 - Linux: Window key/button event handling
 - Linux: Alt+Tab and fullscreen?
 - Windows: Alt+Tab out of fullscreen game not behaving nicely
+- Persist window maximized/minimized state
+- Toggle statistics on/off
 
 Network Specification
 ========

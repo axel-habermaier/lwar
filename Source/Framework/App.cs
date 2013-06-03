@@ -83,7 +83,7 @@ namespace Pegasus.Framework
 			var commands = context.Commands;
 
 			using (new NativeLibrary())
-			using (var window = context.Window = new Window(cvars.ResolutionWidth, cvars.ResolutionHeight))
+			using (var window = context.Window = new Window(cvars.WindowWidth, cvars.WindowHeight))
 			using (var graphicsDevice = context.GraphicsDevice = new GraphicsDevice())
 			using (var statistics = context.Statistics)
 			using (var spriteEffect = context.SpriteEffect)
