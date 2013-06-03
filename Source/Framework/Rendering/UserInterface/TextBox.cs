@@ -34,6 +34,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public TextBox(Font font)
 		{
 			Text = String.Empty;
+			Color = new Color(255, 255, 255, 255);
 
 			_layout = new TextLayout(font, String.Empty);
 			_layout.LayoutChanged += () => _textRenderer.RebuildCache(Font, Text, _layout.LayoutData);

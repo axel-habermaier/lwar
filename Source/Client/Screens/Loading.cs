@@ -82,6 +82,9 @@ namespace Lwar.Client.Screens
 			if (_networkSession.IsConnected || _networkSession.IsDropped || _networkSession.IsFaulted)
 				ScreenManager.Remove(this);
 
+			if (_networkSession.IsConnected)
+				ScreenManager.Add(new ChatInput(_gameSession, _networkSession));
+
 			if (_networkSession.ServerIsFull)
 				MessageBox.Show(this, LogCategory.Server, LogType.Error, "The server is full.", true);
 

@@ -153,10 +153,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="key">The key that was pressed.</param>
 		private void OnKeyPressed(KeyEventArgs key)
 		{
-			if (!_active)
-				return;
-
-			_prompt.InjectKeyPress(key);
+			if (_active)
+				_prompt.InjectKeyPress(key);
 		}
 
 		/// <summary>

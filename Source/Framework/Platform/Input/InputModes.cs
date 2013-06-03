@@ -34,8 +34,13 @@ namespace Pegasus.Framework.Platform.Input
 		Menu = 8,
 
 		/// <summary>
+		///   Indicates that a logical input device provides input for a chat input.
+		/// </summary>
+		Chat = 16,
+
+		/// <summary>
 		///   Indicates that a logical input device provides input for everything.
 		/// </summary>
-		All = Console | Game | Debug | Menu
+		All = Console | Game | Debug | Menu | Chat
 	}
 }
