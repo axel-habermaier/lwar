@@ -46,10 +46,9 @@ namespace Lwar.Client.Rendering
 			_inputDevice = inputDevice;
 
 			GameCamera = new GameCamera(graphicsDevice, inputDevice);
-			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);
+			_debugCamera = new DebugCamera(graphicsDevice, inputDevice, InputLayers.Debug);
 
 			ActiveCamera = GameCamera;
-			_inputDevice.Modes = InputModes.Game;
 
 			Commands.OnToggleDebugCamera += ToggleDebugCamera;
 		}
@@ -73,7 +72,7 @@ namespace Lwar.Client.Rendering
 			{
 				ActiveCamera = GameCamera;
 
-				_inputDevice.Modes = InputModes.Game;
+				_inputDevice.DeactivateLayer(InputLayers.Debug);
 				_window.MouseCaptured = false;
 			}
 			else
@@ -81,7 +80,7 @@ namespace Lwar.Client.Rendering
 				ActiveCamera = _debugCamera;
 				_debugCamera.Reset();
 
-				_inputDevice.Modes = InputModes.Debug;
+				_inputDevice.ActivateLayer(InputLayers.Debug);
 				_window.MouseCaptured = true;
 			}
 		}
@@ -105,7 +104,7 @@ namespace Lwar.Client.Rendering
 			if (ActiveCamera == _debugCamera)
 			{
 				_window.MouseCaptured = false;
-				_inputDevice.Modes = InputModes.Game;
+				_inputDevice.DeactivateLayer(InputLayers.Debug);
 			}
 
 			_debugCamera.SafeDispose();

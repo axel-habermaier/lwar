@@ -200,7 +200,7 @@ namespace Lwar.Client.Rendering
 		/// <param name="delta">The delta that should be applied to the camera's distance to the XZ plane.</param>
 		private void OnZoomChanged(int delta)
 		{
-			if (_inputDevice.Modes == InputModes.Game)
+			if (_inputDevice.InputLayer == InputLayers.Game)
 				_targetZoom = MathUtils.Clamp(_targetZoom + -1 * delta * DeltaScale, MinZoom, MaxZoom);
 		}
 	}

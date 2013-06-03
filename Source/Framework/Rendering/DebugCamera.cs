@@ -69,28 +69,36 @@ namespace Pegasus.Framework.Rendering
 		private Vector2 _rotation;
 
 		/// <summary>
+		/// The input layer that must be activated to control the camera.
+		/// </summary>
+		private InputLayer _layer;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		/// <param name="inputDevice">The logical input device that provides the input for the camera.</param>
-		public DebugCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
+		/// <param name="layer">The input layer that must be activated to control the camera.</param>
+		public DebugCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, InputLayer layer)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
+			Assert.ArgumentSatisfies(layer.IsPrimitive, "Invalid input layer.");
 
 			_inputDevice = inputDevice;
 			_inputDevice.Mouse.Moved += MouseMoved;
+			_layer = layer;
 
-			_forward = new LogicalInput(Key.W.IsPressed(), InputModes.Debug);
-			_backward = new LogicalInput(Key.S.IsPressed(), InputModes.Debug);
-			_left = new LogicalInput(Key.A.IsPressed(), InputModes.Debug);
-			_right = new LogicalInput(Key.D.IsPressed(), InputModes.Debug);
+			_forward = new LogicalInput(Key.W.IsPressed(), layer);
+			_backward = new LogicalInput(Key.S.IsPressed(), layer);
+			_left = new LogicalInput(Key.A.IsPressed(), layer);
+			_right = new LogicalInput(Key.D.IsPressed(), layer);
 
-			inputDevice.Register(_forward);
-			inputDevice.Register(_backward);
-			inputDevice.Register(_left);
-			inputDevice.Register(_right);
+			inputDevice.Add(_forward);
+			inputDevice.Add(_backward);
+			inputDevice.Add(_left);
+			inputDevice.Add(_right);
 
 			Reset();
 		}
@@ -136,7 +144,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		public void Update()
 		{
-			if ((_inputDevice.Modes & InputModes.Debug) == 0)
+			if (_inputDevice.InputLayer != _layer)
 				return;
 
 			var move = Vector3.Zero;
@@ -179,7 +187,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="y">The new position in Y direction.</param>
 		private void MouseMoved(int x, int y)
 		{
-			if ((_inputDevice.Modes & InputModes.Debug) == 0)
+			if (_inputDevice.InputLayer != _layer)
 				return;
 
 			_mouseDelta += new Vector2i(x, y) - new Vector2i(Viewport.Width, Viewport.Height) / 2;

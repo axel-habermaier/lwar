@@ -215,7 +215,7 @@
     <Compile Include="Platform\Graphics\TextureFlags.cs" />
     <Compile Include="Platform\Graphics\TextureType.cs" />
     <Compile Include="Platform\IMeasurement.cs" />
-    <Compile Include="Platform\Input\InputModes.cs" />
+    <Compile Include="Platform\Input\InputLayer.cs" />
     <Compile Include="Platform\Logging\LogEntry.cs" />
     <Compile Include="Platform\Logging\LogFile.cs" />
     <Compile Include="Platform\Logging\LogType.cs" />

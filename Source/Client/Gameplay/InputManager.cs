@@ -48,27 +48,27 @@ namespace Lwar.Client.Gameplay
 
 			_inputDevice = inputDevice;
 
-			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed(), InputModes.Game);
-			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed(), InputModes.Game);
-			_turnLeft.Input = new LogicalInput(Key.A.IsPressed() | Key.Left.IsPressed(), InputModes.Game);
-			_turnRight.Input = new LogicalInput(Key.D.IsPressed() | Key.Right.IsPressed(), InputModes.Game);
-			_strafeLeft.Input = new LogicalInput(Key.Q.IsPressed(), InputModes.Game);
-			_strafeRight.Input = new LogicalInput(Key.E.IsPressed(), InputModes.Game);
-			_shooting1.Input = new LogicalInput(MouseButton.Left.IsPressed(), InputModes.Game);
-			_shooting2.Input = new LogicalInput(MouseButton.Right.IsPressed(), InputModes.Game);
-			_shooting3.Input = new LogicalInput(Key.Num1.IsPressed(), InputModes.Game);
-			_shooting4.Input = new LogicalInput(Key.Num2.IsPressed(), InputModes.Game);
+			_forward.Input = new LogicalInput(Key.W.IsPressed() | Key.Up.IsPressed(), InputLayers.Game);
+			_backward.Input = new LogicalInput(Key.S.IsPressed() | Key.Down.IsPressed(), InputLayers.Game);
+			_turnLeft.Input = new LogicalInput(Key.A.IsPressed() | Key.Left.IsPressed(), InputLayers.Game);
+			_turnRight.Input = new LogicalInput(Key.D.IsPressed() | Key.Right.IsPressed(), InputLayers.Game);
+			_strafeLeft.Input = new LogicalInput(Key.Q.IsPressed(), InputLayers.Game);
+			_strafeRight.Input = new LogicalInput(Key.E.IsPressed(), InputLayers.Game);
+			_shooting1.Input = new LogicalInput(MouseButton.Left.IsPressed(), InputLayers.Game);
+			_shooting2.Input = new LogicalInput(MouseButton.Right.IsPressed(), InputLayers.Game);
+			_shooting3.Input = new LogicalInput(Key.Num1.IsPressed(), InputLayers.Game);
+			_shooting4.Input = new LogicalInput(Key.Num2.IsPressed(), InputLayers.Game);
 
-			_inputDevice.Register(_forward.Input);
-			_inputDevice.Register(_backward.Input);
-			_inputDevice.Register(_turnLeft.Input);
-			_inputDevice.Register(_turnRight.Input);
-			_inputDevice.Register(_strafeLeft.Input);
-			_inputDevice.Register(_strafeRight.Input);
-			_inputDevice.Register(_shooting1.Input);
-			_inputDevice.Register(_shooting2.Input);
-			_inputDevice.Register(_shooting3.Input);
-			_inputDevice.Register(_shooting4.Input);
+			_inputDevice.Add(_forward.Input);
+			_inputDevice.Add(_backward.Input);
+			_inputDevice.Add(_turnLeft.Input);
+			_inputDevice.Add(_turnRight.Input);
+			_inputDevice.Add(_strafeLeft.Input);
+			_inputDevice.Add(_strafeRight.Input);
+			_inputDevice.Add(_shooting1.Input);
+			_inputDevice.Add(_shooting2.Input);
+			_inputDevice.Add(_shooting3.Input);
+			_inputDevice.Add(_shooting4.Input);
 		}
 
 		/// <summary>

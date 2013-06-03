@@ -15,22 +15,21 @@ namespace Pegasus.Framework.Platform.Input
 	public class LogicalInput
 	{
 		/// <summary>
-		///   The input modes in which the input can be triggered.
+		///   The input layer(s) that must be active for the input to be triggered.
 		/// </summary>
-		private readonly InputModes _modes;
+		private readonly InputLayer _layers;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="trigger">The trigger that triggers the logical input.</param>
-		/// <param name="modes">The input modes in which the input should be triggered.</param>
-		public LogicalInput(InputTrigger trigger, InputModes modes)
+		/// <param name="layers">The input layer(s) that must be active for the input to be triggered.</param>
+		public LogicalInput(InputTrigger trigger, InputLayer layers)
 		{
 			Assert.ArgumentNotNull(trigger);
-			Assert.ArgumentSatisfies(modes != InputModes.None, "Invalid input mode.");
 
 			Trigger = trigger;
-			_modes = modes;
+			_layers = layers;
 		}
 
 		/// <summary>
@@ -67,9 +66,9 @@ namespace Pegasus.Framework.Platform.Input
 		///   Evaluates the input's trigger and stores the result in the IsTriggered property.
 		/// </summary>
 		/// <param name="device">The logical input device that should be used to evaluate trigger.</param>
-		public void Update(LogicalInputDevice device)
+		internal void Update(LogicalInputDevice device)
 		{
-			IsTriggered = (device.Modes & _modes) != 0 && Trigger.Evaluate(device);
+			IsTriggered = _layers.Contains(device.InputLayer) && Trigger.Evaluate(device);
 		}
 	}
 }

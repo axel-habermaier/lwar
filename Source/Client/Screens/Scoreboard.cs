@@ -30,11 +30,6 @@ namespace Lwar.Client.Screens
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///   The input that causes the scoreboard to be hidden.
-		/// </summary>
-		private readonly LogicalInput _hideScoreboard = new LogicalInput(Key.Tab.WentUp(), InputModes.Game);
-
-		/// <summary>
 		///   The input device that is used to check for user input.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
@@ -47,17 +42,12 @@ namespace Lwar.Client.Screens
 		/// <summary>
 		///   The input that causes the scoreboard to be shown.
 		/// </summary>
-		private readonly LogicalInput _showScoreboard = new LogicalInput(Key.Tab.WentDown(), InputModes.Game);
+		private readonly LogicalInput _showScoreboard = new LogicalInput(Key.Tab.IsPressed(), InputLayers.Game);
 
 		/// <summary>
 		///   The header row that shows a label for each column.
 		/// </summary>
 		private Row _header;
-
-		/// <summary>
-		///   A value indicating whether the scoreboard is visible.
-		/// </summary>
-		private bool _visible;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -80,8 +70,7 @@ namespace Lwar.Client.Screens
 			for (var i = 0; i < _rows.Length; ++i)
 				_rows[i] = new Row(font);
 
-			_inputDevice.Register(_showScoreboard);
-			_inputDevice.Register(_hideScoreboard);
+			_inputDevice.Add(_showScoreboard);
 		}
 
 		/// <summary>
@@ -90,14 +79,7 @@ namespace Lwar.Client.Screens
 		/// <param name="size">The size of the window.</param>
 		public void Update(Size size)
 		{
-			// Check whether the scoreboard should be shown or hidden
-			if (_hideScoreboard.IsTriggered)
-				_visible = false;
-
-			if (_showScoreboard.IsTriggered)
-				_visible = true;
-
-			if (!_visible)
+			if (!_showScoreboard.IsTriggered)
 				return;
 
 			// Update the visible row contents
@@ -132,7 +114,7 @@ namespace Lwar.Client.Screens
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			if (!_visible)
+			if (!_showScoreboard.IsTriggered)
 				return;
 
 			// Draw the frame
@@ -156,7 +138,6 @@ namespace Lwar.Client.Screens
 		protected override void OnDisposing()
 		{
 			_inputDevice.Remove(_showScoreboard);
-			_inputDevice.Remove(_hideScoreboard);
 		}
 
 		/// <summary>

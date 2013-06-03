@@ -17,11 +17,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private readonly LogicalInputDevice _device;
 
 		/// <summary>
-		///   The input mode the input device should be reset to once the console is deativated.
-		/// </summary>
-		private InputModes _previousInputModes;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The logical input device that provides the user input.</param>
@@ -33,29 +28,29 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			var controlPressed = Key.LeftControl.IsPressed() | Key.RightControl.IsPressed();
 			var controlReleased = Key.LeftControl.IsReleased() | Key.RightControl.IsReleased();
 
-			Toggle = new LogicalInput(new ScanCodeKeyTrigger(KeyTriggerType.WentDown, PlatformInfo.ConsoleKey), InputModes.All);
-			Submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputModes.Console);
-			Clear = new LogicalInput(controlPressed + Key.L.IsPressed(), InputModes.Console);
-			ClearPrompt = new LogicalInput(Key.Escape.WentDown(), InputModes.Console);
-			ShowOlderHistory = new LogicalInput(Key.Up.WentDown(), InputModes.Console);
-			ShowNewerHistory = new LogicalInput(Key.Down.WentDown(), InputModes.Console);
-			ScrollUp = new LogicalInput(Key.PageUp.IsRepeated() & controlReleased, InputModes.Console);
-			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated() & controlReleased, InputModes.Console);
-			ScrollToTop = new LogicalInput(controlPressed + Key.PageUp.IsPressed(), InputModes.Console);
-			ScrollToBottom = new LogicalInput(controlPressed + Key.PageDown.IsPressed(), InputModes.Console);
-			AutoComplete = new LogicalInput(Key.Tab.WentDown(), InputModes.Console);
+			Toggle = new LogicalInput(new ScanCodeKeyTrigger(KeyTriggerType.WentDown, PlatformInfo.ConsoleKey), InputLayer.All);
+			Submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputLayer.Console);
+			Clear = new LogicalInput(controlPressed + Key.L.IsPressed(), InputLayer.Console);
+			ClearPrompt = new LogicalInput(Key.Escape.WentDown(), InputLayer.Console);
+			ShowOlderHistory = new LogicalInput(Key.Up.WentDown(), InputLayer.Console);
+			ShowNewerHistory = new LogicalInput(Key.Down.WentDown(), InputLayer.Console);
+			ScrollUp = new LogicalInput(Key.PageUp.IsRepeated() & controlReleased, InputLayer.Console);
+			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated() & controlReleased, InputLayer.Console);
+			ScrollToTop = new LogicalInput(controlPressed + Key.PageUp.IsPressed(), InputLayer.Console);
+			ScrollToBottom = new LogicalInput(controlPressed + Key.PageDown.IsPressed(), InputLayer.Console);
+			AutoComplete = new LogicalInput(Key.Tab.WentDown(), InputLayer.Console);
 
-			device.Register(Toggle);
-			device.Register(Submit);
-			device.Register(Clear);
-			device.Register(ClearPrompt);
-			device.Register(ShowOlderHistory);
-			device.Register(ShowNewerHistory);
-			device.Register(ScrollUp);
-			device.Register(ScrollDown);
-			device.Register(ScrollToTop);
-			device.Register(ScrollToBottom);
-			device.Register(AutoComplete);
+			device.Add(Toggle);
+			device.Add(Submit);
+			device.Add(Clear);
+			device.Add(ClearPrompt);
+			device.Add(ShowOlderHistory);
+			device.Add(ShowNewerHistory);
+			device.Add(ScrollUp);
+			device.Add(ScrollDown);
+			device.Add(ScrollToTop);
+			device.Add(ScrollToBottom);
+			device.Add(AutoComplete);
 		}
 
 		/// <summary>
@@ -119,12 +114,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public void OnActivationChanged(bool activated)
 		{
 			if (activated)
-			{
-				_previousInputModes = _device.Modes;
-				_device.Modes = InputModes.Console;
-			}
+				_device.ActivateLayer(InputLayer.Console);
 			else
-				_device.Modes = _previousInputModes;
+				_device.DeactivateLayer(InputLayer.Console);
+
+			_device.TextInputEnabled = activated;
 		}
 
 		/// <summary>

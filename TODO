@@ -30,6 +30,7 @@ Pegasus
 - Persist window maximized/minimized state
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Move some input state handling to Platform lib
+- Console: Mouse wheel support for scrolling
 
 Network Specification
 ========

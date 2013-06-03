@@ -27,7 +27,7 @@ namespace Lwar.Client.Screens
 		/// <summary>
 		///   The input trigger that cancels the chat input.
 		/// </summary>
-		private readonly LogicalInput _cancel = new LogicalInput(Key.Escape.WentDown(), InputModes.Chat);
+		private readonly LogicalInput _cancel = new LogicalInput(Key.Escape.WentDown(), InputLayers.Chat);
 
 		/// <summary>
 		///   The frame around the chat input.
@@ -69,7 +69,7 @@ namespace Lwar.Client.Screens
 		///   should be sent to the server.
 		/// </summary>
 		private readonly LogicalInput _trigger = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(),
-																  InputModes.Game | InputModes.Chat);
+																  InputLayers.Game | InputLayers.Chat);
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -88,8 +88,8 @@ namespace Lwar.Client.Screens
 			_gameSession = gameSession;
 			_networkSession = networkSession;
 
-			_inputDevice.Register(_trigger);
-			_inputDevice.Register(_cancel);
+			_inputDevice.Add(_trigger);
+			_inputDevice.Add(_cancel);
 
 			_inputDevice.Keyboard.CharEntered += OnCharEntered;
 			_inputDevice.Keyboard.KeyPressed += OnKeyPressed;
@@ -116,7 +116,7 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		private bool Active
 		{
-			get { return (_inputDevice.Modes & InputModes.Chat) == InputModes.Chat; }
+			get { return _inputDevice.InputLayer.Contains(InputLayers.Chat); }
 		}
 
 		/// <summary>
@@ -127,8 +127,9 @@ namespace Lwar.Client.Screens
 			_inputDevice.Keyboard.CharEntered -= OnCharEntered;
 			_inputDevice.Keyboard.KeyPressed -= OnKeyPressed;
 
-			_inputDevice.Modes &= ~InputModes.Chat;
-			_inputDevice.Modes |= InputModes.Game;
+			if (Active)
+				_inputDevice.DeactivateLayer(InputLayers.Chat);
+
 			_inputDevice.Remove(_trigger);
 			_inputDevice.Remove(_cancel);
 			_textBox.SafeDispose();
@@ -143,16 +144,16 @@ namespace Lwar.Client.Screens
 			// Show or hide the chat input
 			if (_trigger.IsTriggered && !Active)
 			{
-				Assert.That(_inputDevice.Modes == InputModes.Game, "Unexpected input state.");
-				_inputDevice.Modes = InputModes.Chat;
+				_inputDevice.ActivateLayer(InputLayers.Chat);
+				_inputDevice.TextInputEnabled = true;
 			}
 			else if ((_cancel.IsTriggered || _trigger.IsTriggered) && Active)
 			{
 				// Do not do anything if the user tries to send a message that is too long
 				if (!_trigger.IsTriggered || !LengthExceeded)
 				{
-					_inputDevice.Modes &= ~InputModes.Chat;
-					_inputDevice.Modes |= InputModes.Game;
+					_inputDevice.DeactivateLayer(InputLayers.Chat);
+					_inputDevice.TextInputEnabled = false;
 
 					// If a message has been entered, send it to the server and hide the chat input
 					if (!_cancel.IsTriggered && !String.IsNullOrWhiteSpace(_textBox.Text))

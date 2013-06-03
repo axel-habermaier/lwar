@@ -27,7 +27,7 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   The logical input that toggles between fullscreen and windowed mode (Alt+Enter).
 		/// </summary>
-		private readonly LogicalInput _toggleMode = new LogicalInput(Key.LeftAlt.IsPressed() + Key.Return.IsPressed(), InputModes.All);
+		private readonly LogicalInput _toggleMode = new LogicalInput(Key.LeftAlt.IsPressed() + Key.Return.IsPressed(), InputLayer.All);
 
 		/// <summary>
 		///   The window that is affected by resolution changes.
@@ -54,7 +54,7 @@ namespace Pegasus.Framework.Platform
 			Cvars.WindowHeightChanged += UpdateWindowSize;
 
 			UpdateGraphicsState();
-			_device.Register(_toggleMode);
+			_device.Add(_toggleMode);
 		}
 
 		/// <summary>

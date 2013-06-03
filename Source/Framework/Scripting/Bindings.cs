@@ -43,19 +43,13 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Registers a new binding.
-		/// </summary>
-		/// <param name="binding">The binding that should be registered.</param>
-		private void Register(Binding binding)
-		{
-			_bindings.Add(binding);
-		}
-
-		/// <summary>
 		///   Executes all instructions for which the binding's trigger has been triggered.
 		/// </summary>
 		public void Update()
 		{
+			if (_device.TextInputEnabled)
+				return;
+
 			foreach (var binding in _bindings)
 				binding.ExecuteIfTriggered();
 		}
@@ -84,9 +78,9 @@ namespace Pegasus.Framework.Scripting
 			var reply = _parser.Parse(command);
 			if (reply.Status == ReplyStatus.Success)
 			{
-				var input = new LogicalInput(trigger, InputModes.Debug | InputModes.Menu | InputModes.Game);
-				_device.Register(input);
-				Register(new Binding(input, reply.Result));
+				var input = new LogicalInput(trigger, InputLayer.All);
+				_device.Add(input);
+				_bindings.Add(new Binding(input, reply.Result));
 			}
 			else
 				Log.Error("Error while parsing the second parameter of the bind command: {0}", reply.Errors.ErrorMessage);

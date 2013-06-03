@@ -42,7 +42,7 @@ namespace Lwar.Client.Screens
 		private MessageBox(LogEntry entry)
 		{
 			_message = entry.Message;
-			_continue = new LogicalInput(Key.Space.WentDown(), InputModes.Game);
+			_continue = new LogicalInput(Key.Space.WentDown(), InputLayers.Game);
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace Lwar.Client.Screens
 				Alignment = TextAlignment.Middle | TextAlignment.Centered
 			};
 
-			InputDevice.Register(_continue);
+			InputDevice.Add(_continue);
 		}
 
 		/// <summary>
