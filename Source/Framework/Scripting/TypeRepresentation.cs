@@ -18,8 +18,7 @@ namespace Pegasus.Framework.Scripting
 			{ typeof(bool), o => (bool)o ? "true" : "false" },
 			{ typeof(float), o => ((float)o).ToString("F") },
 			{ typeof(double), o => ((double)o).ToString("F") },
-			{ typeof(string), o => (string)o },
-			{ typeof(InputTrigger), o => String.Format("[{0}]", o) }
+			{ typeof(string), o => (string)o }
 		};
 
 		/// <summary>
@@ -29,8 +28,13 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="requireQuotes">A value indicating whether string values require quotes.</param>
 		public static string ToString(object value, bool requireQuotes = false)
 		{
+			// Strings have to be enclosed in quotes if required
 			if (value is string && requireQuotes)
 				return String.Format("\"{0}\"", value);
+
+			// Input triggers cannot be looked up in the dictionary, as they are never of type InputTrigger
+			if (value is InputTrigger)
+				return String.Format("[{0}]", value);
 
 			Func<object, string> toString;
 			if (Map.TryGetValue(value.GetType(), out toString))
