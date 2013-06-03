@@ -1,5 +1,6 @@
 ﻿using System;
 using Lwar.Client.Network;
+using Pegasus.Framework.Platform.Input;
 using Pegasus.Framework.Scripting;
 
 // ReSharper disable CheckNamespace
@@ -20,4 +21,10 @@ internal interface ICvars
 	/// </summary>
 	[Cvar(false)]
 	bool DrawWireframe { get; set; }
+
+	/// <summary>
+	/// The key that show s us
+	/// </summary>
+	[Cvar(DefaultExpression = "Key.Tab.WentDown()")]
+	InputTrigger KeyShowScoreboard { get; set; }
 }

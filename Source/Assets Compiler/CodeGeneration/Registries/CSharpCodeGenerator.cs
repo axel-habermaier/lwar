@@ -218,7 +218,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 					_writer.Newline();
 
 					GenerateInstanceRegistration();
-					_writer.Newline();
 				});
 			_writer.Newline();
 		}

@@ -30,7 +30,7 @@ namespace Pegasus.Framework.Scripting
 			Assert.ArgumentNotNull(target);
 			Assert.That(!(target is ICommand) || (parameter is object[] && ((object[])parameter).Length == ((ICommand)target).Parameters.Count()),
 						"Incorrect command parameters.");
-			Assert.That(!(target is ICvar) || (parameter == null || parameter.GetType() == ((ICvar)target).ValueType),
+			Assert.That(!(target is ICvar) || (parameter == null || ((ICvar)target).ValueType.IsAssignableFrom(parameter.GetType())),
 						"Incorrect cvar parameters.");
 
 			_target = target;
