@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework
 {
+	using System.Runtime.Remoting.Contexts;
+	using System.Security.Cryptography;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
@@ -24,7 +26,7 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Gets the context of the application, providing access to all framework objects that can be used by the application.
 		/// </summary>
-		protected IAppContext Context { get; private set; }
+		protected AppContext Context { get; private set; }
 
 		/// <summary>
 		///   Invoked when the application should update the its state.
@@ -69,45 +71,37 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Runs the application. This method does not return until the application is shut down.
 		/// </summary>
-		/// <param name="context">
-		///   The context of the application, providing access to all framework objects that can be used by the application.
-		/// </param>
 		/// <param name="logFile">The log file that writes all generated log entries to the file system.</param>
-		internal void Run(AppContext context, LogFile logFile)
+		/// <param name="appName">The name of the application.</param>
+		/// <param name="defaultFontName">The name of the default font that is used to draw the console and the statistics.</param>
+		/// <param name="spriteEffect">The sprite effect that should be used to draw the console and the statistics.</param>
+		internal void Run(LogFile logFile, string appName, string defaultFontName, ISpriteEffect spriteEffect)
 		{
-			Assert.ArgumentNotNull(context);
 			Assert.ArgumentNotNull(logFile);
-
-			Context = context;
-
+			
 			using (new NativeLibrary())
-			using (var window = context.Window = new Window(Cvars.WindowWidth, Cvars.WindowHeight))
-			using (var graphicsDevice = context.GraphicsDevice = new GraphicsDevice())
-			using (var statistics = context.Statistics)
-			using (var spriteEffect = context.SpriteEffect)
+			using (var window = new Window(Cvars.WindowWidth, Cvars.WindowHeight))
+			using (var graphicsDevice = new GraphicsDevice())
 			using (var swapChain = new SwapChain(graphicsDevice, window))
-			using (var assets = context.Assets = new AssetsManager(graphicsDevice))
+			using (var assets = new AssetsManager(graphicsDevice))
 			using (var keyboard = new Keyboard(window))
 			using (var mouse = new Mouse(window))
-			using (var inputDevice =context.LogicalInputDevice = new LogicalInputDevice(keyboard, mouse))
+			using (var inputDevice = new LogicalInputDevice(keyboard, mouse))
 			using (var bindings = new Bindings(inputDevice))
 			using (var resolutionManager = new ResolutionManager(window, swapChain, inputDevice))
 			using (var camera2D = new Camera2D(graphicsDevice))
 			using (var sceneOutput = new RenderOutput(graphicsDevice) { RenderTarget = swapChain.BackBuffer })
 			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
 			{
-				window.Title = context.AppName;
-				spriteEffect.Initialize(context.GraphicsDevice, context.Assets);
+				window.Title = appName;
+				spriteEffect.Initialize(graphicsDevice, assets);
 
-				// Let the application initialize itself
-				Initialize();
-
-				var defaultFont = assets.LoadFont(context.DefaultFontName);
+				var defaultFont = assets.LoadFont(defaultFontName);
+				using (var console = new Console(graphicsDevice, inputDevice, defaultFont))
+				using (var statistics = new Statistics(graphicsDevice, defaultFont))
+				using (spriteEffect)
 				using (var spriteBatch = new SpriteBatch(graphicsDevice, uiOutput, spriteEffect))
-				using (var console = new Console(graphicsDevice, inputDevice, spriteBatch, defaultFont))
 				{
-					statistics.Initialize(graphicsDevice, spriteBatch, defaultFont);
-
 					// Ensure that the size of the console and the statistics always matches that of the window
 					console.Resize(window.Size);
 					statistics.Resize(window.Size);
@@ -123,6 +117,10 @@ namespace Pegasus.Framework
 					// Copy the recorded log history to the console and explain the usage of the console
 					logFile.WriteToConsole(console);
 					Commands.Help();
+
+					// Establish the context and let the application initialize itself
+					Context = new AppContext(graphicsDevice, window, assets, inputDevice, statistics);
+					Initialize();
 
 					while (_running)
 					{
@@ -165,8 +163,8 @@ namespace Pegasus.Framework
 							DrawUserInterface(spriteBatch);
 
 							// Draw the console and the statistics on top of the current frame
-							console.Draw();
-							statistics.Draw();
+							console.Draw(spriteBatch);
+							statistics.Draw(spriteBatch);
 						}
 
 						// Present the current frame to the screen and write the log file, if necessary

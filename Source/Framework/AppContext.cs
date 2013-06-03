@@ -5,52 +5,55 @@ namespace Pegasus.Framework
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Input;
-	using Rendering;
 
 	/// <summary>
 	///   Represents the context of an application, providing access to all framework objects that can be used by an
 	///   application.
 	/// </summary>
-	public class AppContext : IAppContext
+	public struct AppContext
 	{
 		/// <summary>
-		///   Gets or sets the name of the default font that is used to draw the console and the statistics.
+		///   Initializes a new instance.
 		/// </summary>
-		public string DefaultFontName { get; set; }
+		/// <param name="graphicsDevice">The graphics device that renders the output of the application.</param>
+		/// <param name="window">The application window the application renders to.</param>
+		/// <param name="assets">The asset manager that manages the assets of the application.</param>
+		/// <param name="inputDevice">The logical input device that handles all user input to the application.</param>
+		/// <param name="statistics">The statistics instance that is used for statistical measurements.</param>
+		public AppContext(GraphicsDevice graphicsDevice, Window window, AssetsManager assets, LogicalInputDevice inputDevice,
+						  Statistics statistics)
+			: this()
+		{
+			GraphicsDevice = graphicsDevice;
+			Window = window;
+			Assets = assets;
+			InputDevice = inputDevice;
+			Statistics = statistics;
+		}
 
 		/// <summary>
-		///   Gets or sets the sprite effect adapter that is used to draw sprite batches.
+		///   Gets the statistics instance that is used for statistical measurements.
 		/// </summary>
-		public ISpriteEffectAdapter SpriteEffect { get; set; }
-
-		/// <summary>
-		///   Gets or sets the name of the application.
-		/// </summary>
-		public string AppName { get; set; }
-
-		/// <summary>
-		///   Gets or sets the statistics instance that is used for statistical measurements.
-		/// </summary>
-		public Statistics Statistics { get; set; }
+		public Statistics Statistics { get; private set; }
 
 		/// <summary>
 		///   Gets the graphics device that renders the output of the application.
 		/// </summary>
-		public GraphicsDevice GraphicsDevice { get; internal set; }
+		public GraphicsDevice GraphicsDevice { get; private set; }
 
 		/// <summary>
 		///   Gets the application window the application renders to.
 		/// </summary>
-		public Window Window { get; internal set; }
+		public Window Window { get; private set; }
 
 		/// <summary>
 		///   Gets the asset manager that manages the assets of the application.
 		/// </summary>
-		public AssetsManager Assets { get; internal set; }
+		public AssetsManager Assets { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input device that handles all user input to the application..
+		///   Gets the logical input device that handles all user input to the application.
 		/// </summary>
-		public LogicalInputDevice LogicalInputDevice { get; internal set; }
+		public LogicalInputDevice InputDevice { get; private set; }
 	}
 }

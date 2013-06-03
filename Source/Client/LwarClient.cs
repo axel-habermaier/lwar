@@ -38,7 +38,7 @@ namespace Lwar.Client
 			Commands.OnConnect += Connect;
 			Commands.OnDisconnect += Disconnect;
 
-			Context.LogicalInputDevice.Modes = InputModes.Game;
+			Context.InputDevice.Modes = InputModes.Game;
 			Context.Window.Closing += Exit;
 
 			_localServer = new LocalServer();

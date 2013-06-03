@@ -8,6 +8,7 @@ namespace Pegasus.Framework
 	using System.Threading.Tasks;
 	using Platform;
 	using Platform.Logging;
+	using Rendering;
 	using Scripting;
 	using Scripting.Parsing;
 
@@ -21,49 +22,43 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Runs the application. This method does not return until the application is shut down.
 		/// </summary>
-		/// <param name="context">
-		///   The application context that provides the default instances and values that the framework relies on.
-		/// </param>
-		public static void Run(AppContext context)
+		/// <param name="appName">The name of the application.</param>
+		/// <param name="defaultFontName">The name of the default font that is used to draw the console and the statistics.</param>
+		/// <param name="spriteEffect">The sprite effect that should be used to draw the console and the statistics.</param>
+		public static void Run(string appName, string defaultFontName, ISpriteEffect spriteEffect)
 		{
-			Assert.ArgumentNotNull(context);
-			Assert.ArgumentSatisfies(!String.IsNullOrWhiteSpace(context.AppName), "The application name has not been set.");
-			Assert.ArgumentSatisfies(!String.IsNullOrWhiteSpace(context.DefaultFontName), "The default font name has not been set.");
-			Assert.ArgumentSatisfies(context.SpriteEffect != null, "The sprite effect adapter has not been set.");
-			Assert.ArgumentSatisfies(context.Statistics != null, "The statistics instance adapter has not been set.");
+			Assert.ArgumentNotNullOrWhitespace(appName);
+			Assert.ArgumentNotNullOrWhitespace(defaultFontName);
+			Assert.ArgumentNotNull(spriteEffect);
 
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
-			using (var logFile = new LogFile(context.AppName))
+			using (var logFile = new LogFile(appName))
 			{
 				try
 				{
 					PrintToConsole();
 
-					Log.Info("Starting {0} ({1} x{2}, {3}).",
-							 context.AppName,
-							 PlatformInfo.Platform,
-							 IntPtr.Size == 4 ? "32" : "64",
-							 PlatformInfo.GraphicsApi);
+					Log.Info("Starting {0} ({1} x{2}, {3}).", appName, PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64", PlatformInfo.GraphicsApi);
 
 					Commands.Initialize();
 					Cvars.Initialize();
 
 					using (new Help())
-					using (new Interpreter(context.AppName))
+					using (new Interpreter(appName))
 					{
 						Commands.Process(ConfigurationFile.AutoExec);
 						ParseCommandLine();
 
 						var app = new TApp();
-						app.Run(context, logFile);
+						app.Run(logFile, appName, defaultFontName, spriteEffect);
 
 						Commands.Persist(ConfigurationFile.AutoExec);
 					}
 
-					Log.Info("{0} has shut down.", context.AppName);
+					Log.Info("{0} has shut down.", appName);
 				}
 				catch (Exception e)
 				{
@@ -72,7 +67,7 @@ namespace Pegasus.Framework
 					message = String.Format(message, e.Message, logFile.FilePath);
 					Log.Error("{0}", message);
 					Log.Error("Stack trace:\n{0}", e.StackTrace);
-					Win32.ShowMessage(context.AppName + " Fatal Error", message);
+					Win32.ShowMessage(appName + " Fatal Error", message);
 				}
 			}
 		}

@@ -13,12 +13,12 @@ namespace Lwar.Client.Rendering
 	/// <summary>
 	///   An adapter to to the 2D sprite effect used by lwar.
 	/// </summary>
-	internal class SpriteEffectAdapter : DisposableObject, ISpriteEffectAdapter
+	internal class SpriteEffect : DisposableObject, ISpriteEffect
 	{
 		/// <summary>
 		///   The sprite effect that is adapted.
 		/// </summary>
-		private SpriteEffect _effect;
+		private Assets.Effects.SpriteEffect _effect;
 
 		/// <summary>
 		///   Sets the texture view that should be used to draw the sprites.
@@ -54,7 +54,7 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
-			_effect = new SpriteEffect(graphicsDevice, assets);
+			_effect = new Assets.Effects.SpriteEffect(graphicsDevice, assets);
 		}
 
 		/// <summary>

@@ -7,9 +7,9 @@ namespace Pegasus.Framework.Rendering
 	using Platform.Graphics;
 
 	/// <summary>
-	///   An adaptor to an effect that can be used to draw 2D sprites.
+	///   An adapter to an effect that can be used to draw 2D sprites.
 	/// </summary>
-	public interface ISpriteEffectAdapter : IDisposable
+	public interface ISpriteEffect : IDisposable
 	{
 		/// <summary>
 		///   Sets the texture view that should be used to draw the sprites.
@@ -27,7 +27,7 @@ namespace Pegasus.Framework.Rendering
 		EffectTechnique Technique { get; }
 
 		/// <summary>
-		///   Initializes a the sprite effect.
+		///   Initializes the sprite effect adapter.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>

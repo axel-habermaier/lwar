@@ -22,16 +22,15 @@ namespace Pegasus.Framework
 		/// <param name="context">
 		///   The context of the application, providing access to all framework objects that can be used by the application.
 		/// </param>
-		public AppStateManager(IAppContext context)
+		public AppStateManager(AppContext context)
 		{
-			Assert.ArgumentNotNull(context);
 			Context = context;
 		}
 
 		/// <summary>
 		///   Gets the context of the application, providing access to all framework objects that can be used by the application.
 		/// </summary>
-		internal IAppContext Context { get; private set; }
+		internal AppContext Context { get; private set; }
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.

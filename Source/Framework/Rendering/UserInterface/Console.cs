@@ -55,11 +55,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private readonly ConsolePrompt _prompt;
 
 		/// <summary>
-		///   The sprite batch that is used for drawing.
-		/// </summary>
-		private readonly SpriteBatch _spriteBatch;
-
-		/// <summary>
 		///   Indicates whether the console is currently active.
 		/// </summary>
 		private bool _active;
@@ -84,16 +79,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="inputDevice">The input device that provides the user input.</param>
-		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
-		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, SpriteBatch spriteBatch, Font font)
+		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, Font font)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
-			Assert.ArgumentNotNull(spriteBatch);
 			Assert.ArgumentNotNull(font);
 
-			_spriteBatch = spriteBatch;
 			_font = font;
 
 			_content = new ConsoleContent(_font);
@@ -170,26 +162,27 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Draws the console.
 		/// </summary>
-		public void Draw()
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the console.</param>
+		public void Draw(SpriteBatch spriteBatch)
 		{
 			// Only draw the console when it is currently active
 			if (!_active)
 				return;
 
-			_spriteBatch.UseScissorTest = false;
-			_spriteBatch.WorldMatrix = Matrix.Identity;
+			spriteBatch.UseScissorTest = false;
+			spriteBatch.WorldMatrix = Matrix.Identity;
 
 			// Draw the background
 			var consoleArea = new Rectangle(0, 0, _size.Width, _prompt.ActualArea.Bottom + _margin.Height);
-			_spriteBatch.Draw(consoleArea, Texture2D.White, BackgroundColor);
+			spriteBatch.Draw(consoleArea, Texture2D.White, BackgroundColor);
 
 			// Draw the prompt and content
-			_prompt.Draw(_spriteBatch);
-			_content.Draw(_spriteBatch);
-			_spriteBatch.DrawBatch();
+			_prompt.Draw(spriteBatch);
+			_content.Draw(spriteBatch);
+			spriteBatch.DrawBatch();
 
-			_spriteBatch.UseScissorTest = false;
-			_spriteBatch.WorldMatrix = Matrix.Identity;
+			spriteBatch.UseScissorTest = false;
+			spriteBatch.WorldMatrix = Matrix.Identity;
 		}
 
 		/// <summary>

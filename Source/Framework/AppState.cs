@@ -21,7 +21,7 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Gets the context of the application, providing access to all framework objects that can be used by the application.
 		/// </summary>
-		protected IAppContext Context
+		protected AppContext Context
 		{
 			get { return StateManager.Context; }
 		}
@@ -39,7 +39,7 @@ namespace Pegasus.Framework
 		/// </summary>
 		protected LogicalInputDevice InputDevice
 		{
-			get { return Context.LogicalInputDevice; }
+			get { return Context.InputDevice; }
 		}
 
 		/// <summary>

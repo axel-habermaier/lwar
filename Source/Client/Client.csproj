@@ -239,7 +239,7 @@
     <Compile Include="Network\ServerConnection.cs" />
     <Compile Include="Rendering\Renderers\BulletRenderer.cs" />
     <Compile Include="Rendering\GaussianBlur.cs" />
-    <Compile Include="Rendering\SpriteEffectAdapter.cs" />
+    <Compile Include="Rendering\SpriteEffect.cs" />
     <Compile Include="Rendering\Renderers\SunRenderer.cs" />
     <Compile Include="Rendering\Renderers\Renderer.cs" />
     <Compile Include="Rendering\Renderers\PlanetRenderer.cs" />

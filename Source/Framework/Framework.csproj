@@ -177,14 +177,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppContext.cs" />
     <Compile Include="Platform\Logging\LogCategory.cs" />
     <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\ResharperAnnotations.cs" />
-    <Compile Include="AppContext.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="AppState.cs" />
-    <Compile Include="IAppContext.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Network\IPacketFactory.cs" />
     <Compile Include="Network\IPEndPointExtensions.cs" />
@@ -232,7 +231,7 @@
     <Compile Include="Rendering\Camera3D.cs" />
     <Compile Include="Rendering\Camera2D.cs" />
     <Compile Include="Rendering\FullscreenQuad.cs" />
-    <Compile Include="Rendering\ISpriteEffectAdapter.cs" />
+    <Compile Include="Rendering\ISpriteEffect.cs" />
     <Compile Include="Rendering\Model.cs" />
     <Compile Include="Rendering\RenderOutput.cs" />
     <Compile Include="Rendering\VertexPositionNormal.cs" />

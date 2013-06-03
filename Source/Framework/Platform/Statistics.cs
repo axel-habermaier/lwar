@@ -13,7 +13,7 @@ namespace Pegasus.Framework.Platform
 	/// <summary>
 	///   Manages statistics about the performance of the application.
 	/// </summary>
-	public class Statistics : DisposableObject
+	public sealed class Statistics : DisposableObject
 	{
 		/// <summary>
 		///   The update frequency of the statistics in Hz.
@@ -32,6 +32,11 @@ namespace Pegasus.Framework.Platform
 		private readonly WeakReference _gcCheck = new WeakReference(new object());
 
 		/// <summary>
+		///   The label that is used to draw the statistics.
+		/// </summary>
+		private readonly Label _label;
+
+		/// <summary>
 		///   The timer that is used to periodically update the statistics.
 		/// </summary>
 		private readonly Timer _timer = Timer.Create(1000.0 / UpdateFrequency);
@@ -42,14 +47,24 @@ namespace Pegasus.Framework.Platform
 		private int _garbageCollections;
 
 		/// <summary>
-		///   The label that is used to draw the statistics.
+		///   Initializes a new instance.
 		/// </summary>
-		private Label _label;
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="font">The font that should be used for drawing.</param>
+		internal Statistics(GraphicsDevice graphicsDevice, Font font)
+		{
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(font);
 
-		/// <summary>
-		///   The sprite batch that is used for drawing.
-		/// </summary>
-		private SpriteBatch _spriteBatch;
+			_label = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
+			_timer.Timeout += UpdateStatistics;
+
+			GpuFrameTime = new GpuProfiler(graphicsDevice);
+			CpuFrameTime = new AveragedValue();
+			UpdateInput = new AveragedValue();
+
+			Commands.OnToggleStats += ToggleVisibility;
+		}
 
 		/// <summary>
 		///   Gets the GPU frame time measurements.
@@ -65,29 +80,6 @@ namespace Pegasus.Framework.Platform
 		///   Gets the input update time measurements.
 		/// </summary>
 		internal IMeasurement UpdateInput { get; private set; }
-
-		/// <summary>
-		///   Initializes the statistics.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
-		/// <param name="font">The font that should be used for drawing.</param>
-		internal void Initialize(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Font font)
-		{
-			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(spriteBatch);
-			Assert.ArgumentNotNull(font);
-
-			_spriteBatch = spriteBatch;
-			_label = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
-			_timer.Timeout += UpdateStatistics;
-
-			GpuFrameTime = new GpuProfiler(graphicsDevice);
-			CpuFrameTime = new AveragedValue();
-			UpdateInput = new AveragedValue();
-
-			Commands.OnToggleStats += ToggleVisibility;
-		}
 
 		/// <summary>
 		///   Updates the statistics.
@@ -123,7 +115,6 @@ namespace Pegasus.Framework.Platform
 			_builder.Append("\n");
 
 			WriteMeasurement(UpdateInput, "Update Input");
-			WriteMeasurements(_builder);
 
 			_label.Text = _builder.ToString();
 		}
@@ -140,20 +131,13 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Draws the statistics.
 		/// </summary>
-		internal void Draw()
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the statistics.</param>
+		internal void Draw(SpriteBatch spriteBatch)
 		{
 			if (!Cvars.ShowStats)
 				return;
 
-			_label.Draw(_spriteBatch);
-		}
-
-		/// <summary>
-		///   Invoked when the measurements should be written to the given string builder.
-		/// </summary>
-		/// <param name="builder">The string builder that the measurements should be written to.</param>
-		protected virtual void WriteMeasurements(StringBuilder builder)
-		{
+			_label.Draw(spriteBatch);
 		}
 
 		/// <summary>
@@ -161,7 +145,7 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		/// <param name="measurement">The measurement that should be written to the string builder.</param>
 		/// <param name="label">The label that describes the measurement.</param>
-		protected void WriteMeasurement(IMeasurement measurement, string label)
+		private void WriteMeasurement(IMeasurement measurement, string label)
 		{
 			_builder.Append(label).Append(": ");
 			measurement.WriteResults(_builder);
@@ -185,7 +169,6 @@ namespace Pegasus.Framework.Platform
 			Commands.OnToggleStats -= ToggleVisibility;
 
 			_timer.SafeDispose();
-			_spriteBatch.SafeDispose();
 			GpuFrameTime.SafeDispose();
 		}
 	}
