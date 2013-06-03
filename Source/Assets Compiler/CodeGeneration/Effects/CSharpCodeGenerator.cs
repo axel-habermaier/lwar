@@ -192,15 +192,12 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 						_writer.AppendLine("\t\"{0}\");", Path.ChangeExtension(fragmentShader, null));
 					}
 
-					if (ConstantBuffers.Any())
-						_writer.Newline();
-
 					foreach (var buffer in ConstantBuffers)
 					{
+						_writer.Newline();
 						_writer.AppendLine("{0} = {3}.CreateConstantBuffer({1}, {2});", GetFieldName(buffer.Name), buffer.Size,
 										   buffer.Slot, ContextVariableName);
 						_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
-						_writer.Newline();
 					}
 				});
 

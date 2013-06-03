@@ -29,7 +29,7 @@ Pegasus
 - Windows: Alt+Tab out of fullscreen game not behaving nicely
 - Persist window maximized/minimized state
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
-- Effect instance sharing
+- Move some input state handling to Platform lib
 
 Network Specification
 ========

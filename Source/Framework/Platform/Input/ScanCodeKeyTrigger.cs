@@ -45,9 +45,6 @@ namespace Pegasus.Framework.Platform.Input
 		/// <summary>
 		///   Indicates whether the current object is equal to another object of the same type.
 		/// </summary>
-		/// <returns>
-		///   true if the current object is equal to other; otherwise, false.
-		/// </returns>
 		public override bool Equals(InputTrigger other)
 		{
 			var trigger = other as ScanCodeKeyTrigger;
@@ -66,7 +63,7 @@ namespace Pegasus.Framework.Platform.Input
 		{
 			// First check whether the key is triggered, then update the key state. Otherwise, we would miss 
 			// all WentDown/WentUp/Released events.
-			var isTriggered = false;
+			bool isTriggered;
 			switch (_triggerType)
 			{
 				case KeyTriggerType.WentDown:
@@ -81,6 +78,8 @@ namespace Pegasus.Framework.Platform.Input
 				case KeyTriggerType.Repeated:
 					isTriggered = _state.IsRepeated;
 					break;
+				default:
+					throw new InvalidOperationException("Unsupported trigger type.");
 			}
 
 			_state.Update();

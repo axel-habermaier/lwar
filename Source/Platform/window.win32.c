@@ -50,16 +50,17 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 	width = clientRect.right - clientRect.left;
 	height = clientRect.bottom - clientRect.top;
 
+	// Initialize the cursor
+	window->cursor = LoadCursor(NULL, IDC_ARROW);
+	if (window->cursor == NULL)
+		pgWin32Error("Failed to initialize the mouse cursor.");
+
 	// Create the window
-	window->hwnd = CreateWindowEx(0, WndClassName, window->params.title, style, CW_USEDEFAULT, 
+	CreateWindowEx(0, WndClassName, window->params.title, style, CW_USEDEFAULT, 
 		CW_USEDEFAULT, width, height, NULL, NULL, GetModuleHandle(NULL), window);
 
 	if (window->hwnd == NULL)
 		pgWin32Error("Failed to open window.");
-
-	window->cursor = LoadCursor(NULL, IDC_ARROW);
-	if (window->cursor == NULL)
-		pgWin32Error("Failed to initialize the mouse cursor.");
 }
 
 pgVoid pgCloseWindowCore(pgWindow* window)
@@ -235,11 +236,12 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 	if (msg == WM_CREATE)
 	{
-		// Get pgWindow instance that was passed as the last argument of CreateWindow
-        LONG_PTR window = (LONG_PTR)((CREATESTRUCT*)lParam)->lpCreateParams;
+		// Get the pgWindow instance that was passed as the last argument of CreateWindow
+        window = (pgWindow*)((CREATESTRUCT*)lParam)->lpCreateParams;
 
-        // Set as the "user data" parameter of the window
-        SetWindowLongPtr(hwnd, GWLP_USERDATA, window);
+        // Set as the "user data" parameter of the window and set the window's hwnd
+        SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
+		window->hwnd = hwnd;
 	}
 
 	window = (pgWindow*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
@@ -263,7 +265,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		return 0;
 	case WM_SIZE:
 		// Ignore size events triggered by a minimize (size == 0 in that case)
-		if (window->hwnd != NULL && wParam != SIZE_MINIMIZED)
+		if (wParam != SIZE_MINIMIZED)
 			pgGetWindowSize(window, &window->width, &window->height);
 		break;
 	case WM_GETMINMAXINFO:

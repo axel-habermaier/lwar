@@ -3,7 +3,6 @@
 namespace Lwar.Client
 {
 	using Pegasus.Framework;
-	using Pegasus.Framework.Platform;
 	using Rendering;
 	using Scripting;
 
@@ -19,6 +18,7 @@ namespace Lwar.Client
 		{
 			Commands.Initialize();
 			Cvars.Initialize();
+
 			Bootstrapper<LwarClient>.Run("lwar", "Fonts/Liberation Mono 12", new SpriteEffect());
 		}
 	}
