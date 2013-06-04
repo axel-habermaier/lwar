@@ -137,7 +137,7 @@ typedef pgVoid (*pgClosedCallback)();
 typedef pgVoid (*pgResizedCallback)(pgInt32 width, pgInt32 height);
 typedef pgVoid (*pgLostFocusCallback)();
 typedef pgVoid (*pgGainedFocusCallback)();
-typedef pgVoid (*pgCharacterEnteredCallback)(pgUint16 character);
+typedef pgVoid (*pgCharacterEnteredCallback)(pgUint16 character, pgInt32 scanCode);
 typedef pgVoid (*pgKeyPressedCallback)(pgKey key, pgInt32 scanCode);
 typedef pgVoid (*pgKeyReleasedCallback)(pgKey key, pgInt32 scanCode);
 typedef pgVoid (*pgMouseWheelCallback)(pgInt32 delta);

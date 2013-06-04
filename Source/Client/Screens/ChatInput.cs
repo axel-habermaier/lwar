@@ -10,6 +10,7 @@ namespace Lwar.Client.Screens
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;

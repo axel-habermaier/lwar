@@ -228,7 +228,7 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e)
 					PG_DEBUG("The unicode character exceeds the limits of a 2-byte unsigned integer.");
 					
 				if (symbol > 31)
-					params->characterEntered((pgUint16)symbol);
+					params->characterEntered((pgUint16)symbol, e->xkey.keycode);
 			}
 		}
 		break;

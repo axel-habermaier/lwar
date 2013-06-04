@@ -59,7 +59,7 @@ namespace Pegasus.Framework.Platform.Input
 		/// <summary>
 		/// A value indicating whether the logical input device provides text input.
 		/// </summary>
-		private ActivationState _textInput;
+		private ActivationState _textInput = new ActivationState();
 
 		/// <summary>
 		///   Gets or sets a value indicating whether the logical input device provides text input. The actual update is deferred

@@ -363,7 +363,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		// events would also be raised for the enter and back space keys, for instance. The character that is
 		// passed to the callback is UTF-16 encoded
 		if ((pgUint16)wParam > 31 && params->characterEntered != NULL)
-			params->characterEntered((pgUint16)wParam);
+			params->characterEntered((pgUint16)wParam, (pgInt32)((pgByte*)&lParam)[2]);
 		break;
 	}
 

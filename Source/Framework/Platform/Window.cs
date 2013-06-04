@@ -58,7 +58,11 @@ namespace Pegasus.Framework.Platform
 					},
 				LostFocus = () => LostFocus(),
 				GainedFocus = () => GainedFocus(),
-				CharacterEntered = c => CharacterEntered((char)c),
+				CharacterEntered = (c, s) =>
+					{
+						if (s != PlatformInfo.ConsoleKey)
+							CharacterEntered((char)c);
+					},
 				KeyPressed = (k, s) =>
 					{
 						Assert.InRange(k);
@@ -263,7 +267,7 @@ namespace Pegasus.Framework.Platform
 #endif
 		private static class NativeMethods
 		{
-			public delegate void CharacterEnteredCallback(ushort character);
+			public delegate void CharacterEnteredCallback(ushort character, int scanCode);
 
 			public delegate void ClosedCallback();
 
