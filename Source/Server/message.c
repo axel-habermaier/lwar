@@ -83,6 +83,7 @@ size_t message_pack(char *s, void *p) {
         break;
     case MESSAGE_LEAVE:
         i += id_pack(s+i, m->leave.player_id);
+		i += uint8_pack(s+i, m->leave.reason);
         break;
     case MESSAGE_CHAT:
         i += id_pack(s+i, m->chat.player_id);
@@ -108,6 +109,10 @@ size_t message_pack(char *s, void *p) {
         i += id_pack(s+i, m->name.player_id);
         i += str_pack(s+i, m->name.nick);
         break;
+	case MESSAGE_KILL:
+		i += id_pack(s+i, m->kill.killer_id);
+		i += id_pack(s+i, m->kill.victim_id);
+		break;
     case MESSAGE_SYNCED:
         break;
     case MESSAGE_FULL:
@@ -173,6 +178,7 @@ size_t message_unpack(const char *s, void *p) {
         break;
     case MESSAGE_LEAVE:
         i += id_unpack(s+i, &m->leave.player_id);
+		i += uint8_unpack(s+i, &m->leave.reason);
         break;
     case MESSAGE_CHAT:
         i += id_unpack(s+i, &m->chat.player_id);
@@ -198,6 +204,10 @@ size_t message_unpack(const char *s, void *p) {
         i += id_unpack(s+i, &m->name.player_id);
         i += str_unpack(s+i, &m->name.nick);
         break;
+	case MESSAGE_KILL:
+		i += id_unpack(s+i, &m->kill.killer_id);
+		i += id_unpack(s+i, &m->kill.victim_id);
+		break;
     case MESSAGE_SYNCED:
         break;
     case MESSAGE_FULL:

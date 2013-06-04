@@ -2,6 +2,7 @@
 
 namespace Lwar.Client.Gameplay
 {
+	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Logging;
@@ -140,23 +141,20 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   Adds a kill message to the event list.
 		/// </summary>
-		/// <param name="player">The identifier of the player that has scored the kill.</param>
+		/// <param name="killer">The identifier of the player that has scored the kill.</param>
 		/// <param name="victim">The identifier of the player that has been killed.</param>
-		public void AddKillMessage(Identifier player, Identifier victim)
+		public void AddKillMessage(Identifier killer, Identifier victim)
 		{
-			var message = new EventMessage(EventType.Kill);
-			if (TryGetPlayer(player, out message.Player) && TryGetPlayer(victim, out message.Vicitim))
-				Add(message);
-		}
+			EventType type;
+			if (killer.Identity == victim.Identity)
+				type = EventType.Suicide;
+			else if (killer.Identity == Specification.ServerPlayerId)
+				type = EventType.EnvironmentKill;
+			else
+				type = EventType.Kill;
 
-		/// <summary>
-		///   Adds a suicide message to the event list.
-		/// </summary>
-		/// <param name="player">The identifier of the player that has committed suicide.</param>
-		public void AddSuicideMessage(Identifier player)
-		{
-			var message = new EventMessage(EventType.Suicide);
-			if (TryGetPlayer(player, out message.Vicitim))
+			var message = new EventMessage(type);
+			if (TryGetPlayer(killer, out message.Player) && TryGetPlayer(victim, out message.Vicitim))
 				Add(message);
 		}
 

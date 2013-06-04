@@ -34,6 +34,7 @@ Message Delivery Guarantees
 Network-related constants
 	Constant						Value 			Comment
 	-------------------------------	----------		---------------------------------------------------------
+	Server Player Id:				  0				The default player that represents the server
 	Max Packet Size: 				512 bytes 		Including the packet and message headers
 	Packet Header Size:			 	 12 bytes	
 	Reliable Message Header Size:	  5 bytes	
@@ -62,7 +63,7 @@ Message Types
 	range from 101 to 199. This can be used to quickly determine whether a message is reliable or unreliable.
 
 	Id		Type			Reliable	Sender			Description	
-	---  	---------		---------	-------------	----------------------------------------------------------------
+	---  	---------		---------	-------------	----------------------------------------------------------------------
 	  1 	Connect			yes			client			Client wants to connect to a server
 	  2		Disconnect		yes			client			Client wants to disconnect from a server
 	  3		Join			yes			server			Informs all clients about a new player
@@ -73,6 +74,7 @@ Message Types
 	  8		Selection		yes			client/server	Broadcasts a ship or weapon type change to all clients
 	  9		Name			yes			client/server	Broadcasts a player name change to all clients
 	 10		Synced			yes			server			Signals the client that the game state has been fully synced
+	 11		Kill			yes			server			Signals the client that a player has scored a kill or committed suicide
 
 	101		Stats			no			server			Periodically updates the clients' stats (pings, scores)
     102     (Deprecated)								(Used to be the Update message)
@@ -125,7 +127,15 @@ Messages Payload Data
 	Leave
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------
-		uint32(Id)	playerId	The generational identifier of the player that left
+		uint32(Id)	playerId	The generational identifier of the player that left. The player id can
+								never be the local player id of the client, except when the player is
+								'kicked' from the server (reason = Misbehaved)
+		uint8		reason		One of the following constants:
+								Id		Name		Description
+								1		Quit		The player quit the game
+								2		Dropped		The connection between the server and the player has 
+													been lost
+								3		Misbehaved	Client-side network protocol error
 		
 	Chat
 		Type		Name 		Description
@@ -160,6 +170,15 @@ Messages Payload Data
 		uint32(Id)	playerId	The generational identifier of the player that changed his/her name
 		uint8		len			The length of the player name in bytes; len < Max Player Name Length
 		uint8[len]	name		The UTF8-encoded player name (not '\0'-terminated)
+
+	Kill
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint32(Id)	killerId	The generational identifier of the player that scored the kill
+		uint32(Id)	victimId	The generational identifier of the player that was killed
+								If killerId == victimId, the kill is considered to be a suicide
+								If killerId == Server Player id, some hazardous environment condition 
+								killed the player (e.g., collision with sun)
 
 	Synced
 		Does not carry any payload data
@@ -314,7 +333,11 @@ Client-side prediction
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
-	14    13-06-04  Axel		Added player name to join and connect messages
+	14    13-06-04  Axel		Added player name to Join and Connect messages
+								Added reason field to Leave message; clarified when the Leave message's
+								player id is allowed to be the client's local player id
+								Added Kill message
+								Added server player id constant
 	13	  13-05-31  Axel		Increased maximum allowed chat message length to 255 bytes 
 	12	  15-04-12  Axel		Removed entity types; these are now determined by the F# code 
 								generation script

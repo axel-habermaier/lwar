@@ -17,6 +17,7 @@ namespace Lwar.Client.Network
 		Selection = 8,
 		Name = 9,
 		Synced = 10,
+		Kill = 11,
 		Stats = 101,
 		Input = 103,
 		Full = 104,

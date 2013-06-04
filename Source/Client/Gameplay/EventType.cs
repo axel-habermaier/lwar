@@ -18,6 +18,11 @@ namespace Lwar.Client.Gameplay
 		Suicide,
 
 		/// <summary>
+		///   Indicates that the event message describes the death of a player due to an environmental hazard.
+		/// </summary>
+		EnvironmentKill,
+
+		/// <summary>
 		///   Indicates that the event message describes a player that has just joined the game session.
 		/// </summary>
 		Join,

@@ -30,6 +30,7 @@ enum MessageType {
     MESSAGE_SELECTION      =   8,
     MESSAGE_NAME           =   9,
     MESSAGE_SYNCED         =  10,
+	MESSAGE_KILL		   = 11,
 
     MESSAGE_STATS          = 101,
     /* */
@@ -41,6 +42,12 @@ enum MessageType {
     MESSAGE_UPDATE_POS     = 111,
     MESSAGE_UPDATE_RAY     = 112,
     MESSAGE_UPDATE_CIRCLE  = 113,
+};
+
+enum LeaveReason {
+	LEAVE_QUIT			= 1,
+	LEAVE_DROPPED		= 2,
+	LEAVE_MISBEHAVED	= 3
 };
 
 int is_reliable(Message *m);
@@ -61,6 +68,7 @@ struct Message {
 
         struct {
             Id player_id;
+			uint8_t reason;
         } leave;
 
         struct {
@@ -91,6 +99,11 @@ struct Message {
             Id player_id;
             Str nick;
         } name;
+
+		struct {
+			Id killer_id;
+			Id victim_id;
+		} kill;
 
         struct {
             uint8_t n;

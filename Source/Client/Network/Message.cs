@@ -148,7 +148,7 @@ namespace Lwar.Client.Network
 		///   The payload of a Leave message.
 		/// </summary>
 		[FieldOffset(PayloadOffset)]
-		public Identifier Leave;
+		public LeavePayload Leave;
 
 		/// <summary>
 		///   The payload of a Chat message.
@@ -179,6 +179,12 @@ namespace Lwar.Client.Network
 		/// </summary>
 		[FieldOffset(StringPayloadOffset)]
 		public NamePayload Name;
+
+		/// <summary>
+		///   The payload of a Kill message.
+		/// </summary>
+		[FieldOffset(PayloadOffset)]
+		public KillPayload Kill;
 
 		/// <summary>
 		///   The payload of a Stats message.
@@ -242,6 +248,23 @@ namespace Lwar.Client.Network
 			///   The player that joined the game session.
 			/// </summary>
 			public Identifier Player;
+		}
+
+		/// <summary>
+		///   Holds the payload of a Leave message.
+		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
+		public struct LeavePayload
+		{
+			/// <summary>
+			///   The player that has left the game session.
+			/// </summary>
+			public Identifier Player;
+
+			/// <summary>
+			///   The reason explaining why the player has left the game session.
+			/// </summary>
+			public LeaveReason Reason;
 		}
 
 		/// <summary>
@@ -335,6 +358,23 @@ namespace Lwar.Client.Network
 			///   The player whose name is changed.
 			/// </summary>
 			public Identifier Player;
+		}
+
+		/// <summary>
+		///   Holds the payload of a Kill message.
+		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
+		public struct KillPayload
+		{
+			/// <summary>
+			///   The player that was killed.
+			/// </summary>
+			public Identifier Victim;
+
+			/// <summary>
+			///   The player that scored the kill.
+			/// </summary>
+			public Identifier Killer;
 		}
 
 		/// <summary>

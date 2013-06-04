@@ -206,15 +206,9 @@ static void send_kick(Client *c) {
     packet_init_header(c, &p);
 
     Message m;
-    static char kick_msg[] = "kicked for (protocol) misbehavior";
-    Str kick_msg_s = { strlen(kick_msg), kick_msg };
-    m.type = MESSAGE_CHAT;
-    m.chat.player_id = server->self->player.id;
-    m.chat.msg = kick_msg_s;
-    packet_put(&p, message_pack, &m);
-
     m.type = MESSAGE_LEAVE;
     m.leave.player_id = c->player.id;
+	m.leave.reason = LEAVE_MISBEHAVED;
     packet_put(&p, message_pack, &m);
 
     packet_send(&p);

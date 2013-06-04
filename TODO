@@ -30,12 +30,7 @@ Pegasus
 - Move some input state handling to Platform lib
 - Allow font color specifiers within texts (e.g., ^r to switch to red)
 - Allow emoticons within texts
-- Fix: Closing the console while the chat input open enters a ` character into the chat input
-
-Network Specification
-========
-- Add reason to Leave message: PlayerLeft, ConnectionDropped, Misbehaved (only Misbehaved Leave message may contain the local player id)
-- Add gameplay event message: X killed himself, X killed Y
+- Fix: Closing the console while the chat input open appends a '`' character to the chat input
 
 Server
 ========

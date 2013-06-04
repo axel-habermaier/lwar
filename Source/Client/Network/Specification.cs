@@ -33,6 +33,11 @@ namespace Lwar.Client.Network
 		public const int MaxPlayers = 8;
 
 		/// <summary>
+		///   The identifier of the player that represents the server.
+		/// </summary>
+		public const int ServerPlayerId = 0;
+
+		/// <summary>
 		///   The frequency in Hz that determines how often the user input is sent to the server.
 		/// </summary>
 		public const int InputUpdateFrequency = 30;

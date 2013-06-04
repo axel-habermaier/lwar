@@ -72,6 +72,9 @@ namespace Lwar.Client.Gameplay
 				case EventType.Suicide:
 					DisplayString = String.Format("{0} got himself killed.", Vicitim.Name);
 					break;
+				case EventType.EnvironmentKill:
+					DisplayString = String.Format("{0} was not afraid of environmental hazards. Then he died.", Vicitim.Name);
+					break;
 				case EventType.Timeout:
 					DisplayString = String.Format("The connection to {0} has been lost.", Player.Name);
 					break;

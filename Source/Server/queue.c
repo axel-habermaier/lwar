@@ -141,6 +141,7 @@ void queue_timeout(Client *c) {
     if(!c->hasleft) {
         r = message_broadcast(MESSAGE_LEAVE);
         r->leave.player_id = c->player.id;
+		r->leave.reason = LEAVE_DROPPED;
     }
 }
 
@@ -189,7 +190,8 @@ void queue_join(Client *c) {
 void queue_leave(Client *c) {
     Message *r;
     r = message_broadcast(MESSAGE_LEAVE);
-    r->join.player_id = c->player.id;
+    r->leave.player_id = c->player.id;
+	r->leave.reason = LEAVE_QUIT; // CHECK ME: Is this function really only called if a client quit gracefully?
 }
 
 void queue_collision(Collision *c) {

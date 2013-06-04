@@ -65,11 +65,29 @@ namespace Lwar.Client.Network
 					break;
 				case MessageType.Leave:
 					// Add the event message first, otherwise the player will already have been removed
-					_gameSession.EventMessages.AddLeaveMessage(message.Leave);
-					_gameSession.Players.Remove(message.Leave);
+					switch (message.Leave.Reason)
+					{
+						case LeaveReason.ConnectionDropped:
+							_gameSession.EventMessages.AddTimeoutMessage(message.Leave.Player);
+							break;
+						case LeaveReason.Misbehaved:
+							_gameSession.EventMessages.AddKickedMessage(message.Leave.Player, "Network protocol violation.");
+							break;
+						case LeaveReason.Quit:
+							_gameSession.EventMessages.AddLeaveMessage(message.Leave.Player);
+							break;
+						default:
+							Assert.InRange(message.Leave.Reason);
+							break;
+					}
+
+					_gameSession.Players.Remove(message.Leave.Player);
 					break;
 				case MessageType.Remove:
 					_gameSession.Entities.Remove(message.Remove);
+					break;
+				case MessageType.Kill:
+					_gameSession.EventMessages.AddKillMessage(message.Kill.Killer, message.Kill.Victim);
 					break;
 				case MessageType.Stats:
 					break;
@@ -134,7 +152,7 @@ namespace Lwar.Client.Network
 		/// <param name="player">The player identifier that should be checked.</param>
 		private static bool IsServerPlayer(Identifier player)
 		{
-			return player.Identity == 0;
+			return player.Identity == Specification.ServerPlayerId;
 		}
 	}
 }

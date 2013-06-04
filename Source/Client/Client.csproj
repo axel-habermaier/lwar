@@ -184,6 +184,7 @@
     <Compile Include="Gameplay\EventType.cs" />
     <Compile Include="Gameplay\InterpolatedValue.cs" />
     <Compile Include="InputLayers.cs" />
+    <Compile Include="Network\LeaveReason.cs" />
     <Compile Include="Screens\ChatInput.cs" />
     <Compile Include="Screens\EventLog.cs" />
     <Compile Include="Screens\EventMessageDisplay.cs" />

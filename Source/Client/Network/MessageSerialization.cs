@@ -79,6 +79,7 @@ namespace Lwar.Client.Network
 				case MessageType.Remove:
 				case MessageType.Stats:
 				case MessageType.Synced:
+				case MessageType.Kill:
 				case MessageType.Update:
 				case MessageType.UpdatePosition:
 				case MessageType.UpdateRay:
@@ -150,6 +151,10 @@ namespace Lwar.Client.Network
 					message.Collision.Position = new Vector2(buffer.ReadInt16(), buffer.ReadInt16());
 					Messages.Add(message);
 					break;
+				case MessageType.Kill:
+					message.Kill.Killer = buffer.ReadIdentifier();
+					message.Kill.Victim = buffer.ReadIdentifier();
+					break;
 				case MessageType.Full:
 				case MessageType.Synced:
 					// No payload data
@@ -162,7 +167,10 @@ namespace Lwar.Client.Network
 					Messages.Add(message);
 					break;
 				case MessageType.Leave:
-					message.Leave = buffer.ReadIdentifier();
+					message.Leave.Player = buffer.ReadIdentifier();
+					message.Leave.Reason = (LeaveReason)buffer.ReadByte();
+
+					Assert.InRange(message.Leave.Reason);
 					Messages.Add(message);
 					break;
 				case MessageType.Remove:
