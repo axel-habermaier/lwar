@@ -186,7 +186,6 @@
     <Compile Include="InputLayers.cs" />
     <Compile Include="Network\LeaveReason.cs" />
     <Compile Include="Screens\ChatInput.cs" />
-    <Compile Include="Screens\EventLog.cs" />
     <Compile Include="Screens\EventMessageDisplay.cs" />
     <Compile Include="Screens\Frame.cs" />
     <Compile Include="Screens\Scoreboard.cs" />

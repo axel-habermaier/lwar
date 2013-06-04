@@ -106,7 +106,6 @@ namespace Pegasus.Framework.Platform.Input
 		/// </summary>
 		public static bool operator ==(InputLayer left, InputLayer right)
 		{
-			var q = left | right;
 			return left.Equals(right);
 		}
 
