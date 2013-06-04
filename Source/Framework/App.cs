@@ -97,10 +97,10 @@ namespace Pegasus.Framework
 				spriteEffect.Initialize(graphicsDevice, assets);
 
 				var defaultFont = assets.LoadFont(defaultFontName);
-				using (var console = new Console(graphicsDevice, inputDevice, defaultFont))
 				using (var statistics = new Statistics(graphicsDevice, defaultFont))
 				using (spriteEffect)
 				using (var spriteBatch = new SpriteBatch(graphicsDevice, uiOutput, spriteEffect))
+				using (var console = new Console(graphicsDevice, inputDevice, defaultFont))
 				{
 					// Ensure that the size of the console and the statistics always matches that of the window
 					console.Resize(window.Size);
