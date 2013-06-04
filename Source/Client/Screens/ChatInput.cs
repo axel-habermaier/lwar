@@ -13,6 +13,7 @@ namespace Lwar.Client.Screens
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
+	using Scripting;
 
 	/// <summary>
 	///   Shows the chat input field during an active game session.
@@ -23,6 +24,11 @@ namespace Lwar.Client.Screens
 		///   The margin of the chat input and the border of the screen.
 		/// </summary>
 		private const int Margin = 100;
+
+		/// <summary>
+		///   The input trigger that is used to determine whether the chat input should be shown.
+		/// </summary>
+		private readonly LogicalInput _activate = new LogicalInput(Cvars.InputChatCvar, InputLayers.Game);
 
 		/// <summary>
 		///   The input trigger that cancels the chat input.
@@ -60,16 +66,14 @@ namespace Lwar.Client.Screens
 		private readonly Label _prompt;
 
 		/// <summary>
+		///   The input trigger that submits a non-empty chat message.
+		/// </summary>
+		private readonly LogicalInput _submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputLayers.Chat);
+
+		/// <summary>
 		///   The chat input text box.
 		/// </summary>
 		private readonly TextBox _textBox;
-
-		/// <summary>
-		///   The input trigger that is used to determine whether the chat input should be shown or whether the chat input
-		///   should be sent to the server.
-		/// </summary>
-		private readonly LogicalInput _trigger = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(),
-																  InputLayers.Game | InputLayers.Chat);
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -88,7 +92,8 @@ namespace Lwar.Client.Screens
 			_gameSession = gameSession;
 			_networkSession = networkSession;
 
-			_inputDevice.Add(_trigger);
+			_inputDevice.Add(_activate);
+			_inputDevice.Add(_submit);
 			_inputDevice.Add(_cancel);
 
 			_inputDevice.Keyboard.CharEntered += OnCharEntered;
@@ -116,7 +121,7 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		private bool Active
 		{
-			get { return _inputDevice.InputLayer.Contains(InputLayers.Chat); }
+			get { return _inputDevice.InputLayer == InputLayers.Chat; }
 		}
 
 		/// <summary>
@@ -128,11 +133,47 @@ namespace Lwar.Client.Screens
 			_inputDevice.Keyboard.KeyPressed -= OnKeyPressed;
 
 			if (Active)
-				_inputDevice.DeactivateLayer(InputLayers.Chat);
+				Hide();
 
-			_inputDevice.Remove(_trigger);
+			_inputDevice.Remove(_activate);
+			_inputDevice.Remove(_submit);
 			_inputDevice.Remove(_cancel);
 			_textBox.SafeDispose();
+		}
+
+		/// <summary>
+		///   Shows the chat input.
+		/// </summary>
+		private void Show()
+		{
+			_inputDevice.ActivateLayer(InputLayers.Chat);
+			_inputDevice.TextInputEnabled = true;
+		}
+
+		/// <summary>
+		///   Hides the chat input and clears the currently entered chat message.
+		/// </summary>
+		private void Hide()
+		{
+			_inputDevice.DeactivateLayer(InputLayers.Chat);
+			_inputDevice.TextInputEnabled = false;
+			_textBox.Text = String.Empty;
+		}
+
+		/// <summary>
+		///   Sends the current message to the server, if the message is non-empty and does not exceed the length limit. Returns
+		///   false to indicate that there was a problem sending the message.
+		/// </summary>
+		private bool Send()
+		{
+			if (LengthExceeded)
+				return false;
+
+			// Ignore empty messages
+			if (!String.IsNullOrWhiteSpace(_textBox.Text))
+				_networkSession.Send(Message.Say(_gameSession.Players.LocalPlayer, _textBox.Text));
+
+			return true;
 		}
 
 		/// <summary>
@@ -141,30 +182,16 @@ namespace Lwar.Client.Screens
 		/// <param name="size">The size of the window.</param>
 		public void Update(Size size)
 		{
-			// Show or hide the chat input
-			if (_trigger.IsTriggered && !Active)
-			{
-				_inputDevice.ActivateLayer(InputLayers.Chat);
-				_inputDevice.TextInputEnabled = true;
-			}
-			else if ((_cancel.IsTriggered || _trigger.IsTriggered) && Active)
-			{
-				// Do not do anything if the user tries to send a message that is too long
-				if (!_trigger.IsTriggered || !LengthExceeded)
-				{
-					_inputDevice.DeactivateLayer(InputLayers.Chat);
-					_inputDevice.TextInputEnabled = false;
-
-					// If a message has been entered, send it to the server and hide the chat input
-					if (!_cancel.IsTriggered && !String.IsNullOrWhiteSpace(_textBox.Text))
-						_networkSession.Send(Message.Say(_gameSession.Players.LocalPlayer, _textBox.Text));
-
-					_textBox.Text = String.Empty;
-				}
-			}
+			// Check if the user activated the chat input
+			if (_activate.IsTriggered)
+				Show();
 
 			if (!Active)
 				return;
+
+			// Hide the chat input if the user canceled the input or if the user submitted the input and sending was successful
+			if (_cancel.IsTriggered || (_submit.IsTriggered && Send()))
+				Hide();
 
 			// Update the chat input's layout
 			var right = size.Width - Margin;

@@ -31,6 +31,8 @@ Pegasus
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Move some input state handling to Platform lib
 - Console: Mouse wheel support for scrolling
+- Allow font specifies within texts (e.g., ^r to switch to red)
+- Allow emoticons within texts
 
 Network Specification
 ========
