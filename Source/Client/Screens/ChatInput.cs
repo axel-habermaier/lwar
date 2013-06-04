@@ -107,7 +107,7 @@ namespace Lwar.Client.Screens
 			var font = assets.LoadFont("Fonts/Liberation Mono 12");
 			_prompt = new Label(font, "Say: ");
 			_textBox = new TextBox(font);
-			_help = new Label(font, "Press [Enter] to submit the input.\nPress [Escape] to cancel.");
+			_help = new Label(font, "Press [Enter] to send the message.\nPress [Escape] to cancel.") { Color = new Color(0xFF3AC984) };
 			_lengthWarning = new Label(font, "The message exceeds the maximum allowed width for a chat message and cannot be sent.")
 			{
 				Color = new Color(255, 0, 0, 255)
@@ -201,10 +201,11 @@ namespace Lwar.Client.Screens
 
 			// Update the chat input's layout
 			var right = size.Width - Margin;
-			_prompt.Area = new Rectangle(Margin, Margin, _prompt.Font.MeasureWidth(_prompt.Text), 0);
+			var top = size.Height - 2 * Margin;
+			_prompt.Area = new Rectangle(Margin, top, _prompt.Font.MeasureWidth(_prompt.Text), 0);
 
 			var messageLeft = _prompt.ActualArea.Right;
-			_textBox.Area = new Rectangle(messageLeft, Margin, right - messageLeft, 0);
+			_textBox.Area = new Rectangle(messageLeft, top, right - messageLeft, 0);
 			_lengthWarning.Area = new Rectangle(messageLeft, _textBox.ActualArea.Bottom + _lengthWarning.Font.LineHeight, right - messageLeft, 0);
 
 			var bottom = _textBox.ActualArea.Bottom;
@@ -212,7 +213,7 @@ namespace Lwar.Client.Screens
 				bottom = _lengthWarning.ActualArea.Bottom;
 
 			_help.Area = new Rectangle(messageLeft, bottom + _help.Font.LineHeight, right - messageLeft, 0);
-			_frame.ContentArea = new Rectangle(Margin, Margin, right - Margin, _help.ActualArea.Bottom - Margin);
+			_frame.ContentArea = new Rectangle(Margin, top, right - Margin, _help.ActualArea.Bottom - top);
 		}
 
 		/// <summary>

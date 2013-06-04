@@ -30,9 +30,9 @@ Pegasus
 - Persist window maximized/minimized state
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Move some input state handling to Platform lib
-- Console: Mouse wheel support for scrolling
-- Allow font specifies within texts (e.g., ^r to switch to red)
+- Allow font color specifiers within texts (e.g., ^r to switch to red)
 - Allow emoticons within texts
+- Fix: Closing the console while the chat input open enters a ` character into the chat input
 
 Network Specification
 ========

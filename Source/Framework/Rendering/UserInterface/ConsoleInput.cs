@@ -104,7 +104,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public LogicalInput Submit { get; private set; }
 
 		/// <summary>
-		/// Gets the logical input for the console's auto-completion action.
+		///   Gets the logical input for the console's auto-completion action.
 		/// </summary>
 		public LogicalInput AutoComplete { get; private set; }
 
@@ -137,6 +137,15 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			add { _device.Keyboard.KeyPressed += value; }
 			remove { _device.Keyboard.KeyPressed -= value; }
+		}
+
+		/// <summary>
+		///   Raised when the mouse wheel has been moved.
+		/// </summary>
+		public event Action<int> MouseWheel
+		{
+			add { _device.Mouse.Wheel += value; }
+			remove { _device.Mouse.Wheel -= value; }
 		}
 
 		/// <summary>

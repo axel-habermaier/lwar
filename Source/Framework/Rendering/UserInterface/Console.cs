@@ -100,6 +100,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			_input.CharEntered += OnCharEntered;
 			_input.KeyPressed += OnKeyPressed;
+			_input.MouseWheel += OnMouseWheelMoved;
 		}
 
 		/// <summary>
@@ -132,6 +133,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			_input.CharEntered -= OnCharEntered;
 			_input.KeyPressed -= OnKeyPressed;
+			_input.MouseWheel -= OnMouseWheelMoved;
 			_input.SafeDispose();
 
 			_prompt.SafeDispose();
@@ -155,6 +157,21 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			if (_active)
 				_prompt.InjectKeyPress(key);
+		}
+
+		/// <summary>
+		///   Invoked when the user used the mouse wheel to scroll.
+		/// </summary>
+		/// <param name="delta">The delta that the mouse wheel has been moved.</param>
+		private void OnMouseWheelMoved(int delta)
+		{
+			if (!_active)
+				return;
+
+			if (delta < 0)
+				_content.ScrollDown();
+			else
+				_content.ScrollUp();
 		}
 
 		/// <summary>
@@ -222,6 +239,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				{
 					Log.Info("{0}{1}", ConsolePrompt.Prompt, input);
 					Commands.Execute(input);
+
+					// Show the result of the user's input
+					_content.ScrollToBottom();
 				}
 			}
 
@@ -302,7 +322,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		/// Shows the given entry on the console.
+		///   Shows the given entry on the console.
 		/// </summary>
 		/// <param name="entry">The entry that should be shown.</param>
 		/// <param name="color">The color that should be used to colorize the message.</param>
