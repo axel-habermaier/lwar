@@ -4,7 +4,7 @@ namespace Lwar.Client.Network
 {
 	using Gameplay;
 	using Gameplay.Entities;
-	using Pegasus.Framework.Platform.Logging;
+	using Pegasus.Framework;
 
 	/// <summary>
 	///   Dispatches messages received from the server.
@@ -38,7 +38,7 @@ namespace Lwar.Client.Network
 					break;
 				case MessageType.Name:
 					// Ignore the server player
-					if (message.Name.Player.Identity == 0)
+					if (IsServerPlayer(message.Name.Player))
 						break;
 
 					// Add the event message first, otherwise the player name will already have been changed
@@ -53,10 +53,14 @@ namespace Lwar.Client.Network
 				case MessageType.Collision:
 					break;
 				case MessageType.Join:
-					_gameSession.Players.Add(message.Join.Player, message.Join.IsLocalPlayer);
+					// Give the server player a default name
+					var name = IsServerPlayer(message.Join.Player) ? "Server" : message.Join.Name;
+					Assert.NotNullOrWhitespace(name);
+
+					_gameSession.Players.Add(message.Join.Player, name, message.Join.IsLocalPlayer);
 
 					// Don't show the message for the local player and the server player
-					if (!message.Join.IsLocalPlayer && message.Join.Player.Identity != 0)
+					if (!message.Join.IsLocalPlayer && !IsServerPlayer(message.Join.Player))
 						_gameSession.EventMessages.AddJoinMessage(message.Join.Player);
 					break;
 				case MessageType.Leave:
@@ -122,6 +126,15 @@ namespace Lwar.Client.Network
 			}
 
 			_gameSession.Entities.Add(entity);
+		}
+
+		/// <summary>
+		///   Checks whether the player with the given identifier is the player that represents the server.
+		/// </summary>
+		/// <param name="player">The player identifier that should be checked.</param>
+		private static bool IsServerPlayer(Identifier player)
+		{
+			return player.Identity == 0;
 		}
 	}
 }

@@ -77,6 +77,7 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
             check_seqno(c, m, seqno);
             c->last_activity = server->cur_clock;
 
+			player_rename(&c->player, m->connect.nick);
             queue_join(c);
             queue_gamestate_for(c);
         } else {

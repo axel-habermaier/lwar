@@ -73,11 +73,13 @@ size_t message_pack(char *s, void *p) {
 
     switch(m->type) {
     case MESSAGE_CONNECT:
+		i += str_pack(s+i, m->connect.nick);
         break;
     case MESSAGE_DISCONNECT:
         break;
     case MESSAGE_JOIN:
         i += id_pack(s+i, m->join.player_id);
+		i += str_pack(s+i, m->join.nick);
         break;
     case MESSAGE_LEAVE:
         i += id_pack(s+i, m->leave.player_id);
@@ -161,11 +163,13 @@ size_t message_unpack(const char *s, void *p) {
 
     switch(m->type) {
     case MESSAGE_CONNECT:
+		i += str_unpack(s+i, &m->connect.nick);
         break;
     case MESSAGE_DISCONNECT:
         break;
     case MESSAGE_JOIN:
         i += id_unpack(s+i, &m->join.player_id);
+		i += str_unpack(s+i, &m->join.nick);
         break;
     case MESSAGE_LEAVE:
         i += id_unpack(s+i, &m->leave.player_id);

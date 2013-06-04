@@ -186,7 +186,7 @@ namespace Lwar.Client.Screens
 				Assert.ArgumentNotNull(font);
 
 				// Measure the width of player name and the 'death' header
-				var name = Enumerable.Repeat("w", Specification.MaximumPlayerNameLength).Aggregate(String.Empty, (acc, v) => acc + v);
+				var name = Enumerable.Repeat("w", Specification.PlayerNameLength).Aggregate(String.Empty, (acc, v) => acc + v);
 				var nameWidth = font.MeasureWidth(name);
 				var deathWidth = font.MeasureWidth("Deaths");
 

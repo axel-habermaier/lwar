@@ -119,7 +119,7 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		private bool LengthExceeded
 		{
-			get { return Encoding.UTF8.GetByteCount(_textBox.Text) > Specification.MaximumChatMessageLength; }
+			get { return Encoding.UTF8.GetByteCount(_textBox.Text) > Specification.ChatMessageLength; }
 		}
 
 		/// <summary>

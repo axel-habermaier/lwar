@@ -35,9 +35,11 @@ namespace Lwar.Client.Network
 			{
 				case MessageType.Chat:
 					buffer.WriteIdentifier(message.Chat.Player);
-					buffer.WriteString(message.Chat.Message, Specification.MaximumChatMessageLength);
+					buffer.WriteString(message.Chat.Message, Specification.ChatMessageLength);
 					break;
 				case MessageType.Connect:
+					buffer.WriteString(message.Connect, Specification.PlayerNameLength);
+					break;
 				case MessageType.Disconnect:
 					// No payload
 					break;
@@ -59,7 +61,7 @@ namespace Lwar.Client.Network
 					break;
 				case MessageType.Name:
 					buffer.WriteIdentifier(message.Name.Player);
-					buffer.WriteString(message.Name.Name, Specification.MaximumPlayerNameLength);
+					buffer.WriteString(message.Name.Name, Specification.PlayerNameLength);
 					break;
 				case MessageType.Selection:
 					buffer.WriteIdentifier(message.Selection.Player);
@@ -111,12 +113,12 @@ namespace Lwar.Client.Network
 			{
 				case MessageType.Chat:
 					message.Chat.Player = buffer.ReadIdentifier();
-					message.Chat.Message = buffer.ReadString(Specification.MaximumChatMessageLength);
+					message.Chat.Message = buffer.ReadString(Specification.ChatMessageLength);
 					Messages.Add(message);
 					break;
 				case MessageType.Name:
 					message.Name.Player = buffer.ReadIdentifier();
-					message.Name.Name = buffer.ReadString(Specification.MaximumPlayerNameLength);
+					message.Name.Name = buffer.ReadString(Specification.PlayerNameLength);
 					Messages.Add(message);
 					break;
 				case MessageType.Selection:
@@ -156,6 +158,7 @@ namespace Lwar.Client.Network
 				case MessageType.Join:
 					message.Join.Player = buffer.ReadIdentifier();
 					message.Join.IsLocalPlayer = false;
+					message.Join.Name = buffer.ReadString(Specification.PlayerNameLength);
 					Messages.Add(message);
 					break;
 				case MessageType.Leave:

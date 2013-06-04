@@ -169,10 +169,11 @@ namespace Lwar.Client.Gameplay
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
 
-			// Ignore the message if we don't know the player's name yet.
 			var message = new EventMessage(EventType.Name) { Message = name };
-			if (TryGetPlayer(player, out message.Player) && !String.IsNullOrWhiteSpace(message.Player.Name))
+			if (TryGetPlayer(player, out message.Player))
 				Add(message);
+
+			Assert.That(!String.IsNullOrWhiteSpace(message.Player.Name), "The player's name is unknown.");
 		}
 
 		/// <summary>

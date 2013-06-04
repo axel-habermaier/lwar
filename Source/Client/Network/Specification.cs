@@ -10,12 +10,12 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   The maximum allowed byte length of an UTF8-encoded player name.
 		/// </summary>
-		public const int MaximumPlayerNameLength = 32;
+		public const int PlayerNameLength = 32;
 
 		/// <summary>
 		///   The maximum allowed byte length of an UTF8-encoded chat message.
 		/// </summary>
-		public const int MaximumChatMessageLength = 255;
+		public const int ChatMessageLength = 255;
 
 		/// <summary>
 		///   The maximum allowed packet size in bytes.

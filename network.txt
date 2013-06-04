@@ -107,7 +107,10 @@ Message Header
 	
 Messages Payload Data
 	Connect
-		Does not carry any payload data
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint8		len			The length of the player name in bytes; len < Max Player Name Length
+		uint8[len]	name		The UTF8-encoded player name (not '\0'-terminated)
 
 	Disconnect
 		Does not carry any payload data
@@ -116,6 +119,8 @@ Messages Payload Data
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------
 		uint32(Id)	playerId	The generational identifier of the player that joined
+		uint8		len			The length of the player name in bytes; len < Max Player Name Length
+		uint8[len]	name		The UTF8-encoded player name (not '\0'-terminated)
 
 	Leave
 		Type		Name 		Description
@@ -309,6 +314,7 @@ Client-side prediction
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	14    13-06-04  Axel		Added player name to join and connect messages
 	13	  13-05-31  Axel		Increased maximum allowed chat message length to 255 bytes 
 	12	  15-04-12  Axel		Removed entity types; these are now determined by the F# code 
 								generation script

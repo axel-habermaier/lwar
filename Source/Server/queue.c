@@ -156,10 +156,7 @@ void queue_gamestate_for(Client *cn) {
 
         r = message_unicast(cn, MESSAGE_JOIN);
         r->join.player_id = c->player.id;
-
-        r = message_unicast(cn, MESSAGE_NAME);
-        r->name.player_id = c->player.id;
-        r->name.nick      = c->player.name;
+        r->join.nick      = c->player.name;
     }
 
     Entity *e;
@@ -186,6 +183,7 @@ void queue_join(Client *c) {
     Message *r;
     r = message_broadcast(MESSAGE_JOIN);
     r->join.player_id = c->player.id;
+	r->join.nick = c->player.name;
 }
 
 void queue_leave(Client *c) {

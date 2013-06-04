@@ -50,8 +50,13 @@ struct Message {
     size_t seqno;
 
     union {
+		 struct {
+			Str nick;
+        } connect;
+
         struct {
             Id player_id;
+			Str nick;
         } join;
 
         struct {

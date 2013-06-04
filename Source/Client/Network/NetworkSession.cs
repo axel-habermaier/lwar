@@ -6,6 +6,7 @@ namespace Lwar.Client.Network
 	using System.Net;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Memory;
+	using Scripting;
 
 	/// <summary>
 	///   Represents a network session that implements the lwar network protocol.
@@ -46,7 +47,7 @@ namespace Lwar.Client.Network
 			_connection = new ServerConnection(serverEndPoint, packetFactory);
 
 			_outgoingMessages = new MessageQueue(packetFactory, _deliveryManager);
-			Send(new Message { Type = MessageType.Connect });
+			Send(new Message { Type = MessageType.Connect, Connect = Cvars.PlayerName });
 		}
 
 		/// <summary>

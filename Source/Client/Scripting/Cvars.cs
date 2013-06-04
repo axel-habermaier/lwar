@@ -884,7 +884,7 @@ namespace Lwar.Client.Scripting
 		/// </summary>
 		public static void Initialize()
 		{
-			PlayerNameCvar = new Cvar<string>("player_name", "UnnamedPlayer", "The name of the player.", UpdateMode.Immediate, true, new NotEmptyAttribute(), new MaximumLengthAttribute(Specification.MaximumPlayerNameLength, true));
+			PlayerNameCvar = new Cvar<string>("player_name", "UnnamedPlayer", "The name of the player.", UpdateMode.Immediate, true, new NotEmptyAttribute(), new MaximumLengthAttribute(Specification.PlayerNameLength, true));
 			DrawWireframeCvar = new Cvar<bool>("draw_wireframe", false, "If true, all 3D geometry is drawn in wireframe mode.", UpdateMode.Immediate, false);
 			EventMessageDisplayTimeCvar = new Cvar<double>("event_message_display_time", 3, "The display time (in seconds) of event messages such as 'X killed Y', 'X joined the game', etc.", UpdateMode.Immediate, true, new RangeAttribute(0.5, 60.0));
 			ChatMessageDisplayTimeCvar = new Cvar<double>("chat_message_display_time", 6, "The display time (in seconds) of chat messages.", UpdateMode.Immediate, true, new RangeAttribute(0.5, 60.0));

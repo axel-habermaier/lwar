@@ -484,7 +484,7 @@ namespace Lwar.Client.Scripting
 				new CommandParameter("port", typeof(ushort), true, Specification.DefaultServerPort, "The port of the server."));
 			DisconnectCvar = new Command("disconnect", "Disconnects from the current game session.");
 			SayCvar = new Command<string>("say", "Sends a chat message to all peers.", 
-				new CommandParameter("message", typeof(string), false, default(string), "The message that should be sent.", new NotEmptyAttribute(), new MaximumLengthAttribute(Specification.MaximumChatMessageLength, true)));
+				new CommandParameter("message", typeof(string), false, default(string), "The message that should be sent.", new NotEmptyAttribute(), new MaximumLengthAttribute(Specification.ChatMessageLength, true)));
 			ToggleDebugCameraCvar = new Command("toggle_debug_camera", "Toggles between the game and the debugging camera.");
 
 			CommandRegistry.Register(StartServerCvar);

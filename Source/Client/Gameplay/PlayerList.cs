@@ -58,13 +58,15 @@ namespace Lwar.Client.Gameplay
 		///   Adds the given player to the list.
 		/// </summary>
 		/// <param name="playerId">The identifier of the player that should be added.</param>
+		/// <param name="name">The name of the new player.</param>
 		/// <param name="isLocalPlayer">Indicates whether the new player is the local one.</param>
-		public void Add(Identifier playerId, bool isLocalPlayer)
+		public void Add(Identifier playerId, string name, bool isLocalPlayer)
 		{
+			Assert.ArgumentNotNullOrWhitespace(name);
 			Assert.That(_playerMap[playerId] == null, "A player with the same id has already been added.");
 			Assert.That(!isLocalPlayer || LocalPlayer == null, "Cannot change the local player.");
 
-			var player = Player.Create(playerId);
+			var player = Player.Create(playerId, name);
 			_players.Add(player);
 			_playerMap.Add(player);
 

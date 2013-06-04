@@ -13,7 +13,7 @@ internal interface ICvars
 	/// <summary>
 	///   The name of the player.
 	/// </summary>
-	[Cvar("UnnamedPlayer"), Persistent, NotEmpty, MaximumLength(Specification.MaximumPlayerNameLength, true)]
+	[Cvar("UnnamedPlayer"), Persistent, NotEmpty, MaximumLength(Specification.PlayerNameLength, true)]
 	string PlayerName { get; set; }
 
 	/// <summary>

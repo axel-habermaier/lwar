@@ -3,6 +3,7 @@
 namespace Lwar.Client.Gameplay
 {
 	using Entities;
+	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
@@ -44,12 +45,15 @@ namespace Lwar.Client.Gameplay
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="id">The identifier of the player.</param>
-		public static Player Create(Identifier id)
+		/// <param name="name">The name of the player.</param>
+		public static Player Create(Identifier id, string name)
 		{
+			Assert.ArgumentNotNullOrWhitespace(name);
+
 			var player = GetInstance();
 			player.Id = id;
 			player.Ship = null;
-			player.Name = String.Empty;
+			player.Name = name;
 			return player;
 		}
 

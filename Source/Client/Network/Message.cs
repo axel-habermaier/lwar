@@ -23,7 +23,7 @@ namespace Lwar.Client.Network
 		{
 			Assert.ArgumentNotNull(player);
 			Assert.ArgumentNotNullOrWhitespace(playerName);
-			Assert.That(Encoding.UTF8.GetByteCount(playerName) <= Specification.MaximumPlayerNameLength, "Player name is too long.");
+			Assert.That(Encoding.UTF8.GetByteCount(playerName) <= Specification.PlayerNameLength, "Player name is too long.");
 
 			return new Message
 			{
@@ -45,7 +45,7 @@ namespace Lwar.Client.Network
 		{
 			Assert.ArgumentNotNull(player);
 			Assert.ArgumentNotNullOrWhitespace(message);
-			Assert.That(Encoding.UTF8.GetByteCount(message) <= Specification.MaximumChatMessageLength, "Chat message is too long.");
+			Assert.That(Encoding.UTF8.GetByteCount(message) <= Specification.ChatMessageLength, "Chat message is too long.");
 
 			return new Message
 			{
@@ -133,9 +133,15 @@ namespace Lwar.Client.Network
 		public uint Timestamp;
 
 		/// <summary>
+		///   The payload of a Connect message.
+		/// </summary>
+		[FieldOffset(StringPayloadOffset)]
+		public string Connect;
+
+		/// <summary>
 		///   The payload of a Join message.
 		/// </summary>
-		[FieldOffset(PayloadOffset)]
+		[FieldOffset(StringPayloadOffset)]
 		public JoinPayload Join;
 
 		/// <summary>
@@ -222,6 +228,11 @@ namespace Lwar.Client.Network
 		[StructLayout(LayoutKind.Sequential)]
 		public struct JoinPayload
 		{
+			/// <summary>
+			///   The name of the player that joined.
+			/// </summary>
+			public string Name;
+
 			/// <summary>
 			///   Indicates whether the joined player is the local player.
 			/// </summary>

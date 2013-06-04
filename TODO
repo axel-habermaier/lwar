@@ -10,8 +10,6 @@ Client
 	- Reusable interpolation class?
 - UI
 	- Ship/Weapon selection
-	- Chat messages outside of console
-	- 'Event log' outside of console: Player rename, x killed y, x left, etc.
 	- Show player names on top of ships
 	- Minimap
 	- Menus

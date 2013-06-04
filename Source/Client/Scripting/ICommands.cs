@@ -45,7 +45,7 @@ internal interface ICommands
 	/// </summary>
 	/// <param name="message">The message that should be sent.</param>
 	[Command]
-	void Say([NotEmpty, MaximumLength(Specification.MaximumChatMessageLength, true)] string message);
+	void Say([NotEmpty, MaximumLength(Specification.ChatMessageLength, true)] string message);
 
 	/// <summary>
 	///   Toggles between the game and the debugging camera.
