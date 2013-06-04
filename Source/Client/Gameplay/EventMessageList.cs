@@ -6,6 +6,7 @@ namespace Lwar.Client.Gameplay
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
+	using Scripting;
 
 	/// <summary>
 	///   Stores event messages such as 'X killed Y' or received chat messages. Messages are removed from the list
@@ -17,16 +18,6 @@ namespace Lwar.Client.Gameplay
 		///   The list capacity determines the maximum number of stored event messages.
 		/// </summary>
 		public const int Capacity = 16;
-
-		/// <summary>
-		///   The amount of seconds to wait before chat messages are removed from the list.
-		/// </summary>
-		private const int ChatMessageLifetime = 10;
-
-		/// <summary>
-		///   The amount of seconds to wait before event messages (except chat messages) are removed from the list.
-		/// </summary>
-		private const int Lifetime = 5;
 
 		/// <summary>
 		///   The clock that is used to determine when messages should be removed from the list.
@@ -199,7 +190,7 @@ namespace Lwar.Client.Gameplay
 		{
 			for (var i = 0; i < _index; ++i)
 			{
-				var timeout = _messages[i].Type == EventType.Chat ? ChatMessageLifetime : Lifetime;
+				var timeout = _messages[i].Type == EventType.Chat ? Cvars.ChatMessageDisplayTime : Cvars.EventMessageDisplayTime;
 				var timedOut = _clock.Seconds - _messages[i].CreationTime > timeout;
 
 				if (timedOut)

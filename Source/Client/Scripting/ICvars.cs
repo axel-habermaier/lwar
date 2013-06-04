@@ -23,6 +23,18 @@ internal interface ICvars
 	bool DrawWireframe { get; set; }
 
 	/// <summary>
+	///   The display time (in seconds) of event messages such as 'X killed Y', 'X joined the game', etc.
+	/// </summary>
+	[Cvar(3), Persistent, Range(0.5, 60.0)]
+	double EventMessageDisplayTime { get; set; }
+
+	/// <summary>
+	///   The display time (in seconds) of chat messages.
+	/// </summary>
+	[Cvar(6), Persistent, Range(0.5, 60.0)]
+	double ChatMessageDisplayTime { get; set; }
+
+	/// <summary>
 	///   When triggered in an active game session, shows the scoreboard.
 	/// </summary>
 	[Cvar(DefaultExpression = "Key.Tab.IsPressed()"), Persistent]
@@ -89,7 +101,7 @@ internal interface ICvars
 	InputTrigger InputQuaternaryWeapon { get; set; }
 
 	/// <summary>
-	/// When triggered in an active game session, opens the chat input.
+	///   When triggered in an active game session, opens the chat input.
 	/// </summary>
 	[Cvar(DefaultExpression = "Key.Return.WentDown() | Key.NumpadEnter.WentDown()"), Persistent]
 	InputTrigger InputChat { get; set; }
