@@ -77,6 +77,8 @@ namespace Lwar.Client.Screens
 				_networkSession.Send(Message.ChangeSelection(localPlayer, EntityType.Ship,
 															 EntityType.Gun, EntityType.Phaser,
 															 EntityType.Gun, EntityType.Gun));
+
+				_gameSession.EventMessages.Enabled = true;
 			}
 
 			if (_networkSession.IsConnected || _networkSession.IsDropped || _networkSession.IsFaulted)

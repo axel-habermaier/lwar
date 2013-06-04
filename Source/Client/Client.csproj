@@ -179,9 +179,14 @@
     <Compile Include="Gameplay\Entities\Ray.cs" />
     <Compile Include="Gameplay\Entities\Phaser.cs" />
     <Compile Include="Gameplay\Entities\Entity.cs" />
+    <Compile Include="Gameplay\EventMessage.cs" />
+    <Compile Include="Gameplay\EventMessageList.cs" />
+    <Compile Include="Gameplay\EventType.cs" />
     <Compile Include="Gameplay\InterpolatedValue.cs" />
     <Compile Include="InputLayers.cs" />
     <Compile Include="Screens\ChatInput.cs" />
+    <Compile Include="Screens\EventLog.cs" />
+    <Compile Include="Screens\EventMessageDisplay.cs" />
     <Compile Include="Screens\Frame.cs" />
     <Compile Include="Screens\Scoreboard.cs" />
     <Compile Include="Rendering\Renderers\ParallaxRenderer.cs" />

@@ -22,6 +22,7 @@ namespace Lwar.Client.Gameplay
 			Entities = new EntityList(this, renderContext);
 			Players = new PlayerList();
 			RootTransform = new Transformation();
+			EventMessages = new EventMessageList(this);
 		}
 
 		/// <summary>
@@ -40,12 +41,18 @@ namespace Lwar.Client.Gameplay
 		public Transformation RootTransform { get; private set; }
 
 		/// <summary>
+		///   Gets the event messages that display game session events to the user such as player kills or received chat messages.
+		/// </summary>
+		public EventMessageList EventMessages { get; private set; }
+
+		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
 			Entities.SafeDispose();
 			Players.SafeDispose();
+			EventMessages.SafeDispose();
 		}
 
 		/// <summary>
@@ -56,6 +63,7 @@ namespace Lwar.Client.Gameplay
 			Players.Update();
 			Entities.Update();
 			RootTransform.Update();
+			EventMessages.Update();
 		}
 	}
 }

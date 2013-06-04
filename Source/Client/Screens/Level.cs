@@ -34,6 +34,16 @@ namespace Lwar.Client.Screens
 		private CameraManager _cameraManager;
 
 		/// <summary>
+		///   The chat input that allows the user to send chat messages to all players of the current session.
+		/// </summary>
+		private ChatInput _chatInput;
+
+		/// <summary>
+		///   Displays the session's event messages to the user.
+		/// </summary>
+		private EventMessageDisplay _eventMessage;
+
+		/// <summary>
 		///   The game session that is played.
 		/// </summary>
 		private GameSession _gameSession;
@@ -57,11 +67,6 @@ namespace Lwar.Client.Screens
 		///   The scoreboard that displays the scores of the current session.
 		/// </summary>
 		private Scoreboard _scoreboard;
-
-		/// <summary>
-		/// The chat input that allows the user to send chat messages to all players of the current session.
-		/// </summary>
-		private ChatInput _chatInput;
 
 		/// <summary>
 		///   Indicates whether the user input should be sent to the server during the next update cycle.
@@ -115,6 +120,7 @@ namespace Lwar.Client.Screens
 			_messageDispatcher = new MessageDispatcher(_gameSession);
 			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
 			_inputManager = new InputManager(InputDevice);
+			_eventMessage = new EventMessageDisplay(Assets);
 
 			Commands.OnSay += OnSay;
 			Cvars.PlayerNameChanged += OnPlayerNameChanged;
@@ -139,6 +145,7 @@ namespace Lwar.Client.Screens
 			{
 				_gameSession.Update();
 				_inputManager.Update();
+				_eventMessage.Update(_gameSession.EventMessages, Window.Size);
 
 				_cameraManager.GameCamera.Ship = _gameSession.Players.LocalPlayer.Ship;
 				_cameraManager.Update();
@@ -186,6 +193,7 @@ namespace Lwar.Client.Screens
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)
 		{
+			_eventMessage.Draw(spriteBatch);
 			_scoreboard.Draw(spriteBatch);
 			_chatInput.Draw(spriteBatch);
 		}

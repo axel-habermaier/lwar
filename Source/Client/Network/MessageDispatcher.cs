@@ -34,12 +34,15 @@ namespace Lwar.Client.Network
 			switch (message.Type)
 			{
 				case MessageType.Chat:
-					// TODO
-					var player = _gameSession.Players[message.Chat.Player];
-					if (player != null)
-						Log.Info("{0}: {1}", player.Name, message.Chat.Message);
+					_gameSession.EventMessages.AddChatMessage(message.Chat.Player, message.Chat.Message);
 					break;
 				case MessageType.Name:
+					// Ignore the server player
+					if (message.Name.Player.Identity == 0)
+						break;
+
+					// Add the event message first, otherwise the player name will already have been changed
+					_gameSession.EventMessages.AddNameChangeMessage(message.Name.Player, message.Name.Name);
 					_gameSession.Players.ChangeName(message.Name.Player, message.Name.Name);
 					break;
 				case MessageType.Selection:
@@ -51,9 +54,15 @@ namespace Lwar.Client.Network
 					break;
 				case MessageType.Join:
 					_gameSession.Players.Add(message.Join.Player, message.Join.IsLocalPlayer);
+
+					// Don't show the message for the local player and the server player
+					if (!message.Join.IsLocalPlayer && message.Join.Player.Identity != 0)
+						_gameSession.EventMessages.AddJoinMessage(message.Join.Player);
 					break;
 				case MessageType.Leave:
-					_gameSession.Players.Remove(message.Remove);
+					// Add the event message first, otherwise the player will already have been removed
+					_gameSession.EventMessages.AddLeaveMessage(message.Leave);
+					_gameSession.Players.Remove(message.Leave);
 					break;
 				case MessageType.Remove:
 					_gameSession.Entities.Remove(message.Remove);

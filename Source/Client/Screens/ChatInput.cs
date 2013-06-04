@@ -41,7 +41,7 @@ namespace Lwar.Client.Screens
 		private readonly Frame _frame = new Frame();
 
 		/// <summary>
-		///   The game session that is loaded.
+		///   The game session that is running.
 		/// </summary>
 		private readonly GameSession _gameSession;
 
@@ -85,7 +85,7 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		/// <param name="inputDevice">The input device that should be used to check for user input.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
-		/// <param name="gameSession">The game session that should be loaded.</param>
+		/// <param name="gameSession">The game session that is running.</param>
 		/// <param name="networkSession">The network session that synchronizes the game state between the client and the server.</param>
 		public ChatInput(LogicalInputDevice inputDevice, AssetsManager assets, GameSession gameSession, NetworkSession networkSession)
 		{
