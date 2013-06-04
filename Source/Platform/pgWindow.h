@@ -134,7 +134,6 @@ typedef enum
 
 typedef pgVoid (*pgClosingCallback)();
 typedef pgVoid (*pgClosedCallback)();
-typedef pgVoid (*pgResizedCallback)(pgInt32 width, pgInt32 height);
 typedef pgVoid (*pgLostFocusCallback)();
 typedef pgVoid (*pgGainedFocusCallback)();
 typedef pgVoid (*pgCharacterEnteredCallback)(pgUint16 character, pgInt32 scanCode);
@@ -155,7 +154,6 @@ typedef struct
 
 	pgClosingCallback			closing;
 	pgClosedCallback			closed;
-	pgResizedCallback			resized;
 	pgLostFocusCallback			lostFocus;
 	pgGainedFocusCallback		gainedFocus;
 	pgCharacterEnteredCallback	characterEntered;
@@ -169,6 +167,15 @@ typedef struct
 	pgMouseLeftCallback			mouseLeft;
 } pgWindowParams;
 
+typedef struct
+{
+	pgBool	maximized;
+	pgInt32 x;
+	pgInt32 y;
+	pgInt32 width;
+	pgInt32 height;
+} pgWindowPlacement;
+
 //====================================================================================================================
 // Window functions
 //====================================================================================================================
@@ -177,9 +184,9 @@ PG_API_EXPORT pgWindow* pgOpenWindow(pgWindowParams* windowParams);
 PG_API_EXPORT pgVoid pgCloseWindow(pgWindow* window);
 
 PG_API_EXPORT pgVoid pgProcessWindowEvents(pgWindow* window);
-PG_API_EXPORT pgVoid pgGetWindowSize(pgWindow* window, pgInt32* width, pgInt32* height);
-PG_API_EXPORT pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height);
 PG_API_EXPORT pgVoid pgSetWindowTitle(pgWindow* window, pgString title);
+PG_API_EXPORT pgVoid pgGetWindowPlacement(pgWindow* window, pgWindowPlacement* placement);
+PG_API_EXPORT pgVoid pgSetWindowPlacement(pgWindow* window, pgWindowPlacement placement);
 
 PG_API_EXPORT pgVoid pgCaptureMouse(pgWindow* window);
 PG_API_EXPORT pgVoid pgReleaseMouse(pgWindow* window);

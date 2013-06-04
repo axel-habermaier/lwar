@@ -19,9 +19,12 @@ pgSwapChain* pgCreateSwapChain(pgGraphicsDevice* device, pgWindow* window)
 
 	window->swapChain = swapChain;
 
-	pgGetWindowSize(window, &swapChain->renderTarget.width, &swapChain->renderTarget.height);
+	swapChain->renderTarget.width = window->placement.width;
+	swapChain->renderTarget.height = window->placement.height;
+
+	/*pgGetWindowSize(window, &swapChain->renderTarget.width, &swapChain->renderTarget.height);
 	pgGetWindowSize(window, &swapChain->fullscreenWidth, &swapChain->fullscreenHeight);
-	pgGetWindowSize(window, &swapChain->windowedWidth, &swapChain->windowedHeight);
+	pgGetWindowSize(window, &swapChain->windowedWidth, &swapChain->windowedHeight);*/
 
 	pgCreateSwapChainCore(swapChain, window);
 

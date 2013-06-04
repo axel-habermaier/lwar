@@ -9,20 +9,21 @@
 #define WndClassName "PegasusWindowClass"
 #define InputWndClassName "PegasusInputWindowClass"
 
-static struct WindowState
+static struct pgWindowsState
 {
 	pgInt32		openWindows;
 	HWND		inputWindow;
 	pgWindow*	activeWindow;
-} windowState;
+	pgMessage	message;
+} state;
 
 static pgVoid Initialize();
 static pgVoid Shutdown();
 static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc);
 static pgVoid HandleWindowMessages(HWND hwnd);
-static pgVoid CenterCursor(pgWindow* window);
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+static pgVoid CenterCursor(pgWindow* window);
 static pgKey TranslateKey(UINT virtualKey);
 
 //====================================================================================================================
@@ -35,7 +36,7 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 	LONG width, height;
 	pgUint32 style = WS_VISIBLE | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_SYSMENU | WS_POPUP;
 
-	if (windowState.openWindows++ == 0)
+	if (state.openWindows++ == 0)
 		Initialize();
 
 	// Set the client size to the given width and height
@@ -56,7 +57,7 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 		pgWin32Error("Failed to initialize the mouse cursor.");
 
 	// Create the window
-	CreateWindowEx(0, WndClassName, window->params.title, style, CW_USEDEFAULT, 
+	CreateWindowEx(0, WndClassName, "", style, CW_USEDEFAULT, 
 		CW_USEDEFAULT, width, height, NULL, NULL, GetModuleHandle(NULL), window);
 
 	if (window->hwnd == NULL)
@@ -65,55 +66,83 @@ pgVoid pgOpenWindowCore(pgWindow* window)
 
 pgVoid pgCloseWindowCore(pgWindow* window)
 {
-	PG_ASSERT(windowState.openWindows > 0, "There are no open windows.");
+	PG_ASSERT(state.openWindows > 0, "There are no open windows.");
 
 	ShowCursor(PG_TRUE);
 
 	if (window->hwnd != NULL && !DestroyWindow(window->hwnd))
 		pgWin32Error("Failed to destroy window.");
 
-	if (--windowState.openWindows == 0)
+	if (--state.openWindows == 0)
 		Shutdown();
 
-	if (windowState.activeWindow == window)
-		windowState.activeWindow = NULL;
+	if (state.activeWindow == window)
+		state.activeWindow = NULL;
 
 	window->hwnd = NULL;
 }
 
-pgVoid pgProcessWindowEventsCore(pgWindow* window)
+pgBool pgProcessWindowEvent(pgWindow* window, pgMessage* message)
 {
-	HandleWindowMessages(windowState.inputWindow);
+	// Only check the input window if the given window is the active one
+	if (state.activeWindow == window)
+	{
+		HandleWindowMessages(state.inputWindow);
+		if (state.message.type != PG_MESSAGE_INVALID)
+		{
+			*message = state.message;
+			return PG_TRUE;
+		}
+	}
+		
 	HandleWindowMessages(window->hwnd);
+	if (state.message.type != PG_MESSAGE_INVALID)
+	{
+		*message = state.message;
+		return PG_TRUE;
+	}
+
+	return PG_FALSE;
 }
 
-pgVoid pgGetWindowSizeCore(pgWindow* window, pgInt32* width, pgInt32* height)
+pgVoid pgGetWindowPlacementCore(pgWindow* window)
 {
 	RECT rect;
-	GetClientRect(window->hwnd, &rect);
-    *width = rect.right - rect.left;
-	*height = rect.bottom - rect.top;
+	if (!GetClientRect(window->hwnd, &rect))
+		pgWin32Error("Failed to get window size.");
+
+	window->placement.x = rect.left;
+	window->placement.y = rect.top;
+    window->placement.width = rect.right - rect.left;
+	window->placement.height = rect.bottom - rect.top;
+	window->placement.maximized = IsZoomed(window->hwnd);
 }
 
-pgVoid pgSetWindowSizeCore(pgWindow* window, pgInt32 width, pgInt32 height)
+pgVoid pgSetWindowPlacementCore(pgWindow* window)
 {
+	RECT rect;
+	LONG width, height;
+
+	rect.left = window->placement.x;
+	rect.top = window->placement.y;
+	rect.right = rect.left + window->placement.width;
+	rect.bottom = rect.top + window->placement.height;
+
 	// SetWindowPos wants the total size of the window (including title bar and borders),
 	// so we have to compute it
-	RECT rect;
-
-	rect.left = 0;
-	rect.top = 0;
-	rect.right = width;
-	rect.bottom = height;
-
 	if (!AdjustWindowRect(&rect, GetWindowLong(window->hwnd, GWL_STYLE), PG_FALSE))
 		pgWin32Error("Failed to calculate new window size.");
 
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
 
-	if (!SetWindowPos(window->hwnd, NULL, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER))
+	if (!SetWindowPos(window->hwnd, NULL, rect.left, rect.top, width, height, SWP_NOZORDER))
 		pgWin32Error("Failed to resize window.");
+
+	if (window->placement.maximized && !ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
+		pgWin32Error("Failed to maximize window.");
+	else if (!window->placement.maximized && !ShowWindow(window->hwnd, SW_RESTORE))
+		pgWin32Error("Failed to get window into non-maximized mode");
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
@@ -148,19 +177,19 @@ static pgVoid Initialize()
 	RegisterWindowClass(WndClassName, WndProc);
 	
 	// Open the hidden input window
-	windowState.inputWindow = CreateWindowEx(0, InputWndClassName, "", WS_POPUP | WS_DISABLED, 0, 0, 1, 1,
+	state.inputWindow = CreateWindowEx(0, InputWndClassName, "", WS_POPUP | WS_DISABLED, 0, 0, 1, 1,
 		NULL, NULL, GetModuleHandle(NULL), NULL);
 
-    if (windowState.inputWindow == NULL)
+    if (state.inputWindow == NULL)
         pgWin32Error("Failed to initialize the input initialization window.");
 
-    ShowWindow(windowState.inputWindow, SW_HIDE);
+    ShowWindow(state.inputWindow, SW_HIDE);
 
 	// Register the keyboard raw input device.
 	device.usUsagePage = 0x01; // keyboard
 	device.usUsage = 0x06; // keyboard
 	device.dwFlags = 0;
-	device.hwndTarget = windowState.inputWindow;
+	device.hwndTarget = state.inputWindow;
 
 	if (!RegisterRawInputDevices(&device, 1, sizeof(RAWINPUTDEVICE)))
 		pgWin32Error("Failed to register keyboard raw input device.");
@@ -168,9 +197,9 @@ static pgVoid Initialize()
 
 static pgVoid Shutdown()
 {
-	PG_ASSERT(windowState.openWindows == 0, "There should be no open windows left.");
+	PG_ASSERT(state.openWindows == 0, "There should be no open windows left.");
 
-	if (windowState.inputWindow != NULL && !DestroyWindow(windowState.inputWindow))
+	if (state.inputWindow != NULL && !DestroyWindow(state.inputWindow))
 		pgWin32Error("Failed to destroy input window.");
 
 	if (!UnregisterClass(WndClassName, GetModuleHandle(NULL)))
@@ -203,44 +232,28 @@ static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc)
 static pgVoid HandleWindowMessages(HWND hwnd)
 {
 	MSG message;
-	while (PeekMessage(&message, hwnd, 0, 0, PM_REMOVE))
+
+	state.message.type = PG_MESSAGE_INVALID;
+	while (state.message.type == PG_MESSAGE_INVALID && PeekMessage(&message, hwnd, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&message);
 		DispatchMessage(&message);
 	}
 }
 
-static pgVoid CenterCursor(pgWindow* window)
-{
-	POINT point, current;
-	pgInt32 width, height;
-
-	pgGetWindowSize(window, &width, &height);
-	point.x = width / 2;
-	point.y = height / 2;
-
-	GetCursorPos(&current);
-	ScreenToClient(window->hwnd, &current);
-
-	if (current.x == point.x && current.y == point.y)
-		return;
-
-	ClientToScreen(window->hwnd, &point);
-	SetCursorPos(point.x, point.y);
-}
-
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	pgMessage* message = &state.message;
 	pgWindow* window;
 	pgWindowParams* params;
 
 	if (msg == WM_CREATE)
 	{
 		// Get the pgWindow instance that was passed as the last argument of CreateWindow
-        window = (pgWindow*)((CREATESTRUCT*)lParam)->lpCreateParams;
+		window = (pgWindow*)((CREATESTRUCT*)lParam)->lpCreateParams;
 
-        // Set as the "user data" parameter of the window and set the window's hwnd
-        SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
+		// Set as the "user data" parameter of the window and set the window's hwnd
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
 		window->hwnd = hwnd;
 	}
 
@@ -257,17 +270,13 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		if (LOWORD(lParam) == HTCLIENT)
 			SetCursor(window->cursor);
 		break;
-	case WM_CLOSE:
-		if (params->closing != NULL)
-			params->closing();
 
-		// Ignore WM_CLOSE messages, as we only want the window to be closed explicitly 
+	case WM_CLOSE:
+		// Do not forward the message to the default wnd proc, as we only want the window to be 
+		// closed explicitly by the client application
+		message->type = PG_MESSAGE_CLOSING;
 		return 0;
-	case WM_SIZE:
-		// Ignore size events triggered by a minimize (size == 0 in that case)
-		if (wParam != SIZE_MINIMIZED)
-			pgGetWindowSize(window, &window->width, &window->height);
-		break;
+
 	case WM_GETMINMAXINFO:
 		{
 			// Set the minimum and maximum allowed window sizes
@@ -278,27 +287,20 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 			info->ptMinTrackSize.y = PG_WINDOW_MIN_HEIGHT;
 		}
 		break;
+
 	case WM_SETFOCUS:
-		windowState.activeWindow = window;
-		if (params->gainedFocus != NULL)
-			params->gainedFocus();
-
-		if (window->swapChain != NULL)
-			pgSwapChainWindowActive(window->swapChain, PG_TRUE);
+		state.activeWindow = window;
+		message->type = PG_MESSAGE_GAINED_FOCUS;
 		break;
+
 	case WM_KILLFOCUS:
-		{
-			POINT point;
-			if (!GetCursorPos(&point))
-				pgWin32Error("Failed to get mouse cursor position");
+		message->type = PG_MESSAGE_LOST_FOCUS;
+		break;
 
-			pgWindowLostFocus(window, point.x, point.y);
-			if (window->swapChain != NULL)
-				pgSwapChainWindowActive(window->swapChain, PG_FALSE);
-
-			break;
-		}
 	case WM_MOUSEMOVE:
+		if (window->mouseCaptured)
+			CenterCursor(window);
+
 		// If the cursor is entering the window, raise the mouse entered event and tell Windows to inform
 		// us when the cursor leaves the window.
 		if (!window->cursorInside)
@@ -310,60 +312,96 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 			TrackMouseEvent(&mouseEvent);
 
 			window->cursorInside = PG_TRUE;
-			if (params->mouseEntered != NULL)
-				params->mouseEntered();
+			message->type = PG_MESSAGE_MOUSE_ENTERED;
+			break;
 		}
 
-		if (params->mouseMoved != NULL)
-			params->mouseMoved(LOWORD(lParam), HIWORD(lParam));
-
-		if (window->mouseCaptured)
-			CenterCursor(window);
-
+		message->type = PG_MESSAGE_MOUSE_MOVED;
+		message->moved.x = LOWORD(lParam);
+		message->moved.y = HIWORD(lParam);
 		break;
+
 	case WM_MOUSELEAVE:
 		window->cursorInside = PG_FALSE;
-		if (params->mouseLeft != NULL)
-			params->mouseLeft();
+		message->type = PG_MESSAGE_MOUSE_LEFT;
 		break;
+
 	case WM_LBUTTONDOWN:
-		pgWindowButtonDown(window, PG_MOUSE_LEFT, LOWORD(lParam), HIWORD(lParam));
+		message->type = PG_MESSAGE_MOUSE_DOWN;
+		message->mouse.button = PG_MOUSE_LEFT;
+		message->mouse.x = LOWORD(lParam);
+		message->mouse.y = HIWORD(lParam);
 		break;
+
 	case WM_LBUTTONUP:
-		pgWindowButtonUp(window, PG_MOUSE_LEFT, LOWORD(lParam), HIWORD(lParam));
+		message->type = PG_MESSAGE_MOUSE_UP;
+		message->mouse.button = PG_MOUSE_LEFT;
+		message->mouse.x = LOWORD(lParam);
+		message->mouse.y = HIWORD(lParam);
 		break;
+
 	case WM_RBUTTONDOWN:
-		pgWindowButtonDown(window, PG_MOUSE_RIGHT, LOWORD(lParam), HIWORD(lParam));
+		message->type = PG_MESSAGE_MOUSE_DOWN;
+		message->mouse.button = PG_MOUSE_RIGHT;
+		message->mouse.x = LOWORD(lParam);
+		message->mouse.y = HIWORD(lParam);
 		break;
+
 	case WM_RBUTTONUP:
-		pgWindowButtonUp(window, PG_MOUSE_RIGHT, LOWORD(lParam), HIWORD(lParam));
+		message->type = PG_MESSAGE_MOUSE_UP;
+		message->mouse.button = PG_MOUSE_RIGHT;
+		message->mouse.x = LOWORD(lParam);
+		message->mouse.y = HIWORD(lParam);
 		break;
+
 	case WM_MBUTTONDOWN:
-		pgWindowButtonDown(window, PG_MOUSE_MIDDLE, LOWORD(lParam), HIWORD(lParam));
+		message->type = PG_MESSAGE_MOUSE_DOWN;
+		message->mouse.button = PG_MOUSE_MIDDLE;
+		message->mouse.x = LOWORD(lParam);
+		message->mouse.y = HIWORD(lParam);
 		break;
+
 	case WM_MBUTTONUP:
-		pgWindowButtonUp(window, PG_MOUSE_MIDDLE, LOWORD(lParam), HIWORD(lParam));
+		message->type = PG_MESSAGE_MOUSE_UP;
+		message->mouse.button = PG_MOUSE_MIDDLE;
+		message->mouse.x = LOWORD(lParam);
+		message->mouse.y = HIWORD(lParam);
 		break;
+
 	case WM_XBUTTONDOWN:
-		pgWindowButtonDown(window, HIWORD(wParam) == XBUTTON1? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2, LOWORD(lParam), HIWORD(lParam));
+		message->type = PG_MESSAGE_MOUSE_DOWN;
+		message->mouse.button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2;
+		message->mouse.x = LOWORD(lParam);
+		message->mouse.y = HIWORD(lParam);
 		break;
+
 	case WM_XBUTTONUP:
-		pgWindowButtonUp(window, HIWORD(wParam) == XBUTTON1? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2, LOWORD(lParam), HIWORD(lParam));
+		message->type = PG_MESSAGE_MOUSE_UP;
+		message->mouse.button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2;
+		message->mouse.x = LOWORD(lParam);
+		message->mouse.y = HIWORD(lParam);
 		break;
+
 	case WM_MOUSEWHEEL:
-		if (params->mouseWheel != NULL)
-			params->mouseWheel(GET_WHEEL_DELTA_WPARAM(wParam) / 120);
+		message->type = PG_MESSAGE_MOUSE_WHEEL;
+		message->wheel.delta = GET_WHEEL_DELTA_WPARAM(wParam) / 120;
 		break;
+
 	case WM_SYSCOMMAND:
 		if (wParam == SC_KEYMENU)
 			return 0;
 		break;
+
 	case WM_CHAR:
 		// Ignore all non-printable characters below 32 (= single white-space). Otherwise, character entered 
 		// events would also be raised for the enter and back space keys, for instance. The character that is
 		// passed to the callback is UTF-16 encoded
-		if ((pgUint16)wParam > 31 && params->characterEntered != NULL)
-			params->characterEntered((pgUint16)wParam, (pgInt32)((pgByte*)&lParam)[2]);
+		if ((pgUint16)wParam > 31)
+		{
+			message->type = PG_MESSAGE_CHARACTER_ENTERED;
+			message->characterEntered.character = (pgUint16)wParam;
+			message->characterEntered.scanCode = (pgInt32)((pgByte*)&lParam)[2];
+		}
 		break;
 	}
 
@@ -372,15 +410,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	pgWindowParams* params;
+	pgMessage* message = &state.message;
 	RAWINPUT input;
 	UINT size;
-	pgInt32 outSize;
-
-	if (windowState.activeWindow != NULL)
-		params = &windowState.activeWindow->params;
-	else
-		return DefWindowProc(hwnd, msg, wParam, lParam);;
+	UINT outSize;
 
 	if (msg != WM_INPUT)
 		return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -433,19 +466,19 @@ static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		key = PG_KEY_UNKNOWN;
 		switch (virtualKey)
 		{
-			// Right-hand CONTROL and ALT have their e0 bit set
+		// Right-hand CONTROL and ALT have their e0 bit set
 		case VK_CONTROL:
 			key = isE0 ? PG_KEY_RIGHTCONTROL : PG_KEY_LEFTCONTROL;
 			break;
 		case VK_MENU:
 			key = isE0 ? PG_KEY_RIGHTALT : PG_KEY_LEFTALT;
 			break;
-			// NUMPAD ENTER has its e0 bit set
+		// NUMPAD ENTER has its e0 bit set
 		case VK_RETURN:
 			key = isE0 ? PG_KEY_NUMPADENTER : PG_KEY_RETURN;
 			break;
-			// The standard INSERT, DELETE, HOME, END, PRIOR and NEXT keys will always have their e0 bit 
-			// set, but the corresponding keys on the NUMPAD will not
+		// The standard INSERT, DELETE, HOME, END, PRIOR and NEXT keys will always have their e0 bit 
+		// set, but the corresponding keys on the NUMPAD will not
 		case VK_INSERT:
 			key = !isE0 ? PG_KEY_NUMPAD0 : PG_KEY_INSERT;
 			break;
@@ -464,8 +497,8 @@ static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		case VK_NEXT:
 			key = !isE0 ? PG_KEY_NUMPAD3 : PG_KEY_PAGEDOWN;
 			break;
-			// The standard arrow keys will always have their e0 bit set, but the corresponding keys on 
-			// the NUMPAD will not
+		// The standard arrow keys will always have their e0 bit set, but the corresponding keys on 
+		// the NUMPAD will not
 		case VK_LEFT:
 			key = !isE0 ? PG_KEY_NUMPAD4 : PG_KEY_LEFT;
 			break;
@@ -478,7 +511,7 @@ static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		case VK_DOWN:
 			key = !isE0 ? PG_KEY_NUMPAD2 : PG_KEY_DOWN;
 			break;
-			// NUMPAD 5 doesn't have its e0 bit set
+		// NUMPAD 5 doesn't have its e0 bit set
 		case VK_CLEAR:
 			if (!isE0)
 				key = PG_KEY_NUMPAD5;
@@ -488,14 +521,29 @@ static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 			break;
 		}
 
-		// Raise the key event
-		if (released)
-			pgWindowKeyUp(windowState.activeWindow, key, scanCode);
-		else if (!released)
-			pgWindowKeyDown(windowState.activeWindow, key, scanCode);
+		message->type = released ? PG_MESSAGE_KEY_UP : PG_MESSAGE_KEY_DOWN;
+		message->key.key = key;
+		message->key.scanCode = scanCode;
 	}
 
 	return 0;
+}
+
+static pgVoid CenterCursor(pgWindow* window)
+{
+	POINT point, current;
+	
+	point.x = window->placement.width / 2;
+	point.y = window->placement.height / 2;
+
+	GetCursorPos(&current);
+	ScreenToClient(window->hwnd, &current);
+
+	if (current.x == point.x && current.y == point.y)
+		return;
+
+	ClientToScreen(window->hwnd, &point);
+	SetCursorPos(point.x, point.y);
 }
 
 static pgKey TranslateKey(UINT virtualKey)

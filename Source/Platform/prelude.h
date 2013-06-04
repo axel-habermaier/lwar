@@ -19,6 +19,7 @@
 	#pragma warning(disable : 4514)	// 'function' : unreferenced inline function has been removed
 	#pragma warning(disable : 4820)	// 'n' bytes padding added after data member 'member'
 	#pragma warning(disable : 4206) // nonstandard extension used: translation unit is empty
+	#pragma warning(disable : 4201) // nonstandard extension used: nameless struct/union
 	#define _CRT_SECURE_NO_WARNINGS // No warnings about non-secure standard library functions
 
 	#define PG_INLINE __forceinline
@@ -194,8 +195,8 @@ PG_NORETURN pgVoid pgNoReturn();
 // Window
 //====================================================================================================================
 
-#define PG_WINDOW_MIN_WIDTH 640
-#define PG_WINDOW_MIN_HEIGHT 360
+#define PG_WINDOW_MIN_WIDTH 800
+#define PG_WINDOW_MIN_HEIGHT 600
 #define PG_WINDOW_MAX_WIDTH 1920
 #define PG_WINDOW_MAX_HEIGHT 1200
 #define PG_KEY_COUNT 108
@@ -203,33 +204,82 @@ PG_NORETURN pgVoid pgNoReturn();
 
 struct pgWindow
 {
-	pgWindowParams	params;
-	pgSwapChain*	swapChain;
-	pgBool			mouseCaptured;
-	pgBool			keyState[PG_KEY_COUNT];
-	pgInt32			scanCode[PG_KEY_COUNT];
-	pgBool			buttonState[PG_BUTTON_COUNT];
-	pgInt32			width;
-	pgInt32			height;
+	pgWindowParams		params;
+	pgSwapChain*		swapChain;
+	pgBool				mouseCaptured;
+	pgBool				fullscreen;
+	pgWindowPlacement	placement;
+
+	pgBool				keyState[PG_KEY_COUNT];
+	pgInt32				scanCode[PG_KEY_COUNT];
+	pgBool				buttonState[PG_BUTTON_COUNT];
 	PG_WINDOW_PLATFORM
 };
+
+typedef enum
+{
+	PG_MESSAGE_INVALID,
+	PG_MESSAGE_CLOSING,
+	PG_MESSAGE_LOST_FOCUS,
+	PG_MESSAGE_GAINED_FOCUS,
+	PG_MESSAGE_CHARACTER_ENTERED,
+	PG_MESSAGE_KEY_DOWN,
+	PG_MESSAGE_KEY_UP,
+	PG_MESSAGE_MOUSE_WHEEL,
+	PG_MESSAGE_MOUSE_DOWN,
+	PG_MESSAGE_MOUSE_UP,
+	PG_MESSAGE_MOUSE_MOVED,
+	PG_MESSAGE_MOUSE_ENTERED,
+	PG_MESSAGE_MOUSE_LEFT
+} pgMessageType;
+
+typedef struct
+{
+	pgMessageType type;
+	union
+	{
+		struct
+		{
+			pgUint16 character;
+			pgInt32 scanCode;
+		} characterEntered;
+
+		struct
+		{
+			pgKey key;
+			pgInt32 scanCode;
+		} key;
+
+		struct 
+		{
+			pgInt32 delta;
+		} wheel;
+
+		struct
+		{
+			pgMouseButton button;
+			pgInt32 x;
+			pgInt32 y;
+		} mouse;
+
+		struct
+		{
+			pgInt32 x;
+			pgInt32 y;
+		} moved;
+	};
+} pgMessage;
 
 pgVoid pgOpenWindowCore(pgWindow* window);
 pgVoid pgCloseWindowCore(pgWindow* window);
 
-pgVoid pgProcessWindowEventsCore(pgWindow* window);
-pgVoid pgGetWindowSizeCore(pgWindow* window, pgInt32* width, pgInt32* height);
-pgVoid pgSetWindowSizeCore(pgWindow* window, pgInt32 width, pgInt32 height);
+pgBool pgProcessWindowEvent(pgWindow* window, pgMessage* message);
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title);
+pgVoid pgGetWindowPlacementCore(pgWindow* window);
+pgVoid pgSetWindowPlacementCore(pgWindow* window);
 
 pgVoid pgCaptureMouseCore(pgWindow* window);
 pgVoid pgReleaseMouseCore(pgWindow* window);
-
-pgVoid pgWindowKeyUp(pgWindow* window, pgKey key, pgInt32 scanCode);
-pgVoid pgWindowKeyDown(pgWindow* window, pgKey key, pgInt32 scanCode);
-pgVoid pgWindowButtonUp(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y);
-pgVoid pgWindowButtonDown(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y);
-pgVoid pgWindowLostFocus(pgWindow* window, pgInt32 x, pgInt32 y);
 
 //====================================================================================================================
 // Helper functions

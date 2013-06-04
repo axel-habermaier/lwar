@@ -30,7 +30,17 @@ Pegasus
 - Move some input state handling to Platform lib
 - Allow font color specifiers within texts (e.g., ^r to switch to red)
 - Allow emoticons within texts
-- Fix: Closing the console while the chat input open appends a '`' character to the chat input
+- Window subsystem
+	- C: Filter out multiple resize-events
+	- C: Resize swap chain automatically when window size changes
+	- C#-initiated: Toggle fullscreen mode with resolution change, c# must know when not successful (as far as it is possible to tell)
+	- C: Fullscreen must be deactivated and reactivated on Alt+Tab
+	- C: Restore previous window state (size, position, minimized/maximized) after mode change
+	- C: Collect window messages and then execute them afterwards, in order to avoid doing app-related stuff while the wndproc is on the callstack
+	- C#: Persist window state (size, position, minimized/maximized) accross game sessions
+- Input:
+	- Double clicking, key down/up in the same frame, multiple key down/ups in same frame
+	- Make sure keys do not 'hang' when application loses focus
 
 Server
 ========

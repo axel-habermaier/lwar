@@ -51,11 +51,11 @@ namespace Pegasus.Framework.Platform
 				Title = "Pegasus",
 				Closing = () => Closing(),
 				Closed = () => Closed(),
-				Resized = (w, h) =>
-					{
-						_size = new Size(w, h);
-						Resized(_size);
-					},
+				//Resized = (w, h) =>
+				//	{
+				//		_size = new Size(w, h);
+				//		Resized(_size);
+				//	},
 				LostFocus = () => LostFocus(),
 				GainedFocus = () => GainedFocus(),
 				CharacterEntered = (c, s) =>
@@ -123,19 +123,19 @@ namespace Pegasus.Framework.Platform
 			{
 				Assert.NotDisposed(this);
 
-				int width, height;
-				NativeMethods.GetWindowSize(_window, out width, out height);
+				//int width, height;
+				//NativeMethods.GetWindowSize(_window, out width, out height);
 
-				if (width == 0 || height == 0)
-					return _size;
+				//if (width == 0 || height == 0)
+				//	return _size;
 
-				return new Size(width, height);
+				return new Size(800, 600);
 			}
 			set
 			{
 				Assert.NotDisposed(this);
-				NativeMethods.SetWindowSize(_window, value.Width, value.Height);
-				_size = new Size(value.Width, value.Height);
+				//NativeMethods.SetWindowSize(_window, value.Width, value.Height);
+				//_size = new Size(value.Width, value.Height);
 			}
 		}
 
@@ -293,8 +293,6 @@ namespace Pegasus.Framework.Platform
 
 			public delegate void MouseWheelCallback(int delta);
 
-			public delegate void ResizedCallback(int width, int height);
-
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgOpenWindow")]
 			public static extern IntPtr OpenWindow(ref WindowParams windowParams);
 
@@ -304,11 +302,11 @@ namespace Pegasus.Framework.Platform
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgProcessWindowEvents")]
 			public static extern void ProcessWindowEvents(IntPtr window);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetWindowSize")]
-			public static extern void GetWindowSize(IntPtr window, out int width, out int height);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetWindowPlacement")]
+			public static extern void GetWindowPlacement(IntPtr window, out WindowPlacement placement);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowSize")]
-			public static extern void SetWindowSize(IntPtr window, int width, int height);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowPlacement")]
+			public static extern void SetWindowPlacement(IntPtr window, WindowPlacement placement);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowTitle")]
 			public static extern void SetWindowTitle(IntPtr window, string title);
@@ -328,7 +326,6 @@ namespace Pegasus.Framework.Platform
 
 				public ClosingCallback Closing;
 				public ClosedCallback Closed;
-				public ResizedCallback Resized;
 				public LostFocusCallback LostFocus;
 				public GainedFocusCallback GainedFocus;
 				public CharacterEnteredCallback CharacterEntered;
@@ -340,6 +337,16 @@ namespace Pegasus.Framework.Platform
 				public MouseMovedCallback MouseMoved;
 				public MouseEnteredCallback MouseEntered;
 				public MouseLeftCallback MouseLeft;
+			}
+
+			[StructLayout(LayoutKind.Sequential)]
+			public struct WindowPlacement
+			{
+				public bool Maximized;
+				public int X;
+				public int Y;
+				public int Width;
+				public int Height;
 			}
 		}
 	}

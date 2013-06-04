@@ -15,9 +15,8 @@ static pgVoid ReleaseBackBuffer(pgSwapChain* swapChain);
 
 pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 {
-	pgInt32 width, height;
+	pgInt32 width = window->placement.width, height = window->placement.height;
 	DXGI_SWAP_CHAIN_DESC desc;
-	pgGetWindowSize(window, &width, &height);
 
 	swapChain->renderTarget.count = 1;
 	swapChain->format = DXGI_FORMAT_R8G8B8A8_UNORM;

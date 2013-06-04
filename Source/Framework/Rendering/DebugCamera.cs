@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Rendering
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Input;
+	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -71,7 +72,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		/// The input layer that must be activated to control the camera.
 		/// </summary>
-		private InputLayer _layer;
+		private readonly InputLayer _layer;
 
 		/// <summary>
 		///   Initializes a new instance.
