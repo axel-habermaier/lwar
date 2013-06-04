@@ -58,7 +58,7 @@ namespace Lwar.Client.Gameplay
 					DisplayString = String.Format("{0}: {1}", Player.Name, Message);
 					break;
 				case EventType.Join:
-					DisplayString = String.Format("{0} joined the game.", Player.Name);
+					DisplayString = String.Format("{0} has joined the game.", Player.Name);
 					break;
 				case EventType.Kicked:
 					if (String.IsNullOrWhiteSpace(Message))

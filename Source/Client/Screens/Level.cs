@@ -98,11 +98,11 @@ namespace Lwar.Client.Screens
 
 			_cameraManager.SafeDispose();
 			_inputManager.SafeDispose();
-			_networkSession.SafeDispose();
 			_gameSession.SafeDispose();
 			_renderContext.SafeDispose();
 			_scoreboard.SafeDispose();
 			_chatInput.SafeDispose();
+			_networkSession.SafeDispose();
 
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;

@@ -65,7 +65,6 @@ Message Types
 	Id		Type			Reliable	Sender			Description	
 	---  	---------		---------	-------------	----------------------------------------------------------------------
 	  1 	Connect			yes			client			Client wants to connect to a server
-	  2		Disconnect		yes			client			Client wants to disconnect from a server
 	  3		Join			yes			server			Informs all clients about a new player
 	  4 	Leave			yes			server			Informs all clients that a client left
 	  5		Chat			yes			client/server	Broadcasts the chat message to all clients
@@ -81,6 +80,7 @@ Message Types
 	103		Input			no			client			Periodically updates the server's client-specific input state
 	104		Full			no			server			Signals the client that the server is full
 	105		Collision		no			server			Indicates that a collision has occurred
+	106		Disconnect		no			client			Client wants to disconnect from a server
 
 	110		Update			no			server			Periodically updates the clients' entity states
 	111		UpdatePos		no			server			Restricted updates for different kinds of entities
@@ -288,10 +288,14 @@ Connecting to the server
 
 	Once the server has received a Connect message from a previously unknown client, it checks whether
 	it can accept an additional client or whether the server is full. In the latter case, the server
-	sends a Full message back to the client. If the server is not full, it sends a Join message
-	containing the id of the newly allocated player to all clients, including the new one. This must be
-	the first message sent to the new client and it must have sequence number 1. Furthermore, this message
-	must acknowledge the reception of the client's Connect message.
+	sends a Full message back to the client. Since the Full message is unreliable and might get lost, 
+	the server is free to send multiple Full message during a short timeframe, in order to increase the 
+	likelihood that the client actually receives the message.
+
+	If the server is not full, it sends a Join message containing the id of the newly allocated player to 
+	all clients, including the new one. This must be the first message sent to the new client and it must 
+	have sequence number 1. Furthermore, this message must acknowledge the reception of the client's Connect 
+	message.
 
 	Upon reception of the Join message, the client knows that it has established a connection to the
 	server and waits for the synchronization of the game state to complete. The server starts sending
@@ -309,19 +313,16 @@ Connecting to the server
 
 Disconnecting from the server
 	If the player requests a graceful disconnect from the server, the client sends a Disconnect message
-	to the server. Upon reception of the message, the server stops sending any messages except for
-	a Leave message with the client's player id that also acknowledges the Disconnect message. 
-
-	The Leave message sent to a disconnecting client will not be acknowledged (similarly, a Full
-	message sent to a connecting client will not be acknowledged). The server just resends the message
-	until it stops receiving the Disconnect (or Connect) messages from the client. Either, the client
-	received the Leave (Full) message and disconnected successfully (aborted the connection attempt)
-	or the client did not receive the message and timed out. 
+	to the server. Upon reception of the message, the server stops sending any messages to the client
+	and closes the connection. Since the Disconnect message is unreliable and might get lost, the client
+	is free to send multiple Disconnect message during a short timeframe, in order to increase the 
+	likelihood that the server actually receives the message.
 
 	If the connection between the server and the client is lost due to an unexpected event (server or 
-	client crash, network cable unplugged, etc.) and cannot be reestablished within the duration of the
-	Disconnect timeout, the client's game session ends and/or the server removes the client, sending all 
-	of its remaining clients a Leave message for the disconnected client.
+	client crash, network cable unplugged, none of the Disconnect messages came through, etc.) and 
+	cannot be reestablished within the duration of the Disconnect timeout, the client's game session 
+	ends and/or the server removes the client, sending all of its remaining clients a Leave message for 
+	the disconnected client.
 
 Client-side prediction
 	A client may predict velocity (or acceleration) of an entity with by linear extrapolation
@@ -338,6 +339,9 @@ Revision History
 								player id is allowed to be the client's local player id
 								Added Kill message
 								Added server player id constant
+								Disconnect is now unreliable with new id 106
+								Clarified how Full and Disconnect messages are handled during the
+								connecting and disconnecting procedure
 	13	  13-05-31  Axel		Increased maximum allowed chat message length to 255 bytes 
 	12	  15-04-12  Axel		Removed entity types; these are now determined by the F# code 
 								generation script

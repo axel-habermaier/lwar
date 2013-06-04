@@ -4,6 +4,7 @@ namespace Lwar.Client.Network
 {
 	using System.Collections.Generic;
 	using System.Net;
+	using System.Threading.Tasks;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Memory;
 	using Scripting;
@@ -13,6 +14,16 @@ namespace Lwar.Client.Network
 	/// </summary>
 	public class NetworkSession : DisposableObject
 	{
+		/// <summary>
+		///   The number of disconnect messages that are sent to the server.
+		/// </summary>
+		private const int DisconnectMessageCount = 3;
+
+		/// <summary>
+		///   The time (in milliseconds) to wait between sending two disconnect messages to server.
+		/// </summary>
+		private const int DisconnectSendInterval = 60;
+
 		/// <summary>
 		///   The connection to the remote server.
 		/// </summary>
@@ -145,6 +156,22 @@ namespace Lwar.Client.Network
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			// Start a task that sends a couple of Disconnect messages to the server
+			var task = Task.Run(async () =>
+				{
+					for (var i = 0; i < DisconnectMessageCount && !IsDropped && !IsFaulted; ++i)
+					{
+						Send(new Message{Type=MessageType.Disconnect});
+
+						_connection.Send(_outgoingMessages);
+						_connection.Update();
+						await Task.Delay(DisconnectSendInterval);
+					}
+				});
+
+			// Wait for the task to finish and clean up
+			task.Wait();
+
 			_connection.SafeDispose();
 			_deliveryManager.SafeDispose();
 		}

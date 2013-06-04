@@ -86,7 +86,7 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
         break;
 
     case MESSAGE_DISCONNECT:
-        if(!c) return;
+        if(!c || c->hasleft) return;
         c->hasleft = 1; /* do not broadcast leave message on timeout */
         queue_leave(c);
         break;
