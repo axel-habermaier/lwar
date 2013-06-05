@@ -134,7 +134,6 @@ namespace Pegasus.Framework
 							
 							// Update the logical inputs based on the new state of the input system
 							inputDevice.Update();
-							console.HandleInput();
 						}
 
 						// Check if any command bindings have been triggered and update the resolution manager

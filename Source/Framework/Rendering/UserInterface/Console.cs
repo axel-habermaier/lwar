@@ -217,12 +217,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			// Resize the content area
 			var contentArea = new Rectangle(_margin.Width, 0, _size.Width - 2 * _margin.Width, promptArea.Top);
 			_content.Resize(contentArea);
+
+			HandleInput();
 		}
 
 		/// <summary>
 		///   Handles the user input relevant to the console of the given device.
 		/// </summary>
-		internal void HandleInput()
+		private void HandleInput()
 		{
 			// Check wheter the console should be toggle on or off
 			if (_input.Toggle.IsTriggered)

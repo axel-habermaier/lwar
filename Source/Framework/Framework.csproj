@@ -328,12 +328,13 @@
     </Compile>
     <Compile Include="Scripting\ConfigurationFile.cs" />
     <Compile Include="Scripting\ConfigurationLine.cs" />
-    <Compile Include="Scripting\FileNameAttribute.cs" />
+    <Compile Include="Scripting\Validators\WindowPositionAttribute.cs" />
+    <Compile Include="Scripting\Validators\FileNameAttribute.cs" />
     <Compile Include="Scripting\Help.cs" />
     <Compile Include="Scripting\Instruction.cs" />
-    <Compile Include="Scripting\MaximumLengthAttribute.cs" />
-    <Compile Include="Scripting\NotEmptyAttribute.cs" />
-    <Compile Include="Scripting\RangeAttribute.cs" />
+    <Compile Include="Scripting\Validators\MaximumLengthAttribute.cs" />
+    <Compile Include="Scripting\Validators\NotEmptyAttribute.cs" />
+    <Compile Include="Scripting\Validators\RangeAttribute.cs" />
     <Compile Include="Scripting\TypeRepresentation.cs" />
     <Compile Include="Scripting\CvarAttribute.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
@@ -501,8 +502,9 @@
     <Compile Include="Platform\AveragedValue.cs" />
     <Compile Include="Scripting\Parsing\Combinators\TypeParser.cs" />
     <Compile Include="Scripting\UpdateMode.cs" />
-    <Compile Include="Scripting\ValidatorAttribute.cs" />
+    <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
     <Compile Include="ScreenManager.cs" />
+    <Compile Include="Scripting\Validators\WindowSizeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

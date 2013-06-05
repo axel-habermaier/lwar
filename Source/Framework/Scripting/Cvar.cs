@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Scripting
 {
 	using Platform.Logging;
+	using Validators;
 
 	/// <summary>
 	///   Represents a configurable value.
@@ -180,8 +181,8 @@ namespace Pegasus.Framework.Scripting
 				return;
 			}
 
-			if (!RaiseChangingEvent(value))
-				return;
+			if (Changing != null)
+				Changing(value);
 
 			var oldValue = _value;
 			_value = value;
@@ -214,9 +215,6 @@ namespace Pegasus.Framework.Scripting
 				return;
 			}
 
-			if (!RaiseChangingEvent(value))
-				return;
-
 			// Otherwise, store the deferred value
 			DeferredValue = value;
 			HasDeferredValue = true;
@@ -226,42 +224,13 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		/// Raises the changing event for the given value. Returns false if the cvar update has been cancelled.
-		/// </summary>
-		/// <param name="newValue">The new cvar value.</param>
-		private bool RaiseChangingEvent(T newValue)
-		{
-			var cancel = false;
-			if (Changing != null)
-				Changing(newValue, ref cancel);
-
-			return !cancel;
-		}
-
-		/// <summary>
 		///   Raised when the value of the cvar is about to change, passing the new value to the event handlers.
 		/// </summary>
-		public event CvarChangingHandler<T> Changing;
+		public event Action<T> Changing;
 
 		/// <summary>
 		///   Raised when the value of the cvar has changed, passing the old value to the event handlers.
 		/// </summary>
-		public event CvarChangedHandler<T> Changed;
+		public event Action<T> Changed;
 	}
-
-	/// <summary>
-	///   A delegate used to broadcast the new value of a cvar that is about to change. Handlers of the event can cancel
-	///   the update by setting the cancel argument to true.
-	/// </summary>
-	/// <typeparam name="T">The type of the cvar's value.</typeparam>
-	/// <param name="newValue">The new value of the cvar.</param>
-	/// <param name="cancel">If set to true, the new value will not be set.</param>
-	public delegate void CvarChangingHandler<in T>(T newValue, ref bool cancel);
-
-	/// <summary>
-	///   A delegate used to inform about a cvar value change.
-	/// </summary>
-	/// <typeparam name="T">The type of the cvar's value.</typeparam>
-	/// <param name="oldValue">The previous value of the cvar.</param>
-	public delegate void CvarChangedHandler<in T>(T oldValue);
 }

@@ -194,7 +194,9 @@ PG_API_EXPORT pgVoid pgCloseWindow(pgWindow* window);
 PG_API_EXPORT pgVoid pgProcessWindowEvents(pgWindow* window);
 PG_API_EXPORT pgVoid pgSetWindowTitle(pgWindow* window, pgString title);
 PG_API_EXPORT pgVoid pgGetWindowPlacement(pgWindow* window, pgWindowPlacement* placement);
-PG_API_EXPORT pgVoid pgSetWindowPlacement(pgWindow* window, pgWindowPlacement placement);
+PG_API_EXPORT pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height);
+PG_API_EXPORT pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y);
+PG_API_EXPORT pgVoid pgSetWindowState(pgWindow* window, pgWindowState state);
 
 PG_API_EXPORT pgVoid pgCaptureMouse(pgWindow* window);
 PG_API_EXPORT pgVoid pgReleaseMouse(pgWindow* window);

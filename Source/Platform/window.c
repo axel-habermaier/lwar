@@ -115,23 +115,38 @@ pgVoid pgGetWindowPlacement(pgWindow* window, pgWindowPlacement* placement)
 	*placement = window->placement;
 }
 
-pgVoid pgSetWindowPlacement(pgWindow* window, pgWindowPlacement placement)
+pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height)
 {
-	pgInt32 width = window->placement.width;
-	pgInt32 height = window->placement.height;
-
 	PG_ASSERT_NOT_NULL(window);
-	pgConstrainWindowPlacement(&placement);
 
-	window->placement = placement;
+	window->placement.width = width;
+	window->placement.height = height;
+	window->placement.state = PG_WINDOW_NORMAL;
 
-	if (!window->fullscreen)
-	{
-		pgSetWindowPlacementCore(window);
+	pgConstrainWindowPlacement(&window->placement);
+	pgSetWindowSizeCore(window);
+}
 
-		if (window->swapChain != NULL && (width != placement.width || height != placement.height))
-			pgResizeSwapChain(window->swapChain);
-	}
+pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
+{
+	PG_ASSERT_NOT_NULL(window);
+
+	window->placement.x = x;
+	window->placement.y = y;
+	window->placement.state = PG_WINDOW_NORMAL;
+
+	pgConstrainWindowPlacement(&window->placement);
+	pgSetWindowPositionCore(window);
+}
+
+pgVoid pgSetWindowState(pgWindow* window, pgWindowState state)
+{
+	PG_ASSERT_NOT_NULL(window);
+
+	window->placement.state = state;
+
+	pgConstrainWindowPlacement(&window->placement);
+	pgSetWindowStateCore(window);
 }
 
 pgVoid pgSetWindowTitle(pgWindow* window, pgString title)

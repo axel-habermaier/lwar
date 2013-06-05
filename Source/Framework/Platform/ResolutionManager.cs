@@ -53,9 +53,6 @@ namespace Pegasus.Framework.Platform
 			Cvars.WindowSizeChanged += UpdateWindowSize;
 			Cvars.WindowPositionChanged += UpdateWindowPosition;
 			Cvars.WindowStateFlagChanged += UpdateWindowState;
-			Cvars.WindowSizeChanging += WindowSizeChanging;
-			Cvars.WindowPositionChanging += WindowPositionChanging;
-			Cvars.ResolutionChanging += WindowSizeChanging;
 
 			UpdateGraphicsState();
 			_device.Add(_toggleMode);
@@ -143,34 +140,6 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Checks whether the new window size is valid.
-		/// </summary>
-		/// <param name="size">The new window size.</param>
-		/// <param name="cancel">If true, cancels the cvar update.</param>
-		private static void WindowSizeChanging(Size size, ref bool cancel)
-		{
-			cancel = Window.MinimumSize.Width > size.Width || Window.MinimumSize.Height > size.Height ||
-					 Window.MaximumSize.Width < size.Width || Window.MaximumSize.Height < size.Height;
-
-			if (cancel)
-				Log.Warn("A window size or resolution of {0}x{1} is not supported.", size.Width, size.Height);
-		}
-
-		/// <summary>
-		///   Checks whether the new window position is valid.
-		/// </summary>
-		/// <param name="position">The new window position.</param>
-		/// <param name="cancel">If true, cancels the cvar update.</param>
-		private static void WindowPositionChanging(Vector2i position, ref bool cancel)
-		{
-			cancel = -Window.MaximumSize.Width > position.X || -Window.MaximumSize.Height > position.Y ||
-					 Window.MaximumSize.Width < position.X || Window.MaximumSize.Height < position.Y;
-
-			if (cancel)
-				Log.Warn("The window position ({0},{1}) is not supported.", position.X, position.Y);
-		}
-
-		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
@@ -178,9 +147,6 @@ namespace Pegasus.Framework.Platform
 			Cvars.WindowSizeChanged -= UpdateWindowSize;
 			Cvars.WindowPositionChanged -= UpdateWindowPosition;
 			Cvars.WindowStateFlagChanged -= UpdateWindowState;
-			Cvars.WindowSizeChanging -= WindowSizeChanging;
-			Cvars.WindowPositionChanging -= WindowPositionChanging;
-			Cvars.ResolutionChanging -= WindowSizeChanging;
 
 			_device.Remove(_toggleMode);
 		}

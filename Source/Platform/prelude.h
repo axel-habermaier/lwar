@@ -254,12 +254,15 @@ pgVoid pgCloseWindowCore(pgWindow* window);
 pgBool pgProcessWindowEvent(pgWindow* window, pgMessage* message);
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title);
 pgVoid pgGetWindowPlacementCore(pgWindow* window);
-pgVoid pgSetWindowPlacementCore(pgWindow* window);
-pgVoid pgConstrainWindowPlacement(pgWindowPlacement* placement);
-pgRectangle pgGetDesktopArea();
+pgVoid pgSetWindowSizeCore(pgWindow* window);
+pgVoid pgSetWindowPositionCore(pgWindow* window);
+pgVoid pgSetWindowStateCore(pgWindow* window);
 
 pgVoid pgCaptureMouseCore(pgWindow* window);
 pgVoid pgReleaseMouseCore(pgWindow* window);
+
+pgVoid pgConstrainWindowPlacement(pgWindowPlacement* placement);
+pgRectangle pgGetDesktopArea();
 
 //====================================================================================================================
 // Helper functions

@@ -2,6 +2,7 @@
 using Pegasus.Framework.Math;
 using Pegasus.Framework.Platform;
 using Pegasus.Framework.Scripting;
+using Pegasus.Framework.Scripting.Validators;
 
 // ReSharper disable CheckNamespace
 
@@ -20,7 +21,7 @@ internal interface ICvars
 	///   The screen resolution used by the application in fullscreen mode. Any changes to this cvar require a
 	///   restart of the graphics subsystem.
 	/// </summary>
-	[Cvar("new Size(1024, 768)", UpdateMode.OnGraphicsRestart), Persistent]
+	[Cvar("new Size(1024, 768)", UpdateMode.OnGraphicsRestart), Persistent, WindowSize]
 	Size Resolution { get; set; }
 
 	/// <summary>
@@ -33,13 +34,13 @@ internal interface ICvars
 	/// <summary>
 	///   The size in pixels of the application window in non-fullscreen mode.
 	/// </summary>
-	[Cvar("new Size(1024, 768)"), Persistent]
+	[Cvar("new Size(1024, 768)"), Persistent, WindowSize]
 	Size WindowSize { get; set; }
 
 	/// <summary>
 	///   The screen position of the application window's top left corner in non-fullscreen mode.
 	/// </summary>
-	[Cvar("Vector2i.Zero"), Persistent]
+	[Cvar("Vector2i.Zero"), Persistent, WindowPosition]
 	Vector2i WindowPosition { get; set; }
 
 	/// <summary>

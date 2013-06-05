@@ -125,20 +125,24 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 	if (IsIconic(window->hwnd))
 		return;
 
-	if (!GetWindowRect(window->hwnd, &rect))
-		pgWin32Error("Failed to get window position.");
-	
-	window->placement.x = rect.left;
-	window->placement.y = rect.top;
-
 	if (!GetClientRect(window->hwnd, &rect))
 		pgWin32Error("Failed to get window size.");
 
     window->placement.width = rect.right - rect.left;
 	window->placement.height = rect.bottom - rect.top;
+
+	// Don't update the position when the window is maximized, as that only results in invalid values
+	if (IsIconic(window->hwnd))
+		return;
+
+	if (!GetWindowRect(window->hwnd, &rect))
+		pgWin32Error("Failed to get window position.");
+	
+	window->placement.x = rect.left;
+	window->placement.y = rect.top;
 }
 
-pgVoid pgSetWindowPlacementCore(pgWindow* window)
+pgVoid pgSetWindowSizeCore(pgWindow* window)
 {
 	RECT rect;
 	LONG width, height;
@@ -154,14 +158,23 @@ pgVoid pgSetWindowPlacementCore(pgWindow* window)
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
 
-	if (!SetWindowPos(window->hwnd, NULL, window->placement.x, window->placement.y, width, height, SWP_NOZORDER))
+	if (!SetWindowPos(window->hwnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE))
 		pgWin32Error("Failed to resize window.");
+}
 
+pgVoid pgSetWindowPositionCore(pgWindow* window)
+{
+	if (!SetWindowPos(window->hwnd, NULL, window->placement.x, window->placement.y, 0, 0, SWP_NOZORDER | SWP_NOSIZE))
+		pgWin32Error("Failed to move window.");
+}
+
+pgVoid pgSetWindowStateCore(pgWindow* window)
+{
 	if (window->placement.state == PG_WINDOW_MAXIMIZED && !ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
 		pgWin32Error("Failed to maximize window.");
-	else if (!window->placement.state == PG_WINDOW_NORMAL && !ShowWindow(window->hwnd, SW_RESTORE))
+	else if (window->placement.state == PG_WINDOW_NORMAL && !ShowWindow(window->hwnd, SW_RESTORE))
 		pgWin32Error("Failed to get window into normal mode.");
-	else if (!window->placement.state == PG_WINDOW_MINIMIZED && !ShowWindow(window->hwnd, SW_SHOWMINIMIZED))
+	else if (window->placement.state == PG_WINDOW_MINIMIZED && !ShowWindow(window->hwnd, SW_SHOWMINIMIZED))
 		pgWin32Error("Failed to get window into minimized mode.");
 }
 

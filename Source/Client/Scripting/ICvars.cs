@@ -2,6 +2,7 @@
 using Lwar.Client.Network;
 using Pegasus.Framework.Platform.Input;
 using Pegasus.Framework.Scripting;
+using Pegasus.Framework.Scripting.Validators;
 
 // ReSharper disable CheckNamespace
 

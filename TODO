@@ -38,8 +38,6 @@ Pegasus
 - Console: Shift+Tab: Go back auto-completion
 - Reset command: Resets cvar to its default
 - Network: Send network spec revision number with Connect message, send WrongVersion message on version mismatch
-- Remove cancel parameter from cvar; add validator attributes for window size and position
-- Move validators into their own namespace
 - Window subsystem
 	- C: Filter out multiple resize-events
 	- C: Resize swap chain automatically when window size changes
