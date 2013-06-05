@@ -73,7 +73,7 @@ namespace Pegasus.Framework.Rendering
 
 			// Ensure that the quads list does not have to be resized by settings its capacity to the number of
 			// characters; however, this wastes some space as not all characters generate quads
-			if (_quads == null || text.Length >= _quads.Length)
+			if (_quads == null || text.Length > _quads.Length)
 				_quads = new Quad[text.Length];
 
 			Quad quad;

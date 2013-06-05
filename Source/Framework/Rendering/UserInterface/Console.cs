@@ -206,6 +206,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="size">The size of the area that the console should be drawn on.</param>
 		internal void Update(Size size)
 		{
+			HandleInput();
+
+			if (_size.Width == size.Width && _size.Height == size.Height / 2)
+				return;
+
 			_size.Width = size.Width;
 			_size.Height = size.Height / 2;
 
@@ -217,8 +222,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			// Resize the content area
 			var contentArea = new Rectangle(_margin.Width, 0, _size.Width - 2 * _margin.Width, promptArea.Top);
 			_content.Resize(contentArea);
-
-			HandleInput();
 		}
 
 		/// <summary>
