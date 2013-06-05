@@ -30,17 +30,17 @@ namespace Pegasus.Framework.Platform.Input
 			var aliasOperator = Character('|') + ws;
 
 			// Define the parsers for mouse and key triggers (the parser does not support scan code triggers or cvar triggers)
-			var keyTriggerType = EnumerationLiteral<KeyTriggerType>() + ws;
-			var mouseTriggerType = EnumerationLiteral<MouseTriggerType>() + ws;
+			var keyTriggerType = EnumerationLiteral<KeyTriggerType>(ignoreCase: true) + ws;
+			var mouseTriggerType = EnumerationLiteral<MouseTriggerType>(ignoreCase: true) + ws;
 
-			var key = EnumerationLiteral<Key>() + ws;
-			var mouseButton = EnumerationLiteral<MouseButton>() + ws;
+			var key = EnumerationLiteral<Key>(ignoreCase: true) + ws;
+			var mouseButton = EnumerationLiteral<MouseButton>(ignoreCase: true) + ws;
 
 			var keyTriggerParams = Pipe(key, comma + keyTriggerType, (k, t) => (InputTrigger)new KeyTrigger(t, k));
 			var mouseTriggerParams = Pipe(mouseButton, comma + mouseTriggerType, (m, t) => (InputTrigger)new MouseTrigger(t, m));
 
-			var keySelector = String("Key") + ws + openParen;
-			var mouseSelector = String("Mouse") + ws + openParen;
+			var keySelector = String("Key", ignoreCase: true) + ws + openParen;
+			var mouseSelector = String("Mouse", ignoreCase: true) + ws + openParen;
 
 			var keyTrigger = Between(keyTriggerParams, keySelector, closeParen);
 			var mouseTrigger = Between(mouseTriggerParams, mouseSelector, closeParen);

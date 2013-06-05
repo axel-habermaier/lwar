@@ -32,7 +32,6 @@ namespace Pegasus.Framework.Platform.Graphics
 			: base(graphicsDevice)
 		{
 			_window = window;
-			_window.Resized += ResizeBackBuffer;
 
 			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr);
 			BackBuffer = new RenderTarget(graphicsDevice, NativeMethods.GetBackBuffer(_swapChain));
@@ -55,21 +54,10 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Resizes the back buffer to the given size.
-		/// </summary>
-		/// <param name="size">The new size.</param>
-		private void ResizeBackBuffer(Size size)
-		{
-			Assert.NotDisposed(this);
-			NativeMethods.ResizeSwapChain(_swapChain, size.Width, size.Height);
-		}
-
-		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_window.Resized -= ResizeBackBuffer;
 			BackBuffer.SafeDispose();
 
 			NativeMethods.DestroySwapChain(_swapChain);
@@ -105,9 +93,6 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetBackBuffer")]
 			public static extern IntPtr GetBackBuffer(IntPtr swapChain);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgResizeSwapChain")]
-			public static extern void ResizeSwapChain(IntPtr swapChain, int width, int height);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgUpdateSwapChainState")]
 			public static extern bool UpdateState(IntPtr swapChain, int width, int height, bool fullscreen);

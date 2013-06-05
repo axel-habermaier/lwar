@@ -54,7 +54,6 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <param name="name">The name of the cvar that should be returned.</param>
 		public static Cvar<T> Resolve<T>(string name)
-			where T : IEquatable<T>
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
 			Assert.That(Cvars.ContainsKey(name), "Could not resolve cvar '{0}'. Rerun the T4 templates.", name);

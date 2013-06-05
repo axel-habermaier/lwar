@@ -8,7 +8,7 @@ namespace Pegasus.Framework.Math
 	/// <summary>
 	///   Represents a 32-bit signed fixed-point value, with 8 bits being used for the fractional part of the value.
 	/// </summary>
-	public struct Fixed8 : IEquatable<Fixed8>
+	public struct Fixed8 : IEquatable<Fixed8>, IComparable<Fixed8>, IComparable
 	{
 		/// <summary>
 		///   The number of bits that are used to store the fractional part of the value.
@@ -155,7 +155,7 @@ namespace Pegasus.Framework.Math
 
 		#endregion
 
-		#region Equality operators
+		#region Equality operators and comparison
 
 		/// <summary>
 		///   Indicates whether the current fixed-point value is equal to another fixed-point value.
@@ -183,6 +183,28 @@ namespace Pegasus.Framework.Math
 		public override int GetHashCode()
 		{
 			return _rawValue;
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(object other)
+		{
+			if (other == null) 
+				return 1;
+
+			Assert.ArgumentSatisfies(other is Fixed8, "The given object is not of type 'Fixed8'.");
+			return CompareTo((Fixed8)other);
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(Fixed8 other)
+		{
+			return _rawValue.CompareTo(other._rawValue);
 		}
 
 		/// <summary>
@@ -402,7 +424,7 @@ namespace Pegasus.Framework.Math
 	/// <summary>
 	///   Represents a 32-bit signed fixed-point value, with 16 bits being used for the fractional part of the value.
 	/// </summary>
-	public struct Fixed16 : IEquatable<Fixed16>
+	public struct Fixed16 : IEquatable<Fixed16>, IComparable<Fixed16>, IComparable
 	{
 		/// <summary>
 		///   The number of bits that are used to store the fractional part of the value.
@@ -549,7 +571,7 @@ namespace Pegasus.Framework.Math
 
 		#endregion
 
-		#region Equality operators
+		#region Equality operators and comparison
 
 		/// <summary>
 		///   Indicates whether the current fixed-point value is equal to another fixed-point value.
@@ -577,6 +599,28 @@ namespace Pegasus.Framework.Math
 		public override int GetHashCode()
 		{
 			return _rawValue;
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(object other)
+		{
+			if (other == null) 
+				return 1;
+
+			Assert.ArgumentSatisfies(other is Fixed16, "The given object is not of type 'Fixed16'.");
+			return CompareTo((Fixed16)other);
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(Fixed16 other)
+		{
+			return _rawValue.CompareTo(other._rawValue);
 		}
 
 		/// <summary>

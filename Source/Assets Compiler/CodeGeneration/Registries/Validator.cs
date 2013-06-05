@@ -47,7 +47,12 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// </summary>
 		public IEnumerable<string> Arguments
 		{
-			get { return _attribute.Arguments.Select(argument => argument.ToString()); }
+			get { return _attribute.Arguments.Select(argument =>
+				{
+					if (Name == "RangeAttribute" && argument.GetConstantValue(Resolver) is string)
+						return argument.GetConstantValue(Resolver).ToString();
+					return argument.ToString();
+				}); }
 		}
 	}
 }

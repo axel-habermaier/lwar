@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Scripting
 {
 	using System.Collections.Generic;
+	using Math;
 	using Platform.Input;
 
 	/// <summary>
@@ -18,7 +19,28 @@ namespace Pegasus.Framework.Scripting
 			{ typeof(bool), o => (bool)o ? "true" : "false" },
 			{ typeof(float), o => ((float)o).ToString("F") },
 			{ typeof(double), o => ((double)o).ToString("F") },
-			{ typeof(string), o => (string)o }
+			{ typeof(string), o => (string)o },
+			{
+				typeof(Vector2i), o =>
+					{
+						var v = (Vector2i)o;
+						return String.Format("{0};{1}", v.X, v.Y);
+					}
+			},
+			{
+				typeof(Vector2), o =>
+					{
+						var v = (Vector2)o;
+						return String.Format("{0};{1}", v.X, v.Y);
+					}
+			},
+			{
+				typeof(Size), o =>
+					{
+						var s = (Size)o;
+						return String.Format("{0};{1}", s.Width, s.Height);
+					}
+			}
 		};
 
 		/// <summary>

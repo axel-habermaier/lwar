@@ -12,7 +12,7 @@ namespace Pegasus.Framework.Math
 	/// <summary>
 	///   Represents a 32-bit signed fixed-point value, with <#= fractionalBits #> bits being used for the fractional part of the value.
 	/// </summary>
-	public struct Fixed<#= fractionalBits #> : IEquatable<Fixed<#= fractionalBits #>>
+	public struct Fixed<#= fractionalBits #> : IEquatable<Fixed<#= fractionalBits #>>, IComparable<Fixed<#= fractionalBits #>>, IComparable
 	{
 		/// <summary>
 		///   The number of bits that are used to store the fractional part of the value.
@@ -159,7 +159,7 @@ namespace Pegasus.Framework.Math
 
 		#endregion
 
-		#region Equality operators
+		#region Equality operators and comparison
 
 		/// <summary>
 		///   Indicates whether the current fixed-point value is equal to another fixed-point value.
@@ -187,6 +187,28 @@ namespace Pegasus.Framework.Math
 		public override int GetHashCode()
 		{
 			return _rawValue;
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(object other)
+		{
+			if (other == null) 
+				return 1;
+
+			Assert.ArgumentSatisfies(other is Fixed<#= fractionalBits #>, "The given object is not of type 'Fixed<#= fractionalBits #>'.");
+			return CompareTo((Fixed<#= fractionalBits #>)other);
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(Fixed<#= fractionalBits #> other)
+		{
+			return _rawValue.CompareTo(other._rawValue);
 		}
 
 		/// <summary>

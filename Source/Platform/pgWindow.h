@@ -9,6 +9,11 @@
 
 typedef struct pgWindow pgWindow;
 
+#define PG_WINDOW_MIN_WIDTH 800
+#define PG_WINDOW_MIN_HEIGHT 600
+#define PG_WINDOW_MAX_WIDTH 4096 
+#define PG_WINDOW_MAX_HEIGHT 2160
+
 typedef enum
 {
 	PG_MOUSE_UNKNOWN		= 0,
@@ -148,10 +153,6 @@ typedef pgVoid (*pgMouseLeftCallback)();
 
 typedef struct
 {
-	pgInt32						width;
-	pgInt32						height;
-	pgString					title;
-
 	pgClosingCallback			closing;
 	pgClosedCallback			closed;
 	pgLostFocusCallback			lostFocus;
@@ -165,22 +166,29 @@ typedef struct
 	pgMouseMovedCallback		mouseMoved;
 	pgMouseEnteredCallback		mouseEntered;
 	pgMouseLeftCallback			mouseLeft;
-} pgWindowParams;
+} pgWindowCallbacks;
+
+typedef enum
+{
+	PG_WINDOW_NORMAL = 1,
+	PG_WINDOW_MAXIMIZED = 2,
+	PG_WINDOW_MINIMIZED = 3
+} pgWindowState;
 
 typedef struct
 {
-	pgBool	maximized;
-	pgInt32 x;
-	pgInt32 y;
-	pgInt32 width;
-	pgInt32 height;
+	pgWindowState	state;
+	pgInt32			x;
+	pgInt32			y;
+	pgInt32			width;
+	pgInt32			height;
 } pgWindowPlacement;
 
 //====================================================================================================================
 // Window functions
 //====================================================================================================================
 
-PG_API_EXPORT pgWindow* pgOpenWindow(pgWindowParams* windowParams);
+PG_API_EXPORT pgWindow* pgOpenWindow(pgString title, pgWindowPlacement placement, pgWindowCallbacks callbacks);
 PG_API_EXPORT pgVoid pgCloseWindow(pgWindow* window);
 
 PG_API_EXPORT pgVoid pgProcessWindowEvents(pgWindow* window);

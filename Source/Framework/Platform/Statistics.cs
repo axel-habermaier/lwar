@@ -84,7 +84,8 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Updates the statistics.
 		/// </summary>
-		internal void Update()
+		/// <param name="size">The size of the area that the statistics should be drawn on.</param>
+		internal void Update(Size size)
 		{
 			if (!_gcCheck.IsAlive)
 			{
@@ -92,6 +93,7 @@ namespace Pegasus.Framework.Platform
 				_gcCheck.Target = new object();
 			}
 
+			_label.Area = new Rectangle(5, 5, size.Width, size.Height);
 			_timer.Update();
 		}
 
@@ -117,15 +119,6 @@ namespace Pegasus.Framework.Platform
 			WriteMeasurement(UpdateInput, "Update Input");
 
 			_label.Text = _builder.ToString();
-		}
-
-		/// <summary>
-		///   Resizes the output of the statistic.
-		/// </summary>
-		/// <param name="size">The new size.</param>
-		internal void Resize(Size size)
-		{
-			_label.Area = new Rectangle(5, 5, size.Width, size.Height);
 		}
 
 		/// <summary>

@@ -39,7 +39,11 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		public override string Description
 		{
-			get { return String.Format("The given value does not lie within [{0}, {1}].", LowerBound, UpperBound); }
+			get
+			{
+				return String.Format("The given value does not lie within {0} and {1}.",
+									 TypeRepresentation.ToString(LowerBound), TypeRepresentation.ToString(UpperBound));
+			}
 		}
 
 		/// <summary>

@@ -22,10 +22,6 @@ pgSwapChain* pgCreateSwapChain(pgGraphicsDevice* device, pgWindow* window)
 	swapChain->renderTarget.width = window->placement.width;
 	swapChain->renderTarget.height = window->placement.height;
 
-	/*pgGetWindowSize(window, &swapChain->renderTarget.width, &swapChain->renderTarget.height);
-	pgGetWindowSize(window, &swapChain->fullscreenWidth, &swapChain->fullscreenHeight);
-	pgGetWindowSize(window, &swapChain->windowedWidth, &swapChain->windowedHeight);*/
-
 	pgCreateSwapChainCore(swapChain, window);
 
 	return swapChain;
@@ -54,39 +50,45 @@ pgRenderTarget* pgGetBackBuffer(pgSwapChain* swapChain)
 	return &swapChain->renderTarget;
 }
 
-pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
+pgVoid pgResizeSwapChain(pgSwapChain* swapChain)
 {
 	PG_ASSERT_NOT_NULL(swapChain);
-	PG_ASSERT_IN_RANGE(width, 0, PG_WINDOW_MAX_WIDTH);
-	PG_ASSERT_IN_RANGE(height, 0, PG_WINDOW_MAX_HEIGHT);
-
-	//swapChain->width = width;
-	//swapChain->height = height;
-	pgResizeSwapChainCore(swapChain, width, height);
+	pgResizeSwapChainCore(swapChain);
 }
 
-pgBool pgUpdateSwapChainState(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen)
-{
-	PG_ASSERT_NOT_NULL(swapChain);
-	PG_ASSERT_IN_RANGE(width, 0, PG_WINDOW_MAX_WIDTH);
-	PG_ASSERT_IN_RANGE(height, 0, PG_WINDOW_MAX_HEIGHT);
-
-	if (pgUpdateSwapChainStateCore(swapChain, width, height, fullscreen))
-	{
-		if (fullscreen)
-		{
-			swapChain->fullscreenWidth = width;
-			swapChain->fullscreenHeight = height;
-		}
-		else
-		{
-			swapChain->windowedWidth = width;
-			swapChain->windowedHeight = height;
-		}
-		
-		swapChain->fullscreen = fullscreen;
-		return PG_TRUE;
-	}
-
-	return PG_FALSE;
-}
+//pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
+//{
+//	PG_ASSERT_NOT_NULL(swapChain);
+//	PG_ASSERT_IN_RANGE(width, 0, PG_WINDOW_MAX_WIDTH);
+//	PG_ASSERT_IN_RANGE(height, 0, PG_WINDOW_MAX_HEIGHT);
+//
+//	//swapChain->width = width;
+//	//swapChain->height = height;
+//	pgResizeSwapChainCore(swapChain, width, height);
+//}
+//
+//pgBool pgUpdateSwapChainState(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen)
+//{
+//	PG_ASSERT_NOT_NULL(swapChain);
+//	PG_ASSERT_IN_RANGE(width, 0, PG_WINDOW_MAX_WIDTH);
+//	PG_ASSERT_IN_RANGE(height, 0, PG_WINDOW_MAX_HEIGHT);
+//
+//	if (pgUpdateSwapChainStateCore(swapChain, width, height, fullscreen))
+//	{
+//		if (fullscreen)
+//		{
+//			swapChain->fullscreenWidth = width;
+//			swapChain->fullscreenHeight = height;
+//		}
+//		else
+//		{
+//			swapChain->windowedWidth = width;
+//			swapChain->windowedHeight = height;
+//		}
+//		
+//		swapChain->fullscreen = fullscreen;
+//		return PG_TRUE;
+//	}
+//
+//	return PG_FALSE;
+//}

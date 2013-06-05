@@ -201,10 +201,10 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Resizes the console.
+		///   Updates the console.
 		/// </summary>
-		/// <param name="size">The new size.</param>
-		internal void Resize(Size size)
+		/// <param name="size">The size of the area that the console should be drawn on.</param>
+		internal void Update(Size size)
 		{
 			_size.Width = size.Width;
 			_size.Height = size.Height / 2;

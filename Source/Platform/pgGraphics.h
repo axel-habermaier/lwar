@@ -379,7 +379,6 @@ PG_API_EXPORT pgVoid pgDestroySwapChain(pgSwapChain* swapChain);
 
 PG_API_EXPORT pgVoid pgPresent(pgSwapChain* swapChain);
 PG_API_EXPORT pgRenderTarget* pgGetBackBuffer(pgSwapChain* swapChain);
-PG_API_EXPORT pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 PG_API_EXPORT pgBool pgUpdateSwapChainState(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen);
 
 //====================================================================================================================

@@ -195,20 +195,17 @@ PG_NORETURN pgVoid pgNoReturn();
 // Window
 //====================================================================================================================
 
-#define PG_WINDOW_MIN_WIDTH 800
-#define PG_WINDOW_MIN_HEIGHT 600
-#define PG_WINDOW_MAX_WIDTH 1920
-#define PG_WINDOW_MAX_HEIGHT 1200
+#define PG_WINDOW_MIN_OVERLAP 100
 #define PG_KEY_COUNT 108
 #define PG_BUTTON_COUNT 5
 
 struct pgWindow
 {
-	pgWindowParams		params;
+	pgWindowCallbacks	callbacks;
+	pgWindowPlacement	placement;
 	pgSwapChain*		swapChain;
 	pgBool				mouseCaptured;
 	pgBool				fullscreen;
-	pgWindowPlacement	placement;
 
 	pgBool				keyState[PG_KEY_COUNT];
 	pgInt32				scanCode[PG_KEY_COUNT];
@@ -236,47 +233,30 @@ typedef enum
 typedef struct
 {
 	pgMessageType type;
-	union
-	{
-		struct
-		{
-			pgUint16 character;
-			pgInt32 scanCode;
-		} characterEntered;
-
-		struct
-		{
-			pgKey key;
-			pgInt32 scanCode;
-		} key;
-
-		struct 
-		{
-			pgInt32 delta;
-		} wheel;
-
-		struct
-		{
-			pgMouseButton button;
+	union {
+		pgUint16 character;
+		pgKey key;
+		pgMouseButton button;
+		pgInt32 delta;
+	};
+	union {
+		pgInt32 scanCode;
+		struct {
 			pgInt32 x;
 			pgInt32 y;
-		} mouse;
-
-		struct
-		{
-			pgInt32 x;
-			pgInt32 y;
-		} moved;
+		};
 	};
 } pgMessage;
 
-pgVoid pgOpenWindowCore(pgWindow* window);
+pgVoid pgOpenWindowCore(pgWindow* window, pgString title);
 pgVoid pgCloseWindowCore(pgWindow* window);
 
 pgBool pgProcessWindowEvent(pgWindow* window, pgMessage* message);
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title);
 pgVoid pgGetWindowPlacementCore(pgWindow* window);
 pgVoid pgSetWindowPlacementCore(pgWindow* window);
+pgVoid pgConstrainWindowPlacement(pgWindowPlacement* placement);
+pgRectangle pgGetDesktopArea();
 
 pgVoid pgCaptureMouseCore(pgWindow* window);
 pgVoid pgReleaseMouseCore(pgWindow* window);
@@ -505,9 +485,12 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window);
 pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain);
 
 pgVoid pgPresentCore(pgSwapChain* swapChain);
-pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
-pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen);
-pgVoid pgSwapChainWindowActive(pgSwapChain* swapChain, pgBool focus);
+//pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
+//pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen);
+//pgVoid pgSwapChainWindowActive(pgSwapChain* swapChain, pgBool focus);
+
+pgVoid pgResizeSwapChain(pgSwapChain* swapChain);
+pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain);
 
 //====================================================================================================================
 // Query

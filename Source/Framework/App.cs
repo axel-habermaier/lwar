@@ -80,7 +80,7 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(logFile);
 			
 			using (new NativeLibrary())
-			using (var window = new Window(Cvars.WindowWidth, Cvars.WindowHeight))
+			using (var window = new Window(appName, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowStateFlag))
 			using (var graphicsDevice = new GraphicsDevice())
 			using (var swapChain = new SwapChain(graphicsDevice, window))
 			using (var assets = new AssetsManager(graphicsDevice))
@@ -102,12 +102,9 @@ namespace Pegasus.Framework
 				using (var spriteBatch = new SpriteBatch(graphicsDevice, uiOutput, spriteEffect))
 				using (var console = new Console(graphicsDevice, inputDevice, defaultFont))
 				{
-					// Ensure that the size of the console and the statistics always matches that of the window
-					console.Resize(window.Size);
-					statistics.Resize(window.Size);
-
-					window.Resized += console.Resize;
-					window.Resized += statistics.Resize;
+					// Ensure that the console and the statistics are properly initialized
+					statistics.Update(window.Size);
+					console.Update(window.Size);
 
 					// Setup some command handlers
 					Commands.OnReloadAssets += assets.ReloadAssets;
@@ -146,7 +143,8 @@ namespace Pegasus.Framework
 
 						// Update the application logic and the statistics
 						Update();
-						statistics.Update();
+						statistics.Update(window.Size);
+						console.Update(window.Size);
 
 						// React to window size changes
 						var viewport = new Rectangle(Vector2i.Zero, window.Size);

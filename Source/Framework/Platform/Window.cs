@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Input;
 	using Logging;
 	using Math;
@@ -15,10 +14,20 @@ namespace Pegasus.Framework.Platform
 	public sealed class Window : DisposableObject
 	{
 		/// <summary>
-		///   The window parameters that have been passed to the native code. We must keep a reference in order to prevent
+		///   The minimal window size supported by the library.
+		/// </summary>
+		public static readonly Size MinimumSize = new Size(800, 600);
+
+		/// <summary>
+		///   The maximal window size supported by the library.
+		/// </summary>
+		public static readonly Size MaximumSize = new Size(4096, 2160);
+
+		/// <summary>
+		///   The window callbacks that have been passed to the native code. We must keep a reference in order to prevent
 		///   the garbage collector from freeing the delegates while they are still being used by native code.
 		/// </summary>
-		private readonly NativeMethods.WindowParams _params;
+		private readonly NativeMethods.Callbacks _callbacks;
 
 		/// <summary>
 		///   The native window instance.
@@ -31,31 +40,25 @@ namespace Pegasus.Framework.Platform
 		private bool _mouseCaptured;
 
 		/// <summary>
-		///   The size of the rendering area of the window.
+		///   The current placement of the window.
 		/// </summary>
-		private Size _size;
+		private NativeMethods.Placement _placement;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="width">The width of the window's rendering area.</param>
-		/// <param name="height">The height of the window's rendering area.</param>
-		internal Window(int width, int height)
+		/// <param name="title">The title of the window.</param>
+		/// <param name="position">The screen position of the window's top left corner.</param>
+		/// <param name="size">The size of the window's rendering area.</param>
+		/// <param name="state">Indicates the window state.</param>
+		internal Window(string title, Vector2i position, Size size, WindowState state)
 		{
 			Log.Info(LogCategory.Platform, "Initializing window...");
 
-			_params = new NativeMethods.WindowParams
+			_callbacks = new NativeMethods.Callbacks
 			{
-				Width = width,
-				Height = height,
-				Title = "Pegasus",
 				Closing = () => Closing(),
 				Closed = () => Closed(),
-				//Resized = (w, h) =>
-				//	{
-				//		_size = new Size(w, h);
-				//		Resized(_size);
-				//	},
 				LostFocus = () => LostFocus(),
 				GainedFocus = () => GainedFocus(),
 				CharacterEntered = (c, s) =>
@@ -89,7 +92,16 @@ namespace Pegasus.Framework.Platform
 				MouseLeft = () => MouseLeft(),
 			};
 
-			_window = NativeMethods.OpenWindow(ref _params);
+			_placement = new NativeMethods.Placement
+			{
+				State = state,
+				X = position.X,
+				Y = position.Y,
+				Width = size.Width,
+				Height = size.Height
+			};
+
+			_window = NativeMethods.OpenWindow(title, _placement, _callbacks);
 		}
 
 		/// <summary>
@@ -115,27 +127,70 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Gets or sets the size of the rendering area of the window.
+		///   Gets or sets the size of the window's rendering area.
 		/// </summary>
 		public Size Size
 		{
 			get
 			{
 				Assert.NotDisposed(this);
-
-				//int width, height;
-				//NativeMethods.GetWindowSize(_window, out width, out height);
-
-				//if (width == 0 || height == 0)
-				//	return _size;
-
-				return new Size(800, 600);
+				return new Size(_placement.Width, _placement.Height);
 			}
 			set
 			{
 				Assert.NotDisposed(this);
-				//NativeMethods.SetWindowSize(_window, value.Width, value.Height);
-				//_size = new Size(value.Width, value.Height);
+
+				if (_placement.Width == value.Width && _placement.Height == value.Height)
+					return;
+
+				_placement.Width = value.Width;
+				_placement.Height = value.Height;
+				NativeMethods.SetWindowPlacement(_window, _placement);
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the screen position of the window's left upper corner.
+		/// </summary>
+		public Vector2i Position
+		{
+			get
+			{
+				Assert.NotDisposed(this);
+				return new Vector2i(_placement.X, _placement.Y);
+			}
+			set
+			{
+				Assert.NotDisposed(this);
+
+				if (_placement.X == value.X && _placement.Y == value.Y)
+					return;
+
+				_placement.X = value.X;
+				_placement.Y = value.Y;
+				NativeMethods.SetWindowPlacement(_window, _placement);
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the window state.
+		/// </summary>
+		public WindowState State
+		{
+			get
+			{
+				Assert.NotDisposed(this);
+				return _placement.State;
+			}
+			set
+			{
+				Assert.NotDisposed(this);
+
+				if (_placement.State == value)
+					return;
+
+				_placement.State = value;
+				NativeMethods.SetWindowPlacement(_window, _placement);
 			}
 		}
 
@@ -185,7 +240,9 @@ namespace Pegasus.Framework.Platform
 		public void ProcessEvents()
 		{
 			Assert.NotDisposed(this);
+
 			NativeMethods.ProcessWindowEvents(_window);
+			NativeMethods.GetWindowPlacement(_window, out _placement);
 		}
 
 		/// <summary>
@@ -198,11 +255,6 @@ namespace Pegasus.Framework.Platform
 		///   Raised when the window is about to be closed.
 		/// </summary>
 		public event Action Closed = () => { };
-
-		/// <summary>
-		///   Raised when the window was resized.
-		/// </summary>
-		public event Action<Size> Resized = s => { };
 
 		/// <summary>
 		///   Raised when the window lost focus.
@@ -294,7 +346,7 @@ namespace Pegasus.Framework.Platform
 			public delegate void MouseWheelCallback(int delta);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgOpenWindow")]
-			public static extern IntPtr OpenWindow(ref WindowParams windowParams);
+			public static extern IntPtr OpenWindow(string title, Placement placement, Callbacks callbacks);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCloseWindow")]
 			public static extern void CloseWindow(IntPtr window);
@@ -303,10 +355,10 @@ namespace Pegasus.Framework.Platform
 			public static extern void ProcessWindowEvents(IntPtr window);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetWindowPlacement")]
-			public static extern void GetWindowPlacement(IntPtr window, out WindowPlacement placement);
+			public static extern void GetWindowPlacement(IntPtr window, out Placement placement);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowPlacement")]
-			public static extern void SetWindowPlacement(IntPtr window, WindowPlacement placement);
+			public static extern void SetWindowPlacement(IntPtr window, Placement placement);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowTitle")]
 			public static extern void SetWindowTitle(IntPtr window, string title);
@@ -318,12 +370,8 @@ namespace Pegasus.Framework.Platform
 			public static extern void ReleaseMouse(IntPtr window);
 
 			[StructLayout(LayoutKind.Sequential)]
-			public struct WindowParams
+			public struct Callbacks
 			{
-				public int Width;
-				public int Height;
-				public string Title;
-
 				public ClosingCallback Closing;
 				public ClosedCallback Closed;
 				public LostFocusCallback LostFocus;
@@ -340,9 +388,9 @@ namespace Pegasus.Framework.Platform
 			}
 
 			[StructLayout(LayoutKind.Sequential)]
-			public struct WindowPlacement
+			public struct Placement
 			{
-				public bool Maximized;
+				public WindowState State;
 				public int X;
 				public int Y;
 				public int Width;

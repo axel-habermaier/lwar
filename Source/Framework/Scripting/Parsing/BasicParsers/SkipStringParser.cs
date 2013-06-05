@@ -7,7 +7,10 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// </summary>
 	/// <typeparam name="TUserState">The type of the user state.</typeparam>
 	public class SkipStringParser<TUserState> : Parser<string, TUserState>
-	{
+	{/// <summary>
+		///   Indicates whether case is ignored.
+		/// </summary>
+		private readonly bool _ignoreCase;
 		/// <summary>
 		///   The string that is parsed.
 		/// </summary>
@@ -17,10 +20,13 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="str">The string that should be parsed.</param>
-		public SkipStringParser(string str)
+		/// <param name="ignoreCase">Indicates whether case should be ignored.</param>
+		public SkipStringParser(string str, bool ignoreCase)
 		{
 			Assert.ArgumentNotNullOrWhitespace(str);
+
 			_string = str;
+			_ignoreCase = ignoreCase;
 		}
 
 		/// <summary>
@@ -33,7 +39,9 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 
 			foreach (char c in _string)
 			{
-				if (inputStream.EndOfInput || inputStream.Peek() != c)
+				var streamChar = _ignoreCase ? Char.ToLower(inputStream.Peek()) : inputStream.Peek();
+				var inputChar = _ignoreCase ? Char.ToLower(c) : c;
+				if (inputStream.EndOfInput || streamChar != inputChar)
 				{
 					inputStream.State = state;
 					return Expected(string.Format("string '{0}'", _string));

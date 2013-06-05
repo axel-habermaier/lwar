@@ -67,16 +67,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			get
 			{
 				var attribute = GetAttribute(_property.Attributes, "Cvar");
-				var argument = attribute.Arguments.First() as NamedExpression;
+				var argument = attribute.Arguments.First();
+				var value = argument.GetConstantValue(Resolver);
 
-				if (argument != null && argument.Name == "DefaultExpression")
-				{
-					// Remove the quotes
-					var expression = argument.Expression.ToString();
-					return expression.Substring(1, expression.Length - 2);
-				}
+				if (value is string && Type != "string")
+					return value.ToString();
 
-				return attribute.Arguments.First().ToString();
+				return argument.ToString();
 			}
 		}
 

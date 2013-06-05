@@ -1,4 +1,5 @@
 ﻿using System;
+using Pegasus.Framework.Math;
 using Pegasus.Framework.Platform;
 using Pegasus.Framework.Scripting;
 
@@ -16,18 +17,11 @@ internal interface ICvars
 	double TimeScale { get; set; }
 
 	/// <summary>
-	///   The width of the screen resolution used by the application in fullscreen mode. Any changes to this cvar require a
+	///   The screen resolution used by the application in fullscreen mode. Any changes to this cvar require a
 	///   restart of the graphics subsystem.
 	/// </summary>
-	[Cvar(1024, UpdateMode.OnGraphicsRestart), Range(320, 4096), Persistent]
-	int ResolutionWidth { get; set; }
-
-	/// <summary>
-	///   The height of the screen resolution used by the application in fullscreen mode. Any changes to this cvar require a
-	///   restart of the graphics subsystem.
-	/// </summary>
-	[Cvar(768, UpdateMode.OnGraphicsRestart), Range(240, 4096), Persistent]
-	int ResolutionHeight { get; set; }
+	[Cvar("new Size(1024, 768)", UpdateMode.OnGraphicsRestart), Persistent]
+	Size Resolution { get; set; }
 
 	/// <summary>
 	///   If true, the application is run in fullscreen mode. Any changes to this cvar require a restart of the graphics
@@ -37,16 +31,22 @@ internal interface ICvars
 	bool Fullscreen { get; set; }
 
 	/// <summary>
-	///   The width of the application's window in non-fullscreen mode.
+	///   The size in pixels of the application window in non-fullscreen mode.
 	/// </summary>
-	[Cvar(640), Range(320, 4096), Persistent]
-	int WindowWidth { get; set; }
+	[Cvar("new Size(1024, 768)"), Persistent]
+	Size WindowSize { get; set; }
 
 	/// <summary>
-	///   The height of the application's window in non-fullscreen mode.
+	///   The screen position of the application window's top left corner in non-fullscreen mode.
 	/// </summary>
-	[Cvar(360), Range(240, 4096), Persistent]
-	int WindowHeight { get; set; }
+	[Cvar("Vector2i.Zero"), Persistent]
+	Vector2i WindowPosition { get; set; }
+
+	/// <summary>
+	///   The width of the application's window in non-fullscreen mode.
+	/// </summary>
+	[Cvar(WindowState.Normal), Persistent]
+	WindowState WindowStateFlag { get; set; }
 
 	/// <summary>
 	///   Shows or hides the statistics.

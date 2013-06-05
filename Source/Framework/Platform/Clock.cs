@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Memory;
 	using Scripting;
 
@@ -59,7 +58,8 @@ namespace Pegasus.Framework.Platform
 		///   Invoked when the time scale factor is about to be changed.
 		/// </summary>
 		/// <param name="factor">The new time scale factor.</param>
-		private void TimeScaleChanging(double factor)
+		/// <param name="cancel">If set to false, the cvar update is cancelled.</param>
+		private void TimeScaleChanging(double factor, ref bool cancel)
 		{
 			// Update the current time with the old factor
 			Update();

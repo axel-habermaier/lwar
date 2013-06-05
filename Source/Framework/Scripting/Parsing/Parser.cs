@@ -255,19 +255,21 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   Parses the given string.
 		/// </summary>
 		/// <param name="str">The string that should be parsed.</param>
-		protected static Parser<string, TUserState> String(string str)
+		/// <param name="ignoreCase">Indicates whether case should be ignored.</param>
+		protected static Parser<string, TUserState> String(string str, bool ignoreCase = false)
 		{
-			return new SkipStringParser<TUserState>(str);
+			return new SkipStringParser<TUserState>(str, ignoreCase);
 		}
 
 		/// <summary>
 		///   Parses an enumeration literal.
 		/// </summary>
 		/// <typeparam name="TEnum">The type of the enumeration literal that should be parsed.</typeparam>
-		protected static Parser<TEnum, TUserState> EnumerationLiteral<TEnum>()
+		/// <param name="ignoreCase">Indicates whether case should be ignored.</param>
+		protected static Parser<TEnum, TUserState> EnumerationLiteral<TEnum>(bool ignoreCase)
 			where TEnum : struct
 		{
-			return new EnumerationLiteralParser<TEnum, TUserState>();
+			return new EnumerationLiteralParser<TEnum, TUserState>(ignoreCase);
 		}
 
 		#endregion

@@ -50,8 +50,12 @@ namespace Pegasus.Framework.Platform
 			_swapChain = swapChain;
 			_device = device;
 
-			Cvars.WindowWidthChanged += UpdateWindowSize;
-			Cvars.WindowHeightChanged += UpdateWindowSize;
+			Cvars.WindowSizeChanged += UpdateWindowSize;
+			Cvars.WindowPositionChanged += UpdateWindowPosition;
+			Cvars.WindowStateFlagChanged += UpdateWindowState;
+			Cvars.WindowSizeChanging += WindowSizeChanging;
+			Cvars.WindowPositionChanging += WindowPositionChanging;
+			Cvars.ResolutionChanging += WindowSizeChanging;
 
 			UpdateGraphicsState();
 			_device.Add(_toggleMode);
@@ -70,22 +74,20 @@ namespace Pegasus.Framework.Platform
 				UpdateGraphicsState();
 			}
 
+			if (Cvars.WindowStateFlag != _window.State)
+				Cvars.WindowStateFlag = _window.State;
+
 			// We do not care about the window size in fullscreen mode; and if we're currently toggling the mode, ignore
 			// the window size as well, as it might be outdated for the current frame
-			if (Cvars.Fullscreen || _toggleMode.IsTriggered)
+			if (Cvars.Fullscreen || _toggleMode.IsTriggered || _window.State != WindowState.Normal)
 				return;
 
-			// If we set the window width and height cvars only to the values sent by the window's resize event, we would
-			// miss some values when we request the window size to change, but it is in fact not changed (that happens,
-			// for instance, when the requested size exceeds the screen's resolution). Therefore, we always set the
-			// cvars to the windows actual size each frame
-			var size = _window.Size;
+			// Make sure the windows cvars are always up-to-date
+			if (Cvars.WindowPosition != _window.Position)
+				Cvars.WindowPosition = _window.Position;
 
-			if (Cvars.WindowWidth != size.Width)
-				Cvars.WindowWidth = size.Width;
-
-			if (Cvars.WindowHeight != size.Height)
-				Cvars.WindowHeight = size.Height;
+			if (Cvars.WindowSize != _window.Size)
+				Cvars.WindowSize = _window.Size;
 		}
 
 		/// <summary>
@@ -99,8 +101,8 @@ namespace Pegasus.Framework.Platform
 			// Resize and update the window and the swap chain depending on whether we're in fullscreen or windowed mode
 			if (Cvars.Fullscreen)
 			{
-				Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", Cvars.ResolutionWidth, Cvars.ResolutionHeight);
-				if (!_swapChain.UpdateState(Cvars.ResolutionWidth, Cvars.ResolutionHeight, true))
+				Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", Cvars.Resolution.Width, Cvars.Resolution.Height);
+				if (!_swapChain.UpdateState(Cvars.Resolution.Width, Cvars.Resolution.Height, true))
 				{
 					Cvars.Fullscreen = false;
 					UpdateGraphicsState();
@@ -108,19 +110,64 @@ namespace Pegasus.Framework.Platform
 			}
 			else
 			{
-				Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowWidth, Cvars.WindowHeight);
-				_swapChain.UpdateState(Cvars.WindowWidth, Cvars.WindowHeight, false);
+				Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowSize.Width, Cvars.WindowSize.Height);
+				//_swapChain.UpdateState(Cvars.WindowWidth, Cvars.WindowHeight, false);
 			}
 		}
 
 		/// <summary>
-		///   Sets the window's size to the values stored in the window size cvars.
+		///   Sets the window's size to the value stored in the window size cvar.
 		/// </summary>
-		private void UpdateWindowSize(int value)
+		/// <param name="size">The old window size.</param>
+		private void UpdateWindowSize(Size size)
 		{
-			// Ignore the changes while in fullscreen mode
-			if (!Cvars.Fullscreen)
-				_window.Size = new Size(Cvars.WindowWidth, Cvars.WindowHeight);
+			_window.Size = Cvars.WindowSize;
+		}
+
+		/// <summary>
+		///   Sets the window's position to the value stored in the window position cvar.
+		/// </summary>
+		/// <param name="size">The old window position.</param>
+		private void UpdateWindowPosition(Vector2i size)
+		{
+			_window.Position = Cvars.WindowPosition;
+		}
+
+		/// <summary>
+		///   Sets the window's state to the value stored in the window state cvar.
+		/// </summary>
+		/// <param name="state">The old window state.</param>
+		private void UpdateWindowState(WindowState state)
+		{
+			_window.State = Cvars.WindowStateFlag;
+		}
+
+		/// <summary>
+		///   Checks whether the new window size is valid.
+		/// </summary>
+		/// <param name="size">The new window size.</param>
+		/// <param name="cancel">If true, cancels the cvar update.</param>
+		private static void WindowSizeChanging(Size size, ref bool cancel)
+		{
+			cancel = Window.MinimumSize.Width > size.Width || Window.MinimumSize.Height > size.Height ||
+					 Window.MaximumSize.Width < size.Width || Window.MaximumSize.Height < size.Height;
+
+			if (cancel)
+				Log.Warn("A window size or resolution of {0}x{1} is not supported.", size.Width, size.Height);
+		}
+
+		/// <summary>
+		///   Checks whether the new window position is valid.
+		/// </summary>
+		/// <param name="position">The new window position.</param>
+		/// <param name="cancel">If true, cancels the cvar update.</param>
+		private static void WindowPositionChanging(Vector2i position, ref bool cancel)
+		{
+			cancel = -Window.MaximumSize.Width > position.X || -Window.MaximumSize.Height > position.Y ||
+					 Window.MaximumSize.Width < position.X || Window.MaximumSize.Height < position.Y;
+
+			if (cancel)
+				Log.Warn("The window position ({0},{1}) is not supported.", position.X, position.Y);
 		}
 
 		/// <summary>
@@ -128,8 +175,13 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Cvars.WindowWidthChanged -= UpdateWindowSize;
-			Cvars.WindowHeightChanged -= UpdateWindowSize;
+			Cvars.WindowSizeChanged -= UpdateWindowSize;
+			Cvars.WindowPositionChanged -= UpdateWindowPosition;
+			Cvars.WindowStateFlagChanged -= UpdateWindowState;
+			Cvars.WindowSizeChanging -= WindowSizeChanging;
+			Cvars.WindowPositionChanging -= WindowPositionChanging;
+			Cvars.ResolutionChanging -= WindowSizeChanging;
+
 			_device.Remove(_toggleMode);
 		}
 	}

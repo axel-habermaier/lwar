@@ -9,7 +9,6 @@ namespace Pegasus.Framework.Scripting
 	/// </summary>
 	/// <typeparam name="T">The type of the value.</typeparam>
 	public sealed class Cvar<T> : ICvar
-		where T : IEquatable<T>
 	{
 		/// <summary>
 		///   The default value of the cvar.
@@ -161,7 +160,7 @@ namespace Pegasus.Framework.Scripting
 				if (validator.Validate(value))
 					continue;
 
-				Log.Error("'{0}' could not be set to '{1}': {2}", Name, value, validator.Description);
+				Log.Error("'{0}' could not be set to '{1}': {2}", Name, TypeRepresentation.ToString(value), validator.Description);
 				Log.Info("{0}", Help.GetHint(Name));
 				return false;
 			}
@@ -181,8 +180,8 @@ namespace Pegasus.Framework.Scripting
 				return;
 			}
 
-			if (Changing != null)
-				Changing(value);
+			if (!RaiseChangingEvent(value))
+				return;
 
 			var oldValue = _value;
 			_value = value;
@@ -215,6 +214,9 @@ namespace Pegasus.Framework.Scripting
 				return;
 			}
 
+			if (!RaiseChangingEvent(value))
+				return;
+
 			// Otherwise, store the deferred value
 			DeferredValue = value;
 			HasDeferredValue = true;
@@ -224,13 +226,42 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
+		/// Raises the changing event for the given value. Returns false if the cvar update has been cancelled.
+		/// </summary>
+		/// <param name="newValue">The new cvar value.</param>
+		private bool RaiseChangingEvent(T newValue)
+		{
+			var cancel = false;
+			if (Changing != null)
+				Changing(newValue, ref cancel);
+
+			return !cancel;
+		}
+
+		/// <summary>
 		///   Raised when the value of the cvar is about to change, passing the new value to the event handlers.
 		/// </summary>
-		public event Action<T> Changing;
+		public event CvarChangingHandler<T> Changing;
 
 		/// <summary>
 		///   Raised when the value of the cvar has changed, passing the old value to the event handlers.
 		/// </summary>
-		public event Action<T> Changed;
+		public event CvarChangedHandler<T> Changed;
 	}
+
+	/// <summary>
+	///   A delegate used to broadcast the new value of a cvar that is about to change. Handlers of the event can cancel
+	///   the update by setting the cancel argument to true.
+	/// </summary>
+	/// <typeparam name="T">The type of the cvar's value.</typeparam>
+	/// <param name="newValue">The new value of the cvar.</param>
+	/// <param name="cancel">If set to true, the new value will not be set.</param>
+	public delegate void CvarChangingHandler<in T>(T newValue, ref bool cancel);
+
+	/// <summary>
+	///   A delegate used to inform about a cvar value change.
+	/// </summary>
+	/// <typeparam name="T">The type of the cvar's value.</typeparam>
+	/// <param name="oldValue">The previous value of the cvar.</param>
+	public delegate void CvarChangedHandler<in T>(T oldValue);
 }

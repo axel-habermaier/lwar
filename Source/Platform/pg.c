@@ -63,6 +63,9 @@ pgBool pgRectangleEqual(pgRectangle* r1, pgRectangle* r2)
 
 pgInt32 pgClamp(pgInt32 value, pgInt32 min, pgInt32 max)
 {
+	if (max < min)
+		return value;
+
 	if (value < min)
 		return min;
 

@@ -30,35 +30,40 @@ static pgKey TranslateKey(UINT virtualKey);
 // Core functions 
 //====================================================================================================================
 
-pgVoid pgOpenWindowCore(pgWindow* window)
+pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
 {
-	RECT clientRect;
+	RECT rect;
 	LONG width, height;
-	pgUint32 style = WS_VISIBLE | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_SYSMENU | WS_POPUP;
+	UINT style = WS_VISIBLE | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_SYSMENU | WS_POPUP;
 
 	if (state.openWindows++ == 0)
 		Initialize();
 
 	// Set the client size to the given width and height
-	clientRect.left = 0;
-	clientRect.top = 0;
-	clientRect.right = window->params.width;
-	clientRect.bottom = window->params.height;
+	rect.left = 0;
+	rect.top = 0;
+	rect.right = window->placement.width; 
+	rect.bottom = window->placement.height;
 
-	if (!AdjustWindowRect(&clientRect, style, PG_FALSE))
+	if (!AdjustWindowRect(&rect, style, PG_FALSE))
 		pgWin32Error("Failed to adjust window rectangle.");
 
-	width = clientRect.right - clientRect.left;
-	height = clientRect.bottom - clientRect.top;
+	width = rect.right - rect.left;
+	height = rect.bottom - rect.top;
 
 	// Initialize the cursor
 	window->cursor = LoadCursor(NULL, IDC_ARROW);
 	if (window->cursor == NULL)
 		pgWin32Error("Failed to initialize the mouse cursor.");
 
+	if (window->placement.state == PG_WINDOW_MAXIMIZED)
+		style |= WS_MAXIMIZE;
+	else if (window->placement.state == PG_WINDOW_MINIMIZED)
+		style |= WS_MINIMIZE;
+
 	// Create the window
-	CreateWindowEx(0, WndClassName, "", style, CW_USEDEFAULT, 
-		CW_USEDEFAULT, width, height, NULL, NULL, GetModuleHandle(NULL), window);
+	CreateWindowEx(0, WndClassName, title, style, window->placement.x, window->placement.y, 
+		width, height, NULL, NULL, GetModuleHandle(NULL), window);
 
 	if (window->hwnd == NULL)
 		pgWin32Error("Failed to open window.");
@@ -108,14 +113,29 @@ pgBool pgProcessWindowEvent(pgWindow* window, pgMessage* message)
 pgVoid pgGetWindowPlacementCore(pgWindow* window)
 {
 	RECT rect;
+
+	if (IsZoomed(window->hwnd))
+		window->placement.state = PG_WINDOW_MAXIMIZED;
+	else if (IsIconic(window->hwnd))
+		window->placement.state = PG_WINDOW_MINIMIZED;
+	else
+		window->placement.state = PG_WINDOW_NORMAL;
+
+	// Don't update the position and size when the window is minimized, as that only results in invalid values
+	if (IsIconic(window->hwnd))
+		return;
+
+	if (!GetWindowRect(window->hwnd, &rect))
+		pgWin32Error("Failed to get window position.");
+	
+	window->placement.x = rect.left;
+	window->placement.y = rect.top;
+
 	if (!GetClientRect(window->hwnd, &rect))
 		pgWin32Error("Failed to get window size.");
 
-	window->placement.x = rect.left;
-	window->placement.y = rect.top;
     window->placement.width = rect.right - rect.left;
 	window->placement.height = rect.bottom - rect.top;
-	window->placement.maximized = IsZoomed(window->hwnd);
 }
 
 pgVoid pgSetWindowPlacementCore(pgWindow* window)
@@ -123,26 +143,26 @@ pgVoid pgSetWindowPlacementCore(pgWindow* window)
 	RECT rect;
 	LONG width, height;
 
-	rect.left = window->placement.x;
-	rect.top = window->placement.y;
+	rect.left = 0;
+	rect.top = 0;
 	rect.right = rect.left + window->placement.width;
 	rect.bottom = rect.top + window->placement.height;
 
-	// SetWindowPos wants the total size of the window (including title bar and borders),
-	// so we have to compute it
 	if (!AdjustWindowRect(&rect, GetWindowLong(window->hwnd, GWL_STYLE), PG_FALSE))
 		pgWin32Error("Failed to calculate new window size.");
 
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
 
-	if (!SetWindowPos(window->hwnd, NULL, rect.left, rect.top, width, height, SWP_NOZORDER))
+	if (!SetWindowPos(window->hwnd, NULL, window->placement.x, window->placement.y, width, height, SWP_NOZORDER))
 		pgWin32Error("Failed to resize window.");
 
-	if (window->placement.maximized && !ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
+	if (window->placement.state == PG_WINDOW_MAXIMIZED && !ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
 		pgWin32Error("Failed to maximize window.");
-	else if (!window->placement.maximized && !ShowWindow(window->hwnd, SW_RESTORE))
-		pgWin32Error("Failed to get window into non-maximized mode");
+	else if (!window->placement.state == PG_WINDOW_NORMAL && !ShowWindow(window->hwnd, SW_RESTORE))
+		pgWin32Error("Failed to get window into normal mode.");
+	else if (!window->placement.state == PG_WINDOW_MINIMIZED && !ShowWindow(window->hwnd, SW_SHOWMINIMIZED))
+		pgWin32Error("Failed to get window into minimized mode.");
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
@@ -163,6 +183,26 @@ pgVoid pgReleaseMouseCore(pgWindow* window)
 {
 	window->cursor = LoadCursor(NULL, IDC_ARROW);
 	SetCursor(window->cursor);
+}
+
+//====================================================================================================================
+// Internal functions
+//====================================================================================================================
+
+pgRectangle pgGetDesktopArea()
+{
+	RECT rect;
+	pgRectangle rectangle;
+
+	if (!GetClientRect(GetDesktopWindow(), &rect))
+		pgWin32Error("Failed to get desktop size.");
+
+	rectangle.left = rect.left;
+	rectangle.top = rect.top;
+	rectangle.width = rect.right - rect.left;
+	rectangle.height = rect.bottom - rect.top;
+
+	return rectangle;
 }
 
 //====================================================================================================================
@@ -245,7 +285,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 {
 	pgMessage* message = &state.message;
 	pgWindow* window;
-	pgWindowParams* params;
 
 	if (msg == WM_CREATE)
 	{
@@ -258,7 +297,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 	}
 
 	window = (pgWindow*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-	params = &window->params;
 
 	if (window == NULL)
 		return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -279,12 +317,21 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 	case WM_GETMINMAXINFO:
 		{
-			// Set the minimum and maximum allowed window sizes
 			MINMAXINFO* info = (MINMAXINFO*)lParam;
-			info->ptMaxTrackSize.x = PG_WINDOW_MAX_WIDTH;
-			info->ptMaxTrackSize.y = PG_WINDOW_MAX_HEIGHT;
-			info->ptMinTrackSize.x = PG_WINDOW_MIN_WIDTH;
-			info->ptMinTrackSize.y = PG_WINDOW_MIN_HEIGHT;
+			RECT minRect = { 0, 0, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MIN_HEIGHT };
+			RECT maxRect = { 0, 0, PG_WINDOW_MAX_WIDTH, PG_WINDOW_MAX_HEIGHT };
+
+			if (!AdjustWindowRect(&minRect, GetWindowLong(window->hwnd, GWL_STYLE), PG_FALSE))
+				pgWin32Error("Unable to get minimum window size.");
+
+			if (!AdjustWindowRect(&maxRect, GetWindowLong(window->hwnd, GWL_STYLE), PG_FALSE))
+				pgWin32Error("Unable to get maximum window size.");
+
+			// Set the minimum and maximum allowed window sizes
+			info->ptMaxTrackSize.x = maxRect.right - maxRect.left;
+			info->ptMaxTrackSize.y = maxRect.bottom - maxRect.top;
+			info->ptMinTrackSize.x = minRect.right - minRect.left;
+			info->ptMinTrackSize.y = minRect.bottom - minRect.top;
 		}
 		break;
 
@@ -317,8 +364,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		}
 
 		message->type = PG_MESSAGE_MOUSE_MOVED;
-		message->moved.x = LOWORD(lParam);
-		message->moved.y = HIWORD(lParam);
+		message->x = LOWORD(lParam);
+		message->y = HIWORD(lParam);
 		break;
 
 	case WM_MOUSELEAVE:
@@ -328,63 +375,63 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 	case WM_LBUTTONDOWN:
 		message->type = PG_MESSAGE_MOUSE_DOWN;
-		message->mouse.button = PG_MOUSE_LEFT;
-		message->mouse.x = LOWORD(lParam);
-		message->mouse.y = HIWORD(lParam);
+		message->button = PG_MOUSE_LEFT;
+		message->x = LOWORD(lParam);
+		message->y = HIWORD(lParam);
 		break;
 
 	case WM_LBUTTONUP:
 		message->type = PG_MESSAGE_MOUSE_UP;
-		message->mouse.button = PG_MOUSE_LEFT;
-		message->mouse.x = LOWORD(lParam);
-		message->mouse.y = HIWORD(lParam);
+		message->button = PG_MOUSE_LEFT;
+		message->x = LOWORD(lParam);
+		message->y = HIWORD(lParam);
 		break;
 
 	case WM_RBUTTONDOWN:
 		message->type = PG_MESSAGE_MOUSE_DOWN;
-		message->mouse.button = PG_MOUSE_RIGHT;
-		message->mouse.x = LOWORD(lParam);
-		message->mouse.y = HIWORD(lParam);
+		message->button = PG_MOUSE_RIGHT;
+		message->x = LOWORD(lParam);
+		message->y = HIWORD(lParam);
 		break;
 
 	case WM_RBUTTONUP:
 		message->type = PG_MESSAGE_MOUSE_UP;
-		message->mouse.button = PG_MOUSE_RIGHT;
-		message->mouse.x = LOWORD(lParam);
-		message->mouse.y = HIWORD(lParam);
+		message->button = PG_MOUSE_RIGHT;
+		message->x = LOWORD(lParam);
+		message->y = HIWORD(lParam);
 		break;
 
 	case WM_MBUTTONDOWN:
 		message->type = PG_MESSAGE_MOUSE_DOWN;
-		message->mouse.button = PG_MOUSE_MIDDLE;
-		message->mouse.x = LOWORD(lParam);
-		message->mouse.y = HIWORD(lParam);
+		message->button = PG_MOUSE_MIDDLE;
+		message->x = LOWORD(lParam);
+		message->y = HIWORD(lParam);
 		break;
 
 	case WM_MBUTTONUP:
 		message->type = PG_MESSAGE_MOUSE_UP;
-		message->mouse.button = PG_MOUSE_MIDDLE;
-		message->mouse.x = LOWORD(lParam);
-		message->mouse.y = HIWORD(lParam);
+		message->button = PG_MOUSE_MIDDLE;
+		message->x = LOWORD(lParam);
+		message->y = HIWORD(lParam);
 		break;
 
 	case WM_XBUTTONDOWN:
 		message->type = PG_MESSAGE_MOUSE_DOWN;
-		message->mouse.button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2;
-		message->mouse.x = LOWORD(lParam);
-		message->mouse.y = HIWORD(lParam);
+		message->button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2;
+		message->x = LOWORD(lParam);
+		message->y = HIWORD(lParam);
 		break;
 
 	case WM_XBUTTONUP:
 		message->type = PG_MESSAGE_MOUSE_UP;
-		message->mouse.button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2;
-		message->mouse.x = LOWORD(lParam);
-		message->mouse.y = HIWORD(lParam);
+		message->button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2;
+		message->x = LOWORD(lParam);
+		message->y = HIWORD(lParam);
 		break;
 
 	case WM_MOUSEWHEEL:
 		message->type = PG_MESSAGE_MOUSE_WHEEL;
-		message->wheel.delta = GET_WHEEL_DELTA_WPARAM(wParam) / 120;
+		message->delta = GET_WHEEL_DELTA_WPARAM(wParam) / 120;
 		break;
 
 	case WM_SYSCOMMAND:
@@ -399,8 +446,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		if ((pgUint16)wParam > 31)
 		{
 			message->type = PG_MESSAGE_CHARACTER_ENTERED;
-			message->characterEntered.character = (pgUint16)wParam;
-			message->characterEntered.scanCode = (pgInt32)((pgByte*)&lParam)[2];
+			message->character = (pgUint16)wParam;
+			message->scanCode = (pgInt32)((pgByte*)&lParam)[2];
 		}
 		break;
 	}
@@ -522,8 +569,8 @@ static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		}
 
 		message->type = released ? PG_MESSAGE_KEY_UP : PG_MESSAGE_KEY_DOWN;
-		message->key.key = key;
-		message->key.scanCode = scanCode;
+		message->key = key;
+		message->scanCode = scanCode;
 	}
 
 	return 0;

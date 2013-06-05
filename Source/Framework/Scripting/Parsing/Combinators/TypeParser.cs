@@ -5,6 +5,8 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	using System.Collections.Generic;
 	using System.Net;
 	using BasicParsers;
+	using Math;
+	using Platform;
 	using Platform.Input;
 
 	/// <summary>
@@ -22,25 +24,29 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <summary>
 		///   Determines which parser should be used to parse an input of a given type.
 		/// </summary>
-		private static readonly Dictionary<Type, Parser<object, TUserState>> TypeParsers = new Dictionary
-			<Type, Parser<object, TUserState>>
-		{
-			{ typeof(byte), AsObject(UInt8) },
-			{ typeof(sbyte), AsObject(Int8) },
-			{ typeof(short), AsObject(Int16) },
-			{ typeof(ushort), AsObject(UInt16) },
-			{ typeof(int), AsObject(Int32) },
-			{ typeof(uint), AsObject(UInt32) },
-			{ typeof(long), AsObject(Int64) },
-			{ typeof(ulong), AsObject(UInt64) },
-			{ typeof(double), AsObject(Float64) },
-			{ typeof(float), AsObject(Float32) },
-			{ typeof(string), AsObject(QuotedStringLiteral | UnquotedSingleWordString) },
-			{ typeof(InputTrigger), AsObject(new InputTriggerParser<TUserState>()) },
-			{ typeof(bool), AsObject(Boolean) },
-			{ typeof(IPEndPoint), AsObject(new IPEndPointParser<TUserState>()) },
-			{ typeof(IPAddress), AsObject(new IPAddressParser<TUserState>()) }
-		};
+		private static readonly Dictionary<Type, Parser<object, TUserState>> TypeParsers =
+			new Dictionary<Type, Parser<object, TUserState>>
+			{
+				{ typeof(byte), AsObject(UInt8) },
+				{ typeof(sbyte), AsObject(Int8) },
+				{ typeof(short), AsObject(Int16) },
+				{ typeof(ushort), AsObject(UInt16) },
+				{ typeof(int), AsObject(Int32) },
+				{ typeof(uint), AsObject(UInt32) },
+				{ typeof(long), AsObject(Int64) },
+				{ typeof(ulong), AsObject(UInt64) },
+				{ typeof(double), AsObject(Float64) },
+				{ typeof(float), AsObject(Float32) },
+				{ typeof(string), AsObject(QuotedStringLiteral | UnquotedSingleWordString) },
+				{ typeof(InputTrigger), AsObject(new InputTriggerParser<TUserState>()) },
+				{ typeof(bool), AsObject(Boolean) },
+				{ typeof(IPEndPoint), AsObject(new IPEndPointParser<TUserState>()) },
+				{ typeof(IPAddress), AsObject(new IPAddressParser<TUserState>()) },
+				{ typeof(WindowState), AsObject(EnumerationLiteral<WindowState>(ignoreCase: true)) },
+				{ typeof(Vector2i), AsObject(Pipe(Int32, ~WhiteSpaces + String(";") + ~WhiteSpaces, Int32, (x, _, y) => new Vector2i(x, y))) },
+				{ typeof(Vector2), AsObject(Pipe(Float32, ~WhiteSpaces + String(";") + ~WhiteSpaces, Float32, (x, _, y) => new Vector2(x, y))) },
+				{ typeof(Size), AsObject(Pipe(Int32, ~WhiteSpaces + String(";") + ~WhiteSpaces, Int32, (x, _, y) => new Size(x, y))) }
+			};
 
 		/// <summary>
 		///   Initializes a new instance.

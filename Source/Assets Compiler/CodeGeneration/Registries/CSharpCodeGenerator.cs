@@ -137,7 +137,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 				_writer.AppendLine("/// <summary>");
 				_writer.AppendLine("///   Raised when the '{0}' cvar is changing. The new value is passed to the event handler.", cvar.Name);
 				_writer.AppendLine("/// </summary>");
-				_writer.AppendLine("public static event Action<{0}> {1}Changing", cvar.Type, cvar.Name);
+				_writer.AppendLine("public static event CvarChangingHandler<{0}> {1}Changing", cvar.Type, cvar.Name);
 				_writer.AppendBlockStatement(() =>
 					{
 						_writer.AppendLine("add {{ {0}.Changing += value; }}", GetPropertyName(cvar.Name));
@@ -149,7 +149,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 				_writer.AppendLine("/// <summary>");
 				_writer.AppendLine("///   Raised when the '{0}' cvar is changed. The previous value is passed to the event handler.", cvar.Name);
 				_writer.AppendLine("/// </summary>");
-				_writer.AppendLine("public static event Action<{0}> {1}Changed", cvar.Type, cvar.Name);
+				_writer.AppendLine("public static event CvarChangedHandler<{0}> {1}Changed", cvar.Type, cvar.Name);
 				_writer.AppendBlockStatement(() =>
 					{
 						_writer.AppendLine("add {{ {0}.Changed += value; }}", GetPropertyName(cvar.Name));

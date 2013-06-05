@@ -15,7 +15,8 @@ static pgVoid ReleaseBackBuffer(pgSwapChain* swapChain);
 
 pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 {
-	pgInt32 width = window->placement.width, height = window->placement.height;
+	pgInt32 width = window->placement.width;
+	pgInt32 height = window->placement.height;
 	DXGI_SWAP_CHAIN_DESC desc;
 
 	swapChain->renderTarget.count = 1;
@@ -43,7 +44,7 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 	PG_D3DCALL(IDXGIFactory_MakeWindowAssociation(swapChain->device->factory, window->hwnd, DXGI_MWA_NO_WINDOW_CHANGES),
 		"Failed to make window association.");
 
-	pgResizeSwapChain(swapChain, width, height);
+	pgResizeSwapChain(swapChain);
 }
 
 pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain)
@@ -60,8 +61,11 @@ pgVoid pgPresentCore(pgSwapChain* swapChain)
 	IDXGISwapChain_Present(swapChain->ptr, 0, 0);
 }
 
-pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
+pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain)
 {
+	pgInt32 width = swapChain->window->placement.width;
+	pgInt32 height = swapChain->window->placement.height;
+
 	swapChain->renderTarget.width = width;
 	swapChain->renderTarget.height = height;
 

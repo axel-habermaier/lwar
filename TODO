@@ -6,6 +6,7 @@ Client
 	- Shield effect
 	- Weapon effects
 	- Particle system
+	- Move skybox
 - Entity interpolation
 	- Reusable interpolation class?
 - UI
@@ -16,6 +17,7 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
+	- Highlight chat messages with different color
 
 Pegasus
 ========
@@ -30,6 +32,14 @@ Pegasus
 - Move some input state handling to Platform lib
 - Allow font color specifiers within texts (e.g., ^r to switch to red)
 - Allow emoticons within texts
+- Console: Better error messages (could not parse parameter 2, give example of correct input)
+- Console: Show validators in help cvar/command
+- Check: Parse command line with string parameters without "" - what happens, i.e. '-cvar hallo welt -test 1'?
+- Console: Shift+Tab: Go back auto-completion
+- Reset command: Resets cvar to its default
+- Network: Send network spec revision number with Connect message, send WrongVersion message on version mismatch
+- Remove cancel parameter from cvar; add validator attributes for window size and position
+- Move validators into their own namespace
 - Window subsystem
 	- C: Filter out multiple resize-events
 	- C: Resize swap chain automatically when window size changes
@@ -41,6 +51,7 @@ Pegasus
 - Input:
 	- Double clicking, key down/up in the same frame, multiple key down/ups in same frame
 	- Make sure keys do not 'hang' when application loses focus
+	- Mouse click: Use click position!
 
 Server
 ========

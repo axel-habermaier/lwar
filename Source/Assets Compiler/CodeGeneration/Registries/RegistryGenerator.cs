@@ -3,7 +3,9 @@
 namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 {
 	using System.Collections.Generic;
+	using System.Globalization;
 	using System.Linq;
+	using System.Threading;
 	using Assets;
 	using Framework.Platform.Memory;
 
@@ -58,6 +60,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// </summary>
 		public void GenerateRegistry()
 		{
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
 			_project = new RegistryProject
 			{
 				CSharpFiles = new[] { new CSharpAsset(SourceFile) },
