@@ -144,9 +144,7 @@ namespace Pegasus.Framework.Platform
 				if (_placement.Width == value.Width && _placement.Height == value.Height)
 					return;
 
-				_placement.Width = value.Width;
-				_placement.Height = value.Height;
-				NativeMethods.SetWindowPlacement(_window, _placement);
+				NativeMethods.SetWindowSize(_window, value.Width, value.Height);
 			}
 		}
 
@@ -167,9 +165,7 @@ namespace Pegasus.Framework.Platform
 				if (_placement.X == value.X && _placement.Y == value.Y)
 					return;
 
-				_placement.X = value.X;
-				_placement.Y = value.Y;
-				NativeMethods.SetWindowPlacement(_window, _placement);
+				NativeMethods.SetWindowPosition(_window, value.X, value.Y);
 			}
 		}
 
@@ -190,8 +186,7 @@ namespace Pegasus.Framework.Platform
 				if (_placement.State == value)
 					return;
 
-				_placement.State = value;
-				NativeMethods.SetWindowPlacement(_window, _placement);
+				NativeMethods.SetWindowState(_window, value);
 			}
 		}
 
@@ -358,8 +353,14 @@ namespace Pegasus.Framework.Platform
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetWindowPlacement")]
 			public static extern void GetWindowPlacement(IntPtr window, out Placement placement);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowPlacement")]
-			public static extern void SetWindowPlacement(IntPtr window, Placement placement);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowSize")]
+			public static extern void SetWindowSize(IntPtr window, int width, int height);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowPosition")]
+			public static extern void SetWindowPosition(IntPtr window, int x, int y);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowState")]
+			public static extern void SetWindowState(IntPtr window, WindowState state);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowTitle")]
 			public static extern void SetWindowTitle(IntPtr window, string title);

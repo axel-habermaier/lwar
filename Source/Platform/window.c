@@ -121,10 +121,13 @@ pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height)
 
 	window->placement.width = width;
 	window->placement.height = height;
-	window->placement.state = PG_WINDOW_NORMAL;
 
 	pgConstrainWindowPlacement(&window->placement);
+	pgSetWindowState(window, PG_WINDOW_NORMAL);
 	pgSetWindowSizeCore(window);
+
+	if (window->swapChain != NULL)
+		pgResizeSwapChain(window->swapChain);
 }
 
 pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
@@ -133,9 +136,9 @@ pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
 
 	window->placement.x = x;
 	window->placement.y = y;
-	window->placement.state = PG_WINDOW_NORMAL;
 
 	pgConstrainWindowPlacement(&window->placement);
+	pgSetWindowState(window, PG_WINDOW_NORMAL);
 	pgSetWindowPositionCore(window);
 }
 

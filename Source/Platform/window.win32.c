@@ -158,6 +158,9 @@ pgVoid pgSetWindowSizeCore(pgWindow* window)
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
 
+	if (!ShowWindow(window->hwnd, SW_RESTORE))
+		pgWin32Error("Failed to get window into normal mode.");
+
 	if (!SetWindowPos(window->hwnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE))
 		pgWin32Error("Failed to resize window.");
 }
