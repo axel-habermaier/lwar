@@ -25,6 +25,13 @@ internal interface ICommands
 	void Help(string name = "");
 
 	/// <summary>
+	///   Resets the given cvar to its default value.
+	/// </summary>
+	/// <param name="cvar">The name of the cvar that should be reset to its default value.</param>
+	[Command]
+	void Reset([NotEmpty] string cvar);
+
+	/// <summary>
 	///   Lists all cvars with names that match the search pattern.
 	/// </summary>
 	/// <param name="pattern">

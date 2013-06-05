@@ -39,6 +39,7 @@ namespace Pegasus.Framework.Scripting
 			Commands.OnPersist += OnPersist;
 			Commands.OnListCommands += OnListCommands;
 			Commands.OnListCvars += OnListCvars;
+			Commands.OnReset += OnResetCvar;
 		}
 
 		/// <summary>
@@ -51,6 +52,22 @@ namespace Pegasus.Framework.Scripting
 			Commands.OnPersist -= OnPersist;
 			Commands.OnListCommands -= OnListCommands;
 			Commands.OnListCvars -= OnListCvars;
+			Commands.OnReset -= OnResetCvar;
+		}
+
+		/// <summary>
+		/// Resets the cvar with the given name to its default value.
+		/// </summary>
+		/// <param name="name">The name of the cvar that should be reset to its default value.</param>
+		private static void OnResetCvar(string name)
+		{
+			Assert.ArgumentNotNullOrWhitespace(name);
+
+			ICvar cvar;
+			if (!CvarRegistry.TryFind(name, out cvar))
+				Log.Warn("Unknown cvar '{0}'.", name);
+			else
+				cvar.Value = cvar.DefaultValue;
 		}
 
 		/// <summary>
@@ -96,7 +113,7 @@ namespace Pegasus.Framework.Scripting
 		///   Invoked when all commands with a matching name should be listed.
 		/// </summary>
 		/// <param name="pattern">The name pattern of the commands that should be listed.</param>
-		private void OnListCommands(string pattern)
+		private static void OnListCommands(string pattern)
 		{
 			var commands = PatternMatches(CommandRegistry.All, command => command.Name, pattern).ToArray();
 			if (commands.Length == 0)
@@ -110,7 +127,7 @@ namespace Pegasus.Framework.Scripting
 		///   Invoked when all cvars with a matching name should be listed.
 		/// </summary>
 		/// <param name="pattern">The name pattern of the cvars that should be listed.</param>
-		private void OnListCvars(string pattern)
+		private static void OnListCvars(string pattern)
 		{
 			var cvars = PatternMatches(CvarRegistry.All, cvar => cvar.Name, pattern).ToArray();
 			if (cvars.Length == 0)
