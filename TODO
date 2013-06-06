@@ -19,22 +19,31 @@ Client
 		* Configuration (graphics settings, input settings, ...)
 	- Highlight chat messages with different color
 
-Pegasus
+Pegasus.Framework
 ========
-- Implement asset compression (store all assets as a single .zip-file maybe, giving higher priority to files on the filesystem such as Quake?)
+- Show platform statistics
+- Allow font color specifiers within texts (e.g., ^r to switch to red)
+- Allow emoticons within texts
+- Track fullscreen resolution changes and added standard timeout-and-reset functionality for invalid resolutions
+- Deactivate app when window loses focus
+- key down/up in the same frame, multiple key down/ups in same frame
+
+Pegasus.Platform
+========
 - Linux: Fullscreen mode does not work reliably
 - Linux: Set minimum/maximum allowed window size
 - Linux: Alt+Tab and fullscreen?
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
-- Move some input state handling to Platform lib
-- Allow font color specifiers within texts (e.g., ^r to switch to red)
-- Allow emoticons within texts
-- Network: Send network spec revision number with Connect message, send WrongVersion message on version mismatch
-- Track fullscreen resolution changes and added standard timeout-and-reset functionality for invalid resolutions
-- Hide cvars and commands from console
-- Deactivate app when window loses focus
-- Input:
-	- key down/up in the same frame, multiple key down/ups in same frame
+
+Assets Compiler
+========
+- Asset compression
+	- Store all assets in one or more .zip-files
+	- Give higher priorities to files on the filesystem (similar to as Quake 3)
+
+Network Specification
+========
+- Send network spec revision number with Connect message, send WrongVersion message on version mismatch
 
 Server
 ========
