@@ -49,9 +49,6 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window)
 
 pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain)
 {
-	// Full screen mode must be left before the swap chain can be destroyed safely
-	PG_D3DCALL(IDXGISwapChain_SetFullscreenState(swapChain->ptr, PG_FALSE, NULL), "Error while leaving fullscreen mode.");
-
 	ReleaseBackBuffer(swapChain);
 	PG_SAFE_RELEASE(IDXGISwapChain, swapChain->ptr);
 }

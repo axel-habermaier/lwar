@@ -38,18 +38,16 @@ pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 	swapChain->renderTarget.height = height;
 }
 
-pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen)
+pgBool pgSwapChainFullscreenCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
 {
 	pgMakeCurrent(&swapChain->context);
-	return pgUpdateContextState(&swapChain->context, width, height, fullscreen);
+	return pgContextFullscreen(&swapChain->context, width, height);
 }
 
-pgVoid pgSwapChainWindowActive(pgSwapChain* swapChain, pgBool focus)
+pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain)
 {
-	PG_ASSERT_NOT_NULL(swapChain);
-
-	if (swapChain->fullscreen && focus)
-		pgUpdateSwapChainStateCore(swapChain, swapChain->fullscreenWidth, swapChain->fullscreenHeight, focus);
+	pgMakeCurrent(&swapChain->context);
+	pgContextWindowed(&swapChain->context, swapChain->windowedWidth, swapChain->windowedHeight);
 }
 
 #endif

@@ -32,6 +32,7 @@ pgVoid pgDestroySwapChain(pgSwapChain* swapChain)
 	if (swapChain == NULL)
 		return;
 
+	pgSwapChainWindowed(swapChain);
 	swapChain->window->swapChain = NULL;
 
 	pgDestroySwapChainCore(swapChain);

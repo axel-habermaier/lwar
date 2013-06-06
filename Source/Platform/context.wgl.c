@@ -7,7 +7,6 @@
 //====================================================================================================================
 
 static pgBool WglExtSupported(int extension, pgString extensionName);
-static pgVoid SwitchToWindowedMode(pgContext* context);
 
 //====================================================================================================================
 // Core functions 
@@ -37,8 +36,6 @@ pgVoid pgCreateContext(pgContext* context)
 
 pgVoid pgDestroyContext(pgContext* context)
 {
-	SwitchToWindowedMode(context);
-
 	if (!wglMakeCurrent(NULL, NULL))
 		pgWin32Error("Unable to unset the current OpenGL context.");
 
@@ -139,41 +136,53 @@ pgVoid pgSetPixelFormat(pgContext* context)
 		pgWin32Error("Failed to set pixel format.");
 }
 
-pgBool pgUpdateContextState(pgContext* context, pgInt32 width, pgInt32 height, pgBool fullscreen)
+pgBool pgContextFullscreen(pgContext* context, pgInt32 width, pgInt32 height)
 {
-	// Switch to fullscreen mode
-	if (fullscreen)
+	DEVMODE devMode;
+	memset(&devMode, 0, sizeof(devMode));
+	devMode.dmSize = sizeof(devMode);
+	devMode.dmPelsWidth = width;
+	devMode.dmPelsHeight = height;
+	devMode.dmBitsPerPel = 32;
+	devMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
+
+	if (ChangeDisplaySettings(&devMode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 	{
-		DEVMODE devMode;
-		memset(&devMode, 0, sizeof(devMode));
-		devMode.dmSize = sizeof(devMode);
-		devMode.dmPelsWidth = width;
-		devMode.dmPelsHeight = height;
-		devMode.dmBitsPerPel = 32;
-		devMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
-
-		if (ChangeDisplaySettings(&devMode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
-		{
-			PG_ERROR("Failed to switch to fullscreen mode.");
-			return PG_FALSE;
-		}
-		else
-		{
-			// Make the window compatible with fullscreen mode
-			SetWindowLong(context->hwnd, GWL_STYLE, WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
-			SetWindowLong(context->hwnd, GWL_EXSTYLE, WS_EX_APPWINDOW);
-
-			// Resize the window so that it fills the entire screen
-			SetWindowPos(context->hwnd, HWND_TOP, 0, 0, width, height, SWP_FRAMECHANGED);
-			ShowWindow(context->hwnd, SW_SHOW);
-
-			context->fullscreen = PG_TRUE;
-			return PG_TRUE;
-		}
+		PG_ERROR("Failed to switch to fullscreen mode.");
+		return PG_FALSE;
 	}
+	else
+	{
+		// The context is moving the window, hence it has to store the original window position
+		RECT rect;
+		if (!GetWindowRect(context->hwnd, &rect))
+			pgWin32Error("Failed to get window position.");
+	
+		context->x = rect.left;
+		context->y = rect.top;
 
-	SwitchToWindowedMode(context);
-	return PG_TRUE;
+		// Make the window compatible with fullscreen mode
+		SetWindowLong(context->hwnd, GWL_STYLE, WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
+		SetWindowLong(context->hwnd, GWL_EXSTYLE, WS_EX_APPWINDOW);
+
+		// Resize the window so that it fills the entire screen
+		SetWindowPos(context->hwnd, HWND_TOP, 0, 0, width, height, SWP_FRAMECHANGED);
+		ShowWindow(context->hwnd, SW_SHOW);
+
+		return PG_TRUE;
+	}
+}
+
+pgVoid pgContextWindowed(pgContext* context, pgInt32 width, pgInt32 height)
+{
+	// Return to the default mode
+	ChangeDisplaySettings(NULL, 0);
+
+	// Reset the original window flags and size
+	SetWindowLong(context->hwnd, GWL_STYLE, context->wndStyle);
+	SetWindowLong(context->hwnd, GWL_EXSTYLE, context->wndExStyle);
+	SetWindowPos(context->hwnd, HWND_TOP, context->x, context->y, width, height, SWP_FRAMECHANGED);
+	ShowWindow(context->hwnd, SW_SHOW);
 }
 
 pgVoid pgInitializeContextExtensions(pgContext* context)
@@ -242,21 +251,6 @@ static pgBool WglExtSupported(int extension, pgString extensionName)
 	}
 
 	return PG_TRUE;
-}
-
-static pgVoid SwitchToWindowedMode(pgContext* context)
-{
-	if (!context->fullscreen)
-		return;
-
-	// Return to the default mode
-	ChangeDisplaySettings(NULL, 0);
-
-	// Reset the original window flags
-	SetWindowLong(context->hwnd, GWL_STYLE, context->wndStyle);
-	SetWindowLong(context->hwnd, GWL_EXSTYLE, context->wndExStyle);
-
-	context->fullscreen = PG_FALSE;
 }
 
 #endif
