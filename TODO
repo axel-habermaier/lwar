@@ -31,6 +31,7 @@ Pegasus
 - Allow emoticons within texts
 - Network: Send network spec revision number with Connect message, send WrongVersion message on version mismatch
 - Make resolution for fullscreen mode unchangeable via console and add command to change fullscreen resolution with timeout verification
+- Deactivate app when window loses focus
 - Input:
 	- Double clicking, key down/up in the same frame, multiple key down/ups in same frame
 	- Make sure keys do not 'hang' when application loses focus

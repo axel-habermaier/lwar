@@ -72,12 +72,12 @@ namespace Pegasus.Framework.Platform
 				UpdateGraphicsState();
 			}
 
-			if (Cvars.WindowMode != _window.State)
-				Cvars.WindowMode = _window.State;
+			if (Cvars.WindowMode != _window.Mode)
+				Cvars.WindowMode = _window.Mode;
 
 			// We do not care about the window size in fullscreen mode; and if we're currently toggling the mode, ignore
 			// the window size as well, as it might be outdated for the current frame
-			if (Cvars.Fullscreen || _toggleMode.IsTriggered || _window.State != WindowState.Normal)
+			if (Cvars.Fullscreen || _toggleMode.IsTriggered || _window.Mode != WindowMode.Normal)
 				return;
 
 			// Make sure the windows cvars are always up-to-date
@@ -113,7 +113,7 @@ namespace Pegasus.Framework.Platform
 
 				// The cvars might have been changed in the mean-time, but that did not yet have any effect
 				_window.Size = Cvars.WindowSize;
-				_window.State = Cvars.WindowMode;
+				_window.Mode = Cvars.WindowMode;
 				_window.Position = Cvars.WindowPosition;
 			}
 		}
@@ -141,11 +141,11 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Sets the window's state to the value stored in the window state cvar.
 		/// </summary>
-		/// <param name="state">The old window state.</param>
-		private void UpdateWindowState(WindowState state)
+		/// <param name="mode">The old window state.</param>
+		private void UpdateWindowState(WindowMode mode)
 		{
 			if (!Cvars.Fullscreen)
-				_window.State = Cvars.WindowMode;
+				_window.Mode = Cvars.WindowMode;
 		}
 
 		/// <summary>

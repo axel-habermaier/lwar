@@ -183,7 +183,7 @@
     <Compile Include="Platform\ResharperAnnotations.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Platform\WindowState.cs" />
+    <Compile Include="Platform\WindowMode.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Network\IPacketFactory.cs" />

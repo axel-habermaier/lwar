@@ -206,6 +206,8 @@ struct pgWindow
 	pgSwapChain*		swapChain;
 	pgBool				mouseCaptured;
 	pgBool				fullscreen;
+	pgBool				focused;
+	pgBool				closing;
 
 	pgBool				keyState[PG_KEY_COUNT];
 	pgInt32				scanCode[PG_KEY_COUNT];
@@ -256,7 +258,7 @@ pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title);
 pgVoid pgGetWindowPlacementCore(pgWindow* window);
 pgVoid pgSetWindowSizeCore(pgWindow* window);
 pgVoid pgSetWindowPositionCore(pgWindow* window);
-pgVoid pgSetWindowStateCore(pgWindow* window);
+pgVoid pgSetWindowModeCore(pgWindow* window);
 
 pgVoid pgCaptureMouseCore(pgWindow* window);
 pgVoid pgReleaseMouseCore(pgWindow* window);

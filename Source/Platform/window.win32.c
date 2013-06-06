@@ -171,7 +171,7 @@ pgVoid pgSetWindowPositionCore(pgWindow* window)
 		pgWin32Error("Failed to move window.");
 }
 
-pgVoid pgSetWindowStateCore(pgWindow* window)
+pgVoid pgSetWindowModeCore(pgWindow* window)
 {
 	if (window->placement.state == PG_WINDOW_MAXIMIZED && !ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
 		pgWin32Error("Failed to maximize window.");

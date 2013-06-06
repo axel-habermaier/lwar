@@ -9,10 +9,6 @@ pgWindow* pgOpenWindow(pgString title, pgWindowPlacement placement, pgWindowCall
 	pgWindow* window;
 
 	PG_ASSERT_NOT_NULL(title);
-	PG_ASSERT_NOT_NULL(callbacks.closing);
-	PG_ASSERT_NOT_NULL(callbacks.closed);
-	PG_ASSERT_NOT_NULL(callbacks.lostFocus);
-	PG_ASSERT_NOT_NULL(callbacks.gainedFocus);
 	PG_ASSERT_NOT_NULL(callbacks.characterEntered);
 	PG_ASSERT_NOT_NULL(callbacks.keyPressed);
 	PG_ASSERT_NOT_NULL(callbacks.keyReleased);
@@ -39,10 +35,6 @@ pgVoid pgCloseWindow(pgWindow* window)
 	PG_ASSERT_NOT_NULL(window);
 
 	pgCloseWindowCore(window);
-
-	if (window->callbacks.closed != NULL)
-		window->callbacks.closed();
-
 	PG_FREE(window);
 }
 
@@ -50,26 +42,28 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 {
 	pgInt32 width, height;
 	pgMessage message;
+
 	PG_ASSERT_NOT_NULL(window);
+	window->closing = PG_FALSE;
 
 	while (pgProcessWindowEvent(window, &message))
 	{
 		switch (message.type)
 		{
 		case PG_MESSAGE_CLOSING:
-			window->callbacks.closing();
+			window->closing = PG_TRUE;
 			break;
 		case PG_MESSAGE_CHARACTER_ENTERED:
 			window->callbacks.characterEntered(message.character, message.scanCode);
 			break;
 		case PG_MESSAGE_GAINED_FOCUS:
-			window->callbacks.gainedFocus();
+			window->focused = PG_TRUE;
 
 			if (window->swapChain != NULL)
 				pgActivateSwapChain(window->swapChain, PG_TRUE);
 			break;
 		case PG_MESSAGE_LOST_FOCUS:
-			window->callbacks.lostFocus();
+			window->focused = PG_FALSE;
 
 			if (window->swapChain != NULL)
 				pgActivateSwapChain(window->swapChain, PG_FALSE);
@@ -110,6 +104,18 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 		pgResizeSwapChain(window->swapChain, window->placement.width, window->placement.height);
 }
 
+pgBool pgIsWindowFocused(pgWindow* window)
+{
+	PG_ASSERT_NOT_NULL(window);
+	return window->focused;
+}
+
+pgBool pgIsWindowClosing(pgWindow* window)
+{
+	PG_ASSERT_NOT_NULL(window);
+	return window->closing;
+}
+
 pgVoid pgGetWindowPlacement(pgWindow* window, pgWindowPlacement* placement)
 {
 	PG_ASSERT_NOT_NULL(window);
@@ -130,7 +136,7 @@ pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height)
 	window->placement.height = height;
 
 	pgConstrainWindowPlacement(&window->placement);
-	pgSetWindowState(window, PG_WINDOW_NORMAL);
+	pgSetWindowMode(window, PG_WINDOW_NORMAL);
 	pgSetWindowSizeCore(window);
 
 	if (window->swapChain != NULL)
@@ -148,11 +154,11 @@ pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
 	window->placement.y = y;
 
 	pgConstrainWindowPlacement(&window->placement);
-	pgSetWindowState(window, PG_WINDOW_NORMAL);
+	pgSetWindowMode(window, PG_WINDOW_NORMAL);
 	pgSetWindowPositionCore(window);
 }
 
-pgVoid pgSetWindowState(pgWindow* window, pgWindowState state)
+pgVoid pgSetWindowMode(pgWindow* window, pgWindowMode state)
 {
 	PG_ASSERT_NOT_NULL(window);
 
@@ -162,7 +168,7 @@ pgVoid pgSetWindowState(pgWindow* window, pgWindowState state)
 	window->placement.state = state;
 
 	pgConstrainWindowPlacement(&window->placement);
-	pgSetWindowStateCore(window);
+	pgSetWindowModeCore(window);
 }
 
 pgVoid pgSetWindowTitle(pgWindow* window, pgString title)

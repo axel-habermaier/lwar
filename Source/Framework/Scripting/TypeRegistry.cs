@@ -49,7 +49,7 @@ namespace Pegasus.Framework.Scripting
 			Register(new IPEndPointParser(), "IPv4 or IPv6 address with optional port", null, "::1", "[::1]:8081", "127.0.0.1", "127.0.0.1:8081");
 
 			// Register common Pegasus framework types
-			Register(new EnumerationLiteralParser<WindowState>(ignoreCase: true), null, null);
+			Register(new EnumerationLiteralParser<WindowMode>(ignoreCase: true), null, null);
 			Register(new Vector2Parser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10.0;10.5");
 			Register(new Vector2IParser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10;10");
 			Register(new SizeParser(), null, s => String.Format("{0};{1}", s.Width, s.Height), "0;0", "-10;10");

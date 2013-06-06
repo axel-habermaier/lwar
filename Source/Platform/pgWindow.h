@@ -137,10 +137,6 @@ typedef enum
 	PG_KEY_BACKSLASH2		= 108
 } pgKey;
 
-typedef pgVoid (*pgClosingCallback)();
-typedef pgVoid (*pgClosedCallback)();
-typedef pgVoid (*pgLostFocusCallback)();
-typedef pgVoid (*pgGainedFocusCallback)();
 typedef pgVoid (*pgCharacterEnteredCallback)(pgUint16 character, pgInt32 scanCode);
 typedef pgVoid (*pgKeyPressedCallback)(pgKey key, pgInt32 scanCode);
 typedef pgVoid (*pgKeyReleasedCallback)(pgKey key, pgInt32 scanCode);
@@ -153,10 +149,6 @@ typedef pgVoid (*pgMouseLeftCallback)();
 
 typedef struct
 {
-	pgClosingCallback			closing;
-	pgClosedCallback			closed;
-	pgLostFocusCallback			lostFocus;
-	pgGainedFocusCallback		gainedFocus;
 	pgCharacterEnteredCallback	characterEntered;
 	pgKeyPressedCallback		keyPressed;
 	pgKeyReleasedCallback		keyReleased;
@@ -173,11 +165,11 @@ typedef enum
 	PG_WINDOW_NORMAL = 1,
 	PG_WINDOW_MAXIMIZED = 2,
 	PG_WINDOW_MINIMIZED = 3
-} pgWindowState;
+} pgWindowMode;
 
 typedef struct
 {
-	pgWindowState	state;
+	pgWindowMode	state;
 	pgInt32			x;
 	pgInt32			y;
 	pgInt32			width;
@@ -192,11 +184,15 @@ PG_API_EXPORT pgWindow* pgOpenWindow(pgString title, pgWindowPlacement placement
 PG_API_EXPORT pgVoid pgCloseWindow(pgWindow* window);
 
 PG_API_EXPORT pgVoid pgProcessWindowEvents(pgWindow* window);
-PG_API_EXPORT pgVoid pgSetWindowTitle(pgWindow* window, pgString title);
+
+PG_API_EXPORT pgBool pgIsWindowFocused(pgWindow* window);
+PG_API_EXPORT pgBool pgIsWindowClosing(pgWindow* window);
 PG_API_EXPORT pgVoid pgGetWindowPlacement(pgWindow* window, pgWindowPlacement* placement);
+
+PG_API_EXPORT pgVoid pgSetWindowTitle(pgWindow* window, pgString title);
 PG_API_EXPORT pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height);
 PG_API_EXPORT pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y);
-PG_API_EXPORT pgVoid pgSetWindowState(pgWindow* window, pgWindowState state);
+PG_API_EXPORT pgVoid pgSetWindowMode(pgWindow* window, pgWindowMode mode);
 
 PG_API_EXPORT pgVoid pgCaptureMouse(pgWindow* window);
 PG_API_EXPORT pgVoid pgReleaseMouse(pgWindow* window);

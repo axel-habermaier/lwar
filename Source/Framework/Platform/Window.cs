@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Input;
 	using Logging;
 	using Math;
@@ -51,17 +50,13 @@ namespace Pegasus.Framework.Platform
 		/// <param name="title">The title of the window.</param>
 		/// <param name="position">The screen position of the window's top left corner.</param>
 		/// <param name="size">The size of the window's rendering area.</param>
-		/// <param name="state">Indicates the window state.</param>
-		internal Window(string title, Vector2i position, Size size, WindowState state)
+		/// <param name="mode">Indicates the window mode.</param>
+		internal Window(string title, Vector2i position, Size size, WindowMode mode)
 		{
 			Log.Info(LogCategory.Platform, "Initializing window...");
 
 			_callbacks = new NativeMethods.Callbacks
 			{
-				Closing = () => Closing(),
-				Closed = () => Closed(),
-				LostFocus = () => LostFocus(),
-				GainedFocus = () => GainedFocus(),
 				CharacterEntered = (c, s) =>
 					{
 						if (s != PlatformInfo.ConsoleKey)
@@ -95,7 +90,7 @@ namespace Pegasus.Framework.Platform
 
 			_placement = new NativeMethods.Placement
 			{
-				State = state,
+				Mode = mode,
 				X = position.X,
 				Y = position.Y,
 				Width = size.Width,
@@ -104,6 +99,11 @@ namespace Pegasus.Framework.Platform
 
 			_window = NativeMethods.OpenWindow(title, _placement, _callbacks);
 		}
+
+		/// <summary>
+		///   Gets a value indicating whether the window currently has the focus.
+		/// </summary>
+		public bool Focused { get; private set; }
 
 		/// <summary>
 		///   Gets the native window instance.
@@ -164,17 +164,17 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Gets or sets the window state.
 		/// </summary>
-		public WindowState State
+		public WindowMode Mode
 		{
 			get
 			{
 				Assert.NotDisposed(this);
-				return _placement.State;
+				return _placement.Mode;
 			}
 			set
 			{
 				Assert.NotDisposed(this);
-				NativeMethods.SetWindowState(_window, value);
+				NativeMethods.SetWindowMode(_window, value);
 			}
 		}
 
@@ -227,6 +227,11 @@ namespace Pegasus.Framework.Platform
 
 			NativeMethods.ProcessWindowEvents(_window);
 			NativeMethods.GetWindowPlacement(_window, out _placement);
+
+			if (Closing != null && NativeMethods.IsClosing(_window))
+				Closing();
+
+			Focused = NativeMethods.IsFocused(_window);
 		}
 
 		/// <summary>
@@ -234,21 +239,6 @@ namespace Pegasus.Framework.Platform
 		///   until Dispose() is called.
 		/// </summary>
 		public event Action Closing = () => { };
-
-		/// <summary>
-		///   Raised when the window is about to be closed.
-		/// </summary>
-		public event Action Closed = () => { };
-
-		/// <summary>
-		///   Raised when the window lost focus.
-		/// </summary>
-		public event Action LostFocus = () => { };
-
-		/// <summary>
-		///   Raised when the window gained focus.
-		/// </summary>
-		public event Action GainedFocus = () => { };
 
 		/// <summary>
 		///   Raised when text was entered.
@@ -305,17 +295,9 @@ namespace Pegasus.Framework.Platform
 		{
 			public delegate void CharacterEnteredCallback(ushort character, int scanCode);
 
-			public delegate void ClosedCallback();
-
-			public delegate void ClosingCallback();
-
-			public delegate void GainedFocusCallback();
-
 			public delegate void KeyPressedCallback(Key key, int scanCode);
 
 			public delegate void KeyReleasedCallback(Key key, int scanCode);
-
-			public delegate void LostFocusCallback();
 
 			public delegate void MouseEnteredCallback();
 
@@ -338,6 +320,12 @@ namespace Pegasus.Framework.Platform
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgProcessWindowEvents")]
 			public static extern void ProcessWindowEvents(IntPtr window);
 
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgIsWindowFocused")]
+			public static extern bool IsFocused(IntPtr window);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgIsWindowClosing")]
+			public static extern bool IsClosing(IntPtr window);
+
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetWindowPlacement")]
 			public static extern void GetWindowPlacement(IntPtr window, out Placement placement);
 
@@ -347,8 +335,8 @@ namespace Pegasus.Framework.Platform
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowPosition")]
 			public static extern void SetWindowPosition(IntPtr window, int x, int y);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowState")]
-			public static extern void SetWindowState(IntPtr window, WindowState state);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowMode")]
+			public static extern void SetWindowMode(IntPtr window, WindowMode mode);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowTitle")]
 			public static extern void SetWindowTitle(IntPtr window, string title);
@@ -362,10 +350,6 @@ namespace Pegasus.Framework.Platform
 			[StructLayout(LayoutKind.Sequential)]
 			public struct Callbacks
 			{
-				public ClosingCallback Closing;
-				public ClosedCallback Closed;
-				public LostFocusCallback LostFocus;
-				public GainedFocusCallback GainedFocus;
 				public CharacterEnteredCallback CharacterEntered;
 				public KeyPressedCallback KeyPressed;
 				public KeyReleasedCallback KeyReleased;
@@ -380,7 +364,7 @@ namespace Pegasus.Framework.Platform
 			[StructLayout(LayoutKind.Sequential)]
 			public struct Placement
 			{
-				public WindowState State;
+				public WindowMode Mode;
 				public int X;
 				public int Y;
 				public int Width;

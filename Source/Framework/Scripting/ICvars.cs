@@ -44,8 +44,8 @@ internal interface ICvars
 	/// <summary>
 	///   The width of the application's window in non-fullscreen mode.
 	/// </summary>
-	[Cvar(WindowState.Normal), Persistent]
-	WindowState WindowMode { get; set; }
+	[Cvar(WindowMode.Normal), Persistent]
+	WindowMode WindowMode { get; set; }
 
 	/// <summary>
 	///   Shows or hides the statistics.
