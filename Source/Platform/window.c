@@ -1,6 +1,16 @@
 #include "prelude.h"
 
 //====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+static pgVoid pgWindowKeyUp(pgWindow* window, pgKey key, pgInt32 scanCode);
+static pgVoid pgWindowKeyDown(pgWindow* window, pgKey key, pgInt32 scanCode);
+static pgVoid pgWindowButtonUp(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y);
+static pgVoid pgWindowButtonDown(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y);
+static pgVoid pgWindowLostFocus(pgWindow* window, pgInt32 x, pgInt32 y);
+
+//====================================================================================================================
 // Exported functions
 //====================================================================================================================
 
@@ -53,9 +63,6 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 		case PG_MESSAGE_CLOSING:
 			window->closing = PG_TRUE;
 			break;
-		case PG_MESSAGE_CHARACTER_ENTERED:
-			window->callbacks.characterEntered(message.character, message.scanCode);
-			break;
 		case PG_MESSAGE_GAINED_FOCUS:
 			window->focused = PG_TRUE;
 
@@ -63,24 +70,56 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 				pgActivateSwapChain(window->swapChain, PG_TRUE);
 			break;
 		case PG_MESSAGE_LOST_FOCUS:
-			window->focused = PG_FALSE;
+			{
+				pgInt32 i, x, y;
+				window->focused = PG_FALSE;
 
-			if (window->swapChain != NULL)
-				pgActivateSwapChain(window->swapChain, PG_FALSE);
+				if (window->swapChain != NULL)
+					pgActivateSwapChain(window->swapChain, PG_FALSE);
+
+				// Make sure that all mouse buttons and keys are released (we might miss some events, for instance,
+				// when the user uses Alt+Tab to switch to another window)
+				for (i = 0; i < PG_KEY_COUNT - 1; ++i)
+				{
+					if (window->keyState[i])
+					{
+						window->keyState[i] = PG_FALSE;
+						window->callbacks.keyReleased((pgKey)(i + 1), window->scanCode[i]);
+					}
+				}
+
+				pgGetMousePosition(window, &x, &y);
+				for (i = 0; i < PG_BUTTON_COUNT - 1; ++i)
+				{
+					if (window->buttonState[i])
+					{
+						window->buttonState[i] = PG_FALSE;
+						window->callbacks.mouseReleased((pgMouseButton)(i + 1), message.x, message.y);
+					}
+				}
+			}
+			break;
+		case PG_MESSAGE_CHARACTER_ENTERED:
+			window->callbacks.characterEntered(message.character, message.scanCode);
 			break;
 		case PG_MESSAGE_KEY_UP:
+			window->keyState[message.key - 1] = PG_FALSE;
 			window->callbacks.keyReleased(message.key, message.scanCode);
 			break;
 		case PG_MESSAGE_KEY_DOWN:
+			window->keyState[message.key - 1] = PG_TRUE;
+			window->scanCode[message.key - 1] = message.scanCode;
 			window->callbacks.keyPressed(message.key, message.scanCode);
 			break;
 		case PG_MESSAGE_MOUSE_WHEEL:
 			window->callbacks.mouseWheel(message.delta);
 			break;
 		case PG_MESSAGE_MOUSE_DOWN:
+			window->buttonState[message.button - 1] = PG_TRUE;
 			window->callbacks.mousePressed(message.button, message.x, message.y);
 			break;
 		case PG_MESSAGE_MOUSE_UP:
+			window->buttonState[message.button - 1] = PG_FALSE;
 			window->callbacks.mouseReleased(message.button, message.x, message.y);
 			break;
 		case PG_MESSAGE_MOUSE_MOVED:
@@ -217,63 +256,3 @@ pgVoid pgConstrainWindowPlacement(pgWindowPlacement* placement)
 	placement->width = pgClamp(placement->width, PG_WINDOW_MIN_WIDTH, rect.width);
 	placement->height = pgClamp(placement->height, PG_WINDOW_MIN_HEIGHT, rect.height);
 }
-
-//pgVoid pgWindowKeyUp(pgWindow* window, pgKey key, pgInt32 scanCode)
-//{
-//	PG_ASSERT_NOT_NULL(window);
-//
-//	window->keyState[key - 1] = PG_FALSE;
-//	if (window->callbacks.keyReleased != NULL)
-//		window->callbacks.keyReleased(key, scanCode);
-//}
-//
-//pgVoid pgWindowKeyDown(pgWindow* window, pgKey key, pgInt32 scanCode)
-//{
-//	PG_ASSERT_NOT_NULL(window);
-//
-//	window->keyState[key - 1] = PG_TRUE;
-//	window->scanCode[key - 1] = scanCode;
-//	if (window->callbacks.keyPressed != NULL)
-//		window->callbacks.keyPressed(key, scanCode);
-//}
-//
-//pgVoid pgWindowButtonUp(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y)
-//{
-//	PG_ASSERT_NOT_NULL(window);
-//
-//	window->buttonState[button - 1] = PG_FALSE;
-//	if (window->callbacks.mouseReleased != NULL)
-//		window->callbacks.mouseReleased(button, x, y);
-//}
-//
-//pgVoid pgWindowButtonDown(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y)
-//{
-//	PG_ASSERT_NOT_NULL(window);
-//
-//	window->buttonState[button - 1] = PG_TRUE;
-//	if (window->callbacks.mousePressed != NULL)
-//		window->callbacks.mousePressed(button, x, y);
-//}
-//
-//pgVoid pgWindowLostFocus(pgWindow* window, pgInt32 x, pgInt32 y)
-//{
-//	pgInt32 i;
-//	PG_ASSERT_NOT_NULL(window);
-//
-//	// Make sure that all mouse buttons and keys are released (we might miss some events, for instance,
-//	// when the user uses Alt+Tab to switch to another window)
-//	for (i = 0; i < PG_KEY_COUNT - 1; ++i)
-//	{
-//		if (window->keyState[i])
-//			pgWindowKeyUp(window, (pgKey)(i + 1), window->scanCode[i]);
-//	}
-//
-//	for (i = 0; i < PG_BUTTON_COUNT - 1; ++i)
-//	{
-//		if (window->buttonState[i])
-//			pgWindowButtonUp(window, (pgMouseButton)(i + 1), x, y);
-//	}
-//
-//	if (window->callbacks.lostFocus != NULL)
-//		window->callbacks.lostFocus();
-//}

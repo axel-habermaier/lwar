@@ -221,6 +221,21 @@ pgRectangle pgGetDesktopArea()
 	return rectangle;
 }
 
+pgVoid pgGetMousePosition(pgWindow* window, pgInt32* x, pgInt32* y)
+{
+	POINT point;
+
+	PG_ASSERT_NOT_NULL(window);
+	PG_ASSERT_NOT_NULL(x);
+	PG_ASSERT_NOT_NULL(y);
+
+	GetCursorPos(&point);
+	ScreenToClient(window->hwnd, &point);
+
+	*x = point.x;
+	*y = point.y;
+}
+
 //====================================================================================================================
 // Helper functions
 //====================================================================================================================

@@ -265,6 +265,7 @@ pgVoid pgReleaseMouseCore(pgWindow* window);
 
 pgVoid pgConstrainWindowPlacement(pgWindowPlacement* placement);
 pgRectangle pgGetDesktopArea();
+pgVoid pgGetMousePosition(pgWindow* window, pgInt32* x, pgInt32* y);
 
 //====================================================================================================================
 // Helper functions
