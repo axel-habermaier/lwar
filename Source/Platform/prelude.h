@@ -477,6 +477,7 @@ struct pgSwapChain
 	pgRenderTarget		renderTarget;
 	pgWindow*			window;
 	pgBool				fullscreen;
+	pgBool				fullscreenHidden;
 	pgInt32				windowedWidth;
 	pgInt32				windowedHeight;
 	pgInt32				fullscreenWidth;
@@ -491,6 +492,7 @@ pgVoid pgPresentCore(pgSwapChain* swapChain);
 pgBool pgSwapChainFullscreenCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain);
 
+pgVoid pgActivateSwapChain(pgSwapChain* swapChain, pgBool activate);
 pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 

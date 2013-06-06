@@ -110,6 +110,11 @@ namespace Pegasus.Framework.Platform
 			{
 				Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowSize.Width, Cvars.WindowSize.Height);
 				_swapChain.SwitchToWindowed();
+
+				// The cvars might have been changed in the mean-time, but that did not yet have any effect
+				_window.Size = Cvars.WindowSize;
+				_window.State = Cvars.WindowMode;
+				_window.Position = Cvars.WindowPosition;
 			}
 		}
 
@@ -119,7 +124,8 @@ namespace Pegasus.Framework.Platform
 		/// <param name="size">The old window size.</param>
 		private void UpdateWindowSize(Size size)
 		{
-			_window.Size = Cvars.WindowSize;
+			if (!Cvars.Fullscreen)
+				_window.Size = Cvars.WindowSize;
 		}
 
 		/// <summary>
@@ -128,7 +134,8 @@ namespace Pegasus.Framework.Platform
 		/// <param name="size">The old window position.</param>
 		private void UpdateWindowPosition(Vector2i size)
 		{
-			_window.Position = Cvars.WindowPosition;
+			if (!Cvars.Fullscreen)
+				_window.Position = Cvars.WindowPosition;
 		}
 
 		/// <summary>
@@ -137,7 +144,8 @@ namespace Pegasus.Framework.Platform
 		/// <param name="state">The old window state.</param>
 		private void UpdateWindowState(WindowState state)
 		{
-			_window.State = Cvars.WindowMode;
+			if (!Cvars.Fullscreen)
+				_window.State = Cvars.WindowMode;
 		}
 
 		/// <summary>

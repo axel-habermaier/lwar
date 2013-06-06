@@ -50,15 +50,6 @@ pgRenderTarget* pgGetBackBuffer(pgSwapChain* swapChain)
 	return &swapChain->renderTarget;
 }
 
-pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
-{
-	PG_ASSERT_NOT_NULL(swapChain);
-	PG_ASSERT_IN_RANGE(width, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MAX_WIDTH);
-	PG_ASSERT_IN_RANGE(height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
-
-	pgResizeSwapChainCore(swapChain, width, height);
-}
-
 pgBool pgSwapChainFullscreen(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
 {
 	PG_ASSERT_NOT_NULL(swapChain);
@@ -68,8 +59,11 @@ pgBool pgSwapChainFullscreen(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 	if (swapChain->fullscreen && swapChain->fullscreenWidth == width && swapChain->fullscreenHeight == height)
 		PG_TRUE;
 
-	swapChain->windowedWidth = swapChain->window->placement.width;
-	swapChain->windowedHeight = swapChain->window->placement.height;
+	if (!swapChain->fullscreen)
+	{
+		swapChain->windowedWidth = swapChain->window->placement.width;
+		swapChain->windowedHeight = swapChain->window->placement.height;
+	}
 
 	if (pgSwapChainFullscreenCore(swapChain, width, height))
 	{
@@ -77,6 +71,7 @@ pgBool pgSwapChainFullscreen(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 		swapChain->fullscreenHeight = height;
 		
 		swapChain->fullscreen = PG_TRUE;
+		swapChain->window->fullscreen = PG_TRUE;
 		return PG_TRUE;
 	}
 
@@ -91,5 +86,35 @@ pgVoid pgSwapChainWindowed(pgSwapChain* swapChain)
 		return;
 
 	swapChain->fullscreen = PG_FALSE;
+	swapChain->window->fullscreen = PG_FALSE;
 	pgSwapChainWindowedCore(swapChain);
+}
+
+//====================================================================================================================
+// Internal functions
+//====================================================================================================================
+
+pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
+{
+	PG_ASSERT_NOT_NULL(swapChain);
+	PG_ASSERT_IN_RANGE(width, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MAX_WIDTH);
+	PG_ASSERT_IN_RANGE(height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
+
+	pgResizeSwapChainCore(swapChain, width, height);
+}
+
+pgVoid pgActivateSwapChain(pgSwapChain* swapChain, pgBool activate)
+{
+	PG_ASSERT_NOT_NULL(swapChain);
+
+	if (activate && swapChain->fullscreenHidden)
+	{
+		swapChain->fullscreenHidden = PG_FALSE;
+		pgSwapChainFullscreen(swapChain, swapChain->fullscreenWidth, swapChain->fullscreenHeight);
+	}
+	else if (!activate && swapChain->fullscreen)
+	{
+		swapChain->fullscreenHidden = PG_TRUE;
+		pgSwapChainWindowed(swapChain);
+	}
 }

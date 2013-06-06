@@ -140,10 +140,6 @@ namespace Pegasus.Framework.Platform
 			set
 			{
 				Assert.NotDisposed(this);
-
-				if (_placement.Width == value.Width && _placement.Height == value.Height)
-					return;
-
 				NativeMethods.SetWindowSize(_window, value.Width, value.Height);
 			}
 		}
@@ -161,10 +157,6 @@ namespace Pegasus.Framework.Platform
 			set
 			{
 				Assert.NotDisposed(this);
-
-				if (_placement.X == value.X && _placement.Y == value.Y)
-					return;
-
 				NativeMethods.SetWindowPosition(_window, value.X, value.Y);
 			}
 		}
@@ -182,10 +174,6 @@ namespace Pegasus.Framework.Platform
 			set
 			{
 				Assert.NotDisposed(this);
-
-				if (_placement.State == value)
-					return;
-
 				NativeMethods.SetWindowState(_window, value);
 			}
 		}

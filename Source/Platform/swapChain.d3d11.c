@@ -82,7 +82,6 @@ pgBool pgSwapChainFullscreenCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 
 	desc.RefreshRate.Numerator = 60;
 	desc.RefreshRate.Denominator = 1;
 
-	PG_WARN("going full: %dx%d",width,height);
 	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
 	{
 		PG_ERROR("Error while resizing swap chain target.");
@@ -116,21 +115,13 @@ pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain)
 	desc.Height = swapChain->windowedHeight;
 	desc.RefreshRate.Numerator = 0;
 	desc.RefreshRate.Denominator = 0;
-	PG_WARN("going win: %dx%d",swapChain->windowedWidth,swapChain->windowedHeight);
+
 	if (IDXGISwapChain_SetFullscreenState(swapChain->ptr, PG_FALSE, NULL) != S_OK)
 		PG_ERROR("Error while leaving fullscreen mode.");
 
 	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
 		PG_ERROR("Error while resizing swap chain target.");
 }
-
-//pgVoid pgSwapChainWindowActive(pgSwapChain* swapChain, pgBool focus)
-//{
-//	PG_ASSERT_NOT_NULL(swapChain);
-//
-//	//if (swapChain->fullscreen && focus)
-//		//pgUpdateSwapChainStateCore(swapChain, swapChain->fullscreenWidth, swapChain->fullscreenHeight, focus);
-//}
 
 //====================================================================================================================
 // Helper functions 

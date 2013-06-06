@@ -316,7 +316,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 	if (window == NULL)
 		return DefWindowProc(hwnd, msg, wParam, lParam);
-
+	
 	switch (msg)
 	{
 	case WM_SETCURSOR:
@@ -351,13 +351,25 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		}
 		break;
 
-	case WM_SETFOCUS:
-		state.activeWindow = window;
-		message->type = PG_MESSAGE_GAINED_FOCUS;
+	case WM_ACTIVATE:
+		if (LOWORD(wParam) == WA_INACTIVE)
+			message->type = PG_MESSAGE_LOST_FOCUS;
+		else
+		{
+			state.activeWindow = window;
+			message->type = PG_MESSAGE_GAINED_FOCUS;
+		}
 		break;
 
-	case WM_KILLFOCUS:
-		message->type = PG_MESSAGE_LOST_FOCUS;
+	case WM_NCACTIVATE:
+	case WM_ACTIVATEAPP:
+		if (!wParam)
+			message->type = PG_MESSAGE_LOST_FOCUS;
+		else
+		{
+			state.activeWindow = window;
+			message->type = PG_MESSAGE_GAINED_FOCUS;
+		}
 		break;
 
 	case WM_MOUSEMOVE:

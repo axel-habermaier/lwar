@@ -64,9 +64,15 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			break;
 		case PG_MESSAGE_GAINED_FOCUS:
 			window->callbacks.gainedFocus();
+
+			if (window->swapChain != NULL)
+				pgActivateSwapChain(window->swapChain, PG_TRUE);
 			break;
 		case PG_MESSAGE_LOST_FOCUS:
 			window->callbacks.lostFocus();
+
+			if (window->swapChain != NULL)
+				pgActivateSwapChain(window->swapChain, PG_FALSE);
 			break;
 		case PG_MESSAGE_KEY_UP:
 			window->callbacks.keyReleased(message.key, message.scanCode);
@@ -109,15 +115,16 @@ pgVoid pgGetWindowPlacement(pgWindow* window, pgWindowPlacement* placement)
 	PG_ASSERT_NOT_NULL(window);
 	PG_ASSERT_NOT_NULL(placement);
 
-	if (!window->fullscreen)
-		pgGetWindowPlacementCore(window);
-
+	pgGetWindowPlacementCore(window);
 	*placement = window->placement;
 }
 
 pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height)
 {
 	PG_ASSERT_NOT_NULL(window);
+
+	if (window->fullscreen)
+		return;
 
 	window->placement.width = width;
 	window->placement.height = height;
@@ -134,6 +141,9 @@ pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
 {
 	PG_ASSERT_NOT_NULL(window);
 
+	if (window->fullscreen)
+		return;
+
 	window->placement.x = x;
 	window->placement.y = y;
 
@@ -145,6 +155,9 @@ pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
 pgVoid pgSetWindowState(pgWindow* window, pgWindowState state)
 {
 	PG_ASSERT_NOT_NULL(window);
+
+	if (window->fullscreen)
+		return;
 
 	window->placement.state = state;
 
