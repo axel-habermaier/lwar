@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Scripting.Parsing
 {
 	using System.Collections.Generic;
+	using System.Linq;
 	using BasicParsers;
 	using Combinators;
 
@@ -85,12 +86,12 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   Forwards the error message of another parser.
 		/// </summary>
 		/// <param name="reply">The reply that should be forwarded.</param>
-		/// <param name="message">An optional additional message that should be included.</param>
-		protected Reply<TResult> ForwardError<T>(Reply<T> reply, string message = null)
+		/// <param name="messages">Additional messages that should be included.</param>
+		protected Reply<TResult> ForwardError<T>(Reply<T> reply, params string[] messages)
 		{
 			var errors = reply.Errors;
-			if (!string.IsNullOrWhiteSpace(message))
-				errors = new ErrorMessageList(errors, new ErrorMessage(ErrorType.Message, message));
+			if (messages != null && messages.Length > 0)
+				errors = new ErrorMessageList(errors, messages.Select(m => new ErrorMessage(ErrorType.Message, m)).ToArray());
 
 			return new Reply<TResult>(reply.Status, errors);
 		}
@@ -235,7 +236,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="otherCharacters">The predicate that all but the first character of the parsed string must satisfy.</param>
 		/// <param name="description">A description describing the expected input in the case of a parser error.</param>
 		protected static Parser<string> String(Func<char, bool> firstCharacter, Func<char, bool> otherCharacters,
-														   string description)
+											   string description)
 		{
 			return new StringParser(firstCharacter, otherCharacters, description);
 		}
@@ -354,8 +355,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <typeparam name="TResultSecond">The type of the second parser's result.</typeparam>
 		/// <typeparam name="T">The type of the pipe2 parser's result.</typeparam>
 		protected static Parser<T> Pipe<TResultFirst, TResultSecond, T>(Parser<TResultFirst> first,
-																					Parser<TResultSecond> second,
-																					Func<TResultFirst, TResultSecond, T> function)
+																		Parser<TResultSecond> second,
+																		Func<TResultFirst, TResultSecond, T> function)
 		{
 			return new Pipe2Parser<TResultFirst, TResultSecond, T>(first, second, function);
 		}
@@ -394,7 +395,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 			Func<TResultFirst, TResultSecond, TResultThird, TResultFourth, T> function)
 		{
 			return new Pipe4Parser<TResultFirst, TResultSecond, TResultThird, TResultFourth, T>(first, second, third,
-																											fourth, function);
+																								fourth, function);
 		}
 
 		/// <summary>
@@ -406,7 +407,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="parser">The parser that is applied several times.</param>
 		/// <param name="separationParser">The separation parser.</param>
 		protected static Parser<List<T>> SeparatedBy<T, TSeparate>(Parser<T> parser,
-																			   Parser<TSeparate> separationParser)
+																   Parser<TSeparate> separationParser)
 		{
 			return new SeparatedByParser<T, TSeparate>(parser, separationParser);
 		}
@@ -420,7 +421,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="parser">The parser that is applied several times.</param>
 		/// <param name="separationParser">The separation parser.</param>
 		protected static Parser<List<T>> SeparatedBy1<T, TSeparate>(Parser<T> parser,
-																				Parser<TSeparate> separationParser)
+																	Parser<TSeparate> separationParser)
 		{
 			return new SeparatedBy1Parser<T, TSeparate>(parser, separationParser);
 		}
@@ -436,8 +437,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="leftParser">The left separation parser.</param>
 		/// <param name="rightParser">The right separation parser.</param>
 		protected static Parser<T> Between<T, TLeft, TRight>(Parser<T> parser,
-																		 Parser<TLeft> leftParser,
-																		 Parser<TRight> rightParser)
+															 Parser<TLeft> leftParser,
+															 Parser<TRight> rightParser)
 		{
 			return new BetweenParser<T, TLeft, TRight>(parser, leftParser, rightParser);
 		}

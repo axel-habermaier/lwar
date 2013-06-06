@@ -22,7 +22,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that is applied zero or more times.</param>
-		public ManyParser(Parser<TResult>parser)
+		public ManyParser(Parser<TResult> parser)
 		{
 			Assert.ArgumentNotNull(parser);
 			_parser = parser;

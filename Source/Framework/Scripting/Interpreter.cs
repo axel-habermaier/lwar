@@ -56,7 +56,7 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		/// Resets the cvar with the given name to its default value.
+		///   Resets the cvar with the given name to its default value.
 		/// </summary>
 		/// <param name="name">The name of the cvar that should be reset to its default value.</param>
 		private static void OnResetCvar(string name)

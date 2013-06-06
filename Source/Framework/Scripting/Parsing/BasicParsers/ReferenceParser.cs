@@ -13,7 +13,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		/// <summary>
 		///   Gets or sets the parser that is applied whenever this parser instance should parse input.
 		/// </summary>
-		public Parser<TResult>ReferencedParser { get; set; }
+		public Parser<TResult> ReferencedParser { get; set; }
 
 		/// <summary>
 		///   Parses the given input string and returns the parser's reply.

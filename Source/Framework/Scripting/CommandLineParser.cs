@@ -4,7 +4,6 @@ namespace Pegasus.Framework.Scripting
 {
 	using System.Collections.Generic;
 	using Parsing;
-	using Parsing.Combinators;
 
 	/// <summary>
 	///   Parses the command line, consisting of a string of cvar set requests. For instance, the

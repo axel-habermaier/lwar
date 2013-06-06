@@ -53,14 +53,6 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Gets the validators that are used to validate the values of the cvar.
-		/// </summary>
-		public IEnumerable<ValidatorAttribute> Validators
-		{
-			get { return _validators; }
-		}
-
-		/// <summary>
 		///   Gets or sets the value of the cvar.
 		/// </summary>
 		public T Value
@@ -83,6 +75,14 @@ namespace Pegasus.Framework.Scripting
 		///   if the cvar's update mode is immediate.
 		/// </summary>
 		public T DeferredValue { get; private set; }
+
+		/// <summary>
+		///   Gets the validators that are used to validate the values of the cvar.
+		/// </summary>
+		public IEnumerable<ValidatorAttribute> Validators
+		{
+			get { return _validators; }
+		}
 
 		/// <summary>
 		///   Sets the cvar's current value to the deferred one.

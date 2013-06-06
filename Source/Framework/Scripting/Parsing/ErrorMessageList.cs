@@ -57,15 +57,16 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="errorList">The error message list whose error messages should be added to the new error message list.</param>
-		/// <param name="errorMessage">The error that should be added to the new error message list.</param>
-		internal ErrorMessageList(ErrorMessageList errorList, ErrorMessage errorMessage)
+		/// <param name="errorMessages">The errors that should be added to the new error message list.</param>
+		internal ErrorMessageList(ErrorMessageList errorList, params ErrorMessage[] errorMessages)
 			: this()
 		{
-			Assert.ArgumentSatisfies(errorList._errorMessages != null, "Uninitializes error list.");
+			Assert.ArgumentSatisfies(errorList._errorMessages != null, "Uninitialized error list.");
+			Assert.ArgumentNotNull(errorMessages);
 
-			_errorMessages = new ErrorMessage[errorList._errorMessages.Length + 1];
+			_errorMessages = new ErrorMessage[errorList._errorMessages.Length + errorMessages.Length];
 			Array.Copy(errorList._errorMessages, _errorMessages, errorList._errorMessages.Length);
-			_errorMessages[errorList._errorMessages.Length] = errorMessage;
+			Array.Copy(errorMessages, 0, _errorMessages, errorList._errorMessages.Length, errorMessages.Length);
 		}
 
 		/// <summary>
@@ -76,8 +77,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 		internal ErrorMessageList(ErrorMessageList first, ErrorMessageList second)
 			: this()
 		{
-			Assert.ArgumentSatisfies(first._errorMessages != null, "Uninitializes error list.");
-			Assert.ArgumentSatisfies(second._errorMessages != null, "Uninitializes error list.");
+			Assert.ArgumentSatisfies(first._errorMessages != null, "Uninitialized error list.");
+			Assert.ArgumentSatisfies(second._errorMessages != null, "Uninitialized error list.");
 
 			_errorMessages = new ErrorMessage[first._errorMessages.Length + second._errorMessages.Length];
 			Array.Copy(first._errorMessages, _errorMessages, first._errorMessages.Length);
@@ -108,7 +109,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <summary>
 		///   Generates the formatted error message.
 		/// </summary>
-			/// <param name="inputStream">The input stream that generated the parser errors.</param>
+		/// <param name="inputStream">The input stream that generated the parser errors.</param>
 		internal void GenerateErrorMessage(InputStream inputStream)
 		{
 			var builder = new StringBuilder(1024);

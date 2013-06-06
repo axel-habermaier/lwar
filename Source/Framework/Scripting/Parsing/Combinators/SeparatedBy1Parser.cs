@@ -27,7 +27,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// </summary>
 		/// <param name="parser">The parser that is applied several times.</param>
 		/// <param name="separationParser">The separation parser.</param>
-		public SeparatedBy1Parser(Parser<TResult>parser, Parser<TSeparate> separationParser)
+		public SeparatedBy1Parser(Parser<TResult> parser, Parser<TSeparate> separationParser)
 		{
 			Assert.ArgumentNotNull(parser);
 			Assert.ArgumentNotNull(separationParser);

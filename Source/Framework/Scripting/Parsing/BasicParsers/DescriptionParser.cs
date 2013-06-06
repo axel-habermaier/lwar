@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	///   given description is returned as an expected error.
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser's result.</typeparam>
-	public class DescriptionParser<TResult>: Parser<TResult>
+	public class DescriptionParser<TResult> : Parser<TResult>
 	{
 		/// <summary>
 		///   The description that should be returned in the case of failure.
@@ -24,7 +24,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		/// </summary>
 		/// <param name="parser">The parser that is applied.</param>
 		/// <param name="description">The description that should be returned in the case of failure.</param>
-		public DescriptionParser(Parser<TResult>parser, string description)
+		public DescriptionParser(Parser<TResult> parser, string description)
 		{
 			Assert.ArgumentNotNull(parser);
 			Assert.ArgumentNotNullOrWhitespace(description);

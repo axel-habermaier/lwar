@@ -12,7 +12,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	/// <typeparam name="TResultThird">The type of the third parser's result.</typeparam>
 	/// <typeparam name="TResultFourth">The type of the fourth parser's result.</typeparam>
 	/// <typeparam name="TResult">The type of the pipe2 parser's result.</typeparam>
-	public class Pipe4Parser<TResultFirst, TResultSecond, TResultThird, TResultFourth, TResult> :Parser<TResult>
+	public class Pipe4Parser<TResultFirst, TResultSecond, TResultThird, TResultFourth, TResult> : Parser<TResult>
 	{
 		/// <summary>
 		///   The parser that is applied first.

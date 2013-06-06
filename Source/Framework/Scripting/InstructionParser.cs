@@ -24,7 +24,7 @@ namespace Pegasus.Framework.Scripting
 		///   A parser for identifiers.
 		/// </summary>
 		private static readonly Parser<string> Identifier = String(c => Char.IsLetter(c) || c == '_',
-																		 c => Char.IsLetterOrDigit(c) || c == '_', "identifier");
+																   c => Char.IsLetterOrDigit(c) || c == '_', "identifier");
 
 		/// <summary>
 		///   Skips any number of whitespaces and then expects the end of the input.
@@ -67,7 +67,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		/// <param name="cvar">The cvar referenced by the instruction.</param>
-		private static Reply<Instruction> Parse(InputStream inputStream, ICvar cvar)
+		private Reply<Instruction> Parse(InputStream inputStream, ICvar cvar)
 		{
 			var cvarDisplay = EndOfInstruction.Apply(_ => new Instruction(cvar, null));
 
@@ -75,7 +75,13 @@ namespace Pegasus.Framework.Scripting
 				.Apply(v => new Instruction(cvar, v));
 
 			var cvarParser = Attempt(cvarDisplay) | cvarSet;
-			return cvarParser.Parse(inputStream);
+			var reply = cvarParser.Parse(inputStream);
+			if (reply.Status == ReplyStatus.Success)
+				return Success(reply.Result);
+			
+			var type = string.Format("Cvar type: {0}", TypeRegistry.GetDescription(cvar.ValueType));
+			var examples = string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
+			return ForwardError(reply, type, examples, Help.GetHint(cvar.Name));
 		}
 
 		/// <summary>
@@ -98,7 +104,7 @@ namespace Pegasus.Framework.Scripting
 
 					break;
 				}
-				
+
 				// We've reached the end of the input, but we're missing at least one parameter
 				if (inputStream.WhiteSpaceUntilEndOfInput() && !parameters[i].HasDefaultValue)
 				{
@@ -117,7 +123,11 @@ namespace Pegasus.Framework.Scripting
 				if (reply.Status == ReplyStatus.Success)
 					values[i] = reply.Result;
 				else
-					return ForwardError(reply, Help.GetHint(command.Name));
+				{
+					var parameterType = string.Format("Parameter type: {0}", TypeRegistry.GetDescription(parameters[i].Type));
+					var examples = string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(parameters[i].Type)));
+					return ForwardError(reply, parameterType, examples, Help.GetHint(command.Name));
+				}
 			}
 
 			return EndOfInstruction.Apply(_ => new Instruction(command, values)).Parse(inputStream);

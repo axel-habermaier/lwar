@@ -6,10 +6,12 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	///   Parses a given string.
 	/// </summary>
 	public class SkipStringParser : Parser<string>
-	{/// <summary>
+	{
+		/// <summary>
 		///   Indicates whether case is ignored.
 		/// </summary>
 		private readonly bool _ignoreCase;
+
 		/// <summary>
 		///   The string that is parsed.
 		/// </summary>

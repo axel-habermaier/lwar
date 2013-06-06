@@ -32,7 +32,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="parser">The parser that is applied.</param>
 		/// <param name="leftParser">The left separation parser.</param>
 		/// <param name="rightParser">The right separation parser.</param>
-		public BetweenParser(Parser<TResult>parser, Parser<TLeft> leftParser,
+		public BetweenParser(Parser<TResult> parser, Parser<TLeft> leftParser,
 							 Parser<TRight> rightParser)
 		{
 			Assert.ArgumentNotNull(parser);

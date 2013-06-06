@@ -20,7 +20,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that should be attempted.</param>
-		public AttemptParser(Parser<TResult>parser)
+		public AttemptParser(Parser<TResult> parser)
 		{
 			_parser = parser;
 		}

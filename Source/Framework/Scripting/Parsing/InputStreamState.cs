@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework.Scripting.Parsing
 {
-	using System.Collections.Generic;
-
 	/// <summary>
 	///   Describes the state of an input stream.
 	/// </summary>

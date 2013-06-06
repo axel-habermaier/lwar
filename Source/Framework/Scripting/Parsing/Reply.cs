@@ -71,7 +71,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <summary>
 		///   Generates a formatted error message if the reply indicates a failed parsing attempt.
 		/// </summary>
-			/// <param name="inputStream">The input stream that generated the parser errors.</param>
+		/// <param name="inputStream">The input stream that generated the parser errors.</param>
 		internal void GenerateErrorMessage(InputStream inputStream)
 		{
 			_errors.GenerateErrorMessage(inputStream);
