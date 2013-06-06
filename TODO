@@ -31,7 +31,6 @@ Pegasus
 - Move some input state handling to Platform lib
 - Allow font color specifiers within texts (e.g., ^r to switch to red)
 - Allow emoticons within texts
-- Check: Parse command line with string parameters without "" - what happens, i.e. '-cvar hallo welt -test 1'?
 - Network: Send network spec revision number with Connect message, send WrongVersion message on version mismatch
 - Window subsystem
 	- DONE C: Filter out multiple resize-events

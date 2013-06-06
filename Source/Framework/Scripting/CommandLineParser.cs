@@ -55,8 +55,13 @@ namespace Pegasus.Framework.Scripting
 				// Parse the cvar argument
 				var argument = (~WhiteSpaces1 + TypeRegistry.GetParser(cvar.ValueType) + ~endOrWhitespace);
 				var argumentReply = argument.Parse(inputStream);
+
 				if (argumentReply.Status != ReplyStatus.Success)
-					return ForwardError(argumentReply);
+				{
+					var type = string.Format("Cvar type: {0}", TypeRegistry.GetDescription(cvar.ValueType));
+					var examples = string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
+					return ForwardError(argumentReply, type, examples, Help.GetHint(cvar.Name));
+				}
 
 				setCvars.Add(new Instruction(cvar, argumentReply.Result));
 			}

@@ -179,9 +179,16 @@ namespace Pegasus.Framework.Scripting
 		///   Gets the string representation of the given value.
 		/// </summary>
 		/// <param name="value">The value for which the string representation should be returned.</param>
-		internal static string ToString(object value)
+		/// <param name="quotedContext">
+		///   Indicates whether the string representation of the value is used in a quoted context. If so, some representations
+		///   might account for this; for instance, in a quoted context, string values are not enclosed in quotes.
+		/// </param>
+		internal static string ToString(object value, bool quotedContext = false)
 		{
 			Assert.ArgumentNotNull(value);
+
+			if (quotedContext && value is string)
+				return (string)value;
 
 			TypeInfo info;
 			if (RegisteredTypes.TryGetValue(value.GetType(), out info))
