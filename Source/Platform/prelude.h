@@ -488,12 +488,11 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window);
 pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain);
 
 pgVoid pgPresentCore(pgSwapChain* swapChain);
-//pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
-//pgBool pgUpdateSwapChainStateCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen);
-//pgVoid pgSwapChainWindowActive(pgSwapChain* swapChain, pgBool focus);
+pgBool pgSwapChainFullscreenCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
+pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain);
 
-pgVoid pgResizeSwapChain(pgSwapChain* swapChain);
-pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain);
+pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
+pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 
 //====================================================================================================================
 // Query

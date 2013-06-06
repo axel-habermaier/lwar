@@ -53,6 +53,7 @@ namespace Pegasus.Framework.Platform
 			Cvars.WindowSizeChanged += UpdateWindowSize;
 			Cvars.WindowPositionChanged += UpdateWindowPosition;
 			Cvars.WindowModeChanged += UpdateWindowState;
+			Commands.OnRestartGraphics += UpdateGraphicsState;
 
 			UpdateGraphicsState();
 			_device.Add(_toggleMode);
@@ -90,7 +91,7 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Updates the state of the graphics subsystem, handling transitions in and out of fullscreen mode.
 		/// </summary>
-		public void UpdateGraphicsState()
+		private void UpdateGraphicsState()
 		{
 			// Execute all deferred cvar updates
 			CvarRegistry.ExecuteDeferredUpdates(UpdateMode.OnGraphicsRestart);
@@ -99,7 +100,7 @@ namespace Pegasus.Framework.Platform
 			if (Cvars.Fullscreen)
 			{
 				Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", Cvars.Resolution.Width, Cvars.Resolution.Height);
-				if (!_swapChain.UpdateState(Cvars.Resolution.Width, Cvars.Resolution.Height, true))
+				if (!_swapChain.SwitchToFullscreen(Cvars.Resolution))
 				{
 					Cvars.Fullscreen = false;
 					UpdateGraphicsState();
@@ -108,7 +109,7 @@ namespace Pegasus.Framework.Platform
 			else
 			{
 				Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowSize.Width, Cvars.WindowSize.Height);
-				//_swapChain.UpdateState(Cvars.WindowWidth, Cvars.WindowHeight, false);
+				_swapChain.SwitchToWindowed();
 			}
 		}
 
@@ -147,6 +148,7 @@ namespace Pegasus.Framework.Platform
 			Cvars.WindowSizeChanged -= UpdateWindowSize;
 			Cvars.WindowPositionChanged -= UpdateWindowPosition;
 			Cvars.WindowModeChanged -= UpdateWindowState;
+			Commands.OnRestartGraphics -= UpdateGraphicsState;
 
 			_device.Remove(_toggleMode);
 		}

@@ -32,6 +32,7 @@ Pegasus
 - Allow font color specifiers within texts (e.g., ^r to switch to red)
 - Allow emoticons within texts
 - Network: Send network spec revision number with Connect message, send WrongVersion message on version mismatch
+- Make resolution for fullscreen mode unchangeable via console and add command to change fullscreen resolution with timeout verification
 - Window subsystem
 	- DONE C: Filter out multiple resize-events
 	- DONE C: Resize swap chain automatically when window size changes

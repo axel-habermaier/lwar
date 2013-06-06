@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Math;
 	using Memory;
 
@@ -19,11 +18,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		private readonly IntPtr _swapChain;
 
 		/// <summary>
-		///   The window the swap chain is bound to.
-		/// </summary>
-		private readonly Window _window;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
@@ -31,7 +25,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal SwapChain(GraphicsDevice graphicsDevice, Window window)
 			: base(graphicsDevice)
 		{
-			_window = window;
+			Assert.ArgumentNotNull(window);
 
 			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr);
 			BackBuffer = new RenderTarget(graphicsDevice, NativeMethods.GetBackBuffer(_swapChain));
@@ -59,19 +53,25 @@ namespace Pegasus.Framework.Platform.Graphics
 		protected override void OnDisposing()
 		{
 			BackBuffer.SafeDispose();
-
 			NativeMethods.DestroySwapChain(_swapChain);
 		}
 
 		/// <summary>
-		///   Reinitializes the swap chain, taking the current resolution and video mode into account.
+		///   Switches to full screen mode with the given resolution. If the swap chain already is in full screen mode, the
+		///   resolution is changed.
 		/// </summary>
-		/// <param name="width">The width of the swap chain's back buffer.</param>
-		/// <param name="height">The width of the swap chain's back buffer.</param>
-		/// <param name="fullscreen">Indicates whether the swap chain should be set to fullscreen mode.</param>
-		public bool UpdateState(int width, int height, bool fullscreen)
+		/// <param name="resolution">The resolution that should be used.</param>
+		public bool SwitchToFullscreen(Size resolution)
 		{
-			return NativeMethods.UpdateState(_swapChain, width, height, fullscreen);
+			return NativeMethods.SwitchToFullscreen(_swapChain, resolution.Width, resolution.Height);
+		}
+
+		/// <summary>
+		///   Switches to windowed mode if the swap chain is currently in full screen mode.
+		/// </summary>
+		public bool SwitchToWindowed()
+		{
+			return NativeMethods.SwitchToWindowed(_swapChain);
 		}
 
 		/// <summary>
@@ -94,8 +94,11 @@ namespace Pegasus.Framework.Platform.Graphics
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetBackBuffer")]
 			public static extern IntPtr GetBackBuffer(IntPtr swapChain);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgUpdateSwapChainState")]
-			public static extern bool UpdateState(IntPtr swapChain, int width, int height, bool fullscreen);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSwapChainFullscreen")]
+			public static extern bool SwitchToFullscreen(IntPtr swapChain, int width, int height);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSwapChainWindowed")]
+			public static extern bool SwitchToWindowed(IntPtr swapChain);
 		}
 	}
 }

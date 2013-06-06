@@ -50,45 +50,46 @@ pgRenderTarget* pgGetBackBuffer(pgSwapChain* swapChain)
 	return &swapChain->renderTarget;
 }
 
-pgVoid pgResizeSwapChain(pgSwapChain* swapChain)
+pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
 {
 	PG_ASSERT_NOT_NULL(swapChain);
-	pgResizeSwapChainCore(swapChain);
+	PG_ASSERT_IN_RANGE(width, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MAX_WIDTH);
+	PG_ASSERT_IN_RANGE(height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
+
+	pgResizeSwapChainCore(swapChain, width, height);
 }
 
-//pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
-//{
-//	PG_ASSERT_NOT_NULL(swapChain);
-//	PG_ASSERT_IN_RANGE(width, 0, PG_WINDOW_MAX_WIDTH);
-//	PG_ASSERT_IN_RANGE(height, 0, PG_WINDOW_MAX_HEIGHT);
-//
-//	//swapChain->width = width;
-//	//swapChain->height = height;
-//	pgResizeSwapChainCore(swapChain, width, height);
-//}
-//
-//pgBool pgUpdateSwapChainState(pgSwapChain* swapChain, pgInt32 width, pgInt32 height, pgBool fullscreen)
-//{
-//	PG_ASSERT_NOT_NULL(swapChain);
-//	PG_ASSERT_IN_RANGE(width, 0, PG_WINDOW_MAX_WIDTH);
-//	PG_ASSERT_IN_RANGE(height, 0, PG_WINDOW_MAX_HEIGHT);
-//
-//	if (pgUpdateSwapChainStateCore(swapChain, width, height, fullscreen))
-//	{
-//		if (fullscreen)
-//		{
-//			swapChain->fullscreenWidth = width;
-//			swapChain->fullscreenHeight = height;
-//		}
-//		else
-//		{
-//			swapChain->windowedWidth = width;
-//			swapChain->windowedHeight = height;
-//		}
-//		
-//		swapChain->fullscreen = fullscreen;
-//		return PG_TRUE;
-//	}
-//
-//	return PG_FALSE;
-//}
+pgBool pgSwapChainFullscreen(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
+{
+	PG_ASSERT_NOT_NULL(swapChain);
+	PG_ASSERT_IN_RANGE(width, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MAX_WIDTH);
+	PG_ASSERT_IN_RANGE(height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
+
+	if (swapChain->fullscreen && swapChain->fullscreenWidth == width && swapChain->fullscreenHeight == height)
+		PG_TRUE;
+
+	swapChain->windowedWidth = swapChain->window->placement.width;
+	swapChain->windowedHeight = swapChain->window->placement.height;
+
+	if (pgSwapChainFullscreenCore(swapChain, width, height))
+	{
+		swapChain->fullscreenWidth = width;
+		swapChain->fullscreenHeight = height;
+		
+		swapChain->fullscreen = PG_TRUE;
+		return PG_TRUE;
+	}
+
+	return PG_FALSE;
+}
+
+pgVoid pgSwapChainWindowed(pgSwapChain* swapChain)
+{
+	PG_ASSERT_NOT_NULL(swapChain);
+
+	if (!swapChain->fullscreen)
+		return;
+
+	swapChain->fullscreen = PG_FALSE;
+	pgSwapChainWindowedCore(swapChain);
+}

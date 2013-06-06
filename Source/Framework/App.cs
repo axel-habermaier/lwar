@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework
 {
-	using System.Runtime.Remoting.Contexts;
-	using System.Security.Cryptography;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
@@ -22,6 +20,14 @@ namespace Pegasus.Framework
 		///   Indicates whether the application should continue to run.
 		/// </summary>
 		private bool _running = true;
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		protected App()
+		{
+			Commands.OnExit += Exit;
+		}
 
 		/// <summary>
 		///   Gets the context of the application, providing access to all framework objects that can be used by the application.
@@ -78,7 +84,7 @@ namespace Pegasus.Framework
 		internal void Run(LogFile logFile, string appName, string defaultFontName, ISpriteEffect spriteEffect)
 		{
 			Assert.ArgumentNotNull(logFile);
-			
+
 			using (new NativeLibrary())
 			using (var window = new Window(appName, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var graphicsDevice = new GraphicsDevice())
@@ -106,11 +112,6 @@ namespace Pegasus.Framework
 					statistics.Update(window.Size);
 					console.Update(window.Size);
 
-					// Setup some command handlers
-					Commands.OnReloadAssets += assets.ReloadAssets;
-					Commands.OnRestartGraphics += resolutionManager.UpdateGraphicsState;
-					Commands.OnExit += Exit;
-
 					// Copy the recorded log history to the console and explain the usage of the console
 					logFile.WriteToConsole(console);
 					Commands.Help();
@@ -131,7 +132,7 @@ namespace Pegasus.Framework
 
 							// Process all window events 
 							window.ProcessEvents();
-							
+
 							// Update the logical inputs based on the new state of the input system
 							inputDevice.Update();
 						}
