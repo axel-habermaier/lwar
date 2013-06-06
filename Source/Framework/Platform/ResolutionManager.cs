@@ -55,7 +55,11 @@ namespace Pegasus.Framework.Platform
 			Cvars.WindowModeChanged += UpdateWindowState;
 			Commands.OnRestartGraphics += UpdateGraphicsState;
 
-			UpdateGraphicsState();
+			// Execute all deferred graphics updates and switch to fullscreen now, if the app is started in fullscreen mode
+			CvarRegistry.ExecuteDeferredUpdates(UpdateMode.OnGraphicsRestart);
+			if (Cvars.Fullscreen)
+				SwitchToFullscreen();
+
 			_device.Add(_toggleMode);
 		}
 
@@ -98,24 +102,38 @@ namespace Pegasus.Framework.Platform
 
 			// Resize and update the window and the swap chain depending on whether we're in fullscreen or windowed mode
 			if (Cvars.Fullscreen)
-			{
-				Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", Cvars.Resolution.Width, Cvars.Resolution.Height);
-				if (!_swapChain.SwitchToFullscreen(Cvars.Resolution))
-				{
-					Cvars.Fullscreen = false;
-					UpdateGraphicsState();
-				}
-			}
+				SwitchToFullscreen();
 			else
-			{
-				Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowSize.Width, Cvars.WindowSize.Height);
-				_swapChain.SwitchToWindowed();
+				SwitchToWindowed();
+		}
 
-				// The cvars might have been changed in the mean-time, but that did not yet have any effect
-				_window.Size = Cvars.WindowSize;
-				_window.Mode = Cvars.WindowMode;
-				_window.Position = Cvars.WindowPosition;
-			}
+		/// <summary>
+		///   Switches to fullscreen mode.
+		/// </summary>
+		private void SwitchToFullscreen()
+		{
+			Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", Cvars.Resolution.Width, Cvars.Resolution.Height);
+
+			if (_swapChain.SwitchToFullscreen(Cvars.Resolution))
+				return;
+
+			// There was an error switching to fullscreen mode, so switch back to windowed mode
+			Cvars.Fullscreen = false;
+			UpdateGraphicsState();
+		}
+
+		/// <summary>
+		///   Switches to windowed mode.
+		/// </summary>
+		private void SwitchToWindowed()
+		{
+			Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowSize.Width, Cvars.WindowSize.Height);
+			_swapChain.SwitchToWindowed();
+
+			// The cvars might have been changed in the mean-time, but that did not yet have any effect
+			_window.Mode = Cvars.WindowMode;
+			_window.Size = Cvars.WindowSize;
+			_window.Position = Cvars.WindowPosition;
 		}
 
 		/// <summary>

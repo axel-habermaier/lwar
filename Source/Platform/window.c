@@ -67,7 +67,6 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			break;
 		case PG_MESSAGE_GAINED_FOCUS:
 			window->focused = PG_TRUE;
-
 			if (window->swapChain != NULL)
 				pgActivateSwapChain(window->swapChain, PG_TRUE);
 			break;

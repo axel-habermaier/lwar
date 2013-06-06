@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework
 {
+	using System.Threading;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
@@ -145,7 +146,8 @@ namespace Pegasus.Framework
 						Update();
 						statistics.Update(window.Size);
 						console.Update(window.Size);
-
+						//Log.Info("Frame");
+						Thread.Sleep(50);
 						// React to window size changes
 						var viewport = new Rectangle(Vector2i.Zero, window.Size);
 						sceneOutput.Viewport = viewport;

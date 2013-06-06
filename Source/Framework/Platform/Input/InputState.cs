@@ -2,10 +2,12 @@
 
 namespace Pegasus.Framework.Platform.Input
 {
+	using Logging;
+
 	/// <summary>
 	///   Represents the state of an input key.
 	/// </summary>
-	public struct InputState : IEquatable<InputState>
+	internal struct InputState : IEquatable<InputState>
 	{
 		/// <summary>
 		///   Gets a value indicating whether the key is currently being pressed down.
@@ -47,10 +49,14 @@ namespace Pegasus.Framework.Platform.Input
 		/// </summary>
 		internal void KeyPressed()
 		{
+			//Log.Info("Down");
+
 			WentDown = !IsPressed;
 			IsPressed = true;
 			WentUp = false;
 			IsRepeated = true;
+
+			//Log.Info("WentDown: {0}, IsPressed: {1}, WentUp: {2}", WentDown, IsPressed, WentUp);
 		}
 
 		/// <summary>
@@ -58,9 +64,11 @@ namespace Pegasus.Framework.Platform.Input
 		/// </summary>
 		internal void KeyReleased()
 		{
+			//Log.Info("Up");
 			WentUp = IsPressed;
 			IsPressed = false;
 			IsRepeated = false;
+			//Log.Info("WentDown: {0}, IsPressed: {1}, WentUp: {2}", WentDown, IsPressed, WentUp);
 		}
 
 		/// <summary>
