@@ -38,7 +38,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated() & controlReleased, InputLayer.Console);
 			ScrollToTop = new LogicalInput(controlPressed + Key.PageUp.IsPressed(), InputLayer.Console);
 			ScrollToBottom = new LogicalInput(controlPressed + Key.PageDown.IsPressed(), InputLayer.Console);
-			AutoComplete = new LogicalInput(Key.Tab.WentDown(), InputLayer.Console);
+			AutoCompleteNext = new LogicalInput(Key.Tab.WentDown() & Key.LeftShift.IsReleased(), InputLayer.Console);
+			AutoCompletePrevious = new LogicalInput(Key.Tab.IsPressed() + Key.LeftShift.IsPressed(), InputLayer.Console);
 
 			device.Add(Toggle);
 			device.Add(Submit);
@@ -50,7 +51,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			device.Add(ScrollDown);
 			device.Add(ScrollToTop);
 			device.Add(ScrollToBottom);
-			device.Add(AutoComplete);
+			device.Add(AutoCompleteNext);
+			device.Add(AutoCompletePrevious);
 		}
 
 		/// <summary>
@@ -104,9 +106,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public LogicalInput Submit { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's auto-completion action.
+		///   Gets the logical input for the console's auto-completion action in forward direction.
 		/// </summary>
-		public LogicalInput AutoComplete { get; private set; }
+		public LogicalInput AutoCompleteNext { get; private set; }
+
+		/// <summary>
+		///   Gets the logical input for the console's auto-completion action in backwards direction.
+		/// </summary>
+		public LogicalInput AutoCompletePrevious { get; private set; }
 
 		/// <summary>
 		///   Invoked when the activation state of the console has been changed.
@@ -163,7 +170,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_device.Remove(ScrollDown);
 			_device.Remove(ScrollToTop);
 			_device.Remove(ScrollToBottom);
-			_device.Remove(AutoComplete);
+			_device.Remove(AutoCompleteNext);
+			_device.Remove(AutoCompletePrevious);
 		}
 	}
 }

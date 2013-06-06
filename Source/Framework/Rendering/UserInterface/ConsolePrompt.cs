@@ -2,7 +2,6 @@
 
 namespace Pegasus.Framework.Rendering.UserInterface
 {
-	using System.Collections.Generic;
 	using System.Linq;
 	using Math;
 	using Platform.Graphics;
@@ -46,9 +45,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private Rectangle _area;
 
 		/// <summary>
-		///   The currently active auto completion list.
+		///   The current auto-completion index.
 		/// </summary>
-		private IEnumerator<string> _autoCompletionList;
+		private int _autoCompletionIndex;
+
+		/// <summary>
+		///   The currently active auto-completion list.
+		/// </summary>
+		private string[] _autoCompletionList;
 
 		/// <summary>
 		///   Stores the current index into the input history.
@@ -182,24 +186,52 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Shows the next auto-completed value if completion is possible.
 		/// </summary>
-		public void AutoComplete()
+		public void AutoCompleteNext()
+		{
+			AutoComplete(true);
+		}
+
+		/// <summary>
+		///   Shows the previous auto-completed value if completion is possible.
+		/// </summary>
+		public void AutoCompletePrevious()
+		{
+			AutoComplete(false);
+		}
+
+		/// <summary>
+		///   Shows the next or previous auto-completed value if completion is possible.
+		/// </summary>
+		/// <param name="next">If true, the next auto-completed entry is shown; otherwise, the previous one is shown.</param>
+		private void AutoComplete(bool next)
 		{
 			if (_autoCompletionList == null)
+			{
 				_autoCompletionList = GetAutoCompletionList();
 
-			if (_autoCompletionList.MoveNext())
-				_input.Text = _autoCompletionList.Current + " ";
+				// If auto-completion returned no results, we're done here
+				if (_autoCompletionList == null)
+					return;
+
+				_autoCompletionIndex = next ? 0 : _autoCompletionList.Length - 1;
+			}
 			else
-				_autoCompletionList = null;
+			{
+				_autoCompletionIndex = (_autoCompletionIndex + (next ? 1 : -1)) % _autoCompletionList.Length;
+				if (_autoCompletionIndex < 0)
+					_autoCompletionIndex += _autoCompletionList.Length;
+			}
+
+			_input.Text = _autoCompletionList[_autoCompletionIndex] + " ";
 		}
 
 		/// <summary>
 		///   Gets the auto completion list for the current input.
 		/// </summary>
-		private IEnumerator<string> GetAutoCompletionList()
+		private string[] GetAutoCompletionList()
 		{
 			if (String.IsNullOrWhiteSpace(_input.Text))
-				yield break;
+				return null;
 
 			var commands = CommandRegistry.All
 										  .Where(command => command.Name.ToLower().StartsWith(_input.Text.ToLower()))
@@ -209,16 +241,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 									.Where(cvar => cvar.Name.ToLower().StartsWith(_input.Text.ToLower()))
 									.Select(cvar => cvar.Name);
 
-			var items = cvars.Union(commands).OrderBy(item => item).ToArray();
-			if (items.Length == 0)
-				yield break;
+			var list = cvars.Union(commands).OrderBy(item => item).ToArray();
+			if (list.Length == 0)
+				return null;
 
-			var i = 0;
-			while (true)
-			{
-				yield return items[i];
-				i = (i + 1) % items.Length;
-			}
+			return list;
 		}
 
 		/// <summary>

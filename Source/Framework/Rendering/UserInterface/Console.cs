@@ -277,8 +277,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (_input.ScrollToBottom.IsTriggered)
 				_content.ScrollToBottom();
 
-			if (_input.AutoComplete.IsTriggered)
-				_prompt.AutoComplete();
+			if (_input.AutoCompleteNext.IsTriggered)
+				_prompt.AutoCompleteNext();
+
+			if (_input.AutoCompletePrevious.IsTriggered)
+				_prompt.AutoCompletePrevious();
 		}
 
 		/// <summary>
