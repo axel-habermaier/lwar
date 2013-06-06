@@ -328,6 +328,10 @@
     </Compile>
     <Compile Include="Scripting\ConfigurationFile.cs" />
     <Compile Include="Scripting\ConfigurationLine.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SizeParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Vector2IParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Vector2Parser.cs" />
+    <Compile Include="Scripting\TypeRegistry.cs" />
     <Compile Include="Scripting\Validators\WindowPositionAttribute.cs" />
     <Compile Include="Scripting\Validators\FileNameAttribute.cs" />
     <Compile Include="Scripting\Help.cs" />
@@ -335,7 +339,6 @@
     <Compile Include="Scripting\Validators\MaximumLengthAttribute.cs" />
     <Compile Include="Scripting\Validators\NotEmptyAttribute.cs" />
     <Compile Include="Scripting\Validators\RangeAttribute.cs" />
-    <Compile Include="Scripting\TypeRepresentation.cs" />
     <Compile Include="Scripting\CvarAttribute.cs" />
     <Compile Include="Scripting\CommandLineParser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
@@ -422,7 +425,6 @@
     <Compile Include="Platform\Input\Mouse.cs" />
     <Compile Include="Scripting\Interpreter.cs" />
     <Compile Include="Platform\Memory\NativeMemoryExtensions.cs" />
-    <Compile Include="Scripting\TypeDescription.cs" />
     <Compile Include="Rendering\UserInterface\ConsolePrompt.cs" />
     <Compile Include="Rendering\UserInterface\Glyph.cs" />
     <Compile Include="Rendering\UserInterface\KerningPair.cs" />
@@ -500,7 +502,6 @@
     <Compile Include="Rendering\UserInterface\Font.cs" />
     <Compile Include="Platform\Statistics.cs" />
     <Compile Include="Platform\AveragedValue.cs" />
-    <Compile Include="Scripting\Parsing\Combinators\TypeParser.cs" />
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
     <Compile Include="ScreenManager.cs" />

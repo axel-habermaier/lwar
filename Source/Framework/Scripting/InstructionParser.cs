@@ -18,24 +18,24 @@ namespace Pegasus.Framework.Scripting
 	///   separated by white space requires some backtracking by the parser, making it harder to generate good error
 	///   messages. Most of the complexity of this parser is a result of the generation of good error messages.
 	/// </remarks>
-	internal class InstructionParser : Parser<Instruction, None>
+	internal class InstructionParser : Parser<Instruction>
 	{
 		/// <summary>
 		///   A parser for identifiers.
 		/// </summary>
-		private static readonly Parser<string, None> Identifier = String(c => Char.IsLetter(c) || c == '_',
+		private static readonly Parser<string> Identifier = String(c => Char.IsLetter(c) || c == '_',
 																		 c => Char.IsLetterOrDigit(c) || c == '_', "identifier");
 
 		/// <summary>
 		///   Skips any number of whitespaces and then expects the end of the input.
 		/// </summary>
-		private static readonly SkipParser<None> EndOfInstruction = ~(WhiteSpaces + ~EndOfInput);
+		private static readonly SkipParser EndOfInstruction = ~(WhiteSpaces + ~EndOfInput);
 
 		/// <summary>
 		///   Parses the given input string and returns the instruction.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<Instruction> Parse(InputStream<None> inputStream)
+		public override Reply<Instruction> Parse(InputStream inputStream)
 		{
 			// Skip all leading white space
 			inputStream.SkipWhiteSpaces();
@@ -67,11 +67,11 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		/// <param name="cvar">The cvar referenced by the instruction.</param>
-		private static Reply<Instruction> Parse(InputStream<None> inputStream, ICvar cvar)
+		private static Reply<Instruction> Parse(InputStream inputStream, ICvar cvar)
 		{
 			var cvarDisplay = EndOfInstruction.Apply(_ => new Instruction(cvar, null));
 
-			var cvarSet = (~WhiteSpaces1 + new TypeParser<None>(cvar.ValueType) + EndOfInstruction)
+			var cvarSet = (~WhiteSpaces1 + TypeRegistry.GetParser(cvar.ValueType) + EndOfInstruction)
 				.Apply(v => new Instruction(cvar, v));
 
 			var cvarParser = Attempt(cvarDisplay) | cvarSet;
@@ -83,7 +83,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		/// <param name="command">The command referenced by the instruction.</param>
-		private Reply<Instruction> Parse(InputStream<None> inputStream, ICommand command)
+		private Reply<Instruction> Parse(InputStream inputStream, ICommand command)
 		{
 			var parameters = command.Parameters.ToArray();
 			var values = new object[parameters.Length];
@@ -103,7 +103,7 @@ namespace Pegasus.Framework.Scripting
 				if (inputStream.WhiteSpaceUntilEndOfInput() && !parameters[i].HasDefaultValue)
 				{
 					inputStream.SkipWhiteSpaces(); // To get the correct column in the error message
-					return Errors(new ErrorMessage(ErrorType.Expected, TypeDescription.GetDescription(parameters[i].Type)),
+					return Errors(new ErrorMessage(ErrorType.Expected, TypeRegistry.GetDescription(parameters[i].Type)),
 								  new ErrorMessage(ErrorType.Message, Help.GetHint(command.Name)));
 				}
 
@@ -113,7 +113,7 @@ namespace Pegasus.Framework.Scripting
 
 				inputStream.SkipWhiteSpaces();
 
-				var reply = new TypeParser<None>(parameters[i].Type).Parse(inputStream);
+				var reply = TypeRegistry.GetParser(parameters[i].Type).Parse(inputStream);
 				if (reply.Status == ReplyStatus.Success)
 					values[i] = reply.Result;
 				else

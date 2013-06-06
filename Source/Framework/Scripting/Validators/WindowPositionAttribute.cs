@@ -11,13 +11,26 @@ namespace Pegasus.Framework.Scripting.Validators
 	public class WindowPositionAttribute : ValidatorAttribute
 	{
 		/// <summary>
-		///   Gets a description for the validation performed by the validator.
+		///   Gets an error message that describes a validation error.
+		/// </summary>
+		public override string ErrorMessage
+		{
+			get
+			{
+				return String.Format("Only screen positions between ({0},{1}) and ({2},{3}) are supported.",
+									 -Window.MaximumSize.Width, -Window.MaximumSize.Height,
+									 Window.MaximumSize.Width, Window.MaximumSize.Height);
+			}
+		}
+
+		/// <summary>
+		///   Gets a description of the validation performed by the validator.
 		/// </summary>
 		public override string Description
 		{
 			get
 			{
-				return String.Format("Only screen positions between ({0},{1}) and ({2},{3}) are supported.",
+				return String.Format("must lie within ({0},{1}) and ({2},{3})",
 									 -Window.MaximumSize.Width, -Window.MaximumSize.Height,
 									 Window.MaximumSize.Width, Window.MaximumSize.Height);
 			}

@@ -7,14 +7,13 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses an unsigned 64-bit integer.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class UInt64Parser<TUserState> : NumberParser<ulong, TUserState>
+	public class UInt64Parser : NumberParser<ulong>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public UInt64Parser()
-			: base(false, false, TypeDescription.GetDescription<ulong>())
+			: base(false, false)
 		{
 		}
 

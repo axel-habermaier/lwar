@@ -7,14 +7,13 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses a 64-bit float point number.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class Float64Parser<TUserState> : NumberParser<double, TUserState>
+	public class Float64Parser : NumberParser<double>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public Float64Parser()
-			: base(true, true, TypeDescription.GetDescription<double>())
+			: base(true, true)
 		{
 		}
 

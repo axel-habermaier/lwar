@@ -26,7 +26,7 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   The parser that is used to parse the instructions.
 		/// </summary>
-		private readonly Parser<Instruction, None> _parser;
+		private readonly Parser<Instruction> _parser;
 
 		/// <summary>
 		///   Initializes a new instance.

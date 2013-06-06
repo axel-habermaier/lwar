@@ -7,8 +7,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 	/// <summary>
 	///   Describes the state of an input stream.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public struct InputStreamState<TUserState> : IEquatable<InputStreamState<TUserState>>
+	public struct InputStreamState : IEquatable<InputStreamState>
 	{
 		/// <summary>
 		///   Initializes a new instance.
@@ -16,8 +15,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="position">The zero-based position of the next character that will be read by the input stream.</param>
 		/// <param name="line">The line number of the next character that will be read by the input stream, starting with 1.</param>
 		/// <param name="lineBegin">The absolute, zero-based position of the first character of the current line.</param>
-		/// <param name="userState">The current user state.</param>
-		public InputStreamState(int position, int line, int lineBegin, TUserState userState)
+		public InputStreamState(int position, int line, int lineBegin)
 			: this()
 		{
 			Assert.ArgumentInRange(position, 0, Int32.MaxValue);
@@ -27,7 +25,6 @@ namespace Pegasus.Framework.Scripting.Parsing
 			Position = position;
 			Line = line;
 			LineBegin = lineBegin;
-			UserState = userState;
 		}
 
 		/// <summary>
@@ -54,18 +51,12 @@ namespace Pegasus.Framework.Scripting.Parsing
 		}
 
 		/// <summary>
-		///   Gets the current user state.
-		/// </summary>
-		public TUserState UserState { get; private set; }
-
-		/// <summary>
 		///   Indicates whether the current object is equal to another object of the same type.
 		/// </summary>
 		/// <param name="other">An object to compare with this object.</param>
-		public bool Equals(InputStreamState<TUserState> other)
+		public bool Equals(InputStreamState other)
 		{
-			return Position == other.Position && Line == other.Line && LineBegin == other.LineBegin &&
-				   EqualityComparer<TUserState>.Default.Equals(UserState, other.UserState);
+			return Position == other.Position && Line == other.Line && LineBegin == other.LineBegin;
 		}
 
 		/// <summary>
@@ -76,7 +67,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		{
 			if (ReferenceEquals(null, obj))
 				return false;
-			return obj is InputStreamState<TUserState> && Equals((InputStreamState<TUserState>)obj);
+			return obj is InputStreamState && Equals((InputStreamState)obj);
 		}
 
 		/// <summary>
@@ -86,10 +77,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		{
 			unchecked
 			{
-				int hashCode = Position;
+				var hashCode = Position;
 				hashCode = (hashCode * 397) ^ Line;
 				hashCode = (hashCode * 397) ^ LineBegin;
-				hashCode = (hashCode * 397) ^ EqualityComparer<TUserState>.Default.GetHashCode(UserState);
 				return hashCode;
 			}
 		}
@@ -99,7 +89,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <param name="left">The left input stream.</param>
 		/// <param name="right">The right input stream.</param>
-		public static bool operator ==(InputStreamState<TUserState> left, InputStreamState<TUserState> right)
+		public static bool operator ==(InputStreamState left, InputStreamState right)
 		{
 			return left.Equals(right);
 		}
@@ -109,7 +99,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <param name="left">The left input stream.</param>
 		/// <param name="right">The right input stream.</param>
-		public static bool operator !=(InputStreamState<TUserState> left, InputStreamState<TUserState> right)
+		public static bool operator !=(InputStreamState left, InputStreamState right)
 		{
 			return !left.Equals(right);
 		}
@@ -118,12 +108,12 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   Advances the position, updating the line count and line begin if necessary.
 		/// </summary>
 		/// <param name="newline">Indicates whether a new line should be registered.</param>
-		internal InputStreamState<TUserState> Advance(bool newline)
+		internal InputStreamState Advance(bool newline)
 		{
 			if (newline)
-				return new InputStreamState<TUserState>(Position + 1, Line + 1, Position + 1, UserState);
+				return new InputStreamState(Position + 1, Line + 1, Position + 1);
 
-			return new InputStreamState<TUserState>(Position + 1, Line, LineBegin, UserState);
+			return new InputStreamState(Position + 1, Line, LineBegin);
 		}
 	}
 }

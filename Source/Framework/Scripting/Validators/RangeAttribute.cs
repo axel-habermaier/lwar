@@ -35,15 +35,23 @@ namespace Pegasus.Framework.Scripting.Validators
 		public IComparable UpperBound { get; private set; }
 
 		/// <summary>
-		///   Gets a description for the validation performed by the validator.
+		///   Gets an error message that describes a validation error.
 		/// </summary>
-		public override string Description
+		public override string ErrorMessage
 		{
 			get
 			{
 				return String.Format("The given value does not lie within {0} and {1}.",
-									 TypeRepresentation.ToString(LowerBound), TypeRepresentation.ToString(UpperBound));
+									 TypeRegistry.ToString(LowerBound), TypeRegistry.ToString(UpperBound));
 			}
+		}
+
+		/// <summary>
+		///   Gets a description of the validation performed by the validator.
+		/// </summary>
+		public override string Description
+		{
+			get { return String.Format("must lie within {0} and {1}", TypeRegistry.ToString(LowerBound), TypeRegistry.ToString(UpperBound)); }
 		}
 
 		/// <summary>

@@ -10,7 +10,12 @@ namespace Pegasus.Framework.Scripting.Validators
 	public abstract class ValidatorAttribute : Attribute
 	{
 		/// <summary>
-		///   Gets a description for the validation performed by the validator.
+		///   Gets an error message that describes a validation error.
+		/// </summary>
+		public abstract string ErrorMessage { get; }
+
+		/// <summary>
+		///   Gets a description of the validation performed by the validator.
 		/// </summary>
 		public abstract string Description { get; }
 

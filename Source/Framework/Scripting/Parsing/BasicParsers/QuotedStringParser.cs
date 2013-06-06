@@ -6,14 +6,13 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	///   Parses a string literal enclosed in double quotes. Double quotes can be used inside the string literal if they are
 	///   escaped by a backslash '\"'.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class QuotedStringParser<TUserState> : Parser<string, TUserState>
+	public class QuotedStringParser : Parser<string>
 	{
 		/// <summary>
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<string> Parse(InputStream<TUserState> inputStream)
+		public override Reply<string> Parse(InputStream inputStream)
 		{
 			// Parse the opening quote
 			if (inputStream.Peek() != '"')

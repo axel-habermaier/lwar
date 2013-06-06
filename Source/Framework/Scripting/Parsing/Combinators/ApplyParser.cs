@@ -8,8 +8,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	/// </summary>
 	/// <typeparam name="TParserResult">The type of the parser's result.</typeparam>
 	/// <typeparam name="TFuncResult">The type of the function's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class ApplyParser<TParserResult, TFuncResult, TUserState> : Parser<TFuncResult, TUserState>
+	public class ApplyParser<TParserResult, TFuncResult> : Parser<TFuncResult>
 	{
 		/// <summary>
 		///   The function that is applied to the parser's result.
@@ -19,14 +18,14 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <summary>
 		///   The parser that is applied.
 		/// </summary>
-		private readonly Parser<TParserResult, TUserState> _parser;
+		private readonly Parser<TParserResult> _parser;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that is applied.</param>
 		/// <param name="function">The function that is applied to the parser's result.</param>
-		public ApplyParser(Parser<TParserResult, TUserState> parser, Func<TParserResult, TFuncResult> function)
+		public ApplyParser(Parser<TParserResult> parser, Func<TParserResult, TFuncResult> function)
 		{
 			Assert.ArgumentNotNull(parser);
 			Assert.ArgumentNotNull(function);
@@ -39,7 +38,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<TFuncResult> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TFuncResult> Parse(InputStream inputStream)
 		{
 			var reply = _parser.Parse(inputStream);
 			if (reply.Status != ReplyStatus.Success)

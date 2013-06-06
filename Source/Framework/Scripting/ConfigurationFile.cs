@@ -93,7 +93,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="silent">Indicates whether parser errors should be silently ignored.</param>
 		private ConfigurationLine ParseLine(string line, int lineNumber, bool silent)
 		{
-			var inputStream = new InputStream<None>(line, _file.FileName, lineNumber);
+			var inputStream = new InputStream(line, _file.FileName, lineNumber);
 			var reply = _parser.Parse(inputStream);
 
 			if (reply.Status == ReplyStatus.Success)
@@ -150,9 +150,9 @@ namespace Pegasus.Framework.Scripting
 			{
 				string value;
 				if (cvar.HasDeferredValue)
-					value = TypeRepresentation.ToString(cvar.DeferredValue, true);
+					value = TypeRegistry.ToString(cvar.DeferredValue);
 				else
-					value = TypeRepresentation.ToString(cvar.Value, true);
+					value = TypeRegistry.ToString(cvar.Value);
 
 				var content = String.Format("{0} {1}", cvar.Name, value);
 				var line = lines.LastOrDefault(l => l.HasInstruction && l.Instruction.HasTarget(cvar));

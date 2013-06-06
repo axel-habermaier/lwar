@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Linq;
+	using System.Text;
 	using Platform.Logging;
 	using Platform.Memory;
 
@@ -10,6 +12,11 @@ namespace Pegasus.Framework.Scripting
 	/// </summary>
 	internal class Help : DisposableObject
 	{
+		/// <summary>
+		///   A cached string builder instance that is used to build up the help texts.
+		/// </summary>
+		private readonly StringBuilder _builder = new StringBuilder();
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -24,48 +31,102 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="name">The name of the cvar or the command for which the help should be displayed.</param>
 		private void OnHelp(string name)
 		{
+			Assert.ArgumentNotNull(name);
+
 			ICvar cvar;
 			ICommand command;
 
 			name = name.Trim();
+			_builder.Clear();
+
 			if (String.IsNullOrWhiteSpace(name))
-			{
-				Log.Info("Use the console to set and view cvars and to invoke commands.");
-				Log.Info("Cvars:");
-				Log.Info("   Type 'cvar-name' to view the current value of the cvar.");
-				Log.Info("   Type 'cvar-name value' to set a cvar to a new value.");
-				Log.Info("   Type 'help cvar-name' to view a description of the usage and purpose of the cvar.");
-				Log.Info("   Type 'list_cvars' to list all available cvars.");
-				Log.Info("Commands:");
-				Log.Info("   Type 'command-name value1 value2 ...' to invoke the command with parameters value1, value2, ... " +
-						 "Optional parameters can be omitted at the end of the command invocation.");
-				Log.Info("   Type 'help command-name' to view a description of the usage and purpose of the command.");
-				Log.Info("   Type 'list_commands' to list all available commands.");
-			}
+				PrintHelp();
 			else if (CvarRegistry.TryFind(name, out cvar))
-			{
-				var deferredValue = String.Empty;
-				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
-					deferredValue = String.Format(", pending update: '{0}'", TypeRepresentation.ToString(cvar.DeferredValue));
-
-				Log.Info("'{0}' : {1} = '{2}' (default: '{3}'{5}): {4}", cvar.Name, TypeDescription.GetDescription(cvar.ValueType),
-						 TypeRepresentation.ToString(cvar.Value), TypeRepresentation.ToString(cvar.DefaultValue), cvar.Description, deferredValue);
-			}
+				PrintCvarHelp(cvar);
 			else if (CommandRegistry.TryFind(name, out command))
-			{
-				Log.Info("'{0}': {1}", command.Name, command.Description);
-				foreach (var parameter in command.Parameters)
-				{
-					var type = TypeDescription.GetDescription(parameter.Type);
-					var defaultValue = String.Empty;
-					if (parameter.HasDefaultValue)
-						defaultValue = String.Format(" = '{0}'", TypeRepresentation.ToString(parameter.DefaultValue));
-
-					Log.Info("    {0} : [{1}]{3}  {2}", parameter.Name, type, parameter.Description, defaultValue);
-				}
-			}
+				PrintCommandHelp(command);
 			else
-				Log.Error("'{0}' is not a cvar or command.", name);
+				Log.Error("'{0}' is neither a cvar nor a command.", name);
+		}
+
+		/// <summary>
+		///   Prints the help for the console system.
+		/// </summary>
+		private void PrintHelp()
+		{
+			_builder.Append("Use the console to set and view cvars and to invoke commands.\n");
+			_builder.Append("Cvars:\n");
+			_builder.Append("   Type 'cvar-name' to view the current value of the cvar.\n");
+			_builder.Append("   Type 'cvar-name value' to set a cvar to a new value.\n");
+			_builder.Append("   Type 'help cvar-name' to view a description of the usage and purpose of the cvar.\n");
+			_builder.Append("   Type 'list_cvars' to list all available cvars.\n");
+			_builder.Append("Commands:\n");
+			_builder.Append("   Type 'command-name value1 value2 ...' to invoke the command with parameters value1, value2, ... " +
+							"Optional parameters can be omitted at the end of the command invocation.\n");
+			_builder.Append("   Type 'help command-name' to view a description of the usage and purpose of the command.\n");
+			_builder.Append("   Type 'list_commands' to list all available commands.");
+
+			Log.Info(_builder.ToString());
+		}
+
+		/// <summary>
+		///   Prints the help for the given cvar.
+		/// </summary>
+		/// <param name="cvar">The cvar the help should be printed for.</param>
+		private void PrintCvarHelp(ICvar cvar)
+		{
+			_builder.AppendFormat("    Cvar:          {0}\n", cvar.Name);
+			_builder.AppendFormat("    Description:   {0}\n", cvar.Description);
+			_builder.AppendFormat("    Type:          {0} (e.g., {1}, ...)\n", TypeRegistry.GetDescription(cvar.ValueType),
+								  String.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
+			_builder.AppendFormat("    Default Value: {0}\n", TypeRegistry.ToString(cvar.DefaultValue));
+			_builder.AppendFormat("    Current Value: {0}\n", TypeRegistry.ToString(cvar.Value));
+
+			if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
+				_builder.AppendFormat("    Pending Value: {0}\n", TypeRegistry.ToString(cvar.DeferredValue));
+
+			if (cvar.Validators.Any())
+				_builder.AppendFormat("    Remarks:       {0}\n", String.Join("; ", cvar.Validators.Select(v => v.Description)));
+
+			_builder.AppendFormat("    Update Mode:   {0}\n", cvar.UpdateMode.ToDisplayString());
+			_builder.AppendFormat("    Persistent:    {0}", cvar.Persistent ? "yes" : "no");
+
+			Log.Info(_builder.ToString());
+		}
+
+		/// <summary>
+		///   Prints the help for the given command.
+		/// </summary>
+		/// <param name="command">The command the help should be printed for.</param>
+		private void PrintCommandHelp(ICommand command)
+		{
+			_builder.AppendFormat("    Command:     {0}\n", command.Name);
+			_builder.AppendFormat("    Description: {0}", command.Description);
+
+			if (command.Parameters.Any())
+				_builder.Append("\n    Parameters:\n");
+
+			var first = true;
+			foreach (var parameter in command.Parameters)
+			{
+				if (first)
+					first = false;
+				else
+					_builder.Append("\n\n");
+
+				_builder.AppendFormat("        Parameter:     {0}\n", parameter.Name);
+				_builder.AppendFormat("        Description:   {0}\n", parameter.Description);
+				_builder.AppendFormat("        Type:          {0} (e.g., {1}, ...)", TypeRegistry.GetDescription(parameter.Type),
+									  String.Join(", ", TypeRegistry.GetExamples(parameter.Type)));
+
+				if (parameter.Validators.Any())
+					_builder.AppendFormat("\n        Remarks:       {0}", String.Join("; ", parameter.Validators.Select(v => v.Description)));
+
+				if (parameter.HasDefaultValue)
+					_builder.AppendFormat("\n        Default Value: {0}\n", TypeRegistry.ToString(parameter.DefaultValue));
+			}
+
+			Log.Info(_builder.ToString());
 		}
 
 		/// <summary>

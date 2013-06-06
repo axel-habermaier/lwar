@@ -11,19 +11,18 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	///   parser.
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class Many1Parser<TResult, TUserState> : Parser<TResult[], TUserState>
+	public class Many1Parser<TResult> : Parser<TResult[]>
 	{
 		/// <summary>
 		///   The parser that is applied zero or more times.
 		/// </summary>
-		private readonly Parser<TResult, TUserState> _parser;
+		private readonly Parser<TResult> _parser;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that is applied zero or more times.</param>
-		public Many1Parser(Parser<TResult, TUserState> parser)
+		public Many1Parser(Parser<TResult>parser)
 		{
 			Assert.ArgumentNotNull(parser);
 			_parser = parser;
@@ -33,7 +32,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<TResult[]> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TResult[]> Parse(InputStream inputStream)
 		{
 			var results = new List<TResult>();
 

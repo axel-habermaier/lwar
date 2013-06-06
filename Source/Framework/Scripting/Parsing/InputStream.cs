@@ -5,8 +5,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 	/// <summary>
 	///   Provides read-access to a sequence of UTF-16 characters. The only supported newline token is \n.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class InputStream<TUserState>
+	public class InputStream
 	{
 		/// <summary>
 		///   Gets the input string that should be parsed.
@@ -19,8 +18,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="input">The string that should be parsed.</param>
 		/// <param name="name">The name of the input stream.</param>
 		/// <param name="line">If set to a number greater than 0, sets the number of the line that line counting starts at.</param>
-		/// <param name="userState">The initial user state.</param>
-		public InputStream(string input, string name = null, int line = -1, TUserState userState = default(TUserState))
+		public InputStream(string input, string name = null, int line = -1)
 		{
 			Assert.ArgumentNotNull(input);
 
@@ -28,7 +26,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 			Name = name ?? String.Empty;
 
 			var lineNumber = line > 0 ? line : 1;
-			State = new InputStreamState<TUserState>(0, lineNumber, 0, userState);
+			State = new InputStreamState(0, lineNumber, 0);
 		}
 
 		/// <summary>
@@ -39,7 +37,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <summary>
 		///   Gets the current state of the input stream.
 		/// </summary>
-		internal InputStreamState<TUserState> State { get; set; }
+		internal InputStreamState State { get; set; }
 
 		/// <summary>
 		///   Gets a value indicating whether the end of the input has been reached.

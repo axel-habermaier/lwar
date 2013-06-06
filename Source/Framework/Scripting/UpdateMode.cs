@@ -13,6 +13,7 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   Indicates that the value of the cvar should be updated immediately.
 		/// </summary>
+		[Description("Immediate")]
 		Immediate = 0,
 
 		/// <summary>

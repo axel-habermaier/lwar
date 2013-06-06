@@ -27,10 +27,7 @@ internal interface ICommands
 	/// <summary>
 	///   Connects to a game session on a remote or local server.
 	/// </summary>
-	/// <param name="ipAddress">
-	///   The IP address of the server in either IPv4 or IPv6 format. For instance, either 127.0.0.1 or ::1 can be used to
-	///   connect to a local server.
-	/// </param>
+	/// <param name="ipAddress">The IP address of the server.</param>
 	/// <param name="port">The port of the server.</param>
 	[Command]
 	void Connect(IPAddress ipAddress, ushort port = Specification.DefaultServerPort);

@@ -10,13 +10,13 @@ namespace Pegasus.Framework.Scripting
 	///   Parses the command line, consisting of a string of cvar set requests. For instance, the
 	///   command line "-time_scale 0.01" sets the value of the time scale cvar to 0.01.
 	/// </summary>
-	internal class CommandLineParser : Parser<IEnumerable<Instruction>, None>
+	internal class CommandLineParser : Parser<IEnumerable<Instruction>>
 	{
 		/// <summary>
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<IEnumerable<Instruction>> Parse(InputStream<None> inputStream)
+		public override Reply<IEnumerable<Instruction>> Parse(InputStream inputStream)
 		{
 			var endOrWhitespace = ~(Attempt(WhiteSpaces + ~EndOfInput) | WhiteSpaces1);
 			var appPath = ~((QuotedStringLiteral | String(c => c != ' ', "application path")) + ~endOrWhitespace);
@@ -54,7 +54,7 @@ namespace Pegasus.Framework.Scripting
 				}
 
 				// Parse the cvar argument
-				var argument = (~WhiteSpaces1 + new TypeParser<None>(cvar.ValueType) + ~endOrWhitespace);
+				var argument = (~WhiteSpaces1 + TypeRegistry.GetParser(cvar.ValueType) + ~endOrWhitespace);
 				var argumentReply = argument.Parse(inputStream);
 				if (argumentReply.Status != ReplyStatus.Success)
 					return ForwardError(argumentReply);

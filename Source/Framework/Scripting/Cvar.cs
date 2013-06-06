@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Collections.Generic;
 	using Platform.Logging;
 	using Validators;
 
@@ -17,7 +18,7 @@ namespace Pegasus.Framework.Scripting
 		private readonly T _defaultValue;
 
 		/// <summary>
-		///   The validators that are used to validate a new value that should be set.
+		///   The validators that are used to validate the values of the cvar.
 		/// </summary>
 		private readonly ValidatorAttribute[] _validators;
 
@@ -49,6 +50,14 @@ namespace Pegasus.Framework.Scripting
 			_defaultValue = defaultValue;
 			_value = defaultValue;
 			_validators = validators;
+		}
+
+		/// <summary>
+		///   Gets the validators that are used to validate the values of the cvar.
+		/// </summary>
+		public IEnumerable<ValidatorAttribute> Validators
+		{
+			get { return _validators; }
 		}
 
 		/// <summary>
@@ -120,7 +129,7 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Gets the cvar's default value as a string.
+		///   Gets the cvar's default value.
 		/// </summary>
 		object ICvar.DefaultValue
 		{
@@ -161,7 +170,7 @@ namespace Pegasus.Framework.Scripting
 				if (validator.Validate(value))
 					continue;
 
-				Log.Error("'{0}' could not be set to '{1}': {2}", Name, TypeRepresentation.ToString(value), validator.Description);
+				Log.Error("'{0}' could not be set to '{1}': {2}", Name, TypeRegistry.ToString(value), validator.ErrorMessage);
 				Log.Info("{0}", Help.GetHint(Name));
 				return false;
 			}
@@ -186,7 +195,7 @@ namespace Pegasus.Framework.Scripting
 
 			var oldValue = _value;
 			_value = value;
-			Log.Info("'{0}' is now '{1}'.", Name, TypeRepresentation.ToString(value));
+			Log.Info("'{0}' is now '{1}'.", Name, TypeRegistry.ToString(value));
 
 			if (Changed != null)
 				Changed(oldValue);
@@ -211,7 +220,7 @@ namespace Pegasus.Framework.Scripting
 				HasDeferredValue = false;
 				DeferredValue = default(T);
 
-				Log.Info("'{0}' is now '{1}'.", Name, TypeRepresentation.ToString(value));
+				Log.Info("'{0}' is now '{1}'.", Name, TypeRegistry.ToString(value));
 				return;
 			}
 
@@ -219,7 +228,7 @@ namespace Pegasus.Framework.Scripting
 			DeferredValue = value;
 			HasDeferredValue = true;
 
-			Log.Info("'{0}' will be set to '{1}'.", Name, TypeRepresentation.ToString(value));
+			Log.Info("'{0}' will be set to '{1}'.", Name, TypeRegistry.ToString(value));
 			Log.Warn("{0}", UpdateMode.ToDisplayString());
 		}
 

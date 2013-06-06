@@ -7,14 +7,13 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses a signed 64-bit integer.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class Int64Parser<TUserState> : NumberParser<long, TUserState>
+	public class Int64Parser : NumberParser<long>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public Int64Parser()
-			: base(true, false, TypeDescription.GetDescription<long>())
+			: base(true, false)
 		{
 		}
 

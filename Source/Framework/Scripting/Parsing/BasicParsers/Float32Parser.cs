@@ -7,14 +7,13 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses a 32-bit floating point number.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class Float32Parser<TUserState> : NumberParser<float, TUserState>
+	public class Float32Parser : NumberParser<float>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public Float32Parser()
-			: base(true, true, TypeDescription.GetDescription<float>())
+			: base(true, true)
 		{
 		}
 

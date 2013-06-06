@@ -10,25 +10,24 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser's result.</typeparam>
 	/// <typeparam name="TSeparate">The type of the separation parser's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class SeparatedBy1Parser<TResult, TSeparate, TUserState> : Parser<List<TResult>, TUserState>
+	public class SeparatedBy1Parser<TResult, TSeparate> : Parser<List<TResult>>
 	{
 		/// <summary>
 		///   The parser that is applied several times.
 		/// </summary>
-		private readonly Parser<TResult, TUserState> _parser;
+		private readonly Parser<TResult> _parser;
 
 		/// <summary>
 		///   The separation parser.
 		/// </summary>
-		private readonly Parser<TSeparate, TUserState> _separationParser;
+		private readonly Parser<TSeparate> _separationParser;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that is applied several times.</param>
 		/// <param name="separationParser">The separation parser.</param>
-		public SeparatedBy1Parser(Parser<TResult, TUserState> parser, Parser<TSeparate, TUserState> separationParser)
+		public SeparatedBy1Parser(Parser<TResult>parser, Parser<TSeparate> separationParser)
 		{
 			Assert.ArgumentNotNull(parser);
 			Assert.ArgumentNotNull(separationParser);
@@ -41,7 +40,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<List<TResult>> Parse(InputStream<TUserState> inputStream)
+		public override Reply<List<TResult>> Parse(InputStream inputStream)
 		{
 			var result = new List<TResult>();
 			do

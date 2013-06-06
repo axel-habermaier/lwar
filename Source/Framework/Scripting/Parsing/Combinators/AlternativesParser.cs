@@ -12,25 +12,24 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	///   input, this means that the alternatives parser by default implements backtracking with only a "one token look‐ahead".
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class AlternativesParser<TResult, TUserState> : Parser<TResult, TUserState>
+	public class AlternativesParser<TResult> : Parser<TResult>
 	{
 		/// <summary>
 		///   The parser that is applied first.
 		/// </summary>
-		private readonly Parser<TResult, TUserState> _first;
+		private readonly Parser<TResult> _first;
 
 		/// <summary>
 		///   The parser that is applied second.
 		/// </summary>
-		private readonly Parser<TResult, TUserState> _second;
+		private readonly Parser<TResult> _second;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="first">The parser that is applied first.</param>
 		/// <param name="second">The parser that is applied second.</param>
-		public AlternativesParser(Parser<TResult, TUserState> first, Parser<TResult, TUserState> second)
+		public AlternativesParser(Parser<TResult> first, Parser<TResult> second)
 		{
 			Assert.ArgumentNotNull(first);
 			Assert.ArgumentNotNull(second);
@@ -43,7 +42,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<TResult> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TResult> Parse(InputStream inputStream)
 		{
 			var state = inputStream.State;
 			var reply = _first.Parse(inputStream);

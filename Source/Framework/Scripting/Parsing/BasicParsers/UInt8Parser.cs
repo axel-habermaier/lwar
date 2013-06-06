@@ -7,14 +7,13 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses an unsigned 8-bit integer.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class UInt8Parser<TUserState> : NumberParser<byte, TUserState>
+	public class UInt8Parser : NumberParser<byte>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public UInt8Parser()
-			: base(false, false, TypeDescription.GetDescription<byte>())
+			: base(false, false)
 		{
 		}
 

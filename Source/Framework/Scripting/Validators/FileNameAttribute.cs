@@ -10,11 +10,19 @@ namespace Pegasus.Framework.Scripting.Validators
 	public class FileNameAttribute : ValidatorAttribute
 	{
 		/// <summary>
-		///   Gets a description for the validation performed by the validator.
+		///   Gets an error message that describes a validation error.
+		/// </summary>
+		public override string ErrorMessage
+		{
+			get { return "The given string is not a valid file name. It either contains a path specifier such as '/', or it contains illegal characters."; }
+		}
+
+		/// <summary>
+		///   Gets a description of the validation performed by the validator.
 		/// </summary>
 		public override string Description
 		{
-			get { return "The given string is not a valid file name. It either contains a path specifier such as '/', or it contains illegal characters."; }
+			get { return "must be a valid file name"; }
 		}
 
 		/// <summary>

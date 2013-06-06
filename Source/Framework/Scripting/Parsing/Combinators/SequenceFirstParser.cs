@@ -8,25 +8,24 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	/// </summary>
 	/// <typeparam name="TResultFirst">The type of the first parser's result.</typeparam>
 	/// <typeparam name="TResultSecond">The type of the second parser's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class SequenceFirstParser<TResultFirst, TResultSecond, TUserState> : Parser<TResultFirst, TUserState>
+	public class SequenceFirstParser<TResultFirst, TResultSecond> : Parser<TResultFirst>
 	{
 		/// <summary>
 		///   The parser that is applied first.
 		/// </summary>
-		private readonly Parser<TResultFirst, TUserState> _first;
+		private readonly Parser<TResultFirst> _first;
 
 		/// <summary>
 		///   The parser that is applied second.
 		/// </summary>
-		private readonly Parser<TResultSecond, TUserState> _second;
+		private readonly Parser<TResultSecond> _second;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="first">The parser that is applied first.</param>
 		/// <param name="second">The parser that is applied second.</param>
-		public SequenceFirstParser(Parser<TResultFirst, TUserState> first, Parser<TResultSecond, TUserState> second)
+		public SequenceFirstParser(Parser<TResultFirst> first, Parser<TResultSecond> second)
 		{
 			Assert.ArgumentNotNull(first);
 			Assert.ArgumentNotNull(second);
@@ -39,7 +38,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Applies the first parser, then, if successful, the second one and returns the result of the first parser.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<TResultFirst> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TResultFirst> Parse(InputStream inputStream)
 		{
 			var firstResult = _first.Parse(inputStream);
 

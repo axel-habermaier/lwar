@@ -12,19 +12,17 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	/// <typeparam name="TResultThird">The type of the third parser's result.</typeparam>
 	/// <typeparam name="TResultFourth">The type of the fourth parser's result.</typeparam>
 	/// <typeparam name="TResult">The type of the pipe2 parser's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class Pipe4Parser<TResultFirst, TResultSecond, TResultThird, TResultFourth, TResult, TUserState> :
-		Parser<TResult, TUserState>
+	public class Pipe4Parser<TResultFirst, TResultSecond, TResultThird, TResultFourth, TResult> :Parser<TResult>
 	{
 		/// <summary>
 		///   The parser that is applied first.
 		/// </summary>
-		private readonly Parser<TResultFirst, TUserState> _first;
+		private readonly Parser<TResultFirst> _first;
 
 		/// <summary>
 		///   The parser that is applied fourth.
 		/// </summary>
-		private readonly Parser<TResultFourth, TUserState> _fourth;
+		private readonly Parser<TResultFourth> _fourth;
 
 		/// <summary>
 		///   A function that is applied to the results of both parsers.
@@ -34,12 +32,12 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <summary>
 		///   The parser that is applied second.
 		/// </summary>
-		private readonly Parser<TResultSecond, TUserState> _second;
+		private readonly Parser<TResultSecond> _second;
 
 		/// <summary>
 		///   The parser that is applied third.
 		/// </summary>
-		private readonly Parser<TResultThird, TUserState> _third;
+		private readonly Parser<TResultThird> _third;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -49,8 +47,8 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="third">The parser that is applied third.</param>
 		/// <param name="fourth">The parser that is applied fourth.</param>
 		/// <param name="function"> A function that is applied to the results of both parsers.</param>
-		public Pipe4Parser(Parser<TResultFirst, TUserState> first, Parser<TResultSecond, TUserState> second,
-						   Parser<TResultThird, TUserState> third, Parser<TResultFourth, TUserState> fourth,
+		public Pipe4Parser(Parser<TResultFirst> first, Parser<TResultSecond> second,
+						   Parser<TResultThird> third, Parser<TResultFourth> fourth,
 						   Func<TResultFirst, TResultSecond, TResultThird, TResultFourth, TResult> function)
 		{
 			Assert.ArgumentNotNull(first);
@@ -70,7 +68,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Applies the first parser, then, if successful, the second one and returns the result of the second parser.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<TResult> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TResult> Parse(InputStream inputStream)
 		{
 			var firstResult = _first.Parse(inputStream);
 			if (firstResult.Status != ReplyStatus.Success)

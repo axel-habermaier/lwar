@@ -10,38 +10,37 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser's result.</typeparam>
 	/// <typeparam name="TSeparate">The type of the separation parser's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class SeparatedByParser<TResult, TSeparate, TUserState> : Parser<List<TResult>, TUserState>
+	public class SeparatedByParser<TResult, TSeparate> : Parser<List<TResult>>
 	{
 		/// <summary>
 		///   The parser that is applied several times.
 		/// </summary>
-		private readonly Parser<TResult, TUserState> _parser;
+		private readonly Parser<TResult> _parser;
 
 		/// <summary>
 		///   The actual parsing is forwarded to this separated by one parser instance.
 		/// </summary>
-		private readonly SeparatedBy1Parser<TResult, TSeparate, TUserState> _separatedBy;
+		private readonly SeparatedBy1Parser<TResult, TSeparate> _separatedBy;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that is applied several times.</param>
 		/// <param name="separationParser">The separation parser.</param>
-		public SeparatedByParser(Parser<TResult, TUserState> parser, Parser<TSeparate, TUserState> separationParser)
+		public SeparatedByParser(Parser<TResult> parser, Parser<TSeparate> separationParser)
 		{
 			Assert.ArgumentNotNull(parser);
 			Assert.ArgumentNotNull(separationParser);
 
 			_parser = parser;
-			_separatedBy = new SeparatedBy1Parser<TResult, TSeparate, TUserState>(parser, separationParser);
+			_separatedBy = new SeparatedBy1Parser<TResult, TSeparate>(parser, separationParser);
 		}
 
 		/// <summary>
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<List<TResult>> Parse(InputStream<TUserState> inputStream)
+		public override Reply<List<TResult>> Parse(InputStream inputStream)
 		{
 			// Return an empty list if the parser fails without consuming input, 
 			// otherwise return the result of the separated by one parser instance or the parser error.

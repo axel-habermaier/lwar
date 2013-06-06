@@ -7,14 +7,13 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses a signed 16-bit integer.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class Int16Parser<TUserState> : NumberParser<short, TUserState>
+	public class Int16Parser : NumberParser<short>
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public Int16Parser()
-			: base(true, false, TypeDescription.GetDescription<short>())
+			: base(true, false)
 		{
 		}
 

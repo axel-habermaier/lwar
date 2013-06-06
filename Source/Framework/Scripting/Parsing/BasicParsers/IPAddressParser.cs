@@ -7,8 +7,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses an IPv4 or IPv6 address.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class IPAddressParser<TUserState> : Parser<IPAddress, TUserState>
+	public class IPAddressParser : Parser<IPAddress>
 	{
 		/// <summary>
 		///   The description that is displayed if the parser failed.
@@ -19,7 +18,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<IPAddress> Parse(InputStream<TUserState> inputStream)
+		public override Reply<IPAddress> Parse(InputStream inputStream)
 		{
 			var state = inputStream.State;
 			IPAddress address;

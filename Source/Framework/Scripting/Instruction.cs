@@ -30,7 +30,7 @@ namespace Pegasus.Framework.Scripting
 			Assert.ArgumentNotNull(target);
 			Assert.That(!(target is ICommand) || (parameter is object[] && ((object[])parameter).Length == ((ICommand)target).Parameters.Count()),
 						"Incorrect command parameters.");
-			Assert.That(!(target is ICvar) || (parameter == null || ((ICvar)target).ValueType.IsAssignableFrom(parameter.GetType())),
+			Assert.That(!(target is ICvar) || (parameter == null || ((ICvar)target).ValueType.IsInstanceOfType(parameter)),
 						"Incorrect cvar parameters.");
 
 			_target = target;
@@ -52,10 +52,10 @@ namespace Pegasus.Framework.Scripting
 			{
 				var deferred = String.Empty;
 				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
-					deferred = String.Format(", pending update: '{0}'", TypeRepresentation.ToString(cvar.DeferredValue));
+					deferred = String.Format(", pending update: '{0}'", TypeRegistry.ToString(cvar.DeferredValue));
 
-				Log.Info("'{0}' is '{1}', default '{2}'{3}", cvar.Name, TypeRepresentation.ToString(cvar.Value),
-					TypeRepresentation.ToString(cvar.DefaultValue), deferred);
+				Log.Info("'{0}' is '{1}', default '{2}'{3}", cvar.Name, TypeRegistry.ToString(cvar.Value),
+					TypeRegistry.ToString(cvar.DefaultValue), deferred);
 
 				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
 					Log.Warn("{0}", cvar.UpdateMode.ToDisplayString());

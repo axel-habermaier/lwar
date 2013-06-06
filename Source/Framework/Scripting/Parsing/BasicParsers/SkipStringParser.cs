@@ -5,8 +5,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses a given string.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class SkipStringParser<TUserState> : Parser<string, TUserState>
+	public class SkipStringParser : Parser<string>
 	{/// <summary>
 		///   Indicates whether case is ignored.
 		/// </summary>
@@ -33,7 +32,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<string> Parse(InputStream<TUserState> inputStream)
+		public override Reply<string> Parse(InputStream inputStream)
 		{
 			var state = inputStream.State;
 

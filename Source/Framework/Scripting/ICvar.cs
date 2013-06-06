@@ -2,6 +2,9 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Collections.Generic;
+	using Validators;
+
 	/// <summary>
 	///   Represents a configurable value.
 	/// </summary>
@@ -16,6 +19,11 @@ namespace Pegasus.Framework.Scripting
 		///   Gets the type of the cvar's value.
 		/// </summary>
 		Type ValueType { get; }
+
+		/// <summary>
+		///   Gets the validators that are used to validate the values of the cvar.
+		/// </summary>
+		IEnumerable<ValidatorAttribute> Validators { get; }
 
 		/// <summary>
 		///   Gets a string describing the usage and the purpose of the cvar.
@@ -34,7 +42,7 @@ namespace Pegasus.Framework.Scripting
 		object DeferredValue { get; }
 
 		/// <summary>
-		///   Gets the cvar's default value as a string.
+		///   Gets the cvar's default value.
 		/// </summary>
 		object DefaultValue { get; }
 

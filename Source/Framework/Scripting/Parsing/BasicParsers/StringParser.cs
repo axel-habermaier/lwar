@@ -5,8 +5,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses a string that satisfies the given predicates. The parser fails if not at least one character can be parsed.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class StringParser<TUserState> : Parser<string, TUserState>
+	public class StringParser : Parser<string>
 	{
 		/// <summary>
 		///   A description describing the expected input in the case of a parser error.
@@ -52,7 +51,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<string> Parse(InputStream<TUserState> inputStream)
+		public override Reply<string> Parse(InputStream inputStream)
 		{
 			var position = inputStream.State.Position;
 

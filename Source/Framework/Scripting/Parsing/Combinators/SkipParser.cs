@@ -5,8 +5,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	/// <summary>
 	///   Skips over the input parsed by the given parser and ignores the parser's result.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public abstract class SkipParser<TUserState> : Parser<None, TUserState>
+	public abstract class SkipParser : Parser<None>
 	{
 	}
 
@@ -14,19 +13,18 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	///   Skips over the input parsed by the given parser and ignores the parser's result.
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser's result that is skipped.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class SkipParser<TResult, TUserState> : SkipParser<TUserState>
+	public class SkipParser<TResult> : SkipParser
 	{
 		/// <summary>
 		///   The parser that is skipped.
 		/// </summary>
-		private readonly Parser<TResult, TUserState> _parser;
+		private readonly Parser<TResult> _parser;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that is skipped.</param>
-		public SkipParser(Parser<TResult, TUserState> parser)
+		public SkipParser(Parser<TResult>parser)
 		{
 			Assert.ArgumentNotNull(parser);
 			_parser = parser;
@@ -36,7 +34,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<None> Parse(InputStream<TUserState> inputStream)
+		public override Reply<None> Parse(InputStream inputStream)
 		{
 			var result = _parser.Parse(inputStream);
 			if (result.Status != ReplyStatus.Success)

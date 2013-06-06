@@ -5,8 +5,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses a Boolean value (either 'true'/'false', '1'/'0', or 'on'/'off').
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class BooleanParser<TUserState> : Parser<bool, TUserState>
+	public class BooleanParser : Parser<bool>
 	{
 		/// <summary>
 		///   The error message that is displayed if the parser failed.
@@ -17,7 +16,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		///   Parses a Boolean value.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<bool> Parse(InputStream<TUserState> inputStream)
+		public override Reply<bool> Parse(InputStream inputStream)
 		{
 			var state = inputStream.State;
 
@@ -37,7 +36,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		/// <param name="keyword">The keyword that should be the next input.</param>
-		private bool IsKeyword(InputStream<TUserState> inputStream, string keyword)
+		private bool IsKeyword(InputStream inputStream, string keyword)
 		{
 			foreach (var character in keyword)
 			{

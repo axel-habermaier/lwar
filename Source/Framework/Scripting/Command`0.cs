@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Scripting
 {
 	using System.Collections.Generic;
+	using System.Linq;
 
 	/// <summary>
 	///   Represents a parameterless command.
@@ -28,7 +29,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		public IEnumerable<CommandParameter> Parameters
 		{
-			get { yield break; }
+			get { return Enumerable.Empty<CommandParameter>(); }
 		}
 
 		/// <summary>

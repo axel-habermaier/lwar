@@ -9,23 +9,22 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	/// <typeparam name="TResult">The type of the parser's result.</typeparam>
 	/// <typeparam name="TLeft">The type of the left separation parser's result.</typeparam>
 	/// <typeparam name="TRight">The type of the right separation parser's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class BetweenParser<TResult, TLeft, TRight, TUserState> : Parser<TResult, TUserState>
+	public class BetweenParser<TResult, TLeft, TRight> : Parser<TResult>
 	{
 		/// <summary>
 		///   The left separation parser.
 		/// </summary>
-		private readonly Parser<TLeft, TUserState> _leftParser;
+		private readonly Parser<TLeft> _leftParser;
 
 		/// <summary>
 		///   The parser that is applied.
 		/// </summary>
-		private readonly Parser<TResult, TUserState> _parser;
+		private readonly Parser<TResult> _parser;
 
 		/// <summary>
 		///   The right separation parser.
 		/// </summary>
-		private readonly Parser<TRight, TUserState> _rightParser;
+		private readonly Parser<TRight> _rightParser;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -33,8 +32,8 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <param name="parser">The parser that is applied.</param>
 		/// <param name="leftParser">The left separation parser.</param>
 		/// <param name="rightParser">The right separation parser.</param>
-		public BetweenParser(Parser<TResult, TUserState> parser, Parser<TLeft, TUserState> leftParser,
-							 Parser<TRight, TUserState> rightParser)
+		public BetweenParser(Parser<TResult>parser, Parser<TLeft> leftParser,
+							 Parser<TRight> rightParser)
 		{
 			Assert.ArgumentNotNull(parser);
 			Assert.ArgumentNotNull(leftParser);
@@ -49,7 +48,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<TResult> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TResult> Parse(InputStream inputStream)
 		{
 			var leftReply = _leftParser.Parse(inputStream);
 			if (leftReply.Status != ReplyStatus.Success)

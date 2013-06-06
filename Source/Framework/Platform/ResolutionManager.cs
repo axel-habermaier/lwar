@@ -52,7 +52,7 @@ namespace Pegasus.Framework.Platform
 
 			Cvars.WindowSizeChanged += UpdateWindowSize;
 			Cvars.WindowPositionChanged += UpdateWindowPosition;
-			Cvars.WindowStateFlagChanged += UpdateWindowState;
+			Cvars.WindowModeChanged += UpdateWindowState;
 
 			UpdateGraphicsState();
 			_device.Add(_toggleMode);
@@ -71,8 +71,8 @@ namespace Pegasus.Framework.Platform
 				UpdateGraphicsState();
 			}
 
-			if (Cvars.WindowStateFlag != _window.State)
-				Cvars.WindowStateFlag = _window.State;
+			if (Cvars.WindowMode != _window.State)
+				Cvars.WindowMode = _window.State;
 
 			// We do not care about the window size in fullscreen mode; and if we're currently toggling the mode, ignore
 			// the window size as well, as it might be outdated for the current frame
@@ -136,7 +136,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="state">The old window state.</param>
 		private void UpdateWindowState(WindowState state)
 		{
-			_window.State = Cvars.WindowStateFlag;
+			_window.State = Cvars.WindowMode;
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace Pegasus.Framework.Platform
 		{
 			Cvars.WindowSizeChanged -= UpdateWindowSize;
 			Cvars.WindowPositionChanged -= UpdateWindowPosition;
-			Cvars.WindowStateFlagChanged -= UpdateWindowState;
+			Cvars.WindowModeChanged -= UpdateWindowState;
 
 			_device.Remove(_toggleMode);
 		}

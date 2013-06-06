@@ -10,8 +10,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 	///   An abstract base class for the implementation of basic parsers and combined parsers.
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public abstract class Parser<TResult, TUserState>
+	public abstract class Parser<TResult>
 	{
 		#region Parse methods
 
@@ -21,7 +20,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="input">The input string that should be parsed.</param>
 		public Reply<TResult> Parse(string input)
 		{
-			var inputStream = new InputStream<TUserState>(input);
+			var inputStream = new InputStream(input);
 			var reply = Parse(inputStream);
 
 			if (reply.Status != ReplyStatus.Success)
@@ -34,7 +33,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public abstract Reply<TResult> Parse(InputStream<TUserState> inputStream);
+		public abstract Reply<TResult> Parse(InputStream inputStream);
 
 		#endregion
 
@@ -122,88 +121,88 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <summary>
 		///   Parses a single digit character.
 		/// </summary>
-		protected static readonly Parser<char, TUserState> Digit = new DigitParser<TUserState>();
+		protected static readonly Parser<char> Digit = new DigitParser();
 
 		/// <summary>
 		///   Parses a Boolean value.
 		/// </summary>
-		protected static readonly Parser<bool, TUserState> Boolean = new BooleanParser<TUserState>();
+		protected static readonly Parser<bool> Boolean = new BooleanParser();
 
 		/// <summary>
 		///   Parses a 32-bit floating point number.
 		/// </summary>
-		protected static readonly Parser<float, TUserState> Float32 = new Float32Parser<TUserState>();
+		protected static readonly Parser<float> Float32 = new Float32Parser();
 
 		/// <summary>
 		///   Parses a 64-bit floating point number.
 		/// </summary>
-		protected static readonly Parser<double, TUserState> Float64 = new Float64Parser<TUserState>();
+		protected static readonly Parser<double> Float64 = new Float64Parser();
 
 		/// <summary>
 		///   Parses a signed 32-bit integer.
 		/// </summary>
-		protected static readonly Parser<int, TUserState> Int32 = new Int32Parser<TUserState>();
+		protected static readonly Parser<int> Int32 = new Int32Parser();
 
 		/// <summary>
 		///   Parses an unsigned 32-bit integer.
 		/// </summary>
-		protected static readonly Parser<uint, TUserState> UInt32 = new UInt32Parser<TUserState>();
+		protected static readonly Parser<uint> UInt32 = new UInt32Parser();
 
 		/// <summary>
 		///   Parses a signed 64-bit integer.
 		/// </summary>
-		protected static readonly Parser<long, TUserState> Int64 = new Int64Parser<TUserState>();
+		protected static readonly Parser<long> Int64 = new Int64Parser();
 
 		/// <summary>
 		///   Parses an unsigned 64-bit integer.
 		/// </summary>
-		protected static readonly Parser<ulong, TUserState> UInt64 = new UInt64Parser<TUserState>();
+		protected static readonly Parser<ulong> UInt64 = new UInt64Parser();
 
 		/// <summary>
 		///   Parses a signed 16-bit integer.
 		/// </summary>
-		protected static readonly Parser<short, TUserState> Int16 = new Int16Parser<TUserState>();
+		protected static readonly Parser<short> Int16 = new Int16Parser();
 
 		/// <summary>
 		///   Parses an unsigned 16-bit integer.
 		/// </summary>
-		protected static readonly Parser<ushort, TUserState> UInt16 = new UInt16Parser<TUserState>();
+		protected static readonly Parser<ushort> UInt16 = new UInt16Parser();
 
 		/// <summary>
 		///   Parses a signed 8-bit integer.
 		/// </summary>
-		protected static readonly Parser<sbyte, TUserState> Int8 = new Int8Parser<TUserState>();
+		protected static readonly Parser<sbyte> Int8 = new Int8Parser();
 
 		/// <summary>
 		///   Parses an unsigned 8-bit integer.
 		/// </summary>
-		protected static readonly Parser<byte, TUserState> UInt8 = new UInt8Parser<TUserState>();
+		protected static readonly Parser<byte> UInt8 = new UInt8Parser();
 
 		/// <summary>
 		///   Parses a single letter character.
 		/// </summary>
-		protected static readonly Parser<char, TUserState> Letter = new LetterParser<TUserState>();
+		protected static readonly Parser<char> Letter = new LetterParser();
 
 		/// <summary>
 		///   Parses the end of the input.
 		/// </summary>
-		protected static readonly Parser<None, TUserState> EndOfInput = new EndOfInputParser<TUserState>();
+		protected static readonly Parser<None> EndOfInput = new EndOfInputParser();
 
 		/// <summary>
 		///   Parses zero or more white space characters.
 		/// </summary>
-		protected static readonly Parser<None, TUserState> WhiteSpaces = new WhiteSpacesParser<TUserState>();
+		protected static readonly Parser<None> WhiteSpaces = new WhiteSpacesParser();
 
 		/// <summary>
 		///   Parses one or more white space characters.
 		/// </summary>
-		protected static readonly Parser<None, TUserState> WhiteSpaces1 = new WhiteSpaces1Parser<TUserState>();
+		protected static readonly Parser<None> WhiteSpaces1 = new WhiteSpaces1Parser();
 
 		/// <summary>
 		///   Parses a string literal enclosed in double quotes. Double quotes can be used inside the string literal if they are
 		///   escaped by a backslash '\"'.
 		/// </summary>
-		protected static readonly Parser<string, TUserState> QuotedStringLiteral = new QuotedStringParser<TUserState>();
+		protected static readonly Parser<string> QuotedStringLiteral = new QuotedStringParser();
 
 		#endregion
 
@@ -213,9 +212,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   Parses the given character.
 		/// </summary>
 		/// <param name="character">The character that should be parsed.</param>
-		protected static Parser<char, TUserState> Character(char character)
+		protected static Parser<char> Character(char character)
 		{
-			return new CharacterParser<TUserState>(character);
+			return new CharacterParser(character);
 		}
 
 		/// <summary>
@@ -224,9 +223,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   have certain configurable parts.
 		/// </summary>
 		/// <typeparam name="T">The type of the result returned by the referenced parser.</typeparam>
-		protected static ReferenceParser<T, TUserState> Reference<T>()
+		protected static ReferenceParser<T> Reference<T>()
 		{
-			return new ReferenceParser<T, TUserState>();
+			return new ReferenceParser<T>();
 		}
 
 		/// <summary>
@@ -235,10 +234,10 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="firstCharacter">The predicate that the first character of the parsed string must satisfy.</param>
 		/// <param name="otherCharacters">The predicate that all but the first character of the parsed string must satisfy.</param>
 		/// <param name="description">A description describing the expected input in the case of a parser error.</param>
-		protected static Parser<string, TUserState> String(Func<char, bool> firstCharacter, Func<char, bool> otherCharacters,
+		protected static Parser<string> String(Func<char, bool> firstCharacter, Func<char, bool> otherCharacters,
 														   string description)
 		{
-			return new StringParser<TUserState>(firstCharacter, otherCharacters, description);
+			return new StringParser(firstCharacter, otherCharacters, description);
 		}
 
 		/// <summary>
@@ -246,9 +245,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <param name="characters">The predicate that all characters of the parsed string must satisfy.</param>
 		/// <param name="description">A description describing the expected input in the case of a parser error.</param>
-		protected static Parser<string, TUserState> String(Func<char, bool> characters, string description)
+		protected static Parser<string> String(Func<char, bool> characters, string description)
 		{
-			return new StringParser<TUserState>(characters, description);
+			return new StringParser(characters, description);
 		}
 
 		/// <summary>
@@ -256,9 +255,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <param name="str">The string that should be parsed.</param>
 		/// <param name="ignoreCase">Indicates whether case should be ignored.</param>
-		protected static Parser<string, TUserState> String(string str, bool ignoreCase = false)
+		protected static Parser<string> String(string str, bool ignoreCase = false)
 		{
-			return new SkipStringParser<TUserState>(str, ignoreCase);
+			return new SkipStringParser(str, ignoreCase);
 		}
 
 		/// <summary>
@@ -266,10 +265,10 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <typeparam name="TEnum">The type of the enumeration literal that should be parsed.</typeparam>
 		/// <param name="ignoreCase">Indicates whether case should be ignored.</param>
-		protected static Parser<TEnum, TUserState> EnumerationLiteral<TEnum>(bool ignoreCase)
+		protected static Parser<TEnum> EnumerationLiteral<TEnum>(bool ignoreCase)
 			where TEnum : struct
 		{
-			return new EnumerationLiteralParser<TEnum, TUserState>(ignoreCase);
+			return new EnumerationLiteralParser<TEnum>(ignoreCase);
 		}
 
 		#endregion
@@ -281,9 +280,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   given description is returned as an expected error.
 		/// </summary>
 		/// <param name="description">The description that should be returned in the case of failure.</param>
-		public Parser<TResult, TUserState> Named(string description)
+		public Parser<TResult> Named(string description)
 		{
-			return new DescriptionParser<TResult, TUserState>(this, description);
+			return new DescriptionParser<TResult>(this, description);
 		}
 
 		/// <summary>
@@ -291,9 +290,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		///   returned and the optional parser is successful anyway.
 		/// </summary>
 		/// <param name="defaultValue">The default value that should be returned when the given parser fails.</param>
-		public Parser<TResult, TUserState> Optional(TResult defaultValue)
+		public Parser<TResult> Optional(TResult defaultValue)
 		{
-			return new OptionalParser<TResult, TUserState>(this, defaultValue);
+			return new OptionalParser<TResult>(this, defaultValue);
 		}
 
 		/// <summary>
@@ -302,9 +301,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <typeparam name="TFuncResult">The type of the function's result.</typeparam>
 		/// <param name="function">The function that is applied to the parser's result.</param>
-		public Parser<TFuncResult, TUserState> Apply<TFuncResult>(Func<TResult, TFuncResult> function)
+		public Parser<TFuncResult> Apply<TFuncResult>(Func<TResult, TFuncResult> function)
 		{
-			return new ApplyParser<TResult, TFuncResult, TUserState>(this, function);
+			return new ApplyParser<TResult, TFuncResult>(this, function);
 		}
 
 		/// <summary>
@@ -315,9 +314,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <typeparam name="T">The type of the given parser's result.</typeparam>
 		/// <param name="parser">The parser that should be applied zero or more times.</param>
-		protected static Parser<T[], TUserState> Many<T>(Parser<T, TUserState> parser)
+		protected static Parser<T[]> Many<T>(Parser<T> parser)
 		{
-			return new ManyParser<T, TUserState>(parser);
+			return new ManyParser<T>(parser);
 		}
 
 		/// <summary>
@@ -328,9 +327,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <typeparam name="T">The type of the given parser's result.</typeparam>
 		/// <param name="parser">The parser that should be applied zero or more times.</param>
-		protected static Parser<T[], TUserState> Many1<T>(Parser<T, TUserState> parser)
+		protected static Parser<T[]> Many1<T>(Parser<T> parser)
 		{
-			return new Many1Parser<T, TUserState>(parser);
+			return new Many1Parser<T>(parser);
 		}
 
 		/// <summary>
@@ -341,9 +340,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <typeparam name="T">The type of the given parser's result.</typeparam>
 		/// <param name="parser">The parser that should be attempted.</param>
-		protected static Parser<T, TUserState> Attempt<T>(Parser<T, TUserState> parser)
+		protected static Parser<T> Attempt<T>(Parser<T> parser)
 		{
-			return new AttemptParser<T, TUserState>(parser);
+			return new AttemptParser<T>(parser);
 		}
 
 		/// <summary>
@@ -354,11 +353,11 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <typeparam name="TResultFirst">The type of the first parser's result.</typeparam>
 		/// <typeparam name="TResultSecond">The type of the second parser's result.</typeparam>
 		/// <typeparam name="T">The type of the pipe2 parser's result.</typeparam>
-		protected static Parser<T, TUserState> Pipe<TResultFirst, TResultSecond, T>(Parser<TResultFirst, TUserState> first,
-																					Parser<TResultSecond, TUserState> second,
+		protected static Parser<T> Pipe<TResultFirst, TResultSecond, T>(Parser<TResultFirst> first,
+																					Parser<TResultSecond> second,
 																					Func<TResultFirst, TResultSecond, T> function)
 		{
-			return new Pipe2Parser<TResultFirst, TResultSecond, T, TUserState>(first, second, function);
+			return new Pipe2Parser<TResultFirst, TResultSecond, T>(first, second, function);
 		}
 
 		/// <summary>
@@ -370,13 +369,13 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <typeparam name="TResultSecond">The type of the second parser's result.</typeparam>
 		/// <typeparam name="TResultThird">The type of the third parser's result.</typeparam>
 		/// <typeparam name="T">The type of the pipe3 parser's result.</typeparam>
-		protected static Parser<T, TUserState> Pipe<TResultFirst, TResultSecond, TResultThird, T>(
-			Parser<TResultFirst, TUserState> first,
-			Parser<TResultSecond, TUserState> second,
-			Parser<TResultThird, TUserState> third,
+		protected static Parser<T> Pipe<TResultFirst, TResultSecond, TResultThird, T>(
+			Parser<TResultFirst> first,
+			Parser<TResultSecond> second,
+			Parser<TResultThird> third,
 			Func<TResultFirst, TResultSecond, TResultThird, T> function)
 		{
-			return new Pipe3Parser<TResultFirst, TResultSecond, TResultThird, T, TUserState>(first, second, third, function);
+			return new Pipe3Parser<TResultFirst, TResultSecond, TResultThird, T>(first, second, third, function);
 		}
 
 		/// <summary>
@@ -389,12 +388,12 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <typeparam name="TResultThird">The type of the third parser's result.</typeparam>
 		/// <typeparam name="TResultFourth">The type of the fourth parser's result.</typeparam>
 		/// <typeparam name="T">The type of the pipe2 parser's result.</typeparam>
-		protected static Parser<T, TUserState> Pipe<TResultFirst, TResultSecond, TResultThird, TResultFourth, T>(
-			Parser<TResultFirst, TUserState> first, Parser<TResultSecond, TUserState> second,
-			Parser<TResultThird, TUserState> third, Parser<TResultFourth, TUserState> fourth,
+		protected static Parser<T> Pipe<TResultFirst, TResultSecond, TResultThird, TResultFourth, T>(
+			Parser<TResultFirst> first, Parser<TResultSecond> second,
+			Parser<TResultThird> third, Parser<TResultFourth> fourth,
 			Func<TResultFirst, TResultSecond, TResultThird, TResultFourth, T> function)
 		{
-			return new Pipe4Parser<TResultFirst, TResultSecond, TResultThird, TResultFourth, T, TUserState>(first, second, third,
+			return new Pipe4Parser<TResultFirst, TResultSecond, TResultThird, TResultFourth, T>(first, second, third,
 																											fourth, function);
 		}
 
@@ -406,10 +405,10 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <typeparam name="TSeparate">The type of the separation parser's result.</typeparam>
 		/// <param name="parser">The parser that is applied several times.</param>
 		/// <param name="separationParser">The separation parser.</param>
-		protected static Parser<List<T>, TUserState> SeparatedBy<T, TSeparate>(Parser<T, TUserState> parser,
-																			   Parser<TSeparate, TUserState> separationParser)
+		protected static Parser<List<T>> SeparatedBy<T, TSeparate>(Parser<T> parser,
+																			   Parser<TSeparate> separationParser)
 		{
-			return new SeparatedByParser<T, TSeparate, TUserState>(parser, separationParser);
+			return new SeparatedByParser<T, TSeparate>(parser, separationParser);
 		}
 
 		/// <summary>
@@ -420,10 +419,10 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <typeparam name="TSeparate">The type of the separation parser's result.</typeparam>
 		/// <param name="parser">The parser that is applied several times.</param>
 		/// <param name="separationParser">The separation parser.</param>
-		protected static Parser<List<T>, TUserState> SeparatedBy1<T, TSeparate>(Parser<T, TUserState> parser,
-																				Parser<TSeparate, TUserState> separationParser)
+		protected static Parser<List<T>> SeparatedBy1<T, TSeparate>(Parser<T> parser,
+																				Parser<TSeparate> separationParser)
 		{
-			return new SeparatedBy1Parser<T, TSeparate, TUserState>(parser, separationParser);
+			return new SeparatedBy1Parser<T, TSeparate>(parser, separationParser);
 		}
 
 		/// <summary>
@@ -436,11 +435,11 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <param name="parser">The parser that is applied.</param>
 		/// <param name="leftParser">The left separation parser.</param>
 		/// <param name="rightParser">The right separation parser.</param>
-		protected static Parser<T, TUserState> Between<T, TLeft, TRight>(Parser<T, TUserState> parser,
-																		 Parser<TLeft, TUserState> leftParser,
-																		 Parser<TRight, TUserState> rightParser)
+		protected static Parser<T> Between<T, TLeft, TRight>(Parser<T> parser,
+																		 Parser<TLeft> leftParser,
+																		 Parser<TRight> rightParser)
 		{
-			return new BetweenParser<T, TLeft, TRight, TUserState>(parser, leftParser, rightParser);
+			return new BetweenParser<T, TLeft, TRight>(parser, leftParser, rightParser);
 		}
 
 		#endregion
@@ -452,9 +451,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <param name="first">The first parser that should be applied to the input.</param>
 		/// <param name="second">The second parser that should be applied to the input.</param>
-		public static Parser<TResult, TUserState> operator +(Parser<TResult, TUserState> first, SkipParser<TUserState> second)
+		public static Parser<TResult> operator +(Parser<TResult> first, SkipParser second)
 		{
-			return new SequenceFirstParser<TResult, None, TUserState>(first, second);
+			return new SequenceFirstParser<TResult, None>(first, second);
 		}
 
 		/// <summary>
@@ -462,9 +461,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <param name="first">The first parser that should be applied to the input.</param>
 		/// <param name="second">The second parser that should be applied to the input.</param>
-		public static Parser<TResult, TUserState> operator +(SkipParser<TUserState> first, Parser<TResult, TUserState> second)
+		public static Parser<TResult> operator +(SkipParser first, Parser<TResult> second)
 		{
-			return new SequenceSecondParser<None, TResult, TUserState>(first, second);
+			return new SequenceSecondParser<None, TResult>(first, second);
 		}
 
 		/// <summary>
@@ -473,18 +472,18 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <param name="first">The first parser that should be applied to the input.</param>
 		/// <param name="second">The second parser that should be applied to the input.</param>
-		public static Parser<TResult, TUserState> operator |(Parser<TResult, TUserState> first, Parser<TResult, TUserState> second)
+		public static Parser<TResult> operator |(Parser<TResult> first, Parser<TResult> second)
 		{
-			return new AlternativesParser<TResult, TUserState>(first, second);
+			return new AlternativesParser<TResult>(first, second);
 		}
 
 		/// <summary>
 		///   Constructs a new parser that skips over the input parsed by the given parser, ignoring the parser's result.
 		/// </summary>
 		/// <param name="parser">The parser whose return value is ignored.</param>
-		public static SkipParser<TUserState> operator ~(Parser<TResult, TUserState> parser)
+		public static SkipParser operator ~(Parser<TResult> parser)
 		{
-			return new SkipParser<TResult, TUserState>(parser);
+			return new SkipParser<TResult>(parser);
 		}
 
 		/// <summary>
@@ -493,9 +492,9 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// </summary>
 		/// <param name="parser">The parser whose description should be overwritten.</param>
 		/// <param name="description">The description that should be returned as an expected error in the case of failure.</param>
-		public static Parser<TResult, TUserState> operator %(Parser<TResult, TUserState> parser, string description)
+		public static Parser<TResult> operator %(Parser<TResult> parser, string description)
 		{
-			return new DescriptionParser<TResult, TUserState>(parser, description);
+			return new DescriptionParser<TResult>(parser, description);
 		}
 
 		#endregion

@@ -5,8 +5,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	/// <summary>
 	///   Parses a given character.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class CharacterParser<TUserState> : Parser<char, TUserState>
+	public class CharacterParser : Parser<char>
 	{
 		/// <summary>
 		///   The character that should be parsed.
@@ -26,7 +25,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		///   Checks whether the current character in the input stream matches the given one.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<char> Parse(InputStream<TUserState> inputStream)
+		public override Reply<char> Parse(InputStream inputStream)
 		{
 			if (inputStream.Peek() == _character)
 			{

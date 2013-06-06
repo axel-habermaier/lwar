@@ -80,7 +80,7 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(logFile);
 			
 			using (new NativeLibrary())
-			using (var window = new Window(appName, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowStateFlag))
+			using (var window = new Window(appName, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var graphicsDevice = new GraphicsDevice())
 			using (var swapChain = new SwapChain(graphicsDevice, window))
 			using (var assets = new AssetsManager(graphicsDevice))

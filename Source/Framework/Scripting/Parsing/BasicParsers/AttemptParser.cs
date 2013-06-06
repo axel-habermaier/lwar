@@ -9,19 +9,18 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	///   fails with or without consuming input.
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class AttemptParser<TResult, TUserState> : Parser<TResult, TUserState>
+	public class AttemptParser<TResult> : Parser<TResult>
 	{
 		/// <summary>
 		///   The parser that is attempted.
 		/// </summary>
-		private readonly Parser<TResult, TUserState> _parser;
+		private readonly Parser<TResult> _parser;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that should be attempted.</param>
-		public AttemptParser(Parser<TResult, TUserState> parser)
+		public AttemptParser(Parser<TResult>parser)
 		{
 			_parser = parser;
 		}
@@ -30,7 +29,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<TResult> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TResult> Parse(InputStream inputStream)
 		{
 			var state = inputStream.State;
 			var reply = _parser.Parse(inputStream);

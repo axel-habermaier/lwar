@@ -108,9 +108,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <summary>
 		///   Generates the formatted error message.
 		/// </summary>
-		/// <typeparam name="TUserState">The type of the user state.</typeparam>
-		/// <param name="inputStream">The input stream that generated the parser errors.</param>
-		internal void GenerateErrorMessage<TUserState>(InputStream<TUserState> inputStream)
+			/// <param name="inputStream">The input stream that generated the parser errors.</param>
+		internal void GenerateErrorMessage(InputStream inputStream)
 		{
 			var builder = new StringBuilder(1024);
 			builder.AppendFormat("Error at line {0}, column {1}:\n", inputStream.State.Line, inputStream.State.Column);

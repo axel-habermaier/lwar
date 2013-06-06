@@ -35,8 +35,8 @@ internal interface ICommands
 	///   Lists all cvars with names that match the search pattern.
 	/// </summary>
 	/// <param name="pattern">
-	///   The search pattern of the cvars that should be listed. For instance, 'draw' lists all cvars that have the string
-	///   'draw' in their name. The pattern is case-insensitive; use '*' to list all cvars.
+	///   The search pattern of the cvars that should be listed. For instance, "draw" lists all cvars that have the string
+	///   "draw" in their name. The pattern is case-insensitive; use "*" to list all cvars.
 	/// </param>
 	[Command]
 	void ListCvars([NotEmpty] string pattern = "*");
@@ -45,8 +45,8 @@ internal interface ICommands
 	///   Lists all commands with names that match the search pattern.
 	/// </summary>
 	/// <param name="pattern">
-	///   The search pattern of the commands that should be listed. For instance, 'draw' lists all commands that have the
-	///   string 'draw' in their name. The pattern is case-insensitive; use '*' to list all commands.
+	///   The search pattern of the commands that should be listed. For instance, "draw" lists all commands that have the
+	///   string "draw" in their name. The pattern is case-insensitive; use "*" to list all commands.
 	/// </param>
 	[Command]
 	void ListCommands([NotEmpty] string pattern = "*");

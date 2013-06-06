@@ -6,8 +6,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 	///   A base implementation for number parsers.
 	/// </summary>
 	/// <typeparam name="TNumber">The type of the number that is parsed.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public abstract class NumberParser<TNumber, TUserState> : Parser<TNumber, TUserState>
+	public abstract class NumberParser<TNumber> : Parser<TNumber>
 	{
 		/// <summary>
 		///   The message that is printed in case of a value overflow.
@@ -25,30 +24,21 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 		private readonly bool _allowNegative;
 
 		/// <summary>
-		///   A textual description of the type of the number that is parsed.
-		/// </summary>
-		private readonly string _description;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="allowNegative">Indicates whether the number may be prefixed with '-'.</param>
 		/// <param name="allowDecimal">Indicates whether the number may contain a decimal point.</param>
-		/// <param name="description">A textual description of the type of the number that is parsed.</param>
-		protected NumberParser(bool allowNegative, bool allowDecimal, string description)
+		protected NumberParser(bool allowNegative, bool allowDecimal)
 		{
-			Assert.ArgumentNotNull(description);
-
 			_allowDecimal = allowDecimal;
 			_allowNegative = allowNegative;
-			_description = description;
 		}
 
 		/// <summary>
 		///   Parses the number.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<TNumber> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TNumber> Parse(InputStream inputStream)
 		{
 			var state = inputStream.State;
 			var count = 0;
@@ -61,7 +51,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 			if (negative && !_allowNegative)
 			{
 				inputStream.State = state;
-				return Expected(_description);
+				return Expected(TypeRegistry.GetDescription<TNumber>());
 			}
 
 			if (negative || positive)
@@ -72,7 +62,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 			if (count == 0 && (!_allowDecimal || inputStream.Peek() != '.'))
 			{
 				inputStream.State = state;
-				return Expected(_description);
+				return Expected(TypeRegistry.GetDescription<TNumber>());
 			}
 
 			// If a fractional part is allowed, parse it, but there must be at least one digit following
@@ -84,7 +74,7 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 				if (count == 0)
 				{
 					inputStream.State = state;
-					return Expected(_description);
+					return Expected(TypeRegistry.GetDescription<TNumber>());
 				}
 			}
 
@@ -96,12 +86,12 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 			catch (FormatException)
 			{
 				inputStream.State = state;
-				return Expected(_description);
+				return Expected(TypeRegistry.GetDescription<TNumber>());
 			}
 			catch (OverflowException)
 			{
 				inputStream.State = state;
-				return Message(string.Format(OverflowMessage, _description));
+				return Message(string.Format(OverflowMessage, TypeRegistry.GetDescription<TNumber>()));
 			}
 		}
 

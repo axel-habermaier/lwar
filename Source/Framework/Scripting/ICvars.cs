@@ -18,15 +18,13 @@ internal interface ICvars
 	double TimeScale { get; set; }
 
 	/// <summary>
-	///   The screen resolution used by the application in fullscreen mode. Any changes to this cvar require a
-	///   restart of the graphics subsystem.
+	///   The screen resolution used by the application in fullscreen mode.
 	/// </summary>
 	[Cvar("new Size(1024, 768)", UpdateMode.OnGraphicsRestart), Persistent, WindowSize]
 	Size Resolution { get; set; }
 
 	/// <summary>
-	///   If true, the application is run in fullscreen mode. Any changes to this cvar require a restart of the graphics
-	///   subsystem.
+	///   If true, the application is run in fullscreen mode.
 	/// </summary>
 	[Cvar(!PlatformInfo.IsDebug, UpdateMode.OnGraphicsRestart), Persistent]
 	bool Fullscreen { get; set; }
@@ -47,7 +45,7 @@ internal interface ICvars
 	///   The width of the application's window in non-fullscreen mode.
 	/// </summary>
 	[Cvar(WindowState.Normal), Persistent]
-	WindowState WindowStateFlag { get; set; }
+	WindowState WindowMode { get; set; }
 
 	/// <summary>
 	///   Shows or hides the statistics.

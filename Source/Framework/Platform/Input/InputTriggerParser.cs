@@ -11,8 +11,7 @@ namespace Pegasus.Framework.Platform.Input
 	///   three operators are left-associative. As the parser rules correspond to C#'s operator rules, an expression
 	///   parsed by the parser describes the same input trigger as if it had been written directly in C#.
 	/// </summary>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	internal class InputTriggerParser<TUserState> : CombinedParser<InputTrigger, TUserState>
+	internal class InputTriggerParser : CombinedParser<InputTrigger>
 	{
 		/// <summary>
 		///   Initializes a new instance.
@@ -70,8 +69,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="operandParser">The parser for the binary trigger operands.</param>
 		/// <param name="operatorParser">The parser for the binary trigger operator.</param>
 		/// <param name="triggerType">The type of the binary input trigger.</param>
-		private static Parser<InputTrigger, TUserState> CreateBinaryTriggerParser(Parser<InputTrigger, TUserState> operandParser,
-																				  Parser<char, TUserState> operatorParser,
+		private static Parser<InputTrigger> CreateBinaryTriggerParser(Parser<InputTrigger> operandParser,
+																				  Parser<char> operatorParser,
 																				  BinaryInputTriggerType triggerType)
 		{
 			return SeparatedBy1(operandParser, operatorParser)

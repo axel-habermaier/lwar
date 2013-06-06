@@ -8,11 +8,19 @@ namespace Pegasus.Framework.Scripting.Validators
 	public class NotEmptyAttribute : ValidatorAttribute
 	{
 		/// <summary>
-		///   Gets a description for the validation performed by the validator.
+		///   Gets an error message that describes a validation error.
+		/// </summary>
+		public override string ErrorMessage
+		{
+			get { return "The given string cannot consist of whitespaces only."; }
+		}
+
+		/// <summary>
+		///   Gets a description of the validation performed by the validator.
 		/// </summary>
 		public override string Description
 		{
-			get { return "The given string cannot consist of whitespaces only."; }
+			get { return "must not be empty"; }
 		}
 
 		/// <summary>

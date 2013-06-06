@@ -27,7 +27,6 @@ Pegasus
 - Linux: Window key/button event handling
 - Linux: Alt+Tab and fullscreen?
 - Windows: Alt+Tab out of fullscreen game not behaving nicely
-- Persist window maximized/minimized state
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Move some input state handling to Platform lib
 - Allow font color specifiers within texts (e.g., ^r to switch to red)
@@ -36,16 +35,17 @@ Pegasus
 - Console: Show validators in help cvar/command
 - Check: Parse command line with string parameters without "" - what happens, i.e. '-cvar hallo welt -test 1'?
 - Console: Shift+Tab: Go back auto-completion
-- Reset command: Resets cvar to its default
+- Console: Automatically parse all enums, list all literals as example
+- Refactor TypeParser, TypeRepresentation -> make it possible for client to register types
 - Network: Send network spec revision number with Connect message, send WrongVersion message on version mismatch
 - Window subsystem
-	- C: Filter out multiple resize-events
-	- C: Resize swap chain automatically when window size changes
+	- DONE C: Filter out multiple resize-events
+	- DONE C: Resize swap chain automatically when window size changes
 	- C#-initiated: Toggle fullscreen mode with resolution change, c# must know when not successful (as far as it is possible to tell)
 	- C: Fullscreen must be deactivated and reactivated on Alt+Tab
 	- C: Restore previous window state (size, position, minimized/maximized) after mode change
-	- C: Collect window messages and then execute them afterwards, in order to avoid doing app-related stuff while the wndproc is on the callstack
-	- C#: Persist window state (size, position, minimized/maximized) accross game sessions
+	- DONE C: Collect window messages and then execute them afterwards, in order to avoid doing app-related stuff while the wndproc is on the callstack
+	- DONE C#: Persist window state (size, position, minimized/maximized) accross game sessions
 - Input:
 	- Double clicking, key down/up in the same frame, multiple key down/ups in same frame
 	- Make sure keys do not 'hang' when application loses focus

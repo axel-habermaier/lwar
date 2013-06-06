@@ -7,8 +7,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 	///   returned and the optional parser is successful anyway.
 	/// </summary>
 	/// <typeparam name="TParserResult">The type of the parser's result.</typeparam>
-	/// <typeparam name="TUserState">The type of the user state.</typeparam>
-	public class OptionalParser<TParserResult, TUserState> : Parser<TParserResult, TUserState>
+	public class OptionalParser<TParserResult> : Parser<TParserResult>
 	{
 		/// <summary>
 		///   The default element that is returned when the parser fails.
@@ -18,14 +17,14 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		/// <summary>
 		///   The parser that is applied.
 		/// </summary>
-		private readonly Parser<TParserResult, TUserState> _parser;
+		private readonly Parser<TParserResult> _parser;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that is applied.</param>
 		/// <param name="defaultValue">The default value that should be returned when the given parser fails.</param>
-		public OptionalParser(Parser<TParserResult, TUserState> parser, TParserResult defaultValue)
+		public OptionalParser(Parser<TParserResult> parser, TParserResult defaultValue)
 		{
 			Assert.ArgumentNotNull(parser);
 
@@ -37,7 +36,7 @@ namespace Pegasus.Framework.Scripting.Parsing.Combinators
 		///   Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
-		public override Reply<TParserResult> Parse(InputStream<TUserState> inputStream)
+		public override Reply<TParserResult> Parse(InputStream inputStream)
 		{
 			var state = inputStream.State;
 			var reply = _parser.Parse(inputStream);

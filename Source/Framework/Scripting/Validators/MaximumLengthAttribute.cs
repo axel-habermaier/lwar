@@ -24,11 +24,23 @@ namespace Pegasus.Framework.Scripting.Validators
 		}
 
 		/// <summary>
-		///   Gets a description for the validation performed by the validator.
+		///   Gets an error message that describes a validation error.
+		/// </summary>
+		public override string ErrorMessage
+		{
+			get
+			{
+				return String.Format("The given string exceeds the maximum allowed length of {0} {1}.", Maximum,
+									 CheckUtf8Length ? "UTF-8 bytes" : "characters");
+			}
+		}
+
+		/// <summary>
+		///   Gets a description of the validation performed by the validator.
 		/// </summary>
 		public override string Description
 		{
-			get { return String.Format("The given string exceeds the maximum allowed length."); }
+			get { return String.Format("length must not exceed {0} {1}", Maximum, CheckUtf8Length ? "UTF-8 bytes" : "characters"); }
 		}
 
 		/// <summary>

@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Scripting
 {
+	using System.Collections.Generic;
 	using Platform;
 	using Platform.Logging;
 	using Validators;
@@ -39,6 +40,14 @@ namespace Pegasus.Framework.Scripting
 			DefaultValue = defaultValue;
 			Description = description;
 			_validators = validators;
+		}
+
+		/// <summary>
+		///   Gets the validators that are used to validate the values of the parameter.
+		/// </summary>
+		public IEnumerable<ValidatorAttribute> Validators
+		{
+			get { return _validators; }
 		}
 
 		/// <summary>
@@ -80,7 +89,7 @@ namespace Pegasus.Framework.Scripting
 				if (validator.Validate(value))
 					continue;
 
-				Log.Error("'{0}' is not a valid value for parameter '{1}': {2}", value, Name, validator.Description);
+				Log.Error("'{0}' is not a valid value for parameter '{1}': {2}", value, Name, validator.ErrorMessage);
 				return false;
 			}
 

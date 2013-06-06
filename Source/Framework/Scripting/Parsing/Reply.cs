@@ -71,9 +71,8 @@ namespace Pegasus.Framework.Scripting.Parsing
 		/// <summary>
 		///   Generates a formatted error message if the reply indicates a failed parsing attempt.
 		/// </summary>
-		/// <typeparam name="TUserState">The type of the user state.</typeparam>
-		/// <param name="inputStream">The input stream that generated the parser errors.</param>
-		internal void GenerateErrorMessage<TUserState>(InputStream<TUserState> inputStream)
+			/// <param name="inputStream">The input stream that generated the parser errors.</param>
+		internal void GenerateErrorMessage(InputStream inputStream)
 		{
 			_errors.GenerateErrorMessage(inputStream);
 		}
