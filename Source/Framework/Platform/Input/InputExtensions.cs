@@ -91,6 +91,15 @@ namespace Pegasus.Framework.Platform.Input
 		}
 
 		/// <summary>
+		///   Creates trigger that triggers when the mouse has been double-clicked.
+		/// </summary>
+		public static InputTrigger DoubleClicked(this MouseButton button)
+		{
+			Assert.ArgumentInRange(button);
+			return new MouseTrigger(MouseTriggerType.DoubleClicked, button);
+		}
+
+		/// <summary>
 		///   Creates a configurable trigger.
 		/// </summary>
 		public static InputTrigger ToTrigger(this Cvar<InputTrigger> cvar)

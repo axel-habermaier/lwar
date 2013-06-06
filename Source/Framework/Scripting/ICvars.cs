@@ -12,7 +12,7 @@ using Pegasus.Framework.Scripting.Validators;
 internal interface ICvars
 {
 	/// <summary>
-	///   The scaling factor that is applied to all timing values.
+	///   The scaling factor that is applied to all time-scaling sensitive timing values.
 	/// </summary>
 	[Cvar(1.0), Range(0.1, 10.0)]
 	double TimeScale { get; set; }

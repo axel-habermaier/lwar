@@ -11,6 +11,11 @@ namespace Pegasus.Framework.Platform.Input
 	public class Mouse : DisposableObject
 	{
 		/// <summary>
+		///   Stores whether a button is currently being double-clicked.
+		/// </summary>
+		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length];
+
+		/// <summary>
 		///   The mouse button states.
 		/// </summary>
 		private readonly InputState[] _states = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
@@ -64,6 +69,7 @@ namespace Pegasus.Framework.Platform.Input
 		private void ButtonPressed(MouseEventArgs button)
 		{
 			_states[(int)button.Button].KeyPressed();
+			_doubleClicked[(int)button.Button] |= button.DoubleClick;
 		}
 
 		/// <summary>
@@ -91,7 +97,10 @@ namespace Pegasus.Framework.Platform.Input
 		internal void Update()
 		{
 			for (var i = 0; i < _states.Length; ++i)
+			{
 				_states[i].Update();
+				_doubleClicked[i] = false;
+			}
 		}
 
 		/// <summary>
@@ -102,6 +111,16 @@ namespace Pegasus.Framework.Platform.Input
 		{
 			Assert.ArgumentInRange(button);
 			return _states[(int)button].IsPressed;
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the button is currently being double-clicked.
+		/// </summary>
+		/// <param name="button">The button that should be checked.</param>
+		public bool IsDoubleClicked(MouseButton button)
+		{
+			Assert.ArgumentInRange(button);
+			return _doubleClicked[(int)button];
 		}
 
 		/// <summary>

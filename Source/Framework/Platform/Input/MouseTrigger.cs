@@ -64,6 +64,8 @@ namespace Pegasus.Framework.Platform.Input
 					return device.Mouse.IsPressed(_button);
 				case MouseTriggerType.WentUp:
 					return device.Mouse.WentUp(_button);
+				case MouseTriggerType.DoubleClicked:
+					return device.Mouse.IsDoubleClicked(_button);
 				default:
 					return false;
 			}

@@ -26,5 +26,10 @@ namespace Pegasus.Framework.Platform.Input
 		///   Indicates that the mouse trigger triggers when the mouse button went up.
 		/// </summary>
 		WentUp,
+
+		/// <summary>
+		///   Indicates that the mouse trigger triggers when the mouse button has been double-clicked.
+		/// </summary>
+		DoubleClicked
 	}
 }

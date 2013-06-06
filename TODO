@@ -30,10 +30,11 @@ Pegasus
 - Allow font color specifiers within texts (e.g., ^r to switch to red)
 - Allow emoticons within texts
 - Network: Send network spec revision number with Connect message, send WrongVersion message on version mismatch
-- Make resolution for fullscreen mode unchangeable via console and add command to change fullscreen resolution with timeout verification
+- Track fullscreen resolution changes and added standard timeout-and-reset functionality for invalid resolutions
+- Hide cvars and commands from console
 - Deactivate app when window loses focus
 - Input:
-	- Double clicking, key down/up in the same frame, multiple key down/ups in same frame
+	- key down/up in the same frame, multiple key down/ups in same frame
 
 Server
 ========

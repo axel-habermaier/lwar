@@ -307,6 +307,7 @@ static pgVoid HandleWindowMessages(HWND hwnd)
 	state.message.type = PG_MESSAGE_INVALID;
 	while (state.message.type == PG_MESSAGE_INVALID && PeekMessage(&message, hwnd, 0, 0, PM_REMOVE))
 	{
+		memset(&state.message, 0, sizeof(state.message));
 		TranslateMessage(&message);
 		DispatchMessage(&message);
 	}
