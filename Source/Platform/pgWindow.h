@@ -141,7 +141,7 @@ typedef pgVoid (*pgCharacterEnteredCallback)(pgUint16 character, pgInt32 scanCod
 typedef pgVoid (*pgKeyPressedCallback)(pgKey key, pgInt32 scanCode);
 typedef pgVoid (*pgKeyReleasedCallback)(pgKey key, pgInt32 scanCode);
 typedef pgVoid (*pgMouseWheelCallback)(pgInt32 delta);
-typedef pgVoid (*pgMousePressedCallback)(pgMouseButton button, pgInt32 x, pgInt32 y);
+typedef pgVoid (*pgMousePressedCallback)(pgMouseButton button, pgBool doubleClick, pgInt32 x, pgInt32 y);
 typedef pgVoid (*pgMouseReleasedCallback)(pgMouseButton button, pgInt32 x, pgInt32 y);
 typedef pgVoid (*pgMouseMovedCallback)(pgInt32 x, pgInt32 y);
 typedef pgVoid (*pgMouseEnteredCallback)();

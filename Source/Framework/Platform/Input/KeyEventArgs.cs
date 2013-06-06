@@ -15,6 +15,8 @@ namespace Pegasus.Framework.Platform.Input
 		public KeyEventArgs(Key key, int scanCode)
 			: this()
 		{
+			Assert.ArgumentInRange(key);
+
 			Key = key;
 			ScanCode = scanCode;
 		}

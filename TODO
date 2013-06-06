@@ -34,7 +34,6 @@ Pegasus
 - Deactivate app when window loses focus
 - Input:
 	- Double clicking, key down/up in the same frame, multiple key down/ups in same frame
-	- Mouse click: Use click position!
 
 Server
 ========

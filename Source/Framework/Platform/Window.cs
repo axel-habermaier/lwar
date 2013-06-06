@@ -62,27 +62,11 @@ namespace Pegasus.Framework.Platform
 						if (s != PlatformInfo.ConsoleKey)
 							CharacterEntered((char)c);
 					},
-				KeyPressed = (k, s) =>
-					{
-						Assert.InRange(k);
-						KeyPressed(new KeyEventArgs(k, s));
-					},
-				KeyReleased = (k, s) =>
-					{
-						Assert.InRange(k);
-						KeyReleased(new KeyEventArgs(k, s));
-					},
+				KeyPressed = (k, s) => KeyPressed(new KeyEventArgs(k, s)),
+				KeyReleased = (k, s) => KeyReleased(new KeyEventArgs(k, s)),
 				MouseWheel = d => MouseWheel(d),
-				MousePressed = (m, x, y) =>
-					{
-						Assert.InRange(m);
-						MousePressed(new MouseEventArgs(m, x, y));
-					},
-				MouseReleased = (m, x, y) =>
-					{
-						Assert.InRange(m);
-						MouseReleased(new MouseEventArgs(m, x, y));
-					},
+				MousePressed = (button, doubleClick, x, y) => MousePressed(new MouseEventArgs(button, doubleClick, x, y)),
+				MouseReleased = (button, x, y) => MouseReleased(new MouseEventArgs(button, false, x, y)),
 				MouseMoved = (x, y) => MouseMoved(x, y),
 				MouseEntered = () => MouseEntered(),
 				MouseLeft = () => MouseLeft(),
@@ -305,7 +289,7 @@ namespace Pegasus.Framework.Platform
 
 			public delegate void MouseMovedCallback(int x, int y);
 
-			public delegate void MousePressedCallback(MouseButton button, int x, int y);
+			public delegate void MousePressedCallback(MouseButton button, bool doubleClick, int x, int y);
 
 			public delegate void MouseReleasedCallback(MouseButton button, int x, int y);
 

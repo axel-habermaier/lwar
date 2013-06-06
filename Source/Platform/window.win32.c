@@ -285,7 +285,7 @@ static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc)
 	WNDCLASS wndClass;
 
 	memset(&wndClass, 0, sizeof(WNDCLASS));
-	wndClass.style = 0;
+	wndClass.style = CS_DBLCLKS;
 	wndClass.lpfnWndProc = wndProc;
 	wndClass.cbClsExtra = 0;
 	wndClass.cbWndExtra = 0;
@@ -416,6 +416,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		message->type = PG_MESSAGE_MOUSE_LEFT;
 		break;
 
+	case WM_LBUTTONDBLCLK:
+		message->doubleClick = PG_TRUE;
+		/* fall-through */
+
 	case WM_LBUTTONDOWN:
 		message->type = PG_MESSAGE_MOUSE_DOWN;
 		message->button = PG_MOUSE_LEFT;
@@ -429,6 +433,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		message->x = LOWORD(lParam);
 		message->y = HIWORD(lParam);
 		break;
+
+	case WM_RBUTTONDBLCLK:
+		message->doubleClick = PG_TRUE;
+		/* fall-through */
 
 	case WM_RBUTTONDOWN:
 		message->type = PG_MESSAGE_MOUSE_DOWN;
@@ -444,6 +452,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		message->y = HIWORD(lParam);
 		break;
 
+	case WM_MBUTTONDBLCLK:
+		message->doubleClick = PG_TRUE;
+		/* fall-through */
+
 	case WM_MBUTTONDOWN:
 		message->type = PG_MESSAGE_MOUSE_DOWN;
 		message->button = PG_MOUSE_MIDDLE;
@@ -457,6 +469,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		message->x = LOWORD(lParam);
 		message->y = HIWORD(lParam);
 		break;
+
+	case WM_XBUTTONDBLCLK:
+		message->doubleClick = PG_TRUE;
+		/* fall-through */
 
 	case WM_XBUTTONDOWN:
 		message->type = PG_MESSAGE_MOUSE_DOWN;

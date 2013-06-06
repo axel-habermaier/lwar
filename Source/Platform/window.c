@@ -54,6 +54,8 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 	pgMessage message;
 
 	PG_ASSERT_NOT_NULL(window);
+
+	memset(&message, 0, sizeof(message));
 	window->closing = PG_FALSE;
 
 	while (pgProcessWindowEvent(window, &message))
@@ -116,7 +118,7 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			break;
 		case PG_MESSAGE_MOUSE_DOWN:
 			window->buttonState[message.button - 1] = PG_TRUE;
-			window->callbacks.mousePressed(message.button, message.x, message.y);
+			window->callbacks.mousePressed(message.button, message.doubleClick, message.x, message.y);
 			break;
 		case PG_MESSAGE_MOUSE_UP:
 			window->buttonState[message.button - 1] = PG_FALSE;
@@ -132,6 +134,8 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			window->callbacks.mouseLeft();
 			break;
 		}
+
+		memset(&message, 0, sizeof(message));
 	}
 
 	// Update the window placement and check whether the size has changed

@@ -217,7 +217,7 @@ struct pgWindow
 
 typedef enum
 {
-	PG_MESSAGE_INVALID,
+	PG_MESSAGE_INVALID = 0,
 	PG_MESSAGE_CLOSING,
 	PG_MESSAGE_LOST_FOCUS,
 	PG_MESSAGE_GAINED_FOCUS,
@@ -248,6 +248,7 @@ typedef struct
 			pgInt32 y;
 		};
 	};
+	pgBool doubleClick;
 } pgMessage;
 
 pgVoid pgOpenWindowCore(pgWindow* window, pgString title);
