@@ -9,6 +9,7 @@ Client
 	- Move skybox
 - Entity interpolation
 	- Reusable interpolation class?
+- Batch drawing of bullets, etc. - instancing?
 - UI
 	- Ship/Weapon selection
 	- Show player names on top of ships
@@ -24,8 +25,6 @@ Pegasus.Framework
 - Show platform statistics, add 'level of detail' to show_stats cvar
 - Allow font color specifiers within texts (e.g., ^r to switch to red)
 - Track fullscreen resolution changes and added standard timeout-and-reset functionality for invalid resolutions
-- Deactivate app when window loses focus
-- Hide cvars and commands from console (cvars should still be persistable though, e.g. isResolutionConfirmed, etc.)
 - key down/up in the same frame, multiple key down/ups in same frame
 
 Pegasus.Platform

@@ -146,8 +146,7 @@ namespace Pegasus.Framework
 						Update();
 						statistics.Update(window.Size);
 						console.Update(window.Size);
-						//Log.Info("Frame");
-						Thread.Sleep(50);
+						
 						// React to window size changes
 						var viewport = new Rectangle(Vector2i.Zero, window.Size);
 						sceneOutput.Viewport = viewport;
@@ -170,6 +169,9 @@ namespace Pegasus.Framework
 						// Present the current frame to the screen and write the log file, if necessary
 						swapChain.Present();
 						logFile.WriteToFile();
+
+						if (!window.Focused)
+							Thread.Sleep(50);
 					}
 
 					// The game loop has been exited; time to clean up
