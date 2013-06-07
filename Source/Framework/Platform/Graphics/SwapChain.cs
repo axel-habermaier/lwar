@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Math;
 	using Memory;
 
@@ -23,12 +22,14 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="window">The window the swap chain should be bound to.</param>
-		internal SwapChain(GraphicsDevice graphicsDevice, Window window)
+		/// <param name="fullscreen">Indicates whether the swap chain should be set to full screen mode.</param>
+		/// <param name="resolution">Indicates the swap chain's default resolution in full screen mode.</param>
+		internal SwapChain(GraphicsDevice graphicsDevice, Window window, bool fullscreen, Size resolution)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(window);
 
-			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr);
+			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr, fullscreen, resolution.Width, resolution.Height);
 			BackBuffer = new RenderTarget(graphicsDevice, NativeMethods.GetBackBuffer(_swapChain));
 
 			BackBuffer.Bind();
@@ -38,6 +39,18 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Gets swap chain's back buffer.
 		/// </summary>
 		public RenderTarget BackBuffer { get; private set; }
+
+		/// <summary>
+		///   Gets a value indicating whether the swap chain is currently in full screen mode.
+		/// </summary>
+		public bool IsFullscreen
+		{
+			get
+			{
+				Assert.NotDisposed(this);
+				return NativeMethods.IsFullscreen(_swapChain);
+			}
+		}
 
 		/// <summary>
 		///   Presents the back buffer to the screen.
@@ -84,7 +97,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateSwapChain")]
-			public static extern IntPtr CreateSwapChain(IntPtr device, IntPtr window);
+			public static extern IntPtr CreateSwapChain(IntPtr device, IntPtr window, bool fullscreen, int width, int height);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroySwapChain")]
 			public static extern void DestroySwapChain(IntPtr swapChain);
@@ -100,6 +113,9 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSwapChainWindowed")]
 			public static extern bool SwitchToWindowed(IntPtr swapChain);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSwapChainIsFullscreen")]
+			public static extern bool IsFullscreen(IntPtr swapChain);
 		}
 	}
 }

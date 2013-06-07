@@ -374,13 +374,14 @@ PG_API_EXPORT pgVoid pgDrawIndexed(pgGraphicsDevice* device, pgInt32 indexCount,
 // Swap chain functions
 //====================================================================================================================
 
-PG_API_EXPORT pgSwapChain* pgCreateSwapChain(pgGraphicsDevice* device, pgWindow* window);
+PG_API_EXPORT pgSwapChain* pgCreateSwapChain(pgGraphicsDevice* device, pgWindow* window, pgBool fullscreen, pgInt32 width, pgInt32 height);
 PG_API_EXPORT pgVoid pgDestroySwapChain(pgSwapChain* swapChain);
 
 PG_API_EXPORT pgVoid pgPresent(pgSwapChain* swapChain);
 PG_API_EXPORT pgRenderTarget* pgGetBackBuffer(pgSwapChain* swapChain);
 PG_API_EXPORT pgBool pgSwapChainFullscreen(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 PG_API_EXPORT pgVoid pgSwapChainWindowed(pgSwapChain* swapChain);
+PG_API_EXPORT pgBool pgSwapChainIsFullscreen(pgSwapChain* swapChain);
 
 //====================================================================================================================
 // Shader functions

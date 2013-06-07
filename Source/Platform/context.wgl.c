@@ -145,7 +145,7 @@ pgBool pgContextFullscreen(pgContext* context, pgInt32 width, pgInt32 height)
 	devMode.dmPelsHeight = height;
 	devMode.dmBitsPerPel = 32;
 	devMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
-
+	
 	if (ChangeDisplaySettings(&devMode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 	{
 		PG_ERROR("Failed to switch to fullscreen mode.");
@@ -153,27 +153,33 @@ pgBool pgContextFullscreen(pgContext* context, pgInt32 width, pgInt32 height)
 	}
 	else
 	{
-		// The context is moving the window, hence it has to store the original window position
-		RECT rect;
-		if (!GetWindowRect(context->hwnd, &rect))
-			pgWin32Error("Failed to get window position.");
-	
-		context->x = rect.left;
-		context->y = rect.top;
+		WINDOWPLACEMENT placement;
+		memset(&placement, 0, sizeof(placement));
+		placement.length = sizeof(placement);
+
+		if (!GetWindowPlacement(context->hwnd, &placement))
+			pgWin32Error("Failed to get window configuration.");
+
+		// The context is moving the window, hence it has to store the original window position and size of the un-maximized window
+		context->x = placement.rcNormalPosition.left;
+		context->y = placement.rcNormalPosition.top;
+		context->width = placement.rcNormalPosition.right - context->x;
+		context->height = placement.rcNormalPosition.bottom - context->y;
+		context->maximized = IsZoomed(context->hwnd);
 
 		// Make the window compatible with fullscreen mode
 		SetWindowLong(context->hwnd, GWL_STYLE, WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
 		SetWindowLong(context->hwnd, GWL_EXSTYLE, WS_EX_APPWINDOW);
 
 		// Resize the window so that it fills the entire screen
-		SetWindowPos(context->hwnd, HWND_TOP, 0, 0, width, height, SWP_FRAMECHANGED);
+		SetWindowPos(context->hwnd, HWND_TOP, 0, 0, width, height, SWP_FRAMECHANGED | SWP_NOCOPYBITS);
 		ShowWindow(context->hwnd, SW_SHOW);
 
 		return PG_TRUE;
 	}
 }
 
-pgVoid pgContextWindowed(pgContext* context, pgInt32 width, pgInt32 height)
+pgVoid pgContextWindowed(pgContext* context)
 {
 	// Return to the default mode
 	ChangeDisplaySettings(NULL, 0);
@@ -181,8 +187,13 @@ pgVoid pgContextWindowed(pgContext* context, pgInt32 width, pgInt32 height)
 	// Reset the original window flags and size
 	SetWindowLong(context->hwnd, GWL_STYLE, context->wndStyle);
 	SetWindowLong(context->hwnd, GWL_EXSTYLE, context->wndExStyle);
-	SetWindowPos(context->hwnd, HWND_TOP, context->x, context->y, width, height, SWP_FRAMECHANGED);
+	
+	// Restore the size
+	SetWindowPos(context->hwnd, HWND_TOP, context->x, context->y, context->width, context->height, SWP_FRAMECHANGED | SWP_NOCOPYBITS);
 	ShowWindow(context->hwnd, SW_SHOW);
+
+	if (context->maximized)
+		ShowWindow(context->hwnd, SW_SHOWMAXIMIZED);
 }
 
 pgVoid pgInitializeContextExtensions(pgContext* context)

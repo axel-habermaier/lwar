@@ -22,6 +22,9 @@
 		LONG	wndExStyle;
 		LONG	x;
 		LONG	y;
+		LONG	width;
+		LONG	height;
+		pgBool  maximized;
 	} pgContext;
 
 #elif defined(LINUX)
@@ -85,7 +88,7 @@ pgVoid pgCreateContextWindow(pgContext* context);
 pgVoid pgDestroyContextWindow(pgContext* context);
 pgVoid pgSetPixelFormat(pgContext* context);
 pgBool pgContextFullscreen(pgContext* context, pgInt32 width, pgInt32 height);
-pgVoid pgContextWindowed(pgContext* context, pgInt32 width, pgInt32 height);
+pgVoid pgContextWindowed(pgContext* context);
 
 pgVoid pgInitializeContextExtensions(pgContext* context);
 pgVoid pgMakeCurrent(pgContext* context);

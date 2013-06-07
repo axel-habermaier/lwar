@@ -196,8 +196,8 @@ PG_NORETURN pgVoid pgNoReturn();
 //====================================================================================================================
 
 #define PG_WINDOW_MIN_OVERLAP 100
-#define PG_KEY_COUNT 108
-#define PG_BUTTON_COUNT 5
+#define PG_KEY_COUNT 108 + 1		// Must be max(pgKey) + 1
+#define PG_BUTTON_COUNT 5 + 1		// Must be max(pgMouseButton) + 1
 
 struct pgWindow
 {
@@ -472,35 +472,6 @@ pgVoid pgDestroySamplerStateCore(pgSamplerState* samplerState);
 pgVoid pgBindSamplerStateCore(pgSamplerState* samplerState, pgInt32 slot);
 
 //====================================================================================================================
-// Swap chain
-//====================================================================================================================
-
-struct pgSwapChain
-{
-	pgGraphicsDevice*	device;
-	pgRenderTarget		renderTarget;
-	pgWindow*			window;
-	pgBool				fullscreen;
-	pgBool				fullscreenHidden;
-	pgInt32				windowedWidth;
-	pgInt32				windowedHeight;
-	pgInt32				fullscreenWidth;
-	pgInt32				fullscreenHeight;
-	PG_SWAP_CHAIN_PLATFORM
-};
-
-pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window);
-pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain);
-
-pgVoid pgPresentCore(pgSwapChain* swapChain);
-pgBool pgSwapChainFullscreenCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
-pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain);
-
-pgVoid pgActivateSwapChain(pgSwapChain* swapChain, pgBool activate);
-pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
-pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
-
-//====================================================================================================================
 // Query
 //====================================================================================================================
 
@@ -520,5 +491,32 @@ pgVoid pgEndQueryCore(pgQuery* query);
 
 pgVoid pgGetQueryDataCore(pgQuery* query, pgVoid* data, pgInt32 size);
 pgBool pgIsQueryDataAvailableCore(pgQuery* query);
+
+//====================================================================================================================
+// Swap chain
+//====================================================================================================================
+
+struct pgSwapChain
+{
+	pgGraphicsDevice*	device;
+	pgRenderTarget		renderTarget;
+	pgWindow*			window;
+	pgBool				fullscreen;
+	pgInt32				windowedWidth;
+	pgInt32				windowedHeight;
+	pgInt32				fullscreenWidth;
+	pgInt32				fullscreenHeight;
+	PG_SWAP_CHAIN_PLATFORM
+};
+
+pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window);
+pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain);
+
+pgVoid pgPresentCore(pgSwapChain* swapChain);
+pgBool pgSwapChainFullscreenCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
+pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain);
+
+pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
+pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 
 #endif

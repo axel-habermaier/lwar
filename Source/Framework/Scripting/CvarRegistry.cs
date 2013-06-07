@@ -63,7 +63,7 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Executes all deferred cvar updates.
+		///   Executes all deferred cvar updates for cvars with the given update mode.
 		/// </summary>
 		/// <param name="mode">The mode of the cvars that should be updated.</param>
 		internal static void ExecuteDeferredUpdates(UpdateMode mode)
@@ -71,6 +71,15 @@ namespace Pegasus.Framework.Scripting
 			Assert.InRange(mode);
 
 			foreach (var cvar in Cvars.Values.Where(cvar => cvar.UpdateMode == mode && cvar.HasDeferredValue))
+				cvar.SetDeferredValue();
+		}
+
+		/// <summary>
+		///   Executes all deferred cvar updates.
+		/// </summary>
+		internal static void ExecuteDeferredUpdates()
+		{
+			foreach (var cvar in Cvars.Values.Where(cvar => cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue))
 				cvar.SetDeferredValue();
 		}
 	}

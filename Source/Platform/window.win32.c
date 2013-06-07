@@ -367,6 +367,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		}
 		break;
 
+	// Check WM_ACTIVATE, WM_NCACTIVATE, WM_ACTIVATEAPP in order to ensure that we do not miss an activation or deactivation
 	case WM_ACTIVATE:
 		if (LOWORD(wParam) == WA_INACTIVE)
 			message->type = PG_MESSAGE_LOST_FOCUS;

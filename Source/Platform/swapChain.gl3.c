@@ -47,7 +47,7 @@ pgBool pgSwapChainFullscreenCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 
 pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain)
 {
 	pgMakeCurrent(&swapChain->context);
-	pgContextWindowed(&swapChain->context, swapChain->windowedWidth, swapChain->windowedHeight);
+	pgContextWindowed(&swapChain->context);
 }
 
 #endif

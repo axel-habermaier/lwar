@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform
 {
 	using Graphics;
-	using Input;
 	using Logging;
 	using Math;
 	using Memory;
@@ -15,19 +14,9 @@ namespace Pegasus.Framework.Platform
 	internal class ResolutionManager : DisposableObject
 	{
 		/// <summary>
-		///   The logical input device that is used to toggle between fullscreen and windowed mode.
-		/// </summary>
-		private readonly LogicalInputDevice _device;
-
-		/// <summary>
 		///   The swap chain that is affected by resolution changes.
 		/// </summary>
 		private readonly SwapChain _swapChain;
-
-		/// <summary>
-		///   The logical input that toggles between fullscreen and windowed mode (Alt+Enter).
-		/// </summary>
-		private readonly LogicalInput _toggleMode = new LogicalInput(Key.LeftAlt.IsPressed() + Key.Return.IsPressed(), InputLayer.All);
 
 		/// <summary>
 		///   The window that is affected by resolution changes.
@@ -39,57 +28,45 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		/// <param name="window">The window that is affected by resolution changes.</param>
 		/// <param name="swapChain">The swap chain that should be affected by resolution changes.</param>
-		/// <param name="device">The logical input device that should be used to toggle between fullscreen and windowed mode.</param>
-		public ResolutionManager(Window window, SwapChain swapChain, LogicalInputDevice device)
+		public ResolutionManager(Window window, SwapChain swapChain)
 		{
 			Assert.ArgumentNotNull(window);
 			Assert.ArgumentNotNull(swapChain);
-			Assert.ArgumentNotNull(device);
 
 			_window = window;
 			_swapChain = swapChain;
-			_device = device;
 
-			Cvars.WindowSizeChanged += UpdateWindowSize;
-			Cvars.WindowPositionChanged += UpdateWindowPosition;
-			Cvars.WindowModeChanged += UpdateWindowState;
-			Commands.OnRestartGraphics += UpdateGraphicsState;
-
-			// Execute all deferred graphics updates and switch to fullscreen now, if the app is started in fullscreen mode
-			CvarRegistry.ExecuteDeferredUpdates(UpdateMode.OnGraphicsRestart);
-			if (Cvars.Fullscreen)
-				SwitchToFullscreen();
-
-			_device.Add(_toggleMode);
+			//Cvars.WindowSizeChanged += UpdateWindowSize;
+			//Cvars.WindowPositionChanged += UpdateWindowPosition;
+			//Cvars.WindowModeChanged += UpdateWindowState;
+			//Commands.OnRestartGraphics += UpdateGraphicsState;
 		}
 
 		/// <summary>
-		///   Updates the resolution manager, ensuring that the application state remains consistent and that Alt+Enter mode toggle
-		///   requests are handled.
+		///   Updates the resolution manager, ensuring that the application state remains consistent.
 		/// </summary>
 		public void Update()
 		{
-			// Check if the user wants to toggle between fullscreen and windowed mode
-			if (_toggleMode.IsTriggered)
-			{
-				Cvars.Fullscreen = !Cvars.Fullscreen;
-				UpdateGraphicsState();
-			}
+			//if (Cvars.Fullscreen != _swapChain.IsFullscreen)
+			//	Cvars.Fullscreen = _swapChain.IsFullscreen;
 
-			if (Cvars.WindowMode != _window.Mode)
-				Cvars.WindowMode = _window.Mode;
+			//// We do not care about the window placement in full screen mode
+			//if (Cvars.Fullscreen)
+			//	return;
 
-			// We do not care about the window size in fullscreen mode; and if we're currently toggling the mode, ignore
-			// the window size as well, as it might be outdated for the current frame
-			if (Cvars.Fullscreen || _toggleMode.IsTriggered || _window.Mode != WindowMode.Normal)
-				return;
+			//if (Cvars.WindowMode != _window.Mode)
+			//	Cvars.WindowMode = _window.Mode;
 
-			// Make sure the windows cvars are always up-to-date
-			if (Cvars.WindowPosition != _window.Position)
-				Cvars.WindowPosition = _window.Position;
+			//// We do not care about the window size in minimized or maximized mode
+			//if (_window.Mode != WindowMode.Normal)
+			//	return;
 
-			if (Cvars.WindowSize != _window.Size)
-				Cvars.WindowSize = _window.Size;
+			//// Make sure the windows cvars are always up-to-date
+			//if (Cvars.WindowPosition != _window.Position)
+			//	Cvars.WindowPosition = _window.Position;
+
+			//if (Cvars.WindowSize != _window.Size)
+			//	Cvars.WindowSize = _window.Size;
 		}
 
 		/// <summary>
@@ -175,8 +152,6 @@ namespace Pegasus.Framework.Platform
 			Cvars.WindowPositionChanged -= UpdateWindowPosition;
 			Cvars.WindowModeChanged -= UpdateWindowState;
 			Commands.OnRestartGraphics -= UpdateGraphicsState;
-
-			_device.Remove(_toggleMode);
 		}
 	}
 }

@@ -4,18 +4,22 @@
 // Exported functions
 //====================================================================================================================
 
-pgSwapChain* pgCreateSwapChain(pgGraphicsDevice* device, pgWindow* window)
+pgSwapChain* pgCreateSwapChain(pgGraphicsDevice* device, pgWindow* window, pgBool fullscreen, pgInt32 width, pgInt32 height)
 {
 	pgSwapChain* swapChain;
 
 	PG_ASSERT_NOT_NULL(device);
 	PG_ASSERT_NOT_NULL(window);
+	PG_ASSERT_IN_RANGE(width, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MAX_WIDTH);
+	PG_ASSERT_IN_RANGE(height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
 	PG_ASSERT(window->swapChain == NULL, "There is already another swap chain for this window.");
 
 	PG_ALLOC(pgSwapChain, swapChain);
 	swapChain->device = device;
 	swapChain->renderTarget.device = device;
 	swapChain->window = window;
+	swapChain->fullscreenWidth = width;
+	swapChain->fullscreenHeight = height;
 
 	window->swapChain = swapChain;
 
@@ -23,6 +27,8 @@ pgSwapChain* pgCreateSwapChain(pgGraphicsDevice* device, pgWindow* window)
 	swapChain->renderTarget.height = window->placement.height;
 
 	pgCreateSwapChainCore(swapChain, window);
+	if (fullscreen)
+		pgSwapChainFullscreen(swapChain, width, height);
 
 	return swapChain;
 }
@@ -58,8 +64,8 @@ pgBool pgSwapChainFullscreen(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 	PG_ASSERT_IN_RANGE(height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
 
 	if (swapChain->fullscreen && swapChain->fullscreenWidth == width && swapChain->fullscreenHeight == height)
-		PG_TRUE;
-
+		return PG_TRUE;
+	
 	if (!swapChain->fullscreen)
 	{
 		swapChain->windowedWidth = swapChain->window->placement.width;
@@ -91,6 +97,12 @@ pgVoid pgSwapChainWindowed(pgSwapChain* swapChain)
 	pgSwapChainWindowedCore(swapChain);
 }
 
+pgBool pgSwapChainIsFullscreen(pgSwapChain* swapChain)
+{
+	PG_ASSERT_NOT_NULL(swapChain);
+	return swapChain->fullscreen;
+}
+
 //====================================================================================================================
 // Internal functions
 //====================================================================================================================
@@ -102,20 +114,4 @@ pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
 	PG_ASSERT_IN_RANGE(height, PG_WINDOW_MIN_HEIGHT, PG_WINDOW_MAX_HEIGHT);
 
 	pgResizeSwapChainCore(swapChain, width, height);
-}
-
-pgVoid pgActivateSwapChain(pgSwapChain* swapChain, pgBool activate)
-{
-	PG_ASSERT_NOT_NULL(swapChain);
-
-	if (activate && swapChain->fullscreenHidden)
-	{
-		swapChain->fullscreenHidden = PG_FALSE;
-		pgSwapChainFullscreen(swapChain, swapChain->fullscreenWidth, swapChain->fullscreenHeight);
-	}
-	else if (!activate && swapChain->fullscreen)
-	{
-		swapChain->fullscreenHidden = PG_TRUE;
-		pgSwapChainWindowed(swapChain);
-	}
 }
