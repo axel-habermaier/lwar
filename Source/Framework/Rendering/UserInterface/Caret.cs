@@ -6,6 +6,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Math;
 	using Platform;
 	using Platform.Graphics;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Math = System.Math;
 
@@ -132,7 +133,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (_position >= _text.Length)
 				ChangeText(_text + c);
 			else
-				ChangeText(_text.Insert(_position, c.ToString(CultureInfo.InvariantCulture)));
+			{
+				int logicalInserts;
+				ChangeText(_text.Insert(_position, c, out logicalInserts));
+				Move(logicalInserts);
+				Log.Info("Logical inserts: {0}", logicalInserts);
+			}
 
 			Move(1);
 		}

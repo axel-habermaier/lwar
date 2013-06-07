@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using System.Collections.Generic;
+	using System.Globalization;
 	using System.Text;
 	using Platform;
 	using Platform.Graphics;
@@ -127,7 +128,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				ColorSpecifier color;
 				Emoticon emoticon;
 
-				if (TryMatch(i, out color))
+				if (TryMatch(SourceString, i, out color))
 				{
 					colorRange.End = _text.Length;
 					_colorRanges.Add(colorRange);
@@ -135,7 +136,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 					colorRange = new ColorRange(color.Color, _text.Length);
 					i += color.Specifier.Length - 1;
 				}
-				else if (TryMatch(i, out emoticon))
+				else if (TryMatch(SourceString, i, out emoticon))
 				{
 					_text.Append(emoticon.CharacterEncoding);
 					i += emoticon.TextRepresentation.Length - 1;
@@ -149,41 +150,23 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		/// Gets the text color at the given index.
-		/// </summary>
-		/// <param name="index">The index for which the color should be returned.</param>
-		/// <param name="color">The returned color.</param>
-		public void GetColor(int index, out Color? color)
-		{
-			foreach (var range in _colorRanges)
-			{
-				if (range.Begin <= index && range.End > index)
-				{
-					color = range.Color;
-					return;
-				}
-			}
-
-			color = null;
-		}
-
-		/// <summary>
 		///   Tries to match all color specifiers at the current input position and returns the first match. Returns false to
 		///   indicate that no match has been found.
 		/// </summary>
+		/// <param name="source">The source string on which the matching should be performed.</param>
 		/// <param name="index">The index of the first character that should be used for the match.</param>
 		/// <param name="matchedColor">Returns the matched color specifier.</param>
-		private bool TryMatch(int index, out ColorSpecifier matchedColor)
+		private static bool TryMatch(string source, int index, out ColorSpecifier matchedColor)
 		{
 			for (var i = 0; i < Colors.Length; ++i)
 			{
-				if (Colors[i].Specifier.Length > SourceString.Length - index)
+				if (Colors[i].Specifier.Length > source.Length - index)
 					continue;
 
 				var matches = true;
-				for (var j = 0; j < Colors[i].Specifier.Length && j + index < SourceString.Length; ++j)
+				for (var j = 0; j < Colors[i].Specifier.Length && j + index < source.Length; ++j)
 				{
-					if (SourceString[j + index] != Colors[i].Specifier[j])
+					if (source[j + index] != Colors[i].Specifier[j])
 					{
 						matches = false;
 						break;
@@ -205,19 +188,20 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Tries to match all emoticon text representations at the current input position and returns the first match. Returns
 		///   false to indicate that no match has been found.
 		/// </summary>
+		/// <param name="source">The source string on which the matching should be performed.</param>
 		/// <param name="index">The index of the first character that should be used for the match.</param>
 		/// <param name="matchedEmoticon">Returns the matched emoticon single-character encoding.</param>
-		private bool TryMatch(int index, out Emoticon matchedEmoticon)
+		private static bool TryMatch(string source, int index, out Emoticon matchedEmoticon)
 		{
 			for (var i = 0; i < Emoticons.Length; ++i)
 			{
-				if (Emoticons[i].TextRepresentation.Length > SourceString.Length - index)
+				if (Emoticons[i].TextRepresentation.Length > source.Length - index)
 					continue;
 
 				var matches = true;
-				for (var j = 0; j < Emoticons[i].TextRepresentation.Length && j + index < SourceString.Length; ++j)
+				for (var j = 0; j < Emoticons[i].TextRepresentation.Length && j + index < source.Length; ++j)
 				{
-					if (SourceString[j + index] != Emoticons[i].TextRepresentation[j])
+					if (source[j + index] != Emoticons[i].TextRepresentation[j])
 					{
 						matches = false;
 						break;
@@ -235,6 +219,64 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			return false;
 		}
 
+		/// <summary>
+		///   Maps the logical text index to the corresponding source index.
+		/// </summary>
+		/// <param name="index">The index that should be mapped.</param>
+		private int MapToSource(int index)
+		{
+			return MapToSource(SourceString, index);
+		}
+
+		/// <summary>
+		///   Maps the logical text index to the corresponding source index.
+		/// </summary>
+		/// <param name="source">The source string for which the index should be mapped.</param>
+		/// <param name="index">The index that should be mapped.</param>
+		private static int MapToSource(string source, int index)
+		{
+			var sourceIndex = 0;
+			var logicalIndex = 0;
+
+			for (; sourceIndex < source.Length && logicalIndex < index; ++sourceIndex)
+			{
+				ColorSpecifier color;
+				Emoticon emoticon;
+
+				if (TryMatch(source, sourceIndex, out color))
+				{
+					sourceIndex += color.Specifier.Length - 1;
+				}
+				else if (TryMatch(source, sourceIndex, out emoticon))
+				{
+					++logicalIndex;
+					sourceIndex += emoticon.TextRepresentation.Length - 1;
+				}
+				else
+					++logicalIndex;
+			}
+
+			return sourceIndex;
+		}
+
+		/// <summary>
+		///   Gets the text color at the given index.
+		/// </summary>
+		/// <param name="index">The index for which the color should be returned.</param>
+		/// <param name="color">The returned color.</param>
+		public void GetColor(int index, out Color? color)
+		{
+			foreach (var range in _colorRanges)
+			{
+				if (range.Begin <= index && range.End > index)
+				{
+					color = range.Color;
+					return;
+				}
+			}
+
+			color = null;
+		}
 
 		/// <summary>
 		///   Retrieves a substring from the text's source string and returns the result.
@@ -242,7 +284,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="startIndex">The zero-based index position of the substring.</param>
 		public string Substring(int startIndex)
 		{
-			return SourceString.Substring(startIndex);
+			Assert.ArgumentInRange(startIndex, 0, _text.Length);
+			return SourceString.Substring(MapToSource(startIndex));
 		}
 
 		/// <summary>
@@ -252,18 +295,43 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="length">The number of characters in the substring.</param>
 		public string Substring(int startIndex, int length)
 		{
-			return SourceString.Substring(startIndex, length);
+			Assert.ArgumentInRange(startIndex, 0, _text.Length);
+			Assert.ArgumentInRange(length, 0, Int32.MaxValue);
+			Assert.ArgumentInRange(startIndex + length, 0, _text.Length);
+
+			var endIndex = MapToSource(startIndex + length);
+			startIndex = MapToSource(startIndex);
+
+			return SourceString.Substring(startIndex, endIndex - startIndex);
 		}
 
 		/// <summary>
-		///   Inserts the given value at the given start index into the text's source string and returns the result.
+		///   Inserts the given value at the given start index into the text's source string and returns the result. Returns the
+		///   effect of the insert operation on the given start index. This number is 0 if a printable character is inserted or a
+		///   negative number if the new character becomes part of a new color specifier or emoticon.
 		/// </summary>
 		/// <param name="startIndex">The zero-based index position of the insertion.</param>
-		/// <param name="value">The string that should be inserted.</param>
+		/// <param name="character">The character that should be inserted.</param>
+		/// <param name="offset">Returns the effect the insert operation had on the given start index.</param>
 		[Pure]
-		public string Insert(int startIndex, string value)
+		public string Insert(int startIndex, char character, out int offset)
 		{
-			return SourceString.Insert(startIndex, value);
+			Assert.ArgumentInRange(startIndex, 0, _text.Length);
+
+			var index = MapToSource(startIndex);
+			var sourceString = SourceString.Insert(index, character.ToString(CultureInfo.InvariantCulture));
+
+			if (startIndex == 0)
+				offset = 0;
+			else
+			{
+				var delta = index - startIndex;
+				var now = MapToSource(sourceString, startIndex) - startIndex - delta;
+
+				offset = -now;
+			}
+
+			return sourceString;
 		}
 
 		/// <summary>
@@ -274,7 +342,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		[Pure]
 		public string Remove(int startIndex, int count)
 		{
-			return SourceString.Remove(startIndex, count);
+			Assert.ArgumentInRange(startIndex, 0, _text.Length);
+			Assert.ArgumentInRange(count, 0, Int32.MaxValue);
+			Assert.ArgumentInRange(startIndex + count, 0, _text.Length);
+
+			var endIndex = MapToSource(startIndex + count);
+			startIndex = MapToSource(startIndex);
+
+			return SourceString.Remove(startIndex, endIndex - startIndex);
 		}
 
 		/// <summary>
@@ -314,12 +389,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			/// <summary>
 			///   The index of the first character that belongs to the range.
 			/// </summary>
-			public int Begin;
+			public readonly int Begin;
 
 			/// <summary>
 			///   The color of the range, if any.
 			/// </summary>
-			public Color? Color;
+			public readonly Color? Color;
 
 			/// <summary>
 			///   The index of the first character that does not belong to the range anymore.
