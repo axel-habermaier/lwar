@@ -66,8 +66,20 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Returns the width of the text.
 		/// </summary>
+		/// <param name="textString">The text whose width should be computed.</param>
+		public int MeasureWidth(string textString)
+		{
+			Assert.ArgumentNotNull(textString);
+
+			using (var text = Text.Create(textString))
+				return MeasureWidth(text, 0, text.Length);
+		}
+
+		/// <summary>
+		///   Returns the width of the text.
+		/// </summary>
 		/// <param name="text">The text whose width should be computed.</param>
-		public int MeasureWidth(string text)
+		public int MeasureWidth(Text text)
 		{
 			Assert.ArgumentNotNull(text);
 			return MeasureWidth(text, 0, text.Length);
@@ -76,10 +88,24 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Returns the width of the text from text[start] to text[end - 1].
 		/// </summary>
+		/// <param name="textString">The text whose width should be computed.</param>
+		/// <param name="start">The index of the first character.</param>
+		/// <param name="end">The index of the first character that is not measured.</param>
+		public int MeasureWidth(string textString, int start, int end)
+		{
+			Assert.ArgumentNotNull(textString);
+
+			using (var text = Text.Create(textString))
+				return MeasureWidth(text, start, end);
+		}
+
+		/// <summary>
+		///   Returns the width of the text from text[start] to text[end - 1].
+		/// </summary>
 		/// <param name="text">The text whose width should be computed.</param>
 		/// <param name="start">The index of the first character.</param>
 		/// <param name="end">The index of the first character that is not measured.</param>
-		public int MeasureWidth(string text, int start, int end)
+		public int MeasureWidth(Text text, int start, int end)
 		{
 			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(start >= 0, "Out of bounds.");
@@ -131,7 +157,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   the offset is updated to reflect the glyph width and the kerning offset.
 		/// </param>
 		/// <returns></returns>
-		internal Rectangle GetGlyphArea(string text, int start, int index, ref Vector2i offset)
+		internal Rectangle GetGlyphArea(Text text, int start, int index, ref Vector2i offset)
 		{
 			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(start >= 0, "Out of bounds.");

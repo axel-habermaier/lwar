@@ -20,7 +20,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   The layout of the text box's text.
 		/// </summary>
-		private TextLayout _layout;
+		private readonly TextLayout _layout;
 
 		/// <summary>
 		///   The renderer for the text box' text.
@@ -33,13 +33,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="font">The font that is used to draw the text.</param>
 		public TextBox(Font font)
 		{
+			_layout = new TextLayout(font, String.Empty);
+			_layout.LayoutChanged += () => _textRenderer.RebuildCache(Font, _layout.Text, _layout.LayoutData);
+
+			_caret.TextChanged += text => _layout.TextString = text;
+
 			Text = String.Empty;
 			Color = new Color(255, 255, 255, 255);
-
-			_layout = new TextLayout(font, String.Empty);
-			_layout.LayoutChanged += () => _textRenderer.RebuildCache(Font, Text, _layout.LayoutData);
-
-			_caret.TextChanged += text => _layout.Text = text;
 		}
 
 		/// <summary>
@@ -76,11 +76,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public string Text
 		{
-			get { return _layout.Text; }
+			get { return _layout.TextString; }
 			set
 			{
-				_layout.Text = value;
-				_caret.Text = value;
+				_layout.TextString = value;
+				_caret.TextString = value;
 			}
 		}
 
@@ -155,6 +155,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		protected override void OnDisposing()
 		{
 			_caret.SafeDispose();
+			_layout.SafeDispose();
 		}
 	}
 }

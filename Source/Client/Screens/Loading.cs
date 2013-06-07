@@ -7,6 +7,7 @@ namespace Lwar.Client.Screens
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Logging;
+	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
 	using Scripting;
@@ -103,6 +104,7 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_statusMessage.SafeDispose();
 		}
 	}
 }

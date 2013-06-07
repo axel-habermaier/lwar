@@ -145,7 +145,11 @@ namespace Lwar.Client.Screens
 			_inputDevice.Remove(_activate);
 			_inputDevice.Remove(_submit);
 			_inputDevice.Remove(_cancel);
+
 			_textBox.SafeDispose();
+			_lengthWarning.SafeDispose();
+			_prompt.SafeDispose();
+			_help.SafeDispose();
 		}
 
 		/// <summary>

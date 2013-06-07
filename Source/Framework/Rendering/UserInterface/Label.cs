@@ -4,16 +4,17 @@ namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using Math;
 	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a text label.
 	/// </summary>
-	public sealed class Label
+	public sealed class Label : DisposableObject
 	{
 		/// <summary>
 		///   The layout of the label's text.
 		/// </summary>
-		private TextLayout _layout;
+		private readonly TextLayout _layout;
 
 		/// <summary>
 		///   The renderer for the label's text.
@@ -40,7 +41,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Assert.ArgumentNotNull(text);
 
 			_layout = new TextLayout(font, text);
-			_layout.LayoutChanged += () => _textRenderer.RebuildCache(Font, Text, _layout.LayoutData);
+			_layout.LayoutChanged += () => _textRenderer.RebuildCache(Font, _layout.Text, _layout.LayoutData);
 
 			Color = Color.White;
 
@@ -54,8 +55,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public string Text
 		{
-			get { return _layout.Text; }
-			set { _layout.Text = value; }
+			get { return _layout.TextString; }
+			set { _layout.TextString = value; }
 		}
 
 		/// <summary>
@@ -115,6 +116,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				_layout.UpdateLayout();
 				return _layout.ActualArea;
 			}
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_layout.SafeDispose();
 		}
 
 		/// <summary>

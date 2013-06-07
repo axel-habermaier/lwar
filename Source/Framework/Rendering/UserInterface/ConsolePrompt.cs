@@ -280,6 +280,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		protected override void OnDisposing()
 		{
 			_input.SafeDispose();
+			_prompt.SafeDispose();
 		}
 	}
 }

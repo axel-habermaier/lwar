@@ -6,13 +6,14 @@ namespace Lwar.Client.Screens
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
 
 	/// <summary>
 	///   Displays event messages on the screen.
 	/// </summary>
-	public class EventMessageDisplay
+	public class EventMessageDisplay : DisposableObject
 	{
 		/// <summary>
 		///   The margin between the event messages and the screen.
@@ -78,6 +79,14 @@ namespace Lwar.Client.Screens
 
 			for (var i = 0; i < _count; ++i)
 				_messages[i].Draw(spriteBatch);
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_messages.SafeDisposeAll();
 		}
 	}
 }

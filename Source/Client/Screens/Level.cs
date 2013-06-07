@@ -103,6 +103,7 @@ namespace Lwar.Client.Screens
 			_scoreboard.SafeDispose();
 			_chatInput.SafeDispose();
 			_networkSession.SafeDispose();
+			_eventMessage.SafeDispose();
 
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;

@@ -4,6 +4,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using Math;
 	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///   The displayed content of the console.
@@ -65,6 +66,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			for (var i = 0; i < MaxLabels; ++i)
 				_labels[i] = new Label(font, String.Empty) { LineSpacing = LineSpacing };
+		}
+
+		/// <summary>
+		/// Disposes the console content.
+		/// </summary>
+		public void Dispose()
+		{
+			_labels.SafeDisposeAll();
 		}
 
 		/// <summary>

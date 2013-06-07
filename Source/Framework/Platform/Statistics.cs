@@ -158,6 +158,7 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_label.SafeDispose();
 			_timer.Timeout -= UpdateStatistics;
 			Commands.OnToggleStats -= ToggleVisibility;
 

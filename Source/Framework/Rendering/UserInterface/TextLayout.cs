@@ -3,12 +3,13 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using Math;
+	using Platform.Memory;
 	using Math = System.Math;
 
 	/// <summary>
 	///   Determines a layout for a text based on the font, desired with, alignment, etc.
 	/// </summary>
-	internal struct TextLayout
+	internal class TextLayout : DisposableObject
 	{
 		/// <summary>
 		///   The areas of the individual characters of the text.
@@ -51,9 +52,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private int _lineSpacing;
 
 		/// <summary>
-		///   The text that should be layouted.
+		///   Gets the text that is layouted.
 		/// </summary>
-		private string _text;
+		public Text Text { get; private set; }
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -61,13 +62,20 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="font">The font that is used to determine the size of the individual characters.</param>
 		/// <param name="text">The text that should be layouted.</param>
 		public TextLayout(Font font, string text)
-			: this()
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.ArgumentNotNull(text);
 
 			Font = font;
-			Text = text;
+			TextString = text;
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			Text.SafeDispose();
 		}
 
 		/// <summary>
@@ -81,21 +89,22 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Gets or sets the text that should be layouted.
 		/// </summary>
-		public string Text
+		public string TextString
 		{
-			get { return _text; }
+			get { return Text.SourceString; }
 			set
 			{
 				Assert.ArgumentNotNull(value);
 
-				if (_text == value)
+				if (Text != null && Text.SourceString == value)
 					return;
 
-				if (_characterAreas == null || value.Length > _characterAreas.Length)
-					_characterAreas = new Rectangle[value.Length];
-
-				_text = value;
+				Text.SafeDispose();
+				Text = Text.Create(value);
 				_dirty = true;
+
+				if (_characterAreas == null || Text.Length > _characterAreas.Length)
+					_characterAreas = new Rectangle[Text.Length];
 			}
 		}
 
@@ -246,7 +255,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			// Calculate the caret's offset from the line's left edge
 			if (!_lines[lineIndex].IsInvalid)
-				result.X += _font.MeasureWidth(_text, Math.Max(0, _lines[lineIndex].FirstCharacter), position);
+				result.X += _font.MeasureWidth(Text, Math.Max(0, _lines[lineIndex].FirstCharacter), position);
 
 			return result;
 		}
@@ -263,7 +272,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			var line = new TextLine(DesiredArea.Left, DesiredArea.Top, Font.LineHeight);
 
 			// Initialize the token stream and get the first token
-			var stream = new TextTokenStream(_font, _text, _desiredArea.Width);
+			var stream = new TextTokenStream(_font, Text, _desiredArea.Width);
 			var token = stream.GetNextToken();
 			while (token.Type != TextTokenType.EndOfText)
 			{
@@ -390,7 +399,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private void ComputeCharacterAreas(TextSequence sequence, ref Vector2i offset)
 		{
 			for (var i = sequence.FirstCharacter; i < sequence.LastCharacter; ++i)
-				_characterAreas[i] = _font.GetGlyphArea(_text, sequence.FirstCharacter, i, ref offset);
+				_characterAreas[i] = _font.GetGlyphArea(Text, sequence.FirstCharacter, i, ref offset);
 		}
 
 		/// <summary>

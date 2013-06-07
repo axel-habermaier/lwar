@@ -13,20 +13,19 @@ namespace Pegasus.Framework.Platform.Memory
 		where T : class
 	{
 		/// <summary>
-		///   The initial number of pooled instances. If the pool runs out of instances, another 'Capacity' many instances are
-		///   allocated.
+		///   The initial number of pooled instances. If the pool runs out of instances, the capacity is doubled.
 		/// </summary>
-		private const int Capacity = 16;
+		private const int InitialCapacity = 16;
 
 		/// <summary>
 		///   The pooled items that are currently not in use.
 		/// </summary>
-		private readonly List<T> _items = new List<T>(Capacity);
+		private readonly List<T> _items = new List<T>(InitialCapacity);
 
 		/// <summary>
 		///   The total number of instances allocated by the pool.
 		/// </summary>
-		private int _allocationCount;
+		private int _allocationCount = InitialCapacity;
 
 		/// <summary>
 		///   The maximum number of instances that have been in use at the same time.
@@ -38,10 +37,10 @@ namespace Pegasus.Framework.Platform.Memory
 		/// </summary>
 		private void AllocateObjects()
 		{
-			_allocationCount += Capacity;
-			Log.DebugInfo(LogCategory.Memory, "Pool<{0}>: Allocating new objects ({1} objects total).", typeof(T).Name, _allocationCount);
+			Log.DebugInfo(LogCategory.Memory, "Pool<{0}>: Allocating new instances ({1} instances total).", typeof(T).Name, _allocationCount);
 
-			AllocateObjects(_items, Capacity);
+			AllocateObjects(_items, _allocationCount);
+			_allocationCount *= 2;
 		}
 
 		/// <summary>

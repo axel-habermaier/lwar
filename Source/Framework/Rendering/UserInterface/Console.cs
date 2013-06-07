@@ -134,9 +134,10 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_input.CharEntered -= OnCharEntered;
 			_input.KeyPressed -= OnKeyPressed;
 			_input.MouseWheel -= OnMouseWheelMoved;
-			_input.SafeDispose();
 
+			_input.SafeDispose();
 			_prompt.SafeDispose();
+			_content.Dispose();
 		}
 
 		/// <summary>

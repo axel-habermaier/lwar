@@ -139,6 +139,10 @@ namespace Lwar.Client.Screens
 		protected override void OnDisposing()
 		{
 			_inputDevice.Remove(_showScoreboard);
+
+			_header.Dispose();
+			foreach (var row in _rows)
+				row.Dispose();
 		}
 
 		/// <summary>
@@ -199,6 +203,17 @@ namespace Lwar.Client.Screens
 				// Compute the width and the height of the row
 				Width = nameWidth + 3 * deathWidth + 3 * ColumnSpan;
 				Height = font.LineHeight + RowSpan;
+			}
+
+			/// <summary>
+			///   Disposes the row, releasing all labels.
+			/// </summary>
+			public void Dispose()
+			{
+				_name.SafeDispose();
+				_kills.SafeDispose();
+				_deaths.SafeDispose();
+				_ping.SafeDispose();
 			}
 
 			/// <summary>

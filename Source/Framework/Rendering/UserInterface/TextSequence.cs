@@ -24,7 +24,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		/// <param name="text">The text for which the sequence should be created.</param>
 		/// <param name="index">The index of the first character in the sequence.</param>
-		public TextSequence(string text, int index)
+		public TextSequence(Text text, int index)
 			: this()
 		{
 			FirstCharacter = index;
@@ -55,7 +55,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		/// <param name="font">The font that should be used to determine the width of sequence.</param>
 		/// <param name="text">The text the sequence was created for.</param>
-		public int ComputeWidth(Font font, string text)
+		public int ComputeWidth(Font font, Text text)
 		{
 			return font.MeasureWidth(text, FirstCharacter, LastCharacter);
 		}
@@ -69,7 +69,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="allowedWidth">The maximum allowed with for the first split part.</param>
 		/// <param name="part1">Returns the text sequence for the first split part.</param>
 		/// <param name="part2">Returns the text sequence for the second split part.</param>
-		public void Split(Font font, string text, int allowedWidth, out TextSequence part1, out TextSequence part2)
+		public void Split(Font font, Text text, int allowedWidth, out TextSequence part1, out TextSequence part2)
 		{
 			var splitIndex = FindSplitIndex(font, text, allowedWidth);
 
@@ -80,7 +80,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="font">The font that should be used to determine the width of sequence.</param>
 		/// <param name="text">The text the sequence was created for.</param>
 		/// <param name="allowedWidth">The maximum allowed with for the first split part.</param>
-		private int FindSplitIndex(Font font, string text, int allowedWidth)
+		private int FindSplitIndex(Font font, Text text, int allowedWidth)
 		{
 			var splitIndex = FirstCharacter;
 			var width = 0;
@@ -102,7 +102,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		/// <param name="text">The text that should be searched.</param>
 		/// <param name="offset">The offset into the text where the search should begin.</param>
-		private static int FindFirstWhitespace(string text, int offset)
+		private static int FindFirstWhitespace(Text text, int offset)
 		{
 			while (offset < text.Length && text[offset] != '\n' && text[offset] != ' ')
 				offset++;

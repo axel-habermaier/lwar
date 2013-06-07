@@ -60,7 +60,7 @@ namespace Pegasus.Framework.Rendering
 		/// </param>
 		/// <param name="text">The text that was layouted and should be drawn.</param>
 		/// <param name="layoutData">The layouting data for the individual characters of the text.</param>
-		internal void RebuildCache(Font font, string text, Rectangle[] layoutData)
+		internal void RebuildCache(Font font, Text text, Rectangle[] layoutData)
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.ArgumentNotNull(text);
@@ -68,19 +68,28 @@ namespace Pegasus.Framework.Rendering
 			Assert.That(text.Length <= layoutData.Length, "Layout data missing.");
 
 			_numQuads = 0;
-			if (String.IsNullOrWhiteSpace(text))
+			if (text.IsWhitespaceOnly)
 				return;
 
 			// Ensure that the quads list does not have to be resized by settings its capacity to the number of
 			// characters; however, this wastes some space as not all characters generate quads
 			if (_quads == null || text.Length > _quads.Length)
 				_quads = new Quad[text.Length];
-
-			Quad quad;
+			
 			for (var i = 0; i < text.Length; ++i)
 			{
+				Quad quad;
 				if (font.CreateGlyphQuad(text[i], ref layoutData[i], _color, out quad))
+				{
+					Color? color;
+
+					text.GetColor(i, out color);
+					
+					if (color.HasValue)
+						quad.SetColor(color.Value);
+
 					_quads[_numQuads++] = quad;
+				}
 			}
 		}
 
@@ -92,21 +101,30 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="text">The text that should be drawn.</param>
 		/// <param name="color">The color that should be used to draw the text.</param>
 		/// <param name="position">The position of the text's top left corner.</param>
-		internal static void Draw(SpriteBatch spriteBatch, Font font, string text, Color color, Vector2i position)
+		internal static void Draw(SpriteBatch spriteBatch, Font font, Text text, Color color, Vector2i position)
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.ArgumentNotNull(text);
 
-			if (String.IsNullOrWhiteSpace(text))
+			if (text.IsWhitespaceOnly)
 				return;
 
-			Quad quad;
 			for (var i = 0; i < text.Length; ++i)
 			{
+				Quad quad;
 				var area = font.GetGlyphArea(text, 0, i, ref position);
 
 				if (font.CreateGlyphQuad(text[i], ref area, color, out quad))
+				{
+					Color? textColor;
+
+					text.GetColor(i, out textColor);
+
+					if (textColor.HasValue)
+						quad.SetColor(textColor.Value);
+
 					spriteBatch.Draw(ref quad, font.Texture);
+				}
 			}
 		}
 
