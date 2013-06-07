@@ -4,7 +4,6 @@ namespace Pegasus.Framework.Platform
 {
 	using Graphics;
 	using Logging;
-	using Math;
 	using Memory;
 	using Scripting;
 
@@ -36,10 +35,7 @@ namespace Pegasus.Framework.Platform
 			_window = window;
 			_swapChain = swapChain;
 
-			//Cvars.WindowSizeChanged += UpdateWindowSize;
-			//Cvars.WindowPositionChanged += UpdateWindowPosition;
-			//Cvars.WindowModeChanged += UpdateWindowState;
-			//Commands.OnRestartGraphics += UpdateGraphicsState;
+			Commands.OnRestartGraphics += UpdateGraphicsState;
 		}
 
 		/// <summary>
@@ -47,26 +43,25 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public void Update()
 		{
-			//if (Cvars.Fullscreen != _swapChain.IsFullscreen)
-			//	Cvars.Fullscreen = _swapChain.IsFullscreen;
+			if (Cvars.Fullscreen != _swapChain.IsFullscreen)
+				Cvars.FullscreenCvar.SetImmediate(_swapChain.IsFullscreen);
 
-			//// We do not care about the window placement in full screen mode
-			//if (Cvars.Fullscreen)
-			//	return;
+			// We do not care about the window placement in full screen mode
+			if (Cvars.Fullscreen)
+				return;
 
-			//if (Cvars.WindowMode != _window.Mode)
-			//	Cvars.WindowMode = _window.Mode;
+			if (Cvars.WindowMode != _window.Mode)
+				Cvars.WindowMode = _window.Mode;
 
-			//// We do not care about the window size in minimized or maximized mode
-			//if (_window.Mode != WindowMode.Normal)
-			//	return;
+			// We do not care about the window size in minimized or maximized mode
+			if (_window.Mode != WindowMode.Normal)
+				return;
 
-			//// Make sure the windows cvars are always up-to-date
-			//if (Cvars.WindowPosition != _window.Position)
-			//	Cvars.WindowPosition = _window.Position;
+			if (Cvars.WindowPosition != _window.Position)
+				Cvars.WindowPosition = _window.Position;
 
-			//if (Cvars.WindowSize != _window.Size)
-			//	Cvars.WindowSize = _window.Size;
+			if (Cvars.WindowSize != _window.Size)
+				Cvars.WindowSize = _window.Size;
 		}
 
 		/// <summary>
@@ -74,73 +69,31 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		private void UpdateGraphicsState()
 		{
+			var switchFullscreen = Cvars.FullscreenCvar.HasDeferredValue && Cvars.FullscreenCvar.DeferredValue;
+			var switchWindowed = Cvars.FullscreenCvar.HasDeferredValue && !Cvars.FullscreenCvar.DeferredValue;
+			var changeResolution = Cvars.ResolutionCvar.HasDeferredValue;
+
 			// Execute all deferred cvar updates
 			CvarRegistry.ExecuteDeferredUpdates(UpdateMode.OnGraphicsRestart);
 
 			// Resize and update the window and the swap chain depending on whether we're in fullscreen or windowed mode
-			if (Cvars.Fullscreen)
-				SwitchToFullscreen();
-			else
-				SwitchToWindowed();
-		}
+			if (switchFullscreen || changeResolution)
+			{
+				Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", Cvars.Resolution.Width, Cvars.Resolution.Height);
 
-		/// <summary>
-		///   Switches to fullscreen mode.
-		/// </summary>
-		private void SwitchToFullscreen()
-		{
-			Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", Cvars.Resolution.Width, Cvars.Resolution.Height);
+				if (_swapChain.SwitchToFullscreen(Cvars.Resolution))
+					return;
 
-			if (_swapChain.SwitchToFullscreen(Cvars.Resolution))
-				return;
+				// There was an error switching to fullscreen mode, so switch back to windowed mode
+				Cvars.Fullscreen = false;
+				UpdateGraphicsState();
+			}
 
-			// There was an error switching to fullscreen mode, so switch back to windowed mode
-			Cvars.Fullscreen = false;
-			UpdateGraphicsState();
-		}
-
-		/// <summary>
-		///   Switches to windowed mode.
-		/// </summary>
-		private void SwitchToWindowed()
-		{
-			Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowSize.Width, Cvars.WindowSize.Height);
-			_swapChain.SwitchToWindowed();
-
-			// The cvars might have been changed in the mean-time, but that did not yet have any effect
-			_window.Mode = Cvars.WindowMode;
-			_window.Size = Cvars.WindowSize;
-			_window.Position = Cvars.WindowPosition;
-		}
-
-		/// <summary>
-		///   Sets the window's size to the value stored in the window size cvar.
-		/// </summary>
-		/// <param name="size">The old window size.</param>
-		private void UpdateWindowSize(Size size)
-		{
-			if (!Cvars.Fullscreen)
-				_window.Size = Cvars.WindowSize;
-		}
-
-		/// <summary>
-		///   Sets the window's position to the value stored in the window position cvar.
-		/// </summary>
-		/// <param name="size">The old window position.</param>
-		private void UpdateWindowPosition(Vector2i size)
-		{
-			if (!Cvars.Fullscreen)
-				_window.Position = Cvars.WindowPosition;
-		}
-
-		/// <summary>
-		///   Sets the window's state to the value stored in the window state cvar.
-		/// </summary>
-		/// <param name="mode">The old window state.</param>
-		private void UpdateWindowState(WindowMode mode)
-		{
-			if (!Cvars.Fullscreen)
-				_window.Mode = Cvars.WindowMode;
+			if (switchWindowed)
+			{
+				Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowSize.Width, Cvars.WindowSize.Height);
+				_swapChain.SwitchToWindowed();
+			}
 		}
 
 		/// <summary>
@@ -148,9 +101,6 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Cvars.WindowSizeChanged -= UpdateWindowSize;
-			Cvars.WindowPositionChanged -= UpdateWindowPosition;
-			Cvars.WindowModeChanged -= UpdateWindowState;
 			Commands.OnRestartGraphics -= UpdateGraphicsState;
 		}
 	}

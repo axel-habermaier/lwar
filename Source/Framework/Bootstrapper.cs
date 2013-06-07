@@ -95,7 +95,7 @@ namespace Pegasus.Framework
 					Log.Info("No cvar values have been provided via the command line.");
 
 				foreach (var cvar in reply.Result)
-					cvar.Execute();
+					cvar.Execute(false);
 			}
 		}
 

@@ -56,9 +56,9 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
 	if (window->cursor == NULL)
 		pgWin32Error("Failed to initialize the mouse cursor.");
 
-	if (window->placement.state == PG_WINDOW_MAXIMIZED)
+	if (window->placement.mode == PG_WINDOW_MAXIMIZED)
 		style |= WS_MAXIMIZE;
-	else if (window->placement.state == PG_WINDOW_MINIMIZED)
+	else if (window->placement.mode == PG_WINDOW_MINIMIZED)
 		style |= WS_MINIMIZE;
 
 	// Create the window
@@ -115,11 +115,11 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 	RECT rect;
 
 	if (IsZoomed(window->hwnd))
-		window->placement.state = PG_WINDOW_MAXIMIZED;
+		window->placement.mode = PG_WINDOW_MAXIMIZED;
 	else if (IsIconic(window->hwnd))
-		window->placement.state = PG_WINDOW_MINIMIZED;
+		window->placement.mode = PG_WINDOW_MINIMIZED;
 	else
-		window->placement.state = PG_WINDOW_NORMAL;
+		window->placement.mode = PG_WINDOW_NORMAL;
 
 	// Don't update the position and size when the window is minimized, as that only results in invalid values
 	if (IsIconic(window->hwnd))
@@ -173,11 +173,11 @@ pgVoid pgSetWindowPositionCore(pgWindow* window)
 
 pgVoid pgSetWindowModeCore(pgWindow* window)
 {
-	if (window->placement.state == PG_WINDOW_MAXIMIZED && !ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
+	if (window->placement.mode == PG_WINDOW_MAXIMIZED && !ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
 		pgWin32Error("Failed to maximize window.");
-	else if (window->placement.state == PG_WINDOW_NORMAL && !ShowWindow(window->hwnd, SW_RESTORE))
+	else if (window->placement.mode == PG_WINDOW_NORMAL && !ShowWindow(window->hwnd, SW_RESTORE))
 		pgWin32Error("Failed to get window into normal mode.");
-	else if (window->placement.state == PG_WINDOW_MINIMIZED && !ShowWindow(window->hwnd, SW_SHOWMINIMIZED))
+	else if (window->placement.mode == PG_WINDOW_MINIMIZED && !ShowWindow(window->hwnd, SW_SHOWMINIMIZED))
 		pgWin32Error("Failed to get window into minimized mode.");
 }
 

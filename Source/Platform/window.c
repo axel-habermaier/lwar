@@ -226,14 +226,14 @@ pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
 	pgSetWindowPositionCore(window);
 }
 
-pgVoid pgSetWindowMode(pgWindow* window, pgWindowMode state)
+pgVoid pgSetWindowMode(pgWindow* window, pgWindowMode mode)
 {
 	PG_ASSERT_NOT_NULL(window);
 
 	if (window->fullscreen)
 		return;
 
-	window->placement.state = state;
+	window->placement.mode = mode;
 
 	pgConstrainWindowPlacement(&window->placement);
 	pgSetWindowModeCore(window);

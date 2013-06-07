@@ -331,6 +331,7 @@
     <Compile Include="Scripting\Parsing\Combinators\SizeParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Vector2IParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Vector2Parser.cs" />
+    <Compile Include="Scripting\SystemOnlyAttribute.cs" />
     <Compile Include="Scripting\TypeRegistry.cs" />
     <Compile Include="Scripting\Validators\WindowPositionAttribute.cs" />
     <Compile Include="Scripting\Validators\FileNameAttribute.cs" />

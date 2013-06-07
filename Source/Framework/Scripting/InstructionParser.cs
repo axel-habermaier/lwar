@@ -78,7 +78,7 @@ namespace Pegasus.Framework.Scripting
 			var reply = cvarParser.Parse(inputStream);
 			if (reply.Status == ReplyStatus.Success)
 				return Success(reply.Result);
-			
+
 			var type = string.Format("Cvar type: {0}", TypeRegistry.GetDescription(cvar.ValueType));
 			var examples = string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
 			return ForwardError(reply, type, examples, Help.GetHint(cvar.Name));

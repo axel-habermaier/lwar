@@ -52,6 +52,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		}
 
 		/// <summary>
+		///   Gets a value indicating whether the command can only be invoked by the system and not via the console.
+		/// </summary>
+		public bool SystemOnly
+		{
+			get { return GetAttribute(_method.Attributes, "SystemOnly") != null; }
+		}
+
+		/// <summary>
 		///   Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()

@@ -40,13 +40,14 @@ namespace Pegasus.Framework.Scripting
 		/// <summary>
 		///   Executes the instruction.
 		/// </summary>
-		public void Execute()
+		/// <param name="executedByUser">If true, indicates that the instruction originates from the user (e.g., via the console).</param>
+		public void Execute(bool executedByUser)
 		{
 			var command = _target as ICommand;
 			var cvar = _target as ICvar;
 
 			if (command != null)
-				command.Invoke((object[])_parameter);
+				command.Invoke((object[])_parameter, executedByUser);
 
 			if (cvar != null && _parameter == null)
 			{
@@ -62,7 +63,7 @@ namespace Pegasus.Framework.Scripting
 			}
 
 			if (cvar != null && _parameter != null)
-				cvar.Value = _parameter;
+				cvar.SetValue(_parameter, executedByUser);
 		}
 
 		/// <summary>

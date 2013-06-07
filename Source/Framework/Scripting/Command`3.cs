@@ -30,21 +30,29 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <param name="name">The external name of the command that is used to refer to the command in the console, for instance.</param>
 		/// <param name="description">A string describing the usage and the purpose of the command.</param>
+		/// <param name="systemOnly">Indicates whether the command can only be invoked by the system and not via the console.</param>
 		/// <param name="parameter1">The representation of the command's first parameter.</param>
 		/// <param name="parameter2">The representation of the command's second parameter.</param>
 		/// <param name="parameter3">The representation of the command's third parameter.</param>
-		public Command(string name, string description, CommandParameter parameter1, CommandParameter parameter2, CommandParameter parameter3)
+		public Command(string name, string description, bool systemOnly,
+					   CommandParameter parameter1, CommandParameter parameter2, CommandParameter parameter3)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
 			Assert.ArgumentNotNullOrWhitespace(description);
 
 			Name = name;
 			Description = description;
+			SystemOnly = systemOnly;
 
 			_parameter1 = parameter1;
 			_parameter2 = parameter2;
 			_parameter3 = parameter3;
 		}
+
+		/// <summary>
+		///   Gets a value indicating whether the command can only be invoked by the system and not via the console.
+		/// </summary>
+		public bool SystemOnly { get; private set; }
 
 		/// <summary>
 		///   Gets the external name of the command that is used to refer to the command in the console, for instance.
@@ -73,12 +81,16 @@ namespace Pegasus.Framework.Scripting
 		///   Invokes the command, extracting the command's parameters (if any) from the given parameters array.
 		/// </summary>
 		/// <param name="parameters">The parameters that should be used to invoke the command.</param>
-		void ICommand.Invoke(object[] parameters)
+		/// <param name="userInvoked">If true, indicates that the command was invoked by the user (e.g., via the console).</param>
+		void ICommand.Invoke(object[] parameters, bool userInvoked)
 		{
 			Assert.ArgumentNotNull(parameters);
 			Assert.ArgumentSatisfies(parameters.Length == 3, "Argument count mismatch.");
 
-			Invoke((T1)parameters[0], (T2)parameters[1], (T3)parameters[2]);
+			if (userInvoked && SystemOnly)
+				Log.Warn("'{0}' can only be invoked by the application.", Name);
+			else
+				Invoke((T1)parameters[0], (T2)parameters[1], (T3)parameters[2]);
 		}
 
 		/// <summary>

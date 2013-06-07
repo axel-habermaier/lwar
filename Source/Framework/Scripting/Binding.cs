@@ -38,7 +38,7 @@ namespace Pegasus.Framework.Scripting
 		public void ExecuteIfTriggered()
 		{
 			if (_input.IsTriggered)
-				_instruction.Execute();
+				_instruction.Execute(true);
 		}
 	}
 }

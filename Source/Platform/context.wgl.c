@@ -190,10 +190,11 @@ pgVoid pgContextWindowed(pgContext* context)
 	
 	// Restore the size
 	SetWindowPos(context->hwnd, HWND_TOP, context->x, context->y, context->width, context->height, SWP_FRAMECHANGED | SWP_NOCOPYBITS);
-	ShowWindow(context->hwnd, SW_SHOW);
 
 	if (context->maximized)
-		ShowWindow(context->hwnd, SW_SHOWMAXIMIZED);
+		ShowWindow(context->hwnd, SW_MAXIMIZE);
+	else
+		ShowWindow(context->hwnd, SW_SHOW);
 }
 
 pgVoid pgInitializeContextExtensions(pgContext* context)

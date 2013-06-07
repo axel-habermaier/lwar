@@ -229,9 +229,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		{
 			foreach (var cvar in _registry.Cvars)
 			{
-				_writer.Append("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {6}, {5}",
+				_writer.Append("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {5}, {6}, {7}",
 							   cvar.Type, GetPropertyName(cvar.Name), GetRuntimeName(cvar.Name), cvar.DefaultValue,
-							   GetSummaryText(cvar.Documentation), cvar.Persistent.ToString().ToLower(), cvar.UpdateMode);
+							   GetSummaryText(cvar.Documentation), cvar.UpdateMode, cvar.Persistent.ToString().ToLower(),
+							   cvar.SystemOnly.ToString().ToLower());
 
 				AppendValidators(cvar.Validators);
 				_writer.AppendLine(");");
@@ -242,9 +243,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 
 			foreach (var command in _registry.Commands)
 			{
-				_writer.Append("{1} = new Command{0}(\"{2}\", \"{3}\"",
+				_writer.Append("{1} = new Command{0}(\"{2}\", \"{3}\", {4}",
 							   GetTypeArguments(command), GetPropertyName(command.Name),
-							   GetRuntimeName(command.Name), GetSummaryText(command.Documentation));
+							   GetRuntimeName(command.Name), GetSummaryText(command.Documentation),
+							   command.SystemOnly.ToString().ToLower());
 
 				GenerateCommandParameters(command);
 				_writer.AppendLine(");");

@@ -31,9 +31,9 @@ namespace Pegasus.Framework.Scripting
 		string Description { get; }
 
 		/// <summary>
-		///   Gets or sets the cvar's value.
+		///   Gets the cvar's value.
 		/// </summary>
-		object Value { get; set; }
+		object Value { get; }
 
 		/// <summary>
 		///   Gets the deferred value of the cvar that will be set the next time it is updated. This property has no meaning
@@ -60,6 +60,18 @@ namespace Pegasus.Framework.Scripting
 		///   Gets the update mode of the cvar.
 		/// </summary>
 		UpdateMode UpdateMode { get; }
+
+		/// <summary>
+		///   Gets a value indicating whether the cvar can only be set by the system and not via the console.
+		/// </summary>
+		bool SystemOnly { get; }
+
+		/// <summary>
+		///   Sets the cvar's value.
+		/// </summary>
+		/// <param name="value">The value that should be set.</param>
+		/// <param name="setByUser">If true, indicates that the cvar was set by the user (e.g., via the console).</param>
+		void SetValue(object value, bool setByUser);
 
 		/// <summary>
 		///   Sets the cvar's current value to the deferred one.

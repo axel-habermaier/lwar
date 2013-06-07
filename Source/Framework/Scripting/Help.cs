@@ -89,7 +89,8 @@ namespace Pegasus.Framework.Scripting
 				_builder.AppendFormat("    Remarks:       {0}\n", String.Join("; ", cvar.Validators.Select(v => v.Description)));
 
 			_builder.AppendFormat("    Update Mode:   {0}\n", cvar.UpdateMode.ToDisplayString());
-			_builder.AppendFormat("    Persistent:    {0}", cvar.Persistent ? "yes" : "no");
+			_builder.AppendFormat("    Persistent:    {0}\n", cvar.Persistent ? "yes" : "no");
+			_builder.AppendFormat("    User Access:   {0}", cvar.SystemOnly ? "read" : "read/write");
 
 			Log.Info(_builder.ToString());
 		}
@@ -101,7 +102,8 @@ namespace Pegasus.Framework.Scripting
 		private void PrintCommandHelp(ICommand command)
 		{
 			_builder.AppendFormat("    Command:     {0}\n", command.Name);
-			_builder.AppendFormat("    Description: {0}", command.Description);
+			_builder.AppendFormat("    Description: {0}\n", command.Description);
+			_builder.AppendFormat("    Invocation:  {0}", command.SystemOnly ? "application only" : "user or application");
 
 			if (command.Parameters.Any())
 				_builder.Append("\n    Parameters:\n");

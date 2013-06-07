@@ -131,7 +131,7 @@ namespace Pegasus.Framework.Scripting
 
 			Log.Info("Processing '{0}'...", _file.FileName);
 			foreach (var line in ParseLines(false).Where(line => line.HasInstruction))
-				line.Instruction.Execute();
+				line.Instruction.Execute(false);
 		}
 
 		/// <summary>

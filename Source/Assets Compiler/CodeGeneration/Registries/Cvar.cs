@@ -101,6 +101,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		}
 
 		/// <summary>
+		///   Gets a value indicating whether the command can only be invoked by the system and not via the console.
+		/// </summary>
+		public bool SystemOnly
+		{
+			get { return GetAttribute(_property.Attributes, "SystemOnly") != null; }
+		}
+
+		/// <summary>
 		///   Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
@@ -108,7 +116,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			// Add all validators declared for the cvar
 			AddElements(from section in _property.Attributes
 						from attribute in section.Attributes
-						where !AttributeHasType(attribute, "Cvar") && !AttributeHasType(attribute, "Persistent")
+						where !AttributeHasType(attribute, "Cvar") &&
+							  !AttributeHasType(attribute, "Persistent") &&
+							  !AttributeHasType(attribute, "SystemOnly")
 						select new Validator(attribute));
 		}
 

@@ -35,8 +35,10 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="description">A description of the cvar's purpose.</param>
 		/// <param name="mode">The update mode of the cvar.</param>
 		/// <param name="persistent">Indicates whether the cvar's value should be persisted across sessions.</param>
+		/// <param name="systemOnly">Indicates whether the cvar can only be set by the system and not via the console.</param>
 		/// <param name="validators">The validators that should be used to validate a new cvar value before it is set.</param>
-		public Cvar(string name, T defaultValue, string description, UpdateMode mode, bool persistent, params ValidatorAttribute[] validators)
+		public Cvar(string name, T defaultValue, string description, UpdateMode mode, bool persistent, bool systemOnly,
+					params ValidatorAttribute[] validators)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
 			Assert.ArgumentNotNullOrWhitespace(description);
@@ -46,11 +48,17 @@ namespace Pegasus.Framework.Scripting
 			Description = description;
 			UpdateMode = mode;
 			Persistent = persistent;
+			SystemOnly = systemOnly;
 
 			_defaultValue = defaultValue;
 			_value = defaultValue;
 			_validators = validators;
 		}
+
+		/// <summary>
+		///   Gets a value indicating whether the cvar is readonly and cannot be set from the console.
+		/// </summary>
+		public bool SystemOnly { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the value of the cvar.
@@ -121,11 +129,6 @@ namespace Pegasus.Framework.Scripting
 		object ICvar.Value
 		{
 			get { return _value; }
-			set
-			{
-				Assert.ArgumentNotNull(value);
-				Value = (T)value;
-			}
 		}
 
 		/// <summary>
@@ -160,6 +163,21 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
+		///   Sets the cvar's value.
+		/// </summary>
+		/// <param name="value">The value that should be set.</param>
+		/// <param name="setByUser">If true, indicates that the cvar was set by the user (e.g., via the console).</param>
+		void ICvar.SetValue(object value, bool setByUser)
+		{
+			Assert.ArgumentNotNull(value);
+
+			if (setByUser && SystemOnly)
+				Log.Warn("'{0}' can only be set by the application.", Name);
+			else
+				Value = (T)value;
+		}
+
+		/// <summary>
 		///   Validates the given value, returning true if the value is valid.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
@@ -176,6 +194,17 @@ namespace Pegasus.Framework.Scripting
 			}
 
 			return true;
+		}
+
+		/// <summary>
+		///   Immediately updates the cvar's value to the given one, ignoring the cvar's update mode.
+		/// </summary>
+		/// <param name="value">The value that should be set.</param>
+		public void SetImmediate(T value)
+		{
+			UpdateValue(value);
+			if (HasDeferredValue && value.Equals(DeferredValue))
+				HasDeferredValue = false;
 		}
 
 		/// <summary>

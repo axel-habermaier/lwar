@@ -25,9 +25,15 @@ namespace Pegasus.Framework.Scripting
 		IEnumerable<CommandParameter> Parameters { get; }
 
 		/// <summary>
+		///   Gets a value indicating whether the command is hidden from the console.
+		/// </summary>
+		bool SystemOnly { get; }
+
+		/// <summary>
 		///   Invokes the command, extracting the command's parameters (if any) from the given parameters array.
 		/// </summary>
 		/// <param name="parameters">The parameters that should be used to invoke the command.</param>
-		void Invoke(object[] parameters);
+		/// <param name="userInvoked">If true, indicates that the command was invoked by the user (e.g., via the console).</param>
+		void Invoke(object[] parameters, bool userInvoked);
 	}
 }

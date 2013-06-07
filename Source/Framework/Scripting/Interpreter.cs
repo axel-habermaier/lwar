@@ -67,7 +67,7 @@ namespace Pegasus.Framework.Scripting
 			if (!CvarRegistry.TryFind(name, out cvar))
 				Log.Warn("Unknown cvar '{0}'.", name);
 			else
-				cvar.Value = cvar.DefaultValue;
+				cvar.SetValue(cvar.DefaultValue, true);
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace Pegasus.Framework.Scripting
 			var reply = _parser.Parse(input);
 
 			if (reply.Status == ReplyStatus.Success)
-				reply.Result.Execute();
+				reply.Result.Execute(true);
 			else
 				Log.Error("{0}", reply.Errors.ErrorMessage);
 		}

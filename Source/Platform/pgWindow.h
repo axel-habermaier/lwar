@@ -169,7 +169,7 @@ typedef enum
 
 typedef struct
 {
-	pgWindowMode	state;
+	pgWindowMode	mode;
 	pgInt32			x;
 	pgInt32			y;
 	pgInt32			width;
