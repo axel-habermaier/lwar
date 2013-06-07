@@ -4,7 +4,6 @@ namespace Pegasus.Framework.Rendering
 {
 	using System.Runtime.InteropServices;
 	using Math;
-	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
@@ -19,16 +18,6 @@ namespace Pegasus.Framework.Rendering
 		///   The maximum number of quads that can be queued.
 		/// </summary>
 		private const int MaxQuads = 8192;
-
-		/// <summary>
-		///   The maximum number of sections that can be created.
-		/// </summary>
-		private const int MaxSections = 128;
-
-		/// <summary>
-		///   The maximum number of section lists that can be created.
-		/// </summary>
-		private const int MaxSectionLists = 16;
 
 		/// <summary>
 		///   The effect that is used to draw the sprites.
@@ -64,16 +53,6 @@ namespace Pegasus.Framework.Rendering
 		///   Rasterizer state for sprite batch rendering with active scissor test.
 		/// </summary>
 		private readonly RasterizerState _scissorRasterizerState;
-
-		/// <summary>
-		///   A mapping from a texture to its corresponding section list.
-		/// </summary>
-		private readonly SectionList[] _sectionLists = new SectionList[MaxSectionLists];
-
-		/// <summary>
-		///   The list of all sections.
-		/// </summary>
-		private readonly Section[] _sections = new Section[MaxSections];
 
 		/// <summary>
 		///   The vertex buffer that is used for drawing.
@@ -114,6 +93,16 @@ namespace Pegasus.Framework.Rendering
 		///   The rectangle that should be used for the scissor test.
 		/// </summary>
 		private Rectangle _scissorArea;
+
+		/// <summary>
+		///   A mapping from a texture to its corresponding section list.
+		/// </summary>
+		private SectionList[] _sectionLists = new SectionList[4];
+
+		/// <summary>
+		///   The list of all sections.
+		/// </summary>
+		private Section[] _sections = new Section[16];
 
 		/// <summary>
 		///   Indicates whether a scissor test should be performed during rendering.
@@ -311,7 +300,7 @@ namespace Pegasus.Framework.Rendering
 			Assert.NotDisposed(this);
 			Assert.ArgumentNotNull(texture);
 
-			DrawBatch(texture, 1);
+			DrawBatchIfNecessary(1);
 			ChangeTexture(texture);
 
 			Assert.That(_numQuads < MaxQuads, "Sprite batch quads overflow.");
@@ -401,7 +390,7 @@ namespace Pegasus.Framework.Rendering
 			if (count == 0)
 				return;
 
-			DrawBatch(texture, count);
+			DrawBatchIfNecessary(count);
 			ChangeTexture(texture);
 
 			Assert.That(_numQuads + count < MaxQuads, "Sprite batch quads overflow.");
@@ -413,8 +402,7 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
-		///   Ends the sprite batching, drawing all quads that have been sent to the sprite batch since the
-		///   last call to DrawBatch().
+		///   Draws all batched sprites.
 		/// </summary>
 		public void DrawBatch()
 		{
@@ -467,27 +455,20 @@ namespace Pegasus.Framework.Rendering
 
 		/// <summary>
 		///   Draws the batched quads even though the user hasn't explicitly requested it if adding the given
-		///   quad batch with the given texture would overflow the internal buffers.
+		///   quad batch with the given texture would overflow the internal quad buffer.
 		/// </summary>
-		/// <param name="texture">The texture of the quads that should be drawn.</param>
 		/// <param name="quadCount">The additional quads that should be drawn.</param>
-		private void DrawBatch(Texture2D texture, int quadCount)
+		private void DrawBatchIfNecessary(int quadCount)
 		{
-			Assert.ArgumentSatisfies(quadCount >= 0, "Out of bounds.");
-			Assert.ArgumentSatisfies(quadCount < MaxQuads, "Quad batch size exceeds limits.");
+			Assert.ArgumentInRange(quadCount, 0, MaxQuads);
 
 			// Check whether we would overflow if we added the given batch.
-			// For section lists, this is not an accurate measure (if we already know the texture, we would not add
-			// another section list), but it's fast
 			var tooManyQuads = _numQuads + quadCount >= _quads.Length;
-			var tooManySections = texture != _currentTexture && _numSections == MaxSections;
-			var tooManySectionLists = texture != _currentTexture && _numSectionLists == MaxSectionLists;
-
-			if (tooManyQuads || tooManySections || tooManySectionLists)
+			if (tooManyQuads)
 			{
-				Log.DebugInfo(LogCategory.Graphics, 
-					"Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
-					_numQuads, MaxQuads, quadCount);
+				Log.DebugInfo(LogCategory.Graphics,
+							  "Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
+							  _numQuads, MaxQuads, quadCount);
 
 				DrawBatch();
 			}
@@ -540,10 +521,8 @@ namespace Pegasus.Framework.Rendering
 			if (texture == _currentTexture)
 				return;
 
-			Assert.That(_numSections < MaxSections, "Sprite batch sections overflow.");
-
 			// Add a new section
-			_sections[_numSections] = new Section(_numQuads);
+			AddSection();
 
 			// Depending on whether we've already seen this texture, add it to the map or add a new section list
 			var known = false;
@@ -562,11 +541,7 @@ namespace Pegasus.Framework.Rendering
 			}
 
 			if (!known)
-			{
-				// We haven't seen the texture before, so allocate a new section list
-				Assert.That(_numSectionLists < MaxSectionLists, "Sprite batch section lists overflow.");
-				_sectionLists[_numSectionLists++] = new SectionList(texture, _numSections);
-			}
+				AddSectionList(new SectionList(texture, _numSections));
 
 			// Update the cached values
 			_currentTexture = texture;
@@ -574,6 +549,37 @@ namespace Pegasus.Framework.Rendering
 
 			// Mark the newly allocated section as allocated
 			++_numSections;
+		}
+
+		/// <summary>
+		///   Adds a new section, allocating more space for the new section if required.
+		/// </summary>
+		private void AddSection()
+		{
+			if (_numSections >= _sections.Length)
+			{
+				var sections = new Section[_sections.Length * 2];
+				Array.Copy(sections, _sections, _sections.Length);
+				_sections = sections;
+			}
+
+			_sections[_numSections] = new Section(_numQuads);
+		}
+
+		/// <summary>
+		///   Adds the given section list, allocating more space for the new section list if required.
+		/// </summary>
+		/// <param name="sectionList">The section list that should be added.</param>
+		private void AddSectionList(SectionList sectionList)
+		{
+			if (_numSectionLists >= _sectionLists.Length)
+			{
+				var sectionLists = new SectionList[_sectionLists.Length * 2];
+				Array.Copy(sectionLists, _sectionLists, _sectionLists.Length);
+				_sectionLists = sectionLists;
+			}
+
+			_sectionLists[_numSectionLists++] = sectionList;
 		}
 
 		#region Nested type: Section
