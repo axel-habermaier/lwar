@@ -79,7 +79,11 @@ namespace Pegasus.Framework.Platform
 
 			average /= count;
 
-			builder.AppendFormat("{0:F2}ms ({1:F2}ms/{2:F2}ms/{3:F3}ms)", average, _min, _last, _max);
+			// Using Append is more efficient than using AppendFormat as profiling shows...
+			builder.Append(average.ToString("F2")).Append("ms (");
+			builder.Append(_min.ToString("F2")).Append("ms/");
+			builder.Append(_last.ToString("F2")).Append("ms/");
+			builder.Append(_max.ToString("F2")).Append("ms)");
 		}
 
 		/// <summary>

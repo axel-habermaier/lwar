@@ -11,24 +11,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	internal struct TextLayout
 	{
 		/// <summary>
-		///   The maximum text length supported by a text layout.
-		/// </summary>
-		private const int MaxTextLength = 1024;
-
-		/// <summary>
-		///   The maximum number of lines that is supported by a text layout.
-		/// </summary>
-		private const int MaxLineCount = 32;
-
-		/// <summary>
 		///   The areas of the individual characters of the text.
 		/// </summary>
-		private readonly Rectangle[] _characterAreas;
+		private Rectangle[] _characterAreas;
 
 		/// <summary>
 		///   The individual lines of the text.
 		/// </summary>
-		private readonly TextLine[] _lines;
+		private TextLine[] _lines;
 
 		/// <summary>
 		///   The alignment of the text within the desired area.
@@ -76,9 +66,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Assert.ArgumentNotNull(font);
 			Assert.ArgumentNotNull(text);
 
-			_characterAreas = new Rectangle[MaxTextLength];
-			_lines = new TextLine[MaxLineCount];
-
 			Font = font;
 			Text = text;
 		}
@@ -100,10 +87,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			set
 			{
 				Assert.ArgumentNotNull(value);
-				Assert.ArgumentSatisfies(value.Length < MaxTextLength, "Text too long.");
 
 				if (_text == value)
 					return;
+
+				if (_characterAreas == null || value.Length > _characterAreas.Length)
+					_characterAreas = new Rectangle[value.Length];
 
 				_text = value;
 				_dirty = true;
@@ -202,7 +191,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public void UpdateLayout()
 		{
 			Assert.That(_characterAreas != null, "TextLayout is not initialized properly.");
-			Assert.That(_lines != null, "TextLayout is not initialized properly.");
 
 			if (!_dirty)
 				return;
@@ -359,8 +347,19 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="line">The line that should be added.</param>
 		private void AddLine(TextLine line)
 		{
-			// Store the current line in the lines array
-			Assert.That(_lineCount < MaxLineCount, "Too many lines.");
+			// Most texts fit in just one line
+			if (_lines == null)
+				_lines = new TextLine[1];
+			
+			// Check if we have to allocate more lines and if so, copy the old ones
+			if (_lineCount + 1 >= _lines.Length)
+			{
+				// Assume that there will be two more lines
+				var lines = new TextLine[_lines.Length + 2];
+				Array.Copy(_lines, lines, _lines.Length);
+				_lines = lines;
+			}
+
 			_lines[_lineCount++] = line;
 		}
 
