@@ -187,6 +187,21 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
+		///   Throws an InvalidOperationException if the given object has already been returned to the pool.
+		/// </summary>
+		/// <param name="obj">The object that should be checked.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void NotPooled<T>(T obj)
+			where T : PooledObject<T>, new()
+		{
+			if (obj == null)
+				throw new ArgumentNullException("obj");
+
+			if (obj.IsAvailable)
+				throw new InvalidOperationException(obj.GetType().FullName);
+		}
+
+		/// <summary>
 		///   Throws an InvalidOperationException if the enum argument is outside the range of the enumeration.
 		/// </summary>
 		/// <typeparam name="TEnum">The type of the enumeration.</typeparam>

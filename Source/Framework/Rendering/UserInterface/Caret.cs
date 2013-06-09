@@ -56,7 +56,10 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			{
 				Assert.ArgumentNotNull(value);
 
-				ChangeText(value);
+				if (_text.SourceString == value)
+					return;
+
+				ChangeText(Text.Create(value));
 				_position = _text.Length;
 			}
 		}
@@ -81,15 +84,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Changes the text, raising the text changed event if necessary.
 		/// </summary>
 		/// <param name="text">The new text.</param>
-		private void ChangeText(string text)
+		private void ChangeText(Text text)
 		{
 			Assert.ArgumentNotNull(text);
 
-			if (_text.SourceString == text)
-				return;
-
 			_text.SafeDispose();
-			_text = Text.Create(text);
+			_text = text;
 
 			if (TextChanged != null)
 				TextChanged(_text.SourceString);
@@ -130,31 +130,37 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (c < 32 || c > 126)
 				return;
 
-			if (_position >= _text.Length)
-				ChangeText(_text + c);
-			else
-			{
-				int logicalInserts;
-				ChangeText(_text.Insert(_position, c, out logicalInserts));
-				Move(logicalInserts);
-				//Log.Info("Logical inserts: {0}", logicalInserts);
-			}
+			var insertIndex = _text.MapToSource(_position);
+			var source = _text.SourceString.Insert(insertIndex, c.ToString(CultureInfo.InvariantCulture));
 
-			Move(1);
+			var text = Text.Create(source);
+			ChangeText(text);
+
+			// Due to the insertion, less characters might now be visible and we have to adjust the caret position accordingly. To do that,
+			// we calculate the new text position of the inserted character and use the delta to adjust the caret
+			var newPosition = _text.MapToText(insertIndex);
+			Move(newPosition - _position + 1);
 		}
 
 		/// <summary>
-		///   Removes the character at the current caret position (similar to pressing the
-		///   Delete key in a Windows text box).
+		///   Removes the character at the current caret position (similar to pressing the Delete key in a Windows text box).
 		/// </summary>
 		public void RemoveCurrentCharacter()
 		{
 			if (_position >= _text.Length)
 				return;
 
-			int move;
-			ChangeText(_text.RemoveCharacter(_position, out move));
-			Move(move);
+			// Calculate the position in the source text; as multiple source characters can be mapped onto the current position,
+			// this ensures that the first mapped character is deleted
+			var position = _position;
+			if (position != 0)
+				position = _text.MapToSource(position - 1) + 1;
+
+			var text = Text.Create(_text.SourceString.Remove(position, 1));
+			ChangeText(text);
+
+			// The caret position doesn't change, but we have to ensure that it does not get out of bounds
+			Move(0);
 		}
 
 		/// <summary>
@@ -166,9 +172,23 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (_position <= 0)
 				return;
 
-			int move;
-			ChangeText(_text.RemovePreviousCharacter(_position, out move));
-			Move(move);
+			// Calculate the position in the source text; as multiple source characters can be mapped onto the previous position,
+			// this ensures that the last mapped character is deleted
+			int removalIndex;
+			if (_position == _text.Length)
+				removalIndex = _text.SourceString.Length - 1;
+			else
+				removalIndex = _text.MapToSource(_position) - 1;
+
+			var sourceString = _text.SourceString.Remove(removalIndex, 1);
+
+			var text = Text.Create(sourceString);
+			ChangeText(text);
+
+			// Due to the deletion, more characters might now be visible and we have to adjust the caret position accordingly. To do that,
+			// we calculate the new text position for the removed index and use the delta to adjust the caret
+			var newPosition = text.MapToText(removalIndex);
+			Move(newPosition - _position);
 		}
 
 		/// <summary>

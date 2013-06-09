@@ -78,7 +78,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			get
 			{
+				Assert.NotPooled(this);
 				Assert.InRange(index, 0, _text.Length - 1);
+
 				return _text[index];
 			}
 		}
@@ -90,6 +92,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			get
 			{
+				Assert.NotPooled(this);
+
 				for (var i = 0; i < _text.Length; ++i)
 					if (!Char.IsWhiteSpace(_text[i]))
 						return false;
@@ -221,43 +225,70 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Maps the logical text index to the corresponding source index.
+		///   Maps the given source index to the corresponding logical text index.
 		/// </summary>
-		/// <param name="index">The index that should be mapped.</param>
-		private int MapToSource(int index)
+		/// <param name="sourceIndex">The source index that should be mapped.</param>
+		public int MapToText(int sourceIndex)
 		{
-			return MapToSource(SourceString, index);
-		}
+			Assert.NotPooled(this);
+			Assert.ArgumentInRange(sourceIndex, 0, SourceString.Length);
 
-		/// <summary>
-		///   Maps the logical text index to the corresponding source index.
-		/// </summary>
-		/// <param name="source">The source string for which the index should be mapped.</param>
-		/// <param name="index">The index that should be mapped.</param>
-		private static int MapToSource(string source, int index)
-		{
-			var sourceIndex = 0;
-			var logicalIndex = -1;
+			if (sourceIndex == SourceString.Length)
+				return Length;
 
-			for (; sourceIndex < source.Length; ++sourceIndex)
+			var logicalIndex = sourceIndex;
+			for (var i = 0; i < sourceIndex; ++i)
 			{
 				ColorSpecifier color;
 				Emoticon emoticon;
 
-				if (TryMatch(source, sourceIndex, out color))
+				if (TryMatch(SourceString, i, out color))
 				{
-					sourceIndex += color.Specifier.Length - 1;
+					i += color.Specifier.Length - 1;
+					logicalIndex -= color.Specifier.Length;
 				}
-				else if (TryMatch(source, sourceIndex, out emoticon))
+				else if (TryMatch(SourceString, i, out emoticon))
 				{
-					++logicalIndex;
-					sourceIndex += emoticon.TextRepresentation.Length - 1;
+					i += emoticon.TextRepresentation.Length - 1;
+					logicalIndex -= emoticon.TextRepresentation.Length;
+				}
+			}
+
+			return logicalIndex;
+		}
+
+		/// <summary>
+		///   Maps the given logical text index to the corresponding source index.
+		/// </summary>
+		/// <param name="logicalIndex">The index that should be mapped.</param>
+		public int MapToSource(int logicalIndex)
+		{
+			Assert.NotPooled(this);
+			Assert.ArgumentInRange(logicalIndex, 0, Length);
+
+			if (logicalIndex == Length)
+				return SourceString.Length;
+
+			var index = -1;
+			for (var i = 0; i < SourceString.Length; ++i)
+			{
+				ColorSpecifier color;
+				Emoticon emoticon;
+
+				if (TryMatch(SourceString, i, out color))
+				{
+					i += color.Specifier.Length - 1;
+				}
+				else if (TryMatch(SourceString, i, out emoticon))
+				{
+					++index;
+					i += emoticon.TextRepresentation.Length - 1;
 				}
 				else
-					++logicalIndex;
+					++index;
 
-				if (logicalIndex == index)
-					return sourceIndex;
+				if (index == logicalIndex)
+					return i;
 			}
 
 			Assert.That(false, "Failed to map logical index to source index.");
@@ -271,6 +302,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="color">The returned color.</param>
 		public void GetColor(int index, out Color? color)
 		{
+			Assert.NotPooled(this);
 			foreach (var range in _colorRanges)
 			{
 				if (range.Begin <= index && range.End > index)
@@ -294,88 +326,24 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		[Pure]
 		public string Insert(int startIndex, char character, out int offset)
 		{
+			Assert.NotPooled(this);
 			Assert.ArgumentInRange(startIndex, 0, _text.Length);
 
 			var index = MapToSource(startIndex);
 			var sourceString = SourceString.Insert(index, character.ToString(CultureInfo.InvariantCulture));
 
-			if (startIndex == 0)
+			//if (startIndex == 0)
 				offset = 0;
-			else
-			{
-				var delta = index - startIndex;
-				var now = MapToSource(sourceString, startIndex) - startIndex - delta;
+			//else
+			//{
+			//	var delta = index - startIndex;
+			//	var now = MapToSource(sourceString, startIndex) - startIndex - delta;
 
-				offset = -now;
-			}
+			//	offset = -now;
+			//}
 
 			Log.Info("{0}", sourceString);
 			return sourceString;
-		}
-
-		/// <summary>
-		///   Removes the character at the given position from the text's source string and returns the result (similar to pressing
-		///   the Delete key in a Windows text box when the cursor is placed at the given index).
-		/// </summary>
-		/// <param name="index">The zero-based index position of the character that should be removed.</param>
-		/// <param name="offset">Returns the effect the removal operation had on the given index.</param>
-		[Pure]
-		public string RemoveCharacter(int index, out int offset)
-		{
-			Assert.ArgumentInRange(index, 0, _text.Length - 1);
-
-			if (index != 0)
-				index = MapToSource(index - 1) + 1;
-			offset = 0;
-			return SourceString.Remove(index, 1);
-		}
-
-		/// <summary>
-		///   Removes the character immediately preceding the one at the given position from the text's source string and returns
-		///   the result (similar to pressing the Backspace key in a Windows text box when the cursor is placed at the given
-		///   index).
-		/// </summary>
-		/// <param name="index">The zero-based index position of the character that should be used to determine the previous character.</param>
-		/// <param name="offset">Returns the effect the removal operation had on the given index.</param>
-		[Pure]
-		public string RemovePreviousCharacter(int index, out int offset)
-		{
-			Assert.ArgumentInRange(index, 1, _text.Length);
-
-			int removalIndex;
-			if (index == _text.Length)
-				removalIndex = SourceString.Length - 1;
-			else
-				removalIndex = MapToSource(index) - 1;
-
-			var sourceString = SourceString.Remove(removalIndex, 1);
-
-			if (index == _text.Length)
-				offset = -1;
-			else
-				offset = removalIndex - MapToSource(index);
-
-			return sourceString;
-		}
-
-		/// <summary>
-		///   Concatenates the source string of the given text with the given character.
-		/// </summary>
-		/// <param name="text">The text that should be concatenated.</param>
-		/// <param name="character">The character that should be concatenated.</param>
-		public static string operator +(Text text, char character)
-		{
-			return text.SourceString + character;
-		}
-
-		/// <summary>
-		///   Concatenates the source string of the given text with the given string.
-		/// </summary>
-		/// <param name="text">The text that should be concatenated.</param>
-		/// <param name="str">The string that should be concatenated.</param>
-		public static string operator +(Text text, string str)
-		{
-			return text.SourceString + str;
 		}
 
 		/// <summary>
@@ -383,6 +351,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public override string ToString()
 		{
+			Assert.NotPooled(this);
+
 			// TODO: EMOTICONS!
 			return _text.ToString();
 		}
