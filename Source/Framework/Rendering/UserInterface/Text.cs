@@ -28,6 +28,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			new ColorSpecifier("\\magenta", new Color(255, 0, 255, 255)),
 			new ColorSpecifier("\\grey", new Color(128, 128, 128, 255)),
 			new ColorSpecifier("\\cyan", new Color(0, 255, 255, 255)),
+			new ColorSpecifier("\0", null)
 		};
 
 		/// <summary>
@@ -388,7 +389,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			/// <summary>
 			///   The color that the specifier represents.
 			/// </summary>
-			public readonly Color Color;
+			public readonly Color? Color;
 
 			/// <summary>
 			///   The specifier that indicates which color should be used.
@@ -400,7 +401,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			/// </summary>
 			/// <param name="specifier">The specifier that indicates which color should be used.</param>
 			/// <param name="color">The color that the specifier represents.</param>
-			public ColorSpecifier(string specifier, Color color)
+			public ColorSpecifier(string specifier, Color? color)
 			{
 				Specifier = specifier;
 				Color = color;

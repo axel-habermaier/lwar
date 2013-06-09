@@ -55,7 +55,7 @@ namespace Lwar.Client.Gameplay
 			switch (Type)
 			{
 				case EventType.Chat:
-					DisplayString = String.Format("{0}\\white: \\yellow{1}", Player.Name, Message);
+					DisplayString = String.Format("{0}\0: \\yellow{1}", Player.Name, Message);
 					break;
 				case EventType.Join:
 					DisplayString = String.Format("{0} has joined the game.", Player.Name);

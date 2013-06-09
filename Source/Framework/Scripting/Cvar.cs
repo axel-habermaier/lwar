@@ -188,7 +188,7 @@ namespace Pegasus.Framework.Scripting
 				if (validator.Validate(value))
 					continue;
 
-				Log.Error("'{0}' could not be set to '{1}': {2}", Name, TypeRegistry.ToString(value, quotedContext: true), validator.ErrorMessage);
+				Log.Error("'{0}' could not be set to '{1}\0': {2}", Name, TypeRegistry.ToString(value, quotedContext: true), validator.ErrorMessage);
 				Log.Info("{0}", Help.GetHint(Name));
 				return false;
 			}
@@ -224,7 +224,7 @@ namespace Pegasus.Framework.Scripting
 
 			var oldValue = _value;
 			_value = value;
-			Log.Info("'{0}' is now '{1}'.", Name, TypeRegistry.ToString(value, quotedContext: true));
+			Log.Info("'{0}' is now '{1}\0'.", Name, TypeRegistry.ToString(value, quotedContext: true));
 
 			if (Changed != null)
 				Changed(oldValue);
@@ -249,7 +249,7 @@ namespace Pegasus.Framework.Scripting
 				HasDeferredValue = false;
 				DeferredValue = default(T);
 
-				Log.Info("'{0}' is now '{1}'.", Name, TypeRegistry.ToString(value, quotedContext: true));
+				Log.Info("'{0}' is now '{1}\0'.", Name, TypeRegistry.ToString(value, quotedContext: true));
 				return;
 			}
 
@@ -257,7 +257,7 @@ namespace Pegasus.Framework.Scripting
 			DeferredValue = value;
 			HasDeferredValue = true;
 
-			Log.Info("'{0}' will be set to '{1}'.", Name, TypeRegistry.ToString(value, quotedContext: true));
+			Log.Info("'{0}' will be set to '{1}\0'.", Name, TypeRegistry.ToString(value, quotedContext: true));
 			Log.Warn("{0}", UpdateMode.ToDisplayString());
 		}
 
