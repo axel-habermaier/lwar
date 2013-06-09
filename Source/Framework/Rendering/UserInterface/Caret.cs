@@ -137,7 +137,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				int logicalInserts;
 				ChangeText(_text.Insert(_position, c, out logicalInserts));
 				Move(logicalInserts);
-				Log.Info("Logical inserts: {0}", logicalInserts);
+				//Log.Info("Logical inserts: {0}", logicalInserts);
 			}
 
 			Move(1);
@@ -152,13 +152,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (_position >= _text.Length)
 				return;
 
-			if (_position == 0)
-				ChangeText(_text.Substring(1));
-			else
-				ChangeText(_text.Remove(_position, 1));
-
-			// The caret position doesn't change, but we have to ensure that it does not get out of bounds
-			Move(0);
+			int move;
+			ChangeText(_text.RemoveCharacter(_position, out move));
+			Move(move);
 		}
 
 		/// <summary>
@@ -170,12 +166,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (_position <= 0)
 				return;
 
-			if (_position == _text.Length)
-				ChangeText(_text.Substring(0, _text.Length - 1));
-			else
-				ChangeText(_text.Remove(_position - 1, 1));
-
-			Move(-1);
+			int move;
+			ChangeText(_text.RemovePreviousCharacter(_position, out move));
+			Move(move);
 		}
 
 		/// <summary>

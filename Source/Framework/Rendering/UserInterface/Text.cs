@@ -7,6 +7,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using System.Text;
 	using Platform;
 	using Platform.Graphics;
+	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -236,9 +237,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private static int MapToSource(string source, int index)
 		{
 			var sourceIndex = 0;
-			var logicalIndex = 0;
+			var logicalIndex = -1;
 
-			for (; sourceIndex < source.Length && logicalIndex < index; ++sourceIndex)
+			for (; sourceIndex < source.Length; ++sourceIndex)
 			{
 				ColorSpecifier color;
 				Emoticon emoticon;
@@ -254,9 +255,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				}
 				else
 					++logicalIndex;
+
+				if (logicalIndex == index)
+					return sourceIndex;
 			}
 
-			return sourceIndex;
+			Assert.That(false, "Failed to map logical index to source index.");
+			return -1;
 		}
 
 		/// <summary>
@@ -276,33 +281,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			}
 
 			color = null;
-		}
-
-		/// <summary>
-		///   Retrieves a substring from the text's source string and returns the result.
-		/// </summary>
-		/// <param name="startIndex">The zero-based index position of the substring.</param>
-		public string Substring(int startIndex)
-		{
-			Assert.ArgumentInRange(startIndex, 0, _text.Length);
-			return SourceString.Substring(MapToSource(startIndex));
-		}
-
-		/// <summary>
-		///   Retrieves a substring from the text's source string and returns the result.
-		/// </summary>
-		/// <param name="startIndex">The zero-based index position of the substring.</param>
-		/// <param name="length">The number of characters in the substring.</param>
-		public string Substring(int startIndex, int length)
-		{
-			Assert.ArgumentInRange(startIndex, 0, _text.Length);
-			Assert.ArgumentInRange(length, 0, Int32.MaxValue);
-			Assert.ArgumentInRange(startIndex + length, 0, _text.Length);
-
-			var endIndex = MapToSource(startIndex + length);
-			startIndex = MapToSource(startIndex);
-
-			return SourceString.Substring(startIndex, endIndex - startIndex);
 		}
 
 		/// <summary>
@@ -331,25 +309,53 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				offset = -now;
 			}
 
+			Log.Info("{0}", sourceString);
 			return sourceString;
 		}
 
 		/// <summary>
-		///   Removes the given number of characters at the specified index from the text's source string and returns the result.
+		///   Removes the character at the given position from the text's source string and returns the result (similar to pressing
+		///   the Delete key in a Windows text box when the cursor is placed at the given index).
 		/// </summary>
-		/// <param name="startIndex">The zero-based index position to begin deletion.</param>
-		/// <param name="count">The number of characters to delete.</param>
+		/// <param name="index">The zero-based index position of the character that should be removed.</param>
+		/// <param name="offset">Returns the effect the removal operation had on the given index.</param>
 		[Pure]
-		public string Remove(int startIndex, int count)
+		public string RemoveCharacter(int index, out int offset)
 		{
-			Assert.ArgumentInRange(startIndex, 0, _text.Length);
-			Assert.ArgumentInRange(count, 0, Int32.MaxValue);
-			Assert.ArgumentInRange(startIndex + count, 0, _text.Length);
+			Assert.ArgumentInRange(index, 0, _text.Length - 1);
 
-			var endIndex = MapToSource(startIndex + count);
-			startIndex = MapToSource(startIndex);
+			if (index != 0)
+				index = MapToSource(index - 1) + 1;
+			offset = 0;
+			return SourceString.Remove(index, 1);
+		}
 
-			return SourceString.Remove(startIndex, endIndex - startIndex);
+		/// <summary>
+		///   Removes the character immediately preceding the one at the given position from the text's source string and returns
+		///   the result (similar to pressing the Backspace key in a Windows text box when the cursor is placed at the given
+		///   index).
+		/// </summary>
+		/// <param name="index">The zero-based index position of the character that should be used to determine the previous character.</param>
+		/// <param name="offset">Returns the effect the removal operation had on the given index.</param>
+		[Pure]
+		public string RemovePreviousCharacter(int index, out int offset)
+		{
+			Assert.ArgumentInRange(index, 1, _text.Length);
+
+			int removalIndex;
+			if (index == _text.Length)
+				removalIndex = SourceString.Length - 1;
+			else
+				removalIndex = MapToSource(index) - 1;
+
+			var sourceString = SourceString.Remove(removalIndex, 1);
+
+			if (index == _text.Length)
+				offset = -1;
+			else
+				offset = removalIndex - MapToSource(index);
+
+			return sourceString;
 		}
 
 		/// <summary>
