@@ -3,11 +3,8 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using System.Collections.Generic;
-	using System.Globalization;
 	using System.Text;
-	using Platform;
 	using Platform.Graphics;
-	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -23,7 +20,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			new ColorSpecifier("\\w", new Color(255, 255, 255, 255)),
 			new ColorSpecifier("\\b", new Color(0, 0, 0, 255)),
-			new ColorSpecifier("\\r", new Color(255, 0, 0, 255)),
+			new ColorSpecifier("\\red", new Color(255, 0, 0, 255)),
 			new ColorSpecifier("\\g", new Color(0, 255, 0, 255)),
 			new ColorSpecifier("\\b", new Color(0, 0, 255, 255))
 		};
@@ -67,6 +64,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public int Length
 		{
 			get { return _text.Length; }
+		}
+
+		/// <summary>
+		///   Gets the length of the text's source string.
+		/// </summary>
+		public int SourceLength
+		{
+			get { return SourceString.Length; }
 		}
 
 		/// <summary>
@@ -316,45 +321,30 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Inserts the given value at the given start index into the text's source string and returns the result. Returns the
-		///   effect of the insert operation on the given start index. This number is 0 if a printable character is inserted or a
-		///   negative number if the new character becomes part of a new color specifier or emoticon.
-		/// </summary>
-		/// <param name="startIndex">The zero-based index position of the insertion.</param>
-		/// <param name="character">The character that should be inserted.</param>
-		/// <param name="offset">Returns the effect the insert operation had on the given start index.</param>
-		[Pure]
-		public string Insert(int startIndex, char character, out int offset)
-		{
-			Assert.NotPooled(this);
-			Assert.ArgumentInRange(startIndex, 0, _text.Length);
-
-			var index = MapToSource(startIndex);
-			var sourceString = SourceString.Insert(index, character.ToString(CultureInfo.InvariantCulture));
-
-			//if (startIndex == 0)
-				offset = 0;
-			//else
-			//{
-			//	var delta = index - startIndex;
-			//	var now = MapToSource(sourceString, startIndex) - startIndex - delta;
-
-			//	offset = -now;
-			//}
-
-			Log.Info("{0}", sourceString);
-			return sourceString;
-		}
-
-		/// <summary>
 		///   Converts the text into a regular .NET string with text-representations of emoticons and without any color specifiers.
 		/// </summary>
 		public override string ToString()
 		{
 			Assert.NotPooled(this);
 
-			// TODO: EMOTICONS!
-			return _text.ToString();
+			Builder.Clear();
+			for (var i = 0; i < SourceString.Length; ++i)
+			{
+				ColorSpecifier color;
+				Emoticon emoticon;
+
+				if (TryMatch(SourceString, i, out color))
+					i += color.Specifier.Length - 1;
+				else if (TryMatch(SourceString, i, out emoticon))
+				{
+					Builder.Append(emoticon.TextRepresentation);
+					i += emoticon.TextRepresentation.Length - 1;
+				}
+				else
+					Builder.Append(SourceString[i]);
+			}
+
+			return Builder.ToString();
 		}
 
 		/// <summary>

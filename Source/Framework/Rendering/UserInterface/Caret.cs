@@ -147,7 +147,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public void RemoveCurrentCharacter()
 		{
-			if (_position >= _text.Length)
+			if (_position >= _text.SourceLength)
 				return;
 
 			// Calculate the position in the source text; as multiple source characters can be mapped onto the current position,
@@ -169,14 +169,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public void RemovePreviousCharacter()
 		{
-			if (_position <= 0)
+			if (_position <= 0 && _text.SourceLength == 0)
 				return;
 
 			// Calculate the position in the source text; as multiple source characters can be mapped onto the previous position,
 			// this ensures that the last mapped character is deleted
 			int removalIndex;
 			if (_position == _text.Length)
-				removalIndex = _text.SourceString.Length - 1;
+				removalIndex = _text.SourceLength - 1;
 			else
 				removalIndex = _text.MapToSource(_position) - 1;
 
