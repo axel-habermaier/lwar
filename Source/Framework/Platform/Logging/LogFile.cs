@@ -3,7 +3,7 @@
 namespace Pegasus.Framework.Platform.Logging
 {
 	using System.Collections.Generic;
-	using System.Linq;
+	using System.IO;
 	using Memory;
 	using Rendering.UserInterface;
 
@@ -15,7 +15,7 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <summary>
 		///   The number of log messages that must be queued before the messages are written to the file system.
 		/// </summary>
-		private const int BatchSize = 100;
+		private const int BatchSize = 250;
 
 		/// <summary>
 		///   The file the log is written to.
@@ -60,11 +60,31 @@ namespace Pegasus.Framework.Platform.Logging
 			if (!force && _logEntries.Count < BatchSize)
 				return;
 
-			var logs = _logEntries.Select(l => String.Format("{0} [{3}] [{1}] {2}",
-				l.Time.ToString("HH:mm:ss.ffff"), l.LogType.ToDisplayString(), l.Message, l.Category.ToDisplayString()));
-
-			if (_file.Append(logs, e => Log.Warn(LogCategory.FileSystem, "Failed to append to log file: {0}", e.Message)))
+			if (_file.Append(WriteQueuedEntries, e => Log.Warn(LogCategory.FileSystem, "Failed to append to log file: {0}", e.Message)))
 				_logEntries.Clear();
+		}
+
+		/// <summary>
+		///   Writes the queued log entries to the given stream.
+		/// </summary>
+		/// <param name="writer">The stream the entry should be written to.</param>
+		private void WriteQueuedEntries(TextWriter writer)
+		{
+			Assert.ArgumentNotNull(writer);
+
+			foreach (var entry in _logEntries)
+			{
+				writer.Write(entry.Time.ToString("HH:mm:ss.ffff"));
+				writer.Write(" ");
+				writer.Write("[");
+				writer.Write(entry.Category.ToDisplayString());
+				writer.Write("] [");
+				writer.Write(entry.LogType.ToDisplayString());
+				writer.Write("] ");
+
+				Text.Write(writer, entry.Message);
+				writer.WriteLine();
+			}
 		}
 
 		/// <summary>

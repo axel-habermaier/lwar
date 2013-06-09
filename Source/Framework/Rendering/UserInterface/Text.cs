@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using System.Collections.Generic;
+	using System.IO;
 	using System.Text;
 	using Platform.Graphics;
 	using Platform.Memory;
@@ -18,11 +19,15 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		private static readonly ColorSpecifier[] Colors = new[]
 		{
-			new ColorSpecifier("\\w", new Color(255, 255, 255, 255)),
-			new ColorSpecifier("\\b", new Color(0, 0, 0, 255)),
+			new ColorSpecifier("\\white", new Color(255, 255, 255, 255)),
+			new ColorSpecifier("\\black", new Color(0, 0, 0, 255)),
 			new ColorSpecifier("\\red", new Color(255, 0, 0, 255)),
-			new ColorSpecifier("\\g", new Color(0, 255, 0, 255)),
-			new ColorSpecifier("\\b", new Color(0, 0, 255, 255))
+			new ColorSpecifier("\\green", new Color(0, 255, 0, 255)),
+			new ColorSpecifier("\\blue", new Color(0, 0, 255, 255)),
+			new ColorSpecifier("\\yellow", new Color(255, 255, 0, 255)),
+			new ColorSpecifier("\\magenta", new Color(255, 0, 255, 255)),
+			new ColorSpecifier("\\grey", new Color(128, 128, 128, 255)),
+			new ColorSpecifier("\\cyan", new Color(0, 255, 255, 255)),
 		};
 
 		/// <summary>
@@ -36,11 +41,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			new Emoticon(":P", (char)280),
 			new Emoticon(":D", (char)281)
 		};
-
-		/// <summary>
-		///   A cached string builder instance that is used to construct the string representation of text instances.
-		/// </summary>
-		private static readonly StringBuilder Builder = new StringBuilder();
 
 		/// <summary>
 		///   The color ranges defined by the text.
@@ -321,30 +321,30 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Converts the text into a regular .NET string with text-representations of emoticons and without any color specifiers.
+		/// Writes the given string into the given text writer. Color specifiers are not written, whereas for emoticons, the text-representation is used.
 		/// </summary>
-		public override string ToString()
+		/// <param name="writer">The text writer that the text should be written to.</param>
+		/// <param name="text">The text that should be written.</param>
+		public static void Write(TextWriter writer, string text)
 		{
-			Assert.NotPooled(this);
+			Assert.ArgumentNotNull(writer);
+			Assert.ArgumentNotNullOrWhitespace(text);
 
-			Builder.Clear();
-			for (var i = 0; i < SourceString.Length; ++i)
+			for (var i = 0; i < text.Length; ++i)
 			{
 				ColorSpecifier color;
 				Emoticon emoticon;
 
-				if (TryMatch(SourceString, i, out color))
+				if (TryMatch(text, i, out color))
 					i += color.Specifier.Length - 1;
-				else if (TryMatch(SourceString, i, out emoticon))
+				else if (TryMatch(text, i, out emoticon))
 				{
-					Builder.Append(emoticon.TextRepresentation);
+					writer.Write(emoticon.TextRepresentation);
 					i += emoticon.TextRepresentation.Length - 1;
 				}
 				else
-					Builder.Append(SourceString[i]);
+					writer.Write(text[i]);
 			}
-
-			return Builder.ToString();
 		}
 
 		/// <summary>

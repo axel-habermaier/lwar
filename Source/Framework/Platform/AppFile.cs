@@ -80,19 +80,23 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		///   Appends the given lines to the file. Returns true to indicate that the file operation has been successful.
+		///   Appends the given content to the file. Returns true to indicate that the file operation has been successful.
 		/// </summary>
-		/// <param name="lines">The lines that should be appended to the file.</param>
+		/// <param name="content">The content that should be appended to the file.</param>
 		/// <param name="onException">
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		public bool Append(IEnumerable<string> lines, Action<IOException> onException = null)
+		public bool Append(Action<TextWriter> content, Action<IOException> onException = null)
 		{
-			Assert.ArgumentNotNull(lines);
+			Assert.ArgumentNotNull(content);
 			Assert.That(IsValid, "The file name is invalid.");
 
-			return Execute(() => File.AppendAllLines(AbsolutePath, lines), onException);
+			return Execute(() =>
+				{
+					using (var writer = File.AppendText(AbsolutePath))
+							content(writer);
+				}, onException);
 		}
 
 		/// <summary>

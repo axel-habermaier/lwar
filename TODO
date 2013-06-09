@@ -18,12 +18,11 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
-	- Highlight chat messages with different color
 
 Pegasus.Framework
 ========
 - Show platform statistics, add 'level of detail' to show_stats cvar
-- Allow font color specifiers within texts (e.g., ^r to switch to red)
+- Fully implement emoticon support
 - Track fullscreen resolution changes and added standard timeout-and-reset functionality for invalid resolutions
 - key down/up in the same frame, multiple key down/ups in same frame
 
@@ -36,6 +35,7 @@ Pegasus.Platform
 
 Assets Compiler
 ========
+- Storing cubemaps as 6 separate images might improve compilation times noticably
 - Asset compression
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)

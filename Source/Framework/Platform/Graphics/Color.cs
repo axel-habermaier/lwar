@@ -210,12 +210,12 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   A predefined color instance for black (Red = 0, Green = 0, Blue = 0, A = 255).
+		///   Gets a predefined color instance representing 'black'.
 		/// </summary>
 		public static readonly Color Black = new Color(0, 0, 0, 255);
 
 		/// <summary>
-		///   Alpha predefined color instance for white (Red = 255, Green = 255, Blue = 255, Alpha = 255).
+		///   Gets a predefined color instance representing 'white'.
 		/// </summary>
 		public static readonly Color White = new Color(255, 255, 255, 255);
 	}

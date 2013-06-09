@@ -2,8 +2,8 @@
 
 namespace Pegasus.Framework.Platform.Logging
 {
+	using System.Diagnostics;
 	using System.Linq;
-	using System.Text;
 
 	/// <summary>
 	///   Provides extension methods for logging-related types.
@@ -13,9 +13,7 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <summary>
 		///   The number of characters of the longest category literal.
 		/// </summary>
-		private static readonly int MaxCategoryLength = Enum.GetNames(typeof(LogCategory))
-															.Where(c => c != LogCategory.Unclassified.ToString())
-															.Max(c => c.Length);
+		private static readonly int MaxCategoryLength = Enum.GetNames(typeof(LogCategory)).Max(c => c.Length);
 
 		/// <summary>
 		///   The number of characters of the longest type literal.
@@ -23,35 +21,26 @@ namespace Pegasus.Framework.Platform.Logging
 		private static readonly int MaxTypeLength = Enum.GetNames(typeof(LogType)).Max(c => c.Length);
 
 		/// <summary>
-		///   A cached string builder instance that is used to construct the strings.
+		///   The display strings of the log categories, all of the same length.
 		/// </summary>
-		private static readonly StringBuilder Builder = new StringBuilder();
+		private static readonly string[] CategoryDisplayStrings = Enum.GetNames(typeof(LogCategory))
+																	  .Select(category => NormalizeLength(category, MaxCategoryLength))
+																	  .ToArray();
 
 		/// <summary>
-		///   Generates a display string for the given category. The length of the string is always the same, regardless of the
-		///   category type.
+		///   The display strings of the log types, all of the same length.
 		/// </summary>
-		/// <param name="category">The category for which the display string should be returned.</param>
-		public static string ToDisplayString(this LogCategory category)
-		{
-			Assert.InRange(category);
-
-			var name = category.ToString();
-			if (category == LogCategory.Unclassified)
-				name = "General";
-
-			return NormalizeLength(name, MaxCategoryLength);
-		}
+		private static readonly string[] TypeDisplayStrings = Enum.GetNames(typeof(LogType))
+																  .Select(category => NormalizeLength(category, MaxTypeLength))
+																  .ToArray();
 
 		/// <summary>
-		///   Generates a display string for the given log type. The length of the string is always the same, regardless of the log
-		///   type.
+		///   Initializes the type.
 		/// </summary>
-		/// <param name="type">The type for which the display string should be returned.</param>
-		public static string ToDisplayString(this LogType type)
+		static LogExtensions()
 		{
-			Assert.InRange(type);
-			return NormalizeLength(type.ToString(), MaxTypeLength);
+			ValidateEnumeration(typeof(LogCategory));
+			ValidateEnumeration(typeof(LogType));
 		}
 
 		/// <summary>
@@ -61,13 +50,47 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <param name="length">The desired length of the string.</param>
 		private static string NormalizeLength(string content, int length)
 		{
-			Builder.Clear();
-			Builder.Append(content);
+			var normalized = content;
 
 			for (var i = 0; i < length - content.Length; ++i)
-				Builder.Append(" ");
+				normalized += " ";
 
-			return Builder.ToString();
+			return normalized;
+		}
+
+		/// <summary>
+		///   Validates the assumptions made about a logging enumeration.
+		/// </summary>
+		/// <param name="enumeration">The type of the enumeration that should be validated.</param>
+		[Conditional("DEBUG")]
+		private static void ValidateEnumeration(Type enumeration)
+		{
+			var values = Enum.GetValues(enumeration) as int[];
+			Assert.That(values != null, "Expected the values to be of type 'int'.");
+
+			var maxValue = values.Max();
+			var minValue = values.Min();
+
+			Assert.That(minValue == 0, "The lowest value must be 0.");
+			Assert.That(maxValue == values.Length - 1, "The highest value must match the number of literals declared by the enumeration.");
+		}
+
+		/// <summary>
+		///   Converts the given log category to a string with a normalized length.
+		/// </summary>
+		/// <param name="logCategory">The log category that should be converted to a string.</param>
+		public static string ToDisplayString(this LogCategory logCategory)
+		{
+			return CategoryDisplayStrings[(int)logCategory];
+		}
+
+		/// <summary>
+		///   Converts the given log type to a string with a normalized length.
+		/// </summary>
+		/// <param name="type">The log type that should be converted to a string.</param>
+		public static string ToDisplayString(this LogType type)
+		{
+			return TypeDisplayStrings[(int)type];
 		}
 	}
 }

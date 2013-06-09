@@ -10,51 +10,51 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <summary>
 		///   Indicates that the log entry is unclassified.
 		/// </summary>
-		Unclassified,
+		General = 0,
 
 		/// <summary>
 		///   Indicates that the log entry is network related, but neither specifically client- or server related.
 		/// </summary>
-		Network,
+		Network = 1,
 
 		/// <summary>
 		///   Indicates that the log entry is a client related network message.
 		/// </summary>
-		Client,
+		Client = 2,
 
 		/// <summary>
 		///   Indicates that the log entry is a server related network message.
 		/// </summary>
-		Server,
+		Server = 3,
 
 		/// <summary>
 		///   Indicates that the log entry is memory related.
 		/// </summary>
-		Memory,
+		Memory = 4,
 
 		/// <summary>
 		///   Indicates that the log entry is file-system related.
 		/// </summary>
-		FileSystem,
+		FileSystem = 5,
 
 		/// <summary>
 		///   Indicates that the log entry is asset related.
 		/// </summary>
-		Assets,
+		Assets = 6,
 
 		/// <summary>
 		///   Indicates that the log entry is graphics related.
 		/// </summary>
-		Graphics,
+		Graphics = 7,
 
 		/// <summary>
-		/// Indicates that the log entry is platform related.
+		///   Indicates that the log entry is platform related.
 		/// </summary>
-		Platform,
+		Platform = 8,
 
 		/// <summary>
 		///   Indicates that the log entry originates from or is related to an external process.
 		/// </summary>
-		External
+		External = 9
 	}
 }

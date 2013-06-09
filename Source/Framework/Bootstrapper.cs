@@ -9,8 +9,10 @@ namespace Pegasus.Framework
 	using Platform;
 	using Platform.Logging;
 	using Rendering;
+	using Rendering.UserInterface;
 	using Scripting;
 	using Scripting.Parsing;
+	using Console = System.Console;
 
 	/// <summary>
 	///   Starts up the application and handles command line arguments and fatal application exceptions.
@@ -104,11 +106,27 @@ namespace Pegasus.Framework
 		/// </summary>
 		private static void PrintToConsole()
 		{
-			Log.OnFatalError += entry => Console.WriteLine("[{1}] FATAL:   {0}", entry.Message, entry.Category.ToDisplayString());
-			Log.OnError += entry => Console.WriteLine("[{1}] ERROR:   {0}", entry.Message, entry.Category.ToDisplayString());
-			Log.OnWarning += entry => Console.WriteLine("[{1}] WARNING: {0}", entry.Message, entry.Category.ToDisplayString());
-			Log.OnInfo += entry => Console.WriteLine("[{1}] INFO:    {0}", entry.Message, entry.Category.ToDisplayString());
-			Log.OnDebugInfo += entry => Console.WriteLine("[{1}] DEBUG:   {0}", entry.Message, entry.Category.ToDisplayString());
+			Log.OnFatalError += WriteToConsole;
+			Log.OnError += WriteToConsole;
+			Log.OnWarning += WriteToConsole;
+			Log.OnInfo += WriteToConsole;
+			Log.OnDebugInfo += WriteToConsole;
+		}
+
+		/// <summary>
+		///   Writes the given log entry to the given text writer.
+		/// </summary>
+		/// <param name="entry">The log entry that should be written.</param>
+		private static void WriteToConsole(LogEntry entry)
+		{
+			Console.Out.Write("[");
+			Console.Out.Write(entry.Category.ToDisplayString());
+			Console.Out.Write("] [");
+			Console.Out.Write(entry.LogType.ToDisplayString());
+			Console.Out.Write("] ");
+
+			Text.Write(Console.Out, entry.Message);
+			Console.Out.WriteLine();
 		}
 	}
 }

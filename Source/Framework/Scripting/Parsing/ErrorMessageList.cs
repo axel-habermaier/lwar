@@ -123,7 +123,7 @@ namespace Pegasus.Framework.Scripting.Parsing
 			Builder.Append("\n");
 			for (var i = 0; i < inputStream.State.Column - 1; ++i)
 				Builder.Append(" ");
-			Builder.Append("^");
+			Builder.Append("\\red^");
 
 			// Show expected messages, if any
 			var expected = _errorMessages.Where(e => e.Type == ErrorType.Expected).ToArray();

@@ -79,11 +79,11 @@ namespace Pegasus.Framework.Scripting
 			_builder.AppendFormat("    Description:   {0}\n", cvar.Description);
 			_builder.AppendFormat("    Type:          {0} (e.g., {1}, ...)\n", TypeRegistry.GetDescription(cvar.ValueType),
 								  String.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
-			_builder.AppendFormat("    Default Value: {0}\n", TypeRegistry.ToString(cvar.DefaultValue));
-			_builder.AppendFormat("    Current Value: {0}\n", TypeRegistry.ToString(cvar.Value));
+			_builder.AppendFormat("    Default Value: {0}\\white\n", TypeRegistry.ToString(cvar.DefaultValue));
+			_builder.AppendFormat("    Current Value: {0}\\white\n", TypeRegistry.ToString(cvar.Value));
 
 			if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
-				_builder.AppendFormat("    Pending Value: {0}\n", TypeRegistry.ToString(cvar.DeferredValue));
+				_builder.AppendFormat("    Pending Value: {0}\\white\n", TypeRegistry.ToString(cvar.DeferredValue));
 
 			if (cvar.Validators.Any())
 				_builder.AppendFormat("    Remarks:       {0}\n", String.Join("; ", cvar.Validators.Select(v => v.Description)));

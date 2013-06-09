@@ -71,7 +71,7 @@ namespace Pegasus.Framework.Platform.Logging
 		[StringFormatMethod("message")]
 		public static void Die(string message, params object[] arguments)
 		{
-			Die(LogCategory.Unclassified, message, arguments);
+			Die(LogCategory.General, message, arguments);
 		}
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace Pegasus.Framework.Platform.Logging
 		[StringFormatMethod("message")]
 		public static void Error(string message, params object[] arguments)
 		{
-			Error(LogCategory.Unclassified, message, arguments);
+			Error(LogCategory.General, message, arguments);
 		}
 
 		/// <summary>
@@ -133,7 +133,7 @@ namespace Pegasus.Framework.Platform.Logging
 		[StringFormatMethod("message")]
 		public static void Warn(string message, params object[] arguments)
 		{
-			Warn(LogCategory.Unclassified, message, arguments);
+			Warn(LogCategory.General, message, arguments);
 		}
 
 		/// <summary>
@@ -164,7 +164,7 @@ namespace Pegasus.Framework.Platform.Logging
 		[StringFormatMethod("message")]
 		public static void Info(string message, params object[] arguments)
 		{
-			Info(LogCategory.Unclassified, message, arguments);
+			Info(LogCategory.General, message, arguments);
 		}
 
 		/// <summary>
@@ -197,7 +197,7 @@ namespace Pegasus.Framework.Platform.Logging
 		[StringFormatMethod("message")]
 		public static void DebugInfo(string message, params object[] arguments)
 		{
-			DebugInfo(LogCategory.Unclassified, message, arguments);
+			DebugInfo(LogCategory.General, message, arguments);
 		}
 	}
 }
