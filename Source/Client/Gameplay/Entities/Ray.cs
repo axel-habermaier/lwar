@@ -9,7 +9,7 @@ namespace Lwar.Client.Gameplay.Entities
 	/// <summary>
 	///   Represents a ray.
 	/// </summary>
-	public class Ray : Entity<Ray>
+	public partial class Ray : Entity<Ray>
 	{
 		/// <summary>
 		///   Gets the length of the ray.

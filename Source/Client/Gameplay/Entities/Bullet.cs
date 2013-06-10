@@ -9,7 +9,7 @@ namespace Lwar.Client.Gameplay.Entities
 	/// <summary>
 	///   Represents a bullet.
 	/// </summary>
-	public class Bullet : Entity<Bullet>
+	public partial class Bullet : Entity<Bullet>
 	{
 		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.

@@ -35,9 +35,9 @@ namespace Lwar.Client.Rendering.Renderers
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
-			var cubemap = assets.LoadCubeMap("Textures/Sun");
+			var cubemap = assets.LoadCubeMap("Textures/Planet");
 
-			_model = Model.CreateSphere(graphicsDevice, 100, 25);
+			_model = Model.CreateSphere(graphicsDevice, Planet.Radius, 15);
 			_effect = new SphereEffect(graphicsDevice, assets) { SphereTexture = new CubeMapView(cubemap, SamplerState.TrilinearClamp) };
 		}
 
@@ -47,6 +47,9 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
 		{
+			BlendState.Premultiplied.Bind();
+			DepthStencilState.DepthEnabled.Bind();
+
 			foreach (var planet in Elements)
 			{
 				_effect.World = planet.Transform.Matrix;

@@ -8,7 +8,7 @@ namespace Lwar.Client.Gameplay.Entities
 	/// <summary>
 	///   Represents a planet.
 	/// </summary>
-	public class Planet : Entity<Planet>
+	public partial class Planet : Entity<Planet>
 	{
 		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.

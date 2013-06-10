@@ -8,7 +8,7 @@ namespace Lwar.Client.Gameplay.Entities
 	/// <summary>
 	///   Represents a sun.
 	/// </summary>
-	public class Sun : Entity<Sun>
+	public partial class Sun : Entity<Sun>
 	{
 		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.

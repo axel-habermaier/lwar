@@ -9,7 +9,7 @@ namespace Lwar.Client.Gameplay.Entities
 	/// <summary>
 	///   Represents a ship that is controlled by a local or remote player.
 	/// </summary>
-	public class Ship : Entity<Ship>
+	public partial class Ship : Entity<Ship>
 	{
 		/// <summary>
 		///   Gets or sets the player the ship belongs to.

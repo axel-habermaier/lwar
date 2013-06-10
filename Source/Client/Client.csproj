@@ -179,6 +179,7 @@
     <Compile Include="Gameplay\Entities\Ray.cs" />
     <Compile Include="Gameplay\Entities\Phaser.cs" />
     <Compile Include="Gameplay\Entities\Entity.cs" />
+    <Compile Include="Gameplay\Entities\Templates.cs" />
     <Compile Include="Gameplay\EventMessage.cs" />
     <Compile Include="Gameplay\EventMessageList.cs" />
     <Compile Include="Gameplay\EventType.cs" />

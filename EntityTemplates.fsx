@@ -82,8 +82,22 @@ let templates = seq {
         Energy          = 0.0;
         Health          = 1.0;
         Length          = 0.0;
-        Mass            = 10000.;
-        Radius          = 256.0;
+        Mass            = 10000.0;
+        Radius          = 128.0;
+        Acceleration    = { X = 0.0; Y = 0.0 };
+        Decelaration    = { X = 0.0; Y = 0.0 };
+        Rotation        = 0.0;  
+    }
+    yield {
+        Type            = EntityType.Sun;
+        Act             = "gravity";
+        Collide         = null;
+        Interval        = 0;
+        Energy          = 0.0;
+        Health          = 1.0;
+        Length          = 0.0;
+        Mass            = 10000.0;
+        Radius          = 512.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0;  
@@ -198,7 +212,7 @@ type CodeWriter() as this =
 //====================================================================================================================
 // Code generation
 //====================================================================================================================
-let clientOutput = "Source/Client/Gameplay/Templates.cs"
+let clientOutput = "Source/Client/Gameplay/Entities/Templates.cs"
 let clientEnumOutput = "Source/Client/Gameplay/EntityType.cs"
 let serverSourceOutput = "Source/Server/templates.c"
 let serverHeaderOutput = "Source/Server/entity.h"
@@ -290,6 +304,37 @@ let generateClientCode =
 
     // Write the enumeration file
     output.WriteToFile clientEnumOutput
+
+    // Generate the entity partial classes corresponding to the template definitions
+    let output = new CodeWriter()
+
+    output.AppendLine("namespace Lwar.Client.Gameplay.Entities")
+    output.AppendBlockStatement false (fun () ->
+        for t in templates do
+            output.AppendLine(sprintf "public partial class %A" t.Type)
+            output.AppendBlockStatement false (fun () ->
+                output.AppendLine("/// <summary>")
+                output.AppendLine("///   The entity's maximum energy level.")
+                output.AppendLine("/// </summary>")
+                output.AppendLine(sprintf "public const float MaxEnergy = %Af;" t.Energy)
+                output.Newline()
+
+                output.AppendLine("/// <summary>")
+                output.AppendLine("///   The entity's maximum health.")
+                output.AppendLine("/// </summary>")
+                output.AppendLine(sprintf "public const float MaxHealth = %Af;" t.Health)
+                output.Newline()
+
+                output.AppendLine("/// <summary>")
+                output.AppendLine("///   The entity's radius, defining its size.")
+                output.AppendLine("/// </summary>")
+                output.AppendLine(sprintf "public const float Radius = %Af;" t.Radius)
+            )
+            output.Newline()
+    )
+
+    // Write the partial classes file
+    output.WriteToFile clientOutput
 
 generateServerCode
 generateClientCode
