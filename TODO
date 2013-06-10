@@ -43,7 +43,6 @@ Assets Compiler
 - Asset compression
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)
-- !!Fix EntityTemplates.fsx
 
 Network
 ========
