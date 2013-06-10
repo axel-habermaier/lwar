@@ -3,6 +3,7 @@
 namespace Lwar.Client.Gameplay.Entities
 {
 	using Network;
+	using Pegasus.Framework.Platform;
 	using Rendering;
 
 	/// <summary>
@@ -26,7 +27,8 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <summary>
 		///   Updates the entity's internal state.
 		/// </summary>
-		void Update();
+		/// <param name="clock">The clock that should be used for time measurements.</param>
+		void Update(Clock clock);
 
 		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.

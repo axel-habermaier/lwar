@@ -6,6 +6,7 @@ namespace Lwar.Client.Gameplay
 	using Entities;
 	using Network;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Memory;
 	using Rendering;
 
@@ -91,12 +92,14 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   Updates the entity list.
 		/// </summary>
-		public void Update()
+		/// <param name="clock">The clock that should be used for time measurements.</param>
+		public void Update(Clock clock)
 		{
+			Assert.ArgumentNotNull(clock);
 			_entities.Update();
 
 			foreach (var entity in _entities)
-				entity.Update();
+				entity.Update(clock);
 		}
 
 		/// <summary>

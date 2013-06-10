@@ -5,6 +5,7 @@ namespace Lwar.Client.Gameplay.Entities
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Memory;
 	using Rendering;
 
@@ -96,7 +97,8 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <summary>
 		///   Updates the entity's internal state.
 		/// </summary>
-		public virtual void Update()
+		/// <param name="clock">The clock that should be used for time measurements.</param>
+		public virtual void Update(Clock clock)
 		{
 		}
 

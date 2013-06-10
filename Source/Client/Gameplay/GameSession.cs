@@ -3,6 +3,7 @@
 namespace Lwar.Client.Gameplay
 {
 	using Pegasus.Framework;
+	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Memory;
 	using Rendering;
 
@@ -11,6 +12,11 @@ namespace Lwar.Client.Gameplay
 	/// </summary>
 	public class GameSession : DisposableObject
 	{
+		/// <summary>
+		///   The clock that is used for time measurements.
+		/// </summary>
+		private readonly Clock _clock = Clock.Create();
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -53,6 +59,7 @@ namespace Lwar.Client.Gameplay
 			Entities.SafeDispose();
 			Players.SafeDispose();
 			EventMessages.SafeDispose();
+			_clock.SafeDispose();
 		}
 
 		/// <summary>
@@ -61,9 +68,11 @@ namespace Lwar.Client.Gameplay
 		public void Update()
 		{
 			Players.Update();
-			Entities.Update();
+			Entities.Update(_clock);
 			RootTransform.Update();
 			EventMessages.Update();
+
+			_clock.Reset();
 		}
 	}
 }
