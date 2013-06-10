@@ -117,6 +117,8 @@ namespace Pegasus.Framework.Math
 		/// <param name="relativeTo">The vector that represents an angle of 0.</param>
 		public static float ComputeAngle(Vector2 start, Vector2 end, Vector2 relativeTo)
 		{
+			Assert.ArgumentSatisfies(relativeTo != Vector2.Zero, "The origin is not a valid value.");
+
 			// Calculate the direction vector
 			var startToEnd = end - start;
 

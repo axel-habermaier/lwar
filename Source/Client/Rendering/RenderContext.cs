@@ -10,7 +10,6 @@ namespace Lwar.Client.Rendering
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Renderers;
-	using Scripting;
 
 	/// <summary>
 	///   Represents the context in which rendering operations are performed.
@@ -43,11 +42,6 @@ namespace Lwar.Client.Rendering
 		private readonly SkyboxRenderer _skyboxRenderer;
 
 		/// <summary>
-		///   The rasterizer state that is used to draw in wireframe mode.
-		/// </summary>
-		private readonly RasterizerState _wireframe;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
@@ -57,7 +51,6 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
-			_wireframe = new RasterizerState(graphicsDevice) { CullMode = CullMode.Back, FillMode = FillMode.Wireframe };
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 			_parallaxRenderer = new ParallaxRenderer(graphicsDevice, assets);
 
@@ -100,13 +93,8 @@ namespace Lwar.Client.Rendering
 			RasterizerState.CullCounterClockwise.Bind();
 			_skyboxRenderer.Draw(output);
 
-			if (Cvars.DrawWireframe)
-				_wireframe.Bind();
-			else
-				RasterizerState.CullCounterClockwise.Bind();
-
+			RasterizerState.CullCounterClockwise.Bind();
 			_parallaxRenderer.Draw(output);
-			DepthStencilState.DepthEnabled.Bind();
 
 			foreach (var renderer in _renderers)
 				renderer.Draw(output);
@@ -121,7 +109,6 @@ namespace Lwar.Client.Rendering
 
 			_skyboxRenderer.SafeDispose();
 			_parallaxRenderer.SafeDispose();
-			_wireframe.SafeDispose();
 		}
 	}
 }

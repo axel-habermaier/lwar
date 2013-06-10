@@ -140,7 +140,6 @@ namespace Lwar.Client.Rendering.Renderers
 			_model.Draw(output, _effect.Default);
 
 			camera.ZoomMode = ZoomMode.Default;
-			BlendState.Premultiplied.Bind();
 		}
 
 		/// <summary>

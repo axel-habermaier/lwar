@@ -65,9 +65,6 @@ namespace Lwar.Client.Rendering.Renderers
 				_effect.Texture = new Texture2DView(_texture, SamplerState.BilinearClampNoMipmaps);
 				_model.Draw(output, _effect.ColoredTexturedQuad);
 			}
-
-			BlendState.Premultiplied.Bind();
-			DepthStencilState.DepthEnabled.Bind();
 		}
 
 		/// <summary>

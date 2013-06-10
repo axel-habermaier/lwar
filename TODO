@@ -20,13 +20,12 @@ Client
 		* Configuration (graphics settings, input settings, ...)
 - !!Batched bullet rendering
 - !!!Explosions!!!
-- !!Bullet rotation (compute from velocity)
 
 Pegasus.Framework
 ========
 - Show platform statistics, add 'level of detail' to show_stats cvar
 - Fully implement emoticon support
-- Track fullscreen resolution changes and added standard timeout-and-reset functionality for invalid resolutions
+- Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
 - key down/up in the same frame, multiple key down/ups in same frame
 
 Pegasus.Platform

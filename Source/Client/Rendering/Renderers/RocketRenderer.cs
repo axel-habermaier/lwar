@@ -47,6 +47,9 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="output">The output that the rockets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
 		{
+			BlendState.Premultiplied.Bind();
+			DepthStencilState.DepthDisabled.Bind();
+
 			foreach (var rocket in Elements)
 			{
 				_effect.World = rocket.Transform.Matrix;

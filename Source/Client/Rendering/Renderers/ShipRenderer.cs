@@ -47,6 +47,9 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
 		{
+			BlendState.Premultiplied.Bind();
+			DepthStencilState.DepthDisabled.Bind();
+
 			foreach (var ship in Elements)
 			{
 				_effect.World = ship.Transform.Matrix;

@@ -65,9 +65,6 @@ namespace Lwar.Client.Rendering.Renderers
 				_effect.Color = new Vector4(1, 1, 1, 1);
 				_model.Draw(output, _effect.ColoredTexturedQuad);
 			}
-
-			DepthStencilState.DepthEnabled.Bind();
-			BlendState.Premultiplied.Bind();
 		}
 
 		/// <summary>

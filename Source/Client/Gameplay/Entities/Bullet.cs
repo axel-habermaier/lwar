@@ -4,6 +4,7 @@ namespace Lwar.Client.Gameplay.Entities
 {
 	using Network;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 
 	/// <summary>
 	///   Represents a bullet.
@@ -17,8 +18,9 @@ namespace Lwar.Client.Gameplay.Entities
 		public override void RemoteUpdate(ref Message message)
 		{
 			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
+
+			Rotation = MathUtils.ComputeAngle(Position, message.Update.Position, new Vector2(1, 0));
 			Position = message.Update.Position;
-			Rotation = message.Update.Rotation;
 		}
 
 		/// <summary>

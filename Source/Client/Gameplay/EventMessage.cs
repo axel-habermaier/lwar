@@ -58,31 +58,31 @@ namespace Lwar.Client.Gameplay
 					DisplayString = String.Format("{0}\\\0: \\yellow{1}", Player.Name, Message);
 					break;
 				case EventType.Join:
-					DisplayString = String.Format("{0} has joined the game.", Player.Name);
+					DisplayString = String.Format("{0}\\\0 has joined the game.", Player.Name);
 					break;
 				case EventType.Kicked:
 					if (String.IsNullOrWhiteSpace(Message))
-						DisplayString = String.Format("{0} has been kicked.", Player.Name);
+						DisplayString = String.Format("{0}\\\0 has been kicked.", Player.Name);
 					else
-						DisplayString = String.Format("{0} has been kicked: {1}.", Player.Name, Message);
+						DisplayString = String.Format("{0}\\\0 has been kicked: {1}.", Player.Name, Message);
 					break;
 				case EventType.Leave:
-					DisplayString = String.Format("{0} has left the game.", Player.Name);
+					DisplayString = String.Format("{0}\\\0 has left the game.", Player.Name);
 					break;
 				case EventType.Suicide:
-					DisplayString = String.Format("{0} got himself killed.", Vicitim.Name);
+					DisplayString = String.Format("{0}\\\0 got himself killed.", Vicitim.Name);
 					break;
 				case EventType.EnvironmentKill:
-					DisplayString = String.Format("{0} was not afraid of environmental hazards. Then he died.", Vicitim.Name);
+					DisplayString = String.Format("{0}\\\0 was not afraid of environmental hazards. Then he died.", Vicitim.Name);
 					break;
 				case EventType.Timeout:
-					DisplayString = String.Format("The connection to {0} has been lost.", Player.Name);
+					DisplayString = String.Format("The connection to {0}\\\0 has been lost.", Player.Name);
 					break;
 				case EventType.Name:
-					DisplayString = String.Format("{0} was renamed to {1}.", Player.Name, Message);
+					DisplayString = String.Format("{0}\\\0 was renamed to {1}\\\0.", Player.Name, Message);
 					break;
 				case EventType.Kill:
-					DisplayString = String.Format("{0} killed {1}.", Player.Name, Vicitim.Name);
+					DisplayString = String.Format("{0}\\\0 killed {1}\\\0.", Player.Name, Vicitim.Name);
 					break;
 				default:
 					throw new InvalidOperationException("Unsupported event message type.");

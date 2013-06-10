@@ -18,12 +18,6 @@ internal interface ICvars
 	string PlayerName { get; set; }
 
 	/// <summary>
-	///   If true, all 3D geometry is drawn in wireframe mode.
-	/// </summary>
-	[Cvar(false)]
-	bool DrawWireframe { get; set; }
-
-	/// <summary>
 	///   The display time (in seconds) of event messages such as 'X killed Y', 'X joined the game', etc.
 	/// </summary>
 	[Cvar(3), Persistent, Range(0.5, 60.0)]
