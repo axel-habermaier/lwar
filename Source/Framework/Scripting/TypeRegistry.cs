@@ -42,7 +42,7 @@ namespace Pegasus.Framework.Scripting
 			Register(new Int64Parser(), "64-bit signed integer", null, "-17", "0", "17");
 			Register(new Float32Parser(), "32-bit floating point number", f => f.ToString("F"), "-17.1", "0.0", "17");
 			Register(new Float64Parser(), "64-bit floating point number", d => d.ToString("F"), "-17.1", "0.0", "17");
-			Register(stringParser, "string", s => String.Format("\"{0}\\\0\"", s), "\"\"", "word", "\"multiple words\"", "\"escaped quote: \\\"\"");
+			Register(stringParser, "string", null, "\"\"", "word", "\"multiple words\"", "\"escaped quote: \\\"\"");
 
 			// Register common .NET framework types
 			Register(new IPAddressParser(), "IPv4 or IPv6 address", null, "::1", "127.0.0.1");
@@ -179,16 +179,9 @@ namespace Pegasus.Framework.Scripting
 		///   Gets the string representation of the given value.
 		/// </summary>
 		/// <param name="value">The value for which the string representation should be returned.</param>
-		/// <param name="quotedContext">
-		///   Indicates whether the string representation of the value is used in a quoted context. If so, some representations
-		///   might account for this; for instance, in a quoted context, string values are not enclosed in quotes.
-		/// </param>
-		internal static string ToString(object value, bool quotedContext = false)
+		internal static string ToString(object value)
 		{
 			Assert.ArgumentNotNull(value);
-
-			if (quotedContext && value is string)
-				return String.Format("{0}\\\0", value);
 
 			TypeInfo info;
 			if (RegisteredTypes.TryGetValue(value.GetType(), out info))

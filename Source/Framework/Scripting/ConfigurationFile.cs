@@ -154,6 +154,10 @@ namespace Pegasus.Framework.Scripting
 				else
 					value = TypeRegistry.ToString(cvar.Value);
 
+				// Enclose strings with quotes
+				if (cvar.ValueType == typeof(string))
+					value = "\"" + value + "\"";
+
 				var content = String.Format("{0} {1}", cvar.Name, value);
 				var line = lines.LastOrDefault(l => l.HasInstruction && l.Instruction.HasTarget(cvar));
 
