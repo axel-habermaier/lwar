@@ -31,10 +31,9 @@ Pegasus.Framework
 
 Pegasus.Platform
 ========
-- Linux: Fullscreen mode does not work reliably
-- Linux: Set minimum/maximum allowed window size
-- Linux: Alt+Tab and fullscreen?
-- !!Linux: Get windowed mode working again
+- Linux: Enforce minimum/maximum allowed window size
+- Linux: Double clicking not implemented
+- Linux: Fullscreen not implemented, moving and resizing window mostly not working
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 
 Assets Compiler
