@@ -84,8 +84,8 @@ void entities_update() {
 static void entity_ctor(size_t i, void *p) {
     Entity *e = (Entity*)p;
     e->id.n = i;
-    e->dead   = 0;
-    e->age    = 0;
+    e->dead = 0;
+    e->age  = 0;
     e->parent = 0;
     INIT_LIST_HEAD(&e->_u);
     INIT_LIST_HEAD(&e->children);
@@ -160,10 +160,14 @@ void entity_remove(Entity *e) {
     }
 }
 
-void entity_attach(Entity *e, Entity *c) {
+void entity_attach(Entity *e, Entity *c, Vec dx, Real dphi) {
     assert(list_empty(&c->siblings));
     list_add_tail(&c->siblings, &e->children);
-    c->parent = e;
+    c->collides = 0;
+    c->bounces  = 0;
+    c->parent   = e;
+    c->dx       = dx;
+    c->dphi     = dphi;
 }
 
 void entities_init() {

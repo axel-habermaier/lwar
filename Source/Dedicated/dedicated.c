@@ -6,6 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 
+
 #include "server_export.h"
 #include "server.h"
 #include "visualization.h"
@@ -84,7 +85,6 @@ static void print_stats() {
     printf("objects\n");
     printf("  client   %4ld\n", pool_nused(&server->clients));
     printf("  entities %4ld\n", pool_nused(&server->entities));
-    printf("  items    %4ld\n", pool_nused(&server->items));
     printf("  queue    %4ld\n", pool_nused(&server->queue));
     printf("\n");
 }

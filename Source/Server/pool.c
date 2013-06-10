@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #endif
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "list.h"
 #include "pool.h"
@@ -24,7 +25,10 @@ void pool_init(Pool *pool, void *p, size_t n, size_t size,
     assert(p);
     assert(size != 0);
 
-    pool->mem  = (char*)p;
+    if(p) pool->mem = (char*)p;
+    else  pool->mem = (char*)malloc(n * size);
+    pool->dynamic = !!p;
+
     pool->n    = n;
     pool->i    = 0;
     pool->size = size;
@@ -38,6 +42,14 @@ void pool_init(Pool *pool, void *p, size_t n, size_t size,
         List *l = (List *)(pool->mem + pool->size*i);
         INIT_LIST_HEAD(l);
         list_add_tail(l, &pool->free);
+    }
+}
+
+void pool_shutdown(Pool *pool) {
+    assert(pool->i == 0);
+
+    if(pool->dynamic) {
+        free(pool->mem);
     }
 }
 

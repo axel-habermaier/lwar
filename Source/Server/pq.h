@@ -2,6 +2,7 @@ typedef struct PrioQueue PrioQueue;
 
 struct PrioQueue {
     char  *mem;
+    bool dynamic;
     size_t n,i;
     size_t size;
     int  (*cmp)(const void *, const void *);
@@ -9,6 +10,7 @@ struct PrioQueue {
 
 void pq_init(PrioQueue *pq, void *p, size_t n, size_t size,
              int (*cmp)(const void *, const void *));
+void pq_shutdown(PrioQueue *pq);
 
 void *pq_alloc(PrioQueue *pq);
 void *pq_alloc_check(PrioQueue *pq, size_t size);

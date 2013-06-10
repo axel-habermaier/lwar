@@ -1,5 +1,7 @@
 typedef unsigned long BitSet;
 
+#define set_empty 0
+
 #define set_insert(s,i) \
     (s) |= (BitSet)(1 << (i))
 

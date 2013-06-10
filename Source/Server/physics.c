@@ -1,3 +1,4 @@
+#include <assert.h>
 #define _USE_MATH_DEFINES // required for M_PI on VS2012
 #include <math.h>
 #include <stdint.h>
@@ -56,10 +57,11 @@ Real impact(Vec v0, Vec v1) {
 }
 
 static void accelerate(Entity *e, Time t) {
-    e->v   = physics_v(e->v, e->a, t);
+    e->v = physics_v(e->v, e->a, t);
 }
 
 static void move(Entity *e, Time t) {
+    assert(!e->parent);
     e->x   = physics_x(e->x, e->v, t);
     e->phi = physics_phi(e->phi, e->rot, t);
     e->remaining -= t;
@@ -67,8 +69,8 @@ static void move(Entity *e, Time t) {
 
 static void move_remaining(Entity *e) {
     if(e->parent) {
-        e->x = e->parent->x;
-        e->phi = e->parent->phi; /* TODO: hackish */
+        e->x   = add(e->parent->x, rotate(e->dx, e->parent->phi));
+        e->phi = e->parent->phi + e->dphi;
     } else {
         move(e, e->remaining);
     }
@@ -117,7 +119,7 @@ static void bounce(Entity *e0, Entity *e1) {
     Real m0 = e0->mass;
     Real m1 = e1->mass;
 
-    /* collision axis */
+    /* collision axis: assume that e0,e1 are already at the point of impact */
     Vec dx = normalize(sub(e0->x, e1->x));
 
     Vec v0,v1;
@@ -127,31 +129,33 @@ static void bounce(Entity *e0, Entity *e1) {
     project(e0->v, dx, &p0, &v0);
     project(e1->v, dx, &p1, &v1);
 
-    if(e1->bounces) {
-        v0 = add(v0, scale(p0, -2));
+    if(!e1->bounces) {
+        v0 = add(v0, scale(p0, -1));
         v0 = add(v0, scale(p1,  2));
     } else {
         v0 = add(v0, scale(p0,(m0-m1)/(m0+m1)));
         v0 = add(v0, scale(p1, (2*m1)/(m0+m1)));
     }
 
-    if(e0->bounces) {
-        v1 = add(v1, scale(p1, -2));
+    if(!e0->bounces) {
+        v1 = add(v1, scale(p1, -1));
         v1 = add(v1, scale(p0,  2));
     } else {
         v1 = add(v1, scale(p1,(m1-m0)/(m0+m1)));
         v1 = add(v1, scale(p0, (2*m0)/(m0+m1)));
     }
 
-    if(!e0->bounces) e0->v = v0;
-    if(!e1->bounces) e1->v = v1;
+    if(e0->bounces) e0->v = v0;
+    if(e1->bounces) e1->v = v1;
 }
 
 /* compute whether e0 and e1 intersect at the moment */
+/*
 static bool intersect(Entity *e0, Entity *e1) {
     Real r = e0->radius + e1->radius;
     return dist2(e0->x, e1->x) < r*r;
 }
+*/
 
 static int collisions_cmp(const void *v0, const void *v1) {
     const Collision *c0 = (const Collision*)v0,

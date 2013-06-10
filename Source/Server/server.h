@@ -14,6 +14,7 @@ enum {
     MAX_ENTITY_TYPES    =   32,
     MAX_COLLISIONS      =   32, /* should be n^2-1 for priority queue */
     MAX_QUEUE           = 1024,
+    MAX_STRINGS         =  128,
 
     NUM_SLOTS           =    4,
 
@@ -32,14 +33,19 @@ typedef struct Id Id;
 typedef struct Address Address;
 
 /* clock_t on unix */
+/* measures discrete time steps in milliseconds */
 typedef unsigned long long Clock;
 
-typedef struct Slot Slot;
-
+/* measures time intervals,
+ * used for example by the physics engine
+ */
 typedef Real Time;
 
 typedef struct Entity Entity;
+typedef struct Slot Slot;
+
 typedef struct EntityType EntityType;
+typedef struct SlotType SlotType;
 
 typedef struct Format Format;
 
@@ -71,9 +77,9 @@ void player_input(Player *p,
                   int fire1, int fire2, int fire3, int fire4,
                   int aim_x, int aim_y);
 void player_select(Player *p,
-                   int ship_type,
-                   int weapon_type1, int weapon_type2,
-                   int weapon_type3, int weapon_type4);
+                   int ship_type_id,
+                   int weapon_type_id1, int weapon_type_id2,
+                   int weapon_type_id3, int weapon_type_id4);
 void player_rename(Player *p, Str name);
 void player_spawn(Player *p, Vec x);
 void player_notify_entity(Entity *e);
@@ -114,7 +120,7 @@ void entity_push(Entity *e, Vec a);
 void entity_accelerate(Entity *e, Vec a);
 void entity_accelerate_to(Entity *e, Vec v);
 void entity_rotate(Entity *e, Real r);
-void entity_attach(Entity *e, Entity *c);
+void entity_attach(Entity *e, Entity *c, Vec dx, Real dphi);
 
 Real   rad(Real a); /* radians of a */
 size_t deg(Real a); /* degrees of a */
@@ -151,8 +157,14 @@ struct Address {
 };
 
 struct Slot {
-    Entity *entity;
+    Entity   *entity;
     EntityType *selected_type;
+};
+
+struct SlotType {
+    Vec  dx;
+    Real dphi;
+    BitSet possible_types;
 };
 
 struct Player {
@@ -187,14 +199,19 @@ struct Entity {
     List siblings;  /* with sibling lists   */
     Entity *parent; /* and parent pointers  */
 
+    Slot   *slot;   /* if directly controlled by a player */
+
     bool active;
     Clock interval;
     Clock periodic;
 
     /* physics */
     Vec x,v,a;    /* world position, absolute velocity, acceleration */
- /*    Vec dx;      position relative to parent */
     Real phi,rot; /* orientation angle, rotation (= delta phi) */
+
+    Vec  dx;      /* position and angle relative to parent */
+    Real dphi;
+
     Real energy;  /* ammunition, fuel, ... */
     Real health;
     Real len;
@@ -226,6 +243,8 @@ struct EntityType {
     Real max_rot;    /* rotation     */
 
     Format *format;
+
+    SlotType slots[NUM_SLOTS]; /* possible weapon attachments */
 };
 
 struct Format {
@@ -278,6 +297,7 @@ struct Server {
     Array     types;
     List      formats;
     PrioQueue collisions;
+    Pool      strings;
 
     Clock     cur_clock;
     Clock     prev_clock;
@@ -287,7 +307,7 @@ struct Server {
 };
 
 static const Vec _0 = {0,0};
-static const Address address_none = {0,0};
+static const Address address_none = {{}, 0,0};
 
 #define clients_foreach(c)       pool_foreach(&server->clients, c, Client)
 #define entities_foreach(e)      pool_foreach(&server->entities, e, Entity)
@@ -296,7 +316,7 @@ static const Address address_none = {0,0};
 #define collisions_foreach(c)    pq_foreach(&server->collisions, c, Collision)
 #define formats_foreach(f)       list_for_each_entry(f, Format, &server->formats, _l)
 #define updates_foreach(t,e)     list_for_each_entry(e, Entity, &t->all, _u)
-#define slots_foreach(p,s)       for(s = p->weapons; s<p->weapons+NUM_SLOTS; s++)
+#define slots_foreach(p,s,st)    for(s = p->weapons, st = (p->ship.entity ? p->ship.entity->type->slots : 0); s<p->weapons+NUM_SLOTS; s++, st = (p->ship.entity ? st + 1 : 0))
 
 #ifndef max
 #define max(n,m) ((n) < (m) ? (m) : (n))

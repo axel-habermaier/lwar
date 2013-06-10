@@ -1,5 +1,6 @@
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 #include "server_export.h"
 #include "server.h"
@@ -18,17 +19,19 @@ bool id_eq(Id id0, Id id1) {
 }
 
 int server_init() {
+    /* initialize static server struct */
+    memset(server, 0, sizeof(Server));
+
     if(!conn_init()) return 0;
     if(!conn_bind()) return 0;
 
     protocol_init();
-
     physics_init();
 
-    /* order is important */
     entities_init();
     clients_init();
 
+    /* important to initialize rules last */
     rules_init();
 
     server->running = 1;
@@ -75,5 +78,6 @@ int server_update(Clock time, int force) {
 
 void server_shutdown() {
     conn_shutdown();
+    /* TODO: shutdown components */
     log_info("Terminated\n");
 }

@@ -4,6 +4,7 @@
 
 #include "window.h"
 
+
 /* borrowed from gluPerspective */
 static void window_perspective(GLfloat fovy, GLfloat aspect,
                                GLfloat zmin, GLfloat zmax)

@@ -1,14 +1,12 @@
 .PHONY: all clean
 
 VPATH = Source/Server Source/Dedicated
-BUILD = build/Debug/server
+BUILD = Build/Debug/server
 
 SERVER_H      = server.h
-SERVER_SRC    = array.c client.c connection.c entity.c format.c log.c message.c     \
+SERVER_SRC    = array.c client.c connection.c entity.c format.c log.c message.c \
                 physics.c packet.c player.c pq.c protocol.c queue.c rules.c \
-                server.c pool.c time.c uint.c update.c \
-                rules/planet.c rules/ship.c rules/bullet.c rules/ray.c rules/rocket.c \
-                rules/gun.c rules/phaser.c
+                server.c pool.c time.c templates.c uint.c update.c
 SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
 SERVER_SO     = $(BUILD)/libserver.so
 SERVER_LIB    = 
@@ -23,10 +21,10 @@ CC = clang
 LD = clang
 CFLAGS = -Wall -g -fPIC -ISource/Server
 
-all: $(BUILD) $(BUILD)/rules $(SERVER_SO) $(DEDICATED_BIN)
+all: $(BUILD) $(SERVER_SO) $(DEDICATED_BIN)
 
 run: $(DEDICATED_BIN)
-	LD_LIBRARY_PATH=$(BUILD) ./$(DEDICATED_BIN) -stats # -visual
+	LD_LIBRARY_PATH=$(BUILD) ./$(DEDICATED_BIN) -visual
 
 gdb: $(DEDICATED_BIN)
 	LD_LIBRARY_PATH=$(BUILD) gdb ./$(DEDICATED_BIN)
@@ -36,9 +34,6 @@ clean:
 
 $(BUILD):
 	mkdir -p $@
-
-$(BUILD)/rules:
-	mkdir -p $@/rules
 
 $(BUILD)/%.o: %.c $(SERVER_H)
 	$(CC) -c $< -o $@ $(CFLAGS)

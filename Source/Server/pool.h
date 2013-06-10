@@ -3,6 +3,7 @@ typedef struct Pool Pool;
 
 struct Pool {
     char  *mem;
+    bool   dynamic;
     size_t n,i;
     size_t size;
     void (*ctor)(size_t i, void *);
@@ -14,6 +15,7 @@ struct Pool {
 void  pool_init(Pool *pool, void *p, size_t n, size_t size,
                 void (*ctor)(size_t, void *),
                 void (*dtor)(size_t, void *));
+void  pool_shutdown(Pool *pool);
 void *pool_alloc(Pool *pool);
 void *pool_alloc_check(Pool *pool, size_t size);
 void  pool_free(Pool *pool, void *p);
@@ -24,9 +26,10 @@ void  pool_add(Pool *pool, size_t i);
 void *pool_get(Pool *pool, size_t i);
 void *pool_remove(Pool *pool, size_t i);
 
-#define pool_static(pool,p,c,d) pool_init(pool, p, sizeof(p)/sizeof(*p), sizeof(*p), c, d);
-#define pool_new(pool,t)        ((t*)pool_alloc_check(pool,sizeof(t)))
-#define pool_at(pool,t,i)       ((i) < (pool)->n ? (t*)((pool)->mem + (pool)->size * (i)) : 0)
+#define pool_static(pool,p,c,d)    pool_init(pool, p, sizeof(p)/sizeof(*p), sizeof(*p), c, d);
+// #define pool_dynamic(pool,t,n,c,d) pool_init(pool, 0, n, sizeof(t), c, d);
+#define pool_new(pool,t)           ((t*)pool_alloc_check(pool,sizeof(t)))
+#define pool_at(pool,t,i)          ((i) < (pool)->n ? (t*)((pool)->mem + (pool)->size * (i)) : 0)
 
 #define pool_nused(pool) ((pool)->i)
 

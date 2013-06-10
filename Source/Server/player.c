@@ -6,16 +6,17 @@
 #include <stdlib.h>
 
 #include "server.h"
-#include "vector.h"
+
 #include "log.h"
 
 void player_init(Player *p, size_t id) {
     Slot *s;
+    SlotType *st;
 
     p->id.n = id;
     p->ship.entity = 0;
     /* p->name = ""; */
-    slots_foreach(p,s)
+    slots_foreach(p,s,st)
         s->entity = 0;
     player_input(p, 0,0,0,0,0,0,0,0,0,0,0,0);
     player_select(p, 0,0,0,0,0);
@@ -34,6 +35,7 @@ void player_input(Player *p,
                   int aim_x, int aim_y)
 {
     Slot *s;
+    SlotType *st;
 
     p->a.x   = forwards    - backwards;
     p->a.y   = strafe_left - strafe_right;
@@ -43,68 +45,76 @@ void player_input(Player *p,
     p->aim.x = aim_x;
     p->aim.y = aim_y;
 
-    s = p->weapons;
-    if(s->entity) { s->entity->active = fire1; } s++;
-    if(s->entity) { s->entity->active = fire2; } s++;
-    if(s->entity) { s->entity->active = fire3; } s++;
-    if(s->entity) { s->entity->active = fire4; } s++;
+    int _f[NUM_SLOTS] = { fire1, fire2, fire3, fire4 };
+    int *f = _f;
+
+    slots_foreach(p,s,st) {
+        if(s->entity) 
+            s->entity->active = *f++;
+    }
 }
 
 void player_select(Player *p,
-                   int ship_type,
-                   int weapon_type1, int weapon_type2,
-                   int weapon_type3, int weapon_type4)
+                   int ship_type_id,
+                   int weapon_type_id1, int weapon_type_id2,
+                   int weapon_type_id3, int weapon_type_id4)
 {
+    EntityType *ship_type = entity_type_get(ship_type_id);
+    if(!ship_type) return;
+
     Slot *s;
+    SlotType *st;
 
     s = &p->ship;
-    s->selected_type = entity_type_get(ship_type);
+    s->selected_type = ship_type;
 
-    s = p->weapons;
-    s->selected_type = entity_type_get(weapon_type1); s++;
-    s->selected_type = entity_type_get(weapon_type2); s++;
-    s->selected_type = entity_type_get(weapon_type3); s++;
-    s->selected_type = entity_type_get(weapon_type4); s++;
+    int _wt[NUM_SLOTS] = { weapon_type_id1, weapon_type_id2, weapon_type_id3, weapon_type_id4 };
+    int *wt = _wt;
+
+    slots_foreach(p,s,st) {
+        s->selected_type = entity_type_get(*wt++);
+    }
 }
 
-static void slot_spawn(Player *p, Slot *s, Entity *parent, Vec x, Vec v) {
+static void slot_spawn(Player *p, Slot *s, SlotType *st, Entity *parent, Vec x, Vec v) {
     assert(!s->entity);
 
-    if(!s->selected_type) return;
-    s->entity = entity_create(s->selected_type, p, x, v);
-    
+    EntityType *t = s->selected_type;
+
+    if(!t) return;
+    if(parent) assert(st);
+
+    // if(st && !set_contains(st->possible_types, t->id)) return;
+
+    s->entity = entity_create(t, p, x, v);
+    s->entity->slot = s;
+
     if(!parent) return;
-    entity_attach(parent, s->entity);
+    entity_attach(parent, s->entity, st->dx, st->dphi);
 }
 
 void player_spawn(Player *p, Vec x) {
     Slot *s;
-    slot_spawn(p, &p->ship, 0, x, _0);
+    SlotType *st;
+    slot_spawn(p, &p->ship, 0, 0, x, _0);
     Entity *ship = p->ship.entity;
     if(ship) {
-        slots_foreach(p,s) {
-            slot_spawn(p, s, ship, x, _0);
+        slots_foreach(p,s,st) {
+            /* position and velocity will be overriden by physics,
+             * since the entity will be attached to the ship */
+            slot_spawn(p, s, st, ship, _0, _0);
         }
     }
 }
 
 void player_notify_entity(Entity *e) {
-    Player *p = e->player;
-    assert(p);
-
     if(!e->dead) return;
+    if(!e->slot) return;
 
-/*
-    if(p->ship == e)
-        p->ship = 0;
-
-    slots_foreach(i) {
-        if(p->weapons[i] == e)
-            p->weapons[i] = 0;
-    }
-*/
+    e->slot->entity = 0;
 }
 
+/* TODO: duplicate of clear */
 void player_die(Player *p) {
     entity_remove(p->ship.entity);
 }

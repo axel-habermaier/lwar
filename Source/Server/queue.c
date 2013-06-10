@@ -34,7 +34,7 @@ static QueuedMessage _queue[MAX_QUEUE];
 
 static void qm_ctor(size_t i, void *p) {
     QueuedMessage *qm = (QueuedMessage*)p;
-    qm->dest = 0;
+    qm->dest = set_empty;
 }
 
 static void qm_dtor(size_t i, void *p) {}
@@ -129,12 +129,6 @@ static Message *message_broadcast(MessageType type) {
 }
 
 
-/* If a client times out, its dead flag is set,
- * so that the client can be cleaned up later.
- * If the client has previously sent a disconnect message,
- * then hasleft is set and the other players do not need further notice.
- * client_remove also disables c as message recepient.
- */
 void queue_timeout(Client *c) {
     Message *r;
     assert(c->remote);
@@ -191,7 +185,7 @@ void queue_leave(Client *c) {
     Message *r;
     r = message_broadcast(MESSAGE_LEAVE);
     r->leave.player_id = c->player.id;
-	r->leave.reason = LEAVE_QUIT; // CHECK ME: Is this function really only called if a client quit gracefully?
+	r->leave.reason = LEAVE_QUIT;
 }
 
 void queue_collision(Collision *c) {
@@ -244,6 +238,7 @@ Message *queue_next(cr_t *state, Client *c, size_t *tries) {
 void protocol_init() {
     INIT_LIST_HEAD(&server->formats);
     pool_static(&server->queue, _queue, qm_ctor, qm_dtor);
+    /* pool_dynamic(&server->queue, QueuedMessage, MAX_QUEUE qm_ctor, qm_dtor); */
 }
 
 void protocol_cleanup() {

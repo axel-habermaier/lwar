@@ -77,6 +77,7 @@ Client *client_get(Id player) {
 
 void clients_init() {
     pool_static(&server->clients, _clients, client_ctor, client_dtor);
+    /* pool_dynamic(&server->clients, Client, MAX_CLIENTS, client_ctor, client_dtor); */
 }
 
 void clients_cleanup() {

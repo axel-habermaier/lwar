@@ -1,6 +1,8 @@
 #include <assert.h>
 #include <string.h>
-#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdlib.h>
 
 #include "pq.h"
 
@@ -82,11 +84,22 @@ void pq_init(PrioQueue *pq, void *p, size_t n, size_t size,
     assert(cmp);
     assert(size != 0);
 
-    pq->mem  = (char*)p;
+    if(p) pq->mem = (char*)p;
+    else  pq->mem = (char*)malloc(n * size);
+    pq->dynamic = !!p;
+
     pq->n    = n;
     pq->i    = 0;
     pq->size = size;
     pq->cmp  = cmp;
+}
+
+void pq_shutdown(PrioQueue *pq) {
+    assert(pq->i == 0);
+
+    if(pq->dynamic) {
+        free(pq->mem);
+    }
 }
 
 void *pq_alloc(PrioQueue *pq) {

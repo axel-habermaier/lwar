@@ -23,6 +23,7 @@ enum {
 
 static void send_full(Address *adr, size_t ack);
 static void send_kick(Client *c);
+static void protocol_timeout(Client *c);
 
 void queue_forward(Message *m);
 Message *queue_next(cr_t *state, Client *c, size_t *tries);
@@ -87,7 +88,8 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
 
     case MESSAGE_DISCONNECT:
         if(!c || c->hasleft) return;
-        c->hasleft = 1; /* do not broadcast leave message on timeout */
+        c->hasleft = 1; /* do not broadcast leave message on timeout,
+                           but delay removal till then (TODO: check why?) */
         queue_leave(c);
         break;
 
@@ -175,11 +177,7 @@ void protocol_recv() {
     }
     if(p.io_failed) {
         Client *c = client_lookup(&p.adr);
-        if(c) 
-		{
-			queue_timeout(c);
-			client_remove(c);
-		}
+        if(c) protocol_timeout(c);
     }
 
     timer_stop(TIMER_RECV);
@@ -244,7 +242,7 @@ static void packet_send_to_init(Client *c, Packet *p) {
     packet_init_header(c,p);
 }
 
-bool packet_put_update(Packet *p, size_t type, size_t n) {
+static bool packet_put_update(Packet *p, size_t type, size_t n) {
     Message m;
     m.type = (MessageType)type;
     m.seqno = 0;
@@ -308,6 +306,11 @@ static void send_messages_for(Client *c, Packet *p) {
     packet_send_to(c, p);
 }
 
+static void protocol_timeout(Client *c) {
+    queue_timeout(c);
+    client_remove(c);
+}
+
 /* (re)send queued messages */
 void protocol_send(bool force) {
     if(!force && !clock_periodic(&server->update_periodic, UPDATE_INTERVAL))
@@ -323,21 +326,18 @@ void protocol_send(bool force) {
             continue;
         }
         else if(c->last_activity + TIMEOUT_INTERVAL < server->cur_clock) {
-            queue_timeout(c);
-            client_remove(c);
+            protocol_timeout(c);
         }
         else if (c->misbehavior > MISBEHAVIOR_LIMIT) {
             send_kick(c);
-            queue_timeout(c);
-            client_remove(c);
+            protocol_timeout(c);
         }
         else if(setjmp(io_error_handler)) {
             /* if setjmp returns != 0
              * there was an error in send_messages_for
              * thrown in packet_send_init
              */
-            queue_timeout(c);
-            client_remove(c);
+            protocol_timeout(c);
         }
         else {
             Packet p;

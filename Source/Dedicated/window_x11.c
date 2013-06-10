@@ -23,7 +23,7 @@ static GLXContext context;
 
 /* mouse position, button and key status */
 static int mx,my;
-static int buttons[3];
+static int buttons[4];
 static int keys[256];
 
 /* TODO: more error handling */
@@ -115,7 +115,7 @@ unsigned int window_events(int *width, int *height) {
             pressed = 1;
             /* fall through */
         case ButtonRelease:
-            if(event.xbutton.button < 3)
+            if(event.xbutton.button < 4)
                 buttons[event.xbutton.button] = pressed;
             break;
 
@@ -139,7 +139,7 @@ int key_down(unsigned char key) {
 }
 
 int button_down(unsigned char button) {
-    if(button < 3)
+    if(button < 4)
         return buttons[button];
     return 0;
 }

@@ -34,7 +34,7 @@ void rules_init() {
     entity_type_register(ENTITY_TYPE_RAY,       &type_ray,       &format_ray);
     // entity_type_register(ENTITY_TYPE_SHOCKWAVE, &type_shockwave, &format_circle);
 
-    entity_type_register(ENTITY_TYPE_GUN,       &type_gun,       0); /* not shared with server */
+    entity_type_register(ENTITY_TYPE_GUN,       &type_gun,       0); /* not shared with client */
     entity_type_register(ENTITY_TYPE_PHASER,    &type_phaser,    0);
 
     Vec x = { 500,500 };
@@ -72,9 +72,9 @@ void gun_shoot(Entity *gun) {
     gun->energy --;
 
     Vec f = unit(gun->phi);
-        Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
-        Vec dir = normalize(sub((gun->player->aim), x));
-        Vec v = scale(dir, type_bullet.max_a.y); /* initial speed */
+    Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
+    Vec dir = normalize(sub((gun->player->aim), gun->x));
+    Vec v = scale(dir, type_bullet.max_a.y); /* initial speed */
     entity_create(&type_bullet,gun->player,x,v);
 }
 
@@ -94,7 +94,7 @@ void phaser_shoot(Entity *phaser) {
     Vec v = _0;
 
     Entity *ray = entity_create(&type_ray,phaser->player,x,v);
-    entity_attach(phaser, ray);
+    entity_attach(phaser, ray, _0, 0);
     ray->active = 1;
 }
 
