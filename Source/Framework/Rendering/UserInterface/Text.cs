@@ -14,21 +14,29 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	public class Text : PooledObject<Text>
 	{
 		/// <summary>
+		///   The marker that introduces a color specifier.
+		/// </summary>
+		private const char ColorMarker = '\\';
+
+		/// <summary>
 		///   Maps characters to colors. The character plus the color marker comprise a color specifier. For instance, 'w'
 		///   is mapped to the color white, so a text containing "\wA" prints a white 'A'.
 		/// </summary>
 		private static readonly ColorSpecifier[] Colors = new[]
 		{
-			new ColorSpecifier("\\white", new Color(255, 255, 255, 255)),
-			new ColorSpecifier("\\black", new Color(0, 0, 0, 255)),
-			new ColorSpecifier("\\red", new Color(255, 0, 0, 255)),
-			new ColorSpecifier("\\green", new Color(0, 255, 0, 255)),
-			new ColorSpecifier("\\blue", new Color(0, 0, 255, 255)),
-			new ColorSpecifier("\\yellow", new Color(255, 255, 0, 255)),
-			new ColorSpecifier("\\magenta", new Color(255, 0, 255, 255)),
-			new ColorSpecifier("\\grey", new Color(128, 128, 128, 255)),
-			new ColorSpecifier("\\cyan", new Color(0, 255, 255, 255)),
-			new ColorSpecifier("\0", null)
+			// A special color specifier that restores the original color; can only be used by the application
+			new ColorSpecifier(ColorMarker + "\0", null),
+
+			// Predefined colors
+			new ColorSpecifier(ColorMarker + "white", new Color(255, 255, 255, 255)),
+			new ColorSpecifier(ColorMarker + "black", new Color(0, 0, 0, 255)),
+			new ColorSpecifier(ColorMarker + "red", new Color(255, 0, 0, 255)),
+			new ColorSpecifier(ColorMarker + "green", new Color(0, 255, 0, 255)),
+			new ColorSpecifier(ColorMarker + "blue", new Color(0, 0, 255, 255)),
+			new ColorSpecifier(ColorMarker + "yellow", new Color(255, 255, 0, 255)),
+			new ColorSpecifier(ColorMarker + "magenta", new Color(255, 0, 255, 255)),
+			new ColorSpecifier(ColorMarker + "grey", new Color(128, 128, 128, 255)),
+			new ColorSpecifier(ColorMarker + "cyan", new Color(0, 255, 255, 255))
 		};
 
 		/// <summary>
@@ -169,6 +177,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="matchedColor">Returns the matched color specifier.</param>
 		private static bool TryMatch(string source, int index, out ColorSpecifier matchedColor)
 		{
+			if (source[index] != ColorMarker)
+			{
+				matchedColor = new ColorSpecifier();
+				return false;
+			}
+
 			for (var i = 0; i < Colors.Length; ++i)
 			{
 				if (Colors[i].Specifier.Length > source.Length - index)
@@ -204,30 +218,40 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="matchedEmoticon">Returns the matched emoticon single-character encoding.</param>
 		private static bool TryMatch(string source, int index, out Emoticon matchedEmoticon)
 		{
-			for (var i = 0; i < Emoticons.Length; ++i)
-			{
-				if (Emoticons[i].TextRepresentation.Length > source.Length - index)
-					continue;
-
-				var matches = true;
-				for (var j = 0; j < Emoticons[i].TextRepresentation.Length && j + index < source.Length; ++j)
-				{
-					if (source[j + index] != Emoticons[i].TextRepresentation[j])
-					{
-						matches = false;
-						break;
-					}
-				}
-
-				if (matches)
-				{
-					matchedEmoticon = Emoticons[i];
-					return true;
-				}
-			}
-
+			// TODO: Allow emoticons and implement Map* methods correctly
 			matchedEmoticon = new Emoticon();
 			return false;
+
+			//if (!Char.IsPunctuation(source[index]))
+			//{
+			//	matchedEmoticon = new Emoticon();
+			//	return false;
+			//}
+
+			//for (var i = 0; i < Emoticons.Length; ++i)
+			//{
+			//	if (Emoticons[i].TextRepresentation.Length > source.Length - index)
+			//		continue;
+
+			//	var matches = true;
+			//	for (var j = 0; j < Emoticons[i].TextRepresentation.Length && j + index < source.Length; ++j)
+			//	{
+			//		if (source[j + index] != Emoticons[i].TextRepresentation[j])
+			//		{
+			//			matches = false;
+			//			break;
+			//		}
+			//	}
+
+			//	if (matches)
+			//	{
+			//		matchedEmoticon = Emoticons[i];
+			//		return true;
+			//	}
+			//}
+
+			//matchedEmoticon = new Emoticon();
+			//return false;
 		}
 
 		/// <summary>
@@ -322,7 +346,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		/// Writes the given string into the given text writer. Color specifiers are not written, whereas for emoticons, the text-representation is used.
+		///   Writes the given string into the given text writer. Color specifiers are not written, whereas for emoticons, the
+		///   text-representation is used.
 		/// </summary>
 		/// <param name="writer">The text writer that the text should be written to.</param>
 		/// <param name="text">The text that should be written.</param>

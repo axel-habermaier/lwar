@@ -18,6 +18,9 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
+- !!Batched bullet rendering
+- !!!Explosions!!!
+- !!Bullet rotation (compute from velocity)
 
 Pegasus.Framework
 ========
@@ -31,6 +34,7 @@ Pegasus.Platform
 - Linux: Fullscreen mode does not work reliably
 - Linux: Set minimum/maximum allowed window size
 - Linux: Alt+Tab and fullscreen?
+- !!Linux: Get windowed mode working again
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 
 Assets Compiler
@@ -39,6 +43,7 @@ Assets Compiler
 - Asset compression
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)
+- !!Fix EntityTemplates.fsx
 
 Network Specification
 ========

@@ -53,9 +53,9 @@ namespace Pegasus.Framework.Scripting
 			{
 				var deferred = String.Empty;
 				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
-					deferred = String.Format(", pending update: '{0}\0'", TypeRegistry.ToString(cvar.DeferredValue, quotedContext: true));
+					deferred = String.Format(", pending update: '{0}'", TypeRegistry.ToString(cvar.DeferredValue, quotedContext: true));
 
-				Log.Info("'{0}' is '{1}\0', default '{2}\0'{3}", cvar.Name, TypeRegistry.ToString(cvar.Value, quotedContext: true),
+				Log.Info("'{0}' is '{1}', default '{2}'{3}", cvar.Name, TypeRegistry.ToString(cvar.Value, quotedContext: true),
 						 TypeRegistry.ToString(cvar.DefaultValue, quotedContext: true), deferred);
 
 				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)

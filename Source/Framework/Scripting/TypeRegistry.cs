@@ -42,7 +42,7 @@ namespace Pegasus.Framework.Scripting
 			Register(new Int64Parser(), "64-bit signed integer", null, "-17", "0", "17");
 			Register(new Float32Parser(), "32-bit floating point number", f => f.ToString("F"), "-17.1", "0.0", "17");
 			Register(new Float64Parser(), "64-bit floating point number", d => d.ToString("F"), "-17.1", "0.0", "17");
-			Register(stringParser, "string", s => String.Format("\"{0}\0\"", s), "\"\"", "word", "\"multiple words\"", "\"escaped quote: \\\"\"");
+			Register(stringParser, "string", s => String.Format("\"{0}\\\0\"", s), "\"\"", "word", "\"multiple words\"", "\"escaped quote: \\\"\"");
 
 			// Register common .NET framework types
 			Register(new IPAddressParser(), "IPv4 or IPv6 address", null, "::1", "127.0.0.1");
@@ -188,7 +188,7 @@ namespace Pegasus.Framework.Scripting
 			Assert.ArgumentNotNull(value);
 
 			if (quotedContext && value is string)
-				return (string)value;
+				return String.Format("{0}\\\0", value);
 
 			TypeInfo info;
 			if (RegisteredTypes.TryGetValue(value.GetType(), out info))
