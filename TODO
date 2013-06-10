@@ -12,7 +12,7 @@ Client
 - Batch drawing of bullets, etc. - instancing?
 - UI
 	- Ship/Weapon selection
-	- Show player names on top of ships
+	- !!Show player names on top of ships + indicator where the other players are
 	- Minimap
 	- Menus
 		* Main menu
@@ -20,6 +20,7 @@ Client
 		* Configuration (graphics settings, input settings, ...)
 - !!Batched bullet rendering
 - !!!Explosions!!!
+- Camera zoom bug in very-low FPS situations
 
 Pegasus.Framework
 ========
@@ -44,14 +45,22 @@ Assets Compiler
 	- Give higher priorities to files on the filesystem (similar to Quake 3)
 - !!Fix EntityTemplates.fsx
 
-Network Specification
+Network
 ========
 - Send network spec revision number with Connect message, send WrongVersion message on version mismatch
+- Are all reliable messages sent multiple times before there's even a chance to acknowledge them? Is that a problem?
 
 Server
 ========
 - slots need relative placement wrt ship,
   extend entity type struct for this
 - server/client: entity types, possible weapons, slots
-- server_init: remove static variables, use dynamic allocation
+- server_init: static initialization of struct Server, check for other problems.
+  e.g. gen is not reset (should be okay)
 - server: copy string to player, free memory
+- !!!!!!!!!players can kill each other
+- !!mouse aim bug
+- !!phaser follows mouse
+- !!bullet time to live
+- !Level Design
+- !!Level boundaries
