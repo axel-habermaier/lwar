@@ -1,16 +1,6 @@
 #include "prelude.h"
 
 //====================================================================================================================
-// Helper functions
-//====================================================================================================================
-
-static pgVoid pgWindowKeyUp(pgWindow* window, pgKey key, pgInt32 scanCode);
-static pgVoid pgWindowKeyDown(pgWindow* window, pgKey key, pgInt32 scanCode);
-static pgVoid pgWindowButtonUp(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y);
-static pgVoid pgWindowButtonDown(pgWindow* window, pgMouseButton button, pgInt32 x, pgInt32 y);
-static pgVoid pgWindowLostFocus(pgWindow* window, pgInt32 x, pgInt32 y);
-
-//====================================================================================================================
 // Exported functions
 //====================================================================================================================
 
@@ -157,6 +147,9 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 		case PG_MESSAGE_MOUSE_LEFT:
 			window->callbacks.mouseLeft();
 			window->focused = PG_TRUE;
+			break;
+		default:
+			PG_NO_SWITCH_DEFAULT;
 			break;
 		}
 
