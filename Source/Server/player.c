@@ -7,6 +7,7 @@
 
 #include "server.h"
 
+#include "vector.h"
 #include "log.h"
 
 void player_init(Player *p, size_t id) {
@@ -129,7 +130,8 @@ static void player_action(Player *p) {
               p->a.y * ship->type->max_a.y * 10 };
     // entity_accelerate(ship, p->a);
 
-    entity_accelerate_to(ship, a);
+    if(p->a.x != 0 || p->a.y != 0)
+        entity_accelerate_to(ship, a);
     entity_rotate(ship, p->rot);
 }
 
@@ -140,8 +142,10 @@ void players_update() {
         p = &c->player;
 
         if(!p->ship.entity) {
-            /* Vec x = { 100 + rand() % 600, 100 + rand() % 400 }; */
-            Vec x = _0;
+            size_t i = rand()%MAX_PLANETS;
+            Real dist = (i+1) * MIN_PLANET_DIST + MIN_PLANET_DIST/2;
+            Real phi  = rad(rand()%360);
+            Vec x = scale(unit(phi), dist);
             player_spawn(p, x);
         }
         player_action(p);

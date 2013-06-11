@@ -41,8 +41,20 @@ static void glTriangle(float r, float phi) {
 static void glCircle(float r) {
     glScalef(r,r,1);
     int i;
+    glBegin(GL_LINE_LOOP);
+    for(i=0; i<360; i+=4) {
+        glVertex3f(cos(rad(i)),
+                   sin(rad(i)),
+                   0);
+    }
+    glEnd();
+}
+
+static void glDisc(float r) {
+    glScalef(r,r,1);
+    int i;
     glBegin(GL_POLYGON);
-    for(i=0; i<360; i+=10) {
+    for(i=0; i<360; i+=4) {
         glVertex3f(cos(rad(i)),
                    sin(rad(i)),
                    0);
@@ -67,21 +79,28 @@ static void draw_entity(Entity *e) {
         break;
     case ENTITY_TYPE_SUN:
         glColor4f(1,.8,0,0);
-        glCircle(r);
+        glDisc(r);
         break;
     case ENTITY_TYPE_PLANET:
         glColor4f(0,.5,1,0);
-        glCircle(r);
+        glDisc(r);
         break;
     case ENTITY_TYPE_BULLET:
         glColor4f(.5,.5,.5,0);
-        glCircle(r);
+        glDisc(r);
         break;
     case ENTITY_TYPE_RAY:
         glColor4f(1,0,0,0);
         glRect(e->len,5,phi);
     }
 
+    glPopMatrix();
+
+    glPushMatrix();
+        if(e->type->id == ENTITY_TYPE_PLANET) {
+            glColor4f(.2,.2,.2,0);
+            glCircle(e->len);
+        }
     glPopMatrix();
 }
 

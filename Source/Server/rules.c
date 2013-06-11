@@ -2,6 +2,8 @@
 #include <math.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "server.h"
 #include "message.h"
@@ -17,6 +19,28 @@
 #define SELF_NAME "server"
 static Str self_name = { sizeof(SELF_NAME)-1, SELF_NAME };
 static const Real gravity_factor = 10000; // 0.04;
+
+static void level_init() {
+    size_t i;
+
+    srand(time(0));
+
+    Entity *sun = entity_create(&type_sun, &server->self->player, _0, _0);
+	sun->active=true;
+	
+    for(i=0; i<MAX_PLANETS; i++) {
+        Real dist = (i+2) * MIN_PLANET_DIST; // + rand()%(MAX_PLANET_DIST - MIN_PLANET_DIST);
+
+        Real phi = rad(rand()%360);
+        Vec  u = unit(phi);
+        Vec  x = scale(u, dist);
+        Entity *p = entity_create(&type_planet, &server->self->player, x, _0);
+        p->active = true;
+        p->len    = dist;
+        p->energy = rad(180 + rand()%360); /* speed of rotation around sun per second */
+        p->radius += rand()%(unsigned)p->radius;
+    }
+}
 
 EntityType *_types[MAX_ENTITY_TYPES];
 
@@ -43,20 +67,7 @@ void rules_init() {
     entity_type_register("gun",    &type_gun,       0); /* not shared with client */
     entity_type_register("phaser", &type_phaser,    0);
 
-    Vec x0 = { 0,500 };
-    Entity *p0 = entity_create(&type_planet, &server->self->player, x0, _0);
-	p0->active=true;
-	p0->mass = 100;
-	
-	Vec x1 = { 0,1500 };
-    Entity *p1 = entity_create(&type_sun, &server->self->player, x1, _0);
-	p1->active=true;
-	p1->mass = 100;
-    /*
-	Vec x2 = { -500, 0 };
-	p0 =entity_create(&type_rocket, &server->self->player, x2, _0);
-	p0->active=true;
-    */
+    level_init();
 }
 
 EntityType *entity_type_get(size_t id) {
@@ -136,21 +147,29 @@ void gravity(Entity *e0) {
     Real m0 = e0->mass;
 
     entities_foreach(e1) {
-        if(e0->type != e1->type) {
-            Real m1 = e1->mass;
-            if(m1 == 0) continue;
+        if(e1->type->id == ENTITY_TYPE_SUN)    continue;
+        if(e1->type->id == ENTITY_TYPE_PLANET) continue;
 
-            Vec dx = sub(e0->x, e1->x);
-            Real l = len(dx);
-            Vec r  = normalize(dx);
+        Real m1 = e1->mass;
+        if(m1 == 0) continue;
 
-            /* force is quadratic wrt proximity,
-             * and wrt to inverse of mass of e1
-             */
-            Vec a  = scale(r, gravity_factor * (m0 + m1) / m1 / (l*l)); 
-            entity_push(e1, a);
-        }
+        Vec dx = sub(e0->x, e1->x);
+        Real l = len(dx);
+        Vec r  = normalize(dx);
+
+        /* force is quadratic wrt proximity,
+         * and wrt to inverse of mass of e1
+         */
+        Vec a  = scale(r, gravity_factor * (m0 + m1) / m1 / (l*l)); 
+        entity_push(e1, a);
     }
+
+    /* planet's movement */
+    Vec  old_x = e0->x;
+    Real old_phi   = arctan(old_x);
+    Real delta_phi = e0->energy * time_delta();
+    Vec  new_x = scale(unit(old_phi + delta_phi), e0->len);
+    e0->v = sub(new_x, old_x);
 }
 
 void ray_act(Entity *ray) {
