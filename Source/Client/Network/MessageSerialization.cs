@@ -154,6 +154,7 @@ namespace Lwar.Client.Network
 				case MessageType.Kill:
 					message.Kill.Killer = buffer.ReadIdentifier();
 					message.Kill.Victim = buffer.ReadIdentifier();
+					Messages.Add(message);
 					break;
 				case MessageType.Full:
 				case MessageType.Synced:

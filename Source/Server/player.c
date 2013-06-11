@@ -135,7 +135,7 @@ void players_update() {
     clients_foreach(c) {
         p = &c->player;
 
-        if(!p->ship.entity) {
+        if(p->id.n != 0 && !p->ship.entity) {
             /* Vec x = { 100 + rand() % 600, 100 + rand() % 400 }; */
             Vec x = _0;
             player_spawn(p, x);
