@@ -20,6 +20,7 @@ type Template = {
     Interval        : int;
     Energy          : float;
     Health          : float;
+    Shield          : float;
     Length          : float;
     Mass            : float;
     Radius          : float;
@@ -35,10 +36,11 @@ let templates = seq {
     yield {
         Type            = EntityType.Bullet;
         Act             = "decay";
-        Collide         = null;
+        Collide         = "bullet_hit";
         Interval        = 0;
         Energy          = 0.0;
-        Health          = 100.0;
+        Health          = 2000.0;
+        Shield          = 1.0;
         Length          = 0.0;
         Mass            = 0.1;
         Radius          = 16.0;
@@ -53,6 +55,7 @@ let templates = seq {
         Interval        = 300;
         Energy          = 1000.0;
         Health          = 1.0;
+        Shield          = 0.0;
         Length          = 0.0;
         Mass            = 0.0;
         Radius          = 0.0;
@@ -67,6 +70,7 @@ let templates = seq {
         Interval        = 0;
         Energy          = 1000.0;
         Health          = 1.0;
+        Shield          = 0.0;
         Length          = 0.0;
         Mass            = 0.0;
         Radius          = 0.0;
@@ -77,10 +81,11 @@ let templates = seq {
     yield {
         Type            = EntityType.Planet;
         Act             = "gravity";
-        Collide         = null;
+        Collide         = "planet_hit";
         Interval        = 0;
         Energy          = 0.0;
         Health          = 1.0;
+        Shield          = 0.0;
         Length          = 0.0;
         Mass            = 10000.0;
         Radius          = 128.0;
@@ -91,10 +96,11 @@ let templates = seq {
     yield {
         Type            = EntityType.Sun;
         Act             = "gravity";
-        Collide         = null;
+        Collide         = "planet_hit";
         Interval        = 0;
         Energy          = 0.0;
         Health          = 1.0;
+        Shield          = 0.0;
         Length          = 0.0;
         Mass            = 10000.0;
         Radius          = 512.0;
@@ -109,6 +115,7 @@ let templates = seq {
         Interval        = 0;
         Energy          = 0.0;
         Health          = 1.0;
+        Shield          = 0.0;
         Length          = 0.0;
         Mass            = 0.0;
         Radius          = 2048.0;
@@ -123,6 +130,7 @@ let templates = seq {
         Interval        = 0;
         Energy          = 1000.0;
         Health          = 1.0;
+        Shield          = 1.0;
         Length          = 0.0;
         Mass            = 1.0;
         Radius          = 16.0;
@@ -133,16 +141,17 @@ let templates = seq {
     yield {
         Type            = EntityType.Ship;
         Act             = null;
-        Collide         = "take_hit";
+        Collide         = "ship_hit";
         Interval        = 0;
         Energy          = 1000.0;
-        Health          = 200.0;
+        Health          = 10000.0;
+        Shield          = 1.0;
         Length          = 0.0;
         Mass            = 1.0;
         Radius          = 64.0;
-        Acceleration    = { X = 500.0; Y = 500.0 };
-        Decelaration    = { X = 500.0; Y = 500.0 };
-        Rotation        = 3.0;  
+        Acceleration    = { X = 1000.0; Y = 1000.0 };
+        Decelaration    = { X = 1000.0; Y = 1000.0 };
+        Rotation        = 2.0;  
     }
 }
 
@@ -267,6 +276,8 @@ let generateServerCode =
             setField(t.Energy)
             output.AppendLine("// health")
             setField(t.Health)
+            output.AppendLine("// shield")
+            setField(t.Shield)
             output.AppendLine("// length")
             setField(t.Length)
             output.AppendLine("// mass")

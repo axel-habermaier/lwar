@@ -38,12 +38,12 @@ void rules_init() {
     entity_type_register("gun",    &type_gun,       0); /* not shared with client */
     entity_type_register("phaser", &type_phaser,    0);
 
-    Vec x0 = { 500,500 };
+    Vec x0 = { 0,500 };
     Entity *p0 = entity_create(&type_planet, &server->self->player, x0, _0);
 	p0->active=true;
 	p0->mass = 100;
 	
-	Vec x1 = { 1500,1500 };
+	Vec x1 = { 0,1500 };
     Entity *p1 = entity_create(&type_sun, &server->self->player, x1, _0);
 	p1->active=true;
 	p1->mass = 100;
@@ -55,6 +55,7 @@ void rules_init() {
 }
 
 EntityType *entity_type_get(size_t id) {
+    /* note: id 0 is not used as an enumeration value */
     if(id < MAX_ENTITY_TYPES)
         return array_at(&server->types, EntityType*, id);
     else return 0;
@@ -70,8 +71,19 @@ void entity_type_register(const char *name, EntityType *t, Format *f) {
     }
 }
 
-void take_hit(Entity *self, Entity *other, Real impact) {
+void bullet_hit(Entity *self, Entity *other, Real impact) {
+    entity_hit(self,  impact, other->player);
+    /* inflict some additional damage */
+    entity_hit(other, self->energy, self->player);
+}
+
+void ship_hit(Entity *self, Entity *other, Real impact) {
     entity_hit(self, impact, other->player);
+}
+
+void planet_hit(Entity *self, Entity *other, Real impact) {
+    /* immediately kill other entity */
+    entity_hit(other, INFINITY, self->player);
 }
 
 void decay(Entity *e) {
@@ -87,8 +99,8 @@ void gun_shoot(Entity *gun) {
 
     Vec f = unit(gun->phi);
     Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
-    Vec dir = normalize(sub((gun->player->aim), x));
-    Vec v = add(gun->v, scale(dir, type_bullet.max_a.y)); /* initial speed */
+    Vec u = normalize(sub((gun->player->aim), x));
+    Vec v = add(gun->v, scale(u, type_bullet.max_a.y)); /* initial speed */
     Entity *bullet = entity_create(&type_bullet,gun->player,x,v);
     bullet->active = 1;
 }
@@ -108,6 +120,7 @@ void phaser_shoot(Entity *phaser) {
     Vec x = add(phaser->x, scale(f, phaser->radius));
     Vec v = _0;
 
+    /* creates an active ray (which removes itself when phaser becomes inactive) */
     Entity *ray = entity_create(&type_ray,phaser->player,x,v);
     entity_attach(phaser, ray, _0, 0);
     ray->active = 1;
@@ -142,12 +155,14 @@ void ray_act(Entity *ray) {
 	Entity *ship   = phaser->parent;
     assert(ship);
 
+    /* the ray is deleted as soon as the phaser is inactive */
     if(!phaser->active) {
         entity_remove(ray);
         return;
     }
 
-    Vec u = unit(ray->phi);
+    Vec u = normalize(sub((ray->player->aim), phaser->x));
+    ray->dphi = arctan(u) - phaser->phi;
 
     Real    best_t;
     Entity *best_e = 0;
@@ -186,6 +201,8 @@ void ray_act(Entity *ray) {
 
     if(best_e) {
         ray->len = best_t;
+        /* damage is proportional to frame time */
+        entity_hit(best_e, ray->energy * clock_delta(), ray->player);
     } else {
         ray->len = ray->radius;
     }

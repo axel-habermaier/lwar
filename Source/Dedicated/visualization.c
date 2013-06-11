@@ -65,6 +65,10 @@ static void draw_entity(Entity *e) {
         glColor4f(1,.5,0,0);
         glTriangle(r,phi);
         break;
+    case ENTITY_TYPE_SUN:
+        glColor4f(1,.8,0,0);
+        glCircle(r);
+        break;
     case ENTITY_TYPE_PLANET:
         glColor4f(0,.5,1,0);
         glCircle(r);
@@ -122,8 +126,11 @@ static void control() {
     Entity *e = p->ship.entity;
     if(!e) return;
 
-    ax = e->x.x + mx - width/2;
-    ay = e->x.y - my + height/2;
+    mx = mx - width/2;
+    my = height - height/2 - my;
+
+    ax = e->x.x + mx;
+    ay = e->x.y + my;
 
     player_input(p, key_down('w'),
                     key_down('s'),

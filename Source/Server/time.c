@@ -51,6 +51,10 @@ Clock clock_delta() {
     return server->cur_clock - server->prev_clock;
 }
 
+Time time_delta() {
+    return to_time(clock_delta());
+}
+
 /* process periodic clock that ticks with interval i in ms
  * i should be larger than frame times
  * return true i time has passed since last tick

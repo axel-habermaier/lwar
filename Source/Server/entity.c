@@ -46,6 +46,7 @@ void entity_accelerate_to(Entity *e, Vec v) {
 
 void entity_hit(Entity *e, Real damage, Player *k) {
     Player *v = e->player;
+    damage *= e->shield;
 
     /* prevent multiple kills of the same entity */
     if(   e->health > 0 && e->health <= damage
@@ -158,6 +159,7 @@ Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
     e->interval = t->init_interval;
     e->energy = t->init_energy;
     e->health = t->init_health;
+    e->shield = t->init_shield;
     e->len    = t->init_len;
     e->mass   = t->init_mass;
     e->radius = t->init_radius;

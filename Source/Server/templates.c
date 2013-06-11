@@ -21,7 +21,9 @@ void gravity(Entity *self);
 void gravity(Entity *self);
 void ray_act(Entity *self);
 void aim(Entity *self);
-void take_hit(Entity *self, Entity *other, Real impact);
+void ship_hit(Entity *self, Entity *other, Real impact);
+void bullet_hit(Entity *self, Entity *other, Real impact);
+void planet_hit(Entity *self, Entity *other, Real impact);
 
 EntityType type_bullet =
 {
@@ -30,13 +32,15 @@ EntityType type_bullet =
     // action
     decay, 
     // collide
-    NULL, 
+    bullet_hit, 
     // interval
     0, 
     // energy
-    0.0, 
+    500.0, 
     // health
-    100.0, 
+    2000.0, 
+    // shield
+    1.0,
     // length
     0.0, 
     // mass
@@ -65,6 +69,8 @@ EntityType type_gun =
     1000.0, 
     // health
     1.0, 
+    // shield
+    0.0,
     // length
     0.0, 
     // mass
@@ -93,6 +99,8 @@ EntityType type_phaser =
     1000.0, 
     // health
     1.0, 
+    // shield
+    0.0,
     // length
     0.0, 
     // mass
@@ -114,13 +122,15 @@ EntityType type_planet =
     // action
     gravity, 
     // collide
-    NULL, 
+    planet_hit, 
     // interval
     0, 
     // energy
     0.0, 
     // health
     1.0, 
+    // shield
+    0.0,
     // length
     0.0, 
     // mass
@@ -142,13 +152,15 @@ EntityType type_sun =
     // action
     gravity, 
     // collide
-    NULL, 
+    planet_hit, 
     // interval
     0, 
     // energy
     0.0, 
     // health
     1.0, 
+    // shield
+    0.0,
     // length
     0.0, 
     // mass
@@ -174,9 +186,11 @@ EntityType type_ray =
     // interval
     0, 
     // energy
-    0.0, 
+    10.0, 
     // health
     1.0, 
+    // shield
+    0.0,
     // length
     0.0, 
     // mass
@@ -205,6 +219,8 @@ EntityType type_rocket =
     1000.0, 
     // health
     1.0, 
+    // shield
+    1.0,
     // length
     0.0, 
     // mass
@@ -226,13 +242,15 @@ EntityType type_ship =
     // action
     NULL, 
     // collide
-    take_hit, 
+    ship_hit, 
     // interval
     0, 
     // energy
     1000.0, 
     // health
-    200.0, 
+    10000.0, 
+    // shield
+    1.0,
     // length
     0.0, 
     // mass
@@ -240,10 +258,10 @@ EntityType type_ship =
     // radius
     64.0, 
     // acceleration
-    { 500.0, 500.0 }, 
+    { 1000.0, 1000.0 }, 
     // deceleration
-    { 500.0, 500.0 }, 
+    { 1000.0, 1000.0 }, 
     // rotation
-    3.0, 
+    2.0, 
 };
 

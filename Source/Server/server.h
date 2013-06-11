@@ -61,10 +61,11 @@ bool id_eq(Id id0, Id id1);
 bool address_eq(Address *adr0, Address *adr1);
 
 Clock clock_delta();
-bool clock_periodic(Clock *t, Clock i);
-bool clock_periodic_active(Clock *t, Clock i, bool active);
+bool  clock_periodic(Clock *t, Clock i);
+bool  clock_periodic_active(Clock *t, Clock i, bool active);
 Clock to_clock(Time t);
 Time  to_time(Clock t);
+Time  time_delta();
 int   time_cmp(Time t0, Time t1);
 void  time_update(Clock t);
 
@@ -215,8 +216,9 @@ struct Entity {
     Vec  dx;      /* position and angle relative to parent */
     Real dphi;
 
-    Real energy;  /* ammunition, fuel, ... */
+    Real energy;  /* ammunition, fuel, damage ... */
     Real health;
+    Real shield;  /* damage multiplier */
     Real len;
     Real mass;
     Real radius;
@@ -238,6 +240,7 @@ struct EntityType {
     /* physics */
     Real init_energy;
     Real init_health;
+    Real init_shield;
     Real init_len;
     Real init_mass;
     Real init_radius;

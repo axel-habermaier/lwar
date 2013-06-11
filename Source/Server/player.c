@@ -125,7 +125,11 @@ static void player_action(Player *p) {
     Entity *ship = p->ship.entity;
     if(!ship) return;
 
-    entity_accelerate(ship, p->a);
+    Vec a = { p->a.x * ship->type->max_a.x * 10,
+              p->a.y * ship->type->max_a.y * 10 };
+    // entity_accelerate(ship, p->a);
+
+    entity_accelerate_to(ship, a);
     entity_rotate(ship, p->rot);
 }
 

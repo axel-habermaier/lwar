@@ -239,7 +239,7 @@ static void handle_collisions(Time t) {
 void physics_update() {
     timer_start(TIMER_PHYSICS);
 
-    Time t = to_time(clock_delta());
+    Time t = time_delta();
     Entity *e;
 
     entities_foreach(e) {
