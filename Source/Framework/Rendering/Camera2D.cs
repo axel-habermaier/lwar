@@ -40,19 +40,17 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Updates the projection matrix based on the current camera configuration.
 		/// </summary>
-		/// <param name="matrix">The matrix that should hold the projection matrix once the method returns.</param>
-		protected override void UpdateProjectionMatrix(out Matrix matrix)
+		protected override void UpdateProjectionMatrixCore()
 		{
-			matrix = Matrix.CreateOrthographic(Viewport.Left, Viewport.Right, Viewport.Bottom, Viewport.Top, -1, 0);
+			Projection = Matrix.CreateOrthographic(Viewport.Left, Viewport.Right, Viewport.Bottom, Viewport.Top, -1, 0);
 		}
 
 		/// <summary>
 		///   Updates the view matrix based on the current camera configuration.
 		/// </summary>
-		/// <param name="matrix">The matrix that should hold the view matrix once the method returns.</param>
-		protected override void UpdateViewMatrix(out Matrix matrix)
+		protected override void UpdateViewMatrixCore()
 		{
-			matrix = Matrix.CreateLookAt(new Vector3(Position.X, Position.Y, 0),
+			View = Matrix.CreateLookAt(new Vector3(Position.X, Position.Y, 0),
 										 new Vector3(Position.X, Position.Y, -1),
 										 new Vector3(0, 1, 0));
 		}

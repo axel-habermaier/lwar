@@ -18,7 +18,6 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
-- !!Batched bullet rendering
 - !!!Explosions!!!
 - Camera zoom bug in very-low FPS situations
 

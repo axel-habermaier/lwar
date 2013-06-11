@@ -107,17 +107,15 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Updates the projection matrix based on the current camera configuration.
 		/// </summary>
-		/// <param name="matrix">The matrix that should hold the projection matrix once the method returns.</param>
-		protected override void UpdateProjectionMatrix(out Matrix matrix)
+		protected override void UpdateProjectionMatrixCore()
 		{
-			matrix = Matrix.CreatePerspectiveFieldOfView(MathUtils.DegToRad(30), Viewport.Width / (float)Viewport.Height, 1, 1000);
+			Projection = Matrix.CreatePerspectiveFieldOfView(MathUtils.DegToRad(30), Viewport.Width / (float)Viewport.Height, 1, 1000);
 		}
 
 		/// <summary>
 		///   Updates the view matrix based on the current camera configuration.
 		/// </summary>
-		/// <param name="matrix">The matrix that should hold the view matrix once the method returns.</param>
-		protected override void UpdateViewMatrix(out Matrix matrix)
+		protected override void UpdateViewMatrixCore()
 		{
 			var rotation = Matrix.CreateRotationX(_rotation.X) * Matrix.CreateRotationY(_rotation.Y);
 
@@ -127,7 +125,7 @@ namespace Pegasus.Framework.Rendering
 			var up = new Vector3(0, 1, 0);
 			up = Vector3.Transform(ref up, ref rotation);
 
-			matrix = Matrix.CreateLookAt(_position, target, up);
+			View = Matrix.CreateLookAt(_position, target, up);
 		}
 
 		/// <summary>

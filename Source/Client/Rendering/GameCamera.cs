@@ -8,6 +8,7 @@ namespace Lwar.Client.Rendering
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 
@@ -167,20 +168,40 @@ namespace Lwar.Client.Rendering
 		/// <param name="screenCoordinates">The screen coordinates that should be converted to world coordinates.</param>
 		public Vector2 ToWorldCoordinates(Vector2 screenCoordinates)
 		{
-			// The projection places the origin into the center of the window; translate the screen coordinates accordingly
-			var center = new Vector2(Viewport.Width, Viewport.Height) / 2.0f;
-			var centered = screenCoordinates - center;
-			centered.X /= Viewport.Width;
-			centered.Y /= Viewport.Height;
+			var viewDirection = Target - Position;
+			viewDirection = viewDirection.Normalize();
 
-			var origin = Position;
-			var direction = new Vector3(centered.X, Viewport.Height / (float)Viewport.Width, centered.Y).Normalize();
+			var left = Vector3.Cross(viewDirection, Up);
+			left = left.Normalize();
+
+			var up = Vector3.Cross(viewDirection, left);
+			up = up.Normalize();
+
+			// Map the viewport plane into world space
+			var height = (float)Math.Tan(FieldOfView / 2.0f) * NearDistance;
+			var width = height * Viewport.Width / Viewport.Height;
+
+			left *= width;
+			up *= height;
+
+			// Translate the screen coordinates such that the origin lies in the center of the viewport
+			screenCoordinates -= new Vector2(Viewport.Width / 2.0f, Viewport.Height / 2.0f);
+
+			// Map the screen coordinates to the range [-1;1]
+			screenCoordinates.X /= Viewport.Width / 2.0f;
+			screenCoordinates.Y /= Viewport.Height / 2.0f;
+
+			// Compute the ray 
+			var origin = Position + viewDirection * NearDistance + left * screenCoordinates.X + up * screenCoordinates.Y;
+			var direction = origin - Position;
 
 			var distance = -origin.Y / direction.Y;
 			var x = origin.X + distance * direction.X;
 			var z = origin.Z + distance * direction.Z;
 
-			return new Vector2(x, z);
+			var worldCoordinates = new Vector2(x, z) * 2 - new Vector2(Position.X, Position.Z);
+			Log.Info("Mouse world coordinates: {0}", worldCoordinates);
+			return worldCoordinates;
 		}
 
 		/// <summary>

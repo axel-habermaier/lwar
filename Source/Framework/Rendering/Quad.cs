@@ -85,5 +85,19 @@ namespace Pegasus.Framework.Rendering
 			quad._topLeft.Position = Vector4.Transform(ref quad._topLeft.Position, ref matrix);
 			quad._topRight.Position = Vector4.Transform(ref quad._topRight.Position, ref matrix);
 		}
+
+		/// <summary>
+		///   Applies the given position offset to the quad's vertices.
+		/// </summary>
+		/// <param name="quad">The quad that should be transformed.</param>
+		/// <param name="positionOffset">The position offset that should be applied.</param>
+		public static void Offset(ref Quad quad, ref Vector3 positionOffset)
+		{
+			var offset = new Vector4(positionOffset, 0);
+			quad._bottomLeft.Position = quad._bottomLeft.Position + offset;
+			quad._bottomRight.Position = quad._bottomRight.Position + offset;
+			quad._topLeft.Position = quad._topLeft.Position + offset;
+			quad._topRight.Position = quad._topRight.Position + offset;
+		}
 	}
 }

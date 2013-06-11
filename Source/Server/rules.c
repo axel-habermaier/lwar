@@ -37,10 +37,10 @@ void rules_init() {
     entity_type_register(ENTITY_TYPE_GUN,       &type_gun,       0); /* not shared with client */
     entity_type_register(ENTITY_TYPE_PHASER,    &type_phaser,    0);
 
-    Vec x = { 500,500 };
+ /*   Vec x = { 500,500 };
     Entity *p0 = entity_create(&type_planet, &server->self->player, x, _0);
 	p0->active=true;
-	p0->mass = 100;
+	p0->mass = 100;*/
 	/*Vec x2 = { -500, 0 };
 	p0 =entity_create(&type_rocket, &server->self->player, x2, _0);
 	p0->active=true;*/
@@ -73,8 +73,8 @@ void gun_shoot(Entity *gun) {
 
     Vec f = unit(gun->phi);
     Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
-    Vec dir = normalize(sub((gun->player->aim), gun->x));
-    Vec v = scale(dir, type_bullet.max_a.y); /* initial speed */
+    Vec dir = normalize(sub((gun->player->aim), x));
+    Vec v = add(gun->v, scale(dir, type_bullet.max_a.y)); /* initial speed */
     entity_create(&type_bullet,gun->player,x,v);
 }
 

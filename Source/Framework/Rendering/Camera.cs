@@ -23,14 +23,14 @@ namespace Pegasus.Framework.Rendering
 		private bool _bufferUpdateRequired = true;
 
 		/// <summary>
-		///   The camera's projection matrix.
+		///   Gets the camera's projection matrix.
 		/// </summary>
-		private Matrix _projection;
+		protected Matrix Projection;
 
 		/// <summary>
-		///   The camera's view matrix.
+		///   Gets the camera's view matrix.
 		/// </summary>
-		private Matrix _view;
+		protected Matrix View;
 
 		/// <summary>
 		///   The camera's viewport.
@@ -74,7 +74,7 @@ namespace Pegasus.Framework.Rendering
 		{
 			if (_bufferUpdateRequired)
 			{
-				var bufferData = new CameraBuffer(_view, _projection);
+				var bufferData = new CameraBuffer(View, Projection);
 				_cameraBuffer.CopyData(&bufferData);
 
 				_bufferUpdateRequired = false;
@@ -96,7 +96,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected void UpdateProjectionMatrix()
 		{
-			UpdateProjectionMatrix(out _projection);
+			UpdateProjectionMatrixCore();
 			_bufferUpdateRequired = true;
 		}
 
@@ -105,21 +105,19 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected void UpdateViewMatrix()
 		{
-			UpdateViewMatrix(out _view);
+			UpdateViewMatrixCore();
 			_bufferUpdateRequired = true;
 		}
 
 		/// <summary>
 		///   Updates the projection matrix based on the current camera configuration.
 		/// </summary>
-		/// <param name="matrix">The matrix that should hold the projection matrix once the method returns.</param>
-		protected abstract void UpdateProjectionMatrix(out Matrix matrix);
+		protected abstract void UpdateProjectionMatrixCore();
 
 		/// <summary>
 		///   Updates the view matrix based on the current camera configuration.
 		/// </summary>
-		/// <param name="matrix">The matrix that should hold the view matrix once the method returns.</param>
-		protected abstract void UpdateViewMatrix(out Matrix matrix);
+		protected abstract void UpdateViewMatrixCore();
 
 		/// <summary>
 		///   Stores the camera data that is passed to the vertex shaders.

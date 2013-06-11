@@ -353,16 +353,22 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Draws the given rectangle.
 		/// </summary>
-		/// <param name="rectangle">The rectangle that should be drawn.</param>
+		/// <param name="position">The position of the quad that should be drawn.</param>
+		/// <param name="size">The size of the quad that should be drawn.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
 		/// <param name="color">The color of the quad.</param>
-		/// <param name="rotation">The rotation (in radians) that should be applied to the rectangle before it is drawn.</param>
-		public void Draw(RectangleF rectangle, Texture2D texture, Color color, float rotation)
+		/// <param name="rotation">The rotation (in radians) that should be applied to the quad before it is drawn.</param>
+		public void Draw(Vector2 position, Size size, Texture2D texture, Color color, float rotation)
 		{
-			var quad = new Quad(new RectangleF(Vector2.Zero, rectangle.Size), color);
-			var transform = Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(rectangle.Left, rectangle.Top, 0);
+			var rectangle = new RectangleF(-size.Width / 2.0f, -size.Height / 2.0f, size.Width, size.Height);
+			var quad = new Quad(rectangle, color);
 
-			Quad.Transform(ref quad, ref transform);
+			var rotationMatrix = Matrix.CreateRotationZ(rotation);
+			var unrotatedPosition = new Vector3(position.X, position.Y, 0);
+
+			Quad.Transform(ref quad, ref rotationMatrix);
+			Quad.Offset(ref quad, ref unrotatedPosition);
+
 			Draw(ref quad, texture);
 		}
 

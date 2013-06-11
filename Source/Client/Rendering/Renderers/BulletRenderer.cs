@@ -60,11 +60,7 @@ namespace Lwar.Client.Rendering.Renderers
 				if (!bullet.IsValid)
 					return;
 
-				var rectangle = new RectangleF(bullet.Position.X - _texture.Width / 2.0f,
-											   bullet.Position.Y - _texture.Height / 2.0f,
-											   _texture.Width, _texture.Height);
-
-				spriteBatch.Draw(rectangle, _texture2, new Color(0, 255, 0, 255), -bullet.Rotation);
+				spriteBatch.Draw(bullet.Position, _texture.Size, _texture2, new Color(0, 255, 0, 255), -bullet.Rotation);
 			}
 
 			foreach (var bullet in Elements)
@@ -73,11 +69,7 @@ namespace Lwar.Client.Rendering.Renderers
 				if (!bullet.IsValid)
 					return;
 
-				var rectangle = new RectangleF(bullet.Position.X - _texture.Width / 2.0f,
-											   bullet.Position.Y - _texture.Height / 2.0f,
-											   _texture.Width, _texture.Height);
-
-				spriteBatch.Draw(rectangle, _texture, Color.White, -bullet.Rotation);
+				spriteBatch.Draw(bullet.Position, _texture.Size, _texture, Color.White, -bullet.Rotation);
 			}
 		}
 

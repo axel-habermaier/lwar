@@ -11,9 +11,19 @@ namespace Pegasus.Framework.Rendering
 	public class Camera3D : Camera
 	{
 		/// <summary>
+		///   The distance to the far clipping plane.
+		/// </summary>
+		private float _farDistance;
+
+		/// <summary>
 		///   The field of view of the camera in radians.
 		/// </summary>
 		private float _fieldOfView;
+
+		/// <summary>
+		///   The distance to the near clipping plane.
+		/// </summary>
+		private float _nearDistance;
 
 		/// <summary>
 		///   The camera's position within the world.
@@ -37,6 +47,8 @@ namespace Pegasus.Framework.Rendering
 		public Camera3D(GraphicsDevice graphicsDevice)
 			: base(graphicsDevice)
 		{
+			_nearDistance = 1.0f;
+			_farDistance = 1000.0f;
 		}
 
 		/// <summary>
@@ -92,21 +104,45 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
+		///   Gets or sets the distance to the far clipping plane.
+		/// </summary>
+		public float FarDistance
+		{
+			get { return _farDistance; }
+			set
+			{
+				_farDistance = value;
+				UpdateProjectionMatrix();
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the distance to the near clipping plane.
+		/// </summary>
+		public float NearDistance
+		{
+			get { return _nearDistance; }
+			set
+			{
+				_nearDistance = value;
+				UpdateProjectionMatrix();
+			}
+		}
+
+		/// <summary>
 		///   Updates the projection matrix based on the current camera configuration.
 		/// </summary>
-		/// <param name="matrix">The matrix that should hold the projection matrix once the method returns.</param>
-		protected override void UpdateProjectionMatrix(out Matrix matrix)
+		protected override void UpdateProjectionMatrixCore()
 		{
-			matrix = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / (float)Viewport.Height, 1, 1000);
+			Projection = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / (float)Viewport.Height, _nearDistance, _farDistance);
 		}
 
 		/// <summary>
 		///   Updates the view matrix based on the current camera configuration.
 		/// </summary>
-		/// <param name="matrix">The matrix that should hold the view matrix once the method returns.</param>
-		protected override void UpdateViewMatrix(out Matrix matrix)
+		protected override void UpdateViewMatrixCore()
 		{
-			matrix = Matrix.CreateLookAt(Position, Target, Up);
+			View = Matrix.CreateLookAt(Position, Target, Up);
 		}
 	}
 }

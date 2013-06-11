@@ -58,6 +58,17 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="v">The X, Y, and Z components of the vector. The W component is discarded.</param>
+		public Vector3(Vector4 v)
+		{
+			X = v.X;
+			Y = v.Y;
+			Z = v.Z;
+		}
+
+		/// <summary>
 		///   Determines whether the given vector is equal to this vector.
 		/// </summary>
 		/// <param name="other">The other vector to compare with this vector.</param>
