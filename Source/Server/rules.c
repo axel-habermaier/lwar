@@ -87,7 +87,7 @@ void gun_shoot(Entity *gun) {
 
     Vec f = unit(gun->phi);
     Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
-    Vec dir = normalize(sub((gun->player->aim), gun->x));
+    Vec dir = normalize(sub((gun->player->aim), x));
     Vec v = add(gun->v, scale(dir, type_bullet.max_a.y)); /* initial speed */
     Entity *bullet = entity_create(&type_bullet,gun->player,x,v);
     bullet->active = 1;

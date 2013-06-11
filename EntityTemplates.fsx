@@ -248,7 +248,7 @@ let generateServerCode =
 
     // Write function prototypes
     prototypes (fun t -> t.Act) "void %s(Entity *self);"
-    prototypes (fun t -> t.Collide) "void %s(Entity *self, Entity *other);"
+    prototypes (fun t -> t.Collide) "void %s(Entity *self, Entity *other, Real impact);"
     output.Newline()
 
     // Write template definitions
