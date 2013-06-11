@@ -71,8 +71,8 @@ namespace Lwar.Client.Rendering.Renderers
 				HeatMap = new Texture2DView(heat, SamplerState.BilinearClampNoMipmaps)
 			};
 
-			uint w = 640;
-			uint h = 360;
+			var w = 640;
+			var h = 360;
 			var flags = TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget;
 			_effectTexture = new Texture2D(graphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
 			_effectTexture.SetName("SunRenderer.EffectTexture");

@@ -178,6 +178,16 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Divides the vector by a scalar value.
+		/// </summary>
+		/// <param name="vector">The vector that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static Vector4 operator /(Vector4 vector, float factor)
+		{
+			return new Vector4(vector.X / factor, vector.Y / factor, vector.Z / factor, vector.W / factor);
+		}
+
+		/// <summary>
 		///   Gets the length of the vector.
 		/// </summary>
 		public float Length

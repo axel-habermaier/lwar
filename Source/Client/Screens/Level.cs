@@ -194,6 +194,7 @@ namespace Lwar.Client.Screens
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)
 		{
+			_renderContext.DrawUserInterface(spriteBatch, _cameraManager.GameCamera);
 			_eventMessage.Draw(spriteBatch);
 			_scoreboard.Draw(spriteBatch);
 			_chatInput.Draw(spriteBatch);

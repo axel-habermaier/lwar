@@ -53,20 +53,40 @@ namespace Lwar.Client.Rendering.Renderers
 		}
 
 		/// <summary>
+		///   Draws the user interface elements.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		/// <param name="camera">The camera that is used to draw the scene.</param>
+		public virtual void DrawUserInterface(SpriteBatch spriteBatch, GameCamera camera)
+		{
+		}
+
+		/// <summary>
 		///   Adds the element to the renderer.
 		/// </summary>
 		/// <param name="element">The element that should be drawn by the renderer.</param>
 		public void Add(TElement element)
 		{
 			Assert.ArgumentNotNull(element);
+
 			_elements.Add(element);
+			OnAdded(element);
 		}
 
 		/// <summary>
 		///   Invoked when an element has been added to the renderer.
 		/// </summary>
-		/// <param name="element">The element that should be drawn by the renderer.</param>
+		/// <param name="element">The element that has been added.</param>
 		protected virtual void OnAdded(TElement element)
+		{
+		}
+
+		/// <summary>
+		///   Invoked when an element has been removed from the renderer.
+		/// </summary>
+		/// <param name="element">The element that has been removed.</param>
+		/// <param name="index">The index of the element that has been removed.</param>
+		protected virtual void OnRemoved(TElement element, int index)
 		{
 		}
 
@@ -84,6 +104,8 @@ namespace Lwar.Client.Rendering.Renderers
 
 			_elements[index] = _elements[last];
 			_elements.RemoveAt(last);
+
+			OnRemoved(element, index);
 		}
 
 		/// <summary>

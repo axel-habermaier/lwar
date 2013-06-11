@@ -27,13 +27,16 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="height">The height of the texture.</param>
 		/// <param name="format">The format of the texture.</param>
 		/// <param name="flags">The flags that indicates which operations are supported on the texture.</param>
-		public Texture2D(GraphicsDevice graphicsDevice, uint width, uint height, SurfaceFormat format, TextureFlags flags)
+		public Texture2D(GraphicsDevice graphicsDevice, int width, int height, SurfaceFormat format, TextureFlags flags)
 			: base(graphicsDevice)
 		{
+			Assert.ArgumentInRange(width, 1, 8192);
+			Assert.ArgumentInRange(height, 1, 8192);
+
 			var description = new TextureDescription
 			{
-				Width = width,
-				Height = height,
+				Width = (uint)width,
+				Height = (uint)height,
 				Depth = 1,
 				ArraySize = 1,
 				Flags = flags,
@@ -62,17 +65,17 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Gets the width of the texture.
 		/// </summary>
-		public uint Width
+		public int Width
 		{
-			get { return Description.Width; }
+			get { return (int)Description.Width; }
 		}
 
 		/// <summary>
 		///   Gets the height of the texture.
 		/// </summary>
-		public uint Height
+		public int Height
 		{
-			get { return Description.Height; }
+			get { return (int)Description.Height; }
 		}
 
 		/// <summary>

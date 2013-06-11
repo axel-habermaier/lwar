@@ -19,7 +19,7 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   The minimum size of the temporary textures.
 		/// </summary>
-		private const uint MinimumSize = 16;
+		private const int MinimumSize = 16;
 
 		private readonly BlurEffect _blurEffect;
 
@@ -56,7 +56,7 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 			Assert.ArgumentNotNull(texture);
-			Assert.InRange(texture.Width, MinimumSize, 2048u);
+			Assert.InRange(texture.Width, MinimumSize, 2048);
 
 			_texture = texture;
 			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);

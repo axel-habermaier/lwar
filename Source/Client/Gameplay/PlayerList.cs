@@ -126,9 +126,6 @@ namespace Lwar.Client.Gameplay
 			var player = _playerMap[playerId];
 			Assert.NotNull(player, "Cannot change the name of an unknown player.");
 
-			if (!String.IsNullOrWhiteSpace(player.Name) && player.Name != name && player != LocalPlayer)
-				Log.Info("{0} was renamed to {1}.", player.Name, name);
-
 			player.Name = name;
 		}
 	}

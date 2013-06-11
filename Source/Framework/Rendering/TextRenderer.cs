@@ -9,7 +9,7 @@ namespace Pegasus.Framework.Rendering
 	/// <summary>
 	///   Improves text drawing performance by caching the quads of a text.
 	/// </summary>
-	internal struct TextRenderer
+	public struct TextRenderer
 	{
 		/// <summary>
 		///   The text color.
@@ -101,7 +101,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="text">The text that should be drawn.</param>
 		/// <param name="color">The color that should be used to draw the text.</param>
 		/// <param name="position">The position of the text's top left corner.</param>
-		internal static void Draw(SpriteBatch spriteBatch, Font font, Text text, Color color, Vector2i position)
+		public static void Draw(SpriteBatch spriteBatch, Font font, Text text, Color color, Vector2i position)
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.ArgumentNotNull(text);

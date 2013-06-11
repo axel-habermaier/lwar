@@ -9,7 +9,6 @@ Client
 	- Move skybox
 - Entity interpolation
 	- Reusable interpolation class?
-- Batch drawing of bullets, etc. - instancing?
 - UI
 	- Ship/Weapon selection
 	- !!Show player names on top of ships + indicator where the other players are

@@ -90,6 +90,36 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="size">The size that should be scaled.</param>
+		/// <param name="factor">The factor that should be applied.</param>
+		public static Size operator *(Size size, int factor)
+		{
+			return new Size(size.Width * factor, size.Height * factor);
+		}
+
+		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="factor">The factor that should be applied.</param>
+		/// <param name="size">The size that should be scaled.</param>
+		public static Size operator *(int factor, Size size)
+		{
+			return new Size(factor * size.Width, factor * size.Height);
+		}
+
+		/// <summary>
+		///   Divides the size by a scalar value.
+		/// </summary>
+		/// <param name="size">The size that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static Size operator /(Size size, int factor)
+		{
+			return new Size(size.Width / factor, size.Height / factor);
+		}
+
+		/// <summary>
 		///   Implicitly converts a size to a vector.
 		/// </summary>
 		/// <param name="size">The size that should be converted.</param>
@@ -188,6 +218,36 @@ namespace Pegasus.Framework.Math
 		public static bool operator !=(SizeF left, SizeF right)
 		{
 			return !(left == right);
+		}
+
+		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="size">The size that should be scaled.</param>
+		/// <param name="factor">The factor that should be applied.</param>
+		public static SizeF operator *(SizeF size, float factor)
+		{
+			return new SizeF(size.Width * factor, size.Height * factor);
+		}
+
+		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="factor">The factor that should be applied.</param>
+		/// <param name="size">The size that should be scaled.</param>
+		public static SizeF operator *(float factor, SizeF size)
+		{
+			return new SizeF(factor * size.Width, factor * size.Height);
+		}
+
+		/// <summary>
+		///   Divides the size by a scalar value.
+		/// </summary>
+		/// <param name="size">The size that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static SizeF operator /(SizeF size, float factor)
+		{
+			return new SizeF(size.Width / factor, size.Height / factor);
 		}
 
 		/// <summary>
@@ -292,6 +352,36 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="size">The size that should be scaled.</param>
+		/// <param name="factor">The factor that should be applied.</param>
+		public static SizeF8 operator *(SizeF8 size, Fixed8 factor)
+		{
+			return new SizeF8(size.Width * factor, size.Height * factor);
+		}
+
+		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="factor">The factor that should be applied.</param>
+		/// <param name="size">The size that should be scaled.</param>
+		public static SizeF8 operator *(Fixed8 factor, SizeF8 size)
+		{
+			return new SizeF8(factor * size.Width, factor * size.Height);
+		}
+
+		/// <summary>
+		///   Divides the size by a scalar value.
+		/// </summary>
+		/// <param name="size">The size that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static SizeF8 operator /(SizeF8 size, Fixed8 factor)
+		{
+			return new SizeF8(size.Width / factor, size.Height / factor);
+		}
+
+		/// <summary>
 		///   Implicitly converts a size to a vector.
 		/// </summary>
 		/// <param name="size">The size that should be converted.</param>
@@ -390,6 +480,36 @@ namespace Pegasus.Framework.Math
 		public static bool operator !=(SizeF16 left, SizeF16 right)
 		{
 			return !(left == right);
+		}
+
+		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="size">The size that should be scaled.</param>
+		/// <param name="factor">The factor that should be applied.</param>
+		public static SizeF16 operator *(SizeF16 size, Fixed16 factor)
+		{
+			return new SizeF16(size.Width * factor, size.Height * factor);
+		}
+
+		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="factor">The factor that should be applied.</param>
+		/// <param name="size">The size that should be scaled.</param>
+		public static SizeF16 operator *(Fixed16 factor, SizeF16 size)
+		{
+			return new SizeF16(factor * size.Width, factor * size.Height);
+		}
+
+		/// <summary>
+		///   Divides the size by a scalar value.
+		/// </summary>
+		/// <param name="size">The size that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static SizeF16 operator /(SizeF16 size, Fixed16 factor)
+		{
+			return new SizeF16(size.Width / factor, size.Height / factor);
 		}
 
 		/// <summary>

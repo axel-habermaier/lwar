@@ -29,5 +29,12 @@ namespace Lwar.Client.Rendering.Renderers
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
 		void Draw(SpriteBatch spriteBatch);
+
+		/// <summary>
+		///   Draws the user interface elements.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		/// <param name="camera">The camera that is used to draw the scene.</param>
+		void DrawUserInterface(SpriteBatch spriteBatch, GameCamera camera);
 	}
 }

@@ -178,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppContext.cs" />
+    <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Platform\Logging\LogCategory.cs" />
     <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\ResharperAnnotations.cs" />

@@ -89,8 +89,6 @@ namespace Lwar.Client.Gameplay
 			var message = new EventMessage(EventType.Chat) { Message = chatMessage };
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
-
-			Log.Info("{0}: {1}", message.Player.Name, chatMessage);
 		}
 
 		/// <summary>
@@ -169,7 +167,10 @@ namespace Lwar.Client.Gameplay
 
 			var message = new EventMessage(EventType.Name) { Message = name };
 			if (TryGetPlayer(player, out message.Player))
-				Add(message);
+			{
+				if (!String.IsNullOrWhiteSpace(message.Player.Name) && message.Player.Name != name)
+					Add(message);
+			}
 
 			Assert.That(!String.IsNullOrWhiteSpace(message.Player.Name), "The player's name is unknown.");
 		}
@@ -232,6 +233,8 @@ namespace Lwar.Client.Gameplay
 
 			message.GenerateDisplayString();
 			_messages[_index++] = message;
+
+			Log.Info(message.DisplayString);
 		}
 
 		/// <summary>

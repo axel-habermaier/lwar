@@ -91,6 +91,14 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
+		///   Gets the 2D position of the camera.
+		/// </summary>
+		public Vector2 Position2D
+		{
+			get { return new Vector2(Position.X, Position.Z); }
+		}
+
+		/// <summary>
 		///   Gets or sets the camera's zoom mode.
 		/// </summary>
 		public ZoomMode ZoomMode
@@ -163,7 +171,7 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
-		///   Converts the given vector in screen coordinates to world coordinates.
+		///   Converts the given screen coordinates to world coordinates.
 		/// </summary>
 		/// <param name="screenCoordinates">The screen coordinates that should be converted to world coordinates.</param>
 		public Vector2 ToWorldCoordinates(Vector2 screenCoordinates)
@@ -202,6 +210,26 @@ namespace Lwar.Client.Rendering
 			var worldCoordinates = new Vector2(x, z) * 2 - new Vector2(Position.X, Position.Z);
 			//Log.Info("Mouse world coordinates: {0}", worldCoordinates);
 			return worldCoordinates;
+		}
+
+		/// <summary>
+		/// Converts the given world coordinates to screen coordinates.
+		/// </summary>
+		/// <param name="worldCoordinates">The world coordinates that should be converted to screen coordinates.</param>
+		public Vector2 ToScreenCoodinates(Vector2 worldCoordinates)
+		{
+			var coordinates = new Vector4(worldCoordinates.X, 0, worldCoordinates.Y);
+			var transformation = View * Projection;
+
+			// Project to view space
+			coordinates = Vector4.Transform(ref coordinates, ref transformation);
+			coordinates /= coordinates.W;
+
+			// Project to screen space
+			coordinates.X = (coordinates.X * 0.5f + 0.5f) * Viewport.Width + Viewport.Left;
+			coordinates.Y = (coordinates.Y * 0.5f + 0.5f) * Viewport.Height + Viewport.Top;
+
+			return new Vector2(coordinates.X, coordinates.Y);
 		}
 
 		/// <summary>

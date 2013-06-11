@@ -239,11 +239,12 @@ namespace Lwar.Client.Network
 				case MessageType.Disconnect:
 				case MessageType.Input:
 					Assert.That(false, "The client is not allowed to receive a message of type '{0}'.", message.Type);
-					break;
+					return Messages;
 				default:
 					throw new InvalidOperationException("Unknown message type.");
 			}
 
+			Assert.That(Messages.Count != 0, "The message has not been deserialized properly.");
 			return Messages;
 		}
 	}

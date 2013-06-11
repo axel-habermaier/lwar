@@ -6,7 +6,6 @@ namespace Pegasus.Framework.Rendering
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Input;
-	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -45,6 +44,11 @@ namespace Pegasus.Framework.Rendering
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
+		///   The input layer that must be activated to control the camera.
+		/// </summary>
+		private readonly InputLayer _layer;
+
+		/// <summary>
 		///   Triggered when the user wants to strafe left.
 		/// </summary>
 		private readonly LogicalInput _left;
@@ -68,11 +72,6 @@ namespace Pegasus.Framework.Rendering
 		///   The current rotation of the camera around the X and Y axis.
 		/// </summary>
 		private Vector2 _rotation;
-
-		/// <summary>
-		/// The input layer that must be activated to control the camera.
-		/// </summary>
-		private readonly InputLayer _layer;
 
 		/// <summary>
 		///   Initializes a new instance.

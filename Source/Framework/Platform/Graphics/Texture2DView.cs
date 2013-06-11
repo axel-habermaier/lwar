@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Platform.Graphics
 {
+	using Math;
+
 	/// <summary>
 	///   Represents a 2D texture associated with a sampler state that can be used by an effect.
 	/// </summary>
@@ -28,6 +30,42 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   Gets the bound texture.
 		/// </summary>
 		public Texture2D Texture { get; private set; }
+
+		/// <summary>
+		///   Gets the size of the bound texture.
+		/// </summary>
+		public Size Size
+		{
+			get
+			{
+				Assert.NotNull(Texture, "No texture has been set.");
+				return Texture.Size;
+			}
+		}
+
+		/// <summary>
+		///   Gets the width of the bound texture.
+		/// </summary>
+		public int Width
+		{
+			get
+			{
+				Assert.NotNull(Texture, "No texture has been set.");
+				return Texture.Width;
+			}
+		}
+
+		/// <summary>
+		///   Gets the height of the bound texture.
+		/// </summary>
+		public int Height
+		{
+			get
+			{
+				Assert.NotNull(Texture, "No texture has been set.");
+				return Texture.Height;
+			}
+		}
 
 		/// <summary>
 		///   Gets the bound sampler state.

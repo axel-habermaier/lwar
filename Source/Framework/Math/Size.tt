@@ -98,6 +98,36 @@ namespace Pegasus.Framework.Math
 		}
 
 		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="size">The size that should be scaled.</param>
+		/// <param name="factor">The factor that should be applied.</param>
+		public static Size<#= info.Name #> operator *(Size<#= info.Name #> size, <#= info.Type #> factor)
+		{
+			return new Size<#= info.Name #>(size.Width * factor, size.Height * factor);
+		}
+
+		/// <summary>
+		///   Scales the size by the given factor.
+		/// </summary>
+		/// <param name="factor">The factor that should be applied.</param>
+		/// <param name="size">The size that should be scaled.</param>
+		public static Size<#= info.Name #> operator *(<#= info.Type #> factor, Size<#= info.Name #> size)
+		{
+			return new Size<#= info.Name #>(factor * size.Width, factor * size.Height);
+		}
+
+		/// <summary>
+		///   Divides the size by a scalar value.
+		/// </summary>
+		/// <param name="size">The size that should be divided.</param>
+		/// <param name="factor">The scalar value the vector should be divided by.</param>
+		public static Size<#= info.Name #> operator /(Size<#= info.Name #> size, <#= info.Type #> factor)
+		{
+			return new Size<#= info.Name #>(size.Width / factor, size.Height / factor);
+		}
+
+		/// <summary>
 		///   Implicitly converts a size to a vector.
 		/// </summary>
 		/// <param name="size">The size that should be converted.</param>
