@@ -200,7 +200,7 @@ namespace Lwar.Client.Rendering
 			var z = origin.Z + distance * direction.Z;
 
 			var worldCoordinates = new Vector2(x, z) * 2 - new Vector2(Position.X, Position.Z);
-			Log.Info("Mouse world coordinates: {0}", worldCoordinates);
+			//Log.Info("Mouse world coordinates: {0}", worldCoordinates);
 			return worldCoordinates;
 		}
 

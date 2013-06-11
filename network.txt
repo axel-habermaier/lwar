@@ -65,6 +65,7 @@ Message Types
 	Id		Type			Reliable	Sender			Description	
 	---  	---------		---------	-------------	----------------------------------------------------------------------
 	  1 	Connect			yes			client			Client wants to connect to a server
+	  2		(Deprecated)								(Used to be the reliable Disconnect message)
 	  3		Join			yes			server			Informs all clients about a new player
 	  4 	Leave			yes			server			Informs all clients that a client left
 	  5		Chat			yes			client/server	Broadcasts the chat message to all clients
