@@ -170,12 +170,14 @@ namespace Lwar.Client.Network
 			if (header == null)
 				return;
 
-			_lastPacketTimestamp = _clock.Milliseconds;
 			deliveryManager.UpdateLastAckedSequenceNumber(header.Value.Acknowledgement);
 			var allowUnreliableDelivery = deliveryManager.AllowUnreliableDelivery(header.Value.Timestamp);
 
-			while (!buffer.EndOfBuffer)
+			var readBytes = -1;
+			while (!buffer.EndOfBuffer && readBytes != buffer.Count)
 			{
+				readBytes = buffer.Count;
+
 				List<Message> messages;
 				if (!buffer.TryRead(out messages, MessageDeserializer))
 					continue;
@@ -196,6 +198,11 @@ namespace Lwar.Client.Network
 					HandleMessage(ref message, messageQueue);
 				}
 			}
+
+			Assert.That(buffer.EndOfBuffer, "Received an invalid packet from server.");
+
+			if (buffer.EndOfBuffer)
+				_lastPacketTimestamp = _clock.Milliseconds;
 		}
 
 		/// <summary>

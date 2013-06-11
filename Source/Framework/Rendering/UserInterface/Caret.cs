@@ -54,6 +54,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			get { return _text.SourceString; }
 			set
 			{
+				Assert.NotDisposed(this);
 				Assert.ArgumentNotNull(value);
 
 				if (_text.SourceString == value)
@@ -101,6 +102,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="delta">The delta by which the caret should be moved.</param>
 		public void Move(int delta)
 		{
+			Assert.NotDisposed(this);
 			Position += delta;
 		}
 
@@ -109,6 +111,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public void MoveToBeginning()
 		{
+			Assert.NotDisposed(this);
 			Position = 0;
 		}
 
@@ -117,6 +120,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public void MoveToEnd()
 		{
+			Assert.NotDisposed(this);
 			Position = _text.Length;
 		}
 
@@ -126,6 +130,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="c">The character that should be inserted.</param>
 		public void InsertCharacter(char c)
 		{
+			Assert.NotDisposed(this);
+
 			// Ignore non-ASCII printable characters
 			if (c < 32 || c > 126)
 				return;
@@ -153,6 +159,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public void RemoveCurrentCharacter()
 		{
+			Assert.NotDisposed(this);
+
 			if (_position >= _text.SourceLength)
 				return;
 
@@ -175,6 +183,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public void RemovePreviousCharacter()
 		{
+			Assert.NotDisposed(this);
+
 			if (_position <= 0 && _text.SourceLength == 0)
 				return;
 
@@ -205,6 +215,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="position">The position of the caret's top left corner.</param>
 		public void Draw(SpriteBatch spriteBatch, Font font, Vector2i position)
 		{
+			Assert.NotDisposed(this);
+
 			// Show and hide the caret depending on the frequency and offset
 			if (((int)Math.Round(_clock.Seconds * Frequency)) % 2 != 0)
 				return;
@@ -219,6 +231,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="font">The font that is used to draw the caret.</param>
 		public int GetWidth(Font font)
 		{
+			Assert.NotDisposed(this);
 			return font.MeasureWidth(_caretVisual);
 		}
 

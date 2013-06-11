@@ -50,6 +50,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			get { return _layout.DesiredArea; }
 			set
 			{
+				Assert.NotDisposed(this);
+
 				// Subtract the caret width from the desired area's size to ensure that we always have
 				// enough space left to draw the caret
 				var width = value.Width - _caret.GetWidth(_layout.Font);
@@ -65,6 +67,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			get
 			{
+				Assert.NotDisposed(this);
+
 				// Ensure that the layout is up to date
 				_layout.UpdateLayout();
 				return _layout.ActualArea;
@@ -79,6 +83,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			get { return _layout.TextString; }
 			set
 			{
+				Assert.NotDisposed(this);
+
 				_layout.TextString = value;
 				_caret.TextString = value;
 			}
@@ -108,6 +114,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="c">The character that should be inserted.</param>
 		public void InsertCharacter(char c)
 		{
+			Assert.NotDisposed(this);
 			_caret.InsertCharacter(c);
 		}
 
@@ -117,6 +124,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="args">The key that was pressed.</param>
 		public void InjectKeyPress(KeyEventArgs args)
 		{
+			Assert.NotDisposed(this);
+
 			if (args.Key == Key.Right)
 				_caret.Move(1);
 
@@ -141,6 +150,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public void Draw(SpriteBatch spriteBatch)
 		{
+			Assert.NotDisposed(this);
+			Assert.ArgumentNotNull(spriteBatch);
+
 			_layout.UpdateLayout();
 			_layout.DrawDebugVisualizations(spriteBatch);
 			_textRenderer.DrawCached(spriteBatch, _layout.Font.Texture);

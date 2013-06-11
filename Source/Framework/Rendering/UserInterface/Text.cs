@@ -72,7 +72,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public int Length
 		{
-			get { return _text.Length; }
+			get
+			{
+				Assert.NotPooled(this);
+				return _text.Length;
+			}
 		}
 
 		/// <summary>
@@ -80,7 +84,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public int SourceLength
 		{
-			get { return SourceString.Length; }
+			get
+			{
+				Assert.NotPooled(this);
+				return SourceString.Length;
+			}
 		}
 
 		/// <summary>
@@ -333,6 +341,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public void GetColor(int index, out Color? color)
 		{
 			Assert.NotPooled(this);
+
 			foreach (var range in _colorRanges)
 			{
 				if (range.Begin <= index && range.End > index)

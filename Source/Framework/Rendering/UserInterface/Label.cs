@@ -56,7 +56,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public string Text
 		{
 			get { return _layout.TextString; }
-			set { _layout.TextString = value; }
+			set
+			{
+				Assert.NotDisposed(this);
+				_layout.TextString = value;
+			}
 		}
 
 		/// <summary>
@@ -65,7 +69,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public Rectangle Area
 		{
 			get { return _layout.DesiredArea; }
-			set { _layout.DesiredArea = value; }
+			set
+			{
+				Assert.NotDisposed(this);
+				_layout.DesiredArea = value;
+			}
 		}
 
 		/// <summary>
@@ -74,7 +82,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public int LineSpacing
 		{
 			get { return _layout.LineSpacing; }
-			set { _layout.LineSpacing = value; }
+			set
+			{
+				Assert.NotDisposed(this);
+				_layout.LineSpacing = value;
+			}
 		}
 
 		/// <summary>
@@ -83,7 +95,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public Font Font
 		{
 			get { return _layout.Font; }
-			set { _layout.Font = value; }
+			set
+			{
+				Assert.NotDisposed(this);
+				_layout.Font = value;
+			}
 		}
 
 		/// <summary>
@@ -92,7 +108,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public Color Color
 		{
 			get { return _textRenderer.Color; }
-			set { _textRenderer.Color = value; }
+			set
+			{
+				Assert.NotDisposed(this);
+				_textRenderer.Color = value;
+			}
 		}
 
 		/// <summary>
@@ -101,7 +121,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public TextAlignment Alignment
 		{
 			get { return _layout.Alignment; }
-			set { _layout.Alignment = value; }
+			set
+			{
+				Assert.NotDisposed(this);
+				_layout.Alignment = value;
+			}
 		}
 
 		/// <summary>
@@ -132,6 +156,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the label.</param>
 		public void Draw(SpriteBatch spriteBatch)
 		{
+			Assert.ArgumentNotNull(spriteBatch);
+			Assert.NotDisposed(this);
+
 			// Ensure that the layout is up to date
 			_layout.UpdateLayout();
 

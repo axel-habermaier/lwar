@@ -81,13 +81,13 @@ namespace Lwar.Client.Screens
 				_gameSession.EventMessages.Enabled = true;
 			}
 
-			if (_networkSession.IsConnected || _networkSession.IsDropped || _networkSession.IsFaulted)
-				ScreenManager.Remove(this);
-
 			if (_networkSession.ServerIsFull)
 				MessageBox.Show(this, LogCategory.Server, LogType.Error, "The server is full.", true);
 
 			_statusMessage.Area = new Rectangle(0, 0, Window.Width, Window.Height);
+
+			if (_networkSession.IsConnected || _networkSession.IsDropped || _networkSession.IsFaulted)
+				ScreenManager.Remove(this);
 		}
 
 		/// <summary>
