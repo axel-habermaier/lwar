@@ -8,7 +8,6 @@ namespace Lwar.Client.Rendering
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 
@@ -89,6 +88,11 @@ namespace Lwar.Client.Rendering
 			_inputDevice.Mouse.Wheel += OnZoomChanged;
 			_targetZoom = _zoom;
 		}
+
+		/// <summary>
+		///   Gets or sets a value indicating whether the camera is currently active.
+		/// </summary>
+		public bool IsActive { get; set; }
 
 		/// <summary>
 		///   Gets the 2D position of the camera.
@@ -213,7 +217,7 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
-		/// Converts the given world coordinates to screen coordinates.
+		///   Converts the given world coordinates to screen coordinates.
 		/// </summary>
 		/// <param name="worldCoordinates">The world coordinates that should be converted to screen coordinates.</param>
 		public Vector2 ToScreenCoodinates(Vector2 worldCoordinates)

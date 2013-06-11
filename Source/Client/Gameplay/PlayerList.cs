@@ -71,7 +71,10 @@ namespace Lwar.Client.Gameplay
 			_playerMap.Add(player);
 
 			if (isLocalPlayer)
+			{
 				LocalPlayer = player;
+				LocalPlayer.IsLocalPlayer = true;
+			}
 		}
 
 		/// <summary>

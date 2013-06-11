@@ -37,6 +37,11 @@ namespace Lwar.Client.Gameplay
 		public Ship Ship { get; set; }
 
 		/// <summary>
+		///   Gets or sets a value indicating whether this player is the local one.
+		/// </summary>
+		public bool IsLocalPlayer { get; set; }
+
+		/// <summary>
 		///   Gets the player's identifier.
 		/// </summary>
 		public Identifier Id { get; private set; }

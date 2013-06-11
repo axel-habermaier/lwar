@@ -4,13 +4,13 @@ namespace Lwar.Client.Rendering.Renderers
 {
 	using System.Collections.Generic;
 	using Assets.Effects;
+	using Gameplay;
 	using Gameplay.Entities;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
@@ -80,26 +80,24 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="camera">The camera that is used to draw the scene.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch, GameCamera camera)
 		{
+			// Don't show the names when the game camera is inactive
+			if (!camera.IsActive)
+				return;
+
 			var viewport = camera.Viewport;
 
 			// Update the positions of all names
 			var i = 0;
 			foreach (var ship in Elements)
 			{
-				// Check if the player name has changed
-				if (_names[i].Name.SourceString != ship.Player.Name)
-				{
-					_names[i].Dispose();
-					_names[i] = new PlayerName(_font, ship.Player.Name);
-				}
-
 				var name = _names[i];
+				name.Update();
 
 				// Determine the screen-space height of the ship
-				var topLeft = camera.ToScreenCoodinates(new Vector2(ship.Position.X + _effect.Texture.Width / 2.0f, 
-					ship.Position.Y - _effect.Texture.Height / 2.0f));
-				var bottomRight = camera.ToScreenCoodinates(new Vector2(ship.Position.X - _effect.Texture.Width / 2.0f, 
-					ship.Position.Y + _effect.Texture.Height / 2.0f));
+				var topLeft = camera.ToScreenCoodinates(new Vector2(ship.Position.X + _effect.Texture.Width / 2.0f,
+																	ship.Position.Y - _effect.Texture.Height / 2.0f));
+				var bottomRight = camera.ToScreenCoodinates(new Vector2(ship.Position.X - _effect.Texture.Width / 2.0f,
+																		ship.Position.Y + _effect.Texture.Height / 2.0f));
 
 				var width = bottomRight.X - topLeft.X;
 				var height = bottomRight.Y - topLeft.Y;
@@ -122,7 +120,7 @@ namespace Lwar.Client.Rendering.Renderers
 
 					// The line segment from the center of the viewport to the ship's screen space position to 
 					var line = new LineSegment(new Vector2(viewport.Width / 2.0f, viewport.Height / 2.0f),
-											   new Vector2(name.Area.Left,name.Area.Top) + new Vector2(name.Area.Width / 2, name.Area.Height / 2));
+											   new Vector2(name.Area.Left, name.Area.Top) + new Vector2(name.Area.Width / 2, name.Area.Height / 2));
 
 					Vector2 intersection;
 					if (line.Intersects(left, out intersection) || line.Intersects(top, out intersection) ||
@@ -156,7 +154,7 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="ship">The ship that has been added.</param>
 		protected override void OnAdded(Ship ship)
 		{
-			_names.Add(new PlayerName(_font, ship.Player.Name));
+			_names.Add(new PlayerName(_font, ship.Player));
 		}
 
 		/// <summary>
@@ -179,7 +177,7 @@ namespace Lwar.Client.Rendering.Renderers
 		{
 			_effect.SafeDispose();
 			_model.SafeDispose();
-		
+
 			foreach (var name in _names)
 				name.Dispose();
 		}
@@ -189,6 +187,16 @@ namespace Lwar.Client.Rendering.Renderers
 		/// </summary>
 		private struct PlayerName
 		{
+			/// <summary>
+			///   The font that is used to draw the player name.
+			/// </summary>
+			private readonly Font _font;
+
+			/// <summary>
+			///   The player whose name is shown.
+			/// </summary>
+			private readonly Player _player;
+
 			/// <summary>
 			///   The area occupied by the player name.
 			/// </summary>
@@ -202,16 +210,39 @@ namespace Lwar.Client.Rendering.Renderers
 			/// <summary>
 			///   Initializes a new instance.
 			/// </summary>
-			/// <param name="font">The font that is used to draw the player name.</param>
-			/// <param name="name">The name of the player.</param>
-			public PlayerName(Font font, string name)
+			/// <param name="font">The font that should be used to draw the player name.</param>
+			/// <param name="player">The player whose name should be shown.</param>
+			public PlayerName(Font font, Player player)
+				: this()
 			{
-				Name = Text.Create(name);
-				Area = new Rectangle(Vector2i.Zero, font.MeasureWidth(Name), font.LineHeight);
+				Assert.ArgumentNotNull(font);
+				Assert.ArgumentNotNull(player);
+
+				_font = font;
+				_player = player;
+
+				// Do not show the name of the local player
+				if (_player.IsLocalPlayer)
+					Name = Text.Create(String.Empty);
 			}
 
 			/// <summary>
-			/// Disposes the player name.
+			///   Updates the player name, if the name has changed.
+			/// </summary>
+			public void Update()
+			{
+				if (Name != null && Name.SourceString == _player.Name)
+					return;
+
+				if (_player.IsLocalPlayer)
+					return;
+
+				Name = Text.Create(_player.Name);
+				Area = new Rectangle(Vector2i.Zero, _font.MeasureWidth(Name), _font.LineHeight);
+			}
+
+			/// <summary>
+			///   Disposes the player name.
 			/// </summary>
 			public void Dispose()
 			{

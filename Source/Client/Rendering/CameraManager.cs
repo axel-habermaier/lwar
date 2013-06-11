@@ -49,6 +49,7 @@ namespace Lwar.Client.Rendering
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice, InputLayers.Debug);
 
 			ActiveCamera = GameCamera;
+			GameCamera.IsActive = true;
 
 			Commands.OnToggleDebugCamera += ToggleDebugCamera;
 		}
@@ -83,6 +84,8 @@ namespace Lwar.Client.Rendering
 				_inputDevice.ActivateLayer(InputLayers.Debug);
 				_window.MouseCaptured = true;
 			}
+
+			GameCamera.IsActive = ActiveCamera == GameCamera;
 		}
 
 		/// <summary>
