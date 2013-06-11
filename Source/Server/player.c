@@ -63,7 +63,7 @@ void player_select(Player *p,
                    int weapon_type_id3, int weapon_type_id4)
 {
     EntityType *ship_type = entity_type_get(ship_type_id);
-    if(!ship_type) return;
+    /* if(!ship_type) return; used to clear selection for visualization */
 
     Slot *s;
     SlotType *st;
@@ -135,7 +135,7 @@ void players_update() {
     clients_foreach(c) {
         p = &c->player;
 
-        if(p->id.n != 0 && !p->ship.entity) {
+        if(!p->ship.entity) {
             /* Vec x = { 100 + rand() % 600, 100 + rand() % 400 }; */
             Vec x = _0;
             player_spawn(p, x);
