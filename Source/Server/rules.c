@@ -9,6 +9,11 @@
 
 #include "rules.h"
 
+#ifdef _MSC_VER // INFINITY is not defined
+#include <limits>
+#define INFINITY std::numeric_limits<float>::infinity()
+#endif
+
 #define SELF_NAME "server"
 static Str self_name = { sizeof(SELF_NAME)-1, SELF_NAME };
 static const Real gravity_factor = 10000; // 0.04;
