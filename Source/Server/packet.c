@@ -38,15 +38,23 @@ void packet_init(Packet *p, Address *adr, size_t ack, size_t time) {
 bool packet_put(Packet *p, Pack *pack, void *u) {
     assert(p->a <= p->b);
     size_t n = pack(p->p + p->b, u);
-    p->b += n;
-    return check_bounds(p,n);
+    if(check_bounds(p,n)) {
+        p->b += n;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool packet_get(Packet *p, Unpack *unpack, void *u) {
     if(p->a >= p->b) return false;
     size_t n = unpack(p->p + p->a, u);
-    p->a += n;
-    return check_bounds(p,n);
+    if(check_bounds(p,n)) {
+        p->a += n;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool packet_recv(Packet *p) {

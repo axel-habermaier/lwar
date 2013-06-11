@@ -2,6 +2,7 @@
 extern EntityType type_ship;
 extern EntityType type_bullet;
 extern EntityType type_planet;
+extern EntityType type_sun;
 extern EntityType type_rocket;
 extern EntityType type_ray;
 extern EntityType type_shockwave;

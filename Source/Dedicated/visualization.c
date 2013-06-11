@@ -105,7 +105,8 @@ static void control() {
         player_select(p, ENTITY_TYPE_SHIP, ENTITY_TYPE_GUN, ENTITY_TYPE_PHASER, 0, 0);
     } else if(key_down('E')) {
         player_select(p, 0, 0, 0, 0, 0);
-        player_die(p);
+        /* TODO: bug appears */
+        player_clear(p);
     }
 
     if(key_down('+'))

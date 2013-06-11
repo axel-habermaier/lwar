@@ -14,6 +14,9 @@ Format format_circle  = { {0,0}, MESSAGE_UPDATE_CIRCLE, update_circle_pack, 0 };
 void format_register(Format *f) {
     INIT_LIST_HEAD(&f->all);
 
+    f->len = 0;
+    f->n   = 0;
+
     if(1) {
         char s[64];
         Entity e = {};

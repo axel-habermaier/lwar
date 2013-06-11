@@ -266,7 +266,7 @@ void message_debug(Message *m, const char *s) {
         log_debug("%sdisconnect", s);
         break;
     case MESSAGE_JOIN:
-        log_debug("%sjoin %d", s, m->join.player_id.n);
+        log_debug("%sjoin %d: %.*s", s, m->join.player_id.n, m->join.nick.n, m->join.nick.s);
         break;
     case MESSAGE_LEAVE:
         log_debug("%sleave %d", s, m->leave.player_id.n);

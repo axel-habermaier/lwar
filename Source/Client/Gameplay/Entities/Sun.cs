@@ -16,8 +16,8 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <param name="message">The update message that should be processed.</param>
 		public override void RemoteUpdate(ref Message message)
 		{
-			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
-			Position = message.Update.Position;
+			Assert.That(message.Type == MessageType.UpdatePosition, "Unsupported update type.");
+			Position = message.UpdatePosition.Position;
 		}
 
 		/// <summary>

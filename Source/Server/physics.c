@@ -70,6 +70,7 @@ static void move(Entity *e, Time t) {
 static void move_remaining(Entity *e) {
     if(e->parent) {
         e->x   = add(e->parent->x, rotate(e->dx, e->parent->phi));
+        e->v   = e->parent->v;
         e->phi = e->parent->phi + e->dphi;
     } else {
         move(e, e->remaining);

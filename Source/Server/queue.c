@@ -213,6 +213,13 @@ void queue_remove(Entity *e) {
     r->remove.entity_id = e->id;
 }
 
+void queue_kill(Player *k, Player *v) {
+    Message *r;
+    r = message_broadcast(MESSAGE_KILL);
+    r->kill.killer_id = k->id;
+    r->kill.victim_id = v->id;
+}
+
 Message *queue_next(cr_t *state, Client *c, size_t *tries) {
     static QueuedMessage *qm;
 

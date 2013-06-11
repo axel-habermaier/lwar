@@ -34,10 +34,10 @@ namespace Lwar.Client.Gameplay.Entities
 		/// <param name="message">The update message that should be processed.</param>
 		public override void RemoteUpdate(ref Message message)
 		{
-			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
+			Assert.That(message.Type == MessageType.UpdatePosition, "Unsupported update type.");
 
-			Rotation = MathUtils.ComputeAngle(Position, message.Update.Position, new Vector2(1, 0));
-			Position = message.Update.Position;
+			Rotation = MathUtils.ComputeAngle(Position, message.UpdatePosition.Position, new Vector2(1, 0));
+			Position = message.UpdatePosition.Position;
 
 			// TODO: Remove this hack
 			++_updateCount;

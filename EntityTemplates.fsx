@@ -133,7 +133,7 @@ let templates = seq {
     yield {
         Type            = EntityType.Ship;
         Act             = null;
-        Collide         = null;
+        Collide         = "take_hit";
         Interval        = 0;
         Energy          = 1000.0;
         Health          = 200.0;

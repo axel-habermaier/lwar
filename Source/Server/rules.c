@@ -27,23 +27,31 @@ void rules_init() {
     format_register(&format_circle);
 
     /* register some entity types */
-    entity_type_register(ENTITY_TYPE_SHIP,      &type_ship,      &format_ship);
-    entity_type_register(ENTITY_TYPE_BULLET,    &type_bullet,    &format_ship); /* TODO: pos */
-    entity_type_register(ENTITY_TYPE_PLANET,    &type_planet,    &format_ship); /* TODO: pos */
-    entity_type_register(ENTITY_TYPE_ROCKET,    &type_rocket,    &format_ship);
-    entity_type_register(ENTITY_TYPE_RAY,       &type_ray,       &format_ray);
+    entity_type_register("ship",   &type_ship,      &format_ship);
+    entity_type_register("bullet", &type_bullet,    &format_pos);
+    entity_type_register("planet", &type_planet,    &format_pos);
+    entity_type_register("sun",    &type_sun,       &format_pos);
+    entity_type_register("rocket", &type_rocket,    &format_ship);
+    entity_type_register("ray",    &type_ray,       &format_ray);
     // entity_type_register(ENTITY_TYPE_SHOCKWAVE, &type_shockwave, &format_circle);
 
-    entity_type_register(ENTITY_TYPE_GUN,       &type_gun,       0); /* not shared with client */
-    entity_type_register(ENTITY_TYPE_PHASER,    &type_phaser,    0);
+    entity_type_register("gun",    &type_gun,       0); /* not shared with client */
+    entity_type_register("phaser", &type_phaser,    0);
 
- /*   Vec x = { 500,500 };
-    Entity *p0 = entity_create(&type_planet, &server->self->player, x, _0);
+    Vec x0 = { 500,500 };
+    Entity *p0 = entity_create(&type_planet, &server->self->player, x0, _0);
 	p0->active=true;
-	p0->mass = 100;*/
-	/*Vec x2 = { -500, 0 };
+	p0->mass = 100;
+	
+	Vec x1 = { 1500,1500 };
+    Entity *p1 = entity_create(&type_sun, &server->self->player, x1, _0);
+	p1->active=true;
+	p1->mass = 100;
+    /*
+	Vec x2 = { -500, 0 };
 	p0 =entity_create(&type_rocket, &server->self->player, x2, _0);
-	p0->active=true;*/
+	p0->active=true;
+    */
 }
 
 EntityType *entity_type_get(size_t id) {
@@ -53,11 +61,17 @@ EntityType *entity_type_get(size_t id) {
 }
 
 /* entity type 0 is invalid, should map to NULL */
-void entity_type_register(size_t id, EntityType *t, Format *f) {
+void entity_type_register(const char *name, EntityType *t, Format *f) {
+    size_t id = t->id;
     if(0 < id && id < MAX_ENTITY_TYPES) {
         array_at(&server->types, EntityType*, id) = t;
+        t->name   = name;
         t->format = f;
     }
+}
+
+void take_hit(Entity *self, Entity *other, Real impact) {
+    entity_hit(self, impact, other->player);
 }
 
 void decay(Entity *e) {
@@ -73,9 +87,10 @@ void gun_shoot(Entity *gun) {
 
     Vec f = unit(gun->phi);
     Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
-    Vec dir = normalize(sub((gun->player->aim), x));
+    Vec dir = normalize(sub((gun->player->aim), gun->x));
     Vec v = add(gun->v, scale(dir, type_bullet.max_a.y)); /* initial speed */
-    entity_create(&type_bullet,gun->player,x,v);
+    Entity *bullet = entity_create(&type_bullet,gun->player,x,v);
+    bullet->active = 1;
 }
 
 void phaser_shoot(Entity *phaser) {
@@ -108,7 +123,7 @@ void gravity(Entity *e0) {
             if(m1 == 0) continue;
 
             Vec dx = sub(e0->x, e1->x);
-            Real l  = len(dx);
+            Real l = len(dx);
             Vec r  = normalize(dx);
 
             /* force is quadratic wrt proximity,
@@ -123,6 +138,10 @@ void gravity(Entity *e0) {
 void ray_act(Entity *ray) {
 	Entity *phaser = ray->parent;
     assert(phaser);
+
+	Entity *ship   = phaser->parent;
+    assert(ship);
+
     if(!phaser->active) {
         entity_remove(ray);
         return;
@@ -135,10 +154,11 @@ void ray_act(Entity *ray) {
 
     Entity *e;
     entities_foreach(e) {
-        if(e == ray) continue;
-        if(e == ray->parent) continue;
-        if(ray->parent->parent && e == ray->parent->parent) continue;
+        if(e == ray)    continue;
+        if(e == phaser) continue;
+        if(e == ship)   continue;
 
+        /* TODO: partially merge into physics code */
         Real r = e->radius;
         Vec dx = sub(ray->x, e->x);
 

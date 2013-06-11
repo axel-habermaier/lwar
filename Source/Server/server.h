@@ -83,7 +83,6 @@ void player_select(Player *p,
 void player_rename(Player *p, Str name);
 void player_spawn(Player *p, Vec x);
 void player_notify_entity(Entity *e);
-void player_die(Player *p);
 void players_update();
 
 void    clients_init();
@@ -101,12 +100,14 @@ void queue_leave(Client *c);
 void queue_collision(Collision *c);
 void queue_add(Entity *e);
 void queue_remove(Entity *e);
+void queue_kill(Player *k, Player *v);
 
 void protocol_init();
 void protocol_recv();
 void protocol_send(bool force);
 void protocol_notify_entity(Entity *e);
 void protocol_notify_collision(Collision *c);
+void protocol_notify_kill(Player *k, Player *v);
 void protocol_cleanup();
 
 void    entities_init();
@@ -120,6 +121,7 @@ void entity_push(Entity *e, Vec a);
 void entity_accelerate(Entity *e, Vec a);
 void entity_accelerate_to(Entity *e, Vec v);
 void entity_rotate(Entity *e, Real r);
+void entity_hit(Entity *e, Real damage, Player *p);
 void entity_attach(Entity *e, Entity *c, Vec dx, Real dphi);
 
 Real   rad(Real a); /* radians of a */
@@ -134,7 +136,7 @@ void format_register(Format *f);
 void format_add_entity(Format *f, Entity *e);
 
 EntityType *entity_type_get(size_t id);
-void entity_type_register(size_t id, EntityType *t, Format *f);
+void entity_type_register(const char *name, EntityType *t, Format *f);
 
 struct Vec {
     Real x,y;
@@ -174,6 +176,7 @@ struct Player {
     /* gameplay */
     Slot ship;
     Slot weapons[NUM_SLOTS];
+    size_t kills,deaths;
 
     /* input state */
     Vec a;
@@ -228,7 +231,7 @@ struct EntityType {
 
     /* gameplay */
     void (*act)(Entity *self);
-    void (*collide)(Entity *self, Entity *other);
+    void (*collide)(Entity *self, Entity *other, Real impact);
 
     Clock init_interval; /* for activation */
 
@@ -244,6 +247,7 @@ struct EntityType {
 
     Format *format;
 
+    const char *name;
     SlotType slots[NUM_SLOTS]; /* possible weapon attachments */
 };
 

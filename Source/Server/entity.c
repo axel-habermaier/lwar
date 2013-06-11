@@ -28,6 +28,11 @@ void entity_accelerate(Entity *e, Vec a) {
     entity_push(e, rotate(apply_acc(a, e->type->max_a, e->type->max_b), e->phi));
 }
 
+/* rotate e by r in [-1..1] */
+void entity_rotate(Entity *e, Real r) {
+    e->rot += r * e->type->max_rot;
+}
+
 /* try to reach exactly velocity v (relative to e)
  */
 void entity_accelerate_to(Entity *e, Vec v) {
@@ -39,9 +44,21 @@ void entity_accelerate_to(Entity *e, Vec v) {
     entity_accelerate(e, a);
 }
 
-/* rotate e by r in [-1..1] */
-void entity_rotate(Entity *e, Real r) {
-    e->rot += r * e->type->max_rot;
+void entity_hit(Entity *e, Real damage, Player *k) {
+    Player *v = e->player;
+
+    /* prevent multiple kills of the same entity */
+    if(   e->health > 0 && e->health <= damage
+       && e == v->ship.entity)
+    {
+        /* TODO: move somewhere else? */
+        k->kills ++;
+        v->deaths ++;
+
+        protocol_notify_kill(k, v);
+    }
+
+    e->health -= damage;
 }
 
 static void notify(Entity *e) {
@@ -53,7 +70,7 @@ static void act(Entity *e) {
     e->age += clock_delta();
 
     if(clock_periodic_active(&e->periodic, e->interval, e->active)) {
-        if(e->type->act)
+        if(e->health > 0 && e->type->act)
             e->type->act(e);
     }
 
@@ -64,10 +81,12 @@ static void act(Entity *e) {
 void entities_notify_collision(Collision *c) {
     Entity *e0 = c->e[0];
     Entity *e1 = c->e[1];
+    Real i0 = c->i[0];
+    Real i1 = c->i[1];
     EntityType *t0 = e0->type;
     EntityType *t1 = e1->type;
-    if(t0->collide) t0->collide(e0, e1);
-    if(t1->collide) t1->collide(e1, e0);
+    if(t0->collide) t0->collide(e0, e1, i0);
+    if(t1->collide) t1->collide(e1, e0, i1);
 }
 
 void entities_update() {
@@ -94,12 +113,6 @@ static void entity_ctor(size_t i, void *p) {
 
 static void entity_dtor(size_t i, void *p) {
     Entity *e = (Entity*)p;
-    Format *f = e->type->format;
-
-    if(f) {
-        list_del(&e->_u);
-        f->n --;
-    }
 
     list_del(&e->siblings);
     e->id.gen ++;
@@ -116,6 +129,14 @@ static void entity_set_type(Entity *e, EntityType *t) {
     if(f) {
         list_add_tail(&e->_u, &f->all);
         f->n ++;
+    }
+}
+
+static void entity_unset_type(Entity *e) {
+    Format *f = e->type->format;
+    if(f) {
+        list_del(&e->_u);
+        f->n --;
     }
 }
 
@@ -143,7 +164,7 @@ Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
     e->collides = (e->radius > 0);   /* TODO: this is a hacky-heuristics */
     e->bounces  = (e->mass < 1000);
     notify(e);
-    log_debug("+ entity %d pos = (%.1f,%.1f) v = (%.1f,%.1f)", e->id.n, e->x.x, e->x.y, e->v.x, e->v.y);
+    log_debug("+ entity %d (%s), pos = (%.1f,%.1f) v = (%.1f,%.1f)", e->id.n, e->type->name, e->x.x, e->x.y, e->v.x, e->v.y);
     return e;
 }
 
@@ -154,9 +175,11 @@ void entity_remove(Entity *e) {
         assert(!e->dead);
         e->dead = 1;
         notify(e);
-        log_debug("- entity %d", e->id.n);
+        log_debug("- entity %d (%s)", e->id.n, e->type->name);
         children_foreach(e,c)
             entity_remove(c);
+            
+        entity_unset_type(e);
     }
 }
 

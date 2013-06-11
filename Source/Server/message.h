@@ -30,7 +30,7 @@ enum MessageType {
     MESSAGE_SELECTION      =   8,
     MESSAGE_NAME           =   9,
     MESSAGE_SYNCED         =  10,
-	MESSAGE_KILL		   = 11,
+	MESSAGE_KILL		   =  11,
 
     MESSAGE_STATS          = 101,
     /* */

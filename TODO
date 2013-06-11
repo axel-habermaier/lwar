@@ -34,6 +34,7 @@ Pegasus.Platform
 - Linux: Double clicking not implemented
 - Linux: Fullscreen not implemented, moving and resizing window mostly not working
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
+  also define a name of the type
 
 Assets Compiler
 ========
@@ -61,3 +62,5 @@ Server
 - !!bullet time to live
 - !Level Design
 - !!Level boundaries
+- fix repeated spawn bug in visualization on 'E'
+- figure out how to communicate ammount of ammunition

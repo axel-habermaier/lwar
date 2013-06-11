@@ -14,6 +14,9 @@ void player_init(Player *p, size_t id) {
     SlotType *st;
 
     p->id.n = id;
+    p->kills  = 0;
+    p->deaths = 0;
+
     p->ship.entity = 0;
     /* p->name = ""; */
     slots_foreach(p,s,st)
@@ -112,11 +115,6 @@ void player_notify_entity(Entity *e) {
     if(!e->slot) return;
 
     e->slot->entity = 0;
-}
-
-/* TODO: duplicate of clear */
-void player_die(Player *p) {
-    entity_remove(p->ship.entity);
 }
 
 void player_rename(Player *p, Str name) {

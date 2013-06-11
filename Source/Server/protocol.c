@@ -195,6 +195,10 @@ void protocol_notify_collision(Collision *c) {
     queue_collision(c);
 }
 
+void protocol_notify_kill(Player *k, Player *v) {
+    queue_kill(k, v);
+}
+
 static void packet_init_header(Client *c, Packet *p) {
     packet_init(p, &c->adr, c->last_in_seqno, server->cur_clock);
 }
@@ -291,6 +295,7 @@ static void send_updates_for(Client *c, Packet *p, Format *f) {
             n --;
         }
     }
+    assert(k == 0);
     assert(n == 0);
 }
 
