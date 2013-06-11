@@ -106,7 +106,7 @@ namespace Pegasus.Framework
 				var defaultFont = assets.LoadFont(defaultFontName);
 				using (var statistics = new Statistics(graphicsDevice, defaultFont))
 				using (spriteEffect)
-				using (var spriteBatch = new SpriteBatch(graphicsDevice, uiOutput, spriteEffect))
+				using (var spriteBatch = new SpriteBatch(graphicsDevice, spriteEffect))
 				using (var console = new Console(graphicsDevice, inputDevice, defaultFont))
 				{
 					// Ensure that the console and the statistics are properly initialized
@@ -120,6 +120,12 @@ namespace Pegasus.Framework
 					// Establish the context and let the application initialize itself
 					Context = new AppContext(graphicsDevice, window, assets, inputDevice, statistics);
 					Initialize();
+
+					// Initialize the sprite batch
+					spriteBatch.Output = uiOutput;
+					spriteBatch.BlendState = BlendState.Premultiplied;
+					spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
+					spriteBatch.SamplerState = SamplerState.PointClampNoMipmaps;
 
 					while (_running)
 					{
@@ -157,8 +163,12 @@ namespace Pegasus.Framework
 						using (new Measurement(statistics.GpuFrameTime))
 						using (new Measurement(statistics.CpuFrameTime))
 						{
-							// Let the application draw the current frame
+							// Let the application draw the 3D elements of the current frame
 							Draw(sceneOutput);
+
+							// Let the application draw the 2D elements of the current frame
+							DepthStencilState.DepthDisabled.Bind();
+							BlendState.Premultiplied.Bind();
 							DrawUserInterface(spriteBatch);
 
 							// Draw the console and the statistics on top of the current frame

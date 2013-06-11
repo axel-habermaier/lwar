@@ -27,7 +27,7 @@ namespace Lwar.Assets.Effects
 								 [Color] out Vector4 outColor)
 		{
 			outPosition = World * position;
-			outPosition = Projection * outPosition;
+			outPosition = ViewProjection * outPosition;
 			outColor = color;
 			outTexCoords = texCoords;
 		}

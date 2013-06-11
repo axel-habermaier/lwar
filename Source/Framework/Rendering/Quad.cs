@@ -44,10 +44,10 @@ namespace Pegasus.Framework.Rendering
 		public Quad(RectangleF rectangle, Color color, RectangleF? textureArea = null)
 			: this()
 		{
-			_bottomLeft.Position = new Vector4(rectangle.Left, rectangle.Bottom, 0, 1);
-			_bottomRight.Position = new Vector4(rectangle.Right, rectangle.Bottom, 0, 1);
-			_topLeft.Position = new Vector4(rectangle.Left, rectangle.Top, 0, 1);
-			_topRight.Position = new Vector4(rectangle.Right, rectangle.Top, 0, 1);
+			_bottomLeft.Position = new Vector4(rectangle.Left, rectangle.Bottom, 0);
+			_bottomRight.Position = new Vector4(rectangle.Right, rectangle.Bottom, 0);
+			_topLeft.Position = new Vector4(rectangle.Left, rectangle.Top, 0);
+			_topRight.Position = new Vector4(rectangle.Right, rectangle.Top, 0);
 
 			_bottomLeft.Color = color;
 			_bottomRight.Color = color;

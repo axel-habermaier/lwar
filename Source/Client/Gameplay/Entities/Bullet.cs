@@ -11,6 +11,23 @@ namespace Lwar.Client.Gameplay.Entities
 	/// </summary>
 	public partial class Bullet : Entity<Bullet>
 	{
+		// TODO: Remove this hack
+		/// <summary>
+		///   Indicates how many update message have been received for the bullet.
+		/// </summary>
+		private int _updateCount;
+
+		// TODO: Remove this hack
+		/// <summary>
+		///   Gets a value indicating whether the bullet is valid and should be drawn. This flag is used to filter out bullets for
+		///   which less than two update messages have been received, which would cause the bullet to be drawn oriented
+		///   incorrectly.
+		/// </summary>
+		public bool IsValid
+		{
+			get { return _updateCount >= 2; }
+		}
+
 		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.
 		/// </summary>
@@ -21,6 +38,9 @@ namespace Lwar.Client.Gameplay.Entities
 
 			Rotation = MathUtils.ComputeAngle(Position, message.Update.Position, new Vector2(1, 0));
 			Position = message.Update.Position;
+
+			// TODO: Remove this hack
+			++_updateCount;
 		}
 
 		/// <summary>
@@ -31,6 +51,7 @@ namespace Lwar.Client.Gameplay.Entities
 		{
 			var bullet = GetInstance();
 			bullet.Id = id;
+			bullet._updateCount = 0;
 			return bullet;
 		}
 	}

@@ -35,11 +35,6 @@ namespace Pegasus.Framework.Rendering
 		private readonly IndexBuffer _indexBuffer;
 
 		/// <summary>
-		///   The output that should be used for drawing.
-		/// </summary>
-		private readonly RenderOutput _output;
-
-		/// <summary>
 		///   The size of a single quad in bytes.
 		/// </summary>
 		private readonly int _quadSize = Marshal.SizeOf(typeof(Quad));
@@ -65,6 +60,11 @@ namespace Pegasus.Framework.Rendering
 		private readonly VertexInputLayout _vertexLayout;
 
 		/// <summary>
+		///   The blend state that should be used for drawing.
+		/// </summary>
+		private BlendState _blendState;
+
+		/// <summary>
 		///   The index of the section that is currently in use.
 		/// </summary>
 		private int _currentSection;
@@ -73,6 +73,11 @@ namespace Pegasus.Framework.Rendering
 		///   The texture of the last section that has been added to the list.
 		/// </summary>
 		private Texture2D _currentTexture;
+
+		/// <summary>
+		///   The depth stencil state that should be used for drawing.
+		/// </summary>
+		private DepthStencilState _depthStencilState;
 
 		/// <summary>
 		///   The number of quads that are currently queued.
@@ -88,6 +93,16 @@ namespace Pegasus.Framework.Rendering
 		///   The number of sections that are currently used.
 		/// </summary>
 		private int _numSections;
+
+		/// <summary>
+		///   The output that should be used for drawing.
+		/// </summary>
+		private RenderOutput _output;
+
+		/// <summary>
+		///   The sampler state that should be used for drawing.
+		/// </summary>
+		private SamplerState _samplerState;
 
 		/// <summary>
 		///   The rectangle that should be used for the scissor test.
@@ -118,16 +133,13 @@ namespace Pegasus.Framework.Rendering
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="output">The output that should be used for drawing.</param>
 		/// <param name="effect">The effect that should be used to draw the sprites.</param>
-		public SpriteBatch(GraphicsDevice graphicsDevice, RenderOutput output, ISpriteEffect effect)
+		public SpriteBatch(GraphicsDevice graphicsDevice, ISpriteEffect effect)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(output);
 			Assert.ArgumentNotNull(effect);
 
 			_graphicsDevice = graphicsDevice;
-			_output = output;
 			_effect = effect;
 
 			// Initialize the indices; this can be done once, so after the indices are copied to the index buffer,
@@ -160,6 +172,90 @@ namespace Pegasus.Framework.Rendering
 				ScissorEnabled = true
 			};
 			_scissorRasterizerState.SetName("SpriteBatch.Scissor");
+		}
+
+		/// <summary>
+		///   Gets or sets the output that should be used for drawing.
+		/// </summary>
+		public RenderOutput Output
+		{
+			get { return _output; }
+			set
+			{
+				Assert.ArgumentNotNull(value);
+				Assert.NotDisposed(this);
+
+				if (_output == value)
+					return;
+
+				if (_output != null)
+					DrawBatch();
+
+				_output = value;
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the sampler state that should be used for drawing.
+		/// </summary>
+		public SamplerState SamplerState
+		{
+			get { return _samplerState; }
+			set
+			{
+				Assert.ArgumentNotNull(value);
+				Assert.NotDisposed(this);
+
+				if (_samplerState == value)
+					return;
+
+				if (_samplerState != null)
+					DrawBatch();
+
+				_samplerState = value;
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the depth stencil state that should be used for drawing.
+		/// </summary>
+		public DepthStencilState DepthStencilState
+		{
+			get { return _depthStencilState; }
+			set
+			{
+				Assert.ArgumentNotNull(value);
+				Assert.NotDisposed(this);
+
+				if (_depthStencilState == value)
+					return;
+
+				if (_depthStencilState != null)
+					DrawBatch();
+
+				_depthStencilState = value;
+			}
+		}
+
+		/// <summary>
+		///   Gets or sets the blend state that should be used for drawing.
+		/// </summary>
+		public BlendState BlendState
+		{
+			get { return _blendState; }
+			set
+			{
+				Assert.ArgumentNotNull(value);
+				Assert.NotDisposed(this);
+
+				if (_blendState == value)
+					return;
+
+				if (_blendState != null)
+					DrawBatch();
+
+				_blendState = value;
+			}
 		}
 
 		/// <summary>
@@ -251,6 +347,22 @@ namespace Pegasus.Framework.Rendering
 		public void Draw(RectangleF rectangle, Texture2D texture, Color color)
 		{
 			var quad = new Quad(rectangle, color);
+			Draw(ref quad, texture);
+		}
+
+		/// <summary>
+		///   Draws the given rectangle.
+		/// </summary>
+		/// <param name="rectangle">The rectangle that should be drawn.</param>
+		/// <param name="texture">The texture that should be used to draw the quad.</param>
+		/// <param name="color">The color of the quad.</param>
+		/// <param name="rotation">The rotation (in radians) that should be applied to the rectangle before it is drawn.</param>
+		public void Draw(RectangleF rectangle, Texture2D texture, Color color, float rotation)
+		{
+			var quad = new Quad(new RectangleF(Vector2.Zero, rectangle.Size), color);
+			var transform = Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(rectangle.Left, rectangle.Top, 0);
+
+			Quad.Transform(ref quad, ref transform);
 			Draw(ref quad, texture);
 		}
 
@@ -406,6 +518,10 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		public void DrawBatch()
 		{
+			Assert.That(Output != null, "No output has been set.");
+			Assert.That(BlendState != null, "No blend state has been set.");
+			Assert.That(DepthStencilState != null, "No depth stencil state has been set.");
+			Assert.That(SamplerState != null, "No sampler state has been set.");
 			Assert.NotDisposed(this);
 
 			// Quit early if there's nothing to draw
@@ -414,19 +530,18 @@ namespace Pegasus.Framework.Rendering
 
 			// Prepare the graphics pipeline
 			_effect.World = _worldMatrix;
+			_blendState.Bind();
+			_depthStencilState.Bind();
 
 			_vertexLayout.Bind();
 			_graphicsDevice.PrimitiveType = PrimitiveType.Triangles;
-
-			DepthStencilState.DepthDisabled.Bind();
-			BlendState.Premultiplied.Bind();
 
 			if (!UseScissorTest)
 				RasterizerState.CullNone.Bind();
 			else
 			{
 				_scissorRasterizerState.Bind();
-				_output.ScissorArea = ScissorArea;
+				Output.ScissorArea = ScissorArea;
 			}
 
 			// Prepare the vertex buffer
@@ -437,11 +552,11 @@ namespace Pegasus.Framework.Rendering
 			for (var i = 0; i < _numSectionLists; ++i)
 			{
 				// Bind the texture
-				_effect.Sprite = new Texture2DView(_sectionLists[i].Texture, SamplerState.PointClampNoMipmaps);
+				_effect.Sprite = new Texture2DView(_sectionLists[i].Texture, _samplerState);
 
 				// Draw and increase the offset
 				var numIndices = _sectionLists[i].NumQuads * 6;
-				_output.DrawIndexed(_effect.Technique, numIndices, offset);
+				Output.DrawIndexed(_effect.Technique, numIndices, offset);
 				offset += numIndices;
 			}
 

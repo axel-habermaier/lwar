@@ -42,7 +42,7 @@ let templates = seq {
         Length          = 0.0;
         Mass            = 0.1;
         Radius          = 16.0;
-        Acceleration    = { X = 0.0; Y = 1500.0 };
+        Acceleration    = { X = 0.0; Y = 1200.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0;  
     }
@@ -271,7 +271,7 @@ let generateServerCode =
             setField(t.Length)
             output.AppendLine("// mass")
             setField(t.Mass)
-            output.AppendLine("// radisu")
+            output.AppendLine("// radius")
             setField(t.Radius)
             output.AppendLine("// acceleration")
             setVectorField(t.Acceleration)

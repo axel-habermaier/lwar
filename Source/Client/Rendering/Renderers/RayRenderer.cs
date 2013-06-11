@@ -57,7 +57,7 @@ namespace Lwar.Client.Rendering.Renderers
 			foreach (var ray in Elements)
 			{
 				_effect.Texture = new Texture2DView(_texture2, SamplerState.BilinearClampNoMipmaps);
-				_effect.World = Matrix.CreateScale(ray.Length, 1, 1) * ray.Transform.Matrix;
+				_effect.World = Matrix.CreateScale(ray.Length, 1, 0.7f) * ray.Transform.Matrix;
 				_effect.Color = new Vector4(1, 0, 0, 1);
 				_model.Draw(output, _effect.ColoredTexturedQuad);
 

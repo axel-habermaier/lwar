@@ -46,24 +46,38 @@ namespace Lwar.Client.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Draws all bullets.
+		///   Draws all registered 2D elements.
 		/// </summary>
-		/// <param name="output">The output that the bullets should be rendered to.</param>
-		public override void Draw(RenderOutput output)
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
+		public override void Draw(SpriteBatch spriteBatch)
 		{
-			BlendState.Additive.Bind();
-			DepthStencilState.DepthDisabled.Bind();
+			spriteBatch.BlendState = BlendState.Additive;
+			spriteBatch.DepthStencilState = DepthStencilState.DepthRead;
 
 			foreach (var bullet in Elements)
 			{
-				_effect.World = bullet.Transform.Matrix;
-				_effect.Texture = new Texture2DView(_texture2, SamplerState.BilinearClampNoMipmaps);
-				_effect.Color = new Vector4(0, 1, 0, 1);
-				_model.Draw(output, _effect.ColoredTexturedQuad);
+				// TODO: Remove this hack
+				if (!bullet.IsValid)
+					return;
 
-				_effect.Color = new Vector4(1, 1, 1, 1);
-				_effect.Texture = new Texture2DView(_texture, SamplerState.BilinearClampNoMipmaps);
-				_model.Draw(output, _effect.ColoredTexturedQuad);
+				var rectangle = new RectangleF(bullet.Position.X - _texture.Width / 2.0f,
+											   bullet.Position.Y - _texture.Height / 2.0f,
+											   _texture.Width, _texture.Height);
+
+				spriteBatch.Draw(rectangle, _texture2, new Color(0, 255, 0, 255), -bullet.Rotation);
+			}
+
+			foreach (var bullet in Elements)
+			{
+				// TODO: Remove this hack
+				if (!bullet.IsValid)
+					return;
+
+				var rectangle = new RectangleF(bullet.Position.X - _texture.Width / 2.0f,
+											   bullet.Position.Y - _texture.Height / 2.0f,
+											   _texture.Width, _texture.Height);
+
+				spriteBatch.Draw(rectangle, _texture, Color.White, -bullet.Rotation);
 			}
 		}
 

@@ -19,9 +19,15 @@ namespace Lwar.Client.Rendering.Renderers
 		void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets);
 
 		/// <summary>
-		///   Draws all registered elements.
+		///   Draws all registered 3D elements.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		void Draw(RenderOutput output);
+
+		/// <summary>
+		///   Draws all registered 2D elements.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
+		void Draw(SpriteBatch spriteBatch);
 	}
 }

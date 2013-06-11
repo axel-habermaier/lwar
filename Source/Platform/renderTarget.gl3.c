@@ -63,8 +63,12 @@ pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
 {
 	pgInt32 glTargets = 0;
-	GLboolean scissorEnabled;
+	GLboolean scissorEnabled, depthMask;
+
 	glGetBooleanv(GL_SCISSOR_TEST, &scissorEnabled);
+	glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+
+	glDepthMask(GL_TRUE);
 	glDisable(GL_SCISSOR_TEST);
 
 	PG_ASSERT(renderTarget->swapChain != NULL || renderTarget->depthStencil != NULL, 
@@ -82,6 +86,7 @@ pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, 
 	if (scissorEnabled)
 		glEnable(GL_SCISSOR_TEST);
 
+	glDepthMask(depthMask);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

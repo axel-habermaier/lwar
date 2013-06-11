@@ -2,7 +2,6 @@
 
 namespace Lwar.Client.Rendering
 {
-	using Assets.Effects;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
@@ -25,7 +24,11 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		public Texture2DView Sprite
 		{
-			set { _effect.Sprite = value; }
+			set
+			{
+				Assert.NotNull(_effect, "The effect has not been properly initialized.");
+				_effect.Sprite = value;
+			}
 		}
 
 		/// <summary>
@@ -33,7 +36,11 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		public Matrix World
 		{
-			set { _effect.World = value; }
+			set
+			{
+				Assert.NotNull(_effect, "The effect has not been properly initialized.");
+				_effect.World = value;
+			}
 		}
 
 		/// <summary>
@@ -41,7 +48,11 @@ namespace Lwar.Client.Rendering
 		/// </summary>
 		public EffectTechnique Technique
 		{
-			get { return _effect.Default; }
+			get
+			{
+				Assert.NotNull(_effect, "The effect has not been properly initialized.");
+				return _effect.Default;
+			}
 		}
 
 		/// <summary>

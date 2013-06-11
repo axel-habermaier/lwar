@@ -5,6 +5,7 @@ namespace Lwar.Client.Rendering
 	using System.Linq;
 	using Gameplay.Entities;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Memory;
@@ -42,6 +43,16 @@ namespace Lwar.Client.Rendering
 		private readonly SkyboxRenderer _skyboxRenderer;
 
 		/// <summary>
+		///   The sprite batch that is used to draw 2D sprites into the scene.
+		/// </summary>
+		private readonly SpriteBatch _spriteBatch;
+
+		/// <summary>
+		///   The sprite effect that is used to draw 2D sprites into the scene.
+		/// </summary>
+		private readonly SpriteEffect _spriteEffect = new SpriteEffect();
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
@@ -51,8 +62,10 @@ namespace Lwar.Client.Rendering
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
+			_spriteBatch = new SpriteBatch(graphicsDevice, _spriteEffect);
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 			_parallaxRenderer = new ParallaxRenderer(graphicsDevice, assets);
+			_spriteEffect.Initialize(graphicsDevice, assets);
 
 			foreach (var renderer in _renderers)
 				renderer.Initialize(graphicsDevice, assets);
@@ -83,7 +96,7 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
-		///   Renders a frame.
+		///   Draws the current frame.
 		/// </summary>
 		/// <param name="output">The output that the render context should render to.</param>
 		public void Draw(RenderOutput output)
@@ -98,6 +111,17 @@ namespace Lwar.Client.Rendering
 
 			foreach (var renderer in _renderers)
 				renderer.Draw(output);
+
+			_spriteBatch.Output = output;
+			_spriteBatch.BlendState = BlendState.Premultiplied;
+			_spriteBatch.DepthStencilState = DepthStencilState.DepthRead;
+			_spriteBatch.SamplerState = SamplerState.BilinearClampNoMipmaps;
+			_spriteBatch.WorldMatrix =  Matrix.CreateRotationX(-MathUtils.PiOver2);
+
+			foreach (var renderer in _renderers)
+				renderer.Draw(_spriteBatch);
+
+			_spriteBatch.DrawBatch();
 		}
 
 		/// <summary>
@@ -109,6 +133,8 @@ namespace Lwar.Client.Rendering
 
 			_skyboxRenderer.SafeDispose();
 			_parallaxRenderer.SafeDispose();
+			_spriteBatch.SafeDispose();
+			_spriteEffect.SafeDispose();
 		}
 	}
 }

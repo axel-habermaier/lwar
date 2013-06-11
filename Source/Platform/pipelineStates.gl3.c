@@ -134,7 +134,6 @@ pgVoid pgBindDepthStencilStateCore(pgDepthStencilState* depthStencilState)
 	if (desc->depthEnabled)
 	{
 		glEnable(GL_DEPTH_TEST);
-		glDepthMask((GLboolean)desc->depthEnabled);
 		glDepthFunc(pgConvertComparison(desc->depthFunction));
 	}
 	else
@@ -150,6 +149,7 @@ pgVoid pgBindDepthStencilStateCore(pgDepthStencilState* depthStencilState)
 	else
 		glDisable(GL_STENCIL_TEST);
 
+	glDepthMask((GLboolean)desc->depthWriteEnabled);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
