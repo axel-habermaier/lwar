@@ -12,7 +12,6 @@ Client
 - Batch drawing of bullets, etc. - instancing?
 - UI
 	- Ship/Weapon selection
-	- !!Show player names on top of ships + indicator where the other players are
 	- Minimap
 	- Menus
 		* Main menu
@@ -20,6 +19,7 @@ Client
 		* Configuration (graphics settings, input settings, ...)
 - !!!Explosions!!!
 - Camera zoom bug in very-low FPS situations
+- Multiple player names might overlap
 
 Pegasus.Framework
 ========
