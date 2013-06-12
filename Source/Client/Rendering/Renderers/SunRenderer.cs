@@ -51,21 +51,16 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
+		protected override void Initialize()
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(assets);
+			var sun = Assets.LoadCubeMap("Textures/Sun");
+			var turbulence = Assets.LoadCubeMap("Textures/SunHeat");
+			var heat = Assets.LoadTexture2D("Textures/Heat");
 
-			var sun = assets.LoadCubeMap("Textures/Sun");
-			var turbulence = assets.LoadCubeMap("Textures/SunHeat");
-			var heat = assets.LoadTexture2D("Textures/Heat");
+			_model = Model.CreateSphere(GraphicsDevice, Templates.Sun.Radius, 20);
+			_sphereEffect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };
 
-			_model = Model.CreateSphere(graphicsDevice, Sun.Radius, 20);
-			_sphereEffect = new SphereEffect(graphicsDevice, assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };
-
-			_sunEffect = new SunEffect(graphicsDevice, assets)
+			_sunEffect = new SunEffect(GraphicsDevice, Assets)
 			{
 				CubeMap = new CubeMapView(turbulence, SamplerState.TrilinearClamp),
 				HeatMap = new Texture2DView(heat, SamplerState.BilinearClampNoMipmaps)
@@ -74,16 +69,16 @@ namespace Lwar.Client.Rendering.Renderers
 			var w = 640;
 			var h = 360;
 			var flags = TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget;
-			_effectTexture = new Texture2D(graphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
+			_effectTexture = new Texture2D(GraphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
 			_effectTexture.SetName("SunRenderer.EffectTexture");
 
-			_effectTarget = new RenderTarget(graphicsDevice, null, _effectTexture);
-			_heatOutput = new RenderOutput(graphicsDevice) { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, (int)w, (int)h) };
+			_effectTarget = new RenderTarget(GraphicsDevice, null, _effectTexture);
+			_heatOutput = new RenderOutput(GraphicsDevice) { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, w, h) };
 
-			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);
-			_quadEffect = new TexturedQuadEffect(graphicsDevice, assets) { World = Matrix.Identity };
+			_fullscreenQuad = new FullscreenQuad(GraphicsDevice, Assets);
+			_quadEffect = new TexturedQuadEffect(GraphicsDevice, Assets) { World = Matrix.Identity };
 
-			_blur = new GaussianBlur(graphicsDevice, assets, _effectTexture);
+			_blur = new GaussianBlur(GraphicsDevice, Assets, _effectTexture);
 		}
 
 		/// <summary>
@@ -94,6 +89,8 @@ namespace Lwar.Client.Rendering.Renderers
 		{
 			foreach (var sun in Elements)
 			{
+				DepthStencilState.DepthEnabled.Bind();
+
 				var elapsed = (float)_clock.Seconds;
 				_clock.Reset();
 
@@ -117,15 +114,13 @@ namespace Lwar.Client.Rendering.Renderers
 				DepthStencilState.DepthDisabled.Bind();
 				_quadEffect.Texture = new Texture2DView(blurredTexture, SamplerState.BilinearClampNoMipmaps);
 				_fullscreenQuad.Draw(output, _quadEffect.FullScreen);
-
-				DepthStencilState.DepthEnabled.Bind();
 			}
 		}
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		protected override void OnDisposingCore()
 		{
 			_clock.SafeDispose();
 			_sunEffect.SafeDispose();

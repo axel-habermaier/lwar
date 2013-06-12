@@ -4,6 +4,7 @@ namespace Lwar.Client.Screens
 {
 	using System.Net;
 	using Gameplay;
+	using Gameplay.Entities;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
@@ -95,7 +96,7 @@ namespace Lwar.Client.Screens
 		{
 			_timer.Timeout -= SendInputTimeout;
 			_timer.SafeDispose();
-
+			
 			_cameraManager.SafeDispose();
 			_inputManager.SafeDispose();
 			_gameSession.SafeDispose();
@@ -104,6 +105,7 @@ namespace Lwar.Client.Screens
 			_chatInput.SafeDispose();
 			_networkSession.SafeDispose();
 			_eventMessage.SafeDispose();
+			Templates.Dispose();
 
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
@@ -116,6 +118,8 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		public override void Initialize()
 		{
+			Templates.Initialize(GraphicsDevice, Assets);
+
 			_renderContext = new RenderContext(GraphicsDevice, Assets);
 			_gameSession = new GameSession(_renderContext);
 			_messageDispatcher = new MessageDispatcher(_gameSession);

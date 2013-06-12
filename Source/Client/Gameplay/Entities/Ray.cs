@@ -37,6 +37,7 @@ namespace Lwar.Client.Gameplay.Entities
 		{
 			var ray = GetInstance();
 			ray.Id = id;
+			ray.Template = Templates.Ray;
 			return ray;
 		}
 	}

@@ -6,12 +6,11 @@ namespace Lwar.Client.Gameplay.Entities
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Logging;
 
 	/// <summary>
 	///   Represents a planet.
 	/// </summary>
-	public partial class Planet : Entity<Planet>
+	public class Planet : Entity<Planet>
 	{
 		/// <summary>
 		///   A cached random number generator.
@@ -22,6 +21,17 @@ namespace Lwar.Client.Gameplay.Entities
 		///   The rotation speed of the planet.
 		/// </summary>
 		private float _rotationSpeed;
+
+		/// <summary>
+		///   Invoked when the entity is added to the game session.
+		/// </summary>
+		protected override void OnAdded()
+		{
+			Transform.Rotation = new Vector3(
+				MathUtils.DegToRad(Random.Next(0, 360)),
+				0.0f,
+				MathUtils.DegToRad(Random.Next(0, 360)));
+		}
 
 		/// <summary>
 		///   Updates the entity's internal state.
@@ -46,14 +56,18 @@ namespace Lwar.Client.Gameplay.Entities
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the planet.</param>
-		public static Planet Create(Identifier id)
+		/// <param name="template">The template defining the planet's type.</param>
+		public static Planet Create(Identifier id, Template template)
 		{
+			Assert.ArgumentNotNull(template);
+
 			var rotationSpeed = Random.Next(30, 50) / 200.0f;
 			rotationSpeed *= (Random.Next() % 2 == 1 ? 1 : -1);
 
 			var planet = GetInstance();
 			planet.Id = id;
 			planet._rotationSpeed = rotationSpeed;
+			planet.Template = template;
 			return planet;
 		}
 	}

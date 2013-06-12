@@ -22,8 +22,8 @@ enum {
     MISBEHAVIOR_LIMIT   =   10,
 
     MAX_PLANETS         = 10,
-    MIN_PLANET_DIST     = 1000,
-    MAX_PLANET_DIST     = 2000,
+    MIN_PLANET_DIST     = 1500,
+    MAX_PLANET_DIST     = 2500,
 };
 
 typedef size_t (Pack)(char *, void *);

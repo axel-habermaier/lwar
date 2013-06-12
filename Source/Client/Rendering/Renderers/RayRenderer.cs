@@ -4,9 +4,7 @@ namespace Lwar.Client.Rendering.Renderers
 {
 	using Assets.Effects;
 	using Gameplay.Entities;
-	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
@@ -31,18 +29,13 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
+		protected override void Initialize()
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(assets);
+			_texture = Assets.LoadTexture2D("Textures/Phaser");
+			_texture2 = Assets.LoadTexture2D("Textures/PhaserGlow");
 
-			_texture = assets.LoadTexture2D("Textures/Phaser");
-			_texture2 = assets.LoadTexture2D("Textures/PhaserGlow");
-
-			_model = Model.CreateQuad(graphicsDevice, _texture.Size, new Vector2(_texture.Size.Width / 2.0f, 0));
-			_effect = new TexturedQuadEffect(graphicsDevice, assets);
+			_model = Model.CreateQuad(GraphicsDevice, _texture.Size, new Vector2(_texture.Size.Width / 2.0f, 0));
+			_effect = new TexturedQuadEffect(GraphicsDevice, Assets);
 		}
 
 		/// <summary>
@@ -70,7 +63,7 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		protected override void OnDisposingCore()
 		{
 			_effect.SafeDispose();
 			_model.SafeDispose();

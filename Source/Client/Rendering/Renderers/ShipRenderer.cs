@@ -43,18 +43,13 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
+		protected override void Initialize()
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(assets);
+			var texture = Assets.LoadTexture2D("Textures/Ship");
 
-			var texture = assets.LoadTexture2D("Textures/Ship");
-
-			_model = Model.CreateQuad(graphicsDevice, texture.Size);
-			_effect = new TexturedQuadEffect(graphicsDevice, assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };
-			_font = assets.LoadFont("Fonts/Liberation Mono 12");
+			_model = Model.CreateQuad(GraphicsDevice, texture.Size);
+			_effect = new TexturedQuadEffect(GraphicsDevice, Assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };
+			_font = Assets.LoadFont("Fonts/Liberation Mono 12");
 		}
 
 		/// <summary>
@@ -173,7 +168,7 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		protected override void OnDisposingCore()
 		{
 			_effect.SafeDispose();
 			_model.SafeDispose();
@@ -220,10 +215,6 @@ namespace Lwar.Client.Rendering.Renderers
 
 				_font = font;
 				_player = player;
-
-				// Do not show the name of the local player
-				if (_player.IsLocalPlayer)
-					Name = Text.Create(String.Empty);
 			}
 
 			/// <summary>
@@ -232,9 +223,6 @@ namespace Lwar.Client.Rendering.Renderers
 			public void Update()
 			{
 				if (Name != null && Name.SourceString == _player.Name)
-					return;
-
-				if (_player.IsLocalPlayer)
 					return;
 
 				Name = Text.Create(_player.Name);

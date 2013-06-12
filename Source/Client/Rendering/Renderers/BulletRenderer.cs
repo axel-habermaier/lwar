@@ -31,18 +31,13 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
+		protected override void Initialize()
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(assets);
+			_texture = Assets.LoadTexture2D("Textures/Bullet");
+			_texture2 = Assets.LoadTexture2D("Textures/BulletGlow");
 
-			_texture = assets.LoadTexture2D("Textures/Bullet");
-			_texture2 = assets.LoadTexture2D("Textures/BulletGlow");
-
-			_model = Model.CreateQuad(graphicsDevice, _texture.Size);
-			_effect = new TexturedQuadEffect(graphicsDevice, assets);
+			_model = Model.CreateQuad(GraphicsDevice, _texture.Size);
+			_effect = new TexturedQuadEffect(GraphicsDevice, Assets);
 		}
 
 		/// <summary>
@@ -76,7 +71,7 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		protected override void OnDisposingCore()
 		{
 			_effect.SafeDispose();
 			_model.SafeDispose();

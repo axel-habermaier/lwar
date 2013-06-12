@@ -98,7 +98,8 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public void Update()
 		{
-			Matrix = Matrix.CreateRotationY(Rotation.Y) * Matrix.CreateTranslation(Position);
+			Matrix = Matrix.CreateRotationZ(Rotation.Z) * Matrix.CreateRotationX(Rotation.X) *
+					 Matrix.CreateRotationY(Rotation.Y) * Matrix.CreateTranslation(Position);
 
 			if (_parent != null)
 				Matrix *= _parent.Matrix;

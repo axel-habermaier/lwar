@@ -20,6 +20,7 @@ Client
 - !!!Explosions!!!
 - Camera zoom bug in very-low FPS situations
 - Multiple player names might overlap
+- Let camera follow ship (sort of: attach the camera to the ship with a spring)
 
 Pegasus.Framework
 ========

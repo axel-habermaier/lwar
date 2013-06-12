@@ -52,6 +52,7 @@ namespace Lwar.Client.Gameplay.Entities
 			var bullet = GetInstance();
 			bullet.Id = id;
 			bullet._updateCount = 0;
+			bullet.Template = Templates.Bullet;
 			return bullet;
 		}
 	}

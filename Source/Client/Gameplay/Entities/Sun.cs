@@ -28,6 +28,7 @@ namespace Lwar.Client.Gameplay.Entities
 		{
 			var sun = GetInstance();
 			sun.Id = id;
+			sun.Template = Templates.Sun;
 			return sun;
 		}
 	}

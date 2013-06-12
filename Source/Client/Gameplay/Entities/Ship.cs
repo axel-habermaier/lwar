@@ -46,6 +46,7 @@ namespace Lwar.Client.Gameplay.Entities
 			var ship = GetInstance();
 			ship.Id = id;
 			ship.Player = player;
+			ship.Template = Templates.Ship;
 			player.Ship = ship;
 			return ship;
 		}

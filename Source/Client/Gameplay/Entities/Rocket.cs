@@ -31,6 +31,7 @@ namespace Lwar.Client.Gameplay.Entities
 		{
 			var rocket = GetInstance();
 			rocket.Id = id;
+			rocket.Template = Templates.Rocket;
 			return rocket;
 		}
 	}

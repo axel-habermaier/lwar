@@ -30,16 +30,35 @@ namespace Lwar.Client.Rendering.Renderers
 		}
 
 		/// <summary>
+		///   Gets the graphics device that is used for drawing.
+		/// </summary>
+		protected GraphicsDevice GraphicsDevice { get; private set; }
+
+		/// <summary>
+		///   Gets the assets manager that is used to load all required assets.
+		/// </summary>
+		protected AssetsManager Assets { get; private set; }
+
+		/// <summary>
 		///   Initializes the renderer.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public abstract void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets);
+		public void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
+		{
+			Assert.NotDisposed(this);
+			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
+
+			GraphicsDevice = graphicsDevice;
+			Assets = assets;
+			Initialize();
+		}
 
 		/// <summary>
 		///   Draws all registered 3D elements.
 		/// </summary>
-		/// <param name="output">The output that the bullets should be rendered to.</param>
+		/// <param name="output">The output that the elements should be rendered to.</param>
 		public virtual void Draw(RenderOutput output)
 		{
 		}
@@ -62,11 +81,17 @@ namespace Lwar.Client.Rendering.Renderers
 		}
 
 		/// <summary>
+		///   Initializes the renderer.
+		/// </summary>
+		protected abstract void Initialize();
+
+		/// <summary>
 		///   Adds the element to the renderer.
 		/// </summary>
 		/// <param name="element">The element that should be drawn by the renderer.</param>
 		public void Add(TElement element)
 		{
+			Assert.NotDisposed(this);
 			Assert.ArgumentNotNull(element);
 
 			_elements.Add(element);
@@ -96,6 +121,7 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <param name="element">The element that should be removed from the renderer.</param>
 		public void Remove(TElement element)
 		{
+			Assert.NotDisposed(this);
 			Assert.ArgumentNotNull(element);
 			Assert.ArgumentSatisfies(_elements.Contains(element), "The element is not drawn by this renderer.");
 
@@ -107,6 +133,22 @@ namespace Lwar.Client.Rendering.Renderers
 
 			OnRemoved(element, index);
 		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected sealed override void OnDisposing()
+		{
+			while (_elements.Count != 0)
+				Remove(_elements[0]);
+
+			OnDisposingCore();
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected abstract void OnDisposingCore();
 
 		/// <summary>
 		///   Provides an GetEnumerator() method that allows the given enumerator to be used in C#'s foreach statement.

@@ -21,7 +21,7 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   Draws all registered 3D elements.
 		/// </summary>
-		/// <param name="output">The output that the bullets should be rendered to.</param>
+		/// <param name="output">The output that the elements should be rendered to.</param>
 		void Draw(RenderOutput output);
 
 		/// <summary>

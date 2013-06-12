@@ -27,6 +27,8 @@ static void level_init() {
 
     Entity *sun = entity_create(&type_sun, &server->self->player, _0, _0);
 	sun->active=true;
+
+	EntityType* types[] = { &type_jupiter, &type_planet, &type_moon, &type_mars };
 	
     for(i=0; i<MAX_PLANETS; i++) {
         Real dist = (i+2) * MIN_PLANET_DIST; // + rand()%(MAX_PLANET_DIST - MIN_PLANET_DIST);
@@ -34,7 +36,7 @@ static void level_init() {
         Real phi = rad(rand()%360);
         Vec  u = unit(phi);
         Vec  x = scale(u, dist);
-        Entity *p = entity_create(&type_planet, &server->self->player, x, _0);
+        Entity *p = entity_create(types[rand() % sizeof(types) / sizeof(EntityType*)], &server->self->player, x, _0);
         p->active = true;
         p->len    = dist;
         p->energy = rad(180 + rand()%360); /* speed of rotation around sun per second */
@@ -56,12 +58,15 @@ void rules_init() {
     format_register(&format_circle);
 
     /* register some entity types */
-    entity_type_register("ship",   &type_ship,      &format_ship);
-    entity_type_register("bullet", &type_bullet,    &format_pos);
-    entity_type_register("planet", &type_planet,    &format_pos);
-    entity_type_register("sun",    &type_sun,       &format_pos);
-    entity_type_register("rocket", &type_rocket,    &format_ship);
-    entity_type_register("ray",    &type_ray,       &format_ray);
+    entity_type_register("ship",    &type_ship,      &format_ship);
+    entity_type_register("bullet",  &type_bullet,    &format_pos);
+    entity_type_register("planet",  &type_planet,    &format_pos);
+	entity_type_register("mars",	&type_mars,		 &format_pos);
+	entity_type_register("jupiter", &type_jupiter,   &format_pos);
+	entity_type_register("moon",	&type_moon,		 &format_pos);
+    entity_type_register("sun",     &type_sun,       &format_pos);
+    entity_type_register("rocket",  &type_rocket,    &format_ship);
+    entity_type_register("ray",     &type_ray,       &format_ray);
     // entity_type_register(ENTITY_TYPE_SHOCKWAVE, &type_shockwave, &format_circle);
 
     entity_type_register("gun",    &type_gun,       0); /* not shared with client */
@@ -147,8 +152,11 @@ void gravity(Entity *e0) {
     Real m0 = e0->mass;
 
     entities_foreach(e1) {
-        if(e1->type->id == ENTITY_TYPE_SUN)    continue;
-        if(e1->type->id == ENTITY_TYPE_PLANET) continue;
+        if(e1->type->id == ENTITY_TYPE_SUN)		continue;
+        if(e1->type->id == ENTITY_TYPE_PLANET)	continue;
+		if(e1->type->id == ENTITY_TYPE_MOON)	continue;
+		if(e1->type->id == ENTITY_TYPE_JUPITER) continue;
+		if(e1->type->id == ENTITY_TYPE_MARS)	continue;
 
         Real m1 = e1->mass;
         if(m1 == 0) continue;

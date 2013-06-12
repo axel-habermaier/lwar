@@ -11,7 +11,7 @@ open Microsoft.FSharp.Reflection
 //====================================================================================================================
 type Vector2 = { X : float; Y : float }
 
-type EntityType = Bullet | Ship | Planet | Rocket | Gun | Phaser | Sun | Ray | Shockwave
+type EntityType = Bullet | Ship | Planet | Rocket | Gun | Phaser | Sun | Ray | Shockwave | Jupiter | Moon | Mars
 
 type Template = {
     Type            : EntityType;
@@ -27,6 +27,9 @@ type Template = {
     Acceleration    : Vector2;
     Decelaration    : Vector2;
     Rotation        : float;   
+    Texture         : string;
+    CubeMap         : string;
+    Model           : Template -> string;
 }
 
 //====================================================================================================================
@@ -47,6 +50,9 @@ let templates = seq {
         Acceleration    = { X = 0.0; Y = 1200.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0;  
+        Texture         = null;
+        CubeMap         = null;
+        Model           = fun _ -> null;
     }
     yield {
         Type            = EntityType.Gun;
@@ -61,7 +67,10 @@ let templates = seq {
         Radius          = 0.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
-        Rotation        = 0.0;  
+        Rotation        = 0.0;   
+        Texture         = null;
+        CubeMap         = null;
+        Model           = fun _ -> null;
     }
     yield {
         Type            = EntityType.Phaser;
@@ -76,7 +85,10 @@ let templates = seq {
         Radius          = 0.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
-        Rotation        = 0.0;  
+        Rotation        = 0.0;   
+        Texture         = null;
+        CubeMap         = null;
+        Model           = fun _ -> null;
     }
     yield {
         Type            = EntityType.Planet;
@@ -88,13 +100,52 @@ let templates = seq {
         Shield          = 0.0;
         Length          = 0.0;
         Mass            = 10000.0;
+        Radius          = 256.0;
+        Acceleration    = { X = 0.0; Y = 0.0 };
+        Decelaration    = { X = 0.0; Y = 0.0 };
+        Rotation        = 0.0;   
+        Texture         = null;
+        CubeMap         = "Textures/Planet";
+        Model           = fun t -> sprintf "Model.CreateSphere(graphicsDevice, %A, %A)" <| int t.Radius <| int t.Radius / 8;
+    }
+    yield {
+        Type            = EntityType.Mars;
+        Act             = "gravity";
+        Collide         = "planet_hit";
+        Interval        = 0;
+        Energy          = 0.0;
+        Health          = 1.0;
+        Shield          = 0.0;
+        Length          = 0.0;
+        Mass            = 10000.0;
         Radius          = 128.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
-        Rotation        = 0.0;  
+        Rotation        = 0.0;   
+        Texture         = null;
+        CubeMap         = "Textures/Mars";
+        Model           = fun t -> sprintf "Model.CreateSphere(graphicsDevice, %A, %A)" <| int t.Radius <| int t.Radius / 8;
     }
     yield {
-        Type            = EntityType.Sun;
+        Type            = EntityType.Moon;
+        Act             = "gravity";
+        Collide         = "planet_hit";
+        Interval        = 0;
+        Energy          = 0.0;
+        Health          = 1.0;
+        Shield          = 0.0;
+        Length          = 0.0;
+        Mass            = 10000.0;
+        Radius          = 64.0;
+        Acceleration    = { X = 0.0; Y = 0.0 };
+        Decelaration    = { X = 0.0; Y = 0.0 };
+        Rotation        = 0.0;   
+        Texture         = null;
+        CubeMap         = "Textures/Moon";
+        Model           = fun t -> sprintf "Model.CreateSphere(graphicsDevice, %A, %A)" <| int t.Radius <| int t.Radius / 8;
+    }
+    yield {
+        Type            = EntityType.Jupiter;
         Act             = "gravity";
         Collide         = "planet_hit";
         Interval        = 0;
@@ -106,7 +157,28 @@ let templates = seq {
         Radius          = 512.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
-        Rotation        = 0.0;  
+        Rotation        = 0.0;   
+        Texture         = null;
+        CubeMap         = "Textures/Jupiter";
+        Model           = fun t -> sprintf "Model.CreateSphere(graphicsDevice, %A, %A)" <| int t.Radius <| int t.Radius / 8;
+    }
+    yield {
+        Type            = EntityType.Sun;
+        Act             = "gravity";
+        Collide         = "planet_hit";
+        Interval        = 0;
+        Energy          = 0.0;
+        Health          = 1.0;
+        Shield          = 0.0;
+        Length          = 0.0;
+        Mass            = 10000.0;
+        Radius          = 1500.0;
+        Acceleration    = { X = 0.0; Y = 0.0 };
+        Decelaration    = { X = 0.0; Y = 0.0 };
+        Rotation        = 0.0;   
+        Texture         = null;
+        CubeMap         = null;
+        Model           = fun _ -> null;
     }
     yield {
         Type            = EntityType.Ray;
@@ -121,7 +193,10 @@ let templates = seq {
         Radius          = 2048.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
-        Rotation        = 0.0;  
+        Rotation        = 0.0; 
+        Texture         = null;
+        CubeMap         = null;  
+        Model           = fun _ -> null;
     }
     yield {
         Type            = EntityType.Rocket;
@@ -136,7 +211,10 @@ let templates = seq {
         Radius          = 16.0;
         Acceleration    = { X = 500.0; Y = 20.0 };
         Decelaration    = { X = 20.0; Y = 20.0 };
-        Rotation        = 1.0;  
+        Rotation        = 1.0;   
+        Texture         = null;
+        CubeMap         = null;
+        Model           = fun _ -> null;
     }
     yield {
         Type            = EntityType.Ship;
@@ -151,7 +229,10 @@ let templates = seq {
         Radius          = 64.0;
         Acceleration    = { X = 1000.0; Y = 1000.0 };
         Decelaration    = { X = 1000.0; Y = 1000.0 };
-        Rotation        = 2.0;  
+        Rotation        = 2.0;   
+        Texture         = null;
+        CubeMap         = null;
+        Model           = fun _ -> null;
     }
 }
 
@@ -206,8 +287,8 @@ type CodeWriter() as this =
             for i = 1 to indent do
                 output.Append("    ") |> ignore
 
-    member private this.IncreaseIndent() = indent <- indent + 1
-    member private this.DecreaseIndent() = indent <- indent - 1
+    member public this.IncreaseIndent() = indent <- indent + 1
+    member public this.DecreaseIndent() = indent <- indent - 1
 
     member private this.AppendHeader() =
         this.AppendLine("//------------------------------------------------------------------------------")
@@ -333,27 +414,57 @@ let generateClientCode =
 
     output.AppendLine("namespace Lwar.Client.Gameplay.Entities")
     output.AppendBlockStatement false (fun () ->
-        for t in templates do
-            output.AppendLine(sprintf "public partial class %A" t.Type)
-            output.AppendBlockStatement false (fun () ->
-                output.AppendLine("/// <summary>")
-                output.AppendLine("///   The entity's maximum energy level.")
-                output.AppendLine("/// </summary>")
-                output.AppendLine(sprintf "public const float MaxEnergy = %Af;" t.Energy)
-                output.Newline()
+        output.AppendLine("using Pegasus.Framework;")
+        output.AppendLine("using Pegasus.Framework.Platform;")
+        output.AppendLine("using Pegasus.Framework.Platform.Graphics;")
+        output.AppendLine("using Pegasus.Framework.Platform.Memory;")
+        output.AppendLine("using Pegasus.Framework.Rendering;")
+        output.Newline()
 
-                output.AppendLine("/// <summary>")
-                output.AppendLine("///   The entity's maximum health.")
-                output.AppendLine("/// </summary>")
-                output.AppendLine(sprintf "public const float MaxHealth = %Af;" t.Health)
-                output.Newline()
-
-                output.AppendLine("/// <summary>")
-                output.AppendLine("///   The entity's radius, defining its size.")
-                output.AppendLine("/// </summary>")
-                output.AppendLine(sprintf "public const float Radius = %Af;" t.Radius)
-            )
+        output.AppendLine("public static class Templates")
+        output.AppendBlockStatement false (fun () ->
+            for t in templates do
+                output.AppendLine(sprintf "public static Template %A { get; private set; }" t.Type)
             output.Newline()
+
+            output.AppendLine("public static void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)")
+            output.AppendBlockStatement false (fun () ->
+                output.AppendLine("Assert.ArgumentNotNull(graphicsDevice);")
+                output.AppendLine("Assert.ArgumentNotNull(assets);")
+                output.Newline()
+
+                for t in templates do
+                    output.AppendLine(sprintf "%A = new Template" t.Type)
+                    output.AppendLine("(")
+                    output.IncreaseIndent()
+                    output.AppendLine(sprintf "maxEnergy: %Af," t.Energy)
+                    output.AppendLine(sprintf "maxHealth: %Af," t.Health)
+                    output.AppendLine(sprintf "radius: %Af," t.Radius)
+                    if t.Texture <> null then
+                        output.AppendLine(sprintf "texture: assets.LoadTexture2D(%A)," t.Texture)
+                    else
+                        output.AppendLine("texture: null,")
+                    if t.CubeMap <> null then
+                        output.AppendLine(sprintf "cubeMap: assets.LoadCubeMap(%A)," t.CubeMap)
+                    else
+                        output.AppendLine("cubeMap: null,")
+                    let model = t.Model t
+                    if model <> null then
+                        output.AppendLine(sprintf "model: %s" model)
+                    else
+                        output.AppendLine("model: null")
+                    output.DecreaseIndent()
+                    output.AppendLine(");")
+                    output.Newline()
+            )
+
+            output.Newline()
+            output.AppendLine("public static void Dispose()")
+            output.AppendBlockStatement false (fun () ->
+                for t in templates do
+                    output.AppendLine(sprintf "%A.SafeDispose();" t.Type)
+            )
+        )
     )
 
     // Write the partial classes file

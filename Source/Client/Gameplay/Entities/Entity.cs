@@ -25,6 +25,11 @@ namespace Lwar.Client.Gameplay.Entities
 		}
 
 		/// <summary>
+		///   Gets the template defining some of the entity's properties.
+		/// </summary>
+		public Template Template { get; protected set; }
+
+		/// <summary>
 		///   Gets the game session the entity belongs to.
 		/// </summary>
 		protected GameSession GameSession { get; private set; }
@@ -54,7 +59,12 @@ namespace Lwar.Client.Gameplay.Entities
 		public float Rotation
 		{
 			get { return Transform.Rotation.Y; }
-			set { Transform.Rotation = new Vector3(0, value, 0); }
+			set
+			{
+				var rotation = Transform.Rotation;
+				rotation.Y = value;
+				Transform.Rotation = rotation;
+			}
 		}
 
 		/// <summary>
@@ -80,6 +90,8 @@ namespace Lwar.Client.Gameplay.Entities
 
 			RenderContext.Add(this as TEntity);
 			OnAdded();
+
+			Assert.That(Template != null, "No entity template has been set.");
 		}
 
 		/// <summary>
