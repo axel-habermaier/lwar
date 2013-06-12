@@ -1,9 +1,9 @@
 Client
 ========
 - Effects
-	- Different types of planets
+	- Improve planet rendering
 	- Nebulae
-	- Shield effect
+	- Improve shield effect
 	- Weapon effects
 	- Particle system
 	- Move skybox
@@ -35,6 +35,7 @@ Pegasus.Platform
 - Linux: Enforce minimum/maximum allowed window size
 - Linux: Double clicking not implemented
 - Linux: Fullscreen not implemented, moving and resizing window mostly not working
+- Linux: Input bug (for instance, crash when entering text into the console)
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
   also define a name of the type
 - Bug: Window is not opened in maximized mode when native debugging is not enabled??
