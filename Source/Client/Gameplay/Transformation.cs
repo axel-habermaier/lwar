@@ -95,11 +95,18 @@ namespace Lwar.Client.Gameplay
 		/// </summary>
 		public void Detach()
 		{
+			Assert.That(_parent != null, "The transformation has already been detached.");
 			Assert.That(_parent._children.Contains(this), "Inconsistent transformation hierarchy.");
 			Assert.That(_children.All(t => !_parent._children.Contains(t)), "Inconsistent transformation hierarchy.");
 
 			_parent._children.Remove(this);
 			_parent._children.AddRange(_children);
+
+			foreach (var child in _children)
+				child._parent = _parent;
+
+			_parent = null;
+			_children.Clear();
 		}
 
 		/// <summary>

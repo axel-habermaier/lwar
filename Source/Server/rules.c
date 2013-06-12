@@ -25,23 +25,23 @@ static void level_init() {
 
     srand(time(0));
 
- //   Entity *sun = entity_create(&type_sun, &server->self->player, _0, _0);
-	//sun->active=true;
+    Entity *sun = entity_create(&type_sun, &server->self->player, _0, _0);
+	sun->active=true;
 
-	//EntityType* types[] = { &type_jupiter, &type_planet, &type_moon, &type_mars };
-	//
- //   for(i=0; i<MAX_PLANETS; i++) {
- //       Real dist = (i+2) * MIN_PLANET_DIST; // + rand()%(MAX_PLANET_DIST - MIN_PLANET_DIST);
+	EntityType* types[] = { &type_jupiter, &type_planet, &type_moon, &type_mars };
+	
+    for(i=0; i<MAX_PLANETS; i++) {
+        Real dist = (i+2) * MIN_PLANET_DIST; // + rand()%(MAX_PLANET_DIST - MIN_PLANET_DIST);
 
- //       Real phi = rad(rand()%360);
- //       Vec  u = unit(phi);
- //       Vec  x = scale(u, dist);
- //       Entity *p = entity_create(types[rand() % sizeof(types) / sizeof(EntityType*)], &server->self->player, x, _0);
- //       p->active = true;
- //       p->len    = dist;
- //       p->energy = rad(180 + rand()%360); /* speed of rotation around sun per second */
- //       p->radius += rand()%(unsigned)p->radius;
- //   }
+        Real phi = rad(rand()%360);
+        Vec  u = unit(phi);
+        Vec  x = scale(u, dist);
+        Entity *p = entity_create(types[rand() % sizeof(types) / sizeof(EntityType*)], &server->self->player, x, _0);
+        p->active = true;
+        p->len    = dist;
+        p->energy = rad(180 + rand()%360); /* speed of rotation around sun per second */
+        p->radius += rand()%(unsigned)p->radius;
+    }
 }
 
 EntityType *_types[MAX_ENTITY_TYPES];
