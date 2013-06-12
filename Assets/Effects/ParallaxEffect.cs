@@ -13,9 +13,6 @@ namespace Lwar.Assets.Effects
 			FragmentShader = "FragmentShader"
 		};
 
-		[Constant]
-		public readonly Vector2 CameraPosition;
-
 		public readonly Texture2D TextureAtlas;
 
 		// Must be in sync with ParallaxRenderer's distance range
@@ -38,7 +35,7 @@ namespace Lwar.Assets.Effects
 			// Offset the star's position by the current camera position and the speed in order to simulate
 			// slower star movement when the star is further away from the camera
 			position.x += CameraPosition.x * speed;
-			position.z += CameraPosition.y * speed;
+			position.z += CameraPosition.z * speed;
 
 			outPosition = ViewProjection * position;
 			outTexCoords = texCoordsAndDistance.xy;

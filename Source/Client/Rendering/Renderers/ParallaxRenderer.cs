@@ -135,10 +135,7 @@ namespace Lwar.Client.Rendering.Renderers
 
 			BlendState.Additive.Bind();
 			camera.ZoomMode = ZoomMode.Starfield;
-
-			_effect.CameraPosition = new Vector2(camera.Position.X, camera.Position.Z);
 			_model.Draw(output, _effect.Default);
-
 			camera.ZoomMode = ZoomMode.Default;
 		}
 

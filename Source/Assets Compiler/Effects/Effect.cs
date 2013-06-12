@@ -8,6 +8,11 @@ namespace Pegasus.AssetsCompiler.Effects
 	public abstract class Effect
 	{
 		/// <summary>
+		///   The position of the camera in world space.
+		/// </summary>
+		protected readonly Vector3 CameraPosition;
+
+		/// <summary>
 		///   The projection matrix that should be used to project the geometry onto the screen.
 		/// </summary>
 		protected readonly Matrix Projection;

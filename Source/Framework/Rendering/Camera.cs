@@ -18,11 +18,6 @@ namespace Pegasus.Framework.Rendering
 		private readonly ConstantBuffer _cameraBuffer;
 
 		/// <summary>
-		///   Indicates whether the contents of the camera buffer are outdated.
-		/// </summary>
-		private bool _bufferUpdateRequired = true;
-
-		/// <summary>
 		///   Gets the camera's projection matrix.
 		/// </summary>
 		protected Matrix Projection;
@@ -31,6 +26,16 @@ namespace Pegasus.Framework.Rendering
 		///   Gets the camera's view matrix.
 		/// </summary>
 		protected Matrix View;
+
+		/// <summary>
+		///   Indicates whether the contents of the camera buffer are outdated.
+		/// </summary>
+		private bool _bufferUpdateRequired = true;
+
+		/// <summary>
+		///   The camera's position within the world.
+		/// </summary>
+		private Vector3 _position;
 
 		/// <summary>
 		///   The camera's viewport.
@@ -49,6 +54,19 @@ namespace Pegasus.Framework.Rendering
 			_cameraBuffer = new ConstantBuffer(graphicsDevice, CameraBuffer.Size, CameraBuffer.Slot);
 			UpdateProjectionMatrix();
 			UpdateViewMatrix();
+		}
+
+		/// <summary>
+		///   Gets or sets the camera's position within the world.
+		/// </summary>
+		public Vector3 Position
+		{
+			get { return _position; }
+			set
+			{
+				_position = value;
+				UpdateViewMatrix();
+			}
 		}
 
 		/// <summary>
@@ -74,7 +92,7 @@ namespace Pegasus.Framework.Rendering
 		{
 			if (_bufferUpdateRequired)
 			{
-				var bufferData = new CameraBuffer(View, Projection);
+				var bufferData = new CameraBuffer(ref View, ref Projection, ref _position);
 				_cameraBuffer.CopyData(&bufferData);
 
 				_bufferUpdateRequired = false;
@@ -128,7 +146,7 @@ namespace Pegasus.Framework.Rendering
 			/// <summary>
 			///   The size of the struct in bytes.
 			/// </summary>
-			public const int Size = 192;
+			public const int Size = 208;
 
 			/// <summary>
 			///   The slot that is used to pass the camera buffer to the vertex shaders.
@@ -151,15 +169,22 @@ namespace Pegasus.Framework.Rendering
 			private readonly Matrix _viewProjection;
 
 			/// <summary>
+			///   The position of the camera in world space.
+			/// </summary>
+			private readonly Vector3 _cameraPosition;
+
+			/// <summary>
 			///   Initializes a new instance.
 			/// </summary>
 			/// <param name="view">The view matrix of the camera.</param>
 			/// <param name="projection"> The projection matrix of the camera.</param>
-			public CameraBuffer(Matrix view, Matrix projection)
+			/// <param name="cameraPosition">The position of the camera in world space.</param>
+			public CameraBuffer(ref Matrix view, ref Matrix projection, ref Vector3 cameraPosition)
 			{
 				_view = view;
 				_projection = projection;
 				_viewProjection = view * projection;
+				_cameraPosition = cameraPosition;
 			}
 		}
 	}

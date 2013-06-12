@@ -27,7 +27,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Gets or sets the camera's position within the world.
 		/// </summary>
-		public Vector2 Position
+		public new Vector2 Position
 		{
 			get { return _position; }
 			set

@@ -157,11 +157,12 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			var projection = new ShaderConstant("Projection", DataType.Matrix);
 			var viewProjection = new ShaderConstant("ViewProjection", DataType.Matrix);
 			var viewportSize = new ShaderConstant("ViewportSize", DataType.Vector2);
+			var cameraPosition = new ShaderConstant("CameraPosition", DataType.Vector3);
 
 			// Create the default constant buffers
 			var constantBuffers = new[]
 			{
-				new ConstantBuffer("CameraBuffer", 0, new[] { view, projection, viewProjection }, true),
+				new ConstantBuffer("CameraBuffer", 0, new[] { view, projection, viewProjection, cameraPosition }, true),
 				new ConstantBuffer("ViewportBuffer", 1, new[] { viewportSize }, true)
 			};
 

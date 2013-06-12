@@ -26,11 +26,6 @@ namespace Pegasus.Framework.Rendering
 		private float _nearDistance;
 
 		/// <summary>
-		///   The camera's position within the world.
-		/// </summary>
-		private Vector3 _position;
-
-		/// <summary>
 		///   The target the camera looks at.
 		/// </summary>
 		private Vector3 _target;
@@ -49,19 +44,6 @@ namespace Pegasus.Framework.Rendering
 		{
 			_nearDistance = 1.0f;
 			_farDistance = 1000.0f;
-		}
-
-		/// <summary>
-		///   Gets or sets the camera's position within the world.
-		/// </summary>
-		public Vector3 Position
-		{
-			get { return _position; }
-			set
-			{
-				_position = value;
-				UpdateViewMatrix();
-			}
 		}
 
 		/// <summary>

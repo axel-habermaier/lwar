@@ -73,9 +73,9 @@ namespace Pegasus.AssetsCompiler.Effects
 		/// <summary>
 		///   Gets the element of the matrix at the given column and the given row.
 		/// </summary>
-		/// <param name="column">The column index of the element that should be returned.</param>
-		/// <param name="row">The row index of the element that should be returned.</param>
-		public float this[int column, int row]
+		/// <param name="row">The zero-based index of the row of the element that should be returned.</param>
+		/// <param name="column">The zero-based index of the column of the element that should be returned.</param>
+		public float this[int row, int column]
 		{
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }

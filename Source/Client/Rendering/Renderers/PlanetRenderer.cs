@@ -4,7 +4,7 @@ namespace Lwar.Client.Rendering.Renderers
 {
 	using Assets.Effects;
 	using Gameplay.Entities;
-	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
@@ -39,9 +39,10 @@ namespace Lwar.Client.Rendering.Renderers
 			foreach (var planet in Elements)
 			{
 				_effect.World = planet.Transform.Matrix;
+				_effect.SunPosition = new Vector3(0, 0.5f, 0);
 				_effect.SphereTexture = new CubeMapView(planet.Template.CubeMap, SamplerState.TrilinearClamp);
 
-				planet.Template.Model.Draw(output, _effect.Default);
+				planet.Template.Model.Draw(output, _effect.Planet);
 			}
 		}
 

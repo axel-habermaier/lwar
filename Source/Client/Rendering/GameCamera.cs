@@ -19,12 +19,12 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   The maximum allowed distance to the XZ plane.
 		/// </summary>
-		private const float MaxZoom = 20000.0f;
+		private const float MaxZoom = 100000.0f;
 
 		/// <summary>
 		///   The minimum allowed distance to the XZ plane.
 		/// </summary>
-		private const float MinZoom = 500.0f;
+		private const float MinZoom = 1000.0f;
 
 		/// <summary>
 		///   The default distance to the XZ plane.
@@ -34,7 +34,7 @@ namespace Lwar.Client.Rendering
 		/// <summary>
 		///   Determines how fast the zoom level changes when the user scrolls the mouse wheel.
 		/// </summary>
-		private const float DeltaScale = 1000.0f;
+		private const float DeltaScale = 5000.0f;
 
 		/// <summary>
 		///   Determines how fast the camera changes the distance to the XZ plane.
