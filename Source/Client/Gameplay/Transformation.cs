@@ -41,6 +41,15 @@ namespace Lwar.Client.Gameplay
 		public Vector3 Position { get; set; }
 
 		/// <summary>
+		///   Gets or sets the 2D position relative to the parent.
+		/// </summary>
+		public Vector2 Position2D
+		{
+			get { return new Vector2(Position.X, Position.Z); }
+			set { Position = new Vector3(value.X, Position.Y, value.Y); }
+		}
+
+		/// <summary>
 		///   Gets or sets the rotation relative to the parent.
 		/// </summary>
 		public Vector3 Rotation { get; set; }
@@ -63,7 +72,7 @@ namespace Lwar.Client.Gameplay
 		///   old parent before it is attached to the new one.
 		/// </summary>
 		/// <param name="parent">The parent the transformation should be attached to.</param>
-		public void Attach(Transformation parent)
+		public void AttachTo(Transformation parent)
 		{
 			Assert.ArgumentNotNull(parent);
 

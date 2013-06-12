@@ -174,6 +174,10 @@
     <Compile Include="..\..\Assets\Effects\Effects.cs">
       <Link>Rendering\Effects.cs</Link>
     </Compile>
+    <Compile Include="Gameplay\Actors\Actor.cs" />
+    <Compile Include="Gameplay\Actors\ActorList.cs" />
+    <Compile Include="Gameplay\Actors\IActor.cs" />
+    <Compile Include="Gameplay\Actors\Shield.cs" />
     <Compile Include="Gameplay\Entities\Rocket.cs" />
     <Compile Include="Gameplay\Entities\Shockwave.cs" />
     <Compile Include="Gameplay\Entities\Ray.cs" />
@@ -187,6 +191,7 @@
     <Compile Include="Gameplay\InterpolatedValue.cs" />
     <Compile Include="InputLayers.cs" />
     <Compile Include="Network\LeaveReason.cs" />
+    <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
     <Compile Include="Screens\ChatInput.cs" />
     <Compile Include="Screens\EventMessageDisplay.cs" />
     <Compile Include="Screens\Frame.cs" />
@@ -209,7 +214,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Gameplay\Entities\Sun.cs" />
-    <Compile Include="Gameplay\EntityList.cs" />
+    <Compile Include="Gameplay\Entities\EntityList.cs" />
     <Compile Include="Rendering\GameCamera.cs" />
     <Compile Include="Gameplay\PlayerList.cs" />
     <Compile Include="Screens\MessageBox.cs" />
@@ -220,7 +225,7 @@
     <Compile Include="Rendering\CameraManager.cs" />
     <Compile Include="Gameplay\IdentifierMap.cs" />
     <Compile Include="DeferredList.cs" />
-    <Compile Include="Gameplay\EntityType.cs" />
+    <Compile Include="Gameplay\Entities\EntityType.cs" />
     <Compile Include="Gameplay\GameSession.cs" />
     <Compile Include="Gameplay\Identifier.cs" />
     <Compile Include="Network\BufferExtensions.cs" />

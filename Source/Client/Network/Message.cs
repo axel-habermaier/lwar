@@ -5,6 +5,7 @@ namespace Lwar.Client.Network
 	using System.Runtime.InteropServices;
 	using System.Text;
 	using Gameplay;
+	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 

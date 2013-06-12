@@ -8,7 +8,7 @@ namespace Lwar.Client.Gameplay.Entities
 	/// <summary>
 	///   Represents a phaser.
 	/// </summary>
-	public partial class Phaser : Entity<Phaser>
+	public class Phaser : Entity<Phaser>
 	{
 		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.

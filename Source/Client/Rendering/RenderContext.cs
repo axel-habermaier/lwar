@@ -3,7 +3,6 @@
 namespace Lwar.Client.Rendering
 {
 	using System.Linq;
-	using Gameplay.Entities;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
@@ -34,7 +33,8 @@ namespace Lwar.Client.Rendering
 			new PhaserRenderer(),
 			new RayRenderer(),
 			new ShockwaveRenderer(),
-			new RocketRenderer()
+			new RocketRenderer(),
+			new ShieldRenderer()
 		};
 
 		/// <summary>
@@ -72,27 +72,27 @@ namespace Lwar.Client.Rendering
 		}
 
 		/// <summary>
-		///   Adds the given entity to the appropriate renderer.
+		///   Adds the given element to the appropriate renderer.
 		/// </summary>
-		/// <typeparam name="TEntity">The type of the entity that should be added.</typeparam>
-		/// <param name="entity">The entity that should be added.</param>
-		public void Add<TEntity>(TEntity entity)
-			where TEntity : class, IEntity
+		/// <typeparam name="TElement">The type of the element that should be added.</typeparam>
+		/// <param name="element">The element that should be added.</param>
+		public void Add<TElement>(TElement element)
+			where TElement : class
 		{
-			Assert.ArgumentNotNull(entity);
-			_renderers.OfType<Renderer<TEntity>>().Single().Add(entity);
+			Assert.ArgumentNotNull(element);
+			_renderers.OfType<Renderer<TElement>>().Single().Add(element);
 		}
 
 		/// <summary>
-		///   Removes the given entity from the appropriate renderer.
+		///   Removes the given element from the appropriate renderer.
 		/// </summary>
-		/// <typeparam name="TEntity">The type of the entity that should be removed.</typeparam>
-		/// <param name="entity">The entity that should be removed.</param>
-		public void Remove<TEntity>(TEntity entity)
-			where TEntity : class, IEntity
+		/// <typeparam name="TElement">The type of the element that should be removed.</typeparam>
+		/// <param name="element">The element that should be removed.</param>
+		public void Remove<TElement>(TElement element)
+			where TElement : class
 		{
-			Assert.ArgumentNotNull(entity);
-			_renderers.OfType<Renderer<TEntity>>().Single().Remove(entity);
+			Assert.ArgumentNotNull(element);
+			_renderers.OfType<Renderer<TElement>>().Single().Remove(element);
 		}
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace Lwar.Client.Rendering
 			_spriteBatch.BlendState = BlendState.Premultiplied;
 			_spriteBatch.DepthStencilState = DepthStencilState.DepthRead;
 			_spriteBatch.SamplerState = SamplerState.BilinearClampNoMipmaps;
-			_spriteBatch.WorldMatrix =  Matrix.CreateRotationX(-MathUtils.PiOver2);
+			_spriteBatch.WorldMatrix = Matrix.CreateRotationX(-MathUtils.PiOver2);
 
 			foreach (var renderer in _renderers)
 				renderer.Draw(_spriteBatch);

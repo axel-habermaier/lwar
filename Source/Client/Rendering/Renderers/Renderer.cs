@@ -137,7 +137,7 @@ namespace Lwar.Client.Rendering.Renderers
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected sealed override void OnDisposing()
+		protected override sealed void OnDisposing()
 		{
 			while (_elements.Count != 0)
 				Remove(_elements[0]);

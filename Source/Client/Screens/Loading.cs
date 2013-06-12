@@ -3,6 +3,7 @@
 namespace Lwar.Client.Screens
 {
 	using Gameplay;
+	using Gameplay.Entities;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;

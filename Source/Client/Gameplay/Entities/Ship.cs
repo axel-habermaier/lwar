@@ -2,6 +2,7 @@
 
 namespace Lwar.Client.Gameplay.Entities
 {
+	using Actors;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
@@ -9,7 +10,7 @@ namespace Lwar.Client.Gameplay.Entities
 	/// <summary>
 	///   Represents a ship that is controlled by a local or remote player.
 	/// </summary>
-	public partial class Ship : Entity<Ship>
+	public class Ship : Entity<Ship>
 	{
 		/// <summary>
 		///   Gets or sets the player the ship belongs to.
@@ -32,6 +33,16 @@ namespace Lwar.Client.Gameplay.Entities
 			Position = message.Update.Position;
 			Rotation = MathUtils.DegToRad(message.Update.Rotation);
 			Health = message.Update.Health;
+		}
+
+		/// <summary>
+		///   Invoked when the entity collided another entity.
+		/// </summary>
+		/// <param name="other">The other entity this instance collided with.</param>
+		/// <param name="impact">The position of the impact.</param>
+		public override void CollidedWith(IEntity other, Vector2 impact)
+		{
+			GameSession.Actors.Add(Shield.Create(this, impact));
 		}
 
 		/// <summary>

@@ -9,7 +9,6 @@ Client
 	- Move skybox
 - Entity interpolation
 	- Reusable interpolation class?
-- Batch drawing of bullets, etc. - instancing?
 - UI
 	- Ship/Weapon selection
 	- Minimap
@@ -21,6 +20,8 @@ Client
 - Camera zoom bug in very-low FPS situations
 - Multiple player names might overlap
 - Let camera follow ship (sort of: attach the camera to the ship with a spring)
+- Show server network statistics
+- Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
 
 Pegasus.Framework
 ========
@@ -50,6 +51,7 @@ Network
 - Send network spec revision number with Connect message, send WrongVersion message on version mismatch
 - Are all reliable messages sent multiple times before there's even a chance to acknowledge them? Is that a problem?
   Comment: queue.c last_tx_time and RETRANSMIT_INTERVAL capture this, see qm_check_relevant
+- Should collision messages be reliable? Otherwise the client has to filter collision messages...
 
 Server
 ========

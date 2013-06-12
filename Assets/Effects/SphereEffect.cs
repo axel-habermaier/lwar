@@ -19,13 +19,19 @@ namespace Lwar.Assets.Effects
 			FragmentShader = "FragmentShaderPlanet"
 		};
 
+		public readonly Technique Shield = new Technique
+		{
+			VertexShader = "VertexShaderShield",
+			FragmentShader = "FragmentShaderShield"
+		};
+
 		public readonly CubeMap SphereTexture;
 
 		[Constant]
 		public readonly Matrix World;
 
 		[Constant]
-		public readonly Vector3 SunPosition;
+		public readonly Vector3 Position;
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,
@@ -48,21 +54,21 @@ namespace Lwar.Assets.Effects
 		public void VertexShaderPlanet([Position] Vector4 position,
 									   [Normal] Vector3 normal,
 									   [Position] out Vector4 outPosition,
-									   [TexCoords] out Vector3 eyePosition,
+									   [TexCoords] out Vector3 worldPosition,
 									   [Normal] out Vector3 outNormal)
 		{
 			outPosition = World * position;
 			outPosition = ViewProjection * outPosition;
 			outNormal = normal;
-			eyePosition = Normalize((World * position).xyz);
+			worldPosition = Normalize((World * position).xyz);
 		}
 
 		[FragmentShader]
-		public void FragmentShaderPlanet([TexCoords] Vector3 eyePosition, [Normal] Vector3 normal, [Color] out Vector4 color)
+		public void FragmentShaderPlanet([TexCoords] Vector3 worldPosition, [Normal] Vector3 normal, [Color] out Vector4 color)
 		{
 			var textureColor = SphereTexture.Sample(normal).rgb;
 
-			eyePosition = Normalize(eyePosition);
+			worldPosition = Normalize(worldPosition);
 			var matrix = World;
 			matrix[0, 3] = 0.0f;
 			matrix[1, 3] = 0.0f;
@@ -71,7 +77,7 @@ namespace Lwar.Assets.Effects
 			normal = Normalize((matrix * new Vector4(normal, 1)).xyz);
 
 			// Diffuse light
-			var lightDirection = Normalize(SunPosition - eyePosition);
+			var lightDirection = Normalize(Position - worldPosition);
 			var diffuseLight = Max(Dot(lightDirection, normal), 0.0f);
 
 			// Specular light - looks strange at the moment, requires planet-specific specular map
@@ -80,6 +86,29 @@ namespace Lwar.Assets.Effects
 			//var specularLight = 10.0f * Max(Pow(Dot(reflection, viewDirection), 64.0f), 0.0f);
 
 			color = new Vector4(textureColor * (diffuseLight + 0.15f /* + specularLight */), 1.0f);
+		}
+
+		[VertexShader]
+		public void VertexShaderShield([Position] Vector4 position,
+									   [Normal] Vector3 normal,
+									   [Position] out Vector4 outPosition,
+									   [TexCoords] out Vector3 worldPosition,
+									   [Normal] out Vector3 outNormal)
+		{
+			outPosition = World * position;
+			outPosition = ViewProjection * outPosition;
+			outNormal = normal;
+			worldPosition = (World * position).xyz;
+		}
+
+		[FragmentShader]
+		public void FragmentShaderShield([TexCoords] Vector3 worldPosition, [Normal] Vector3 normal, [Color] out Vector4 color)
+		{
+			var maxDistance = 200;
+			var distance = Min(Distance(worldPosition, Position) / maxDistance, 1.0f);
+
+			color = SphereTexture.Sample(normal) * (1 - distance);
+			//color = new Vector4(Normalize(Position), 1);
 		}
 	}
 }

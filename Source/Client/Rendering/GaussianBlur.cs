@@ -70,7 +70,7 @@ namespace Lwar.Client.Rendering
 				++count;
 				width /= 2;
 				height /= 2;
-				sizes.Add(new Size((int)width, (int)height));
+				sizes.Add(new Size(width, height));
 			}
 			_sizes = sizes.ToArray();
 

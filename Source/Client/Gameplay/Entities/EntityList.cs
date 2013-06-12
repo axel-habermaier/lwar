@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Lwar.Client.Gameplay
+namespace Lwar.Client.Gameplay.Entities
 {
 	using System.Collections.Generic;
-	using Entities;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;

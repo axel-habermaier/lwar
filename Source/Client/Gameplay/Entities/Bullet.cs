@@ -9,7 +9,7 @@ namespace Lwar.Client.Gameplay.Entities
 	/// <summary>
 	///   Represents a bullet.
 	/// </summary>
-	public partial class Bullet : Entity<Bullet>
+	public class Bullet : Entity<Bullet>
 	{
 		// TODO: Remove this hack
 		/// <summary>

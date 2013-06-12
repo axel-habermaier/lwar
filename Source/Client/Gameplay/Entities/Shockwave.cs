@@ -8,7 +8,7 @@ namespace Lwar.Client.Gameplay.Entities
 	/// <summary>
 	///   Represents a shockwave.
 	/// </summary>
-	public partial class Shockwave : Entity<Shockwave>
+	public class Shockwave : Entity<Shockwave>
 	{
 		/// <summary>
 		///   Gets the current radius of the shockwave.
