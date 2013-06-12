@@ -88,7 +88,7 @@ namespace Lwar.Client.Gameplay
 			if (t > 3 && Players.LocalPlayer != null && Players.LocalPlayer.Ship != null)
 			{
 				t = 0;
-				Players.LocalPlayer.Ship.CollidedWith(null, Players.LocalPlayer.Ship.Position - new Vector2(64, 64));
+				//Players.LocalPlayer.Ship.CollidedWith(null, Players.LocalPlayer.Ship.Position + new Vector2(64, 0));
 			}
 
 			_clock.Reset();

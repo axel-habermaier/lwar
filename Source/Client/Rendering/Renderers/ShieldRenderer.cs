@@ -6,7 +6,6 @@ namespace Lwar.Client.Rendering.Renderers
 	using Gameplay.Actors;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 
@@ -30,10 +29,10 @@ namespace Lwar.Client.Rendering.Renderers
 		/// </summary>
 		protected override void Initialize()
 		{
-			_model = Model.CreateSphere(GraphicsDevice, /*1.0f*/64.0f, 16);
+			_model = Model.CreateSphere(GraphicsDevice, 1.0f, 16);
 			_effect = new SphereEffect(GraphicsDevice, Assets)
 			{
-				SphereTexture = new CubeMapView(Assets.LoadCubeMap("Textures/Sun"), SamplerState.TrilinearClamp)
+				SphereTexture = new CubeMapView(Assets.LoadCubeMap("Textures/Shields"), SamplerState.TrilinearClamp)
 			};
 		}
 
@@ -45,10 +44,9 @@ namespace Lwar.Client.Rendering.Renderers
 		{
 			foreach (var shield in Elements)
 			{
-				_effect.World = /*Matrix.CreateScale(shield.Ship.Template.Radius) */ shield.Transform.Matrix;
-				_effect.Position = new Vector3(shield.ImpactPosition.X, 0, shield.ImpactPosition.Y);
-				Log.
-					Info(_effect.Position.ToString());
+				_effect.World = Matrix.CreateScale(shield.Ship.Template.Radius) * shield.Transform.Matrix;
+				_effect.ImpactPosition = new Vector3(shield.ImpactPosition.X, 0, shield.ImpactPosition.Y);
+				_effect.TimeToLive = shield.TimeToLive;
 				_model.Draw(output, _effect.Shield);
 			}
 		}

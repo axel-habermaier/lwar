@@ -5,6 +5,7 @@ namespace Lwar.Client.Gameplay.Entities
 	using System.Collections.Generic;
 	using Network;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Memory;
 	using Rendering;
@@ -128,6 +129,24 @@ namespace Lwar.Client.Gameplay.Entities
 				return;
 
 			entity.RemoteUpdate(ref message);
+		}
+
+		/// <summary>
+		///   Handles a collision between the two entities.
+		/// </summary>
+		/// <param name="entityIdentifier1">The identifier of the first entity of the collision.</param>
+		/// <param name="entityIdentifier2">The identifier of the second entity of the collision.</param>
+		/// <param name="impactPosition">The position of the impact.</param>
+		public void OnCollision(Identifier entityIdentifier1, Identifier entityIdentifier2, Vector2 impactPosition)
+		{
+			var entity1 = this[entityIdentifier1];
+			var entity2 = this[entityIdentifier2];
+
+			if (entity1 == null || entity2 == null)
+				return;
+
+			entity1.CollidedWith(entity2, impactPosition);
+			entity2.CollidedWith(entity1, impactPosition);
 		}
 	}
 }

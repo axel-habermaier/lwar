@@ -30,8 +30,14 @@ namespace Lwar.Assets.Effects
 		[Constant]
 		public readonly Matrix World;
 
-		[Constant]
-		public readonly Vector3 Position;
+		[Constant("PlanetConstantBuffer")]
+		public readonly Vector3 SunPosition;
+
+		[Constant("ShieldConstantBuffer")]
+		public readonly Vector3 ImpactPosition;
+
+		[Constant("ShieldConstantBuffer")]
+		public readonly float TimeToLive;
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,
@@ -77,7 +83,7 @@ namespace Lwar.Assets.Effects
 			normal = Normalize((matrix * new Vector4(normal, 1)).xyz);
 
 			// Diffuse light
-			var lightDirection = Normalize(Position - worldPosition);
+			var lightDirection = Normalize(SunPosition - worldPosition);
 			var diffuseLight = Max(Dot(lightDirection, normal), 0.0f);
 
 			// Specular light - looks strange at the moment, requires planet-specific specular map
@@ -104,11 +110,10 @@ namespace Lwar.Assets.Effects
 		[FragmentShader]
 		public void FragmentShaderShield([TexCoords] Vector3 worldPosition, [Normal] Vector3 normal, [Color] out Vector4 color)
 		{
-			var maxDistance = 200;
-			var distance = Min(Distance(worldPosition, Position) / maxDistance, 1.0f);
+			var maxDistance = 70;
+			var distance = Min(Distance(worldPosition, ImpactPosition) / maxDistance, 1.0f);
 
-			color = SphereTexture.Sample(normal) * (1 - distance);
-			//color = new Vector4(Normalize(Position), 1);
+			color = SphereTexture.Sample(normal) * (1 - distance) * TimeToLive;
 		}
 	}
 }

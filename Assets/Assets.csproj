@@ -202,6 +202,7 @@
     <Content Include="Textures\PhaserGlow.png" />
     <Content Include="Textures\Planet.png" />
     <Content Include="Textures\Rocket.png" />
+    <Content Include="Textures\Shields.png" />
     <Content Include="Textures\Ship.png" />
     <Content Include="Textures\Space.png" />
     <Content Include="Textures\Sun.png" />

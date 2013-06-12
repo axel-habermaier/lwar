@@ -51,6 +51,7 @@ namespace Lwar.Client.Network
 					AddEntity(message.Add.Entity, message.Add.Type, message.Add.Player);
 					break;
 				case MessageType.Collision:
+					_gameSession.Entities.OnCollision(message.Collision.Entity1, message.Collision.Entity2, message.Collision.Position);
 					break;
 				case MessageType.Join:
 					// Give the server player a default name

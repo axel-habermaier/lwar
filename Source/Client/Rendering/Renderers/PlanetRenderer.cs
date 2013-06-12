@@ -39,7 +39,7 @@ namespace Lwar.Client.Rendering.Renderers
 			foreach (var planet in Elements)
 			{
 				_effect.World = planet.Transform.Matrix;
-				_effect.Position = new Vector3(0, 0.5f, 0);
+				_effect.SunPosition = new Vector3(0, 0.5f, 0);
 				_effect.SphereTexture = new CubeMapView(planet.Template.CubeMap, SamplerState.TrilinearClamp);
 
 				planet.Template.Model.Draw(output, _effect.Planet);

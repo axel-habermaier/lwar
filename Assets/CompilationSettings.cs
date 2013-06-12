@@ -7,6 +7,7 @@ using Pegasus.AssetsCompiler.Assets.Attributes;
 [assembly: CubeMap("Textures/Mars.png")]
 [assembly: CubeMap("Textures/Moon.png")]
 [assembly: CubeMap("Textures/Jupiter.png")]
+[assembly: CubeMap("Textures/Shields.png")]
 [assembly: CubeMap("Textures/SunHeat.png")]
 [assembly: CubeMap("Textures/Space.png", Mipmaps = false, Uncompressed = false)]
 [assembly: Texture2D("Textures/Heat.png", Mipmaps = false, Uncompressed = true)]
