@@ -185,10 +185,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		public override void VisitIdentifierExpression(IdentifierExpression identifierExpression)
 		{
 			var local = Resolver.Resolve(identifierExpression) as LocalResolveResult;
-			if (Shader.Type == ShaderType.VertexShader && local != null && local.IsParameter)
+			if (local != null && local.IsParameter)
 			{
 				var parameter = Shader.Parameters.Single(p => p.Name == local.Variable.Name);
-				if (parameter.IsOutput && parameter.Semantics == DataSemantics.Position)
+				if (Shader.Type == ShaderType.VertexShader && parameter.IsOutput && parameter.Semantics == DataSemantics.Position)
 				{
 					Writer.Append("gl_Position");
 					return;
