@@ -224,6 +224,7 @@ namespace Lwar.Client.Rendering.Renderers
 				if (Name != null && Name.SourceString == _player.Name)
 					return;
 
+				Name.SafeDispose();
 				Name = Text.Create(_player.Name);
 				Area = new Rectangle(Vector2i.Zero, _font.MeasureWidth(Name), _font.LineHeight);
 			}

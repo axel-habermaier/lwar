@@ -11,6 +11,9 @@ namespace Pegasus.Framework.Scripting
 	/// </summary>
 	internal static class CommandLineParser
 	{
+		/// <summary>
+		///   Parses the command line and executes all successfully parsed cvar set instructions.
+		/// </summary>
 		public static void Parse()
 		{
 			var arguments = Environment.GetCommandLineArgs();
