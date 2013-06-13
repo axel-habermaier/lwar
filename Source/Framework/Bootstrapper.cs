@@ -3,7 +3,6 @@
 namespace Pegasus.Framework
 {
 	using System.Globalization;
-	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
@@ -11,7 +10,6 @@ namespace Pegasus.Framework
 	using Rendering;
 	using Rendering.UserInterface;
 	using Scripting;
-	using Scripting.Parsing;
 	using Console = System.Console;
 
 	/// <summary>
@@ -54,7 +52,7 @@ namespace Pegasus.Framework
 						// Process the autoexec.cfg first, then the command line, so that cvar values set via the command line overwrite
 						// the autoexec.cfg. Afterwards, perform all deferred updates so that all cvars are set to their updated values
 						Commands.Process(ConfigurationFile.AutoExec);
-						ParseCommandLine();
+						CommandLineParser.Parse();
 						CvarRegistry.ExecuteDeferredUpdates();
 
 						var app = new TApp();
@@ -74,30 +72,6 @@ namespace Pegasus.Framework
 					Log.Error("Stack trace:\n{0}", e.StackTrace);
 					Win32.ShowMessage(appName + " Fatal Error", message);
 				}
-			}
-		}
-
-		/// <summary>
-		///   Parses the command line and sets all cvars to the requested values.
-		/// </summary>
-		private static void ParseCommandLine()
-		{
-			Log.Info("Parsing the command line arguments '{0}'...", Environment.CommandLine);
-			var reply = new CommandLineParser().Parse(Environment.CommandLine);
-			if (reply.Status != ReplyStatus.Success)
-			{
-				Log.Error("{0}", reply.Errors.ErrorMessage);
-				Log.Warn("All cvar values set via the command line were discarded.");
-			}
-			else
-			{
-				if (reply.Result.Any())
-					Log.Info("Setting cvar values passed via the command line...");
-				else
-					Log.Info("No cvar values have been provided via the command line.");
-
-				foreach (var cvar in reply.Result)
-					cvar.Execute(false);
 			}
 		}
 
