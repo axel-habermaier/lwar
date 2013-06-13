@@ -344,7 +344,7 @@ EntityType type_ship =
     // energy
     1000.0, 
     // health
-    10000.0, 
+    200.0, 
     // shield
     1.0, 
     // length

@@ -34,7 +34,8 @@ namespace Lwar.Client.Rendering
 			new RayRenderer(),
 			new ShockwaveRenderer(),
 			new RocketRenderer(),
-			new ShieldRenderer()
+			new ShieldRenderer(),
+			new ExplosionRenderer()
 		};
 
 		/// <summary>

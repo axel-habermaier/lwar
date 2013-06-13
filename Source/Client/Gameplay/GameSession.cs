@@ -72,7 +72,6 @@ namespace Lwar.Client.Gameplay
 			_clock.SafeDispose();
 		}
 
-		private float t = 10;
 		/// <summary>
 		///   Updates the game session.
 		/// </summary>
@@ -83,13 +82,6 @@ namespace Lwar.Client.Gameplay
 			Actors.Update(_clock);
 			RootTransform.Update();
 			EventMessages.Update();
-
-			t += (float)_clock.Seconds;
-			if (t > 3 && Players.LocalPlayer != null && Players.LocalPlayer.Ship != null)
-			{
-				t = 0;
-				//Players.LocalPlayer.Ship.CollidedWith(null, Players.LocalPlayer.Ship.Position + new Vector2(64, 0));
-			}
 
 			_clock.Reset();
 		}

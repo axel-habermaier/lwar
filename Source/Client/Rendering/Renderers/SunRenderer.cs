@@ -88,6 +88,7 @@ namespace Lwar.Client.Rendering.Renderers
 		{
 			foreach (var sun in Elements)
 			{
+				BlendState.Premultiplied.Bind();
 				DepthStencilState.DepthEnabled.Bind();
 
 				var elapsed = (float)_clock.Seconds;

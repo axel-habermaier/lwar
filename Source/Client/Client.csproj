@@ -176,6 +176,7 @@
     </Compile>
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
+    <Compile Include="Gameplay\Actors\Explosion.cs" />
     <Compile Include="Gameplay\Actors\IActor.cs" />
     <Compile Include="Gameplay\Actors\Shield.cs" />
     <Compile Include="Gameplay\Entities\Rocket.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Gameplay\InterpolatedValue.cs" />
     <Compile Include="InputLayers.cs" />
     <Compile Include="Network\LeaveReason.cs" />
+    <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
     <Compile Include="Screens\ChatInput.cs" />
     <Compile Include="Screens\EventMessageDisplay.cs" />

@@ -344,9 +344,10 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
 		/// <param name="color">The color of the quad.</param>
-		public void Draw(RectangleF rectangle, Texture2D texture, Color color)
+		/// <param name="texCoords">The texture coordinates that should be used.</param>
+		public void Draw(RectangleF rectangle, Texture2D texture, Color color, RectangleF? texCoords = null)
 		{
-			var quad = new Quad(rectangle, color);
+			var quad = new Quad(rectangle, color, texCoords);
 			Draw(ref quad, texture);
 		}
 

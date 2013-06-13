@@ -40,7 +40,7 @@ static void level_init() {
         p->active = true;
         p->len    = dist;
         p->energy = rad(180 + rand()%360); /* speed of rotation around sun per second */
-        p->radius += rand()%(unsigned)p->radius;
+        //p->radius += rand()%(unsigned)p->radius;
     }
 }
 

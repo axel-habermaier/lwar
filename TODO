@@ -16,7 +16,6 @@ Client
 		* Main menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
-- !!!Explosions!!!
 - Camera zoom bug in very-low FPS situations
 - Multiple player names might overlap
 - Let camera follow ship (sort of: attach the camera to the ship with a spring)
@@ -37,7 +36,6 @@ Pegasus.Platform
 - Linux: Fullscreen not implemented, moving and resizing window mostly not working
 - Linux: Input bug (for instance, crash when entering text into the console)
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
-  also define a name of the type
 - Bug: Window is not opened in maximized mode when native debugging is not enabled??
 
 Assets Compiler
@@ -46,7 +44,7 @@ Assets Compiler
 - Asset compression
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)
-- Allow shader constants initialized for vector types (e.g., = new Vector2(1,1))
+- Allow shader constants initialization for vector types (e.g., = new Vector2(1,1))
 
 Network
 ========

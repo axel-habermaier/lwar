@@ -46,6 +46,15 @@ namespace Lwar.Client.Gameplay.Entities
 		}
 
 		/// <summary>
+		///   Invoked when the actor is removed from the game session.
+		/// </summary>
+		/// <remarks>This method is not called when the game session is shut down.</remarks>
+		protected override void OnRemoved()
+		{
+			GameSession.Actors.Add(Explosion.Create(Position));
+		}
+
+		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the ship.</param>

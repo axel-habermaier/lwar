@@ -10,6 +10,7 @@ using Pegasus.AssetsCompiler.Assets.Attributes;
 [assembly: CubeMap("Textures/Shields.png")]
 [assembly: CubeMap("Textures/SunHeat.png")]
 [assembly: CubeMap("Textures/Space.png", Mipmaps = false, Uncompressed = false)]
+[assembly: Texture2D("Textures/Explosion.png", Mipmaps = false, Uncompressed = false)]
 [assembly: Texture2D("Textures/Heat.png", Mipmaps = false, Uncompressed = true)]
 [assembly: Texture2D("Textures/Phaser.png", Mipmaps = false, Uncompressed = true)]
 [assembly: Texture2D("Textures/PhaserGlow.png", Mipmaps = false, Uncompressed = true)]

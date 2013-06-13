@@ -134,7 +134,7 @@ namespace Lwar.Client.Gameplay.Entities
             Ship = new Template
             (
                 maxEnergy: 1000.0f,
-                maxHealth: 10000.0f,
+                maxHealth: 200.0f,
                 radius: 64.0f,
                 texture: null,
                 cubeMap: null,
