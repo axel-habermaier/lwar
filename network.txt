@@ -34,7 +34,9 @@ Message Delivery Guarantees
 Network-related constants
 	Constant						Value 			Comment
 	-------------------------------	----------		---------------------------------------------------------
+	Reserved Entity Id:				  0				A special entity id reserved by the server
 	Server Player Id:				  0				The default player that represents the server
+	Angle Scale Factor				100				Angles sent over the network are scaled by this factor
 	Max Packet Size: 				512 bytes 		Including the packet and message headers
 	Packet Header Size:			 	 12 bytes	
 	Reliable Message Header Size:	  5 bytes	
@@ -205,7 +207,7 @@ Messages Payload Data
 		uint32(Id)	entityId	The generational identifier of the entity that is updated
 		int16		x			The new x position
 		int16		y			The new y position
-		uint16		orientation	New orientation angle, in degrees
+		uint16		orientation	New orientation angle, in degrees, scaled by the Angle Scale Factor
 		uint8		health		The new health
 
 	UpdatePos
@@ -225,7 +227,7 @@ Messages Payload Data
 		uint32(Id)	entityId	The generational identifier of the entity that is updated
 		int16		x			The current origin x
 		int16		y			The current origin y
-		uint16		orientation	The orientation (direction) of the ray
+		uint16		orientation	The orientation (direction, in degrees) of the ray, scaled by the Angle Scale Factor
 		uint16		length		The lenght of the ray
 
 	UpdateCircle
@@ -335,6 +337,8 @@ Client-side prediction
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	15	  13-06-14  Axel/Gidon	Angles are now scaled when sent over the network; entity with id 0 is 
+								now reserved for internal server use
 	14    13-06-04  Axel		Added player name to Join and Connect messages
 								Added reason field to Leave message; clarified when the Leave message's
 								player id is allowed to be the client's local player id

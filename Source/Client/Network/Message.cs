@@ -523,7 +523,7 @@ namespace Lwar.Client.Network
 			/// <summary>
 			///   The new entity rotation.
 			/// </summary>
-			public ushort Rotation;
+			public float Rotation;
 		}
 
 		/// <summary>

@@ -197,7 +197,7 @@ namespace Lwar.Client.Network
 					{
 						message.Update.Entity = buffer.ReadIdentifier();
 						message.Update.Position = new Vector2(buffer.ReadInt16(), buffer.ReadInt16());
-						message.Update.Rotation = buffer.ReadUInt16();
+						message.Update.Rotation = buffer.ReadUInt16() / Specification.AngleFactor;
 						message.Update.Health = buffer.ReadByte();
 
 						Messages.Add(message);
@@ -219,7 +219,7 @@ namespace Lwar.Client.Network
 					{
 						message.UpdateRay.Entity = buffer.ReadIdentifier();
 						message.UpdateRay.Origin = new Vector2(buffer.ReadInt16(), buffer.ReadInt16());
-						message.UpdateRay.Direction = buffer.ReadUInt16();
+						message.UpdateRay.Direction = buffer.ReadUInt16() / Specification.AngleFactor;
 						message.UpdateRay.Length = buffer.ReadUInt16();
 
 						Messages.Add(message);

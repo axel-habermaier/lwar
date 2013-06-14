@@ -46,5 +46,10 @@ namespace Lwar.Client.Network
 		///   The default server port.
 		/// </summary>
 		public const ushort DefaultServerPort = 32422;
+
+		/// <summary>
+		///   The factor that angles sent over the network are scaled with.
+		/// </summary>
+		public const float AngleFactor = 100.0f;
 	}
 }
