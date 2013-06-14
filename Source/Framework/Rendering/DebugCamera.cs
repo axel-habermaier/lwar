@@ -21,7 +21,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The move speed of the camera.
 		/// </summary>
-		private const float MoveSpeed = 1000.0f;
+		private const float MoveSpeed = 10000.0f;
 
 		/// <summary>
 		///   Triggered when the user wants to move backward.

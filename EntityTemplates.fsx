@@ -47,7 +47,7 @@ let templates = seq {
         Length          = 0.0;
         Mass            = 0.1;
         Radius          = 16.0;
-        Acceleration    = { X = 0.0; Y = 2000.0 };
+        Acceleration    = { X = 0.0; Y = 3000.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0;  
         Texture         = null;
@@ -171,7 +171,7 @@ let templates = seq {
         Health          = 1.0;
         Shield          = 0.0;
         Length          = 0.0;
-        Mass            = 10000.0;
+        Mass            = 50000.0;
         Radius          = 1500.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
@@ -185,7 +185,7 @@ let templates = seq {
         Act             = "ray_act";
         Collide         = null;
         Interval        = 0;
-        Energy          = 0.0;
+        Energy          = 1.0;
         Health          = 1.0;
         Shield          = 0.0;
         Length          = 0.0;
@@ -222,7 +222,7 @@ let templates = seq {
         Collide         = "ship_hit";
         Interval        = 0;
         Energy          = 1000.0;
-        Health          = 10000.0;
+        Health          = 3000.0;
         Shield          = 1.0;
         Length          = 0.0;
         Mass            = 1.0;

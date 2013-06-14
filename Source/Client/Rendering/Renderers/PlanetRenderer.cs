@@ -47,6 +47,22 @@ namespace Lwar.Client.Rendering.Renderers
 		}
 
 		/// <summary>
+		///   Draws all registered 2D elements.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
+		public override void Draw(SpriteBatch spriteBatch)
+		{
+			// Draw the planet's orbit
+			foreach (var planet in Elements)
+			{
+				// The distance to the sun - assumes the sun lies at the origin
+				var distance = planet.Position.Length;
+
+				spriteBatch.DrawOutline(new CircleF(Vector2.Zero, distance), new Color(32, 32, 32, 64), 12, 200);
+			}
+		}
+
+		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()

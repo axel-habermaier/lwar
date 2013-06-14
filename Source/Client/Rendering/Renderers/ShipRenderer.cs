@@ -3,7 +3,6 @@
 namespace Lwar.Client.Rendering.Renderers
 {
 	using System.Collections.Generic;
-	using Assets.Effects;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Network;
@@ -25,46 +24,35 @@ namespace Lwar.Client.Rendering.Renderers
 		private readonly List<PlayerName> _names = new List<PlayerName>(Specification.MaxPlayers);
 
 		/// <summary>
-		///   The effect that is used to draw the ships.
-		/// </summary>
-		private TexturedQuadEffect _effect;
-
-		/// <summary>
 		///   The font that is used to draw the player names below the ships.
 		/// </summary>
 		private Font _font;
 
 		/// <summary>
-		///   The ship model.
+		///   The texture that is used to draw the ship.
 		/// </summary>
-		private Model _model;
+		private Texture2D _texture;
 
 		/// <summary>
 		///   Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
-			var texture = Assets.LoadTexture2D("Textures/Ship");
-
-			_model = Model.CreateQuad(GraphicsDevice, texture.Size);
-			_effect = new TexturedQuadEffect(GraphicsDevice, Assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };
+			_texture = Assets.LoadTexture2D("Textures/Ship");
 			_font = Assets.LoadFont("Fonts/Liberation Mono 12");
 		}
 
 		/// <summary>
-		///   Draws all ships.
+		///   Draws all registered 2D elements.
 		/// </summary>
-		/// <param name="output">The output that the bullets should be rendered to.</param>
-		public override void Draw(RenderOutput output)
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
+		public override void Draw(SpriteBatch spriteBatch)
 		{
-			BlendState.Premultiplied.Bind();
-			DepthStencilState.DepthDisabled.Bind();
+			spriteBatch.BlendState = BlendState.Premultiplied;
+			spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
 
 			foreach (var ship in Elements)
-			{
-				_effect.World = ship.Transform.Matrix;
-				_model.Draw(output, _effect.TexturedQuad);
-			}
+				spriteBatch.Draw(ship.Position, _texture.Size, _texture, Color.White, -ship.Rotation);
 		}
 
 		/// <summary>
@@ -88,10 +76,10 @@ namespace Lwar.Client.Rendering.Renderers
 				name.Update();
 
 				// Determine the screen-space height of the ship
-				var topLeft = camera.ToScreenCoodinates(new Vector2(ship.Position.X + _effect.Texture.Width / 2.0f,
-																	ship.Position.Y - _effect.Texture.Height / 2.0f));
-				var bottomRight = camera.ToScreenCoodinates(new Vector2(ship.Position.X - _effect.Texture.Width / 2.0f,
-																		ship.Position.Y + _effect.Texture.Height / 2.0f));
+				var topLeft = camera.ToScreenCoodinates(new Vector2(ship.Position.X + _texture.Width / 2.0f,
+																	ship.Position.Y - _texture.Height / 2.0f));
+				var bottomRight = camera.ToScreenCoodinates(new Vector2(ship.Position.X - _texture.Width / 2.0f,
+																		ship.Position.Y + _texture.Height / 2.0f));
 
 				var width = bottomRight.X - topLeft.X;
 				var height = bottomRight.Y - topLeft.Y;
@@ -169,9 +157,6 @@ namespace Lwar.Client.Rendering.Renderers
 		/// </summary>
 		protected override void OnDisposingCore()
 		{
-			_effect.SafeDispose();
-			_model.SafeDispose();
-
 			foreach (var name in _names)
 				name.Dispose();
 		}

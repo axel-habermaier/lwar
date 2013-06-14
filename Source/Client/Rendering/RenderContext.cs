@@ -126,7 +126,7 @@ namespace Lwar.Client.Rendering
 				renderer.Draw(_spriteBatch);
 
 			// Draw the level boundaries
-			var thickness = 64;
+			const int thickness = 64;
 			_spriteBatch.DrawOutline(new CircleF(Vector2.Zero, Int16.MaxValue + thickness / 2), new Color(128, 0, 0, 128), thickness, 265);
 
 			_spriteBatch.DrawBatch();

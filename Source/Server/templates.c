@@ -54,7 +54,7 @@ EntityType type_bullet =
     // radius
     16.0, 
     // acceleration
-    { 0.0, 2000.0 }, 
+    { 0.0, 3000.0 }, 
     // deceleration
     { 0.0, 0.0 }, 
     // rotation
@@ -260,7 +260,7 @@ EntityType type_sun =
     // length
     0.0, 
     // mass
-    10000.0, 
+    50000.0, 
     // radius
     1500.0, 
     // acceleration
@@ -282,7 +282,7 @@ EntityType type_ray =
     // interval
     0, 
     // energy
-    0.0, 
+    1.0, 
     // health
     1.0, 
     // shield
@@ -344,7 +344,7 @@ EntityType type_ship =
     // energy
     1000.0, 
     // health
-    10000.0, 
+    3000.0, 
     // shield
     1.0, 
     // length
