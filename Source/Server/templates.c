@@ -292,7 +292,7 @@ EntityType type_ray =
     // mass
     0.0, 
     // radius
-    2048.0, 
+    4096.0, 
     // acceleration
     { 0.0, 0.0 }, 
     // deceleration
@@ -344,7 +344,7 @@ EntityType type_ship =
     // energy
     1000.0, 
     // health
-    200.0, 
+    10000.0, 
     // shield
     1.0, 
     // length
@@ -354,10 +354,10 @@ EntityType type_ship =
     // radius
     64.0, 
     // acceleration
-    { 1000.0, 1000.0 }, 
+    { 2000.0, 2000.0 }, 
     // deceleration
-    { 1000.0, 1000.0 }, 
+    { 2000.0, 2000.0 }, 
     // rotation
-    2.0, 
+    10.0, 
 };
 

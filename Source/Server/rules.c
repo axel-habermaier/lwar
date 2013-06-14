@@ -39,7 +39,7 @@ static void level_init() {
         Entity *p = entity_create(types[rand() % sizeof(types) / sizeof(EntityType*)], &server->self->player, x, _0);
         p->active = true;
         p->len    = dist;
-        p->energy = rad(180 + rand()%360); /* speed of rotation around sun per second */
+        p->energy = rad(20 + rand()%50); /* speed of rotation around sun per second */
         //p->radius += rand()%(unsigned)p->radius;
     }
 }
@@ -194,7 +194,8 @@ void ray_act(Entity *ray) {
     }
 
     Vec u = normalize(sub((ray->player->aim), phaser->x));
-    ray->dphi = arctan(u) - phaser->phi;
+    //ray->dphi = arctan(u) - phaser->phi;
+	ray->phi = arctan(u);
 
     Real    best_t;
     Entity *best_e = 0;
@@ -204,6 +205,7 @@ void ray_act(Entity *ray) {
         if(e == ray)    continue;
         if(e == phaser) continue;
         if(e == ship)   continue;
+		if(e->type->id == ENTITY_TYPE_BULLET) continue;
 
         /* TODO: partially merge into physics code */
         Real r = e->radius;

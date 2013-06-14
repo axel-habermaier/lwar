@@ -29,8 +29,8 @@ void entity_accelerate(Entity *e, Vec a) {
 }
 
 /* rotate e by r in [-1..1] */
-void entity_rotate(Entity *e, Real r) {
-    e->rot += r * e->type->max_rot;
+void entity_rotate(Entity *e, Real rot) {
+    e->rot += rot * e->type->max_rot;
 }
 
 /* try to reach exactly velocity v (relative to e)

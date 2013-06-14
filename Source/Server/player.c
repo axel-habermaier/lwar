@@ -1,4 +1,5 @@
 #include <assert.h>
+#define _USE_MATH_DEFINES // required for M_PI on VS2012
 #include <math.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -30,7 +31,6 @@ void player_clear(Player *p) {
     entity_remove(p->ship.entity);
 }
 
-/* too lazy to update signature each time something changes */
 void player_input(Player *p,
                   int forwards,    int backwards,
                   int turn_left,   int turn_right,
@@ -42,9 +42,10 @@ void player_input(Player *p,
     SlotType *st;
 
     p->a.x   = forwards    - backwards;
-    p->a.y   = strafe_left - strafe_right;
+    p->a.y   = strafe_right - strafe_left;
 
-    p->rot   = turn_right  - turn_left;
+    //p->rot   = turn_right  - turn_left;
+
 
     p->aim.x = aim_x;
     p->aim.y = aim_y;
@@ -126,12 +127,17 @@ static void player_action(Player *p) {
     Entity *ship = p->ship.entity;
     if(!ship) return;
 
-    Vec a = { p->a.x * ship->type->max_a.x * 10,
-              p->a.y * ship->type->max_a.y * 10 };
+    Vec v = { p->a.x * ship->type->max_a.x * 0.5f,
+              p->a.y * ship->type->max_a.y * 0.5f };
     // entity_accelerate(ship, p->a);
 
+	Vec dx = sub(p->aim, ship->x);
+	Vec q = normalize(rotate(dx, -ship->phi));
+	Real dphi = arctan(q);
+	p->rot = dphi / M_PI;
+
     if(p->a.x != 0 || p->a.y != 0)
-        entity_accelerate_to(ship, a);
+        entity_accelerate_to(ship, v);
     entity_rotate(ship, p->rot);
 }
 

@@ -1,10 +1,16 @@
 #include <assert.h>
 #define _USE_MATH_DEFINES // required for M_PI on VS2012
 #include <math.h>
+#include <limits.h>
 #include <stdint.h>
 #include <stddef.h>
 
 #include "server.h"
+
+#ifdef _MSC_VER // INFINITY is not defined
+#include <limits>
+#define INFINITY std::numeric_limits<float>::infinity()
+#endif
 
 #include "vector.h"
 #include "log.h"
@@ -21,6 +27,11 @@ Real rad(Real a) {
 size_t deg(Real a) {
     Real d = a * 180.0 / M_PI;
     return mod(d, 360);
+}
+
+size_t deg100(Real a){
+	Real d = a * 180.0 / M_PI;
+	return mod(d * 100, 360 * 100);
 }
 
 static Collision _collisions[MAX_COLLISIONS];
@@ -71,7 +82,7 @@ static void move_remaining(Entity *e) {
     if(e->parent) {
         e->x   = add(e->parent->x, rotate(e->dx, e->parent->phi));
         e->v   = e->parent->v;
-        e->phi = e->parent->phi + e->dphi;
+        //e->phi = e->parent->phi + e->dphi;
     } else {
         move(e, e->remaining);
     }
@@ -254,6 +265,9 @@ void physics_update() {
         move_remaining(e);
         e->a   = _0; /* reset acceleration */
         e->rot =  0; /* and rotation       */
+
+		if (len(e->x) > SHRT_MAX - 1)
+			entity_hit(e, INFINITY, &server->self->player);
     }
 
     timer_stop(TIMER_PHYSICS);

@@ -190,7 +190,7 @@ let templates = seq {
         Shield          = 0.0;
         Length          = 0.0;
         Mass            = 0.0;
-        Radius          = 2048.0;
+        Radius          = 4096.0;
         Acceleration    = { X = 0.0; Y = 0.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0; 
@@ -222,14 +222,14 @@ let templates = seq {
         Collide         = "ship_hit";
         Interval        = 0;
         Energy          = 1000.0;
-        Health          = 200.0;
+        Health          = 10000.0;
         Shield          = 1.0;
         Length          = 0.0;
         Mass            = 1.0;
         Radius          = 64.0;
-        Acceleration    = { X = 1000.0; Y = 1000.0 };
-        Decelaration    = { X = 1000.0; Y = 1000.0 };
-        Rotation        = 2.0;   
+        Acceleration    = { X = 2000.0; Y = 2000.0 };
+        Decelaration    = { X = 2000.0; Y = 2000.0 };
+        Rotation        = 10.0;   
         Texture         = null;
         CubeMap         = null;
         Model           = fun _ -> null;

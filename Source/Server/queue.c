@@ -108,6 +108,8 @@ static void qm_enqueue(Client *c, QueuedMessage *qm) {
         qm_seqno(c,qm) = (c->next_out_seqno ++);
         qm_tries(c,qm) = 0;
     }
+	else
+		qm_seqno(c,qm) = 0;
 }
 
 static Message *message_unicast(Client *c, MessageType type) {

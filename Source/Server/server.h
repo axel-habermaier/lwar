@@ -131,6 +131,7 @@ void entity_attach(Entity *e, Entity *c, Vec dx, Real dphi);
 
 Real   rad(Real a); /* radians of a */
 size_t deg(Real a); /* degrees of a */
+size_t deg100(Real a);
 void physics_init();
 void physics_cleanup();
 void physics_update();
