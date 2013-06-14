@@ -47,7 +47,7 @@ let templates = seq {
         Length          = 0.0;
         Mass            = 0.1;
         Radius          = 16.0;
-        Acceleration    = { X = 0.0; Y = 1200.0 };
+        Acceleration    = { X = 0.0; Y = 2000.0 };
         Decelaration    = { X = 0.0; Y = 0.0 };
         Rotation        = 0.0;  
         Texture         = null;
@@ -58,7 +58,7 @@ let templates = seq {
         Type            = EntityType.Gun;
         Act             = "gun_shoot";
         Collide         = null;
-        Interval        = 300;
+        Interval        = 150;
         Energy          = 1000.0;
         Health          = 1.0;
         Shield          = 0.0;

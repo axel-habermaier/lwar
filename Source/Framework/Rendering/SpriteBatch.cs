@@ -447,16 +447,31 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		/// <param name="circle">The circle that should be drawn.</param>
 		/// <param name="color">The color of the outline.</param>
-		public void DrawOutline(CircleF circle, Color color)
+		/// <param name="width">The width of the outline.</param>
+		/// <param name="precision">The number of lines that are used to approximate the circle.</param>
+		public void DrawOutline(CircleF circle, Color color, int width, int precision)
 		{
-			// Work out the minimum step necessary using trigonometry + sine approximation.
-			var step = 10.0f / circle.Radius;
-			for (var angle = 0.0f; angle < Math.PI * 2; angle += step)
-			{
-				var x = (float)Math.Round(circle.Radius * Math.Cos(angle));
-				var y = (float)Math.Round(circle.Radius * Math.Sin(angle));
+			Assert.ArgumentInRange(precision, 5, Int16.MaxValue);
+			Assert.ArgumentInRange(width, 1, Int16.MaxValue);
 
-				Draw(new RectangleF(circle.Position.X + x, circle.Position.Y + y, 1, 1), Texture2D.White, color);
+			var theta = 2d * 3.1415926f / precision;
+			var cosine = (float)Math.Cos(theta);
+			var sine = (float)Math.Sin(theta);
+
+			float t;
+			var current = new Vector2(circle.Radius, 0);
+
+			for (var i = 0; i < precision; i++)
+			{
+				var start = current + circle.Position;
+
+				// Calculate the next point
+				t = current.X;
+				current.X = cosine * current.X - sine * current.Y;
+				current.Y = sine * t + cosine * current.Y;
+
+				var end = current + circle.Position;
+				DrawLine(start, end, color, width);
 			}
 		}
 

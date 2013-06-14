@@ -104,15 +104,18 @@ namespace Lwar.Client.Rendering
 		{
 			Assert.ArgumentNotNull(output);
 
+			// Draw the skybox and the parallax effect
 			RasterizerState.CullCounterClockwise.Bind();
 			_skyboxRenderer.Draw(output);
 
 			RasterizerState.CullCounterClockwise.Bind();
 			_parallaxRenderer.Draw(output);
 
+			// Draw all 3D elements
 			foreach (var renderer in _renderers)
 				renderer.Draw(output);
 
+			// Draw all 2D elements into the 3D scenes
 			_spriteBatch.Output = output;
 			_spriteBatch.BlendState = BlendState.Premultiplied;
 			_spriteBatch.DepthStencilState = DepthStencilState.DepthRead;
@@ -121,6 +124,10 @@ namespace Lwar.Client.Rendering
 
 			foreach (var renderer in _renderers)
 				renderer.Draw(_spriteBatch);
+
+			// Draw the level boundaries
+			var thickness = 64;
+			_spriteBatch.DrawOutline(new CircleF(Vector2.Zero, Int16.MaxValue + thickness / 2), new Color(128, 0, 0, 128), thickness, 265);
 
 			_spriteBatch.DrawBatch();
 		}

@@ -54,7 +54,7 @@ EntityType type_bullet =
     // radius
     16.0, 
     // acceleration
-    { 0.0, 1200.0 }, 
+    { 0.0, 2000.0 }, 
     // deceleration
     { 0.0, 0.0 }, 
     // rotation
@@ -70,7 +70,7 @@ EntityType type_gun =
     // collide
     NULL, 
     // interval
-    300, 
+    150, 
     // energy
     1000.0, 
     // health
