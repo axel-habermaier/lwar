@@ -125,9 +125,31 @@ namespace Lwar.Client.Rendering.Renderers
 				++i;
 			}
 
-			// Draw the names
-			foreach (var name in _names)
+			// Draw player names and health bars
+			i = 0;
+			foreach (var ship in Elements)
+			{
+				var name = _names[i];
+
+				// Draw the health bar
+				var center = name.Area.Position + new Vector2i(name.Area.Width / 2, name.Area.Height / 2);
+
+				const int healthBarLength = 60;
+				var positionY = center.Y - 10;
+
+				var start = new Vector2(center.X - healthBarLength / 2, positionY);
+				var middle = new Vector2(start.X + ship.Health / 100.0f * healthBarLength, positionY);
+				var end = new Vector2(center.X + healthBarLength / 2, positionY);
+
+				if ((middle - end).Length > 1)
+					spriteBatch.DrawLine(end, middle, new Color(255, 0, 0, 255), 5);
+				if ((middle - start).Length > 1)
+					spriteBatch.DrawLine(start, middle, new Color(0, 255, 0, 255), 5);
+
+				// Draw the name
 				TextRenderer.Draw(spriteBatch, _font, name.Name, Color.White, name.Area.Position);
+				++i;
+			}
 		}
 
 		/// <summary>
