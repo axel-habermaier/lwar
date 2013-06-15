@@ -50,25 +50,25 @@ internal interface ICvars
 	/// <summary>
 	///   When triggered in an active game session, turns the player to the left.
 	/// </summary>
-	[Cvar("Key.A.IsPressed() | Key.Left.IsPressed()"), Persistent]
+	[Cvar("Key.Q.IsPressed()"), Persistent]
 	InputTrigger InputTurnLeft { get; set; }
 
 	/// <summary>
 	///   When triggered in an active game session, turns the player to the right.
 	/// </summary>
-	[Cvar("Key.D.IsPressed() | Key.Right.IsPressed()"), Persistent]
+	[Cvar("Key.E.IsPressed()"), Persistent]
 	InputTrigger InputTurnRight { get; set; }
 
 	/// <summary>
 	///   When triggered in an active game session, moves the player to the left.
 	/// </summary>
-	[Cvar("Key.Q.IsPressed()"), Persistent]
+	[Cvar("Key.A.IsPressed()"), Persistent]
 	InputTrigger InputStrafeLeft { get; set; }
 
 	/// <summary>
 	///   When triggered in an active game session, moves the player to the right.
 	/// </summary>
-	[Cvar("Key.E.IsPressed()"), Persistent]
+	[Cvar("Key.D.IsPressed()"), Persistent]
 	InputTrigger InputStrafeRight { get; set; }
 
 	/// <summary>

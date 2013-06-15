@@ -82,7 +82,7 @@ void player_select(Player *p,
 }
 
 static void slot_spawn(Player *p, Slot *s, SlotType *st, Entity *parent, Vec x, Vec v) {
-    assert(!s->entity);
+    //assert(!s->entity);
 
     EntityType *t = s->selected_type;
 

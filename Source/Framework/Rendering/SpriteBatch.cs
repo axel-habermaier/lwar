@@ -632,6 +632,9 @@ namespace Pegasus.Framework.Rendering
 						var quadOffset = quads + _sections[section].Offset * _quadSize;
 						var bytes = _sections[section].NumQuads * _quadSize;
 
+						if (bytes == 0)
+							goto end;
+
 						// Copy the entire section to the vertex buffer
 						Interop.Copy(vertexOffset, quadOffset, bytes);
 
@@ -644,7 +647,7 @@ namespace Pegasus.Framework.Rendering
 					}
 				}
 			}
-
+			end:
 			_vertexBuffer.Unmap();
 		}
 

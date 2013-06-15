@@ -204,6 +204,7 @@ void ray_act(Entity *ray) {
     entities_foreach(e) {
         if(e == ray)    continue;
         if(e == phaser) continue;
+		if(e->type->id == ENTITY_TYPE_RAY) continue;
         if(e == ship)   continue;
 		if(e->type->id == ENTITY_TYPE_BULLET) continue;
 

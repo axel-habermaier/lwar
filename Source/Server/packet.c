@@ -11,7 +11,7 @@
 
 static bool check_bounds(Packet *p,size_t n) {
     return    n != 0
-           && p->b <= MAX_PACKET_LENGTH;
+           && p->b + n <= MAX_PACKET_LENGTH;
 }
 
 bool packet_hasdata(Packet *p) {
