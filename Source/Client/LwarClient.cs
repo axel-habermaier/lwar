@@ -3,6 +3,8 @@
 namespace Lwar.Client
 {
 	using System.Net;
+	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Rendering.UserInterface;
 	using Screens;
 	using Network;
 	using Pegasus.Framework;

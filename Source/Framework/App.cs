@@ -174,6 +174,8 @@ namespace Pegasus.Framework
 							// Draw the console and the statistics on top of the current frame
 							console.Draw(spriteBatch);
 							statistics.Draw(spriteBatch);
+
+							spriteBatch.DrawBatch();
 						}
 
 						// Present the current frame to the screen and write the log file, if necessary

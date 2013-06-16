@@ -518,8 +518,7 @@ namespace Pegasus.Framework.Rendering
 			Assert.NotDisposed(this);
 			Assert.ArgumentNotNull(quads);
 			Assert.ArgumentNotNull(texture);
-			Assert.ArgumentSatisfies(count >= 0, "Out of bounds.");
-			Assert.ArgumentSatisfies(count <= quads.Length, "Out of bounds.");
+			Assert.ArgumentInRange(count, 0, quads.Length);
 
 			if (count == 0)
 				return;
@@ -601,14 +600,14 @@ namespace Pegasus.Framework.Rendering
 
 			// Check whether we would overflow if we added the given batch.
 			var tooManyQuads = _numQuads + quadCount >= _quads.Length;
-			if (tooManyQuads)
-			{
-				Log.DebugInfo(LogCategory.Graphics,
-							  "Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
-							  _numQuads, MaxQuads, quadCount);
+			if (!tooManyQuads)
+				return;
 
-				DrawBatch();
-			}
+			Log.DebugInfo(LogCategory.Graphics,
+						  "Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
+						  _numQuads, MaxQuads, quadCount);
+
+			DrawBatch();
 		}
 
 		/// <summary>
@@ -632,8 +631,7 @@ namespace Pegasus.Framework.Rendering
 						var quadOffset = quads + _sections[section].Offset * _quadSize;
 						var bytes = _sections[section].NumQuads * _quadSize;
 
-						if (bytes == 0)
-							goto end;
+						Assert.That(bytes != 0, "");
 
 						// Copy the entire section to the vertex buffer
 						Interop.Copy(vertexOffset, quadOffset, bytes);
@@ -647,7 +645,6 @@ namespace Pegasus.Framework.Rendering
 					}
 				}
 			}
-			end:
 			_vertexBuffer.Unmap();
 		}
 
@@ -666,18 +663,18 @@ namespace Pegasus.Framework.Rendering
 
 			// Depending on whether we've already seen this texture, add it to the map or add a new section list
 			var known = false;
-			for (int i = 0; i < _numSectionLists; ++i) // Would a Dictionary be more efficient?
+			for (var i = 0; i < _numSectionLists; ++i) // Would a Dictionary be more efficient?
 			{
-				if (_sectionLists[i].Texture == texture)
-				{
-					// We've already seen this texture before, so add the new section to the list by setting the
-					// list's tail section's next pointer to the newly allocated section
-					_sections[_sectionLists[i].Last].Next = _numSections;
-					// Set the section list's tail pointer to the newly allocated section
-					_sectionLists[i].Last = _numSections;
-					known = true;
-					break;
-				}
+				if (_sectionLists[i].Texture != texture)
+					continue;
+
+				// We've already seen this texture before, so add the new section to the list by setting the
+				// list's tail section's next pointer to the newly allocated section
+				_sections[_sectionLists[i].Last].Next = _numSections;
+				// Set the section list's tail pointer to the newly allocated section
+				_sectionLists[i].Last = _numSections;
+				known = true;
+				break;
 			}
 
 			if (!known)
