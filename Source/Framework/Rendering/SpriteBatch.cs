@@ -631,8 +631,6 @@ namespace Pegasus.Framework.Rendering
 						var quadOffset = quads + _sections[section].Offset * _quadSize;
 						var bytes = _sections[section].NumQuads * _quadSize;
 
-						Assert.That(bytes != 0, "");
-
 						// Copy the entire section to the vertex buffer
 						Interop.Copy(vertexOffset, quadOffset, bytes);
 
@@ -696,7 +694,7 @@ namespace Pegasus.Framework.Rendering
 			if (_numSections >= _sections.Length)
 			{
 				var sections = new Section[_sections.Length * 2];
-				Array.Copy(sections, _sections, _sections.Length);
+				Array.Copy(_sections, sections, _sections.Length);
 				_sections = sections;
 			}
 
@@ -712,7 +710,7 @@ namespace Pegasus.Framework.Rendering
 			if (_numSectionLists >= _sectionLists.Length)
 			{
 				var sectionLists = new SectionList[_sectionLists.Length * 2];
-				Array.Copy(sectionLists, _sectionLists, _sectionLists.Length);
+				Array.Copy(_sectionLists, sectionLists, _sectionLists.Length);
 				_sectionLists = sectionLists;
 			}
 
