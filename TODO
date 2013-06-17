@@ -65,3 +65,5 @@ Server
   extend entity type struct for this
 - server: copy string to player, free memory
 - figure out how to communicate ammount of ammunition
+- Check assertion problem in player.c:85
+- Fix infinite ship duplication bug (might be a client issue?)

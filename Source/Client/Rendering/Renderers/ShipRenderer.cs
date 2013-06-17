@@ -102,7 +102,7 @@ namespace Lwar.Client.Rendering.Renderers
 
 					// The line segment from the center of the viewport to the ship's screen space position to 
 					var line = new LineSegment(new Vector2(viewport.Width / 2.0f, viewport.Height / 2.0f),
-											   new Vector2(name.Area.Left, name.Area.Top) + new Vector2(name.Area.Width / 2, name.Area.Height / 2));
+											   new Vector2(name.Area.Left, name.Area.Top) + new Vector2(name.Area.Width / 2.0f, name.Area.Height / 2.0f));
 
 					Vector2 intersection;
 					if (line.Intersects(left, out intersection) || line.Intersects(top, out intersection) ||

@@ -38,13 +38,13 @@ internal interface ICvars
 	/// <summary>
 	///   When triggered in an active game session, moves the player forwards.
 	/// </summary>
-	[Cvar("Key.W.IsPressed() | Key.Up.IsPressed()"), Persistent]
+	[Cvar("Key.W.IsPressed()"), Persistent]
 	InputTrigger InputForward { get; set; }
 
 	/// <summary>
 	///   When triggered in an active game session, moves the player backwards.
 	/// </summary>
-	[Cvar("Key.S.IsPressed() | Key.Down.IsPressed()"), Persistent]
+	[Cvar("Key.S.IsPressed()"), Persistent]
 	InputTrigger InputBackward { get; set; }
 
 	/// <summary>
