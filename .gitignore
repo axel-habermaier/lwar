@@ -28,4 +28,8 @@ Binaries x64
 Binaries x86
 log.txt
 Assets/Effects/Effects.cs
+Source/Client/Gameplay/Entities/EntityType.cs
+Source/Client/Gameplay/Entities/Templates.cs
+Source/Server/templates.c
+Source/Server/entity.h
 lwar.sln.ide
