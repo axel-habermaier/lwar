@@ -33,12 +33,14 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		static CompilationUnit()
 		{
-			Compilers = Assembly.GetExecutingAssembly()
-								.GetTypes()
-								.Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IAssetCompiler)))
-								.Select(Activator.CreateInstance)
-								.Cast<IAssetCompiler>()
-								.ToArray();
+			var assetCompilerTypes = Assembly.GetExecutingAssembly().GetTypes();
+			var assetListTypes = Configuration.AssetListAssembly.GetTypes();
+
+			Compilers = assetCompilerTypes.Union(assetListTypes)
+										  .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IAssetCompiler)))
+										  .Select(Activator.CreateInstance)
+										  .Cast<IAssetCompiler>()
+										  .ToArray();
 		}
 
 		/// <summary>

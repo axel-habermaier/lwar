@@ -120,8 +120,8 @@ namespace Lwar.Client.Network
 				case EntityType.Ship:
 					entity = Ship.Create(entityId, player);
 					break;
-				case EntityType.Planet:
-					entity = Planet.Create(entityId, Templates.Planet);
+				case EntityType.Earth:
+					entity = Planet.Create(entityId, Templates.Earth);
 					break;
 				case EntityType.Mars:
 					entity = Planet.Create(entityId, Templates.Mars);

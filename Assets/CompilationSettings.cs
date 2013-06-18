@@ -1,9 +1,12 @@
 ﻿using System;
+using Lwar.Assets.Templates.Compilation;
 using Pegasus.AssetsCompiler.Assets.Attributes;
 
 [assembly: Ignore("CompilationSettings.cs")]
+[assembly: Ignore("TemplateAsset.cs")]
+[assembly: Ignore("TemplatesAttribute.cs")]
 [assembly: CubeMap("Textures/Sun.png")]
-[assembly: CubeMap("Textures/Planet.png")]
+[assembly: CubeMap("Textures/Earth.png")]
 [assembly: CubeMap("Textures/Mars.png")]
 [assembly: CubeMap("Textures/Moon.png")]
 [assembly: CubeMap("Textures/Jupiter.png")]
@@ -16,3 +19,7 @@ using Pegasus.AssetsCompiler.Assets.Attributes;
 [assembly: Texture2D("Textures/PhaserGlow.png", Mipmaps = false, Uncompressed = true)]
 [assembly: Texture2D("Textures/Bullet.png", Mipmaps = false, Uncompressed = true)]
 [assembly: Texture2D("Textures/BulletGlow.png", Mipmaps = false, Uncompressed = true)]
+[assembly: Templates("Templates/Planets.cs")]
+[assembly: Templates("Templates/Ships.cs")]
+[assembly: Templates("Templates/Suns.cs")]
+[assembly: Templates("Templates/Weapons.cs")]

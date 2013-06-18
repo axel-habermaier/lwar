@@ -185,6 +185,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -202,7 +214,7 @@
     <Content Include="Textures\Parallax.png" />
     <Content Include="Textures\Phaser.png" />
     <Content Include="Textures\PhaserGlow.png" />
-    <Content Include="Textures\Planet.png" />
+    <Content Include="Textures\Earth.png" />
     <Content Include="Textures\Rocket.png" />
     <Content Include="Textures\Shields.png" />
     <Content Include="Textures\Ship.png" />
@@ -219,13 +231,26 @@
     <Compile Include="Effects\SpriteEffect.cs" />
     <Compile Include="Effects\SunEffect.cs" />
     <Compile Include="Effects\TexturedQuadEffect.cs" />
+    <Compile Include="Templates\Compilation\TemplateAsset.cs" />
+    <Compile Include="Templates\Compilation\TemplatesAttribute.cs" />
+    <Compile Include="Templates\Compilation\TemplateCompiler.cs" />
+    <Compile Include="Templates\Ships.cs" />
+    <Compile Include="Templates\Suns.cs" />
+    <Compile Include="Templates\Planets.cs" />
+    <Compile Include="Templates\Weapons.cs" />
+    <Compile Include="Templates\Compilation\Template.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Assets Compiler\Assets Compiler.csproj">
       <Project>{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}</Project>
       <Name>Assets Compiler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Source\Framework\Framework.csproj">
+      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
+      <Name>Framework</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="&quot;$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\pgc.exe&quot; compile" WorkingDirectory="$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)" />

@@ -14,7 +14,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	///   Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.
 	/// </summary>
 	/// <typeparam name="TAsset">The type of the asset that is compiled</typeparam>
-	internal abstract class AssetCompiler<TAsset> : IAssetCompiler
+	public abstract class AssetCompiler<TAsset> : IAssetCompiler
 		where TAsset : Asset
 	{
 		/// <summary>
@@ -117,7 +117,9 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected abstract void Compile(TAsset asset, BufferWriter buffer);
+		protected virtual void Compile(TAsset asset, BufferWriter buffer)
+		{
+		}
 
 		/// <summary>
 		///   Removes the compiled asset and all temporary files written by the compiler.

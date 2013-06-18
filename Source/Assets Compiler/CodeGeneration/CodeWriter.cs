@@ -11,7 +11,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 	/// <summary>
 	///   Writes code with a C-like syntax to an in-memory buffer.
 	/// </summary>
-	internal class CodeWriter
+	public class CodeWriter
 	{
 		/// <summary>
 		///   The buffer that contains the written code.

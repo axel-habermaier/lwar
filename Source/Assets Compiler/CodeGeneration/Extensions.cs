@@ -16,7 +16,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 	/// <summary>
 	///   Provides extension methods on NRefactory AST types.
 	/// </summary>
-	internal static class Extensions
+	public static class Extensions
 	{
 		/// <summary>
 		///   Checks whether the declared class is derived from the given base class.

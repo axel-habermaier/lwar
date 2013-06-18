@@ -11,6 +11,6 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 		/// <summary>
 		///   Gets the asset that should be compiled.
 		/// </summary>
-		internal abstract Asset Asset { get; }
+		public abstract Asset Asset { get; }
 	}
 }

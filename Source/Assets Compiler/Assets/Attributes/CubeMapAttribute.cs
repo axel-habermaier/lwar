@@ -5,7 +5,7 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 	using Framework;
 
 	/// <summary>
-	///   When applied to an asset assembly, overrides the default compilation settings of an asset.
+	///   When applied to an asset assembly, overrides the default compilation settings of a CubeMap asset.
 	/// </summary>
 	public class CubeMapAttribute : AssetAttribute
 	{
@@ -39,7 +39,7 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 		/// <summary>
 		///   Gets the asset that should be compiled.
 		/// </summary>
-		internal override Asset Asset
+		public override Asset Asset
 		{
 			get { return new CubeMapAsset(_name) { Mipmaps = Mipmaps, Uncompressed = Uncompressed }; }
 		}

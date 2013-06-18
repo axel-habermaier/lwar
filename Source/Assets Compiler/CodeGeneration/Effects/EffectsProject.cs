@@ -29,7 +29,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		public override void Report(LogType type, string file, string message, TextLocation begin, TextLocation end)
 		{
 			file = file.ToLocationString(begin, end);
-			file = file.Replace("/", "\\");
 
 			var logMessage = String.Format("{0}: {1}: {2}", file, type, message);
 			new LogEntry(LogCategory.Assets, type, logMessage).RaiseLogEvent();

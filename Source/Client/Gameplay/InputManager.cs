@@ -21,7 +21,7 @@ namespace Lwar.Client.Gameplay
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
-		///   The input message payload that is sent to the server periodically.
+		///   The input message that is sent to the server periodically.
 		/// </summary>
 		private InputMessage _inputMessage;
 
@@ -74,7 +74,7 @@ namespace Lwar.Client.Gameplay
 		}
 
 		/// <summary>
-		///   Updates the current input state, periodically sending the input to the server.
+		///   Updates the current input state.
 		/// </summary>
 		public void Update()
 		{
