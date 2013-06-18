@@ -193,14 +193,16 @@ namespace Lwar.Assets.Templates.Compilation
 									writer.AppendLine("Assert.ArgumentNotNull(assets);");
 									writer.Newline();
 
-									foreach (var template in templates)
+									for (var i = 0; i < templates.Length; ++i )
 									{
+										var template = templates[i];
+
 										writer.AppendLine("{0} = new Template", template.Name);
 										writer.AppendLine("(");
 										writer.IncreaseIndent();
-										writer.AppendLine("maxEnergy: {0:0#######}f,", template.Energy);
-										writer.AppendLine("maxHealth: {0:0#######}f,", template.Health);
-										writer.AppendLine("radius: {0:0#######}f,", template.Radius);
+										writer.AppendLine("maxEnergy: {0:0.0######}f,", template.Energy);
+										writer.AppendLine("maxHealth: {0:0.0######}f,", template.Health);
+										writer.AppendLine("radius: {0:0.0######}f,", template.Radius);
 										if (template.Texture != null)
 											writer.AppendLine("texture: assets.LoadTexture2D(\"{0}\"),", template.Texture);
 										else
@@ -219,7 +221,9 @@ namespace Lwar.Assets.Templates.Compilation
 
 										writer.DecreaseIndent();
 										writer.AppendLine(");");
-										writer.Newline();
+
+										if (i + 1 < templates.Length)
+											writer.Newline();
 									}
 								});
 
