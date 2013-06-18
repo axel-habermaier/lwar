@@ -21,6 +21,11 @@ namespace Pegasus.Framework.Platform
 		private const int SpacesPerTab = 4;
 
 		/// <summary>
+		///   The folder in which application files are stored.
+		/// </summary>
+		public static readonly string Folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="appName">The name of the application.</param>
@@ -31,9 +36,7 @@ namespace Pegasus.Framework.Platform
 			Assert.ArgumentNotNullOrWhitespace(fileName);
 
 			FileName = fileName;
-
-			var folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			AbsolutePath = Path.Combine(folder, appName, fileName);
+			AbsolutePath = Path.Combine(Folder, appName, fileName);
 		}
 
 		/// <summary>

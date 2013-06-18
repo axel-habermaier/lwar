@@ -4,7 +4,9 @@ namespace Pegasus.Framework.Scripting
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Text;
 	using Parsing;
+	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
 
@@ -40,6 +42,7 @@ namespace Pegasus.Framework.Scripting
 			Commands.OnListCommands += OnListCommands;
 			Commands.OnListCvars += OnListCvars;
 			Commands.OnReset += OnResetCvar;
+			Commands.OnPrintAppInfo += OnPrintAppInfo;
 		}
 
 		/// <summary>
@@ -53,6 +56,22 @@ namespace Pegasus.Framework.Scripting
 			Commands.OnListCommands -= OnListCommands;
 			Commands.OnListCvars -= OnListCvars;
 			Commands.OnReset -= OnResetCvar;
+			Commands.OnPrintAppInfo -= OnPrintAppInfo;
+		}
+
+		/// <summary>
+		///   Prints information about the application.
+		/// </summary>
+		private void OnPrintAppInfo()
+		{
+			var builder = new StringBuilder();
+			builder.AppendFormat("Application Name: {0}\n", _appName);
+			builder.AppendFormat("Operating System: {0}\n", PlatformInfo.Platform);
+			builder.AppendFormat("CPU architecture: {0}\n", IntPtr.Size == 8 ? "x64" : "x86");
+			builder.AppendFormat("Graphics API:     {0}\n", PlatformInfo.GraphicsApi);
+			builder.AppendFormat("File Path:        {0}", AppFile.Folder);
+
+			Log.Info("{0}", builder);
 		}
 
 		/// <summary>
