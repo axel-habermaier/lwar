@@ -32,8 +32,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputLayer.Console);
 			Clear = new LogicalInput(controlPressed + Key.L.IsPressed(), InputLayer.Console);
 			ClearPrompt = new LogicalInput(Key.Escape.WentDown(), InputLayer.Console);
-			ShowOlderHistory = new LogicalInput(Key.Up.WentDown(), InputLayer.Console);
-			ShowNewerHistory = new LogicalInput(Key.Down.WentDown(), InputLayer.Console);
+			ShowOlderHistory = new LogicalInput(Key.Up.IsRepeated(), InputLayer.Console);
+			ShowNewerHistory = new LogicalInput(Key.Down.IsRepeated(), InputLayer.Console);
 			ScrollUp = new LogicalInput(Key.PageUp.IsRepeated() & controlReleased, InputLayer.Console);
 			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated() & controlReleased, InputLayer.Console);
 			ScrollToTop = new LogicalInput(controlPressed + Key.PageUp.IsPressed(), InputLayer.Console);

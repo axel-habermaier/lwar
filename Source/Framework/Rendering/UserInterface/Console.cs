@@ -15,6 +15,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	internal sealed class Console : DisposableObject
 	{
 		/// <summary>
+		///   The maximum length of all console input or output.
+		/// </summary>
+		public const int MaxLength = 4096;
+
+		/// <summary>
 		///   The display color of error messages.
 		/// </summary>
 		private static readonly Color ErrorColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);
@@ -80,16 +85,18 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="inputDevice">The input device that provides the user input.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
-		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, Font font)
+		/// <param name="appName">The name of the application.</param>
+		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, Font font, string appName)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
 			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNullOrWhitespace(appName);
 
 			_font = font;
 
 			_content = new ConsoleContent(_font);
-			_prompt = new ConsolePrompt(_font, InfoColor);
+			_prompt = new ConsolePrompt(_font, InfoColor, appName);
 			_input = new ConsoleInput(inputDevice);
 
 			Commands.OnShowConsole += ShowConsole;

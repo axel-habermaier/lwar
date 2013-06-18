@@ -2,7 +2,6 @@
 
 namespace Pegasus.Framework.Platform
 {
-	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 
@@ -17,7 +16,7 @@ namespace Pegasus.Framework.Platform
 		private const int MaximumFileNameLength = 50;
 
 		/// <summary>
-		/// The number of spaces per tab.
+		///   The number of spaces per tab.
 		/// </summary>
 		private const int SpacesPerTab = 4;
 
@@ -71,7 +70,7 @@ namespace Pegasus.Framework.Platform
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		public bool Write(string content, Action<IOException> onException = null)
+		public bool Write(string content, Action<Exception> onException = null)
 		{
 			Assert.ArgumentNotNull(content);
 			Assert.That(IsValid, "The file name is invalid.");
@@ -87,7 +86,7 @@ namespace Pegasus.Framework.Platform
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		public bool Append(Action<TextWriter> content, Action<IOException> onException = null)
+		public bool Append(Action<TextWriter> content, Action<Exception> onException = null)
 		{
 			Assert.ArgumentNotNull(content);
 			Assert.That(IsValid, "The file name is invalid.");
@@ -95,7 +94,7 @@ namespace Pegasus.Framework.Platform
 			return Execute(() =>
 				{
 					using (var writer = File.AppendText(AbsolutePath))
-							content(writer);
+						content(writer);
 				}, onException);
 		}
 
@@ -108,7 +107,7 @@ namespace Pegasus.Framework.Platform
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		public bool Read(out string content, Action<IOException> onException = null)
+		public bool Read(out string content, Action<Exception> onException = null)
 		{
 			Assert.That(IsValid, "The file name is invalid.");
 
@@ -138,7 +137,7 @@ namespace Pegasus.Framework.Platform
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		public bool Delete(Action<IOException> onException = null)
+		public bool Delete(Action<Exception> onException = null)
 		{
 			Assert.That(IsValid, "The file name is invalid.");
 			return Execute(() => File.Delete(AbsolutePath), onException);
@@ -154,7 +153,7 @@ namespace Pegasus.Framework.Platform
 		///   The action that should be executed if an I/O exception occurs during the execution of the
 		///   method. If null, the exception is propagated to the calling scope.
 		/// </param>
-		private bool Execute(Action action, Action<IOException> onException)
+		private bool Execute(Action action, Action<Exception> onException)
 		{
 			Assert.ArgumentNotNull(action);
 
@@ -164,7 +163,7 @@ namespace Pegasus.Framework.Platform
 				action();
 				return true;
 			}
-			catch (IOException e)
+			catch (Exception e)
 			{
 				if (onException == null)
 					throw;

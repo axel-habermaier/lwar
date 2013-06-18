@@ -107,7 +107,7 @@ namespace Pegasus.Framework
 				using (var statistics = new Statistics(graphicsDevice, defaultFont))
 				using (spriteEffect)
 				using (var spriteBatch = new SpriteBatch(graphicsDevice, spriteEffect))
-				using (var console = new Console(graphicsDevice, inputDevice, defaultFont))
+				using (var console = new Console(graphicsDevice, inputDevice, defaultFont, appName))
 				{
 					// Ensure that the console and the statistics are properly initialized
 					statistics.Update(window.Size);

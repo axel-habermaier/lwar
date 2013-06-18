@@ -3,9 +3,12 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using System.Linq;
+	using System.Text;
 	using Math;
+	using Platform;
 	using Platform.Graphics;
 	using Platform.Input;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;
 
@@ -23,6 +26,16 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   The maximum history size.
 		/// </summary>
 		private const int MaxHistory = 64;
+
+		/// <summary>
+		///   The name of the console history file.
+		/// </summary>
+		private const string HistoryFileName = "console.txt";
+
+		/// <summary>
+		///   The name of the application.
+		/// </summary>
+		private readonly string _appName;
 
 		/// <summary>
 		///   The input history.
@@ -69,13 +82,38 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		/// <param name="font">The font that should be used to draw the prompt.</param>
 		/// <param name="color">The text color of the prompt.</param>
-		public ConsolePrompt(Font font, Color color)
+		/// <param name="appName">The name of the application.</param>
+		public ConsolePrompt(Font font, Color color, string appName)
 		{
 			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNullOrWhitespace(appName);
 
 			_history = new string[MaxHistory];
 			_input = new TextBox(font) { Color = color };
 			_prompt = new Label(font, Prompt) { Color = color };
+			_appName = appName;
+
+			var file = new AppFile(_appName, HistoryFileName);
+			string content;
+
+			if (!file.Read(out content, e => Log.Error("Failed to load console history from '{0}': {1}", file.AbsolutePath, e.Message)))
+				return;
+
+			var history = content.Split(new [] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+			history = history.Where(h => h.Length <= Console.MaxLength).ToArray();
+
+			var count = history.Length;
+			var offset = 0;
+
+			if (count > _history.Length)
+			{
+				offset = count - _history.Length;
+				count = _history.Length;
+			}
+
+			Array.Copy(history, offset, _history, 0, count);
+			_numHistory = count;
+			_historyIndex = _numHistory;
 		}
 
 		/// <summary>
@@ -124,6 +162,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="c">The character that should be inserted.</param>
 		public void InsertCharacter(char c)
 		{
+			if (_input.Text.Length + 1 > Console.MaxLength)
+				return;
+
 			_input.InsertCharacter(c);
 			_autoCompletionList = null;
 		}
@@ -281,6 +322,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			_input.SafeDispose();
 			_prompt.SafeDispose();
+
+			var builder = new StringBuilder();
+			for (var i = 0; i < _numHistory; ++i)
+				builder.AppendLine(_history[i]);
+
+			var file = new AppFile(_appName, HistoryFileName);
+			file.Write(builder.ToString(), e => Log.Error("Failed to persist console history in '{0}': {1}", file.AbsolutePath, e.Message));
 		}
 	}
 }
