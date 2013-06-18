@@ -82,6 +82,25 @@ internal interface ICommands
 	void Bind(InputTrigger trigger, [NotEmpty] string command);
 
 	/// <summary>
+	///   Unbinds all commands currently bound to the logical input.
+	/// </summary>
+	/// <param name="trigger">The trigger that should be unbound.</param>
+	[Command]
+	void Unbind(InputTrigger trigger);
+
+	/// <summary>
+	///   Removes all command bindings.
+	/// </summary>
+	[Command]
+	void UnbindAll();
+
+	/// <summary>
+	///   Lists all active bindings.
+	/// </summary>
+	[Command]
+	void ListBindings();
+
+	/// <summary>
 	///   Shows or hides the console.
 	/// </summary>
 	/// <param name="show">A value of 'true' indicates that the console should be shown.</param>

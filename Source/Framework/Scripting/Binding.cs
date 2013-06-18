@@ -10,11 +10,6 @@ namespace Pegasus.Framework.Scripting
 	internal struct Binding
 	{
 		/// <summary>
-		///   The input that triggers the execution of the instruction.
-		/// </summary>
-		private readonly LogicalInput _input;
-
-		/// <summary>
 		///   The instruction that is executed when the input is triggered.
 		/// </summary>
 		private readonly Instruction _instruction;
@@ -23,21 +18,35 @@ namespace Pegasus.Framework.Scripting
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="input">The input that should trigger the execution of the instruction.</param>
+		/// <param name="command">The unparsed instruction.</param>
 		/// <param name="instruction">The instruction that should be executed when the input is triggered.</param>
-		public Binding(LogicalInput input, Instruction instruction)
+		public Binding(LogicalInput input, string command, Instruction instruction)
+			: this()
 		{
 			Assert.ArgumentNotNull(input);
+			Assert.ArgumentNotNullOrWhitespace(command);
 
-			_input = input;
+			Input = input;
+			Command = command;
 			_instruction = instruction;
 		}
+
+		/// <summary>
+		///   The unparsed instruction.
+		/// </summary>
+		public string Command { get; private set; }
+
+		/// <summary>
+		///   The input that triggers the execution of the instruction.
+		/// </summary>
+		public LogicalInput Input { get; private set; }
 
 		/// <summary>
 		///   Executes the user request if the input has been triggered.
 		/// </summary>
 		public void ExecuteIfTriggered()
 		{
-			if (_input.IsTriggered)
+			if (Input.IsTriggered)
 				_instruction.Execute(true);
 		}
 	}

@@ -109,7 +109,10 @@ namespace Pegasus.Framework.Scripting
 				if (inputStream.WhiteSpaceUntilEndOfInput() && !parameters[i].HasDefaultValue)
 				{
 					inputStream.SkipWhiteSpaces(); // To get the correct column in the error message
+					var examples = string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(parameters[i].Type)));
+
 					return Errors(new ErrorMessage(ErrorType.Expected, TypeRegistry.GetDescription(parameters[i].Type)),
+								  new ErrorMessage(ErrorType.Message, examples),
 								  new ErrorMessage(ErrorType.Message, Help.GetHint(command.Name)));
 				}
 

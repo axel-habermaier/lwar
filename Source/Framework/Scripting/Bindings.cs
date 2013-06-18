@@ -3,6 +3,8 @@
 namespace Pegasus.Framework.Scripting
 {
 	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
 	using Parsing;
 	using Platform.Input;
 	using Platform.Logging;
@@ -39,7 +41,10 @@ namespace Pegasus.Framework.Scripting
 			_device = device;
 			_parser = new InstructionParser();
 
-			Commands.OnBind += OnBindCommand;
+			Commands.OnBind += OnBind;
+			Commands.OnUnbind += OnUnbind;
+			Commands.OnUnbindAll += OnUnbindAll;
+			Commands.OnListBindings += OnListBindings;
 		}
 
 		/// <summary>
@@ -59,7 +64,65 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Commands.OnBind -= OnBindCommand;
+			Commands.OnBind -= OnBind;
+			Commands.OnUnbind -= OnUnbind;
+			Commands.OnUnbindAll -= OnUnbindAll;
+			Commands.OnListBindings -= OnListBindings;
+		}
+
+		/// <summary>
+		///   Lists all active bindings.
+		/// </summary>
+		private void OnListBindings()
+		{
+			var builder = new StringBuilder();
+			var bindings = _bindings.OrderBy(binding => binding.Input.Trigger.ToString()).ToArray();
+
+			for (var i = 0; i < bindings.Length; ++i)
+			{
+				if (i != 0)
+					builder.Append("\n");
+
+				builder.AppendFormat("{0}: {1}", TypeRegistry.ToString(bindings[i].Input.Trigger), bindings[i].Command);
+			}
+
+			Log.Info("{0}", builder);
+		}
+
+		/// <summary>
+		///   Removes all bindings.
+		/// </summary>
+		private void OnUnbindAll()
+		{
+			_bindings.Clear();
+			Log.Info("All command bindings have been removed.");
+		}
+
+		/// <summary>
+		///   Invoked when the unbind command is used.
+		/// </summary>
+		/// <param name="trigger">The trigger that should be unbound.</param>
+		private void OnUnbind(InputTrigger trigger)
+		{
+			var removed = 0;
+			for (var i = 0; i < _bindings.Count; ++i)
+			{
+				if (!_bindings[i].Input.Trigger.Equals(trigger))
+					continue;
+
+				++removed;
+				_bindings.RemoveAt(i);
+				--i;
+			}
+
+			if (removed == 1)
+				Log.Info("The command binding for '{0}' has been removed.", TypeRegistry.ToString(trigger));
+			else if (removed != 0)
+				Log.Info("{0} command bindings for '{1}' have been removed.", removed, TypeRegistry.ToString(trigger));
+			else
+				Log.Error("No binding could be found with trigger '{0}'. Note that the order of operands is important for combined triggers " +
+						  "(i.e., [Key(A,Pressed)|Key(B,Pressed)] is considered to be different from [Key(B,Pressed)|Key(A,Pressed)]). " +
+						  "Use the 'list_bindings' command to view all active bindings.", TypeRegistry.ToString(trigger));
 		}
 
 		/// <summary>
@@ -67,7 +130,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <param name="trigger">The trigger that should be bound.</param>
 		/// <param name="command">The instruction that should be bound.</param>
-		private void OnBindCommand(InputTrigger trigger, string command)
+		private void OnBind(InputTrigger trigger, string command)
 		{
 			if (String.IsNullOrWhiteSpace(command))
 			{
@@ -80,7 +143,7 @@ namespace Pegasus.Framework.Scripting
 			{
 				var input = new LogicalInput(trigger, InputLayer.All);
 				_device.Add(input);
-				_bindings.Add(new Binding(input, reply.Result));
+				_bindings.Add(new Binding(input, command, reply.Result));
 			}
 			else
 				Log.Error("Error while parsing the second parameter of the bind command: {0}", reply.Errors.ErrorMessage);

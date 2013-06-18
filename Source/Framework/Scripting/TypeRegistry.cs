@@ -53,8 +53,8 @@ namespace Pegasus.Framework.Scripting
 			Register(new Vector2Parser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10.0;10.5");
 			Register(new Vector2IParser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10;10");
 			Register(new SizeParser(), null, s => String.Format("{0};{1}", s.Width, s.Height), "0;0", "-10;10");
-			Register(new InputTriggerParser(), null, i => String.Format("[{0}]", i), "[Key(Return,WentDown)]",
-					 "[Mouse(Left,Pressed) | Mouse(Right,Pressed)]");
+			Register(new InputTriggerParser(), null, i => String.Format("[{0}]", i), "[Key(Return,WentDown)]", "[Key(A,Pressed)]",
+				"[Key(Left,Repeated)]", "[Mouse(Left,Pressed) | Mouse(Right,Pressed)]");
 		}
 
 		/// <summary>
