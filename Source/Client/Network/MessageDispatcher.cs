@@ -4,6 +4,7 @@ namespace Lwar.Client.Network
 {
 	using Gameplay;
 	using Gameplay.Entities;
+	using Messages;
 	using Pegasus.Framework;
 
 	/// <summary>

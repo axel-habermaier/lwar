@@ -6,6 +6,7 @@ namespace Lwar.Client.Network
 	using System.Net;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Memory;
 	using Scripting;

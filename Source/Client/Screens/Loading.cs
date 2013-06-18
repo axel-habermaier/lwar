@@ -5,6 +5,7 @@ namespace Lwar.Client.Screens
 	using Gameplay;
 	using Gameplay.Entities;
 	using Network;
+	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Logging;
@@ -75,7 +76,7 @@ namespace Lwar.Client.Screens
 				var localPlayer = _gameSession.Players.LocalPlayer;
 				Assert.NotNull(localPlayer, "Game state synced but local player is unknown.");
 
-				_networkSession.Send(Message.ChangeSelection(localPlayer, EntityType.Ship,
+				_networkSession.Send(SelectionMessage.Create(localPlayer, EntityType.Ship,
 															 EntityType.Gun, EntityType.Phaser,
 															 EntityType.Gun, EntityType.Gun));
 

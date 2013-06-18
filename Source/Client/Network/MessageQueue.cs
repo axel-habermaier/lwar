@@ -3,6 +3,7 @@
 namespace Lwar.Client.Network
 {
 	using System.Collections.Generic;
+	using Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform.Memory;

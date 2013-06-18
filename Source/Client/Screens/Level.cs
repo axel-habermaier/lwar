@@ -6,6 +6,7 @@ namespace Lwar.Client.Screens
 	using Gameplay;
 	using Gameplay.Entities;
 	using Network;
+	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Logging;
@@ -133,7 +134,7 @@ namespace Lwar.Client.Screens
 			ScreenManager.Add(new Loading(_gameSession, _networkSession));
 
 			_scoreboard = new Scoreboard(InputDevice, Assets, _gameSession);
-			_chatInput = new ChatInput(InputDevice, Assets, _gameSession, _networkSession);
+			_chatInput = new ChatInput(InputDevice, Assets);
 		}
 
 		/// <summary>
@@ -234,7 +235,7 @@ namespace Lwar.Client.Screens
 		/// <param name="name">The previous name of the local player.</param>
 		private void OnPlayerNameChanged(string name)
 		{
-			_networkSession.Send(Message.ChangePlayerName(_gameSession.Players.LocalPlayer, Cvars.PlayerName));
+			_networkSession.Send(NameMessage.Create(_gameSession.Players.LocalPlayer, Cvars.PlayerName));
 		}
 
 		/// <summary>
@@ -243,7 +244,7 @@ namespace Lwar.Client.Screens
 		/// <param name="message">The message that the local player wants to send.</param>
 		private void OnSay(string message)
 		{
-			_networkSession.Send(Message.Say(_gameSession.Players.LocalPlayer, message));
+			_networkSession.Send(ChatMessage.Create(_gameSession.Players.LocalPlayer, message));
 		}
 	}
 }

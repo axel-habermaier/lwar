@@ -3,6 +3,7 @@
 namespace Lwar.Client.Gameplay
 {
 	using Network;
+	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Input;
@@ -22,7 +23,7 @@ namespace Lwar.Client.Gameplay
 		/// <summary>
 		///   The input message payload that is sent to the server periodically.
 		/// </summary>
-		private Message.InputPayload _inputMessage;
+		private InputMessage _inputMessage;
 
 		#region Network-synced input states
 

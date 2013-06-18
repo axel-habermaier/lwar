@@ -5,6 +5,7 @@ namespace Lwar.Client.Screens
 	using System.Text;
 	using Gameplay;
 	using Network;
+	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
@@ -42,11 +43,6 @@ namespace Lwar.Client.Screens
 		private readonly Frame _frame = new Frame();
 
 		/// <summary>
-		///   The game session that is running.
-		/// </summary>
-		private readonly GameSession _gameSession;
-
-		/// <summary>
 		///   The input device that is used to check for user input.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
@@ -55,11 +51,6 @@ namespace Lwar.Client.Screens
 		///   The label that informs the user if the text is too long.
 		/// </summary>
 		private readonly Label _lengthWarning;
-
-		/// <summary>
-		///   The network session that is used to synchronize the game state between the client and the server.
-		/// </summary>
-		private readonly NetworkSession _networkSession;
 
 		/// <summary>
 		///   The chat input prompt.
@@ -86,17 +77,11 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		/// <param name="inputDevice">The input device that should be used to check for user input.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
-		/// <param name="gameSession">The game session that is running.</param>
-		/// <param name="networkSession">The network session that synchronizes the game state between the client and the server.</param>
-		public ChatInput(LogicalInputDevice inputDevice, AssetsManager assets, GameSession gameSession, NetworkSession networkSession)
+		public ChatInput(LogicalInputDevice inputDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(inputDevice);
-			Assert.ArgumentNotNull(gameSession);
-			Assert.ArgumentNotNull(networkSession);
 
 			_inputDevice = inputDevice;
-			_gameSession = gameSession;
-			_networkSession = networkSession;
 
 			_inputDevice.Add(_activate);
 			_inputDevice.Add(_submit);
@@ -182,7 +167,7 @@ namespace Lwar.Client.Screens
 
 			// Ignore empty messages
 			if (!String.IsNullOrWhiteSpace(_textBox.Text))
-				_networkSession.Send(Message.Say(_gameSession.Players.LocalPlayer, _textBox.Text));
+				Commands.Say(_textBox.Text);
 
 			return true;
 		}

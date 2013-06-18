@@ -78,7 +78,7 @@ namespace Lwar.Client.Network
 		}
 
 		/// <summary>
-		/// Enqueues a log entry.
+		///   Enqueues a log entry.
 		/// </summary>
 		/// <param name="type">The type of the log entry that should be enqueued.</param>
 		/// <param name="message">The message of the log entry that should be enqueued.</param>

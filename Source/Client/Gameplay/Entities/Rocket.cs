@@ -3,6 +3,7 @@
 namespace Lwar.Client.Gameplay.Entities
 {
 	using Network;
+	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 
