@@ -16,7 +16,7 @@ namespace Lwar.Assets.Templates
 			Health = 1,
 			Mass = 10000,
 			Radius = 256,
-			CubeMap = "Textures/Planet",
+			CubeMap = "Textures/Earth",
 			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, (int)(t.Radius / 8)),
 			Format = "format_pos"
 		};
