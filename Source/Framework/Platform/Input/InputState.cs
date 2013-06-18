@@ -2,8 +2,6 @@
 
 namespace Pegasus.Framework.Platform.Input
 {
-	using Logging;
-
 	/// <summary>
 	///   Represents the state of an input key.
 	/// </summary>

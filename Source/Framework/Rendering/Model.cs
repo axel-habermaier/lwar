@@ -41,7 +41,7 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="indexBuffer">The index buffer containing the model's indices.</param>
 		/// <param name="indexCount">The number of indices in the index buffer.</param>
 		public Model(VertexBuffer vertexBuffer, VertexInputLayout layout, IndexBuffer indexBuffer,
-					  int indexCount)
+					 int indexCount)
 		{
 			Assert.ArgumentNotNull(vertexBuffer);
 			Assert.ArgumentNotNull(layout);

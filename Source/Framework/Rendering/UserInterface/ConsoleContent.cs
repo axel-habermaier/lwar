@@ -69,14 +69,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		/// Disposes the console content.
-		/// </summary>
-		public void Dispose()
-		{
-			_labels.SafeDisposeAll();
-		}
-
-		/// <summary>
 		///   Gets the total height of all labels.
 		/// </summary>
 		private int TotalLabelHeight
@@ -91,6 +83,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				// set to 0 in order to avoid repositioning all lines.
 				return _labels[_numLabels - 1].ActualArea.Bottom - _labels[0].ActualArea.Top;
 			}
+		}
+
+		/// <summary>
+		///   Disposes the console content.
+		/// </summary>
+		public void Dispose()
+		{
+			_labels.SafeDisposeAll();
 		}
 
 		/// <summary>

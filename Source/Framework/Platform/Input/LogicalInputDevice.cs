@@ -28,6 +28,11 @@ namespace Pegasus.Framework.Platform.Input
 		private readonly ActivationState[] _layerStates = new ActivationState[32];
 
 		/// <summary>
+		///   A value indicating whether the logical input device provides text input.
+		/// </summary>
+		private ActivationState _textInput = new ActivationState();
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="keyboard">The keyboard that should be associated with this logical device.</param>
@@ -55,11 +60,6 @@ namespace Pegasus.Framework.Platform.Input
 		///   Gets the mouse that is associated with this logical device.
 		/// </summary>
 		public Mouse Mouse { get; private set; }
-
-		/// <summary>
-		/// A value indicating whether the logical input device provides text input.
-		/// </summary>
-		private ActivationState _textInput = new ActivationState();
 
 		/// <summary>
 		///   Gets or sets a value indicating whether the logical input device provides text input. The actual update is deferred
@@ -184,7 +184,7 @@ namespace Pegasus.Framework.Platform.Input
 			public short Pending;
 
 			/// <summary>
-			/// Executes all deferred updates to the state.
+			///   Executes all deferred updates to the state.
 			/// </summary>
 			public void Update()
 			{
@@ -193,7 +193,7 @@ namespace Pegasus.Framework.Platform.Input
 			}
 
 			/// <summary>
-			/// Handles a deferred activation request.
+			///   Handles a deferred activation request.
 			/// </summary>
 			public void Activate()
 			{
@@ -202,8 +202,9 @@ namespace Pegasus.Framework.Platform.Input
 
 				++Pending;
 			}
+
 			/// <summary>
-			/// Handles a deferred deactivation request.
+			///   Handles a deferred deactivation request.
 			/// </summary>
 			public void Deactivate()
 			{
@@ -211,6 +212,7 @@ namespace Pegasus.Framework.Platform.Input
 				Assert.That(Count + Pending > 0, "Imbalanced call to deactivate.");
 
 				--Pending;
-			}}
+			}
+		}
 	}
 }

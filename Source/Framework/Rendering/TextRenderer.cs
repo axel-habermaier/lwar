@@ -75,7 +75,7 @@ namespace Pegasus.Framework.Rendering
 			// characters; however, this wastes some space as not all characters generate quads
 			if (_quads == null || text.Length > _quads.Length)
 				_quads = new Quad[text.Length];
-			
+
 			for (var i = 0; i < text.Length; ++i)
 			{
 				Quad quad;
@@ -84,7 +84,7 @@ namespace Pegasus.Framework.Rendering
 					Color? color;
 
 					text.GetColor(i, out color);
-					
+
 					if (color.HasValue)
 						quad.SetColor(color.Value);
 

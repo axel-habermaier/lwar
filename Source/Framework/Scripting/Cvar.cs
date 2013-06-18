@@ -56,11 +56,6 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the cvar is readonly and cannot be set from the console.
-		/// </summary>
-		public bool SystemOnly { get; private set; }
-
-		/// <summary>
 		///   Gets or sets the value of the cvar.
 		/// </summary>
 		public T Value
@@ -83,6 +78,11 @@ namespace Pegasus.Framework.Scripting
 		///   if the cvar's update mode is immediate.
 		/// </summary>
 		public T DeferredValue { get; private set; }
+
+		/// <summary>
+		///   Gets a value indicating whether the cvar is readonly and cannot be set from the console.
+		/// </summary>
+		public bool SystemOnly { get; private set; }
 
 		/// <summary>
 		///   Gets the validators that are used to validate the values of the cvar.

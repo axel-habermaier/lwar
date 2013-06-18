@@ -70,8 +70,8 @@ namespace Pegasus.Framework.Platform.Input
 		/// <param name="operatorParser">The parser for the binary trigger operator.</param>
 		/// <param name="triggerType">The type of the binary input trigger.</param>
 		private static Parser<InputTrigger> CreateBinaryTriggerParser(Parser<InputTrigger> operandParser,
-																				  Parser<char> operatorParser,
-																				  BinaryInputTriggerType triggerType)
+																	  Parser<char> operatorParser,
+																	  BinaryInputTriggerType triggerType)
 		{
 			return SeparatedBy1(operandParser, operatorParser)
 					   .Apply(triggers =>

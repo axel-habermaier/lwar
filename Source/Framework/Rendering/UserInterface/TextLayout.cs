@@ -12,19 +12,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	internal class TextLayout : DisposableObject
 	{
 		/// <summary>
-		///   The areas of the individual characters of the text.
-		/// </summary>
-		private Rectangle[] _characterAreas;
-
-		/// <summary>
-		///   The individual lines of the text.
-		/// </summary>
-		private TextLine[] _lines;
-
-		/// <summary>
 		///   The alignment of the text within the desired area.
 		/// </summary>
 		private TextAlignment _alignment;
+
+		/// <summary>
+		///   The areas of the individual characters of the text.
+		/// </summary>
+		private Rectangle[] _characterAreas;
 
 		/// <summary>
 		///   The desired drawing area of the text. If the text doesn't fit, it overlaps vertically.
@@ -52,9 +47,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private int _lineSpacing;
 
 		/// <summary>
-		///   Gets the text that is layouted.
+		///   The individual lines of the text.
 		/// </summary>
-		public Text Text { get; private set; }
+		private TextLine[] _lines;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -71,12 +66,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///   Gets the text that is layouted.
 		/// </summary>
-		protected override void OnDisposing()
-		{
-			Text.SafeDispose();
-		}
+		public Text Text { get; private set; }
 
 		/// <summary>
 		///   Gets the layouting data for the individual characters of the layouted text.
@@ -187,6 +179,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   If any words overlap, however, the actual area is bigger.
 		/// </summary>
 		public Rectangle ActualArea { get; private set; }
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			Text.SafeDispose();
+		}
 
 		/// <summary>
 		///   Raised when the layout has changed.
@@ -359,7 +359,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			// Most texts fit in just one line
 			if (_lines == null)
 				_lines = new TextLine[1];
-			
+
 			// Check if we have to allocate more lines and if so, copy the old ones
 			if (_lineCount + 1 >= _lines.Length)
 			{

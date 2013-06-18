@@ -6,7 +6,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Math;
 	using Platform;
 	using Platform.Graphics;
-	using Platform.Logging;
 	using Platform.Memory;
 	using Math = System.Math;
 
@@ -24,11 +23,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   The string that is used to visualize the caret.
 		/// </summary>
 		private readonly Text _caretVisual = Text.Create("_");
-
-		/// <summary>
-		///   Raised when an editing operation changed the text.
-		/// </summary>
-		public event Action<string> TextChanged;
 
 		/// <summary>
 		///   The clock that is used to determine whether the caret should be visible.
@@ -80,6 +74,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				_clock = Clock.Create();
 			}
 		}
+
+		/// <summary>
+		///   Raised when an editing operation changed the text.
+		/// </summary>
+		public event Action<string> TextChanged;
 
 		/// <summary>
 		///   Changes the text, raising the text changed event if necessary.

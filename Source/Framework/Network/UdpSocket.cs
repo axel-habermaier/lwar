@@ -4,7 +4,9 @@ namespace Pegasus.Framework.Network
 {
 	using System.Net;
 	using System.Net.Sockets;
+	using System.Threading.Tasks;
 	using Platform.Memory;
+	using Processes;
 
 	/// <summary>
 	///   Represents a Udp-based socket connection that can be used to unreliably send and receive packets over the network.
@@ -30,7 +32,7 @@ namespace Pegasus.Framework.Network
 			_packetFactory = packetFactory;
 
 			_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp) { Blocking = false };
-			_socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0);
+			_socket.EnableDualMode();
 		}
 
 		/// <summary>
@@ -49,6 +51,31 @@ namespace Pegasus.Framework.Network
 				try
 				{
 					_socket.SendTo(packet.Data, 0, packet.Size, SocketFlags.None, remoteEndPoint);
+				}
+				catch (SocketException e)
+				{
+					throw new SocketOperationException("Unable to send Udp packet to {0}: {1}.", remoteEndPoint, e.Message);
+				}
+			}
+		}
+
+		/// <summary>
+		///   Sends the given packet over the connection.
+		/// </summary>
+		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
+		/// <param name="packet">The packet that should be sent. The packet is returned to the pool before this function returns.</param>
+		/// <param name="remoteEndPoint">The endpoint of the peer the packet should be sent to.</param>
+		public async Task SendAsync(ProcessContext context, OutgoingPacket packet, IPEndPoint remoteEndPoint)
+		{
+			Assert.ArgumentNotNull(packet);
+			Assert.ArgumentNotNull(remoteEndPoint);
+			Assert.InRange(packet.Size, 1, Packet.MaxSize);
+
+			using (packet)
+			{
+				try
+				{
+					await _socket.SendToAsync(context, new ArraySegment<byte>(packet.Data, 0, packet.Size), remoteEndPoint);
 				}
 				catch (SocketException e)
 				{
@@ -81,6 +108,35 @@ namespace Pegasus.Framework.Network
 				packet.SetDataRange(size);
 				packetReturned = true;
 				return true;
+			}
+			catch (SocketException e)
+			{
+				throw new SocketOperationException("Error while trying to receive Udp packet: {0}.", e.Message);
+			}
+			finally
+			{
+				if (!packetReturned)
+					packet.SafeDispose();
+			}
+		}
+
+		/// <summary>
+		///   Receives a packet sent over the connection.
+		/// </summary>
+		/// <param name="context">The context of the process that waits for the asynchronous method to complete.</param>
+		/// <param name="remoteEndPoint">After the method completes, contains the endpoint of the peer that sent the packet.</param>
+		public async Task<IncomingPacket> ReceiveAsync(ProcessContext context, IPEndPoint remoteEndPoint)
+		{
+			var packet = _packetFactory.CreateIncomingPacket();
+			var packetReturned = false;
+
+			try
+			{
+				var size = await _socket.ReceiveFromAsync(context, new ArraySegment<byte>(packet.Data), remoteEndPoint);
+
+				packet.SetDataRange(size);
+				packetReturned = true;
+				return packet;
 			}
 			catch (SocketException e)
 			{

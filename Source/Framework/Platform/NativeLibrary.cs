@@ -15,9 +15,9 @@ namespace Pegasus.Framework.Platform
 	internal class NativeLibrary : DisposableObject
 	{
 #if Linux
-		/// <summary>
-		///   The name of the native Pegasus.Platform library.
-		/// </summary>
+	/// <summary>
+	///   The name of the native Pegasus.Platform library.
+	/// </summary>
 		internal const string LibraryName = "libPlatform.so";
 #else
 		/// <summary>
@@ -53,7 +53,7 @@ namespace Pegasus.Framework.Platform
 			Assert.That(!_isInitialized, "The library has already been initialized.");
 
 			_logCallback = OnLoggedMessage;
-			
+
 			Log.Info(LogCategory.Platform, "Initializing native platform library...");
 			NativeMethods.Initialize(_logCallback);
 
@@ -71,7 +71,7 @@ namespace Pegasus.Framework.Platform
 		}
 
 		/// <summary>
-		/// Invoked when the native library generates a log entry.
+		///   Invoked when the native library generates a log entry.
 		/// </summary>
 		/// <param name="type">The type of the generated log entry.</param>
 		/// <param name="message">The message that has been generated.</param>

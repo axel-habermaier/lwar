@@ -152,7 +152,7 @@ namespace Pegasus.Framework
 						Update();
 						statistics.Update(window.Size);
 						console.Update(window.Size);
-						
+
 						// React to window size changes
 						var viewport = new Rectangle(Vector2i.Zero, window.Size);
 						sceneOutput.Viewport = viewport;

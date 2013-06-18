@@ -99,7 +99,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (!file.Read(out content, e => Log.Error("Failed to load console history from '{0}': {1}", file.AbsolutePath, e.Message)))
 				return;
 
-			var history = content.Split(new [] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+			var history = content.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 			history = history.Where(h => h.Length <= Console.MaxLength).ToArray();
 
 			var count = history.Length;

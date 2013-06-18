@@ -10,14 +10,15 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Pegasus.Framework</RootNamespace>
     <AssemblyName>Pegasus.Framework</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <SccProjectName>Svn</SccProjectName>
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU'">
     <DebugSymbols>True</DebugSymbols>
@@ -31,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|AnyCPU'">
     <OutputPath>..\..\Binaries x64\Release Direct3D11\</OutputPath>
@@ -44,6 +46,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|AnyCPU'">
     <DebugSymbols>True</DebugSymbols>
@@ -56,6 +59,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|AnyCPU'">
     <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
@@ -69,6 +73,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|AnyCPU'">
     <DebugSymbols>True</DebugSymbols>
@@ -81,6 +86,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|AnyCPU'">
     <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
@@ -94,6 +100,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86'">
     <DebugSymbols>True</DebugSymbols>
@@ -107,6 +114,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x86'">
     <OutputPath>..\..\Binaries x86\Release Direct3D11\</OutputPath>
@@ -121,6 +129,7 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
     <DebugSymbols>True</DebugSymbols>
@@ -134,6 +143,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
@@ -147,6 +157,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <DebugSymbols>True</DebugSymbols>
@@ -159,6 +170,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
@@ -172,6 +184,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -180,12 +193,42 @@
   <ItemGroup>
     <Compile Include="AppContext.cs" />
     <Compile Include="Math\LineSegment.cs" />
+    <Compile Include="Network\IServiceOperation.cs" />
+    <Compile Include="Network\MessageHeader.cs" />
+    <Compile Include="Network\MessageType.cs" />
+    <Compile Include="Network\ServiceHost.cs" />
+    <Compile Include="Network\ServiceIdentifier.cs" />
+    <Compile Include="Network\ServiceOperation.cs" />
+    <Compile Include="Network\ServiceOperation`1.cs" />
+    <Compile Include="Network\ServicePacketFactory.cs" />
+    <Compile Include="Network\ServiceProxy.cs" />
+    <Compile Include="Network\SocketExtensions.cs" />
+    <Compile Include="Network\SocketOperation.cs" />
+    <Compile Include="Network\TcpListener.cs" />
+    <Compile Include="Network\TcpSocket.cs" />
     <Compile Include="Platform\Logging\LogCategory.cs" />
     <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\ResharperAnnotations.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Platform\WindowMode.cs" />
+    <Compile Include="Processes\AsyncAction.cs" />
+    <Compile Include="Processes\AsyncFunc.cs" />
+    <Compile Include="Processes\Awaiter.cs" />
+    <Compile Include="Processes\Awaiter`1.cs" />
+    <Compile Include="Processes\DelayOperation.cs" />
+    <Compile Include="Processes\DelegateOperation.cs" />
+    <Compile Include="Processes\IAsyncOperation.cs" />
+    <Compile Include="Processes\IAsyncOperation`1.cs" />
+    <Compile Include="Processes\IProcess.cs" />
+    <Compile Include="Processes\IProcess`1.cs" />
+    <Compile Include="Processes\IResumableProcess.cs" />
+    <Compile Include="Processes\Process.cs" />
+    <Compile Include="Processes\ProcessContext.cs" />
+    <Compile Include="Processes\ProcessScheduler.cs" />
+    <Compile Include="Processes\Process`1.cs" />
+    <Compile Include="Processes\TaskOperation.cs" />
+    <Compile Include="Processes\TaskOperation`1.cs" />
     <Compile Include="Rendering\UserInterface\Text.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Math\Vector3.cs" />

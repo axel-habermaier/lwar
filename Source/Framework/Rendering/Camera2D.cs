@@ -51,8 +51,8 @@ namespace Pegasus.Framework.Rendering
 		protected override void UpdateViewMatrixCore()
 		{
 			View = Matrix.CreateLookAt(new Vector3(Position.X, Position.Y, 0),
-										 new Vector3(Position.X, Position.Y, -1),
-										 new Vector3(0, 1, 0));
+									   new Vector3(Position.X, Position.Y, -1),
+									   new Vector3(0, 1, 0));
 		}
 	}
 }

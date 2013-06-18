@@ -56,6 +56,15 @@ namespace Pegasus.Framework.Platform.Input
 		}
 
 		/// <summary>
+		///   Indicates whether the current object is equal to another object of the same type.
+		/// </summary>
+		public bool Equals(InputLayer other)
+		{
+			Assert.That(Priority != 0 && other.Priority != 0, "Use the Contains method to compare two non-primitive input layers.");
+			return BitMask == other.BitMask;
+		}
+
+		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="priority">
@@ -71,15 +80,6 @@ namespace Pegasus.Framework.Platform.Input
 				Priority = priority,
 				BitMask = 1 << (priority - 1)
 			};
-		}
-
-		/// <summary>
-		///   Indicates whether the current object is equal to another object of the same type.
-		/// </summary>
-		public bool Equals(InputLayer other)
-		{
-			Assert.That(Priority != 0 && other.Priority != 0, "Use the Contains method to compare two non-primitive input layers.");
-			return BitMask == other.BitMask;
 		}
 
 		/// <summary>
