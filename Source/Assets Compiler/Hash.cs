@@ -9,7 +9,7 @@ namespace Pegasus.AssetsCompiler
 	/// <summary>
 	///   Represents an MD5 hash of a file.
 	/// </summary>
-	internal class Hash
+	public class Hash
 	{
 		/// <summary>
 		///   The hash of the file.

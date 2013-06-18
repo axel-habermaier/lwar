@@ -5,7 +5,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	/// <summary>
 	///   Indicates the action that the compiler must take.
 	/// </summary>
-	internal enum CompilationAction
+	public enum CompilationAction
 	{
 		/// <summary>
 		///   Indicates that the compiler can skip the asset as the latest version of the processed asset is already at the target

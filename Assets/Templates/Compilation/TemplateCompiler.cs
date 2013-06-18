@@ -9,6 +9,7 @@ namespace Lwar.Assets.Templates.Compilation
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using Pegasus.AssetsCompiler;
 	using Pegasus.AssetsCompiler.Assets;
 	using Pegasus.AssetsCompiler.CodeGeneration;
 	using Pegasus.AssetsCompiler.Compilers;
@@ -45,16 +46,47 @@ namespace Lwar.Assets.Templates.Compilation
 		/// <param name="assets">The assets that should be compiled.</param>
 		public override bool Compile(IEnumerable<Asset> assets)
 		{
-			var templates = GetTemplates(GetClassNames(assets.OfType<TemplateAsset>()))
-				.OrderBy(template => template.Name).ToArray();
+			if (DetermineAction(assets.OfType<TemplateAsset>()) == CompilationAction.Skip)
+				Log.Info("Skipping entity templates compilation (no changes detected).");
+			else
+			{
+				Log.Info("Compiling entity templates...");
 
-			GenerateServerTemplates(templates);
-			GenerateServerHeader(templates);
+				foreach (var asset in assets)
+					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 
-			GenerateClientTemplates(templates);
-			GenerateClientTypeEnumeration(templates);
+				var templates = GetTemplates(GetClassNames(assets.OfType<TemplateAsset>()))
+					.OrderBy(template => template.Name).ToArray();
 
+				GenerateServerTemplates(templates);
+				GenerateServerHeader(templates);
+				 
+				GenerateClientTemplates(templates);
+				GenerateClientTypeEnumeration(templates);
+			}
+			 
 			return true;
+		}
+
+		/// <summary>
+		///   Checks whether any of the templates have changed.
+		/// </summary>
+		/// <param name="assets">The assets that should be checked to determine the compilation action.</param>
+		private static CompilationAction DetermineAction(IEnumerable<Asset> assets)
+		{
+			foreach (var asset in assets)
+			{
+				if (!File.Exists(asset.HashPath))
+					return CompilationAction.Process;
+
+				var oldHash = Hash.FromFile(asset.HashPath);
+				var newHash = Hash.Compute(asset.SourcePath);
+
+				if (oldHash != newHash)
+					return CompilationAction.Process;
+			}
+
+			return CompilationAction.Skip;
 		}
 
 		/// <summary>
@@ -64,8 +96,8 @@ namespace Lwar.Assets.Templates.Compilation
 		/// <param name="writer">The contents of the file that should be written.</param>
 		private static void WriteToFile(string path, CodeWriter writer)
 		{
+			Log.Info("Writing '{0}'...", path);
 			File.WriteAllText(path, writer.ToString());
-			Log.Info("'{0}' has been generated.", path);
 		}
 
 		/// <summary>

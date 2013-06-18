@@ -124,7 +124,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// <summary>
 		///   Gets a value indicating which action the compiler has to take.
 		/// </summary>
-		internal CompilationAction GetRequiredAction()
+		public CompilationAction GetRequiredAction()
 		{
 			if (!File.Exists(TempPath))
 				return CompilationAction.Process;

@@ -3,7 +3,7 @@
 namespace Lwar.Assets.Templates
 {
 	using Compilation;
-	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Math; 
 	
 	/// <summary>
 	///   The ship entity templates that are shared between the client and the server.
@@ -17,7 +17,7 @@ namespace Lwar.Assets.Templates
 			Health = 3000,
 			Shield = 1,
 			Mass = 1,
-			Radius = 64,
+			Radius = 64, 
 			Acceleration = new Vector2(2000, 2000),
 			Decelaration = new Vector2(2000, 2000),
 			Rotation = 10,
