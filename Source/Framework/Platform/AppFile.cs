@@ -33,7 +33,7 @@ namespace Pegasus.Framework.Platform
 
 			FileName = fileName;
 
-			var folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			var folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 			AbsolutePath = Path.Combine(folder, appName, fileName);
 		}
 

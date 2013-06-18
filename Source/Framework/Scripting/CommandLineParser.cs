@@ -85,7 +85,7 @@ namespace Pegasus.Framework.Scripting
 				Log.Error(Help.GetHint(cvar.Name));
 			}
 			else
-				new Instruction(cvar, reply.Result).Execute(true);
+				new Instruction(cvar, reply.Result).Execute(false);
 		}
 	}
 }

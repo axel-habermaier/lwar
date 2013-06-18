@@ -29,7 +29,7 @@ Pegasus.Framework
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
 - Key down/up in the same frame, multiple key down/ups in same frame
 - Persist key bindings
-- Store autoexec.cfg and log in other directory
+- Persist console input history?
 
 Pegasus.Platform
 ========
