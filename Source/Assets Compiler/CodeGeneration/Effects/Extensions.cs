@@ -59,7 +59,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 								 })
 							 .Single();
 
-			var mapsTo = method.GetCustomAttribute<MapsToAttribute>();
+			var mapsTo = method.GetCustomAttributes(typeof(MapsToAttribute), true).OfType<MapsToAttribute>().FirstOrDefault();
 			if (mapsTo == null)
 				return Intrinsic.Unknown;
 

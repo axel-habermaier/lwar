@@ -10,13 +10,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Pegasus.Framework</RootNamespace>
     <AssemblyName>Pegasus.Framework</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <SccProjectName>Svn</SccProjectName>
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU'">
     <DebugSymbols>True</DebugSymbols>
@@ -190,7 +191,6 @@
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Network\IPacketFactory.cs" />
     <Compile Include="Network\IPEndPointExtensions.cs" />
-    <Compile Include="Network\ServicePacketFactory.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />
     <Compile Include="Platform\AppFile.cs" />
     <Compile Include="AppException.cs" />
@@ -227,10 +227,6 @@
     <Compile Include="Platform\ResolutionManager.cs" />
     <Compile Include="Platform\Timer.cs" />
     <Compile Include="Platform\Win32.cs" />
-    <Compile Include="Processes\DelegateOperation.cs" />
-    <Compile Include="Processes\IResumableProcess.cs" />
-    <Compile Include="Processes\TaskOperation`1.cs" />
-    <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Rendering\Camera3D.cs" />
     <Compile Include="Rendering\Camera2D.cs" />
     <Compile Include="Rendering\FullscreenQuad.cs" />
@@ -268,20 +264,9 @@
     </Compile>
     <Compile Include="Network\UdpSocket.cs" />
     <Compile Include="Network\SocketOperationException.cs" />
-    <Compile Include="Network\IServiceOperation.cs" />
-    <Compile Include="Network\MessageHeader.cs" />
-    <Compile Include="Network\MessageType.cs" />
-    <Compile Include="Network\ServiceOperation.cs" />
-    <Compile Include="Network\ServiceHost.cs" />
-    <Compile Include="Network\ServiceIdentifier.cs" />
-    <Compile Include="Network\ServiceOperation`1.cs" />
-    <Compile Include="Network\ServiceProxy.cs" />
-    <Compile Include="Network\TcpListener.cs" />
     <Compile Include="Network\IncomingPacket.cs" />
     <Compile Include="Network\OutgoingPacket.cs" />
     <Compile Include="Network\Packet.cs" />
-    <Compile Include="Network\SocketExtensions.cs" />
-    <Compile Include="Network\TcpSocket.cs" />
     <Compile Include="Platform\Assets\FontAsset.cs" />
     <Compile Include="Platform\Assets\VertexShaderAsset.cs" />
     <Compile Include="Platform\Assets\TextureAsset.cs" />
@@ -294,20 +279,6 @@
     <Compile Include="Platform\NativeLibrary.cs" />
     <Compile Include="Platform\Memory\Pool.cs" />
     <Compile Include="Platform\Memory\PooledObject.cs" />
-    <Compile Include="Processes\AsyncAction.cs" />
-    <Compile Include="Processes\AsyncFunc.cs" />
-    <Compile Include="Processes\Awaiter.cs" />
-    <Compile Include="Processes\Awaiter`1.cs" />
-    <Compile Include="Processes\DelayOperation.cs" />
-    <Compile Include="Processes\IAsyncOperation.cs" />
-    <Compile Include="Processes\IAsyncOperation`1.cs" />
-    <Compile Include="Processes\IProcess.cs" />
-    <Compile Include="Processes\IProcess`1.cs" />
-    <Compile Include="Processes\Process.cs" />
-    <Compile Include="Processes\ProcessContext.cs" />
-    <Compile Include="Processes\ProcessScheduler.cs" />
-    <Compile Include="Processes\Process`1.cs" />
-    <Compile Include="Network\SocketOperation.cs" />
     <Compile Include="Platform\Graphics\BufferType.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\Camera.cs" />

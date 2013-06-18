@@ -4,6 +4,7 @@ namespace Lwar.Client.Network
 {
 	using System.Collections.Generic;
 	using System.Net;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Memory;
@@ -157,15 +158,15 @@ namespace Lwar.Client.Network
 		protected override void OnDisposing()
 		{
 			// Start a task that sends a couple of Disconnect messages to the server
-			var task = Task.Run(async () =>
+			var task = Task.Factory.StartNew(() =>
 				{
 					for (var i = 0; i < DisconnectMessageCount && !IsDropped && !IsFaulted; ++i)
 					{
-						Send(new Message{Type=MessageType.Disconnect});
+						Send(new Message { Type = MessageType.Disconnect });
 
 						_connection.Send(_outgoingMessages);
 						_connection.Update();
-						await Task.Delay(DisconnectSendInterval);
+						Thread.Sleep(DisconnectSendInterval);
 					}
 				});
 
