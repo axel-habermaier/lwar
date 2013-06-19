@@ -35,7 +35,7 @@ Pegasus.Platform
 - Linux: Enforce minimum/maximum allowed window size
 - Linux: Double clicking not implemented
 - Linux: Fullscreen not implemented, moving and resizing window mostly not working
-- Linux: Input bug (for instance, crash when entering text into the console)
+- Linux: Input bug (for instance, crash when entering text into the console; cannot reproduce)
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Bug: Window is not opened in maximized mode when native debugging is not enabled??
 

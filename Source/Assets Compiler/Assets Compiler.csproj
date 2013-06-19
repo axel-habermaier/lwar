@@ -178,9 +178,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Tests|AnyCPU'">
     <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Debug Tests</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Tests|x86'">
     <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Debug Tests</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.NRefactory">
