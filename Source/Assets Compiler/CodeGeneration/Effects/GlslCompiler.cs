@@ -24,16 +24,18 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			Writer.Append("const {0} {1}", ToShaderType(literal.Type), Escape(literal.Name));
 
 			if (literal.IsArray)
-				Writer.Append("[{0}]", ((object[])literal.Value).Length);
+				Writer.Append("[{0}]", literal.Value.GetConstantValues(Resolver).Length);
 
 			Writer.Append(" = ");
 
 			if (literal.IsArray)
 			{
-				Writer.Append("new {0}[] ( ",  ToShaderType(literal.Type));
-				Writer.Append(String.Join(", ", (object[])literal.Value));
+				Writer.Append("new {0}[] ( ", ToShaderType(literal.Type));
+				Writer.Append(String.Join(", ", literal.Value.GetConstantValues(Resolver)));
 				Writer.Append(" )");
 			}
+			else if (literal.IsConstructed)
+				literal.Value.AcceptVisitor(this);
 			else
 				Writer.Append(literal.Value.ToString().ToLower());
 

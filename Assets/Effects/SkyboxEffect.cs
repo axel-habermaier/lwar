@@ -12,7 +12,7 @@ namespace Lwar.Assets.Effects
 			VertexShader = "VertexShader",
 			FragmentShader = "FragmentShader"
 		};
-
+		   
 		public readonly CubeMap Skybox;
 
 		[VertexShader]

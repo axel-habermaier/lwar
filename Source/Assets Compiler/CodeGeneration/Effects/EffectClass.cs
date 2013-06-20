@@ -352,7 +352,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				Error(variable.Declaration, "Unsupported data type: '{0}'.", variable.Type.FullName);
 			}
 
-			// Check for indexer expressions with out-of-bounds indices
+			// Check for indexer expressions with out-of-bounds indices into a shader literal
 			foreach (var indexArgument in from method in _type.Descendants.OfType<MethodDeclaration>()
 										  from indexer in method.Descendants.OfType<IndexerExpression>()
 										  from argument in indexer.Arguments
@@ -375,9 +375,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				var identifier = indexArgument.Indexer.Target as IdentifierExpression;
 				if (identifier != null)
 				{
-					var literal = Literals.SingleOrDefault(l => l.Name == identifier.Identifier);
+					var literal = Literals.SingleOrDefault(l => l.Name == identifier.Identifier && l.IsArray);
 					if (literal != null)
-						literalOutOfBounds = value >= ((object[])literal.Value).Length;
+						literalOutOfBounds = value >= literal.Value.GetConstantValues(Resolver).Length;
 				}
 
 				if (value < 0 || matrix || vector4 || vector3 || vector2 || literalOutOfBounds)

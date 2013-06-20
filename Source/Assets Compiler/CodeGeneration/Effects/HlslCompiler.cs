@@ -51,9 +51,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			if (literal.IsArray)
 			{
 				Writer.Append("{{ ");
-				Writer.Append(String.Join(", ", (object[])literal.Value));
+				Writer.Append(String.Join(", ", literal.Value.GetConstantValues(Resolver)));
 				Writer.Append(" }}");
 			}
+			else if (literal.IsConstructed)
+				literal.Value.AcceptVisitor(this);
 			else
 				Writer.Append(literal.Value.ToString().ToLower());
 

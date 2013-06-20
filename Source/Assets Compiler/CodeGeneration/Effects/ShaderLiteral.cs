@@ -2,9 +2,13 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
+	using System.Linq;
+	using AssetsCompiler.Effects;
 	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using ICSharpCode.NRefactory.TypeSystem.Implementation;
 
 	/// <summary>
 	///   Represents a field of an effect class that acts as compile-time constant literal shader value.
@@ -54,14 +58,51 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <summary>
 		///   Gets the value of the literal.
 		/// </summary>
-		public object Value
+		public Expression Value
+		{
+			get { return _variable.Initializer; }
+		}
+
+		/// <summary>
+		///   Checks whether the literal has a constant value.
+		/// </summary>
+		private bool HasConstantValue
 		{
 			get
 			{
-				if (IsArray)
-					return _variable.Initializer.GetConstantValues(Resolver);
+				if (IsConstructed)
+					return true;
 
-				return _variable.Initializer.GetConstantValue(Resolver);
+				if (IsArray)
+					return _variable.Initializer.GetConstantValues(Resolver) != null;
+
+				return _variable.Initializer.GetConstantValue(Resolver) != null;
+			}
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the literal's value is a call to a constructor of Vector2, Vector3, Vector4, or
+		///   Matrix.
+		/// </summary>
+		public bool IsConstructed
+		{
+			get
+			{
+				var resolved = Resolver.Resolve(_variable.Initializer) as CSharpInvocationResolveResult;
+				if (resolved == null)
+					return false;
+
+				var method = resolved.Member as DefaultResolvedMethod;
+				if (method == null || !method.IsConstructor)
+					return false;
+
+				if (resolved.Type.FullName != typeof(Vector2).FullName &&
+					resolved.Type.FullName != typeof(Vector3).FullName &&
+					resolved.Type.FullName != typeof(Vector4).FullName &&
+					resolved.Type.FullName != typeof(Matrix).FullName)
+					return false;
+
+				return resolved.Arguments.All(a => a.IsCompileTimeConstant);
 			}
 		}
 
@@ -95,7 +136,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				Error(_variable, "Shader literal '{0}' must be initialized.", Name);
 
 			// Check whether the literal is initialized with a compile-time constant
-			if (!_variable.Initializer.IsNull && Value == null)
+			if (!_variable.Initializer.IsNull && !HasConstantValue)
 				Error(_variable.Initializer, "Shader literal '{0}' must be initialized with a non-null compile-time constant value.",
 					  Name);
 		}
