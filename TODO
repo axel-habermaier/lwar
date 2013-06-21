@@ -35,13 +35,14 @@ Pegasus.Platform
 - Linux: Enforce minimum/maximum allowed window size (use XSetWMNormalHints)
 - Linux: Double clicking not implemented
 - Linux: Fullscreen not implemented, moving and resizing window mostly not working
-- Linux: Input bug (for instance, crash when entering text into the console; cannot reproduce)
+- Linux: Input bug (for instance, crash when entering text into the console; dead key problem -> use previously used deprecated function?)
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Bug: Window is not opened in maximized mode when native debugging is not enabled??
 
 Assets Compiler
 ========
 - Storing cubemaps as 6 separate images might improve compilation times noticably
+- Add dependency system (e.g., cubemap depends on 6 textures, font depends on texture)
 - Asset compression
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)

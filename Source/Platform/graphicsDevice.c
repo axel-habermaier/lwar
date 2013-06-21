@@ -26,10 +26,10 @@ pgVoid pgDestroyGraphicsDevice(pgGraphicsDevice* device)
 pgVoid pgSetViewport(pgGraphicsDevice* device, pgRectangle viewport)
 {
 	PG_ASSERT_NOT_NULL(device);
-	PG_ASSERT_IN_RANGE(viewport.left, 0, 4096);
-	PG_ASSERT_IN_RANGE(viewport.top, 0, 4096);
-	PG_ASSERT_IN_RANGE(viewport.width, 0, 4096);
-	PG_ASSERT_IN_RANGE(viewport.height, 0, 4096);
+	PG_ASSERT_IN_RANGE(viewport.left, 0, PG_WINDOW_MAX_WIDTH);
+	PG_ASSERT_IN_RANGE(viewport.top, 0, PG_WINDOW_MAX_HEIGHT);
+	PG_ASSERT_IN_RANGE(viewport.width, 0, PG_WINDOW_MAX_WIDTH);
+	PG_ASSERT_IN_RANGE(viewport.height, 0, PG_WINDOW_MAX_HEIGHT);
 
 	if (pgRectangleEqual(&viewport, &device->viewport))
 		return;
@@ -41,10 +41,10 @@ pgVoid pgSetViewport(pgGraphicsDevice* device, pgRectangle viewport)
 pgVoid pgSetScissorArea(pgGraphicsDevice* device, pgRectangle scissorArea)
 {
 	PG_ASSERT_NOT_NULL(device);
-	PG_ASSERT_IN_RANGE(scissorArea.left, 0, 4096);
-	PG_ASSERT_IN_RANGE(scissorArea.top, 0, 4096);
-	PG_ASSERT_IN_RANGE(scissorArea.width, 0, 4096);
-	PG_ASSERT_IN_RANGE(scissorArea.height, 0, 4096);
+	PG_ASSERT_IN_RANGE(scissorArea.left, 0, PG_WINDOW_MAX_WIDTH);
+	PG_ASSERT_IN_RANGE(scissorArea.top, 0, PG_WINDOW_MAX_HEIGHT);
+	PG_ASSERT_IN_RANGE(scissorArea.width, 0, PG_WINDOW_MAX_WIDTH);
+	PG_ASSERT_IN_RANGE(scissorArea.height, 0, PG_WINDOW_MAX_HEIGHT);
 
 	if (pgRectangleEqual(&scissorArea, &device->scissorArea))
 		return;
