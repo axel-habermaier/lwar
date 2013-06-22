@@ -29,8 +29,13 @@ pgVoid pgDestroyBuffer(pgBuffer* buffer)
 
 pgVoid* pgMapBuffer(pgBuffer* buffer, pgMapMode mode)
 {
+	pgFloat64 start = pgGetTime();
+	pgVoid* v;
 	PG_ASSERT_NOT_NULL(buffer);
-	return pgMapBufferCore(buffer, mode);
+	v = pgMapBufferCore(buffer, mode);
+
+	PG_INFO("%f", (pgGetTime() - start) * 1000.0);
+	return v;
 }
 
 pgVoid pgUnmapBuffer(pgBuffer* buffer)

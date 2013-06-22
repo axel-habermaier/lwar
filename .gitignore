@@ -33,3 +33,6 @@ Source/Client/Gameplay/Entities/Templates.cs
 Source/Server/templates.c
 Source/Server/entity.h
 lwar.sln.ide
+*.psess
+*.vsp
+*.vspx

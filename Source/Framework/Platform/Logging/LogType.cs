@@ -10,26 +10,26 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <summary>
 		///   Indicates that the log entry represents a fatal error.
 		/// </summary>
-		Fatal = 0,
+		Fatal = 1,
 
 		/// <summary>
 		///   Indicates that the log entry represents an error.
 		/// </summary>
-		Error = 1,
+		Error = 2,
 
 		/// <summary>
 		///   Indicates that the log entry represents a warning.
 		/// </summary>
-		Warning = 2,
+		Warning = 3,
 
 		/// <summary>
 		///   Indicates that the log entry represents an informational message.
 		/// </summary>
-		Info = 3,
+		Info = 4,
 
 		/// <summary>
 		///   Indicates that the log entry represents debugging information.
 		/// </summary>
-		Debug = 4
+		Debug = 5
 	}
 }

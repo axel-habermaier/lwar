@@ -48,6 +48,22 @@ Global
 		Release OpenGL3|x86 = Release OpenGL3|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x64.ActiveCfg = Debug Direct3D11|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x64.Build.0 = Debug Direct3D11|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x86.ActiveCfg = Debug Direct3D11|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x86.Build.0 = Debug Direct3D11|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x64.ActiveCfg = Debug OpenGL3|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x64.Build.0 = Debug OpenGL3|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x86.ActiveCfg = Debug OpenGL3|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x86.Build.0 = Debug OpenGL3|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x64.ActiveCfg = Release Direct3D11|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x64.Build.0 = Release Direct3D11|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x86.ActiveCfg = Release Direct3D11|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x86.Build.0 = Release Direct3D11|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x64.ActiveCfg = Release OpenGL3|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x64.Build.0 = Release OpenGL3|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x86.ActiveCfg = Release OpenGL3|x86
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x86.Build.0 = Release OpenGL3|x86
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug Direct3D11|x64.ActiveCfg = Debug Direct3D11|Any CPU
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug Direct3D11|x64.Build.0 = Debug Direct3D11|Any CPU
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug Direct3D11|x86.ActiveCfg = Debug Direct3D11|x86
@@ -80,22 +96,6 @@ Global
 		{E008FA73-A930-40B5-93A4-959A4D30492D}.Release OpenGL3|x64.Build.0 = Release OpenGL3|x64
 		{E008FA73-A930-40B5-93A4-959A4D30492D}.Release OpenGL3|x86.ActiveCfg = Release OpenGL3|Win32
 		{E008FA73-A930-40B5-93A4-959A4D30492D}.Release OpenGL3|x86.Build.0 = Release OpenGL3|Win32
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x64.ActiveCfg = Debug Direct3D11|Any CPU
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x64.Build.0 = Debug Direct3D11|Any CPU
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x86.ActiveCfg = Debug Direct3D11|x86
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Direct3D11|x86.Build.0 = Debug Direct3D11|x86
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x64.ActiveCfg = Debug OpenGL3|Any CPU
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x64.Build.0 = Debug OpenGL3|Any CPU
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x86.ActiveCfg = Debug OpenGL3|x86
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug OpenGL3|x86.Build.0 = Debug OpenGL3|x86
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x64.ActiveCfg = Release Direct3D11|Any CPU
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x64.Build.0 = Release Direct3D11|Any CPU
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x86.ActiveCfg = Release Direct3D11|x86
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Direct3D11|x86.Build.0 = Release Direct3D11|x86
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x64.ActiveCfg = Release OpenGL3|Any CPU
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x64.Build.0 = Release OpenGL3|Any CPU
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x86.ActiveCfg = Release OpenGL3|x86
-		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release OpenGL3|x86.Build.0 = Release OpenGL3|x86
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug Direct3D11|x64.ActiveCfg = Debug Direct3D11|x64
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug Direct3D11|x64.Build.0 = Debug Direct3D11|x64
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug Direct3D11|x86.ActiveCfg = Debug Direct3D11|Win32
@@ -147,5 +147,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
