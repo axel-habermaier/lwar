@@ -15,26 +15,22 @@ static pgVoid pgValidateFramebufferCompleteness();
 pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget)
 {
 	pgInt32 i;
-	GLint boundFramebuffer;
-
+	
 	PG_GL_ALLOC("Framebuffer", glGenFramebuffers, renderTarget->id);
-	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &boundFramebuffer);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
 
 	if (renderTarget->depthStencil != NULL)
 	{
-		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, renderTarget->depthStencil->glType, 
+		glNamedFramebufferTexture2DEXT(renderTarget->id, GL_DEPTH_STENCIL_ATTACHMENT, renderTarget->depthStencil->glType, 
 			renderTarget->depthStencil->id, 0);
 	}
 
 	for (i = 0; i < renderTarget->count; ++i)
 	{
-		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, renderTarget->colorBuffers[i]->glType, 
+		glNamedFramebufferTexture2DEXT(renderTarget->id, GL_COLOR_ATTACHMENT0 + i, renderTarget->colorBuffers[i]->glType, 
 			renderTarget->colorBuffers[i]->id, 0);
 	}
 
 	pgValidateFramebufferCompleteness();
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, boundFramebuffer);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
@@ -45,16 +41,14 @@ pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)
 
 pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 {
-	GLboolean scissorEnabled;
-	glGetBooleanv(GL_SCISSOR_TEST, &scissorEnabled);
-	glDisable(GL_SCISSOR_TEST);
-
-	PG_UNUSED(renderTarget);
+	pgBindRenderTarget(renderTarget);
+	if (renderTarget->device->scissorEnabled)
+		glDisable(GL_SCISSOR_TEST);
 
     glClearColor(color.red, color.green, color.blue, color.alpha);
     glClear(GL_COLOR_BUFFER_BIT);
 
-	if (scissorEnabled)
+	if (renderTarget->device->scissorEnabled)
 		glEnable(GL_SCISSOR_TEST);
 
 	PG_ASSERT_NO_GL_ERRORS();
@@ -63,13 +57,13 @@ pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
 {
 	pgInt32 glTargets = 0;
-	GLboolean scissorEnabled, depthMask;
 
-	glGetBooleanv(GL_SCISSOR_TEST, &scissorEnabled);
-	glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+	pgBindRenderTarget(renderTarget);
+	if (renderTarget->device->scissorEnabled)
+		glDisable(GL_SCISSOR_TEST);
 
-	glDepthMask(GL_TRUE);
-	glDisable(GL_SCISSOR_TEST);
+	if (!renderTarget->device->depthWritesEnabled)
+		glDepthMask(GL_TRUE);
 
 	PG_ASSERT(renderTarget->swapChain != NULL || renderTarget->depthStencil != NULL, 
 		"Cannot clear depth stencil of a render target without a depth stencil buffer.");
@@ -83,10 +77,12 @@ pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, 
     glClearStencil(stencil);
     glClear(glTargets);
 
-	if (scissorEnabled)
+	if (renderTarget->device->scissorEnabled)
 		glEnable(GL_SCISSOR_TEST);
 
-	glDepthMask(depthMask);
+	if (!renderTarget->device->depthWritesEnabled)
+		glDepthMask(GL_FALSE);
+
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

@@ -15,15 +15,11 @@ static pgVoid pgAllocTextureData(pgTexture* texture);
 
 pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 {
-	GLint boundTexture;
 	pgUint32 i;
 	
 	PG_GL_ALLOC("Texture", glGenTextures, texture->id);
 	pgConvertTextureType(texture->desc.type, &texture->glType, &texture->glBoundType);
 	
-	glGetIntegerv(texture->glBoundType, &boundTexture);
-	glBindTexture(texture->glType, texture->id);
-
 	if (surfaces != NULL)
 	{
 		switch (texture->desc.type)
@@ -63,9 +59,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 		pgAllocTextureData(texture);
 
 	if ((texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS) != 0)
-		glGenerateMipmap(texture->glType);
-
-	glBindTexture(texture->glType, boundTexture);
+		glGenerateTextureMipmapEXT(texture->id, texture->glType);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -84,14 +78,8 @@ pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)
 
 pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 {
-	GLint boundTexture;
-	glGetIntegerv(texture->glBoundType, &boundTexture);
-
 	glBindTexture(texture->glType, texture->id);
-	glGenerateMipmap(texture->glType);
-	PG_ASSERT_NO_GL_ERRORS();
-
-	glBindTexture(texture->glType, boundTexture);
+	glGenerateTextureMipmapEXT(texture->id, texture->glType);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
@@ -110,9 +98,9 @@ static pgVoid pgUploadTexture(pgTexture* texture, pgSurface* surface, GLenum tar
 		type = GL_UNSIGNED_INT_24_8;
 
 	if (pgIsCompressedFormat(texture->desc.format))
-		glCompressedTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, surface->size, surface->data);
+		glCompressedTextureImage2DEXT(texture->id, target, level, internalFormat, surface->width, surface->height, 0, surface->size, surface->data);
 	else
-		glTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, format, type, surface->data);
+		glTextureImage2DEXT(texture->id, target, level, internalFormat, surface->width, surface->height, 0, format, type, surface->data);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }

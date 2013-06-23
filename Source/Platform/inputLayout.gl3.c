@@ -50,8 +50,6 @@ pgVoid pgCreateInputLayoutCore(pgInputLayout* inputLayout, pgBuffer* indexBuffer
 		PG_ASSERT_NO_GL_ERRORS();
 	}
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

@@ -39,8 +39,8 @@ namespace Pegasus.Framework.Platform.Logging
 		/// </summary>
 		static LogExtensions()
 		{
-			ValidateEnumeration(typeof(LogCategory));
-			ValidateEnumeration(typeof(LogType));
+			ValidateEnumeration(typeof(LogCategory), 0);
+			ValidateEnumeration(typeof(LogType), 1);
 		}
 
 		/// <summary>
@@ -62,8 +62,9 @@ namespace Pegasus.Framework.Platform.Logging
 		///   Validates the assumptions made about a logging enumeration.
 		/// </summary>
 		/// <param name="enumeration">The type of the enumeration that should be validated.</param>
+		/// <param name="lowestValue">The lowest value that must be defined by the enumeration.</param>
 		[Conditional("DEBUG")]
-		private static void ValidateEnumeration(Type enumeration)
+		private static void ValidateEnumeration(Type enumeration, int lowestValue)
 		{
 			var values = Enum.GetValues(enumeration) as int[];
 			Assert.That(values != null, "Expected the values to be of type 'int'.");
@@ -71,8 +72,8 @@ namespace Pegasus.Framework.Platform.Logging
 			var maxValue = values.Max();
 			var minValue = values.Min();
 
-			Assert.That(minValue == 0, "The lowest value must be 0.");
-			Assert.That(maxValue == values.Length - 1, "The highest value must match the number of literals declared by the enumeration.");
+			Assert.That(minValue == lowestValue, "The lowest value must be {0}.", lowestValue);
+			Assert.That(maxValue == values.Length - 1 + lowestValue, "The highest value must match the number of literals declared by the enumeration.");
 		}
 
 		/// <summary>
@@ -90,7 +91,7 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <param name="type">The log type that should be converted to a string.</param>
 		public static string ToDisplayString(this LogType type)
 		{
-			return TypeDisplayStrings[(int)type];
+			return TypeDisplayStrings[(int)type - 1];
 		}
 	}
 }

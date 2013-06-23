@@ -3,28 +3,16 @@
 #ifdef OPENGL3
 
 //====================================================================================================================
-// Helper functions
-//====================================================================================================================
-
-static GLint GetBoundBuffer(GLenum bufferType);
-
-//====================================================================================================================
 // Core functions
 //====================================================================================================================
 
 pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage usage, pgVoid* data, pgInt32 size)
 {
-	GLint boundBuffer;
-
 	PG_GL_ALLOC("Buffer", glGenBuffers, buffer->id);
 	buffer->type = pgConvertBufferType(type);
 	buffer->size = size;
 
-	boundBuffer = GetBoundBuffer(buffer->type);
-	glBindBuffer(buffer->type, buffer->id);
-	glBufferData(buffer->type, size, data, pgConvertResourceUsage(usage));
-	glBindBuffer(buffer->type, boundBuffer);
-	
+	glNamedBufferDataEXT(buffer->id, size, data, pgConvertResourceUsage(usage));
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
@@ -36,12 +24,8 @@ pgVoid pgDestroyBufferCore(pgBuffer* buffer)
 pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode)
 {
 	pgVoid* mappedBuffer;
-	GLint boundBuffer;
 
-	boundBuffer = GetBoundBuffer(buffer->type);
-	glBindBuffer(buffer->type, buffer->id);
-	mappedBuffer = glMapBufferRange(buffer->type, 0, buffer->size, pgConvertMapMode(mode));
-	glBindBuffer(buffer->type, boundBuffer);
+	mappedBuffer = glMapNamedBufferRangeEXT(buffer->id, 0, buffer->size, pgConvertMapMode(mode));
 	PG_ASSERT_NO_GL_ERRORS();
 
 	if (mappedBuffer == NULL)
@@ -53,12 +37,9 @@ pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode)
 pgVoid pgUnmapBufferCore(pgBuffer* buffer)
 {
 	GLboolean success;
-	GLint boundBuffer;
 
-	boundBuffer = GetBoundBuffer(buffer->type);
 	glBindBuffer(buffer->type, buffer->id);
-	success = glUnmapBuffer(buffer->type);
-	glBindBuffer(buffer->type, boundBuffer);
+	success = glUnmapNamedBufferEXT(buffer->id);
 	PG_ASSERT_NO_GL_ERRORS();
 
 	if (!success)
@@ -71,32 +52,6 @@ pgVoid pgBindConstantBufferCore(pgBuffer* buffer, pgInt32 slot)
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, slot, buffer->id);
 	PG_ASSERT_NO_GL_ERRORS();
-}
-
-//====================================================================================================================
-// Helper functions
-//====================================================================================================================
-
-static GLint GetBoundBuffer(GLenum bufferType)
-{
-	GLint buffer;
-
-	switch (bufferType)
-	{
-	case GL_ELEMENT_ARRAY_BUFFER:
-		glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &buffer);
-		break;
-	case GL_ARRAY_BUFFER:
-		glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &buffer);
-		break;
-	case GL_UNIFORM_BUFFER:
-		glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &buffer);
-		break;
-	default:
-		PG_NO_SWITCH_DEFAULT;
-	}
-
-	return buffer;
 }
 
 #endif
