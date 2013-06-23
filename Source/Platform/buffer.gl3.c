@@ -38,7 +38,6 @@ pgVoid pgUnmapBufferCore(pgBuffer* buffer)
 {
 	GLboolean success;
 
-	glBindBuffer(buffer->type, buffer->id);
 	success = glUnmapNamedBufferEXT(buffer->id);
 	PG_ASSERT_NO_GL_ERRORS();
 

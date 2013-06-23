@@ -23,6 +23,10 @@ static void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id, GLenum
 
 pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 {
+	// Invalidate the cached device state
+	size_t offset = offsetof(pgGraphicsDevice, depthWritesEnabled);
+	memset((pgByte*)device + offset, -1, sizeof(pgGraphicsDevice) - offset);
+
 	pgCreateContextWindow(&device->context);
 	pgSetPixelFormat(&device->context);
 
@@ -62,15 +66,23 @@ pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device)
 
 pgVoid pgSetViewportCore(pgGraphicsDevice* device, pgRectangle viewport)
 {
-	pgInt32 top = FlipY(device, viewport.top, viewport.height);
-	glViewport(viewport.left, top, viewport.width, viewport.height);
+	viewport.top = FlipY(device, viewport.top, viewport.height);
+	if (pgRectangleEqual(&viewport, &device->currentViewport))
+		return;
+
+	device->currentViewport = viewport;
+	glViewport(viewport.left, viewport.top, viewport.width, viewport.height);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
 pgVoid pgSetScissorAreaCore(pgGraphicsDevice* device, pgRectangle scissorArea)
 {
-	pgInt32 top = FlipY(device, scissorArea.top, scissorArea.height);
-	glScissor(scissorArea.left, top, scissorArea.width, scissorArea.height);
+	scissorArea.top = FlipY(device, scissorArea.top, scissorArea.height);
+	if (pgRectangleEqual(&scissorArea, &device->currentScissorArea))
+		return;
+
+	device->currentScissorArea = scissorArea;
+	glScissor(scissorArea.left, scissorArea.top, scissorArea.width, scissorArea.height);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

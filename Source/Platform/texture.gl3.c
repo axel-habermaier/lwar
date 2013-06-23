@@ -71,14 +71,13 @@ pgVoid pgDestroyTextureCore(pgTexture* texture)
 
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)
 {
-	glActiveTexture(GL_TEXTURE0 + slot);
+	pgChangeActiveTexture(texture->device, slot);
 	glBindTexture(texture->glType, texture->id);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
 pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 {
-	glBindTexture(texture->glType, texture->id);
 	glGenerateTextureMipmapEXT(texture->id, texture->glType);
 	PG_ASSERT_NO_GL_ERRORS();
 }

@@ -98,12 +98,39 @@ pgVoid pgSwapBuffers(pgContext* context);
 // OpenGL-specific data types
 //====================================================================================================================
 
-#define PG_GRAPHICS_DEVICE_PLATFORM		\
-	pgContext		context;			\
-	GLenum			glPrimitiveType;	\
-	GLuint			pipeline;			\
-	GLboolean		depthWritesEnabled; \
-	GLboolean		scissorEnabled;
+#define PG_GRAPHICS_DEVICE_PLATFORM			\
+	pgContext		context;				\
+	GLenum			glPrimitiveType;		\
+	GLuint			pipeline;				\
+	/* Begin device state */				\
+	GLboolean		depthWritesEnabled;		\
+	GLboolean		scissorEnabled;			\
+	GLboolean		blendEnabled;			\
+	GLboolean		depthTestEnabled;		\
+	GLboolean		cullFaceEnabled;		\
+	GLboolean		depthClampEnabled;		\
+	GLboolean		multisampleEnabled;		\
+	GLboolean		stencilTestEnabled;		\
+	GLboolean		antialiasedLineEnabled;	\
+	pgInt32			activeTexture;			\
+	GLenum			cullFace;				\
+	GLenum			polygonMode;			\
+	pgFloat32		slopeScaledDepthBias;	\
+	pgFloat32		depthBiasClamp;			\
+	GLenum			frontFace;				\
+	GLenum			depthFunc;				\
+	pgColor			clearColor;				\
+	pgFloat32		depthClear;				\
+	pgUint8			stencilClear;			\
+	GLenum			blendOperation;			\
+	GLenum			blendOperationAlpha;	\
+	GLenum			sourceBlend;			\
+	GLenum			destinationBlend;		\
+	GLenum			sourceBlendAlpha;		\
+	GLenum			destinationBlendAlpha;	\
+	GLboolean		colorMask[4];			\
+	pgRectangle		currentViewport;		\
+	pgRectangle		currentScissorArea;
 
 #define PG_SWAP_CHAIN_PLATFORM \
 	pgContext context;
@@ -167,5 +194,31 @@ GLvoid pgConvertTextureFilter(pgTextureFilter textureFilter, GLenum* minFilter, 
 GLvoid pgConvertVertexDataFormat(pgVertexDataFormat vertexDataFormat, GLenum* type, GLsizei* size);
 GLenum pgConvertBufferType(pgBufferType bufferType);
 GLvoid pgConvertTextureType(pgTextureType textureType, GLenum* type, GLenum* boundType);
+
+//====================================================================================================================
+// State change functions
+//====================================================================================================================
+
+pgVoid pgChangeActiveTexture(pgGraphicsDevice* device, pgInt32 slot);
+pgVoid pgEnableScissor(pgGraphicsDevice* device, GLboolean enabled);
+pgVoid pgEnableBlend(pgGraphicsDevice* device, GLboolean enabled);
+pgVoid pgEnableDepthTest(pgGraphicsDevice* device, GLboolean enabled);
+pgVoid pgEnableCullFace(pgGraphicsDevice* device, GLboolean enabled);
+pgVoid pgEnableDepthClamp(pgGraphicsDevice* device, GLboolean enabled);
+pgVoid pgEnableMultisample(pgGraphicsDevice* device, GLboolean enabled);
+pgVoid pgEnableAntialiasedLine(pgGraphicsDevice* device, GLboolean enabled);
+pgVoid pgEnableStencilTest(pgGraphicsDevice* device, GLboolean enabled);
+pgVoid pgEnableDepthWrites(pgGraphicsDevice* device, GLboolean enabled);
+pgVoid pgSetCullFace(pgGraphicsDevice* device, GLenum cullFace);
+pgVoid pgSetFrontFace(pgGraphicsDevice* device, GLenum frontFace);
+pgVoid pgSetPolygonMode(pgGraphicsDevice* device, GLenum mode);
+pgVoid pgSetPolygonOffset(pgGraphicsDevice* device, pgFloat32 slopeScaledDepthBias, pgFloat32 depthBiasClamp);
+pgVoid pgSetDepthFunc(pgGraphicsDevice* device, GLenum func);
+pgVoid pgSetClearColor(pgGraphicsDevice* device, pgColor color);
+pgVoid pgSetClearDepth(pgGraphicsDevice* device, pgFloat32 depth);
+pgVoid pgSetClearStencil(pgGraphicsDevice* device, pgUint8 stencil);
+pgVoid pgSetBlendEquation(pgGraphicsDevice* device, GLenum blendOperation, GLenum blendOperationAlpha);
+pgVoid pgSetBlendFuncs(pgGraphicsDevice* device, GLenum sourceBlend, GLenum destinationBlend, GLenum sourceBlendAlpha, GLenum destinationBlendAlpha);
+pgVoid pgSetColorMask(pgGraphicsDevice* device, GLboolean mask[4]);
 
 #endif

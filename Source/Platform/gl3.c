@@ -438,4 +438,205 @@ GLvoid pgConvertTextureType(pgTextureType textureType, GLenum* type, GLenum* bou
 	}
 }
 
+//====================================================================================================================
+// State change functions
+//====================================================================================================================
+
+static pgVoid pgEnable(GLenum capability, GLboolean* current, GLboolean enabled)
+{
+	if (*current == enabled)
+		return;
+
+	*current = enabled;
+
+	if (enabled)
+		glEnable(capability);
+	else
+		glDisable(capability);
+
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgChangeActiveTexture(pgGraphicsDevice* device, pgInt32 slot)
+{
+	if (device->activeTexture == GL_TEXTURE0 + slot)
+		return;
+	
+	device->activeTexture = GL_TEXTURE0 + slot;
+	glActiveTexture(GL_TEXTURE0 + slot);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgEnableScissor(pgGraphicsDevice* device, GLboolean enabled)
+{
+	pgEnable(GL_SCISSOR_TEST, &device->scissorEnabled, enabled);
+}
+
+pgVoid pgEnableBlend(pgGraphicsDevice* device, GLboolean enabled)
+{
+	pgEnable(GL_BLEND, &device->blendEnabled, enabled);
+}
+
+pgVoid pgEnableDepthTest(pgGraphicsDevice* device, GLboolean enabled)
+{
+	pgEnable(GL_DEPTH_TEST, &device->depthTestEnabled, enabled);
+}
+
+pgVoid pgEnableCullFace(pgGraphicsDevice* device, GLboolean enabled)
+{
+	pgEnable(GL_CULL_FACE, &device->cullFaceEnabled, enabled);
+}
+
+pgVoid pgEnableDepthClamp(pgGraphicsDevice* device, GLboolean enabled)
+{
+	pgEnable(GL_DEPTH_CLAMP, &device->depthClampEnabled, enabled);
+}
+
+pgVoid pgEnableMultisample(pgGraphicsDevice* device, GLboolean enabled)
+{
+	pgEnable(GL_MULTISAMPLE, &device->multisampleEnabled, enabled);
+}
+
+pgVoid pgEnableAntialiasedLine(pgGraphicsDevice* device, GLboolean enabled)
+{
+	pgEnable(GL_LINE_SMOOTH, &device->antialiasedLineEnabled, enabled);
+}
+
+pgVoid pgEnableStencilTest(pgGraphicsDevice* device, GLboolean enabled)
+{
+	pgEnable(GL_STENCIL_TEST, &device->stencilTestEnabled, enabled);
+}
+
+pgVoid pgEnableDepthWrites(pgGraphicsDevice* device, GLboolean enabled)
+{
+	if (device->depthWritesEnabled == enabled)
+		return;
+
+	device->depthWritesEnabled = enabled;
+	glDepthMask(enabled);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetCullFace(pgGraphicsDevice* device, GLenum cullFace)
+{
+	if (device->cullFace == cullFace)
+		return;
+
+	device->cullFace = cullFace;
+	glCullFace(cullFace);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetFrontFace(pgGraphicsDevice* device, GLenum frontFace)
+{
+	if (device->frontFace == frontFace)
+		return;
+
+	device->frontFace = frontFace;
+	glFrontFace(frontFace);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetPolygonMode(pgGraphicsDevice* device, GLenum mode)
+{
+	if (device->polygonMode == mode)
+		return;
+
+	device->polygonMode = mode;
+	glPolygonMode(GL_FRONT_AND_BACK, mode);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetPolygonOffset(pgGraphicsDevice* device, pgFloat32 slopeScaledDepthBias, pgFloat32 depthBiasClamp)
+{
+	if (device->slopeScaledDepthBias == slopeScaledDepthBias && device->depthBiasClamp == depthBiasClamp)
+		return;
+
+	device->slopeScaledDepthBias = slopeScaledDepthBias;
+	device->depthBiasClamp = depthBiasClamp;
+	glPolygonOffset(slopeScaledDepthBias, depthBiasClamp);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetDepthFunc(pgGraphicsDevice* device, GLenum func)
+{
+	if (device->depthFunc == func)
+		return;
+
+	device->depthFunc = func;
+	glDepthFunc(func);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetClearColor(pgGraphicsDevice* device, pgColor color)
+{
+	if (device->clearColor.red == color.red && device->clearColor.green == color.green && 
+		device->clearColor.blue == color.blue && device->clearColor.alpha == color.alpha)
+		return;
+
+	device->clearColor = color;
+	glClearColor(color.red, color.green, color.blue, color.alpha);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetClearDepth(pgGraphicsDevice* device, pgFloat32 depth)
+{
+	if (device->depthClear == depth)
+		return;
+
+	device->depthClear = depth;
+	glClearDepth(depth);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetClearStencil(pgGraphicsDevice* device, pgUint8 stencil)
+{
+	if (device->stencilClear == stencil)
+		return;
+
+	device->stencilClear = stencil;
+	glClearStencil(stencil);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetBlendEquation(pgGraphicsDevice* device, GLenum blendOperation, GLenum blendOperationAlpha)
+{
+	if (device->blendOperation == blendOperation && device->blendOperationAlpha == blendOperationAlpha)
+		return;
+
+	device->blendOperation = blendOperation;
+	device->blendOperationAlpha = blendOperationAlpha;
+	glBlendEquationSeparate(blendOperation, blendOperationAlpha);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetBlendFuncs(pgGraphicsDevice* device, GLenum sourceBlend, GLenum destinationBlend, GLenum sourceBlendAlpha, GLenum destinationBlendAlpha)
+{
+	if (device->sourceBlend == sourceBlend && device->destinationBlend == destinationBlend && 
+		device->sourceBlendAlpha == sourceBlendAlpha && device->destinationBlendAlpha == destinationBlendAlpha)
+		return;
+
+	device->sourceBlend = sourceBlend;
+	device->destinationBlend = destinationBlend;
+	device->sourceBlendAlpha = sourceBlendAlpha;
+	device->destinationBlendAlpha = destinationBlendAlpha;
+
+	glBlendFuncSeparate(sourceBlend, destinationBlend, sourceBlendAlpha, destinationBlendAlpha);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgSetColorMask(pgGraphicsDevice* device, GLboolean mask[4])
+{
+	if (device->colorMask[0] == mask[0] && device->colorMask[1] == mask[1] && device->colorMask[2] == mask[2] && device->colorMask[3] == mask[3])
+		return;
+
+	device->colorMask[0] = mask[0];
+	device->colorMask[1] = mask[1];
+	device->colorMask[2] = mask[2];
+	device->colorMask[3] = mask[3];
+
+	glColorMask(mask[0], mask[1], mask[2], mask[3]);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
 #endif

@@ -15,14 +15,6 @@ static pgVoid SetupStencilState(pgDepthStencilDesc* desc, GLenum face, pgStencil
 		pgConvertStencilOperation(stencilDesc->pass));
 }
 
-static pgVoid Toggle(GLenum capability, pgBool enable)
-{
-	if (enable)
-		glEnable(capability);
-	else
-		glDisable(capability);
-}
-
 //====================================================================================================================
 // Blend state core functions
 //====================================================================================================================
@@ -44,23 +36,21 @@ pgVoid pgBindBlendStateCore(pgBlendState* blendState)
 	
 	if (desc->blendEnabled)
 	{
-		GLboolean writeA, writeR, writeG, writeB;
+		GLboolean colorMask[4];
 
-		glEnable(GL_BLEND);
-		glBlendEquationSeparate(pgConvertBlendOperation(desc->blendOperation), pgConvertBlendOperation(desc->blendOperationAlpha));
-		glBlendFuncSeparate(pgConvertBlendOption(desc->sourceBlend), pgConvertBlendOption(desc->destinationBlend),
+		pgEnableBlend(blendState->device, GL_TRUE);
+		pgSetBlendEquation(blendState->device, pgConvertBlendOperation(desc->blendOperation), pgConvertBlendOperation(desc->blendOperationAlpha));
+		pgSetBlendFuncs(blendState->device, pgConvertBlendOption(desc->sourceBlend), pgConvertBlendOption(desc->destinationBlend),
 			pgConvertBlendOption(desc->sourceBlendAlpha), pgConvertBlendOption(desc->destinationBlendAlpha));
 
-		writeA = (desc->writeMask & PG_COLOR_WRITE_ENABLE_ALPHA) == PG_COLOR_WRITE_ENABLE_ALPHA;
-		writeR = (desc->writeMask & PG_COLOR_WRITE_ENABLE_RED) == PG_COLOR_WRITE_ENABLE_RED;
-		writeG = (desc->writeMask & PG_COLOR_WRITE_ENABLE_GREEN) == PG_COLOR_WRITE_ENABLE_GREEN;
-		writeB = (desc->writeMask & PG_COLOR_WRITE_ENABLE_BLUE) == PG_COLOR_WRITE_ENABLE_BLUE;
-		glColorMask(writeR, writeG, writeB, writeA);
+		colorMask[0] = (desc->writeMask & PG_COLOR_WRITE_ENABLE_ALPHA) == PG_COLOR_WRITE_ENABLE_ALPHA;
+		colorMask[1] = (desc->writeMask & PG_COLOR_WRITE_ENABLE_RED) == PG_COLOR_WRITE_ENABLE_RED;
+		colorMask[2] = (desc->writeMask & PG_COLOR_WRITE_ENABLE_GREEN) == PG_COLOR_WRITE_ENABLE_GREEN;
+		colorMask[3] = (desc->writeMask & PG_COLOR_WRITE_ENABLE_BLUE) == PG_COLOR_WRITE_ENABLE_BLUE;
+		pgSetColorMask(blendState->device, colorMask);
 	}
 	else
-		glDisable(GL_BLEND);
-
-	PG_ASSERT_NO_GL_ERRORS();
+		pgEnableBlend(blendState->device, GL_FALSE);
 }
 
 //====================================================================================================================
@@ -83,33 +73,29 @@ pgVoid pgBindRasterizerStateCore(pgRasterizerState* rasterizerState)
 	// TODO: What about depth bias?
 	pgRasterizerDesc* desc = &rasterizerState->description;
 
-	glPolygonMode(GL_FRONT_AND_BACK, pgConvertFillMode(desc->fillMode));
-	glPolygonOffset(desc->slopeScaledDepthBias, desc->depthBiasClamp);
-	glFrontFace(desc->frontIsCounterClockwise ? GL_CCW : GL_CW);
-	PG_ASSERT_NO_GL_ERRORS();
+	pgSetPolygonMode(rasterizerState->device, pgConvertFillMode(desc->fillMode));
+	pgSetPolygonOffset(rasterizerState->device, desc->slopeScaledDepthBias, desc->depthBiasClamp);
+	pgSetFrontFace(rasterizerState->device, desc->frontIsCounterClockwise ? GL_CCW : GL_CW);
 
 	switch (desc->cullMode)
 	{
 	case PG_CULL_FRONT:
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_FRONT);
+		pgEnableCullFace(rasterizerState->device, GL_TRUE);
+		pgSetCullFace(rasterizerState->device, GL_FRONT);
 		break;
 	case PG_CULL_BACK:
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		pgEnableCullFace(rasterizerState->device, GL_TRUE);
+		pgSetCullFace(rasterizerState->device, GL_BACK);
 		break;
 	default:
-		glDisable(GL_CULL_FACE);
+		pgEnableCullFace(rasterizerState->device, GL_FALSE);
 		break;
 	}
-	PG_ASSERT_NO_GL_ERRORS();
 
-	Toggle(GL_SCISSOR_TEST, desc->scissorEnabled);
-	Toggle(GL_DEPTH_CLAMP, desc->depthClipEnabled);
-	Toggle(GL_MULTISAMPLE, desc->multisampleEnabled);
-	Toggle(GL_LINE_SMOOTH, desc->antialiasedLineEnabled);
-
-	PG_ASSERT_NO_GL_ERRORS();
+	pgEnableScissor(rasterizerState->device, (GLboolean)desc->scissorEnabled);
+	pgEnableDepthClamp(rasterizerState->device, (GLboolean)desc->depthClipEnabled);
+	pgEnableMultisample(rasterizerState->device, (GLboolean)desc->multisampleEnabled);
+	pgEnableAntialiasedLine(rasterizerState->device, (GLboolean)desc->antialiasedLineEnabled);
 }
 
 //====================================================================================================================
@@ -133,24 +119,23 @@ pgVoid pgBindDepthStencilStateCore(pgDepthStencilState* depthStencilState)
 
 	if (desc->depthEnabled)
 	{
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(pgConvertComparison(desc->depthFunction));
+		pgEnableDepthTest(depthStencilState->device, GL_TRUE);
+		pgSetDepthFunc(depthStencilState->device, pgConvertComparison(desc->depthFunction));
 	}
 	else
-		glDisable(GL_DEPTH_TEST);
+		pgEnableDepthTest(depthStencilState->device, GL_FALSE);
 
 	if (desc->stencilEnabled)
 	{
-		glEnable(GL_STENCIL_TEST);
+		pgEnableStencilTest(depthStencilState->device, GL_TRUE);
 
 		SetupStencilState(desc, GL_FRONT, &desc->frontFace);
 		SetupStencilState(desc, GL_BACK, &desc->backFace);
 	}
 	else
-		glDisable(GL_STENCIL_TEST);
+		pgEnableStencilTest(depthStencilState->device, GL_FALSE);
 
-	glDepthMask((GLboolean)desc->depthWriteEnabled);
-	PG_ASSERT_NO_GL_ERRORS();
+	pgEnableDepthWrites(depthStencilState->device, (GLboolean)desc->depthWriteEnabled);
 }
 
 //====================================================================================================================

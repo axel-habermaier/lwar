@@ -6,7 +6,7 @@
 // Helper functions
 //====================================================================================================================
 
-static pgVoid pgValidateFramebufferCompleteness();
+static pgVoid pgValidateFramebufferCompleteness(pgRenderTarget* renderTarget);
 
 //====================================================================================================================
 // Core functions
@@ -15,7 +15,15 @@ static pgVoid pgValidateFramebufferCompleteness();
 pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget)
 {
 	pgInt32 i;
+	static GLenum buffers[] = 
+	{
+		GL_COLOR_ATTACHMENT0,
+		GL_COLOR_ATTACHMENT1,
+		GL_COLOR_ATTACHMENT2,
+		GL_COLOR_ATTACHMENT3,
+	};
 	
+	PG_ASSERT(PG_MAX_COLOR_ATTACHMENTS == sizeof(buffers) / sizeof(GLenum), "Attachment count mismatch.");
 	PG_GL_ALLOC("Framebuffer", glGenFramebuffers, renderTarget->id);
 
 	if (renderTarget->depthStencil != NULL)
@@ -30,7 +38,10 @@ pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget)
 			renderTarget->colorBuffers[i]->id, 0);
 	}
 
-	pgValidateFramebufferCompleteness();
+	pgValidateFramebufferCompleteness(renderTarget);
+	PG_ASSERT_NO_GL_ERRORS();
+
+	glFramebufferDrawBuffersEXT(renderTarget->id, renderTarget->count, buffers);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
@@ -41,29 +52,27 @@ pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)
 
 pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 {
-	pgBindRenderTarget(renderTarget);
-	if (renderTarget->device->scissorEnabled)
-		glDisable(GL_SCISSOR_TEST);
+	GLboolean scissorEnabled = renderTarget->device->scissorEnabled;
 
-    glClearColor(color.red, color.green, color.blue, color.alpha);
+	pgBindRenderTarget(renderTarget);
+	pgEnableScissor(renderTarget->device, PG_FALSE);
+
+    pgSetClearColor(renderTarget->device, color);
     glClear(GL_COLOR_BUFFER_BIT);
 
-	if (renderTarget->device->scissorEnabled)
-		glEnable(GL_SCISSOR_TEST);
-
+	pgEnableScissor(renderTarget->device, scissorEnabled);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
 pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
 {
 	pgInt32 glTargets = 0;
+	GLboolean scissorEnabled = renderTarget->device->scissorEnabled;
+	GLboolean depthWritesEnabled = renderTarget->device->depthWritesEnabled;
 
 	pgBindRenderTarget(renderTarget);
-	if (renderTarget->device->scissorEnabled)
-		glDisable(GL_SCISSOR_TEST);
-
-	if (!renderTarget->device->depthWritesEnabled)
-		glDepthMask(GL_TRUE);
+	pgEnableScissor(renderTarget->device, PG_FALSE);
+	pgEnableDepthWrites(renderTarget->device, PG_TRUE);
 
 	PG_ASSERT(renderTarget->swapChain != NULL || renderTarget->depthStencil != NULL, 
 		"Cannot clear depth stencil of a render target without a depth stencil buffer.");
@@ -73,15 +82,12 @@ pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, 
     if (clearStencil)
         glTargets |= GL_STENCIL_BUFFER_BIT;
 
-    glClearDepth(depth);
-    glClearStencil(stencil);
+    pgSetClearDepth(renderTarget->device, depth);
+    pgSetClearStencil(renderTarget->device, stencil);
     glClear(glTargets);
 
-	if (renderTarget->device->scissorEnabled)
-		glEnable(GL_SCISSOR_TEST);
-
-	if (!renderTarget->device->depthWritesEnabled)
-		glDepthMask(GL_FALSE);
+	pgEnableScissor(renderTarget->device, scissorEnabled);
+	pgEnableDepthWrites(renderTarget->device, depthWritesEnabled);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -96,23 +102,9 @@ pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 	{
 		pgMakeCurrent(&renderTarget->swapChain->context);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		glDrawBuffer(GL_BACK);
 	}
 	else
-	{
-		static GLenum buffers[] = 
-		{
-			GL_COLOR_ATTACHMENT0,
-			GL_COLOR_ATTACHMENT1,
-			GL_COLOR_ATTACHMENT2,
-			GL_COLOR_ATTACHMENT3,
-		};
-
-		PG_ASSERT(PG_MAX_COLOR_ATTACHMENTS == sizeof(buffers) / sizeof(GLenum), "Attachment count mismatch.");
-
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
-		glDrawBuffers(renderTarget->count, buffers);
-	}
 
 	PG_ASSERT_NO_GL_ERRORS();
 
@@ -129,9 +121,9 @@ pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 // Helper functions
 //====================================================================================================================
 
-static pgVoid pgValidateFramebufferCompleteness()
+static pgVoid pgValidateFramebufferCompleteness(pgRenderTarget* renderTarget)
 {
-	GLenum status = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+	GLenum status = glCheckNamedFramebufferStatusEXT(renderTarget->id, GL_DRAW_FRAMEBUFFER);
 	PG_ASSERT_NO_GL_ERRORS();
 
 	switch (status)
