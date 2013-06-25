@@ -29,6 +29,7 @@ Pegasus.Framework
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
 - Key down/up in the same frame, multiple key down/ups in same frame
 - Persist key bindings
+- Use triple buffering for dynamic vertex buffers (sprite batch) 
 
 Pegasus.Platform
 ========
@@ -38,6 +39,8 @@ Pegasus.Platform
 - Linux: Input bug (for instance, crash when entering text into the console; dead key problem -> use previously used deprecated function?)
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Bug: Window is not opened in maximized mode when native debugging is not enabled??
+- Add sync/fence objects
+- Allow binding of multiple constant buffers at once?
 
 Assets Compiler
 ========
@@ -46,6 +49,9 @@ Assets Compiler
 - Asset compression
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)
+- Fix constant buffer packing
+- Technique should check whether shader signatures match
+- Add Misc() semantics
 
 Network
 ========
