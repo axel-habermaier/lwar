@@ -139,14 +139,9 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			for (var i = 0; i < BufferSize; ++i)
-				_beginQueries[i].SafeDispose();
-
-			for (var i = 0; i < BufferSize; ++i)
-				_endQueries[i].SafeDispose();
-
-			for (var i = 0; i < BufferSize; ++i)
-				_disjointQueries[i].SafeDispose();
+			_beginQueries.SafeDisposeAll();
+			_endQueries.SafeDisposeAll();
+			_disjointQueries.SafeDisposeAll();
 		}
 	}
 }

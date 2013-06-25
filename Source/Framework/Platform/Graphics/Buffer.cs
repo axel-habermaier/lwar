@@ -23,8 +23,8 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="type">The type of the buffer.</param>
 		/// <param name="usage">A value describing the usage pattern of the buffer.</param>
-		/// <param name="data">The data that should be copied into the constant buffer.</param>
-		/// <param name="size">The size of the constant buffer.</param>
+		/// <param name="data">The data that should be copied into the buffer.</param>
+		/// <param name="size">The size of the buffer in bytes.</param>
 		protected Buffer(GraphicsDevice graphicsDevice, BufferType type, ResourceUsage usage, IntPtr data, int size)
 			: base(graphicsDevice)
 		{
