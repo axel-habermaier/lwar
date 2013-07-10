@@ -4,6 +4,7 @@ namespace Lwar.Client.Gameplay
 {
 	using System.Collections;
 	using System.Collections.Generic;
+	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Memory;
 
@@ -129,6 +130,21 @@ namespace Lwar.Client.Gameplay
 			Assert.NotNull(player, "Cannot change the name of an unknown player.");
 
 			player.Name = name;
+		}
+
+		/// <summary>
+		/// Updates the statistics of the corresponding player.
+		/// </summary>
+		/// <param name="stats">The updated statistics that should be copied to the player instance.</param>
+		public void UpdateStats(StatsMessage stats)
+		{
+			var player = this[stats.Player];
+			if (player == null)
+				return;
+
+			player.Kills = stats.Kills;
+			player.Deaths = stats.Deaths;
+			player.Ping = stats.Ping;
 		}
 	}
 }

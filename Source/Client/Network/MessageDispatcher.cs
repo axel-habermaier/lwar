@@ -92,6 +92,7 @@ namespace Lwar.Client.Network
 					_gameSession.EventMessages.AddKillMessage(message.Kill.Killer, message.Kill.Victim);
 					break;
 				case MessageType.Stats:
+					_gameSession.Players.UpdateStats(message.Stats);
 					break;
 				case MessageType.Update:
 				case MessageType.UpdatePosition:
