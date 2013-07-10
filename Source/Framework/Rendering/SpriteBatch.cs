@@ -146,6 +146,10 @@ namespace Pegasus.Framework.Rendering
 				CullMode = CullMode.None,
 				ScissorEnabled = true
 			};
+
+			_vertexBuffer.SetName("SpriteBatch.VertexBuffer");
+			_indexBuffer.SetName("SpriteBatch.IndexBuffer");
+			_vertexLayout.SetName("SpriteBatch.VertexLayout");
 			_scissorRasterizerState.SetName("SpriteBatch.Scissor");
 		}
 

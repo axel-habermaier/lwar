@@ -29,8 +29,6 @@ Pegasus.Framework
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
 - Key down/up in the same frame, multiple key down/ups in same frame
 - Persist key bindings
-- Use triple buffering for dynamic vertex buffers (sprite batch) 
-- Sprite batch should not force-draw when changing the world matrix, blend state, etc.; instead, a new section should be started
 
 Pegasus.Platform
 ========
@@ -41,7 +39,6 @@ Pegasus.Platform
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Bug: Window is not opened in maximized mode when native debugging is not enabled??
 - Add sync/fence objects
-- Allow binding of multiple constant buffers at once?
 
 Assets Compiler
 ========

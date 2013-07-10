@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Rendering
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using Platform.Graphics;
 	using Platform.Memory;
@@ -48,6 +49,16 @@ namespace Pegasus.Framework.Rendering
 		public int VertexOffset
 		{
 			get { return _currentChunk * _elementCount; }
+		}
+
+		/// <summary>
+		///   Sets the debug name of the dynamic vertex buffer.
+		/// </summary>
+		/// <param name="name">The debug name of the vertex buffer.</param>
+		[Conditional("DEBUG")]
+		public void SetName(string name)
+		{
+			Buffer.SetName(name);
 		}
 
 		/// <summary>
