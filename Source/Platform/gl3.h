@@ -143,7 +143,6 @@ pgVoid pgSwapBuffers(pgContext* context);
 #define PG_BUFFER_PLATFORM	\
 	GLuint	id;				\
 	GLenum	type;			\
-	GLsizei size;			\
 
 #define PG_INPUT_LAYOUT_PLATFORM \
 	GLuint			id;					\

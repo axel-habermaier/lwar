@@ -6,7 +6,7 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage usage, pgVoid* data, pgInt32 size)
+pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage usage, pgVoid* data)
 {
 	D3D11_BUFFER_DESC desc;
 	D3D11_SUBRESOURCE_DATA dataResource;
@@ -16,7 +16,7 @@ pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage u
 
 	desc.BindFlags = pgConvertBufferType(type);
 	desc.CPUAccessFlags = usage == PG_USAGE_DYNAMIC ? D3D11_CPU_ACCESS_WRITE : 0;
-	desc.ByteWidth = size;
+	desc.ByteWidth = buffer->size;
 	desc.MiscFlags = 0;
 	desc.StructureByteStride = 0;
 	desc.Usage = pgConvertResourceUsage(usage);
@@ -36,6 +36,15 @@ pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode)
 	PG_D3DCALL(ID3D11DeviceContext_Map(PG_CONTEXT(buffer), (ID3D11Resource*)buffer->ptr, 0, pgConvertMapMode(mode), 0, &subResource), 
 		"Failed to map buffer.");
 	return subResource.pData;
+}
+
+pgVoid* pgMapBufferRangeCore(pgBuffer* buffer, pgMapMode mode, pgInt32 offset, pgInt32 byteCount)
+{
+	pgVoid* ptr;
+	PG_UNUSED(byteCount);
+
+	ptr = pgMapBufferCore(buffer, mode);
+	return ((pgByte*)ptr) + offset;
 }
 
 pgVoid pgUnmapBufferCore(pgBuffer* buffer)

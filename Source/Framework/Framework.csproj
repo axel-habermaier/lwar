@@ -229,6 +229,7 @@
     <Compile Include="Processes\Process`1.cs" />
     <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Processes\TaskOperation`1.cs" />
+    <Compile Include="Rendering\DynamicVertexBuffer.cs" />
     <Compile Include="Rendering\UserInterface\Text.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Math\Vector3.cs" />

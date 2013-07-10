@@ -47,7 +47,7 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The vertex buffer that is used for drawing.
 		/// </summary>
-		private readonly VertexBuffer _vertexBuffer;
+		private readonly DynamicVertexBuffer _vertexBuffer;
 
 		/// <summary>
 		///   The vertex input layout used by the sprite batch.
@@ -137,9 +137,9 @@ namespace Pegasus.Framework.Rendering
 			}
 
 			// Initialize the graphics objects
-			_vertexBuffer = VertexBuffer.Create<Quad>(graphicsDevice, MaxQuads, ResourceUsage.Dynamic);
+			_vertexBuffer = DynamicVertexBuffer.Create<VertexPositionColorTexture>(graphicsDevice, MaxQuads * 4, chunkCount: 3);
 			_indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
-			_vertexLayout = VertexPositionColorTexture.GetInputLayout(graphicsDevice, _vertexBuffer, _indexBuffer);
+			_vertexLayout = VertexPositionColorTexture.GetInputLayout(graphicsDevice, _vertexBuffer.Buffer, _indexBuffer);
 
 			_scissorRasterizerState = new RasterizerState(graphicsDevice)
 			{
@@ -469,7 +469,7 @@ namespace Pegasus.Framework.Rendering
 
 				// Draw and increase the offset
 				var numIndices = _sectionLists[i].NumQuads * 6;
-				output.DrawIndexed(_effect.Technique, numIndices, offset);
+				output.DrawIndexed(_effect.Technique, numIndices, offset, _vertexBuffer.VertexOffset);
 				offset += numIndices;
 			}
 
@@ -506,7 +506,7 @@ namespace Pegasus.Framework.Rendering
 		/// </summary>
 		private unsafe void UpdateVertexBuffer()
 		{
-			var vertexData = _vertexBuffer.Map(MapMode.WriteDiscard);
+			var vertexData = _vertexBuffer.Map();
 			var offset = 0;
 
 			fixed (Quad* quadsPtr = &_quads[0])

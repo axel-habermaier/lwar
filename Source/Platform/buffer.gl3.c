@@ -6,13 +6,12 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage usage, pgVoid* data, pgInt32 size)
+pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage usage, pgVoid* data)
 {
 	PG_GL_ALLOC("Buffer", glGenBuffers, buffer->id);
 	buffer->type = pgConvertBufferType(type);
-	buffer->size = size;
 
-	glNamedBufferDataEXT(buffer->id, size, data, pgConvertResourceUsage(usage));
+	glNamedBufferDataEXT(buffer->id, buffer->size, data, pgConvertResourceUsage(usage));
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
@@ -23,9 +22,14 @@ pgVoid pgDestroyBufferCore(pgBuffer* buffer)
 
 pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode)
 {
+	return pgMapBufferRange(buffer, mode, 0, buffer->size);
+}
+
+pgVoid* pgMapBufferRangeCore(pgBuffer* buffer, pgMapMode mode, pgInt32 offset, pgInt32 byteCount)
+{
 	pgVoid* mappedBuffer;
 
-	mappedBuffer = glMapNamedBufferRangeEXT(buffer->id, 0, buffer->size, pgConvertMapMode(mode));
+	mappedBuffer = glMapNamedBufferRangeEXT(buffer->id, (GLintptr)offset, (GLsizeiptr)byteCount, pgConvertMapMode(mode));
 	PG_ASSERT_NO_GL_ERRORS();
 
 	if (mappedBuffer == NULL)

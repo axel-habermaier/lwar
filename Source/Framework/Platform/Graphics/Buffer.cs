@@ -45,11 +45,23 @@ namespace Pegasus.Framework.Platform.Graphics
 		///   returned pointer depend on the given map mode.
 		/// </summary>
 		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
-		/// <returns>Returns a pointer to the buffer memory.</returns>
 		public IntPtr Map(MapMode mapMode)
 		{
 			Assert.NotDisposed(this);
 			return NativeMethods.MapBuffer(_buffer, mapMode);
+		}
+
+		/// <summary>
+		///   Maps the buffer and returns a pointer that the CPU can access. The operations that are allowed on the
+		///   returned pointer depend on the given map mode.
+		/// </summary>
+		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
+		/// <param name="offset">A zero-based index denoting the first byte of the buffer that should be mapped.</param>
+		/// <param name="byteCount">The number of bytes that should be mapped.</param>
+		public IntPtr MapRange(MapMode mapMode, int offset, int byteCount)
+		{
+			Assert.NotDisposed(this);
+			return NativeMethods.MapBufferRange(_buffer, mapMode, offset, byteCount);
 		}
 
 		/// <summary>
@@ -121,6 +133,9 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgMapBuffer")]
 			public static extern IntPtr MapBuffer(IntPtr buffer, MapMode mode);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgMapBufferRange")]
+			public static extern IntPtr MapBufferRange(IntPtr buffer, MapMode mode, int offset, int byteCount);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgUnmapBuffer")]
 			public static extern void UnmapBuffer(IntPtr buffer);

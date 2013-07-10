@@ -401,6 +401,7 @@ PG_API_EXPORT pgBuffer* pgCreateBuffer(pgGraphicsDevice* device, pgBufferType ty
 PG_API_EXPORT pgVoid pgDestroyBuffer(pgBuffer* buffer);
 
 PG_API_EXPORT pgVoid* pgMapBuffer(pgBuffer* buffer, pgMapMode mode);
+PG_API_EXPORT pgVoid* pgMapBufferRange(pgBuffer* buffer, pgMapMode mode, pgInt32 offset, pgInt32 byteCount);
 PG_API_EXPORT pgVoid pgUnmapBuffer(pgBuffer* buffer);
 PG_API_EXPORT pgVoid pgBindConstantBuffer(pgBuffer* buffer, pgInt32 slot);
 

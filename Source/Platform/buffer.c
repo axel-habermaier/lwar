@@ -13,7 +13,8 @@ pgBuffer* pgCreateBuffer(pgGraphicsDevice* device, pgBufferType type, pgResource
 
 	PG_ALLOC(pgBuffer, buffer);
 	buffer->device = device;
-	pgCreateBufferCore(buffer, type, usage, data, size);
+	buffer->size = size;
+	pgCreateBufferCore(buffer, type, usage, data);
 
 	return buffer;
 }
@@ -29,13 +30,21 @@ pgVoid pgDestroyBuffer(pgBuffer* buffer)
 
 pgVoid* pgMapBuffer(pgBuffer* buffer, pgMapMode mode)
 {
-	//pgFloat64 start = pgGetTime();
 	pgVoid* v;
 	PG_ASSERT_NOT_NULL(buffer);
 	v = pgMapBufferCore(buffer, mode);
 
-	//PG_INFO("%f", (pgGetTime() - start) * 1000.0);
 	return v;
+}
+
+pgVoid* pgMapBufferRange(pgBuffer* buffer, pgMapMode mode, pgInt32 offset, pgInt32 byteCount)
+{
+	PG_ASSERT_NOT_NULL(buffer);
+	PG_ASSERT_IN_RANGE(offset, 0, buffer->size);
+	PG_ASSERT_IN_RANGE(byteCount, 1, buffer->size);
+	PG_ASSERT(offset + byteCount <= buffer->size, "Buffer overflow");
+
+	return pgMapBufferRangeCore(buffer, mode, offset, byteCount);
 }
 
 pgVoid pgUnmapBuffer(pgBuffer* buffer)
