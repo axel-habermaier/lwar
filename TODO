@@ -21,6 +21,8 @@ Client
 - Let camera follow ship (sort of: attach the camera to the ship with a spring)
 - Show server network statistics
 - Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
+- Implement stats message update
+- Implement relative mouse coordinates
 
 Pegasus.Framework
 ========
@@ -30,6 +32,7 @@ Pegasus.Framework
 - Key down/up in the same frame, multiple key down/ups in same frame
 - Persist key bindings
 - Use triple buffering for dynamic vertex buffers (sprite batch) 
+- Sprite batch should not force-draw when changing the world matrix, blend state, etc.; instead, a new section should be started
 
 Pegasus.Platform
 ========
@@ -74,6 +77,10 @@ Server
 - figure out how to communicate ammount of ammunition
 - Check assertion problem in player.c:85
 - Fix infinite ship duplication bug (might be a client issue?)
+
+
+Some notes...
+=================================================================
 
 // Handle double click timing
 	if (event.type == ButtonPress)
