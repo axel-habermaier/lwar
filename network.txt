@@ -267,8 +267,8 @@ Messages Payload Data
 		uint8		strafeRight	Boolean state value, also including the seven previous states
 		uint8[4]	shooting	Boolean state value, also including the seven previous states,
         						for four weapon slots
-        int16		aim x		World x position of the client's aim (= mouse)
-        int16		aim y		World y position of the client's aim (= mouse)
+        int16		target x	x position of the client's target, relative to the center of the client's ship
+        int16		target y	y position of the client's target, relative to the center of the client's ship
 
 	Collision
     	Collision messages are sent for each pair of entities that collide. The order of the entityIds has
@@ -337,6 +337,7 @@ Client-side prediction
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	----------------------------------------------------------------------
+	16    13-07-10  Axel		The client's target is now relative to the center of the client's ship
 	15	  13-06-14  Axel/Gidon	Angles are now scaled when sent over the network; entity with id 0 is 
 								now reserved for internal server use
 	14    13-06-04  Axel		Added player name to Join and Connect messages

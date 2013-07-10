@@ -21,7 +21,6 @@ Client
 - Let camera follow ship (sort of: attach the camera to the ship with a spring)
 - Show server network statistics
 - Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
-- Implement relative mouse coordinates
 
 Pegasus.Framework
 ========

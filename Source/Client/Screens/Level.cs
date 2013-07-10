@@ -215,7 +215,10 @@ namespace Lwar.Client.Screens
 
 			var message = _inputManager.CreateInputMessage();
 			message.Input.Player = _gameSession.Players.LocalPlayer.Id;
-			message.Input.Target = _cameraManager.GameCamera.ToWorldCoordinates(message.Input.Target);
+
+			var worldCoordinates = _cameraManager.GameCamera.ToWorldCoordinates(message.Input.Target);
+			if (_gameSession.Players.LocalPlayer.Ship != null)
+				message.Input.Target = worldCoordinates - _gameSession.Players.LocalPlayer.Ship.Position;
 
 			_networkSession.Send(message);
 			_sendInput = false;

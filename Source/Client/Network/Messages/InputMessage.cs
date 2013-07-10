@@ -63,7 +63,7 @@ namespace Lwar.Client.Network.Messages
 		public byte StrafeRight;
 
 		/// <summary>
-		///   The position of the client's target in world coodinates.
+		///   The position of the client's target relative to the client's ship.
 		/// </summary>
 		public Vector2 Target;
 
