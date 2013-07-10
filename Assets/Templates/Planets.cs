@@ -17,7 +17,7 @@ namespace Lwar.Assets.Templates
 			Mass = 10000,
 			Radius = 256,
 			CubeMap = "Textures/Earth",
-			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, (int)(t.Radius / 8)),
+			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, 16),
 			Format = "format_pos"
 		};
 
@@ -29,7 +29,7 @@ namespace Lwar.Assets.Templates
 			Mass = 10000,
 			Radius = 128,
 			CubeMap = "Textures/Mars",
-			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, (int)(t.Radius / 8)),
+			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, 16),
 			Format = "format_pos"
 		};
 
@@ -41,7 +41,7 @@ namespace Lwar.Assets.Templates
 			Mass = 10000,
 			Radius = 64,
 			CubeMap = "Textures/Moon",
-			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, (int)(t.Radius / 8)),
+			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, 16),
 			Format = "format_pos"
 		};
 
@@ -53,7 +53,7 @@ namespace Lwar.Assets.Templates
 			Mass = 10000,
 			Radius = 512,
 			CubeMap = "Textures/Jupiter",
-			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, (int)(t.Radius / 8)),
+			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, 16),
 			Format = "format_pos"
 		};
 	}

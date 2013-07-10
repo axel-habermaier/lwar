@@ -25,11 +25,6 @@ namespace Pegasus.Framework.Rendering
 		private readonly ISpriteEffect _effect;
 
 		/// <summary>
-		///   The graphics device that should be used to draw the sprites.
-		/// </summary>
-		private readonly GraphicsDevice _graphicsDevice;
-
-		/// <summary>
 		///   The index buffer that is used for drawing.
 		/// </summary>
 		private readonly IndexBuffer _indexBuffer;
@@ -67,12 +62,12 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   The index of the section that is currently in use.
 		/// </summary>
-		private int _currentSection;
+		private int _currentSection = -1;
 
 		/// <summary>
-		///   The texture of the last section that has been added to the list.
+		///   The index of the section list that is currently being used.
 		/// </summary>
-		private Texture2D _currentTexture;
+		private int _currentSectionList = -1;
 
 		/// <summary>
 		///   The depth stencil state that should be used for drawing.
@@ -95,19 +90,9 @@ namespace Pegasus.Framework.Rendering
 		private int _numSections;
 
 		/// <summary>
-		///   The output that should be used for drawing.
-		/// </summary>
-		private RenderOutput _output;
-
-		/// <summary>
 		///   The sampler state that should be used for drawing.
 		/// </summary>
 		private SamplerState _samplerState;
-
-		/// <summary>
-		///   The rectangle that should be used for the scissor test.
-		/// </summary>
-		private Rectangle _scissorArea;
 
 		/// <summary>
 		///   A mapping from a texture to its corresponding section list.
@@ -120,26 +105,16 @@ namespace Pegasus.Framework.Rendering
 		private Section[] _sections = new Section[16];
 
 		/// <summary>
-		///   Indicates whether a scissor test should be performed during rendering.
-		/// </summary>
-		private bool _useScissorTest;
-
-		/// <summary>
-		///   The current world matrix used by the sprite batch.
-		/// </summary>
-		private Matrix _worldMatrix = Matrix.Identity;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="effect">The effect that should be used to draw the sprites.</param>
 		public SpriteBatch(GraphicsDevice graphicsDevice, ISpriteEffect effect)
 		{
+			WorldMatrix = Matrix.Identity;
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(effect);
 
-			_graphicsDevice = graphicsDevice;
 			_effect = effect;
 
 			// Initialize the indices; this can be done once, so after the indices are copied to the index buffer,
@@ -175,27 +150,6 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
-		///   Gets or sets the output that should be used for drawing.
-		/// </summary>
-		public RenderOutput Output
-		{
-			get { return _output; }
-			set
-			{
-				Assert.ArgumentNotNull(value);
-				Assert.NotDisposed(this);
-
-				if (_output == value)
-					return;
-
-				if (_output != null)
-					DrawBatch();
-
-				_output = value;
-			}
-		}
-
-		/// <summary>
 		///   Gets or sets the sampler state that should be used for drawing.
 		/// </summary>
 		public SamplerState SamplerState
@@ -205,12 +159,6 @@ namespace Pegasus.Framework.Rendering
 			{
 				Assert.ArgumentNotNull(value);
 				Assert.NotDisposed(this);
-
-				if (_samplerState == value)
-					return;
-
-				if (_samplerState != null)
-					DrawBatch();
 
 				_samplerState = value;
 			}
@@ -227,12 +175,6 @@ namespace Pegasus.Framework.Rendering
 				Assert.ArgumentNotNull(value);
 				Assert.NotDisposed(this);
 
-				if (_depthStencilState == value)
-					return;
-
-				if (_depthStencilState != null)
-					DrawBatch();
-
 				_depthStencilState = value;
 			}
 		}
@@ -248,12 +190,6 @@ namespace Pegasus.Framework.Rendering
 				Assert.ArgumentNotNull(value);
 				Assert.NotDisposed(this);
 
-				if (_blendState == value)
-					return;
-
-				if (_blendState != null)
-					DrawBatch();
-
 				_blendState = value;
 			}
 		}
@@ -262,59 +198,19 @@ namespace Pegasus.Framework.Rendering
 		///   Gets or sets the scissor area that should be used for the scissor test. All batched sprites are drawn before the area
 		///   is changed.
 		/// </summary>
-		public Rectangle ScissorArea
-		{
-			get { return _scissorArea; }
-			set
-			{
-				Assert.NotDisposed(this);
-
-				if (_scissorArea == value)
-					return;
-
-				DrawBatch();
-				_scissorArea = value;
-			}
-		}
+		public Rectangle ScissorArea { get; set; }
 
 		/// <summary>
 		///   Gets or sets a value indicating whether a scissor test should be performed during rendering. All batched sprites are
 		///   drawn before the scissor test is enabled or disabled.
 		/// </summary>
-		public bool UseScissorTest
-		{
-			get { return _useScissorTest; }
-			set
-			{
-				Assert.NotDisposed(this);
-
-				if (_useScissorTest == value)
-					return;
-
-				DrawBatch();
-				_useScissorTest = value;
-			}
-		}
+		public bool UseScissorTest { get; set; }
 
 		/// <summary>
 		///   Gets or sets the world matrix used by the sprite batch. All batched sprites are drawn before the world matrix is
 		///   changed.
 		/// </summary>
-		public Matrix WorldMatrix
-		{
-			get
-			{
-				Assert.NotDisposed(this);
-				return _worldMatrix;
-			}
-			set
-			{
-				Assert.NotDisposed(this);
-
-				DrawBatch();
-				_worldMatrix = value;
-			}
-		}
+		public Matrix WorldMatrix { get; set; }
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
@@ -419,10 +315,10 @@ namespace Pegasus.Framework.Rendering
 			Assert.NotDisposed(this);
 			Assert.ArgumentNotNull(texture);
 
-			DrawBatchIfNecessary(1);
-			ChangeTexture(texture);
+			if (!CheckQuadCount(1))
+				return;
 
-			Assert.That(_numQuads < MaxQuads, "Sprite batch quads overflow.");
+			ChangeTexture(texture);
 
 			// Add the quad to the list
 			_quads[_numQuads++] = quad;
@@ -458,7 +354,6 @@ namespace Pegasus.Framework.Rendering
 			var cosine = (float)Math.Cos(theta);
 			var sine = (float)Math.Sin(theta);
 
-			float t;
 			var current = new Vector2(circle.Radius, 0);
 
 			for (var i = 0; i < precision; i++)
@@ -466,7 +361,7 @@ namespace Pegasus.Framework.Rendering
 				var start = current + circle.Position;
 
 				// Calculate the next point
-				t = current.X;
+				var t = current.X;
 				current.X = cosine * current.X - sine * current.Y;
 				current.Y = sine * t + cosine * current.Y;
 
@@ -520,13 +415,10 @@ namespace Pegasus.Framework.Rendering
 			Assert.ArgumentNotNull(texture);
 			Assert.ArgumentInRange(count, 0, quads.Length);
 
-			if (count == 0)
+			if (count == 0 || !CheckQuadCount(count))
 				return;
 
-			DrawBatchIfNecessary(count);
 			ChangeTexture(texture);
-
-			Assert.That(_numQuads + count < MaxQuads, "Sprite batch quads overflow.");
 
 			// Add the quads to the list and update the quad counts
 			Array.Copy(quads, 0, _quads, _numQuads, count);
@@ -537,9 +429,10 @@ namespace Pegasus.Framework.Rendering
 		/// <summary>
 		///   Draws all batched sprites.
 		/// </summary>
-		public void DrawBatch()
+		/// <param name="output">The output the sprite batch should draw to.</param>
+		public void DrawBatch(RenderOutput output)
 		{
-			Assert.That(Output != null, "No output has been set.");
+			Assert.ArgumentNotNull(output);
 			Assert.That(BlendState != null, "No blend state has been set.");
 			Assert.That(DepthStencilState != null, "No depth stencil state has been set.");
 			Assert.That(SamplerState != null, "No sampler state has been set.");
@@ -549,35 +442,34 @@ namespace Pegasus.Framework.Rendering
 			if (_numQuads == 0)
 				return;
 
-			// Prepare the graphics pipeline
-			_effect.World = _worldMatrix;
-			_blendState.Bind();
-			_depthStencilState.Bind();
-
-			_vertexLayout.Bind();
-			_graphicsDevice.PrimitiveType = PrimitiveType.Triangles;
-
-			if (!UseScissorTest)
-				RasterizerState.CullNone.Bind();
-			else
-			{
-				_scissorRasterizerState.Bind();
-				Output.ScissorArea = ScissorArea;
-			}
-
 			// Prepare the vertex buffer
 			UpdateVertexBuffer();
+			_vertexLayout.Bind();
 
 			// Finally, draw the quads
 			var offset = 0;
 			for (var i = 0; i < _numSectionLists; ++i)
 			{
-				// Bind the texture
-				_effect.Sprite = new Texture2DView(_sectionLists[i].Texture, _samplerState);
+				var sectionList = _sectionLists[i];
+
+				// Bind the texture and rendering state
+				_effect.Sprite = new Texture2DView(sectionList.Texture, sectionList.SamplerState);
+				_effect.World = sectionList.WorldMatrix;
+
+				sectionList.BlendState.Bind();
+				sectionList.DepthStencilState.Bind();
+
+				if (!sectionList.UseScissorTest)
+					RasterizerState.CullNone.Bind();
+				else
+				{
+					_scissorRasterizerState.Bind();
+					output.ScissorArea = sectionList.ScissorArea;
+				}
 
 				// Draw and increase the offset
 				var numIndices = _sectionLists[i].NumQuads * 6;
-				Output.DrawIndexed(_effect.Technique, numIndices, offset);
+				output.DrawIndexed(_effect.Technique, numIndices, offset);
 				offset += numIndices;
 			}
 
@@ -585,29 +477,28 @@ namespace Pegasus.Framework.Rendering
 			_numQuads = 0;
 			_numSections = 0;
 			_numSectionLists = 0;
-			_currentTexture = null;
+			_currentSectionList = -1;
 			_currentSection = -1;
 		}
 
 		/// <summary>
-		///   Draws the batched quads even though the user hasn't explicitly requested it if adding the given
-		///   quad batch with the given texture would overflow the internal quad buffer.
+		///   Check whether adding the given number of quads would overflow the internal quad buffer. Returns true
+		///   if the quads can be batched.
 		/// </summary>
-		/// <param name="quadCount">The additional quads that should be drawn.</param>
-		private void DrawBatchIfNecessary(int quadCount)
+		/// <param name="quadCount">The additional number of quads that should be drawn.</param>
+		private bool CheckQuadCount(int quadCount)
 		{
 			Assert.ArgumentInRange(quadCount, 0, MaxQuads);
 
 			// Check whether we would overflow if we added the given batch.
 			var tooManyQuads = _numQuads + quadCount >= _quads.Length;
-			if (!tooManyQuads)
-				return;
 
-			Log.DebugInfo(LogCategory.Graphics,
-						  "Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
-						  _numQuads, MaxQuads, quadCount);
+			if (tooManyQuads)
+				Log.Warn(LogCategory.Graphics,
+						 "Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
+						 _numQuads, MaxQuads, quadCount);
 
-			DrawBatch();
+			return !tooManyQuads;
 		}
 
 		/// <summary>
@@ -647,43 +538,64 @@ namespace Pegasus.Framework.Rendering
 		}
 
 		/// <summary>
-		///   Checks whether the current texture has to be changed, and if so, creates a new section and possibly section list.
+		///   Checks whether the current texture has to be changed, and if so, creates a new section and possibly a new section
+		///   list. Or, if any rendering settings have been changed, a new section and/or section list might be added as well.
 		/// </summary>
 		/// <param name="texture">The texture that should be used for newly added quads.</param>
 		private void ChangeTexture(Texture2D texture)
 		{
-			// If the texture hasn't changed, just continue to append to the current section
-			if (texture == _currentTexture)
+			// If nothing has changed, just continue to append to the current section
+			if (_currentSectionList != -1 && _currentSection != -1 && SectionListMatches(_currentSectionList, texture))
 				return;
 
 			// Add a new section
 			AddSection();
 
-			// Depending on whether we've already seen this texture, add it to the map or add a new section list
+			// Depending on whether we've already seen this texture and these rendering settings, add it to the corresponding 
+			// section list or add a new one
 			var known = false;
-			for (var i = 0; i < _numSectionLists; ++i) // Would a Dictionary be more efficient?
+			for (var i = 0; i < _numSectionLists; ++i)
 			{
-				if (_sectionLists[i].Texture != texture)
+				if (!SectionListMatches(i, texture))
 					continue;
 
-				// We've already seen this texture before, so add the new section to the list by setting the
+				// We've already seen this texture and these rendering settings before, so add the new section to the list by setting the
 				// list's tail section's next pointer to the newly allocated section
 				_sections[_sectionLists[i].Last].Next = _numSections;
 				// Set the section list's tail pointer to the newly allocated section
 				_sectionLists[i].Last = _numSections;
+
 				known = true;
+				_currentSectionList = i;
 				break;
 			}
 
 			if (!known)
-				AddSectionList(new SectionList(texture, _numSections));
+			{
+				_currentSectionList = _numSectionLists;
+				AddSectionList(new SectionList(BlendState, DepthStencilState, SamplerState, WorldMatrix, texture, ScissorArea, UseScissorTest,
+											   _numSections));
+			}
 
-			// Update the cached values
-			_currentTexture = texture;
 			_currentSection = _numSections;
 
 			// Mark the newly allocated section as allocated
 			++_numSections;
+		}
+
+		/// <summary>
+		///   Checks whether the section list with the specificed index matches the given texture and the current rendering
+		///   settings.
+		/// </summary>
+		/// <param name="sectionList">The index of the section list that should be checked.</param>
+		/// <param name="texture">The texture that should be used to draw the quads.</param>
+		private bool SectionListMatches(int sectionList, Texture2D texture)
+		{
+			var list = _sectionLists[sectionList];
+
+			return list.Texture == texture && list.BlendState == BlendState && list.DepthStencilState == DepthStencilState &&
+				   list.SamplerState == SamplerState && list.UseScissorTest == UseScissorTest && list.ScissorArea == ScissorArea &&
+				   list.WorldMatrix == WorldMatrix;
 		}
 
 		/// <summary>
@@ -720,17 +632,19 @@ namespace Pegasus.Framework.Rendering
 		#region Nested type: Section
 
 		/// <summary>
-		///   Represents a section of the quad list, with each quad using the same texture.
+		///   Represents a section of the quad list, with each quad using the same texture and rendering settings.
 		/// </summary>
 		private struct Section
 		{
 			/// <summary>
-			///   The offset into the quad list. All quads from [Offset, Offset + _numQuads) use the same texture.
+			///   The offset into the quad list. All quads from [Offset, Offset + _numQuads) use the same texture and rendering
+			///   settings.
 			/// </summary>
 			public readonly int Offset;
 
 			/// <summary>
-			///   The index of the next section of the quad list using the same texture or -1 if this is the last
+			///   The index of the next section of the quad list using the same texture and rendering settings or -1 if this is the
+			///   last
 			///   section.
 			/// </summary>
 			public int Next;
@@ -757,19 +671,49 @@ namespace Pegasus.Framework.Rendering
 		#region Nested type: SectionList
 
 		/// <summary>
-		///   Represents a list of sections using the same texture.
+		///   Represents a list of sections using the same texture and rendering settings.
 		/// </summary>
 		private struct SectionList
 		{
+			/// <summary>
+			///   The blend state used by the sections.
+			/// </summary>
+			public readonly BlendState BlendState;
+
+			/// <summary>
+			///   The depth stencil state used by the sections.
+			/// </summary>
+			public readonly DepthStencilState DepthStencilState;
+
 			/// <summary>
 			///   The index of the first section of the list or -1 if there is none.
 			/// </summary>
 			public readonly int First;
 
 			/// <summary>
+			///   The sampler state used by the sections.
+			/// </summary>
+			public readonly SamplerState SamplerState;
+
+			/// <summary>
+			///   The scissor area used by the sections.
+			/// </summary>
+			public readonly Rectangle ScissorArea;
+
+			/// <summary>
 			///   The texture used by the sections.
 			/// </summary>
 			public readonly Texture2D Texture;
+
+			/// <summary>
+			///   Indicates whether the scissor test should be enabled when drawing the sections.
+			/// </summary>
+			public readonly bool UseScissorTest;
+
+			/// <summary>
+			///   The world matrix used by the sections.
+			/// </summary>
+			public readonly Matrix WorldMatrix;
 
 			/// <summary>
 			///   The index of the last section of the list or -1 if there is none.
@@ -784,12 +728,31 @@ namespace Pegasus.Framework.Rendering
 			/// <summary>
 			///   Initializes the instance.
 			/// </summary>
+			/// <param name="blendState">The blend state used by the sections.</param>
+			/// <param name="depthStencilState">The depth stencil state used by the sections.</param>
+			/// <param name="samplerState">The sampler state used by the sections.</param>
+			/// <param name="worldMatrix">The world matrix used by the sections.</param>
 			/// <param name="texture">The texture used by the quads of this list.</param>
+			/// <param name="scissorArea">The scissor area used by the sections.</param>
+			/// <param name="useScissorTest">Indicates whether the scissor test should be enabled when drawing the sections.</param>
 			/// <param name="section">The index of the (one and only) section of the list.</param>
-			public SectionList(Texture2D texture, int section)
+			public SectionList(BlendState blendState,
+							   DepthStencilState depthStencilState,
+							   SamplerState samplerState,
+							   Matrix worldMatrix,
+							   Texture2D texture,
+							   Rectangle scissorArea,
+							   bool useScissorTest,
+							   int section)
 			{
 				Texture = texture;
 				First = section;
+				WorldMatrix = worldMatrix;
+				ScissorArea = scissorArea;
+				UseScissorTest = useScissorTest;
+				BlendState = blendState;
+				DepthStencilState = depthStencilState;
+				SamplerState = samplerState;
 				Last = section;
 				NumQuads = 0;
 			}

@@ -122,7 +122,6 @@ namespace Pegasus.Framework
 					Initialize();
 
 					// Initialize the sprite batch
-					spriteBatch.Output = uiOutput;
 					spriteBatch.BlendState = BlendState.Premultiplied;
 					spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
 					spriteBatch.SamplerState = SamplerState.PointClampNoMipmaps;
@@ -175,7 +174,7 @@ namespace Pegasus.Framework
 							console.Draw(spriteBatch);
 							statistics.Draw(spriteBatch);
 
-							spriteBatch.DrawBatch();
+							spriteBatch.DrawBatch(uiOutput);
 						}
 
 						// Present the current frame to the screen and write the log file, if necessary

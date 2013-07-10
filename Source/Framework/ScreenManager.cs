@@ -106,10 +106,7 @@ namespace Pegasus.Framework
 		public void DrawUserInterface(SpriteBatch spriteBatch)
 		{
 			for (var i = GetFirstVisibleScreen(); i < _screens.Count; ++i)
-			{
 				_screens[i].DrawUserInterface(spriteBatch);
-				spriteBatch.DrawBatch();
-			}
 		}
 
 		/// <summary>

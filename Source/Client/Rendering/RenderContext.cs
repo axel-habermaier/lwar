@@ -116,7 +116,6 @@ namespace Lwar.Client.Rendering
 				renderer.Draw(output);
 
 			// Draw all 2D elements into the 3D scenes
-			_spriteBatch.Output = output;
 			_spriteBatch.BlendState = BlendState.Premultiplied;
 			_spriteBatch.DepthStencilState = DepthStencilState.DepthRead;
 			_spriteBatch.SamplerState = SamplerState.BilinearClampNoMipmaps;
@@ -129,7 +128,7 @@ namespace Lwar.Client.Rendering
 			const int thickness = 64;
 			_spriteBatch.DrawOutline(new CircleF(Vector2.Zero, Int16.MaxValue + thickness / 2), new Color(128, 0, 0, 128), thickness, 265);
 
-			_spriteBatch.DrawBatch();
+			_spriteBatch.DrawBatch(output);
 		}
 
 		/// <summary>

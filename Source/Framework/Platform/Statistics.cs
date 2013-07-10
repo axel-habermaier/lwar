@@ -130,6 +130,7 @@ namespace Pegasus.Framework.Platform
 			if (!Cvars.ShowStats)
 				return;
 
+			spriteBatch.WorldMatrix = Matrix.Identity;
 			_label.Draw(spriteBatch);
 		}
 

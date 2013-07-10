@@ -124,6 +124,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				if (topIsInside && bottomIsInside)
 					_labels[i].Draw(spriteBatch);
 			}
+
+			spriteBatch.UseScissorTest = false;
 		}
 
 		/// <summary>
