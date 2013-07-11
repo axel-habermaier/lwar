@@ -6,7 +6,7 @@ namespace Pegasus.Framework.Math
 {
 	using System.Globalization;
 	using System.Runtime.InteropServices;
-	using Math = System.Math;
+
 
 	/// <summary>
 	///   Represents a two-component vector of 32-bit floating point values.
@@ -45,7 +45,7 @@ namespace Pegasus.Framework.Math
 		/// </summary>
 		public float Length
 		{
-			get { return (float)Math.Sqrt(SquaredLength); }
+			get { return (float)System.Math.Sqrt(SquaredLength); }
 		}
 
 		/// <summary>
@@ -195,6 +195,18 @@ namespace Pegasus.Framework.Math
 		public static float Dot(Vector2 left, Vector2 right)
 		{
 			return left.X * right.X + left.Y * right.Y;
+		}
+
+		/// <summary>
+		///   Applies the given transformation matrix to the vector.
+		/// </summary>
+		/// <param name="vector">The vector that should be transformed.</param>
+		/// <param name="matrix">The transformation matrix that should be applied.</param>
+		public static Vector2 Transform(ref Vector2 vector, ref Matrix matrix)
+		{
+			var vector4 = new Vector4(vector.X, vector.Y, 0);
+			vector4 = Vector4.Transform(ref vector4, ref matrix);
+			return new Vector2(vector4.X, vector4.Y);
 		}
 	}
 
@@ -770,3 +782,4 @@ namespace Pegasus.Framework.Math
 }
 
 // ReSharper restore InconsistentNaming
+

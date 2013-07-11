@@ -111,7 +111,8 @@ namespace Pegasus.Framework.Rendering
 			{
 				// If the queries are not yet available, we have to stall the CPU
 				while (!_disjointQueries[ResultIndex].DataAvailable || !_endQueries[ResultIndex].DataAvailable)
-					Thread.Sleep(0);
+				{
+				}
 
 				// The timestamps might be invalid if the GPU changed its clockrate, for instance
 				var result = _disjointQueries[ResultIndex].Result;

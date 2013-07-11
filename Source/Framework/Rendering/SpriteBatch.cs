@@ -137,9 +137,9 @@ namespace Pegasus.Framework.Rendering
 			}
 
 			// Initialize the graphics objects
-			_vertexBuffer = DynamicVertexBuffer.Create<VertexPositionColorTexture>(graphicsDevice, MaxQuads * 4, chunkCount: 3);
+			_vertexBuffer = Quad.CreateDynamicVertexBuffer(graphicsDevice, quadCount: MaxQuads, chunkCount: 3);
 			_indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
-			_vertexLayout = VertexPositionColorTexture.GetInputLayout(graphicsDevice, _vertexBuffer.Buffer, _indexBuffer);
+			_vertexLayout = Quad.GetInputLayout(graphicsDevice, _vertexBuffer.Buffer, _indexBuffer);
 
 			_scissorRasterizerState = new RasterizerState(graphicsDevice)
 			{
@@ -266,9 +266,10 @@ namespace Pegasus.Framework.Rendering
 
 			var rotationMatrix = Matrix.CreateRotationZ(rotation);
 			var unrotatedPosition = new Vector3(position.X, position.Y, 0);
+			var offset = new Vector2(unrotatedPosition.X, unrotatedPosition.Y);
 
 			Quad.Transform(ref quad, ref rotationMatrix);
-			Quad.Offset(ref quad, ref unrotatedPosition);
+			Quad.Offset(ref quad, ref offset);
 
 			Draw(ref quad, texture);
 		}

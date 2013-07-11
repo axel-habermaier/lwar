@@ -19,14 +19,15 @@ namespace Lwar.Assets.Effects
 		public readonly Matrix World;
 
 		[VertexShader]
-		public void VertexShader([Position] Vector4 position,
+		public void VertexShader([Position] Vector2 position,
 								 [TexCoords] Vector2 texCoords,
 								 [Color] Vector4 color,
 								 [Position] out Vector4 outPosition,
 								 [TexCoords] out Vector2 outTexCoords,
 								 [Color] out Vector4 outColor)
 		{
-			outPosition = World * position;
+			var position4 = new Vector4(position.x, position.y, 0, 1);
+			outPosition = World * position4;
 			outPosition = ViewProjection * outPosition;
 			outColor = color;
 			outTexCoords = texCoords;

@@ -204,6 +204,20 @@ namespace Pegasus.Framework.Math
 		{
 			return left.X * right.X + left.Y * right.Y;
 		}
+<# if (info.Type == "float") { #>
+
+		/// <summary>
+		///   Applies the given transformation matrix to the vector.
+		/// </summary>
+		/// <param name="vector">The vector that should be transformed.</param>
+		/// <param name="matrix">The transformation matrix that should be applied.</param>
+		public static Vector2 Transform(ref Vector2 vector, ref Matrix matrix)
+		{
+			var vector4 = new Vector4(vector.X, vector.Y, 0);
+			vector4 = Vector4.Transform(ref vector4, ref matrix);
+			return new Vector2(vector4.X, vector4.Y);
+		}
+<# } #>
 	}
 <# } #>
 }
