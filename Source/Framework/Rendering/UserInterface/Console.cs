@@ -192,14 +192,16 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (!_active)
 				return;
 
-			spriteBatch.UseScissorTest = false;
-			spriteBatch.WorldMatrix = Matrix.CreateTranslation(0, 0, -0.5f);
-
 			// Draw the background
+			spriteBatch.UseScissorTest = false;
+			spriteBatch.Layer = Int32.MaxValue - 1;
+
 			var consoleArea = new Rectangle(0, 0, _size.Width, _prompt.ActualArea.Bottom + _margin.Height);
 			spriteBatch.Draw(consoleArea, Texture2D.White, BackgroundColor);
 
 			// Draw the prompt and content
+			spriteBatch.Layer = Int32.MaxValue;
+
 			_prompt.Draw(spriteBatch);
 			_content.Draw(spriteBatch);
 		}

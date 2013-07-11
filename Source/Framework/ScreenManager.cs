@@ -106,7 +106,11 @@ namespace Pegasus.Framework
 		public void DrawUserInterface(SpriteBatch spriteBatch)
 		{
 			for (var i = GetFirstVisibleScreen(); i < _screens.Count; ++i)
+			{
+				// Each screen can use up to 100 different layers
+				spriteBatch.Layer = i * 100;
 				_screens[i].DrawUserInterface(spriteBatch);
+			}
 		}
 
 		/// <summary>

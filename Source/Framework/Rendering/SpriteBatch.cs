@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Rendering
 {
+	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
 	using Math;
 	using Platform.Graphics;
@@ -156,6 +157,8 @@ namespace Pegasus.Framework.Rendering
 			_indexBuffer.SetName("SpriteBatch.IndexBuffer");
 			_vertexLayout.SetName("SpriteBatch.VertexLayout");
 			_scissorRasterizerState.SetName("SpriteBatch.Scissor");
+
+			Reset();
 		}
 
 		/// <summary>
@@ -220,6 +223,14 @@ namespace Pegasus.Framework.Rendering
 		///   changed.
 		/// </summary>
 		public Matrix WorldMatrix { get; set; }
+
+		/// <summary>
+		///   Gets or sets the layer of all subsequent drawing operations. All sprites within the same layer are drawn in some
+		///   unspecified order. Layers, on the other hand, are drawn from lowest to highest, such that sprites in a higher layer
+		///   overlap or hide sprites in a lower layer at the same position, depending on the blend and depth stencil
+		///   state settings.
+		/// </summary>
+		public int Layer { get; set; }
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
@@ -452,11 +463,14 @@ namespace Pegasus.Framework.Rendering
 			if (_numQuads == 0)
 				return;
 
+			// Sort the section lists by layer
+			Array.Sort(_sectionLists, 0, _numSectionLists, SectionList.LayerComparer.Instance);
+
 			// Prepare the vertex buffer
 			UpdateVertexBuffer();
 			_vertexLayout.Bind();
 
-			// Finally, draw the quads
+			// Draw the quads, starting with the lowest layer
 			var offset = 0;
 			for (var i = 0; i < _numSectionLists; ++i)
 			{
@@ -478,7 +492,7 @@ namespace Pegasus.Framework.Rendering
 				}
 
 				// Draw and increase the offset
-				var numIndices = _sectionLists[i].NumQuads * 6;
+				var numIndices = sectionList.NumQuads * 6;
 				output.DrawIndexed(_effect.Technique, numIndices, offset, _vertexBuffer.VertexOffset);
 				offset += numIndices;
 			}
@@ -487,6 +501,14 @@ namespace Pegasus.Framework.Rendering
 			_vertexBuffer.MarkEndOfUse();
 
 			// Reset the internal state
+			Reset();
+		}
+
+		/// <summary>
+		///   Resets the internal state.
+		/// </summary>
+		private void Reset()
+		{
 			_numQuads = 0;
 			_numSections = 0;
 			_numSectionLists = 0;
@@ -527,7 +549,7 @@ namespace Pegasus.Framework.Rendering
 				var quads = new IntPtr(quadsPtr);
 				for (var i = 0; i < _numSectionLists; ++i)
 				{
-					var section = _sectionLists[i].First;
+					var section = _sectionLists[i].FirstSection;
 					while (section != -1)
 					{
 						// Calculate the offsets into the arrays and the amount of bytes to copy
@@ -574,9 +596,9 @@ namespace Pegasus.Framework.Rendering
 
 				// We've already seen this texture and these rendering settings before, so add the new section to the list by setting the
 				// list's tail section's next pointer to the newly allocated section
-				_sections[_sectionLists[i].Last].Next = _numSections;
+				_sections[_sectionLists[i].LastSection].Next = _numSections;
 				// Set the section list's tail pointer to the newly allocated section
-				_sectionLists[i].Last = _numSections;
+				_sectionLists[i].LastSection = _numSections;
 
 				known = true;
 				_currentSectionList = i;
@@ -586,7 +608,11 @@ namespace Pegasus.Framework.Rendering
 			if (!known)
 			{
 				_currentSectionList = _numSectionLists;
-				AddSectionList(new SectionList(BlendState, DepthStencilState, SamplerState, WorldMatrix, texture, ScissorArea, UseScissorTest,
+				AddSectionList(new SectionList(BlendState, DepthStencilState, SamplerState,
+											   WorldMatrix,
+											   texture,
+											   ScissorArea, UseScissorTest,
+											   Layer,
 											   _numSections));
 			}
 
@@ -608,7 +634,7 @@ namespace Pegasus.Framework.Rendering
 
 			return list.Texture == texture && list.BlendState == BlendState && list.DepthStencilState == DepthStencilState &&
 				   list.SamplerState == SamplerState && list.UseScissorTest == UseScissorTest && list.ScissorArea == ScissorArea &&
-				   list.WorldMatrix == WorldMatrix;
+				   list.WorldMatrix == WorldMatrix && list.Layer == Layer;
 		}
 
 		/// <summary>
@@ -701,7 +727,12 @@ namespace Pegasus.Framework.Rendering
 			/// <summary>
 			///   The index of the first section of the list or -1 if there is none.
 			/// </summary>
-			public readonly int First;
+			public readonly int FirstSection;
+
+			/// <summary>
+			///   The layer of the section list.
+			/// </summary>
+			public readonly int Layer;
 
 			/// <summary>
 			///   The sampler state used by the sections.
@@ -731,7 +762,7 @@ namespace Pegasus.Framework.Rendering
 			/// <summary>
 			///   The index of the last section of the list or -1 if there is none.
 			/// </summary>
-			public int Last;
+			public int LastSection;
 
 			/// <summary>
 			///   The total number of quads of the section list across all sections.
@@ -748,6 +779,7 @@ namespace Pegasus.Framework.Rendering
 			/// <param name="texture">The texture used by the quads of this list.</param>
 			/// <param name="scissorArea">The scissor area used by the sections.</param>
 			/// <param name="useScissorTest">Indicates whether the scissor test should be enabled when drawing the sections.</param>
+			/// <param name="layer">The section list's layer.</param>
 			/// <param name="section">The index of the (one and only) section of the list.</param>
 			public SectionList(BlendState blendState,
 							   DepthStencilState depthStencilState,
@@ -756,18 +788,45 @@ namespace Pegasus.Framework.Rendering
 							   Texture2D texture,
 							   Rectangle scissorArea,
 							   bool useScissorTest,
+							   int layer,
 							   int section)
 			{
 				Texture = texture;
-				First = section;
+				FirstSection = section;
 				WorldMatrix = worldMatrix;
 				ScissorArea = scissorArea;
 				UseScissorTest = useScissorTest;
 				BlendState = blendState;
 				DepthStencilState = depthStencilState;
 				SamplerState = samplerState;
-				Last = section;
+				LastSection = section;
+				Layer = layer;
+
 				NumQuads = 0;
+			}
+
+			/// <summary>
+			///   Used to compare the layers of two section lists.
+			/// </summary>
+			public class LayerComparer : IComparer<SectionList>
+			{
+				/// <summary>
+				///   The singleton comparer instance.
+				/// </summary>
+				public static readonly LayerComparer Instance = new LayerComparer();
+
+				/// <summary>
+				///   Compares two section list and returns a value indicating whether one belongs to a lower, the same, or greater layer
+				///   than the other.
+				/// </summary>
+				/// <param name="x">The first section list to compare.</param>
+				/// <param name="y">The second section list to compare.</param>
+				public int Compare(SectionList x, SectionList y)
+				{
+					// ReSharper disable ImpureMethodCallOnReadonlyValueField
+					return x.Layer.CompareTo(y.Layer);
+					// ReSharper restore ImpureMethodCallOnReadonlyValueField
+				}
 			}
 		}
 
