@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Rendering
 {
 	using System.Text;
-	using System.Threading;
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Memory;
@@ -110,9 +109,8 @@ namespace Pegasus.Framework.Rendering
 			if (_index >= BufferSize - 1)
 			{
 				// If the queries are not yet available, we have to stall the CPU
-				while (!_disjointQueries[ResultIndex].DataAvailable || !_endQueries[ResultIndex].DataAvailable)
-				{
-				}
+				_disjointQueries[ResultIndex].WaitForCompletion();
+				_endQueries[ResultIndex].WaitForCompletion();
 
 				// The timestamps might be invalid if the GPU changed its clockrate, for instance
 				var result = _disjointQueries[ResultIndex].Result;

@@ -8,7 +8,7 @@
 
 pgVoid pgCreateQueryCore(pgQuery* query)
 {
-	if (query->type == PG_TIMESTAMP_DISJOINT_QUERY)
+	if (query->type == PG_TIMESTAMP_DISJOINT_QUERY || query->type == PG_SYNCED_QUERY)
 		return;
 
 	PG_GL_ALLOC("Query", glGenQueries, query->id);
@@ -16,7 +16,7 @@ pgVoid pgCreateQueryCore(pgQuery* query)
 
 pgVoid pgDestroyQueryCore(pgQuery* query)
 {
-	if (query->type == PG_TIMESTAMP_DISJOINT_QUERY)
+	if (query->type == PG_TIMESTAMP_DISJOINT_QUERY || query->type == PG_SYNCED_QUERY)
 		return;
 
 	PG_GL_FREE(glDeleteQueries, query->id);
@@ -54,6 +54,9 @@ pgVoid pgEndQueryCore(pgQuery* query)
 		break;
 	case PG_OCCLUSION_QUERY:
 		PG_DIE("Not implemented.");
+		break;
+	case PG_SYNCED_QUERY:
+		query->sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 		break;
 	default:
 		PG_NO_SWITCH_DEFAULT;
@@ -94,14 +97,23 @@ pgVoid pgGetQueryDataCore(pgQuery* query, pgVoid* data, pgInt32 size)
 pgBool pgIsQueryDataAvailableCore(pgQuery* query)
 {
 	GLint available;
+	GLenum result;
 
-	if (query->type == PG_TIMESTAMP_DISJOINT_QUERY)
+	switch (query->type)
+	{
+	case PG_TIMESTAMP_DISJOINT_QUERY:
 		return PG_TRUE;
+	case PG_SYNCED_QUERY:
+		result = glClientWaitSync(query->sync, GL_SYNC_FLUSH_COMMANDS_BIT, 0);
+		PG_ASSERT_NO_GL_ERRORS();
 
-	glGetQueryObjectiv(query->id, GL_QUERY_RESULT_AVAILABLE, &available);
-	PG_ASSERT_NO_GL_ERRORS();
+		return result == GL_CONDITION_SATISFIED || result == GL_ALREADY_SIGNALED;
+	default:
+		glGetQueryObjectiv(query->id, GL_QUERY_RESULT_AVAILABLE, &available);
+		PG_ASSERT_NO_GL_ERRORS();
 
-	return available == GL_TRUE;
+		return available == GL_TRUE;
+	}	
 }
 
 #endif

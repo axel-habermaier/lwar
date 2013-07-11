@@ -211,7 +211,8 @@ typedef enum
 {
 	PG_TIMESTAMP_QUERY						= 2801,
 	PG_TIMESTAMP_DISJOINT_QUERY				= 2802,
-	PG_OCCLUSION_QUERY						= 2803
+	PG_OCCLUSION_QUERY						= 2803,
+	PG_SYNCED_QUERY							= 2804
 } pgQueryType;
 
 typedef enum

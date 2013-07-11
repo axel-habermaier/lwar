@@ -476,6 +476,8 @@ D3D11_QUERY pgConvertQueryType(pgQueryType type)
 		return D3D11_QUERY_TIMESTAMP_DISJOINT;
 	case PG_OCCLUSION_QUERY:
 		return D3D11_QUERY_OCCLUSION;
+	case PG_SYNCED_QUERY:
+		return D3D11_QUERY_EVENT;
 	default:
 		PG_NO_SWITCH_DEFAULT;
 	}

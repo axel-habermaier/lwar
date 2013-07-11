@@ -29,6 +29,7 @@ Pegasus.Framework
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
 - Key down/up in the same frame, multiple key down/ups in same frame
 - Persist key bindings
+- Add layers to SpriteBatch
 
 Pegasus.Platform
 ========
@@ -38,7 +39,6 @@ Pegasus.Platform
 - Linux: Input bug (for instance, crash when entering text into the console; dead key problem -> use previously used deprecated function?)
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Bug: Window is not opened in maximized mode when native debugging is not enabled??
-- Add sync/fence objects
 
 Assets Compiler
 ========

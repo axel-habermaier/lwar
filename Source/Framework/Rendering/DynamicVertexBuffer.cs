@@ -10,9 +10,10 @@ namespace Pegasus.Framework.Rendering
 	/// <summary>
 	///   Represents a dynamic vertex buffer that is split into several chunks. Each chunk is of the requested size; therefore,
 	///   the amount of memory allocated on the GPU is the product of the chunk size and the number of chunks. The chunks are
-	///   updated in a round-robin fashion, updating only those parts of the vertex buffer that the GPU is currently not using,
-	///   if enough chunks are used. This frees the GPU driver from copying the buffer, which sometimes causes noticable
-	///   hiccups.
+	///   updated in a round-robin fashion, updating only those parts of the vertex buffer that the GPU is currently not using.
+	///   This frees the GPU driver from copying the buffer, which sometimes causes noticable hiccups.
+	///   When the dynamic vertex buffer runs out of chunks that it can safely update, it introduces a CPU/GPU synchronization
+	///   point.
 	/// </summary>
 	public class DynamicVertexBuffer : DisposableObject
 	{
@@ -37,6 +38,11 @@ namespace Pegasus.Framework.Rendering
 		private int _elementCount;
 
 		/// <summary>
+		///   The CPU/GPU synchronization markers that are used to ensure that no chucks are mapped that are still used by the GPU.
+		/// </summary>
+		private SyncedQuery[] _queries;
+
+		/// <summary>
 		///   Gets the underlying vertex buffer. The returned buffer should only be used to initialize vertex layouts;
 		///   mapping the buffer will most likely result in some unexpected behavior.
 		/// </summary>
@@ -59,6 +65,9 @@ namespace Pegasus.Framework.Rendering
 		public void SetName(string name)
 		{
 			Buffer.SetName(name);
+
+			for (var i = 0; i < _chunkCount; ++i)
+				_queries[i].SetName(name + ".SyncedQuery" + i);
 		}
 
 		/// <summary>
@@ -68,19 +77,37 @@ namespace Pegasus.Framework.Rendering
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="elementCount">The number of elements of type T that the buffer should be able to store.</param>
 		/// <param name="chunkCount">The number of chunks that should be allocated.</param>
-		public static DynamicVertexBuffer Create<T>(GraphicsDevice graphicsDevice, int elementCount, int chunkCount)
+		/// <param name="requiresSynchronization">
+		///   If true, mapping the vertex buffer and all drawing operations involving the vertex buffer require CPU/GPU
+		///   synchronization.
+		/// </param>
+		public static DynamicVertexBuffer Create<T>(GraphicsDevice graphicsDevice, int elementCount, int chunkCount, bool requiresSynchronization)
 			where T : struct
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentInRange(elementCount, 1, UInt16.MaxValue);
 			Assert.ArgumentInRange(chunkCount, 2, Byte.MaxValue);
 
+			SyncedQuery[] queries = null;
+
+			if (requiresSynchronization)
+			{
+				queries = new SyncedQuery[chunkCount];
+				for (var i = 0; i < chunkCount; ++i)
+				{
+					queries[i] = new SyncedQuery(graphicsDevice);
+					queries[i].MarkSyncPoint();
+					queries[i].SetName("DynamicVertexBuffer.SyncedQuery" + i);
+				}
+			}
+
 			return new DynamicVertexBuffer
 			{
 				Buffer = VertexBuffer.Create<T>(graphicsDevice, elementCount * chunkCount, ResourceUsage.Dynamic),
 				_chunkCount = chunkCount,
 				_elementCount = elementCount,
-				_chunkSize = elementCount * Marshal.SizeOf(typeof(T))
+				_chunkSize = elementCount * Marshal.SizeOf(typeof(T)),
+				_queries = queries
 			};
 		}
 
@@ -90,6 +117,18 @@ namespace Pegasus.Framework.Rendering
 		protected override void OnDisposing()
 		{
 			Buffer.SafeDispose();
+			_queries.SafeDisposeAll();
+		}
+
+		/// <summary>
+		///   Marks the end of the use of the current chunk. This method must be called after the last drawing operation involving
+		///   the current chunk has been sent to the GPU's command stream if the instance has been constructed with
+		///   requiresSynchronization = true. Otherwise, the behavior of the dynamic vertex buffer is unspecified.
+		/// </summary>
+		public void MarkEndOfUse()
+		{
+			Assert.That(_queries != null, "Synchronization support is not enabled for this instance.");
+			_queries[_currentChunk].MarkSyncPoint();
 		}
 
 		/// <summary>
@@ -98,6 +137,11 @@ namespace Pegasus.Framework.Rendering
 		public IntPtr Map()
 		{
 			_currentChunk = (_currentChunk + 1) % _chunkCount;
+
+			// If CPU/GPU synchronization is required, wait for the current chunk to become available
+			if (_queries != null)
+				_queries[_currentChunk].WaitForCompletion();
+
 			return Buffer.MapRange(MapMode.WriteNoOverwrite, _currentChunk * _chunkSize, _chunkSize);
 		}
 

@@ -20,6 +20,11 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <summary>
 		///   Indicates that a query is an occlusion query.
 		/// </summary>
-		Occlusion = 2803
+		Occlusion = 2803,
+
+		/// <summary>
+		///   Indicates that a query represents a GPU/CPU synchronization marker.
+		/// </summary>
+		Synced = 2804
 	}
 }

@@ -29,11 +29,23 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the query data is available.
+		///   Gets a value indicating whether the query has completed and whether the result data (if any) is available.
 		/// </summary>
-		public bool DataAvailable
+		public bool Completed
 		{
 			get { return NativeMethods.IsQueryDataAvailable(_query); }
+		}
+
+		/// <summary>
+		///   Waits for the completion of the query by stalling the CPU until the query has completed and the result data (if any)
+		///   is available.
+		/// </summary>
+		public void WaitForCompletion()
+		{
+			while (!Completed)
+			{
+				// Just check the query's completion status until it has been completed
+			}
 		}
 
 		/// <summary>

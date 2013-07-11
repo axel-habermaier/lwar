@@ -172,7 +172,8 @@ pgVoid pgSwapBuffers(pgContext* context);
 	GLuint id;
 
 #define PG_QUERY_PLATFORM \
-	GLuint id;				
+	GLuint id;			  \
+	GLsync sync;
 
 //====================================================================================================================
 // Conversion functions

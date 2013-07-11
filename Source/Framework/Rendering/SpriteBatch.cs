@@ -20,6 +20,11 @@ namespace Pegasus.Framework.Rendering
 		private const int MaxQuads = 8192;
 
 		/// <summary>
+		///   The number of chunks that the dynamic vertex buffer allocates.
+		/// </summary>
+		private const int ChunkCount = 3;
+
+		/// <summary>
 		///   The effect that is used to draw the sprites.
 		/// </summary>
 		private readonly ISpriteEffect _effect;
@@ -137,7 +142,7 @@ namespace Pegasus.Framework.Rendering
 			}
 
 			// Initialize the graphics objects
-			_vertexBuffer = Quad.CreateDynamicVertexBuffer(graphicsDevice, quadCount: MaxQuads, chunkCount: 3);
+			_vertexBuffer = Quad.CreateDynamicVertexBuffer(graphicsDevice, MaxQuads, ChunkCount, requiresSynchronization: true);
 			_indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
 			_vertexLayout = Quad.GetInputLayout(graphicsDevice, _vertexBuffer.Buffer, _indexBuffer);
 
@@ -477,6 +482,9 @@ namespace Pegasus.Framework.Rendering
 				output.DrawIndexed(_effect.Technique, numIndices, offset, _vertexBuffer.VertexOffset);
 				offset += numIndices;
 			}
+
+			// We're no longer using the current vertex buffer chunk for drawing
+			_vertexBuffer.MarkEndOfUse();
 
 			// Reset the internal state
 			_numQuads = 0;

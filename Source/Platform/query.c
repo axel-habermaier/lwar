@@ -33,7 +33,8 @@ pgVoid pgBeginQuery(pgQuery* query)
 {
 	PG_ASSERT_NOT_NULL(query);
 	PG_ASSERT(!query->isActive, "Query is already active.");
-	PG_ASSERT(query->type != PG_TIMESTAMP_QUERY, "pgBeginQuery is not supported for timestamp queries.");
+	PG_ASSERT(query->type != PG_TIMESTAMP_QUERY, "pgBeginQuery is not supported for PG_TIMESTAMP_QUERY.");
+	PG_ASSERT(query->type != PG_SYNCED_QUERY, "pgBeginQuery is not supported for PG_SYNCED_QUERY.");
 
 	query->isActive = PG_TRUE;
 	pgBeginQueryCore(query);
@@ -42,7 +43,7 @@ pgVoid pgBeginQuery(pgQuery* query)
 pgVoid pgEndQuery(pgQuery* query)
 {
 	PG_ASSERT_NOT_NULL(query);
-	PG_ASSERT(query->type == PG_TIMESTAMP_QUERY || query->isActive, "Non-timestamp query is currently not active.");
+	PG_ASSERT(query->type == PG_TIMESTAMP_QUERY || query->type == PG_SYNCED_QUERY || query->isActive, "Query is currently not active.");
 
 	pgEndQueryCore(query);
 	query->isActive = PG_FALSE;
@@ -56,6 +57,7 @@ pgVoid pgGetQueryData(pgQuery* query, pgVoid* data, pgInt32 size)
 	PG_ASSERT(!query->isActive, "Cannot get the data of a currently active query.");
 	PG_ASSERT(query->type != PG_TIMESTAMP_QUERY || size == sizeof(pgUint64), "Invalid data type.");
 	PG_ASSERT(query->type != PG_TIMESTAMP_DISJOINT_QUERY || size == sizeof(pgTimestampDisjointQueryData), "Invalid data type.");
+	PG_ASSERT(query->type != PG_SYNCED_QUERY, "PG_SYNCED_QUERY does not return any data.");
 
 	pgGetQueryDataCore(query, data, size);
 }
