@@ -131,8 +131,7 @@ static void player_action(Player *p) {
               p->a.y * ship->type->max_a.y * 0.5f };
     // entity_accelerate(ship, p->a);
 
-	Vec dx = sub(p->aim, ship->x);
-	Vec q = normalize(rotate(dx, -ship->phi));
+	Vec q = normalize(rotate(p->aim, -ship->phi));
 	Real dphi = arctan(q);
 	p->rot = dphi / M_PI;
 

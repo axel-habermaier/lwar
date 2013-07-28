@@ -126,6 +126,14 @@ struct Message {
             int16_t  aim_y;
         } input;
 
+		struct {
+			uint8_t n;
+			Id player_ids[MAX_CLIENTS];
+			uint16_t kills[MAX_CLIENTS];
+			uint16_t deaths[MAX_CLIENTS];
+			uint16_t pings[MAX_CLIENTS];
+		} stats;
+
         struct {
             Id entity_id[2];
             int16_t x;

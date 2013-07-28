@@ -117,9 +117,6 @@ size_t message_pack(char *s, void *p) {
         break;
     case MESSAGE_FULL:
         break;
-    case MESSAGE_STATS:
-        assert(0);
-        break;
     case MESSAGE_UPDATE:
     case MESSAGE_UPDATE_POS:
     case MESSAGE_UPDATE_RAY:
@@ -142,6 +139,12 @@ size_t message_pack(char *s, void *p) {
         i += int16_pack(s+i, m->input.aim_x);
         i += int16_pack(s+i, m->input.aim_y);
         break;
+	case MESSAGE_STATS:
+		i += uint8_pack(s+i, m->stats.n);
+		for (int j = 0; j < m->stats.n; ++j)
+		{
+		}
+		break;
     case MESSAGE_COLLISION:
         i += id_pack(s+i, m->collision.entity_id[0]);
         i += id_pack(s+i, m->collision.entity_id[1]);

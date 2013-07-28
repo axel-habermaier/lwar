@@ -108,9 +108,13 @@ void gun_shoot(Entity *gun) {
 
     gun->energy --;
 
+	Entity *ship   = gun->parent;
+    assert(ship);
+
     Vec f = unit(gun->phi);
     Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
-    Vec u = normalize(sub((gun->player->aim), x));
+	Vec a = add(ship->x, gun->player->aim);
+    Vec u = normalize(sub(a, x));
     Vec v = add(gun->v, scale(u, type_bullet.max_a.y)); /* initial speed */
     Entity *bullet = entity_create(&type_bullet,gun->player,x,v);
     bullet->active = 1;
@@ -183,7 +187,8 @@ void ray_act(Entity *ray) {
         return;
     }
 
-    Vec u = normalize(sub((ray->player->aim), phaser->x));
+	Vec a = add(ship->x, ray->player->aim);
+    Vec u = normalize(sub(a, phaser->x));
     //ray->dphi = arctan(u) - phaser->phi;
 	ray->phi = arctan(u);
 
