@@ -37,7 +37,7 @@ namespace Pegasus.Framework.Platform.Memory
 		~PooledObject()
 		{
 			if (!IsAvailable)
-				Log.Die("A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
+				Log.Error("A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
 					GetType().Name, _description ?? "None");
 		}
 #endif

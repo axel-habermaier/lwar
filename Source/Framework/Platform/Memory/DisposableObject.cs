@@ -33,7 +33,7 @@ namespace Pegasus.Framework.Platform.Memory
 		/// </summary>
 		~DisposableObject()
 		{
-			Log.Die("Finalizer runs for a disposable object of type '{0}'.\nInstance description: '{1}'",
+			Log.Error("Finalizer runs for a disposable object of type '{0}'.\nInstance description: '{1}'",
 				GetType().Name, _description ?? "None");
 		}
 #endif
