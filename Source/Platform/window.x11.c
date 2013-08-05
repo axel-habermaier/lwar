@@ -157,6 +157,15 @@ pgVoid pgReleaseMouseCore(pgWindow* window)
     XFlush(x11.display);
 }
 
+pgVoid pgGetMousePositionCore(pgWindow* window, pgInt32* x, pgInt32* y)
+{
+	Window root, child;
+	int gx, gy;
+	unsigned int buttons;
+
+	XQueryPointer(x11.display, window->handle, &root, &child, &gx, &gy, x, y, &buttons);
+}
+
 //====================================================================================================================
 // Internal functions
 //====================================================================================================================
@@ -179,19 +188,6 @@ pgRectangle pgGetDesktopArea()
 	rectangle.height = attributes.height;
 
 	return rectangle;
-}
-
-pgVoid pgGetMousePosition(pgWindow* window, pgInt32* x, pgInt32* y)
-{
-	Window root, child;
-	int gx, gy;
-	unsigned int buttons;
-	
-	PG_ASSERT_NOT_NULL(window);
-	PG_ASSERT_NOT_NULL(x);
-	PG_ASSERT_NOT_NULL(y);
-
-	XQueryPointer(x11.display, window->handle, &root, &child, &gx, &gy, x, y, &buttons);
 }
 
 //====================================================================================================================

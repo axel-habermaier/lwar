@@ -196,5 +196,6 @@ PG_API_EXPORT pgVoid pgSetWindowMode(pgWindow* window, pgWindowMode mode);
 
 PG_API_EXPORT pgVoid pgCaptureMouse(pgWindow* window);
 PG_API_EXPORT pgVoid pgReleaseMouse(pgWindow* window);
+PG_API_EXPORT pgVoid pgGetMousePosition(pgWindow* window, pgInt32* x, pgInt32* y);
 
 #endif

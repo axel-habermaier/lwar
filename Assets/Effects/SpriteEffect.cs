@@ -26,8 +26,9 @@ namespace Lwar.Assets.Effects
 								 [TexCoords] out Vector2 outTexCoords,
 								 [Color] out Vector4 outColor)
 		{
-			var position4 = new Vector4(position.x, position.y, 0, 1);
-			outPosition = World * position4;
+			var pos = new Vector4(position.x, position.y, 0, 1);
+
+			outPosition = World * pos;
 			outPosition = ViewProjection * outPosition;
 			outColor = color;
 			outTexCoords = texCoords;

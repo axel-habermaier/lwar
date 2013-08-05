@@ -258,6 +258,15 @@ pgVoid pgReleaseMouse(pgWindow* window)
 	pgReleaseMouseCore(window);
 }
 
+pgVoid pgGetMousePosition(pgWindow* window, pgInt32* x, pgInt32* y)
+{
+	PG_ASSERT_NOT_NULL(window);
+	PG_ASSERT_NOT_NULL(x);
+	PG_ASSERT_NOT_NULL(y);
+
+	pgGetMousePositionCore(window, x, y);
+}
+
 //====================================================================================================================
 // Internal functions
 //====================================================================================================================

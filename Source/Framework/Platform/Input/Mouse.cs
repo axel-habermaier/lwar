@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Input
 {
+	using System.Runtime.InteropServices;
 	using Math;
 	using Memory;
 
@@ -34,7 +35,6 @@ namespace Pegasus.Framework.Platform.Input
 			Assert.ArgumentNotNull(window);
 
 			_window = window;
-			_window.MouseMoved += MouseMoved;
 			_window.MousePressed += ButtonPressed;
 			_window.MouseReleased += ButtonReleased;
 		}
@@ -42,7 +42,16 @@ namespace Pegasus.Framework.Platform.Input
 		/// <summary>
 		///   Gets the position of the mouse.
 		/// </summary>
-		public Vector2i Position { get; private set; }
+		public Vector2i Position
+		{
+			get
+			{
+				int x, y;
+				NativeMethods.GetMousePosition(_window.NativePtr, out x, out y);
+
+				return new Vector2i(x, y);
+			}
+		}
 
 		/// <summary>
 		///   Raised when the mouse has been moved.
@@ -79,16 +88,6 @@ namespace Pegasus.Framework.Platform.Input
 		private void ButtonReleased(MouseEventArgs button)
 		{
 			_states[(int)button.Button].KeyReleased();
-		}
-
-		/// <summary>
-		///   Invoked when the mouse has been moved.
-		/// </summary>
-		/// <param name="x">The new x-coordinate of the mouse.</param>
-		/// <param name="y">The new y-coordinate of the mouse.</param>
-		private void MouseMoved(int x, int y)
-		{
-			Position = new Vector2i(x, y);
 		}
 
 		/// <summary>
@@ -150,9 +149,20 @@ namespace Pegasus.Framework.Platform.Input
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_window.MouseMoved -= MouseMoved;
 			_window.MousePressed -= ButtonPressed;
 			_window.MouseReleased -= ButtonReleased;
+		}
+
+		/// <summary>
+		///   Provides access to the native mouse functions.
+		/// </summary>
+#if !DEBUG
+		[SuppressUnmanagedCodeSecurity]
+#endif
+		private static class NativeMethods
+		{
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetMousePosition")]
+			public static extern IntPtr GetMousePosition(IntPtr window, out int x, out int y);
 		}
 	}
 }
