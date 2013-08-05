@@ -66,7 +66,7 @@ namespace Pegasus.Framework.Platform
 			if (String.IsNullOrWhiteSpace(message))
 				return;
 
-			_logEntries.Enqueue(new LogEntry(LogCategory.External, type, String.Format("{0}: {1}", _process.StartInfo.FileName, message)));
+			_logEntries.Enqueue(new LogEntry(type, String.Format("{0}: {1}", _process.StartInfo.FileName, message)));
 		}
 
 		/// <summary>

@@ -71,7 +71,7 @@ namespace Pegasus.Framework.Network
 			Assert.ArgumentNotNull(endPoint);
 			Assert.That(!_isRunning, "Already running.");
 
-			Log.Info(LogCategory.Server, "Service host for service '{0}' is started.", typeof(TService).FullName);
+			Log.Info("Service host for service '{0}' is started.", typeof(TService).FullName);
 			_isRunning = true;
 
 			var listener = new TcpListener(PacketFactory, endPoint);
@@ -85,7 +85,7 @@ namespace Pegasus.Framework.Network
 					{
 						if (listener.IsFaulted)
 						{
-							Log.Error(LogCategory.Server, "The host is no longer able to respond to new client connections.");
+							Log.Error("The host is no longer able to respond to new client connections.");
 							break;
 						}
 
@@ -103,7 +103,7 @@ namespace Pegasus.Framework.Network
 
 				_scheduler.SafeDispose();
 
-				Log.Info(LogCategory.Server, "Service host for service '{0}' has shut down.", typeof(TService).FullName);
+				Log.Info("Service host for service '{0}' has shut down.", typeof(TService).FullName);
 			}
 		}
 
@@ -147,9 +147,9 @@ namespace Pegasus.Framework.Network
 			catch (SocketOperationException e)
 			{
 				if (connection.IsFaulted)
-					Log.Error(LogCategory.Server, e.Message);
+					Log.Error("{0}", e.Message);
 				else
-					Log.Info(LogCategory.Server, e.Message);
+					Log.Info("{0}", e.Message);
 			}
 			finally
 			{
@@ -182,7 +182,7 @@ namespace Pegasus.Framework.Network
 			var header = new MessageHeader(_serviceIdentifier, MessageType.ServiceIdentifierMismatch);
 			header.Write(packet);
 
-			Log.Warn(LogCategory.Server, "Rejected request from {0} because of a service identifier mismatch.", connection.RemoteEndPoint);
+			Log.Warn("Rejected request from {0} because of a service identifier mismatch.", connection.RemoteEndPoint);
 			await connection.SendAsync(context, packet);
 			return false;
 		}
@@ -203,7 +203,7 @@ namespace Pegasus.Framework.Network
 			var header = new MessageHeader(_serviceIdentifier, MessageType.InvalidMessageType);
 			header.Write(packet);
 
-			Log.Warn(LogCategory.Server, "Rejected request from {0} because of the message type was invalid.", connection.RemoteEndPoint);
+			Log.Warn("Rejected request from {0} because of the message type was invalid.", connection.RemoteEndPoint);
 			await connection.SendAsync(context, packet);
 			return true;
 		}

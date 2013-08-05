@@ -37,7 +37,7 @@ namespace Pegasus.Framework.Platform.Memory
 		/// </summary>
 		private void AllocateObjects()
 		{
-			Log.DebugInfo(LogCategory.Memory, "Pool<{0}>: Allocating new instances ({1} instances total).", typeof(T).Name, _allocationCount);
+			Log.DebugInfo("Pool<{0}>: Allocating new instances ({1} instances total).", typeof(T).Name, _allocationCount);
 
 			AllocateObjects(_items, _allocationCount);
 			_allocationCount *= 2;

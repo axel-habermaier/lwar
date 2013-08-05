@@ -207,7 +207,6 @@
     <Compile Include="Network\TcpListener.cs" />
     <Compile Include="Network\TcpSocket.cs" />
     <Compile Include="Platform\Graphics\SyncedQuery.cs" />
-    <Compile Include="Platform\Logging\LogCategory.cs" />
     <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\ResharperAnnotations.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />

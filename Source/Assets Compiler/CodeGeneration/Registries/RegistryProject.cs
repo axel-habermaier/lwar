@@ -66,7 +66,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			file = file.Replace("/", "\\");
 
 			message = String.Format("{0}: error: {1}", file, message);
-			_errors.Add(new LogEntry(LogCategory.Assets, LogType.Error, message));
+			_errors.Add(new LogEntry(LogType.Error, message));
 		}
 
 		/// <summary>

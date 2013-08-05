@@ -54,7 +54,7 @@ namespace Pegasus.Framework.Platform
 		/// <param name="mode">Indicates the window mode.</param>
 		internal Window(string title, Vector2i position, Size size, WindowMode mode)
 		{
-			Log.Info(LogCategory.Platform, "Initializing window...");
+			Log.Info("Initializing window...");
 
 			_callbacks = new NativeMethods.Callbacks
 			{

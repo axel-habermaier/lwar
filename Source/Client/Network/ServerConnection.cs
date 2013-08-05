@@ -107,7 +107,7 @@ namespace Lwar.Client.Network
 			}
 			catch (SocketOperationException e)
 			{
-				Log.Error(LogCategory.Client, "The connection to the server has been terminated due to an error: {0}", e.Message);
+				Log.Error("The connection to the server has been terminated due to an error: {0}", e.Message);
 				State = ConnectionState.Faulted;
 			}
 		}
@@ -140,7 +140,7 @@ namespace Lwar.Client.Network
 							HandlePacket(packet, messageQueue, deliveryManager);
 						else
 						{
-							Log.Warn(LogCategory.Client, "Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
+							Log.Warn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
 									 sender, ServerEndPoint);
 						}
 					}
@@ -148,7 +148,7 @@ namespace Lwar.Client.Network
 			}
 			catch (SocketOperationException e)
 			{
-				Log.Error(LogCategory.Client, "The connection to the server has been terminated due to an error: {0}", e.Message);
+				Log.Error("The connection to the server has been terminated due to an error: {0}", e.Message);
 				State = ConnectionState.Faulted;
 			}
 		}
@@ -229,14 +229,14 @@ namespace Lwar.Client.Network
 				case MessageType.Synced:
 					// We should only receive a sync packet if we're actually syncing
 					if (State != ConnectionState.Syncing)
-						Log.Warn(LogCategory.Client, "Ignored an unexpected Synced message.");
+						Log.Warn("Ignored an unexpected Synced message.");
 					else
 						State = ConnectionState.Connected;
 					break;
 				case MessageType.Full:
 					// Only the first message can be a server full message
 					if (State != ConnectionState.Connecting)
-						Log.Warn(LogCategory.Client, "Ignored an unexpected server full message.");
+						Log.Warn("Ignored an unexpected server full message.");
 					else
 						State = ConnectionState.Full;
 					break;

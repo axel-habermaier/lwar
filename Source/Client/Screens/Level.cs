@@ -87,7 +87,7 @@ namespace Lwar.Client.Screens
 			IsOpaque = true;
 			_timer.Timeout += SendInputTimeout;
 
-			Log.Info(LogCategory.Client, "Connecting to {0}...", serverEndPoint);
+			Log.Info("Connecting to {0}...", serverEndPoint);
 		}
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace Lwar.Client.Screens
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
 
-			Log.Info(LogCategory.Client, "The game session has ended.");
+			Log.Info("The game session has ended.");
 		}
 
 		/// <summary>
@@ -159,13 +159,13 @@ namespace Lwar.Client.Screens
 
 			if (_networkSession.IsDropped)
 			{
-				MessageBox.Show(this, LogCategory.Client, LogType.Error, "The connection to the server has been lost.", true);
+				MessageBox.Show(this, LogType.Error, "The connection to the server has been lost.", true);
 				return;
 			}
 
 			if (_networkSession.IsFaulted)
 			{
-				MessageBox.Show(this, LogCategory.Client, LogType.Error, "The game session has been aborted due to a network error.", true);
+				MessageBox.Show(this, LogType.Error, "The game session has been aborted due to a network error.", true);
 				return;
 			}
 

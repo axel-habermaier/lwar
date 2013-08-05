@@ -87,7 +87,7 @@ namespace Lwar.Client.Network
 			Assert.InRange(type);
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			_logs.Enqueue(new LogEntry(LogCategory.Server, type, RemoveTrailingNewlines(message)));
+			_logs.Enqueue(new LogEntry(type, RemoveTrailingNewlines(message)));
 		}
 
 		/// <summary>

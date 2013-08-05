@@ -12,26 +12,18 @@ namespace Pegasus.Framework.Platform.Logging
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="category">The category of the log entry.</param>
 		/// <param name="logType">The type of the log entry.</param>
 		/// <param name="message">The message of the log entry.</param>
-		public LogEntry(LogCategory category, LogType logType, string message)
+		public LogEntry(LogType logType, string message)
 			: this()
 		{
-			Assert.InRange(category);
 			Assert.InRange(logType);
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			Category = category;
 			LogType = logType;
 			Message = message;
 			Time = DateTime.Now;
 		}
-
-		/// <summary>
-		///   Gets the category of the log entry.
-		/// </summary>
-		public LogCategory Category { get; private set; }
 
 		/// <summary>
 		///   Gets the type of the log entry.
@@ -57,19 +49,19 @@ namespace Pegasus.Framework.Platform.Logging
 			switch (LogType)
 			{
 				case LogType.Fatal:
-					Log.Die(Category, "{0}", Message);
+					Log.Die("{0}", Message);
 					break;
 				case LogType.Error:
-					Log.Error(Category, "{0}", Message);
+					Log.Error("{0}", Message);
 					break;
 				case LogType.Warning:
-					Log.Warn(Category, "{0}", Message);
+					Log.Warn("{0}", Message);
 					break;
 				case LogType.Info:
-					Log.Info(Category, "{0}", Message);
+					Log.Info("{0}", Message);
 					break;
 				case LogType.Debug:
-					Log.DebugInfo(Category, "{0}", Message);
+					Log.DebugInfo("{0}", Message);
 					break;
 				default:
 					throw new InvalidOperationException("Unknown log entry type.");

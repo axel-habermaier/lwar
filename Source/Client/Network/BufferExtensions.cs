@@ -73,7 +73,7 @@ namespace Lwar.Client.Network
 
 			if (size > length)
 			{
-				Log.Warn(LogCategory.Client, "Received a string that exceeds the maximum allowed length. String truncated.");
+				Log.Warn("Received a string that exceeds the maximum allowed length. String truncated.");
 				skipBytes = size - length;
 				size = length;
 			}

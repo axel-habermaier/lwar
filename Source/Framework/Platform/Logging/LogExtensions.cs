@@ -11,35 +11,23 @@ namespace Pegasus.Framework.Platform.Logging
 	public static class LogExtensions
 	{
 		/// <summary>
-		///   The number of characters of the longest category literal.
-		/// </summary>
-		private static readonly int MaxCategoryLength = Enum.GetNames(typeof(LogCategory)).Max(c => c.Length);
-
-		/// <summary>
 		///   The number of characters of the longest type literal.
 		/// </summary>
 		private static readonly int MaxTypeLength = Enum.GetNames(typeof(LogType)).Max(c => c.Length);
 
 		/// <summary>
-		///   The display strings of the log categories, all of the same length.
-		/// </summary>
-		private static readonly string[] CategoryDisplayStrings = Enum.GetNames(typeof(LogCategory))
-																	  .Select(category => NormalizeLength(category, MaxCategoryLength))
-																	  .ToArray();
-
-		/// <summary>
 		///   The display strings of the log types, all of the same length.
 		/// </summary>
-		private static readonly string[] TypeDisplayStrings = Enum.GetNames(typeof(LogType))
-																  .Select(category => NormalizeLength(category, MaxTypeLength))
-																  .ToArray();
+		private static readonly string[] TypeDisplayStrings =
+			Enum.GetNames(typeof(LogType))
+				.Select(category => NormalizeLength(category, MaxTypeLength))
+				.ToArray();
 
 		/// <summary>
 		///   Initializes the type.
 		/// </summary>
 		static LogExtensions()
 		{
-			ValidateEnumeration(typeof(LogCategory), 0);
 			ValidateEnumeration(typeof(LogType), 1);
 		}
 
@@ -73,16 +61,8 @@ namespace Pegasus.Framework.Platform.Logging
 			var minValue = values.Min();
 
 			Assert.That(minValue == lowestValue, "The lowest value must be {0}.", lowestValue);
-			Assert.That(maxValue == values.Length - 1 + lowestValue, "The highest value must match the number of literals declared by the enumeration.");
-		}
-
-		/// <summary>
-		///   Converts the given log category to a string with a normalized length.
-		/// </summary>
-		/// <param name="logCategory">The log category that should be converted to a string.</param>
-		public static string ToDisplayString(this LogCategory logCategory)
-		{
-			return CategoryDisplayStrings[(int)logCategory];
+			Assert.That(maxValue == values.Length - 1 + lowestValue,
+				"The highest value must match the number of literals declared by the enumeration.");
 		}
 
 		/// <summary>

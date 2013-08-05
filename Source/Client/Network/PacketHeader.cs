@@ -48,13 +48,13 @@ namespace Lwar.Client.Network
 
 			if (!buffer.CanRead(Specification.HeaderSize))
 			{
-				Log.Warn(LogCategory.Client, "Received a packet with an incomplete header.");
+				Log.Warn("Received a packet with an incomplete header.");
 				return null;
 			}
 
 			if (buffer.ReadUInt32() != AppIdentifier)
 			{
-				Log.Warn(LogCategory.Client, "Received a packet with an invalid application identifier from the server.");
+				Log.Warn("Received a packet with an invalid application identifier from the server.");
 				return null;
 			}
 

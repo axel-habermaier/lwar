@@ -529,9 +529,8 @@ namespace Pegasus.Framework.Rendering
 			var tooManyQuads = _numQuads + quadCount >= _quads.Length;
 
 			if (tooManyQuads)
-				Log.Warn(LogCategory.Graphics,
-						 "Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
-						 _numQuads, MaxQuads, quadCount);
+				Log.Warn("Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
+					_numQuads, MaxQuads, quadCount);
 
 			return !tooManyQuads;
 		}
@@ -609,11 +608,11 @@ namespace Pegasus.Framework.Rendering
 			{
 				_currentSectionList = _numSectionLists;
 				AddSectionList(new SectionList(BlendState, DepthStencilState, SamplerState,
-											   WorldMatrix,
-											   texture,
-											   ScissorArea, UseScissorTest,
-											   Layer,
-											   _numSections));
+					WorldMatrix,
+					texture,
+					ScissorArea, UseScissorTest,
+					Layer,
+					_numSections));
 			}
 
 			_currentSection = _numSections;
@@ -782,14 +781,14 @@ namespace Pegasus.Framework.Rendering
 			/// <param name="layer">The section list's layer.</param>
 			/// <param name="section">The index of the (one and only) section of the list.</param>
 			public SectionList(BlendState blendState,
-							   DepthStencilState depthStencilState,
-							   SamplerState samplerState,
-							   Matrix worldMatrix,
-							   Texture2D texture,
-							   Rectangle scissorArea,
-							   bool useScissorTest,
-							   int layer,
-							   int section)
+				DepthStencilState depthStencilState,
+				SamplerState samplerState,
+				Matrix worldMatrix,
+				Texture2D texture,
+				Rectangle scissorArea,
+				bool useScissorTest,
+				int layer,
+				int section)
 			{
 				Texture = texture;
 				FirstSection = section;

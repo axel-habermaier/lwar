@@ -46,7 +46,7 @@ namespace Pegasus.Framework.Scripting
 
 			if (String.IsNullOrWhiteSpace(fileName))
 			{
-				Log.Error(LogCategory.FileSystem, "The file name cannot consist of whitespace only.");
+				Log.Error("The file name cannot consist of whitespace only.");
 				return;
 			}
 
@@ -54,7 +54,7 @@ namespace Pegasus.Framework.Scripting
 			_file = new AppFile(appName, fileName);
 
 			if (!_file.IsValid)
-				Log.Error(LogCategory.FileSystem, "'{0}' is not a valid file name.", _file.FileName);
+				Log.Error("'{0}' is not a valid file name.", _file.FileName);
 		}
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace Pegasus.Framework.Scripting
 			if (!_file.Read(out input, e =>
 				{
 					if (!silent)
-						Log.Error(LogCategory.FileSystem, "Unable to read '{0}': {1}", _file.FileName, e.Message);
+						Log.Error("Unable to read '{0}': {1}", _file.FileName, e.Message);
 				}))
 				yield break;
 

@@ -38,7 +38,7 @@ namespace Pegasus.Framework.Network
 #endif
 
 			if (!success)
-				Log.Warn(LogCategory.Network, "UDP socket is IPv6-only; dual-stack mode could not be activated.");
+				Log.Warn("UDP socket is IPv6-only; dual-stack mode could not be activated.");
 		}
 
 		/// <summary>

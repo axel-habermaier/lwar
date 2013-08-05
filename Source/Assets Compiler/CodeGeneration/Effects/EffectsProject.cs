@@ -31,7 +31,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			file = file.ToLocationString(begin, end);
 
 			var logMessage = String.Format("{0}: {1}: {2}", file, type, message);
-			new LogEntry(LogCategory.Assets, type, logMessage).RaiseLogEvent();
+			new LogEntry(type, logMessage).RaiseLogEvent();
 		}
 
 		/// <summary>

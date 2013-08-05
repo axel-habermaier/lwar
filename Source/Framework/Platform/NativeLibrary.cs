@@ -54,7 +54,7 @@ namespace Pegasus.Framework.Platform
 
 			_logCallback = OnLoggedMessage;
 
-			Log.Info(LogCategory.Platform, "Initializing native platform library...");
+			Log.Info("Initializing native platform library...");
 			NativeMethods.Initialize(_logCallback);
 
 			_isInitialized = true;
@@ -65,7 +65,7 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Log.Info(LogCategory.Platform, "Shutting down native platform library...");
+			Log.Info("Shutting down native platform library...");
 			NativeMethods.Shutdown();
 			_isInitialized = false;
 		}
@@ -81,7 +81,7 @@ namespace Pegasus.Framework.Platform
 			Assert.InRange(type);
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			var logEntry = new LogEntry(LogCategory.Graphics, type, message);
+			var logEntry = new LogEntry(type, message);
 			logEntry.RaiseLogEvent();
 		}
 

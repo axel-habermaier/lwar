@@ -342,10 +342,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="color">The color that should be used to colorize the message.</param>
 		private void ShowLogEntry(LogEntry entry, Color color)
 		{
-			if (entry.Category == LogCategory.General)
-				_content.Add(entry.Message, color);
-			else
-				_content.Add(String.Format("[{0}] {1}", entry.Category.ToDisplayString(), entry.Message), color);
+			_content.Add(entry.Message, color);
 		}
 	}
 }

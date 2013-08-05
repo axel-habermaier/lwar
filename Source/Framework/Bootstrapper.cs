@@ -94,8 +94,6 @@ namespace Pegasus.Framework
 		private static void WriteToConsole(LogEntry entry)
 		{
 			Console.Out.Write("[");
-			Console.Out.Write(entry.Category.ToDisplayString());
-			Console.Out.Write("] [");
 			Console.Out.Write(entry.LogType.ToDisplayString());
 			Console.Out.Write("] ");
 

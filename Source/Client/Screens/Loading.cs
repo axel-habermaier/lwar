@@ -84,7 +84,7 @@ namespace Lwar.Client.Screens
 			}
 
 			if (_networkSession.ServerIsFull)
-				MessageBox.Show(this, LogCategory.Server, LogType.Error, "The server is full.", true);
+				MessageBox.Show(this, LogType.Error, "The server is full.", true);
 
 			_statusMessage.Area = new Rectangle(0, 0, Window.Width, Window.Height);
 

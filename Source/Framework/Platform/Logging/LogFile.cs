@@ -40,7 +40,7 @@ namespace Pegasus.Framework.Platform.Logging
 			Log.OnDebugInfo += _logEntries.Enqueue;
 
 			_file = new AppFile(appName, String.Format("{0}.log", appName));
-			_file.Delete(e => Log.Warn(LogCategory.FileSystem, "Failed to delete the current contents of the log file: {0}", e.Message));
+			_file.Delete(e => Log.Warn("Failed to delete the current contents of the log file: {0}", e.Message));
 		}
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace Pegasus.Framework.Platform.Logging
 			if (!force && _logEntries.Count < BatchSize)
 				return;
 
-			if (_file.Append(WriteQueuedEntries, e => Log.Warn(LogCategory.FileSystem, "Failed to append to log file: {0}", e.Message)))
+			if (_file.Append(WriteQueuedEntries, e => Log.Warn("Failed to append to log file: {0}", e.Message)))
 				_logEntries.Clear();
 		}
 
@@ -74,14 +74,12 @@ namespace Pegasus.Framework.Platform.Logging
 
 			foreach (var entry in _logEntries)
 			{
-				writer.Write(entry.Time.ToString("HH:mm:ss.ffff"));
-				writer.Write(" ");
 				writer.Write("[");
-				writer.Write(entry.Category.ToDisplayString());
-				writer.Write("] [");
 				writer.Write(entry.LogType.ToDisplayString());
-				writer.Write("] ");
+				writer.Write("]   ");
+				writer.Write(entry.Time.ToString("HH:mm:ss.ffff"));
 
+				writer.Write("   ");
 				Text.Write(writer, entry.Message);
 				writer.WriteLine();
 			}

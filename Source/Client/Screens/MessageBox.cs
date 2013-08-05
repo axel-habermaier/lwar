@@ -97,17 +97,15 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		/// <param name="screen">The screen that should be considered to be the parent of the message box.</param>
 		/// <param name="type">The type of the message that should be shown.</param>
-		/// <param name="category">The category of the message that should be shown.</param>
 		/// <param name="message">The message that should be displayed by the message box.</param>
 		/// <param name="removeState">Indicates whether the current screen should be removed from the state manager.</param>
-		public static void Show(Screen screen, LogCategory category, LogType type, string message, bool removeState = false)
+		public static void Show(Screen screen, LogType type, string message, bool removeState = false)
 		{
 			Assert.ArgumentNotNull(screen);
-			Assert.InRange(category);
 			Assert.InRange(type);
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			var entry = new LogEntry(category, type, message);
+			var entry = new LogEntry(type, message);
 			entry.RaiseLogEvent();
 
 			screen.ScreenManager.Add(new MessageBox(entry));
