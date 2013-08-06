@@ -141,8 +141,11 @@ size_t message_pack(char *s, void *p) {
         break;
 	case MESSAGE_STATS:
 		i += uint8_pack(s+i, m->stats.n);
-		for (int j = 0; j < m->stats.n; ++j)
-		{
+		for (int j = 0; j < m->stats.n; ++j) {
+			i += id_pack(s+i, m->stats.info[j].player_id);
+			i += uint16_pack(s+i, m->stats.info[j].kills);
+			i += uint16_pack(s+i, m->stats.info[j].deaths);
+			i += uint16_pack(s+i, m->stats.info[j].ping);
 		}
 		break;
     case MESSAGE_COLLISION:
@@ -216,7 +219,13 @@ size_t message_unpack(const char *s, void *p) {
     case MESSAGE_FULL:
         break;
     case MESSAGE_STATS:
-        assert(0);
+        i += uint8_unpack(s+i, &m->stats.n);
+		for (int j = 0; j < m->stats.n; ++j) {
+			i += id_unpack(s+i, &m->stats.info[j].player_id);
+			i += uint16_unpack(s+i, &m->stats.info[j].kills);
+			i += uint16_unpack(s+i, &m->stats.info[j].deaths);
+			i += uint16_unpack(s+i, &m->stats.info[j].ping);
+		}
         break;
     case MESSAGE_UPDATE:
     case MESSAGE_UPDATE_POS:
@@ -305,7 +314,6 @@ void message_debug(Message *m, const char *s) {
         log_debug("%sfull", s);
         break;
     case MESSAGE_STATS:
-        log_debug("%stats", s);
         break;
     case MESSAGE_UPDATE:
     case MESSAGE_UPDATE_POS:

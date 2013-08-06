@@ -302,6 +302,9 @@ static void send_updates_for(Client *c, Packet *p, Format *f) {
 static void send_messages_for(Client *c, Packet *p) {
     Format *f;
 
+	// TODO: This should probably be moved somewhere else...
+	queue_stats();
+
     packet_init_header(c, p);
 
     send_queue_for(c, p);

@@ -44,7 +44,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// </summary>
 		~Effect()
 		{
-			Log.Die("Finalizer runs for effect '{0}'", GetType().FullName);
+			Log.Error("Finalizer runs for effect '{0}'", GetType().FullName);
 		}
 #endif
 

@@ -106,6 +106,7 @@ void queue_collision(Collision *c);
 void queue_add(Entity *e);
 void queue_remove(Entity *e);
 void queue_kill(Player *k, Player *v);
+void queue_stats();
 
 void protocol_init();
 void protocol_recv();

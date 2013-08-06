@@ -222,6 +222,26 @@ void queue_kill(Player *k, Player *v) {
     r->kill.victim_id = v->id;
 }
 
+void queue_stats()
+{
+	Message *r;
+	Client* c;
+
+	r = message_broadcast(MESSAGE_STATS);
+	r->stats.n = 0;
+
+	clients_foreach(c) {
+		if (c->player.id.n == 0)
+			continue;
+	
+		r->stats.info[r->stats.n].player_id = c->player.id;
+		r->stats.info[r->stats.n].kills = c->player.kills;
+		r->stats.info[r->stats.n].deaths = c->player.deaths;
+		r->stats.info[r->stats.n].ping = 0; // TODO
+		++r->stats.n;
+	}
+}
+
 Message *queue_next(cr_t *state, Client *c, size_t *tries) {
     static QueuedMessage *qm;
 

@@ -128,10 +128,12 @@ struct Message {
 
 		struct {
 			uint8_t n;
-			Id player_ids[MAX_CLIENTS];
-			uint16_t kills[MAX_CLIENTS];
-			uint16_t deaths[MAX_CLIENTS];
-			uint16_t pings[MAX_CLIENTS];
+			struct {
+				Id player_id;
+				uint16_t kills;
+				uint16_t deaths;
+				uint16_t ping;
+			} info[MAX_CLIENTS];
 		} stats;
 
         struct {

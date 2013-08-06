@@ -87,7 +87,8 @@ namespace Lwar.Client.Screens
 			var visibleRows = 0;
 			foreach (var player in _gameSession.Players
 											   .Where(player => player.Id.Identity != 0)
-											   .OrderBy(player => player.Kills)
+											   .OrderByDescending(player => player.Kills)
+											   .ThenBy(player => player.Deaths)
 											   .ThenBy(player => player.Name))
 				_rows[visibleRows++].UpdateContents(player);
 
@@ -206,17 +207,6 @@ namespace Lwar.Client.Screens
 			}
 
 			/// <summary>
-			///   Disposes the row, releasing all labels.
-			/// </summary>
-			public void Dispose()
-			{
-				_name.SafeDispose();
-				_kills.SafeDispose();
-				_deaths.SafeDispose();
-				_ping.SafeDispose();
-			}
-
-			/// <summary>
 			///   Gets or sets a value indicating whether the row is visible.
 			/// </summary>
 			public bool Visible { get; set; }
@@ -230,6 +220,17 @@ namespace Lwar.Client.Screens
 			///   Gets the total height of the row.
 			/// </summary>
 			public int Height { get; private set; }
+
+			/// <summary>
+			///   Disposes the row, releasing all labels.
+			/// </summary>
+			public void Dispose()
+			{
+				_name.SafeDispose();
+				_kills.SafeDispose();
+				_deaths.SafeDispose();
+				_ping.SafeDispose();
+			}
 
 			/// <summary>
 			///   Creates the header row.
@@ -305,7 +306,7 @@ namespace Lwar.Client.Screens
 			///   width of the label and the colum span.
 			/// </param>
 			/// <param name="offsetY">The offset in Y-direction that should be applied to the label.</param>
-			private void ChangeArea(Label label, ref int offsetX, int offsetY)
+			private static void ChangeArea(Label label, ref int offsetX, int offsetY)
 			{
 				label.Area = new Rectangle(offsetX, offsetY, label.Area.Size);
 				offsetX += label.Area.Width + ColumnSpan;
