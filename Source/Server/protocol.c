@@ -262,7 +262,7 @@ static void send_queue_for(Client *c, Packet *p) {
     while((m = queue_next(&state, c, &tries))) {
         if(tries > 0)
             stats.nresend ++;
-        if(tries == 0 /* && is_reliable(&qm->m) */)
+        if(tries == 0 && is_reliable(m))
             message_debug(m, dest_fmt(c));
 
     again_m:
@@ -301,9 +301,6 @@ static void send_updates_for(Client *c, Packet *p, Format *f) {
 
 static void send_messages_for(Client *c, Packet *p) {
     Format *f;
-
-	// TODO: This should probably be moved somewhere else...
-	queue_stats();
 
     packet_init_header(c, p);
 

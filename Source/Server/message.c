@@ -314,6 +314,7 @@ void message_debug(Message *m, const char *s) {
         log_debug("%sfull", s);
         break;
     case MESSAGE_STATS:
+		log_debug("%sstats", s);
         break;
     case MESSAGE_UPDATE:
     case MESSAGE_UPDATE_POS:

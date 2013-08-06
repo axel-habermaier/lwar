@@ -6,6 +6,7 @@
 #include "server.h"
 #include "coroutine.h"
 #include "message.h"
+#include "log.h"
 
 enum {
     /* TODO: should be a parameter to some function */
@@ -71,19 +72,19 @@ static bool qm_check_relevant(Client *c, QueuedMessage *qm) {
         return false;
     }
 
+	 /* unreliable message for c, do not resend */
+    if(!is_reliable(&qm->m)) {
+        qm_clear_dest(c, qm);
+        return true;
+    }
+
     if(   qm_tries(c,qm) > 0
-       && qm_last_tx_time(c,qm) + RETRANSMIT_INTERVAL < server->cur_clock)
+       && qm_last_tx_time(c,qm) + RETRANSMIT_INTERVAL >= server->cur_clock)
     {
         return false;
     }
     else {
         qm_last_tx_time(c,qm) = server->cur_clock;
-    }
-
-    /* unreliable message for c, do not resend */
-    if(!is_reliable(&qm->m)) {
-        qm_clear_dest(c, qm);
-        return true;
     }
 
     /* reliable message for c, already acknowledged */
@@ -98,6 +99,13 @@ static bool qm_check_relevant(Client *c, QueuedMessage *qm) {
 
 static QueuedMessage *qm_create() {
     QueuedMessage *qm = pool_new(&server->queue, QueuedMessage);
+	if (!qm) {
+		queue_foreach(qm) {
+			log_debug("dest = %x", qm->dest);
+			message_debug(&qm->m, "");
+		}
+		assert(false);
+	}
     assert(qm); /* TODO: handle allocation failure */
     return qm;
 }
@@ -106,10 +114,12 @@ static void qm_enqueue(Client *c, QueuedMessage *qm) {
     qm_set_dest(c,qm);
     if(is_reliable(&qm->m)) {
         qm_seqno(c,qm) = (c->next_out_seqno ++);
-        qm_tries(c,qm) = 0;
     }
-	else
+	else {
 		qm_seqno(c,qm) = 0;
+	}
+
+	qm_tries(c,qm) = 0;
 }
 
 static Message *message_unicast(Client *c, MessageType type) {

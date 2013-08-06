@@ -10,10 +10,10 @@
 
 enum {
     MAX_CLIENTS         =    8,
-    MAX_ENTITIES        = 4069,
+    MAX_ENTITIES        = 4096,
     MAX_ENTITY_TYPES    =   32,
     MAX_COLLISIONS      =   32, /* should be n^2-1 for priority queue */
-    MAX_QUEUE           = 4096,
+    MAX_QUEUE           = 128,
     MAX_STRINGS         =  128,
 
     NUM_SLOTS           =    4,
