@@ -8,6 +8,7 @@ namespace Lwar.Client.Screens
 	using Network;
 	using Network.Messages;
 	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;

@@ -158,21 +158,15 @@ namespace Lwar.Client.Network
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			// Start a task that sends a couple of Disconnect messages to the server
-			var task = Task.Factory.StartNew(() =>
-				{
-					for (var i = 0; i < DisconnectMessageCount && !IsDropped && !IsFaulted; ++i)
-					{
-						Send(new Message { Type = MessageType.Disconnect });
+			// Send a couple of Disconnect messages to the server
+			for (var i = 0; i < DisconnectMessageCount && !IsDropped && !IsFaulted; ++i)
+			{
+				Send(new Message { Type = MessageType.Disconnect });
 
-						_connection.Send(_outgoingMessages);
-						_connection.Update();
-						Thread.Sleep(DisconnectSendInterval);
-					}
-				});
-
-			// Wait for the task to finish and clean up
-			task.Wait();
+				_connection.Send(_outgoingMessages);
+				_connection.Update();
+				Thread.Sleep(DisconnectSendInterval);
+			}
 
 			_connection.SafeDispose();
 			_deliveryManager.SafeDispose();

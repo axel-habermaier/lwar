@@ -66,3 +66,5 @@ Server
 - figure out how to communicate ammount of ammunition
 - Check assertion problem in player.c:85
 - Fix infinite ship duplication bug (might be a client issue?)
+- BUG: If the mouse is directly in the center of the ship, the ship no longer reacts to mouse commands and 
+  pressing a move key moves the ship into the sun

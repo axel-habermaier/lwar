@@ -10,20 +10,10 @@
 
 pgFloat64 pgGetTime()
 {
-	HANDLE currentThread;
-	DWORD_PTR previousMask;
 	LARGE_INTEGER frequency, time;
-
-	// Force the timing code to run on the same core to work around possible hardware bugs
-	// (see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644904(v=vs.85).aspx)
-    currentThread = GetCurrentThread();
-    previousMask = SetThreadAffinityMask(currentThread, 1);
 
 	QueryPerformanceFrequency(&frequency);
     QueryPerformanceCounter(&time);
-
-    // Restore the thread affinity
-    SetThreadAffinityMask(currentThread, previousMask);
 
     // Return the current time in seconds
     return time.QuadPart / (pgFloat64)frequency.QuadPart;
