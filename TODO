@@ -50,6 +50,7 @@ Assets Compiler
 Network
 ========
 - Send network spec revision number with Connect message, send WrongVersion message on version mismatch
+- Send target entity with ray update message
 - Should collision messages be reliable? Otherwise the client has to filter collision messages...
 
 Server

@@ -529,3 +529,4 @@ namespace Pegasus.Framework.Math
 		}
 	}
 }
+

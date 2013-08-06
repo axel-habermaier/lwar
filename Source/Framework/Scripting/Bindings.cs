@@ -76,16 +76,27 @@ namespace Pegasus.Framework.Scripting
 		private void OnListBindings()
 		{
 			var builder = new StringBuilder();
-			var bindings = _bindings.OrderBy(binding => binding.Input.Trigger.ToString()).ToArray();
+			var bindingGroups = (from binding in _bindings
+								group binding by binding.Command
+								into bindingGroup
+								orderby bindingGroup.Key
+								select new { Command = bindingGroup.Key, Bindings = bindingGroup.ToArray() }).ToArray();
 
-			for (var i = 0; i < bindings.Length; ++i)
+			foreach (var group in bindingGroups)
 			{
-				if (i != 0)
-					builder.Append("\n");
+				builder.AppendFormat("\n'\\yellow{0}\\\0'", group.Command);
 
-				builder.AppendFormat("{0}: {1}", TypeRegistry.ToString(bindings[i].Input.Trigger), bindings[i].Command);
+				foreach (var binding in group.Bindings)
+					builder.AppendFormat("\n   on {0}", TypeRegistry.ToString(binding.Input.Trigger));
 			}
 
+			if (bindingGroups.Length == 0)
+			{
+				Log.Warn("There are no registered bindings.");
+				return;
+			}
+
+			builder.Append("\n");
 			Log.Info("{0}", builder);
 		}
 

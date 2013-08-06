@@ -110,7 +110,9 @@ namespace Lwar.Assets.Effects
 		}
 
 		[FragmentShader]
-		public void FragmentShaderShield([TexCoords] Vector3 worldPosition, [Normal] Vector3 normal, [Color] out Vector4 color)
+		public void FragmentShaderShield([TexCoords] Vector3 worldPosition,
+										 [Normal] Vector3 normal,
+										 [Color] out Vector4 color)
 		{
 			var maxDistance = 70;
 			var distance = Min(Distance(worldPosition, ImpactPosition) / maxDistance, 1.0f);

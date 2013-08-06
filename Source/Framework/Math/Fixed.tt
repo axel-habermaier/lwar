@@ -1,7 +1,6 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ import namespace="System" #>
 <#@ output extension=".cs" #>
-
 using System;
 
 namespace Pegasus.Framework.Math

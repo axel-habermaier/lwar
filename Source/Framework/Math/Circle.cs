@@ -68,8 +68,8 @@ namespace Pegasus.Framework.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(Circle other)
 		{
-			return Position.X == other.Position.X && Position.Y == other.Position.Y
-				   && Radius == other.Radius;
+			return Position.X == other.Position.X && Position.Y == other.Position.Y 
+				&& Radius == other.Radius;
 		}
 
 		/// <summary>
@@ -226,8 +226,8 @@ namespace Pegasus.Framework.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(CircleF other)
 		{
-			return MathUtils.FloatEquality(Position.X, other.Position.X) && MathUtils.FloatEquality(Position.Y, other.Position.Y)
-				   && MathUtils.FloatEquality(Radius, other.Radius);
+			return MathUtils.FloatEquality(Position.X, other.Position.X) && MathUtils.FloatEquality(Position.Y, other.Position.Y) 
+				&& MathUtils.FloatEquality(Radius, other.Radius);
 		}
 
 		/// <summary>
@@ -384,8 +384,8 @@ namespace Pegasus.Framework.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(CircleF8 other)
 		{
-			return Position.X == other.Position.X && Position.Y == other.Position.Y
-				   && Radius == other.Radius;
+			return Position.X == other.Position.X && Position.Y == other.Position.Y 
+				&& Radius == other.Radius;
 		}
 
 		/// <summary>
@@ -542,8 +542,8 @@ namespace Pegasus.Framework.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(CircleF16 other)
 		{
-			return Position.X == other.Position.X && Position.Y == other.Position.Y
-				   && Radius == other.Radius;
+			return Position.X == other.Position.X && Position.Y == other.Position.Y 
+				&& Radius == other.Radius;
 		}
 
 		/// <summary>
@@ -637,3 +637,4 @@ namespace Pegasus.Framework.Math
 		}
 	}
 }
+

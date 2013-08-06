@@ -88,7 +88,7 @@ internal interface ICommands
 	void Bind(InputTrigger trigger, [NotEmpty] string command);
 
 	/// <summary>
-	///   Unbinds all commands currently bound to the logical input.
+	///   Unbinds all commands currently bound to a logical input.
 	/// </summary>
 	/// <param name="trigger">The trigger that should be unbound.</param>
 	[Command]

@@ -1,12 +1,10 @@
 ﻿// ReSharper disable InconsistentNaming
-
 using System;
 
 namespace Pegasus.Framework.Math
 {
 	using System.Globalization;
 	using System.Runtime.InteropServices;
-
 
 	/// <summary>
 	///   Represents a two-component vector of 32-bit floating point values.

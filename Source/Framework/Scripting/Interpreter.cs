@@ -65,11 +65,11 @@ namespace Pegasus.Framework.Scripting
 		private void OnPrintAppInfo()
 		{
 			var builder = new StringBuilder();
-			builder.AppendFormat("Application Name: {0}\n", _appName);
-			builder.AppendFormat("Operating System: {0}\n", PlatformInfo.Platform);
-			builder.AppendFormat("CPU architecture: {0}\n", IntPtr.Size == 8 ? "x64" : "x86");
-			builder.AppendFormat("Graphics API:     {0}\n", PlatformInfo.GraphicsApi);
-			builder.AppendFormat("File Path:        {0}", AppFile.Folder);
+			builder.AppendFormat("\nApplication Name:     {0}\n", _appName);
+			builder.AppendFormat("Operating System:     {0}\n", PlatformInfo.Platform);
+			builder.AppendFormat("CPU Architecture:     {0}\n", IntPtr.Size == 8 ? "x64" : "x86");
+			builder.AppendFormat("Graphics API:         {0}\n", PlatformInfo.GraphicsApi);
+			builder.AppendFormat("User File Directory:  {0}\n", AppFile.Folder);
 
 			Log.Info("{0}", builder);
 		}
@@ -134,12 +134,7 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="pattern">The name pattern of the commands that should be listed.</param>
 		private static void OnListCommands(string pattern)
 		{
-			var commands = PatternMatches(CommandRegistry.All, command => command.Name, pattern).ToArray();
-			if (commands.Length == 0)
-				Log.Warn("No commands found matching search pattern '{0}'.", pattern);
-
-			foreach (var command in commands)
-				Log.Info("'{0}': {1}", command.Name, command.Description);
+			ListElements(CommandRegistry.All, pattern, command => command.Name, command => command.Description);
 		}
 
 		/// <summary>
@@ -148,12 +143,38 @@ namespace Pegasus.Framework.Scripting
 		/// <param name="pattern">The name pattern of the cvars that should be listed.</param>
 		private static void OnListCvars(string pattern)
 		{
-			var cvars = PatternMatches(CvarRegistry.All, cvar => cvar.Name, pattern).ToArray();
-			if (cvars.Length == 0)
-				Log.Warn("No cvars found matching search pattern '{0}'.", pattern);
+			ListElements(CvarRegistry.All, pattern, cvar => cvar.Name, cvar => cvar.Description);
+		}
 
-			foreach (var cvar in cvars)
-				Log.Info("'{0}': {1}", cvar.Name, cvar.Description);
+		/// <summary>
+		///   Lists all elements matching the given predicate.
+		/// </summary>
+		/// <typeparam name="T">The type of the elements that should be shown.</typeparam>
+		/// <param name="source">The elements that should be shown.</param>
+		/// <param name="pattern">The pattern that should be checked.</param>
+		/// <param name="name">A selector that returns the name of an element.</param>
+		/// <param name="description">A selector that returns the description of an element.</param>
+		private static void ListElements<T>(IEnumerable<T> source, string pattern, Func<T, string> name, Func<T, string> description)
+		{
+			Assert.ArgumentNotNull(source);
+			Assert.ArgumentNotNull(pattern);
+			Assert.ArgumentNotNull(name);
+			Assert.ArgumentNotNull(description);
+
+			var elements = PatternMatches(source, name, pattern).ToArray();
+			if (elements.Length == 0)
+			{
+				Log.Warn("No elements found matching search pattern '{0}'.", pattern);
+				return;
+			}
+
+			var builder = new StringBuilder();
+			builder.Append("\n");
+
+			foreach (var element in elements)
+				builder.AppendFormat("'\\yellow{0}\\\0'\n   {1}\n", name(element), description(element));
+
+			Log.Info("{0}", builder);
 		}
 
 		/// <summary>
@@ -162,7 +183,7 @@ namespace Pegasus.Framework.Scripting
 		/// </summary>
 		/// <typeparam name="T">The type of the items that should be checked.</typeparam>
 		/// <param name="source">The items that should be checked.</param>
-		/// <param name="selector">The selector function that selects the item property that should be checked.</param>
+		/// <param name="selector">The selector function that selects the item property that should be used for pattern matching.</param>
 		/// <param name="pattern">The pattern that should be checked.</param>
 		private static IEnumerable<T> PatternMatches<T>(IEnumerable<T> source, Func<T, string> selector, string pattern)
 		{

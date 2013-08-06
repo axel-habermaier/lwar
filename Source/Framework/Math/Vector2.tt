@@ -6,14 +6,12 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 // ReSharper disable InconsistentNaming
-
 using System;
 
 namespace Pegasus.Framework.Math
 {
 	using System.Globalization;
 	using System.Runtime.InteropServices;
-
 <# foreach (var info in GetInfo()) { #>
 
 	/// <summary>
