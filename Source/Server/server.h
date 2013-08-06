@@ -16,6 +16,8 @@ enum {
     MAX_QUEUE           = 4096,
     MAX_STRINGS         =  128,
 
+	NETWORK_REVISION    =   17,
+
     NUM_SLOTS           =    4,
 
     TIMEOUT_INTERVAL    =   15 * 1000 /*ms*/,

@@ -73,6 +73,7 @@ size_t message_pack(char *s, void *p) {
 
     switch(m->type) {
     case MESSAGE_CONNECT:
+		i += uint8_pack(s+i, m->connect.rev);
 		i += str_pack(s+i, m->connect.nick);
         break;
     case MESSAGE_DISCONNECT:
@@ -83,7 +84,7 @@ size_t message_pack(char *s, void *p) {
         break;
     case MESSAGE_LEAVE:
         i += id_pack(s+i, m->leave.player_id);
-		i += uint8_pack(s+i, m->leave.reason);
+		i += uint8_pack(s+i, (uint8_t)m->leave.reason);
         break;
     case MESSAGE_CHAT:
         i += id_pack(s+i, m->chat.player_id);
@@ -115,7 +116,8 @@ size_t message_pack(char *s, void *p) {
 		break;
     case MESSAGE_SYNCED:
         break;
-    case MESSAGE_FULL:
+	case MESSAGE_REJECT:
+		i += uint8_pack(s+i, (uint8_t)m->reject.reason);
         break;
     case MESSAGE_UPDATE:
     case MESSAGE_UPDATE_POS:
@@ -174,6 +176,7 @@ size_t message_unpack(const char *s, void *p) {
 
     switch(m->type) {
     case MESSAGE_CONNECT:
+		i += uint8_unpack(s+i, &m->connect.rev);
 		i += str_unpack(s+i, &m->connect.nick);
         break;
     case MESSAGE_DISCONNECT:
@@ -184,7 +187,7 @@ size_t message_unpack(const char *s, void *p) {
         break;
     case MESSAGE_LEAVE:
         i += id_unpack(s+i, &m->leave.player_id);
-		i += uint8_unpack(s+i, &m->leave.reason);
+		i += uint8_unpack(s+i, (uint8_t*)&m->leave.reason);
         break;
     case MESSAGE_CHAT:
         i += id_unpack(s+i, &m->chat.player_id);
@@ -216,7 +219,8 @@ size_t message_unpack(const char *s, void *p) {
 		break;
     case MESSAGE_SYNCED:
         break;
-    case MESSAGE_FULL:
+   case MESSAGE_REJECT:
+		i += uint8_unpack(s+i, (uint8_t*)&m->reject.reason);
         break;
     case MESSAGE_STATS:
         i += uint8_unpack(s+i, &m->stats.n);
@@ -310,8 +314,8 @@ void message_debug(Message *m, const char *s) {
     case MESSAGE_SYNCED:
         log_debug("%ssynced", s);
         break;
-    case MESSAGE_FULL:
-        log_debug("%sfull", s);
+    case MESSAGE_REJECT:
+        log_debug("%sreject", s);
         break;
     case MESSAGE_STATS:
 		log_debug("%sstats", s);

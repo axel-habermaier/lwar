@@ -65,7 +65,7 @@ Message Types
 	range from 101 to 199. This can be used to quickly determine whether a message is reliable or unreliable.
 
 	Id		Type			Reliable	Sender			Description	
-	---  	---------		---------	-------------	----------------------------------------------------------------------
+	---  	---------		---------	-------------	---------------------------------------------------------
 	  1 	Connect			yes			client			Client wants to connect to a server
 	  2		(Deprecated)								(Used to be the reliable Disconnect message)
 	  3		Join			yes			server			Informs all clients about a new player
@@ -81,9 +81,10 @@ Message Types
 	101		Stats			no			server			Periodically updates the clients' stats (pings, scores)
     102     (Deprecated)								(Used to be the Update message)
 	103		Input			no			client			Periodically updates the server's client-specific input state
-	104		Full			no			server			Signals the client that the server is full
+	104		(Deprecated)	no			server			(Used to be the Full message)
 	105		Collision		no			server			Indicates that a collision has occurred
 	106		Disconnect		no			client			Client wants to disconnect from a server
+	107     Reject			no			server			Signals the client that the server rejected the connection attempt
 
 	110		Update			no			server			Periodically updates the clients' entity states
 	111		UpdatePos		no			server			Restricted updates for different kinds of entities
@@ -114,6 +115,7 @@ Messages Payload Data
 	Connect
 		Type		Name 		Description
 		---------	----------	------------------------------------------------------------------------
+		uint8       revision	The revision number of the network protocol that the client implements
 		uint8		len			The length of the player name in bytes; len < Max Player Name Length
 		uint8[len]	name		The UTF8-encoded player name (not '\0'-terminated)
 
@@ -186,8 +188,14 @@ Messages Payload Data
 	Synced
 		Does not carry any payload data
 
-	Full
-		Does not carry any payload data
+	Reject
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint8   	reason		One of the following constants:
+								Id		Name			Description
+								1		Full			The server is full
+								2		VersionMismatch The server uses a different network protocol revision
+														than the client
 										
 	Stats
 		Type		Name 		Description
@@ -229,6 +237,8 @@ Messages Payload Data
 		int16		y			The current origin y
 		uint16		orientation	The orientation (direction, in degrees) of the ray, scaled by the Angle Scale Factor
 		uint16		length		The lenght of the ray
+		uint32(Id)  targetId	The id of the target entity (the entity that is hit by the ray) or
+								the reserved entity id if no entity is hit
 
 	UpdateCircle
 		Type		Name 		Description
@@ -289,11 +299,13 @@ Connecting to the server
 	Connect messages it might receive from a connecting client, just as it does with any other reliable
 	message that is received more than once.
 
-	Once the server has received a Connect message from a previously unknown client, it checks whether
-	it can accept an additional client or whether the server is full. In the latter case, the server
-	sends a Full message back to the client. Since the Full message is unreliable and might get lost, 
-	the server is free to send multiple Full message during a short timeframe, in order to increase the 
-	likelihood that the client actually receives the message.
+	Once the server has received a Connect message from a previously unknown client, it checks whether the
+	client's network protocol revision matches the server's revision. In case of a mismatch, the server
+	sends a Reject message with the VersionMismatch reason and ignores the connection attempt. Otherwise, 
+	the server checks whether it can accept an additional client or whether the server is full. In the latter 
+	case, the server sends a Reject message with the Full reason back to the client. Since the Reject message is 
+	unreliable and might get lost, the server is free to send multiple Reject message during a short timeframe, 
+	in order to increase the likelihood that the client actually receives the message.
 
 	If the server is not full, it sends a Join message containing the id of the newly allocated player to 
 	all clients, including the new one. This must be the first message sent to the new client and it must 
@@ -336,7 +348,11 @@ Client-side prediction
 
 Revision History
     Rev.    Date    Author		Changes
-    ----  --------  ----------	----------------------------------------------------------------------
+    ----  --------  ----------	-------------------------------------------------------------------
+	17	  13-08-06  Axel		Added Reject message; added revision number to connect message;
+								Updated connection procedure to reject connection attempts when a protocol
+								revision mismatch is detected; UpdateRay message now contains the id of
+								the target entity, if any
 	16    13-07-10  Axel		The client's target is now relative to the center of the client's ship
 	15	  13-06-14  Axel/Gidon	Angles are now scaled when sent over the network; entity with id 0 is 
 								now reserved for internal server use

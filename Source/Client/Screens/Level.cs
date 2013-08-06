@@ -170,6 +170,12 @@ namespace Lwar.Client.Screens
 				return;
 			}
 
+			if (_networkSession.ServerIsFull || _networkSession.VersionMismatch)
+			{
+				ScreenManager.Remove(this);
+				return;
+			}
+
 			if (_networkSession.IsLagging && topmost)
 				ScreenManager.Add(new WaitingForServer(_networkSession));
 

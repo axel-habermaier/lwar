@@ -144,6 +144,9 @@ namespace Lwar.Client.Network
 									 sender, ServerEndPoint);
 						}
 					}
+
+					if (State != ConnectionState.Connecting && State != ConnectionState.Connected && State != ConnectionState.Syncing)
+						return;
 				}
 			}
 			catch (SocketOperationException e)
@@ -233,12 +236,16 @@ namespace Lwar.Client.Network
 					else
 						State = ConnectionState.Connected;
 					break;
-				case MessageType.Full:
-					// Only the first message can be a server full message
+				case MessageType.Reject:
+					// Only the first message can be a reject message
 					if (State != ConnectionState.Connecting)
-						Log.Warn("Ignored an unexpected server full message.");
-					else
+						Log.Warn("Ignored an unexpected reject message.");
+					else if (message.Reject == RejectReason.Full)
 						State = ConnectionState.Full;
+					else if (message.Reject == RejectReason.VersionMismatch)
+						State = ConnectionState.VersionMismatch;
+					else
+						Assert.That(false, "Unknown reject reason.");
 					break;
 				default:
 					messageQueue.Enqueue(message);

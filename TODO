@@ -26,7 +26,6 @@ Pegasus.Framework
 ========
 - Show platform statistics, add 'level of detail' to show_stats cvar
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
-- Persist key bindings
 
 Pegasus.Platform
 ========

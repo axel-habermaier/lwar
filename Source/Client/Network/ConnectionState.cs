@@ -36,6 +36,11 @@ namespace Lwar.Client.Network
 		///   Indicates that a connection has been dropped after no packets have been received from the server for a specific
 		///   amount of time.
 		/// </summary>
-		Dropped
+		Dropped,
+
+		/// <summary>
+		///   Indicates that the server implements another revision of the network protocol.
+		/// </summary>
+		VersionMismatch
 	}
 }

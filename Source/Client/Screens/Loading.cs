@@ -78,18 +78,21 @@ namespace Lwar.Client.Screens
 
 				_networkSession.Send(SelectionMessage.Create(localPlayer, EntityType.Ship,
 															 EntityType.Gun, EntityType.Phaser,
-															 EntityType.Gun, EntityType.Gun));
+															 EntityType.Rocket, EntityType.Shockwave));
 
 				_gameSession.EventMessages.Enabled = true;
 			}
-
-			if (_networkSession.ServerIsFull)
-				MessageBox.Show(this, LogType.Error, "The server is full.", true);
 
 			_statusMessage.Area = new Rectangle(0, 0, Window.Width, Window.Height);
 
 			if (_networkSession.IsConnected || _networkSession.IsDropped || _networkSession.IsFaulted)
 				ScreenManager.Remove(this);
+
+			if (_networkSession.ServerIsFull)
+				MessageBox.Show(this, LogType.Error, "The server is full.", true);
+
+			if (_networkSession.VersionMismatch)
+				MessageBox.Show(this, LogType.Error, "The server uses an incompatible version of the network protocol.", true);
 		}
 
 		/// <summary>

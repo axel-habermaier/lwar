@@ -21,7 +21,7 @@ enum {
     UPDATE_INTERVAL = 30,
 };
 
-static void send_full(Address *adr, size_t ack);
+static void send_reject(Address *adr, size_t ack, RejectReason reason);
 static void send_kick(Client *c);
 static void protocol_timeout(Client *c);
 
@@ -71,6 +71,11 @@ static bool check_seqno(Client *c, Message *m, size_t seqno) {
 static void message_handle(Client *c, Address *adr, Message *m, size_t time, size_t seqno) {
     switch(m->type) {
     case MESSAGE_CONNECT:
+		if (m->connect.rev != NETWORK_REVISION) { 
+			send_reject(adr, seqno, REJECT_VERSION_MISMATCH);
+			break;
+		}
+
         /* TODO: probably allow reconnects */
         if(check_behavior(c, c != 0, "reconnect")) return;
         c = client_create(adr);
@@ -82,7 +87,7 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t time, siz
             queue_join(c);
             queue_gamestate_for(c);
         } else {
-            send_full(adr, seqno);
+            send_reject(adr, seqno, REJECT_FULL);
         }
         break;
 
@@ -217,12 +222,13 @@ static void send_kick(Client *c) {
     stats.nsend ++;
 }
 
-static void send_full(Address *adr, size_t ack) {
+static void send_reject(Address *adr, size_t ack, RejectReason reason) {
     Packet p;
     packet_init(&p, adr, ack, 0);
 
     Message m;
-    m.type  = MESSAGE_FULL;
+    m.type  = MESSAGE_REJECT;
+	m.reject.reason = reason;
     m.seqno = 0;
     packet_put(&p, message_pack, &m);
 

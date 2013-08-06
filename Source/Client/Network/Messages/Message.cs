@@ -47,7 +47,7 @@ namespace Lwar.Client.Network.Messages
 		///   The payload of a Connect message.
 		/// </summary>
 		[FieldOffset(StringPayloadOffset)]
-		public string Connect;
+		public ConnectMessage Connect;
 
 		/// <summary>
 		///   The payload of a Join message.
@@ -96,6 +96,12 @@ namespace Lwar.Client.Network.Messages
 		/// </summary>
 		[FieldOffset(PayloadOffset)]
 		public KillMessage Kill;
+
+		/// <summary>
+		/// The payload of a Reject message.
+		/// </summary>
+		[FieldOffset(PayloadOffset)]
+		public RejectReason Reject;
 
 		/// <summary>
 		///   The payload of a Stats message.

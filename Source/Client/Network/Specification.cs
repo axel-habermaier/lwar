@@ -51,5 +51,10 @@ namespace Lwar.Client.Network
 		///   The factor that angles sent over the network are scaled with.
 		/// </summary>
 		public const float AngleFactor = 100.0f;
+
+		/// <summary>
+		///   The revision number of the network protocol that is implemented by the client.
+		/// </summary>
+		public const byte Revision = 17;
 	}
 }

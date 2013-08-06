@@ -20,34 +20,41 @@ enum {
 };
 
 enum MessageType {
-    MESSAGE_CONNECT        =   1,
-    MESSAGE_DISCONNECT     =   2,
-    MESSAGE_JOIN           =   3,
-    MESSAGE_LEAVE          =   4,
-    MESSAGE_CHAT           =   5,
-    MESSAGE_ADD            =   6,
-    MESSAGE_REMOVE         =   7,
-    MESSAGE_SELECTION      =   8,
-    MESSAGE_NAME           =   9,
-    MESSAGE_SYNCED         =  10,
-	MESSAGE_KILL		   =  11,
+    MESSAGE_CONNECT			  =   1,
+	/* */
+    MESSAGE_JOIN			  =   3,
+    MESSAGE_LEAVE			  =   4,
+    MESSAGE_CHAT			  =   5,
+    MESSAGE_ADD				  =   6,
+    MESSAGE_REMOVE			  =   7,
+    MESSAGE_SELECTION		  =   8,
+    MESSAGE_NAME			  =   9,
+    MESSAGE_SYNCED			  =  10,
+	MESSAGE_KILL			  =  11,
 
-    MESSAGE_STATS          = 101,
+    MESSAGE_STATS			  = 101,
     /* */
-    MESSAGE_INPUT          = 103,
-    MESSAGE_FULL           = 104,
-    MESSAGE_COLLISION      = 105,
+    MESSAGE_INPUT			  = 103,
+    /* */			
+    MESSAGE_COLLISION		  = 105,
+	MESSAGE_DISCONNECT		  = 106,
+	MESSAGE_REJECT			  = 107,
 
-    MESSAGE_UPDATE         = 110,
-    MESSAGE_UPDATE_POS     = 111,
-    MESSAGE_UPDATE_RAY     = 112,
-    MESSAGE_UPDATE_CIRCLE  = 113,
+    MESSAGE_UPDATE			  = 110,
+    MESSAGE_UPDATE_POS		  = 111,
+    MESSAGE_UPDATE_RAY		  = 112,
+    MESSAGE_UPDATE_CIRCLE	  = 113,
 };
 
 enum LeaveReason {
 	LEAVE_QUIT			= 1,
 	LEAVE_DROPPED		= 2,
-	LEAVE_MISBEHAVED	= 3
+	LEAVE_MISBEHAVED	= 3,
+};
+
+enum RejectReason {
+	REJECT_FULL				= 1,
+	REJECT_VERSION_MISMATCH = 2,
 };
 
 int is_reliable(Message *m);
@@ -58,6 +65,7 @@ struct Message {
 
     union {
 		 struct {
+			uint8_t rev;
 			Str nick;
         } connect;
 
@@ -68,7 +76,7 @@ struct Message {
 
         struct {
             Id player_id;
-			uint8_t reason;
+			LeaveReason reason;
         } leave;
 
         struct {
@@ -104,6 +112,10 @@ struct Message {
 			Id killer_id;
 			Id victim_id;
 		} kill;
+
+		struct {
+			RejectReason reason;
+		} reject;
 
         struct {
             uint8_t n;

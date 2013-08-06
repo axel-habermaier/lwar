@@ -39,7 +39,8 @@ namespace Lwar.Client.Network
 					buffer.WriteString(message.Chat.Message, Specification.ChatMessageLength);
 					break;
 				case MessageType.Connect:
-					buffer.WriteString(message.Connect, Specification.PlayerNameLength);
+					buffer.WriteByte(message.Connect.NetworkRevision);
+					buffer.WriteString(message.Connect.Name, Specification.PlayerNameLength);
 					break;
 				case MessageType.Disconnect:
 					// No payload
@@ -74,7 +75,7 @@ namespace Lwar.Client.Network
 					break;
 				case MessageType.Add:
 				case MessageType.Collision:
-				case MessageType.Full:
+				case MessageType.Reject:
 				case MessageType.Join:
 				case MessageType.Leave:
 				case MessageType.Remove:
@@ -157,7 +158,12 @@ namespace Lwar.Client.Network
 					message.Kill.Victim = buffer.ReadIdentifier();
 					Messages.Add(message);
 					break;
-				case MessageType.Full:
+				case MessageType.Reject:
+					message.Reject = (RejectReason)buffer.ReadByte();
+
+					Assert.InRange(message.Reject);
+					Messages.Add(message);
+					break;
 				case MessageType.Synced:
 					// No payload data
 					Messages.Add(message);
@@ -221,6 +227,7 @@ namespace Lwar.Client.Network
 						message.UpdateRay.Origin = new Vector2(buffer.ReadInt16(), buffer.ReadInt16());
 						message.UpdateRay.Direction = buffer.ReadUInt16() / Specification.AngleFactor;
 						message.UpdateRay.Length = buffer.ReadUInt16();
+						message.UpdateRay.Target = buffer.ReadIdentifier();
 
 						Messages.Add(message);
 					}

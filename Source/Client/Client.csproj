@@ -203,6 +203,7 @@
     <Compile Include="Network\Messages\AddMessage.cs" />
     <Compile Include="Network\Messages\ChatMessage.cs" />
     <Compile Include="Network\Messages\CollisionMessage.cs" />
+    <Compile Include="Network\Messages\ConnectMessage.cs" />
     <Compile Include="Network\Messages\InputMessage.cs" />
     <Compile Include="Network\Messages\JoinMessage.cs" />
     <Compile Include="Network\Messages\KillMessage.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Network\Messages\UpdateMessage.cs" />
     <Compile Include="Network\Messages\UpdatePositionMessage.cs" />
     <Compile Include="Network\Messages\UpdateRayMessage.cs" />
+    <Compile Include="Network\RejectReason.cs" />
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
     <Compile Include="Screens\ChatInput.cs" />

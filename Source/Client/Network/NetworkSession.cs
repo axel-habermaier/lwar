@@ -60,7 +60,7 @@ namespace Lwar.Client.Network
 			_connection = new ServerConnection(serverEndPoint, packetFactory);
 
 			_outgoingMessages = new MessageQueue(packetFactory, _deliveryManager);
-			Send(new Message { Type = MessageType.Connect, Connect = Cvars.PlayerName });
+			Send(ConnectMessage.Create(Cvars.PlayerName));
 		}
 
 		/// <summary>
@@ -126,6 +126,14 @@ namespace Lwar.Client.Network
 		public bool ServerIsFull
 		{
 			get { return _connection.State == ConnectionState.Full; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the server implements a newer or older network protocol revision.
+		/// </summary>
+		public bool VersionMismatch
+		{
+			get { return _connection.State == ConnectionState.VersionMismatch; }
 		}
 
 		/// <summary>

@@ -31,5 +31,10 @@ namespace Lwar.Client.Network.Messages
 		///   The new ray origin.
 		/// </summary>
 		public Vector2 Origin;
+
+		/// <summary>
+		///   The target entity that is hit by the ray, if any.
+		/// </summary>
+		public Identifier Target;
 	}
 }
