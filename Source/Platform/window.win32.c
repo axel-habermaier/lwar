@@ -56,17 +56,19 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
 	if (window->cursor == NULL)
 		pgWin32Error("Failed to initialize the mouse cursor.");
 
-	if (window->placement.mode == PG_WINDOW_MAXIMIZED)
-		style |= WS_MAXIMIZE;
-	else if (window->placement.mode == PG_WINDOW_MINIMIZED)
-		style |= WS_MINIMIZE;
-
 	// Create the window
 	CreateWindowEx(0, WndClassName, title, style, window->placement.x, window->placement.y, 
 		width, height, NULL, NULL, GetModuleHandle(NULL), window);
 
 	if (window->hwnd == NULL)
 		pgWin32Error("Failed to open window.");
+
+	if (window->placement.mode == PG_WINDOW_MAXIMIZED)
+		ShowWindow(window->hwnd, SW_SHOWMAXIMIZED);
+	else if (window->placement.mode == PG_WINDOW_MINIMIZED)
+		ShowWindow(window->hwnd, SW_SHOWMINIMIZED);
+	else
+		ShowWindow(window->hwnd, SW_SHOW);
 }
 
 pgVoid pgCloseWindowCore(pgWindow* window)
@@ -288,7 +290,7 @@ static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc)
 	wndClass.hInstance = GetModuleHandle(NULL);
 	wndClass.hIcon = NULL;
 	wndClass.hCursor = NULL;
-	wndClass.hbrBackground = NULL;
+	wndClass.hbrBackground = (HBRUSH)GetStockObject (BLACK_BRUSH);
 	wndClass.lpszMenuName = NULL;
 	wndClass.lpszClassName = (LPCSTR)className;
 
