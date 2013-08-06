@@ -25,7 +25,6 @@ Client
 Pegasus.Framework
 ========
 - Show platform statistics, add 'level of detail' to show_stats cvar
-- Fully implement emoticon support
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
 - Key down/up in the same frame, multiple key down/ups in same frame
 - Persist key bindings

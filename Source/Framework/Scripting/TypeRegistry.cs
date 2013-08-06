@@ -13,7 +13,7 @@ namespace Pegasus.Framework.Scripting
 	/// <summary>
 	///   Manages the types that can be used for command parameters and cvar values. All enumerations types as well as most C#
 	///   built-in types and common .NET and Pegasus framework types are supported automatically. Enumeration types can also be
-	///   registered, in which case the overwrite the defaults.
+	///   registered, in which case they overwrite the defaults.
 	/// </summary>
 	public static class TypeRegistry
 	{

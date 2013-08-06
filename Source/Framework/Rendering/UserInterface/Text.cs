@@ -9,7 +9,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a text that may optionally contain color specifiers or text-representations of emoticons.
+	///   Represents a text that may optionally contain color specifiers.
 	/// </summary>
 	public class Text : PooledObject<Text>
 	{
@@ -22,7 +22,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Maps characters to colors. The character plus the color marker comprise a color specifier. For instance, 'w'
 		///   is mapped to the color white, so a text containing "\wA" prints a white 'A'.
 		/// </summary>
-		private static readonly ColorSpecifier[] Colors = new[]
+		private static readonly ColorSpecifier[] Colors =
 		{
 			// A special color specifier that restores the original color; can only be used by the application
 			new ColorSpecifier(ColorMarker + "\0", null),
@@ -40,35 +40,22 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		};
 
 		/// <summary>
-		///   Maps text-representations of emoticons to their single-character encoding.
-		/// </summary>
-		private static readonly Emoticon[] Emoticons = new[]
-		{
-			new Emoticon(":)", (char)277),
-			new Emoticon(":(", (char)278),
-			new Emoticon(";)", (char)279),
-			new Emoticon(":P", (char)280),
-			new Emoticon(":D", (char)281)
-		};
-
-		/// <summary>
 		///   The color ranges defined by the text.
 		/// </summary>
 		private readonly List<ColorRange> _colorRanges = new List<ColorRange>(2);
 
 		/// <summary>
-		///   The text with the color specifiers removed and the emoticons replaced by their single-character encoding.
+		///   The text with the color specifiers removed.
 		/// </summary>
 		private readonly StringBuilder _text = new StringBuilder();
 
 		/// <summary>
-		///   Gets the source string that might contain color specifiers and text-representations of emotions.
+		///   Gets the source string that might contain color specifiers.
 		/// </summary>
 		public string SourceString { get; private set; }
 
 		/// <summary>
-		///   Gets the length of the text, excluding all color specifiers and counting all single-character encodings of
-		///   emoticons.
+		///   Gets the length of the text, excluding all color specifiers.
 		/// </summary>
 		public int Length
 		{
@@ -92,8 +79,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Gets the character at the specified index. Color specifier are not returned and do not increase the index
-		///   count, whereas the single-character encodings of emoticons are returned and increase the index count by one.
+		///   Gets the character at the specified index. Color specifier are not returned and do not increase the index count.
 		/// </summary>
 		/// <param name="index">The index of the character that should be returned.</param>
 		public char this[int index]
@@ -128,8 +114,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Creates a new text instance.
 		/// </summary>
 		/// <param name="textString">
-		///   The string, possibly containing color specifiers or text-representations of emoticons,
-		///   that is the source for the text.
+		///   The string, possibly containing color specifiers, that is the source for the text.
 		/// </param>
 		public static Text Create(string textString)
 		{
@@ -144,8 +129,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Processes the source text: Removes all color specifiers, using them to build up the color range list and
-		///   replaces all text-representations of emoticons by their single-character encoding.
+		///   Processes the source text: Removes all color specifiers, using them to build up the color range list.
 		/// </summary>
 		private void ProcessSourceText()
 		{
@@ -153,7 +137,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			for (var i = 0; i < SourceString.Length; ++i)
 			{
 				ColorSpecifier color;
-				Emoticon emoticon;
 
 				if (TryMatch(SourceString, i, out color))
 				{
@@ -162,11 +145,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 					colorRange = new ColorRange(color.Color, _text.Length);
 					i += color.Specifier.Length - 1;
-				}
-				else if (TryMatch(SourceString, i, out emoticon))
-				{
-					_text.Append(emoticon.CharacterEncoding);
-					i += emoticon.TextRepresentation.Length - 1;
 				}
 				else
 					_text.Append(SourceString[i]);
@@ -218,51 +196,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Tries to match all emoticon text representations at the current input position and returns the first match. Returns
-		///   false to indicate that no match has been found.
-		/// </summary>
-		/// <param name="source">The source string on which the matching should be performed.</param>
-		/// <param name="index">The index of the first character that should be used for the match.</param>
-		/// <param name="matchedEmoticon">Returns the matched emoticon single-character encoding.</param>
-		private static bool TryMatch(string source, int index, out Emoticon matchedEmoticon)
-		{
-			// TODO: Allow emoticons and implement Map* methods correctly
-			matchedEmoticon = new Emoticon();
-			return false;
-
-			//if (!Char.IsPunctuation(source[index]))
-			//{
-			//	matchedEmoticon = new Emoticon();
-			//	return false;
-			//}
-
-			//for (var i = 0; i < Emoticons.Length; ++i)
-			//{
-			//	if (Emoticons[i].TextRepresentation.Length > source.Length - index)
-			//		continue;
-
-			//	var matches = true;
-			//	for (var j = 0; j < Emoticons[i].TextRepresentation.Length && j + index < source.Length; ++j)
-			//	{
-			//		if (source[j + index] != Emoticons[i].TextRepresentation[j])
-			//		{
-			//			matches = false;
-			//			break;
-			//		}
-			//	}
-
-			//	if (matches)
-			//	{
-			//		matchedEmoticon = Emoticons[i];
-			//		return true;
-			//	}
-			//}
-
-			//matchedEmoticon = new Emoticon();
-			//return false;
-		}
-
-		/// <summary>
 		///   Maps the given source index to the corresponding logical text index.
 		/// </summary>
 		/// <param name="sourceIndex">The source index that should be mapped.</param>
@@ -278,17 +211,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			for (var i = 0; i < sourceIndex; ++i)
 			{
 				ColorSpecifier color;
-				Emoticon emoticon;
 
 				if (TryMatch(SourceString, i, out color))
 				{
 					i += color.Specifier.Length - 1;
 					logicalIndex -= color.Specifier.Length;
-				}
-				else if (TryMatch(SourceString, i, out emoticon))
-				{
-					i += emoticon.TextRepresentation.Length - 1;
-					logicalIndex -= emoticon.TextRepresentation.Length;
 				}
 			}
 
@@ -311,16 +238,10 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			for (var i = 0; i < SourceString.Length; ++i)
 			{
 				ColorSpecifier color;
-				Emoticon emoticon;
 
 				if (TryMatch(SourceString, i, out color))
 				{
 					i += color.Specifier.Length - 1;
-				}
-				else if (TryMatch(SourceString, i, out emoticon))
-				{
-					++index;
-					i += emoticon.TextRepresentation.Length - 1;
 				}
 				else
 					++index;
@@ -355,8 +276,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Writes the given string into the given text writer. Color specifiers are not written, whereas for emoticons, the
-		///   text-representation is used.
+		///   Writes the given string into the given text writer. Color specifiers are not written.
 		/// </summary>
 		/// <param name="writer">The text writer that the text should be written to.</param>
 		/// <param name="text">The text that should be written.</param>
@@ -368,15 +288,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			for (var i = 0; i < text.Length; ++i)
 			{
 				ColorSpecifier color;
-				Emoticon emoticon;
 
 				if (TryMatch(text, i, out color))
 					i += color.Specifier.Length - 1;
-				else if (TryMatch(text, i, out emoticon))
-				{
-					writer.Write(emoticon.TextRepresentation);
-					i += emoticon.TextRepresentation.Length - 1;
-				}
 				else
 					writer.Write(text[i]);
 			}
@@ -439,35 +353,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			{
 				Specifier = specifier;
 				Color = color;
-			}
-		}
-
-		/// <summary>
-		///   Represents an emoticon, defining its text representation and single-character encoding.
-		/// </summary>
-		private struct Emoticon
-		{
-			/// <summary>
-			///   The single-character encoding of the emoticon.
-			/// </summary>
-			public readonly char CharacterEncoding;
-
-			/// <summary>
-			///   The text representation of the emoticon.
-			/// </summary>
-			public readonly string TextRepresentation;
-
-			/// <summary>
-			///   Initializes a new instance.
-			/// </summary>
-			/// <param name="textRepresentation">The text representation of the emoticon.</param>
-			/// <param name="characterEncoding">The single-character encoding of the emoticon.</param>
-			public Emoticon(string textRepresentation, char characterEncoding)
-			{
-				Assert.ArgumentNotNullOrWhitespace(textRepresentation);
-
-				TextRepresentation = textRepresentation;
-				CharacterEncoding = characterEncoding;
 			}
 		}
 	}
