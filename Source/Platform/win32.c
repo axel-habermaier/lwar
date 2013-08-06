@@ -5,18 +5,22 @@
 #include "win32.h"
 
 //====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+static pgFloat64 pgGetFequency();
+
+//====================================================================================================================
 // Exported functions
 //====================================================================================================================
 
 pgFloat64 pgGetTime()
 {
-	LARGE_INTEGER frequency, time;
-
-	QueryPerformanceFrequency(&frequency);
+	LARGE_INTEGER time;
     QueryPerformanceCounter(&time);
 
     // Return the current time in seconds
-    return time.QuadPart / (pgFloat64)frequency.QuadPart;
+	return time.QuadPart / pgGetFequency();
 }
 
 //====================================================================================================================
@@ -40,6 +44,25 @@ pgVoid pgDieWin32Error(pgString message, DWORD error)
 		PG_DIE("%s %s", message, buffer);
 	else
 		PG_DIE("%s (error code: 0x%X)", message, error);
+}
+
+//====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+static pgFloat64 pgGetFequency()
+{
+	static pgFloat64 frequency;
+
+	if (frequency == 0)
+	{
+		LARGE_INTEGER f;
+		QueryPerformanceFrequency(&f);
+
+		frequency = (pgFloat64)f.QuadPart;
+	}
+
+	return frequency;
 }
 
 #endif
