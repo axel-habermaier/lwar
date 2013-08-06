@@ -63,3 +63,6 @@ Server
 - Fix infinite ship duplication bug (might be a client issue?)
 - BUG: If the mouse is directly in the center of the ship, the ship no longer reacts to mouse commands and 
   pressing a move key moves the ship into the sun
+- BUG: assert(p->a <= p->b); packet.c:39
+- BUG: assert(!e->dead); entity.c:177
+- Infinite ship spawn bug occurs reliably
