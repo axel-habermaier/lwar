@@ -13,10 +13,6 @@ static pgBool GlExtSupported(int extension, pgString extensionName);
 static pgVoid InitializeOpenGLExtensions();
 static pgInt32 FlipY(pgGraphicsDevice* device, pgInt32 top, pgInt32 height);
 
-#ifdef DEBUG
-static void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam);
-#endif
-
 //====================================================================================================================
 // Core functions 
 //====================================================================================================================
@@ -48,12 +44,6 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 	PG_GL_ALLOC("Program Pipeline", glGenProgramPipelines, device->pipeline);
 	glBindProgramPipeline(device->pipeline);
 	PG_ASSERT_NO_GL_ERRORS();
-
-#ifdef DEBUG
-	glDebugMessageCallbackARB(&DebugCallback, NULL);
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-	PG_ASSERT_NO_GL_ERRORS();
-#endif
 }
 
 pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device)
@@ -151,9 +141,6 @@ static pgVoid InitializeOpenGLExtensions()
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_filter_anisotropic, "EXT_texture_filter_anisotropic");
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_compression_s3tc, "EXT_texture_compression_s3tc");
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_direct_state_access, "EXT_direct_state_access");
-#ifdef DEBUG
-	glExtsSupported &= GlExtSupported(ogl_ext_ARB_debug_output, "ARB_debug_output");
-#endif
 
 	if (!glExtsSupported)
 		PG_DIE("Incompatible graphics card. Not all required OpenGL extenions are supported.");
@@ -163,27 +150,5 @@ static pgInt32 FlipY(pgGraphicsDevice* device, pgInt32 top, pgInt32 height)
 {
 	return device->renderTarget->height - height - top;
 }
-
-#ifdef DEBUG
-static void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam)
-{
-	PG_UNUSED(source);
-	PG_UNUSED(id);
-	PG_UNUSED(severity);
-	PG_UNUSED(length);
-	PG_UNUSED(userParam);
-
-	switch (type)
-	{
-	case GL_DEBUG_TYPE_ERROR_ARB:
-	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
-	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
-		PG_ERROR("OpenGL error: %s", message);
-		return;
-	default:
-		PG_WARN("OpenGL info: %s", message);
-	}
-}
-#endif
 
 #endif

@@ -1,5 +1,101 @@
 #include "prelude.h"
 
+// Double click & Fullscreen implementation ideas (ClanLIB)
+//// Handle double click timing
+//	if (event.type == ButtonPress)
+//	{
+//		Time time_change = event.time - time_at_last_press;
+//		time_at_last_press = event.time;
+//
+//		if (last_press_id == id)	// Same key pressed
+//		{
+//			if (time_change < 500)	// 500 ms is the default in Windows
+//			{
+//				is_a_double_click_event = true;
+//				last_press_id = -1;	// Reset to avoid "tripple clicks"
+//			}
+//		}
+//		else
+//		{
+//			last_press_id = id;
+//		}
+//	}
+//	
+//	
+//	
+//void X11Window::clear_structurenotify_events()
+//{
+//	XEvent event;
+//	while( XCheckMaskEvent(display, StructureNotifyMask, &event));
+//
+//}
+//	
+//	void X11Window::map_window()
+//{
+//	clear_structurenotify_events();
+//
+//	if (!is_window_mapped)
+//	{
+//		int result = XMapWindow(display, window);
+//		if ( (result == BadValue) || (result == BadWindow) )
+//		{
+//			throw Exception("Failed to map window");		
+//		}
+//		else
+//		{
+//			XEvent event;
+//			do {
+//				XWindowEvent(display, window, StructureNotifyMask, &event);
+//			}while ( event.type != MapNotify );
+//
+//			is_window_mapped = true;
+//
+//			if (fullscreen)
+//				XSetInputFocus(display, window, RevertToParent, CurrentTime);
+//		}
+//
+//		if (!frame_size_calculated)
+//		{
+//			frame_size_calculated = true;
+//			calculate_window_frame_size();
+//
+//			if (!fullscreen)
+//			{
+//				// Now we know the frame size, nudge the window into the exact position
+//				Rect frame_size = requested_current_window_client_area;	// Must copy as set_position() changes this variable, causing all sorts of problems
+//				set_position(frame_size, !requested_size_contains_frame);
+//			}
+//			current_window_client_area = get_screen_position();
+//			requested_current_window_client_area = current_window_client_area;
+//		}
+//
+//		always_send_window_position_changed_event = true;
+//		always_send_window_size_changed_event = true;
+//	}
+//}
+//
+//void X11Window::unmap_window()
+//{
+//	clear_structurenotify_events();
+//	if (is_window_mapped)
+//	{
+//		int result = XUnmapWindow(display, window);
+//		if ( (result == BadValue) || (result == BadWindow) )
+//		{
+//			throw Exception("Failed to unmap window");		
+//		}
+//		else
+//		{
+//			XEvent event;
+//			do {
+//				XWindowEvent(display, window, StructureNotifyMask, &event);
+//			}while (event.type != UnmapNotify);
+//
+//			is_window_mapped = false;
+//		}
+//	}
+//}
+
 #ifdef LINUX
 
 // The next message that should be handled
