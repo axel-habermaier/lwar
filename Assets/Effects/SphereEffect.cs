@@ -70,7 +70,9 @@ namespace Lwar.Assets.Effects
 		}
 
 		[FragmentShader]
-		public void FragmentShaderPlanet([TexCoords] Vector3 worldPosition, [Normal] Vector3 normal, [Color] out Vector4 color)
+		public void FragmentShaderPlanet([TexCoords] Vector3 worldPosition,
+										 [Normal] Vector3 normal,
+										 [Color] out Vector4 color)
 		{
 			var textureColor = SphereTexture.Sample(normal).rgb;
 

@@ -161,6 +161,21 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 						throw new InvalidOperationException("Unsupported shader type.");
 				}
 			}
+
+			ValidateShaderSignatures();
+		}
+
+		/// <summary>
+		///   Checks whether the signatures of the vertex and fragment shaders match.
+		/// </summary>
+		private void ValidateShaderSignatures()
+		{
+			foreach (var input in from input in FragmentShader.Inputs
+								  where VertexShader.Outputs.All(output => output.Semantics != input.Semantics)
+								  select input)
+			{
+				Error(_variable, "Shader signature mismatch: Fragment shader input '{0}' is not set by the vertex shader.", input.Name);
+			}
 		}
 
 		/// <summary>
