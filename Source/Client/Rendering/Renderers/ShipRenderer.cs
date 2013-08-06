@@ -66,6 +66,7 @@ namespace Lwar.Client.Rendering.Renderers
 			if (!camera.IsActive)
 				return;
 
+			spriteBatch.WorldMatrix = Matrix.Identity;
 			var viewport = camera.Viewport;
 
 			// Update the positions of all names

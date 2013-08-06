@@ -193,6 +193,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				return;
 
 			// Draw the background
+			spriteBatch.WorldMatrix = Matrix.Identity;
 			spriteBatch.UseScissorTest = false;
 			spriteBatch.Layer = Int32.MaxValue - 1;
 
