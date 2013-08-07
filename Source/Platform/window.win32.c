@@ -498,6 +498,18 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 			return 0;
 		break;
 
+	case WM_DEADCHAR:
+		{
+			BYTE keyState[256];
+			WCHAR buffer[8];
+			if (!GetKeyboardState(keyState))
+				pgWin32Error("Failed to get keyboard state.");
+
+			// Clear the internal keyboard buffer so that the next WM_CHAR message is not influenced by the dead key
+			ToUnicode(VK_SPACE, 39, keyState, buffer, sizeof(buffer) / sizeof(WCHAR), 0);
+		}
+		/* fall-through */
+
 	case WM_CHAR:
 		// Ignore all non-printable characters below 32 (= single white-space). Otherwise, character entered 
 		// events would also be raised for the enter and back space keys, for instance. The character that is

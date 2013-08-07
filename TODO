@@ -21,15 +21,11 @@ Client
 - Let camera follow ship (sort of: attach the camera to the ship with a spring)
 - Show server network statistics
 - Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
-- Welcome text not centered when leaving fullscreen with non-native resolution
 
 Pegasus.Framework
 ========
 - Show platform statistics, add 'level of detail' to show_stats cvar
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
-- Console scrolling with mouse wheel
-- Crash when deleting characters
-- Crash when spamming
 
 Pegasus.Platform
 ========

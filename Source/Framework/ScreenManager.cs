@@ -3,6 +3,7 @@
 namespace Pegasus.Framework
 {
 	using System.Collections.Generic;
+	using Math;
 	using Platform.Memory;
 	using Rendering;
 
@@ -105,6 +106,8 @@ namespace Pegasus.Framework
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public void DrawUserInterface(SpriteBatch spriteBatch)
 		{
+			spriteBatch.WorldMatrix = Matrix.Identity;
+
 			for (var i = GetFirstVisibleScreen(); i < _screens.Count; ++i)
 			{
 				// Each screen can use up to 100 different layers
