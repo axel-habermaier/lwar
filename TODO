@@ -21,11 +21,16 @@ Client
 - Let camera follow ship (sort of: attach the camera to the ship with a spring)
 - Show server network statistics
 - Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
+- Rename to lwar
+- Add layered networking system with debugging capabilities and statistics
 
 Pegasus.Framework
 ========
 - Show platform statistics, add 'level of detail' to show_stats cvar
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
+- Support all printable ASCII characters
+- Show a 'non-printable character' glyph (box) when a character is not in a font
+- Add .NET wrapper for Platform socket abstraction
 
 Pegasus.Platform
 ========
@@ -36,6 +41,9 @@ Pegasus.Platform
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Get rid of EXT_direct_state_access
 - Fix AMD OpenGL synchronization bug
+- Support all printable ASCII characters
+- Allow dead keys, use callback to determine whether a dead key should be 'canceled'
+- Add UDP socket abstraction
 
 Assets Compiler
 ========
@@ -45,6 +53,13 @@ Assets Compiler
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)
 - Fix constant buffer packing
+- Replace bmfont with freetype
+- Require all (printable) ASCII characters in a font
+- Require a 'non-printable character' glyph (box) in a font
+- Added template attribute to template-defining classes and just have the compiler check all .cs files
+- Assign increasing numbers per asset type and use that instead of name at runtime
+- Generate a class that maps a friendly C#-name to an asset id and that also stores the total number of assets per type
+- Asset lookup can then be an indexing operation into an array
 
 Network
 ========
