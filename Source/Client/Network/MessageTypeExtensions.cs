@@ -12,7 +12,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Checks whether the message type represents a reliable message.
 		/// </summary>
-		/// <param name="type">The type that should be checked.</param>
+		/// <param name="type">The message type that should be checked.</param>
 		public static bool IsReliable(this MessageType type)
 		{
 			Assert.ArgumentInRange(type);
@@ -22,7 +22,7 @@ namespace Lwar.Client.Network
 		/// <summary>
 		///   Checks whether the message type represents an unreliable message.
 		/// </summary>
-		/// <param name="type">The type that should be checked.</param>
+		/// <param name="type">The message type that should be checked.</param>
 		public static bool IsUnreliable(this MessageType type)
 		{
 			Assert.ArgumentInRange(type);

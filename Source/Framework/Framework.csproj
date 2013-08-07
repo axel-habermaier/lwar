@@ -193,19 +193,8 @@
   <ItemGroup>
     <Compile Include="AppContext.cs" />
     <Compile Include="Math\LineSegment.cs" />
-    <Compile Include="Network\IServiceOperation.cs" />
-    <Compile Include="Network\MessageHeader.cs" />
-    <Compile Include="Network\MessageType.cs" />
-    <Compile Include="Network\ServiceHost.cs" />
-    <Compile Include="Network\ServiceIdentifier.cs" />
-    <Compile Include="Network\ServiceOperation.cs" />
-    <Compile Include="Network\ServiceOperation`1.cs" />
-    <Compile Include="Network\ServicePacketFactory.cs" />
-    <Compile Include="Network\ServiceProxy.cs" />
     <Compile Include="Network\SocketExtensions.cs" />
-    <Compile Include="Network\SocketOperation.cs" />
-    <Compile Include="Network\TcpListener.cs" />
-    <Compile Include="Network\TcpSocket.cs" />
+    <Compile Include="Network\SocketOperationException.cs" />
     <Compile Include="Platform\Graphics\SyncedQuery.cs" />
     <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\ResharperAnnotations.cs" />
@@ -307,7 +296,6 @@
       <DependentUpon>Vector2.tt</DependentUpon>
     </Compile>
     <Compile Include="Network\UdpSocket.cs" />
-    <Compile Include="Network\SocketOperationException.cs" />
     <Compile Include="Network\IncomingPacket.cs" />
     <Compile Include="Network\OutgoingPacket.cs" />
     <Compile Include="Network\Packet.cs" />
