@@ -10,13 +10,11 @@
 autoexec.cfg
 lwar.log
 .directory
-Source/Client/obj
+Source/lwar/obj
 Source/Assets Compiler/obj
 Source/Assets Compiler/bin
 Source/Framework/obj
 Source/Platform/obj
-Source/LibNoise/obj
-Source/LibNoise/bin
 Source/Platform/Platform.md.pc
 Source/Server/Server.md.pc
 lwarMono.userprefs
@@ -28,8 +26,8 @@ Binaries x64
 Binaries x86
 log.txt
 Assets/Effects/Effects.cs
-Source/Client/Gameplay/Entities/EntityType.cs
-Source/Client/Gameplay/Entities/Templates.cs
+Source/lwar/Gameplay/Entities/EntityType.cs
+Source/lwar/Gameplay/Entities/Templates.cs
 Source/Server/templates.c
 Source/Server/entity.h
 lwar.sln.ide
