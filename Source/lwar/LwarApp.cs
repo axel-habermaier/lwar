@@ -13,9 +13,9 @@ namespace Lwar
 	using Scripting;
 
 	/// <summary>
-	///   Represents the lwar client.
+	///   Represents the lwar application.
 	/// </summary>
-	internal sealed class LwarClient : App
+	internal sealed class LwarApp : App
 	{
 		/// <summary>
 		///   The local game server that can be used to hosts game sessions locally.

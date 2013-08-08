@@ -19,7 +19,7 @@ namespace Lwar
 			Commands.Initialize();
 			Cvars.Initialize();
 
-			Bootstrapper<LwarClient>.Run("lwar", "Fonts/Liberation Mono 12", new SpriteEffect());
+			Bootstrapper<LwarApp>.Run("lwar", "Fonts/Liberation Mono 12", new SpriteEffect());
 		}
 	}
 }
