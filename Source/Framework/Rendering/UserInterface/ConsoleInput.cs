@@ -133,8 +133,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public event Action<char> CharEntered
 		{
-			add { _device.Keyboard.CharEntered += value; }
-			remove { _device.Keyboard.CharEntered -= value; }
+			add { _device.Keyboard.CharacterEntered += value; }
+			remove { _device.Keyboard.CharacterEntered -= value; }
 		}
 
 		/// <summary>

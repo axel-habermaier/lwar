@@ -222,6 +222,7 @@ typedef enum
 	PG_MESSAGE_LOST_FOCUS,
 	PG_MESSAGE_GAINED_FOCUS,
 	PG_MESSAGE_CHARACTER_ENTERED,
+	PG_MESSAGE_DEAD_CHARACTER_ENTERED,
 	PG_MESSAGE_KEY_DOWN,
 	PG_MESSAGE_KEY_UP,
 	PG_MESSAGE_MOUSE_WHEEL,
@@ -267,6 +268,7 @@ pgVoid pgReleaseMouseCore(pgWindow* window);
 pgVoid pgConstrainWindowPlacement(pgWindowPlacement* placement);
 pgRectangle pgGetDesktopArea();
 pgVoid pgGetMousePositionCore(pgWindow* window, pgInt32* x, pgInt32* y);
+pgVoid pgCancelDeadCharacter();
 
 //====================================================================================================================
 // Helper functions

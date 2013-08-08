@@ -234,6 +234,17 @@ pgRectangle pgGetDesktopArea()
 	return rectangle;
 }
 
+pgVoid pgCancelDeadCharacter()
+{
+	BYTE keyState[256];
+	WCHAR buffer[8];
+	if (!GetKeyboardState(keyState))
+		pgWin32Error("Failed to get keyboard state.");
+
+	// Clear the internal keyboard buffer so that the next WM_CHAR message is not influenced by the dead key
+	ToUnicode(VK_SPACE, 39, keyState, buffer, sizeof(buffer) / sizeof(WCHAR), 0);
+}
+
 //====================================================================================================================
 // Helper functions
 //====================================================================================================================
@@ -499,27 +510,15 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		break;
 
 	case WM_DEADCHAR:
-		{
-			BYTE keyState[256];
-			WCHAR buffer[8];
-			if (!GetKeyboardState(keyState))
-				pgWin32Error("Failed to get keyboard state.");
-
-			// Clear the internal keyboard buffer so that the next WM_CHAR message is not influenced by the dead key
-			ToUnicode(VK_SPACE, 39, keyState, buffer, sizeof(buffer) / sizeof(WCHAR), 0);
-		}
-		/* fall-through */
+		message->type = PG_MESSAGE_DEAD_CHARACTER_ENTERED;
+		message->character = (pgUint16)wParam;
+		message->scanCode = (pgInt32)((pgByte*)&lParam)[2];
+		break;
 
 	case WM_CHAR:
-		// Ignore all non-printable characters below 32 (= single white-space). Otherwise, character entered 
-		// events would also be raised for the enter and back space keys, for instance. The character that is
-		// passed to the callback is UTF-16 encoded
-		if ((pgUint16)wParam > 31)
-		{
-			message->type = PG_MESSAGE_CHARACTER_ENTERED;
-			message->character = (pgUint16)wParam;
-			message->scanCode = (pgInt32)((pgByte*)&lParam)[2];
-		}
+		message->type = PG_MESSAGE_CHARACTER_ENTERED;
+		message->character = (pgUint16)wParam;
+		message->scanCode = (pgInt32)((pgByte*)&lParam)[2];
 		break;
 	}
 

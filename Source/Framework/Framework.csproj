@@ -196,6 +196,7 @@
     <Compile Include="Network\SocketExtensions.cs" />
     <Compile Include="Network\SocketOperationException.cs" />
     <Compile Include="Platform\Graphics\SyncedQuery.cs" />
+    <Compile Include="Platform\Input\CharacterEnteredEventArgs.cs" />
     <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\ResharperAnnotations.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />

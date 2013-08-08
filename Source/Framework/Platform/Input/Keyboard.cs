@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Input
 {
+	using Logging;
 	using Memory;
 
 	/// <summary>
@@ -30,16 +31,14 @@ namespace Pegasus.Framework.Platform.Input
 			_window = window;
 			_window.KeyPressed += OnKeyPressed;
 			_window.KeyReleased += OnKeyReleased;
+			_window.CharacterEntered += OnCharacterEntered;
+			_window.DeadCharacterEntered += OnDeadCharacterEntered;
 		}
 
 		/// <summary>
 		///   Raised when a text character was entered.
 		/// </summary>
-		public event Action<char> CharEntered
-		{
-			add { _window.CharacterEntered += value; }
-			remove { _window.CharacterEntered -= value; }
-		}
+		public event Action<char> CharacterEntered;
 
 		/// <summary>
 		///   Raised when a key was pressed.
@@ -66,6 +65,40 @@ namespace Pegasus.Framework.Platform.Input
 		{
 			_window.KeyPressed -= OnKeyPressed;
 			_window.KeyReleased -= OnKeyReleased;
+			_window.CharacterEntered -= OnCharacterEntered;
+			_window.DeadCharacterEntered -= OnDeadCharacterEntered;
+		}
+
+		/// <summary>
+		///   Invoked when a character has been entered as the result of a dead key press.
+		/// </summary>
+		/// <param name="character">Identifies the character that has been entered.</param>
+		/// <param name="cancel">
+		///   If set to true, the dead character is removed such that the subsequently entered character is not
+		///   influenced by the dead character.
+		/// </param>
+		private static void OnDeadCharacterEntered(CharacterEnteredEventArgs character, out bool cancel)
+		{
+			// Cancel the dead key if it is the result of the console key being pressed (happens, for instance, on German keyboard layouts)
+			cancel = character.ScanCode == PlatformInfo.ConsoleKey;
+		}
+
+		/// <summary>
+		///   Invoked when a character has been entered.
+		/// </summary>
+		/// <param name="character">Identifies the character that has been entered.</param>
+		private void OnCharacterEntered(CharacterEnteredEventArgs character)
+		{
+			// Only raise the character entered event if the character is a printable ASCII character
+			if (Char.IsControl(character.Character))
+				return;
+			
+			// Do not raise the character entered event if the character is the result of the console key being pressed
+			if (character.ScanCode == PlatformInfo.ConsoleKey)
+				return;
+
+			if (CharacterEntered != null)
+				CharacterEntered(character.Character);
 		}
 
 		/// <summary>

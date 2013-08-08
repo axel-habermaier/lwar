@@ -234,7 +234,7 @@ namespace Lwar.Client.Gameplay
 			message.GenerateDisplayString();
 			_messages[_index++] = message;
 
-			Log.Info(message.DisplayString);
+			Log.Info("{0}", message.DisplayString);
 		}
 
 		/// <summary>

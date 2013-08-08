@@ -132,7 +132,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Assert.NotDisposed(this);
 
 			// Ignore non-ASCII printable characters
-			if (c < 32 || c > 126)
+			if (c < 32 || c > 255)
 				return;
 
 			var length = _text.Length;

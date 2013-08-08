@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.Platform
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Input;
 	using Logging;
 	using Math;
@@ -14,6 +13,16 @@ namespace Pegasus.Framework.Platform
 	/// </summary>
 	public sealed class Window : DisposableObject
 	{
+		/// <summary>
+		///   Reacts to a character being entered as the result of a dead key press.
+		/// </summary>
+		/// <param name="character">Provides information about the character that has been entered.</param>
+		/// <param name="cancel">
+		///   If set to true, the dead character is removed such that the subsequently entered character is not
+		///   influenced by the dead character.
+		/// </param>
+		public delegate void DeadCharacterEnteredHandler(CharacterEnteredEventArgs character, out bool cancel);
+
 		/// <summary>
 		///   The minimal window size supported by the library.
 		/// </summary>
@@ -58,19 +67,16 @@ namespace Pegasus.Framework.Platform
 
 			_callbacks = new NativeMethods.Callbacks
 			{
-				CharacterEntered = (c, s) =>
-					{
-						if (s != PlatformInfo.ConsoleKey)
-							CharacterEntered((char)c);
-					},
-				KeyPressed = (k, s) => KeyPressed(new KeyEventArgs(k, s)),
-				KeyReleased = (k, s) => KeyReleased(new KeyEventArgs(k, s)),
-				MouseWheel = d => MouseWheel(d),
-				MousePressed = (button, doubleClick, x, y) => MousePressed(new MouseEventArgs(button, doubleClick, x, y)),
-				MouseReleased = (button, x, y) => MouseReleased(new MouseEventArgs(button, false, x, y)),
-				MouseMoved = (x, y) => MouseMoved(x, y),
-				MouseEntered = () => MouseEntered(),
-				MouseLeft = () => MouseLeft(),
+				CharacterEntered = OnCharacterEntered,
+				DeadCharacterEntered = OnDeadCharacterEntered,
+				KeyPressed = OnKeyPressed,
+				KeyReleased = OnKeyReleased,
+				MouseWheel = OnMouseWheel,
+				MousePressed = OnMousePressed,
+				MouseReleased = OnMouseReleased,
+				MouseMoved = OnMouseMoved,
+				MouseEntered = OnMouseEntered,
+				MouseLeft = OnMouseLeft
 			};
 
 			_placement = new NativeMethods.Placement
@@ -223,22 +229,74 @@ namespace Pegasus.Framework.Platform
 		///   Raised when the user requested the window to be closed. The window is not actually closed
 		///   until Dispose() is called.
 		/// </summary>
-		public event Action Closing = () => { };
+		public event Action Closing;
 
 		/// <summary>
-		///   Raised when text was entered.
+		///   Raised when a character was entered.
 		/// </summary>
-		public event Action<char> CharacterEntered = c => { };
+		public event Action<CharacterEnteredEventArgs> CharacterEntered;
+
+		/// <summary>
+		///   Raises the character entered event.
+		/// </summary>
+		/// <param name="character">The character that has been entered.</param>
+		/// <param name="scanCode">The scan code of the key that generated the character.</param>
+		private void OnCharacterEntered(ushort character, int scanCode)
+		{
+			if (CharacterEntered != null)
+				CharacterEntered(new CharacterEnteredEventArgs((char)character, scanCode));
+		}
+
+		/// <summary>
+		///   Raised when a character was entered as a result of a dead key press.
+		/// </summary>
+		public event DeadCharacterEnteredHandler DeadCharacterEntered;
+
+		/// <summary>
+		///   Raises the dead character entered event.
+		/// </summary>
+		/// <param name="character">The character that has been entered.</param>
+		/// <param name="scanCode">The scan code of the key that generated the character.</param>
+		/// <param name="cancel">If set to true, the dead key is canceled.</param>
+		private void OnDeadCharacterEntered(ushort character, int scanCode, out bool cancel)
+		{
+			if (DeadCharacterEntered != null)
+				DeadCharacterEntered(new CharacterEnteredEventArgs((char)character, scanCode), out cancel);
+			else
+				cancel = false;
+		}
 
 		/// <summary>
 		///   Raised when a key was pressed.
 		/// </summary>
-		public event Action<KeyEventArgs> KeyPressed = e => { };
+		public event Action<KeyEventArgs> KeyPressed;
+
+		/// <summary>
+		///   Raises the key pressed event.
+		/// </summary>
+		/// <param name="key">The key that has been pressed.</param>
+		/// <param name="scanCode">The scan code of the key.</param>
+		private void OnKeyPressed(Key key, int scanCode)
+		{
+			if (KeyPressed != null)
+				KeyPressed(new KeyEventArgs(key, scanCode));
+		}
 
 		/// <summary>
 		///   Raised when a key was released.
 		/// </summary>
-		public event Action<KeyEventArgs> KeyReleased = e => { };
+		public event Action<KeyEventArgs> KeyReleased;
+
+		/// <summary>
+		///   Raises the key released event.
+		/// </summary>
+		/// <param name="key">The key that has been released.</param>
+		/// <param name="scanCode">The scan code of the key.</param>
+		private void OnKeyReleased(Key key, int scanCode)
+		{
+			if (KeyReleased != null)
+				KeyReleased(new KeyEventArgs(key, scanCode));
+		}
 
 		/// <summary>
 		///   Raised when the mouse wheel was moved.
@@ -246,9 +304,32 @@ namespace Pegasus.Framework.Platform
 		public event Action<int> MouseWheel = d => { };
 
 		/// <summary>
+		///   Raises the mouse wheel event.
+		/// </summary>
+		/// <param name="delta">The mouse wheel delta.</param>
+		private void OnMouseWheel(int delta)
+		{
+			if (MouseWheel != null)
+				MouseWheel(delta);
+		}
+
+		/// <summary>
 		///   Raised when a mouse button was pressed.
 		/// </summary>
 		public event Action<MouseEventArgs> MousePressed = e => { };
+
+		/// <summary>
+		///   Raises the mouse pressed event.
+		/// </summary>
+		/// <param name="button">The mouse button that has been pressed.</param>
+		/// <param name="doubleClick">Indicates whether the event represents a double click.</param>
+		/// <param name="x">The X coordinate of the mouse.</param>
+		/// <param name="y">The Y coordinate of the mouse.</param>
+		private void OnMousePressed(MouseButton button, bool doubleClick, int x, int y)
+		{
+			if (MousePressed != null)
+				MousePressed(new MouseEventArgs(button, doubleClick, x, y));
+		}
 
 		/// <summary>
 		///   Raised when a mouse button was released.
@@ -256,19 +337,60 @@ namespace Pegasus.Framework.Platform
 		public event Action<MouseEventArgs> MouseReleased = e => { };
 
 		/// <summary>
+		///   Raises the mouse released event.
+		/// </summary>
+		/// <param name="button">The mouse button that has been released.</param>
+		/// <param name="x">The X coordinate of the mouse.</param>
+		/// <param name="y">The Y coordinate of the mouse.</param>
+		private void OnMouseReleased(MouseButton button, int x, int y)
+		{
+			if (MouseReleased != null)
+				MouseReleased(new MouseEventArgs(button, false, x, y));
+		}
+
+		/// <summary>
 		///   Raised when the mouse was moved inside the window.
 		/// </summary>
-		public event Action<int, int> MouseMoved = (x, y) => { };
+		public event Action<int, int> MouseMoved;
+
+		/// <summary>
+		///   Raises the mouse moved event.
+		/// </summary>
+		/// <param name="x">The X coordinate of the mouse.</param>
+		/// <param name="y">The Y coordinate of the mouse.</param>
+		private void OnMouseMoved(int x, int y)
+		{
+			if (MouseMoved != null)
+				MouseMoved(x, y);
+		}
 
 		/// <summary>
 		///   Raised when the mouse entered the window.
 		/// </summary>
-		public event Action MouseEntered = () => { };
+		public event Action MouseEntered;
+
+		/// <summary>
+		///   Raises the mouse entered event.
+		/// </summary>
+		private void OnMouseEntered()
+		{
+			if (MouseEntered != null)
+				MouseEntered();
+		}
 
 		/// <summary>
 		///   Raised when the mouse left the window.
 		/// </summary>
-		public event Action MouseLeft = () => { };
+		public event Action MouseLeft;
+
+		/// <summary>
+		///   Raises the mouse left event.
+		/// </summary>
+		private void OnMouseLeft()
+		{
+			if (MouseLeft != null)
+				MouseLeft();
+		}
 
 		/// <summary>
 		///   Provides access to the native window-related types and functions.
@@ -279,6 +401,8 @@ namespace Pegasus.Framework.Platform
 		private static class NativeMethods
 		{
 			public delegate void CharacterEnteredCallback(ushort character, int scanCode);
+
+			public delegate void DeadCharacterEnteredCallback(ushort character, int scanCode, out bool cancel);
 
 			public delegate void KeyPressedCallback(Key key, int scanCode);
 
@@ -336,6 +460,7 @@ namespace Pegasus.Framework.Platform
 			public struct Callbacks
 			{
 				public CharacterEnteredCallback CharacterEntered;
+				public DeadCharacterEnteredCallback DeadCharacterEntered;
 				public KeyPressedCallback KeyPressed;
 				public KeyReleasedCallback KeyReleased;
 				public MouseWheelCallback MouseWheel;

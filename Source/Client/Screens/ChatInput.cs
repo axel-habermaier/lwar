@@ -58,11 +58,6 @@ namespace Lwar.Client.Screens
 		private readonly Label _prompt;
 
 		/// <summary>
-		/// The label that explains how the chat input is used.
-		/// </summary>
-		private readonly Label _help;
-
-		/// <summary>
 		///   The input trigger that submits a non-empty chat message.
 		/// </summary>
 		private readonly LogicalInput _submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputLayers.Chat);
@@ -87,13 +82,12 @@ namespace Lwar.Client.Screens
 			_inputDevice.Add(_submit);
 			_inputDevice.Add(_cancel);
 
-			_inputDevice.Keyboard.CharEntered += OnCharEntered;
+			_inputDevice.Keyboard.CharacterEntered += OnCharacterEntered;
 			_inputDevice.Keyboard.KeyPressed += OnKeyPressed;
 
 			var font = assets.LoadFont("Fonts/Liberation Mono 12");
 			_prompt = new Label(font, "Say: ");
 			_textBox = new TextBox(font);
-			_help = new Label(font, "Press [Enter] to send the message.\nPress [Escape] to cancel.") { Color = new Color(0xFF3AC984) };
 			_lengthWarning = new Label(font, "The message exceeds the maximum allowed width for a chat message and cannot be sent.")
 			{
 				Color = new Color(255, 0, 0, 255)
@@ -121,7 +115,7 @@ namespace Lwar.Client.Screens
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_inputDevice.Keyboard.CharEntered -= OnCharEntered;
+			_inputDevice.Keyboard.CharacterEntered -= OnCharacterEntered;
 			_inputDevice.Keyboard.KeyPressed -= OnKeyPressed;
 
 			if (Active)
@@ -134,7 +128,6 @@ namespace Lwar.Client.Screens
 			_textBox.SafeDispose();
 			_lengthWarning.SafeDispose();
 			_prompt.SafeDispose();
-			_help.SafeDispose();
 		}
 
 		/// <summary>
@@ -202,8 +195,7 @@ namespace Lwar.Client.Screens
 			if (LengthExceeded)
 				bottom = _lengthWarning.ActualArea.Bottom;
 
-			_help.Area = new Rectangle(messageLeft, bottom + _help.Font.LineHeight, right - messageLeft, 0);
-			_frame.ContentArea = new Rectangle(Margin, top, right - Margin, _help.ActualArea.Bottom - top);
+			_frame.ContentArea = new Rectangle(Margin, top, right - Margin, bottom - top);
 		}
 
 		/// <summary>
@@ -218,10 +210,9 @@ namespace Lwar.Client.Screens
 			// Draw the frame
 			_frame.Draw(spriteBatch);
 
-			// Draw the prompt, the textbox, and the help label
+			// Draw the prompt and the textbox
 			_prompt.Draw(spriteBatch);
 			_textBox.Draw(spriteBatch);
-			_help.Draw(spriteBatch);
 
 			// Draw the length warning
 			if (LengthExceeded)
@@ -232,7 +223,7 @@ namespace Lwar.Client.Screens
 		///   Invoked whenever a printable character is entered.
 		/// </summary>
 		/// <param name="c">The character that has been entered.</param>
-		private void OnCharEntered(char c)
+		private void OnCharacterEntered(char c)
 		{
 			if (Active)
 				_textBox.InsertCharacter(c);

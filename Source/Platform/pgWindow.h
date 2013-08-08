@@ -138,6 +138,7 @@ typedef enum
 } pgKey;
 
 typedef pgVoid (*pgCharacterEnteredCallback)(pgUint16 character, pgInt32 scanCode);
+typedef pgVoid (*pgDeadCharacterEnteredCallback)(pgUint16 character, pgInt32 scanCode, pgBool* cancel);
 typedef pgVoid (*pgKeyPressedCallback)(pgKey key, pgInt32 scanCode);
 typedef pgVoid (*pgKeyReleasedCallback)(pgKey key, pgInt32 scanCode);
 typedef pgVoid (*pgMouseWheelCallback)(pgInt32 delta);
@@ -149,15 +150,16 @@ typedef pgVoid (*pgMouseLeftCallback)();
 
 typedef struct
 {
-	pgCharacterEnteredCallback	characterEntered;
-	pgKeyPressedCallback		keyPressed;
-	pgKeyReleasedCallback		keyReleased;
-	pgMouseWheelCallback		mouseWheel;
-	pgMousePressedCallback		mousePressed;
-	pgMouseReleasedCallback		mouseReleased;
-	pgMouseMovedCallback		mouseMoved;
-	pgMouseEnteredCallback		mouseEntered;
-	pgMouseLeftCallback			mouseLeft;
+	pgCharacterEnteredCallback		characterEntered;
+	pgDeadCharacterEnteredCallback	deadCharacterEntered;
+	pgKeyPressedCallback			keyPressed;
+	pgKeyReleasedCallback			keyReleased;
+	pgMouseWheelCallback			mouseWheel;
+	pgMousePressedCallback			mousePressed;
+	pgMouseReleasedCallback			mouseReleased;
+	pgMouseMovedCallback			mouseMoved;
+	pgMouseEnteredCallback			mouseEntered;
+	pgMouseLeftCallback				mouseLeft;
 } pgWindowCallbacks;
 
 typedef enum

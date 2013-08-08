@@ -41,8 +41,6 @@ Pegasus.Platform
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Get rid of EXT_direct_state_access
 - Fix AMD OpenGL synchronization bug
-- Support all printable ASCII characters
-- Allow dead keys, use callback to determine whether a dead key should be 'canceled'
 - Add UDP socket abstraction
 
 Assets Compiler
@@ -81,3 +79,4 @@ Server
 - BUG: assert(p->a <= p->b); packet.c:39
 - BUG: assert(!e->dead); entity.c:177
 - Infinite ship spawn bug occurs reliably
+- BUG: Long chat message (~ 250 characters) are ignored and not acknowledged by server

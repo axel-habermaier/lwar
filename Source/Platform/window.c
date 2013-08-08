@@ -10,6 +10,7 @@ pgWindow* pgOpenWindow(pgString title, pgWindowPlacement placement, pgWindowCall
 
 	PG_ASSERT_NOT_NULL(title);
 	PG_ASSERT_NOT_NULL(callbacks.characterEntered);
+	PG_ASSERT_NOT_NULL(callbacks.deadCharacterEntered);
 	PG_ASSERT_NOT_NULL(callbacks.keyPressed);
 	PG_ASSERT_NOT_NULL(callbacks.keyReleased);
 	PG_ASSERT_NOT_NULL(callbacks.mouseWheel);
@@ -93,6 +94,16 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			window->callbacks.characterEntered(message.character, message.scanCode);
 			window->focused = PG_TRUE;
 			break;
+		case PG_MESSAGE_DEAD_CHARACTER_ENTERED:
+		{
+			pgBool cancel = PG_FALSE;
+			window->callbacks.deadCharacterEntered(message.character, message.scanCode, &cancel);
+			window->focused = PG_TRUE;
+
+			if (cancel)
+				pgCancelDeadCharacter();
+			break;
+		}
 		case PG_MESSAGE_KEY_UP:
 			window->keyState[message.key] = PG_FALSE;
 			window->callbacks.keyReleased(message.key, message.scanCode);
