@@ -1,6 +1,0 @@
-﻿<#
-	SourceFile = "ICvars.cs";
-	Import = "../../Framework/Scripting/ICvars.cs";
-	Namespace = "Lwar.Client.Scripting";
-#>
-<#@ include file="../../Framework/Scripting/RegistryGenerator.tt" #>

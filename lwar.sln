@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Source\Client\Client.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar", "Source\lwar\lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1F608B12-403C-4639-947A-B559E8EF121C} = {1F608B12-403C-4639-947A-B559E8EF121C}
 		{8243791D-FE6E-40BF-A303-D981AE9968C2} = {8243791D-FE6E-40BF-A303-D981AE9968C2}
