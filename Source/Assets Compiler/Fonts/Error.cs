@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.FreeType
+namespace Pegasus.AssetsCompiler.Fonts
 {
 	/// <summary>
 	///   Indicates which type of error occurred when calling a freetype function.

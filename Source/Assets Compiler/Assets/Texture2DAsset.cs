@@ -26,6 +26,16 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
+		/// <param name="sourceDirectory">The source directory of the asset.</param>
+		protected Texture2DAsset(string relativePath, string sourceDirectory)
+			: base(relativePath, sourceDirectory)
+		{
+		}
+
+		/// <summary>
 		///   Loads the texture data.
 		/// </summary>
 		public unsafe void Load()

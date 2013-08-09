@@ -9,7 +9,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using Framework.Platform;
 	using Framework.Platform.Logging;
 	using Framework.Platform.Memory;
-	using FreeType;
+	using Fonts;
 
 	/// <summary>
 	///   Compiles texture-based fonts.
@@ -40,15 +40,16 @@ namespace Pegasus.AssetsCompiler.Compilers
 		protected override void Compile(FontAsset asset, BufferWriter buffer)
 		{
 			var configuration = _parser.Parse(asset.SourcePath);
+
 			var fontFile = Path.Combine(asset.SourceDirectory, (string)configuration["file"]);
 			var size = (int)configuration["size"];
 			var antialiased = (bool)configuration["antialiased"];
+			var renderMode = antialiased ? RenderMode.Antialiased : RenderMode.Aliased;
 
-			using (var font = _freeType.CreateFont(fontFile, 0))
+			using (var font = _freeType.CreateFont(fontFile, size, renderMode))
+			using (var fontMap = new FontMap(font, asset.RelativePathWithoutExtension + "_fontmap.png"))
 			{
-				font.Size = size;
-				using (var bitmap = font.GetGlyphBitmap('w', antialiased ? RenderMode.Antialiased : RenderMode.Aliased))
-					bitmap.Save(asset.TempPathWithoutExtension + "w.png", ImageFormat.Png);
+				
 			}
 		}
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.FreeType
+namespace Pegasus.AssetsCompiler.Fonts
 {
 	/// <summary>
 	///   Determines the glyph rendering quality.

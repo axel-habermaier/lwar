@@ -8,11 +8,10 @@ using Long = System.Int32;
 
 #endif
 
-namespace Pegasus.AssetsCompiler.FreeType
+namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System.Runtime.InteropServices;
 	using Framework;
-	using Framework.Platform;
 	using Framework.Platform.Logging;
 
 	/// <summary>
@@ -21,7 +20,7 @@ namespace Pegasus.AssetsCompiler.FreeType
 #if !DEBUG
 	[SuppressUnmanagedCodeSecurity]
 #endif
-	internal static class NativeMethods
+	internal static class FreeType
 	{
 		/// <summary>
 		///   The name of the freetype dynamic link library.

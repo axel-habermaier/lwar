@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.FreeType
+namespace Pegasus.AssetsCompiler.Fonts
 {
 	using Framework.Platform.Memory;
 
@@ -19,21 +19,21 @@ namespace Pegasus.AssetsCompiler.FreeType
 		/// </summary>
 		public FreeTypeLibrary()
 		{
-			NativeMethods.Invoke(() => NativeMethods.Initialize(out _library));
+			FreeType.Invoke(() => FreeType.Initialize(out _library));
 		}
 
 		/// <summary>
 		///   Creates a new font instance.
 		/// </summary>
 		/// <param name="fileName">The path to the font file.</param>
-		/// <param name="faceIndex">The zero-based index of the face within the font.</param>
-		/// <returns></returns>
-		public FontFace CreateFont(string fileName, int faceIndex)
+		/// <param name="size">The size (in pixels) of the characters.</param>
+		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyphs.</param>
+		public FontFace CreateFont(string fileName, int size, RenderMode renderMode)
 		{
 			var font = IntPtr.Zero;
-			NativeMethods.Invoke(() => NativeMethods.NewFace(_library, fileName, faceIndex, out font));
+			FreeType.Invoke(() => FreeType.NewFace(_library, fileName, 0, out font));
 
-			return new FontFace(font);
+			return new FontFace(font, size, renderMode);
 		}
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace Pegasus.AssetsCompiler.FreeType
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			NativeMethods.Invoke(() => NativeMethods.DisposeLibrary(_library));
+			FreeType.Invoke(() => FreeType.DisposeLibrary(_library));
 		}
 	}
 }
