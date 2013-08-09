@@ -2,12 +2,14 @@
 
 namespace Pegasus.AssetsCompiler.Compilers
 {
+	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using Assets;
 	using Framework.Platform;
 	using Framework.Platform.Logging;
 	using Framework.Platform.Memory;
+	using FreeType;
 
 	/// <summary>
 	///   Compiles fonts.
@@ -27,6 +29,21 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		protected override void Compile(FontAsset asset, BufferWriter buffer)
 		{
+			using (var freetype = new FreeTypeLibrary())
+			{
+			}
+
+			var parser = new ConfigurationFileParser(new Dictionary<string, Func<string, object>>
+			{
+				{ "file", s => s },
+				{ "size", s => Int32.Parse(s) },
+				{ "bold", s => Boolean.Parse(s) },
+				{ "italic", s => Boolean.Parse(s) },
+				{ "antialiased", s => Boolean.Parse(s) },
+			});
+
+			var content = parser.Parse(asset.SourcePath);
+
 			_parser = new XmlParser(asset.SourcePath);
 
 			ProcessCommon(buffer);

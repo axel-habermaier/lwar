@@ -33,6 +33,7 @@ namespace Pegasus.AssetsCompiler
 		private static void WriteToConsole(ConsoleColor color, string message)
 		{
 			WriteColored(color, () => Console.WriteLine(message));
+			Debug.WriteLine(message);
 		}
 
 		/// <summary>
@@ -43,6 +44,7 @@ namespace Pegasus.AssetsCompiler
 		private static void WriteToError(ConsoleColor color, string message)
 		{
 			WriteColored(color, () => Console.Error.WriteLine(message));
+			Debug.WriteLine(message);
 		}
 
 		/// <summary>

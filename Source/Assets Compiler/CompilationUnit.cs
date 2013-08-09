@@ -117,7 +117,7 @@ namespace Pegasus.AssetsCompiler
 			{
 				if (asset.EndsWith(".png"))
 					Add(new Texture2DAsset(asset));
-				else if (asset.EndsWith(".fnt"))
+				else if (asset.EndsWith(".font"))
 					Add(new FontAsset(asset));
 				else if (asset.EndsWith(".cs"))
 					Add(new CSharpAsset(asset));

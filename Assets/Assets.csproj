@@ -209,9 +209,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Fonts\Liberation Mono 12.fnt" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Textures\Bullet.png" />
     <Content Include="Textures\BulletGlow.png" />
     <Content Include="Textures\Explosion.png" />
@@ -258,7 +255,9 @@
       <Name>Framework</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Fonts\Liberation Mono 12.font" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="&quot;$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\pgc.exe&quot; compile" WorkingDirectory="$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)" />
