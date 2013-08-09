@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler
 	using System.Globalization;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Logging;
 
@@ -101,6 +102,8 @@ namespace Pegasus.AssetsCompiler
 				var success = true;
 				using (var compilationUnit = new CompilationUnit())
 				{
+					compilationUnit.LoadAssets();
+
 					if (clean)
 						compilationUnit.Clean();
 
@@ -126,6 +129,10 @@ namespace Pegasus.AssetsCompiler
 					Log.Error(exception.Message);
 
 				Log.Error(e.StackTrace);
+				return -1;
+			}
+			catch (AppException)
+			{
 				return -1;
 			}
 			catch (Exception e)

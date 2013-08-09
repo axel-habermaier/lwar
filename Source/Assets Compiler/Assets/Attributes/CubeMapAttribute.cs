@@ -10,11 +10,6 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 	public class CubeMapAttribute : AssetAttribute
 	{
 		/// <summary>
-		///   The name of the asset.
-		/// </summary>
-		private readonly string _name;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="name">The name of the asset.</param>
@@ -22,7 +17,7 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
 
-			_name = name;
+			Name = name;
 			Mipmaps = true;
 		}
 
@@ -35,13 +30,5 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 		///   Gets or sets a value indicating whether the texture should not use texture compression. Default is false.
 		/// </summary>
 		public bool Uncompressed { get; set; }
-
-		/// <summary>
-		///   Gets the asset that should be compiled.
-		/// </summary>
-		public override Asset Asset
-		{
-			get { return new CubeMapAsset(_name) { Mipmaps = Mipmaps, Uncompressed = Uncompressed }; }
-		}
 	}
 }

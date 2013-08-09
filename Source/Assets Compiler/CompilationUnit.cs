@@ -19,96 +19,44 @@ namespace Pegasus.AssetsCompiler
 	public class CompilationUnit : DisposableObject
 	{
 		/// <summary>
-		///   The list of asset compilers that is used to compile the assets.
-		/// </summary>
-		private static readonly IAssetCompiler[] Compilers;
-
-		/// <summary>
-		///   The list of asset factories that is used to find and create the compiled assets.
-		/// </summary>
-		private static readonly IAssetFactory[] Factories;
-
-		/// <summary>
 		///   The list of assets that are compiled by the compilation unit.
 		/// </summary>
 		private readonly List<Asset> _assets = new List<Asset>();
 
 		/// <summary>
-		///   Initializes the type.
+		///   Loads all assets that should be compiled.
 		/// </summary>
-		static CompilationUnit()
+		public void LoadAssets()
+		{
+			var assetNames = GetAssetNames();
+			var attributes = Configuration.AssetListAssembly.GetCustomAttributes(false).OfType<AssetAttribute>().ToArray();
+
+			var assets = CreateAssets(assetNames, attributes).ToArray();
+			assets = ValidateAssets(assets, assetNames).ToArray();
+
+			_assets.AddRange(assets);
+		}
+
+		/// <summary>
+		///   Searches for all types implementing the given interface or base class and returns an instance of each type.
+		/// </summary>
+		/// <typeparam name="T">The interface or base class that is implemented by all returned instances.</typeparam>
+		private static T[] CreateTypeInstances<T>()
 		{
 			var assetCompilerTypes = Assembly.GetExecutingAssembly().GetTypes();
 			var assetListTypes = Configuration.AssetListAssembly.GetTypes();
 
-			Compilers = assetListTypes.Union(assetCompilerTypes)
-									  .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IAssetCompiler)))
-									  .Select(Activator.CreateInstance)
-									  .Cast<IAssetCompiler>()
-									  .ToArray();
-
-			Factories = assetListTypes.Union(assetCompilerTypes)
-									  .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IAssetFactory)))
-									  .Select(Activator.CreateInstance)
-									  .Cast<IAssetFactory>()
-									  .ToArray();
+			return assetListTypes.Union(assetCompilerTypes)
+								 .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(T)))
+								 .Select(Activator.CreateInstance)
+								 .Cast<T>()
+								 .ToArray();
 		}
 
 		/// <summary>
-		///   Creates a new instance.
+		///   Gets the names of all assets that should be compiled.
 		/// </summary>
-		public CompilationUnit()
-		{
-			AddSpecialAssets();
-			AddRemainingAssets();
-		}
-
-		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			_assets.SafeDisposeAll();
-			Compilers.SafeDisposeAll();
-		}
-
-		/// <summary>
-		///   Compiles all assets and returns the names of the assets that have been changed. Returns true to indicate that the
-		///   compilation of all assets has been successful.
-		/// </summary>
-		public bool Compile()
-		{
-			try
-			{
-				var success = true;
-
-				foreach (var compiler in Compilers)
-					success &= compiler.Compile(_assets);
-
-				return success;
-			}
-			catch (Exception e)
-			{
-				Log.Error(e.Message);
-				return false;
-			}
-		}
-
-		/// <summary>
-		///   Removes all compiled assets and temporary files.
-		/// </summary>
-		public void Clean()
-		{
-			Log.Info("Cleaning compiled assets and temporary files...");
-
-			foreach (var compiler in Compilers)
-				compiler.Clean(_assets);
-		}
-
-		/// <summary>
-		///   Adds the remaining assets to the compilation unit that do not require any special compilation settings.
-		/// </summary>
-		private void AddRemainingAssets()
+		private string[] GetAssetNames()
 		{
 			var root = XDocument.Load(Configuration.AssetsProject).Root;
 			XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
@@ -124,29 +72,101 @@ namespace Pegasus.AssetsCompiler
 											 .Select(ignore => ignore.Name);
 			assets = assets.Where(path => _assets.All(a => a.RelativePath != path));
 			assets = assets.Except(ignoredAssets);
+			return assets.ToArray();
+		}
 
-			foreach (var asset in assets)
+		/// <summary>
+		///   Creates all asset instances.
+		/// </summary>
+		/// <param name="assets">The assets that should be compiled.</param>
+		/// <param name="attributes">The attributes that affect the compilation settings of some assets.</param>
+		private static IEnumerable<Asset> CreateAssets(string[] assets, AssetAttribute[] attributes)
+		{
+			var factories = CreateTypeInstances<IAssetFactory>();
+
+			return from factory in factories
+				   from asset in factory.CreateAssets(assets, attributes)
+				   select asset;
+		}
+
+		/// <summary>
+		///   Checks whether compilation settings could be uniquely determined for each asset.
+		/// </summary>
+		/// <param name="assets">The asset instances.</param>
+		/// <param name="assetNames">The asset names.</param>
+		private static IEnumerable<Asset> ValidateAssets(Asset[] assets, string[] assetNames)
+		{
+			var instanceNames = assets.Select(asset => asset.RelativePath);
+			foreach (var undeterminedAsset in assetNames.Except(instanceNames))
+				Log.Warn("Ignoring asset '{0}': Unable to determine compilation settings.", undeterminedAsset);
+
+			foreach (var group in assets.GroupBy(asset => asset.RelativePath))
 			{
-				var assetObjs = Factories.Select(f => f.CreateAsset(asset)).Where(a => a != null).ToArray();
-				if (assetObjs.Length == 0)
-					Log.Warn("Ignoring asset '{0}': Unable to determine compilation settings.", asset);
-				else if (assetObjs.Length > 1)
-					Log.Warn("Ignoring asset '{0}': Asset type is ambiguous: One of {1}.", asset, 
-							 String.Join(", ", assetObjs.Select(a => a.GetType().Name)));
+				if (group.Count() > 1)
+				{
+					Log.Warn("Ignoring asset '{0}': Compilation settings are ambiguous: One of {1}.", group.Key,
+							 String.Join(", ", group.Select(a => a.GetType().Name)));
+
+					group.SafeDisposeAll();
+				}
 				else
-					Add(assetObjs.Single());
+					yield return group.First();
 			}
 		}
 
 		/// <summary>
-		///   Adds assets to the compilation unit that require special compilation settings.
+		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		private void AddSpecialAssets()
+		protected override void OnDisposing()
 		{
-			var assets = Configuration.AssetListAssembly.GetCustomAttributes(false).OfType<AssetAttribute>();
+			_assets.SafeDisposeAll();
+		}
 
-			foreach (var asset in assets)
-				Add(asset.Asset);
+		/// <summary>
+		///   Compiles all assets and returns the names of the assets that have been changed. Returns true to indicate that the
+		///   compilation of all assets has been successful.
+		/// </summary>
+		public bool Compile()
+		{
+			var compilers = CreateTypeInstances<IAssetCompiler>();
+
+			try
+			{
+				var success = true;
+
+				foreach (var compiler in compilers)
+					success &= compiler.Compile(_assets);
+
+				return success;
+			}
+			catch (Exception e)
+			{
+				Log.Error(e.Message);
+				return false;
+			}
+			finally
+			{
+				compilers.SafeDisposeAll();
+			}
+		}
+
+		/// <summary>
+		///   Removes all compiled assets and temporary files.
+		/// </summary>
+		public void Clean()
+		{
+			Log.Info("Cleaning compiled assets and temporary files...");
+
+			var compilers = CreateTypeInstances<IAssetCompiler>();
+			try
+			{
+				foreach (var compiler in compilers)
+					compiler.Clean(_assets);
+			}
+			finally
+			{
+				compilers.SafeDisposeAll();
+			}
 		}
 
 		/// <summary>

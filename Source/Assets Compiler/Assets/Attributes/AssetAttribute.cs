@@ -9,8 +9,8 @@ namespace Pegasus.AssetsCompiler.Assets.Attributes
 	public abstract class AssetAttribute : Attribute
 	{
 		/// <summary>
-		///   Gets the asset that should be compiled.
+		///   The name of the asset.
 		/// </summary>
-		public abstract Asset Asset { get; }
+		public string Name { get; protected set; }
 	}
 }

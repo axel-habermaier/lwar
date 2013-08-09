@@ -65,6 +65,9 @@ namespace Pegasus.AssetsCompiler
 		{
 			get
 			{
+				if (!File.Exists(AssetListPath))
+					Log.Die("Unable to load asset list assembly '{0}'.", AssetListPath);
+
 				if (_assetListAssembly == null)
 					_assetListAssembly = Assembly.LoadFile(AssetListPath);
 
