@@ -49,7 +49,6 @@ Assets Compiler
 - Organize assets into different packages
 	- All assets of a package are loaded at the same time
 	- Assign offsets per asset per package and use that instead of name at runtime
-- Generate a class that maps a friendly C#-name to an asset id and that also stores the total number of assets per type
 
 Network
 ========
