@@ -43,15 +43,15 @@ Pegasus.Platform
 Assets Compiler
 ========
 - Storing cubemaps as 6 separate images might improve compilation times noticably
-- Add dependency system (e.g., cubemap depends on 6 textures, font depends on texture)
+- Add dependency system (e.g., cubemap depends on 6 textures)
 - Asset compression
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)
 - Fix constant buffer packing
-- Assign increasing numbers per asset type and use that instead of name at runtime
+- Organize assets into different packages
+	- All assets of a package are loaded at the same time
+	- Assign offsets per asset per package and use that instead of name at runtime
 - Generate a class that maps a friendly C#-name to an asset id and that also stores the total number of assets per type
-- Asset lookup can then be an indexing operation into an array
-- Make asset compiler independent of Framework (by link-including all required files)
 
 Network
 ========

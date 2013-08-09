@@ -131,7 +131,7 @@ namespace Pegasus.AssetsCompiler
 				if (assetObjs.Length == 0)
 					Log.Warn("Ignoring asset '{0}': Unable to determine compilation settings.", asset);
 				else if (assetObjs.Length > 1)
-					Log.Warn("Ignoring asset '{0}': Ambiguous compilation settings: {1}.", asset,
+					Log.Warn("Ignoring asset '{0}': Asset type is ambiguous: One of {1}.", asset, 
 							 String.Join(", ", assetObjs.Select(a => a.GetType().Name)));
 				else
 					Add(assetObjs.Single());
