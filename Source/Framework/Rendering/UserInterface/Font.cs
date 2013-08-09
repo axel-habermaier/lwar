@@ -21,11 +21,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private KerningPair[] _kerning;
 
 		/// <summary>
-		///   The lowest glyph id.
-		/// </summary>
-		private int _lowestGlyphId;
-
-		/// <summary>
 		///   Gets a value indicating whether the font supportes kerning.
 		/// </summary>
 		public bool KerningSupported
@@ -47,17 +42,15 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Reinitializes the font.
 		/// </summary>
 		/// <param name="glyphs">The glyphs of the font.</param>
-		/// <param name="lowestGlyphId">The lowest glyph id.</param>
 		/// <param name="kerning">The kerning information of the font.</param>
 		/// <param name="texture">The texture containing the font's glyph images.</param>
 		/// <param name="lineHeight">The height of a single line.</param>
-		internal void Reinitialize(Glyph[] glyphs, int lowestGlyphId, KerningPair[] kerning, Texture2D texture, int lineHeight)
+		internal void Reinitialize(Glyph[] glyphs, KerningPair[] kerning, Texture2D texture, int lineHeight)
 		{
 			Assert.ArgumentNotNull(glyphs);
 			Assert.ArgumentNotNull(texture);
 
 			_glyphs = glyphs;
-			_lowestGlyphId = lowestGlyphId;
 			_kerning = kerning;
 			Texture = texture;
 			LineHeight = lineHeight;
@@ -208,11 +201,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="glyph">The glyph character.</param>
 		private Glyph GetGlyph(char glyph)
 		{
-			var index = glyph - _lowestGlyphId;
+			var index = (int)glyph;
 
-			// Ensure that a '.' is printed for all characters that are not supported by the font.
+			// Ensure that a '□' (at index 0) is printed for all characters that are not supported by the font.
 			if (index < 0 || index >= _glyphs.Length || _glyphs[index].IsInvalid)
-				return GetGlyph('.'); // The font processor guarantees that '.' is supported by the font
+				return GetGlyph((char)0); // The font processor guarantees that '□' at index 0 is supported by the font
 
 			// New lines should not be visible at all, and should have no width
 			if (glyph == '\n')

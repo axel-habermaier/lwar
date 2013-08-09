@@ -85,7 +85,7 @@ namespace Lwar.Screens
 			_inputDevice.Keyboard.CharacterEntered += OnCharacterEntered;
 			_inputDevice.Keyboard.KeyPressed += OnKeyPressed;
 
-			var font = assets.LoadFont("Fonts/Liberation Mono 12");
+			var font = assets.LoadFont("Fonts/Liberation Mono 11");
 			_prompt = new Label(font, "Say: ");
 			_textBox = new TextBox(font);
 			_lengthWarning = new Label(font, "The message exceeds the maximum allowed width for a chat message and cannot be sent.")

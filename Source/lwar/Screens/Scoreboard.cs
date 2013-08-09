@@ -65,7 +65,7 @@ namespace Lwar.Screens
 			_inputDevice = inputDevice;
 			_gameSession = gameSession;
 
-			var font = assets.LoadFont("Fonts/Liberation Mono 12");
+			var font = assets.LoadFont("Fonts/Liberation Mono 11");
 			_header = Row.CreateHeader(font);
 
 			for (var i = 0; i < _rows.Length; ++i)

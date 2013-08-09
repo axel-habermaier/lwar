@@ -25,7 +25,7 @@ namespace Lwar.Screens
 		{
 			IsOpaque = true;
 
-			_label = new Label(Assets.LoadFont("Fonts/Liberation Mono 12"))
+			_label = new Label(Assets.LoadFont("Fonts/Liberation Mono 11"))
 			{
 				Text = "Welcome to lwar!",
 				Alignment = TextAlignment.Centered | TextAlignment.Middle

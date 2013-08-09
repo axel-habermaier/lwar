@@ -68,7 +68,6 @@ namespace Pegasus.Framework.Platform.Assets
 				buffer.Skip((int)surfaceSize);
 			}
 
-			Assert.That(buffer.EndOfBuffer, "Not all data has been read.");
 			if (Texture == null)
 				Texture = _createTexture(GraphicsDevice);
 

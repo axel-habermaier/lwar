@@ -11,6 +11,7 @@ using Long = System.Int32;
 namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Framework;
 	using Framework.Platform.Logging;
 
@@ -75,7 +76,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		public static extern Error RenderGlyph(IntPtr glyphSlot, RenderMode renderMode);
 
 		[StructLayout(LayoutKind.Sequential)]
-		public class FreeTypeFace
+		public class Face
 		{
 			internal Long num_faces;
 			internal Long face_index;
@@ -148,7 +149,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 
 			internal int format;
 
-			internal FreeTypeBitmap bitmap;
+			internal Bitmap bitmap;
 			internal int bitmap_left;
 			internal int bitmap_top;
 
@@ -197,7 +198,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct FreeTypeBitmap
+		internal struct Bitmap
 		{
 			internal int rows;
 			internal int width;
@@ -207,6 +208,24 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal byte pixel_mode;
 			internal byte palette_mode;
 			internal IntPtr palette;
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		internal class Size
+		{
+			internal IntPtr face;
+			internal IntPtr generic_data;
+			internal IntPtr generic_finalizer;
+			internal ushort x_ppem;
+			internal ushort y_ppem;
+
+			internal Long x_scale;
+			internal Long y_scale;
+			internal Long ascender;
+			internal Long descender;
+			internal Long height;
+			internal Long max_advance;
+			private IntPtr @internal;
 		}
 	}
 }

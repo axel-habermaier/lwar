@@ -60,7 +60,7 @@ namespace Lwar.Screens
 		/// </summary>
 		public override void Initialize()
 		{
-			_messageLabel = new Label(Assets.LoadFont("Fonts/Liberation Mono 12"))
+			_messageLabel = new Label(Assets.LoadFont("Fonts/Liberation Mono 11"))
 			{
 				Text = _message + "\n\nPress [Space] to continue...",
 				Alignment = TextAlignment.Middle | TextAlignment.Centered

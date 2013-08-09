@@ -25,6 +25,9 @@ namespace Pegasus.AssetsCompiler.Fonts
 
 			Character = character;
 			Size = new Size(glyphInfo.bitmap.width, glyphInfo.bitmap.rows);
+			AdvanceX = glyphInfo.advance_x / 64;
+			OffsetX = glyphInfo.bitmap_left;
+			OffsetY = glyphInfo.bitmap_top;
 
 			if (Size.Width != 0 && Size.Height == 0 || Size.Width == 0 && Size.Height != 0)
 				Log.Die("The width or height of the glyph for '{0}' is 0.", Character);
@@ -52,6 +55,21 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
+		///   Gets the offset in pixels from the drawing position to the leftmost border of the glyph.
+		/// </summary>
+		public int OffsetX { get; private set; }
+
+		/// <summary>
+		///   Gets the offset in pixels from the drawing position on the base line to the topmost border of the glyph.
+		/// </summary>
+		public int OffsetY { get; private set; }
+
+		/// <summary>
+		///   Gets the number of pixels that the pen should advance after drawing the glyph.
+		/// </summary>
+		public int AdvanceX { get; private set; }
+
+		/// <summary>
 		///   Gets the bitmap containing the glyph.
 		/// </summary>
 		public Bitmap Bitmap { get; private set; }
@@ -70,7 +88,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		///   Gets an aliased bitmap from the given glyph bitmap.
 		/// </summary>
 		/// <param name="glyph">The glyph the should be copied to a bitmap.</param>
-		private static unsafe Bitmap GetAliasedBitmap(FreeType.FreeTypeBitmap glyph)
+		private static unsafe Bitmap GetAliasedBitmap(FreeType.Bitmap glyph)
 		{
 			using (var bitmap = new Bitmap(glyph.width, glyph.rows, PixelFormat.Format1bppIndexed))
 			{
@@ -108,7 +126,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		///   Gets an anti-aliased bitmap from the given glyph bitmap.
 		/// </summary>
 		/// <param name="glyph">The glyph the should be copied to a bitmap.</param>
-		private static unsafe Bitmap GetAntiAliasedBitmap(FreeType.FreeTypeBitmap glyph)
+		private static unsafe Bitmap GetAntiAliasedBitmap(FreeType.Bitmap glyph)
 		{
 			var bitmap = new Bitmap(glyph.width, glyph.rows, PixelFormat.Format32bppArgb);
 			var destination = (byte*)glyph.buffer.ToPointer();

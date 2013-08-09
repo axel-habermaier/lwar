@@ -6,7 +6,10 @@ namespace Pegasus.AssetsCompiler.Fonts
 	using System.Drawing.Imaging;
 	using System.Linq;
 	using Assets;
+	using Compilers;
 	using Framework;
+	using Framework.Platform.Logging;
+	using Framework.Platform.Memory;
 	using Rectangle = Framework.Math.Rectangle;
 	using Size = Framework.Math.Size;
 
@@ -30,7 +33,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		/// </summary>
 		/// <param name="font">The font that should be stored in the font map.</param>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		public FontMap(FontFace font, string relativePath)
+		public FontMap(Font font, string relativePath)
 			: base(relativePath, Configuration.TempDirectory)
 		{
 			Assert.ArgumentNotNull(font);
@@ -114,6 +117,28 @@ namespace Pegasus.AssetsCompiler.Fonts
 
 				bitmap.Save(SourcePath);
 			}
+		}
+
+		/// <summary>
+		///   Processes the font map and appends it to the given buffer.
+		/// </summary>
+		/// <param name="buffer"></param>
+		public void Compile(BufferWriter buffer)
+		{
+			new Texture2DCompiler().CompileSingle(this, buffer);
+		}
+
+		/// <summary>
+		///   Gets the area that the glyph corresponding to the given character occupies in the font mpa.
+		/// </summary>
+		/// <param name="character">The character the glyph are should be returned for.</param>
+		public Rectangle GetGlyphArea(char character)
+		{
+			var glyph = _glyphAreas.SingleOrDefault(g => g.Glyph.Character == character);
+			if (glyph == null)
+				Log.Die("The font map does not contain a glyph for character '{0}'.", character);
+
+			return glyph.Area;
 		}
 
 		/// <summary>

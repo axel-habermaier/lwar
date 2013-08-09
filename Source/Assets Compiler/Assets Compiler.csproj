@@ -232,7 +232,7 @@
     <Compile Include="Compilers\EffectCompiler.cs" />
     <Compile Include="Effects\ShaderAttribute.cs" />
     <Compile Include="Fonts\Error.cs" />
-    <Compile Include="Fonts\FontFace.cs" />
+    <Compile Include="Fonts\Font.cs" />
     <Compile Include="Fonts\FontMap.cs" />
     <Compile Include="Fonts\FreeTypeLibrary.cs" />
     <Compile Include="Fonts\Glyph.cs" />

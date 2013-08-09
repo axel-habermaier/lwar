@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.Platform.Assets
 {
+	using System.Linq;
 	using Math;
 	using Memory;
 	using Rendering.UserInterface;
@@ -42,66 +43,65 @@ namespace Pegasus.Framework.Platform.Assets
 			if (_texture == null)
 				_texture = new Texture2DAsset { GraphicsDevice = GraphicsDevice, Assets = Assets };
 
+			// Load the font map
+			_texture.Load(buffer, name);
+
 			// Load the font metadata
-			var scaleW = buffer.ReadUInt16();
-			var scaleH = buffer.ReadUInt16();
 			var lineHeight = buffer.ReadUInt16();
 
 			// Load the glyph metadata
 			var numGlyphs = buffer.ReadUInt16();
-			var lowestGlyphId = buffer.ReadUInt16();
-			var highestGlyphId = buffer.ReadUInt16();
-			var glyphs = new Glyph[highestGlyphId - lowestGlyphId + 1];
+			var glyphs = new Glyph[256];
 
 			for (var i = 0; i < numGlyphs; ++i)
 			{
-				var id = buffer.ReadUInt16();
-				var index = id - lowestGlyphId;
+				var index = buffer.ReadByte();
 
+				// Read the texture coordinates
+				var x = buffer.ReadUInt16();
+				var y = buffer.ReadUInt16();
 				glyphs[index].Area.Width = buffer.ReadUInt16();
 				glyphs[index].Area.Height = buffer.ReadUInt16();
+
+				// Compute the texture coordinates
+				var textureLeft = x / (float)_texture.Texture.Width;
+				var textureRight = (x + glyphs[index].Area.Width) / (float)_texture.Texture.Width;
+				var textureTop = (y + glyphs[index].Area.Height) / (float)_texture.Texture.Height;
+				var textureBottom = y / (float)_texture.Texture.Height;
+
+				glyphs[index].TextureArea = new RectangleF(textureLeft, textureTop,
+														   textureRight - textureLeft,
+														   textureBottom - textureTop);
+
+				// Read the glyph offsets
 				glyphs[index].Area.Left = buffer.ReadInt16();
 				glyphs[index].Area.Top = buffer.ReadInt16();
 				glyphs[index].AdvanceX = buffer.ReadInt16();
-
-				var x = buffer.ReadUInt16();
-				var y = buffer.ReadUInt16();
-
-				var textureLeft = x / (float)scaleW;
-				var textureRight = (x + glyphs[index].Area.Width) / (float)scaleW;
-				var textureTop = (y + glyphs[index].Area.Height) / (float)scaleH;
-				var textureBottom = y / (float)scaleH;
-
-				var textureArea = new RectangleF(textureLeft, textureTop,
-												 textureRight - textureLeft, textureBottom - textureTop);
-
-				glyphs[index].TextureArea = textureArea;
 			}
 
 			// Load the kerning data
-			var kerningCount = buffer.ReadUInt16();
+			//var kerningCount = buffer.ReadUInt16();
 			KerningPair[] kernings = null;
-			if (kerningCount != 0)
-			{
-				kernings = new KerningPair[kerningCount];
+			//if (kerningCount != 0)
+			//{
+			//	kernings = new KerningPair[kerningCount];
 
-				for (var i = 0; i < kerningCount; ++i)
-				{
-					var first = buffer.ReadUInt16();
-					var second = buffer.ReadUInt16();
-					var offset = buffer.ReadInt16();
+			//	for (var i = 0; i < kerningCount; ++i)
+			//	{
+			//		var first = buffer.ReadUInt16();
+			//		var second = buffer.ReadUInt16();
+			//		var offset = buffer.ReadInt16();
 
-					kernings[i] = new KerningPair((char)first, (char)second, offset);
+			//		kernings[i] = new KerningPair((char)first, (char)second, offset);
 
-					if (glyphs[first - lowestGlyphId].KerningStart == 0)
-						glyphs[first - lowestGlyphId].KerningStart = i;
+			//		if (glyphs[first - lowestGlyphId].KerningStart == 0)
+			//			glyphs[first - lowestGlyphId].KerningStart = i;
 
-					++glyphs[first - lowestGlyphId].KerningCount;
-				}
-			}
+			//		++glyphs[first - lowestGlyphId].KerningCount;
+			//	}
+			//}
 
-			_texture.Load(buffer, name);
-			Font.Reinitialize(glyphs, lowestGlyphId, kernings, _texture.Texture, lineHeight);
+			Font.Reinitialize(glyphs, kernings, _texture.Texture, lineHeight);
 		}
 
 		/// <summary>

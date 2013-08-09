@@ -43,7 +43,7 @@ namespace Lwar.Screens
 		{
 			Assert.ArgumentNotNull(assets);
 
-			var font = assets.LoadFont("Fonts/Liberation Mono 12");
+			var font = assets.LoadFont("Fonts/Liberation Mono 11");
 			for (var i = 0; i < _messages.Length; ++i)
 				_messages[i] = new Label(font) { LineSpacing = LineSpacing };
 		}

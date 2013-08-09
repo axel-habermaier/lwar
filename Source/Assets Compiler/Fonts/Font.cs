@@ -4,19 +4,19 @@ namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Platform.Memory;
+	using Framework;
+	using Framework.Platform.Logging;
+	using Framework.Platform.Memory;
 
 	/// <summary>
 	///   Represents a typeface in a given style.
 	/// </summary>
-	internal class FontFace : DisposableObject
+	internal class Font : DisposableObject
 	{
 		/// <summary>
 		///   The native freetype font instance.
 		/// </summary>
-		private readonly FreeType.FreeTypeFace _font;
+		private readonly FreeType.Face _font;
 
 		/// <summary>
 		///   The native freetype font instance pointer.
@@ -34,13 +34,13 @@ namespace Pegasus.AssetsCompiler.Fonts
 		/// <param name="font">The native freetype font instance.</param>
 		/// <param name="size">The size (in pixels) of the characters.</param>
 		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyphs.</param>
-		public FontFace(IntPtr font, int size, RenderMode renderMode)
+		public Font(IntPtr font, int size, RenderMode renderMode)
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.InRange(renderMode);
 
 			_fontPtr = font;
-			_font = (FreeType.FreeTypeFace)Marshal.PtrToStructure(font, typeof(FreeType.FreeTypeFace));
+			_font = (FreeType.Face)Marshal.PtrToStructure(font, typeof(FreeType.Face));
 
 			FreeType.Invoke(() => FreeType.SetPixelSize(_fontPtr, 0, (uint)size));
 
@@ -50,6 +50,30 @@ namespace Pegasus.AssetsCompiler.Fonts
 
 			// Add the 'box' glyph that is used to show non-printable or non-supported characters
 			AddGlyph(renderMode, '□');
+		}
+
+		/// <summary>
+		///   Gets the line height of the font.
+		/// </summary>
+		public ushort LineHeight
+		{
+			get
+			{
+				var metrics = (FreeType.Size)Marshal.PtrToStructure(_font.size, typeof(FreeType.Size));
+				return (ushort)(metrics.height / 64);
+			}
+		}
+
+		/// <summary>
+		/// Gets the base line offset for the font.
+		/// </summary>
+		public ushort Baseline
+		{
+			get
+			{
+				var metrics = (FreeType.Size)Marshal.PtrToStructure(_font.size, typeof(FreeType.Size));
+				return (ushort)(LineHeight + metrics.descender / 64);
+			}
 		}
 
 		/// <summary>

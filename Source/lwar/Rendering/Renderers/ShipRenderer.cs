@@ -39,7 +39,7 @@ namespace Lwar.Rendering.Renderers
 		protected override void Initialize()
 		{
 			_texture = Assets.LoadTexture2D("Textures/Ship");
-			_font = Assets.LoadFont("Fonts/Liberation Mono 12");
+			_font = Assets.LoadFont("Fonts/Liberation Mono 11");
 		}
 
 		/// <summary>

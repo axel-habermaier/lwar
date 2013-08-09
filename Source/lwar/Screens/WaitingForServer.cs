@@ -49,7 +49,7 @@ namespace Lwar.Screens
 		/// </summary>
 		public override void Initialize()
 		{
-			_timeoutLabel = new Label(Assets.LoadFont("Fonts/Liberation Mono 12"))
+			_timeoutLabel = new Label(Assets.LoadFont("Fonts/Liberation Mono 11"))
 			{
 				Alignment = TextAlignment.Middle | TextAlignment.Centered
 			};
