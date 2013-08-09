@@ -15,50 +15,44 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		public const string AssetExtension = ".pca"; // Pegasus Compiled Asset
 
-#if BigEndian
-	/// <summary>
-	///   Indicates whether the platform is a big or little endian architecture.
-	/// </summary>
-		public const EndianessType Endianess = EndianessType.Big;
-#else
 		/// <summary>
 		///   Indicates whether the platform is a big or little endian architecture.
 		/// </summary>
-		public const EndianessType Endianess = EndianessType.Little;
+		public const EndianessType Endianess = 
+#if BigEndian
+			EndianessType.Big;
+#else
+			EndianessType.Little;
 #endif
 
-#if Windows
 		/// <summary>
 		///   The type of the platform the application is running on.
 		/// </summary>
-		public static readonly PlatformType Platform = PlatformType.Windows;
+		public static readonly PlatformType Platform =
+#if Windows
+			PlatformType.Windows;
+#elif Linux
+			Platform.Linux;
+#endif
 
 		/// <summary>
 		///   The scancode of the console key.
 		/// </summary>
-		public const int ConsoleKey = 41;
+		public const int ConsoleKey =
+#if Windows
+			41;
 #elif Linux
-	/// <summary>
-	///   The type of the platform the application is running on.
-	/// </summary>
-        public const PlatformType Platform = PlatformType.Linux;
-
-		/// <summary>
-		///    The scancode of the console key.
-		/// </summary>
-		public const int ConsoleKey = 49;
+			49;
 #endif
 
-#if DEBUG
 		/// <summary>
 		///   Indicates whether the application was built in debug mode.
 		/// </summary>
-		public const bool IsDebug = true;
+		public const bool IsDebug =
+#if DEBUG
+			true;
 #else
-	/// <summary>
-	///   Indicates whether the application was built in debug mode.
-	/// </summary>
-		public const bool IsDebug = false;
+			false;
 #endif
 
 		/// <summary>

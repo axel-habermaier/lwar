@@ -58,6 +58,7 @@ namespace Pegasus.AssetsCompiler
 		protected override void OnDisposing()
 		{
 			_assets.SafeDisposeAll();
+			Compilers.SafeDisposeAll();
 		}
 
 		/// <summary>

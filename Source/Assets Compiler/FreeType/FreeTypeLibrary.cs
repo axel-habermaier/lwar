@@ -2,7 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.FreeType
 {
-	using System.Runtime.InteropServices;
 	using Framework.Platform.Memory;
 
 	/// <summary>
@@ -10,29 +9,31 @@ namespace Pegasus.AssetsCompiler.FreeType
 	/// </summary>
 	internal class FreeTypeLibrary : DisposableObject
 	{
-#if Linux
-	/// <summary>
-	///   The name of the freetype dynamic link library.
-	/// </summary>
-		internal const string LibraryName = "libPlatform.so";
-#else
-		/// <summary>
-		///   The name of the freetype dynamic link library.
-		/// </summary>
-		internal const string LibraryName = "FreeType/freetype250.x86.dll";
-#endif
-
 		/// <summary>
 		///   The native freetype library object.
 		/// </summary>
-		private readonly IntPtr _library;
+		private IntPtr _library;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public FreeTypeLibrary()
 		{
-			NativeMethods.Initialize(out _library);
+			NativeMethods.Invoke(() => NativeMethods.Initialize(out _library));
+		}
+
+		/// <summary>
+		///   Creates a new font instance.
+		/// </summary>
+		/// <param name="fileName">The path to the font file.</param>
+		/// <param name="faceIndex">The zero-based index of the face within the font.</param>
+		/// <returns></returns>
+		public FontFace CreateFont(string fileName, int faceIndex)
+		{
+			var font = IntPtr.Zero;
+			NativeMethods.Invoke(() => NativeMethods.NewFace(_library, fileName, faceIndex, out font));
+
+			return new FontFace(font);
 		}
 
 		/// <summary>
@@ -40,23 +41,7 @@ namespace Pegasus.AssetsCompiler.FreeType
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			if (_library != IntPtr.Zero)
-				NativeMethods.Dispose(_library);
-		}
-
-		/// <summary>
-		///   Provides access to native freetype functions.
-		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
-		private static class NativeMethods
-		{
-			[DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "FT_Init_FreeType")]
-			public static extern int Initialize(out IntPtr library);
-
-			[DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "FT_Done_Library")]
-			public static extern int Dispose(IntPtr library);
+			NativeMethods.Invoke(() => NativeMethods.DisposeLibrary(_library));
 		}
 	}
 }

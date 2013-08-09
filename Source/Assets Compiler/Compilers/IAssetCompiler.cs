@@ -8,7 +8,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	/// <summary>
 	///   Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.
 	/// </summary>
-	internal interface IAssetCompiler
+	internal interface IAssetCompiler : IDisposable
 	{
 		/// <summary>
 		///   Compiles all assets of the compiler's asset source type. Returns true to indicate that the compilation of all assets

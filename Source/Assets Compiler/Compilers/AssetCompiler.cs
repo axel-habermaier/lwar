@@ -14,7 +14,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	///   Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.
 	/// </summary>
 	/// <typeparam name="TAsset">The type of the asset that is compiled</typeparam>
-	public abstract class AssetCompiler<TAsset> : IAssetCompiler
+	public abstract class AssetCompiler<TAsset> : DisposableObject, IAssetCompiler
 		where TAsset : Asset
 	{
 		/// <summary>
@@ -126,6 +126,13 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// </summary>
 		/// <param name="asset">The asset that should be cleaned.</param>
 		protected virtual void Clean(TAsset asset)
+		{
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
 		{
 		}
 	}
