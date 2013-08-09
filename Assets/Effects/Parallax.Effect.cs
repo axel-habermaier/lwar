@@ -10,7 +10,7 @@ namespace Lwar.Assets.Effects
 		public readonly Technique Default = new Technique
 		{
 			VertexShader = "VertexShader",
-			FragmentShader = "FragmentShader"
+			FragmentShader = "FragmentShader" 
 		};
 
 		public readonly Texture2D TextureAtlas;

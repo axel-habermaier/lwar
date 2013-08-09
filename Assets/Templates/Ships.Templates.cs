@@ -9,7 +9,7 @@ namespace Lwar.Assets.Templates
 	///   The ship entity templates that are shared between the client and the server.
 	/// </summary>
 	public static class Ships
-	{
+	{ 
 		public static readonly Template Ship = new Template
 		{
 			Collide = "ship_hit",

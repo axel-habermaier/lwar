@@ -24,6 +24,11 @@ namespace Pegasus.AssetsCompiler
 		private static readonly IAssetCompiler[] Compilers;
 
 		/// <summary>
+		///   The list of asset factories that is used to find and create the compiled assets.
+		/// </summary>
+		private static readonly IAssetFactory[] Factories;
+
+		/// <summary>
 		///   The list of assets that are compiled by the compilation unit.
 		/// </summary>
 		private readonly List<Asset> _assets = new List<Asset>();
@@ -40,6 +45,12 @@ namespace Pegasus.AssetsCompiler
 									  .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IAssetCompiler)))
 									  .Select(Activator.CreateInstance)
 									  .Cast<IAssetCompiler>()
+									  .ToArray();
+
+			Factories = assetListTypes.Union(assetCompilerTypes)
+									  .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IAssetFactory)))
+									  .Select(Activator.CreateInstance)
+									  .Cast<IAssetFactory>()
 									  .ToArray();
 		}
 
@@ -116,14 +127,14 @@ namespace Pegasus.AssetsCompiler
 
 			foreach (var asset in assets)
 			{
-				if (asset.EndsWith(".png"))
-					Add(new Texture2DAsset(asset));
-				else if (asset.EndsWith(".font"))
-					Add(new FontAsset(asset));
-				else if (asset.EndsWith(".cs"))
-					Add(new CSharpAsset(asset));
-				else
+				var assetObjs = Factories.Select(f => f.CreateAsset(asset)).Where(a => a != null).ToArray();
+				if (assetObjs.Length == 0)
 					Log.Warn("Ignoring asset '{0}': Unable to determine compilation settings.", asset);
+				else if (assetObjs.Length > 1)
+					Log.Warn("Ignoring asset '{0}': Ambiguous compilation settings: {1}.", asset,
+							 String.Join(", ", assetObjs.Select(a => a.GetType().Name)));
+				else
+					Add(assetObjs.Single());
 			}
 		}
 

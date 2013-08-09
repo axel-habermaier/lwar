@@ -29,7 +29,7 @@ namespace Lwar.Rendering.Renderers
 		/// </summary>
 		protected override void Initialize()
 		{
-			var texture = Assets.LoadCubeMap("Textures/SunHeat");
+			var texture = Assets.LoadCubeMap("Textures/SunHeat.Cubemap");
 
 			_model = Model.CreateSphere(GraphicsDevice, 1, 10);
 			_effect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(texture, SamplerState.BilinearClampNoMipmaps) };

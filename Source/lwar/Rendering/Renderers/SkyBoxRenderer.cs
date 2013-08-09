@@ -34,7 +34,7 @@ namespace Lwar.Rendering.Renderers
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
-			var cubemap = assets.LoadCubeMap("Textures/Space");
+			var cubemap = assets.LoadCubeMap("Textures/Space.Cubemap");
 
 			_model = Model.CreateSkybox(graphicsDevice);
 			_effect = new SkyboxEffect(graphicsDevice, assets) { Skybox = new CubeMapView(cubemap, SamplerState.BilinearClampNoMipmaps) };

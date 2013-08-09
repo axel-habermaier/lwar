@@ -34,7 +34,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 
 			try
 			{
-				var csharpAssets = assets.OfType<CSharpAsset>().ToArray();
+				var csharpAssets = assets.OfType<EffectAsset>().ToArray();
 
 				if (DetermineAction(shaderAssets, csharpAssets) == CompilationAction.Skip)
 					Log.Info("Skipping effect compilation (no changes detected).");
@@ -83,7 +83,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 				foreach (var asset in shaderAssets)
 					File.Delete(asset.SourcePath);
 
-				foreach (var asset in assets.OfType<CSharpAsset>())
+				foreach (var asset in assets.OfType<EffectAsset>())
 					File.Delete(asset.HashPath);
 			}
 			finally
@@ -98,7 +98,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <param name="shaderAssets">The shader assets that should be checked to determine the compilation action.</param>
 		/// <param name="csharpAssets">The C# assets that should be checked to determine the compilation action.</param>
 		private static CompilationAction DetermineAction(IEnumerable<ShaderAsset> shaderAssets,
-														 IEnumerable<CSharpAsset> csharpAssets)
+														 IEnumerable<EffectAsset> csharpAssets)
 		{
 			foreach (var asset in csharpAssets)
 			{

@@ -33,7 +33,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		protected CodeProject()
 		{
 			Assemblies = Enumerable.Empty<Assembly>();
-			CSharpFiles = Enumerable.Empty<CSharpAsset>();
+			CSharpFiles = Enumerable.Empty<EffectAsset>();
 		}
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <summary>
 		///   Gets or sets the path to the C# files that are loaded into the project.
 		/// </summary>
-		public IEnumerable<CSharpAsset> CSharpFiles { get; set; }
+		public IEnumerable<EffectAsset> CSharpFiles { get; set; }
 
 		/// <summary>
 		///   Outputs a compilation message.

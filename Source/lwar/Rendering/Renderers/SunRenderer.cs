@@ -52,8 +52,8 @@ namespace Lwar.Rendering.Renderers
 		/// </summary>
 		protected override void Initialize()
 		{
-			var sun = Assets.LoadCubeMap("Textures/Sun");
-			var turbulence = Assets.LoadCubeMap("Textures/SunHeat");
+			var sun = Assets.LoadCubeMap("Textures/Sun.Cubemap");
+			var turbulence = Assets.LoadCubeMap("Textures/SunHeat.Cubemap");
 			var heat = Assets.LoadTexture2D("Textures/Heat");
 
 			_model = Model.CreateSphere(GraphicsDevice, Templates.Sun.Radius, 20);

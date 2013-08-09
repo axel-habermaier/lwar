@@ -211,7 +211,12 @@
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
     <Compile Include="Assets\Attributes\CubeMapAttribute.cs" />
     <Compile Include="Assets\Attributes\Texture2DAttribute.cs" />
+    <Compile Include="Assets\CubeMapAssetFactory.cs" />
+    <Compile Include="Assets\EffectAssetFactory.cs" />
+    <Compile Include="Assets\FontAssetFactory.cs" />
+    <Compile Include="Assets\IAssetFactory.cs" />
     <Compile Include="Assets\ShaderAsset.cs" />
+    <Compile Include="Assets\Texture2DAssetFactory.cs" />
     <Compile Include="Assets\TextureAsset.cs" />
     <Compile Include="CodeGeneration\CodeElement.cs" />
     <Compile Include="CodeGeneration\CodeProject.cs" />
@@ -241,7 +246,7 @@
     <Compile Include="Hash.cs" />
     <Compile Include="Compilers\IAssetCompiler.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Assets\CSharpAsset.cs" />
+    <Compile Include="Assets\EffectAsset.cs" />
     <Compile Include="Assets\CubeMapAsset.cs" />
     <Compile Include="Compilers\CubeMapCompiler.cs" />
     <Compile Include="DirectDrawSurface.cs" />
@@ -303,7 +308,6 @@
     <Compile Include="Effects\VertexShaderAttribute.cs" />
     <Compile Include="CodeGeneration\Registries\Cvar.cs" />
     <Compile Include="CodeGeneration\Registries\RegistryGenerator.cs" />
-    <Compile Include="XmlParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

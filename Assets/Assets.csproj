@@ -213,36 +213,36 @@
     <Content Include="Textures\BulletGlow.png" />
     <Content Include="Textures\Explosion.png" />
     <Content Include="Textures\Heat.png" />
-    <Content Include="Textures\Jupiter.png" />
-    <Content Include="Textures\Mars.png" />
-    <Content Include="Textures\Moon.png" />
+    <Content Include="Textures\Jupiter.Cubemap.png" />
+    <Content Include="Textures\Mars.Cubemap.png" />
+    <Content Include="Textures\Moon.Cubemap.png" />
     <Content Include="Textures\Parallax.png" />
     <Content Include="Textures\Phaser.png" />
     <Content Include="Textures\PhaserGlow.png" />
-    <Content Include="Textures\Earth.png" />
+    <Content Include="Textures\Earth.Cubemap.png" />
     <Content Include="Textures\Rocket.png" />
-    <Content Include="Textures\Shields.png" />
+    <Content Include="Textures\Shields.Cubemap.png" />
     <Content Include="Textures\Ship.png" />
-    <Content Include="Textures\Space.png" />
-    <Content Include="Textures\Sun.png" />
-    <Content Include="Textures\SunHeat.png" />
+    <Content Include="Textures\Space.Cubemap.png" />
+    <Content Include="Textures\Sun.Cubemap.png" />
+    <Content Include="Textures\SunHeat.Cubemap.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompilationSettings.cs" />
-    <Compile Include="Effects\BlurEffect.cs" />
-    <Compile Include="Effects\ParallaxEffect.cs" />
-    <Compile Include="Effects\SkyboxEffect.cs" />
-    <Compile Include="Effects\SphereEffect.cs" />
-    <Compile Include="Effects\SpriteEffect.cs" />
-    <Compile Include="Effects\SunEffect.cs" />
-    <Compile Include="Effects\TexturedQuadEffect.cs" />
+    <Compile Include="Effects\Blur.Effect.cs" />
+    <Compile Include="Effects\Parallax.Effect.cs" />
+    <Compile Include="Effects\Skybox.Effect.cs" />
+    <Compile Include="Effects\Sphere.Effect.cs" />
+    <Compile Include="Effects\Sprite.Effect.cs" />
+    <Compile Include="Effects\Sun.Effect.cs" />
+    <Compile Include="Effects\TexturedQuad.Effect.cs" />
     <Compile Include="Templates\Compilation\TemplateAsset.cs" />
-    <Compile Include="Templates\Compilation\TemplatesAttribute.cs" />
+    <Compile Include="Templates\Compilation\TemplateAssetFactory.cs" />
     <Compile Include="Templates\Compilation\TemplateCompiler.cs" />
-    <Compile Include="Templates\Ships.cs" />
-    <Compile Include="Templates\Suns.cs" />
-    <Compile Include="Templates\Planets.cs" />
-    <Compile Include="Templates\Weapons.cs" />
+    <Compile Include="Templates\Ships.Templates.cs" />
+    <Compile Include="Templates\Suns.Templates.cs" />
+    <Compile Include="Templates\Planets.Templates.cs" />
+    <Compile Include="Templates\Weapons.Templates.cs" />
     <Compile Include="Templates\Compilation\Template.cs" />
   </ItemGroup>
   <ItemGroup>

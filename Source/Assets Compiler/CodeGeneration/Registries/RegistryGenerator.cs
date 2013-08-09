@@ -65,7 +65,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 
 			_project = new RegistryProject
 			{
-				CSharpFiles = new[] { new CSharpAsset(SourceFile) },
+				CSharpFiles = new[] { new EffectAsset(SourceFile) },
 				ImportedRegistry = GetImportedRegistry(),
 				Namespace = Namespace
 			};
@@ -83,7 +83,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 			if (String.IsNullOrWhiteSpace(Import))
 				return new Registry();
 
-			using (var project = new RegistryProject { CSharpFiles = new[] { new CSharpAsset(Import) } })
+			using (var project = new RegistryProject { CSharpFiles = new[] { new EffectAsset(Import) } })
 			{
 				RegistryFile[] file;
 				project.TryGetValidatedFiles(out file);

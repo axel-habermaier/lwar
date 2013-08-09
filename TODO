@@ -27,8 +27,6 @@ Pegasus.Framework
 ========
 - Show platform statistics, add 'level of detail' to show_stats cvar
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
-- Support all printable ASCII characters
-- Show a 'non-printable character' glyph (box) when a character is not in a font
 - Add .NET wrapper for Platform socket abstraction
 
 Pegasus.Platform
@@ -50,9 +48,6 @@ Assets Compiler
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)
 - Fix constant buffer packing
-- Replace bmfont with freetype
-- Require all (printable) ASCII characters in a font
-- Require a 'non-printable character' glyph (box) in a font
 - Added template attribute to template-defining classes and just have the compiler check all .cs files
 - Assign increasing numbers per asset type and use that instead of name at runtime
 - Generate a class that maps a friendly C#-name to an asset id and that also stores the total number of assets per type
