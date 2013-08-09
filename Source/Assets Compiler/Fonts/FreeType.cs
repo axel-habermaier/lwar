@@ -11,6 +11,7 @@ using Long = System.Int32;
 namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Framework;
 	using Framework.Platform.Logging;
 

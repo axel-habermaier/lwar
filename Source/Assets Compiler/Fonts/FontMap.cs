@@ -125,7 +125,8 @@ namespace Pegasus.AssetsCompiler.Fonts
 		/// <param name="buffer"></param>
 		public void Compile(BufferWriter buffer)
 		{
-			new Texture2DCompiler().CompileSingle(this, buffer);
+			using (var compiler = new Texture2DCompiler())
+				compiler.CompileSingle(this, buffer);
 		}
 
 		/// <summary>

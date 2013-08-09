@@ -22,7 +22,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
     <OutputPath>..\..\Binaries x64\Debug Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x64</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -36,7 +36,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|AnyCPU' ">
     <OutputPath>..\..\Binaries x64\Release Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;x64</DefineConstants>
+    <DefineConstants>TRACE;x64;Windows</DefineConstants>
     <Optimize>True</Optimize>
     <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -49,7 +49,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86' ">
     <DebugSymbols>True</DebugSymbols>
     <OutputPath>..\..\Binaries x86\Debug Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x86</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;x86;Windows</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -62,7 +62,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x86' ">
     <OutputPath>..\..\Binaries x86\Release Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;x86</DefineConstants>
+    <DefineConstants>TRACE;x86;Windows</DefineConstants>
     <Optimize>True</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -76,7 +76,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|AnyCPU'">
     <DebugSymbols>True</DebugSymbols>
     <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x64</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;x64;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -90,7 +90,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <DebugSymbols>True</DebugSymbols>
     <OutputPath>..\..\Binaries\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x86</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;x86;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -103,7 +103,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|AnyCPU'">
     <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;x64</DefineConstants>
+    <DefineConstants>TRACE;x64;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -115,7 +115,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
     <OutputPath>..\..\Binaries\Release\</OutputPath>
-    <DefineConstants>TRACE;x86</DefineConstants>
+    <DefineConstants>TRACE;x86;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -127,7 +127,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|AnyCPU'">
     <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;x64</DefineConstants>
+    <DefineConstants>TRACE;x64;Windows</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -139,7 +139,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;x86</DefineConstants>
+    <DefineConstants>TRACE;x86;Windows</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -152,7 +152,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|AnyCPU'">
     <DebugSymbols>True</DebugSymbols>
     <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x64</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -165,7 +165,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
     <DebugSymbols>True</DebugSymbols>
     <OutputPath>..\..\Binaries x86\Debug OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x86</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;x86;Windows</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -181,14 +181,14 @@
     <OutputPath>bin\Debug Tests</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-    <DefineConstants>x64</DefineConstants>
+    <DefineConstants>x64;Windows</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Tests|x86'">
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>bin\Debug Tests</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-    <DefineConstants>x86</DefineConstants>
+    <DefineConstants>x86;Windows</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.NRefactory">
@@ -203,10 +203,133 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Framework\AppException.cs">
+      <Link>Framework\AppException.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Assert.cs">
+      <Link>Framework\Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Math\Circle.cs">
+      <Link>Framework\Circle.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Math\Fixed.cs">
+      <Link>Framework\Fixed.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Math\MathUtils.cs">
+      <Link>Framework\MathUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Math\Matrix.cs">
+      <Link>Framework\Matrix.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Math\Rectangle.cs">
+      <Link>Framework\Rectangle.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Math\Size.cs">
+      <Link>Framework\Size.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Math\Vector2.cs">
+      <Link>Framework\Vector2.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Math\Vector3.cs">
+      <Link>Framework\Vector3.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Math\Vector4.cs">
+      <Link>Framework\Vector4.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\ExternalProcess.cs">
+      <Link>Framework\ExternalProcess.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\DataSemantics.cs">
+      <Link>Framework\DataSemantics.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\GraphicsApi.cs">
+      <Link>Framework\GraphicsApi.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\ShaderInput.cs">
+      <Link>Framework\ShaderInput.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\ShaderType.cs">
+      <Link>Framework\ShaderType.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\Surface.cs">
+      <Link>Framework\Surface.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\SurfaceFormat.cs">
+      <Link>Framework\SurfaceFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\TextureAddressMode.cs">
+      <Link>Framework\TextureAddressMode.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\TextureDescription.cs">
+      <Link>Framework\TextureDescription.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\TextureFilter.cs">
+      <Link>Framework\TextureFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\TextureFlags.cs">
+      <Link>Framework\TextureFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\TextureType.cs">
+      <Link>Framework\TextureType.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Graphics\VertexDataFormat.cs">
+      <Link>Framework\VertexDataFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Logging\Log.cs">
+      <Link>Framework\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Logging\LogEntry.cs">
+      <Link>Framework\LogEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Logging\LogType.cs">
+      <Link>Framework\LogType.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\BufferPointer.cs">
+      <Link>Framework\BufferPointer.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\BufferReader.cs">
+      <Link>Framework\BufferReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\BufferWriter.cs">
+      <Link>Framework\BufferWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\DisposableExtensions.cs">
+      <Link>Framework\DisposableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\DisposableObject.cs">
+      <Link>Framework\DisposableObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\EndianConverter.cs">
+      <Link>Framework\EndianConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\Endianess.cs">
+      <Link>Framework\Endianess.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\ObjectPool.cs">
+      <Link>Framework\ObjectPool.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\Pool.cs">
+      <Link>Framework\Pool.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\Memory\PooledObject.cs">
+      <Link>Framework\PooledObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\NativeLibrary.cs">
+      <Link>Framework\NativeLibrary.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\PlatformInfo.cs">
+      <Link>Framework\PlatformInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\PlatformType.cs">
+      <Link>Framework\PlatformType.cs</Link>
+    </Compile>
+    <Compile Include="..\Framework\Platform\ResharperAnnotations.cs">
+      <Link>Framework\ResharperAnnotations.cs</Link>
+    </Compile>
     <Compile Include="Assets\Attributes\AssetAttribute.cs" />
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
     <Compile Include="Assets\Attributes\CubeMapAttribute.cs" />
@@ -321,12 +444,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Swizzle.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Framework\Framework.csproj">
-      <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
-      <Name>Framework</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\Dependencies\freetype250.x64.dll">

@@ -34,6 +34,15 @@ namespace Pegasus.AssetsCompiler.Compilers
 		});
 
 		/// <summary>
+		///   Gets the path of the temporary font map file.
+		/// </summary>
+		/// <param name="asset">The asset the path should be returned for.</param>
+		private static string GetFontMapPath(Asset asset)
+		{
+			return asset.RelativePathWithoutExtension + ".Fontmap.png";
+		}
+
+		/// <summary>
 		///   Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
@@ -54,7 +63,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 
 			// Initialize the font data structures
 			using (var font = _freeType.CreateFont(fontFile, size, renderMode))
-			using (var fontMap = new FontMap(font, asset.RelativePathWithoutExtension + "_fontmap.png"))
+			using (var fontMap = new FontMap(font, GetFontMapPath(asset)))
 			{
 				// Write the font map
 				fontMap.Compile(buffer);
@@ -109,6 +118,15 @@ namespace Pegasus.AssetsCompiler.Compilers
 					buffer.WriteInt16((short)pair.Offset);
 				}
 			}
+		}
+
+		/// <summary>
+		///   Removes the compiled asset and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="asset">The asset that should be cleaned.</param>
+		protected override void Clean(FontAsset asset)
+		{
+			File.Delete(Path.Combine(Configuration.TempDirectory, GetFontMapPath(asset)));
 		}
 
 		/// <summary>
