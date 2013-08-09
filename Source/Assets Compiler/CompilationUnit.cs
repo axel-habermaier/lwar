@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler
 	using System.Xml.Linq;
 	using Assets;
 	using Assets.Attributes;
+	using CodeGeneration;
 	using Compilers;
 	using Framework;
 	using Framework.Platform.Logging;
@@ -136,6 +137,21 @@ namespace Pegasus.AssetsCompiler
 
 				foreach (var compiler in compilers)
 					success &= compiler.Compile(_assets);
+
+				if (success)
+				{
+					var root = XDocument.Load(Configuration.AssetsProject).Root;
+					XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
+
+					var namespaceNode = root.Descendants(ns + "RootNamespace").FirstOrDefault();
+					if (namespaceNode == null)
+						Log.Warn("RootNamespace is missing in '{0}'.", Configuration.AssetsProject);
+
+					var namespaceName = namespaceNode == null ? "Unspecified" : namespaceNode.Value;
+
+					var assetListGenerator = new AssetIdentifierListGenerator(_assets);
+					assetListGenerator.Generate(namespaceName);
+				}
 
 				return success;
 			}

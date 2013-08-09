@@ -5,6 +5,7 @@ namespace Pegasus.Framework
 	using System.Threading;
 	using Math;
 	using Platform;
+	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Input;
 	using Platform.Logging;
@@ -80,9 +81,9 @@ namespace Pegasus.Framework
 		/// </summary>
 		/// <param name="logFile">The log file that writes all generated log entries to the file system.</param>
 		/// <param name="appName">The name of the application.</param>
-		/// <param name="defaultFontName">The name of the default font that is used to draw the console and the statistics.</param>
+		/// <param name="defaultFont">The default font that is used to draw the console and the statistics.</param>
 		/// <param name="spriteEffect">The sprite effect that should be used to draw the console and the statistics.</param>
-		internal void Run(LogFile logFile, string appName, string defaultFontName, ISpriteEffect spriteEffect)
+		internal void Run(LogFile logFile, string appName, AssetIdentifier<Font> defaultFont, ISpriteEffect spriteEffect)
 		{
 			Assert.ArgumentNotNull(logFile);
 
@@ -103,11 +104,11 @@ namespace Pegasus.Framework
 				window.Title = appName;
 				spriteEffect.Initialize(graphicsDevice, assets);
 
-				var defaultFont = assets.LoadFont(defaultFontName);
-				using (var statistics = new Statistics(graphicsDevice, defaultFont))
+				var font = assets.LoadFont(defaultFont);
+				using (var statistics = new Statistics(graphicsDevice, font))
 				using (spriteEffect)
 				using (var spriteBatch = new SpriteBatch(graphicsDevice, spriteEffect))
-				using (var console = new Console(graphicsDevice, inputDevice, defaultFont, appName))
+				using (var console = new Console(graphicsDevice, inputDevice, font, appName))
 				{
 					// Ensure that the console and the statistics are properly initialized
 					statistics.Update(window.Size);

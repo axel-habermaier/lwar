@@ -6,6 +6,7 @@ namespace Pegasus.Framework
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
+	using Platform.Assets;
 	using Platform.Logging;
 	using Rendering;
 	using Rendering.UserInterface;
@@ -23,12 +24,11 @@ namespace Pegasus.Framework
 		///   Runs the application. This method does not return until the application is shut down.
 		/// </summary>
 		/// <param name="appName">The name of the application.</param>
-		/// <param name="defaultFontName">The name of the default font that is used to draw the console and the statistics.</param>
+		/// <param name="defaultFont">The default font that is used to draw the console and the statistics.</param>
 		/// <param name="spriteEffect">The sprite effect that should be used to draw the console and the statistics.</param>
-		public static void Run(string appName, string defaultFontName, ISpriteEffect spriteEffect)
+		public static void Run(string appName, AssetIdentifier<Font> defaultFont, ISpriteEffect spriteEffect)
 		{
 			Assert.ArgumentNotNullOrWhitespace(appName);
-			Assert.ArgumentNotNullOrWhitespace(defaultFontName);
 			Assert.ArgumentNotNull(spriteEffect);
 
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
@@ -56,7 +56,7 @@ namespace Pegasus.Framework
 						CvarRegistry.ExecuteDeferredUpdates();
 
 						var app = new TApp();
-						app.Run(logFile, appName, defaultFontName, spriteEffect);
+						app.Run(logFile, appName, defaultFont, spriteEffect);
 
 						Commands.Persist(ConfigurationFile.AutoExec);
 					}

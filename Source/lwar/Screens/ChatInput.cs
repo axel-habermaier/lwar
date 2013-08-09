@@ -3,12 +3,14 @@
 namespace Lwar.Screens
 {
 	using System.Text;
+	using Assets;
 	using Gameplay;
 	using Network;
 	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Platform.Logging;
@@ -85,7 +87,7 @@ namespace Lwar.Screens
 			_inputDevice.Keyboard.CharacterEntered += OnCharacterEntered;
 			_inputDevice.Keyboard.KeyPressed += OnKeyPressed;
 
-			var font = assets.LoadFont("Fonts/Liberation Mono 11");
+			var font = assets.LoadFont(Fonts.LiberationMono11);
 			_prompt = new Label(font, "Say: ");
 			_textBox = new TextBox(font);
 			_lengthWarning = new Label(font, "The message exceeds the maximum allowed width for a chat message and cannot be sent.")

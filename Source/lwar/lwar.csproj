@@ -179,6 +179,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Assets\Assets.cs">
+      <Link>Assets.cs</Link>
+    </Compile>
     <Compile Include="..\..\Assets\Effects\Effects.cs">
       <Link>Rendering\Effects.cs</Link>
     </Compile>

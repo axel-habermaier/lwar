@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.Assets
 {
 	using System.Drawing;
+	using Framework;
 	using Framework.Platform.Graphics;
 	using Framework.Platform.Memory;
 
@@ -23,6 +24,31 @@ namespace Pegasus.AssetsCompiler.Assets
 		public CubeMapAsset(string relativePath)
 			: base(relativePath)
 		{
+		}
+
+		/// <summary>
+		///   The identifier type that should be used for the asset when generating the asset identifier list. If null is returned,
+		///   no asset identifier is generated for this asset instance.
+		/// </summary>
+		public override string IdentifierType
+		{
+			get { return "Pegasus.Framework.Platform.Graphics.CubeMap"; }
+		}
+
+		/// <summary>
+		///   The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
+		///   asset instance.
+		/// </summary>
+		public override string IdentifierName
+		{
+			get
+			{
+				const string suffix = ".Cubemap";
+				var index = FileNameWithoutExtension.LastIndexOf(suffix, StringComparison.Ordinal);
+				Assert.That(index == FileNameWithoutExtension.Length - suffix.Length, "Unexpected naming convention.");
+
+				return FileNameWithoutExtension.Remove(FileNameWithoutExtension.Length - suffix.Length, 1);
+			}
 		}
 
 		/// <summary>

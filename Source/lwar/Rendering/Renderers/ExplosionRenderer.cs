@@ -2,6 +2,7 @@
 
 namespace Lwar.Rendering.Renderers
 {
+	using Assets;
 	using Gameplay.Actors;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
@@ -28,7 +29,7 @@ namespace Lwar.Rendering.Renderers
 		/// </summary>
 		protected override void Initialize()
 		{
-			_texture = Assets.LoadTexture2D("Textures/Explosion");
+			_texture = Assets.LoadTexture2D(Textures.Explosion);
 		}
 
 		/// <summary>

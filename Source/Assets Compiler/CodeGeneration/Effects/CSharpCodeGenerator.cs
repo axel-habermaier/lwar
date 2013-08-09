@@ -47,6 +47,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			_writer.AppendLine("using Pegasus.Framework;");
 			_writer.AppendLine("using Pegasus.Framework.Math;");
 			_writer.AppendLine("using Pegasus.Framework.Platform;");
+			_writer.AppendLine("using Pegasus.Framework.Platform.Assets;");
 			_writer.AppendLine("using Pegasus.Framework.Platform.Graphics;");
 			_writer.AppendLine("using Pegasus.Framework.Platform.Memory;");
 			_writer.Newline();

@@ -59,6 +59,11 @@ namespace Pegasus.AssetsCompiler
 		public static readonly string CSharpEffectFile = Path.Combine(SourceDirectory, "Effects", "Effects.cs");
 
 		/// <summary>
+		///   The path to the C# file that should contain the generated asset identifiers.
+		/// </summary>
+		public static readonly string CSharpAssetIdentifiersFile = Path.Combine(SourceDirectory, "Assets.cs");
+
+		/// <summary>
 		///   Get the asset list assembly.
 		/// </summary>
 		public static Assembly AssetListAssembly

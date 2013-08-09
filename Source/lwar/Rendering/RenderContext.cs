@@ -6,6 +6,7 @@ namespace Lwar.Rendering
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;

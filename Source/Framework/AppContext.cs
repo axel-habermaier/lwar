@@ -3,6 +3,7 @@
 namespace Pegasus.Framework
 {
 	using Platform;
+	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Input;
 

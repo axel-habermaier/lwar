@@ -15,5 +15,23 @@ namespace Pegasus.AssetsCompiler.Assets
 			: base(relativePath)
 		{
 		}
+
+		/// <summary>
+		///   The identifier type that should be used for the asset when generating the asset identifier list. If null is returned,
+		///   no asset identifier is generated for this asset instance.
+		/// </summary>
+		public override string IdentifierType
+		{
+			get { return "Pegasus.Framework.Rendering.UserInterface.Font"; }
+		}
+
+		/// <summary>
+		///   The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
+		///   asset instance.
+		/// </summary>
+		public override string IdentifierName
+		{
+			get { return FileNameWithoutExtension; }
+		}
 	}
 }

@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Framework.Platform.Assets
 {
 	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.IO;
-	using Assets;
 	using Graphics;
 	using Logging;
 	using Memory;
@@ -178,11 +177,10 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Loads a font.
 		/// </summary>
-		/// <param name="fontFilePath">The path to the font description file.</param>
-		public Font LoadFont(string fontFilePath)
+		/// <param name="font">The identifier of the font asset that should be loaded.</param>
+		public Font LoadFont(AssetIdentifier<Font> font)
 		{
-			Assert.ArgumentNotNullOrWhitespace(fontFilePath);
-			return Load<FontAsset>(fontFilePath).Font;
+			return Load<FontAsset>(font.AssetName).Font;
 		}
 
 		/// <summary>
@@ -208,21 +206,19 @@ namespace Pegasus.Framework.Platform
 		/// <summary>
 		///   Loads a 2D texture.
 		/// </summary>
-		/// <param name="texturePath">The path to the texture file.</param>
-		public Texture2D LoadTexture2D(string texturePath)
+		/// <param name="texture">The identifier of the texture 2D asset that should be loaded.</param>
+		public Texture2D LoadTexture2D(AssetIdentifier<Texture2D> texture)
 		{
-			Assert.ArgumentNotNullOrWhitespace(texturePath);
-			return Load<Texture2DAsset>(texturePath).Texture;
+			return Load<Texture2DAsset>(texture.AssetName).Texture;
 		}
 
 		/// <summary>
 		///   Loads a cube map.
 		/// </summary>
-		/// <param name="cubeMapPath">The path to the cube map file.</param>
-		public CubeMap LoadCubeMap(string cubeMapPath)
+		/// <param name="cubeMap">The identifier of the cube map asset that should be loaded.</param>
+		public CubeMap LoadCubeMap(AssetIdentifier<CubeMap> cubeMap)
 		{
-			Assert.ArgumentNotNullOrWhitespace(cubeMapPath);
-			return Load<CubeMapAsset>(cubeMapPath).Texture;
+			return Load<CubeMapAsset>(cubeMap.AssetName).Texture;
 		}
 	}
 }

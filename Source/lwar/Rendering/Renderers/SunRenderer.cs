@@ -2,6 +2,7 @@
 
 namespace Lwar.Rendering.Renderers
 {
+	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
 	using Pegasus.Framework.Math;
@@ -52,9 +53,9 @@ namespace Lwar.Rendering.Renderers
 		/// </summary>
 		protected override void Initialize()
 		{
-			var sun = Assets.LoadCubeMap("Textures/Sun.Cubemap");
-			var turbulence = Assets.LoadCubeMap("Textures/SunHeat.Cubemap");
-			var heat = Assets.LoadTexture2D("Textures/Heat");
+			var sun = Assets.LoadCubeMap(Textures.SunCubemap);
+			var turbulence = Assets.LoadCubeMap(Textures.SunHeatCubemap);
+			var heat = Assets.LoadTexture2D(Textures.Heat);
 
 			_model = Model.CreateSphere(GraphicsDevice, Templates.Sun.Radius, 20);
 			_sphereEffect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };

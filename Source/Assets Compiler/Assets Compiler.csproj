@@ -341,6 +341,7 @@
     <Compile Include="Assets\ShaderAsset.cs" />
     <Compile Include="Assets\Texture2DAssetFactory.cs" />
     <Compile Include="Assets\TextureAsset.cs" />
+    <Compile Include="CodeGeneration\AssetIdentifierListGenerator.cs" />
     <Compile Include="CodeGeneration\CodeElement.cs" />
     <Compile Include="CodeGeneration\CodeProject.cs" />
     <Compile Include="CodeGeneration\Extensions.cs" />

@@ -2,6 +2,7 @@
 
 namespace Lwar.Rendering.Renderers
 {
+	using Assets;
 	using Assets.Effects;
 	using Gameplay.Actors;
 	using Pegasus.Framework.Math;
@@ -32,7 +33,7 @@ namespace Lwar.Rendering.Renderers
 			_model = Model.CreateSphere(GraphicsDevice, 1.0f, 16);
 			_effect = new SphereEffect(GraphicsDevice, Assets)
 			{
-				SphereTexture = new CubeMapView(Assets.LoadCubeMap("Textures/Shields.Cubemap"), SamplerState.TrilinearClamp)
+				SphereTexture = new CubeMapView(Assets.LoadCubeMap(Textures.ShieldsCubemap), SamplerState.TrilinearClamp)
 			};
 		}
 

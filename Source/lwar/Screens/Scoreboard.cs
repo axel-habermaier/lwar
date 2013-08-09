@@ -3,11 +3,13 @@ using System;
 namespace Lwar.Screens
 {
 	using System.Linq;
+	using Assets;
 	using Gameplay;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Platform.Memory;
@@ -65,7 +67,7 @@ namespace Lwar.Screens
 			_inputDevice = inputDevice;
 			_gameSession = gameSession;
 
-			var font = assets.LoadFont("Fonts/Liberation Mono 11");
+			var font = assets.LoadFont(Fonts.LiberationMono11);
 			_header = Row.CreateHeader(font);
 
 			for (var i = 0; i < _rows.Length; ++i)

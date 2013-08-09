@@ -47,6 +47,22 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
+		///   Gets the file name the asset, i.e., Tex.png.
+		/// </summary>
+		public string FileName
+		{
+			get { return Path.GetFileName(RelativePath); }
+		}
+
+		/// <summary>
+		///   Gets the file name the asset excluding the file extension, i.e., Tex.
+		/// </summary>
+		public string FileNameWithoutExtension
+		{
+			get { return Path.GetFileNameWithoutExtension(RelativePath); }
+		}
+
+		/// <summary>
 		///   Gets the path to the asset relative to the asset source directory, i.e., Textures/Tex.png.
 		/// </summary>
 		public string RelativePath { get; private set; }
@@ -111,6 +127,24 @@ namespace Pegasus.AssetsCompiler.Assets
 		public string HashPath
 		{
 			get { return TempPathWithoutExtension + ".md5"; }
+		}
+
+		/// <summary>
+		///   The identifier type that should be used for the asset when generating the asset identifier list. If null is returned,
+		///   no asset identifier is generated for this asset instance.
+		/// </summary>
+		public virtual string IdentifierType
+		{
+			get { return null; }
+		}
+
+		/// <summary>
+		///   The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
+		///   asset instance.
+		/// </summary>
+		public virtual string IdentifierName
+		{
+			get { return null; }
 		}
 
 		/// <summary>

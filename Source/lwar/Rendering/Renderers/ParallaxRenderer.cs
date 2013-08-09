@@ -2,10 +2,12 @@
 
 namespace Lwar.Rendering.Renderers
 {
+	using Assets;
 	using Assets.Effects;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
@@ -62,7 +64,7 @@ namespace Lwar.Rendering.Renderers
 
 			_effect = new ParallaxEffect(graphicsDevice, assets)
 			{
-				TextureAtlas = new Texture2DView(assets.LoadTexture2D("Textures/Parallax"), SamplerState.BilinearWrapNoMipmaps)
+				TextureAtlas = new Texture2DView(assets.LoadTexture2D(Textures.Parallax), SamplerState.BilinearWrapNoMipmaps)
 			};
 
 			var random = new Random();

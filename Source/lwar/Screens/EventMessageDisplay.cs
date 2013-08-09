@@ -2,10 +2,12 @@
 
 namespace Lwar.Screens
 {
+	using Assets;
 	using Gameplay;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
@@ -43,7 +45,7 @@ namespace Lwar.Screens
 		{
 			Assert.ArgumentNotNull(assets);
 
-			var font = assets.LoadFont("Fonts/Liberation Mono 11");
+			var font = assets.LoadFont(Fonts.LiberationMono11);
 			for (var i = 0; i < _messages.Length; ++i)
 				_messages[i] = new Label(font) { LineSpacing = LineSpacing };
 		}

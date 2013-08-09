@@ -36,6 +36,24 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
+		///   The identifier type that should be used for the asset when generating the asset identifier list. If null is returned,
+		///   no asset identifier is generated for this asset instance.
+		/// </summary>
+		public override string IdentifierType
+		{
+			get { return "Pegasus.Framework.Platform.Graphics.Texture2D"; }
+		}
+
+		/// <summary>
+		///   The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
+		///   asset instance.
+		/// </summary>
+		public override string IdentifierName
+		{
+			get { return FileNameWithoutExtension; }
+		}
+
+		/// <summary>
 		///   Loads the texture data.
 		/// </summary>
 		public unsafe void Load()

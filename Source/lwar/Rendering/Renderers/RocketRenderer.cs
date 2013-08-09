@@ -2,6 +2,7 @@
 
 namespace Lwar.Rendering.Renderers
 {
+	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
 	using Pegasus.Framework.Platform.Graphics;
@@ -28,7 +29,7 @@ namespace Lwar.Rendering.Renderers
 		/// </summary>
 		protected override void Initialize()
 		{
-			var texture = Assets.LoadTexture2D("Textures/Rocket");
+			var texture = Assets.LoadTexture2D(Textures.Rocket);
 
 			_model = Model.CreateQuad(GraphicsDevice, texture.Size);
 			_effect = new TexturedQuadEffect(GraphicsDevice, Assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };

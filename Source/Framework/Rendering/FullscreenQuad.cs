@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Rendering
 {
 	using Platform;
+	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Memory;
 

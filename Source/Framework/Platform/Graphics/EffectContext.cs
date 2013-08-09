@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Platform.Graphics
 {
 	using System.Diagnostics;
+	using Assets;
 
 	/// <summary>
 	///   Represents the context of an effect.

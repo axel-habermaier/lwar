@@ -2,6 +2,7 @@
 
 namespace Lwar.Rendering.Renderers
 {
+	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
 	using Pegasus.Framework.Math;
@@ -29,7 +30,7 @@ namespace Lwar.Rendering.Renderers
 		/// </summary>
 		protected override void Initialize()
 		{
-			var texture = Assets.LoadCubeMap("Textures/SunHeat.Cubemap");
+			var texture = Assets.LoadCubeMap(Textures.SunHeatCubemap);
 
 			_model = Model.CreateSphere(GraphicsDevice, 1, 10);
 			_effect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(texture, SamplerState.BilinearClampNoMipmaps) };

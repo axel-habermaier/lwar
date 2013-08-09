@@ -2,6 +2,7 @@
 
 namespace Lwar.Screens
 {
+	using Assets;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
@@ -49,7 +50,7 @@ namespace Lwar.Screens
 		/// </summary>
 		public override void Initialize()
 		{
-			_timeoutLabel = new Label(Assets.LoadFont("Fonts/Liberation Mono 11"))
+			_timeoutLabel = new Label(Assets.LoadFont(Fonts.LiberationMono11))
 			{
 				Alignment = TextAlignment.Middle | TextAlignment.Centered
 			};

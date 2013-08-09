@@ -2,6 +2,7 @@
 
 namespace Lwar
 {
+	using Assets;
 	using Pegasus.Framework;
 	using Rendering;
 	using Scripting;
@@ -19,7 +20,7 @@ namespace Lwar
 			Commands.Initialize();
 			Cvars.Initialize();
 
-			Bootstrapper<LwarApp>.Run("lwar", "Fonts/Liberation Mono 11", new SpriteEffect());
+			Bootstrapper<LwarApp>.Run("lwar", Fonts.LiberationMono11, new SpriteEffect());
 		}
 	}
 }

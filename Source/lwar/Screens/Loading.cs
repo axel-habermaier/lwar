@@ -2,6 +2,7 @@
 
 namespace Lwar.Screens
 {
+	using Assets;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Network;
@@ -53,7 +54,7 @@ namespace Lwar.Screens
 		/// </summary>
 		public override void Initialize()
 		{
-			_statusMessage = new Label(Assets.LoadFont("Fonts/Liberation Mono 11"))
+			_statusMessage = new Label(Assets.LoadFont(Fonts.LiberationMono11))
 			{
 				Alignment = TextAlignment.Centered | TextAlignment.Middle,
 				Text = String.Format("Connecting to {0}...", _networkSession.ServerEndPoint)

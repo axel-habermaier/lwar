@@ -203,8 +203,10 @@ namespace Lwar.Assets.Templates.Compilation
 			writer.AppendLine("namespace Lwar.Gameplay.Entities");
 			writer.AppendBlockStatement(() =>
 				{
+					writer.AppendLine("using Assets;");
 					writer.AppendLine("using Pegasus.Framework;");
 					writer.AppendLine("using Pegasus.Framework.Platform;");
+					writer.AppendLine("using Pegasus.Framework.Platform.Assets;");
 					writer.AppendLine("using Pegasus.Framework.Platform.Graphics;");
 					writer.AppendLine("using Pegasus.Framework.Platform.Memory;");
 					writer.AppendLine("using Pegasus.Framework.Rendering;");
@@ -236,12 +238,12 @@ namespace Lwar.Assets.Templates.Compilation
 										writer.AppendLine("maxHealth: {0:0.0######}f,", template.Health);
 										writer.AppendLine("radius: {0:0.0######}f,", template.Radius);
 										if (template.Texture != null)
-											writer.AppendLine("texture: assets.LoadTexture2D(\"{0}\"),", template.Texture);
+											writer.AppendLine("texture: assets.LoadTexture2D({0}),", template.Texture);
 										else
 											writer.AppendLine("texture: null,");
 
 										if (template.CubeMap != null)
-											writer.AppendLine("cubeMap: assets.LoadCubeMap(\"{0}\"),", template.CubeMap);
+											writer.AppendLine("cubeMap: assets.LoadCubeMap({0}),", template.CubeMap);
 										else
 											writer.AppendLine("cubeMap: null,");
 

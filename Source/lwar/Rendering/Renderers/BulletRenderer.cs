@@ -2,6 +2,7 @@
 
 namespace Lwar.Rendering.Renderers
 {
+	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
 	using Pegasus.Framework.Math;
@@ -31,8 +32,8 @@ namespace Lwar.Rendering.Renderers
 		/// </summary>
 		protected override void Initialize()
 		{
-			_texture = Assets.LoadTexture2D("Textures/Bullet");
-			_texture2 = Assets.LoadTexture2D("Textures/BulletGlow");
+			_texture = Assets.LoadTexture2D(Textures.Bullet);
+			_texture2 = Assets.LoadTexture2D(Textures.BulletGlow);
 
 			_model = Model.CreateQuad(GraphicsDevice, _texture.Size);
 			_effect = new TexturedQuadEffect(GraphicsDevice, Assets);

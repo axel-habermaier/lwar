@@ -2,9 +2,11 @@
 
 namespace Lwar.Rendering.Renderers
 {
+	using Assets;
 	using Assets.Effects;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Assets;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
@@ -34,7 +36,7 @@ namespace Lwar.Rendering.Renderers
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
-			var cubemap = assets.LoadCubeMap("Textures/Space.Cubemap");
+			var cubemap = assets.LoadCubeMap(Textures.SpaceCubemap);
 
 			_model = Model.CreateSkybox(graphicsDevice);
 			_effect = new SkyboxEffect(graphicsDevice, assets) { Skybox = new CubeMapView(cubemap, SamplerState.BilinearClampNoMipmaps) };

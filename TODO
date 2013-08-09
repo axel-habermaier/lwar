@@ -42,8 +42,6 @@ Pegasus.Platform
 
 Assets Compiler
 ========
-- Storing cubemaps as 6 separate images might improve compilation times noticably
-- Add dependency system (e.g., cubemap depends on 6 textures)
 - Asset compression
 	- Store all assets in one or more .zip-files
 	- Give higher priorities to files on the filesystem (similar to Quake 3)

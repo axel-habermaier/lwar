@@ -2,6 +2,7 @@
 
 namespace Lwar.Screens
 {
+	using Assets;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Graphics;
@@ -60,7 +61,7 @@ namespace Lwar.Screens
 		/// </summary>
 		public override void Initialize()
 		{
-			_messageLabel = new Label(Assets.LoadFont("Fonts/Liberation Mono 11"))
+			_messageLabel = new Label(Assets.LoadFont(Fonts.LiberationMono11))
 			{
 				Text = _message + "\n\nPress [Space] to continue...",
 				Alignment = TextAlignment.Middle | TextAlignment.Centered

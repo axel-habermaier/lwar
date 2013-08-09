@@ -2,6 +2,7 @@
 
 namespace Lwar.Screens
 {
+	using Assets;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform.Memory;
@@ -25,7 +26,7 @@ namespace Lwar.Screens
 		{
 			IsOpaque = true;
 
-			_label = new Label(Assets.LoadFont("Fonts/Liberation Mono 11"))
+			_label = new Label(Assets.LoadFont(Fonts.LiberationMono11))
 			{
 				Text = "Welcome to lwar!",
 				Alignment = TextAlignment.Centered | TextAlignment.Middle

@@ -3,6 +3,7 @@
 namespace Lwar.Rendering.Renderers
 {
 	using System.Collections.Generic;
+	using Assets;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Network;
@@ -38,8 +39,8 @@ namespace Lwar.Rendering.Renderers
 		/// </summary>
 		protected override void Initialize()
 		{
-			_texture = Assets.LoadTexture2D("Textures/Ship");
-			_font = Assets.LoadFont("Fonts/Liberation Mono 11");
+			_texture = Assets.LoadTexture2D(Textures.Ship);
+			_font = Assets.LoadFont(Fonts.LiberationMono11);
 		}
 
 		/// <summary>
