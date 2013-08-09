@@ -23,12 +23,12 @@ namespace Lwar.Assets.Templates.Compilation
 		/// <summary>
 		///   The path of the client file containing the template declarations.
 		/// </summary>
-		private const string ClientTemplates = "../../Source/Client/Gameplay/Entities/Templates.cs";
+		private const string ClientTemplates = "../../Source/lwar/Gameplay/Entities/Templates.cs";
 
 		/// <summary>
 		///   The path of the client file containing the entity type enumeration.
 		/// </summary>
-		private const string ClientTypeEnumeration = "../../Source/Client/Gameplay/Entities/EntityType.cs";
+		private const string ClientTypeEnumeration = "../../Source/lwar/Gameplay/Entities/EntityType.cs";
 
 		/// <summary>
 		///   The path of the server file containing the template declarations.
@@ -200,7 +200,7 @@ namespace Lwar.Assets.Templates.Compilation
 			var writer = new CodeWriter();
 			writer.WriterHeader("//");
 
-			writer.AppendLine("namespace Lwar.Client.Gameplay.Entities");
+			writer.AppendLine("namespace Lwar.Gameplay.Entities");
 			writer.AppendBlockStatement(() =>
 				{
 					writer.AppendLine("using Pegasus.Framework;");
@@ -281,7 +281,7 @@ namespace Lwar.Assets.Templates.Compilation
 			var writer = new CodeWriter();
 			writer.WriterHeader("//");
 
-			writer.AppendLine("namespace Lwar.Client.Gameplay.Entities");
+			writer.AppendLine("namespace Lwar.Gameplay.Entities");
 			writer.AppendBlockStatement(() =>
 				{
 					writer.AppendLine("public enum EntityType");

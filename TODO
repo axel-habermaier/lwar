@@ -57,6 +57,7 @@ Assets Compiler
 - Assign increasing numbers per asset type and use that instead of name at runtime
 - Generate a class that maps a friendly C#-name to an asset id and that also stores the total number of assets per type
 - Asset lookup can then be an indexing operation into an array
+- Make asset compiler independent of Framework (by link-including all required files)
 
 Network
 ========
