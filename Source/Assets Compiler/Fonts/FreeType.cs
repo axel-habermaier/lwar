@@ -11,7 +11,6 @@ using Long = System.Int32;
 namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Framework;
 	using Framework.Platform.Logging;
 
@@ -50,6 +49,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 
 		public const int LoadTargetMono = ((int)RenderMode.Aliased & 15) << 16;
 		public const int LoadTargetNormal = ((int)RenderMode.Antialiased & 15) << 16;
+		public const int Kerning = 0x0040;
 
 		[DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "FT_Init_FreeType")]
 		public static extern Error Initialize(out IntPtr library);
@@ -74,6 +74,9 @@ namespace Pegasus.AssetsCompiler.Fonts
 
 		[DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "FT_Render_Glyph")]
 		public static extern Error RenderGlyph(IntPtr glyphSlot, RenderMode renderMode);
+
+		[DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "FT_Get_Kerning")]
+		public static extern Error GetKerning(IntPtr face, uint leftGlyph, uint rightGlyph, uint kernMode, out Vector kerning);
 
 		[StructLayout(LayoutKind.Sequential)]
 		public class Face
@@ -226,6 +229,13 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal Long height;
 			internal Long max_advance;
 			private IntPtr @internal;
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		internal struct Vector
+		{
+			internal Long x;
+			internal Long y;
 		}
 	}
 }

@@ -17,12 +17,14 @@ namespace Pegasus.AssetsCompiler.Fonts
 		///   Creates the bitmap for the glyph.
 		/// </summary>
 		/// <param name="glyphInfo">Provides information about the glyph.</param>
+		/// <param name="index">The index of the glyph in the font file.</param>
 		/// <param name="character">The character of the glyph.</param>
 		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyph.</param>
-		public Glyph(FreeType.GlyphSlot glyphInfo, char character, RenderMode renderMode)
+		public Glyph(FreeType.GlyphSlot glyphInfo, uint index, char character, RenderMode renderMode)
 		{
 			Assert.ArgumentSatisfies(!Char.IsControl(character), "The given character is not printable.");
 
+			Index = index;
 			Character = character;
 			Size = new Size(glyphInfo.bitmap.width, glyphInfo.bitmap.rows);
 			AdvanceX = glyphInfo.advance_x / 64;
@@ -53,6 +55,11 @@ namespace Pegasus.AssetsCompiler.Fonts
 					throw new InvalidOperationException("Unknown render mode.");
 			}
 		}
+
+		/// <summary>
+		///   Gets the index of the glyph in the font file.
+		/// </summary>
+		public uint Index { get; private set; }
 
 		/// <summary>
 		///   Gets the offset in pixels from the drawing position to the leftmost border of the glyph.

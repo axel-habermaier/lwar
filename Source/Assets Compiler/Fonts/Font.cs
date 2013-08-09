@@ -65,7 +65,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		/// Gets the base line offset for the font.
+		///   Gets the base line offset for the font.
 		/// </summary>
 		public ushort Baseline
 		{
@@ -74,6 +74,14 @@ namespace Pegasus.AssetsCompiler.Fonts
 				var metrics = (FreeType.Size)Marshal.PtrToStructure(_font.size, typeof(FreeType.Size));
 				return (ushort)(LineHeight + metrics.descender / 64);
 			}
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether the font provides kerning information.
+		/// </summary>
+		public bool HasKerning
+		{
+			get { return (_font.face_flags & FreeType.Kerning) == FreeType.Kerning; }
 		}
 
 		/// <summary>
@@ -103,7 +111,22 @@ namespace Pegasus.AssetsCompiler.Fonts
 			FreeType.Invoke(() => FreeType.RenderGlyph(_font.glyph, renderMode));
 
 			var glyphInfo = (FreeType.GlyphSlot)Marshal.PtrToStructure(_font.glyph, typeof(FreeType.GlyphSlot));
-			_glyphs.Add(new Glyph(glyphInfo, character, renderMode));
+			_glyphs.Add(new Glyph(glyphInfo, glyphIndex, character, renderMode));
+		}
+
+		/// <summary>
+		///   Gets the kerning offset (in X direction) for the two glyphs.
+		/// </summary>
+		/// <param name="left">The left glyph.</param>
+		/// <param name="right">The right glyph.</param>
+		public int GetKerning(Glyph left, Glyph right)
+		{
+			Assert.ArgumentNotNull(left);
+			Assert.ArgumentNotNull(right);
+
+			var kerning = new FreeType.Vector();
+			FreeType.Invoke(() => FreeType.GetKerning(_fontPtr, left.Index, right.Index, 0, out kerning));
+			return kerning.x / 64;
 		}
 
 		/// <summary>

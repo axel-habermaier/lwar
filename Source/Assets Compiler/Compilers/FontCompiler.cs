@@ -3,14 +3,14 @@
 namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.Collections.Generic;
-	using System.Drawing.Imaging;
 	using System.IO;
 	using System.Linq;
 	using Assets;
+	using Fonts;
+	using Framework;
 	using Framework.Platform;
 	using Framework.Platform.Logging;
 	using Framework.Platform.Memory;
-	using Fonts;
 
 	/// <summary>
 	///   Compiles texture-based fonts.
@@ -79,11 +79,34 @@ namespace Pegasus.AssetsCompiler.Compilers
 					buffer.WriteInt16((short)area.Top);
 					buffer.WriteUInt16((ushort)area.Width);
 					buffer.WriteUInt16((ushort)area.Height);
-					
+
 					// Write the glyph offsets
 					buffer.WriteInt16((short)glyph.OffsetX);
 					buffer.WriteInt16((short)(font.Baseline - glyph.OffsetY));
 					buffer.WriteInt16((short)glyph.AdvanceX);
+				}
+
+				// Write the kerning information, if any
+				if (!font.HasKerning)
+				{
+					buffer.WriteUInt16(0);
+					return;
+				}
+
+				var pairs = (from left in font.Glyphs
+							 from right in font.Glyphs
+							 let offset = font.GetKerning(left, right)
+							 where offset != 0
+							 select new { Left = left, Right = right, Offset = offset }).ToArray();
+
+				Assert.That(pairs.Length < UInt16.MaxValue, "Too many kerning pairs.");
+				buffer.WriteUInt16((ushort)pairs.Length);
+
+				foreach (var pair in pairs)
+				{
+					buffer.WriteUInt16(pair.Left.Character);
+					buffer.WriteUInt16(pair.Right.Character);
+					buffer.WriteInt16((short)pair.Offset);
 				}
 			}
 		}

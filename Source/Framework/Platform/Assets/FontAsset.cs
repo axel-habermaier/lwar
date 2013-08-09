@@ -80,26 +80,26 @@ namespace Pegasus.Framework.Platform.Assets
 			}
 
 			// Load the kerning data
-			//var kerningCount = buffer.ReadUInt16();
+			var kerningCount = buffer.ReadUInt16();
 			KerningPair[] kernings = null;
-			//if (kerningCount != 0)
-			//{
-			//	kernings = new KerningPair[kerningCount];
+			if (kerningCount != 0)
+			{
+				kernings = new KerningPair[kerningCount];
 
-			//	for (var i = 0; i < kerningCount; ++i)
-			//	{
-			//		var first = buffer.ReadUInt16();
-			//		var second = buffer.ReadUInt16();
-			//		var offset = buffer.ReadInt16();
+				for (var i = 0; i < kerningCount; ++i)
+				{
+					var first = buffer.ReadUInt16();
+					var second = buffer.ReadUInt16();
+					var offset = buffer.ReadInt16();
 
-			//		kernings[i] = new KerningPair((char)first, (char)second, offset);
+					kernings[i] = new KerningPair((char)first, (char)second, offset);
 
-			//		if (glyphs[first - lowestGlyphId].KerningStart == 0)
-			//			glyphs[first - lowestGlyphId].KerningStart = i;
+					if (glyphs[first].KerningStart == 0)
+						glyphs[first].KerningStart = i;
 
-			//		++glyphs[first - lowestGlyphId].KerningCount;
-			//	}
-			//}
+					++glyphs[first].KerningCount;
+				}
+			}
 
 			Font.Reinitialize(glyphs, kernings, _texture.Texture, lineHeight);
 		}
