@@ -20,7 +20,7 @@ namespace Pegasus.Framework.Platform.Assets
 		/// <summary>
 		///   The name of the assets directory.
 		/// </summary>
-		private const string AssetDirectory = "Assets";
+		private const string AssetDirectory = "";
 
 		/// <summary>
 		///   The path to the asset compiler.
