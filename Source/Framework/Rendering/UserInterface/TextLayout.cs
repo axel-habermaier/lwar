@@ -229,6 +229,15 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
+		///   Relayouts the text.
+		/// </summary>
+		public void Relayout()
+		{
+			_dirty = true;
+			UpdateLayout();
+		}
+
+		/// <summary>
 		///   Computes the physical position of the caret at the given logical caret position.
 		/// </summary>
 		/// <param name="position">The logical position of the caret.</param>

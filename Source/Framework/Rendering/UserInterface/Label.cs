@@ -5,6 +5,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Scripting;
 
 	/// <summary>
 	///   Represents a text label.
@@ -40,6 +41,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Assert.ArgumentNotNull(font);
 			Assert.ArgumentNotNull(text);
 
+			Commands.OnReloadAssets += OnReloadAssets;
+
 			_layout = new TextLayout(font, text);
 			_layout.LayoutChanged += () => _textRenderer.RebuildCache(Font, _layout.Text, _layout.LayoutData);
 
@@ -48,6 +51,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			// Use a large value for the default area; however, don't use Int32.MaxValue because of
 			// integer arithmetic overflowing problems
 			Area = new Rectangle(0, 0, Int16.MaxValue, Int16.MaxValue);
+		}
+
+		/// <summary>
+		/// Invoked when assets are reloaded. Forces the relayouting of the label's text just in case that the font has been changed.
+		/// </summary>
+		private void OnReloadAssets()
+		{
+			_layout.Relayout();
 		}
 
 		/// <summary>
@@ -147,6 +158,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			Commands.OnReloadAssets -= OnReloadAssets;
 			_layout.SafeDispose();
 		}
 
