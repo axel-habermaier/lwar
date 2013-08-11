@@ -68,6 +68,14 @@ namespace Pegasus.AssetsCompiler.Assets
 		public string RelativePath { get; private set; }
 
 		/// <summary>
+		///   Gets the relative path to the asset directory in the source directory, i.e. /Textures/.
+		/// </summary>
+		public string RelativeDirectory
+		{
+			get { return Path.GetDirectoryName(RelativePath); }
+		}
+
+		/// <summary>
 		///   Gets the path to the asset relative to the asset source directory without the file extensions, i.e., Textures/Tex.
 		/// </summary>
 		public string RelativePathWithoutExtension

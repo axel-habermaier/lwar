@@ -9,17 +9,6 @@ namespace Pegasus.Framework.Platform.Assets
 		where T : class
 	{
 		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="assetName">The name of the asset.</param>
-		public AssetIdentifier(string assetName)
-			: this()
-		{
-			Assert.ArgumentNotNullOrWhitespace(assetName);
-			AssetName = assetName;
-		}
-
-		/// <summary>
 		///   Gets the name of the asset.
 		/// </summary>
 		internal string AssetName { get; private set; }
@@ -31,6 +20,16 @@ namespace Pegasus.Framework.Platform.Assets
 		public bool Equals(AssetIdentifier<T> other)
 		{
 			return string.Equals(AssetName, other.AssetName);
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="assetName">The name of the asset.</param>
+		public static implicit operator AssetIdentifier<T>(string assetName)
+		{
+			Assert.ArgumentNotNullOrWhitespace(assetName);
+			return new AssetIdentifier<T> { AssetName = assetName };
 		}
 
 		/// <summary>
