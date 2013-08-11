@@ -44,7 +44,7 @@ Pegasus.Platform
 Assets Compiler
 ========
 - Asset compression
-	- Store all assets in one or more .zip-files
+	- Store all assets in one or more .zip-files (decreases asset file size by about 50%)
 	- Give higher priorities to files on the filesystem (similar to Quake 3)
 - Fix constant buffer packing
 - Organize assets into different packages
