@@ -30,9 +30,9 @@ namespace Pegasus.AssetsCompiler.Fonts
 #if Linux
 			 "libPlatform.so";
 #elif !Linux && x86
-			"FreeType/freetype250.x86.dll";
+			"../../Dependencies/freetype250.x86.dll";
 #elif !Linux && x64
-			"FreeType/freetype250.x64.dll";
+			"../../Dependencies/freetype250.x64.dll";
 #endif
 
 		/// <summary>

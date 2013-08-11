@@ -22,8 +22,9 @@ namespace Pegasus.AssetsCompiler.Assets
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		protected Asset(string relativePath)
-			: this(relativePath, Configuration.SourceDirectory)
+		/// <param name="doNotCreateTargetPath">If true, the target path for the asset is not created.</param>
+		protected Asset(string relativePath, bool doNotCreateTargetPath = false)
+			: this(relativePath, Configuration.SourceDirectory, doNotCreateTargetPath)
 		{
 		}
 
@@ -32,7 +33,8 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		/// <param name="sourceDirectory">The source directory of the asset.</param>
-		protected Asset(string relativePath, string sourceDirectory)
+		/// <param name="doNotCreateTargetPath">If true, the target path for the asset is not created.</param>
+		protected Asset(string relativePath, string sourceDirectory, bool doNotCreateTargetPath = false)
 		{
 			Assert.ArgumentNotNullOrWhitespace(relativePath);
 			Assert.ArgumentNotNullOrWhitespace(sourceDirectory);
@@ -42,7 +44,9 @@ namespace Pegasus.AssetsCompiler.Assets
 			_sourceDirectory = sourceDirectory;
 			RelativePath = relativePath;
 
-			Directory.CreateDirectory(Path.GetDirectoryName(TargetPath));
+			if (!doNotCreateTargetPath)
+				Directory.CreateDirectory(Path.GetDirectoryName(TargetPath));
+
 			Directory.CreateDirectory(Path.GetDirectoryName(TempPathWithoutExtension));
 		}
 

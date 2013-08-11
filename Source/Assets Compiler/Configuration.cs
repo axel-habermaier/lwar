@@ -51,7 +51,7 @@ namespace Pegasus.AssetsCompiler
 		/// <summary>
 		///   The path where the compiled assets should be stored.
 		/// </summary>
-		public static readonly string TargetDirectory = Path.Combine(Environment.CurrentDirectory, "Assets");
+		public static readonly string TargetDirectory = Environment.CurrentDirectory;
 
 		/// <summary>
 		///   The path to the C# file that should contain the generated effect code.
