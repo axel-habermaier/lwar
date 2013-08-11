@@ -1,6 +1,12 @@
 #include "prelude.h"
 
 //====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+static pgVoid pgReleaseButtonsAndKeys(pgWindow* window);
+
+//====================================================================================================================
 // Exported functions
 //====================================================================================================================
 
@@ -58,36 +64,15 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			break;
 		case PG_MESSAGE_GAINED_FOCUS:
 			window->focused = PG_TRUE;
+			pgReleaseButtonsAndKeys(window);
 			break;
 		case PG_MESSAGE_LOST_FOCUS:
-			{
-				pgInt32 i, x, y;
-				window->focused = PG_FALSE;
+			window->focused = PG_FALSE;
 
-				if (window->swapChain != NULL)
-					pgSwapChainWindowed(window->swapChain);
+			if (window->swapChain != NULL)
+				pgSwapChainWindowed(window->swapChain);
 
-				// Make sure that all mouse buttons and keys are released (we might miss some events, for instance,
-				// when the user uses Alt+Tab to switch to another window)
-				for (i = 1; i < PG_KEY_COUNT - 1; ++i)
-				{
-					if (window->keyState[i])
-					{
-						window->keyState[i] = PG_FALSE;
-						window->callbacks.keyReleased((pgKey)i, window->scanCode[i]);
-					}
-				}
-
-				pgGetMousePosition(window, &x, &y);
-				for (i = 1; i < PG_BUTTON_COUNT - 1; ++i)
-				{
-					if (window->buttonState[i])
-					{
-						window->buttonState[i] = PG_FALSE;
-						window->callbacks.mouseReleased((pgMouseButton)i, message.x, message.y);
-					}
-				}
-			}
+			pgReleaseButtonsAndKeys(window);
 			break;
 		/* Activate the window on all input-related events to ensure that we haven't missed the focused event */
 		case PG_MESSAGE_CHARACTER_ENTERED:
@@ -297,4 +282,34 @@ pgVoid pgConstrainWindowPlacement(pgWindowPlacement* placement)
 	placement->y = pgClamp(placement->y, rect.top - placement->height + PG_WINDOW_MIN_OVERLAP, rect.top + rect.height - PG_WINDOW_MIN_OVERLAP);
 	placement->width = pgClamp(placement->width, PG_WINDOW_MIN_WIDTH, rect.width);
 	placement->height = pgClamp(placement->height, PG_WINDOW_MIN_HEIGHT, rect.height);
+}
+
+//====================================================================================================================
+// Helper functions
+//====================================================================================================================
+
+static pgVoid pgReleaseButtonsAndKeys(pgWindow* window)
+{
+	pgInt32 i, x, y;
+
+	// Make sure that all mouse buttons and keys are released (we might miss some events, for instance,
+	// when the user uses Alt+Tab to switch to another window)
+	for (i = 1; i < PG_KEY_COUNT - 1; ++i)
+	{
+		if (window->keyState[i])
+		{
+			window->keyState[i] = PG_FALSE;
+			window->callbacks.keyReleased((pgKey)i, window->scanCode[i]);
+		}
+	}
+
+	pgGetMousePosition(window, &x, &y);
+	for (i = 1; i < PG_BUTTON_COUNT - 1; ++i)
+	{
+		if (window->buttonState[i])
+		{
+			window->buttonState[i] = PG_FALSE;
+			window->callbacks.mouseReleased((pgMouseButton)i, x, y);
+		}
+	}
 }
