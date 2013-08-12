@@ -381,23 +381,13 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e, pgMessage* message)
             KeySym keySym;
             int bytes = Xutf8LookupString(window->inputContext, &e->xkey, &buffer[0], size - 1, &keySym, &status);
             
-            if (isDead)
+            if (bytes > 0 || isDead)
             {
                 long symbol = KeySymbolToUtf16(keySym);
                 if (symbol > UINT16_MAX)
                     PG_DEBUG("The unicode character exceeds the limits of a 2-byte unsigned integer.");
 
-                nextMessage.type = PG_MESSAGE_DEAD_CHARACTER_ENTERED;
-                nextMessage.character = (pgUint16)symbol;
-                nextMessage.scanCode = e->xkey.keycode;
-            }
-            else if (bytes > 0)
-            {
-                long symbol = KeySymbolToUtf16(keySym);
-                if (symbol > UINT16_MAX)
-                    PG_DEBUG("The unicode character exceeds the limits of a 2-byte unsigned integer.");
-
-                nextMessage.type = PG_MESSAGE_CHARACTER_ENTERED;
+                nextMessage.type = isDead ? PG_MESSAGE_DEAD_CHARACTER_ENTERED : PG_MESSAGE_CHARACTER_ENTERED;
                 nextMessage.character = (pgUint16)symbol;
                 nextMessage.scanCode = e->xkey.keycode;
             }
