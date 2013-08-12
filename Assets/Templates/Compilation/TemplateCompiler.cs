@@ -349,5 +349,18 @@ namespace Lwar.Assets.Templates.Compilation
 				}
 			}
 		}
+
+		/// <summary>
+		///   Removes the compiled assets and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="assets">The assets that should be cleaned.</param>
+		public override void Clean(IEnumerable<Asset> assets)
+		{
+			foreach (var asset in assets.OfType<TemplateAsset>())
+			{
+				File.Delete(asset.TempPath);
+				File.Delete(asset.HashPath);
+			}
+		}
 	}
 }
