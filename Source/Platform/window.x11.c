@@ -152,6 +152,16 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
 		
 	if (window->inputContext == NULL)
 		PG_DIE("Failed to create input context for X11 window.");
+        
+    // Set minimum and maximum window size
+    XSizeHints hints;
+    hints.flags = PMinSize | PMaxSize;
+    hints.min_width = PG_WINDOW_MIN_WIDTH;
+    hints.min_height = PG_WINDOW_MIN_HEIGHT;
+    hints.max_width = PG_WINDOW_MAX_WIDTH;
+    hints.max_height = PG_WINDOW_MAX_HEIGHT;
+    
+    XSetWMNormalHints(x11.display, window->handle, &hints);
 		
 	XMapWindow(x11.display, window->handle);
 	XFlush(x11.display);
@@ -352,7 +362,6 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e, pgMessage* message)
 		break;
         
 	case ConfigureNotify:
-		// TODO: Enforce minimum and maximum window size
 		break;
         
 	case ClientMessage:
