@@ -31,8 +31,7 @@ Pegasus.Framework
 
 Pegasus.Platform
 ========
-- Linux: Double clicking not implemented
-- Linux: Fullscreen not implemented, moving and resizing window mostly not working
+- Linux: Fullscreen not implemented
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 - Get rid of EXT_direct_state_access
 - Fix AMD OpenGL synchronization bug

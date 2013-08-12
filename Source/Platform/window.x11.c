@@ -1,28 +1,5 @@
 #include "prelude.h"
 
-// Double click & Fullscreen implementation ideas (ClanLIB)
-//// Handle double click timing
-//	if (event.type == ButtonPress)
-//	{
-//		Time time_change = event.time - time_at_last_press;
-//		time_at_last_press = event.time;
-//
-//		if (last_press_id == id)	// Same key pressed
-//		{
-//			if (time_change < 500)	// 500 ms is the default in Windows
-//			{
-//				is_a_double_click_event = true;
-//				last_press_id = -1;	// Reset to avoid "tripple clicks"
-//			}
-//		}
-//		else
-//		{
-//			last_press_id = id;
-//		}
-//	}
-//	
-//	
-//	
 //void X11Window::clear_structurenotify_events()
 //{
 //	XEvent event;
@@ -167,6 +144,11 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
 	XFlush(x11.display);
 	
 	CreateHiddenCursor(window);
+    
+    // Enforce size and position again, as the values specified in XCreateWindow are ignored
+    // However: This might move the window to the wrong monitor...
+    pgSetWindowSizeCore(window);
+    pgSetWindowPositionCore(window);
 }
 
 pgVoid pgCloseWindowCore(pgWindow* window)
@@ -223,8 +205,6 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 	window->placement.y = attributes.y;
 	window->placement.width = attributes.width;
 	window->placement.height = attributes.height;
-	
-	// TODO: Mode
 }
 
 pgVoid pgSetWindowSizeCore(pgWindow* window)
@@ -241,7 +221,7 @@ pgVoid pgSetWindowPositionCore(pgWindow* window)
 
 pgVoid pgSetWindowModeCore(pgWindow* window)
 {
-	// TODO
+	// Not implemented
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)

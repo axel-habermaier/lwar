@@ -959,7 +959,7 @@ static int Load_EXT_direct_state_access()
 	_ptrc_glNamedFramebufferTextureLayerEXT = (void (CODEGEN_FUNCPTR *)(GLuint , GLenum , GLuint , GLint , GLint ))IntGetProcAddress("glNamedFramebufferTextureLayerEXT");
 	if(!_ptrc_glNamedFramebufferTextureLayerEXT) numFailed++;
 	_ptrc_glNamedFramebufferTextureFaceEXT = (void (CODEGEN_FUNCPTR *)(GLuint , GLenum , GLuint , GLint , GLenum ))IntGetProcAddress("glNamedFramebufferTextureFaceEXT");
-	if(!_ptrc_glNamedFramebufferTextureFaceEXT) numFailed++;PG_INFO("4 -> %d", numFailed);
+	if(!_ptrc_glNamedFramebufferTextureFaceEXT) numFailed++;
 	_ptrc_glTextureRenderbufferEXT = (void (CODEGEN_FUNCPTR *)(GLuint , GLenum , GLuint ))IntGetProcAddress("glTextureRenderbufferEXT");
 	if(!_ptrc_glTextureRenderbufferEXT) numFailed++;
 	_ptrc_glMultiTexRenderbufferEXT = (void (CODEGEN_FUNCPTR *)(GLenum , GLenum , GLuint ))IntGetProcAddress("glMultiTexRenderbufferEXT");
