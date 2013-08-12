@@ -410,9 +410,7 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e, pgMessage* message)
                 }
             }
             else
-            {
                 lastButton = e->xbutton.button;
-            }
         
     		break;
         }
