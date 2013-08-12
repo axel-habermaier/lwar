@@ -203,7 +203,7 @@ namespace Lwar.Network
 				}
 			}
 
-			Assert.That(buffer.EndOfBuffer, "Received an invalid packet from server.");
+			Assert.That(buffer.EndOfBuffer, "Received an invalid packet from the server.");
 
 			if (buffer.EndOfBuffer)
 				_lastPacketTimestamp = _clock.Milliseconds;

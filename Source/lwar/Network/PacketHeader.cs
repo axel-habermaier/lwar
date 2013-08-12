@@ -12,7 +12,8 @@ namespace Lwar.Network
 	public struct PacketHeader
 	{
 		/// <summary>
-		///   The application identifier that is used to determine whether a packet has been sent by another application.
+		///   The application identifier that is used to determine whether a packet has been sent by another instance of the same
+		///   application.
 		/// </summary>
 		private const uint AppIdentifier = 0xf27087c5;
 
@@ -58,10 +59,11 @@ namespace Lwar.Network
 				return null;
 			}
 
-			var header = new PacketHeader();
-			header.Acknowledgement = buffer.ReadUInt32();
-			header.Timestamp = buffer.ReadUInt32();
-			return header;
+			return new PacketHeader
+			{
+				Acknowledgement = buffer.ReadUInt32(),
+				Timestamp = buffer.ReadUInt32()
+			};
 		}
 
 		/// <summary>
