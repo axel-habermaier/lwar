@@ -286,6 +286,11 @@ pgRectangle pgGetDesktopArea()
 	return rectangle;
 }
 
+pgVoid pgCancelDeadCharacter()
+{
+    // It is unclear how dead characters can be removed from the keyboard state
+}
+
 //====================================================================================================================
 // Helper functions
 //====================================================================================================================
@@ -337,55 +342,72 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e, pgMessage* message)
 	{
 	case DestroyNotify:
 		break;
+        
 	case FocusIn:
 		message->type = PG_MESSAGE_GAINED_FOCUS;
 		break;
+        
 	case FocusOut:
 		message->type = PG_MESSAGE_LOST_FOCUS;
 		break;
+        
 	case ConfigureNotify:
 		// TODO: Enforce minimum and maximum window size
 		break;
+        
 	case ClientMessage:
 		message->type = PG_MESSAGE_CLOSING;
 		break;
+        
 	case KeyPress:
 		message->type = PG_MESSAGE_KEY_DOWN;
 		message->key = TranslateKey(&e->xkey);
 		message->scanCode = e->xkey.keycode;
-			
-		if (!XFilterEvent(e, 0))
-		{
-			Status status;
-			KeySym keySym;
-			int length = Xutf8LookupString(window->inputContext, &e->xkey, NULL, 0, &keySym, &status);
-			
-			if (length > 0)
-			{
-				long symbol = KeySymbolToUtf16(keySym);
-				if (symbol > UINT16_MAX)
-					PG_DEBUG("The unicode character exceeds the limits of a 2-byte unsigned integer.");
-					
-				if (symbol > 31)
-				{
-					nextMessage.type = PG_MESSAGE_CHARACTER_ENTERED;
-					nextMessage.character = (pgUint16)symbol;
-					nextMessage.scanCode = e->xkey.keycode;
-				}
-			}
-		}
+        
+        {
+            pgBool isDead = XFilterEvent(e, None);
+            Status status;
+            const int size = 32;
+            char buffer[size];
+            KeySym keySym;
+            int bytes = Xutf8LookupString(window->inputContext, &e->xkey, &buffer[0], size - 1, &keySym, &status);
+            
+            if (isDead)
+            {
+                long symbol = KeySymbolToUtf16(keySym);
+                if (symbol > UINT16_MAX)
+                    PG_DEBUG("The unicode character exceeds the limits of a 2-byte unsigned integer.");
+
+                nextMessage.type = PG_MESSAGE_DEAD_CHARACTER_ENTERED;
+                nextMessage.character = (pgUint16)symbol;
+                nextMessage.scanCode = e->xkey.keycode;
+            }
+            else if (bytes > 0)
+            {
+                long symbol = KeySymbolToUtf16(keySym);
+                if (symbol > UINT16_MAX)
+                    PG_DEBUG("The unicode character exceeds the limits of a 2-byte unsigned integer.");
+
+                nextMessage.type = PG_MESSAGE_CHARACTER_ENTERED;
+                nextMessage.character = (pgUint16)symbol;
+                nextMessage.scanCode = e->xkey.keycode;
+            }
+        }
+		
 		break;
 	case KeyRelease:
 		message->type = PG_MESSAGE_KEY_UP;
 		message->key = TranslateKey(&e->xkey);
 		message->scanCode = e->xkey.keycode;
 		break;
+        
 	case ButtonPress: // TODO: Double click detection
 		message->type = PG_MESSAGE_MOUSE_DOWN;
 		message->button = TranslateButton(e->xbutton.button);
 		message->x = e->xbutton.x;
 		message->y = e->xbutton.y;
 		break;
+        
 	case ButtonRelease:
 		message->type = PG_MESSAGE_MOUSE_UP;
 		message->button = TranslateButton(e->xbutton.button);
@@ -398,6 +420,7 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e, pgMessage* message)
 			nextMessage.delta = e->xbutton.button == Button4 ? 1 : -1;
 		}
 		break;
+        
 	case MotionNotify:
 		message->type = PG_MESSAGE_MOUSE_MOVED;
 		message->x = e->xmotion.x;
@@ -406,9 +429,11 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e, pgMessage* message)
 		if (window->mouseCaptured)
 			CenterCursor(window);
 		break;
+        
 	case EnterNotify:
 		message->type = PG_MESSAGE_MOUSE_ENTERED;
 		break;
+        
 	case LeaveNotify:
 		message->type = PG_MESSAGE_MOUSE_LEFT;
 		break;
@@ -437,8 +462,7 @@ static pgMouseButton TranslateButton(unsigned int button)
 static pgKey TranslateKey(XKeyEvent* keyEvent)
 {
 	KeySym lower;
-	int num;
-	KeySym key = *XGetKeyboardMapping(x11.display, keyEvent->keycode, 1, &num);
+	KeySym key = XKeycodeToKeysym(x11.display, keyEvent->keycode, 0);
 
 	switch (key)
 	{
