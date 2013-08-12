@@ -46,16 +46,16 @@ enum MessageType {
     MESSAGE_UPDATE_CIRCLE	  = 113,
 };
 
-enum LeaveReason {
+typedef enum {
 	LEAVE_QUIT			= 1,
 	LEAVE_DROPPED		= 2,
 	LEAVE_MISBEHAVED	= 3,
-};
+} LeaveReason;
 
-enum RejectReason {
+typedef enum {
 	REJECT_FULL				= 1,
 	REJECT_VERSION_MISMATCH = 2,
-};
+} RejectReason;
 
 int is_reliable(Message *m);
 

@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Source\A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets", "Assets\Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Source\Client\Client.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar", "Source\lwar\lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
 EndProject
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Server", "Source\Server\Server.cproj", "{F35D340A-310C-4414-BE7F-87F061CE7C83}"
 EndProject
@@ -94,7 +94,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Source\Client\Client.csproj
+		StartupItem = Source\lwar\lwar.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
 		$1.FileWidth = 140

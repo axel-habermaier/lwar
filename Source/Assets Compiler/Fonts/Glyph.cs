@@ -27,7 +27,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			Index = index;
 			Character = character;
 			Size = new Size(glyphInfo.bitmap.width, glyphInfo.bitmap.rows);
-			AdvanceX = glyphInfo.advance_x / 64;
+			AdvanceX = (int)glyphInfo.advance_x / 64;
 			OffsetX = glyphInfo.bitmap_left;
 			OffsetY = glyphInfo.bitmap_top;
 

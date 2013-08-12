@@ -32,7 +32,7 @@ namespace Pegasus.Framework.Platform
 #if Windows
 			PlatformType.Windows;
 #elif Linux
-			Platform.Linux;
+			PlatformType.Linux;
 #endif
 
 		/// <summary>

@@ -62,6 +62,7 @@ size_t header_unpack(const char *s, size_t *app_id, size_t *ack, size_t *time) {
 size_t message_pack(char *s, void *p) {
     Message *m = (Message *)p;
     size_t i=0;
+    int j;
     i += uint8_pack(s+i, m->type);
 
     if(is_reliable(m)) {
@@ -143,7 +144,7 @@ size_t message_pack(char *s, void *p) {
         break;
 	case MESSAGE_STATS:
 		i += uint8_pack(s+i, m->stats.n);
-		for (int j = 0; j < m->stats.n; ++j) {
+		for (j = 0; j < m->stats.n; ++j) {
 			i += id_pack(s+i, m->stats.info[j].player_id);
 			i += uint16_pack(s+i, m->stats.info[j].kills);
 			i += uint16_pack(s+i, m->stats.info[j].deaths);
@@ -163,6 +164,7 @@ size_t message_pack(char *s, void *p) {
 size_t message_unpack(const char *s, void *p) {
     Message *m = (Message*)p;
     size_t i=0;
+    int j;
     uint8_t _type;
     i += uint8_unpack(s+i, &_type);
     m->type = (MessageType)_type;
@@ -224,7 +226,7 @@ size_t message_unpack(const char *s, void *p) {
         break;
     case MESSAGE_STATS:
         i += uint8_unpack(s+i, &m->stats.n);
-		for (int j = 0; j < m->stats.n; ++j) {
+		for (j = 0; j < m->stats.n; ++j) {
 			i += id_unpack(s+i, &m->stats.info[j].player_id);
 			i += uint16_unpack(s+i, &m->stats.info[j].kills);
 			i += uint16_unpack(s+i, &m->stats.info[j].deaths);

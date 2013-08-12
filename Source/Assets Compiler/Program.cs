@@ -126,9 +126,9 @@ namespace Pegasus.AssetsCompiler
 			catch (AggregateException e)
 			{
 				foreach (var exception in e.InnerExceptions)
-					Log.Error(exception.Message);
+					Log.Error("{0}", exception.Message);
 
-				Log.Error(e.StackTrace);
+				Log.Error("{0}", e.StackTrace);
 				return -1;
 			}
 			catch (AppException)
@@ -137,8 +137,15 @@ namespace Pegasus.AssetsCompiler
 			}
 			catch (Exception e)
 			{
-				Log.Error(e.Message);
-				Log.Error(e.StackTrace);
+				Log.Error("{0}", e.Message);
+				Log.Error("{0}", e.StackTrace);
+
+				if (e.InnerException != null)
+				{
+					Log.Error("Inner exception:");
+					Log.Error("{0}", e.InnerException.Message);
+					Log.Error("{0}", e.InnerException.StackTrace);
+				}
 				return -1;
 			}
 		}

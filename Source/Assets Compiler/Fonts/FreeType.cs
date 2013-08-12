@@ -28,7 +28,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		/// </summary>
 		private const string LibraryName =
 #if Linux
-			 "libPlatform.so";
+			"libfreetype.so.6";
 #elif !Linux && x86
 			"../../Dependencies/freetype250.x86.dll";
 #elif !Linux && x64
@@ -78,6 +78,9 @@ namespace Pegasus.AssetsCompiler.Fonts
 
 		[DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "FT_Get_Kerning")]
 		public static extern Error GetKerning(IntPtr face, uint leftGlyph, uint rightGlyph, uint kernMode, out Vector kerning);
+
+		// Disable annoying "private field is never used" warnings on Mono
+		#pragma warning disable 0169
 
 		[StructLayout(LayoutKind.Sequential)]
 		public class Face
@@ -238,5 +241,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal Long x;
 			internal Long y;
 		}
+
+		#pragma warning restore 0169
 	}
 }
