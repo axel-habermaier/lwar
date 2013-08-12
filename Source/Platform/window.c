@@ -62,23 +62,31 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 		case PG_MESSAGE_CLOSING:
 			window->closing = PG_TRUE;
 			break;
-		case PG_MESSAGE_GAINED_FOCUS:
-			window->focused = PG_TRUE;
-			pgReleaseButtonsAndKeys(window);
-			break;
+		
 		case PG_MESSAGE_LOST_FOCUS:
 			window->focused = PG_FALSE;
-
 			if (window->swapChain != NULL)
 				pgSwapChainWindowed(window->swapChain);
 
+			// If we've lost the focus, make sure that all pressed keys are unpressed, because we'll miss the up event
+			// if we're not focused; of course, if a key is not released while the window is out of focus and focused again,
+			// the key state might be wrong; but this seems to be more acceptable than the alternative
 			pgReleaseButtonsAndKeys(window);
 			break;
+
+		case PG_MESSAGE_GAINED_FOCUS:
+			window->focused = PG_TRUE;
+
+			// We sometimes do not get the lost focus event, so make sure we're now releasing all pressed buttons and keys
+			pgReleaseButtonsAndKeys(window);
+			break;
+
 		/* Activate the window on all input-related events to ensure that we haven't missed the focused event */
 		case PG_MESSAGE_CHARACTER_ENTERED:
 			window->callbacks.characterEntered(message.character, message.scanCode);
 			window->focused = PG_TRUE;
 			break;
+
 		case PG_MESSAGE_DEAD_CHARACTER_ENTERED:
 		{
 			pgBool cancel = PG_FALSE;
@@ -89,11 +97,13 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 				pgCancelDeadCharacter();
 			break;
 		}
+
 		case PG_MESSAGE_KEY_UP:
 			window->keyState[message.key] = PG_FALSE;
 			window->callbacks.keyReleased(message.key, message.scanCode);
 			window->focused = PG_TRUE;
 			break;
+
 		case PG_MESSAGE_KEY_DOWN:
 			// If either the Alt key or the Return key have just been pressed, and we now have both keys active,
 			// toggle fullscreen mode
@@ -118,32 +128,39 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			window->scanCode[message.key] = message.scanCode;
 			window->callbacks.keyPressed(message.key, message.scanCode);
 			break;
+
 		case PG_MESSAGE_MOUSE_WHEEL:
 			window->callbacks.mouseWheel(message.delta);
 			window->focused = PG_TRUE;
 			break;
+
 		case PG_MESSAGE_MOUSE_DOWN:
 			window->buttonState[message.button] = PG_TRUE;
 			window->callbacks.mousePressed(message.button, message.doubleClick, message.x, message.y);
 			window->focused = PG_TRUE;
 			break;
+
 		case PG_MESSAGE_MOUSE_UP:
 			window->buttonState[message.button] = PG_FALSE;
 			window->callbacks.mouseReleased(message.button, message.x, message.y);
 			window->focused = PG_TRUE;
 			break;
+
 		case PG_MESSAGE_MOUSE_MOVED:
 			window->callbacks.mouseMoved(message.x, message.y);
 			window->focused = PG_TRUE;
 			break;
+
 		case PG_MESSAGE_MOUSE_ENTERED:
 			window->callbacks.mouseEntered();
 			window->focused = PG_TRUE;
 			break;
+
 		case PG_MESSAGE_MOUSE_LEFT:
 			window->callbacks.mouseLeft();
 			window->focused = PG_TRUE;
 			break;
+
 		default:
 			PG_NO_SWITCH_DEFAULT;
 			break;
