@@ -410,12 +410,42 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e, pgMessage* message)
 		message->scanCode = e->xkey.keycode;
 		break;
         
-	case ButtonPress: // TODO: Double click detection
-		message->type = PG_MESSAGE_MOUSE_DOWN;
-		message->button = TranslateButton(e->xbutton.button);
-		message->x = e->xbutton.x;
-		message->y = e->xbutton.y;
-		break;
+	case ButtonPress: 
+        {
+            static Time lastPressTime = -1;
+            static int x = 0, y = 0;
+            static int lastButton = -1;
+            
+            message->type = PG_MESSAGE_MOUSE_DOWN;
+            message->button = TranslateButton(e->xbutton.button);
+            message->x = e->xbutton.x;
+            message->y = e->xbutton.y;
+            
+            Time pressDelta = e->xbutton.time - lastPressTime;
+            int xDelta = abs(e->xbutton.x - x);
+            int yDelta = abs(e->xbutton.y - y);
+            
+            lastPressTime = e->xbutton.time;
+            x = e->xbutton.x;
+            y = e->xbutton.y;
+
+            // If the same mouse button has been pressed twice within a time inverval of 500ms and within a range of 5 pixels,
+            // it counts as a double click
+            if (lastButton == e->xbutton.button)
+            {
+                if (pressDelta < 500 && xDelta * xDelta + yDelta * yDelta <= 25)
+                {
+                    message->doubleClick = PG_TRUE;
+                    lastButton = -1; // Prevent 'triple clicks'
+                }
+            }
+            else
+            {
+                lastButton = e->xbutton.button;
+            }
+        
+    		break;
+        }
         
 	case ButtonRelease:
 		message->type = PG_MESSAGE_MOUSE_UP;
