@@ -52,7 +52,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		{
 			get
 			{
-				var size = Constants.Sum(constant => SizeInBytes(constant.Type));
+				var info = GetLayoutedConstants().Last();
+				var size = info.Offset + SizeInBytes(info.Constant.Type);
+
 				if (size % 16 != 0)
 					size = 16 * (size / 16 + 1);
 

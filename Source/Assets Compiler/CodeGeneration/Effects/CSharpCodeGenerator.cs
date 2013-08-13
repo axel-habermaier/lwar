@@ -338,10 +338,16 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			var buffers = ConstantBuffers.ToArray();
 			for (var i = 0; i < buffers.Length; ++i)
 			{
-				_writer.AppendLine("[StructLayout(LayoutKind.Explicit)]");
+				_writer.AppendLine("[StructLayout(LayoutKind.Explicit, Size = Size)]");
 				_writer.AppendLine("private struct {0}", GetStructName(buffers[i]));
 				_writer.AppendBlockStatement(() =>
 					{
+						_writer.AppendLine("/// <summary>");
+						_writer.AppendLine("///   The size of the struct in bytes.");
+						_writer.AppendLine("/// </summary>");
+						_writer.AppendLine("public const int Size = {0};", buffers[i].Size);
+						_writer.Newline();
+
 						var constants = buffers[i].GetLayoutedConstants().ToArray();
 						for (var j = 0; j < constants.Length; ++j)
 						{
