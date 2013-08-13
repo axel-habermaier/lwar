@@ -60,7 +60,7 @@ pgVoid pgBindConstantBufferCore(pgBuffer* buffer, pgInt32 slot)
 
 pgVoid pgUpdateConstantBufferCore(pgBuffer* buffer, pgVoid* data)
 {
-	pgVoid* bufferData = pgMapBuffer(buffer, PG_MAP_WRITE_DISCARD);
+	pgVoid* bufferData = pgMapBufferCore(buffer, PG_MAP_WRITE_DISCARD);
 	memcpy(bufferData, data, buffer->size);
 	pgUnmapBuffer(buffer);
 }

@@ -9,6 +9,7 @@ namespace Pegasus.Framework
 	using Platform.Graphics;
 	using Platform.Input;
 	using Platform.Logging;
+	using Platform.Performance;
 	using Rendering;
 	using Rendering.UserInterface;
 	using Scripting;
@@ -105,7 +106,7 @@ namespace Pegasus.Framework
 				spriteEffect.Initialize(graphicsDevice, assets);
 
 				var font = assets.LoadFont(defaultFont);
-				using (var statistics = new Statistics(graphicsDevice, font))
+				using (var statistics = new DebugOverlay(graphicsDevice, font))
 				using (spriteEffect)
 				using (var spriteBatch = new SpriteBatch(graphicsDevice, spriteEffect))
 				using (var console = new Console(graphicsDevice, inputDevice, font, appName))
@@ -129,20 +130,16 @@ namespace Pegasus.Framework
 
 					while (_running)
 					{
-						// Update the input system and let the console respond to any input
-						using (new Measurement(statistics.UpdateInput))
-						{
-							// Update the keyboard and mouse state first (this ensures that WentDown returns 
-							// false for all keys and buttons, etc.)
-							inputDevice.Keyboard.Update();
-							inputDevice.Mouse.Update();
+						// Update the keyboard and mouse state first (this ensures that WentDown returns 
+						// false for all keys and buttons, etc.)
+						inputDevice.Keyboard.Update();
+						inputDevice.Mouse.Update();
 
-							// Process all window events 
-							window.ProcessEvents();
+						// Process all window events 
+						window.ProcessEvents();
 
-							// Update the logical inputs based on the new state of the input system
-							inputDevice.Update();
-						}
+						// Update the logical inputs based on the new state of the input system
+						inputDevice.Update();
 
 						// Check if any command bindings have been triggered and update the resolution manager
 						bindings.Update();
@@ -160,7 +157,7 @@ namespace Pegasus.Framework
 						camera2D.Viewport = viewport;
 
 						// Draw the current frame
-						using (new Measurement(statistics.GpuFrameTime))
+						using (new Measurement(statistics.GraphicsDeviceProfiler))
 						using (new Measurement(statistics.CpuFrameTime))
 						{
 							// Let the application draw the 3D elements of the current frame
@@ -172,8 +169,8 @@ namespace Pegasus.Framework
 							DrawUserInterface(spriteBatch);
 
 							// Draw the console and the statistics on top of the current frame
-							console.Draw(spriteBatch);
 							statistics.Draw(spriteBatch);
+							console.Draw(spriteBatch);
 
 							spriteBatch.DrawBatch(uiOutput);
 						}

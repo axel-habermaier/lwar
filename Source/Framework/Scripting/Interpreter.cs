@@ -9,6 +9,7 @@ namespace Pegasus.Framework.Scripting
 	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
+	using Rendering.UserInterface;
 
 	/// <summary>
 	///   Interprets user-provided input to set and view cvars and invoke commands.
@@ -43,6 +44,7 @@ namespace Pegasus.Framework.Scripting
 			Commands.OnListCvars += OnListCvars;
 			Commands.OnReset += OnResetCvar;
 			Commands.OnPrintAppInfo += OnPrintAppInfo;
+			Commands.OnToggle += OnToggle;
 		}
 
 		/// <summary>
@@ -57,6 +59,27 @@ namespace Pegasus.Framework.Scripting
 			Commands.OnListCvars -= OnListCvars;
 			Commands.OnReset -= OnResetCvar;
 			Commands.OnPrintAppInfo -= OnPrintAppInfo;
+			Commands.OnToggle -= OnToggle;
+		}
+
+		/// <summary>
+		/// Toggles the value of a Boolean console variable.
+		/// </summary>
+		/// <param name="name">The name of the console variable whose value should be toggled.</param>
+		private static void OnToggle(string name)
+		{
+			Assert.ArgumentNotNullOrWhitespace(name);
+
+			ICvar cvar;
+			if (!CvarRegistry.TryFind(name, out cvar))
+				Log.Warn("Unknown cvar '{0}'.", name);
+			else
+			{
+				if (cvar.ValueType != typeof(bool))
+					Log.Warn("Cvar '{0}' is not of type {1}.", name, TypeRegistry.GetDescription<bool>());
+				else
+					cvar.SetValue(!(bool)cvar.Value, true);
+			}
 		}
 
 		/// <summary>

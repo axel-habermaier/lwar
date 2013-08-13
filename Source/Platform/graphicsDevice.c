@@ -72,6 +72,9 @@ pgVoid pgDraw(pgGraphicsDevice* device, pgInt32 primitiveCount, pgInt32 offset)
 
 	pgValidateDeviceState(device);
 	pgDrawCore(device, primitiveCount, offset);
+	
+	++device->statistics.drawCalls;
+	device->statistics.vertexCount += pgPrimitiveCountToVertexCount(device, primitiveCount);
 }
 
 pgVoid pgDrawIndexed(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 indexOffset, pgInt32 vertexOffset)
@@ -83,6 +86,18 @@ pgVoid pgDrawIndexed(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 index
 
 	pgValidateDeviceState(device);
 	pgDrawIndexedCore(device, indexCount, indexOffset, vertexOffset);
+
+	++device->statistics.drawCalls;
+	device->statistics.vertexCount += indexCount;
+}
+
+pgVoid pgGetStatistics(pgGraphicsDevice* device, pgStatistics* statistics)
+{
+	PG_ASSERT_NOT_NULL(device);
+	PG_ASSERT_NOT_NULL(statistics);
+
+	*statistics = device->statistics;
+	memset(&device->statistics, 0, sizeof(pgStatistics));
 }
 
 //====================================================================================================================

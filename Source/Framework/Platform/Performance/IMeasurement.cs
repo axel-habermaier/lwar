@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Framework.Platform.Performance
 {
 	using System.Text;
 

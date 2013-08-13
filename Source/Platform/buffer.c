@@ -31,11 +31,10 @@ pgVoid pgDestroyBuffer(pgBuffer* buffer)
 
 pgVoid* pgMapBuffer(pgBuffer* buffer, pgMapMode mode)
 {
-	pgVoid* v;
 	PG_ASSERT_NOT_NULL(buffer);
-	v = pgMapBufferCore(buffer, mode);
 
-	return v;
+	++buffer->device->statistics.bufferMapCount;
+	return pgMapBufferCore(buffer, mode);
 }
 
 pgVoid* pgMapBufferRange(pgBuffer* buffer, pgMapMode mode, pgInt32 offset, pgInt32 byteCount)
@@ -45,6 +44,7 @@ pgVoid* pgMapBufferRange(pgBuffer* buffer, pgMapMode mode, pgInt32 offset, pgInt
 	PG_ASSERT_IN_RANGE(byteCount, 1, buffer->size);
 	PG_ASSERT(offset + byteCount <= buffer->size, "Buffer overflow");
 
+	++buffer->device->statistics.bufferMapCount;
 	return pgMapBufferRangeCore(buffer, mode, offset, byteCount);
 }
 
@@ -65,6 +65,8 @@ pgVoid pgBindConstantBuffer(pgBuffer* buffer, pgInt32 slot)
 
 	buffer->device->constantBuffers[slot] = buffer;
 	pgBindConstantBufferCore(buffer, slot);
+
+	++buffer->device->statistics.constantBufferBindingCount;
 }
 
 pgVoid pgUpdateConstantBuffer(pgBuffer* buffer, pgVoid* data)
@@ -74,4 +76,5 @@ pgVoid pgUpdateConstantBuffer(pgBuffer* buffer, pgVoid* data)
 	PG_ASSERT(buffer->type == PG_CONSTANT_BUFFER, "Buffer is not a constant buffer.");
 
 	pgUpdateConstantBufferCore(buffer, data);
+	++buffer->device->statistics.constantBufferUpdates;
 }

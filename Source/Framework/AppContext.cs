@@ -6,6 +6,7 @@ namespace Pegasus.Framework
 	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Input;
+	using Platform.Performance;
 
 	/// <summary>
 	///   Represents the context of an application, providing access to all framework objects that can be used by an
@@ -20,22 +21,22 @@ namespace Pegasus.Framework
 		/// <param name="window">The application window the application renders to.</param>
 		/// <param name="assets">The asset manager that manages the assets of the application.</param>
 		/// <param name="inputDevice">The logical input device that handles all user input to the application.</param>
-		/// <param name="statistics">The statistics instance that is used for statistical measurements.</param>
+		/// <param name="debugOverlay">The statistics instance that is used for statistical measurements.</param>
 		public AppContext(GraphicsDevice graphicsDevice, Window window, AssetsManager assets, LogicalInputDevice inputDevice,
-						  Statistics statistics)
+						  DebugOverlay debugOverlay)
 			: this()
 		{
 			GraphicsDevice = graphicsDevice;
 			Window = window;
 			Assets = assets;
 			InputDevice = inputDevice;
-			Statistics = statistics;
+			DebugOverlay = debugOverlay;
 		}
 
 		/// <summary>
 		///   Gets the statistics instance that is used for statistical measurements.
 		/// </summary>
-		public Statistics Statistics { get; private set; }
+		public DebugOverlay DebugOverlay { get; private set; }
 
 		/// <summary>
 		///   Gets the graphics device that renders the output of the application.

@@ -193,6 +193,9 @@
   <ItemGroup>
     <Compile Include="AppContext.cs" />
     <Compile Include="Math\LineSegment.cs" />
+    <Compile Include="Platform\Performance\AveragedDouble.cs" />
+    <Compile Include="Platform\Performance\AveragedInteger.cs" />
+    <Compile Include="Platform\Graphics\GraphicsDeviceStatistics.cs" />
     <Compile Include="Platform\Network\SocketOperationException.cs" />
     <Compile Include="Platform\Assets\AssetIdentifier.cs" />
     <Compile Include="Platform\Graphics\SyncedQuery.cs" />
@@ -250,12 +253,12 @@
     <Compile Include="Platform\Graphics\TextureDescription.cs" />
     <Compile Include="Platform\Graphics\TextureFlags.cs" />
     <Compile Include="Platform\Graphics\TextureType.cs" />
-    <Compile Include="Platform\IMeasurement.cs" />
+    <Compile Include="Platform\Performance\IMeasurement.cs" />
     <Compile Include="Platform\Input\InputLayer.cs" />
     <Compile Include="Platform\Logging\LogEntry.cs" />
     <Compile Include="Platform\Logging\LogFile.cs" />
     <Compile Include="Platform\Logging\LogType.cs" />
-    <Compile Include="Platform\Measurement.cs" />
+    <Compile Include="Platform\Performance\Measurement.cs" />
     <Compile Include="Platform\Clock.cs" />
     <Compile Include="Platform\ResolutionManager.cs" />
     <Compile Include="Platform\Timer.cs" />
@@ -269,7 +272,7 @@
     <Compile Include="Rendering\VertexPositionNormal.cs" />
     <Compile Include="Rendering\DebugCamera.cs" />
     <Compile Include="Rendering\VertexPositionNormalTexture.cs" />
-    <Compile Include="Rendering\GpuProfiler.cs" />
+    <Compile Include="Platform\Performance\GraphicsDeviceProfiler.cs" />
     <Compile Include="Math\Circle.cs">
       <DependentUpon>Circle.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -503,8 +506,8 @@
     <Compile Include="Platform\Input\Key.cs" />
     <Compile Include="Platform\Input\MouseButton.cs" />
     <Compile Include="Rendering\UserInterface\Font.cs" />
-    <Compile Include="Platform\Statistics.cs" />
-    <Compile Include="Platform\AveragedValue.cs" />
+    <Compile Include="Platform\Performance\DebugOverlay.cs" />
+    <Compile Include="Platform\Performance\TimingMeasurement.cs" />
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
     <Compile Include="ScreenManager.cs" />

@@ -47,6 +47,8 @@ pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot)
 
 	texture->device->textures[slot] = texture;
 	pgBindTextureCore(texture, slot);
+
+	++texture->device->statistics.textureBindingCount;
 }
 
 pgVoid pgGenerateMipmaps(pgTexture* texture)

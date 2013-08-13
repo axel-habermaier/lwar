@@ -114,12 +114,6 @@ internal interface ICommands
 	void ShowConsole(bool show);
 
 	/// <summary>
-	///   Toggles the visiblity of the statistics.
-	/// </summary>
-	[Command]
-	void ToggleStats();
-
-	/// <summary>
 	///   Reloads all changed assets.
 	/// </summary>
 	[Command]
@@ -130,4 +124,11 @@ internal interface ICommands
 	/// </summary>
 	[Command]
 	void RestartGraphics();
+
+	/// <summary>
+	///   Toggles the value of a Boolean console variable.
+	/// </summary>
+	/// <param name="cvar">The name of console variable whose value should be toggled.</param>
+	[Command]
+	void Toggle([NotEmpty] string cvar);
 }

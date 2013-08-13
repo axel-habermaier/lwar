@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Framework.Platform.Performance
 {
 	using System.Text;
 	using Graphics;
@@ -11,9 +11,9 @@ namespace Pegasus.Framework.Platform
 	using Scripting;
 
 	/// <summary>
-	///   Manages statistics about the performance of the application.
+	///   Manages statistics about the performance of the application and other information useful for debugging.
 	/// </summary>
-	public sealed class Statistics : DisposableObject
+	public sealed class DebugOverlay : DisposableObject
 	{
 		/// <summary>
 		///   The update frequency of the statistics in Hz.
@@ -32,9 +32,9 @@ namespace Pegasus.Framework.Platform
 		private readonly WeakReference _gcCheck = new WeakReference(new object());
 
 		/// <summary>
-		///   The label that is used to draw the statistics.
+		///   The label that is used to draw platform info and frame stats.
 		/// </summary>
-		private readonly Label _label;
+		private readonly Label _platformInfo;
 
 		/// <summary>
 		///   The timer that is used to periodically update the statistics.
@@ -51,35 +51,27 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
-		internal Statistics(GraphicsDevice graphicsDevice, Font font)
+		internal DebugOverlay(GraphicsDevice graphicsDevice, Font font)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(font);
 
-			_label = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
+			_platformInfo = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
 			_timer.Timeout += UpdateStatistics;
 
-			GpuFrameTime = new GpuProfiler(graphicsDevice);
-			CpuFrameTime = new AveragedValue();
-			UpdateInput = new AveragedValue();
-
-			Commands.OnToggleStats += ToggleVisibility;
+			GraphicsDeviceProfiler = new GraphicsDeviceProfiler(graphicsDevice);
+			CpuFrameTime = new TimingMeasurement();
 		}
 
 		/// <summary>
 		///   Gets the GPU frame time measurements.
 		/// </summary>
-		internal GpuProfiler GpuFrameTime { get; private set; }
+		internal GraphicsDeviceProfiler GraphicsDeviceProfiler { get; private set; }
 
 		/// <summary>
 		///   Gets the CPU frame time measurements.
 		/// </summary>
 		internal IMeasurement CpuFrameTime { get; private set; }
-
-		/// <summary>
-		///   Gets the input update time measurements.
-		/// </summary>
-		internal IMeasurement UpdateInput { get; private set; }
 
 		/// <summary>
 		///   Updates the statistics.
@@ -93,7 +85,9 @@ namespace Pegasus.Framework.Platform
 				_gcCheck.Target = new object();
 			}
 
-			_label.Area = new Rectangle(5, 5, size.Width, size.Height);
+			const int padding = 5;
+			_platformInfo.Area = new Rectangle(padding, padding, size.Width - 2 * padding, size.Height - 2 * padding);
+
 			_timer.Update();
 		}
 
@@ -102,23 +96,32 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		private void UpdateStatistics()
 		{
-			if (!Cvars.ShowStats)
-				return;
+			if (Cvars.ShowPlatformInfo)
+			{
+				_builder.Append("Platform:                    ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
+				_builder.Append("Debug Mode:                  ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
+				_builder.Append("Renderer:                    ").Append(PlatformInfo.GraphicsApi).Append("\n");
+				_builder.Append("# of GCs:                    ").Append(_garbageCollections);
+			}
+
+			if (Cvars.ShowFrameStats && Cvars.ShowPlatformInfo)
+				_builder.Append("\n\n");
+
+			if (Cvars.ShowFrameStats)
+			{
+				_builder.Append("Frame\n");
+				WriteMeasurement(GraphicsDeviceProfiler, "   GPU Time:                 ");
+				WriteMeasurement(CpuFrameTime, "   CPU Time:                 ");
+				GraphicsDeviceProfiler.WriteFrameInfo(_builder);
+				_builder.Append("\n\n");
+
+				GraphicsDeviceProfiler.WriteStateChanges(_builder);
+			}
+
+			if (Cvars.ShowFrameStats || Cvars.ShowPlatformInfo)
+				_platformInfo.Text = _builder.ToString();
 
 			_builder.Clear();
-			_builder.Append("Platform: ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
-			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
-			_builder.Append("Renderer: ").Append(PlatformInfo.GraphicsApi).Append("\n");
-			_builder.Append("# of GCs: ").Append(_garbageCollections).Append("\n\n");
-
-			WriteMeasurement(GpuFrameTime, "GPU Frame Time");
-			WriteMeasurement(CpuFrameTime, "CPU Frame Time");
-
-			_builder.Append("\n");
-
-			WriteMeasurement(UpdateInput, "Update Input");
-
-			_label.Text = _builder.ToString();
 		}
 
 		/// <summary>
@@ -127,11 +130,10 @@ namespace Pegasus.Framework.Platform
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the statistics.</param>
 		internal void Draw(SpriteBatch spriteBatch)
 		{
-			if (!Cvars.ShowStats)
-				return;
-
 			spriteBatch.WorldMatrix = Matrix.Identity;
-			_label.Draw(spriteBatch);
+
+			if (Cvars.ShowPlatformInfo || Cvars.ShowFrameStats)
+				_platformInfo.Draw(spriteBatch);
 		}
 
 		/// <summary>
@@ -141,17 +143,9 @@ namespace Pegasus.Framework.Platform
 		/// <param name="label">The label that describes the measurement.</param>
 		private void WriteMeasurement(IMeasurement measurement, string label)
 		{
-			_builder.Append(label).Append(": ");
+			_builder.Append(label);
 			measurement.WriteResults(_builder);
 			_builder.Append("\n");
-		}
-
-		/// <summary>
-		///   Toggles the visibility of the statistics.
-		/// </summary>
-		private void ToggleVisibility()
-		{
-			Cvars.ShowStats = !Cvars.ShowStats;
 		}
 
 		/// <summary>
@@ -159,12 +153,12 @@ namespace Pegasus.Framework.Platform
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_label.SafeDispose();
+			_platformInfo.SafeDispose();
+
 			_timer.Timeout -= UpdateStatistics;
-			Commands.OnToggleStats -= ToggleVisibility;
 
 			_timer.SafeDispose();
-			GpuFrameTime.SafeDispose();
+			GraphicsDeviceProfiler.SafeDispose();
 		}
 	}
 }

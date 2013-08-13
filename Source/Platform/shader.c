@@ -73,6 +73,8 @@ pgVoid pgBindShader(pgShader* shader)
 
 	*boundShader = shader;
 	pgBindShaderCore(shader);
+
+	++shader->device->statistics.shaderBindingCount;
 }
 
 //====================================================================================================================
