@@ -343,18 +343,21 @@ pgVoid pgBindShaderCore(pgShader* shader);
 
 struct pgBuffer
 {
-	pgGraphicsDevice* device;
-	pgInt32 size;
+	pgGraphicsDevice*	device;
+	pgInt32				size;
+	pgBufferType		type;
 	PG_BUFFER_PLATFORM
 };
 
-pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage usage, pgVoid* data);
+pgVoid pgCreateBufferCore(pgBuffer* buffer, pgResourceUsage usage, pgVoid* data);
 pgVoid pgDestroyBufferCore(pgBuffer* buffer);
 
 pgVoid* pgMapBufferCore(pgBuffer* buffer, pgMapMode mode);
 pgVoid* pgMapBufferRangeCore(pgBuffer* buffer, pgMapMode mode, pgInt32 offset, pgInt32 byteCount);
 pgVoid pgUnmapBufferCore(pgBuffer* buffer);
+
 pgVoid pgBindConstantBufferCore(pgBuffer* buffer, pgInt32 slot);
+pgVoid pgUpdateConstantBufferCore(pgBuffer* buffer, pgVoid* data);
 
 //====================================================================================================================
 // Input layout

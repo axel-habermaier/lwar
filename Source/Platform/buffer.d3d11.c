@@ -6,7 +6,7 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage usage, pgVoid* data)
+pgVoid pgCreateBufferCore(pgBuffer* buffer, pgResourceUsage usage, pgVoid* data)
 {
 	D3D11_BUFFER_DESC desc;
 	D3D11_SUBRESOURCE_DATA dataResource;
@@ -14,7 +14,7 @@ pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage u
 	dataResource.SysMemPitch = 0;
 	dataResource.SysMemSlicePitch = 0;
 
-	desc.BindFlags = pgConvertBufferType(type);
+	desc.BindFlags = pgConvertBufferType(buffer->type);
 	desc.CPUAccessFlags = usage == PG_USAGE_DYNAMIC ? D3D11_CPU_ACCESS_WRITE : 0;
 	desc.ByteWidth = buffer->size;
 	desc.MiscFlags = 0;
@@ -56,6 +56,13 @@ pgVoid pgBindConstantBufferCore(pgBuffer* buffer, pgInt32 slot)
 {
 	ID3D11DeviceContext_VSSetConstantBuffers(PG_CONTEXT(buffer), slot, 1, &buffer->ptr);
 	ID3D11DeviceContext_PSSetConstantBuffers(PG_CONTEXT(buffer), slot, 1, &buffer->ptr);
+}
+
+pgVoid pgUpdateConstantBufferCore(pgBuffer* buffer, pgVoid* data)
+{
+	pgVoid* bufferData = pgMapBuffer(buffer, PG_MAP_WRITE_DISCARD);
+	memcpy(bufferData, data, buffer->size);
+	pgUnmapBuffer(buffer);
 }
 
 #endif

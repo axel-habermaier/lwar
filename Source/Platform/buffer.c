@@ -14,7 +14,8 @@ pgBuffer* pgCreateBuffer(pgGraphicsDevice* device, pgBufferType type, pgResource
 	PG_ALLOC(pgBuffer, buffer);
 	buffer->device = device;
 	buffer->size = size;
-	pgCreateBufferCore(buffer, type, usage, data);
+	buffer->type = type;
+	pgCreateBufferCore(buffer, usage, data);
 
 	return buffer;
 }
@@ -57,10 +58,20 @@ pgVoid pgBindConstantBuffer(pgBuffer* buffer, pgInt32 slot)
 {
 	PG_ASSERT_NOT_NULL(buffer);
 	PG_ASSERT_IN_RANGE(slot, 0, PG_CONSTANT_BUFFER_SLOT_COUNT);
+	PG_ASSERT(buffer->type == PG_CONSTANT_BUFFER, "Buffer is not a constant buffer.");
 
 	if (buffer->device->constantBuffers[slot] == buffer)
 		return;
 
 	buffer->device->constantBuffers[slot] = buffer;
 	pgBindConstantBufferCore(buffer, slot);
+}
+
+pgVoid pgUpdateConstantBuffer(pgBuffer* buffer, pgVoid* data)
+{
+	PG_ASSERT_NOT_NULL(buffer);
+	PG_ASSERT_NOT_NULL(data);
+	PG_ASSERT(buffer->type == PG_CONSTANT_BUFFER, "Buffer is not a constant buffer.");
+
+	pgUpdateConstantBufferCore(buffer, data);
 }

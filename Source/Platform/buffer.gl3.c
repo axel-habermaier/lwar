@@ -6,10 +6,10 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateBufferCore(pgBuffer* buffer, pgBufferType type, pgResourceUsage usage, pgVoid* data)
+pgVoid pgCreateBufferCore(pgBuffer* buffer, pgResourceUsage usage, pgVoid* data)
 {
 	PG_GL_ALLOC("Buffer", glGenBuffers, buffer->id);
-	buffer->type = pgConvertBufferType(type);
+	buffer->glType = pgConvertBufferType(buffer->type);
 
 	glNamedBufferDataEXT(buffer->id, buffer->size, data, pgConvertResourceUsage(usage));
 	PG_ASSERT_NO_GL_ERRORS();
@@ -51,9 +51,13 @@ pgVoid pgUnmapBufferCore(pgBuffer* buffer)
 
 pgVoid pgBindConstantBufferCore(pgBuffer* buffer, pgInt32 slot)
 {
-	PG_ASSERT(buffer->type == GL_UNIFORM_BUFFER, "Buffer is not a constant buffer");
-
 	glBindBufferBase(GL_UNIFORM_BUFFER, slot, buffer->id);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgUpdateConstantBufferCore(pgBuffer* buffer, pgVoid* data)
+{
+	glNamedBufferSubDataEXT(buffer->id, 0, buffer->size, data);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

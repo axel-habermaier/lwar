@@ -8,11 +8,6 @@ namespace Pegasus.Framework.Platform.Graphics
 	public sealed class ConstantBuffer : Buffer
 	{
 		/// <summary>
-		///   The unmanaged size of the buffer in bytes.
-		/// </summary>
-		private readonly int _size;
-
-		/// <summary>
 		///   The slot the constant buffer is bound to.
 		/// </summary>
 		private readonly int _slot;
@@ -26,7 +21,6 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal ConstantBuffer(GraphicsDevice graphicsDevice, int size, int slot)
 			: base(graphicsDevice, BufferType.ConstantBuffer, ResourceUsage.Dynamic, IntPtr.Zero, size)
 		{
-			_size = size;
 			_slot = slot;
 		}
 
@@ -36,6 +30,7 @@ namespace Pegasus.Framework.Platform.Graphics
 		internal void Bind()
 		{
 			Assert.NotDisposed(this);
+
 			BindBuffer(_slot);
 		}
 
@@ -46,8 +41,10 @@ namespace Pegasus.Framework.Platform.Graphics
 		/// <param name="data">The data that should be copied into the buffer.</param>
 		internal unsafe void CopyData(void* data)
 		{
+			Assert.That(data != null, "A valid data pointer must be specified.");
 			Assert.NotDisposed(this);
-			CopyData(new IntPtr(data), _size);
+
+			UpdateConstantBuffer(new IntPtr(data));
 		}
 	}
 }

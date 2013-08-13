@@ -98,11 +98,24 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
+		///   Updates the content of a constant buffer.
+		/// </summary>
+		/// <param name="data">The data that should be copied to the constant buffer.</param>
+		protected void UpdateConstantBuffer(IntPtr data)
+		{
+			Assert.ArgumentNotNull(data);
+			Assert.NotDisposed(this);
+
+			NativeMethods.UpdateConstantBuffer(_buffer, data);
+		}
+
+		/// <summary>
 		///   Binds the buffer to the given slot.
 		/// </summary>
 		/// <param name="slot">The slot the constant buffer should be bound to.</param>
 		protected void BindBuffer(int slot)
 		{
+			Assert.NotDisposed(this);
 			NativeMethods.BindConstantBuffer(_buffer, slot);
 		}
 
@@ -142,6 +155,9 @@ namespace Pegasus.Framework.Platform.Graphics
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindConstantBuffer")]
 			public static extern void BindConstantBuffer(IntPtr buffer, int slot);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgUpdateConstantBuffer")]
+			public static extern IntPtr UpdateConstantBuffer(IntPtr buffer, IntPtr data);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetBufferName")]
 			[Conditional("DEBUG")]

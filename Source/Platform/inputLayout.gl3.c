@@ -10,7 +10,7 @@ pgVoid pgCreateInputLayoutCore(pgInputLayout* inputLayout, pgBuffer* indexBuffer
 							   pgIndexSize indexSize, pgInputBinding* inputBindings, pgInt32 bindingsCount)
 {
 	GLint i;
-	PG_ASSERT(indexBuffer == NULL || (indexBuffer != NULL && indexBuffer->type == GL_ELEMENT_ARRAY_BUFFER), "Invalid index buffer.");
+	PG_ASSERT(indexBuffer == NULL || (indexBuffer != NULL && indexBuffer->glType == GL_ELEMENT_ARRAY_BUFFER), "Invalid index buffer.");
 
 	PG_GL_ALLOC("Vertex Input Layout", glGenVertexArrays, inputLayout->id);
 	glBindVertexArray(inputLayout->id);
@@ -33,7 +33,7 @@ pgVoid pgCreateInputLayoutCore(pgInputLayout* inputLayout, pgBuffer* indexBuffer
 		GLuint slot = (GLuint)inputBindings[i].semantics;
 
 		PG_ASSERT_NOT_NULL(inputBindings[i].vertexBuffer);
-		PG_ASSERT(inputBindings[i].vertexBuffer->type == GL_ARRAY_BUFFER, "Invalid vertex buffer.");
+		PG_ASSERT(inputBindings[i].vertexBuffer->glType == GL_ARRAY_BUFFER, "Invalid vertex buffer.");
 
 		glBindBuffer(GL_ARRAY_BUFFER, inputBindings[i].vertexBuffer->id);
 		glEnableVertexAttribArray(slot);
