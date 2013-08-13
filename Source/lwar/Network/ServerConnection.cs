@@ -6,10 +6,10 @@ namespace Lwar.Network
 	using System.Net;
 	using Messages;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
+	using Pegasus.Framework.Platform.Network;
 
 	/// <summary>
 	///   Represents a proxy of an lwar server that a client can use to communicate with the server.
@@ -34,6 +34,11 @@ namespace Lwar.Network
 		private static readonly Func<BufferReader, List<Message>> MessageDeserializer = MessageSerialization.Deserialize;
 
 		/// <summary>
+		///   The buffer that is used to send and receive data.
+		/// </summary>
+		private readonly byte[] _buffer = new byte[Specification.MaxPacketSize];
+
+		/// <summary>
 		///   Provides the time that is used to check whether a connection is lagging or dropped.
 		/// </summary>
 		private readonly Clock _clock = Clock.Create();
@@ -52,13 +57,11 @@ namespace Lwar.Network
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The endpoint of the server.</param>
-		/// <param name="packetFactory">The packet factory that should be used to create incoming packets.</param>
-		public ServerConnection(IPEndPoint serverEndPoint, IPacketFactory packetFactory)
+		public ServerConnection(IPEndPoint serverEndPoint)
 		{
 			Assert.ArgumentNotNull(serverEndPoint);
-			Assert.ArgumentNotNull(packetFactory);
 
-			_socket = new UdpSocket(packetFactory);
+			_socket = new UdpSocket();
 			ServerEndPoint = serverEndPoint;
 			State = ConnectionState.Connecting;
 		}
@@ -99,17 +102,27 @@ namespace Lwar.Network
 			{
 				// While we're connecting or syncing, send as many packets as possible (even if the payload is empty)
 				if (State == ConnectionState.Connecting || State == ConnectionState.Syncing)
-					_socket.Send(messageQueue.CreatePacket(), ServerEndPoint);
+					SendMessages(messageQueue);
 
 				// Once we're connected, only send a packet if we actually have some payload to send
 				if (State == ConnectionState.Connected && messageQueue.HasPendingData)
-					_socket.Send(messageQueue.CreatePacket(), ServerEndPoint);
+					SendMessages(messageQueue);
 			}
 			catch (SocketOperationException e)
 			{
 				Log.Error("The connection to the server has been terminated due to an error: {0}", e.Message);
 				State = ConnectionState.Faulted;
 			}
+		}
+
+		/// <summary>
+		///   Sends the messages that are currently enqueued.
+		/// </summary>
+		/// <param name="messageQueue">The message queue that stores the messages that should be sent.</param>
+		private void SendMessages(MessageQueue messageQueue)
+		{
+			var size = messageQueue.WritePacket(_buffer);
+			_socket.Send(_buffer, size, ServerEndPoint);
 		}
 
 		/// <summary>
@@ -130,14 +143,14 @@ namespace Lwar.Network
 			try
 			{
 				var sender = new IPEndPoint(IPAddress.IPv6Any, 0);
-				IncomingPacket packet;
+				int receivedBytes;
 
-				while (_socket.TryReceive(ref sender, out packet))
+				while (_socket.TryReceive(_buffer, ref sender, out receivedBytes))
 				{
-					using (packet)
+					using (var reader = BufferReader.Create(_buffer, 0, receivedBytes, Endianess.Big))
 					{
 						if (sender.SameEndPoint(ServerEndPoint))
-							HandlePacket(packet, messageQueue, deliveryManager);
+							HandlePacket(reader, messageQueue, deliveryManager);
 						else
 						{
 							Log.Warn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
@@ -159,18 +172,16 @@ namespace Lwar.Network
 		/// <summary>
 		///   Handles the incoming packet.
 		/// </summary>
-		/// <param name="packet">The packet that should be handled.</param>
+		/// <param name="buffer">The buffer the packet data should be read from.</param>
 		/// <param name="messageQueue">The message queue the received messages should be added to.</param>
 		/// <param name="deliveryManager">
 		///   The delivery manager that is used to determine whether a message should be added to the queue.
 		/// </param>
-		private void HandlePacket(IncomingPacket packet, Queue<Message> messageQueue, DeliveryManager deliveryManager)
+		private void HandlePacket(BufferReader buffer, Queue<Message> messageQueue, DeliveryManager deliveryManager)
 		{
-			Assert.ArgumentNotNull(packet);
+			Assert.ArgumentNotNull(buffer);
 
-			var buffer = packet.Reader;
 			var header = PacketHeader.Create(buffer);
-
 			if (header == null)
 				return;
 

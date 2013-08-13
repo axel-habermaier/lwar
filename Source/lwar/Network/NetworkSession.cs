@@ -56,10 +56,9 @@ namespace Lwar.Network
 			Assert.ArgumentNotNull(serverEndPoint);
 
 			_deliveryManager = new DeliveryManager();
-			var packetFactory = new PacketFactory();
-			_connection = new ServerConnection(serverEndPoint, packetFactory);
+			_connection = new ServerConnection(serverEndPoint);
 
-			_outgoingMessages = new MessageQueue(packetFactory, _deliveryManager);
+			_outgoingMessages = new MessageQueue(_deliveryManager);
 			Send(ConnectMessage.Create(Cvars.PlayerName));
 		}
 

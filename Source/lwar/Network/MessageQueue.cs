@@ -5,7 +5,6 @@ namespace Lwar.Network
 	using System.Collections.Generic;
 	using Messages;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Network;
 	using Pegasus.Framework.Platform.Memory;
 
 	/// <summary>
@@ -25,11 +24,6 @@ namespace Lwar.Network
 		private readonly DeliveryManager _deliveryManager;
 
 		/// <summary>
-		///   The packet factory that is used to create incoming and outgoing packets.
-		/// </summary>
-		private readonly IPacketFactory _packetFactory;
-
-		/// <summary>
 		///   The queued reliable messages that have not yet been sent or that have not yet been acknowledged.
 		/// </summary>
 		private readonly Queue<Message> _reliableMessages = new Queue<Message>();
@@ -42,14 +36,10 @@ namespace Lwar.Network
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="packetFactory">The packet factory that should be used to create incoming and outgoing packets.</param>
 		/// <param name="deliveryManager">The delivery manager that is used to enforce the message delivery constraints.</param>
-		public MessageQueue(IPacketFactory packetFactory, DeliveryManager deliveryManager)
+		public MessageQueue(DeliveryManager deliveryManager)
 		{
-			Assert.ArgumentNotNull(packetFactory);
 			Assert.ArgumentNotNull(deliveryManager);
-
-			_packetFactory = packetFactory;
 			_deliveryManager = deliveryManager;
 		}
 
@@ -78,19 +68,23 @@ namespace Lwar.Network
 
 		/// <summary>
 		///   Sends all queued messages, resending all reliable messages that have previously been sent but not yet acknowledged.
+		///   Returns the number of bytes that have been written.
 		/// </summary>
-		public OutgoingPacket CreatePacket()
+		public int WritePacket(byte[] buffer)
 		{
+			Assert.ArgumentNotNull(buffer);
 			RemoveAckedMessages();
 
-			var packet = _packetFactory.CreateOutgoingPacket();
-			_deliveryManager.WriteHeader(packet.Writer);
+			using (var writer = BufferWriter.Create(buffer, Endianess.Big))
+			{
+				_deliveryManager.WriteHeader(writer);
 
-			AddMessages(_reliableMessages, packet.Writer);
-			AddMessages(_unreliableMessages, packet.Writer);
-			_unreliableMessages.Clear();
+				AddMessages(_reliableMessages, writer);
+				AddMessages(_unreliableMessages, writer);
+				_unreliableMessages.Clear();
 
-			return packet;
+				return writer.Count;
+			}
 		}
 
 		/// <summary>

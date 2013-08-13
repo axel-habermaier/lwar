@@ -1,21 +1,16 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Network
+namespace Pegasus.Framework.Platform.Network
 {
 	using System.Net;
 	using System.Net.Sockets;
-	using Platform.Memory;
+	using Memory;
 
 	/// <summary>
 	///   Represents a Udp-based socket connection that can be used to unreliably send and receive packets over the network.
 	/// </summary>
 	public class UdpSocket : DisposableObject
 	{
-		/// <summary>
-		///   Used to create incoming and outgoing packets.
-		/// </summary>
-		private readonly IPacketFactory _packetFactory;
-
 		/// <summary>
 		///   The underlying socket that is used to send and receive packets.
 		/// </summary>
@@ -24,11 +19,8 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public UdpSocket(IPacketFactory packetFactory)
+		public UdpSocket()
 		{
-			Assert.ArgumentNotNull(packetFactory);
-			_packetFactory = packetFactory;
-
 			_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp) { Blocking = false };
 			_socket.EnableDualMode();
 		}
@@ -36,60 +28,51 @@ namespace Pegasus.Framework.Network
 		/// <summary>
 		///   Sends the given packet over the connection.
 		/// </summary>
-		/// <param name="packet">The packet that should be sent. The packet is returned to the pool before this function returns.</param>
+		/// <param name="buffer">The buffer that contains the data that should be sent.</param>
+		/// <param name="size">The number of bytes that should be sent.</param>
 		/// <param name="remoteEndPoint">The endpoint of the peer the packet should be sent to.</param>
-		public void Send(OutgoingPacket packet, IPEndPoint remoteEndPoint)
+		public void Send(byte[] buffer, int size, IPEndPoint remoteEndPoint)
 		{
-			Assert.ArgumentNotNull(packet);
+			Assert.ArgumentNotNull(buffer);
 			Assert.ArgumentNotNull(remoteEndPoint);
-			Assert.InRange(packet.Size, 1, Packet.MaxSize);
 
-			using (packet)
+			try
 			{
-				try
-				{
-					_socket.SendTo(packet.Data, 0, packet.Size, SocketFlags.None, remoteEndPoint);
-				}
-				catch (SocketException e)
-				{
-					throw new SocketOperationException("Unable to send Udp packet to {0}: {1}.", remoteEndPoint, e.Message);
-				}
+				_socket.SendTo(buffer, 0, size, SocketFlags.None, remoteEndPoint);
+			}
+			catch (SocketException e)
+			{
+				throw new SocketOperationException("Unable to send Udp packet to {0}: {1}.", remoteEndPoint, e.Message);
 			}
 		}
 
 		/// <summary>
 		///   Tries to receive a packet sent over the connection. Returns true if a packet has been received, false otherwise.
 		/// </summary>
+		/// <param name="buffer">The buffer the received data should be written to.</param>
 		/// <param name="remoteEndPoint">After the method completes, contains the endpoint of the peer that sent the packet.</param>
-		/// <param name="packet">The packet that has been received.</param>
-		public bool TryReceive(ref IPEndPoint remoteEndPoint, out IncomingPacket packet)
+		/// <param name="size">Returns the number of bytes that have been received.</param>
+		public bool TryReceive(byte[] buffer, ref IPEndPoint remoteEndPoint, out int size)
 		{
-			packet = null;
+			Assert.ArgumentNotNull(buffer);
+			Assert.ArgumentNotNull(remoteEndPoint);
+
+			size = 0;
 
 			if (_socket.Available == 0)
 				return false;
 
-			packet = _packetFactory.CreateIncomingPacket();
-			var packetReturned = false;
-
 			try
 			{
 				var endPoint = (EndPoint)remoteEndPoint;
-				var size = _socket.ReceiveFrom(packet.Data, ref endPoint);
+				size = _socket.ReceiveFrom(buffer, ref endPoint);
 				remoteEndPoint = (IPEndPoint)endPoint;
 
-				packet.SetDataRange(size);
-				packetReturned = true;
 				return true;
 			}
 			catch (SocketException e)
 			{
 				throw new SocketOperationException("Error while trying to receive Udp packet: {0}.", e.Message);
-			}
-			finally
-			{
-				if (!packetReturned)
-					packet.SafeDispose();
 			}
 		}
 

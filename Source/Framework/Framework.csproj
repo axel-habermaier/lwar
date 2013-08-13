@@ -193,8 +193,7 @@
   <ItemGroup>
     <Compile Include="AppContext.cs" />
     <Compile Include="Math\LineSegment.cs" />
-    <Compile Include="Network\SocketExtensions.cs" />
-    <Compile Include="Network\SocketOperationException.cs" />
+    <Compile Include="Platform\Network\SocketOperationException.cs" />
     <Compile Include="Platform\Assets\AssetIdentifier.cs" />
     <Compile Include="Platform\Graphics\SyncedQuery.cs" />
     <Compile Include="Platform\Input\CharacterEnteredEventArgs.cs" />
@@ -224,8 +223,7 @@
     <Compile Include="Rendering\UserInterface\Text.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Math\Vector3.cs" />
-    <Compile Include="Network\IPacketFactory.cs" />
-    <Compile Include="Network\IPEndPointExtensions.cs" />
+    <Compile Include="Platform\Network\Extensions.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />
     <Compile Include="Platform\AppFile.cs" />
     <Compile Include="AppException.cs" />
@@ -297,10 +295,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Vector2.tt</DependentUpon>
     </Compile>
-    <Compile Include="Network\UdpSocket.cs" />
-    <Compile Include="Network\IncomingPacket.cs" />
-    <Compile Include="Network\OutgoingPacket.cs" />
-    <Compile Include="Network\Packet.cs" />
+    <Compile Include="Platform\Network\UdpSocket.cs" />
     <Compile Include="Platform\Assets\FontAsset.cs" />
     <Compile Include="Platform\Assets\VertexShaderAsset.cs" />
     <Compile Include="Platform\Assets\TextureAsset.cs" />
