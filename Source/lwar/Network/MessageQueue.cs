@@ -81,6 +81,7 @@ namespace Lwar.Network
 
 				AddMessages(_reliableMessages, writer);
 				AddMessages(_unreliableMessages, writer);
+
 				_unreliableMessages.Clear();
 
 				return writer.Count;

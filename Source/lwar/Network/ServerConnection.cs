@@ -251,12 +251,20 @@ namespace Lwar.Network
 					// Only the first message can be a reject message
 					if (State != ConnectionState.Connecting)
 						Log.Warn("Ignored an unexpected reject message.");
-					else if (message.Reject == RejectReason.Full)
-						State = ConnectionState.Full;
-					else if (message.Reject == RejectReason.VersionMismatch)
-						State = ConnectionState.VersionMismatch;
 					else
-						Assert.That(false, "Unknown reject reason.");
+					{
+						switch (message.Reject)
+						{
+							case RejectReason.Full:
+								State = ConnectionState.Full;
+								break;
+							case RejectReason.VersionMismatch:
+								State = ConnectionState.VersionMismatch;
+								break;
+							default:
+								throw new InvalidOperationException("Unknown reject reason.");
+						}
+					}
 					break;
 				default:
 					messageQueue.Enqueue(message);

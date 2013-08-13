@@ -21,19 +21,17 @@ Client
 - Let camera follow ship (sort of: attach the camera to the ship with a spring)
 - Show server network statistics
 - Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
-- Add layered networking system with debugging capabilities and statistics
+- Add debugging capabilities and statistics to network
 
 Pegasus.Framework
 ========
 - Show platform statistics, add 'level of detail' to show_stats cvar
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
-- Add .NET wrapper for Platform socket abstraction
 
 Pegasus.Platform
 ========
 - Linux: Fullscreen not implemented
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
-- Add UDP socket abstraction
 
 Assets Compiler
 ========
