@@ -30,7 +30,7 @@ namespace Pegasus.Framework.Platform.Network
 			int value = 0;
 			const int IPPROTO_IPV6 = 41;
 			const int IPV6_V6ONLY = 27;
-			var success = SetSocketOption(socket.Handle, IPPROTO_IPV6, IPV6_V6ONLY, ref value, sizeof(int)) == 0;
+			var success = SetSocketOption(socket.Handle, IPPROTO_IPV6, IPV6_V6ONLY, ref value, sizeof(int));
 
 			if (success != 0)
 				Platform.Logging.Log.Warn("UDP socket is IPv6-only; dual-stack mode could not be activated.");
