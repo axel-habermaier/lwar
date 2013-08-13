@@ -8,7 +8,7 @@ namespace Pegasus.Framework.Platform
 	/// <summary>
 	///   Provides access to some native Win32 API functions.
 	/// </summary>
-	public static class Win32
+	internal static class Win32
 	{
 		[DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "MessageBox")]
 		private static extern int ShowMessage(IntPtr hWnd, String text, String caption, MessageBoxStyle options);

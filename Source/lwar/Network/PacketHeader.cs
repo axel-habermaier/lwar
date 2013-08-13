@@ -12,12 +12,6 @@ namespace Lwar.Network
 	public struct PacketHeader
 	{
 		/// <summary>
-		///   The application identifier that is used to determine whether a packet has been sent by another instance of the same
-		///   application.
-		/// </summary>
-		private const uint AppIdentifier = 0xf27087c5;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="acknowledgement">The acknowledged sequence number of the packet.</param>
@@ -53,7 +47,7 @@ namespace Lwar.Network
 				return null;
 			}
 
-			if (buffer.ReadUInt32() != AppIdentifier)
+			if (buffer.ReadUInt32() != Specification.AppIdentifier)
 			{
 				Log.Warn("Received a packet with an invalid application identifier from the server.");
 				return null;
@@ -74,7 +68,7 @@ namespace Lwar.Network
 		{
 			Assert.ArgumentNotNull(buffer);
 
-			buffer.WriteUInt32(AppIdentifier);
+			buffer.WriteUInt32(Specification.AppIdentifier);
 			buffer.WriteUInt32(Acknowledgement);
 			buffer.WriteUInt32(Timestamp);
 		}

@@ -7,7 +7,7 @@ namespace Pegasus.Framework.Platform.Network
 	using Memory;
 
 	/// <summary>
-	///   Represents a Udp-based socket connection that can be used to unreliably send and receive packets over the network.
+	///   Represents a Udp-based socket that can be used to unreliably send and receive packets over the network.
 	/// </summary>
 	public class UdpSocket : DisposableObject
 	{
@@ -23,6 +23,14 @@ namespace Pegasus.Framework.Platform.Network
 		{
 			_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp) { Blocking = false };
 			_socket.EnableDualMode();
+		}
+
+		/// <summary>
+		///   Gets the underlying socket instance.
+		/// </summary>
+		internal Socket Socket
+		{
+			get { return _socket; }
 		}
 
 		/// <summary>

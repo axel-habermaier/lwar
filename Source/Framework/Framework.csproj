@@ -193,6 +193,7 @@
   <ItemGroup>
     <Compile Include="AppContext.cs" />
     <Compile Include="Math\LineSegment.cs" />
+    <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />
     <Compile Include="Platform\Performance\AveragedInteger.cs" />
     <Compile Include="Platform\Graphics\GraphicsDeviceStatistics.cs" />

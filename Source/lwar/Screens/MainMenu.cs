@@ -3,8 +3,10 @@
 namespace Lwar.Screens
 {
 	using Assets;
+	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
 	using Pegasus.Framework.Rendering.UserInterface;
@@ -14,6 +16,11 @@ namespace Lwar.Screens
 	/// </summary>
 	public class MainMenu : Screen
 	{
+		/// <summary>
+		///   The service that is used to automatically discover server instances.
+		/// </summary>
+		private readonly ServerDiscoveryService _discoveryService = new ServerDiscoveryService();
+
 		/// <summary>
 		///   The label that is used to draw the menu.
 		/// </summary>
@@ -31,6 +38,9 @@ namespace Lwar.Screens
 				Text = "Welcome to lwar!",
 				Alignment = TextAlignment.Centered | TextAlignment.Middle
 			};
+
+			_discoveryService.ServerDiscovered += s => Log.Info("Discovered {0}.", s);
+			_discoveryService.ServerHasShutdown += s => Log.Info("Removed discovered server {0}.", s);
 		}
 
 		/// <summary>
@@ -40,6 +50,7 @@ namespace Lwar.Screens
 		public override void Update(bool topmost)
 		{
 			_label.Area = new Rectangle(0, 0, Window.Width, Window.Height);
+			_discoveryService.Update();
 		}
 
 		/// <summary>
@@ -57,6 +68,7 @@ namespace Lwar.Screens
 		protected override void OnDisposing()
 		{
 			_label.SafeDispose();
+			_discoveryService.SafeDispose();
 		}
 	}
 }

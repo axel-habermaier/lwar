@@ -2,11 +2,19 @@
 
 namespace Lwar.Network
 {
+	using System.Net;
+
 	/// <summary>
 	///   Provides access to lwar network specification constants.
 	/// </summary>
 	public static class Specification
 	{
+		/// <summary>
+		///   The application identifier that is used to determine whether a packet has been sent by another instance of the same
+		///   application.
+		/// </summary>
+		public const uint AppIdentifier = 0xf27087c5;
+
 		/// <summary>
 		///   The maximum allowed byte length of an UTF8-encoded player name.
 		/// </summary>
@@ -56,5 +64,20 @@ namespace Lwar.Network
 		///   The revision number of the network protocol that is implemented by the client.
 		/// </summary>
 		public const byte Revision = 17;
+
+		/// <summary>
+		///   The time to live value used for automatic server discovery.
+		/// </summary>
+		public const int MulticastTimeToLive = 1;
+
+		/// <summary>
+		///   The number of discovery messages that should be sent per second for automatic server discovery.
+		/// </summary>
+		public const int DiscoveryMessageFrequency = 1;
+
+		/// <summary>
+		///   The multicast group that is used for automatic server discovery.
+		/// </summary>
+		public static readonly IPEndPoint MulticastGroup = new IPEndPoint(IPAddress.Parse("FF01::12"), DefaultServerPort + 1);
 	}
 }

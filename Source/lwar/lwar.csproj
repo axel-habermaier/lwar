@@ -219,6 +219,7 @@
     <Compile Include="Network\Messages\UpdatePositionMessage.cs" />
     <Compile Include="Network\Messages\UpdateRayMessage.cs" />
     <Compile Include="Network\RejectReason.cs" />
+    <Compile Include="Network\ServerDiscoveryService.cs" />
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
     <Compile Include="Screens\ChatInput.cs" />
