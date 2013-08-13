@@ -149,6 +149,7 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
     // However: This might move the window to the wrong monitor...
     pgSetWindowSizeCore(window);
     pgSetWindowPositionCore(window);
+    pgSetWindowModeCore(window);
 }
 
 pgVoid pgCloseWindowCore(pgWindow* window)
@@ -205,6 +206,41 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 	window->placement.y = attributes.y;
 	window->placement.width = attributes.width;
 	window->placement.height = attributes.height;
+	
+	Atom actualType;
+    int actualFormat;
+    unsigned long i, numItems, bytesAfter;
+    unsigned char *propertyValue = NULL;
+    long maxLength = 1024;
+
+    if (XGetWindowProperty(x11.display, window->handle, x11.wmState, 0l, maxLength, False, XA_ATOM, &actualType, &actualFormat, &numItems, &bytesAfter, &propertyValue) != Success)
+		PG_DIE("Failed to get window property _NET_WM_STATE.");
+		
+    Atom* atoms = (Atom*)propertyValue;
+    Bool hidden = False;
+    Bool maximizedVert = False;
+    Bool maximizedHorz = False;
+
+    for (i = 0; i < numItems; ++i) 
+    {
+        if (atoms[i] == x11.wmStateHidden)
+            hidden = True;
+            
+        if (atoms[i] == x11.wmStateMaximizedVert)
+            maximizedVert = True;
+            
+        if (atoms[i] == x11.wmStateMaximizedVert)
+            maximizedHorz = True;
+    }
+
+    if (maximizedVert && maximizedHorz)
+    	window->placement.mode = PG_WINDOW_MAXIMIZED;  
+    else if (hidden)
+    	window->placement.mode = PG_WINDOW_MINIMIZED;  
+    else
+    	window->placement.mode = PG_WINDOW_NORMAL;
+    
+    XFree(propertyValue);
 }
 
 pgVoid pgSetWindowSizeCore(pgWindow* window)
@@ -221,7 +257,29 @@ pgVoid pgSetWindowPositionCore(pgWindow* window)
 
 pgVoid pgSetWindowModeCore(pgWindow* window)
 {
-	// Not implemented
+	XMapWindow(x11.display, window->handle);
+
+	XEvent event;
+	memset(&event, 0, sizeof(event));
+	event.xclient.type = ClientMessage;
+	event.xclient.send_event = True;
+	event.xclient.window = window->handle;
+	event.xclient.message_type = x11.wmState;
+	event.xclient.format = 32;
+	
+	event.xclient.data.l[0] = window->placement.mode == PG_WINDOW_MAXIMIZED ? 1 : 0;
+	event.xclient.data.l[1] = x11.wmStateMaximizedVert;
+	event.xclient.data.l[2] = x11.wmStateMaximizedHorz;
+		
+	XSendEvent(x11.display, DefaultRootWindow(x11.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
+		
+	event.xclient.data.l[0] = window->placement.mode == PG_WINDOW_MINIMIZED ? 1 : 0;
+	event.xclient.data.l[1] = x11.wmStateHidden;
+	event.xclient.data.l[2] = 0;
+	
+	XSendEvent(x11.display, DefaultRootWindow(x11.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
+	
+	XFlush(x11.display);
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)

@@ -20,6 +20,12 @@ pgVoid pgInitializeX11()
 		PG_DIE("Unable to connect to X11.");
 
 	x11.screen = XDefaultScreen(x11.display);
+	
+	x11.wmState = XInternAtom(x11.display, "_NET_WM_STATE", False);
+	x11.wmStateFullscreen = XInternAtom(x11.display, "_NET_WM_STATE_FULLSCREEN", False);
+	x11.wmStateMaximizedVert = XInternAtom(x11.display, "_NET_WM_STATE_MAXIMIZED_VERT", False);
+	x11.wmStateMaximizedHorz = XInternAtom(x11.display, "_NET_WM_STATE_MAXIMIZED_HORZ", False);
+	x11.wmStateHidden = XInternAtom(x11.display, "_NET_WM_STATE_HIDDEN", False);
 }
 
 pgVoid pgShutdownX11()

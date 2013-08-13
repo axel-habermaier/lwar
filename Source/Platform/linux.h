@@ -16,6 +16,12 @@ typedef struct
 	Display*	display;
 	int			screen;
 	int			refCount;
+	Atom		wmState;
+	Atom		wmStateFullscreen;
+	Atom		wmStateMaximizedVert;
+	Atom		wmStateMaximizedHorz;
+	Atom		wmStateHidden;
+	
 } X11State;
 
 extern X11State x11;
