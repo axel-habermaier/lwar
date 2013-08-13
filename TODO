@@ -30,7 +30,7 @@ Pegasus.Framework
 
 Pegasus.Platform
 ========
-- Linux: Fullscreen not implemented
+- Linux: Fullscreen mode somewhat buggy
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
 
 Assets Compiler

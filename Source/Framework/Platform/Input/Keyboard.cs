@@ -90,7 +90,7 @@ namespace Pegasus.Framework.Platform.Input
 		private void OnCharacterEntered(CharacterEnteredEventArgs character)
 		{
 			// Only raise the character entered event if the character is a printable ASCII character
-			if (Char.IsControl(character.Character))
+			if (character.Character < 32 || character.Character > 255 || Char.IsControl(character.Character))
 				return;
 			
 			// Do not raise the character entered event if the character is the result of the console key being pressed
