@@ -230,7 +230,7 @@ namespace Pegasus.Framework.Platform.Performance
 		/// <param name="builder">The string builder the results should be written to.</param>
 		public void WriteFrameInfo(StringBuilder builder)
 		{
-			WriteValue(builder, _drawCalls, "   Draw Count:               ");
+			WriteValue(builder, _drawCalls, "   Draw Calls:               ");
 			WriteValue(builder, _vertexCount, "   Vertex Count:             ");
 			WriteValue(builder, _constantBufferUpdates, "   Constant Buffer Updates:  ");
 			WriteValue(builder, _bufferMapCount, "   Other Buffer Updates:     ");
