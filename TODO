@@ -63,5 +63,5 @@ Server
 - BUG: If the mouse is directly in the center of the ship, the ship no longer reacts to mouse commands and 
   pressing a move key moves the ship into the sun
 - BUG: assert(p->a <= p->b); packet.c:39
-- BUG: assert(!e->dead); entity.c:177
+- BUG: assert(!e->dead); entity.c:177 (occurs, for instance, when flying into the world border)
 - BUG: Long chat message (~ 250 characters) are ignored and not acknowledged by server
