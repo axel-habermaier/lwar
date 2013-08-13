@@ -33,7 +33,6 @@ Pegasus.Platform
 ========
 - Linux: Fullscreen not implemented
 - Statistics: # of draw calls, # of (redundant) state changes, # of textures, etc.
-- Get rid of EXT_direct_state_access
 - Add UDP socket abstraction
 
 Assets Compiler

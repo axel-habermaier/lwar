@@ -3,11 +3,18 @@
 #ifdef OPENGL3
 
 //====================================================================================================================
+// State
+//====================================================================================================================
+
+static pgTexture* boundTexture = NULL;
+
+//====================================================================================================================
 // Helper functions
 //====================================================================================================================
 
 static pgVoid pgUploadTexture(pgTexture* texture, pgSurface* surface, GLenum target, GLint level);
 static pgVoid pgAllocTextureData(pgTexture* texture);
+static pgVoid pgRebindTexture();
 
 //====================================================================================================================
 // Core functions
@@ -16,9 +23,12 @@ static pgVoid pgAllocTextureData(pgTexture* texture);
 pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 {
 	pgUint32 i;
+
+	pgConvertTextureType(texture->desc.type, &texture->glType, &texture->glBoundType);
 	
 	PG_GL_ALLOC("Texture", glGenTextures, texture->id);
-	pgConvertTextureType(texture->desc.type, &texture->glType, &texture->glBoundType);
+	glBindTexture(texture->glType, texture->id);
+	PG_ASSERT_NO_GL_ERRORS();
 	
 	if (surfaces != NULL)
 	{
@@ -59,14 +69,19 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 		pgAllocTextureData(texture);
 
 	if ((texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS) != 0)
-		glGenerateTextureMipmapEXT(texture->id, texture->glType);
+		glGenerateMipmap(texture->glType);
 
 	PG_ASSERT_NO_GL_ERRORS();
+
+	pgRebindTexture();
 }
 
 pgVoid pgDestroyTextureCore(pgTexture* texture)
 {
 	PG_GL_FREE(glDeleteTextures, texture->id);
+
+	if (boundTexture == texture)
+		boundTexture = NULL;
 }
 
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)
@@ -74,12 +89,17 @@ pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)
 	pgChangeActiveTexture(texture->device, slot);
 	glBindTexture(texture->glType, texture->id);
 	PG_ASSERT_NO_GL_ERRORS();
+
+	boundTexture = texture;
 }
 
 pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 {
-	glGenerateTextureMipmapEXT(texture->id, texture->glType);
+	glBindTexture(texture->glType, texture->id);
+	glGenerateMipmap(texture->glType);
 	PG_ASSERT_NO_GL_ERRORS();
+
+	pgRebindTexture();
 }
 
 //====================================================================================================================
@@ -97,9 +117,9 @@ static pgVoid pgUploadTexture(pgTexture* texture, pgSurface* surface, GLenum tar
 		type = GL_UNSIGNED_INT_24_8;
 
 	if (pgIsCompressedFormat(texture->desc.format))
-		glCompressedTextureImage2DEXT(texture->id, target, level, internalFormat, surface->width, surface->height, 0, surface->size, surface->data);
+		glCompressedTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, surface->size, surface->data);
 	else
-		glTextureImage2DEXT(texture->id, target, level, internalFormat, surface->width, surface->height, 0, format, type, surface->data);
+		glTexImage2D(target, level, internalFormat, surface->width, surface->height, 0, format, type, surface->data);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -128,6 +148,14 @@ static pgVoid pgAllocTextureData(pgTexture* texture)
 	default:
 		PG_NO_SWITCH_DEFAULT;
 	}
+}
+
+static pgVoid pgRebindTexture()
+{
+	if (boundTexture != NULL)
+		glBindTexture(boundTexture->glType, boundTexture->id);
+
+	PG_ASSERT_NO_GL_ERRORS();
 }
 
 #endif

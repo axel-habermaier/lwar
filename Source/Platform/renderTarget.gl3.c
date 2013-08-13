@@ -3,10 +3,18 @@
 #ifdef OPENGL3
 
 //====================================================================================================================
+// State
+//====================================================================================================================
+
+static pgRenderTarget* boundRenderTarget = NULL;
+
+//====================================================================================================================
 // Helper functions
 //====================================================================================================================
 
-static pgVoid pgValidateFramebufferCompleteness(pgRenderTarget* renderTarget);
+static pgVoid pgValidateFramebufferCompleteness();
+static pgVoid pgRebindRenderTarget();
+static pgVoid pgBindRenderTargetGL(pgRenderTarget* renderTarget);
 
 //====================================================================================================================
 // Core functions
@@ -25,29 +33,35 @@ pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget)
 	
 	PG_ASSERT(PG_MAX_COLOR_ATTACHMENTS == sizeof(buffers) / sizeof(GLenum), "Attachment count mismatch.");
 	PG_GL_ALLOC("Framebuffer", glGenFramebuffers, renderTarget->id);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
 
 	if (renderTarget->depthStencil != NULL)
 	{
-		glNamedFramebufferTexture2DEXT(renderTarget->id, GL_DEPTH_STENCIL_ATTACHMENT, renderTarget->depthStencil->glType, 
+		glFramebufferTexture2D( GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, renderTarget->depthStencil->glType, 
 			renderTarget->depthStencil->id, 0);
 	}
 
 	for (i = 0; i < renderTarget->count; ++i)
 	{
-		glNamedFramebufferTexture2DEXT(renderTarget->id, GL_COLOR_ATTACHMENT0 + i, renderTarget->colorBuffers[i]->glType, 
+		glFramebufferTexture2D( GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, renderTarget->colorBuffers[i]->glType, 
 			renderTarget->colorBuffers[i]->id, 0);
 	}
 
-	pgValidateFramebufferCompleteness(renderTarget);
+	pgValidateFramebufferCompleteness();
 	PG_ASSERT_NO_GL_ERRORS();
 
-	glFramebufferDrawBuffersEXT(renderTarget->id, renderTarget->count, buffers);
+	glDrawBuffers(renderTarget->count, buffers);
 	PG_ASSERT_NO_GL_ERRORS();
+
+	pgRebindRenderTarget();
 }
 
 pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget)
 {
 	PG_GL_FREE(glDeleteFramebuffers, renderTarget->id);
+
+	if (boundRenderTarget == renderTarget)
+		boundRenderTarget = NULL;
 }
 
 pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
@@ -98,15 +112,8 @@ pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 	pgRectangle viewport = renderTarget->device->viewport;
 	pgRectangle scissorArea = renderTarget->device->scissorArea;
 
-	if (renderTarget->swapChain != NULL)
-	{
-		pgMakeCurrent(&renderTarget->swapChain->context);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-	}
-	else
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
-
-	PG_ASSERT_NO_GL_ERRORS();
+	boundRenderTarget = renderTarget;
+	pgBindRenderTargetGL(renderTarget);
 
 	// We have to update the viewport and scissor rectangle as the the new render target might have a different size 
 	// than the old one; viewports and scissor rectangles depend on the size of the currently bound render target
@@ -121,9 +128,9 @@ pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget)
 // Helper functions
 //====================================================================================================================
 
-static pgVoid pgValidateFramebufferCompleteness(pgRenderTarget* renderTarget)
+static pgVoid pgValidateFramebufferCompleteness()
 {
-	GLenum status = glCheckNamedFramebufferStatusEXT(renderTarget->id, GL_DRAW_FRAMEBUFFER);
+	GLenum status = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
 	PG_ASSERT_NO_GL_ERRORS();
 
 	switch (status)
@@ -147,6 +154,27 @@ static pgVoid pgValidateFramebufferCompleteness(pgRenderTarget* renderTarget)
 	default:
 		PG_DIE("The frame buffer is incomplete for an unknown reason.");
 	}
+}
+
+static pgVoid pgRebindRenderTarget()
+{
+	if (boundRenderTarget != NULL)
+		pgBindRenderTargetGL(boundRenderTarget);
+}
+
+static pgVoid pgBindRenderTargetGL(pgRenderTarget* renderTarget)
+{
+	PG_ASSERT_NOT_NULL(renderTarget);
+
+	if (renderTarget->swapChain != NULL)
+	{
+		pgMakeCurrent(&renderTarget->swapChain->context);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	}
+	else
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->id);
+
+	PG_ASSERT_NO_GL_ERRORS();
 }
 
 #endif

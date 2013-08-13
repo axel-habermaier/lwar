@@ -83,14 +83,20 @@ pgVoid pgSetPrimitiveTypeCore(pgGraphicsDevice* device, pgPrimitiveType primitiv
 
 pgVoid pgDrawCore(pgGraphicsDevice* device, pgInt32 primitiveCount, pgInt32 offset)
 {
+	glBindVertexArray(device->inputLayout->id);
 	glDrawArrays(device->glPrimitiveType, offset, pgPrimitiveCountToVertexCount(device, primitiveCount));
+	glBindVertexArray(0);
+
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
 pgVoid pgDrawIndexedCore(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 indexOffset, pgInt32 vertexOffset)
 {
 	pgVoid* offset = (pgVoid*)(size_t)((indexOffset + device->inputLayout->indexOffset) * device->inputLayout->indexSizeInBytes);
+
+	glBindVertexArray(device->inputLayout->id);
 	glDrawElementsBaseVertex(device->glPrimitiveType, indexCount, device->inputLayout->indexType, offset, vertexOffset);
+	glBindVertexArray(0);
 
 	PG_ASSERT_NO_GL_ERRORS();
 }
@@ -140,7 +146,6 @@ static pgVoid InitializeOpenGLExtensions()
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_shading_language_420pack, "ARB_shading_language_420pack");
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_filter_anisotropic, "EXT_texture_filter_anisotropic");
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_compression_s3tc, "EXT_texture_compression_s3tc");
-	glExtsSupported &= GlExtSupported(ogl_ext_EXT_direct_state_access, "EXT_direct_state_access");
 
 	if (!glExtsSupported)
 		PG_DIE("Incompatible graphics card. Not all required OpenGL extenions are supported.");

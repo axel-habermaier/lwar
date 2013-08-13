@@ -130,7 +130,7 @@ pgVoid pgSwapBuffers(pgContext* context);
 	GLenum			destinationBlendAlpha;	\
 	GLboolean		colorMask[4];			\
 	pgRectangle		currentViewport;		\
-	pgRectangle		currentScissorArea;
+	pgRectangle		currentScissorArea;	
 
 #define PG_SWAP_CHAIN_PLATFORM \
 	pgContext context;

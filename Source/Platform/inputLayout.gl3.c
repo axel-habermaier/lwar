@@ -46,10 +46,11 @@ pgVoid pgCreateInputLayoutCore(pgInputLayout* inputLayout, pgBuffer* indexBuffer
 			inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR1 ||
 			inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR2 ||
 			inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR3;
-		glVertexAttribPointer(slot, size, type, normalize, inputBindings[i].stride, (void*)(size_t)inputBindings[i].offset);
+		glVertexAttribPointer(slot, size, type, normalize, inputBindings[i].stride, (pgVoid*)(size_t)inputBindings[i].offset);
 		PG_ASSERT_NO_GL_ERRORS();
 	}
 
+	glBindVertexArray(0);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
@@ -63,8 +64,8 @@ pgVoid pgDestroyInputLayoutCore(pgInputLayout* inputLayout)
 
 pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout)
 {
-	glBindVertexArray(inputLayout->id);
-	PG_ASSERT_NO_GL_ERRORS();
+	// Do not actually bind the input layout here, as that causes all sorts of problems with buffer updates between
+	// the binding of the input layout and the actual draw call using the input layout
 
 	inputLayout->device->inputLayout = inputLayout;
 }

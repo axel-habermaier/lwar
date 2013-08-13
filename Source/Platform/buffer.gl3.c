@@ -8,10 +8,13 @@
 
 pgVoid pgCreateBufferCore(pgBuffer* buffer, pgResourceUsage usage, pgVoid* data)
 {
-	PG_GL_ALLOC("Buffer", glGenBuffers, buffer->id);
 	buffer->glType = pgConvertBufferType(buffer->type);
 
-	glNamedBufferDataEXT(buffer->id, buffer->size, data, pgConvertResourceUsage(usage));
+	PG_GL_ALLOC("Buffer", glGenBuffers, buffer->id);
+	glBindBuffer(buffer->glType, buffer->id);
+	PG_ASSERT_NO_GL_ERRORS();
+
+	glBufferData(buffer->glType, buffer->size, data, pgConvertResourceUsage(usage));
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
@@ -29,7 +32,8 @@ pgVoid* pgMapBufferRangeCore(pgBuffer* buffer, pgMapMode mode, pgInt32 offset, p
 {
 	pgVoid* mappedBuffer;
 
-	mappedBuffer = glMapNamedBufferRangeEXT(buffer->id, (GLintptr)offset, (GLsizeiptr)byteCount, pgConvertMapMode(mode));
+	glBindBuffer(buffer->glType, buffer->id);
+	mappedBuffer = glMapBufferRange(buffer->glType, (GLintptr)offset, (GLsizeiptr)byteCount, pgConvertMapMode(mode));
 	PG_ASSERT_NO_GL_ERRORS();
 
 	if (mappedBuffer == NULL)
@@ -42,7 +46,8 @@ pgVoid pgUnmapBufferCore(pgBuffer* buffer)
 {
 	GLboolean success;
 
-	success = glUnmapNamedBufferEXT(buffer->id);
+	glBindBuffer(buffer->glType, buffer->id);
+	success = glUnmapBuffer(buffer->glType);
 	PG_ASSERT_NO_GL_ERRORS();
 
 	if (!success)
@@ -57,7 +62,8 @@ pgVoid pgBindConstantBufferCore(pgBuffer* buffer, pgInt32 slot)
 
 pgVoid pgUpdateConstantBufferCore(pgBuffer* buffer, pgVoid* data)
 {
-	glNamedBufferSubDataEXT(buffer->id, 0, buffer->size, data);
+	glBindBuffer(buffer->glType, buffer->id);
+	glBufferSubData(buffer->glType, 0, buffer->size, data);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
