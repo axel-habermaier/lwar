@@ -338,20 +338,16 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			var buffers = ConstantBuffers.ToArray();
 			for (var i = 0; i < buffers.Length; ++i)
 			{
-				_writer.AppendLine("[StructLayout(LayoutKind.Sequential, Size = Size, Pack = 1)]");
+				_writer.AppendLine("[StructLayout(LayoutKind.Explicit)]");
 				_writer.AppendLine("private struct {0}", GetStructName(buffers[i]));
 				_writer.AppendBlockStatement(() =>
 					{
-						_writer.AppendLine("/// <summary>");
-						_writer.AppendLine("///   The size of the struct in bytes.");
-						_writer.AppendLine("/// </summary>");
-						_writer.AppendLine("public const int Size = {0};", buffers[i].Size);
-						_writer.Newline();
-
-						for (var j = 0; j < buffers[i].Constants.Length; ++j)
+						var constants = buffers[i].GetLayoutedConstants().ToArray();
+						for (var j = 0; j < constants.Length; ++j)
 						{
-							WriteDocumentation(buffers[i].Constants[j].Documentation);
-							_writer.AppendLine("public {0} {1};", ToCSharpType(buffers[i].Constants[j].Type), buffers[i].Constants[j].Name);
+							WriteDocumentation(constants[j].Constant.Documentation);
+							_writer.AppendLine("[FieldOffset({0})]", constants[j].Offset);
+							_writer.AppendLine("public {0} {1};", ToCSharpType(constants[j].Constant.Type), constants[j].Constant.Name);
 
 							if (j < buffers[i].Constants.Length - 1)
 								_writer.Newline();

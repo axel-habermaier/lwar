@@ -89,8 +89,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether this constant is a special system-provided constant and not a user-defined one. If
-		///   true is returned, the change frequency of the constant has no meaning.
+		///   Gets a value indicating whether this constant is a special system-provided constant and not a user-defined one.
 		/// </summary>
 		public bool IsSpecial { get; private set; }
 

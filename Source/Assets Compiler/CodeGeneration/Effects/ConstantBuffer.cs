@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
+	using System.Collections.Generic;
 	using System.Linq;
 	using Framework;
 
@@ -89,6 +90,73 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				default:
 					throw new NotSupportedException("Unsupported data type.");
 			}
+		}
+
+		/// <summary>
+		///   Computes the constant buffer layout in accordance with the D3D11 constant buffer layouting rules and returns the
+		///   layouted constants contained in the constant buffer.
+		///   http://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx
+		/// </summary>
+		public IEnumerable<LayoutedShaderConstant> GetLayoutedConstants()
+		{
+			// Basically, we only have to ensure that a constant never crosses a 16-byte boundary
+			var remainingBytes = 16;
+			var offset = 0;
+
+			foreach (var constant in Constants)
+			{
+				var size = SizeInBytes(constant.Type);
+
+				// All types with more than 16 bytes must start at a 16-byte boundary
+				if (size > 16)
+				{
+					if (remainingBytes != 16)
+						offset += remainingBytes;
+
+					remainingBytes = size;
+				}
+				else if (size > remainingBytes)
+				{
+					offset += remainingBytes;
+					remainingBytes = 16;
+				}
+
+				yield return new LayoutedShaderConstant(constant, offset);
+				offset += size;
+				remainingBytes -= size;
+			}
+		}
+
+		/// <summary>
+		///   Provides information about a shader constant stored inside a constant buffer.
+		/// </summary>
+		public struct LayoutedShaderConstant
+		{
+			/// <summary>
+			///   Initializes a new instance.
+			/// </summary>
+			/// <param name="constant">The shader constant stored in a constant buffer.</param>
+			/// <param name="offset">
+			///   The zero-based offset in bytes from the beginning of the constant buffer to the first byte of the
+			///   shader constant.
+			/// </param>
+			public LayoutedShaderConstant(ShaderConstant constant, int offset)
+				: this()
+			{
+				Constant = constant;
+				Offset = offset;
+			}
+
+			/// <summary>
+			///   Gets the shader constant stored in a constant buffer.
+			/// </summary>
+			public ShaderConstant Constant { get; private set; }
+
+			/// <summary>
+			///   Gets the zero-based offset in bytes from the beginning of the constant buffer to the first byte of the shader
+			///   constant.
+			/// </summary>
+			public int Offset { get; private set; }
 		}
 	}
 }
