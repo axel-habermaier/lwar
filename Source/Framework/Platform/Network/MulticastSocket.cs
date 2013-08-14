@@ -25,35 +25,19 @@ namespace Pegasus.Framework.Platform.Network
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="multicastGroup">The multicast group that the socket should listen to or send to.</param>
-		public MulticastSocket(IPEndPoint multicastGroup)
+		/// <param name="timeToLive">The time to live for the multicast messages.</param>
+		public MulticastSocket(IPEndPoint multicastGroup, int timeToLive = 1)
 		{
 			Assert.ArgumentNotNull(multicastGroup);
 			Assert.ArgumentSatisfies(multicastGroup.AddressFamily == AddressFamily.InterNetworkV6, "Not a valid IPv6 multicast address.");
 			Assert.ArgumentSatisfies(multicastGroup.Address.IsIPv6Multicast, "Not a valid multicast group.");
-
-			_multicastGroup = multicastGroup;
-		}
-
-		/// <summary>
-		///   Connects the socket to the multicast group and prepares it for sending.
-		/// </summary>
-		/// <param name="timeToLive">The time to live for the multicast messages.</param>
-		public void Connect(int timeToLive)
-		{
 			Assert.ArgumentInRange(timeToLive, 1, Int32.MaxValue);
 
+			_multicastGroup = multicastGroup;
 			_udpSocket.Socket.MulticastLoopback = true;
-			_udpSocket.Socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.MulticastTimeToLive, timeToLive);
-			_udpSocket.Socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.AddMembership,
-											  new IPv6MulticastOption(_multicastGroup.Address));
-		}
 
-		/// <summary>
-		///   Binds the socket to the multicast group and prepares it for receiving.
-		/// </summary>
-		public void Bind()
-		{
-			_udpSocket.Bind(new IPEndPoint(IPAddress.IPv6Any, _multicastGroup.Port));
+			_udpSocket.Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+			_udpSocket.Socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.MulticastTimeToLive, timeToLive);
 			_udpSocket.Socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.AddMembership,
 											  new IPv6MulticastOption(_multicastGroup.Address));
 		}
@@ -76,6 +60,9 @@ namespace Pegasus.Framework.Platform.Network
 		/// <param name="size">Returns the number of bytes that have been received.</param>
 		public bool TryReceive(byte[] buffer, ref IPEndPoint remoteEndPoint, out int size)
 		{
+			if (!_udpSocket.Socket.IsBound)
+				_udpSocket.Bind(new IPEndPoint(IPAddress.IPv6Any, _multicastGroup.Port));
+
 			return _udpSocket.TryReceive(buffer, ref remoteEndPoint, out size);
 		}
 

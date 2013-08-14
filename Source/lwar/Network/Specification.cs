@@ -78,6 +78,6 @@ namespace Lwar.Network
 		/// <summary>
 		///   The multicast group that is used for automatic server discovery.
 		/// </summary>
-		public static readonly IPEndPoint MulticastGroup = new IPEndPoint(IPAddress.Parse("FF01::12"), DefaultServerPort + 1);
+		public static readonly IPEndPoint MulticastGroup = new IPEndPoint(IPAddress.Parse("FF05::3"), DefaultServerPort + 1);
 	}
 }

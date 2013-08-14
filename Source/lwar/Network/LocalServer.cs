@@ -37,7 +37,7 @@ namespace Lwar.Network
 		/// <summary>
 		///   The socket that is used to broadcast information about this server to interested clients.
 		/// </summary>
-		private readonly MulticastSocket _multicastSocket = new MulticastSocket(Specification.MulticastGroup);
+		private readonly MulticastSocket _multicastSocket = new MulticastSocket(Specification.MulticastGroup, Specification.MulticastTimeToLive);
 
 		/// <summary>
 		///   The buffer that is used to send the multi cast data.
@@ -70,8 +70,6 @@ namespace Lwar.Network
 
 			Commands.OnStartServer += Run;
 			Commands.OnStopServer += Shutdown;
-
-			_multicastSocket.Connect(Specification.MulticastTimeToLive);
 		}
 
 		/// <summary>
@@ -169,7 +167,8 @@ namespace Lwar.Network
 			{
 				writer.WriteUInt32(Specification.AppIdentifier);
 				writer.WriteByte(Specification.Revision);
-				//EnqueueLogEntry(LogType.Error, "Sent message.");
+
+				_multicastSocket.Send(_buffer, writer.Count);
 			}
 		}
 

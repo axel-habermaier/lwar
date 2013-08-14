@@ -42,14 +42,6 @@ namespace Lwar.Network
 		private IPEndPoint _serverEndPoint = new IPEndPoint(IPAddress.IPv6Any, 0);
 
 		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		public ServerDiscoveryService()
-		{
-			_multicastSocket.Bind();
-		}
-
-		/// <summary>
 		///   Raised when a new server has been discovered.
 		/// </summary>
 		public event Action<IPEndPoint> ServerDiscovered;
