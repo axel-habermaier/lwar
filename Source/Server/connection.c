@@ -246,7 +246,7 @@ bool address_eq(Address *adr0, Address *adr1) {
 
 	for (i = 0; i < sizeof(adr0->ip); ++i)
 	{
-		if (adr0->ip[0] != adr1->ip[1])
+		if (adr0->ip[i] != adr1->ip[i])
 			return false;
 	}
 
