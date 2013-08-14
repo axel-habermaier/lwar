@@ -10,6 +10,6 @@ namespace Lwar.Gameplay
 		/// <summary>
 		///   Gets the generational identifier of the object.
 		/// </summary>
-		Identifier Id { get; }
+		Identifier Identifier { get; }
 	}
 }

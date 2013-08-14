@@ -3,8 +3,7 @@
 namespace Lwar.Gameplay.Entities
 {
 	using Actors;
-	using Network;
-	using Network.Messages;
+	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 
 	/// <summary>
@@ -45,13 +44,50 @@ namespace Lwar.Gameplay.Entities
 		/// <summary>
 		///   Gets or sets the generational identifier of the entity.
 		/// </summary>
-		public Identifier Id { get; protected set; }
+		public Identifier Identifier { get; protected set; }
 
 		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.
 		/// </summary>
-		/// <param name="message">The update message that should be processed.</param>
-		public abstract void RemoteUpdate(ref Message message);
+		/// <param name="position">The updated entity position.</param>
+		public virtual void RemoteUpdate(Vector2 position)
+		{
+			Position = position;
+		}
+
+		/// <summary>
+		///   Applies the update message sent by the server to the entity's state.
+		/// </summary>
+		/// <param name="position">The updated entity position.</param>
+		/// <param name="rotation">The updated entity rotation.</param>
+		/// <param name="health">The updated entity health.</param>
+		public virtual void RemoteUpdate(Vector2 position, float rotation, int health)
+		{
+			Position = position;
+			Rotation = MathUtils.DegToRad(rotation);
+		}
+
+		/// <summary>
+		///   Applies the update message sent by the server to the entity's state.
+		/// </summary>
+		/// <param name="center">The updated circle center.</param>
+		/// <param name="radius">The updated circle radius.</param>
+		public virtual void RemoteUpdate(Vector2 center, float radius)
+		{
+			Assert.That(false, "Circle updates are not supported by the entity.");
+		}
+
+		/// <summary>
+		///   Applies the update message sent by the server to the entity's state.
+		/// </summary>
+		/// <param name="origin">The updated ray origin.</param>
+		/// <param name="direction">The updated ray direction.</param>
+		/// <param name="length">The updated ray length.</param>
+		/// <param name="target">The current ray target or null if no target is hit.</param>
+		public virtual void RemoteUpdate(Vector2 origin, float direction, float length, IEntity target)
+		{
+			Assert.That(false, "Ray updates are not supported by the entity.");
+		}
 
 		/// <summary>
 		///   Invoked when the entity collided another entity.
@@ -60,6 +96,14 @@ namespace Lwar.Gameplay.Entities
 		/// <param name="impact">The position of the impact.</param>
 		public virtual void CollidedWith(IEntity other, Vector2 impact)
 		{
+		}
+
+		/// <summary>
+		///   Returns a string that represents the current object.
+		/// </summary>
+		public override string ToString()
+		{
+			return String.Format("{0} {1}", GetType().Name, Identifier);
 		}
 	}
 }

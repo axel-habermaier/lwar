@@ -44,7 +44,7 @@ namespace Lwar.Gameplay
 		/// <summary>
 		///   Gets the player's identifier.
 		/// </summary>
-		public Identifier Id { get; private set; }
+		public Identifier Identifier { get; private set; }
 
 		/// <summary>
 		///   Creates a new instance.
@@ -56,7 +56,7 @@ namespace Lwar.Gameplay
 			Assert.ArgumentNotNullOrWhitespace(name);
 
 			var player = GetInstance();
-			player.Id = id;
+			player.Identifier = id;
 			player.Ship = null;
 			player.Name = name;
 			return player;
@@ -67,7 +67,7 @@ namespace Lwar.Gameplay
 		/// </summary>
 		public override string ToString()
 		{
-			return String.Format("'{0}' ({1})", Name, Id);
+			return String.Format("'{0}' ({1})", Name, Identifier);
 		}
 	}
 }

@@ -83,7 +83,7 @@ namespace Lwar.Gameplay
 		/// <param name="playerId">The id of the player that should be removed.</param>
 		public void Remove(Identifier playerId)
 		{
-			Assert.ArgumentSatisfies(LocalPlayer == null || playerId != LocalPlayer.Id,
+			Assert.ArgumentSatisfies(LocalPlayer == null || playerId != LocalPlayer.Identifier,
 									 "Cannot remove the local player.");
 
 			var player = _playerMap[playerId];

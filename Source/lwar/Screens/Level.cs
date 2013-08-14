@@ -221,7 +221,7 @@ namespace Lwar.Screens
 				return;
 
 			var message = _inputManager.CreateInputMessage();
-			message.Input.Player = _gameSession.Players.LocalPlayer.Id;
+			message.Input.Player = _gameSession.Players.LocalPlayer.Identifier;
 
 			var worldCoordinates = _cameraManager.GameCamera.ToWorldCoordinates(message.Input.Target);
 			if (_gameSession.Players.LocalPlayer.Ship != null)

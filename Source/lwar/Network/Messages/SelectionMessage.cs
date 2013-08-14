@@ -68,7 +68,7 @@ namespace Lwar.Network.Messages
 				Type = MessageType.Selection,
 				Selection = new SelectionMessage
 				{
-					Player = player.Id,
+					Player = player.Identifier,
 					ShipType = ship,
 					WeaponType1 = weapon1,
 					WeaponType2 = weapon2,

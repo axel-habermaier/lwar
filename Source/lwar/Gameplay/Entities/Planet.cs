@@ -2,8 +2,6 @@
 
 namespace Lwar.Gameplay.Entities
 {
-	using Network;
-	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
@@ -44,16 +42,6 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
-		/// </summary>
-		/// <param name="message">The update message that should be processed.</param>
-		public override void RemoteUpdate(ref Message message)
-		{
-			Assert.That(message.Type == MessageType.UpdatePosition, "Unsupported update type.");
-			Position = message.UpdatePosition.Position;
-		}
-
-		/// <summary>
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the planet.</param>
@@ -66,7 +54,7 @@ namespace Lwar.Gameplay.Entities
 			rotationSpeed *= (Random.Next() % 2 == 1 ? 1 : -1);
 
 			var planet = GetInstance();
-			planet.Id = id;
+			planet.Identifier = id;
 			planet._rotationSpeed = rotationSpeed;
 			planet.Template = template;
 			return planet;

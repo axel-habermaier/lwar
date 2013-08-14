@@ -3,6 +3,7 @@
 namespace Lwar.Network
 {
 	using System.Net;
+	using Gameplay;
 
 	/// <summary>
 	///   Provides access to lwar network specification constants.
@@ -41,11 +42,6 @@ namespace Lwar.Network
 		public const int MaxPlayers = 8;
 
 		/// <summary>
-		///   The identifier of the player that represents the server.
-		/// </summary>
-		public const int ServerPlayerId = 0;
-
-		/// <summary>
 		///   The frequency in Hz that determines how often the user input is sent to the server.
 		/// </summary>
 		public const int InputUpdateFrequency = 30;
@@ -74,6 +70,16 @@ namespace Lwar.Network
 		///   The number of discovery messages that should be sent per second for automatic server discovery.
 		/// </summary>
 		public const int DiscoveryMessageFrequency = 1;
+
+		/// <summary>
+		///   The identifier of the player that represents the server.
+		/// </summary>
+		public static readonly Identifier ServerPlayerIdentifier = new Identifier(0, 0);
+
+		/// <summary>
+		///   The reserved entity identifier
+		/// </summary>
+		public static readonly Identifier ReservedEntityIdentifier = new Identifier(UInt16.MaxValue, 0);
 
 		/// <summary>
 		///   The multicast group that is used for automatic server discovery.

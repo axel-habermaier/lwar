@@ -39,7 +39,7 @@ namespace Lwar.Network
 					break;
 				case MessageType.Name:
 					// Ignore the server player
-					if (IsServerPlayer(message.Name.Player))
+					if (message.Name.Player == Specification.ServerPlayerIdentifier)
 						break;
 
 					// Add the event message first, otherwise the player name will already have been changed
@@ -56,13 +56,13 @@ namespace Lwar.Network
 					break;
 				case MessageType.Join:
 					// Give the server player a default name
-					var name = IsServerPlayer(message.Join.Player) ? "Server" : message.Join.Name;
+					var name = message.Join.Player == Specification.ServerPlayerIdentifier ? "Server" : message.Join.Name;
 					Assert.NotNullOrWhitespace(name);
 
 					_gameSession.Players.Add(message.Join.Player, name, message.Join.IsLocalPlayer);
 
 					// Don't show the message for the local player and the server player
-					if (!message.Join.IsLocalPlayer && !IsServerPlayer(message.Join.Player))
+					if (!message.Join.IsLocalPlayer && message.Join.Player != Specification.ServerPlayerIdentifier)
 						_gameSession.EventMessages.AddJoinMessage(message.Join.Player);
 					break;
 				case MessageType.Leave:
@@ -156,15 +156,6 @@ namespace Lwar.Network
 			}
 
 			_gameSession.Entities.Add(entity);
-		}
-
-		/// <summary>
-		///   Checks whether the player with the given identifier is the player that represents the server.
-		/// </summary>
-		/// <param name="player">The player identifier that should be checked.</param>
-		private static bool IsServerPlayer(Identifier player)
-		{
-			return player.Identity == Specification.ServerPlayerId;
 		}
 	}
 }

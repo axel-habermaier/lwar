@@ -2,10 +2,8 @@
 
 namespace Lwar.Gameplay.Entities
 {
-	using Network;
-	using Network.Messages;
-	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
+	using Pegasus.Framework.Platform.Logging;
 
 	/// <summary>
 	///   Represents a ray.
@@ -18,16 +16,25 @@ namespace Lwar.Gameplay.Entities
 		public float Length { get; private set; }
 
 		/// <summary>
+		///   Gets the current target entity or null if there is none.
+		/// </summary>
+		public IEntity Target { get; private set; }
+
+		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.
 		/// </summary>
-		/// <param name="message">The update message that should be processed.</param>
-		public override void RemoteUpdate(ref Message message)
+		/// <param name="origin">The updated ray origin.</param>
+		/// <param name="direction">The updated ray direction.</param>
+		/// <param name="length">The updated ray length.</param>
+		/// <param name="target">The current ray target or null if no target is hit.</param>
+		public override void RemoteUpdate(Vector2 origin, float direction, float length, IEntity target)
 		{
-			Assert.That(message.Type == MessageType.UpdateRay, "Unsupported update type.");
-			Position = message.UpdateRay.Origin;
+			Position = origin;
+			Rotation = MathUtils.DegToRad(direction);
+			Length = length;
+			Target = target;
 
-			Rotation = MathUtils.DegToRad(message.UpdateRay.Direction);
-			Length = message.UpdateRay.Length;
+			Log.Info("Target: {0}", target);
 		}
 
 		/// <summary>
@@ -37,7 +44,7 @@ namespace Lwar.Gameplay.Entities
 		public static Ray Create(Identifier id)
 		{
 			var ray = GetInstance();
-			ray.Id = id;
+			ray.Identifier = id;
 			ray.Template = Templates.Ray;
 			return ray;
 		}

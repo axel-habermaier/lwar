@@ -88,7 +88,7 @@ namespace Lwar.Screens
 			// Update the visible row contents
 			var visibleRows = 0;
 			foreach (var player in _gameSession.Players
-											   .Where(player => player.Id.Identity != 0)
+											   .Where(player => player.Identifier != Specification.ServerPlayerIdentifier)
 											   .OrderByDescending(player => player.Kills)
 											   .ThenBy(player => player.Deaths)
 											   .ThenBy(player => player.Name))

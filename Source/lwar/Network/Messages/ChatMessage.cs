@@ -39,7 +39,7 @@ namespace Lwar.Network.Messages
 				Type = MessageType.Chat,
 				Chat = new ChatMessage
 				{
-					Player = player.Id,
+					Player = player.Identifier,
 					Message = message
 				}
 			};

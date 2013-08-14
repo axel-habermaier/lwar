@@ -39,7 +39,7 @@ namespace Lwar.Network.Messages
 				Type = MessageType.Name,
 				Name = new NameMessage
 				{
-					Player = player.Id,
+					Player = player.Identifier,
 					Name = playerName
 				}
 			};

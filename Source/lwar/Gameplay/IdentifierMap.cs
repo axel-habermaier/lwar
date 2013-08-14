@@ -29,7 +29,7 @@ namespace Lwar.Gameplay
 				if (obj == null)
 					return null;
 
-				return obj.Id.Generation == identifier.Generation ? obj : null;
+				return obj.Identifier.Generation == identifier.Generation ? obj : null;
 			}
 		}
 
@@ -40,9 +40,9 @@ namespace Lwar.Gameplay
 		public void Add(T obj)
 		{
 			Assert.ArgumentNotNull(obj);
-			Assert.That(_map[obj.Id.Identity] == null, "There already is a mapping for the object's identifier.");
+			Assert.That(_map[obj.Identifier.Identity] == null, "There already is a mapping for the object's identifier.");
 
-			_map[obj.Id.Identity] = obj;
+			_map[obj.Identifier.Identity] = obj;
 		}
 
 		/// <summary>
@@ -52,11 +52,11 @@ namespace Lwar.Gameplay
 		public void Remove(T obj)
 		{
 			Assert.ArgumentNotNull(obj);
-			Assert.That(_map[obj.Id.Identity] != null, "The object is not mapped.");
-			Assert.That(_map[obj.Id.Identity].Id.Generation == obj.Id.Generation,
+			Assert.That(_map[obj.Identifier.Identity] != null, "The object is not mapped.");
+			Assert.That(_map[obj.Identifier.Identity].Identifier.Generation == obj.Identifier.Generation,
 						"Attempted to unmap an object of a different generation.");
 
-			_map[obj.Id.Identity] = null;
+			_map[obj.Identifier.Identity] = null;
 		}
 	}
 }

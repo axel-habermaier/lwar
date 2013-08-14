@@ -146,7 +146,7 @@ namespace Lwar.Gameplay
 			EventType type;
 			if (killer.Identity == victim.Identity)
 				type = EventType.Suicide;
-			else if (killer.Identity == Specification.ServerPlayerId)
+			else if (killer == Specification.ServerPlayerIdentifier)
 				type = EventType.EnvironmentKill;
 			else
 				type = EventType.Kill;

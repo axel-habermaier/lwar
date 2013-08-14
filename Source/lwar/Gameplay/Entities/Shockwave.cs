@@ -2,9 +2,7 @@
 
 namespace Lwar.Gameplay.Entities
 {
-	using Network;
-	using Network.Messages;
-	using Pegasus.Framework;
+	using Pegasus.Framework.Math;
 
 	/// <summary>
 	///   Represents a shockwave.
@@ -19,13 +17,12 @@ namespace Lwar.Gameplay.Entities
 		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.
 		/// </summary>
-		/// <param name="message">The update message that should be processed.</param>
-		public override void RemoteUpdate(ref Message message)
+		/// <param name="center">The updated circle center.</param>
+		/// <param name="radius">The updated circle radius.</param>
+		public override void RemoteUpdate(Vector2 center, float radius)
 		{
-			Assert.That(message.Type == MessageType.UpdateCircle, "Unsupported update type.");
-
-			Position = message.UpdateCircle.Center;
-			Radius = message.UpdateCircle.Radius;
+			Position = center;
+			Radius = radius;
 		}
 
 		/// <summary>
@@ -35,7 +32,7 @@ namespace Lwar.Gameplay.Entities
 		public static Shockwave Create(Identifier id)
 		{
 			var shockwave = GetInstance();
-			shockwave.Id = id;
+			shockwave.Identifier = id;
 			return shockwave;
 		}
 	}

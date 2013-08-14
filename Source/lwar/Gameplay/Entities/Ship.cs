@@ -3,8 +3,6 @@
 namespace Lwar.Gameplay.Entities
 {
 	using Actors;
-	using Network;
-	using Network.Messages;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 
@@ -26,14 +24,13 @@ namespace Lwar.Gameplay.Entities
 		/// <summary>
 		///   Applies the update message sent by the server to the entity's state.
 		/// </summary>
-		/// <param name="message">The update message that should be processed.</param>
-		public override void RemoteUpdate(ref Message message)
+		/// <param name="position">The updated entity position.</param>
+		/// <param name="rotation">The updated entity rotation.</param>
+		/// <param name="health">The updated entity health.</param>
+		public override void RemoteUpdate(Vector2 position, float rotation, int health)
 		{
-			Assert.That(message.Type == MessageType.Update, "Unsupported update type.");
-
-			Position = message.Update.Position;
-			Rotation = MathUtils.DegToRad(message.Update.Rotation);
-			Health = message.Update.Health;
+			base.RemoteUpdate(position, rotation, health);
+			Health = health;
 		}
 
 		/// <summary>
@@ -65,7 +62,7 @@ namespace Lwar.Gameplay.Entities
 			Assert.ArgumentNotNull(player);
 
 			var ship = GetInstance();
-			ship.Id = id;
+			ship.Identifier = id;
 			ship.Player = player;
 			ship.Template = Templates.Ship;
 			player.Ship = ship;
@@ -77,7 +74,7 @@ namespace Lwar.Gameplay.Entities
 		/// </summary>
 		public override string ToString()
 		{
-			return String.Format("Ship {0}, Player: {1}", Id, Player);
+			return String.Format("Ship {0} of Player {1}", Identifier, Player);
 		}
 	}
 }

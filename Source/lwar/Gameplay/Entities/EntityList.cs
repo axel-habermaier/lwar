@@ -67,7 +67,7 @@ namespace Lwar.Gameplay.Entities
 		public void Add(IEntity entity)
 		{
 			Assert.ArgumentNotNull(entity);
-			Assert.That(_entityMap[entity.Id] == null, "An entity with the same id has already been added.");
+			Assert.That(_entityMap[entity.Identifier] == null, "An entity with the same id has already been added.");
 
 			_entities.Add(entity);
 			_entityMap.Add(entity);
@@ -129,7 +129,27 @@ namespace Lwar.Gameplay.Entities
 			if (entity == null)
 				return;
 
-			entity.RemoteUpdate(ref message);
+			switch (message.Type)
+			{
+				case MessageType.Update:
+					entity.RemoteUpdate(message.Update.Position, message.Update.Rotation, message.Update.Health);
+					break;
+				case MessageType.UpdatePosition:
+					entity.RemoteUpdate(message.UpdatePosition.Position);
+					break;
+				case MessageType.UpdateRay:
+					IEntity target = null;
+					if (message.UpdateRay.Target != Specification.ReservedEntityIdentifier)
+						target = _entityMap[message.UpdateRay.Target];
+
+					entity.RemoteUpdate(message.UpdateRay.Origin, message.UpdateRay.Direction, message.UpdateRay.Length, target);
+					break;
+				case MessageType.UpdateCircle:
+					entity.RemoteUpdate(message.UpdateCircle.Center, message.UpdateCircle.Radius);
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported entity update message type.");
+			}
 		}
 
 		/// <summary>
