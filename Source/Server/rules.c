@@ -230,10 +230,12 @@ void ray_act(Entity *ray) {
     }
 
     if(best_e) {
+		ray->target = best_e;
         ray->len = best_t;
         /* damage is proportional to frame time */
         entity_hit(best_e, ray->energy * clock_delta(), ray->player);
     } else {
+		ray->target = 0;
         ray->len = ray->radius;
     }
 }

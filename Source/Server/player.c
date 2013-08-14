@@ -23,7 +23,7 @@ void player_init(Player *p, size_t id) {
     /* p->name = ""; */
     slots_foreach(p,s,st)
         s->entity = 0;
-    player_input(p, 0,0,0,0,0,0,0,0,0,0,0,0);
+    player_input(p, 0,0,0,0,0,0,0,0,0,0,42,0);
     player_select(p, 0,0,0,0,0);
 }
 
@@ -46,9 +46,9 @@ void player_input(Player *p,
 
     //p->rot   = turn_right  - turn_left;
 
-
-    p->aim.x = aim_x;
-    p->aim.y = aim_y;
+	Vec aim = { aim_x, aim_y };
+	if (len(aim) >= 42)
+		p->aim = aim;
 
     int _f[NUM_SLOTS] = { fire1, fire2, fire3, fire4 };
     int *f = _f;
@@ -82,7 +82,7 @@ void player_select(Player *p,
 }
 
 static void slot_spawn(Player *p, Slot *s, SlotType *st, Entity *parent, Vec x, Vec v) {
-    //assert(!s->entity); // TODO: Does this make sense?
+    assert(!s->entity);
 
     EntityType *t = s->selected_type;
 
@@ -116,6 +116,7 @@ void player_notify_entity(Entity *e) {
     if(!e->dead) return;
     if(!e->slot) return;
 
+	log_debug("- slot of player %d, entity = %d", e->player->id.n, e->id.n);
     e->slot->entity = 0;
 }
 

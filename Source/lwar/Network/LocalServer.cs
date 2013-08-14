@@ -169,7 +169,7 @@ namespace Lwar.Network
 			{
 				writer.WriteUInt32(Specification.AppIdentifier);
 				writer.WriteByte(Specification.Revision);
-				EnqueueLogEntry(LogType.Error, "Sent message.");
+				//EnqueueLogEntry(LogType.Error, "Sent message.");
 			}
 		}
 

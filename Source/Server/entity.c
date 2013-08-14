@@ -45,18 +45,18 @@ void entity_accelerate_to(Entity *e, Vec v) {
 }
 
 void entity_hit(Entity *e, Real damage, Player *k) {
-    Player *v = e->player;
+    Player *p = e->player;
     damage *= e->shield;
 
     /* prevent multiple kills of the same entity */
     if(   e->health > 0 && e->health <= damage
-       && e == v->ship.entity)
+       && e == p->ship.entity)
     {
         /* TODO: move somewhere else? */
         k->kills ++;
-        v->deaths ++;
+        p->deaths ++;
 
-        protocol_notify_kill(k, v);
+        protocol_notify_kill(k, p);
     }
 
     e->health -= damage;
@@ -104,9 +104,11 @@ void entities_update() {
 static void entity_ctor(size_t i, void *p) {
     Entity *e = (Entity*)p;
     e->id.n = i;
-    e->dead = 0;
+    e->dead = false;
     e->age  = 0;
     e->parent = 0;
+	e->slot = 0;
+	e->target = 0;
     INIT_LIST_HEAD(&e->_u);
     INIT_LIST_HEAD(&e->children);
     INIT_LIST_HEAD(&e->siblings);
@@ -173,9 +175,8 @@ Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
 void entity_remove(Entity *e) {
     Entity *c;
 
-    if(e) {
-        assert(!e->dead);
-        e->dead = 1;
+    if(e && !e->dead) {
+        e->dead = true;
         notify(e);
         log_debug("- entity %d (%s)", e->id.n, e->type->name);
         children_foreach(e,c)

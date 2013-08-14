@@ -16,7 +16,7 @@ enum {
     MAX_QUEUE           = 4096,
     MAX_STRINGS         =  128,
 
-	NETWORK_REVISION    =   17,
+	NETWORK_REVISION    =   18,
 
     NUM_SLOTS           =    4,
 
@@ -212,6 +212,8 @@ struct Entity {
     Entity *parent; /* and parent pointers  */
 
     Slot   *slot;   /* if directly controlled by a player */
+
+	Entity *target;
 
     bool active;
     Clock interval;

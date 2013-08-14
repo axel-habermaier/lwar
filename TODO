@@ -42,7 +42,7 @@ Assets Compiler
 
 Network
 ========
-- Should collision messages be reliable? Otherwise the client has to filter collision messages...
+- seqno for unreliable message: receive at most once
 
 Server
 ========
@@ -50,11 +50,5 @@ Server
 - slots need relative placement wrt ship,
   extend entity type struct for this
 - server: copy string to player, free memory
-- figure out how to communicate ammount of ammunition
-- Check assertion problem in player.c:85
-- Fix infinite ship duplication bug (occurs reliably)
-- BUG: If the mouse is directly in the center of the ship, the ship no longer reacts to mouse commands and 
-  pressing a move key moves the ship into the sun
-- BUG: assert(p->a <= p->b); packet.c:39
-- BUG: assert(!e->dead); entity.c:177 (occurs, for instance, when flying into the world border)
-- BUG: Long chat message (~ 250 characters) are ignored and not acknowledged by server
+- figure out how to communicate amount of ammunition
+- BUG: assert(p->a <= p->b); packet.c:39 (?)

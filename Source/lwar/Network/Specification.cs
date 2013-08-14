@@ -63,7 +63,7 @@ namespace Lwar.Network
 		/// <summary>
 		///   The revision number of the network protocol that is implemented by the client.
 		/// </summary>
-		public const byte Revision = 17;
+		public const byte Revision = 18;
 
 		/// <summary>
 		///   The time to live value used for automatic server discovery.

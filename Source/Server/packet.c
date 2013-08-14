@@ -9,9 +9,14 @@
 #include "connection.h"
 #include "log.h"
 
-static bool check_bounds(Packet *p,size_t n) {
+static bool check_put(Packet *p,size_t n) {
     return    n != 0
            && p->b + n <= MAX_PACKET_LENGTH;
+}
+
+static bool check_get(Packet *p,size_t n) {
+    return    n != 0
+           && p->a + n <= p->b;
 }
 
 bool packet_hasdata(Packet *p) {
@@ -38,7 +43,7 @@ void packet_init(Packet *p, Address *adr, size_t ack, size_t time) {
 bool packet_put(Packet *p, Pack *pack, void *u) {
     assert(p->a <= p->b);
     size_t n = pack(p->p + p->b, u);
-    if(check_bounds(p,n)) {
+    if(check_put(p,n)) {
         p->b += n;
         return true;
     } else {
@@ -49,7 +54,7 @@ bool packet_put(Packet *p, Pack *pack, void *u) {
 bool packet_get(Packet *p, Unpack *unpack, void *u) {
     if(p->a >= p->b) return false;
     size_t n = unpack(p->p + p->a, u);
-    if(check_bounds(p,n)) {
+    if(check_get(p,n)) {
         p->a += n;
         return true;
     } else {

@@ -32,24 +32,24 @@ Message Delivery Guarantees
     players or entities.
 
 Network-related constants
-	Constant						Value 			Comment
-	-------------------------------	----------		---------------------------------------------------------
-	Reserved Entity Id:				  0				A special entity id reserved by the server
-	Server Player Id:				  0				The default player that represents the server
-	Angle Scale Factor				100				Angles sent over the network are scaled by this factor
-	Max Packet Size: 				512 bytes 		Including the packet and message headers
-	Packet Header Size:			 	 12 bytes	
-	Reliable Message Header Size:	  5 bytes	
-	Unreliable Message Header Size:	  1 byte	
-	Max Player Name Length: 	 	 32 bytes 		
-	Max Chat Message Length: 		255 bytes 		
-	Max Player Count:				  8 players
-	Stats Message Frequency:		 ~2 Hz			Clients do not have to be up-to-date all the time
-	Input Message Frequency:		~30	Hz			Should be relatively high to reduce latency
-	Update Message Frequency:		~15 Hz			Has to balance latency and bandwidth
-	Reliable Message Frequency:		~15 Hz			Has to balance latency and bandwidth
-	Disconnect Timeout:				 15 seconds		Client and server consider a connection to be dropped 
-													if no data has been received for the given amount of time
+	Constant						Value 			    Comment
+	-------------------------------	----------		    ---------------------------------------------------------
+	Reserved Entity Id:		        65535				A special entity id reserved by the server
+	Server Player Id:				    0				The default player that represents the server
+	Angle Scale Factor				  100				Angles sent over the network are scaled by this factor
+	Max Packet Size: 				  512 bytes 		Including the packet and message headers
+	Packet Header Size:			 	   12 bytes	
+	Reliable Message Header Size:	    5 bytes	
+	Unreliable Message Header Size:	    1 byte	
+	Max Player Name Length: 	 	   32 bytes 		
+	Max Chat Message Length: 		  255 bytes 		
+	Max Player Count:				    8 players
+	Stats Message Frequency:		   ~2 Hz			Clients do not have to be up-to-date all the time
+	Input Message Frequency:		  ~30	Hz			Should be relatively high to reduce latency
+	Update Message Frequency:		  ~15 Hz			Has to balance latency and bandwidth
+	Reliable Message Frequency:		  ~15 Hz			Has to balance latency and bandwidth
+	Disconnect Timeout:				   15 seconds		Client and server consider a connection to be dropped 
+													    if no data has been received for the given amount of time
 
 Packet Header
 	The following data is included at the beginning of every UDP packet sent by a server or a client.
@@ -349,6 +349,7 @@ Client-side prediction
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	-------------------------------------------------------------------
+	18	  13-08-14  Axel/Gidon	Changed reserved entity id
 	17	  13-08-06  Axel		Added Reject message; added revision number to connect message;
 								Updated connection procedure to reject connection attempts when a protocol
 								revision mismatch is detected; UpdateRay message now contains the id of

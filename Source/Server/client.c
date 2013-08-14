@@ -36,7 +36,7 @@ Client *client_create(Address *adr) {
     Client *c = pool_new(&server->clients, Client);
     if(c) {
         c->adr = *adr;
-        c->remote = 1;
+        c->remote = true;
         set_insert(server->connected, c->player.id.n);
         log_debug("+ client %d", c->player.id.n);
     }
@@ -47,14 +47,14 @@ Client *client_create_local() {
     Client *c = pool_new(&server->clients, Client);
     if(c) {
         c->adr = address_none;
-        c->remote = 0;
+        c->remote = false;
         log_debug("+ bot %d", c->player.id.n);
     }
     return c;
 }
 
 void client_remove(Client *c) {
-    c->dead = 1;
+    c->dead = true;
     set_remove(server->connected, c->player.id.n);
     log_debug("- client %d", c->player.id.n);
 }

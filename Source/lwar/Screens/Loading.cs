@@ -79,7 +79,7 @@ namespace Lwar.Screens
 
 				_networkSession.Send(SelectionMessage.Create(localPlayer, EntityType.Ship,
 															 EntityType.Gun, EntityType.Phaser,
-															 EntityType.Rocket, EntityType.Phaser));
+															 EntityType.Phaser, EntityType.Phaser));
 
 				_gameSession.EventMessages.Enabled = true;
 			}
