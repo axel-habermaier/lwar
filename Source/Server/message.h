@@ -159,6 +159,7 @@ struct Message {
 		struct {
 			uint32_t app_id;
 			uint8_t  rev;
+			uint16_t port;
 		} discovery;
     };
 };

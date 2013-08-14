@@ -19,7 +19,7 @@ namespace Lwar.Network
 		///   The amount of time in milliseconds after which a server is assumed to be shut down if no more discovery messages are
 		///   received from the server.
 		/// </summary>
-		private const double ServerTimeout = 60000.0 / Specification.DiscoveryMessageFrequency * 5;
+		private const double ServerTimeout = 60000.0 / Specification.DiscoveryMessageFrequency * Specification.DiscoveryTimeout;
 
 		/// <summary>
 		///   The buffer that is used to receive the multi cast data.
@@ -89,6 +89,7 @@ namespace Lwar.Network
 			var type = (MessageType)reader.ReadByte();
 			var appIdentifier = reader.ReadUInt32();
 			var revision = reader.ReadByte();
+			var port = reader.ReadUInt16();
 
 			if (type != MessageType.Discovery || appIdentifier != Specification.AppIdentifier || revision != Specification.Revision)
 			{
@@ -96,15 +97,17 @@ namespace Lwar.Network
 				return;
 			}
 
+			var endPoint = new IPEndPoint(_serverEndPoint.Address, port);
+
 			// Check if we already know this server; if not add it, otherwise update the server's discovery time
-			var server = _knownServers.SingleOrDefault(s => s.EndPoint.Equals(_serverEndPoint));
+			var server = _knownServers.SingleOrDefault(s => s.EndPoint.Equals(endPoint));
 			if (server == null)
 			{
-				server = new ServerInfo { EndPoint = _serverEndPoint, DiscoveryTime = DateTime.Now };
+				server = new ServerInfo { EndPoint = endPoint, DiscoveryTime = DateTime.Now };
 				_knownServers.Add(server);
 
 				if (ServerDiscovered != null)
-					ServerDiscovered(_serverEndPoint);
+					ServerDiscovered(endPoint);
 			}
 			else
 				server.DiscoveryTime = DateTime.Now;

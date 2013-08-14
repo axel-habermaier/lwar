@@ -59,12 +59,17 @@ namespace Lwar.Network
 		/// <summary>
 		///   The revision number of the network protocol that is implemented by the client.
 		/// </summary>
-		public const byte Revision = 18;
+		public const byte Revision = 19;
 
 		/// <summary>
 		///   The number of discovery messages that should be sent per minute for automatic server discovery.
 		/// </summary>
 		public const double DiscoveryMessageFrequency = 12;
+
+		/// <summary>
+		///   The time (in seconds) after which a discovered server has presumably shut down.
+		/// </summary>
+		public const int DiscoveryTimeout = 5;
 
 		/// <summary>
 		///   The identifier of the player that represents the server.
@@ -79,6 +84,6 @@ namespace Lwar.Network
 		/// <summary>
 		///   The multicast group that is used for automatic server discovery.
 		/// </summary>
-		public static readonly IPEndPoint MulticastGroup = new IPEndPoint(IPAddress.Parse("FF05::3"), DefaultServerPort + 1);
+		public static readonly IPEndPoint MulticastGroup = new IPEndPoint(IPAddress.Parse("FF05::3"), 32423);
 	}
 }

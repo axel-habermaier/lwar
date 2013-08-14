@@ -137,6 +137,7 @@ void packet_send_discovery(Clock time)
 	m.type = MESSAGE_DISCOVERY;
 	m.discovery.app_id = APP_ID;
 	m.discovery.rev = NETWORK_REVISION;
+	m.discovery.port = SERVER_PORT;
 	size_t size = message_pack(buffer, &m);
 
 	Address a;

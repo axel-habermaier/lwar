@@ -32,24 +32,28 @@ Message Delivery Guarantees
     players or entities.
 
 Network-related constants
-	Constant						Value 			    Comment
-	-------------------------------	----------		    ---------------------------------------------------------
-	Reserved Entity Id:		        65535				A special entity id reserved by the server
-	Server Player Id:				    0				The default player that represents the server
-	Angle Scale Factor				  100				Angles sent over the network are scaled by this factor
-	Max Packet Size: 				  512 bytes 		Including the packet and message headers
-	Packet Header Size:			 	   12 bytes	
-	Reliable Message Header Size:	    5 bytes	
-	Unreliable Message Header Size:	    1 byte	
-	Max Player Name Length: 	 	   32 bytes 		
-	Max Chat Message Length: 		  255 bytes 		
-	Max Player Count:				    8 players
-	Stats Message Frequency:		   ~2 Hz			Clients do not have to be up-to-date all the time
-	Input Message Frequency:		  ~30	Hz			Should be relatively high to reduce latency
-	Update Message Frequency:		  ~15 Hz			Has to balance latency and bandwidth
-	Reliable Message Frequency:		  ~15 Hz			Has to balance latency and bandwidth
-	Disconnect Timeout:				   15 seconds		Client and server consider a connection to be dropped 
-													    if no data has been received for the given amount of time
+	Constant						  Value 			Comment
+	-------------------------------	  ----------		---------------------------------------------------------
+	Reserved Entity Id:		          65535				A special entity id reserved by the server
+	Server Player Id:				      0				The default player that represents the server
+	Angle Scale Factor				    100				Angles sent over the network are scaled by this factor
+	Max Packet Size: 				    512 bytes 		Including the packet and message headers
+	Packet Header Size:			 	     12 bytes	    
+	Reliable Message Header Size:	      5 bytes	    
+	Unreliable Message Header Size:	      1 byte	    
+	Max Player Name Length: 	 	     32 bytes 		
+	Max Chat Message Length: 		    255 bytes 		
+	Max Player Count:				      8 players	    
+	Stats Message Frequency:		     ~2 Hz			Clients do not have to be up-to-date all the time
+	Input Message Frequency:		    ~30	Hz			Should be relatively high to reduce latency
+	Update Message Frequency:		    ~15 Hz			Has to balance latency and bandwidth
+	Reliable Message Frequency:		    ~15 Hz			Has to balance latency and bandwidth
+	Disconnect Timeout:				     15 seconds		Client and server consider a connection to be dropped 
+									  				    if no data has been received for the given amount of time
+    Discovery Message Frequency	         12 per min		The number of discovery packet a server should send per minute
+	Discovery Multicast IP Address	FF05::3			        
+	Discovery Multicast Port          32423
+	Discovery Timeout					  5 min			The time after which a discovered server has presumably shut down
 
 Packet Header
 	The following data is included at the beginning of every UDP packet sent by a server or a client.
@@ -90,6 +94,8 @@ Message Types
 	111		UpdatePos		no			server			Restricted updates for different kinds of entities
 	112		UpdateRay		no			server			
 	113		UpdateCircle	no			server			
+
+	200	    Discovery		no			server			Repreatedly sent by the server to allow automatic server discovery
 	
 Message Header
 	Both reliable and unreliable messages first contain the message type id in their header. This way, the message
@@ -289,6 +295,15 @@ Messages Payload Data
 		uint32(id)[2]	entityIds 	The generational identifiers of the entities that collided
 		int16			x			The x position of the impact point
 		int16			y			The y position of the impact point
+
+	Discovery
+    	THIS MESSAGE IS A PACKET OF ITS OWN AND NEITHER CONTAINS A PACKET HEADER NOR A MESSAGE HEADER
+
+		Type			Name 		Description
+		---------		----------	------------------------------------------------------------------------
+		uint32   		appId 		The generational identifiers of the entities that collided
+		uint8		    revision	The revision number of the network protocol that the server implements
+		uint16		    port		The port that the client should use to connect to the server
 	
 Connecting to the server
 	The client tries to establish a connection to the server by sending Connect messages to the server's
@@ -349,6 +364,7 @@ Client-side prediction
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	-------------------------------------------------------------------
+	19	  13-08-14  Axel		Added server discovery
 	18	  13-08-14  Axel/Gidon	Changed reserved entity id
 	17	  13-08-06  Axel		Added Reject message; added revision number to connect message;
 								Updated connection procedure to reject connection attempts when a protocol
