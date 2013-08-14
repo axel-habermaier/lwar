@@ -62,14 +62,9 @@ namespace Lwar.Network
 		public const byte Revision = 18;
 
 		/// <summary>
-		///   The time to live value used for automatic server discovery.
+		///   The number of discovery messages that should be sent per minute for automatic server discovery.
 		/// </summary>
-		public const int MulticastTimeToLive = 1;
-
-		/// <summary>
-		///   The number of discovery messages that should be sent per second for automatic server discovery.
-		/// </summary>
-		public const int DiscoveryMessageFrequency = 1;
+		public const double DiscoveryMessageFrequency = 12;
 
 		/// <summary>
 		///   The identifier of the player that represents the server.

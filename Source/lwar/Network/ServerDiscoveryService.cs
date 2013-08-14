@@ -19,7 +19,7 @@ namespace Lwar.Network
 		///   The amount of time in milliseconds after which a server is assumed to be shut down if no more discovery messages are
 		///   received from the server.
 		/// </summary>
-		private const double ServerTimeout = 1000.0 / Specification.DiscoveryMessageFrequency * 5;
+		private const double ServerTimeout = 60000.0 / Specification.DiscoveryMessageFrequency * 5;
 
 		/// <summary>
 		///   The buffer that is used to receive the multi cast data.
@@ -60,7 +60,10 @@ namespace Lwar.Network
 			// Check for incoming discovery messages
 			int size;
 			while (_multicastSocket.TryReceive(_buffer, ref _serverEndPoint, out size))
-				HandleDiscoveryMessage();
+			{
+				using (var reader = BufferReader.Create(_buffer, 0, size, Endianess.Big))
+					HandleDiscoveryMessage(reader);
+			}
 
 			// Remove all servers that have timed out
 			for (var i = 0; i < _knownServers.Count; ++i)
@@ -79,33 +82,32 @@ namespace Lwar.Network
 		/// <summary>
 		///   Handles the discovery message that has just been received.
 		/// </summary>
-		private void HandleDiscoveryMessage()
+		/// <param name="reader">The reader that should be used to read the contents of the discovery message.</param>
+		private void HandleDiscoveryMessage(BufferReader reader)
 		{
 			// Check if this is a valid message
-			using (var reader = BufferReader.Create(_buffer, Endianess.Big))
+			var type = (MessageType)reader.ReadByte();
+			var appIdentifier = reader.ReadUInt32();
+			var revision = reader.ReadByte();
+
+			if (type != MessageType.Discovery || appIdentifier != Specification.AppIdentifier || revision != Specification.Revision)
 			{
-				var appIdentifier = reader.ReadUInt32();
-				var revision = reader.ReadByte();
-
-				if (appIdentifier != Specification.AppIdentifier || revision != Specification.Revision)
-				{
-					Log.Warn("Ignored invalid discovery message from {0}.", _serverEndPoint);
-					return;
-				}
-
-				// Check if we already know this server; if not add it, otherwise update the server's discovery time
-				var server = _knownServers.SingleOrDefault(s => s.EndPoint.Equals(_serverEndPoint));
-				if (server == null)
-				{
-					server = new ServerInfo { EndPoint = _serverEndPoint, DiscoveryTime = DateTime.Now };
-					_knownServers.Add(server);
-
-					if (ServerDiscovered != null)
-						ServerDiscovered(_serverEndPoint);
-				}
-				else
-					server.DiscoveryTime = DateTime.Now;
+				Log.Warn("Ignored invalid discovery message from {0}.", _serverEndPoint);
+				return;
 			}
+
+			// Check if we already know this server; if not add it, otherwise update the server's discovery time
+			var server = _knownServers.SingleOrDefault(s => s.EndPoint.Equals(_serverEndPoint));
+			if (server == null)
+			{
+				server = new ServerInfo { EndPoint = _serverEndPoint, DiscoveryTime = DateTime.Now };
+				_knownServers.Add(server);
+
+				if (ServerDiscovered != null)
+					ServerDiscovered(_serverEndPoint);
+			}
+			else
+				server.DiscoveryTime = DateTime.Now;
 		}
 
 		/// <summary>

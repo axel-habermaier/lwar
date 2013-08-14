@@ -44,6 +44,8 @@ enum MessageType {
     MESSAGE_UPDATE_POS		  = 111,
     MESSAGE_UPDATE_RAY		  = 112,
     MESSAGE_UPDATE_CIRCLE	  = 113,
+
+	MESSAGE_DISCOVERY		  = 200,
 };
 
 typedef enum {
@@ -153,5 +155,10 @@ struct Message {
             int16_t x;
             int16_t y;
         } collision;
+
+		struct {
+			uint32_t app_id;
+			uint8_t  rev;
+		} discovery;
     };
 };
