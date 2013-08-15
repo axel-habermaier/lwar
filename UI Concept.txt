@@ -1,0 +1,27 @@
+Use VS+Blend to design UI with XAML/WPF
+Asset Compiler: Convert XAML files to equivalent C# code that is included by lwar
+	-> automatically compiles required image resources and fonts
+Implement parts of WPF's object model
+
+WPF Object model (required parts):
+- Dependency/Attached Properties
+- Routed/Attached Events
+- Controls
+	* Window
+	* TextBox 
+	* Scrollviewer
+	* Label
+	* Combobox (side-way scrolling)
+	* Checkbox
+	* Button
+	* Image
+	* 3D scene (allows arbitrary rendering)
+- Layouting: Arrange & Measure
+	* StackPanel
+	* Canvas
+	* DockPanel
+- Animation system
+- Styles (no themes/default styles)
+- Templates
+- Data binding/DataContext with type-safe view models
+- UI Drawing with IRTs for (semi-)transparent or 3D-transformed elements
