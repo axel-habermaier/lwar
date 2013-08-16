@@ -28,7 +28,6 @@ Client
 Pegasus.Framework
 ========
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
-- Simplify parsing
 
 Pegasus.Platform
 ========
