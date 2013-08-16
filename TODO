@@ -28,6 +28,8 @@ Client
 Pegasus.Framework
 ========
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
+- Simplify parsing
+- IPv6 parsing not working for  fe80::a587:eff:d70a:7b2d%12
 
 Pegasus.Platform
 ========

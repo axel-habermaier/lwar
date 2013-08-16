@@ -145,7 +145,7 @@ bool conn_bind(Connection* connection)
 bool conn_multicast(Connection* connection)
 {
 	int loop = 1;
-	if (socket_error(setsockopt(connection->socket, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, &loop, sizeof(loop))))
+	if (socket_error(setsockopt(connection->socket, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, (char*)&loop, sizeof(loop))))
 	{
 		conn_error("Failed to enable multicast looping.");
 		conn_shutdown(connection);
