@@ -36,9 +36,9 @@ typedef SOCKET Socket;
 
 static int numConnections = 0;
 
-struct Connection {
+typedef struct Connection {
 	Socket socket;
-};
+} Connection;
 
 static void conn_error(const char* const msg)
 {
@@ -90,7 +90,7 @@ bool conn_init(Connection* connection)
 #endif
 
 #ifdef __unix__
-	if (socket_error(fcntl(connection.socket, F_SETFL, fcntl(connection.socket, F_GETFL, 0) | O_NDELAY)))
+	if (socket_error(fcntl(connection->socket, F_SETFL, fcntl(connection->socket, F_GETFL, 0) | O_NDELAY)))
 #endif
 	{
 		conn_error("Unable to switch to non-blocking mode.");
@@ -144,7 +144,7 @@ bool conn_bind(Connection* connection)
 
 bool conn_multicast(Connection* connection)
 {
-	char loop = 1;
+	int loop = 1;
 	if (socket_error(setsockopt(connection->socket, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, &loop, sizeof(loop))))
 	{
 		conn_error("Failed to enable multicast looping.");
