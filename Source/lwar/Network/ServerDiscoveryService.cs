@@ -5,6 +5,7 @@ namespace Lwar.Network
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Net;
+	using Messages;
 	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Platform.Network;
@@ -62,7 +63,7 @@ namespace Lwar.Network
 			while (_multicastSocket.TryReceive(_buffer, ref _serverEndPoint, out size))
 			{
 				using (var reader = BufferReader.Create(_buffer, 0, size, Endianess.Big))
-					HandleDiscoveryMessage(reader);
+					HandleDiscoveryMessage(new DiscoveryMessage(reader));
 			}
 
 			// Remove all servers that have timed out
@@ -82,22 +83,17 @@ namespace Lwar.Network
 		/// <summary>
 		///   Handles the discovery message that has just been received.
 		/// </summary>
-		/// <param name="reader">The reader that should be used to read the contents of the discovery message.</param>
-		private void HandleDiscoveryMessage(BufferReader reader)
+		/// <param name="message">The discovery message that should be handled..</param>
+		private void HandleDiscoveryMessage(DiscoveryMessage message)
 		{
 			// Check if this is a valid message
-			var type = (MessageType)reader.ReadByte();
-			var appIdentifier = reader.ReadUInt32();
-			var revision = reader.ReadByte();
-			var port = reader.ReadUInt16();
-
-			if (type != MessageType.Discovery || appIdentifier != Specification.AppIdentifier || revision != Specification.Revision)
+			if (!message.IsValid)
 			{
-				Log.Warn("Ignored invalid discovery message from {0}.", _serverEndPoint);
+				Log.DebugInfo("Ignored invalid discovery message from {0}.", _serverEndPoint);
 				return;
 			}
 
-			var endPoint = new IPEndPoint(_serverEndPoint.Address, port);
+			var endPoint = new IPEndPoint(_serverEndPoint.Address, message.Port);
 
 			// Check if we already know this server; if not add it, otherwise update the server's discovery time
 			var server = _knownServers.SingleOrDefault(s => s.EndPoint.Equals(endPoint));

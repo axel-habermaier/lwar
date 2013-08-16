@@ -207,6 +207,7 @@
     <Compile Include="Network\Messages\ChatMessage.cs" />
     <Compile Include="Network\Messages\CollisionMessage.cs" />
     <Compile Include="Network\Messages\ConnectMessage.cs" />
+    <Compile Include="Network\Messages\DiscoveryMessage.cs" />
     <Compile Include="Network\Messages\InputMessage.cs" />
     <Compile Include="Network\Messages\JoinMessage.cs" />
     <Compile Include="Network\Messages\KillMessage.cs" />
