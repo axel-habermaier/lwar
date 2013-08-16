@@ -34,6 +34,7 @@ Message Delivery Guarantees
 Network-related constants
 	Constant						  Value 			Comment
 	-------------------------------	  ----------		---------------------------------------------------------
+	Application Id:					  0xf27087c5 
 	Reserved Entity Id:		          65535				A special entity id reserved by the server
 	Server Player Id:				      0				The default player that represents the server
 	Angle Scale Factor				    100				Angles sent over the network are scaled by this factor
@@ -50,17 +51,19 @@ Network-related constants
 	Reliable Message Frequency:		    ~15 Hz			Has to balance latency and bandwidth
 	Disconnect Timeout:				     15 seconds		Client and server consider a connection to be dropped 
 									  				    if no data has been received for the given amount of time
-    Discovery Message Frequency	         12 per min		The number of discovery packet a server should send per minute
-	Discovery Multicast IP Address	FF05::3			        
-	Discovery Multicast Port          32423
-	Discovery Timeout					  5 min			The time after which a discovered server has presumably shut down
+    Discovery Message Frequency:	     12 per min		The number of discovery packet a server should send per minute
+	Discovery Multicast IP Address:	FF05::3			        
+	Discovery Multicast Port:         32423
+	Discovery Timeout Factor:		      5 			The number of frequency intervals a client waits before assuming that
+														a previously discovered server has shut down after not receiving any
+														further discovery messages
 
 Packet Header
 	The following data is included at the beginning of every UDP packet sent by a server or a client.
 	
 	Type		Name 		Description
 	---------	----------	------------------------------------------------------------------------
-	uint32		appId		Must always be 0xf27087c5 
+	uint32		appId		The application id
 	uint32		ack			Sequence number of the last reliable message that has been processed
 	uint32		timestamp	Timestamp of the unreliable messages contained in the packet
 	
@@ -301,7 +304,7 @@ Messages Payload Data
 
 		Type			Name 		Description
 		---------		----------	------------------------------------------------------------------------
-		uint32   		appId 		The generational identifiers of the entities that collided
+		uint32   		appId 		The application id
 		uint8		    revision	The revision number of the network protocol that the server implements
 		uint16		    port		The port that the client should use to connect to the server
 	
@@ -360,6 +363,10 @@ Client-side prediction
 	as long as no updates are received. Velocity can be computed as the difference of two position measures
 	divided by the time interval, acceleration can similarly be obtained from velocity.
 	Client-side prediction leads to a smoother display of the game, especially on bad networks.
+
+Automatic server discovery
+	A server periodically sends discovery messages that clients can use to automatically find servers
+	with the same LAN. IPv6 multicasting is used to send those messages.
 
 Revision History
     Rev.    Date    Author		Changes
