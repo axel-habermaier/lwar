@@ -223,6 +223,7 @@
     <Compile Include="Network\ServerDiscoveryService.cs" />
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
+    <Compile Include="Scoreboard.cs" />
     <Compile Include="Screens\ChatInput.cs" />
     <Compile Include="Screens\EventMessageDisplay.cs" />
     <Compile Include="Screens\Frame.cs" />

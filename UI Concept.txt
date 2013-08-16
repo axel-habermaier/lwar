@@ -1,7 +1,9 @@
 Use VS+Blend to design UI with XAML/WPF
 Asset Compiler: Convert XAML files to equivalent C# code that is included by lwar
 	-> automatically compiles required image resources and fonts
-Implement parts of WPF's object model
+	-> requires interfaces for all DataContexts
+	-> Bindings, etc. use Func<obj,T>s + casting instead of reflection/dynamic
+Framework implements parts of WPF's object model
 
 WPF Object model (required parts):
 - Dependency/Attached Properties
@@ -16,6 +18,7 @@ WPF Object model (required parts):
 	* Button
 	* Image
 	* 3D scene (allows arbitrary rendering)
+	* ItemsControl
 - Layouting: Arrange & Measure
 	* StackPanel
 	* Canvas
@@ -25,3 +28,10 @@ WPF Object model (required parts):
 - Templates
 - Data binding/DataContext with type-safe view models
 - UI Drawing with IRTs for (semi-)transparent or 3D-transformed elements
+
+Open questions
+- How do dependency properties/routed events work?
+- How deas Measure & Arrange work?
+- How does input handling work?
+- How does drawing work?
+- How does data binding work (reflection?)
