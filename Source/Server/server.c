@@ -22,8 +22,13 @@ int server_init() {
     /* initialize static server struct */
     memset(server, 0, sizeof(Server));
 
-    if(!conn_init()) return 0;
-    if(!conn_bind()) return 0;
+	server->conn_clients = conn_init();
+    if(!server->conn_clients) return 0;
+    if(!conn_bind(server->conn_clients)) return 0;
+
+	server->conn_discovery = conn_init();
+    if(!server->conn_discovery) return 0;
+	if(!conn_multicast(server->conn_discovery)) return 0;
 
     protocol_init();
     physics_init();
@@ -35,6 +40,7 @@ int server_init() {
     rules_init();
 
     server->running = 1;
+	packet_send_discovery(0);
 
     log_info("Initialized\n");
 
@@ -64,6 +70,7 @@ int server_update(Clock time, int force) {
 
 		queue_stats();
         protocol_send(force);
+		packet_send_discovery(time);
         
         /* remove obsolete messages, clients, and entities
          * order is important
@@ -78,7 +85,9 @@ int server_update(Clock time, int force) {
 }
 
 void server_shutdown() {
-    conn_shutdown();
+	conn_shutdown(server->conn_clients);
+	conn_shutdown(server->conn_discovery);
+
     /* TODO: shutdown components */
     log_info("Terminated\n");
 }

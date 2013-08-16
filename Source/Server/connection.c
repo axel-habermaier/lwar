@@ -34,19 +34,12 @@ typedef SOCKET Socket;
 #include "connection.h"
 #include "log.h"
 
-enum 
-{
-	SERVER_PORT = 32422,
-	/* IP_STRLENGTH = 22, */
-};
-
-typedef struct
+struct Connection
 {
 	Socket socket;
-	int initialized;
-} Connection;
+};
 
-static Connection connection;
+static int numConnections = 0;
 
 static void conn_error(const char* const msg)
 {
@@ -66,31 +59,34 @@ static void conn_error(const char* const msg)
 	log_error("%s - %s\n", msg, errmsg);
 }
 
-int conn_init()
+Connection* conn_init()
 {
 #ifdef _MSC_VER
-	WSADATA wsaData; 
-	
-	if (WSAStartup(MAKEWORD(1,1), &wsaData) != 0)
+	if (numConnections == 0)
 	{
-		conn_error("Winsock startup failed.");
-		return 0;
+		WSADATA wsaData; 
+	
+		if (WSAStartup(MAKEWORD(1,1), &wsaData) != 0)
+		{
+			conn_error("Winsock startup failed.");
+			return 0;
+		}
 	}
 #endif
 
-	connection.socket = socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
-	if (socket_invalid(connection.socket))
+	Connection* connection = (Connection*)malloc(sizeof(Connection));
+	++numConnections;
+	connection->socket = socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
+	if (socket_invalid(connection->socket))
 	{
 		conn_error("Unable to initialize socket.");
-		conn_shutdown();
+		conn_shutdown(connection);
 		return 0;
 	}
 
-	connection.initialized = 1;
-
 #ifdef _MSC_VER
 	u_long _true = 1;
-	if (socket_error(ioctlsocket(connection.socket, FIONBIO, &_true)))
+	if (socket_error(ioctlsocket(connection->socket, FIONBIO, &_true)))
 #endif
 
 #ifdef __unix__
@@ -98,36 +94,38 @@ int conn_init()
 #endif
 	{
 		conn_error("Unable to switch to non-blocking mode.");
-		conn_shutdown();
+		conn_shutdown(connection);
 		return 0;
 	}
 
 	int ipv6only = 0;
-	if (setsockopt(connection.socket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&ipv6only, sizeof(ipv6only)) != 0)
+	if (setsockopt(connection->socket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&ipv6only, sizeof(ipv6only)) != 0)
 	{
 		conn_error("Unable to switch to dual-stack mode.");
-		conn_shutdown();
+		conn_shutdown(connection);
 		return 0;
 	}
 
-	return 1;
+	return connection;
 }
 
-void conn_shutdown()
+void conn_shutdown(Connection* connection)
 {
-	if (connection.initialized == 0)
-		return;
+	assert(numConnections > 0);
 
-	if (socket_error(closesocket(connection.socket)))
+	if (socket_error(closesocket(connection->socket)))
 		conn_error("Unable to close socket.");
 
-	connection.initialized = 0;
+	free(connection);
+	--numConnections;
+
 #ifdef _MSC_VER
-	WSACleanup();
+	if (numConnections == 0)
+		WSACleanup();
 #endif
 }
 
-int conn_bind()
+bool conn_bind(Connection* connection)
 {
 	struct sockaddr_in6 addr;
 	memset(&addr, 0, sizeof(addr));
@@ -135,17 +133,58 @@ int conn_bind()
 	addr.sin6_addr = in6addr_any;
 	addr.sin6_port = htons(SERVER_PORT);
 
-	if (socket_error(bind(connection.socket, (struct sockaddr*)&addr, sizeof(addr))))
+	if (socket_error(bind(connection->socket, (struct sockaddr*)&addr, sizeof(addr))))
 	{
 		conn_error("Unable to bind socket.");
-		conn_shutdown();
-		return 0;
+		conn_shutdown(connection);
+		return false;
 	}
 
-	return 1;
+	return true;
 }
 
-int conn_recv(char *buf, size_t* size, Address* adr)
+bool conn_multicast(Connection* connection)
+{
+	char loop = 1;
+	if (socket_error(setsockopt(connection->socket, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, &loop, sizeof(loop))))
+	{
+		conn_error("Failed to enable multicast looping.");
+		conn_shutdown(connection);
+		return false;
+	}
+
+	int ttl = MULTICAST_TTL;
+	if (socket_error(setsockopt(connection->socket, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, (char*)&ttl, sizeof(ttl))))
+	{
+		conn_error("Failed to set multicast TTL.");
+		conn_shutdown(connection);
+		return false;
+	}
+
+	struct in6_addr result;
+	inet_pton(AF_INET6, MULTICAST_GROUP, &result);
+
+	struct sockaddr_in6 addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin6_family = AF_INET6;
+	addr.sin6_addr = result;
+	addr.sin6_port = htons(MULTICAST_PORT);
+
+	struct ipv6_mreq group;
+	memset(&group, 0, sizeof(group));
+	group.ipv6mr_multiaddr = addr.sin6_addr;
+
+	if (socket_error(setsockopt(connection->socket, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, (char*)&group, sizeof(group))))
+	{
+		conn_error("Failed to add multicast membership.");
+		conn_shutdown(connection);
+		return false;
+	}
+
+	return true;
+}
+
+bool conn_recv(Connection* connection, char *buf, size_t* size, Address* adr)
 {
 	struct sockaddr_storage from;
 	struct sockaddr_in6* from6;
@@ -154,7 +193,7 @@ int conn_recv(char *buf, size_t* size, Address* adr)
 
 	memset(&from, 0, len);
 	
-	int read_bytes = recvfrom(connection.socket, buf, *size, 0, (struct sockaddr*)&from, &len);
+	int read_bytes = recvfrom(connection->socket, buf, *size, 0, (struct sockaddr*)&from, &len);
 #ifdef _MSC_VER
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
 #endif
@@ -163,7 +202,7 @@ int conn_recv(char *buf, size_t* size, Address* adr)
 #endif
 	{
 		*size = 0;
-		return 1;
+		return true;
 	}
 	
 	switch (from.ss_family)
@@ -188,15 +227,15 @@ int conn_recv(char *buf, size_t* size, Address* adr)
 	if (socket_error(read_bytes))
 	{
 		conn_error("Receiving failed.");
-		return 0;
+		return false;
 	}
 
 	*size = read_bytes;
 	
-	return 1;
+	return true;
 }
 
-int conn_send(const char *buf, size_t size, Address* adr)
+bool conn_send(Connection* connection, const char *buf, size_t size, Address* adr)
 {
 	struct sockaddr_in addr4;
 	struct sockaddr_in6 addr6;
@@ -222,20 +261,20 @@ int conn_send(const char *buf, size_t size, Address* adr)
 		len = sizeof(addr4);
 	}
 
-	int sent = sendto(connection.socket, buf, size, 0, addr, len);
+	int sent = sendto(connection->socket, buf, size, 0, addr, len);
 	if (socket_error(sent))
 	{
 		conn_error("Sending failed");
-		return 0;
+		return false;
 	}
 
 	if (sent != size)
 	{
 		conn_error ("Message was sent only partially.");
-		return 0;
+		return false;
 	}
 
-	return 1;
+	return true;
 }
 
 bool address_eq(Address *adr0, Address *adr1) {
@@ -246,9 +285,25 @@ bool address_eq(Address *adr0, Address *adr1) {
 
 	for (i = 0; i < sizeof(adr0->ip); ++i)
 	{
-		if (adr0->ip[0] != adr1->ip[1])
+		if (adr0->ip[i] != adr1->ip[i])
 			return false;
 	}
+
+	return true;
+}
+
+bool address_create(Address* addr, const char* ip, uint16_t port)
+{
+	memset(addr, 0, sizeof(Address));
+
+	struct in6_addr result;
+	if (!inet_pton(AF_INET6, MULTICAST_GROUP, &result))
+		return false;
+
+	int q =sizeof(result);
+	memcpy(&addr->ip, &result, sizeof(result));
+	addr->port = htons(port);
+	addr->isIPv6 = true;
 
 	return true;
 }

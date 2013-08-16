@@ -35,11 +35,6 @@ namespace Lwar.Network
 		private readonly ConcurrentQueue<LogEntry> _logs = new ConcurrentQueue<LogEntry>();
 
 		/// <summary>
-		///   The socket that is used to broadcast information about this server to interested clients.
-		/// </summary>
-		private readonly MulticastSocket _multicastSocket = new MulticastSocket(Specification.MulticastGroup, Specification.MulticastTimeToLive);
-
-		/// <summary>
 		///   The buffer that is used to send the multi cast data.
 		/// </summary>
 		private readonly byte[] _buffer = new byte[Specification.MaxPacketSize];
@@ -125,7 +120,6 @@ namespace Lwar.Network
 			_task = Task.Factory.StartNew(() =>
 			{
 				ulong serverTime = 0;
-				double discoveryTime = 0;
 
 				using (var clock = Clock.Create())
 				{
@@ -135,13 +129,6 @@ namespace Lwar.Network
 						{
 							Thread.Sleep(0);
 							continue;
-						}
-
-						discoveryTime += clock.Milliseconds;
-						if (discoveryTime >= 1000 / Specification.DiscoveryMessageFrequency)
-						{
-							SendServerDiscoveryMessage();
-							discoveryTime = 0;
 						}
 
 						clock.Reset();
@@ -155,21 +142,6 @@ namespace Lwar.Network
 					}
 				}
 			}, token);
-		}
-
-		/// <summary>
-		///   Sends the server's discovery message.
-		/// </summary>
-		private void SendServerDiscoveryMessage()
-		{
-			// TODO: Include information about the server (name, player count, estimated ping, etc.)
-			using (var writer = BufferWriter.Create(_buffer, Endianess.Big))
-			{
-				writer.WriteUInt32(Specification.AppIdentifier);
-				writer.WriteByte(Specification.Revision);
-
-				_multicastSocket.Send(_buffer, writer.Count);
-			}
 		}
 
 		/// <summary>
@@ -222,8 +194,6 @@ namespace Lwar.Network
 
 			Commands.OnStartServer -= Run;
 			Commands.OnStopServer -= Shutdown;
-
-			_multicastSocket.SafeDispose();
 		}
 
 		/// <summary>

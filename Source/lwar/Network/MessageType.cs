@@ -25,6 +25,7 @@ namespace Lwar.Network
 		Update = 110,
 		UpdatePosition = 111,
 		UpdateRay = 112,
-		UpdateCircle = 113
+		UpdateCircle = 113,
+		Discovery = 200
 	}
 }

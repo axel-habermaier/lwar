@@ -157,6 +157,11 @@ size_t message_pack(char *s, void *p) {
         i += int16_pack(s+i, m->collision.x);
         i += int16_pack(s+i, m->collision.y);
         break;
+	case MESSAGE_DISCOVERY:
+		i += uint32_pack(s+i, m->discovery.app_id);
+		i += uint8_pack(s+i, m->discovery.rev);
+		i += uint16_pack(s+i, m->discovery.port);
+		break;
     }
     return i;
 }
@@ -261,6 +266,11 @@ size_t message_unpack(const char *s, void *p) {
         i += int16_unpack(s+i, &m->collision.x);
         i += int16_unpack(s+i, &m->collision.y);
         break;
+	case MESSAGE_DISCOVERY:
+		i += uint32_unpack(s+i, &m->discovery.app_id);
+		i += uint8_unpack(s+i, &m->discovery.rev);
+		i += uint16_unpack(s+i, &m->discovery.port);
+		break;
     }
     return i;
 }

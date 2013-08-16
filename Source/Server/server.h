@@ -16,7 +16,7 @@ enum {
     MAX_QUEUE           = 4096,
     MAX_STRINGS         =  128,
 
-	NETWORK_REVISION    =   18,
+	NETWORK_REVISION    =   19,
 
     NUM_SLOTS           =    4,
 
@@ -27,6 +27,15 @@ enum {
     MIN_PLANET_DIST     = 1500,
     MAX_PLANET_DIST     = 2500,
 };
+
+enum {
+	SERVER_PORT			= 32422,
+	MULTICAST_PORT      = SERVER_PORT + 1,
+	MULTICAST_TTL		= 1,
+	DISCOVERY_FREQUENCY = 12,
+};
+
+#define MULTICAST_GROUP "FF05::3"
 
 typedef size_t (Pack)(char *, void *);
 typedef size_t (Unpack)(const char *, void *);
@@ -60,6 +69,7 @@ typedef struct Collision Collision;
 typedef struct Player Player;
 typedef struct Client Client;
 typedef struct Server Server;
+typedef struct Connection Connection;
 
 extern Server *server;
 
@@ -117,6 +127,7 @@ void protocol_notify_entity(Entity *e);
 void protocol_notify_collision(Collision *c);
 void protocol_notify_kill(Player *k, Player *v);
 void protocol_cleanup();
+void packet_send_discovery(Clock time);
 
 void    entities_init();
 void    entities_cleanup();
@@ -304,23 +315,26 @@ struct Client {
 };
 
 struct Server {
-    bool      running;
+    bool       running;
+			   
+    Pool       clients;
+    BitSet     connected;
+			   
+    Pool       entities;
+    Pool       queue;
+    Array      types;
+    List       formats;
+    PrioQueue  collisions;
+    Pool       strings;
+			   
+    Clock      cur_clock;
+    Clock      prev_clock;
+    Clock      update_periodic;
 
-    Pool      clients;
-    BitSet    connected;
+    Client     *self;
 
-    Pool      entities;
-    Pool      queue;
-    Array     types;
-    List      formats;
-    PrioQueue collisions;
-    Pool      strings;
-
-    Clock     cur_clock;
-    Clock     prev_clock;
-    Clock     update_periodic;
-
-    Client   *self;
+	Connection *conn_clients;
+	Connection *conn_discovery;
 };
 
 static const Vec _0 = {0,0};
