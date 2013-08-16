@@ -29,7 +29,7 @@ namespace Pegasus.Framework.Platform.Network
 #elif Linux
 			int value = 0;
 			const int IPPROTO_IPV6 = 41;
-			const int IPV6_V6ONLY = 27;
+			const int IPV6_V6ONLY = 26;
 			var success = SetSocketOption(socket.Handle.ToInt32(), IPPROTO_IPV6, IPV6_V6ONLY, ref value, sizeof(int));
 
 			if (success != 0)
