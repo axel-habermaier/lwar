@@ -31,7 +31,37 @@ WPF Object model (required parts):
 
 Open questions
 - How do dependency properties/routed events work?
+	* DP: Globally unique id
+		- DP values store: current animated value, local value, style trigger value, template trigger value, style setter
+		- When inheritance: walk the tree (expensive); DO knows its ancestors
+		- Default value: Get from DP instance
+		- SetValue(value, origin) with origin = Animation, Local, StyleTrigger, etc.
+		- ClearValue() analogous
+		- Animation: SetValue, call ClearValue() on end
+		- Trigger: SetValue() when active, ClearValue() when inactive
+		- For triggers and animations: order of declaration is important (last trigger overrides all previous ones if the same DP is set)
+		- For all triggers of a style/template: Determine activated/deactivated ones
+			If there was a change:
+				1. Call ClearValue for all trigger setters of the deactivate triggers 
+				2. Call SetValue for all trigger setter of the activated triggers
+				3. execute exit actions of all deactivated triggers
+				4. execute all entry actions of all activated triggers
+	* DO: Array of DP values (binding, value, animated value), sorted by DP.id, using binary search to find DP
 - How deas Measure & Arrange work?
 - How does input handling work?
 - How does drawing work?
-- How does data binding work (reflection?)
+	* http://msdn.microsoft.com/en-us/library/ms748373.aspx
+	* Generate list of drawning commands - which can be cached as long as nothing changes
+- How does data binding work 
+	* Source expression: must be able to cope with dep props/regular props, etc.
+	* source expr must react to all changes in the property path
+	* GetSourceValue, SetSourceValue, GetTargetValue, SetTargetValue actions with closures
+	* Just execute every frame to see if value changed (no PropertyChanged events!), use SetValue(v, Local) to set DP value
+	* If no binding source is specified, bind to DataContext property of the object that is bound as the target
+- Each frame:
+	1. Do input
+	2. update bindings
+	3. Check style/template triggers
+	4. Do animations
+	5. update layout
+	6. render
