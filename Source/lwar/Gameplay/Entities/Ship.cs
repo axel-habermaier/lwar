@@ -50,6 +50,9 @@ namespace Lwar.Gameplay.Entities
 		protected override void OnRemoved()
 		{
 			GameSession.Actors.Add(Explosion.Create(Position));
+
+			if (Player.Ship == this)
+				Player.Ship = null;
 		}
 
 		/// <summary>
@@ -68,6 +71,8 @@ namespace Lwar.Gameplay.Entities
 			player.Ship = ship;
 			return ship;
 		}
+
+
 
 		/// <summary>
 		///   Returns a string that represents the current object.

@@ -116,6 +116,9 @@ void player_notify_entity(Entity *e) {
     if(!e->dead) return;
     if(!e->slot) return;
 
+	if(e == e->player->ship.entity)
+		player_select(e->player, 0,0,0,0,0);
+
 	log_debug("- slot of player %d, entity = %d", e->player->id.n, e->id.n);
     e->slot->entity = 0;
 }
