@@ -3,6 +3,7 @@
 namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 {
 	using System.Collections.Generic;
+	using Assets;
 	using Framework;
 	using Framework.Platform.Logging;
 	using ICSharpCode.NRefactory;
@@ -12,7 +13,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 	/// <summary>
 	///   Represents a C# project with registry declaration interfaces for which a C# registry class is generated.
 	/// </summary>
-	internal class RegistryProject : CodeProject<RegistryFile>
+	internal class RegistryProject : CodeProject<Asset, RegistryFile>
 	{
 		/// <summary>
 		///   The errors that have been raised during the compilation.

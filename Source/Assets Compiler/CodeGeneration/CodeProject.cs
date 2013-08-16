@@ -18,9 +18,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 	/// <summary>
 	///   Represents a NRefactory C# project.
 	/// </summary>
-	/// <typeparam name="T">The type of the file elements that are compiled by the project.</typeparam>
-	internal abstract class CodeProject<T> : DisposableObject, IErrorReporter
-		where T : CodeElement
+	/// <typeparam name="TAsset">The type of the assets that are compiled by the project.</typeparam>
+	/// <typeparam name="TFileElement">The type of the file elements that are compiled by the project.</typeparam>
+	internal abstract class CodeProject<TAsset, TFileElement> : DisposableObject, IErrorReporter
+		where TAsset : Asset
+		where TFileElement : CodeElement
 	{
 		/// <summary>
 		///   The C# project that is compiled.
@@ -33,7 +35,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		protected CodeProject()
 		{
 			Assemblies = Enumerable.Empty<Assembly>();
-			CSharpFiles = Enumerable.Empty<EffectAsset>();
+			CSharpFiles = Enumerable.Empty<TAsset>();
 		}
 
 		/// <summary>
@@ -45,7 +47,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <summary>
 		///   Gets or sets the path to the C# files that are loaded into the project.
 		/// </summary>
-		public IEnumerable<EffectAsset> CSharpFiles { get; set; }
+		public IEnumerable<TAsset> CSharpFiles { get; set; }
 
 		/// <summary>
 		///   Outputs a compilation message.
@@ -64,7 +66,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		{
 			var loader = new CecilLoader();
 
-			var defaultAssemblies = new[] { typeof(int).Assembly, typeof(CodeProject<>).Assembly };
+			var defaultAssemblies = new[] { typeof(int).Assembly, typeof(CodeProject<,>).Assembly };
 			foreach (var assembly in defaultAssemblies.Union(Assemblies))
 			{
 				var loadedAssembly = loader.LoadAssemblyFile(assembly.Location);
@@ -75,27 +77,27 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// <summary>
 		///   Loads the C# files into the project.
 		/// </summary>
-		private IEnumerable<T> LoadFiles()
+		private IEnumerable<TFileElement> LoadFiles()
 		{
 			var parser = new CSharpParser();
 			var parsedFiles = CSharpFiles.Select(asset =>
-				{
-					var syntaxTree = parser.Parse(File.ReadAllText(asset.SourcePath), asset.SourcePath);
-					syntaxTree.FileName = asset.RelativePath;
-					PrintParserErrors(asset.RelativePath, parser.Errors.ToArray());
+			{
+				var syntaxTree = parser.Parse(File.ReadAllText(asset.SourcePath), asset.SourcePath);
+				syntaxTree.FileName = asset.RelativePath;
+				PrintParserErrors(asset.RelativePath, parser.Errors.ToArray());
 
-					var unresolvedFile = syntaxTree.ToTypeSystem();
-					_project = _project.AddOrUpdateFiles(unresolvedFile);
+				var unresolvedFile = syntaxTree.ToTypeSystem();
+				_project = _project.AddOrUpdateFiles(unresolvedFile);
 
-					return new { FileName = asset.RelativePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
-				}).ToArray();
+				return new { FileName = asset.RelativePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
+			}).ToArray();
 
 			var compilation = _project.CreateCompilation();
 			return parsedFiles.Select(file =>
-				{
-					var resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
-					return CreateFile(file.SyntaxTree, resolver);
-				});
+			{
+				var resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
+				return CreateFile(file.SyntaxTree, resolver);
+			});
 		}
 
 		/// <summary>
@@ -103,14 +105,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		/// </summary>
 		/// <param name="syntaxTree">The syntax tree of the file.</param>
 		/// <param name="resolver">The resolver that should be used to resolve type information within the file.</param>
-		protected abstract T CreateFile(SyntaxTree syntaxTree, CSharpAstResolver resolver);
+		protected abstract TFileElement CreateFile(SyntaxTree syntaxTree, CSharpAstResolver resolver);
 
 		/// <summary>
 		///   Compiles the project. Returns false to indicate that compilation errors have occurred.
 		/// </summary>
 		public bool Compile()
 		{
-			T[] files;
+			TFileElement[] files;
 			TryGetValidatedFiles(out files);
 
 			foreach (var file in files.Where(file => !file.HasErrors))
@@ -123,7 +125,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		///   Gets all validated file elements.
 		/// </summary>
 		/// <param name="files">Returns the validated file elements.</param>
-		public void TryGetValidatedFiles(out T[] files)
+		public void TryGetValidatedFiles(out TFileElement[] files)
 		{
 			LoadAssemblies();
 			files = LoadFiles().ToArray();
@@ -139,7 +141,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		///   Compiles the given file.
 		/// </summary>
 		/// <param name="file">The file that should be compiled.</param>
-		protected abstract void Compile(T file);
+		protected abstract void Compile(TFileElement file);
 
 		/// <summary>
 		///   Prints all parser errors.

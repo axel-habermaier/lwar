@@ -69,13 +69,11 @@ namespace Lwar.Network
 		/// <param name="sequenceNumber">The sequence number that should be checked.</param>
 		public bool AllowReliableDelivery(uint sequenceNumber)
 		{
-			if (sequenceNumber == _lastReceivedReliableSequenceNumber + 1)
-			{
-				++_lastReceivedReliableSequenceNumber;
-				return true;
-			}
+			if (sequenceNumber != _lastReceivedReliableSequenceNumber + 1)
+				return false;
 
-			return false;
+			++_lastReceivedReliableSequenceNumber;
+			return true;
 		}
 
 		/// <summary>
@@ -85,13 +83,11 @@ namespace Lwar.Network
 		/// <param name="sequenceNumber">The sequence number that should be checked.</param>
 		public bool AllowUnreliableDelivery(uint sequenceNumber)
 		{
-			if (sequenceNumber > _lastReceivedUnreliableSequenceNumber)
-			{
-				_lastReceivedUnreliableSequenceNumber = sequenceNumber;
-				return true;
-			}
+			if (sequenceNumber <= _lastReceivedUnreliableSequenceNumber)
+				return false;
 
-			return false;
+			_lastReceivedUnreliableSequenceNumber = sequenceNumber;
+			return true;
 		}
 
 		/// <summary>
@@ -105,23 +101,15 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Assigns a sequence number to the reliable message.
+		///   Assigns a sequence number to the message.
 		/// </summary>
-		/// <param name="message">The reliable message the sequence number should be assigned to.</param>
-		public void AssignReliableSequenceNumber(ref Message message)
+		/// <param name="message">The message the sequence number should be assigned to.</param>
+		public void AssignSequenceNumber(ref Message message)
 		{
-			Assert.That(message.Type.IsReliable(), "Cannot assign a sequence number to an unreliable message.");
-			message.SequenceNumber = ++_lastAssignedReliableSequenceNumber;
-		}
-
-		/// <summary>
-		///   Assigns a sequence number to the unreliable message.
-		/// </summary>
-		/// <param name="message">The unreliable message the sequence number should be assigned to.</param>
-		public void AssignUnreliableSequenceNumber(ref Message message)
-		{
-			Assert.That(message.Type.IsUnreliable(), "Cannot assign a sequence number to an reliable message.");
-			message.SequenceNumber = ++_lastAssignedUnreliableSequenceNumber;
+			if (message.Type.IsReliable())
+				message.SequenceNumber = ++_lastAssignedReliableSequenceNumber;
+			else
+				message.SequenceNumber = ++_lastAssignedUnreliableSequenceNumber;
 		}
 
 		/// <summary>

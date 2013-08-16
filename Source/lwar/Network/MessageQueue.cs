@@ -57,16 +57,12 @@ namespace Lwar.Network
 		/// <param name="message">The message that should be enqueued.</param>
 		public void Enqueue(ref Message message)
 		{
+			_deliveryManager.AssignSequenceNumber(ref message);
+
 			if (message.Type.IsReliable())
-			{
-				_deliveryManager.AssignReliableSequenceNumber(ref message);
 				_reliableMessages.Enqueue(message);
-			}
 			else
-			{
-				_deliveryManager.AssignUnreliableSequenceNumber(ref message);
 				_unreliableMessages.Enqueue(message);
-			}
 		}
 
 		/// <summary>
