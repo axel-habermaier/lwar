@@ -200,17 +200,16 @@ namespace Lwar.Network
 				// - messages.Count == 1: This happens when a single protocol message results in a single Message instance
 				// - messages.Count  > 1: This happens when a single protocol message is split into several Message instances
 				// In either case, we can check if delivery is allowed for all generated Message instances, as they all
-				// have the same sequence number and type.
-				var message = messages[0];
-				if (message.Type.IsReliable() && !deliveryManager.AllowReliableDelivery(message.SequenceNumber))
+				// have the same sequence number and type
+				if (messages[0].Type.IsReliable() && !deliveryManager.AllowReliableDelivery(messages[0].SequenceNumber))
 					continue;
 
-				if (message.Type.IsUnreliable() && !deliveryManager.AllowUnreliableDelivery(message.SequenceNumber))
+				if (messages[0].Type.IsUnreliable() && !deliveryManager.AllowUnreliableDelivery(messages[0].SequenceNumber))
 					continue;
 
 				for (var i = 0; i < messages.Count; ++i)
 				{
-					message = messages[i];
+					var message = messages[i];
 
 					if (message.Type.IsUnreliable())
 						message.Timestamp = header.Value.Timestamp;
