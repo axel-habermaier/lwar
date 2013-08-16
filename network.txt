@@ -31,6 +31,9 @@ Message Delivery Guarantees
     Hence, both peers must also discard messages that refer to obsolete (and possibly already deleted)
     players or entities.
 
+	Reliable message therefore have a 'receive exactly once in the correct order' semantics, whereas unreliable
+	messages have a 'receive at most once, in any order, ignoring outdated messages' semantics.
+
 Network-related constants
 	Constant						  Value 			Comment
 	-------------------------------	  ----------		---------------------------------------------------------
@@ -105,6 +108,9 @@ Message Header
 	type can be read from the packet without knowing in advance whether the message is reliable or unreliable, 
 	allowing for arbitrary interleaving of reliable and unreliable messages within a packet.
 
+	Both headers contain a sequence number which is consecutively increasing for reliable and unreliable messages
+	separately. This is important for the receiver to detect which kind of message was missed.
+
 	Reliable messages have the following header:
 	
 	Type		Name 		Description
@@ -119,6 +125,8 @@ Message Header
 	Type		Name 		Description
 	---------	----------	------------------------------------------------------------------------
 	uint8		type		One of the unreliable message type ids
+	uint32		seqno		The sequence number of the unreliable message. Starts with 0 and increases
+							by 1 with every unreliable message sent to that particular remote peer.
 	
 Messages Payload Data
 	Connect
@@ -371,6 +379,7 @@ Automatic server discovery
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	-------------------------------------------------------------------
+	20    13-08-16  Axel/Gidon	Added sequence number for unreliable messages
 	19	  13-08-14  Axel		Added server discovery
 	18	  13-08-14  Axel/Gidon	Changed reserved entity id
 	17	  13-08-06  Axel		Added Reject message; added revision number to connect message;

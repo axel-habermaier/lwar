@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
-	using System.Xml.Linq;
 	using Assets;
 	using Assets.Attributes;
 	using CodeGeneration;
@@ -59,21 +58,11 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		private string[] GetAssetNames()
 		{
-			var root = XDocument.Load(Configuration.AssetsProject).Root;
-			XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
-
-			var assets = root.Descendants(ns + "None")
-							 .Union(root.Descendants(ns + "Content"))
-							 .Union(root.Descendants(ns + "Compile"))
-							 .Select(element => element.Attribute("Include").Value)
-							 .Select(asset => asset.Replace("\\", "/"));
-
 			var ignoredAssets = Configuration.AssetListAssembly.GetCustomAttributes(false)
 											 .OfType<IgnoreAttribute>()
 											 .Select(ignore => ignore.Name);
-			assets = assets.Where(path => _assets.All(a => a.RelativePath != path));
-			assets = assets.Except(ignoredAssets);
-			return assets.ToArray();
+
+			return Configuration.AssetsProject.Assets.Except(ignoredAssets).ToArray();
 		}
 
 		/// <summary>
@@ -140,17 +129,8 @@ namespace Pegasus.AssetsCompiler
 
 				if (success)
 				{
-					var root = XDocument.Load(Configuration.AssetsProject).Root;
-					XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
-
-					var namespaceNode = root.Descendants(ns + "RootNamespace").FirstOrDefault();
-					if (namespaceNode == null)
-						Log.Warn("RootNamespace is missing in '{0}'.", Configuration.AssetsProject);
-
-					var namespaceName = namespaceNode == null ? "Unspecified" : namespaceNode.Value;
-
 					var assetListGenerator = new AssetIdentifierListGenerator(_assets);
-					assetListGenerator.Generate(namespaceName);
+					assetListGenerator.Generate(Configuration.AssetsProject.RootNamespace);
 				}
 
 				return success;

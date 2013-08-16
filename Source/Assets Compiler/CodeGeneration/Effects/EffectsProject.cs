@@ -2,6 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
+	using Assets;
 	using Framework.Platform.Logging;
 	using Framework.Platform.Memory;
 	using ICSharpCode.NRefactory;
@@ -11,7 +12,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	/// <summary>
 	///   Represents a C# project with effect declarations that have to be cross-compiled.
 	/// </summary>
-	internal class EffectsProject : CodeProject<EffectFile>
+	internal class EffectsProject : CodeProject<EffectAsset, EffectFile>
 	{
 		/// <summary>
 		///   The C# code generator that is used to generate the C# effects file.

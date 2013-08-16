@@ -59,7 +59,7 @@ typedef enum {
 	REJECT_VERSION_MISMATCH = 2,
 } RejectReason;
 
-int is_reliable(Message *m);
+bool is_reliable(Message *m);
 
 struct Message {
     MessageType type;

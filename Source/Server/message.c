@@ -8,7 +8,11 @@
 #include "log.h"
 #include "message.h"
 
-int is_reliable(Message *m) {
+static bool has_seqno(Message *m) {
+	return m->type != MESSAGE_DISCOVERY;
+}
+
+bool is_reliable(Message *m) {
     return m->type < 100;
 }
 
@@ -63,14 +67,15 @@ size_t message_pack(char *s, void *p) {
     Message *m = (Message *)p;
     size_t i=0;
     int j;
+
     i += uint8_pack(s+i, m->type);
 
-    if(is_reliable(m)) {
-        assert(m->seqno);
-        i += uint32_pack(s+i, m->seqno);
-    } else {
-        assert(!m->seqno);
-    }
+	if (has_seqno(m)) {
+		assert(m->seqno);
+		i += uint32_pack(s+i, m->seqno);
+	}
+	else
+		assert(!m->seqno);
 
     switch(m->type) {
     case MESSAGE_CONNECT:
@@ -174,12 +179,14 @@ size_t message_unpack(const char *s, void *p) {
     i += uint8_unpack(s+i, &_type);
     m->type = (MessageType)_type;
 
-    if(is_reliable(m)) {
-        uint32_t _seqno;
-        i += uint32_unpack(s+i, &_seqno);
-        assert(_seqno);
-        m->seqno = _seqno;
-    }
+	if (has_seqno(m)) {
+		uint32_t _seqno;
+		i += uint32_unpack(s+i, &_seqno);
+		assert(_seqno);
+		m->seqno = _seqno;
+	}
+	else
+		m->seqno = 0;
 
     switch(m->type) {
     case MESSAGE_CONNECT:

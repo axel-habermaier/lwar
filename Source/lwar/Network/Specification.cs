@@ -59,7 +59,7 @@ namespace Lwar.Network
 		/// <summary>
 		///   The revision number of the network protocol that is implemented by the client.
 		/// </summary>
-		public const byte Revision = 19;
+		public const byte Revision = 20;
 
 		/// <summary>
 		///   The number of discovery messages that should be sent per minute for automatic server discovery.

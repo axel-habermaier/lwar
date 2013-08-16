@@ -10,7 +10,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
 	using Microsoft.CSharp;
-	using Effect = AssetsCompiler.Effects.Effect;
 
 	/// <summary>
 	///   Represents a C# class that contains cross-compiled shader code and shader constants.
@@ -193,6 +192,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// </summary>
 		protected override void Validate()
 		{
+			// Check whether the effect is declared within the assets project root namespace
+			if (!FullName.StartsWith(Configuration.AssetsProject.RootNamespace))
+				Error(_type.NameToken, "Effect must be defined within root namespace '{0}'.", Configuration.AssetsProject.RootNamespace);
+
+			// Check whether the effect is declared within at least one sub-namespace of the root namespace
+			if (FullName.IndexOf('.', Configuration.AssetsProject.RootNamespace.Length + 1) == -1)
+				Error(_type.NameToken, "Effect must be defined in a namespace within root namespace '{0}'.", Configuration.AssetsProject.RootNamespace);
+
 			// Check whether the Effect attribute has been applied to the class and whether the class is derived from Effect
 			var hasBaseType = _type.IsDerivedFrom<Effect>(Resolver);
 			var hasAttribute = _type.Attributes.Contain<EffectAttribute>(Resolver);

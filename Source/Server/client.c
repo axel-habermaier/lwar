@@ -9,14 +9,16 @@ static Client _clients[MAX_CLIENTS];
 
 static void client_ctor(size_t i, void *p) {
     Client *c = (Client*)p;
-    c->next_out_seqno  = 1; /* important to start with one */
-    c->last_in_ack     = 0;
-    c->last_in_seqno   = 0;
-    c->last_in_frameno = 0;
-    c->last_activity   = 0;
-    c->misbehavior     = 0;
-    c->hasleft         = 0;
-    c->dead            = 0;
+    c->next_out_reliable_seqno    = 1; /* important to start with one */
+	c->next_out_unreliable_seqno  = 1; 
+    c->last_in_ack                = 0;
+    c->last_in_reliable_seqno     = 0;
+	c->last_in_unreliable_seqno   = 0;
+    c->last_in_frameno            = 0;
+    c->last_activity              = 0;
+    c->misbehavior                = 0;
+    c->hasleft                    = 0;
+    c->dead                       = 0;
 
     player_init(&c->player, i);
 }

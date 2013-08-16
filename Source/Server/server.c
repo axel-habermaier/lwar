@@ -10,6 +10,7 @@
 #include "rules.h"
 
 static Server _server;
+Address address_multicast;
 
 Server *server=&_server;
 
@@ -21,14 +22,13 @@ bool id_eq(Id id0, Id id1) {
 int server_init() {
     /* initialize static server struct */
     memset(server, 0, sizeof(Server));
+	address_create(&address_multicast, MULTICAST_GROUP, MULTICAST_PORT);
 
-	server->conn_clients = conn_init();
-    if(!server->conn_clients) return 0;
-    if(!conn_bind(server->conn_clients)) return 0;
+    if(!conn_init(&server->conn_clients)) return 0;
+    if(!conn_bind(&server->conn_clients)) return 0;
 
-	server->conn_discovery = conn_init();
-    if(!server->conn_discovery) return 0;
-	if(!conn_multicast(server->conn_discovery)) return 0;
+    if(!conn_init(&server->conn_discovery)) return 0;
+	if(!conn_multicast(&server->conn_discovery)) return 0;
 
     protocol_init();
     physics_init();
@@ -40,7 +40,6 @@ int server_init() {
     rules_init();
 
     server->running = 1;
-	packet_send_discovery(0);
 
     log_info("Initialized\n");
 
@@ -57,6 +56,9 @@ int server_update(Clock time, int force) {
         if(!server->prev_clock)
             return 1;
 
+		if(clock_periodic(&server->discovery_periodic, DISCOVERY_INTERVAL))
+			packet_send_discovery();
+
         /* heartbeat
         if(clock_periodic(&debug_clock, 1000))
             log_debug("server time: %d", server->cur_clock);
@@ -70,7 +72,6 @@ int server_update(Clock time, int force) {
 
 		queue_stats();
         protocol_send(force);
-		packet_send_discovery(time);
         
         /* remove obsolete messages, clients, and entities
          * order is important
@@ -85,8 +86,8 @@ int server_update(Clock time, int force) {
 }
 
 void server_shutdown() {
-	conn_shutdown(server->conn_clients);
-	conn_shutdown(server->conn_discovery);
+	conn_shutdown(&server->conn_clients);
+	conn_shutdown(&server->conn_discovery);
 
     /* TODO: shutdown components */
     log_info("Terminated\n");

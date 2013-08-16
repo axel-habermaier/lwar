@@ -250,6 +250,7 @@
   <ItemGroup>
     <None Include="Fonts\Liberation Mono 11.font" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="&quot;$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\pgc.exe&quot; compile" WorkingDirectory="$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)" />

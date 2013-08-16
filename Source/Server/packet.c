@@ -66,7 +66,7 @@ bool packet_recv(Packet *p) {
     p->a = 0;
     p->b = MAX_PACKET_LENGTH;
 	p->adr = address_none;
-    if(!conn_recv(server->conn_clients, p->p, &p->b, &p->adr)) {
+    if(!conn_recv(&server->conn_clients, p->p, &p->b, &p->adr)) {
         p->io_failed = true;
         return false;
     }
@@ -84,7 +84,7 @@ bool packet_send(Packet *p) {
     assert(p->adr.ip   != 0);
     assert(p->adr.port != 0);
 
-    if(!conn_send(server->conn_clients, p->p, p->b - p->a, &p->adr)) {
+    if(!conn_send(&server->conn_clients, p->p, p->b - p->a, &p->adr)) {
         p->io_failed = true;
         return false;
     }
@@ -120,17 +120,10 @@ void packet_debug(Packet *p) {
 }
 */
 
-void packet_send_discovery(Clock time)
+void packet_send_discovery()
 {
-	static Clock last_send = 0;
-
-	if (last_send != 0 && time - last_send < 60000 / DISCOVERY_FREQUENCY)
-		return;
-
-	last_send = time;
-
 	// TODO: Include information about the server (name, player count, estimated ping, etc.)
-	char buffer[MAX_PACKET_LENGTH];
+	char buffer[16];
 
 	Message m;
 	m.seqno = 0;
@@ -139,8 +132,7 @@ void packet_send_discovery(Clock time)
 	m.discovery.rev = NETWORK_REVISION;
 	m.discovery.port = SERVER_PORT;
 	size_t size = message_pack(buffer, &m);
-
-	Address a;
-	address_create(&a, MULTICAST_GROUP, MULTICAST_PORT);
-	conn_send(server->conn_discovery, buffer, size, &a);
+	assert(size <= sizeof(buffer) / sizeof(char));
+	
+	conn_send(&server->conn_discovery, buffer, size, &address_multicast);
 }

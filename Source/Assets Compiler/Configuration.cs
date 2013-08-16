@@ -39,9 +39,14 @@ namespace Pegasus.AssetsCompiler
 		private static Assembly _assetListAssembly;
 
 		/// <summary>
+		///   The assets project file.
+		/// </summary>
+		private static AssetsProject _assetsProject;
+
+		/// <summary>
 		///   The path to the assets project.
 		/// </summary>
-		public static readonly string AssetsProject = Path.Combine(SourceDirectory, "Assets.csproj");
+		private static readonly string AssetsProjectPath = Path.Combine(SourceDirectory, "Assets.csproj");
 
 		/// <summary>
 		///   The path where the temporary asset files should be stored.
@@ -77,6 +82,20 @@ namespace Pegasus.AssetsCompiler
 					_assetListAssembly = Assembly.LoadFile(AssetListPath);
 
 				return _assetListAssembly;
+			}
+		}
+
+		/// <summary>
+		///   Gets the assets project file.
+		/// </summary>
+		public static AssetsProject AssetsProject
+		{
+			get
+			{
+				if (_assetsProject == null)
+					_assetsProject = new AssetsProject(AssetsProjectPath);
+
+				return _assetsProject;
 			}
 		}
 

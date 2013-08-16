@@ -25,17 +25,22 @@ namespace Lwar.Network
 		/// <summary>
 		///   The last sequence number that has been assigned to a reliable message.
 		/// </summary>
-		private uint _lastAssignedSequenceNumber;
+		private uint _lastAssignedReliableSequenceNumber;
+
+		/// <summary>
+		///   The last sequence number that has been assigned to an unreliable message.
+		/// </summary>
+		private uint _lastAssignedUnreliableSequenceNumber;
 
 		/// <summary>
 		///   Gets the sequence number of the last reliable message that has been received and processed.
 		/// </summary>
-		private uint _lastReceivedSequenceNumber;
+		private uint _lastReceivedReliableSequenceNumber;
 
 		/// <summary>
-		///   The maximum of the timestamps of all received unreliable messages.
+		///   Gets the sequence number of the last unreliable message that has been received and processed.
 		/// </summary>
-		private uint _lastReceivedTimestamp;
+		private uint _lastReceivedUnreliableSequenceNumber;
 
 		/// <summary>
 		///   Writes the header for a packet.
@@ -43,7 +48,7 @@ namespace Lwar.Network
 		/// <param name="buffer">The buffer the header should be written into.</param>
 		public void WriteHeader(BufferWriter buffer)
 		{
-			var header = new PacketHeader(_lastReceivedSequenceNumber, (uint)_clock.Milliseconds);
+			var header = new PacketHeader(_lastReceivedReliableSequenceNumber, (uint)_clock.Milliseconds);
 			header.Write(buffer);
 		}
 
@@ -64,31 +69,25 @@ namespace Lwar.Network
 		/// <param name="sequenceNumber">The sequence number that should be checked.</param>
 		public bool AllowReliableDelivery(uint sequenceNumber)
 		{
-			if (sequenceNumber == _lastReceivedSequenceNumber + 1)
-			{
-				++_lastReceivedSequenceNumber;
-				return true;
-			}
+			if (sequenceNumber != _lastReceivedReliableSequenceNumber + 1)
+				return false;
 
-			return false;
+			++_lastReceivedReliableSequenceNumber;
+			return true;
 		}
 
 		/// <summary>
-		///   Checks whether the timestamp is newer than the ones of all previously received unreliable messages. If true,
-		///   updates the last timestamp, causing future older unreliable messages to be discarded.
+		///   Checks the sequence number to determine whether the message has not been processed before. If true,
+		///   updates the last timestamp and processed sequence number, causing future older unreliable messages to be discarded.
 		/// </summary>
-		/// <param name="timestamp">The timestamp of the received unreliable messages that should be delivered.</param>
-		public bool AllowUnreliableDelivery(uint timestamp)
+		/// <param name="sequenceNumber">The sequence number that should be checked.</param>
+		public bool AllowUnreliableDelivery(uint sequenceNumber)
 		{
-			// We must allow the delivery of unreliable packets with the same timestamp, as they might contain
-			// different data if the packet was split
-			if (timestamp >= _lastReceivedTimestamp)
-			{
-				_lastReceivedTimestamp = timestamp;
-				return true;
-			}
+			if (sequenceNumber <= _lastReceivedUnreliableSequenceNumber)
+				return false;
 
-			return false;
+			_lastReceivedUnreliableSequenceNumber = sequenceNumber;
+			return true;
 		}
 
 		/// <summary>
@@ -102,13 +101,15 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Assigns a sequence number to the reliable message.
+		///   Assigns a sequence number to the message.
 		/// </summary>
-		/// <param name="message">The reliable message the sequence number should be assigned to.</param>
+		/// <param name="message">The message the sequence number should be assigned to.</param>
 		public void AssignSequenceNumber(ref Message message)
 		{
-			Assert.That(message.Type.IsReliable(), "Cannot assign a sequence number to an unreliable message.");
-			message.SequenceNumber = ++_lastAssignedSequenceNumber;
+			if (message.Type.IsReliable())
+				message.SequenceNumber = ++_lastAssignedReliableSequenceNumber;
+			else
+				message.SequenceNumber = ++_lastAssignedUnreliableSequenceNumber;
 		}
 
 		/// <summary>

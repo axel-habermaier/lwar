@@ -330,6 +330,7 @@
     <Compile Include="..\Framework\Platform\ResharperAnnotations.cs">
       <Link>Framework\ResharperAnnotations.cs</Link>
     </Compile>
+    <Compile Include="AssetsProject.cs" />
     <Compile Include="Assets\Attributes\AssetAttribute.cs" />
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
     <Compile Include="Assets\Attributes\CubeMapAttribute.cs" />

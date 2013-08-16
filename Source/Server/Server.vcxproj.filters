@@ -41,5 +41,6 @@
     <ClInclude Include="bitset.h" />
     <ClInclude Include="array.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="address.h" />
   </ItemGroup>
 </Project>

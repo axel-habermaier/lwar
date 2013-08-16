@@ -20,8 +20,6 @@ namespace Pegasus.AssetsCompiler.Assets
 		public ShaderAsset(string effect, string name, ShaderType type)
 			: base(GetPath(effect, name, type), Configuration.TempDirectory)
 		{
-			Effect = effect;
-			Name = name;
 			Type = type;
 		}
 
@@ -29,16 +27,6 @@ namespace Pegasus.AssetsCompiler.Assets
 		///   Gets the type of the shader.
 		/// </summary>
 		public ShaderType Type { get; private set; }
-
-		/// <summary>
-		///   Gets the name of the effect the shader belongs to.
-		/// </summary>
-		public string Effect { get; private set; }
-
-		/// <summary>
-		///   Gets the name of the shader method.
-		/// </summary>
-		public string Name { get; private set; }
 
 		/// <summary>
 		///   Gets the shader asset path for the given effect name, shader method name, and shader type.
@@ -51,6 +39,9 @@ namespace Pegasus.AssetsCompiler.Assets
 			Assert.ArgumentNotNullOrWhitespace(effect);
 			Assert.ArgumentNotNullOrWhitespace(name);
 			Assert.ArgumentInRange(type);
+
+			var lastNamespaceEnd = effect.IndexOf('.', Configuration.AssetsProject.RootNamespace.Length + 1);
+			effect = effect.Substring(lastNamespaceEnd + 1);
 
 			var extension = type.ToString().Where(Char.IsUpper).Aggregate(String.Empty, (s, c) => s + c).ToLower();
 			return String.Format("Effects/{0}.{1}.{2}", effect, name, extension);
