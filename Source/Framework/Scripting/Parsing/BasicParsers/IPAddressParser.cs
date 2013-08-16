@@ -33,8 +33,8 @@ namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
 			var length = 0;
 
 			if (isIPv6)
-				length =
-					inputStream.Skip(c => Char.IsDigit(c) || c == ':' || c == '.' || (Char.ToLower(c) >= 'a' && Char.ToLower(c) <= 'f'));
+				length = inputStream.Skip(c => Char.IsDigit(c) || c == ':' || c == '.' || c == '%' ||
+											   (Char.ToLower(c) >= 'a' && Char.ToLower(c) <= 'f'));
 			else
 				length = inputStream.Skip(c => Char.IsDigit(c) || c == '.');
 
