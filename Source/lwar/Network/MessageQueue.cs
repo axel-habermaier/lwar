@@ -59,11 +59,14 @@ namespace Lwar.Network
 		{
 			if (message.Type.IsReliable())
 			{
-				_deliveryManager.AssignSequenceNumber(ref message);
+				_deliveryManager.AssignReliableSequenceNumber(ref message);
 				_reliableMessages.Enqueue(message);
 			}
 			else
+			{
+				_deliveryManager.AssignUnreliableSequenceNumber(ref message);
 				_unreliableMessages.Enqueue(message);
+			}
 		}
 
 		/// <summary>

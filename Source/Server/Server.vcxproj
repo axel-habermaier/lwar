@@ -365,6 +365,7 @@
     <ClCompile Include="update.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="address.h" />
     <ClInclude Include="array.h" />
     <ClInclude Include="bitset.h" />
     <ClInclude Include="connection.h" />

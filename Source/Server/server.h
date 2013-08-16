@@ -2,9 +2,10 @@
 #include <stdbool.h>
 #endif
 
+#include "address.h"
+#include "array.h"
 #include "bitset.h"
 #include "list.h"
-#include "array.h"
 #include "pq.h"
 #include "pool.h"
 
@@ -16,7 +17,7 @@ enum {
     MAX_QUEUE           = 4096,
     MAX_STRINGS         =  128,
 
-	NETWORK_REVISION    =   19,
+	NETWORK_REVISION    =   20,
 
     NUM_SLOTS           =    4,
 
@@ -27,15 +28,6 @@ enum {
     MIN_PLANET_DIST     = 1500,
     MAX_PLANET_DIST     = 2500,
 };
-
-enum {
-	SERVER_PORT			= 32422,
-	MULTICAST_PORT      = SERVER_PORT + 1,
-	MULTICAST_TTL		= 1,
-	DISCOVERY_FREQUENCY = 12,
-};
-
-#define MULTICAST_GROUP "FF05::3"
 
 typedef size_t (Pack)(char *, void *);
 typedef size_t (Unpack)(const char *, void *);
@@ -74,7 +66,6 @@ typedef struct Connection Connection;
 extern Server *server;
 
 bool id_eq(Id id0, Id id1);
-bool address_eq(Address *adr0, Address *adr1);
 
 Clock clock_delta();
 bool  clock_periodic(Clock *t, Clock i);
@@ -127,7 +118,7 @@ void protocol_notify_entity(Entity *e);
 void protocol_notify_collision(Collision *c);
 void protocol_notify_kill(Player *k, Player *v);
 void protocol_cleanup();
-void packet_send_discovery(Clock time);
+void packet_send_discovery();
 
 void    entities_init();
 void    entities_cleanup();
@@ -170,12 +161,6 @@ struct Str {
 struct Id {
     uint16_t gen;
     uint16_t n;
-};
-
-struct Address {
-	uint8_t ip[16];
-	uint16_t port;
-	bool isIPv6;
 };
 
 struct Slot {
@@ -303,15 +288,22 @@ struct Client {
     bool hasleft;  /* has actively disconnected */
     bool dead;     /* memory will be released, don't use any more */
 
-    size_t next_out_seqno;
+    size_t next_out_reliable_seqno;
+	size_t next_out_unreliable_seqno;
+
+	size_t last_in_reliable_seqno;
+	size_t last_in_unreliable_seqno;
 
     size_t last_in_ack;
-    size_t last_in_seqno;
     size_t last_in_frameno;
     Clock  last_activity;
 
     /* count protocol violations */
     size_t misbehavior;
+};
+
+struct Connection {
+	char _[8];
 };
 
 struct Server {
@@ -330,15 +322,15 @@ struct Server {
     Clock      cur_clock;
     Clock      prev_clock;
     Clock      update_periodic;
+	Clock      discovery_periodic;
 
     Client     *self;
 
-	Connection *conn_clients;
-	Connection *conn_discovery;
+	Connection conn_clients;
+	Connection conn_discovery;
 };
 
 static const Vec _0 = {0,0};
-static const Address address_none = {{}, 0,0};
 
 #define clients_foreach(c)       pool_foreach(&server->clients, c, Client)
 #define entities_foreach(e)      pool_foreach(&server->entities, e, Entity)

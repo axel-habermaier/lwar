@@ -113,10 +113,10 @@ static QueuedMessage *qm_create() {
 static void qm_enqueue(Client *c, QueuedMessage *qm) {
     qm_set_dest(c,qm);
     if(is_reliable(&qm->m)) {
-        qm_seqno(c,qm) = (c->next_out_seqno ++);
+        qm_seqno(c,qm) = (c->next_out_reliable_seqno ++);
     }
 	else {
-		qm_seqno(c,qm) = 0;
+		qm_seqno(c,qm) = (c->next_out_unreliable_seqno ++);
 	}
 
 	qm_tries(c,qm) = 0;

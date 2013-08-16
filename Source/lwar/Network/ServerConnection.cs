@@ -186,7 +186,6 @@ namespace Lwar.Network
 				return;
 
 			deliveryManager.UpdateLastAckedSequenceNumber(header.Value.Acknowledgement);
-			var allowUnreliableDelivery = deliveryManager.AllowUnreliableDelivery(header.Value.Timestamp);
 
 			var readBytes = -1;
 			while (!buffer.EndOfBuffer && readBytes != buffer.Count)
@@ -197,11 +196,14 @@ namespace Lwar.Network
 				if (!buffer.TryRead(out messages, MessageDeserializer))
 					continue;
 
+				var allowReliableDelivery = messages[0].Type.IsReliable() && deliveryManager.AllowReliableDelivery(messages[0].SequenceNumber);
+				var allowUnreliableDelivery = messages[0].Type.IsUnreliable() && deliveryManager.AllowUnreliableDelivery(messages[0].SequenceNumber);
+
 				for (var i = 0; i < messages.Count; ++i)
 				{
 					var message = messages[i];
 
-					if (message.Type.IsReliable() && !deliveryManager.AllowReliableDelivery(message.SequenceNumber))
+					if (message.Type.IsReliable() && !allowReliableDelivery)
 						continue;
 
 					if (message.Type.IsUnreliable() && !allowUnreliableDelivery)

@@ -2,6 +2,7 @@
 
 namespace Lwar.Network.Messages
 {
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using Gameplay;
 
@@ -10,6 +11,7 @@ namespace Lwar.Network.Messages
 	///   union-type).
 	/// </summary>
 	[StructLayout(LayoutKind.Explicit)]
+	[DebuggerDisplay("Type = {Type}")]
 	public struct Message
 	{
 		/// <summary>

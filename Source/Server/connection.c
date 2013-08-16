@@ -30,16 +30,15 @@ typedef SOCKET Socket;
 
 #define socket_valid(s)   (! socket_invalid(s))
 
-#include "server.h"
+#include "address.h"
 #include "connection.h"
 #include "log.h"
 
-struct Connection
-{
+static int numConnections = 0;
+
+struct Connection {
 	Socket socket;
 };
-
-static int numConnections = 0;
 
 static void conn_error(const char* const msg)
 {
@@ -59,7 +58,7 @@ static void conn_error(const char* const msg)
 	log_error("%s - %s\n", msg, errmsg);
 }
 
-Connection* conn_init()
+bool conn_init(Connection* connection)
 {
 #ifdef _MSC_VER
 	if (numConnections == 0)
@@ -69,19 +68,20 @@ Connection* conn_init()
 		if (WSAStartup(MAKEWORD(1,1), &wsaData) != 0)
 		{
 			conn_error("Winsock startup failed.");
-			return 0;
+			return false;
 		}
 	}
 #endif
 
-	Connection* connection = (Connection*)malloc(sizeof(Connection));
+	memset(connection, 0, sizeof(Connection));
 	++numConnections;
+
 	connection->socket = socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
 	if (socket_invalid(connection->socket))
 	{
 		conn_error("Unable to initialize socket.");
 		conn_shutdown(connection);
-		return 0;
+		return false;
 	}
 
 #ifdef _MSC_VER
@@ -95,7 +95,7 @@ Connection* conn_init()
 	{
 		conn_error("Unable to switch to non-blocking mode.");
 		conn_shutdown(connection);
-		return 0;
+		return false;
 	}
 
 	int ipv6only = 0;
@@ -103,10 +103,10 @@ Connection* conn_init()
 	{
 		conn_error("Unable to switch to dual-stack mode.");
 		conn_shutdown(connection);
-		return 0;
+		return false;
 	}
 
-	return connection;
+	return true;
 }
 
 void conn_shutdown(Connection* connection)
@@ -116,7 +116,6 @@ void conn_shutdown(Connection* connection)
 	if (socket_error(closesocket(connection->socket)))
 		conn_error("Unable to close socket.");
 
-	free(connection);
 	--numConnections;
 
 #ifdef _MSC_VER
@@ -278,18 +277,10 @@ bool conn_send(Connection* connection, const char *buf, size_t size, Address* ad
 }
 
 bool address_eq(Address *adr0, Address *adr1) {
-	int32_t i;
-
     if (adr0->port != adr1->port)
 		return false;
 
-	for (i = 0; i < sizeof(adr0->ip); ++i)
-	{
-		if (adr0->ip[i] != adr1->ip[i])
-			return false;
-	}
-
-	return true;
+	return memcmp(adr0->ip, adr1->ip, sizeof(adr1->ip)) == 0;
 }
 
 bool address_create(Address* addr, const char* ip, uint16_t port)

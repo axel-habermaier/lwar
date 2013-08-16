@@ -3,7 +3,6 @@
 namespace Lwar.Gameplay.Entities
 {
 	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Logging;
 
 	/// <summary>
 	///   Represents a ray.
@@ -33,8 +32,6 @@ namespace Lwar.Gameplay.Entities
 			Rotation = MathUtils.DegToRad(direction);
 			Length = length;
 			Target = target;
-
-			Log.Info("Target: {0}", target);
 		}
 
 		/// <summary>

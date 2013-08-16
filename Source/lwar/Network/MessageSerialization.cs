@@ -29,8 +29,7 @@ namespace Lwar.Network
 			Assert.ArgumentNotNull(buffer);
 
 			buffer.WriteByte((byte)message.Type);
-			if (message.Type.IsReliable())
-				buffer.WriteUInt32(message.SequenceNumber);
+			buffer.WriteUInt32(message.SequenceNumber);
 
 			switch (message.Type)
 			{
@@ -109,8 +108,7 @@ namespace Lwar.Network
 			Messages.Clear();
 
 			Assert.InRange(message.Type);
-			if (message.Type.IsReliable())
-				message.SequenceNumber = buffer.ReadUInt32();
+			message.SequenceNumber = buffer.ReadUInt32();
 
 			switch (message.Type)
 			{

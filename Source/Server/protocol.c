@@ -61,9 +61,15 @@ static bool check_behavior_id(Client *c, Id id) {
 }
 
 static bool check_seqno(Client *c, Message *m, size_t seqno) {
-    if(c && is_reliable(m)) {
-        if(seqno <= c->last_in_seqno) return false;
-        c->last_in_seqno = seqno;
+	if (!c) return true;
+
+    if(is_reliable(m)) {
+        if(seqno == c->last_in_reliable_seqno + 1) return false;
+        c->last_in_reliable_seqno = seqno;
+    }
+	else {
+        if(seqno <= c->last_in_unreliable_seqno) return false;
+        c->last_in_unreliable_seqno = seqno;
     }
     return true;
 }
@@ -205,7 +211,7 @@ void protocol_notify_kill(Player *k, Player *v) {
 }
 
 static void packet_init_header(Client *c, Packet *p) {
-    packet_init(p, &c->adr, c->last_in_seqno, server->cur_clock);
+    packet_init(p, &c->adr, c->last_in_reliable_seqno, server->cur_clock);
 }
 
 static void send_kick(Client *c) {
@@ -229,7 +235,7 @@ static void send_reject(Address *adr, size_t ack, RejectReason reason) {
     Message m;
     m.type  = MESSAGE_REJECT;
 	m.reject.reason = reason;
-    m.seqno = 0;
+    m.seqno = 1;
     packet_put(&p, message_pack, &m);
 
     packet_send(&p);
@@ -252,10 +258,10 @@ static void packet_send_to_init(Client *c, Packet *p) {
     packet_init_header(c,p);
 }
 
-static bool packet_put_update(Packet *p, size_t type, size_t n) {
+static bool packet_put_update(Client *c, Packet *p, size_t type, size_t n) {
     Message m;
     m.type = (MessageType)type;
-    m.seqno = 0;
+    m.seqno = c->next_out_unreliable_seqno ++;
     m.update.n = n;
     return packet_put(p, message_pack, &m);
 }
@@ -290,7 +296,7 @@ static void send_updates_for(Client *c, Packet *p, Format *f) {
         if(!k) {
             k = min(n, packet_update_n(p,f->len));
             if(k) {
-                assert(packet_put_update(p, f->id, k));
+                assert(packet_put_update(c, p, f->id, k));
             } else {
                 packet_send_to_init(c, p);
             }
