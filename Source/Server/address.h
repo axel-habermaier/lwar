@@ -1,3 +1,7 @@
+#ifndef _MSC_VER
+#include <stdbool.h>
+#endif
+
 enum {
 	SERVER_PORT			= 32422,
 	MULTICAST_PORT      = SERVER_PORT + 1,
@@ -7,11 +11,11 @@ enum {
 
 #define MULTICAST_GROUP "FF05::3"
 
-struct Address {
+typedef struct Address {
 	uint8_t ip[16];
 	uint16_t port;
 	bool isIPv6;
-};
+} Address;
 
 bool address_create(Address *adr, const char *ip, uint16_t port);
 bool address_eq(Address *adr0, Address *adr1);

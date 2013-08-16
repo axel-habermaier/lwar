@@ -12,7 +12,7 @@ namespace Pegasus.Framework.Platform.Network
 	{
 #if Linux
 		[System.Runtime.InteropServices.DllImport("libc", EntryPoint = "setsockopt")]
-		private static extern int SetSocketOption(IntPtr socket, int level, int optname, ref int optval, int optlen);
+		private static extern int SetSocketOption(int socket, int level, int optname, ref int optval, int optlen);
 #endif
 
 		/// <summary>
@@ -29,8 +29,8 @@ namespace Pegasus.Framework.Platform.Network
 #elif Linux
 			int value = 0;
 			const int IPPROTO_IPV6 = 41;
-			const int IPV6_V6ONLY = 27;
-			var success = SetSocketOption(socket.Handle, IPPROTO_IPV6, IPV6_V6ONLY, ref value, sizeof(int));
+			const int IPV6_V6ONLY = 26;
+			var success = SetSocketOption(socket.Handle.ToInt32(), IPPROTO_IPV6, IPV6_V6ONLY, ref value, sizeof(int));
 
 			if (success != 0)
 				Platform.Logging.Log.Warn("UDP socket is IPv6-only; dual-stack mode could not be activated.");

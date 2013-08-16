@@ -64,7 +64,7 @@ static bool check_seqno(Client *c, Message *m, size_t seqno) {
 	if (!c) return true;
 
     if(is_reliable(m)) {
-        if(seqno == c->last_in_reliable_seqno + 1) return false;
+        if(seqno != c->last_in_reliable_seqno + 1) return false;
         c->last_in_reliable_seqno = seqno;
     }
 	else {

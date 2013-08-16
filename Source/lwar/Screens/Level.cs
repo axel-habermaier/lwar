@@ -10,6 +10,7 @@ namespace Lwar.Screens
 	using Pegasus.Framework;
 	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
+	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Platform.Logging;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
@@ -76,6 +77,8 @@ namespace Lwar.Screens
 		/// </summary>
 		private bool _sendInput;
 
+		readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -112,6 +115,8 @@ namespace Lwar.Screens
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
 
+			InputDevice.Remove(_respawn);
+
 			Log.Info("The game session has ended.");
 		}
 
@@ -136,6 +141,7 @@ namespace Lwar.Screens
 
 			_scoreboard = new Scoreboard(InputDevice, Assets, _gameSession);
 			_chatInput = new ChatInput(InputDevice, Assets);
+			InputDevice.Add(_respawn);
 		}
 
 		/// <summary>
@@ -184,6 +190,12 @@ namespace Lwar.Screens
 				_scoreboard.Update(Window.Size);
 				_chatInput.Update(Window.Size);
 			}
+
+			var localPlayer = _gameSession.Players.LocalPlayer;
+			if (localPlayer != null && localPlayer.Ship == null && _respawn.IsTriggered)
+				_networkSession.Send(SelectionMessage.Create(localPlayer, EntityType.Ship,
+															 EntityType.Gun, EntityType.Phaser,
+															 EntityType.Phaser, EntityType.Phaser));
 		}
 
 		/// <summary>

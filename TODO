@@ -23,6 +23,7 @@ Client
 - Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
 - Add debugging capabilities and statistics to network
 - Ignore new entities until at least one update message has been received
+- Refactor respawning after death
 
 Pegasus.Framework
 ========
@@ -46,7 +47,6 @@ Network
 
 Server
 ========
-- respawn: maybe just after some click?
 - slots need relative placement wrt ship,
   extend entity type struct for this
 - server: copy string to player, free memory

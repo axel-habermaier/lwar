@@ -35,11 +35,6 @@ namespace Lwar.Network
 		private readonly ConcurrentQueue<LogEntry> _logs = new ConcurrentQueue<LogEntry>();
 
 		/// <summary>
-		///   The buffer that is used to send the multi cast data.
-		/// </summary>
-		private readonly byte[] _buffer = new byte[Specification.MaxPacketSize];
-
-		/// <summary>
 		///   Can be used to cancel the server update process.
 		/// </summary>
 		private CancellationTokenSource _cancellation;
