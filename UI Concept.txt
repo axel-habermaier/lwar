@@ -3,6 +3,8 @@ Asset Compiler: Convert XAML files to equivalent C# code that is included by lwa
 	-> automatically compiles required image resources and fonts
 	-> requires interfaces for all DataContexts
 	-> Bindings, etc. use Func<obj,T>s + casting instead of reflection/dynamic
+	-> Copy all value converters, XAML code-behind, etc. to generated output 
+	-> or use T4 templates to compile XAML files (similar to cvar/command registries?); UI cannot be reloaded at runtime anyway
 Framework implements parts of WPF's object model
 
 WPF Object model (required parts):
@@ -32,10 +34,12 @@ WPF Object model (required parts):
 Open questions
 - How do dependency properties/routed events work?
 	* DP: Globally unique id
-		- DP values store: current animated value, local value, style trigger value, template trigger value, style setter
+		- DP values store: current animated value, local value, expression value
 		- When inheritance: walk the tree (expensive); DO knows its ancestors
 		- Default value: Get from DP instance
-		- SetValue(value, origin) with origin = Animation, Local, StyleTrigger, etc.
+		- SetValue(value, origin) with origin = Animation, Local, etc.
+		- Local value is either true local value or style value or style trigger value, etc. because true local values override style values anyway
+			* What about style triggers whose effects need to be undone?
 		- ClearValue() analogous
 		- Animation: SetValue, call ClearValue() on end
 		- Trigger: SetValue() when active, ClearValue() when inactive
@@ -57,7 +61,13 @@ Open questions
 	* source expr must react to all changes in the property path
 	* GetSourceValue, SetSourceValue, GetTargetValue, SetTargetValue actions with closures
 	* Just execute every frame to see if value changed (no PropertyChanged events!), use SetValue(v, Local) to set DP value
+		Or: set expression as local value on DP, evaluate only when whenever local value is required
 	* If no binding source is specified, bind to DataContext property of the object that is bound as the target
+- Hierarchy of resource dictionaries
+	* Static binding - simple lookup at initialization time
+		-> walk up the tree until a resource with a matching key is found
+		only one key per dictionary; key might be overriden in lower layers; merged dictionaries with equal keys: last one wins
+	* Dynamic resource: Expression set on DP, does lookup when whenever local value is required
 - Each frame:
 	1. Do input
 	2. update bindings
