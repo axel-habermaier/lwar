@@ -5,7 +5,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	/// <summary>
 	///   Represents an object that exposes dependency properties.
 	/// </summary>
-	public class DependencyObject
+	public abstract class DependencyObject
 	{
 		/// <summary>
 		///   Stores the value's of the dependency object's dependency properties.
@@ -121,6 +121,20 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Assert.ArgumentNotNull(changeHandler);
 
 			_propertyStore.GetValue(property, addIfNotFound: false).ChangeHandlers -= changeHandler;
+		}
+
+		/// <summary>
+		///   Attaches a binding to the dependency property.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property that should be target of the binding.</param>
+		/// <param name="binding">The binding that should be set.</param>
+		public void SetBinding<T>(DependencyProperty<T> property, Binding<T> binding)
+		{
+			Assert.ArgumentNotNull(property);
+			Assert.ArgumentNotNull(binding);
+
+			binding.Initialize(this, property);
 		}
 	}
 }

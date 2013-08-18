@@ -5,7 +5,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	/// <summary>
 	///   Provides rendering support for the UI system, also including hit testing.
 	/// </summary>
-	public class Visual : DependencyObject
+	public abstract class Visual : DependencyObject
 	{
 	}
 }

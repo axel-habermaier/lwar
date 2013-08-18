@@ -72,7 +72,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		public bool HasEffectiveValue
 		{
-			get { return _sources == 0; }
+			get { return _sources != 0; }
 		}
 
 		/// <summary>

@@ -3,12 +3,14 @@
 namespace Lwar
 {
 	using System.Net;
+	using Assets;
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.Platform.Graphics;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Platform.Memory;
 	using Pegasus.Framework.Rendering;
+	using Pegasus.Framework.Rendering.UserInterface;
 	using Screens;
 	using Scripting;
 
@@ -26,6 +28,10 @@ namespace Lwar
 		///   The state manager that manages the states of the application.
 		/// </summary>
 		private ScreenManager _stateManager;
+
+		private Button b;
+
+		private TestViewModel vm;
 
 		/// <summary>
 		///   Invoked when the application is initializing.
@@ -54,6 +60,13 @@ namespace Lwar
 			Commands.Bind(Key.Escape.WentDown(), "exit");
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
+
+			b = new Button();
+			b.ViewModel =vm= new TestViewModel();
+			vm.Rank = 17;
+
+			var binding = new Binding<object> { SourceExpression = s => ((TestViewModel)s).Rank };
+			b.SetBinding(Button.ContentProperty, binding);
 		}
 
 		/// <summary>
@@ -63,6 +76,8 @@ namespace Lwar
 		{
 			_localServer.Update();
 			_stateManager.Update();
+
+			vm.Rank++;
 		}
 
 		/// <summary>
@@ -84,6 +99,8 @@ namespace Lwar
 		protected override void DrawUserInterface(SpriteBatch spriteBatch)
 		{
 			_stateManager.DrawUserInterface(spriteBatch);
+
+			b.Draw(spriteBatch, Context.Assets.LoadFont(Fonts.LiberationMono11));
 		}
 
 		/// <summary>
@@ -118,6 +135,20 @@ namespace Lwar
 		{
 			_stateManager.Clear();
 			_stateManager.Add(new MainMenu());
+		}
+
+		private class TestViewModel : ViewModel
+		{
+			private int _rank;
+
+			/// <summary>
+			///   Rank of the local player
+			/// </summary>
+			public int Rank
+			{
+				get { return _rank; }
+				set { OnPropertyChanged(ref _rank, value); }
+			}
 		}
 	}
 }
