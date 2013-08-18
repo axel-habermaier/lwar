@@ -50,6 +50,9 @@ Open questions
 				2. Call SetValue for all trigger setter of the activated triggers
 				3. execute exit actions of all deactivated triggers
 				4. execute all entry actions of all activated triggers
+			OR: When a style is set, add expressions to all DPs set by the style that compute the style values
+			A style setter cannot be changed once it has been used
+			Replacing a style that is bound with dynamic resource should immediately change all set DPs
 	* DO: Array of DP values (binding, value, animated value), sorted by DP.id, using binary search to find DP
 - How deas Measure & Arrange work?
 - How does input handling work?
@@ -75,3 +78,14 @@ Open questions
 	4. Do animations
 	5. update layout
 	6. render
+
+Property expression registers on Changed events of all its sources
+DP raises change event (DO.OnChanged(DP, handler))
+DO.SetValue(DP)
+	- If inherited, push down
+	- Raise change event (e.g. updates bindings/styles/templates)
+	- Style: DO sets changed handlers that applies the style or template including the triggers
+		* Triggers must be evaluated every frame and set the DP values every frame, if triggered
+	- Resource dictionaries raises change events -> dynamic resource binding sets new value
+	- DP stores animated value, local value (either set locally (possibly through binding) or style value) and 
+	  triggered value (either style trigger or template trigger)
