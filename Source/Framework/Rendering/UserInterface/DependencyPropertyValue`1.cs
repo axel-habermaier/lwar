@@ -13,6 +13,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	internal class DependencyPropertyValue<T> : DependencyPropertyValue
 	{
 		/// <summary>
+		///   The change handlers that are invoked when the effect value of the dependency property has changed.
+		/// </summary>
+		public DependencyPropertyChangedHandler<T> ChangeHandlers;
+
+		/// <summary>
 		///   The property's value that has been set by the animation system. The animated value has the highest precedence.
 		/// </summary>
 		private T _animatedValue;
@@ -63,131 +68,79 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Raised when the effective value of the property has changed.
+		///   Gets a value indicating whether the property has an effective value.
 		/// </summary>
-		public event Action<DependencyProperty<T>, T> Changed;
+		public bool HasEffectiveValue
+		{
+			get { return _sources == 0; }
+		}
 
 		/// <summary>
 		///   Sets the property's value to the value provided directly or through a data binding.
 		/// </summary>
-		/// <param name="property">The dependency property the value should be set for.</param>
 		/// <param name="value">The value that should be set.</param>
-		public void SetLocalValue(DependencyProperty<T> property, T value)
+		public void SetLocalValue(T value)
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = EffectiveValue;
-
 			_baseValue = value;
 			_sources |= ValueSources.Local;
 			_sources &= ~ValueSources.Style;
-
-			RaiseChangeEvent(property, previousValue);
 		}
 
 		/// <summary>
 		///   Sets the property's value to the value provided by a style.
 		/// </summary>
-		/// <param name="property">The dependency property the value should be set for.</param>
 		/// <param name="value">The value that should be set.</param>
-		public void SetStyleValue(DependencyProperty<T> property, T value)
+		public void SetStyleValue(T value)
 		{
-			Assert.ArgumentNotNull(property);
-
 			if ((_sources & ValueSources.Local) == ValueSources.Local)
 				return;
 
-			var previousValue = EffectiveValue;
-
 			_baseValue = value;
 			_sources |= ValueSources.Style;
-
-			RaiseChangeEvent(property, previousValue);
 		}
 
 		/// <summary>
 		///   Sets the property's value to the value provided by a style trigger.
 		/// </summary>
-		/// <param name="property">The dependency property the value should be set for.</param>
 		/// <param name="value">The value that should be set.</param>
-		public void SetStyleTriggeredValue(DependencyProperty<T> property, T value)
+		public void SetStyleTriggeredValue(T value)
 		{
-			Assert.ArgumentNotNull(property);
-
 			if ((_sources & ValueSources.TemplateTrigger) == ValueSources.TemplateTrigger)
 				return;
 
-			var previousValue = EffectiveValue;
-
 			_triggeredValue = value;
 			_sources |= ValueSources.StyleTrigger;
-
-			RaiseChangeEvent(property, previousValue);
 		}
 
 		/// <summary>
 		///   Unsets the property's value that has been set by a style trigger.
 		/// </summary>
-		/// <param name="property">The dependency property the value should be unset for.</param>
-		public void UnsetStyleTriggeredValue(DependencyProperty<T> property)
+		public void UnsetStyleTriggeredValue()
 		{
-			Assert.ArgumentNotNull(property);
-
 			if ((_sources & ValueSources.StyleTrigger) != ValueSources.StyleTrigger)
 				return;
 
-			var previousValue = EffectiveValue;
-
 			_triggeredValue = default(T);
 			_sources &= ~ValueSources.StyleTrigger;
-
-			RaiseChangeEvent(property, previousValue);
 		}
 
 		/// <summary>
 		///   Sets the property's animated value.
 		/// </summary>
-		/// <param name="property">The dependency property the value should be set for.</param>
 		/// <param name="value">The value that should be set.</param>
-		public void SetAnimatedValue(DependencyProperty<T> property, T value)
+		public void SetAnimatedValue(T value)
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = EffectiveValue;
-
 			_animatedValue = value;
 			_sources |= ValueSources.Animation;
-
-			RaiseChangeEvent(property, previousValue);
 		}
 
 		/// <summary>
 		///   Unsets the property's animated value.
 		/// </summary>
-		/// <param name="property">The dependency property the value should be unset for.</param>
-		public void UnsetAnimatedValue(DependencyProperty<T> property)
+		public void UnsetAnimatedValue()
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = EffectiveValue;
-
 			_animatedValue = default(T);
 			_sources &= ~ValueSources.Animation;
-
-			RaiseChangeEvent(property, previousValue);
-		}
-
-		/// <summary>
-		///   Raises the changed event if the property's effective value has changed.
-		/// </summary>
-		/// <param name="property">The dependency property the change event should be raised for.</param>
-		/// <param name="previousValue">The previous effective value of the property.</param>
-		private void RaiseChangeEvent(DependencyProperty<T> property, T previousValue)
-		{
-			var value = EffectiveValue;
-
-			if (value.Equals(previousValue) && Changed != null)
-				Changed(property, value);
 		}
 
 		/// <summary>

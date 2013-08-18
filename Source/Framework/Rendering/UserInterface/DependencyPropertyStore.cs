@@ -5,9 +5,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	using System.Linq;
 
 	/// <summary>
-	///   Represents a sparse storage for dependency property values. The values are stored in an array, sorted by
-	///   dependency property index. A binary search is used to find the value of a dependency property, whereas insertions
-	///   are guaranteed to insert the value at the correct array index.
+	///   A sparse storage for dependency property values. The values are stored in an array, sorted by dependency property
+	///   index. A binary search is used to find the value of a dependency property, whereas insertions are guaranteed to
+	///   insert the value at the correct array index.
 	/// </summary>
 	internal struct DependencyPropertyStore
 	{
@@ -43,7 +43,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Adds the value to the store.
+		///   Adds the value to the store. The new value is added such that the ordering of the values array is maintained.
 		/// </summary>
 		/// <param name="value">The value that should be added.</param>
 		private void AddValue(DependencyPropertyValue value)
@@ -108,7 +108,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			// Perform a binary search while there are more than three elements
 			while (end - start > 3)
 			{
-				// Split the interval in two halves
+				// Split the interval into two halves
 				var center = start + (end - start) / 2;
 
 				// Check if the center of the interval is what we're looking for

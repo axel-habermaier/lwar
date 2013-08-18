@@ -224,6 +224,8 @@
     <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Processes\TaskOperation`1.cs" />
     <Compile Include="Rendering\DynamicVertexBuffer.cs" />
+    <Compile Include="Rendering\UserInterface\DependencyProperty`1.cs" />
+    <Compile Include="Rendering\UserInterface\DependencyPropertyChangedHandler.cs" />
     <Compile Include="Rendering\UserInterface\DependencyPropertyValue`1.cs" />
     <Compile Include="Rendering\UserInterface\DependencyObject.cs" />
     <Compile Include="Rendering\UserInterface\DependencyProperty.cs" />

@@ -86,6 +86,16 @@ namespace Pegasus.Framework
 		/// <param name="spriteEffect">The sprite effect that should be used to draw the console and the statistics.</param>
 		internal void Run(LogFile logFile, string appName, AssetIdentifier<Font> defaultFont, ISpriteEffect spriteEffect)
 		{
+			var dp = new DependencyProperty<int>(38);
+			var dps = new DependencyProperty<string>("hallo");
+
+			var dobj = new DependencyObject();
+			dobj.SetValue(dp, 11);
+			var v = dobj.GetValue(dps);
+			dobj.SetValue(dps, "ga");
+			v = dobj.GetValue(dps);
+
+
 			Assert.ArgumentNotNull(logFile);
 
 			using (new NativeLibrary())

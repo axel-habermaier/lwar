@@ -3,10 +3,10 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	/// <summary>
-	///   Represents a property that has multiple sources (such as data bindings, style setters, animation, etc.).
+	///   Represents an untyped property that has multiple sources (such as data bindings, style setters, animation,
+	///   etc.).
 	/// </summary>
-	/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
-	public class DependencyProperty<T>
+	public abstract class DependencyProperty
 	{
 		/// <summary>
 		///   The number of dependency properties that have been registered throughout the lifetime of the application.
@@ -16,7 +16,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public DependencyProperty()
+		protected DependencyProperty()
 		{
 			Index = _propertyCount++;
 		}
