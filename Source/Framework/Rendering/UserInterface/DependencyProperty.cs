@@ -25,5 +25,10 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   The index of the dependency property that remains unchanged and unique throughout the lifetime of the application.
 		/// </summary>
 		internal int Index { get; private set; }
+
+		/// <summary>
+		///   Gets the type of the value stored by the dependency property.
+		/// </summary>
+		internal abstract Type ValueType { get; }
 	}
 }

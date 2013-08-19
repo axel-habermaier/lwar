@@ -22,5 +22,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Gets the default value of the dependency property.
 		/// </summary>
 		public T DefaultValue { get; private set; }
+
+		/// <summary>
+		///   Gets the type of the value stored by the dependency property.
+		/// </summary>
+		internal override Type ValueType
+		{
+			get { return typeof(T); }
+		}
 	}
 }

@@ -17,12 +17,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public event PropertyChangedHandler PropertyChanged;
 
 		/// <summary>
-		///   Raises the property changed event.
+		///   Changes the property value and raises the property changed event.
 		/// </summary>
 		/// <param name="field">The backing field that stores the property value.</param>
 		/// <param name="newValue">The new value that should be set on the property.</param>
 		/// <param name="propertyName">The name of the property that is being changed.</param>
-		protected void OnPropertyChanged<T>(ref T field, T newValue, [CallerMemberName] string propertyName = "")
+		protected void ChangePropertyValue<T>(ref T field, T newValue, [CallerMemberName] string propertyName = "")
 		{
 			Assert.ArgumentNotNullOrWhitespace(propertyName);
 

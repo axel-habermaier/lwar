@@ -227,12 +227,12 @@
     <Compile Include="Rendering\UserInterface\Binding`1.cs" />
     <Compile Include="Rendering\UserInterface\Button.cs" />
     <Compile Include="Rendering\UserInterface\DependencyProperty`1.cs" />
-    <Compile Include="Rendering\UserInterface\DependencyPropertyChangedHandler.cs" />
     <Compile Include="Rendering\UserInterface\DependencyPropertyValue`1.cs" />
     <Compile Include="Rendering\UserInterface\DependencyObject.cs" />
     <Compile Include="Rendering\UserInterface\DependencyProperty.cs" />
     <Compile Include="Rendering\UserInterface\DependencyPropertyStore.cs" />
     <Compile Include="Rendering\UserInterface\DependencyPropertyValue.cs" />
+    <Compile Include="Rendering\UserInterface\ExpressionVisitor.cs" />
     <Compile Include="Rendering\UserInterface\INotifyPropertyChanged.cs" />
     <Compile Include="Rendering\UserInterface\PropertyChangedHandler.cs" />
     <Compile Include="Rendering\UserInterface\Text.cs" />

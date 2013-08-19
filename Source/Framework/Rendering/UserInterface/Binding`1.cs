@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.Rendering.UserInterface
 {
 	using System.Linq.Expressions;
+	using System.Reflection;
 
 	/// <summary>
 	///   Binds a target dependency object/dependency property pair to a source object and path selector.
@@ -11,9 +12,54 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	public class Binding<T>
 	{
 		/// <summary>
+		///   Indicates whether the view model of the bound UI element is the source object.
+		/// </summary>
+		private readonly bool _sourceIsViewModel;
+
+		/// <summary>
+		///   If greater than 0, the properties accessed by the source expression are currently changing.
+		/// </summary>
+		private byte _isChanging;
+
+		/// <summary>
+		///   Provides information about the first member access (such as 'a.b') in a source expression 'a.b.c.d'.
+		/// </summary>
+		/// <remarks>
+		///   We do not use an array to store the member access, but rather use a hard-coded limit to save possibly numerous
+		///   array allocations.
+		/// </remarks>
+		private MemberAccess _memberAccess1;
+
+		/// <summary>
+		///   Provides information about the second member access (such as 'b.c') in a source expression 'a.b.c.d'.
+		/// </summary>
+		private MemberAccess _memberAccess2;
+
+		/// <summary>
+		///   Provides information about the third member access (such as 'c.d') in a source expression 'a.b.c.d'.
+		/// </summary>
+		private MemberAccess _memberAccess3;
+
+		/// <summary>
+		///   The number of member accesses in the source expression.
+		/// </summary>
+		private byte _memberAccessCount;
+
+		/// <summary>
+		///   The expression that is used to get the value from the source object.
+		/// </summary>
+		private Expression<Func<object, T>> _sourceExpression;
+
+		/// <summary>
 		///   The compiled expression that is used to get the value from the source object.
 		/// </summary>
 		private Func<object, T> _sourceFunc;
+
+		/// <summary>
+		///   The source object that is passed to the source expression in order to get the value that is set on the target
+		///   property.
+		/// </summary>
+		private object _sourceObject;
 
 		/// <summary>
 		///   The target dependency object that defines the target dependency property.
@@ -26,15 +72,30 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private DependencyProperty<T> _targetProperty;
 
 		/// <summary>
-		///   Gets or sets the expression that is used to get the value from the source object.
+		///   Initializes a new instance.
 		/// </summary>
-		public Expression<Func<object, T>> SourceExpression { get; set; }
+		/// <param name="sourceExpression">The expression that should be used to get the source value.</param>
+		public Binding(Expression<Func<object, T>> sourceExpression)
+		{
+			Assert.ArgumentNotNull(sourceExpression);
+
+			_sourceExpression = sourceExpression;
+			_sourceIsViewModel = true;
+		}
 
 		/// <summary>
-		///   Gets or sets the source object that provides the value to be copied. If the source object is null, the getter is
-		///   applied to the target UI element's view model.
+		///   Initializes a new instance.
 		/// </summary>
-		public object SourceObject { get; set; }
+		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
+		/// <param name="sourceExpression">The expression that should be used to get the source value.</param>
+		public Binding(object sourceObject, Expression<Func<object, T>> sourceExpression)
+		{
+			Assert.ArgumentNotNull(sourceObject);
+			Assert.ArgumentNotNull(sourceExpression);
+
+			_sourceObject = sourceObject;
+			_sourceExpression = sourceExpression;
+		}
 
 		/// <summary>
 		///   Initializes the binding.
@@ -45,450 +106,437 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			Assert.ArgumentNotNull(targetObject);
 			Assert.ArgumentNotNull(targetProperty);
-			Assert.NotNull(SourceExpression, "No getter has been set.");
+			Assert.That(!_sourceIsViewModel || targetObject is UIElement,
+						"No source object has been set; this is OK as long as the target object is an UIElement, " +
+						"in which case the UIElement's view model becomes the source object.");
 
 			_targetObject = targetObject;
 			_targetProperty = targetProperty;
 
-			_sourceFunc = SourceExpression.Compile();
-			if (SourceObject == null)
+			if (_sourceIsViewModel)
 			{
-				var uiElement = _targetObject as UIElement;
-				Assert.NotNull(uiElement, "No source object has been set; this is OK as long as the target object is an UIElement, " +
-										  "in which case the UIElement's view model becomes the source object.");
-
-				SourceObject = uiElement.ViewModel;
+				_sourceExpression = SourceExpressionRewriter.Instance.Rewrite(_sourceExpression);
+				_sourceObject = _targetObject;
 			}
 
-			_targetObject.SetValue(_targetProperty, _sourceFunc(SourceObject));
-			WalkExpression(SourceExpression);
+			AnalyzeExpression();
+
+			_sourceFunc = _sourceExpression.Compile();
+			_memberAccess1.SourceObject = _targetObject;
 		}
 
-		private void WalkExpression(Expression<Func<object, T>> expression)
+		/// <summary>
+		///   Analyzes the source expression and generates the member access infos.
+		/// </summary>
+		private void AnalyzeExpression()
 		{
-			new Visitor().Visit(expression);
+			// Analyze the source expression
+			var analyzer = SourceExpressionAnalyzer.Instance;
+			var memberAccesses = analyzer.Analyze(_sourceExpression);
 
-			// Idea: consider a.b.c.d
-			// Flatten to array as follows:
-			// - [0]: object = source, prop = a
-			// - [1]: object = a, prop = b
-			// - [2]: object = b, prop = c
-			// - [3]: object = c, prop = d
-			// use reflection to access individual elements (for entire expression, use compiled lambda)
-			//    -> getting the value is cheap, property changes of the last element are somewhat cheap, 
-			//       property changes somewhere else are expensive (requires reflection, but should not happen that often?)
-			// register change handler on each (if invoked, search for object instance and prop name)
-			// if, for instance, b.c changes, unregister on c, update entry [3] and register handler again (and set new value on DP)
+			// Store a copy of the member access infos
+			_memberAccessCount = (byte)memberAccesses.Count;
+			switch (memberAccesses.Count)
+			{
+				case 3:
+					_memberAccess3 = memberAccesses.Array[0];
+					_memberAccess2 = memberAccesses.Array[1];
+					_memberAccess1 = memberAccesses.Array[2];
+
+					_memberAccess1.Changed = OnMember1Changed;
+					_memberAccess2.Changed = OnMember2Changed;
+					_memberAccess3.Changed = OnMember3Changed;
+					break;
+				case 2:
+					_memberAccess2 = memberAccesses.Array[0];
+					_memberAccess1 = memberAccesses.Array[1];
+
+					_memberAccess1.Changed = OnMember1Changed;
+					_memberAccess2.Changed = OnMember2Changed;
+					break;
+				case 1:
+					_memberAccess1 = memberAccesses.Array[0];
+					_memberAccess1.Changed = OnMember1Changed;
+					break;
+				case 0:
+					Assert.That(false, "The source expression does not access any members.");
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported number of member accesses.");
+			}
 		}
 
-		class Visitor : ExpressionVisitor
+		/// <summary>
+		///   Invoked when the first accessed member changed.
+		/// </summary>
+		private void OnMember1Changed()
+		{
+			++_isChanging;
+
+			if (_memberAccessCount > 1)
+				_memberAccess2.SourceObject = _memberAccess1.Value;
+
+			--_isChanging;
+
+			UpdateTargetProperty();
+		}
+
+		/// <summary>
+		///   Invoked when the second accessed member changed.
+		/// </summary>
+		private void OnMember2Changed()
+		{
+			++_isChanging;
+
+			if (_memberAccessCount > 2)
+				_memberAccess3.SourceObject = _memberAccess2.Value;
+
+			--_isChanging;
+
+			UpdateTargetProperty();
+		}
+
+		/// <summary>
+		///   Invoked when the third accessed member changed.
+		/// </summary>
+		private void OnMember3Changed()
+		{
+			UpdateTargetProperty();
+		}
+
+		/// <summary>
+		///   Updates the target property, setting it to the current source value.
+		/// </summary>
+		private void UpdateTargetProperty()
+		{
+			if (_isChanging == 0)
+				_targetObject.SetValue(_targetProperty, _sourceFunc(_sourceObject));
+		}
+
+		/// <summary>
+		///   Provides information about a member access in the source expression.
+		/// </summary>
+		private struct MemberAccess
 		{
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.MemberListBinding"/>.
+			///   A cached method info instance for DependencyObjects's GetValue method.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
+			private static readonly MethodInfo GetDependencyPropertyValueInfo = typeof(DependencyObject).GetMethod("GetValue");
+
+			/// <summary>
+			///   A cached method info instance for DependencyObjects's AddChangeHandler method.
+			/// </summary>
+			private static readonly MethodInfo AddChangeHandlerInfo = typeof(DependencyObject).GetMethod("AddChangeHandler");
+
+			/// <summary>
+			///   A cached method info instance for DependencyObjects's RemoveChangeHandler method.
+			/// </summary>
+			private static readonly MethodInfo RemoveChangeHandlerInfo = typeof(DependencyObject).GetMethod("RemoveChangeHandler");
+
+			/// <summary>
+			///   A cached event info instance for INotifyPropertyChanged's PropertyChanged event.
+			/// </summary>
+			private static readonly EventInfo PropertyChangedEventInfo = typeof(INotifyPropertyChanged).GetEvent("PropertyChanged");
+
+			/// <summary>
+			///   The reflection info instance for the property that is accessed, if any.
+			/// </summary>
+			private readonly PropertyInfo _propertyInfo;
+
+			/// <summary>
+			///   The dependency property that is accessed, if any.
+			/// </summary>
+			private DependencyProperty _dependencyProperty;
+
+			/// <summary>
+			///   The source object that is accessed.
+			/// </summary>
+			private object _sourceObject;
+
+			/// <summary>
+			///   Initializes a new instance.
+			/// </summary>
+			/// <param name="propertyInfo">The reflection info instance for the property that is accessed.</param>
+			public MemberAccess(PropertyInfo propertyInfo)
+				: this()
 			{
-				return base.VisitMemberListBinding(node);
+				Assert.ArgumentNotNull(propertyInfo);
+				_propertyInfo = propertyInfo;
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.MemberMemberBinding"/>.
+			///   Sets the change handler that is invoked when the value of the member has changed.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
+			public Action Changed { private get; set; }
+
+			/// <summary>
+			///   Sets the source object that is accessed.
+			/// </summary>
+			public object SourceObject
 			{
-				return base.VisitMemberMemberBinding(node);
+				private get { return _sourceObject; }
+				set
+				{
+					Assert.ArgumentNotNull(value);
+
+					if (_sourceObject == value)
+						return;
+
+					DetachFromChangeEvent();
+
+					_sourceObject = value;
+					_dependencyProperty = null;
+
+					GetDependencyProperty();
+					AttachToChangeEvent();
+
+					if (Changed != null)
+						Changed();
+				}
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.MemberAssignment"/>.
+			///   Uses reflection to get the value of the accessed member.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
+			public object Value
 			{
-				return base.VisitMemberAssignment(node);
+				get
+				{
+					Assert.NotNull(GetDependencyPropertyValueInfo, "Unable to find DependencyObject.GetValue() method.");
+
+					if (_dependencyProperty == null)
+						return _propertyInfo.GetValue(_sourceObject);
+
+					Assert.That(_sourceObject is DependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
+					var getValue = GetDependencyPropertyValueInfo.MakeGenericMethod(_dependencyProperty.ValueType);
+
+					return getValue.Invoke(_sourceObject, new object[] { _dependencyProperty });
+				}
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.MemberBinding"/>.
+			///   Attaches the instance to the source object's property changed event.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override MemberBinding VisitMemberBinding(MemberBinding node)
+			private void AttachToChangeEvent()
 			{
-				return base.VisitMemberBinding(node);
+				Assert.NotNull(PropertyChangedEventInfo, "Unable to find INotifyPropertyChanged.PropertyChanged event.");
+				Assert.NotNull(AddChangeHandlerInfo, "Unable to find DependencyObject.AddChangeHandler() method.");
+				Assert.NotNull(RemoveChangeHandlerInfo, "Unable to find DependencyObject.RemoveChangeHandler() method.");
+
+				if (_dependencyProperty != null)
+				{
+					Assert.That(_sourceObject is DependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
+
+					var addHandler = AddChangeHandlerInfo.MakeGenericMethod(_dependencyProperty.ValueType);
+					addHandler.Invoke(_sourceObject, new object[] { _dependencyProperty, new DependencyPropertyChangedHandler(DependencyPropertyChanged) });
+				}
+				else
+				{
+					var notifyPropertyChanged = _sourceObject as INotifyPropertyChanged;
+					if (notifyPropertyChanged == null)
+						return;
+
+					PropertyChangedEventInfo.AddEventHandler(notifyPropertyChanged, new PropertyChangedHandler(PropertyChanged));
+				}
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.ElementInit"/>.
+			///   Detaches the instance from the source object's property changed event.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override ElementInit VisitElementInit(ElementInit node)
+			private void DetachFromChangeEvent()
 			{
-				return base.VisitElementInit(node);
+				Assert.NotNull(PropertyChangedEventInfo, "Unable to find INotifyPropertyChanged.PropertyChanged event.");
+				Assert.NotNull(AddChangeHandlerInfo, "Unable to find DependencyObject.AddChangeHandler() method.");
+				Assert.NotNull(RemoveChangeHandlerInfo, "Unable to find DependencyObject.RemoveChangeHandler() method.");
+
+				if (_dependencyProperty != null)
+				{
+					Assert.That(_sourceObject is DependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
+
+					var removeHandler = RemoveChangeHandlerInfo.MakeGenericMethod(_dependencyProperty.ValueType);
+					removeHandler.Invoke(_sourceObject,
+										 new object[] { _dependencyProperty, new DependencyPropertyChangedHandler(DependencyPropertyChanged) });
+				}
+				else
+				{
+					var notifyPropertyChanged = _sourceObject as INotifyPropertyChanged;
+					if (notifyPropertyChanged == null)
+						return;
+
+					PropertyChangedEventInfo.RemoveEventHandler(notifyPropertyChanged, new PropertyChangedHandler(PropertyChanged));
+				}
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.ListInitExpression"/>.
+			///   Gets the dependency property instance if the accessed member is a dependency property.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitListInit(ListInitExpression node)
+			private void GetDependencyProperty()
 			{
-				return base.VisitListInit(node);
+				if (!(_sourceObject is DependencyObject))
+					return;
+
+				var fieldName = String.Format("{0}Property", _propertyInfo.Name);
+				var bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+				var propertyField = _sourceObject.GetType().GetField(fieldName, bindingFlags);
+
+				if (propertyField == null)
+					return;
+
+				_dependencyProperty = (DependencyProperty)propertyField.GetValue(null);
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.MemberInitExpression"/>.
+			///   Handles a change notification for a property.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitMemberInit(MemberInitExpression node)
+			/// <param name="obj">The object the changed property belongs to.</param>
+			/// <param name="property">The name of the property that has changed.</param>
+			private void PropertyChanged(object obj, string property)
 			{
-				return base.VisitMemberInit(node);
+				Assert.That(obj == _sourceObject, "Received an unexpected property change notification.");
+				Assert.That(_dependencyProperty == null, "Received an unexpected property change notification.");
+
+				if (property == _propertyInfo.Name && Changed != null)
+					Changed();
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.UnaryExpression"/>.
+			///   Handles a change notification for a dependency property.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitUnary(UnaryExpression node)
+			/// <param name="obj">The dependency object the changed dependency property belongs to.</param>
+			/// <param name="property">The dependency property that has changed.</param>
+			private void DependencyPropertyChanged(DependencyObject obj, DependencyProperty property)
 			{
-				return base.VisitUnary(node);
+				Assert.That(obj == _sourceObject, "Received an unexpected dependency property change notification.");
+				Assert.NotNull(_dependencyProperty, "Received un unexpected dependency property change notification.");
+
+				if (property == _dependencyProperty && Changed != null)
+					Changed();
+			}
+		}
+
+		/// <summary>
+		///   Analyzes a source expression of a binding.
+		/// </summary>
+		private class SourceExpressionAnalyzer : MemberAccessExpressionVisitor
+		{
+			/// <summary>
+			///   The singleton instance of the source expression analyzer.
+			/// </summary>
+			public static readonly SourceExpressionAnalyzer Instance = new SourceExpressionAnalyzer();
+
+			/// <summary>
+			///   Provides information about the member accesses (such as 'a.b') in a source expression 'a.b.c.d'. The member access at
+			///   index 0 corresponds to 'c.d', the one at index 1 corresponds to 'b.c', etc.
+			/// </summary>
+			private readonly MemberAccess[] _memberAccesses = new MemberAccess[3];
+
+			/// <summary>
+			///   The number of member accesses in the source expression.
+			/// </summary>
+			private int _memberAccessCount;
+
+			/// <summary>
+			///   Indicates whether the source object has been found in the expression.
+			/// </summary>
+			private bool _sourceObjectFound;
+
+			/// <summary>
+			///   Initializes a new instance.
+			/// </summary>
+			private SourceExpressionAnalyzer()
+			{
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.TypeBinaryExpression"/>.
+			///   Analyzes the source expression and returns the member accesses.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitTypeBinary(TypeBinaryExpression node)
+			/// <param name="expression">The expression that should be analyzed.</param>
+			public ArraySegment<MemberAccess> Analyze(Expression<Func<object, T>> expression)
 			{
-				return base.VisitTypeBinary(node);
+				Assert.ArgumentNotNull(expression);
+
+				_sourceObjectFound = false;
+				_memberAccessCount = 0;
+
+				Visit(expression.Body);
+				return new ArraySegment<MemberAccess>(_memberAccesses, 0, _memberAccessCount);
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.TryExpression"/>.
+			///   Visits an unary expression. Only conversion expressions (casts) are supported.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitTry(TryExpression node)
+			protected override Expression VisitUnary(UnaryExpression expression)
 			{
-				return base.VisitTry(node);
+				Assert.ArgumentSatisfies(expression.NodeType == ExpressionType.Convert, "Unsupported unary expression.");
+				return base.VisitUnary(expression);
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.CatchBlock"/>.
+			///   Vists a parameter access expression. Only lambda function parameter accesses are supported.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override CatchBlock VisitCatchBlock(CatchBlock node)
+			protected override Expression VisitParameter(ParameterExpression expression)
 			{
-				return base.VisitCatchBlock(node);
+				_sourceObjectFound = true;
+				return base.VisitParameter(expression);
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.SwitchExpression"/>.
+			///   Vists a member access expression. Only property accesses are supported.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitSwitch(SwitchExpression node)
+			protected override Expression VisitMember(MemberExpression expression)
 			{
-				return base.VisitSwitch(node);
+				Assert.ArgumentSatisfies(expression.Member.MemberType == MemberTypes.Property, "Unsupported non-property member access.");
+				Assert.That(!_sourceObjectFound, "Found a member access that is not transitively connected to the source object.");
+				Assert.That(_memberAccessCount + 1 <= _memberAccesses.Length, "Too many member accesses in source expression.");
+
+				_memberAccesses[_memberAccessCount] = new MemberAccess((PropertyInfo)expression.Member);
+				++_memberAccessCount;
+
+				return base.VisitMember(expression);
+			}
+		}
+
+		/// <summary>
+		///   Rewrites the source expression of a binding such that the first member access is the view model property.
+		/// </summary>
+		private class SourceExpressionRewriter : MemberAccessExpressionVisitor
+		{
+			/// <summary>
+			///   The singleton instance of the source expression analyzer.
+			/// </summary>
+			public static readonly SourceExpressionRewriter Instance = new SourceExpressionRewriter();
+
+			/// <summary>
+			///   A cached property info instance for UIElement's ViewModel property.
+			/// </summary>
+			private static readonly PropertyInfo ViewModelPropertyInfo = typeof(UIElement).GetProperty("ViewModel");
+
+			/// <summary>
+			///   The expression that is used to access the view model.
+			/// </summary>
+			private MemberExpression _viewModelAccess;
+
+			/// <summary>
+			///   Analyzes the source expression and returns the member accesses.
+			/// </summary>
+			/// <param name="expression">The expression that should be rewritten.</param>
+			public Expression<Func<object, T>> Rewrite(Expression<Func<object, T>> expression)
+			{
+				Assert.ArgumentNotNull(expression);
+				Assert.NotNull(ViewModelPropertyInfo, "View model property info could not be found.");
+
+				var convertedParameter = Expression.Convert(expression.Parameters[0], typeof(UIElement));
+				_viewModelAccess = Expression.MakeMemberAccess(convertedParameter, ViewModelPropertyInfo);
+
+				return Expression.Lambda<Func<object, T>>(Visit(expression.Body), expression.Parameters);
 			}
 
 			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.SwitchCase"/>.
+			///   Vists a parameter access expression. Only lambda function parameter accesses are supported.
 			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override SwitchCase VisitSwitchCase(SwitchCase node)
+			protected override Expression VisitParameter(ParameterExpression expression)
 			{
-				return base.VisitSwitchCase(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.RuntimeVariablesExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
-			{
-				return base.VisitRuntimeVariables(node);
-			}
-
-			/// <summary>
-			/// Visits the <see cref="T:System.Linq.Expressions.ParameterExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitParameter(ParameterExpression node)
-			{
-				return base.VisitParameter(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.NewExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitNew(NewExpression node)
-			{
-				return base.VisitNew(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.NewArrayExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitNewArray(NewArrayExpression node)
-			{
-				return base.VisitNewArray(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.MethodCallExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitMethodCall(MethodCallExpression node)
-			{
-				return base.VisitMethodCall(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.IndexExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitIndex(IndexExpression node)
-			{
-				return base.VisitIndex(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.MemberExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitMember(MemberExpression node)
-			{
-				return base.VisitMember(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.LoopExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitLoop(LoopExpression node)
-			{
-				return base.VisitLoop(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.Expression`1"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param><typeparam name="T">The type of the delegate.</typeparam>
-			protected override Expression VisitLambda<T1>(Expression<T1> node)
-			{
-				return base.VisitLambda(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.LabelExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitLabel(LabelExpression node)
-			{
-				return base.VisitLabel(node);
-			}
-
-			/// <summary>
-			/// Visits the <see cref="T:System.Linq.Expressions.LabelTarget"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override LabelTarget VisitLabelTarget(LabelTarget node)
-			{
-				return base.VisitLabelTarget(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.InvocationExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitInvocation(InvocationExpression node)
-			{
-				return base.VisitInvocation(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.GotoExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitGoto(GotoExpression node)
-			{
-				return base.VisitGoto(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the extension expression.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitExtension(Expression node)
-			{
-				return base.VisitExtension(node);
-			}
-
-			/// <summary>
-			/// Visits the <see cref="T:System.Linq.Expressions.DefaultExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitDefault(DefaultExpression node)
-			{
-				return base.VisitDefault(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.DynamicExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitDynamic(DynamicExpression node)
-			{
-				return base.VisitDynamic(node);
-			}
-
-			/// <summary>
-			/// Visits the <see cref="T:System.Linq.Expressions.DebugInfoExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitDebugInfo(DebugInfoExpression node)
-			{
-				return base.VisitDebugInfo(node);
-			}
-
-			/// <summary>
-			/// Visits the <see cref="T:System.Linq.Expressions.ConstantExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitConstant(ConstantExpression node)
-			{
-				return base.VisitConstant(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.ConditionalExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitConditional(ConditionalExpression node)
-			{
-				return base.VisitConditional(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.BlockExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitBlock(BlockExpression node)
-			{
-				return base.VisitBlock(node);
-			}
-
-			/// <summary>
-			/// Visits the children of the <see cref="T:System.Linq.Expressions.BinaryExpression"/>.
-			/// </summary>
-			/// <returns>
-			/// The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.
-			/// </returns>
-			/// <param name="node">The expression to visit.</param>
-			protected override Expression VisitBinary(BinaryExpression node)
-			{
-				return base.VisitBinary(node);
+				return _viewModelAccess;
 			}
 		}
 	}

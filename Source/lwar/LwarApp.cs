@@ -61,11 +61,13 @@ namespace Lwar
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
-			b = new Button();
-			b.ViewModel =vm= new TestViewModel();
+			b = new Button { ViewModel = vm = new TestViewModel() };
 			vm.Rank = 17;
+			vm.A = new TestViewModel();
+			vm.A.B = new TestViewModel();
+			vm.A.Rank = 21;
 
-			var binding = new Binding<object> { SourceExpression = s => ((TestViewModel)s).Rank };
+			var binding = new Binding<object>(viewModel => ((TestViewModel)viewModel).A.Rank);
 			b.SetBinding(Button.ContentProperty, binding);
 		}
 
@@ -77,7 +79,15 @@ namespace Lwar
 			_localServer.Update();
 			_stateManager.Update();
 
+			var vm = b.ViewModel as TestViewModel;
 			vm.Rank++;
+			vm.A.Rank++;
+
+			if (vm.Rank % 1000 == 0)
+				vm.A = new TestViewModel();
+
+			if (vm.Rank % 3000 == 0)
+				b.ViewModel = new TestViewModel() { A = new TestViewModel{Rank = 9999999 }};
 		}
 
 		/// <summary>
@@ -139,7 +149,32 @@ namespace Lwar
 
 		private class TestViewModel : ViewModel
 		{
+			private static int _x;
 			private int _rank;
+			private TestViewModel a, b, c;
+
+			public TestViewModel A
+			{
+				get { return a; }
+				set { ChangePropertyValue(ref a, value); }
+			}
+
+			public TestViewModel B
+			{
+				get { return b; }
+				set { ChangePropertyValue(ref b, value); }
+			}
+
+			public TestViewModel C
+			{
+				get { return c; }
+				set { ChangePropertyValue(ref c, value); }
+			}
+
+			public TestViewModel()
+			{
+				//_rank = ++_x;
+			}
 
 			/// <summary>
 			///   Rank of the local player
@@ -147,7 +182,7 @@ namespace Lwar
 			public int Rank
 			{
 				get { return _rank; }
-				set { OnPropertyChanged(ref _rank, value); }
+				set { ChangePropertyValue(ref _rank, value); }
 			}
 		}
 	}

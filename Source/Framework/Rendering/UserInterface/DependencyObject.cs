@@ -74,9 +74,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (propertyValue.ChangeHandlers == null)
 				return;
 
-			var newValue = GetValue(property);
-			if (!previousValue.Equals(newValue))
-				propertyValue.ChangeHandlers(this, property, newValue);
+			if (!previousValue.Equals(GetValue(property)))
+				propertyValue.ChangeHandlers(this, property);
 		}
 
 		/// <summary>
@@ -101,7 +100,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the change handler should be added to.</param>
 		/// <param name="changeHandler">The change handler that should be added.</param>
-		public void AddChangeHandler<T>(DependencyProperty<T> property, DependencyPropertyChangedHandler<T> changeHandler)
+		public void AddChangeHandler<T>(DependencyProperty<T> property, DependencyPropertyChangedHandler changeHandler)
 		{
 			Assert.ArgumentNotNull(property);
 			Assert.ArgumentNotNull(changeHandler);
@@ -115,7 +114,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the change handler should be removed from.</param>
 		/// <param name="changeHandler">The change handler that should be removed.</param>
-		public void RemoveChangeHandler<T>(DependencyProperty<T> property, DependencyPropertyChangedHandler<T> changeHandler)
+		public void RemoveChangeHandler<T>(DependencyProperty<T> property, DependencyPropertyChangedHandler changeHandler)
 		{
 			Assert.ArgumentNotNull(property);
 			Assert.ArgumentNotNull(changeHandler);
