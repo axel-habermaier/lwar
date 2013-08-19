@@ -8,17 +8,23 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	public abstract class Trigger : ISealable
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///   The collection of setters that apply property values when the trigger is triggered.
 		/// </summary>
-		protected Trigger()
-		{
-			Setters = new SealableCollection<Setter>();
-		}
+		private SealableCollection<Setter> _setters = SealableCollection<Setter>.Empty;
 
 		/// <summary>
-		///   Gets the collection of setters that apply property values.
+		///   Gets the collection of setters that apply property values when the trigger is triggered.
 		/// </summary>
-		public SealableCollection<Setter> Setters { get; private set; }
+		public SealableCollection<Setter> Setters
+		{
+			get
+			{
+				if (_setters == SealableCollection<Setter>.Empty)
+					_setters = new SealableCollection<Setter>();
+
+				return _setters;
+			}
+		}
 
 		/// <summary>
 		///   Gets a value indicating whether the object is sealed and can no longer be modified.

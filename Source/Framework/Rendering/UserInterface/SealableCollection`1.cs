@@ -13,6 +13,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		where T : ISealable
 	{
 		/// <summary>
+		///   Represents an empty sealable collection that cannot be modified.
+		/// </summary>
+		public static readonly SealableCollection<T> Empty = new SealableCollection<T>() { IsSealed = true };
+
+		/// <summary>
 		///   Gets a value indicating whether the collection is sealed and can no longer be modified.
 		/// </summary>
 		public bool IsSealed { get; private set; }

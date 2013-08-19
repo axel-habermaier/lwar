@@ -8,23 +8,42 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	public class Style : ISealable
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///   The collection of setters that apply property values.
 		/// </summary>
-		public Style()
-		{
-			Setters = new SealableCollection<Setter>();
-			Triggers = new SealableCollection<Trigger>();
-		}
+		private SealableCollection<Setter> _setters = SealableCollection<Setter>.Empty;
+
+		/// <summary>
+		///   The triggers that apply property values only when certain conditions hold.
+		/// </summary>
+		private SealableCollection<Trigger> _triggers = SealableCollection<Trigger>.Empty;
 
 		/// <summary>
 		///   Gets the collection of setters that apply property values.
 		/// </summary>
-		public SealableCollection<Setter> Setters { get; private set; }
+		public SealableCollection<Setter> Setters
+		{
+			get
+			{
+				if (_setters == SealableCollection<Setter>.Empty)
+					_setters = new SealableCollection<Setter>();
+
+				return _setters;
+			}
+		}
 
 		/// <summary>
 		///   Gets the triggers that apply property values only when certain conditions hold.
 		/// </summary>
-		public SealableCollection<Trigger> Triggers { get; private set; }
+		public SealableCollection<Trigger> Triggers
+		{
+			get
+			{
+				if (_triggers == SealableCollection<Trigger>.Empty)
+					_triggers = new SealableCollection<Trigger>();
+
+				return _triggers;
+			}
+		}
 
 		/// <summary>
 		///   Gets a value indicating whether the style is sealed and can no longer be modified.
