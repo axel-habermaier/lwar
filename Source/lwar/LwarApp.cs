@@ -63,6 +63,9 @@ namespace Lwar
 
 			var s = new Style();
 			s.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
+			var t = new Trigger<bool>(UIElement.IsMouseOverProperty, true);
+			t.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(0, 255, 123, 255)));
+			s.Triggers.Add(t);
 
 			b = new Button { ViewModel = vm = new TestViewModel() };
 			b.Resources.Add("myStyle", s);
@@ -88,18 +91,24 @@ namespace Lwar
 			vm.Rank++;
 			vm.A.Rank++;
 
-			if (vm.Rank % 1000 == 0)
+			if (vm.Rank % 500 == 0)
 			{
 				var s = new Style();
-				s.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(255,52,251, 255)));
+				s.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(255, 52, 251, 255)));
 				vm.A = new TestViewModel() { A = new TestViewModel() };
-				var r = new ResourceDictionary();
-				r.Add("myStyle", s);
-				b.Resources = r;
+				//var r = new ResourceDictionary();
+				//r.Add("myStyle", s);
+				//b.Resources = r;
+				b.IsMouseOver = !b.IsMouseOver;
+			}
+
+			if (vm.Rank % 2000 == 0)
+			{
+				b.Resources["myStyle"] = new Style();
 			}
 
 			//if (vm.Rank % 3000 == 0)
-				//b.ViewModel = new TestViewModel() { A = new TestViewModel{Rank = 9999999 }};
+			//b.ViewModel = new TestViewModel() { A = new TestViewModel{Rank = 9999999 }};
 		}
 
 		/// <summary>
@@ -165,6 +174,11 @@ namespace Lwar
 			private int _rank;
 			private TestViewModel a, b, c;
 
+			public TestViewModel()
+			{
+				//_rank = ++_x;
+			}
+
 			public TestViewModel A
 			{
 				get { return a; }
@@ -181,11 +195,6 @@ namespace Lwar
 			{
 				get { return c; }
 				set { ChangePropertyValue(ref c, value); }
-			}
-
-			public TestViewModel()
-			{
-				//_rank = ++_x;
 			}
 
 			/// <summary>

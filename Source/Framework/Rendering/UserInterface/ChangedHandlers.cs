@@ -14,7 +14,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	/// </summary>
 	/// <param name="obj">The dependency object the changed dependency property belongs to.</param>
 	/// <param name="property">The dependency property that has changed.</param>
-	public delegate void DependencyPropertyChangedHandler(DependencyObject obj, DependencyProperty property);
+	public delegate void DependencyPropertyChangeHandler(DependencyObject obj, DependencyProperty property);
 
 	/// <summary>
 	///   Handles a change notification for a resource dictionary.

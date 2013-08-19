@@ -226,6 +226,7 @@
     <Compile Include="Rendering\DynamicVertexBuffer.cs" />
     <Compile Include="Rendering\UserInterface\Binding`1.cs" />
     <Compile Include="Rendering\UserInterface\Button.cs" />
+    <Compile Include="Rendering\UserInterface\Trigger`1.cs" />
     <Compile Include="Rendering\UserInterface\ISealable.cs" />
     <Compile Include="Rendering\UserInterface\ReflectionHelper.cs" />
     <Compile Include="Rendering\UserInterface\ResourceBinding.cs" />
@@ -244,6 +245,7 @@
     <Compile Include="Rendering\UserInterface\Setter.cs" />
     <Compile Include="Rendering\UserInterface\Style.cs" />
     <Compile Include="Rendering\UserInterface\Text.cs" />
+    <Compile Include="Rendering\UserInterface\Trigger.cs" />
     <Compile Include="Rendering\UserInterface\UIElement.cs" />
     <Compile Include="Rendering\UserInterface\ViewModel.cs" />
     <Compile Include="Rendering\UserInterface\Visual.cs" />

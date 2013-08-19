@@ -31,13 +31,45 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Applies the setter's value to the given dependency object and seals the setter.
+		///   Applies the setter's value to the given UI element.
 		/// </summary>
-		/// <param name="obj">The dependency object the setter should be applied to.</param>
-		internal override void Apply(DependencyObject obj)
+		/// <param name="obj">The UI element the setter's value should be applied to.</param>
+		internal override void Apply(UIElement obj)
 		{
 			Assert.ArgumentNotNull(obj);
 			obj.SetStyleValue(_dependencyProperty, _value);
+		}
+
+		/// <summary>
+		///   Applies the setter's value to the given UI element when the setter is applied as the result of a trigger being
+		///   triggered.
+		/// </summary>
+		/// <param name="obj">The UI element the setter's value should be applied to.</param>
+		internal override void ApplyTriggered(UIElement obj)
+		{
+			Assert.ArgumentNotNull(obj);
+			obj.SetStyleTriggeredValue(_dependencyProperty, _value);
+		}
+
+		/// <summary>
+		///   Unsets the setter's value from the given UI element when the setter is no longer applied as the result of a
+		///   trigger being triggered.
+		/// </summary>
+		/// <param name="obj">The UI element the setter's value should be applied to.</param>
+		internal override void UnsetTriggered(UIElement obj)
+		{
+			Assert.ArgumentNotNull(obj);
+			obj.UnsetStyleTriggeredValue(_dependencyProperty);
+		}
+
+		/// <summary>
+		///   Unsets the setter's value from the given UI element.
+		/// </summary>
+		/// <param name="obj">The UI element the setter's value should be unset from.</param>
+		internal override void Unset(UIElement obj)
+		{
+			Assert.ArgumentNotNull(obj);
+			obj.UnsetStyleValue(_dependencyProperty);
 		}
 	}
 }

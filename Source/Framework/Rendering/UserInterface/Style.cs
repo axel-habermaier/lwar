@@ -13,12 +13,18 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public Style()
 		{
 			Setters = new SealableCollection<Setter>();
+			Triggers = new SealableCollection<Trigger>();
 		}
 
 		/// <summary>
 		///   Gets the collection of setters that apply property values.
 		/// </summary>
 		public SealableCollection<Setter> Setters { get; private set; }
+
+		/// <summary>
+		///   Gets the triggers that apply property values only when certain conditions hold.
+		/// </summary>
+		public SealableCollection<Trigger> Triggers { get; private set; }
 
 		/// <summary>
 		///   Gets a value indicating whether the style is sealed and can no longer be modified.
@@ -28,24 +34,42 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Seals the object such that it can no longer be modified.
 		/// </summary>
-		void ISealable.Seal()
+		public void Seal()
 		{
-			((ISealable)Setters).Seal();
-			foreach (var setter in Setters)
-				((ISealable)setter).Seal();
+			IsSealed = true;
+
+			Setters.Seal();
+			Triggers.Seal();
 		}
 
 		/// <summary>
-		///   Applies the style to the given dependency object and seals the style.
+		///   Applies the style to the given UI element.
 		/// </summary>
-		/// <param name="obj">The dependency object the style should be applied to.</param>
-		internal void Apply(DependencyObject obj)
+		/// <param name="obj">The UI element the style should be applied to.</param>
+		internal void Apply(UIElement obj)
 		{
 			Assert.ArgumentNotNull(obj);
 
-			((ISealable)this).Seal();
 			foreach (var setter in Setters)
 				setter.Apply(obj);
+
+			foreach (var trigger in Triggers)
+				trigger.Apply(obj);
+		}
+
+		/// <summary>
+		///   Unsets the style from the given UI element.
+		/// </summary>
+		/// <param name="obj">The UI element the style should be unset from.</param>
+		internal void Unset(UIElement obj)
+		{
+			Assert.ArgumentNotNull(obj);
+
+			foreach (var setter in Setters)
+				setter.Unset(obj);
+
+			foreach (var trigger in Triggers)
+				trigger.Unset(obj);
 		}
 	}
 }

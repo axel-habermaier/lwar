@@ -36,11 +36,17 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private static readonly DependencyProperty<ResourceDictionary> ResourcesProperty = new DependencyProperty<ResourceDictionary>();
 
 		/// <summary>
+		///   Indicates whether the mouse is currently hovering the UI element.
+		/// </summary>
+		public static readonly DependencyProperty<bool> IsMouseOverProperty = new DependencyProperty<bool>();
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		protected UIElement()
 		{
-			AddChangeHandler(StyleProperty, OnStyleChanged);
+			AddChangingHandler(StyleProperty, OnStyleChanging);
+			AddChangedHandler(StyleProperty, OnStyleChanged);
 		}
 
 		/// <summary>
@@ -117,6 +123,15 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
+		///   Indicates whether the mouse is currently hovering the UI element.
+		/// </summary>
+		public bool IsMouseOver
+		{
+			get { return GetValue(IsMouseOverProperty); }
+			set { SetValue(IsMouseOverProperty, value); }
+		}
+
+		/// <summary>
 		///   Gets or sets the logical parent of the UI element.
 		/// </summary>
 		internal UIElement LogicalParent { get; set; }
@@ -170,12 +185,27 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
+		///   Unsets the current style from the UI element, if any.
+		/// </summary>
+		private void OnStyleChanging(DependencyObject obj, DependencyProperty property)
+		{
+			var style = Style;
+			if (style == null)
+				return;
+
+			style.Unset(this);
+		}
+
+		/// <summary>
 		///   Applies a style change to the UI element.
 		/// </summary>
 		private void OnStyleChanged(DependencyObject obj, DependencyProperty property)
 		{
-			Assert.NotNull(Style);
-			Style.Apply(this);
+			var style = Style;
+			Assert.NotNull(style);
+
+			style.Seal();
+			style.Apply(this);
 		}
 
 		/// <summary>

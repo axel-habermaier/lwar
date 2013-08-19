@@ -19,12 +19,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   A cached method info instance for DependencyObjects's AddChangeHandler method.
 		/// </summary>
-		private static readonly MethodInfo AddDependencyPropertyChangeHandlerInfo = typeof(DependencyObject).GetMethod("AddChangeHandler");
+		private static readonly MethodInfo AddDependencyPropertyChangedHandlerInfo = typeof(DependencyObject).GetMethod("AddChangedHandler");
 
 		/// <summary>
 		///   A cached method info instance for DependencyObjects's RemoveChangeHandler method.
 		/// </summary>
-		private static readonly MethodInfo RemoveDependencyPropertyChangeHandlerInfo = typeof(DependencyObject).GetMethod("RemoveChangeHandler");
+		private static readonly MethodInfo RemoveDependencyPropertyChangedHandlerInfo = typeof(DependencyObject).GetMethod("RemoveChangedHandler");
 
 		/// <summary>
 		///   A cached event info instance for INotifyPropertyChanged's PropertyChanged event.
@@ -44,8 +44,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			Assert.NotNull(GetDependencyPropertyValueInfo, "Unable to find the DependencyObject.GetValue() method.");
 			Assert.NotNull(PropertyChangedEventInfo, "Unable to find the INotifyPropertyChanged.PropertyChanged event.");
-			Assert.NotNull(AddDependencyPropertyChangeHandlerInfo, "Unable to find the DependencyObject.AddChangeHandler() method.");
-			Assert.NotNull(RemoveDependencyPropertyChangeHandlerInfo, "Unable to find the DependencyObject.RemoveChangeHandler() method.");
+			Assert.NotNull(AddDependencyPropertyChangedHandlerInfo, "Unable to find the DependencyObject.AddChangeHandler() method.");
+			Assert.NotNull(RemoveDependencyPropertyChangedHandlerInfo, "Unable to find the DependencyObject.RemoveChangeHandler() method.");
 			Assert.NotNull(ViewModelPropertyInfo, "Unable to find the UIElement.ViewModel property.");
 		}
 
@@ -70,13 +70,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="property">The property the handler should be attached to.</param>
 		/// <param name="handler">The handler that should be attached.</param>
 		public static void AttachDependencyPropertyChangedEventHandler(DependencyObject obj, DependencyProperty property,
-																	   DependencyPropertyChangedHandler handler)
+																	   DependencyPropertyChangeHandler handler)
 		{
 			Assert.ArgumentNotNull(obj);
 			Assert.ArgumentNotNull(property);
 			Assert.ArgumentNotNull(handler);
 
-			var addHandler = AddDependencyPropertyChangeHandlerInfo.MakeGenericMethod(property.ValueType);
+			var addHandler = AddDependencyPropertyChangedHandlerInfo.MakeGenericMethod(property.ValueType);
 			addHandler.Invoke(obj, new object[] { property, handler });
 		}
 
@@ -87,13 +87,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="property">The property the handler should be detached from.</param>
 		/// <param name="handler">The handler that should be detached.</param>
 		public static void DetachDependencyPropertyChangedEventHandler(DependencyObject obj, DependencyProperty property,
-																	   DependencyPropertyChangedHandler handler)
+																	   DependencyPropertyChangeHandler handler)
 		{
 			Assert.ArgumentNotNull(obj);
 			Assert.ArgumentNotNull(property);
 			Assert.ArgumentNotNull(handler);
 
-			var removeHandler = RemoveDependencyPropertyChangeHandlerInfo.MakeGenericMethod(property.ValueType);
+			var removeHandler = RemoveDependencyPropertyChangedHandlerInfo.MakeGenericMethod(property.ValueType);
 			removeHandler.Invoke(obj, new object[] { property, handler });
 		}
 

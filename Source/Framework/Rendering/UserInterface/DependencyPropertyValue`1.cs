@@ -13,9 +13,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	internal class DependencyPropertyValue<T> : DependencyPropertyValue
 	{
 		/// <summary>
-		///   The change handlers that are invoked when the effect value of the dependency property has changed.
+		///   The change handlers that are invoked when the effective value of the dependency property has changed.
 		/// </summary>
-		public DependencyPropertyChangedHandler ChangeHandlers;
+		public DependencyPropertyChangeHandler ChangedHandlers;
+
+		/// <summary>
+		///   The change handlers that are invoked when the effective value of the dependency property is about to change.
+		/// </summary>
+		public DependencyPropertyChangeHandler ChangingHandlers;
 
 		/// <summary>
 		///   The property's value that has been set by the animation system. The animated value has the highest precedence.
@@ -110,6 +115,18 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			_triggeredValue = value;
 			_sources |= ValueSources.StyleTrigger;
+		}
+
+		/// <summary>
+		///   Unsets the property's value that has been set by a style.
+		/// </summary>
+		public void UnsetStyleValue()
+		{
+			if ((_sources & ValueSources.Style) != ValueSources.Style)
+				return;
+
+			_baseValue = default(T);
+			_sources &= ~ValueSources.Style;
 		}
 
 		/// <summary>

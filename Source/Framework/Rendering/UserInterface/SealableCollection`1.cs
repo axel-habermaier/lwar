@@ -10,6 +10,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	/// </summary>
 	/// <typeparam name="T">The type of the objects contained in the collection.</typeparam>
 	public class SealableCollection<T> : Collection<T>, ISealable
+		where T : ISealable
 	{
 		/// <summary>
 		///   Gets a value indicating whether the collection is sealed and can no longer be modified.
@@ -19,9 +20,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Seals the collection such that it can no longer be modified.
 		/// </summary>
-		void ISealable.Seal()
+		public void Seal()
 		{
 			IsSealed = true;
+
+			foreach (var item in this)
+				item.Seal();
 		}
 
 		/// <summary>

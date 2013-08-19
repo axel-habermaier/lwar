@@ -5,7 +5,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	/// <summary>
 	///   Represents a class that can be sealed, preventing any future modification of the class.
 	/// </summary>
-	internal interface ISealable
+	public interface ISealable
 	{
 		/// <summary>
 		///   Gets a value indicating whether the object is sealed and can no longer be modified.

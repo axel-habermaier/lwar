@@ -27,12 +27,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			var previousValue = GetValue(property);
 			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
 
+			RaiseChangingEvent(property, propertyValue);
 			propertyValue.SetLocalValue(value);
 			RaiseChangeEvent(property, propertyValue, previousValue);
 		}
 
 		/// <summary>
-		///   Sets the value of the dependency property originating from a style.
+		///   Sets the value of the dependency property originating from a style setter.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be set.</param>
@@ -44,7 +45,26 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			var previousValue = GetValue(property);
 			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
 
+			RaiseChangingEvent(property, propertyValue);
 			propertyValue.SetStyleValue(value);
+			RaiseChangeEvent(property, propertyValue, previousValue);
+		}
+
+		/// <summary>
+		///   Sets the value of the dependency property originating from a style setter being triggered.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be set.</param>
+		/// <param name="value">The value that should be set.</param>
+		internal void SetStyleTriggeredValue<T>(DependencyProperty<T> property, T value)
+		{
+			Assert.ArgumentNotNull(property);
+
+			var previousValue = GetValue(property);
+			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
+
+			RaiseChangingEvent(property, propertyValue);
+			propertyValue.SetStyleTriggeredValue(value);
 			RaiseChangeEvent(property, propertyValue, previousValue);
 		}
 
@@ -61,7 +81,42 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			var previousValue = GetValue(property);
 			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
 
+			RaiseChangingEvent(property, propertyValue);
 			propertyValue.SetAnimatedValue(value);
+			RaiseChangeEvent(property, propertyValue, previousValue);
+		}
+
+		/// <summary>
+		///   Unsets the last value of the dependency property that originated from a style.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be unset.</param>
+		internal void UnsetStyleValue<T>(DependencyProperty<T> property)
+		{
+			Assert.ArgumentNotNull(property);
+
+			var previousValue = GetValue(property);
+			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: false);
+
+			RaiseChangingEvent(property, propertyValue);
+			propertyValue.UnsetStyleValue();
+			RaiseChangeEvent(property, propertyValue, previousValue);
+		}
+
+		/// <summary>
+		///   Unsets the last value of the dependency property that originated from a style setter being triggered.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be unset.</param>
+		internal void UnsetStyleTriggeredValue<T>(DependencyProperty<T> property)
+		{
+			Assert.ArgumentNotNull(property);
+
+			var previousValue = GetValue(property);
+			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: false);
+
+			RaiseChangingEvent(property, propertyValue);
+			propertyValue.UnsetStyleTriggeredValue();
 			RaiseChangeEvent(property, propertyValue, previousValue);
 		}
 
@@ -77,12 +132,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			var previousValue = GetValue(property);
 			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: false);
 
+			RaiseChangingEvent(property, propertyValue);
 			propertyValue.UnsetAnimatedValue();
 			RaiseChangeEvent(property, propertyValue, previousValue);
 		}
 
 		/// <summary>
-		///   Raises the change event for the given property if its effective value has been changed.
+		///   Raises the changed event for the given property if its effective value has been changed.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the change event should be raised for.</param>
@@ -90,11 +146,23 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <param name="previousValue">The previous effective value of the property.</param>
 		private void RaiseChangeEvent<T>(DependencyProperty<T> property, DependencyPropertyValue<T> propertyValue, T previousValue)
 		{
-			if (propertyValue.ChangeHandlers == null)
+			if (propertyValue.ChangedHandlers == null)
 				return;
 
 			if (!EqualityComparer<T>.Default.Equals(previousValue, GetValue(property)))
-				propertyValue.ChangeHandlers(this, property);
+				propertyValue.ChangedHandlers(this, property);
+		}
+
+		/// <summary>
+		///   Raises the changing event for the given property, regardless of whether its effective value is about to change.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property the change event should be raised for.</param>
+		/// <param name="propertyValue">The current property value.</param>
+		private void RaiseChangingEvent<T>(DependencyProperty property, DependencyPropertyValue<T> propertyValue)
+		{
+			if (propertyValue.ChangingHandlers != null)
+				propertyValue.ChangingHandlers(this, property);
 		}
 
 		/// <summary>
@@ -114,17 +182,45 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
+		///   Adds the change handler to the dependency property's changing event.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property the change handler should be added to.</param>
+		/// <param name="changeHandler">The change handler that should be added.</param>
+		public void AddChangingHandler<T>(DependencyProperty<T> property, DependencyPropertyChangeHandler changeHandler)
+		{
+			Assert.ArgumentNotNull(property);
+			Assert.ArgumentNotNull(changeHandler);
+
+			_propertyStore.GetValue(property, addIfNotFound: true).ChangingHandlers += changeHandler;
+		}
+
+		/// <summary>
+		///   Removes the change handler from the dependency property's changing event.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property the change handler should be removed from.</param>
+		/// <param name="changeHandler">The change handler that should be removed.</param>
+		public void RemoveChangingHandler<T>(DependencyProperty<T> property, DependencyPropertyChangeHandler changeHandler)
+		{
+			Assert.ArgumentNotNull(property);
+			Assert.ArgumentNotNull(changeHandler);
+
+			_propertyStore.GetValue(property, addIfNotFound: false).ChangingHandlers -= changeHandler;
+		}
+
+		/// <summary>
 		///   Adds the change handler to the dependency property's changed event.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the change handler should be added to.</param>
 		/// <param name="changeHandler">The change handler that should be added.</param>
-		public void AddChangeHandler<T>(DependencyProperty<T> property, DependencyPropertyChangedHandler changeHandler)
+		public void AddChangedHandler<T>(DependencyProperty<T> property, DependencyPropertyChangeHandler changeHandler)
 		{
 			Assert.ArgumentNotNull(property);
 			Assert.ArgumentNotNull(changeHandler);
 
-			_propertyStore.GetValue(property, addIfNotFound: true).ChangeHandlers += changeHandler;
+			_propertyStore.GetValue(property, addIfNotFound: true).ChangedHandlers += changeHandler;
 		}
 
 		/// <summary>
@@ -133,12 +229,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the change handler should be removed from.</param>
 		/// <param name="changeHandler">The change handler that should be removed.</param>
-		public void RemoveChangeHandler<T>(DependencyProperty<T> property, DependencyPropertyChangedHandler changeHandler)
+		public void RemoveChangedHandler<T>(DependencyProperty<T> property, DependencyPropertyChangeHandler changeHandler)
 		{
 			Assert.ArgumentNotNull(property);
 			Assert.ArgumentNotNull(changeHandler);
 
-			_propertyStore.GetValue(property, addIfNotFound: false).ChangeHandlers -= changeHandler;
+			_propertyStore.GetValue(property, addIfNotFound: false).ChangedHandlers -= changeHandler;
 		}
 
 		/// <summary>
