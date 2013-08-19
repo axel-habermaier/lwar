@@ -79,15 +79,15 @@ namespace Lwar
 			_localServer.Update();
 			_stateManager.Update();
 
-			var vm = b.ViewModel as TestViewModel;
+			//var vm = b.ViewModel as TestViewModel;
 			vm.Rank++;
 			vm.A.Rank++;
 
 			if (vm.Rank % 1000 == 0)
-				vm.A = new TestViewModel();
+				vm.A = new TestViewModel(){A = new TestViewModel()};
 
-			if (vm.Rank % 3000 == 0)
-				b.ViewModel = new TestViewModel() { A = new TestViewModel{Rank = 9999999 }};
+			//if (vm.Rank % 3000 == 0)
+				//b.ViewModel = new TestViewModel() { A = new TestViewModel{Rank = 9999999 }};
 		}
 
 		/// <summary>
@@ -149,7 +149,7 @@ namespace Lwar
 
 		private class TestViewModel : ViewModel
 		{
-			private static int _x;
+			//private static int _x;
 			private int _rank;
 			private TestViewModel a, b, c;
 

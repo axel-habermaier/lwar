@@ -122,7 +122,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			AnalyzeExpression();
 
 			_sourceFunc = _sourceExpression.Compile();
-			_memberAccess1.SourceObject = _targetObject;
+			_memberAccess1.SourceObject = _sourceObject;
 		}
 
 		/// <summary>
@@ -274,10 +274,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			/// </summary>
 			public object SourceObject
 			{
-				private get { return _sourceObject; }
 				set
 				{
-					Assert.ArgumentNotNull(value);
+					Assert.NotNull(value, "A binding expression returned null.");
 
 					if (_sourceObject == value)
 						return;
@@ -497,7 +496,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Rewrites the source expression of a binding such that the first member access is the view model property.
+		///   Rewrites the source expression of a binding such that the first member access is UIElement's ViewModel property.
 		/// </summary>
 		private class SourceExpressionRewriter : MemberAccessExpressionVisitor
 		{
