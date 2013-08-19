@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.Rendering.UserInterface
 {
+	using System.Collections.Generic;
+
 	/// <summary>
 	///   Represents an object that exposes dependency properties.
 	/// </summary>
@@ -26,6 +28,23 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
 
 			propertyValue.SetLocalValue(value);
+			RaiseChangeEvent(property, propertyValue, previousValue);
+		}
+
+		/// <summary>
+		///   Sets the value of the dependency property originating from a style.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be set.</param>
+		/// <param name="value">The value that should be set.</param>
+		internal void SetStyleValue<T>(DependencyProperty<T> property, T value)
+		{
+			Assert.ArgumentNotNull(property);
+
+			var previousValue = GetValue(property);
+			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
+
+			propertyValue.SetStyleValue(value);
 			RaiseChangeEvent(property, propertyValue, previousValue);
 		}
 
@@ -74,7 +93,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (propertyValue.ChangeHandlers == null)
 				return;
 
-			if (!previousValue.Equals(GetValue(property)))
+			if (!EqualityComparer<T>.Default.Equals(previousValue, GetValue(property)))
 				propertyValue.ChangeHandlers(this, property);
 		}
 

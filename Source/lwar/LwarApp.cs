@@ -61,7 +61,10 @@ namespace Lwar
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
-			b = new Button { ViewModel = vm = new TestViewModel() };
+			var s = new Style();
+			s.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
+
+			b = new Button { ViewModel = vm = new TestViewModel(),Style=s };
 			vm.Rank = 17;
 			vm.A = new TestViewModel();
 			vm.A.B = new TestViewModel();

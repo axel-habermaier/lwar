@@ -103,6 +103,24 @@ namespace Pegasus.Framework.Platform.Graphics
 		}
 
 		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="red">The red component of the color.</param>
+		/// <param name="green">The green component of the color.</param>
+		/// <param name="blue">The blue component of the color.</param>
+		/// <param name="alpha">The alpha component of the color.</param>
+		public static Color FromRgba(byte red, byte green, byte blue, byte alpha)
+		{
+			return new Color
+			{
+				Red = red,
+				Green = green,
+				Blue = blue,
+				Alpha = alpha
+			};
+		}
+
+		/// <summary>
 		///   Converts the color into a packed integer.
 		/// </summary>
 		/// <returns>A packed integer containing all four color components.</returns>
