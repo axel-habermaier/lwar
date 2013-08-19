@@ -31,6 +31,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public static readonly DependencyProperty<AssetIdentifier<Font>> FontProperty = new DependencyProperty<AssetIdentifier<Font>>();
 
 		/// <summary>
+		///   The resources used by the UI element.
+		/// </summary>
+		internal static readonly DependencyProperty<ResourceDictionary> ResourcesProperty = new DependencyProperty<ResourceDictionary>();
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		protected UIElement()
@@ -79,6 +84,32 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
+		///   Gets or sets the resources used by the UI element.
+		/// </summary>
+		public ResourceDictionary Resources
+		{
+			get
+			{
+				var resources = GetValue(ResourcesProperty);
+
+				if (resources == null)
+				{
+					resources = new ResourceDictionary();
+					SetValue(ResourcesProperty, resources);
+				}
+
+				return resources;
+			}
+			set
+			{
+				if (value == null)
+					value = new ResourceDictionary();
+
+				SetValue(ResourcesProperty, value);
+			}
+		}
+
+		/// <summary>
 		///   Applies a style change to the UI element.
 		/// </summary>
 		private void OnStyleChanged(DependencyObject obj, DependencyProperty property)
@@ -86,5 +117,48 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Assert.NotNull(Style);
 			Style.Apply(this);
 		}
+
+		/// <summary>
+		///   Assigns a dynamic resource reference to the given dependency property. When the resource changes, the dependency
+		///   property is updated accordingly.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property that should be set to the resource.</param>
+		/// <param name="key">The key of the resource that should be bound to the dependency property.</param>
+		public void SetResourceReference<T>(DependencyProperty<T> property, string key)
+		{
+			Assert.ArgumentNotNull(property);
+			Assert.ArgumentNotNullOrWhitespace(key);
+
+			new ResourceBinding<T>(this, property, key);
+		}
+
+		/// <summary>
+		/// Searches the tree for a resource with the given key.
+		/// </summary>
+		/// <param name="key">The key of the resource that should be returned.</param>
+		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
+		internal bool TryFindResource(string key, out object resource)
+		{
+			Assert.ArgumentNotNullOrWhitespace(key);
+
+			// If the key is in our resource dictionary, return the resource
+			var resources = GetValue(ResourcesProperty);
+			if (resources != null && resources.TryGetValue(key, out resource))
+				return true;
+
+			// Otherwise, check the logical parent
+			if (LogicalParent != null)
+				return LogicalParent.TryFindResource(key, out resource);
+
+			// If there is no logical parent, there is no resource with the given key
+			resource = null;
+			return false;
+		}
+
+		/// <summary>
+		/// Gets or sets the logical parent of the UI element.
+		/// </summary>
+		internal UIElement LogicalParent { get; set; }
 	}
 }

@@ -64,7 +64,9 @@ namespace Lwar
 			var s = new Style();
 			s.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
 
-			b = new Button { ViewModel = vm = new TestViewModel(),Style=s };
+			b = new Button { ViewModel = vm = new TestViewModel() };
+			b.Resources.Add("myStyle", s);
+			b.SetResourceReference(UIElement.StyleProperty, "myStyle");
 			vm.Rank = 17;
 			vm.A = new TestViewModel();
 			vm.A.B = new TestViewModel();

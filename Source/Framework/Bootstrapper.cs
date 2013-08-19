@@ -43,6 +43,7 @@ namespace Pegasus.Framework
 
 					Log.Info("Starting {0} ({1} x{2}, {3}).", appName, PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64", PlatformInfo.GraphicsApi);
 
+					ReflectionHelper.Validate();
 					Commands.Initialize();
 					Cvars.Initialize();
 

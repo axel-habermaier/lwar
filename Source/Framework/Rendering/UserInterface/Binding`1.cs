@@ -219,26 +219,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private struct MemberAccess
 		{
 			/// <summary>
-			///   A cached method info instance for DependencyObjects's GetValue method.
-			/// </summary>
-			private static readonly MethodInfo GetDependencyPropertyValueInfo = typeof(DependencyObject).GetMethod("GetValue");
-
-			/// <summary>
-			///   A cached method info instance for DependencyObjects's AddChangeHandler method.
-			/// </summary>
-			private static readonly MethodInfo AddChangeHandlerInfo = typeof(DependencyObject).GetMethod("AddChangeHandler");
-
-			/// <summary>
-			///   A cached method info instance for DependencyObjects's RemoveChangeHandler method.
-			/// </summary>
-			private static readonly MethodInfo RemoveChangeHandlerInfo = typeof(DependencyObject).GetMethod("RemoveChangeHandler");
-
-			/// <summary>
-			///   A cached event info instance for INotifyPropertyChanged's PropertyChanged event.
-			/// </summary>
-			private static readonly EventInfo PropertyChangedEventInfo = typeof(INotifyPropertyChanged).GetEvent("PropertyChanged");
-
-			/// <summary>
 			///   The reflection info instance for the property that is accessed, if any.
 			/// </summary>
 			private readonly PropertyInfo _propertyInfo;
@@ -301,15 +281,13 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			{
 				get
 				{
-					Assert.NotNull(GetDependencyPropertyValueInfo, "Unable to find DependencyObject.GetValue() method.");
-
 					if (_dependencyProperty == null)
 						return _propertyInfo.GetValue(_sourceObject);
 
-					Assert.That(_sourceObject is DependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
-					var getValue = GetDependencyPropertyValueInfo.MakeGenericMethod(_dependencyProperty.ValueType);
+					var dependencyObject = _sourceObject as DependencyObject;
+					Assert.NotNull(dependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
 
-					return getValue.Invoke(_sourceObject, new object[] { _dependencyProperty });
+					return ReflectionHelper.GetDependencyPropertyValue(dependencyObject, _dependencyProperty);
 				}
 			}
 
@@ -318,16 +296,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			/// </summary>
 			private void AttachToChangeEvent()
 			{
-				Assert.NotNull(PropertyChangedEventInfo, "Unable to find INotifyPropertyChanged.PropertyChanged event.");
-				Assert.NotNull(AddChangeHandlerInfo, "Unable to find DependencyObject.AddChangeHandler() method.");
-				Assert.NotNull(RemoveChangeHandlerInfo, "Unable to find DependencyObject.RemoveChangeHandler() method.");
-
 				if (_dependencyProperty != null)
 				{
-					Assert.That(_sourceObject is DependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
+					var dependencyObject = _sourceObject as DependencyObject;
+					Assert.NotNull(dependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
 
-					var addHandler = AddChangeHandlerInfo.MakeGenericMethod(_dependencyProperty.ValueType);
-					addHandler.Invoke(_sourceObject, new object[] { _dependencyProperty, new DependencyPropertyChangedHandler(DependencyPropertyChanged) });
+					ReflectionHelper.AttachDependencyPropertyChangedEventHandler(dependencyObject, _dependencyProperty, DependencyPropertyChanged);
 				}
 				else
 				{
@@ -335,7 +309,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 					if (notifyPropertyChanged == null)
 						return;
 
-					PropertyChangedEventInfo.AddEventHandler(notifyPropertyChanged, new PropertyChangedHandler(PropertyChanged));
+					ReflectionHelper.AttachPropertyChangedEventHandler(notifyPropertyChanged, PropertyChanged);
 				}
 			}
 
@@ -344,17 +318,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			/// </summary>
 			private void DetachFromChangeEvent()
 			{
-				Assert.NotNull(PropertyChangedEventInfo, "Unable to find INotifyPropertyChanged.PropertyChanged event.");
-				Assert.NotNull(AddChangeHandlerInfo, "Unable to find DependencyObject.AddChangeHandler() method.");
-				Assert.NotNull(RemoveChangeHandlerInfo, "Unable to find DependencyObject.RemoveChangeHandler() method.");
-
 				if (_dependencyProperty != null)
 				{
-					Assert.That(_sourceObject is DependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
+					var dependencyObject = _sourceObject as DependencyObject;
+					Assert.NotNull(dependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
 
-					var removeHandler = RemoveChangeHandlerInfo.MakeGenericMethod(_dependencyProperty.ValueType);
-					removeHandler.Invoke(_sourceObject,
-										 new object[] { _dependencyProperty, new DependencyPropertyChangedHandler(DependencyPropertyChanged) });
+					ReflectionHelper.DetachDependencyPropertyChangedEventHandler(dependencyObject, _dependencyProperty, DependencyPropertyChanged);
 				}
 				else
 				{
@@ -362,7 +331,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 					if (notifyPropertyChanged == null)
 						return;
 
-					PropertyChangedEventInfo.RemoveEventHandler(notifyPropertyChanged, new PropertyChangedHandler(PropertyChanged));
+					ReflectionHelper.DetachPropertyChangedEventHandler(notifyPropertyChanged, PropertyChanged);
 				}
 			}
 
@@ -374,14 +343,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				if (!(_sourceObject is DependencyObject))
 					return;
 
-				var fieldName = String.Format("{0}Property", _propertyInfo.Name);
-				var bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
-				var propertyField = _sourceObject.GetType().GetField(fieldName, bindingFlags);
-
-				if (propertyField == null)
-					return;
-
-				_dependencyProperty = (DependencyProperty)propertyField.GetValue(null);
+				_dependencyProperty = ReflectionHelper.GetDependencyProperty(_sourceObject.GetType(), _propertyInfo.Name);
 			}
 
 			/// <summary>
@@ -506,11 +468,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			public static readonly SourceExpressionRewriter Instance = new SourceExpressionRewriter();
 
 			/// <summary>
-			///   A cached property info instance for UIElement's ViewModel property.
-			/// </summary>
-			private static readonly PropertyInfo ViewModelPropertyInfo = typeof(UIElement).GetProperty("ViewModel");
-
-			/// <summary>
 			///   The expression that is used to access the view model.
 			/// </summary>
 			private MemberExpression _viewModelAccess;
@@ -522,10 +479,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			public Expression<Func<object, T>> Rewrite(Expression<Func<object, T>> expression)
 			{
 				Assert.ArgumentNotNull(expression);
-				Assert.NotNull(ViewModelPropertyInfo, "View model property info could not be found.");
 
 				var convertedParameter = Expression.Convert(expression.Parameters[0], typeof(UIElement));
-				_viewModelAccess = Expression.MakeMemberAccess(convertedParameter, ViewModelPropertyInfo);
+				_viewModelAccess = Expression.MakeMemberAccess(convertedParameter, ReflectionHelper.ViewModelPropertyInfo);
 
 				return Expression.Lambda<Func<object, T>>(Visit(expression.Body), expression.Parameters);
 			}

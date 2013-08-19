@@ -226,6 +226,9 @@
     <Compile Include="Rendering\DynamicVertexBuffer.cs" />
     <Compile Include="Rendering\UserInterface\Binding`1.cs" />
     <Compile Include="Rendering\UserInterface\Button.cs" />
+    <Compile Include="Rendering\UserInterface\ReflectionHelper.cs" />
+    <Compile Include="Rendering\UserInterface\ResourceBinding.cs" />
+    <Compile Include="Rendering\UserInterface\ResourceDictionary.cs" />
     <Compile Include="Rendering\UserInterface\Setter`1.cs" />
     <Compile Include="Rendering\UserInterface\DependencyProperty`1.cs" />
     <Compile Include="Rendering\UserInterface\DependencyPropertyValue`1.cs" />
@@ -235,7 +238,7 @@
     <Compile Include="Rendering\UserInterface\DependencyPropertyValue.cs" />
     <Compile Include="Rendering\UserInterface\ExpressionVisitor.cs" />
     <Compile Include="Rendering\UserInterface\INotifyPropertyChanged.cs" />
-    <Compile Include="Rendering\UserInterface\PropertyChangedHandler.cs" />
+    <Compile Include="Rendering\UserInterface\ChangedHandlers.cs" />
     <Compile Include="Rendering\UserInterface\SealableCollection`1.cs" />
     <Compile Include="Rendering\UserInterface\Setter.cs" />
     <Compile Include="Rendering\UserInterface\Style.cs" />
