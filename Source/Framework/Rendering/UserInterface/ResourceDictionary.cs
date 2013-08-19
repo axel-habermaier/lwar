@@ -30,7 +30,16 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public object this[string key]
 		{
 			get { return _dictionary[key]; }
-			set { _dictionary[key] = value; }
+			set
+			{
+				_dictionary[key] = value;
+
+				var sealable = value as ISealable;
+				if (sealable != null && !sealable.IsSealed)
+					sealable.Seal();
+
+				RaiseChangeEvent(key);
+			}
 		}
 
 		/// <summary>
@@ -58,6 +67,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public void Add(string key, object resource)
 		{
 			_dictionary.Add(key, resource);
+
+			var sealable = resource as ISealable;
+			if (sealable != null && !sealable.IsSealed)
+				sealable.Seal();
+
 			RaiseChangeEvent(key);
 		}
 

@@ -5,7 +5,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	/// <summary>
 	///   Untyped base class for setters that apply property values.
 	/// </summary>
-	public abstract class Setter
+	public abstract class Setter : ISealable
 	{
 		/// <summary>
 		///   Gets a value indicating whether the setter is sealed and can no longer be modified.
@@ -15,7 +15,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Seals the setter such that it can no longer be modified.
 		/// </summary>
-		protected void Seal()
+		void ISealable.Seal()
 		{
 			IsSealed = true;
 		}

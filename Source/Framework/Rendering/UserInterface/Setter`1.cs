@@ -37,9 +37,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		internal override void Apply(DependencyObject obj)
 		{
 			Assert.ArgumentNotNull(obj);
-
 			obj.SetStyleValue(_dependencyProperty, _value);
-			Seal();
 		}
 	}
 }

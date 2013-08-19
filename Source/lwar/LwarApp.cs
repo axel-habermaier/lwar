@@ -89,7 +89,14 @@ namespace Lwar
 			vm.A.Rank++;
 
 			if (vm.Rank % 1000 == 0)
-				vm.A = new TestViewModel(){A = new TestViewModel()};
+			{
+				var s = new Style();
+				s.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(255,52,251, 255)));
+				vm.A = new TestViewModel() { A = new TestViewModel() };
+				var r = new ResourceDictionary();
+				r.Add("myStyle", s);
+				b.Resources = r;
+			}
 
 			//if (vm.Rank % 3000 == 0)
 				//b.ViewModel = new TestViewModel() { A = new TestViewModel{Rank = 9999999 }};

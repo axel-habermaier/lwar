@@ -12,17 +12,17 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   The key of the resource that is bound to the dependency property.
 		/// </summary>
-		private string _key;
+		private readonly string _key;
 
 		/// <summary>
 		///   The target UI element that defines the target dependency property.
 		/// </summary>
-		private UIElement _targetObject;
+		private readonly UIElement _targetObject;
 
 		/// <summary>
 		///   The target dependency property whose value is bound.
 		/// </summary>
-		private DependencyProperty<T> _targetProperty;
+		private readonly DependencyProperty<T> _targetProperty;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -39,6 +39,21 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_targetObject = targetObject;
 			_targetProperty = targetProperty;
 			_key = key;
+
+			_targetObject.ResourcesInvalidated += SetResource;
+			SetResource();
+		}
+
+		/// <summary>
+		///   Sets the bound resource to the target dependency property.
+		/// </summary>
+		private void SetResource()
+		{
+			object resource;
+			if (!_targetObject.TryFindResource(_key, out resource))
+				Assert.That(false, "Unable to find resource '{0}'.", _key);
+
+			_targetObject.SetValue(_targetProperty, (T)resource);
 		}
 	}
 }

@@ -33,7 +33,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   The resources used by the UI element.
 		/// </summary>
-		internal static readonly DependencyProperty<ResourceDictionary> ResourcesProperty = new DependencyProperty<ResourceDictionary>();
+		private static readonly DependencyProperty<ResourceDictionary> ResourcesProperty = new DependencyProperty<ResourceDictionary>();
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -96,17 +96,77 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				{
 					resources = new ResourceDictionary();
 					SetValue(ResourcesProperty, resources);
+
+					AttachResourcesEventHandlers();
 				}
 
 				return resources;
 			}
 			set
 			{
+				DetachResourcesEventHandlers();
+
 				if (value == null)
 					value = new ResourceDictionary();
 
 				SetValue(ResourcesProperty, value);
+				AttachResourcesEventHandlers();
+
+				InvalidateResources();
 			}
+		}
+
+		/// <summary>
+		///   Gets or sets the logical parent of the UI element.
+		/// </summary>
+		internal UIElement LogicalParent { get; set; }
+
+		/// <summary>
+		///   Attaches the resources change event handlers.
+		/// </summary>
+		private void AttachResourcesEventHandlers()
+		{
+			var resources = GetValue(ResourcesProperty);
+			Assert.NotNull(resources);
+
+			resources.ResourceChanged += ResourceChanged;
+		}
+
+		/// <summary>
+		///   Detaches the resources change event handlers.
+		/// </summary>
+		private void DetachResourcesEventHandlers()
+		{
+			var resources = GetValue(ResourcesProperty);
+			if (resources == null)
+				return;
+
+			resources.ResourceChanged -= ResourceChanged;
+		}
+
+		/// <summary>
+		///   Raised when a change to a resource dictionary in this UI element or one of its ancestors has occurred.
+		/// </summary>
+		internal event Action ResourcesInvalidated;
+
+		/// <summary>
+		///   Invoked when a resource within the resource dictionary has been replaced, invalidating all resources for this UI
+		///   element and all of its children.
+		/// </summary>
+		private void ResourceChanged(ResourceDictionary resources, string key)
+		{
+			InvalidateResources();
+		}
+
+		/// <summary>
+		///   Raises the resources invalidated event for this UI element and all of its children.
+		/// </summary>
+		private void InvalidateResources()
+		{
+			if (ResourcesInvalidated != null)
+				ResourcesInvalidated();
+
+			// TODO: Invalidate children
 		}
 
 		/// <summary>
@@ -123,7 +183,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   property is updated accordingly.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
-		/// <param name="property">The dependency property that should be set to the resource.</param>
+		/// <param name="property">The dependency property that the resource should be bound to.</param>
 		/// <param name="key">The key of the resource that should be bound to the dependency property.</param>
 		public void SetResourceReference<T>(DependencyProperty<T> property, string key)
 		{
@@ -134,7 +194,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		/// Searches the tree for a resource with the given key.
+		///   Searches the tree for a resource with the given key.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be returned.</param>
 		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
@@ -155,10 +215,5 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			resource = null;
 			return false;
 		}
-
-		/// <summary>
-		/// Gets or sets the logical parent of the UI element.
-		/// </summary>
-		internal UIElement LogicalParent { get; set; }
 	}
 }

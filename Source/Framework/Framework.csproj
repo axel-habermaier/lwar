@@ -226,6 +226,7 @@
     <Compile Include="Rendering\DynamicVertexBuffer.cs" />
     <Compile Include="Rendering\UserInterface\Binding`1.cs" />
     <Compile Include="Rendering\UserInterface\Button.cs" />
+    <Compile Include="Rendering\UserInterface\ISealable.cs" />
     <Compile Include="Rendering\UserInterface\ReflectionHelper.cs" />
     <Compile Include="Rendering\UserInterface\ResourceBinding.cs" />
     <Compile Include="Rendering\UserInterface\ResourceDictionary.cs" />
