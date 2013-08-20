@@ -60,12 +60,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Invoked when the trigger property has changed. Compares the new value with the trigger value and applies the setters
 		///   if the trigger is triggered.
 		/// </summary>
-		private void PropertyChanged(DependencyObject obj, DependencyProperty property)
+		private void PropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<T> args)
 		{
 			var uiElement = obj as UIElement;
 			Assert.NotNull(uiElement, "Expected an UI element.");
 
-			var value = obj.GetValue(property as DependencyProperty<T>);
+			var value = obj.GetValue(args.Property);
 			if (EqualityComparer<T>.Default.Equals(value, _value))
 				ApplySetters(uiElement);
 			else

@@ -45,7 +45,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </summary>
 		protected UIElement()
 		{
-			AddChangingHandler(StyleProperty, OnStyleChanging);
 			AddChangedHandler(StyleProperty, OnStyleChanged);
 		}
 
@@ -132,9 +131,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Gets or sets the logical parent of the UI element.
+		///   Gets the logical parent of the UI element.
 		/// </summary>
-		internal UIElement LogicalParent { get; set; }
+		public UIElement Parent { get; internal set; }
 
 		/// <summary>
 		///   Attaches the resources change event handlers.
@@ -185,27 +184,17 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Unsets the current style from the UI element, if any.
-		/// </summary>
-		private void OnStyleChanging(DependencyObject obj, DependencyProperty property)
-		{
-			var style = Style;
-			if (style == null)
-				return;
-
-			style.Unset(this);
-		}
-
-		/// <summary>
 		///   Applies a style change to the UI element.
 		/// </summary>
-		private void OnStyleChanged(DependencyObject obj, DependencyProperty property)
+		private void OnStyleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Style> property)
 		{
-			var style = Style;
-			Assert.NotNull(style);
+			Assert.NotNull(property.NewValue);
 
-			style.Seal();
-			style.Apply(this);
+			if (property.OldValue != null)
+				property.OldValue.Unset(this);
+
+			property.NewValue.Seal();
+			property.NewValue.Apply(this);
 		}
 
 		/// <summary>
@@ -238,12 +227,17 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				return true;
 
 			// Otherwise, check the logical parent
-			if (LogicalParent != null)
-				return LogicalParent.TryFindResource(key, out resource);
+			if (Parent != null)
+				return Parent.TryFindResource(key, out resource);
 
 			// If there is no logical parent, there is no resource with the given key
 			resource = null;
 			return false;
+		}
+
+		protected void AddLogicalChild(UIElement element)
+		{
+			
 		}
 	}
 }

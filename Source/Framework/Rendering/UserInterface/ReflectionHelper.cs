@@ -12,27 +12,12 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	internal static class ReflectionHelper
 	{
 		/// <summary>
-		///   A cached method info instance for DependencyObjects's GetValue method.
-		/// </summary>
-		private static readonly MethodInfo GetDependencyPropertyValueInfo = typeof(DependencyObject).GetMethod("GetValue");
-
-		/// <summary>
-		///   A cached method info instance for DependencyObjects's AddChangeHandler method.
-		/// </summary>
-		private static readonly MethodInfo AddDependencyPropertyChangedHandlerInfo = typeof(DependencyObject).GetMethod("AddChangedHandler");
-
-		/// <summary>
-		///   A cached method info instance for DependencyObjects's RemoveChangeHandler method.
-		/// </summary>
-		private static readonly MethodInfo RemoveDependencyPropertyChangedHandlerInfo = typeof(DependencyObject).GetMethod("RemoveChangedHandler");
-
-		/// <summary>
-		///   A cached event info instance for INotifyPropertyChanged's PropertyChanged event.
+		///   A cached event info instance for the INotifyPropertyChanged.PropertyChanged event.
 		/// </summary>
 		private static readonly EventInfo PropertyChangedEventInfo = typeof(INotifyPropertyChanged).GetEvent("PropertyChanged");
 
 		/// <summary>
-		///   A cached property info instance for UIElement's ViewModel property.
+		///   A cached property info instance for the UIElement.ViewModel property.
 		/// </summary>
 		public static readonly PropertyInfo ViewModelPropertyInfo = typeof(UIElement).GetProperty("ViewModel");
 
@@ -42,59 +27,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		[Conditional("DEBUG")]
 		public static void Validate()
 		{
-			Assert.NotNull(GetDependencyPropertyValueInfo, "Unable to find the DependencyObject.GetValue() method.");
 			Assert.NotNull(PropertyChangedEventInfo, "Unable to find the INotifyPropertyChanged.PropertyChanged event.");
-			Assert.NotNull(AddDependencyPropertyChangedHandlerInfo, "Unable to find the DependencyObject.AddChangeHandler() method.");
-			Assert.NotNull(RemoveDependencyPropertyChangedHandlerInfo, "Unable to find the DependencyObject.RemoveChangeHandler() method.");
 			Assert.NotNull(ViewModelPropertyInfo, "Unable to find the UIElement.ViewModel property.");
-		}
-
-		/// <summary>
-		///   Gets the value of the given dependency object's dependency property.
-		/// </summary>
-		/// <param name="obj">The object for which the value should be returned.</param>
-		/// <param name="property">The dependency property of which the value should be returned.</param>
-		public static object GetDependencyPropertyValue(DependencyObject obj, DependencyProperty property)
-		{
-			Assert.ArgumentNotNull(obj);
-			Assert.ArgumentNotNull(property);
-
-			var method = GetDependencyPropertyValueInfo.MakeGenericMethod(property.ValueType);
-			return method.Invoke(obj, new object[] { property });
-		}
-
-		/// <summary>
-		///   Attaches the given handler to the given dependency object's dependency property.
-		/// </summary>
-		/// <param name="obj">The object the handler should be attached to.</param>
-		/// <param name="property">The property the handler should be attached to.</param>
-		/// <param name="handler">The handler that should be attached.</param>
-		public static void AttachDependencyPropertyChangedEventHandler(DependencyObject obj, DependencyProperty property,
-																	   DependencyPropertyChangeHandler handler)
-		{
-			Assert.ArgumentNotNull(obj);
-			Assert.ArgumentNotNull(property);
-			Assert.ArgumentNotNull(handler);
-
-			var addHandler = AddDependencyPropertyChangedHandlerInfo.MakeGenericMethod(property.ValueType);
-			addHandler.Invoke(obj, new object[] { property, handler });
-		}
-
-		/// <summary>
-		///   Detaches the given handler from the given dependency object's dependency property.
-		/// </summary>
-		/// <param name="obj">The object the handler should be detached from.</param>
-		/// <param name="property">The property the handler should be detached from.</param>
-		/// <param name="handler">The handler that should be detached.</param>
-		public static void DetachDependencyPropertyChangedEventHandler(DependencyObject obj, DependencyProperty property,
-																	   DependencyPropertyChangeHandler handler)
-		{
-			Assert.ArgumentNotNull(obj);
-			Assert.ArgumentNotNull(property);
-			Assert.ArgumentNotNull(handler);
-
-			var removeHandler = RemoveDependencyPropertyChangedHandlerInfo.MakeGenericMethod(property.ValueType);
-			removeHandler.Invoke(obj, new object[] { property, handler });
 		}
 
 		/// <summary>

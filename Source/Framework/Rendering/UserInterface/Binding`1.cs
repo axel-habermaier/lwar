@@ -224,6 +224,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			private readonly PropertyInfo _propertyInfo;
 
 			/// <summary>
+			///   The strongly-typed changed handler that has been added for the dependency property.
+			/// </summary>
+			private Delegate _changeHandler;
+
+			/// <summary>
 			///   The dependency property that is accessed, if any.
 			/// </summary>
 			private DependencyProperty _dependencyProperty;
@@ -285,9 +290,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 						return _propertyInfo.GetValue(_sourceObject);
 
 					var dependencyObject = _sourceObject as DependencyObject;
-					Assert.NotNull(dependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
+					Assert.NotNull(dependencyObject, "Trying to use a dependency property on a type not derived from DependencyObject.");
 
-					return ReflectionHelper.GetDependencyPropertyValue(dependencyObject, _dependencyProperty);
+					return _dependencyProperty.GetValue(dependencyObject);
 				}
 			}
 
@@ -299,9 +304,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				if (_dependencyProperty != null)
 				{
 					var dependencyObject = _sourceObject as DependencyObject;
-					Assert.NotNull(dependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
+					Assert.NotNull(dependencyObject, "Trying to use a dependency property on a type not derived from DependencyObject.");
 
-					ReflectionHelper.AttachDependencyPropertyChangedEventHandler(dependencyObject, _dependencyProperty, DependencyPropertyChanged);
+					_changeHandler = _dependencyProperty.AddUntypedChangeHandler(dependencyObject, DependencyPropertyChanged);
 				}
 				else
 				{
@@ -321,9 +326,9 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				if (_dependencyProperty != null)
 				{
 					var dependencyObject = _sourceObject as DependencyObject;
-					Assert.NotNull(dependencyObject, "Trying to use a dependency property on a type not derived from DependecyObject.");
+					Assert.NotNull(dependencyObject, "Trying to use a dependency property on a type not derived from DependencyObject.");
 
-					ReflectionHelper.DetachDependencyPropertyChangedEventHandler(dependencyObject, _dependencyProperty, DependencyPropertyChanged);
+					_dependencyProperty.RemoveUntypedChangeHandler(dependencyObject, _changeHandler);
 				}
 				else
 				{

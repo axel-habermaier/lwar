@@ -15,12 +15,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   The change handlers that are invoked when the effective value of the dependency property has changed.
 		/// </summary>
-		public DependencyPropertyChangeHandler ChangedHandlers;
-
-		/// <summary>
-		///   The change handlers that are invoked when the effective value of the dependency property is about to change.
-		/// </summary>
-		public DependencyPropertyChangeHandler ChangingHandlers;
+		public DependencyPropertyChangedHandler<T> ChangedHandlers;
 
 		/// <summary>
 		///   The property's value that has been set by the animation system. The animated value has the highest precedence.

@@ -66,7 +66,7 @@ namespace Lwar
 			var t = new Trigger<bool>(UIElement.IsMouseOverProperty, true);
 			t.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(0, 255, 123, 255)));
 			s.Triggers.Add(t);
-			
+
 			b = new Button { ViewModel = vm = new TestViewModel() };
 			b.Resources.Add("myStyle", s);
 			b.SetResourceReference(UIElement.StyleProperty, "myStyle");

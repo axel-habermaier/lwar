@@ -226,6 +226,10 @@
     <Compile Include="Rendering\DynamicVertexBuffer.cs" />
     <Compile Include="Rendering\UserInterface\Binding`1.cs" />
     <Compile Include="Rendering\UserInterface\Button.cs" />
+    <Compile Include="Rendering\UserInterface\ContentControl.cs" />
+    <Compile Include="Rendering\UserInterface\Control.cs" />
+    <Compile Include="Rendering\UserInterface\ControlTemplate.cs" />
+    <Compile Include="Rendering\UserInterface\DependencyPropertyChangedEventArgs.cs" />
     <Compile Include="Rendering\UserInterface\Trigger`1.cs" />
     <Compile Include="Rendering\UserInterface\ISealable.cs" />
     <Compile Include="Rendering\UserInterface\ReflectionHelper.cs" />

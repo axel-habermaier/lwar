@@ -89,3 +89,5 @@ DO.SetValue(DP)
 	- Resource dictionaries raises change events -> dynamic resource binding sets new value
 	- DP stores animated value, local value (either set locally (possibly through binding) or style value) and 
 	  triggered value (either style trigger or template trigger)
+
+Merged resource dictionaries are resolved at compile time (no runtime support)
