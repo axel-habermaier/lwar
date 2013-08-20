@@ -1,7 +1,6 @@
 ﻿using System;
 
-// ReSharper disable once CheckNamespace
-namespace Lwar.Assets.Effects.Internal
+namespace Lwar.Assets.Effects
 {
 	using Pegasus.AssetsCompiler.Effects;
 

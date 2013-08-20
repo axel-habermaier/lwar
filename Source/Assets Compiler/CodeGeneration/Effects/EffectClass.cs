@@ -214,10 +214,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			if (FullName.IndexOf('.', Configuration.AssetsProject.RootNamespace.Length + 1) == -1)
 				Error(_type.NameToken, "Effect must be defined in a namespace within root namespace '{0}'.", Configuration.AssetsProject.RootNamespace);
 
-			// Check whether the effect is declared within a sub-namespace 'Internal'
-			if (!Namespace.EndsWith(".Internal"))
-				Error(_type.NameToken, "Effect must be defined in an internal sub-namespace called 'Internal'.");
-
 			// Check whether the Effect attribute has been applied to the class and whether the class is derived from Effect
 			var hasBaseType = _type.IsDerivedFrom<Effect>(Resolver);
 			var hasAttribute = _type.Attributes.Contain<EffectAttribute>(Resolver);

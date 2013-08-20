@@ -8,11 +8,12 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using Assets;
 	using Framework;
 	using Framework.Platform.Graphics;
+	using Framework.Platform.Memory;
 
 	/// <summary>
 	///   Generates a C# class for an effect.
 	/// </summary>
-	internal class CSharpCodeGenerator
+	internal class CSharpCodeGenerator : DisposableObject
 	{
 		/// <summary>
 		///   The name of the context variable of the Effect base class.
@@ -37,25 +38,18 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="fileName">The name of the file that is generated.</param>
-		public CSharpCodeGenerator(string fileName)
+		public CSharpCodeGenerator()
 		{
-			Assert.ArgumentNotNullOrWhitespace(fileName);
-
 			_writer.WriterHeader("//");
 			_writer.AppendLine("using System;");
 			_writer.AppendLine("using System.Diagnostics;");
 			_writer.AppendLine("using System.Runtime.InteropServices;");
-			_writer.AppendLine("using Pegasus.AssetsCompiler.Assets.Attributes;");
 			_writer.AppendLine("using Pegasus.Framework;");
 			_writer.AppendLine("using Pegasus.Framework.Math;");
 			_writer.AppendLine("using Pegasus.Framework.Platform;");
 			_writer.AppendLine("using Pegasus.Framework.Platform.Assets;");
 			_writer.AppendLine("using Pegasus.Framework.Platform.Graphics;");
 			_writer.AppendLine("using Pegasus.Framework.Platform.Memory;");
-			_writer.Newline();
-
-			_writer.AppendLine("[assembly: Ignore(\"{0}\")]", fileName);
 			_writer.Newline();
 		}
 
@@ -95,13 +89,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 
 			_effect = effect;
 
-			_writer.AppendLine("namespace {0}", _effect.PublicNamespace);
+			_writer.AppendLine("namespace {0}", _effect.Namespace);
 			_writer.AppendBlockStatement(() =>
-			{
-				WriteDocumentation(_effect.Documentation);
-				_writer.AppendLine("public sealed class {0} : Effect", _effect.Name);
-				_writer.AppendBlockStatement(GenerateClass);
-			});
+				{
+					WriteDocumentation(_effect.Documentation);
+					_writer.AppendLine("public sealed class {0} : Effect", _effect.Name);
+					_writer.AppendBlockStatement(GenerateClass);
+				});
 
 			_writer.Newline();
 		}
@@ -188,25 +182,25 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			_writer.AppendLine("{0}(GraphicsDevice graphicsDevice, AssetsManager assets)", _effect.Name);
 			_writer.AppendLine("\t: base(graphicsDevice, assets)");
 			_writer.AppendBlockStatement(() =>
-			{
-				foreach (var technique in _effect.Techniques)
 				{
-					var vertexShader = ShaderAsset.GetPath(_effect.FullName, technique.VertexShader.Name, ShaderType.VertexShader);
-					var fragmentShader = ShaderAsset.GetPath(_effect.FullName, technique.FragmentShader.Name, ShaderType.FragmentShader);
+					foreach (var technique in _effect.Techniques)
+					{
+						var vertexShader = ShaderAsset.GetPath(_effect.FullName, technique.VertexShader.Name, ShaderType.VertexShader);
+						var fragmentShader = ShaderAsset.GetPath(_effect.FullName, technique.FragmentShader.Name, ShaderType.FragmentShader);
 
-					_writer.AppendLine("{0} = {1}.CreateTechnique({2},", technique.Name, ContextVariableName, _bindMethodName);
-					_writer.AppendLine("\t\"{0}\", ", Path.ChangeExtension(vertexShader, null));
-					_writer.AppendLine("\t\"{0}\");", Path.ChangeExtension(fragmentShader, null));
-				}
+						_writer.AppendLine("{0} = {1}.CreateTechnique({2},", technique.Name, ContextVariableName, _bindMethodName);
+						_writer.AppendLine("\t\"{0}\", ", Path.ChangeExtension(vertexShader, null));
+						_writer.AppendLine("\t\"{0}\");", Path.ChangeExtension(fragmentShader, null));
+					}
 
-				foreach (var buffer in ConstantBuffers)
-				{
-					_writer.Newline();
-					_writer.AppendLine("{0} = {3}.CreateConstantBuffer({1}, {2});", GetFieldName(buffer.Name), buffer.Size,
-									   buffer.Slot, ContextVariableName);
-					_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
-				}
-			});
+					foreach (var buffer in ConstantBuffers)
+					{
+						_writer.Newline();
+						_writer.AppendLine("{0} = {3}.CreateConstantBuffer({1}, {2});", GetFieldName(buffer.Name), buffer.Size,
+										   buffer.Slot, ContextVariableName);
+						_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
+					}
+				});
 
 			_writer.Newline();
 		}
@@ -223,15 +217,15 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 					WriteDocumentation(constant.Documentation);
 					_writer.AppendLine("public {0} {1}", ToCSharpType(constant.Type), constant.Name);
 					_writer.AppendBlockStatement(() =>
-					{
-						_writer.AppendLine("get {{ return {0}; }}", GetFieldName(constant.Name));
-						_writer.AppendLine("set");
-						_writer.AppendBlockStatement(() =>
 						{
-							_writer.AppendLine("{0} = value;", GetFieldName(constant.Name));
-							_writer.AppendLine("{0} = true;", GetDirtyFlagName(buffer.Name));
+							_writer.AppendLine("get {{ return {0}; }}", GetFieldName(constant.Name));
+							_writer.AppendLine("set");
+							_writer.AppendBlockStatement(() =>
+								{
+									_writer.AppendLine("{0} = value;", GetFieldName(constant.Name));
+									_writer.AppendLine("{0} = true;", GetDirtyFlagName(buffer.Name));
+								});
 						});
-					});
 					_writer.Newline();
 				}
 			}
@@ -279,33 +273,33 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 
 			_writer.AppendLine("void {0}()", _bindMethodName);
 			_writer.AppendBlockStatement(() =>
-			{
-				if (!ConstantBuffers.Any() && !_effect.Textures.Any())
-					_writer.AppendLine("// Nothing to do here");
-
-				foreach (var buffer in ConstantBuffers)
 				{
-					_writer.AppendLine("if ({0})", GetDirtyFlagName(buffer.Name));
-					_writer.AppendBlockStatement(() =>
+					if (!ConstantBuffers.Any() && !_effect.Textures.Any())
+						_writer.AppendLine("// Nothing to do here");
+
+					foreach (var buffer in ConstantBuffers)
 					{
-						_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), Configuration.ReservedIdentifierPrefix);
-						foreach (var constant in buffer.Constants)
-							_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedIdentifierPrefix);
+						_writer.AppendLine("if ({0})", GetDirtyFlagName(buffer.Name));
+						_writer.AppendBlockStatement(() =>
+							{
+								_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), Configuration.ReservedIdentifierPrefix);
+								foreach (var constant in buffer.Constants)
+									_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedIdentifierPrefix);
 
+								_writer.Newline();
+								_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
+								_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
+												   Configuration.ReservedIdentifierPrefix, ContextVariableName);
+							});
 						_writer.Newline();
-						_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
-						_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
-										   Configuration.ReservedIdentifierPrefix, ContextVariableName);
-					});
-					_writer.Newline();
-				}
+					}
 
-				foreach (var texture in _effect.Textures)
-					_writer.AppendLine("{2}.Bind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
+					foreach (var texture in _effect.Textures)
+						_writer.AppendLine("{2}.Bind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
 
-				foreach (var buffer in ConstantBuffers)
-					_writer.AppendLine("{1}.Bind({0});", GetFieldName(buffer.Name), ContextVariableName);
-			});
+					foreach (var buffer in ConstantBuffers)
+						_writer.AppendLine("{1}.Bind({0});", GetFieldName(buffer.Name), ContextVariableName);
+				});
 
 			if (ConstantBuffers.Any())
 				_writer.Newline();
@@ -324,13 +318,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			_writer.AppendLine("/// </summary>");
 			_writer.AppendLine("protected override void __OnDisposing()");
 			_writer.AppendBlockStatement(() =>
-			{
-				if (!ConstantBuffers.Any())
-					_writer.AppendLine("// Nothing to do here");
+				{
+					if (!ConstantBuffers.Any())
+						_writer.AppendLine("// Nothing to do here");
 
-				foreach (var buffer in ConstantBuffers)
-					_writer.AppendLine("{0}.SafeDispose();", GetFieldName(buffer.Name));
-			});
+					foreach (var buffer in ConstantBuffers)
+						_writer.AppendLine("{0}.SafeDispose();", GetFieldName(buffer.Name));
+				});
 
 			if (ConstantBuffers.Any())
 				_writer.Newline();
@@ -347,24 +341,24 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				_writer.AppendLine("[StructLayout(LayoutKind.Explicit, Size = Size)]");
 				_writer.AppendLine("private struct {0}", GetStructName(buffers[i]));
 				_writer.AppendBlockStatement(() =>
-				{
-					_writer.AppendLine("/// <summary>");
-					_writer.AppendLine("///   The size of the struct in bytes.");
-					_writer.AppendLine("/// </summary>");
-					_writer.AppendLine("public const int Size = {0};", buffers[i].Size);
-					_writer.Newline();
-
-					var constants = buffers[i].GetLayoutedConstants().ToArray();
-					for (var j = 0; j < constants.Length; ++j)
 					{
-						WriteDocumentation(constants[j].Constant.Documentation);
-						_writer.AppendLine("[FieldOffset({0})]", constants[j].Offset);
-						_writer.AppendLine("public {0} {1};", ToCSharpType(constants[j].Constant.Type), constants[j].Constant.Name);
+						_writer.AppendLine("/// <summary>");
+						_writer.AppendLine("///   The size of the struct in bytes.");
+						_writer.AppendLine("/// </summary>");
+						_writer.AppendLine("public const int Size = {0};", buffers[i].Size);
+						_writer.Newline();
 
-						if (j < buffers[i].Constants.Length - 1)
-							_writer.Newline();
-					}
-				});
+						var constants = buffers[i].GetLayoutedConstants().ToArray();
+						for (var j = 0; j < constants.Length; ++j)
+						{
+							WriteDocumentation(constants[j].Constant.Documentation);
+							_writer.AppendLine("[FieldOffset({0})]", constants[j].Offset);
+							_writer.AppendLine("public {0} {1};", ToCSharpType(constants[j].Constant.Type), constants[j].Constant.Name);
+
+							if (j < buffers[i].Constants.Length - 1)
+								_writer.Newline();
+						}
+					});
 
 				if (i < buffers.Length - 1)
 					_writer.Newline();
@@ -403,6 +397,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		}
 
 		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			File.WriteAllText(Configuration.CSharpEffectFile, _writer.ToString());
+		}
+
+		/// <summary>
 		///   Gets the name of the corresponding field.
 		/// </summary>
 		/// <param name="name">The name whose field name should be returned.</param>
@@ -437,15 +439,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		{
 			foreach (var line in documentation)
 				_writer.AppendLine("///{0}", line);
-		}
-
-		/// <summary>
-		///   Writes the generated output to the output file.
-		/// </summary>
-		/// <param name="path">The path of the file that should be written.</param>
-		public void WriteFile(string path)
-		{
-			File.WriteAllText(path, _writer.ToString());
 		}
 	}
 }

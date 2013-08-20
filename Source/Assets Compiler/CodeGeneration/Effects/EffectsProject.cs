@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using Assets;
 	using Framework.Platform.Logging;
+	using Framework.Platform.Memory;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
@@ -13,6 +14,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	/// </summary>
 	internal class EffectsProject : CodeProject<EffectAsset, EffectFile>
 	{
+		/// <summary>
+		///   The C# code generator that is used to generate the C# effects file.
+		/// </summary>
+		private readonly CSharpCodeGenerator _generator = new CSharpCodeGenerator();
+
 		/// <summary>
 		///   Outputs a compilation message.
 		/// </summary>
@@ -46,7 +52,15 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <param name="file">The file that should be compiled.</param>
 		protected override void Compile(EffectFile file)
 		{
-			file.Compile();
+			file.Compile(_generator);
+		}
+
+		/// <summary>
+		///   Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_generator.SafeDispose();
 		}
 	}
 }

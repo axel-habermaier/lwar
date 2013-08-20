@@ -238,35 +238,20 @@
     <Content Include="Textures\SunHeat.Cubemap.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssetIdentifiers.cs" />
     <Compile Include="Effects\Blur.Effect.cs" />
-    <Compile Include="Effects\Blur.Effect.generated.cs">
-      <DependentUpon>Blur.Effect.cs</DependentUpon>
-    </Compile>
+   
     <Compile Include="Effects\Parallax.Effect.cs" />
-    <Compile Include="Effects\Parallax.Effect.generated.cs">
-      <DependentUpon>Parallax.Effect.cs</DependentUpon>
-    </Compile>
+  
     <Compile Include="Effects\Skybox.Effect.cs" />
-    <Compile Include="Effects\Skybox.Effect.generated.cs">
-      <DependentUpon>Skybox.Effect.cs</DependentUpon>
-    </Compile>
+  
     <Compile Include="Effects\Sphere.Effect.cs" />
-    <Compile Include="Effects\Sphere.Effect.generated.cs">
-      <DependentUpon>Sphere.Effect.cs</DependentUpon>
-    </Compile>
+   
     <Compile Include="Effects\Sprite.Effect.cs" />
-    <Compile Include="Effects\Sprite.Effect.generated.cs">
-      <DependentUpon>Sprite.Effect.cs</DependentUpon>
-    </Compile>
+   
     <Compile Include="Effects\Sun.Effect.cs" />
-    <Compile Include="Effects\Sun.Effect.generated.cs">
-      <DependentUpon>Sun.Effect.cs</DependentUpon>
-    </Compile>
+  
     <Compile Include="Effects\TexturedQuad.Effect.cs" />
-    <Compile Include="Effects\TexturedQuad.Effect.generated.cs">
-      <DependentUpon>TexturedQuad.Effect.cs</DependentUpon>
-    </Compile>
+   
     <Compile Include="Templates\Compilation\TemplateAsset.cs" />
     <Compile Include="Templates\Compilation\TemplateAssetFactory.cs" />
     <Compile Include="Templates\Compilation\TemplateCompiler.cs" />
@@ -281,10 +266,6 @@
     <ProjectReference Include="..\Assets Compiler\Assets Compiler.csproj">
       <Project>{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}</Project>
       <Name>Assets Compiler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Pegasus\Pegasus.csproj">
-      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
-      <Name>Pegasus</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

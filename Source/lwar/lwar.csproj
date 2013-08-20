@@ -179,6 +179,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Assets\AssetIdentifiers.cs">
+      <Link>Assets\AssetIdentifiers.cs</Link>
+    </Compile>
+    <Compile Include="..\Assets\Effects\Effects.cs">
+      <Link>Assets\Effects.cs</Link>
+    </Compile>
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
     <Compile Include="Gameplay\Actors\Explosion.cs" />
@@ -306,10 +312,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assets\Assets.csproj">
-      <Project>{1f608b12-403c-4639-947a-b559e8ef121c}</Project>
-      <Name>Assets</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Pegasus\Pegasus.csproj">
       <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
       <Name>Pegasus</Name>

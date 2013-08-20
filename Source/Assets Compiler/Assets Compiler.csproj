@@ -207,6 +207,129 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Pegasus\PegasusException.cs">
+      <Link>Pegasus\PegasusException.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Assert.cs">
+      <Link>Pegasus\Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Circle.cs">
+      <Link>Pegasus\Circle.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Fixed.cs">
+      <Link>Pegasus\Fixed.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\MathUtils.cs">
+      <Link>Pegasus\MathUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Matrix.cs">
+      <Link>Pegasus\Matrix.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Rectangle.cs">
+      <Link>Pegasus\Rectangle.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Size.cs">
+      <Link>Pegasus\Size.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Vector2.cs">
+      <Link>Pegasus\Vector2.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Vector3.cs">
+      <Link>Pegasus\Vector3.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Vector4.cs">
+      <Link>Pegasus\Vector4.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\ExternalProcess.cs">
+      <Link>Pegasus\ExternalProcess.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\DataSemantics.cs">
+      <Link>Pegasus\DataSemantics.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\GraphicsApi.cs">
+      <Link>Pegasus\GraphicsApi.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\ShaderInput.cs">
+      <Link>Pegasus\ShaderInput.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\ShaderType.cs">
+      <Link>Pegasus\ShaderType.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\Surface.cs">
+      <Link>Pegasus\Surface.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\SurfaceFormat.cs">
+      <Link>Pegasus\SurfaceFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureAddressMode.cs">
+      <Link>Pegasus\TextureAddressMode.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureDescription.cs">
+      <Link>Pegasus\TextureDescription.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureFilter.cs">
+      <Link>Pegasus\TextureFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureFlags.cs">
+      <Link>Pegasus\TextureFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureType.cs">
+      <Link>Pegasus\TextureType.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\VertexDataFormat.cs">
+      <Link>Pegasus\VertexDataFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Logging\Log.cs">
+      <Link>Pegasus\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Logging\LogEntry.cs">
+      <Link>Pegasus\LogEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Logging\LogType.cs">
+      <Link>Pegasus\LogType.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\BufferPointer.cs">
+      <Link>Pegasus\BufferPointer.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\BufferReader.cs">
+      <Link>Pegasus\BufferReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\BufferWriter.cs">
+      <Link>Pegasus\BufferWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\DisposableExtensions.cs">
+      <Link>Pegasus\DisposableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\DisposableObject.cs">
+      <Link>Pegasus\DisposableObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\EndianConverter.cs">
+      <Link>Pegasus\EndianConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\Endianess.cs">
+      <Link>Pegasus\Endianess.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\ObjectPool.cs">
+      <Link>Pegasus\ObjectPool.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\Pool.cs">
+      <Link>Pegasus\Pool.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\PooledObject.cs">
+      <Link>Pegasus\PooledObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\NativeLibrary.cs">
+      <Link>Pegasus\NativeLibrary.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\PlatformInfo.cs">
+      <Link>Pegasus\PlatformInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\PlatformType.cs">
+      <Link>Pegasus\PlatformType.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\ResharperAnnotations.cs">
+      <Link>Pegasus\ResharperAnnotations.cs</Link>
+    </Compile>
     <Compile Include="AssetsProject.cs" />
     <Compile Include="Assets\Attributes\AssetAttribute.cs" />
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
@@ -323,12 +446,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Swizzle.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Pegasus\Pegasus.csproj">
-      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
-      <Name>Pegasus</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

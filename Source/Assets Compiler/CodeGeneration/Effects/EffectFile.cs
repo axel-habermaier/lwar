@@ -9,12 +9,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using AssetsCompiler.Effects;
 	using Framework;
 	using Framework.Platform.Graphics;
-	using Framework.Platform.Logging;
 	using Framework.Platform.Memory;
-	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
-	using Effect = AssetsCompiler.Effects.Effect;
 
 	/// <summary>
 	///   Represents a C# source code file that possibly contains one or more effect declarations.
@@ -68,20 +65,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
-		/// </summary>
-		protected override void Validate()
-		{
-			const string endsWith = ".Effect.cs";
-			if (!_fileName.EndsWith(endsWith))
-				Report(LogType.Error, "The file name of '{0}' should end with '{1}'.", _fileName, endsWith);
-		}
-
-		/// <summary>
 		///   Compiles all effects declared in the file.
 		/// </summary>
-		public void Compile()
+		/// <param name="generator">The C# code generator that should be used to generate the C# effect code.</param>
+		public void Compile(CSharpCodeGenerator generator)
 		{
 			foreach (var effectShader in from effect in Effects
 										 from shader in effect.Shaders
@@ -90,15 +77,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				CompileShaderCode(effectShader.Effect, effectShader.Shader);
 			}
 
-			var generatedFileName = _fileName.Replace(".Effect.cs", ".Effect.generated.cs");
-			var generator = new CSharpCodeGenerator(generatedFileName);
-
 			foreach (var effect in Effects)
 				generator.GenerateCode(effect);
-
-
-			generator.WriteFile(Path.Combine(Configuration.SourceDirectory, generatedFileName));
-			Configuration.AssetsProject.AddFile(generatedFileName, _fileName);
 		}
 
 		/// <summary>
