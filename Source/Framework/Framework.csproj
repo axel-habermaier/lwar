@@ -230,7 +230,7 @@
     <Compile Include="Rendering\UserInterface\Control.cs" />
     <Compile Include="Rendering\UserInterface\ControlTemplate.cs" />
     <Compile Include="Rendering\UserInterface\DependencyPropertyChangedEventArgs.cs" />
-    <Compile Include="Rendering\UserInterface\LogicalChildrenEnumerator.cs" />
+    <Compile Include="Rendering\UserInterface\Layout.cs" />
     <Compile Include="Rendering\UserInterface\Trigger`1.cs" />
     <Compile Include="Rendering\UserInterface\ISealable.cs" />
     <Compile Include="Rendering\UserInterface\ReflectionHelper.cs" />
@@ -246,12 +246,13 @@
     <Compile Include="Rendering\UserInterface\ExpressionVisitor.cs" />
     <Compile Include="Rendering\UserInterface\INotifyPropertyChanged.cs" />
     <Compile Include="Rendering\UserInterface\ChangedHandlers.cs" />
-    <Compile Include="Rendering\UserInterface\SealableCollection`1.cs" />
+    <Compile Include="Rendering\UserInterface\SealableCollection.cs" />
     <Compile Include="Rendering\UserInterface\Setter.cs" />
     <Compile Include="Rendering\UserInterface\Style.cs" />
     <Compile Include="Rendering\UserInterface\Text.cs" />
     <Compile Include="Rendering\UserInterface\Trigger.cs" />
     <Compile Include="Rendering\UserInterface\UIElement.cs" />
+    <Compile Include="Rendering\UserInterface\UIElementCollection.cs" />
     <Compile Include="Rendering\UserInterface\ViewModel.cs" />
     <Compile Include="Rendering\UserInterface\Visual.cs" />
     <Compile Include="Screen.cs" />

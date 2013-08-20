@@ -248,7 +248,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// <summary>
 		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
-		protected abstract LogicalChildrenEnumerator LogicalChildren { get; }
+		protected abstract UIElementCollection.Enumerator LogicalChildren { get; }
 
 		/// <summary>
 		///   Attaches the resources change event handlers.
@@ -359,7 +359,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		/// </param>
 		internal void ChangeLogicalParent(UIElement element)
 		{
+			if (element == Parent)
+				return;
+
 			Assert.That(element != this, "Detected a loop in the logical tree.");
+			Assert.That(element == null || Parent == null, "The element is already attached to the logical tree.");
 
 			Parent = element;
 

@@ -111,6 +111,24 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
+		///   Throws an InvalidOperationException if the object is not null.
+		/// </summary>
+		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
+		/// <param name="obj">The object to check for null.</param>
+		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
+		/// <param name="parameters">The parameters for the error message.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void IsNull<T>(T obj, string formatMessage, params object[] parameters)
+			where T : class
+		{
+			if (formatMessage == null)
+				throw new ArgumentNullException("formatMessage");
+
+			if (obj != null)
+				throw new InvalidOperationException(String.Format(formatMessage, parameters));
+		}
+
+		/// <summary>
 		///   Throws an InvalidOperationException if the object is null.
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>

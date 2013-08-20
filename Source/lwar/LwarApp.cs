@@ -67,14 +67,18 @@ namespace Lwar
 			t.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(0, 255, 123, 255)));
 			s.Triggers.Add(t);
 
-			b = new Button { Width=100,Height=200};
-			b.Resources.Add("myStyle", s);
+			l = new Layout();
+			l2 = new Layout();
+
+			b = new Button { Width = 100, Height = 200 }; l.Children.Add(b);
+			l.Resources.Add("myStyle", s);
+			l2.Resources.Add("myStyle", new Style());
 			var rb = new ResourceBinding<Style>("myStyle");
 			b.SetResourceBinding(UIElement.StyleProperty, rb);
 			
 
-			var b2 = new Button() { ViewModel = vm = new TestViewModel(), Width = 300,Height=100 };
-			b.Content = b2; 
+			 b2 = new Button() { ViewModel = vm = new TestViewModel(), Width = 300,Height=100 };
+			b.Content = "blub"; l.Children.Add(b2);
 			
 			vm.Rank = 17;
 			vm.A = new TestViewModel();
@@ -86,8 +90,12 @@ namespace Lwar
 
 			var binding = new Binding<object>(viewModel => ((TestViewModel)viewModel).A.Rank);
 			b2.SetBinding(ContentControl.ContentProperty, binding);
+			
+		
 		}
 
+		private Button b2;
+		private Layout l,l2;
 		/// <summary>
 		///   Invoked when the application should update the its state.
 		/// </summary>
@@ -110,9 +118,14 @@ namespace Lwar
 				//b.Resources = r;
 				b.IsMouseOver = !b.IsMouseOver;
 			}
+			if (vm.Rank % 1000 == 0)
+			{
+				l.Children.Remove(b);
+				l2.Children.Add(b);
+			}
 			if (vm.Rank % 2000 == 0)
 			{
-				b.Resources["myStyle"] = new Style();
+				l.Resources["myStyle"] = new Style();
 			}
 
 			//if (vm.Rank % 3000 == 0)
@@ -141,6 +154,7 @@ namespace Lwar
 
 			spriteBatch.Layer = 17;
 			b.Draw(spriteBatch, Context.Assets.LoadFont(Fonts.LiberationMono11));
+			b2.Draw(spriteBatch, Context.Assets.LoadFont(Fonts.LiberationMono11));
 		}
 
 		/// <summary>

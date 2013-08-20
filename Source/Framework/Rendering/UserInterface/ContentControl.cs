@@ -30,17 +30,17 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
+		///   Gets an enumerator that can be used to enumerate all logical children of the content control.
 		/// </summary>
-		protected override LogicalChildrenEnumerator LogicalChildren
+		protected override UIElementCollection.Enumerator LogicalChildren
 		{
 			get
 			{
 				var child = Content as UIElement;
 				if (child != null)
-					return LogicalChildrenEnumerator.SingleChild(child);
+					return UIElementCollection.Enumerator.FromElement(child);
 
-				return LogicalChildrenEnumerator.Empty;
+				return UIElementCollection.Enumerator.Empty;
 			}
 		}
 
