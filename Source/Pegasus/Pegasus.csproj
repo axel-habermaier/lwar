@@ -251,7 +251,7 @@
     <Compile Include="Framework\DependencyPropertyValue.cs" />
     <Compile Include="Framework\UserInterface\ExpressionVisitor.cs" />
     <Compile Include="Framework\INotifyPropertyChanged.cs" />
-    <Compile Include="Framework\PropertyChangedHandlers.cs" />
+    <Compile Include="Framework\PropertyDelegates.cs" />
     <Compile Include="Framework\UserInterface\SealableCollection.cs" />
     <Compile Include="Framework\UserInterface\Setter.cs" />
     <Compile Include="Framework\UserInterface\Style.cs" />

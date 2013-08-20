@@ -90,4 +90,9 @@ DO.SetValue(DP)
 	- DP stores animated value, local value (either set locally (possibly through binding) or style value) and 
 	  triggered value (either style trigger or template trigger)
 
-Merged resource dictionaries are resolved at compile time (no runtime support)
+
+NOTES FOR FUTURE IMPLEMENTATION TASKS
+- Merged resource dictionaries are resolved at compile time (no runtime support)
+- Width/Height take precedence over alignment = stretch
+- margin applies space outside actualwidth/height
+- min width/height must be honored, then max widht/height, only then widht/height

@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework
 {
+	using System.Diagnostics;
+
 	/// <summary>
 	///   Represents a strongly-typed property that has multiple sources (such as data bindings, style setters, animation,
 	///   etc.).
@@ -10,9 +12,18 @@ namespace Pegasus.Framework
 	public class DependencyProperty<T> : DependencyProperty
 	{
 		/// <summary>
+		///   The callback that is used to validate whether the given value is a valid value for the dependency property.
+		/// </summary>
+		private DependencyPropertyValidationCallback<T> _validationCallback;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="defaultValue">The default value of the dependency property.</param>
+		/// <param name="validationCallback">
+		///   The callback that should be used to validate whether the given value is a valid value
+		///   for the dependency property.
+		/// </param>
 		/// <param name="inherits">Indicates whether the value of the dependency property is inheritable.</param>
 		/// <param name="affectsMeasure">
 		///   Indicates that changes to the value of the dependency property potentially affect the measure pass of the layout
@@ -29,6 +40,7 @@ namespace Pegasus.Framework
 		/// <param name="prohibitsAnimations"> Indicates that the dependency property cannot be animated.</param>
 		/// <param name="prohibitsDataBinding">Indicates that the dependency property does not support data binding.</param>
 		public DependencyProperty(T defaultValue = default(T),
+								  DependencyPropertyValidationCallback<T> validationCallback = null,
 								  bool inherits = false,
 								  bool affectsMeasure = false,
 								  bool affectsArrange = false,
@@ -38,6 +50,7 @@ namespace Pegasus.Framework
 			: base(inherits, affectsMeasure, affectsArrange, affectsRender, prohibitsAnimations, prohibitsDataBinding)
 		{
 			DefaultValue = defaultValue;
+			_validationCallback = validationCallback;
 		}
 
 		/// <summary>
@@ -51,6 +64,16 @@ namespace Pegasus.Framework
 		internal override Type ValueType
 		{
 			get { return typeof(T); }
+		}
+
+		/// <summary>
+		///   In debug builds, checks whether the given value is a valid value for the dependency property.
+		/// </summary>
+		/// <param name="value">The value that should be checked.</param>
+		[Conditional("DEBUG")]
+		internal void ValidateValue(T value)
+		{
+			Assert.That(_validationCallback == null || _validationCallback(value), "Attempted to set an invalid value.");
 		}
 
 		/// <summary>

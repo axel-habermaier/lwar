@@ -28,6 +28,7 @@ namespace Pegasus.Framework
 			Assert.ArgumentSatisfies(obj != this, "Detected a loop in the inheritance relationship.");
 
 			_inheritedObject = obj;
+			// TODO invalidate!
 		}
 
 		/// <summary>
@@ -38,13 +39,8 @@ namespace Pegasus.Framework
 		/// <param name="value">The value that should be set.</param>
 		public void SetValue<T>(DependencyProperty<T> property, T value)
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValueAddUnknown(property);
-
-			propertyValue.SetLocalValue(value);
-			RaiseChangeEvent(property, propertyValue, previousValue);
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
+				setter.PropertyValue.SetLocalValue(value);
 		}
 
 		/// <summary>
@@ -55,13 +51,8 @@ namespace Pegasus.Framework
 		/// <param name="value">The value that should be set.</param>
 		internal void SetStyleValue<T>(DependencyProperty<T> property, T value)
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValueAddUnknown(property);
-
-			propertyValue.SetStyleValue(value);
-			RaiseChangeEvent(property, propertyValue, previousValue);
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
+				setter.PropertyValue.SetStyleValue(value);
 		}
 
 		/// <summary>
@@ -72,13 +63,8 @@ namespace Pegasus.Framework
 		/// <param name="value">The value that should be set.</param>
 		internal void SetStyleTriggeredValue<T>(DependencyProperty<T> property, T value)
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValueAddUnknown(property);
-
-			propertyValue.SetStyleTriggeredValue(value);
-			RaiseChangeEvent(property, propertyValue, previousValue);
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
+				setter.PropertyValue.SetStyleTriggeredValue(value);
 		}
 
 		/// <summary>
@@ -89,13 +75,8 @@ namespace Pegasus.Framework
 		/// <param name="value">The value that should be set.</param>
 		internal void SetAnimatedValue<T>(DependencyProperty<T> property, T value)
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValueAddUnknown(property);
-
-			propertyValue.SetAnimatedValue(value);
-			RaiseChangeEvent(property, propertyValue, previousValue);
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
+				setter.PropertyValue.SetAnimatedValue(value);
 		}
 
 		/// <summary>
@@ -105,16 +86,8 @@ namespace Pegasus.Framework
 		/// <param name="property">The dependency property whose value should be unset.</param>
 		internal void UnsetStyleValue<T>(DependencyProperty<T> property)
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValueOrNull(property);
-
-			if (propertyValue == null)
-				return;
-
-			propertyValue.UnsetStyleValue();
-			RaiseChangeEvent(property, propertyValue, previousValue);
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property))
+				setter.PropertyValue.UnsetStyleValue();
 		}
 
 		/// <summary>
@@ -124,16 +97,8 @@ namespace Pegasus.Framework
 		/// <param name="property">The dependency property whose value should be unset.</param>
 		internal void UnsetStyleTriggeredValue<T>(DependencyProperty<T> property)
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValueOrNull(property);
-
-			if (propertyValue == null)
-				return;
-
-			propertyValue.UnsetStyleTriggeredValue();
-			RaiseChangeEvent(property, propertyValue, previousValue);
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property))
+				setter.PropertyValue.UnsetStyleTriggeredValue();
 		}
 
 		/// <summary>
@@ -143,33 +108,8 @@ namespace Pegasus.Framework
 		/// <param name="property">The dependency property whose value should be unset.</param>
 		internal void UnsetAnimatedValue<T>(DependencyProperty<T> property)
 		{
-			Assert.ArgumentNotNull(property);
-
-			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValueOrNull(property);
-
-			if (propertyValue == null)
-				return;
-
-			propertyValue.UnsetAnimatedValue();
-			RaiseChangeEvent(property, propertyValue, previousValue);
-		}
-
-		/// <summary>
-		///   Raises the changed event for the given property if its effective value has been changed.
-		/// </summary>
-		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
-		/// <param name="property">The dependency property the change event should be raised for.</param>
-		/// <param name="propertyValue">The current property value.</param>
-		/// <param name="previousValue">The previous effective value of the property.</param>
-		private void RaiseChangeEvent<T>(DependencyProperty<T> property, DependencyPropertyValue<T> propertyValue, T previousValue)
-		{
-			if (propertyValue.ChangedHandlers == null)
-				return;
-
-			var newValue = GetValue(property);
-			if (!EqualityComparer<T>.Default.Equals(previousValue, newValue))
-				propertyValue.ChangedHandlers(this, new DependencyPropertyChangedEventArgs<T>(property, previousValue, newValue));
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property))
+				setter.PropertyValue.UnsetAnimatedValue();
 		}
 
 		/// <summary>
@@ -247,6 +187,81 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(binding);
 
 			binding.Initialize(this, property);
+		}
+
+		/// <summary>
+		///   Abuses the IDisposable interface to allow for a more streamlined implementation of the many Set*Value and Unset*Value
+		///   methods that set or unset a dependency property's value.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <remarks>
+		///   Alternative implementations would rely on virtual methods or delegates, which probably introduce too much
+		///   overhead.
+		/// </remarks>
+		private struct DependencyPropertyValueSetter<T> : IDisposable
+		{
+			/// <summary>
+			///   The dependency object for which the value is be changed.
+			/// </summary>
+			private readonly DependencyObject _object;
+
+			/// <summary>
+			///   The old value of the dependency property before the change was made.
+			/// </summary>
+			private readonly T _oldValue;
+
+			/// <summary>
+			///   The dependency property that is about to change its value.
+			/// </summary>
+			private readonly DependencyProperty<T> _property;
+
+			/// <summary>
+			///   Initializes a new instance.
+			/// </summary>
+			/// <param name="obj">The dependency object for which the value should be changed.</param>
+			/// <param name="property">The dependency property that is about to change its value.</param>
+			/// <param name="newValue">The new value for the dependency property.</param>
+			public DependencyPropertyValueSetter(DependencyObject obj, DependencyProperty<T> property, T newValue)
+				: this(obj, property)
+			{
+				_property.ValidateValue(newValue);
+			}
+
+			/// <summary>
+			///   Initializes a new instance.
+			/// </summary>
+			/// <param name="obj">The dependency object for which the value should be changed.</param>
+			/// <param name="property">The dependency property that is about to change its value.</param>
+			public DependencyPropertyValueSetter(DependencyObject obj, DependencyProperty<T> property)
+				: this()
+			{
+				Assert.ArgumentNotNull(obj);
+				Assert.ArgumentNotNull(property);
+
+				_object = obj;
+				_property = property;
+
+				_oldValue = obj.GetValue(property);
+				PropertyValue = obj._propertyStore.GetValueAddUnknown(property);
+			}
+
+			/// <summary>
+			///   Gets the property value instance for the dependency object's dependency property.
+			/// </summary>
+			public DependencyPropertyValue<T> PropertyValue { get; private set; }
+
+			/// <summary>
+			///   Raises the changed event if the property's value has changed.
+			/// </summary>
+			public void Dispose()
+			{
+				if (PropertyValue.ChangedHandlers == null)
+					return;
+
+				var newValue = _object.GetValue(_property);
+				if (!EqualityComparer<T>.Default.Equals(_oldValue, newValue))
+					PropertyValue.ChangedHandlers(_object, new DependencyPropertyChangedEventArgs<T>(_property, _oldValue, newValue));
+			}
 		}
 	}
 }
