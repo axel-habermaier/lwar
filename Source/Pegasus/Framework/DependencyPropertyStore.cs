@@ -22,22 +22,30 @@ namespace Pegasus.Framework
 		private DependencyPropertyValue[] _values;
 
 		/// <summary>
-		///   Gets the value for the given dependency property.
+		///   Gets the value for the given dependency property. If no value is found, null is returned.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the value should be returned for.</param>
-		/// <param name="addIfNotFound">If true, a new value is added if none is found; otherwise, null is returned.</param>
-		public DependencyPropertyValue<T> GetValue<T>(DependencyProperty<T> property, bool addIfNotFound)
+		public DependencyPropertyValue<T> GetValueOrNull<T>(DependencyProperty<T> property)
 		{
 			Assert.ArgumentNotNull(property);
 
-			DependencyPropertyValue<T> value = null;
 			var valueIndex = FindValueIndex(property.Index);
+			return valueIndex == -1 ? null : _values[valueIndex] as DependencyPropertyValue<T>;
+		}
 
-			if (valueIndex == -1 && addIfNotFound)
+		/// <summary>
+		///   Gets the value for the given dependency property or adds it if no value is found.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property the value should be returned for.</param>
+		public DependencyPropertyValue<T> GetValueAddUnknown<T>(DependencyProperty<T> property)
+		{
+			Assert.ArgumentNotNull(property);
+
+			var value = GetValueOrNull(property);
+			if (value == null)
 				AddValue(value = new DependencyPropertyValue<T>(property.Index));
-			else if (valueIndex != -1)
-				value = _values[valueIndex] as DependencyPropertyValue<T>;
 
 			return value;
 		}

@@ -41,7 +41,7 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 
 			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
+			var propertyValue = _propertyStore.GetValueAddUnknown(property);
 
 			propertyValue.SetLocalValue(value);
 			RaiseChangeEvent(property, propertyValue, previousValue);
@@ -58,7 +58,7 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 
 			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
+			var propertyValue = _propertyStore.GetValueAddUnknown(property);
 
 			propertyValue.SetStyleValue(value);
 			RaiseChangeEvent(property, propertyValue, previousValue);
@@ -75,7 +75,7 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 
 			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
+			var propertyValue = _propertyStore.GetValueAddUnknown(property);
 
 			propertyValue.SetStyleTriggeredValue(value);
 			RaiseChangeEvent(property, propertyValue, previousValue);
@@ -92,7 +92,7 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 
 			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: true);
+			var propertyValue = _propertyStore.GetValueAddUnknown(property);
 
 			propertyValue.SetAnimatedValue(value);
 			RaiseChangeEvent(property, propertyValue, previousValue);
@@ -108,7 +108,10 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 
 			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: false);
+			var propertyValue = _propertyStore.GetValueOrNull(property);
+
+			if (propertyValue == null)
+				return;
 
 			propertyValue.UnsetStyleValue();
 			RaiseChangeEvent(property, propertyValue, previousValue);
@@ -124,7 +127,10 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 
 			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: false);
+			var propertyValue = _propertyStore.GetValueOrNull(property);
+
+			if (propertyValue == null)
+				return;
 
 			propertyValue.UnsetStyleTriggeredValue();
 			RaiseChangeEvent(property, propertyValue, previousValue);
@@ -140,7 +146,10 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 
 			var previousValue = GetValue(property);
-			var propertyValue = _propertyStore.GetValue(property, addIfNotFound: false);
+			var propertyValue = _propertyStore.GetValueOrNull(property);
+
+			if (propertyValue == null)
+				return;
 
 			propertyValue.UnsetAnimatedValue();
 			RaiseChangeEvent(property, propertyValue, previousValue);
@@ -173,7 +182,7 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 
 			// If the property has an effective value, return it
-			var value = _propertyStore.GetValue(property, addIfNotFound: false);
+			var value = _propertyStore.GetValueOrNull(property);
 			if (value != null && value.HasEffectiveValue)
 				return value.EffectiveValue;
 
@@ -185,7 +194,7 @@ namespace Pegasus.Framework
 			var obj = _inheritedObject;
 			while (obj != null)
 			{
-				value = obj._propertyStore.GetValue(property, addIfNotFound: false);
+				value = obj._propertyStore.GetValueOrNull(property);
 				if (value != null && value.HasEffectiveValue)
 					return value.EffectiveValue;
 
@@ -207,7 +216,7 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 			Assert.ArgumentNotNull(changeHandler);
 
-			_propertyStore.GetValue(property, addIfNotFound: true).ChangedHandlers += changeHandler;
+			_propertyStore.GetValueAddUnknown(property).ChangedHandlers += changeHandler;
 		}
 
 		/// <summary>
@@ -221,7 +230,9 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 			Assert.ArgumentNotNull(changeHandler);
 
-			_propertyStore.GetValue(property, addIfNotFound: false).ChangedHandlers -= changeHandler;
+			var value = _propertyStore.GetValueOrNull(property);
+			if (value != null)
+				value.ChangedHandlers -= changeHandler;
 		}
 
 		/// <summary>
