@@ -20,7 +20,7 @@ namespace Lwar
 			Commands.Initialize();
 			Cvars.Initialize();
 
-			Bootstrapper<LwarApp>.Run("lwar", Fonts.LiberationMono11, new SpriteEffect());
+			Bootstrapper<LwarApplication>.Run("lwar", Fonts.LiberationMono11, new SpriteEffect());
 		}
 	}
 }

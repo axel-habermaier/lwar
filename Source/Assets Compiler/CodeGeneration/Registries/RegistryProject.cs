@@ -73,9 +73,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// <summary>
 		///   Creates a code element representing the a file.
 		/// </summary>
+		/// <param name="fileName">The name of the file.</param>
 		/// <param name="syntaxTree">The syntax tree of the file.</param>
 		/// <param name="resolver">The resolver that should be used to resolve type information within the file.</param>
-		protected override RegistryFile CreateFile(SyntaxTree syntaxTree, CSharpAstResolver resolver)
+		protected override RegistryFile CreateFile(string fileName, SyntaxTree syntaxTree, CSharpAstResolver resolver)
 		{
 			return new RegistryFile(this, syntaxTree, resolver);
 		}

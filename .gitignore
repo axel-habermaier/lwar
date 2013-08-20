@@ -5,6 +5,7 @@
 /ipch
 /.svn
 *.suo
+/Source/*.suo
 /Source/Server/obj
 *.opensdf
 autoexec.cfg
@@ -13,20 +14,20 @@ lwar.log
 Source/lwar/obj
 Source/Assets Compiler/obj
 Source/Assets Compiler/bin
-Source/Framework/obj
+Source/Pegasus/obj
+*.generated.cs
 Source/Platform/obj
 Source/Platform/Platform.md.pc
 Source/Server/Server.md.pc
 lwarMono.userprefs
-Assets/obj
-Assets/bin
-Assets/temp
-Assets/Binaries
+Source/Assets/obj
+Source/Assets/bin
+Source/Assets/temp
+Source/Assets/Binaries
 Binaries x64
 Binaries x86
 log.txt
-Assets/Effects/Effects.cs
-Assets/Assets.cs
+Source/Assets/AssetIdentifiers.cs
 Source/lwar/Gameplay/Entities/EntityType.cs
 Source/lwar/Gameplay/Entities/Templates.cs
 Source/Server/templates.c

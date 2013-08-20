@@ -131,7 +131,7 @@ namespace Pegasus.AssetsCompiler
 				Log.Error("{0}", e.StackTrace);
 				return -1;
 			}
-			catch (AppException)
+			catch (PegasusException)
 			{
 				return -1;
 			}

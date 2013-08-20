@@ -10,6 +10,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
 	using Microsoft.CSharp;
+	using Effect = AssetsCompiler.Effects.Effect;
 
 	/// <summary>
 	///   Represents a C# class that contains cross-compiled shader code and shader constants.
@@ -52,7 +53,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		}
 
 		/// <summary>
-		///   Gets the namespace in which the effect class is declared.
+		///   Gets the namespace in which the effect source class is declared.
 		/// </summary>
 		public string Namespace
 		{
@@ -60,6 +61,19 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			{
 				var resolved = (TypeResolveResult)Resolver.Resolve(_type);
 				return resolved.Type.Namespace;
+			}
+		}
+
+		/// <summary>
+		///   Gets the namespace in which the runtime effect class is declared.
+		/// </summary>
+		public string PublicNamespace
+		{
+			get
+			{
+				var resolved = (TypeResolveResult)Resolver.Resolve(_type);
+				var ns = resolved.Type.Namespace;
+				return ns.Substring(0, ns.Length - ".Internal".Length);
 			}
 		}
 
@@ -200,6 +214,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			if (FullName.IndexOf('.', Configuration.AssetsProject.RootNamespace.Length + 1) == -1)
 				Error(_type.NameToken, "Effect must be defined in a namespace within root namespace '{0}'.", Configuration.AssetsProject.RootNamespace);
 
+			// Check whether the effect is declared within a sub-namespace 'Internal'
+			if (!Namespace.EndsWith(".Internal"))
+				Error(_type.NameToken, "Effect must be defined in an internal sub-namespace called 'Internal'.");
+
 			// Check whether the Effect attribute has been applied to the class and whether the class is derived from Effect
 			var hasBaseType = _type.IsDerivedFrom<Effect>(Resolver);
 			var hasAttribute = _type.Attributes.Contain<EffectAttribute>(Resolver);
@@ -211,7 +229,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				Warn(_type.NameToken, "Expected base type '{0}'.", typeof(Effect).FullName);
 
 			// Check whether 'public' is the only declared modifier 
-			ValidateModifiers(_type, _type.ModifierTokens, new[] { Modifiers.Public });
+			ValidateModifiers(_type, _type.ModifierTokens, new[] { Modifiers.Internal });
 
 			// Check whether the effect depends on any type arguments
 			foreach (var parameter in _type.TypeParameters)

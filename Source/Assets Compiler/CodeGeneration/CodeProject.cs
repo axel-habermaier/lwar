@@ -96,16 +96,17 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 			return parsedFiles.Select(file =>
 			{
 				var resolver = new CSharpAstResolver(compilation, file.SyntaxTree, file.UnresolvedFile);
-				return CreateFile(file.SyntaxTree, resolver);
+				return CreateFile(file.FileName, file.SyntaxTree, resolver);
 			});
 		}
 
 		/// <summary>
 		///   Creates a code element representing the a file.
 		/// </summary>
+		/// <param name="fileName">The name of the file.</param>
 		/// <param name="syntaxTree">The syntax tree of the file.</param>
 		/// <param name="resolver">The resolver that should be used to resolve type information within the file.</param>
-		protected abstract TFileElement CreateFile(SyntaxTree syntaxTree, CSharpAstResolver resolver);
+		protected abstract TFileElement CreateFile(string fileName, SyntaxTree syntaxTree, CSharpAstResolver resolver);
 
 		/// <summary>
 		///   Compiles the project. Returns false to indicate that compilation errors have occurred.

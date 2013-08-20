@@ -19,9 +19,19 @@ namespace Pegasus.AssetsCompiler
 		private static readonly XNamespace Namespace = "http://schemas.microsoft.com/developer/msbuild/2003";
 
 		/// <summary>
+		///   The project XML file.
+		/// </summary>
+		private readonly XDocument _document;
+
+		/// <summary>
 		///   The root node of the project file.
 		/// </summary>
 		private readonly XElement _projectFile;
+
+		/// <summary>
+		/// The file name of the project.
+		/// </summary>
+		private readonly string _projectFileName;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -34,7 +44,9 @@ namespace Pegasus.AssetsCompiler
 			if (!File.Exists(projectFile))
 				Log.Die("Unable to load assets project file '{0}'.", projectFile);
 
-			_projectFile = XDocument.Load(projectFile).Root;
+			_projectFileName = projectFile;
+			_document = XDocument.Load(projectFile);
+			_projectFile = _document.Root;
 		}
 
 		/// <summary>
@@ -66,6 +78,53 @@ namespace Pegasus.AssetsCompiler
 								   .Select(asset => asset.Replace("\\", "/"))
 								   .ToArray();
 			}
+		}
+
+		/// <summary>
+		///   Adds the file to the assets project as a child of the parent file.
+		/// </summary>
+		/// <param name="file">The file that should be added.</param>
+		/// <param name="parentFile">The parent file of the file that should be added.</param>
+		public void AddFile(string file, string parentFile)
+		{
+			Assert.ArgumentNotNullOrWhitespace(file);
+			Assert.ArgumentNotNullOrWhitespace(parentFile);
+			Assert.ArgumentSatisfies(file.EndsWith(".cs"), "Only C# files can be added.");
+			Assert.ArgumentSatisfies(parentFile.EndsWith(".cs"), "The parent file must be a C# file.");
+
+			var fileElement = FindFile(file);
+			var parentFileElement = FindFile(parentFile);
+
+			if (parentFileElement == null)
+				Log.Die("File '{0}' is not referenced by the assets project.", parentFile);
+
+			if (fileElement != null)
+				return;
+
+			var newFile = new XElement(Namespace + "Compile",
+									   new XAttribute("Include", file.Replace("/", "\\")),
+									   new XElement(Namespace + "DependentUpon", Path.GetFileName(parentFile)));
+
+			parentFileElement.AddAfterSelf(newFile);
+			_document.Save(_projectFileName);
+		}
+
+		/// <summary>
+		///   Finds the XML element that corresponds to the file.
+		/// </summary>
+		/// <param name="file">The file that should be searched for.</param>
+		private XElement FindFile(string file)
+		{
+			var files = _projectFile.Descendants(Namespace + "None")
+									.Union(_projectFile.Descendants(Namespace + "Content"))
+									.Union(_projectFile.Descendants(Namespace + "Compile"))
+									.Where(element => element.Attribute("Include").Value.Replace("\\", "/") == file)
+									.ToArray();
+
+			if (files.Length > 2)
+				Log.Die("Found multiple references to file '{0}' in assets project.", file);
+			
+			return files.Length > 0 ? files[0] : null;
 		}
 	}
 }

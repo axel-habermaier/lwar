@@ -221,6 +221,21 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		}
 
 		/// <summary>
+		///   Reports a message to the error reporter.
+		/// </summary>
+		/// <param name="type">The type of the message that should be reported.</param>
+		/// <param name="message">The message that should be reported.</param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[StringFormatMethod("message")]
+		protected void Report(LogType type, string message, params object[] arguments)
+		{
+			Assert.ArgumentInRange(type);
+			Assert.ArgumentNotNullOrWhitespace(message);
+
+			_errorReporter.Report(LogType.Warning, _sourceFile, String.Format(message, arguments), new TextLocation(), new TextLocation());
+		}
+
+		/// <summary>
 		///   Describes the state of a compiled element.
 		/// </summary>
 		private enum State

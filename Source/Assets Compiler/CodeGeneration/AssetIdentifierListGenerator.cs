@@ -44,7 +44,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 			var writer = new CodeWriter();
 			writer.WriterHeader("//");
 			writer.AppendLine("using System;");
+			writer.AppendLine("using Pegasus.AssetsCompiler.Assets.Attributes;");
 			writer.AppendLine("using Pegasus.Framework.Platform.Assets;");
+			writer.Newline();
+
+			writer.AppendLine("[assembly: Ignore(\"{0}\")]", Path.GetFileName(Configuration.CSharpAssetIdentifiersFile));
 			writer.Newline();
 
 			writer.AppendLine("namespace {0}", namespaceName);
@@ -86,7 +90,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 
 			if (encloseWithClass)
 			{
-				writer.AppendLine("internal static class {0}", className);
+				writer.AppendLine("public static class {0}", className);
 				writer.AppendBlockStatement(generate);
 			}
 			else

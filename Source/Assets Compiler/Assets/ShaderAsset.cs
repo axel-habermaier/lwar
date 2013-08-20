@@ -43,6 +43,11 @@ namespace Pegasus.AssetsCompiler.Assets
 			var lastNamespaceEnd = effect.IndexOf('.', Configuration.AssetsProject.RootNamespace.Length + 1);
 			effect = effect.Substring(lastNamespaceEnd + 1);
 
+			if (effect.StartsWith("Internal."))
+				effect = effect.Substring("Internal.".Length);
+			else
+				effect = effect.Replace(".Internal.", "");
+
 			var extension = type.ToString().Where(Char.IsUpper).Aggregate(String.Empty, (s, c) => s + c).ToLower();
 			return String.Format("Effects/{0}.{1}.{2}", effect, name, extension);
 		}

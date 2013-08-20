@@ -7,16 +7,25 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using System.Linq;
 	using Assets;
 	using AssetsCompiler.Effects;
+	using Framework;
 	using Framework.Platform.Graphics;
+	using Framework.Platform.Logging;
 	using Framework.Platform.Memory;
+	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using Effect = AssetsCompiler.Effects.Effect;
 
 	/// <summary>
 	///   Represents a C# source code file that possibly contains one or more effect declarations.
 	/// </summary>
 	internal class EffectFile : EffectElement
 	{
+		/// <summary>
+		///   The name of the file.
+		/// </summary>
+		private readonly string _fileName;
+
 		/// <summary>
 		///   The C# syntax tree of the effect file.
 		/// </summary>
@@ -25,12 +34,16 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
+		/// <param name="fileName">The name of the file.</param>
 		/// <param name="errorReporter">The error reporter that should be used to report validation errors.</param>
 		/// <param name="syntaxTree">The parsed syntax tree of the effect file.</param>
 		/// <param name="resolver"> The C# AST resolver that should be used to resolve symbols of the effect file.</param>
-		public EffectFile(IErrorReporter errorReporter, SyntaxTree syntaxTree, CSharpAstResolver resolver)
+		public EffectFile(string fileName, IErrorReporter errorReporter, SyntaxTree syntaxTree, CSharpAstResolver resolver)
 			: base(errorReporter, syntaxTree.FileName, resolver)
 		{
+			Assert.ArgumentNotNullOrWhitespace(fileName);
+
+			_fileName = fileName;
 			_syntaxTree = syntaxTree;
 		}
 
@@ -55,10 +68,20 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		}
 
 		/// <summary>
+		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///   initialization.
+		/// </summary>
+		protected override void Validate()
+		{
+			const string endsWith = ".Effect.cs";
+			if (!_fileName.EndsWith(endsWith))
+				Report(LogType.Error, "The file name of '{0}' should end with '{1}'.", _fileName, endsWith);
+		}
+
+		/// <summary>
 		///   Compiles all effects declared in the file.
 		/// </summary>
-		/// <param name="generator">The C# code generator that should be used to generate the C# effect code.</param>
-		public void Compile(CSharpCodeGenerator generator)
+		public void Compile()
 		{
 			foreach (var effectShader in from effect in Effects
 										 from shader in effect.Shaders
@@ -67,8 +90,15 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				CompileShaderCode(effectShader.Effect, effectShader.Shader);
 			}
 
+			var generatedFileName = _fileName.Replace(".Effect.cs", ".Effect.generated.cs");
+			var generator = new CSharpCodeGenerator(generatedFileName);
+
 			foreach (var effect in Effects)
 				generator.GenerateCode(effect);
+
+
+			generator.WriteFile(Path.Combine(Configuration.SourceDirectory, generatedFileName));
+			Configuration.AssetsProject.AddFile(generatedFileName, _fileName);
 		}
 
 		/// <summary>

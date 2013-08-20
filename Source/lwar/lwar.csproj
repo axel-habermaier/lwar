@@ -179,12 +179,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Assets\Assets.cs">
-      <Link>Assets.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Assets\Effects\Effects.cs">
-      <Link>Rendering\Effects.cs</Link>
-    </Compile>
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
     <Compile Include="Gameplay\Actors\Explosion.cs" />
@@ -290,17 +284,11 @@
     <Compile Include="Rendering\RenderContext.cs" />
     <Compile Include="Rendering\Renderers\ShipRenderer.cs" />
     <Compile Include="Gameplay\Entities\IEntity.cs" />
-    <Compile Include="LwarApp.cs" />
+    <Compile Include="LwarApplication.cs" />
     <Compile Include="Gameplay\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gameplay\Entities\Planet.cs" />
     <Compile Include="Rendering\Renderers\SkyBoxRenderer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Framework\Framework.csproj">
-      <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
-      <Name>Framework</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -316,6 +304,16 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Cvars.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Assets\Assets.csproj">
+      <Project>{1f608b12-403c-4639-947a-b559e8ef121c}</Project>
+      <Name>Assets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Pegasus\Pegasus.csproj">
+      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
+      <Name>Pegasus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

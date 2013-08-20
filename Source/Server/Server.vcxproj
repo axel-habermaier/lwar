@@ -122,50 +122,50 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Direct3D11|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenGL3|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Direct3D11|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenGL3|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|Win32'">

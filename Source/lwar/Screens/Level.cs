@@ -8,7 +8,6 @@ namespace Lwar.Screens
 	using Network;
 	using Network.Messages;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
 	using Pegasus.Framework.Platform;
 	using Pegasus.Framework.Platform.Input;
 	using Pegasus.Framework.Platform.Logging;
@@ -26,6 +25,8 @@ namespace Lwar.Screens
 		///   The network session that synchronizes the game state between the client and the server.
 		/// </summary>
 		private readonly NetworkSession _networkSession;
+
+		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
 
 		/// <summary>
 		///   The timer that is used to send user input to the server.
@@ -77,8 +78,6 @@ namespace Lwar.Screens
 		/// </summary>
 		private bool _sendInput;
 
-		readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
-
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -101,7 +100,7 @@ namespace Lwar.Screens
 		{
 			_timer.Timeout -= SendInputTimeout;
 			_timer.SafeDispose();
-			
+
 			_cameraManager.SafeDispose();
 			_inputManager.SafeDispose();
 			_gameSession.SafeDispose();

@@ -207,129 +207,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Framework\AppException.cs">
-      <Link>Framework\AppException.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Assert.cs">
-      <Link>Framework\Assert.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Math\Circle.cs">
-      <Link>Framework\Circle.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Math\Fixed.cs">
-      <Link>Framework\Fixed.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Math\MathUtils.cs">
-      <Link>Framework\MathUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Math\Matrix.cs">
-      <Link>Framework\Matrix.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Math\Rectangle.cs">
-      <Link>Framework\Rectangle.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Math\Size.cs">
-      <Link>Framework\Size.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Math\Vector2.cs">
-      <Link>Framework\Vector2.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Math\Vector3.cs">
-      <Link>Framework\Vector3.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Math\Vector4.cs">
-      <Link>Framework\Vector4.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\ExternalProcess.cs">
-      <Link>Framework\ExternalProcess.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\DataSemantics.cs">
-      <Link>Framework\DataSemantics.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\GraphicsApi.cs">
-      <Link>Framework\GraphicsApi.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\ShaderInput.cs">
-      <Link>Framework\ShaderInput.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\ShaderType.cs">
-      <Link>Framework\ShaderType.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\Surface.cs">
-      <Link>Framework\Surface.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\SurfaceFormat.cs">
-      <Link>Framework\SurfaceFormat.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\TextureAddressMode.cs">
-      <Link>Framework\TextureAddressMode.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\TextureDescription.cs">
-      <Link>Framework\TextureDescription.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\TextureFilter.cs">
-      <Link>Framework\TextureFilter.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\TextureFlags.cs">
-      <Link>Framework\TextureFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\TextureType.cs">
-      <Link>Framework\TextureType.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Graphics\VertexDataFormat.cs">
-      <Link>Framework\VertexDataFormat.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Logging\Log.cs">
-      <Link>Framework\Log.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Logging\LogEntry.cs">
-      <Link>Framework\LogEntry.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Logging\LogType.cs">
-      <Link>Framework\LogType.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\BufferPointer.cs">
-      <Link>Framework\BufferPointer.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\BufferReader.cs">
-      <Link>Framework\BufferReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\BufferWriter.cs">
-      <Link>Framework\BufferWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\DisposableExtensions.cs">
-      <Link>Framework\DisposableExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\DisposableObject.cs">
-      <Link>Framework\DisposableObject.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\EndianConverter.cs">
-      <Link>Framework\EndianConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\Endianess.cs">
-      <Link>Framework\Endianess.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\ObjectPool.cs">
-      <Link>Framework\ObjectPool.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\Pool.cs">
-      <Link>Framework\Pool.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\Memory\PooledObject.cs">
-      <Link>Framework\PooledObject.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\NativeLibrary.cs">
-      <Link>Framework\NativeLibrary.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\PlatformInfo.cs">
-      <Link>Framework\PlatformInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\PlatformType.cs">
-      <Link>Framework\PlatformType.cs</Link>
-    </Compile>
-    <Compile Include="..\Framework\Platform\ResharperAnnotations.cs">
-      <Link>Framework\ResharperAnnotations.cs</Link>
-    </Compile>
     <Compile Include="AssetsProject.cs" />
     <Compile Include="Assets\Attributes\AssetAttribute.cs" />
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
@@ -446,6 +323,12 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Swizzle.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pegasus\Pegasus.csproj">
+      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
+      <Name>Pegasus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

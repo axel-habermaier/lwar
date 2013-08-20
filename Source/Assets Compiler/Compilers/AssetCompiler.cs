@@ -100,7 +100,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 				Compile(asset, buffer);
 				return true;
 			}
-			catch (AppException)
+			catch (PegasusException)
 			{
 			}
 			catch (Exception e)
