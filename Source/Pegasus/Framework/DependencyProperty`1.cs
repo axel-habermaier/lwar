@@ -14,8 +14,28 @@ namespace Pegasus.Framework
 		/// </summary>
 		/// <param name="defaultValue">The default value of the dependency property.</param>
 		/// <param name="inherits">Indicates whether the value of the dependency property is inheritable.</param>
-		public DependencyProperty(T defaultValue = default(T), bool inherits = false)
-			: base(inherits)
+		/// <param name="affectsMeasure">
+		///   Indicates that changes to the value of the dependency property potentially affect the measure pass of the layout
+		///   engine. Implies affectsArrange and affectsRender.
+		/// </param>
+		/// <param name="affectsArrange">
+		///   Indicates that changes to the value of the dependency property potentially affect the arrange pass of the layout
+		///   engine. Implies affectsRender.
+		/// </param>
+		/// <param name="affectsRender">
+		///   Indicates that changes to the value of the dependency property potentially requires a redraw, without affecting
+		///   measurement or arrangement.
+		/// </param>
+		/// <param name="isAnimationProhibited"> Indicates that the dependency property cannot be animated.</param>
+		/// <param name="isDataBindingProhibited">Indicates that the dependency property does not support data binding.</param>
+		public DependencyProperty(T defaultValue = default(T),
+								  bool inherits = false,
+								  bool affectsMeasure = false,
+								  bool affectsArrange = false,
+								  bool affectsRender = false,
+								  bool isAnimationProhibited = false,
+								  bool isDataBindingProhibited = false)
+			: base(inherits, affectsMeasure, affectsArrange, affectsRender, isAnimationProhibited, isDataBindingProhibited)
 		{
 			DefaultValue = defaultValue;
 		}

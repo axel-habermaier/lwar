@@ -14,19 +14,109 @@ namespace Pegasus.Framework
 		private static int _propertyCount;
 
 		/// <summary>
+		///   The metadata flags of the dependency property.
+		/// </summary>
+		private readonly MetadataFlags _flags;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="inherits">Indicates whether the value of the dependency property is inheritable.</param>
-		protected DependencyProperty(bool inherits = false)
+		/// <param name="affectsMeasure">
+		///   Indicates that changes to the value of the dependency property potentially affect the measure pass of the layout
+		///   engine. Implies affectsArrange and affectsRender.
+		/// </param>
+		/// <param name="affectsArrange">
+		///   Indicates that changes to the value of the dependency property potentially affect the arrange pass of the layout
+		///   engine. Implies affectsRender.
+		/// </param>
+		/// <param name="affectsRender">
+		///   Indicates that changes to the value of the dependency property potentially requires a redraw, without affecting
+		///   measurement or arrangement.
+		/// </param>
+		/// <param name="isAnimationProhibited"> Indicates that the dependency property cannot be animated.</param>
+		/// <param name="isDataBindingProhibited">Indicates that the dependency property does not support data binding.</param>
+		protected DependencyProperty(bool inherits,
+									 bool affectsMeasure,
+									 bool affectsArrange,
+									 bool affectsRender,
+									 bool isAnimationProhibited,
+									 bool isDataBindingProhibited)
 		{
 			Index = _propertyCount++;
-			Inherits = inherits;
+
+			if (inherits)
+				_flags |= MetadataFlags.Inherits;
+
+			if (affectsMeasure)
+				_flags |= MetadataFlags.AffectsMeasure;
+
+			if (affectsArrange)
+				_flags |= MetadataFlags.AffectsArrange;
+
+			if (affectsRender)
+				_flags |= MetadataFlags.AffectsRender;
+
+			if (isAnimationProhibited)
+				_flags |= MetadataFlags.IsAnimationProhibited;
+
+			if (isDataBindingProhibited)
+				_flags |= MetadataFlags.IsDataBindingProhibited;
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the value of the dependency property is inheritable.
+		///   Gets a value indicating whether the value of the dependency property is potentially inherited.
 		/// </summary>
-		public bool Inherits { get; private set; }
+		public bool Inherits
+		{
+			get { return (_flags & MetadataFlags.Inherits) == MetadataFlags.Inherits; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether changes to the value of the dependency property potentially affect the measure pass
+		///   of the layout
+		///   engine.
+		/// </summary>
+		public bool AffectsMeasure
+		{
+			get { return (_flags & MetadataFlags.AffectsMeasure) == MetadataFlags.AffectsMeasure; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether changes to the value of the dependency property potentially affect the arrange pass
+		///   of the layout
+		///   engine.
+		/// </summary>
+		public bool AffectsArrange
+		{
+			get { return (_flags & MetadataFlags.AffectsArrange) == MetadataFlags.AffectsArrange || AffectsMeasure; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating whether changes to the value of the dependency property potentially requires a redraw,
+		///   without affecting
+		///   measurement or arrangement.
+		/// </summary>
+		public bool AffectsRender
+		{
+			get { return (_flags & MetadataFlags.AffectsRender) == MetadataFlags.AffectsRender || AffectsArrange || AffectsMeasure; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating that the dependency property cannot be animated.
+		/// </summary>
+		public bool IsAnimationProhibited
+		{
+			get { return (_flags & MetadataFlags.IsAnimationProhibited) == MetadataFlags.IsAnimationProhibited; }
+		}
+
+		/// <summary>
+		///   Gets a value indicating that the dependency property does not support data binding.
+		/// </summary>
+		public bool IsDataBindingProhibited
+		{
+			get { return (_flags & MetadataFlags.IsDataBindingProhibited) == MetadataFlags.IsDataBindingProhibited; }
+		}
 
 		/// <summary>
 		///   The index of the dependency property that remains unchanged and unique throughout the lifetime of the application.
@@ -58,5 +148,45 @@ namespace Pegasus.Framework
 		/// </summary>
 		/// <param name="obj">The dependency object the value should be returned for.</param>
 		internal abstract object GetValue(DependencyObject obj);
+
+		/// <summary>
+		///   Provides metadata for the dependency property.
+		/// </summary>
+		[Flags]
+		private enum MetadataFlags : byte
+		{
+			/// <summary>
+			///   Indicates that the value of the dependency property is potentially inherited.
+			/// </summary>
+			Inherits = 1,
+
+			/// <summary>
+			///   Indicates that changes to the value of the dependency property potentially affect the measure pass of the layout
+			///   engine. Implies affectsArrange and affectsRender.
+			/// </summary>
+			AffectsMeasure = 2,
+
+			/// <summary>
+			///   Indicates that changes to the value of the dependency property potentially affect the arrange pass of the layout
+			///   engine. Implies affectsRender.
+			/// </summary>
+			AffectsArrange = 4,
+
+			/// <summary>
+			///   Indicates that changes to the value of the dependency property potentially requires a redraw, without affecting
+			///   measurement or arrangement.
+			/// </summary>
+			AffectsRender = 8,
+
+			/// <summary>
+			///   Indicates that the dependency property cannot be animated.
+			/// </summary>
+			IsAnimationProhibited = 16,
+
+			/// <summary>
+			///   Indicates that the dependency property does not support data binding.
+			/// </summary>
+			IsDataBindingProhibited = 32
+		}
 	}
 }

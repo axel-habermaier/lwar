@@ -41,6 +41,34 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
+		///   Checks whether two double values are equal. If the difference between the two doubles is
+		///   small enough, they are considered equal.
+		/// </summary>
+		/// <param name="left">The first value to compare.</param>
+		/// <param name="right">The second value to compare.</param>
+		public static bool DoubleEquality(double left, double right)
+		{
+			return Math.Abs(left - right) < Epsilon;
+		}
+
+		/// <summary>
+		///   Clamps the given value to be in the range [min, max].
+		/// </summary>
+		/// <param name="value">The value that should be clamped.</param>
+		/// <param name="min">The lower bound of the clamped interval.</param>
+		/// <param name="max">The upper bound of the clamped interval.</param>
+		public static double Clamp(double value, double min, double max)
+		{
+			if (value < min)
+				return min;
+
+			if (value > max)
+				return max;
+
+			return value;
+		}
+
+		/// <summary>
 		///   Clamps the given value to be in the range [min, max].
 		/// </summary>
 		/// <param name="value">The value that should be clamped.</param>

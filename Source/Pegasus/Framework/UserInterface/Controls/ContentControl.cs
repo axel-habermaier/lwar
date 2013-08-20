@@ -13,7 +13,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///   The content of a content control.
 		/// </summary>
-		public static readonly DependencyProperty<object> ContentProperty = new DependencyProperty<object>();
+		public static readonly DependencyProperty<object> ContentProperty = new DependencyProperty<object>(affectsMeasure: true);
 
 		/// <summary>
 		///   Initializes a new instance.

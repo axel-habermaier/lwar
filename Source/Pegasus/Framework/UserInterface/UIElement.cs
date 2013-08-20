@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework.UserInterface
 {
+	using Math;
 	using Platform.Graphics;
 	using Rendering.UserInterface;
 
@@ -18,17 +19,18 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   The foreground color of the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<Color> ForegroundProperty = new DependencyProperty<Color>(new Color(255, 255, 255, 255));
+		public static readonly DependencyProperty<Color> ForegroundProperty =
+			new DependencyProperty<Color>(defaultValue: new Color(255, 255, 255, 255), affectsRender: true);
 
 		/// <summary>
 		///   The style of the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<Style> StyleProperty = new DependencyProperty<Style>();
+		public static readonly DependencyProperty<Style> StyleProperty = new DependencyProperty<Style>(affectsMeasure: true);
 
 		/// <summary>
 		///   The font used for text rendering by the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<Font> FontProperty = new DependencyProperty<Font>();
+		public static readonly DependencyProperty<Font> FontProperty = new DependencyProperty<Font>(affectsMeasure: true);
 
 		/// <summary>
 		///   Indicates whether the mouse is currently hovering the UI element.
@@ -38,32 +40,32 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   The width of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> WidthProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> WidthProperty = new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The height of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> HeightProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> HeightProperty = new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The minimum width constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MinWidthProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> MinWidthProperty = new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The minimum height constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MinHeightProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> MinHeightProperty = new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The maximum width constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MaxWidthProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> MaxWidthProperty = new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The maximum height constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MaxHeightProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> MaxHeightProperty = new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The actual width of the UI element, measured in pixels, as determined by the layouting system.
@@ -74,6 +76,33 @@ namespace Pegasus.Framework.UserInterface
 		///   The actual height of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
 		public static readonly DependencyProperty<double> ActualHeightProperty = new DependencyProperty<double>();
+
+		/// <summary>
+		///   Indicates whether the UI element is visible.
+		/// </summary>
+		public static readonly DependencyProperty<bool> VisibleProperty = new DependencyProperty<bool>(affectsMeasure: true);
+
+		/// <summary>
+		///   The outer margin of the UI element.
+		/// </summary>
+		public static readonly DependencyProperty<Thickness> MarginProperty = new DependencyProperty<Thickness>(affectsMeasure: true);
+
+		/// <summary>
+		///   The horizontal alignment characteristics of the UI element.
+		/// </summary>
+		public static readonly DependencyProperty<HorizontalAlignment> HorizontalAlignmentProperty =
+			new DependencyProperty<HorizontalAlignment>(affectsArrange: true);
+
+		/// <summary>
+		///   The vertical alignment characteristics of the UI element.
+		/// </summary>
+		public static readonly DependencyProperty<VerticalAlignment> VerticalAlignmentProperty =
+			new DependencyProperty<VerticalAlignment>(affectsArrange: true);
+
+		/// <summary>
+		///   The size of the UI element that has been computed by the last measure pass of the layout engine.
+		/// </summary>
+		private SizeD _desiredSize;
 
 		/// <summary>
 		///   The resources used by the UI element.
@@ -223,6 +252,57 @@ namespace Pegasus.Framework.UserInterface
 		public double ActualHeight
 		{
 			get { return GetValue(ActualHeightProperty); }
+		}
+
+		/// <summary>
+		///   Indicates whether the UI element is visible.
+		/// </summary>
+		public bool Visible
+		{
+			get { return GetValue(VisibleProperty); }
+			set { SetValue(VisibleProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets the outer margin of the UI element.
+		/// </summary>
+		public Thickness Margin
+		{
+			get { return GetValue(MarginProperty); }
+			set { SetValue(MarginProperty, value); }
+		}
+
+		/// <summary>
+		///   The horizontal alignment characteristics of the UI element.
+		/// </summary>
+		public HorizontalAlignment HorizontalAlignment
+		{
+			get { return GetValue(HorizontalAlignmentProperty); }
+			set { SetValue(HorizontalAlignmentProperty, value); }
+		}
+
+		/// ///
+		/// <summary>
+		///   The vertical alignment characteristics of the UI element.
+		/// </summary>
+		public VerticalAlignment VerticalAlignment
+		{
+			get { return GetValue(VerticalAlignmentProperty); }
+			set { SetValue(VerticalAlignmentProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets the size of the UI element that has been computed by the last measure pass of the layout engine.
+		/// </summary>
+		public SizeD DesiredSize
+		{
+			get
+			{
+				if (!Visible)
+					return new SizeD(0, 0);
+
+				return _desiredSize;
+			}
 		}
 
 		/// <summary>

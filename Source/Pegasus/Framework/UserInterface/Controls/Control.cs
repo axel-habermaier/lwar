@@ -10,7 +10,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///   The template that defines the control's appearance.
 		/// </summary>
-		public static readonly DependencyProperty<ControlTemplate> TemplateProperty = new DependencyProperty<ControlTemplate>();
+		public static readonly DependencyProperty<ControlTemplate> TemplateProperty = new DependencyProperty<ControlTemplate>(affectsMeasure: true);
 
 		/// <summary>
 		///   Gets or sets the template that defines the control's appearance.

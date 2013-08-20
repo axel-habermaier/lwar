@@ -199,6 +199,15 @@ IEnumerable<Info> GetInfo()
 		VectorType = "Vector2f16",
 		EqualsMethodFormat = "{0} == {1}"
 	};
+
+	yield return new Info 
+	{ 
+		Name = "D", 
+		Type = "double", 
+		Description = "64-bit floating point", 
+		VectorType = "Vector2d",
+		EqualsMethodFormat = "MathUtils.DoubleEquality({0}, {1})"
+	};
 }
 
 #>
