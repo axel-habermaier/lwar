@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework
 {
 	using System.Collections.Generic;
+	using UserInterface;
 
 	/// <summary>
 	///   Represents an object that exposes dependency properties.

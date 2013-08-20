@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework
 {
 	/// <summary>
 	///   Represents an untyped property that has multiple sources (such as data bindings, style setters, animation,

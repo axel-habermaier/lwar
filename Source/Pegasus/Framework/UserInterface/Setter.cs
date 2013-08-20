@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework.UserInterface
 {
 	/// <summary>
 	///   Untyped base class for setters that apply property values.

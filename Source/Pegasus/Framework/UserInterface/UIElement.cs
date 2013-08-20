@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework.UserInterface
 {
 	using Platform.Assets;
 	using Platform.Graphics;
+	using Rendering.UserInterface;
 
 	/// <summary>
 	///   Provides layouting, input, and other base functionality for all UI elements.

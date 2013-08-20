@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework.UserInterface.Controls
 {
 	/// <summary>
 	///   A base class for all layouts that position and arrange child UI elements.

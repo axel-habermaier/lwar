@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework
 {
 	/// <summary>
 	///   Raises an event when a property has been changed.

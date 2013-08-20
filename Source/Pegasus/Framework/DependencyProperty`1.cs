@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework
 {
 	/// <summary>
 	///   Represents a strongly-typed property that has multiple sources (such as data bindings, style setters, animation,

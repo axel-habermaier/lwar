@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework.UserInterface
 {
 	using System.Linq.Expressions;
 	using System.Reflection;

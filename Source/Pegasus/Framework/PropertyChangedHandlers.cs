@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework
 {
 	/// <summary>
 	///   Handles a change notification for a property.
@@ -26,11 +26,4 @@ namespace Pegasus.Rendering.UserInterface
 	/// <param name="obj">The dependency object the changed dependency property belongs to.</param>
 	/// <param name="property">The dependency property that has been changed.</param>
 	internal delegate void DependencyPropertyChangedHandler(DependencyObject obj, DependencyProperty property);
-
-	/// <summary>
-	///   Handles a change notification for a resource dictionary.
-	/// </summary>
-	/// <param name="resourceDictionary">The resource dictionary that has been changed.</param>
-	/// <param name="key">The key of the resource that has been changed.</param>
-	internal delegate void ResourceKeyChangedHandler(ResourceDictionary resourceDictionary, string key);
 }

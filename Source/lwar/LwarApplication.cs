@@ -7,6 +7,8 @@ namespace Lwar
 	using Network;
 	using Pegasus;
 	using Pegasus.Framework;
+	using Pegasus.Framework.UserInterface;
+	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;

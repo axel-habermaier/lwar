@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework
 {
 	/// <summary>
 	///   Stores the values that have been set on a dependency property, managing their precedences. The effective value of the

@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework.UserInterface.Controls
 {
 	using Math;
 	using Platform.Graphics;
+	using Rendering;
+	using Rendering.UserInterface;
 
 	/// <summary>
 	///   Represents a button control.

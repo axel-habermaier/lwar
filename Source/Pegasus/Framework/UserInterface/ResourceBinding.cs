@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework.UserInterface
 {
 	/// <summary>
 	///   Binds a target UI element/dependency property pair to a resource and updates the target dependency property's

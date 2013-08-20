@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework.UserInterface
 {
 	/// <summary>
 	///   Provides rendering support for the UI system, also including hit testing.

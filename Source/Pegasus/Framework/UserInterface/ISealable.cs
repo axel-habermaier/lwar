@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework.UserInterface
 {
 	/// <summary>
 	///   Represents a class that can be sealed, preventing any future modification of the class.

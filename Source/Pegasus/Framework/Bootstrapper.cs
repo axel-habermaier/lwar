@@ -11,6 +11,7 @@ namespace Pegasus.Framework
 	using Rendering;
 	using Rendering.UserInterface;
 	using Scripting;
+	using UserInterface;
 	using Console = System.Console;
 
 	/// <summary>

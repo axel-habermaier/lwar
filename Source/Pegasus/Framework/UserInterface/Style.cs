@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Rendering.UserInterface
+namespace Pegasus.Framework.UserInterface
 {
 	/// <summary>
 	///   Enables sharing of dependency property values between different dependency objects.
