@@ -28,6 +28,7 @@ Binaries x64
 Binaries x86
 log.txt
 Source/Assets/AssetIdentifiers.cs
+Source/Assets/Effects/Effects.cs
 Source/lwar/Gameplay/Entities/EntityType.cs
 Source/lwar/Gameplay/Entities/Templates.cs
 Source/Server/templates.c
