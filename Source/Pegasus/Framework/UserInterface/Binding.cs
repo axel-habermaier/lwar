@@ -117,6 +117,7 @@ namespace Pegasus.Framework.UserInterface
 		{
 			Assert.ArgumentNotNull(targetObject);
 			Assert.ArgumentNotNull(targetProperty);
+			Assert.ArgumentSatisfies(!targetProperty.IsDataBindingProhibited, "Data binding is not allowed on the target property.");
 			Assert.That(!IsBound, "The binding has already been bound to a dependency property.");
 			Assert.That(!_sourceIsViewModel || targetObject is UIElement,
 						"No source object has been set; this is OK as long as the target object is an UIElement, " +

@@ -34,14 +34,14 @@ namespace Pegasus.Framework
 		///   Indicates that changes to the value of the dependency property potentially requires a redraw, without affecting
 		///   measurement or arrangement.
 		/// </param>
-		/// <param name="isAnimationProhibited"> Indicates that the dependency property cannot be animated.</param>
-		/// <param name="isDataBindingProhibited">Indicates that the dependency property does not support data binding.</param>
+		/// <param name="prohibitsAnimations"> Indicates that the dependency property cannot be animated.</param>
+		/// <param name="prohibitsDataBinding">Indicates that the dependency property does not support data binding.</param>
 		protected DependencyProperty(bool inherits,
 									 bool affectsMeasure,
 									 bool affectsArrange,
 									 bool affectsRender,
-									 bool isAnimationProhibited,
-									 bool isDataBindingProhibited)
+									 bool prohibitsAnimations,
+									 bool prohibitsDataBinding)
 		{
 			Index = _propertyCount++;
 
@@ -57,10 +57,10 @@ namespace Pegasus.Framework
 			if (affectsRender)
 				_flags |= MetadataFlags.AffectsRender;
 
-			if (isAnimationProhibited)
+			if (prohibitsAnimations)
 				_flags |= MetadataFlags.IsAnimationProhibited;
 
-			if (isDataBindingProhibited)
+			if (prohibitsDataBinding)
 				_flags |= MetadataFlags.IsDataBindingProhibited;
 		}
 

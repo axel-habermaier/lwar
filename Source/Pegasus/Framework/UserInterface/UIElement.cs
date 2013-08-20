@@ -14,7 +14,8 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   The view model of the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<ViewModel> ViewModelProperty = new DependencyProperty<ViewModel>(inherits: true);
+		public static readonly DependencyProperty<ViewModel> ViewModelProperty =
+			new DependencyProperty<ViewModel>(inherits: true, prohibitsAnimations: true);
 
 		/// <summary>
 		///   The foreground color of the UI element.
@@ -25,67 +26,80 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   The style of the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<Style> StyleProperty = new DependencyProperty<Style>(affectsMeasure: true);
+		public static readonly DependencyProperty<Style> StyleProperty =
+			new DependencyProperty<Style>(affectsMeasure: true);
 
 		/// <summary>
 		///   The font used for text rendering by the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<Font> FontProperty = new DependencyProperty<Font>(affectsMeasure: true);
+		public static readonly DependencyProperty<Font> FontProperty =
+			new DependencyProperty<Font>(affectsMeasure: true);
 
 		/// <summary>
 		///   Indicates whether the mouse is currently hovering the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<bool> IsMouseOverProperty = new DependencyProperty<bool>();
+		public static readonly DependencyProperty<bool> IsMouseOverProperty =
+			new DependencyProperty<bool>();
 
 		/// <summary>
 		///   The width of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> WidthProperty = new DependencyProperty<double>(affectsMeasure: true);
+		public static readonly DependencyProperty<double> WidthProperty =
+			new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The height of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> HeightProperty = new DependencyProperty<double>(affectsMeasure: true);
+		public static readonly DependencyProperty<double> HeightProperty =
+			new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The minimum width constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MinWidthProperty = new DependencyProperty<double>(affectsMeasure: true);
+		public static readonly DependencyProperty<double> MinWidthProperty =
+			new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The minimum height constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MinHeightProperty = new DependencyProperty<double>(affectsMeasure: true);
+		public static readonly DependencyProperty<double> MinHeightProperty =
+			new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The maximum width constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MaxWidthProperty = new DependencyProperty<double>(affectsMeasure: true);
+		public static readonly DependencyProperty<double> MaxWidthProperty =
+			new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The maximum height constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MaxHeightProperty = new DependencyProperty<double>(affectsMeasure: true);
+		public static readonly DependencyProperty<double> MaxHeightProperty =
+			new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
 		///   The actual width of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
-		public static readonly DependencyProperty<double> ActualWidthProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> ActualWidthProperty =
+			new DependencyProperty<double>();
 
 		/// <summary>
 		///   The actual height of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
-		public static readonly DependencyProperty<double> ActualHeightProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> ActualHeightProperty =
+			new DependencyProperty<double>();
 
 		/// <summary>
 		///   Indicates whether the UI element is visible.
 		/// </summary>
-		public static readonly DependencyProperty<bool> VisibleProperty = new DependencyProperty<bool>(affectsMeasure: true);
+		public static readonly DependencyProperty<bool> VisibleProperty =
+			new DependencyProperty<bool>(affectsMeasure: true);
 
 		/// <summary>
 		///   The outer margin of the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<Thickness> MarginProperty = new DependencyProperty<Thickness>(affectsMeasure: true);
+		public static readonly DependencyProperty<Thickness> MarginProperty =
+			new DependencyProperty<Thickness>(affectsMeasure: true);
 
 		/// <summary>
 		///   The horizontal alignment characteristics of the UI element.

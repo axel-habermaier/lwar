@@ -26,16 +26,16 @@ namespace Pegasus.Framework
 		///   Indicates that changes to the value of the dependency property potentially requires a redraw, without affecting
 		///   measurement or arrangement.
 		/// </param>
-		/// <param name="isAnimationProhibited"> Indicates that the dependency property cannot be animated.</param>
-		/// <param name="isDataBindingProhibited">Indicates that the dependency property does not support data binding.</param>
+		/// <param name="prohibitsAnimations"> Indicates that the dependency property cannot be animated.</param>
+		/// <param name="prohibitsDataBinding">Indicates that the dependency property does not support data binding.</param>
 		public DependencyProperty(T defaultValue = default(T),
 								  bool inherits = false,
 								  bool affectsMeasure = false,
 								  bool affectsArrange = false,
 								  bool affectsRender = false,
-								  bool isAnimationProhibited = false,
-								  bool isDataBindingProhibited = false)
-			: base(inherits, affectsMeasure, affectsArrange, affectsRender, isAnimationProhibited, isDataBindingProhibited)
+								  bool prohibitsAnimations = false,
+								  bool prohibitsDataBinding = false)
+			: base(inherits, affectsMeasure, affectsArrange, affectsRender, prohibitsAnimations, prohibitsDataBinding)
 		{
 			DefaultValue = defaultValue;
 		}

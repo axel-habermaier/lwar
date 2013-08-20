@@ -10,24 +10,28 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///   The distance between the left side of an UI element and its parent Canvas.
 		/// </summary>
-		public static readonly DependencyProperty<double> LeftProperty = new DependencyProperty<double>(affectsArrange: true);
+		public static readonly DependencyProperty<double> LeftProperty =
+			new DependencyProperty<double>(affectsArrange: true);
 
 		/// <summary>
 		///   The distance between the right side of an UI element and its parent Canvas. If the Left property is also set, the
 		///   Right value is ignored.
 		/// </summary>
-		public static readonly DependencyProperty<double> RightProperty = new DependencyProperty<double>(affectsArrange: true);
+		public static readonly DependencyProperty<double> RightProperty =
+			new DependencyProperty<double>(affectsArrange: true);
 
 		/// <summary>
 		///   The distance between the top of an UI element and its parent Canvas.
 		/// </summary>
-		public static readonly DependencyProperty<double> TopProperty = new DependencyProperty<double>(affectsArrange: true);
+		public static readonly DependencyProperty<double> TopProperty =
+			new DependencyProperty<double>(affectsArrange: true);
 
 		/// <summary>
 		///   The distance between the bottom of an UI element and its parent Canvas. If the Top property is also set, the Bottom
 		///   value is ignored.
 		/// </summary>
-		public static readonly DependencyProperty<double> BottomProperty = new DependencyProperty<double>(affectsArrange: true);
+		public static readonly DependencyProperty<double> BottomProperty =
+			new DependencyProperty<double>(affectsArrange: true);
 
 		/// <summary>
 		///   Gets or sets the distance between the left side of an UI element and its parent Canvas.
