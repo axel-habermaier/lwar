@@ -1,6 +1,5 @@
 ﻿using System;
 
-// ReSharper disable UnusedParameter.Global
 
 namespace Pegasus
 {

@@ -37,7 +37,7 @@ namespace Pegasus.Platform.Graphics
 		///   Provides access to the native shader functions.
 		/// </summary>
 #if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
+		[System.Security.SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

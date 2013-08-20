@@ -88,7 +88,7 @@ namespace Pegasus.Platform
 		///   Provides access to the native platform types and functions.
 		/// </summary>
 #if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
+		[System.Security.SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

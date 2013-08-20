@@ -4,6 +4,7 @@ namespace Pegasus.Platform.Graphics
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///   Represents a GPU texture.
@@ -110,7 +111,7 @@ namespace Pegasus.Platform.Graphics
 		///   Provides access to the native Texture2D functions.
 		/// </summary>
 #if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
+		[System.Security.SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

@@ -11,13 +11,14 @@ using Long = System.Int32;
 namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Platform.Logging;
 
 	/// <summary>
 	///   Provides access to native freetype functions.
 	/// </summary>
 #if !DEBUG
-	[SuppressUnmanagedCodeSecurity]
+	[System.Security.SuppressUnmanagedCodeSecurity]
 #endif
 	internal static class FreeType
 	{

@@ -8,7 +8,7 @@ namespace Pegasus.Platform.Memory
 	///   Provides access to certain native functions in a platform-independent way.
 	/// </summary>
 #if !DEBUG
-	[SuppressUnmanagedCodeSecurity]
+	[System.Security.SuppressUnmanagedCodeSecurity]
 #endif
 	internal static class Interop
 	{

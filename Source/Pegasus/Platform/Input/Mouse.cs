@@ -157,7 +157,7 @@ namespace Pegasus.Platform.Input
 		///   Provides access to the native mouse functions.
 		/// </summary>
 #if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
+		[System.Security.SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{
