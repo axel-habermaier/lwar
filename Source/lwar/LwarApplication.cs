@@ -34,7 +34,21 @@ namespace Lwar
 
 		public void Update()
 		{
-			++FrameCount;
+			++_frameCount;
+
+			if (Model != null)
+				Model.FrameCount++;
+
+			if (_frameCount % 1000 == 0)
+				Model = Model == null ? new HelloWorldViewModel() : null;
+		}
+
+		private HelloWorldViewModel _model;
+
+		public HelloWorldViewModel Model
+		{
+			get { return _model; }
+			set { ChangePropertyValue(ref _model, value); }
 		}
 	}
 
@@ -58,7 +72,7 @@ namespace Lwar
 			Resources["MyStyle"] = style;
 
 			var binding1 = new Binding<object>(v => ((HelloWorldViewModel)v).Name);
-			var binding2 = new Binding<object>(v => ((HelloWorldViewModel)v).FrameCount);
+			var binding2 = new Binding<object>(v => ((HelloWorldViewModel)v).Model.FrameCount);
 
 			var canvas = new Canvas();
 			var button1 = new Button() { Width = 300, Height = 100 };

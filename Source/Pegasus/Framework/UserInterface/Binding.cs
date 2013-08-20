@@ -138,9 +138,9 @@ namespace Pegasus.Framework.UserInterface
 
 			IsBound = true;
 
+			// In release builds, we unset the source expression to free up the memory; in debug builds, we need
+			// the expression in case of errors
 #if !DEBUG
-	// In release builds, we unset the source expression to free up the memory; in debug builds, we use print
-	// the expression in case of errors
 			_sourceExpression = null;
 #endif
 		}
@@ -223,16 +223,16 @@ namespace Pegasus.Framework.UserInterface
 		{
 			++_isChanging;
 
-			var value = memberAccess.Value;
-			_isNull = value == null;
-
 #if DEBUG
-			if (_isNull)
+			if (!_isNull && memberAccess.Value == null)
 				Log.Debug("Binding failure: Expression '{0}' encountered a null value when accessing '{1}'.",
 						  _sourceExpression, memberAccess.MemberName);
 #endif
 
-			if (_memberAccessCount > memberAccessCount && !_isNull)
+			var value = memberAccess.Value;
+			_isNull = value == null;
+
+			if (_memberAccessCount > memberAccessCount)
 				nextMemberAccess.SourceObject = value;
 
 			--_isChanging;
