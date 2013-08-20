@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;

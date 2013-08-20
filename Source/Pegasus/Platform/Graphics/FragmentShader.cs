@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Graphics
+namespace Pegasus.Platform.Graphics
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///   A fragment shader is a program that controls the fragment-shader stage.

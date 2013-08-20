@@ -1,8 +1,8 @@
 ﻿using System;
-using Pegasus.Framework.Math;
-using Pegasus.Framework.Platform;
-using Pegasus.Framework.Scripting;
-using Pegasus.Framework.Scripting.Validators;
+using Pegasus.Math;
+using Pegasus.Platform;
+using Pegasus.Scripting;
+using Pegasus.Scripting.Validators;
 
 // ReSharper disable CheckNamespace
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing
+namespace Pegasus.Scripting.Parsing
 {
 	/// <summary>
 	///   Indicates whether the parser that generated a reply succeeded.

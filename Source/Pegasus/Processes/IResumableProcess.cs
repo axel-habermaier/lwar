@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Processes
+namespace Pegasus.Processes
 {
 	/// <summary>
 	///   Represents an resumable asynchronous process.

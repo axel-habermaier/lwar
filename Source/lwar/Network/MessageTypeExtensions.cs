@@ -2,7 +2,7 @@
 
 namespace Lwar.Network
 {
-	using Pegasus.Framework;
+	using Pegasus;
 
 	/// <summary>
 	///   Provides extension methods for the MessageType enumeration.

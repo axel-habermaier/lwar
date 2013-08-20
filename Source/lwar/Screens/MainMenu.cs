@@ -4,12 +4,12 @@ namespace Lwar.Screens
 {
 	using Assets;
 	using Network;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
-	using Pegasus.Framework.Rendering.UserInterface;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Logging;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
+	using Pegasus.Rendering.UserInterface;
 
 	/// <summary>
 	///   Shows the main menu.

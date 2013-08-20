@@ -7,13 +7,12 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 	using System.Linq;
 	using System.Reflection;
 	using Assets;
-	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a NRefactory C# project.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Input
+namespace Pegasus.Platform.Input
 {
 	using System.Linq;
 	using Scripting.Parsing;
@@ -74,8 +74,8 @@ namespace Pegasus.Framework.Platform.Input
 																	  BinaryInputTriggerType triggerType)
 		{
 			return SeparatedBy1(operandParser, operatorParser)
-					   .Apply(triggers =>
-							  triggers.Aggregate((binaries, next) => new BinaryInputTrigger(triggerType, binaries, next)))
+				.Apply(triggers =>
+						   triggers.Aggregate((binaries, next) => new BinaryInputTrigger(triggerType, binaries, next)))
 				   + ~WhiteSpaces;
 		}
 	}

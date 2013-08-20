@@ -3,7 +3,7 @@
 <#@ output extension=".cs" #>
 using System;
 
-namespace Pegasus.Framework.Math
+namespace Pegasus.Math
 {
 	using System.Globalization;
 <# foreach (var fractionalBits in new int[] { 8, 16 }) { #>

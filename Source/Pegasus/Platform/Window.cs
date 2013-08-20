@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Platform
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Input;
 	using Logging;
 	using Math;

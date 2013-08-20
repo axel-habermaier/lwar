@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	/// <summary>
 	///   Represents a text marker or text sequence.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	using Math;
 

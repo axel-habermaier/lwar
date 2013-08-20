@@ -3,7 +3,6 @@
 namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 {
 	using System.Linq;
-	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 

@@ -6,9 +6,9 @@ namespace Lwar.Network
 	using System.Linq;
 	using System.Net;
 	using Messages;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Platform.Network;
+	using Pegasus.Platform.Logging;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Platform.Network;
 
 	/// <summary>
 	///   Listens to incoming automatic server discovery messages and reports the end points of the servers that it has

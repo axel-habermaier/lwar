@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Graphics
+namespace Pegasus.Platform.Graphics
 {
 	/// <summary>
 	///   Indicates which stencil operation should be used.

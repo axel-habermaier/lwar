@@ -4,9 +4,8 @@ namespace Pegasus.AssetsCompiler.Assets
 {
 	using System.IO;
 	using Compilers;
-	using Framework;
-	using Framework.Platform;
-	using Framework.Platform.Memory;
+	using Platform;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a source asset that requires compilation.

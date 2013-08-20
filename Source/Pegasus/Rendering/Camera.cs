@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering
+namespace Pegasus.Rendering
 {
 	using System.Runtime.InteropServices;
 	using Math;
@@ -138,7 +138,7 @@ namespace Pegasus.Framework.Rendering
 		protected abstract void UpdateViewMatrixCore();
 
 		// Disable annoying "private field is is assigned byt its value is never used" warnings on Mono
-		#pragma warning disable 0414
+#pragma warning disable 0414
 
 		/// <summary>
 		///   Stores the camera data that is passed to the vertex shaders.
@@ -191,6 +191,6 @@ namespace Pegasus.Framework.Rendering
 			}
 		}
 
-		#pragma warning restore 0414
+#pragma warning restore 0414
 	}
 }

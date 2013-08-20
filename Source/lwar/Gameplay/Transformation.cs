@@ -4,8 +4,8 @@ namespace Lwar.Gameplay
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
+	using Pegasus;
+	using Pegasus.Math;
 
 	/// <summary>
 	///   Represents a transformation in a transformation hierarchy.

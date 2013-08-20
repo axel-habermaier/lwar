@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	/// <summary>
 	///   Binds a target UI element/dependency property pair to a resource and updates the target dependency property's
@@ -25,11 +25,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private DependencyProperty<T> _targetProperty;
 
 		/// <summary>
-		/// Gets a value indicating whether the resource binding has already been bound to a dependency property.
-		/// </summary>
-		public bool IsBound { get; private set; }
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be bound to the dependency property.</param>
@@ -38,6 +33,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			Assert.ArgumentNotNullOrWhitespace(key);
 			_key = key;
 		}
+
+		/// <summary>
+		///   Gets a value indicating whether the resource binding has already been bound to a dependency property.
+		/// </summary>
+		public bool IsBound { get; private set; }
 
 		/// <summary>
 		///   Initializes the binding.

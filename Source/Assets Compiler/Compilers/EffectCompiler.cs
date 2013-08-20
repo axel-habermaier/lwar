@@ -10,12 +10,10 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using Assets;
 	using CodeGeneration.Effects;
 	using Effects;
-	using Framework;
-	using Framework.Platform;
-	using Framework.Platform.Graphics;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
-	using Effect = Effects.Effect;
+	using Platform;
+	using Platform.Graphics;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Compiles effects written in C#.

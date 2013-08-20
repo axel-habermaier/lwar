@@ -2,8 +2,8 @@
 
 namespace Lwar.Gameplay.Actors
 {
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
+	using Pegasus.Math;
+	using Pegasus.Platform;
 
 	/// <summary>
 	///   Represents an explosion

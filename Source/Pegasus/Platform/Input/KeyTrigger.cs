@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Input
+namespace Pegasus.Platform.Input
 {
 	/// <summary>
 	///   Represents a trigger that triggers if a key is in a certain state.

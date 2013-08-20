@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Memory
+namespace Pegasus.Platform.Memory
 {
 	using System.Collections.Generic;
 	using System.Diagnostics;

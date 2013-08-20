@@ -5,8 +5,7 @@ namespace Pegasus.AssetsCompiler
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
-	using Framework;
-	using Framework.Platform.Logging;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Parses configuration files similar to Window's .ini file format.

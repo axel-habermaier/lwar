@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	/// <summary>
 	///   Represents a base class for templated UI elements.

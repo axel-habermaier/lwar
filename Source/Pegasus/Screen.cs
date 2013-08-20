@@ -1,7 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.Framework
+namespace Pegasus
 {
+	using Framework;
 	using Platform;
 	using Platform.Assets;
 	using Platform.Graphics;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	/// <summary>
 	///   A kerning pair stores an position offset for two glyphs.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing.Combinators
+namespace Pegasus.Scripting.Parsing.Combinators
 {
 	/// <summary>
 	///   Applies the given parser and passes the parser's result to the given function. The value returned by the function

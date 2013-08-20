@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Graphics
+namespace Pegasus.Platform.Graphics
 {
 	/// <summary>
 	///   Indicates which operation should be used for blending.

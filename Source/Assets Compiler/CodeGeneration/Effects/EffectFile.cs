@@ -7,11 +7,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using System.Linq;
 	using Assets;
 	using AssetsCompiler.Effects;
-	using Framework;
-	using Framework.Platform.Graphics;
-	using Framework.Platform.Memory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a C# source code file that possibly contains one or more effect declarations.

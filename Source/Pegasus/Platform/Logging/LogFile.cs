@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Logging
+namespace Pegasus.Platform.Logging
 {
 	using System.Collections.Generic;
 	using System.IO;

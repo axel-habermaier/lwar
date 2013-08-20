@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting
+namespace Pegasus.Scripting
 {
 	using System.Collections.Generic;
 	using System.Linq;
@@ -77,10 +77,10 @@ namespace Pegasus.Framework.Scripting
 		{
 			var builder = new StringBuilder();
 			var bindingGroups = (from binding in _bindings
-								group binding by binding.Command
-								into bindingGroup
-								orderby bindingGroup.Key
-								select new { Command = bindingGroup.Key, Bindings = bindingGroup.ToArray() }).ToArray();
+								 group binding by binding.Command
+								 into bindingGroup
+								 orderby bindingGroup.Key
+								 select new { Command = bindingGroup.Key, Bindings = bindingGroup.ToArray() }).ToArray();
 
 			foreach (var group in bindingGroups)
 			{

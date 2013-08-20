@@ -2,7 +2,7 @@
 
 // ReSharper disable UnusedParameter.Global
 
-namespace Pegasus.Framework
+namespace Pegasus
 {
 	using System.Diagnostics;
 	using Platform.Memory;
@@ -245,11 +245,11 @@ namespace Pegasus.Framework
 		{
 			if (index.CompareTo(min) < 0)
 				throw new InvalidOperationException(String.Format(
-					"Lower bound violation. Expected argument to lie between {0} and {1}.", min, max));
+																  "Lower bound violation. Expected argument to lie between {0} and {1}.", min, max));
 
 			if (index.CompareTo(max) > 0)
 				throw new InvalidOperationException(String.Format(
-					"Upper bound violation. Expected argument to lie between {0} and {1}.", min, max));
+																  "Upper bound violation. Expected argument to lie between {0} and {1}.", min, max));
 		}
 
 		/// <summary>

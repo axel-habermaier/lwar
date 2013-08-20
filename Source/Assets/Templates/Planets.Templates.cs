@@ -18,7 +18,7 @@ namespace Lwar.Assets.Templates
 			Radius = 256,
 			CubeMap = "Textures.EarthCubemap",
 			Model = t => String.Format("Model.CreateSphere(graphicsDevice, {0}, {1})", (int)t.Radius, 16),
-			Format = "format_pos" 
+			Format = "format_pos"
 		};
 
 		public static readonly Template Mars = new Template

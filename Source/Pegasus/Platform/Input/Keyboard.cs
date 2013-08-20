@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Input
+namespace Pegasus.Platform.Input
 {
-	using Logging;
 	using Memory;
 
 	/// <summary>
@@ -92,7 +91,7 @@ namespace Pegasus.Framework.Platform.Input
 			// Only raise the character entered event if the character is a printable ASCII character
 			if (character.Character < 32 || character.Character > 255 || Char.IsControl(character.Character))
 				return;
-			
+
 			// Do not raise the character entered event if the character is the result of the console key being pressed
 			if (character.ScanCode == PlatformInfo.ConsoleKey)
 				return;

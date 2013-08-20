@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Graphics
+namespace Pegasus.Platform.Graphics
 {
 	/// <summary>
 	///   Indicates the fill mode to be used when rendering polygons.

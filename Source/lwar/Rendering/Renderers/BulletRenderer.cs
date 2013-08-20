@@ -5,10 +5,10 @@ namespace Lwar.Rendering.Renderers
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Math;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
 	///   Renders bullets into a 3D scene.

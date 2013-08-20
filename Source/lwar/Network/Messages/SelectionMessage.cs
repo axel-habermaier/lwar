@@ -5,7 +5,7 @@ namespace Lwar.Network.Messages
 	using System.Runtime.InteropServices;
 	using Gameplay;
 	using Gameplay.Entities;
-	using Pegasus.Framework;
+	using Pegasus;
 
 	/// <summary>
 	///   Holds the payload of a Selection message.

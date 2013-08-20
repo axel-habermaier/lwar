@@ -5,7 +5,7 @@ namespace Lwar.Network.Messages
 	using System.Runtime.InteropServices;
 	using System.Text;
 	using Gameplay;
-	using Pegasus.Framework;
+	using Pegasus;
 
 	/// <summary>
 	///   Holds the payload of a Chat message.

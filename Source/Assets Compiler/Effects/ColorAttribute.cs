@@ -2,7 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects
 {
-	using Framework.Platform.Graphics;
+	using Platform.Graphics;
 
 	/// <summary>
 	///   Indicates that a shader argument or return value represents a color.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Platform
 {
 	/// <summary>
 	///   Indicates the whether the window is minimized, maximized, or neither minimized nor maximized.

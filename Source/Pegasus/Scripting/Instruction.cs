@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting
+namespace Pegasus.Scripting
 {
 	using System.Linq;
 	using Platform.Logging;

@@ -3,14 +3,14 @@
 namespace Lwar.Screens
 {
 	using Assets;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
-	using Pegasus.Framework.Rendering.UserInterface;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Input;
+	using Pegasus.Platform.Logging;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
+	using Pegasus.Rendering.UserInterface;
 
 	/// <summary>
 	///   Displays a message to the user.

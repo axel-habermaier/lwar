@@ -1,6 +1,6 @@
 using System;
 
-namespace Pegasus.Framework.Platform.Input
+namespace Pegasus.Platform.Input
 {
 	/// <summary>
 	///   Identifies a mouse button.

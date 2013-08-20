@@ -2,9 +2,9 @@
 
 namespace Lwar.Gameplay.Entities
 {
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform;
 
 	/// <summary>
 	///   Represents a planet.

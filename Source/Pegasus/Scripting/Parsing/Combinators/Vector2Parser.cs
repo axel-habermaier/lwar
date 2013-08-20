@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing.Combinators
+namespace Pegasus.Scripting.Parsing.Combinators
 {
 	using Math;
 

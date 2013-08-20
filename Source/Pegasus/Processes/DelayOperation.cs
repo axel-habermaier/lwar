@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Processes
+namespace Pegasus.Processes
 {
 	using Platform;
 	using Platform.Memory;

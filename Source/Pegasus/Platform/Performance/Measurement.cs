@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Performance
+namespace Pegasus.Platform.Performance
 {
 	/// <summary>
 	///   Represents a measurement that can be used with C#'s using keyword to define the scope of the measurement.

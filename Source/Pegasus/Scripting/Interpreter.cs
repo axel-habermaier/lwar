@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting
+namespace Pegasus.Scripting
 {
 	using System.Collections.Generic;
 	using System.Linq;
@@ -9,7 +9,6 @@ namespace Pegasus.Framework.Scripting
 	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Rendering.UserInterface;
 
 	/// <summary>
 	///   Interprets user-provided input to set and view cvars and invoke commands.
@@ -63,7 +62,7 @@ namespace Pegasus.Framework.Scripting
 		}
 
 		/// <summary>
-		/// Toggles the value of a Boolean console variable.
+		///   Toggles the value of a Boolean console variable.
 		/// </summary>
 		/// <param name="name">The name of the console variable whose value should be toggled.</param>
 		private static void OnToggle(string name)

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Processes
+namespace Pegasus.Processes
 {
 	/// <summary>
 	///   Represents an asynchronous operation that can block the execution of an asynchronous process until the operation

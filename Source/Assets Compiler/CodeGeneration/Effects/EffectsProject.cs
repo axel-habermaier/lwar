@@ -3,11 +3,11 @@
 namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using Assets;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a C# project with effect declarations that have to be cross-compiled.

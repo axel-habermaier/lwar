@@ -2,8 +2,8 @@
 
 namespace Pegasus.AssetsCompiler.CodeGeneration
 {
-	using Framework.Platform.Logging;
 	using ICSharpCode.NRefactory;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Provides methods to report errors and warnings.

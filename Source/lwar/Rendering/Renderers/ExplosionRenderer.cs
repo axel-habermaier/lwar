@@ -4,10 +4,9 @@ namespace Lwar.Rendering.Renderers
 {
 	using Assets;
 	using Gameplay.Actors;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Math;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Rendering;
 
 	/// <summary>
 	///   Renders explosion effects into a 3D scene.
@@ -46,7 +45,7 @@ namespace Lwar.Rendering.Renderers
 				var currentFrame = (int)(numFrames * (1.0f - explosion.TimeToLive));
 				var frameX = currentFrame % FrameCount;
 				var frameY = currentFrame / FrameCount;
-				
+
 				var size = new SizeF((float)_texture.Width / FrameCount * 2, (float)_texture.Height / FrameCount * 2);
 				var position = new Vector2(explosion.Transform.Position2D.X - size.Width / 2.0f, explosion.Transform.Position2D.Y - size.Height / 2.0f);
 				var texCoords = new RectangleF(frameX * frameSize.Width, frameY * frameSize.Height, frameSize.Width, frameSize.Height);

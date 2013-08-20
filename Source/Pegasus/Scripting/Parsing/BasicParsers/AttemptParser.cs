@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
+namespace Pegasus.Scripting.Parsing.BasicParsers
 {
 	/// <summary>
 	///   Attempts to apply the given parser, returning its reply on success. If the parser fails non-fatally, however, it

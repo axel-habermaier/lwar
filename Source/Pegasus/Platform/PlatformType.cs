@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Platform
 {
 	/// <summary>
 	///   Indicates the platform on which the application is running.

@@ -4,10 +4,10 @@ namespace Lwar.Gameplay
 {
 	using Network;
 	using Network.Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Input;
+	using Pegasus.Platform.Memory;
 	using Scripting;
 
 	/// <summary>

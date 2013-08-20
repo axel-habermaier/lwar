@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
 	using System.Security.Cryptography;
-	using Framework;
 
 	/// <summary>
 	///   Represents an MD5 hash of a file.

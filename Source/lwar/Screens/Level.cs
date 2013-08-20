@@ -7,12 +7,12 @@ namespace Lwar.Screens
 	using Gameplay.Entities;
 	using Network;
 	using Network.Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
+	using Pegasus;
+	using Pegasus.Platform;
+	using Pegasus.Platform.Input;
+	using Pegasus.Platform.Logging;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 	using Rendering;
 	using Scripting;
 

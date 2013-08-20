@@ -2,8 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.Assets.Attributes
 {
-	using Framework;
-
 	/// <summary>
 	///   When applied to an asset assembly, overrides the default compilation settings of an asset.
 	/// </summary>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting
+namespace Pegasus.Scripting
 {
 	using System.Collections.Generic;
 	using System.Linq;
@@ -65,10 +65,10 @@ namespace Pegasus.Framework.Scripting
 		{
 			string input;
 			if (!_file.Read(out input, e =>
-				{
-					if (!silent)
-						Log.Error("Unable to read '{0}': {1}", _file.FileName, e.Message);
-				}))
+			{
+				if (!silent)
+					Log.Error("Unable to read '{0}': {1}", _file.FileName, e.Message);
+			}))
 				yield break;
 
 			var lineNumber = 0;

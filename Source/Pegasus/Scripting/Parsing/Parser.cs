@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing
+namespace Pegasus.Scripting.Parsing
 {
 	using System.Collections.Generic;
 	using System.Linq;

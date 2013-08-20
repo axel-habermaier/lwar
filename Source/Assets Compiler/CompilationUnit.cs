@@ -9,9 +9,8 @@ namespace Pegasus.AssetsCompiler
 	using Assets.Attributes;
 	using CodeGeneration;
 	using Compilers;
-	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a compilation unit that compiles all assets into a binary format.

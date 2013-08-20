@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Graphics
+namespace Pegasus.Platform.Graphics
 {
 	using System.Diagnostics;
 	using System.Linq;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///   Represents the target of a rendering operation.

@@ -1,6 +1,6 @@
 ﻿<#
 	SourceFile = "ICvars.cs";
-	Import = "../../Framework/Scripting/ICvars.cs";
+	Import = "../../Pegasus/Scripting/ICvars.cs";
 	Namespace = "Lwar.Scripting";
 #>
-<#@ include file="../../Framework/Scripting/RegistryGenerator.tt" #>
+<#@ include file="../../Pegasus/Scripting/RegistryGenerator.tt" #>

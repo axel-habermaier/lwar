@@ -11,9 +11,7 @@ using Long = System.Int32;
 namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
-	using Framework;
-	using Framework.Platform.Logging;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Provides access to native freetype functions.
@@ -80,7 +78,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		public static extern Error GetKerning(IntPtr face, uint leftGlyph, uint rightGlyph, uint kernMode, out Vector kerning);
 
 		// Disable annoying "private field is never used" warnings on Mono
-		#pragma warning disable 0169
+#pragma warning disable 0169
 
 		[StructLayout(LayoutKind.Sequential)]
 		public class Face
@@ -242,6 +240,6 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal Long y;
 		}
 
-		#pragma warning restore 0169
+#pragma warning restore 0169
 	}
 }

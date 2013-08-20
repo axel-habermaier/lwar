@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using Framework;
 	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
@@ -47,12 +46,15 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 		/// </summary>
 		public IEnumerable<string> Arguments
 		{
-			get { return _attribute.Arguments.Select(argument =>
+			get
+			{
+				return _attribute.Arguments.Select(argument =>
 				{
 					if (Name == "RangeAttribute" && argument.GetConstantValue(Resolver) is string)
 						return argument.GetConstantValue(Resolver).ToString();
 					return argument.ToString();
-				}); }
+				});
+			}
 		}
 	}
 }

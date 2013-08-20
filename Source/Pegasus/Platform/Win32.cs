@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Platform
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;

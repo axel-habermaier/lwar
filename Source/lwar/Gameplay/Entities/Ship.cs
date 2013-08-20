@@ -3,8 +3,8 @@
 namespace Lwar.Gameplay.Entities
 {
 	using Actors;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
+	using Pegasus;
+	using Pegasus.Math;
 
 	/// <summary>
 	///   Represents a ship that is controlled by a local or remote player.
@@ -71,8 +71,6 @@ namespace Lwar.Gameplay.Entities
 			player.Ship = ship;
 			return ship;
 		}
-
-
 
 		/// <summary>
 		///   Returns a string that represents the current object.

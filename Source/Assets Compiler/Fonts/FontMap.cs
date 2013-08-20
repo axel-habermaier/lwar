@@ -7,11 +7,11 @@ namespace Pegasus.AssetsCompiler.Fonts
 	using System.Linq;
 	using Assets;
 	using Compilers;
-	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
-	using Rectangle = Framework.Math.Rectangle;
-	using Size = Framework.Math.Size;
+	using Platform.Logging;
+	using Platform.Memory;
+	using Math = System.Math;
+	using Rectangle = Math.Rectangle;
+	using Size = Math.Size;
 
 	/// <summary>
 	///   Represents a font as a bitmap, containing all glyphs of a given font.

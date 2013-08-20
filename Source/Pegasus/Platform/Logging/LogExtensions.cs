@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Logging
+namespace Pegasus.Platform.Logging
 {
 	using System.Diagnostics;
 	using System.Linq;
@@ -62,7 +62,7 @@ namespace Pegasus.Framework.Platform.Logging
 
 			Assert.That(minValue == lowestValue, "The lowest value must be {0}.", lowestValue);
 			Assert.That(maxValue == values.Length - 1 + lowestValue,
-				"The highest value must match the number of literals declared by the enumeration.");
+						"The highest value must match the number of literals declared by the enumeration.");
 		}
 
 		/// <summary>

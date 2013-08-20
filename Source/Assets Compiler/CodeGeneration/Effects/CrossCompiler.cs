@@ -5,10 +5,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using System.Collections.Generic;
 	using System.Linq;
 	using AssetsCompiler.Effects;
-	using Framework;
-	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using Platform.Graphics;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method.
@@ -321,11 +320,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				statement.AcceptVisitor(this);
 			else
 				Writer.AppendBlockStatement(() =>
-					{
-						statement.AcceptVisitor(this);
-						if (!OmitTerminatingSemicolon(statement))
-							Writer.Append(";");
-					});
+				{
+					statement.AcceptVisitor(this);
+					if (!OmitTerminatingSemicolon(statement))
+						Writer.Append(";");
+				});
 		}
 
 		/// <summary>

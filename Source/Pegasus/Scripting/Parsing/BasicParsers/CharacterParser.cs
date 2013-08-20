@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing.BasicParsers
+namespace Pegasus.Scripting.Parsing.BasicParsers
 {
 	/// <summary>
 	///   Parses a given character.

@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	/// <summary>
-	/// Specifies the appearance and structure of a control.
+	///   Specifies the appearance and structure of a control.
 	/// </summary>
 	public class ControlTemplate
 	{
-		
 	}
 }

@@ -27,10 +27,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		public virtual void VisitBlockStatement(BlockStatement blockStatement)
 		{
 			Writer.AppendBlockStatement(() => blockStatement.Statements.AcceptVisitor(this, node =>
-				{
-					if (!OmitTerminatingSemicolon(node))
-						Writer.AppendLine(";");
-				}, true));
+			{
+				if (!OmitTerminatingSemicolon(node))
+					Writer.AppendLine(";");
+			}, true));
 		}
 
 		public virtual void VisitBreakStatement(BreakStatement breakStatement)

@@ -3,12 +3,12 @@
 namespace Lwar.Assets.Effects
 {
 	using Pegasus.AssetsCompiler.Effects;
-	
+
 	/// <summary>
 	///   Applies a Gaussian blur filter to a texture.
 	/// </summary>
 	[Effect]
-	internal class BlurEffect : Effect 
+	internal class BlurEffect : Effect
 	{
 		/// <summary>
 		///   Applies a single-pass Gaussian blur filter.
@@ -19,10 +19,10 @@ namespace Lwar.Assets.Effects
 			FragmentShader = "GaussianBlur"
 		};
 
-		/// <summary> 
+		/// <summary>
 		///   The texture that is blurred.
 		/// </summary>
-		public readonly Texture2D Texture; 
+		public readonly Texture2D Texture;
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,
@@ -33,7 +33,7 @@ namespace Lwar.Assets.Effects
 			outPosition = position;
 			outTexCoords = texCoords;
 		}
-		 
+
 		[FragmentShader]
 		public void GaussianBlur([TexCoords(0)] Vector2 texCoords, [Color] out Vector4 color)
 		{

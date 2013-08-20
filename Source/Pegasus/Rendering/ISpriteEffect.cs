@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering
+namespace Pegasus.Rendering
 {
 	using Math;
-	using Platform;
 	using Platform.Assets;
 	using Platform.Graphics;
 

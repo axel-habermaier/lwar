@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace Pegasus.Framework
+namespace Pegasus
 {
 	using System.Collections.Generic;
+	using Framework;
 	using Math;
 	using Platform.Memory;
 	using Rendering;

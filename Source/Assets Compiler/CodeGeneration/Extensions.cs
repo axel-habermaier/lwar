@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using Framework;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
@@ -201,10 +200,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 			where T : AstNode
 		{
 			nodesCollection.AcceptVisitor(visitor, _ =>
-				{
-					if (action != null)
-						action();
-				}, afterLast);
+			{
+				if (action != null)
+					action();
+			}, afterLast);
 		}
 
 		/// <summary>

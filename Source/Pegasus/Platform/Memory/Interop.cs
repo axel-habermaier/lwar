@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Memory
+namespace Pegasus.Platform.Memory
 {
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///   Provides access to certain native functions in a platform-independent way.

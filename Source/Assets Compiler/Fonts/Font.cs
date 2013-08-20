@@ -4,9 +4,8 @@ namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
-	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a typeface in a given style.

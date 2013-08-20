@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Graphics
+namespace Pegasus.Platform.Graphics
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///   Represents a shader that controls a programmable stage of the graphics pipeline.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Input
+namespace Pegasus.Platform.Input
 {
 	/// <summary>
 	///   Represents an input trigger that is triggered if a logical input device is in a certain state.

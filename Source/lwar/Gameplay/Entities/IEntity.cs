@@ -3,7 +3,7 @@
 namespace Lwar.Gameplay.Entities
 {
 	using Actors;
-	using Pegasus.Framework.Math;
+	using Pegasus.Math;
 
 	/// <summary>
 	///   Represents an entity, a special form of an actor that is synchronized with and under control of the server.

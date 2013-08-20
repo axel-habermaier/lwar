@@ -5,8 +5,7 @@ namespace Pegasus.AssetsCompiler
 	using System.IO;
 	using System.Linq;
 	using System.Xml.Linq;
-	using Framework;
-	using Framework.Platform.Logging;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Represents the assets project that contains the assets that are compiled.
@@ -29,7 +28,7 @@ namespace Pegasus.AssetsCompiler
 		private readonly XElement _projectFile;
 
 		/// <summary>
-		/// The file name of the project.
+		///   The file name of the project.
 		/// </summary>
 		private readonly string _projectFileName;
 
@@ -123,7 +122,7 @@ namespace Pegasus.AssetsCompiler
 
 			if (files.Length > 2)
 				Log.Die("Found multiple references to file '{0}' in assets project.", file);
-			
+
 			return files.Length > 0 ? files[0] : null;
 		}
 	}

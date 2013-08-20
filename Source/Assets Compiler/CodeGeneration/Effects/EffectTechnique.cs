@@ -5,11 +5,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using System.Collections.Generic;
 	using System.Linq;
 	using AssetsCompiler.Effects;
-	using Framework;
-	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using Platform.Graphics;
 
 	/// <summary>
 	///   Represents a field of an effect class that defines the combination of shaders that should be set on the GPU to create

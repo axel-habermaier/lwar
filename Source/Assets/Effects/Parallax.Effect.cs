@@ -5,12 +5,12 @@ namespace Lwar.Assets.Effects
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]
-	internal class ParallaxEffect : Effect 
+	internal class ParallaxEffect : Effect
 	{
 		public readonly Technique Default = new Technique
 		{
 			VertexShader = "VertexShader",
-			FragmentShader = "FragmentShader" 
+			FragmentShader = "FragmentShader"
 		};
 
 		public readonly Texture2D TextureAtlas;

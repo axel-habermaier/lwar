@@ -2,7 +2,7 @@
 
 namespace Lwar
 {
-	using Pegasus.Framework.Platform.Input;
+	using Pegasus.Platform.Input;
 
 	/// <summary>
 	///   Provides access to the input layers used by the application.

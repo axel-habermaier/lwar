@@ -5,10 +5,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using System.Collections.Generic;
 	using System.Linq;
 	using AssetsCompiler.Effects;
-	using Framework;
-	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
+	using Platform.Graphics;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to HLSL.
@@ -71,15 +70,15 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			Writer.Append("cbuffer {2}{0} : register(b{1})", constantBuffer.Name, constantBuffer.Slot,
 						  Configuration.ReservedInternalIdentifierPrefix);
 			Writer.AppendBlockStatement(() =>
+			{
+				foreach (var constant in constantBuffer.Constants)
 				{
-					foreach (var constant in constantBuffer.Constants)
-					{
-						if (constant.Type == DataType.Matrix)
-							Writer.Append("column_major ");
+					if (constant.Type == DataType.Matrix)
+						Writer.Append("column_major ");
 
-						Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
-					}
-				});
+					Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
+				}
+			});
 			Writer.Newline();
 		}
 
@@ -111,13 +110,13 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		{
 			Writer.AppendLine("struct {0}", OutputStructName);
 			Writer.AppendBlockStatement(() =>
-				{
-					var position = outputs.Single(output => output.Semantics == DataSemantics.Position);
-					foreach (var output in outputs.Except(new[] { position }))
-						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), Escape(output.Name), ToHlsl(output.Semantics));
+			{
+				var position = outputs.Single(output => output.Semantics == DataSemantics.Position);
+				foreach (var output in outputs.Except(new[] { position }))
+					Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), Escape(output.Name), ToHlsl(output.Semantics));
 
-					Writer.AppendLine("{0} {1} : SV_Position;", ToShaderType(position.Type), Escape(position.Name));
-				}, true);
+				Writer.AppendLine("{0} {1} : SV_Position;", ToShaderType(position.Type), Escape(position.Name));
+			}, true);
 		}
 
 		/// <summary>
@@ -137,16 +136,16 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		{
 			Writer.AppendLine("struct {0}", OutputStructName);
 			Writer.AppendBlockStatement(() =>
+			{
+				foreach (var output in outputs)
 				{
-					foreach (var output in outputs)
-					{
-						var index = output.Semantics - DataSemantics.Color0;
-						var semantics = "SV_Target" + index;
+					var index = output.Semantics - DataSemantics.Color0;
+					var semantics = "SV_Target" + index;
 
-						Assert.InRange(index, 0, SemanticsAttribute.MaximumIndex);
-						Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), Escape(output.Name), semantics);
-					}
-				}, true);
+					Assert.InRange(index, 0, SemanticsAttribute.MaximumIndex);
+					Writer.AppendLine("{0} {1} : {2};", ToShaderType(output.Type), Escape(output.Name), semantics);
+				}
+			}, true);
 		}
 
 		/// <summary>
@@ -156,10 +155,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		{
 			Writer.AppendLine("struct {0}", InputStructName);
 			Writer.AppendBlockStatement(() =>
-				{
-					foreach (var input in inputs)
-						Writer.AppendLine("{0} {1} : {2};", ToShaderType(input.Type), Escape(input.Name), ToHlsl(input.Semantics));
-				}, true);
+			{
+				foreach (var input in inputs)
+					Writer.AppendLine("{0} {1} : {2};", ToShaderType(input.Type), Escape(input.Name), ToHlsl(input.Semantics));
+			}, true);
 		}
 
 		/// <summary>
@@ -169,15 +168,15 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		{
 			Writer.AppendLine("{0} Main({1} {2})", OutputStructName, InputStructName, InputVariableName);
 			Writer.AppendBlockStatement(() =>
-				{
-					Writer.AppendLine("{0} {1};", OutputStructName, OutputVariableName);
-					Writer.Newline();
+			{
+				Writer.AppendLine("{0} {1};", OutputStructName, OutputVariableName);
+				Writer.Newline();
 
-					Shader.MethodBody.AcceptVisitor(this);
+				Shader.MethodBody.AcceptVisitor(this);
 
-					Writer.Newline();
-					Writer.AppendLine("return {0};", OutputVariableName);
-				});
+				Writer.Newline();
+				Writer.AppendLine("return {0};", OutputVariableName);
+			});
 		}
 
 		/// <summary>

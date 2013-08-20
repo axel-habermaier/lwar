@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Math
+namespace Pegasus.Math
 {
 	using Math = System.Math;
 

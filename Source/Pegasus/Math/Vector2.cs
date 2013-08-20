@@ -1,10 +1,12 @@
 ﻿// ReSharper disable InconsistentNaming
+
 using System;
 
-namespace Pegasus.Framework.Math
+namespace Pegasus.Math
 {
 	using System.Globalization;
 	using System.Runtime.InteropServices;
+	using Math = System.Math;
 
 	/// <summary>
 	///   Represents a two-component vector of 32-bit floating point values.
@@ -43,7 +45,7 @@ namespace Pegasus.Framework.Math
 		/// </summary>
 		public float Length
 		{
-			get { return (float)System.Math.Sqrt(SquaredLength); }
+			get { return (float)Math.Sqrt(SquaredLength); }
 		}
 
 		/// <summary>
@@ -780,4 +782,3 @@ namespace Pegasus.Framework.Math
 }
 
 // ReSharper restore InconsistentNaming
-

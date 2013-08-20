@@ -5,8 +5,8 @@ namespace Lwar.Gameplay
 	using System.Collections;
 	using System.Collections.Generic;
 	using Network.Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///   Manages the active players that participate in a game session.
@@ -133,7 +133,7 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		/// Updates the statistics of the corresponding player.
+		///   Updates the statistics of the corresponding player.
 		/// </summary>
 		/// <param name="stats">The updated statistics that should be copied to the player instance.</param>
 		public void UpdateStats(StatsMessage stats)

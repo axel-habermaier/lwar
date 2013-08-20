@@ -4,9 +4,9 @@ namespace Lwar.Network
 {
 	using System.Text;
 	using Gameplay;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform.Logging;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///   Provides extension methods for buffer readers and writers.

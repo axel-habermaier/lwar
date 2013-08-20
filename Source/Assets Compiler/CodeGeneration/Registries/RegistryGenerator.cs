@@ -7,7 +7,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 	using System.Linq;
 	using System.Threading;
 	using Assets;
-	using Framework.Platform.Memory;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Generates a C# class from a registry specification interface.

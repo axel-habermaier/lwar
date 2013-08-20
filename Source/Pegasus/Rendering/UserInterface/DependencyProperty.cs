@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	/// <summary>
 	///   Represents an untyped property that has multiple sources (such as data bindings, style setters, animation,
@@ -47,7 +47,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		internal abstract void RemoveUntypedChangeHandler(DependencyObject obj, Delegate handler);
 
 		/// <summary>
-		/// Gets the untyped value of the dependency property for the given dependency object.
+		///   Gets the untyped value of the dependency property for the given dependency object.
 		/// </summary>
 		/// <param name="obj">The dependency object the value should be returned for.</param>
 		internal abstract object GetValue(DependencyObject obj);

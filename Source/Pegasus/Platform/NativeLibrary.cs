@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Platform
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Graphics;
 	using Logging;
 	using Memory;
@@ -15,9 +14,9 @@ namespace Pegasus.Framework.Platform
 	internal class NativeLibrary : DisposableObject
 	{
 #if Linux
-		/// <summary>
-		///   The name of the native Pegasus.Platform library.
-		/// </summary>
+	/// <summary>
+	///   The name of the native Pegasus.Platform library.
+	/// </summary>
 		internal const string LibraryName = "libPlatform.so";
 #else
 		/// <summary>

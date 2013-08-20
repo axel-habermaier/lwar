@@ -3,8 +3,8 @@
 namespace Lwar
 {
 	using System.Collections.Generic;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///   Represents a list where additions and removals are deferred until some later point in time.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Processes
+namespace Pegasus.Processes
 {
 	/// <summary>
 	///   Represents the context of a process that can be by the asynchronous methods that the process executes to check

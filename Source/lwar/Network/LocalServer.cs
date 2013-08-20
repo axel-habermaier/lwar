@@ -6,11 +6,10 @@ namespace Lwar.Network
 	using System.Runtime.InteropServices;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Platform.Network;
+	using Pegasus;
+	using Pegasus.Platform;
+	using Pegasus.Platform.Logging;
+	using Pegasus.Platform.Memory;
 	using Scripting;
 
 	/// <summary>

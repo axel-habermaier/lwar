@@ -5,7 +5,7 @@ namespace Lwar.Network
 	using Gameplay;
 	using Gameplay.Entities;
 	using Messages;
-	using Pegasus.Framework;
+	using Pegasus;
 
 	/// <summary>
 	///   Dispatches messages received from the server.

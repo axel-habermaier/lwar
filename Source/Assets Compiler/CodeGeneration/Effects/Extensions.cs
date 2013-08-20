@@ -6,14 +6,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using System.Linq;
 	using System.Reflection;
 	using AssetsCompiler.Effects;
-	using Framework;
-	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using Platform.Graphics;
 	using CSharpAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
-	using CubeMap = AssetsCompiler.Effects.CubeMap;
-	using Texture2D = AssetsCompiler.Effects.Texture2D;
 
 	/// <summary>
 	///   Provides extension methods on NRefactory AST types.
@@ -39,24 +36,24 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			var flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 			var method = type.GetMethods(flags).Where(m => m.Name == invokedMethod.Name)
 							 .Where(m =>
-								 {
-									 var declaredParameters = m.GetParameters();
-									 var invokedParameters = invokedMethod.Parameters;
+							 {
+								 var declaredParameters = m.GetParameters();
+								 var invokedParameters = invokedMethod.Parameters;
 
-									 if (declaredParameters.Length != invokedParameters.Count)
+								 if (declaredParameters.Length != invokedParameters.Count)
+									 return false;
+
+								 for (var i = 0; i < declaredParameters.Length; ++i)
+								 {
+									 if (declaredParameters[i].Name != invokedParameters[i].Name)
 										 return false;
 
-									 for (var i = 0; i < declaredParameters.Length; ++i)
-									 {
-										 if (declaredParameters[i].Name != invokedParameters[i].Name)
-											 return false;
+									 if (declaredParameters[i].ParameterType.FullName != invokedParameters[i].Type.FullName)
+										 return false;
+								 }
 
-										 if (declaredParameters[i].ParameterType.FullName != invokedParameters[i].Type.FullName)
-											 return false;
-									 }
-
-									 return true;
-								 })
+								 return true;
+							 })
 							 .Single();
 
 			var mapsTo = method.GetCustomAttributes(typeof(MapsToAttribute), true).OfType<MapsToAttribute>().FirstOrDefault();

@@ -2,7 +2,7 @@
 
 namespace Lwar.Gameplay
 {
-	using Pegasus.Framework;
+	using Pegasus;
 
 	/// <summary>
 	///   Maps generational identifiers to concrete objects.

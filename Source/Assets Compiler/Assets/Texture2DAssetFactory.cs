@@ -6,7 +6,7 @@ namespace Pegasus.AssetsCompiler.Assets
 	using System.Globalization;
 	using System.Linq;
 	using Attributes;
-	using Framework.Platform.Logging;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Creates texture 2D asset instances.

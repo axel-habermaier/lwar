@@ -4,10 +4,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
 	using System.Linq;
 	using AssetsCompiler.Effects;
-	using Framework;
-	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using Platform.Graphics;
 
 	/// <summary>
 	///   Represents a parameter of a shader.

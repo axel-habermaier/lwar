@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing.Combinators
+namespace Pegasus.Scripting.Parsing.Combinators
 {
 	/// <summary>
 	///   Applies the four parsers in sequence. The second parser is only applied if the first parser

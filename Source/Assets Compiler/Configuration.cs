@@ -5,8 +5,8 @@ namespace Pegasus.AssetsCompiler
 	using System.ComponentModel;
 	using System.IO;
 	using System.Reflection;
-	using Framework.Platform;
-	using Framework.Platform.Logging;
+	using Platform;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Provides access to the asset compiler configuration.

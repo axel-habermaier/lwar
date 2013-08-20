@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform
+namespace Pegasus.Platform
 {
 	using System.IO;
 	using System.Linq;
@@ -95,10 +95,10 @@ namespace Pegasus.Framework.Platform
 			Assert.That(IsValid, "The file name is invalid.");
 
 			return Execute(() =>
-				{
-					using (var writer = File.AppendText(AbsolutePath))
-						content(writer);
-				}, onException);
+			{
+				using (var writer = File.AppendText(AbsolutePath))
+					content(writer);
+			}, onException);
 		}
 
 		/// <summary>

@@ -3,8 +3,8 @@
 namespace Lwar.Gameplay
 {
 	using Entities;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///   Represents a player.

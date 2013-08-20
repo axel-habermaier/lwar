@@ -4,12 +4,11 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using Framework;
-	using Framework.Platform;
-	using Framework.Platform.Logging;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using Platform;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Represents a code element.

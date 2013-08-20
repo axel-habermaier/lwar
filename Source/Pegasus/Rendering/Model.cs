@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering
+namespace Pegasus.Rendering
 {
 	using System.Collections.Generic;
 	using Math;
@@ -267,47 +267,47 @@ namespace Pegasus.Framework.Rendering
 
 			// Generates a face of the cube
 			Action<Vector3, Vector3, Vector3> generateFace = (topLeft, topRight, bottomLeft) =>
+			{
+				Assert.That(vertices.Count < UInt16.MaxValue, "Too many vertices.");
+
+				var right = topRight - topLeft;
+				var down = bottomLeft - topLeft;
+				var delta = right.Length / subdivision;
+				var indexOffset = (ushort)vertices.Count;
+
+				right = right.Normalize() * delta;
+				down = down.Normalize() * delta;
+
+				// Create the vertices
+				for (var i = 0; i <= subdivision; ++i)
 				{
-					Assert.That(vertices.Count < UInt16.MaxValue, "Too many vertices.");
-
-					var right = topRight - topLeft;
-					var down = bottomLeft - topLeft;
-					var delta = right.Length / subdivision;
-					var indexOffset = (ushort)vertices.Count;
-
-					right = right.Normalize() * delta;
-					down = down.Normalize() * delta;
-
-					// Create the vertices
-					for (var i = 0; i <= subdivision; ++i)
+					for (var j = 0; j <= subdivision; ++j)
 					{
-						for (var j = 0; j <= subdivision; ++j)
-						{
-							// Compute the position of the vertex and project it onto the sphere
-							var position = topLeft + i * right + j * down;
-							var normal = position.Normalize();
-							vertices.Add(new VertexPositionNormal(new Vector4(normal * radius), normal));
-						}
+						// Compute the position of the vertex and project it onto the sphere
+						var position = topLeft + i * right + j * down;
+						var normal = position.Normalize();
+						vertices.Add(new VertexPositionNormal(new Vector4(normal * radius), normal));
 					}
+				}
 
-					// Create the indices
-					Assert.That(vertices.Count < UInt16.MaxValue, "Too many vertices.");
-					for (var i = 0; i < subdivision; ++i)
+				// Create the indices
+				Assert.That(vertices.Count < UInt16.MaxValue, "Too many vertices.");
+				for (var i = 0; i < subdivision; ++i)
+				{
+					var row = i * (subdivision + 1);
+					var nextRow = (i + 1) * (subdivision + 1);
+
+					for (var j = 0; j < subdivision; ++j)
 					{
-						var row = i * (subdivision + 1);
-						var nextRow = (i + 1) * (subdivision + 1);
-
-						for (var j = 0; j < subdivision; ++j)
-						{
-							indices.Add((ushort)(indexOffset + row + j));
-							indices.Add((ushort)(indexOffset + nextRow + j));
-							indices.Add((ushort)(indexOffset + nextRow + j + 1));
-							indices.Add((ushort)(indexOffset + row + j));
-							indices.Add((ushort)(indexOffset + nextRow + j + 1));
-							indices.Add((ushort)(indexOffset + row + j + 1));
-						}
+						indices.Add((ushort)(indexOffset + row + j));
+						indices.Add((ushort)(indexOffset + nextRow + j));
+						indices.Add((ushort)(indexOffset + nextRow + j + 1));
+						indices.Add((ushort)(indexOffset + row + j));
+						indices.Add((ushort)(indexOffset + nextRow + j + 1));
+						indices.Add((ushort)(indexOffset + row + j + 1));
 					}
-				};
+				}
+			};
 
 			// Generate the cube faces
 			generateFace(topLeftFront, topRightFront, bottomLeftFront); // Front

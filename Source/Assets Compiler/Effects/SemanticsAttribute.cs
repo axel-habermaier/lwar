@@ -2,7 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Effects
 {
-	using Framework.Platform.Graphics;
+	using Platform.Graphics;
 
 	/// <summary>
 	///   Describes the semantics of a shader argument.

@@ -7,10 +7,9 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using System.Linq;
 	using Assets;
 	using Fonts;
-	using Framework;
-	using Framework.Platform;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Compiles texture-based fonts.

@@ -191,7 +191,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppContext.cs" />
+    <Compile Include="Framework\AppContext.cs" />
     <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />
@@ -204,7 +204,7 @@
     <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\ResharperAnnotations.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />
-    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Framework\Bootstrapper.cs" />
     <Compile Include="Platform\WindowMode.cs" />
     <Compile Include="Processes\AsyncAction.cs" />
     <Compile Include="Processes\AsyncFunc.cs" />
@@ -260,7 +260,7 @@
     <Compile Include="Platform\Network\Extensions.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />
     <Compile Include="Platform\AppFile.cs" />
-    <Compile Include="PegasusException.cs" />
+    <Compile Include="Framework\PegasusException.cs" />
     <Compile Include="Platform\Assets\Asset.cs" />
     <Compile Include="Platform\Assets\CubeMapAsset.cs" />
     <Compile Include="Platform\Assets\ShaderAsset.cs" />
@@ -495,7 +495,7 @@
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Platform\Window.cs" />
     <Compile Include="Assert.cs" />
-    <Compile Include="Application.cs" />
+    <Compile Include="Framework\Application.cs" />
     <Compile Include="Platform\Memory\DisposableObject.cs" />
     <Compile Include="Platform\Graphics\BlendOption.cs" />
     <Compile Include="Platform\Graphics\BlendOperation.cs" />

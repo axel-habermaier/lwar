@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Graphics
+namespace Pegasus.Platform.Graphics
 {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///   An input-layout holds a definition of how to feed vertex data that

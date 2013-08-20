@@ -207,11 +207,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Pegasus\PegasusException.cs">
-      <Link>Pegasus\PegasusException.cs</Link>
-    </Compile>
     <Compile Include="..\Pegasus\Assert.cs">
       <Link>Pegasus\Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Framework\PegasusException.cs">
+      <Link>Pegasus\PegasusException.cs</Link>
     </Compile>
     <Compile Include="..\Pegasus\Math\Circle.cs">
       <Link>Pegasus\Circle.cs</Link>

@@ -2,9 +2,9 @@
 
 namespace Lwar.Gameplay.Actors
 {
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform;
+	using Pegasus.Platform.Memory;
 	using Rendering;
 
 	/// <summary>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Math
+namespace Pegasus.Math
 {
 	/// <summary>
 	///   Represents a segment of a line in 2D space.

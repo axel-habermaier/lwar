@@ -5,7 +5,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 	using System.Collections.Generic;
 	using System.Linq;
 	using ICSharpCode.NRefactory.CSharp;
-	using ICSharpCode.NRefactory.Semantics;
 
 	/// <summary>
 	///   Represents a registry declaration.
@@ -65,9 +64,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 
 				return imports.Union(new[]
 				{
-					"Pegasus.Framework", 
-					"Pegasus.Framework.Platform.Logging",
-					"Pegasus.Framework.Scripting"
+					"Pegasus",
+					"Pegasus.Platform.Logging",
+					"Pegasus.Scripting"
 				});
 			}
 		}

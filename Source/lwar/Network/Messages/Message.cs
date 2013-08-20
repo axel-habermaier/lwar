@@ -100,7 +100,7 @@ namespace Lwar.Network.Messages
 		public KillMessage Kill;
 
 		/// <summary>
-		/// The payload of a Reject message.
+		///   The payload of a Reject message.
 		/// </summary>
 		[FieldOffset(PayloadOffset)]
 		public RejectReason Reject;

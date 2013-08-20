@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Memory
+namespace Pegasus.Platform.Memory
 {
 	using System.Diagnostics;
 	using Logging;
@@ -38,7 +38,7 @@ namespace Pegasus.Framework.Platform.Memory
 		{
 			if (!IsAvailable)
 				Log.Error("A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
-					GetType().Name, _description ?? "None");
+						  GetType().Name, _description ?? "None");
 		}
 #endif
 

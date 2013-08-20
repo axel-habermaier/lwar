@@ -4,9 +4,9 @@ namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System.IO;
 	using Assets;
-	using Framework.Platform;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Compiles 2D textures.

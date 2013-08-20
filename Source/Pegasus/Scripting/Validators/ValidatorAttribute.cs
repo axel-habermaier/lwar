@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Validators
+namespace Pegasus.Scripting.Validators
 {
 	/// <summary>
 	///   When applied to a cvar or command parameter, performs additional validation before setting the cvar's value or

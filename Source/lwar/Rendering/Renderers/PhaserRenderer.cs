@@ -3,7 +3,7 @@
 namespace Lwar.Rendering.Renderers
 {
 	using Gameplay.Entities;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Rendering;
 
 	/// <summary>
 	///   Renders phasers into a 3D scene.

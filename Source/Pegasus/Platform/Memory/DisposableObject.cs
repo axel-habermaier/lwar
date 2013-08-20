@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Memory
+namespace Pegasus.Platform.Memory
 {
 	using System.Diagnostics;
 	using Logging;
@@ -34,7 +34,7 @@ namespace Pegasus.Framework.Platform.Memory
 		~DisposableObject()
 		{
 			Log.Error("Finalizer runs for a disposable object of type '{0}'.\nInstance description: '{1}'",
-				GetType().Name, _description ?? "None");
+					  GetType().Name, _description ?? "None");
 		}
 #endif
 

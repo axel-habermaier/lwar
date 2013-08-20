@@ -7,8 +7,8 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using System.Linq;
 	using Assets;
 	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.

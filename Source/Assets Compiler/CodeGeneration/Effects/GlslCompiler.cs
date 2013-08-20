@@ -5,10 +5,9 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using System.Collections.Generic;
 	using System.Linq;
 	using AssetsCompiler.Effects;
-	using Framework;
-	using Framework.Platform.Graphics;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
+	using Platform.Graphics;
 
 	/// <summary>
 	///   Cross-compiles a C# shader method to GLSL.
@@ -51,10 +50,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			Writer.AppendLine("layout(std140, binding = {0}) uniform {2}{1}", constantBuffer.Slot, constantBuffer.Name,
 							  Configuration.ReservedInternalIdentifierPrefix);
 			Writer.AppendBlockStatement(() =>
-				{
-					foreach (var constant in constantBuffer.Constants)
-						Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
-				}, true);
+			{
+				foreach (var constant in constantBuffer.Constants)
+					Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
+			}, true);
 			Writer.Newline();
 		}
 
@@ -128,14 +127,14 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 		{
 			Writer.AppendLine("void main()");
 			Writer.AppendBlockStatement(() =>
-				{
-					foreach (var input in Shader.Inputs)
-						Writer.AppendLine("{0} {1}{2} = {3};", ToShaderType(input.Type),
-										  Configuration.ReservedInternalIdentifierPrefix, input.Name, Escape(input.Name));
+			{
+				foreach (var input in Shader.Inputs)
+					Writer.AppendLine("{0} {1}{2} = {3};", ToShaderType(input.Type),
+									  Configuration.ReservedInternalIdentifierPrefix, input.Name, Escape(input.Name));
 
-					Writer.Newline();
-					Shader.MethodBody.AcceptVisitor(this);
-				});
+				Writer.Newline();
+				Shader.MethodBody.AcceptVisitor(this);
+			});
 		}
 
 		/// <summary>

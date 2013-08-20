@@ -3,8 +3,7 @@
 namespace Pegasus.AssetsCompiler.Assets
 {
 	using System.Linq;
-	using Framework;
-	using Framework.Platform.Graphics;
+	using Platform.Graphics;
 
 	/// <summary>
 	///   Represents a shader that requires compilation.

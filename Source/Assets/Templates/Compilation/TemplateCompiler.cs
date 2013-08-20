@@ -16,7 +16,7 @@ namespace Lwar.Assets.Templates.Compilation
 	using Pegasus.AssetsCompiler.Assets;
 	using Pegasus.AssetsCompiler.CodeGeneration;
 	using Pegasus.AssetsCompiler.Compilers;
-	using Pegasus.Framework.Platform.Logging;
+	using Pegasus.Platform.Logging;
 
 	/// <summary>
 	///   Compiles entity template declarations.
@@ -207,12 +207,12 @@ namespace Lwar.Assets.Templates.Compilation
 			writer.AppendBlockStatement(() =>
 			{
 				writer.AppendLine("using Assets;");
-				writer.AppendLine("using Pegasus.Framework;");
-				writer.AppendLine("using Pegasus.Framework.Platform;");
-				writer.AppendLine("using Pegasus.Framework.Platform.Assets;");
-				writer.AppendLine("using Pegasus.Framework.Platform.Graphics;");
-				writer.AppendLine("using Pegasus.Framework.Platform.Memory;");
-				writer.AppendLine("using Pegasus.Framework.Rendering;");
+				writer.AppendLine("using Pegasus;");
+				writer.AppendLine("using Pegasus.Platform;");
+				writer.AppendLine("using Pegasus.Platform.Assets;");
+				writer.AppendLine("using Pegasus.Platform.Graphics;");
+				writer.AppendLine("using Pegasus.Platform.Memory;");
+				writer.AppendLine("using Pegasus.Rendering;");
 				writer.Newline();
 
 				writer.AppendLine("public static class Templates");

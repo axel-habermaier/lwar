@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Assets
+namespace Pegasus.Platform.Assets
 {
-	using System.Linq;
 	using Math;
 	using Memory;
 	using Rendering.UserInterface;

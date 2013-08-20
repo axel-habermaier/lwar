@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	using System.Linq.Expressions;
 	using System.Reflection;
@@ -20,11 +20,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   If greater than 0, the properties accessed by the source expression are currently changing.
 		/// </summary>
 		private byte _isChanging;
-
-		/// <summary>
-		/// Gets a value indicating whether the binding has already been bound to a dependency property.
-		/// </summary>
-		public bool IsBound { get; private set; }
 
 		/// <summary>
 		///   Provides information about the first member access (such as 'a.b') in a source expression 'a.b.c.d'.
@@ -101,6 +96,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			_sourceObject = sourceObject;
 			_sourceExpression = sourceExpression;
 		}
+
+		/// <summary>
+		///   Gets a value indicating whether the binding has already been bound to a dependency property.
+		/// </summary>
+		public bool IsBound { get; private set; }
 
 		/// <summary>
 		///   Initializes the binding.

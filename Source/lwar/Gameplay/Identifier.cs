@@ -2,7 +2,7 @@
 
 namespace Lwar.Gameplay
 {
-	using Pegasus.Framework;
+	using Pegasus;
 
 	/// <summary>
 	///   Represents a unique identifier. There are UInt16.MaxValue different identifiers, all assigned to

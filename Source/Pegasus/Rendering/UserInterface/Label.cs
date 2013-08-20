@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	using Math;
 	using Platform.Graphics;
@@ -51,14 +51,6 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			// Use a large value for the default area; however, don't use Int32.MaxValue because of
 			// integer arithmetic overflowing problems
 			Area = new Rectangle(0, 0, Int16.MaxValue, Int16.MaxValue);
-		}
-
-		/// <summary>
-		/// Invoked when assets are reloaded. Forces the relayouting of the label's text just in case that the font has been changed.
-		/// </summary>
-		private void OnReloadAssets()
-		{
-			_layout.Relayout();
 		}
 
 		/// <summary>
@@ -151,6 +143,15 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				_layout.UpdateLayout();
 				return _layout.ActualArea;
 			}
+		}
+
+		/// <summary>
+		///   Invoked when assets are reloaded. Forces the relayouting of the label's text just in case that the font has been
+		///   changed.
+		/// </summary>
+		private void OnReloadAssets()
+		{
+			_layout.Relayout();
 		}
 
 		/// <summary>

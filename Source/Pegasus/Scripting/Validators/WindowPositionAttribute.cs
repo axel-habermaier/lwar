@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Validators
+namespace Pegasus.Scripting.Validators
 {
 	using Math;
 	using Platform;

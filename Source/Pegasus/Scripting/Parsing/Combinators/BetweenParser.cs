@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing.Combinators
+namespace Pegasus.Scripting.Parsing.Combinators
 {
 	/// <summary>
 	///   Parses the single occurrence of the given parser, enclosed by a single occurrence of the given left and right

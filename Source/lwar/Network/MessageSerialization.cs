@@ -5,9 +5,9 @@ namespace Lwar.Network
 	using System.Collections.Generic;
 	using Gameplay.Entities;
 	using Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///   Serializes and deserializes messages from and to buffers.

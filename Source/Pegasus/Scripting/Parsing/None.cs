@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing
+namespace Pegasus.Scripting.Parsing
 {
 	/// <summary>
 	///   Represents a non-existing value. This type is similar to F#'s unit type and necessary because C# does not allow

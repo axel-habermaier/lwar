@@ -6,7 +6,6 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 	using System.IO;
 	using System.Linq;
 	using Assets;
-	using Framework;
 
 	/// <summary>
 	///   Generates a class that contains the identifiers of all compiled assets.
@@ -44,7 +43,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 			var writer = new CodeWriter();
 			writer.WriterHeader("//");
 			writer.AppendLine("using System;");
-			writer.AppendLine("using Pegasus.Framework.Platform.Assets;");
+			writer.AppendLine("using Pegasus.Platform.Assets;");
 			writer.Newline();
 
 			writer.AppendLine("namespace {0}", namespaceName);

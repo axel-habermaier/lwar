@@ -3,9 +3,9 @@
 namespace Pegasus.AssetsCompiler
 {
 	using System.Linq;
-	using Framework.Platform;
-	using Framework.Platform.Graphics;
-	using Framework.Platform.Logging;
+	using Platform;
+	using Platform.Graphics;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Runs an external asset compilation tool.

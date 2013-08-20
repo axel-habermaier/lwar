@@ -2,9 +2,9 @@
 
 namespace Lwar.Screens
 {
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Math;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Rendering;
 
 	/// <summary>
 	///   Draws a frame around arbitrary content.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering
+namespace Pegasus.Rendering
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;

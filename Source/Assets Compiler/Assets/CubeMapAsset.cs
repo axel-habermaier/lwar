@@ -3,9 +3,8 @@
 namespace Pegasus.AssetsCompiler.Assets
 {
 	using System.Drawing;
-	using Framework;
-	using Framework.Platform.Graphics;
-	using Framework.Platform.Memory;
+	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a cube map asset that requires compilation.
@@ -32,7 +31,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// </summary>
 		public override string IdentifierType
 		{
-			get { return "Pegasus.Framework.Platform.Graphics.CubeMap"; }
+			get { return "Pegasus.Platform.Graphics.CubeMap"; }
 		}
 
 		/// <summary>

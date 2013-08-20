@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Validators
+namespace Pegasus.Scripting.Validators
 {
 	using Platform;
 
@@ -14,7 +14,10 @@ namespace Pegasus.Framework.Scripting.Validators
 		/// </summary>
 		public override string ErrorMessage
 		{
-			get { return "The given string is not a valid file name. It either contains a path specifier such as '/', or it contains illegal characters."; }
+			get
+			{
+				return "The given string is not a valid file name. It either contains a path specifier such as '/', or it contains illegal characters.";
+			}
 		}
 
 		/// <summary>

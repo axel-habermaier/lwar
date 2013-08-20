@@ -22,7 +22,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// </summary>
 		public override string IdentifierType
 		{
-			get { return "Pegasus.Framework.Rendering.UserInterface.Font"; }
+			get { return "Pegasus.Rendering.UserInterface.Font"; }
 		}
 
 		/// <summary>

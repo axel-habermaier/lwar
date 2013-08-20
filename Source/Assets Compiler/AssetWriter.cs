@@ -4,8 +4,7 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.IO;
 	using Assets;
-	using Framework;
-	using Framework.Platform.Memory;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Writes a compiled asset file. The endianess of the compiled file always matches the endianess of the target

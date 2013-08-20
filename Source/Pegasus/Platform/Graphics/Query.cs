@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Graphics
+namespace Pegasus.Platform.Graphics
 {
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///   Represents a query that can be used to retrieve information from the GPU.

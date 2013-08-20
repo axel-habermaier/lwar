@@ -4,11 +4,10 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 {
 	using System.Collections.Generic;
 	using Assets;
-	using Framework;
-	using Framework.Platform.Logging;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Represents a C# project with registry declaration interfaces for which a C# registry class is generated.

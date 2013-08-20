@@ -4,9 +4,8 @@ namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System.Drawing;
 	using System.Drawing.Imaging;
-	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a single character of a font face.

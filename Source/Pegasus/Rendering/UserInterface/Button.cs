@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Rendering.UserInterface
+namespace Pegasus.Rendering.UserInterface
 {
 	using Math;
 	using Platform.Graphics;
@@ -17,12 +17,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 				((Button)Content).Draw(batch, font);
 			else
 			{
-
 				using (var text = Text.Create(Content.ToString()))
 					TextRenderer.Draw(batch, font, text, Color.White, new Vector2i(100, 100));
-
-				
-		
 			}
 
 			batch.Draw(new Rectangle(200, 20, (int)Width, (int)Height), Texture2D.White, Foreground);

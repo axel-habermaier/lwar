@@ -3,8 +3,8 @@
 namespace Pegasus.AssetsCompiler.Assets
 {
 	using System.Drawing;
-	using Framework.Platform.Graphics;
-	using Framework.Platform.Memory;
+	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a 2D texture that requires compilation.
@@ -41,7 +41,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		/// </summary>
 		public override string IdentifierType
 		{
-			get { return "Pegasus.Framework.Platform.Graphics.Texture2D"; }
+			get { return "Pegasus.Platform.Graphics.Texture2D"; }
 		}
 
 		/// <summary>

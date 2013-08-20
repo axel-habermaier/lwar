@@ -4,7 +4,7 @@ namespace Lwar.Network.Messages
 {
 	using System.Runtime.InteropServices;
 	using Gameplay;
-	using Pegasus.Framework.Math;
+	using Pegasus.Math;
 
 	/// <summary>
 	///   Holds the payload of an UpdateCircle message.

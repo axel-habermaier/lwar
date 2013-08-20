@@ -2,10 +2,9 @@
 
 namespace Lwar.Rendering.Renderers
 {
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Platform.Assets;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Rendering;
 
 	/// <summary>
 	///   Represents a renderer that renders an object into a 3D scene.

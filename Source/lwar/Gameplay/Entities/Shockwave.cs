@@ -2,7 +2,7 @@
 
 namespace Lwar.Gameplay.Entities
 {
-	using Pegasus.Framework.Math;
+	using Pegasus.Math;
 
 	/// <summary>
 	///   Represents a shockwave.

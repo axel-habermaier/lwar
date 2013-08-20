@@ -2,7 +2,7 @@
 
 namespace Pegasus.AssetsCompiler.Fonts
 {
-	using Framework.Platform.Memory;
+	using Platform.Memory;
 
 	/// <summary>
 	///   Represents a freetype library object.

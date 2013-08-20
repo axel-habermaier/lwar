@@ -3,7 +3,7 @@
 namespace Lwar.Assets.Templates
 {
 	using Compilation;
-	using Pegasus.Framework.Math;
+	using Pegasus.Math;
 
 	/// <summary>
 	///   The weapon entity templates that are shared between the client and the server.

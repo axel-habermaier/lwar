@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Processes
+namespace Pegasus.Processes
 {
 	using System.Runtime.CompilerServices;
 

@@ -5,12 +5,13 @@ namespace Lwar
 	using System.Net;
 	using Assets;
 	using Network;
+	using Pegasus;
 	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
-	using Pegasus.Framework.Rendering.UserInterface;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Input;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
+	using Pegasus.Rendering.UserInterface;
 	using Screens;
 	using Scripting;
 
@@ -31,6 +32,8 @@ namespace Lwar
 
 		private Button b;
 
+		private Button b2;
+		private Layout l, l2;
 		private TestViewModel vm;
 
 		/// <summary>
@@ -70,15 +73,17 @@ namespace Lwar
 			l = new Layout();
 			l2 = new Layout();
 
-			b = new Button { Width = 100, Height = 200 }; l.Children.Add(b);
+			b = new Button { Width = 100, Height = 200 };
+			l.Children.Add(b);
 			l.Resources.Add("myStyle", s);
 			l2.Resources.Add("myStyle", new Style());
 			var rb = new ResourceBinding<Style>("myStyle");
 			b.SetResourceBinding(UIElement.StyleProperty, rb);
-			
-			 b2 = new Button() { ViewModel = vm = new TestViewModel(), Width = 300,Height=100 };
-			b.Content = "blub"; l.Children.Add(b2);
-			
+
+			b2 = new Button() { ViewModel = vm = new TestViewModel(), Width = 300, Height = 100 };
+			b.Content = "blub";
+			l.Children.Add(b2);
+
 			vm.Rank = 17;
 			vm.A = new TestViewModel();
 			vm.A.B = new TestViewModel();
@@ -89,12 +94,8 @@ namespace Lwar
 
 			var binding = new Binding<object>(viewModel => ((TestViewModel)viewModel).A.Rank);
 			b2.SetBinding(ContentControl.ContentProperty, binding);
-			
-		
 		}
 
-		private Button b2;
-		private Layout l,l2;
 		/// <summary>
 		///   Invoked when the application should update the its state.
 		/// </summary>

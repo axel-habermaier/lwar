@@ -3,9 +3,9 @@
 namespace Lwar.Gameplay.Actors
 {
 	using Entities;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform;
 
 	/// <summary>
 	///   Represents a shield that protects a ship. The shield is only visible if it has just been hit. Invisible shields are

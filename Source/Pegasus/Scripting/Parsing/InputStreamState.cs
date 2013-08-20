@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing
+namespace Pegasus.Scripting.Parsing
 {
 	/// <summary>
 	///   Describes the state of an input stream.

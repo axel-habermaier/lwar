@@ -2,9 +2,9 @@
 
 namespace Lwar.Network
 {
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform.Logging;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///   Represents the header of a packet.

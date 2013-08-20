@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Scripting.Parsing
+namespace Pegasus.Scripting.Parsing
 {
 	/// <summary>
 	///   Provides read-access to a sequence of UTF-16 characters. The only supported newline token is \n.

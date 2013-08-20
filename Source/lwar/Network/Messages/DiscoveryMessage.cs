@@ -2,8 +2,8 @@
 
 namespace Lwar.Network.Messages
 {
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///   Represents a discovery message that is sent periodically by servers running the game.

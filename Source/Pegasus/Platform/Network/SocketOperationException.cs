@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.Framework.Platform.Network
+namespace Pegasus.Platform.Network
 {
 	using System.Net.Sockets;
 

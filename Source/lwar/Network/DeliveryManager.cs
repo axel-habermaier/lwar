@@ -3,9 +3,9 @@
 namespace Lwar.Network
 {
 	using Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///   Manages the delivery guarantees of all incoming and outgoing messages.
