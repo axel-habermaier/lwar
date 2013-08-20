@@ -61,7 +61,7 @@ namespace Pegasus.Platform.Logging
 					Log.Info("{0}", Message);
 					break;
 				case LogType.Debug:
-					Log.DebugInfo("{0}", Message);
+					Log.Debug("{0}", Message);
 					break;
 				default:
 					throw new InvalidOperationException("Unknown log entry type.");

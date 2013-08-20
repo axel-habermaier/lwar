@@ -13,6 +13,7 @@ namespace Pegasus.Framework
 	using Rendering;
 	using Rendering.UserInterface;
 	using Scripting;
+	using UserInterface;
 
 	/// <summary>
 	///   Represents the application.
@@ -31,12 +32,6 @@ namespace Pegasus.Framework
 		{
 			Commands.OnExit += Exit;
 		}
-
-		/// <summary>
-		///   Gets the context of the application, providing access to all framework objects that can be used by the application.
-		/// </summary>
-		protected AppContext Context { get; private set; }
-
 		/// <summary>
 		///   Invoked when the application should update the its state.
 		/// </summary>
@@ -66,7 +61,8 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Invoked when the application is initializing.
 		/// </summary>
-		protected virtual void Initialize()
+		/// <param name="uiContext">The UI context that is used to draw the user interface.</param>
+		protected virtual void Initialize(UIContext uiContext)
 		{
 		}
 
@@ -89,8 +85,8 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(logFile);
 
 			using (new NativeLibrary())
-			using (var window = new Window(appName, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var graphicsDevice = new GraphicsDevice())
+			using (var window = new Window(appName, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var swapChain = new SwapChain(graphicsDevice, window, Cvars.Fullscreen, Cvars.Resolution))
 			using (var assets = new AssetsManager(graphicsDevice))
 			using (var keyboard = new Keyboard(window))
@@ -101,6 +97,7 @@ namespace Pegasus.Framework
 			using (var camera2D = new Camera2D(graphicsDevice))
 			using (var sceneOutput = new RenderOutput(graphicsDevice) { RenderTarget = swapChain.BackBuffer })
 			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
+			using (var uiContext = new UIContext(graphicsDevice, window))
 			{
 				window.Title = appName;
 				spriteEffect.Initialize(graphicsDevice, assets);
@@ -119,9 +116,8 @@ namespace Pegasus.Framework
 					logFile.WriteToConsole(console);
 					Commands.Help();
 
-					// Establish the context and let the application initialize itself
-					Context = new AppContext(graphicsDevice, window, assets, inputDevice, statistics);
-					Initialize();
+					// Let the application initialize itself
+					Initialize(uiContext);
 
 					// Initialize the sprite batch
 					spriteBatch.BlendState = BlendState.Premultiplied;
@@ -139,6 +135,7 @@ namespace Pegasus.Framework
 						window.ProcessEvents();
 
 						// Update the logical inputs based on the new state of the input system
+						inputDevice.ActivateLayer(new InputLayer(1)); // TODO: Refactor this
 						inputDevice.Update();
 
 						// Check if any command bindings have been triggered and update the resolution manager
@@ -147,6 +144,7 @@ namespace Pegasus.Framework
 
 						// Update the application logic and the statistics
 						Update();
+						uiContext.Update();
 						statistics.Update(window.Size);
 						console.Update(window.Size);
 
@@ -167,6 +165,7 @@ namespace Pegasus.Framework
 							DepthStencilState.DepthDisabled.Bind();
 							BlendState.Premultiplied.Bind();
 							DrawUserInterface(spriteBatch);
+							uiContext.Draw(spriteBatch, font);
 
 							// Draw the console and the statistics on top of the current frame
 							statistics.Draw(spriteBatch);

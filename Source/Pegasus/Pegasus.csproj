@@ -191,8 +191,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Framework\AppContext.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
+    <Compile Include="Framework\UserInterface\Controls\UserControl.cs" />
     <Compile Include="Framework\UserInterface\ResourceKeyChangedHandlers.cs" />
+    <Compile Include="Framework\UserInterface\UIContext.cs" />
     <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />
@@ -254,9 +256,8 @@
     <Compile Include="Framework\UserInterface\Trigger.cs" />
     <Compile Include="Framework\UserInterface\UIElement.cs" />
     <Compile Include="Framework\UserInterface\UIElementCollection.cs" />
-    <Compile Include="Framework\UserInterface\ViewModel.cs" />
+    <Compile Include="Framework\ViewModel.cs" />
     <Compile Include="Framework\UserInterface\Visual.cs" />
-    <Compile Include="Screen.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Platform\Network\Extensions.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />
@@ -542,7 +543,6 @@
     <Compile Include="Platform\Performance\TimingMeasurement.cs" />
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
-    <Compile Include="ScreenManager.cs" />
     <Compile Include="Scripting\Validators\WindowSizeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -115,7 +115,7 @@ namespace Pegasus.Platform.Logging
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[Conditional("DEBUG")]
 		[StringFormatMethod("message")]
-		public static void DebugInfo(string message, params object[] arguments)
+		public static void Debug(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
 

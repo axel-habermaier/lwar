@@ -29,12 +29,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   The font used for text rendering by the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<AssetIdentifier<Font>> FontProperty = new DependencyProperty<AssetIdentifier<Font>>();
-
-		/// <summary>
-		///   The resources used by the UI element.
-		/// </summary>
-		private static readonly DependencyProperty<ResourceDictionary> ResourcesProperty = new DependencyProperty<ResourceDictionary>();
+		public static readonly DependencyProperty<Font> FontProperty = new DependencyProperty<Font>();
 
 		/// <summary>
 		///   Indicates whether the mouse is currently hovering the UI element.
@@ -82,6 +77,11 @@ namespace Pegasus.Framework.UserInterface
 		public static readonly DependencyProperty<double> ActualHeightProperty = new DependencyProperty<double>();
 
 		/// <summary>
+		///   The resources used by the UI element.
+		/// </summary>
+		private ResourceDictionary _resources;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		protected UIElement()
@@ -123,7 +123,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   Gets or sets the font used for text rendering by the UI element.
 		/// </summary>
-		public AssetIdentifier<Font> Font
+		public Font Font
 		{
 			get { return GetValue(FontProperty); }
 			set { SetValue(FontProperty, value); }
@@ -136,27 +136,21 @@ namespace Pegasus.Framework.UserInterface
 		{
 			get
 			{
-				var resources = GetValue(ResourcesProperty);
-
-				if (resources == null)
+				if (_resources == null)
 				{
-					resources = new ResourceDictionary();
-					SetValue(ResourcesProperty, resources);
-
-					AttachResourcesEventHandlers();
+					_resources = new ResourceDictionary();
+					_resources.ResourceChanged += ResourceChanged;
 				}
 
-				return resources;
+				return _resources;
 			}
 			set
 			{
-				DetachResourcesEventHandlers();
+				if (_resources != null)
+					_resources.ResourceChanged -= ResourceChanged;
 
-				if (value == null)
-					value = new ResourceDictionary();
-
-				SetValue(ResourcesProperty, value);
-				AttachResourcesEventHandlers();
+				_resources = value ?? new ResourceDictionary();
+				_resources.ResourceChanged += ResourceChanged;
 
 				InvalidateResources();
 			}
@@ -252,35 +246,13 @@ namespace Pegasus.Framework.UserInterface
 		protected abstract UIElementCollection.Enumerator LogicalChildren { get; }
 
 		/// <summary>
-		///   Attaches the resources change event handlers.
-		/// </summary>
-		private void AttachResourcesEventHandlers()
-		{
-			var resources = GetValue(ResourcesProperty);
-			Assert.NotNull(resources);
-
-			resources.ResourceChanged += ResourceChanged;
-		}
-
-		/// <summary>
-		///   Detaches the resources change event handlers.
-		/// </summary>
-		private void DetachResourcesEventHandlers()
-		{
-			var resources = GetValue(ResourcesProperty);
-			if (resources == null)
-				return;
-
-			resources.ResourceChanged -= ResourceChanged;
-		}
-
-		/// <summary>
 		///   Raised when a change to a resource dictionary in this UI element or one of its ancestors has occurred.
 		/// </summary>
 		internal event Action ResourcesInvalidated;
 
 		/// <summary>
-		///   Invoked when a resource within the resource dictionary has been replaced, invalidating all resources for this UI
+		///   Invoked when a resource within the resource dictionary has been replaced, added, or removed, invalidating all
+		///   resources for this UI
 		///   element and all of its children.
 		/// </summary>
 		private void ResourceChanged(ResourceDictionary resources, string key)
@@ -339,8 +311,7 @@ namespace Pegasus.Framework.UserInterface
 			Assert.ArgumentNotNullOrWhitespace(key);
 
 			// If the key is in our resource dictionary, return the resource
-			var resources = GetValue(ResourcesProperty);
-			if (resources != null && resources.TryGetValue(key, out resource))
+			if (_resources != null && _resources.TryGetValue(key, out resource))
 				return true;
 
 			// Otherwise, check the logical parent

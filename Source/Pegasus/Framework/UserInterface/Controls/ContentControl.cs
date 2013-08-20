@@ -2,6 +2,9 @@
 
 namespace Pegasus.Framework.UserInterface.Controls
 {
+	using Rendering;
+	using Rendering.UserInterface;
+
 	/// <summary>
 	///   Represents a control with a single logical child of any type as its content.
 	/// </summary>
@@ -57,6 +60,15 @@ namespace Pegasus.Framework.UserInterface.Controls
 
 			if (newContent != null)
 				newContent.ChangeLogicalParent(this);
+		}
+
+		public override void Draw(SpriteBatch spriteBatch, Font font)
+		{
+			var visual = Content as Visual;
+			if (visual == null)
+				return;
+
+			visual.Draw(spriteBatch, font);
 		}
 	}
 }

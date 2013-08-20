@@ -12,14 +12,15 @@ namespace Pegasus.Framework.UserInterface.Controls
 	/// </summary>
 	public class Button : ContentControl
 	{
-		public void Draw(SpriteBatch batch, Font font)
+		public override void Draw(SpriteBatch batch, Font font)
 		{
 			batch.Layer--;
 			if (Content is Button)
 				((Button)Content).Draw(batch, font);
 			else
 			{
-				using (var text = Text.Create(Content.ToString()))
+				var s = Content == null ? "" : Content.ToString();
+				using (var text = Text.Create(s))
 					TextRenderer.Draw(batch, font, text, Color.White, new Vector2i(100, 100));
 			}
 

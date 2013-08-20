@@ -89,7 +89,7 @@ namespace Lwar.Network
 			// Check if this is a valid message
 			if (!message.IsValid)
 			{
-				Log.DebugInfo("Ignored invalid discovery message from {0}.", _serverEndPoint);
+				Log.Debug("Ignored invalid discovery message from {0}.", _serverEndPoint);
 				return;
 			}
 

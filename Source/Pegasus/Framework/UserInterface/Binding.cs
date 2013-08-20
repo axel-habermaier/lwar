@@ -4,6 +4,7 @@ namespace Pegasus.Framework.UserInterface
 {
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Binds a target dependency object/dependency property pair to a source object and path selector.
@@ -20,6 +21,11 @@ namespace Pegasus.Framework.UserInterface
 		///   If greater than 0, the properties accessed by the source expression are currently changing.
 		/// </summary>
 		private byte _isChanging;
+
+		/// <summary>
+		///   Indicates whether the currently bound value is null.
+		/// </summary>
+		private bool _isNull;
 
 		/// <summary>
 		///   Provides information about the first member access (such as 'a.b') in a source expression 'a.b.c.d'.
@@ -131,6 +137,12 @@ namespace Pegasus.Framework.UserInterface
 			_memberAccess1.SourceObject = _sourceObject;
 
 			IsBound = true;
+
+#if !DEBUG
+	// In release builds, we unset the source expression to free up the memory; in debug builds, we use print
+	// the expression in case of errors
+			_sourceExpression = null;
+#endif
 		}
 
 		/// <summary>
@@ -179,14 +191,7 @@ namespace Pegasus.Framework.UserInterface
 		/// </summary>
 		private void OnMember1Changed()
 		{
-			++_isChanging;
-
-			if (_memberAccessCount > 1)
-				_memberAccess2.SourceObject = _memberAccess1.Value;
-
-			--_isChanging;
-
-			UpdateTargetProperty();
+			OnMemberChanged(ref _memberAccess1, ref _memberAccess2, 1);
 		}
 
 		/// <summary>
@@ -194,14 +199,7 @@ namespace Pegasus.Framework.UserInterface
 		/// </summary>
 		private void OnMember2Changed()
 		{
-			++_isChanging;
-
-			if (_memberAccessCount > 2)
-				_memberAccess3.SourceObject = _memberAccess2.Value;
-
-			--_isChanging;
-
-			UpdateTargetProperty();
+			OnMemberChanged(ref _memberAccess2, ref _memberAccess3, 2);
 		}
 
 		/// <summary>
@@ -209,16 +207,40 @@ namespace Pegasus.Framework.UserInterface
 		/// </summary>
 		private void OnMember3Changed()
 		{
-			UpdateTargetProperty();
+			OnMemberChanged(ref _memberAccess3, ref _memberAccess3, Int32.MaxValue);
 		}
 
 		/// <summary>
-		///   Updates the target property, setting it to the current source value.
+		///   Handles a value change of an accessed member.
 		/// </summary>
-		private void UpdateTargetProperty()
+		/// <param name="memberAccess">The member that has been accessed.</param>
+		/// <param name="nextMemberAccess">The next member access that must be updated.</param>
+		/// <param name="memberAccessCount">
+		///   The number of member accesses the source expression must contain for the next member
+		///   access to be updated.
+		/// </param>
+		private void OnMemberChanged(ref MemberAccess memberAccess, ref MemberAccess nextMemberAccess, int memberAccessCount)
 		{
-			if (_isChanging == 0)
+			++_isChanging;
+
+			var value = memberAccess.Value;
+			_isNull = value == null;
+
+#if DEBUG
+			if (_isNull)
+				Log.Debug("Binding failure: Expression '{0}' encountered a null value when accessing '{1}'.",
+						  _sourceExpression, memberAccess.MemberName);
+#endif
+
+			if (_memberAccessCount > memberAccessCount && !_isNull)
+				nextMemberAccess.SourceObject = value;
+
+			--_isChanging;
+
+			if (_isChanging == 0 && !_isNull)
 				_targetObject.SetValue(_targetProperty, _sourceFunc(_sourceObject));
+			else if (_isNull)
+				_targetObject.SetValue(_targetProperty, default(T));
 		}
 
 		/// <summary>
@@ -258,6 +280,14 @@ namespace Pegasus.Framework.UserInterface
 			}
 
 			/// <summary>
+			///   Gets the name of the member that is accessed.
+			/// </summary>
+			public string MemberName
+			{
+				get { return _propertyInfo.Name; }
+			}
+
+			/// <summary>
 			///   Sets the change handler that is invoked when the value of the member has changed.
 			/// </summary>
 			public Action Changed { private get; set; }
@@ -269,8 +299,6 @@ namespace Pegasus.Framework.UserInterface
 			{
 				set
 				{
-					Assert.NotNull(value, "A binding expression returned null.");
-
 					if (_sourceObject == value)
 						return;
 
@@ -294,6 +322,9 @@ namespace Pegasus.Framework.UserInterface
 			{
 				get
 				{
+					if (_sourceObject == null)
+						return null;
+
 					if (_dependencyProperty == null)
 						return _propertyInfo.GetValue(_sourceObject);
 
@@ -309,6 +340,9 @@ namespace Pegasus.Framework.UserInterface
 			/// </summary>
 			private void AttachToChangeEvent()
 			{
+				if (_sourceObject == null)
+					return;
+
 				if (_dependencyProperty != null)
 				{
 					var dependencyObject = _sourceObject as DependencyObject;
@@ -331,6 +365,9 @@ namespace Pegasus.Framework.UserInterface
 			/// </summary>
 			private void DetachFromChangeEvent()
 			{
+				if (_sourceObject == null)
+					return;
+
 				if (_dependencyProperty != null)
 				{
 					var dependencyObject = _sourceObject as DependencyObject;

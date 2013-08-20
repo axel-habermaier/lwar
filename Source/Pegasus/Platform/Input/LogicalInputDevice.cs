@@ -90,7 +90,7 @@ namespace Pegasus.Platform.Input
 			_inputs.Add(input);
 			input.IsRegisteredOn(this);
 
-			Log.DebugInfo("A logical input with trigger '{0}' has been registered.", input.Trigger);
+			Log.Debug("A logical input with trigger '{0}' has been registered.", input.Trigger);
 		}
 
 		/// <summary>
@@ -143,7 +143,7 @@ namespace Pegasus.Platform.Input
 				if (_layerStates[i - 1].Count > 0)
 				{
 					if (InputLayer.Priority != i)
-						Log.DebugInfo("Input layer has been switched to {0}.", i);
+						Log.Debug("Input layer has been switched to {0}.", i);
 
 					InputLayer = InputLayer.Create(i);
 					break;

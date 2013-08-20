@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Pegasus.Framework.UserInterface
+namespace Pegasus.Framework
 {
 	using System.Collections.Generic;
 	using System.Runtime.CompilerServices;
+	using UserInterface;
 
 	/// <summary>
 	///   A view model can be bound to an UI element, providing both the values that the UI displays and the methods that
@@ -11,6 +12,11 @@ namespace Pegasus.Framework.UserInterface
 	/// </summary>
 	public abstract class ViewModel : INotifyPropertyChanged
 	{
+		/// <summary>
+		///   Gets the UI context the view model's UI element belongs to.
+		/// </summary>
+		public UIContext UIContext { get; internal set; }
+
 		/// <summary>
 		///   Raised when a property of the view model has been changed.
 		/// </summary>

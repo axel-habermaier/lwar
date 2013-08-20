@@ -3,19 +3,81 @@
 namespace Lwar
 {
 	using System.Net;
-	using Assets;
 	using Network;
 	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
+	using Pegasus.Platform.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
-	using Pegasus.Rendering.UserInterface;
-	using Screens;
 	using Scripting;
+
+	internal class HelloWorldViewModel : ViewModel
+	{
+		private int _frameCount;
+		private string _name;
+
+		public string Name
+		{
+			get { return _name; }
+			set { ChangePropertyValue(ref _name, value); }
+		}
+
+		public int FrameCount
+		{
+			get { return _frameCount; }
+			set { ChangePropertyValue(ref _frameCount, value); }
+		}
+
+		public void Update()
+		{
+			++FrameCount;
+		}
+	}
+
+	internal class HelloWorldView : UserControl
+	{
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="assets">The assets manager that should be used to load the assets required by the control.</param>
+		/// <param name="viewModel">The view model that should be bound to the control.</param>
+		public HelloWorldView(AssetsManager assets, ViewModel viewModel)
+			: base(assets, viewModel)
+		{
+			var style = new Style();
+			style.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
+
+			var trigger = new Trigger<bool>(IsMouseOverProperty, true);
+			trigger.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 255, 123, 255)));
+			style.Triggers.Add(trigger);
+
+			Resources["MyStyle"] = style;
+
+			var binding1 = new Binding<object>(v => ((HelloWorldViewModel)v).Name);
+			var binding2 = new Binding<object>(v => ((HelloWorldViewModel)v).FrameCount);
+
+			var canvas = new Canvas();
+			var button1 = new Button() { Width = 300, Height = 100 };
+			var button2 = new Button() { Width = 100, Height = 300 };
+
+			button1.SetBinding(ContentProperty, binding1);
+			button2.SetBinding(ContentProperty, binding2);
+
+			canvas.Children.Add(button1);
+			canvas.Children.Add(button2);
+
+			Content = canvas;
+
+			var resourceBinding = new ResourceBinding<Style>("MyStyle");
+			button1.SetResourceBinding(StyleProperty, resourceBinding);
+
+			button2.ViewModel = viewModel;
+		}
+	}
 
 	/// <summary>
 	///   Represents the lwar application.
@@ -27,21 +89,13 @@ namespace Lwar
 		/// </summary>
 		private LocalServer _localServer;
 
-		/// <summary>
-		///   The state manager that manages the states of the application.
-		/// </summary>
-		private ScreenManager _stateManager;
-
-		private Button b;
-
-		private Button b2;
-		private Layout l, l2;
-		private TestViewModel vm;
+		private HelloWorldViewModel _viewModel;
 
 		/// <summary>
 		///   Invoked when the application is initializing.
 		/// </summary>
-		protected override void Initialize()
+		/// <param name="uiContext">The UI context that is used to draw the user interface.</param>
+		protected override void Initialize(UIContext uiContext)
 		{
 			Commands.Resolve();
 			Cvars.Resolve();
@@ -49,12 +103,12 @@ namespace Lwar
 			Commands.OnConnect += Connect;
 			Commands.OnDisconnect += Disconnect;
 
-			Context.InputDevice.ActivateLayer(InputLayers.Game);
-			Context.Window.Closing += Exit;
+			//Context.InputDevice.ActivateLayer(InputLayers.Game);
+			//Context.Window.Closing += Exit;
 
 			_localServer = new LocalServer();
-			_stateManager = new ScreenManager(Context);
-			_stateManager.Add(new MainMenu());
+			//_stateManager = new ScreenManager(Context);
+			//_stateManager.Add(new MainMenu());
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");
 			Commands.Bind(Key.F2.WentDown(), "stop_server");
@@ -66,36 +120,9 @@ namespace Lwar
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
-			var s = new Style();
-			s.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
-			var t = new Trigger<bool>(UIElement.IsMouseOverProperty, true);
-			t.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(0, 255, 123, 255)));
-			s.Triggers.Add(t);
-
-			l = new Layout();
-			l2 = new Layout();
-
-			b = new Button { Width = 100, Height = 200 };
-			l.Children.Add(b);
-			l.Resources.Add("myStyle", s);
-			l2.Resources.Add("myStyle", new Style());
-			var rb = new ResourceBinding<Style>("myStyle");
-			b.SetResourceBinding(UIElement.StyleProperty, rb);
-
-			b2 = new Button() { ViewModel = vm = new TestViewModel(), Width = 300, Height = 100 };
-			b.Content = "blub";
-			l.Children.Add(b2);
-
-			vm.Rank = 17;
-			vm.A = new TestViewModel();
-			vm.A.B = new TestViewModel();
-			vm.A.Rank = 21;
-
-			var rb2 = new ResourceBinding<Style>("myStyle");
-			b2.SetResourceBinding(UIElement.StyleProperty, rb2);
-
-			var binding = new Binding<object>(viewModel => ((TestViewModel)viewModel).A.Rank);
-			b2.SetBinding(ContentControl.ContentProperty, binding);
+			_viewModel = new HelloWorldViewModel() { Name = "Axel" };
+			var view = new HelloWorldView(uiContext.SharedAssets, _viewModel);
+			uiContext.Add(view);
 		}
 
 		/// <summary>
@@ -104,34 +131,8 @@ namespace Lwar
 		protected override void Update()
 		{
 			_localServer.Update();
-			_stateManager.Update();
-
-			//var vm = b.ViewModel as TestViewModel;
-			vm.Rank++;
-			vm.A.Rank++;
-
-			if (vm.Rank % 500 == 0)
-			{
-				var s = new Style();
-				s.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(255, 52, 251, 255)));
-				vm.A = new TestViewModel() { A = new TestViewModel() };
-				//var r = new ResourceDictionary();
-				//r.Add("myStyle", s);
-				//b.Resources = r;
-				b.IsMouseOver = !b.IsMouseOver;
-			}
-			if (vm.Rank % 1000 == 0)
-			{
-				l.Children.Remove(b2);
-				l2.Children.Add(b2);
-			}
-			if (vm.Rank % 2000 == 0)
-			{
-				l.Resources["myStyle"] = new Style();
-			}
-
-			//if (vm.Rank % 3000 == 0)
-			//b.ViewModel = new TestViewModel() { A = new TestViewModel{Rank = 9999999 }};
+			//_stateManager.Update();
+			_viewModel.Update();
 		}
 
 		/// <summary>
@@ -143,7 +144,7 @@ namespace Lwar
 			output.ClearColor(new Color(0, 0, 0, 0));
 			output.ClearDepth();
 
-			_stateManager.Draw(output);
+			//_stateManager.Draw(output);
 		}
 
 		/// <summary>
@@ -152,11 +153,7 @@ namespace Lwar
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		protected override void DrawUserInterface(SpriteBatch spriteBatch)
 		{
-			_stateManager.DrawUserInterface(spriteBatch);
-
-			spriteBatch.Layer = 17;
-			b.Draw(spriteBatch, Context.Assets.LoadFont(Fonts.LiberationMono11));
-			b2.Draw(spriteBatch, Context.Assets.LoadFont(Fonts.LiberationMono11));
+			//_stateManager.DrawUserInterface(spriteBatch);
 		}
 
 		/// <summary>
@@ -167,7 +164,7 @@ namespace Lwar
 			Commands.OnConnect -= Connect;
 			Commands.OnDisconnect -= Disconnect;
 
-			_stateManager.SafeDispose();
+			//_stateManager.SafeDispose();
 			_localServer.SafeDispose();
 		}
 
@@ -181,7 +178,7 @@ namespace Lwar
 			Assert.ArgumentNotNull(address);
 
 			Disconnect();
-			_stateManager.Add(new Level(new IPEndPoint(address, port)));
+			//_stateManager.Add(new Level(new IPEndPoint(address, port)));
 		}
 
 		/// <summary>
@@ -189,47 +186,8 @@ namespace Lwar
 		/// </summary>
 		private void Disconnect()
 		{
-			_stateManager.Clear();
-			_stateManager.Add(new MainMenu());
-		}
-
-		private class TestViewModel : ViewModel
-		{
-			//private static int _x;
-			private int _rank;
-			private TestViewModel a, b, c;
-
-			public TestViewModel()
-			{
-				//_rank = ++_x;
-			}
-
-			public TestViewModel A
-			{
-				get { return a; }
-				set { ChangePropertyValue(ref a, value); }
-			}
-
-			public TestViewModel B
-			{
-				get { return b; }
-				set { ChangePropertyValue(ref b, value); }
-			}
-
-			public TestViewModel C
-			{
-				get { return c; }
-				set { ChangePropertyValue(ref c, value); }
-			}
-
-			/// <summary>
-			///   Rank of the local player
-			/// </summary>
-			public int Rank
-			{
-				get { return _rank; }
-				set { ChangePropertyValue(ref _rank, value); }
-			}
+			//_stateManager.Clear();
+			//_stateManager.Add(new MainMenu());
 		}
 	}
 }

@@ -2,11 +2,17 @@
 
 namespace Pegasus.Framework.UserInterface.Controls
 {
+	using Rendering;
+	using Rendering.UserInterface;
+
 	/// <summary>
 	///   A base class for all layouts that position and arrange child UI elements.
 	/// </summary>
-	public class Layout : UIElement
+	public abstract class Layout : UIElement
 	{
+		/// <summary>
+		///   The collection of layouted children.
+		/// </summary>
 		private UIElementCollection _children;
 
 		/// <summary>
@@ -29,6 +35,12 @@ namespace Pegasus.Framework.UserInterface.Controls
 		public UIElementCollection Children
 		{
 			get { return _children ?? (_children = new UIElementCollection(this)); }
+		}
+
+		public override void Draw(SpriteBatch spriteBatch, Font font)
+		{
+			foreach (var child in Children)
+				child.Draw(spriteBatch, font);
 		}
 	}
 }
