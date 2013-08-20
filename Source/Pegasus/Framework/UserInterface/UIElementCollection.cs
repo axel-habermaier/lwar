@@ -99,7 +99,7 @@ namespace Pegasus.Framework.UserInterface
 		public struct Enumerator
 		{
 			/// <summary>
-			///   Creates an enumerator that does not enumerate any elements.
+			///   Represents an enumerator that does not enumerate any elements.
 			/// </summary>
 			public static readonly Enumerator Empty = new Enumerator();
 

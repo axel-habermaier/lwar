@@ -11,25 +11,9 @@ namespace Pegasus.Framework
 	public abstract class DependencyObject
 	{
 		/// <summary>
-		///   The dependency object this dependency object gets its inherited dependency property values from.
-		/// </summary>
-		private DependencyObject _inheritedObject;
-
-		/// <summary>
 		///   Stores the value's of the dependency object's dependency properties.
 		/// </summary>
 		private DependencyPropertyStore _propertyStore = new DependencyPropertyStore();
-
-		/// <summary>
-		///   Changes the dependency object from which this dependency object gets its inherited dependency property values.
-		/// </summary>
-		protected void ChangeInheritedObject(DependencyObject obj)
-		{
-			Assert.ArgumentSatisfies(obj != this, "Detected a loop in the inheritance relationship.");
-
-			_inheritedObject = obj;
-			// TODO invalidate!
-		}
 
 		/// <summary>
 		///   Sets the value of the dependency property.
@@ -122,28 +106,64 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(property);
 
 			// If the property has an effective value, return it
-			var value = _propertyStore.GetValueOrNull(property);
-			if (value != null && value.HasEffectiveValue)
-				return value.EffectiveValue;
+			T value;
+			if (TryGetEffectiveValue(property, out value))
+				return value;
 
 			// If the property is not inheritable, return its default value
 			if (!property.Inherits)
 				return property.DefaultValue;
 
 			// Otherwise, check whether we inherit an effective value
-			var obj = _inheritedObject;
-			while (obj != null)
-			{
-				value = obj._propertyStore.GetValueOrNull(property);
-				if (value != null && value.HasEffectiveValue)
-					return value.EffectiveValue;
-
-				obj = obj._inheritedObject;
-			}
+			if (TryGetInheritedValue(property, out value))
+				return value;
 
 			// If no value is inherited, return the property's default value
 			return property.DefaultValue;
 		}
+
+		/// <summary>
+		///   Gets the current effective value of the dependency property. Returns true to indicate that an effective value is set.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be returned.</param>
+		/// <param name="value">Returns the effective value, if one is set.</param>
+		protected bool TryGetEffectiveValue<T>(DependencyProperty<T> property, out T value)
+		{
+			Assert.ArgumentNotNull(property);
+
+			var propertyValue = _propertyStore.GetValueOrNull(property);
+			if (propertyValue != null && propertyValue.HasEffectiveValue)
+			{
+				value = propertyValue.EffectiveValue;
+				return true;
+			}
+
+			value = default(T);
+			return false;
+		}
+
+		/// <summary>
+		///   Invalidates the inherited values of all dependency properties of this dependency objects and all of its inheriting objects.
+		/// </summary>
+		protected void InvalidateInheritedValues()
+		{
+			//_propertyStore.Invalidate
+			InvalidateAllInheritingObjects();
+		}
+
+		/// <summary>
+		///   Invalidates the inherited values of all dependency properties of all inheriting objects.
+		/// </summary>
+		protected abstract void InvalidateAllInheritingObjects();
+
+		/// <summary>
+		///   Gets the inherited value of the dependency property. Returns true to indicate that an inherited value was found.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be returned.</param>
+		/// <param name="value">Returns the inherited value, if one was found.</param>
+		protected abstract bool TryGetInheritedValue<T>(DependencyProperty<T> property, out T value);
 
 		/// <summary>
 		///   Adds the change handler to the dependency property's changed event.

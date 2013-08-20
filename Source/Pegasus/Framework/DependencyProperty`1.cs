@@ -14,7 +14,7 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   The callback that is used to validate whether the given value is a valid value for the dependency property.
 		/// </summary>
-		private DependencyPropertyValidationCallback<T> _validationCallback;
+		private readonly DependencyPropertyValidationCallback<T> _validationCallback;
 
 		/// <summary>
 		///   Initializes a new instance.

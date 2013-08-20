@@ -354,7 +354,7 @@ namespace Pegasus.Framework.UserInterface
 		}
 
 		/// <summary>
-		///   Raises the resources invalidated event for this UI element and all of its children.
+		///   Raises the resources invalidated event for this UI element and all of its logical children.
 		/// </summary>
 		private void InvalidateResources()
 		{
@@ -431,10 +431,42 @@ namespace Pegasus.Framework.UserInterface
 			Assert.That(element == null || Parent == null, "The element is already attached to the logical tree.");
 
 			Parent = element;
-			ChangeInheritedObject(element);
 
+			InvalidateInheritedValues();
 			if (element != null)
 				InvalidateResources();
+		}
+
+		/// <summary>
+		///   Gets the inherited value of the dependency property. Returns true to indicate that an inherited value was found.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be returned.</param>
+		/// <param name="value">Returns the inherited value, if one was found.</param>
+		protected override sealed bool TryGetInheritedValue<T>(DependencyProperty<T> property, out T value)
+		{
+			Assert.ArgumentNotNull(property);
+
+			var parent = Parent;
+			while (parent != null)
+			{
+				if (parent.TryGetEffectiveValue(property, out value))
+					return true;
+
+				parent = parent.Parent;
+			}
+
+			value = default(T);
+			return false;
+		}
+
+		/// <summary>
+		///   Invalidates the inherited values of all dependency properties of all inheriting children.
+		/// </summary>
+		protected override sealed void InvalidateAllInheritingObjects()
+		{
+			foreach (var child in LogicalChildren)
+				child.InvalidateInheritedValues();
 		}
 	}
 }

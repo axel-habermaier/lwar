@@ -96,3 +96,6 @@ NOTES FOR FUTURE IMPLEMENTATION TASKS
 - Width/Height take precedence over alignment = stretch
 - margin applies space outside actualwidth/height
 - min width/height must be honored, then max widht/height, only then widht/height
+
+- DP inheritance: introduce inheritance context (with lambdas to UI.Element parent/children) and set on DO; 
+  DP store should store a list of all accessed inheriting DPs for the DO

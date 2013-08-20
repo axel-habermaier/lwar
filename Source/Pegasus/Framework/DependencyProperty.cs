@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework
 {
+	using System.Collections.Generic;
+
 	/// <summary>
 	///   Represents an untyped property that has multiple sources (such as data bindings, style setters, animation,
 	///   etc.).
@@ -12,6 +14,11 @@ namespace Pegasus.Framework
 		///   The number of dependency properties that have been registered throughout the lifetime of the application.
 		/// </summary>
 		private static int _propertyCount;
+
+		/// <summary>
+		///   The list of all dependency properties that have been created, sorted by dependency property index.
+		/// </summary>
+		internal static readonly List<DependencyProperty> DependencyProperties = new List<DependencyProperty>();
 
 		/// <summary>
 		///   The metadata flags of the dependency property.
@@ -62,6 +69,8 @@ namespace Pegasus.Framework
 
 			if (prohibitsDataBinding)
 				_flags |= MetadataFlags.IsDataBindingProhibited;
+
+			DependencyProperties.Add(this);
 		}
 
 		/// <summary>
