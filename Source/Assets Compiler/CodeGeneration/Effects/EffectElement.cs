@@ -82,7 +82,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 			Assert.ArgumentNotNull(declaredModifiers);
 			Assert.ArgumentNotNull(expectedModifiers);
 
-			// Check whether any modifiers other than the exepcted ones are declared 
+			// Check whether any modifiers other than the expected ones are declared 
 			foreach (var modifier in declaredModifiers.Where(modifier => !expectedModifiers.Any(m => m.Contains(modifier.Modifier))))
 				Error(modifier, "Unexpected modifier '{0}'.", modifier.Modifier.ToString().ToLower());
 
