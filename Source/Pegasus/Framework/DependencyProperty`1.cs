@@ -13,7 +13,9 @@ namespace Pegasus.Framework
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="defaultValue">The default value of the dependency property.</param>
-		public DependencyProperty(T defaultValue = default(T))
+		/// <param name="inherits">Indicates whether the value of the dependency property is inheritable.</param>
+		public DependencyProperty(T defaultValue = default(T), bool inherits = false)
+			: base(inherits)
 		{
 			DefaultValue = defaultValue;
 		}

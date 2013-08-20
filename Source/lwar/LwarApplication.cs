@@ -78,9 +78,6 @@ namespace Lwar
 			var button1 = new Button() { Width = 300, Height = 100 };
 			var button2 = new Button() { Width = 100, Height = 300 };
 
-			button1.SetBinding(ContentProperty, binding1);
-			button2.SetBinding(ContentProperty, binding2);
-
 			canvas.Children.Add(button1);
 			canvas.Children.Add(button2);
 
@@ -89,7 +86,8 @@ namespace Lwar
 			var resourceBinding = new ResourceBinding<Style>("MyStyle");
 			button1.SetResourceBinding(StyleProperty, resourceBinding);
 
-			button2.ViewModel = viewModel;
+			button1.SetBinding(ContentProperty, binding1);
+			button2.SetBinding(ContentProperty, binding2);
 		}
 	}
 

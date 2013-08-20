@@ -2,7 +2,6 @@
 
 namespace Pegasus.Framework.UserInterface
 {
-	using Platform.Assets;
 	using Platform.Graphics;
 	using Rendering.UserInterface;
 
@@ -14,7 +13,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   The view model of the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<ViewModel> ViewModelProperty = new DependencyProperty<ViewModel>();
+		public static readonly DependencyProperty<ViewModel> ViewModelProperty = new DependencyProperty<ViewModel>(inherits: true);
 
 		/// <summary>
 		///   The foreground color of the UI element.
@@ -338,6 +337,7 @@ namespace Pegasus.Framework.UserInterface
 			Assert.That(element == null || Parent == null, "The element is already attached to the logical tree.");
 
 			Parent = element;
+			ChangeInheritedObject(element);
 
 			if (element != null)
 				InvalidateResources();

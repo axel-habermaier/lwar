@@ -11,9 +11,24 @@ namespace Pegasus.Framework
 	public abstract class DependencyObject
 	{
 		/// <summary>
+		///   The dependency object this dependency object gets its inherited dependency property values from.
+		/// </summary>
+		private DependencyObject _inheritedObject;
+
+		/// <summary>
 		///   Stores the value's of the dependency object's dependency properties.
 		/// </summary>
 		private DependencyPropertyStore _propertyStore = new DependencyPropertyStore();
+
+		/// <summary>
+		///   Changes the dependency object from which this dependency object gets its inherited dependency property values.
+		/// </summary>
+		protected void ChangeInheritedObject(DependencyObject obj)
+		{
+			Assert.ArgumentSatisfies(obj != this, "Detected a loop in the inheritance relationship.");
+
+			_inheritedObject = obj;
+		}
 
 		/// <summary>
 		///   Sets the value of the dependency property.
@@ -157,11 +172,28 @@ namespace Pegasus.Framework
 		{
 			Assert.ArgumentNotNull(property);
 
+			// If the property has an effective value, return it
 			var value = _propertyStore.GetValue(property, addIfNotFound: false);
-			if (value == null || !value.HasEffectiveValue)
+			if (value != null && value.HasEffectiveValue)
+				return value.EffectiveValue;
+
+			// If the property is not inheritable, return its default value
+			if (!property.Inherits)
 				return property.DefaultValue;
 
-			return value.EffectiveValue;
+			// Otherwise, check whether we inherit an effective value
+			var obj = _inheritedObject;
+			while (obj != null)
+			{
+				value = obj._propertyStore.GetValue(property, addIfNotFound: false);
+				if (value != null && value.HasEffectiveValue)
+					return value.EffectiveValue;
+
+				obj = obj._inheritedObject;
+			}
+
+			// If no value is inherited, return the property's default value
+			return property.DefaultValue;
 		}
 
 		/// <summary>

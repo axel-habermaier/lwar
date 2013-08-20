@@ -16,10 +16,17 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		protected DependencyProperty()
+		/// <param name="inherits">Indicates whether the value of the dependency property is inheritable.</param>
+		protected DependencyProperty(bool inherits = false)
 		{
 			Index = _propertyCount++;
+			Inherits = inherits;
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether the value of the dependency property is inheritable.
+		/// </summary>
+		public bool Inherits { get; private set; }
 
 		/// <summary>
 		///   The index of the dependency property that remains unchanged and unique throughout the lifetime of the application.
