@@ -67,16 +67,25 @@ namespace Lwar
 			t.Setters.Add(new Setter<Color>(UIElement.ForegroundProperty, Color.FromRgba(0, 255, 123, 255)));
 			s.Triggers.Add(t);
 
-			b = new Button { ViewModel = vm = new TestViewModel() };
+			b = new Button { Width=100,Height=200};
 			b.Resources.Add("myStyle", s);
-			b.SetResourceReference(UIElement.StyleProperty, "myStyle");
+			var rb = new ResourceBinding<Style>("myStyle");
+			b.SetResourceBinding(UIElement.StyleProperty, rb);
+			
+
+			var b2 = new Button() { ViewModel = vm = new TestViewModel(), Width = 300,Height=100 };
+			b.Content = b2; 
+			
 			vm.Rank = 17;
 			vm.A = new TestViewModel();
 			vm.A.B = new TestViewModel();
 			vm.A.Rank = 21;
 
+			var rb2 = new ResourceBinding<Style>("myStyle");
+			b2.SetResourceBinding(UIElement.StyleProperty, rb2);
+
 			var binding = new Binding<object>(viewModel => ((TestViewModel)viewModel).A.Rank);
-			b.SetBinding(Button.ContentProperty, binding);
+			b2.SetBinding(ContentControl.ContentProperty, binding);
 		}
 
 		/// <summary>
@@ -130,6 +139,7 @@ namespace Lwar
 		{
 			_stateManager.DrawUserInterface(spriteBatch);
 
+			spriteBatch.Layer = 17;
 			b.Draw(spriteBatch, Context.Assets.LoadFont(Fonts.LiberationMono11));
 		}
 

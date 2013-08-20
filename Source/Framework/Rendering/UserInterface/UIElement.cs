@@ -41,6 +41,46 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public static readonly DependencyProperty<bool> IsMouseOverProperty = new DependencyProperty<bool>();
 
 		/// <summary>
+		///   The width of the UI element, measured in pixels.
+		/// </summary>
+		public static readonly DependencyProperty<double> WidthProperty = new DependencyProperty<double>();
+
+		/// <summary>
+		///   The height of the UI element, measured in pixels.
+		/// </summary>
+		public static readonly DependencyProperty<double> HeightProperty = new DependencyProperty<double>();
+
+		/// <summary>
+		///   The minimum width constraint of the UI element, measured in pixels.
+		/// </summary>
+		public static readonly DependencyProperty<double> MinWidthProperty = new DependencyProperty<double>();
+
+		/// <summary>
+		///   The minimum height constraint of the UI element, measured in pixels.
+		/// </summary>
+		public static readonly DependencyProperty<double> MinHeightProperty = new DependencyProperty<double>();
+
+		/// <summary>
+		///   The maximum width constraint of the UI element, measured in pixels.
+		/// </summary>
+		public static readonly DependencyProperty<double> MaxWidthProperty = new DependencyProperty<double>();
+
+		/// <summary>
+		///   The maximum height constraint of the UI element, measured in pixels.
+		/// </summary>
+		public static readonly DependencyProperty<double> MaxHeightProperty = new DependencyProperty<double>();
+
+		/// <summary>
+		///   The actual width of the UI element, measured in pixels, as determined by the layouting system.
+		/// </summary>
+		public static readonly DependencyProperty<double> ActualWidthProperty = new DependencyProperty<double>();
+
+		/// <summary>
+		///   The actual height of the UI element, measured in pixels, as determined by the layouting system.
+		/// </summary>
+		public static readonly DependencyProperty<double> ActualHeightProperty = new DependencyProperty<double>();
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		protected UIElement()
@@ -122,6 +162,76 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
+		///   Gets or sets the width of the UI element, measured in pixels.
+		/// </summary>
+		public double Width
+		{
+			get { return GetValue(WidthProperty); }
+			set { SetValue(WidthProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets the height of the UI element, measured in pixels.
+		/// </summary>
+		public double Height
+		{
+			get { return GetValue(HeightProperty); }
+			set { SetValue(HeightProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets the minimum width constraint of the UI element, measured in pixels.
+		/// </summary>
+		public double MinWidth
+		{
+			get { return GetValue(MinWidthProperty); }
+			set { SetValue(MinWidthProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets the minimum height constraint of the UI element, measured in pixels.
+		/// </summary>
+		public double MinHeight
+		{
+			get { return GetValue(MinHeightProperty); }
+			set { SetValue(MinHeightProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets the maximum width constraint of the UI element, measured in pixels.
+		/// </summary>
+		public double MaxWidth
+		{
+			get { return GetValue(MaxWidthProperty); }
+			set { SetValue(MaxWidthProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets the maximum height constraint of the UI element, measured in pixels.
+		/// </summary>
+		public double MaxHeight
+		{
+			get { return GetValue(MaxHeightProperty); }
+			set { SetValue(MaxHeightProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets  the actual width of the UI element, measured in pixels, as determined by the layouting system.
+		/// </summary>
+		public double ActualWidth
+		{
+			get { return GetValue(ActualWidthProperty); }
+		}
+
+		/// <summary>
+		///   Gets the actual height of the UI element, measured in pixels, as determined by the layouting system.
+		/// </summary>
+		public double ActualHeight
+		{
+			get { return GetValue(ActualHeightProperty); }
+		}
+
+		/// <summary>
 		///   Indicates whether the mouse is currently hovering the UI element.
 		/// </summary>
 		public bool IsMouseOver
@@ -134,6 +244,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		///   Gets the logical parent of the UI element.
 		/// </summary>
 		public UIElement Parent { get; internal set; }
+
+		/// <summary>
+		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
+		/// </summary>
+		protected abstract LogicalChildrenEnumerator LogicalChildren { get; }
 
 		/// <summary>
 		///   Attaches the resources change event handlers.
@@ -180,7 +295,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			if (ResourcesInvalidated != null)
 				ResourcesInvalidated();
 
-			// TODO: Invalidate children
+			foreach (var child in LogicalChildren)
+				child.InvalidateResources();
 		}
 
 		/// <summary>
@@ -198,18 +314,18 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		///   Assigns a dynamic resource reference to the given dependency property. When the resource changes, the dependency
+		///   Attaches a resource binding to the dependency property. When the resource changes, the dependency
 		///   property is updated accordingly.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property that the resource should be bound to.</param>
-		/// <param name="key">The key of the resource that should be bound to the dependency property.</param>
-		public void SetResourceReference<T>(DependencyProperty<T> property, string key)
+		/// <param name="binding">The binding that should be set.</param>
+		public void SetResourceBinding<T>(DependencyProperty<T> property, ResourceBinding<T> binding)
 		{
 			Assert.ArgumentNotNull(property);
-			Assert.ArgumentNotNullOrWhitespace(key);
+			Assert.ArgumentNotNull(binding);
 
-			new ResourceBinding<T>(this, property, key);
+			binding.Initialize(this, property);
 		}
 
 		/// <summary>
@@ -235,9 +351,20 @@ namespace Pegasus.Framework.Rendering.UserInterface
 			return false;
 		}
 
-		protected void AddLogicalChild(UIElement element)
+		/// <summary>
+		///   Changes the logical parent of the UI element.
+		/// </summary>
+		/// <param name="element">
+		///   The new logical parent of the UI element. If null, the UI element is no longer part of the logical tree.
+		/// </param>
+		internal void ChangeLogicalParent(UIElement element)
 		{
-			
+			Assert.That(element != this, "Detected a loop in the logical tree.");
+
+			Parent = element;
+
+			if (element != null)
+				InvalidateResources();
 		}
 	}
 }

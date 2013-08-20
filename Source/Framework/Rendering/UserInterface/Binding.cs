@@ -22,6 +22,11 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		private byte _isChanging;
 
 		/// <summary>
+		/// Gets a value indicating whether the binding has already been bound to a dependency property.
+		/// </summary>
+		public bool IsBound { get; private set; }
+
+		/// <summary>
 		///   Provides information about the first member access (such as 'a.b') in a source expression 'a.b.c.d'.
 		/// </summary>
 		/// <remarks>
@@ -106,6 +111,7 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		{
 			Assert.ArgumentNotNull(targetObject);
 			Assert.ArgumentNotNull(targetProperty);
+			Assert.That(!IsBound, "The binding has already been bound to a dependency property.");
 			Assert.That(!_sourceIsViewModel || targetObject is UIElement,
 						"No source object has been set; this is OK as long as the target object is an UIElement, " +
 						"in which case the UIElement's view model becomes the source object.");
@@ -123,6 +129,8 @@ namespace Pegasus.Framework.Rendering.UserInterface
 
 			_sourceFunc = _sourceExpression.Compile();
 			_memberAccess1.SourceObject = _sourceObject;
+
+			IsBound = true;
 		}
 
 		/// <summary>

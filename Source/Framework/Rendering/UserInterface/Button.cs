@@ -12,10 +12,21 @@ namespace Pegasus.Framework.Rendering.UserInterface
 	{
 		public void Draw(SpriteBatch batch, Font font)
 		{
-			using (var text = Text.Create(Content.ToString()))
-				TextRenderer.Draw(batch, font, text, Color.White, new Vector2i(100, 100));
+			batch.Layer--;
+			if (Content is Button)
+				((Button)Content).Draw(batch, font);
+			else
+			{
 
-			batch.Draw(new Rectangle(200, 20, 100, 100), Texture2D.White, Foreground);
+				using (var text = Text.Create(Content.ToString()))
+					TextRenderer.Draw(batch, font, text, Color.White, new Vector2i(100, 100));
+
+				
+		
+			}
+
+			batch.Draw(new Rectangle(200, 20, (int)Width, (int)Height), Texture2D.White, Foreground);
+			batch.Layer++;
 		}
 	}
 }

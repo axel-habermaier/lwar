@@ -13,6 +13,14 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		public static readonly DependencyProperty<object> ContentProperty = new DependencyProperty<object>();
 
 		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		public ContentControl()
+		{
+			AddChangedHandler(ContentProperty, OnContentChanged);
+		}
+
+		/// <summary>
 		///   Gets or sets the content of the content control.
 		/// </summary>
 		public object Content
@@ -22,15 +30,33 @@ namespace Pegasus.Framework.Rendering.UserInterface
 		}
 
 		/// <summary>
-		/// Initializes a new instance.
+		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
-		public ContentControl()
+		protected override LogicalChildrenEnumerator LogicalChildren
 		{
-			AddChangedHandler(ContentProperty, OnContentChanged);
+			get
+			{
+				var child = Content as UIElement;
+				if (child != null)
+					return LogicalChildrenEnumerator.SingleChild(child);
+
+				return LogicalChildrenEnumerator.Empty;
+			}
 		}
 
+		/// <summary>
+		///   Updates the logical and visual parents of the new and old content.
+		/// </summary>
 		private void OnContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
 		{
+			var oldContent = args.OldValue as UIElement;
+			var newContent = args.NewValue as UIElement;
+
+			if (oldContent != null)
+				oldContent.ChangeLogicalParent(null);
+
+			if (newContent != null)
+				newContent.ChangeLogicalParent(this);
 		}
 	}
 }
