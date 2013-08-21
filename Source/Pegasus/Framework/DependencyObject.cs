@@ -28,6 +28,20 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
+		///   Sets the inherited value of the dependency property.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be set.</param>
+		/// <param name="value">The value that should be set.</param>
+		internal void SetInheritedValue<T>(DependencyProperty<T> property, T value)
+		{
+			Assert.ArgumentSatisfies(property.Inherits, "The property does not support value inheritance.");
+
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
+				setter.PropertyValue.SetInheritedValue(value);
+		}
+
+		/// <summary>
 		///   Sets the value of the dependency property originating from a style setter.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
@@ -59,6 +73,8 @@ namespace Pegasus.Framework
 		/// <param name="value">The value that should be set.</param>
 		internal void SetAnimatedValue<T>(DependencyProperty<T> property, T value)
 		{
+			Assert.ArgumentSatisfies(property.IsAnimationProhibited, "The property does not support animations.");
+
 			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
 				setter.PropertyValue.SetAnimatedValue(value);
 		}
@@ -72,6 +88,19 @@ namespace Pegasus.Framework
 		{
 			using (var setter = new DependencyPropertyValueSetter<T>(this, property))
 				setter.PropertyValue.UnsetStyleValue();
+		}
+
+		/// <summary>
+		///   Unsets the inherited value of the dependency property.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be unset.</param>
+		internal void UnsetInheritedValue<T>(DependencyProperty<T> property)
+		{
+			Assert.ArgumentSatisfies(property.Inherits, "The property does not support value inheritance.");
+
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property))
+				setter.PropertyValue.UnsetInheritedValue();
 		}
 
 		/// <summary>
@@ -92,6 +121,8 @@ namespace Pegasus.Framework
 		/// <param name="property">The dependency property whose value should be unset.</param>
 		internal void UnsetAnimatedValue<T>(DependencyProperty<T> property)
 		{
+			Assert.ArgumentSatisfies(property.IsAnimationProhibited, "The property does not support animations.");
+
 			using (var setter = new DependencyPropertyValueSetter<T>(this, property))
 				setter.PropertyValue.UnsetAnimatedValue();
 		}
@@ -108,14 +139,6 @@ namespace Pegasus.Framework
 			// If the property has an effective value, return it
 			T value;
 			if (TryGetEffectiveValue(property, out value))
-				return value;
-
-			// If the property is not inheritable, return its default value
-			if (!property.Inherits)
-				return property.DefaultValue;
-
-			// Otherwise, check whether we inherit an effective value
-			if (TryGetInheritedValue(property, out value))
 				return value;
 
 			// If no value is inherited, return the property's default value
@@ -142,28 +165,6 @@ namespace Pegasus.Framework
 			value = default(T);
 			return false;
 		}
-
-		/// <summary>
-		///   Invalidates the inherited values of all dependency properties of this dependency objects and all of its inheriting objects.
-		/// </summary>
-		protected void InvalidateInheritedValues()
-		{
-			//_propertyStore.Invalidate
-			InvalidateAllInheritingObjects();
-		}
-
-		/// <summary>
-		///   Invalidates the inherited values of all dependency properties of all inheriting objects.
-		/// </summary>
-		protected abstract void InvalidateAllInheritingObjects();
-
-		/// <summary>
-		///   Gets the inherited value of the dependency property. Returns true to indicate that an inherited value was found.
-		/// </summary>
-		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
-		/// <param name="property">The dependency property whose value should be returned.</param>
-		/// <param name="value">Returns the inherited value, if one was found.</param>
-		protected abstract bool TryGetInheritedValue<T>(DependencyProperty<T> property, out T value);
 
 		/// <summary>
 		///   Adds the change handler to the dependency property's changed event.
@@ -207,6 +208,25 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(binding);
 
 			binding.Initialize(this, property);
+		}
+
+		/// <summary>
+		///   Notifies all inheriting objects about a change of an inheriting dependency property.
+		/// </summary>
+		/// <param name="property">The inheriting dependency property that has been changed.</param>
+		/// <param name="newValue">The new value that should be inherited.</param>
+		protected abstract void InheritedValueChanged<T>(DependencyProperty<T> property, T newValue);
+
+		/// <summary>
+		/// Invalidates the inherited values of all inheriting dependency properties.
+		/// </summary>
+		/// <param name="inheritedObject">The new inherited dependency object.</param>
+		protected void InvalidateInheritedValues(DependencyObject inheritedObject)
+		{
+			if (inheritedObject != null)
+				inheritedObject._propertyStore.SetInheritedValues(inheritedObject, this);
+			else
+				_propertyStore.UnsetInheritedValues(this);
 		}
 
 		/// <summary>
@@ -275,12 +295,18 @@ namespace Pegasus.Framework
 			/// </summary>
 			public void Dispose()
 			{
-				if (PropertyValue.ChangedHandlers == null)
+				// Check if the property's value has changed
+				var newValue = _object.GetValue(_property);
+				if (EqualityComparer<T>.Default.Equals(_oldValue, newValue))
 					return;
 
-				var newValue = _object.GetValue(_property);
-				if (!EqualityComparer<T>.Default.Equals(_oldValue, newValue))
+				// Invoke the changed handlers, if any
+				if (PropertyValue.ChangedHandlers != null)
 					PropertyValue.ChangedHandlers(_object, new DependencyPropertyChangedEventArgs<T>(_property, _oldValue, newValue));
+
+				// If the property inherits its value, we have to push down the change to all inheriting objects
+				if (_property.Inherits)
+					_object.InheritedValueChanged(_property, newValue);
 			}
 		}
 	}

@@ -9,7 +9,7 @@ namespace Pegasus.Framework
 	///   etc.).
 	/// </summary>
 	/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
-	public class DependencyProperty<T> : DependencyProperty
+	public sealed class DependencyProperty<T> : DependencyProperty
 	{
 		/// <summary>
 		///   The callback that is used to validate whether the given value is a valid value for the dependency property.
@@ -114,6 +114,32 @@ namespace Pegasus.Framework
 		{
 			Assert.ArgumentNotNull(obj);
 			return obj.GetValue(this);
+		}
+
+		/// <summary>
+		///   Copies the dependency property's inherited value from source to target.
+		/// </summary>
+		/// <param name="source">The dependency object the value should be retrieved from.</param>
+		/// <param name="target">The dependency object the value should be set for.</param>
+		internal override void CopyInheritedValue(DependencyObject source, DependencyObject target)
+		{
+			Assert.ArgumentNotNull(source);
+			Assert.ArgumentNotNull(target);
+			Assert.That(Inherits, "The dependency property does not support value inheritance.");
+
+			target.SetInheritedValue(this, source.GetValue(this));
+		}
+
+		/// <summary>
+		/// Unsets the inherited value of the given dependency object.
+		/// </summary>
+		/// <param name="obj">The dependency object whose inherited value should be unset.</param>
+		internal override void UnsetInheritedValue(DependencyObject obj)
+		{
+			Assert.ArgumentNotNull(obj);
+			Assert.That(Inherits, "The dependency property does not support value inheritance.");
+
+			obj.UnsetInheritedValue(this);
 		}
 	}
 }

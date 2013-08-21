@@ -190,13 +190,13 @@
     <Compile Include="Gameplay\Actors\Explosion.cs" />
     <Compile Include="Gameplay\Actors\IActor.cs" />
     <Compile Include="Gameplay\Actors\Shield.cs" />
+    <Compile Include="Gameplay\Entities\EntityTemplates.cs" />
     <Compile Include="Gameplay\Entities\Rocket.cs" />
     <Compile Include="Gameplay\Entities\Shockwave.cs" />
     <Compile Include="Gameplay\Entities\Ray.cs" />
     <Compile Include="Gameplay\Entities\Phaser.cs" />
     <Compile Include="Gameplay\Entities\Entity.cs" />
-    <Compile Include="Gameplay\Entities\Template.cs" />
-    <Compile Include="Gameplay\Entities\Templates.cs" />
+    <Compile Include="Gameplay\Entities\EntityTemplate.cs" />
     <Compile Include="Gameplay\EventMessage.cs" />
     <Compile Include="Gameplay\EventMessageList.cs" />
     <Compile Include="Gameplay\EventType.cs" />

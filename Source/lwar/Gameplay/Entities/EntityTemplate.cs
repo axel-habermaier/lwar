@@ -9,12 +9,12 @@ namespace Lwar.Gameplay.Entities
 	/// <summary>
 	///   Manages common properties of entities.
 	/// </summary>
-	public class Template : DisposableObject
+	public class EntityTemplate : DisposableObject
 	{
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public Template(float maxEnergy, float maxHealth, float radius, Texture2D texture, CubeMap cubeMap, Model model)
+		public EntityTemplate(float maxEnergy, float maxHealth, float radius, Texture2D texture, CubeMap cubeMap, Model model)
 		{
 			MaxEnergy = maxEnergy;
 			MaxHealth = maxHealth;

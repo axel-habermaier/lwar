@@ -16,7 +16,7 @@ namespace Lwar.Gameplay.Entities
 		/// <summary>
 		///   Gets the template defining some of the entity's properties.
 		/// </summary>
-		public Template Template { get; protected set; }
+		public EntityTemplate Template { get; protected set; }
 
 		/// <summary>
 		///   Gets or sets the entity's position relative to its parent.

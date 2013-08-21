@@ -1,9 +1,9 @@
 using System;
 using Pegasus.AssetsCompiler.Assets.Attributes;
 
-[assembly: Ignore("Templates/Compilation/TemplateAssetFactory.cs")]
+[assembly: Ignore("EntityTemplates/Compilation/EntityTemplateAssetFactory.cs")]
 
-namespace Lwar.Assets.Templates.Compilation
+namespace Lwar.Assets.EntityTemplates.Compilation
 {
 	using System.Collections.Generic;
 	using System.Globalization;
@@ -14,7 +14,7 @@ namespace Lwar.Assets.Templates.Compilation
 	/// <summary>
 	///   Creates template asset instances.
 	/// </summary>
-	internal class TemplateAssetFactory : IAssetFactory
+	internal class EntityTemplateAssetFactory : IAssetFactory
 	{
 		/// <summary>
 		///   Creates an asset instance for all assets of an supported type.
@@ -25,7 +25,7 @@ namespace Lwar.Assets.Templates.Compilation
 		{
 			return from asset in assets
 				   where asset.EndsWith(".Templates.cs", ignoreCase: true, culture: CultureInfo.InvariantCulture)
-				   select new TemplateAsset(asset);
+				   select new EntityTemplateAsset(asset);
 		}
 	}
 }

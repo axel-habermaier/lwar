@@ -15,7 +15,7 @@ namespace Lwar.Gameplay.Entities
 		{
 			var rocket = GetInstance();
 			rocket.Identifier = id;
-			rocket.Template = Templates.Rocket;
+			rocket.Template = EntityTemplates.Rocket;
 			return rocket;
 		}
 	}

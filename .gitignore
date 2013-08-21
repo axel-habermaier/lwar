@@ -30,7 +30,7 @@ log.txt
 Source/Assets/AssetIdentifiers.cs
 Source/Assets/Effects/Effects.cs
 Source/lwar/Gameplay/Entities/EntityType.cs
-Source/lwar/Gameplay/Entities/Templates.cs
+Source/lwar/Gameplay/Entities/EntityTemplates.cs
 Source/Server/templates.c
 Source/Server/entity.h
 lwar.sln.ide

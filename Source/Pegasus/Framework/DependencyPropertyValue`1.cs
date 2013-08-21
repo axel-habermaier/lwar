@@ -10,7 +10,7 @@ namespace Pegasus.Framework
 	///   unchanged.
 	/// </summary>
 	/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
-	internal class DependencyPropertyValue<T> : DependencyPropertyValue
+	internal sealed class DependencyPropertyValue<T> : DependencyPropertyValue
 	{
 		/// <summary>
 		///   The change handlers that are invoked when the effective value of the dependency property has changed.
@@ -23,14 +23,10 @@ namespace Pegasus.Framework
 		private T _animatedValue;
 
 		/// <summary>
-		///   The base value of the property that has either been set directly, through data binding, by a a style, etc.
+		///   The base value of the property that has either been set directly, through data binding, by a a style, or via
+		///   inheritance.
 		/// </summary>
 		private T _baseValue;
-
-		/// <summary>
-		///   The sources of the property's values.
-		/// </summary>
-		private ValueSources _sources;
 
 		/// <summary>
 		///   The value of the property that has been set by a trigger.
@@ -40,9 +36,9 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="propertyIndex">The index of the dependency property the value belongs to.</param>
-		public DependencyPropertyValue(int propertyIndex)
-			: base(propertyIndex)
+		/// <param name="property">The dependency property the value belongs to.</param>
+		public DependencyPropertyValue(DependencyProperty<T> property)
+			: base(property)
 		{
 		}
 
@@ -53,6 +49,8 @@ namespace Pegasus.Framework
 		{
 			get
 			{
+				Assert.That(HasEffectiveValue, "The property has no effective value.");
+
 				if ((_sources & ValueSources.Animation) == ValueSources.Animation)
 					return _animatedValue;
 
@@ -68,14 +66,6 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the property has an effective value.
-		/// </summary>
-		public bool HasEffectiveValue
-		{
-			get { return _sources != 0; }
-		}
-
-		/// <summary>
 		///   Sets the property's value to the value provided directly or through a data binding.
 		/// </summary>
 		/// <param name="value">The value that should be set.</param>
@@ -84,6 +74,7 @@ namespace Pegasus.Framework
 			_baseValue = value;
 			_sources |= ValueSources.Local;
 			_sources &= ~ValueSources.Style;
+			_sources &= ~ValueSources.Inherited;
 		}
 
 		/// <summary>
@@ -97,6 +88,20 @@ namespace Pegasus.Framework
 
 			_baseValue = value;
 			_sources |= ValueSources.Style;
+			_sources &= ~ValueSources.Inherited;
+		}
+
+		/// <summary>
+		///   Sets the property's value to the given inherited value
+		/// </summary>
+		/// <param name="value">The value that should be set.</param>
+		public void SetInheritedValue(T value)
+		{
+			if ((_sources & ValueSources.Local) == ValueSources.Local || (_sources & ValueSources.Style) == ValueSources.Style)
+				return;
+
+			_baseValue = value;
+			_sources |= ValueSources.Inherited;
 		}
 
 		/// <summary>
@@ -122,6 +127,17 @@ namespace Pegasus.Framework
 
 			_baseValue = default(T);
 			_sources &= ~ValueSources.Style;
+		}
+
+		/// <summary>
+		///   Unsets the property's inherited value.
+		/// </summary>
+		public void UnsetInheritedValue()
+		{
+			Assert.That((_sources & ValueSources.Inherited) == ValueSources.Inherited, "Cannot unset an inherited value when none is set.");
+
+			_baseValue = default(T);
+			_sources &= ~ValueSources.Inherited;
 		}
 
 		/// <summary>
@@ -153,38 +169,6 @@ namespace Pegasus.Framework
 		{
 			_animatedValue = default(T);
 			_sources &= ~ValueSources.Animation;
-		}
-
-		/// <summary>
-		///   Identifies the sources of the property's values.
-		/// </summary>
-		[Flags]
-		private enum ValueSources : byte
-		{
-			/// <summary>
-			///   Indicates that the base value has been set directly or through a data binding.
-			/// </summary>
-			Local = 1,
-
-			/// <summary>
-			///   Indicates that the base value has been set by a style.
-			/// </summary>
-			Style = 2,
-
-			/// <summary>
-			///   Indicates that the triggered value has been set by a style trigger.
-			/// </summary>
-			StyleTrigger = 4,
-
-			/// <summary>
-			///   Indicates that the triggered value has been set by a template trigger.
-			/// </summary>
-			TemplateTrigger = 8,
-
-			/// <summary>
-			///   Indicates that the animated value has been set.
-			/// </summary>
-			Animation = 16
 		}
 	}
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using Pegasus.AssetsCompiler.Assets.Attributes;
 
-[assembly: Ignore("Templates/Compilation/TemplateCompiler.cs")]
+[assembly: Ignore("EntityTemplates/Compilation/EntityTemplateCompiler.cs")]
 
-namespace Lwar.Assets.Templates.Compilation
+namespace Lwar.Assets.EntityTemplates.Compilation
 {
 	using System.Collections.Generic;
 	using System.IO;
@@ -21,12 +21,12 @@ namespace Lwar.Assets.Templates.Compilation
 	/// <summary>
 	///   Compiles entity template declarations.
 	/// </summary>
-	internal class TemplateCompiler : AssetCompiler<TemplateAsset>
+	internal class EntityTemplateCompiler : AssetCompiler<EntityTemplateAsset>
 	{
 		/// <summary>
 		///   The path of the client file containing the template declarations.
 		/// </summary>
-		private const string ClientTemplates = "../../Source/lwar/Gameplay/Entities/Templates.cs";
+		private const string ClientTemplates = "../../Source/lwar/Gameplay/Entities/EntityTemplates.cs";
 
 		/// <summary>
 		///   The path of the client file containing the entity type enumeration.
@@ -49,7 +49,7 @@ namespace Lwar.Assets.Templates.Compilation
 		/// <param name="assets">The assets that should be compiled.</param>
 		public override bool Compile(IEnumerable<Asset> assets)
 		{
-			if (DetermineAction(assets.OfType<TemplateAsset>()) == CompilationAction.Skip)
+			if (DetermineAction(assets.OfType<EntityTemplateAsset>()) == CompilationAction.Skip)
 				Log.Info("Skipping entity templates compilation (no changes detected).");
 			else
 			{
@@ -58,7 +58,7 @@ namespace Lwar.Assets.Templates.Compilation
 				foreach (var asset in assets)
 					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 
-				var templates = GetTemplates(GetClassNames(assets.OfType<TemplateAsset>()))
+				var templates = GetTemplates(GetClassNames(assets.OfType<EntityTemplateAsset>()))
 					.OrderBy(template => template.Name).ToArray();
 
 				GenerateServerTemplates(templates);
@@ -107,7 +107,7 @@ namespace Lwar.Assets.Templates.Compilation
 		///   Generates the server templates file.
 		/// </summary>
 		/// <param name="templates">The declared templates.</param>
-		private static void GenerateServerTemplates(Template[] templates)
+		private static void GenerateServerTemplates(EntityTemplate[] templates)
 		{
 			var writer = new CodeWriter();
 			writer.WriterHeader("//");
@@ -174,7 +174,7 @@ namespace Lwar.Assets.Templates.Compilation
 		///   Generates the server header file.
 		/// </summary>
 		/// <param name="templates">The declared templates.</param>
-		private static void GenerateServerHeader(IEnumerable<Template> templates)
+		private static void GenerateServerHeader(IEnumerable<EntityTemplate> templates)
 		{
 			var writer = new CodeWriter();
 			writer.WriterHeader("//");
@@ -198,7 +198,7 @@ namespace Lwar.Assets.Templates.Compilation
 		///   Generates the server templates file.
 		/// </summary>
 		/// <param name="templates">The declared templates.</param>
-		private static void GenerateClientTemplates(Template[] templates)
+		private static void GenerateClientTemplates(EntityTemplate[] templates)
 		{
 			var writer = new CodeWriter();
 			writer.WriterHeader("//");
@@ -215,11 +215,11 @@ namespace Lwar.Assets.Templates.Compilation
 				writer.AppendLine("using Pegasus.Rendering;");
 				writer.Newline();
 
-				writer.AppendLine("public static class Templates");
+				writer.AppendLine("public static class EntityTemplates");
 				writer.AppendBlockStatement(() =>
 				{
 					foreach (var template in templates)
-						writer.AppendLine("public static Template {0} {{ get; private set; }}", template.Name);
+						writer.AppendLine("public static EntityTemplate {0} {{ get; private set; }}", template.Name);
 
 					writer.Newline();
 
@@ -234,7 +234,7 @@ namespace Lwar.Assets.Templates.Compilation
 						{
 							var template = templates[i];
 
-							writer.AppendLine("{0} = new Template", template.Name);
+							writer.AppendLine("{0} = new EntityTemplate", template.Name);
 							writer.AppendLine("(");
 							writer.IncreaseIndent();
 							writer.AppendLine("maxEnergy: {0:0.0######}f,", template.Energy);
@@ -281,7 +281,7 @@ namespace Lwar.Assets.Templates.Compilation
 		///   Generates the server entity type enumeration file.
 		/// </summary>
 		/// <param name="templates">The declared templates.</param>
-		private static void GenerateClientTypeEnumeration(IEnumerable<Template> templates)
+		private static void GenerateClientTypeEnumeration(IEnumerable<EntityTemplate> templates)
 		{
 			var writer = new CodeWriter();
 			writer.WriterHeader("//");
@@ -305,15 +305,15 @@ namespace Lwar.Assets.Templates.Compilation
 		///   Gets the declared templates.
 		/// </summary>
 		/// <param name="templates">The names of the classes that declare the templates.</param>
-		private static IEnumerable<Template> GetTemplates(IEnumerable<string> templates)
+		private static IEnumerable<EntityTemplate> GetTemplates(IEnumerable<string> templates)
 		{
 			foreach (var templateClass in templates)
 			{
 				var type = Type.GetType(templateClass);
 				foreach (var templateField in type.GetFields(BindingFlags.Static | BindingFlags.Public)
-												  .Where(field => field.FieldType == typeof(Template)))
+												  .Where(field => field.FieldType == typeof(EntityTemplate)))
 				{
-					var template = (Template)templateField.GetValue(null);
+					var template = (EntityTemplate)templateField.GetValue(null);
 					template.Name = templateField.Name;
 
 					yield return template;
@@ -325,7 +325,7 @@ namespace Lwar.Assets.Templates.Compilation
 		///   Gets the names of the classes declaring entity templates.
 		/// </summary>
 		/// <param name="templates">The template assets that declare the entity templates.</param>
-		private static IEnumerable<string> GetClassNames(IEnumerable<TemplateAsset> templates)
+		private static IEnumerable<string> GetClassNames(IEnumerable<EntityTemplateAsset> templates)
 		{
 			var parser = new CSharpParser();
 
@@ -359,7 +359,7 @@ namespace Lwar.Assets.Templates.Compilation
 		/// <param name="assets">The assets that should be cleaned.</param>
 		public override void Clean(IEnumerable<Asset> assets)
 		{
-			foreach (var asset in assets.OfType<TemplateAsset>())
+			foreach (var asset in assets.OfType<EntityTemplateAsset>())
 			{
 				File.Delete(asset.TempPath);
 				File.Delete(asset.HashPath);

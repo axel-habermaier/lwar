@@ -28,6 +28,13 @@ Client
 Pegasus.Framework
 ========
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
+- Add object support to cvar/command system
+	* Invoke commands/set cvars on objects (console.visible, window.size, etc.)
+	* Add IntelliSense-like code completion for objects and cvars/commands, including when cvars/commands are expected as parameters
+	* Add C# expression evaluator (1+1, if-then-else, variables, loops) to console
+	* Allow multi-line console input
+	* Define cvars/commands as object instances on partial classes, generate code-behind similar to registries nowadays
+	* Register instances defining cvars/commands on registries manually
 
 Pegasus.Platform
 ========

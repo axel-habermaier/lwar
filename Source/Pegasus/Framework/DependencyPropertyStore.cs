@@ -29,9 +29,7 @@ namespace Pegasus.Framework
 		public DependencyPropertyValue<T> GetValueOrNull<T>(DependencyProperty<T> property)
 		{
 			Assert.ArgumentNotNull(property);
-
-			var valueIndex = FindValueIndex(property.Index);
-			return valueIndex == -1 ? null : _values[valueIndex] as DependencyPropertyValue<T>;
+			return GetValue(property, false);
 		}
 
 		/// <summary>
@@ -42,12 +40,60 @@ namespace Pegasus.Framework
 		public DependencyPropertyValue<T> GetValueAddUnknown<T>(DependencyProperty<T> property)
 		{
 			Assert.ArgumentNotNull(property);
+			return GetValue(property, true);
+		}
 
-			var value = GetValueOrNull(property);
-			if (value == null)
-				AddValue(value = new DependencyPropertyValue<T>(property.Index));
+		/// <summary>
+		///   Gets the value for the given dependency property or adds it if no value is found and a value should be added.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property the value should be returned for.</param>
+		/// <param name="addValueIfUnknown">Indicates whether a value should be added if none is found.</param>
+		private DependencyPropertyValue<T> GetValue<T>(DependencyProperty<T> property, bool addValueIfUnknown)
+		{
+			Assert.ArgumentNotNull(property);
+
+			var valueIndex = FindValueIndex(property.Index);
+			var value = valueIndex == -1 ? null : _values[valueIndex] as DependencyPropertyValue<T>;
+
+			if (value == null && addValueIfUnknown)
+				AddValue(value = new DependencyPropertyValue<T>(property));
 
 			return value;
+		}
+
+		/// <summary>
+		///   Copies the values of all inheriting dependency properties from the given object to the given inheriting object.
+		/// </summary>
+		/// <param name="obj">The parent object the inherited values should be retrieved from.</param>
+		/// <param name="inheritingObject">The inheriting object whose inheriting dependency properties should be set.</param>
+		public void SetInheritedValues(DependencyObject obj, DependencyObject inheritingObject)
+		{
+			Assert.ArgumentNotNull(obj);
+			Assert.ArgumentNotNull(inheritingObject);
+
+			for (var i = 0; i < _valueCount; ++i)
+			{
+				if (!_values[i].Property.Inherits)
+					continue;
+
+				_values[i].Property.CopyInheritedValue(obj, inheritingObject);
+			}
+		}
+
+		/// <summary>
+		/// Unsets all inherited values of all inheriting dependency properties.
+		/// </summary>
+		/// <param name="obj">The dependency object whose inherited values should be unset.</param>
+		public void UnsetInheritedValues(DependencyObject obj)
+		{
+			for (var i = 0; i < _valueCount; ++i)
+			{
+				if (!_values[i].Property.Inherits)
+					continue;
+
+				_values[i].Property.UnsetInheritedValue(obj);
+			}
 		}
 
 		/// <summary>

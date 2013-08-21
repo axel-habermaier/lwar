@@ -42,7 +42,7 @@ namespace Lwar.Gameplay.Entities
 		{
 			var ray = GetInstance();
 			ray.Identifier = id;
-			ray.Template = Templates.Ray;
+			ray.Template = EntityTemplates.Ray;
 			return ray;
 		}
 	}

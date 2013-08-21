@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace Lwar.Assets.Templates
+namespace Lwar.Assets.EntityTemplates
 {
 	using Compilation;
 
 	/// <summary>
 	///   The planet entity templates that are shared between the client and the server.
 	/// </summary>
-	internal static class Planets
+	public static class Planets
 	{
-		public static readonly Template Earth = new Template
+		public static readonly EntityTemplate Earth = new EntityTemplate
 		{
 			Act = "gravity",
 			Collide = "planet_hit",
@@ -21,7 +21,7 @@ namespace Lwar.Assets.Templates
 			Format = "format_pos"
 		};
 
-		public static readonly Template Mars = new Template
+		public static readonly EntityTemplate Mars = new EntityTemplate
 		{
 			Act = "gravity",
 			Collide = "planet_hit",
@@ -33,7 +33,7 @@ namespace Lwar.Assets.Templates
 			Format = "format_pos"
 		};
 
-		public static readonly Template Moon = new Template
+		public static readonly EntityTemplate Moon = new EntityTemplate
 		{
 			Act = "gravity",
 			Collide = "planet_hit",
@@ -45,7 +45,7 @@ namespace Lwar.Assets.Templates
 			Format = "format_pos"
 		};
 
-		public static readonly Template Jupiter = new Template
+		public static readonly EntityTemplate Jupiter = new EntityTemplate
 		{
 			Act = "gravity",
 			Collide = "planet_hit",

@@ -191,6 +191,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Framework\InheritanceContext.cs" />
     <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
     <Compile Include="Framework\UserInterface\Controls\UserControl.cs" />
     <Compile Include="Framework\UserInterface\HorizontalAlignment.cs" />

@@ -57,7 +57,7 @@ namespace Lwar.Rendering.Renderers
 			var turbulence = Assets.LoadCubeMap(Textures.SunHeatCubemap);
 			var heat = Assets.LoadTexture2D(Textures.Heat);
 
-			_model = Model.CreateSphere(GraphicsDevice, Templates.Sun.Radius, 20);
+			_model = Model.CreateSphere(GraphicsDevice, EntityTemplates.Sun.Radius, 20);
 			_sphereEffect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };
 
 			_sunEffect = new SunEffect(GraphicsDevice, Assets)

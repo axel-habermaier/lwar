@@ -45,10 +45,10 @@ namespace Lwar.Gameplay.Entities
 		///   Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the planet.</param>
-		/// <param name="template">The template defining the planet's type.</param>
-		public static Planet Create(Identifier id, Template template)
+		/// <param name="entityTemplate">The template defining the planet's type.</param>
+		public static Planet Create(Identifier id, EntityTemplate entityTemplate)
 		{
-			Assert.ArgumentNotNull(template);
+			Assert.ArgumentNotNull(entityTemplate);
 
 			var rotationSpeed = Random.Next(30, 50) / 200.0f;
 			rotationSpeed *= (Random.Next() % 2 == 1 ? 1 : -1);
@@ -56,7 +56,7 @@ namespace Lwar.Gameplay.Entities
 			var planet = GetInstance();
 			planet.Identifier = id;
 			planet._rotationSpeed = rotationSpeed;
-			planet.Template = template;
+			planet.Template = entityTemplate;
 			return planet;
 		}
 	}

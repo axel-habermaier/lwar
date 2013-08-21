@@ -1,16 +1,16 @@
 ﻿using System;
 using Pegasus.AssetsCompiler.Assets.Attributes;
 
-[assembly: Ignore("Templates/Compilation/Template.cs")]
+[assembly: Ignore("EntityTemplates/Compilation/EntityTemplate.cs")]
 
-namespace Lwar.Assets.Templates.Compilation
+namespace Lwar.Assets.EntityTemplates.Compilation
 {
 	using Pegasus.Math;
 
 	/// <summary>
 	///   Represents an entity template that is shared between the client and the server.
 	/// </summary>
-	internal class Template
+	public class EntityTemplate
 	{
 		public Vector2 Acceleration;
 		public string Act;
@@ -23,7 +23,7 @@ namespace Lwar.Assets.Templates.Compilation
 		public int Interval;
 		public float Length;
 		public float Mass;
-		public Func<Template, string> Model;
+		public Func<EntityTemplate, string> Model;
 
 		/// <summary>
 		///   The name of the template. This field is set by the template compiler.
@@ -38,7 +38,7 @@ namespace Lwar.Assets.Templates.Compilation
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		public Template()
+		public EntityTemplate()
 		{
 			Model = _ => null;
 		}

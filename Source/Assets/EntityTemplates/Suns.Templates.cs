@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace Lwar.Assets.Templates
+namespace Lwar.Assets.EntityTemplates
 {
 	using Compilation;
 
 	/// <summary>
 	///   The sun entity templates that are shared between the client and the server.
 	/// </summary>
-	internal static class Suns
+	public static class Suns
 	{
-		public static readonly Template Sun = new Template
+		public static readonly EntityTemplate Sun = new EntityTemplate
 		{
 			Act = "gravity",
 			Collide = "planet_hit",

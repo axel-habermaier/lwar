@@ -159,6 +159,19 @@ namespace Pegasus.Framework
 		internal abstract object GetValue(DependencyObject obj);
 
 		/// <summary>
+		///   Copies the dependency property's inherited value from source to target.
+		/// </summary>
+		/// <param name="source">The dependency object the value should be retrieved from.</param>
+		/// <param name="target">The dependency object the value should be set for.</param>
+		internal abstract void CopyInheritedValue(DependencyObject source, DependencyObject target);
+
+		/// <summary>
+		/// Unsets the inherited value of the given dependency object.
+		/// </summary>
+		/// <param name="obj">The dependency object whose inherited value should be unset.</param>
+		internal abstract void UnsetInheritedValue(DependencyObject obj);
+
+		/// <summary>
 		///   Provides metadata for the dependency property.
 		/// </summary>
 		[Flags]

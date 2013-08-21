@@ -11,6 +11,7 @@ namespace Lwar
 	using Pegasus.Platform.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
+	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Scripting;
@@ -39,8 +40,11 @@ namespace Lwar
 			if (Model != null)
 				Model.FrameCount++;
 
-			if (_frameCount % 1000 == 0)
-				Model = Model == null ? new HelloWorldViewModel() : null;
+			//if (_frameCount % 1000 == 0)
+				//Model = Model == null ? new HelloWorldViewModel() : null;
+
+			if (_model == null)
+				_model = new HelloWorldViewModel();
 		}
 
 		private HelloWorldViewModel _model;
@@ -74,8 +78,8 @@ namespace Lwar
 			var binding1 = new Binding<object>(v => ((HelloWorldViewModel)v).Name);
 			var binding2 = new Binding<object>(v => ((HelloWorldViewModel)v).Model.FrameCount);
 
-			var canvas = new Canvas();
-			var button1 = new Button() { Width = 300, Height = 100 };
+			canvas = new Canvas();
+			button1 = new Button() { Width = 300, Height = 100 };
 			var button2 = new Button() { Width = 100, Height = 300 };
 
 			canvas.Children.Add(button1);
@@ -87,8 +91,14 @@ namespace Lwar
 			button1.SetResourceBinding(StyleProperty, resourceBinding);
 
 			button1.SetBinding(ContentProperty, binding1);
-			button2.SetBinding(ContentProperty, binding2);
+			//button2.SetBinding(ContentProperty, binding2);
 		}
+
+		private Button button1;
+		private Canvas canvas;
+
+		public void AddButton(){ canvas.Children.Add(button1);}
+		public void RemoveButton() { canvas.Children.Remove(button1); }
 	}
 
 	/// <summary>
@@ -102,6 +112,7 @@ namespace Lwar
 		private LocalServer _localServer;
 
 		private HelloWorldViewModel _viewModel;
+		private HelloWorldView _view;
 
 		/// <summary>
 		///   Invoked when the application is initializing.
@@ -133,8 +144,8 @@ namespace Lwar
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
 			_viewModel = new HelloWorldViewModel() { Name = "Axel" };
-			var view = new HelloWorldView(uiContext.SharedAssets, _viewModel);
-			uiContext.Add(view);
+			_view = new HelloWorldView(uiContext.SharedAssets, _viewModel);
+			uiContext.Add(_view);
 		}
 
 		/// <summary>
@@ -145,6 +156,27 @@ namespace Lwar
 			_localServer.Update();
 			//_stateManager.Update();
 			_viewModel.Update();
+
+			if (_viewModel.FrameCount % 3000 == 0)
+			{
+				//_view.ViewModel = _view.ViewModel == null ? _viewModel : null;
+				if (_viewModel.FrameCount % 6000 == 0)
+				{
+					Log.Info("Adding button: {0}", DateTime.Now.ToLongTimeString());
+					_view.AddButton();
+				}
+					
+				else
+				{
+					Log.Info("Removing button: {0}", DateTime.Now.ToLongTimeString());
+					_view.RemoveButton();
+				}
+			}
+			if ((_viewModel.FrameCount - 1500) % 3000 == 0)
+			{
+				Log.Info("Changing VM: {0}", DateTime.Now.ToLongTimeString());
+				_view.ViewModel = new HelloWorldViewModel() { Name = DateTime.Now.ToLongTimeString() };
+			}
 		}
 
 		/// <summary>

@@ -419,54 +419,36 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   Changes the logical parent of the UI element.
 		/// </summary>
-		/// <param name="element">
+		/// <param name="parent">
 		///   The new logical parent of the UI element. If null, the UI element is no longer part of the logical tree.
 		/// </param>
-		internal void ChangeLogicalParent(UIElement element)
+		internal void ChangeLogicalParent(UIElement parent)
 		{
-			if (element == Parent)
+			if (parent == Parent)
 				return;
 
-			Assert.That(element != this, "Detected a loop in the logical tree.");
-			Assert.That(element == null || Parent == null, "The element is already attached to the logical tree.");
+			Assert.That(parent != this, "Detected a loop in the logical tree.");
+			Assert.That(parent == null || Parent == null, "The element is already attached to the logical tree.");
 
-			Parent = element;
+			Parent = parent;
 
-			InvalidateInheritedValues();
-			if (element != null)
+			// Setting a new (valid) parent possibly invalidates the resources
+			if (parent != null)
 				InvalidateResources();
+
+			// Changing the parent invalidates inherited property values
+			InvalidateInheritedValues(parent);
 		}
 
 		/// <summary>
-		///   Gets the inherited value of the dependency property. Returns true to indicate that an inherited value was found.
+		///   Notifies all inheriting objects about a change of an inheriting dependency property.
 		/// </summary>
-		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
-		/// <param name="property">The dependency property whose value should be returned.</param>
-		/// <param name="value">Returns the inherited value, if one was found.</param>
-		protected override sealed bool TryGetInheritedValue<T>(DependencyProperty<T> property, out T value)
-		{
-			Assert.ArgumentNotNull(property);
-
-			var parent = Parent;
-			while (parent != null)
-			{
-				if (parent.TryGetEffectiveValue(property, out value))
-					return true;
-
-				parent = parent.Parent;
-			}
-
-			value = default(T);
-			return false;
-		}
-
-		/// <summary>
-		///   Invalidates the inherited values of all dependency properties of all inheriting children.
-		/// </summary>
-		protected override sealed void InvalidateAllInheritingObjects()
+		/// <param name="property">The inheriting dependency property that has been changed.</param>
+		/// <param name="newValue">The new value that should be inherited.</param>
+		protected override sealed void InheritedValueChanged<T>(DependencyProperty<T> property, T newValue)
 		{
 			foreach (var child in LogicalChildren)
-				child.InvalidateInheritedValues();
+				child.SetInheritedValue(property, newValue);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lwar.Assets.Templates
+namespace Lwar.Assets.EntityTemplates
 {
 	using Compilation;
 	using Pegasus.Math;
@@ -8,9 +8,9 @@ namespace Lwar.Assets.Templates
 	/// <summary>
 	///   The weapon entity templates that are shared between the client and the server.
 	/// </summary>
-	internal static class Weapons
+	public static class Weapons
 	{
-		public static readonly Template Bullet = new Template
+		public static readonly EntityTemplate Bullet = new EntityTemplate
 		{
 			Act = "decay",
 			Collide = "bullet_hit",
@@ -22,7 +22,7 @@ namespace Lwar.Assets.Templates
 			Format = "format_pos"
 		};
 
-		public static readonly Template Rocket = new Template
+		public static readonly EntityTemplate Rocket = new EntityTemplate
 		{
 			Act = "aim",
 			Energy = 1000,
@@ -36,7 +36,7 @@ namespace Lwar.Assets.Templates
 			Format = "format_ship"
 		};
 
-		public static readonly Template Ray = new Template
+		public static readonly EntityTemplate Ray = new EntityTemplate
 		{
 			Act = "ray_act",
 			Energy = 1,
@@ -45,11 +45,11 @@ namespace Lwar.Assets.Templates
 			Format = "format_ray"
 		};
 
-		public static readonly Template Shockwave = new Template
+		public static readonly EntityTemplate Shockwave = new EntityTemplate
 		{
 		};
 
-		public static readonly Template Gun = new Template
+		public static readonly EntityTemplate Gun = new EntityTemplate
 		{
 			Act = "gun_shoot",
 			Interval = 150,
@@ -57,7 +57,7 @@ namespace Lwar.Assets.Templates
 			Health = 1
 		};
 
-		public static readonly Template Phaser = new Template
+		public static readonly EntityTemplate Phaser = new EntityTemplate
 		{
 			Act = "phaser_shoot",
 			Interval = 0,

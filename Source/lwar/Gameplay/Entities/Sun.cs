@@ -15,7 +15,7 @@ namespace Lwar.Gameplay.Entities
 		{
 			var sun = GetInstance();
 			sun.Identifier = id;
-			sun.Template = Templates.Sun;
+			sun.Template = EntityTemplates.Sun;
 			return sun;
 		}
 	}
