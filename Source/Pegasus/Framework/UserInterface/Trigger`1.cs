@@ -78,7 +78,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <param name="element">The UI element the trigger should be applied to.</param>
 		private void ApplySetters(UIElement element)
 		{
-			foreach (var setter in Setters)
+			foreach (var setter in _setters)
 				setter.ApplyTriggered(element);
 		}
 
@@ -88,7 +88,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <param name="element">The UI element the trigger should be unset from.</param>
 		private void UnsetSetters(UIElement element)
 		{
-			foreach (var setter in Setters)
+			foreach (var setter in _setters)
 				setter.UnsetTriggered(element);
 		}
 	}

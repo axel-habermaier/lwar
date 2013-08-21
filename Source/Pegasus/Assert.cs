@@ -1,9 +1,9 @@
 ﻿using System;
 
-
 namespace Pegasus
 {
 	using System.Diagnostics;
+	using Framework;
 	using Platform.Memory;
 
 	/// <summary>
@@ -27,11 +27,11 @@ namespace Pegasus
 		/// <summary>
 		///   Throws an InvalidOperationException if the pointer is null.
 		/// </summary>
-		/// <param name="ptr">The ptr to check for null.</param>
+		/// <param name="pointer">The pointer to check for null.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
-		public static void ArgumentNotNull(IntPtr ptr)
+		public static void ArgumentNotNull(IntPtr pointer)
 		{
-			if (ptr == IntPtr.Zero)
+			if (pointer == IntPtr.Zero)
 				throw new ArgumentNullException("Pointer type parameter cannot be null.");
 		}
 
@@ -186,6 +186,20 @@ namespace Pegasus
 
 			if (!condition)
 				throw new InvalidOperationException(String.Format(formatMessage, parameters));
+		}
+
+		/// <summary>
+		///   Throws an InvalidOperationException if the given object has already been sealed.
+		/// </summary>
+		/// <param name="obj">The object that should be checked.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void NotSealed(ISealable obj)
+		{
+			if (obj == null)
+				throw new ArgumentNullException("obj");
+
+			if (obj.IsSealed)
+				throw new InvalidOperationException(String.Format("The '{0}' instance has already been sealed.", obj.GetType().FullName));
 		}
 
 		/// <summary>

@@ -239,7 +239,7 @@
     <Compile Include="Framework\DependencyPropertyChangedEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Controls\Layout.cs" />
     <Compile Include="Framework\UserInterface\Trigger`1.cs" />
-    <Compile Include="Framework\UserInterface\ISealable.cs" />
+    <Compile Include="Framework\ISealable.cs" />
     <Compile Include="Framework\UserInterface\ReflectionHelper.cs" />
     <Compile Include="Framework\UserInterface\ResourceBinding.cs" />
     <Compile Include="Framework\UserInterface\ResourceDictionary.cs" />

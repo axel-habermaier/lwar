@@ -210,6 +210,9 @@
     <Compile Include="..\Pegasus\Assert.cs">
       <Link>Pegasus\Assert.cs</Link>
     </Compile>
+    <Compile Include="..\Pegasus\Framework\ISealable.cs">
+      <Link>Pegasus\ISealable.cs</Link>
+    </Compile>
     <Compile Include="..\Pegasus\Framework\PegasusException.cs">
       <Link>Pegasus\PegasusException.cs</Link>
     </Compile>

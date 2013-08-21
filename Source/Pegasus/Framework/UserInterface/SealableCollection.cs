@@ -34,20 +34,11 @@ namespace Pegasus.Framework.UserInterface
 		}
 
 		/// <summary>
-		///   In debug builds, checks whether the collection has already been sealed.
-		/// </summary>
-		[Conditional("DEBUG")]
-		private void CheckSealed()
-		{
-			Assert.That(!IsSealed, "The collection has already been sealed and can no longer be modified.");
-		}
-
-		/// <summary>
 		///   Removes all elements from the collection.
 		/// </summary>
 		protected override void ClearItems()
 		{
-			CheckSealed();
+			Assert.NotSealed(this);
 			base.ClearItems();
 		}
 
@@ -58,7 +49,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <param name="item">The item that should be inserted.</param>
 		protected override void InsertItem(int index, T item)
 		{
-			CheckSealed();
+			Assert.NotSealed(this);
 			base.InsertItem(index, item);
 		}
 
@@ -68,7 +59,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <param name="index">The zero-based index of the element that should be removed.</param>
 		protected override void RemoveItem(int index)
 		{
-			CheckSealed();
+			Assert.NotSealed(this);
 			base.RemoveItem(index);
 		}
 
@@ -79,7 +70,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <param name="item">The new value for the element at the specified index.</param>
 		protected override void SetItem(int index, T item)
 		{
-			CheckSealed();
+			Assert.NotSealed(this);
 			base.SetItem(index, item);
 		}
 	}

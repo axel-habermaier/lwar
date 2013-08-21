@@ -66,7 +66,14 @@ namespace Lwar
 		public HelloWorldView(AssetsManager assets, ViewModel viewModel)
 			: base(assets, viewModel)
 		{
-			var style = new Style();
+			var baseStyle = new Style();
+			baseStyle.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 255, 0, 255)));
+
+			var baseTrigger = new Trigger<bool>(IsMouseOverProperty, true);
+			baseTrigger.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 0, 255, 255)));
+			baseStyle.Triggers.Add(baseTrigger);
+
+			var style = new Style(baseStyle);
 			style.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
 
 			var trigger = new Trigger<bool>(IsMouseOverProperty, true);
@@ -94,9 +101,9 @@ namespace Lwar
 			//button2.SetBinding(ContentProperty, binding2);
 		}
 
-		private Button button1;
-		private Canvas canvas;
-
+		public  Button button1;
+		public  Canvas canvas;
+		
 		public void AddButton(){ canvas.Children.Add(button1);}
 		public void RemoveButton() { canvas.Children.Remove(button1); }
 	}
@@ -157,6 +164,9 @@ namespace Lwar
 			//_stateManager.Update();
 			_viewModel.Update();
 
+			if (_viewModel.FrameCount % 300 == 0)
+				_view.button1.IsMouseOver = !_view.button1.IsMouseOver;
+			
 			if (_viewModel.FrameCount % 3000 == 0)
 			{
 				//_view.ViewModel = _view.ViewModel == null ? _viewModel : null;

@@ -10,7 +10,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   The collection of setters that apply property values when the trigger is triggered.
 		/// </summary>
-		private SealableCollection<Setter> _setters = SealableCollection<Setter>.Empty;
+		protected SealableCollection<Setter> _setters = SealableCollection<Setter>.Empty;
 
 		/// <summary>
 		///   Gets the collection of setters that apply property values when the trigger is triggered.
@@ -20,7 +20,10 @@ namespace Pegasus.Framework.UserInterface
 			get
 			{
 				if (_setters == SealableCollection<Setter>.Empty)
+				{
+					Assert.NotSealed(this);
 					_setters = new SealableCollection<Setter>();
+				}
 
 				return _setters;
 			}
