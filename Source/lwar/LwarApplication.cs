@@ -86,7 +86,7 @@ namespace Lwar
 			var binding2 = new Binding<object>(v => ((HelloWorldViewModel)v).Model.FrameCount);
 
 			canvas = new Canvas();
-			button1 = new Button() { Width = 300, Height = 100 };
+			button1 = new Button() { Width = -300, Height = 100 };
 			var button2 = new Button() { Width = 100, Height = 300 };
 
 			canvas.Children.Add(button1);

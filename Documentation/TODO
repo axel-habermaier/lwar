@@ -35,10 +35,11 @@ Pegasus.Framework
 	* Allow multi-line console input
 	* Define cvars/commands as object instances on partial classes, generate code-behind similar to registries nowadays
 	* Register instances defining cvars/commands on registries manually
+- Add texture quality switch cvar -> asset reloading required
 
 Pegasus.Platform
 ========
-- Linux: Fullscreen mode somewhat buggy
+- Linux: Fullscreen mode somewhat buggy when resolution is changed
 
 Assets Compiler
 ========

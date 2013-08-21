@@ -45,37 +45,37 @@ namespace Pegasus.Framework.UserInterface
 		///   The width of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> WidthProperty =
-			new DependencyProperty<double>(affectsMeasure: true);
+			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateWidthHeight);
 
 		/// <summary>
 		///   The height of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> HeightProperty =
-			new DependencyProperty<double>(affectsMeasure: true);
+			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateWidthHeight);
 
 		/// <summary>
 		///   The minimum width constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MinWidthProperty =
-			new DependencyProperty<double>(affectsMeasure: true);
+			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
 
 		/// <summary>
 		///   The minimum height constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MinHeightProperty =
-			new DependencyProperty<double>(affectsMeasure: true);
+			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
 
 		/// <summary>
 		///   The maximum width constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MaxWidthProperty =
-			new DependencyProperty<double>(affectsMeasure: true);
+			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
 
 		/// <summary>
 		///   The maximum height constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MaxHeightProperty =
-			new DependencyProperty<double>(affectsMeasure: true);
+			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
 
 		/// <summary>
 		///   The actual width of the UI element, measured in pixels, as determined by the layouting system.
@@ -339,14 +339,40 @@ namespace Pegasus.Framework.UserInterface
 		protected abstract UIElementCollection.Enumerator LogicalChildren { get; }
 
 		/// <summary>
+		///   Checks whether the given value is a valid width or height value.
+		/// </summary>
+		/// <param name="value">The value that should be validated.</param>
+		private static bool ValidateWidthHeight(double value)
+		{
+			return Double.IsNaN(value) || (value >= 0.0 && !Double.IsPositiveInfinity(value));
+		}
+
+		/// <summary>
+		///   Checks whether the given value is a valid minimum width or height value.
+		/// </summary>
+		/// <param name="value">The value that should be validated.</param>
+		private static bool ValidateMinWidthHeight(double value)
+		{
+			return !Double.IsNaN(value) && value >= 0.0 && !Double.IsPositiveInfinity(value);
+		}
+
+		/// <summary>
+		///   Checks whether the given value is a valid maximum width or height value.
+		/// </summary>
+		/// <param name="value">The value that should be validated.</param>
+		private static bool ValidateMaxWidthHeight(double value)
+		{
+			return !Double.IsNaN(value) && value >= 0.0;
+		}
+
+		/// <summary>
 		///   Raised when a change to a resource dictionary in this UI element or one of its ancestors has occurred.
 		/// </summary>
 		internal event Action ResourcesInvalidated;
 
 		/// <summary>
 		///   Invoked when a resource within the resource dictionary has been replaced, added, or removed, invalidating all
-		///   resources for this UI
-		///   element and all of its children.
+		///   resources for this UI element and all of its children.
 		/// </summary>
 		private void ResourceChanged(ResourceDictionary resources, string key)
 		{
