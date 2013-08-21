@@ -176,7 +176,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
@@ -186,7 +186,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
@@ -196,7 +196,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
@@ -212,8 +212,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(Rectangle other)
 		{
-			return Left == other.Left && Top == other.Top &&
-				   Width == other.Width && Height == other.Height;
+			return Left == other.Left && Top == other.Top && 
+				Width == other.Width && Height == other.Height;
 		}
 
 		/// <summary>
@@ -278,10 +278,10 @@ namespace Pegasus.Math
 		public bool Intersects(Rectangle rectangle)
 		{
 			var xOverlap = (Left >= rectangle.Left && Left <= rectangle.Right) ||
-						   (rectangle.Left >= Left && rectangle.Left <= Right);
+				(rectangle.Left >= Left && rectangle.Left <= Right);
 
 			var yOverlap = (Top >= rectangle.Top && Top <= rectangle.Bottom) ||
-						   (rectangle.Top >= Top && rectangle.Top <= Bottom);
+				(rectangle.Top >= Top && rectangle.Top <= Bottom);
 
 			return xOverlap && yOverlap;
 		}
@@ -476,7 +476,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
@@ -486,7 +486,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
@@ -496,7 +496,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
@@ -512,8 +512,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(RectangleF other)
 		{
-			return MathUtils.FloatEquality(Left, other.Left) && MathUtils.FloatEquality(Top, other.Top) &&
-				   MathUtils.FloatEquality(Width, other.Width) && MathUtils.FloatEquality(Height, other.Height);
+			return MathUtils.FloatEquality(Left, other.Left) && MathUtils.FloatEquality(Top, other.Top) && 
+				MathUtils.FloatEquality(Width, other.Width) && MathUtils.FloatEquality(Height, other.Height);
 		}
 
 		/// <summary>
@@ -578,10 +578,10 @@ namespace Pegasus.Math
 		public bool Intersects(RectangleF rectangle)
 		{
 			var xOverlap = (Left >= rectangle.Left && Left <= rectangle.Right) ||
-						   (rectangle.Left >= Left && rectangle.Left <= Right);
+				(rectangle.Left >= Left && rectangle.Left <= Right);
 
 			var yOverlap = (Top >= rectangle.Top && Top <= rectangle.Bottom) ||
-						   (rectangle.Top >= Top && rectangle.Top <= Bottom);
+				(rectangle.Top >= Top && rectangle.Top <= Bottom);
 
 			return xOverlap && yOverlap;
 		}
@@ -606,8 +606,307 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a rectangle with the left, top, width, and height stored as 32-bit signed fixed-point (in 24.8 format)
-	///   values.
+	///   Represents a rectangle with the left, top, width, and height stored as 64-bit floating point values.
+	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct RectangleD : IEquatable<RectangleD>
+	{
+		/// <summary>
+		///   Represents a rectangle at the origin with an area of 0.
+		/// </summary>
+		public static readonly RectangleD Empty;
+
+		/// <summary>
+		///   The X-coordinate of the left edge of the rectangle.
+		/// </summary>
+		public double Left;
+
+		/// <summary>
+		///   The Y-coordinate of the top edge of the rectangle.
+		/// </summary>
+		public double Top;
+
+		/// <summary>
+		///   The width of the rectangle.
+		/// </summary>
+		public double Width;
+
+		/// <summary>
+		///   The height of the rectangle.
+		/// </summary>
+		public double Height;
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="left">The X-coordinate of the left edge of the rectangle.</param>
+		/// <param name="top">The Y-coordinate of the left edge of the rectangle.</param>
+		/// <param name="width">The width of the rectangle.</param>
+		/// <param name="height">The height of the rectangle.</param>
+		public RectangleD(double left, double top, double width, double height)
+		{
+			Left = left;
+			Top = top;
+			Width = width;
+			Height = height;
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="position">The position of the rectangle's top left corner.</param>
+		/// <param name="width">The width of the rectangle.</param>
+		/// <param name="height">The height of the rectangle.</param>
+		public RectangleD(Vector2d position, double width, double height)
+		{
+			Left = position.X;
+			Top = position.Y;
+			Width = width;
+			Height = height;
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="left">The X-coordinate of the left edge of the rectangle.</param>
+		/// <param name="top">The Y-coordinate of the left edge of the rectangle.</param>
+		/// <param name="size">The size of the rectangle.</param>
+		public RectangleD(double left, double top, SizeD size)
+		{
+			Left = left;
+			Top = top;
+			Width = size.Width;
+			Height = size.Height;
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="position">The position of the rectangle's top left corner.</param>
+		/// <param name="size">The size of the rectangle.</param>
+		public RectangleD(Vector2d position, SizeD size)
+		{
+			Left = position.X;
+			Top = position.Y;
+			Width = size.Width;
+			Height = size.Height;
+		}
+
+		/// <summary>
+		///   Gets the X-coordinate of the right edge of the rectangle.
+		/// </summary>
+		public double Right
+		{
+			get { return Left + Width; }
+		}
+
+		/// <summary>
+		///   Gets the Y-coordinate of the bottom edge of the rectangle.
+		/// </summary>
+		public double Bottom
+		{
+			get { return Top + Height; }
+		}
+
+		/// <summary>
+		///   Gets the position of the rectangle's top left corner.
+		/// </summary>
+		public Vector2d Position
+		{
+			get { return new Vector2d(Left, Top); }
+		}
+
+		/// <summary>
+		///   Gets the size of the rectangle.
+		/// </summary>
+		public SizeD Size
+		{
+			get { return new SizeD(Width, Height); }
+		}
+
+		/// <summary>
+		///   Gets the position of the rectangle's top left corner.
+		/// </summary>
+		public Vector2d TopLeft
+		{
+			get { return Position; }
+		}
+
+		/// <summary>
+		///   Gets the position of the rectangle's top right corner.
+		/// </summary>
+		public Vector2d TopRight
+		{
+			get { return Position + new Vector2d(Width, 0); }
+		}
+
+		/// <summary>
+		///   Gets the position of the rectangle's bottom left corner.
+		/// </summary>
+		public Vector2d BottomLeft
+		{
+			get { return Position + new Vector2d(0, Height); }
+		}
+
+		/// <summary>
+		///   Gets the position of the rectangle's bottom right corner.
+		/// </summary>
+		public Vector2d BottomRight
+		{
+			get { return Position + new Vector2d(Width, Height); }
+		}
+
+		/// <summary>
+		///   Returns a copy of the rectangle with the given offsets added to the position of the returned rectangle.
+		/// </summary>
+		/// <param name="x">The offset that should be applied to the rectangle's left edge.</param>
+		/// <param name="y">The offset that should be applied to the rectangle's top edge.</param>
+		public RectangleD Offset(double x, double y)
+		{
+			return new RectangleD(Left + x, Top + y, Width, Height);
+		}
+
+		/// <summary>
+		///   Returns a copy of the rectangle with the given offsets added to the position of the returned rectangle.
+		/// </summary>
+		/// <param name="offset">The offset that should be applied to the rectangle's position.</param>
+		public RectangleD Offset(Vector2d offset)
+		{
+			return Offset(offset.X, offset.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public RectangleD Enlarge(double amount)
+		{
+			return Enlarge(amount, amount);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
+		public RectangleD Enlarge(Vector2d amount)
+		{
+			return Enlarge(amount.X, amount.Y);
+		}
+
+		/// <summary>
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		/// </summary>
+		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
+		/// <param name="y">The amount that the rectangle should be enlarged in Y-direction.</param>
+		public RectangleD Enlarge(double x, double y)
+		{
+			return new RectangleD(Left - x, Top - y, Width + 2 * x, Height + 2 * y);
+		}
+
+		/// <summary>
+		///   Determines whether the given rectangle is equal to this rectangle.
+		/// </summary>
+		/// <param name="other">The other rectangle to compare with this rectangle.</param>
+		public bool Equals(RectangleD other)
+		{
+			return MathUtils.DoubleEquality(Left, other.Left) && MathUtils.DoubleEquality(Top, other.Top) && 
+				MathUtils.DoubleEquality(Width, other.Width) && MathUtils.DoubleEquality(Height, other.Height);
+		}
+
+		/// <summary>
+		///   Determines whether the specified object is equal to this rectangle.
+		/// </summary>
+		/// <param name="value">The object to compare with this rectangle.</param>
+		public override bool Equals(object value)
+		{
+			if (ReferenceEquals(null, value))
+				return false;
+
+			if (value.GetType() != typeof(RectangleD))
+				return false;
+
+			return Equals((RectangleD)value);
+		}
+
+		/// <summary>
+		///   Returns a hash code for this rectangle.
+		/// </summary>
+		public override int GetHashCode()
+		{
+			var result = Left.GetHashCode();
+			result = (result * 397) ^ Top.GetHashCode();
+			result = (result * 397) ^ Width.GetHashCode();
+			result = (result * 397) ^ Height.GetHashCode();
+			return result;
+		}
+
+		/// <summary>
+		///   Tests for equality between two rectangles.
+		/// </summary>
+		/// <param name="left">The first rectangle to compare.</param>
+		/// <param name="right">The second rectangle to compare.</param>
+		public static bool operator ==(RectangleD left, RectangleD right)
+		{
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		///   Tests for inequality between two rectangles.
+		/// </summary>
+		/// <param name="left">The first rectangle to compare.</param>
+		/// <param name="right">The second rectangle to compare.</param>
+		public static bool operator !=(RectangleD left, RectangleD right)
+		{
+			return !(left == right);
+		}
+
+		/// <summary>
+		///   Returns a string representation of this rectangle.
+		/// </summary>
+		public override string ToString()
+		{
+			return String.Format(CultureInfo.InvariantCulture, "Left: {0}, Top: {1}, Width: {2}, Height: {3}", Left, Top, Width, Height);
+		}
+
+		/// <summary>
+		///   Checks whether this rectangle intersects with the given rectangle.
+		/// </summary>
+		/// <param name="rectangle">The rectangle that should be checked.</param>
+		public bool Intersects(RectangleD rectangle)
+		{
+			var xOverlap = (Left >= rectangle.Left && Left <= rectangle.Right) ||
+				(rectangle.Left >= Left && rectangle.Left <= Right);
+
+			var yOverlap = (Top >= rectangle.Top && Top <= rectangle.Bottom) ||
+				(rectangle.Top >= Top && rectangle.Top <= Bottom);
+
+			return xOverlap && yOverlap;
+		}
+
+		/// <summary>
+		///   Checks whether this rectangle intersects with the given circle.
+		/// </summary>
+		/// <param name="circle">The circle that should be checked.</param>
+		public bool Intersects(CircleD circle)
+		{
+			return circle.Intersects(this);
+		}
+
+		/// <summary>
+		///   Checks whether the given point lies within the rectangle.
+		/// </summary>
+		/// <param name="point">The point that should be checked.</param>
+		public bool Intersects(Vector2d point)
+		{
+			return point.X >= Left && point.X <= Right && point.Y >= Top && point.Y <= Bottom;
+		}
+	}
+
+	/// <summary>
+	///   Represents a rectangle with the left, top, width, and height stored as 32-bit signed fixed-point (in 24.8 format) values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct RectangleF8 : IEquatable<RectangleF8>
@@ -777,7 +1076,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
@@ -787,7 +1086,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
@@ -797,7 +1096,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
@@ -813,8 +1112,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(RectangleF8 other)
 		{
-			return Left == other.Left && Top == other.Top &&
-				   Width == other.Width && Height == other.Height;
+			return Left == other.Left && Top == other.Top && 
+				Width == other.Width && Height == other.Height;
 		}
 
 		/// <summary>
@@ -879,10 +1178,10 @@ namespace Pegasus.Math
 		public bool Intersects(RectangleF8 rectangle)
 		{
 			var xOverlap = (Left >= rectangle.Left && Left <= rectangle.Right) ||
-						   (rectangle.Left >= Left && rectangle.Left <= Right);
+				(rectangle.Left >= Left && rectangle.Left <= Right);
 
 			var yOverlap = (Top >= rectangle.Top && Top <= rectangle.Bottom) ||
-						   (rectangle.Top >= Top && rectangle.Top <= Bottom);
+				(rectangle.Top >= Top && rectangle.Top <= Bottom);
 
 			return xOverlap && yOverlap;
 		}
@@ -907,8 +1206,7 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a rectangle with the left, top, width, and height stored as 32-bit signed fixed-point (in 16.16 format)
-	///   values.
+	///   Represents a rectangle with the left, top, width, and height stored as 32-bit signed fixed-point (in 16.16 format) values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct RectangleF16 : IEquatable<RectangleF16>
@@ -1078,7 +1376,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
@@ -1088,7 +1386,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
@@ -1098,7 +1396,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged
+		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
 		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
@@ -1114,8 +1412,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(RectangleF16 other)
 		{
-			return Left == other.Left && Top == other.Top &&
-				   Width == other.Width && Height == other.Height;
+			return Left == other.Left && Top == other.Top && 
+				Width == other.Width && Height == other.Height;
 		}
 
 		/// <summary>
@@ -1180,10 +1478,10 @@ namespace Pegasus.Math
 		public bool Intersects(RectangleF16 rectangle)
 		{
 			var xOverlap = (Left >= rectangle.Left && Left <= rectangle.Right) ||
-						   (rectangle.Left >= Left && rectangle.Left <= Right);
+				(rectangle.Left >= Left && rectangle.Left <= Right);
 
 			var yOverlap = (Top >= rectangle.Top && Top <= rectangle.Bottom) ||
-						   (rectangle.Top >= Top && rectangle.Top <= Bottom);
+				(rectangle.Top >= Top && rectangle.Top <= Bottom);
 
 			return xOverlap && yOverlap;
 		}
@@ -1207,3 +1505,4 @@ namespace Pegasus.Math
 		}
 	}
 }
+

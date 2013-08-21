@@ -68,8 +68,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(Circle other)
 		{
-			return Position.X == other.Position.X && Position.Y == other.Position.Y
-				   && Radius == other.Radius;
+			return Position.X == other.Position.X && Position.Y == other.Position.Y 
+				&& Radius == other.Radius;
 		}
 
 		/// <summary>
@@ -226,8 +226,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(CircleF other)
 		{
-			return MathUtils.FloatEquality(Position.X, other.Position.X) && MathUtils.FloatEquality(Position.Y, other.Position.Y)
-				   && MathUtils.FloatEquality(Radius, other.Radius);
+			return MathUtils.FloatEquality(Position.X, other.Position.X) && MathUtils.FloatEquality(Position.Y, other.Position.Y) 
+				&& MathUtils.FloatEquality(Radius, other.Radius);
 		}
 
 		/// <summary>
@@ -322,6 +322,164 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
+	///   Represents a circle with the position and radius stored as 64-bit floating point values.
+	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct CircleD : IEquatable<CircleD>
+	{
+		/// <summary>
+		///   The position of the circle's center.
+		/// </summary>
+		public Vector2d Position;
+
+		/// <summary>
+		///   The circle's radius.
+		/// </summary>
+		public double Radius;
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="x">The X-component of the circle's position.</param>
+		/// <param name="y">The Y-component of the circle's position.</param>
+		/// <param name="radius">The circle's radius.</param>
+		public CircleD(double x, double y, double radius)
+			: this(new Vector2d(x, y), radius)
+		{
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="position">The position of the circle's center.</param>
+		/// <param name="radius">The circle's radius.</param>
+		public CircleD(Vector2d position, double radius)
+		{
+			Position = position;
+			Radius = radius;
+		}
+
+		/// <summary>
+		///   Returns a copy of the circle with the given offsets added to the position of the returned circle.
+		/// </summary>
+		/// <param name="x">The offset that should be applied to the circle's position in x-direction.</param>
+		/// <param name="y">The offset that should be applied to the circle's position in y-direction.</param>
+		public CircleD Offset(double x, double y)
+		{
+			return Offset(new Vector2d(Position.X + x, Position.Y + y));
+		}
+
+		/// <summary>
+		///   Returns a copy of the circle with the given offsets added to the position of the returned circle.
+		/// </summary>
+		/// <param name="offset">The offset that should be applied to the circle's position.</param>
+		public CircleD Offset(Vector2d offset)
+		{
+			return new CircleD(Position + offset, Radius);
+		}
+
+		/// <summary>
+		///   Determines whether the given circle is equal to this circle.
+		/// </summary>
+		/// <param name="other">The other circle to compare with this circle.</param>
+		public bool Equals(CircleD other)
+		{
+			return MathUtils.DoubleEquality(Position.X, other.Position.X) && MathUtils.DoubleEquality(Position.Y, other.Position.Y) 
+				&& MathUtils.DoubleEquality(Radius, other.Radius);
+		}
+
+		/// <summary>
+		///   Determines whether the specified object is equal to this circle.
+		/// </summary>
+		/// <param name="value">The object to compare with this circle.</param>
+		public override bool Equals(object value)
+		{
+			if (ReferenceEquals(null, value))
+				return false;
+
+			if (value.GetType() != typeof(CircleD))
+				return false;
+
+			return Equals((CircleD)value);
+		}
+
+		/// <summary>
+		///   Returns a hash code for this circle.
+		/// </summary>
+		public override int GetHashCode()
+		{
+			return (Position.GetHashCode() * 397) ^ Radius.GetHashCode();
+		}
+
+		/// <summary>
+		///   Tests for equality between two circle.
+		/// </summary>
+		/// <param name="left">The first circle to compare.</param>
+		/// <param name="right">The second circle to compare.</param>
+		public static bool operator ==(CircleD left, CircleD right)
+		{
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		///   Tests for inequality between two circle.
+		/// </summary>
+		/// <param name="left">The first circle to compare.</param>
+		/// <param name="right">The second circle to compare.</param>
+		public static bool operator !=(CircleD left, CircleD right)
+		{
+			return !(left == right);
+		}
+
+		/// <summary>
+		///   Returns a string representation of this circle.
+		/// </summary>
+		public override string ToString()
+		{
+			return String.Format(CultureInfo.InvariantCulture, "Position: {0}, Radius: {1}", Position, Radius);
+		}
+
+		/// <summary>
+		///   Checks whether this circle intersects with the given circle.
+		/// </summary>
+		/// <param name="circle">The circle that should be checked.</param>
+		public bool Intersects(CircleD circle)
+		{
+			var distance = (Position - circle.Position).SquaredLength;
+			var radiusSum = Radius + circle.Radius;
+			return distance <= radiusSum * radiusSum;
+		}
+
+		/// <summary>
+		///   Checks whether this circle intersects with the given rectangle.
+		/// </summary>
+		/// <param name="rectangle">The rectangle that should be checked.</param>
+		public bool Intersects(RectangleD rectangle)
+		{
+			// Find the closest point to the circle that lies within the rectangle
+			var closestX = MathUtils.Clamp(Position.X, rectangle.Left, rectangle.Right);
+			var closestY = MathUtils.Clamp(Position.Y, rectangle.Top, rectangle.Bottom);
+			var closest = new Vector2d(closestX, closestY);
+
+			// Calculate the distance between the circle's center and the closest point
+			var distance = Position - closest;
+
+			// There is an intersection only if the distance is less than or equal to the circle's radius
+			return distance.SquaredLength <= Radius * Radius;
+		}
+
+		/// <summary>
+		///   Checks whether the given point lies within the circle.
+		/// </summary>
+		/// <param name="point">The point that should be checked.</param>
+		public bool Intersects(Vector2d point)
+		{
+			var distance = (Position - point).SquaredLength;
+			return distance <= Radius * Radius;
+		}
+	}
+
+	/// <summary>
 	///   Represents a circle with the position and radius stored as 32-bit signed fixed-point (in 24.8 format) values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
@@ -384,8 +542,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(CircleF8 other)
 		{
-			return Position.X == other.Position.X && Position.Y == other.Position.Y
-				   && Radius == other.Radius;
+			return Position.X == other.Position.X && Position.Y == other.Position.Y 
+				&& Radius == other.Radius;
 		}
 
 		/// <summary>
@@ -542,8 +700,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(CircleF16 other)
 		{
-			return Position.X == other.Position.X && Position.Y == other.Position.Y
-				   && Radius == other.Radius;
+			return Position.X == other.Position.X && Position.Y == other.Position.Y 
+				&& Radius == other.Radius;
 		}
 
 		/// <summary>
@@ -637,3 +795,4 @@ namespace Pegasus.Math
 		}
 	}
 }
+

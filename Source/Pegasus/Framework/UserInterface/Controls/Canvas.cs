@@ -11,27 +11,27 @@ namespace Pegasus.Framework.UserInterface.Controls
 		///   The distance between the left side of an UI element and its parent Canvas.
 		/// </summary>
 		public static readonly DependencyProperty<double> LeftProperty =
-			new DependencyProperty<double>(affectsArrange: true);
+			new DependencyProperty<double>(affectsArrange: true, validationCallback: ValidatePosition);
 
 		/// <summary>
 		///   The distance between the right side of an UI element and its parent Canvas. If the Left property is also set, the
 		///   Right value is ignored.
 		/// </summary>
 		public static readonly DependencyProperty<double> RightProperty =
-			new DependencyProperty<double>(affectsArrange: true);
+			new DependencyProperty<double>(affectsArrange: true, validationCallback: ValidatePosition);
 
 		/// <summary>
 		///   The distance between the top of an UI element and its parent Canvas.
 		/// </summary>
 		public static readonly DependencyProperty<double> TopProperty =
-			new DependencyProperty<double>(affectsArrange: true);
+			new DependencyProperty<double>(affectsArrange: true, validationCallback: ValidatePosition);
 
 		/// <summary>
 		///   The distance between the bottom of an UI element and its parent Canvas. If the Top property is also set, the Bottom
 		///   value is ignored.
 		/// </summary>
 		public static readonly DependencyProperty<double> BottomProperty =
-			new DependencyProperty<double>(affectsArrange: true);
+			new DependencyProperty<double>(affectsArrange: true, validationCallback: ValidatePosition);
 
 		/// <summary>
 		///   Gets or sets the distance between the left side of an UI element and its parent Canvas.
@@ -69,6 +69,16 @@ namespace Pegasus.Framework.UserInterface.Controls
 		{
 			get { return GetValue(BottomProperty); }
 			set { SetValue(BottomProperty, value); }
+		}
+
+		/// <summary>
+		///   Checks whether the given value is a valid canvas position.
+		/// </summary>
+		/// <param name="value">The value that should be validated.</param>
+		private static bool ValidatePosition(double value)
+		{
+			// NaN as well as all positive/negative values are supported except for infinity
+			return !Double.IsInfinity(value);
 		}
 	}
 }

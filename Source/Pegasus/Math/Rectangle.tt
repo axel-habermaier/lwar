@@ -359,6 +359,17 @@ IEnumerable<Info> GetInfo()
 
 	yield return new Info 
 	{ 
+		Name = "D", 
+		Type = "double", 
+		Description = "64-bit floating point", 
+		PositionType = "Vector2d",
+		SizeType = "SizeD",
+		CircleType = "CircleD",
+		EqualsMethodFormat = "MathUtils.DoubleEquality({0}, {1})" 
+	};
+
+	yield return new Info 
+	{ 
 		Name = "F8", 
 		Type = "Fixed8", 
 		Description = "32-bit signed fixed-point (in 24.8 format)", 

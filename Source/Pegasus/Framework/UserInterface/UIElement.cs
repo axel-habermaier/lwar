@@ -344,6 +344,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidateWidthHeight(double value)
 		{
+			// NaN is used to represent XAML's 'auto' value
 			return Double.IsNaN(value) || (value >= 0.0 && !Double.IsPositiveInfinity(value));
 		}
 
@@ -476,5 +477,48 @@ namespace Pegasus.Framework.UserInterface
 			foreach (var child in LogicalChildren)
 				child.SetInheritedValue(property, newValue);
 		}
+
+		/// <summary>
+		///   Updates the UI element's desired size. This method should be called from a parent UI element's MeasureCore method to
+		///   perform a the first pass of a recursive layout update.
+		/// </summary>
+		/// <param name="availableSize">
+		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
+		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
+		///   element might be able to use scrolling in this case.
+		/// </param>
+		public void Measure(SizeD availableSize)
+		{
+		}
+
+		/// <summary>
+		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
+		/// </summary>
+		/// <param name="availableSize">
+		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
+		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
+		///   element might be able to use scrolling in this case.
+		/// </param>
+		protected abstract SizeD MeasureCore(SizeD availableSize);
+
+		/// <summary>
+		///   Determines the size and position of the UI element and all of its children. This method should be called from a
+		///   parent UI element's ArrangeCore method to perform the second pass of a recursive layout update.
+		/// </summary>
+		/// <param name="finalRect">The final size and position of the UI element.</param>
+		/// <remarks>
+		///   The first time a UI element is layouted, Measure is always called before Arrange. Later layout passes
+		///   triggered by some changes to the UI element's state might only call Arrange if the UI element's measurement remained
+		///   unaffected by the state change.
+		/// </remarks>
+		public void Arrange(RectangleD finalRect)
+		{
+		}
+
+		/// <summary>
+		///   Determines the size and position of the UI element and all of its children.
+		/// </summary>
+		/// <param name="finalRect">The final size and position of the UI element.</param>
+		protected abstract void ArrangeCore(RectangleD finalRect);
 	}
 }
