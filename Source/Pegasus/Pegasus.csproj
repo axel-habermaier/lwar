@@ -193,6 +193,8 @@
   <ItemGroup>
     <Compile Include="Framework\InheritanceContext.cs" />
     <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Orientation.cs" />
+    <Compile Include="Framework\UserInterface\Controls\StackPanel.cs" />
     <Compile Include="Framework\UserInterface\Controls\UserControl.cs" />
     <Compile Include="Framework\UserInterface\HorizontalAlignment.cs" />
     <Compile Include="Framework\UserInterface\ResourceKeyChangedHandlers.cs" />
@@ -237,7 +239,7 @@
     <Compile Include="Framework\UserInterface\Controls\Control.cs" />
     <Compile Include="Framework\UserInterface\Controls\ControlTemplate.cs" />
     <Compile Include="Framework\DependencyPropertyChangedEventArgs.cs" />
-    <Compile Include="Framework\UserInterface\Controls\Layout.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Panel.cs" />
     <Compile Include="Framework\UserInterface\Trigger`1.cs" />
     <Compile Include="Framework\ISealable.cs" />
     <Compile Include="Framework\UserInterface\ReflectionHelper.cs" />

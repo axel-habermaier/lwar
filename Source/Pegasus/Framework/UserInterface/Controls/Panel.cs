@@ -6,9 +6,9 @@ namespace Pegasus.Framework.UserInterface.Controls
 	using Rendering.UserInterface;
 
 	/// <summary>
-	///   A base class for all layouts that position and arrange child UI elements.
+	///   A base class for all panel elements that position and arrange child UI elements.
 	/// </summary>
-	public abstract class Layout : UIElement
+	public abstract class Panel : UIElement
 	{
 		/// <summary>
 		///   The collection of layouted children.

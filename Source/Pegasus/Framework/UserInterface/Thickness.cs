@@ -81,7 +81,7 @@ namespace Pegasus.Framework.UserInterface
 		{
 			unchecked
 			{
-				int hashCode = Bottom.GetHashCode();
+				var hashCode = Bottom.GetHashCode();
 				hashCode = (hashCode * 397) ^ Left.GetHashCode();
 				hashCode = (hashCode * 397) ^ Right.GetHashCode();
 				hashCode = (hashCode * 397) ^ Top.GetHashCode();

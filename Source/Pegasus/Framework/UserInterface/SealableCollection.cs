@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.UserInterface
 {
 	using System.Collections.ObjectModel;
-	using System.Diagnostics;
 
 	/// <summary>
 	///   Represents a list of objects that can no longer be changed once it has been sealed.
@@ -16,6 +15,11 @@ namespace Pegasus.Framework.UserInterface
 		///   Represents an empty sealable collection that cannot be modified.
 		/// </summary>
 		public static readonly SealableCollection<T> Empty = new SealableCollection<T>() { IsSealed = true };
+
+		/// <summary>
+		///   The version of the collection. Each modification of the collection increments the version number by one.
+		/// </summary>
+		private int _version;
 
 		/// <summary>
 		///   Gets a value indicating whether the collection is sealed and can no longer be modified.
@@ -39,6 +43,8 @@ namespace Pegasus.Framework.UserInterface
 		protected override void ClearItems()
 		{
 			Assert.NotSealed(this);
+
+			++_version;
 			base.ClearItems();
 		}
 
@@ -50,6 +56,8 @@ namespace Pegasus.Framework.UserInterface
 		protected override void InsertItem(int index, T item)
 		{
 			Assert.NotSealed(this);
+
+			++_version;
 			base.InsertItem(index, item);
 		}
 
@@ -60,6 +68,8 @@ namespace Pegasus.Framework.UserInterface
 		protected override void RemoveItem(int index)
 		{
 			Assert.NotSealed(this);
+
+			++_version;
 			base.RemoveItem(index);
 		}
 
@@ -71,7 +81,76 @@ namespace Pegasus.Framework.UserInterface
 		protected override void SetItem(int index, T item)
 		{
 			Assert.NotSealed(this);
+
+			++_version;
 			base.SetItem(index, item);
+		}
+
+		/// <summary>
+		///   Gets an enumerator for the collection.
+		/// </summary>
+		/// <Remarks>This method returns a custom enumerator in order to avoid a heap allocation.</Remarks>
+		public new Enumerator GetEnumerator()
+		{
+			return new Enumerator(this);
+		}
+
+		/// <summary>
+		///   Enumerates a sealable collection.
+		/// </summary>
+		public struct Enumerator
+		{
+			/// <summary>
+			///   The version of the collection when the enumerator was created.
+			/// </summary>
+			private readonly int _version;
+
+			/// <summary>
+			///   The elements that are enumerated.
+			/// </summary>
+			private SealableCollection<T> _collection;
+
+			/// <summary>
+			///   The index of the current enumerated element.
+			/// </summary>
+			private int _current;
+
+			/// <summary>
+			///   Creates a new instance.
+			/// </summary>
+			/// <param name="collection">The elements that should be enumerated.</param>
+			public Enumerator(SealableCollection<T> collection)
+				: this()
+			{
+				Assert.ArgumentNotNull(collection);
+
+				_collection = collection;
+				_version = collection._version;
+			}
+
+			/// <summary>
+			///   Gets the element at the current position of the enumerator.
+			/// </summary>
+			public T Current { get; private set; }
+
+			/// <summary>
+			///   Advances the enumerator to the next UI element.
+			/// </summary>
+			public bool MoveNext()
+			{
+				Assert.That(_collection._version == _version, "The collection has been modified while it is enumerated.");
+
+				// If we've reached the end of the collection, we're done
+				if (_current == _collection.Count)
+				{
+					_collection = null;
+					return false;
+				}
+
+				// Otherwise, enumerate the next element
+				Current = _collection[_current++];
+				return true;
+			}
 		}
 	}
 }

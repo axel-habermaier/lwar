@@ -109,7 +109,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by a scalar value.
+		///   Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -240,7 +240,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by a scalar value.
+		///   Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -371,7 +371,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by a scalar value.
+		///   Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -502,7 +502,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by a scalar value.
+		///   Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -633,7 +633,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by a scalar value.
+		///   Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>

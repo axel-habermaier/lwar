@@ -45,37 +45,37 @@ namespace Pegasus.Framework.UserInterface
 		///   The width of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> WidthProperty =
-			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateWidthHeight);
+			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
 
 		/// <summary>
 		///   The height of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> HeightProperty =
-			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateWidthHeight);
+			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
 
 		/// <summary>
 		///   The minimum width constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MinWidthProperty =
-			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
+			new DependencyProperty<double>(defaultValue: 0.0, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
 
 		/// <summary>
 		///   The minimum height constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MinHeightProperty =
-			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
+			new DependencyProperty<double>(defaultValue: 0.0, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
 
 		/// <summary>
 		///   The maximum width constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MaxWidthProperty =
-			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
+			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
 
 		/// <summary>
 		///   The maximum height constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MaxHeightProperty =
-			new DependencyProperty<double>(affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
+			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
 
 		/// <summary>
 		///   The actual width of the UI element, measured in pixels, as determined by the layouting system.
@@ -93,7 +93,7 @@ namespace Pegasus.Framework.UserInterface
 		///   Indicates whether the UI element is visible.
 		/// </summary>
 		public static readonly DependencyProperty<bool> VisibleProperty =
-			new DependencyProperty<bool>(affectsMeasure: true);
+			new DependencyProperty<bool>(defaultValue: true, affectsMeasure: true);
 
 		/// <summary>
 		///   The outer margin of the UI element.
@@ -105,13 +105,17 @@ namespace Pegasus.Framework.UserInterface
 		///   The horizontal alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<HorizontalAlignment> HorizontalAlignmentProperty =
-			new DependencyProperty<HorizontalAlignment>(affectsArrange: true);
+			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Stretch,
+														affectsArrange: true,
+														validationCallback: ValidateAlignment);
 
 		/// <summary>
 		///   The vertical alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<VerticalAlignment> VerticalAlignmentProperty =
-			new DependencyProperty<VerticalAlignment>(affectsArrange: true);
+			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Stretch,
+													  affectsArrange: true,
+													  validationCallback: ValidateAlignment);
 
 		/// <summary>
 		///   The size of the UI element that has been computed by the last measure pass of the layout engine.
@@ -339,6 +343,35 @@ namespace Pegasus.Framework.UserInterface
 		protected abstract UIElementCollection.Enumerator LogicalChildren { get; }
 
 		/// <summary>
+		///   Gets the final render size of the UI element.
+		/// </summary>
+		public SizeD RenderSize { get; internal set; }
+
+		/// <summary>
+		///   Checks whether the given horizontal alignment is a valid value.
+		/// </summary>
+		/// <param name="alignment">The alignment that should be checked.</param>
+		private static bool ValidateAlignment(HorizontalAlignment alignment)
+		{
+			return alignment == HorizontalAlignment.Stretch ||
+				   alignment == HorizontalAlignment.Left ||
+				   alignment == HorizontalAlignment.Center ||
+				   alignment == HorizontalAlignment.Right;
+		}
+
+		/// <summary>
+		///   Checks whether the given vertical alignment is a valid value.
+		/// </summary>
+		/// <param name="alignment">The alignment that should be checked.</param>
+		private static bool ValidateAlignment(VerticalAlignment alignment)
+		{
+			return alignment == VerticalAlignment.Stretch ||
+				   alignment == VerticalAlignment.Top ||
+				   alignment == VerticalAlignment.Center ||
+				   alignment == VerticalAlignment.Bottom;
+		}
+
+		/// <summary>
 		///   Checks whether the given value is a valid width or height value.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
@@ -459,11 +492,11 @@ namespace Pegasus.Framework.UserInterface
 
 			Parent = parent;
 
-			// Setting a new (valid) parent possibly invalidates the resources
+			// Setting a new (valid) parent possibly invalidates the resources of this UI element and its children
 			if (parent != null)
 				InvalidateResources();
 
-			// Changing the parent invalidates inherited property values
+			// Changing the parent possibly invalidates the inherited property values of this UI element and its children
 			InvalidateInheritedValues(parent);
 		}
 
@@ -489,17 +522,23 @@ namespace Pegasus.Framework.UserInterface
 		/// </param>
 		public void Measure(SizeD availableSize)
 		{
+			_desiredSize = MeasureCore(availableSize);
+
+			Assert.That(!Double.IsInfinity(_desiredSize.Width) && !Double.IsNaN(_desiredSize.Width), "MeasureCore returned invalid width.");
+			Assert.That(!Double.IsInfinity(_desiredSize.Height) && !Double.IsNaN(_desiredSize.Height), "MeasureCore returned invalid height.");
+
+			_desiredSize = IncreaseByMargin(_desiredSize);
 		}
 
 		/// <summary>
 		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
-		/// <param name="availableSize">
+		/// <param name="constraint">
 		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
 		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///   element might be able to use scrolling in this case.
 		/// </param>
-		protected abstract SizeD MeasureCore(SizeD availableSize);
+		protected abstract SizeD MeasureCore(SizeD constraint);
 
 		/// <summary>
 		///   Determines the size and position of the UI element and all of its children. This method should be called from a
@@ -513,12 +552,85 @@ namespace Pegasus.Framework.UserInterface
 		/// </remarks>
 		public void Arrange(RectangleD finalRect)
 		{
+			var renderSize = ArrangeCore(finalRect.Size);
+
+			if (HorizontalAlignment == HorizontalAlignment.Stretch)
+				renderSize.Width = finalRect.Width - Margin.Left - Margin.Right;
+
+			if (VerticalAlignment == VerticalAlignment.Stretch)
+				renderSize.Height = finalRect.Height - Margin.Top - Margin.Bottom;
+
+			var offset = ComputeAlignmentOffset(finalRect.Size);
+
+			VisualOffset = finalRect.Position + offset;
+			RenderSize = renderSize;
 		}
 
 		/// <summary>
-		///   Determines the size and position of the UI element and all of its children.
+		///   Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
+		///   element. If this value is smaller than the given size, the UI element's alignment properties position it
+		///   appropriately.
 		/// </summary>
-		/// <param name="finalRect">The final size and position of the UI element.</param>
-		protected abstract void ArrangeCore(RectangleD finalRect);
+		/// <param name="finalSize">
+		///   The final area allocated by the UI element's parent that the UI element should use to arrange
+		///   itself and its children.
+		/// </param>
+		protected abstract SizeD ArrangeCore(SizeD finalSize);
+
+		/// <summary>
+		///   Computes the alignment offset based on the available size and the actual size of the UI element.
+		/// </summary>
+		/// <param name="availableSize">The available size the UI element should be aligned in.</param>
+		private Vector2d ComputeAlignmentOffset(SizeD availableSize)
+		{
+			var offset = Vector2d.Zero;
+
+			switch (HorizontalAlignment)
+			{
+				case HorizontalAlignment.Center:
+					offset.X = (availableSize.Width - RenderSize.Width) / 2 + Margin.Left - Margin.Right;
+					break;
+				case HorizontalAlignment.Stretch:
+				case HorizontalAlignment.Left:
+					offset.X = Margin.Left;
+					break;
+				case HorizontalAlignment.Right:
+					offset.X = availableSize.Width - RenderSize.Width - Margin.Right;
+					break;
+				default:
+					throw new InvalidOperationException("Unexepcted alignment.");
+			}
+
+			switch (VerticalAlignment)
+			{
+				case VerticalAlignment.Center:
+					offset.Y = (availableSize.Height - RenderSize.Height) / 2 + Margin.Top - Margin.Bottom;
+					break;
+				case VerticalAlignment.Stretch:
+				case VerticalAlignment.Top:
+					offset.Y = Margin.Top;
+					break;
+				case VerticalAlignment.Bottom:
+					offset.Y = availableSize.Height - RenderSize.Height - Margin.Bottom;
+					break;
+				default:
+					throw new InvalidOperationException("Unexepcted alignment.");
+			}
+
+			offset.X = System.Math.Max(0, offset.X);
+			offset.Y = System.Math.Max(0, offset.Y);
+			return offset;
+		}
+
+		/// <summary>
+		/// Increases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and 3,
+		/// the returns size has a width of 10 + 2 + 3 = 15.
+		/// </summary>
+		/// <param name="size">The size the thickness should be added to.</param>
+		public SizeD IncreaseByMargin(SizeD size)
+		{
+			var margin = Margin;
+			return new SizeD(size.Width + margin.Left + margin.Right, size.Height + margin.Top + margin.Bottom);
+		}
 	}
 }

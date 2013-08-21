@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.UserInterface
 {
 	using Controls;
+	using Math;
 	using Platform;
 	using Platform.Assets;
 	using Platform.Graphics;
@@ -106,6 +107,10 @@ namespace Pegasus.Framework.UserInterface
 		/// </summary>
 		public void Update()
 		{
+			var size = new SizeD(Window.Width, Window.Height);
+
+			_canvas.Measure(size);
+			_canvas.Arrange(new RectangleD(0, 0, size));
 		}
 
 		/// <summary>

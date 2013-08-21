@@ -19,18 +19,44 @@ namespace Lwar
 	internal class HelloWorldViewModel : ViewModel
 	{
 		private int _frameCount;
+		private HelloWorldViewModel _model;
 		private string _name;
+		private string _name2;
+		private string _name3;
 
 		public string Name
 		{
 			get { return _name; }
-			set { ChangePropertyValue(ref _name, value); }
+			set
+			{
+				ChangePropertyValue(ref _name, value);
+				Name2 = Name + Name;
+				Name3 = Name2 + Name;
+			}
+		}
+
+		public string Name2
+		{
+			get { return _name2; }
+			set { ChangePropertyValue(ref _name2, value); }
+		}
+
+		public string Name3
+		{
+			get { return _name3; }
+			set { ChangePropertyValue(ref _name3, value); }
 		}
 
 		public int FrameCount
 		{
 			get { return _frameCount; }
 			set { ChangePropertyValue(ref _frameCount, value); }
+		}
+
+		public HelloWorldViewModel Model
+		{
+			get { return _model; }
+			set { ChangePropertyValue(ref _model, value); }
 		}
 
 		public void Update()
@@ -41,23 +67,18 @@ namespace Lwar
 				Model.FrameCount++;
 
 			//if (_frameCount % 1000 == 0)
-				//Model = Model == null ? new HelloWorldViewModel() : null;
+			//Model = Model == null ? new HelloWorldViewModel() : null;
 
 			if (_model == null)
 				_model = new HelloWorldViewModel();
-		}
-
-		private HelloWorldViewModel _model;
-
-		public HelloWorldViewModel Model
-		{
-			get { return _model; }
-			set { ChangePropertyValue(ref _model, value); }
 		}
 	}
 
 	internal class HelloWorldView : UserControl
 	{
+		public Button button1;
+		//public Canvas canvas;
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -83,29 +104,59 @@ namespace Lwar
 			Resources["MyStyle"] = style;
 
 			var binding1 = new Binding<object>(v => ((HelloWorldViewModel)v).Name);
-			var binding2 = new Binding<object>(v => ((HelloWorldViewModel)v).Model.FrameCount);
+			var binding2 = new Binding<object>(v => ((HelloWorldViewModel)v).Name2);
+			var binding3 = new Binding<object>(v => ((HelloWorldViewModel)v).Name3);
 
-			canvas = new Canvas();
-			button1 = new Button() { Width = -300, Height = 100 };
-			var button2 = new Button() { Width = 100, Height = 300 };
+			button1 = new Button() { Width = 300, Height = 100 };
+			var button2 = new Button()
+			{
+				Width = 100,
+				Height = 300,
+				Margin = new Thickness(15, 5, 21, 15),
+				//HorizontalAlignment = HorizontalAlignment.Left,
+				//VerticalAlignment = VerticalAlignment.Top
+			};
+			var button3 = new Button()
+			{
+				Width = 100,
+				Height = 300,
+				Margin = new Thickness(0, 100, 0, 0),
+				//HorizontalAlignment = HorizontalAlignment.Center,
+				//VerticalAlignment = VerticalAlignment.Top
+			};
 
-			canvas.Children.Add(button1);
-			canvas.Children.Add(button2);
+			//button1.SetValue(Canvas.LeftProperty, 200);
+			//button1.SetValue(Canvas.TopProperty, 200);
+			//button2.SetValue(Canvas.RightProperty, 5);
+			//button2.SetValue(Canvas.BottomProperty, 5);
 
-			Content = canvas;
+			//canvas = new Canvas();
+
+			var panel = new StackPanel();
+			//panel.Orientation = Orientation.Horizontal;
+
+			panel.Children.Add(button1);
+			panel.Children.Add(button2);
+			panel.Children.Add(button3);
+			Content = panel;
 
 			var resourceBinding = new ResourceBinding<Style>("MyStyle");
 			button1.SetResourceBinding(StyleProperty, resourceBinding);
 
 			button1.SetBinding(ContentProperty, binding1);
-			//button2.SetBinding(ContentProperty, binding2);
+			button2.SetBinding(ContentProperty, binding2);
+			button3.SetBinding(ContentProperty, binding3);
 		}
 
-		public  Button button1;
-		public  Canvas canvas;
-		
-		public void AddButton(){ canvas.Children.Add(button1);}
-		public void RemoveButton() { canvas.Children.Remove(button1); }
+		//public void AddButton()
+		//{
+		//	canvas.Children.Add(button1);
+		//}
+
+		//public void RemoveButton()
+		//{
+		//	canvas.Children.Remove(button1);
+		//}
 	}
 
 	/// <summary>
@@ -118,8 +169,8 @@ namespace Lwar
 		/// </summary>
 		private LocalServer _localServer;
 
-		private HelloWorldViewModel _viewModel;
 		private HelloWorldView _view;
+		private HelloWorldViewModel _viewModel;
 
 		/// <summary>
 		///   Invoked when the application is initializing.
@@ -166,20 +217,20 @@ namespace Lwar
 
 			if (_viewModel.FrameCount % 300 == 0)
 				_view.button1.IsMouseOver = !_view.button1.IsMouseOver;
-			
+
 			if (_viewModel.FrameCount % 3000 == 0)
 			{
 				//_view.ViewModel = _view.ViewModel == null ? _viewModel : null;
 				if (_viewModel.FrameCount % 6000 == 0)
 				{
 					Log.Info("Adding button: {0}", DateTime.Now.ToLongTimeString());
-					_view.AddButton();
+					//_view.AddButton();
 				}
-					
+
 				else
 				{
 					Log.Info("Removing button: {0}", DateTime.Now.ToLongTimeString());
-					_view.RemoveButton();
+					//_view.RemoveButton();
 				}
 			}
 			if ((_viewModel.FrameCount - 1500) % 3000 == 0)
