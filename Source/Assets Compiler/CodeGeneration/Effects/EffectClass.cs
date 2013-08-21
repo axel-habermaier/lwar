@@ -223,7 +223,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 				Warn(_type.NameToken, "Expected base type '{0}'.", typeof(Effect).FullName);
 
 			// Check whether 'public' is the only declared modifier 
-			ValidateModifiers(_type, _type.ModifierTokens, new[] { Modifiers.Internal });
+			ValidateModifiers(_type, _type.ModifierTokens, new[] { Modifiers.Public });
 
 			// Check whether the effect depends on any type arguments
 			foreach (var parameter in _type.TypeParameters)

@@ -5,7 +5,7 @@ namespace Lwar.Assets.Effects
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]
-	internal class SphereEffect : Effect
+	public class SphereEffect : Effect
 	{
 		public readonly Technique Default = new Technique
 		{

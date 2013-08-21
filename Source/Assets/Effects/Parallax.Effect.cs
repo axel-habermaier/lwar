@@ -5,7 +5,7 @@ namespace Lwar.Assets.Effects
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]
-	internal class ParallaxEffect : Effect
+	public class ParallaxEffect : Effect
 	{
 		public readonly Technique Default = new Technique
 		{

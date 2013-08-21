@@ -5,7 +5,7 @@ namespace Lwar.Assets.Effects
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]
-	internal class SpriteEffect : Effect
+	public class SpriteEffect : Effect
 	{
 		public readonly Technique Default = new Technique
 		{

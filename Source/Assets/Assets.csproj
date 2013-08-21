@@ -14,7 +14,8 @@
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86' ">
@@ -29,7 +30,8 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -42,7 +44,8 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64' ">
     <DebugSymbols>True</DebugSymbols>
@@ -57,7 +60,8 @@
     <Optimize>False</Optimize>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x64' ">
     <OutputPath>..\..\Binaries x64\Release Direct3D11\</OutputPath>
@@ -70,7 +74,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
     <DebugSymbols>True</DebugSymbols>
@@ -85,7 +90,8 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x64'">
     <DebugSymbols>True</DebugSymbols>
@@ -99,7 +105,8 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
@@ -112,7 +119,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
     <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
@@ -125,7 +133,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <DebugSymbols>True</DebugSymbols>
@@ -145,7 +154,8 @@
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x64'">
     <DebugSymbols>True</DebugSymbols>
@@ -164,7 +174,8 @@
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
@@ -182,7 +193,8 @@
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x64'">
     <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
@@ -200,7 +212,8 @@
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
-    <NoWarn>0649</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
@@ -239,19 +252,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Effects\Blur.Effect.cs" />
-   
     <Compile Include="Effects\Parallax.Effect.cs" />
-  
     <Compile Include="Effects\Skybox.Effect.cs" />
-  
     <Compile Include="Effects\Sphere.Effect.cs" />
-   
     <Compile Include="Effects\Sprite.Effect.cs" />
-   
     <Compile Include="Effects\Sun.Effect.cs" />
-  
     <Compile Include="Effects\TexturedQuad.Effect.cs" />
-   
     <Compile Include="Templates\Compilation\TemplateAsset.cs" />
     <Compile Include="Templates\Compilation\TemplateAssetFactory.cs" />
     <Compile Include="Templates\Compilation\TemplateCompiler.cs" />

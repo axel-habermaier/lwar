@@ -5,7 +5,7 @@ namespace Lwar.Assets.Effects
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]
-	internal class TexturedQuadEffect : Effect
+	public class TexturedQuadEffect : Effect
 	{
 		public readonly Technique TexturedQuad = new Technique
 		{

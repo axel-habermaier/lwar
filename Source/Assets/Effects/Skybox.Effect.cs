@@ -5,7 +5,7 @@ namespace Lwar.Assets.Effects
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]
-	internal class SkyboxEffect : Effect
+	public class SkyboxEffect : Effect
 	{
 		public readonly Technique Default = new Technique
 		{

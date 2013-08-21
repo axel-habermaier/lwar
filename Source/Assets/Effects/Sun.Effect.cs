@@ -5,7 +5,7 @@ namespace Lwar.Assets.Effects
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]
-	internal class SunEffect : Effect
+	public class SunEffect : Effect
 	{
 		public readonly CubeMap CubeMap;
 

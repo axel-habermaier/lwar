@@ -8,7 +8,7 @@ namespace Lwar.Assets.Effects
 	///   Applies a Gaussian blur filter to a texture.
 	/// </summary>
 	[Effect]
-	internal class BlurEffect : Effect
+	public class BlurEffect : Effect
 	{
 		/// <summary>
 		///   Applies a single-pass Gaussian blur filter.
