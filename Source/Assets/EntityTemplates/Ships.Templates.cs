@@ -15,7 +15,7 @@ namespace Lwar.Assets.EntityTemplates
 			Collide = "ship_hit",
 			Energy = 1000,
 			Health = 3000,
-			Shield = 1, 
+			Shield = 1,
 			Mass = 1,
 			Radius = 64,
 			Acceleration = new Vector2(2000, 2000),
