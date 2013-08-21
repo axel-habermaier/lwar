@@ -23,6 +23,7 @@ namespace Lwar
 		private string _name;
 		private string _name2;
 		private string _name3;
+		private Thickness _thickness;
 
 		public string Name
 		{
@@ -50,7 +51,14 @@ namespace Lwar
 		public int FrameCount
 		{
 			get { return _frameCount; }
-			set { ChangePropertyValue(ref _frameCount, value); }
+			set { ChangePropertyValue(ref _frameCount, value);Thickness = new Thickness(value / 10.0); }
+		}
+
+
+		public Thickness Thickness
+		{
+			get { return _thickness; }
+			set { ChangePropertyValue(ref _thickness, value); }
 		}
 
 		public HelloWorldViewModel Model
@@ -61,7 +69,7 @@ namespace Lwar
 
 		public void Update()
 		{
-			++_frameCount;
+			++FrameCount;
 
 			if (Model != null)
 				Model.FrameCount++;
@@ -106,6 +114,7 @@ namespace Lwar
 			var binding1 = new Binding<object>(v => ((HelloWorldViewModel)v).Name);
 			var binding2 = new Binding<object>(v => ((HelloWorldViewModel)v).Name2);
 			var binding3 = new Binding<object>(v => ((HelloWorldViewModel)v).Name3);
+			var binding4 = new Binding<Thickness>(v => ((HelloWorldViewModel)v).Thickness);
 
 			button1 = new Button() { Width = 300, Height = 100 };
 			var button2 = new Button()
@@ -146,6 +155,7 @@ namespace Lwar
 			button1.SetBinding(ContentProperty, binding1);
 			button2.SetBinding(ContentProperty, binding2);
 			button3.SetBinding(ContentProperty, binding3);
+			button2.SetBinding(MarginProperty, binding4);
 		}
 
 		//public void AddButton()
@@ -223,21 +233,24 @@ namespace Lwar
 				//_view.ViewModel = _view.ViewModel == null ? _viewModel : null;
 				if (_viewModel.FrameCount % 6000 == 0)
 				{
-					Log.Info("Adding button: {0}", DateTime.Now.ToLongTimeString());
+					//Log.Info("Adding button: {0}", DateTime.Now.ToLongTimeString());
 					//_view.AddButton();
 				}
 
 				else
 				{
-					Log.Info("Removing button: {0}", DateTime.Now.ToLongTimeString());
+					//Log.Info("Removing button: {0}", DateTime.Now.ToLongTimeString());
 					//_view.RemoveButton();
 				}
 			}
 			if ((_viewModel.FrameCount - 1500) % 3000 == 0)
 			{
 				Log.Info("Changing VM: {0}", DateTime.Now.ToLongTimeString());
-				_view.ViewModel = new HelloWorldViewModel() { Name = DateTime.Now.ToLongTimeString() };
+				//_viewModel.Name = DateTime.Now.ToLongTimeString();
+				_view.ViewModel = _viewModel = new HelloWorldViewModel() { Name = DateTime.Now.ToLongTimeString() };
 			}
+
+			_viewModel.Name = DateTime.Now.ToLongTimeString();
 		}
 
 		/// <summary>
