@@ -2,6 +2,8 @@
 
 namespace Pegasus.Framework.UserInterface
 {
+	using Platform.Logging;
+
 	/// <summary>
 	///   Binds a target UI element/dependency property pair to a resource and updates the target dependency property's
 	///   value every time the resource changes.
@@ -66,9 +68,12 @@ namespace Pegasus.Framework.UserInterface
 		{
 			object resource;
 			if (!_targetObject.TryFindResource(_key, out resource))
-				Assert.That(false, "Unable to find resource '{0}'.", _key);
-
-			_targetObject.SetValue(_targetProperty, (T)resource);
+			{
+				Log.Warn("Unable to find resource '{0}'.", _key);
+				_targetObject.SetValue(_targetProperty, _targetProperty.DefaultValue);
+			}
+			else
+				_targetObject.SetValue(_targetProperty, (T)resource);
 		}
 	}
 }

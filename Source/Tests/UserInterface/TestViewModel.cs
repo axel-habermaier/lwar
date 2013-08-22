@@ -13,10 +13,18 @@ namespace Tests.UserInterface
 		private TestViewModel _model;
 		private Thickness _thickness;
 
+		private double _width;
+
 		public Thickness Thickness
 		{
 			get { return _thickness; }
 			set { ChangePropertyValue(ref _thickness, value); }
+		}
+
+		public double Width
+		{
+			get { return _width; }
+			set { ChangePropertyValue(ref _width, value); }
 		}
 
 		public TestViewModel Model

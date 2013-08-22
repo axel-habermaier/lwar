@@ -31,6 +31,47 @@ namespace Tests.UserInterface
 		private TestControl _control2;
 
 		[Test]
+		public void FindResource_RootElement()
+		{
+			var resource = new object();
+			_control1.Resources["r"] = resource;
+
+			object foundResource;
+			_control1.Button3.TryFindResource("r", out foundResource).Should().BeTrue();
+			foundResource.Should().Be(resource);
+		}
+
+		[Test]
+		public void FindResource_RootElement_Overriden()
+		{
+			var resource = new object();
+			_control1.Resources["r"] = new object();
+			_control1.Canvas1.Resources["r"] = resource;
+
+			object foundResource;
+			_control1.Button3.TryFindResource("r", out foundResource).Should().BeTrue();
+			foundResource.Should().Be(resource);
+		}
+
+		[Test]
+		public void FindResource_SameElement()
+		{
+			var resource = new object();
+			_control1.Button3.Resources["r"] = resource;
+
+			object foundResource;
+			_control1.Button3.TryFindResource("r", out foundResource).Should().BeTrue();
+			foundResource.Should().Be(resource);
+		}
+
+		[Test]
+		public void FindResource_Unknown()
+		{
+			object foundResource;
+			_control1.Button3.TryFindResource("r", out foundResource).Should().BeFalse();
+		}
+
+		[Test]
 		public void InheritedProperty_Inherits()
 		{
 			_control1.ViewModel = _viewModel1;
@@ -54,17 +95,6 @@ namespace Tests.UserInterface
 		}
 
 		[Test]
-		public void Inherits_TreeRemove()
-		{
-			_control1.ViewModel = _viewModel1;
-
-			_control1.Button3.ViewModel.Should().Be(_viewModel1);
-			_control1.Canvas2.Children.Remove(_control1.Button3);
-
-			_control1.Button3.ViewModel.Should().Be(UIElement.ViewModelProperty.DefaultValue);
-		}
-
-		[Test]
 		public void Inherits_TreeChange()
 		{
 			_control1.ViewModel = _viewModel1;
@@ -75,6 +105,17 @@ namespace Tests.UserInterface
 			_control2.Canvas2.Children.Add(_control1.Button3);
 
 			_control1.Button3.ViewModel.Should().Be(_viewModel2);
+		}
+
+		[Test]
+		public void Inherits_TreeRemove()
+		{
+			_control1.ViewModel = _viewModel1;
+
+			_control1.Button3.ViewModel.Should().Be(_viewModel1);
+			_control1.Canvas2.Children.Remove(_control1.Button3);
+
+			_control1.Button3.ViewModel.Should().Be(UIElement.ViewModelProperty.DefaultValue);
 		}
 
 		[Test]

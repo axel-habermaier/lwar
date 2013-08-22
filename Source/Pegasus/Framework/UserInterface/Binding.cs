@@ -241,7 +241,7 @@ namespace Pegasus.Framework.UserInterface
 			if (_isChanging == 0 && !_isNull)
 				_targetObject.SetValue(_targetProperty, _sourceFunc(_sourceObject));
 			else if (_isNull)
-				_targetObject.SetValue(_targetProperty, default(T));
+				_targetObject.SetValue(_targetProperty, _targetProperty.DefaultValue);
 		}
 
 		/// <summary>
