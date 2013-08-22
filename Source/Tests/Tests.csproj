@@ -74,48 +74,59 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Parsing\BasicParsers\CharacterParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\BooleanParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\IPAddressParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\IPEndPointParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\QuotedStringParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\StringParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\WhiteSpacesParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\WhiteSpaces1ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\DigitParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\LetterParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\EndOfInputParserTests.cs" />
-    <Compile Include="Parsing\Combinators\AlternativesParserTests.cs" />
-    <Compile Include="Parsing\Combinators\ApplyParserTests.cs" />
-    <Compile Include="Parsing\Combinators\BetweenParserTests.cs" />
-    <Compile Include="Parsing\Combinators\OptionalParserTests.cs" />
-    <Compile Include="Parsing\Combinators\SeparatedBy1ParserTests.cs" />
-    <Compile Include="Parsing\Combinators\SeparatedByParserTests.cs" />
-    <Compile Include="Parsing\Combinators\Many1ParserTests.cs" />
-    <Compile Include="Parsing\Combinators\ManyParserTests.cs" />
-    <Compile Include="Parsing\Combinators\SkipParserTests.cs" />
-    <Compile Include="Parsing\Combinators\SequenceSecondParserTests.cs" />
-    <Compile Include="Parsing\Combinators\SequenceFirstParserTests.cs" />
-    <Compile Include="Parsing\InputStreamTests.cs" />
-    <Compile Include="Parsing\InputTriggerParserTests.cs" />
+    <Compile Include="Parsing\BasicParsers\CharacterParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\BooleanParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\IPAddressParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\IPEndPointParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\QuotedStringParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\StringParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\WhiteSpacesParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\WhiteSpaces1Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\DigitParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\LetterParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\EndOfInputParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\AlternativesParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\ApplyParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\BetweenParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\OptionalParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SeparatedBy1Parser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SeparatedByParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\Many1Parser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\ManyParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SkipParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SequenceSecondParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SequenceFirstParser.Tests.cs" />
+    <Compile Include="Parsing\InputStream.Tests.cs" />
+    <Compile Include="Parsing\InputTriggerParser.Tests.cs" />
     <Compile Include="Parsing\ParserTestsHelper.cs" />
-    <Compile Include="Parsing\BasicParsers\Float32ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\Float64ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\Int8ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\UInt8ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\Int64ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\UInt64ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\Int16ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\UInt16ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\UInt32ParserTests.cs" />
-    <Compile Include="Parsing\BasicParsers\Int32ParserTests.cs" />
+    <Compile Include="Parsing\BasicParsers\Float32Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Float64Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Int8Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\UInt8Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Int64Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\UInt64Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Int16Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\UInt16Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\UInt32Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Int32Parser.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserInterface\LogicalTree.Tests.cs" />
+    <Compile Include="UserInterface\Style.Tests.cs" />
+    <Compile Include="UserInterface\TestControl.cs" />
+    <Compile Include="UserInterface\TestViewModel.cs" />
+    <Compile Include="UserInterface\ValueInheritance.Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pegasus\Pegasus.csproj">
       <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
       <Name>Framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="UserInterface\DependencyProperty.Tests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="UserInterface\Binding.Tests.cs" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

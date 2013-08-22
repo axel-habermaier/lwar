@@ -37,23 +37,35 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   Applies the trigger to the given UI element.
 		/// </summary>
-		/// <param name="obj">The UI element the trigger should be applied to.</param>
-		internal override void Apply(UIElement obj)
+		/// <param name="element">The UI element the trigger should be applied to.</param>
+		internal override void Apply(UIElement element)
 		{
-			Assert.ArgumentNotNull(obj);
-			obj.AddChangedHandler(_property, PropertyChanged);
+			Assert.ArgumentNotNull(element);
+
+			element.AddChangedHandler(_property, PropertyChanged);
+			ApplyIfTriggered(element, element.GetValue(_property), unsetIfNotTriggered: false);
 		}
 
 		/// <summary>
-		///   Unsets the trigger from the given UI element.
+		///   Unsets the all triggered values from the given UI element.
 		/// </summary>
-		/// <param name="obj">The UI element the trigger should be unset from.</param>
-		internal override void Unset(UIElement obj)
+		/// <param name="element">The UI element the style should be unset from.</param>
+		internal override void Unset(UIElement element)
 		{
-			Assert.ArgumentNotNull(obj);
+			Assert.ArgumentNotNull(element);
 
-			obj.RemoveChangedHandler(_property, PropertyChanged);
-			UnsetSetters(obj);
+			element.RemoveChangedHandler(_property, PropertyChanged);
+			UnsetSetters(element);
+		}
+
+		/// <summary>
+		///   Reapplys all setters of the trigger if it is currently triggered.
+		/// </summary>
+		/// <param name="element">The UI element the triggered setters should be reapplied to.</param>
+		internal override void Reapply(UIElement element)
+		{
+			Assert.NotNull(element, "Expected an UI element.");
+			ApplyIfTriggered(element, element.GetValue(_property), unsetIfNotTriggered: false);
 		}
 
 		/// <summary>
@@ -65,11 +77,8 @@ namespace Pegasus.Framework.UserInterface
 			var uiElement = obj as UIElement;
 			Assert.NotNull(uiElement, "Expected an UI element.");
 
-			var value = obj.GetValue(args.Property);
-			if (EqualityComparer<T>.Default.Equals(value, _value))
-				ApplySetters(uiElement);
-			else
-				UnsetSetters(uiElement);
+			ApplyIfTriggered(uiElement, args.NewValue, unsetIfNotTriggered: true);
+			RaiseTriggerStateChanged(uiElement);
 		}
 
 		/// <summary>
@@ -90,6 +99,22 @@ namespace Pegasus.Framework.UserInterface
 		{
 			foreach (var setter in _setters)
 				setter.UnsetTriggered(element);
+		}
+
+		/// <summary>
+		///   Applies the setters of the trigger if the trigger is currently triggered; unsets them otherwise.
+		/// </summary>
+		/// <param name="element">The UI element the trigger should be applied to.</param>
+		/// <param name="value">The current value of the triggering dependency property.</param>
+		/// <param name="unsetIfNotTriggered">Indicates whether the value should be unset if it is not triggered.</param>
+		private void ApplyIfTriggered(UIElement element, T value, bool unsetIfNotTriggered)
+		{
+			var isTriggered = EqualityComparer<T>.Default.Equals(value, _value);
+
+			if (isTriggered)
+				ApplySetters(element);
+			else if (unsetIfNotTriggered)
+				UnsetSetters(element);
 		}
 	}
 }

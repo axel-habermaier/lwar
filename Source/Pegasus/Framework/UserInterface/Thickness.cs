@@ -104,5 +104,13 @@ namespace Pegasus.Framework.UserInterface
 		{
 			return !left.Equals(right);
 		}
+
+		/// <summary>
+		///   Returns a string representation of this instance.
+		/// </summary>
+		public override string ToString()
+		{
+			return string.Format("Left: {0}, Right: {1}, Top: {2}, Bottom: {3}", Left, Right, Top, Bottom);
+		}
 	}
 }

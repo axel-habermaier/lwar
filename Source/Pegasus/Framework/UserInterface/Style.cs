@@ -5,13 +5,8 @@ namespace Pegasus.Framework.UserInterface
 	/// <summary>
 	///   Enables sharing of dependency property values between different dependency objects.
 	/// </summary>
-	public class Style : ISealable
+	public sealed class Style : ISealable
 	{
-		/// <summary>
-		///   The style instance the current style is based on, inheriting all of its setters and triggers.
-		/// </summary>
-		private readonly Style _basedOn;
-
 		/// <summary>
 		///   The collection of setters that apply property values.
 		/// </summary>
@@ -32,20 +27,21 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   Initializes a new style instance, based on the given style.
 		/// </summary>
-		/// <param name="basedOn">The style instance the current style is based on, inheriting all of its setters and triggers.</param>
-		public Style(Style basedOn)
+		/// <param name="baseStyle">The style instance the current style is based on, inheriting all of its setters and triggers.</param>
+		public Style(Style baseStyle)
 		{
-			Assert.ArgumentNotNull(basedOn);
-			_basedOn = basedOn;
+			Assert.ArgumentNotNull(baseStyle);
+
+			BaseStyle = baseStyle;
+			CopyBaseStyle(baseStyle);
+
+			baseStyle.Seal();
 		}
 
 		/// <summary>
-		///   Gets the style instance the current style is based on, inheriting all of its setters and triggers.
+		///   Gets the base style of this style, or null if there is none.
 		/// </summary>
-		public Style BasedOn
-		{
-			get { return _basedOn; }
-		}
+		public Style BaseStyle { get; private set; }
 
 		/// <summary>
 		///   Gets the collection of setters that apply property values.
@@ -93,47 +89,87 @@ namespace Pegasus.Framework.UserInterface
 		{
 			IsSealed = true;
 
-			if (BasedOn != null)
-				BasedOn.Seal();
-
 			_setters.Seal();
 			_triggers.Seal();
+
+			RegisterTriggerStateChangedEvents();
 		}
 
 		/// <summary>
 		///   Applies the style to the given UI element.
 		/// </summary>
-		/// <param name="obj">The UI element the style should be applied to.</param>
-		internal void Apply(UIElement obj)
+		/// <param name="element">The UI element the style should be applied to.</param>
+		internal void Apply(UIElement element)
 		{
-			Assert.ArgumentNotNull(obj);
-
-			if (BasedOn != null)
-				BasedOn.Apply(obj);
+			Assert.ArgumentNotNull(element);
 
 			foreach (var setter in _setters)
-				setter.Apply(obj);
+				setter.Apply(element);
 
 			foreach (var trigger in _triggers)
-				trigger.Apply(obj);
+				trigger.Apply(element);
 		}
 
 		/// <summary>
 		///   Unsets the style from the given UI element.
 		/// </summary>
-		/// <param name="obj">The UI element the style should be unset from.</param>
-		internal void Unset(UIElement obj)
+		/// <param name="element">The UI element the style should be unset from.</param>
+		internal void Unset(UIElement element)
 		{
-			Assert.ArgumentNotNull(obj);
-
-			if (BasedOn != null)
-				BasedOn.Unset(obj);
+			Assert.ArgumentNotNull(element);
 
 			foreach (var setter in _setters)
-				setter.Unset(obj);
+				setter.Unset(element);
 
 			foreach (var trigger in _triggers)
-				trigger.Unset(obj);
+				trigger.Unset(element);
+		}
+
+		/// <summary>
+		///   Invoked when the triggered state of a trigger has potentially changed. In that case, we have to reapply all triggers
+		///   in order to guarantee that the correct triggered value is set.
+		/// </summary>
+		/// <param name="element">The UI element for which the triggered state has changed.</param>
+		private void OnTriggerStateChanged(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+
+			// If this is not the style set on the element, don't reapply the triggers. This happens when the current style
+			// is used as a base style of the element's actual style. In that case, the element's actual style is responsible
+			// for reapplying the triggers
+			if (element.Style != this)
+				return;
+
+			foreach (var trigger in _triggers)
+				trigger.Reapply(element);
+		}
+
+		/// <summary>
+		///   Registers the trigger state changed event handler for all triggers of the style.
+		/// </summary>
+		private void RegisterTriggerStateChangedEvents()
+		{
+			foreach (var trigger in _triggers)
+				trigger.TriggerStateChanged += OnTriggerStateChanged;
+		}
+
+		/// <summary>
+		///   Recursively copies all setters and triggers of the base style to this instance.
+		/// </summary>
+		/// <param name="baseStyle">The base style that should be copied.</param>
+		private void CopyBaseStyle(Style baseStyle)
+		{
+			if (baseStyle.BaseStyle != null)
+				CopyBaseStyle(baseStyle.BaseStyle);
+
+			var setters = Setters;
+			var triggers = Triggers;
+
+			foreach (var setter in baseStyle._setters)
+				setters.Add(setter);
+
+			foreach (var trigger in baseStyle._triggers)
+				triggers.Add(trigger);
 		}
 	}
 }

@@ -5,6 +5,7 @@ namespace Pegasus.Framework.UserInterface
 	using Math;
 	using Platform.Graphics;
 	using Rendering.UserInterface;
+	using Math = System.Math;
 
 	/// <summary>
 	///   Provides layouting, input, and other base functionality for all UI elements.
@@ -159,11 +160,7 @@ namespace Pegasus.Framework.UserInterface
 		public Style Style
 		{
 			get { return GetValue(StyleProperty); }
-			set
-			{
-				Assert.ArgumentNotNull(value);
-				SetValue(StyleProperty, value);
-			}
+			set { SetValue(StyleProperty, value); }
 		}
 
 		/// <summary>
@@ -430,10 +427,11 @@ namespace Pegasus.Framework.UserInterface
 		/// </summary>
 		private void OnStyleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Style> property)
 		{
-			Assert.NotNull(property.NewValue);
-
 			if (property.OldValue != null)
 				property.OldValue.Unset(this);
+
+			if (property.NewValue == null)
+				return;
 
 			property.NewValue.Seal();
 			property.NewValue.Apply(this);
@@ -617,14 +615,15 @@ namespace Pegasus.Framework.UserInterface
 					throw new InvalidOperationException("Unexepcted alignment.");
 			}
 
-			offset.X = System.Math.Max(0, offset.X);
-			offset.Y = System.Math.Max(0, offset.Y);
+			offset.X = Math.Max(0, offset.X);
+			offset.Y = Math.Max(0, offset.Y);
 			return offset;
 		}
 
 		/// <summary>
-		/// Increases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and 3,
-		/// the returns size has a width of 10 + 2 + 3 = 15.
+		///   Increases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and
+		///   3,
+		///   the returns size has a width of 10 + 2 + 3 = 15.
 		/// </summary>
 		/// <param name="size">The size the thickness should be added to.</param>
 		public SizeD IncreaseByMargin(SizeD size)

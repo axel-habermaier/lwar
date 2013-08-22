@@ -93,7 +93,6 @@ namespace Lwar
 		/// <param name="assets">The assets manager that should be used to load the assets required by the control.</param>
 		/// <param name="viewModel">The view model that should be bound to the control.</param>
 		public HelloWorldView(AssetsManager assets, ViewModel viewModel)
-			: base(assets, viewModel)
 		{
 			var baseStyle = new Style();
 			baseStyle.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 255, 0, 255)));
@@ -156,6 +155,8 @@ namespace Lwar
 			button2.SetBinding(ContentProperty, binding2);
 			button3.SetBinding(ContentProperty, binding3);
 			button2.SetBinding(MarginProperty, binding4);
+
+			ViewModel = viewModel;
 		}
 
 		//public void AddButton()

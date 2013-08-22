@@ -43,15 +43,38 @@ namespace Pegasus.Framework.UserInterface
 		}
 
 		/// <summary>
-		///   Applies the trigger to the given UI element.
+		///   Raised when the triggered state potentially changed for the UI element.
 		/// </summary>
-		/// <param name="obj">The UI element the setter should be applied to.</param>
-		internal abstract void Apply(UIElement obj);
+		internal event Action<UIElement> TriggerStateChanged;
 
 		/// <summary>
-		///   Unsets the style from the given UI element.
+		///   Raises the trigger state changed event.
 		/// </summary>
-		/// <param name="obj">The UI element the style should be unset from.</param>
-		internal abstract void Unset(UIElement obj);
+		/// <param name="element">The UI element for which the trigger state has changed.</param>
+		protected void RaiseTriggerStateChanged(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+
+			if (TriggerStateChanged != null)
+				TriggerStateChanged(element);
+		}
+
+		/// <summary>
+		///   Applies the trigger to the given UI element.
+		/// </summary>
+		/// <param name="element">The UI element the setter should be applied to.</param>
+		internal abstract void Apply(UIElement element);
+
+		/// <summary>
+		///   Unsets the all triggered values from the given UI element.
+		/// </summary>
+		/// <param name="element">The UI element the style should be unset from.</param>
+		internal abstract void Unset(UIElement element);
+
+		/// <summary>
+		///   Reapplys all setters of the trigger if it is currently triggered.
+		/// </summary>
+		/// <param name="element">The UI element the triggered setters should be reapplied to.</param>
+		internal abstract void Reapply(UIElement element);
 	}
 }
