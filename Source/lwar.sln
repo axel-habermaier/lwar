@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets", "Assets\Assets.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Assets Compiler\Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Direct3D11|x64 = Debug Direct3D11|x64
@@ -141,6 +143,22 @@ Global
 		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release OpenGL3|x64.Build.0 = Release OpenGL3|Any CPU
 		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release OpenGL3|x86.ActiveCfg = Release OpenGL3|x86
 		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}.Release OpenGL3|x86.Build.0 = Release OpenGL3|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug Direct3D11|x64.ActiveCfg = Debug|x64
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug Direct3D11|x64.Build.0 = Debug|x64
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug Direct3D11|x86.ActiveCfg = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug Direct3D11|x86.Build.0 = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug OpenGL3|x64.ActiveCfg = Debug|x64
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug OpenGL3|x64.Build.0 = Debug|x64
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug OpenGL3|x86.ActiveCfg = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Debug OpenGL3|x86.Build.0 = Debug|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release Direct3D11|x64.ActiveCfg = Release|x64
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release Direct3D11|x64.Build.0 = Release|x64
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release Direct3D11|x86.ActiveCfg = Release|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release Direct3D11|x86.Build.0 = Release|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release OpenGL3|x64.ActiveCfg = Release|x64
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release OpenGL3|x64.Build.0 = Release|x64
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release OpenGL3|x86.ActiveCfg = Release|x86
+		{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}.Release OpenGL3|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

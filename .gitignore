@@ -37,3 +37,6 @@ lwar.sln.ide
 *.psess
 *.vsp
 *.vspx
+Source/TestResults
+Source/Tests/bin
+Source/Tests/obj
