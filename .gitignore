@@ -40,3 +40,4 @@ lwar.sln.ide
 Source/TestResults
 Source/Tests/bin
 Source/Tests/obj
+*.xaml.cs

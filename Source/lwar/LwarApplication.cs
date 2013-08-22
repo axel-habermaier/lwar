@@ -98,6 +98,8 @@ namespace Lwar
 		/// <param name="viewModel">The view model that should be bound to the control.</param>
 		public HelloWorldView(AssetsManager assets, ViewModel viewModel)
 		{
+			Assert.ArgumentNotNull(assets);
+			Assert.ArgumentNotNull(viewModel);
 			Font = assets.LoadFont(Fonts.LiberationMono11);
 
 			var baseStyle = new Style();
@@ -128,6 +130,8 @@ namespace Lwar
 
 			Resources[typeof(Button)] = buttonStyle;
 			Resources["MyStyle"] = style;
+
+			ViewModel = viewModel;
 
 			var binding1 = new DataBinding<object>(v => ((HelloWorldViewModel)v).Name);
 			var binding2 = new DataBinding<object>(v => ((HelloWorldViewModel)v).Name2);
@@ -171,6 +175,14 @@ namespace Lwar
 				//VerticalAlignment = VerticalAlignment.Top
 			};
 
+			var panel = new StackPanel();
+			//panel.Orientation = Orientation.Horizontal;
+
+			Content = panel;
+			panel.Children.Add(button1);
+			panel.Children.Add(button2);
+			
+
 			var stackPanel = new StackPanel() { Orientation = Orientation.Horizontal };
 			stackPanel.Children.Add(button4);
 			stackPanel.Children.Add(button5);
@@ -180,15 +192,8 @@ namespace Lwar
 			//button2.SetValue(Canvas.BottomProperty, 5);
 
 			//canvas = new Canvas();
-
-			var panel = new StackPanel();
-			//panel.Orientation = Orientation.Horizontal;
-
-			panel.Children.Add(button1);
-			panel.Children.Add(button2);
 			panel.Children.Add(stackPanel);
 			panel.Children.Add(button3);
-			Content = panel;
 
 			////var resourceBinding = new ResourceBinding<Style>("MyStyle");
 			//button1.SetResourceBinding(StyleProperty, resourceBinding);
@@ -198,7 +203,7 @@ namespace Lwar
 			button3.SetBinding(ContentProperty, binding3);
 			//button2.SetBinding(MarginProperty, binding4);
 
-			ViewModel = viewModel;
+			
 		}
 
 		//public void AddButton()

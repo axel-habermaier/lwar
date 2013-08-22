@@ -338,6 +338,8 @@
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
     <Compile Include="Assets\Attributes\CubeMapAttribute.cs" />
     <Compile Include="Assets\Attributes\Texture2DAttribute.cs" />
+    <Compile Include="Assets\XamlAsset.cs" />
+    <Compile Include="Assets\XamlAssetFactory.cs" />
     <Compile Include="Assets\CubeMapAssetFactory.cs" />
     <Compile Include="Assets\EffectAssetFactory.cs" />
     <Compile Include="Assets\FontAssetFactory.cs" />
@@ -363,6 +365,7 @@
     <Compile Include="CompilationUnit.cs" />
     <Compile Include="Compilers\CompilationAction.cs" />
     <Compile Include="Compilers\EffectCompiler.cs" />
+    <Compile Include="Compilers\XamlCompiler.cs" />
     <Compile Include="Effects\ShaderAttribute.cs" />
     <Compile Include="Fonts\Error.cs" />
     <Compile Include="Fonts\Font.cs" />

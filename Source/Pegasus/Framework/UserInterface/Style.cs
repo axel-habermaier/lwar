@@ -87,6 +87,9 @@ namespace Pegasus.Framework.UserInterface
 		/// </summary>
 		public void Seal()
 		{
+			if (IsSealed)
+				return;
+
 			IsSealed = true;
 
 			_setters.Seal();
@@ -102,6 +105,8 @@ namespace Pegasus.Framework.UserInterface
 		internal void Apply(UIElement element)
 		{
 			Assert.ArgumentNotNull(element);
+
+			Seal();
 
 			foreach (var setter in _setters)
 				setter.Apply(element);

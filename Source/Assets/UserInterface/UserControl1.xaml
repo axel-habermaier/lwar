@@ -1,0 +1,17 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="290" Width="505">
+   <!-- <UserControl.Resources>
+        <Style x:Key="MyStyle">
+            <Setter Property="Control.Background" Value="Red" />
+        </Style>
+    </UserControl.Resources>-->
+    <Control.Background>
+        White
+    </Control.Background>
+    <Grid>
+        <Label Margin="0,0,10,0">Hello World!</Label>
+    </Grid>
+</UserControl>

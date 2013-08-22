@@ -72,7 +72,7 @@ namespace Pegasus.Framework.UserInterface
 		internal abstract void Unset(UIElement element);
 
 		/// <summary>
-		///   Reapplys all setters of the trigger if it is currently triggered.
+		///   Reapplies all setters of the trigger if it is currently triggered.
 		/// </summary>
 		/// <param name="element">The UI element the triggered setters should be reapplied to.</param>
 		internal abstract void Reapply(UIElement element);

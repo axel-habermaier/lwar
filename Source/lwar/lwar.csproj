@@ -185,6 +185,9 @@
     <Compile Include="..\Assets\Effects\Effects.cs">
       <Link>Assets\Effects.cs</Link>
     </Compile>
+    <Compile Include="..\Assets\UserInterface\UserControl1.xaml.cs">
+      <Link>UserInterface\UserControl1.xaml.cs</Link>
+    </Compile>
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
     <Compile Include="Gameplay\Actors\Explosion.cs" />

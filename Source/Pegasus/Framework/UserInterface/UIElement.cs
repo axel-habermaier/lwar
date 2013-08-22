@@ -443,9 +443,9 @@ namespace Pegasus.Framework.UserInterface
 			// Set the new style; if it is null, try to find an implicit style
 			if (property.NewValue == null)
 				BindImplicitStyle();
-			else
+			else if (Parent != null)
 			{
-				property.NewValue.Seal();
+				// No need to set the style if the UI element is not part of a logical tree
 				property.NewValue.Apply(this);
 				_usesImplicitStyle = false;
 			}
@@ -458,10 +458,7 @@ namespace Pegasus.Framework.UserInterface
 		{
 			object style;
 			if (!TryFindResource(GetType(), out style) || !(style is Style))
-			{
-				Log.Warn("No style could be determined for an UI element of type '{0}'.", GetType().FullName);
 				SetValue(StyleProperty, null);
-			}
 			else
 			{
 				Style = (Style)style;
@@ -514,10 +511,22 @@ namespace Pegasus.Framework.UserInterface
 			if (parent != null)
 			{
 				InvalidateResources();
+
+				if (Style != null)
+					Style.Apply(this);
+
 				OnAttached();
 			}
 			else
+			{
+				// Unset the style to avoid memory leaks (style triggers register an event handler on this UI element;
+				// therefore, this instance cannot be garbage collected before the triggers are garbage collected, which
+				// can have a very long lifetime if declared at application scope)
+				if (Style != null)
+					Style.Unset(this);
+
 				OnDetached();
+			}
 		}
 
 		/// <summary>

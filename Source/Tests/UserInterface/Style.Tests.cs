@@ -5,6 +5,7 @@ namespace Tests.UserInterface
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Framework.UserInterface;
+	using Pegasus.Framework.UserInterface.Controls;
 
 	[TestFixture]
 	public class StyleTests
@@ -14,10 +15,17 @@ namespace Tests.UserInterface
 		{
 			_control1 = new TestControl();
 			_control2 = new TestControl();
+
+			_root1 = new UserControl { Content = _control1 };
+			_root2 = new UserControl { Content = _control2 };
 		}
 
 		private TestControl _control1;
 		private TestControl _control2;
+
+		// The root elements are required as the styles are not set before the controls have a logical parent
+		private UserControl _root1;
+		private UserControl _root2;
 
 		[Test]
 		public void Setters_BaseStyle_NoOverride()

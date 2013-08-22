@@ -73,6 +73,7 @@ namespace Pegasus.AssetsCompiler
 				return _projectFile.Descendants(Namespace + "None")
 								   .Union(_projectFile.Descendants(Namespace + "Content"))
 								   .Union(_projectFile.Descendants(Namespace + "Compile"))
+								   .Union(_projectFile.Descendants(Namespace + "Page"))
 								   .Select(element => element.Attribute("Include").Value)
 								   .Select(asset => asset.Replace("\\", "/"))
 								   .ToArray();

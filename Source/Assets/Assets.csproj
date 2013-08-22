@@ -228,8 +228,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\Mono.Cecil.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Textures\Bullet.png" />
@@ -277,7 +280,12 @@
   <ItemGroup>
     <None Include="Fonts\Liberation Mono 11.font" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="UserInterface\UserControl1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="&quot;$(TargetDir)pgc.exe&quot; compile" WorkingDirectory="$(TargetDir)" />
