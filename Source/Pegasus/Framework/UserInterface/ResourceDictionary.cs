@@ -13,7 +13,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   The underlying dictionary instance.
 		/// </summary>
-		private readonly Dictionary<string, object> _dictionary = new Dictionary<string, object>();
+		private readonly Dictionary<object, object> _dictionary = new Dictionary<object, object>();
 
 		/// <summary>
 		///   Gets the number of resources contained in the dictionary.
@@ -27,7 +27,7 @@ namespace Pegasus.Framework.UserInterface
 		///   Gets or sets the resource with the specified key.
 		/// </summary>
 		/// <param name="key">The key of the resource to get or set.</param>
-		public object this[string key]
+		public object this[object key]
 		{
 			get { return _dictionary[key]; }
 			set
@@ -51,9 +51,9 @@ namespace Pegasus.Framework.UserInterface
 		///   Raises the resource changed event.
 		/// </summary>
 		/// <param name="key">The key of the resource that has been changed.</param>
-		private void RaiseChangeEvent(string key)
+		private void RaiseChangeEvent(object key)
 		{
-			Assert.ArgumentNotNullOrWhitespace(key);
+			Assert.ArgumentNotNull(key);
 
 			if (ResourceChanged != null)
 				ResourceChanged(this, key);
@@ -64,7 +64,7 @@ namespace Pegasus.Framework.UserInterface
 		/// </summary>
 		/// <param name="key">The key of the resource that should be add.</param>
 		/// <param name="resource">The resource that should be added.</param>
-		public void Add(string key, object resource)
+		public void Add(object key, object resource)
 		{
 			_dictionary.Add(key, resource);
 
@@ -79,7 +79,7 @@ namespace Pegasus.Framework.UserInterface
 		///   Removes the resource with the specified key from the dictionary.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be removed.</param>
-		public bool Remove(string key)
+		public bool Remove(object key)
 		{
 			if (!_dictionary.Remove(key))
 				return false;
@@ -101,7 +101,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   Determines whether the dictionary contains a resource with the specified key.
 		/// </summary>
-		public bool ContainsKey(string key)
+		public bool ContainsKey(object key)
 		{
 			return _dictionary.ContainsKey(key);
 		}
@@ -111,7 +111,7 @@ namespace Pegasus.Framework.UserInterface
 		/// </summary>
 		/// <param name="key">The key of the resource that should be returned.</param>
 		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
-		public bool TryGetValue(string key, out object resource)
+		public bool TryGetValue(object key, out object resource)
 		{
 			return _dictionary.TryGetValue(key, out resource);
 		}

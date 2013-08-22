@@ -127,7 +127,7 @@
     <Compile Include="UserInterface\DependencyProperty.Tests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserInterface\Binding.Tests.cs" />
+    <Compile Include="UserInterface\DataBinding.Tests.cs" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

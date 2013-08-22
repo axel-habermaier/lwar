@@ -37,6 +37,26 @@ namespace Pegasus.Framework.UserInterface.Controls
 			get { return _children ?? (_children = new UIElementCollection(this)); }
 		}
 
+		/// <summary>
+		///   Gets the number of visual children for this visual.
+		/// </summary>
+		protected override int VisualChildrenCount
+		{
+			get { return _children == null ? 0 : _children.Count; }
+		}
+
+		/// <summary>
+		///   Gets the visual child at the specified index.
+		/// </summary>
+		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
+		protected override Visual GetVisualChild(int index)
+		{
+			Assert.NotNull(_children);
+			Assert.ArgumentInRange(index, _children);
+
+			return _children[index];
+		}
+
 		public override void Draw(SpriteBatch spriteBatch, Font font)
 		{
 			foreach (var child in Children)

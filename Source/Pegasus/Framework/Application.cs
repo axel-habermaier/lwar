@@ -124,6 +124,7 @@ namespace Pegasus.Framework
 					spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
 					spriteBatch.SamplerState = SamplerState.PointClampNoMipmaps;
 
+					inputDevice.ActivateLayer(new InputLayer(1)); // TODO: Refactor this
 					while (_running)
 					{
 						// Update the keyboard and mouse state first (this ensures that WentDown returns 
@@ -135,7 +136,6 @@ namespace Pegasus.Framework
 						window.ProcessEvents();
 
 						// Update the logical inputs based on the new state of the input system
-						inputDevice.ActivateLayer(new InputLayer(1)); // TODO: Refactor this
 						inputDevice.Update();
 
 						// Check if any command bindings have been triggered and update the resolution manager

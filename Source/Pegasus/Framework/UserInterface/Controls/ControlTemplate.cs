@@ -3,9 +3,14 @@
 namespace Pegasus.Framework.UserInterface.Controls
 {
 	/// <summary>
-	///   Specifies the appearance and structure of a control.
+	///   Untyped base class for control templates that specify the visual appearance and structure of a control.
 	/// </summary>
-	public class ControlTemplate
+	public abstract class ControlTemplate
 	{
+		/// <summary>
+		///   Instantiates the template and returns the the root of the instantiated visual tree.
+		/// </summary>
+		/// <param name="control">The control the template should be instantiated for.</param>
+		internal abstract UIElement Instantiate(Control control);
 	}
 }

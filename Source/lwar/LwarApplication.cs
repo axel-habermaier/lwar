@@ -3,6 +3,7 @@
 namespace Lwar
 {
 	using System.Net;
+	using Assets;
 	using Network;
 	using Pegasus;
 	using Pegasus.Framework;
@@ -51,9 +52,12 @@ namespace Lwar
 		public int FrameCount
 		{
 			get { return _frameCount; }
-			set { ChangePropertyValue(ref _frameCount, value);Thickness = new Thickness(value / 10.0); }
+			set
+			{
+				ChangePropertyValue(ref _frameCount, value);
+				Thickness = new Thickness(value / 10.0);
+			}
 		}
-
 
 		public Thickness Thickness
 		{
@@ -94,6 +98,8 @@ namespace Lwar
 		/// <param name="viewModel">The view model that should be bound to the control.</param>
 		public HelloWorldView(AssetsManager assets, ViewModel viewModel)
 		{
+			Font = assets.LoadFont(Fonts.LiberationMono11);
+
 			var baseStyle = new Style();
 			baseStyle.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 255, 0, 255)));
 
@@ -110,10 +116,10 @@ namespace Lwar
 
 			Resources["MyStyle"] = style;
 
-			var binding1 = new Binding<object>(v => ((HelloWorldViewModel)v).Name);
-			var binding2 = new Binding<object>(v => ((HelloWorldViewModel)v).Name2);
-			var binding3 = new Binding<object>(v => ((HelloWorldViewModel)v).Name3);
-			var binding4 = new Binding<Thickness>(v => ((HelloWorldViewModel)v).Thickness);
+			var binding1 = new DataBinding<object>(v => ((HelloWorldViewModel)v).Name);
+			var binding2 = new DataBinding<object>(v => ((HelloWorldViewModel)v).Name2);
+			var binding3 = new DataBinding<object>(v => ((HelloWorldViewModel)v).Name3);
+			var binding4 = new DataBinding<Thickness>(v => ((HelloWorldViewModel)v).Thickness);
 
 			button1 = new Button() { Width = 300, Height = 100 };
 			var button2 = new Button()
@@ -133,6 +139,28 @@ namespace Lwar
 				//VerticalAlignment = VerticalAlignment.Top
 			};
 
+			var button4 = new Button()
+			{
+				Width = 20,
+				Height = 20,
+				Content = "Btn 4",
+				Margin = new Thickness(5),
+				//HorizontalAlignment = HorizontalAlignment.Left,
+				//VerticalAlignment = VerticalAlignment.Top
+			};
+			var button5 = new Button()
+			{
+				Width = 20,
+				Height = 20,
+				Content = "Btn 5",
+				Margin = new Thickness(5),
+				//HorizontalAlignment = HorizontalAlignment.Center,
+				//VerticalAlignment = VerticalAlignment.Top
+			};
+
+			var stackPanel = new StackPanel() { Orientation = Orientation.Horizontal };
+			stackPanel.Children.Add(button4);
+			stackPanel.Children.Add(button5);
 			//button1.SetValue(Canvas.LeftProperty, 200);
 			//button1.SetValue(Canvas.TopProperty, 200);
 			//button2.SetValue(Canvas.RightProperty, 5);
@@ -145,16 +173,17 @@ namespace Lwar
 
 			panel.Children.Add(button1);
 			panel.Children.Add(button2);
+			panel.Children.Add(stackPanel);
 			panel.Children.Add(button3);
 			Content = panel;
 
-			var resourceBinding = new ResourceBinding<Style>("MyStyle");
-			button1.SetResourceBinding(StyleProperty, resourceBinding);
+			////var resourceBinding = new ResourceBinding<Style>("MyStyle");
+			//button1.SetResourceBinding(StyleProperty, resourceBinding);
 
 			button1.SetBinding(ContentProperty, binding1);
 			button2.SetBinding(ContentProperty, binding2);
 			button3.SetBinding(ContentProperty, binding3);
-			button2.SetBinding(MarginProperty, binding4);
+			//button2.SetBinding(MarginProperty, binding4);
 
 			ViewModel = viewModel;
 		}

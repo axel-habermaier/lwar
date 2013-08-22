@@ -192,12 +192,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\InheritanceContext.cs" />
+    <Compile Include="Framework\UserInterface\Binding.cs" />
     <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ContentPresenter.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ControlTemplate`1.cs" />
+    <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />
+    <Compile Include="Framework\UserInterface\Controls\TextBlock.cs" />
     <Compile Include="Framework\UserInterface\Controls\Orientation.cs" />
     <Compile Include="Framework\UserInterface\Controls\StackPanel.cs" />
     <Compile Include="Framework\UserInterface\Controls\UserControl.cs" />
     <Compile Include="Framework\UserInterface\HorizontalAlignment.cs" />
     <Compile Include="Framework\UserInterface\ResourceKeyChangedHandlers.cs" />
+    <Compile Include="Framework\UserInterface\TemplateBinding.cs" />
     <Compile Include="Framework\UserInterface\Thickness.cs" />
     <Compile Include="Framework\UserInterface\UIContext.cs" />
     <Compile Include="Framework\UserInterface\VerticalAlignment.cs" />
@@ -233,7 +239,7 @@
     <Compile Include="Processes\TaskOperation.cs" />
     <Compile Include="Processes\TaskOperation`1.cs" />
     <Compile Include="Rendering\DynamicVertexBuffer.cs" />
-    <Compile Include="Framework\UserInterface\Binding.cs" />
+    <Compile Include="Framework\UserInterface\DataBinding.cs" />
     <Compile Include="Framework\UserInterface\Controls\Button.cs" />
     <Compile Include="Framework\UserInterface\Controls\ContentControl.cs" />
     <Compile Include="Framework\UserInterface\Controls\Control.cs" />

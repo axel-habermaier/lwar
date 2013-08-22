@@ -4,6 +4,7 @@ namespace Pegasus.Framework.UserInterface
 {
 	using Math;
 	using Platform.Graphics;
+	using Platform.Logging;
 	using Rendering.UserInterface;
 	using Math = System.Math;
 
@@ -34,7 +35,7 @@ namespace Pegasus.Framework.UserInterface
 		///   The font used for text rendering by the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<Font> FontProperty =
-			new DependencyProperty<Font>(affectsMeasure: true);
+			new DependencyProperty<Font>(affectsMeasure: true, inherits: true);
 
 		/// <summary>
 		///   Indicates whether the mouse is currently hovering the UI element.
@@ -405,7 +406,7 @@ namespace Pegasus.Framework.UserInterface
 		///   Invoked when a resource within the resource dictionary has been replaced, added, or removed, invalidating all
 		///   resources for this UI element and all of its children.
 		/// </summary>
-		private void ResourceChanged(ResourceDictionary resources, string key)
+		private void ResourceChanged(ResourceDictionary resources, object key)
 		{
 			InvalidateResources();
 		}
@@ -418,6 +419,7 @@ namespace Pegasus.Framework.UserInterface
 			if (ResourcesInvalidated != null)
 				ResourcesInvalidated();
 
+			BindImplicitStyle();
 			foreach (var child in LogicalChildren)
 				child.InvalidateResources();
 		}
@@ -430,26 +432,28 @@ namespace Pegasus.Framework.UserInterface
 			if (property.OldValue != null)
 				property.OldValue.Unset(this);
 
-			if (property.NewValue == null)
-				return;
-
-			property.NewValue.Seal();
-			property.NewValue.Apply(this);
+			if (property.NewValue != null)
+			{
+				property.NewValue.Seal();
+				property.NewValue.Apply(this);
+			}
+			else
+				BindImplicitStyle();
 		}
 
 		/// <summary>
-		///   Attaches a resource binding to the dependency property. When the resource changes, the dependency
-		///   property is updated accordingly.
+		///   Binds the implicit style to the UI element, if no other style is set.
 		/// </summary>
-		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
-		/// <param name="property">The dependency property that the resource should be bound to.</param>
-		/// <param name="binding">The binding that should be set.</param>
-		public void SetResourceBinding<T>(DependencyProperty<T> property, ResourceBinding<T> binding)
+		private void BindImplicitStyle()
 		{
-			Assert.ArgumentNotNull(property);
-			Assert.ArgumentNotNull(binding);
-
-			binding.Initialize(this, property);
+			object style;
+			if (!TryFindResource(GetType(), out style) || !(style is Style))
+			{
+				Log.Warn("No style could be determined for an UI element of type '{0}'.", GetType().FullName);
+				SetValue(StyleProperty, null);
+			}
+			else
+				Style = (Style)style;
 		}
 
 		/// <summary>
@@ -457,9 +461,9 @@ namespace Pegasus.Framework.UserInterface
 		/// </summary>
 		/// <param name="key">The key of the resource that should be returned.</param>
 		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
-		internal bool TryFindResource(string key, out object resource)
+		internal bool TryFindResource(object key, out object resource)
 		{
-			Assert.ArgumentNotNullOrWhitespace(key);
+			Assert.ArgumentNotNull(key);
 
 			// If the key is in our resource dictionary, return the resource
 			if (_resources != null && _resources.TryGetValue(key, out resource))
@@ -622,8 +626,7 @@ namespace Pegasus.Framework.UserInterface
 
 		/// <summary>
 		///   Increases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and
-		///   3,
-		///   the returns size has a width of 10 + 2 + 3 = 15.
+		///   3, the returned size has a width of 10 + 2 + 3 = 15.
 		/// </summary>
 		/// <param name="size">The size the thickness should be added to.</param>
 		public SizeD IncreaseByMargin(SizeD size)

@@ -9,56 +9,40 @@ namespace Pegasus.Framework.UserInterface
 	///   value every time the resource changes.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
-	public class ResourceBinding<T>
+	public sealed class ResourceBinding<T> : Binding<T>
 	{
 		/// <summary>
 		///   The key of the resource that is bound to the dependency property.
 		/// </summary>
-		private readonly string _key;
-
-		/// <summary>
-		///   The target UI element that defines the target dependency property.
-		/// </summary>
-		private UIElement _targetObject;
-
-		/// <summary>
-		///   The target dependency property whose value is bound.
-		/// </summary>
-		private DependencyProperty<T> _targetProperty;
+		private readonly object _key;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be bound to the dependency property.</param>
-		public ResourceBinding(string key)
+		public ResourceBinding(object key)
 		{
-			Assert.ArgumentNotNullOrWhitespace(key);
+			Assert.ArgumentNotNull(key);
 			_key = key;
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the resource binding has already been bound to a dependency property.
+		///   Gets the target object as an instance of UIElement.
 		/// </summary>
-		public bool IsBound { get; private set; }
+		private UIElement TargetObject
+		{
+			get { return _targetObject as UIElement; }
+		}
 
 		/// <summary>
 		///   Initializes the binding.
 		/// </summary>
-		/// <param name="targetObject">The target UI element that defines the target dependency property.</param>
-		/// <param name="targetProperty">The target dependency property whose value should be bound.</param>
-		internal void Initialize(UIElement targetObject, DependencyProperty<T> targetProperty)
+		protected override void Initialize()
 		{
-			Assert.ArgumentNotNull(targetObject);
-			Assert.ArgumentNotNull(targetProperty);
-			Assert.That(!IsBound, "The binding has already been bound to a dependency property.");
+			Assert.OfType<UIElement>(_targetObject);
 
-			_targetObject = targetObject;
-			_targetProperty = targetProperty;
-
-			_targetObject.ResourcesInvalidated += SetResource;
+			TargetObject.ResourcesInvalidated += SetResource;
 			SetResource();
-
-			IsBound = true;
 		}
 
 		/// <summary>
@@ -67,7 +51,7 @@ namespace Pegasus.Framework.UserInterface
 		private void SetResource()
 		{
 			object resource;
-			if (!_targetObject.TryFindResource(_key, out resource))
+			if (!TargetObject.TryFindResource(_key, out resource))
 			{
 				Log.Warn("Unable to find resource '{0}'.", _key);
 				_targetObject.SetValue(_targetProperty, _targetProperty.DefaultValue);

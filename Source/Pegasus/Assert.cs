@@ -2,6 +2,7 @@
 
 namespace Pegasus
 {
+	using System.Collections;
 	using System.Diagnostics;
 	using Framework;
 	using Platform.Memory;
@@ -25,7 +26,7 @@ namespace Pegasus
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the pointer is null.
+		///   Throws an ArgumentNullException if the pointer is null.
 		/// </summary>
 		/// <param name="pointer">The pointer to check for null.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -36,15 +37,27 @@ namespace Pegasus
 		}
 
 		/// <summary>
-		///   Throws an ArgumentNullException if the string argument is null or an ArgumentException if the string is empty (or
+		///   Throws an ArgumentException if the object is not the same as or subtype of the given type.
+		/// </summary>
+		/// <param name="obj">The object to check.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void ArgumentOfType<T>(object obj)
+		{
+			ArgumentNotNull(obj);
+
+			if (!(obj is T))
+				throw new ArgumentException("The given object is not of the requested type.");
+		}
+
+		/// <summary>
+		///   Throws an ArgumentException if the string argument is null or an ArgumentException if the string is empty (or
 		///   only whitespace).
 		/// </summary>
 		/// <param name="argument">The argument to check.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
 		public static void ArgumentNotNullOrWhitespace(string argument)
 		{
-			if (argument == null)
-				throw new ArgumentNullException("String parameter cannot be null.");
+			ArgumentNotNull(argument);
 
 			if (String.IsNullOrWhiteSpace(argument))
 				throw new ArgumentException("String parameter cannot be empty or consist of whitespace only.");
@@ -68,8 +81,8 @@ namespace Pegasus
 		/// </summary>
 		/// <typeparam name="T">The type of the value to check.</typeparam>
 		/// <param name="argument">The value to check.</param>
-		/// <param name="min">The lower bound of the range.</param>
-		/// <param name="max">The upper bound of the range.</param>
+		/// <param name="min">The inclusive lower bound of the range.</param>
+		/// <param name="max">The inclusive upper bound of the range.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
 		public static void ArgumentInRange<T>(T argument, T min, T max)
 			where T : IComparable<T>
@@ -84,14 +97,13 @@ namespace Pegasus
 		/// <summary>
 		///   Throws an ArgumentOutOfRangeException if the argument is outside the range.
 		/// </summary>
-		/// <typeparam name="T">The type of the array that specifies the bounds.</typeparam>
 		/// <param name="argument">The value of the index argument to check.</param>
-		/// <param name="array">The array that defines the valid range of the given index argument.</param>
+		/// <param name="collection">The collection that defines the valid range of the given index argument.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
-		public static void ArgumentInRange<T>(int argument, T[] array)
+		public static void ArgumentInRange(int argument, ICollection collection)
 		{
-			ArgumentNotNull(array);
-			ArgumentInRange(argument, 0, array.Length);
+			ArgumentNotNull(collection);
+			ArgumentInRange(argument, 0, collection.Count);
 		}
 
 		/// <summary>
@@ -120,8 +132,7 @@ namespace Pegasus
 		public static void IsNull<T>(T obj, string formatMessage, params object[] parameters)
 			where T : class
 		{
-			if (formatMessage == null)
-				throw new ArgumentNullException("formatMessage");
+			ArgumentNotNull(formatMessage);
 
 			if (obj != null)
 				throw new InvalidOperationException(String.Format(formatMessage, parameters));
@@ -138,8 +149,7 @@ namespace Pegasus
 		public static void NotNull<T>(T obj, string formatMessage, params object[] parameters)
 			where T : class
 		{
-			if (formatMessage == null)
-				throw new ArgumentNullException("formatMessage");
+			ArgumentNotNull(formatMessage);
 
 			if (obj == null)
 				throw new InvalidOperationException(String.Format(formatMessage, parameters));
@@ -155,7 +165,7 @@ namespace Pegasus
 			where T : class
 		{
 			if (obj == null)
-				throw new InvalidOperationException("Expected valid reference.");
+				throw new InvalidOperationException("Expected a valid reference.");
 		}
 
 		/// <summary>
@@ -165,8 +175,7 @@ namespace Pegasus
 		[Conditional("DEBUG"), DebuggerHidden]
 		public static void NotNullOrWhitespace(string s)
 		{
-			if (s == null)
-				throw new ArgumentNullException("s");
+			ArgumentNotNull(s);
 
 			if (String.IsNullOrWhiteSpace(s))
 				throw new InvalidOperationException("String cannot be empty or consist of whitespace only.");
@@ -181,8 +190,7 @@ namespace Pegasus
 		[Conditional("DEBUG"), DebuggerHidden]
 		public static void That(bool condition, string formatMessage, params object[] parameters)
 		{
-			if (formatMessage == null)
-				throw new ArgumentNullException("formatMessage");
+			ArgumentNotNull(formatMessage);
 
 			if (!condition)
 				throw new InvalidOperationException(String.Format(formatMessage, parameters));
@@ -195,8 +203,7 @@ namespace Pegasus
 		[Conditional("DEBUG"), DebuggerHidden]
 		public static void NotSealed(ISealable obj)
 		{
-			if (obj == null)
-				throw new ArgumentNullException("obj");
+			ArgumentNotNull(obj);
 
 			if (obj.IsSealed)
 				throw new InvalidOperationException(String.Format("The '{0}' instance has already been sealed.", obj.GetType().FullName));
@@ -210,8 +217,7 @@ namespace Pegasus
 		public static void NotDisposed<T>(T obj)
 			where T : DisposableObject
 		{
-			if (obj == null)
-				throw new ArgumentNullException("obj");
+			ArgumentNotNull(obj);
 
 			if (obj.IsDisposed)
 				throw new ObjectDisposedException(obj.GetType().FullName);
@@ -225,8 +231,7 @@ namespace Pegasus
 		public static void NotPooled<T>(T obj)
 			where T : PooledObject<T>, new()
 		{
-			if (obj == null)
-				throw new ArgumentNullException("obj");
+			ArgumentNotNull(obj);
 
 			if (obj.IsAvailable)
 				throw new InvalidOperationException(obj.GetType().FullName);
@@ -277,7 +282,18 @@ namespace Pegasus
 			ArgumentNotNull(array);
 			InRange(index, 0, array.Length);
 		}
+
+		/// <summary>
+		///   Throws an InvalidCastException if the object is not the same as or subtype of the given type.
+		/// </summary>
+		/// <param name="obj">The object to check.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void OfType<T>(object obj)
+		{
+			ArgumentNotNull(obj);
+
+			if (!(obj is T))
+				throw new InvalidCastException("The given object is not of the requested type.");
+		}
 	}
 }
-
-// ReSharper restore UnusedParameter.Global

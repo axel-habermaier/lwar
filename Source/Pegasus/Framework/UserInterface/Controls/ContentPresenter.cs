@@ -3,38 +3,40 @@
 namespace Pegasus.Framework.UserInterface.Controls
 {
 	using Math;
+	using Rendering;
+	using Rendering.UserInterface;
 
 	/// <summary>
-	///   Represents a base class for templated UI elements.
+	///   Converts arbitrary content into UI elements.
 	/// </summary>
-	public abstract class Control : UIElement
+	public class ContentPresenter : UIElement
 	{
 		/// <summary>
-		///   The template that defines the control's appearance.
+		///   The content of a content control.
 		/// </summary>
-		public static readonly DependencyProperty<ControlTemplate> TemplateProperty =
-			new DependencyProperty<ControlTemplate>(affectsMeasure: true, prohibitsAnimations: true);
+		public static readonly DependencyProperty<object> ContentProperty =
+			new DependencyProperty<object>(affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
-		///   The child UI element that represents the root of this control's template. Null if no template has been created.
+		///   The presented element of the content presenter.
 		/// </summary>
-		private UIElement _templateRoot;
+		private UIElement _presentedElement;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		protected Control()
+		public ContentPresenter()
 		{
-			AddChangedHandler(TemplateProperty, OnTemplateChanged);
+			AddChangedHandler(ContentProperty, OnContentChanged);
 		}
 
 		/// <summary>
-		///   Gets or sets the template that defines the control's appearance.
+		///   Gets or sets the content of the content control.
 		/// </summary>
-		public ControlTemplate Template
+		public object Content
 		{
-			get { return GetValue(TemplateProperty); }
-			set { SetValue(TemplateProperty, value); }
+			get { return GetValue(ContentProperty); }
+			set { SetValue(ContentProperty, value); }
 		}
 
 		/// <summary>
@@ -42,18 +44,35 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </summary>
 		protected override int VisualChildrenCount
 		{
-			get { return _templateRoot == null ? 0 : 1; }
+			get { return _presentedElement == null ? 0 : 1; }
 		}
 
 		/// <summary>
-		///   Changes the control's template root.
+		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
-		private void OnTemplateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<ControlTemplate> args)
+		protected override UIElementCollection.Enumerator LogicalChildren
 		{
+			get
+			{
+				if (_presentedElement == null)
+					return UIElementCollection.Enumerator.Empty;
+
+				return UIElementCollection.Enumerator.FromElement(_presentedElement);
+			}
+		}
+
+		/// <summary>
+		///   Updates the logical and visual parents of the new and old content.
+		/// </summary>
+		private void OnContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
+		{
+			if (args.NewValue is UIElement)
+				_presentedElement = args.NewValue as UIElement;
+
 			if (args.NewValue == null)
-				_templateRoot = null;
+				_presentedElement = null;
 			else
-				_templateRoot = args.NewValue.Instantiate(this);
+				_presentedElement = new TextBlock(args.NewValue.ToString());
 		}
 
 		/// <summary>
@@ -62,10 +81,10 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
 		protected override Visual GetVisualChild(int index)
 		{
-			Assert.NotNull(_templateRoot);
+			Assert.NotNull(_presentedElement);
 			Assert.ArgumentSatisfies(index == 0, "The UI element has only one visual child.");
 
-			return _templateRoot;
+			return _presentedElement;
 		}
 
 		/// <summary>
@@ -78,11 +97,11 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </param>
 		protected override SizeD MeasureCore(SizeD constraint)
 		{
-			if (_templateRoot == null)
+			if (_presentedElement == null)
 				return new SizeD();
 
-			_templateRoot.Measure(constraint);
-			return _templateRoot.DesiredSize;
+			_presentedElement.Measure(constraint);
+			return _presentedElement.DesiredSize;
 		}
 
 		/// <summary>
@@ -96,10 +115,14 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{
-			if (_templateRoot != null)
-				_templateRoot.Arrange(new RectangleD(0, 0, finalSize));
+			if (_presentedElement != null)
+				_presentedElement.Arrange(new RectangleD(0, 0, finalSize));
 
 			return finalSize;
+		}
+
+		public override void Draw(SpriteBatch spriteBatch, Font font)
+		{
 		}
 	}
 }

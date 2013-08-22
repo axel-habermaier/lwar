@@ -14,10 +14,10 @@ namespace Pegasus.Framework.UserInterface.Controls
 	{
 		public override void Draw(SpriteBatch batch, Font font)
 		{
-			var width = (int)RenderSize.Width;
-			var height = (int)RenderSize.Height;
-			var x = (int)VisualOffset.X;
-			var y = (int)VisualOffset.Y;
+			var width = (int)System.Math.Round(RenderSize.Width);
+			var height = (int)System.Math.Round(RenderSize.Height);
+			var x = (int)System.Math.Round(VisualOffset.X);
+			var y = (int)System.Math.Round(VisualOffset.Y);
 
 			batch.Layer--;
 			var s = Content == null ? "" : Content.ToString();

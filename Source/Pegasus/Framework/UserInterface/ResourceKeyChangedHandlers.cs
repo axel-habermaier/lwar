@@ -7,5 +7,5 @@ namespace Pegasus.Framework.UserInterface
 	/// </summary>
 	/// <param name="resourceDictionary">The resource dictionary that has been changed.</param>
 	/// <param name="key">The key of the resource that has been changed.</param>
-	internal delegate void ResourceKeyChangedHandler(ResourceDictionary resourceDictionary, string key);
+	internal delegate void ResourceKeyChangedHandler(ResourceDictionary resourceDictionary, object key);
 }

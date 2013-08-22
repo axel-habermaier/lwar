@@ -100,3 +100,5 @@ NOTES FOR FUTURE IMPLEMENTATION TASKS
 - Width/Height take precedence over alignment = stretch
 - margin applies space outside actualwidth/height
 - min width/height must be honored, then max widht/height, only then widht/height
+
+- binding to another element when tree changes should update the binding
