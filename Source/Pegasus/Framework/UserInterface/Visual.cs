@@ -4,7 +4,6 @@ namespace Pegasus.Framework.UserInterface
 {
 	using Math;
 	using Rendering;
-	using Rendering.UserInterface;
 
 	/// <summary>
 	///   Provides rendering support for the UI system, also including hit testing.
@@ -47,6 +46,15 @@ namespace Pegasus.Framework.UserInterface
 				GetVisualChild(i).ApplyVisualOffset(VisualOffset);
 		}
 
-		public abstract void Draw(SpriteBatch spriteBatch, Font font);
+		internal void Draw(SpriteBatch spriteBatch)
+		{
+			OnDraw(spriteBatch);
+
+			var count = VisualChildrenCount;
+			for (var i = 0; i < count; ++i)
+				GetVisualChild(i).Draw(spriteBatch);
+		}
+
+		protected abstract void OnDraw(SpriteBatch spriteBatch);
 	}
 }

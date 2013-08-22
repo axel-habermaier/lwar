@@ -101,4 +101,5 @@ NOTES FOR FUTURE IMPLEMENTATION TASKS
 - margin applies space outside actualwidth/height
 - min width/height must be honored, then max widht/height, only then widht/height
 
-- binding to another element when tree changes should update the binding
+- data binding to another element when tree changes should update the binding
+- memory leaks for events registered in bindings and triggers

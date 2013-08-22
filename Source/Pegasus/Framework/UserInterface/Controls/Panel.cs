@@ -3,7 +3,6 @@
 namespace Pegasus.Framework.UserInterface.Controls
 {
 	using Rendering;
-	using Rendering.UserInterface;
 
 	/// <summary>
 	///   A base class for all panel elements that position and arrange child UI elements.
@@ -57,10 +56,8 @@ namespace Pegasus.Framework.UserInterface.Controls
 			return _children[index];
 		}
 
-		public override void Draw(SpriteBatch spriteBatch, Font font)
+		protected override void OnDraw(SpriteBatch spriteBatch)
 		{
-			foreach (var child in Children)
-				child.Draw(spriteBatch, font);
 		}
 	}
 }

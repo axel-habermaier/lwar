@@ -2,9 +2,6 @@
 
 namespace Pegasus.Framework.UserInterface.Controls
 {
-	using Rendering;
-	using Rendering.UserInterface;
-
 	/// <summary>
 	///   Represents a control with a single logical child of any type as its content.
 	/// </summary>
@@ -15,14 +12,6 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </summary>
 		public static readonly DependencyProperty<object> ContentProperty =
 			new DependencyProperty<object>(affectsMeasure: true, prohibitsAnimations: true);
-
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		public ContentControl()
-		{
-			AddChangedHandler(ContentProperty, OnContentChanged);
-		}
 
 		/// <summary>
 		///   Gets or sets the content of the content control.
@@ -46,30 +35,6 @@ namespace Pegasus.Framework.UserInterface.Controls
 
 				return UIElementCollection.Enumerator.Empty;
 			}
-		}
-
-		/// <summary>
-		///   Updates the logical and visual parents of the new and old content.
-		/// </summary>
-		private void OnContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
-		{
-			var oldContent = args.OldValue as UIElement;
-			var newContent = args.NewValue as UIElement;
-
-			if (oldContent != null)
-				oldContent.ChangeLogicalParent(null);
-
-			if (newContent != null)
-				newContent.ChangeLogicalParent(this);
-		}
-
-		public override void Draw(SpriteBatch spriteBatch, Font font)
-		{
-			var visual = Content as Visual;
-			if (visual == null)
-				return;
-
-			visual.Draw(spriteBatch, font);
 		}
 	}
 }

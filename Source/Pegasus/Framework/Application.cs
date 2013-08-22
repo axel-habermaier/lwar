@@ -165,7 +165,7 @@ namespace Pegasus.Framework
 							DepthStencilState.DepthDisabled.Bind();
 							BlendState.Premultiplied.Bind();
 							DrawUserInterface(spriteBatch);
-							uiContext.Draw(spriteBatch, font);
+							uiContext.Draw(spriteBatch);
 
 							// Draw the console and the statistics on top of the current frame
 							statistics.Draw(spriteBatch);

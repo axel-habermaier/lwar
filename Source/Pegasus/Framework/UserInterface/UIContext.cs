@@ -117,9 +117,9 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   Draws all UI elements in the order they have been added to the context.
 		/// </summary>
-		public void Draw(SpriteBatch spriteBatch, Font font)
+		public void Draw(SpriteBatch spriteBatch)
 		{
-			_canvas.Draw(spriteBatch, font);
+			_canvas.Draw(spriteBatch);
 		}
 
 		/// <summary>

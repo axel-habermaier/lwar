@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.UserInterface.Controls
 {
 	using Math;
+	using Rendering;
 
 	/// <summary>
 	///   Represents a base class for templated UI elements.
@@ -46,14 +47,34 @@ namespace Pegasus.Framework.UserInterface.Controls
 		}
 
 		/// <summary>
+		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
+		/// </summary>
+		protected override UIElementCollection.Enumerator LogicalChildren
+		{
+			get
+			{
+				if (_templateRoot == null)
+					return UIElementCollection.Enumerator.Empty;
+
+				return UIElementCollection.Enumerator.FromElement(_templateRoot);
+			}
+		}
+
+		/// <summary>
 		///   Changes the control's template root.
 		/// </summary>
 		private void OnTemplateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<ControlTemplate> args)
 		{
+			if (_templateRoot != null)
+				_templateRoot.ChangeLogicalParent(null);
+
 			if (args.NewValue == null)
 				_templateRoot = null;
 			else
 				_templateRoot = args.NewValue.Instantiate(this);
+
+			if (_templateRoot != null)
+				_templateRoot.ChangeLogicalParent(this);
 		}
 
 		/// <summary>
@@ -100,6 +121,10 @@ namespace Pegasus.Framework.UserInterface.Controls
 				_templateRoot.Arrange(new RectangleD(0, 0, finalSize));
 
 			return finalSize;
+		}
+
+		protected override void OnDraw(SpriteBatch spriteBatch)
+		{
 		}
 	}
 }

@@ -114,6 +114,19 @@ namespace Lwar
 			trigger.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 255, 123, 255)));
 			style.Triggers.Add(trigger);
 
+			var buttonTemplate = new ControlTemplate<Button>(button =>
+			{
+				var binding = new TemplateBinding<object>(button, ContentProperty);
+				var presenter = new ContentPresenter();
+				presenter.SetBinding(ContentPresenter.ContentProperty, binding);
+
+				return presenter;
+			});
+
+			var buttonStyle = new Style();
+			buttonStyle.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, buttonTemplate));
+
+			Resources[typeof(Button)] = buttonStyle;
 			Resources["MyStyle"] = style;
 
 			var binding1 = new DataBinding<object>(v => ((HelloWorldViewModel)v).Name);

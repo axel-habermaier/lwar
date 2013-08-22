@@ -494,12 +494,17 @@ namespace Pegasus.Framework.UserInterface
 
 			Parent = parent;
 
-			// Setting a new (valid) parent possibly invalidates the resources of this UI element and its children
-			if (parent != null)
-				InvalidateResources();
-
 			// Changing the parent possibly invalidates the inherited property values of this UI element and its children
 			InvalidateInheritedValues(parent);
+
+			// Setting a new (valid) parent possibly invalidates the resources of this UI element and its children
+			if (parent != null)
+			{
+				InvalidateResources();
+				OnAttached();
+			}
+			else
+				OnDetached();
 		}
 
 		/// <summary>
@@ -629,10 +634,24 @@ namespace Pegasus.Framework.UserInterface
 		///   3, the returned size has a width of 10 + 2 + 3 = 15.
 		/// </summary>
 		/// <param name="size">The size the thickness should be added to.</param>
-		public SizeD IncreaseByMargin(SizeD size)
+		private SizeD IncreaseByMargin(SizeD size)
 		{
 			var margin = Margin;
 			return new SizeD(size.Width + margin.Left + margin.Right, size.Height + margin.Top + margin.Bottom);
+		}
+
+		/// <summary>
+		///   Invoked when the UI element is attached to a new logical tree.
+		/// </summary>
+		protected virtual void OnAttached()
+		{
+		}
+
+		/// <summary>
+		///   Invoked when the UI element has been detached from its current logical tree.
+		/// </summary>
+		protected virtual void OnDetached()
+		{
 		}
 	}
 }

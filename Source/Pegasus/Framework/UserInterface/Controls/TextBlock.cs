@@ -58,15 +58,6 @@ namespace Pegasus.Framework.UserInterface.Controls
 			get { return UIElementCollection.Enumerator.Empty; }
 		}
 
-		public override void Draw(SpriteBatch spriteBatch, Font font)
-		{
-			var x = (int)Math.Round(VisualOffset.X);
-			var y = (int)Math.Round(VisualOffset.Y);
-
-			using (var text = Rendering.UserInterface.Text.Create(Text))
-				TextRenderer.Draw(spriteBatch, Font, text, Color.FromRgba(0, 0, 0, 255), new Vector2i(x, y));
-		}
-
 		/// <summary>
 		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
@@ -94,6 +85,15 @@ namespace Pegasus.Framework.UserInterface.Controls
 		{
 			Assert.NotNull(Font);
 			return new SizeD(Font.MeasureWidth(Text), Font.LineHeight);
+		}
+
+		protected override void OnDraw(SpriteBatch spriteBatch)
+		{
+			var x = (int)Math.Round(VisualOffset.X);
+			var y = (int)Math.Round(VisualOffset.Y);
+
+			using (var text = Rendering.UserInterface.Text.Create(Text))
+				TextRenderer.Draw(spriteBatch, Font, text, Color.FromRgba(255, 0, 0, 255), new Vector2i(x, y));
 		}
 	}
 }

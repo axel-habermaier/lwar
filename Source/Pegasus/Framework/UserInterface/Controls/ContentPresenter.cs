@@ -4,7 +4,6 @@ namespace Pegasus.Framework.UserInterface.Controls
 {
 	using Math;
 	using Rendering;
-	using Rendering.UserInterface;
 
 	/// <summary>
 	///   Converts arbitrary content into UI elements.
@@ -21,6 +20,11 @@ namespace Pegasus.Framework.UserInterface.Controls
 		///   The presented element of the content presenter.
 		/// </summary>
 		private UIElement _presentedElement;
+
+		/// <summary>
+		///   A cached text block instance that the presenter can use to present text content.
+		/// </summary>
+		private TextBlock _textBlock;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -66,13 +70,18 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </summary>
 		private void OnContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
 		{
+			if (_presentedElement != null)
+				_presentedElement.ChangeLogicalParent(null);
+
 			if (args.NewValue is UIElement)
 				_presentedElement = args.NewValue as UIElement;
-
-			if (args.NewValue == null)
+			else if (args.NewValue == null)
 				_presentedElement = null;
 			else
-				_presentedElement = new TextBlock(args.NewValue.ToString());
+				_presentedElement = _textBlock ?? (_textBlock = new TextBlock(args.NewValue.ToString()));
+
+			if (_presentedElement != null)
+				_presentedElement.ChangeLogicalParent(Parent);
 		}
 
 		/// <summary>
@@ -121,7 +130,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 			return finalSize;
 		}
 
-		public override void Draw(SpriteBatch spriteBatch, Font font)
+		protected override void OnDraw(SpriteBatch spriteBatch)
 		{
 		}
 	}
