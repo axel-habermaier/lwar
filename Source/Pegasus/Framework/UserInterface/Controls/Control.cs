@@ -117,10 +117,11 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{
-			if (_templateRoot != null)
-				_templateRoot.Arrange(new RectangleD(0, 0, finalSize));
+			if (_templateRoot == null)
+				return new SizeD();
 
-			return finalSize;
+			_templateRoot.Arrange(new RectangleD(0, 0, finalSize));
+			return _templateRoot.RenderSize;
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)

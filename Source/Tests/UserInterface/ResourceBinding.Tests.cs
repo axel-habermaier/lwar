@@ -25,6 +25,7 @@ namespace Tests.UserInterface
 
 		private static readonly Style ImplicitButtonStyle1 = new Style();
 		private static readonly Style ImplicitButtonStyle2 = new Style();
+		private static readonly Style ExplicitButtonStyle = new Style();
 
 		private const string Key = "Margin";
 
@@ -148,6 +149,42 @@ namespace Tests.UserInterface
 		}
 
 		[Test]
+		public void ImplicitStyle_OverriddenByExplicitStyle_ExplicitSetFirst()
+		{
+			_control1.Button1.Style = ExplicitButtonStyle;
+			SetImplicitStyle1(_control1);
+
+			_control1.Button1.Style.Should().Be(ExplicitButtonStyle);
+		}
+
+		[Test]
+		public void ImplicitStyle_OverriddenByExplicitStyle_ImplicitSetFirst()
+		{
+			SetImplicitStyle1(_control1);
+			_control1.Button1.Style = ExplicitButtonStyle;
+
+			_control1.Button1.Style.Should().Be(ExplicitButtonStyle);
+		}
+
+		[Test]
+		public void ImplicitStyle_Reparent_BothImplicit()
+		{
+			var button = new Button();
+			var userControl1 = new UserControl();
+			var userControl2 = new UserControl();
+
+			SetImplicitStyle1(userControl1);
+			SetImplicitStyle2(userControl2);
+
+			userControl1.Content = button;
+			button.Style.Should().Be(ImplicitButtonStyle1);
+
+			userControl1.Content = null;
+			userControl2.Content = button;
+			button.Style.Should().Be(ImplicitButtonStyle2);
+		}
+
+		[Test]
 		public void NoValue()
 		{
 			AddWidthBinding(_control1);
@@ -243,7 +280,7 @@ namespace Tests.UserInterface
 		}
 
 		[Test]
-		public void ResourceOverriden()
+		public void ResourceOverridden()
 		{
 			_control1.Resources[Key] = _thickness1;
 			_control1.Canvas1.Resources[Key] = _thickness2;
@@ -252,7 +289,7 @@ namespace Tests.UserInterface
 		}
 
 		[Test]
-		public void ResourceOverriden_ChangeOverridingResourceDictionary()
+		public void ResourceOverridden_ChangeOverridingResourceDictionary()
 		{
 			_control1.Resources[Key] = _thickness3;
 			_control1.Canvas1.Resources[Key] = _thickness1;
@@ -266,7 +303,7 @@ namespace Tests.UserInterface
 		}
 
 		[Test]
-		public void ResourceOverriden_ChangeResource()
+		public void ResourceOverridden_ChangeResource()
 		{
 			_control1.Resources[Key] = _thickness1;
 			AddBinding(_control1.Button3);
@@ -277,7 +314,7 @@ namespace Tests.UserInterface
 		}
 
 		[Test]
-		public void ResourceOverriden_RemoveOverridingResourceDictionary()
+		public void ResourceOverridden_RemoveOverridingResourceDictionary()
 		{
 			_control1.Resources[Key] = _thickness3;
 			_control1.Canvas1.Resources[Key] = _thickness1;

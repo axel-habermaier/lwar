@@ -107,7 +107,7 @@ namespace Pegasus.Framework.UserInterface
 		///   The horizontal alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<HorizontalAlignment> HorizontalAlignmentProperty =
-			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Stretch,
+			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Left,
 														affectsArrange: true,
 														validationCallback: ValidateAlignment);
 
@@ -115,7 +115,7 @@ namespace Pegasus.Framework.UserInterface
 		///   The vertical alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<VerticalAlignment> VerticalAlignmentProperty =
-			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Stretch,
+			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Top,
 													  affectsArrange: true,
 													  validationCallback: ValidateAlignment);
 
@@ -128,6 +128,11 @@ namespace Pegasus.Framework.UserInterface
 		///   The resources used by the UI element.
 		/// </summary>
 		private ResourceDictionary _resources;
+
+		/// <summary>
+		///   A value indicating whether the UI element uses and implicitly set style.
+		/// </summary>
+		private bool _usesImplicitStyle = true;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -419,7 +424,10 @@ namespace Pegasus.Framework.UserInterface
 			if (ResourcesInvalidated != null)
 				ResourcesInvalidated();
 
-			BindImplicitStyle();
+			// If we're using an implicit style, we have to check whether the style has changed
+			if (_usesImplicitStyle)
+				BindImplicitStyle();
+
 			foreach (var child in LogicalChildren)
 				child.InvalidateResources();
 		}
@@ -432,13 +440,15 @@ namespace Pegasus.Framework.UserInterface
 			if (property.OldValue != null)
 				property.OldValue.Unset(this);
 
-			if (property.NewValue != null)
+			// Set the new style; if it is null, try to find an implicit style
+			if (property.NewValue == null)
+				BindImplicitStyle();
+			else
 			{
 				property.NewValue.Seal();
 				property.NewValue.Apply(this);
+				_usesImplicitStyle = false;
 			}
-			else
-				BindImplicitStyle();
 		}
 
 		/// <summary>
@@ -453,7 +463,10 @@ namespace Pegasus.Framework.UserInterface
 				SetValue(StyleProperty, null);
 			}
 			else
+			{
 				Style = (Style)style;
+				_usesImplicitStyle = true;
+			}
 		}
 
 		/// <summary>
@@ -567,10 +580,10 @@ namespace Pegasus.Framework.UserInterface
 			if (VerticalAlignment == VerticalAlignment.Stretch)
 				renderSize.Height = finalRect.Height - Margin.Top - Margin.Bottom;
 
-			var offset = ComputeAlignmentOffset(finalRect.Size);
-
-			VisualOffset = finalRect.Position + offset;
 			RenderSize = renderSize;
+
+			var offset = ComputeAlignmentOffset(finalRect.Size);
+			VisualOffset = finalRect.Position + offset;
 		}
 
 		/// <summary>
@@ -605,7 +618,7 @@ namespace Pegasus.Framework.UserInterface
 					offset.X = availableSize.Width - RenderSize.Width - Margin.Right;
 					break;
 				default:
-					throw new InvalidOperationException("Unexepcted alignment.");
+					throw new InvalidOperationException("Unexpected alignment.");
 			}
 
 			switch (VerticalAlignment)
@@ -621,7 +634,7 @@ namespace Pegasus.Framework.UserInterface
 					offset.Y = availableSize.Height - RenderSize.Height - Margin.Bottom;
 					break;
 				default:
-					throw new InvalidOperationException("Unexepcted alignment.");
+					throw new InvalidOperationException("Unexpected alignment.");
 			}
 
 			offset.X = Math.Max(0, offset.X);

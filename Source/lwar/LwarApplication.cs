@@ -140,7 +140,7 @@ namespace Lwar
 				Width = 100,
 				Height = 300,
 				Margin = new Thickness(15, 5, 21, 15),
-				//HorizontalAlignment = HorizontalAlignment.Left,
+				HorizontalAlignment = HorizontalAlignment.Right,
 				//VerticalAlignment = VerticalAlignment.Top
 			};
 			var button3 = new Button()

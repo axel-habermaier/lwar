@@ -70,15 +70,23 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </summary>
 		private void OnContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
 		{
-			if (_presentedElement != null)
-				_presentedElement.ChangeLogicalParent(null);
+			var previousElement = _presentedElement;
 
 			if (args.NewValue is UIElement)
 				_presentedElement = args.NewValue as UIElement;
 			else if (args.NewValue == null)
 				_presentedElement = null;
+			else if (_textBlock == null)
+				_presentedElement = _textBlock = new TextBlock(args.NewValue.ToString());
 			else
-				_presentedElement = _textBlock ?? (_textBlock = new TextBlock(args.NewValue.ToString()));
+			{
+				// Reuse the previous text block instance (and don't reparent it)
+				_textBlock.Text = args.NewValue.ToString();
+				previousElement = null;
+			}
+
+			if (previousElement != null)
+				previousElement.ChangeLogicalParent(null);
 
 			if (_presentedElement != null)
 				_presentedElement.ChangeLogicalParent(Parent);
@@ -124,10 +132,11 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{
-			if (_presentedElement != null)
-				_presentedElement.Arrange(new RectangleD(0, 0, finalSize));
+			if (_presentedElement == null)
+				return new SizeD();
 
-			return finalSize;
+			_presentedElement.Arrange(new RectangleD(0, 0, finalSize));
+			return _presentedElement.RenderSize;
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)
