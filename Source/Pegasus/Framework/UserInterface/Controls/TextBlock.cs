@@ -53,7 +53,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
-		protected override UIElementCollection.Enumerator LogicalChildren
+		protected internal override UIElementCollection.Enumerator LogicalChildren
 		{
 			get { return UIElementCollection.Enumerator.Empty; }
 		}

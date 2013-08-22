@@ -28,7 +28,7 @@ namespace Tests.UserInterface
 
 		private const string Key = "Margin";
 
-		private readonly Thickness _thickness1 = new Thickness(4);
+		private readonly Thickness _thickness1 = new Thickness(2);
 		private readonly Thickness _thickness2 = new Thickness(4);
 		private readonly Thickness _thickness3 = new Thickness(8);
 

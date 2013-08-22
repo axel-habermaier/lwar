@@ -338,7 +338,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
-		protected abstract UIElementCollection.Enumerator LogicalChildren { get; }
+		protected internal abstract UIElementCollection.Enumerator LogicalChildren { get; }
 
 		/// <summary>
 		///   Gets the final render size of the UI element.

@@ -113,21 +113,22 @@
     <Compile Include="UserInterface\LogicalTree.Tests.cs" />
     <Compile Include="UserInterface\ResourceBinding.Tests.cs" />
     <Compile Include="UserInterface\Style.Tests.cs" />
+    <Compile Include="UserInterface\Templates.Tests.cs" />
     <Compile Include="UserInterface\TestControl.cs" />
     <Compile Include="UserInterface\TestViewModel.cs" />
     <Compile Include="UserInterface\ValueInheritance.Tests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Pegasus\Pegasus.csproj">
-      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
-      <Name>Framework</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UserInterface\DependencyProperty.Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UserInterface\DataBinding.Tests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pegasus\Pegasus.csproj">
+      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
+      <Name>Pegasus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
