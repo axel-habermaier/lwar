@@ -439,6 +439,16 @@
     <Compile Include="Effects\VertexShaderAttribute.cs" />
     <Compile Include="CodeGeneration\Registries\Cvar.cs" />
     <Compile Include="CodeGeneration\Registries\RegistryGenerator.cs" />
+    <Compile Include="UserInterface\ContentPropertyAttribute.cs" />
+    <Compile Include="UserInterface\Controls\ContentControl.cs" />
+    <Compile Include="UserInterface\Controls\Control.cs" />
+    <Compile Include="UserInterface\Controls\UIElement.cs" />
+    <Compile Include="UserInterface\Markup\XamlFile.cs" />
+    <Compile Include="UserInterface\Markup\XamlNamespace.cs" />
+    <Compile Include="UserInterface\Markup\XamlObject.cs" />
+    <Compile Include="UserInterface\Markup\XamlProperty.cs" />
+    <Compile Include="UserInterface\ResourceDictionary.cs" />
+    <Compile Include="UserInterface\Controls\UserControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

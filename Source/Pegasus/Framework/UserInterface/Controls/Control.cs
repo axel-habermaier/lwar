@@ -8,7 +8,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 	/// <summary>
 	///   Represents a base class for templated UI elements.
 	/// </summary>
-	public abstract class Control : UIElement
+	public class Control : UIElement
 	{
 		/// <summary>
 		///   The template that defines the control's appearance.
