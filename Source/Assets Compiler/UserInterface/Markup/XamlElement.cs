@@ -40,7 +40,8 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		///   Generates the code for the Xaml object.
 		/// </summary>
 		/// <param name="writer">The code writer that should be used to write the generated code.</param>
-		public abstract void GenerateCode(CodeWriter writer);
+		/// <param name="assignmentFormat">The target the generated object should be assigned to.</param>
+		public abstract void GenerateCode(CodeWriter writer, string assignmentFormat);
 
 		/// <summary>
 		///   Generates the code for the Xaml file root object.
@@ -66,7 +67,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 					writer.AppendBlockStatement(() =>
 					{
 						writer.AppendLine("Pegasus.Assert.ArgumentNotNull(assets);");
-						GenerateCode(writer);
+						GenerateCode(writer, "");
 					});
 				});
 			});
@@ -105,10 +106,11 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 
 			if (isDictionary)
 				return new XamlDictionary(xamlFile, element);
-			else if (isList)
+			
+			if (isList)
 				return null;
-			else
-				return new XamlObject(xamlFile, element);
+			
+			return new XamlObject(xamlFile, element);
 		}
 	}
 }

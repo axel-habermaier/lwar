@@ -7,23 +7,22 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 	using CodeGeneration;
 
 	/// <summary>
-	///   Represents a dictionary instantiation in a Xaml file.
+	///   Represents a list instantiation in a Xaml file.
 	/// </summary>
-	internal class XamlDictionary : XamlElement
+	internal class XamlList : XamlElement
 	{
 		/// <summary>
-		///   The values stored in the dictionary.
+		///   The values stored in the list.
 		/// </summary>
-		private readonly Dictionary<object, XamlElement> _values = new Dictionary<object, XamlElement>();
+		private readonly List<XamlElement> _items = new List<XamlElement>();
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="xamlFile">The Xaml file that defines the Xaml element.</param>
 		/// <param name="xamlElement">The Xaml element this object should represent.</param>
-		/// <param name="isRoot">Indicates whether the Xaml object is the root object of a Xaml file.</param>
-		public XamlDictionary(XamlFile xamlFile, XElement xamlElement, bool isRoot = false)
-			: base(isRoot)
+		public XamlList(XamlFile xamlFile, XElement xamlElement)
+			: base(false)
 		{
 			Assert.ArgumentNotNull(xamlFile);
 			Assert.ArgumentNotNull(xamlElement);
@@ -32,19 +31,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			Name = xamlFile.GenerateUniqueName(Type);
 
 			foreach (var element in xamlElement.Elements())
-			{
-				var item = Create(xamlFile, element);
-
-				object key;
-				var keyAttribute = element.Attribute(XamlFile.MarkupNamespace + "Key");
-
-				if (keyAttribute == null)
-					key = item.Type;
-				else
-					key = keyAttribute.Value;
-
-				_values.Add(key, item);
-			}
+				_items.Add(Create(xamlFile, element));
 		}
 
 		/// <summary>
@@ -54,8 +41,8 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		/// <param name="assignmentFormat">The target the generated object should be assigned to.</param>
 		public override void GenerateCode(CodeWriter writer, string assignmentFormat)
 		{
-			foreach (var pair in _values)
-				pair.Value.GenerateCode(writer, String.Format(assignmentFormat, String.Format("Add(\"{1}\", {{0}});", Name, pair.Key)));
+			foreach (var item in _items)
+				item.GenerateCode(writer, String.Format(assignmentFormat, String.Format("Add({{0}});", Name)));
 		}
 	}
 }

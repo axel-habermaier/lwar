@@ -29,11 +29,10 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		/// <summary>
 		///   Generates the code for the object value.
 		/// </summary>
-		/// <param name="writer">The code writer that should be used to write the generated code.</param>
 		/// <param name="value">The value the code should be generated for.</param>
-		protected override void GenerateInstantiationCode(CodeWriter writer, object value)
+		protected override string GenerateInstantiationCode(object value)
 		{
-			writer.Append("\"{0}\"", value);
+			return String.Format("\"{0}\"", value);
 		}
 	}
 }

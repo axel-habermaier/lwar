@@ -67,7 +67,19 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 				Value = new XamlDictionary(xamlFile, normalized);
 			}
 			else if (IsList)
-				Value = null;
+			{
+				var firstElement = xamlElement.Elements().FirstOrDefault();
+
+				XElement normalized;
+				if (firstElement == null)
+					normalized = new XElement(Type.Name);
+				else if (xamlFile.GetClrType(firstElement) != Type)
+					normalized = new XElement(Type.Name, xamlElement.Elements());
+				else
+					normalized = firstElement;
+
+				Value = new XamlList(xamlFile, normalized);
+			}
 			else if (xamlElement.HasElements)
 				Value = new XamlObject(xamlFile, xamlElement.Elements().First());
 			else
@@ -143,9 +155,10 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			if (Name == "Name")
 				return;
 
-			writer.Newline();
-			Value.GenerateCode(writer);
-			writer.AppendLine("{0}.{1} = {2};", objectName, Name, Value.Name);
+			if (IsDictionary || IsList)
+				Value.GenerateCode(writer, String.Format("{0}.{1}.{{0}};", objectName, Name));
+			else
+				Value.GenerateCode(writer, String.Format("{0}.{1} = {{0}};", objectName, Name));
 		}
 	}
 }

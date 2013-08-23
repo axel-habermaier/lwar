@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 	using System.Reflection;
 	using System.Xml.Linq;
 	using CodeGeneration;
+	using Mono.CSharp;
 	using Platform.Logging;
 
 	/// <summary>
@@ -57,15 +58,19 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		///   Generates the code for the Xaml object.
 		/// </summary>
 		/// <param name="writer">The code writer that should be used to write the generated code.</param>
-		public override void GenerateCode(CodeWriter writer)
+		/// <param name="assignmentFormat">The target the generated object should be assigned to.</param>
+		public override void GenerateCode(CodeWriter writer, string assignmentFormat)
 		{
 			Assert.ArgumentNotNull(writer);
 
+			writer.Newline();
 			if (!IsRoot)
 				writer.AppendLine("var {0} = new {1}.{2}();", Name, GetRuntimeNamespace(), Type.Name);
 
 			foreach (var property in _properties)
 				property.GenerateCode(writer, Name);
+
+			writer.AppendLine(assignmentFormat, Name);
 		}
 
 		/// <summary>

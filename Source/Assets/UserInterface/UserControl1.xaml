@@ -14,12 +14,12 @@
     <Control.Background>
         #FF112233
     </Control.Background>
-    <!--<Grid>
-        <Label Margin="0,0,10,0">Hello World!</Label>
-    </Grid>-->
-    <ContentControl Name="Abc">
+    <StackPanel>
+    <ContentControl Name="firstCHild">
         <ContentControl.Content>
-        <ContentControl x:Name="Xzy"></ContentControl>
+        <ContentControl x:Name="subchild"></ContentControl>
         </ContentControl.Content>
     </ContentControl>
+        <ContentControl Name="secndChild"></ContentControl>
+    </StackPanel>
 </UserControl>

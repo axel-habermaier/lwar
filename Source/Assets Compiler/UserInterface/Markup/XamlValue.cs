@@ -37,13 +37,11 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		///   Generates the code for the Xaml object.
 		/// </summary>
 		/// <param name="writer">The code writer that should be used to write the generated code.</param>
-		public override void GenerateCode(CodeWriter writer)
+		/// <param name="assignmentFormat">The target the generated object should be assigned to.</param>
+		public override void GenerateCode(CodeWriter writer, string assignmentFormat)
 		{
 			Assert.ArgumentNotNull(writer);
-
-			writer.Append("var {0} = ", Name);
-			TypeConverter.GenerateCode(writer, Value);
-			writer.AppendLine(";");
+			writer.AppendLine(assignmentFormat, TypeConverter.GenerateCode(Value));
 		}
 	}
 }

@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using CodeGeneration;
 	using Platform.Logging;
 
 	/// <summary>
@@ -31,9 +30,8 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		/// <summary>
 		///   Generates the code for the object value.
 		/// </summary>
-		/// <param name="writer">The code writer that should be used to write the generated code.</param>
 		/// <param name="value">The value the code should be generated for.</param>
-		protected abstract void GenerateInstantiationCode(CodeWriter writer, object value);
+		protected abstract string GenerateInstantiationCode(object value);
 
 		/// <summary>
 		///   Converts the given string value into an instance of the given type.
@@ -70,11 +68,9 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		/// <summary>
 		///   Generates the code for the object value.
 		/// </summary>
-		/// <param name="writer">The code writer that should be used to write the generated code.</param>
 		/// <param name="value">The value the code should be generated for.</param>
-		public static void GenerateCode(CodeWriter writer, object value)
+		public static string GenerateCode(object value)
 		{
-			Assert.ArgumentNotNull(writer);
 			Assert.ArgumentNotNull(value);
 			Assert.NotNull(_converters);
 
@@ -82,7 +78,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 			if (!_converters.TryGetValue(value.GetType(), out converter))
 				Log.Die("Unable to find a type converter for type '{0}'.", value.GetType().FullName);
 
-			converter.GenerateInstantiationCode(writer, value);
+			return converter.GenerateInstantiationCode(value);
 		}
 	}
 }
