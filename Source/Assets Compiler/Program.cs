@@ -65,6 +65,7 @@ namespace Pegasus.AssetsCompiler
 		///   Compiles, recompiles, or cleans the assets.
 		/// </summary>
 		/// <param name="args"></param>
+		[STAThread]
 		public static int Main(string[] args)
 		{
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };

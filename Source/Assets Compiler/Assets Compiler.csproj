@@ -447,6 +447,8 @@
     <Compile Include="UserInterface\Markup\TypeConverters\DoubleConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\StringConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\TypeConverter.cs" />
+    <Compile Include="UserInterface\Markup\XamlDictionary.cs" />
+    <Compile Include="UserInterface\Markup\XamlElement.cs" />
     <Compile Include="UserInterface\Markup\XamlFile.cs" />
     <Compile Include="UserInterface\Markup\XamlNamespace.cs" />
     <Compile Include="UserInterface\Markup\XamlObject.cs" />
@@ -454,6 +456,9 @@
     <Compile Include="UserInterface\Markup\XamlValue.cs" />
     <Compile Include="UserInterface\ResourceDictionary.cs" />
     <Compile Include="UserInterface\Controls\UserControl.cs" />
+    <Compile Include="UserInterface\RuntimeNamespaceAttribute.cs" />
+    <Compile Include="UserInterface\Setter.cs" />
+    <Compile Include="UserInterface\Style.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

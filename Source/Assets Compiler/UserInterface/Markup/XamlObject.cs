@@ -3,18 +3,20 @@
 namespace Pegasus.AssetsCompiler.UserInterface.Markup
 {
 	using System.Linq;
+	using System.Reflection;
 	using System.Xml.Linq;
 	using CodeGeneration;
+	using Platform.Logging;
 
 	/// <summary>
 	///   Represents an object instantiation in a Xaml file.
 	/// </summary>
-	internal class XamlObject
+	internal class XamlObject : XamlElement
 	{
 		/// <summary>
-		///   Indicates whether the Xaml object is the root object of a Xaml file.
+		///   The Xaml properties of the Xaml object.
 		/// </summary>
-		private readonly bool _isRoot;
+		private readonly XamlProperty[] _properties;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -23,17 +25,18 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		/// <param name="xamlElement">The Xaml element this object should represent.</param>
 		/// <param name="isRoot">Indicates whether the Xaml object is the root object of a Xaml file.</param>
 		public XamlObject(XamlFile xamlFile, XElement xamlElement, bool isRoot = false)
+			: base(isRoot)
 		{
 			Assert.ArgumentNotNull(xamlFile);
 			Assert.ArgumentNotNull(xamlElement);
 
 			// Get the type of the object
-			var clrType = xamlFile.GetClrType(xamlElement);
-			Type = clrType.FullName;
+			Type = xamlFile.GetClrType(xamlElement);
+			var normalized = Normalize(xamlElement);
 
 			// Initialize all properties
-			Properties = xamlElement.Attributes().Select(attribute => new XamlProperty(xamlFile, clrType, attribute))
-									.Union(xamlElement.Elements().Select(element => new XamlProperty(xamlFile, clrType, element)))
+			_properties = normalized.Attributes().Select(attribute => new XamlProperty(xamlFile, Type, attribute))
+									.Union(normalized.Elements().Select(element => new XamlProperty(xamlFile, Type, element)))
 									.Where(property => property.IsValid)
 									.ToArray();
 
@@ -42,77 +45,60 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 				Name = "this";
 			else
 			{
-				var nameProperty = Properties.SingleOrDefault(p => p.Name == "Name");
+				var nameProperty = _properties.SingleOrDefault(p => p.Name == "Name");
 				if (nameProperty == null)
-					Name = xamlFile.GenerateUniqueName(clrType);
+					Name = xamlFile.GenerateUniqueName(Type);
 				else
-					Name = (string)nameProperty.XamlValue.Value;
+					Name = (string)((XamlValue)nameProperty.Value).Value;
 			}
-
-			_isRoot = isRoot;
 		}
-
-		/// <summary>
-		///   Gets the CLR type name of the object.
-		/// </summary>
-		public string Type { get; private set; }
-
-		/// <summary>
-		///   Gets the name of the object.
-		/// </summary>
-		public string Name { get; private set; }
-
-		/// <summary>
-		///   Gets the Xaml properties of the Xaml object.
-		/// </summary>
-		public XamlProperty[] Properties { get; private set; }
 
 		/// <summary>
 		///   Generates the code for the Xaml object.
 		/// </summary>
 		/// <param name="writer">The code writer that should be used to write the generated code.</param>
-		public void GenerateCode(CodeWriter writer)
+		public override void GenerateCode(CodeWriter writer)
 		{
 			Assert.ArgumentNotNull(writer);
 
-			writer.Newline();
-			if (!_isRoot)
-				writer.AppendLine("var {0} = new {1}();", Name, Type);
+			if (!IsRoot)
+				writer.AppendLine("var {0} = new {1}.{2}();", Name, GetRuntimeNamespace(), Type.Name);
 
-			foreach (var property in Properties)
+			foreach (var property in _properties)
 				property.GenerateCode(writer, Name);
 		}
 
 		/// <summary>
-		///   Generates the code for the Xaml file root object.
+		///   Normalizes the tree by adding a property element for the object's content property.
 		/// </summary>
-		/// <param name="writer">The code writer that should be used to write the generated code.</param>
-		/// <param name="namespaceName">The namespace of the generated class.</param>
-		/// <param name="className">The name of the generated class.</param>
-		public void GenerateCode(CodeWriter writer, string namespaceName, string className)
+		/// <param name="xamlElement">The element that should be normalized.</param>
+		private XElement Normalize(XElement xamlElement)
 		{
-			Assert.ArgumentNotNull(writer);
-			Assert.ArgumentNotNullOrWhitespace(namespaceName);
-			Assert.ArgumentNotNullOrWhitespace(className);
+			var attributes = xamlElement.Attributes();
+			var propertyElements = xamlElement.Elements().Where(element => element.Name.LocalName.Contains("."));
+			var contentPropertyElements = xamlElement.Elements().Where(element => !element.Name.LocalName.Contains("."));
 
-			writer.AppendLine("namespace {0}", namespaceName);
-			writer.AppendBlockStatement(() =>
-			{
-				writer.AppendLine("public class {0} : {1}", className, Type);
-				writer.AppendBlockStatement(() =>
-				{
-					writer.AppendLine("public {0}(AssetsManager assets, ViewModel viewModel)", className);
-					writer.AppendBlockStatement(() =>
-					{
-						writer.AppendLine("Assert.ArgumentNotNull(assets);");
-						writer.AppendLine("Assert.ArgumentNotNull(viewModel);");
-						writer.Newline();
+			if (!contentPropertyElements.Any())
+				return xamlElement;
 
-						writer.AppendLine("this.ViewModel = viewModel;");
-						GenerateCode(writer);
-					});
-				});
-			});
+			var contentPropertyName = GetContentPropertyName();
+			return new XElement(xamlElement.Name, attributes, propertyElements,
+								new XElement(xamlElement.Name + "." + contentPropertyName, contentPropertyElements));
+		}
+
+		/// <summary>
+		///   Gets the name of the content property.
+		/// </summary>
+		private string GetContentPropertyName()
+		{
+			var contentProperty = Type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
+									  .OfType<ContentPropertyAttribute>()
+									  .SingleOrDefault();
+
+			if (contentProperty == null)
+				Log.Die("Unable to determine the name of the content property of class '{0}'.", Type.FullName);
+
+			return contentProperty.Name;
 		}
 	}
 }

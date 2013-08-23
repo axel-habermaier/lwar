@@ -2,12 +2,12 @@
 
 namespace Pegasus.AssetsCompiler.UserInterface.Markup
 {
+	using System.Collections;
 	using System.Linq;
 	using System.Reflection;
 	using System.Xml.Linq;
 	using CodeGeneration;
 	using Platform.Logging;
-	using TypeConverters;
 
 	/// <summary>
 	///   Represents a Xaml property setter.
@@ -25,14 +25,14 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			Assert.ArgumentNotNull(xamlFile);
 			Assert.ArgumentNotNull(xamlAttribute);
 
-			IsValid = !xamlAttribute.IsNamespaceDeclaration && !xamlFile.ShouldBeIgnored(xamlAttribute);
+			IsValid = !xamlAttribute.IsNamespaceDeclaration && !xamlFile.ShouldBeIgnored(xamlAttribute) && !IgnoreAttribute(xamlAttribute);
 			if (!IsValid)
 				return;
 
 			Name = xamlAttribute.Name.LocalName;
 			Initialize(classType);
 
-			XamlValue = XamlValue.Create(xamlAttribute, Type);
+			Value = new XamlValue(xamlFile, Type, xamlAttribute.Value);
 		}
 
 		/// <summary>
@@ -48,27 +48,38 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 
 			var elementName = xamlElement.Name.LocalName;
 			var dotIndex = elementName.IndexOf('.');
-			var isContentProperty = dotIndex == -1;
-
-			if (isContentProperty)
-				Name = GetContentPropertyName(classType);
-			else
-				Name = elementName.Substring(dotIndex + 1);
+			Name = elementName.Substring(dotIndex + 1);
 
 			Initialize(classType);
 
-			if (isContentProperty)
-				XamlValue = XamlValue.Create(xamlFile, xamlElement);
-			else
-				XamlValue = XamlValue.Create(xamlFile, xamlElement, Type);
+			if (IsDictionary)
+			{
+				var firstElement = xamlElement.Elements().FirstOrDefault();
 
-			IsValid = XamlValue != null;
+				XElement normalized;
+				if (firstElement == null)
+					normalized = new XElement(Type.Name);
+				else if (xamlFile.GetClrType(firstElement) != Type)
+					normalized = new XElement(Type.Name, xamlElement.Elements());
+				else
+					normalized = firstElement;
+
+				Value = new XamlDictionary(xamlFile, normalized);
+			}
+			else if (IsList)
+				Value = null;
+			else if (xamlElement.HasElements)
+				Value = new XamlObject(xamlFile, xamlElement.Elements().First());
+			else
+				Value = new XamlValue(xamlFile, Type, xamlElement.Value);
+
+			IsValid = true;
 		}
 
 		/// <summary>
 		///   Gets the property's value.
 		/// </summary>
-		public XamlValue XamlValue { get; private set; }
+		public XamlElement Value { get; private set; }
 
 		/// <summary>
 		///   Gets a value indicating whether the instance is valid.
@@ -86,19 +97,22 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		public Type Type { get; private set; }
 
 		/// <summary>
-		///   Gets the name of the content property.
+		///   Gets a value indicating whether the property's type is a list type.
 		/// </summary>
-		/// <param name="classType">The CLR type of the class the content property name should be returned for.</param>
-		private static string GetContentPropertyName(Type classType)
+		public bool IsList { get; private set; }
+
+		/// <summary>
+		///   Gets a value indicating whether the property's type is a dictionary type.
+		/// </summary>
+		public bool IsDictionary { get; private set; }
+
+		/// <summary>
+		///   Checks whether the given attribute should be ignored.
+		/// </summary>
+		/// <param name="xamlAttribute">The attribute that should be checked.</param>
+		private static bool IgnoreAttribute(XAttribute xamlAttribute)
 		{
-			var contentProperty = classType.GetCustomAttributes(typeof(ContentPropertyAttribute))
-										   .OfType<ContentPropertyAttribute>()
-										   .SingleOrDefault();
-
-			if (contentProperty == null)
-				Log.Die("Unable to determine the name of the content property of class '{0}'.", classType.FullName);
-
-			return contentProperty.Name;
+			return xamlAttribute.Name == XamlFile.MarkupNamespace + "Key";
 		}
 
 		/// <summary>
@@ -112,6 +126,8 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 				Log.Die("Property '{0}.{1}' does not exist.", classType.FullName, Name);
 
 			Type = propertyInfo.PropertyType;
+			IsDictionary = typeof(IDictionary).IsAssignableFrom(Type);
+			IsList = typeof(IList).IsAssignableFrom(Type) && !IsDictionary;
 		}
 
 		/// <summary>
@@ -124,7 +140,12 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			Assert.ArgumentNotNull(writer);
 			Assert.ArgumentNotNullOrWhitespace(objectName);
 
-			XamlValue.GenerateCode(writer, objectName, Name);
+			if (Name == "Name")
+				return;
+
+			writer.Newline();
+			Value.GenerateCode(writer);
+			writer.AppendLine("{0}.{1} = {2};", objectName, Name, Value.Name);
 		}
 	}
 }

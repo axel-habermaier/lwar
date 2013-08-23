@@ -21,6 +21,11 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		public static readonly XNamespace DefaultNamespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
 
 		/// <summary>
+		///   The Xaml markup namespace.
+		/// </summary>
+		public static readonly XNamespace MarkupNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+
+		/// <summary>
 		///   Maps a class name to the number of instances created of the class.
 		/// </summary>
 		private readonly Dictionary<string, int> _instancesCount = new Dictionary<string, int>();
@@ -47,7 +52,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		/// <summary>
 		///   Gets the root Xaml object of the Xaml file.
 		/// </summary>
-		public XamlObject RootObject { get; private set; }
+		public XamlElement RootObject { get; private set; }
 
 		/// <summary>
 		///   Builds the namespace map.
@@ -147,14 +152,15 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		{
 			Assert.ArgumentNotNull(clrType);
 
-			int count;
-			if (!_instancesCount.TryGetValue(clrType.Name, out count))
-			{
-				_instancesCount.Add(clrType.Name, 1);
-				count = 1;
-			}
+			var name = Char.ToLower(clrType.Name[0]) + clrType.Name.Substring(1);
 
-			return clrType.Name + count;
+			int count;
+			if (!_instancesCount.TryGetValue(name, out count))
+				count = 0;
+
+			++count;
+			_instancesCount[name] = count;
+			return name + count;
 		}
 
 		/// <summary>
@@ -187,13 +193,6 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 
 			// Generated the imports for the default namespaces
 			writer.AppendLine("using System;");
-			writer.AppendLine("using Pegasus;");
-			writer.AppendLine("using Pegasus.Framework;");
-			writer.AppendLine("using Pegasus.Platform.Assets;");
-
-			// Generates the imports for the namespace referenced in the Xaml file
-			foreach (var importedNamespace in _namespaceMap.SelectMany(p => p.Value).Where(n=>!n.Ignored).Select(n => n.RuntimeNamespace).Distinct())
-				writer.AppendLine("using {0};", importedNamespace);
 
 			writer.Newline();
 			RootObject.GenerateCode(writer, namespaceName, className);

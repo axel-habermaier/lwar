@@ -52,7 +52,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		protected override void GenerateInstantiationCode(CodeWriter writer, object value)
 		{
 			var color = (Color)value;
-			writer.Append("Color.FromRgba({0}, {1}, {2}, {3})", color.R, color.G, color.B, color.A);
+			writer.Append("Pegasus.Platform.Graphics.Color.FromRgba({0}, {1}, {2}, {3})", color.R, color.G, color.B, color.A);
 		}
 	}
 }

@@ -35,9 +35,11 @@ namespace Pegasus.AssetsCompiler.Compilers
 			var namespaceName = asset.RelativePath.Substring(0, asset.RelativePath.Length - asset.FileName.Length - 1);
 
 			var writer = new CodeWriter();
-			var xamlFile = new XamlFile(asset.SourcePath);
+			writer.WriterHeader("//");
 
+			var xamlFile = new XamlFile(asset.SourcePath);
 			xamlFile.GenerateCode(writer, namespaceName.Replace("/", "."), className);
+
 			buffer.Copy(Encoding.UTF8.GetBytes(writer.ToString()));
 		}
 	}
