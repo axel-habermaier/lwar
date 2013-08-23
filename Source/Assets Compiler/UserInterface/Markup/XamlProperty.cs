@@ -5,7 +5,9 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 	using System.Linq;
 	using System.Reflection;
 	using System.Xml.Linq;
+	using CodeGeneration;
 	using Platform.Logging;
+	using TypeConverters;
 
 	/// <summary>
 	///   Represents a Xaml property setter.
@@ -29,6 +31,8 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 
 			Name = xamlAttribute.Name.LocalName;
 			Initialize(classType);
+
+			XamlValue = XamlValue.Create(xamlAttribute, Type);
 		}
 
 		/// <summary>
@@ -52,17 +56,19 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 				Name = elementName.Substring(dotIndex + 1);
 
 			Initialize(classType);
+
+			if (isContentProperty)
+				XamlValue = XamlValue.Create(xamlFile, xamlElement);
+			else
+				XamlValue = XamlValue.Create(xamlFile, xamlElement, Type);
+
+			IsValid = XamlValue != null;
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the property type is a list type.
+		///   Gets the property's value.
 		/// </summary>
-		public bool IsList { get; private set; }
-
-		/// <summary>
-		///   Gets a value indicating whether the property type is a dictionary type.
-		/// </summary>
-		public bool IsDictionary { get; private set; }
+		public XamlValue XamlValue { get; private set; }
 
 		/// <summary>
 		///   Gets a value indicating whether the instance is valid.
@@ -75,9 +81,9 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		public string Name { get; private set; }
 
 		/// <summary>
-		///   Gets the CLR type name of the property.
+		///   Gets the CLR type of the property.
 		/// </summary>
-		public string Type { get; private set; }
+		public Type Type { get; private set; }
 
 		/// <summary>
 		///   Gets the name of the content property.
@@ -91,7 +97,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 
 			if (contentProperty == null)
 				Log.Die("Unable to determine the name of the content property of class '{0}'.", classType.FullName);
-			
+
 			return contentProperty.Name;
 		}
 
@@ -104,6 +110,21 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			var propertyInfo = classType.GetProperty(Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
 			if (propertyInfo == null)
 				Log.Die("Property '{0}.{1}' does not exist.", classType.FullName, Name);
+
+			Type = propertyInfo.PropertyType;
+		}
+
+		/// <summary>
+		///   Generates the code for the Xaml property.
+		/// </summary>
+		/// <param name="writer">The code writer that should be used to write the generated code.</param>
+		/// <param name="objectName">The name of the object.</param>
+		public void GenerateCode(CodeWriter writer, string objectName)
+		{
+			Assert.ArgumentNotNull(writer);
+			Assert.ArgumentNotNullOrWhitespace(objectName);
+
+			XamlValue.GenerateCode(writer, objectName, Name);
 		}
 	}
 }

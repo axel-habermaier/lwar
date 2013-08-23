@@ -2,8 +2,10 @@
 
 namespace Pegasus.AssetsCompiler
 {
+	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.IO;
+	using System.Linq;
 	using System.Reflection;
 	using Platform;
 	using Platform.Logging;
@@ -125,6 +127,17 @@ namespace Pegasus.AssetsCompiler
 
 				CompileHlsl = false;
 			}
+		}
+
+		/// <summary>
+		///   Gets the types that should be checked when searching all relevant types via reflection.
+		/// </summary>
+		public static IEnumerable<Type> GetReflectionTypes()
+		{
+			var assetCompilerTypes = Assembly.GetExecutingAssembly().GetTypes();
+			var assetListTypes = AssetListAssembly.GetTypes();
+
+			return assetListTypes.Union(assetCompilerTypes);
 		}
 	}
 }

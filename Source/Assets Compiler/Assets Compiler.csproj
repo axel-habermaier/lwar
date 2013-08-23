@@ -443,10 +443,15 @@
     <Compile Include="UserInterface\Controls\ContentControl.cs" />
     <Compile Include="UserInterface\Controls\Control.cs" />
     <Compile Include="UserInterface\Controls\UIElement.cs" />
+    <Compile Include="UserInterface\Markup\TypeConverters\ColorConverter.cs" />
+    <Compile Include="UserInterface\Markup\TypeConverters\DoubleConverter.cs" />
+    <Compile Include="UserInterface\Markup\TypeConverters\StringConverter.cs" />
+    <Compile Include="UserInterface\Markup\TypeConverters\TypeConverter.cs" />
     <Compile Include="UserInterface\Markup\XamlFile.cs" />
     <Compile Include="UserInterface\Markup\XamlNamespace.cs" />
     <Compile Include="UserInterface\Markup\XamlObject.cs" />
     <Compile Include="UserInterface\Markup\XamlProperty.cs" />
+    <Compile Include="UserInterface\Markup\XamlValue.cs" />
     <Compile Include="UserInterface\ResourceDictionary.cs" />
     <Compile Include="UserInterface\Controls\UserControl.cs" />
   </ItemGroup>

@@ -9,9 +9,12 @@
         </Style>
     </UserControl.Resources>-->
     <Control.Background>
-        White
+        #FF112233
     </Control.Background>
-    <Grid>
+    <!--<Grid>
         <Label Margin="0,0,10,0">Hello World!</Label>
-    </Grid>
+    </Grid>-->
+    <ContentControl Name="Abc">
+        <ContentControl x:Name="Xzy"></ContentControl>
+    </ContentControl>
 </UserControl>

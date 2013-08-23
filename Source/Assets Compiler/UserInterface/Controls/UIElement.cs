@@ -9,6 +9,8 @@ namespace Pegasus.AssetsCompiler.UserInterface.Controls
 	/// </summary>
 	public abstract class UIElement
 	{
+		public string Name { get; set; }
+
 		public ResourceDictionary Resources { get; set; }
 
 		public double Width { get; set; }

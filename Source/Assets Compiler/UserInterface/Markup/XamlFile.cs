@@ -7,6 +7,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 	using System.Linq;
 	using System.Reflection;
 	using System.Xml.Linq;
+	using CodeGeneration;
 	using Platform.Logging;
 
 	/// <summary>
@@ -18,6 +19,11 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		///   The default Xaml namespace.
 		/// </summary>
 		public static readonly XNamespace DefaultNamespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+
+		/// <summary>
+		///   Maps a class name to the number of instances created of the class.
+		/// </summary>
+		private readonly Dictionary<string, int> _instancesCount = new Dictionary<string, int>();
 
 		/// <summary>
 		///   Maps an Xml namespace to the corresponding Xaml namespaces.
@@ -35,7 +41,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			var rootElement = XElement.Parse(File.ReadAllText(fileName), LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace);
 			BuildNamespaceMap(rootElement);
 
-			RootObject = new XamlObject(this, rootElement);
+			RootObject = new XamlObject(this, rootElement, isRoot: true);
 		}
 
 		/// <summary>
@@ -134,6 +140,24 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		}
 
 		/// <summary>
+		///   Generates a file-wide unique name for the given CLR type.
+		/// </summary>
+		/// <param name="clrType">The CLR type the name should be generated for.</param>
+		public string GenerateUniqueName(Type clrType)
+		{
+			Assert.ArgumentNotNull(clrType);
+
+			int count;
+			if (!_instancesCount.TryGetValue(clrType.Name, out count))
+			{
+				_instancesCount.Add(clrType.Name, 1);
+				count = 1;
+			}
+
+			return clrType.Name + count;
+		}
+
+		/// <summary>
 		///   Gets the Xaml namespaces for the Xaml name.
 		/// </summary>
 		/// <param name="xamlName">The Xaml name the Xaml namespaces should be returned for.</param>
@@ -147,6 +171,32 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 				Log.Die("Unknown Xaml namespace '{0}'.", xamlNamespace);
 
 			return _namespaceMap[xamlNamespace];
+		}
+
+		/// <summary>
+		///   Generates the code for the Xaml file.
+		/// </summary>
+		/// <param name="writer">The code writer that should be used to write the generated code.</param>
+		/// <param name="namespaceName">The namespace of the generated class.</param>
+		/// <param name="className">The name of the generated class.</param>
+		public void GenerateCode(CodeWriter writer, string namespaceName, string className)
+		{
+			Assert.ArgumentNotNull(writer);
+			Assert.ArgumentNotNullOrWhitespace(namespaceName);
+			Assert.ArgumentNotNullOrWhitespace(className);
+
+			// Generated the imports for the default namespaces
+			writer.AppendLine("using System;");
+			writer.AppendLine("using Pegasus;");
+			writer.AppendLine("using Pegasus.Framework;");
+			writer.AppendLine("using Pegasus.Platform.Assets;");
+
+			// Generates the imports for the namespace referenced in the Xaml file
+			foreach (var importedNamespace in _namespaceMap.SelectMany(p => p.Value).Where(n=>!n.Ignored).Select(n => n.RuntimeNamespace).Distinct())
+				writer.AppendLine("using {0};", importedNamespace);
+
+			writer.Newline();
+			RootObject.GenerateCode(writer, namespaceName, className);
 		}
 	}
 }

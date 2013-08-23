@@ -4,7 +4,6 @@ namespace Pegasus.AssetsCompiler
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Reflection;
 	using Assets;
 	using Assets.Attributes;
 	using CodeGeneration;
@@ -42,14 +41,11 @@ namespace Pegasus.AssetsCompiler
 		/// <typeparam name="T">The interface or base class that is implemented by all returned instances.</typeparam>
 		private static T[] CreateTypeInstances<T>()
 		{
-			var assetCompilerTypes = Assembly.GetExecutingAssembly().GetTypes();
-			var assetListTypes = Configuration.AssetListAssembly.GetTypes();
-
-			return assetListTypes.Union(assetCompilerTypes)
-								 .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(T)))
-								 .Select(Activator.CreateInstance)
-								 .Cast<T>()
-								 .ToArray();
+			return Configuration.GetReflectionTypes()
+								.Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(T)))
+								.Select(Activator.CreateInstance)
+								.Cast<T>()
+								.ToArray();
 		}
 
 		/// <summary>
