@@ -445,8 +445,8 @@
     <Compile Include="UserInterface\Controls\Control.cs" />
     <Compile Include="UserInterface\Controls\Panel.cs" />
     <Compile Include="UserInterface\Controls\StackPanel.cs" />
-    <Compile Include="UserInterface\Controls\UIElement.cs" />
-    <Compile Include="UserInterface\Controls\UIElementCollection.cs" />
+    <Compile Include="UserInterface\UIElement.cs" />
+    <Compile Include="UserInterface\UIElementCollection.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\ColorConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\DoubleConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\StringConverter.cs" />

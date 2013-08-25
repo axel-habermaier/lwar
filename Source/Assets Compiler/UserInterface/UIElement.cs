@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.UserInterface.Controls
+namespace Pegasus.AssetsCompiler.UserInterface
 {
 	using System.Drawing;
 
@@ -22,5 +22,6 @@ namespace Pegasus.AssetsCompiler.UserInterface.Controls
 		public double MaxHeight { get; set; }
 
 		public Color Background { get; set; }
+		public Color Foreground { get; set; }
 	}
 }

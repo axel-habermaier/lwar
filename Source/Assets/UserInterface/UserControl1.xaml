@@ -11,9 +11,9 @@
             <ContentControl x:Key="gflheapgoua aehg oaergpe u"></ContentControl>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Control.Background>
+    <Control.Foreground>
         #FF112233
-    </Control.Background>
+    </Control.Foreground>
     <StackPanel>
     <ContentControl Name="firstCHild">
         <ContentControl.Content>

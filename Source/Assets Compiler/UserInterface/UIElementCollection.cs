@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pegasus.AssetsCompiler.UserInterface.Controls
+namespace Pegasus.AssetsCompiler.UserInterface
 {
 	using System.Collections.Generic;
 
