@@ -7,7 +7,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Controls
 	/// </summary>
 	[RuntimeNamespace("Pegasus.Framework.UserInterface.Controls")]
 	[ContentProperty("Content")]
-	public class ContentControl : Control
+	internal class ContentControl : Control
 	{
 		public object Content { get; set; }
 	}

@@ -203,6 +203,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -445,6 +446,11 @@
     <Compile Include="UserInterface\Controls\Control.cs" />
     <Compile Include="UserInterface\Controls\Panel.cs" />
     <Compile Include="UserInterface\Controls\StackPanel.cs" />
+    <Compile Include="UserInterface\DeferredEvaluationOrderAttribute.cs" />
+    <Compile Include="UserInterface\IgnoreAtRuntimeAttribute.cs" />
+    <Compile Include="UserInterface\Markup\TypeConverters\TypeInfoConverter.cs" />
+    <Compile Include="UserInterface\Markup\XamlDeferredValue.cs" />
+    <Compile Include="UserInterface\SetterCollection.cs" />
     <Compile Include="UserInterface\UIElement.cs" />
     <Compile Include="UserInterface\UIElementCollection.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\ColorConverter.cs" />

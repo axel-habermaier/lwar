@@ -15,6 +15,11 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 	internal class XamlProperty
 	{
 		/// <summary>
+		///   Indicates whether the property should be ignored at runtime.
+		/// </summary>
+		private bool _ignoreAtRuntime;
+
+		/// <summary>
 		///   Initializes a new instance from a Xaml property attribute.
 		/// </summary>
 		/// <param name="xamlFile">The Xaml file that defines the Xaml attribute.</param>
@@ -32,7 +37,10 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			Name = xamlAttribute.Name.LocalName;
 			Initialize(classType);
 
-			Value = new XamlValue(xamlFile, Type, xamlAttribute.Value);
+			if (Type == typeof(XamlDeferredValue))
+				Value = new XamlDeferredValue(xamlFile, Type, xamlAttribute.Value);
+			else
+				Value = new XamlValue(xamlFile, Type, xamlAttribute.Value);
 		}
 
 		/// <summary>
@@ -52,7 +60,9 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 
 			Initialize(classType);
 
-			if (IsDictionary)
+			if (Type == typeof(XamlDeferredValue))
+				Value = new XamlDeferredValue(xamlFile, Type, xamlElement.Value);
+			else if (IsDictionary)
 			{
 				var firstElement = xamlElement.Elements().FirstOrDefault();
 
@@ -119,6 +129,16 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		public bool IsDictionary { get; private set; }
 
 		/// <summary>
+		///   Gets a value indicating whether the evaluation of the property's value is deferred.
+		/// </summary>
+		public bool IsDeferred { get; private set; }
+
+		/// <summary>
+		///   Determines the order of evaluation if the evaluation of the property's value is deferred.
+		/// </summary>
+		public int EvaluationOrder { get; private set; }
+
+		/// <summary>
 		///   Checks whether the given attribute should be ignored.
 		/// </summary>
 		/// <param name="xamlAttribute">The attribute that should be checked.</param>
@@ -140,6 +160,18 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			Type = propertyInfo.PropertyType;
 			IsDictionary = typeof(IDictionary).IsAssignableFrom(Type);
 			IsList = typeof(IList).IsAssignableFrom(Type) && !IsDictionary;
+			IsDeferred = Type == typeof(XamlDeferredValue);
+
+			_ignoreAtRuntime = propertyInfo.GetCustomAttributes(typeof(IgnoreAtRuntimeAttribute), true)
+										   .OfType<IgnoreAtRuntimeAttribute>()
+										   .SingleOrDefault() != null;
+
+			var orderAttribute = propertyInfo.GetCustomAttributes(typeof(DeferredEvaluationOrderAttribute), true)
+											 .OfType<DeferredEvaluationOrderAttribute>()
+											 .SingleOrDefault();
+
+			if (orderAttribute != null)
+				EvaluationOrder = orderAttribute.EvaluationOrder;
 		}
 
 		/// <summary>
@@ -152,13 +184,23 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			Assert.ArgumentNotNull(writer);
 			Assert.ArgumentNotNullOrWhitespace(objectName);
 
-			if (Name == "Name")
+			if (_ignoreAtRuntime)
 				return;
 
 			if (IsDictionary || IsList)
 				Value.GenerateCode(writer, String.Format("{0}.{1}.{{0}};", objectName, Name));
 			else
 				Value.GenerateCode(writer, String.Format("{0}.{1} = {{0}};", objectName, Name));
+		}
+
+		/// <summary>
+		///   Evaluates the deferred value of the property.
+		/// </summary>
+		/// <param name="obj">The Xaml object this property belongs to.</param>
+		public void Evaluate(XamlObject obj)
+		{
+			Assert.ArgumentNotNull(obj);
+			Assert.That(IsDeferred, "Cannot evaluate a non-deferred property.");
 		}
 	}
 }

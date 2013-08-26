@@ -3,10 +3,8 @@
 namespace Pegasus.AssetsCompiler.UserInterface.Markup
 {
 	using System.Linq;
-	using System.Reflection;
 	using System.Xml.Linq;
 	using CodeGeneration;
-	using Mono.CSharp;
 	using Platform.Logging;
 
 	/// <summary>
@@ -14,11 +12,6 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 	/// </summary>
 	internal class XamlObject : XamlElement
 	{
-		/// <summary>
-		///   The Xaml properties of the Xaml object.
-		/// </summary>
-		private readonly XamlProperty[] _properties;
-
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
@@ -36,23 +29,32 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			var normalized = Normalize(xamlElement);
 
 			// Initialize all properties
-			_properties = normalized.Attributes().Select(attribute => new XamlProperty(xamlFile, Type, attribute))
-									.Union(normalized.Elements().Select(element => new XamlProperty(xamlFile, Type, element)))
-									.Where(property => property.IsValid)
-									.ToArray();
+			Properties = normalized.Attributes().Select(attribute => new XamlProperty(xamlFile, Type, attribute))
+								   .Union(normalized.Elements().Select(element => new XamlProperty(xamlFile, Type, element)))
+								   .Where(property => property.IsValid)
+								   .ToArray();
 
 			// Get the name of the object
 			if (isRoot)
 				Name = "this";
 			else
 			{
-				var nameProperty = _properties.SingleOrDefault(p => p.Name == "Name");
+				var nameProperty = Properties.SingleOrDefault(p => p.Name == "Name");
 				if (nameProperty == null)
 					Name = xamlFile.GenerateUniqueName(Type);
 				else
 					Name = (string)((XamlValue)nameProperty.Value).Value;
 			}
+
+			// Initialize all properties with deferred values
+			foreach (var property in Properties.Where(p => p.IsDeferred).OrderBy(p => p.EvaluationOrder))
+				property.Evaluate(this);
 		}
+
+		/// <summary>
+		///   Gets the Xaml properties of the Xaml object.
+		/// </summary>
+		public XamlProperty[] Properties { get; private set; }
 
 		/// <summary>
 		///   Generates the code for the Xaml object.
@@ -67,7 +69,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			if (!IsRoot)
 				writer.AppendLine("var {0} = new {1}.{2}();", Name, GetRuntimeNamespace(), Type.Name);
 
-			foreach (var property in _properties)
+			foreach (var property in Properties)
 				property.GenerateCode(writer, Name);
 
 			writer.AppendLine(assignmentFormat, Name);

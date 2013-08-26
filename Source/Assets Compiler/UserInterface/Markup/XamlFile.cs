@@ -131,16 +131,27 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		/// <param name="xamlElement">The Xaml element the CLR type should be returned for.</param>
 		public Type GetClrType(XElement xamlElement)
 		{
-			foreach (var typeNamespace in GetXamlNamespaces(xamlElement.Name))
+			return GetClrType(xamlElement.Name.LocalName);
+		}
+
+		/// <summary>
+		///   Gets the CLR type corresponding to the given type.
+		/// </summary>
+		/// <param name="typeName">The type name the CLR type should be returned for.</param>
+		public Type GetClrType(string typeName)
+		{
+			Assert.ArgumentNotNullOrWhitespace(typeName);
+
+			foreach (var typeNamespace in GetXamlNamespaces(typeName))
 			{
-				var typeName = String.Format("{0}.{1}, {2}", typeNamespace.CompilationNamespace, xamlElement.Name.LocalName, typeNamespace.AssemblyName);
-				var type = Type.GetType(typeName, false);
+				var fullTypeName = String.Format("{0}.{1}, {2}", typeNamespace.CompilationNamespace, typeName, typeNamespace.AssemblyName);
+				var type = Type.GetType(fullTypeName, false);
 
 				if (type != null)
 					return type;
 			}
 
-			Log.Die("Unable to find CLR type for Xaml name '{0}'.", xamlElement.Name);
+			Log.Die("Unable to find CLR type for Xaml name '{0}'.", typeName);
 			return null;
 		}
 

@@ -6,17 +6,22 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 	using TypeConverters;
 
 	/// <summary>
-	///   Represents a Xaml value.
+	///   Represents a Xaml value that is not evaluated immediately.
 	/// </summary>
-	internal class XamlValue : XamlElement
+	internal class XamlDeferredValue : XamlElement
 	{
+		/// <summary>
+		///   The un-evaluated raw value.
+		/// </summary>
+		private readonly string _rawValue;
+
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="xamlFile">The Xaml file that defines the Xaml value.</param>
 		/// <param name="valueType">The type of the value.</param>
 		/// <param name="value">The string representation of the value.</param>
-		public XamlValue(XamlFile xamlFile, Type valueType, string value)
+		public XamlDeferredValue(XamlFile xamlFile, Type valueType, string value)
 			: base(false)
 		{
 			Assert.ArgumentNotNull(xamlFile);
@@ -25,7 +30,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 
 			Type = valueType;
 			Name = xamlFile.GenerateUniqueName(Type);
-			Value = TypeConverter.Convert(xamlFile, valueType, value);
+			_rawValue = value;
 		}
 
 		/// <summary>

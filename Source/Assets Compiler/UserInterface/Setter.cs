@@ -2,14 +2,18 @@
 
 namespace Pegasus.AssetsCompiler.UserInterface
 {
+	using Markup;
+
 	/// <summary>
 	///   Provides metadata for the 'Setter' UI class.
 	/// </summary>
-	[ContentProperty("Setters")]
 	[RuntimeNamespace("Pegasus.Framework.UserInterface")]
 	internal class Setter
 	{
-		public string Property { get; set; }
-		public object Value { get; set; }
+		[DeferredEvaluationOrder(1)]
+		public XamlDeferredValue Property { get; set; }
+
+		[DeferredEvaluationOrder(2)]
+		public XamlDeferredValue Value { get; set; }
 	}
 }

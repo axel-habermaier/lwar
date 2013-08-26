@@ -7,7 +7,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Controls
 	/// </summary>
 	[RuntimeNamespace("Pegasus.Framework.UserInterface.Controls")]
 	[ContentProperty("Children")]
-	public abstract class Panel : UIElement
+	internal abstract class Panel : UIElement
 	{
 		public UIElementCollection Children { get; private set; }
 	}

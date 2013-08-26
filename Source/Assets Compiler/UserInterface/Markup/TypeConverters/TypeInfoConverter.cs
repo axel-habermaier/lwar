@@ -3,16 +3,16 @@
 namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 {
 	/// <summary>
-	///   Represents the identity conversion for strings.
+	///   Represents the identity conversion for type info objects.
 	/// </summary>
-	internal class StringConverter : TypeConverter
+	internal class TypeInfoConverter : TypeConverter
 	{
 		/// <summary>
 		///   Gets the type the string value is converted to.
 		/// </summary>
 		protected override Type TargetType
 		{
-			get { return typeof(string); }
+			get { return typeof(Type); }
 		}
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		/// <param name="value">The value that should be converted.</param>
 		protected override object Convert(XamlFile xamlFile, string value)
 		{
-			return value;
+			return xamlFile.GetClrType(value);
 		}
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		/// <param name="value">The value the code should be generated for.</param>
 		protected override string GenerateInstantiationCode(object value)
 		{
-			return String.Format("\"{0}\"", value);
+			throw new NotSupportedException();
 		}
 	}
 }

@@ -34,7 +34,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		/// <summary>
 		///   Gets or sets the CLR type of the element.
 		/// </summary>
-		public Type Type { get;protected set; }
+		public Type Type { get; protected set; }
 
 		/// <summary>
 		///   Generates the code for the Xaml object.
@@ -106,10 +106,10 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 
 			if (isDictionary)
 				return new XamlDictionary(xamlFile, element);
-			
+
 			if (isList)
 				return null;
-			
+
 			return new XamlObject(xamlFile, element);
 		}
 	}

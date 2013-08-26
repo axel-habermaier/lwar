@@ -24,8 +24,9 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		/// <summary>
 		///   Converts the given string value into an instance of the target type.
 		/// </summary>
+		/// <param name="xamlFile">The Xaml file the value is specified in.</param>
 		/// <param name="value">The value that should be converted.</param>
-		protected abstract object Convert(string value);
+		protected abstract object Convert(XamlFile xamlFile, string value);
 
 		/// <summary>
 		///   Generates the code for the object value.
@@ -36,10 +37,12 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		/// <summary>
 		///   Converts the given string value into an instance of the given type.
 		/// </summary>
+		/// <param name="xamlFile">The Xaml file the value is specified in.</param>
 		/// <param name="targetType">The target type of the conversion.</param>
 		/// <param name="value">The value that should be converted.</param>
-		public static object Convert(Type targetType, string value)
+		public static object Convert(XamlFile xamlFile, Type targetType, string value)
 		{
+			Assert.ArgumentNotNull(xamlFile);
 			Assert.ArgumentNotNull(targetType);
 			Assert.ArgumentNotNull(value);
 
@@ -56,7 +59,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 
 			try
 			{
-				return converter.Convert(value.Trim());
+				return converter.Convert(xamlFile, value.Trim());
 			}
 			catch (Exception e)
 			{

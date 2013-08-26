@@ -4,22 +4,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" Height="290" Width="505">
     <UserControl.Resources>
-       <ResourceDictionary>
-        <!--<Style x:Key="MyStyle">
-            <Setter Property="Control.Background" Value="Red" />
-        </Style>-->
-            <ContentControl x:Key="gflheapgoua aehg oaergpe u"></ContentControl>
-        </ResourceDictionary>
+        <Style TargetType="ContentControl">
+            <Setter Property="Background" Value="Red" />
+        </Style>
     </UserControl.Resources>
     <Control.Foreground>
         #FF112233
     </Control.Foreground>
     <StackPanel>
-    <ContentControl Name="firstCHild">
-        <ContentControl.Content>
-        <ContentControl x:Name="subchild"></ContentControl>
-        </ContentControl.Content>
-    </ContentControl>
-        <ContentControl Name="secndChild"></ContentControl>
+        <ContentControl Name="firstCHild">
+            <ContentControl.Content>
+                <ContentControl x:Name="subchild" />
+            </ContentControl.Content>
+        </ContentControl>
+        <ContentControl Name="secndChild" />
     </StackPanel>
 </UserControl>

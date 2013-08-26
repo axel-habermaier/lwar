@@ -7,7 +7,7 @@ namespace Pegasus.AssetsCompiler.UserInterface
 	///   property.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public class ContentPropertyAttribute : Attribute
+	internal class ContentPropertyAttribute : Attribute
 	{
 		/// <summary>
 		///   Initializes a new instance.

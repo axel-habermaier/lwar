@@ -8,8 +8,9 @@ namespace Pegasus.AssetsCompiler.UserInterface
 	///   Provides metadata for the 'UIElement' UI class.
 	/// </summary>
 	[RuntimeNamespace("Pegasus.Framework.UserInterface")]
-	public abstract class UIElement
+	internal abstract class UIElement
 	{
+		[IgnoreAtRuntime]
 		public string Name { get; set; }
 
 		public ResourceDictionary Resources { get; set; }

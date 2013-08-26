@@ -6,7 +6,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Controls
 	///   Provides metadata for the 'Control' UI class.
 	/// </summary>
 	[RuntimeNamespace("Pegasus.Framework.UserInterface.Controls")]
-	public class Control : UIElement
+	internal class Control : UIElement
 	{
 	}
 }

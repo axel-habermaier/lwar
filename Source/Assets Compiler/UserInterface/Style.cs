@@ -2,8 +2,6 @@
 
 namespace Pegasus.AssetsCompiler.UserInterface
 {
-	using System.Collections.Generic;
-
 	/// <summary>
 	///   Provides metadata for the 'Style' UI class.
 	/// </summary>
@@ -11,6 +9,9 @@ namespace Pegasus.AssetsCompiler.UserInterface
 	[RuntimeNamespace("Pegasus.Framework.UserInterface")]
 	internal class Style
 	{
-		public List<Setter> Setters { get; set; }
+		[IgnoreAtRuntime]
+		public Type TargetType { get; set; }
+
+		public SetterCollection Setters { get; set; }
 	}
 }

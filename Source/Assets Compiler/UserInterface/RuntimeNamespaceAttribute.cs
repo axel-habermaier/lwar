@@ -7,7 +7,7 @@ namespace Pegasus.AssetsCompiler.UserInterface
 	///   defined.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public class RuntimeNamespaceAttribute : Attribute
+	internal class RuntimeNamespaceAttribute : Attribute
 	{
 		/// <summary>
 		///   Initializes a new instance.
