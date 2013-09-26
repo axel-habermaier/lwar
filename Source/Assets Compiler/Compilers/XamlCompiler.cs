@@ -32,6 +32,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		protected override void Compile(XamlAsset asset, BufferWriter buffer)
 		{
+			return;
 			XamlServices.Transform(new XamlXmlReader(asset.SourcePath), new MyXamlWriter());
 			
 
