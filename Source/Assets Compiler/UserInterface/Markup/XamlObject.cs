@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.UserInterface.Markup
+﻿namespace Pegasus.AssetsCompiler.UserInterface.Markup
 {
+	using System;
 	using System.Linq;
 	using System.Xml.Linq;
 	using CodeGeneration;
@@ -45,10 +44,6 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 				else
 					Name = (string)((XamlValue)nameProperty.Value).Value;
 			}
-
-			// Initialize all properties with deferred values
-			foreach (var property in Properties.Where(p => p.IsDeferred).OrderBy(p => p.EvaluationOrder))
-				property.Evaluate(this);
 		}
 
 		/// <summary>
@@ -66,11 +61,20 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			Assert.ArgumentNotNull(writer);
 
 			writer.Newline();
-			if (!IsRoot)
-				writer.AppendLine("var {0} = new {1}.{2}();", Name, GetRuntimeNamespace(), Type.Name);
 
-			foreach (var property in Properties)
-				property.GenerateCode(writer, Name);
+			if (typeof(ICodeGenerator).IsAssignableFrom(Type))
+			{
+				var generator = (ICodeGenerator)Activator.CreateInstance(Type);
+				generator.GenerateCode(this, writer);
+			}
+			else
+			{
+				if (!IsRoot)
+					writer.AppendLine("var {0} = new {1}.{2}();", Name, GetRuntimeNamespace(), Type.Name);
+
+				foreach (var property in Properties)
+					property.GenerateCode(writer, Name);
+			}
 
 			writer.AppendLine(assignmentFormat, Name);
 		}
@@ -80,6 +84,23 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		/// </summary>
 		/// <param name="xamlElement">The element that should be normalized.</param>
 		private XElement Normalize(XElement xamlElement)
+		{
+			xamlElement = NormalizeContentProperty(xamlElement);
+
+			if (typeof(INormalizationRequired).IsAssignableFrom(Type))
+			{
+				var normalization = (INormalizationRequired)Activator.CreateInstance(Type);
+				normalization.Normalize(xamlElement);
+			}
+
+			return xamlElement;
+		}
+
+		/// <summary>
+		///   Normalizes the tree by adding a property element for the object's content property.
+		/// </summary>
+		/// <param name="xamlElement">The element that should be normalized.</param>
+		private XElement NormalizeContentProperty(XElement xamlElement)
 		{
 			var attributes = xamlElement.Attributes();
 			var propertyElements = xamlElement.Elements().Where(element => element.Name.LocalName.Contains("."));

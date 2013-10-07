@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
+﻿namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 {
+	using System;
 	using System.Drawing;
 	using Platform.Logging;
 
@@ -16,6 +15,14 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		protected override Type TargetType
 		{
 			get { return typeof(Color); }
+		}
+
+		/// <summary>
+		///   Gets the runtime type for the given value.
+		/// </summary>
+		protected override string RuntimeType
+		{
+			get { return "Pegasus.Platform.Graphics.Color"; }
 		}
 
 		/// <summary>

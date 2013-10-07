@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
+﻿namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using Platform.Logging;
@@ -20,6 +19,11 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		///   Gets the type the string value is converted to.
 		/// </summary>
 		protected abstract Type TargetType { get; }
+
+		/// <summary>
+		///   Gets the runtime type for the given value.
+		/// </summary>
+		protected abstract string RuntimeType { get; }
 
 		/// <summary>
 		///   Converts the given string value into an instance of the target type.
@@ -82,6 +86,22 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 				Log.Die("Unable to find a type converter for type '{0}'.", value.GetType().FullName);
 
 			return converter.GenerateInstantiationCode(value);
+		}
+
+		/// <summary>
+		///   Gets the runtime type for the given value.
+		/// </summary>
+		/// <param name="type">The type the runtime type should be returned for.</param>
+		public static string GetRuntimeType(Type type)
+		{
+			Assert.ArgumentNotNull(type);
+			Assert.NotNull(_converters);
+
+			TypeConverter converter;
+			if (!_converters.TryGetValue(type, out converter))
+				Log.Die("Unable to find a type converter for type '{0}'.", type.FullName);
+
+			return converter.RuntimeType;
 		}
 	}
 }

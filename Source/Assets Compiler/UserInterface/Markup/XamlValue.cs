@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.UserInterface.Markup
+﻿namespace Pegasus.AssetsCompiler.UserInterface.Markup
 {
+	using System;
+	using System.Reflection;
 	using CodeGeneration;
 	using TypeConverters;
 
@@ -23,9 +23,24 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 			Assert.ArgumentNotNull(valueType);
 			Assert.ArgumentNotNull(value);
 
-			Type = valueType;
+			// Check if the value contains type information and extract it
+			if (valueType == typeof(object) && value.StartsWith("[typeof("))
+			{
+				var valueStart = value.IndexOf("]", StringComparison.Ordinal) + 1;
+				var propertyStart = value.IndexOf("(", StringComparison.Ordinal) + 1;
+				var propertyEnd = value.IndexOf(")", StringComparison.Ordinal);
+
+				var propertyName = value.Substring(propertyStart, propertyEnd - propertyStart);
+				var propertyInfo = (DependencyPropertyReference)TypeConverter.Convert(xamlFile, typeof(DependencyPropertyReference), propertyName);
+
+				Type = propertyInfo.PropertyType;
+				value = value.Substring(valueStart);
+			}
+			else
+				Type = valueType;
+
 			Name = xamlFile.GenerateUniqueName(Type);
-			Value = TypeConverter.Convert(xamlFile, valueType, value);
+			Value = TypeConverter.Convert(xamlFile, Type, value);
 		}
 
 		/// <summary>
@@ -41,7 +56,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		public override void GenerateCode(CodeWriter writer, string assignmentFormat)
 		{
 			Assert.ArgumentNotNull(writer);
-			writer.AppendLine(assignmentFormat, TypeConverter.GenerateCode(Value));
+			writer.Append(assignmentFormat, TypeConverter.GenerateCode(Value));
 		}
 	}
 }

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
+﻿namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 {
+	using System;
+
 	/// <summary>
 	///   Represents the identity conversion for strings.
 	/// </summary>
@@ -13,6 +13,14 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		protected override Type TargetType
 		{
 			get { return typeof(string); }
+		}
+
+		/// <summary>
+		///   Gets the runtime type for the given value.
+		/// </summary>
+		protected override string RuntimeType
+		{
+			get { return "System.String"; }
 		}
 
 		/// <summary>

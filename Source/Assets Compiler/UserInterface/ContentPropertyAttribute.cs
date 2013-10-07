@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.UserInterface
+﻿namespace Pegasus.AssetsCompiler.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   When applied to a UIElement-derived class, denotes the property that should be treated as the element's content
 	///   property.

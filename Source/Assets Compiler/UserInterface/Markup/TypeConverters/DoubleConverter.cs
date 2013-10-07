@@ -16,6 +16,14 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 		}
 
 		/// <summary>
+		///   Gets the runtime type for the given value.
+		/// </summary>
+		protected override string RuntimeType
+		{
+			get { return "double"; }
+		}
+
+		/// <summary>
 		///   Converts the given string value into an instance of the target type.
 		/// </summary>
 		/// <param name="xamlFile">The Xaml file the value is specified in.</param>

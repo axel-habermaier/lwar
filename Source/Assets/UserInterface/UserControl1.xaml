@@ -5,7 +5,8 @@
              mc:Ignorable="d" Height="290" Width="505">
     <UserControl.Resources>
         <Style TargetType="ContentControl">
-            <Setter Property="Background" Value="Red" />
+            <Setter Property="Foreground" Value="Red" />
+            <Setter Property="Control.Width" Value="434"></Setter>
         </Style>
     </UserControl.Resources>
     <Control.Foreground>
