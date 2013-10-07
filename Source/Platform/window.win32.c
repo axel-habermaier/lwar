@@ -332,7 +332,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		// Get the pgWindow instance that was passed as the last argument of CreateWindow
 		window = (pgWindow*)((CREATESTRUCT*)lParam)->lpCreateParams;
 
-		// Set as the "user data" parameter of the window and set the window's hwnd
+		// Set the "user data" parameter of the window and set the window's hwnd
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
 		window->hwnd = hwnd;
 	}

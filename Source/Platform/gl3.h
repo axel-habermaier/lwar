@@ -5,7 +5,6 @@
 // OS-specific includes and definitions
 //====================================================================================================================
 
-#define GLEW_STATIC
 #include "glExt.h"
 
 #ifdef WINDOWS
