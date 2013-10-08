@@ -1,9 +1,7 @@
 ﻿namespace Pegasus.AssetsCompiler.UserInterface
 {
 	using System;
-	using System.Linq;
 	using System.Reflection;
-	using Markup;
 	using Markup.TypeConverters;
 
 	/// <summary>
@@ -39,7 +37,7 @@
 		/// </summary>
 		public string RuntimeDeclaringType
 		{
-			get { return GetRuntimeType(_property.DeclaringType); }
+			get { return _property.DeclaringType.GetRuntimeType(); }
 		}
 
 		/// <summary>
@@ -64,24 +62,6 @@
 		public string Name
 		{
 			get { return _property.Name; }
-		}
-
-		/// <summary>
-		///   Gets the runtime namespace for the given type.
-		/// </summary>
-		/// <param name="type">The type the runtime type should be retrieved for.</param>
-		private static string GetRuntimeType(Type type)
-		{
-			Assert.ArgumentNotNull(type);
-
-			var runtimeNamespace = type.GetCustomAttributes(typeof(RuntimeNamespaceAttribute), true)
-									   .OfType<RuntimeNamespaceAttribute>()
-									   .SingleOrDefault();
-
-			if (runtimeNamespace == null)
-				return type.FullName;
-
-			return String.Format("{0}.{1}", runtimeNamespace.Name, type.Name);
 		}
 	}
 }

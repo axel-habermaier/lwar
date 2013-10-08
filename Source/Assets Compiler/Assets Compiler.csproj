@@ -448,10 +448,12 @@
     <Compile Include="UserInterface\Controls\StackPanel.cs" />
     <Compile Include="UserInterface\ICodeGenerator.cs" />
     <Compile Include="UserInterface\IgnoreAtRuntimeAttribute.cs" />
+    <Compile Include="UserInterface\ImplicitKeyAttribute.cs" />
     <Compile Include="UserInterface\INormalizationRequired.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\DependencyPropertyReferenceConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\TypeInfoConverter.cs" />
     <Compile Include="UserInterface\DependencyPropertyReference.cs" />
+    <Compile Include="UserInterface\ReflectionExtensions.cs" />
     <Compile Include="UserInterface\SetterCollection.cs" />
     <Compile Include="UserInterface\UIElement.cs" />
     <Compile Include="UserInterface\UIElementCollection.cs" />

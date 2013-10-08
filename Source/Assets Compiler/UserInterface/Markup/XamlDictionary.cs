@@ -3,8 +3,12 @@
 namespace Pegasus.AssetsCompiler.UserInterface.Markup
 {
 	using System.Collections.Generic;
+	using System.Linq;
+	using System.Reflection;
 	using System.Xml.Linq;
 	using CodeGeneration;
+	using Platform.Logging;
+	using TypeConverters;
 
 	/// <summary>
 	///   Represents a dictionary instantiation in a Xaml file.
@@ -39,9 +43,32 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 				var keyAttribute = element.Attribute(XamlFile.MarkupNamespace + "Key");
 
 				if (keyAttribute == null)
-					key = item.Type;
+				{
+					// Check whether the item type defines an implicit key and use that instead
+					var implicitKeyAttribute = item.Type.GetCustomAttribute<ImplicitKeyAttribute>();
+					if (implicitKeyAttribute == null)
+						Log.Die("Key definition missing for dictionary item of type '{0}'.", item.Type.FullName);
+
+					var xamlObject = item as XamlObject;
+					if (xamlObject == null)
+						Log.Die("Key definition missing for dictionary item of type '{0}'.", item.Type.FullName);
+
+					var xamlProperty = xamlObject.Properties.FirstOrDefault(p => p.Name == implicitKeyAttribute.Property);
+					if (xamlProperty == null)
+						Log.Die("Key definition missing for dictionary item of type '{0}'.", item.Type.FullName);
+
+					var xamlValue = xamlProperty.Value as XamlValue;
+					if (xamlValue == null)
+						Log.Die("Key definition missing for dictionary item of type '{0}'.", item.Type.FullName);
+
+					var implicitKey = xamlValue.Value as Type;
+					if (implicitKey == null)
+						Log.Die("Key definition missing for dictionary item of type '{0}'.", item.Type.FullName);
+
+					key = String.Format("typeof({0})", implicitKey.GetRuntimeType());
+				}
 				else
-					key = keyAttribute.Value;
+					key = String.Format("\"{0}\"", keyAttribute.Value);
 
 				_values.Add(key, item);
 			}
@@ -55,7 +82,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		public override void GenerateCode(CodeWriter writer, string assignmentFormat)
 		{
 			foreach (var pair in _values)
-				pair.Value.GenerateCode(writer, String.Format(assignmentFormat, String.Format("Add(\"{1}\", {{0}});", Name, pair.Key)));
+				pair.Value.GenerateCode(writer, String.Format(assignmentFormat, String.Format("Add({1}, {{0}});", Name, pair.Key)));
 		}
 	}
 }

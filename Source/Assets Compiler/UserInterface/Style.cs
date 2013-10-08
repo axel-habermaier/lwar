@@ -10,6 +10,7 @@
 	/// </summary>
 	[ContentProperty("Setters")]
 	[RuntimeNamespace("Pegasus.Framework.UserInterface")]
+	[ImplicitKey("TargetType")]
 	internal class Style : INormalizationRequired
 	{
 		[IgnoreAtRuntime]

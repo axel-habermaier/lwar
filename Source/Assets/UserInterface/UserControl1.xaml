@@ -4,10 +4,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" Height="290" Width="505">
     <UserControl.Resources>
-        <Style TargetType="ContentControl">
+        <Style TargetType="UserControl">
             <Setter Property="Foreground" Value="Red" />
             <Setter Property="Control.Width" Value="434"></Setter>
         </Style>
+        <Style x:Key="StyleA"></Style>
     </UserControl.Resources>
     <Control.Foreground>
         #FF112233
