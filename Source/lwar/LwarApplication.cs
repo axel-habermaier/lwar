@@ -101,7 +101,6 @@ namespace Lwar
 		{
 			Assert.ArgumentNotNull(assets);
 			Assert.ArgumentNotNull(viewModel);
-			Font = assets.LoadFont(Fonts.LiberationMono11);
 
 			var baseStyle = new Style();
 			baseStyle.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 255, 0, 255)));
@@ -260,8 +259,8 @@ namespace Lwar
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
-			_viewModel = new HelloWorldViewModel() { Name = "Axel" };
-			_view = new HelloWorldView(uiContext.SharedAssets, _viewModel);
+			//_viewModel = new HelloWorldViewModel() { Name = "Axel" };
+			//_view = new HelloWorldView(uiContext.SharedAssets, _viewModel);
 
 			var buttonTemplate = new ControlTemplate<Button>(button =>
 			{
@@ -278,8 +277,9 @@ namespace Lwar
 
 			var uc1 = new UserControl1(uiContext.SharedAssets);
 			uc1.Resources[typeof(Button)] = buttonStyle;
-			uc1.Font = uiContext.SharedAssets.LoadFont(Fonts.LiberationMono11);
 			uiContext.Add(uc1);
+
+			uiContext.FontLoader = new FontLoader(uiContext.SharedAssets);
 		}
 
 		/// <summary>
@@ -289,34 +289,34 @@ namespace Lwar
 		{
 			_localServer.Update();
 			//_stateManager.Update();
-			_viewModel.Update();
+			//_viewModel.Update();
 
-			if (_viewModel.FrameCount % 300 == 0)
-				_view.button1.IsMouseOver = !_view.button1.IsMouseOver;
+			//if (_viewModel.FrameCount % 300 == 0)
+			//	_view.button1.IsMouseOver = !_view.button1.IsMouseOver;
 
-			if (_viewModel.FrameCount % 3000 == 0)
-			{
-				//_view.ViewModel = _view.ViewModel == null ? _viewModel : null;
-				if (_viewModel.FrameCount % 6000 == 0)
-				{
-					//Log.Info("Adding button: {0}", DateTime.Now.ToLongTimeString());
-					//_view.AddButton();
-				}
+			//if (_viewModel.FrameCount % 3000 == 0)
+			//{
+			//	//_view.ViewModel = _view.ViewModel == null ? _viewModel : null;
+			//	if (_viewModel.FrameCount % 6000 == 0)
+			//	{
+			//		//Log.Info("Adding button: {0}", DateTime.Now.ToLongTimeString());
+			//		//_view.AddButton();
+			//	}
 
-				else
-				{
-					//Log.Info("Removing button: {0}", DateTime.Now.ToLongTimeString());
-					//_view.RemoveButton();
-				}
-			}
-			if ((_viewModel.FrameCount - 1500) % 3000 == 0)
-			{
-				Log.Info("Changing VM: {0}", DateTime.Now.ToLongTimeString());
-				//_viewModel.Name = DateTime.Now.ToLongTimeString();
-				_view.ViewModel = _viewModel = new HelloWorldViewModel() { Name = DateTime.Now.ToLongTimeString() };
-			}
+			//	else
+			//	{
+			//		//Log.Info("Removing button: {0}", DateTime.Now.ToLongTimeString());
+			//		//_view.RemoveButton();
+			//	}
+			//}
+			//if ((_viewModel.FrameCount - 1500) % 3000 == 0)
+			//{
+			//	Log.Info("Changing VM: {0}", DateTime.Now.ToLongTimeString());
+			//	//_viewModel.Name = DateTime.Now.ToLongTimeString();
+			//	_view.ViewModel = _viewModel = new HelloWorldViewModel() { Name = DateTime.Now.ToLongTimeString() };
+			//}
 
-			_viewModel.Name = DateTime.Now.ToLongTimeString();
+			//_viewModel.Name = DateTime.Now.ToLongTimeString();
 		}
 
 		/// <summary>

@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
+	using System;
 	using Math;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Rendering.UserInterface;
-	using Math = System.Math;
 
 	/// <summary>
 	///   Provides layouting, input, and other base functionality for all UI elements.
@@ -32,10 +30,34 @@ namespace Pegasus.Framework.UserInterface
 			new DependencyProperty<Style>(affectsMeasure: true);
 
 		/// <summary>
-		///   The font used for text rendering by the UI element.
+		///   The font family used for text rendering by the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<Font> FontProperty =
-			new DependencyProperty<Font>(affectsMeasure: true, inherits: true);
+		public static readonly DependencyProperty<string> FontFamilyProperty =
+			new DependencyProperty<string>(affectsMeasure: true, inherits: true);
+
+		/// <summary>
+		///   The font size used for text rendering by the UI element.
+		/// </summary>
+		public static readonly DependencyProperty<int> FontSizeProperty =
+			new DependencyProperty<int>(affectsMeasure: true, inherits: true);
+
+		/// <summary>
+		///   Indicates whether a bold font is used for text rendering by the UI element.
+		/// </summary>
+		public static readonly DependencyProperty<bool> FontBoldProperty =
+			new DependencyProperty<bool>(defaultValue: false, affectsMeasure: true, inherits: true);
+
+		/// <summary>
+		///   Indicates whether an italic font is used for text rendering by the UI element.
+		/// </summary>
+		public static readonly DependencyProperty<bool> FontItalicProperty =
+			new DependencyProperty<bool>(defaultValue: false, affectsMeasure: true, inherits: true);
+
+		/// <summary>
+		///   Indicates whether an aliased font is used for text rendering by the UI element.
+		/// </summary>
+		public static readonly DependencyProperty<bool> FontAliasedProperty =
+			new DependencyProperty<bool>(defaultValue: false, affectsMeasure: true, inherits: true);
 
 		/// <summary>
 		///   Indicates whether the mouse is currently hovering the UI element.
@@ -120,6 +142,11 @@ namespace Pegasus.Framework.UserInterface
 													  validationCallback: ValidateAlignment);
 
 		/// <summary>
+		///   The cached font instance that is currently being used for text rendering.
+		/// </summary>
+		private Font _cachedFont;
+
+		/// <summary>
 		///   The size of the UI element that has been computed by the last measure pass of the layout engine.
 		/// </summary>
 		private SizeD _desiredSize;
@@ -140,6 +167,11 @@ namespace Pegasus.Framework.UserInterface
 		protected UIElement()
 		{
 			AddChangedHandler(StyleProperty, OnStyleChanged);
+			AddChangedHandler(FontFamilyProperty, (o, e) => _cachedFont = null);
+			AddChangedHandler(FontSizeProperty, (o, e) => _cachedFont = null);
+			AddChangedHandler(FontBoldProperty, (o, e) => _cachedFont = null);
+			AddChangedHandler(FontItalicProperty, (o, e) => _cachedFont = null);
+			AddChangedHandler(FontAliasedProperty, (o, e) => _cachedFont = null);
 		}
 
 		/// <summary>
@@ -170,12 +202,48 @@ namespace Pegasus.Framework.UserInterface
 		}
 
 		/// <summary>
-		///   Gets or sets the font used for text rendering by the UI element.
+		///   Gets or sets the font family used for text rendering by the UI element.
 		/// </summary>
-		public Font Font
+		public string FontFamily
 		{
-			get { return GetValue(FontProperty); }
-			set { SetValue(FontProperty, value); }
+			get { return GetValue(FontFamilyProperty); }
+			set { SetValue(FontFamilyProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets the font size used for text rendering by the UI element.
+		/// </summary>
+		public int FontSize
+		{
+			get { return GetValue(FontSizeProperty); }
+			set { SetValue(FontSizeProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets a value indicating whether a bold font is used for text rendering by the UI element.
+		/// </summary>
+		public bool FontBold
+		{
+			get { return GetValue(FontBoldProperty); }
+			set { SetValue(FontBoldProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets a value indicating whether an italic font is used for text rendering by the UI element.
+		/// </summary>
+		public bool FontItalic
+		{
+			get { return GetValue(FontItalicProperty); }
+			set { SetValue(FontItalicProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets a value indicating whether an aliased font is used for text rendering by the UI element.
+		/// </summary>
+		public bool FontAliased
+		{
+			get { return GetValue(FontAliasedProperty); }
+			set { SetValue(FontAliasedProperty, value); }
 		}
 
 		/// <summary>
@@ -302,7 +370,6 @@ namespace Pegasus.Framework.UserInterface
 			set { SetValue(HorizontalAlignmentProperty, value); }
 		}
 
-		/// ///
 		/// <summary>
 		///   The vertical alignment characteristics of the UI element.
 		/// </summary>
@@ -333,6 +400,26 @@ namespace Pegasus.Framework.UserInterface
 		{
 			get { return GetValue(IsMouseOverProperty); }
 			set { SetValue(IsMouseOverProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets the font used for text rendering.
+		/// </summary>
+		protected Font Font
+		{
+			get
+			{
+				if (_cachedFont == null)
+				{
+					IFontLoader fontLoader;
+					if (!TryFindResource(typeof(IFontLoader), out fontLoader))
+						Log.Die("Unable to find a font cache in the UI element's resources.");
+
+					_cachedFont = fontLoader.LoadFont(FontFamily, FontSize, FontBold, FontItalic, FontAliased);
+				}
+
+				return _cachedFont;
+			}
 		}
 
 		/// <summary>
@@ -486,6 +573,26 @@ namespace Pegasus.Framework.UserInterface
 			// If there is no logical parent, there is no resource with the given key
 			resource = null;
 			return false;
+		}
+
+		/// <summary>
+		///   Searches the tree for a resource with the given key.
+		/// </summary>
+		/// <param name="key">The key of the resource that should be returned.</param>
+		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
+		internal bool TryFindResource<T>(object key, out T resource)
+		{
+			Assert.ArgumentNotNull(key);
+
+			object untypedResource;
+			if (!TryFindResource(key, out untypedResource))
+			{
+				resource = default(T);
+				return false;
+			}
+
+			resource = (T)untypedResource;
+			return true;
 		}
 
 		/// <summary>

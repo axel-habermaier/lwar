@@ -71,6 +71,11 @@ namespace Pegasus.AssetsCompiler
 		public static readonly string CSharpAssetIdentifiersFile = Path.Combine(SourceDirectory, "AssetIdentifiers.cs");
 
 		/// <summary>
+		///   The path to the C# file that should contain the font loader class.
+		/// </summary>
+		public static readonly string CSharpFontLoaderFile = Path.Combine(SourceDirectory, "Fonts", "FontLoader.cs");
+
+		/// <summary>
 		///   Get the asset list assembly.
 		/// </summary>
 		public static Assembly AssetListAssembly

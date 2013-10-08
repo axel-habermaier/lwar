@@ -96,8 +96,7 @@ namespace Pegasus.AssetsCompiler.CodeGeneration
 		///   Escapes the name in order to form a valid C# identifier.
 		/// </summary>
 		/// <param name="name">The name that should be escaped.</param>
-		private static
-			string EscapeName(string name)
+		private static string EscapeName(string name)
 		{
 			return name.Replace(".", "_")
 					   .Replace(" ", "");

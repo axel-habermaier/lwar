@@ -11,7 +11,7 @@
 	[ContentProperty("Setters")]
 	[RuntimeNamespace("Pegasus.Framework.UserInterface")]
 	[ImplicitKey("TargetType")]
-	internal class Style : INormalizationRequired
+	internal class Style : IRequiresNormalization
 	{
 		[IgnoreAtRuntime]
 		public Type TargetType { get; set; }

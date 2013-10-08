@@ -185,6 +185,9 @@
     <Compile Include="..\Assets\Effects\Effects.cs">
       <Link>Assets\Effects.cs</Link>
     </Compile>
+    <Compile Include="..\Assets\Fonts\FontLoader.cs">
+      <Link>Assets\FontLoader.cs</Link>
+    </Compile>
     <Compile Include="..\Assets\UserInterface\UserControl1.xaml.cs">
       <Link>UserInterface\UserControl1.xaml.cs</Link>
     </Compile>

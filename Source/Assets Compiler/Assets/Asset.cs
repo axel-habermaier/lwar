@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Assets
+﻿namespace Pegasus.AssetsCompiler.Assets
 {
+	using System;
 	using System.IO;
 	using Compilers;
 	using Platform;
@@ -150,7 +149,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
+		///   Gets the name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
 		///   asset instance.
 		/// </summary>
 		public virtual string IdentifierName

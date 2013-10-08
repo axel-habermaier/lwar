@@ -453,8 +453,10 @@
     <Compile Include="UserInterface\ICodeGenerator.cs" />
     <Compile Include="UserInterface\IgnoreAtRuntimeAttribute.cs" />
     <Compile Include="UserInterface\ImplicitKeyAttribute.cs" />
-    <Compile Include="UserInterface\INormalizationRequired.cs" />
+    <Compile Include="UserInterface\IRequiresNormalization.cs" />
+    <Compile Include="UserInterface\Markup\TypeConverters\BooleanConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\DependencyPropertyReferenceConverter.cs" />
+    <Compile Include="UserInterface\Markup\TypeConverters\Int32Converter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\ThicknessConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\TypeInfoConverter.cs" />
     <Compile Include="UserInterface\DependencyPropertyReference.cs" />

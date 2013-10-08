@@ -32,8 +32,10 @@ namespace Pegasus.AssetsCompiler.Fonts
 		/// </summary>
 		/// <param name="font">The native freetype font instance.</param>
 		/// <param name="size">The size (in pixels) of the characters.</param>
+		/// <param name="bold">Indicates whether the font weight should be bold.</param>
+		/// <param name="italic">Indicates whether the font should be italic.</param>
 		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyphs.</param>
-		public Font(IntPtr font, int size, RenderMode renderMode)
+		public Font(IntPtr font, int size, bool bold, bool italic, RenderMode renderMode)
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.InRange(renderMode);

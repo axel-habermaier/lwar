@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler
+﻿namespace Pegasus.AssetsCompiler
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
@@ -12,6 +11,11 @@ namespace Pegasus.AssetsCompiler
 	/// </summary>
 	internal class ConfigurationFileParser
 	{
+		/// <summary>
+		///   The key that is used to store the path of the source file in the configuration dictionary.
+		/// </summary>
+		public const string SourceFile = "___sourceFileName";
+
 		/// <summary>
 		///   Indicates the required keys and the function that is used to convert their values into .NET objects.
 		/// </summary>
@@ -42,6 +46,8 @@ namespace Pegasus.AssetsCompiler
 
 			var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 			var lineNumber = 0;
+
+			result.Add(SourceFile, file);
 
 			foreach (var line in File.ReadAllLines(file))
 			{

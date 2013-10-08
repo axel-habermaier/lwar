@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
+	using System;
 	using Controls;
 	using Math;
 	using Platform;
@@ -10,7 +9,6 @@ namespace Pegasus.Framework.UserInterface
 	using Platform.Input;
 	using Platform.Memory;
 	using Rendering;
-	using Rendering.UserInterface;
 
 	/// <summary>
 	///   Represents the UI context that layouts and draws several logical trees as well as handling their input. Multiple UI
@@ -40,9 +38,21 @@ namespace Pegasus.Framework.UserInterface
 		}
 
 		/// <summary>
+		///   Gets or sets the font loader that is used by all UI elements of the context.
+		/// </summary>
+		public IFontLoader FontLoader
+		{
+			get { return _canvas.Resources[typeof(IFontLoader)] as IFontLoader; }
+			set
+			{
+				Assert.ArgumentNotNull(value);
+				_canvas.Resources[typeof(IFontLoader)] = value;
+			}
+		}
+
+		/// <summary>
 		///   Gets the asset manager that is used to load the shared assets required by the UI context such as fonts and UI
-		///   shaders.
-		///   Textures, on the other hand, should typically be loaded by more short-lived assets managers.
+		///   shaders. Textures, on the other hand, should typically be loaded by more short-lived assets managers.
 		/// </summary>
 		public AssetsManager SharedAssets { get; private set; }
 

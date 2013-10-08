@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.UserInterface.Markup
+﻿namespace Pegasus.AssetsCompiler.UserInterface.Markup
 {
+	using System;
 	using System.Collections;
 	using System.Linq;
 	using System.Xml.Linq;

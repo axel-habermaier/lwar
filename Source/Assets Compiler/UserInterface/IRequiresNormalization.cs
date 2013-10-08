@@ -6,7 +6,7 @@
 	/// <summary>
 	///   Normalizes the contents of a XAML object.
 	/// </summary>
-	internal interface INormalizationRequired
+	internal interface IRequiresNormalization
 	{
 		/// <summary>
 		///   Normalizes the contents of the given XAML element.

@@ -87,9 +87,9 @@
 		{
 			xamlElement = NormalizeContentProperty(xamlElement);
 
-			if (typeof(INormalizationRequired).IsAssignableFrom(Type))
+			if (typeof(IRequiresNormalization).IsAssignableFrom(Type))
 			{
-				var normalization = (INormalizationRequired)Activator.CreateInstance(Type);
+				var normalization = (IRequiresNormalization)Activator.CreateInstance(Type);
 				normalization.Normalize(xamlElement);
 			}
 

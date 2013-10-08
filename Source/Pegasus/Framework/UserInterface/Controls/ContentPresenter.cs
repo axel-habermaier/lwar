@@ -89,7 +89,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 				previousElement.ChangeLogicalParent(null);
 
 			if (_presentedElement != null)
-				_presentedElement.ChangeLogicalParent(Parent);
+				_presentedElement.ChangeLogicalParent(this);
 		}
 
 		/// <summary>

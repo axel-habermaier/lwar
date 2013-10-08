@@ -201,6 +201,7 @@
     <Compile Include="Framework\UserInterface\Controls\Orientation.cs" />
     <Compile Include="Framework\UserInterface\Controls\StackPanel.cs" />
     <Compile Include="Framework\UserInterface\Controls\UserControl.cs" />
+    <Compile Include="Framework\UserInterface\IFontLoader.cs" />
     <Compile Include="Framework\UserInterface\HorizontalAlignment.cs" />
     <Compile Include="Framework\UserInterface\ResourceKeyChangedHandlers.cs" />
     <Compile Include="Framework\UserInterface\TemplateBinding.cs" />

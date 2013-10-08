@@ -15,13 +15,13 @@
 	/// </summary>
 	internal class XamlCompiler : AssetCompiler<XamlAsset>
 	{
-		// TODO: REMOVE
-		public override bool Compile(IEnumerable<Asset> assets)
-		{
-			foreach (var xaml in assets.OfType<XamlAsset>())
-				File.Delete(xaml.HashPath);
-			return base.Compile(assets);
-		}
+		//// TODO: REMOVE
+		//public override bool Compile(IEnumerable<Asset> assets)
+		//{
+		//	foreach (var xaml in assets.OfType<XamlAsset>())
+		//		File.Delete(xaml.HashPath);
+		//	return base.Compile(assets);
+		//}
 
 		/// <summary>
 		///   Compiles the asset.
