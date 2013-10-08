@@ -191,6 +191,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Framework\ContentPropertyAttribute.cs" />
     <Compile Include="Framework\InheritanceContext.cs" />
     <Compile Include="Framework\UserInterface\Binding.cs" />
     <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />

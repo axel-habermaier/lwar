@@ -9,12 +9,13 @@
     <UserControl.Resources>
         <Style TargetType="Button">
             <Setter Property="Foreground" Value="Red"></Setter>
+            <Setter Property="Control.Background" Value="Red"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
+                    <ControlTemplate>
                         <StackPanel>
                             <TextBlock>Hallo Welt</TextBlock>
-                            <ContentPresenter Content="{TemplateBinding Content}"></ContentPresenter>
+                            <ContentPresenter Content="{TemplateBinding Button.Content}"></ContentPresenter>
                         </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
@@ -22,7 +23,7 @@
         </Style>
     </UserControl.Resources>
     <StackPanel>
-        <Button>Button 1</Button>
+        <Button Content="    Button 1"></Button>
         <Button Width="100" HorizontalAlignment="Right" Margin="15,5,21,15">
             Button 2
         </Button>

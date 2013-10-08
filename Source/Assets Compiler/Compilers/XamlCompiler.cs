@@ -5,10 +5,11 @@
 	using System.IO;
 	using System.Linq;
 	using System.Text;
+	using System.Xml.Linq;
 	using Assets;
 	using CodeGeneration;
 	using Platform.Memory;
-	using UserInterface.Markup;
+	using Xaml;
 
 	/// <summary>
 	///   Compiles Xaml assets into C# code targeting the Pegasus UI library.
@@ -20,7 +21,7 @@
 		{
 			foreach (var xaml in assets.OfType<XamlAsset>())
 				File.Delete(xaml.HashPath);
-			return base.Compile(assets);
+			return base.Compile(assets); 
 		}
 
 		/// <summary>
@@ -36,10 +37,11 @@
 			var writer = new CodeWriter();
 			writer.WriterHeader("//");
 
-			var xamlFile = new XamlFile(asset.SourcePath);
-			xamlFile.GenerateCode(writer, namespaceName.Replace("/", "."), className);
+			//var xamlFile = new XamlFile(asset.SourcePath);
+			//xamlFile.GenerateCode(writer, namespaceName.Replace("/", "."), className);
 
-			buffer.Copy(Encoding.UTF8.GetBytes(writer.ToString()));
+			var xamlFile = new XamlFile(asset.SourcePath);
+			buffer.Copy(Encoding.UTF8.GetBytes(XDocument.Parse(xamlFile.Root.ToString()).ToString()));
 		}
 	}
 }

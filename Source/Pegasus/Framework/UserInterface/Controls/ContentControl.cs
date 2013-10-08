@@ -5,6 +5,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 	/// <summary>
 	///   Represents a control with a single logical child of any type as its content.
 	/// </summary>
+	[ContentProperty("Content")]
 	public class ContentControl : Control
 	{
 		/// <summary>

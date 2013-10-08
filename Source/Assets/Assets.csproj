@@ -249,6 +249,10 @@
       <Project>{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}</Project>
       <Name>Assets Compiler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Pegasus\Pegasus.csproj">
+      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
+      <Name>Pegasus</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Fonts\Liberation Mono 11.font" />

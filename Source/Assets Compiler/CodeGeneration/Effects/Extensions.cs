@@ -11,6 +11,8 @@ namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Platform.Graphics;
 	using CSharpAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
+	using CubeMap = AssetsCompiler.Effects.CubeMap;
+	using Texture2D = AssetsCompiler.Effects.Texture2D;
 
 	/// <summary>
 	///   Provides extension methods on NRefactory AST types.

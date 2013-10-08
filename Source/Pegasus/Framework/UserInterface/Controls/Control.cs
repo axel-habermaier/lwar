@@ -3,6 +3,7 @@
 namespace Pegasus.Framework.UserInterface.Controls
 {
 	using Math;
+	using Platform.Graphics;
 	using Rendering;
 
 	/// <summary>
@@ -17,6 +18,12 @@ namespace Pegasus.Framework.UserInterface.Controls
 			new DependencyProperty<ControlTemplate>(affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
+		///   The background color of the control.
+		/// </summary>
+		public static readonly DependencyProperty<Color> BackgroundProperty =
+			new DependencyProperty<Color>(defaultValue: new Color(255, 255, 255, 255), affectsRender: true);
+
+		/// <summary>
 		///   The child UI element that represents the root of this control's template. Null if no template has been created.
 		/// </summary>
 		private UIElement _templateRoot;
@@ -27,6 +34,15 @@ namespace Pegasus.Framework.UserInterface.Controls
 		protected Control()
 		{
 			AddChangedHandler(TemplateProperty, OnTemplateChanged);
+		}
+
+		/// <summary>
+		///   Gets or sets the background color of the control.
+		/// </summary>
+		public Color Background
+		{
+			get { return GetValue(BackgroundProperty); }
+			set { SetValue(BackgroundProperty, value); }
 		}
 
 		/// <summary>
