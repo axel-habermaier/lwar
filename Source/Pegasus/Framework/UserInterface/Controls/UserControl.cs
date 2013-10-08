@@ -10,14 +10,14 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///   The default template that defines the visual appearance of a user control.
 		/// </summary>
-		private static readonly ControlTemplate DefaultTemplate = new ControlTemplate<UserControl>(control =>
+		private static readonly ControlTemplate DefaultTemplate = control =>
 		{
 			var binding = new TemplateBinding<object>(control, ContentProperty);
 			var presenter = new ContentPresenter();
 			presenter.SetBinding(ContentPresenter.ContentProperty, binding);
 
 			return presenter;
-		});
+		};
 
 		/// <summary>
 		///   Initializes a new instance.

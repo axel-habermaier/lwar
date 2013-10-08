@@ -116,7 +116,7 @@ namespace Lwar
 			trigger.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 255, 123, 255)));
 			style.Triggers.Add(trigger);
 
-			var buttonTemplate = new ControlTemplate<Button>(button =>
+			var buttonTemplate = new ControlTemplate(button =>
 			{
 				var binding = new TemplateBinding<object>(button, ContentProperty);
 				var presenter = new ContentPresenter();
@@ -262,7 +262,7 @@ namespace Lwar
 			//_viewModel = new HelloWorldViewModel() { Name = "Axel" };
 			//_view = new HelloWorldView(uiContext.SharedAssets, _viewModel);
 
-			var buttonTemplate = new ControlTemplate<Button>(button =>
+			var buttonTemplate = new ControlTemplate(button =>
 			{
 				var binding = new TemplateBinding<object>(button, ContentControl.ContentProperty);
 				var presenter = new ContentPresenter();
@@ -275,7 +275,7 @@ namespace Lwar
 			buttonStyle.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, buttonTemplate));
 			buttonStyle.Setters.Add(new Setter<Color>(Control.ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
 
-			var uc1 = new UserControl1(uiContext.SharedAssets);
+			var uc1 = new UserControl1();
 			uc1.Resources[typeof(Button)] = buttonStyle;
 			uiContext.Add(uc1);
 

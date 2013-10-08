@@ -71,7 +71,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 			if (args.NewValue == null)
 				_templateRoot = null;
 			else
-				_templateRoot = args.NewValue.Instantiate(this);
+				_templateRoot = args.NewValue(this);
 
 			if (_templateRoot != null)
 				_templateRoot.ChangeLogicalParent(this);

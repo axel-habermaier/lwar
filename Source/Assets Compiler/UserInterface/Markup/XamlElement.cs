@@ -62,12 +62,8 @@
 				writer.AppendLine("public class {0} : {1}.{2}", className, GetRuntimeNamespace(), Type.Name);
 				writer.AppendBlockStatement(() =>
 				{
-					writer.AppendLine("public {0}(Pegasus.Platform.Assets.AssetsManager assets)", className);
-					writer.AppendBlockStatement(() =>
-					{
-						writer.AppendLine("Pegasus.Assert.ArgumentNotNull(assets);");
-						GenerateCode(writer, "");
-					});
+					writer.AppendLine("public {0}()", className);
+					writer.AppendBlockStatement(() => GenerateCode(writer, ""));
 				});
 			});
 		}

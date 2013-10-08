@@ -16,21 +16,24 @@ namespace Tests.UserInterface
 			_presenter1 = new ContentPresenter();
 			_presenter2 = new ContentPresenter();
 
-			_template1 = new ControlTemplate<Button>(button =>
+			_template1 = button =>
 			{
-				var binding = new TemplateBinding<Thickness>(button, UIElement.MarginProperty);
-				_presenter1.SetBinding(UIElement.MarginProperty, binding);
+				var thicknessBinding = new TemplateBinding<Thickness>(button, UIElement.MarginProperty);
+				_presenter1.SetBinding(UIElement.MarginProperty, thicknessBinding);
+
+				var contentBinding = new TemplateBinding<object>(button, ContentControl.ContentProperty);
+				_presenter1.SetBinding(ContentPresenter.ContentProperty, contentBinding);
 
 				return _presenter1;
-			});
+			};
 
-			_template2 = new ControlTemplate<Button>(button =>
+			_template2 = button =>
 			{
 				var binding = new TemplateBinding<Thickness>(button, UIElement.MarginProperty);
 				_presenter2.SetBinding(UIElement.MarginProperty, binding);
 
 				return _presenter2;
-			});
+			};
 		}
 
 		private ContentPresenter _presenter1;
@@ -49,6 +52,50 @@ namespace Tests.UserInterface
 			var control = new UserControl { Content = button };
 
 			button.Parent.Should().Be(control);
+		}
+
+		[Test]
+		public void LogicalParentOfTextContent_SetTemplateBeforeContent()
+		{
+			var text = new TextBlock();
+			var button = new Button { Template = _template1, Content = text };
+			var control = new UserControl { Content = button };
+
+			button.Parent.Should().Be(control);
+			text.Parent.Should().Be(button);
+		}
+
+		[Test]
+		public void LogicalParentOfTextContent_SetContentBeforeTemplate()
+		{
+			var text = new TextBlock();
+			var button = new Button { Content = text, Template = _template1 };
+			var control = new UserControl { Content = button };
+
+			button.Parent.Should().Be(control);
+			text.Parent.Should().Be(button);
+		}
+
+		[Test]
+		public void LogicalParentOfTextContent_ChangeButtonParent()
+		{
+			var text = new TextBlock();
+			var button = new Button { Content = text, Template = _template1 };
+			var control1 = new UserControl { Content = button };
+			var control2 = new UserControl();
+
+			button.Parent.Should().Be(control1);
+			text.Parent.Should().Be(button);
+
+			control1.Content = null;
+
+			button.Parent.Should().Be(null);
+			text.Parent.Should().Be(button);
+
+			control2.Content = button;
+
+			button.Parent.Should().Be(control2);
+			text.Parent.Should().Be(button);
 		}
 
 		[Test]

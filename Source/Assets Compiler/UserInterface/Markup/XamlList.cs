@@ -42,7 +42,7 @@ namespace Pegasus.AssetsCompiler.UserInterface.Markup
 		public override void GenerateCode(CodeWriter writer, string assignmentFormat)
 		{
 			foreach (var item in _items)
-				item.GenerateCode(writer, String.Format(assignmentFormat, String.Format("Add({{0}});", Name)));
+				item.GenerateCode(writer, String.Format(assignmentFormat, String.Format("Add({{0}})", Name)));
 		}
 	}
 }

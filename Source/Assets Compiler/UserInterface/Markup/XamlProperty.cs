@@ -145,9 +145,7 @@
 			IsDictionary = typeof(IDictionary).IsAssignableFrom(Type);
 			IsList = typeof(IList).IsAssignableFrom(Type) && !IsDictionary;
 
-			_ignoreAtRuntime = propertyInfo.GetCustomAttributes(typeof(IgnoreAtRuntimeAttribute), true)
-										   .OfType<IgnoreAtRuntimeAttribute>()
-										   .SingleOrDefault() != null;
+			_ignoreAtRuntime = propertyInfo.GetCustomAttribute<IgnoreAtRuntimeAttribute>() != null;
 		}
 
 		/// <summary>

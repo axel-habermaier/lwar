@@ -80,16 +80,16 @@ namespace Pegasus.Framework.UserInterface.Controls
 				_presentedElement = _textBlock = new TextBlock(args.NewValue.ToString());
 			else
 			{
-				// Reuse the previous text block instance (and don't reparent it)
+				// Reuse the previous text block instance
 				_textBlock.Text = args.NewValue.ToString();
-				previousElement = null;
+				previousElement = null; // No need to remove the text block from the logical tree
 			}
 
 			if (previousElement != null)
 				previousElement.ChangeLogicalParent(null);
 
 			if (_presentedElement != null)
-				_presentedElement.ChangeLogicalParent(this);
+				_presentedElement.ChangeLogicalParent(Parent);
 		}
 
 		/// <summary>
@@ -137,6 +137,24 @@ namespace Pegasus.Framework.UserInterface.Controls
 
 			_presentedElement.Arrange(new RectangleD(0, 0, finalSize));
 			return _presentedElement.RenderSize;
+		}
+
+		/// <summary>
+		///   Invoked when the UI element is attached to a new logical tree.
+		/// </summary>
+		protected override void OnAttached()
+		{
+			if (_presentedElement != null)
+				_presentedElement.ChangeLogicalParent(Parent);
+		}
+
+		/// <summary>
+		///   Invoked when the UI element has been detached from its current logical tree.
+		/// </summary>
+		protected override void OnDetached()
+		{
+			if (_presentedElement != null)
+				_presentedElement.ChangeLogicalParent(null);
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)
