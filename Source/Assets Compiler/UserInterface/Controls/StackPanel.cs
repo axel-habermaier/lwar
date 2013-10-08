@@ -7,5 +7,6 @@ namespace Pegasus.AssetsCompiler.UserInterface.Controls
 	/// </summary>
 	internal class StackPanel : Panel
 	{
+		public Orientation Orientation { get; set; }
 	}
 }

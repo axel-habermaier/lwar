@@ -1,12 +1,12 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.UserInterface
+﻿namespace Pegasus.AssetsCompiler.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   When applied to a UIElement-derived class, denotes the namespace in which the runtime-version of the UI element is
 	///   defined.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Struct, AllowMultiple = false)]
 	internal class RuntimeNamespaceAttribute : Attribute
 	{
 		/// <summary>

@@ -24,5 +24,11 @@ namespace Pegasus.AssetsCompiler.UserInterface
 
 		public Color Background { get; set; }
 		public Color Foreground { get; set; }
+
+		public Style Style { get; set; }
+		public bool Visible { get; set; }
+		public Thickness Margin { get; set; }
+		public HorizontalAlignment HorizontalAlignment { get; set; }
+		public VerticalAlignment VerticalAlignment { get; set; }
 	}
 }

@@ -106,8 +106,14 @@
 			var propertyElements = xamlElement.Elements().Where(element => element.Name.LocalName.Contains("."));
 			var contentPropertyElements = xamlElement.Elements().Where(element => !element.Name.LocalName.Contains("."));
 
-			if (!contentPropertyElements.Any())
+			if ((xamlElement.Elements().Any() || String.IsNullOrWhiteSpace(xamlElement.Value)) && !contentPropertyElements.Any())
 				return xamlElement;
+
+			if (!contentPropertyElements.Any())
+				contentPropertyElements = new ArraySegment<XElement>(new[]
+				{
+					new XElement(XamlFile.DefaultNamespace + "TextBlock", new XAttribute("Text", xamlElement.Value))
+				});
 
 			var contentPropertyName = GetContentPropertyName();
 			return new XElement(xamlElement.Name, attributes, propertyElements,

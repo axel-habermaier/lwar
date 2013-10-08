@@ -441,20 +441,26 @@
     <Compile Include="CodeGeneration\Registries\Cvar.cs" />
     <Compile Include="CodeGeneration\Registries\RegistryGenerator.cs" />
     <Compile Include="UserInterface\ContentPropertyAttribute.cs" />
+    <Compile Include="UserInterface\Controls\Button.cs" />
     <Compile Include="UserInterface\Controls\Canvas.cs" />
     <Compile Include="UserInterface\Controls\ContentControl.cs" />
     <Compile Include="UserInterface\Controls\Control.cs" />
+    <Compile Include="UserInterface\Controls\Orientation.cs" />
     <Compile Include="UserInterface\Controls\Panel.cs" />
     <Compile Include="UserInterface\Controls\StackPanel.cs" />
+    <Compile Include="UserInterface\Controls\TextBlock.cs" />
+    <Compile Include="UserInterface\HorizontalAlignment.cs" />
     <Compile Include="UserInterface\ICodeGenerator.cs" />
     <Compile Include="UserInterface\IgnoreAtRuntimeAttribute.cs" />
     <Compile Include="UserInterface\ImplicitKeyAttribute.cs" />
     <Compile Include="UserInterface\INormalizationRequired.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\DependencyPropertyReferenceConverter.cs" />
+    <Compile Include="UserInterface\Markup\TypeConverters\ThicknessConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\TypeInfoConverter.cs" />
     <Compile Include="UserInterface\DependencyPropertyReference.cs" />
     <Compile Include="UserInterface\ReflectionExtensions.cs" />
     <Compile Include="UserInterface\SetterCollection.cs" />
+    <Compile Include="UserInterface\Thickness.cs" />
     <Compile Include="UserInterface\UIElement.cs" />
     <Compile Include="UserInterface\UIElementCollection.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\ColorConverter.cs" />
@@ -474,6 +480,7 @@
     <Compile Include="UserInterface\RuntimeNamespaceAttribute.cs" />
     <Compile Include="UserInterface\Setter.cs" />
     <Compile Include="UserInterface\Style.cs" />
+    <Compile Include="UserInterface\VerticalAlignment.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -1,20 +1,19 @@
 ﻿namespace Pegasus.AssetsCompiler.UserInterface.Markup.TypeConverters
 {
 	using System;
-	using System.Drawing;
 	using Platform.Logging;
 
 	/// <summary>
-	///   Converts strings to colors.
+	///   Converts strings to thickness values.
 	/// </summary>
-	internal class ColorConverter : TypeConverter
+	internal class ThicknessConverter : TypeConverter
 	{
 		/// <summary>
 		///   Gets the type the string value is converted to.
 		/// </summary>
 		protected override Type TargetType
 		{
-			get { return typeof(Color); }
+			get { return typeof(Thickness); }
 		}
 
 		/// <summary>
@@ -22,7 +21,7 @@
 		/// </summary>
 		protected override string RuntimeType
 		{
-			get { return "Pegasus.Platform.Graphics.Color"; }
+			get { return "Pegasus.Framework.UserInterface.Thickness"; }
 		}
 
 		/// <summary>
@@ -32,23 +31,18 @@
 		/// <param name="value">The value that should be converted.</param>
 		protected override object Convert(XamlFile xamlFile, string value)
 		{
-			if (value.StartsWith("#"))
-			{
-				try
-				{
-					return Color.FromArgb(System.Convert.ToInt32(value.Substring(1), 16));
-				}
-				catch (Exception)
-				{
-					Log.Die("Failed to convert color value '{0}'.", value);
-				}
-			}
+			double left, right, top, bottom;
+			var split = value.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
-			var color = Color.FromName(value);
-			if (value.ToLower() != "transparent" && color.ToArgb() == 0)
-				Log.Die("Failed to convert color value '{0}'.", value);
+			if (split.Length == 1 && Double.TryParse(split[0], out left))
+				return new Thickness(left);
+			
+			if (split.Length == 4 && Double.TryParse(split[0], out left) && Double.TryParse(split[1], out right) &&
+					 Double.TryParse(split[2], out top) && Double.TryParse(split[3], out bottom))
+				return new Thickness(left, right, top, bottom);
 
-			return color;
+			Log.Die("Failed to parse Thickness value '{0}'.", value);
+			return null;
 		}
 
 		/// <summary>
@@ -57,8 +51,8 @@
 		/// <param name="value">The value the code should be generated for.</param>
 		protected override string GenerateInstantiationCode(object value)
 		{
-			var color = (Color)value;
-			return String.Format("{4}.FromRgba({0}, {1}, {2}, {3})", color.R, color.G, color.B, color.A, RuntimeType);
+			var thickness = (Thickness)value;
+			return String.Format("new {0}({1}, {2}, {3}, {4})", RuntimeType, thickness.Left, thickness.Right, thickness.Top, thickness.Bottom);
 		}
 	}
 }

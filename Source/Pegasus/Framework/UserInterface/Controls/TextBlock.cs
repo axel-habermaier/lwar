@@ -93,7 +93,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 			var y = (int)Math.Round(VisualOffset.Y);
 
 			using (var text = Rendering.UserInterface.Text.Create(Text))
-				TextRenderer.Draw(spriteBatch, Font, text, Color.FromRgba(255, 0, 0, 255), new Vector2i(x, y));
+				TextRenderer.Draw(spriteBatch, Font, text, Color.FromRgba(0, 255, 0, 255), new Vector2i(x, y));
 		}
 	}
 }

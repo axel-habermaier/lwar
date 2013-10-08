@@ -16,6 +16,7 @@ namespace Lwar
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Scripting;
+	using UserInterface;
 
 	internal class HelloWorldViewModel : ViewModel
 	{
@@ -261,7 +262,24 @@ namespace Lwar
 
 			_viewModel = new HelloWorldViewModel() { Name = "Axel" };
 			_view = new HelloWorldView(uiContext.SharedAssets, _viewModel);
-			uiContext.Add(_view);
+
+			var buttonTemplate = new ControlTemplate<Button>(button =>
+			{
+				var binding = new TemplateBinding<object>(button, ContentControl.ContentProperty);
+				var presenter = new ContentPresenter();
+				presenter.SetBinding(ContentPresenter.ContentProperty, binding);
+
+				return presenter;
+			});
+
+			var buttonStyle = new Style();
+			buttonStyle.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, buttonTemplate));
+			buttonStyle.Setters.Add(new Setter<Color>(Control.ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
+
+			var uc1 = new UserControl1(uiContext.SharedAssets);
+			uc1.Resources[typeof(Button)] = buttonStyle;
+			uc1.Font = uiContext.SharedAssets.LoadFont(Fonts.LiberationMono11);
+			uiContext.Add(uc1);
 		}
 
 		/// <summary>

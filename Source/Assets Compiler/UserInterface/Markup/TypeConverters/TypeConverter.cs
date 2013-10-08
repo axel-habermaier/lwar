@@ -57,6 +57,9 @@
 										   .Cast<TypeConverter>()
 										   .ToDictionary(c => c.TargetType, c => c);
 
+			if (targetType.IsEnum)
+				return Enum.Parse(targetType, value);
+
 			TypeConverter converter;
 			if (!_converters.TryGetValue(targetType, out converter))
 				Log.Die("Unable to find a type converter for type '{0}'.", targetType.FullName);
@@ -81,6 +84,9 @@
 			Assert.ArgumentNotNull(value);
 			Assert.NotNull(_converters);
 
+			if (value.GetType().IsEnum)
+				return String.Format("{0}.{1}", value.GetType().GetRuntimeType(), value);
+
 			TypeConverter converter;
 			if (!_converters.TryGetValue(value.GetType(), out converter))
 				Log.Die("Unable to find a type converter for type '{0}'.", value.GetType().FullName);
@@ -96,6 +102,9 @@
 		{
 			Assert.ArgumentNotNull(type);
 			Assert.NotNull(_converters);
+
+			if (type.IsEnum)
+				return type.GetRuntimeType();
 
 			TypeConverter converter;
 			if (!_converters.TryGetValue(type, out converter))
