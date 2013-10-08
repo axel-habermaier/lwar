@@ -65,7 +65,7 @@
 			if (typeof(ICodeGenerator).IsAssignableFrom(Type))
 			{
 				var generator = (ICodeGenerator)Activator.CreateInstance(Type);
-				generator.GenerateCode(this, writer);
+				generator.GenerateCode(this, writer, assignmentFormat);
 			}
 			else
 			{
@@ -74,9 +74,9 @@
 
 				foreach (var property in Properties)
 					property.GenerateCode(writer, Name);
-			}
 
-			writer.AppendLine(assignmentFormat, Name);
+				writer.AppendLine(assignmentFormat, Name);
+			}
 		}
 
 		/// <summary>
@@ -102,6 +102,10 @@
 		/// <param name="xamlElement">The element that should be normalized.</param>
 		private XElement NormalizeContentProperty(XElement xamlElement)
 		{
+			var contentProperty = Type.GetCustomAttribute<ContentPropertyAttribute>();
+			if (contentProperty == null)
+				return xamlElement;
+
 			var attributes = xamlElement.Attributes();
 			var propertyElements = xamlElement.Elements().Where(element => element.Name.LocalName.Contains("."));
 			var contentPropertyElements = xamlElement.Elements().Where(element => !element.Name.LocalName.Contains("."));
@@ -115,24 +119,8 @@
 					new XElement(XamlFile.DefaultNamespace + "TextBlock", new XAttribute("Text", xamlElement.Value))
 				});
 
-			var contentPropertyName = GetContentPropertyName();
 			return new XElement(xamlElement.Name, attributes, propertyElements,
-								new XElement(xamlElement.Name + "." + contentPropertyName, contentPropertyElements));
-		}
-
-		/// <summary>
-		///   Gets the name of the content property.
-		/// </summary>
-		private string GetContentPropertyName()
-		{
-			var contentProperty = Type.GetCustomAttributes(typeof(ContentPropertyAttribute), true)
-									  .OfType<ContentPropertyAttribute>()
-									  .SingleOrDefault();
-
-			if (contentProperty == null)
-				Log.Die("Unable to determine the name of the content property of class '{0}'.", Type.FullName);
-
-			return contentProperty.Name;
+								new XElement(xamlElement.Name + "." + contentProperty.Name, contentPropertyElements));
 		}
 	}
 }

@@ -95,22 +95,30 @@
 		}
 
 		/// <summary>
-		///   Gets the runtime type for the given value.
+		///   Tries to get the runtime type for the given CLR type.
 		/// </summary>
 		/// <param name="type">The type the runtime type should be returned for.</param>
-		public static string GetRuntimeType(Type type)
+		/// <param name="runtimeType">Returns the runtime type.</param>
+		public static bool TryGetRuntimeType(Type type, out string runtimeType)
 		{
 			Assert.ArgumentNotNull(type);
 			Assert.NotNull(_converters);
 
 			if (type.IsEnum)
-				return type.GetRuntimeType();
+			{
+				runtimeType = type.GetRuntimeType();
+				return true;
+			}
 
 			TypeConverter converter;
 			if (!_converters.TryGetValue(type, out converter))
-				Log.Die("Unable to find a type converter for type '{0}'.", type.FullName);
+			{
+				runtimeType = String.Empty;
+				return false;
+			}
 
-			return converter.RuntimeType;
+			runtimeType = converter.RuntimeType;
+			return true;
 		}
 	}
 }

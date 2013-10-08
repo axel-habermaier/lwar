@@ -20,7 +20,8 @@
 		/// </summary>
 		/// <param name="xamlObject">The Xaml object the code is generated for.</param>
 		/// <param name="writer">The code writer that should be used to write the generated code.</param>
-		public void GenerateCode(XamlObject xamlObject, CodeWriter writer)
+		/// <param name="assignmentFormat">The target the generated object should be assigned to.</param>
+		public void GenerateCode(XamlObject xamlObject, CodeWriter writer, string assignmentFormat)
 		{
 			Assert.ArgumentSatisfies(xamlObject.Type == typeof(Setter), "Unexpected Xaml object.");
 
@@ -35,6 +36,7 @@
 			value.GenerateCode(writer, "{0}");
 
 			writer.AppendLine(");");
+			writer.AppendLine(assignmentFormat, xamlObject.Name);
 		}
 	}
 }

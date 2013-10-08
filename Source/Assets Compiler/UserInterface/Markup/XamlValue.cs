@@ -23,9 +23,9 @@
 			Assert.ArgumentNotNull(valueType);
 			Assert.ArgumentNotNull(value);
 
-			// Check if the value contains type information and extract it
 			if (valueType == typeof(object) && value.StartsWith("[typeof("))
 			{
+				// Extract the type information
 				var valueStart = value.IndexOf("]", StringComparison.Ordinal) + 1;
 				var propertyStart = value.IndexOf("(", StringComparison.Ordinal) + 1;
 				var propertyEnd = value.IndexOf(")", StringComparison.Ordinal);

@@ -29,7 +29,14 @@
 		/// </summary>
 		public string RuntimePropertyType
 		{
-			get { return TypeConverter.GetRuntimeType(_property.PropertyType); }
+			get
+			{
+				string type;
+				if (!TypeConverter.TryGetRuntimeType(_property.PropertyType, out type))
+					return _property.PropertyType.GetRuntimeType();
+
+				return type;
+			}
 		}
 
 		/// <summary>

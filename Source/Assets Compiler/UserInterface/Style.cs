@@ -81,7 +81,7 @@
 				attribute.SetValue(String.Format("[typeof({0})]{1}", property, attribute.Value));
 
 			var element = setter.Elements().FirstOrDefault(e => e.Name.LocalName == "Setter.Value");
-			if (element != null)
+			if (element != null && !element.Elements().Any())
 				element.SetValue(String.Format("[typeof({0})]{1}", property, element.Value));
 
 			if (attribute == null && element == null)

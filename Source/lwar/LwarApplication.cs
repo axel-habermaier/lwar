@@ -4,6 +4,7 @@ namespace Lwar
 {
 	using System.Net;
 	using Assets;
+	using Assets.UserInterface;
 	using Network;
 	using Pegasus;
 	using Pegasus.Framework;
@@ -16,7 +17,6 @@ namespace Lwar
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Scripting;
-	using UserInterface;
 
 	internal class HelloWorldViewModel : ViewModel
 	{
@@ -262,21 +262,21 @@ namespace Lwar
 			//_viewModel = new HelloWorldViewModel() { Name = "Axel" };
 			//_view = new HelloWorldView(uiContext.SharedAssets, _viewModel);
 
-			var buttonTemplate = new ControlTemplate(button =>
-			{
-				var binding = new TemplateBinding<object>(button, ContentControl.ContentProperty);
-				var presenter = new ContentPresenter();
-				presenter.SetBinding(ContentPresenter.ContentProperty, binding);
+			//var buttonTemplate = new ControlTemplate(button =>
+			//{
+			//	var binding = new TemplateBinding<object>(button, ContentControl.ContentProperty);
+			//	var presenter = new ContentPresenter();
+			//	presenter.SetBinding(ContentPresenter.ContentProperty, binding);
 
-				return presenter;
-			});
+			//	return presenter;
+			//});
 
-			var buttonStyle = new Style();
-			buttonStyle.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, buttonTemplate));
-			buttonStyle.Setters.Add(new Setter<Color>(Control.ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
+			//var buttonStyle = new Style();
+			//buttonStyle.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, buttonTemplate));
+			//buttonStyle.Setters.Add(new Setter<Color>(Control.ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
 
 			var uc1 = new UserControl1();
-			uc1.Resources[typeof(Button)] = buttonStyle;
+			//uc1.Resources[typeof(Button)] = buttonStyle;
 			uiContext.Add(uc1);
 
 			uiContext.FontLoader = new FontLoader(uiContext.SharedAssets);

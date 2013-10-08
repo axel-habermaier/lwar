@@ -444,7 +444,9 @@
     <Compile Include="UserInterface\Controls\Button.cs" />
     <Compile Include="UserInterface\Controls\Canvas.cs" />
     <Compile Include="UserInterface\Controls\ContentControl.cs" />
+    <Compile Include="UserInterface\Controls\ContentPresenter.cs" />
     <Compile Include="UserInterface\Controls\Control.cs" />
+    <Compile Include="UserInterface\Controls\ControlTemplate.cs" />
     <Compile Include="UserInterface\Controls\Orientation.cs" />
     <Compile Include="UserInterface\Controls\Panel.cs" />
     <Compile Include="UserInterface\Controls\StackPanel.cs" />
@@ -454,6 +456,8 @@
     <Compile Include="UserInterface\IgnoreAtRuntimeAttribute.cs" />
     <Compile Include="UserInterface\ImplicitKeyAttribute.cs" />
     <Compile Include="UserInterface\IRequiresNormalization.cs" />
+    <Compile Include="UserInterface\Markup\MarkupExtensions\MarkupExtension.cs" />
+    <Compile Include="UserInterface\Markup\MarkupExtensions\TemplateBindingExtension.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\BooleanConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\DependencyPropertyReferenceConverter.cs" />
     <Compile Include="UserInterface\Markup\TypeConverters\Int32Converter.cs" />
@@ -462,6 +466,7 @@
     <Compile Include="UserInterface\DependencyPropertyReference.cs" />
     <Compile Include="UserInterface\ReflectionExtensions.cs" />
     <Compile Include="UserInterface\SetterCollection.cs" />
+    <Compile Include="UserInterface\TemplateBinding.cs" />
     <Compile Include="UserInterface\Thickness.cs" />
     <Compile Include="UserInterface\UIElement.cs" />
     <Compile Include="UserInterface\UIElementCollection.cs" />

@@ -3,11 +3,12 @@
 namespace Pegasus.AssetsCompiler.UserInterface.Controls
 {
 	/// <summary>
-	///   Provides metadata for the 'Control' UI class.
+	///   Provides metadata for the 'ContentPresenter' UI class.
 	/// </summary>
 	[RuntimeNamespace("Pegasus.Framework.UserInterface.Controls")]
-	internal class Control : UIElement
+	[ContentProperty("Content")]
+	internal class ContentPresenter : Control
 	{
-		public ControlTemplate Template { get; set; }
+		public object Content { get; set; }
 	}
 }

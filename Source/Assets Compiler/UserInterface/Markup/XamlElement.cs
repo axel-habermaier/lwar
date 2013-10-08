@@ -56,7 +56,7 @@
 			Assert.That(IsRoot, "This Xaml element is not the root of the tree.");
 			Assert.NotNull(Type, "The type of the Xaml element is unknown.");
 
-			writer.AppendLine("namespace {0}", namespaceName);
+			writer.AppendLine("namespace {0}.{1}", Configuration.AssetsProject.RootNamespace, namespaceName);
 			writer.AppendBlockStatement(() =>
 			{
 				writer.AppendLine("public class {0} : {1}.{2}", className, GetRuntimeNamespace(), Type.Name);

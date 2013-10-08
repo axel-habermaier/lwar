@@ -6,6 +6,21 @@
              FontFamily="Liberation Mono" 
              FontSize="11" 
              TextOptions.TextRenderingMode="Aliased">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="Red"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <StackPanel>
+                            <TextBlock>Hallo Welt</TextBlock>
+                            <ContentPresenter Content="{TemplateBinding Content}"></ContentPresenter>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <StackPanel>
         <Button>Button 1</Button>
         <Button Width="100" HorizontalAlignment="Right" Margin="15,5,21,15">
