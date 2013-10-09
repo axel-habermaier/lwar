@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
+	using System.Linq.Expressions;
 	using Controls;
 	using Math;
 	using Platform.Graphics;
@@ -646,6 +647,21 @@
 		{
 			foreach (var child in LogicalChildren)
 				child.SetInheritedValue(property, newValue);
+		}
+
+		/// <summary>
+		///   Creates a data binding with the UI element's view model as the source object.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
+		/// <param name="path">The property path that should be evaluated on the UI element's view model to get the source value.</param>
+		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
+		public void CreateDataBinding<T>(string path, DependencyProperty<T> targetProperty)
+		{
+			Assert.ArgumentNotNullOrWhitespace(path);
+			Assert.ArgumentNotNull(targetProperty);
+
+			var binding = new ViewModelDataBinding<T>(this, path);
+			binding.Initialize(this, targetProperty);
 		}
 
 		/// <summary>

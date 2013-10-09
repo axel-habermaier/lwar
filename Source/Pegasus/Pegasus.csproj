@@ -209,6 +209,7 @@
     <Compile Include="Framework\UserInterface\Thickness.cs" />
     <Compile Include="Framework\UserInterface\UIContext.cs" />
     <Compile Include="Framework\UserInterface\VerticalAlignment.cs" />
+    <Compile Include="Framework\UserInterface\ViewModelDataBinding.cs" />
     <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />

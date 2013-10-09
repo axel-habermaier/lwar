@@ -23,18 +23,18 @@ namespace Tests.UserInterface
 		private TestViewModel _viewModel;
 		private TestControl _control;
 
-		private void Bind(object sourceObject, Expression<Func<object, Thickness>> sourceExpression)
+		private void Bind(object sourceObject, string sourceExpression)
 		{
 			_control.CreateDataBinding(sourceObject, sourceExpression, UIElement.MarginProperty);
 		}
 
-		private void BindToViewModel(Expression<Func<object, Thickness>> sourceExpression)
+		private void BindToViewModel(string sourceExpression)
 		{
 			_control.ViewModel = _viewModel;
 			_control.CreateDataBinding(sourceExpression, UIElement.MarginProperty);
 		}
 
-		private void BindWidth(Expression<Func<object, double>> sourceExpression)
+		private void BindWidth(string sourceExpression)
 		{
 			_control.CreateDataBinding(sourceExpression, UIElement.WidthProperty);
 		}
@@ -43,7 +43,7 @@ namespace Tests.UserInterface
 		public void Source_Property()
 		{
 			_viewModel.Thickness = _margin;
-			Bind(_viewModel, vm => ((TestViewModel)vm).Thickness);
+			Bind(_viewModel, "Thickness");
 
 			_control.Margin.Should().Be(_margin);
 		}
@@ -51,7 +51,7 @@ namespace Tests.UserInterface
 		[Test]
 		public void Source_Property_Changed()
 		{
-			Bind(_viewModel, vm => ((TestViewModel)vm).Thickness);
+			Bind(_viewModel, "Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Thickness = _margin;
@@ -64,7 +64,7 @@ namespace Tests.UserInterface
 			_viewModel.InitializeRecursively(1);
 			_viewModel.Model.Thickness = _margin;
 
-			Bind(_viewModel, vm => ((TestViewModel)vm).Model.Thickness);
+			Bind(_viewModel, "Model.Thickness");
 
 			_control.Margin.Should().Be(_margin);
 		}
@@ -75,7 +75,7 @@ namespace Tests.UserInterface
 			_viewModel.InitializeRecursively(2);
 			_viewModel.Model.Model.Thickness = _margin;
 
-			Bind(_viewModel, vm => ((TestViewModel)vm).Model.Model.Thickness);
+			Bind(_viewModel, "Model.Model.Thickness");
 
 			_control.Margin.Should().Be(_margin);
 		}
@@ -85,7 +85,7 @@ namespace Tests.UserInterface
 		{
 			_viewModel.InitializeRecursively(1);
 
-			Bind(_viewModel, vm => ((TestViewModel)vm).Model.Thickness);
+			Bind(_viewModel, "Model.Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model = new TestViewModel { Thickness = _margin };
@@ -97,7 +97,7 @@ namespace Tests.UserInterface
 		{
 			_viewModel.InitializeRecursively(2);
 
-			Bind(_viewModel, vm => ((TestViewModel)vm).Model.Model.Thickness);
+			Bind(_viewModel, "Model.Model.Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model = new TestViewModel { Model = new TestViewModel { Thickness = _margin } };
@@ -109,7 +109,7 @@ namespace Tests.UserInterface
 		{
 			_viewModel.InitializeRecursively(2);
 
-			Bind(_viewModel, vm => ((TestViewModel)vm).Model.Model.Thickness);
+			Bind(_viewModel, "Model.Model.Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model.Model = new TestViewModel { Thickness = _margin };
@@ -121,7 +121,7 @@ namespace Tests.UserInterface
 		{
 			_viewModel.InitializeRecursively(2);
 
-			Bind(_viewModel, vm => ((TestViewModel)vm).Model.Model.Thickness);
+			Bind(_viewModel, "Model.Model.Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model.Model.Thickness = _margin;
@@ -133,7 +133,7 @@ namespace Tests.UserInterface
 		{
 			_viewModel.InitializeRecursively(1);
 
-			Bind(_viewModel, vm => ((TestViewModel)vm).Model.Thickness);
+			Bind(_viewModel, "Model.Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model.Thickness = _margin;
@@ -144,7 +144,7 @@ namespace Tests.UserInterface
 		public void ViewModel_Property()
 		{
 			_viewModel.Thickness = _margin;
-			BindToViewModel(vm => ((TestViewModel)vm).Thickness);
+			BindToViewModel("Thickness");
 
 			_control.Margin.Should().Be(_margin);
 		}
@@ -152,7 +152,7 @@ namespace Tests.UserInterface
 		[Test]
 		public void ViewModel_Property_Changed()
 		{
-			BindToViewModel(vm => ((TestViewModel)vm).Thickness);
+			BindToViewModel("Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Thickness = _margin;
@@ -165,7 +165,7 @@ namespace Tests.UserInterface
 			_viewModel.InitializeRecursively(1);
 			_viewModel.Model.Thickness = _margin;
 
-			BindToViewModel(vm => ((TestViewModel)vm).Model.Thickness);
+			BindToViewModel("Model.Thickness");
 
 			_control.Margin.Should().Be(_margin);
 		}
@@ -175,7 +175,7 @@ namespace Tests.UserInterface
 		{
 			_viewModel.InitializeRecursively(1);
 
-			BindToViewModel(vm => ((TestViewModel)vm).Model.Thickness);
+			BindToViewModel("Model.Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model = new TestViewModel { Thickness = _margin };
@@ -187,7 +187,7 @@ namespace Tests.UserInterface
 		{
 			_viewModel.InitializeRecursively(1);
 
-			BindToViewModel(vm => ((TestViewModel)vm).Model.Thickness);
+			BindToViewModel("Model.Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model.Thickness = _margin;
@@ -198,7 +198,7 @@ namespace Tests.UserInterface
 		public void ViewModel_NotSet()
 		{
 			_control.ViewModel = null;
-			BindWidth(vm => ((TestViewModel)vm).Width);
+			BindWidth("Width");
 
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
 		}
@@ -209,7 +209,7 @@ namespace Tests.UserInterface
 			_control.ViewModel = _viewModel;
 			_viewModel.Width = Width;
 
-			BindWidth(vm => ((TestViewModel)vm).Width);
+			BindWidth("Width");
 			_control.Width.Should().Be(Width);
 
 			_control.ViewModel = null;
@@ -220,7 +220,7 @@ namespace Tests.UserInterface
 		public void ViewModel_Property_Property_ViewModel_NotSet()
 		{
 			_control.ViewModel = null;
-			BindWidth(vm => ((TestViewModel)vm).Model.Width);
+			BindWidth("Model.Width");
 
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
 		}
@@ -229,7 +229,7 @@ namespace Tests.UserInterface
 		public void ViewModel_Property_Property_NotSet()
 		{
 			_control.ViewModel = _viewModel;
-			BindWidth(vm => ((TestViewModel)vm).Model.Width);
+			BindWidth("Model.Width");
 
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
 		}
@@ -241,7 +241,7 @@ namespace Tests.UserInterface
 			_control.ViewModel = _viewModel;
 			_viewModel.Model.Width = Width;
 
-			BindWidth(vm => ((TestViewModel)vm).Model.Width);
+			BindWidth("Model.Width");
 			_control.Width.Should().Be(Width);
 
 			_control.ViewModel = null;
@@ -255,7 +255,7 @@ namespace Tests.UserInterface
 			_control.ViewModel = _viewModel;
 			_viewModel.Model.Width = Width;
 
-			BindWidth(vm => ((TestViewModel)vm).Model.Width);
+			BindWidth("Model.Width");
 			_control.Width.Should().Be(Width);
 
 			_viewModel.Model = null;

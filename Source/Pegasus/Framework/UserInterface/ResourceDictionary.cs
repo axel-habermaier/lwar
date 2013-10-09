@@ -2,13 +2,14 @@
 
 namespace Pegasus.Framework.UserInterface
 {
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
 
 	/// <summary>
 	///   Provides resources used by UI elements.
 	/// </summary>
-	public class ResourceDictionary
+	public sealed class ResourceDictionary
 	{
 		/// <summary>
 		///   The underlying dictionary instance.

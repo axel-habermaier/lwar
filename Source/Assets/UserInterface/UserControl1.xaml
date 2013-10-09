@@ -7,6 +7,10 @@
              FontSize="11" 
              TextOptions.TextRenderingMode="Aliased">
     <UserControl.Resources>
+        <Style x:Key="StyleA">
+            <Setter Property="TextOptions.TextRenderingMode" Value="Aliased"></Setter>
+            <Setter Property="Control.FontSize" Value="14"></Setter>
+        </Style>
         <Style TargetType="Button">
             <Setter Property="Foreground" Value="Red"></Setter>
             <Setter Property="Control.Background" Value="Red"></Setter>
@@ -28,8 +32,9 @@
             Button 2
         </Button>
         <StackPanel Orientation="Horizontal">
-            <Button Margin="5">Button 3</Button>
-            <Button Margin="5">Button 4</Button>
+            <Button Margin="5" Style="{StaticResource StyleA}">Button 3</Button>
+            <Button Margin="5" Style="{DynamicResource StyleA}">Button 4</Button>
+            <TextBlock Text="{Binding Test}"></TextBlock>
         </StackPanel>
     </StackPanel>
 </UserControl>

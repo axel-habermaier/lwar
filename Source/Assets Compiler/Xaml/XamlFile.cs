@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Xaml
+﻿namespace Pegasus.AssetsCompiler.Xaml
 {
+	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
@@ -71,19 +71,97 @@ namespace Pegasus.AssetsCompiler.Xaml
 			AddImplicitContentElements();
 			ReplaceAttributesWithElements(Root);
 
+			ReplaceListSyntax(Root);
+			ReplaceDictionarySyntax(Root);
+			AddImplicitStyleKeys();
+			MoveUpDictionaryKey();
+
 			RewriteTemplateBindings();
+			RewriteDynamicResourceBindings();
+			RewriteStaticResourceBindings();
+			RewriteDataBindings();
+
 			PushDownControlTemplateTargetType();
-
 			PushDownStyleTargetType();
-			AddStyleSetterLiterals();
-
-			ReplaceTextRenderingMode();
-
-			AddLiterals();
 		}
 
 		/// <summary>
-		///   Adds the target type defined on a control template to its template bindings and removes the target type from the file.
+		///   Makes implicit style keys explicit.
+		/// </summary>
+		private void AddImplicitStyleKeys()
+		{
+			foreach (var element in Root.DescendantsAndSelf().Where(e => e.Name.LocalName.Contains("..Add")))
+			{
+				var value = element.Elements(DefaultNamespace + "Style").SingleOrDefault();
+				if (value == null)
+					return;
+
+				var key = value.Elements(value.Name + ".Key").SingleOrDefault();
+				if (key != null)
+					continue;
+
+				var property = value.Elements(DefaultNamespace + "Style.TargetType").SingleOrDefault();
+				if (property == null)
+					continue;
+
+				var type = GetClrType(property.Value);
+				element.Add(new XAttribute("Key", String.Format("typeof({0})", type.FullName)));
+			}
+		}
+
+		/// <summary>
+		///   Moves the dictionary key from the value element of the dictionary to the dictionary's Add element.
+		/// </summary>
+		private void MoveUpDictionaryKey()
+		{
+			foreach (var element in Root.DescendantsAndSelf().Where(e => e.Name.LocalName.Contains("..Add")))
+			{
+				var value = element.Elements().Single();
+				var key = value.Elements(value.Name + ".Key").SingleOrDefault();
+
+				if (key == null)
+					continue;
+
+				key.Remove();
+				element.Add(new XAttribute("Key", String.Format("\"{0}\"", key.Value)));
+			}
+		}
+
+		/// <summary>
+		///   Recursively replaces Xaml's special list syntax with explicit calls to the list's Add method.
+		/// </summary>
+		private void ReplaceListSyntax(XElement element)
+		{
+			foreach (var child in element.Elements())
+				ReplaceListSyntax(child);
+
+			if (element.Name.LocalName.Contains("."))
+			{
+				Type propertyType;
+				if (TryGetPropertyType(element.Name.LocalName, out propertyType) && typeof(IList).IsAssignableFrom(propertyType))
+					element.ReplaceWith(element.Elements().Select(e => new XElement(element.Name + "..Add", e)));
+			}
+		}
+
+		/// <summary>
+		///   Recursively replaces Xaml's special dictionary syntax with explicit calls to the list's Add method.
+		/// </summary>
+		private void ReplaceDictionarySyntax(XElement element)
+		{
+			foreach (var child in element.Elements())
+				ReplaceDictionarySyntax(child);
+
+			if (element.Name.LocalName.Contains("."))
+			{
+				Type propertyType;
+				if (TryGetPropertyType(element.Name.LocalName, out propertyType) && typeof(ResourceDictionary).IsAssignableFrom(propertyType))
+					element.ReplaceWith(element.Elements().Select(e => new XElement(element.Name + "...Add", e)));
+			}
+		}
+
+		/// <summary>
+		///   Adds the target type defined on a control template to its template bindings and removes the target type from the
+		///   file.
 		/// </summary>
 		private void PushDownControlTemplateTargetType()
 		{
@@ -95,7 +173,7 @@ namespace Pegasus.AssetsCompiler.Xaml
 
 				foreach (var templateBinding in GetNamedElements(controlTemplate, "TemplateBinding"))
 				{
-					var property = GetNamedElement(templateBinding, "TemplateBinding.Property");
+					var property = templateBinding.Attribute("SourceProperty");
 					if (!property.Value.Contains("."))
 						property.SetValue(String.Format("{0}.{1}", targetType.Value, property.Value));
 				}
@@ -105,19 +183,74 @@ namespace Pegasus.AssetsCompiler.Xaml
 		}
 
 		/// <summary>
-		/// Rewrites the template binding markup extension syntax to regular Xaml syntax.
+		///   Rewrites the template binding markup extension syntax to regular Xaml syntax.
 		/// </summary>
 		private void RewriteTemplateBindings()
 		{
-			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{TemplateBinding")))
+			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{TemplateBinding")).ToArray())
 			{
 				var binding = bindingElement.Value;
 				var regex = new Regex(@"\{TemplateBinding ((Property=(?<property>.*))|(?<property>.*))\}");
 				var match = regex.Match(binding);
 
 				bindingElement.SetValue(String.Empty);
-				bindingElement.Add(new XElement(DefaultNamespace + "TemplateBinding", 
-					new XElement(DefaultNamespace + "TemplateBinding.Property", match.Groups["property"])));
+				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "TemplateBinding",
+												new XAttribute("SourceProperty", match.Groups["property"]),
+												new XAttribute("TargetProperty", bindingElement.Name.LocalName)));
+			}
+		}
+
+		/// <summary>
+		///   Rewrites the dynamic resource binding markup extension syntax to regular Xaml syntax.
+		/// </summary>
+		private void RewriteDynamicResourceBindings()
+		{
+			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{DynamicResource")).ToArray())
+			{
+				var binding = bindingElement.Value;
+				var regex = new Regex(@"\{DynamicResource ((Key=(?<key>.*))|(?<key>.*))\}");
+				var match = regex.Match(binding);
+
+				bindingElement.SetValue(String.Empty);
+				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "DynamicResourceBinding",
+												new XAttribute("ResourceKey", match.Groups["key"]),
+												new XAttribute("TargetProperty", bindingElement.Name.LocalName)));
+			}
+		}
+
+		/// <summary>
+		///   Rewrites the static resource binding markup extension syntax to regular Xaml syntax.
+		/// </summary>
+		private void RewriteStaticResourceBindings()
+		{
+			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{StaticResource")).ToArray())
+			{
+				var binding = bindingElement.Value;
+				var regex = new Regex(@"\{StaticResource ((ResourceKey=(?<key>.*))|(?<key>.*))\}");
+				var match = regex.Match(binding);
+
+				bindingElement.SetValue(String.Empty);
+				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "StaticResourceBinding",
+												new XAttribute("Key", match.Groups["key"]),
+												new XAttribute("TargetProperty", bindingElement.Name.LocalName)));
+			}
+		}
+
+		/// <summary>
+		///   Rewrites the data binding markup extension syntax to regular Xaml syntax.
+		/// </summary>
+		private void RewriteDataBindings()
+		{
+			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{Binding")).ToArray())
+			{
+				var binding = bindingElement.Value;
+				var regex = new Regex(@"\{Binding ((Path=(?<path>.*))|(?<path>.*))\}");
+				var match = regex.Match(binding);
+
+				bindingElement.SetValue(String.Empty);
+				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "DataBinding",
+												new XAttribute("Path", match.Groups["path"]),
+												new XAttribute("TargetProperty", bindingElement.Name.LocalName)));
 			}
 		}
 
@@ -134,76 +267,25 @@ namespace Pegasus.AssetsCompiler.Xaml
 		}
 
 		/// <summary>
-		///   Renames the 'TextOptions.TextRenderingMode' Xaml attached property to 'FontAliased' and normalizes it to a Boolean
-		///   value.
+		///   Tries to get the type of the dependency property.
 		/// </summary>
-		private void ReplaceTextRenderingMode()
+		/// <param name="dependencyProperty">The dependency property whose type should be determined.</param>
+		/// <param name="propertyType">Returns the type of the property.</param>
+		private bool TryGetPropertyType(string dependencyProperty, out Type propertyType)
 		{
-			foreach (var element in GetNamedElements(Root, "TextOptions.TextRenderingMode").ToArray())
-			{
-				string value = null;
-				switch (element.Value)
-				{
-					case "ClearType":
-						value = "false";
-						break;
-					case "Aliased":
-						value = "true";
-						break;
-					default:
-						Log.Die("Unsupported text rendering mode value '{0}'.", element.Value);
-						break;
-				}
+			propertyType = null;
+			var split = dependencyProperty.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
 
-				element.Parent.Add(new XElement(element.Parent.Name + "." + "FontAliased", value));
-				element.Remove();
-			}
-		}
+			Type type;
+			if (!TryGetClrType(split[0], out type))
+				return false;
 
-		/// <summary>
-		///   Adds 'Literal' elements for literal setter values.
-		/// </summary>
-		private void AddStyleSetterLiterals()
-		{
-			foreach (var setter in GetNamedElements(Root, "Setter"))
-			{
-				var value = GetNamedElement(setter, "Setter.Value");
-				if (value.Elements().Any())
-					continue;
+			var property = type.GetProperty(split[1], BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+			if (property == null)
+				return false;
 
-				var property = GetNamedElement(setter, "Setter.Property");
-				var type = GetPropertyType(property.Value);
-
-				ReplaceWithLiteral(value, type);
-			}
-		}
-
-		/// <summary>
-		///   Adds 'Literal' elements for non-style literal values.
-		/// </summary>
-		private void AddLiterals()
-		{
-			foreach (var element in Root.DescendantsAndSelf().Where(e => !e.Name.LocalName.EndsWith(".Property")))
-			{
-				if (element.Elements().Any() || String.IsNullOrWhiteSpace(element.Value))
-					continue;
-
-				var type = GetPropertyType(element.Name.LocalName);
-				ReplaceWithLiteral(element, type);
-			}
-		}
-
-		/// <summary>
-		///   Replaces the literal value of the given element with a 'Literal' element of the given type.
-		/// </summary>
-		/// <param name="element">The element whose literal value should be replaced.</param>
-		/// <param name="type">The type of the literal value.</param>
-		private static void ReplaceWithLiteral(XElement element, Type type)
-		{
-			var oldValue = element.Value;
-			element.SetValue(String.Empty);
-			element.Add(new XElement(DefaultNamespace + "Literal", new XAttribute("Type", type.AssemblyQualifiedName),
-									 new XAttribute("Value", oldValue)));
+			propertyType = property.PropertyType;
+			return true;
 		}
 
 		/// <summary>
@@ -212,15 +294,11 @@ namespace Pegasus.AssetsCompiler.Xaml
 		/// <param name="dependencyProperty">The dependency property whose type should be determined.</param>
 		private Type GetPropertyType(string dependencyProperty)
 		{
-			var split = dependencyProperty.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
-			var type = GetClrType(split[0]);
-
-			var property = type.GetProperty(split[1], BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-
-			if (property == null)
+			Type propertyType;
+			if (!TryGetPropertyType(dependencyProperty, out propertyType))
 				Log.Die("Property '{0}' could not be found.", dependencyProperty);
 
-			return property.PropertyType;
+			return propertyType;
 		}
 
 		/// <summary>
@@ -274,16 +352,16 @@ namespace Pegasus.AssetsCompiler.Xaml
 		private static void ReplaceAttributesWithElements(XElement element)
 		{
 			var attributes = element.Attributes().ToArray();
-			foreach (var attribute in attributes.Where(a=>!a.IsNamespaceDeclaration))
+			foreach (var attribute in attributes.Where(a => !a.IsNamespaceDeclaration).ToArray().Reverse())
 			{
 				attribute.Remove();
 				XName name;
 				if (attribute.Name.LocalName.Contains("."))
-					name = attribute.Name;
+					name = element.Name.Namespace + attribute.Name.LocalName;
 				else
 					name = element.Name + "." + attribute.Name.LocalName;
 
-				element.Add(new XElement(name, attribute.Value));
+				element.AddFirst(new XElement(name, attribute.Value));
 			}
 
 			foreach (var subElement in element.Elements())
@@ -352,24 +430,36 @@ namespace Pegasus.AssetsCompiler.Xaml
 		}
 
 		/// <summary>
-		///   Gets the CLR type corresponding to the Xaml element.
+		///   Tries to get the CLR type corresponding to the Xaml element.
 		/// </summary>
 		/// <param name="typeName">The name of the type the CLR type should be returned for.</param>
-		public Type GetClrType(XName typeName)
+		/// <param name="type">Returns the CLR type.</param>
+		private bool TryGetClrType(XName typeName, out Type type)
 		{
-			Assert.ArgumentNotNull(typeName);
-
 			foreach (var typeNamespace in GetXamlNamespaces(typeName))
 			{
 				var fullTypeName = String.Format("{0}.{1}, {2}", typeNamespace.Namespace, typeName.LocalName, typeNamespace.AssemblyName);
-				var type = Type.GetType(fullTypeName, false);
+				type = Type.GetType(fullTypeName, false);
 
 				if (type != null)
-					return type;
+					return true;
 			}
 
-			Log.Die("Unable to find CLR type for Xaml name '{0}'.", typeName);
-			return null;
+			type = null;
+			return false;
+		}
+
+		/// <summary>
+		///   Gets the CLR type corresponding to the Xaml element.
+		/// </summary>
+		/// <param name="typeName">The name of the type the CLR type should be returned for.</param>
+		private Type GetClrType(XName typeName)
+		{
+			Type type;
+			if (!TryGetClrType(typeName, out type))
+				Log.Die("Unable to find CLR type for Xaml name '{0}'.", typeName);
+
+			return type;
 		}
 
 		/// <summary>

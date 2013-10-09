@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace Lwar
+﻿namespace Lwar
 {
+	using System;
 	using System.Net;
 	using Assets;
-	using Assets.UserInterface;
 	using Network;
 	using Pegasus;
 	using Pegasus.Framework;
@@ -13,7 +11,6 @@ namespace Lwar
 	using Pegasus.Platform.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
-	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Scripting;
@@ -118,26 +115,21 @@ namespace Lwar
 
 			var buttonTemplate = new ControlTemplate(button =>
 			{
-				var binding = new TemplateBinding<object>(button, ContentProperty);
 				var presenter = new ContentPresenter();
-				presenter.SetBinding(ContentPresenter.ContentProperty, binding);
+				presenter.CreateTemplateBinding(button, ContentProperty, ContentPresenter.ContentProperty);
 
 				return presenter;
 			});
 
 			var buttonStyle = new Style();
-			buttonStyle.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, buttonTemplate));
+			buttonStyle.Setters.Add(new Setter<ControlTemplate>(TemplateProperty, buttonTemplate));
 
 			Resources[typeof(Button)] = buttonStyle;
 			Resources["MyStyle"] = style;
 
 			ViewModel = viewModel;
 
-			var binding1 = new DataBinding<object>(v => ((HelloWorldViewModel)v).Name);
-			var binding2 = new DataBinding<object>(v => ((HelloWorldViewModel)v).Name2);
-			var binding3 = new DataBinding<object>(v => ((HelloWorldViewModel)v).Name3);
-			var binding4 = new DataBinding<Thickness>(v => ((HelloWorldViewModel)v).Thickness);
-
+	
 			button1 = new Button() { Width = 300, Height = 100 };
 			var button2 = new Button()
 			{
@@ -181,7 +173,6 @@ namespace Lwar
 			Content = panel;
 			panel.Children.Add(button1);
 			panel.Children.Add(button2);
-			
 
 			var stackPanel = new StackPanel() { Orientation = Orientation.Horizontal };
 			stackPanel.Children.Add(button4);
@@ -198,12 +189,10 @@ namespace Lwar
 			////var resourceBinding = new ResourceBinding<Style>("MyStyle");
 			//button1.SetResourceBinding(StyleProperty, resourceBinding);
 
-			button1.SetBinding(ContentProperty, binding1);
-			button2.SetBinding(ContentProperty, binding2);
-			button3.SetBinding(ContentProperty, binding3);
+			button1.CreateDataBinding("Name", ContentProperty);
+			button2.CreateDataBinding("Name2",ContentProperty);
+			button3.CreateDataBinding("Name3",ContentProperty);
 			//button2.SetBinding(MarginProperty, binding4);
-
-			
 		}
 
 		//public void AddButton()

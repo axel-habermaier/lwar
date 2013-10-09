@@ -201,31 +201,16 @@ namespace Pegasus.Framework
 		///   Creates a data binding.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
-		/// <param name="sourceExpression">The expression that should be used to get the source value.</param>
-		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
-		public void CreateDataBinding<T>(Expression<Func<object, T>> sourceExpression, DependencyProperty<T> targetProperty)
-		{
-			Assert.ArgumentNotNull(sourceExpression);
-			Assert.ArgumentNotNull(targetProperty);
-
-			var binding = new DataBinding<T>(sourceExpression);
-			binding.Initialize(this, targetProperty);
-		}
-
-		/// <summary>
-		///   Creates a data binding.
-		/// </summary>
-		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
-		/// <param name="sourceExpression">The expression that should be used to get the source value.</param>
+		/// <param name="path">The property path that should be evaluated on the source object to get the source value.</param>
 		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
-		public void CreateDataBinding<T>(object sourceObject, Expression<Func<object, T>> sourceExpression, DependencyProperty<T> targetProperty)
+		public void CreateDataBinding<T>(object sourceObject, string path, DependencyProperty<T> targetProperty)
 		{
 			Assert.ArgumentNotNull(sourceObject);
-			Assert.ArgumentNotNull(sourceExpression);
+			Assert.ArgumentNotNullOrWhitespace(path);
 			Assert.ArgumentNotNull(targetProperty);
 
-			var binding = new DataBinding<T>(sourceObject, sourceExpression);
+			var binding = new DataBinding<T>(sourceObject, path);
 			binding.Initialize(this, targetProperty);
 		}
 

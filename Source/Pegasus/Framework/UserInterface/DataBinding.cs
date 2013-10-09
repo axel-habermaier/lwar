@@ -1,21 +1,31 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
+	using System;
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using Platform.Logging;
 
 	/// <summary>
-	///   Binds a target dependency object/dependency property pair to a source object and path selector.
+	///   Binds a target dependency object/dependency property pair to a source object and a path selector.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
-	internal sealed class DataBinding<T> : Binding<T>
+	internal class DataBinding<T> : Binding<T>
 	{
 		/// <summary>
-		///   Indicates whether the view model of the bound UI element is the source object.
+		///   Cached array instance used to separate the properties of a path.
 		/// </summary>
-		private readonly bool _sourceIsViewModel;
+		private static readonly string[] PathSeparator = { "." };
+
+		/// <summary>
+		///   The property path that is evaluated on the source object to get the source value.
+		/// </summary>
+		private readonly string _path;
+
+		/// <summary>
+		///   The source object that is passed to the source expression in order to get the value that is set on the target
+		///   property.
+		/// </summary>
+		protected object _sourceObject;
 
 		/// <summary>
 		///   If greater than 0, the properties accessed by the source expression are currently changing.
@@ -52,113 +62,66 @@ namespace Pegasus.Framework.UserInterface
 		private byte _memberAccessCount;
 
 		/// <summary>
-		///   The expression that is used to get the value from the source object.
-		/// </summary>
-		private Expression<Func<object, T>> _sourceExpression;
-
-		/// <summary>
 		///   The compiled expression that is used to get the value from the source object.
 		/// </summary>
 		private Func<object, T> _sourceFunc;
 
 		/// <summary>
-		///   The source object that is passed to the source expression in order to get the value that is set on the target
-		///   property.
-		/// </summary>
-		private object _sourceObject;
-
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="sourceExpression">The expression that should be used to get the source value.</param>
-		public DataBinding(Expression<Func<object, T>> sourceExpression)
-		{
-			Assert.ArgumentNotNull(sourceExpression);
-
-			_sourceExpression = sourceExpression;
-			_sourceIsViewModel = true;
-		}
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
-		/// <param name="sourceExpression">The expression that should be used to get the source value.</param>
-		public DataBinding(object sourceObject, Expression<Func<object, T>> sourceExpression)
+		/// <param name="path">The property path that should be evaluated on the source object to get the source value.</param>
+		public DataBinding(object sourceObject, string path)
 		{
-			Assert.ArgumentNotNull(sourceObject);
-			Assert.ArgumentNotNull(sourceExpression);
+			Assert.ArgumentNotNullOrWhitespace(path);
 
 			_sourceObject = sourceObject;
-			_sourceExpression = sourceExpression;
+			_path = path;
 		}
+
 		/// <summary>
 		///   Initializes the binding.
 		/// </summary>
 		protected override void Initialize()
 		{
 			Assert.ArgumentSatisfies(!_targetProperty.IsDataBindingProhibited, "Data binding is not allowed on the target property.");
-			Assert.That(!_sourceIsViewModel || _targetObject is UIElement,
-						"No source object has been set; this is OK as long as the target object is an UIElement, " +
-						"in which case the UIElement's view model becomes the source object.");
 
-			if (_sourceIsViewModel)
-			{
-				_sourceExpression = SourceExpressionRewriter.Instance.Rewrite(_sourceExpression);
-				_sourceObject = _targetObject;
-			}
+			// Initialize the member access information
+			var properties = _path.Split(PathSeparator, StringSplitOptions.RemoveEmptyEntries);
 
-			AnalyzeExpression();
+			_memberAccessCount = (byte)properties.Length;
+			Assert.That(_memberAccessCount > 0, "The source expression does not access any members.");
+			Assert.That(_memberAccessCount <= 3, "Unsupported number of member accesses.");
 
-			_sourceFunc = _sourceExpression.Compile();
+			_memberAccess1 = new MemberAccess(properties[0]) { Changed = OnMember1Changed };
+
+			if (_memberAccessCount > 1)
+				_memberAccess2 = new MemberAccess(properties[1]) { Changed = OnMember2Changed };
+
+			if (_memberAccessCount > 2)
+				_memberAccess3 = new MemberAccess(properties[2]) { Changed = OnMember3Changed };
+
+			// Set the source object of the first member access
 			_memberAccess1.SourceObject = _sourceObject;
-
-			// In release builds, we unset the source expression to free up the memory; in debug builds, we need
-			// the expression in case of errors
-#if !DEBUG
-			_sourceExpression = null;
-#endif
 		}
 
 		/// <summary>
-		///   Analyzes the source expression and generates the member access infos.
+		///   Compiles the function to access the source value.
 		/// </summary>
-		private void AnalyzeExpression()
+		private void CompileFunction()
 		{
-			// Analyze the source expression
-			var analyzer = SourceExpressionAnalyzer.Instance;
-			var memberAccesses = analyzer.Analyze(_sourceExpression);
+			var parameter = Expression.Parameter(typeof(object));
+			var expression = Expression.Convert(parameter, _sourceObject.GetType()) as Expression;
+			expression = _memberAccess1.GetAccessExpression(expression);
 
-			// Store a copy of the member access infos
-			_memberAccessCount = (byte)memberAccesses.Count;
-			switch (memberAccesses.Count)
-			{
-				case 3:
-					_memberAccess3 = memberAccesses.Array[0];
-					_memberAccess2 = memberAccesses.Array[1];
-					_memberAccess1 = memberAccesses.Array[2];
+			if (_memberAccessCount > 1)
+				expression = _memberAccess2.GetAccessExpression(expression);
 
-					_memberAccess1.Changed = OnMember1Changed;
-					_memberAccess2.Changed = OnMember2Changed;
-					_memberAccess3.Changed = OnMember3Changed;
-					break;
-				case 2:
-					_memberAccess2 = memberAccesses.Array[0];
-					_memberAccess1 = memberAccesses.Array[1];
+			if (_memberAccessCount > 2)
+				expression = _memberAccess3.GetAccessExpression(expression);
 
-					_memberAccess1.Changed = OnMember1Changed;
-					_memberAccess2.Changed = OnMember2Changed;
-					break;
-				case 1:
-					_memberAccess1 = memberAccesses.Array[0];
-					_memberAccess1.Changed = OnMember1Changed;
-					break;
-				case 0:
-					Assert.That(false, "The source expression does not access any members.");
-					break;
-				default:
-					throw new InvalidOperationException("Unsupported number of member accesses.");
-			}
+			_sourceFunc = Expression.Lambda<Func<object, T>>(expression, parameter).Compile();
+			UpdateTargetProperty();
 		}
 
 		/// <summary>
@@ -201,7 +164,7 @@ namespace Pegasus.Framework.UserInterface
 #if DEBUG
 			if (!_isNull && memberAccess.Value == null)
 				Log.Debug("DataBinding failure: Expression '{0}' encountered a null value when accessing '{1}'.",
-						  _sourceExpression, memberAccess.MemberName);
+						  _path, memberAccess.MemberName);
 #endif
 
 			var value = memberAccess.Value;
@@ -212,7 +175,19 @@ namespace Pegasus.Framework.UserInterface
 
 			--_isChanging;
 
-			if (_isChanging == 0 && !_isNull)
+			if (_isChanging == 0)
+				UpdateTargetProperty();
+		}
+
+		/// <summary>
+		///   Updates the target property with the current source value.
+		/// </summary>
+		private void UpdateTargetProperty()
+		{
+			if (_sourceFunc == null && !_isNull)
+				CompileFunction();
+
+			if (!_isNull)
 				_targetObject.SetValue(_targetProperty, _sourceFunc(_sourceObject));
 			else if (_isNull)
 				_targetObject.SetValue(_targetProperty, _targetProperty.DefaultValue);
@@ -224,9 +199,9 @@ namespace Pegasus.Framework.UserInterface
 		private struct MemberAccess
 		{
 			/// <summary>
-			///   The reflection info instance for the property that is accessed, if any.
+			///   The name of the accessed property.
 			/// </summary>
-			private readonly PropertyInfo _propertyInfo;
+			private readonly string _propertyName;
 
 			/// <summary>
 			///   The strongly-typed changed handler that has been added for the dependency property.
@@ -239,6 +214,11 @@ namespace Pegasus.Framework.UserInterface
 			private DependencyProperty _dependencyProperty;
 
 			/// <summary>
+			///   The reflection info instance for the property that is accessed, if any.
+			/// </summary>
+			private PropertyInfo _propertyInfo;
+
+			/// <summary>
 			///   The source object that is accessed.
 			/// </summary>
 			private object _sourceObject;
@@ -246,12 +226,12 @@ namespace Pegasus.Framework.UserInterface
 			/// <summary>
 			///   Initializes a new instance.
 			/// </summary>
-			/// <param name="propertyInfo">The reflection info instance for the property that is accessed.</param>
-			public MemberAccess(PropertyInfo propertyInfo)
+			/// <param name="propertyName">The name of the property that should be accessed.</param>
+			public MemberAccess(string propertyName)
 				: this()
 			{
-				Assert.ArgumentNotNull(propertyInfo);
-				_propertyInfo = propertyInfo;
+				Assert.ArgumentNotNullOrWhitespace(propertyName);
+				_propertyName = propertyName;
 			}
 
 			/// <summary>
@@ -259,7 +239,7 @@ namespace Pegasus.Framework.UserInterface
 			/// </summary>
 			public string MemberName
 			{
-				get { return _propertyInfo.Name; }
+				get { return _propertyName; }
 			}
 
 			/// <summary>
@@ -274,15 +254,17 @@ namespace Pegasus.Framework.UserInterface
 			{
 				set
 				{
-					if (_sourceObject == value)
+					// Don't do unnecessary work; a value of null, however, must always be propagated
+					if (_sourceObject == value && value != null)
 						return;
 
 					DetachFromChangeEvent();
 
 					_sourceObject = value;
 					_dependencyProperty = null;
+					_propertyInfo = null;
 
-					GetDependencyProperty();
+					GetReflectedProperty();
 					AttachToChangeEvent();
 
 					if (Changed != null)
@@ -308,6 +290,15 @@ namespace Pegasus.Framework.UserInterface
 
 					return _dependencyProperty.GetValue(dependencyObject);
 				}
+			}
+
+			/// <summary>
+			///   Gets the access expression for the accessed property or dependency property.
+			/// </summary>
+			/// <param name="expression">The expression that defines the property that should be accessed.</param>
+			public Expression GetAccessExpression(Expression expression)
+			{
+				return Expression.Property(expression, _propertyInfo);
 			}
 
 			/// <summary>
@@ -361,14 +352,20 @@ namespace Pegasus.Framework.UserInterface
 			}
 
 			/// <summary>
-			///   Gets the dependency property instance if the accessed member is a dependency property.
+			///   Gets the reflection info of the property or the instance of the dependency property that is accessed.
 			/// </summary>
-			private void GetDependencyProperty()
+			private void GetReflectedProperty()
 			{
-				if (!(_sourceObject is DependencyObject))
+				if (_sourceObject == null)
 					return;
 
-				_dependencyProperty = ReflectionHelper.GetDependencyProperty(_sourceObject.GetType(), _propertyInfo.Name);
+				if (_sourceObject is DependencyObject)
+					_dependencyProperty = ReflectionHelper.GetDependencyProperty(_sourceObject.GetType(), _propertyName);
+
+				_propertyInfo = _sourceObject.GetType().GetProperty(_propertyName, BindingFlags.Public | BindingFlags.Instance);
+				if (_propertyInfo == null)
+					Log.Die("Unable to find public, non-static property or dependency property '{0}' on '{1}'.",
+							_propertyName, _sourceObject.GetType().FullName);
 			}
 
 			/// <summary>
@@ -397,126 +394,6 @@ namespace Pegasus.Framework.UserInterface
 
 				if (property == _dependencyProperty && Changed != null)
 					Changed();
-			}
-		}
-
-		/// <summary>
-		///   Analyzes a source expression of a binding.
-		/// </summary>
-		private class SourceExpressionAnalyzer : MemberAccessExpressionVisitor
-		{
-			/// <summary>
-			///   The singleton instance of the source expression analyzer.
-			/// </summary>
-			public static readonly SourceExpressionAnalyzer Instance = new SourceExpressionAnalyzer();
-
-			/// <summary>
-			///   Provides information about the member accesses (such as 'a.b') in a source expression 'a.b.c.d'. The member access at
-			///   index 0 corresponds to 'c.d', the one at index 1 corresponds to 'b.c', etc.
-			/// </summary>
-			private readonly MemberAccess[] _memberAccesses = new MemberAccess[3];
-
-			/// <summary>
-			///   The number of member accesses in the source expression.
-			/// </summary>
-			private int _memberAccessCount;
-
-			/// <summary>
-			///   Indicates whether the source object has been found in the expression.
-			/// </summary>
-			private bool _sourceObjectFound;
-
-			/// <summary>
-			///   Initializes a new instance.
-			/// </summary>
-			private SourceExpressionAnalyzer()
-			{
-			}
-
-			/// <summary>
-			///   Analyzes the source expression and returns the member accesses.
-			/// </summary>
-			/// <param name="expression">The expression that should be analyzed.</param>
-			public ArraySegment<MemberAccess> Analyze(Expression<Func<object, T>> expression)
-			{
-				Assert.ArgumentNotNull(expression);
-
-				_sourceObjectFound = false;
-				_memberAccessCount = 0;
-
-				Visit(expression.Body);
-				return new ArraySegment<MemberAccess>(_memberAccesses, 0, _memberAccessCount);
-			}
-
-			/// <summary>
-			///   Visits an unary expression. Only conversion expressions (casts) are supported.
-			/// </summary>
-			protected override Expression VisitUnary(UnaryExpression expression)
-			{
-				Assert.ArgumentSatisfies(expression.NodeType == ExpressionType.Convert, "Unsupported unary expression.");
-				return base.VisitUnary(expression);
-			}
-
-			/// <summary>
-			///   Visits a parameter access expression. Only lambda function parameter accesses are supported.
-			/// </summary>
-			protected override Expression VisitParameter(ParameterExpression expression)
-			{
-				_sourceObjectFound = true;
-				return base.VisitParameter(expression);
-			}
-
-			/// <summary>
-			///   Visits a member access expression. Only property accesses are supported.
-			/// </summary>
-			protected override Expression VisitMember(MemberExpression expression)
-			{
-				Assert.ArgumentSatisfies(expression.Member.MemberType == MemberTypes.Property, "Unsupported non-property member access.");
-				Assert.That(!_sourceObjectFound, "Found a member access that is not transitively connected to the source object.");
-				Assert.That(_memberAccessCount + 1 <= _memberAccesses.Length, "Too many member accesses in source expression.");
-
-				_memberAccesses[_memberAccessCount] = new MemberAccess((PropertyInfo)expression.Member);
-				++_memberAccessCount;
-
-				return base.VisitMember(expression);
-			}
-		}
-
-		/// <summary>
-		///   Rewrites the source expression of a binding such that the first member access is UIElement's ViewModel property.
-		/// </summary>
-		private class SourceExpressionRewriter : MemberAccessExpressionVisitor
-		{
-			/// <summary>
-			///   The singleton instance of the source expression analyzer.
-			/// </summary>
-			public static readonly SourceExpressionRewriter Instance = new SourceExpressionRewriter();
-
-			/// <summary>
-			///   The expression that is used to access the view model.
-			/// </summary>
-			private MemberExpression _viewModelAccess;
-
-			/// <summary>
-			///   Analyzes the source expression and returns the member accesses.
-			/// </summary>
-			/// <param name="expression">The expression that should be rewritten.</param>
-			public Expression<Func<object, T>> Rewrite(Expression<Func<object, T>> expression)
-			{
-				Assert.ArgumentNotNull(expression);
-
-				var convertedParameter = Expression.Convert(expression.Parameters[0], typeof(UIElement));
-				_viewModelAccess = Expression.MakeMemberAccess(convertedParameter, ReflectionHelper.ViewModelPropertyInfo);
-
-				return Expression.Lambda<Func<object, T>>(Visit(expression.Body), expression.Parameters);
-			}
-
-			/// <summary>
-			///   Visits a parameter access expression. Only lambda function parameter accesses are supported.
-			/// </summary>
-			protected override Expression VisitParameter(ParameterExpression expression)
-			{
-				return _viewModelAccess;
 			}
 		}
 	}
