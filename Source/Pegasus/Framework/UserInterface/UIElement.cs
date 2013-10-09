@@ -660,8 +660,7 @@
 			Assert.ArgumentNotNullOrWhitespace(path);
 			Assert.ArgumentNotNull(targetProperty);
 
-			var binding = new ViewModelDataBinding<T>(this, path);
-			binding.Initialize(this, targetProperty);
+			CreateDataBinding(this, "ViewModel." + path, targetProperty);
 		}
 
 		/// <summary>

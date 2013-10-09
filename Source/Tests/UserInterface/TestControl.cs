@@ -12,8 +12,8 @@ namespace Tests.UserInterface
 	{
 		public static readonly DependencyProperty<bool> BooleanTestProperty1 = new DependencyProperty<bool>();
 		public static readonly DependencyProperty<bool> BooleanTestProperty2 = new DependencyProperty<bool>();
-		public static readonly DependencyProperty<int> IntegerTestPropery1 = new DependencyProperty<int>();
-		public static readonly DependencyProperty<int> IntegerTestPropery2 = new DependencyProperty<int>();
+		public static readonly DependencyProperty<int> IntegerTestProperty1 = new DependencyProperty<int>();
+		public static readonly DependencyProperty<int> IntegerTestProperty2 = new DependencyProperty<int>();
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -50,14 +50,14 @@ namespace Tests.UserInterface
 
 		public int IntegerTest1
 		{
-			get { return GetValue(IntegerTestPropery1); }
-			set { SetValue(IntegerTestPropery1, value); }
+			get { return GetValue(IntegerTestProperty1); }
+			set { SetValue(IntegerTestProperty1, value); }
 		}
 
 		public int IntegerTest2
 		{
-			get { return GetValue(IntegerTestPropery2); }
-			set { SetValue(IntegerTestPropery2, value); }
+			get { return GetValue(IntegerTestProperty2); }
+			set { SetValue(IntegerTestProperty2, value); }
 		}
 
 		/// <summary>

@@ -34,10 +34,10 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var baseStyle = new Style();
-			baseStyle.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			baseStyle.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var style = new Style(baseStyle);
-			style.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery2, value2));
+			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty2, value2));
 
 			_control1.Style = style;
 			_control1.IntegerTest1.Should().Be(value1);
@@ -51,10 +51,10 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var baseStyle = new Style();
-			baseStyle.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			baseStyle.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var style = new Style(baseStyle);
-			style.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value2));
+			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value2));
 
 			_control1.Style = style;
 			_control1.IntegerTest1.Should().Be(value2);
@@ -69,13 +69,13 @@ namespace Tests.UserInterface
 			const int value3 = 71;
 
 			var baseStyle1 = new Style();
-			baseStyle1.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			baseStyle1.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var baseStyle2 = new Style(baseStyle1);
-			baseStyle2.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value2));
+			baseStyle2.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value2));
 
 			var style = new Style(baseStyle2);
-			style.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value3));
+			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value3));
 
 			_control1.Style = style;
 			_control1.IntegerTest1.Should().Be(value3);
@@ -88,10 +88,10 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var baseStyle1 = new Style();
-			baseStyle1.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			baseStyle1.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var baseStyle2 = new Style(baseStyle1);
-			baseStyle2.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery2, value2));
+			baseStyle2.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty2, value2));
 
 			var style = new Style(baseStyle2);
 
@@ -106,7 +106,7 @@ namespace Tests.UserInterface
 			const int value = 17;
 
 			var style = new Style();
-			style.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value));
+			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value));
 
 			_control1.Style = style;
 			_control1.IntegerTest1.Should().Be(value);
@@ -118,7 +118,7 @@ namespace Tests.UserInterface
 			const int value = 17;
 
 			var trigger = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value));
+			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value));
 
 			var style = new Style();
 			style.Triggers.Add(trigger);
@@ -140,11 +140,11 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var trigger = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var style = new Style();
 			style.Triggers.Add(trigger);
-			style.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery2, value2));
+			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty2, value2));
 
 			_control1.Style = style;
 			_control1.IntegerTest1.Should().Be(0);
@@ -166,11 +166,11 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var trigger = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var style = new Style();
 			style.Triggers.Add(trigger);
-			style.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value2));
+			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value2));
 
 			_control1.Style = style;
 			_control1.IntegerTest1.Should().Be(value2);
@@ -189,10 +189,10 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var trigger1 = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var trigger2 = new Trigger<bool>(TestControl.BooleanTestProperty2, true);
-			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery2, value2));
+			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty2, value2));
 
 			var baseStyle = new Style();
 			baseStyle.Triggers.Add(trigger1);
@@ -228,10 +228,10 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var trigger1 = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var trigger2 = new Trigger<bool>(TestControl.BooleanTestProperty2, true);
-			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value2));
+			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value2));
 
 			var style = new Style();
 			style.Triggers.Add(trigger1);
@@ -266,10 +266,10 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var trigger1 = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var trigger2 = new Trigger<bool>(TestControl.BooleanTestProperty2, true);
-			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value2));
+			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value2));
 
 			var baseStyle = new Style();
 			baseStyle.Triggers.Add(trigger1);
@@ -299,7 +299,7 @@ namespace Tests.UserInterface
 			const int value = 17;
 
 			var trigger = new Trigger<bool>(TestControl.BooleanTestProperty1, false);
-			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value));
+			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value));
 
 			var style = new Style();
 			style.Triggers.Add(trigger);
@@ -315,11 +315,11 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var trigger = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			trigger.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var style = new Style();
 			style.Triggers.Add(trigger);
-			style.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery2, value2));
+			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty2, value2));
 
 			_control1.Style = style;
 			_control2.Style = style;
@@ -355,10 +355,10 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var trigger1 = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var trigger2 = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery2, value2));
+			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty2, value2));
 
 			var baseStyle = new Style();
 			baseStyle.Triggers.Add(trigger1);
@@ -383,10 +383,10 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var trigger1 = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
+			trigger1.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
 
 			var trigger2 = new Trigger<bool>(TestControl.BooleanTestProperty1, true);
-			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery2, value2));
+			trigger2.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty2, value2));
 
 			var baseStyle = new Style();
 			baseStyle.Triggers.Add(trigger1);
@@ -412,8 +412,8 @@ namespace Tests.UserInterface
 			const int value2 = 42;
 
 			var style = new Style();
-			style.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value1));
-			style.Setters.Add(new Setter<int>(TestControl.IntegerTestPropery1, value2));
+			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value1));
+			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value2));
 
 			_control1.Style = style;
 			_control1.IntegerTest1.Should().Be(value2);

@@ -120,6 +120,7 @@
 			if (_memberAccessCount > 2)
 				expression = _memberAccess3.GetAccessExpression(expression);
 
+			expression = Expression.Convert(expression, typeof(T));
 			_sourceFunc = Expression.Lambda<Func<object, T>>(expression, parameter).Compile();
 			UpdateTargetProperty();
 		}
@@ -170,6 +171,19 @@
 			var value = memberAccess.Value;
 			_isNull = value == null;
 
+			// If the value is not null and the type of a value somewhere in the middle of the path has changed,
+			// we have to regenerate the source function
+			if (memberAccessCount < _memberAccessCount && !_isNull)
+			{
+				var type = value.GetType();
+
+				if (type != memberAccess.ValueType)
+				{
+					_sourceFunc = null;
+					memberAccess.ValueType = type;
+				}
+			}
+
 			if (_memberAccessCount > memberAccessCount)
 				nextMemberAccess.SourceObject = value;
 
@@ -189,7 +203,7 @@
 
 			if (!_isNull)
 				_targetObject.SetValue(_targetProperty, _sourceFunc(_sourceObject));
-			else if (_isNull)
+			else
 				_targetObject.SetValue(_targetProperty, _targetProperty.DefaultValue);
 		}
 
@@ -222,6 +236,11 @@
 			///   The source object that is accessed.
 			/// </summary>
 			private object _sourceObject;
+
+			/// <summary>
+			/// Gets or sets the type of the value currently stored by the accessed property.
+			/// </summary>
+			public Type ValueType { get; set; }
 
 			/// <summary>
 			///   Initializes a new instance.
@@ -298,7 +317,7 @@
 			/// <param name="expression">The expression that defines the property that should be accessed.</param>
 			public Expression GetAccessExpression(Expression expression)
 			{
-				return Expression.Property(expression, _propertyInfo);
+				return Expression.Convert(Expression.Property(expression, _propertyInfo), Value.GetType());
 			}
 
 			/// <summary>
