@@ -9,7 +9,7 @@ namespace Pegasus.Framework.UserInterface
 	///   value every time the resource changes.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
-	internal sealed class ResourceBinding<T> : Binding<T>
+	public sealed class ResourceBinding<T> : Binding<T>
 	{
 		/// <summary>
 		///   The key of the resource that is bound to the dependency property.
@@ -20,7 +20,7 @@ namespace Pegasus.Framework.UserInterface
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be bound to the dependency property.</param>
-		public ResourceBinding(object key)
+		internal ResourceBinding(object key)
 		{
 			Assert.ArgumentNotNull(key);
 			_key = key;

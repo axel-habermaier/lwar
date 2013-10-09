@@ -6,7 +6,7 @@ namespace Pegasus.Framework.UserInterface
 	///   A base class for bindings that automatically ensures that values are synchronized between source and target.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
-	internal abstract class Binding<T>
+	public abstract class Binding<T>
 	{
 		/// <summary>
 		///   The target UI element that defines the target dependency property.
@@ -21,7 +21,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <summary>
 		///   Gets a value indicating whether the binding has already been bound to a dependency property.
 		/// </summary>
-		public bool IsBound { get; private set; }
+		internal bool IsBound { get; private set; }
 
 		/// <summary>
 		///   Initializes the binding.

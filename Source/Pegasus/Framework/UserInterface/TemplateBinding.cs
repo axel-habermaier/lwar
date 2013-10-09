@@ -9,7 +9,7 @@ namespace Pegasus.Framework.UserInterface
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
 	/// <remarks>This class assumes that the templated parent of a UI element never changes.</remarks>
-	internal sealed class TemplateBinding<T> : Binding<T>
+	public sealed class TemplateBinding<T> : Binding<T>
 	{
 		/// <summary>
 		///   The source object that is the templated parent of the target object.
@@ -28,7 +28,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <param name="sourceProperty">
 		///   The dependency property defined by the source object from which the bound value is retrieved.
 		/// </param>
-		public TemplateBinding(Control sourceObject, DependencyProperty<T> sourceProperty)
+		internal TemplateBinding(Control sourceObject, DependencyProperty<T> sourceProperty)
 		{
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentNotNull(sourceProperty);

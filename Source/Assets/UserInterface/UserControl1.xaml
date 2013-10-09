@@ -27,13 +27,14 @@
         </Style>
     </UserControl.Resources>
     <StackPanel>
-        <Button Content="    Button 1"></Button>
-        <Button Width="100" HorizontalAlignment="Right" Margin="15,5,21,15">
+        <Button Name="button2" Content="    Button 1"></Button>
+        <Button x:Name="Button2" Width="100" HorizontalAlignment="Right" Margin="15,5,21,15">
             Button 2
         </Button>
         <StackPanel Orientation="Horizontal">
-            <Button Margin="5" Style="{StaticResource StyleA}">Button 3</Button>
+            <Button Name="button3" Margin="5" Style="{StaticResource StyleA}">Button 3</Button>
             <Button Margin="5" Style="{DynamicResource StyleA}">Button 4</Button>
+            <Button></Button>
             <TextBlock Text="{Binding Test}"></TextBlock>
         </StackPanel>
     </StackPanel>

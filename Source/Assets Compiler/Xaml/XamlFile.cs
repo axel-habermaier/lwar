@@ -75,6 +75,7 @@
 			ReplaceDictionarySyntax(Root);
 			AddImplicitStyleKeys();
 			MoveUpDictionaryKey();
+			MoveUpExplicitNames();
 
 			RewriteTemplateBindings();
 			RewriteDynamicResourceBindings();
@@ -83,6 +84,102 @@
 
 			PushDownControlTemplateTargetType();
 			PushDownStyleTargetType();
+
+			MakeObjectInstantiationsExplicit(Root);
+			AssignNames();
+			ResolveTypes();
+		}
+
+		/// <summary>
+		/// Recursively makes all object instantiations explicit.
+		/// </summary>
+		private void MakeObjectInstantiationsExplicit(XElement element)
+		{
+			foreach (var child in element.Elements())
+				MakeObjectInstantiationsExplicit(child);
+
+			if (element.Name.LocalName.Contains("."))
+				return;
+
+			var newElement = new XElement(DefaultNamespace + "Create", new XAttribute("Type", element.Name.LocalName), element.Attributes(), element.Elements());
+			if (element.Parent != null)
+				element.ReplaceWith(newElement);
+			else
+				Root = newElement;
+		}
+
+		/// <summary>
+		/// Resolves the full names of the types of all instantiated objects. 
+		/// </summary>
+		private void ResolveTypes()
+		{
+			foreach (var instantiation in Root.DescendantsAndSelf().Where(e => e.Name.LocalName == "Create"))
+			{
+				var typeAttribute = instantiation.Attribute("Type");
+				Type type;
+				if (!TryGetClrType(typeAttribute.Value, out type))
+					continue;
+
+				typeAttribute.SetValue(type.FullName);
+			}
+		}
+
+		/// <summary>
+		/// Converts explicit name elements to name attributes and registers the used name.
+		/// </summary>
+		private void MoveUpExplicitNames()
+		{
+			foreach (var element in Root.Descendants().Where(e => e.Name.LocalName.EndsWith(".Name")).ToArray())
+			{
+				_usedNames.Add(element.Value);
+				element.Parent.Add(new XAttribute("Name", element.Value));
+				element.Remove();
+			}
+		}
+
+		/// <summary>
+		/// Assigns names to all unnamed objects.
+		/// </summary>
+		private void AssignNames()
+		{
+			foreach (var element in Root.Descendants().Where(e => e.Name.LocalName == "Create"))
+			{
+				if (element.Attribute("Name") != null)
+					continue;
+
+				var typeName = element.Attribute("Type").Value;
+				var name = GenerateUniqueName(typeName);
+				element.Add(new XAttribute("Name", name));
+			}
+
+			// The root object must be called 'this'
+			Root.Add(new XAttribute("Name", "this"));
+		}
+
+		/// <summary>
+		///   Generates a file-wide unique name for the given CLR type.
+		/// </summary>
+		/// <param name="clrType">The CLR type the name should be generated for.</param>
+		private string GenerateUniqueName(string clrType)
+		{
+			Assert.ArgumentNotNull(clrType);
+
+			var name = Char.ToLower(clrType[0]) + clrType.Substring(1);
+
+			int count;
+			if (!_instancesCount.TryGetValue(name, out count))
+				count = 0;
+
+			string uniqueName;
+			do
+			{
+				++count;
+				_instancesCount[name] = count;
+
+				uniqueName = name + count;
+			} while (_usedNames.Contains(uniqueName));
+
+			return uniqueName;
 		}
 
 		/// <summary>

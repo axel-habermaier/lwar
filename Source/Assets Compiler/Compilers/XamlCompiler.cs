@@ -1,6 +1,7 @@
-﻿namespace Pegasus.AssetsCompiler.Compilers
+﻿using System;
+
+namespace Pegasus.AssetsCompiler.Compilers
 {
-	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
@@ -21,7 +22,7 @@
 		{
 			foreach (var xaml in assets.OfType<XamlAsset>())
 				File.Delete(xaml.HashPath);
-			return base.Compile(assets); 
+			return base.Compile(assets);
 		}
 
 		/// <summary>
@@ -32,16 +33,15 @@
 		protected override void Compile(XamlAsset asset, BufferWriter buffer)
 		{
 			var className = Path.GetFileNameWithoutExtension(asset.RelativePath);
-			var namespaceName = asset.RelativePath.Substring(0, asset.RelativePath.Length - asset.FileName.Length - 1);
-
-			var writer = new CodeWriter();
-			writer.WriterHeader("//");
-
-			//var xamlFile = new XamlFile(asset.SourcePath);
-			//xamlFile.GenerateCode(writer, namespaceName.Replace("/", "."), className);
+			var namespaceName = asset.RelativePath
+									 .Substring(0, asset.RelativePath.Length - asset.FileName.Length - 1)
+									 .Replace("/", ".");
 
 			var xamlFile = new XamlFile(asset.SourcePath);
+			var csharpSerializer = new XamlToCSharpSerializer(xamlFile, namespaceName, className);
+
 			buffer.Copy(Encoding.UTF8.GetBytes(XDocument.Parse(xamlFile.Root.ToString()).ToString()));
+			buffer.Copy(Encoding.UTF8.GetBytes(csharpSerializer.GetGeneratedCode()));
 		}
 	}
 }

@@ -9,7 +9,7 @@
 	///   Binds a target dependency object/dependency property pair to a source object and a path selector.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
-	internal class DataBinding<T> : Binding<T>
+	public sealed class DataBinding<T> : Binding<T>
 	{
 		/// <summary>
 		///   Cached array instance used to separate the properties of a path.
@@ -25,7 +25,7 @@
 		///   The source object that is passed to the source expression in order to get the value that is set on the target
 		///   property.
 		/// </summary>
-		protected object _sourceObject;
+		private readonly object _sourceObject;
 
 		/// <summary>
 		///   If greater than 0, the properties accessed by the source expression are currently changing.
@@ -71,7 +71,7 @@
 		/// </summary>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
 		/// <param name="path">The property path that should be evaluated on the source object to get the source value.</param>
-		public DataBinding(object sourceObject, string path)
+		internal DataBinding(object sourceObject, string path)
 		{
 			Assert.ArgumentNotNullOrWhitespace(path);
 

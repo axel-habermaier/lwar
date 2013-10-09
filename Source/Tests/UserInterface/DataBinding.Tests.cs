@@ -177,23 +177,6 @@ namespace Tests.UserInterface
 		}
 
 		[Test]
-		public void ViewModel_ChangeType_Twice()
-		{
-			_control.ViewModel = new UntypedViewModelA { Value = _margin };
-			_control.CreateDataBinding("Value", UIElement.MarginProperty);
-
-			_control.Margin.Should().Be(_margin);
-
-			var margin = new Thickness(65);
-			_control.ViewModel = new UntypedViewModelB { Value = margin };
-
-			_control.Margin.Should().Be(margin);
-
-			_control.ViewModel = new UntypedViewModelA { Value = _margin };
-			_control.Margin.Should().Be(_margin);
-		}
-
-		[Test]
 		public void ViewModel_ChangeType_AfterNull()
 		{
 			_control.ViewModel = new UntypedViewModelA { Value = _margin };
@@ -208,6 +191,23 @@ namespace Tests.UserInterface
 			_control.ViewModel = new UntypedViewModelB { Value = margin };
 
 			_control.Margin.Should().Be(margin);
+		}
+
+		[Test]
+		public void ViewModel_ChangeType_Twice()
+		{
+			_control.ViewModel = new UntypedViewModelA { Value = _margin };
+			_control.CreateDataBinding("Value", UIElement.MarginProperty);
+
+			_control.Margin.Should().Be(_margin);
+
+			var margin = new Thickness(65);
+			_control.ViewModel = new UntypedViewModelB { Value = margin };
+
+			_control.Margin.Should().Be(margin);
+
+			_control.ViewModel = new UntypedViewModelA { Value = _margin };
+			_control.Margin.Should().Be(_margin);
 		}
 
 		[Test]
