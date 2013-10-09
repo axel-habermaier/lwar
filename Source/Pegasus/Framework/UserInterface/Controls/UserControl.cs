@@ -12,9 +12,8 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </summary>
 		private static readonly ControlTemplate DefaultTemplate = control =>
 		{
-			var binding = new TemplateBinding<object>(control, ContentProperty);
 			var presenter = new ContentPresenter();
-			presenter.SetBinding(ContentPresenter.ContentProperty, binding);
+			presenter.CreateTemplateBinding(control, ContentProperty, ContentPresenter.ContentProperty);
 
 			return presenter;
 		};

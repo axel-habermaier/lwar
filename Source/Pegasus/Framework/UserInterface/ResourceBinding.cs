@@ -9,7 +9,7 @@ namespace Pegasus.Framework.UserInterface
 	///   value every time the resource changes.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
-	public sealed class ResourceBinding<T> : Binding<T>
+	internal sealed class ResourceBinding<T> : Binding<T>
 	{
 		/// <summary>
 		///   The key of the resource that is bound to the dependency property.

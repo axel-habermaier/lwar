@@ -6,6 +6,7 @@ namespace Pegasus.AssetsCompiler.Xaml
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
+	using System.Text.RegularExpressions;
 	using System.Xml.Linq;
 	using Framework;
 	using Framework.UserInterface;
@@ -68,8 +69,10 @@ namespace Pegasus.AssetsCompiler.Xaml
 			TrimElementLiterals();
 			RemoveIgnorableElements();
 			AddImplicitContentElements();
-			RemoveNamespaceDeclarations();
 			ReplaceAttributesWithElements(Root);
+
+			RewriteTemplateBindings();
+			PushDownControlTemplateTargetType();
 
 			PushDownStyleTargetType();
 			AddStyleSetterLiterals();
@@ -77,6 +80,45 @@ namespace Pegasus.AssetsCompiler.Xaml
 			ReplaceTextRenderingMode();
 
 			AddLiterals();
+		}
+
+		/// <summary>
+		///   Adds the target type defined on a control template to its template bindings and removes the target type from the file.
+		/// </summary>
+		private void PushDownControlTemplateTargetType()
+		{
+			foreach (var controlTemplate in GetNamedElements(Root, "ControlTemplate"))
+			{
+				var targetType = GetNamedElement(controlTemplate, "ControlTemplate.TargetType");
+				if (targetType == null)
+					continue;
+
+				foreach (var templateBinding in GetNamedElements(controlTemplate, "TemplateBinding"))
+				{
+					var property = GetNamedElement(templateBinding, "TemplateBinding.Property");
+					if (!property.Value.Contains("."))
+						property.SetValue(String.Format("{0}.{1}", targetType.Value, property.Value));
+				}
+
+				targetType.Remove();
+			}
+		}
+
+		/// <summary>
+		/// Rewrites the template binding markup extension syntax to regular Xaml syntax.
+		/// </summary>
+		private void RewriteTemplateBindings()
+		{
+			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{TemplateBinding")))
+			{
+				var binding = bindingElement.Value;
+				var regex = new Regex(@"\{TemplateBinding ((Property=(?<property>.*))|(?<property>.*))\}");
+				var match = regex.Match(binding);
+
+				bindingElement.SetValue(String.Empty);
+				bindingElement.Add(new XElement(DefaultNamespace + "TemplateBinding", 
+					new XElement(DefaultNamespace + "TemplateBinding.Property", match.Groups["property"])));
+			}
 		}
 
 		/// <summary>
@@ -141,7 +183,7 @@ namespace Pegasus.AssetsCompiler.Xaml
 		/// </summary>
 		private void AddLiterals()
 		{
-			foreach (var element in Root.DescendantsAndSelf().Where(e => !e.Name.LocalName.StartsWith("Setter.")))
+			foreach (var element in Root.DescendantsAndSelf().Where(e => !e.Name.LocalName.EndsWith(".Property")))
 			{
 				if (element.Elements().Any() || String.IsNullOrWhiteSpace(element.Value))
 					continue;
@@ -232,7 +274,7 @@ namespace Pegasus.AssetsCompiler.Xaml
 		private static void ReplaceAttributesWithElements(XElement element)
 		{
 			var attributes = element.Attributes().ToArray();
-			foreach (var attribute in attributes)
+			foreach (var attribute in attributes.Where(a=>!a.IsNamespaceDeclaration))
 			{
 				attribute.Remove();
 				XName name;
@@ -344,16 +386,6 @@ namespace Pegasus.AssetsCompiler.Xaml
 				Log.Die("Unknown Xaml namespace '{0}'.", xamlNamespace);
 
 			return _namespaceMap[xamlNamespace];
-		}
-
-		/// <summary>
-		///   Removes all namespace declarations from the root element.
-		/// </summary>
-		private void RemoveNamespaceDeclarations()
-		{
-			var namespaceDeclarations = Root.Attributes().Where(a => a.IsNamespaceDeclaration).ToArray();
-			foreach (var namespaceDeclaration in namespaceDeclarations)
-				namespaceDeclaration.Remove();
 		}
 
 		/// <summary>

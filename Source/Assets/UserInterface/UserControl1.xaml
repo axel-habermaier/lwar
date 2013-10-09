@@ -12,10 +12,10 @@
             <Setter Property="Control.Background" Value="Red"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate>
+                    <ControlTemplate TargetType="Button">
                         <StackPanel>
                             <TextBlock>Hallo Welt</TextBlock>
-                            <ContentPresenter Content="{TemplateBinding Button.Content}"></ContentPresenter>
+                            <ContentPresenter Content="{TemplateBinding Content}"></ContentPresenter>
                         </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>

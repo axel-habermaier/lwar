@@ -10,7 +10,7 @@ namespace Pegasus.Framework.UserInterface
 	///   Binds a target dependency object/dependency property pair to a source object and path selector.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
-	public sealed class DataBinding<T> : Binding<T>
+	internal sealed class DataBinding<T> : Binding<T>
 	{
 		/// <summary>
 		///   Indicates whether the view model of the bound UI element is the source object.

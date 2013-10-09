@@ -37,14 +37,12 @@ namespace Tests.UserInterface
 
 		private static void AddBinding(UIElement element)
 		{
-			var binding = new ResourceBinding<Thickness>(Key);
-			element.SetBinding(UIElement.MarginProperty, binding);
+			element.CreateResourceBinding(Key, UIElement.MarginProperty);
 		}
 
 		private static void AddWidthBinding(UIElement element)
 		{
-			var binding = new ResourceBinding<double>(Key);
-			element.SetBinding(UIElement.WidthProperty, binding);
+			element.CreateResourceBinding(Key, UIElement.WidthProperty);
 		}
 
 		private static void SetImplicitStyle1(UIElement element)
