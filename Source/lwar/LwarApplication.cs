@@ -8,204 +8,11 @@
 	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
-	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Platform.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Scripting;
-
-	internal class HelloWorldViewModel : ViewModel
-	{
-		private int _frameCount;
-		private HelloWorldViewModel _model;
-		private string _name;
-		private string _name2;
-		private string _name3;
-		private Thickness _thickness;
-
-		public string Name
-		{
-			get { return _name; }
-			set
-			{
-				ChangePropertyValue(ref _name, value);
-				Name2 = Name + Name;
-				Name3 = Name2 + Name;
-			}
-		}
-
-		public string Name2
-		{
-			get { return _name2; }
-			set { ChangePropertyValue(ref _name2, value); }
-		}
-
-		public string Name3
-		{
-			get { return _name3; }
-			set { ChangePropertyValue(ref _name3, value); }
-		}
-
-		public int FrameCount
-		{
-			get { return _frameCount; }
-			set
-			{
-				ChangePropertyValue(ref _frameCount, value);
-				Thickness = new Thickness(value / 10.0);
-			}
-		}
-
-		public Thickness Thickness
-		{
-			get { return _thickness; }
-			set { ChangePropertyValue(ref _thickness, value); }
-		}
-
-		public HelloWorldViewModel Model
-		{
-			get { return _model; }
-			set { ChangePropertyValue(ref _model, value); }
-		}
-
-		public void Update()
-		{
-			++FrameCount;
-
-			if (Model != null)
-				Model.FrameCount++;
-
-			//if (_frameCount % 1000 == 0)
-			//Model = Model == null ? new HelloWorldViewModel() : null;
-
-			if (_model == null)
-				_model = new HelloWorldViewModel();
-		}
-	}
-
-	internal class HelloWorldView : UserControl
-	{
-		public Button button1;
-		//public Canvas canvas;
-
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="assets">The assets manager that should be used to load the assets required by the control.</param>
-		/// <param name="viewModel">The view model that should be bound to the control.</param>
-		public HelloWorldView(AssetsManager assets, ViewModel viewModel)
-		{
-			Assert.ArgumentNotNull(assets);
-			Assert.ArgumentNotNull(viewModel);
-
-			var baseStyle = new Style();
-			baseStyle.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 255, 0, 255)));
-
-			var baseTrigger = new Trigger<bool>(IsMouseOverProperty, true);
-			baseTrigger.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 0, 255, 255)));
-			baseStyle.Triggers.Add(baseTrigger);
-
-			var style = new Style(baseStyle);
-			style.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
-
-			var trigger = new Trigger<bool>(IsMouseOverProperty, true);
-			trigger.Setters.Add(new Setter<Color>(ForegroundProperty, Color.FromRgba(0, 255, 123, 255)));
-			style.Triggers.Add(trigger);
-
-			var buttonTemplate = new ControlTemplate(button =>
-			{
-				var presenter = new ContentPresenter();
-				presenter.CreateTemplateBinding(button, ContentProperty, ContentPresenter.ContentProperty);
-
-				return presenter;
-			});
-
-			var buttonStyle = new Style();
-			buttonStyle.Setters.Add(new Setter<ControlTemplate>(TemplateProperty, buttonTemplate));
-
-			Resources[typeof(Button)] = buttonStyle;
-			Resources["MyStyle"] = style;
-
-			ViewModel = viewModel;
-
-	
-			button1 = new Button() { Width = 300, Height = 100 };
-			var button2 = new Button()
-			{
-				Width = 100,
-				Height = 300,
-				Margin = new Thickness(15, 5, 21, 15),
-				HorizontalAlignment = HorizontalAlignment.Right,
-				//VerticalAlignment = VerticalAlignment.Top
-			};
-			var button3 = new Button()
-			{
-				Width = 100,
-				Height = 300,
-				Margin = new Thickness(0, 100, 0, 0),
-				//HorizontalAlignment = HorizontalAlignment.Center,
-				//VerticalAlignment = VerticalAlignment.Top
-			};
-
-			var button4 = new Button()
-			{
-				Width = 20,
-				Height = 20,
-				Content = "Btn 4",
-				Margin = new Thickness(5),
-				//HorizontalAlignment = HorizontalAlignment.Left,
-				//VerticalAlignment = VerticalAlignment.Top
-			};
-			var button5 = new Button()
-			{
-				Width = 20,
-				Height = 20,
-				Content = "Btn 5",
-				Margin = new Thickness(5),
-				//HorizontalAlignment = HorizontalAlignment.Center,
-				//VerticalAlignment = VerticalAlignment.Top
-			};
-
-			var panel = new StackPanel();
-			//panel.Orientation = Orientation.Horizontal;
-
-			Content = panel;
-			panel.Children.Add(button1);
-			panel.Children.Add(button2);
-
-			var stackPanel = new StackPanel() { Orientation = Orientation.Horizontal };
-			stackPanel.Children.Add(button4);
-			stackPanel.Children.Add(button5);
-			//button1.SetValue(Canvas.LeftProperty, 200);
-			//button1.SetValue(Canvas.TopProperty, 200);
-			//button2.SetValue(Canvas.RightProperty, 5);
-			//button2.SetValue(Canvas.BottomProperty, 5);
-
-			//canvas = new Canvas();
-			panel.Children.Add(stackPanel);
-			panel.Children.Add(button3);
-
-			////var resourceBinding = new ResourceBinding<Style>("MyStyle");
-			//button1.SetResourceBinding(StyleProperty, resourceBinding);
-
-			button1.CreateDataBinding("Name", ContentProperty);
-			button2.CreateDataBinding("Name2",ContentProperty);
-			button3.CreateDataBinding("Name3",ContentProperty);
-			//button2.SetBinding(MarginProperty, binding4);
-		}
-
-		//public void AddButton()
-		//{
-		//	canvas.Children.Add(button1);
-		//}
-
-		//public void RemoveButton()
-		//{
-		//	canvas.Children.Remove(button1);
-		//}
-	}
 
 	/// <summary>
 	///   Represents the lwar application.
@@ -216,9 +23,6 @@
 		///   The local game server that can be used to hosts game sessions locally.
 		/// </summary>
 		private LocalServer _localServer;
-
-		private HelloWorldView _view;
-		private HelloWorldViewModel _viewModel;
 
 		/// <summary>
 		///   Invoked when the application is initializing.
@@ -249,24 +53,7 @@
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
-			//_viewModel = new HelloWorldViewModel() { Name = "Axel" };
-			//_view = new HelloWorldView(uiContext.SharedAssets, _viewModel);
-
-			//var buttonTemplate = new ControlTemplate(button =>
-			//{
-			//	var binding = new TemplateBinding<object>(button, ContentControl.ContentProperty);
-			//	var presenter = new ContentPresenter();
-			//	presenter.SetBinding(ContentPresenter.ContentProperty, binding);
-
-			//	return presenter;
-			//});
-
-			//var buttonStyle = new Style();
-			//buttonStyle.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, buttonTemplate));
-			//buttonStyle.Setters.Add(new Setter<Color>(Control.ForegroundProperty, Color.FromRgba(255, 0, 0, 255)));
-
 			var uc1 = new UserControl1();
-			//uc1.Resources[typeof(Button)] = buttonStyle;
 			uiContext.Add(uc1);
 
 			uiContext.FontLoader = new FontLoader(uiContext.SharedAssets);
@@ -278,35 +65,6 @@
 		protected override void Update()
 		{
 			_localServer.Update();
-			//_stateManager.Update();
-			//_viewModel.Update();
-
-			//if (_viewModel.FrameCount % 300 == 0)
-			//	_view.button1.IsMouseOver = !_view.button1.IsMouseOver;
-
-			//if (_viewModel.FrameCount % 3000 == 0)
-			//{
-			//	//_view.ViewModel = _view.ViewModel == null ? _viewModel : null;
-			//	if (_viewModel.FrameCount % 6000 == 0)
-			//	{
-			//		//Log.Info("Adding button: {0}", DateTime.Now.ToLongTimeString());
-			//		//_view.AddButton();
-			//	}
-
-			//	else
-			//	{
-			//		//Log.Info("Removing button: {0}", DateTime.Now.ToLongTimeString());
-			//		//_view.RemoveButton();
-			//	}
-			//}
-			//if ((_viewModel.FrameCount - 1500) % 3000 == 0)
-			//{
-			//	Log.Info("Changing VM: {0}", DateTime.Now.ToLongTimeString());
-			//	//_viewModel.Name = DateTime.Now.ToLongTimeString();
-			//	_view.ViewModel = _viewModel = new HelloWorldViewModel() { Name = DateTime.Now.ToLongTimeString() };
-			//}
-
-			//_viewModel.Name = DateTime.Now.ToLongTimeString();
 		}
 
 		/// <summary>
@@ -317,8 +75,6 @@
 		{
 			output.ClearColor(new Color(0, 0, 0, 0));
 			output.ClearDepth();
-
-			//_stateManager.Draw(output);
 		}
 
 		/// <summary>
@@ -327,7 +83,6 @@
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		protected override void DrawUserInterface(SpriteBatch spriteBatch)
 		{
-			//_stateManager.DrawUserInterface(spriteBatch);
 		}
 
 		/// <summary>
@@ -352,7 +107,6 @@
 			Assert.ArgumentNotNull(address);
 
 			Disconnect();
-			//_stateManager.Add(new Level(new IPEndPoint(address, port)));
 		}
 
 		/// <summary>
@@ -360,8 +114,6 @@
 		/// </summary>
 		private void Disconnect()
 		{
-			//_stateManager.Clear();
-			//_stateManager.Add(new MainMenu());
 		}
 	}
 }

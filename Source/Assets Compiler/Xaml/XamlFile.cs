@@ -51,7 +51,7 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(fileName);
 
-			Root = XElement.Parse(File.ReadAllText(fileName), LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace);
+			Root = XElement.Parse(File.ReadAllText(fileName));
 
 			BuildNamespaceMap();
 			Transform();
@@ -111,16 +111,16 @@
 			AssignNames();
 			ResolveTypes();
 
-			RewriteControlTemplateInstantiation(Root);
+			RewriteControlTemplateInstantiations(Root);
 		}
 
 		/// <summary>
 		///   Recursively rewrites the instantiation of all control templates to delegate instantiations.
 		/// </summary>
-		private void RewriteControlTemplateInstantiation(XElement element)
+		private void RewriteControlTemplateInstantiations(XElement element)
 		{
 			foreach (var child in element.Elements().ToArray())
-				RewriteControlTemplateInstantiation(child);
+				RewriteControlTemplateInstantiations(child);
 
 			if (element.Name.LocalName != "Create" || Type.GetType(element.Attribute("Type").Value) != typeof(ControlTemplate))
 				return;

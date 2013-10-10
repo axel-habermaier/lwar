@@ -8,7 +8,6 @@ namespace Pegasus.AssetsCompiler.Compilers
 	using System.Text;
 	using System.Xml.Linq;
 	using Assets;
-	using CodeGeneration;
 	using Platform.Memory;
 	using Xaml;
 
