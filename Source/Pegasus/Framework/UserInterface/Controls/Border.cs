@@ -6,74 +6,47 @@
 	using Rendering;
 
 	/// <summary>
-	///   Represents a base class for templated UI elements.
+	///   Draws a border, a background, or both around another element.
 	/// </summary>
-	public class Control : UIElement
+	[ContentProperty("Child")]
+	public class Border : UIElement
 	{
 		/// <summary>
-		///   The template that defines the control's appearance.
+		///   The UI element that is decorated by the border.
 		/// </summary>
-		public static readonly DependencyProperty<ControlTemplate> TemplateProperty =
-			new DependencyProperty<ControlTemplate>(affectsMeasure: true, prohibitsAnimations: true);
+		public static readonly DependencyProperty<UIElement> ChildProperty =
+			new DependencyProperty<UIElement>(affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
-		///   The foreground color of the control.
-		/// </summary>
-		public static readonly DependencyProperty<Color> ForegroundProperty =
-			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 255), affectsRender: true, inherits: true);
-
-		/// <summary>
-		///   The background color of the control.
+		///   The background color of the border.
 		/// </summary>
 		public static readonly DependencyProperty<Color> BackgroundProperty =
 			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 0), affectsRender: true);
 
 		/// <summary>
-		///   The child UI element that represents the root of this control's template. Null if no template has been created.
-		/// </summary>
-		private UIElement _templateRoot;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		protected Control()
+		public Border()
 		{
-			AddChangedHandler(TemplateProperty, OnTemplateChanged);
+			AddChangedHandler(ChildProperty, OnChildChanged);
 		}
 
 		/// <summary>
-		///   Gets or sets the foreground color of the control.
+		///   Gets or sets the UI element that is decorated by the border.
 		/// </summary>
-		public Color Foreground
+		public UIElement Child
 		{
-			get { return GetValue(ForegroundProperty); }
-			set { SetValue(ForegroundProperty, value); }
+			get { return GetValue(ChildProperty); }
+			set { SetValue(ChildProperty, value); }
 		}
 
 		/// <summary>
-		///   Gets or sets the background color of the control.
+		///   Gets or sets the background color of the border.
 		/// </summary>
 		public Color Background
 		{
 			get { return GetValue(BackgroundProperty); }
 			set { SetValue(BackgroundProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the template that defines the control's appearance.
-		/// </summary>
-		public ControlTemplate Template
-		{
-			get { return GetValue(TemplateProperty); }
-			set { SetValue(TemplateProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets the number of visual children for this visual.
-		/// </summary>
-		protected internal override int VisualChildrenCount
-		{
-			get { return _templateRoot == null ? 0 : 1; }
 		}
 
 		/// <summary>
@@ -83,28 +56,31 @@
 		{
 			get
 			{
-				if (_templateRoot == null)
+				if (Child == null)
 					return UIElementCollection.Enumerator.Empty;
 
-				return UIElementCollection.Enumerator.FromElement(_templateRoot);
+				return UIElementCollection.Enumerator.FromElement(Child);
 			}
 		}
 
 		/// <summary>
-		///   Changes the control's template root.
+		///   Gets the number of visual children for this visual.
 		/// </summary>
-		private void OnTemplateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<ControlTemplate> args)
+		protected internal override int VisualChildrenCount
 		{
-			if (_templateRoot != null)
-				_templateRoot.ChangeLogicalParent(null);
+			get { return Child == null ? 0 : 1; }
+		}
 
-			if (args.NewValue == null)
-				_templateRoot = null;
-			else
-				_templateRoot = args.NewValue(this);
+		/// <summary>
+		///   Removes the current child from the logical tree and adds the new child.
+		/// </summary>
+		private void OnChildChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<UIElement> args)
+		{
+			if (args.OldValue != null)
+				args.OldValue.ChangeLogicalParent(null);
 
-			if (_templateRoot != null)
-				_templateRoot.ChangeLogicalParent(this);
+			if (args.NewValue != null)
+				args.NewValue.ChangeLogicalParent(this);
 		}
 
 		/// <summary>
@@ -113,10 +89,10 @@
 		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
 		protected internal override Visual GetVisualChild(int index)
 		{
-			Assert.NotNull(_templateRoot);
+			Assert.NotNull(Child);
 			Assert.ArgumentSatisfies(index == 0, "The UI element has only one visual child.");
 
-			return _templateRoot;
+			return Child;
 		}
 
 		/// <summary>
@@ -129,11 +105,11 @@
 		/// </param>
 		protected override SizeD MeasureCore(SizeD constraint)
 		{
-			if (_templateRoot == null)
+			if (Child == null)
 				return new SizeD();
 
-			_templateRoot.Measure(constraint);
-			return _templateRoot.DesiredSize;
+			Child.Measure(constraint);
+			return Child.DesiredSize;
 		}
 
 		/// <summary>
@@ -147,15 +123,21 @@
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{
-			if (_templateRoot == null)
+			if (Child == null)
 				return new SizeD();
 
-			_templateRoot.Arrange(new RectangleD(0, 0, finalSize));
-			return _templateRoot.RenderSize;
+			Child.Arrange(new RectangleD(0, 0, finalSize));
+			return Child.RenderSize;
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)
 		{
+			var width = (int)Math.Round(RenderSize.Width);
+			var height = (int)Math.Round(RenderSize.Height);
+			var x = (int)Math.Round(VisualOffset.X);
+			var y = (int)Math.Round(VisualOffset.Y);
+
+			spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background);
 		}
 	}
 }

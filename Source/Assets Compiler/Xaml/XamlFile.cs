@@ -193,7 +193,11 @@
 			}
 			else
 			{
-				var propertyType = classType.GetProperty(split[1], BindingFlags.Instance | BindingFlags.Public).PropertyType.AssemblyQualifiedName;
+				var property = classType.GetProperty(split[1], BindingFlags.Instance | BindingFlags.Public);
+				if (property == null)
+					Log.Die("Unable to find property '{0}' in '{1}'.", split[1], classType.FullName);
+				
+				var propertyType = property.PropertyType.AssemblyQualifiedName;
 				newElement = new XElement(DefaultNamespace + "Set", new XAttribute("Property", propertyName),
 										  new XElement(DefaultNamespace + "Value", new XAttribute("Type", propertyType), content));
 			}

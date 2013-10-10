@@ -1,12 +1,9 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Controls
 {
+	using System;
 	using Math;
 	using Platform.Graphics;
 	using Rendering;
-	using Rendering.UserInterface;
-	using Math = System.Math;
 
 	/// <summary>
 	///   Displays text.
@@ -19,6 +16,12 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// </summary>
 		public static readonly DependencyProperty<string> TextProperty =
 			new DependencyProperty<string>(defaultValue: String.Empty, affectsMeasure: true, prohibitsAnimations: true);
+
+		/// <summary>
+		///   The foreground color of the text.
+		/// </summary>
+		public static readonly DependencyProperty<Color> ForegroundProperty =
+			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 255), affectsRender: true, inherits: true);
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -36,6 +39,15 @@ namespace Pegasus.Framework.UserInterface.Controls
 		{
 			Assert.ArgumentNotNull(text);
 			Text = text;
+		}
+
+		/// <summary>
+		///   Gets or sets the foreground color of the text.
+		/// </summary>
+		public Color Foreground
+		{
+			get { return GetValue(ForegroundProperty); }
+			set { SetValue(ForegroundProperty, value); }
 		}
 
 		/// <summary>
@@ -94,7 +106,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 			var y = (int)Math.Round(VisualOffset.Y);
 
 			using (var text = Rendering.UserInterface.Text.Create(Text))
-				TextRenderer.Draw(spriteBatch, Font, text, Color.FromRgba(0, 255, 0, 255), new Vector2i(x, y));
+				TextRenderer.Draw(spriteBatch, Font, text, Foreground, new Vector2i(x, y));
 		}
 	}
 }

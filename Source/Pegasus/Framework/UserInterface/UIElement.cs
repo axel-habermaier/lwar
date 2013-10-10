@@ -1,10 +1,8 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
-	using System.Linq.Expressions;
 	using Controls;
 	using Math;
-	using Platform.Graphics;
 	using Platform.Logging;
 	using Rendering.UserInterface;
 
@@ -18,12 +16,6 @@
 		/// </summary>
 		public static readonly DependencyProperty<ViewModel> ViewModelProperty =
 			new DependencyProperty<ViewModel>(inherits: true, prohibitsAnimations: true);
-
-		/// <summary>
-		///   The foreground color of the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<Color> ForegroundProperty =
-			new DependencyProperty<Color>(defaultValue: new Color(255, 255, 255, 255), affectsRender: true);
 
 		/// <summary>
 		///   The style of the UI element.
@@ -177,15 +169,6 @@
 		{
 			get { return GetValue(ViewModelProperty); }
 			set { SetValue(ViewModelProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the foreground color of the UI element.
-		/// </summary>
-		public Color Foreground
-		{
-			get { return GetValue(ForegroundProperty); }
-			set { SetValue(ForegroundProperty, value); }
 		}
 
 		/// <summary>
@@ -518,7 +501,7 @@
 			// Set the new style; if it is null, try to find an implicit style
 			if (property.NewValue == null)
 				BindImplicitStyle();
-			else if (Parent != null)
+			else
 			{
 				// No need to set the style if the UI element is not part of a logical tree
 				property.NewValue.Apply(this);

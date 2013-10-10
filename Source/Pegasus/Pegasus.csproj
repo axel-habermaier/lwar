@@ -194,6 +194,7 @@
     <Compile Include="Framework\ContentPropertyAttribute.cs" />
     <Compile Include="Framework\InheritanceContext.cs" />
     <Compile Include="Framework\UserInterface\Binding.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Border.cs" />
     <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
     <Compile Include="Framework\UserInterface\Controls\ContentPresenter.cs" />
     <Compile Include="Framework\UserInterface\Controls\ControlTemplate.cs" />

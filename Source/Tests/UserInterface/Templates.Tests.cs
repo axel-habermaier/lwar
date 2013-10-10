@@ -108,6 +108,43 @@
 		}
 
 		[Test]
+		public void SetTemplateByStyle_StyleSetDirectly()
+		{
+			var style = new Style();
+			style.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, _template1));
+			var button = new Button { Style = style };
+
+			button.GetVisualChild(0).Should().Be(_presenter1);
+		}
+
+		[Test]
+		public void SetTemplateByStyle_StyleSetByResourceBinding()
+		{
+			var control = new UserControl();
+			var style = new Style();
+			style.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, _template1));
+			control.Resources.Add("MyStyle", style);
+
+			var button = new Button();
+			button.CreateResourceBinding("MyStyle", UIElement.StyleProperty);
+			control.Content = button;
+			button.GetVisualChild(0).Should().Be(_presenter1);
+		}
+
+		[Test]
+		public void SetTemplateByStyle_StyleSetImplicitly()
+		{
+			var control = new UserControl();
+			var style = new Style();
+			style.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, _template1));
+			control.Resources.Add(typeof(Button), style);
+
+			var button = new Button();
+			control.Content = button;
+			button.GetVisualChild(0).Should().Be(_presenter1);
+		}
+
+		[Test]
 		public void TemplateBinding_ChangeValue()
 		{
 			var button = new Button { Margin = _thickness1, Template = _template1 };

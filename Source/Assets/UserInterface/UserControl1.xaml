@@ -6,7 +6,26 @@
              FontFamily="Liberation Mono" 
              FontSize="11" 
              TextOptions.TextRenderingMode="Aliased">
-    <UserControl.Resources>
+    <Canvas>
+		<Border Background="Red"><TextBlock Margin="42,31,0,15" Foreground="#FF1AA6E8">Hallo</TextBlock></Border>
+        <Button Content="Hallo Welt" Canvas.Top="120" Canvas.Left="180.666" Background="#FFD60707">
+            <Button.Style>
+                <Style>
+                    <Setter Property="Control.Foreground" Value="White"></Setter>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+								<Border Background="{TemplateBinding Background}">
+									<ContentPresenter Content="{TemplateBinding Content}"></ContentPresenter>
+								</Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style> 
+            </Button.Style>
+        </Button>
+    </Canvas>
+    <!--<UserControl.Resources>
         <Style x:Key="StyleA">
             <Setter Property="TextOptions.TextRenderingMode" Value="Aliased"></Setter>
             <Setter Property="Control.FontSize" Value="14"></Setter>
@@ -37,5 +56,5 @@
             <Button></Button>
             <TextBlock Text="{Binding Test}"></TextBlock>
         </StackPanel>
-    </StackPanel>
+    </StackPanel>-->
 </UserControl>
