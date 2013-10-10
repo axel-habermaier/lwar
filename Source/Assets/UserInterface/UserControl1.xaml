@@ -27,7 +27,7 @@
         </Style>
     </UserControl.Resources>
     <StackPanel>
-        <Button Name="button2" Content="    Button 1"></Button>
+        <Button TextOptions.TextRenderingMode="Aliased" Name="button2" Content="    Button 1"></Button>
         <Button x:Name="Button2" Width="100" HorizontalAlignment="Right" Margin="15,5,21,15">
             Button 2
         </Button>

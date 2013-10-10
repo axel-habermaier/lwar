@@ -10,6 +10,7 @@
 	using System.Xml.Linq;
 	using Framework;
 	using Framework.UserInterface;
+	using Framework.UserInterface.Controls;
 	using Platform.Logging;
 
 	/// <summary>
@@ -57,6 +58,21 @@
 		}
 
 		/// <summary>
+		///   Gets the namespaces imported by the Xaml file.
+		/// </summary>
+		public IEnumerable<string> Namespaces
+		{
+			get
+			{
+				return (from mappedNamespaces in _namespaceMap.Values
+					   from xamlNamespace in mappedNamespaces
+					   where !xamlNamespace.Ignored
+					   orderby xamlNamespace.Namespace
+					   select xamlNamespace.Namespace).Distinct();
+			}
+		}
+
+		/// <summary>
 		///   The root object of the Xaml file.
 		/// </summary>
 		public XElement Root { get; private set; }
@@ -86,22 +102,102 @@
 			PushDownStyleTargetType();
 
 			MakeObjectInstantiationsExplicit(Root);
+			MakeDictionaryAddCallsExplicit(Root);
+			MakeListAddCallsExplicit(Root);
+
+			AddSetterConstructorParameters();
+
+			MakePropertySetCallsExplicit(Root);
 			AssignNames();
 			ResolveTypes();
+
+			RewriteControlTemplateInstantiation(Root);
 		}
 
 		/// <summary>
-		/// Recursively makes all object instantiations explicit.
+		///   Recursively rewrites the instantiation of all control templates to delegate instantiations.
 		/// </summary>
-		private void MakeObjectInstantiationsExplicit(XElement element)
+		private void RewriteControlTemplateInstantiation(XElement element)
 		{
-			foreach (var child in element.Elements())
-				MakeObjectInstantiationsExplicit(child);
+			foreach (var child in element.Elements().ToArray())
+				RewriteControlTemplateInstantiation(child);
 
-			if (element.Name.LocalName.Contains("."))
+			if (element.Name.LocalName != "Create" || Type.GetType(element.Attribute("Type").Value) != typeof(ControlTemplate))
 				return;
 
-			var newElement = new XElement(DefaultNamespace + "Create", new XAttribute("Type", element.Name.LocalName), element.Attributes(), element.Elements());
+			element.ReplaceWith(new XElement(DefaultNamespace + "Delegate",
+											 new XElement(DefaultNamespace + "Parameter", new XAttribute("Name", "templatedControl")),
+											 new XElement(DefaultNamespace + "Return", element.Elements().Single().Attribute("Name").Value),
+											 element.Attributes(), element.Elements()));
+		}
+
+		/// <summary>
+		///   Adds the constructor parameters for setter instantiations.
+		/// </summary>
+		private void AddSetterConstructorParameters()
+		{
+			foreach (var setter in Root.DescendantsAndSelf()
+									   .Where(e => e.Name.LocalName == "Create" && e.Attribute("Type").Value == "Setter"))
+			{
+				var property = setter.Element(DefaultNamespace + "Setter.Property");
+				var value = setter.Element(DefaultNamespace + "Setter.Value");
+
+				property.Remove();
+				value.Remove();
+
+				Type type;
+				if (!TryGetPropertyType(property.Value, out type))
+					Log.Die("Unable to get type of property '{0}'.", property.Value);
+
+				var content = value.HasElements ? (object)value.Elements() : (object)value.Value;
+
+				setter.Add(new XElement(DefaultNamespace + "TypeParameter", type.AssemblyQualifiedName));
+				setter.Add(new XElement(DefaultNamespace + "Parameter",
+										new XAttribute("Type", typeof(XamlLiteral).AssemblyQualifiedName), property.Value + "Property"));
+				setter.Add(new XElement(DefaultNamespace + "Parameter",
+										new XAttribute("Type", type.AssemblyQualifiedName), content));
+			}
+		}
+
+		/// <summary>
+		///   Recursively makes all property set operations explicit.
+		/// </summary>
+		private void MakePropertySetCallsExplicit(XElement element)
+		{
+			foreach (var child in element.Elements().ToArray())
+				MakePropertySetCallsExplicit(child);
+
+			if (!element.Name.LocalName.Contains("."))
+				return;
+
+			var split = element.Name.LocalName.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+			Assert.That(split.Length == 2, "Expected property element to be of form 'TargetType.PropertyName'.");
+
+			var parentType = element.Parent.Attribute("Type").Value;
+			var propertyName = split[1];
+
+			var isAttached = !parentType.EndsWith(split[0]);
+			var content = element.HasElements ? (object)element.Elements() : (object)element.Value;
+			var classType = GetClrType(split[0]);
+
+			XElement newElement;
+			if (isAttached)
+			{
+				var fieldType = classType.GetField(split[1] + "Property", BindingFlags.Static | BindingFlags.Public).FieldType;
+				var propertyType = fieldType.GetGenericArguments()[0].AssemblyQualifiedName;
+
+				newElement = new XElement(DefaultNamespace + "SetAttached",
+										  new XAttribute("Type", classType.AssemblyQualifiedName),
+										  new XAttribute("Property", propertyName),
+										  new XElement(DefaultNamespace + "Value", new XAttribute("Type", propertyType), content));
+			}
+			else
+			{
+				var propertyType = classType.GetProperty(split[1], BindingFlags.Instance | BindingFlags.Public).PropertyType.AssemblyQualifiedName;
+				newElement = new XElement(DefaultNamespace + "Set", new XAttribute("Property", propertyName),
+										  new XElement(DefaultNamespace + "Value", new XAttribute("Type", propertyType), content));
+			}
+
 			if (element.Parent != null)
 				element.ReplaceWith(newElement);
 			else
@@ -109,23 +205,107 @@
 		}
 
 		/// <summary>
-		/// Resolves the full names of the types of all instantiated objects. 
+		///   Recursively makes all Dictionary.Add method calls explicit.
+		/// </summary>
+		private void MakeDictionaryAddCallsExplicit(XElement element)
+		{
+			foreach (var child in element.Elements().ToArray())
+				MakeDictionaryAddCallsExplicit(child);
+
+			if (!element.Name.LocalName.EndsWith("...Add"))
+				return;
+
+			var targetProperty = element.Name.LocalName.Replace("...Add", String.Empty);
+			targetProperty = targetProperty.Substring(targetProperty.LastIndexOf(".", StringComparison.Ordinal) + 1);
+
+			var key = element.Attribute("Key").Value;
+			Type keyType;
+			if (key.StartsWith("typeof"))
+			{
+				var length = "typeof(".Length;
+				key = key.Substring(length, key.Length - length - 1);
+				keyType = typeof(Type);
+			}
+			else
+			{
+				key = key.Substring(1, key.Length - 2);
+				keyType = typeof(string);
+			}
+
+			var newElement = new XElement(DefaultNamespace + "Invoke", new XAttribute("Method", "Add"),
+										  new XAttribute("TargetProperty", targetProperty),
+										  new XElement(DefaultNamespace + "Parameter", key, new XAttribute("Type", keyType.AssemblyQualifiedName)),
+										  new XElement(DefaultNamespace + "Parameter",
+													   new XAttribute("Type", typeof(object).AssemblyQualifiedName), element.Elements()));
+
+			if (element.Parent != null)
+				element.ReplaceWith(newElement);
+			else
+				Root = newElement;
+		}
+
+		/// <summary>
+		///   Recursively makes all List.Add method calls explicit.
+		/// </summary>
+		private void MakeListAddCallsExplicit(XElement element)
+		{
+			foreach (var child in element.Elements().ToArray())
+				MakeListAddCallsExplicit(child);
+
+			if (!element.Name.LocalName.EndsWith("..Add"))
+				return;
+
+			var targetProperty = element.Name.LocalName.Replace("..Add", String.Empty);
+			targetProperty = targetProperty.Substring(targetProperty.LastIndexOf(".", StringComparison.Ordinal) + 1);
+
+			var newElement = new XElement(DefaultNamespace + "Invoke", new XAttribute("Method", "Add"),
+										  new XAttribute("TargetProperty", targetProperty),
+										  new XElement(DefaultNamespace + "Parameter",
+													   new XAttribute("Type", typeof(object).AssemblyQualifiedName), element.Elements()));
+
+			if (element.Parent != null)
+				element.ReplaceWith(newElement);
+			else
+				Root = newElement;
+		}
+
+		/// <summary>
+		///   Recursively makes all object instantiations explicit.
+		/// </summary>
+		private void MakeObjectInstantiationsExplicit(XElement element)
+		{
+			foreach (var child in element.Elements().ToArray())
+				MakeObjectInstantiationsExplicit(child);
+
+			if (element.Name.LocalName.Contains(".") || element.Name.LocalName == "Binding")
+				return;
+
+			var newElement = new XElement(DefaultNamespace + "Create", new XAttribute("Type", element.Name.LocalName), element.Attributes(),
+										  element.Elements());
+			if (element.Parent != null)
+				element.ReplaceWith(newElement);
+			else
+				Root = newElement;
+		}
+
+		/// <summary>
+		///   Resolves the full names of the types of all instantiated objects.
 		/// </summary>
 		private void ResolveTypes()
 		{
-			foreach (var instantiation in Root.DescendantsAndSelf().Where(e => e.Name.LocalName == "Create"))
+			foreach (var instantiation in Root.DescendantsAndSelf().Where(e => e.Name.LocalName == "Create" || e.Name.LocalName == "Delegate"))
 			{
 				var typeAttribute = instantiation.Attribute("Type");
 				Type type;
 				if (!TryGetClrType(typeAttribute.Value, out type))
 					continue;
 
-				typeAttribute.SetValue(type.FullName);
+				typeAttribute.SetValue(type.AssemblyQualifiedName);
 			}
 		}
 
 		/// <summary>
-		/// Converts explicit name elements to name attributes and registers the used name.
+		///   Converts explicit name elements to name attributes and registers the used name.
 		/// </summary>
 		private void MoveUpExplicitNames()
 		{
@@ -138,11 +318,11 @@
 		}
 
 		/// <summary>
-		/// Assigns names to all unnamed objects.
+		///   Assigns names to all unnamed objects.
 		/// </summary>
 		private void AssignNames()
 		{
-			foreach (var element in Root.Descendants().Where(e => e.Name.LocalName == "Create"))
+			foreach (var element in Root.Descendants().Where(e => e.Name.LocalName == "Create" || e.Name.LocalName == "Delegate"))
 			{
 				if (element.Attribute("Name") != null)
 					continue;
@@ -187,7 +367,7 @@
 		/// </summary>
 		private void AddImplicitStyleKeys()
 		{
-			foreach (var element in Root.DescendantsAndSelf().Where(e => e.Name.LocalName.Contains("..Add")))
+			foreach (var element in Root.DescendantsAndSelf().Where(e => e.Name.LocalName.Contains("...Add")))
 			{
 				var value = element.Elements(DefaultNamespace + "Style").SingleOrDefault();
 				if (value == null)
@@ -211,7 +391,7 @@
 		/// </summary>
 		private void MoveUpDictionaryKey()
 		{
-			foreach (var element in Root.DescendantsAndSelf().Where(e => e.Name.LocalName.Contains("..Add")))
+			foreach (var element in Root.DescendantsAndSelf().Where(e => e.Name.LocalName.Contains("...Add")))
 			{
 				var value = element.Elements().Single();
 				var key = value.Elements(value.Name + ".Key").SingleOrDefault();
@@ -268,9 +448,12 @@
 				if (targetType == null)
 					continue;
 
-				foreach (var templateBinding in GetNamedElements(controlTemplate, "TemplateBinding"))
+				foreach (var binding in GetNamedElements(controlTemplate, "Binding"))
 				{
-					var property = templateBinding.Attribute("SourceProperty");
+					if (binding.Attribute("BindingType").Value != "Template")
+						continue;
+
+					var property = binding.Attribute("SourceProperty");
 					if (!property.Value.Contains("."))
 						property.SetValue(String.Format("{0}.{1}", targetType.Value, property.Value));
 				}
@@ -284,16 +467,18 @@
 		/// </summary>
 		private void RewriteTemplateBindings()
 		{
-			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{TemplateBinding")).ToArray())
+			foreach (var bindingElement in Root.DescendantsAndSelf()
+											   .Where(e => !e.Elements().Any() && e.Value.StartsWith("{TemplateBinding"))
+											   .ToArray())
 			{
 				var binding = bindingElement.Value;
 				var regex = new Regex(@"\{TemplateBinding ((Property=(?<property>.*))|(?<property>.*))\}");
 				var match = regex.Match(binding);
 
 				bindingElement.SetValue(String.Empty);
-				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "TemplateBinding",
-												new XAttribute("SourceProperty", match.Groups["property"]),
-												new XAttribute("TargetProperty", bindingElement.Name.LocalName)));
+				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Template"),
+														new XAttribute("SourceProperty", match.Groups["property"] + "Property"),
+														new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
 			}
 		}
 
@@ -302,16 +487,18 @@
 		/// </summary>
 		private void RewriteDynamicResourceBindings()
 		{
-			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{DynamicResource")).ToArray())
+			foreach (var bindingElement in Root.DescendantsAndSelf()
+											   .Where(e => !e.Elements().Any() && e.Value.StartsWith("{DynamicResource"))
+											   .ToArray())
 			{
 				var binding = bindingElement.Value;
 				var regex = new Regex(@"\{DynamicResource ((Key=(?<key>.*))|(?<key>.*))\}");
 				var match = regex.Match(binding);
 
 				bindingElement.SetValue(String.Empty);
-				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "DynamicResourceBinding",
-												new XAttribute("ResourceKey", match.Groups["key"]),
-												new XAttribute("TargetProperty", bindingElement.Name.LocalName)));
+				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "DynamicResource"),
+														new XAttribute("ResourceKey", match.Groups["key"]),
+														new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
 			}
 		}
 
@@ -320,16 +507,18 @@
 		/// </summary>
 		private void RewriteStaticResourceBindings()
 		{
-			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{StaticResource")).ToArray())
+			foreach (var bindingElement in Root.DescendantsAndSelf()
+											   .Where(e => !e.Elements().Any() && e.Value.StartsWith("{StaticResource"))
+											   .ToArray())
 			{
 				var binding = bindingElement.Value;
 				var regex = new Regex(@"\{StaticResource ((ResourceKey=(?<key>.*))|(?<key>.*))\}");
 				var match = regex.Match(binding);
 
 				bindingElement.SetValue(String.Empty);
-				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "StaticResourceBinding",
-												new XAttribute("Key", match.Groups["key"]),
-												new XAttribute("TargetProperty", bindingElement.Name.LocalName)));
+				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "StaticResource"),
+														new XAttribute("ResourceKey", match.Groups["key"]),
+														new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
 			}
 		}
 
@@ -338,16 +527,18 @@
 		/// </summary>
 		private void RewriteDataBindings()
 		{
-			foreach (var bindingElement in Root.DescendantsAndSelf().Where(e => !e.Elements().Any() && e.Value.StartsWith("{Binding")).ToArray())
+			foreach (var bindingElement in Root.DescendantsAndSelf()
+											   .Where(e => !e.Elements().Any() && e.Value.StartsWith("{Binding"))
+											   .ToArray())
 			{
 				var binding = bindingElement.Value;
 				var regex = new Regex(@"\{Binding ((Path=(?<path>.*))|(?<path>.*))\}");
 				var match = regex.Match(binding);
 
 				bindingElement.SetValue(String.Empty);
-				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "DataBinding",
-												new XAttribute("Path", match.Groups["path"]),
-												new XAttribute("TargetProperty", bindingElement.Name.LocalName)));
+				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Data"),
+														new XAttribute("Path", match.Groups["path"]),
+														new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
 			}
 		}
 
@@ -379,23 +570,17 @@
 
 			var property = type.GetProperty(split[1], BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
 			if (property == null)
-				return false;
+			{
+				var field = type.GetField(split[1] + "Property", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+				if (field == null)
+					return false;
+
+				propertyType = field.FieldType.GetGenericArguments()[0];
+				return true;
+			}
 
 			propertyType = property.PropertyType;
 			return true;
-		}
-
-		/// <summary>
-		///   Gets the type of the dependency property.
-		/// </summary>
-		/// <param name="dependencyProperty">The dependency property whose type should be determined.</param>
-		private Type GetPropertyType(string dependencyProperty)
-		{
-			Type propertyType;
-			if (!TryGetPropertyType(dependencyProperty, out propertyType))
-				Log.Die("Property '{0}' could not be found.", dependencyProperty);
-
-			return propertyType;
 		}
 
 		/// <summary>

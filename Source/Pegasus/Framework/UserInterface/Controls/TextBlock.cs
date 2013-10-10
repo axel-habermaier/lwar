@@ -18,7 +18,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 		///   The text content of the text block.
 		/// </summary>
 		public static readonly DependencyProperty<string> TextProperty =
-			new DependencyProperty<string>(affectsMeasure: true, prohibitsAnimations: true);
+			new DependencyProperty<string>(defaultValue: String.Empty, affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
 		///   Initializes a new instance.

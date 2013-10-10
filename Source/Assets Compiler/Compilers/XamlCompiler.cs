@@ -39,9 +39,14 @@ namespace Pegasus.AssetsCompiler.Compilers
 
 			var xamlFile = new XamlFile(asset.SourcePath);
 			var csharpSerializer = new XamlToCSharpSerializer(xamlFile, namespaceName, className);
-
-			buffer.Copy(Encoding.UTF8.GetBytes(XDocument.Parse(xamlFile.Root.ToString()).ToString()));
 			buffer.Copy(Encoding.UTF8.GetBytes(csharpSerializer.GetGeneratedCode()));
+
+			var preprocessedXamlFile = XDocument.Parse(xamlFile.Root.ToString()).ToString();
+			var lines = preprocessedXamlFile.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+			buffer.Copy(Encoding.UTF8.GetBytes(Environment.NewLine + Environment.NewLine));
+			foreach (var line in lines)
+				buffer.Copy(Encoding.UTF8.GetBytes("// " + line + Environment.NewLine));
 		}
 	}
 }

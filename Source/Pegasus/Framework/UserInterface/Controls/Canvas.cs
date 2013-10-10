@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Controls
 {
+	using System;
 	using Math;
 
 	/// <summary>
@@ -36,41 +35,87 @@ namespace Pegasus.Framework.UserInterface.Controls
 			new DependencyProperty<double>(defaultValue: Double.NaN, affectsArrange: true, validationCallback: ValidatePosition);
 
 		/// <summary>
-		///   Gets or sets the distance between the left side of an UI element and its parent Canvas.
+		///   Gets the distance between the left side of the given UI element and its parent Canvas.
 		/// </summary>
-		public double Left
+		/// <param name="element">The element the distance should be returned for.</param>
+		public static double GetLeft(UIElement element)
 		{
-			get { return GetValue(LeftProperty); }
-			set { SetValue(LeftProperty, value); }
+			Assert.ArgumentNotNull(element);
+			return element.GetValue(LeftProperty);
 		}
 
 		/// <summary>
-		///   Gets or sets the distance between the right side of an UI element and its parent Canvas. If the Left property is also
-		///   set, the Right value is ignored.
+		///   Sets the distance between the left side of the given UI element and its parent Canvas.
 		/// </summary>
-		public double Right
+		/// <param name="element">The element the distance should be set for.</param>
+		/// <param name="distance">The distance that should be set.</param>
+		public static void SetLeft(UIElement element, double distance)
 		{
-			get { return GetValue(RightProperty); }
-			set { SetValue(RightProperty, value); }
+			Assert.ArgumentNotNull(element);
+			element.SetValue(LeftProperty, distance);
 		}
 
 		/// <summary>
-		///   Gets or sets the distance between the top of an UI element and its parent Canvas.
+		///   Gets the distance between the right side of the given UI element and its parent Canvas.
 		/// </summary>
-		public double Top
+		/// <param name="element">The element the distance should be returned for.</param>
+		public static double GetRight(UIElement element)
 		{
-			get { return GetValue(TopProperty); }
-			set { SetValue(TopProperty, value); }
+			Assert.ArgumentNotNull(element);
+			return element.GetValue(RightProperty);
 		}
 
 		/// <summary>
-		///   Gets or sets the distance between the bottom of an UI element and its parent Canvas. If the Top property is also set,
-		///   the Bottom value is ignored.
+		///   Sets the distance between the right side of the given UI element and its parent Canvas.
 		/// </summary>
-		public double Bottom
+		/// <param name="element">The element the distance should be set for.</param>
+		/// <param name="distance">The distance that should be set.</param>
+		public static void SetRight(UIElement element, double distance)
 		{
-			get { return GetValue(BottomProperty); }
-			set { SetValue(BottomProperty, value); }
+			Assert.ArgumentNotNull(element);
+			element.SetValue(RightProperty, distance);
+		}
+
+		/// <summary>
+		///   Gets the distance between the top of the given UI element and its parent Canvas.
+		/// </summary>
+		/// <param name="element">The element the distance should be returned for.</param>
+		public static double GetTop(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			return element.GetValue(TopProperty);
+		}
+
+		/// <summary>
+		///   Sets the distance between the left side of the given UI element and its parent Canvas.
+		/// </summary>
+		/// <param name="element">The element the distance should be set for.</param>
+		/// <param name="distance">The distance that should be set.</param>
+		public static void SetTop(UIElement element, double distance)
+		{
+			Assert.ArgumentNotNull(element);
+			element.SetValue(TopProperty, distance);
+		}
+
+		/// <summary>
+		///   Gets the distance between the bottom of the given UI element and its parent Canvas.
+		/// </summary>
+		/// <param name="element">The element the distance should be returned for.</param>
+		public static double GetBottom(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			return element.GetValue(BottomProperty);
+		}
+
+		/// <summary>
+		///   Sets the distance between the bottom of the given UI element and its parent Canvas.
+		/// </summary>
+		/// <param name="element">The element the distance should be set for.</param>
+		/// <param name="distance">The distance that should be set.</param>
+		public static void SetBottom(UIElement element, double distance)
+		{
+			Assert.ArgumentNotNull(element);
+			element.SetValue(BottomProperty, distance);
 		}
 
 		/// <summary>

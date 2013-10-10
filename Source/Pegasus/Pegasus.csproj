@@ -206,6 +206,8 @@
     <Compile Include="Framework\UserInterface\HorizontalAlignment.cs" />
     <Compile Include="Framework\UserInterface\ResourceKeyChangedHandlers.cs" />
     <Compile Include="Framework\UserInterface\TemplateBinding.cs" />
+    <Compile Include="Framework\UserInterface\TextOptions.cs" />
+    <Compile Include="Framework\UserInterface\TextRenderingMode.cs" />
     <Compile Include="Framework\UserInterface\Thickness.cs" />
     <Compile Include="Framework\UserInterface\UIContext.cs" />
     <Compile Include="Framework\UserInterface\VerticalAlignment.cs" />

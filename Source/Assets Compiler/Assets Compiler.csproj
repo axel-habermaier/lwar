@@ -362,6 +362,8 @@
     <Compile Include="UserInterface\Setter.cs" />
     <Compile Include="UserInterface\Style.cs" />
     <Compile Include="UserInterface\VerticalAlignment.cs" />
+    <Compile Include="Xaml\XamlLiteral.cs" />
+    <Compile Include="Xaml\XamlTypeConverter.cs" />
     <Compile Include="Xaml\XamlNamespace.cs" />
     <Compile Include="Xaml\XamlFile.cs" />
     <Compile Include="Xaml\XamlToCSharpSerializer.cs" />

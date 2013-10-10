@@ -3,6 +3,7 @@
 	using System;
 	using System.Net;
 	using Assets;
+	using Assets.UserInterface;
 	using Network;
 	using Pegasus;
 	using Pegasus.Framework;

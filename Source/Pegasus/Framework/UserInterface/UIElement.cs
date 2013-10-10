@@ -56,12 +56,6 @@
 			new DependencyProperty<bool>(defaultValue: false, affectsMeasure: true, inherits: true);
 
 		/// <summary>
-		///   Indicates whether an aliased font is used for text rendering by the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<bool> FontAliasedProperty =
-			new DependencyProperty<bool>(defaultValue: false, affectsMeasure: true, inherits: true);
-
-		/// <summary>
 		///   Indicates whether the mouse is currently hovering the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<bool> IsMouseOverProperty =
@@ -173,7 +167,7 @@
 			AddChangedHandler(FontSizeProperty, (o, e) => _cachedFont = null);
 			AddChangedHandler(FontBoldProperty, (o, e) => _cachedFont = null);
 			AddChangedHandler(FontItalicProperty, (o, e) => _cachedFont = null);
-			AddChangedHandler(FontAliasedProperty, (o, e) => _cachedFont = null);
+			AddChangedHandler(TextOptions.TextRenderingModeProperty, (o, e) => _cachedFont = null);
 		}
 
 		/// <summary>
@@ -237,15 +231,6 @@
 		{
 			get { return GetValue(FontItalicProperty); }
 			set { SetValue(FontItalicProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets a value indicating whether an aliased font is used for text rendering by the UI element.
-		/// </summary>
-		public bool FontAliased
-		{
-			get { return GetValue(FontAliasedProperty); }
-			set { SetValue(FontAliasedProperty, value); }
 		}
 
 		/// <summary>
@@ -417,7 +402,8 @@
 					if (!TryFindResource(typeof(IFontLoader), out fontLoader))
 						Log.Die("Unable to find a font cache in the UI element's resources.");
 
-					_cachedFont = fontLoader.LoadFont(FontFamily, FontSize, FontBold, FontItalic, FontAliased);
+					var aliased = TextOptions.GetTextRenderingMode(this) == TextRenderingMode.Aliased;
+					_cachedFont = fontLoader.LoadFont(FontFamily, FontSize, FontBold, FontItalic, aliased);
 				}
 
 				return _cachedFont;
