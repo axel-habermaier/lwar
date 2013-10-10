@@ -12,12 +12,6 @@
 	public class Border : UIElement
 	{
 		/// <summary>
-		///   The padding of the border.
-		/// </summary>
-		public static readonly DependencyProperty<Thickness> PaddingProperty =
-			new DependencyProperty<Thickness>(affectsMeasure: true);
-
-		/// <summary>
 		///   The UI element that is decorated by the border.
 		/// </summary>
 		public static readonly DependencyProperty<UIElement> ChildProperty =
@@ -35,15 +29,6 @@
 		public Border()
 		{
 			AddChangedHandler(ChildProperty, OnChildChanged);
-		}
-
-		/// <summary>
-		///   Gets or sets the padding of the border.
-		/// </summary>
-		public Thickness Padding
-		{
-			get { return GetValue(PaddingProperty); }
-			set { SetValue(PaddingProperty, value); }
 		}
 
 		/// <summary>
