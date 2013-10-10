@@ -719,16 +719,36 @@
 		/// </remarks>
 		public void Arrange(RectangleD finalRect)
 		{
+			var horizontalAlignment = HorizontalAlignment;
+			var verticalAlignment = VerticalAlignment;
+
 			var availableSize = DecreaseByMargin(finalRect.Size);
-			var width = Math.Min(_desiredSize.Width, availableSize.Width);
-			var height = Math.Min(_desiredSize.Height, availableSize.Height);
+			var desiredSize = DecreaseByMargin(_desiredSize);
+
+			var width = Math.Min(desiredSize.Width, availableSize.Width);
+			var height = Math.Min(desiredSize.Height, availableSize.Height);
+
+			if (horizontalAlignment == HorizontalAlignment.Stretch)
+				width = availableSize.Width;
+
+			if (verticalAlignment == VerticalAlignment.Stretch)
+				height = availableSize.Height;
+
+			if (!Double.IsNaN(Width))
+				width = Width;
+
+			if (!Double.IsNaN(Height))
+				height = Height;
+
+			width = MathUtils.Clamp(width, MinWidth, MaxWidth);
+			height = MathUtils.Clamp(height, MinHeight, MaxHeight);
 
 			var size = ArrangeCore(new SizeD(width, height));
 
-			if (HorizontalAlignment == HorizontalAlignment.Stretch)
+			if (horizontalAlignment == HorizontalAlignment.Stretch)
 				size.Width = availableSize.Width;
 
-			if (VerticalAlignment == VerticalAlignment.Stretch)
+			if (verticalAlignment == VerticalAlignment.Stretch)
 				size.Height = availableSize.Height;
 
 			if (!Double.IsNaN(Width))
@@ -770,10 +790,12 @@
 
 			switch (HorizontalAlignment)
 			{
-				case HorizontalAlignment.Center:
-					offset.X = (availableSize.Width - margin.Left - margin.Right - RenderSize.Width) / 2 + margin.Left - margin.Right;
-					break;
 				case HorizontalAlignment.Stretch:
+					offset.X = margin.Left;
+					break;
+				case HorizontalAlignment.Center:
+					offset.X = (availableSize.Width - RenderSize.Width + margin.Left - margin.Right) / 2;
+					break;
 				case HorizontalAlignment.Left:
 					offset.X = margin.Left;
 					break;
@@ -786,10 +808,12 @@
 
 			switch (VerticalAlignment)
 			{
-				case VerticalAlignment.Center:
-					offset.Y = (availableSize.Height - margin.Top - margin.Bottom - RenderSize.Height) / 2 + margin.Top - margin.Bottom;
-					break;
 				case VerticalAlignment.Stretch:
+					offset.Y = margin.Top;
+					break;
+				case VerticalAlignment.Center:
+					offset.Y = (availableSize.Height - RenderSize.Height + margin.Top - margin.Bottom) / 2;
+					break;
 				case VerticalAlignment.Top:
 					offset.Y = margin.Top;
 					break;

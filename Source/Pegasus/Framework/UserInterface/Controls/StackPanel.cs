@@ -78,8 +78,6 @@ namespace Pegasus.Framework.UserInterface.Controls
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{
 			var isHorizontallyOriented = Orientation == Orientation.Horizontal;
-
-			var rect = new RectangleD(0, 0, finalSize);
 			var offset = 0.0;
 
 			// Arrange the children such that they're stacked either horizontally or vertically
@@ -87,20 +85,14 @@ namespace Pegasus.Framework.UserInterface.Controls
 			{
 				if (isHorizontallyOriented)
 				{
-					rect.Left += offset;
-					offset = child.DesiredSize.Width;
-					rect.Width = offset;
-					rect.Height = Math.Max(finalSize.Height, child.DesiredSize.Height);
+					child.Arrange(new RectangleD(offset, 0, child.DesiredSize.Width, finalSize.Height));
+					offset += child.DesiredSize.Width;
 				}
 				else
 				{
-					rect.Top += offset;
-					offset = child.DesiredSize.Height;
-					rect.Height = offset;
-					rect.Width = Math.Max(finalSize.Width, child.DesiredSize.Width);
+					child.Arrange(new RectangleD(0, offset, finalSize.Width, child.DesiredSize.Height));
+					offset += child.DesiredSize.Height;
 				}
-
-				child.Arrange(rect);
 			}
 
 			return finalSize;
