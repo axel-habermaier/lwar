@@ -1,23 +1,21 @@
-﻿namespace Lwar
+﻿using System;
+
+namespace Lwar
 {
-	using System;
 	using System.Net;
-	using Assets;
-	//using Assets.UserInterface;
 	using Network;
 	using Pegasus;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Scripting;
+	using UserInterface;
 
 	/// <summary>
 	///   Represents the lwar application.
 	/// </summary>
-	public sealed partial class LwarApplication : Application
+	public sealed partial class App
 	{
 		/// <summary>
 		///   The local game server that can be used to hosts game sessions locally.
@@ -52,8 +50,8 @@
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
-			//var uc1 = new UserControl1();
-			//Add(uc1);
+			var uc1 = new UserControl1();
+			Add(uc1);
 		}
 
 		/// <summary>

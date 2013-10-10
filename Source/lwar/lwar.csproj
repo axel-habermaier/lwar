@@ -18,6 +18,7 @@
     <SccProvider>SubversionScc</SccProvider>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
+    <ExpressionBlendVersion>5.0.40218.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -209,8 +210,8 @@
     <Compile Include="Gameplay\EventType.cs" />
     <Compile Include="Gameplay\InterpolatedValue.cs" />
     <Compile Include="InputLayers.cs" />
-    <Compile Include="LwarApplication.xaml.cs">
-      <DependentUpon>LwarApplication.xaml</DependentUpon>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Network\LeaveReason.cs" />
     <Compile Include="Network\Messages\AddMessage.cs" />
@@ -300,13 +301,22 @@
     <Compile Include="Rendering\RenderContext.cs" />
     <Compile Include="Rendering\Renderers\ShipRenderer.cs" />
     <Compile Include="Gameplay\Entities\IEntity.cs" />
-    <Compile Include="LwarApplication.cs" />
+    <Compile Include="App.cs" />
     <Compile Include="Gameplay\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gameplay\Entities\Planet.cs" />
     <Compile Include="Rendering\Renderers\SkyBoxRenderer.cs" />
+    <Compile Include="UserInterface\Styles\CheckBoxStyle.xaml.cs">
+      <DependentUpon>CheckBoxStyle.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\UserControl2.xaml.cs">
       <DependentUpon>UserControl2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\UserControl1.xaml.cs">
+      <DependentUpon>UserControl1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\Styles\ButtonStyle.xaml.cs">
+      <DependentUpon>ButtonStyle.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -331,13 +341,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="UserInterface\Styles\ButtonStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Styles\CheckBoxStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserInterface\UserControl1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="LwarApplication.xaml">
+    <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

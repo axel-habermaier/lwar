@@ -11,6 +11,7 @@
 	using Framework;
 	using Framework.UserInterface;
 	using Framework.UserInterface.Controls;
+	using Mono.Cecil;
 	using Platform.Logging;
 
 	/// <summary>
@@ -82,6 +83,15 @@
 		/// </summary>
 		private void Transform()
 		{
+			var baseType = GetClrType(Root.Name);
+			if (baseType == typeof(ResourceDictionary))
+			{
+				Root = null;
+				return;
+			}
+
+			InlineMergedResourceDictionaries();
+
 			TrimElementLiterals();
 			RemoveIgnorableElements();
 			AddImplicitContentElements();
@@ -92,6 +102,7 @@
 			AddImplicitStyleKeys();
 			MoveUpDictionaryKey();
 			MoveUpExplicitNames();
+			RemoveDuplicatedResourceKeys();
 
 			RewriteTemplateBindings();
 			RewriteDynamicResourceBindings();
@@ -112,6 +123,45 @@
 			ResolveTypes();
 
 			RewriteControlTemplateInstantiations(Root);
+		}
+
+		/// <summary>
+		/// Removes duplicated resources from resource dictionaries. The last resource is kept, in accordance with the WPF resource lookup specification.
+		/// </summary>
+		private void RemoveDuplicatedResourceKeys()
+		{
+			foreach (var resourceDictionary in Root.DescendantsAndSelf().Where(e=>e.Name.LocalName.EndsWith("...Add")).GroupBy(e=>e.Name))
+			{
+				var resources = new Dictionary<string, XElement>();
+				foreach (var resource in resourceDictionary)
+				{
+					var key = resource.Attribute("Key").Value;
+
+					if (resources.ContainsKey(key))
+						resources[key].Remove();
+
+					resources[key] = resource;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Inlines merged dictionary files.
+		/// </summary>
+		private void InlineMergedResourceDictionaries()
+		{
+			foreach (var merge in GetNamedElements(Root, "ResourceDictionary.MergedDictionaries").ToArray())
+			{
+				foreach (var dictionary in merge.Elements(DefaultNamespace + "ResourceDictionary").ToArray())
+				{
+					var source = dictionary.Attribute("Source").Value;
+					var content = XElement.Parse(File.ReadAllText(Path.Combine(Configuration.SourceDirectory, source)));
+
+					dictionary.ReplaceWith(content.Elements());
+				}
+
+				merge.Parent.ReplaceWith(merge.Elements());
+			}
 		}
 
 		/// <summary>

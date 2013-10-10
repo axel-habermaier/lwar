@@ -67,6 +67,7 @@ namespace Pegasus.Framework.UserInterface
 		/// <param name="resource">The resource that should be added.</param>
 		public void Add(object key, object resource)
 		{
+			Assert.That(!_dictionary.ContainsKey(key), "A resource with key '{0}' already exists.", key);
 			_dictionary.Add(key, resource);
 
 			var sealable = resource as ISealable;

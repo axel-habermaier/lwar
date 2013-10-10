@@ -27,7 +27,7 @@ namespace Pegasus.Rendering
 		EffectTechnique Technique { get; }
 
 		/// <summary>
-		///   Initializes the sprite effect adapter.
+		///   Initializes the sprite effect.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>

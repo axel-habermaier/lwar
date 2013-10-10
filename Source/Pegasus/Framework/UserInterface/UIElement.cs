@@ -385,7 +385,7 @@
 				{
 					IFontLoader fontLoader;
 					if (!TryFindResource(typeof(IFontLoader), out fontLoader))
-						Log.Die("Unable to find a font cache in the UI element's resources.");
+						Log.Die("Unable to find a font loader implementing '{0}' in the UI element's resources.", typeof(IFontLoader).FullName);
 
 					var aliased = TextOptions.GetTextRenderingMode(this) == TextRenderingMode.Aliased;
 					_cachedFont = fontLoader.LoadFont(FontFamily, FontSize, FontBold, FontItalic, aliased);

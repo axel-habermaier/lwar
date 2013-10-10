@@ -26,11 +26,9 @@ namespace Pegasus.Framework
 		/// </summary>
 		/// <param name="appName">The name of the application.</param>
 		/// <param name="defaultFont">The default font that is used to draw the console and the statistics.</param>
-		/// <param name="spriteEffect">The sprite effect that should be used to draw the console and the statistics.</param>
-		public static void Run(string appName, AssetIdentifier<Font> defaultFont, ISpriteEffect spriteEffect)
+		public static void Run(string appName, AssetIdentifier<Font> defaultFont)
 		{
 			Assert.ArgumentNotNullOrWhitespace(appName);
-			Assert.ArgumentNotNull(spriteEffect);
 
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -58,7 +56,7 @@ namespace Pegasus.Framework
 						CvarRegistry.ExecuteDeferredUpdates();
 
 						var app = new TApp();
-						app.Run(logFile, appName, defaultFont, spriteEffect);
+						app.Run(logFile, appName, defaultFont);
 
 						Commands.Persist(ConfigurationFile.AutoExec);
 					}

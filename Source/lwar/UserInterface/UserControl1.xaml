@@ -6,23 +6,9 @@
              FontFamily="Liberation Mono" 
              FontSize="11" 
              TextOptions.TextRenderingMode="Aliased">
-	<UserControl.Resources>
-		<Style TargetType="Button">
-            <Setter Property="Control.Foreground" Value="Yellow"></Setter>
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-						<Border Background="{TemplateBinding Background}">
-							<ContentPresenter Content="{TemplateBinding Content}"></ContentPresenter>
-						</Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style> 
-	</UserControl.Resources>
     <Canvas>
 		<Border Background="Red"><TextBlock Margin="18,31,0,15" Foreground="#FF1AA6E8" Background="#FFBD4C0B">Hallo</TextBlock></Border>
-        <Button Content="Hallo Welt Button" Canvas.Top="149.333" Canvas.Left="181.999" Background="#FFD60707">
+        <Button Style="{StaticResource Special}" Content="Hallo Welt Button" Canvas.Top="149.333" Canvas.Left="181.999" Background="#FFD60707">
         </Button>
         <Border Background="Red" Canvas.Left="155.333" Canvas.Top="30" Height="85" Width="128.333"><TextBlock Margin="50,31,0,15" Foreground="#FF1AA6E8" Background="#FFE07234" Text="ABC"/></Border>
         <Border Background="Red" Canvas.Top="73.333" Margin="7,0,0,0"><TextBlock Margin="42,31,0,15" Foreground="#FF1AA6E8" Background="#FFC36A37">DEF</TextBlock></Border>

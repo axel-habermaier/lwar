@@ -32,9 +32,12 @@ namespace Pegasus.AssetsCompiler.Compilers
 		protected override void Compile(XamlAsset asset, BufferWriter buffer)
 		{
 			var className = Path.GetFileNameWithoutExtension(asset.RelativePath);
-			var namespaceName = Path.GetDirectoryName(asset.RelativePath).Replace("/", ".");
+			var namespaceName = Path.GetDirectoryName(asset.RelativePath).Replace("/", ".").Replace("\\", ".");
 
 			var xamlFile = new XamlFile(asset.SourcePath);
+			if (xamlFile.Root == null)
+				return;
+
 			var csharpSerializer = new XamlToCSharpSerializer(xamlFile, namespaceName, className);
 			buffer.Copy(Encoding.UTF8.GetBytes(csharpSerializer.GetGeneratedCode()));
 

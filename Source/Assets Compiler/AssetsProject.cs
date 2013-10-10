@@ -47,7 +47,7 @@ namespace Pegasus.AssetsCompiler
 			_document = XDocument.Load(projectFile);
 			_projectFile = _document.Root;
 
-			SourceDirectory = Path.GetDirectoryName(projectFile);
+			SourceDirectory = Path.GetFullPath(Path.GetDirectoryName(projectFile));
 			TempDirectory = Path.Combine(SourceDirectory, "obj");
 			TargetDirectory = Environment.CurrentDirectory;
 		}

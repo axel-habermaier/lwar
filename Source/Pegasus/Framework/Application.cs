@@ -2,6 +2,7 @@
 
 namespace Pegasus.Framework
 {
+	using System.Linq;
 	using System.Threading;
 	using Math;
 	using Platform;
@@ -94,8 +95,7 @@ namespace Pegasus.Framework
 		/// <param name="logFile">The log file that writes all generated log entries to the file system.</param>
 		/// <param name="appName">The name of the application.</param>
 		/// <param name="defaultFont">The default font that is used to draw the console and the statistics.</param>
-		/// <param name="spriteEffect">The sprite effect that should be used to draw the console and the statistics.</param>
-		internal void Run(LogFile logFile, string appName, AssetIdentifier<Font> defaultFont, ISpriteEffect spriteEffect)
+		internal void Run(LogFile logFile, string appName, AssetIdentifier<Font> defaultFont)
 		{
 			Assert.ArgumentNotNull(logFile);
 
@@ -114,11 +114,11 @@ namespace Pegasus.Framework
 			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
 			{
 				window.Title = appName;
-				spriteEffect.Initialize(graphicsDevice, assets);
+				InitializeFontLoader(assets);
 
 				var font = assets.LoadFont(defaultFont);
 				using (var statistics = new DebugOverlay(graphicsDevice, font))
-				using (spriteEffect)
+				using (var spriteEffect = InitializeSpriteEffect(graphicsDevice, assets))
 				using (var spriteBatch = new SpriteBatch(graphicsDevice, spriteEffect))
 				using (var console = new Console(graphicsDevice, inputDevice, font, appName))
 				{
@@ -158,7 +158,7 @@ namespace Pegasus.Framework
 
 						// Update the application logic
 						Update();
-						
+
 						// Update the user interface
 						var size = new SizeD(window.Width, window.Height);
 						_canvas.Measure(size);
@@ -232,6 +232,43 @@ namespace Pegasus.Framework
 				return false;
 
 			return true;
+		}
+
+		/// <summary>
+		///   Initializes the font loader instance.
+		/// </summary>
+		/// <param name="assets">The assets manager that should be used to load the fonts.</param>
+		private void InitializeFontLoader(AssetsManager assets)
+		{
+			var fontLoaderType = (from a in AppDomain.CurrentDomain.GetAssemblies()
+								  from t in a.GetTypes()
+								  where typeof(IFontLoader).IsAssignableFrom(t) && !t.IsAbstract && t.IsClass
+								  select t).SingleOrDefault();
+
+			if (fontLoaderType == null)
+				Log.Die("Unable to find an implementation of '{0}' or multiple implementations were found.", typeof(IFontLoader));
+
+			_canvas.Resources[typeof(IFontLoader)] = Activator.CreateInstance(fontLoaderType, assets);
+		}
+
+		/// <summary>
+		///   Initializes the sprite effect.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
+		/// <param name="assets">The assets manager that should be used to load required assets.</param>
+		private static ISpriteEffect InitializeSpriteEffect(GraphicsDevice graphicsDevice, AssetsManager assets)
+		{
+			var spriteEffectType = (from a in AppDomain.CurrentDomain.GetAssemblies()
+									from t in a.GetTypes()
+									where typeof(ISpriteEffect).IsAssignableFrom(t) && !t.IsAbstract && t.IsClass
+									select t).SingleOrDefault();
+
+			if (spriteEffectType == null)
+				Log.Die("Unable to find an implementation of '{0}' or multiple implementations were found.", typeof(ISpriteEffect));
+
+			var spriteEffect = (ISpriteEffect)Activator.CreateInstance(spriteEffectType);
+			spriteEffect.Initialize(graphicsDevice, assets);
+			return spriteEffect;
 		}
 	}
 }

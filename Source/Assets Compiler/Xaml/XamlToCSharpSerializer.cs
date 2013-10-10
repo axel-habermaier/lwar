@@ -4,6 +4,7 @@
 	using System.Linq;
 	using System.Xml.Linq;
 	using CodeGeneration;
+	using Framework.UserInterface;
 	using Platform.Logging;
 
 	/// <summary>
@@ -50,7 +51,8 @@
 
 			_writer.AppendBlockStatement(() =>
 			{
-				_writer.AppendLine("public partial class {0} : {1}", className, Type.GetType(_xamlRoot.Attribute("Type").Value).Name);
+				var baseType = Type.GetType(_xamlRoot.Attribute("Type").Value);
+				_writer.AppendLine("public partial class {0} : {1}", className, baseType.Name);
 				_writer.AppendBlockStatement(() =>
 				{
 					_writer.AppendLine("public {0}()", className);
