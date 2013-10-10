@@ -27,6 +27,6 @@
         <Border Background="Red" Canvas.Left="155.333" Canvas.Top="30" Height="85" Width="128.333"><TextBlock Margin="50,31,0,15" Foreground="#FF1AA6E8" Background="#FFE07234" Text="ABC"/></Border>
         <Border Background="Red" Canvas.Top="73.333" Margin="7,0,0,0"><TextBlock Margin="42,31,0,15" Foreground="#FF1AA6E8" Background="#FFC36A37">DEF</TextBlock></Border>
         <Border Background="Red" Canvas.Left="34" Canvas.Top="164.666" Padding="8,0,0,8"><TextBlock Foreground="#FF1AA6E8" Text="Padded" Background="#FFC14905"/></Border>
-        <Border Background="Red" Canvas.Top="195.999" Canvas.Left="191.666" Height="31.127" Width="71.6"><TextBlock Foreground="#FF1AA6E8" Background="#FFC36A37" Text="Center" VerticalAlignment="Top" Margin="24,0,0,0"/></Border>
+        <Border Background="Red" Canvas.Top="195" Canvas.Left="191" Height="31" Width="71"><TextBlock Foreground="#FF1AA6E8" Background="#FFC36A37" Text="Center" Margin="0,6,0,0" HorizontalAlignment="Right"/></Border>
     </Canvas>
 </UserControl>

@@ -766,18 +766,19 @@
 		private Vector2d ComputeAlignmentOffset(SizeD availableSize)
 		{
 			var offset = Vector2d.Zero;
+			var margin = Margin;
 
 			switch (HorizontalAlignment)
 			{
 				case HorizontalAlignment.Center:
-					offset.X = (availableSize.Width - Margin.Left - Margin.Right - RenderSize.Width) / 2 + Margin.Left - Margin.Right;
+					offset.X = (availableSize.Width - margin.Left - margin.Right - RenderSize.Width) / 2 + margin.Left - margin.Right;
 					break;
 				case HorizontalAlignment.Stretch:
 				case HorizontalAlignment.Left:
-					offset.X = Margin.Left;
+					offset.X = margin.Left;
 					break;
 				case HorizontalAlignment.Right:
-					offset.X = availableSize.Width - RenderSize.Width - Margin.Right;
+					offset.X = availableSize.Width - RenderSize.Width - margin.Right;
 					break;
 				default:
 					throw new InvalidOperationException("Unexpected alignment.");
@@ -786,14 +787,14 @@
 			switch (VerticalAlignment)
 			{
 				case VerticalAlignment.Center:
-					offset.Y = (availableSize.Height - RenderSize.Height) / 2 + Margin.Top - Margin.Bottom;
+					offset.Y = (availableSize.Height - margin.Top - margin.Bottom - RenderSize.Height) / 2 + margin.Top - margin.Bottom;
 					break;
 				case VerticalAlignment.Stretch:
 				case VerticalAlignment.Top:
-					offset.Y = Margin.Top;
+					offset.Y = margin.Top;
 					break;
 				case VerticalAlignment.Bottom:
-					offset.Y = availableSize.Height - RenderSize.Height - Margin.Bottom;
+					offset.Y = availableSize.Height - RenderSize.Height - margin.Bottom;
 					break;
 				default:
 					throw new InvalidOperationException("Unexpected alignment.");
