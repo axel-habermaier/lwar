@@ -210,7 +210,6 @@
     <Compile Include="Framework\UserInterface\TextOptions.cs" />
     <Compile Include="Framework\UserInterface\TextRenderingMode.cs" />
     <Compile Include="Framework\UserInterface\Thickness.cs" />
-    <Compile Include="Framework\UserInterface\UIContext.cs" />
     <Compile Include="Framework\UserInterface\VerticalAlignment.cs" />
     <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Platform\Network\MulticastSocket.cs" />

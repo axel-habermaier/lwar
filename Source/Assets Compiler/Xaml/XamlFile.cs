@@ -624,10 +624,10 @@
 									where GetXamlNamespaces(element.Name).Any(n => n.Ignored)
 									select element;
 
-			foreach (var ignorable in ignorableAttributes)
+			foreach (var ignorable in ignorableAttributes.ToArray())
 				ignorable.Remove();
 
-			foreach (var ignorable in ignorableElements)
+			foreach (var ignorable in ignorableElements.ToArray())
 				ignorable.Remove();
 		}
 
@@ -777,6 +777,7 @@
 
 			_namespaceMap.Add("http://schemas.microsoft.com/winfx/2006/xaml/presentation", new[]
 			{
+				new XamlNamespace("Pegasus.Framework", typeof(UIElement).Assembly.FullName),
 				new XamlNamespace("Pegasus.Framework.UserInterface", typeof(UIElement).Assembly.FullName),
 				new XamlNamespace("Pegasus.Framework.UserInterface.Controls", typeof(UIElement).Assembly.FullName)
 			});

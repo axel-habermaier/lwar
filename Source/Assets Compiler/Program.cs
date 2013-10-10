@@ -49,7 +49,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Writes a colored message to the console, ensuring that the color is reset afterwards.
+		///   Writes a colored message to the console, ensuring that the color is reset.
 		/// </summary>
 		/// <param name="color">The color of the message.</param>
 		/// <param name="action">Writes the message to the console.</param>
@@ -81,16 +81,22 @@ namespace Pegasus.AssetsCompiler
 				Log.Info("Pegasus Asset Compiler ({0} x{1})", PlatformInfo.Platform, IntPtr.Size == 4 ? "86" : "64");
 
 				Console.WriteLine();
-				var command = args.Length == 1 ? args[0].Trim().ToLower() : String.Empty;
+				var command = args.Length >= 1 ? args[0].Trim().ToLower() : String.Empty;
 				var recompile = command == "recompile";
 				var compile = command == "compile";
 				var clean = command == "clean";
+				var ui = command == "ui";
+				var project = args.Length >= 2 ? args[1].Trim() : String.Empty;
 
-				if (!recompile && !clean && !compile)
+				if (String.IsNullOrWhiteSpace(project) || (!recompile && !clean && !compile && !ui))
 				{
-					Log.Error("The asset compiler must be invoked with exactly one argument: 'clean', 'compile', or 'recompile'.");
+					Log.Error("The asset compiler must be invoked with two arguments: the 'ui', 'clean', 'compile', or "+
+						"'recompile' command followed by the path to the assets project that should be compiled.");
 					return -1;
 				}
+
+				Configuration.XamlFilesOnly = ui;
+				Configuration.AssetsProjectPath = project;
 
 				if (recompile)
 				{
@@ -108,7 +114,7 @@ namespace Pegasus.AssetsCompiler
 					if (clean)
 						compilationUnit.Clean();
 
-					if (compile)
+					if (compile || ui)
 						success = compilationUnit.Compile();
 
 					var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;

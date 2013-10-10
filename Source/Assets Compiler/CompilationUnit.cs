@@ -30,7 +30,10 @@ namespace Pegasus.AssetsCompiler
 			var attributes = Configuration.AssetListAssembly.GetCustomAttributes(false).OfType<AssetAttribute>().ToArray();
 
 			var assets = CreateAssets(assetNames, attributes).ToArray();
-			assets = ValidateAssets(assets, assetNames).ToArray();
+			if (Configuration.XamlFilesOnly)
+				assets = assets.OfType<XamlAsset>().ToArray();
+			else
+				assets = ValidateAssets(assets, assetNames).ToArray();
 
 			_assets.AddRange(assets);
 		}
@@ -113,10 +116,13 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		public bool Compile()
 		{
-			var compilers = CreateTypeInstances<IAssetCompiler>();
+				var compilers = CreateTypeInstances<IAssetCompiler>();
 
 			try
 			{
+				if (Configuration.XamlFilesOnly)
+					return compilers.OfType<XamlCompiler>().Single().Compile(_assets);
+
 				var success = true;
 
 				foreach (var compiler in compilers)

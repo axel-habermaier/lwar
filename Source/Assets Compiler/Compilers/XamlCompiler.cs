@@ -17,12 +17,12 @@ namespace Pegasus.AssetsCompiler.Compilers
 	internal class XamlCompiler : AssetCompiler<XamlAsset>
 	{
 		//// TODO: REMOVE
-		//public override bool Compile(IEnumerable<Asset> assets)
-		//{
-		//	foreach (var xaml in assets.OfType<XamlAsset>())
-		//		File.Delete(xaml.HashPath);
-		//	return base.Compile(assets);
-		//}
+		public override bool Compile(IEnumerable<Asset> assets)
+		{
+			foreach (var xaml in assets.OfType<XamlAsset>())
+				File.Delete(xaml.HashPath);
+			return base.Compile(assets);
+		}
 
 		/// <summary>
 		///   Compiles the asset.
@@ -32,9 +32,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		protected override void Compile(XamlAsset asset, BufferWriter buffer)
 		{
 			var className = Path.GetFileNameWithoutExtension(asset.RelativePath);
-			var namespaceName = asset.RelativePath
-									 .Substring(0, asset.RelativePath.Length - asset.FileName.Length - 1)
-									 .Replace("/", ".");
+			var namespaceName = Path.GetDirectoryName(asset.RelativePath).Replace("/", ".");
 
 			var xamlFile = new XamlFile(asset.SourcePath);
 			var csharpSerializer = new XamlToCSharpSerializer(xamlFile, namespaceName, className);

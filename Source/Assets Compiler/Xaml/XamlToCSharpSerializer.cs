@@ -30,7 +30,7 @@
 		public XamlToCSharpSerializer(XamlFile xamlFile, string namespaceName, string className)
 		{
 			Assert.ArgumentNotNull(xamlFile);
-			Assert.ArgumentNotNullOrWhitespace(namespaceName);
+			Assert.ArgumentNotNull(namespaceName);
 			Assert.ArgumentNotNullOrWhitespace(className);
 
 			_xamlRoot = xamlFile.Root;
@@ -43,10 +43,14 @@
 				_writer.AppendLine("using {0};", xamlNamespace);
 			_writer.Newline();
 
-			_writer.AppendLine("namespace {0}.{1}", Configuration.AssetsProject.RootNamespace, namespaceName);
+			if (String.IsNullOrWhiteSpace(namespaceName))
+				_writer.AppendLine("namespace {0}", Configuration.AssetsProject.RootNamespace);
+			else
+				_writer.AppendLine("namespace {0}.{1}", Configuration.AssetsProject.RootNamespace, namespaceName);
+
 			_writer.AppendBlockStatement(() =>
 			{
-				_writer.AppendLine("public class {0} : {1}", className, Type.GetType(_xamlRoot.Attribute("Type").Value).Name);
+				_writer.AppendLine("public partial class {0} : {1}", className, Type.GetType(_xamlRoot.Attribute("Type").Value).Name);
 				_writer.AppendBlockStatement(() =>
 				{
 					_writer.AppendLine("public {0}()", className);

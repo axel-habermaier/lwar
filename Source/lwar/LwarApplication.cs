@@ -3,7 +3,7 @@
 	using System;
 	using System.Net;
 	using Assets;
-	using Assets.UserInterface;
+	//using Assets.UserInterface;
 	using Network;
 	using Pegasus;
 	using Pegasus.Framework;
@@ -17,7 +17,7 @@
 	/// <summary>
 	///   Represents the lwar application.
 	/// </summary>
-	internal sealed class LwarApplication : Application
+	public sealed partial class LwarApplication : Application
 	{
 		/// <summary>
 		///   The local game server that can be used to hosts game sessions locally.
@@ -27,8 +27,7 @@
 		/// <summary>
 		///   Invoked when the application is initializing.
 		/// </summary>
-		/// <param name="uiContext">The UI context that is used to draw the user interface.</param>
-		protected override void Initialize(UIContext uiContext)
+		protected override void Initialize()
 		{
 			Commands.Resolve();
 			Cvars.Resolve();
@@ -53,10 +52,8 @@
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
-			var uc1 = new UserControl1();
-			uiContext.Add(uc1);
-
-			uiContext.FontLoader = new FontLoader(uiContext.SharedAssets);
+			//var uc1 = new UserControl1();
+			//Add(uc1);
 		}
 
 		/// <summary>

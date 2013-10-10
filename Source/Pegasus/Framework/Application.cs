@@ -14,12 +14,18 @@ namespace Pegasus.Framework
 	using Rendering.UserInterface;
 	using Scripting;
 	using UserInterface;
+	using UserInterface.Controls;
 
 	/// <summary>
 	///   Represents the application.
 	/// </summary>
 	public abstract class Application
 	{
+		/// <summary>
+		///   The root of the logical tree managed by the application.
+		/// </summary>
+		private readonly Canvas _canvas = new Canvas();
+
 		/// <summary>
 		///   Indicates whether the application should continue to run.
 		/// </summary>
@@ -32,6 +38,16 @@ namespace Pegasus.Framework
 		{
 			Commands.OnExit += Exit;
 		}
+
+		/// <summary>
+		///   Gets or sets the application-wide resources.
+		/// </summary>
+		public ResourceDictionary Resources
+		{
+			get { return _canvas.Resources; }
+			set { _canvas.Resources = value; }
+		}
+
 		/// <summary>
 		///   Invoked when the application should update the its state.
 		/// </summary>
@@ -61,8 +77,7 @@ namespace Pegasus.Framework
 		/// <summary>
 		///   Invoked when the application is initializing.
 		/// </summary>
-		/// <param name="uiContext">The UI context that is used to draw the user interface.</param>
-		protected virtual void Initialize(UIContext uiContext)
+		protected virtual void Initialize()
 		{
 		}
 
@@ -97,7 +112,6 @@ namespace Pegasus.Framework
 			using (var camera2D = new Camera2D(graphicsDevice))
 			using (var sceneOutput = new RenderOutput(graphicsDevice) { RenderTarget = swapChain.BackBuffer })
 			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
-			using (var uiContext = new UIContext(graphicsDevice, window))
 			{
 				window.Title = appName;
 				spriteEffect.Initialize(graphicsDevice, assets);
@@ -117,7 +131,7 @@ namespace Pegasus.Framework
 					Commands.Help();
 
 					// Let the application initialize itself
-					Initialize(uiContext);
+					Initialize();
 
 					// Initialize the sprite batch
 					spriteBatch.BlendState = BlendState.Premultiplied;
@@ -142,9 +156,15 @@ namespace Pegasus.Framework
 						bindings.Update();
 						resolutionManager.Update();
 
-						// Update the application logic and the statistics
+						// Update the application logic
 						Update();
-						uiContext.Update();
+						
+						// Update the user interface
+						var size = new SizeD(window.Width, window.Height);
+						_canvas.Measure(size);
+						_canvas.Arrange(new RectangleD(0, 0, size));
+
+						// Update the statistics
 						statistics.Update(window.Size);
 						console.Update(window.Size);
 
@@ -165,7 +185,7 @@ namespace Pegasus.Framework
 							DepthStencilState.DepthDisabled.Bind();
 							BlendState.Premultiplied.Bind();
 							DrawUserInterface(spriteBatch);
-							uiContext.Draw(spriteBatch);
+							_canvas.Draw(spriteBatch);
 
 							// Draw the console and the statistics on top of the current frame
 							statistics.Draw(spriteBatch);
@@ -186,6 +206,32 @@ namespace Pegasus.Framework
 					Dispose();
 				}
 			}
+		}
+
+		/// <summary>
+		///   Adds the UI element to the context.
+		/// </summary>
+		/// <param name="element">The element that should be added.</param>
+		public void Add(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			Assert.ArgumentSatisfies(element.Parent == null, "The element is already part of a logical tree.");
+
+			_canvas.Children.Add(element);
+		}
+
+		/// <summary>
+		///   Removes the UI element from the context.
+		/// </summary>
+		/// <param name="element">The UI element that should be removed.</param>
+		public bool Remove(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+
+			if (!_canvas.Children.Remove(element))
+				return false;
+
+			return true;
 		}
 	}
 }

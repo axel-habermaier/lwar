@@ -26,12 +26,7 @@ namespace Pegasus.AssetsCompiler
 		public const string ReservedInternalIdentifierPrefix = "_pg_";
 
 		/// <summary>
-		///   The path to the source assets.
-		/// </summary>
-		public static readonly string SourceDirectory = Path.Combine(Environment.CurrentDirectory, "../../Source/Assets");
-
-		/// <summary>
-		///   The path to the assets list.
+		///   Gets the path to the compiled assets project.
 		/// </summary>
 		public static readonly string AssetListPath = Path.Combine(Environment.CurrentDirectory, "assets.dll");
 
@@ -46,34 +41,62 @@ namespace Pegasus.AssetsCompiler
 		private static AssetsProject _assetsProject;
 
 		/// <summary>
-		///   The path to the assets project.
+		///   Gets the path to the C# file that should contain the generated effect code.
 		/// </summary>
-		private static readonly string AssetsProjectPath = Path.Combine(SourceDirectory, "Assets.csproj");
+		public static string CSharpEffectFile
+		{
+			get { return Path.Combine(SourceDirectory, "Effects", "Effects.cs"); }
+		}
 
 		/// <summary>
-		///   The path where the temporary asset files should be stored.
+		///   Gets the path to the C# file that should contain the generated asset identifiers.
 		/// </summary>
-		public static readonly string TempDirectory = Path.Combine(Environment.CurrentDirectory, "../../Source/Assets/obj");
+		public static string CSharpAssetIdentifiersFile
+		{
+			get { return Path.Combine(SourceDirectory, "AssetIdentifiers.cs"); }
+		}
 
 		/// <summary>
-		///   The path where the compiled assets should be stored.
+		///   Gets the path to the C# file that should contain the font loader class.
 		/// </summary>
-		public static readonly string TargetDirectory = Environment.CurrentDirectory;
+		public static string CSharpFontLoaderFile
+		{
+			get { return Path.Combine(SourceDirectory, "Fonts", "FontLoader.cs"); }
+		}
 
 		/// <summary>
-		///   The path to the C# file that should contain the generated effect code.
+		///   Gets or set the path to the assets project that is compiled.
 		/// </summary>
-		public static readonly string CSharpEffectFile = Path.Combine(SourceDirectory, "Effects", "Effects.cs");
+		public static string AssetsProjectPath { get; set; }
 
 		/// <summary>
-		///   The path to the C# file that should contain the generated asset identifiers.
+		///   Gets the path to the source assets.
 		/// </summary>
-		public static readonly string CSharpAssetIdentifiersFile = Path.Combine(SourceDirectory, "AssetIdentifiers.cs");
+		public static string SourceDirectory
+		{
+			get { return AssetsProject.SourceDirectory; }
+		}
 
 		/// <summary>
-		///   The path to the C# file that should contain the font loader class.
+		///   Gets the path where the temporary asset files should be stored.
 		/// </summary>
-		public static readonly string CSharpFontLoaderFile = Path.Combine(SourceDirectory, "Fonts", "FontLoader.cs");
+		public static string TempDirectory
+		{
+			get { return AssetsProject.TempDirectory; }
+		}
+
+		/// <summary>
+		///   Gets the path where the compiled assets should be stored.
+		/// </summary>
+		public static string TargetDirectory
+		{
+			get { return AssetsProject.TargetDirectory; }
+		}
+
+		/// <summary>
+		///   Gets or sets a value indicating whether Xaml files should be the only kind of asset that is compiled.
+		/// </summary>
+		public static bool XamlFilesOnly { get; set; }
 
 		/// <summary>
 		///   Get the asset list assembly.

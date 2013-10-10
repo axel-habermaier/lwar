@@ -46,6 +46,10 @@ namespace Pegasus.AssetsCompiler
 			_projectFileName = projectFile;
 			_document = XDocument.Load(projectFile);
 			_projectFile = _document.Root;
+
+			SourceDirectory = Path.GetDirectoryName(projectFile);
+			TempDirectory = Path.Combine(SourceDirectory, "obj");
+			TargetDirectory = Environment.CurrentDirectory;
 		}
 
 		/// <summary>
@@ -79,6 +83,21 @@ namespace Pegasus.AssetsCompiler
 								   .ToArray();
 			}
 		}
+
+		/// <summary>
+		///   Gets the path to the source assets.
+		/// </summary>
+		public string SourceDirectory { get; private set; }
+
+		/// <summary>
+		///   Gets the path where the temporary asset files should be stored.
+		/// </summary>
+		public string TempDirectory { get; private set; }
+
+		/// <summary>
+		///   Gets the path where the compiled assets should be stored.
+		/// </summary>
+		public string TargetDirectory { get; private set; }
 
 		/// <summary>
 		///   Adds the file to the assets project as a child of the parent file.
