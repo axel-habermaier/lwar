@@ -1,14 +1,9 @@
-Use VS+Blend to design UI with XAML/WPF
-Asset Compiler: Convert XAML files to equivalent C# code that is included by lwar
-	-> automatically compiles required image resources and fonts
-	-> requires interfaces for all DataContexts
-	-> Bindings, etc. use Func<obj,T>s + casting instead of reflection/dynamic
-	-> Copy all value converters, XAML code-behind, etc. to generated output 
-	-> or use T4 templates to compile XAML files (similar to cvar/command registries?); UI cannot be reloaded at runtime anyway
-Framework implements parts of WPF's object model
+Xaml Compiler
+	- automatically compiles required image resources and fonts
+	- Copy all value converters, XAML code-behind, etc. to generated output 
+	- Resolve merged resource dictionaries
 
 WPF Object model (required parts):
-- Dependency/Attached Properties
 - Routed/Attached Events
 - Controls
 	* Window
@@ -22,13 +17,8 @@ WPF Object model (required parts):
 	* 3D scene (allows arbitrary rendering)
 	* ItemsControl
 - Layouting: Arrange & Measure
-	* StackPanel
-	* Canvas
 	* DockPanel
 - Animation system
-- Styles (no themes/default styles)
-- Templates
-- Data binding/DataContext with type-safe view models
 - UI Drawing with IRTs for (semi-)transparent or 3D-transformed elements
 
 Open questions
@@ -37,33 +27,5 @@ Open questions
 - How does drawing work?
 	* http://msdn.microsoft.com/en-us/library/ms748373.aspx
 	* Generate list of drawning commands - which can be cached as long as nothing changes
-- Each frame:
-	1. Do input
-	2. Do animations
-	3. update layout
-	4. render
 
-Property expression registers on Changed events of all its sources
-DP raises change event (DO.OnChanged(DP, handler))
-DO.SetValue(DP)
-	- If inherited, push down
-	- Raise change event (e.g. updates bindings/styles/templates)
-	- Style: DO sets changed handlers that applies the style or template including the triggers
-		* Triggers must be evaluated every frame and set the DP values every frame, if triggered
-	- Resource dictionaries raises change events -> dynamic resource binding sets new value
-	- DP stores animated value, local value (either set locally (possibly through binding) or style value) and 
-	  triggered value (either style trigger or template trigger)
-
-
-NOTES FOR FUTURE IMPLEMENTATION TASKS
-- XAML compiler
-	- Resolve merged resource dictionaries
-	- No implicit default styles
-	- Visibility changed to Boolean Visible property
-	
-- Width/Height take precedence over alignment = stretch
-- margin applies space outside actualwidth/height
-- min width/height must be honored, then max widht/height, only then widht/height
-
-- data binding to another element when tree changes should update the binding
-- two way bindings
+- Implement two way bindings
