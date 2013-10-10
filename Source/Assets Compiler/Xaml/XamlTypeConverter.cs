@@ -29,7 +29,7 @@
 			{ typeof(uint), s => s },
 			{ typeof(long), s => s },
 			{ typeof(ulong), s => s },
-			{ typeof(Thickness), s => String.Format("new Pegasus.Framework.UserInterface.Thickness({0})", s) },
+			{ typeof(Thickness), s => String.Format("new Thickness({0})", s) },
 			{ typeof(Color), ConvertColor },
 			{ typeof(Type), s => String.Format("typeof({0})", s) },
 			{ typeof(XamlLiteral), s => s }
@@ -46,7 +46,7 @@
 			Assert.ArgumentNotNull(value);
 
 			if (targetType.IsEnum)
-				return String.Format("{0}.{1}", targetType.FullName, Enum.Parse(targetType, value).ToString());
+				return String.Format("{0}.{1}", targetType.Name, Enum.Parse(targetType, value).ToString());
 
 			Func<string, string> converter;
 			if (!Converters.TryGetValue(targetType, out converter))
@@ -88,7 +88,7 @@
 					Log.Die("Failed to convert color value '{0}'.", value);
 			}
 
-			return String.Format("Pegasus.Platform.Graphics.Color.FromRgba({0}, {1}, {2}, {3})", color.R, color.G, color.B, color.A);
+			return String.Format("Color.FromRgba({0}, {1}, {2}, {3})", color.R, color.G, color.B, color.A);
 		}
 	}
 }

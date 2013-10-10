@@ -20,8 +20,7 @@
 		/// <summary>
 		///   The foreground color of the text.
 		/// </summary>
-		public static readonly DependencyProperty<Color> ForegroundProperty =
-			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 255), affectsRender: true, inherits: true);
+		public static readonly DependencyProperty<Color> ForegroundProperty = Control.ForegroundProperty;
 
 		/// <summary>
 		///   Initializes a new instance.
