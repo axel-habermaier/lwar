@@ -189,7 +189,7 @@
 						y = finalSize.Height - child.DesiredSize.Height - bottom;
 				}
 
-				child.Arrange(new RectangleD(x, y, finalSize));
+				child.Arrange(new RectangleD(x, y, child.DesiredSize));
 			}
 
 			return finalSize;

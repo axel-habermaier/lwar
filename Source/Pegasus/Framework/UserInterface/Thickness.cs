@@ -43,10 +43,10 @@ namespace Pegasus.Framework.UserInterface
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="left">The width of the left side of the rectangle.</param>
-		/// <param name="right">The width of the right side of the rectangle.</param>
 		/// <param name="top">The width of the upper side of the rectangle.</param>
+		/// <param name="right">The width of the right side of the rectangle.</param>
 		/// <param name="bottom">The width of the lower side of the rectangle.</param>
-		public Thickness(double left, double right, double top, double bottom)
+		public Thickness(double left, double top, double right, double bottom)
 		{
 			Left = left;
 			Right = right;

@@ -121,7 +121,6 @@
 
 			_canvas.Measure(size);
 			_canvas.Arrange(new RectangleD(0, 0, size));
-			_canvas.ApplyVisualOffset(Vector2d.Zero);
 		}
 
 		/// <summary>

@@ -117,7 +117,7 @@
 		///   The horizontal alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<HorizontalAlignment> HorizontalAlignmentProperty =
-			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Left,
+			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Stretch,
 														affectsArrange: true,
 														validationCallback: ValidateAlignment);
 
@@ -125,7 +125,7 @@
 		///   The vertical alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<VerticalAlignment> VerticalAlignmentProperty =
-			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Top,
+			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Stretch,
 													  affectsArrange: true,
 													  validationCallback: ValidateAlignment);
 
@@ -303,6 +303,7 @@
 		public double ActualWidth
 		{
 			get { return GetValue(ActualWidthProperty); }
+			private set { SetValue(ActualWidthProperty, value); }
 		}
 
 		/// <summary>
@@ -311,6 +312,7 @@
 		public double ActualHeight
 		{
 			get { return GetValue(ActualHeightProperty); }
+			private set{SetValue(ActualHeightProperty, value);}
 		}
 
 		/// <summary>
@@ -675,10 +677,22 @@
 		/// </param>
 		public void Measure(SizeD availableSize)
 		{
-			_desiredSize = MeasureCore(availableSize);
+			var hasWidth = !Double.IsNaN(Width);
+			var hasHeight = !Double.IsNaN(Height);
+
+			_desiredSize = MeasureCore(DecreaseByMargin(availableSize));
 
 			Assert.That(!Double.IsInfinity(_desiredSize.Width) && !Double.IsNaN(_desiredSize.Width), "MeasureCore returned invalid width.");
 			Assert.That(!Double.IsInfinity(_desiredSize.Height) && !Double.IsNaN(_desiredSize.Height), "MeasureCore returned invalid height.");
+
+			if (hasWidth)
+				_desiredSize.Width = Width;
+
+			if (hasHeight)
+				_desiredSize.Height = Height;
+
+			_desiredSize.Width = MathUtils.Clamp(_desiredSize.Width, MinWidth, MaxWidth);
+			_desiredSize.Height = MathUtils.Clamp(_desiredSize.Height, MinHeight, MaxHeight);
 
 			_desiredSize = IncreaseByMargin(_desiredSize);
 		}
@@ -705,18 +719,33 @@
 		/// </remarks>
 		public void Arrange(RectangleD finalRect)
 		{
-			var renderSize = ArrangeCore(finalRect.Size);
+			var availableSize = DecreaseByMargin(finalRect.Size);
+			var width = Math.Min(_desiredSize.Width, availableSize.Width);
+			var height = Math.Min(_desiredSize.Height, availableSize.Height);
+
+			var size = ArrangeCore(new SizeD(width, height));
 
 			if (HorizontalAlignment == HorizontalAlignment.Stretch)
-				renderSize.Width = finalRect.Width - Margin.Left - Margin.Right;
+				size.Width = availableSize.Width;
 
 			if (VerticalAlignment == VerticalAlignment.Stretch)
-				renderSize.Height = finalRect.Height - Margin.Top - Margin.Bottom;
+				size.Height = availableSize.Height;
 
-			RenderSize = renderSize;
+			if (!Double.IsNaN(Width))
+				size.Width = Width;
 
-			var offset = ComputeAlignmentOffset(finalRect.Size);
-			VisualOffset = finalRect.Position + offset;
+			if (!Double.IsNaN(Height))
+				size.Height = Height;
+
+			size.Width = MathUtils.Clamp(size.Width, MinWidth, MaxWidth);
+			size.Height = MathUtils.Clamp(size.Height, MinHeight, MaxHeight);
+
+			ActualWidth = size.Width;
+			ActualHeight = size.Height;
+
+			RenderSize = size;
+			VisualOffset = finalRect.Position + ComputeAlignmentOffset(finalRect.Size);
+			RenderSize = IncreaseByMargin(size);
 		}
 
 		/// <summary>
@@ -741,7 +770,7 @@
 			switch (HorizontalAlignment)
 			{
 				case HorizontalAlignment.Center:
-					offset.X = (availableSize.Width - RenderSize.Width) / 2 + Margin.Left - Margin.Right;
+					offset.X = (availableSize.Width - Margin.Left - Margin.Right - RenderSize.Width) / 2 + Margin.Left - Margin.Right;
 					break;
 				case HorizontalAlignment.Stretch:
 				case HorizontalAlignment.Left:
@@ -784,6 +813,17 @@
 		{
 			var margin = Margin;
 			return new SizeD(size.Width + margin.Left + margin.Right, size.Height + margin.Top + margin.Bottom);
+		}
+
+		/// <summary>
+		///   Decreases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and
+		///   3, the returned size has a width of 10 - 2 - 3 = 5.
+		/// </summary>
+		/// <param name="size">The size the thickness should be added to.</param>
+		private SizeD DecreaseByMargin(SizeD size)
+		{
+			var margin = Margin;
+			return new SizeD(size.Width - margin.Left - margin.Right, size.Height - margin.Top - margin.Bottom);
 		}
 
 		/// <summary>

@@ -23,6 +23,11 @@
 		public static readonly DependencyProperty<Color> ForegroundProperty = Control.ForegroundProperty;
 
 		/// <summary>
+		///   The background color of the text.
+		/// </summary>
+		public static readonly DependencyProperty<Color> BackgroundProperty = Control.BackgroundProperty;
+
+		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public TextBlock()
@@ -47,6 +52,15 @@
 		{
 			get { return GetValue(ForegroundProperty); }
 			set { SetValue(ForegroundProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets the background color of the text.
+		/// </summary>
+		public Color Background
+		{
+			get { return GetValue(BackgroundProperty); }
+			set { SetValue(BackgroundProperty, value); }
 		}
 
 		/// <summary>
@@ -101,9 +115,12 @@
 
 		protected override void OnDraw(SpriteBatch spriteBatch)
 		{
+			var width = (int)Math.Round(ActualWidth);
+			var height = (int)Math.Round(ActualHeight);
 			var x = (int)Math.Round(VisualOffset.X);
 			var y = (int)Math.Round(VisualOffset.Y);
 
+			spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background);
 			using (var text = Rendering.UserInterface.Text.Create(Text))
 				TextRenderer.Draw(spriteBatch, Font, text, Foreground, new Vector2i(x, y));
 		}

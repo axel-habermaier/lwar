@@ -37,14 +37,14 @@ namespace Pegasus.Framework.UserInterface
 		///   Applies the given offset to the visual's offset and to all of its visual children.
 		/// </summary>
 		/// <param name="offset">The offset that should be applied to the visual's offset.</param>
-		internal void ApplyVisualOffset(Vector2d offset)
-		{
-			VisualOffset += offset;
+		//internal void ApplyVisualOffset(Vector2d offset)
+		//{
+		//	VisualOffset += offset;
 
-			var count = VisualChildrenCount;
-			for (var i = 0; i < count; ++i)
-				GetVisualChild(i).ApplyVisualOffset(VisualOffset);
-		}
+		//	var count = VisualChildrenCount;
+		//	for (var i = 0; i < count; ++i)
+		//		GetVisualChild(i).ApplyVisualOffset(VisualOffset);
+		//}
 
 		internal void Draw(SpriteBatch spriteBatch)
 		{
@@ -52,7 +52,11 @@ namespace Pegasus.Framework.UserInterface
 
 			var count = VisualChildrenCount;
 			for (var i = 0; i < count; ++i)
-				GetVisualChild(i).Draw(spriteBatch);
+			{
+				var child = GetVisualChild(i);
+				child.VisualOffset += VisualOffset;
+				child.Draw(spriteBatch);
+			}
 		}
 
 		protected abstract void OnDraw(SpriteBatch spriteBatch);
