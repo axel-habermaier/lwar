@@ -355,6 +355,9 @@
 		/// </param>
 		public void Measure(SizeD availableSize)
 		{
+			if (Visibility == Visibility.Collapsed)
+				return;
+
 			var hasWidth = !Double.IsNaN(Width);
 			var hasHeight = !Double.IsNaN(Height);
 
@@ -397,6 +400,9 @@
 		/// </remarks>
 		public void Arrange(RectangleD finalRect)
 		{
+			if (Visibility == Visibility.Collapsed)
+				return;
+
 			var horizontalAlignment = HorizontalAlignment;
 			var verticalAlignment = VerticalAlignment;
 

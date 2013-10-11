@@ -98,12 +98,6 @@
 			new DependencyProperty<double>();
 
 		/// <summary>
-		///   Indicates whether the UI element is visible.
-		/// </summary>
-		public static readonly DependencyProperty<bool> VisibleProperty =
-			new DependencyProperty<bool>(defaultValue: true, affectsMeasure: true);
-
-		/// <summary>
 		///   The outer margin of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<Thickness> MarginProperty =
@@ -279,15 +273,6 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the UI element is visible.
-		/// </summary>
-		public bool Visible
-		{
-			get { return GetValue(VisibleProperty); }
-			set { SetValue(VisibleProperty, value); }
-		}
-
-		/// <summary>
 		///   Gets or sets the outer margin of the UI element.
 		/// </summary>
 		public Thickness Margin
@@ -319,13 +304,7 @@
 		/// </summary>
 		public SizeD DesiredSize
 		{
-			get
-			{
-				if (!Visible)
-					return new SizeD(0, 0);
-
-				return _desiredSize;
-			}
+			get { return _desiredSize; }
 		}
 
 		/// <summary>
