@@ -193,6 +193,9 @@
   <ItemGroup>
     <Compile Include="Framework\ContentPropertyAttribute.cs" />
     <Compile Include="Framework\InheritanceContext.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventStorage`1.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventStorage.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventStore.cs" />
     <Compile Include="Framework\UserInterface\UIElement.cs" />
     <Compile Include="Framework\UserInterface\UIElement.Properties.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventArgs.cs" />

@@ -4,7 +4,6 @@
 	using Controls;
 	using Math;
 	using Rendering.UserInterface;
-	using Console = System.Console;
 
 	/// <summary>
 	///   Provides layouting, input, and other base functionality for all UI elements.
@@ -20,6 +19,11 @@
 		///   The size of the UI element that has been computed by the last measure pass of the layout engine.
 		/// </summary>
 		private SizeD _desiredSize;
+
+		/// <summary>
+		///   Stores the handlers of the UI element's routed events.
+		/// </summary>
+		private RoutedEventStore _eventStore = new RoutedEventStore();
 
 		/// <summary>
 		///   The resources used by the UI element.
@@ -42,6 +46,36 @@
 			FontBoldProperty.Changed += (o, e) => UnsetCachedFont(o);
 			FontItalicProperty.Changed += (o, e) => UnsetCachedFont(o);
 			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
+		}
+
+		/// <summary>
+		///   Adds the given handler to the given routed event.
+		/// </summary>
+		/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
+		/// <param name="routedEvent">The routed event that should be handled.</param>
+		/// <param name="handler">The handler that should be invoked when the routed event has been raised.</param>
+		public void AddHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
+			where T : class, IRoutedEventArgs
+		{
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNull(handler);
+
+			_eventStore.AddHandler(routedEvent, handler);
+		}
+
+		/// <summary>
+		///   Removes the given handler from the given routed event.
+		/// </summary>
+		/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
+		/// <param name="routedEvent">The routed event that should be handled.</param>
+		/// <param name="handler">The handler that should be invoked when the routed event has been raised.</param>
+		public void RemoveHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
+			where T : class, IRoutedEventArgs
+		{
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNull(handler);
+
+			_eventStore.RemoveHandler(routedEvent, handler);
 		}
 
 		/// <summary>

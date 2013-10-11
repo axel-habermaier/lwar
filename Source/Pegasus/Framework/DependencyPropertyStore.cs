@@ -3,9 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   A sparse storage for dependency property values. The values are stored in an array, sorted by dependency property
-	///   index. A binary search is used to find the value of a dependency property, whereas insertions are guaranteed to
-	///   insert the value at the correct array index.
+	///   A sparse storage for dependency property values. 
 	/// </summary>
 	internal struct DependencyPropertyStore
 	{

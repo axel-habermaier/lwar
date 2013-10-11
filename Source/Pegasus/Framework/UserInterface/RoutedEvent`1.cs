@@ -5,9 +5,9 @@
 	/// <summary>
 	///   Represents a typed routed event.
 	/// </summary>
-	/// <typeparam name="T">The type of the event handler delegate.</typeparam>
+	/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
 	public class RoutedEvent<T> : RoutedEvent
-		where T : class
+		where T : class, IRoutedEventArgs
 	{
 		/// <summary>
 		///   Initializes a new instance.
@@ -16,7 +16,6 @@
 		public RoutedEvent(RoutingStrategy routingStrategy)
 			: base(routingStrategy)
 		{
-			Assert.That(typeof(RoutedEventHandler).IsAssignableFrom(typeof(T)), "Expected 'RoutedEventHandler' delegate (sub-)type.");
 		}
 	}
 }
