@@ -193,6 +193,16 @@
   <ItemGroup>
     <Compile Include="Framework\ContentPropertyAttribute.cs" />
     <Compile Include="Framework\InheritanceContext.cs" />
+    <Compile Include="Framework\UserInterface\UIElement.cs" />
+    <Compile Include="Framework\UserInterface\UIElement.Properties.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEvent`1.cs" />
+    <Compile Include="Framework\UserInterface\IRoutedEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEvent.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventArgs`1.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventHandler.cs" />
+    <Compile Include="Framework\UserInterface\RoutingStrategy.cs" />
+    <Compile Include="Framework\SparseObjectStorage.cs" />
     <Compile Include="Framework\UserInterface\Binding.cs" />
     <Compile Include="Framework\UserInterface\Controls\Border.cs" />
     <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
@@ -269,7 +279,7 @@
     <Compile Include="Framework\UserInterface\Style.cs" />
     <Compile Include="Rendering\UserInterface\Text.cs" />
     <Compile Include="Framework\UserInterface\Trigger.cs" />
-    <Compile Include="Framework\UserInterface\UIElement.cs" />
+    <Compile Include="Framework\UserInterface\UIElement.Events.cs" />
     <Compile Include="Framework\UserInterface\UIElementCollection.cs" />
     <Compile Include="Framework\ViewModel.cs" />
     <Compile Include="Framework\UserInterface\Visual.cs" />

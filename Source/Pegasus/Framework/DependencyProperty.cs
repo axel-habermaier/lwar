@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
 	using System.Collections.Generic;
 
 	/// <summary>
@@ -166,7 +165,7 @@ namespace Pegasus.Framework
 		internal abstract void CopyInheritedValue(DependencyObject source, DependencyObject target);
 
 		/// <summary>
-		/// Unsets the inherited value of the given dependency object.
+		///   Unsets the inherited value of the given dependency object.
 		/// </summary>
 		/// <param name="obj">The dependency object whose inherited value should be unset.</param>
 		internal abstract void UnsetInheritedValue(DependencyObject obj);

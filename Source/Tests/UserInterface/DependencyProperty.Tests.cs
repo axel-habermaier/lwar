@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.UserInterface
+﻿namespace Tests.UserInterface
 {
+	using System;
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Framework.UserInterface;

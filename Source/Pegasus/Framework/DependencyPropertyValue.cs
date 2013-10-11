@@ -5,7 +5,7 @@ namespace Pegasus.Framework
 	/// <summary>
 	///   Represents the base class for a dependency property value.
 	/// </summary>
-	internal abstract class DependencyPropertyValue
+	internal abstract class DependencyPropertyValue : SparseObjectStorage<DependencyPropertyValue>.IStorageLocation
 	{
 		/// <summary>
 		///   The sources of the property's values.
@@ -28,9 +28,9 @@ namespace Pegasus.Framework
 		public DependencyProperty Property { get; private set; }
 
 		/// <summary>
-		///   Gets the index of the dependency property the value belongs to.
+		///   Gets the storage location of the dependency property.
 		/// </summary>
-		public int PropertyIndex
+		public int Location
 		{
 			get { return Property.Index; }
 		}

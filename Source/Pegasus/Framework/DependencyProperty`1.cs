@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
 	using System.Diagnostics;
 
 	/// <summary>
@@ -73,6 +72,10 @@ namespace Pegasus.Framework
 		[Conditional("DEBUG")]
 		internal void ValidateValue(T value)
 		{
+			// For enumeration types, check if the given literal is defined
+			if (typeof(T).IsEnum)
+				Assert.That(Enum.IsDefined(typeof(T), value), "The given value is not defined by the enumeration.");
+
 			Assert.That(_validationCallback == null || _validationCallback(value), "Attempted to set an invalid value.");
 		}
 
@@ -131,7 +134,7 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
-		/// Unsets the inherited value of the given dependency object.
+		///   Unsets the inherited value of the given dependency object.
 		/// </summary>
 		/// <param name="obj">The dependency object whose inherited value should be unset.</param>
 		internal override void UnsetInheritedValue(DependencyObject obj)

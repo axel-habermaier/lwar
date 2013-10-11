@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
-	using System.Linq;
+	using System;
 
 	/// <summary>
 	///   A sparse storage for dependency property values. The values are stored in an array, sorted by dependency property
@@ -12,14 +10,9 @@ namespace Pegasus.Framework
 	internal struct DependencyPropertyStore
 	{
 		/// <summary>
-		///   The number of stored values.
-		/// </summary>
-		private int _valueCount;
-
-		/// <summary>
 		///   The values that are currently stored.
 		/// </summary>
-		private DependencyPropertyValue[] _values;
+		private SparseObjectStorage<DependencyPropertyValue> _values;
 
 		/// <summary>
 		///   Gets the value for the given dependency property. If no value is found, null is returned.
@@ -53,11 +46,9 @@ namespace Pegasus.Framework
 		{
 			Assert.ArgumentNotNull(property);
 
-			var valueIndex = FindValueIndex(property.Index);
-			var value = valueIndex == -1 ? null : _values[valueIndex] as DependencyPropertyValue<T>;
-
+			var value = _values.Get(property.Index) as DependencyPropertyValue<T>;
 			if (value == null && addValueIfUnknown)
-				AddValue(value = new DependencyPropertyValue<T>(property));
+				_values.Add(value = new DependencyPropertyValue<T>(property));
 
 			return value;
 		}
@@ -72,118 +63,28 @@ namespace Pegasus.Framework
 			Assert.ArgumentNotNull(obj);
 			Assert.ArgumentNotNull(inheritingObject);
 
-			for (var i = 0; i < _valueCount; ++i)
+			foreach (var value in _values.GetEnumerator())
 			{
-				if (!_values[i].Property.Inherits)
+				if (!value.Property.Inherits)
 					continue;
 
-				_values[i].Property.CopyInheritedValue(obj, inheritingObject);
+				value.Property.CopyInheritedValue(obj, inheritingObject);
 			}
 		}
 
 		/// <summary>
-		/// Unsets all inherited values of all inheriting dependency properties.
+		///   Unsets all inherited values of all inheriting dependency properties.
 		/// </summary>
 		/// <param name="obj">The dependency object whose inherited values should be unset.</param>
 		public void UnsetInheritedValues(DependencyObject obj)
 		{
-			for (var i = 0; i < _valueCount; ++i)
+			foreach (var value in _values.GetEnumerator())
 			{
-				if (!_values[i].Property.Inherits)
+				if (!value.Property.Inherits)
 					continue;
 
-				_values[i].Property.UnsetInheritedValue(obj);
+				value.Property.UnsetInheritedValue(obj);
 			}
-		}
-
-		/// <summary>
-		///   Adds the value to the store. The new value is added such that the ordering of the values array is maintained.
-		/// </summary>
-		/// <param name="value">The value that should be added.</param>
-		private void AddValue(DependencyPropertyValue value)
-		{
-			// Add the value at the beginning of the list if it is empty
-			if (_values == null)
-			{
-				_values = new DependencyPropertyValue[2];
-				_values[0] = value;
-				_valueCount = 1;
-				return;
-			}
-
-			Assert.That(_values.All(v => v == null || v.PropertyIndex != value.PropertyIndex), "The property value has already been stored.");
-
-			// Use a linear search to find the insertion index
-			var index = 0;
-			while (index < _valueCount && _values[index].PropertyIndex < value.PropertyIndex)
-				++index;
-
-			if (_values.Length == _valueCount)
-			{
-				// We have to increase the size of the store before we can add the value
-				var newLength = (int)(_values.Length * 1.5);
-				if (newLength == _values.Length)
-					++newLength;
-
-				var values = new DependencyPropertyValue[newLength];
-
-				// Copy all old values before the insertion index
-				Array.Copy(_values, 0, values, 0, index);
-
-				// Copy all old values after the insertion index
-				Array.Copy(_values, index, values, index + 1, _valueCount - index);
-
-				_values = values;
-			}
-			else
-			{
-				// Shift up all values at indices greater than the insertion index
-				Array.Copy(_values, index, _values, index + 1, _valueCount - index);
-			}
-
-			// Add the new value at the insertion index and increase the value count
-			_values[index] = value;
-			++_valueCount;
-		}
-
-		/// <summary>
-		///   Performs a binary search to find the value index for the given property index. Returns -1 if no value has been stored
-		///   yet for the given property index.
-		/// </summary>
-		/// <param name="propertyIndex">The index of the property the value index should be returned for.</param>
-		private int FindValueIndex(int propertyIndex)
-		{
-			if (_valueCount == 0)
-				return -1;
-
-			var start = 0;
-			var end = _valueCount;
-
-			// Perform a binary search while there are more than three elements
-			while (end - start > 3)
-			{
-				// Split the interval into two halves
-				var center = start + (end - start) / 2;
-
-				// Check if the center of the interval is what we're looking for
-				if (_values[center].PropertyIndex == propertyIndex)
-					return center;
-
-				// Continue searching the lower or the upper half
-				if (_values[center].PropertyIndex > propertyIndex)
-					end = center - 1;
-				else
-					start = center + 1;
-			}
-
-			// For less than three elements, just use a linear search
-			for (var i = start; i < end + 1 && i < _valueCount; ++i)
-			{
-				if (_values[i].PropertyIndex == propertyIndex)
-					return i;
-			}
-
-			return -1;
 		}
 	}
 }
