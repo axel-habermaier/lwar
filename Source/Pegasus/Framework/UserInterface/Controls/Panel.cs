@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Controls
 {
+	using System;
 	using Rendering;
 
 	/// <summary>
@@ -10,6 +9,13 @@ namespace Pegasus.Framework.UserInterface.Controls
 	[ContentProperty("Children")]
 	public abstract class Panel : UIElement
 	{
+		/// <summary>
+		///   Represents the order on the z-plane in which an element appears. Elements with higher z indices are drawn above ones
+		///   with lower indices.
+		/// </summary>
+		public static readonly DependencyProperty<int> ZIndexProperty =
+			new DependencyProperty<int>(defaultValue: 0, affectsRender: true);
+
 		/// <summary>
 		///   The collection of layouted children.
 		/// </summary>
@@ -43,6 +49,24 @@ namespace Pegasus.Framework.UserInterface.Controls
 		protected internal override int VisualChildrenCount
 		{
 			get { return _children == null ? 0 : _children.Count; }
+		}
+
+		/// <summary>
+		///   Gets the z-index of the given dependency object.
+		/// </summary>
+		public static int GetZIndex(DependencyObject obj)
+		{
+			Assert.ArgumentNotNull(obj);
+			return obj.GetValue(ZIndexProperty);
+		}
+
+		/// <summary>
+		///   Sets the z-index of the given dependency object.
+		/// </summary>
+		public static void SetZIndex(DependencyObject obj, int zIndex)
+		{
+			Assert.ArgumentNotNull(obj);
+			obj.SetValue(ZIndexProperty, zIndex);
 		}
 
 		/// <summary>

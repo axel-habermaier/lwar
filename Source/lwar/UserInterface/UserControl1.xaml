@@ -21,5 +21,6 @@
 			</StackPanel>
 		</Border>
 		<Border Background="Red" Canvas.Left="110.4" Canvas.Top="164.666" Margin="0"><TextBlock Foreground="#FF1AA6E8" Text="Padded" Background="#FFC14905" Margin="8,0,0,8"/></Border>
+		<Border Canvas.Left="373" Canvas.Top="161.793" Background="#FF20BBBB" Height="56" Width="66"/>
     </Canvas>
 </UserControl>
