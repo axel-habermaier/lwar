@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Controls
 {
+	using System;
 	using Math;
 	using Rendering;
 
@@ -27,11 +26,11 @@ namespace Pegasus.Framework.UserInterface.Controls
 		private TextBlock _textBlock;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///   Initializes the type.
 		/// </summary>
-		public ContentPresenter()
+		static ContentPresenter()
 		{
-			AddChangedHandler(ContentProperty, OnContentChanged);
+			ContentProperty.Changed += OnContentChanged;
 		}
 
 		/// <summary>
@@ -68,28 +67,32 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///   Updates the logical and visual parents of the new and old content.
 		/// </summary>
-		private void OnContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
+		private static void OnContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
 		{
-			var previousElement = _presentedElement;
+			var contentPresenter = obj as ContentPresenter;
+			if (contentPresenter == null)
+				return;
+
+			var previousElement = contentPresenter._presentedElement;
 
 			if (args.NewValue is UIElement)
-				_presentedElement = args.NewValue as UIElement;
+				contentPresenter._presentedElement = args.NewValue as UIElement;
 			else if (args.NewValue == null)
-				_presentedElement = null;
-			else if (_textBlock == null)
-				_presentedElement = _textBlock = new TextBlock(args.NewValue.ToString());
+				contentPresenter._presentedElement = null;
+			else if (contentPresenter._textBlock == null)
+				contentPresenter._presentedElement = contentPresenter._textBlock = new TextBlock(args.NewValue.ToString());
 			else
 			{
 				// Reuse the previous text block instance
-				_textBlock.Text = args.NewValue.ToString();
+				contentPresenter._textBlock.Text = args.NewValue.ToString();
 				previousElement = null; // No need to remove the text block from the logical tree
 			}
 
 			if (previousElement != null)
 				previousElement.ChangeLogicalParent(null);
 
-			if (_presentedElement != null)
-				_presentedElement.ChangeLogicalParent(Parent);
+			if (contentPresenter._presentedElement != null)
+				contentPresenter._presentedElement.ChangeLogicalParent(contentPresenter.Parent);
 		}
 
 		/// <summary>

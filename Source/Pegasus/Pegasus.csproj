@@ -208,7 +208,6 @@
     <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
     <Compile Include="Framework\UserInterface\Controls\ContentPresenter.cs" />
     <Compile Include="Framework\UserInterface\Controls\ControlTemplate.cs" />
-    <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />
     <Compile Include="Framework\UserInterface\Controls\TextBlock.cs" />
     <Compile Include="Framework\UserInterface\Controls\Orientation.cs" />
     <Compile Include="Framework\UserInterface\Controls\StackPanel.cs" />

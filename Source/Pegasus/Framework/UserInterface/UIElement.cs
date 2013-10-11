@@ -4,6 +4,7 @@
 	using Controls;
 	using Math;
 	using Rendering.UserInterface;
+	using Console = System.Console;
 
 	/// <summary>
 	///   Provides layouting, input, and other base functionality for all UI elements.
@@ -31,16 +32,27 @@
 		private bool _usesImplicitStyle = true;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///   Initializes the type.
 		/// </summary>
-		protected UIElement()
+		static UIElement()
 		{
-			AddChangedHandler(StyleProperty, OnStyleChanged);
-			AddChangedHandler(FontFamilyProperty, (o, e) => _cachedFont = null);
-			AddChangedHandler(FontSizeProperty, (o, e) => _cachedFont = null);
-			AddChangedHandler(FontBoldProperty, (o, e) => _cachedFont = null);
-			AddChangedHandler(FontItalicProperty, (o, e) => _cachedFont = null);
-			AddChangedHandler(TextOptions.TextRenderingModeProperty, (o, e) => _cachedFont = null);
+			StyleProperty.Changed += OnStyleChanged;
+			FontFamilyProperty.Changed += (o, e) => UnsetCachedFont(o);
+			FontSizeProperty.Changed += (o, e) => UnsetCachedFont(o);
+			FontBoldProperty.Changed += (o, e) => UnsetCachedFont(o);
+			FontItalicProperty.Changed += (o, e) => UnsetCachedFont(o);
+			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
+		}
+
+		/// <summary>
+		///   Unsets the cached font object.
+		/// </summary>
+		/// <param name="obj">The object defining the cached font object that should be unset.</param>
+		private static void UnsetCachedFont(object obj)
+		{
+			var uiElement = obj as UIElement;
+			if (uiElement != null)
+				uiElement._cachedFont = null;
 		}
 
 		/// <summary>
@@ -123,19 +135,23 @@
 		/// <summary>
 		///   Applies a style change to the UI element.
 		/// </summary>
-		private void OnStyleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Style> property)
+		private static void OnStyleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Style> property)
 		{
+			var uiElement = obj as UIElement;
+			if (uiElement == null)
+				return;
+
 			if (property.OldValue != null)
-				property.OldValue.Unset(this);
+				property.OldValue.Unset(uiElement);
 
 			// Set the new style; if it is null, try to find an implicit style
 			if (property.NewValue == null)
-				BindImplicitStyle();
+				uiElement.BindImplicitStyle();
 			else
 			{
 				// No need to set the style if the UI element is not part of a logical tree
-				property.NewValue.Apply(this);
-				_usesImplicitStyle = false;
+				property.NewValue.Apply(uiElement);
+				uiElement._usesImplicitStyle = false;
 			}
 		}
 

@@ -66,6 +66,11 @@
 		}
 
 		/// <summary>
+		///   Raised when the value of the dependency property has been changed on any dependency object.
+		/// </summary>
+		internal event DependencyPropertyChangedHandler<T> Changed;
+
+		/// <summary>
 		///   In debug builds, checks whether the given value is a valid value for the dependency property.
 		/// </summary>
 		/// <param name="value">The value that should be checked.</param>
@@ -143,6 +148,15 @@
 			Assert.That(Inherits, "The dependency property does not support value inheritance.");
 
 			obj.UnsetInheritedValue(this);
+		}
+
+		/// <summary>
+		///   Raises the Changed event.
+		/// </summary>
+		internal void OnValueChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs<T> changedEventArgs)
+		{
+			if (Changed != null)
+				Changed(dependencyObject, changedEventArgs);
 		}
 	}
 }

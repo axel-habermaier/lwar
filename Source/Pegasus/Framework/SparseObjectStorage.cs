@@ -148,8 +148,7 @@
 			public Enumerator(int valueCount, T[] values)
 				: this()
 			{
-				Assert.ArgumentNotNull(values);
-				Assert.ArgumentSatisfies(valueCount <= values.Length, "Too many values.");
+				Assert.ArgumentSatisfies(values == null || valueCount <= values.Length, "Too many values.");
 
 				_valueCount = valueCount;
 				_values = values;
