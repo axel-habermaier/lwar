@@ -41,12 +41,11 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
-		///   Gets or sets the application-wide resources.
+		///   Gets the application-wide resources.
 		/// </summary>
 		public ResourceDictionary Resources
 		{
 			get { return _canvas.Resources; }
-			set { _canvas.Resources = value; }
 		}
 
 		/// <summary>
@@ -248,7 +247,7 @@ namespace Pegasus.Framework
 			if (fontLoaderType == null)
 				Log.Die("Unable to find an implementation of '{0}' or multiple implementations were found.", typeof(IFontLoader));
 
-			_canvas.Resources[typeof(IFontLoader)] = Activator.CreateInstance(fontLoaderType, assets);
+			_canvas.Resources.Add(typeof(IFontLoader), Activator.CreateInstance(fontLoaderType, assets));
 		}
 
 		/// <summary>

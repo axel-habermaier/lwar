@@ -1,20 +1,18 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
-	using System.Collections;
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 
 	/// <summary>
 	///   Provides resources used by UI elements.
 	/// </summary>
-	public sealed class ResourceDictionary
+	public struct ResourceDictionary
 	{
 		/// <summary>
-		///   The underlying dictionary instance.
+		///   The underlying dictionary instance that stores the resources.
 		/// </summary>
-		private readonly Dictionary<object, object> _dictionary = new Dictionary<object, object>();
+		private Dictionary<object, object> _dictionary;
 
 		/// <summary>
 		///   Gets the number of resources contained in the dictionary.
@@ -25,40 +23,35 @@ namespace Pegasus.Framework.UserInterface
 		}
 
 		/// <summary>
-		///   Gets or sets the resource with the specified key.
+		///   Gets the resource with the specified key.
 		/// </summary>
 		/// <param name="key">The key of the resource to get or set.</param>
 		public object this[object key]
 		{
 			get { return _dictionary[key]; }
-			set
-			{
-				_dictionary[key] = value;
+		}
 
-				var sealable = value as ISealable;
-				if (sealable != null && !sealable.IsSealed)
-					sealable.Seal();
+		/// <summary>
+		///   Gets a value indicating whether the resource dictionary has already been initialized.
+		/// </summary>
+		internal bool IsInitialized
+		{
+			get { return _dictionary != null; }
+		}
 
-				RaiseChangeEvent(key);
-			}
+		/// <summary>
+		///   Initializes the resource dictionary.
+		/// </summary>
+		internal void Initialize()
+		{
+			Assert.That(!IsInitialized, "The resource dictionary has already been initialized.");
+			_dictionary = new Dictionary<object, object>();
 		}
 
 		/// <summary>
 		///   Raised when a key of the resource dictionary has changed.
 		/// </summary>
 		internal event ResourceKeyChangedHandler ResourceChanged;
-
-		/// <summary>
-		///   Raises the resource changed event.
-		/// </summary>
-		/// <param name="key">The key of the resource that has been changed.</param>
-		private void RaiseChangeEvent(object key)
-		{
-			Assert.ArgumentNotNull(key);
-
-			if (ResourceChanged != null)
-				ResourceChanged(this, key);
-		}
 
 		/// <summary>
 		///   Adds a resource with the provided key to the dictionary.
@@ -68,12 +61,9 @@ namespace Pegasus.Framework.UserInterface
 		public void Add(object key, object resource)
 		{
 			Assert.That(!_dictionary.ContainsKey(key), "A resource with key '{0}' already exists.", key);
+
 			_dictionary.Add(key, resource);
-
-			var sealable = resource as ISealable;
-			if (sealable != null && !sealable.IsSealed)
-				sealable.Seal();
-
+			SealResource(resource);
 			RaiseChangeEvent(key);
 		}
 
@@ -116,6 +106,29 @@ namespace Pegasus.Framework.UserInterface
 		public bool TryGetValue(object key, out object resource)
 		{
 			return _dictionary.TryGetValue(key, out resource);
+		}
+
+		/// <summary>
+		///   Seals the given resource, if necessary.
+		/// </summary>
+		/// <param name="resource">The resource that should be sealed.</param>
+		private static void SealResource(object resource)
+		{
+			var sealable = resource as ISealable;
+			if (sealable != null && !sealable.IsSealed)
+				sealable.Seal();
+		}
+
+		/// <summary>
+		///   Raises the resource changed event.
+		/// </summary>
+		/// <param name="key">The key of the resource that has been changed.</param>
+		private void RaiseChangeEvent(object key)
+		{
+			Assert.ArgumentNotNull(key);
+
+			if (ResourceChanged != null)
+				ResourceChanged(this, key);
 		}
 	}
 }

@@ -214,7 +214,7 @@
 			Assert.ArgumentNotNull(key);
 
 			// If the key is in our resource dictionary, return the resource
-			if (_resources != null && _resources.TryGetValue(key, out resource))
+			if (_resources.IsInitialized && _resources.TryGetValue(key, out resource))
 				return true;
 
 			// Otherwise, check the logical parent

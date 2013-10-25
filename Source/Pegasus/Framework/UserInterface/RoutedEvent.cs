@@ -28,6 +28,8 @@
 
 			Index = _eventCount++;
 			RoutedEvents.Add(this);
+
+			RoutingStrategy = routingStrategy;
 		}
 
 		/// <summary>

@@ -174,29 +174,19 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the resources used by the UI element.
+		///   Gets the resources used by the UI element.
 		/// </summary>
 		public ResourceDictionary Resources
 		{
 			get
 			{
-				if (_resources == null)
+				if (!_resources.IsInitialized)
 				{
-					_resources = new ResourceDictionary();
+					_resources.Initialize();
 					_resources.ResourceChanged += ResourceChanged;
 				}
 
 				return _resources;
-			}
-			set
-			{
-				if (_resources != null)
-					_resources.ResourceChanged -= ResourceChanged;
-
-				_resources = value ?? new ResourceDictionary();
-				_resources.ResourceChanged += ResourceChanged;
-
-				InvalidateResources();
 			}
 		}
 

@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   Represents a typed routed event.
+	///   Represents a strongly-typed routed event.
 	/// </summary>
 	/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
 	public class RoutedEvent<T> : RoutedEvent

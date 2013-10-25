@@ -192,7 +192,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\ContentPropertyAttribute.cs" />
-    <Compile Include="Framework\InheritanceContext.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventStorage`1.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventStorage.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventStore.cs" />
@@ -274,7 +273,6 @@
     <Compile Include="Framework\DependencyProperty.cs" />
     <Compile Include="Framework\DependencyPropertyStore.cs" />
     <Compile Include="Framework\DependencyPropertyValue.cs" />
-    <Compile Include="Framework\UserInterface\ExpressionVisitor.cs" />
     <Compile Include="Framework\INotifyPropertyChanged.cs" />
     <Compile Include="Framework\PropertyDelegates.cs" />
     <Compile Include="Framework\UserInterface\SealableCollection.cs" />
