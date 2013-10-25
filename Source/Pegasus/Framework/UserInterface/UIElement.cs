@@ -119,7 +119,7 @@
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidateWidthHeight(double value)
 		{
-			// NaN is used to represent XAML's 'auto' value
+			// NaN is used to represent Xaml's 'auto' value
 			return Double.IsNaN(value) || (value >= 0.0 && !Double.IsPositiveInfinity(value));
 		}
 

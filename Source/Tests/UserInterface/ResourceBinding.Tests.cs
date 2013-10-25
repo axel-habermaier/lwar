@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.UserInterface
+﻿namespace Tests.UserInterface
 {
+	using System;
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Framework.UserInterface;
@@ -47,19 +46,19 @@ namespace Tests.UserInterface
 
 		private static void SetImplicitStyle1(UIElement element)
 		{
-			element.Resources[typeof(Button)] = ImplicitButtonStyle1;
+			element.Resources.AddOrReplace(typeof(Button), ImplicitButtonStyle1);
 		}
 
 		private static void SetImplicitStyle2(UIElement element)
 		{
-			element.Resources[typeof(Button)] = ImplicitButtonStyle2;
+			element.Resources.AddOrReplace(typeof(Button), ImplicitButtonStyle2);
 		}
 
 		[Test]
 		public void ChangeTree_ResourceDefined()
 		{
-			_control1.Resources[Key] = _thickness1;
-			_control2.Resources[Key] = _thickness2;
+			_control1.Resources.Add(Key, _thickness1);
+			_control2.Resources.Add(Key, _thickness2);
 
 			AddBinding(_control1.Button3);
 			_control1.Button3.Margin.Should().Be(_thickness1);
@@ -72,7 +71,7 @@ namespace Tests.UserInterface
 		[Test]
 		public void ChangeTree_ResourceNotDefined()
 		{
-			_control1.Resources[Key] = Width;
+			_control1.Resources.Add(Key, Width);
 
 			AddWidthBinding(_control1.Button3);
 			_control1.Button3.Width.Should().Be(Width);
@@ -86,7 +85,7 @@ namespace Tests.UserInterface
 		public void ImplicitStyle_ChangeResourceDictionary_Parent()
 		{
 			SetImplicitStyle1(_control1);
-			_control1.Resources = new ResourceDictionary();
+			_control1.Resources.Clear();
 
 			_control1.Button1.Style.Should().Be(null);
 			_control1.Button2.Style.Should().Be(null);
@@ -97,7 +96,7 @@ namespace Tests.UserInterface
 		public void ImplicitStyle_ChangeResourceDictionary_SameElement()
 		{
 			SetImplicitStyle1(_control1.Button2);
-			_control1.Button2.Resources = new ResourceDictionary();
+			_control1.Button2.Resources.Clear();
 
 			_control1.Button1.Style.Should().Be(null);
 			_control1.Button2.Style.Should().Be(null);
@@ -192,7 +191,7 @@ namespace Tests.UserInterface
 		[Test]
 		public void OnElementWithResourceDefined()
 		{
-			_control1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1);
 
 			_control1.Margin.Should().Be(_thickness1);
@@ -201,42 +200,41 @@ namespace Tests.UserInterface
 		[Test]
 		public void OnElementWithResourceDefined_ChangeResource()
 		{
-			_control1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1);
 			_control1.Margin.Should().Be(_thickness1);
 
-			_control1.Resources[Key] = _thickness2;
+			_control1.Resources.AddOrReplace(Key, _thickness2);
 			_control1.Margin.Should().Be(_thickness2);
 		}
 
 		[Test]
 		public void OnElementWithResourceDefined_ChangeResourceDictionary()
 		{
-			_control1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1);
 			_control1.Margin.Should().Be(_thickness1);
 
-			var r = new ResourceDictionary();
-			r[Key] = _thickness2;
-			_control1.Resources = r;
+			_control1.Resources.Clear();
+			_control1.Resources.Add(Key, _thickness2);
 			_control1.Margin.Should().Be(_thickness2);
 		}
 
 		[Test]
 		public void OnElementWithResourceDefined_RemoveResource()
 		{
-			_control1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1);
 			_control1.Margin.Should().Be(_thickness1);
 
-			_control1.Resources = new ResourceDictionary();
+			_control1.Resources.Clear();
 			_control1.Margin.Should().Be(new Thickness());
 		}
 
 		[Test]
 		public void ResourceDefinedByParent()
 		{
-			_control1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1.Button3);
 
 			_control1.Button3.Margin.Should().Be(_thickness1);
@@ -245,43 +243,42 @@ namespace Tests.UserInterface
 		[Test]
 		public void ResourceDefinedByParent_ChangeResource()
 		{
-			_control1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1.Button3);
 			_control1.Button3.Margin.Should().Be(_thickness1);
 
-			_control1.Resources[Key] = _thickness2;
+			_control1.Resources.AddOrReplace(Key, _thickness2);
 			_control1.Button3.Margin.Should().Be(_thickness2);
 		}
 
 		[Test]
 		public void ResourceDefinedByParent_ChangeResourceDictionary()
 		{
-			_control1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1.Button3);
 			_control1.Button3.Margin.Should().Be(_thickness1);
 
-			var r = new ResourceDictionary();
-			r[Key] = _thickness2;
-			_control1.Resources = r;
+			_control1.Resources.Clear();
+			_control1.Resources.Add(Key, _thickness2);
 			_control1.Button3.Margin.Should().Be(_thickness2);
 		}
 
 		[Test]
 		public void ResourceDefinedByParent_RemoveResource()
 		{
-			_control1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1.Button3);
 			_control1.Button3.Margin.Should().Be(_thickness1);
 
-			_control1.Resources = new ResourceDictionary();
+			_control1.Resources.Clear();
 			_control1.Button3.Margin.Should().Be(new Thickness());
 		}
 
 		[Test]
 		public void ResourceOverridden()
 		{
-			_control1.Resources[Key] = _thickness1;
-			_control1.Canvas1.Resources[Key] = _thickness2;
+			_control1.Resources.Add(Key, _thickness1);
+			_control1.Canvas1.Resources.Add(Key, _thickness2);
 			AddBinding(_control1.Button3);
 			_control1.Button3.Margin.Should().Be(_thickness2);
 		}
@@ -289,37 +286,36 @@ namespace Tests.UserInterface
 		[Test]
 		public void ResourceOverridden_ChangeOverridingResourceDictionary()
 		{
-			_control1.Resources[Key] = _thickness3;
-			_control1.Canvas1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness3);
+			_control1.Canvas1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1.Button3);
 			_control1.Button3.Margin.Should().Be(_thickness1);
 
-			var r = new ResourceDictionary();
-			r[Key] = _thickness2;
-			_control1.Canvas1.Resources = r;
+			_control1.Canvas1.Resources.Clear();
+			_control1.Canvas1.Resources.Add(Key, _thickness2);
 			_control1.Button3.Margin.Should().Be(_thickness2);
 		}
 
 		[Test]
 		public void ResourceOverridden_ChangeResource()
 		{
-			_control1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1.Button3);
 			_control1.Button3.Margin.Should().Be(_thickness1);
 
-			_control1.Canvas1.Resources[Key] = _thickness2;
+			_control1.Canvas1.Resources.Add(Key, _thickness2);
 			_control1.Button3.Margin.Should().Be(_thickness2);
 		}
 
 		[Test]
 		public void ResourceOverridden_RemoveOverridingResourceDictionary()
 		{
-			_control1.Resources[Key] = _thickness3;
-			_control1.Canvas1.Resources[Key] = _thickness1;
+			_control1.Resources.Add(Key, _thickness3);
+			_control1.Canvas1.Resources.Add(Key, _thickness1);
 			AddBinding(_control1.Button3);
 			_control1.Button3.Margin.Should().Be(_thickness1);
 
-			_control1.Canvas1.Resources = null;
+			_control1.Canvas1.Resources.Clear();
 			_control1.Button3.Margin.Should().Be(_thickness3);
 		}
 	}

@@ -60,9 +60,26 @@
 		/// <param name="resource">The resource that should be added.</param>
 		public void Add(object key, object resource)
 		{
+			Assert.ArgumentNotNull(key);
 			Assert.That(!_dictionary.ContainsKey(key), "A resource with key '{0}' already exists.", key);
+			Assert.ArgumentNotNull(resource);
 
 			_dictionary.Add(key, resource);
+			SealResource(resource);
+			RaiseChangeEvent(key);
+		}
+
+		/// <summary>
+		///   Adds a resource with the provided key to the dictionary. If a resource with the given key already exists, it is replaced by the new resource.
+		/// </summary>
+		/// <param name="key">The key of the resource that should be add.</param>
+		/// <param name="resource">The resource that should be added.</param>
+		public void AddOrReplace(object key, object resource)
+		{
+			Assert.ArgumentNotNull(key);
+			Assert.ArgumentNotNull(resource);
+
+			_dictionary[key] = resource;
 			SealResource(resource);
 			RaiseChangeEvent(key);
 		}
@@ -73,6 +90,8 @@
 		/// <param name="key">The key of the resource that should be removed.</param>
 		public bool Remove(object key)
 		{
+			Assert.ArgumentNotNull(key);
+
 			if (!_dictionary.Remove(key))
 				return false;
 
@@ -105,6 +124,7 @@
 		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
 		public bool TryGetValue(object key, out object resource)
 		{
+			Assert.ArgumentNotNull(key);
 			return _dictionary.TryGetValue(key, out resource);
 		}
 

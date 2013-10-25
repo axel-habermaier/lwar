@@ -5,6 +5,7 @@ namespace Lwar
 	using System.Net;
 	using Network;
 	using Pegasus;
+	using Pegasus.Framework;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
