@@ -26,9 +26,14 @@
 		private RoutedEventStore _eventStore = new RoutedEventStore();
 
 		/// <summary>
+		///   Caches the layouting information of the UI element during the measure and arrange phases for performance reasons.
+		/// </summary>
+		private LayoutInfo _layoutInfo;
+
+		/// <summary>
 		///   The resources used by the UI element.
 		/// </summary>
-		private ResourceDictionary _resources;
+		private ResourceDictionary _resources = new ResourceDictionary();
 
 		/// <summary>
 		///   A value indicating whether the UI element uses and implicitly set style.
@@ -358,8 +363,9 @@
 			if (Visibility == Visibility.Collapsed)
 				return;
 
-			var hasWidth = !Double.IsNaN(Width);
-			var hasHeight = !Double.IsNaN(Height);
+			_layoutInfo = new LayoutInfo(this);
+			var hasWidth = !Double.IsNaN(_layoutInfo.Width);
+			var hasHeight = !Double.IsNaN(_layoutInfo.Height);
 
 			_desiredSize = MeasureCore(DecreaseByMargin(availableSize));
 
@@ -367,13 +373,13 @@
 			Assert.That(!Double.IsInfinity(_desiredSize.Height) && !Double.IsNaN(_desiredSize.Height), "MeasureCore returned invalid height.");
 
 			if (hasWidth)
-				_desiredSize.Width = Width;
+				_desiredSize.Width = _layoutInfo.Width;
 
 			if (hasHeight)
-				_desiredSize.Height = Height;
+				_desiredSize.Height = _layoutInfo.Height;
 
-			_desiredSize.Width = MathUtils.Clamp(_desiredSize.Width, MinWidth, MaxWidth);
-			_desiredSize.Height = MathUtils.Clamp(_desiredSize.Height, MinHeight, MaxHeight);
+			_desiredSize.Width = MathUtils.Clamp(_desiredSize.Width, _layoutInfo.MinWidth, _layoutInfo.MaxWidth);
+			_desiredSize.Height = MathUtils.Clamp(_desiredSize.Height, _layoutInfo.MinHeight, _layoutInfo.MaxHeight);
 
 			_desiredSize = IncreaseByMargin(_desiredSize);
 		}
@@ -403,8 +409,7 @@
 			if (Visibility == Visibility.Collapsed)
 				return;
 
-			var horizontalAlignment = HorizontalAlignment;
-			var verticalAlignment = VerticalAlignment;
+			_layoutInfo = new LayoutInfo(this);
 
 			var availableSize = DecreaseByMargin(finalRect.Size);
 			var desiredSize = DecreaseByMargin(_desiredSize);
@@ -412,37 +417,11 @@
 			var width = Math.Min(desiredSize.Width, availableSize.Width);
 			var height = Math.Min(desiredSize.Height, availableSize.Height);
 
-			if (horizontalAlignment == HorizontalAlignment.Stretch)
-				width = availableSize.Width;
+			var finalSize = new SizeD(width, height);
+			AdaptSize(ref finalSize, availableSize);
 
-			if (verticalAlignment == VerticalAlignment.Stretch)
-				height = availableSize.Height;
-
-			if (!Double.IsNaN(Width))
-				width = Width;
-
-			if (!Double.IsNaN(Height))
-				height = Height;
-
-			width = MathUtils.Clamp(width, MinWidth, MaxWidth);
-			height = MathUtils.Clamp(height, MinHeight, MaxHeight);
-
-			var size = ArrangeCore(new SizeD(width, height));
-
-			if (horizontalAlignment == HorizontalAlignment.Stretch)
-				size.Width = availableSize.Width;
-
-			if (verticalAlignment == VerticalAlignment.Stretch)
-				size.Height = availableSize.Height;
-
-			if (!Double.IsNaN(Width))
-				size.Width = Width;
-
-			if (!Double.IsNaN(Height))
-				size.Height = Height;
-
-			size.Width = MathUtils.Clamp(size.Width, MinWidth, MaxWidth);
-			size.Height = MathUtils.Clamp(size.Height, MinHeight, MaxHeight);
+			var size = ArrangeCore(finalSize);
+			AdaptSize(ref size, availableSize);
 
 			ActualWidth = size.Width;
 			ActualHeight = size.Height;
@@ -450,6 +429,34 @@
 			RenderSize = size;
 			VisualOffset = finalRect.Position + ComputeAlignmentOffset(finalRect.Size);
 			RenderSize = IncreaseByMargin(size);
+		}
+
+		/// <summary>
+		///   Adapts the size of the UI element according to the layouting information.
+		/// </summary>
+		/// <param name="size">The size that should be adapted.</param>
+		/// <param name="availableSize">The size that is available to this UI element.</param>
+		private void AdaptSize(ref SizeD size, SizeD availableSize)
+		{
+			// When stretching horizontally, fill all available width
+			if (_layoutInfo.HorizontalAlignment == HorizontalAlignment.Stretch)
+				size.Width = availableSize.Width;
+
+			// When stretching vertically, fill all available height
+			if (_layoutInfo.VerticalAlignment == VerticalAlignment.Stretch)
+				size.Height = availableSize.Height;
+
+			// Use the requested width if one is set
+			if (!Double.IsNaN(_layoutInfo.Width))
+				size.Width = _layoutInfo.Width;
+
+			// Use the requested height if one is set
+			if (!Double.IsNaN(_layoutInfo.Height))
+				size.Height = _layoutInfo.Height;
+
+			// Clamp the width and the height to the minimum and maximum values
+			size.Width = MathUtils.Clamp(size.Width, _layoutInfo.MinWidth, _layoutInfo.MaxWidth);
+			size.Height = MathUtils.Clamp(size.Height, _layoutInfo.MinHeight, _layoutInfo.MaxHeight);
 		}
 
 		/// <summary>
@@ -470,21 +477,20 @@
 		private Vector2d ComputeAlignmentOffset(SizeD availableSize)
 		{
 			var offset = Vector2d.Zero;
-			var margin = Margin;
 
 			switch (HorizontalAlignment)
 			{
 				case HorizontalAlignment.Stretch:
-					offset.X = margin.Left;
+					offset.X = _layoutInfo.Margin.Left;
 					break;
 				case HorizontalAlignment.Center:
-					offset.X = (availableSize.Width - RenderSize.Width + margin.Left - margin.Right) / 2;
+					offset.X = (availableSize.Width - RenderSize.Width + _layoutInfo.Margin.Left - _layoutInfo.Margin.Right) / 2;
 					break;
 				case HorizontalAlignment.Left:
-					offset.X = margin.Left;
+					offset.X = _layoutInfo.Margin.Left;
 					break;
 				case HorizontalAlignment.Right:
-					offset.X = availableSize.Width - RenderSize.Width - margin.Right;
+					offset.X = availableSize.Width - RenderSize.Width - _layoutInfo.Margin.Right;
 					break;
 				default:
 					throw new InvalidOperationException("Unexpected alignment.");
@@ -493,16 +499,16 @@
 			switch (VerticalAlignment)
 			{
 				case VerticalAlignment.Stretch:
-					offset.Y = margin.Top;
+					offset.Y = _layoutInfo.Margin.Top;
 					break;
 				case VerticalAlignment.Center:
-					offset.Y = (availableSize.Height - RenderSize.Height + margin.Top - margin.Bottom) / 2;
+					offset.Y = (availableSize.Height - RenderSize.Height + _layoutInfo.Margin.Top - _layoutInfo.Margin.Bottom) / 2;
 					break;
 				case VerticalAlignment.Top:
-					offset.Y = margin.Top;
+					offset.Y = _layoutInfo.Margin.Top;
 					break;
 				case VerticalAlignment.Bottom:
-					offset.Y = availableSize.Height - RenderSize.Height - margin.Bottom;
+					offset.Y = availableSize.Height - RenderSize.Height - _layoutInfo.Margin.Bottom;
 					break;
 				default:
 					throw new InvalidOperationException("Unexpected alignment.");
@@ -520,8 +526,8 @@
 		/// <param name="size">The size the thickness should be added to.</param>
 		private SizeD IncreaseByMargin(SizeD size)
 		{
-			var margin = Margin;
-			return new SizeD(size.Width + margin.Left + margin.Right, size.Height + margin.Top + margin.Bottom);
+			return new SizeD(size.Width + _layoutInfo.Margin.Left + _layoutInfo.Margin.Right,
+							 size.Height + _layoutInfo.Margin.Top + _layoutInfo.Margin.Bottom);
 		}
 
 		/// <summary>
@@ -531,8 +537,8 @@
 		/// <param name="size">The size the thickness should be added to.</param>
 		private SizeD DecreaseByMargin(SizeD size)
 		{
-			var margin = Margin;
-			return new SizeD(size.Width - margin.Left - margin.Right, size.Height - margin.Top - margin.Bottom);
+			return new SizeD(size.Width - _layoutInfo.Margin.Left - _layoutInfo.Margin.Right,
+							 size.Height - _layoutInfo.Margin.Top - _layoutInfo.Margin.Bottom);
 		}
 
 		/// <summary>

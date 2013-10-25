@@ -164,7 +164,7 @@
 
 #if DEBUG
 			if (!_isNull && memberAccess.Value == null)
-				Log.Debug("DataBinding failure: Expression '{0}' encountered a null value when accessing '{1}'.",
+				Log.Debug("Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
 						  _path, memberAccess.MemberName);
 #endif
 

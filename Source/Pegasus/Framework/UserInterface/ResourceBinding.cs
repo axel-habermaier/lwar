@@ -53,7 +53,7 @@ namespace Pegasus.Framework.UserInterface
 			object resource;
 			if (!TargetObject.TryFindResource(_key, out resource))
 			{
-				Log.Warn("Unable to find resource '{0}'.", _key);
+				Log.Debug("Resource binding failure: Unable to find resource '{0}'.", _key);
 				_targetObject.SetValue(_targetProperty, _targetProperty.DefaultValue);
 			}
 			else
