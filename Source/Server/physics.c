@@ -7,11 +7,6 @@
 
 #include "server.h"
 
-#ifdef _MSC_VER // INFINITY is not defined
-#include <limits>
-#define INFINITY std::numeric_limits<float>::infinity()
-#endif
-
 #include "vector.h"
 #include "log.h"
 #include "performance.h"

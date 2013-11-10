@@ -11,11 +11,6 @@
 
 #include "rules.h"
 
-#ifdef _MSC_VER // INFINITY is not defined
-#include <limits>
-#define INFINITY std::numeric_limits<float>::infinity()
-#endif
-
 void templates_register();
 
 #define SELF_NAME "server"
