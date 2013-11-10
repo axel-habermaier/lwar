@@ -7,13 +7,5 @@
 	/// </summary>
 	public class Button : ContentControl
 	{
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		public Button()
-		{
-			HorizontalAlignment = HorizontalAlignment.Stretch;
-			VerticalAlignment = VerticalAlignment.Stretch;
-		}
 	}
 }

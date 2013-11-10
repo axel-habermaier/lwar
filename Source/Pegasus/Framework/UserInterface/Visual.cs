@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
+	using System;
 	using Math;
 	using Rendering;
 
@@ -10,6 +9,12 @@ namespace Pegasus.Framework.UserInterface
 	/// </summary>
 	public abstract class Visual : DependencyObject
 	{
+		/// <summary>
+		///   Indicates whether the UI element is visible.
+		/// </summary>
+		public static readonly DependencyProperty<Visibility> VisibilityProperty =
+			new DependencyProperty<Visibility>(defaultValue: Visibility.Visible, affectsMeasure: true);
+
 		/// <summary>
 		///   Gets or sets the offset value of the visual.
 		/// </summary>
@@ -24,6 +29,15 @@ namespace Pegasus.Framework.UserInterface
 		}
 
 		/// <summary>
+		///   Indicates whether the UI element is visible.
+		/// </summary>
+		public Visibility Visibility
+		{
+			get { return GetValue(VisibilityProperty); }
+			set { SetValue(VisibilityProperty, value); }
+		}
+
+		/// <summary>
 		///   Gets the visual child at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
@@ -33,21 +47,11 @@ namespace Pegasus.Framework.UserInterface
 			return null;
 		}
 
-		/// <summary>
-		///   Applies the given offset to the visual's offset and to all of its visual children.
-		/// </summary>
-		/// <param name="offset">The offset that should be applied to the visual's offset.</param>
-		//internal void ApplyVisualOffset(Vector2d offset)
-		//{
-		//	VisualOffset += offset;
-
-		//	var count = VisualChildrenCount;
-		//	for (var i = 0; i < count; ++i)
-		//		GetVisualChild(i).ApplyVisualOffset(VisualOffset);
-		//}
-
 		internal void Draw(SpriteBatch spriteBatch)
 		{
+			if (Visibility != Visibility.Visible)
+				return;
+
 			OnDraw(spriteBatch);
 
 			var count = VisualChildrenCount;

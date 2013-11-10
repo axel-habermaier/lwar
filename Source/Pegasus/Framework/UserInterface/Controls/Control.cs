@@ -34,11 +34,11 @@
 		private UIElement _templateRoot;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///   Initializes the type.
 		/// </summary>
-		protected Control()
+		static Control()
 		{
-			AddChangedHandler(TemplateProperty, OnTemplateChanged);
+			TemplateProperty.Changed += OnTemplateChanged;
 		}
 
 		/// <summary>
@@ -93,18 +93,22 @@
 		/// <summary>
 		///   Changes the control's template root.
 		/// </summary>
-		private void OnTemplateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<ControlTemplate> args)
+		private static void OnTemplateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<ControlTemplate> args)
 		{
-			if (_templateRoot != null)
-				_templateRoot.ChangeLogicalParent(null);
+			var control = obj as Control;
+			if (control == null)
+				return;
+
+			if (control._templateRoot != null)
+				control._templateRoot.ChangeLogicalParent(null);
 
 			if (args.NewValue == null)
-				_templateRoot = null;
+				control._templateRoot = null;
 			else
-				_templateRoot = args.NewValue(this);
+				control._templateRoot = args.NewValue(control);
 
-			if (_templateRoot != null)
-				_templateRoot.ChangeLogicalParent(this);
+			if (control._templateRoot != null)
+				control._templateRoot.ChangeLogicalParent(control);
 		}
 
 		/// <summary>

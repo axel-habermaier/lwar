@@ -6,6 +6,9 @@
              FontFamily="Liberation Mono" 
              FontSize="11" 
              TextOptions.TextRenderingMode="Aliased">
+    <UserControl.Resources>
+        <Style x:Key="Bla"></Style>
+    </UserControl.Resources>
     <Canvas>
 		<Border Background="Red"><TextBlock Margin="18,31,0,15" Foreground="#FF1AA6E8" Background="#FFBD4C0B">Hallo</TextBlock></Border>
         <Button Style="{StaticResource Special}" Content="Hallo Welt Button" Canvas.Top="149.333" Canvas.Left="181.999" Background="#FFD60707">
@@ -21,5 +24,7 @@
 			</StackPanel>
 		</Border>
 		<Border Background="Red" Canvas.Left="110.4" Canvas.Top="164.666" Margin="0"><TextBlock Foreground="#FF1AA6E8" Text="Padded" Background="#FFC14905" Margin="8,0,0,8"/></Border>
+		<Border Canvas.Left="373" Canvas.Top="161.793" Background="#FF20BBBB" Height="56" Width="66"/>
+        <TextBlock Text="{Binding Text}"></TextBlock>
     </Canvas>
 </UserControl>

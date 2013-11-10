@@ -24,11 +24,11 @@
 			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 0), affectsRender: true);
 
 		/// <summary>
-		///   Initializes a new instance.
+		///   Initializes the type.
 		/// </summary>
-		public Border()
+		static Border()
 		{
-			AddChangedHandler(ChildProperty, OnChildChanged);
+			ChildProperty.Changed += OnChildChanged;
 		}
 
 		/// <summary>
@@ -74,13 +74,17 @@
 		/// <summary>
 		///   Removes the current child from the logical tree and adds the new child.
 		/// </summary>
-		private void OnChildChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<UIElement> args)
+		private static void OnChildChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<UIElement> args)
 		{
+			var border = obj as Border;
+			if (border == null)
+				return;
+
 			if (args.OldValue != null)
 				args.OldValue.ChangeLogicalParent(null);
 
 			if (args.NewValue != null)
-				args.NewValue.ChangeLogicalParent(this);
+				args.NewValue.ChangeLogicalParent(border);
 		}
 
 		/// <summary>

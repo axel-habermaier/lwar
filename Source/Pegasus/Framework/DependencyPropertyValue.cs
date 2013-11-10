@@ -1,11 +1,11 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
+
 	/// <summary>
 	///   Represents the base class for a dependency property value.
 	/// </summary>
-	internal abstract class DependencyPropertyValue
+	internal abstract class DependencyPropertyValue : SparseObjectStorage<DependencyPropertyValue>.IStorageLocation
 	{
 		/// <summary>
 		///   The sources of the property's values.
@@ -28,14 +28,6 @@ namespace Pegasus.Framework
 		public DependencyProperty Property { get; private set; }
 
 		/// <summary>
-		///   Gets the index of the dependency property the value belongs to.
-		/// </summary>
-		public int PropertyIndex
-		{
-			get { return Property.Index; }
-		}
-
-		/// <summary>
 		///   Gets a value indicating whether the property has an effective value.
 		/// </summary>
 		public bool HasEffectiveValue
@@ -49,6 +41,14 @@ namespace Pegasus.Framework
 		public bool HasInheritedValue
 		{
 			get { return (_sources & ValueSources.Inherited) == ValueSources.Inherited; }
+		}
+
+		/// <summary>
+		///   Gets the storage location of the dependency property value.
+		/// </summary>
+		public int Location
+		{
+			get { return Property.Index; }
 		}
 
 		/// <summary>

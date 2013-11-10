@@ -2,6 +2,7 @@
 
 namespace Tests.UserInterface
 {
+	using System.Diagnostics;
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Framework.UserInterface;
@@ -104,12 +105,16 @@ namespace Tests.UserInterface
 		public void Setters_NoBaseStyle()
 		{
 			const int value = 17;
+			var sw = new Stopwatch();
+			sw.Start();
 
 			var style = new Style();
 			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty1, value));
 
 			_control1.Style = style;
 			_control1.IntegerTest1.Should().Be(value);
+
+			Console.WriteLine(sw.ElapsedMilliseconds);
 		}
 
 		[Test]

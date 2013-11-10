@@ -3,132 +3,13 @@
 	using System;
 	using Controls;
 	using Math;
-	using Platform.Logging;
 	using Rendering.UserInterface;
 
 	/// <summary>
 	///   Provides layouting, input, and other base functionality for all UI elements.
 	/// </summary>
-	public abstract class UIElement : Visual
+	public abstract partial class UIElement : Visual
 	{
-		/// <summary>
-		///   The view model of the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<ViewModel> ViewModelProperty =
-			new DependencyProperty<ViewModel>(inherits: true, prohibitsAnimations: true);
-
-		/// <summary>
-		///   The style of the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<Style> StyleProperty =
-			new DependencyProperty<Style>(affectsMeasure: true);
-
-		/// <summary>
-		///   The font family used for text rendering by the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<string> FontFamilyProperty =
-			new DependencyProperty<string>(affectsMeasure: true, inherits: true);
-
-		/// <summary>
-		///   The font size used for text rendering by the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<int> FontSizeProperty =
-			new DependencyProperty<int>(affectsMeasure: true, inherits: true);
-
-		/// <summary>
-		///   Indicates whether a bold font is used for text rendering by the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<bool> FontBoldProperty =
-			new DependencyProperty<bool>(defaultValue: false, affectsMeasure: true, inherits: true);
-
-		/// <summary>
-		///   Indicates whether an italic font is used for text rendering by the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<bool> FontItalicProperty =
-			new DependencyProperty<bool>(defaultValue: false, affectsMeasure: true, inherits: true);
-
-		/// <summary>
-		///   Indicates whether the mouse is currently hovering the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<bool> IsMouseOverProperty =
-			new DependencyProperty<bool>();
-
-		/// <summary>
-		///   The width of the UI element, measured in pixels.
-		/// </summary>
-		public static readonly DependencyProperty<double> WidthProperty =
-			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
-
-		/// <summary>
-		///   The height of the UI element, measured in pixels.
-		/// </summary>
-		public static readonly DependencyProperty<double> HeightProperty =
-			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
-
-		/// <summary>
-		///   The minimum width constraint of the UI element, measured in pixels.
-		/// </summary>
-		public static readonly DependencyProperty<double> MinWidthProperty =
-			new DependencyProperty<double>(defaultValue: 0.0, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
-
-		/// <summary>
-		///   The minimum height constraint of the UI element, measured in pixels.
-		/// </summary>
-		public static readonly DependencyProperty<double> MinHeightProperty =
-			new DependencyProperty<double>(defaultValue: 0.0, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
-
-		/// <summary>
-		///   The maximum width constraint of the UI element, measured in pixels.
-		/// </summary>
-		public static readonly DependencyProperty<double> MaxWidthProperty =
-			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
-
-		/// <summary>
-		///   The maximum height constraint of the UI element, measured in pixels.
-		/// </summary>
-		public static readonly DependencyProperty<double> MaxHeightProperty =
-			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
-
-		/// <summary>
-		///   The actual width of the UI element, measured in pixels, as determined by the layouting system.
-		/// </summary>
-		public static readonly DependencyProperty<double> ActualWidthProperty =
-			new DependencyProperty<double>();
-
-		/// <summary>
-		///   The actual height of the UI element, measured in pixels, as determined by the layouting system.
-		/// </summary>
-		public static readonly DependencyProperty<double> ActualHeightProperty =
-			new DependencyProperty<double>();
-
-		/// <summary>
-		///   Indicates whether the UI element is visible.
-		/// </summary>
-		public static readonly DependencyProperty<bool> VisibleProperty =
-			new DependencyProperty<bool>(defaultValue: true, affectsMeasure: true);
-
-		/// <summary>
-		///   The outer margin of the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<Thickness> MarginProperty =
-			new DependencyProperty<Thickness>(affectsMeasure: true);
-
-		/// <summary>
-		///   The horizontal alignment characteristics of the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<HorizontalAlignment> HorizontalAlignmentProperty =
-			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Stretch,
-														affectsArrange: true,
-														validationCallback: ValidateAlignment);
-
-		/// <summary>
-		///   The vertical alignment characteristics of the UI element.
-		/// </summary>
-		public static readonly DependencyProperty<VerticalAlignment> VerticalAlignmentProperty =
-			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Stretch,
-													  affectsArrange: true,
-													  validationCallback: ValidateAlignment);
-
 		/// <summary>
 		///   The cached font instance that is currently being used for text rendering.
 		/// </summary>
@@ -140,9 +21,19 @@
 		private SizeD _desiredSize;
 
 		/// <summary>
+		///   Stores the handlers of the UI element's routed events.
+		/// </summary>
+		private RoutedEventStore _eventStore = new RoutedEventStore();
+
+		/// <summary>
+		///   Caches the layouting information of the UI element during the measure and arrange phases for performance reasons.
+		/// </summary>
+		private LayoutInfo _layoutInfo;
+
+		/// <summary>
 		///   The resources used by the UI element.
 		/// </summary>
-		private ResourceDictionary _resources;
+		private ResourceDictionary _resources = new ResourceDictionary();
 
 		/// <summary>
 		///   A value indicating whether the UI element uses and implicitly set style.
@@ -150,265 +41,58 @@
 		private bool _usesImplicitStyle = true;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///   Initializes the type.
 		/// </summary>
-		protected UIElement()
+		static UIElement()
 		{
-			AddChangedHandler(StyleProperty, OnStyleChanged);
-			AddChangedHandler(FontFamilyProperty, (o, e) => _cachedFont = null);
-			AddChangedHandler(FontSizeProperty, (o, e) => _cachedFont = null);
-			AddChangedHandler(FontBoldProperty, (o, e) => _cachedFont = null);
-			AddChangedHandler(FontItalicProperty, (o, e) => _cachedFont = null);
-			AddChangedHandler(TextOptions.TextRenderingModeProperty, (o, e) => _cachedFont = null);
+			StyleProperty.Changed += OnStyleChanged;
+			FontFamilyProperty.Changed += (o, e) => UnsetCachedFont(o);
+			FontSizeProperty.Changed += (o, e) => UnsetCachedFont(o);
+			FontBoldProperty.Changed += (o, e) => UnsetCachedFont(o);
+			FontItalicProperty.Changed += (o, e) => UnsetCachedFont(o);
+			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
 		}
 
 		/// <summary>
-		///   Gets or sets the view model of the UI element.
+		///   Adds the given handler to the given routed event.
 		/// </summary>
-		public ViewModel ViewModel
+		/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
+		/// <param name="routedEvent">The routed event that should be handled.</param>
+		/// <param name="handler">The handler that should be invoked when the routed event has been raised.</param>
+		public void AddHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
+			where T : class, IRoutedEventArgs
 		{
-			get { return GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNull(handler);
+
+			_eventStore.AddHandler(routedEvent, handler);
 		}
 
 		/// <summary>
-		///   Gets or sets the style of the UI element.
+		///   Removes the given handler from the given routed event.
 		/// </summary>
-		public Style Style
+		/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
+		/// <param name="routedEvent">The routed event that should be handled.</param>
+		/// <param name="handler">The handler that should be invoked when the routed event has been raised.</param>
+		public void RemoveHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
+			where T : class, IRoutedEventArgs
 		{
-			get { return GetValue(StyleProperty); }
-			set { SetValue(StyleProperty, value); }
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNull(handler);
+
+			_eventStore.RemoveHandler(routedEvent, handler);
 		}
 
 		/// <summary>
-		///   Gets or sets the font family used for text rendering by the UI element.
+		///   Unsets the cached font object.
 		/// </summary>
-		public string FontFamily
+		/// <param name="obj">The object defining the cached font object that should be unset.</param>
+		private static void UnsetCachedFont(object obj)
 		{
-			get { return GetValue(FontFamilyProperty); }
-			set { SetValue(FontFamilyProperty, value); }
+			var uiElement = obj as UIElement;
+			if (uiElement != null)
+				uiElement._cachedFont = null;
 		}
-
-		/// <summary>
-		///   Gets or sets the font size used for text rendering by the UI element.
-		/// </summary>
-		public int FontSize
-		{
-			get { return GetValue(FontSizeProperty); }
-			set { SetValue(FontSizeProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets a value indicating whether a bold font is used for text rendering by the UI element.
-		/// </summary>
-		public bool FontBold
-		{
-			get { return GetValue(FontBoldProperty); }
-			set { SetValue(FontBoldProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets a value indicating whether an italic font is used for text rendering by the UI element.
-		/// </summary>
-		public bool FontItalic
-		{
-			get { return GetValue(FontItalicProperty); }
-			set { SetValue(FontItalicProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the resources used by the UI element.
-		/// </summary>
-		public ResourceDictionary Resources
-		{
-			get
-			{
-				if (_resources == null)
-				{
-					_resources = new ResourceDictionary();
-					_resources.ResourceChanged += ResourceChanged;
-				}
-
-				return _resources;
-			}
-			set
-			{
-				if (_resources != null)
-					_resources.ResourceChanged -= ResourceChanged;
-
-				_resources = value ?? new ResourceDictionary();
-				_resources.ResourceChanged += ResourceChanged;
-
-				InvalidateResources();
-			}
-		}
-
-		/// <summary>
-		///   Gets or sets the width of the UI element, measured in pixels.
-		/// </summary>
-		public double Width
-		{
-			get { return GetValue(WidthProperty); }
-			set { SetValue(WidthProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the height of the UI element, measured in pixels.
-		/// </summary>
-		public double Height
-		{
-			get { return GetValue(HeightProperty); }
-			set { SetValue(HeightProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the minimum width constraint of the UI element, measured in pixels.
-		/// </summary>
-		public double MinWidth
-		{
-			get { return GetValue(MinWidthProperty); }
-			set { SetValue(MinWidthProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the minimum height constraint of the UI element, measured in pixels.
-		/// </summary>
-		public double MinHeight
-		{
-			get { return GetValue(MinHeightProperty); }
-			set { SetValue(MinHeightProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the maximum width constraint of the UI element, measured in pixels.
-		/// </summary>
-		public double MaxWidth
-		{
-			get { return GetValue(MaxWidthProperty); }
-			set { SetValue(MaxWidthProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the maximum height constraint of the UI element, measured in pixels.
-		/// </summary>
-		public double MaxHeight
-		{
-			get { return GetValue(MaxHeightProperty); }
-			set { SetValue(MaxHeightProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets  the actual width of the UI element, measured in pixels, as determined by the layouting system.
-		/// </summary>
-		public double ActualWidth
-		{
-			get { return GetValue(ActualWidthProperty); }
-			private set { SetValue(ActualWidthProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets the actual height of the UI element, measured in pixels, as determined by the layouting system.
-		/// </summary>
-		public double ActualHeight
-		{
-			get { return GetValue(ActualHeightProperty); }
-			private set{SetValue(ActualHeightProperty, value);}
-		}
-
-		/// <summary>
-		///   Indicates whether the UI element is visible.
-		/// </summary>
-		public bool Visible
-		{
-			get { return GetValue(VisibleProperty); }
-			set { SetValue(VisibleProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the outer margin of the UI element.
-		/// </summary>
-		public Thickness Margin
-		{
-			get { return GetValue(MarginProperty); }
-			set { SetValue(MarginProperty, value); }
-		}
-
-		/// <summary>
-		///   The horizontal alignment characteristics of the UI element.
-		/// </summary>
-		public HorizontalAlignment HorizontalAlignment
-		{
-			get { return GetValue(HorizontalAlignmentProperty); }
-			set { SetValue(HorizontalAlignmentProperty, value); }
-		}
-
-		/// <summary>
-		///   The vertical alignment characteristics of the UI element.
-		/// </summary>
-		public VerticalAlignment VerticalAlignment
-		{
-			get { return GetValue(VerticalAlignmentProperty); }
-			set { SetValue(VerticalAlignmentProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets the size of the UI element that has been computed by the last measure pass of the layout engine.
-		/// </summary>
-		public SizeD DesiredSize
-		{
-			get
-			{
-				if (!Visible)
-					return new SizeD(0, 0);
-
-				return _desiredSize;
-			}
-		}
-
-		/// <summary>
-		///   Indicates whether the mouse is currently hovering the UI element.
-		/// </summary>
-		public bool IsMouseOver
-		{
-			get { return GetValue(IsMouseOverProperty); }
-			set { SetValue(IsMouseOverProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets the font used for text rendering.
-		/// </summary>
-		protected Font Font
-		{
-			get
-			{
-				if (_cachedFont == null)
-				{
-					IFontLoader fontLoader;
-					if (!TryFindResource(typeof(IFontLoader), out fontLoader))
-						Log.Die("Unable to find a font loader implementing '{0}' in the UI element's resources.", typeof(IFontLoader).FullName);
-
-					var aliased = TextOptions.GetTextRenderingMode(this) == TextRenderingMode.Aliased;
-					_cachedFont = fontLoader.LoadFont(FontFamily, FontSize, FontBold, FontItalic, aliased);
-				}
-
-				return _cachedFont;
-			}
-		}
-
-		/// <summary>
-		///   Gets the logical parent of the UI element.
-		/// </summary>
-		public UIElement Parent { get; internal set; }
-
-		/// <summary>
-		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
-		/// </summary>
-		protected internal abstract UIElementCollection.Enumerator LogicalChildren { get; }
-
-		/// <summary>
-		///   Gets the final render size of the UI element.
-		/// </summary>
-		public SizeD RenderSize { get; internal set; }
 
 		/// <summary>
 		///   Checks whether the given horizontal alignment is a valid value.
@@ -440,7 +124,7 @@
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidateWidthHeight(double value)
 		{
-			// NaN is used to represent XAML's 'auto' value
+			// NaN is used to represent Xaml's 'auto' value
 			return Double.IsNaN(value) || (value >= 0.0 && !Double.IsPositiveInfinity(value));
 		}
 
@@ -461,11 +145,6 @@
 		{
 			return !Double.IsNaN(value) && value >= 0.0;
 		}
-
-		/// <summary>
-		///   Raised when a change to a resource dictionary in this UI element or one of its ancestors has occurred.
-		/// </summary>
-		internal event Action ResourcesInvalidated;
 
 		/// <summary>
 		///   Invoked when a resource within the resource dictionary has been replaced, added, or removed, invalidating all
@@ -495,19 +174,23 @@
 		/// <summary>
 		///   Applies a style change to the UI element.
 		/// </summary>
-		private void OnStyleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Style> property)
+		private static void OnStyleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Style> property)
 		{
+			var uiElement = obj as UIElement;
+			if (uiElement == null)
+				return;
+
 			if (property.OldValue != null)
-				property.OldValue.Unset(this);
+				property.OldValue.Unset(uiElement);
 
 			// Set the new style; if it is null, try to find an implicit style
 			if (property.NewValue == null)
-				BindImplicitStyle();
+				uiElement.BindImplicitStyle();
 			else
 			{
 				// No need to set the style if the UI element is not part of a logical tree
-				property.NewValue.Apply(this);
-				_usesImplicitStyle = false;
+				property.NewValue.Apply(uiElement);
+				uiElement._usesImplicitStyle = false;
 			}
 		}
 
@@ -536,7 +219,7 @@
 			Assert.ArgumentNotNull(key);
 
 			// If the key is in our resource dictionary, return the resource
-			if (_resources != null && _resources.TryGetValue(key, out resource))
+			if (_resources.IsInitialized && _resources.TryGetValue(key, out resource))
 				return true;
 
 			// Otherwise, check the logical parent
@@ -677,8 +360,12 @@
 		/// </param>
 		public void Measure(SizeD availableSize)
 		{
-			var hasWidth = !Double.IsNaN(Width);
-			var hasHeight = !Double.IsNaN(Height);
+			if (Visibility == Visibility.Collapsed)
+				return;
+
+			_layoutInfo = new LayoutInfo(this);
+			var hasWidth = !Double.IsNaN(_layoutInfo.Width);
+			var hasHeight = !Double.IsNaN(_layoutInfo.Height);
 
 			_desiredSize = MeasureCore(DecreaseByMargin(availableSize));
 
@@ -686,13 +373,13 @@
 			Assert.That(!Double.IsInfinity(_desiredSize.Height) && !Double.IsNaN(_desiredSize.Height), "MeasureCore returned invalid height.");
 
 			if (hasWidth)
-				_desiredSize.Width = Width;
+				_desiredSize.Width = _layoutInfo.Width;
 
 			if (hasHeight)
-				_desiredSize.Height = Height;
+				_desiredSize.Height = _layoutInfo.Height;
 
-			_desiredSize.Width = MathUtils.Clamp(_desiredSize.Width, MinWidth, MaxWidth);
-			_desiredSize.Height = MathUtils.Clamp(_desiredSize.Height, MinHeight, MaxHeight);
+			_desiredSize.Width = MathUtils.Clamp(_desiredSize.Width, _layoutInfo.MinWidth, _layoutInfo.MaxWidth);
+			_desiredSize.Height = MathUtils.Clamp(_desiredSize.Height, _layoutInfo.MinHeight, _layoutInfo.MaxHeight);
 
 			_desiredSize = IncreaseByMargin(_desiredSize);
 		}
@@ -719,8 +406,10 @@
 		/// </remarks>
 		public void Arrange(RectangleD finalRect)
 		{
-			var horizontalAlignment = HorizontalAlignment;
-			var verticalAlignment = VerticalAlignment;
+			if (Visibility == Visibility.Collapsed)
+				return;
+
+			_layoutInfo = new LayoutInfo(this);
 
 			var availableSize = DecreaseByMargin(finalRect.Size);
 			var desiredSize = DecreaseByMargin(_desiredSize);
@@ -728,37 +417,11 @@
 			var width = Math.Min(desiredSize.Width, availableSize.Width);
 			var height = Math.Min(desiredSize.Height, availableSize.Height);
 
-			if (horizontalAlignment == HorizontalAlignment.Stretch)
-				width = availableSize.Width;
+			var finalSize = new SizeD(width, height);
+			AdaptSize(ref finalSize, availableSize);
 
-			if (verticalAlignment == VerticalAlignment.Stretch)
-				height = availableSize.Height;
-
-			if (!Double.IsNaN(Width))
-				width = Width;
-
-			if (!Double.IsNaN(Height))
-				height = Height;
-
-			width = MathUtils.Clamp(width, MinWidth, MaxWidth);
-			height = MathUtils.Clamp(height, MinHeight, MaxHeight);
-
-			var size = ArrangeCore(new SizeD(width, height));
-
-			if (horizontalAlignment == HorizontalAlignment.Stretch)
-				size.Width = availableSize.Width;
-
-			if (verticalAlignment == VerticalAlignment.Stretch)
-				size.Height = availableSize.Height;
-
-			if (!Double.IsNaN(Width))
-				size.Width = Width;
-
-			if (!Double.IsNaN(Height))
-				size.Height = Height;
-
-			size.Width = MathUtils.Clamp(size.Width, MinWidth, MaxWidth);
-			size.Height = MathUtils.Clamp(size.Height, MinHeight, MaxHeight);
+			var size = ArrangeCore(finalSize);
+			AdaptSize(ref size, availableSize);
 
 			ActualWidth = size.Width;
 			ActualHeight = size.Height;
@@ -766,6 +429,34 @@
 			RenderSize = size;
 			VisualOffset = finalRect.Position + ComputeAlignmentOffset(finalRect.Size);
 			RenderSize = IncreaseByMargin(size);
+		}
+
+		/// <summary>
+		///   Adapts the size of the UI element according to the layouting information.
+		/// </summary>
+		/// <param name="size">The size that should be adapted.</param>
+		/// <param name="availableSize">The size that is available to this UI element.</param>
+		private void AdaptSize(ref SizeD size, SizeD availableSize)
+		{
+			// When stretching horizontally, fill all available width
+			if (_layoutInfo.HorizontalAlignment == HorizontalAlignment.Stretch)
+				size.Width = availableSize.Width;
+
+			// When stretching vertically, fill all available height
+			if (_layoutInfo.VerticalAlignment == VerticalAlignment.Stretch)
+				size.Height = availableSize.Height;
+
+			// Use the requested width if one is set
+			if (!Double.IsNaN(_layoutInfo.Width))
+				size.Width = _layoutInfo.Width;
+
+			// Use the requested height if one is set
+			if (!Double.IsNaN(_layoutInfo.Height))
+				size.Height = _layoutInfo.Height;
+
+			// Clamp the width and the height to the minimum and maximum values
+			size.Width = MathUtils.Clamp(size.Width, _layoutInfo.MinWidth, _layoutInfo.MaxWidth);
+			size.Height = MathUtils.Clamp(size.Height, _layoutInfo.MinHeight, _layoutInfo.MaxHeight);
 		}
 
 		/// <summary>
@@ -786,21 +477,20 @@
 		private Vector2d ComputeAlignmentOffset(SizeD availableSize)
 		{
 			var offset = Vector2d.Zero;
-			var margin = Margin;
 
 			switch (HorizontalAlignment)
 			{
 				case HorizontalAlignment.Stretch:
-					offset.X = margin.Left;
+					offset.X = _layoutInfo.Margin.Left;
 					break;
 				case HorizontalAlignment.Center:
-					offset.X = (availableSize.Width - RenderSize.Width + margin.Left - margin.Right) / 2;
+					offset.X = (availableSize.Width - RenderSize.Width + _layoutInfo.Margin.Left - _layoutInfo.Margin.Right) / 2;
 					break;
 				case HorizontalAlignment.Left:
-					offset.X = margin.Left;
+					offset.X = _layoutInfo.Margin.Left;
 					break;
 				case HorizontalAlignment.Right:
-					offset.X = availableSize.Width - RenderSize.Width - margin.Right;
+					offset.X = availableSize.Width - RenderSize.Width - _layoutInfo.Margin.Right;
 					break;
 				default:
 					throw new InvalidOperationException("Unexpected alignment.");
@@ -809,16 +499,16 @@
 			switch (VerticalAlignment)
 			{
 				case VerticalAlignment.Stretch:
-					offset.Y = margin.Top;
+					offset.Y = _layoutInfo.Margin.Top;
 					break;
 				case VerticalAlignment.Center:
-					offset.Y = (availableSize.Height - RenderSize.Height + margin.Top - margin.Bottom) / 2;
+					offset.Y = (availableSize.Height - RenderSize.Height + _layoutInfo.Margin.Top - _layoutInfo.Margin.Bottom) / 2;
 					break;
 				case VerticalAlignment.Top:
-					offset.Y = margin.Top;
+					offset.Y = _layoutInfo.Margin.Top;
 					break;
 				case VerticalAlignment.Bottom:
-					offset.Y = availableSize.Height - RenderSize.Height - margin.Bottom;
+					offset.Y = availableSize.Height - RenderSize.Height - _layoutInfo.Margin.Bottom;
 					break;
 				default:
 					throw new InvalidOperationException("Unexpected alignment.");
@@ -836,8 +526,8 @@
 		/// <param name="size">The size the thickness should be added to.</param>
 		private SizeD IncreaseByMargin(SizeD size)
 		{
-			var margin = Margin;
-			return new SizeD(size.Width + margin.Left + margin.Right, size.Height + margin.Top + margin.Bottom);
+			return new SizeD(size.Width + _layoutInfo.Margin.Left + _layoutInfo.Margin.Right,
+							 size.Height + _layoutInfo.Margin.Top + _layoutInfo.Margin.Bottom);
 		}
 
 		/// <summary>
@@ -847,8 +537,8 @@
 		/// <param name="size">The size the thickness should be added to.</param>
 		private SizeD DecreaseByMargin(SizeD size)
 		{
-			var margin = Margin;
-			return new SizeD(size.Width - margin.Left - margin.Right, size.Height - margin.Top - margin.Bottom);
+			return new SizeD(size.Width - _layoutInfo.Margin.Left - _layoutInfo.Margin.Right,
+							 size.Height - _layoutInfo.Margin.Top - _layoutInfo.Margin.Bottom);
 		}
 
 		/// <summary>

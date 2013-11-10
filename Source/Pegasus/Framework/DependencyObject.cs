@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
 	using System.Collections.Generic;
-	using System.Linq.Expressions;
 	using UserInterface;
 
 	/// <summary>
@@ -12,7 +10,7 @@ namespace Pegasus.Framework
 	public abstract class DependencyObject
 	{
 		/// <summary>
-		///   Stores the value's of the dependency object's dependency properties.
+		///   Stores the values of the dependency object's dependency properties.
 		/// </summary>
 		private DependencyPropertyStore _propertyStore = new DependencyPropertyStore();
 
@@ -222,7 +220,7 @@ namespace Pegasus.Framework
 		protected abstract void InheritedValueChanged<T>(DependencyProperty<T> property, T newValue);
 
 		/// <summary>
-		/// Invalidates the inherited values of all inheriting dependency properties.
+		///   Invalidates the inherited values of all inheriting dependency properties.
 		/// </summary>
 		/// <param name="inheritedObject">The new inherited dependency object.</param>
 		protected void InvalidateInheritedValues(DependencyObject inheritedObject)
@@ -304,9 +302,14 @@ namespace Pegasus.Framework
 				if (EqualityComparer<T>.Default.Equals(_oldValue, newValue))
 					return;
 
-				// Invoke the changed handlers, if any
+				var changedEventArgs = new DependencyPropertyChangedEventArgs<T>(_property, _oldValue, newValue);
+
+				// Invoke the static changed handlers
+				_property.OnValueChanged(_object, changedEventArgs);
+				
+				// Invoke the instance changed handlers, if any
 				if (PropertyValue.ChangedHandlers != null)
-					PropertyValue.ChangedHandlers(_object, new DependencyPropertyChangedEventArgs<T>(_property, _oldValue, newValue));
+					PropertyValue.ChangedHandlers(_object, changedEventArgs);
 
 				// If the property inherits its value, we have to push down the change to all inheriting objects
 				if (_property.Inherits)

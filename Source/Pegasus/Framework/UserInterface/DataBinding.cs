@@ -9,7 +9,7 @@
 	///   Binds a target dependency object/dependency property pair to a source object and a path selector.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
-	public sealed class DataBinding<T> : Binding<T>
+	internal sealed class DataBinding<T> : Binding<T>
 	{
 		/// <summary>
 		///   Cached array instance used to separate the properties of a path.
@@ -164,7 +164,7 @@
 
 #if DEBUG
 			if (!_isNull && memberAccess.Value == null)
-				Log.Debug("DataBinding failure: Expression '{0}' encountered a null value when accessing '{1}'.",
+				Log.Debug("Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
 						  _path, memberAccess.MemberName);
 #endif
 

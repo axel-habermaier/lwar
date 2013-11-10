@@ -110,6 +110,7 @@
     <Compile Include="Parsing\BasicParsers\UInt32Parser.Tests.cs" />
     <Compile Include="Parsing\BasicParsers\Int32Parser.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserInterface\SparseObjectStorage.Tests.cs" />
     <Compile Include="UserInterface\LogicalTree.Tests.cs" />
     <Compile Include="UserInterface\ResourceBinding.Tests.cs" />
     <Compile Include="UserInterface\Style.Tests.cs" />

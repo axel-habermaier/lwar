@@ -192,13 +192,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\ContentPropertyAttribute.cs" />
-    <Compile Include="Framework\InheritanceContext.cs" />
+    <Compile Include="Framework\UserInterface\LayoutInfo.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventStorage`1.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventStorage.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventStore.cs" />
+    <Compile Include="Framework\UserInterface\UIElement.cs" />
+    <Compile Include="Framework\UserInterface\UIElement.Properties.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEvent`1.cs" />
+    <Compile Include="Framework\UserInterface\IRoutedEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEvent.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventArgs`1.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventHandler.cs" />
+    <Compile Include="Framework\UserInterface\RoutingStrategy.cs" />
+    <Compile Include="Framework\SparseObjectStorage.cs" />
     <Compile Include="Framework\UserInterface\Binding.cs" />
     <Compile Include="Framework\UserInterface\Controls\Border.cs" />
     <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
     <Compile Include="Framework\UserInterface\Controls\ContentPresenter.cs" />
     <Compile Include="Framework\UserInterface\Controls\ControlTemplate.cs" />
-    <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />
     <Compile Include="Framework\UserInterface\Controls\TextBlock.cs" />
     <Compile Include="Framework\UserInterface\Controls\Orientation.cs" />
     <Compile Include="Framework\UserInterface\Controls\StackPanel.cs" />
@@ -211,6 +223,7 @@
     <Compile Include="Framework\UserInterface\TextRenderingMode.cs" />
     <Compile Include="Framework\UserInterface\Thickness.cs" />
     <Compile Include="Framework\UserInterface\VerticalAlignment.cs" />
+    <Compile Include="Framework\UserInterface\Visibility.cs" />
     <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />
@@ -261,7 +274,6 @@
     <Compile Include="Framework\DependencyProperty.cs" />
     <Compile Include="Framework\DependencyPropertyStore.cs" />
     <Compile Include="Framework\DependencyPropertyValue.cs" />
-    <Compile Include="Framework\UserInterface\ExpressionVisitor.cs" />
     <Compile Include="Framework\INotifyPropertyChanged.cs" />
     <Compile Include="Framework\PropertyDelegates.cs" />
     <Compile Include="Framework\UserInterface\SealableCollection.cs" />
@@ -269,7 +281,7 @@
     <Compile Include="Framework\UserInterface\Style.cs" />
     <Compile Include="Rendering\UserInterface\Text.cs" />
     <Compile Include="Framework\UserInterface\Trigger.cs" />
-    <Compile Include="Framework\UserInterface\UIElement.cs" />
+    <Compile Include="Framework\UserInterface\UIElement.Events.cs" />
     <Compile Include="Framework\UserInterface\UIElementCollection.cs" />
     <Compile Include="Framework\ViewModel.cs" />
     <Compile Include="Framework\UserInterface\Visual.cs" />

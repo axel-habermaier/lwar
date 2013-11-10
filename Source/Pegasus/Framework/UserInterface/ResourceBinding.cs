@@ -9,7 +9,7 @@ namespace Pegasus.Framework.UserInterface
 	///   value every time the resource changes.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
-	public sealed class ResourceBinding<T> : Binding<T>
+	internal sealed class ResourceBinding<T> : Binding<T>
 	{
 		/// <summary>
 		///   The key of the resource that is bound to the dependency property.
@@ -53,7 +53,7 @@ namespace Pegasus.Framework.UserInterface
 			object resource;
 			if (!TargetObject.TryFindResource(_key, out resource))
 			{
-				Log.Warn("Unable to find resource '{0}'.", _key);
+				Log.Debug("Resource binding failure: Unable to find resource '{0}'.", _key);
 				_targetObject.SetValue(_targetProperty, _targetProperty.DefaultValue);
 			}
 			else

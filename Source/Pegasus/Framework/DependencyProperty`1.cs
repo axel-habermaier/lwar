@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
 	using System.Diagnostics;
 
 	/// <summary>
@@ -67,12 +66,21 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
+		///   Raised when the value of the dependency property has been changed on any dependency object.
+		/// </summary>
+		internal event DependencyPropertyChangedHandler<T> Changed;
+
+		/// <summary>
 		///   In debug builds, checks whether the given value is a valid value for the dependency property.
 		/// </summary>
 		/// <param name="value">The value that should be checked.</param>
 		[Conditional("DEBUG")]
 		internal void ValidateValue(T value)
 		{
+			// For enumeration types, check if the given literal is defined
+			if (typeof(T).IsEnum)
+				Assert.That(Enum.IsDefined(typeof(T), value), "The given value is not defined by the enumeration.");
+
 			Assert.That(_validationCallback == null || _validationCallback(value), "Attempted to set an invalid value.");
 		}
 
@@ -131,7 +139,7 @@ namespace Pegasus.Framework
 		}
 
 		/// <summary>
-		/// Unsets the inherited value of the given dependency object.
+		///   Unsets the inherited value of the given dependency object.
 		/// </summary>
 		/// <param name="obj">The dependency object whose inherited value should be unset.</param>
 		internal override void UnsetInheritedValue(DependencyObject obj)
@@ -140,6 +148,15 @@ namespace Pegasus.Framework
 			Assert.That(Inherits, "The dependency property does not support value inheritance.");
 
 			obj.UnsetInheritedValue(this);
+		}
+
+		/// <summary>
+		///   Raises the Changed event.
+		/// </summary>
+		internal void OnValueChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs<T> changedEventArgs)
+		{
+			if (Changed != null)
+				Changed(dependencyObject, changedEventArgs);
 		}
 	}
 }

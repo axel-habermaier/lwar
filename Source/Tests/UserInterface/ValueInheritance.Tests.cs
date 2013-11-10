@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.UserInterface
+﻿namespace Tests.UserInterface
 {
+	using System;
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Framework.UserInterface;
@@ -34,7 +33,7 @@ namespace Tests.UserInterface
 		public void FindResource_RootElement()
 		{
 			var resource = new object();
-			_control1.Resources["r"] = resource;
+			_control1.Resources.Add("r", resource);
 
 			object foundResource;
 			_control1.Button3.TryFindResource("r", out foundResource).Should().BeTrue();
@@ -45,8 +44,8 @@ namespace Tests.UserInterface
 		public void FindResource_RootElement_Overriden()
 		{
 			var resource = new object();
-			_control1.Resources["r"] = new object();
-			_control1.Canvas1.Resources["r"] = resource;
+			_control1.Resources.Add("r", new object());
+			_control1.Canvas1.Resources.Add("r", resource);
 
 			object foundResource;
 			_control1.Button3.TryFindResource("r", out foundResource).Should().BeTrue();
@@ -57,7 +56,7 @@ namespace Tests.UserInterface
 		public void FindResource_SameElement()
 		{
 			var resource = new object();
-			_control1.Button3.Resources["r"] = resource;
+			_control1.Button3.Resources.Add("r", resource);
 
 			object foundResource;
 			_control1.Button3.TryFindResource("r", out foundResource).Should().BeTrue();
