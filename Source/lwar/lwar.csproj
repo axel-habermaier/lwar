@@ -210,9 +210,6 @@
     <Compile Include="Gameplay\EventType.cs" />
     <Compile Include="Gameplay\InterpolatedValue.cs" />
     <Compile Include="InputLayers.cs" />
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Network\LeaveReason.cs" />
     <Compile Include="Network\Messages\AddMessage.cs" />
     <Compile Include="Network\Messages\ChatMessage.cs" />
@@ -308,9 +305,6 @@
     <Compile Include="Rendering\Renderers\SkyBoxRenderer.cs" />
     <Compile Include="UserInterface\Styles\CheckBoxStyle.xaml.cs">
       <DependentUpon>CheckBoxStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserInterface\UserControl2.xaml.cs">
-      <DependentUpon>UserControl2.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserInterface\UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
