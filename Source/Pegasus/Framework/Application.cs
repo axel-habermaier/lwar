@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
 	using System.Linq;
 	using System.Threading;
 	using Math;
@@ -16,6 +15,7 @@ namespace Pegasus.Framework
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
+	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>
 	///   Represents the application.

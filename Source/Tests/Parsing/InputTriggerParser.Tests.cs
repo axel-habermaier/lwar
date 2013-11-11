@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing
+﻿namespace Tests.Parsing
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Platform.Input;
 	using Pegasus.Scripting;

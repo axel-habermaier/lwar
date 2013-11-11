@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
+
 	/// <summary>
 	///   Stores the values that have been set on a dependency property, managing their precedences. The effective value of the
 	///   property is calculated based on the values that have been set. For instance, if the base value has been set by a

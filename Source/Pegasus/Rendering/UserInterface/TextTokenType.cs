@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Rendering.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   Identifies the type of a text token.
 	/// </summary>

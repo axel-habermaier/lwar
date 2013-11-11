@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
+
 	/// <summary>
 	///   Handles a change notification for a property.
 	/// </summary>

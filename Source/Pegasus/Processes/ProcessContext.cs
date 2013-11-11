@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Processes
+﻿namespace Pegasus.Processes
 {
+	using System;
+
 	/// <summary>
 	///   Represents the context of a process that can be by the asynchronous methods that the process executes to check
 	///   whether cancellation has been requested and to set resume conditions for the process.

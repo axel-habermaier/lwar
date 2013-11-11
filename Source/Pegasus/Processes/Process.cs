@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Processes
+﻿namespace Pegasus.Processes
 {
+	using System;
 	using System.Runtime.ExceptionServices;
 	using System.Threading.Tasks;
 	using Platform.Memory;

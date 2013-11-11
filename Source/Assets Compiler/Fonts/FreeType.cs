@@ -1,5 +1,4 @@
-﻿using System;
-#if Linux && x64
+﻿#if Linux && x64
 // FT_Long is 64 bits wide on x64 Linux
 using Long = System.Int64;
 #else
@@ -10,6 +9,7 @@ using Long = System.Int32;
 
 namespace Pegasus.AssetsCompiler.Fonts
 {
+	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Platform.Logging;
@@ -18,7 +18,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 	///   Provides access to native freetype functions.
 	/// </summary>
 #if !DEBUG
-	[System.Security.SuppressUnmanagedCodeSecurity]
+	[SuppressUnmanagedCodeSecurity]
 #endif
 	internal static class FreeType
 	{

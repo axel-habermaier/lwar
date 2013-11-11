@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Rendering
+﻿namespace Lwar.Rendering
 {
+	using System;
 	using System.Linq;
 	using Pegasus;
 	using Pegasus.Math;

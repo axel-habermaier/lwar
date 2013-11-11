@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Logging
+﻿namespace Pegasus.Platform.Logging
 {
+	using System;
+
 	/// <summary>
 	///   Describes the type of a log entry.
 	/// </summary>

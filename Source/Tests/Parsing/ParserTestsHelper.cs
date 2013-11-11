@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing
+﻿namespace Tests.Parsing
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using FluentAssertions;

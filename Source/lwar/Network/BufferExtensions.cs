@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
 	using System.Text;
 	using Gameplay;
 	using Pegasus;

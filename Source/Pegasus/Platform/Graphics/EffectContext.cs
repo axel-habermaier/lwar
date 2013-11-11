@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
 	using System.Diagnostics;
 	using Assets;
 

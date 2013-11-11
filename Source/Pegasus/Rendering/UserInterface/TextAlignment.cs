@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Rendering.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   Describes the alignment of text.
 	/// </summary>

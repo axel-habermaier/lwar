@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar
+﻿namespace Lwar
 {
+	using System;
 	using System.Collections.Generic;
 	using Pegasus;
 	using Pegasus.Platform.Memory;

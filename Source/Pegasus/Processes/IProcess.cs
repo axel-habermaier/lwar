@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Processes
+﻿namespace Pegasus.Processes
 {
+	using System;
+
 	/// <summary>
 	///   Represents an asynchronous process.
 	/// </summary>

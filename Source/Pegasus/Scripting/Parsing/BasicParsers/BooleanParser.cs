@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.BasicParsers
+﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
+	using System;
+
 	/// <summary>
 	///   Parses a Boolean value (either 'true'/'false', '1'/'0', or 'on'/'off').
 	/// </summary>

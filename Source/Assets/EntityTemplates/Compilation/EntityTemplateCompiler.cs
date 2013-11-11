@@ -1,10 +1,10 @@
-﻿using System;
-using Pegasus.AssetsCompiler.Assets.Attributes;
+﻿using Pegasus.AssetsCompiler.Assets.Attributes;
 
 [assembly: Ignore("EntityTemplates/Compilation/EntityTemplateCompiler.cs")]
 
 namespace Lwar.Assets.EntityTemplates.Compilation
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;

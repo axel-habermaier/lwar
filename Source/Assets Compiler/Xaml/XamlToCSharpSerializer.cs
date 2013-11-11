@@ -4,7 +4,6 @@
 	using System.Linq;
 	using System.Xml.Linq;
 	using CodeGeneration;
-	using Framework.UserInterface;
 	using Platform.Logging;
 
 	/// <summary>
@@ -178,8 +177,8 @@
 			var parameters = element.Elements(XamlFile.DefaultNamespace + "Parameter").Select(GenerateValue).ToArray();
 			var parent = element.Parent.Attribute("Name").Value;
 
-			_writer.AppendLine("{0}.{3}.{1}({2});", parent, element.Attribute("Method").Value, 
-				String.Join(", ", parameters), element.Attribute("TargetProperty").Value);
+			_writer.AppendLine("{0}.{3}.{1}({2});", parent, element.Attribute("Method").Value,
+							   String.Join(", ", parameters), element.Attribute("TargetProperty").Value);
 			_writer.Newline();
 		}
 

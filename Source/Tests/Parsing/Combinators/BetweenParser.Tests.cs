@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.Combinators
+﻿namespace Tests.Parsing.Combinators
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Parsing.BasicParsers;
@@ -18,21 +17,27 @@ namespace Tests.Parsing.Combinators
 		}
 
 		[Test]
-		public void Valid()
+		public void Invalid_InvalidInt()
 		{
-			Success("(123)", 123);
-		}
-
-		[Test]
-		public void Invalid_MissingLeft()
-		{
-			Expected("21)", "'('");
+			Expected("(a)", TypeRegistry.GetDescription<int>());
 		}
 
 		[Test]
 		public void Invalid_LeftOtherCharacter()
 		{
 			Expected("a21)", "'('");
+		}
+
+		[Test]
+		public void Invalid_MissingInt()
+		{
+			Expected("()", TypeRegistry.GetDescription<int>());
+		}
+
+		[Test]
+		public void Invalid_MissingLeft()
+		{
+			Expected("21)", "'('");
 		}
 
 		[Test]
@@ -48,15 +53,9 @@ namespace Tests.Parsing.Combinators
 		}
 
 		[Test]
-		public void Invalid_MissingInt()
+		public void Valid()
 		{
-			Expected("()", TypeRegistry.GetDescription<int>());
-		}
-
-		[Test]
-		public void Invalid_InvalidInt()
-		{
-			Expected("(a)", TypeRegistry.GetDescription<int>());
+			Success("(123)", 123);
 		}
 	}
 }

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Platform.Input
 {
+	using System;
+
 	/// <summary>
 	///   Provides information about key press and release events.
 	/// </summary>

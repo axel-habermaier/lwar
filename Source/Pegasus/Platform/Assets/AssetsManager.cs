@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform.Assets
+﻿namespace Pegasus.Platform.Assets
 {
+	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.IO;

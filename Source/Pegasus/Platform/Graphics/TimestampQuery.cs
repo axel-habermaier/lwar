@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
+
 	/// <summary>
 	///   Represents a query that records the current GPU timestamp. A timestamp query can only be issued when a timestamp
 	///   disjoint query is currently active.

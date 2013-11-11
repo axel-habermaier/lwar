@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
+﻿namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
+	using System;
+
 	/// <summary>
 	///   Represents a data type.
 	/// </summary>

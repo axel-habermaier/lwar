@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
+
 	/// <summary>
 	///   A constant buffer holds constant data for shader programs.
 	/// </summary>

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Lwar.Gameplay.Entities
+﻿namespace Lwar.Gameplay.Entities
 {
+	using System;
+
 	/// <summary>
 	///   Represents a phaser.
 	/// </summary>

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing
+﻿namespace Pegasus.Scripting.Parsing
 {
+	using System;
+
 	/// <summary>
 	///   Indicates which type of error occurred.
 	/// </summary>

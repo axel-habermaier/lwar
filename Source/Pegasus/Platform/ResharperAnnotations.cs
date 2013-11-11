@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using System;
-
 namespace Pegasus.Platform
 {
+	using System;
+
 	/// <summary>
 	///   Indicates that the marked method builds string by format pattern and (optional) arguments.
 	///   Parameter, which contains format string, should be given in constructor.

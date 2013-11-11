@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Controls
 {
+	using System;
+
 	/// <summary>
 	///   Represents a base class for control typically defined in Xaml.
 	/// </summary>

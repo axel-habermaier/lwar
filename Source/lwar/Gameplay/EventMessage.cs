@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Lwar.Gameplay
+﻿namespace Lwar.Gameplay
 {
+	using System;
+
 	/// <summary>
 	///   Represents an event message. Valid fields depend on the type of the events.
 	/// </summary>

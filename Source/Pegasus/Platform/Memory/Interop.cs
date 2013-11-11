@@ -1,14 +1,14 @@
-﻿using System;
-
-namespace Pegasus.Platform.Memory
+﻿namespace Pegasus.Platform.Memory
 {
+	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///   Provides access to certain native functions in a platform-independent way.
 	/// </summary>
 #if !DEBUG
-	[System.Security.SuppressUnmanagedCodeSecurity]
+	[SuppressUnmanagedCodeSecurity]
 #endif
 	internal static class Interop
 	{

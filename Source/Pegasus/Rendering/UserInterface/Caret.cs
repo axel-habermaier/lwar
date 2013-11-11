@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Rendering.UserInterface
 {
+	using System;
 	using System.Globalization;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Memory;
-	using Math = System.Math;
 
 	/// <summary>
 	///   An indicator that shows the current insertion and deletion position within an editable text.

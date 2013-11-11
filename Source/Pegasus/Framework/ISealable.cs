@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
+
 	/// <summary>
 	///   Represents a class that can be sealed, preventing any future modification of the class.
 	/// </summary>

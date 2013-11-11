@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.BasicParsers
+﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
+	using System;
+
 	/// <summary>
 	///   Parses a string that satisfies the given predicates. The parser fails if not at least one character can be parsed.
 	/// </summary>

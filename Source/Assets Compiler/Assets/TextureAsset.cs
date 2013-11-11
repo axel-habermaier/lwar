@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Assets
+﻿namespace Pegasus.AssetsCompiler.Assets
 {
+	using System;
 	using System.Drawing;
 	using System.Drawing.Imaging;
 	using System.Runtime.InteropServices;

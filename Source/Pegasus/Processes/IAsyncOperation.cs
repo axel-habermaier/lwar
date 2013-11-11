@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Processes
+﻿namespace Pegasus.Processes
 {
+	using System;
+
 	/// <summary>
 	///   Represents an asynchronous operation that can block the execution of an asynchronous process until the operation
 	///   returns.

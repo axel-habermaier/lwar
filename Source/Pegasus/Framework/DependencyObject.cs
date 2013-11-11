@@ -306,7 +306,7 @@
 
 				// Invoke the static changed handlers
 				_property.OnValueChanged(_object, changedEventArgs);
-				
+
 				// Invoke the instance changed handlers, if any
 				if (PropertyValue.ChangedHandlers != null)
 					PropertyValue.ChangedHandlers(_object, changedEventArgs);

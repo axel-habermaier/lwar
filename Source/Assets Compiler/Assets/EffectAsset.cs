@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Assets
+﻿namespace Pegasus.AssetsCompiler.Assets
 {
+	using System;
+
 	/// <summary>
 	///   Represents a C# shader effect file that requires compilation.
 	/// </summary>

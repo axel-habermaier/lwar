@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Platform.Input
 {
+	using System;
 	using System.Linq;
 	using Scripting.Parsing;
 

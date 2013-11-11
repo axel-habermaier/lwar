@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Math
+﻿namespace Pegasus.Math
 {
+	using System;
 	using System.Runtime.InteropServices;
-	using Math = System.Math;
 
 	/// <summary>
 	///   Represents a 4x4 matrix.

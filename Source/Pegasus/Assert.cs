@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus
+﻿namespace Pegasus
 {
+	using System;
 	using System.Collections;
 	using System.Diagnostics;
 	using Framework;

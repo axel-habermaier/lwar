@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.CodeGeneration
+﻿namespace Pegasus.AssetsCompiler.CodeGeneration
 {
+	using System;
 	using ICSharpCode.NRefactory;
 	using Platform.Logging;
 

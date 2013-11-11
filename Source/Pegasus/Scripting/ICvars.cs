@@ -1,5 +1,4 @@
-﻿using System;
-using Pegasus.Math;
+﻿using Pegasus.Math;
 using Pegasus.Platform;
 using Pegasus.Scripting;
 using Pegasus.Scripting.Validators;

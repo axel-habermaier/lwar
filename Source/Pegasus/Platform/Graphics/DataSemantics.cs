@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
+
 	/// <summary>
 	///   Describes the usage scenario of an input element.
 	/// </summary>

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
+﻿namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
+	using System;
 	using Assets;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;

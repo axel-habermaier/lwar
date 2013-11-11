@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing
+﻿namespace Tests.Parsing
 {
+	using System;
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Scripting.Parsing;
@@ -54,18 +53,17 @@ namespace Tests.Parsing
 		}
 
 		[Test]
+		public void Peek_EndOfInput()
+		{
+			var stream = new InputStream("");
+			stream.Peek().Should().Be(Char.MaxValue);
+		}
+
+		[Test]
 		public void Peek_First()
 		{
 			var stream = new InputStream("123");
 			stream.Peek().Should().Be('1');
-		}
-
-		[Test]
-		public void Peek_Second()
-		{
-			var stream = new InputStream("123");
-			stream.Skip(1);
-			stream.Peek().Should().Be('2');
 		}
 
 		[Test]
@@ -77,50 +75,11 @@ namespace Tests.Parsing
 		}
 
 		[Test]
-		public void Peek_EndOfInput()
+		public void Peek_Second()
 		{
-			var stream = new InputStream("");
-			stream.Peek().Should().Be(Char.MaxValue);
-		}
-
-		[Test]
-		public void Substring()
-		{
-			var stream = new InputStream("Test");
-			var substring = stream.Substring(1, 2);
-			substring.Should().Be("es");
-		}
-
-		[Test]
-		public void Skip_One()
-		{
-			var stream = new InputStream("Test");
+			var stream = new InputStream("123");
 			stream.Skip(1);
-			CheckState(stream, 1, 1, 0, 2);
-		}
-
-		[Test]
-		public void Skip_Two()
-		{
-			var stream = new InputStream("Test");
-			stream.Skip(2);
-			CheckState(stream, 2, 1, 0, 3);
-		}
-
-		[Test]
-		public void Skip_Four_OneNewline()
-		{
-			var stream = new InputStream("Te\nst");
-			stream.Skip(4);
-			CheckState(stream, 4, 2, 3, 2);
-		}
-
-		[Test]
-		public void Skip_Four_TwoNewlines()
-		{
-			var stream = new InputStream("Te\n\nst");
-			stream.Skip(4);
-			CheckState(stream, 4, 3, 4, 1);
+			stream.Peek().Should().Be('2');
 		}
 
 		[Test]
@@ -140,14 +99,6 @@ namespace Tests.Parsing
 		}
 
 		[Test]
-		public void SkipWhiteSpaces_TwoFollowedByCharacter()
-		{
-			var stream = new InputStream("\n abc");
-			stream.SkipWhiteSpaces();
-			stream.State.Position.Should().Be(2);
-		}
-
-		[Test]
 		public void SkipWhiteSpaces_OneFollowedByEndOfInput()
 		{
 			var stream = new InputStream(" ");
@@ -156,11 +107,59 @@ namespace Tests.Parsing
 		}
 
 		[Test]
+		public void SkipWhiteSpaces_TwoFollowedByCharacter()
+		{
+			var stream = new InputStream("\n abc");
+			stream.SkipWhiteSpaces();
+			stream.State.Position.Should().Be(2);
+		}
+
+		[Test]
 		public void SkipWhiteSpaces_TwoFollowedByEndOfInput()
 		{
 			var stream = new InputStream("\n ");
 			stream.SkipWhiteSpaces();
 			stream.State.Position.Should().Be(2);
+		}
+
+		[Test]
+		public void Skip_Four_OneNewline()
+		{
+			var stream = new InputStream("Te\nst");
+			stream.Skip(4);
+			CheckState(stream, 4, 2, 3, 2);
+		}
+
+		[Test]
+		public void Skip_Four_TwoNewlines()
+		{
+			var stream = new InputStream("Te\n\nst");
+			stream.Skip(4);
+			CheckState(stream, 4, 3, 4, 1);
+		}
+
+		[Test]
+		public void Skip_One()
+		{
+			var stream = new InputStream("Test");
+			stream.Skip(1);
+			CheckState(stream, 1, 1, 0, 2);
+		}
+
+		[Test]
+		public void Skip_Two()
+		{
+			var stream = new InputStream("Test");
+			stream.Skip(2);
+			CheckState(stream, 2, 1, 0, 3);
+		}
+
+		[Test]
+		public void Substring()
+		{
+			var stream = new InputStream("Test");
+			var substring = stream.Substring(1, 2);
+			substring.Should().Be("es");
 		}
 	}
 }

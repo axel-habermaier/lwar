@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.BasicParsers
+﻿namespace Tests.Parsing.BasicParsers
 {
+	using System;
 	using System.Globalization;
 	using NUnit.Framework;
 	using Pegasus.Scripting;
@@ -16,111 +15,15 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
-		public void Valid_NoSign_NoDecimal_FollowedByEndOfInput()
+		public void Invalid_OnlyNegativeSign()
 		{
-			Success("123", Double.Parse("123", CultureInfo.InvariantCulture));
+			Expected("-a", TypeRegistry.GetDescription<double>());
 		}
 
 		[Test]
-		public void Valid_Positive_NoDecimal_FollowedByEndOfInput()
+		public void Invalid_OnlyNegativeSign_EndOfInput()
 		{
-			Success("+123", Double.Parse("+123", CultureInfo.InvariantCulture));
-		}
-
-		[Test]
-		public void Valid_Negative_NoDecimal_FollowedByEndOfInput()
-		{
-			Success("-123", Double.Parse("-123", CultureInfo.InvariantCulture));
-		}
-
-		[Test]
-		public void Valid_NoSign_NoDecimal_FollowedByLetter()
-		{
-			Success("123a", Double.Parse("123", CultureInfo.InvariantCulture), false);
-		}
-
-		[Test]
-		public void Valid_Positive_NoDecimal_FollowedByLetter()
-		{
-			Success("+123a", Double.Parse("+123", CultureInfo.InvariantCulture), false);
-		}
-
-		[Test]
-		public void Valid_Negative_NoDecimal_FollowedByLetter()
-		{
-			Success("-123a", Double.Parse("-123", CultureInfo.InvariantCulture), false);
-		}
-
-		[Test]
-		public void Valid_NoSign_FractionOnly_FollowedByEndOfInput()
-		{
-			Success(".123", Double.Parse(".123", CultureInfo.InvariantCulture));
-		}
-
-		[Test]
-		public void Valid_Positive_FractionOnly_FollowedByEndOfInput()
-		{
-			Success("+.123", Double.Parse("+.123", CultureInfo.InvariantCulture));
-		}
-
-		[Test]
-		public void Valid_Negative_FractionOnly_FollowedByEndOfInput()
-		{
-			Success("-.123", Double.Parse("-.123", CultureInfo.InvariantCulture));
-		}
-
-		[Test]
-		public void Valid_NoSign_FractionOnly_FollowedByLetter()
-		{
-			Success(".123a", Double.Parse(".123", CultureInfo.InvariantCulture), false);
-		}
-
-		[Test]
-		public void Valid_Positive_FractionOnly_FollowedByLetter()
-		{
-			Success("+.123a", Double.Parse("+.123", CultureInfo.InvariantCulture), false);
-		}
-
-		[Test]
-		public void Valid_Negative_FractionOnly_FollowedByLetter()
-		{
-			Success("-.123a", Double.Parse("-.123", CultureInfo.InvariantCulture), false);
-		}
-
-		[Test]
-		public void Valid_NoSign_FractionAndInteger_FollowedByEndOfInput()
-		{
-			Success("3.123", Double.Parse("3.123", CultureInfo.InvariantCulture));
-		}
-
-		[Test]
-		public void Valid_Positive_FractionAndInteger_FollowedByEndOfInput()
-		{
-			Success("+3.123", Double.Parse("+3.123", CultureInfo.InvariantCulture));
-		}
-
-		[Test]
-		public void Valid_Negative_FractionAndInteger_FollowedByEndOfInput()
-		{
-			Success("-3.123", Double.Parse("-3.123", CultureInfo.InvariantCulture));
-		}
-
-		[Test]
-		public void Valid_NoSign_FractionAndInteger_FollowedByLetter()
-		{
-			Success("3.123a", Double.Parse("3.123", CultureInfo.InvariantCulture), false);
-		}
-
-		[Test]
-		public void Valid_Positive_FractionAndInteger_FollowedByLetter()
-		{
-			Success("+3.123a", Double.Parse("+3.123", CultureInfo.InvariantCulture), false);
-		}
-
-		[Test]
-		public void Valid_Negative_FractionAndInteger_FollowedByLetter()
-		{
-			Success("-3.123a", Double.Parse("-3.123", CultureInfo.InvariantCulture), false);
+			Expected("-", TypeRegistry.GetDescription<double>());
 		}
 
 		[Test]
@@ -130,21 +33,17 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
-		public void Invalid_OnlyNegativeSign()
-		{
-			Expected("-a", TypeRegistry.GetDescription<double>());
-		}
-
-		[Test]
 		public void Invalid_OnlyPositiveSign_EndOfInput()
 		{
 			Expected("+", TypeRegistry.GetDescription<double>());
 		}
 
 		[Test]
-		public void Invalid_OnlyNegativeSign_EndOfInput()
+		public void Overflow()
 		{
-			Expected("-", TypeRegistry.GetDescription<double>());
+			Message(
+				    "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+					String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<double>()));
 		}
 
 		[Test]
@@ -156,11 +55,111 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
-		public void Overflow()
+		public void Valid_Negative_FractionAndInteger_FollowedByEndOfInput()
 		{
-			Message(
-				    "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-					String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<double>()));
+			Success("-3.123", Double.Parse("-3.123", CultureInfo.InvariantCulture));
+		}
+
+		[Test]
+		public void Valid_Negative_FractionAndInteger_FollowedByLetter()
+		{
+			Success("-3.123a", Double.Parse("-3.123", CultureInfo.InvariantCulture), false);
+		}
+
+		[Test]
+		public void Valid_Negative_FractionOnly_FollowedByEndOfInput()
+		{
+			Success("-.123", Double.Parse("-.123", CultureInfo.InvariantCulture));
+		}
+
+		[Test]
+		public void Valid_Negative_FractionOnly_FollowedByLetter()
+		{
+			Success("-.123a", Double.Parse("-.123", CultureInfo.InvariantCulture), false);
+		}
+
+		[Test]
+		public void Valid_Negative_NoDecimal_FollowedByEndOfInput()
+		{
+			Success("-123", Double.Parse("-123", CultureInfo.InvariantCulture));
+		}
+
+		[Test]
+		public void Valid_Negative_NoDecimal_FollowedByLetter()
+		{
+			Success("-123a", Double.Parse("-123", CultureInfo.InvariantCulture), false);
+		}
+
+		[Test]
+		public void Valid_NoSign_FractionAndInteger_FollowedByEndOfInput()
+		{
+			Success("3.123", Double.Parse("3.123", CultureInfo.InvariantCulture));
+		}
+
+		[Test]
+		public void Valid_NoSign_FractionAndInteger_FollowedByLetter()
+		{
+			Success("3.123a", Double.Parse("3.123", CultureInfo.InvariantCulture), false);
+		}
+
+		[Test]
+		public void Valid_NoSign_FractionOnly_FollowedByEndOfInput()
+		{
+			Success(".123", Double.Parse(".123", CultureInfo.InvariantCulture));
+		}
+
+		[Test]
+		public void Valid_NoSign_FractionOnly_FollowedByLetter()
+		{
+			Success(".123a", Double.Parse(".123", CultureInfo.InvariantCulture), false);
+		}
+
+		[Test]
+		public void Valid_NoSign_NoDecimal_FollowedByEndOfInput()
+		{
+			Success("123", Double.Parse("123", CultureInfo.InvariantCulture));
+		}
+
+		[Test]
+		public void Valid_NoSign_NoDecimal_FollowedByLetter()
+		{
+			Success("123a", Double.Parse("123", CultureInfo.InvariantCulture), false);
+		}
+
+		[Test]
+		public void Valid_Positive_FractionAndInteger_FollowedByEndOfInput()
+		{
+			Success("+3.123", Double.Parse("+3.123", CultureInfo.InvariantCulture));
+		}
+
+		[Test]
+		public void Valid_Positive_FractionAndInteger_FollowedByLetter()
+		{
+			Success("+3.123a", Double.Parse("+3.123", CultureInfo.InvariantCulture), false);
+		}
+
+		[Test]
+		public void Valid_Positive_FractionOnly_FollowedByEndOfInput()
+		{
+			Success("+.123", Double.Parse("+.123", CultureInfo.InvariantCulture));
+		}
+
+		[Test]
+		public void Valid_Positive_FractionOnly_FollowedByLetter()
+		{
+			Success("+.123a", Double.Parse("+.123", CultureInfo.InvariantCulture), false);
+		}
+
+		[Test]
+		public void Valid_Positive_NoDecimal_FollowedByEndOfInput()
+		{
+			Success("+123", Double.Parse("+123", CultureInfo.InvariantCulture));
+		}
+
+		[Test]
+		public void Valid_Positive_NoDecimal_FollowedByLetter()
+		{
+			Success("+123a", Double.Parse("+123", CultureInfo.InvariantCulture), false);
 		}
 	}
 }

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.CodeGeneration
+﻿namespace Pegasus.AssetsCompiler.CodeGeneration
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;

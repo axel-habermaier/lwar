@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform
+﻿namespace Pegasus.Platform
 {
+	using System;
+
 	/// <summary>
 	///   Indicates the platform on which the application is running.
 	/// </summary>

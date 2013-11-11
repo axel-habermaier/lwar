@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   A sparse storage for dependency property values. 
+	///   A sparse storage for dependency property values.
 	/// </summary>
 	internal struct DependencyPropertyStore
 	{

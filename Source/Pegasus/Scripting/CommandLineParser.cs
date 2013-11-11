@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Scripting
+﻿namespace Pegasus.Scripting
 {
+	using System;
 	using Parsing;
 	using Platform.Logging;
 

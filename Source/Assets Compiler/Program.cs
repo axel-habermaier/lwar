@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler
+﻿namespace Pegasus.AssetsCompiler
 {
+	using System;
 	using System.Diagnostics;
 	using System.Globalization;
 	using System.Threading;
@@ -90,8 +89,8 @@ namespace Pegasus.AssetsCompiler
 
 				if (String.IsNullOrWhiteSpace(project) || (!recompile && !clean && !compile && !ui))
 				{
-					Log.Error("The asset compiler must be invoked with two arguments: the 'ui', 'clean', 'compile', or "+
-						"'recompile' command followed by the path to the assets project that should be compiled.");
+					Log.Error("The asset compiler must be invoked with two arguments: the 'ui', 'clean', 'compile', or " +
+							  "'recompile' command followed by the path to the assets project that should be compiled.");
 					return -1;
 				}
 

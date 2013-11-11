@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
+﻿namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;

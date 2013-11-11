@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
+
 	/// <summary>
 	///   Indicates which blend function should be used.
 	/// </summary>

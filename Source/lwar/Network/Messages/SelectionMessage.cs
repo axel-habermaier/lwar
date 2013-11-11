@@ -1,7 +1,6 @@
-using System;
-
 namespace Lwar.Network.Messages
 {
+	using System;
 	using System.Runtime.InteropServices;
 	using Gameplay;
 	using Gameplay.Entities;

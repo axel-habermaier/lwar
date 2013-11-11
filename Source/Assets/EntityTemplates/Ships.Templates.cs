@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Assets.EntityTemplates
+﻿namespace Lwar.Assets.EntityTemplates
 {
+	using System;
 	using Compilation;
 	using Pegasus.Math;
 

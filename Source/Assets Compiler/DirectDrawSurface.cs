@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler
+﻿namespace Pegasus.AssetsCompiler
 {
+	using System;
 	using System.Collections.Generic;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Math = System.Math;
 
 	/// <summary>
 	///   Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at

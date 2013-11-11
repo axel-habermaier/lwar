@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
+
 	/// <summary>
 	///   Specifies what operations are supported on a texture.
 	/// </summary>

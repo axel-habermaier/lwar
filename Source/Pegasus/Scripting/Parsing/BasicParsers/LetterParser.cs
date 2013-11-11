@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.BasicParsers
+﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
+	using System;
+
 	/// <summary>
 	///   Parses a single letter character.
 	/// </summary>

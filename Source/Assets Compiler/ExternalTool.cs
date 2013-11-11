@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler
+﻿namespace Pegasus.AssetsCompiler
 {
+	using System;
 	using System.Linq;
 	using Platform;
 	using Platform.Graphics;

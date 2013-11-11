@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Assets
+﻿namespace Pegasus.Platform.Assets
 {
+	using System;
+
 	/// <summary>
 	///   Represents a unique identifier for an asset that the asset manager uses to load the asset.
 	/// </summary>

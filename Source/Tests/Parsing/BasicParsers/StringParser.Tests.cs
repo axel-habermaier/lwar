@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.BasicParsers
+﻿namespace Tests.Parsing.BasicParsers
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting.Parsing.BasicParsers;
 
@@ -16,21 +15,9 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
-		public void Valid_OneLetter()
+		public void EndOfInput()
 		{
-			Success("A", "A");
-		}
-
-		[Test]
-		public void Valid_TwoLetters()
-		{
-			Success("Ab", "Ab");
-		}
-
-		[Test]
-		public void Valid_ThreeLetters()
-		{
-			Success("Abc", "Abc");
+			Expected("", Description);
 		}
 
 		[Test]
@@ -40,9 +27,21 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
-		public void EndOfInput()
+		public void Valid_OneLetter()
 		{
-			Expected("", Description);
+			Success("A", "A");
+		}
+
+		[Test]
+		public void Valid_ThreeLetters()
+		{
+			Success("Abc", "Abc");
+		}
+
+		[Test]
+		public void Valid_TwoLetters()
+		{
+			Success("Ab", "Ab");
 		}
 	}
 }

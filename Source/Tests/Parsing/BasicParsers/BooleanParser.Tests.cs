@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.BasicParsers
+﻿namespace Tests.Parsing.BasicParsers
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting.Parsing.BasicParsers;
 
@@ -11,14 +10,6 @@ namespace Tests.Parsing.BasicParsers
 		public BooleanParserTests()
 			: base(new BooleanParser())
 		{
-		}
-
-		[Test]
-		public void True()
-		{
-			Success("true", true, true);
-			Success("1", true, true);
-			Success("on", true, true);
 		}
 
 		[Test]
@@ -35,6 +26,14 @@ namespace Tests.Parsing.BasicParsers
 			Expected("t", BooleanParser.ErrorMessage);
 			Expected("tru", BooleanParser.ErrorMessage);
 			Expected("fals", BooleanParser.ErrorMessage);
+		}
+
+		[Test]
+		public void True()
+		{
+			Success("true", true, true);
+			Success("1", true, true);
+			Success("on", true, true);
 		}
 	}
 }

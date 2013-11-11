@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Effects
+﻿namespace Pegasus.AssetsCompiler.Effects
 {
+	using System;
 	using Platform.Graphics;
 
 	/// <summary>

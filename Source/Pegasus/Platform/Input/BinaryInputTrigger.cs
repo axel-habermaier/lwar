@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Platform.Input
 {
+	using System;
+
 	/// <summary>
 	///   Represents a binary trigger that combines two sub-triggers.
 	/// </summary>

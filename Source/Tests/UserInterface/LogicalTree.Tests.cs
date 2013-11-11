@@ -1,5 +1,6 @@
 ﻿namespace Tests.UserInterface
 {
+	using System;
 	using FluentAssertions;
 	using NUnit.Framework;
 
@@ -17,13 +18,6 @@
 		private TestControl _control2;
 
 		[Test]
-		public void Canvas()
-		{
-			_control1.Canvas1.Parent.Should().Be(_control1);
-			_control1.Canvas1.Children.Should().ContainInOrder(_control1.Button1, _control1.Button2, _control1.Canvas2);
-		}
-
-		[Test]
 		public void Button()
 		{
 			_control1.Button1.Parent.Should().Be(_control1.Canvas1);
@@ -32,12 +26,10 @@
 		}
 
 		[Test]
-		public void TreeRemove()
+		public void Canvas()
 		{
-			_control1.Canvas1.Children.Remove(_control1.Button2);
-
-			_control1.Canvas1.Children.Should().ContainInOrder(_control1.Button1, _control1.Canvas2);
-			_control1.Button2.Parent.Should().BeNull();
+			_control1.Canvas1.Parent.Should().Be(_control1);
+			_control1.Canvas1.Children.Should().ContainInOrder(_control1.Button1, _control1.Button2, _control1.Canvas2);
 		}
 
 		[Test]
@@ -47,6 +39,15 @@
 			_control2.Canvas1.Children.Add(_control1.Button2);
 
 			_control1.Button2.Parent.Should().Be(_control2.Canvas1);
+		}
+
+		[Test]
+		public void TreeRemove()
+		{
+			_control1.Canvas1.Children.Remove(_control1.Button2);
+
+			_control1.Canvas1.Children.Should().ContainInOrder(_control1.Button1, _control1.Canvas2);
+			_control1.Button2.Parent.Should().BeNull();
 		}
 	}
 }

@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Math
+﻿namespace Pegasus.Math
 {
-	using Math = System.Math;
+	using System;
 
 	/// <summary>
 	///   Provides math utility functions.

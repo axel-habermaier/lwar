@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   Handles a change notification for a resource dictionary.
 	/// </summary>

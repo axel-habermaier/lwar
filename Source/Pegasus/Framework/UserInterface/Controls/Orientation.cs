@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Controls
 {
+	using System;
+
 	/// <summary>
 	///   Determines the orientation of a layout.
 	/// </summary>

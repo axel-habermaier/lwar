@@ -1,11 +1,11 @@
-﻿using System;
-
-namespace Pegasus.Platform.Logging
+﻿namespace Pegasus.Platform.Logging
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using Memory;
 	using Rendering.UserInterface;
+	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>
 	///   Captures all generated logs and outputs them to a log file.

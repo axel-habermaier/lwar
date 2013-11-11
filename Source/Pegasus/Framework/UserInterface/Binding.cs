@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   A base class for bindings that automatically ensures that values are synchronized between source and target.
 	/// </summary>

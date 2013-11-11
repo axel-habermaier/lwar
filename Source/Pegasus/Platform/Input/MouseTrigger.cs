@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Platform.Input
 {
+	using System;
+
 	/// <summary>
 	///   Represents a trigger that triggers if a mouse button is in a certain state.
 	/// </summary>

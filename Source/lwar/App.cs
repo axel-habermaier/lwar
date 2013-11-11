@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Lwar
+﻿namespace Lwar
 {
+	using System;
 	using System.Net;
 	using Network;
 	using Pegasus;
-	using Pegasus.Framework;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;

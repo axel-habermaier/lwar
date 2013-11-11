@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler
+﻿namespace Pegasus.AssetsCompiler
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using Assets;
@@ -116,7 +115,7 @@ namespace Pegasus.AssetsCompiler
 		/// </summary>
 		public bool Compile()
 		{
-				var compilers = CreateTypeInstances<IAssetCompiler>();
+			var compilers = CreateTypeInstances<IAssetCompiler>();
 
 			try
 			{

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform.Memory
+﻿namespace Pegasus.Platform.Memory
 {
+	using System;
 	using System.Collections.Generic;
 	using Logging;
 

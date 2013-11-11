@@ -1,8 +1,8 @@
-﻿using System;
-
-namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Platform.Input
 {
+	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Math;
 	using Memory;
 
@@ -157,7 +157,7 @@ namespace Pegasus.Platform.Input
 		///   Provides access to the native mouse functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

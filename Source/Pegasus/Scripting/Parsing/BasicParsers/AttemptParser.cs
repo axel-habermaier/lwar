@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.BasicParsers
+﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
+	using System;
+
 	/// <summary>
 	///   Attempts to apply the given parser, returning its reply on success. If the parser fails non-fatally, however, it
 	///   resets the input stream state to where it was when the parser was applied. Therefore, the attempt parser implements a

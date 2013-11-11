@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Gameplay.Actors
+﻿namespace Lwar.Gameplay.Actors
 {
+	using System;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 

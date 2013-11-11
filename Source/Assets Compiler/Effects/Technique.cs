@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Effects
+﻿namespace Pegasus.AssetsCompiler.Effects
 {
+	using System;
+
 	/// <summary>
 	///   Represents a combination of shaders that are set on the GPU to create a rendering effect.
 	/// </summary>

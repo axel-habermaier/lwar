@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Rendering.Renderers
+﻿namespace Lwar.Rendering.Renderers
 {
+	using System;
 	using Assets;
 	using Gameplay.Actors;
 	using Pegasus.Math;

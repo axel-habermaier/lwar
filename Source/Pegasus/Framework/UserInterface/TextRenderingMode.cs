@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   Defines the supported rendering modes for text.
 	/// </summary>

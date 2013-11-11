@@ -1,5 +1,4 @@
-﻿using System;
-using Pegasus.AssetsCompiler.Assets.Attributes;
+﻿using Pegasus.AssetsCompiler.Assets.Attributes;
 
 [assembly: Ignore("Textures/CompilationSettings.cs")]
 

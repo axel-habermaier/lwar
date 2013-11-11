@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Rendering.UserInterface
 {
+	using System;
 	using Math;
 	using Platform.Memory;
-	using Math = System.Math;
 
 	/// <summary>
 	///   Determines a layout for a text based on the font, desired with, alignment, etc.

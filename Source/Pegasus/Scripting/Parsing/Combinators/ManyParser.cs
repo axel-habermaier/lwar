@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.Combinators
+﻿namespace Pegasus.Scripting.Parsing.Combinators
 {
+	using System;
 	using System.Collections.Generic;
 
 	/// <summary>

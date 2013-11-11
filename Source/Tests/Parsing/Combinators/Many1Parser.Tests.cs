@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.Combinators
+﻿namespace Tests.Parsing.Combinators
 {
+	using System;
 	using System.Collections.Generic;
 	using FluentAssertions;
 	using NUnit.Framework;
@@ -14,27 +13,6 @@ namespace Tests.Parsing.Combinators
 		public Many1ParserTest()
 			: base(new Many1Parser<char>(~new WhiteSpacesParser() + new LetterParser()))
 		{
-		}
-
-		[Test]
-		public void Valid_One()
-		{
-			var result = Success("a");
-			result.Should().Equal(new List<char> { 'a' });
-		}
-
-		[Test]
-		public void Valid_Two()
-		{
-			var result = Success("ab");
-			result.Should().Equal(new List<char> { 'a', 'b' });
-		}
-
-		[Test]
-		public void Valid_Three()
-		{
-			var result = Success("abc");
-			result.Should().Equal(new List<char> { 'a', 'b', 'c' });
 		}
 
 		[Test]
@@ -53,6 +31,27 @@ namespace Tests.Parsing.Combinators
 		public void Invalid_Second_ConsumesInput()
 		{
 			Expected("a  1", "letter");
+		}
+
+		[Test]
+		public void Valid_One()
+		{
+			var result = Success("a");
+			result.Should().Equal(new List<char> { 'a' });
+		}
+
+		[Test]
+		public void Valid_Three()
+		{
+			var result = Success("abc");
+			result.Should().Equal(new List<char> { 'a', 'b', 'c' });
+		}
+
+		[Test]
+		public void Valid_Two()
+		{
+			var result = Success("ab");
+			result.Should().Equal(new List<char> { 'a', 'b' });
 		}
 	}
 }

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Controls
 {
+	using System;
+
 	/// <summary>
 	///   Represents a control with a single logical child of any type as its content.
 	/// </summary>

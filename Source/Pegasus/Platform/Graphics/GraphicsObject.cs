@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
 	using System.Diagnostics;
 	using Memory;
 
@@ -43,9 +42,9 @@ namespace Pegasus.Platform.Graphics
 
 #if DEBUG
 
-		/// <summary>
-		///   Gets the name of the graphics object. This property is only available in debug builds.
-		/// </summary>
+	/// <summary>
+	///   Gets the name of the graphics object. This property is only available in debug builds.
+	/// </summary>
 		protected string Name { get; private set; }
 
 		/// <summary>

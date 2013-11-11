@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Xaml
+﻿namespace Pegasus.AssetsCompiler.Xaml
 {
+	using System;
+
 	/// <summary>
 	///   Represents a namespace imported by a Xaml file.
 	/// </summary>

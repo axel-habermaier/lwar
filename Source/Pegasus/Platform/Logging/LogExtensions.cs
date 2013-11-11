@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform.Logging
+﻿namespace Pegasus.Platform.Logging
 {
+	using System;
 	using System.Diagnostics;
 	using System.Linq;
 

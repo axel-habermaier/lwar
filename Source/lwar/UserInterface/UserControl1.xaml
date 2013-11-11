@@ -7,12 +7,11 @@
              FontSize="11" 
              TextOptions.TextRenderingMode="Aliased">
     <UserControl.Resources>
-        <Style x:Key="Bla"></Style>
+        <Style x:Key="Bla" />
     </UserControl.Resources>
     <Canvas>
 		<Border Background="Red"><TextBlock Margin="18,31,0,15" Foreground="#FF1AA6E8" Background="#FFBD4C0B">Hallo</TextBlock></Border>
-        <Button Style="{StaticResource Special}" Content="Hallo Welt Button" Canvas.Top="149.333" Canvas.Left="181.999" Background="#FFD60707">
-        </Button>
+        <Button Style="{StaticResource Special}" Content="Hallo Welt Button" Canvas.Top="149.333" Canvas.Left="181.999" Background="#FFD60707" />
         <Border Background="Red" Canvas.Left="155.333" Canvas.Top="30" Height="85" Width="128.333"><TextBlock Margin="50,31,0,15" Foreground="#FF1AA6E8" Background="#FFE07234" Text="ABC"/></Border>
         <Border Background="Red" Canvas.Top="73.333" Margin="7,0,0,0"><TextBlock Margin="42,31,0,15" Foreground="#FF1AA6E8" Background="#FFC36A37">DEF</TextBlock></Border>
         <Border Background="Red" Canvas.Top="195" Canvas.Left="191" Height="31" Width="71"><TextBlock Foreground="#FF1AA6E8" Background="#FFC36A37" Text="Center" Margin="10,6,10,0"/></Border>
@@ -25,6 +24,6 @@
 		</Border>
 		<Border Background="Red" Canvas.Left="110.4" Canvas.Top="164.666" Margin="0"><TextBlock Foreground="#FF1AA6E8" Text="Padded" Background="#FFC14905" Margin="8,0,0,8"/></Border>
 		<Border Canvas.Left="373" Canvas.Top="161.793" Background="#FF20BBBB" Height="56" Width="66"/>
-        <TextBlock Text="{Binding Text}"></TextBlock>
+        <TextBlock Text="{Binding Text}" />
     </Canvas>
 </UserControl>

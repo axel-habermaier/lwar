@@ -1,8 +1,8 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Logging;
 	using Math;
 	using Memory;
@@ -168,7 +168,7 @@ namespace Pegasus.Platform.Graphics
 		///   Provides access to the native graphics device functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

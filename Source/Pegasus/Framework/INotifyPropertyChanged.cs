@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
+
 	/// <summary>
 	///   Raises an event when a property has been changed.
 	/// </summary>

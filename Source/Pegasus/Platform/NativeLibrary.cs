@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace Pegasus.Platform
+﻿namespace Pegasus.Platform
 {
+	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Graphics;
 	using Logging;
 	using Memory;
@@ -88,7 +88,7 @@ namespace Pegasus.Platform
 		///   Provides access to the native platform types and functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

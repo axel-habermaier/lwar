@@ -20,13 +20,6 @@
 			public int Location { get; private set; }
 		}
 
-		[Test]
-		public void TestStorage()
-		{
-			for (var i = 0; i < 100; ++i)
-				TestStorage(i);
-		}
-
 		private void TestStorage(int count)
 		{
 			var storage = new SparseObjectStorage<Test>();
@@ -62,6 +55,13 @@
 
 			foreach (var location in unknownLocations)
 				storage.Get(location).Should().BeNull();
+		}
+
+		[Test]
+		public void TestStorage()
+		{
+			for (var i = 0; i < 100; ++i)
+				TestStorage(i);
 		}
 	}
 }

@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Controls
 {
+	using System;
 	using Math;
-	using Math = System.Math;
 
 	/// <summary>
 	///   Represents a panel that stacks its children vertically or horizontally.

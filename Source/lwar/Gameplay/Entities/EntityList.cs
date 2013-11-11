@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Gameplay.Entities
+﻿namespace Lwar.Gameplay.Entities
 {
+	using System;
 	using System.Collections.Generic;
 	using Network;
 	using Network.Messages;

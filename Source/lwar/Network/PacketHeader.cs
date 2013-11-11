@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
 	using Pegasus;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;

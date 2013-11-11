@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.Combinators
+﻿namespace Pegasus.Scripting.Parsing.Combinators
 {
+	using System;
+
 	/// <summary>
 	///   Applies the given parser and passes the parser's result to the given function. The value returned by the function
 	///   is returned as the reply of the apply parser.

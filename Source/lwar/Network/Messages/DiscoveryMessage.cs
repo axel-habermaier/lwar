@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Network.Messages
+﻿namespace Lwar.Network.Messages
 {
+	using System;
 	using Pegasus;
 	using Pegasus.Platform.Memory;
 

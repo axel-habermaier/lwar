@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   Untyped base class for triggers that apply property values when a certain condition is met.
 	/// </summary>

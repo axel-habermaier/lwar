@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
+﻿namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 {
+	using System;
 	using System.Linq;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;

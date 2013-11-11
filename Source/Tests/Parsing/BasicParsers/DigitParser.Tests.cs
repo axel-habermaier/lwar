@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.BasicParsers
+﻿namespace Tests.Parsing.BasicParsers
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting.Parsing.BasicParsers;
 
@@ -20,15 +19,15 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
-		public void Letter()
-		{
-			Expected("a", "digit");
-		}
-
-		[Test]
 		public void EndOfInput()
 		{
 			Expected("", "digit");
+		}
+
+		[Test]
+		public void Letter()
+		{
+			Expected("a", "digit");
 		}
 	}
 }

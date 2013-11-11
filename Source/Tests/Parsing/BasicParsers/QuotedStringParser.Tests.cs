@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.BasicParsers
+﻿namespace Tests.Parsing.BasicParsers
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting.Parsing.BasicParsers;
 
@@ -14,6 +13,18 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
+		public void Invalid_NoClosingQuote()
+		{
+			Message("\"ab", "missing closing quote '\"'");
+		}
+
+		[Test]
+		public void Invalid_NoOpeningQuote()
+		{
+			Expected("ab", "opening quote '\"'");
+		}
+
+		[Test]
 		public void Valid_Empty()
 		{
 			Success("\"\"", "");
@@ -23,12 +34,6 @@ namespace Tests.Parsing.BasicParsers
 		public void Valid_OneLetter()
 		{
 			Success("\"a\"", "a");
-		}
-
-		[Test]
-		public void Valid_ThreeLetters()
-		{
-			Success("\"ab1\"", "ab1");
 		}
 
 		[Test]
@@ -56,15 +61,9 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
-		public void Invalid_NoOpeningQuote()
+		public void Valid_ThreeLetters()
 		{
-			Expected("ab", "opening quote '\"'");
-		}
-
-		[Test]
-		public void Invalid_NoClosingQuote()
-		{
-			Message("\"ab", "missing closing quote '\"'");
+			Success("\"ab1\"", "ab1");
 		}
 	}
 }

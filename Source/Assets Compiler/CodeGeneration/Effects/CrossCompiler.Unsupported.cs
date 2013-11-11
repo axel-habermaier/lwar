@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
+﻿namespace Pegasus.AssetsCompiler.CodeGeneration.Effects
 {
+	using System;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.PatternMatching;
+	using Attribute = ICSharpCode.NRefactory.CSharp.Attribute;
 
 	internal partial class CrossCompiler
 	{

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Fonts
+﻿namespace Pegasus.AssetsCompiler.Fonts
 {
+	using System;
+
 	/// <summary>
 	///   Determines the glyph rendering quality.
 	/// </summary>

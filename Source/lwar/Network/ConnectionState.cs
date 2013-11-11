@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
+
 	/// <summary>
 	///   Describes the state of the virtual connection to the server.
 	/// </summary>

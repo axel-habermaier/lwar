@@ -1,7 +1,7 @@
-using System;
-
 namespace Pegasus.Platform.Input
 {
+	using System;
+
 	/// <summary>
 	///   Identifies a keyboard key.
 	/// </summary>

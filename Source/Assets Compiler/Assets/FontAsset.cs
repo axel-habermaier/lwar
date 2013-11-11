@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Assets
+﻿namespace Pegasus.AssetsCompiler.Assets
 {
+	using System;
+
 	/// <summary>
 	///   Represents a font asset that requires compilation.
 	/// </summary>

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Rendering.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   Represents a sequence of text, i.e., sequence of letters and digits or special characters, as well as
 	///   individual new line tokens or spaces.

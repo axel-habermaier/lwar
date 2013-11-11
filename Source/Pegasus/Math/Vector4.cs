@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace Pegasus.Math
+﻿namespace Pegasus.Math
 {
+	using System;
 	using System.Globalization;
 	using System.Runtime.InteropServices;
-	using Math = System.Math;
 
 	/// <summary>
 	///   Represents a four-component vector.

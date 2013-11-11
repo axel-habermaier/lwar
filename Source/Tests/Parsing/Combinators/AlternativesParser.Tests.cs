@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.Combinators
+﻿namespace Tests.Parsing.Combinators
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Parsing.BasicParsers;
@@ -15,18 +14,6 @@ namespace Tests.Parsing.Combinators
 					   new Int32Parser().Apply(i => (object)i),
 					   (new LetterParser() + ~new LetterParser()).Apply(d => (object)d)))
 		{
-		}
-
-		[Test]
-		public void Valid_First()
-		{
-			Success("123", 123);
-		}
-
-		[Test]
-		public void Valid_Second()
-		{
-			Success("ab", 'a');
 		}
 
 		[Test]
@@ -45,6 +32,18 @@ namespace Tests.Parsing.Combinators
 		public void Invalid_SecondFails_ConsumesInput()
 		{
 			Expected("a1", "letter");
+		}
+
+		[Test]
+		public void Valid_First()
+		{
+			Success("123", 123);
+		}
+
+		[Test]
+		public void Valid_Second()
+		{
+			Success("ab", 'a');
 		}
 	}
 }

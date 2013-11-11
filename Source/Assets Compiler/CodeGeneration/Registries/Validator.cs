@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
+﻿namespace Pegasus.AssetsCompiler.CodeGeneration.Registries
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using ICSharpCode.NRefactory.CSharp;
+	using Attribute = ICSharpCode.NRefactory.CSharp.Attribute;
 
 	/// <summary>
 	///   Represents a validator attribute on a cvar or command parameter.

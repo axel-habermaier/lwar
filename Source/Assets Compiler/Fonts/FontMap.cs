@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Fonts
+﻿namespace Pegasus.AssetsCompiler.Fonts
 {
+	using System;
 	using System.Drawing;
 	using System.Drawing.Imaging;
 	using System.Linq;
@@ -9,7 +8,6 @@ namespace Pegasus.AssetsCompiler.Fonts
 	using Compilers;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Math = System.Math;
 	using Rectangle = Math.Rectangle;
 	using Size = Math.Size;
 

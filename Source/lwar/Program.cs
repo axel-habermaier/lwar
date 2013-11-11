@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar
+﻿namespace Lwar
 {
+	using System;
 	using Assets;
 	using Pegasus.Framework;
 	using Scripting;

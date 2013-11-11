@@ -238,11 +238,6 @@
 			private object _sourceObject;
 
 			/// <summary>
-			/// Gets or sets the type of the value currently stored by the accessed property.
-			/// </summary>
-			public Type ValueType { get; set; }
-
-			/// <summary>
 			///   Initializes a new instance.
 			/// </summary>
 			/// <param name="propertyName">The name of the property that should be accessed.</param>
@@ -252,6 +247,11 @@
 				Assert.ArgumentNotNullOrWhitespace(propertyName);
 				_propertyName = propertyName;
 			}
+
+			/// <summary>
+			///   Gets or sets the type of the value currently stored by the accessed property.
+			/// </summary>
+			public Type ValueType { get; set; }
 
 			/// <summary>
 			///   Gets the name of the member that is accessed.

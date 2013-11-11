@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Runtime.CompilerServices;
 

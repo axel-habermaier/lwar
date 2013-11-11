@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Effects
+﻿namespace Pegasus.AssetsCompiler.Effects
 {
+	using System;
+
 	/// <summary>
 	///   When applied to a field, indicates that the field is part of a constant buffer. All fields that have the attribute
 	///   applied with the same constant buffer name are placed in the same buffer. The order of the fields in the declaring

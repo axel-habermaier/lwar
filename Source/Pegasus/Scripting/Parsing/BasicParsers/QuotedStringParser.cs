@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.BasicParsers
+﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
+	using System;
+
 	/// <summary>
 	///   Parses a string literal enclosed in double quotes. Double quotes can be used inside the string literal if they are
 	///   escaped by a backslash '\"'.

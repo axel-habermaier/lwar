@@ -1,8 +1,8 @@
-﻿using System;
-
-namespace Pegasus.Platform
+﻿namespace Pegasus.Platform
 {
+	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Memory;
 	using Scripting;
 
@@ -118,7 +118,7 @@ namespace Pegasus.Platform
 		///   Provides access to the native function.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

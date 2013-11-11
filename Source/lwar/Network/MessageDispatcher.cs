@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Messages;

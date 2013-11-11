@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Rendering.UserInterface
 {
+	using System;
 	using Platform;
 	using Platform.Input;
 	using Platform.Memory;

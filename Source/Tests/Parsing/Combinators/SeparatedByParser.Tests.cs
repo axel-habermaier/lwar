@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.Combinators
+﻿namespace Tests.Parsing.Combinators
 {
+	using System;
 	using System.Collections.Generic;
 	using FluentAssertions;
 	using NUnit.Framework;
@@ -18,17 +17,22 @@ namespace Tests.Parsing.Combinators
 		}
 
 		[Test]
-		public void Valid_One()
+		public void Invalid_One_EndsWithSeparator()
 		{
-			var result = Success("21");
-			result.Should().Equal(new List<int> { 21 });
+			Expected("21|", TypeRegistry.GetDescription<int>());
 		}
 
 		[Test]
-		public void Valid_Two()
+		public void Invalid_SeparatorOnly()
 		{
-			var result = Success("21|33");
-			result.Should().Equal(new List<int> { 21, 33 });
+			var result = Success("|", false);
+			result.Should().Equal(new List<int> { });
+		}
+
+		[Test]
+		public void Invalid_Two_EndsWithSeparator()
+		{
+			Expected("21|33|", TypeRegistry.GetDescription<int>());
 		}
 
 		[Test]
@@ -46,22 +50,17 @@ namespace Tests.Parsing.Combinators
 		}
 
 		[Test]
-		public void Invalid_SeparatorOnly()
+		public void Valid_One()
 		{
-			var result = Success("|", false);
-			result.Should().Equal(new List<int> { });
+			var result = Success("21");
+			result.Should().Equal(new List<int> { 21 });
 		}
 
 		[Test]
-		public void Invalid_One_EndsWithSeparator()
+		public void Valid_Two()
 		{
-			Expected("21|", TypeRegistry.GetDescription<int>());
-		}
-
-		[Test]
-		public void Invalid_Two_EndsWithSeparator()
-		{
-			Expected("21|33|", TypeRegistry.GetDescription<int>());
+			var result = Success("21|33");
+			result.Should().Equal(new List<int> { 21, 33 });
 		}
 	}
 }

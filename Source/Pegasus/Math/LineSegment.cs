@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Math
+﻿namespace Pegasus.Math
 {
+	using System;
+
 	/// <summary>
 	///   Represents a segment of a line in 2D space.
 	/// </summary>

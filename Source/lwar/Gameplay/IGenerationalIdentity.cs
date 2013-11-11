@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Lwar.Gameplay
+﻿namespace Lwar.Gameplay
 {
+	using System;
+
 	/// <summary>
 	///   Provides access to the generational identity of an object.
 	/// </summary>

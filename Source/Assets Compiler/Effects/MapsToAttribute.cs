@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Effects
+﻿namespace Pegasus.AssetsCompiler.Effects
 {
+	using System;
+
 	/// <summary>
 	///   Indicates that a method invocation should be mapped to an intrinsic shader function.
 	/// </summary>

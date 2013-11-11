@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Fonts
+﻿namespace Pegasus.AssetsCompiler.Fonts
 {
+	using System;
 	using System.Drawing;
 	using System.Drawing.Imaging;
 	using Platform.Logging;

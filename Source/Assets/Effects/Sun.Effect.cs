@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Assets.Effects
+﻿namespace Lwar.Assets.Effects
 {
+	using System;
 	using Pegasus.AssetsCompiler.Effects;
 
 	[Effect]

@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace Pegasus.Framework
+﻿namespace Pegasus.Framework
 {
+	using System;
 	using System.Globalization;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
 	using Platform.Assets;
 	using Platform.Logging;
-	using Rendering;
 	using Rendering.UserInterface;
 	using Scripting;
 	using UserInterface;

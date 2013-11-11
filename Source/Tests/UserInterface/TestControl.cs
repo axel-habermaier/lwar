@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.UserInterface
+﻿namespace Tests.UserInterface
 {
+	using System;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Controls;
 

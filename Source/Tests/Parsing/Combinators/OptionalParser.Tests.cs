@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.Combinators
+﻿namespace Tests.Parsing.Combinators
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Parsing.BasicParsers;
@@ -16,9 +15,10 @@ namespace Tests.Parsing.Combinators
 		}
 
 		[Test]
-		public void ReturnParsedElement()
+		public void Invalid()
 		{
-			Success("!123", 123);
+			Expected("!", TypeRegistry.GetDescription<int>());
+			Expected("!x", TypeRegistry.GetDescription<int>());
 		}
 
 		[Test]
@@ -30,10 +30,9 @@ namespace Tests.Parsing.Combinators
 		}
 
 		[Test]
-		public void Invalid()
+		public void ReturnParsedElement()
 		{
-			Expected("!", TypeRegistry.GetDescription<int>());
-			Expected("!x", TypeRegistry.GetDescription<int>());
+			Success("!123", 123);
 		}
 	}
 }

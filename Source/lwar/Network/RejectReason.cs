@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
+
 	/// <summary>
 	///   Indicates why a connect attempt has been rejected by the server.
 	/// </summary>

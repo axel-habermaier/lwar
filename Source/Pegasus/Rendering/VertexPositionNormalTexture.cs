@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Rendering
+﻿namespace Pegasus.Rendering
 {
+	using System;
 	using System.Runtime.InteropServices;
 	using Math;
 	using Platform.Graphics;

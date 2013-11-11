@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform
+﻿namespace Pegasus.Platform
 {
+	using System;
 	using Memory;
 	using Scripting;
 

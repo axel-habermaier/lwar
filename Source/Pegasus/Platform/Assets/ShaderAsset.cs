@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform.Assets
+﻿namespace Pegasus.Platform.Assets
 {
+	using System;
 	using Graphics;
 	using Logging;
 	using Memory;

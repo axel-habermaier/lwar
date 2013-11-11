@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Rendering.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   Provides extension methods for the text alignment enumeration.
 	/// </summary>

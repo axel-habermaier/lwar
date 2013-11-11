@@ -23,11 +23,6 @@
 		private readonly FreeTypeLibrary _freeType = new FreeTypeLibrary();
 
 		/// <summary>
-		/// A value indicating whether the font loader must be regenerated.
-		/// </summary>
-		private bool _regenerateFontLoader;
-
-		/// <summary>
 		///   The parser that is used to parse the font definitions.
 		/// </summary>
 		private readonly ConfigurationFileParser _parser = new ConfigurationFileParser(new Dictionary<string, Func<string, object>>
@@ -39,6 +34,11 @@
 			{ "bold", s => Boolean.Parse(s) },
 			{ "italic", s => Boolean.Parse(s) },
 		});
+
+		/// <summary>
+		///   A value indicating whether the font loader must be regenerated.
+		/// </summary>
+		private bool _regenerateFontLoader;
 
 		/// <summary>
 		///   Gets the path of the temporary font map file.
@@ -166,7 +166,7 @@
 		}
 
 		/// <summary>
-		/// Generates the font loader class.
+		///   Generates the font loader class.
 		/// </summary>
 		/// <param name="assets">The font assets that have been compiled.</param>
 		private void GenerateFontLoader(FontAsset[] assets)
@@ -247,9 +247,9 @@
 											var asset = assets.Single(a => a.SourcePath == sourceFile);
 
 											writer.AppendLine("if (bold == {0} && italic == {1} && aliased == {2})",
-												((bool)font["bold"]).ToString().ToLower(),
-												((bool)font["italic"]).ToString().ToLower(),
-												((bool)font["aliased"]).ToString().ToLower());
+															  ((bool)font["bold"]).ToString().ToLower(),
+															  ((bool)font["italic"]).ToString().ToLower(),
+															  ((bool)font["aliased"]).ToString().ToLower());
 											writer.IncreaseIndent();
 											writer.AppendLine("font = \"{0}\";", asset.RelativePathWithoutExtension);
 											writer.DecreaseIndent();

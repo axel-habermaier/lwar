@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
+	using System;
 	using System.Diagnostics;
 	using System.Reflection;
 

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Platform.Input
 {
+	using System;
 	using System.Collections.Generic;
 	using Logging;
 	using Memory;

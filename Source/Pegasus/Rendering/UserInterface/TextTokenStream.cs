@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Rendering.UserInterface
 {
+	using System;
+
 	/// <summary>
 	///   Represents a stream of text tokens for the given text. Wrap tokens are inserted when the remainder
 	///   of the text should be placed on a new line.

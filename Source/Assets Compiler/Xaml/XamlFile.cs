@@ -11,7 +11,6 @@
 	using Framework;
 	using Framework.UserInterface;
 	using Framework.UserInterface.Controls;
-	using Mono.Cecil;
 	using Platform.Logging;
 
 	/// <summary>
@@ -66,10 +65,10 @@
 			get
 			{
 				return (from mappedNamespaces in _namespaceMap.Values
-					   from xamlNamespace in mappedNamespaces
-					   where !xamlNamespace.Ignored
-					   orderby xamlNamespace.Namespace
-					   select xamlNamespace.Namespace).Distinct();
+						from xamlNamespace in mappedNamespaces
+						where !xamlNamespace.Ignored
+						orderby xamlNamespace.Namespace
+						select xamlNamespace.Namespace).Distinct();
 			}
 		}
 
@@ -126,11 +125,12 @@
 		}
 
 		/// <summary>
-		/// Removes duplicated resources from resource dictionaries. The last resource is kept, in accordance with the WPF resource lookup specification.
+		///   Removes duplicated resources from resource dictionaries. The last resource is kept, in accordance with the WPF
+		///   resource lookup specification.
 		/// </summary>
 		private void RemoveDuplicatedResourceKeys()
 		{
-			foreach (var resourceDictionary in Root.DescendantsAndSelf().Where(e=>e.Name.LocalName.EndsWith("...Add")).GroupBy(e=>e.Name))
+			foreach (var resourceDictionary in Root.DescendantsAndSelf().Where(e => e.Name.LocalName.EndsWith("...Add")).GroupBy(e => e.Name))
 			{
 				var resources = new Dictionary<string, XElement>();
 				foreach (var resource in resourceDictionary)
@@ -146,7 +146,7 @@
 		}
 
 		/// <summary>
-		/// Inlines merged dictionary files.
+		///   Inlines merged dictionary files.
 		/// </summary>
 		private void InlineMergedResourceDictionaries()
 		{
@@ -246,7 +246,7 @@
 				var property = classType.GetProperty(split[1], BindingFlags.Instance | BindingFlags.Public);
 				if (property == null)
 					Log.Die("Unable to find property '{0}' in '{1}'.", split[1], classType.FullName);
-				
+
 				var propertyType = property.PropertyType.AssemblyQualifiedName;
 				newElement = new XElement(DefaultNamespace + "Set", new XAttribute("Property", propertyName),
 										  new XElement(DefaultNamespace + "Value", new XAttribute("Type", propertyType), content));

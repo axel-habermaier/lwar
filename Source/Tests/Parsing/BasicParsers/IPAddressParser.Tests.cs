@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.BasicParsers
+﻿namespace Tests.Parsing.BasicParsers
 {
+	using System;
 	using System.Net;
 	using NUnit.Framework;
 	using Pegasus.Scripting.Parsing.BasicParsers;
@@ -12,6 +11,49 @@ namespace Tests.Parsing.BasicParsers
 		public IPAddressParserTest()
 			: base(new IPAddressParser())
 		{
+		}
+
+		private void CheckIPv4Valid(string ip, bool parseAll = true)
+		{
+			Success(ip, IPAddress.Parse(ip), parseAll);
+		}
+
+		private void CheckIPv6Valid(string ip, bool parseAll = true)
+		{
+			Success(ip, IPAddress.Parse(ip), parseAll);
+		}
+
+		private void CheckIPv4Invalid(string ip)
+		{
+			Expected(ip, IPAddressParser.Description);
+		}
+
+		private void CheckIPv6Invalid(string ip)
+		{
+			Expected(ip, IPAddressParser.Description);
+		}
+
+		[Test]
+		public void Invalid_IPv4()
+		{
+			CheckIPv4Invalid("");
+			CheckIPv4Invalid(".111");
+			CheckIPv4Invalid("832.129.321.2");
+		}
+
+		[Test]
+		public void Invalid_IPv6()
+		{
+			CheckIPv6Invalid("");
+			CheckIPv6Invalid("2001:0db885a3:0000:0000:8a2e:0370:7334");
+			CheckIPv6Invalid("99999:db8:85a3:0:0:8a2e:370:7334");
+			CheckIPv6Invalid("2001:db8:85a3:::8a2e:370:7334");
+			CheckIPv6Invalid(":2001:db8:85a3:::8a2e:370:7334");
+			CheckIPv6Invalid("45:1");
+			CheckIPv6Invalid(":");
+
+			Expected("[::1]:5464532", IPAddressParser.Description);
+			Expected("[::1:546", IPAddressParser.Description);
 		}
 
 		[Test]
@@ -44,49 +86,6 @@ namespace Tests.Parsing.BasicParsers
 			Success("::ffff:192.0.2.128]:22", IPAddress.Parse("::ffff:192.0.2.128"), false);
 			Success("::x:192.0.2.128", IPAddress.Parse("::"), false);
 			Success("::1]:546", IPAddress.Parse("::1"), false);
-		}
-
-		[Test]
-		public void Invalid_IPv4()
-		{
-			CheckIPv4Invalid("");
-			CheckIPv4Invalid(".111");
-			CheckIPv4Invalid("832.129.321.2");
-		}
-
-		[Test]
-		public void Invalid_IPv6()
-		{
-			CheckIPv6Invalid("");
-			CheckIPv6Invalid("2001:0db885a3:0000:0000:8a2e:0370:7334");
-			CheckIPv6Invalid("99999:db8:85a3:0:0:8a2e:370:7334");
-			CheckIPv6Invalid("2001:db8:85a3:::8a2e:370:7334");
-			CheckIPv6Invalid(":2001:db8:85a3:::8a2e:370:7334");
-			CheckIPv6Invalid("45:1");
-			CheckIPv6Invalid(":");
-
-			Expected("[::1]:5464532", IPAddressParser.Description);
-			Expected("[::1:546", IPAddressParser.Description);
-		}
-
-		private void CheckIPv4Valid(string ip, bool parseAll = true)
-		{
-			Success(ip, IPAddress.Parse(ip), parseAll);
-		}
-
-		private void CheckIPv6Valid(string ip, bool parseAll = true)
-		{
-			Success(ip, IPAddress.Parse(ip), parseAll);
-		}
-
-		private void CheckIPv4Invalid(string ip)
-		{
-			Expected(ip, IPAddressParser.Description);
-		}
-
-		private void CheckIPv6Invalid(string ip)
-		{
-			Expected(ip, IPAddressParser.Description);
 		}
 	}
 }

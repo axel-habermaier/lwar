@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Lwar.Rendering
+﻿namespace Lwar.Rendering
 {
+	using System;
+
 	/// <summary>
 	///   Defines how the camera handles the current zoom value.
 	/// </summary>

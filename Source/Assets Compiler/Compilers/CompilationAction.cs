@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Compilers
+﻿namespace Pegasus.AssetsCompiler.Compilers
 {
+	using System;
+
 	/// <summary>
 	///   Indicates the action that the compiler must take.
 	/// </summary>

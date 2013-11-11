@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Platform
+﻿namespace Pegasus.Platform
 {
+	using System;
 	using System.Collections.Concurrent;
 	using System.Collections.Generic;
 	using System.Diagnostics;

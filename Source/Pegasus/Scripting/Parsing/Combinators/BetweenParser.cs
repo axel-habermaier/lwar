@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.Combinators
+﻿namespace Pegasus.Scripting.Parsing.Combinators
 {
+	using System;
+
 	/// <summary>
 	///   Parses the single occurrence of the given parser, enclosed by a single occurrence of the given left and right
 	///   parsers. The right parser is applied once the given parser returns.

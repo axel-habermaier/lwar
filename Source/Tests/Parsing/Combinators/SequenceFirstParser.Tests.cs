@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.Combinators
+﻿namespace Tests.Parsing.Combinators
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting.Parsing.BasicParsers;
 	using Pegasus.Scripting.Parsing.Combinators;
@@ -15,9 +14,15 @@ namespace Tests.Parsing.Combinators
 		}
 
 		[Test]
-		public void Valid()
+		public void Invalid_EndOfInput()
 		{
-			Success("f1", 'f');
+			Expected("", "letter");
+		}
+
+		[Test]
+		public void Invalid_EndOfInputAfterFirst()
+		{
+			Expected("a", "digit");
 		}
 
 		[Test]
@@ -33,15 +38,9 @@ namespace Tests.Parsing.Combinators
 		}
 
 		[Test]
-		public void Invalid_EndOfInput()
+		public void Valid()
 		{
-			Expected("", "letter");
-		}
-
-		[Test]
-		public void Invalid_EndOfInputAfterFirst()
-		{
-			Expected("a", "digit");
+			Success("f1", 'f');
 		}
 	}
 }

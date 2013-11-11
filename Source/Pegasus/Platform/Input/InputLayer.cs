@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Platform.Input
 {
+	using System;
+
 	/// <summary>
 	///   Represents an input layer. The active input layer of a logical input device determines which logical inputs are
 	///   triggered. Input layers are prioritized, with higher-numbered layers having higher priorities. The

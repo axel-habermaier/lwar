@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Validators
+﻿namespace Pegasus.Scripting.Validators
 {
+	using System;
+
 	/// <summary>
 	///   Ensures that the validated value lies within the given bounds.
 	/// </summary>

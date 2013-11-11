@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting
+﻿namespace Pegasus.Scripting
 {
+	using System;
+
 	/// <summary>
 	///   Represents a line of a configuration file.
 	/// </summary>

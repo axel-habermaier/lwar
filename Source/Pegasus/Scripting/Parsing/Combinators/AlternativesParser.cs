@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.Combinators
+﻿namespace Pegasus.Scripting.Parsing.Combinators
 {
+	using System;
+
 	/// <summary>
 	///   First, it applies the parser p1 to the input stream. If the first parser succeeds, the reply of the first parser is
 	///   returned. If it fails with a non‐fatal error and without changing the parser state, the second parser is applied. If

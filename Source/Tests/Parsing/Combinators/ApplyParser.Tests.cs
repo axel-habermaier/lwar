@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.Combinators
+﻿namespace Tests.Parsing.Combinators
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting.Parsing.BasicParsers;
 	using Pegasus.Scripting.Parsing.Combinators;
@@ -15,15 +14,15 @@ namespace Tests.Parsing.Combinators
 		}
 
 		[Test]
-		public void Valid()
-		{
-			Success("f", "f");
-		}
-
-		[Test]
 		public void Invalid()
 		{
 			Expected("3", "letter");
+		}
+
+		[Test]
+		public void Valid()
+		{
+			Success("f", "f");
 		}
 	}
 }

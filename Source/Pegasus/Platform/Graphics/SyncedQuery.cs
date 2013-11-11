@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
+
 	/// <summary>
 	///   Represents a query that checks whether the GPU has reached a CPU/GPU synchronization marker.
 	/// </summary>

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing
+﻿namespace Pegasus.Scripting.Parsing
 {
+	using System;
+
 	/// <summary>
 	///   Describes the reply of a parser.
 	/// </summary>

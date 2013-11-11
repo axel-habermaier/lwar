@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.BasicParsers
+﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
+	using System;
 	using System.Globalization;
 
 	/// <summary>

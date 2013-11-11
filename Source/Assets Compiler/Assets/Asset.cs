@@ -149,7 +149,8 @@
 		}
 
 		/// <summary>
-		///   Gets the name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
+		///   Gets the name that should be used for the asset identifier. If null is returned, no asset identifier is generated for
+		///   this
 		///   asset instance.
 		/// </summary>
 		public virtual string IdentifierName

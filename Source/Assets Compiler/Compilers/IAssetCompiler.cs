@@ -1,7 +1,6 @@
-using System;
-
 namespace Pegasus.AssetsCompiler.Compilers
 {
+	using System;
 	using System.Collections.Generic;
 	using Assets;
 

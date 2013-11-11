@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Pegasus.Scripting.Parsing.BasicParsers
+﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
+	using System;
+
 	/// <summary>
 	///   Applies the referenced parser whenever it should parse any input and returns the referenced parser's result. This
 	///   parser kind can be used to break cyclic parser dependencies or to optimize the construction of larger parsers that

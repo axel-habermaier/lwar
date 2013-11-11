@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
 	using System.Collections.Concurrent;
 	using System.Runtime.InteropServices;
 	using System.Threading;

@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Platform.Graphics
 {
+	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Memory;
 
 	/// <summary>
@@ -204,9 +204,9 @@ namespace Pegasus.Platform.Graphics
 		}
 
 #if DEBUG
-		/// <summary>
-		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
+	/// <summary>
+	///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+	/// </summary>
 		protected override void OnRenamed()
 		{
 			if (State != IntPtr.Zero)
@@ -234,7 +234,7 @@ namespace Pegasus.Platform.Graphics
 		///   Provides access to the native depth stencil state functions.
 		/// </summary>
 #if !DEBUG
-		[System.Security.SuppressUnmanagedCodeSecurity]
+		[SuppressUnmanagedCodeSecurity]
 #endif
 		private static class NativeMethods
 		{

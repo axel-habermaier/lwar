@@ -70,7 +70,8 @@
 		}
 
 		/// <summary>
-		///   Adds a resource with the provided key to the dictionary. If a resource with the given key already exists, it is replaced by the new resource.
+		///   Adds a resource with the provided key to the dictionary. If a resource with the given key already exists, it is
+		///   replaced by the new resource.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be add.</param>
 		/// <param name="resource">The resource that should be added.</param>

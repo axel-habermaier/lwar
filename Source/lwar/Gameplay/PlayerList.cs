@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Gameplay
+﻿namespace Lwar.Gameplay
 {
+	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 	using Network.Messages;

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tests.Parsing.BasicParsers
+﻿namespace Tests.Parsing.BasicParsers
 {
+	using System;
 	using NUnit.Framework;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Parsing.BasicParsers;
@@ -15,51 +14,9 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
-		public void Valid_NoSign_FollowedByEndOfInput()
-		{
-			Success("123", 123);
-		}
-
-		[Test]
-		public void Valid_Positive_FollowedByEndOfInput()
-		{
-			Success("+123", 123);
-		}
-
-		[Test]
-		public void Valid_Negative_FollowedByEndOfInput()
-		{
-			Success("-123", -123);
-		}
-
-		[Test]
-		public void Valid_NoSign_FollowedByLetter()
-		{
-			Success("123a", 123, false);
-		}
-
-		[Test]
-		public void Valid_Positive_FollowedByLetter()
-		{
-			Success("+123a", 123, false);
-		}
-
-		[Test]
-		public void Valid_Negative_FollowedByLetter()
-		{
-			Success("-123a", -123, false);
-		}
-
-		[Test]
 		public void Invalid_DecimalPoint()
 		{
 			Expected(".2", TypeRegistry.GetDescription<short>());
-		}
-
-		[Test]
-		public void Invalid_OnlyPositiveSign()
-		{
-			Expected("+a", TypeRegistry.GetDescription<short>());
 		}
 
 		[Test]
@@ -69,15 +26,27 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
+		public void Invalid_OnlyNegativeSign_EndOfInput()
+		{
+			Expected("-", TypeRegistry.GetDescription<short>());
+		}
+
+		[Test]
+		public void Invalid_OnlyPositiveSign()
+		{
+			Expected("+a", TypeRegistry.GetDescription<short>());
+		}
+
+		[Test]
 		public void Invalid_OnlyPositiveSign_EndOfInput()
 		{
 			Expected("+", TypeRegistry.GetDescription<short>());
 		}
 
 		[Test]
-		public void Invalid_OnlyNegativeSign_EndOfInput()
+		public void Overflow()
 		{
-			Expected("-", TypeRegistry.GetDescription<short>());
+			Message("1111111111111", String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<short>()));
 		}
 
 		[Test]
@@ -87,9 +56,39 @@ namespace Tests.Parsing.BasicParsers
 		}
 
 		[Test]
-		public void Overflow()
+		public void Valid_Negative_FollowedByEndOfInput()
 		{
-			Message("1111111111111", String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<short>()));
+			Success("-123", -123);
+		}
+
+		[Test]
+		public void Valid_Negative_FollowedByLetter()
+		{
+			Success("-123a", -123, false);
+		}
+
+		[Test]
+		public void Valid_NoSign_FollowedByEndOfInput()
+		{
+			Success("123", 123);
+		}
+
+		[Test]
+		public void Valid_NoSign_FollowedByLetter()
+		{
+			Success("123a", 123, false);
+		}
+
+		[Test]
+		public void Valid_Positive_FollowedByEndOfInput()
+		{
+			Success("+123", 123);
+		}
+
+		[Test]
+		public void Valid_Positive_FollowedByLetter()
+		{
+			Success("+123a", 123, false);
 		}
 	}
 }
