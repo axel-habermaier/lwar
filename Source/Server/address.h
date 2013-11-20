@@ -1,6 +1,4 @@
-#ifndef _MSC_VER
 #include <stdbool.h>
-#endif
 
 enum {
 	SERVER_PORT			= 32422,
