@@ -126,17 +126,17 @@
 		/// <summary>
 		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
-		/// <param name="constraint">
+		/// <param name="availableSize">
 		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
 		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///   element might be able to use scrolling in this case.
 		/// </param>
-		protected override SizeD MeasureCore(SizeD constraint)
+		protected override SizeD MeasureCore(SizeD availableSize)
 		{
 			if (_templateRoot == null)
 				return new SizeD();
 
-			_templateRoot.Measure(constraint);
+			_templateRoot.Measure(availableSize);
 			return _templateRoot.DesiredSize;
 		}
 
