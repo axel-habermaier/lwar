@@ -47,5 +47,23 @@
 			if (storage != null)
 				storage.RemoveHandler(handler);
 		}
+
+		/// <summary>
+		///   Invokes the handlers registered on the routed event.
+		/// </summary>
+		/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
+		/// <param name="routedEvent">The routed event that should be raised.</param>
+		/// <param name="sender">The object that raises the event.</param>
+		/// <param name="arguments">The arguments that should be passed to the event handlers.</param>
+		public void InvokeHandlers<T>(RoutedEvent<T> routedEvent, object sender, T arguments)
+			where T : class, IRoutedEventArgs
+		{
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNull(arguments);
+
+			var storage = _values.Get(routedEvent.Index) as RoutedEventStorage<T>;
+			if (storage != null)
+				storage.InvokeHandlers(sender, arguments);
+		}
 	}
 }
