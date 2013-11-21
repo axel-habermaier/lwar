@@ -206,7 +206,7 @@
     <Compile Include="Framework\UserInterface\RoutedEventHandler.cs" />
     <Compile Include="Framework\UserInterface\RoutingStrategy.cs" />
     <Compile Include="Framework\SparseObjectStorage.cs" />
-    <Compile Include="Framework\UserInterface\Binding.cs" />
+    <Compile Include="Framework\Binding.cs" />
     <Compile Include="Framework\UserInterface\Controls\Border.cs" />
     <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
     <Compile Include="Framework\UserInterface\Controls\ContentPresenter.cs" />

@@ -198,7 +198,7 @@
 		///   Maps the given source index to the corresponding logical text index.
 		/// </summary>
 		/// <param name="sourceIndex">The source index that should be mapped.</param>
-		public int MapToText(int sourceIndex)
+		internal int MapToText(int sourceIndex)
 		{
 			Assert.NotPooled(this);
 			Assert.ArgumentInRange(sourceIndex, 0, SourceString.Length);
@@ -225,7 +225,7 @@
 		///   Maps the given logical text index to the corresponding source index.
 		/// </summary>
 		/// <param name="logicalIndex">The index that should be mapped.</param>
-		public int MapToSource(int logicalIndex)
+		internal int MapToSource(int logicalIndex)
 		{
 			Assert.NotPooled(this);
 			Assert.ArgumentInRange(logicalIndex, 0, Length);
@@ -258,7 +258,7 @@
 		/// </summary>
 		/// <param name="index">The index for which the color should be returned.</param>
 		/// <param name="color">The returned color.</param>
-		public void GetColor(int index, out Color? color)
+		internal void GetColor(int index, out Color? color)
 		{
 			Assert.NotPooled(this);
 

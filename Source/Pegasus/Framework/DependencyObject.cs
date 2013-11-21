@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using UserInterface;
 
 	/// <summary>
 	///   Represents an object that exposes dependency properties.
@@ -79,6 +78,21 @@
 		}
 
 		/// <summary>
+		///   Sets a binding for the dependency property.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be set.</param>
+		/// <param name="binding">The binding that should be set.</param>
+		internal void SetBinding<T>(DependencyProperty<T> property, Binding<T> binding)
+		{
+			Assert.ArgumentNotNull(property);
+			Assert.ArgumentNotNull(binding);
+
+			binding.Initialize(this, property);
+			_propertyStore.GetValueAddUnknown(property).SetBinding(binding);
+		}
+
+		/// <summary>
 		///   Unsets the last value of the dependency property that originated from a style.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
@@ -124,6 +138,16 @@
 
 			using (var setter = new DependencyPropertyValueSetter<T>(this, property))
 				setter.PropertyValue.UnsetAnimatedValue();
+		}
+
+		/// <summary>
+		///   Unsets the current binding of the dependency property.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose binding should be removed.</param>
+		internal void UnsetBinding<T>(DependencyProperty<T> property)
+		{
+			_propertyStore.GetValueAddUnknown(property).UnsetBinding();
 		}
 
 		/// <summary>
@@ -193,23 +217,6 @@
 			var value = _propertyStore.GetValueOrNull(property);
 			if (value != null)
 				value.ChangedHandlers -= changeHandler;
-		}
-
-		/// <summary>
-		///   Creates a data binding.
-		/// </summary>
-		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
-		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
-		/// <param name="path">The property path that should be evaluated on the source object to get the source value.</param>
-		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
-		public void CreateDataBinding<T>(object sourceObject, string path, DependencyProperty<T> targetProperty)
-		{
-			Assert.ArgumentNotNull(sourceObject);
-			Assert.ArgumentNotNullOrWhitespace(path);
-			Assert.ArgumentNotNull(targetProperty);
-
-			var binding = new DataBinding<T>(sourceObject, path);
-			binding.Initialize(this, targetProperty);
 		}
 
 		/// <summary>

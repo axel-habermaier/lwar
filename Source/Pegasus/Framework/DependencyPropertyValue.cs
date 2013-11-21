@@ -44,6 +44,14 @@
 		}
 
 		/// <summary>
+		///   Gets a value indicating whether the property has a bound value.
+		/// </summary>
+		public bool IsBound
+		{
+			get { return (_sources & ValueSources.Binding) == ValueSources.Binding; }
+		}
+
+		/// <summary>
 		///   Gets the storage location of the dependency property value.
 		/// </summary>
 		public int Location
@@ -58,7 +66,7 @@
 		protected enum ValueSources : byte
 		{
 			/// <summary>
-			///   Indicates that the base value has been set directly or through a data binding.
+			///   Indicates that the base value has been set directly or through a binding.
 			/// </summary>
 			Local = 1,
 
@@ -85,7 +93,12 @@
 			/// <summary>
 			///   Indicates that the value has been inherited from a parent object.
 			/// </summary>
-			Inherited = 32
+			Inherited = 32,
+
+			/// <summary>
+			///   Indicates that the value is determined by a binding.
+			/// </summary>
+			Binding = 64
 		}
 	}
 }

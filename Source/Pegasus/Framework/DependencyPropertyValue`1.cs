@@ -29,6 +29,11 @@
 		private T _baseValue;
 
 		/// <summary>
+		///   The binding that determines the value of the property.
+		/// </summary>
+		private Binding<T> _binding;
+
+		/// <summary>
 		///   The value of the property that has been set by a trigger.
 		/// </summary>
 		private T _triggeredValue;
@@ -54,7 +59,7 @@
 				if ((_sources & ValueSources.Animation) == ValueSources.Animation)
 					return _animatedValue;
 
-				if ((_sources & ValueSources.Local) == ValueSources.Local)
+				if ((_sources & ValueSources.Local) == ValueSources.Local || (_sources & ValueSources.Binding) == ValueSources.Binding)
 					return _baseValue;
 
 				if ((_sources & ValueSources.StyleTrigger) == ValueSources.StyleTrigger ||
@@ -71,10 +76,13 @@
 		/// <param name="value">The value that should be set.</param>
 		public void SetLocalValue(T value)
 		{
+			_binding = null;
 			_baseValue = value;
+
 			_sources |= ValueSources.Local;
 			_sources &= ~ValueSources.Style;
 			_sources &= ~ValueSources.Inherited;
+			_sources &= ~ValueSources.Binding;
 		}
 
 		/// <summary>
@@ -169,6 +177,30 @@
 		{
 			_animatedValue = default(T);
 			_sources &= ~ValueSources.Animation;
+		}
+
+		/// <summary>
+		///   Sets the property's binding.
+		/// </summary>
+		/// <param name="binding">The binding that should be set.</param>
+		public void SetBinding(Binding<T> binding)
+		{
+			Assert.ArgumentNotNull(binding);
+			Assert.IsNull(_binding, "There is already another binding for this property.");
+
+			_binding = binding;
+			_sources |= ValueSources.Binding;
+		}
+
+		/// <summary>
+		///   Unsets the property's binding.
+		/// </summary>
+		public void UnsetBinding()
+		{
+			Assert.NotNull(_binding, "There is no binding set for this property.");
+
+			_binding = null;
+			_sources &= ~ValueSources.Binding;
 		}
 	}
 }

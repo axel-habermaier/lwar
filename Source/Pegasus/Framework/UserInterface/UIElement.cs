@@ -305,6 +305,22 @@
 		}
 
 		/// <summary>
+		///   Creates a data binding.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
+		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
+		/// <param name="path">The property path that should be evaluated on the source object to get the source value.</param>
+		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
+		public void CreateDataBinding<T>(object sourceObject, string path, DependencyProperty<T> targetProperty)
+		{
+			Assert.ArgumentNotNull(sourceObject);
+			Assert.ArgumentNotNullOrWhitespace(path);
+			Assert.ArgumentNotNull(targetProperty);
+
+			SetBinding(targetProperty, new DataBinding<T>(sourceObject, path));
+		}
+
+		/// <summary>
 		///   Creates a data binding with the UI element's view model as the source object.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
@@ -331,8 +347,7 @@
 			Assert.ArgumentNotNull(sourceProperty);
 			Assert.ArgumentNotNull(targetProperty);
 
-			var binding = new TemplateBinding<T>(sourceObject, sourceProperty);
-			binding.Initialize(this, targetProperty);
+			SetBinding(targetProperty, new TemplateBinding<T>(sourceObject, sourceProperty));
 		}
 
 		/// <summary>
@@ -346,8 +361,7 @@
 			Assert.ArgumentNotNull(key);
 			Assert.ArgumentNotNull(targetProperty);
 
-			var binding = new ResourceBinding<T>(key);
-			binding.Initialize(this, targetProperty);
+			SetBinding(targetProperty, new ResourceBinding<T>(key));
 		}
 
 		/// <summary>

@@ -1,4 +1,4 @@
-﻿namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework
 {
 	using System;
 

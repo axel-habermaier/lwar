@@ -41,7 +41,7 @@
 		///   Provides information about the first member access (such as 'a.b') in a source expression 'a.b.c.d'.
 		/// </summary>
 		/// <remarks>
-		///   We do not use an array to store the member access, but rather use a hard-coded limit to save possibly numerous
+		///   We do not use an array to store the member accesses, but rather use a hard-coded limit to avoid possibly numerous
 		///   array allocations.
 		/// </remarks>
 		private MemberAccess _memberAccess1;
