@@ -42,5 +42,18 @@
 			Assert.ArgumentNotNull(handler);
 			_handlers -= handler;
 		}
+
+		/// <summary>
+		///   Invokes the registered handlers.
+		/// </summary>
+		/// <param name="sender">The object that raises the event.</param>
+		/// <param name="arguments">The arguments that should be passed to the event handlers.</param>
+		public void InvokeHandlers(object sender, T arguments)
+		{
+			Assert.ArgumentNotNull(arguments);
+
+			if (_handlers != null)
+				_handlers(sender, arguments);
+		}
 	}
 }

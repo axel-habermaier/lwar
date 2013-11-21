@@ -20,7 +20,7 @@
 			public int Location { get; private set; }
 		}
 
-		private void TestStorage(int count)
+		private static void TestStorage(int count)
 		{
 			var storage = new SparseObjectStorage<Test>();
 			var random = new Random();
