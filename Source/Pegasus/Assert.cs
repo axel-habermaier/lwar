@@ -4,6 +4,7 @@
 	using System.Collections;
 	using System.Diagnostics;
 	using Framework;
+	using Platform;
 	using Platform.Memory;
 
 	/// <summary>
@@ -111,7 +112,7 @@
 		/// <param name="condition">The condition that, if false, causes the exception to be raised.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
 		public static void ArgumentSatisfies(bool condition, string formatMessage, params object[] parameters)
 		{
 			ArgumentNotNull(formatMessage);
@@ -127,7 +128,7 @@
 		/// <param name="obj">The object to check for null.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
 		public static void IsNull<T>(T obj, string formatMessage, params object[] parameters)
 			where T : class
 		{
@@ -144,7 +145,7 @@
 		/// <param name="obj">The object to check for null.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
 		public static void NotNull<T>(T obj, string formatMessage, params object[] parameters)
 			where T : class
 		{
@@ -186,13 +187,24 @@
 		/// <param name="condition">The condition that, if false, causes the exception to be raised.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
 		public static void That(bool condition, string formatMessage, params object[] parameters)
 		{
 			ArgumentNotNull(formatMessage);
 
 			if (!condition)
 				throw new InvalidOperationException(String.Format(formatMessage, parameters));
+		}
+
+		/// <summary>
+		///   Throws an InvalidOperationException if the method is invoked.
+		/// </summary>
+		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
+		/// <param name="parameters">The parameters for the error message.</param>
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		public static void NotReached(string formatMessage, params object[] parameters)
+		{
+			That(false, formatMessage, parameters);
 		}
 
 		/// <summary>
@@ -261,12 +273,12 @@
 			where T : IComparable<T>
 		{
 			if (index.CompareTo(min) < 0)
-				throw new InvalidOperationException(String.Format(
-																  "Lower bound violation. Expected argument to lie between {0} and {1}.", min, max));
+				throw new InvalidOperationException(
+					String.Format("Lower bound violation. Expected argument to lie between {0} and {1}.", min, max));
 
 			if (index.CompareTo(max) > 0)
-				throw new InvalidOperationException(String.Format(
-																  "Upper bound violation. Expected argument to lie between {0} and {1}.", min, max));
+				throw new InvalidOperationException(
+					String.Format("Upper bound violation. Expected argument to lie between {0} and {1}.", min, max));
 		}
 
 		/// <summary>

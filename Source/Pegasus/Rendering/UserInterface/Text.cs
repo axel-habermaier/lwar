@@ -275,11 +275,11 @@
 		}
 
 		/// <summary>
-		///   Writes the given string into the given text writer. Color specifiers are not written.
+		///   Writes the given string into the given text writer, removing all color specifiers.
 		/// </summary>
 		/// <param name="writer">The text writer that the text should be written to.</param>
 		/// <param name="text">The text that should be written.</param>
-		public static void Write(TextWriter writer, string text)
+		internal static void Write(TextWriter writer, string text)
 		{
 			Assert.ArgumentNotNull(writer);
 			Assert.ArgumentNotNullOrWhitespace(text);

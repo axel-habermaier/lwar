@@ -96,7 +96,6 @@
 				{
 					queries[i] = new SyncedQuery(graphicsDevice);
 					queries[i].MarkSyncPoint();
-					queries[i].SetName("DynamicVertexBuffer.SyncedQuery" + i);
 				}
 			}
 

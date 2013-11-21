@@ -247,6 +247,7 @@
 				return false;
 			}
 
+			Assert.OfType<T>(untypedResource);
 			resource = (T)untypedResource;
 			return true;
 		}
