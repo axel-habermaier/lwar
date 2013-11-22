@@ -28,10 +28,10 @@
 		{
 			get
 			{
-				if (Children == null)
+				if (_children == null)
 					return UIElementCollection.Enumerator.Empty;
 
-				return Children.GetEnumerator();
+				return _children.GetEnumerator();
 			}
 		}
 

@@ -33,11 +33,11 @@
 		/// <param name="appName">The name of the application.</param>
 		public LogFile(string appName)
 		{
-			Log.OnFatalError += _logEntries.Enqueue;
-			Log.OnError += _logEntries.Enqueue;
-			Log.OnWarning += _logEntries.Enqueue;
-			Log.OnInfo += _logEntries.Enqueue;
-			Log.OnDebugInfo += _logEntries.Enqueue;
+			Log.OnFatalError += Enqueue;
+			Log.OnError += Enqueue;
+			Log.OnWarning += Enqueue;
+			Log.OnInfo += Enqueue;
+			Log.OnDebugInfo += Enqueue;
 
 			_file = new AppFile(appName, String.Format("{0}.log", appName));
 			_file.Delete(e => Log.Warn("Failed to delete the current contents of the log file: {0}", e.Message));
@@ -52,10 +52,20 @@
 		}
 
 		/// <summary>
+		///   Enqueues the given log entry.
+		/// </summary>
+		/// <param name="entry">The log entry that should be enqueued.</param>
+		private void Enqueue(LogEntry entry)
+		{
+			_logEntries.Enqueue(entry);
+			WriteToFile();
+		}
+
+		/// <summary>
 		///   Writes the generated log messages into the log file.
 		/// </summary>
 		/// <param name="force">If true, all unwritten messages are written; otherwise, writes are batched to improve performance.</param>
-		public void WriteToFile(bool force = false)
+		private void WriteToFile(bool force = false)
 		{
 			if (!force && _logEntries.Count < BatchSize)
 				return;
@@ -123,11 +133,11 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Log.OnFatalError -= _logEntries.Enqueue;
-			Log.OnError -= _logEntries.Enqueue;
-			Log.OnWarning -= _logEntries.Enqueue;
-			Log.OnInfo -= _logEntries.Enqueue;
-			Log.OnDebugInfo -= _logEntries.Enqueue;
+			Log.OnFatalError -= Enqueue;
+			Log.OnError -= Enqueue;
+			Log.OnWarning -= Enqueue;
+			Log.OnInfo -= Enqueue;
+			Log.OnDebugInfo -= Enqueue;
 
 			WriteToFile(true);
 		}

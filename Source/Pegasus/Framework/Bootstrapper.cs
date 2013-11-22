@@ -44,6 +44,7 @@
 					Commands.Initialize();
 					Cvars.Initialize();
 
+					using (new NativeLibrary())
 					using (new Help())
 					using (new Interpreter(appName))
 					{
@@ -53,8 +54,8 @@
 						CommandLineParser.Parse();
 						CvarRegistry.ExecuteDeferredUpdates();
 
-						var app = new TApp();
-						app.Run(logFile, appName, defaultFont);
+						using (var app = new TApp())
+							app.Run(appName);
 
 						Commands.Persist(ConfigurationFile.AutoExec);
 					}

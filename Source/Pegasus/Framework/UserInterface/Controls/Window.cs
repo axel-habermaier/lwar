@@ -6,6 +6,7 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
+	using Rendering;
 
 	/// <summary>
 	///   Represents an operating system window that hosts UI elements.
@@ -38,7 +39,7 @@
 		private Vector2i _position = Vector2i.Zero;
 
 		/// <summary>
-		/// Gets a value indicating whether the window is open.
+		///   Gets a value indicating whether the window is open.
 		/// </summary>
 		public bool IsOpen { get; private set; }
 
@@ -53,6 +54,11 @@
 		private WindowMode _mode = WindowMode.Normal;
 
 		/// <summary>
+		///   The output the window's contents are rendered to.
+		/// </summary>
+		private RenderOutput _output;
+
+		/// <summary>
 		///   Opens the window.
 		/// </summary>
 		/// <param name="application">The application the window belongs to.</param>
@@ -65,8 +71,21 @@
 
 			_window = new NativeWindow(Title, Position, Size, Mode);
 			_swapChain = new SwapChain(application.GraphicsDevice, _window, false, _window.Size);
+			_output = new RenderOutput(application.GraphicsDevice)
+			{
+				RenderTarget = _swapChain.BackBuffer,
+				Camera = new Camera2D(application.GraphicsDevice)
+			};
 
 			IsOpen = true;
+		}
+
+		/// <summary>
+		///   Processes all pending window events.
+		/// </summary>
+		public void ProcessEvents()
+		{
+			_window.ProcessEvents();
 		}
 
 		/// <summary>
@@ -81,7 +100,9 @@
 					return;
 
 				_title = value;
-				_window.Title = value;
+
+				if (_window != null)
+					_window.Title = value;
 			}
 		}
 
@@ -97,7 +118,9 @@
 					return;
 
 				_size = value;
-				_window.Size = value;
+
+				if (_window != null)
+					_window.Size = value;
 			}
 		}
 
@@ -113,7 +136,9 @@
 					return;
 
 				_position = value;
-				_window.Position = value;
+
+				if (_window != null)
+					_window.Position = value;
 			}
 		}
 
@@ -129,7 +154,9 @@
 					return;
 
 				_mode = value;
-				_window.Mode = value;
+
+				if (_window != null)
+					_window.Mode = value;
 			}
 		}
 
@@ -140,6 +167,8 @@
 		{
 			_application.RemoveWindow(this);
 
+			_output.Camera.SafeDispose();
+			_output.SafeDispose();
 			_swapChain.SafeDispose();
 			_window.SafeDispose();
 
@@ -167,5 +196,24 @@
 			Log.Error("Finalizer runs for an instance of '{0}'.", GetType().FullName);
 		}
 #endif
+
+		internal new void Draw(SpriteBatch spriteBatch)
+		{
+			if (Visibility != Visibility.Visible)
+				return;
+
+			_output.Viewport = new Rectangle(Position, Size);
+			_output.ClearColor(new Color(0, 0, 0, 0));
+			_output.ClearDepth();
+
+			var count = VisualChildrenCount;
+			for (var i = 0; i < count; ++i)
+			{
+				var child = GetVisualChild(i);
+				child.Draw(spriteBatch);
+			}
+
+			_swapChain.Present();
+		}
 	}
 }

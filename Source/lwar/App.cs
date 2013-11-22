@@ -26,6 +26,8 @@
 		/// </summary>
 		protected override void Initialize()
 		{
+			base.Initialize();
+
 			Commands.Resolve();
 			Cvars.Resolve();
 
@@ -49,8 +51,8 @@
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
-			var uc1 = new UserControl1();
-			//Add(uc1);
+			//var uc1 = new UserControl1();
+			////Add(uc1);
 			ShowWindow(new MainWindow());
 		}
 
@@ -63,33 +65,17 @@
 		}
 
 		/// <summary>
-		///   Invoked when the application should draw a frame.
-		/// </summary>
-		/// <param name="output">The output that the scene should be rendered to.</param>
-		protected override void Draw(RenderOutput output)
-		{
-			output.ClearColor(new Color(0, 0, 0, 0));
-			output.ClearDepth();
-		}
-
-		/// <summary>
-		///   Invoked when the application should draw the user interface.
-		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
-		protected override void DrawUserInterface(SpriteBatch spriteBatch)
-		{
-		}
-
-		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void Dispose()
+		protected override void OnDisposing()
 		{
 			Commands.OnConnect -= Connect;
 			Commands.OnDisconnect -= Disconnect;
 
 			//_stateManager.SafeDispose();
 			_localServer.SafeDispose();
+
+			base.OnDisposing();
 		}
 
 		/// <summary>

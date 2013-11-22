@@ -195,10 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\ContentPropertyAttribute.cs" />
-    <Compile Include="Framework\Game.cs" />
-    <Compile Include="Framework\GameWindow.xaml.cs">
-      <DependentUpon>GameWindow.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Framework\UserInterface\RootUIElement.cs" />
     <Compile Include="Framework\UserInterface\Controls\Window.cs" />
     <Compile Include="Framework\UserInterface\LayoutInfo.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventStorage`1.cs" />
@@ -615,14 +612,8 @@
     </None>
     <None Include="Scripting\RegistryGenerator.tt" />
   </ItemGroup>
-  <ItemGroup>
-    <Page Include="Framework\GameWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-   <Target Name="BeforeBuild">
+  <Target Name="BeforeBuild">
     <Exec Command="&quot;$(TargetDir)pgc.exe&quot; ui &quot;$(ProjectPath)&quot;" WorkingDirectory="$(TargetDir)" />
   </Target>
 </Project>
