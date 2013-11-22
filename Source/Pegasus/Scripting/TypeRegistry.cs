@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using Framework.UserInterface.Controls;
 	using Parsing;
 	using Parsing.BasicParsers;
 	using Parsing.Combinators;

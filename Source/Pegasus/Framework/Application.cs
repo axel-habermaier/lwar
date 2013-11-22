@@ -49,6 +49,11 @@
 		}
 
 		/// <summary>
+		/// Gets the graphics device that is used to render the application.
+		/// </summary>
+		public GraphicsDevice GraphicsDevice { get; private set; }
+
+		/// <summary>
 		///   Invoked when the application should update the its state.
 		/// </summary>
 		protected abstract void Update();
@@ -100,7 +105,7 @@
 
 			using (new NativeLibrary())
 			using (var graphicsDevice = new GraphicsDevice())
-			using (var window = new Window(appName, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
+			using (var window = new NativeWindow(appName, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var swapChain = new SwapChain(graphicsDevice, window, Cvars.Fullscreen, Cvars.Resolution))
 			using (var assets = new AssetsManager(graphicsDevice))
 			using (var keyboard = new Keyboard(window))
@@ -208,29 +213,26 @@
 		}
 
 		/// <summary>
-		///   Adds the UI element to the context.
+		///   Creates a new window.
 		/// </summary>
-		/// <param name="element">The element that should be added.</param>
-		public void Add(UIElement element)
+		/// <param name="window">The window that should be shown.</param>
+		public void ShowWindow(Window window)
 		{
-			Assert.ArgumentNotNull(element);
-			Assert.ArgumentSatisfies(element.Parent == null, "The element is already part of a logical tree.");
+			Assert.ArgumentNotNull(window);
+			Assert.That(!_canvas.Children.Contains(window), "The window has already been opened.");
 
-			_canvas.Children.Add(element);
+			_canvas.Children.Add(window);
+			window.Open(this);
 		}
 
 		/// <summary>
-		///   Removes the UI element from the context.
+		///   Removes the window from the application.
 		/// </summary>
-		/// <param name="element">The UI element that should be removed.</param>
-		public bool Remove(UIElement element)
+		/// <param name="window">The window that should be removed.</param>
+		internal void RemoveWindow(Window window)
 		{
-			Assert.ArgumentNotNull(element);
-
-			if (!_canvas.Children.Remove(element))
-				return false;
-
-			return true;
+			Assert.ArgumentNotNull(window);
+			_canvas.Children.Remove(window);
 		}
 
 		/// <summary>

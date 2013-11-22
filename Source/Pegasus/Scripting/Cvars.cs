@@ -12,6 +12,7 @@ namespace Pegasus.Scripting
 {
 	using System;
 	using System.Diagnostics;
+	using Framework.UserInterface.Controls;
 	using Math;
 	using Platform;
 	using Validators;

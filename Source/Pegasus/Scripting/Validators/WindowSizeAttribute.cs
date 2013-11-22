@@ -17,8 +17,8 @@
 			get
 			{
 				return String.Format("Only resolutions between {0}x{1} and {2}x{3} are supported.",
-									 Window.MinimumSize.Width, Window.MinimumSize.Height,
-									 Window.MaximumSize.Width, Window.MaximumSize.Height);
+									 NativeWindow.MinimumSize.Width, NativeWindow.MinimumSize.Height,
+									 NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
 			}
 		}
 
@@ -30,8 +30,8 @@
 			get
 			{
 				return String.Format("must lie within {0}x{1} and {2}x{3}",
-									 Window.MinimumSize.Width, Window.MinimumSize.Height,
-									 Window.MaximumSize.Width, Window.MaximumSize.Height);
+									 NativeWindow.MinimumSize.Width, NativeWindow.MinimumSize.Height,
+									 NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
 			}
 		}
 
@@ -45,8 +45,8 @@
 			Assert.ArgumentSatisfies(value is Size, "The value is not of type 'Size'.");
 
 			var size = (Size)value;
-			return Window.MinimumSize.Width <= size.Width && Window.MinimumSize.Height <= size.Height &&
-				   Window.MaximumSize.Width >= size.Width && Window.MaximumSize.Height >= size.Height;
+			return NativeWindow.MinimumSize.Width <= size.Width && NativeWindow.MinimumSize.Height <= size.Height &&
+				   NativeWindow.MaximumSize.Width >= size.Width && NativeWindow.MaximumSize.Height >= size.Height;
 		}
 	}
 }

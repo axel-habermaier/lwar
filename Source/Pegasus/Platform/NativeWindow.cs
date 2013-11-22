@@ -3,15 +3,16 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using Framework.UserInterface.Controls;
 	using Input;
 	using Logging;
 	using Math;
 	using Memory;
 
 	/// <summary>
-	///   The window of the application.
+	///   Represents a native operating system window.
 	/// </summary>
-	public sealed class Window : DisposableObject
+	public sealed class NativeWindow : DisposableObject
 	{
 		/// <summary>
 		///   Reacts to a character being entered as the result of a dead key press.
@@ -61,7 +62,7 @@
 		/// <param name="position">The screen position of the window's top left corner.</param>
 		/// <param name="size">The size of the window's rendering area.</param>
 		/// <param name="mode">Indicates the window mode.</param>
-		internal Window(string title, Vector2i position, Size size, WindowMode mode)
+		internal NativeWindow(string title, Vector2i position, Size size, WindowMode mode)
 		{
 			Log.Info("Initializing window...");
 

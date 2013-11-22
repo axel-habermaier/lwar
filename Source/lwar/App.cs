@@ -50,7 +50,8 @@
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
 			var uc1 = new UserControl1();
-			Add(uc1);
+			//Add(uc1);
+			ShowWindow(new MainWindow());
 		}
 
 		/// <summary>

@@ -14,6 +14,7 @@ namespace Lwar.Scripting
 	using System.Diagnostics;
 	using Network;
 	using Pegasus;
+	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Input;

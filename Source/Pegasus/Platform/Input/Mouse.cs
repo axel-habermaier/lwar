@@ -24,13 +24,13 @@
 		/// <summary>
 		///   The window that generates the mouse events.
 		/// </summary>
-		private readonly Window _window;
+		private readonly NativeWindow _window;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the mouse events.</param>
-		public Mouse(Window window)
+		public Mouse(NativeWindow window)
 		{
 			Assert.ArgumentNotNull(window);
 

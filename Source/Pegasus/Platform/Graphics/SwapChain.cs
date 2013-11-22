@@ -24,7 +24,7 @@
 		/// <param name="window">The window the swap chain should be bound to.</param>
 		/// <param name="fullscreen">Indicates whether the swap chain should be set to full screen mode.</param>
 		/// <param name="resolution">Indicates the swap chain's default resolution in full screen mode.</param>
-		internal SwapChain(GraphicsDevice graphicsDevice, Window window, bool fullscreen, Size resolution)
+		internal SwapChain(GraphicsDevice graphicsDevice, NativeWindow window, bool fullscreen, Size resolution)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(window);

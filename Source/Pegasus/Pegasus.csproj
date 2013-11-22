@@ -187,11 +187,19 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\ContentPropertyAttribute.cs" />
+    <Compile Include="Framework\Game.cs" />
+    <Compile Include="Framework\GameWindow.xaml.cs">
+      <DependentUpon>GameWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Framework\UserInterface\Controls\Window.cs" />
     <Compile Include="Framework\UserInterface\LayoutInfo.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventStorage`1.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventStorage.cs" />
@@ -237,7 +245,7 @@
     <Compile Include="Platform\ResharperAttributes.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />
     <Compile Include="Framework\Bootstrapper.cs" />
-    <Compile Include="Platform\WindowMode.cs" />
+    <Compile Include="Framework\UserInterface\Controls\WindowMode.cs" />
     <Compile Include="Processes\AsyncAction.cs" />
     <Compile Include="Processes\AsyncFunc.cs" />
     <Compile Include="Processes\Awaiter.cs" />
@@ -521,7 +529,7 @@
     <Compile Include="Rendering\UserInterface\TextTokenStream.cs" />
     <Compile Include="Rendering\UserInterface\TextTokenType.cs" />
     <Compile Include="Math\Vector4.cs" />
-    <Compile Include="Platform\Window.cs" />
+    <Compile Include="Platform\NativeWindow.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="Framework\Application.cs" />
     <Compile Include="Platform\Memory\DisposableObject.cs" />
@@ -607,13 +615,14 @@
     </None>
     <None Include="Scripting\RegistryGenerator.tt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Framework\GameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+   <Target Name="BeforeBuild">
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; ui &quot;$(ProjectPath)&quot;" WorkingDirectory="$(TargetDir)" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Platform
 {
 	using System;
+	using Framework.UserInterface.Controls;
 	using Graphics;
 	using Logging;
 	using Memory;
@@ -19,14 +20,14 @@
 		/// <summary>
 		///   The window that is affected by resolution changes.
 		/// </summary>
-		private readonly Window _window;
+		private readonly NativeWindow _window;
 
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that is affected by resolution changes.</param>
 		/// <param name="swapChain">The swap chain that should be affected by resolution changes.</param>
-		public ResolutionManager(Window window, SwapChain swapChain)
+		public ResolutionManager(NativeWindow window, SwapChain swapChain)
 		{
 			Assert.ArgumentNotNull(window);
 			Assert.ArgumentNotNull(swapChain);

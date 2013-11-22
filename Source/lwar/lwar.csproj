@@ -309,8 +309,8 @@
     <Compile Include="UserInterface\UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserInterface\UserControl2.xaml.cs">
-      <DependentUpon>UserControl2.xaml</DependentUpon>
+    <Compile Include="UserInterface\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserInterface\Styles\ButtonStyle.xaml.cs">
       <DependentUpon>ButtonStyle.xaml</DependentUpon>
@@ -361,7 +361,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UserInterface\UserControl2.xaml">
+    <Page Include="UserInterface\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

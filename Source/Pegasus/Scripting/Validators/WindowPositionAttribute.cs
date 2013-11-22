@@ -17,8 +17,8 @@
 			get
 			{
 				return String.Format("Only screen positions between ({0},{1}) and ({2},{3}) are supported.",
-									 -Window.MaximumSize.Width, -Window.MaximumSize.Height,
-									 Window.MaximumSize.Width, Window.MaximumSize.Height);
+									 -NativeWindow.MaximumSize.Width, -NativeWindow.MaximumSize.Height,
+									 NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
 			}
 		}
 
@@ -30,8 +30,8 @@
 			get
 			{
 				return String.Format("must lie within ({0},{1}) and ({2},{3})",
-									 -Window.MaximumSize.Width, -Window.MaximumSize.Height,
-									 Window.MaximumSize.Width, Window.MaximumSize.Height);
+									 -NativeWindow.MaximumSize.Width, -NativeWindow.MaximumSize.Height,
+									 NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
 			}
 		}
 
@@ -45,8 +45,8 @@
 			Assert.ArgumentSatisfies(value is Vector2i, "The value is not of type 'Vector2i'.");
 
 			var position = (Vector2i)value;
-			return -Window.MaximumSize.Width <= position.X && -Window.MaximumSize.Height <= position.Y &&
-				   Window.MaximumSize.Width >= position.X && Window.MaximumSize.Height >= position.Y;
+			return -NativeWindow.MaximumSize.Width <= position.X && -NativeWindow.MaximumSize.Height <= position.Y &&
+				   NativeWindow.MaximumSize.Width >= position.X && NativeWindow.MaximumSize.Height >= position.Y;
 		}
 	}
 }
