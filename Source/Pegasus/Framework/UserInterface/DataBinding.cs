@@ -17,11 +17,6 @@
 		private static readonly string[] PathSeparator = { "." };
 
 		/// <summary>
-		///   The property path that is evaluated on the source object to get the source value.
-		/// </summary>
-		private readonly string _path;
-
-		/// <summary>
 		///   The source object that is passed to the source expression in order to get the value that is set on the target
 		///   property.
 		/// </summary>
@@ -59,7 +54,7 @@
 		/// <summary>
 		///   The number of member accesses in the source expression.
 		/// </summary>
-		private byte _memberAccessCount;
+		private readonly byte _memberAccessCount;
 
 		/// <summary>
 		///   The compiled expression that is used to get the value from the source object.
@@ -70,13 +65,45 @@
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
-		/// <param name="path">The property path that should be evaluated on the source object to get the source value.</param>
-		internal DataBinding(object sourceObject, string path)
+		/// <param name="property1">The name of the first property in the property path.</param>
+		/// <param name="property2">The name of the second property in the property path.</param>
+		/// <param name="property3">The name of the third property in the property path.</param>
+		internal DataBinding(object sourceObject, string property1, string property2 = null, string property3 = null)
 		{
-			Assert.ArgumentNotNullOrWhitespace(path);
+			Assert.ArgumentNotNullOrWhitespace(property1);
 
 			_sourceObject = sourceObject;
-			_path = path;
+			_memberAccessCount = 1;
+			_memberAccess1 = new MemberAccess(property1) { Changed = OnMember1Changed };
+
+			if (!String.IsNullOrWhiteSpace(property2))
+			{
+				_memberAccessCount = 2;
+				_memberAccess2 = new MemberAccess(property2) { Changed = OnMember2Changed };
+			}
+
+			if (!String.IsNullOrWhiteSpace(property3))
+			{
+				_memberAccessCount = 3;
+				_memberAccess3 = new MemberAccess(property3) { Changed = OnMember3Changed };
+			}
+		}
+
+		/// <summary>
+		/// Gets the property path that is bound to the dependency property.
+		/// </summary>
+		private string PropertyPath
+		{
+			get
+			{
+				if (_memberAccessCount == 3)
+					return String.Format("{0}.{1}.{2}", _memberAccess1.MemberName, _memberAccess2.MemberName, _memberAccess3.MemberName);
+
+				if (_memberAccessCount == 2)
+					return String.Format("{0}.{1}", _memberAccess1.MemberName, _memberAccess2.MemberName);
+
+				return _memberAccess1.MemberName;
+			}
 		}
 
 		/// <summary>
@@ -85,21 +112,6 @@
 		protected override void Initialize()
 		{
 			Assert.ArgumentSatisfies(!_targetProperty.IsDataBindingProhibited, "Data binding is not allowed on the target property.");
-
-			// Initialize the member access information
-			var properties = _path.Split(PathSeparator, StringSplitOptions.RemoveEmptyEntries);
-
-			_memberAccessCount = (byte)properties.Length;
-			Assert.That(_memberAccessCount > 0, "The source expression does not access any members.");
-			Assert.That(_memberAccessCount <= 3, "Unsupported number of member accesses.");
-
-			_memberAccess1 = new MemberAccess(properties[0]) { Changed = OnMember1Changed };
-
-			if (_memberAccessCount > 1)
-				_memberAccess2 = new MemberAccess(properties[1]) { Changed = OnMember2Changed };
-
-			if (_memberAccessCount > 2)
-				_memberAccess3 = new MemberAccess(properties[2]) { Changed = OnMember3Changed };
 
 			// Set the source object of the first member access
 			_memberAccess1.SourceObject = _sourceObject;
@@ -165,7 +177,7 @@
 #if DEBUG
 			if (!_isNull && memberAccess.Value == null)
 				Log.Debug("Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
-						  _path, memberAccess.MemberName);
+						  PropertyPath, memberAccess.MemberName);
 #endif
 
 			var value = memberAccess.Value;

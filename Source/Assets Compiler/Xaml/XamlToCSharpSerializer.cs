@@ -4,6 +4,7 @@
 	using System.Linq;
 	using System.Xml.Linq;
 	using CodeGeneration;
+	using Mono.CSharp;
 	using Platform.Logging;
 
 	/// <summary>
@@ -143,8 +144,18 @@
 				case "Data":
 				{
 					var parentName = element.Parent.Attribute("Name").Value;
-					_writer.AppendLine("{0}.CreateDataBinding(\"{1}\", {2});",
-									   parentName, element.Attribute("Path").Value, element.Attribute("TargetProperty").Value);
+					_writer.Append("{0}.CreateDataBinding({1}, ", parentName, element.Attribute("TargetProperty").Value);
+
+					var path = element.Attribute("Path").Value;
+					var properties = path.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+					if (properties.Length < 1 || properties.Length > 2)
+						Log.Die("Invalid property path '{0}': One or two properties must be accessed.", path);
+
+					_writer.Append("\"{0}\"", properties[0]);
+					if (properties.Length > 1)
+						_writer.Append(", \"{0}\"", properties[1]);
+
+					_writer.AppendLine(");");
 					break;
 				}
 				case "Template":

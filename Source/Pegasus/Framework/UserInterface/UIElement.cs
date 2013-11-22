@@ -309,29 +309,33 @@
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
-		/// <param name="path">The property path that should be evaluated on the source object to get the source value.</param>
 		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
-		public void CreateDataBinding<T>(object sourceObject, string path, DependencyProperty<T> targetProperty)
+		/// <param name="property1">The name of the first property in the property path.</param>
+		/// <param name="property2">The name of the second property in the property path.</param>
+		/// <param name="property3">The name of the third property in the property path.</param>
+		public void CreateDataBinding<T>(object sourceObject, DependencyProperty<T> targetProperty,
+										 string property1, string property2 = null, string property3 = null)
 		{
 			Assert.ArgumentNotNull(sourceObject);
-			Assert.ArgumentNotNullOrWhitespace(path);
+			Assert.ArgumentNotNullOrWhitespace(property1);
 			Assert.ArgumentNotNull(targetProperty);
 
-			SetBinding(targetProperty, new DataBinding<T>(sourceObject, path));
+			SetBinding(targetProperty, new DataBinding<T>(sourceObject, property1, property2, property3));
 		}
 
 		/// <summary>
 		///   Creates a data binding with the UI element's view model as the source object.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
-		/// <param name="path">The property path that should be evaluated on the UI element's view model to get the source value.</param>
 		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
-		public void CreateDataBinding<T>(string path, DependencyProperty<T> targetProperty)
+		/// <param name="property1">The name of the first property in the property path.</param>
+		/// <param name="property2">The name of the second property in the property path.</param>
+		public void CreateDataBinding<T>(DependencyProperty<T> targetProperty, string property1, string property2 = null)
 		{
-			Assert.ArgumentNotNullOrWhitespace(path);
+			Assert.ArgumentNotNullOrWhitespace(property1);
 			Assert.ArgumentNotNull(targetProperty);
 
-			CreateDataBinding(this, "ViewModel." + path, targetProperty);
+			CreateDataBinding(this, targetProperty, "ViewModel", property1, property2);
 		}
 
 		/// <summary>

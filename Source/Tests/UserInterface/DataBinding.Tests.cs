@@ -22,20 +22,20 @@
 		private TestViewModel _viewModel;
 		private TestControl _control;
 
-		private void Bind(object sourceObject, string sourceExpression)
+		private void Bind(object sourceObject, string property1, string property2 = null, string property3 = null)
 		{
-			_control.CreateDataBinding(sourceObject, sourceExpression, UIElement.MarginProperty);
+			_control.CreateDataBinding(sourceObject, UIElement.MarginProperty, property1, property2, property3);
 		}
 
-		private void BindToViewModel(string sourceExpression)
+		private void BindToViewModel(string property1, string property2 = null)
 		{
 			_control.ViewModel = _viewModel;
-			_control.CreateDataBinding(sourceExpression, UIElement.MarginProperty);
+			_control.CreateDataBinding(UIElement.MarginProperty, property1, property2);
 		}
 
-		private void BindWidth(string sourceExpression)
+		private void BindWidth(string property1, string property2 = null)
 		{
-			_control.CreateDataBinding(sourceExpression, UIElement.WidthProperty);
+			_control.CreateDataBinding(UIElement.WidthProperty, property1, property2);
 		}
 
 		private class UntypedViewModelA : ViewModel
@@ -85,7 +85,7 @@
 			_viewModel.InitializeRecursively(1);
 			_viewModel.Model.Thickness = _margin;
 
-			Bind(_viewModel, "Model.Thickness");
+			Bind(_viewModel, "Model", "Thickness");
 
 			_control.Margin.Should().Be(_margin);
 		}
@@ -96,7 +96,7 @@
 			_viewModel.InitializeRecursively(2);
 			_viewModel.Model.Model.Thickness = _margin;
 
-			Bind(_viewModel, "Model.Model.Thickness");
+			Bind(_viewModel, "Model", "Model", "Thickness");
 
 			_control.Margin.Should().Be(_margin);
 		}
@@ -106,7 +106,7 @@
 		{
 			_viewModel.InitializeRecursively(1);
 
-			Bind(_viewModel, "Model.Thickness");
+			Bind(_viewModel, "Model", "Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model = new TestViewModel { Thickness = _margin };
@@ -118,7 +118,7 @@
 		{
 			_viewModel.InitializeRecursively(2);
 
-			Bind(_viewModel, "Model.Model.Thickness");
+			Bind(_viewModel, "Model", "Model", "Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model = new TestViewModel { Model = new TestViewModel { Thickness = _margin } };
@@ -130,7 +130,7 @@
 		{
 			_viewModel.InitializeRecursively(2);
 
-			Bind(_viewModel, "Model.Model.Thickness");
+			Bind(_viewModel, "Model", "Model", "Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model.Model = new TestViewModel { Thickness = _margin };
@@ -142,7 +142,7 @@
 		{
 			_viewModel.InitializeRecursively(2);
 
-			Bind(_viewModel, "Model.Model.Thickness");
+			Bind(_viewModel, "Model", "Model", "Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model.Model.Thickness = _margin;
@@ -154,7 +154,7 @@
 		{
 			_viewModel.InitializeRecursively(1);
 
-			Bind(_viewModel, "Model.Thickness");
+			Bind(_viewModel, "Model", "Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model.Thickness = _margin;
@@ -165,7 +165,7 @@
 		public void ViewModel_ChangeType()
 		{
 			_control.ViewModel = new UntypedViewModelA { Value = _margin };
-			_control.CreateDataBinding("Value", UIElement.MarginProperty);
+			_control.CreateDataBinding(UIElement.MarginProperty, "Value");
 
 			_control.Margin.Should().Be(_margin);
 
@@ -179,7 +179,7 @@
 		public void ViewModel_ChangeType_AfterNull()
 		{
 			_control.ViewModel = new UntypedViewModelA { Value = _margin };
-			_control.CreateDataBinding("Value", UIElement.MarginProperty);
+			_control.CreateDataBinding(UIElement.MarginProperty, "Value");
 
 			_control.Margin.Should().Be(_margin);
 
@@ -196,7 +196,7 @@
 		public void ViewModel_ChangeType_Twice()
 		{
 			_control.ViewModel = new UntypedViewModelA { Value = _margin };
-			_control.CreateDataBinding("Value", UIElement.MarginProperty);
+			_control.CreateDataBinding(UIElement.MarginProperty, "Value");
 
 			_control.Margin.Should().Be(_margin);
 
@@ -232,7 +232,7 @@
 		{
 			var viewModel = new UntypedViewModelA { Value = new UntypedViewModelA { Value = _margin } };
 			_control.ViewModel = viewModel;
-			_control.CreateDataBinding("Value.Value", UIElement.MarginProperty);
+			_control.CreateDataBinding(UIElement.MarginProperty, "Value", "Value");
 
 			_control.Margin.Should().Be(_margin);
 
@@ -258,7 +258,7 @@
 			_viewModel.InitializeRecursively(1);
 			_viewModel.Model.Thickness = _margin;
 
-			BindToViewModel("Model.Thickness");
+			BindToViewModel("Model", "Thickness");
 
 			_control.Margin.Should().Be(_margin);
 		}
@@ -267,7 +267,7 @@
 		public void ViewModel_Property_Property_NotSet()
 		{
 			_control.ViewModel = _viewModel;
-			BindWidth("Model.Width");
+			BindWidth("Model", "Width");
 
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
 		}
@@ -277,7 +277,7 @@
 		{
 			_viewModel.InitializeRecursively(1);
 
-			BindToViewModel("Model.Thickness");
+			BindToViewModel("Model", "Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model = new TestViewModel { Thickness = _margin };
@@ -291,7 +291,7 @@
 			_control.ViewModel = _viewModel;
 			_viewModel.Model.Width = Width;
 
-			BindWidth("Model.Width");
+			BindWidth("Model", "Width");
 			_control.Width.Should().Be(Width);
 
 			_viewModel.Model = null;
@@ -305,7 +305,7 @@
 			_control.ViewModel = _viewModel;
 			_viewModel.Model.Width = Width;
 
-			BindWidth("Model.Width");
+			BindWidth("Model", "Width");
 			_control.Width.Should().Be(Width);
 
 			_control.ViewModel = null;
@@ -317,7 +317,7 @@
 		{
 			_viewModel.InitializeRecursively(1);
 
-			BindToViewModel("Model.Thickness");
+			BindToViewModel("Model", "Thickness");
 			_control.Margin.Should().Be(new Thickness());
 
 			_viewModel.Model.Thickness = _margin;
@@ -328,7 +328,7 @@
 		public void ViewModel_Property_Property_ViewModel_NotSet()
 		{
 			_control.ViewModel = null;
-			BindWidth("Model.Width");
+			BindWidth("Model", "Width");
 
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
 		}
