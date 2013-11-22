@@ -88,8 +88,20 @@
 			Assert.ArgumentNotNull(property);
 			Assert.ArgumentNotNull(binding);
 
-			binding.Initialize(this, property);
 			_propertyStore.GetValueAddUnknown(property).SetBinding(binding);
+			binding.Initialize(this, property);
+		}
+
+		/// <summary>
+		///   Sets the value of the dependency property originating from a binding.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be set.</param>
+		/// <param name="value">The value that should be set.</param>
+		internal void SetBoundValue<T>(DependencyProperty<T> property, T value)
+		{
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
+				setter.PropertyValue.SetBoundValue(value);
 		}
 
 		/// <summary>

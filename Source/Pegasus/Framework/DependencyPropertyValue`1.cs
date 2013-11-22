@@ -71,11 +71,14 @@
 		}
 
 		/// <summary>
-		///   Sets the property's value to the value provided directly or through a data binding.
+		///   Sets the property's value to the value provided directly.
 		/// </summary>
 		/// <param name="value">The value that should be set.</param>
 		public void SetLocalValue(T value)
 		{
+			if (_binding != null)
+				_binding.Remove();
+
 			_binding = null;
 			_baseValue = value;
 
@@ -83,6 +86,16 @@
 			_sources &= ~ValueSources.Style;
 			_sources &= ~ValueSources.Inherited;
 			_sources &= ~ValueSources.Binding;
+		}
+
+		/// <summary>
+		///   Sets the property's value to the value provided by a binding.
+		/// </summary>
+		/// <param name="value">The value that should be set.</param>
+		public void SetBoundValue(T value)
+		{
+			Assert.NotNull(_binding, "No binding has been set for this property.");
+			_baseValue = value;
 		}
 
 		/// <summary>

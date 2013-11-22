@@ -43,6 +43,11 @@
 		}
 
 		/// <summary>
+		///   Removes the binding.
+		/// </summary>
+		internal abstract void Remove();
+
+		/// <summary>
 		///   Initializes the binding.
 		/// </summary>
 		protected abstract void Initialize();

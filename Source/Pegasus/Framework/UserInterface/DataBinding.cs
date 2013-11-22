@@ -110,6 +110,16 @@
 		}
 
 		/// <summary>
+		///   Removes the binding.
+		/// </summary>
+		internal override void Remove()
+		{
+			_memberAccess1.RemoveBinding();
+			_memberAccess2.RemoveBinding();
+			_memberAccess3.RemoveBinding();
+		}
+
+		/// <summary>
 		///   Compiles the function to access the source value.
 		/// </summary>
 		private void CompileFunction()
@@ -206,9 +216,9 @@
 				CompileFunction();
 
 			if (!_isNull)
-				_targetObject.SetValue(_targetProperty, _sourceFunc(_sourceObject));
+				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(_sourceObject));
 			else
-				_targetObject.SetValue(_targetProperty, _targetProperty.DefaultValue);
+				_targetObject.SetBoundValue(_targetProperty, _targetProperty.DefaultValue);
 		}
 
 		/// <summary>
@@ -345,7 +355,8 @@
 					if (notifyPropertyChanged == null)
 						return;
 
-					ReflectionHelper.AttachPropertyChangedEventHandler(notifyPropertyChanged, PropertyChanged);
+					_changeHandler = (PropertyChangedHandler)PropertyChanged;
+					ReflectionHelper.AttachPropertyChangedEventHandler(notifyPropertyChanged, (PropertyChangedHandler)_changeHandler);
 				}
 			}
 
@@ -370,7 +381,7 @@
 					if (notifyPropertyChanged == null)
 						return;
 
-					ReflectionHelper.DetachPropertyChangedEventHandler(notifyPropertyChanged, PropertyChanged);
+					ReflectionHelper.DetachPropertyChangedEventHandler(notifyPropertyChanged,(PropertyChangedHandler) _changeHandler);
 				}
 			}
 
@@ -417,6 +428,14 @@
 
 				if (property == _dependencyProperty && Changed != null)
 					Changed();
+			}
+
+			/// <summary>
+			/// Removes the binding.
+			/// </summary>
+			public void RemoveBinding()
+			{
+				DetachFromChangeEvent();
 			}
 		}
 	}

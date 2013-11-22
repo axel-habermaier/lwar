@@ -39,6 +39,7 @@
 
 		private readonly Thickness _thickness1 = new Thickness(2);
 		private readonly Thickness _thickness2 = new Thickness(4);
+		private readonly Thickness _thickness3 = new Thickness(8);
 
 		[Test]
 		public void LogicalChildrenOfTemplatedControl()
@@ -151,7 +152,7 @@
 			_presenter1.Margin.Should().Be(_thickness1);
 
 			button.Margin = _thickness2;
-			((ContentPresenter)button.GetVisualChild(0)).Margin.Should().Be(_thickness2);
+			_presenter1.Margin.Should().Be(_thickness2);
 		}
 
 		[Test]
@@ -178,6 +179,20 @@
 
 			button.VisualChildrenCount.Should().Be(1);
 			button.GetVisualChild(0).Should().Be(_presenter1);
+		}
+
+		[Test]
+		public void UnsetBinding()
+		{
+			var button = new Button { Template = _template1, Margin = _thickness1 };
+
+			_presenter1.Margin.Should().Be(_thickness1);
+
+			_presenter1.Margin = _thickness2;
+			_presenter1.Margin.Should().Be(_thickness2);
+
+			button.Margin = _thickness3;
+			_presenter1.Margin.Should().Be(_thickness2);
 		}
 	}
 }

@@ -318,5 +318,20 @@
 			_control1.Canvas1.Resources.Clear();
 			_control1.Button3.Margin.Should().Be(_thickness3);
 		}
+
+		[Test]
+		public void UnsetBinding()
+		{
+			_control1.Resources.Add(Key, _thickness1);
+			AddBinding(_control1);
+
+			_control1.Margin.Should().Be(_thickness1);
+
+			_control1.Margin = _thickness2;
+			_control1.Margin.Should().Be(_thickness2);
+
+			_control1.Resources.AddOrReplace(Key,_thickness3);
+			_control1.Margin.Should().Be(_thickness2);
+		}
 	}
 }

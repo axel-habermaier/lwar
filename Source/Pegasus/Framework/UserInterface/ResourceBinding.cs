@@ -45,6 +45,14 @@
 		}
 
 		/// <summary>
+		///   Removes the binding.
+		/// </summary>
+		internal override void Remove()
+		{
+			TargetObject.ResourcesInvalidated -= SetResource;
+		}
+
+		/// <summary>
 		///   Sets the bound resource to the target dependency property.
 		/// </summary>
 		private void SetResource()
@@ -53,10 +61,10 @@
 			if (!TargetObject.TryFindResource(_key, out resource))
 			{
 				Log.Debug("Resource binding failure: Unable to find resource '{0}'.", _key);
-				_targetObject.SetValue(_targetProperty, _targetProperty.DefaultValue);
+				_targetObject.SetBoundValue(_targetProperty, _targetProperty.DefaultValue);
 			}
 			else
-				_targetObject.SetValue(_targetProperty, (T)resource);
+				_targetObject.SetBoundValue(_targetProperty, (T)resource);
 		}
 	}
 }

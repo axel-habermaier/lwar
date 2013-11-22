@@ -41,8 +41,16 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			_targetObject.SetValue(_targetProperty, _sourceObject.GetValue(_sourceProperty));
+			_targetObject.SetBoundValue(_targetProperty, _sourceObject.GetValue(_sourceProperty));
 			_sourceObject.AddChangedHandler(_sourceProperty, OnPropertyChanged);
+		}
+
+		/// <summary>
+		///   Removes the binding.
+		/// </summary>
+		internal override void Remove()
+		{
+			_sourceObject.RemoveChangedHandler(_sourceProperty, OnPropertyChanged);
 		}
 
 		/// <summary>
@@ -51,7 +59,7 @@
 		/// </summary>
 		private void OnPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<T> args)
 		{
-			_targetObject.SetValue(_targetProperty, args.NewValue);
+			_targetObject.SetBoundValue(_targetProperty, args.NewValue);
 		}
 	}
 }
