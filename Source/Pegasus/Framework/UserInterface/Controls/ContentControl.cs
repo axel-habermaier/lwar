@@ -15,6 +15,17 @@
 			new DependencyProperty<object>(affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
+		///   The default template that defines the visual appearance of a user control.
+		/// </summary>
+		internal static readonly ControlTemplate DefaultTemplate = control =>
+		{
+			var presenter = new ContentPresenter();
+			presenter.CreateTemplateBinding(control, ContentProperty, ContentPresenter.ContentProperty);
+
+			return presenter;
+		};
+
+		/// <summary>
 		///   Gets or sets the content of the content control.
 		/// </summary>
 		public object Content

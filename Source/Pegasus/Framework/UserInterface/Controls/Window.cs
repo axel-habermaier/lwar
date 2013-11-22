@@ -78,6 +78,7 @@
 			};
 
 			IsOpen = true;
+			Template = DefaultTemplate;
 		}
 
 		/// <summary>
@@ -202,7 +203,13 @@
 			if (Visibility != Visibility.Visible)
 				return;
 
-			_output.Viewport = new Rectangle(Position, Size);
+			spriteBatch.BlendState = BlendState.Premultiplied;
+			spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
+			spriteBatch.SamplerState = SamplerState.PointClampNoMipmaps;
+
+			var viewport = new Rectangle(Position, Size);
+			_output.Camera.Viewport = viewport;
+			_output.Viewport = viewport;
 			_output.ClearColor(new Color(0, 0, 0, 0));
 			_output.ClearDepth();
 
@@ -213,6 +220,7 @@
 				child.Draw(spriteBatch);
 			}
 
+			spriteBatch.DrawBatch(_output);
 			_swapChain.Present();
 		}
 	}
