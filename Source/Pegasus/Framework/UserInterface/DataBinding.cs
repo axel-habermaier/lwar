@@ -6,15 +6,16 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Binds a target dependency object/dependency property pair to a source object and a path selector.
+	///   Binds a target dependency object/dependency property pair to a source object and a property path.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
+	/// <remarks>With the current implementation of the data binding, a property path can only access up to three properties.</remarks>
 	internal sealed class DataBinding<T> : Binding<T>
 	{
 		/// <summary>
-		///   Cached array instance used to separate the properties of a path.
+		///   The number of member accesses in the source expression.
 		/// </summary>
-		private static readonly string[] PathSeparator = { "." };
+		private readonly byte _memberAccessCount;
 
 		/// <summary>
 		///   The source object that is passed to the source expression in order to get the value that is set on the target
@@ -33,28 +34,19 @@
 		private bool _isNull;
 
 		/// <summary>
-		///   Provides information about the first member access (such as 'a.b') in a source expression 'a.b.c.d'.
+		///   Provides information about the first member access (such as 'a.b') in a property path 'a.b.c.d'.
 		/// </summary>
-		/// <remarks>
-		///   We do not use an array to store the member accesses, but rather use a hard-coded limit to avoid possibly numerous
-		///   array allocations.
-		/// </remarks>
 		private MemberAccess _memberAccess1;
 
 		/// <summary>
-		///   Provides information about the second member access (such as 'b.c') in a source expression 'a.b.c.d'.
+		///   Provides information about the second member access (such as 'b.c') in a property path 'a.b.c.d'.
 		/// </summary>
 		private MemberAccess _memberAccess2;
 
 		/// <summary>
-		///   Provides information about the third member access (such as 'c.d') in a source expression 'a.b.c.d'.
+		///   Provides information about the third member access (such as 'c.d') in a property path 'a.b.c.d'.
 		/// </summary>
 		private MemberAccess _memberAccess3;
-
-		/// <summary>
-		///   The number of member accesses in the source expression.
-		/// </summary>
-		private readonly byte _memberAccessCount;
 
 		/// <summary>
 		///   The compiled expression that is used to get the value from the source object.
@@ -90,7 +82,7 @@
 		}
 
 		/// <summary>
-		/// Gets the property path that is bound to the dependency property.
+		///   Gets the property path that is bound to the dependency property.
 		/// </summary>
 		private string PropertyPath
 		{
