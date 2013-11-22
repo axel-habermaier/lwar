@@ -213,12 +213,8 @@
 			_output.ClearColor(new Color(0, 0, 0, 0));
 			_output.ClearDepth();
 
-			var count = VisualChildrenCount;
-			for (var i = 0; i < count; ++i)
-			{
-				var child = GetVisualChild(i);
-				child.Draw(spriteBatch);
-			}
+			Assert.That(VisualChildrenCount == 1, "A window must have exactly one child element.");
+			GetVisualChild(0).Draw(spriteBatch);
 
 			spriteBatch.DrawBatch(_output);
 			_swapChain.Present();

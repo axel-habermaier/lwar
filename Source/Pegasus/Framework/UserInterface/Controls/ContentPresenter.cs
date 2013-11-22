@@ -7,7 +7,7 @@
 	/// <summary>
 	///   Converts arbitrary content into UI elements.
 	/// </summary>
-	public class ContentPresenter : UIElement
+	public sealed class ContentPresenter : UIElement
 	{
 		/// <summary>
 		///   The content of a content control.

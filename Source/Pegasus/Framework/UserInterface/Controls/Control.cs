@@ -79,7 +79,7 @@
 		/// <summary>
 		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
-		protected internal override UIElementCollection.Enumerator LogicalChildren
+		protected sealed internal override UIElementCollection.Enumerator LogicalChildren
 		{
 			get
 			{
@@ -115,7 +115,7 @@
 		///   Gets the visual child at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
-		protected internal override UIElement GetVisualChild(int index)
+		protected sealed internal override UIElement GetVisualChild(int index)
 		{
 			Assert.NotNull(_templateRoot);
 			Assert.ArgumentSatisfies(index == 0, "The UI element has only one visual child.");
