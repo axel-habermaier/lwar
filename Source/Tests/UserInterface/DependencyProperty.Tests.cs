@@ -29,6 +29,36 @@
 		}
 
 		[Test]
+		public void PreserveLocalValue()
+		{
+			var control = new TestControl();
+			control.SetAnimatedValue(UIElement.WidthProperty, 1);
+			control.SetValue(UIElement.WidthProperty, 2);
+
+			control.Width.Should().Be(1);
+
+			control.UnsetAnimatedValue(UIElement.WidthProperty);
+			control.Width.Should().Be(2);
+		}
+
+		[Test]
+		public void PreserveStyleValues()
+		{
+			var control = new TestControl();
+			control.SetAnimatedValue(UIElement.WidthProperty, 1);
+			control.SetStyleTriggeredValue(UIElement.WidthProperty, 3);
+			control.SetStyleValue(UIElement.WidthProperty, 4);
+
+			control.Width.Should().Be(1);
+
+			control.UnsetAnimatedValue(UIElement.WidthProperty);
+			control.Width.Should().Be(3);
+
+			control.UnsetStyleTriggeredValue(UIElement.WidthProperty);
+			control.Width.Should().Be(4);
+		}
+
+		[Test]
 		public void SetValue()
 		{
 			const HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;

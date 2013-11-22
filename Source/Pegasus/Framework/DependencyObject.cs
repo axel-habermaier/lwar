@@ -71,7 +71,7 @@
 		/// <param name="value">The value that should be set.</param>
 		internal void SetAnimatedValue<T>(DependencyProperty<T> property, T value)
 		{
-			Assert.ArgumentSatisfies(property.IsAnimationProhibited, "The property does not support animations.");
+			Assert.ArgumentSatisfies(!property.IsAnimationProhibited, "The property does not support animations.");
 
 			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
 				setter.PropertyValue.SetAnimatedValue(value);
@@ -146,7 +146,7 @@
 		/// <param name="property">The dependency property whose value should be unset.</param>
 		internal void UnsetAnimatedValue<T>(DependencyProperty<T> property)
 		{
-			Assert.ArgumentSatisfies(property.IsAnimationProhibited, "The property does not support animations.");
+			Assert.ArgumentSatisfies(!property.IsAnimationProhibited, "The property does not support animations.");
 
 			using (var setter = new DependencyPropertyValueSetter<T>(this, property))
 				setter.PropertyValue.UnsetAnimatedValue();
