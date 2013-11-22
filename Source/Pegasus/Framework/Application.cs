@@ -25,7 +25,7 @@
 		/// <summary>
 		///   The root of the logical tree managed by the application.
 		/// </summary>
-		private readonly Canvas _canvas = new Canvas();
+		private readonly Canvas _canvas = new Canvas { IsConnectedToRoot = true };
 
 		/// <summary>
 		///   Indicates whether the application should continue to run.

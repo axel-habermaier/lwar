@@ -3,12 +3,13 @@
 	using System;
 	using Controls;
 	using Math;
+	using Rendering;
 	using Rendering.UserInterface;
 
 	/// <summary>
-	///   Provides layouting, input, and other base functionality for all UI elements.
+	///   Provides layouting, input, hit testing, rendering, and other base functionality for all UI elements.
 	/// </summary>
-	public abstract partial class UIElement : Visual
+	public abstract partial class UIElement : DependencyObject
 	{
 		/// <summary>
 		///   The cached font instance that is currently being used for text rendering.
@@ -19,6 +20,11 @@
 		///   The size of the UI element that has been computed by the last measure pass of the layout engine.
 		/// </summary>
 		private SizeD _desiredSize;
+
+		/// <summary>
+		/// A value indicating whether the UI element is connected to the visual tree's root element.
+		/// </summary>
+		private bool _isConnectedToRoot;
 
 		/// <summary>
 		///   Stores the handlers of the UI element's routed events.
@@ -160,6 +166,9 @@
 		/// </summary>
 		private void InvalidateResources()
 		{
+			if (!IsConnectedToRoot)
+				return;
+
 			if (ResourcesInvalidated != null)
 				ResourcesInvalidated();
 
@@ -169,6 +178,9 @@
 
 			foreach (var child in LogicalChildren)
 				child.InvalidateResources();
+
+			if (Style != null)
+				Style.Apply(this);
 		}
 
 		/// <summary>
@@ -274,10 +286,8 @@
 			// Setting a new (valid) parent possibly invalidates the resources of this UI element and its children
 			if (parent != null)
 			{
+				IsConnectedToRoot = parent.IsConnectedToRoot;
 				InvalidateResources();
-
-				if (Style != null)
-					Style.Apply(this);
 
 				OnAttached();
 			}
@@ -289,6 +299,7 @@
 				if (Style != null)
 					Style.Unset(this);
 
+				IsConnectedToRoot = false;
 				OnDetached();
 			}
 		}
@@ -302,6 +313,21 @@
 		{
 			foreach (var child in LogicalChildren)
 				child.SetInheritedValue(property, newValue);
+		}
+
+		/// <summary>
+		///   Sets a binding for the dependency property.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be set.</param>
+		/// <param name="binding">The binding that should be set.</param>
+		private new void SetBinding<T>(DependencyProperty<T> property, Binding<T> binding)
+		{
+			Assert.ArgumentNotNull(property);
+			Assert.ArgumentNotNull(binding);
+
+			base.SetBinding(property, binding);
+			binding.Active = IsConnectedToRoot;
 		}
 
 		/// <summary>
@@ -573,5 +599,33 @@
 		protected virtual void OnDetached()
 		{
 		}
+
+		/// <summary>
+		///   Gets the visual child at the specified index.
+		/// </summary>
+		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
+		protected internal virtual UIElement GetVisualChild(int index)
+		{
+			Assert.That(false, "This visual does not have any visual children.");
+			return null;
+		}
+
+		internal void Draw(SpriteBatch spriteBatch)
+		{
+			if (Visibility != Visibility.Visible)
+				return;
+
+			OnDraw(spriteBatch);
+
+			var count = VisualChildrenCount;
+			for (var i = 0; i < count; ++i)
+			{
+				var child = GetVisualChild(i);
+				child.VisualOffset += VisualOffset;
+				child.Draw(spriteBatch);
+			}
+		}
+
+		protected abstract void OnDraw(SpriteBatch spriteBatch);
 	}
 }

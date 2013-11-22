@@ -21,8 +21,8 @@
 		private readonly Thickness _margin3 = new Thickness(8);
 		private readonly Thickness _margin4 = new Thickness(16);
 		private const double Width1 = 4;
-		private const double Width2 =66;
-		private const double Width3 =128;
+		private const double Width2 = 66;
+		private const double Width3 = 128;
 
 		private TestViewModel _viewModel;
 		private TestControl _control;
@@ -63,6 +63,23 @@
 				get { return _value; }
 				set { ChangePropertyValue(ref _value, value); }
 			}
+		}
+
+		[Test]
+		public void Source_ChangeNotificationUnregisteredCorrectly()
+		{
+			_viewModel.InitializeRecursively(1);
+			_viewModel.Model.Thickness = _margin1;
+
+			Bind(_viewModel, "Model", "Thickness");
+			_control.Margin.Should().Be(_margin1);
+
+			var model = _viewModel.Model;
+			_viewModel.Model = new TestViewModel { Thickness = _margin2 };
+			_control.Margin.Should().Be(_margin2);
+
+			model.Thickness = _margin3;
+			_control.Margin.Should().Be(_margin2);
 		}
 
 		[Test]
@@ -131,23 +148,6 @@
 		}
 
 		[Test]
-		public void Source_ChangeNotificationUnregisteredCorrectly()
-		{
-			_viewModel.InitializeRecursively(1);
-			_viewModel.Model.Thickness = _margin1;
-
-			Bind(_viewModel, "Model", "Thickness");
-			_control.Margin.Should().Be(_margin1);
-
-			var model = _viewModel.Model;
-			_viewModel.Model = new TestViewModel { Thickness = _margin2};
-			_control.Margin.Should().Be(_margin2);
-
-			model.Thickness = _margin3;
-			_control.Margin.Should().Be(_margin2);
-		}
-
-		[Test]
 		public void Source_Property_Property_Property_SecondPropertyChanged()
 		{
 			_viewModel.InitializeRecursively(2);
@@ -181,6 +181,22 @@
 
 			_viewModel.Model.Thickness = _margin1;
 			_control.Margin.Should().Be(_margin1);
+		}
+
+		[Test]
+		public void UnsetBinding()
+		{
+			_control.ViewModel = _viewModel;
+			_viewModel.Width = Width1;
+
+			BindWidth("Width");
+			_control.Width.Should().Be(Width1);
+
+			_control.Width = Width2;
+			_control.Width.Should().Be(Width2);
+
+			_viewModel.Width = Width3;
+			_control.Width.Should().Be(Width2);
 		}
 
 		[Test]
@@ -366,22 +382,6 @@
 
 			_control.ViewModel = null;
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
-		}
-
-		[Test]
-		public void UnsetBinding()
-		{
-			_control.ViewModel = _viewModel;
-			_viewModel.Width = Width1;
-
-			BindWidth("Width");
-			_control.Width.Should().Be(Width1);
-
-			_control.Width = Width2;
-			_control.Width.Should().Be(Width2);
-
-			_viewModel.Width = Width3;
-			_control.Width.Should().Be(Width2);
 		}
 	}
 }

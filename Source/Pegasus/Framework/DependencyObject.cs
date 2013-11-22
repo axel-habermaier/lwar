@@ -232,6 +232,15 @@
 		}
 
 		/// <summary>
+		/// Changes the activation state of all bindings that are set on any of the dependency object's dependency properties.
+		/// </summary>
+		/// <param name="activated">Indicates whether the bindings should be activated.</param>
+		internal void SetBindingsActivationState(bool activated)
+		{
+			_propertyStore.SetBindingsActivationState(activated);
+		}
+
+		/// <summary>
 		///   Notifies all inheriting objects about a change of an inheriting dependency property.
 		/// </summary>
 		/// <param name="property">The inheriting dependency property that has been changed.</param>

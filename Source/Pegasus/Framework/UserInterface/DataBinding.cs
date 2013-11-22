@@ -99,6 +99,14 @@
 		}
 
 		/// <summary>
+		///   Invoked when the binding has been activated.
+		/// </summary>
+		protected override void OnActivated()
+		{
+			UpdateTargetProperty();
+		}
+
+		/// <summary>
 		///   Initializes the binding.
 		/// </summary>
 		protected override void Initialize()
@@ -114,9 +122,9 @@
 		/// </summary>
 		internal override void Remove()
 		{
-			_memberAccess1.RemoveBinding();
-			_memberAccess2.RemoveBinding();
-			_memberAccess3.RemoveBinding();
+			_memberAccess1.Remove();
+			_memberAccess2.Remove();
+			_memberAccess3.Remove();
 		}
 
 		/// <summary>
@@ -177,7 +185,7 @@
 			++_isChanging;
 
 #if DEBUG
-			if (!_isNull && memberAccess.Value == null)
+			if (Active && !_isNull && memberAccess.Value == null)
 				Log.Debug("Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
 						  PropertyPath, memberAccess.MemberName);
 #endif
@@ -212,6 +220,9 @@
 		/// </summary>
 		private void UpdateTargetProperty()
 		{
+			if (!Active)
+				return;
+
 			if (_sourceFunc == null && !_isNull)
 				CompileFunction();
 
@@ -381,7 +392,7 @@
 					if (notifyPropertyChanged == null)
 						return;
 
-					ReflectionHelper.DetachPropertyChangedEventHandler(notifyPropertyChanged,(PropertyChangedHandler) _changeHandler);
+					ReflectionHelper.DetachPropertyChangedEventHandler(notifyPropertyChanged, (PropertyChangedHandler)_changeHandler);
 				}
 			}
 
@@ -431,9 +442,9 @@
 			}
 
 			/// <summary>
-			/// Removes the binding.
+			///   Deactivates the change handling of the member access.
 			/// </summary>
-			public void RemoveBinding()
+			public void Remove()
 			{
 				DetachFromChangeEvent();
 			}

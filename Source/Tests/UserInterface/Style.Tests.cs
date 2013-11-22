@@ -16,8 +16,8 @@
 			_control1 = new TestControl();
 			_control2 = new TestControl();
 
-			_root1 = new UserControl { Content = _control1 };
-			_root2 = new UserControl { Content = _control2 };
+			_root1 = new UserControl { Content = _control1, IsConnectedToRoot = true };
+			_root2 = new UserControl { Content = _control2, IsConnectedToRoot = true };
 		}
 
 		private TestControl _control1;
@@ -26,6 +26,60 @@
 		// The root elements are required as the styles are not set before the controls have a logical parent
 		private UserControl _root1;
 		private UserControl _root2;
+
+		[Test]
+		public void ImplicitStyle_ShouldBeOverridenByExplicitStyle()
+		{
+			var style1 = new Style();
+			var style2 = new Style();
+
+			_control1.Resources.Add(typeof(TestControl), style1);
+			_control1.Style.Should().Be(style1);
+
+			_control1.Style = style2;
+			_control1.Style.Should().Be(style2);
+		}
+
+		[Test]
+		public void ImplicitStyle_ShouldBeOverridenByStyleBinding()
+		{
+			var style1 = new Style();
+			var style2 = new Style();
+
+			_control1.Resources.Add("MyStyle", style2);
+			_control1.Resources.Add(typeof(TestControl), style1);
+			_control1.Style.Should().Be(style1);
+
+			_control1.CreateResourceBinding("MyStyle", UIElement.StyleProperty);
+			_control1.Style.Should().Be(style2);
+		}
+
+		[Test]
+		public void ImplicitStyle_ShouldNotOverrideExplicitStyle()
+		{
+			var style1 = new Style();
+			var style2 = new Style();
+
+			_control1.Style = style1;
+			_control1.Style.Should().Be(style1);
+
+			_control1.Resources.Add(typeof(TestControl), style2);
+			_control1.Style.Should().Be(style1);
+		}
+
+		[Test]
+		public void ImplicitStyle_ShouldNotOverrideStyleBinding()
+		{
+			var style1 = new Style();
+			var style2 = new Style();
+
+			_control1.Resources.Add("MyStyle", style1);
+			_control1.CreateResourceBinding("MyStyle", UIElement.StyleProperty);
+			_control1.Style.Should().Be(style1);
+
+			_control1.Resources.Add(typeof(TestControl), style2);
+			_control1.Style.Should().Be(style1);
+		}
 
 		[Test]
 		public void Setters_BaseStyle_BaseStyle_NoOverride()
@@ -364,6 +418,76 @@
 			_control2.IntegerTest1.Should().Be(0);
 			_control1.IntegerTest2.Should().Be(value2);
 			_control2.IntegerTest2.Should().Be(value2);
+		}
+
+		[Test]
+		public void Unattached_ImplicitStyle_ShouldBeOverridenByExplicitStyle()
+		{
+			var style1 = new Style();
+			var style2 = new Style();
+			var button = new Button();
+
+			button.Resources.Add(typeof(TestControl), style1);
+			button.Style.Should().Be(null);
+
+			button.Style = style2;
+			button.Style.Should().Be(style2);
+
+			_control1.Content = button;
+			button.Style.Should().Be(style2);
+		}
+
+		[Test]
+		public void Unattached_ImplicitStyle_ShouldBeOverridenByStyleBinding()
+		{
+			var style1 = new Style();
+			var style2 = new Style();
+			var button = new Button();
+
+			button.Resources.Add("MyStyle", style2);
+			button.Resources.Add(typeof(TestControl), style1);
+			button.Style.Should().Be(null);
+
+			button.CreateResourceBinding("MyStyle", UIElement.StyleProperty);
+			button.Style.Should().Be(null);
+
+			_control1.Content = button;
+			button.Style.Should().Be(style2);
+		}
+
+		[Test]
+		public void Unattached_ImplicitStyle_ShouldNotOverrideExplicitStyle()
+		{
+			var style1 = new Style();
+			var style2 = new Style();
+			var button = new Button();
+
+			button.Style = style1;
+			button.Style.Should().Be(style1);
+
+			button.Resources.Add(typeof(TestControl), style2);
+			button.Style.Should().Be(style1);
+
+			_control1.Content = button;
+			button.Style.Should().Be(style1);
+		}
+
+		[Test]
+		public void Unattached_ImplicitStyle_ShouldNotOverrideStyleBinding()
+		{
+			var style1 = new Style();
+			var style2 = new Style();
+			var button = new Button();
+
+			button.Resources.Add("MyStyle", style1);
+			button.CreateResourceBinding("MyStyle", UIElement.StyleProperty);
+			button.Style.Should().Be(null);
+
+			button.Resources.Add(typeof(TestControl), style2);
+			button.Style.Should().Be(null);
+
+			_control1.Content = button;
+			button.Style.Should().Be(style1);
 		}
 
 		[Test]

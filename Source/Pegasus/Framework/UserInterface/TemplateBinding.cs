@@ -41,8 +41,16 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			_targetObject.SetBoundValue(_targetProperty, _sourceObject.GetValue(_sourceProperty));
 			_sourceObject.AddChangedHandler(_sourceProperty, OnPropertyChanged);
+			_targetObject.SetBoundValue(_targetProperty, _sourceObject.GetValue(_sourceProperty));
+		}
+
+		/// <summary>
+		///   Invoked when the binding has been activated.
+		/// </summary>
+		protected override void OnActivated()
+		{
+			// Template bindings are always active
 		}
 
 		/// <summary>
@@ -59,6 +67,7 @@
 		/// </summary>
 		private void OnPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<T> args)
 		{
+			// Template bindings are always active
 			_targetObject.SetBoundValue(_targetProperty, args.NewValue);
 		}
 	}

@@ -73,7 +73,7 @@
 		///   Gets the visual child at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
-		protected internal override Visual GetVisualChild(int index)
+		protected internal override UIElement GetVisualChild(int index)
 		{
 			Assert.NotNull(_children);
 			Assert.ArgumentInRange(index, _children);

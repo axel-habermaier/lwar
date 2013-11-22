@@ -84,5 +84,15 @@
 				value.Property.UnsetInheritedValue(obj);
 			}
 		}
+
+		/// <summary>
+		/// Changes the activation state of all bindings that are set on any dependency properties.
+		/// </summary>
+		/// <param name="activated">Indicates whether the bindings should be activated.</param>
+		public void SetBindingsActivationState(bool activated)
+		{
+			foreach (var value in _values.GetEnumerator())
+				value.SetBindingActivationState(activated);
+		}
 	}
 }

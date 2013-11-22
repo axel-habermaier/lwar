@@ -120,6 +120,12 @@
 													  validationCallback: ValidateAlignment);
 
 		/// <summary>
+		///   Indicates whether the UI element is visible.
+		/// </summary>
+		public static readonly DependencyProperty<Visibility> VisibilityProperty =
+			new DependencyProperty<Visibility>(defaultValue: Visibility.Visible, affectsMeasure: true);
+
+		/// <summary>
 		///   Gets or sets the view model of the UI element.
 		/// </summary>
 		public ViewModel ViewModel
@@ -290,6 +296,15 @@
 		}
 
 		/// <summary>
+		///   Indicates whether the UI element is visible.
+		/// </summary>
+		public Visibility Visibility
+		{
+			get { return GetValue(VisibilityProperty); }
+			set { SetValue(VisibilityProperty, value); }
+		}
+
+		/// <summary>
 		///   Gets the size of the UI element that has been computed by the last measure pass of the layout engine.
 		/// </summary>
 		public SizeD DesiredSize
@@ -341,5 +356,38 @@
 		///   Gets the final render size of the UI element.
 		/// </summary>
 		public SizeD RenderSize { get; internal set; }
+
+		/// <summary>
+		///   Gets or sets the offset value of the UI element.
+		/// </summary>
+		protected internal Vector2d VisualOffset { get; protected set; }
+
+		/// <summary>
+		///   Gets the number of visual children for this UI element.
+		/// </summary>
+		protected internal virtual int VisualChildrenCount
+		{
+			get { return 0; }
+		}
+
+		/// <summary>
+		///   Gets or sets a value indicating whether the UI element is connected to the visual tree's root element.
+		/// </summary>
+		internal bool IsConnectedToRoot
+		{
+			get { return _isConnectedToRoot; }
+			set
+			{
+				if (_isConnectedToRoot == value)
+					return;
+
+				_isConnectedToRoot = value;
+				SetBindingsActivationState(_isConnectedToRoot);
+
+				var childrenCount = VisualChildrenCount;
+				for (var i = 0; i < childrenCount; ++i)
+					GetVisualChild(i).IsConnectedToRoot = _isConnectedToRoot;
+			}
+		}
 	}
 }

@@ -9,6 +9,11 @@
 	internal abstract class Binding<T>
 	{
 		/// <summary>
+		///   Indicates whether the binding is currently active.
+		/// </summary>
+		private bool _active;
+
+		/// <summary>
 		///   The target UI element that defines the target dependency property.
 		/// </summary>
 		protected DependencyObject _targetObject;
@@ -22,6 +27,27 @@
 		///   Gets a value indicating whether the binding has already been bound to a dependency property.
 		/// </summary>
 		internal bool IsBound { get; private set; }
+
+		/// <summary>
+		///   Gets or sets a value indicating whether the binding is currently active.
+		/// </summary>
+		internal bool Active
+		{
+			get { return _active; }
+			set
+			{
+				if (_active == value)
+					return;
+
+				_active = value;
+				OnActivated();
+			}
+		}
+
+		/// <summary>
+		///   Invoked when the binding has been activated.
+		/// </summary>
+		protected abstract void OnActivated();
 
 		/// <summary>
 		///   Initializes the binding.

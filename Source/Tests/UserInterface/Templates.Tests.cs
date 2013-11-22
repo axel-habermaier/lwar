@@ -111,7 +111,7 @@
 		[Test]
 		public void SetTemplateByStyle_StyleSetByResourceBinding()
 		{
-			var control = new UserControl();
+			var control = new UserControl() { IsConnectedToRoot = true };
 			var style = new Style();
 			style.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, _template1));
 			control.Resources.Add("MyStyle", style);
@@ -135,7 +135,7 @@
 		[Test]
 		public void SetTemplateByStyle_StyleSetImplicitly()
 		{
-			var control = new UserControl();
+			var control = new UserControl() { IsConnectedToRoot = true };
 			var style = new Style();
 			style.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, _template1));
 			control.Resources.Add(typeof(Button), style);
@@ -173,15 +173,6 @@
 		}
 
 		[Test]
-		public void VisualChildrenOfTemplatedControl()
-		{
-			var button = new Button { Template = _template1 };
-
-			button.VisualChildrenCount.Should().Be(1);
-			button.GetVisualChild(0).Should().Be(_presenter1);
-		}
-
-		[Test]
 		public void UnsetBinding()
 		{
 			var button = new Button { Template = _template1, Margin = _thickness1 };
@@ -193,6 +184,15 @@
 
 			button.Margin = _thickness3;
 			_presenter1.Margin.Should().Be(_thickness2);
+		}
+
+		[Test]
+		public void VisualChildrenOfTemplatedControl()
+		{
+			var button = new Button { Template = _template1 };
+
+			button.VisualChildrenCount.Should().Be(1);
+			button.GetVisualChild(0).Should().Be(_presenter1);
 		}
 	}
 }

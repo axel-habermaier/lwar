@@ -167,8 +167,8 @@
 		public void ImplicitStyle_Reparent_BothImplicit()
 		{
 			var button = new Button();
-			var userControl1 = new UserControl();
-			var userControl2 = new UserControl();
+			var userControl1 = new UserControl() { IsConnectedToRoot = true };
+			var userControl2 = new UserControl() { IsConnectedToRoot = true };
 
 			SetImplicitStyle1(userControl1);
 			SetImplicitStyle2(userControl2);
@@ -330,7 +330,7 @@
 			_control1.Margin = _thickness2;
 			_control1.Margin.Should().Be(_thickness2);
 
-			_control1.Resources.AddOrReplace(Key,_thickness3);
+			_control1.Resources.AddOrReplace(Key, _thickness3);
 			_control1.Margin.Should().Be(_thickness2);
 		}
 	}

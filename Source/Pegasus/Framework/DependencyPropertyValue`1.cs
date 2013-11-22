@@ -71,6 +71,16 @@
 		}
 
 		/// <summary>
+		///   Changes the activation state of the binding that is set on the dependency property, if any.
+		/// </summary>
+		/// <param name="activated">Indicates whether the binding should be activated.</param>
+		public override void SetBindingActivationState(bool activated)
+		{
+			if (_binding != null)
+				_binding.Active = activated;
+		}
+
+		/// <summary>
 		///   Sets the property's value to the value provided directly.
 		/// </summary>
 		/// <param name="value">The value that should be set.</param>

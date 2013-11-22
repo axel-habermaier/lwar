@@ -19,6 +19,8 @@
 		/// </summary>
 		public TestControl()
 		{
+			IsConnectedToRoot = true;
+
 			Button1 = new Button();
 			Button2 = new Button();
 			Button3 = new Button();

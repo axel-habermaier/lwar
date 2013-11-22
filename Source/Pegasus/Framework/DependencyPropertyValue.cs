@@ -60,6 +60,12 @@
 		}
 
 		/// <summary>
+		///   Changes the activation state of the binding that is set on the dependency property, if any.
+		/// </summary>
+		/// <param name="activated">Indicates whether the binding should be activated.</param>
+		public abstract void SetBindingActivationState(bool activated);
+
+		/// <summary>
 		///   Identifies the sources of the property's values.
 		/// </summary>
 		[Flags]
