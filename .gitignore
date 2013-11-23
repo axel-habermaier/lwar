@@ -42,3 +42,4 @@ Source/Tests/bin
 Source/Tests/obj
 *.xaml.cs
 Source/Assets/Fonts/FontLoader.cs
+*.ipch

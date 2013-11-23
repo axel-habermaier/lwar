@@ -370,6 +370,9 @@
     </PostBuildEvent>
   </PropertyGroup>
   <Target Name="BeforeBuild">
-    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; ui &quot;$(ProjectPath)&quot;" WorkingDirectory="$(TargetDir)" />
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; compile &quot;$(ProjectPath)&quot; /ui" WorkingDirectory="$(TargetDir)" />
+  </Target>
+  <Target Name="Clean">
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; clean &quot;$(ProjectPath)&quot; /ui" WorkingDirectory="$(TargetDir)" />
   </Target>
 </Project>
