@@ -136,8 +136,8 @@
 
 				// Shift down the items until we find the index where the current item should be inserted.
 				var j = i;
-				for (; j > 0 && itemZIndex < GetZIndex(_children[j]); --j)
-					_children[j] = _children[j - 1];
+				for (; j > 0 && itemZIndex < GetZIndex(_children[j - 1]); --j)
+					_children.ReplaceItemWithoutNotifications(j, _children[j - 1]);
 
 				_children[j] = item;
 			}

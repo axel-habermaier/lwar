@@ -228,6 +228,8 @@
 			_output.ClearColor(Background);
 			_output.ClearDepth();
 
+			OnDraw(spriteBatch);
+
 			Assert.That(VisualChildrenCount == 1, "A window must have exactly one child element.");
 			GetVisualChild(0).Draw(spriteBatch);
 

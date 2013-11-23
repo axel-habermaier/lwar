@@ -90,6 +90,20 @@
 		}
 
 		/// <summary>
+		///   Replaces the item at the given index with the given one, without notifying neither the items nor the items parents
+		///   about the change. This method should only be used if the order of the elements in the collection should be changed.
+		/// </summary>
+		/// <param name="index">The index of the item that should be replaced.</param>
+		/// <param name="item">The new item the old item at the given index should be replaced with.</param>
+		internal void ReplaceItemWithoutNotifications(int index, UIElement item)
+		{
+			Assert.ArgumentInRange(index, this);
+			Assert.ArgumentNotNull(item);
+
+			Items[index] = item;
+		}
+
+		/// <summary>
 		///   Gets an enumerator for the collection.
 		/// </summary>
 		public new Enumerator GetEnumerator()

@@ -94,6 +94,8 @@
 
 			if (control._templateRoot != null)
 				control._templateRoot.ChangeLogicalParent(control);
+
+			control.OnVisualChildrenChanged();
 		}
 
 		/// <summary>
