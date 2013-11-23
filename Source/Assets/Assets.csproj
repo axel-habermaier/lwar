@@ -14,8 +14,6 @@
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86' ">
@@ -153,7 +151,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile &quot;$(ProjectDir)/Assets.csproj&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -187,7 +185,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile &quot;$(ProjectDir)/Assets.csproj&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -247,7 +245,7 @@
       <Name>Assets Compiler</Name>
     </ProjectReference>
     <ProjectReference Include="..\Pegasus\Pegasus.csproj">
-      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
+      <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
       <Name>Pegasus</Name>
     </ProjectReference>
   </ItemGroup>

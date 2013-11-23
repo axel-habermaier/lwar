@@ -16,8 +16,6 @@
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <ExpressionBlendVersion>5.0.40218.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU' ">
@@ -85,6 +83,11 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile &quot;$(ProjectDir)/lwar.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <DebugSymbols>True</DebugSymbols>
@@ -111,6 +114,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile &quot;$(ProjectDir)/lwar.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
