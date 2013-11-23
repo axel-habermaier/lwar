@@ -26,6 +26,15 @@
 		};
 
 		/// <summary>
+		/// Initializes a new instance.
+		/// </summary>
+		public ContentControl()
+		{
+			// We set an implicit default template as some sort of implicit style
+			SetStyleValue(TemplateProperty, DefaultTemplate);
+		}
+
+		/// <summary>
 		///   Gets or sets the content of the content control.
 		/// </summary>
 		public object Content
