@@ -26,8 +26,6 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			base.Initialize();
-
 			Commands.Resolve();
 			Cvars.Resolve();
 

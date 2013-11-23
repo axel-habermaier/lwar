@@ -5,9 +5,10 @@
              mc:Ignorable="d" 
              FontFamily="Liberation Mono" 
              FontSize="11" 
-             TextOptions.TextRenderingMode="Aliased"
+             TextOptions.TextRenderingMode="Aliased" Background="Black"
              d:DesignHeight="300" d:DesignWidth="300" Title="lwar">
-    <Canvas>
-        <TextBlock Foreground="Red">Hello World!</TextBlock>
-    </Canvas>
+    <StackPanel Background="Green" Margin="20">
+        <ContentControl Content="Bla" HorizontalAlignment="Center" VerticalAlignment="Center"></ContentControl>
+        <Canvas Background="Blue" Margin="20"/>
+    </StackPanel>
 </Window>

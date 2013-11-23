@@ -74,9 +74,7 @@
 		/// <summary>
 		///   Invoked when the application is initializing.
 		/// </summary>
-		protected virtual void Initialize()
-		{
-		}
+		protected abstract void Initialize();
 
 		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.

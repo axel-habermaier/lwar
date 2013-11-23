@@ -23,12 +23,6 @@
 			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 255), affectsRender: true, inherits: true);
 
 		/// <summary>
-		///   The background color of the control.
-		/// </summary>
-		public static readonly DependencyProperty<Color> BackgroundProperty =
-			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 0), affectsRender: true);
-
-		/// <summary>
 		///   The child UI element that represents the root of this control's template. Null if no template has been created.
 		/// </summary>
 		private UIElement _templateRoot;
@@ -51,15 +45,6 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the background color of the control.
-		/// </summary>
-		public Color Background
-		{
-			get { return GetValue(BackgroundProperty); }
-			set { SetValue(BackgroundProperty, value); }
-		}
-
-		/// <summary>
 		///   Gets or sets the template that defines the control's appearance.
 		/// </summary>
 		public ControlTemplate Template
@@ -79,7 +64,7 @@
 		/// <summary>
 		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
-		protected sealed internal override UIElementCollection.Enumerator LogicalChildren
+		protected internal override sealed UIElementCollection.Enumerator LogicalChildren
 		{
 			get
 			{
@@ -115,7 +100,7 @@
 		///   Gets the visual child at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
-		protected sealed internal override UIElement GetVisualChild(int index)
+		protected internal override sealed UIElement GetVisualChild(int index)
 		{
 			Assert.NotNull(_templateRoot);
 			Assert.ArgumentSatisfies(index == 0, "The UI element has only one visual child.");

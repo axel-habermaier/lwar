@@ -87,6 +87,10 @@
 		public void ProcessEvents()
 		{
 			_window.ProcessEvents();
+
+			_size = _window.Size;
+			_position = _window.Position;
+			_mode = _window.Mode;
 		}
 
 		/// <summary>
@@ -198,6 +202,17 @@
 		}
 #endif
 
+		internal void UpdateLayout()
+		{
+			var size = Size;
+			Width = size.Width;
+			Height = size.Height;
+
+			var availableSize = new SizeD(size.Width, size.Height);
+			Measure(availableSize);
+			Arrange(new RectangleD(0, 0, availableSize));
+		}
+
 		internal new void Draw(SpriteBatch spriteBatch)
 		{
 			if (Visibility != Visibility.Visible)
@@ -207,10 +222,10 @@
 			spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
 			spriteBatch.SamplerState = SamplerState.PointClampNoMipmaps;
 
-			var viewport = new Rectangle(Position, Size);
+			var viewport = new Rectangle(0, 0, Size);
 			_output.Camera.Viewport = viewport;
 			_output.Viewport = viewport;
-			_output.ClearColor(new Color(0, 0, 0, 0));
+			_output.ClearColor(Background);
 			_output.ClearDepth();
 
 			Assert.That(VisualChildrenCount == 1, "A window must have exactly one child element.");

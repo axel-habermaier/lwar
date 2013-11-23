@@ -2,6 +2,7 @@
 {
 	using System;
 	using Math;
+	using Platform.Graphics;
 	using Platform.Logging;
 	using Rendering.UserInterface;
 
@@ -12,6 +13,12 @@
 		/// </summary>
 		public static readonly DependencyProperty<ViewModel> ViewModelProperty =
 			new DependencyProperty<ViewModel>(inherits: true, prohibitsAnimations: true);
+
+		/// <summary>
+		///   The background color of the UI element.
+		/// </summary>
+		public static readonly DependencyProperty<Color> BackgroundProperty =
+			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 0), affectsRender: true);
 
 		/// <summary>
 		///   The style of the UI element.
@@ -132,6 +139,15 @@
 		{
 			get { return GetValue(ViewModelProperty); }
 			set { SetValue(ViewModelProperty, value); }
+		}
+
+		/// <summary>
+		///   Gets or sets the background color of the control.
+		/// </summary>
+		public Color Background
+		{
+			get { return GetValue(BackgroundProperty); }
+			set { SetValue(BackgroundProperty, value); }
 		}
 
 		/// <summary>
