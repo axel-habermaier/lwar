@@ -38,6 +38,7 @@
 			foreach (var element in this)
 				element.ChangeLogicalParent(null);
 
+			_logicalParent.OnVisualChildrenChanged();
 			base.ClearItems();
 		}
 
@@ -50,10 +51,11 @@
 		{
 			Assert.ArgumentNotNull(item);
 
-			item.ChangeLogicalParent(_logicalParent);
-
 			++_version;
 			base.InsertItem(index, item);
+
+			item.ChangeLogicalParent(_logicalParent);
+			_logicalParent.OnVisualChildrenChanged();
 		}
 
 		/// <summary>
@@ -62,10 +64,11 @@
 		/// <param name="index">The zero-based index of the element that should be removed.</param>
 		protected override void RemoveItem(int index)
 		{
-			this[index].ChangeLogicalParent(null);
-
 			++_version;
 			base.RemoveItem(index);
+
+			this[index].ChangeLogicalParent(null);
+			_logicalParent.OnVisualChildrenChanged();
 		}
 
 		/// <summary>
@@ -77,11 +80,13 @@
 		{
 			Assert.ArgumentNotNull(item);
 
+			++_version;
+			base.SetItem(index, item);
+
 			this[index].ChangeLogicalParent(null);
 			item.ChangeLogicalParent(_logicalParent);
 
-			++_version;
-			base.SetItem(index, item);
+			_logicalParent.OnVisualChildrenChanged();
 		}
 
 		/// <summary>
