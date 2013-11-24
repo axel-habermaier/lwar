@@ -25,11 +25,6 @@
 		public const string ReservedInternalIdentifierPrefix = "_pg_";
 
 		/// <summary>
-		///   Gets the path to the compiled assets project.
-		/// </summary>
-		public static readonly string AssetListPath = Path.Combine(Environment.CurrentDirectory, "assets.dll");
-
-		/// <summary>
 		///   The asset list assembly.
 		/// </summary>
 		private static Assembly _assetListAssembly;
@@ -38,6 +33,14 @@
 		///   The assets project file.
 		/// </summary>
 		private static AssetsProject _assetsProject;
+
+		/// <summary>
+		///   Gets the path to the compiled assets project.
+		/// </summary>
+		public static string AssetListPath
+		{
+			get { return AssetsProject.CompiledAssemblyPath; }
+		}
 
 		/// <summary>
 		///   Gets the path to the C# file that should contain the generated effect code.

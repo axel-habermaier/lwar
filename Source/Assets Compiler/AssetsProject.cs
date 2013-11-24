@@ -48,7 +48,7 @@
 
 			SourceDirectory = Path.GetFullPath(Path.GetDirectoryName(projectFile));
 			TempDirectory = Path.Combine(SourceDirectory, "obj");
-			TargetDirectory = Environment.CurrentDirectory;
+			TargetDirectory = Path.Combine(Environment.CurrentDirectory, AssemblyName);
 		}
 
 		/// <summary>
@@ -97,6 +97,50 @@
 		///   Gets the path where the compiled assets should be stored.
 		/// </summary>
 		public string TargetDirectory { get; private set; }
+
+		/// <summary>
+		///   Gets the name of the compiled assets project assembly.
+		/// </summary>
+		public string AssemblyName
+		{
+			get
+			{
+				var assemblyName = _projectFile.Descendants(Namespace + "AssemblyName").FirstOrDefault();
+				if (assemblyName == null)
+					Log.Die("Unable to determine the assembly name of the assets project.");
+
+				return assemblyName.Value;
+			}
+		}
+
+		/// <summary>
+		///   Gets the path to the compiled assets assembly.
+		/// </summary>
+		public string CompiledAssemblyPath
+		{
+			get
+			{
+				var outputType = _projectFile.Descendants(Namespace + "OutputType").FirstOrDefault();
+				if (outputType == null)
+					Log.Die("Unable to determine the output type of the assets project.");
+
+				var extension = String.Empty;
+				switch (outputType.Value)
+				{
+					case "WinExe":
+						extension = "exe";
+						break;
+					case "Library":
+						extension = "dll";
+						break;
+					default:
+						Log.Die("Assets project has unsupported output type: '{0}'.", outputType.Value);
+						break;
+				}
+
+				return Path.Combine(Environment.CurrentDirectory, AssemblyName + "." + extension);
+			}
+		}
 
 		/// <summary>
 		///   Adds the file to the assets project as a child of the parent file.
