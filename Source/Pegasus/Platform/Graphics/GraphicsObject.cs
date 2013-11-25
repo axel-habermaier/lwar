@@ -5,7 +5,7 @@
 	using Memory;
 
 	/// <summary>
-	///   Base class for all objects belong to a graphics device.
+	///   Base class for all objects belonging to a graphics device.
 	/// </summary>
 	public abstract class GraphicsObject : DisposableObject
 	{
@@ -42,9 +42,9 @@
 
 #if DEBUG
 
-	/// <summary>
-	///   Gets the name of the graphics object. This property is only available in debug builds.
-	/// </summary>
+		/// <summary>
+		///   Gets the name of the graphics object. This property is only available in debug builds.
+		/// </summary>
 		protected string Name { get; private set; }
 
 		/// <summary>
