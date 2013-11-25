@@ -64,11 +64,11 @@
 		/// <param name="index">The zero-based index of the element that should be removed.</param>
 		protected override void RemoveItem(int index)
 		{
-			++_version;
-			base.RemoveItem(index);
-
 			this[index].ChangeLogicalParent(null);
 			_logicalParent.OnVisualChildrenChanged();
+
+			++_version;
+			base.RemoveItem(index);
 		}
 
 		/// <summary>
