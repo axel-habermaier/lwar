@@ -84,12 +84,12 @@
 				var recompile = command == "recompile";
 				var compile = command == "compile";
 				var clean = command == "clean";
-				var ui = command == "ui";
+				var ui = args.Length >= 3 && args[2].Trim().ToLower() == "/ui";
 				var project = args.Length >= 2 ? args[1].Trim() : String.Empty;
 
-				if (String.IsNullOrWhiteSpace(project) || (!recompile && !clean && !compile && !ui))
+				if (String.IsNullOrWhiteSpace(project) || (!recompile && !clean && !compile))
 				{
-					Log.Error("The asset compiler must be invoked with two arguments: the 'ui', 'clean', 'compile', or " +
+					Log.Error("The asset compiler must be invoked with two arguments: the 'clean', 'compile', or " +
 							  "'recompile' command followed by the path to the assets project that should be compiled.");
 					return -1;
 				}
@@ -113,7 +113,7 @@
 					if (clean)
 						compilationUnit.Clean();
 
-					if (compile || ui)
+					if (compile)
 						success = compilationUnit.Compile();
 
 					var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;

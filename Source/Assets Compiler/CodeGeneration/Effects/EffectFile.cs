@@ -18,11 +18,6 @@
 	internal class EffectFile : EffectElement
 	{
 		/// <summary>
-		///   The name of the file.
-		/// </summary>
-		private readonly string _fileName;
-
-		/// <summary>
 		///   The C# syntax tree of the effect file.
 		/// </summary>
 		private readonly SyntaxTree _syntaxTree;
@@ -30,16 +25,12 @@
 		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
-		/// <param name="fileName">The name of the file.</param>
 		/// <param name="errorReporter">The error reporter that should be used to report validation errors.</param>
 		/// <param name="syntaxTree">The parsed syntax tree of the effect file.</param>
 		/// <param name="resolver"> The C# AST resolver that should be used to resolve symbols of the effect file.</param>
-		public EffectFile(string fileName, IErrorReporter errorReporter, SyntaxTree syntaxTree, CSharpAstResolver resolver)
+		public EffectFile(IErrorReporter errorReporter, SyntaxTree syntaxTree, CSharpAstResolver resolver)
 			: base(errorReporter, syntaxTree.FileName, resolver)
 		{
-			Assert.ArgumentNotNullOrWhitespace(fileName);
-
-			_fileName = fileName;
 			_syntaxTree = syntaxTree;
 		}
 

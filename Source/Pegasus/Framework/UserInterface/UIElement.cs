@@ -22,14 +22,14 @@
 		private SizeD _desiredSize;
 
 		/// <summary>
-		/// A value indicating whether the UI element is connected to the visual tree's root element.
-		/// </summary>
-		private bool _isConnectedToRoot;
-
-		/// <summary>
 		///   Stores the handlers of the UI element's routed events.
 		/// </summary>
 		private RoutedEventStore _eventStore = new RoutedEventStore();
+
+		/// <summary>
+		///   A value indicating whether the UI element is connected to the visual tree's root element.
+		/// </summary>
+		private bool _isConnectedToRoot;
 
 		/// <summary>
 		///   Caches the layouting information of the UI element during the measure and arrange phases for performance reasons.
@@ -597,6 +597,13 @@
 		///   Invoked when the UI element has been detached from its current logical tree.
 		/// </summary>
 		protected virtual void OnDetached()
+		{
+		}
+
+		/// <summary>
+		///   Invoked when the visual children of the UI element have changed.
+		/// </summary>
+		protected internal virtual void OnVisualChildrenChanged()
 		{
 		}
 

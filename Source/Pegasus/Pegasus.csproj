@@ -17,8 +17,6 @@
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU'">
     <DebugSymbols>True</DebugSymbols>
@@ -613,7 +611,4 @@
     <None Include="Scripting\RegistryGenerator.tt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="BeforeBuild">
-    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; ui &quot;$(ProjectPath)&quot;" WorkingDirectory="$(TargetDir)" />
-  </Target>
 </Project>

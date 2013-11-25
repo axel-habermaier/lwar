@@ -26,6 +26,17 @@
 		};
 
 		/// <summary>
+		/// Initializes a new instance.
+		/// </summary>
+		public ContentControl()
+		{
+			// We set an implicit default template as a style value. This is an inexpensive way of setting
+			// an implicit default style for all content controls. Using SetValue(), on the other hand,
+			// would take precedence over all templates set by a style
+			SetStyleValue(TemplateProperty, DefaultTemplate);
+		}
+
+		/// <summary>
 		///   Gets or sets the content of the content control.
 		/// </summary>
 		public object Content

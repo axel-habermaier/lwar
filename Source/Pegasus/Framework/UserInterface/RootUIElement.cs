@@ -122,11 +122,7 @@
 		public void UpdateLayout()
 		{
 			foreach (Window window in _windows)
-			{
-				var size = new SizeD(window.Width, window.Height);
-				window.Measure(size);
-				window.Arrange(new RectangleD(0, 0, size));
-			}
+				window.UpdateLayout();
 		}
 
 		/// <summary>

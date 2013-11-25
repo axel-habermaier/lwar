@@ -16,8 +16,6 @@
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <ExpressionBlendVersion>5.0.40218.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU' ">
@@ -85,6 +83,11 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile &quot;$(ProjectDir)/lwar.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <DebugSymbols>True</DebugSymbols>
@@ -111,6 +114,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; recompile &quot;$(ProjectDir)/lwar.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
@@ -303,6 +311,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gameplay\Entities\Planet.cs" />
     <Compile Include="Rendering\Renderers\SkyBoxRenderer.cs" />
+    <Compile Include="UserInterface\MainMenu.xaml.cs">
+      <DependentUpon>MainMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -341,6 +352,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="UserInterface\MainMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserInterface\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -370,6 +385,9 @@
     </PostBuildEvent>
   </PropertyGroup>
   <Target Name="BeforeBuild">
-    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; ui &quot;$(ProjectPath)&quot;" WorkingDirectory="$(TargetDir)" />
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; compile &quot;$(ProjectPath)&quot; /ui" WorkingDirectory="$(TargetDir)" />
+  </Target>
+  <Target Name="Clean">
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; clean &quot;$(ProjectPath)&quot; /ui" WorkingDirectory="$(TargetDir)" />
   </Target>
 </Project>

@@ -317,7 +317,7 @@
 			}
 
 			/// <summary>
-			///   Uses reflection to get the value of the accessed member.
+			///   Gets the value of the accessed member.
 			/// </summary>
 			public object Value
 			{

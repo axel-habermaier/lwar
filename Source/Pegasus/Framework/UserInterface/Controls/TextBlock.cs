@@ -23,11 +23,6 @@
 		public static readonly DependencyProperty<Color> ForegroundProperty = Control.ForegroundProperty;
 
 		/// <summary>
-		///   The background color of the text.
-		/// </summary>
-		public static readonly DependencyProperty<Color> BackgroundProperty = Control.BackgroundProperty;
-
-		/// <summary>
 		///   Initializes a new instance.
 		/// </summary>
 		public TextBlock()
@@ -52,15 +47,6 @@
 		{
 			get { return GetValue(ForegroundProperty); }
 			set { SetValue(ForegroundProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the background color of the text.
-		/// </summary>
-		public Color Background
-		{
-			get { return GetValue(BackgroundProperty); }
-			set { SetValue(BackgroundProperty, value); }
 		}
 
 		/// <summary>

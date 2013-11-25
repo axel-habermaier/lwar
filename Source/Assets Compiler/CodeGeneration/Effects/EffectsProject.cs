@@ -42,7 +42,7 @@
 		/// <param name="resolver">The resolver that should be used to resolve type information within the file.</param>
 		protected override EffectFile CreateFile(string fileName, SyntaxTree syntaxTree, CSharpAstResolver resolver)
 		{
-			return new EffectFile(fileName, this, syntaxTree, resolver);
+			return new EffectFile(this, syntaxTree, resolver);
 		}
 
 		/// <summary>

@@ -7,12 +7,5 @@
 	/// </summary>
 	public class UserControl : ContentControl
 	{
-		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		public UserControl()
-		{
-			Template = DefaultTemplate;
-		}
 	}
 }

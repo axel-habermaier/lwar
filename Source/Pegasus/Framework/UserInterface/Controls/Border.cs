@@ -18,12 +18,6 @@
 			new DependencyProperty<UIElement>(affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
-		///   The background color of the border.
-		/// </summary>
-		public static readonly DependencyProperty<Color> BackgroundProperty =
-			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 0), affectsRender: true);
-
-		/// <summary>
 		///   Initializes the type.
 		/// </summary>
 		static Border()
@@ -38,15 +32,6 @@
 		{
 			get { return GetValue(ChildProperty); }
 			set { SetValue(ChildProperty, value); }
-		}
-
-		/// <summary>
-		///   Gets or sets the background color of the border.
-		/// </summary>
-		public Color Background
-		{
-			get { return GetValue(BackgroundProperty); }
-			set { SetValue(BackgroundProperty, value); }
 		}
 
 		/// <summary>
