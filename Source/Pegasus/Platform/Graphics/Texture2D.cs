@@ -121,6 +121,7 @@
 
 				White = new Texture2D(graphicsDevice);
 				White.Reinitialize(description, surfaces);
+				White.SetName("White");
 			}
 		}
 
