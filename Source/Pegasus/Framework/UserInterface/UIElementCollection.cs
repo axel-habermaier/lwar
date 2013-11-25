@@ -65,10 +65,11 @@
 		protected override void RemoveItem(int index)
 		{
 			this[index].ChangeLogicalParent(null);
-			_logicalParent.OnVisualChildrenChanged();
-
+			
 			++_version;
 			base.RemoveItem(index);
+
+			_logicalParent.OnVisualChildrenChanged();
 		}
 
 		/// <summary>
