@@ -307,8 +307,6 @@
     <Compile Include="Platform\Memory\BufferPointer.cs" />
     <Compile Include="Platform\Memory\Endianess.cs" />
     <Compile Include="Platform\ExternalProcess.cs" />
-    <Compile Include="Platform\Graphics\Attachment.cs" />
-    <Compile Include="Platform\Graphics\AttachmentPoint.cs" />
     <Compile Include="Platform\Graphics\CubeMap.cs" />
     <Compile Include="Platform\Graphics\Surface.cs" />
     <Compile Include="Platform\Graphics\Texture.cs" />
