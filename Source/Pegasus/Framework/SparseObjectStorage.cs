@@ -24,7 +24,6 @@
 		/// <summary>
 		///   Gets an enumerator for all values currently stored in the sparse object storage.
 		/// </summary>
-		/// <returns></returns>
 		internal Enumerator GetEnumerator()
 		{
 			return new Enumerator(_valueCount, _values);

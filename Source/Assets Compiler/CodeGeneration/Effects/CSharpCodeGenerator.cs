@@ -194,8 +194,8 @@
 				foreach (var buffer in ConstantBuffers)
 				{
 					_writer.Newline();
-					_writer.AppendLine("{0} = {3}.CreateConstantBuffer({1}, {2});", GetFieldName(buffer.Name), buffer.Size,
-									   buffer.Slot, ContextVariableName);
+					_writer.AppendLine("{0} = {2}.CreateConstantBuffer({1}.Size, {1}.Slot);", GetFieldName(buffer.Name),
+									   GetStructName(buffer), ContextVariableName);
 					_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
 				}
 			});
@@ -344,6 +344,12 @@
 					_writer.AppendLine("///   The size of the struct in bytes.");
 					_writer.AppendLine("/// </summary>");
 					_writer.AppendLine("public const int Size = {0};", buffers[i].Size);
+					_writer.Newline();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///   The slot the constant buffer is assigned to.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("public const int Slot = {0};", buffers[i].Slot);
 					_writer.Newline();
 
 					var constants = buffers[i].GetLayoutedConstants().ToArray();
