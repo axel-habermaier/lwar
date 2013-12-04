@@ -6,6 +6,7 @@
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
+	using Assets;
 	using Platform;
 	using Platform.Logging;
 
@@ -170,8 +171,10 @@
 		public static IEnumerable<Type> GetReflectionTypes()
 		{
 			var assetCompilerTypes = Assembly.GetExecutingAssembly().GetTypes();
-			var assetListTypes = AssetListAssembly.GetTypes();
+			if (XamlFilesOnly)
+				return assetCompilerTypes;
 
+			var assetListTypes = AssetListAssembly.GetTypes();
 			return assetListTypes.Union(assetCompilerTypes);
 		}
 	}

@@ -26,13 +26,17 @@
 		public void LoadAssets()
 		{
 			var assetNames = GetAssetNames();
-			var attributes = Configuration.AssetListAssembly.GetCustomAttributes(false).OfType<AssetAttribute>().ToArray();
+			Asset[] assets;
 
-			var assets = CreateAssets(assetNames, attributes).ToArray();
 			if (Configuration.XamlFilesOnly)
-				assets = assets.OfType<XamlAsset>().ToArray();
+				assets = CreateAssets(assetNames, new AssetAttribute[0]).OfType<XamlAsset>().ToArray();
 			else
+			{
+				var attributes = Configuration.AssetListAssembly.GetCustomAttributes(false).OfType<AssetAttribute>().ToArray();
+
+				assets = CreateAssets(assetNames, attributes).ToArray();
 				assets = ValidateAssets(assets, assetNames).ToArray();
+			}
 
 			_assets.AddRange(assets);
 		}
@@ -55,6 +59,9 @@
 		/// </summary>
 		private string[] GetAssetNames()
 		{
+			if (Configuration.XamlFilesOnly)
+				return Configuration.AssetsProject.Assets;
+
 			var ignoredAssets = Configuration.AssetListAssembly.GetCustomAttributes(false)
 											 .OfType<IgnoreAttribute>()
 											 .Select(ignore => ignore.Name);

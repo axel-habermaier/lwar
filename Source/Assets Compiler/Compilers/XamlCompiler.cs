@@ -1,8 +1,12 @@
 ﻿namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
 	using Assets;
 	using Platform.Memory;
+	using Xaml;
 
 	/// <summary>
 	///   Compiles Xaml assets into C# code targeting the Pegasus UI library.
@@ -10,12 +14,14 @@
 	internal class XamlCompiler : AssetCompiler<XamlAsset>
 	{
 		//// TODO: REMOVE
-		//public override bool Compile(IEnumerable<Asset> assets)
-		//{
-		//	foreach (var xaml in assets.OfType<XamlAsset>())
-		//		File.Delete(xaml.HashPath);
-		//	return base.Compile(assets);
-		//}
+		public override bool Compile(IEnumerable<Asset> assets)
+		{
+			var typeInfo = new XamlTypeInfoProvider(Path.Combine(Configuration.SourceDirectory, "TypeInfo.xml"));
+
+			foreach (var xaml in assets.OfType<XamlAsset>())
+				File.Delete(xaml.HashPath);
+			return base.Compile(assets);
+		}
 
 		/// <summary>
 		///   Compiles the asset.

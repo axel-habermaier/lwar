@@ -6,18 +6,18 @@
 	using Rendering;
 
 	/// <summary>
-	///   Draws a border, a background, or both around another element.
+	///     Draws a border, a background, or both around another element.
 	/// </summary>
 	public class Border : UIElement
 	{
 		/// <summary>
-		///   The UI element that is decorated by the border.
+		///     The UI element that is decorated by the border.
 		/// </summary>
 		public static readonly DependencyProperty<UIElement> ChildProperty =
 			new DependencyProperty<UIElement>(affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
-		///   Initializes the type.
+		///     Initializes the type.
 		/// </summary>
 		static Border()
 		{
@@ -25,7 +25,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the UI element that is decorated by the border.
+		///     Gets or sets the UI element that is decorated by the border.
 		/// </summary>
 		public UIElement Child
 		{
@@ -34,7 +34,7 @@
 		}
 
 		/// <summary>
-		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
+		///     Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
 		protected internal override UIElementCollection.Enumerator LogicalChildren
 		{
@@ -48,7 +48,7 @@
 		}
 
 		/// <summary>
-		///   Gets the number of visual children for this visual.
+		///     Gets the number of visual children for this visual.
 		/// </summary>
 		protected internal override int VisualChildrenCount
 		{
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Removes the current child from the logical tree and adds the new child.
+		///     Removes the current child from the logical tree and adds the new child.
 		/// </summary>
 		private static void OnChildChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<UIElement> args)
 		{
@@ -72,7 +72,7 @@
 		}
 
 		/// <summary>
-		///   Gets the visual child at the specified index.
+		///     Gets the visual child at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
 		protected internal override UIElement GetVisualChild(int index)
@@ -84,12 +84,12 @@
 		}
 
 		/// <summary>
-		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
+		///     Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
 		/// <param name="availableSize">
-		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
-		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
-		///   element might be able to use scrolling in this case.
+		///     The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
+		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
+		///     element might be able to use scrolling in this case.
 		/// </param>
 		protected override SizeD MeasureCore(SizeD availableSize)
 		{
@@ -101,13 +101,13 @@
 		}
 
 		/// <summary>
-		///   Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
-		///   element. If this value is smaller than the given size, the UI element's alignment properties position it
-		///   appropriately.
+		///     Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
+		///     element. If this value is smaller than the given size, the UI element's alignment properties position it
+		///     appropriately.
 		/// </summary>
 		/// <param name="finalSize">
-		///   The final area allocated by the UI element's parent that the UI element should use to arrange
-		///   itself and its children.
+		///     The final area allocated by the UI element's parent that the UI element should use to arrange
+		///     itself and its children.
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{

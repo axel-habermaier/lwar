@@ -291,7 +291,7 @@
     <Compile Include="Framework\UserInterface\Trigger.cs" />
     <Compile Include="Framework\UserInterface\UIElement.Events.cs" />
     <Compile Include="Framework\UserInterface\UIElementCollection.cs" />
-    <Compile Include="Framework\ViewModel.cs" />
+    <Compile Include="Framework\UserInterface\ViewModel.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Platform\Network\Extensions.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />

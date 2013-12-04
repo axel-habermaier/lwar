@@ -450,6 +450,7 @@
     <Compile Include="Effects\VertexShaderAttribute.cs" />
     <Compile Include="Registries\Cvar.cs" />
     <Compile Include="Registries\RegistryGenerator.cs" />
+    <Compile Include="Xaml\XamlEnumeration.cs" />
     <Compile Include="Xaml\XamlLiteral.cs" />
     <Compile Include="Xaml\XamlTypeConverter.cs" />
     <Compile Include="Xaml\XamlNamespace.cs" />

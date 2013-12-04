@@ -1,22 +1,22 @@
-﻿namespace Pegasus.Framework
+﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.CompilerServices;
 
 	/// <summary>
-	///   A view model can be bound to an UI element, providing both the values that the UI displays and the methods that
-	///   handle UI commands.
+	///     A view model can be bound to an UI element, providing both the values that the UI displays and the methods that
+	///     handle UI commands.
 	/// </summary>
 	public abstract class ViewModel : INotifyPropertyChanged
 	{
 		/// <summary>
-		///   Raised when a property of the view model has been changed.
+		///     Raised when a property of the view model has been changed.
 		/// </summary>
 		public event PropertyChangedHandler PropertyChanged;
 
 		/// <summary>
-		///   Changes the property value and raises the property changed event.
+		///     Changes the property value and raises the property changed event.
 		/// </summary>
 		/// <param name="field">The backing field that stores the property value.</param>
 		/// <param name="newValue">The new value that should be set on the property.</param>

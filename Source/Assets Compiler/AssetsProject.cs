@@ -125,12 +125,12 @@
 					Log.Die("Unable to determine the output type of the assets project.");
 
 				var extension = String.Empty;
-				switch (outputType.Value)
+				switch (outputType.Value.ToLower())
 				{
-					case "WinExe":
+					case "winexe":
 						extension = "exe";
 						break;
-					case "Library":
+					case "library":
 						extension = "dll";
 						break;
 					default:
