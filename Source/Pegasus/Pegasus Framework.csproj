@@ -331,7 +331,6 @@
     <Compile Include="Rendering\Camera3D.cs" />
     <Compile Include="Rendering\Camera2D.cs" />
     <Compile Include="Rendering\FullscreenQuad.cs" />
-    <Compile Include="Rendering\ISpriteEffect.cs" />
     <Compile Include="Rendering\Model.cs" />
     <Compile Include="Rendering\RenderOutput.cs" />
     <Compile Include="Rendering\VertexPositionNormal.cs" />

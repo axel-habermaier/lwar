@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Linq;
+	using Assets;
 	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
@@ -97,11 +98,10 @@
 			GraphicsDevice = new GraphicsDevice();
 			Assets = new AssetsManager(GraphicsDevice);
 
-			InitializeFontLoader();
+			RegisterFontLoader(new FontLoader(Assets));
 			Initialize();
 
-			using (var spriteEffect = InitializeSpriteEffect())
-			using (var spriteBatch = new SpriteBatch(GraphicsDevice, spriteEffect))
+			using (var spriteBatch = new SpriteBatch(GraphicsDevice, Assets))
 			while (_running)
 			{
 				_root.HandleInput();
@@ -136,37 +136,18 @@
 		}
 
 		/// <summary>
-		///   Initializes the font loader instance.
+		///   Registers the given font loader on the application.
 		/// </summary>
-		private void InitializeFontLoader()
+		/// <param name="fontLoader">The font loader that should be registered.</param>
+		protected void RegisterFontLoader(IFontLoader fontLoader)
 		{
-			var fontLoaderType = (from a in AppDomain.CurrentDomain.GetAssemblies()
-								  from t in a.GetTypes()
-								  where typeof(IFontLoader).IsAssignableFrom(t) && !t.IsAbstract && t.IsClass
-								  select t).SingleOrDefault();
+			Assert.ArgumentNotNull(fontLoader);
 
-			if (fontLoaderType == null)
-				Log.Die("Unable to find an implementation of '{0}' or multiple implementations were found.", typeof(IFontLoader));
+			object currentFontLoader;
+			if (_root.Resources.TryGetValue(typeof(IFontLoader), out currentFontLoader))
+				fontLoader.Next = (IFontLoader)currentFontLoader;
 
-			_root.Resources.Add(typeof(IFontLoader), Activator.CreateInstance(fontLoaderType, Assets));
-		}
-
-		/// <summary>
-		///   Initializes the sprite effect.
-		/// </summary>
-		private ISpriteEffect InitializeSpriteEffect()
-		{
-			var spriteEffectType = (from a in AppDomain.CurrentDomain.GetAssemblies()
-									from t in a.GetTypes()
-									where typeof(ISpriteEffect).IsAssignableFrom(t) && !t.IsAbstract && t.IsClass
-									select t).SingleOrDefault();
-
-			if (spriteEffectType == null)
-				Log.Die("Unable to find an implementation of '{0}' or multiple implementations were found.", typeof(ISpriteEffect));
-
-			var spriteEffect = (ISpriteEffect)Activator.CreateInstance(spriteEffectType);
-			spriteEffect.Initialize(GraphicsDevice, Assets);
-			return spriteEffect;
+			_root.Resources.AddOrReplace(typeof(IFontLoader), fontLoader);
 		}
 	}
 }

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Net;
+	using Assets;
 	using Network;
 	using Pegasus;
 	using Pegasus.Platform.Input;
@@ -24,6 +25,8 @@
 		/// </summary>
 		protected override void Initialize()
 		{
+			RegisterFontLoader(new FontLoader(Assets));
+
 			Commands.Resolve();
 			Cvars.Resolve();
 

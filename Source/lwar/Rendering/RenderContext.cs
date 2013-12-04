@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Linq;
+	using Assets.Effects;
 	using Pegasus;
 	using Pegasus.Math;
 	using Pegasus.Platform.Assets;
@@ -50,7 +51,7 @@
 		/// <summary>
 		///   The sprite effect that is used to draw 2D sprites into the scene.
 		/// </summary>
-		private readonly SpriteEffect _spriteEffect = new SpriteEffect();
+		private readonly SpriteEffect _spriteEffect;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -62,10 +63,10 @@
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
-			_spriteBatch = new SpriteBatch(graphicsDevice, _spriteEffect);
+			_spriteEffect = new SpriteEffect(graphicsDevice, assets);
+			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 			_parallaxRenderer = new ParallaxRenderer(graphicsDevice, assets);
-			_spriteEffect.Initialize(graphicsDevice, assets);
 
 			foreach (var renderer in _renderers)
 				renderer.Initialize(graphicsDevice, assets);

@@ -50,8 +50,8 @@ lwar.sln.ide
 Source/TestResults
 Source/Tests/bin
 Source/Tests/obj
-*.xaml.cs
 Source/Lwar Assets/Fonts/FontLoader.cs
 Source/Pegasus Assets/Fonts/FontLoader.cs
 *.ipch
 /Source/lwar UI/UserInterface.cs
+/Source/Pegasus UI/UserInterface.cs

@@ -3,7 +3,9 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
+	using Assets.Effects;
 	using Math;
+	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
@@ -26,7 +28,7 @@
 		/// <summary>
 		///   The effect that is used to draw the sprites.
 		/// </summary>
-		private readonly ISpriteEffect _effect;
+		private readonly SpriteEffect _effect;
 
 		/// <summary>
 		///   The index buffer that is used for drawing.
@@ -112,14 +114,14 @@
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="effect">The effect that should be used to draw the sprites.</param>
-		public SpriteBatch(GraphicsDevice graphicsDevice, ISpriteEffect effect)
+		/// <param name="assets">The assets manager that should be used to load required assets.</param>
+		public SpriteBatch(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			WorldMatrix = Matrix.Identity;
 			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(effect);
+			Assert.ArgumentNotNull(assets);
 
-			_effect = effect;
+			WorldMatrix = Matrix.Identity;
+			_effect = new SpriteEffect(graphicsDevice, assets);
 
 			// Initialize the indices; this can be done once, so after the indices are copied to the index buffer,
 			// we never have to change the index buffer again
@@ -491,7 +493,7 @@
 
 				// Draw and increase the offset
 				var numIndices = sectionList.NumQuads * 6;
-				output.DrawIndexed(_effect.Technique, numIndices, offset, _vertexBuffer.VertexOffset);
+				output.DrawIndexed(_effect.Default, numIndices, offset, _vertexBuffer.VertexOffset);
 				offset += numIndices;
 			}
 

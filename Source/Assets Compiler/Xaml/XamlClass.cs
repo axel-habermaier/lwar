@@ -110,8 +110,8 @@
 		{
 			get
 			{
-				Assert.That(_properties.Count(p => p.IsContentProperty) <= 1, "Class '{0}' defines more than one content property.", Name);
-				return _properties.SingleOrDefault(p => p.IsContentProperty);
+				Assert.That(Properties.Count(p => p.IsContentProperty) <= 1, "Class '{0}' defines more than one content property.", Name);
+				return Properties.SingleOrDefault(p => p.IsContentProperty);
 			}
 		}
 

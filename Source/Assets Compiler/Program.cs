@@ -15,52 +15,6 @@
 	public static class Program
 	{
 		/// <summary>
-		///   Wires up the events to write all logged messages to the console.
-		/// </summary>
-		private static void PrintToConsole()
-		{
-			Log.OnFatalError += entry => WriteToError(ConsoleColor.Red, entry.Message);
-			Log.OnError += entry => WriteToError(ConsoleColor.Red, entry.Message);
-			Log.OnWarning += entry => WriteToConsole(ConsoleColor.Yellow, entry.Message);
-			Log.OnInfo += entry => WriteToConsole(ConsoleColor.White, entry.Message);
-		}
-
-		/// <summary>
-		///   Writes a colored message to the console.
-		/// </summary>
-		/// <param name="color">The color of the message.</param>
-		/// <param name="message">The message that should be written to the console.</param>
-		private static void WriteToConsole(ConsoleColor color, string message)
-		{
-			WriteColored(color, () => Console.WriteLine(message));
-			Debug.WriteLine(message);
-		}
-
-		/// <summary>
-		///   Writes a colored message to the error output.
-		/// </summary>
-		/// <param name="color">The color of the message.</param>
-		/// <param name="message">The message that should be written to the console.</param>
-		private static void WriteToError(ConsoleColor color, string message)
-		{
-			WriteColored(color, () => Console.Error.WriteLine(message));
-			Debug.WriteLine(message);
-		}
-
-		/// <summary>
-		///   Writes a colored message to the console, ensuring that the color is reset.
-		/// </summary>
-		/// <param name="color">The color of the message.</param>
-		/// <param name="action">Writes the message to the console.</param>
-		private static void WriteColored(ConsoleColor color, Action action)
-		{
-			var currentColor = Console.ForegroundColor;
-			Console.ForegroundColor = color;
-			action();
-			Console.ForegroundColor = currentColor;
-		}
-
-		/// <summary>
 		///   Compiles, recompiles, or cleans the assets.
 		/// </summary>
 		/// <param name="args"></param>
@@ -77,7 +31,7 @@
 			try
 			{
 				PrintToConsole();
-				Log.Info("\nPegasus Asset Compiler ({0} x{1})", PlatformInfo.Platform, IntPtr.Size == 4 ? "86" : "64");
+				Log.Info("Pegasus Asset Compiler ({0} x{1})", PlatformInfo.Platform, IntPtr.Size == 4 ? "86" : "64");
 
 				Console.WriteLine();
 				var command = args.Length >= 1 ? args[0].Trim().ToLower() : String.Empty;
@@ -125,11 +79,11 @@
 					var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
 
 					if (clean && !(recompile || compile))
-						Log.Info("Done.\n");
+						Log.Info("Done.");
 					else
 					{
 						Console.WriteLine();
-						Log.Info("Asset compilation completed ({0:F2}s).\n", elapsedSeconds.ToString(CultureInfo.InvariantCulture));
+						Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds);
 					}
 				}
 
@@ -162,6 +116,52 @@
 
 				return -1;
 			}
+		}
+
+		/// <summary>
+		///   Wires up the events to write all logged messages to the console.
+		/// </summary>
+		private static void PrintToConsole()
+		{
+			Log.OnFatalError += entry => WriteToError(ConsoleColor.Red, entry.Message);
+			Log.OnError += entry => WriteToError(ConsoleColor.Red, entry.Message);
+			Log.OnWarning += entry => WriteToConsole(ConsoleColor.Yellow, entry.Message);
+			Log.OnInfo += entry => WriteToConsole(ConsoleColor.White, entry.Message);
+		}
+
+		/// <summary>
+		///   Writes a colored message to the console.
+		/// </summary>
+		/// <param name="color">The color of the message.</param>
+		/// <param name="message">The message that should be written to the console.</param>
+		private static void WriteToConsole(ConsoleColor color, string message)
+		{
+			WriteColored(color, () => Console.WriteLine(message));
+			Debug.WriteLine(message);
+		}
+
+		/// <summary>
+		///   Writes a colored message to the error output.
+		/// </summary>
+		/// <param name="color">The color of the message.</param>
+		/// <param name="message">The message that should be written to the console.</param>
+		private static void WriteToError(ConsoleColor color, string message)
+		{
+			WriteColored(color, () => Console.Error.WriteLine(message));
+			Debug.WriteLine(message);
+		}
+
+		/// <summary>
+		///   Writes a colored message to the console, ensuring that the color is reset.
+		/// </summary>
+		/// <param name="color">The color of the message.</param>
+		/// <param name="action">Writes the message to the console.</param>
+		private static void WriteColored(ConsoleColor color, Action action)
+		{
+			var currentColor = Console.ForegroundColor;
+			Console.ForegroundColor = color;
+			action();
+			Console.ForegroundColor = currentColor;
 		}
 	}
 }

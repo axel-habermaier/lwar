@@ -4,12 +4,18 @@
 	using Rendering.UserInterface;
 
 	/// <summary>
-	///   Provides a method to search for a font based on certain font settings.
+	///     Provides a method to search for a font based on certain font settings.
 	/// </summary>
 	public interface IFontLoader
 	{
 		/// <summary>
-		///   Gets the font matching the given font settings.
+		///     Sets the next font loader that is used to load the font if the current loader fails to
+		///     load an appropriate font.
+		/// </summary>
+		IFontLoader Next { set; }
+
+		/// <summary>
+		///     Gets the font matching the given font settings.
 		/// </summary>
 		/// <param name="fontFamily">The family of the font that should be returned.</param>
 		/// <param name="size">The size of the font that should be returned.</param>
