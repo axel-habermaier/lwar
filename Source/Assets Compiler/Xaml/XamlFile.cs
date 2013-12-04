@@ -102,6 +102,7 @@
 			AddImplicitContentElements();
 			ReplaceAttributesWithElements(Root);
 
+			RemoveClassAttribute();
 			ReplaceListSyntax(Root);
 			ReplaceDictionarySyntax(Root);
 			AddImplicitStyleKeys();
@@ -128,6 +129,21 @@
 			ResolveTypes();
 
 			RewriteControlTemplateInstantiations(Root);
+		}
+
+		/// <summary>
+		/// Removes the code-behind class attribute from the top-level element.
+		/// </summary>
+		private void RemoveClassAttribute()
+		{
+			foreach (var element in Root.Elements())
+			{
+				if (element.Name.LocalName.EndsWith(".Class"))
+				{
+					element.Remove();
+					break;
+				}
+			}
 		}
 
 		/// <summary>

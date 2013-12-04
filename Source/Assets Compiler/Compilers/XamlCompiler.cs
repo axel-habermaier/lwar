@@ -38,7 +38,6 @@
 				foreach (var asset in xamlAssets)
 				{
 					Log.Info("Compiling '{0}'...", asset.RelativePath);
-					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 
 					var xamlFile = new XamlFile(asset.SourcePath, typeInfo);
 					if (xamlFile.Root == null)
@@ -47,12 +46,27 @@
 					var className = Path.GetFileNameWithoutExtension(asset.RelativePath);
 					var namespaceName = Path.GetDirectoryName(asset.RelativePath).Replace("/", ".").Replace("\\", ".");
 					serializer.SerializeToCSharp(xamlFile, namespaceName, className);
+
+					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 				}
 
 				File.WriteAllText(Configuration.CSharpXamlFile, serializer.GetGeneratedCode());
 			}
 
 			return true;
+		}
+
+		/// <summary>
+		///   Removes the compiled assets and all temporary files written by the compiler.
+		/// </summary>
+		/// <param name="assets">The assets that should be cleaned.</param>
+		public override void Clean(IEnumerable<Asset> assets)
+		{
+			foreach (var asset in assets.OfType<XamlAsset>())
+			{
+				File.Delete(asset.TempPath);
+				File.Delete(asset.HashPath);
+			}
 		}
 
 		/// <summary>

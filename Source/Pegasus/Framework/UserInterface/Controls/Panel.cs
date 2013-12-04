@@ -138,7 +138,7 @@
 				for (; j > 0 && itemZIndex < GetZIndex(_children[j - 1]); --j)
 					_children.ReplaceItemWithoutNotifications(j, _children[j - 1]);
 
-				_children[j] = item;
+				_children.ReplaceItemWithoutNotifications(j, item);
 			}
 
 			_zOrderDirty = false;
