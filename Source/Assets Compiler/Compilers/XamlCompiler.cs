@@ -1,14 +1,8 @@
 ﻿namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Linq;
-	using System.Text;
-	using System.Xml.Linq;
 	using Assets;
 	using Platform.Memory;
-	using Xaml;
 
 	/// <summary>
 	///   Compiles Xaml assets into C# code targeting the Pegasus UI library.

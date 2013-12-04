@@ -7,13 +7,13 @@
 	using System.Reflection;
 	using System.Text;
 	using Assets;
-	using CodeGeneration.Effects;
+	using CSharp;
 	using Effects;
+	using Effects.Compilation;
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Effect = Effects.Effect;
 
 	/// <summary>
 	///   Compiles effects written in C#.
@@ -43,7 +43,8 @@
 					foreach (var asset in csharpAssets)
 						Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 
-					using (var project = new EffectsProject { CSharpFiles = csharpAssets })
+					var csharpFiles = csharpAssets.Select(asset => new CSharpFile(Configuration.SourceDirectory, asset.RelativePath));
+					using (var project = new EffectsProject { CSharpFiles = csharpFiles })
 					{
 						if (!project.Compile())
 							return false;

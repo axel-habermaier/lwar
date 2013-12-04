@@ -1,6 +1,7 @@
-﻿namespace Pegasus.AssetsCompiler.Effects
+﻿using System;
+
+namespace Pegasus.AssetsCompiler.Effects
 {
-	using System;
 
 	public partial class Vector2
 	{

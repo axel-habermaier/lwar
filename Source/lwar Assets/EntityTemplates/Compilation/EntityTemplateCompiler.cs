@@ -14,7 +14,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Pegasus.AssetsCompiler;
 	using Pegasus.AssetsCompiler.Assets;
-	using Pegasus.AssetsCompiler.CodeGeneration;
+	using Pegasus.AssetsCompiler.CSharp;
 	using Pegasus.AssetsCompiler.Compilers;
 	using Pegasus.Platform.Logging;
 
@@ -110,7 +110,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		private static void GenerateServerTemplates(EntityTemplate[] templates)
 		{
 			var writer = new CodeWriter();
-			writer.WriterHeader("//");
+			writer.WriterHeader();
 
 			// Write required includes
 			writer.AppendLine("#include <math.h>");
@@ -177,7 +177,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		private static void GenerateServerHeader(IEnumerable<EntityTemplate> templates)
 		{
 			var writer = new CodeWriter();
-			writer.WriterHeader("//");
+			writer.WriterHeader();
 
 			writer.AppendLine("enum");
 			writer.AppendBlockStatement(() =>
@@ -201,7 +201,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		private static void GenerateClientTemplates(EntityTemplate[] templates)
 		{
 			var writer = new CodeWriter();
-			writer.WriterHeader("//");
+			writer.WriterHeader();
 
 			writer.AppendLine("namespace Lwar.Gameplay.Entities");
 			writer.AppendBlockStatement(() =>
@@ -284,7 +284,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		private static void GenerateClientTypeEnumeration(IEnumerable<EntityTemplate> templates)
 		{
 			var writer = new CodeWriter();
-			writer.WriterHeader("//");
+			writer.WriterHeader();
 
 			writer.AppendLine("namespace Lwar.Gameplay.Entities");
 			writer.AppendBlockStatement(() =>

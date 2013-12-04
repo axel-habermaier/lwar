@@ -5,7 +5,7 @@
 	using System.IO;
 	using System.Linq;
 	using Assets;
-	using CodeGeneration;
+	using CSharp;
 	using Fonts;
 	using Platform;
 	using Platform.Logging;
@@ -172,7 +172,7 @@
 		private void GenerateFontLoader(FontAsset[] assets)
 		{
 			var writer = new CodeWriter();
-			writer.WriterHeader("//");
+			writer.WriterHeader();
 
 			writer.AppendLine("namespace {0}", Configuration.AssetsProject.RootNamespace);
 			writer.AppendBlockStatement(() =>
@@ -251,8 +251,8 @@
 															  ((bool)font["italic"]).ToString().ToLower(),
 															  ((bool)font["aliased"]).ToString().ToLower());
 											writer.IncreaseIndent();
-											writer.AppendLine("font = \"{0}.{1}\";", 
-												asset.RelativePathWithoutExtension, Configuration.UniqueFileIdentifier);
+											writer.AppendLine("font = \"{0}.{1}\";",
+															  asset.RelativePathWithoutExtension, Configuration.UniqueFileIdentifier);
 											writer.DecreaseIndent();
 										}
 										writer.AppendLine("break;");

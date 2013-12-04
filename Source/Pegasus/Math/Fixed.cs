@@ -1,6 +1,7 @@
-﻿namespace Pegasus.Math
+﻿using System;
+
+namespace Pegasus.Math
 {
-	using System;
 	using System.Globalization;
 
 	/// <summary>
@@ -14,6 +15,26 @@
 		private const int FractionalBits = 8;
 
 		/// <summary>
+		///   Epsilon value for fixed-point equality comparisons.
+		/// </summary>
+		public static readonly Fixed8 Epsilon = MathUtils.Epsilon;
+
+		/// <summary>
+		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
+		/// </summary>
+		public static readonly Fixed8 Pi = System.Math.PI;
+
+		/// <summary>
+		///   Represents a 360 degree rotation.
+		/// </summary>
+		public static readonly Fixed8 TwoPi = System.Math.PI * 2;
+
+		/// <summary>
+		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
+		/// </summary>
+		public static readonly Fixed8 PiOver2 = System.Math.PI / 2;
+
+		/// <summary>
 		///   Represents the largest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MaxValue = Int32.MaxValue >> FractionalBits;
@@ -22,26 +43,6 @@
 		///   Represents the smallest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MinValue = Int32.MinValue >> FractionalBits;
-
-		/// <summary>
-		///   Epsilon value for fixed-point equality comparisons.
-		/// </summary>
-		public static readonly Fixed8 Epsilon = MathUtils.Epsilon;
-
-		/// <summary>
-		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
-		/// </summary>
-		public static readonly Fixed8 Pi = Math.PI;
-
-		/// <summary>
-		///   Represents a 360 degree rotation.
-		/// </summary>
-		public static readonly Fixed8 TwoPi = Math.PI * 2;
-
-		/// <summary>
-		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
-		/// </summary>
-		public static readonly Fixed8 PiOver2 = Math.PI / 2;
 
 		/// <summary>
 		///   The raw value stored as a 32-bit signed integer.
@@ -65,7 +66,7 @@
 		public Fixed8(float value)
 		{
 			Assert.ArgumentInRange(value, MinValue, MaxValue);
-			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
@@ -75,7 +76,7 @@
 		public Fixed8(double value)
 		{
 			Assert.ArgumentInRange(value, MinValue, MaxValue);
-			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
@@ -156,28 +157,6 @@
 		#region Equality operators and comparison
 
 		/// <summary>
-		///   Compares the current value with the given one.
-		/// </summary>
-		/// <param name="other">The value this instance should be compared with.</param>
-		public int CompareTo(object other)
-		{
-			if (other == null)
-				return 1;
-
-			Assert.ArgumentSatisfies(other is Fixed8, "The given object is not of type 'Fixed8'.");
-			return CompareTo((Fixed8)other);
-		}
-
-		/// <summary>
-		///   Compares the current value with the given one.
-		/// </summary>
-		/// <param name="other">The value this instance should be compared with.</param>
-		public int CompareTo(Fixed8 other)
-		{
-			return _rawValue.CompareTo(other._rawValue);
-		}
-
-		/// <summary>
 		///   Indicates whether the current fixed-point value is equal to another fixed-point value.
 		/// </summary>
 		/// <param name="other">The value to compare with this value.</param>
@@ -203,6 +182,28 @@
 		public override int GetHashCode()
 		{
 			return _rawValue;
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(object other)
+		{
+			if (other == null) 
+				return 1;
+
+			Assert.ArgumentSatisfies(other is Fixed8, "The given object is not of type 'Fixed8'.");
+			return CompareTo((Fixed8)other);
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(Fixed8 other)
+		{
+			return _rawValue.CompareTo(other._rawValue);
 		}
 
 		/// <summary>
@@ -355,7 +356,7 @@
 		#region Functions
 
 		/// <summary>
-		///   Returns the absolute value of a fixed-point value.
+		/// Returns the absolute value of a fixed-point value.
 		/// </summary>
 		/// <param name="value">The value whose absolute should be returned.</param>
 		public static Fixed8 Abs(Fixed8 value)
@@ -430,6 +431,26 @@
 		private const int FractionalBits = 16;
 
 		/// <summary>
+		///   Epsilon value for fixed-point equality comparisons.
+		/// </summary>
+		public static readonly Fixed16 Epsilon = MathUtils.Epsilon;
+
+		/// <summary>
+		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
+		/// </summary>
+		public static readonly Fixed16 Pi = System.Math.PI;
+
+		/// <summary>
+		///   Represents a 360 degree rotation.
+		/// </summary>
+		public static readonly Fixed16 TwoPi = System.Math.PI * 2;
+
+		/// <summary>
+		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
+		/// </summary>
+		public static readonly Fixed16 PiOver2 = System.Math.PI / 2;
+
+		/// <summary>
 		///   Represents the largest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MaxValue = Int32.MaxValue >> FractionalBits;
@@ -438,26 +459,6 @@
 		///   Represents the smallest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MinValue = Int32.MinValue >> FractionalBits;
-
-		/// <summary>
-		///   Epsilon value for fixed-point equality comparisons.
-		/// </summary>
-		public static readonly Fixed16 Epsilon = MathUtils.Epsilon;
-
-		/// <summary>
-		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
-		/// </summary>
-		public static readonly Fixed16 Pi = Math.PI;
-
-		/// <summary>
-		///   Represents a 360 degree rotation.
-		/// </summary>
-		public static readonly Fixed16 TwoPi = Math.PI * 2;
-
-		/// <summary>
-		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
-		/// </summary>
-		public static readonly Fixed16 PiOver2 = Math.PI / 2;
 
 		/// <summary>
 		///   The raw value stored as a 32-bit signed integer.
@@ -481,7 +482,7 @@
 		public Fixed16(float value)
 		{
 			Assert.ArgumentInRange(value, MinValue, MaxValue);
-			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
@@ -491,7 +492,7 @@
 		public Fixed16(double value)
 		{
 			Assert.ArgumentInRange(value, MinValue, MaxValue);
-			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
@@ -572,28 +573,6 @@
 		#region Equality operators and comparison
 
 		/// <summary>
-		///   Compares the current value with the given one.
-		/// </summary>
-		/// <param name="other">The value this instance should be compared with.</param>
-		public int CompareTo(object other)
-		{
-			if (other == null)
-				return 1;
-
-			Assert.ArgumentSatisfies(other is Fixed16, "The given object is not of type 'Fixed16'.");
-			return CompareTo((Fixed16)other);
-		}
-
-		/// <summary>
-		///   Compares the current value with the given one.
-		/// </summary>
-		/// <param name="other">The value this instance should be compared with.</param>
-		public int CompareTo(Fixed16 other)
-		{
-			return _rawValue.CompareTo(other._rawValue);
-		}
-
-		/// <summary>
 		///   Indicates whether the current fixed-point value is equal to another fixed-point value.
 		/// </summary>
 		/// <param name="other">The value to compare with this value.</param>
@@ -619,6 +598,28 @@
 		public override int GetHashCode()
 		{
 			return _rawValue;
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(object other)
+		{
+			if (other == null) 
+				return 1;
+
+			Assert.ArgumentSatisfies(other is Fixed16, "The given object is not of type 'Fixed16'.");
+			return CompareTo((Fixed16)other);
+		}
+
+		/// <summary>
+		///   Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(Fixed16 other)
+		{
+			return _rawValue.CompareTo(other._rawValue);
 		}
 
 		/// <summary>
@@ -771,7 +772,7 @@
 		#region Functions
 
 		/// <summary>
-		///   Returns the absolute value of a fixed-point value.
+		/// Returns the absolute value of a fixed-point value.
 		/// </summary>
 		/// <param name="value">The value whose absolute should be returned.</param>
 		public static Fixed16 Abs(Fixed16 value)

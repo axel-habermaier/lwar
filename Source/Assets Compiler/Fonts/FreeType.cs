@@ -11,7 +11,6 @@ namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Platform.Logging;
 
 	/// <summary>
