@@ -189,6 +189,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Pegasus Assets\AssetIdentifiers.cs">
+      <Link>Assets\AssetIdentifiers.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus Assets\Effects\Effects.cs">
+      <Link>Assets\Effects.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus Assets\Fonts\FontLoader.cs">
+      <Link>Assets\FontLoader.cs</Link>
+    </Compile>
     <Compile Include="Framework\ContentPropertyAttribute.cs" />
     <Compile Include="Framework\UserInterface\RootUIElement.cs" />
     <Compile Include="Framework\UserInterface\Controls\Window.cs" />

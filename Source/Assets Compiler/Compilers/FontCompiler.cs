@@ -251,7 +251,8 @@
 															  ((bool)font["italic"]).ToString().ToLower(),
 															  ((bool)font["aliased"]).ToString().ToLower());
 											writer.IncreaseIndent();
-											writer.AppendLine("font = \"{0}\";", asset.RelativePathWithoutExtension);
+											writer.AppendLine("font = \"{0}.{1}\";", 
+												asset.RelativePathWithoutExtension, Configuration.UniqueFileIdentifier);
 											writer.DecreaseIndent();
 										}
 										writer.AppendLine("break;");

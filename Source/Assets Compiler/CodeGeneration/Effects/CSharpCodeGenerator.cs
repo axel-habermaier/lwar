@@ -187,8 +187,8 @@
 					var fragmentShader = ShaderAsset.GetPath(_effect.FullName, technique.FragmentShader.Name, ShaderType.FragmentShader);
 
 					_writer.AppendLine("{0} = {1}.CreateTechnique({2},", technique.Name, ContextVariableName, _bindMethodName);
-					_writer.AppendLine("\t\"{0}\", ", Path.ChangeExtension(vertexShader, null));
-					_writer.AppendLine("\t\"{0}\");", Path.ChangeExtension(fragmentShader, null));
+					_writer.AppendLine("\t\"{0}.{1}\", ", Path.ChangeExtension(vertexShader, null), Configuration.UniqueFileIdentifier);
+					_writer.AppendLine("\t\"{0}.{1}\");", Path.ChangeExtension(fragmentShader, null), Configuration.UniqueFileIdentifier);
 				}
 
 				foreach (var buffer in ConstantBuffers)
