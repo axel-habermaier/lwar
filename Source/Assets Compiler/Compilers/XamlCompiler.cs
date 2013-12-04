@@ -4,7 +4,9 @@
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
+	using System.Text;
 	using Assets;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Xaml;
 
@@ -13,14 +15,60 @@
 	/// </summary>
 	internal class XamlCompiler : AssetCompiler<XamlAsset>
 	{
-		//// TODO: REMOVE
+		/// <summary>
+		///   Compiles all assets of the compiler's asset source type.
+		/// </summary>
+		/// <param name="assets">The assets that should be compiled.</param>
 		public override bool Compile(IEnumerable<Asset> assets)
 		{
-			var typeInfo = new XamlTypeInfoProvider(Path.Combine(Configuration.SourceDirectory, "TypeInfo.xml"));
-
+			// TODO: REMOVE
 			foreach (var xaml in assets.OfType<XamlAsset>())
 				File.Delete(xaml.HashPath);
-			return base.Compile(assets);
+
+			var xamlAssets = assets.OfType<XamlAsset>().ToArray();
+
+			if (DetermineAction(xamlAssets) == CompilationAction.Skip)
+				Log.Info("Skipping compilation of Xaml files (no changes detected).");
+			else
+			{
+				var typeInfo = new XamlTypeInfoProvider(Path.Combine(Configuration.SourceDirectory, "TypeInfo.xml"));
+
+				foreach (var asset in xamlAssets)
+				{
+					Log.Info("Compiling '{0}'...", asset.RelativePath);
+					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
+
+					var xamlFile = new XamlFile(asset.SourcePath, typeInfo);
+					if (xamlFile.Root == null)
+						continue;
+
+					//var csharpSerializer = new XamlToCSharpSerializer(xamlFile, namespaceName, className);
+					//buffer.Copy(Encoding.UTF8.GetBytes(csharpSerializer.GetGeneratedCode()));
+				}
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		///   Checks whether any of the Xaml assets have changed.
+		/// </summary>
+		/// <param name="xamlAssets">The Xaml assets that should be checked to determine the compilation action.</param>
+		private static CompilationAction DetermineAction(IEnumerable<XamlAsset> xamlAssets)
+		{
+			foreach (var asset in xamlAssets)
+			{
+				if (!File.Exists(asset.HashPath))
+					return CompilationAction.Process;
+
+				var oldHash = Hash.FromFile(asset.HashPath);
+				var newHash = Hash.Compute(asset.SourcePath);
+
+				if (oldHash != newHash)
+					return CompilationAction.Process;
+			}
+
+			return CompilationAction.Skip;
 		}
 
 		/// <summary>

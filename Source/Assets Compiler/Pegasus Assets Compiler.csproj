@@ -450,12 +450,19 @@
     <Compile Include="Effects\VertexShaderAttribute.cs" />
     <Compile Include="Registries\Cvar.cs" />
     <Compile Include="Registries\RegistryGenerator.cs" />
+    <Compile Include="Xaml\IXamlType.cs" />
+    <Compile Include="Xaml\XamlClass.cs" />
     <Compile Include="Xaml\XamlEnumeration.cs" />
     <Compile Include="Xaml\XamlLiteral.cs" />
+    <Compile Include="Xaml\XamlPrimitiveType.cs" />
+    <Compile Include="Xaml\XamlProperty.cs" />
+    <Compile Include="Xaml\XamlType.cs" />
     <Compile Include="Xaml\XamlTypeConverter.cs" />
     <Compile Include="Xaml\XamlNamespace.cs" />
     <Compile Include="Xaml\XamlFile.cs" />
     <Compile Include="Xaml\XamlToCSharpSerializer.cs" />
+    <Compile Include="Xaml\XamlTypeInfoFile.cs" />
+    <Compile Include="Xaml\XamlTypeInfoProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -19,13 +19,10 @@
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="clrNamespace">The name of the imported CLR namespace.</param>
-		/// <param name="assemblyName">The assembly that defines the imported CLR namespace.</param>
-		public XamlNamespace(string clrNamespace, string assemblyName)
+		public XamlNamespace(string clrNamespace)
 		{
 			Assert.ArgumentNotNullOrWhitespace(clrNamespace);
-
 			Namespace = clrNamespace;
-			AssemblyName = assemblyName;
 		}
 
 		/// <summary>
@@ -37,10 +34,5 @@
 		///   The name of the imported CLR namespace.
 		/// </summary>
 		public string Namespace { get; private set; }
-
-		/// <summary>
-		///   The assembly that defines the imported CLR namespace.
-		/// </summary>
-		public string AssemblyName { get; private set; }
 	}
 }
