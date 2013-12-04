@@ -267,7 +267,7 @@
 						writer.AppendLine("if (font == null)");
 						writer.IncreaseIndent();
 						writer.AppendLine("Log.Die(\"Unable to find a font with family = '{{0}}', size = {{1}}, bold = {{2}}, " +
-										  "italic = {{3}}, aliased = {{4}} \", fontFamily, size, bold, italic, aliased);");
+										  "italic = {{3}}, aliased = {{4}}.\", fontFamily, size, bold, italic, aliased);");
 						writer.DecreaseIndent();
 
 						writer.Newline();
