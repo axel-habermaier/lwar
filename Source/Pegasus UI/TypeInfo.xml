@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+	<Enumeration Name="Pegasus.Framework.UserInterface.Controls.Orientation">
+		<Literal>Vertical</Literal>
+		<Literal>Horizontal</Literal>
+	</Enumeration>
+	
+	<Enumeration Name="Pegasus.Framework.UserInterface.Visibility">
+		<Literal>Collapsed</Literal>
+		<Literal>Visible</Literal>
+		<Literal>Hidden</Literal>
+	</Enumeration>
+	
+	<Enumeration Name="Pegasus.Framework.UserInterface.VerticalAlignment">
+		<Literal>Stretch</Literal>
+		<Literal>Top</Literal>
+		<Literal>Center</Literal>
+		<Literal>Bottom</Literal>
+	</Enumeration>
+	
+	<Enumeration Name="Pegasus.Framework.UserInterface.HorizontalAlignment">
+		<Literal>Stretch</Literal>
+		<Literal>Left</Literal>
+		<Literal>Center</Literal>
+		<Literal>Right</Literal>
+	</Enumeration>
+
+	<Class Name="Pegasus.Framework.UserInterface.UIElement">
+		<Property Type="Pegasus.Framework.ViewModel" Name="ViewModel"/>
+		<Property Type="Pegasus.Platform.Graphics.Color" Name="Background"/>
+		<Property Type="Pegasus.Framework.UserInterface.Style" Name="Style"/>
+		<Property Type="string" Name="FontFamily"/>
+		<Property Type="int" Name="FontSize"/>
+		<Property Type="bool" Name="FontBold"/>
+		<Property Type="bool" Name="FontItalic"/>
+		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources"/>
+		<Property Type="double" Name="Width"/>
+		<Property Type="double" Name="Height"/>
+		<Property Type="double" Name="MinWidth"/>
+		<Property Type="double" Name="MinHeight"/>
+		<Property Type="double" Name="MaxWidth"/>
+		<Property Type="double" Name="MaxHeight"/>
+		<Property Type="double" Name="ActualWidth"/>
+		<Property Type="double" Name="ActualHeight"/>
+		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="Margin"/>
+		<Property Type="Pegasus.Framework.UserInterface.HorizontalAlignment" Name="HorizontalAlignment"/>
+		<Property Type="Pegasus.Framework.UserInterface.VerticalAlignment" Name="VerticalAlignment"/>
+		<Property Type="Pegasus.Framework.UserInterface.Visibility" Name="Visibility"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Control" Inherits="Pegasus.Framework.UserInterface.UIElement">
+		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground"/>
+		<Property Type="Pegasus.Framework.UserInterface.ControlTemplate" Name="Template"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.TextBlock" Inherits="Pegasus.Framework.UserInterface.UIElement">
+		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground"/>
+		<Property Type="string" Name="Text" IsContentProperty="true"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.ContentControl" Inherits="Pegasus.Framework.UserInterface.Control">
+		<Property Type="object" Name="Content" IsContentProperty="true"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Border" Inherits="Pegasus.Framework.UserInterface.UIElement">
+		<Property Type="Pegasus.Framework.UserInterface.UIElement" Name="Child" IsContentProperty="true"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.ContentPresenter" Inherits="Pegasus.Framework.UserInterface.UIElement">
+		<Property Type="object" Name="Content" IsContentProperty="true"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Button" Inherits="Pegasus.Framework.UserInterface.ContentControl">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Panel" Inherits="Pegasus.Framework.UserInterface.UIElement">
+		<Property Type="int" Name="ZIndex"/>
+		<Property Type="Pegasus.Framework.UserInterface.UIElementCollection" Name="Children" IsContentProperty="true"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Canvas" Inherits="Pegasus.Framework.UserInterface.Panel">
+		<Property Type="double" Name="Left"/>
+		<Property Type="double" Name="Right"/>
+		<Property Type="double" Name="Top"/>
+		<Property Type="double" Name="Bottom"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.StackPanel" Inherits="Pegasus.Framework.UserInterface.Panel">
+		<Property Type="Pegasus.Framework.UserInterface.Controls.Orientation" Name="Orientation"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.UserControl" Inherits="Pegasus.Framework.UserInterface.ContentControl">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Window" Inherits="Pegasus.Framework.UserInterface.ContentControl">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.UIElementCollection" IsList="true">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.ResourceDictionary" IsDictionary="true">
+	</Class>
+
+	<Struct Name="Pegasus.Framework.UserInterface.Thickness">
+	</Struct>
+
+	<Struct Name="Pegasus.Platform.Graphics.Color">
+	</Struct>
+</Types>

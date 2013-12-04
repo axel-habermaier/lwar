@@ -8,7 +8,6 @@
 	/// <summary>
 	///   A base class for all panel elements that position and arrange child UI elements.
 	/// </summary>
-	[ContentProperty("Children")]
 	public abstract class Panel : UIElement
 	{
 		/// <summary>

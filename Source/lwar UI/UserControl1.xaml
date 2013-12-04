@@ -7,8 +7,10 @@
              FontSize="11" 
              TextOptions.TextRenderingMode="Aliased">
     <UserControl.Resources>
-        <Style x:Key="Bla" />
-    </UserControl.Resources>
+		<Style x:Key="Bla" TargetType="Button">
+			<Setter Property="Background" Value="Red"/>
+		</Style>
+	</UserControl.Resources>
     <Canvas>
 		<Border Background="Red"><TextBlock Margin="18,31,0,15" Foreground="#FF1AA6E8" Background="#FFBD4C0B">Hallo</TextBlock></Border>
         <Button Style="{StaticResource Special}" Content="Hallo Welt Button" Canvas.Top="149.333" Canvas.Left="181.999" Background="#FFD60707" />

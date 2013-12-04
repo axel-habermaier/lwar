@@ -8,7 +8,6 @@
 	/// <summary>
 	///   Displays text.
 	/// </summary>
-	[ContentProperty("Text")]
 	public class TextBlock : UIElement
 	{
 		/// <summary>

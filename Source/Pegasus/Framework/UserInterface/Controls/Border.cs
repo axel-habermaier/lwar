@@ -8,7 +8,6 @@
 	/// <summary>
 	///   Draws a border, a background, or both around another element.
 	/// </summary>
-	[ContentProperty("Child")]
 	public class Border : UIElement
 	{
 		/// <summary>

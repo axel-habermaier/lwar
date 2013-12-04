@@ -201,6 +201,7 @@
 		{
 			Assert.ArgumentNotNull(color);
 			Assert.ArgumentSatisfies(color.Length == 4, "Array has wrong size.");
+
 			color[0] = ToFloat(Red);
 			color[1] = ToFloat(Green);
 			color[2] = ToFloat(Blue);

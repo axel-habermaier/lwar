@@ -5,7 +5,6 @@
 	/// <summary>
 	///   Enables sharing of dependency property values between different dependency objects.
 	/// </summary>
-	[ContentProperty("Setters")]
 	public sealed class Style : ISealable
 	{
 		/// <summary>
