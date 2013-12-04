@@ -197,6 +197,9 @@
     <Compile Include="..\Lwar Assets\Fonts\FontLoader.cs">
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
+    <Compile Include="..\lwar UI\UserInterface.cs">
+      <Link>Assets\UserInterface.cs</Link>
+    </Compile>
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
     <Compile Include="Gameplay\Actors\Explosion.cs" />

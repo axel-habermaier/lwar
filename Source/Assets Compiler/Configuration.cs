@@ -52,6 +52,14 @@
 		}
 
 		/// <summary>
+		///   Gets the path to the C# file that should contain the C# code generated from the Xaml files.
+		/// </summary>
+		public static string CSharpXamlFile
+		{
+			get { return Path.Combine(SourceDirectory, "UserInterface.cs"); }
+		}
+
+		/// <summary>
 		///   Gets the path to the C# file that should contain the generated asset identifiers.
 		/// </summary>
 		public static string CSharpAssetIdentifiersFile

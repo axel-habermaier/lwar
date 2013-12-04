@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Xaml
+﻿namespace Pegasus.AssetsCompiler.Xaml
 {
+	using System;
 	using System.Linq;
 	using System.Xml.Linq;
 
@@ -43,6 +42,16 @@ namespace Pegasus.AssetsCompiler.Xaml
 		///     Gets the name of the type.
 		/// </summary>
 		public string Name { get; protected set; }
+
+		/// <summary>
+		///     Gets a value indicating whether the type is a list type.
+		/// </summary>
+		public bool IsList { get; protected set; }
+
+		/// <summary>
+		///     Gets a value indicating whether the type is a dictionary type.
+		/// </summary>
+		public bool IsDictionary { get; protected set; }
 
 		/// <summary>
 		///     Gets the full name of the type.

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Xaml
+﻿namespace Pegasus.AssetsCompiler.Xaml
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Xml.Linq;
@@ -65,18 +64,18 @@ namespace Pegasus.AssetsCompiler.Xaml
 		/// </summary>
 		public IEnumerable<XamlProperty> Properties
 		{
-			get { return _properties; }
+			get
+			{
+				foreach (var property in _properties)
+					yield return property;
+
+				if (!HasParent)
+					yield break;
+
+				foreach (var property in Parent.Properties)
+					yield return property;
+			}
 		}
-
-		/// <summary>
-		///     Gets a value indicating whether the type is a list type.
-		/// </summary>
-		public bool IsList { get; private set; }
-
-		/// <summary>
-		///     Gets a value indicating whether the type is a dictionary type.
-		/// </summary>
-		public bool IsDictionary { get; private set; }
 
 		/// <summary>
 		///     Gets a value indicating whether the class defines a content property.
@@ -112,8 +111,19 @@ namespace Pegasus.AssetsCompiler.Xaml
 			get
 			{
 				Assert.That(_properties.Count(p => p.IsContentProperty) <= 1, "Class '{0}' defines more than one content property.", Name);
-				return _properties.Single(p => p.IsContentProperty);
+				return _properties.SingleOrDefault(p => p.IsContentProperty);
 			}
+		}
+
+		/// <summary>
+		///     Tries to find a property of the given name. Returns true to indicate that a property was found.
+		/// </summary>
+		/// <param name="propertyName">The name of the property that should be returned.</param>
+		/// <param name="property">Returns the property, if it could be found.</param>
+		public bool TryFind(string propertyName, out XamlProperty property)
+		{
+			property = Properties.FirstOrDefault(p => p.Name == propertyName);
+			return property != null;
 		}
 	}
 }

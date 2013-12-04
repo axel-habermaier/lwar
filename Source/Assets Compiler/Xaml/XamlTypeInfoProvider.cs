@@ -35,7 +35,9 @@ namespace Pegasus.AssetsCompiler.Xaml
 			new XamlPrimitiveType("ulong"),
 			new XamlPrimitiveType("single"),
 			new XamlPrimitiveType("double"),
-			new XamlPrimitiveType("string")
+			new XamlPrimitiveType("string"),
+			new XamlPrimitiveType("System", "Type"),
+			new XamlPrimitiveType("Pegasus.AssetCompiler.Xaml", "XamlLiteral")
 		};
 
 		/// <summary>

@@ -4,25 +4,23 @@
 	using System.Net;
 	using Network;
 	using Pegasus;
-	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Rendering;
 	using Scripting;
 	using UserInterface;
 
 	/// <summary>
-	///   Represents the lwar application.
+	///     Represents the lwar application.
 	/// </summary>
 	public sealed partial class App
 	{
 		/// <summary>
-		///   The local game server that can be used to hosts game sessions locally.
+		///     The local game server that can be used to hosts game sessions locally.
 		/// </summary>
 		private LocalServer _localServer;
 
 		/// <summary>
-		///   Invoked when the application is initializing.
+		///     Invoked when the application is initializing.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -55,7 +53,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the application should update the its state.
+		///     Invoked when the application should update the its state.
 		/// </summary>
 		protected override void Update()
 		{
@@ -63,7 +61,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -77,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Connects to the server at the given end point and joins the game session.
+		///     Connects to the server at the given end point and joins the game session.
 		/// </summary>
 		/// <param name="address">The IP address of the server.</param>
 		/// <param name="port">The port of the server.</param>
@@ -89,7 +87,7 @@
 		}
 
 		/// <summary>
-		///   Disconnects from the game session the client is currently connected to.
+		///     Disconnects from the game session the client is currently connected to.
 		/// </summary>
 		private void Disconnect()
 		{

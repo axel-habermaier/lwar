@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using Framework.UserInterface;
 	using Platform.Graphics;
 	using Platform.Logging;
@@ -14,25 +15,25 @@
 		/// <summary>
 		///   Maps types to their type converters.
 		/// </summary>
-		private static readonly Dictionary<Type, Func<string, string>> Converters = new Dictionary<Type, Func<string, string>>
+		private static readonly Dictionary<string, Func<string, string>> Converters = new Dictionary<string, Func<string, string>>
 		{
-			{ typeof(bool), s => s },
-			{ typeof(string), s => String.Format("\"{0}\"", s) },
-			{ typeof(object), s => String.Format("\"{0}\"", s) },
-			{ typeof(double), s => s },
-			{ typeof(float), s => s },
-			{ typeof(byte), s => s },
-			{ typeof(char), s => s },
-			{ typeof(short), s => s },
-			{ typeof(ushort), s => s },
-			{ typeof(int), s => s },
-			{ typeof(uint), s => s },
-			{ typeof(long), s => s },
-			{ typeof(ulong), s => s },
-			{ typeof(Thickness), s => String.Format("new Thickness({0})", s) },
-			{ typeof(Color), ConvertColor },
-			{ typeof(Type), s => String.Format("typeof({0})", s) },
-			{ typeof(XamlLiteral), s => s }
+			{ "bool", s => s },
+			{ "string", s => String.Format("\"{0}\"", s) },
+			{ "object", s => String.Format("\"{0}\"", s) },
+			{ "double", s => s },
+			{ "float", s => s },
+			{ "byte", s => s },
+			{ "char", s => s },
+			{ "short", s => s },
+			{ "ushort", s => s },
+			{ "int", s => s },
+			{ "uint", s => s },
+			{ "long", s => s },
+			{ "ulong", s => s },
+			{ "Pegasus.Framework.UserInterface.Thickness", s => String.Format("new Thickness({0})", s) },
+			{ "Pegasus.Platform.Graphics.Color", ConvertColor },
+			{ "System.Type", s => String.Format("typeof({0})", s) },
+			{ "Pegasus.AssetCompiler.Xaml.XamlLiteral", s => s }
 		};
 
 		/// <summary>
@@ -40,16 +41,22 @@
 		/// </summary>
 		/// <param name="targetType">The target type.</param>
 		/// <param name="value">The value that should be converted.</param>
-		public static string Convert(Type targetType, string value)
+		public static string Convert(IXamlType targetType, string value)
 		{
 			Assert.ArgumentNotNull(targetType);
 			Assert.ArgumentNotNull(value);
 
-			if (targetType.IsEnum)
-				return String.Format("{0}.{1}", targetType.Name, Enum.Parse(targetType, value).ToString());
+			var enumeration = targetType as XamlEnumeration;
+			if (enumeration != null)
+			{
+				if (enumeration.Literals.All(l => l != value))
+					Log.Die("Unable to find enumeration literal '{0}.{1}'.", targetType.FullName, value);
+
+				return String.Format("{0}.{1}", targetType.Name, value);
+			}
 
 			Func<string, string> converter;
-			if (!Converters.TryGetValue(targetType, out converter))
+			if (!Converters.TryGetValue(targetType.FullName, out converter))
 				Log.Die("Unable to find a type converter for type '{0}'.", targetType.FullName);
 
 			try

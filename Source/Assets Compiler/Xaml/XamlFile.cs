@@ -89,7 +89,7 @@
 		private void Transform()
 		{
 			var baseType = GetClrType(Root.Name);
-			if (baseType == typeof(IDictionary))
+			if (baseType.FullName == "Pegasus.Framework.UserInterface.ResourceDictionary")
 			{
 				Root = null;
 				return;
@@ -175,16 +175,16 @@
 		/// </summary>
 		private void RewriteControlTemplateInstantiations(XElement element)
 		{
-			//foreach (var child in element.Elements().ToArray())
-			//	RewriteControlTemplateInstantiations(child);
+			foreach (var child in element.Elements().ToArray())
+				RewriteControlTemplateInstantiations(child);
 
-			//if (element.Name.LocalName != "Create" || Type.GetType(element.Attribute("Type").Value) != typeof(ControlTemplate))
-			//	return;
+			if (element.Name.LocalName != "Create" || element.Attribute("Type").Value != "Pegasus.Framework.UserInterface.Controls.ControlTemplate")
+				return;
 
-			//element.ReplaceWith(new XElement(DefaultNamespace + "Delegate",
-			//								 new XElement(DefaultNamespace + "Parameter", new XAttribute("Name", "templatedControl")),
-			//								 new XElement(DefaultNamespace + "Return", element.Elements().Single().Attribute("Name").Value),
-			//								 element.Attributes(), element.Elements()));
+			element.ReplaceWith(new XElement(DefaultNamespace + "Delegate",
+											 new XElement(DefaultNamespace + "Parameter", new XAttribute("Name", "templatedControl")),
+											 new XElement(DefaultNamespace + "Return", element.Elements().Single().Attribute("Name").Value),
+											 element.Attributes(), element.Elements()));
 		}
 
 		/// <summary>
@@ -201,17 +201,17 @@
 				property.Remove();
 				value.Remove();
 
-				Type type;
-				if (!TryGetPropertyType(property.Value, out type))
+				XamlProperty xamlProperty;
+				if (!TryGetPropertyType(property.Value, out xamlProperty))
 					Log.Die("Unable to get type of property '{0}'.", property.Value);
 
 				var content = value.HasElements ? (object)value.Elements() : (object)value.Value;
 
-				setter.Add(new XElement(DefaultNamespace + "TypeParameter", type.AssemblyQualifiedName));
+				setter.Add(new XElement(DefaultNamespace + "TypeParameter", xamlProperty.Type.FullName));
 				setter.Add(new XElement(DefaultNamespace + "Parameter",
-										new XAttribute("Type", typeof(XamlLiteral).AssemblyQualifiedName), property.Value + "Property"));
+										new XAttribute("Type", "Pegasus.AssetCompiler.Xaml.XamlLiteral"), property.Value + "Property"));
 				setter.Add(new XElement(DefaultNamespace + "Parameter",
-										new XAttribute("Type", type.AssemblyQualifiedName), content));
+										new XAttribute("Type", xamlProperty.Type.FullName), content));
 			}
 		}
 
@@ -234,26 +234,24 @@
 
 			var isAttached = !parentType.EndsWith(split[0]);
 			var content = element.HasElements ? (object)element.Elements() : (object)element.Value;
-			var classType = GetClrType(split[0]);
+			var classType = (XamlClass)GetClrType(split[0]);
+
+			XamlProperty xamlProperty;
+			if (!classType.TryFind(split[1], out xamlProperty))
+					Log.Die("Unable to find property '{0}' in '{1}'.", split[1], classType.FullName);
 
 			XElement newElement;
 			if (isAttached)
 			{
-				var fieldType = classType.GetField(split[1] + "Property", BindingFlags.Static | BindingFlags.Public).FieldType;
-				var propertyType = fieldType.GetGenericArguments()[0].AssemblyQualifiedName;
-
 				newElement = new XElement(DefaultNamespace + "SetAttached",
-										  new XAttribute("Type", classType.AssemblyQualifiedName),
+										  new XAttribute("Type", classType.FullName),
 										  new XAttribute("Property", propertyName),
-										  new XElement(DefaultNamespace + "Value", new XAttribute("Type", propertyType), content));
+										  new XElement(DefaultNamespace + "Value", 
+											  new XAttribute("Type", xamlProperty.Type.FullName), content));
 			}
 			else
 			{
-				var property = classType.GetProperty(split[1], BindingFlags.Instance | BindingFlags.Public);
-				if (property == null)
-					Log.Die("Unable to find property '{0}' in '{1}'.", split[1], classType.FullName);
-
-				var propertyType = property.PropertyType.AssemblyQualifiedName;
+				var propertyType = xamlProperty.Type.FullName;
 				newElement = new XElement(DefaultNamespace + "Set", new XAttribute("Property", propertyName),
 										  new XElement(DefaultNamespace + "Value", new XAttribute("Type", propertyType), content));
 			}
@@ -279,22 +277,22 @@
 			targetProperty = targetProperty.Substring(targetProperty.LastIndexOf(".", StringComparison.Ordinal) + 1);
 
 			var key = element.Attribute("Key").Value;
-			Type keyType;
+			string keyType;
 			if (key.StartsWith("typeof"))
 			{
 				var length = "typeof(".Length;
 				key = key.Substring(length, key.Length - length - 1);
-				keyType = typeof(Type);
+				keyType = "System.Type";
 			}
 			else
 			{
 				key = key.Substring(1, key.Length - 2);
-				keyType = typeof(string);
+				keyType = "string";
 			}
 
 			var newElement = new XElement(DefaultNamespace + "Invoke", new XAttribute("Method", "Add"),
 										  new XAttribute("TargetProperty", targetProperty),
-										  new XElement(DefaultNamespace + "Parameter", key, new XAttribute("Type", keyType.AssemblyQualifiedName)),
+										  new XElement(DefaultNamespace + "Parameter", key, new XAttribute("Type", keyType)),
 										  new XElement(DefaultNamespace + "Parameter",
 													   new XAttribute("Type", typeof(object).AssemblyQualifiedName), element.Elements()));
 
@@ -356,11 +354,11 @@
 			foreach (var instantiation in Root.DescendantsAndSelf().Where(e => e.Name.LocalName == "Create" || e.Name.LocalName == "Delegate"))
 			{
 				var typeAttribute = instantiation.Attribute("Type");
-				Type type;
+				IXamlType type;
 				if (!TryGetClrType(typeAttribute.Value, out type))
 					continue;
 
-				typeAttribute.SetValue(type.AssemblyQualifiedName);
+				typeAttribute.SetValue(type.FullName);
 			}
 		}
 
@@ -474,8 +472,8 @@
 
 			if (element.Name.LocalName.Contains("."))
 			{
-				Type propertyType;
-				if (TryGetPropertyType(element.Name.LocalName, out propertyType) && typeof(IList).IsAssignableFrom(propertyType))
+				XamlProperty property;
+				if (TryGetPropertyType(element.Name.LocalName, out property) && property.Type.IsList)
 					element.ReplaceWith(element.Elements().Select(e => new XElement(element.Name + "..Add", e)));
 			}
 		}
@@ -485,15 +483,15 @@
 		/// </summary>
 		private void ReplaceDictionarySyntax(XElement element)
 		{
-			//foreach (var child in element.Elements())
-			//	ReplaceDictionarySyntax(child);
+			foreach (var child in element.Elements())
+				ReplaceDictionarySyntax(child);
 
-			//if (element.Name.LocalName.Contains("."))
-			//{
-			//	Type propertyType;
-			//	if (TryGetPropertyType(element.Name.LocalName, out propertyType) && typeof(ResourceDictionary).IsAssignableFrom(propertyType))
-			//		element.ReplaceWith(element.Elements().Select(e => new XElement(element.Name + "...Add", e)));
-			//}
+			if (element.Name.LocalName.Contains("."))
+			{
+				XamlProperty property;
+				if (TryGetPropertyType(element.Name.LocalName, out property) && property.Type.IsDictionary)
+					element.ReplaceWith(element.Elements().Select(e => new XElement(element.Name + "...Add", e)));
+			}
 		}
 
 		/// <summary>
@@ -618,29 +616,18 @@
 		///   Tries to get the type of the dependency property.
 		/// </summary>
 		/// <param name="dependencyProperty">The dependency property whose type should be determined.</param>
-		/// <param name="propertyType">Returns the type of the property.</param>
-		private bool TryGetPropertyType(string dependencyProperty, out Type propertyType)
+		/// <param name="property">Returns the the property.</param>
+		private bool TryGetPropertyType(string dependencyProperty, out XamlProperty property)
 		{
-			propertyType = null;
+			property = null;
 			var split = dependencyProperty.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
 
-			Type type;
+			IXamlType type;
 			if (!TryGetClrType(split[0], out type))
 				return false;
 
-			var property = type.GetProperty(split[1], BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-			if (property == null)
-			{
-				var field = type.GetField(split[1] + "Property", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-				if (field == null)
-					return false;
-
-				propertyType = field.FieldType.GetGenericArguments()[0];
-				return true;
-			}
-
-			propertyType = property.PropertyType;
-			return true;
+			var xamlClass = (XamlClass)type;
+			return xamlClass.TryFind(split[1], out property);
 		}
 
 		/// <summary>
@@ -715,31 +702,34 @@
 		/// </summary>
 		private void AddImplicitContentElements()
 		{
-			//foreach (var instantiation in GetInstantiations(Root))
-			//{
-			//	var xamlType = GetClrType(instantiation.Name);
-			//	var contentProperty = xamlType.GetCustomAttribute<ContentPropertyAttribute>();
+			foreach (var instantiation in GetInstantiations(Root))
+			{
+				var xamlType = GetClrType(instantiation.Name) as XamlClass;
+				if (xamlType == null || !xamlType.HasContentProperty)
+					continue;
 
-			//	if (contentProperty == null)
-			//		continue;
+				var contentProperty = xamlType.ContentProperty;
 
-			//	var contentPropertyElements = instantiation.Elements().Where(element => !element.Name.LocalName.Contains(".")).ToArray();
-			//	if (contentPropertyElements.Length != 0)
-			//	{
-			//		foreach (var element in contentPropertyElements)
-			//			element.Remove();
+				if (contentProperty == null)
+					continue;
 
-			//		instantiation.Add(new XElement(instantiation.Name + "." + contentProperty.Name, contentPropertyElements));
-			//		continue;
-			//	}
+				var contentPropertyElements = instantiation.Elements().Where(element => !element.Name.LocalName.Contains(".")).ToArray();
+				if (contentPropertyElements.Length != 0)
+				{
+					foreach (var element in contentPropertyElements)
+						element.Remove();
 
-			//	if (!instantiation.Elements().Any() && !String.IsNullOrWhiteSpace(instantiation.Value))
-			//	{
-			//		var value = instantiation.Value;
-			//		instantiation.SetValue(String.Empty);
-			//		instantiation.Add(new XElement(instantiation.Name + "." + contentProperty.Name, value));
-			//	}
-			//}
+					instantiation.Add(new XElement(instantiation.Name + "." + contentProperty.Name, contentPropertyElements));
+					continue;
+				}
+
+				if (!instantiation.Elements().Any() && !String.IsNullOrWhiteSpace(instantiation.Value))
+				{
+					var value = instantiation.Value;
+					instantiation.SetValue(String.Empty);
+					instantiation.Add(new XElement(instantiation.Name + "." + contentProperty.Name, value));
+				}
+			}
 		}
 
 		/// <summary>
@@ -776,14 +766,11 @@
 		/// </summary>
 		/// <param name="typeName">The name of the type the CLR type should be returned for.</param>
 		/// <param name="type">Returns the CLR type.</param>
-		private bool TryGetClrType(XName typeName, out Type type)
+		private bool TryGetClrType(XName typeName, out IXamlType type)
 		{
 			foreach (var typeNamespace in GetXamlNamespaces(typeName))
 			{
-				var fullTypeName = String.Format("{0}.{1}, {2}", typeNamespace.Namespace, typeName.LocalName);
-				type = Type.GetType(fullTypeName, false);
-
-				if (type != null)
+				if (_typeInfoProvider.TryFind(typeNamespace.Namespace, typeName.LocalName, out type))
 					return true;
 			}
 
@@ -795,9 +782,9 @@
 		///   Gets the CLR type corresponding to the Xaml element.
 		/// </summary>
 		/// <param name="typeName">The name of the type the CLR type should be returned for.</param>
-		private Type GetClrType(XName typeName)
+		private IXamlType GetClrType(XName typeName)
 		{
-			Type type;
+			IXamlType type;
 			if (!TryGetClrType(typeName, out type))
 				Log.Die("Unable to find CLR type for Xaml name '{0}'.", typeName);
 
