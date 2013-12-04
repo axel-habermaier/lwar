@@ -110,7 +110,11 @@
 		/// </summary>
 		public virtual string TargetPath
 		{
-			get { return Path.Combine(Configuration.TargetDirectory, RelativePathWithoutExtension) + PlatformInfo.AssetExtension; }
+			get
+			{
+				var extension = "." + Configuration.UniqueFileIdentifier + PlatformInfo.AssetExtension;
+				return Path.Combine(Configuration.TargetDirectory, RelativePathWithoutExtension) + extension;
+			}
 		}
 
 		/// <summary>

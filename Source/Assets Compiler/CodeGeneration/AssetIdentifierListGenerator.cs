@@ -65,8 +65,9 @@
 			{
 				var currentAssets = assets.Where(asset => !asset.Name.Contains("/")).ToArray();
 				foreach (var asset in currentAssets)
-					writer.AppendLine("public static AssetIdentifier<{0}> {1} = \"{2}\";",
-									  asset.IdentifierType, EscapeName(asset.Asset.IdentifierName), asset.Asset.RelativePathWithoutExtension);
+					writer.AppendLine("public static AssetIdentifier<{0}> {1} = \"{2}.{3}\";",
+									  asset.IdentifierType, EscapeName(asset.Asset.IdentifierName),
+									  asset.Asset.RelativePathWithoutExtension, Configuration.UniqueFileIdentifier);
 
 				var groups = assets.Where(asset => asset.Name.Contains("/")).GroupBy(asset => asset.Name.Split('/')[0]).ToArray();
 				if (groups.Length > 0 && currentAssets.Length > 0)

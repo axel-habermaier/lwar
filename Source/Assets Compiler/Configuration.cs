@@ -101,6 +101,11 @@
 		public static bool XamlFilesOnly { get; set; }
 
 		/// <summary>
+		///   Gets or sets the unique identifier of all asset files contained in the compiled assets project.
+		/// </summary>
+		public static int UniqueFileIdentifier { get; set; }
+
+		/// <summary>
 		///   Get the asset list assembly.
 		/// </summary>
 		public static Assembly AssetListAssembly

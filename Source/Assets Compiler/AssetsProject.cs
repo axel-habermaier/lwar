@@ -48,7 +48,7 @@
 
 			SourceDirectory = Path.GetFullPath(Path.GetDirectoryName(projectFile));
 			TempDirectory = Path.Combine(SourceDirectory, "obj");
-			TargetDirectory = Path.Combine(Environment.CurrentDirectory, AssemblyName);
+			TargetDirectory = Environment.CurrentDirectory;
 		}
 
 		/// <summary>
