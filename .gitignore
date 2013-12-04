@@ -28,6 +28,10 @@ Source/Pegasus Assets/obj
 Source/Pegasus Assets/bin
 Source/Pegasus Assets/temp
 Source/Pegasus Assets/Binaries
+Source/Pegasus UI/obj
+Source/Pegasus UI/bin
+Source/lwar UI/obj
+Source/lwar UI/bin
 Binaries x64
 Binaries x86
 log.txt
