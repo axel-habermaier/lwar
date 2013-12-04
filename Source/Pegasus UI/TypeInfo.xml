@@ -102,6 +102,9 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
 
+	<Class Name="Pegasus.Framework.UserInterface.Controls.RenderTargetPanel" Inherits="Pegasus.Framework.UserInterface.UIElement">
+	</Class>
+
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Window" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 		<Property Type="string" Name="Title"/>
 	</Class>

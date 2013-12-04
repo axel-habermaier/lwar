@@ -1,53 +1,50 @@
 ﻿namespace Pegasus.AssetsCompiler.Xaml
 {
 	using System;
-	using System.Collections;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
-	using System.Reflection;
 	using System.Text.RegularExpressions;
 	using System.Xml.Linq;
-	using Framework;
 	using Platform.Logging;
 
 	/// <summary>
-	///   Applies a number of transformations to a Xaml file to facilitate the cross-compilation of the Xaml code to C#.
+	///     Applies a number of transformations to a Xaml file to facilitate the cross-compilation of the Xaml code to C#.
 	/// </summary>
 	internal class XamlFile
 	{
 		/// <summary>
-		///   The default Xaml namespace.
+		///     The default Xaml namespace.
 		/// </summary>
 		public static readonly XNamespace DefaultNamespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
 
 		/// <summary>
-		///   The Xaml markup namespace.
+		///     The Xaml markup namespace.
 		/// </summary>
 		public static readonly XNamespace MarkupNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
 
 		/// <summary>
-		/// Provides type information about types referenced by the Xaml file.
-		/// </summary>
-		private readonly XamlTypeInfoProvider _typeInfoProvider;
-
-		/// <summary>
-		///   Maps a class name to the number of instances created of the class.
+		///     Maps a class name to the number of instances created of the class.
 		/// </summary>
 		private readonly Dictionary<string, int> _instancesCount = new Dictionary<string, int>();
 
 		/// <summary>
-		///   Maps an Xml namespace to the corresponding Xaml namespaces.
+		///     Maps an Xml namespace to the corresponding Xaml namespaces.
 		/// </summary>
 		private readonly Dictionary<string, XamlNamespace[]> _namespaceMap = new Dictionary<string, XamlNamespace[]>();
 
 		/// <summary>
-		///   The object names that are used by the Xaml file.
+		///     Provides type information about types referenced by the Xaml file.
+		/// </summary>
+		private readonly XamlTypeInfoProvider _typeInfoProvider;
+
+		/// <summary>
+		///     The object names that are used by the Xaml file.
 		/// </summary>
 		private readonly HashSet<string> _usedNames = new HashSet<string>();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="fileName">The file name of the Xaml file.</param>
 		/// <param name="typeInfoProvider">Provides type information about types referenced by the Xaml file.</param>
@@ -64,7 +61,7 @@
 		}
 
 		/// <summary>
-		///   Gets the namespaces imported by the Xaml file.
+		///     Gets the namespaces imported by the Xaml file.
 		/// </summary>
 		public IEnumerable<string> Namespaces
 		{
@@ -79,12 +76,12 @@
 		}
 
 		/// <summary>
-		///   The root object of the Xaml file.
+		///     The root object of the Xaml file.
 		/// </summary>
 		public XElement Root { get; private set; }
 
 		/// <summary>
-		///   Transforms the Xaml root object.
+		///     Transforms the Xaml root object.
 		/// </summary>
 		private void Transform()
 		{
@@ -132,7 +129,7 @@
 		}
 
 		/// <summary>
-		/// Removes the code-behind class attribute from the top-level element.
+		///     Removes the code-behind class attribute from the top-level element.
 		/// </summary>
 		private void RemoveClassAttribute()
 		{
@@ -147,8 +144,8 @@
 		}
 
 		/// <summary>
-		///   Removes duplicated resources from resource dictionaries. The last resource is kept, in accordance with the WPF
-		///   resource lookup specification.
+		///     Removes duplicated resources from resource dictionaries. The last resource is kept, in accordance with the WPF
+		///     resource lookup specification.
 		/// </summary>
 		private void RemoveDuplicatedResourceKeys()
 		{
@@ -168,7 +165,7 @@
 		}
 
 		/// <summary>
-		///   Inlines merged dictionary files.
+		///     Inlines merged dictionary files.
 		/// </summary>
 		private void InlineMergedResourceDictionaries()
 		{
@@ -187,7 +184,7 @@
 		}
 
 		/// <summary>
-		///   Recursively rewrites the instantiation of all control templates to delegate instantiations.
+		///     Recursively rewrites the instantiation of all control templates to delegate instantiations.
 		/// </summary>
 		private void RewriteControlTemplateInstantiations(XElement element)
 		{
@@ -204,7 +201,7 @@
 		}
 
 		/// <summary>
-		///   Adds the constructor parameters for setter instantiations.
+		///     Adds the constructor parameters for setter instantiations.
 		/// </summary>
 		private void AddSetterConstructorParameters()
 		{
@@ -232,7 +229,7 @@
 		}
 
 		/// <summary>
-		///   Recursively makes all property set operations explicit.
+		///     Recursively makes all property set operations explicit.
 		/// </summary>
 		private void MakePropertySetCallsExplicit(XElement element)
 		{
@@ -254,7 +251,7 @@
 
 			XamlProperty xamlProperty;
 			if (!classType.TryFind(split[1], out xamlProperty))
-					Log.Die("Unable to find property '{0}' in '{1}'.", split[1], classType.FullName);
+				Log.Die("Unable to find property '{0}' in '{1}'.", split[1], classType.FullName);
 
 			XElement newElement;
 			if (isAttached)
@@ -262,8 +259,8 @@
 				newElement = new XElement(DefaultNamespace + "SetAttached",
 										  new XAttribute("Type", classType.FullName),
 										  new XAttribute("Property", propertyName),
-										  new XElement(DefaultNamespace + "Value", 
-											  new XAttribute("Type", xamlProperty.Type.FullName), content));
+										  new XElement(DefaultNamespace + "Value",
+													   new XAttribute("Type", xamlProperty.Type.FullName), content));
 			}
 			else
 			{
@@ -279,7 +276,7 @@
 		}
 
 		/// <summary>
-		///   Recursively makes all Dictionary.Add method calls explicit.
+		///     Recursively makes all Dictionary.Add method calls explicit.
 		/// </summary>
 		private void MakeDictionaryAddCallsExplicit(XElement element)
 		{
@@ -319,7 +316,7 @@
 		}
 
 		/// <summary>
-		///   Recursively makes all List.Add method calls explicit.
+		///     Recursively makes all List.Add method calls explicit.
 		/// </summary>
 		private void MakeListAddCallsExplicit(XElement element)
 		{
@@ -344,7 +341,7 @@
 		}
 
 		/// <summary>
-		///   Recursively makes all object instantiations explicit.
+		///     Recursively makes all object instantiations explicit.
 		/// </summary>
 		private void MakeObjectInstantiationsExplicit(XElement element)
 		{
@@ -363,7 +360,7 @@
 		}
 
 		/// <summary>
-		///   Resolves the full names of the types of all instantiated objects.
+		///     Resolves the full names of the types of all instantiated objects.
 		/// </summary>
 		private void ResolveTypes()
 		{
@@ -379,7 +376,7 @@
 		}
 
 		/// <summary>
-		///   Converts explicit name elements to name attributes and registers the used name.
+		///     Converts explicit name elements to name attributes and registers the used name.
 		/// </summary>
 		private void MoveUpExplicitNames()
 		{
@@ -392,7 +389,7 @@
 		}
 
 		/// <summary>
-		///   Assigns names to all unnamed objects.
+		///     Assigns names to all unnamed objects.
 		/// </summary>
 		private void AssignNames()
 		{
@@ -411,7 +408,7 @@
 		}
 
 		/// <summary>
-		///   Generates a file-wide unique name for the given CLR type.
+		///     Generates a file-wide unique name for the given CLR type.
 		/// </summary>
 		/// <param name="clrType">The CLR type the name should be generated for.</param>
 		private string GenerateUniqueName(string clrType)
@@ -437,7 +434,7 @@
 		}
 
 		/// <summary>
-		///   Makes implicit style keys explicit.
+		///     Makes implicit style keys explicit.
 		/// </summary>
 		private void AddImplicitStyleKeys()
 		{
@@ -461,7 +458,7 @@
 		}
 
 		/// <summary>
-		///   Moves the dictionary key from the value element of the dictionary to the dictionary's Add element.
+		///     Moves the dictionary key from the value element of the dictionary to the dictionary's Add element.
 		/// </summary>
 		private void MoveUpDictionaryKey()
 		{
@@ -479,7 +476,7 @@
 		}
 
 		/// <summary>
-		///   Recursively replaces Xaml's special list syntax with explicit calls to the list's Add method.
+		///     Recursively replaces Xaml's special list syntax with explicit calls to the list's Add method.
 		/// </summary>
 		private void ReplaceListSyntax(XElement element)
 		{
@@ -495,7 +492,7 @@
 		}
 
 		/// <summary>
-		///   Recursively replaces Xaml's special dictionary syntax with explicit calls to the list's Add method.
+		///     Recursively replaces Xaml's special dictionary syntax with explicit calls to the list's Add method.
 		/// </summary>
 		private void ReplaceDictionarySyntax(XElement element)
 		{
@@ -511,8 +508,8 @@
 		}
 
 		/// <summary>
-		///   Adds the target type defined on a control template to its template bindings and removes the target type from the
-		///   file.
+		///     Adds the target type defined on a control template to its template bindings and removes the target type from the
+		///     file.
 		/// </summary>
 		private void PushDownControlTemplateTargetType()
 		{
@@ -537,7 +534,7 @@
 		}
 
 		/// <summary>
-		///   Rewrites the template binding markup extension syntax to regular Xaml syntax.
+		///     Rewrites the template binding markup extension syntax to regular Xaml syntax.
 		/// </summary>
 		private void RewriteTemplateBindings()
 		{
@@ -557,7 +554,7 @@
 		}
 
 		/// <summary>
-		///   Rewrites the dynamic resource binding markup extension syntax to regular Xaml syntax.
+		///     Rewrites the dynamic resource binding markup extension syntax to regular Xaml syntax.
 		/// </summary>
 		private void RewriteDynamicResourceBindings()
 		{
@@ -577,7 +574,7 @@
 		}
 
 		/// <summary>
-		///   Rewrites the static resource binding markup extension syntax to regular Xaml syntax.
+		///     Rewrites the static resource binding markup extension syntax to regular Xaml syntax.
 		/// </summary>
 		private void RewriteStaticResourceBindings()
 		{
@@ -597,7 +594,7 @@
 		}
 
 		/// <summary>
-		///   Rewrites the data binding markup extension syntax to regular Xaml syntax.
+		///     Rewrites the data binding markup extension syntax to regular Xaml syntax.
 		/// </summary>
 		private void RewriteDataBindings()
 		{
@@ -617,7 +614,7 @@
 		}
 
 		/// <summary>
-		///   Trims the literal values of all elements.
+		///     Trims the literal values of all elements.
 		/// </summary>
 		private void TrimElementLiterals()
 		{
@@ -629,7 +626,7 @@
 		}
 
 		/// <summary>
-		///   Tries to get the type of the dependency property.
+		///     Tries to get the type of the dependency property.
 		/// </summary>
 		/// <param name="dependencyProperty">The dependency property whose type should be determined.</param>
 		/// <param name="property">Returns the the property.</param>
@@ -647,7 +644,7 @@
 		}
 
 		/// <summary>
-		///   Adds the target type defined on a style to its setters and removes the target type from the file.
+		///     Adds the target type defined on a style to its setters and removes the target type from the file.
 		/// </summary>
 		private void PushDownStyleTargetType()
 		{
@@ -669,7 +666,7 @@
 		}
 
 		/// <summary>
-		///   Removes all ignorable elements from the file.
+		///     Removes all ignorable elements from the file.
 		/// </summary>
 		private void RemoveIgnorableElements()
 		{
@@ -691,7 +688,7 @@
 		}
 
 		/// <summary>
-		///   Recursively removes all attributes from the file and replaces them with element syntax.
+		///     Recursively removes all attributes from the file and replaces them with element syntax.
 		/// </summary>
 		/// <param name="element">The element whose attributes should be replaced.</param>
 		private static void ReplaceAttributesWithElements(XElement element)
@@ -714,7 +711,7 @@
 		}
 
 		/// <summary>
-		///   Makes the implicit content property elements explicit.
+		///     Makes the implicit content property elements explicit.
 		/// </summary>
 		private void AddImplicitContentElements()
 		{
@@ -744,12 +741,12 @@
 					var value = instantiation.Value;
 					instantiation.SetValue(String.Empty);
 					instantiation.Add(new XElement(instantiation.Name + "." + contentProperty.Name, value));
-				}
+				} 
 			}
 		}
 
 		/// <summary>
-		///   Gets all Xaml object instantiations defined below (and including) the given root element.
+		///     Gets all Xaml object instantiations defined below (and including) the given root element.
 		/// </summary>
 		/// <param name="root">The root element all object instantiations are returned for.</param>
 		private static IEnumerable<XElement> GetInstantiations(XElement root)
@@ -758,7 +755,7 @@
 		}
 
 		/// <summary>
-		///   Gets all elements with the given name, starting with and including the given root element.
+		///     Gets all elements with the given name, starting with and including the given root element.
 		/// </summary>
 		/// <param name="root">The root element all named elements are returned for.</param>
 		/// <param name="name">The name of the elements that should be returned.</param>
@@ -768,7 +765,7 @@
 		}
 
 		/// <summary>
-		///   Gets the element with the given name directly below the root element. Returns null if no such element exists.
+		///     Gets the element with the given name directly below the root element. Returns null if no such element exists.
 		/// </summary>
 		/// <param name="root">The root element the named element is returned for.</param>
 		/// <param name="name">The name of the element that should be returned.</param>
@@ -778,7 +775,7 @@
 		}
 
 		/// <summary>
-		///   Tries to get the CLR type corresponding to the Xaml element.
+		///     Tries to get the CLR type corresponding to the Xaml element.
 		/// </summary>
 		/// <param name="typeName">The name of the type the CLR type should be returned for.</param>
 		/// <param name="type">Returns the CLR type.</param>
@@ -795,7 +792,7 @@
 		}
 
 		/// <summary>
-		///   Gets the CLR type corresponding to the Xaml element.
+		///     Gets the CLR type corresponding to the Xaml element.
 		/// </summary>
 		/// <param name="typeName">The name of the type the CLR type should be returned for.</param>
 		private IXamlType GetClrType(XName typeName)
@@ -808,7 +805,7 @@
 		}
 
 		/// <summary>
-		///   Gets the Xaml namespaces for the Xaml name.
+		///     Gets the Xaml namespaces for the Xaml name.
 		/// </summary>
 		/// <param name="xamlName">The Xaml name the Xaml namespaces should be returned for.</param>
 		private IEnumerable<XamlNamespace> GetXamlNamespaces(XName xamlName)
@@ -824,7 +821,7 @@
 		}
 
 		/// <summary>
-		///   Builds the namespace map for the Xaml root object.
+		///     Builds the namespace map for the Xaml root object.
 		/// </summary>
 		private void BuildNamespaceMap()
 		{
@@ -861,4 +858,3 @@
 		}
 	}
 }
-

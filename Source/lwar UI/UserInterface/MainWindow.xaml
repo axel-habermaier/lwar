@@ -3,6 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:userInterface="clr-namespace:Lwar.UserInterface"
+             xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls;assembly=Pegasus.UI"
              mc:Ignorable="d" 
              FontFamily="Liberation Mono" 
              FontSize="11" 
@@ -15,7 +16,9 @@
 			<Border Width="110" Height="100" Background="Yellow" Canvas.Left="-17" Canvas.Top="43" Panel.ZIndex="3"></Border>
 			<Border Width="110" Height="100" Background="#FFFF2300" Canvas.Left="33" Canvas.Top="27"></Border>
 			<Border Width="110" Height="100" Background="#FF3F59CD" Panel.ZIndex="-6" Canvas.Left="17" Canvas.Top="80"/>
-			<userInterface:UserControl1 Canvas.Left="223" Canvas.Top="11"></userInterface:UserControl1>
+			<userInterface:UserControl1 Canvas.Left="224" Canvas.Top="27" />
+
+			<controls:RenderTargetPanel Canvas.Left="58" Canvas.Top="282" Height="73.46" Width="279" />
 		</Canvas>
 	</StackPanel>
 </Window>
