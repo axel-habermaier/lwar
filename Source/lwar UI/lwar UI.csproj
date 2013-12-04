@@ -114,6 +114,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pegasus UI\Pegasus UI.csproj">
+      <Project>{032c4229-b3a4-417f-8ed3-b2470e371f2d}</Project>
+      <Name>Pegasus UI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

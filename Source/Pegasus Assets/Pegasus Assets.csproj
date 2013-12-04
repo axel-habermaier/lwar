@@ -206,9 +206,9 @@
     <Compile Include="Effects\Sprite.Effect.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assets Compiler\Assets Compiler.csproj">
+    <ProjectReference Include="..\Assets Compiler\Pegasus Assets Compiler.csproj">
       <Project>{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}</Project>
-      <Name>Assets Compiler</Name>
+      <Name>Pegasus Assets Compiler</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

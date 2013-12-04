@@ -77,7 +77,7 @@
 			try
 			{
 				PrintToConsole();
-				Log.Info("Pegasus Asset Compiler ({0} x{1})", PlatformInfo.Platform, IntPtr.Size == 4 ? "86" : "64");
+				Log.Info("\nPegasus Asset Compiler ({0} x{1})", PlatformInfo.Platform, IntPtr.Size == 4 ? "86" : "64");
 
 				Console.WriteLine();
 				var command = args.Length >= 1 ? args[0].Trim().ToLower() : String.Empty;
@@ -125,11 +125,11 @@
 					var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
 
 					if (clean && !(recompile || compile))
-						Log.Info("Done.");
+						Log.Info("Done.\n");
 					else
 					{
 						Console.WriteLine();
-						Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds.ToString(CultureInfo.InvariantCulture));
+						Log.Info("Asset compilation completed ({0:F2}s).\n", elapsedSeconds.ToString(CultureInfo.InvariantCulture));
 					}
 				}
 
@@ -141,6 +141,7 @@
 					Log.Error("{0}", exception.Message);
 
 				Log.Error("{0}", e.StackTrace);
+				Log.Info(Environment.NewLine);
 				return -1;
 			}
 			catch (PegasusException)
@@ -158,6 +159,7 @@
 					Log.Error("{0}", e.InnerException.Message);
 					Log.Error("{0}", e.InnerException.StackTrace);
 				}
+
 				return -1;
 			}
 		}
