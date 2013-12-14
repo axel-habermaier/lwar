@@ -4,6 +4,7 @@
 	using System.IO;
 	using System.Linq;
 	using System.Xml.Linq;
+	using Platform;
 	using Platform.Logging;
 
 	/// <summary>
@@ -47,8 +48,14 @@
 			_projectFile = _document.Root;
 
 			SourceDirectory = Path.GetFullPath(Path.GetDirectoryName(projectFile));
-			TempDirectory = Path.Combine(SourceDirectory, "obj");
 			TargetDirectory = Environment.CurrentDirectory;
+			TempDirectory = Path.Combine(SourceDirectory, "obj");
+
+#if DEBUG
+			TempDirectory = Path.Combine(TempDirectory, "Debug");
+#else
+			TempDirectory = Path.Combine(TempDirectory, "Release");
+#endif
 		}
 
 		/// <summary>

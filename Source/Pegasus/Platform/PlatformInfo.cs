@@ -12,7 +12,7 @@
 		/// <summary>
 		///   The file extension used for compiled asset files.
 		/// </summary>
-		public const string AssetExtension = ".pca"; // Pegasus Compiled Asset
+		public const string AssetExtension = ".pg";
 
 		/// <summary>
 		///   Indicates whether the platform is a big or little endian architecture.
@@ -35,7 +35,7 @@
 #endif
 
 		/// <summary>
-		///   The scancode of the console key.
+		///   The scan code of the console key.
 		/// </summary>
 		public const int ConsoleKey =
 #if Windows
