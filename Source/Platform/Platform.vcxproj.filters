@@ -85,9 +85,6 @@
     <ClCompile Include="context.glx.c">
       <Filter>Graphics\OpenGL 3</Filter>
     </ClCompile>
-    <ClCompile Include="pgGraphics.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="glExt.c">
       <Filter>Graphics\OpenGL 3\Bindings</Filter>
     </ClCompile>
@@ -112,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="texture.gl3.c">
       <Filter>Graphics\OpenGL 3</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics.c">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

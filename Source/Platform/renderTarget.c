@@ -55,6 +55,16 @@ pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget)
 	PG_FREE(renderTarget);
 }
 
+pgVoid pgGetRenderTargetSize(pgRenderTarget* renderTarget, pgInt32* width, pgInt32* height)
+{
+	PG_ASSERT_NOT_NULL(renderTarget);
+	PG_ASSERT_NOT_NULL(width);
+	PG_ASSERT_NOT_NULL(height);
+
+	*width = renderTarget->width;
+	*height = renderTarget->height;
+}
+
 pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color)
 {
 	PG_ASSERT_NOT_NULL(renderTarget);

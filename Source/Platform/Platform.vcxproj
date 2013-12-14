@@ -415,7 +415,7 @@
     <ClCompile Include="inputLayout.d3d11.c" />
     <ClCompile Include="linux.c" />
     <ClCompile Include="pg.c" />
-    <ClCompile Include="pgGraphics.c" />
+    <ClCompile Include="graphics.c" />
     <ClCompile Include="pipelineStates.c" />
     <ClCompile Include="pipelineStates.d3d11.c" />
     <ClCompile Include="pipelineStates.gl3.c" />

@@ -5,25 +5,26 @@
 	using System.Linq;
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using Math;
 
 	/// <summary>
-	///   Represents the target of a rendering operation.
+	///     Represents the target of a rendering operation.
 	/// </summary>
 	public sealed class RenderTarget : GraphicsObject
 	{
 		/// <summary>
-		///   A value indicating whether this render target instance owns the native object and is responsible for
-		///   destroying it when it is no longer used.
+		///     A value indicating whether this render target instance owns the native object and is responsible for
+		///     destroying it when it is no longer used.
 		/// </summary>
 		private readonly bool _ownsNativeObject;
 
 		/// <summary>
-		///   The native render target instance.
+		///     The native render target instance.
 		/// </summary>
 		private readonly IntPtr _renderTarget;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="renderTarget">The native render target instance.</param>
@@ -35,7 +36,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="depthStencil">The depth stencil buffer that should be bound to the render target.</param>
@@ -60,7 +61,36 @@
 		}
 
 		/// <summary>
-		///   Clears the color buffers of the render target.
+		///     Gets the size of the render target.
+		/// </summary>
+		public Size Size
+		{
+			get
+			{
+				int width, height;
+				NativeMethods.GetRenderTargetSize(_renderTarget, out width, out height);
+				return new Size(width, height);
+			}
+		}
+
+		/// <summary>
+		///     Gets the width of the render target.
+		/// </summary>
+		public int Width
+		{
+			get { return Size.Width; }
+		}
+
+		/// <summary>
+		///     Gets the height of the render target.
+		/// </summary>
+		public int Height
+		{
+			get { return Size.Height; }
+		}
+
+		/// <summary>
+		///     Clears the color buffers of the render target.
 		/// </summary>
 		/// <param name="color">The color the color buffer should be set to.</param>
 		internal void ClearColor(Color color)
@@ -70,7 +100,7 @@
 		}
 
 		/// <summary>
-		///   Clears the depth stencil buffer of the render target.
+		///     Clears the depth stencil buffer of the render target.
 		/// </summary>
 		/// <param name="clearDepth">Indicates whether the depth buffer should be cleared.</param>
 		/// <param name="clearStencil">Indicates whether the stencil buffer should be cleared.</param>
@@ -83,7 +113,7 @@
 		}
 
 		/// <summary>
-		///   Binds the render target to the output merger state.
+		///     Binds the render target to the output merger state.
 		/// </summary>
 		internal void Bind()
 		{
@@ -92,7 +122,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -101,9 +131,9 @@
 		}
 
 #if DEBUG
-	/// <summary>
-	///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-	/// </summary>
+		/// <summary>
+		///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
 		protected override void OnRenamed()
 		{
 			if (_renderTarget != IntPtr.Zero)
@@ -112,7 +142,7 @@
 #endif
 
 		/// <summary>
-		///   Provides access to the native render target functions.
+		///     Provides access to the native render target functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]
@@ -125,11 +155,14 @@
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyRenderTarget")]
 			public static extern void DestroyRenderTarget(IntPtr renderTarget);
 
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetRenderTargetSize")]
+			public static extern void GetRenderTargetSize(IntPtr renderTarget, out int width, out int height);
+
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgClearColor")]
 			public static extern void ClearColor(IntPtr renderTarget, Color color);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgClearDepthStencil")]
-			public static extern void ClearDepthStencil(IntPtr renderTarget, bool clearDepth, bool clearnStencil, float depth,
+			public static extern void ClearDepthStencil(IntPtr renderTarget, bool clearDepth, bool clearStencil, float depth,
 														byte stencil);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindRenderTarget")]

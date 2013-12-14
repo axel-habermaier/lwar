@@ -6,37 +6,37 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a rendering output configuration that can be used to draw geometry into the configured render target.
+	///     Represents a rendering output configuration that can be used to draw geometry into the configured render target.
 	/// </summary>
 	public class RenderOutput : DisposableObject
 	{
 		/// <summary>
-		///   The slot that is used to pass the viewport buffer to the vertex shaders.
+		///     The slot that is used to pass the viewport buffer to the vertex shaders.
 		/// </summary>
 		private const int ViewportBufferSlot = 1;
 
 		/// <summary>
-		///   The graphics device that is used for rendering.
+		///     The graphics device that is used for rendering.
 		/// </summary>
 		private readonly GraphicsDevice _graphicsDevice;
 
 		/// <summary>
-		///   The constant buffer that holds the viewport-related data that is passed to each vertex shader.
+		///     The constant buffer that holds the viewport-related data that is passed to each vertex shader.
 		/// </summary>
 		private readonly ConstantBuffer _viewportBuffer;
 
 		/// <summary>
-		///   The viewport of the rendering operation.
+		///     The viewport of the rendering operation.
 		/// </summary>
 		private Rectangle _viewport;
 
 		/// <summary>
-		///   Indicates whether the viewport has changed and the constant buffer must be updated.
+		///     Indicates whether the viewport has changed and the constant buffer must be updated.
 		/// </summary>
 		private bool _viewportHasChanged = true;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for rendering.</param>
 		public RenderOutput(GraphicsDevice graphicsDevice)
@@ -48,17 +48,17 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the render target that should be rendered to.
+		///     Gets or sets the render target that should be rendered to.
 		/// </summary>
 		public RenderTarget RenderTarget { get; set; }
 
 		/// <summary>
-		///   Gets or sets the camera that should be used for rendering.
+		///     Gets or sets the camera that should be used for rendering.
 		/// </summary>
 		public Camera Camera { get; set; }
 
 		/// <summary>
-		///   Gets or sets the viewport of the rendering operation.
+		///     Gets or sets the viewport of the rendering operation.
 		/// </summary>
 		public Rectangle Viewport
 		{
@@ -74,12 +74,12 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the scissor area of the rendering operation.
+		///     Gets or sets the scissor area of the rendering operation.
 		/// </summary>
 		public Rectangle ScissorArea { get; set; }
 
 		/// <summary>
-		///   Draws primitiveCount-many primitives, starting at the given offset into the currently bound vertex buffers.
+		///     Draws primitiveCount-many primitives, starting at the given offset into the currently bound vertex buffers.
 		/// </summary>
 		/// <param name="effect">The effect that should be used for drawing.</param>
 		/// <param name="primitiveCount">The number of primitives that should be drawn.</param>
@@ -96,8 +96,8 @@
 		}
 
 		/// <summary>
-		///   Draws indexCount-many indices, starting at the given index offset into the currently bound index buffer, where the
-		///   vertex offset is added to each index before accessing the currently bound vertex buffers.
+		///     Draws indexCount-many indices, starting at the given index offset into the currently bound index buffer, where the
+		///     vertex offset is added to each index before accessing the currently bound vertex buffers.
 		/// </summary>
 		/// <param name="effect">The effect that should be used for drawing.</param>
 		/// <param name="indexCount">The number of indices to draw.</param>
@@ -115,7 +115,7 @@
 		}
 
 		/// <summary>
-		///   Clears the color buffers of the render target.
+		///     Clears the color buffers of the render target.
 		/// </summary>
 		/// <param name="color">The color the color buffer should be set to.</param>
 		public void ClearColor(Color color)
@@ -128,7 +128,7 @@
 		}
 
 		/// <summary>
-		///   Clears the depth buffer of the render target.
+		///     Clears the depth buffer of the render target.
 		/// </summary>
 		/// <param name="depth">The value the depth buffer should be set to.</param>
 		public void ClearDepth(float depth = 1.0f)
@@ -141,7 +141,7 @@
 		}
 
 		/// <summary>
-		///   Binds the required state to the graphics device.
+		///     Binds the required state to the graphics device.
 		/// </summary>
 		private unsafe void Bind()
 		{
@@ -169,7 +169,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
