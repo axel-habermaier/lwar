@@ -6,19 +6,19 @@
              xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls;assembly=Pegasus.UI"
              mc:Ignorable="d" 
              FontFamily="Liberation Mono" 
-             FontSize="11" 
+             FontSize="11"
              TextOptions.TextRenderingMode="Aliased" Background="Black" Title="lwar" Height="506.85" Width="871">
 	<StackPanel Background="Green" Margin="20">
 		<ContentControl Content="Bla" HorizontalAlignment="Center" VerticalAlignment="Center"></ContentControl>
 		<Canvas Background="Blue">
-			<Canvas.Margin>20</Canvas.Margin>
+			<Canvas.Margin>20</Canvas.Margin> 
 			<Border Width="110" Height="100" Background="#FF7F3FCD" Panel.ZIndex="6"></Border>
 			<Border Width="110" Height="100" Background="Yellow" Canvas.Left="-17" Canvas.Top="43" Panel.ZIndex="3"></Border>
 			<Border Width="110" Height="100" Background="#FFFF2300" Canvas.Left="33" Canvas.Top="27"></Border>
 			<Border Width="110" Height="100" Background="#FF3F59CD" Panel.ZIndex="-6" Canvas.Left="17" Canvas.Top="80"/>
 			<userInterface:UserControl1 Canvas.Left="224" Canvas.Top="27" />
 
-			<controls:RenderTargetPanel Canvas.Left="58" Canvas.Top="282" Height="73.46" Width="279" />
+			<controls:RenderTargetPanel Name="RTP" Canvas.Left="58" Canvas.Top="282" Height="73.46" Width="279" />
 		</Canvas>
 	</StackPanel>
 </Window>

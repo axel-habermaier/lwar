@@ -55,7 +55,7 @@
 
 			_typeInfoProvider = typeInfoProvider;
 			Root = XElement.Parse(File.ReadAllText(fileName));
-
+			
 			BuildNamespaceMap();
 			Transform();
 		}
@@ -395,6 +395,8 @@
 		{
 			foreach (var element in Root.Descendants().Where(e => e.Name.LocalName == "Create" || e.Name.LocalName == "Delegate"))
 			{
+				element.Add(new XAttribute("GenerateMember", element.Attribute("Name") != null));
+
 				if (element.Attribute("Name") != null)
 					continue;
 

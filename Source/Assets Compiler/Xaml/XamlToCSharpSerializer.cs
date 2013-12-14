@@ -68,12 +68,36 @@
 				_writer.AppendLine("public partial class {0} : {1}", className, baseType);
 				_writer.AppendBlockStatement(() =>
 				{
+					GenerateMembers();
+
 					_writer.AppendLine("public {0}()", className);
 					_writer.AppendBlockStatement(() => GenerateCode(_xamlRoot));
 				});
 			});
 
 			_writer.Newline();
+		}
+
+		/// <summary>
+		/// Generates the private member fields for named Xaml elements.
+		/// </summary>
+		void GenerateMembers()
+		{
+			var hasMembers = false;
+			foreach (var element in _xamlRoot.Descendants().Where(e => e.Name.LocalName == "Create" || e.Name.LocalName == "Delegate"))
+			{
+				if (element.Attribute("GenerateMember").Value.ToLower() == "false")
+					continue;
+
+				var type = element.Attribute("Type").Value;
+				var name = element.Attribute("Name").Value;
+
+				_writer.AppendLine("private readonly {0} {1};", type, name);
+				hasMembers = true;
+			}
+
+			if (hasMembers)
+				_writer.Newline();
 		}
 
 		/// <summary>
@@ -130,7 +154,9 @@
 			var delegateType = element.Attribute("Type").Value;
 			var parameters = element.Elements(XamlFile.DefaultNamespace + "Parameter").Select(e => e.Attribute("Name").Value);
 
-			_writer.Append("var {0} = new {1}(", variableName, delegateType);
+			if (element.Attribute("GenerateMember").Value.ToLower() == "false")
+				_writer.Append("var ");
+			_writer.Append("{0} = new {1}(", variableName, delegateType);
 			_writer.AppendLine("({0}) =>", String.Join(", ", parameters));
 			_writer.IncreaseIndent();
 			_writer.AppendLine("{{");
@@ -217,7 +243,9 @@
 			var parameters = element.Elements(XamlFile.DefaultNamespace + "Parameter").Select(GenerateValue).ToArray();
 
 			var type = element.Attribute("Type").Value;
-			_writer.Append("var {0} = new {1}", element.Attribute("Name").Value, type);
+			if (element.Attribute("GenerateMember").Value.ToLower() == "false")
+				_writer.Append("var ");
+			_writer.Append("{0} = new {1}", element.Attribute("Name").Value, type);
 
 			var typeParameters = element.Elements(XamlFile.DefaultNamespace + "TypeParameter").Select(e => e.Value).ToArray();
 			if (typeParameters.Length != 0)
