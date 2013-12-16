@@ -623,7 +623,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the section list with the specificed index matches the given texture and the current rendering
+		///   Checks whether the section list with the specified index matches the given texture and the current rendering
 		///   settings.
 		/// </summary>
 		/// <param name="sectionList">The index of the section list that should be checked.</param>
