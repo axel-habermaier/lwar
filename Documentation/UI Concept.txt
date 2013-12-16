@@ -1,8 +1,3 @@
-Xaml Compiler
-	- automatically compiles required image resources and fonts
-	- Copy all value converters, XAML code-behind, etc. to generated output 
-	- Resolve merged resource dictionaries
-
 WPF Object model (required parts):
 - Routed/Attached Events
 - Controls

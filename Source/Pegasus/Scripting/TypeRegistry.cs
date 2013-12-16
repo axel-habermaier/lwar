@@ -6,24 +6,23 @@
 	using Parsing;
 	using Parsing.BasicParsers;
 	using Parsing.Combinators;
-	using Platform;
 	using Platform.Input;
 	using Platform.Logging;
 
 	/// <summary>
-	///   Manages the types that can be used for command parameters and cvar values. All enumerations types as well as most C#
-	///   built-in types and common .NET and Pegasus framework types are supported automatically. Enumeration types can also be
-	///   registered, in which case they overwrite the defaults.
+	///     Manages the types that can be used for command parameters and cvar values. All enumerations types as well as most C#
+	///     built-in types and common .NET and Pegasus framework types are supported automatically. Enumeration types can also be
+	///     registered, in which case they overwrite the defaults.
 	/// </summary>
 	public static class TypeRegistry
 	{
 		/// <summary>
-		///   Stores the registered type information.
+		///     Stores the registered type information.
 		/// </summary>
 		private static readonly Dictionary<Type, TypeInfo> RegisteredTypes = new Dictionary<Type, TypeInfo>();
 
 		/// <summary>
-		///   Initializes the type and registers all built-in types.
+		///     Initializes the type and registers all built-in types.
 		/// </summary>
 		static TypeRegistry()
 		{
@@ -58,15 +57,15 @@
 		}
 
 		/// <summary>
-		///   Registers the given type.
+		///     Registers the given type.
 		/// </summary>
 		/// <typeparam name="T">The type that should be registered.</typeparam>
 		/// <param name="parser">A parser that parses an input string into the given type.</param>
 		/// <param name="description">A more user-friendly description of the type. If null, the C# type name is used.</param>
 		/// <param name="toString">Converts a value of the type to a string. If null, object.ToString() is used.</param>
 		/// <param name="examples">
-		///   A list of example values for the type that can be parsed by the parser. Can only contain zero elements for
-		///   enumeration types, where a list of all enumeration literals can be generated automatically.
+		///     A list of example values for the type that can be parsed by the parser. Can only contain zero elements for
+		///     enumeration types, where a list of all enumeration literals can be generated automatically.
 		/// </param>
 		public static void Register<T>(Parser<T> parser, string description, Func<T, string> toString, params string[] examples)
 		{
@@ -92,7 +91,7 @@
 		}
 
 		/// <summary>
-		///   Gets a parser for the given type.
+		///     Gets a parser for the given type.
 		/// </summary>
 		/// <typeparam name="T">The type for which the parser should be returned.</typeparam>
 		internal static Parser<object> GetParser<T>()
@@ -101,7 +100,7 @@
 		}
 
 		/// <summary>
-		///   Gets a parser for the given type.
+		///     Gets a parser for the given type.
 		/// </summary>
 		/// <param name="type">The type for which the parser should be returned.</param>
 		internal static Parser<object> GetParser(Type type)
@@ -120,7 +119,7 @@
 		}
 
 		/// <summary>
-		///   Gets the user-friendly description of the given type.
+		///     Gets the user-friendly description of the given type.
 		/// </summary>
 		/// <typeparam name="T">The type for which the user-friendly description should be returned.</typeparam>
 		internal static string GetDescription<T>()
@@ -129,7 +128,7 @@
 		}
 
 		/// <summary>
-		///   Gets the user-friendly description of the given type.
+		///     Gets the user-friendly description of the given type.
 		/// </summary>
 		/// <param name="type">The type for which the user-friendly description should be returned.</param>
 		internal static string GetDescription(Type type)
@@ -148,7 +147,7 @@
 		}
 
 		/// <summary>
-		///   Gets the examples for the given type.
+		///     Gets the examples for the given type.
 		/// </summary>
 		/// <typeparam name="T">The type for which the examples should be returned.</typeparam>
 		internal static IEnumerable<string> GetExamples<T>()
@@ -157,7 +156,7 @@
 		}
 
 		/// <summary>
-		///   Gets the examples for the given type.
+		///     Gets the examples for the given type.
 		/// </summary>
 		/// <param name="type">The type for which the examples should be returned.</param>
 		internal static IEnumerable<string> GetExamples(Type type)
@@ -176,7 +175,7 @@
 		}
 
 		/// <summary>
-		///   Gets the string representation of the given value.
+		///     Gets the string representation of the given value.
 		/// </summary>
 		/// <param name="value">The value for which the string representation should be returned.</param>
 		internal static string ToString(object value)
@@ -205,12 +204,12 @@
 		}
 
 		/// <summary>
-		///   Stores the information about a registered type.
+		///     Stores the information about a registered type.
 		/// </summary>
 		private struct TypeInfo
 		{
 			/// <summary>
-			///   Initializes a new instance.
+			///     Initializes a new instance.
 			/// </summary>
 			/// <param name="parser">The parser for the type.</param>
 			/// <param name="description">A user-friendly description of the type.</param>
@@ -231,22 +230,22 @@
 			}
 
 			/// <summary>
-			///   Gets the parser for the type.
+			///     Gets the parser for the type.
 			/// </summary>
 			public Parser<object> Parser { get; private set; }
 
 			/// <summary>
-			///   Gets the user-friendly description of the type.
+			///     Gets the user-friendly description of the type.
 			/// </summary>
 			public string Description { get; private set; }
 
 			/// <summary>
-			///   Gets the examples of the type.
+			///     Gets the examples of the type.
 			/// </summary>
 			public string[] Examples { get; private set; }
 
 			/// <summary>
-			///   Gets a function that converts an instance of the type into a string.
+			///     Gets a function that converts an instance of the type into a string.
 			/// </summary>
 			public Func<object, string> ToDisplayString { get; private set; }
 		}

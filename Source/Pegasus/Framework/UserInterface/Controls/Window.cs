@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface.Controls
 {
 	using System;
+	using System.Diagnostics;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
@@ -11,7 +12,7 @@
 	/// <summary>
 	///     Represents an operating system window that hosts UI elements.
 	/// </summary>
-	public abstract class Window : ContentControl, IDisposable
+	public class Window : ContentControl, IDisposable
 	{
 		/// <summary>
 		///     The application the window belongs to.
@@ -19,14 +20,14 @@
 		private Application _application;
 
 		/// <summary>
-		///     The swap chain that is used to render the window's contents.
+		///     Gets the swap chain that is used to render the window's contents.
 		/// </summary>
-		private SwapChain _swapChain;
+		internal SwapChain SwapChain { get; private set; }
 
 		/// <summary>
-		///     Gets the native operating system window that is used to display the UI.
+		///     The native operating system window that is used to display the UI.
 		/// </summary>
-		internal NativeWindow NativeWindow { get; private set; }
+		private NativeWindow _window;
 
 		/// <summary>
 		///     The window's title.
@@ -59,38 +60,56 @@
 		private RenderOutput _output;
 
 		/// <summary>
-		///     Opens the window.
+		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="application">The application the window belongs to.</param>
-		internal void Open(Application application)
+		public Window()
 		{
-			Assert.ArgumentNotNull(application);
-			Assert.That(!IsOpen, "The window is already open.");
-
-			_application = application;
-
-			NativeWindow = new NativeWindow(Title, Position, Size, Mode);
-			_swapChain = new SwapChain(application.GraphicsDevice, NativeWindow, false, NativeWindow.Size);
-			_output = new RenderOutput(application.GraphicsDevice)
-			{
-				RenderTarget = _swapChain.BackBuffer,
-				Camera = new Camera2D(application.GraphicsDevice)
-			};
-
-			IsOpen = true;
-			Template = DefaultTemplate;
 		}
 
 		/// <summary>
-		///     Processes all pending window events.
+		///     Initializes a new instance.
 		/// </summary>
-		public void ProcessEvents()
+		/// <param name="title">The title of the window.</param>
+		/// <param name="position">The screen position of the window's top left corner.</param>
+		/// <param name="size">The size of the window's rendering area.</param>
+		/// <param name="mode">Indicates the window mode.</param>
+		internal Window(string title, Vector2i position, Size size, WindowMode mode)
 		{
-			NativeWindow.ProcessEvents();
+			Assert.ArgumentNotNull(title);
 
-			_size = NativeWindow.Size;
-			_position = NativeWindow.Position;
-			_mode = NativeWindow.Mode;
+			Title = title;
+			Position = position;
+			Size = size;
+			Mode = mode;
+		}
+
+		/// <summary>
+		///     Gets the native operating system window that is used to display the UI.
+		/// </summary>
+		internal NativeWindow NativeWindow
+		{
+			get
+			{
+				CheckNativeWindowOpen();
+				return _window;
+			}
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the mouse is currently captured by the window.
+		/// </summary>
+		public bool MouseCaptured
+		{
+			get
+			{
+				CheckNativeWindowOpen();
+				return _window.MouseCaptured;
+			}
+			set
+			{
+				CheckNativeWindowOpen();
+				_window.MouseCaptured = value;
+			}
 		}
 
 		/// <summary>
@@ -100,8 +119,26 @@
 		{
 			get
 			{
-				Assert.NotNull(NativeWindow, "The window has not yet been opened.");
-				return NativeWindow.Focused;
+				CheckNativeWindowOpen();
+				return _window.Focused;
+			}
+		}
+
+		/// <summary>
+		///     Raised when the user requested the window to be closed. The window is not actually closed
+		///     until Dispose() or Close() is called.
+		/// </summary>
+		public event Action Closing
+		{
+			add
+			{
+				CheckNativeWindowOpen();
+				_window.Closing += value;
+			}
+			remove
+			{
+				CheckNativeWindowOpen();
+				_window.Closing -= value;
 			}
 		}
 
@@ -118,8 +155,8 @@
 
 				_title = value;
 
-				if (NativeWindow != null)
-					NativeWindow.Title = value;
+				if (_window != null)
+					_window.Title = value;
 			}
 		}
 
@@ -136,8 +173,8 @@
 
 				_size = value;
 
-				if (NativeWindow != null)
-					NativeWindow.Size = value;
+				if (_window != null)
+					_window.Size = value;
 			}
 		}
 
@@ -154,8 +191,8 @@
 
 				_position = value;
 
-				if (NativeWindow != null)
-					NativeWindow.Position = value;
+				if (_window != null)
+					_window.Position = value;
 			}
 		}
 
@@ -172,9 +209,46 @@
 
 				_mode = value;
 
-				if (NativeWindow != null)
-					NativeWindow.Mode = value;
+				if (_window != null)
+					_window.Mode = value;
 			}
+		}
+
+		/// <summary>
+		///     Opens the window.
+		/// </summary>
+		/// <param name="application">The application the window belongs to.</param>
+		internal void Open(Application application)
+		{
+			Assert.ArgumentNotNull(application);
+			Assert.That(!IsOpen, "The window is already open.");
+
+			_application = application;
+
+			_window = new NativeWindow(Title, Position, Size, Mode);
+			SwapChain = new SwapChain(application.GraphicsDevice, _window, false, _window.Size);
+			_output = new RenderOutput(application.GraphicsDevice)
+			{
+				RenderTarget = SwapChain.BackBuffer,
+				Camera = new Camera2D(application.GraphicsDevice)
+			};
+
+			IsOpen = true;
+			Template = DefaultTemplate;
+
+			UpdateLayout();
+		}
+
+		/// <summary>
+		///     Processes all pending window events.
+		/// </summary>
+		public void ProcessEvents()
+		{
+			_window.ProcessEvents();
+
+			_size = _window.Size;
+			_position = _window.Position;
+			_mode = _window.Mode;
 		}
 
 		/// <summary>
@@ -186,8 +260,8 @@
 
 			_output.Camera.SafeDispose();
 			_output.SafeDispose();
-			_swapChain.SafeDispose();
-			NativeWindow.SafeDispose();
+			SwapChain.SafeDispose();
+			_window.SafeDispose();
 
 			IsOpen = false;
 		}
@@ -212,6 +286,7 @@
 		{
 			Log.Error("Finalizer runs for an instance of '{0}'.", GetType().FullName);
 		}
+
 #endif
 
 		/// <summary>
@@ -226,6 +301,33 @@
 			var availableSize = new SizeD(size.Width, size.Height);
 			Measure(availableSize);
 			Arrange(new RectangleD(0, 0, availableSize));
+		}
+
+		/// <summary>
+		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
+		/// </summary>
+		/// <param name="availableSize">
+		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
+		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
+		///   element might be able to use scrolling in this case.
+		/// </param>
+		protected override SizeD MeasureCore(SizeD availableSize)
+		{
+			return availableSize;
+		}
+
+		/// <summary>
+		///   Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
+		///   element. If this value is smaller than the given size, the UI element's alignment properties position it
+		///   appropriately.
+		/// </summary>
+		/// <param name="finalSize">
+		///   The final area allocated by the UI element's parent that the UI element should use to arrange
+		///   itself and its children.
+		/// </param>
+		protected override SizeD ArrangeCore(SizeD finalSize)
+		{
+			return finalSize;
 		}
 
 		/// <summary>
@@ -246,6 +348,7 @@
 			var viewport = new Rectangle(0, 0, Size);
 			_output.Camera.Viewport = viewport;
 			_output.Viewport = viewport;
+
 			_output.ClearColor(Background);
 			_output.ClearDepth();
 
@@ -255,7 +358,16 @@
 			GetVisualChild(0).Draw(spriteBatch);
 
 			spriteBatch.DrawBatch(_output);
-			_swapChain.Present();
+			SwapChain.Present();
+		}
+
+		/// <summary>
+		///     In debug builds, checks whether the native window is open.
+		/// </summary>
+		[Conditional("DEBUG")]
+		private void CheckNativeWindowOpen()
+		{
+			Assert.NotNull(_window, "The window has not yet been opened.");
 		}
 	}
 }

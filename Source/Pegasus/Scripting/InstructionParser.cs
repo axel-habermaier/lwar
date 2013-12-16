@@ -6,32 +6,32 @@
 	using Parsing.Combinators;
 
 	/// <summary>
-	///   Parses an instruction.
+	///     Parses an instruction.
 	/// </summary>
 	/// <remarks>
-	///   This parser is written in a very low-level way. There are two reasons for this: First of all, the parser is
-	///   highly dynamic, meaning that it does not parse a statically defined grammar. Instead, depending on the cvar name or
-	///   command name that is found at the beginning of the input, the remainder of the parser is configured dynamically to
-	///   parse exactly the possible arguments of a cvar or command instruction. Therefore, the parser is already responsible
-	///   for the type checks of the arguments. Secondly, the requirement that the cvar/command name and all arguments are
-	///   separated by white space requires some backtracking by the parser, making it harder to generate good error
-	///   messages. Most of the complexity of this parser is a result of the generation of good error messages.
+	///     This parser is written in a very low-level way. There are two reasons for this: First of all, the parser is
+	///     highly dynamic, meaning that it does not parse a statically defined grammar. Instead, depending on the cvar name or
+	///     command name that is found at the beginning of the input, the remainder of the parser is configured dynamically to
+	///     parse exactly the possible arguments of a cvar or command instruction. Therefore, the parser is already responsible
+	///     for the type checks of the arguments. Secondly, the requirement that the cvar/command name and all arguments are
+	///     separated by white space requires some backtracking by the parser, making it harder to generate good error
+	///     messages. Most of the complexity of this parser is a result of the generation of good error messages.
 	/// </remarks>
 	internal class InstructionParser : Parser<Instruction>
 	{
 		/// <summary>
-		///   A parser for identifiers.
+		///     A parser for identifiers.
 		/// </summary>
 		private static readonly Parser<string> Identifier = String(c => Char.IsLetter(c) || c == '_',
 																   c => Char.IsLetterOrDigit(c) || c == '_', "identifier");
 
 		/// <summary>
-		///   Skips any number of whitespaces and then expects the end of the input.
+		///     Skips any number of whitespaces and then expects the end of the input.
 		/// </summary>
 		private static readonly SkipParser EndOfInstruction = ~(WhiteSpaces + ~EndOfInput);
 
 		/// <summary>
-		///   Parses the given input string and returns the instruction.
+		///     Parses the given input string and returns the instruction.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<Instruction> Parse(InputStream inputStream)
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Parses a cvar instruction.
+		///     Parses a cvar instruction.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		/// <param name="cvar">The cvar referenced by the instruction.</param>
@@ -84,7 +84,7 @@
 		}
 
 		/// <summary>
-		///   Parses a command invocation.
+		///     Parses a command invocation.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		/// <param name="command">The command referenced by the instruction.</param>
@@ -95,7 +95,7 @@
 
 			for (var i = 0; i < parameters.Length; ++i)
 			{
-				// We've reached the end of the input, and all subsequent parameters should use their default value, we're done
+				// We've reached the end of the input, and all subsequent parameters should use their default value, so we're done
 				if (inputStream.WhiteSpaceUntilEndOfInput() && parameters[i].HasDefaultValue)
 				{
 					for (var j = i; j < parameters.Length; ++j)
