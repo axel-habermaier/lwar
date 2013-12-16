@@ -5,12 +5,12 @@
 	using System.Diagnostics;
 
 	/// <summary>
-	///   Provides extension methods for classes implementing the IDisposable interface.
+	///     Provides extension methods for classes implementing the IDisposable interface.
 	/// </summary>
 	public static class DisposableExtensions
 	{
 		/// <summary>
-		///   Disposes all objects contained in the enumerable if the enumerable is not null.
+		///     Disposes all objects contained in the enumerable if the enumerable is not null.
 		/// </summary>
 		/// <param name="enumerable">The enumerabble that should be disposed.</param>
 		[DebuggerHidden]
@@ -24,7 +24,7 @@
 		}
 
 		/// <summary>
-		///   Disposes all objects contained in the enumerable if the enumerable is not null.
+		///     Disposes all objects contained in the enumerable if the enumerable is not null.
 		/// </summary>
 		/// <param name="enumerable">The enumerabble that should be disposed.</param>
 		[DebuggerHidden]
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object if it is not null.
+		///     Disposes the object if it is not null.
 		/// </summary>
 		/// <param name="obj">The object that should be disposed.</param>
 		[DebuggerHidden]
@@ -49,7 +49,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object if it is not null and has not yet been disposed.
+		///     Disposes the object if it is not null and has not yet been disposed.
 		/// </summary>
 		/// <param name="obj">The object that should be disposed.</param>
 		[DebuggerHidden]
@@ -60,7 +60,7 @@
 		}
 
 		/// <summary>
-		///   Returns the pooled object to the pool the object if it is not null and has not yet been returned.
+		///     Returns the pooled object to the pool the object if it is not null and has not yet been returned.
 		/// </summary>
 		/// <typeparam name="T">The type of the pooled object.</typeparam>
 		/// <param name="obj">The object that should be returned.</param>

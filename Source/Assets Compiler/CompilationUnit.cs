@@ -6,22 +6,21 @@
 	using Assets;
 	using Assets.Attributes;
 	using Compilers;
-	using CSharp;
 	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a compilation unit that compiles all assets into a binary format.
+	///     Represents a compilation unit that compiles all assets into a binary format.
 	/// </summary>
 	public class CompilationUnit : DisposableObject
 	{
 		/// <summary>
-		///   The list of assets that are compiled by the compilation unit.
+		///     The list of assets that are compiled by the compilation unit.
 		/// </summary>
 		private readonly List<Asset> _assets = new List<Asset>();
 
 		/// <summary>
-		///   Loads all assets that should be compiled.
+		///     Loads all assets that should be compiled.
 		/// </summary>
 		public void LoadAssets()
 		{
@@ -42,7 +41,7 @@
 		}
 
 		/// <summary>
-		///   Searches for all types implementing the given interface or base class and returns an instance of each type.
+		///     Searches for all types implementing the given interface or base class and returns an instance of each type.
 		/// </summary>
 		/// <typeparam name="T">The interface or base class that is implemented by all returned instances.</typeparam>
 		private static T[] CreateTypeInstances<T>()
@@ -55,7 +54,7 @@
 		}
 
 		/// <summary>
-		///   Gets the names of all assets that should be compiled.
+		///     Gets the names of all assets that should be compiled.
 		/// </summary>
 		private string[] GetAssetNames()
 		{
@@ -70,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Creates all asset instances.
+		///     Creates all asset instances.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
 		/// <param name="attributes">The attributes that affect the compilation settings of some assets.</param>
@@ -84,7 +83,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether compilation settings could be uniquely determined for each asset.
+		///     Checks whether compilation settings could be uniquely determined for each asset.
 		/// </summary>
 		/// <param name="assets">The asset instances.</param>
 		/// <param name="assetNames">The asset names.</param>
@@ -109,7 +108,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -117,8 +116,8 @@
 		}
 
 		/// <summary>
-		///   Compiles all assets and returns the names of the assets that have been changed. Returns true to indicate that the
-		///   compilation of all assets has been successful.
+		///     Compiles all assets and returns the names of the assets that have been changed. Returns true to indicate that the
+		///     compilation of all assets has been successful.
 		/// </summary>
 		public bool Compile()
 		{
@@ -154,7 +153,7 @@
 		}
 
 		/// <summary>
-		///   Removes all compiled assets and temporary files.
+		///     Removes all compiled assets and temporary files.
 		/// </summary>
 		public void Clean()
 		{
@@ -173,7 +172,7 @@
 		}
 
 		/// <summary>
-		///   Adds a compiler to the compilation unit.
+		///     Adds a compiler to the compilation unit.
 		/// </summary>
 		/// <param name="asset">The compiler that should be added.</param>
 		private void Add(Asset asset)

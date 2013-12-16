@@ -9,32 +9,32 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Cross-compiles a C# shader method to HLSL.
+	///     Cross-compiles a C# shader method to HLSL.
 	/// </summary>
 	internal sealed class HlslCompiler : CrossCompiler
 	{
 		/// <summary>
-		///   The name of the shader output structure.
+		///     The name of the shader output structure.
 		/// </summary>
 		public const string OutputStructName = Configuration.ReservedInternalIdentifierPrefix + "OUTPUT";
 
 		/// <summary>
-		///   The name of the shader input structure.
+		///     The name of the shader input structure.
 		/// </summary>
 		public const string InputStructName = Configuration.ReservedInternalIdentifierPrefix + "INPUT";
 
 		/// <summary>
-		///   The name of the shader input variable.
+		///     The name of the shader input variable.
 		/// </summary>
 		public const string InputVariableName = Configuration.ReservedInternalIdentifierPrefix + "input";
 
 		/// <summary>
-		///   The name of the shader input variable.
+		///     The name of the shader input variable.
 		/// </summary>
 		public const string OutputVariableName = Configuration.ReservedInternalIdentifierPrefix + "output";
 
 		/// <summary>
-		///   Generates the shader code for shader literals.
+		///     Generates the shader code for shader literals.
 		/// </summary>
 		/// <param name="literal">The shader literal that should be generated.</param>
 		protected override void GenerateLiteral(ShaderLiteral literal)
@@ -61,7 +61,7 @@
 		}
 
 		/// <summary>
-		///   Generates the shader code for shader constant buffers.
+		///     Generates the shader code for shader constant buffers.
 		/// </summary>
 		/// <param name="constantBuffer">The constant buffer that should be generated.</param>
 		protected override void GenerateConstantBuffer(ConstantBuffer constantBuffer)
@@ -82,7 +82,7 @@
 		}
 
 		/// <summary>
-		///   Generates the shader code for texture objects.
+		///     Generates the shader code for texture objects.
 		/// </summary>
 		/// <param name="texture">The shader texture that should be generated.</param>
 		protected override void GenerateTextureObject(ShaderTexture texture)
@@ -93,7 +93,7 @@
 		}
 
 		/// <summary>
-		///   Generates the shader inputs if the shader is a vertex shader.
+		///     Generates the shader inputs if the shader is a vertex shader.
 		/// </summary>
 		/// <param name="inputs">The shader inputs that should be generated.</param>
 		protected override void GenerateVertexShaderInputs(IEnumerable<ShaderParameter> inputs)
@@ -102,7 +102,7 @@
 		}
 
 		/// <summary>
-		///   Generates the shader outputs if the shader is a vertex shader.
+		///     Generates the shader outputs if the shader is a vertex shader.
 		/// </summary>
 		/// <param name="outputs">The shader outputs that should be generated.</param>
 		protected override void GenerateVertexShaderOutputs(IEnumerable<ShaderParameter> outputs)
@@ -119,7 +119,7 @@
 		}
 
 		/// <summary>
-		///   Generates the shader inputs if the shader is a fragment shader.
+		///     Generates the shader inputs if the shader is a fragment shader.
 		/// </summary>
 		/// <param name="inputs">The shader inputs that should be generated.</param>
 		protected override void GenerateFragmentShaderInputs(IEnumerable<ShaderParameter> inputs)
@@ -128,7 +128,7 @@
 		}
 
 		/// <summary>
-		///   Generates the shader outputs if the shader is a fragment shader.
+		///     Generates the shader outputs if the shader is a fragment shader.
 		/// </summary>
 		/// <param name="outputs">The shader outputs that should be generated.</param>
 		protected override void GenerateFragmentShaderOutputs(IEnumerable<ShaderParameter> outputs)
@@ -148,7 +148,7 @@
 		}
 
 		/// <summary>
-		///   Generates the shader inputs.
+		///     Generates the shader inputs.
 		/// </summary>
 		private void GenerateInputs(IEnumerable<ShaderParameter> inputs)
 		{
@@ -161,7 +161,7 @@
 		}
 
 		/// <summary>
-		///   Generates the shader entry point.
+		///     Generates the shader entry point.
 		/// </summary>
 		protected override void GenerateMainMethod()
 		{
@@ -179,7 +179,7 @@
 		}
 
 		/// <summary>
-		///   Gets the corresponding HLSL type.
+		///     Gets the corresponding HLSL type.
 		/// </summary>
 		/// <param name="type">The data type that should be converted.</param>
 		protected override string ToShaderType(DataType type)
@@ -210,7 +210,7 @@
 		}
 
 		/// <summary>
-		///   Gets the corresponding HLSL semantics.
+		///     Gets the corresponding HLSL semantics.
 		/// </summary>
 		/// <param name="semantics">The data semantics that should be converted.</param>
 		private static string ToHlsl(DataSemantics semantics)
@@ -243,7 +243,7 @@
 		}
 
 		/// <summary>
-		///   Gets the token for the given intrinsic function.
+		///     Gets the token for the given intrinsic function.
 		/// </summary>
 		/// <param name="intrinsic">The intrinsic function for which the token should be returned.</param>
 		protected override string GetToken(Intrinsic intrinsic)
@@ -258,7 +258,7 @@
 		}
 
 		/// <summary>
-		///   Gets the sampler name for the given texture name.
+		///     Gets the sampler name for the given texture name.
 		/// </summary>
 		/// <param name="textureName">The texture name that should be converted.</param>
 		private static string GetSamplerName(string textureName)
@@ -343,7 +343,7 @@
 		}
 
 		/// <summary>
-		///   Extracts the column and row indices from the list of indexer arguments.
+		///     Extracts the column and row indices from the list of indexer arguments.
 		/// </summary>
 		/// <param name="indexerArguments">The list of indexer arguments.</param>
 		/// <param name="first">The expression that should be used as the first index.</param>

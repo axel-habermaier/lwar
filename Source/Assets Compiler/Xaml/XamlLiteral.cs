@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   Represents a literal Xaml value.
+	///     Represents a literal Xaml value.
 	/// </summary>
 	internal struct XamlLiteral
 	{

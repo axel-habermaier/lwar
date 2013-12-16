@@ -3,37 +3,37 @@
 	using System;
 
 	/// <summary>
-	///   Represents an effect that provides shaders for drawing operations.
+	///     Represents an effect that provides shaders for drawing operations.
 	/// </summary>
 	public abstract class Effect
 	{
 		/// <summary>
-		///   The position of the camera in world space.
+		///     The position of the camera in world space.
 		/// </summary>
 		protected readonly Vector3 CameraPosition;
 
 		/// <summary>
-		///   The projection matrix that should be used to project the geometry onto the screen.
+		///     The projection matrix that should be used to project the geometry onto the screen.
 		/// </summary>
 		protected readonly Matrix Projection;
 
 		/// <summary>
-		///   The view matrix of the camera that should be used to render the geometry.
+		///     The view matrix of the camera that should be used to render the geometry.
 		/// </summary>
 		protected readonly Matrix View;
 
 		/// <summary>
-		///   The view matrix multiplied with the projection matrix.
+		///     The view matrix multiplied with the projection matrix.
 		/// </summary>
 		protected readonly Matrix ViewProjection;
 
 		/// <summary>
-		///   The size of the viewport.
+		///     The size of the viewport.
 		/// </summary>
 		protected readonly Vector2 ViewportSize;
 
 		/// <summary>
-		///   Computes the sine of the given value.
+		///     Computes the sine of the given value.
 		/// </summary>
 		/// <param name="value">The value (in radians) whose sine should be computed.</param>
 		[MapsTo(Intrinsic.Sine)]
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Computes the cosine of the given value.
+		///     Computes the cosine of the given value.
 		/// </summary>
 		/// <param name="value">The value (in radians) whose cosine should be computed.</param>
 		[MapsTo(Intrinsic.Cosine)]
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		///   Computes the tangent of the given value.
+		///     Computes the tangent of the given value.
 		/// </summary>
 		/// <param name="value">The value (in radians) whose tangent should be computed.</param>
 		[MapsTo(Intrinsic.Tangent)]
@@ -63,7 +63,7 @@
 		}
 
 		/// <summary>
-		///   Computes the arc sine of the given value.
+		///     Computes the arc sine of the given value.
 		/// </summary>
 		/// <param name="value">The value (in range [-1, 1]) whose arc sine should be computed.</param>
 		[MapsTo(Intrinsic.ArcSine)]
@@ -73,7 +73,7 @@
 		}
 
 		/// <summary>
-		///   Computes the arc cosine of the given value.
+		///     Computes the arc cosine of the given value.
 		/// </summary>
 		/// <param name="value">The value (in range [-1, 1]) whose arc cosine should be computed.</param>
 		[MapsTo(Intrinsic.ArcCosine)]
@@ -83,7 +83,7 @@
 		}
 
 		/// <summary>
-		///   Computes the arc tangent of the given value.
+		///     Computes the arc tangent of the given value.
 		/// </summary>
 		/// <param name="value">The value (in range [-1, 1]) whose arc tangent should be computed.</param>
 		[MapsTo(Intrinsic.ArcTangent)]
@@ -93,7 +93,7 @@
 		}
 
 		/// <summary>
-		///   Returns the smallest integer value that is greater than or equal to the specified value.
+		///     Returns the smallest integer value that is greater than or equal to the specified value.
 		/// </summary>
 		/// <param name="value">The value that should be rounded up.</param>
 		[MapsTo(Intrinsic.Ceil)]
@@ -103,7 +103,7 @@
 		}
 
 		/// <summary>
-		///   Returns the largest integer that is less than or equal to the specified value.
+		///     Returns the largest integer that is less than or equal to the specified value.
 		/// </summary>
 		/// <param name="value">The value that should be rounded down.</param>
 		[MapsTo(Intrinsic.Floor)]
@@ -113,7 +113,7 @@
 		}
 
 		/// <summary>
-		///   Clamps the specified value to the specified minimum and maximum range.
+		///     Clamps the specified value to the specified minimum and maximum range.
 		/// </summary>
 		/// <param name="value">The value that should be clamped.</param>
 		/// <param name="min">The minimum value that the given value should be clamped to.</param>
@@ -125,7 +125,7 @@
 		}
 
 		/// <summary>
-		///   Returns the square root of the given value.
+		///     Returns the square root of the given value.
 		/// </summary>
 		/// <param name="value">The value for which the square root should be returned.</param>
 		[MapsTo(Intrinsic.SquareRoot)]
@@ -135,7 +135,7 @@
 		}
 
 		/// <summary>
-		///   Returns the inverse square root of the given value.
+		///     Returns the inverse square root of the given value.
 		/// </summary>
 		/// <param name="value">The value for which the inverse square root should be returned.</param>
 		[MapsTo(Intrinsic.InverseSquareRoot)]
@@ -145,7 +145,7 @@
 		}
 
 		/// <summary>
-		///   Returns the base-e exponential of the specified value.
+		///     Returns the base-e exponential of the specified value.
 		/// </summary>
 		/// <param name="value">The value for which the base-e exponential should be returned.</param>
 		[MapsTo(Intrinsic.Exponential)]
@@ -155,7 +155,7 @@
 		}
 
 		/// <summary>
-		///   Returns the specified value raised to the specified power.
+		///     Returns the specified value raised to the specified power.
 		/// </summary>
 		/// <param name="value">The value that should be raised to the specified power.</param>
 		/// <param name="power">The power that the specifiec value should be raised to.</param>
@@ -166,7 +166,7 @@
 		}
 
 		/// <summary>
-		///   Returns the absolute value of the specified value.
+		///     Returns the absolute value of the specified value.
 		/// </summary>
 		/// <param name="value">The value for which the absolute value should be returned.</param>
 		[MapsTo(Intrinsic.Absolute)]
@@ -176,7 +176,7 @@
 		}
 
 		/// <summary>
-		///   Rounds the specified value to the nearest integer.
+		///     Rounds the specified value to the nearest integer.
 		/// </summary>
 		/// <param name="value">The value that should be rounded to the nearest integer.</param>
 		[MapsTo(Intrinsic.Round)]
@@ -186,7 +186,7 @@
 		}
 
 		/// <summary>
-		///   Selects the greater of x and y.
+		///     Selects the greater of x and y.
 		/// </summary>
 		/// <param name="value1">The first value that should be selected if it is greater than the second value.</param>
 		/// <param name="value2">The second value that should be selected if it is greater than the first value.</param>
@@ -197,7 +197,7 @@
 		}
 
 		/// <summary>
-		///   Selects the lesser of x and y.
+		///     Selects the lesser of x and y.
 		/// </summary>
 		/// <param name="value1">The first value that should be selected if it is less than the second value.</param>
 		/// <param name="value2">The second value that should be selected if it is less than the first value.</param>
@@ -208,7 +208,7 @@
 		}
 
 		/// <summary>
-		///   Returns a distance scalar between two vectors.
+		///     Returns a distance scalar between two vectors.
 		/// </summary>
 		/// <param name="origin">The origin of the distance calculation.</param>
 		/// <param name="target">The target that determines the distance.</param>
@@ -219,7 +219,7 @@
 		}
 
 		/// <summary>
-		///   Returns a distance scalar between two vectors.
+		///     Returns a distance scalar between two vectors.
 		/// </summary>
 		/// <param name="origin">The origin of the distance calculation.</param>
 		/// <param name="target">The target that determines the distance.</param>
@@ -230,7 +230,7 @@
 		}
 
 		/// <summary>
-		///   Returns a distance scalar between two vectors.
+		///     Returns a distance scalar between two vectors.
 		/// </summary>
 		/// <param name="origin">The origin of the distance calculation.</param>
 		/// <param name="target">The target that determines the distance.</param>
@@ -241,7 +241,7 @@
 		}
 
 		/// <summary>
-		///   Returns the dot product of the two vectors.
+		///     Returns the dot product of the two vectors.
 		/// </summary>
 		/// <param name="vector1">The first vector of the dot product.</param>
 		/// <param name="vector2">The second vector of the dot product.</param>
@@ -252,7 +252,7 @@
 		}
 
 		/// <summary>
-		///   Returns the dot product of the two vectors.
+		///     Returns the dot product of the two vectors.
 		/// </summary>
 		/// <param name="vector1">The first vector of the dot product.</param>
 		/// <param name="vector2">The second vector of the dot product.</param>
@@ -263,7 +263,7 @@
 		}
 
 		/// <summary>
-		///   Returns the dot product of the two vectors.
+		///     Returns the dot product of the two vectors.
 		/// </summary>
 		/// <param name="vector1">The first vector of the dot product.</param>
 		/// <param name="vector2">The second vector of the dot product.</param>
@@ -274,7 +274,7 @@
 		}
 
 		/// <summary>
-		///   Returns the cross product of the two vectors.
+		///     Returns the cross product of the two vectors.
 		/// </summary>
 		/// <param name="vector1">The first vector of the cross product.</param>
 		/// <param name="vector2">The second vector of the cross product.</param>
@@ -285,7 +285,7 @@
 		}
 
 		/// <summary>
-		///   Returns the cross product of the two vectors.
+		///     Returns the cross product of the two vectors.
 		/// </summary>
 		/// <param name="vector1">The first vector of the cross product.</param>
 		/// <param name="vector2">The second vector of the cross product.</param>
@@ -296,7 +296,7 @@
 		}
 
 		/// <summary>
-		///   Returns the cross product of the two vectors.
+		///     Returns the cross product of the two vectors.
 		/// </summary>
 		/// <param name="vector1">The first vector of the cross product.</param>
 		/// <param name="vector2">The second vector of the cross product.</param>
@@ -307,7 +307,7 @@
 		}
 
 		/// <summary>
-		///   Normalizes the given vector to unit length and returns the result.
+		///     Normalizes the given vector to unit length and returns the result.
 		/// </summary>
 		/// <param name="vector">The vector that should be normalized.</param>
 		[MapsTo(Intrinsic.Normalize)]
@@ -317,7 +317,7 @@
 		}
 
 		/// <summary>
-		///   Normalizes the given vector to unit length and returns the result.
+		///     Normalizes the given vector to unit length and returns the result.
 		/// </summary>
 		/// <param name="vector">The vector that should be normalized.</param>
 		[MapsTo(Intrinsic.Normalize)]
@@ -327,7 +327,7 @@
 		}
 
 		/// <summary>
-		///   Normalizes the given vector to unit length and returns the result.
+		///     Normalizes the given vector to unit length and returns the result.
 		/// </summary>
 		/// <param name="vector">The vector that should be normalized.</param>
 		[MapsTo(Intrinsic.Normalize)]

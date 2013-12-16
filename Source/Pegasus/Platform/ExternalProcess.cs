@@ -9,27 +9,27 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents external process.
+	///     Represents external process.
 	/// </summary>
 	public class ExternalProcess : DisposableObject
 	{
 		/// <summary>
-		///   The external process.
+		///     The external process.
 		/// </summary>
 		private readonly Process _process;
 
 		/// <summary>
-		///   The log entries generated during the execution of the process.
+		///     The log entries generated during the execution of the process.
 		/// </summary>
 		private ConcurrentQueue<LogEntry> _logEntries;
 
 		/// <summary>
-		///   Indicates whether the process is currently running.
+		///     Indicates whether the process is currently running.
 		/// </summary>
 		private bool _running;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="fileName">The file name of the external executable.</param>
 		/// <param name="commandLine">The command line arguments that should be passed to the executable.</param>
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Adds the message to the log entry queue.
+		///     Adds the message to the log entry queue.
 		/// </summary>
 		/// <param name="type">The type of the log entry.</param>
 		/// <param name="message">The message that should be added.</param>
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Runs the process.
+		///     Runs the process.
 		/// </summary>
 		public IEnumerable<LogEntry> Run()
 		{
@@ -78,7 +78,7 @@
 		}
 
 		/// <summary>
-		///   Runs the process.
+		///     Runs the process.
 		/// </summary>
 		/// <param name="exitCode">Returns the exit code of the process.</param>
 		public IEnumerable<LogEntry> Run(out int exitCode)
@@ -106,7 +106,7 @@
 		}
 
 		/// <summary>
-		///   Asynchronously runs the process.
+		///     Asynchronously runs the process.
 		/// </summary>
 		public Task<IEnumerable<LogEntry>> RunAsync()
 		{
@@ -133,7 +133,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

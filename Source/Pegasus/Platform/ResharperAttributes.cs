@@ -19,12 +19,12 @@ namespace Pegasus.Platform
 	using System;
 
 	/// <summary>
-	///   Indicates that the marked method builds string by format pattern and (optional) arguments.
-	///   Parameter, which contains format string, should be given in constructor.
-	///   The format string should be in <see cref="string.Format(IFormatProvider,string,object[])" /> -like form
+	///     Indicates that the marked method builds string by format pattern and (optional) arguments.
+	///     Parameter, which contains format string, should be given in constructor.
+	///     The format string should be in <see cref="string.Format(IFormatProvider,string,object[])" /> -like form
 	/// </summary>
 	/// <example>
-	///   <code>
+	///     <code>
 	/// [StringFormatMethod("message")]
 	/// public void ShowError(string message, params object[] args)
 	/// {
@@ -40,7 +40,7 @@ namespace Pegasus.Platform
 	public sealed class StringFormatMethodAttribute : Attribute
 	{
 		/// <summary>
-		///   Initializes new instance of StringFormatMethodAttribute
+		///     Initializes new instance of StringFormatMethodAttribute
 		/// </summary>
 		/// <param name="formatParameterName">Specifies which parameter of an annotated method should be treated as format-string</param>
 		public StringFormatMethodAttribute(string formatParameterName)
@@ -49,18 +49,18 @@ namespace Pegasus.Platform
 		}
 
 		/// <summary>
-		///   Gets format parameter name
+		///     Gets format parameter name
 		/// </summary>
 		[UsedImplicitly]
 		public string FormatParameterName { get; private set; }
 	}
 
 	/// <summary>
-	///   Indicates that the value of the marked element could be <c>null</c> sometimes,
-	///   so the check for <c>null</c> is necessary before its usage.
+	///     Indicates that the value of the marked element could be <c>null</c> sometimes,
+	///     so the check for <c>null</c> is necessary before its usage.
 	/// </summary>
 	/// <example>
-	///   <code>
+	///     <code>
 	/// [CanBeNull]
 	/// public object Test()
 	/// {
@@ -82,10 +82,10 @@ namespace Pegasus.Platform
 	}
 
 	/// <summary>
-	///   Indicates that the value of the marked element could never be <c>null</c>
+	///     Indicates that the value of the marked element could never be <c>null</c>
 	/// </summary>
 	/// <example>
-	///   <code>
+	///     <code>
 	/// [NotNull]
 	/// public object Foo()
 	/// {
@@ -101,11 +101,11 @@ namespace Pegasus.Platform
 	}
 
 	/// <summary>
-	///   When applied to a target attribute, specifies a requirement for any type marked with
-	///   the target attribute to implement or inherit specific type or types.
+	///     When applied to a target attribute, specifies a requirement for any type marked with
+	///     the target attribute to implement or inherit specific type or types.
 	/// </summary>
 	/// <example>
-	///   <code>
+	///     <code>
 	/// [BaseTypeRequired(typeof(IComponent)] // Specify requirement
 	/// public class ComponentAttribute : Attribute 
 	/// {}
@@ -120,7 +120,7 @@ namespace Pegasus.Platform
 	public sealed class BaseTypeRequiredAttribute : Attribute
 	{
 		/// <summary>
-		///   Initializes new instance of BaseTypeRequiredAttribute
+		///     Initializes new instance of BaseTypeRequiredAttribute
 		/// </summary>
 		/// <param name="baseType">Specifies which types are required</param>
 		public BaseTypeRequiredAttribute(Type baseType)
@@ -129,14 +129,14 @@ namespace Pegasus.Platform
 		}
 
 		/// <summary>
-		///   Gets enumerations of specified base types
+		///     Gets enumerations of specified base types
 		/// </summary>
 		public Type[] BaseTypes { get; private set; }
 	}
 
 	/// <summary>
-	///   Indicates that the marked symbol is used implicitly (e.g. via reflection, in external library),
-	///   so this symbol will not be marked as unused (as well as by other usage inspections)
+	///     Indicates that the marked symbol is used implicitly (e.g. via reflection, in external library),
+	///     so this symbol will not be marked as unused (as well as by other usage inspections)
 	/// </summary>
 	[AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
 	public sealed class UsedImplicitlyAttribute : Attribute
@@ -170,15 +170,15 @@ namespace Pegasus.Platform
 		public ImplicitUseKindFlags UseKindFlags { get; private set; }
 
 		/// <summary>
-		///   Gets value indicating what is meant to be used
+		///     Gets value indicating what is meant to be used
 		/// </summary>
 		[UsedImplicitly]
 		public ImplicitUseTargetFlags TargetFlags { get; private set; }
 	}
 
 	/// <summary>
-	///   Should be used on attributes and causes ReSharper
-	///   to not mark symbols marked with such attributes as unused (as well as by other usage inspections)
+	///     Should be used on attributes and causes ReSharper
+	///     to not mark symbols marked with such attributes as unused (as well as by other usage inspections)
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 	public sealed class MeansImplicitUseAttribute : Attribute
@@ -212,7 +212,7 @@ namespace Pegasus.Platform
 		public ImplicitUseKindFlags UseKindFlags { get; private set; }
 
 		/// <summary>
-		///   Gets value indicating what is meant to be used
+		///     Gets value indicating what is meant to be used
 		/// </summary>
 		[UsedImplicitly]
 		public ImplicitUseTargetFlags TargetFlags { get; private set; }
@@ -224,30 +224,30 @@ namespace Pegasus.Platform
 		Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
 
 		/// <summary>
-		///   Only entity marked with attribute considered used
+		///     Only entity marked with attribute considered used
 		/// </summary>
 		Access = 1,
 
 		/// <summary>
-		///   Indicates implicit assignment to a member
+		///     Indicates implicit assignment to a member
 		/// </summary>
 		Assign = 2,
 
 		/// <summary>
-		///   Indicates implicit instantiation of a type with fixed constructor signature.
-		///   That means any unused constructor parameters won't be reported as such.
+		///     Indicates implicit instantiation of a type with fixed constructor signature.
+		///     That means any unused constructor parameters won't be reported as such.
 		/// </summary>
 		InstantiatedWithFixedConstructorSignature = 4,
 
 		/// <summary>
-		///   Indicates implicit instantiation of a type
+		///     Indicates implicit instantiation of a type
 		/// </summary>
 		InstantiatedNoFixedConstructorSignature = 8,
 	}
 
 	/// <summary>
-	///   Specify what is considered used implicitly when marked with <see cref="MeansImplicitUseAttribute" /> or
-	///   <see cref="UsedImplicitlyAttribute" />
+	///     Specify what is considered used implicitly when marked with <see cref="MeansImplicitUseAttribute" /> or
+	///     <see cref="UsedImplicitlyAttribute" />
 	/// </summary>
 	[Flags]
 	public enum ImplicitUseTargetFlags
@@ -257,22 +257,22 @@ namespace Pegasus.Platform
 		Itself = 1,
 
 		/// <summary>
-		///   Members of entity marked with attribute are considered used
+		///     Members of entity marked with attribute are considered used
 		/// </summary>
 		Members = 2,
 
 		/// <summary>
-		///   Entity marked with attribute and all its members considered used
+		///     Entity marked with attribute and all its members considered used
 		/// </summary>
 		WithMembers = Itself | Members
 	}
 
 	/// <summary>
-	///   Indicates that a method does not make any observable state changes.
-	///   The same as <see cref="System.Diagnostics.Contracts.PureAttribute" />
+	///     Indicates that a method does not make any observable state changes.
+	///     The same as <see cref="System.Diagnostics.Contracts.PureAttribute" />
 	/// </summary>
 	/// <example>
-	///   <code>
+	///     <code>
 	///  [Pure]
 	///  private int Multiply(int x, int y)
 	///  {

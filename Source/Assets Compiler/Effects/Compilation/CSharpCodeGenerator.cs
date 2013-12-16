@@ -10,32 +10,32 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Generates a C# class for an effect.
+	///     Generates a C# class for an effect.
 	/// </summary>
 	internal class CSharpCodeGenerator : DisposableObject
 	{
 		/// <summary>
-		///   The name of the context variable of the Effect base class.
+		///     The name of the context variable of the Effect base class.
 		/// </summary>
 		private const string ContextVariableName = "__context";
 
 		/// <summary>
-		///   The name of the method that binds the constant buffers and textures.
+		///     The name of the method that binds the constant buffers and textures.
 		/// </summary>
 		private readonly string _bindMethodName = String.Format("_{0}Bind", Configuration.ReservedIdentifierPrefix);
 
 		/// <summary>
-		///   The writer that is used to write the generated code.
+		///     The writer that is used to write the generated code.
 		/// </summary>
 		private readonly CodeWriter _writer = new CodeWriter();
 
 		/// <summary>
-		///   The effect for which the C# class is generated.
+		///     The effect for which the C# class is generated.
 		/// </summary>
 		private EffectClass _effect;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public CSharpCodeGenerator()
 		{
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		///   Gets all non-shared constant buffers declared by the effect.
+		///     Gets all non-shared constant buffers declared by the effect.
 		/// </summary>
 		private IEnumerable<ConstantBuffer> ConstantBuffers
 		{
@@ -66,7 +66,7 @@
 		}
 
 		/// <summary>
-		///   Gets all non-shared constants declared by the effect.
+		///     Gets all non-shared constants declared by the effect.
 		/// </summary>
 		private IEnumerable<ShaderConstant> Constants
 		{
@@ -79,7 +79,7 @@
 		}
 
 		/// <summary>
-		///   Generates the C# effect code.
+		///     Generates the C# effect code.
 		/// </summary>
 		/// <param name="effect">The effect for which the C# code should be generated.</param>
 		public void GenerateCode(EffectClass effect)
@@ -100,7 +100,7 @@
 		}
 
 		/// <summary>
-		///   Generates the C# class for the effect.
+		///     Generates the C# class for the effect.
 		/// </summary>
 		private void GenerateClass()
 		{
@@ -121,7 +121,7 @@
 		}
 
 		/// <summary>
-		///   Generates the dirty fields for all non-shared constant buffers declared by the effect.
+		///     Generates the dirty fields for all non-shared constant buffers declared by the effect.
 		/// </summary>
 		private void GenerateDirtyFields()
 		{
@@ -136,7 +136,7 @@
 		}
 
 		/// <summary>
-		///   Generates the fields for the non-shared constant buffers declared by the effect.
+		///     Generates the fields for the non-shared constant buffers declared by the effect.
 		/// </summary>
 		private void GenerateConstantBufferFields()
 		{
@@ -151,7 +151,7 @@
 		}
 
 		/// <summary>
-		///   Generates the fields for all non-shared constants declared by the effect.
+		///     Generates the fields for all non-shared constants declared by the effect.
 		/// </summary>
 		private void GenerateConstantsFields()
 		{
@@ -164,7 +164,7 @@
 		}
 
 		/// <summary>
-		///   Generates the constructor.
+		///     Generates the constructor.
 		/// </summary>
 		private void GenerateConstructor()
 		{
@@ -205,7 +205,7 @@
 		}
 
 		/// <summary>
-		///   Generates the properties for all non-shared constants declared by the effect.
+		///     Generates the properties for all non-shared constants declared by the effect.
 		/// </summary>
 		private void GenerateConstantsProperties()
 		{
@@ -231,7 +231,7 @@
 		}
 
 		/// <summary>
-		///   Generates the properties for the shader texture objects declared by the effect.
+		///     Generates the properties for the shader texture objects declared by the effect.
 		/// </summary>
 		private void GenerateTextureProperties()
 		{
@@ -246,7 +246,7 @@
 		}
 
 		/// <summary>
-		///   Generates the properties for all techniques declared by the effect.
+		///     Generates the properties for all techniques declared by the effect.
 		/// </summary>
 		private void GenerateTechniqueProperties()
 		{
@@ -259,7 +259,7 @@
 		}
 
 		/// <summary>
-		///   Generates the state binding method.
+		///     Generates the state binding method.
 		/// </summary>
 		private void GenerateBindMethod()
 		{
@@ -305,7 +305,7 @@
 		}
 
 		/// <summary>
-		///   Generates the implementation of the OnDisposing() method.
+		///     Generates the implementation of the OnDisposing() method.
 		/// </summary>
 		private void GenerateOnDisposingMethod()
 		{
@@ -330,7 +330,7 @@
 		}
 
 		/// <summary>
-		///   Generates the structures for the non-shared constant buffers declared by the effect.
+		///     Generates the structures for the non-shared constant buffers declared by the effect.
 		/// </summary>
 		private void GenerateConstantBufferStructs()
 		{
@@ -371,7 +371,7 @@
 		}
 
 		/// <summary>
-		///   Gets the corresponding C# type.
+		///     Gets the corresponding C# type.
 		/// </summary>
 		/// <param name="dataType">The data type that should be converted.</param>
 		private static string ToCSharpType(DataType dataType)
@@ -402,7 +402,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -410,7 +410,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the corresponding field.
+		///     Gets the name of the corresponding field.
 		/// </summary>
 		/// <param name="name">The name whose field name should be returned.</param>
 		private static string GetFieldName(string name)
@@ -419,7 +419,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the constant buffer struct.
+		///     Gets the name of the constant buffer struct.
 		/// </summary>
 		/// <param name="buffer">The buffer whose struct name should be returned.</param>
 		private static string GetStructName(ConstantBuffer buffer)
@@ -428,7 +428,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the corresponding dirty flag.
+		///     Gets the name of the corresponding dirty flag.
 		/// </summary>
 		/// <param name="name">The name whose dirty flag name should be returned.</param>
 		private static string GetDirtyFlagName(string name)
@@ -437,7 +437,7 @@
 		}
 
 		/// <summary>
-		///   Writes the given documentation to the output.
+		///     Writes the given documentation to the output.
 		/// </summary>
 		/// <param name="documentation">The documentation that should be written.</param>
 		private void WriteDocumentation(IEnumerable<string> documentation)

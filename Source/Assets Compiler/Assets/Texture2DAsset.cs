@@ -6,17 +6,17 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a 2D texture that requires compilation.
+	///     Represents a 2D texture that requires compilation.
 	/// </summary>
 	public class Texture2DAsset : TextureAsset
 	{
 		/// <summary>
-		///   The image data.
+		///     The image data.
 		/// </summary>
 		private BufferPointer _data;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		public Texture2DAsset(string relativePath)
@@ -25,7 +25,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		/// <param name="sourceDirectory">The source directory of the asset.</param>
@@ -35,8 +35,9 @@
 		}
 
 		/// <summary>
-		///   The identifier type that should be used for the asset when generating the asset identifier list. If null is returned,
-		///   no asset identifier is generated for this asset instance.
+		///     The identifier type that should be used for the asset when generating the asset identifier list. If null is
+		///     returned,
+		///     no asset identifier is generated for this asset instance.
 		/// </summary>
 		public override string IdentifierType
 		{
@@ -44,8 +45,9 @@
 		}
 
 		/// <summary>
-		///   The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
-		///   asset instance.
+		///     The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for
+		///     this
+		///     asset instance.
 		/// </summary>
 		public override string IdentifierName
 		{
@@ -53,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Loads the texture data.
+		///     Loads the texture data.
 		/// </summary>
 		public unsafe void Load()
 		{
@@ -88,7 +90,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

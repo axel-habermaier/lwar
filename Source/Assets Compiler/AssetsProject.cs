@@ -4,36 +4,35 @@
 	using System.IO;
 	using System.Linq;
 	using System.Xml.Linq;
-	using Platform;
 	using Platform.Logging;
 
 	/// <summary>
-	///   Represents the assets project that contains the assets that are compiled.
+	///     Represents the assets project that contains the assets that are compiled.
 	/// </summary>
 	internal class AssetsProject
 	{
 		/// <summary>
-		///   The namespace of the elements contained in the project file.
+		///     The namespace of the elements contained in the project file.
 		/// </summary>
 		private static readonly XNamespace Namespace = "http://schemas.microsoft.com/developer/msbuild/2003";
 
 		/// <summary>
-		///   The project XML file.
+		///     The project XML file.
 		/// </summary>
 		private readonly XDocument _document;
 
 		/// <summary>
-		///   The root node of the project file.
+		///     The root node of the project file.
 		/// </summary>
 		private readonly XElement _projectFile;
 
 		/// <summary>
-		///   The file name of the project.
+		///     The file name of the project.
 		/// </summary>
 		private readonly string _projectFileName;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="projectFile">The path to the project file.</param>
 		public AssetsProject(string projectFile)
@@ -59,7 +58,7 @@
 		}
 
 		/// <summary>
-		///   Gets the root namespace of the project.
+		///     Gets the root namespace of the project.
 		/// </summary>
 		public string RootNamespace
 		{
@@ -74,7 +73,7 @@
 		}
 
 		/// <summary>
-		///   Gets the asset files contained in the project.
+		///     Gets the asset files contained in the project.
 		/// </summary>
 		public string[] Assets
 		{
@@ -91,22 +90,22 @@
 		}
 
 		/// <summary>
-		///   Gets the path to the source assets.
+		///     Gets the path to the source assets.
 		/// </summary>
 		public string SourceDirectory { get; private set; }
 
 		/// <summary>
-		///   Gets the path where the temporary asset files should be stored.
+		///     Gets the path where the temporary asset files should be stored.
 		/// </summary>
 		public string TempDirectory { get; private set; }
 
 		/// <summary>
-		///   Gets the path where the compiled assets should be stored.
+		///     Gets the path where the compiled assets should be stored.
 		/// </summary>
 		public string TargetDirectory { get; private set; }
 
 		/// <summary>
-		///   Gets the name of the compiled assets project assembly.
+		///     Gets the name of the compiled assets project assembly.
 		/// </summary>
 		public string AssemblyName
 		{
@@ -121,7 +120,7 @@
 		}
 
 		/// <summary>
-		///   Gets the path to the compiled assets assembly.
+		///     Gets the path to the compiled assets assembly.
 		/// </summary>
 		public string CompiledAssemblyPath
 		{
@@ -150,7 +149,7 @@
 		}
 
 		/// <summary>
-		///   Adds the file to the assets project as a child of the parent file.
+		///     Adds the file to the assets project as a child of the parent file.
 		/// </summary>
 		/// <param name="file">The file that should be added.</param>
 		/// <param name="parentFile">The parent file of the file that should be added.</param>
@@ -179,7 +178,7 @@
 		}
 
 		/// <summary>
-		///   Finds the XML element that corresponds to the file.
+		///     Finds the XML element that corresponds to the file.
 		/// </summary>
 		/// <param name="file">The file that should be searched for.</param>
 		private XElement FindFile(string file)

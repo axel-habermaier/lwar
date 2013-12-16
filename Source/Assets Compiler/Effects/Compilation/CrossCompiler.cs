@@ -9,27 +9,27 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Cross-compiles a C# shader method.
+	///     Cross-compiles a C# shader method.
 	/// </summary>
 	internal abstract partial class CrossCompiler : IAstVisitor
 	{
 		/// <summary>
-		///   Gets the code writer the generated code should be written to.
+		///     Gets the code writer the generated code should be written to.
 		/// </summary>
 		protected CodeWriter Writer { get; private set; }
 
 		/// <summary>
-		///   Gets the shader that is compiled.
+		///     Gets the shader that is compiled.
 		/// </summary>
 		protected ShaderMethod Shader { get; private set; }
 
 		/// <summary>
-		///   Gets the resolver that should be used to resolve type information.
+		///     Gets the resolver that should be used to resolve type information.
 		/// </summary>
 		protected CSharpAstResolver Resolver { get; private set; }
 
 		/// <summary>
-		///   Cross-compiles the C# shader method.
+		///     Cross-compiles the C# shader method.
 		/// </summary>
 		/// <param name="effect">The effect class the shader method belongs to.</param>
 		/// <param name="shader">The C# shader method that should be cross-compiled.</param>
@@ -84,60 +84,60 @@
 		}
 
 		/// <summary>
-		///   Generates the shader code for shader literals.
+		///     Generates the shader code for shader literals.
 		/// </summary>
 		/// <param name="literal">The shader literal that should be generated.</param>
 		protected abstract void GenerateLiteral(ShaderLiteral literal);
 
 		/// <summary>
-		///   Generates the shader code for shader constant buffers.
+		///     Generates the shader code for shader constant buffers.
 		/// </summary>
 		/// <param name="constantBuffer">The constant buffer that should be generated.</param>
 		protected abstract void GenerateConstantBuffer(ConstantBuffer constantBuffer);
 
 		/// <summary>
-		///   Generates the shader code for texture objects.
+		///     Generates the shader code for texture objects.
 		/// </summary>
 		/// <param name="texture">The shader texture that should be generated.</param>
 		protected abstract void GenerateTextureObject(ShaderTexture texture);
 
 		/// <summary>
-		///   Generates the shader inputs if the shader is a vertex shader.
+		///     Generates the shader inputs if the shader is a vertex shader.
 		/// </summary>
 		/// <param name="inputs">The shader inputs that should be generated.</param>
 		protected abstract void GenerateVertexShaderInputs(IEnumerable<ShaderParameter> inputs);
 
 		/// <summary>
-		///   Generates the shader outputs if the shader is a vertex shader.
+		///     Generates the shader outputs if the shader is a vertex shader.
 		/// </summary>
 		/// <param name="outputs">The shader outputs that should be generated.</param>
 		protected abstract void GenerateVertexShaderOutputs(IEnumerable<ShaderParameter> outputs);
 
 		/// <summary>
-		///   Generates the shader inputs if the shader is a fragment shader.
+		///     Generates the shader inputs if the shader is a fragment shader.
 		/// </summary>
 		/// <param name="inputs">The shader inputs that should be generated.</param>
 		protected abstract void GenerateFragmentShaderInputs(IEnumerable<ShaderParameter> inputs);
 
 		/// <summary>
-		///   Generates the shader outputs if the shader is a fragment shader.
+		///     Generates the shader outputs if the shader is a fragment shader.
 		/// </summary>
 		/// <param name="outputs">The shader outputs that should be generated.</param>
 		protected abstract void GenerateFragmentShaderOutputs(IEnumerable<ShaderParameter> outputs);
 
 		/// <summary>
-		///   Generates the shader entry point.
+		///     Generates the shader entry point.
 		/// </summary>
 		protected abstract void GenerateMainMethod();
 
 		/// <summary>
-		///   Gets the corresponding shader type.
+		///     Gets the corresponding shader type.
 		/// </summary>
 		/// <param name="type">The data type that should be converted.</param>
 		protected abstract string ToShaderType(DataType type);
 
 		/// <summary>
-		///   Extracts the column and row indices from the list of indexer arguments.
+		///     Extracts the column and row indices from the list of indexer arguments.
 		/// </summary>
 		/// <param name="indexerArguments">The list of indexer arguments.</param>
 		/// <param name="first">The expression that should be used as the first index.</param>
@@ -146,7 +146,7 @@
 												 out Expression second);
 
 		/// <summary>
-		///   Gets the token for the given assignment operator.
+		///     Gets the token for the given assignment operator.
 		/// </summary>
 		/// <param name="assignmentOperator">The assignment operator for which the token should be returned.</param>
 		private string GetToken(AssignmentOperatorType assignmentOperator)
@@ -181,7 +181,7 @@
 		}
 
 		/// <summary>
-		///   Gets the token for the given unary operator.
+		///     Gets the token for the given unary operator.
 		/// </summary>
 		/// <param name="unaryOperator">The unary operator for which the token should be returned.</param>
 		private string GetToken(UnaryOperatorType unaryOperator)
@@ -208,7 +208,7 @@
 		}
 
 		/// <summary>
-		///   Gets the token for the given binary operator.
+		///     Gets the token for the given binary operator.
 		/// </summary>
 		/// <param name="binaryOperator">The binary operator for which the token should be returned.</param>
 		private string GetToken(BinaryOperatorType binaryOperator)
@@ -257,7 +257,7 @@
 		}
 
 		/// <summary>
-		///   Gets the token for the given intrinsic function.
+		///     Gets the token for the given intrinsic function.
 		/// </summary>
 		/// <param name="intrinsic">The intrinsic function for which the token should be returned.</param>
 		protected virtual string GetToken(Intrinsic intrinsic)
@@ -310,7 +310,7 @@
 		}
 
 		/// <summary>
-		///   Visits the given statement, treating it as a single-line block statement if it is not actually a block statement.
+		///     Visits the given statement, treating it as a single-line block statement if it is not actually a block statement.
 		/// </summary>
 		/// <param name="statement">The statement that should be visited.</param>
 		private void VisitStatementBlock(Statement statement)
@@ -327,7 +327,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the terminating semicolon can be safely omitted from the statement.
+		///     Checks whether the terminating semicolon can be safely omitted from the statement.
 		/// </summary>
 		/// <param name="node">The node that should be checked.</param>
 		private static bool OmitTerminatingSemicolon(AstNode node)
@@ -337,8 +337,8 @@
 		}
 
 		/// <summary>
-		///   Returns an escaped version of the name that is guaranteed not to clash with any shader built-in variables, keywords
-		///   or intrinsics.
+		///     Returns an escaped version of the name that is guaranteed not to clash with any shader built-in variables, keywords
+		///     or intrinsics.
 		/// </summary>
 		/// <param name="name">The name that should be escaped.</param>
 		protected static string Escape(string name)

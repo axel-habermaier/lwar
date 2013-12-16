@@ -12,12 +12,12 @@
 	using CSharpAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
 
 	/// <summary>
-	///   Provides extension methods on NRefactory AST types.
+	///     Provides extension methods on NRefactory AST types.
 	/// </summary>
 	internal static class Extensions
 	{
 		/// <summary>
-		///   Resolves the intrinsic that the given invocation expression represents.
+		///     Resolves the intrinsic that the given invocation expression represents.
 		/// </summary>
 		/// <param name="invocationExpression">The invocation expression that should be resolved.</param>
 		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
@@ -63,7 +63,7 @@
 		}
 
 		/// <summary>
-		///   Converts the given type to its corresponding data type value.
+		///     Converts the given type to its corresponding data type value.
 		/// </summary>
 		/// <param name="type">The type that should be converted.</param>
 		public static DataType ToDataType(this IType type)
@@ -108,7 +108,7 @@
 		}
 
 		/// <summary>
-		///   Converts the semantics into its display string.
+		///     Converts the semantics into its display string.
 		/// </summary>
 		/// <param name="semantics">The semantics that should be converted.</param>
 		public static string ToDisplayString(this DataSemantics semantics)
@@ -123,7 +123,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the semantics represents one of the color semantics, regardless of the semantic index.
+		///     Checks whether the semantics represents one of the color semantics, regardless of the semantic index.
 		/// </summary>
 		/// <param name="semantics">The semantics that should be checked.</param>
 		public static bool IsColor(this DataSemantics semantics)
@@ -135,7 +135,7 @@
 		}
 
 		/// <summary>
-		///   Gets the semantics attributes that are applied to the parameter.
+		///     Gets the semantics attributes that are applied to the parameter.
 		/// </summary>
 		/// <param name="parameter">The parameter whose semantics attributes should be returned.</param>
 		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
@@ -153,7 +153,7 @@
 		}
 
 		/// <summary>
-		///   Gets the semantics attributes that are applied to the parameter.
+		///     Gets the semantics attributes that are applied to the parameter.
 		/// </summary>
 		/// <param name="parameter">The parameter whose semantics attributes should be returned.</param>
 		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
@@ -165,7 +165,7 @@
 		}
 
 		/// <summary>
-		///   Gets the corresponding semantics attribute instance from the C# attribute.
+		///     Gets the corresponding semantics attribute instance from the C# attribute.
 		/// </summary>
 		/// <param name="attribute">The attribute that should be converted.</param>
 		/// <param name="resolver">The resolver that should be used to resolve type information.</param>

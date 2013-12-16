@@ -8,17 +8,17 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a C# method that is cross-compiled to GLSL or HLSL.
+	///     Represents a C# method that is cross-compiled to GLSL or HLSL.
 	/// </summary>
 	internal class ShaderMethod : EffectElement
 	{
 		/// <summary>
-		///   The declaration of the method that represents the shader.
+		///     The declaration of the method that represents the shader.
 		/// </summary>
 		private readonly MethodDeclaration _method;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="method">The declaration of the method that represents the shader.</param>
 		public ShaderMethod(MethodDeclaration method)
@@ -28,7 +28,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the shader.
+		///     Gets the name of the shader.
 		/// </summary>
 		public string Name
 		{
@@ -36,7 +36,7 @@
 		}
 
 		/// <summary>
-		///   Gets the type of the shader.
+		///     Gets the type of the shader.
 		/// </summary>
 		public ShaderType Type
 		{
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		///   Gets the syntax tree of the shader method's body.
+		///     Gets the syntax tree of the shader method's body.
 		/// </summary>
 		public BlockStatement MethodBody
 		{
@@ -61,7 +61,7 @@
 		}
 
 		/// <summary>
-		///   Gets the input parameters declared by the shader method.
+		///     Gets the input parameters declared by the shader method.
 		/// </summary>
 		public IEnumerable<ShaderParameter> Inputs
 		{
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Gets the output parameters declared by the shader method.
+		///     Gets the output parameters declared by the shader method.
 		/// </summary>
 		public IEnumerable<ShaderParameter> Outputs
 		{
@@ -77,7 +77,7 @@
 		}
 
 		/// <summary>
-		///   Gets all parameters declared by the shader method.
+		///     Gets all parameters declared by the shader method.
 		/// </summary>
 		public IEnumerable<ShaderParameter> Parameters
 		{
@@ -85,7 +85,7 @@
 		}
 
 		/// <summary>
-		///   Gets the input layout for the shader.
+		///     Gets the input layout for the shader.
 		/// </summary>
 		public IEnumerable<ShaderInput> InputLayout
 		{
@@ -126,7 +126,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -136,8 +136,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{
@@ -188,7 +188,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given parameters are declared with distinct semantics.
+		///     Checks whether the given parameters are declared with distinct semantics.
 		/// </summary>
 		/// <param name="parameters">The parameters that should be checked.</param>
 		/// <param name="direction">A description of the parameter direction.</param>

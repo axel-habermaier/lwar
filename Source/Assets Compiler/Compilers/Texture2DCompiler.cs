@@ -8,13 +8,13 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Compiles 2D textures.
+	///     Compiles 2D textures.
 	/// </summary>
 	[UsedImplicitly]
 	internal sealed class Texture2DCompiler : AssetCompiler<Texture2DAsset>
 	{
 		/// <summary>
-		///   Compiles the asset.
+		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -29,7 +29,7 @@
 		}
 
 		/// <summary>
-		///   Removes the compiled asset and all temporary files written by the compiler.
+		///     Removes the compiled asset and all temporary files written by the compiler.
 		/// </summary>
 		/// <param name="asset">The asset that should be cleaned.</param>
 		protected override void Clean(Texture2DAsset asset)
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Compiles a texture that should be compressed.
+		///     Compiles a texture that should be compressed.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -58,7 +58,7 @@
 		}
 
 		/// <summary>
-		///   Gets the path of the temporary assembled texture file.
+		///     Gets the path of the temporary assembled texture file.
 		/// </summary>
 		/// <param name="asset">The asset the path should be returned for.</param>
 		private static string GetAssembledFilePath(Asset asset)

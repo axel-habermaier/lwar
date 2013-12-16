@@ -6,37 +6,36 @@
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
-	using Assets;
 	using Platform;
 	using Platform.Logging;
 
 	/// <summary>
-	///   Provides access to the asset compiler configuration.
+	///     Provides access to the asset compiler configuration.
 	/// </summary>
 	internal static class Configuration
 	{
 		/// <summary>
-		///   The prefix that is used for reserved shader identifiers.
+		///     The prefix that is used for reserved shader identifiers.
 		/// </summary>
 		public const string ReservedIdentifierPrefix = "_";
 
 		/// <summary>
-		///   The prefix that is used for internally generated shader identifiers.
+		///     The prefix that is used for internally generated shader identifiers.
 		/// </summary>
 		public const string ReservedInternalIdentifierPrefix = "_pg_";
 
 		/// <summary>
-		///   The asset list assembly.
+		///     The asset list assembly.
 		/// </summary>
 		private static Assembly _assetListAssembly;
 
 		/// <summary>
-		///   The assets project file.
+		///     The assets project file.
 		/// </summary>
 		private static AssetsProject _assetsProject;
 
 		/// <summary>
-		///   Gets the path to the compiled assets project.
+		///     Gets the path to the compiled assets project.
 		/// </summary>
 		public static string AssetListPath
 		{
@@ -44,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Gets the path to the C# file that should contain the generated effect code.
+		///     Gets the path to the C# file that should contain the generated effect code.
 		/// </summary>
 		public static string CSharpEffectFile
 		{
@@ -52,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   Gets the path to the C# file that should contain the C# code generated from the Xaml files.
+		///     Gets the path to the C# file that should contain the C# code generated from the Xaml files.
 		/// </summary>
 		public static string CSharpXamlFile
 		{
@@ -60,7 +59,7 @@
 		}
 
 		/// <summary>
-		///   Gets the path to the C# file that should contain the generated asset identifiers.
+		///     Gets the path to the C# file that should contain the generated asset identifiers.
 		/// </summary>
 		public static string CSharpAssetIdentifiersFile
 		{
@@ -68,7 +67,7 @@
 		}
 
 		/// <summary>
-		///   Gets the path to the C# file that should contain the font loader class.
+		///     Gets the path to the C# file that should contain the font loader class.
 		/// </summary>
 		public static string CSharpFontLoaderFile
 		{
@@ -76,12 +75,12 @@
 		}
 
 		/// <summary>
-		///   Gets or set the path to the assets project that is compiled.
+		///     Gets or set the path to the assets project that is compiled.
 		/// </summary>
 		public static string AssetsProjectPath { get; set; }
 
 		/// <summary>
-		///   Gets the path to the source assets.
+		///     Gets the path to the source assets.
 		/// </summary>
 		public static string SourceDirectory
 		{
@@ -89,7 +88,7 @@
 		}
 
 		/// <summary>
-		///   Gets the path where the temporary asset files should be stored.
+		///     Gets the path where the temporary asset files should be stored.
 		/// </summary>
 		public static string TempDirectory
 		{
@@ -97,7 +96,7 @@
 		}
 
 		/// <summary>
-		///   Gets the path where the compiled assets should be stored.
+		///     Gets the path where the compiled assets should be stored.
 		/// </summary>
 		public static string TargetDirectory
 		{
@@ -105,17 +104,17 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether Xaml files should be the only kind of asset that is compiled.
+		///     Gets or sets a value indicating whether Xaml files should be the only kind of asset that is compiled.
 		/// </summary>
 		public static bool XamlFilesOnly { get; set; }
 
 		/// <summary>
-		///   Gets or sets the unique identifier of all asset files contained in the compiled assets project.
+		///     Gets or sets the unique identifier of all asset files contained in the compiled assets project.
 		/// </summary>
 		public static int UniqueFileIdentifier { get; set; }
 
 		/// <summary>
-		///   Get the asset list assembly.
+		///     Get the asset list assembly.
 		/// </summary>
 		public static Assembly AssetListAssembly
 		{
@@ -132,7 +131,7 @@
 		}
 
 		/// <summary>
-		///   Gets the assets project file.
+		///     Gets the assets project file.
 		/// </summary>
 		public static AssetsProject AssetsProject
 		{
@@ -146,12 +145,13 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether HLSL shaders should be compiled.
+		///     Gets a value indicating whether HLSL shaders should be compiled.
 		/// </summary>
 		public static bool CompileHlsl { get; private set; }
 
 		/// <summary>
-		///   Checks whether the HLSL compiler is available and disable HLSL shader compilation if the compiler cannot be invoked.
+		///     Checks whether the HLSL compiler is available and disable HLSL shader compilation if the compiler cannot be
+		///     invoked.
 		/// </summary>
 		public static void CheckFxcAvailability()
 		{
@@ -174,7 +174,7 @@
 		}
 
 		/// <summary>
-		///   Gets the types that should be checked when searching all relevant types via reflection.
+		///     Gets the types that should be checked when searching all relevant types via reflection.
 		/// </summary>
 		public static IEnumerable<Type> GetReflectionTypes()
 		{

@@ -7,22 +7,22 @@
 	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
-	///   Represents a field of an effect class that allows access to a texture or cubemap.
+	///     Represents a field of an effect class that allows access to a texture or cubemap.
 	/// </summary>
 	internal class ShaderTexture : EffectElement
 	{
 		/// <summary>
-		///   The declaration of the field that represents the texture object.
+		///     The declaration of the field that represents the texture object.
 		/// </summary>
 		private readonly FieldDeclaration _field;
 
 		/// <summary>
-		///   The variable that represents the texture object.
+		///     The variable that represents the texture object.
 		/// </summary>
 		private readonly VariableInitializer _variable;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="field">The declaration of the field that represents the texture object.</param>
 		/// <param name="variable">The declaration of the field variable that represents the texture object.</param>
@@ -39,7 +39,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the texture object.
+		///     Gets the name of the texture object.
 		/// </summary>
 		public string Name
 		{
@@ -47,7 +47,7 @@
 		}
 
 		/// <summary>
-		///   Gets the type of the texture object.
+		///     Gets the type of the texture object.
 		/// </summary>
 		public DataType Type
 		{
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Gets the documentation of the effect.
+		///     Gets the documentation of the effect.
 		/// </summary>
 		public IEnumerable<string> Documentation
 		{
@@ -63,13 +63,13 @@
 		}
 
 		/// <summary>
-		///   Gets the slot the texture object is bound to.
+		///     Gets the slot the texture object is bound to.
 		/// </summary>
 		public int Slot { get; private set; }
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{

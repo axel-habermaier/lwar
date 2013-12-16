@@ -4,17 +4,17 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a freetype library object.
+	///     Represents a freetype library object.
 	/// </summary>
 	internal class FreeTypeLibrary : DisposableObject
 	{
 		/// <summary>
-		///   The native freetype library object.
+		///     The native freetype library object.
 		/// </summary>
 		private IntPtr _library;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public FreeTypeLibrary()
 		{
@@ -22,7 +22,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new font instance.
+		///     Creates a new font instance.
 		/// </summary>
 		/// <param name="fileName">The path to the font file.</param>
 		/// <param name="size">The size (in pixels) of the characters.</param>
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

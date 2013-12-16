@@ -12,18 +12,18 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Compiles texture-based fonts.
+	///     Compiles texture-based fonts.
 	/// </summary>
 	[UsedImplicitly]
 	internal sealed class FontCompiler : AssetCompiler<FontAsset>
 	{
 		/// <summary>
-		///   The freetype library instance that is to generate the font textures.
+		///     The freetype library instance that is to generate the font textures.
 		/// </summary>
 		private readonly FreeTypeLibrary _freeType = new FreeTypeLibrary();
 
 		/// <summary>
-		///   The parser that is used to parse the font definitions.
+		///     The parser that is used to parse the font definitions.
 		/// </summary>
 		private readonly ConfigurationFileParser _parser = new ConfigurationFileParser(new Dictionary<string, Func<string, object>>
 		{
@@ -36,12 +36,12 @@
 		});
 
 		/// <summary>
-		///   A value indicating whether the font loader must be regenerated.
+		///     A value indicating whether the font loader must be regenerated.
 		/// </summary>
 		private bool _regenerateFontLoader;
 
 		/// <summary>
-		///   Gets the path of the temporary font map file.
+		///     Gets the path of the temporary font map file.
 		/// </summary>
 		/// <param name="asset">The asset the path should be returned for.</param>
 		private static string GetFontMapPath(Asset asset)
@@ -50,7 +50,7 @@
 		}
 
 		/// <summary>
-		///   Compiles all assets of the compiler's asset source type.
+		///     Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
 		public override bool Compile(IEnumerable<Asset> assets)
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Compiles the asset.
+		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -149,7 +149,7 @@
 		}
 
 		/// <summary>
-		///   Removes the compiled asset and all temporary files written by the compiler.
+		///     Removes the compiled asset and all temporary files written by the compiler.
 		/// </summary>
 		/// <param name="asset">The asset that should be cleaned.</param>
 		protected override void Clean(FontAsset asset)
@@ -158,7 +158,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -166,7 +166,7 @@
 		}
 
 		/// <summary>
-		///   Generates the font loader class.
+		///     Generates the font loader class.
 		/// </summary>
 		/// <param name="assets">The font assets that have been compiled.</param>
 		private void GenerateFontLoader(FontAsset[] assets)

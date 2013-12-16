@@ -8,22 +8,22 @@
 	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
-	///   Represents a field of an effect class that is part of a constant buffer.
+	///     Represents a field of an effect class that is part of a constant buffer.
 	/// </summary>
 	internal class ShaderConstant : EffectElement
 	{
 		/// <summary>
-		///   The declaration of the field that represents the shader constant.
+		///     The declaration of the field that represents the shader constant.
 		/// </summary>
 		private readonly FieldDeclaration _field;
 
 		/// <summary>
-		///   The variable that represents the shader constant.
+		///     The variable that represents the shader constant.
 		/// </summary>
 		private readonly VariableInitializer _variable;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="field">The declaration of the field that represents the shader constant.</param>
 		/// <param name="variable">The declaration of the field variable that represents the shader constant.</param>
@@ -37,7 +37,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="name">The name of the shader constant.</param>
 		/// <param name="type">The type of the shader constant.</param>
@@ -52,17 +52,17 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the shader constant.
+		///     Gets the name of the shader constant.
 		/// </summary>
 		public string Name { get; private set; }
 
 		/// <summary>
-		///   Gets the type of the shader constant.
+		///     Gets the type of the shader constant.
 		/// </summary>
 		public DataType Type { get; private set; }
 
 		/// <summary>
-		///   Gets the documentation of the effect.
+		///     Gets the documentation of the effect.
 		/// </summary>
 		public IEnumerable<string> Documentation
 		{
@@ -70,8 +70,9 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the constant buffer the constant should be placed in. This property cannot be called if the constant
-		///   is not user-defined.
+		///     Gets the name of the constant buffer the constant should be placed in. This property cannot be called if the
+		///     constant
+		///     is not user-defined.
 		/// </summary>
 		public string ConstantBufferName
 		{
@@ -87,12 +88,12 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether this constant is a special system-provided constant and not a user-defined one.
+		///     Gets a value indicating whether this constant is a special system-provided constant and not a user-defined one.
 		/// </summary>
 		public bool IsSpecial { get; private set; }
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -104,8 +105,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{

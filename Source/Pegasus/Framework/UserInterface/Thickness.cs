@@ -3,32 +3,32 @@
 	using System;
 
 	/// <summary>
-	///   Describes the thickness of a rectangular frame.
+	///     Describes the thickness of a rectangular frame.
 	/// </summary>
 	public struct Thickness : IEquatable<Thickness>
 	{
 		/// <summary>
-		///   The width of the lower side of the rectangle.
+		///     The width of the lower side of the rectangle.
 		/// </summary>
 		public double Bottom;
 
 		/// <summary>
-		///   The width of the left side of the rectangle.
+		///     The width of the left side of the rectangle.
 		/// </summary>
 		public double Left;
 
 		/// <summary>
-		///   The width of the right side of the rectangle.
+		///     The width of the right side of the rectangle.
 		/// </summary>
 		public double Right;
 
 		/// <summary>
-		///   The width of the upper side of the rectangle.
+		///     The width of the upper side of the rectangle.
 		/// </summary>
 		public double Top;
 
 		/// <summary>
-		///   Initializes a new instance that has a uniform width on each side.
+		///     Initializes a new instance that has a uniform width on each side.
 		/// </summary>
 		/// <param name="width">The width of the left, right, upper, and lower sides of the rectangle.</param>
 		public Thickness(double width)
@@ -40,7 +40,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="left">The width of the left side of the rectangle.</param>
 		/// <param name="top">The width of the upper side of the rectangle.</param>
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the current object is equal to another object of the same type.
+		///     Indicates whether the current object is equal to another object of the same type.
 		/// </summary>
 		/// <param name="other">An object to compare with this object.</param>
 		public bool Equals(Thickness other)
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Indicates whether this instance and a specified object are equal.
+		///     Indicates whether this instance and a specified object are equal.
 		/// </summary>
 		/// <param name="obj">Another object to compare to.</param>
 		public override bool Equals(object obj)
@@ -75,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Returns the hash code for this instance.
+		///     Returns the hash code for this instance.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -90,7 +90,7 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the two thickness instances are equal.
+		///     Indicates whether the two thickness instances are equal.
 		/// </summary>
 		public static bool operator ==(Thickness left, Thickness right)
 		{
@@ -98,7 +98,7 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the two thickness instances are not equal.
+		///     Indicates whether the two thickness instances are not equal.
 		/// </summary>
 		public static bool operator !=(Thickness left, Thickness right)
 		{
@@ -106,7 +106,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string representation of this instance.
+		///     Returns a string representation of this instance.
 		/// </summary>
 		public override string ToString()
 		{

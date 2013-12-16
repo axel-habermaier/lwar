@@ -6,17 +6,17 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a cube map asset that requires compilation.
+	///     Represents a cube map asset that requires compilation.
 	/// </summary>
 	public class CubeMapAsset : TextureAsset
 	{
 		/// <summary>
-		///   The image data.
+		///     The image data.
 		/// </summary>
 		private readonly BufferPointer[] _data = new BufferPointer[6];
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		public CubeMapAsset(string relativePath)
@@ -25,8 +25,9 @@
 		}
 
 		/// <summary>
-		///   The identifier type that should be used for the asset when generating the asset identifier list. If null is returned,
-		///   no asset identifier is generated for this asset instance.
+		///     The identifier type that should be used for the asset when generating the asset identifier list. If null is
+		///     returned,
+		///     no asset identifier is generated for this asset instance.
 		/// </summary>
 		public override string IdentifierType
 		{
@@ -34,8 +35,9 @@
 		}
 
 		/// <summary>
-		///   The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
-		///   asset instance.
+		///     The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for
+		///     this
+		///     asset instance.
 		/// </summary>
 		public override string IdentifierName
 		{
@@ -50,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Loads the cube map data.
+		///     Loads the cube map data.
 		/// </summary>
 		public void Load()
 		{
@@ -73,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -82,7 +84,7 @@
 		}
 
 		/// <summary>
-		///   Loads and converts the image data.
+		///     Loads and converts the image data.
 		/// </summary>
 		private unsafe void LoadCubemapSurfaces()
 		{
@@ -110,7 +112,7 @@
 		}
 
 		/// <summary>
-		///   Extracts the cube map faces from the given cube map.
+		///     Extracts the cube map faces from the given cube map.
 		/// </summary>
 		public Bitmap[] ExtractFaces()
 		{

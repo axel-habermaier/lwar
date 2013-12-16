@@ -4,12 +4,12 @@
 	using System.IO;
 
 	/// <summary>
-	///   Represents a Xaml file that is cross-compiled into C# code targeting the Pegasus UI library.
+	///     Represents a Xaml file that is cross-compiled into C# code targeting the Pegasus UI library.
 	/// </summary>
 	public class XamlAsset : Asset
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		public XamlAsset(string relativePath)
@@ -18,7 +18,7 @@
 		}
 
 		/// <summary>
-		///   Gets the absolute path to the generated C# file, i.e. C:/Source/Assets/UI.xaml.cs.
+		///     Gets the absolute path to the generated C# file, i.e. C:/Source/Assets/UI.xaml.cs.
 		/// </summary>
 		public override string TargetPath
 		{

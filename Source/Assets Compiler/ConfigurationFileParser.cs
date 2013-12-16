@@ -7,26 +7,26 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Parses configuration files similar to Window's .ini file format.
+	///     Parses configuration files similar to Window's .ini file format.
 	/// </summary>
 	internal class ConfigurationFileParser
 	{
 		/// <summary>
-		///   The key that is used to store the path of the source file in the configuration dictionary.
+		///     The key that is used to store the path of the source file in the configuration dictionary.
 		/// </summary>
 		public const string SourceFile = "___sourceFileName";
 
 		/// <summary>
-		///   Indicates the required keys and the function that is used to convert their values into .NET objects.
+		///     Indicates the required keys and the function that is used to convert their values into .NET objects.
 		/// </summary>
 		private readonly Dictionary<string, Func<string, object>> _requiredKeys;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="requiredKeys">
-		///   Indicates the required keys and the function that should be used to convert their values
-		///   into .NET objects.
+		///     Indicates the required keys and the function that should be used to convert their values
+		///     into .NET objects.
 		/// </param>
 		public ConfigurationFileParser(Dictionary<string, Func<string, object>> requiredKeys)
 		{
@@ -36,8 +36,8 @@
 		}
 
 		/// <summary>
-		///   Parses the given configuration file, validates that all required keys are present with correctly types values and
-		///   returns all key-value pairs.
+		///     Parses the given configuration file, validates that all required keys are present with correctly types values and
+		///     returns all key-value pairs.
 		/// </summary>
 		/// <param name="file">The configuration file that should be parsed.</param>
 		public Dictionary<string, object> Parse(string file)

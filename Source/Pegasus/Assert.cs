@@ -8,12 +8,12 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Defines assertion helpers that can be used to check for errors. The checks are only performed in debug builds.
+	///     Defines assertion helpers that can be used to check for errors. The checks are only performed in debug builds.
 	/// </summary>
 	public static class Assert
 	{
 		/// <summary>
-		///   Throws an ArgumentNullException if the argument is null.
+		///     Throws an ArgumentNullException if the argument is null.
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
 		/// <param name="argument">The argument to check for null.</param>
@@ -26,7 +26,7 @@
 		}
 
 		/// <summary>
-		///   Throws an ArgumentNullException if the pointer is null.
+		///     Throws an ArgumentNullException if the pointer is null.
 		/// </summary>
 		/// <param name="pointer">The pointer to check for null.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -37,7 +37,7 @@
 		}
 
 		/// <summary>
-		///   Throws an ArgumentException if the object is not the same as or subtype of the given type.
+		///     Throws an ArgumentException if the object is not the same as or subtype of the given type.
 		/// </summary>
 		/// <param name="obj">The object to check.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -50,8 +50,8 @@
 		}
 
 		/// <summary>
-		///   Throws an ArgumentException if the string argument is null or an ArgumentException if the string is empty (or
-		///   only whitespace).
+		///     Throws an ArgumentException if the string argument is null or an ArgumentException if the string is empty (or
+		///     only whitespace).
 		/// </summary>
 		/// <param name="argument">The argument to check.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Throws an ArgumentOutOfRangeException if the enum argument is outside the range of the enumeration.
+		///     Throws an ArgumentOutOfRangeException if the enum argument is outside the range of the enumeration.
 		/// </summary>
 		/// <typeparam name="TEnum">The type of the enumeration.</typeparam>
 		/// <param name="argument">The enumeration value to check.</param>
@@ -77,7 +77,7 @@
 		}
 
 		/// <summary>
-		///   Throws an ArgumentOutOfRangeException if the argument is outside the range.
+		///     Throws an ArgumentOutOfRangeException if the argument is outside the range.
 		/// </summary>
 		/// <typeparam name="T">The type of the value to check.</typeparam>
 		/// <param name="argument">The value to check.</param>
@@ -95,7 +95,7 @@
 		}
 
 		/// <summary>
-		///   Throws an ArgumentOutOfRangeException if the argument is outside the range.
+		///     Throws an ArgumentOutOfRangeException if the argument is outside the range.
 		/// </summary>
 		/// <param name="argument">The value of the index argument to check.</param>
 		/// <param name="collection">The collection that defines the valid range of the given index argument.</param>
@@ -107,7 +107,7 @@
 		}
 
 		/// <summary>
-		///   Throws an ArgumentException if the condition does not hold.
+		///     Throws an ArgumentException if the condition does not hold.
 		/// </summary>
 		/// <param name="condition">The condition that, if false, causes the exception to be raised.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
@@ -122,7 +122,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the object is not null.
+		///     Throws an InvalidOperationException if the object is not null.
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
 		/// <param name="obj">The object to check for null.</param>
@@ -139,7 +139,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the object is null.
+		///     Throws an InvalidOperationException if the object is null.
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
 		/// <param name="obj">The object to check for null.</param>
@@ -156,7 +156,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the object is null.
+		///     Throws an InvalidOperationException if the object is null.
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
 		/// <param name="obj">The object to check for null.</param>
@@ -169,7 +169,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the string argument is null or empty (or only whitespace).
+		///     Throws an InvalidOperationException if the string argument is null or empty (or only whitespace).
 		/// </summary>
 		/// <param name="s">The string to check.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -182,7 +182,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the condition does not hold.
+		///     Throws an InvalidOperationException if the condition does not hold.
 		/// </summary>
 		/// <param name="condition">The condition that, if false, causes the exception to be raised.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
@@ -197,7 +197,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the method is invoked.
+		///     Throws an InvalidOperationException if the method is invoked.
 		/// </summary>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
@@ -208,7 +208,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the given object has already been sealed.
+		///     Throws an InvalidOperationException if the given object has already been sealed.
 		/// </summary>
 		/// <param name="obj">The object that should be checked.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -221,7 +221,7 @@
 		}
 
 		/// <summary>
-		///   Throws an ObjectDisposedException if the given object has already been disposed.
+		///     Throws an ObjectDisposedException if the given object has already been disposed.
 		/// </summary>
 		/// <param name="obj">The object that should be checked.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -235,7 +235,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the given object has already been returned to the pool.
+		///     Throws an InvalidOperationException if the given object has already been returned to the pool.
 		/// </summary>
 		/// <param name="obj">The object that should be checked.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -249,7 +249,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the enum argument is outside the range of the enumeration.
+		///     Throws an InvalidOperationException if the enum argument is outside the range of the enumeration.
 		/// </summary>
 		/// <typeparam name="TEnum">The type of the enumeration.</typeparam>
 		/// <param name="argument">The enumeration value to check.</param>
@@ -262,7 +262,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the argument is outside the range.
+		///     Throws an InvalidOperationException if the argument is outside the range.
 		/// </summary>
 		/// <typeparam name="T">The type of the value to check.</typeparam>
 		/// <param name="index">The value to check.</param>
@@ -282,7 +282,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidOperationException if the argument is outside the range.
+		///     Throws an InvalidOperationException if the argument is outside the range.
 		/// </summary>
 		/// <typeparam name="T">The type of the array that specifies the bounds.</typeparam>
 		/// <param name="index">The value of the index to check.</param>
@@ -295,7 +295,7 @@
 		}
 
 		/// <summary>
-		///   Throws an InvalidCastException if the object is not the same as or subtype of the given type.
+		///     Throws an InvalidCastException if the object is not the same as or subtype of the given type.
 		/// </summary>
 		/// <param name="obj">The object to check.</param>
 		[Conditional("DEBUG"), DebuggerHidden]

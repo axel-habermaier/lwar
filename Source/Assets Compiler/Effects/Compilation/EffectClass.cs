@@ -10,17 +10,17 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a C# class that contains cross-compiled shader code and shader constants.
+	///     Represents a C# class that contains cross-compiled shader code and shader constants.
 	/// </summary>
 	internal class EffectClass : EffectElement
 	{
 		/// <summary>
-		///   The declaration of the class that represents the effect.
+		///     The declaration of the class that represents the effect.
 		/// </summary>
 		private readonly TypeDeclaration _type;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="type">The declaration of the class that represents the effect.</param>
 		public EffectClass(TypeDeclaration type)
@@ -30,7 +30,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the effect class.
+		///     Gets the name of the effect class.
 		/// </summary>
 		public string Name
 		{
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Gets the full name of the effect class.
+		///     Gets the full name of the effect class.
 		/// </summary>
 		public string FullName
 		{
@@ -50,7 +50,7 @@
 		}
 
 		/// <summary>
-		///   Gets the namespace in which the effect source class is declared.
+		///     Gets the namespace in which the effect source class is declared.
 		/// </summary>
 		public string Namespace
 		{
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Gets the namespace in which the runtime effect class is declared.
+		///     Gets the namespace in which the runtime effect class is declared.
 		/// </summary>
 		public string PublicNamespace
 		{
@@ -75,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Gets the documentation of the effect.
+		///     Gets the documentation of the effect.
 		/// </summary>
 		public IEnumerable<string> Documentation
 		{
@@ -83,7 +83,7 @@
 		}
 
 		/// <summary>
-		///   Gets the shaders declared by the effect.
+		///     Gets the shaders declared by the effect.
 		/// </summary>
 		public IEnumerable<ShaderMethod> Shaders
 		{
@@ -91,12 +91,12 @@
 		}
 
 		/// <summary>
-		///   Gets the constant buffers declared by the effect.
+		///     Gets the constant buffers declared by the effect.
 		/// </summary>
 		public ConstantBuffer[] ConstantBuffers { get; private set; }
 
 		/// <summary>
-		///   Gets the shader constants declared by the effect.
+		///     Gets the shader constants declared by the effect.
 		/// </summary>
 		private IEnumerable<ShaderConstant> Constants
 		{
@@ -104,7 +104,7 @@
 		}
 
 		/// <summary>
-		///   Gets the shader literals declared by the effect.
+		///     Gets the shader literals declared by the effect.
 		/// </summary>
 		public IEnumerable<ShaderLiteral> Literals
 		{
@@ -112,7 +112,7 @@
 		}
 
 		/// <summary>
-		///   Gets the shader texture objects declared by the effect.
+		///     Gets the shader texture objects declared by the effect.
 		/// </summary>
 		public IEnumerable<ShaderTexture> Textures
 		{
@@ -120,7 +120,7 @@
 		}
 
 		/// <summary>
-		///   Gets the techniques declared by the effect.
+		///     Gets the techniques declared by the effect.
 		/// </summary>
 		public IEnumerable<EffectTechnique> Techniques
 		{
@@ -128,7 +128,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -198,8 +198,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{
@@ -414,8 +414,8 @@
 		}
 
 		/// <summary>
-		///   Checks whether there are any local variables or parameters that hide a shader literal, constant, technique, or
-		///   texture object.
+		///     Checks whether there are any local variables or parameters that hide a shader literal, constant, technique, or
+		///     texture object.
 		/// </summary>
 		private void ValidateVariableNames()
 		{
@@ -439,7 +439,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the name of any locally declared variable is reserved.
+		///     Checks whether the name of any locally declared variable is reserved.
 		/// </summary>
 		private void ValidateLocalVariableNames()
 		{
@@ -453,7 +453,7 @@
 		}
 
 		/// <summary>
-		///   Reports any usage of the given node type in the methods' bodies as an unsupported C# feature.
+		///     Reports any usage of the given node type in the methods' bodies as an unsupported C# feature.
 		/// </summary>
 		/// <typeparam name="T">The type of the unsupported C# syntax element.</typeparam>
 		/// <param name="description">The description of the unsupported C# feature.</param>
@@ -469,7 +469,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the names assigned to all declared constant buffers are valid identifiers.
+		///     Checks whether the names assigned to all declared constant buffers are valid identifiers.
 		/// </summary>
 		private void ValidateConstantBufferNames()
 		{

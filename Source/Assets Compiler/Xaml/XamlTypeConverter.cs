@@ -2,18 +2,17 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Drawing;
 	using System.Linq;
-	using Framework.UserInterface;
-	using Platform.Graphics;
 	using Platform.Logging;
 
 	/// <summary>
-	///   Converts a Xaml value string into a given type's string representation.
+	///     Converts a Xaml value string into a given type's string representation.
 	/// </summary>
 	internal static class XamlTypeConverter
 	{
 		/// <summary>
-		///   Maps types to their type converters.
+		///     Maps types to their type converters.
 		/// </summary>
 		private static readonly Dictionary<string, Func<string, string>> Converters = new Dictionary<string, Func<string, string>>
 		{
@@ -37,7 +36,7 @@
 		};
 
 		/// <summary>
-		///   Converts the given Xaml value string to the given type's string representation.
+		///     Converts the given Xaml value string to the given type's string representation.
 		/// </summary>
 		/// <param name="targetType">The target type.</param>
 		/// <param name="value">The value that should be converted.</param>
@@ -71,17 +70,17 @@
 		}
 
 		/// <summary>
-		///   Converts a color value.
+		///     Converts a color value.
 		/// </summary>
 		/// <param name="value">The color that should be converted.</param>
 		private static string ConvertColor(string value)
 		{
-			var color = new System.Drawing.Color();
+			var color = new Color();
 			if (value.StartsWith("#"))
 			{
 				try
 				{
-					color = System.Drawing.Color.FromArgb(System.Convert.ToInt32(value.Substring(1), 16));
+					color = Color.FromArgb(System.Convert.ToInt32(value.Substring(1), 16));
 				}
 				catch (Exception)
 				{
@@ -90,7 +89,7 @@
 			}
 			else
 			{
-				color = System.Drawing.Color.FromName(value);
+				color = Color.FromName(value);
 				if (value.ToLower() != "transparent" && color.ToArgb() == 0)
 					Log.Die("Failed to convert color value '{0}'.", value);
 			}

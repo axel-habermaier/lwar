@@ -3,12 +3,12 @@
 	using System;
 
 	/// <summary>
-	///   Represents a namespace imported by a Xaml file.
+	///     Represents a namespace imported by a Xaml file.
 	/// </summary>
 	internal class XamlNamespace
 	{
 		/// <summary>
-		///   Initializes a new instance of an ignored Xaml namespace.
+		///     Initializes a new instance of an ignored Xaml namespace.
 		/// </summary>
 		public XamlNamespace()
 		{
@@ -16,7 +16,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="clrNamespace">The name of the imported CLR namespace.</param>
 		public XamlNamespace(string clrNamespace)
@@ -26,12 +26,12 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether this Xaml namespace should be ignored.
+		///     Gets a value indicating whether this Xaml namespace should be ignored.
 		/// </summary>
 		public bool Ignored { get; private set; }
 
 		/// <summary>
-		///   The name of the imported CLR namespace.
+		///     The name of the imported CLR namespace.
 		/// </summary>
 		public string Namespace { get; private set; }
 	}

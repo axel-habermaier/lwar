@@ -5,7 +5,6 @@
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
-	using Assets;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
@@ -14,19 +13,19 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a NRefactory C# project.
+	///     Represents a NRefactory C# project.
 	/// </summary>
 	/// <typeparam name="TFileElement">The type of the file elements that are compiled by the project.</typeparam>
 	internal abstract class CSharpProject<TFileElement> : DisposableObject, IErrorReporter
 		where TFileElement : CodeElement
 	{
 		/// <summary>
-		///   The C# project that is compiled.
+		///     The C# project that is compiled.
 		/// </summary>
 		private IProjectContent _project = new CSharpProjectContent();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		protected CSharpProject()
 		{
@@ -35,18 +34,18 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the assemblies that are loaded into the project. By default, only mscorlib and the assets compiler
-		///   assembly are loaded.
+		///     Gets or sets the assemblies that are loaded into the project. By default, only mscorlib and the assets compiler
+		///     assembly are loaded.
 		/// </summary>
 		public IEnumerable<Assembly> Assemblies { get; set; }
 
 		/// <summary>
-		///   Gets or sets the path to the C# files that are loaded into the project.
+		///     Gets or sets the path to the C# files that are loaded into the project.
 		/// </summary>
 		public IEnumerable<CSharpFile> CSharpFiles { get; set; }
 
 		/// <summary>
-		///   Outputs a compilation message.
+		///     Outputs a compilation message.
 		/// </summary>
 		/// <param name="type">The type of the compilation message.</param>
 		/// <param name="file">The name of the file for which the message should be raised.</param>
@@ -56,7 +55,7 @@
 		public abstract void Report(LogType type, string file, string message, TextLocation begin, TextLocation end);
 
 		/// <summary>
-		///   Loads the required assemblies into the project.
+		///     Loads the required assemblies into the project.
 		/// </summary>
 		private void LoadAssemblies()
 		{
@@ -71,7 +70,7 @@
 		}
 
 		/// <summary>
-		///   Loads the C# files into the project.
+		///     Loads the C# files into the project.
 		/// </summary>
 		private IEnumerable<TFileElement> LoadFiles()
 		{
@@ -97,7 +96,7 @@
 		}
 
 		/// <summary>
-		///   Creates a code element representing the a file.
+		///     Creates a code element representing the a file.
 		/// </summary>
 		/// <param name="fileName">The name of the file.</param>
 		/// <param name="syntaxTree">The syntax tree of the file.</param>
@@ -105,7 +104,7 @@
 		protected abstract TFileElement CreateFile(string fileName, SyntaxTree syntaxTree, CSharpAstResolver resolver);
 
 		/// <summary>
-		///   Compiles the project. Returns false to indicate that compilation errors have occurred.
+		///     Compiles the project. Returns false to indicate that compilation errors have occurred.
 		/// </summary>
 		public bool Compile()
 		{
@@ -119,7 +118,7 @@
 		}
 
 		/// <summary>
-		///   Gets all validated file elements.
+		///     Gets all validated file elements.
 		/// </summary>
 		/// <param name="files">Returns the validated file elements.</param>
 		public void TryGetValidatedFiles(out TFileElement[] files)
@@ -135,13 +134,13 @@
 		}
 
 		/// <summary>
-		///   Compiles the given file.
+		///     Compiles the given file.
 		/// </summary>
 		/// <param name="file">The file that should be compiled.</param>
 		protected abstract void Compile(TFileElement file);
 
 		/// <summary>
-		///   Prints all parser errors.
+		///     Prints all parser errors.
 		/// </summary>
 		/// <param name="file">The file for which the parser messages should be printed.</param>
 		/// <param name="errors">The parser errors that should be printed.</param>
@@ -155,7 +154,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

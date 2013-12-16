@@ -7,17 +7,17 @@
 	using Attribute = ICSharpCode.NRefactory.CSharp.Attribute;
 
 	/// <summary>
-	///   Represents a validator attribute on a cvar or command parameter.
+	///     Represents a validator attribute on a cvar or command parameter.
 	/// </summary>
 	internal class Validator : RegistryElement
 	{
 		/// <summary>
-		///   The declaration of the attribute that represents the validator.
+		///     The declaration of the attribute that represents the validator.
 		/// </summary>
 		private readonly Attribute _attribute;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="attribute">The declaration of the attribute that represents the validator.</param>
 		public Validator(Attribute attribute)
@@ -27,7 +27,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the validator.
+		///     Gets the name of the validator.
 		/// </summary>
 		public string Name
 		{
@@ -42,7 +42,7 @@
 		}
 
 		/// <summary>
-		///   Gets the arguments of the validator.
+		///     Gets the arguments of the validator.
 		/// </summary>
 		public IEnumerable<string> Arguments
 		{

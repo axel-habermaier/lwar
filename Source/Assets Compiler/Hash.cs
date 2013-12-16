@@ -5,24 +5,24 @@
 	using System.Security.Cryptography;
 
 	/// <summary>
-	///   Represents an MD5 hash of a file.
+	///     Represents an MD5 hash of a file.
 	/// </summary>
 	public class Hash
 	{
 		/// <summary>
-		///   The hash of the file.
+		///     The hash of the file.
 		/// </summary>
 		private byte[] _hash;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		private Hash()
 		{
 		}
 
 		/// <summary>
-		///   Computes a hash for the given file.
+		///     Computes a hash for the given file.
 		/// </summary>
 		/// <param name="file">The file that should be hashed.</param>
 		public static Hash Compute(string file)
@@ -35,7 +35,7 @@
 		}
 
 		/// <summary>
-		///   Loads a file hash saved on disk.
+		///     Loads a file hash saved on disk.
 		/// </summary>
 		/// <param name="file">The file that contains the hash.</param>
 		public static Hash FromFile(string file)
@@ -45,7 +45,7 @@
 		}
 
 		/// <summary>
-		///   Writes the hash to the given file.
+		///     Writes the hash to the given file.
 		/// </summary>
 		/// <param name="file">The file that the hash should be written to.</param>
 		public void WriteTo(string file)
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given hash instance is equal to the current instance.
+		///     Checks whether the given hash instance is equal to the current instance.
 		/// </summary>
 		protected bool Equals(Hash other)
 		{
@@ -72,7 +72,7 @@
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to the current instance.
+		///     Determines whether the specified object is equal to the current instance.
 		/// </summary>
 		public override bool Equals(object obj)
 		{
@@ -87,7 +87,7 @@
 		}
 
 		/// <summary>
-		///   Serves as a hash function for a particular type.
+		///     Serves as a hash function for a particular type.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -95,7 +95,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the two hash instances are equal.
+		///     Checks whether the two hash instances are equal.
 		/// </summary>
 		public static bool operator ==(Hash left, Hash right)
 		{
@@ -103,7 +103,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the two hash instances are not equal.
+		///     Checks whether the two hash instances are not equal.
 		/// </summary>
 		public static bool operator !=(Hash left, Hash right)
 		{

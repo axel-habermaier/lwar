@@ -7,17 +7,17 @@
 	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
-	///   Represents a cvar property of the registry interface.
+	///     Represents a cvar property of the registry interface.
 	/// </summary>
 	internal class Cvar : RegistryElement
 	{
 		/// <summary>
-		///   The declaration of the property that represents the cvar.
+		///     The declaration of the property that represents the cvar.
 		/// </summary>
 		private readonly PropertyDeclaration _property;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="property">The declaration of the property that represents the cvar.</param>
 		public Cvar(PropertyDeclaration property)
@@ -27,7 +27,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the cvar.
+		///     Gets the name of the cvar.
 		/// </summary>
 		public string Name
 		{
@@ -35,7 +35,7 @@
 		}
 
 		/// <summary>
-		///   Gets the type of the cvar.
+		///     Gets the type of the cvar.
 		/// </summary>
 		public string Type
 		{
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Gets the documentation of the cvar.
+		///     Gets the documentation of the cvar.
 		/// </summary>
 		public IEnumerable<string> Documentation
 		{
@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   Gets the validators that have been declared for the cvar.
+		///     Gets the validators that have been declared for the cvar.
 		/// </summary>
 		public IEnumerable<Validator> Validators
 		{
@@ -59,7 +59,7 @@
 		}
 
 		/// <summary>
-		///   Gets the default value of the cvar.
+		///     Gets the default value of the cvar.
 		/// </summary>
 		public string DefaultValue
 		{
@@ -77,7 +77,7 @@
 		}
 
 		/// <summary>
-		///   Gets the update mode of the cvar.
+		///     Gets the update mode of the cvar.
 		/// </summary>
 		public string UpdateMode
 		{
@@ -92,7 +92,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the cvar's value is persisted across sessions.
+		///     Gets a value indicating whether the cvar's value is persisted across sessions.
 		/// </summary>
 		public bool Persistent
 		{
@@ -100,7 +100,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the command can only be invoked by the system and not via the console.
+		///     Gets a value indicating whether the command can only be invoked by the system and not via the console.
 		/// </summary>
 		public bool SystemOnly
 		{
@@ -108,7 +108,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -122,8 +122,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{

@@ -79,9 +79,9 @@
 		}
 
 		/// <summary>
-		/// Generates the private member fields for named Xaml elements.
+		///     Generates the private member fields for named Xaml elements.
 		/// </summary>
-		void GenerateMembers()
+		private void GenerateMembers()
 		{
 			var hasMembers = false;
 			foreach (var element in _xamlRoot.Descendants().Where(e => e.Name.LocalName == "Create" || e.Name.LocalName == "Delegate"))

@@ -4,33 +4,33 @@
 	using System.Runtime.InteropServices;
 
 	/// <summary>
-	///   Represents a 32-bit color (4 bytes) in the form of RGBA.
+	///     Represents a 32-bit color (4 bytes) in the form of RGBA.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Color : IEquatable<Color>
 	{
 		/// <summary>
-		///   The red component of the color.
+		///     The red component of the color.
 		/// </summary>
 		public byte Red;
 
 		/// <summary>
-		///   The green component of the color.
+		///     The green component of the color.
 		/// </summary>
 		public byte Green;
 
 		/// <summary>
-		///   The blue component of the color.
+		///     The blue component of the color.
 		/// </summary>
 		public byte Blue;
 
 		/// <summary>
-		///   The alpha component of the color.
+		///     The alpha component of the color.
 		/// </summary>
 		public byte Alpha;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The value that will be assigned to all components.</param>
 		public Color(byte value)
@@ -39,7 +39,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The value that will be assigned to all components.</param>
 		public Color(float value)
@@ -48,7 +48,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="red">The red component of the color.</param>
 		/// <param name="green">The green component of the color.</param>
@@ -63,7 +63,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="red">The red component of the color.</param>
 		/// <param name="green">The green component of the color.</param>
@@ -78,7 +78,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="argb">A packed unsigned integer containing all four color components.</param>
 		public Color(uint argb)
@@ -90,7 +90,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="argb">A packed integer containing all four color components.</param>
 		public Color(int argb)
@@ -102,7 +102,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="red">The red component of the color.</param>
 		/// <param name="green">The green component of the color.</param>
@@ -120,7 +120,7 @@
 		}
 
 		/// <summary>
-		///   Converts the color into a packed integer.
+		///     Converts the color into a packed integer.
 		/// </summary>
 		/// <returns>A packed integer containing all four color components.</returns>
 		public int ToArgb()
@@ -134,7 +134,7 @@
 		}
 
 		/// <summary>
-		///   Tests for equality between two colors.
+		///     Tests for equality between two colors.
 		/// </summary>
 		/// <param name="left">The first color to compare.</param>
 		/// <param name="right">The second color to compare.</param>
@@ -144,7 +144,7 @@
 		}
 
 		/// <summary>
-		///   Tests for inequality between two colors.
+		///     Tests for inequality between two colors.
 		/// </summary>
 		/// <param name="left">The first color to compare.</param>
 		/// <param name="right">The second color to compare.</param>
@@ -154,7 +154,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string representation of this color.
+		///     Returns a string representation of this color.
 		/// </summary>
 		public override string ToString()
 		{
@@ -162,7 +162,7 @@
 		}
 
 		/// <summary>
-		///   Returns a hash code for this color.
+		///     Returns a hash code for this color.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -170,7 +170,7 @@
 		}
 
 		/// <summary>
-		///   Determines whether the given color is equal to this color.
+		///     Determines whether the given color is equal to this color.
 		/// </summary>
 		/// <param name="other">The other color to compare with this color.</param>
 		public bool Equals(Color other)
@@ -179,7 +179,7 @@
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this color.
+		///     Determines whether the specified object is equal to this color.
 		/// </summary>
 		/// <param name="value">The object to compare with this color.</param>
 		public override bool Equals(object value)
@@ -194,7 +194,7 @@
 		}
 
 		/// <summary>
-		///   Stores the color information in the given array in RGBA format.
+		///     Stores the color information in the given array in RGBA format.
 		/// </summary>
 		/// <param name="color">The array to which the color information should be copied.</param>
 		public void ToFloatArray(float[] color)
@@ -209,7 +209,7 @@
 		}
 
 		/// <summary>
-		///   Converts a byte value to a floating point value.
+		///     Converts a byte value to a floating point value.
 		/// </summary>
 		/// <param name="component">The value that should be converted.</param>
 		private static float ToFloat(byte component)
@@ -218,7 +218,7 @@
 		}
 
 		/// <summary>
-		///   Converts a floating point value to a byte value.
+		///     Converts a floating point value to a byte value.
 		/// </summary>
 		/// <param name="component">The value that should be converted.</param>
 		private static byte ToByte(float component)
@@ -228,12 +228,12 @@
 		}
 
 		/// <summary>
-		///   Gets a predefined color instance representing 'black'.
+		///     Gets a predefined color instance representing 'black'.
 		/// </summary>
 		public static readonly Color Black = new Color(0, 0, 0, 255);
 
 		/// <summary>
-		///   Gets a predefined color instance representing 'white'.
+		///     Gets a predefined color instance representing 'white'.
 		/// </summary>
 		public static readonly Color White = new Color(255, 255, 255, 255);
 	}

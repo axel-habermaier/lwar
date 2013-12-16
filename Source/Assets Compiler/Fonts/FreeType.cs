@@ -11,11 +11,10 @@ namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Platform.Logging;
 
 	/// <summary>
-	///   Provides access to native freetype functions.
+	///     Provides access to native freetype functions.
 	/// </summary>
 #if !DEBUG
 	[SuppressUnmanagedCodeSecurity]
@@ -23,7 +22,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 	internal static class FreeType
 	{
 		/// <summary>
-		///   The name of the freetype dynamic link library.
+		///     The name of the freetype dynamic link library.
 		/// </summary>
 		private const string LibraryName =
 #if Linux
@@ -35,7 +34,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 #endif
 
 		/// <summary>
-		///   Invokes the given function, which should return a freetype error result. Throws an exception if an error occurred.
+		///     Invokes the given function, which should return a freetype error result. Throws an exception if an error occurred.
 		/// </summary>
 		/// <param name="function">The function that should be invoked.</param>
 		public static void Invoke(Func<Error> function)

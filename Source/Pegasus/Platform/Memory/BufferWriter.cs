@@ -6,27 +6,27 @@
 	using Math;
 
 	/// <summary>
-	///   Wraps a byte buffer, providing methods for writing fundamental data types to the buffer.
+	///     Wraps a byte buffer, providing methods for writing fundamental data types to the buffer.
 	/// </summary>
 	public class BufferWriter : PooledObject<BufferWriter>
 	{
 		/// <summary>
-		///   The buffer to which the data is written.
+		///     The buffer to which the data is written.
 		/// </summary>
 		private ArraySegment<byte> _buffer;
 
 		/// <summary>
-		///   Indicates the which endian encoding the buffer uses.
+		///     Indicates the which endian encoding the buffer uses.
 		/// </summary>
 		private Endianess _endianess;
 
 		/// <summary>
-		///   The current write position.
+		///     The current write position.
 		/// </summary>
 		private int _writePosition;
 
 		/// <summary>
-		///   Gets the number of bytes that have been written to the buffer.
+		///     Gets the number of bytes that have been written to the buffer.
 		/// </summary>
 		public int Count
 		{
@@ -34,7 +34,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new instance. Data is therefore written to the buffer within the range [0, buffer.Length).
+		///     Creates a new instance. Data is therefore written to the buffer within the range [0, buffer.Length).
 		/// </summary>
 		/// <param name="buffer">The buffer to which the data should be written.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
@@ -44,7 +44,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new instance. Data is therefore written to the buffer within the range [offset, offset + length).
+		///     Creates a new instance. Data is therefore written to the buffer within the range [offset, offset + length).
 		/// </summary>
 		/// <param name="buffer">The buffer to which the data should be written.</param>
 		/// <param name="offset"> The offset to the first byte of the buffer that should be written.</param>
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new instance. Data is therefore written to the buffer within the range [offset, offset + length).
+		///     Creates a new instance. Data is therefore written to the buffer within the range [offset, offset + length).
 		/// </summary>
 		/// <param name="buffer">The buffer to which the data should be written.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
@@ -70,7 +70,7 @@
 		}
 
 		/// <summary>
-		///   Resets the write position so that all content can be overwritten.
+		///     Resets the write position so that all content can be overwritten.
 		/// </summary>
 		public void Reset()
 		{
@@ -78,7 +78,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given number of bytes can be written to the buffer.
+		///     Checks whether the given number of bytes can be written to the buffer.
 		/// </summary>
 		/// <param name="size">The number of bytes that should be checked.</param>
 		public bool CanWrite(int size)
@@ -87,7 +87,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given number of bytes can be written to the buffer and throws an exception if not.
+		///     Checks whether the given number of bytes can be written to the buffer and throws an exception if not.
 		/// </summary>
 		/// <param name="size">The number of bytes that should be checked.</param>
 		[DebuggerHidden]
@@ -98,7 +98,7 @@
 		}
 
 		/// <summary>
-		///   Appends the given byte value to the end of the payload.
+		///     Appends the given byte value to the end of the payload.
 		/// </summary>
 		/// <param name="value">The value that should be appended.</param>
 		private void Append(byte value)
@@ -107,7 +107,7 @@
 		}
 
 		/// <summary>
-		///   Writes a Boolean value.
+		///     Writes a Boolean value.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteBoolean(bool value)
@@ -117,7 +117,7 @@
 		}
 
 		/// <summary>
-		///   Writes a signed byte.
+		///     Writes a signed byte.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteSByte(sbyte value)
@@ -127,7 +127,7 @@
 		}
 
 		/// <summary>
-		///   Writes an unsigned byte.
+		///     Writes an unsigned byte.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteByte(byte value)
@@ -137,7 +137,7 @@
 		}
 
 		/// <summary>
-		///   Writes a 2 byte signed integer.
+		///     Writes a 2 byte signed integer.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteInt16(short value)
@@ -151,7 +151,7 @@
 		}
 
 		/// <summary>
-		///   Writes a 2 byte unsigned integer.
+		///     Writes a 2 byte unsigned integer.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteUInt16(ushort value)
@@ -165,7 +165,7 @@
 		}
 
 		/// <summary>
-		///   Writes an UTF-16 character.
+		///     Writes an UTF-16 character.
 		/// </summary>
 		/// <param name="character">The value that should be written.</param>
 		public void WriteCharacter(char character)
@@ -175,7 +175,7 @@
 		}
 
 		/// <summary>
-		///   Writes a 4 byte signed integer.
+		///     Writes a 4 byte signed integer.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteInt32(int value)
@@ -191,7 +191,7 @@
 		}
 
 		/// <summary>
-		///   Writes a 4 byte unsigned integer.
+		///     Writes a 4 byte unsigned integer.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteUInt32(uint value)
@@ -207,7 +207,7 @@
 		}
 
 		/// <summary>
-		///   Writes an 8 byte signed integer.
+		///     Writes an 8 byte signed integer.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteInt64(long value)
@@ -227,7 +227,7 @@
 		}
 
 		/// <summary>
-		///   Writes an 8 byte unsigned integer.
+		///     Writes an 8 byte unsigned integer.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteUInt64(ulong value)
@@ -247,7 +247,7 @@
 		}
 
 		/// <summary>
-		///   Writes a 4 byte signed fixed-point value with 8 bits for the fractional part.
+		///     Writes a 4 byte signed fixed-point value with 8 bits for the fractional part.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteFixed8(Fixed8 value)
@@ -256,7 +256,7 @@
 		}
 
 		/// <summary>
-		///   Writes a 4 byte signed fixed-point value with 16 bits for the fractional part.
+		///     Writes a 4 byte signed fixed-point value with 16 bits for the fractional part.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteFixed16(Fixed16 value)
@@ -267,7 +267,7 @@
 		// ReSharper disable InconsistentNaming
 
 		/// <summary>
-		///   Writes a two-component vector of Fixed8.
+		///     Writes a two-component vector of Fixed8.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteVector2f8(Vector2f8 value)
@@ -277,7 +277,7 @@
 		}
 
 		/// <summary>
-		///   Writes a two-component vector of Fixed16.
+		///     Writes a two-component vector of Fixed16.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteVector2f16(Vector2f16 value)
@@ -287,7 +287,7 @@
 		}
 
 		/// <summary>
-		///   Writes a two-component vector of integers.
+		///     Writes a two-component vector of integers.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteVector2i(Vector2i value)
@@ -299,7 +299,7 @@
 		// ReSharper restore InconsistentNaming
 
 		/// <summary>
-		///   Writes an UTF8 string.
+		///     Writes an UTF8 string.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteString(string value)
@@ -309,7 +309,7 @@
 		}
 
 		/// <summary>
-		///   Writes a byte array.
+		///     Writes a byte array.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteByteArray(byte[] value)
@@ -321,7 +321,7 @@
 		}
 
 		/// <summary>
-		///   Copies the given byte array into the buffer.
+		///     Copies the given byte array into the buffer.
 		/// </summary>
 		/// <param name="value">The data that should be copied.</param>
 		public void Copy(byte[] value)
@@ -334,8 +334,8 @@
 		}
 
 		/// <summary>
-		///   Tries to serialize the given object into the buffer. Either, all writes succeed or the buffer remains unmodified
-		///   if any writes are out of bounds. Returns true to indicate that all writes have been successful.
+		///     Tries to serialize the given object into the buffer. Either, all writes succeed or the buffer remains unmodified
+		///     if any writes are out of bounds. Returns true to indicate that all writes have been successful.
 		/// </summary>
 		/// <typeparam name="T">The type of the object that should be serialized.</typeparam>
 		/// <param name="obj">The object that should be serialized into the buffer.</param>

@@ -4,27 +4,27 @@
 	using System.Runtime.InteropServices;
 
 	/// <summary>
-	///   Represents a pointer to a byte buffer.
+	///     Represents a pointer to a byte buffer.
 	/// </summary>
 	public unsafe class BufferPointer : PooledObject<BufferPointer>
 	{
 		/// <summary>
-		///   The handle of the pinned byte array.
+		///     The handle of the pinned byte array.
 		/// </summary>
 		private GCHandle _handle;
 
 		/// <summary>
-		///   The pointer to the beginning of the buffer.
+		///     The pointer to the beginning of the buffer.
 		/// </summary>
 		public byte* Pointer { get; private set; }
 
 		/// <summary>
-		///   The size of the buffer in bytes.
+		///     The size of the buffer in bytes.
 		/// </summary>
 		public int Size { get; private set; }
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer the pointer should point to.</param>
 		public static BufferPointer Create(byte[] buffer)
@@ -33,7 +33,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer the pointer should point to.</param>
 		/// <param name="offset">The offset of the first byte the pointer should point to.</param>
@@ -52,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the pooled instance is returned to the pool.
+		///     Invoked when the pooled instance is returned to the pool.
 		/// </summary>
 		protected override void OnReturning()
 		{

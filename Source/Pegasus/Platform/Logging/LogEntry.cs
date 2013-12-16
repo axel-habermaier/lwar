@@ -4,12 +4,12 @@
 	using System.Diagnostics;
 
 	/// <summary>
-	///   Represents a log entry with a specific type and message.
+	///     Represents a log entry with a specific type and message.
 	/// </summary>
 	public struct LogEntry
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="logType">The type of the log entry.</param>
 		/// <param name="message">The message of the log entry.</param>
@@ -25,22 +25,22 @@
 		}
 
 		/// <summary>
-		///   Gets the type of the log entry.
+		///     Gets the type of the log entry.
 		/// </summary>
 		public LogType LogType { get; private set; }
 
 		/// <summary>
-		///   Gets the message of the log entry.
+		///     Gets the message of the log entry.
 		/// </summary>
 		public string Message { get; private set; }
 
 		/// <summary>
-		///   Gets the date and time of the creation of the log entry.
+		///     Gets the date and time of the creation of the log entry.
 		/// </summary>
 		public DateTime Time { get; private set; }
 
 		/// <summary>
-		///   Raises the appropriate log event for the log entries.
+		///     Raises the appropriate log event for the log entries.
 		/// </summary>
 		[DebuggerHidden]
 		public void RaiseLogEvent()

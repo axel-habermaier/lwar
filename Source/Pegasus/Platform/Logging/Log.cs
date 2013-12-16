@@ -5,43 +5,43 @@
 	using Framework;
 
 	/// <summary>
-	///   Provides functions to log fatal errors, errors, warnings, informational messages, and debug-time only
-	///   informational messages. An event is raised whenever one of these functions is invoked.
+	///     Provides functions to log fatal errors, errors, warnings, informational messages, and debug-time only
+	///     informational messages. An event is raised whenever one of these functions is invoked.
 	/// </summary>
 	public static class Log
 	{
 		/// <summary>
-		///   Raised when a fatal error occurred. Typically, the program terminates after all event handlers have
-		///   been executed.
+		///     Raised when a fatal error occurred. Typically, the program terminates after all event handlers have
+		///     been executed.
 		/// </summary>
 		public static event Action<LogEntry> OnFatalError;
 
 		/// <summary>
-		///   Raised when an error occurred.
+		///     Raised when an error occurred.
 		/// </summary>
 		public static event Action<LogEntry> OnError;
 
 		/// <summary>
-		///   Raised when a warning was generated.
+		///     Raised when a warning was generated.
 		/// </summary>
 		public static event Action<LogEntry> OnWarning;
 
 		/// <summary>
-		///   Raised when an informational message was generated.
+		///     Raised when an informational message was generated.
 		/// </summary>
 		public static event Action<LogEntry> OnInfo;
 
 		/// <summary>
-		///   Raised when a debug informational message was generated.
+		///     Raised when a debug informational message was generated.
 		/// </summary>
 		public static event Action<LogEntry> OnDebugInfo;
 
 		/// <summary>
-		///   Raises the OnFatalError event with the given message and terminates the application by throwing
-		///   an InvalidOperationException.
+		///     Raises the OnFatalError event with the given message and terminates the application by throwing
+		///     an InvalidOperationException.
 		/// </summary>
 		/// <param name="message">
-		///   The message that should be formatted and passed as an argument of the OnFatalError event.
+		///     The message that should be formatted and passed as an argument of the OnFatalError event.
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[DebuggerHidden]
@@ -58,10 +58,10 @@
 		}
 
 		/// <summary>
-		///   Raises the OnError event with the given message.
+		///     Raises the OnError event with the given message.
 		/// </summary>
 		/// <param name="message">
-		///   The message that should be formatted and passed as an argument of the OnError event.
+		///     The message that should be formatted and passed as an argument of the OnError event.
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[StringFormatMethod("message")]
@@ -74,10 +74,10 @@
 		}
 
 		/// <summary>
-		///   Raises the OnWarning event with the given message.
+		///     Raises the OnWarning event with the given message.
 		/// </summary>
 		/// <param name="message">
-		///   The message that should be formatted and passed as an argument of the OnWarning event.
+		///     The message that should be formatted and passed as an argument of the OnWarning event.
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[StringFormatMethod("message")]
@@ -90,10 +90,10 @@
 		}
 
 		/// <summary>
-		///   Raises the OnInfo event with the given message.
+		///     Raises the OnInfo event with the given message.
 		/// </summary>
 		/// <param name="message">
-		///   The message that should be formatted and passed as an argument of the OnInfo event.
+		///     The message that should be formatted and passed as an argument of the OnInfo event.
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[StringFormatMethod("message")]
@@ -106,10 +106,10 @@
 		}
 
 		/// <summary>
-		///   In debug builds, raises the OnDebugInfo event with the given message.
+		///     In debug builds, raises the OnDebugInfo event with the given message.
 		/// </summary>
 		/// <param name="message">
-		///   The message that should be formatted and passed as an argument of the OnDebugInfo event.
+		///     The message that should be formatted and passed as an argument of the OnDebugInfo event.
 		/// </param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[Conditional("DEBUG")]

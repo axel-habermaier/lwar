@@ -10,37 +10,37 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Represents a code element.
+	///     Represents a code element.
 	/// </summary>
 	internal abstract class CodeElement
 	{
 		/// <summary>
-		///   The list of child elements that this element consists of.
+		///     The list of child elements that this element consists of.
 		/// </summary>
 		private readonly List<CodeElement> _childElements = new List<CodeElement>();
 
 		/// <summary>
-		///   The error reporter that is used to report validation errors.
+		///     The error reporter that is used to report validation errors.
 		/// </summary>
 		private IErrorReporter _errorReporter;
 
 		/// <summary>
-		///   Indicates whether any errors occurred during the validation of the element.
+		///     Indicates whether any errors occurred during the validation of the element.
 		/// </summary>
 		private bool _hasErrors;
 
 		/// <summary>
-		///   The path to the C# file that contains the element.
+		///     The path to the C# file that contains the element.
 		/// </summary>
 		private string _sourceFile;
 
 		/// <summary>
-		///   The current state of the element.
+		///     The current state of the element.
 		/// </summary>
 		private State _state = State.Uninitialized;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="errorReporter">The error reporter that should be used to report validation errors.</param>
 		/// <param name="sourceFile">The path to the C# file that contains the element.</param>
@@ -57,20 +57,20 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		protected CodeElement()
 		{
 		}
 
 		/// <summary>
-		///   Gets the C# AST resolver that should be used to resolve symbols of the C# file currently being analyzed.
+		///     Gets the C# AST resolver that should be used to resolve symbols of the C# file currently being analyzed.
 		/// </summary>
 		protected CSharpAstResolver Resolver { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating whether there have been any errors during the validation of the element or any of its
-		///   children.
+		///     Gets a value indicating whether there have been any errors during the validation of the element or any of its
+		///     children.
 		/// </summary>
 		public bool HasErrors
 		{
@@ -78,7 +78,7 @@
 		}
 
 		/// <summary>
-		///   Initializes the element and all of its children.
+		///     Initializes the element and all of its children.
 		/// </summary>
 		public void InitializeElement()
 		{
@@ -92,8 +92,8 @@
 		}
 
 		/// <summary>
-		///   Validates the element and all of its children. This method has no effect if any errors occurred during
-		///   initialization.
+		///     Validates the element and all of its children. This method has no effect if any errors occurred during
+		///     initialization.
 		/// </summary>
 		public void ValidateElement()
 		{
@@ -110,7 +110,7 @@
 		}
 
 		/// <summary>
-		///   Adds the given elements to the current element.
+		///     Adds the given elements to the current element.
 		/// </summary>
 		/// <param name="elements">The elements that should be added.</param>
 		protected void AddElements(IEnumerable<CodeElement> elements)
@@ -122,7 +122,7 @@
 		}
 
 		/// <summary>
-		///   Adds the given element to the current element.
+		///     Adds the given element to the current element.
 		/// </summary>
 		/// <param name="element">The element that should be added.</param>
 		protected void AddElement(CodeElement element)
@@ -138,7 +138,7 @@
 		}
 
 		/// <summary>
-		///   Returns all child elements of the given type.
+		///     Returns all child elements of the given type.
 		/// </summary>
 		/// <typeparam name="T">The type of the elements that should be returned.</typeparam>
 		protected IEnumerable<T> GetChildElements<T>()
@@ -148,22 +148,22 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected virtual void Initialize()
 		{
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected virtual void Validate()
 		{
 		}
 
 		/// <summary>
-		///   Logs an error.
+		///     Logs an error.
 		/// </summary>
 		/// <param name="node">The node for which the error should be reported.</param>
 		/// <param name="message">The error message.</param>
@@ -176,7 +176,7 @@
 		}
 
 		/// <summary>
-		///   Logs a warning.
+		///     Logs a warning.
 		/// </summary>
 		/// <param name="node">The node for which the warning should be raised.</param>
 		/// <param name="message">The message of the warning.</param>
@@ -189,7 +189,7 @@
 		}
 
 		/// <summary>
-		///   Logs an error.
+		///     Logs an error.
 		/// </summary>
 		/// <param name="begin">The beginning of the message location in the source file.</param>
 		/// <param name="end">The end of the message location in the source file.</param>
@@ -205,7 +205,7 @@
 		}
 
 		/// <summary>
-		///   Logs a warning.
+		///     Logs a warning.
 		/// </summary>
 		/// <param name="begin">The beginning of the message location in the source file.</param>
 		/// <param name="end">The end of the message location in the source file.</param>
@@ -219,7 +219,7 @@
 		}
 
 		/// <summary>
-		///   Reports a message to the error reporter.
+		///     Reports a message to the error reporter.
 		/// </summary>
 		/// <param name="type">The type of the message that should be reported.</param>
 		/// <param name="message">The message that should be reported.</param>
@@ -234,7 +234,7 @@
 		}
 
 		/// <summary>
-		///   Describes the state of a compiled element.
+		///     Describes the state of a compiled element.
 		/// </summary>
 		private enum State
 		{

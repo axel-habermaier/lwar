@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System;
-	using Assets;
 	using CSharp;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
@@ -10,17 +9,17 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a C# project with effect declarations that have to be cross-compiled.
+	///     Represents a C# project with effect declarations that have to be cross-compiled.
 	/// </summary>
 	internal class EffectsProject : CSharpProject<EffectFile>
 	{
 		/// <summary>
-		///   The C# code generator that is used to generate the C# effects file.
+		///     The C# code generator that is used to generate the C# effects file.
 		/// </summary>
 		private readonly CSharpCodeGenerator _generator = new CSharpCodeGenerator();
 
 		/// <summary>
-		///   Outputs a compilation message.
+		///     Outputs a compilation message.
 		/// </summary>
 		/// <param name="type">The type of the compilation message.</param>
 		/// <param name="file">The name of the file for which the message should be raised.</param>
@@ -36,7 +35,7 @@
 		}
 
 		/// <summary>
-		///   Creates a code element representing the a file.
+		///     Creates a code element representing the a file.
 		/// </summary>
 		/// <param name="fileName">The name of the file.</param>
 		/// <param name="syntaxTree">The syntax tree of the file.</param>
@@ -47,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Compiles the given file.
+		///     Compiles the given file.
 		/// </summary>
 		/// <param name="file">The file that should be compiled.</param>
 		protected override void Compile(EffectFile file)
@@ -56,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

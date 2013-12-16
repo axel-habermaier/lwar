@@ -9,7 +9,6 @@
 	using Platform.Graphics;
 	using Platform.Input;
 	using Platform.Logging;
-	using Platform.Memory;
 	using Platform.Performance;
 	using Rendering;
 	using Scripting;
@@ -100,7 +99,7 @@
 		/// </summary>
 		protected void Exit()
 		{
-			Log.Info("Exiting...");
+			Log.Info("Exiting {0}...", Name);
 			_running = false;
 		}
 
@@ -221,7 +220,7 @@
 						swapChain.Present();
 						//logFile.WriteToFile();
 
-						if (!window.Focused)
+						if (!_root.HasFocusedWindows)
 							Thread.Sleep(50);
 					}
 

@@ -9,12 +9,12 @@
 	using ICSharpCode.NRefactory.TypeSystem;
 
 	/// <summary>
-	///   Represents an element of an effect declaration.
+	///     Represents an element of an effect declaration.
 	/// </summary>
 	internal abstract class EffectElement : CodeElement
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="errorReporter">The error reporter that should be used to report validation errors.</param>
 		/// <param name="sourceFile">The path to the C# file that contains the element.</param>
@@ -25,14 +25,14 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		protected EffectElement()
 		{
 		}
 
 		/// <summary>
-		///   Checks whether the given identifier is reserved.
+		///     Checks whether the given identifier is reserved.
 		/// </summary>
 		/// <param name="identifier">The identifier that should be checked.</param>
 		protected void ValidateIdentifier(Identifier identifier)
@@ -42,7 +42,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given type is valid.
+		///     Checks whether the given type is valid.
 		/// </summary>
 		/// <param name="node">The node whose type should be checked.</param>
 		/// <param name="resolvedType">The declared type of the node.</param>
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the declared modifiers match the expected ones.
+		///     Checks whether the declared modifiers match the expected ones.
 		/// </summary>
 		/// <param name="declaration">The declaration that is affected by the modifiers.</param>
 		/// <param name="declaredModifiers">The modifiers that have actually been declared.</param>
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the declared modifiers match the expected ones.
+		///     Checks whether the declared modifiers match the expected ones.
 		/// </summary>
 		/// <param name="declaration">The declaration that is affected by the modifiers.</param>
 		/// <param name="declaredModifiers">The modifiers that have actually been declared.</param>

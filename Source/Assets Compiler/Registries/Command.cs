@@ -7,17 +7,17 @@
 	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
-	///   Represents a command method of the registry interface.
+	///     Represents a command method of the registry interface.
 	/// </summary>
 	internal class Command : RegistryElement
 	{
 		/// <summary>
-		///   The declaration of the method that represents the command.
+		///     The declaration of the method that represents the command.
 		/// </summary>
 		private readonly MethodDeclaration _method;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="method">The declaration of the method that represents the command.</param>
 		public Command(MethodDeclaration method)
@@ -27,7 +27,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the command.
+		///     Gets the name of the command.
 		/// </summary>
 		public string Name
 		{
@@ -35,7 +35,7 @@
 		}
 
 		/// <summary>
-		///   Gets the command's parameters.
+		///     Gets the command's parameters.
 		/// </summary>
 		public IEnumerable<CommandParameter> Parameters
 		{
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Gets the documentation of the cvar.
+		///     Gets the documentation of the cvar.
 		/// </summary>
 		public IEnumerable<string> Documentation
 		{
@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the command can only be invoked by the system and not via the console.
+		///     Gets a value indicating whether the command can only be invoked by the system and not via the console.
 		/// </summary>
 		public bool SystemOnly
 		{
@@ -59,7 +59,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -69,8 +69,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{

@@ -8,17 +8,17 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a parameter of a shader.
+	///     Represents a parameter of a shader.
 	/// </summary>
 	internal class ShaderParameter : EffectElement
 	{
 		/// <summary>
-		///   The declaration of the method parameter that represents the shader parameter.
+		///     The declaration of the method parameter that represents the shader parameter.
 		/// </summary>
 		private readonly ParameterDeclaration _parameter;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="parameter">The declaration of the method parameter that represents the shader parameter.</param>
 		public ShaderParameter(ParameterDeclaration parameter)
@@ -28,7 +28,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the parameter
+		///     Gets the name of the parameter
 		/// </summary>
 		public string Name
 		{
@@ -36,7 +36,7 @@
 		}
 
 		/// <summary>
-		///   Gets the type of the parameter.
+		///     Gets the type of the parameter.
 		/// </summary>
 		public DataType Type
 		{
@@ -44,7 +44,7 @@
 		}
 
 		/// <summary>
-		///   Gets the semantics of the shader parameter.
+		///     Gets the semantics of the shader parameter.
 		/// </summary>
 		public DataSemantics Semantics
 		{
@@ -61,7 +61,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the parameter is a shader output.
+		///     Gets a value indicating whether the parameter is a shader output.
 		/// </summary>
 		public bool IsOutput
 		{
@@ -69,8 +69,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{

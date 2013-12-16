@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Xaml
+﻿namespace Pegasus.AssetsCompiler.Xaml
 {
+	using System;
 	using System.Xml.Linq;
 	using Platform.Logging;
 

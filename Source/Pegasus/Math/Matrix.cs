@@ -4,98 +4,98 @@
 	using System.Runtime.InteropServices;
 
 	/// <summary>
-	///   Represents a 4x4 matrix.
+	///     Represents a 4x4 matrix.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Matrix : IEquatable<Matrix>
 	{
 		/// <summary>
-		///   The identity matrix.
+		///     The identity matrix.
 		/// </summary>
 		public static readonly Matrix Identity = new Matrix { M11 = 1.0f, M22 = 1.0f, M33 = 1.0f, M44 = 1.0f };
 
 		/// <summary>
-		///   The value at row 1 column 1 of the matrix.
+		///     The value at row 1 column 1 of the matrix.
 		/// </summary>
 		public float M11;
 
 		/// <summary>
-		///   The value at row 1 column 2 of the matrix.
+		///     The value at row 1 column 2 of the matrix.
 		/// </summary>
 		public float M12;
 
 		/// <summary>
-		///   The value at row 1 column 3 of the matrix.
+		///     The value at row 1 column 3 of the matrix.
 		/// </summary>
 		public float M13;
 
 		/// <summary>
-		///   The value at row 1 column 4 of the matrix.
+		///     The value at row 1 column 4 of the matrix.
 		/// </summary>
 		public float M14;
 
 		/// <summary>
-		///   The value at row 2 column 1 of the matrix.
+		///     The value at row 2 column 1 of the matrix.
 		/// </summary>
 		public float M21;
 
 		/// <summary>
-		///   The value at row 2 column 2 of the matrix.
+		///     The value at row 2 column 2 of the matrix.
 		/// </summary>
 		public float M22;
 
 		/// <summary>
-		///   The value at row 2 column 3 of the matrix.
+		///     The value at row 2 column 3 of the matrix.
 		/// </summary>
 		public float M23;
 
 		/// <summary>
-		///   The value at row 2 column 4 of the matrix.
+		///     The value at row 2 column 4 of the matrix.
 		/// </summary>
 		public float M24;
 
 		/// <summary>
-		///   The value at row 3 column 1 of the matrix.
+		///     The value at row 3 column 1 of the matrix.
 		/// </summary>
 		public float M31;
 
 		/// <summary>
-		///   The value at row 3 column 2 of the matrix.
+		///     The value at row 3 column 2 of the matrix.
 		/// </summary>
 		public float M32;
 
 		/// <summary>
-		///   The value at row 3 column 3 of the matrix.
+		///     The value at row 3 column 3 of the matrix.
 		/// </summary>
 		public float M33;
 
 		/// <summary>
-		///   The value at row 3 column 4 of the matrix.
+		///     The value at row 3 column 4 of the matrix.
 		/// </summary>
 		public float M34;
 
 		/// <summary>
-		///   The value at row 4 column 1 of the matrix.
+		///     The value at row 4 column 1 of the matrix.
 		/// </summary>
 		public float M41;
 
 		/// <summary>
-		///   The value at row 4 column 2 of the matrix.
+		///     The value at row 4 column 2 of the matrix.
 		/// </summary>
 		public float M42;
 
 		/// <summary>
-		///   The value at row 4 column 3 of the matrix.
+		///     The value at row 4 column 3 of the matrix.
 		/// </summary>
 		public float M43;
 
 		/// <summary>
-		///   The value at row 4 column 4 of the matrix.
+		///     The value at row 4 column 4 of the matrix.
 		/// </summary>
 		public float M44;
 
 		/// <summary>
-		///   Gets or sets the first row of the matrix (M11, M12, M13, and M14).
+		///     Gets or sets the first row of the matrix (M11, M12, M13, and M14).
 		/// </summary>
 		public Vector4 Row1
 		{
@@ -110,7 +110,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the second row of the matrix (M21, M22, M23, and M24).
+		///     Gets or sets the second row of the matrix (M21, M22, M23, and M24).
 		/// </summary>
 		public Vector4 Row2
 		{
@@ -125,7 +125,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the third row of the matrix (M31, M32, M33, and M34).
+		///     Gets or sets the third row of the matrix (M31, M32, M33, and M34).
 		/// </summary>
 		public Vector4 Row3
 		{
@@ -140,7 +140,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the fourth row of the matrix (M41, M42, M43, and M44).
+		///     Gets or sets the fourth row of the matrix (M41, M42, M43, and M44).
 		/// </summary>
 		public Vector4 Row4
 		{
@@ -155,7 +155,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the first column of the matrix (M11, M21, M31, and M41).
+		///     Gets or sets the first column of the matrix (M11, M21, M31, and M41).
 		/// </summary>
 		public Vector4 Column1
 		{
@@ -170,7 +170,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the second column of the matrix (M12, M22, M32, and M42).
+		///     Gets or sets the second column of the matrix (M12, M22, M32, and M42).
 		/// </summary>
 		public Vector4 Column2
 		{
@@ -185,7 +185,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the third column of the matrix (M13, M23, M33, and M43).
+		///     Gets or sets the third column of the matrix (M13, M23, M33, and M43).
 		/// </summary>
 		public Vector4 Column3
 		{
@@ -200,7 +200,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the fourth column of the matrix (M14, M24, M34, and M44).
+		///     Gets or sets the fourth column of the matrix (M14, M24, M34, and M44).
 		/// </summary>
 		public Vector4 Column4
 		{
@@ -215,7 +215,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The value that should be assigned to all components.</param>
 		public Matrix(float value)
@@ -227,7 +227,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="m11">The value of row 1, column 1 of the matrix.</param>
 		/// <param name="m12">The value of row 1, column 2 of the matrix.</param>
@@ -269,7 +269,7 @@
 		}
 
 		/// <summary>
-		///   Creates a perspective projection matrix.
+		///     Creates a perspective projection matrix.
 		/// </summary>
 		/// <param name="left">The minimum x-value of the viewing volume.</param>
 		/// <param name="right">The maximum x-value of the viewing volume.</param>
@@ -301,7 +301,7 @@
 		}
 
 		/// <summary>
-		///   Creates a perspective projection matrix.
+		///     Creates a perspective projection matrix.
 		/// </summary>
 		/// <param name="fieldOfView">The field of view in radians.</param>
 		/// <param name="aspect">The aspect ratio, defined as view space width divided by view space height.</param>
@@ -323,7 +323,7 @@
 		}
 
 		/// <summary>
-		///   Creates a orthographic projection matrix.
+		///     Creates a orthographic projection matrix.
 		/// </summary>
 		/// <param name="left">The minimum x-value of the viewing volume.</param>
 		/// <param name="right">The maximum x-value of the viewing volume.</param>
@@ -347,7 +347,7 @@
 		}
 
 		/// <summary>
-		///   Creates a translation matrix.
+		///     Creates a translation matrix.
 		/// </summary>
 		/// <param name="x">The translation offset in X-direction.</param>
 		/// <param name="y">The translation offset in Y-direction.</param>
@@ -362,7 +362,7 @@
 		}
 
 		/// <summary>
-		///   Creates a translation matrix.
+		///     Creates a translation matrix.
 		/// </summary>
 		/// <param name="translation">The translation offset in X, Y, and Z direction.</param>
 		public static Matrix CreateTranslation(Vector3 translation)
@@ -371,7 +371,7 @@
 		}
 
 		/// <summary>
-		///   Creates a viewing matrix where the camera lies at the given position at looks at the given target.
+		///     Creates a viewing matrix where the camera lies at the given position at looks at the given target.
 		/// </summary>
 		/// <param name="position">The position of the camera.</param>
 		/// <param name="target">The target of the camera.</param>
@@ -401,7 +401,7 @@
 		}
 
 		/// <summary>
-		///   Creates a matrix that rotates around the Z-axis.
+		///     Creates a matrix that rotates around the Z-axis.
 		/// </summary>
 		/// <param name="angle">The angle of the rotation, measured in radians.</param>
 		public static Matrix CreateRotationX(float angle)
@@ -419,7 +419,7 @@
 		}
 
 		/// <summary>
-		///   Creates a matrix that rotates around the Z-axis.
+		///     Creates a matrix that rotates around the Z-axis.
 		/// </summary>
 		/// <param name="angle">The angle of the rotation, measured in radians.</param>
 		public static Matrix CreateRotationY(float angle)
@@ -437,7 +437,7 @@
 		}
 
 		/// <summary>
-		///   Creates a matrix that rotates around the Z-axis.
+		///     Creates a matrix that rotates around the Z-axis.
 		/// </summary>
 		/// <param name="angle">The angle of the rotation, measured in radians.</param>
 		public static Matrix CreateRotationZ(float angle)
@@ -455,7 +455,7 @@
 		}
 
 		/// <summary>
-		///   Creates a matrix that uniformly changes the scale.
+		///     Creates a matrix that uniformly changes the scale.
 		/// </summary>
 		/// <param name="scale">The scale in X-direction.</param>
 		public static Matrix CreateScale(float scale)
@@ -464,7 +464,7 @@
 		}
 
 		/// <summary>
-		///   Creates a matrix that changes the scale.
+		///     Creates a matrix that changes the scale.
 		/// </summary>
 		/// <param name="x">The scale in X-direction.</param>
 		/// <param name="y">The scale in Y-direction.</param>
@@ -479,7 +479,7 @@
 		}
 
 		/// <summary>
-		///   Determines whether the given matrix is equal to this matrix.
+		///     Determines whether the given matrix is equal to this matrix.
 		/// </summary>
 		/// <param name="other">The other matrix to compare with this matrix.</param>
 		public bool Equals(Matrix other)
@@ -503,7 +503,7 @@
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this matrix.
+		///     Determines whether the specified object is equal to this matrix.
 		/// </summary>
 		/// <param name="value">The object to compare with this matrix.</param>
 		public override bool Equals(object value)
@@ -518,7 +518,7 @@
 		}
 
 		/// <summary>
-		///   Returns a hash code for this matrix.
+		///     Returns a hash code for this matrix.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -529,7 +529,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string representation of this matrix.
+		///     Returns a string representation of this matrix.
 		/// </summary>
 		public override string ToString()
 		{
@@ -539,7 +539,7 @@
 		}
 
 		/// <summary>
-		///   Tests for equality between two matrices.
+		///     Tests for equality between two matrices.
 		/// </summary>
 		/// <param name="left">The first matrix to compare.</param>
 		/// <param name="right">The second matrix to compare.</param>
@@ -549,7 +549,7 @@
 		}
 
 		/// <summary>
-		///   Tests for inequality between two matrices.
+		///     Tests for inequality between two matrices.
 		/// </summary>
 		/// <param name="left">The first matrix to compare.</param>
 		/// <param name="right">The second matrix to compare.</param>
@@ -559,7 +559,7 @@
 		}
 
 		/// <summary>
-		///   Performs a matrix addition.
+		///     Performs a matrix addition.
 		/// </summary>
 		/// <param name="left">The first matrix to add.</param>
 		/// <param name="right">The second matrix to add.</param>
@@ -572,7 +572,7 @@
 		}
 
 		/// <summary>
-		///   Performs a matrix subtraction.
+		///     Performs a matrix subtraction.
 		/// </summary>
 		/// <param name="left">The first matrix.</param>
 		/// <param name="right">The second matrix.</param>
@@ -585,7 +585,7 @@
 		}
 
 		/// <summary>
-		///   Multiplies two matricies.
+		///     Multiplies two matricies.
 		/// </summary>
 		/// <param name="left">The first matrix to multiply.</param>
 		/// <param name="right">The second matrix to multiply.</param>

@@ -5,12 +5,12 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Provides methods to report errors and warnings.
+	///     Provides methods to report errors and warnings.
 	/// </summary>
 	public interface IErrorReporter
 	{
 		/// <summary>
-		///   Reports an error or a warning.
+		///     Reports an error or a warning.
 		/// </summary>
 		/// <param name="type">The type of the reported message.</param>
 		/// <param name="file">The name of the file for which the message should be reported.</param>

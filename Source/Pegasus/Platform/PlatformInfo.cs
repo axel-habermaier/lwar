@@ -5,17 +5,17 @@
 	using EndianessType = Memory.Endianess;
 
 	/// <summary>
-	///   Provides further information about the platform the application is running on.
+	///     Provides further information about the platform the application is running on.
 	/// </summary>
 	public static class PlatformInfo
 	{
 		/// <summary>
-		///   The file extension used for compiled asset files.
+		///     The file extension used for compiled asset files.
 		/// </summary>
 		public const string AssetExtension = ".pg";
 
 		/// <summary>
-		///   Indicates whether the platform is a big or little endian architecture.
+		///     Indicates whether the platform is a big or little endian architecture.
 		/// </summary>
 		public const EndianessType Endianess = 
 #if BigEndian
@@ -25,7 +25,7 @@
 #endif
 
 		/// <summary>
-		///   The type of the platform the application is running on.
+		///     The type of the platform the application is running on.
 		/// </summary>
 		public static readonly PlatformType Platform =
 #if Windows
@@ -35,7 +35,7 @@
 #endif
 
 		/// <summary>
-		///   The scan code of the console key.
+		///     The scan code of the console key.
 		/// </summary>
 		public const int ConsoleKey =
 #if Windows
@@ -45,7 +45,7 @@
 #endif
 
 		/// <summary>
-		///   Indicates whether the application was built in debug mode.
+		///     Indicates whether the application was built in debug mode.
 		/// </summary>
 		public const bool IsDebug =
 #if DEBUG
@@ -55,7 +55,7 @@
 #endif
 
 		/// <summary>
-		///   Gets the type of graphics API that is used for rendering.
+		///     Gets the type of graphics API that is used for rendering.
 		/// </summary>
 		public static GraphicsApi GraphicsApi
 		{

@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   Describes an intrinsic shader function.
+	///     Describes an intrinsic shader function.
 	/// </summary>
 	internal enum Intrinsic
 	{

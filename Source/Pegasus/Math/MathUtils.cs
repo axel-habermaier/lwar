@@ -3,33 +3,33 @@
 	using System;
 
 	/// <summary>
-	///   Provides math utility functions.
+	///     Provides math utility functions.
 	/// </summary>
 	public static class MathUtils
 	{
 		/// <summary>
-		///   Epsilon value for float-point equality comparisons.
+		///     Epsilon value for float-point equality comparisons.
 		/// </summary>
 		public const float Epsilon = 10e-6f;
 
 		/// <summary>
-		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
+		///     Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
 		/// </summary>
 		public const float Pi = (float)Math.PI;
 
 		/// <summary>
-		///   Represents a 360 degree rotation.
+		///     Represents a 360 degree rotation.
 		/// </summary>
 		public const float TwoPi = (float)Math.PI * 2;
 
 		/// <summary>
-		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
+		///     Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
 		/// </summary>
 		public const float PiOver2 = (float)Math.PI / 2;
 
 		/// <summary>
-		///   Checks whether two float values are equal. If the difference between the two floats is
-		///   small enough, they are considered equal.
+		///     Checks whether two float values are equal. If the difference between the two floats is
+		///     small enough, they are considered equal.
 		/// </summary>
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
@@ -39,8 +39,8 @@
 		}
 
 		/// <summary>
-		///   Checks whether two double values are equal. If the difference between the two doubles is
-		///   small enough, they are considered equal.
+		///     Checks whether two double values are equal. If the difference between the two doubles is
+		///     small enough, they are considered equal.
 		/// </summary>
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
@@ -50,7 +50,7 @@
 		}
 
 		/// <summary>
-		///   Clamps the given value to be in the range [min, max].
+		///     Clamps the given value to be in the range [min, max].
 		/// </summary>
 		/// <param name="value">The value that should be clamped.</param>
 		/// <param name="min">The lower bound of the clamped interval.</param>
@@ -67,7 +67,7 @@
 		}
 
 		/// <summary>
-		///   Clamps the given value to be in the range [min, max].
+		///     Clamps the given value to be in the range [min, max].
 		/// </summary>
 		/// <param name="value">The value that should be clamped.</param>
 		/// <param name="min">The lower bound of the clamped interval.</param>
@@ -84,7 +84,7 @@
 		}
 
 		/// <summary>
-		///   Clamps the given value to be in the range [min, max].
+		///     Clamps the given value to be in the range [min, max].
 		/// </summary>
 		/// <param name="value">The value that should be clamped.</param>
 		/// <param name="min">The lower bound of the clamped interval.</param>
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Clamps the given value to be in the range [min, max].
+		///     Clamps the given value to be in the range [min, max].
 		/// </summary>
 		/// <param name="value">The value that should be clamped.</param>
 		/// <param name="min">The lower bound of the clamped interval.</param>
@@ -118,7 +118,7 @@
 		}
 
 		/// <summary>
-		///   Clamps the given value to be in the range [min, max].
+		///     Clamps the given value to be in the range [min, max].
 		/// </summary>
 		/// <param name="value">The value that should be clamped.</param>
 		/// <param name="min">The lower bound of the clamped interval.</param>
@@ -135,8 +135,8 @@
 		}
 
 		/// <summary>
-		///   Computes the angle in radians between the two vectors starting at the given start position and ending in end and
-		///   relativeTo.
+		///     Computes the angle in radians between the two vectors starting at the given start position and ending in end and
+		///     relativeTo.
 		/// </summary>
 		/// <param name="start">The starting point of the vectors whose angle should be computed.</param>
 		/// <param name="end">The end point of the vector whose angle should be computed.</param>
@@ -160,7 +160,7 @@
 		}
 
 		/// <summary>
-		///   Converts degrees to radians.
+		///     Converts degrees to radians.
 		/// </summary>
 		/// <param name="degrees">The value in degrees that should be converted.</param>
 		public static float DegToRad(float degrees)
@@ -169,7 +169,7 @@
 		}
 
 		/// <summary>
-		///   Converts radians to degrees.
+		///     Converts radians to degrees.
 		/// </summary>
 		/// <param name="radians">The value in radians that should be converted.</param>
 		public static float RadToDeg(float radians)

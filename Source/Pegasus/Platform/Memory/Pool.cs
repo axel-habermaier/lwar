@@ -5,34 +5,34 @@
 	using Logging;
 
 	/// <summary>
-	///   Base implementation of pooled allocators.
+	///     Base implementation of pooled allocators.
 	/// </summary>
 	/// <typeparam name="T">The type of the pooled objects.</typeparam>
 	public abstract class Pool<T>
 		where T : class
 	{
 		/// <summary>
-		///   The initial number of pooled instances. If the pool runs out of instances, the capacity is doubled.
+		///     The initial number of pooled instances. If the pool runs out of instances, the capacity is doubled.
 		/// </summary>
 		private const int InitialCapacity = 16;
 
 		/// <summary>
-		///   The pooled items that are currently not in use.
+		///     The pooled items that are currently not in use.
 		/// </summary>
 		private readonly List<T> _items = new List<T>(InitialCapacity);
 
 		/// <summary>
-		///   The total number of instances allocated by the pool.
+		///     The total number of instances allocated by the pool.
 		/// </summary>
 		private int _allocationCount = InitialCapacity;
 
 		/// <summary>
-		///   The maximum number of instances that have been in use at the same time.
+		///     The maximum number of instances that have been in use at the same time.
 		/// </summary>
 		private int _maxInUse;
 
 		/// <summary>
-		///   Allocates new array instances.
+		///     Allocates new array instances.
 		/// </summary>
 		private void AllocateObjects()
 		{
@@ -43,14 +43,14 @@
 		}
 
 		/// <summary>
-		///   Allocates new objects.
+		///     Allocates new objects.
 		/// </summary>
 		/// <param name="items">The list in which the newly allocated items should be stored.</param>
 		/// <param name="count">The number of items that should be allocated.</param>
 		protected abstract void AllocateObjects(List<T> items, int count);
 
 		/// <summary>
-		///   Gets a pooled object.
+		///     Gets a pooled object.
 		/// </summary>
 		public T Get()
 		{
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Returns an object to the pool that is no longer being used.
+		///     Returns an object to the pool that is no longer being used.
 		/// </summary>
 		/// <param name="item">The object that should be returned to the pool.</param>
 		public void Return(T item)

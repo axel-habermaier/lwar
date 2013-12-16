@@ -12,17 +12,17 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a C# source code file that possibly contains one or more effect declarations.
+	///     Represents a C# source code file that possibly contains one or more effect declarations.
 	/// </summary>
 	internal class EffectFile : EffectElement
 	{
 		/// <summary>
-		///   The C# syntax tree of the effect file.
+		///     The C# syntax tree of the effect file.
 		/// </summary>
 		private readonly SyntaxTree _syntaxTree;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="errorReporter">The error reporter that should be used to report validation errors.</param>
 		/// <param name="syntaxTree">The parsed syntax tree of the effect file.</param>
@@ -34,7 +34,7 @@
 		}
 
 		/// <summary>
-		///   Gets the effects that are declared in the file.
+		///     Gets the effects that are declared in the file.
 		/// </summary>
 		private IEnumerable<EffectClass> Effects
 		{
@@ -42,7 +42,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -54,7 +54,7 @@
 		}
 
 		/// <summary>
-		///   Compiles all effects declared in the file.
+		///     Compiles all effects declared in the file.
 		/// </summary>
 		/// <param name="generator">The C# code generator that should be used to generate the C# effect code.</param>
 		public void Compile(CSharpCodeGenerator generator)
@@ -71,7 +71,7 @@
 		}
 
 		/// <summary>
-		///   Generates the GLSL and HLSL shader code for the given shader method of the given effect.
+		///     Generates the GLSL and HLSL shader code for the given shader method of the given effect.
 		/// </summary>
 		/// <param name="effect">The effect that declares the shader method that should be compiled.</param>
 		/// <param name="shader">The shader method that should be compiled.</param>

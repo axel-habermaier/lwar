@@ -9,22 +9,22 @@
 	using ICSharpCode.NRefactory.TypeSystem.Implementation;
 
 	/// <summary>
-	///   Represents a field of an effect class that acts as compile-time constant literal shader value.
+	///     Represents a field of an effect class that acts as compile-time constant literal shader value.
 	/// </summary>
 	internal class ShaderLiteral : EffectElement
 	{
 		/// <summary>
-		///   The declaration of the field that represents the literal.
+		///     The declaration of the field that represents the literal.
 		/// </summary>
 		private readonly FieldDeclaration _field;
 
 		/// <summary>
-		///   The variable that represents the literal.
+		///     The variable that represents the literal.
 		/// </summary>
 		private readonly VariableInitializer _variable;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="field">The declaration of the field that represents the literal.</param>
 		/// <param name="variable">The declaration of the field variable that represents the literal.</param>
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the literal.
+		///     Gets the name of the literal.
 		/// </summary>
 		public string Name
 		{
@@ -46,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Gets the type of the literal.
+		///     Gets the type of the literal.
 		/// </summary>
 		public DataType Type
 		{
@@ -54,7 +54,7 @@
 		}
 
 		/// <summary>
-		///   Gets the value of the literal.
+		///     Gets the value of the literal.
 		/// </summary>
 		public Expression Value
 		{
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the literal has a constant value.
+		///     Checks whether the literal has a constant value.
 		/// </summary>
 		private bool HasConstantValue
 		{
@@ -79,8 +79,8 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the literal's value is a call to a constructor of Vector2, Vector3, Vector4, or
-		///   Matrix.
+		///     Gets a value indicating whether the literal's value is a call to a constructor of Vector2, Vector3, Vector4, or
+		///     Matrix.
 		/// </summary>
 		public bool IsConstructed
 		{
@@ -105,7 +105,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the literal is an array.
+		///     Gets a value indicating whether the literal is an array.
 		/// </summary>
 		public bool IsArray
 		{
@@ -113,8 +113,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{

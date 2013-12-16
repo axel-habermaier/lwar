@@ -10,12 +10,12 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Executes the asset compiler.
+	///     Executes the asset compiler.
 	/// </summary>
 	public static class Program
 	{
 		/// <summary>
-		///   Compiles, recompiles, or cleans the assets.
+		///     Compiles, recompiles, or cleans the assets.
 		/// </summary>
 		/// <param name="args"></param>
 		[STAThread]
@@ -119,7 +119,7 @@
 		}
 
 		/// <summary>
-		///   Wires up the events to write all logged messages to the console.
+		///     Wires up the events to write all logged messages to the console.
 		/// </summary>
 		private static void PrintToConsole()
 		{
@@ -130,7 +130,7 @@
 		}
 
 		/// <summary>
-		///   Writes a colored message to the console.
+		///     Writes a colored message to the console.
 		/// </summary>
 		/// <param name="color">The color of the message.</param>
 		/// <param name="message">The message that should be written to the console.</param>
@@ -141,7 +141,7 @@
 		}
 
 		/// <summary>
-		///   Writes a colored message to the error output.
+		///     Writes a colored message to the error output.
 		/// </summary>
 		/// <param name="color">The color of the message.</param>
 		/// <param name="message">The message that should be written to the console.</param>
@@ -152,7 +152,7 @@
 		}
 
 		/// <summary>
-		///   Writes a colored message to the console, ensuring that the color is reset.
+		///     Writes a colored message to the console, ensuring that the color is reset.
 		/// </summary>
 		/// <param name="color">The color of the message.</param>
 		/// <param name="action">Writes the message to the console.</param>

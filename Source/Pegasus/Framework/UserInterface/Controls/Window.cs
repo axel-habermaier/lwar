@@ -94,6 +94,18 @@
 		}
 
 		/// <summary>
+		///     Gets a value indicating whether the window currently has the focus.
+		/// </summary>
+		public bool Focused
+		{
+			get
+			{
+				Assert.NotNull(NativeWindow, "The window has not yet been opened.");
+				return NativeWindow.Focused;
+			}
+		}
+
+		/// <summary>
 		///     Sets the window's title.
 		/// </summary>
 		public string Title
@@ -202,6 +214,9 @@
 		}
 #endif
 
+		/// <summary>
+		///     Updates the layout of the window and its children.
+		/// </summary>
 		internal void UpdateLayout()
 		{
 			var size = Size;
@@ -213,8 +228,14 @@
 			Arrange(new RectangleD(0, 0, availableSize));
 		}
 
+		/// <summary>
+		///     Draws the window and its children.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		internal new void Draw(SpriteBatch spriteBatch)
 		{
+			Assert.ArgumentNotNull(spriteBatch);
+
 			if (Visibility != Visibility.Visible)
 				return;
 

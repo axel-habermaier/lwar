@@ -3,19 +3,19 @@
 	using System;
 
 	/// <summary>
-	///   Represents a 2-dimensional cubemap object from which a shader can retrieve texel data.
+	///     Represents a 2-dimensional cubemap object from which a shader can retrieve texel data.
 	/// </summary>
 	public class CubeMap
 	{
 		/// <summary>
-		///   Forbid initialization of new cubemap instances.
+		///     Forbid initialization of new cubemap instances.
 		/// </summary>
 		private CubeMap()
 		{
 		}
 
 		/// <summary>
-		///   Samples the texel data at the given coordinates.
+		///     Samples the texel data at the given coordinates.
 		/// </summary>
 		/// <param name="coordinates">The coordinates at which the texel data should be sampled.</param>
 		[MapsTo(Intrinsic.Sample)]
@@ -25,7 +25,7 @@
 		}
 
 		/// <summary>
-		///   Samples the texel data at the given coordinates and mipmap level.
+		///     Samples the texel data at the given coordinates and mipmap level.
 		/// </summary>
 		/// <param name="coordinates">The coordinates at which the texel data should be sampled.</param>
 		/// <param name="mipmap">The mipmap level at which the texel data should be sampled.</param>

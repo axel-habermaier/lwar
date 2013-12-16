@@ -5,12 +5,12 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a shader that requires compilation.
+	///     Represents a shader that requires compilation.
 	/// </summary>
 	public class ShaderAsset : Asset
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="effect">The name of the effect the shader belongs to.</param>
 		/// <param name="name">The name of the shader method.</param>
@@ -22,12 +22,12 @@
 		}
 
 		/// <summary>
-		///   Gets the type of the shader.
+		///     Gets the type of the shader.
 		/// </summary>
 		public ShaderType Type { get; private set; }
 
 		/// <summary>
-		///   Gets the shader asset path for the given effect name, shader method name, and shader type.
+		///     Gets the shader asset path for the given effect name, shader method name, and shader type.
 		/// </summary>
 		/// <param name="effect">The name of the effect the shader belongs to.</param>
 		/// <param name="name">The name of the shader method.</param>

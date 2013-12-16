@@ -5,38 +5,38 @@
 	using System.Runtime.InteropServices;
 
 	/// <summary>
-	///   Represents a four-component vector.
+	///     Represents a four-component vector.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Vector4 : IEquatable<Vector4>
 	{
 		/// <summary>
-		///   A vector with all components set to zero.
+		///     A vector with all components set to zero.
 		/// </summary>
 		public static readonly Vector4 Zero = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
 		/// <summary>
-		///   The X-component of the vector.
+		///     The X-component of the vector.
 		/// </summary>
 		public float X;
 
 		/// <summary>
-		///   The Y-component of the vector.
+		///     The Y-component of the vector.
 		/// </summary>
 		public float Y;
 
 		/// <summary>
-		///   The Z-component of the vector.
+		///     The Z-component of the vector.
 		/// </summary>
 		public float Z;
 
 		/// <summary>
-		///   The W-component of the vector.
+		///     The W-component of the vector.
 		/// </summary>
 		public float W;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="x">The X-component of the vector.</param>
 		/// <param name="y">The Y-component of the vector.</param>
@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="vector">The X, Y, and Z components of the vector.</param>
 		/// <param name="w">The W-component of the vector.</param>
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Determines whether the given vector is equal to this vector.
+		///     Determines whether the given vector is equal to this vector.
 		/// </summary>
 		/// <param name="other">The other vector to compare with this vector.</param>
 		public bool Equals(Vector4 other)
@@ -76,7 +76,7 @@
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this vector.
+		///     Determines whether the specified object is equal to this vector.
 		/// </summary>
 		/// <param name="value">The object to compare with this vector.</param>
 		public override bool Equals(object value)
@@ -91,7 +91,7 @@
 		}
 
 		/// <summary>
-		///   Returns a hash code for this vector.
+		///     Returns a hash code for this vector.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -99,7 +99,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string representation of this vector.
+		///     Returns a string representation of this vector.
 		/// </summary>
 		public override string ToString()
 		{
@@ -107,7 +107,7 @@
 		}
 
 		/// <summary>
-		///   Tests for equality between two vectors.
+		///     Tests for equality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -117,7 +117,7 @@
 		}
 
 		/// <summary>
-		///   Tests for inequality between two vectors.
+		///     Tests for inequality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -127,7 +127,7 @@
 		}
 
 		/// <summary>
-		///   Performs a vector addition.
+		///     Performs a vector addition.
 		/// </summary>
 		/// <param name="left">The first vector to add.</param>
 		/// <param name="right">The second vector to add.</param>
@@ -137,7 +137,7 @@
 		}
 
 		/// <summary>
-		///   Performs a vector subtraction.
+		///     Performs a vector subtraction.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -147,7 +147,7 @@
 		}
 
 		/// <summary>
-		///   Negates the components of a vector.
+		///     Negates the components of a vector.
 		/// </summary>
 		/// <param name="vector">The vector whose components should be negated.</param>
 		public static Vector4 operator -(Vector4 vector)
@@ -156,7 +156,7 @@
 		}
 
 		/// <summary>
-		///   Multiplies a vector with a scalar value.
+		///     Multiplies a vector with a scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be multiplied.</param>
 		/// <param name="factor">The scalar value the vector should be multiplied with.</param>
@@ -166,7 +166,7 @@
 		}
 
 		/// <summary>
-		///   Multiplies a vector with a scalar value.
+		///     Multiplies a vector with a scalar value.
 		/// </summary>
 		/// <param name="factor">The scalar value the vector should be multiplied with.</param>
 		/// <param name="vector">The vector that should be multiplied.</param>
@@ -176,7 +176,7 @@
 		}
 
 		/// <summary>
-		///   Divides the vector by a scalar value.
+		///     Divides the vector by a scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -186,7 +186,7 @@
 		}
 
 		/// <summary>
-		///   Gets the length of the vector.
+		///     Gets the length of the vector.
 		/// </summary>
 		public float Length
 		{
@@ -194,7 +194,7 @@
 		}
 
 		/// <summary>
-		///   Gets the squared length of the vector.
+		///     Gets the squared length of the vector.
 		/// </summary>
 		public float SquaredLength
 		{
@@ -202,7 +202,7 @@
 		}
 
 		/// <summary>
-		///   Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
+		///     Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
 		/// </summary>
 		public Vector4 Normalize()
 		{
@@ -214,7 +214,7 @@
 		}
 
 		/// <summary>
-		///   Applies the given transformation matrix to the vector.
+		///     Applies the given transformation matrix to the vector.
 		/// </summary>
 		/// <param name="vector">The vector that should be transformed.</param>
 		/// <param name="matrix">The transformation matrix that should be applied.</param>

@@ -55,7 +55,7 @@
 
 			_typeInfoProvider = typeInfoProvider;
 			Root = XElement.Parse(File.ReadAllText(fileName));
-			
+
 			BuildNamespaceMap();
 			Transform();
 		}
@@ -743,7 +743,7 @@
 					var value = instantiation.Value;
 					instantiation.SetValue(String.Empty);
 					instantiation.Add(new XElement(instantiation.Name + "." + contentProperty.Name, value));
-				} 
+				}
 			}
 		}
 

@@ -6,32 +6,32 @@
 	using Math;
 
 	/// <summary>
-	///   Wraps a byte buffer, providing methods for reading fundamental data types from the buffer.
+	///     Wraps a byte buffer, providing methods for reading fundamental data types from the buffer.
 	/// </summary>
 	public class BufferReader : PooledObject<BufferReader>
 	{
 		/// <summary>
-		///   The buffer from which the data is read.
+		///     The buffer from which the data is read.
 		/// </summary>
 		private ArraySegment<byte> _buffer;
 
 		/// <summary>
-		///   Indicates the which endian encoding the buffer uses.
+		///     Indicates the which endian encoding the buffer uses.
 		/// </summary>
 		private Endianess _endianess;
 
 		/// <summary>
-		///   A pointer to the first byte of the buffer.
+		///     A pointer to the first byte of the buffer.
 		/// </summary>
 		private BufferPointer _pointer;
 
 		/// <summary>
-		///   The current read position.
+		///     The current read position.
 		/// </summary>
 		private int _readPosition;
 
 		/// <summary>
-		///   Gets a value indicating whether the end of the buffer has been reached.
+		///     Gets a value indicating whether the end of the buffer has been reached.
 		/// </summary>
 		public bool EndOfBuffer
 		{
@@ -39,7 +39,7 @@
 		}
 
 		/// <summary>
-		///   Gets the number of bytes that have been read from the buffer.
+		///     Gets the number of bytes that have been read from the buffer.
 		/// </summary>
 		public int Count
 		{
@@ -47,7 +47,7 @@
 		}
 
 		/// <summary>
-		///   Gets the size of the entire buffer in bytes.
+		///     Gets the size of the entire buffer in bytes.
 		/// </summary>
 		public int BufferSize
 		{
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Gets a pointer to the next byte of the buffer that should be read.
+		///     Gets a pointer to the next byte of the buffer that should be read.
 		/// </summary>
 		public unsafe byte* Pointer
 		{
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the pooled instance is returned to the pool.
+		///     Invoked when the pooled instance is returned to the pool.
 		/// </summary>
 		protected override void OnReturning()
 		{
@@ -78,8 +78,8 @@
 		}
 
 		/// <summary>
-		///   Creates a new instance. The valid data of the buffer can be found within the
-		///   range [0, buffer.Length).
+		///     Creates a new instance. The valid data of the buffer can be found within the
+		///     range [0, buffer.Length).
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
@@ -89,8 +89,8 @@
 		}
 
 		/// <summary>
-		///   Creates a new instance. The valid data of the buffer can be found within the
-		///   range [offset, offset + length).
+		///     Creates a new instance. The valid data of the buffer can be found within the
+		///     range [offset, offset + length).
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="offset">The offset to the first valid byte in the buffer.</param>
@@ -102,8 +102,8 @@
 		}
 
 		/// <summary>
-		///   Creates a new instance. The valid data of the buffer can be found within the
-		///   range [offset, offset + length).
+		///     Creates a new instance. The valid data of the buffer can be found within the
+		///     range [offset, offset + length).
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
@@ -117,7 +117,7 @@
 		}
 
 		/// <summary>
-		///   Resets the read position so that all content can be read again.
+		///     Resets the read position so that all content can be read again.
 		/// </summary>
 		public void Reset()
 		{
@@ -125,7 +125,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given number of bytes can be read from the buffer.
+		///     Checks whether the given number of bytes can be read from the buffer.
 		/// </summary>
 		/// <param name="size">The number of bytes that should be checked.</param>
 		public bool CanRead(int size)
@@ -134,7 +134,7 @@
 		}
 
 		/// <summary>
-		///   Skips the given number of bytes.
+		///     Skips the given number of bytes.
 		/// </summary>
 		/// <param name="count">The number of bytes that should be skipped.</param>
 		public void Skip(int count)
@@ -145,7 +145,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given number of bytes can be read from the buffer and throws an exception if not.
+		///     Checks whether the given number of bytes can be read from the buffer and throws an exception if not.
 		/// </summary>
 		/// <param name="size">The number of bytes that should be checked.</param>
 		[DebuggerHidden]
@@ -156,7 +156,7 @@
 		}
 
 		/// <summary>
-		///   Reads an unsigned byte.
+		///     Reads an unsigned byte.
 		/// </summary>
 		private byte Next()
 		{
@@ -164,7 +164,7 @@
 		}
 
 		/// <summary>
-		///   Reads a Boolean value.
+		///     Reads a Boolean value.
 		/// </summary>
 		public bool ReadBoolean()
 		{
@@ -173,7 +173,7 @@
 		}
 
 		/// <summary>
-		///   Reads a signed byte.
+		///     Reads a signed byte.
 		/// </summary>
 		public sbyte ReadSignedByte()
 		{
@@ -182,7 +182,7 @@
 		}
 
 		/// <summary>
-		///   Reads an unsigned byte.
+		///     Reads an unsigned byte.
 		/// </summary>
 		public byte ReadByte()
 		{
@@ -191,7 +191,7 @@
 		}
 
 		/// <summary>
-		///   Reads a 2 byte signed integer.
+		///     Reads a 2 byte signed integer.
 		/// </summary>
 		public short ReadInt16()
 		{
@@ -205,7 +205,7 @@
 		}
 
 		/// <summary>
-		///   Reads a 2 byte unsigned integer.
+		///     Reads a 2 byte unsigned integer.
 		/// </summary>
 		public ushort ReadUInt16()
 		{
@@ -219,7 +219,7 @@
 		}
 
 		/// <summary>
-		///   Reads an UTF-16 character.
+		///     Reads an UTF-16 character.
 		/// </summary>
 		public char ReadCharacter()
 		{
@@ -227,7 +227,7 @@
 		}
 
 		/// <summary>
-		///   Reads a 4 byte signed integer.
+		///     Reads a 4 byte signed integer.
 		/// </summary>
 		public int ReadInt32()
 		{
@@ -241,7 +241,7 @@
 		}
 
 		/// <summary>
-		///   Reads a 4 byte unsigned integer.
+		///     Reads a 4 byte unsigned integer.
 		/// </summary>
 		public uint ReadUInt32()
 		{
@@ -255,7 +255,7 @@
 		}
 
 		/// <summary>
-		///   Reads an 8 byte signed integer.
+		///     Reads an 8 byte signed integer.
 		/// </summary>
 		public long ReadInt64()
 		{
@@ -276,7 +276,7 @@
 		}
 
 		/// <summary>
-		///   Reads an 8 byte unsigned integer.
+		///     Reads an 8 byte unsigned integer.
 		/// </summary>
 		public ulong ReadUInt64()
 		{
@@ -297,7 +297,7 @@
 		}
 
 		/// <summary>
-		///   Reads a 4 byte signed fixed-point value with 8 bits for the fractional part.
+		///     Reads a 4 byte signed fixed-point value with 8 bits for the fractional part.
 		/// </summary>
 		public Fixed8 ReadFixed8()
 		{
@@ -305,7 +305,7 @@
 		}
 
 		/// <summary>
-		///   Reads a 4 byte signed fixed-point value with 16 bits for the fractional part.
+		///     Reads a 4 byte signed fixed-point value with 16 bits for the fractional part.
 		/// </summary>
 		public Fixed16 ReadFixed16()
 		{
@@ -315,7 +315,7 @@
 		// ReSharper disable InconsistentNaming
 
 		/// <summary>
-		///   Reads a two-component vector of Fixed8.
+		///     Reads a two-component vector of Fixed8.
 		/// </summary>
 		public Vector2f8 ReadVector2f8()
 		{
@@ -323,7 +323,7 @@
 		}
 
 		/// <summary>
-		///   Reads a two-component vector of Fixed16.
+		///     Reads a two-component vector of Fixed16.
 		/// </summary>
 		public Vector2f16 ReadVector2f16()
 		{
@@ -331,7 +331,7 @@
 		}
 
 		/// <summary>
-		///   Reads a two-component vector of integers.
+		///     Reads a two-component vector of integers.
 		/// </summary>
 		public Vector2i ReadVector2i()
 		{
@@ -341,7 +341,7 @@
 		// ReSharper restore InconsistentNaming
 
 		/// <summary>
-		///   Reads an UTF8 string.
+		///     Reads an UTF8 string.
 		/// </summary>
 		public string ReadString()
 		{
@@ -349,7 +349,7 @@
 		}
 
 		/// <summary>
-		///   Reads a byte array.
+		///     Reads a byte array.
 		/// </summary>
 		public byte[] ReadByteArray()
 		{
@@ -365,7 +365,7 @@
 		}
 
 		/// <summary>
-		///   Copies the requested number of bytes into the buffer, starting at the given offset.
+		///     Copies the requested number of bytes into the buffer, starting at the given offset.
 		/// </summary>
 		/// <param name="buffer">The buffer into which the data should be copied.</param>
 		public void Copy(byte[] buffer)
@@ -374,7 +374,7 @@
 		}
 
 		/// <summary>
-		///   Copies the requested number of bytes into the buffer, starting at the given offset.
+		///     Copies the requested number of bytes into the buffer, starting at the given offset.
 		/// </summary>
 		/// <param name="buffer">The buffer into which the data should be copied.</param>
 		/// <param name="offset">The first byte in the buffer that should be written.</param>
@@ -390,9 +390,9 @@
 		}
 
 		/// <summary>
-		///   Tries to deserialize an object of the given type from the buffer. Either, all reads succeed or the read position of
-		///   the buffer remains unmodified if any reads are out of bounds. Returns true to indicate that the object has been
-		///   successfully deserialized.
+		///     Tries to deserialize an object of the given type from the buffer. Either, all reads succeed or the read position of
+		///     the buffer remains unmodified if any reads are out of bounds. Returns true to indicate that the object has been
+		///     successfully deserialized.
 		/// </summary>
 		/// <typeparam name="T">The type of the object that should be deserialized.</typeparam>
 		/// <param name="obj">The object that the deserialized values should be written to.</param>

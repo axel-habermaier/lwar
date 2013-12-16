@@ -3,12 +3,12 @@
 	using System;
 
 	/// <summary>
-	///   Converts between little and big endian encoding.
+	///     Converts between little and big endian encoding.
 	/// </summary>
 	public static class EndianConverter
 	{
 		/// <summary>
-		///   Converts an 8 byte signed integer.
+		///     Converts an 8 byte signed integer.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
 		public static long Convert(long value)
@@ -24,7 +24,7 @@
 		}
 
 		/// <summary>
-		///   Converts an 8 byte unsigned integer.
+		///     Converts an 8 byte unsigned integer.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
 		public static ulong Convert(ulong value)
@@ -40,7 +40,7 @@
 		}
 
 		/// <summary>
-		///   Converts a 4 byte signed integer.
+		///     Converts a 4 byte signed integer.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
 		public static int Convert(int value)
@@ -52,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Converts a 4 byte unsigned integer.
+		///     Converts a 4 byte unsigned integer.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
 		public static uint Convert(uint value)
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Converts a 2 byte signed integer.
+		///     Converts a 2 byte signed integer.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
 		public static short Convert(short value)
@@ -73,7 +73,7 @@
 		}
 
 		/// <summary>
-		///   Converts a 2 byte unsigned integer.
+		///     Converts a 2 byte unsigned integer.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
 		public static ushort Convert(ushort value)

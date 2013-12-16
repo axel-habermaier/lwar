@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   Indicates which type of error occurred when calling a freetype function.
+	///     Indicates which type of error occurred when calling a freetype function.
 	/// </summary>
 	internal enum Error
 	{

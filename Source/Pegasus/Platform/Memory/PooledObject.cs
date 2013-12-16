@@ -5,33 +5,33 @@
 	using Logging;
 
 	/// <summary>
-	///   An abstract base class for objects whose instances are pooled in order to reduce the pressure on the garbage
-	///   collector. Pooled types should perform all their initialization in the OnReusing() method, which is called whenever
-	///   the instance is reused. Similarly, all cleanup logic that must be run when an instance is returned to the pool
-	///   should be done in the OnReturning method.
+	///     An abstract base class for objects whose instances are pooled in order to reduce the pressure on the garbage
+	///     collector. Pooled types should perform all their initialization in the OnReusing() method, which is called whenever
+	///     the instance is reused. Similarly, all cleanup logic that must be run when an instance is returned to the pool
+	///     should be done in the OnReturning method.
 	/// </summary>
 	/// <typeparam name="TObject">The concrete type of the pooled object.</typeparam>
 	public abstract class PooledObject<TObject> : IDisposable
 		where TObject : PooledObject<TObject>, new()
 	{
 		/// <summary>
-		///   Gets a value indicating whether the instance is currently available, that is, waiting in the pool to be reused.
+		///     Gets a value indicating whether the instance is currently available, that is, waiting in the pool to be reused.
 		/// </summary>
 		public bool IsAvailable { get; private set; }
 
 		/// <summary>
-		///   The pool that manages the instances of type TObject.
+		///     The pool that manages the instances of type TObject.
 		/// </summary>
 		private static readonly ObjectPool<TObject> Pool = new ObjectPool<TObject>();
 
 #if DEBUG
 		/// <summary>
-		///   A description for the instance in order to make debugging easier.
+		///     A description for the instance in order to make debugging easier.
 		/// </summary>
 		private string _description;
 
 		/// <summary>
-		///   Checks whether the instance has been returned to the pool.
+		///     Checks whether the instance has been returned to the pool.
 		/// </summary>
 		~PooledObject()
 		{
@@ -42,7 +42,7 @@
 #endif
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		protected PooledObject()
 		{
@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   In debug builds, sets a description for the instance in order to make debugging easier.
+		///     In debug builds, sets a description for the instance in order to make debugging easier.
 		/// </summary>
 		/// <param name="description">The description of the instance.</param>
 		/// <param name="arguments">The arguments that should be copied into the description.</param>
@@ -66,7 +66,7 @@
 		}
 
 		/// <summary>
-		///   Reuses a pooled instance.
+		///     Reuses a pooled instance.
 		/// </summary>
 		protected static TObject GetInstance()
 		{
@@ -78,21 +78,21 @@
 		}
 
 		/// <summary>
-		///   Invoked when the pooled instance is reused and should reset or reinitialize its state.
+		///     Invoked when the pooled instance is reused and should reset or reinitialize its state.
 		/// </summary>
 		protected virtual void OnReusing()
 		{
 		}
 
 		/// <summary>
-		///   Invoked when the pooled instance is returned to the pool.
+		///     Invoked when the pooled instance is returned to the pool.
 		/// </summary>
 		protected virtual void OnReturning()
 		{
 		}
 
 		/// <summary>
-		///   Returns the instance to the pool.
+		///     Returns the instance to the pool.
 		/// </summary>
 		[DebuggerHidden]
 		void IDisposable.Dispose()

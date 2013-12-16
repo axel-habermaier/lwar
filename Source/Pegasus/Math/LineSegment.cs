@@ -3,22 +3,22 @@
 	using System;
 
 	/// <summary>
-	///   Represents a segment of a line in 2D space.
+	///     Represents a segment of a line in 2D space.
 	/// </summary>
 	public struct LineSegment
 	{
 		/// <summary>
-		///   The end point of the line segment.
+		///     The end point of the line segment.
 		/// </summary>
 		public Vector2 End;
 
 		/// <summary>
-		///   The start point of the line segment.
+		///     The start point of the line segment.
 		/// </summary>
 		public Vector2 Start;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="start">The start point of the line segment.</param>
 		/// <param name="end">The end point of the line segment.</param>
@@ -29,7 +29,7 @@
 		}
 
 		/// <summary>
-		///   Computes the intersection between the two line segments. Returns false if the lines do not intersect.
+		///     Computes the intersection between the two line segments. Returns false if the lines do not intersect.
 		/// </summary>
 		/// <param name="other">The other line segment.</param>
 		/// <param name="intersection">Returns the intersection point if an intersection was found.</param>

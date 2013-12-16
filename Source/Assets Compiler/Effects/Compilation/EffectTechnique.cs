@@ -10,28 +10,29 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a field of an effect class that defines the combination of shaders that should be set on the GPU to create
-	///   a graphical effect.
+	///     Represents a field of an effect class that defines the combination of shaders that should be set on the GPU to
+	///     create
+	///     a graphical effect.
 	/// </summary>
 	internal class EffectTechnique : EffectElement
 	{
 		/// <summary>
-		///   The declaration of the field that represents the technique.
+		///     The declaration of the field that represents the technique.
 		/// </summary>
 		private readonly FieldDeclaration _field;
 
 		/// <summary>
-		///   The shaders declared by the effect the technique belongs to.
+		///     The shaders declared by the effect the technique belongs to.
 		/// </summary>
 		private readonly ShaderMethod[] _shaders;
 
 		/// <summary>
-		///   The variable that represents the technique.
+		///     The variable that represents the technique.
 		/// </summary>
 		private readonly VariableInitializer _variable;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="field">The declaration of the field that represents the technique.</param>
 		/// <param name="variable">The variable that represents the technique.</param>
@@ -48,7 +49,7 @@
 		}
 
 		/// <summary>
-		///   Gets the documentation of the effect.
+		///     Gets the documentation of the effect.
 		/// </summary>
 		public IEnumerable<string> Documentation
 		{
@@ -56,7 +57,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the technique.
+		///     Gets the name of the technique.
 		/// </summary>
 		public string Name
 		{
@@ -64,17 +65,17 @@
 		}
 
 		/// <summary>
-		///   Gets the vertex shader that should be bound.
+		///     Gets the vertex shader that should be bound.
 		/// </summary>
 		public ShaderMethod VertexShader { get; private set; }
 
 		/// <summary>
-		///   Gets the fragment shader that should be bound.
+		///     Gets the fragment shader that should be bound.
 		/// </summary>
 		public ShaderMethod FragmentShader { get; private set; }
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -99,8 +100,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{
@@ -164,7 +165,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the signatures of the vertex and fragment shaders match.
+		///     Checks whether the signatures of the vertex and fragment shaders match.
 		/// </summary>
 		private void ValidateShaderSignatures()
 		{
@@ -177,7 +178,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the technique's shader of the given type is not declared, null, or an empty string.
+		///     Checks whether the technique's shader of the given type is not declared, null, or an empty string.
 		/// </summary>
 		/// <param name="shaderType">The type of the shader that should be checked.</param>
 		private void ValidateShaderDeclaration(ShaderType shaderType)
