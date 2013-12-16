@@ -5,7 +5,6 @@
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
-	using Platform.Assets;
 	using Platform.Logging;
 	using Rendering.UserInterface;
 	using Scripting;
@@ -13,18 +12,17 @@
 	using Console = System.Console;
 
 	/// <summary>
-	///   Starts up the application and handles command line arguments and fatal application exceptions.
+	///     Starts up the application and handles command line arguments and fatal application exceptions.
 	/// </summary>
 	/// <typeparam name="TApp">The type of the application that should be run.</typeparam>
 	public static class Bootstrapper<TApp>
 		where TApp : Application, new()
 	{
 		/// <summary>
-		///   Runs the application. This method does not return until the application is shut down.
+		///     Runs the application. This method does not return until the application is shut down.
 		/// </summary>
 		/// <param name="appName">The name of the application.</param>
-		/// <param name="defaultFont">The default font that is used to draw the console and the statistics.</param>
-		public static void Run(string appName, AssetIdentifier<Font> defaultFont)
+		public static void Run(string appName)
 		{
 			Assert.ArgumentNotNullOrWhitespace(appName);
 
@@ -75,7 +73,7 @@
 		}
 
 		/// <summary>
-		///   Wires up the log events to write all logged messages to the console.
+		///     Wires up the log events to write all logged messages to the console.
 		/// </summary>
 		private static void PrintToConsole()
 		{
@@ -87,7 +85,7 @@
 		}
 
 		/// <summary>
-		///   Writes the given log entry to the given text writer.
+		///     Writes the given log entry to the given text writer.
 		/// </summary>
 		/// <param name="entry">The log entry that should be written.</param>
 		private static void WriteToConsole(LogEntry entry)

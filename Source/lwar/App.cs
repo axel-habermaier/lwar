@@ -5,10 +5,12 @@
 	using Assets;
 	using Network;
 	using Pegasus;
+	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
+	using Screens;
 	using Scripting;
-	using UserInterface;
 
 	/// <summary>
 	///     Represents the lwar application.
@@ -19,6 +21,8 @@
 		///     The local game server that can be used to hosts game sessions locally.
 		/// </summary>
 		private LocalServer _localServer;
+
+		private ScreenManager _screenManager;
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -33,12 +37,12 @@
 			Commands.OnConnect += Connect;
 			Commands.OnDisconnect += Disconnect;
 
-			//Context.InputDevice.ActivateLayer(InputLayers.Game);
-			//Context.Window.Closing += Exit;
+			InputDevice.ActivateLayer(InputLayers.Game);
+			Window.Closing += Exit;
 
 			_localServer = new LocalServer();
-			//_stateManager = new ScreenManager(Context);
-			//_stateManager.Add(new MainMenu());
+			_screenManager = new ScreenManager(new AppContext(GraphicsDevice, Window, Assets, InputDevice));
+			_screenManager.Add(new MainMenu());
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");
 			Commands.Bind(Key.F2.WentDown(), "stop_server");
@@ -52,7 +56,7 @@
 
 			//var uc1 = new UserControl1();
 			////Add(uc1);
-			ShowWindow(new MainWindow());
+			//ShowWindow(new MainWindow());
 		}
 
 		/// <summary>
@@ -61,6 +65,28 @@
 		protected override void Update()
 		{
 			_localServer.Update();
+			_screenManager.Update();
+		}
+
+		/// <summary>
+		///     Invoked when the application should draw a frame.
+		/// </summary>
+		/// <param name="output">The output the frame should be rendered to.</param>
+		protected override void Draw(RenderOutput output)
+		{
+			output.ClearColor(new Color(0, 0, 0, 0));
+			output.ClearDepth();
+
+			_screenManager.Draw(output);
+		}
+
+		/// <summary>
+		///     Invoked when the application should draw the user interface.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		protected override void DrawUserInterface(SpriteBatch spriteBatch)
+		{
+			_screenManager.DrawUserInterface(spriteBatch);
 		}
 
 		/// <summary>
@@ -71,7 +97,7 @@
 			Commands.OnConnect -= Connect;
 			Commands.OnDisconnect -= Disconnect;
 
-			//_stateManager.SafeDispose();
+			_screenManager.SafeDispose();
 			_localServer.SafeDispose();
 
 			base.OnDisposing();
@@ -87,6 +113,7 @@
 			Assert.ArgumentNotNull(address);
 
 			Disconnect();
+			_screenManager.Add(new Level(new IPEndPoint(address, port)));
 		}
 
 		/// <summary>
@@ -94,6 +121,8 @@
 		/// </summary>
 		private void Disconnect()
 		{
+			_screenManager.Clear();
+			_screenManager.Add(new MainMenu());
 		}
 	}
 }

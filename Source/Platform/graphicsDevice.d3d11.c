@@ -29,6 +29,9 @@ pgString FeatureLevelToString(D3D_FEATURE_LEVEL featureLevel)
 	}
 }
 
+void* pgInitializeDebug();
+void pgReportLiveObjects(IUnknown* debugObject);
+
 //====================================================================================================================
 // Core functions 
 //====================================================================================================================
@@ -42,14 +45,24 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 	if (IDXGIFactory_EnumAdapters(device->factory, 0, &device->adapter) == DXGI_ERROR_NOT_FOUND)
 		PG_DIE("Failed to get DXGI adapter.");
 	
-	
 	flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
-#if DEBUG
+#ifdef DEBUG
 	flags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
 	PG_D3DCALL(D3D11CreateDevice(device->adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, NULL, 0, D3D11_SDK_VERSION, &device->ptr, &featureLevel, &device->context),
 		"Failed to create Direct3D 11 device.");
+
+#ifdef DEBUG
+	typedef HRESULT(__stdcall *debugInterfacePtr)(REFIID, void**);
+	HMODULE debugDll = GetModuleHandleW(L"dxgidebug.dll");
+	PG_ASSERT(debugDll != NULL, "Failed to load dxgidebug.dll");
+
+	debugInterfacePtr DXGIGetDebugInterface = (debugInterfacePtr)GetProcAddress(debugDll, "DXGIGetDebugInterface");
+	PG_ASSERT(DXGIGetDebugInterface != NULL, "Failed to get DXGIGetDebugInterface().");
+
+	PG_D3DCALL(DXGIGetDebugInterface(&IID_IDXGIDebug, (void**)(&device->debug)), "Failed to get the Direct3D 11 debug interface.");
+#endif
 
 	if (featureLevel < REQUIRED_FEATURE_LEVEL)
 		PG_DIE("Incompatible graphics card: Only feature level %s is supported, but feature level %s is required.", 
@@ -67,6 +80,14 @@ pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device)
 
 	PG_SAFE_RELEASE(IDXGIAdapter, device->adapter);
 	PG_SAFE_RELEASE(ID3D11Device, device->ptr);
+
+#ifdef DEBUG
+	if (device->debug != NULL)
+		IDXGIDebug_ReportLiveObjects((IDXGIDebug*)device->debug, DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+
+	PG_SAFE_RELEASE(IDXGIDebug, device->debug);
+#endif
+
 	PG_SAFE_RELEASE(IDXGIFactory, device->factory);
 }
 

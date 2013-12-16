@@ -9,57 +9,57 @@
 	using Rendering;
 
 	/// <summary>
-	///   Represents an operating system window that hosts UI elements.
+	///     Represents an operating system window that hosts UI elements.
 	/// </summary>
 	public abstract class Window : ContentControl, IDisposable
 	{
 		/// <summary>
-		///   The application the window belongs to.
+		///     The application the window belongs to.
 		/// </summary>
 		private Application _application;
 
 		/// <summary>
-		///   The swap chain that is used to render the window's contents.
+		///     The swap chain that is used to render the window's contents.
 		/// </summary>
 		private SwapChain _swapChain;
 
 		/// <summary>
-		///   The native operating system window that is used to display the UI.
+		///     Gets the native operating system window that is used to display the UI.
 		/// </summary>
-		private NativeWindow _window;
+		internal NativeWindow NativeWindow { get; private set; }
 
 		/// <summary>
-		///   The window's title.
+		///     The window's title.
 		/// </summary>
 		private string _title = String.Empty;
 
 		/// <summary>
-		///   The screen position of the window's left upper corner.
+		///     The screen position of the window's left upper corner.
 		/// </summary>
 		private Vector2i _position = Vector2i.Zero;
 
 		/// <summary>
-		///   Gets a value indicating whether the window is open.
+		///     Gets a value indicating whether the window is open.
 		/// </summary>
 		public bool IsOpen { get; private set; }
 
 		/// <summary>
-		///   The size of the window's rendering area.
+		///     The size of the window's rendering area.
 		/// </summary>
 		private Size _size = new Size(1024, 768);
 
 		/// <summary>
-		///   The window mode.
+		///     The window mode.
 		/// </summary>
 		private WindowMode _mode = WindowMode.Normal;
 
 		/// <summary>
-		///   The output the window's contents are rendered to.
+		///     The output the window's contents are rendered to.
 		/// </summary>
 		private RenderOutput _output;
 
 		/// <summary>
-		///   Opens the window.
+		///     Opens the window.
 		/// </summary>
 		/// <param name="application">The application the window belongs to.</param>
 		internal void Open(Application application)
@@ -69,8 +69,8 @@
 
 			_application = application;
 
-			_window = new NativeWindow(Title, Position, Size, Mode);
-			_swapChain = new SwapChain(application.GraphicsDevice, _window, false, _window.Size);
+			NativeWindow = new NativeWindow(Title, Position, Size, Mode);
+			_swapChain = new SwapChain(application.GraphicsDevice, NativeWindow, false, NativeWindow.Size);
 			_output = new RenderOutput(application.GraphicsDevice)
 			{
 				RenderTarget = _swapChain.BackBuffer,
@@ -82,19 +82,19 @@
 		}
 
 		/// <summary>
-		///   Processes all pending window events.
+		///     Processes all pending window events.
 		/// </summary>
 		public void ProcessEvents()
 		{
-			_window.ProcessEvents();
+			NativeWindow.ProcessEvents();
 
-			_size = _window.Size;
-			_position = _window.Position;
-			_mode = _window.Mode;
+			_size = NativeWindow.Size;
+			_position = NativeWindow.Position;
+			_mode = NativeWindow.Mode;
 		}
 
 		/// <summary>
-		///   Sets the window's title.
+		///     Sets the window's title.
 		/// </summary>
 		public string Title
 		{
@@ -106,13 +106,13 @@
 
 				_title = value;
 
-				if (_window != null)
-					_window.Title = value;
+				if (NativeWindow != null)
+					NativeWindow.Title = value;
 			}
 		}
 
 		/// <summary>
-		///   Gets or sets the size of the window's rendering area.
+		///     Gets or sets the size of the window's rendering area.
 		/// </summary>
 		public Size Size
 		{
@@ -124,13 +124,13 @@
 
 				_size = value;
 
-				if (_window != null)
-					_window.Size = value;
+				if (NativeWindow != null)
+					NativeWindow.Size = value;
 			}
 		}
 
 		/// <summary>
-		///   Gets or sets the screen position of the window's left upper corner.
+		///     Gets or sets the screen position of the window's left upper corner.
 		/// </summary>
 		public Vector2i Position
 		{
@@ -142,13 +142,13 @@
 
 				_position = value;
 
-				if (_window != null)
-					_window.Position = value;
+				if (NativeWindow != null)
+					NativeWindow.Position = value;
 			}
 		}
 
 		/// <summary>
-		///   Gets or sets the window state.
+		///     Gets or sets the window state.
 		/// </summary>
 		public WindowMode Mode
 		{
@@ -160,13 +160,13 @@
 
 				_mode = value;
 
-				if (_window != null)
-					_window.Mode = value;
+				if (NativeWindow != null)
+					NativeWindow.Mode = value;
 			}
 		}
 
 		/// <summary>
-		///   Closes the window.
+		///     Closes the window.
 		/// </summary>
 		public void Close()
 		{
@@ -175,13 +175,13 @@
 			_output.Camera.SafeDispose();
 			_output.SafeDispose();
 			_swapChain.SafeDispose();
-			_window.SafeDispose();
+			NativeWindow.SafeDispose();
 
 			IsOpen = false;
 		}
 
 		/// <summary>
-		///   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
 		void IDisposable.Dispose()
 		{
@@ -194,7 +194,7 @@
 
 #if DEBUG
 		/// <summary>
-		///   Ensures that the instance has been disposed.
+		///     Ensures that the instance has been disposed.
 		/// </summary>
 		~Window()
 		{

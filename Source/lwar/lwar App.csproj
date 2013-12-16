@@ -238,6 +238,7 @@
     <Compile Include="Network\ServerDiscoveryService.cs" />
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
+    <Compile Include="Screens\AppContext.cs" />
     <Compile Include="Screens\ChatInput.cs" />
     <Compile Include="Screens\EventMessageDisplay.cs" />
     <Compile Include="Screens\Frame.cs" />
@@ -249,6 +250,8 @@
     <Compile Include="Rendering\Renderers\PhaserRenderer.cs" />
     <Compile Include="Rendering\Renderers\IRenderer.cs" />
     <Compile Include="Rendering\ZoomMode.cs" />
+    <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Screens\ScreenManager.cs" />
     <Compile Include="Scripting\Commands.cs">
       <DependentUpon>Commands.tt</DependentUpon>
       <AutoGen>True</AutoGen>
