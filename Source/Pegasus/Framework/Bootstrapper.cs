@@ -52,8 +52,8 @@
 						CommandLineParser.Parse();
 						CvarRegistry.ExecuteDeferredUpdates();
 
-						using (var app = new TApp())
-							app.Run(appName);
+						var app = new TApp();
+						app.Run(appName);
 
 						Commands.Persist(ConfigurationFile.AutoExec);
 					}

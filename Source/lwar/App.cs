@@ -92,15 +92,13 @@
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		protected override void Dispose()
 		{
 			Commands.OnConnect -= Connect;
 			Commands.OnDisconnect -= Disconnect;
 
 			_screenManager.SafeDispose();
 			_localServer.SafeDispose();
-
-			base.OnDisposing();
 		}
 
 		/// <summary>

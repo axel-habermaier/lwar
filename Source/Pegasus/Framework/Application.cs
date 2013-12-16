@@ -20,7 +20,7 @@
 	/// <summary>
 	///     Represents the application.
 	/// </summary>
-	public abstract class Application : DisposableObject
+	public abstract class Application
 	{
 		/// <summary>
 		///     The root of the visual tree managed by the application.
@@ -107,10 +107,8 @@
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		protected virtual void Dispose()
 		{
-			Assets.SafeDispose();
-			GraphicsDevice.SafeDispose();
 		}
 
 		/// <summary>
@@ -226,6 +224,9 @@
 						if (!window.Focused)
 							Thread.Sleep(50);
 					}
+
+					// The game loop has been exited; time to clean up
+					Dispose();
 				}
 			}
 		}

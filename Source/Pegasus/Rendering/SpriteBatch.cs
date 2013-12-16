@@ -241,6 +241,7 @@
 			_indexBuffer.SafeDispose();
 			_vertexLayout.SafeDispose();
 			_scissorRasterizerState.SafeDispose();
+			_effect.SafeDispose();
 		}
 
 		/// <summary>
