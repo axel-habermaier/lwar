@@ -4,7 +4,7 @@
 <#@ import namespace="Pegasus.AssetsCompiler.Registries" #>
 <#@ output extension=".cs" #>
 <#
-	string GeneratedCode = "";
+	var generatedCode = String.Empty;
 
 	if (String.IsNullOrWhiteSpace(SourceFile))
 		Error("'SourceFile' must be set.");
@@ -22,11 +22,11 @@
 			foreach (var error in generator.Errors)
 				Error(error);
 
-			GeneratedCode = generator.GeneratedCode;
+			generatedCode = generator.GeneratedCode;
 		}
 	}
 #>
-<#= GeneratedCode #>
+<#= generatedCode #>
 <#+
 	protected string SourceFile;
 	protected string Import;
