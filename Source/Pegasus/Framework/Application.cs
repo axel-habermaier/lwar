@@ -114,9 +114,11 @@
 		///     Runs the application. This method does not return until the application is shut down.
 		/// </summary>
 		/// <param name="name">The name of the application.</param>
-		internal void Run(string name)
+		/// <param name="logFile">The log file that is used to serialize log message to the disk.</param>
+		internal void Run(string name, LogFile logFile)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
+			Assert.ArgumentNotNull(logFile);
 
 			Name = name;
 
@@ -146,7 +148,7 @@
 					console.Update(window.Size);
 
 					// Copy the recorded log history to the console and explain the usage of the console
-					//logFile.WriteToConsole(console);
+					logFile.WriteToConsole(console);
 					Commands.Help();
 
 					// Let the application initialize itself

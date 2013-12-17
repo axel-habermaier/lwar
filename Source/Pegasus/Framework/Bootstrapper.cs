@@ -53,7 +53,7 @@
 						CvarRegistry.ExecuteDeferredUpdates();
 
 						var app = new TApp();
-						app.Run(appName);
+						app.Run(appName, logFile);
 
 						Commands.Persist(ConfigurationFile.AutoExec);
 					}
