@@ -48,6 +48,8 @@ pgVoid pgCreateContext(pgContext* context)
 
 pgVoid pgDestroyContext(pgContext* context)
 {
+	PG_ASSERT_NOT_NULL(context->ctx);
+
 	XFree(context->visuals);
 	XFree(context->configs);
 
@@ -56,6 +58,8 @@ pgVoid pgDestroyContext(pgContext* context)
 		
 	if (context->ctx != NULL)
 		glXDestroyContext(x11.display, context->ctx);
+
+	context->ctx = NULL;
 }
 
 pgVoid pgBindContext(pgContext* context, pgGraphicsDevice* device, pgWindow* window)

@@ -36,11 +36,15 @@ pgVoid pgCreateContext(pgContext* context)
 
 pgVoid pgDestroyContext(pgContext* context)
 {
+	PG_ASSERT_NOT_NULL(context->hrc);
+
 	if (!wglMakeCurrent(NULL, NULL))
 		pgWin32Error("Unable to unset the current OpenGL context.");
 
 	if (context->hrc != NULL && !wglDeleteContext(context->hrc))
 		pgWin32Error("Unable to destroy the OpenGL context.");
+
+	context->hrc = NULL;
 }
 
 pgVoid pgBindContext(pgContext* context, pgGraphicsDevice* device, pgWindow* window)
@@ -84,6 +88,8 @@ pgVoid pgDestroyContextWindow(pgContext* context)
 
 	if (context->hwnd != NULL && !DestroyWindow(context->hwnd))
 		pgWin32Error("Failed to destroy the OpenGL initialization window.");
+
+	context->hwnd = NULL;
 }
 
 pgVoid pgSetPixelFormat(pgContext* context)
@@ -199,6 +205,7 @@ pgVoid pgContextWindowed(pgContext* context)
 
 pgVoid pgInitializeContextExtensions(pgContext* context)
 {
+	PG_ASSERT_NULL(context->hrc);
 	pgBool wglExtsSupported = PG_TRUE;
 
 	// In order to initialize OpenGL and the extensions, we have to create a legacy OpenGL 1.1 context
@@ -219,12 +226,6 @@ pgVoid pgInitializeContextExtensions(pgContext* context)
 
 	if (!wglExtsSupported)
 		PG_DIE("Not all required WGL extensions are supported.");
-	
-	if (!wglMakeCurrent(NULL, NULL))
-		pgWin32Error("Unable to unset the legacy OpenGL context.");
-
-	if (context->hrc != NULL && !wglDeleteContext(context->hrc))
-		pgWin32Error("Unable to free the legacy OpenGL context.");
 }
 
 pgVoid pgMakeCurrent(pgContext* context)
