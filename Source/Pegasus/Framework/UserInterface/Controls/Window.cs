@@ -15,11 +15,6 @@
 	public class Window : ContentControl, IDisposable
 	{
 		/// <summary>
-		///     The application the window belongs to.
-		/// </summary>
-		private Application _application;
-
-		/// <summary>
 		///     Gets the swap chain that is used to render the window's contents.
 		/// </summary>
 		internal SwapChain SwapChain { get; private set; }
@@ -30,39 +25,28 @@
 		private NativeWindow _window;
 
 		/// <summary>
-		///     The window's title.
-		/// </summary>
-		private string _title = String.Empty;
-
-		/// <summary>
-		///     The screen position of the window's left upper corner.
-		/// </summary>
-		private Vector2i _position = Vector2i.Zero;
-
-		/// <summary>
 		///     Gets a value indicating whether the window is open.
 		/// </summary>
-		public bool IsOpen { get; private set; }
-
-		/// <summary>
-		///     The size of the window's rendering area.
-		/// </summary>
-		private Size _size = new Size(1024, 768);
-
-		/// <summary>
-		///     The window mode.
-		/// </summary>
-		private WindowMode _mode = WindowMode.Normal;
+		public bool IsOpen
+		{
+			get { return _window != null; }
+		}
 
 		/// <summary>
 		///     The output the window's contents are rendered to.
 		/// </summary>
-		private RenderOutput _output;
+		private readonly RenderOutput _output;
+
+		/// <summary>
+		/// The sprite batch that is used for drawing the window's UI elements.
+		/// </summary>
+		private readonly SpriteBatch _spriteBatch;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public Window()
+			: this(String.Empty, Vector2i.Zero, new Size(1024, 768), WindowMode.Normal)
 		{
 		}
 
@@ -77,10 +61,24 @@
 		{
 			Assert.ArgumentNotNull(title);
 
-			Title = title;
-			Position = position;
-			Size = size;
-			Mode = mode;
+			_window = new NativeWindow(title, position, size, mode);
+			SwapChain = new SwapChain(Application.Current.GraphicsDevice, _window, false, _window.Size);
+			_output = new RenderOutput(Application.Current.GraphicsDevice)
+			{
+				RenderTarget = SwapChain.BackBuffer,
+				Camera = new Camera2D(Application.Current.GraphicsDevice)
+			};
+
+			_spriteBatch = new SpriteBatch(Application.Current.GraphicsDevice, Application.Current.Assets)
+			{
+				BlendState = BlendState.Premultiplied,
+				DepthStencilState = DepthStencilState.DepthDisabled,
+				SamplerState = SamplerState.PointClampNoMipmaps
+			};
+
+			Application.Current.AddWindow(this);
+			Template = DefaultTemplate;
+			UpdateLayout();
 		}
 
 		/// <summary>
@@ -90,7 +88,7 @@
 		{
 			get
 			{
-				CheckNativeWindowOpen();
+				CheckWindowOpen();
 				return _window;
 			}
 		}
@@ -102,12 +100,12 @@
 		{
 			get
 			{
-				CheckNativeWindowOpen();
+				CheckWindowOpen();
 				return _window.MouseCaptured;
 			}
 			set
 			{
-				CheckNativeWindowOpen();
+				CheckWindowOpen();
 				_window.MouseCaptured = value;
 			}
 		}
@@ -119,7 +117,7 @@
 		{
 			get
 			{
-				CheckNativeWindowOpen();
+				CheckWindowOpen();
 				return _window.Focused;
 			}
 		}
@@ -132,12 +130,12 @@
 		{
 			add
 			{
-				CheckNativeWindowOpen();
+				CheckWindowOpen();
 				_window.Closing += value;
 			}
 			remove
 			{
-				CheckNativeWindowOpen();
+				CheckWindowOpen();
 				_window.Closing -= value;
 			}
 		}
@@ -147,16 +145,10 @@
 		/// </summary>
 		public string Title
 		{
-			get { return _title; }
 			set
 			{
-				if (_title == value)
-					return;
-
-				_title = value;
-
-				if (_window != null)
-					_window.Title = value;
+				CheckWindowOpen();
+				_window.Title = value;
 			}
 		}
 
@@ -165,16 +157,15 @@
 		/// </summary>
 		public Size Size
 		{
-			get { return _size; }
+			get
+			{
+				CheckWindowOpen();
+				return _window.Size;
+			}
 			set
 			{
-				if (_size == value)
-					return;
-
-				_size = value;
-
-				if (_window != null)
-					_window.Size = value;
+				CheckWindowOpen();
+				_window.Size = value;
 			}
 		}
 
@@ -183,16 +174,15 @@
 		/// </summary>
 		public Vector2i Position
 		{
-			get { return _position; }
+			get
+			{
+				CheckWindowOpen();
+				return _window.Position;
+			}
 			set
 			{
-				if (_position == value)
-					return;
-
-				_position = value;
-
-				if (_window != null)
-					_window.Position = value;
+				CheckWindowOpen();
+				_window.Position = value;
 			}
 		}
 
@@ -201,42 +191,16 @@
 		/// </summary>
 		public WindowMode Mode
 		{
-			get { return _mode; }
+			get
+			{
+				CheckWindowOpen();
+				return _window.Mode;
+			}
 			set
 			{
-				if (_mode == value)
-					return;
-
-				_mode = value;
-
-				if (_window != null)
-					_window.Mode = value;
+				CheckWindowOpen();
+				_window.Mode = value;
 			}
-		}
-
-		/// <summary>
-		///     Opens the window.
-		/// </summary>
-		/// <param name="application">The application the window belongs to.</param>
-		internal void Open(Application application)
-		{
-			Assert.ArgumentNotNull(application);
-			Assert.That(!IsOpen, "The window is already open.");
-
-			_application = application;
-
-			_window = new NativeWindow(Title, Position, Size, Mode);
-			SwapChain = new SwapChain(application.GraphicsDevice, _window, false, _window.Size);
-			_output = new RenderOutput(application.GraphicsDevice)
-			{
-				RenderTarget = SwapChain.BackBuffer,
-				Camera = new Camera2D(application.GraphicsDevice)
-			};
-
-			IsOpen = true;
-			Template = DefaultTemplate;
-
-			UpdateLayout();
 		}
 
 		/// <summary>
@@ -244,11 +208,8 @@
 		/// </summary>
 		public void ProcessEvents()
 		{
+			CheckWindowOpen();
 			_window.ProcessEvents();
-
-			_size = _window.Size;
-			_position = _window.Position;
-			_mode = _window.Mode;
 		}
 
 		/// <summary>
@@ -256,14 +217,16 @@
 		/// </summary>
 		public void Close()
 		{
-			_application.RemoveWindow(this);
+			CheckWindowOpen();
+			Application.Current.RemoveWindow(this);
 
+			_spriteBatch.SafeDispose();
 			_output.Camera.SafeDispose();
 			_output.SafeDispose();
 			SwapChain.SafeDispose();
 			_window.SafeDispose();
 
-			IsOpen = false;
+			_window = null;
 		}
 
 		/// <summary>
@@ -304,46 +267,12 @@
 		}
 
 		/// <summary>
-		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
-		/// </summary>
-		/// <param name="availableSize">
-		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
-		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
-		///   element might be able to use scrolling in this case.
-		/// </param>
-		protected override SizeD MeasureCore(SizeD availableSize)
-		{
-			return availableSize;
-		}
-
-		/// <summary>
-		///   Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
-		///   element. If this value is smaller than the given size, the UI element's alignment properties position it
-		///   appropriately.
-		/// </summary>
-		/// <param name="finalSize">
-		///   The final area allocated by the UI element's parent that the UI element should use to arrange
-		///   itself and its children.
-		/// </param>
-		protected override SizeD ArrangeCore(SizeD finalSize)
-		{
-			return finalSize;
-		}
-
-		/// <summary>
 		///     Draws the window and its children.
 		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
-		internal new void Draw(SpriteBatch spriteBatch)
+		internal void Draw()
 		{
-			Assert.ArgumentNotNull(spriteBatch);
-
 			if (Visibility != Visibility.Visible)
 				return;
-
-			spriteBatch.BlendState = BlendState.Premultiplied;
-			spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
-			spriteBatch.SamplerState = SamplerState.PointClampNoMipmaps;
 
 			var viewport = new Rectangle(0, 0, Size);
 			_output.Camera.Viewport = viewport;
@@ -352,22 +281,25 @@
 			_output.ClearColor(Background);
 			_output.ClearDepth();
 
-			OnDraw(spriteBatch);
-
 			Assert.That(VisualChildrenCount == 1, "A window must have exactly one child element.");
-			GetVisualChild(0).Draw(spriteBatch);
+			GetVisualChild(0).Draw(_spriteBatch);
 
-			spriteBatch.DrawBatch(_output);
+			_spriteBatch.DrawBatch(_output);
 			SwapChain.Present();
 		}
 
+		protected override void OnDraw(SpriteBatch spriteBatch)
+		{
+			throw new NotSupportedException("Call Draw() instead.");
+		}
+
 		/// <summary>
-		///     In debug builds, checks whether the native window is open.
+		///     In debug builds, checks whether the window is open.
 		/// </summary>
 		[Conditional("DEBUG")]
-		private void CheckNativeWindowOpen()
+		private void CheckWindowOpen()
 		{
-			Assert.NotNull(_window, "The window has not yet been opened.");
+			Assert.That(IsOpen, "The window has not yet been opened.");
 		}
 	}
 }

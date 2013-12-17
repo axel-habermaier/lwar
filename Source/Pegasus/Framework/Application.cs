@@ -17,10 +17,15 @@
 	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>
-	///     Represents the application.
+	///     Represents the application. There can be only one instance per app domain.
 	/// </summary>
 	public abstract class Application
 	{
+		/// <summary>
+		///     The application instance of this app domain.
+		/// </summary>
+		private static Application _current;
+
 		/// <summary>
 		///     The root of the visual tree managed by the application.
 		/// </summary>
@@ -37,6 +42,26 @@
 		protected Application()
 		{
 			Commands.OnExit += Exit;
+			Current = this;
+		}
+
+		/// <summary>
+		///     Gets the application instance of this app domain.
+		/// </summary>
+		public static Application Current
+		{
+			get
+			{
+				Assert.NotNull(_current, "No application is currently active in this app domain.");
+				return _current;
+			}
+			private set
+			{
+				Assert.That(_current == null || value == null,
+							"There can only be one instance of '{0}' per app domain.", typeof(Application).FullName);
+
+				_current = value;
+			}
 		}
 
 		/// <summary>
@@ -108,6 +133,7 @@
 		/// </summary>
 		protected virtual void Dispose()
 		{
+			Current = null;
 		}
 
 		/// <summary>
@@ -207,20 +233,19 @@
 							BlendState.Premultiplied.Bind();
 							DrawUserInterface(spriteBatch);
 
-							// Draw the user interface
-							_root.UpdateLayout();
-							_root.Draw(spriteBatch);
-
 							// Draw the console and the statistics on top of the current frame
 							debugOverlay.Draw(spriteBatch);
 							console.Draw(spriteBatch);
 
 							spriteBatch.DrawBatch(uiOutput);
+
+							// Draw the user interface
+							_root.UpdateLayout();
+							_root.Draw();
 						}
 
-						// Present the current frame to the screen and write the log file, if necessary
+						// Present the current frame to the screen
 						swapChain.Present();
-						//logFile.WriteToFile();
 
 						if (!_root.HasFocusedWindows)
 							Thread.Sleep(50);
@@ -233,15 +258,13 @@
 		}
 
 		/// <summary>
-		///     Creates a new window.
+		///     Adds the window to the application.
 		/// </summary>
-		/// <param name="window">The window that should be shown.</param>
-		public void ShowWindow(Window window)
+		/// <param name="window">The window that should be added.</param>
+		internal void AddWindow(Window window)
 		{
 			Assert.ArgumentNotNull(window);
-
-			_root.Add(window);
-			window.Open(this);
+			_root.Children.Add(window);
 		}
 
 		/// <summary>
@@ -251,7 +274,7 @@
 		internal void RemoveWindow(Window window)
 		{
 			Assert.ArgumentNotNull(window);
-			_root.Remove(window);
+			_root.Children.Remove(window);
 		}
 
 		/// <summary>

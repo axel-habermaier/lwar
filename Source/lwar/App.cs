@@ -5,12 +5,15 @@
 	using Assets;
 	using Network;
 	using Pegasus;
+	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Screens;
 	using Scripting;
+	using UserInterface;
+	using MainMenu = Screens.MainMenu;
 
 	/// <summary>
 	///     Represents the lwar application.
@@ -23,6 +26,8 @@
 		private LocalServer _localServer;
 
 		private ScreenManager _screenManager;
+
+		private Window _window;
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -56,7 +61,7 @@
 
 			//var uc1 = new UserControl1();
 			////Add(uc1);
-			//ShowWindow(new MainWindow());
+			_window =new MainWindow();
 		}
 
 		/// <summary>
@@ -99,6 +104,9 @@
 
 			_screenManager.SafeDispose();
 			_localServer.SafeDispose();
+			_window.SafeDispose();
+
+			base.Dispose();
 		}
 
 		/// <summary>

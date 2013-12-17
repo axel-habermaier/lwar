@@ -8,42 +8,14 @@
 	/// <summary>
 	///     Represents the root element of all visual trees within an application.
 	/// </summary>
-	internal class RootUIElement : UIElement
+	internal class RootUIElement : Panel
 	{
-		/// <summary>
-		///     The collection of windows attached to the root element.
-		/// </summary>
-		private readonly UIElementCollection _windows;
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public RootUIElement()
 		{
 			IsConnectedToRoot = true;
-			_windows = new UIElementCollection(this);
-		}
-
-		/// <summary>
-		///     Gets an enumerator that can be used to enumerate all logical children of the panel.
-		/// </summary>
-		protected internal override UIElementCollection.Enumerator LogicalChildren
-		{
-			get
-			{
-				if (_windows == null)
-					return UIElementCollection.Enumerator.Empty;
-
-				return _windows.GetEnumerator();
-			}
-		}
-
-		/// <summary>
-		///     Gets the number of visual children for this visual.
-		/// </summary>
-		protected internal override int VisualChildrenCount
-		{
-			get { return _windows == null ? 0 : _windows.Count; }
 		}
 
 		/// <summary>
@@ -53,35 +25,16 @@
 		{
 			get
 			{
-				foreach (Window window in _windows)
+				foreach (var child in LogicalChildren)
 				{
+					Assert.OfType<Window>(child);
+
+					var window = child as Window;
 					if (window.Focused)
 						return true;
 				}
 				return false;
 			}
-		}
-
-		/// <summary>
-		///     Adds the window to the visual tree.
-		/// </summary>
-		/// <param name="window">The window that should be added.</param>
-		public void Add(Window window)
-		{
-			Assert.ArgumentNotNull(window);
-			Assert.That(!_windows.Contains(window), "The window has already been added.");
-
-			_windows.Add(window);
-		}
-
-		/// <summary>
-		///     Removes the window from the visual tree.
-		/// </summary>
-		/// <param name="window">The window that should be removed.</param>
-		public void Remove(Window window)
-		{
-			Assert.ArgumentNotNull(window);
-			_windows.Remove(window);
 		}
 
 		/// <summary>
@@ -112,24 +65,17 @@
 		}
 
 		/// <summary>
-		///     Gets the visual child at the specified index.
-		/// </summary>
-		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
-		protected internal override UIElement GetVisualChild(int index)
-		{
-			Assert.NotNull(_windows);
-			Assert.ArgumentInRange(index, _windows);
-
-			return _windows[index];
-		}
-
-		/// <summary>
 		///     Handles the user input.
 		/// </summary>
 		public void HandleInput()
 		{
-			foreach (Window window in _windows)
+			foreach (var child in LogicalChildren)
+			{
+				Assert.OfType<Window>(child);
+
+				var window = child as Window;
 				window.ProcessEvents();
+			}
 		}
 
 		/// <summary>
@@ -137,23 +83,32 @@
 		/// </summary>
 		public void UpdateLayout()
 		{
-			foreach (Window window in _windows)
+			foreach (var child in LogicalChildren)
+			{
+				Assert.OfType<Window>(child);
+
+				var window = child as Window;
 				window.UpdateLayout();
+			}
 		}
 
 		/// <summary>
 		///     Draws the contents of all windows.
 		/// </summary>
-		/// <param name="spriteBatch"></param>
-		public new void Draw(SpriteBatch spriteBatch)
+		public void Draw()
 		{
-			foreach (Window window in _windows)
-				window.Draw(spriteBatch);
+			foreach (var child in LogicalChildren)
+			{
+				Assert.OfType<Window>(child);
+
+				var window = child as Window;
+				window.Draw();
+			}
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)
 		{
-			throw new NotSupportedException();
+			throw new NotSupportedException("Call Draw() instead.");
 		}
 	}
 }
