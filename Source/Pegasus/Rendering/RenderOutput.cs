@@ -45,6 +45,7 @@
 
 			_graphicsDevice = graphicsDevice;
 			_viewportBuffer = new ConstantBuffer(graphicsDevice, 16, ViewportBufferSlot);
+			_viewportBuffer.SetName("RenderOutput.ViewportBuffer");
 		}
 
 		/// <summary>

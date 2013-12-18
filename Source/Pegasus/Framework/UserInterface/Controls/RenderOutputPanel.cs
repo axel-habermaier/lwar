@@ -3,7 +3,6 @@
 	using System;
 	using Math;
 	using Platform.Graphics;
-	using Platform.Memory;
 	using Rendering;
 
 	/// <summary>
@@ -34,6 +33,11 @@
 		///     size changes.
 		/// </summary>
 		public event Action<Size> InitializeRenderOutput;
+
+		/// <summary>
+		///     Raised when the render output has to be disposed, i.e., when the panel is detached from a logical tree.
+		/// </summary>
+		public event Action DisposeRenderOutput;
 
 		/// <summary>
 		///     Invoked when the UI element is now (transitively) attached to the root of a visual tree.
@@ -91,17 +95,11 @@
 		/// </summary>
 		private void Dispose()
 		{
-			if (RenderOutput != null)
-			{
-				RenderOutput.Camera.SafeDispose();
-				RenderOutput.RenderTarget.SafeDispose();
-			}
+			if (DisposeRenderOutput != null)
+				DisposeRenderOutput();
 
-			OutputTexture.SafeDispose();
-			RenderOutput.SafeDispose();
-
-			OutputTexture = null;
-			RenderOutput = null;
+			Assert.NullOrDisposed(RenderOutput);
+			Assert.NullOrDisposed(OutputTexture);
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)
@@ -110,12 +108,22 @@
 				return;
 
 			Assert.NotNull(OutputTexture, "The output texture has not been initialized.");
+
 			var width = (int)Math.Round(ActualWidth);
 			var height = (int)Math.Round(ActualHeight);
 			var x = (int)Math.Round(VisualOffset.X);
 			var y = (int)Math.Round(VisualOffset.Y);
 
-			spriteBatch.Draw(new Rectangle(x, y, width, height), OutputTexture);
+			// Take the different coordinates origins for OpenGL and Direct3D into account when rendering 
+			// the render target's color buffer... annoying
+#if Direct3D11
+			var textureArea = new RectangleF(0, 1, 1, -1);
+#elif OpenGL3
+			var textureArea = new RectangleF(0, 0, 1, 1);
+#endif
+
+			var quad = new Quad(new RectangleF(x, y, width, height), Color.White, textureArea);
+			spriteBatch.Draw(ref quad, OutputTexture);
 		}
 	}
 }

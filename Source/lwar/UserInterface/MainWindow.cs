@@ -41,6 +41,7 @@
 
 			_graphicsDevice = graphicsDevice;
 			RenderOutputPanel.InitializeRenderOutput += InitializeRenderOutputPanel;
+			RenderOutputPanel.DisposeRenderOutput += DisposeRenderOutputPanel;
 		}
 
 		/// <summary>
@@ -61,7 +62,6 @@
 			RenderOutputPanel.OutputTexture = colorBuffer;
 			RenderOutputPanel.RenderOutput = new RenderOutput(_graphicsDevice)
 			{
-				Camera = new Camera3D(_graphicsDevice),
 				RenderTarget = new RenderTarget(_graphicsDevice, depthStencil, colorBuffer),
 				Viewport = new Rectangle(0, 0, panelSize)
 			};
@@ -82,10 +82,27 @@
 		}
 
 		/// <summary>
+		///     Disposes the render output panel's graphics objects.
+		/// </summary>
+		private void DisposeRenderOutputPanel()
+		{
+			if (RenderOutputPanel.RenderOutput != null)
+				RenderOutputPanel.RenderOutput.RenderTarget.SafeDispose();
+
+			RenderOutputPanel.OutputTexture.SafeDispose();
+			RenderOutputPanel.RenderOutput.SafeDispose();
+
+			RenderOutputPanel.OutputTexture = null;
+			RenderOutputPanel.RenderOutput = null;
+		}
+
+		/// <summary>
 		///     Invoked when the window is being closed.
 		/// </summary>
 		protected override void OnClosing()
 		{
+			DisposeRenderOutputPanel();
+
 			if (Output2D != null)
 				Output2D.Camera.SafeDispose();
 
