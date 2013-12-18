@@ -60,6 +60,7 @@
 		internal Window(string title, Vector2i position, Size size, WindowMode mode)
 		{
 			Assert.ArgumentNotNull(title);
+			Assert.NotNull(Application.Current.GraphicsDevice, "The application's graphics device has not yet been initialized.");
 
 			_window = new NativeWindow(title, position, size, mode);
 			SwapChain = new SwapChain(Application.Current.GraphicsDevice, _window, false, _window.Size);
@@ -82,7 +83,7 @@
 		/// <summary>
 		///     Gets the native operating system window that is used to display the UI.
 		/// </summary>
-		internal NativeWindow NativeWindow
+		public NativeWindow NativeWindow
 		{
 			get
 			{

@@ -30,7 +30,7 @@
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the mouse events.</param>
-		public Mouse(NativeWindow window)
+		internal Mouse(NativeWindow window)
 		{
 			Assert.ArgumentNotNull(window);
 

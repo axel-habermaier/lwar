@@ -445,6 +445,7 @@ PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDesc
 PG_API_EXPORT pgVoid pgDestroyTexture(pgTexture* texture);
 
 PG_API_EXPORT pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot);
+PG_API_EXPORT pgVoid pgUnbindTexture(pgTexture* texture, pgInt32 slot);
 PG_API_EXPORT pgVoid pgGenerateMipmaps(pgTexture* texture);
 
 //====================================================================================================================

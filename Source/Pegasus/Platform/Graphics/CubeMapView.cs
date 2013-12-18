@@ -46,5 +46,18 @@
 			CubeMap.Bind(slot);
 			Sampler.Bind(slot);
 		}
+
+		/// <summary>
+		///     Unbinds the texture from the GPU if the texture is used as a render target.
+		/// </summary>
+		/// <param name="slot">The slot the texture should be unbound from.</param>
+		internal void Unbind(int slot)
+		{
+			Assert.NotNull(CubeMap, "No texture has been set.");
+			Assert.NotNull(Sampler, "No sampler state has been set.");
+
+			if (CubeMap.IsColorBuffer || CubeMap.IsDepthStencilBuffer)
+				CubeMap.Unbind(slot);
+		}
 	}
 }

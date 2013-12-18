@@ -22,7 +22,7 @@
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the key events.</param>
-		public Keyboard(NativeWindow window)
+		internal Keyboard(NativeWindow window)
 		{
 			Assert.ArgumentNotNull(window);
 

@@ -25,6 +25,11 @@
 		private readonly string _bindMethodName = String.Format("_{0}Bind", Configuration.ReservedIdentifierPrefix);
 
 		/// <summary>
+		///     The name of the method that unbinds the textures.
+		/// </summary>
+		private readonly string _unbindMethodName = String.Format("_{0}Unbind", Configuration.ReservedIdentifierPrefix);
+
+		/// <summary>
 		///     The writer that is used to write the generated code.
 		/// </summary>
 		private readonly CodeWriter _writer = new CodeWriter();
@@ -115,6 +120,7 @@
 			GenerateTechniqueProperties();
 
 			GenerateBindMethod();
+			GenerateUnbindMethod();
 			GenerateOnDisposingMethod();
 
 			GenerateConstantBufferStructs();
@@ -187,7 +193,7 @@
 					var vertexShader = ShaderAsset.GetPath(_effect.FullName, technique.VertexShader.Name, ShaderType.VertexShader);
 					var fragmentShader = ShaderAsset.GetPath(_effect.FullName, technique.FragmentShader.Name, ShaderType.FragmentShader);
 
-					_writer.AppendLine("{0} = {1}.CreateTechnique({2},", technique.Name, ContextVariableName, _bindMethodName);
+					_writer.AppendLine("{0} = {1}.CreateTechnique({2}, {3},", technique.Name, ContextVariableName, _bindMethodName, _unbindMethodName);
 					_writer.AppendLine("\t\"{0}.{1}\", ", Path.ChangeExtension(vertexShader, null), Configuration.UniqueFileIdentifier);
 					_writer.AppendLine("\t\"{0}.{1}\");", Path.ChangeExtension(fragmentShader, null), Configuration.UniqueFileIdentifier);
 				}
@@ -298,6 +304,27 @@
 
 				foreach (var buffer in ConstantBuffers)
 					_writer.AppendLine("{1}.Bind({0});", GetFieldName(buffer.Name), ContextVariableName);
+			});
+
+			_writer.Newline();
+		}
+
+		/// <summary>
+		///     Generates the texture unbinding method.
+		/// </summary>
+		private void GenerateUnbindMethod()
+		{
+			_writer.AppendLine("/// <summary>");
+			_writer.AppendLine("///   Unbinds all textures required by the effect.");
+			_writer.AppendLine("/// </summary>");
+			_writer.Append("private void {0}()", _unbindMethodName);
+			_writer.AppendBlockStatement(() =>
+			{
+				if (!_effect.Textures.Any())
+					_writer.AppendLine("// Nothing to do here");
+
+				foreach (var texture in _effect.Textures)
+					_writer.AppendLine("{2}.Unbind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
 			});
 
 			if (ConstantBuffers.Any())

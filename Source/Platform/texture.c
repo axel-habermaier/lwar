@@ -51,6 +51,20 @@ pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot)
 	++texture->device->statistics.textureBindingCount;
 }
 
+pgVoid pgUnbindTexture(pgTexture* texture, pgInt32 slot)
+{
+	PG_ASSERT_NOT_NULL(texture);
+	PG_ASSERT_IN_RANGE(slot, 0, PG_TEXTURE_SLOT_COUNT);
+
+	if (texture->device->textures[slot] != texture)
+		return;
+
+	texture->device->textures[slot] = NULL;
+	pgUnbindTextureCore(texture, slot);
+
+	++texture->device->statistics.textureBindingCount;
+}
+
 pgVoid pgGenerateMipmaps(pgTexture* texture)
 {
 	PG_ASSERT_NOT_NULL(texture);

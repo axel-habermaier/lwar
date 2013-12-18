@@ -11,8 +11,6 @@
 	using Pegasus.Rendering;
 	using Screens;
 	using Scripting;
-	using UserInterface;
-	using MainMenu = Screens.MainMenu;
 
 	/// <summary>
 	///     Represents the lwar application.
@@ -27,7 +25,6 @@
 		private ScreenManager _screenManager;
 
 		private SpriteBatch _spriteBatch;
-		private MainWindow _window;
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -46,7 +43,7 @@
 			Window.Closing += Exit;
 
 			_localServer = new LocalServer();
-			_screenManager = new ScreenManager(new AppContext(GraphicsDevice, Window, Assets, InputDevice));
+			_screenManager = new ScreenManager(new AppContext(GraphicsDevice, Window.NativeWindow, Assets, InputDevice));
 			_screenManager.Add(new MainMenu());
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");
@@ -58,9 +55,6 @@
 			Commands.Bind(Key.Escape.WentDown(), "exit");
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
-
-			_window = new MainWindow();
-			_window.Initialize(GraphicsDevice);
 
 			_spriteBatch = new SpriteBatch(GraphicsDevice, Assets)
 			{
@@ -82,15 +76,16 @@
 		/// <summary>
 		///     Invoked when the application should draw a frame.
 		/// </summary>
-		protected override void Draw()
+		/// <param name="output">The render output that should be used to draw the frame.</param>
+		protected override void Draw(RenderOutput output)
 		{
-			_window.Output3D.ClearColor(new Color(0, 0, 0, 255));
-			_window.Output3D.ClearDepth();
+			output.ClearColor(new Color(0, 0, 0, 255));
+			output.ClearDepth();
 
-			_screenManager.Draw(_window.Output3D);
+			_screenManager.Draw(output);
 
-			_screenManager.DrawUserInterface(_spriteBatch);
-			_spriteBatch.DrawBatch(_window.Output2D);
+			//_screenManager.DrawUserInterface(_spriteBatch);
+			//_spriteBatch.DrawBatch(_window.Output2D);
 		}
 
 		/// <summary>
@@ -104,7 +99,6 @@
 			_spriteBatch.SafeDispose();
 			_screenManager.SafeDispose();
 			_localServer.SafeDispose();
-			_window.SafeDispose();
 
 			base.Dispose();
 		}

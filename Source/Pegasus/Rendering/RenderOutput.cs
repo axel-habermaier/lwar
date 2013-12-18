@@ -94,6 +94,8 @@
 
 			_graphicsDevice.PrimitiveType = primitiveType;
 			_graphicsDevice.Draw(primitiveCount, offset);
+
+			effect.Unbind();
 		}
 
 		/// <summary>
@@ -113,6 +115,8 @@
 
 			_graphicsDevice.PrimitiveType = primitiveType;
 			_graphicsDevice.DrawIndexed(indexCount, indexOffset, vertexOffset);
+
+			effect.Unbind();
 		}
 
 		/// <summary>

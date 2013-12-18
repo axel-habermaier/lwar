@@ -93,6 +93,15 @@ pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)
 	boundTexture = texture;
 }
 
+pgVoid pgUnbindTextureCore(pgTexture* texture, pgInt32 slot)
+{
+	pgChangeActiveTexture(texture->device, slot);
+	glBindTexture(texture->glType, 0);
+	PG_ASSERT_NO_GL_ERRORS();
+
+	boundTexture = NULL;
+}
+
 pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 {
 	glBindTexture(texture->glType, texture->id);

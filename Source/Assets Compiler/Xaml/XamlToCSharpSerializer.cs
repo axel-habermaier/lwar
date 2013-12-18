@@ -70,7 +70,17 @@
 				{
 					GenerateMembers();
 
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     Initializes a new instance.");
+					_writer.AppendLine("/// </summary>");
 					_writer.AppendLine("public {0}()", className);
+					_writer.AppendBlockStatement(() => _writer.AppendLine("InitializeComponents();"));
+					_writer.Newline();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     Initializes the UI element's children.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("private void InitializeComponents()");
 					_writer.AppendBlockStatement(() => GenerateCode(_xamlRoot));
 				});
 			});
@@ -92,7 +102,7 @@
 				var type = element.Attribute("Type").Value;
 				var name = element.Attribute("Name").Value;
 
-				_writer.AppendLine("private readonly {0} {1};", type, name);
+				_writer.AppendLine("private {0} {1};", type, name);
 				hasMembers = true;
 			}
 

@@ -4,12 +4,12 @@
 	using Math;
 
 	/// <summary>
-	///   Represents a 2D texture associated with a sampler state that can be used by an effect.
+	///     Represents a 2D texture associated with a sampler state that can be used by an effect.
 	/// </summary>
 	public struct Texture2DView
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="texture">The texture that should be bound.</param>
 		/// <param name="sampler">The sampler that should be bound.</param>
@@ -26,12 +26,12 @@
 		}
 
 		/// <summary>
-		///   Gets the bound texture.
+		///     Gets the bound texture.
 		/// </summary>
 		public Texture2D Texture { get; private set; }
 
 		/// <summary>
-		///   Gets the size of the bound texture.
+		///     Gets the size of the bound texture.
 		/// </summary>
 		public Size Size
 		{
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Gets the width of the bound texture.
+		///     Gets the width of the bound texture.
 		/// </summary>
 		public int Width
 		{
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Gets the height of the bound texture.
+		///     Gets the height of the bound texture.
 		/// </summary>
 		public int Height
 		{
@@ -67,12 +67,12 @@
 		}
 
 		/// <summary>
-		///   Gets the bound sampler state.
+		///     Gets the bound sampler state.
 		/// </summary>
 		public SamplerState Sampler { get; private set; }
 
 		/// <summary>
-		///   Binds the texture and sampler state to the GPU.
+		///     Binds the texture and sampler state to the GPU.
 		/// </summary>
 		/// <param name="slot">The slot the texture and sampler state should be bound to.</param>
 		internal void Bind(int slot)
@@ -82,6 +82,19 @@
 
 			Texture.Bind(slot);
 			Sampler.Bind(slot);
+		}
+
+		/// <summary>
+		///     Unbinds the texture from the GPU if the texture is used as a render target.
+		/// </summary>
+		/// <param name="slot">The slot the texture should be unbound from.</param>
+		internal void Unbind(int slot)
+		{
+			Assert.NotNull(Texture, "No texture has been set.");
+			Assert.NotNull(Sampler, "No sampler state has been set.");
+
+			if (Texture.IsColorBuffer || Texture.IsDepthStencilBuffer)
+				Texture.Unbind(slot);
 		}
 	}
 }

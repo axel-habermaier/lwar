@@ -82,14 +82,14 @@
 		public string Name { get; private set; }
 
 		/// <summary>
-		///     Gets the application-wide assets manager.
+		///     Gets the application-wide Assets manager.
 		/// </summary>
 		public AssetsManager Assets { get; private set; }
 
 		/// <summary>
-		///     Gets the window the application is rendered to.
+		///     Gets the Window the application is rendered to.
 		/// </summary>
-		public NativeWindow Window { get; private set; }
+		public AppWindow Window { get; private set; }
 
 		/// <summary>
 		///     Gets the logical input device that the application uses to handle user input.
@@ -109,7 +109,8 @@
 		/// <summary>
 		///     Invoked when the application should draw a frame.
 		/// </summary>
-		protected abstract void Draw();
+		/// <param name="output">The render output that should be used to draw the frame.</param>
+		protected abstract void Draw(RenderOutput output);
 
 		/// <summary>
 		///     Exists the application.
@@ -125,7 +126,6 @@
 		/// </summary>
 		protected virtual void Dispose()
 		{
-			Current = null;
 		}
 
 		/// <summary>
@@ -140,39 +140,36 @@
 
 			Name = name;
 
-			using (var graphicsDevice = new GraphicsDevice())
-			using (var window = new NativeWindow(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
-			using (var swapChain = new SwapChain(graphicsDevice, window, Cvars.Fullscreen, Cvars.Resolution))
-			using (var assets = new AssetsManager(graphicsDevice))
-			using (var keyboard = new Keyboard(window))
-			using (var mouse = new Mouse(window))
+			using (GraphicsDevice = new GraphicsDevice())
+			using (Assets = new AssetsManager(GraphicsDevice))
+			using (Window = new AppWindow(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
+			using (var keyboard = new Keyboard(Window.NativeWindow))
+			using (var mouse = new Mouse(Window.NativeWindow))
 			using (var inputDevice = new LogicalInputDevice(keyboard, mouse))
 			using (var bindings = new Bindings(inputDevice))
-			using (var resolutionManager = new ResolutionManager(window, swapChain))
-			using (var camera = new Camera2D(graphicsDevice))
-			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera, RenderTarget = swapChain.BackBuffer })
+			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
+			using (var camera = new Camera2D(GraphicsDevice))
 			{
-				window.Title = name;
-				RegisterFontLoader(new FontLoader(assets));
+				Window.Title = name;
+				RegisterFontLoader(new FontLoader(Assets));
 
-				var font = assets.LoadFont(Fonts.LiberationMono11);
-				using (var debugOverlay = new DebugOverlay(graphicsDevice, font))
-				using (var spriteBatch = new SpriteBatch(graphicsDevice, assets))
-				using (var console = new Console(graphicsDevice, inputDevice, font, name))
+				var font = Assets.LoadFont(Fonts.LiberationMono11);
+				using (var debugOverlay = new DebugOverlay(GraphicsDevice, font))
+				using (var spriteBatch = new SpriteBatch(GraphicsDevice, Assets))
+				using (var console = new Console(GraphicsDevice, inputDevice, font, name))
 				{
 					// Ensure that the console and the statistics are properly initialized
-					debugOverlay.Update(window.Size);
-					console.Update(window.Size);
+					debugOverlay.Update(Window.Size);
+					console.Update(Window.Size);
 
 					// Copy the recorded log history to the console and explain the usage of the console
 					logFile.WriteToConsole(console);
 					Commands.Help();
 
 					// Let the application initialize itself
-					GraphicsDevice = graphicsDevice;
-					Assets = assets;
+					Assets = Assets;
 					InputDevice = inputDevice;
-					Window = window;
+					Window = Window;
 					Initialize();
 
 					// Initialize the sprite batch
@@ -188,8 +185,8 @@
 						inputDevice.Keyboard.Update();
 						inputDevice.Mouse.Update();
 
-						// Process all window events 
-						window.ProcessEvents();
+						// Process all Window events 
+						Window.ProcessEvents();
 
 						// Update the user interface and the logical inputs based on the new state of the input system
 						_root.HandleInput();
@@ -204,19 +201,19 @@
 						_root.UpdateLayout();
 
 						// Update the statistics
-						debugOverlay.Update(window.Size);
-						console.Update(window.Size);
+						debugOverlay.Update(Window.Size);
+						console.Update(Window.Size);
 
 						// Draw the current frame
 						using (new Measurement(debugOverlay.GraphicsDeviceProfiler))
 						using (new Measurement(debugOverlay.CpuFrameTime))
 						{
 							// Let the application perform all custom drawing for the current frame
-							Draw();
+							Draw(Window.RenderOutput);
 
 							// Draw the console and the statistics on top of the current frame
-							DepthStencilState.DepthDisabled.Bind();
-							BlendState.Premultiplied.Bind();
+							//DepthStencilState.DepthDisabled.Bind();
+							//BlendState.Premultiplied.Bind();
 
 							//debugOverlay.Draw(spriteBatch);
 							//console.Draw(spriteBatch);
@@ -227,9 +224,6 @@
 							_root.Draw();
 						}
 
-						// Present the current frame to the screen
-						swapChain.Present();
-
 						if (!_root.HasFocusedWindows)
 							Thread.Sleep(50);
 					}
@@ -238,26 +232,28 @@
 					Dispose();
 				}
 			}
+
+			Current = null;
 		}
 
 		/// <summary>
-		///     Adds the window to the application.
+		///     Adds the Window to the application.
 		/// </summary>
-		/// <param name="window">The window that should be added.</param>
-		internal void AddWindow(Window window)
+		/// <param name="Window">The Window that should be added.</param>
+		internal void AddWindow(Window Window)
 		{
-			Assert.ArgumentNotNull(window);
-			_root.Children.Add(window);
+			Assert.ArgumentNotNull(Window);
+			_root.Children.Add(Window);
 		}
 
 		/// <summary>
-		///     Removes the window from the application.
+		///     Removes the Window from the application.
 		/// </summary>
-		/// <param name="window">The window that should be removed.</param>
-		internal void RemoveWindow(Window window)
+		/// <param name="Window">The Window that should be removed.</param>
+		internal void RemoveWindow(Window Window)
 		{
-			Assert.ArgumentNotNull(window);
-			_root.Children.Remove(window);
+			Assert.ArgumentNotNull(Window);
+			_root.Children.Remove(Window);
 		}
 
 		/// <summary>
