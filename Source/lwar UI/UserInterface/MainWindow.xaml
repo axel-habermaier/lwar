@@ -17,8 +17,7 @@
 			<Border Width="110" Height="100" Background="#FFFF2300" Canvas.Left="33" Canvas.Top="27"></Border>
 			<Border Width="110" Height="100" Background="#FF3F59CD" Panel.ZIndex="-6" Canvas.Left="17" Canvas.Top="80"/>
 			<userInterface:UserControl1 Canvas.Left="224" Canvas.Top="27" />
-
-			<controls:RenderTargetPanel Name="RTP" Canvas.Left="58" Canvas.Top="282" Height="73.46" Width="279" />
 		</Canvas>
+		<controls:RenderOutputPanel Name="RenderOutputPanel" Height="55" />
 	</StackPanel>
 </Window>

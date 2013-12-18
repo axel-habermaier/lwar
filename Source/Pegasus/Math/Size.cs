@@ -183,7 +183,7 @@ namespace Pegasus.Math
 		/// <param name="other">The size instance to compare with this instance.</param>
 		public bool Equals(SizeF other)
 		{
-			return MathUtils.FloatEquality(Width, other.Width) && MathUtils.FloatEquality(Height, other.Height);
+			return MathUtils.Equals(Width, other.Width) && MathUtils.Equals(Height, other.Height);
 		}
 
 		/// <summary>
@@ -576,7 +576,7 @@ namespace Pegasus.Math
 		/// <param name="other">The size instance to compare with this instance.</param>
 		public bool Equals(SizeD other)
 		{
-			return MathUtils.DoubleEquality(Width, other.Width) && MathUtils.DoubleEquality(Height, other.Height);
+			return MathUtils.Equals(Width, other.Width) && MathUtils.Equals(Height, other.Height);
 		}
 
 		/// <summary>

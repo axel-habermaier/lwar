@@ -22,6 +22,18 @@
 		///   Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
+		/// <param name="size">The size of the texture.</param>
+		/// <param name="format">The format of the texture.</param>
+		/// <param name="flags">The flags that indicates which operations are supported on the texture.</param>
+		public Texture2D(GraphicsDevice graphicsDevice, Size size, SurfaceFormat format, TextureFlags flags)
+			: this(graphicsDevice, size.Width, size.Height, format, flags)
+		{
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="width">The width of the texture.</param>
 		/// <param name="height">The height of the texture.</param>
 		/// <param name="format">The format of the texture.</param>

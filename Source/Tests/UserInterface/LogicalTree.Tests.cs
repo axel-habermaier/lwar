@@ -23,19 +23,19 @@
 			_control1.Canvas1.Children.Remove(_control1.Canvas2);
 			_control2.Canvas1.Children.Add(_control1.Canvas2);
 
-			_control1.Canvas2.IsConnectedToRoot.Should().Be(true);
-			_control1.Button3.IsConnectedToRoot.Should().Be(true);
+			_control1.Canvas2.IsAttachedToRoot.Should().Be(true);
+			_control1.Button3.IsAttachedToRoot.Should().Be(true);
 		}
 
 		[Test]
 		public void AttachedToRoot()
 		{
-			_control1.IsConnectedToRoot.Should().Be(true);
-			_control1.Canvas1.IsConnectedToRoot.Should().Be(true);
-			_control1.Canvas2.IsConnectedToRoot.Should().Be(true);
-			_control1.Button1.IsConnectedToRoot.Should().Be(true);
-			_control1.Button2.IsConnectedToRoot.Should().Be(true);
-			_control1.Button3.IsConnectedToRoot.Should().Be(true);
+			_control1.IsAttachedToRoot.Should().Be(true);
+			_control1.Canvas1.IsAttachedToRoot.Should().Be(true);
+			_control1.Canvas2.IsAttachedToRoot.Should().Be(true);
+			_control1.Button1.IsAttachedToRoot.Should().Be(true);
+			_control1.Button2.IsAttachedToRoot.Should().Be(true);
+			_control1.Button3.IsAttachedToRoot.Should().Be(true);
 		}
 
 		[Test]
@@ -60,12 +60,12 @@
 		{
 			_control1.Canvas1.Children.Remove(_control1.Canvas2);
 
-			_control1.IsConnectedToRoot.Should().Be(true);
-			_control1.Canvas1.IsConnectedToRoot.Should().Be(true);
-			_control1.Canvas2.IsConnectedToRoot.Should().Be(false);
-			_control1.Button1.IsConnectedToRoot.Should().Be(true);
-			_control1.Button2.IsConnectedToRoot.Should().Be(true);
-			_control1.Button3.IsConnectedToRoot.Should().Be(false);
+			_control1.IsAttachedToRoot.Should().Be(true);
+			_control1.Canvas1.IsAttachedToRoot.Should().Be(true);
+			_control1.Canvas2.IsAttachedToRoot.Should().Be(false);
+			_control1.Button1.IsAttachedToRoot.Should().Be(true);
+			_control1.Button2.IsAttachedToRoot.Should().Be(true);
+			_control1.Button3.IsAttachedToRoot.Should().Be(false);
 		}
 
 		[Test]

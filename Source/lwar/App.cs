@@ -27,7 +27,7 @@
 
 		private ScreenManager _screenManager;
 
-		private Window _window;
+		private MainWindow _window;
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -62,6 +62,7 @@
 			//var uc1 = new UserControl1();
 			////Add(uc1);
 			_window =new MainWindow();
+			_window.Initialize(GraphicsDevice);
 		}
 
 		/// <summary>

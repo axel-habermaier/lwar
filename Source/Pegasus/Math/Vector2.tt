@@ -252,7 +252,7 @@ IEnumerable<Info> GetInfo()
 		LengthType = "float",
 		Epsilon = "MathUtils.Epsilon",
 		NormalizedType = "",
-		EqualsMethodFormat = "MathUtils.FloatEquality({0}, {1})"
+		EqualsMethodFormat = "MathUtils.Equals({0}, {1})"
 	};
 
 	yield return new Info 
@@ -264,7 +264,7 @@ IEnumerable<Info> GetInfo()
 		LengthType = "double",
 		Epsilon = "MathUtils.Epsilon",
 		NormalizedType = "d",
-		EqualsMethodFormat = "MathUtils.DoubleEquality({0}, {1})"
+		EqualsMethodFormat = "MathUtils.Equals({0}, {1})"
 	};
 
 	yield return new Info 

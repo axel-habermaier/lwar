@@ -19,7 +19,7 @@
 		/// </summary>
 		public TestControl()
 		{
-			IsConnectedToRoot = true;
+			IsAttachedToRoot = true;
 
 			Button1 = new Button();
 			Button2 = new Button();

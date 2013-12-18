@@ -209,7 +209,7 @@ IEnumerable<Info> GetInfo()
 		Description = "32-bit floating point", 
 		PositionType = "Vector2",
 		RectangleType = "RectangleF",
-		EqualsMethodFormat = "MathUtils.FloatEquality({0}, {1})" 
+		EqualsMethodFormat = "MathUtils.Equals({0}, {1})" 
 	};
 
 	yield return new Info 
@@ -219,7 +219,7 @@ IEnumerable<Info> GetInfo()
 		Description = "64-bit floating point", 
 		PositionType = "Vector2d",
 		RectangleType = "RectangleD",
-		EqualsMethodFormat = "MathUtils.DoubleEquality({0}, {1})" 
+		EqualsMethodFormat = "MathUtils.Equals({0}, {1})" 
 	};
 
 	yield return new Info 

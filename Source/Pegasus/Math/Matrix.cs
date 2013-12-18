@@ -484,22 +484,22 @@
 		/// <param name="other">The other matrix to compare with this matrix.</param>
 		public bool Equals(Matrix other)
 		{
-			return MathUtils.FloatEquality(M11, other.M11) &&
-				   MathUtils.FloatEquality(M12, other.M12) &&
-				   MathUtils.FloatEquality(M13, other.M13) &&
-				   MathUtils.FloatEquality(M14, other.M14) &&
-				   MathUtils.FloatEquality(M21, other.M21) &&
-				   MathUtils.FloatEquality(M22, other.M22) &&
-				   MathUtils.FloatEquality(M23, other.M23) &&
-				   MathUtils.FloatEquality(M24, other.M24) &&
-				   MathUtils.FloatEquality(M31, other.M31) &&
-				   MathUtils.FloatEquality(M32, other.M32) &&
-				   MathUtils.FloatEquality(M33, other.M33) &&
-				   MathUtils.FloatEquality(M34, other.M34) &&
-				   MathUtils.FloatEquality(M41, other.M41) &&
-				   MathUtils.FloatEquality(M42, other.M42) &&
-				   MathUtils.FloatEquality(M43, other.M43) &&
-				   MathUtils.FloatEquality(M44, other.M44);
+			return MathUtils.Equals(M11, other.M11) &&
+				   MathUtils.Equals(M12, other.M12) &&
+				   MathUtils.Equals(M13, other.M13) &&
+				   MathUtils.Equals(M14, other.M14) &&
+				   MathUtils.Equals(M21, other.M21) &&
+				   MathUtils.Equals(M22, other.M22) &&
+				   MathUtils.Equals(M23, other.M23) &&
+				   MathUtils.Equals(M24, other.M24) &&
+				   MathUtils.Equals(M31, other.M31) &&
+				   MathUtils.Equals(M32, other.M32) &&
+				   MathUtils.Equals(M33, other.M33) &&
+				   MathUtils.Equals(M34, other.M34) &&
+				   MathUtils.Equals(M41, other.M41) &&
+				   MathUtils.Equals(M42, other.M42) &&
+				   MathUtils.Equals(M43, other.M43) &&
+				   MathUtils.Equals(M44, other.M44);
 		}
 
 		/// <summary>

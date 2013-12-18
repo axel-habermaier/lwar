@@ -387,22 +387,27 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the UI element is connected to the visual tree's root element.
+		///   Gets or sets a value indicating whether the UI element is attached to the visual tree's root element.
 		/// </summary>
-		internal bool IsConnectedToRoot
+		protected internal bool IsAttachedToRoot
 		{
-			get { return _isConnectedToRoot; }
+			get { return _isAttachedToRoot; }
 			set
 			{
-				if (_isConnectedToRoot == value)
+				if (_isAttachedToRoot == value)
 					return;
 
-				_isConnectedToRoot = value;
-				SetBindingsActivationState(_isConnectedToRoot);
+				_isAttachedToRoot = value;
+				SetBindingsActivationState(_isAttachedToRoot);
 
 				var childrenCount = VisualChildrenCount;
 				for (var i = 0; i < childrenCount; ++i)
-					GetVisualChild(i).IsConnectedToRoot = _isConnectedToRoot;
+					GetVisualChild(i).IsAttachedToRoot = _isAttachedToRoot;
+
+				if (value)
+					OnAttachedToRoot();
+				else
+					OnDetachedFromRoot();
 			}
 		}
 	}

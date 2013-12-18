@@ -24,11 +24,6 @@
 		private RenderTarget _effectTarget;
 
 		/// <summary>
-		///   The texture that is bound to the effect render target.
-		/// </summary>
-		private Texture2D _effectTexture;
-
-		/// <summary>
 		///   The full-screen quad that is used to draw the sun special effects.
 		/// </summary>
 		private FullscreenQuad _fullscreenQuad;
@@ -68,16 +63,16 @@
 			var w = 640;
 			var h = 360;
 			var flags = TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget;
-			_effectTexture = new Texture2D(GraphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
-			_effectTexture.SetName("SunRenderer.EffectTexture");
+			var effectTexture = new Texture2D(GraphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
+			effectTexture.SetName("SunRenderer.EffectTexture");
 
-			_effectTarget = new RenderTarget(GraphicsDevice, null, _effectTexture);
+			_effectTarget = new RenderTarget(GraphicsDevice, null, effectTexture);
 			_heatOutput = new RenderOutput(GraphicsDevice) { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, w, h) };
 
 			_fullscreenQuad = new FullscreenQuad(GraphicsDevice, Assets);
 			_quadEffect = new TexturedQuadEffect(GraphicsDevice, Assets) { World = Matrix.Identity };
 
-			_blur = new GaussianBlur(GraphicsDevice, Assets, _effectTexture);
+			_blur = new GaussianBlur(GraphicsDevice, Assets, effectTexture);
 		}
 
 		/// <summary>
@@ -127,7 +122,6 @@
 			_sphereEffect.SafeDispose();
 			_quadEffect.SafeDispose();
 			_model.SafeDispose();
-			_effectTexture.SafeDispose();
 			_effectTarget.SafeDispose();
 			_fullscreenQuad.SafeDispose();
 			_heatOutput.SafeDispose();

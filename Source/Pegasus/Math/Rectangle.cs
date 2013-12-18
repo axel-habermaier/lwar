@@ -512,8 +512,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(RectangleF other)
 		{
-			return MathUtils.FloatEquality(Left, other.Left) && MathUtils.FloatEquality(Top, other.Top) && 
-				MathUtils.FloatEquality(Width, other.Width) && MathUtils.FloatEquality(Height, other.Height);
+			return MathUtils.Equals(Left, other.Left) && MathUtils.Equals(Top, other.Top) && 
+				MathUtils.Equals(Width, other.Width) && MathUtils.Equals(Height, other.Height);
 		}
 
 		/// <summary>
@@ -812,8 +812,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(RectangleD other)
 		{
-			return MathUtils.DoubleEquality(Left, other.Left) && MathUtils.DoubleEquality(Top, other.Top) && 
-				MathUtils.DoubleEquality(Width, other.Width) && MathUtils.DoubleEquality(Height, other.Height);
+			return MathUtils.Equals(Left, other.Left) && MathUtils.Equals(Top, other.Top) && 
+				MathUtils.Equals(Width, other.Width) && MathUtils.Equals(Height, other.Height);
 		}
 
 		/// <summary>

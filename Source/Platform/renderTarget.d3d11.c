@@ -37,10 +37,10 @@ pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 {
 	pgInt32 i;
 	FLOAT d3dColor[4];
-	d3dColor[0] = color.red;
-	d3dColor[1] = color.green;
-	d3dColor[2] = color.blue;
-	d3dColor[3] = color.alpha;
+	d3dColor[0] = color.red / 255.0f;
+	d3dColor[1] = color.green / 255.0f;
+	d3dColor[2] = color.blue / 255.0f;
+	d3dColor[3] = color.alpha / 255.0f;
 
 	for (i = 0; i < renderTarget->count; ++i)
 		ID3D11DeviceContext_ClearRenderTargetView(PG_CONTEXT(renderTarget), renderTarget->cbPtr[i], d3dColor);

@@ -12,7 +12,7 @@
 	/// <summary>
 	///     Represents an operating system window that hosts UI elements.
 	/// </summary>
-	public class Window : ContentControl, IDisposable
+	public class Window : Decorator, IDisposable
 	{
 		/// <summary>
 		///     Gets the swap chain that is used to render the window's contents.
@@ -38,7 +38,7 @@
 		private readonly RenderOutput _output;
 
 		/// <summary>
-		/// The sprite batch that is used for drawing the window's UI elements.
+		///     The sprite batch that is used for drawing the window's UI elements.
 		/// </summary>
 		private readonly SpriteBatch _spriteBatch;
 
@@ -77,8 +77,6 @@
 			};
 
 			Application.Current.AddWindow(this);
-			Template = DefaultTemplate;
-			UpdateLayout();
 		}
 
 		/// <summary>
@@ -218,6 +216,8 @@
 		public void Close()
 		{
 			CheckWindowOpen();
+
+			OnClosing();
 			Application.Current.RemoveWindow(this);
 
 			_spriteBatch.SafeDispose();
@@ -227,6 +227,13 @@
 			_window.SafeDispose();
 
 			_window = null;
+		}
+
+		/// <summary>
+		///     Invoked when the window is being closed.
+		/// </summary>
+		protected virtual void OnClosing()
+		{
 		}
 
 		/// <summary>

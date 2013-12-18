@@ -221,12 +221,23 @@
 		}
 
 		/// <summary>
+		///     Throws an InvalidOperationException if the given object is not null or has not been disposed.
+		/// </summary>
+		/// <param name="obj">The object that should be checked.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void NullOrDisposed<T>(T obj)
+			where T : DisposableObject
+		{
+			if (obj != null && !obj.IsDisposed)
+				throw new InvalidOperationException(String.Format("The '{0}' instance has not been disposed.", typeof(T).FullName));
+		}
+
+		/// <summary>
 		///     Throws an ObjectDisposedException if the given object has already been disposed.
 		/// </summary>
 		/// <param name="obj">The object that should be checked.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
-		public static void NotDisposed<T>(T obj)
-			where T : DisposableObject
+		public static void NotDisposed(DisposableObject obj)
 		{
 			ArgumentNotNull(obj);
 

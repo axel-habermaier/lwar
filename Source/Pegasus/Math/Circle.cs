@@ -226,8 +226,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(CircleF other)
 		{
-			return MathUtils.FloatEquality(Position.X, other.Position.X) && MathUtils.FloatEquality(Position.Y, other.Position.Y) 
-				&& MathUtils.FloatEquality(Radius, other.Radius);
+			return MathUtils.Equals(Position.X, other.Position.X) && MathUtils.Equals(Position.Y, other.Position.Y) 
+				&& MathUtils.Equals(Radius, other.Radius);
 		}
 
 		/// <summary>
@@ -384,8 +384,8 @@ namespace Pegasus.Math
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(CircleD other)
 		{
-			return MathUtils.DoubleEquality(Position.X, other.Position.X) && MathUtils.DoubleEquality(Position.Y, other.Position.Y) 
-				&& MathUtils.DoubleEquality(Radius, other.Radius);
+			return MathUtils.Equals(Position.X, other.Position.X) && MathUtils.Equals(Position.Y, other.Position.Y) 
+				&& MathUtils.Equals(Radius, other.Radius);
 		}
 
 		/// <summary>

@@ -29,7 +29,7 @@
 		/// <summary>
 		///   A value indicating whether the UI element is connected to the visual tree's root element.
 		/// </summary>
-		private bool _isConnectedToRoot;
+		private bool _isAttachedToRoot;
 
 		/// <summary>
 		///   Caches the layouting information of the UI element during the measure and arrange phases for performance reasons.
@@ -166,7 +166,7 @@
 		/// </summary>
 		private void InvalidateResources()
 		{
-			if (!IsConnectedToRoot)
+			if (!IsAttachedToRoot)
 				return;
 
 			if (ResourcesInvalidated != null)
@@ -286,7 +286,7 @@
 			// Setting a new (valid) parent possibly invalidates the resources of this UI element and its children
 			if (parent != null)
 			{
-				IsConnectedToRoot = parent.IsConnectedToRoot;
+				IsAttachedToRoot = parent.IsAttachedToRoot;
 				InvalidateResources();
 
 				OnAttached();
@@ -299,7 +299,7 @@
 				if (Style != null)
 					Style.Unset(this);
 
-				IsConnectedToRoot = false;
+				IsAttachedToRoot = false;
 				OnDetached();
 			}
 		}
@@ -327,7 +327,7 @@
 			Assert.ArgumentNotNull(binding);
 
 			base.SetBinding(property, binding);
-			binding.Active = IsConnectedToRoot;
+			binding.Active = IsAttachedToRoot;
 		}
 
 		/// <summary>
@@ -471,9 +471,14 @@
 			ActualWidth = size.Width;
 			ActualHeight = size.Height;
 
+			var oldSize = RenderSize;
 			RenderSize = size;
+
 			VisualOffset = finalRect.Position + ComputeAlignmentOffset(finalRect.Size);
 			RenderSize = IncreaseByMargin(size);
+
+			if (oldSize != RenderSize)
+				OnSizeChanged(oldSize, RenderSize);
 		}
 
 		/// <summary>
@@ -587,16 +592,39 @@
 		}
 
 		/// <summary>
-		///   Invoked when the UI element is attached to a new logical tree.
+		///   Invoked when the UI element is attached to a new logical parent.
 		/// </summary>
 		protected virtual void OnAttached()
 		{
 		}
 
 		/// <summary>
-		///   Invoked when the UI element has been detached from its current logical tree.
+		///   Invoked when the UI element is now (transitively) attached to the root of a visual tree.
+		/// </summary>
+		protected virtual void OnAttachedToRoot()
+		{
+		}
+
+		/// <summary>
+		///   Invoked when the UI element has been detached from its current logical parent.
 		/// </summary>
 		protected virtual void OnDetached()
+		{
+		}
+
+		/// <summary>
+		///   Invoked when the UI element is no longer (transitively) attached to the root of a visual tree.
+		/// </summary>
+		protected virtual void OnDetachedFromRoot()
+		{
+		}
+
+		/// <summary>
+		/// Invoked when the size of the UI element has changed.
+		/// </summary>
+		/// <param name="oldSize">The old size of the UI element.</param>
+		/// <param name="newSize">The new size of the UI element.</param>
+		protected virtual void OnSizeChanged(SizeD oldSize, SizeD newSize)
 		{
 		}
 

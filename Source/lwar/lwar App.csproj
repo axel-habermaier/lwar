@@ -198,7 +198,7 @@
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
     <Compile Include="..\lwar UI\UserInterface.cs">
-      <Link>Assets\UserInterface.cs</Link>
+      <Link>UserInterface\UserInterface.cs</Link>
     </Compile>
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
@@ -312,6 +312,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gameplay\Entities\Planet.cs" />
     <Compile Include="Rendering\Renderers\SkyBoxRenderer.cs" />
+    <Compile Include="UserInterface\MainWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

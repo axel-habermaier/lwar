@@ -575,7 +575,7 @@ pgVoid pgSetClearColor(pgGraphicsDevice* device, pgColor color)
 		return;
 
 	device->clearColor = color;
-	glClearColor(color.red, color.green, color.blue, color.alpha);
+	glClearColor(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, color.alpha / 255.0f);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

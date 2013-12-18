@@ -6,6 +6,7 @@
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Math;
+	using Memory;
 
 	/// <summary>
 	///     Represents the target of a rendering operation.
@@ -22,6 +23,15 @@
 		///     The native render target instance.
 		/// </summary>
 		private readonly IntPtr _renderTarget;
+
+		/// <summary>
+		/// The depth stencil buffer that is bound to the render target.
+		/// </summary>
+		private readonly Texture2D _depthStencil;
+		/// <summary>
+		/// The color buffers that are bound to the render target.
+		/// </summary>
+		private readonly Texture[] _colorBuffers;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -58,6 +68,8 @@
 
 			_renderTarget = NativeMethods.CreateRenderTarget(graphicsDevice.NativePtr, colorBuffersPtrs, count, depthStencilPtr);
 			_ownsNativeObject = true;
+			_depthStencil = depthStencil;
+			_colorBuffers = colorBuffers;
 		}
 
 		/// <summary>
@@ -126,8 +138,12 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			if (_ownsNativeObject)
-				NativeMethods.DestroyRenderTarget(_renderTarget);
+			if (!_ownsNativeObject)
+				return;
+
+			NativeMethods.DestroyRenderTarget(_renderTarget);
+			_depthStencil.SafeDispose();
+			_colorBuffers.SafeDisposeAll();
 		}
 
 #if DEBUG

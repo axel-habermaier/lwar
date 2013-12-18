@@ -41,7 +41,7 @@
 			var directionOther = other.End - other.Start;
 
 			var determinant = directionOther.Y * directionThis.X - directionOther.X * directionThis.Y;
-			if (MathUtils.FloatEquality(determinant, 0.0f))
+			if (MathUtils.Equals(determinant, 0.0f))
 				return false;
 
 			var distanceThis = directionOther.X * (Start.Y - other.Start.Y) - directionOther.Y * (Start.X - other.Start.X);

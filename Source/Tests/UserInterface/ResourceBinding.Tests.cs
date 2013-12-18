@@ -167,8 +167,8 @@
 		public void ImplicitStyle_Reparent_BothImplicit()
 		{
 			var button = new Button();
-			var userControl1 = new UserControl() { IsConnectedToRoot = true };
-			var userControl2 = new UserControl() { IsConnectedToRoot = true };
+			var userControl1 = new UserControl() { IsAttachedToRoot = true };
+			var userControl2 = new UserControl() { IsAttachedToRoot = true };
 
 			SetImplicitStyle1(userControl1);
 			SetImplicitStyle2(userControl2);

@@ -15,7 +15,7 @@
 		/// </summary>
 		public RootUIElement()
 		{
-			IsConnectedToRoot = true;
+			IsAttachedToRoot = true;
 		}
 
 		/// <summary>

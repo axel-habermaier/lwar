@@ -72,7 +72,7 @@ namespace Pegasus.Math
 		/// <param name="other">The other vector to compare with this vector.</param>
 		public bool Equals(Vector2 other)
 		{
-			return MathUtils.FloatEquality(X, other.X) && MathUtils.FloatEquality(Y, other.Y);
+			return MathUtils.Equals(X, other.X) && MathUtils.Equals(Y, other.Y);
 		}
 
 		/// <summary>
@@ -274,7 +274,7 @@ namespace Pegasus.Math
 		/// <param name="other">The other vector to compare with this vector.</param>
 		public bool Equals(Vector2d other)
 		{
-			return MathUtils.DoubleEquality(X, other.X) && MathUtils.DoubleEquality(Y, other.Y);
+			return MathUtils.Equals(X, other.X) && MathUtils.Equals(Y, other.Y);
 		}
 
 		/// <summary>

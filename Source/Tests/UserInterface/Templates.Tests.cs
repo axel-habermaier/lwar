@@ -111,7 +111,7 @@
 		[Test]
 		public void SetTemplateByStyle_StyleSetByResourceBinding()
 		{
-			var control = new UserControl() { IsConnectedToRoot = true };
+			var control = new UserControl() { IsAttachedToRoot = true };
 			var style = new Style();
 			style.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, _template1));
 			control.Resources.Add("MyStyle", style);
@@ -135,7 +135,7 @@
 		[Test]
 		public void SetTemplateByStyle_StyleSetImplicitly()
 		{
-			var control = new UserControl() { IsConnectedToRoot = true };
+			var control = new UserControl() { IsAttachedToRoot = true };
 			var style = new Style();
 			style.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, _template1));
 			control.Resources.Add(typeof(Button), style);

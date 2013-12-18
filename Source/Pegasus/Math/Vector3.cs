@@ -72,9 +72,9 @@
 		/// <param name="other">The other vector to compare with this vector.</param>
 		public bool Equals(Vector3 other)
 		{
-			return MathUtils.FloatEquality(X, other.X) &&
-				   MathUtils.FloatEquality(Y, other.Y) &&
-				   MathUtils.FloatEquality(Z, other.Z);
+			return MathUtils.Equals(X, other.X) &&
+				   MathUtils.Equals(Y, other.Y) &&
+				   MathUtils.Equals(Z, other.Z);
 		}
 
 		/// <summary>

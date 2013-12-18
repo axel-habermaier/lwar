@@ -198,7 +198,8 @@
     <Compile Include="..\Pegasus Assets\Fonts\FontLoader.cs">
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
-    <Compile Include="Framework\UserInterface\Controls\RenderTargetPanel.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />
+    <Compile Include="Framework\UserInterface\Controls\RenderOutputPanel.cs" />
     <Compile Include="Framework\UserInterface\RootUIElement.cs" />
     <Compile Include="Framework\UserInterface\Controls\Window.cs" />
     <Compile Include="Framework\UserInterface\LayoutInfo.cs" />

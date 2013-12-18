@@ -12,7 +12,7 @@
 		/// <summary>
 		///     Disposes all objects contained in the enumerable if the enumerable is not null.
 		/// </summary>
-		/// <param name="enumerable">The enumerabble that should be disposed.</param>
+		/// <param name="enumerable">The enumerable that should be disposed.</param>
 		[DebuggerHidden]
 		public static void SafeDisposeAll(this IEnumerable<IDisposable> enumerable)
 		{
@@ -26,7 +26,7 @@
 		/// <summary>
 		///     Disposes all objects contained in the enumerable if the enumerable is not null.
 		/// </summary>
-		/// <param name="enumerable">The enumerabble that should be disposed.</param>
+		/// <param name="enumerable">The enumerable that should be disposed.</param>
 		[DebuggerHidden]
 		public static void SafeDisposeAll(this IEnumerable<DisposableObject> enumerable)
 		{

@@ -33,7 +33,7 @@
 		/// </summary>
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
-		public static bool FloatEquality(float left, float right)
+		public static bool Equals(float left, float right)
 		{
 			return Math.Abs(left - right) < Epsilon;
 		}
@@ -44,7 +44,7 @@
 		/// </summary>
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
-		public static bool DoubleEquality(double left, double right)
+		public static bool Equals(double left, double right)
 		{
 			return Math.Abs(left - right) < Epsilon;
 		}

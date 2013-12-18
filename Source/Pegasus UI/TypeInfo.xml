@@ -67,8 +67,11 @@
 		<Property Type="object" Name="Content" IsContentProperty="true"/>
 	</Class>
 
-	<Class Name="Pegasus.Framework.UserInterface.Controls.Border" Inherits="Pegasus.Framework.UserInterface.UIElement">
+	<Class Name="Pegasus.Framework.UserInterface.Controls.Decorator" Inherits="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="Pegasus.Framework.UserInterface.UIElement" Name="Child" IsContentProperty="true"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.Border" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ContentPresenter" Inherits="Pegasus.Framework.UserInterface.UIElement">
@@ -102,10 +105,10 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
 
-	<Class Name="Pegasus.Framework.UserInterface.Controls.RenderTargetPanel" Inherits="Pegasus.Framework.UserInterface.UIElement">
+	<Class Name="Pegasus.Framework.UserInterface.Controls.RenderOutputPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 	</Class>
 
-	<Class Name="Pegasus.Framework.UserInterface.Controls.Window" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
+	<Class Name="Pegasus.Framework.UserInterface.Controls.Window" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 		<Property Type="string" Name="Title"/>
 	</Class>
 

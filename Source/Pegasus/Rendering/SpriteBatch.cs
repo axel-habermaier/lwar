@@ -249,6 +249,16 @@
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
+		public void Draw(Rectangle rectangle, Texture2D texture)
+		{
+			Draw(rectangle, texture, Color.White);
+		}
+
+		/// <summary>
+		///   Draws the given rectangle.
+		/// </summary>
+		/// <param name="rectangle">The rectangle that should be drawn.</param>
+		/// <param name="texture">The texture that should be used to draw the quad.</param>
 		/// <param name="color">The color of the quad.</param>
 		public void Draw(Rectangle rectangle, Texture2D texture, Color color)
 		{

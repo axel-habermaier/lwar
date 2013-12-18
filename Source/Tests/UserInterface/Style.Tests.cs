@@ -16,8 +16,8 @@
 			_control1 = new TestControl();
 			_control2 = new TestControl();
 
-			_root1 = new UserControl { Content = _control1, IsConnectedToRoot = true };
-			_root2 = new UserControl { Content = _control2, IsConnectedToRoot = true };
+			_root1 = new UserControl { Content = _control1, IsAttachedToRoot = true };
+			_root2 = new UserControl { Content = _control2, IsAttachedToRoot = true };
 		}
 
 		private TestControl _control1;

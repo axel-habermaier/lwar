@@ -17,7 +17,9 @@ PG_API_EXPORT pgVoid pgSetTextureName(pgTexture* texture, pgString name)
 	PG_ASSERT_NOT_NULL(name);
 
 	PG_SET_NAME(ID3D11Texture2D, texture->ptr);
-	PG_SET_NAME(ID3D11ShaderResourceView, texture->resourceView);
+
+	if (texture->resourceView != NULL)
+		PG_SET_NAME(ID3D11ShaderResourceView, texture->resourceView);
 }
 
 PG_API_EXPORT pgVoid pgSetShaderName(pgShader* shader, pgString name)
