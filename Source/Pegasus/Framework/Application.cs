@@ -154,7 +154,6 @@
 
 				var font = Assets.LoadFont(Fonts.LiberationMono11);
 				using (var debugOverlay = new DebugOverlay(GraphicsDevice, font))
-				using (var spriteBatch = new SpriteBatch(GraphicsDevice, Assets))
 				using (var console = new Console(GraphicsDevice, inputDevice, font, name))
 				{
 					// Ensure that the console and the statistics are properly initialized
@@ -171,11 +170,6 @@
 					// Let the application initialize itself
 					InputDevice = inputDevice;
 					Initialize();
-
-					// Initialize the sprite batch
-					spriteBatch.BlendState = BlendState.Premultiplied;
-					spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
-					spriteBatch.SamplerState = SamplerState.PointClampNoMipmaps;
 
 					inputDevice.ActivateLayer(new InputLayer(1)); // TODO: Refactor this
 					while (_running)

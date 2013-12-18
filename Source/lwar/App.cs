@@ -5,6 +5,7 @@
 	using Assets;
 	using Network;
 	using Pegasus;
+	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
@@ -25,6 +26,8 @@
 		private ScreenManager _screenManager;
 
 		private SpriteBatch _spriteBatch;
+
+		private Camera2D _camera;
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -56,6 +59,7 @@
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
+			_camera = new Camera2D(GraphicsDevice);
 			_spriteBatch = new SpriteBatch(GraphicsDevice, Assets)
 			{
 				BlendState = BlendState.Premultiplied,
@@ -84,8 +88,14 @@
 
 			_screenManager.Draw(output);
 
-			//_screenManager.DrawUserInterface(_spriteBatch);
-			//_spriteBatch.DrawBatch(_window.Output2D);
+			var camera = output.Camera;
+			output.Camera = _camera;
+
+			_camera.Viewport = output.Viewport;
+			_screenManager.DrawUserInterface(_spriteBatch);
+			_spriteBatch.DrawBatch(output);
+
+			output.Camera = camera;
 		}
 
 		/// <summary>
@@ -96,6 +106,7 @@
 			Commands.OnConnect -= Connect;
 			Commands.OnDisconnect -= Disconnect;
 
+			_camera.SafeDispose();
 			_spriteBatch.SafeDispose();
 			_screenManager.SafeDispose();
 			_localServer.SafeDispose();
