@@ -106,6 +106,20 @@
 			}
 		}
 
+		/// <summary>
+		///     Presents the contents of all windows' backbuffers.
+		/// </summary>
+		public void Present()
+		{
+			foreach (var child in LogicalChildren)
+			{
+				Assert.OfType<Window>(child);
+
+				var window = child as Window;
+				window.Present();
+			}
+		}
+
 		protected override void OnDraw(SpriteBatch spriteBatch)
 		{
 			throw new NotSupportedException("Call Draw() instead.");

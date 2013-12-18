@@ -60,7 +60,7 @@
 		private readonly SpriteBatch _spriteBatch;
 
 		/// <summary>
-		/// Manages the input bindings registered for this window.
+		///     Manages the input bindings registered for this window.
 		/// </summary>
 		private readonly Bindings _bindings;
 
@@ -106,6 +106,10 @@
 			InputDevice = new LogicalInputDevice(Keyboard, Mouse);
 
 			_bindings = new Bindings(InputDevice);
+
+			// Make sure the window's input state and update are initialized correctly
+			HandleInput();
+			UpdateLayout();
 		}
 
 		/// <summary>
@@ -339,11 +343,17 @@
 			GetVisualChild(0).Draw(_spriteBatch);
 
 			_spriteBatch.DrawBatch(_output);
-			SwapChain.Present();
-
 			Assert.That(_spriteBatch.Layer == 0, "Unbalanced layer increase and decrease operations.");
 
 			OnWindowDrawn(_spriteBatch);
+		}
+
+		/// <summary>
+		///     Presents the contents of all windows' backbuffers.
+		/// </summary>
+		internal void Present()
+		{
+			SwapChain.Present();
 		}
 
 		protected override sealed void OnDraw(SpriteBatch spriteBatch)

@@ -84,7 +84,7 @@ namespace Lwar.Screens
 				_gameSession.EventMessages.Enabled = true;
 			}
 
-			_statusMessage.Area = new Rectangle(0, 0, (int)Window.Width, (int)Window.Height);
+			_statusMessage.Area = new Rectangle(0, 0, (int)Window.ActualWidth, (int)Window.ActualHeight);
 
 			if (_networkSession.IsConnected || _networkSession.IsDropped || _networkSession.IsFaulted)
 				ScreenManager.Remove(this);

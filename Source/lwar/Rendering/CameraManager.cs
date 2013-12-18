@@ -3,7 +3,6 @@
 	using System;
 	using Pegasus;
 	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
@@ -11,27 +10,27 @@
 	using Scripting;
 
 	/// <summary>
-	///   Manages the game and debug cameras.
+	///     Manages the game and debug cameras.
 	/// </summary>
 	public class CameraManager : DisposableObject
 	{
 		/// <summary>
-		///   The debug camera that can be used to freely navigate the scene.
+		///     The debug camera that can be used to freely navigate the scene.
 		/// </summary>
 		private readonly DebugCamera _debugCamera;
 
 		/// <summary>
-		///   The logical input device that provides the user input for the cameras.
+		///     The logical input device that provides the user input for the cameras.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
-		///   The window that outputs the scene rendered from the point of view of the active camera.
+		///     The window that outputs the scene rendered from the point of view of the active camera.
 		/// </summary>
 		private readonly Window _window;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that displays the scene rendered from the point of view of the active camera.</param>
 		/// <param name="graphicsDevice">The graphics device the cameras are created for.</param>
@@ -55,17 +54,17 @@
 		}
 
 		/// <summary>
-		///   Gets the game camera that provides a top-down view of the scene and follows the local ship.
+		///     Gets the game camera that provides a top-down view of the scene and follows the local ship.
 		/// </summary>
 		public GameCamera GameCamera { get; private set; }
 
 		/// <summary>
-		///   Gets the active camera that should be used to draw the scene.
+		///     Gets the active camera that should be used to draw the scene.
 		/// </summary>
 		public Camera ActiveCamera { get; private set; }
 
 		/// <summary>
-		///   Toggles between the game and the debug camera.
+		///     Toggles between the game and the debug camera.
 		/// </summary>
 		private void ToggleDebugCamera()
 		{
@@ -89,7 +88,7 @@
 		}
 
 		/// <summary>
-		///   Updates the camera manager.
+		///     Updates the camera manager.
 		/// </summary>
 		public void Update()
 		{
@@ -98,7 +97,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

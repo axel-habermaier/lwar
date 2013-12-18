@@ -80,12 +80,12 @@
 		public string Name { get; private set; }
 
 		/// <summary>
-		///     Gets the application-wide Assets manager.
+		///     Gets the application-wide assets manager.
 		/// </summary>
 		public AssetsManager Assets { get; private set; }
 
 		/// <summary>
-		///     Gets the Window the application is rendered to.
+		///     Gets the window the application is rendered to.
 		/// </summary>
 		public AppWindow Window { get; private set; }
 
@@ -178,6 +178,9 @@
 						_root.Draw();
 					}
 
+					// Presents the contents of all windows' backbuffers.
+					_root.Present();
+
 					if (!_root.HasFocusedWindows)
 						Thread.Sleep(50);
 				}
@@ -190,23 +193,23 @@
 		}
 
 		/// <summary>
-		///     Adds the Window to the application.
+		///     Adds the window to the application.
 		/// </summary>
-		/// <param name="Window">The Window that should be added.</param>
-		internal void AddWindow(Window Window)
+		/// <param name="window">The window that should be added.</param>
+		internal void AddWindow(Window window)
 		{
-			Assert.ArgumentNotNull(Window);
-			_root.Children.Add(Window);
+			Assert.ArgumentNotNull(window);
+			_root.Children.Add(window);
 		}
 
 		/// <summary>
-		///     Removes the Window from the application.
+		///     Removes the window from the application.
 		/// </summary>
-		/// <param name="Window">The Window that should be removed.</param>
-		internal void RemoveWindow(Window Window)
+		/// <param name="window">The window that should be removed.</param>
+		internal void RemoveWindow(Window window)
 		{
-			Assert.ArgumentNotNull(Window);
-			_root.Children.Remove(Window);
+			Assert.ArgumentNotNull(window);
+			_root.Children.Remove(window);
 		}
 
 		/// <summary>

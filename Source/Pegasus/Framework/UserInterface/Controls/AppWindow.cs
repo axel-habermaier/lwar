@@ -15,7 +15,7 @@
 	partial class AppWindow
 	{
 		/// <summary>
-		/// The camera that is used to draw the console and the debug overlay.
+		///     The camera that is used to draw the console and the debug overlay.
 		/// </summary>
 		private readonly Camera _camera;
 
@@ -39,6 +39,16 @@
 			var font = Application.Current.Assets.LoadFont(Fonts.LiberationMono11);
 			DebugOverlay = new DebugOverlay(Application.Current.GraphicsDevice, font);
 			Console = new Console(Application.Current.GraphicsDevice, InputDevice, font);
+		}
+
+		/// <summary>
+		///     Gets or sets the layout root of the application window. The top-level UI element of the window is the render output
+		///     panel; the layout root is the render output panel's child.
+		/// </summary>
+		public UIElement LayoutRoot
+		{
+			get { return RenderOutputPanel.Child; }
+			set { RenderOutputPanel.Child = value; }
 		}
 
 		/// <summary>
@@ -119,7 +129,7 @@
 		}
 
 		/// <summary>
-		/// Invoked after the window has been drawn.
+		///     Invoked after the window has been drawn.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		protected override void OnWindowDrawn(SpriteBatch spriteBatch)

@@ -149,7 +149,8 @@
 				}
 			}
 
-			Assert.That(InputLayer.Priority != 0, "No active input layer.");
+			if (InputLayer.Priority == 0)
+				return;
 
 			// Update the text input state
 			_textInput.Update();
