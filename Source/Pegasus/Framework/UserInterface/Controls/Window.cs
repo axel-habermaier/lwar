@@ -257,9 +257,16 @@
 		}
 
 		/// <summary>
-		///     Closes the window.
+		///     Invoked when the window is being closed.
 		/// </summary>
-		public void Close()
+		protected virtual void OnClosing()
+		{
+		}
+
+		/// <summary>
+		///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		void IDisposable.Dispose()
 		{
 			CheckWindowOpen();
 
@@ -278,21 +285,6 @@
 			_window.SafeDispose();
 
 			_window = null;
-		}
-
-		/// <summary>
-		///     Invoked when the window is being closed.
-		/// </summary>
-		protected virtual void OnClosing()
-		{
-		}
-
-		/// <summary>
-		///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// </summary>
-		void IDisposable.Dispose()
-		{
-			Close();
 
 #if DEBUG
 			GC.SuppressFinalize(this);
