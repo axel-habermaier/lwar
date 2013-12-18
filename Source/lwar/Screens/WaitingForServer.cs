@@ -62,7 +62,7 @@ namespace Lwar.Screens
 		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
-			_timeoutLabel.Area = new Rectangle(0, 0, Window.Width, Window.Height);
+			_timeoutLabel.Area = new Rectangle(0, 0, (int)Window.Width, (int)Window.Height);
 			_timeoutLabel.Text = String.Format("Waiting for server ({0} seconds)...", (int)(_networkSession.TimeToDrop / 1000) + 1);
 
 			if (!_networkSession.IsLagging || _networkSession.IsDropped)

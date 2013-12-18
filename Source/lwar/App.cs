@@ -42,11 +42,11 @@
 			Commands.OnConnect += Connect;
 			Commands.OnDisconnect += Disconnect;
 
-			InputDevice.ActivateLayer(InputLayers.Game);
+			Window.InputDevice.ActivateLayer(InputLayers.Game);
 			Window.Closing += Exit;
 
 			_localServer = new LocalServer();
-			_screenManager = new ScreenManager(new AppContext(GraphicsDevice, Window.NativeWindow, Assets, InputDevice));
+			_screenManager = new ScreenManager();
 			_screenManager.Add(new MainMenu());
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");

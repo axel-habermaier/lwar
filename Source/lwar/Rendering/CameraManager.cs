@@ -2,6 +2,7 @@
 {
 	using System;
 	using Pegasus;
+	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
@@ -27,7 +28,7 @@
 		/// <summary>
 		///   The window that outputs the scene rendered from the point of view of the active camera.
 		/// </summary>
-		private readonly NativeWindow _window;
+		private readonly Window _window;
 
 		/// <summary>
 		///   Initializes a new instance.
@@ -35,7 +36,7 @@
 		/// <param name="window">The window that displays the scene rendered from the point of view of the active camera.</param>
 		/// <param name="graphicsDevice">The graphics device the cameras are created for.</param>
 		/// <param name="inputDevice">The logical input device that provides the user input for the cameras.</param>
-		public CameraManager(NativeWindow window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
+		public CameraManager(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
 		{
 			Assert.ArgumentNotNull(window);
 			Assert.ArgumentNotNull(graphicsDevice);

@@ -6,14 +6,12 @@
 	using Platform;
 	using Platform.Assets;
 	using Platform.Graphics;
-	using Platform.Input;
 	using Platform.Logging;
 	using Platform.Performance;
 	using Rendering;
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
-	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>
 	///     Represents the application. There can be only one instance per app domain.
@@ -92,11 +90,6 @@
 		public AppWindow Window { get; private set; }
 
 		/// <summary>
-		///     Gets the logical input device that the application uses to handle user input.
-		/// </summary>
-		public LogicalInputDevice InputDevice { get; private set; }
-
-		/// <summary>
 		///     Invoked when the application is initializing.
 		/// </summary>
 		protected abstract void Initialize();
@@ -143,79 +136,54 @@
 			using (GraphicsDevice = new GraphicsDevice())
 			using (Assets = new AssetsManager(GraphicsDevice))
 			using (Window = new AppWindow(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
-			using (var keyboard = new Keyboard(Window.NativeWindow))
-			using (var mouse = new Mouse(Window.NativeWindow))
-			using (var inputDevice = new LogicalInputDevice(keyboard, mouse))
-			using (var bindings = new Bindings(inputDevice))
 			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
 			{
 				Window.Title = name;
 				RegisterFontLoader(new FontLoader(Assets));
 
-				var font = Assets.LoadFont(Fonts.LiberationMono11);
-				using (var debugOverlay = new DebugOverlay(GraphicsDevice, font))
-				using (var console = new Console(GraphicsDevice, inputDevice, font, name))
+				// Ensure that the console and the statistics are properly initialized
+				Window.DebugOverlay.Update(Window.Size);
+				Window.Console.Update(Window.Size);
+
+				// Copy the recorded log history to the console and explain the usage of the console
+				logFile.WriteToConsole(Window.Console);
+				Commands.Help();
+
+				// Let the application initialize itself
+				Initialize();
+
+				while (_running)
 				{
-					// Ensure that the console and the statistics are properly initialized
-					debugOverlay.Update(Window.Size);
-					console.Update(Window.Size);
+					// Handle all input
+					_root.HandleInput();
 
-					Window.Console = console;
-					Window.DebugOverlay = debugOverlay;
+					// Update the application logic and the UI
+					Update();
 
-					// Copy the recorded log history to the console and explain the usage of the console
-					logFile.WriteToConsole(console);
-					Commands.Help();
+					resolutionManager.Update();
+					_root.UpdateLayout();
 
-					// Let the application initialize itself
-					InputDevice = inputDevice;
-					Initialize();
+					// Update the statistics
+					Window.DebugOverlay.Update(Window.Size);
+					Window.Console.Update(Window.Size);
 
-					inputDevice.ActivateLayer(new InputLayer(1)); // TODO: Refactor this
-					while (_running)
+					// Draw the current frame
+					using (new Measurement(Window.DebugOverlay.GraphicsDeviceProfiler))
+					using (new Measurement(Window.DebugOverlay.CpuFrameTime))
 					{
-						// Update the keyboard and mouse state first (this ensures that WentDown returns 
-						// false for all keys and buttons, etc.)
-						inputDevice.Keyboard.Update();
-						inputDevice.Mouse.Update();
+						// Let the application perform all custom drawing for the current frame
+						Draw(Window.RenderOutput);
 
-						// Process all Window events 
-						Window.ProcessEvents();
-
-						// Update the user interface and the logical inputs based on the new state of the input system
-						_root.HandleInput();
-						inputDevice.Update();
-
-						// Check if any command bindings have been triggered and update the resolution manager
-						bindings.Update();
-						resolutionManager.Update();
-
-						// Update the application logic and the UI
-						Update();
-						_root.UpdateLayout();
-
-						// Update the statistics
-						debugOverlay.Update(Window.Size);
-						console.Update(Window.Size);
-
-						// Draw the current frame
-						using (new Measurement(debugOverlay.GraphicsDeviceProfiler))
-						using (new Measurement(debugOverlay.CpuFrameTime))
-						{
-							// Let the application perform all custom drawing for the current frame
-							Draw(Window.RenderOutput);
-
-							// Draw the user interface
-							_root.Draw();
-						}
-
-						if (!_root.HasFocusedWindows)
-							Thread.Sleep(50);
+						// Draw the user interface
+						_root.Draw();
 					}
 
-					// The game loop has been exited; time to clean up
-					Dispose();
+					if (!_root.HasFocusedWindows)
+						Thread.Sleep(50);
 				}
+
+				// The game loop has been exited; time to clean up
+				Dispose();
 			}
 
 			Current = null;

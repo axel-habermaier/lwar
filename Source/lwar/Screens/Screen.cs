@@ -1,6 +1,8 @@
 ﻿namespace Lwar.Screens
 {
 	using System;
+	using Pegasus.Framework;
+	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Assets;
 	using Pegasus.Platform.Graphics;
@@ -19,19 +21,11 @@
 		public ScreenManager ScreenManager { get; internal set; }
 
 		/// <summary>
-		///     Gets the context of the application, providing access to all framework objects that can be used by the application.
-		/// </summary>
-		protected AppContext Context
-		{
-			get { return ScreenManager.Context; }
-		}
-
-		/// <summary>
 		///     Gets or sets the window that displays the app.
 		/// </summary>
-		protected NativeWindow Window
+		protected Window Window
 		{
-			get { return Context.Window; }
+			get { return Application.Current.Window; }
 		}
 
 		/// <summary>
@@ -39,7 +33,7 @@
 		/// </summary>
 		protected LogicalInputDevice InputDevice
 		{
-			get { return Context.InputDevice; }
+			get { return Application.Current.Window.InputDevice; }
 		}
 
 		/// <summary>
@@ -47,7 +41,7 @@
 		/// </summary>
 		protected GraphicsDevice GraphicsDevice
 		{
-			get { return Context.GraphicsDevice; }
+			get { return Application.Current.GraphicsDevice; }
 		}
 
 		/// <summary>
@@ -55,7 +49,7 @@
 		/// </summary>
 		protected AssetsManager Assets
 		{
-			get { return Context.Assets; }
+			get { return Application.Current.Assets; }
 		}
 
 		/// <summary>

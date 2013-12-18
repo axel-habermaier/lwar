@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface.Controls
 {
 	using System;
+	using Assets;
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
@@ -34,6 +35,10 @@
 			RenderOutputPanel.DisposeRenderOutput += DisposeRenderOutputPanel;
 
 			_camera = new Camera2D(Application.Current.GraphicsDevice);
+
+			var font = Application.Current.Assets.LoadFont(Fonts.LiberationMono11);
+			DebugOverlay = new DebugOverlay(Application.Current.GraphicsDevice, font);
+			Console = new Console(Application.Current.GraphicsDevice, InputDevice, font);
 		}
 
 		/// <summary>
@@ -105,7 +110,10 @@
 		protected override void OnClosing()
 		{
 			DisposeRenderOutputPanel();
+
 			_camera.SafeDispose();
+			Console.SafeDispose();
+			DebugOverlay.SafeDispose();
 
 			base.OnClosing();
 		}

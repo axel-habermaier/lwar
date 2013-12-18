@@ -12,7 +12,7 @@
 	/// <summary>
 	///   Represents a native operating system window.
 	/// </summary>
-	public sealed class NativeWindow : DisposableObject
+	internal sealed class NativeWindow : DisposableObject
 	{
 		/// <summary>
 		///   Reacts to a character being entered as the result of a dead key press.

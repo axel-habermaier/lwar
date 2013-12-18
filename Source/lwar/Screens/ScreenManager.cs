@@ -20,22 +20,6 @@ namespace Lwar.Screens
 		private readonly List<Screen> _screens = new List<Screen>();
 
 		/// <summary>
-		///   Initializes a new instance.
-		/// </summary>
-		/// <param name="context">
-		///   The context of the application, providing access to all framework objects that can be used by the application.
-		/// </param>
-		public ScreenManager(AppContext context)
-		{
-			Context = context;
-		}
-
-		/// <summary>
-		///   Gets the context of the application, providing access to all framework objects that can be used by the application.
-		/// </summary>
-		internal AppContext Context { get; private set; }
-
-		/// <summary>
 		///   Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
@@ -58,27 +42,27 @@ namespace Lwar.Screens
 		/// <summary>
 		///   Adds the app screen onto the top of the stack.
 		/// </summary>
-		/// <param name="appscreen">The app screen that should be added.</param>
-		public void Add(Screen appscreen)
+		/// <param name="screen">The app screen that should be added.</param>
+		public void Add(Screen screen)
 		{
-			Assert.ArgumentNotNull(appscreen);
+			Assert.ArgumentNotNull(screen);
 
-			_screens.Add(appscreen);
+			_screens.Add(screen);
 
-			appscreen.ScreenManager = this;
-			appscreen.Initialize();
+			screen.ScreenManager = this;
+			screen.Initialize();
 		}
 
 		/// <summary>
 		///   Removes the app screen from the stack.
 		/// </summary>
-		/// <param name="appscreen">The app screen that should be removed.</param>
-		public void Remove(Screen appscreen)
+		/// <param name="screen">The app screen that should be removed.</param>
+		public void Remove(Screen screen)
 		{
-			Assert.ArgumentNotNull(appscreen);
+			Assert.ArgumentNotNull(screen);
 
-			if (_screens.Remove(appscreen))
-				appscreen.SafeDispose();
+			if (_screens.Remove(screen))
+				screen.SafeDispose();
 		}
 
 		/// <summary>

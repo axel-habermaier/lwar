@@ -76,7 +76,7 @@ namespace Lwar.Screens
 		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
-			_messageLabel.Area = new Rectangle(0, 0, Window.Width, Window.Height);
+			_messageLabel.Area = new Rectangle(0, 0, (int)Window.Width, (int)Window.Height);
 			_frame.ContentArea = _messageLabel.ActualArea;
 
 			if (topmost && _continue.IsTriggered)

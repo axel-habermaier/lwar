@@ -84,18 +84,16 @@
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="inputDevice">The input device that provides the user input.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
-		/// <param name="appName">The name of the application.</param>
-		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, Font font, string appName)
+		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, Font font)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
 			Assert.ArgumentNotNull(font);
-			Assert.ArgumentNotNullOrWhitespace(appName);
 
 			_font = font;
 
 			_content = new ConsoleContent(_font);
-			_prompt = new ConsolePrompt(_font, InfoColor, appName);
+			_prompt = new ConsolePrompt(_font, InfoColor);
 			_input = new ConsoleInput(inputDevice);
 
 			Commands.OnShowConsole += ShowConsole;

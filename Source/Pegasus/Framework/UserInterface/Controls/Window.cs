@@ -5,9 +5,11 @@
 	using Math;
 	using Platform;
 	using Platform.Graphics;
+	using Platform.Input;
 	using Platform.Logging;
 	using Platform.Memory;
 	using Rendering;
+	using Scripting;
 
 	/// <summary>
 	///     Represents an operating system window that hosts UI elements.
@@ -23,6 +25,21 @@
 		///     The native operating system window that is used to display the UI.
 		/// </summary>
 		private NativeWindow _window;
+
+		/// <summary>
+		///     Gets the keyboard state of this window.
+		/// </summary>
+		public Keyboard Keyboard { get; private set; }
+
+		/// <summary>
+		///     Gets the mouse state of this window.
+		/// </summary>
+		public Mouse Mouse { get; private set; }
+
+		/// <summary>
+		///     Gets the logical input device that is used to handle all of the user input of this window.
+		/// </summary>
+		public LogicalInputDevice InputDevice { get; private set; }
 
 		/// <summary>
 		///     Gets a value indicating whether the window is open.
@@ -41,6 +58,11 @@
 		///     The sprite batch that is used for drawing the window's UI elements.
 		/// </summary>
 		private readonly SpriteBatch _spriteBatch;
+
+		/// <summary>
+		/// Manages the input bindings registered for this window.
+		/// </summary>
+		private readonly Bindings _bindings;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -78,12 +100,18 @@
 			};
 
 			Application.Current.AddWindow(this);
+
+			Keyboard = new Keyboard(_window);
+			Mouse = new Mouse(_window);
+			InputDevice = new LogicalInputDevice(Keyboard, Mouse);
+
+			_bindings = new Bindings(InputDevice);
 		}
 
 		/// <summary>
 		///     Gets the native operating system window that is used to display the UI.
 		/// </summary>
-		public NativeWindow NativeWindow
+		internal NativeWindow NativeWindow
 		{
 			get
 			{
@@ -203,12 +231,25 @@
 		}
 
 		/// <summary>
-		///     Processes all pending window events.
+		///     Processes all pending window events and handles the window's user input	.
 		/// </summary>
-		public void ProcessEvents()
+		public void HandleInput()
 		{
 			CheckWindowOpen();
+
+			// Update the keyboard and mouse state first (this ensures that WentDown returns 
+			// false for all keys and buttons, etc.)
+			Keyboard.Update();
+			Mouse.Update();
+
+			// Process all pending operating system events
 			_window.ProcessEvents();
+
+			// Update the logical inputs based on the new state of the input system
+			InputDevice.Update();
+
+			// Check if any command bindings have been triggered and update the resolution manager
+			_bindings.Update();
 		}
 
 		/// <summary>
@@ -220,6 +261,11 @@
 
 			OnClosing();
 			Application.Current.RemoveWindow(this);
+
+			_bindings.SafeDispose();
+			InputDevice.SafeDispose();
+			Mouse.SafeDispose();
+			Keyboard.SafeDispose();
 
 			_spriteBatch.SafeDispose();
 			_output.Camera.SafeDispose();
@@ -300,13 +346,13 @@
 			OnWindowDrawn(_spriteBatch);
 		}
 
-		protected sealed override void OnDraw(SpriteBatch spriteBatch)
+		protected override sealed void OnDraw(SpriteBatch spriteBatch)
 		{
 			throw new NotSupportedException("Call Draw() instead.");
 		}
 
 		/// <summary>
-		/// Invoked after the window has been drawn.
+		///     Invoked after the window has been drawn.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		protected virtual void OnWindowDrawn(SpriteBatch spriteBatch)

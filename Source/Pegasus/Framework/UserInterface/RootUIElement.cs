@@ -74,7 +74,7 @@
 				Assert.OfType<Window>(child);
 
 				var window = child as Window;
-				window.ProcessEvents();
+				window.HandleInput();
 			}
 		}
 

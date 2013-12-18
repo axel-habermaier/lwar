@@ -3,6 +3,7 @@
 	using System;
 	using System.Linq;
 	using System.Text;
+	using Framework;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
@@ -30,11 +31,6 @@
 		///   The name of the console history file.
 		/// </summary>
 		private const string HistoryFileName = "console.txt";
-
-		/// <summary>
-		///   The name of the application.
-		/// </summary>
-		private readonly string _appName;
 
 		/// <summary>
 		///   The input history.
@@ -81,18 +77,15 @@
 		/// </summary>
 		/// <param name="font">The font that should be used to draw the prompt.</param>
 		/// <param name="color">The text color of the prompt.</param>
-		/// <param name="appName">The name of the application.</param>
-		public ConsolePrompt(Font font, Color color, string appName)
+		public ConsolePrompt(Font font, Color color)
 		{
 			Assert.ArgumentNotNull(font);
-			Assert.ArgumentNotNullOrWhitespace(appName);
 
 			_history = new string[MaxHistory];
 			_input = new TextBox(font) { Color = color };
 			_prompt = new Label(font, Prompt) { Color = color };
-			_appName = appName;
 
-			var file = new AppFile(_appName, HistoryFileName);
+			var file = new AppFile(Application.Current.Name, HistoryFileName);
 			string content;
 
 			if (!file.Read(out content, e => Log.Error("Failed to load console history from '{0}': {1}", file.AbsolutePath, e.Message)))
@@ -326,7 +319,7 @@
 			for (var i = 0; i < _numHistory; ++i)
 				builder.AppendLine(_history[i]);
 
-			var file = new AppFile(_appName, HistoryFileName);
+			var file = new AppFile(Application.Current.Name, HistoryFileName);
 			file.Write(builder.ToString(), e => Log.Error("Failed to persist console history in '{0}': {1}", file.AbsolutePath, e.Message));
 		}
 	}
