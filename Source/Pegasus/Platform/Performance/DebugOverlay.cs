@@ -129,6 +129,7 @@
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the statistics.</param>
 		internal void Draw(SpriteBatch spriteBatch)
 		{
+			spriteBatch.Layer = Int32.MaxValue - 2;
 			spriteBatch.WorldMatrix = Matrix.Identity;
 
 			if (Cvars.ShowPlatformInfo || Cvars.ShowFrameStats)

@@ -148,7 +148,6 @@
 			using (var inputDevice = new LogicalInputDevice(keyboard, mouse))
 			using (var bindings = new Bindings(inputDevice))
 			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
-			using (var camera = new Camera2D(GraphicsDevice))
 			{
 				Window.Title = name;
 				RegisterFontLoader(new FontLoader(Assets));
@@ -162,14 +161,15 @@
 					debugOverlay.Update(Window.Size);
 					console.Update(Window.Size);
 
+					Window.Console = console;
+					Window.DebugOverlay = debugOverlay;
+
 					// Copy the recorded log history to the console and explain the usage of the console
 					logFile.WriteToConsole(console);
 					Commands.Help();
 
 					// Let the application initialize itself
-					Assets = Assets;
 					InputDevice = inputDevice;
-					Window = Window;
 					Initialize();
 
 					// Initialize the sprite batch
@@ -210,15 +210,6 @@
 						{
 							// Let the application perform all custom drawing for the current frame
 							Draw(Window.RenderOutput);
-
-							// Draw the console and the statistics on top of the current frame
-							//DepthStencilState.DepthDisabled.Bind();
-							//BlendState.Premultiplied.Bind();
-
-							//debugOverlay.Draw(spriteBatch);
-							//console.Draw(spriteBatch);
-
-							//spriteBatch.DrawBatch(uiOutput);
 
 							// Draw the user interface
 							_root.Draw();

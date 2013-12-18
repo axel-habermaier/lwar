@@ -296,11 +296,21 @@
 			SwapChain.Present();
 
 			Assert.That(_spriteBatch.Layer == 0, "Unbalanced layer increase and decrease operations.");
+
+			OnWindowDrawn(_spriteBatch);
 		}
 
-		protected override void OnDraw(SpriteBatch spriteBatch)
+		protected sealed override void OnDraw(SpriteBatch spriteBatch)
 		{
 			throw new NotSupportedException("Call Draw() instead.");
+		}
+
+		/// <summary>
+		/// Invoked after the window has been drawn.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
+		protected virtual void OnWindowDrawn(SpriteBatch spriteBatch)
+		{
 		}
 
 		/// <summary>

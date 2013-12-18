@@ -4,13 +4,20 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Platform.Performance;
 	using Rendering;
+	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>
 	///     Represents the default window of an application.
 	/// </summary>
 	partial class AppWindow
 	{
+		/// <summary>
+		/// The camera that is used to draw the console and the debug overlay.
+		/// </summary>
+		private readonly Camera _camera;
+
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
@@ -25,7 +32,19 @@
 
 			RenderOutputPanel.InitializeRenderOutput += InitializeRenderOutputPanel;
 			RenderOutputPanel.DisposeRenderOutput += DisposeRenderOutputPanel;
+
+			_camera = new Camera2D(Application.Current.GraphicsDevice);
 		}
+
+		/// <summary>
+		///     Gets or sets the console that should be drawn on top of the window's backbuffer.
+		/// </summary>
+		internal Console Console { get; set; }
+
+		/// <summary>
+		///     Gets or sets the debug overlay that should be drawn on top of the window's backbuffer.
+		/// </summary>
+		internal DebugOverlay DebugOverlay { get; set; }
 
 		/// <summary>
 		///     Gets the render output that should be used for 3D rendering.
@@ -86,7 +105,31 @@
 		protected override void OnClosing()
 		{
 			DisposeRenderOutputPanel();
+			_camera.SafeDispose();
+
 			base.OnClosing();
+		}
+
+		/// <summary>
+		/// Invoked after the window has been drawn.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
+		protected override void OnWindowDrawn(SpriteBatch spriteBatch)
+		{
+			var camera = RenderOutputPanel.RenderOutput.Camera;
+			RenderOutputPanel.RenderOutput.Camera = _camera;
+
+			spriteBatch.WorldMatrix = Matrix.Identity;
+			spriteBatch.UseScissorTest = false;
+
+			if (Console != null)
+				Console.Draw(spriteBatch);
+
+			if (DebugOverlay != null)
+				DebugOverlay.Draw(spriteBatch);
+
+			RenderOutputPanel.RenderOutput.Camera = camera;
+			spriteBatch.Layer = 0;
 		}
 	}
 }
