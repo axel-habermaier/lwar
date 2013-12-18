@@ -531,8 +531,6 @@
 			switch (HorizontalAlignment)
 			{
 				case HorizontalAlignment.Stretch:
-					offset.X = _layoutInfo.Margin.Left;
-					break;
 				case HorizontalAlignment.Center:
 					offset.X = (availableSize.Width - RenderSize.Width + _layoutInfo.Margin.Left - _layoutInfo.Margin.Right) / 2;
 					break;
@@ -549,8 +547,6 @@
 			switch (VerticalAlignment)
 			{
 				case VerticalAlignment.Stretch:
-					offset.Y = _layoutInfo.Margin.Top;
-					break;
 				case VerticalAlignment.Center:
 					offset.Y = (availableSize.Height - RenderSize.Height + _layoutInfo.Margin.Top - _layoutInfo.Margin.Bottom) / 2;
 					break;

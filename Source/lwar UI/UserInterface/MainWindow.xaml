@@ -8,16 +8,17 @@
              FontFamily="Liberation Mono" 
              FontSize="11"
              TextOptions.TextRenderingMode="Aliased" Background="Black" Title="lwar" Height="506.85" Width="871">
-	<StackPanel Background="Green" Margin="20">
-		<ContentControl Content="Bla" HorizontalAlignment="Center" VerticalAlignment="Center"></ContentControl>
-		<Canvas Background="Blue">
-			<Canvas.Margin>20</Canvas.Margin> 
-			<Border Width="110" Height="100" Background="#FF7F3FCD" Panel.ZIndex="6"></Border>
-			<Border Width="110" Height="100" Background="Yellow" Canvas.Left="-17" Canvas.Top="43" Panel.ZIndex="3"></Border>
-			<Border Width="110" Height="100" Background="#FFFF2300" Canvas.Left="33" Canvas.Top="27"></Border>
-			<Border Width="110" Height="100" Background="#FF3F59CD" Panel.ZIndex="-6" Canvas.Left="17" Canvas.Top="80"/>
-			<userInterface:UserControl1 Canvas.Left="224" Canvas.Top="27" />
-		</Canvas>
-		<controls:RenderOutputPanel Name="RenderOutputPanel" Height="320" Panel.ZIndex="-1" />
-	</StackPanel>
+	<controls:RenderOutputPanel Name="RenderOutputPanel">
+		<StackPanel Background="Green" Margin="20" Height="250">
+			<ContentControl Content="Bla" HorizontalAlignment="Center" VerticalAlignment="Center"></ContentControl>
+			<Canvas Background="Blue">
+				<Canvas.Margin>20</Canvas.Margin> 
+				<Border Width="110" Height="100" Background="#FF7F3FCD" Panel.ZIndex="6"></Border>
+				<Border Width="110" Height="100" Background="Yellow" Canvas.Left="-17" Canvas.Top="43" Panel.ZIndex="3"></Border>
+				<Border Width="110" Height="100" Background="#FFFF2300" Canvas.Left="33" Canvas.Top="27"></Border>
+				<Border Width="110" Height="100" Background="#FF3F59CD" Panel.ZIndex="-6" Canvas.Left="17" Canvas.Top="80"/>
+				<userInterface:UserControl1 Canvas.Left="224" Canvas.Top="27" />
+			</Canvas>
+		</StackPanel>
+	</controls:RenderOutputPanel>
 </Window>
