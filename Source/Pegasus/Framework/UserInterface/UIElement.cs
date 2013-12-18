@@ -652,6 +652,8 @@
 
 			OnDraw(spriteBatch);
 
+			++spriteBatch.Layer;
+
 			var count = VisualChildrenCount;
 			for (var i = 0; i < count; ++i)
 			{
@@ -659,6 +661,8 @@
 				child.VisualOffset += VisualOffset;
 				child.Draw(spriteBatch);
 			}
+
+			--spriteBatch.Layer;
 		}
 
 		protected abstract void OnDraw(SpriteBatch spriteBatch);

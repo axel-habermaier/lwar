@@ -139,10 +139,10 @@
 		protected override SizeD MeasureCore(SizeD availableSize)
 		{
 			// The canvas does not restrict the size its children
-			availableSize = new SizeD(Double.PositiveInfinity, Double.PositiveInfinity);
+			var size = new SizeD(Double.PositiveInfinity, Double.PositiveInfinity);
 
 			foreach (var child in Children)
-				child.Measure(availableSize);
+				child.Measure(size);
 
 			// The canvas itself consumes no space
 			return new SizeD();

@@ -245,7 +245,7 @@
 			var parentType = element.Parent.Attribute("Type").Value;
 			var propertyName = split[1];
 
-			var isAttached = !parentType.EndsWith(split[0]);
+			var isAttached = parentType != split[0];
 			var content = element.HasElements ? (object)element.Elements() : (object)element.Value;
 			var classType = (XamlClass)GetClrType(split[0]);
 
@@ -701,7 +701,7 @@
 				attribute.Remove();
 				XName name;
 				if (attribute.Name.LocalName.Contains("."))
-					name = element.Name.Namespace + attribute.Name.LocalName;
+					name = attribute.Name;
 				else
 					name = element.Name + "." + attribute.Name.LocalName;
 

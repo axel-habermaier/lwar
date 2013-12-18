@@ -293,6 +293,8 @@
 
 			_spriteBatch.DrawBatch(_output);
 			SwapChain.Present();
+
+			Assert.That(_spriteBatch.Layer == 0, "Unbalanced layer increase and decrease operations.");
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)

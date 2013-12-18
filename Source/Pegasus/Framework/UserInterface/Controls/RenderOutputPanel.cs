@@ -74,13 +74,11 @@
 			if (!IsAttachedToRoot || InitializeRenderOutput == null)
 				return;
 
-			// The render output panel is guaranteed to have an integer size 
-			var size = new Size((int)ActualWidth, (int)ActualHeight);
-
 			// No need to initialize the render output if its area is 0
 			if (!HasVisibleArea)
 				return;
 
+			var size = new Size((int)Math.Round(ActualWidth), (int)Math.Round(ActualHeight));
 			InitializeRenderOutput(size);
 
 			Assert.NotNull(RenderOutput, "The render output has not been initialized.");

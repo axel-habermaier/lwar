@@ -18,6 +18,6 @@
 			<Border Width="110" Height="100" Background="#FF3F59CD" Panel.ZIndex="-6" Canvas.Left="17" Canvas.Top="80"/>
 			<userInterface:UserControl1 Canvas.Left="224" Canvas.Top="27" />
 		</Canvas>
-		<controls:RenderOutputPanel Name="RenderOutputPanel" Height="55" />
+		<controls:RenderOutputPanel Name="RenderOutputPanel" Height="320" Panel.ZIndex="-1" />
 	</StackPanel>
 </Window>

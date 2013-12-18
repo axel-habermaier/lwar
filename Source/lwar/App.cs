@@ -5,7 +5,6 @@
 	using Assets;
 	using Network;
 	using Pegasus;
-	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
@@ -27,6 +26,7 @@
 
 		private ScreenManager _screenManager;
 
+		private SpriteBatch _spriteBatch;
 		private MainWindow _window;
 
 		/// <summary>
@@ -59,10 +59,15 @@
 			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
 
-			//var uc1 = new UserControl1();
-			////Add(uc1);
-			_window =new MainWindow();
+			_window = new MainWindow();
 			_window.Initialize(GraphicsDevice);
+
+			_spriteBatch = new SpriteBatch(GraphicsDevice, Assets)
+			{
+				BlendState = BlendState.Premultiplied,
+				DepthStencilState = DepthStencilState.DepthDisabled,
+				SamplerState = SamplerState.PointClampNoMipmaps
+			};
 		}
 
 		/// <summary>
@@ -77,22 +82,15 @@
 		/// <summary>
 		///     Invoked when the application should draw a frame.
 		/// </summary>
-		/// <param name="output">The output the frame should be rendered to.</param>
-		protected override void Draw(RenderOutput output)
+		protected override void Draw()
 		{
-			output.ClearColor(new Color(0, 0, 0, 0));
-			output.ClearDepth();
+			_window.Output3D.ClearColor(new Color(0, 0, 0, 255));
+			_window.Output3D.ClearDepth();
 
-			_screenManager.Draw(output);
-		}
+			_screenManager.Draw(_window.Output3D);
 
-		/// <summary>
-		///     Invoked when the application should draw the user interface.
-		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
-		protected override void DrawUserInterface(SpriteBatch spriteBatch)
-		{
-			_screenManager.DrawUserInterface(spriteBatch);
+			_screenManager.DrawUserInterface(_spriteBatch);
+			_spriteBatch.DrawBatch(_window.Output2D);
 		}
 
 		/// <summary>
@@ -103,6 +101,7 @@
 			Commands.OnConnect -= Connect;
 			Commands.OnDisconnect -= Disconnect;
 
+			_spriteBatch.SafeDispose();
 			_screenManager.SafeDispose();
 			_localServer.SafeDispose();
 			_window.SafeDispose();

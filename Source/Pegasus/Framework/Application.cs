@@ -3,7 +3,6 @@
 	using System;
 	using System.Threading;
 	using Assets;
-	using Math;
 	using Platform;
 	using Platform.Assets;
 	using Platform.Graphics;
@@ -110,14 +109,7 @@
 		/// <summary>
 		///     Invoked when the application should draw a frame.
 		/// </summary>
-		/// <param name="output">The output the frame should be rendered to.</param>
-		protected abstract void Draw(RenderOutput output);
-
-		/// <summary>
-		///     Invoked when the application should draw the user interface.
-		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
-		protected abstract void DrawUserInterface(SpriteBatch spriteBatch);
+		protected abstract void Draw();
 
 		/// <summary>
 		///     Exists the application.
@@ -157,9 +149,8 @@
 			using (var inputDevice = new LogicalInputDevice(keyboard, mouse))
 			using (var bindings = new Bindings(inputDevice))
 			using (var resolutionManager = new ResolutionManager(window, swapChain))
-			using (var camera2D = new Camera2D(graphicsDevice))
-			using (var sceneOutput = new RenderOutput(graphicsDevice) { RenderTarget = swapChain.BackBuffer })
-			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera2D, RenderTarget = swapChain.BackBuffer })
+			using (var camera = new Camera2D(graphicsDevice))
+			using (var uiOutput = new RenderOutput(graphicsDevice) { Camera = camera, RenderTarget = swapChain.BackBuffer })
 			{
 				window.Title = name;
 				RegisterFontLoader(new FontLoader(assets));
@@ -208,39 +199,31 @@
 						bindings.Update();
 						resolutionManager.Update();
 
-						// Update the application logic
+						// Update the application logic and the UI
 						Update();
+						_root.UpdateLayout();
 
 						// Update the statistics
 						debugOverlay.Update(window.Size);
 						console.Update(window.Size);
 
-						// React to window size changes
-						var viewport = new Rectangle(Vector2i.Zero, window.Size);
-						sceneOutput.Viewport = viewport;
-						uiOutput.Viewport = viewport;
-						camera2D.Viewport = viewport;
-
 						// Draw the current frame
 						using (new Measurement(debugOverlay.GraphicsDeviceProfiler))
 						using (new Measurement(debugOverlay.CpuFrameTime))
 						{
-							// Let the application draw the 3D elements of the current frame
-							Draw(sceneOutput);
-
-							// Let the application draw the 2D elements of the current frame
-							DepthStencilState.DepthDisabled.Bind();
-							BlendState.Premultiplied.Bind();
-							DrawUserInterface(spriteBatch);
+							// Let the application perform all custom drawing for the current frame
+							Draw();
 
 							// Draw the console and the statistics on top of the current frame
-							debugOverlay.Draw(spriteBatch);
-							console.Draw(spriteBatch);
+							DepthStencilState.DepthDisabled.Bind();
+							BlendState.Premultiplied.Bind();
 
-							spriteBatch.DrawBatch(uiOutput);
+							//debugOverlay.Draw(spriteBatch);
+							//console.Draw(spriteBatch);
+
+							//spriteBatch.DrawBatch(uiOutput);
 
 							// Draw the user interface
-							_root.UpdateLayout();
 							_root.Draw();
 						}
 

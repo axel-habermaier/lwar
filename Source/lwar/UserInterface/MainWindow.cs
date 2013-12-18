@@ -4,6 +4,7 @@
 	using Pegasus;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 
 	public partial class MainWindow
@@ -12,6 +13,23 @@
 		///     The graphics device that is used to initialize the render output panel.
 		/// </summary>
 		private GraphicsDevice _graphicsDevice;
+
+		/// <summary>
+		///     Gets the render output that should be used for 3D rendering.
+		/// </summary>
+		public RenderOutput Output3D
+		{
+			get
+			{
+				Assert.NotNull(RenderOutputPanel.RenderOutput, "The render output panel has not yet been initialized.");
+				return RenderOutputPanel.RenderOutput;
+			}
+		}
+
+		/// <summary>
+		///     Gets the render output that should be used for 2D rendering.
+		/// </summary>
+		public RenderOutput Output2D { get; private set; }
 
 		/// <summary>
 		///     Initializes the window.
@@ -48,7 +66,31 @@
 				Viewport = new Rectangle(0, 0, panelSize)
 			};
 
-			RenderOutputPanel.RenderOutput.ClearColor(new Color(0xFF7F3FCD));
+			// TODO: Remove this initialization of the 2D output and remove the 2D output altogether
+			if (Output2D != null)
+				Output2D.Camera.SafeDispose();
+
+			Output2D.SafeDispose();
+
+			var camera2D = new Camera2D(_graphicsDevice);
+			Output2D = new RenderOutput(_graphicsDevice)
+			{
+				Camera = camera2D,
+				RenderTarget = RenderOutputPanel.RenderOutput.RenderTarget,
+				Viewport = new Rectangle(0, 0, panelSize)
+			};
+		}
+
+		/// <summary>
+		///     Invoked when the window is being closed.
+		/// </summary>
+		protected override void OnClosing()
+		{
+			if (Output2D != null)
+				Output2D.Camera.SafeDispose();
+
+			Output2D.SafeDispose();
+			base.OnClosing();
 		}
 	}
 }
