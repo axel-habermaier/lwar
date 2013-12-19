@@ -25,7 +25,7 @@
 			<TextBlock Margin="42,31,0,15" Foreground="#FF1AA6E8" Background="#FFC36A37">DEF</TextBlock>
 		</Border>
 		<Border Background="#FF571654" Canvas.Top="42" Canvas.Left="373" Width="50" Height="50">
-			<TextBlock Foreground="#FF1AA6E8" Background="#FFC36A37">DEF</TextBlock>
+			<TextBlock Foreground="#FF1AA6E8" Background="#FFC3FA37">DEF</TextBlock>
 		</Border>
 		<Border Background="Red" Canvas.Top="195" Canvas.Left="191" Height="31" Width="71">
 			<TextBlock Foreground="#FF1AA6E8" Background="#FFC36A37" Text="Center" Margin="10,6,10,0"/>

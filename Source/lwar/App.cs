@@ -68,8 +68,6 @@
 				DepthStencilState = DepthStencilState.DepthDisabled,
 				SamplerState = SamplerState.PointClampNoMipmaps
 			};
-
-			Window.LayoutRoot = new UserControl1();
 		}
 
 		/// <summary>
