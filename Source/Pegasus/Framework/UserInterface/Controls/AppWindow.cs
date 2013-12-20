@@ -39,6 +39,10 @@
 			var font = Application.Current.Assets.LoadFont(Fonts.LiberationMono11);
 			DebugOverlay = new DebugOverlay(Application.Current.GraphicsDevice, font);
 			Console = new Console(Application.Current.GraphicsDevice, InputDevice, font);
+
+			// Ensure that the console and the statistics are properly initialized
+			DebugOverlay.Update(Size);
+			Console.Update(Size);
 		}
 
 		/// <summary>

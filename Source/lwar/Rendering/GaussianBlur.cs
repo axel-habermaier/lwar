@@ -11,19 +11,19 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Represents a GPU-based gaussian blur filter than can be applied to a texture.
+	///     Represents a GPU-based gaussian blur filter than can be applied to a texture.
 	/// </summary>
 	public class GaussianBlur : DisposableObject
 	{
 		/// <summary>
-		///   The minimum size of the temporary textures.
+		///     The minimum size of the temporary textures.
 		/// </summary>
 		private const int MinimumSize = 16;
 
 		private readonly BlurEffect _blurEffect;
 
 		/// <summary>
-		///   The full-screen quad that is used to blur the textures.
+		///     The full-screen quad that is used to blur the textures.
 		/// </summary>
 		private readonly FullscreenQuad _fullscreenQuad;
 
@@ -31,21 +31,21 @@
 		private readonly TexturedQuadEffect _quadEffect;
 
 		/// <summary>
-		///   The temporary render targets that are required to blur the input texture.
+		///     The temporary render targets that are required to blur the input texture.
 		/// </summary>
 		private readonly RenderTarget[] _renderTargets;
 
 		private readonly Size[] _sizes;
 
 		/// <summary>
-		///   The input texture that is blurred.
+		///     The input texture that is blurred.
 		/// </summary>
 		private readonly Texture2D _texture;
 
 		private readonly Texture2D[] _textures;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to apply the blur effect.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
@@ -96,7 +96,7 @@
 		}
 
 		/// <summary>
-		///   Blurs the input texture.
+		///     Blurs the input texture.
 		/// </summary>
 		public Texture2D Blur(RenderOutput output)
 		{
@@ -136,7 +136,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

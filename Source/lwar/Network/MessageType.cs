@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   Identifies the type of a message.
+	///     Identifies the type of a message.
 	/// </summary>
 	public enum MessageType : byte
 	{

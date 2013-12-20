@@ -8,28 +8,28 @@
 	using Pegasus.Platform.Memory;
 
 	/// <summary>
-	///   Manages the active players that participate in a game session.
+	///     Manages the active players that participate in a game session.
 	/// </summary>
 	public sealed class PlayerList : DisposableObject, IEnumerable<Player>
 	{
 		/// <summary>
-		///   Maps generational identifiers to player instances.
+		///     Maps generational identifiers to player instances.
 		/// </summary>
 		private readonly IdentifierMap<Player> _playerMap = new IdentifierMap<Player>();
 
 		/// <summary>
-		///   The list of active players.
+		///     The list of active players.
 		/// </summary>
 		private readonly DeferredList<Player> _players = new DeferredList<Player>(false);
 
 		/// <summary>
-		///   Gets the local player.
+		///     Gets the local player.
 		/// </summary>
 		public Player LocalPlayer { get; private set; }
 
 		/// <summary>
-		///   Gets the player that corresponds to the given identifier. Returns null if no player with the given identifier could
-		///   be found, or if the generation did not match.
+		///     Gets the player that corresponds to the given identifier. Returns null if no player with the given identifier could
+		///     be found, or if the generation did not match.
 		/// </summary>
 		/// <param name="identifier">The identifier of the player that should be returned.</param>
 		public Player this[Identifier identifier]
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Returns an enumerator that iterates through the collection.
+		///     Returns an enumerator that iterates through the collection.
 		/// </summary>
 		IEnumerator<Player> IEnumerable<Player>.GetEnumerator()
 		{
@@ -46,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Returns an enumerator that iterates through the collection.
+		///     Returns an enumerator that iterates through the collection.
 		/// </summary>
 		IEnumerator IEnumerable.GetEnumerator()
 		{
@@ -54,7 +54,7 @@
 		}
 
 		/// <summary>
-		///   Adds the given player to the list.
+		///     Adds the given player to the list.
 		/// </summary>
 		/// <param name="playerId">The identifier of the player that should be added.</param>
 		/// <param name="name">The name of the new player.</param>
@@ -77,7 +77,7 @@
 		}
 
 		/// <summary>
-		///   Removes the player with the given id from the list.
+		///     Removes the player with the given id from the list.
 		/// </summary>
 		/// <param name="playerId">The id of the player that should be removed.</param>
 		public void Remove(Identifier playerId)
@@ -93,7 +93,7 @@
 		}
 
 		/// <summary>
-		///   Updates the player list.
+		///     Updates the player list.
 		/// </summary>
 		public void Update()
 		{
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Enumerates all active players.
+		///     Enumerates all active players.
 		/// </summary>
 		public List<Player>.Enumerator GetEnumerator()
 		{
@@ -109,7 +109,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -117,7 +117,7 @@
 		}
 
 		/// <summary>
-		///   Changes the name of the player with the given id.
+		///     Changes the name of the player with the given id.
 		/// </summary>
 		/// <param name="playerId">The id of the player whose name should be changed.</param>
 		/// <param name="name">The new name of the player.</param>
@@ -132,7 +132,7 @@
 		}
 
 		/// <summary>
-		///   Updates the statistics of the corresponding player.
+		///     Updates the statistics of the corresponding player.
 		/// </summary>
 		/// <param name="stats">The updated statistics that should be copied to the player instance.</param>
 		public void UpdateStats(StatsMessage stats)

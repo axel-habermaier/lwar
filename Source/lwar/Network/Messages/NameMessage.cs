@@ -7,23 +7,23 @@ namespace Lwar.Network.Messages
 	using Pegasus;
 
 	/// <summary>
-	///   Holds the payload of a Name message.
+	///     Holds the payload of a Name message.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct NameMessage
 	{
 		/// <summary>
-		///   The new name of the player.
+		///     The new name of the player.
 		/// </summary>
 		public string Name;
 
 		/// <summary>
-		///   The player whose name is changed.
+		///     The player whose name is changed.
 		/// </summary>
 		public Identifier Player;
 
 		/// <summary>
-		///   Creates a message that instructs the server to change the name of the given player.
+		///     Creates a message that instructs the server to change the name of the given player.
 		/// </summary>
 		/// <param name="player">The player whose name should be changed.</param>
 		/// <param name="playerName">The new player name.</param>

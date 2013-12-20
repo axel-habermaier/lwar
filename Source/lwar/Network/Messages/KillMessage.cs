@@ -5,18 +5,18 @@ namespace Lwar.Network.Messages
 	using Gameplay;
 
 	/// <summary>
-	///   Holds the payload of a Kill message.
+	///     Holds the payload of a Kill message.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct KillMessage
 	{
 		/// <summary>
-		///   The player that was killed.
+		///     The player that was killed.
 		/// </summary>
 		public Identifier Victim;
 
 		/// <summary>
-		///   The player that scored the kill.
+		///     The player that scored the kill.
 		/// </summary>
 		public Identifier Killer;
 	}

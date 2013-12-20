@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Screens
+﻿namespace Lwar.Screens
 {
+	using System;
 	using Assets;
 	using Pegasus;
 	using Pegasus.Math;
@@ -13,32 +12,32 @@ namespace Lwar.Screens
 	using Pegasus.Rendering.UserInterface;
 
 	/// <summary>
-	///   Displays a message to the user.
+	///     Displays a message to the user.
 	/// </summary>
 	public class MessageBox : Screen
 	{
 		/// <summary>
-		///   The input that, when triggered, closes the message box.
+		///     The input that, when triggered, closes the message box.
 		/// </summary>
 		private readonly LogicalInput _continue;
 
 		/// <summary>
-		///   The frame defining the out edges of the message box.
+		///     The frame defining the out edges of the message box.
 		/// </summary>
 		private readonly Frame _frame = new Frame { FrameColor = new Color(0xFF333333), Margin = 10 };
 
 		/// <summary>
-		///   The message that is displayed to the user.
+		///     The message that is displayed to the user.
 		/// </summary>
 		private readonly string _message;
 
 		/// <summary>
-		///   The label that draws the message to the screen.
+		///     The label that draws the message to the screen.
 		/// </summary>
 		private Label _messageLabel;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="entry">The entry that should be displayed to the user.</param>
 		private MessageBox(LogEntry entry)
@@ -48,7 +47,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -57,7 +56,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Initializes the screen.
+		///     Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -71,7 +70,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Updates the screen.
+		///     Updates the screen.
 		/// </summary>
 		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
@@ -84,7 +83,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the app screen.
+		///     Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)
@@ -94,7 +93,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Shows a message box with the given message, optionally removing the current state from the state manager.
+		///     Shows a message box with the given message, optionally removing the current state from the state manager.
 		/// </summary>
 		/// <param name="screen">The screen that should be considered to be the parent of the message box.</param>
 		/// <param name="type">The type of the message that should be shown.</param>
@@ -116,4 +115,3 @@ namespace Lwar.Screens
 		}
 	}
 }
-

@@ -7,13 +7,13 @@
 	using Rendering;
 
 	/// <summary>
-	///   The base class of all actors.
+	///     The base class of all actors.
 	/// </summary>
 	public abstract class Actor<TActor> : PooledObject<TActor>, IActor
 		where TActor : Actor<TActor>, new()
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		protected Actor()
 		{
@@ -21,22 +21,22 @@
 		}
 
 		/// <summary>
-		///   Gets the game session the actor belongs to.
+		///     Gets the game session the actor belongs to.
 		/// </summary>
 		protected GameSession GameSession { get; private set; }
 
 		/// <summary>
-		///   Gets the render context that draws the actor.
+		///     Gets the render context that draws the actor.
 		/// </summary>
 		protected RenderContext RenderContext { get; private set; }
 
 		/// <summary>
-		///   Gets the transformation of the actor.
+		///     Gets the transformation of the actor.
 		/// </summary>
 		public Transformation Transform { get; private set; }
 
 		/// <summary>
-		///   Adds the actor to the game session and the render context.
+		///     Adds the actor to the game session and the render context.
 		/// </summary>
 		/// <param name="gameSession">The game session the actor should be added to.</param>
 		/// <param name="renderContext">The render context the actor should be added to.</param>
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Removes the actor from the game session and the render context.
+		///     Removes the actor from the game session and the render context.
 		/// </summary>
 		/// <remarks>This method is not called when the game session is shut down.</remarks>
 		public void Removed()
@@ -68,7 +68,7 @@
 		}
 
 		/// <summary>
-		///   Updates the actor's internal state.
+		///     Updates the actor's internal state.
 		/// </summary>
 		/// <param name="clock">The clock that should be used for time measurements.</param>
 		public virtual void Update(Clock clock)
@@ -76,14 +76,14 @@
 		}
 
 		/// <summary>
-		///   Invoked when the actor is added to the game session.
+		///     Invoked when the actor is added to the game session.
 		/// </summary>
 		protected virtual void OnAdded()
 		{
 		}
 
 		/// <summary>
-		///   Invoked when the actor is removed from the game session.
+		///     Invoked when the actor is removed from the game session.
 		/// </summary>
 		/// <remarks>This method is not called when the game session is shut down.</remarks>
 		protected virtual void OnRemoved()

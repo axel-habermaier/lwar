@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace Lwar.Screens
+﻿namespace Lwar.Screens
 {
+	using System;
 	using Assets;
 	using Network;
-	using Pegasus;
 	using Pegasus.Math;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
@@ -12,22 +10,22 @@ namespace Lwar.Screens
 	using Pegasus.Rendering.UserInterface;
 
 	/// <summary>
-	///   Shows the main menu.
+	///     Shows the main menu.
 	/// </summary>
 	public class MainMenu : Screen
 	{
 		/// <summary>
-		///   The service that is used to automatically discover server instances.
+		///     The service that is used to automatically discover server instances.
 		/// </summary>
 		private readonly ServerDiscoveryService _discoveryService = new ServerDiscoveryService();
 
 		/// <summary>
-		///   The label that is used to draw the menu.
+		///     The label that is used to draw the menu.
 		/// </summary>
 		private Label _label;
 
 		/// <summary>
-		///   Initializes the screen.
+		///     Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -44,7 +42,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Updates the screen.
+		///     Updates the screen.
 		/// </summary>
 		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
@@ -54,7 +52,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the app screen.
+		///     Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)
@@ -63,7 +61,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -72,4 +70,3 @@ namespace Lwar.Screens
 		}
 	}
 }
-

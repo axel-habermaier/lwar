@@ -11,7 +11,7 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders suns into a 3D scene.
+	///     Renders suns into a 3D scene.
 	/// </summary>
 	public class SunRenderer : Renderer<Sun>
 	{
@@ -19,19 +19,19 @@
 		private GaussianBlur _blur;
 
 		/// <summary>
-		///   The render target that is used to draw the sun effect.
+		///     The render target that is used to draw the sun effect.
 		/// </summary>
 		private RenderTarget _effectTarget;
 
 		/// <summary>
-		///   The full-screen quad that is used to draw the sun special effects.
+		///     The full-screen quad that is used to draw the sun special effects.
 		/// </summary>
 		private FullscreenQuad _fullscreenQuad;
 
 		private RenderOutput _heatOutput;
 
 		/// <summary>
-		///   The sun model.
+		///     The sun model.
 		/// </summary>
 		private Model _model;
 
@@ -43,7 +43,7 @@
 		private SunEffect _sunEffect;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -76,7 +76,7 @@
 		}
 
 		/// <summary>
-		///   Draws all suns.
+		///     Draws all suns.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -113,7 +113,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

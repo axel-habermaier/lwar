@@ -6,22 +6,22 @@
 	using Pegasus.Platform;
 
 	/// <summary>
-	///   Represents a planet.
+	///     Represents a planet.
 	/// </summary>
 	public class Planet : Entity<Planet>
 	{
 		/// <summary>
-		///   A cached random number generator.
+		///     A cached random number generator.
 		/// </summary>
 		private static readonly Random Random = new Random();
 
 		/// <summary>
-		///   The rotation speed of the planet.
+		///     The rotation speed of the planet.
 		/// </summary>
 		private float _rotationSpeed;
 
 		/// <summary>
-		///   Invoked when the entity is added to the game session.
+		///     Invoked when the entity is added to the game session.
 		/// </summary>
 		protected override void OnAdded()
 		{
@@ -32,7 +32,7 @@
 		}
 
 		/// <summary>
-		///   Updates the entity's internal state.
+		///     Updates the entity's internal state.
 		/// </summary>
 		/// <param name="clock">The clock that should be used for time measurements.</param>
 		public override void Update(Clock clock)
@@ -41,7 +41,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the planet.</param>
 		/// <param name="entityTemplate">The template defining the planet's type.</param>

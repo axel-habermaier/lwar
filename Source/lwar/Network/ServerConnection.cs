@@ -11,49 +11,49 @@
 	using Pegasus.Platform.Network;
 
 	/// <summary>
-	///   Represents a proxy of an lwar server that a client can use to communicate with the server.
+	///     Represents a proxy of an lwar server that a client can use to communicate with the server.
 	/// </summary>
 	public class ServerConnection : DisposableObject
 	{
 		/// <summary>
-		///   The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
-		///   considered to be dropped.
+		///     The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
+		///     considered to be dropped.
 		/// </summary>
 		private const int DroppedTimeout = 15000;
 
 		/// <summary>
-		///   The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
-		///   considered to be lagging.
+		///     The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
+		///     considered to be lagging.
 		/// </summary>
 		private const int LaggingTimeout = 500;
 
 		/// <summary>
-		///   Cached delegate of the message deserialization function.
+		///     Cached delegate of the message deserialization function.
 		/// </summary>
 		private static readonly Func<BufferReader, List<Message>> MessageDeserializer = MessageSerialization.Deserialize;
 
 		/// <summary>
-		///   The buffer that is used to send and receive data.
+		///     The buffer that is used to send and receive data.
 		/// </summary>
 		private readonly byte[] _buffer = new byte[Specification.MaxPacketSize];
 
 		/// <summary>
-		///   Provides the time that is used to check whether a connection is lagging or dropped.
+		///     Provides the time that is used to check whether a connection is lagging or dropped.
 		/// </summary>
 		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
-		///   The Udp socket that is used for the communication with the server.
+		///     The Udp socket that is used for the communication with the server.
 		/// </summary>
 		private readonly UdpSocket _socket;
 
 		/// <summary>
-		///   The time when the last packet has been received from the server.
+		///     The time when the last packet has been received from the server.
 		/// </summary>
 		private double _lastPacketTimestamp;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The endpoint of the server.</param>
 		public ServerConnection(IPEndPoint serverEndPoint)
@@ -66,17 +66,17 @@
 		}
 
 		/// <summary>
-		///   Gets the current state of the virtual connection to the server.
+		///     Gets the current state of the virtual connection to the server.
 		/// </summary>
 		public ConnectionState State { get; private set; }
 
 		/// <summary>
-		///   Gets the endpoint of the server.
+		///     Gets the endpoint of the server.
 		/// </summary>
 		public IPEndPoint ServerEndPoint { get; private set; }
 
 		/// <summary>
-		///   Gets the remaining time in milliseconds before the connection will be dropped.
+		///     Gets the remaining time in milliseconds before the connection will be dropped.
 		/// </summary>
 		public double TimeToDrop
 		{
@@ -84,7 +84,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the connection to the server is lagging.
+		///     Gets a value indicating whether the connection to the server is lagging.
 		/// </summary>
 		public bool IsLagging
 		{
@@ -92,7 +92,7 @@
 		}
 
 		/// <summary>
-		///   Sends the queued messages to the server.
+		///     Sends the queued messages to the server.
 		/// </summary>
 		/// <param name="messageQueue">The queued messages that should be sent.</param>
 		public void Send(MessageQueue messageQueue)
@@ -115,7 +115,7 @@
 		}
 
 		/// <summary>
-		///   Sends the messages that are currently enqueued.
+		///     Sends the messages that are currently enqueued.
 		/// </summary>
 		/// <param name="messageQueue">The message queue that stores the messages that should be sent.</param>
 		private void SendMessages(MessageQueue messageQueue)
@@ -125,11 +125,11 @@
 		}
 
 		/// <summary>
-		///   Handles incoming packets from the server.
+		///     Handles incoming packets from the server.
 		/// </summary>
 		/// <param name="messageQueue">The message queue the received messages should be added to.</param>
 		/// <param name="deliveryManager">
-		///   The delivery manager that is used to determine whether a message should be added to the queue.
+		///     The delivery manager that is used to determine whether a message should be added to the queue.
 		/// </param>
 		public void Receive(Queue<Message> messageQueue, DeliveryManager deliveryManager)
 		{
@@ -169,12 +169,12 @@
 		}
 
 		/// <summary>
-		///   Handles the incoming packet.
+		///     Handles the incoming packet.
 		/// </summary>
 		/// <param name="buffer">The buffer the packet data should be read from.</param>
 		/// <param name="messageQueue">The message queue the received messages should be added to.</param>
 		/// <param name="deliveryManager">
-		///   The delivery manager that is used to determine whether a message should be added to the queue.
+		///     The delivery manager that is used to determine whether a message should be added to the queue.
 		/// </param>
 		private void HandlePacket(BufferReader buffer, Queue<Message> messageQueue, DeliveryManager deliveryManager)
 		{
@@ -224,7 +224,7 @@
 		}
 
 		/// <summary>
-		///   Handles internal messages and adds external messages to the queue.
+		///     Handles internal messages and adds external messages to the queue.
 		/// </summary>
 		/// <param name="message">The message that should be handled.</param>
 		/// <param name="messageQueue">The message queue an external message should be added to.</param>
@@ -276,7 +276,7 @@
 		}
 
 		/// <summary>
-		///   Updates the connection state, dropping the connection if no more packets are received for a specific amount of time.
+		///     Updates the connection state, dropping the connection if no more packets are received for a specific amount of time.
 		/// </summary>
 		public void Update()
 		{
@@ -289,7 +289,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

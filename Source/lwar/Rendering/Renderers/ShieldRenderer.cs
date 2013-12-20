@@ -10,22 +10,22 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders shield effects into a 3D scene.
+	///     Renders shield effects into a 3D scene.
 	/// </summary>
 	public class ShieldRenderer : Renderer<Shield>
 	{
 		/// <summary>
-		///   The effect that is used to draw the shields.
+		///     The effect that is used to draw the shields.
 		/// </summary>
 		private SphereEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the shields.
+		///     The model that is used to draw the shields.
 		/// </summary>
 		private Model _model;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -37,7 +37,7 @@
 		}
 
 		/// <summary>
-		///   Draws all registered 3D elements.
+		///     Draws all registered 3D elements.
 		/// </summary>
 		/// <param name="output">The output that the elements should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -52,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

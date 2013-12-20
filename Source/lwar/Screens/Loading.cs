@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Lwar.Screens
+﻿namespace Lwar.Screens
 {
+	using System;
 	using Assets;
 	using Gameplay;
 	using Gameplay.Entities;
@@ -16,27 +15,27 @@ namespace Lwar.Screens
 	using Scripting;
 
 	/// <summary>
-	///   Loads a game session.
+	///     Loads a game session.
 	/// </summary>
 	public class Loading : Screen
 	{
 		/// <summary>
-		///   The game session that is loaded.
+		///     The game session that is loaded.
 		/// </summary>
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///   The network session that is used to synchronize the game state between the client and the server.
+		///     The network session that is used to synchronize the game state between the client and the server.
 		/// </summary>
 		private readonly NetworkSession _networkSession;
 
 		/// <summary>
-		///   Shows a status message to the user.
+		///     Shows a status message to the user.
 		/// </summary>
 		private Label _statusMessage;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session that should be loaded.</param>
 		/// <param name="networkSession">The network session that synchronizes the game state between the client and the server.</param>
@@ -50,7 +49,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Initializes the screen.
+		///     Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -64,7 +63,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Updates the screen.
+		///     Updates the screen.
 		/// </summary>
 		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
@@ -97,7 +96,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the app screen.
+		///     Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)
@@ -106,7 +105,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -114,4 +113,3 @@ namespace Lwar.Screens
 		}
 	}
 }
-

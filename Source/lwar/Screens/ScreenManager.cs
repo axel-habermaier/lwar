@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lwar.Screens
+﻿namespace Lwar.Screens
 {
 	using System;
 	using System.Collections.Generic;
@@ -10,17 +8,17 @@ namespace Lwar.Screens
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Manages several layered app screens.
+	///     Manages several layered app screens.
 	/// </summary>
 	public sealed class ScreenManager : DisposableObject
 	{
 		/// <summary>
-		///   The stack of layered game screens.
+		///     The stack of layered game screens.
 		/// </summary>
 		private readonly List<Screen> _screens = new List<Screen>();
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -28,7 +26,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Removes all app screens from the screen manager.
+		///     Removes all app screens from the screen manager.
 		/// </summary>
 		public void Clear()
 		{
@@ -40,7 +38,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Adds the app screen onto the top of the stack.
+		///     Adds the app screen onto the top of the stack.
 		/// </summary>
 		/// <param name="screen">The app screen that should be added.</param>
 		public void Add(Screen screen)
@@ -54,7 +52,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Removes the app screen from the stack.
+		///     Removes the app screen from the stack.
 		/// </summary>
 		/// <param name="screen">The app screen that should be removed.</param>
 		public void Remove(Screen screen)
@@ -66,7 +64,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Updates all screens from top to bottom.
+		///     Updates all screens from top to bottom.
 		/// </summary>
 		public void Update()
 		{
@@ -75,7 +73,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws all visible screens from top to bottom.
+		///     Draws all visible screens from top to bottom.
 		/// </summary>
 		/// <param name="output">The output that the screens should render to.</param>
 		public void Draw(RenderOutput output)
@@ -87,7 +85,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of all visible screens from top to bottom.
+		///     Draws the user interface elements of all visible screens from top to bottom.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public void DrawUserInterface(SpriteBatch spriteBatch)
@@ -103,7 +101,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Gets the index of the first visible app screen that must be drawn.
+		///     Gets the index of the first visible app screen that must be drawn.
 		/// </summary>
 		private int GetFirstVisibleScreen()
 		{

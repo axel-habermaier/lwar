@@ -5,21 +5,20 @@
 	using Assets;
 	using Network;
 	using Pegasus;
-	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Screens;
 	using Scripting;
-	using UserInterface;
-	using MainMenu = Screens.MainMenu;
 
 	/// <summary>
 	///     Represents the lwar application.
 	/// </summary>
 	public sealed partial class App
 	{
+		private Camera2D _camera;
+
 		/// <summary>
 		///     The local game server that can be used to hosts game sessions locally.
 		/// </summary>
@@ -28,8 +27,6 @@
 		private ScreenManager _screenManager;
 
 		private SpriteBatch _spriteBatch;
-
-		private Camera2D _camera;
 
 		/// <summary>
 		///     Invoked when the application is initializing.

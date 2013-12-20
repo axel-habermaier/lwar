@@ -9,22 +9,22 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders rockets into a 3D scene.
+	///     Renders rockets into a 3D scene.
 	/// </summary>
 	public class RocketRenderer : Renderer<Rocket>
 	{
 		/// <summary>
-		///   The effect that is used to draw the rockets.
+		///     The effect that is used to draw the rockets.
 		/// </summary>
 		private TexturedQuadEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the rockets.
+		///     The model that is used to draw the rockets.
 		/// </summary>
 		private Model _model;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -35,7 +35,7 @@
 		}
 
 		/// <summary>
-		///   Draws all rockets.
+		///     Draws all rockets.
 		/// </summary>
 		/// <param name="output">The output that the rockets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

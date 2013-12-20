@@ -10,22 +10,22 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders shockwaves into a 3D scene.
+	///     Renders shockwaves into a 3D scene.
 	/// </summary>
 	public class ShockwaveRenderer : Renderer<Shockwave>
 	{
 		/// <summary>
-		///   The effect that is used to draw the shockwaves.
+		///     The effect that is used to draw the shockwaves.
 		/// </summary>
 		private SphereEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the shockwaves.
+		///     The model that is used to draw the shockwaves.
 		/// </summary>
 		private Model _model;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -36,7 +36,7 @@
 		}
 
 		/// <summary>
-		///   Draws all shockwaves.
+		///     Draws all shockwaves.
 		/// </summary>
 		/// <param name="output">The output that the shockwaves should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -49,7 +49,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

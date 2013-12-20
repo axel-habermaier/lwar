@@ -12,17 +12,17 @@
 	using Renderers;
 
 	/// <summary>
-	///   Represents the context in which rendering operations are performed.
+	///     Represents the context in which rendering operations are performed.
 	/// </summary>
 	public class RenderContext : DisposableObject
 	{
 		/// <summary>
-		///   The renderer that is used to draw the parallax scrolling effect.
+		///     The renderer that is used to draw the parallax scrolling effect.
 		/// </summary>
 		private readonly ParallaxRenderer _parallaxRenderer;
 
 		/// <summary>
-		///   The renderers that the context uses to render the scene.
+		///     The renderers that the context uses to render the scene.
 		/// </summary>
 		private readonly IRenderer[] _renderers = new IRenderer[]
 		{
@@ -39,22 +39,22 @@
 		};
 
 		/// <summary>
-		///   The renderer that is used to draw the skybox.
+		///     The renderer that is used to draw the skybox.
 		/// </summary>
 		private readonly SkyboxRenderer _skyboxRenderer;
 
 		/// <summary>
-		///   The sprite batch that is used to draw 2D sprites into the scene.
+		///     The sprite batch that is used to draw 2D sprites into the scene.
 		/// </summary>
 		private readonly SpriteBatch _spriteBatch;
 
 		/// <summary>
-		///   The sprite effect that is used to draw 2D sprites into the scene.
+		///     The sprite effect that is used to draw 2D sprites into the scene.
 		/// </summary>
 		private readonly SpriteEffect _spriteEffect;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
@@ -73,7 +73,7 @@
 		}
 
 		/// <summary>
-		///   Adds the given element to the appropriate renderer.
+		///     Adds the given element to the appropriate renderer.
 		/// </summary>
 		/// <typeparam name="TElement">The type of the element that should be added.</typeparam>
 		/// <param name="element">The element that should be added.</param>
@@ -85,7 +85,7 @@
 		}
 
 		/// <summary>
-		///   Removes the given element from the appropriate renderer.
+		///     Removes the given element from the appropriate renderer.
 		/// </summary>
 		/// <typeparam name="TElement">The type of the element that should be removed.</typeparam>
 		/// <param name="element">The element that should be removed.</param>
@@ -97,7 +97,7 @@
 		}
 
 		/// <summary>
-		///   Draws the current frame.
+		///     Draws the current frame.
 		/// </summary>
 		/// <param name="output">The output that the render context should render to.</param>
 		public void Draw(RenderOutput output)
@@ -132,7 +132,7 @@
 		}
 
 		/// <summary>
-		///   Draws the user interface elements.
+		///     Draws the user interface elements.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		/// <param name="camera">The camera that is used to draw the scene.</param>
@@ -145,7 +145,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

@@ -3,12 +3,12 @@
 	using System;
 
 	/// <summary>
-	///   Represents a bullet.
+	///     Represents a bullet.
 	/// </summary>
 	public class Bullet : Entity<Bullet>
 	{
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the bullet.</param>
 		public static Bullet Create(Identifier id)

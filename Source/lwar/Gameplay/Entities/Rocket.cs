@@ -3,12 +3,12 @@
 	using System;
 
 	/// <summary>
-	///   Represents a rocket.
+	///     Represents a rocket.
 	/// </summary>
 	public class Rocket : Entity<Rocket>
 	{
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the rocket.</param>
 		public static Rocket Create(Identifier id)

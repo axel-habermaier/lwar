@@ -8,12 +8,12 @@
 	using Pegasus.Platform.Memory;
 
 	/// <summary>
-	///   Provides extension methods for buffer readers and writers.
+	///     Provides extension methods for buffer readers and writers.
 	/// </summary>
 	public static class BufferExtensions
 	{
 		/// <summary>
-		///   Writes the given identifier into the buffer.
+		///     Writes the given identifier into the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the identifier should be written into.</param>
 		/// <param name="identifier">The identifier that should be written into the buffer.</param>
@@ -26,7 +26,7 @@
 		}
 
 		/// <summary>
-		///   Reads an identifier from the buffer.
+		///     Reads an identifier from the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the identifier should be read from.</param>
 		public static Identifier ReadIdentifier(this BufferReader buffer)
@@ -39,7 +39,7 @@
 		}
 
 		/// <summary>
-		///   Writes a string of the given maximum length into the buffer.
+		///     Writes a string of the given maximum length into the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the string should be written into.</param>
 		/// <param name="s">The string that should be written into the buffer.</param>
@@ -58,7 +58,7 @@
 		}
 
 		/// <summary>
-		///   Reads a string of the given length from the buffer.
+		///     Reads a string of the given length from the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the string should be read from.</param>
 		/// <param name="length">The maximum length of the string.</param>

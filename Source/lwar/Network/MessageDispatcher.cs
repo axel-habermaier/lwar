@@ -7,17 +7,17 @@
 	using Pegasus;
 
 	/// <summary>
-	///   Dispatches messages received from the server.
+	///     Dispatches messages received from the server.
 	/// </summary>
 	public sealed class MessageDispatcher
 	{
 		/// <summary>
-		///   The game session the messages are dispatched to.
+		///     The game session the messages are dispatched to.
 		/// </summary>
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session the messages should be dispatched to.</param>
 		public MessageDispatcher(GameSession gameSession)
@@ -26,7 +26,7 @@
 		}
 
 		/// <summary>
-		///   Dispatches the given message.
+		///     Dispatches the given message.
 		/// </summary>
 		/// <param name="message">The message that should be dispatched.</param>
 		public void Dispatch(Message message)
@@ -105,7 +105,7 @@
 		}
 
 		/// <summary>
-		///   Adds a new entity to the game session.
+		///     Adds a new entity to the game session.
 		/// </summary>
 		/// <param name="entityId">The identifier of the new entity.</param>
 		/// <param name="type">The type of the new entity.</param>

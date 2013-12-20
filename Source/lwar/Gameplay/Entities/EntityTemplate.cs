@@ -6,12 +6,12 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Manages common properties of entities.
+	///     Manages common properties of entities.
 	/// </summary>
 	public class EntityTemplate : DisposableObject
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public EntityTemplate(float maxEnergy, float maxHealth, float radius, Texture2D texture, CubeMap cubeMap, Model model)
 		{
@@ -24,37 +24,37 @@
 		}
 
 		/// <summary>
-		///   The cube map that should be used to draw the entity.
+		///     The cube map that should be used to draw the entity.
 		/// </summary>
 		public CubeMap CubeMap { get; private set; }
 
 		/// <summary>
-		///   The entity's maximum energy level.
+		///     The entity's maximum energy level.
 		/// </summary>
 		public float MaxEnergy { get; private set; }
 
 		/// <summary>
-		///   The entity's maximum health.
+		///     The entity's maximum health.
 		/// </summary>
 		public float MaxHealth { get; private set; }
 
 		/// <summary>
-		///   The model that is used to draw the entity.
+		///     The model that is used to draw the entity.
 		/// </summary>
 		public Model Model { get; private set; }
 
 		/// <summary>
-		///   The entity's radius, defining its size.
+		///     The entity's radius, defining its size.
 		/// </summary>
 		public float Radius { get; private set; }
 
 		/// <summary>
-		///   The texture that should be used to draw the entity.
+		///     The texture that should be used to draw the entity.
 		/// </summary>
 		public Texture2D Texture { get; private set; }
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

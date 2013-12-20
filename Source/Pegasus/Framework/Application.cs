@@ -141,10 +141,6 @@
 				Window.Title = name;
 				RegisterFontLoader(new FontLoader(Assets));
 
-				// Ensure that the console and the statistics are properly initialized
-				Window.DebugOverlay.Update(Window.Size);
-				Window.Console.Update(Window.Size);
-
 				// Copy the recorded log history to the console and explain the usage of the console
 				logFile.WriteToConsole(Window.Console);
 				Commands.Help();

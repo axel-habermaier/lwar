@@ -1,46 +1,131 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="client.c" />
-    <ClCompile Include="connection.c" />
-    <ClCompile Include="entity.c" />
-    <ClCompile Include="log.c" />
-    <ClCompile Include="message.c" />
-    <ClCompile Include="physics.c" />
-    <ClCompile Include="pq.c" />
-    <ClCompile Include="protocol.c" />
+    <ClCompile Include="connection.c">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="message.c">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="packet.c">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol.c">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="entity.c">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="physics.c">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="player.c">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="rules.c">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="templates.c">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="update.c">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="client.c">
+      <Filter>Network</Filter>
+    </ClCompile>
     <ClCompile Include="server.c" />
-    <ClCompile Include="time.c" />
-    <ClCompile Include="uint.c" />
-    <ClCompile Include="packet.c" />
-    <ClCompile Include="pool.c" />
-    <ClCompile Include="player.c" />
-    <ClCompile Include="rules.c" />
-    <ClCompile Include="format.c" />
-    <ClCompile Include="queue.c" />
-    <ClCompile Include="update.c" />
-    <ClCompile Include="array.c" />
-    <ClCompile Include="templates.c" />
+    <ClCompile Include="format.c">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="array.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="log.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="pool.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="pq.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="queue.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="time.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="uint.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="connection.h" />
-    <ClInclude Include="list.h" />
-    <ClInclude Include="log.h" />
-    <ClInclude Include="message.h" />
-    <ClInclude Include="pq.h" />
+    <ClInclude Include="address.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="connection.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="message.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="packet.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="rules.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="update.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
     <ClInclude Include="server.h" />
-    <ClInclude Include="uint.h" />
-    <ClInclude Include="vector.h" />
-    <ClInclude Include="server_export.h" />
-    <ClInclude Include="coroutine.h" />
-    <ClInclude Include="rules.h" />
-    <ClInclude Include="packet.h" />
-    <ClInclude Include="pool.h" />
-    <ClInclude Include="performance.h" />
-    <ClInclude Include="update.h" />
-    <ClInclude Include="bitset.h" />
-    <ClInclude Include="array.h" />
-    <ClInclude Include="entity.h" />
-    <ClInclude Include="address.h" />
+    <ClInclude Include="array.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="bitset.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="coroutine.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="list.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="performance.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="pool.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="pq.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="server_export.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="uint.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Network">
+      <UniqueIdentifier>{e49de4e5-4e2a-473f-8f64-fa53e524b9c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay">
+      <UniqueIdentifier>{ae153b2c-31cd-4bde-a455-538333b15782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{a8762f84-f2e6-4ddd-8c92-28354ab0100e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

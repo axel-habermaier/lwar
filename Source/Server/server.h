@@ -276,7 +276,7 @@ struct Collision {
     Vec x;
 };
 
-struct Client {
+typedef struct Client {
     List _l;
 
     Player player;
@@ -298,7 +298,7 @@ struct Client {
 
     /* count protocol violations */
     size_t misbehavior;
-};
+} Client;
 
 struct Connection {
 	char _[8];

@@ -8,22 +8,22 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders explosion effects into a 3D scene.
+	///     Renders explosion effects into a 3D scene.
 	/// </summary>
 	public class ExplosionRenderer : Renderer<Explosion>
 	{
 		/// <summary>
-		///   Gets the number of frames stored in the texture per dimension.
+		///     Gets the number of frames stored in the texture per dimension.
 		/// </summary>
 		private const int FrameCount = 8;
 
 		/// <summary>
-		///   The texture that is used to draw the explosion.
+		///     The texture that is used to draw the explosion.
 		/// </summary>
 		private Texture2D _texture;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -31,7 +31,7 @@
 		}
 
 		/// <summary>
-		///   Draws all registered 2D elements.
+		///     Draws all registered 2D elements.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
 		public override void Draw(SpriteBatch spriteBatch)
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

@@ -11,67 +11,67 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Represents the camera that is used to draw the game session.
+	///     Represents the camera that is used to draw the game session.
 	/// </summary>
 	public class GameCamera : Camera3D
 	{
 		/// <summary>
-		///   The maximum allowed distance to the XZ plane.
+		///     The maximum allowed distance to the XZ plane.
 		/// </summary>
 		private const float MaxZoom = 20000.0f;
 
 		/// <summary>
-		///   The minimum allowed distance to the XZ plane.
+		///     The minimum allowed distance to the XZ plane.
 		/// </summary>
 		private const float MinZoom = 1000.0f;
 
 		/// <summary>
-		///   The default distance to the XZ plane.
+		///     The default distance to the XZ plane.
 		/// </summary>
 		private const float DefaultZoom = 3000.0f;
 
 		/// <summary>
-		///   Determines how fast the zoom level changes when the user scrolls the mouse wheel.
+		///     Determines how fast the zoom level changes when the user scrolls the mouse wheel.
 		/// </summary>
 		private const float DeltaScale = 800.0f;
 
 		/// <summary>
-		///   Determines how fast the camera changes the distance to the XZ plane.
+		///     Determines how fast the camera changes the distance to the XZ plane.
 		/// </summary>
 		private const float ZoomChangeSpeed = 100.0f;
 
 		/// <summary>
-		///   The factor that is applied to the zoom value when the starfield zoom mode is selected.
+		///     The factor that is applied to the zoom value when the starfield zoom mode is selected.
 		/// </summary>
 		private const float StarfieldZoomFactor = 0.2f;
 
 		/// <summary>
-		///   The clock that is used to animate changes of the XZ plane distance.
+		///     The clock that is used to animate changes of the XZ plane distance.
 		/// </summary>
 		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
-		///   The input device that provides the input for the camera.
+		///     The input device that provides the input for the camera.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
-		///   The target distance to the XZ plane the camera is moving to.
+		///     The target distance to the XZ plane the camera is moving to.
 		/// </summary>
 		private float _targetZoom;
 
 		/// <summary>
-		///   The current distance to the XZ plane.
+		///     The current distance to the XZ plane.
 		/// </summary>
 		private float _zoom = DefaultZoom;
 
 		/// <summary>
-		///   The camera's current zoom mode.
+		///     The camera's current zoom mode.
 		/// </summary>
 		private ZoomMode _zoomMode = ZoomMode.Default;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		/// <param name="inputDevice">The input device that provides the input for the camera.</param>
@@ -89,12 +89,12 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the camera is currently active.
+		///     Gets or sets a value indicating whether the camera is currently active.
 		/// </summary>
 		public bool IsActive { get; set; }
 
 		/// <summary>
-		///   Gets the 2D position of the camera.
+		///     Gets the 2D position of the camera.
 		/// </summary>
 		public Vector2 Position2D
 		{
@@ -102,7 +102,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the camera's zoom mode.
+		///     Gets or sets the camera's zoom mode.
 		/// </summary>
 		public ZoomMode ZoomMode
 		{
@@ -118,12 +118,12 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the ship that the camera follows.
+		///     Gets or sets the ship that the camera follows.
 		/// </summary>
 		public Ship Ship { get; set; }
 
 		/// <summary>
-		///   Updates the camera.
+		///     Updates the camera.
 		/// </summary>
 		public void Update()
 		{
@@ -150,7 +150,7 @@
 		}
 
 		/// <summary>
-		///   Updates the camera's position.
+		///     Updates the camera's position.
 		/// </summary>
 		private void UpdatePosition()
 		{
@@ -174,7 +174,7 @@
 		}
 
 		/// <summary>
-		///   Converts the given screen coordinates to world coordinates.
+		///     Converts the given screen coordinates to world coordinates.
 		/// </summary>
 		/// <param name="screenCoordinates">The screen coordinates that should be converted to world coordinates.</param>
 		public Vector2 ToWorldCoordinates(Vector2 screenCoordinates)
@@ -216,7 +216,7 @@
 		}
 
 		/// <summary>
-		///   Converts the given world coordinates to screen coordinates.
+		///     Converts the given world coordinates to screen coordinates.
 		/// </summary>
 		/// <param name="worldCoordinates">The world coordinates that should be converted to screen coordinates.</param>
 		public Vector2 ToScreenCoodinates(Vector2 worldCoordinates)
@@ -236,7 +236,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -247,7 +247,7 @@
 		}
 
 		/// <summary>
-		///   Updates the camera's distance to the XZ plane.
+		///     Updates the camera's distance to the XZ plane.
 		/// </summary>
 		/// <param name="delta">The delta that should be applied to the camera's distance to the XZ plane.</param>
 		private void OnZoomChanged(int delta)

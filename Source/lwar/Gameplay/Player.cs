@@ -6,47 +6,47 @@
 	using Pegasus.Platform.Memory;
 
 	/// <summary>
-	///   Represents a player.
+	///     Represents a player.
 	/// </summary>
 	public class Player : PooledObject<Player>, IGenerationalIdentity
 	{
 		/// <summary>
-		///   Gets or sets the name of the player.
+		///     Gets or sets the name of the player.
 		/// </summary>
 		public string Name { get; set; }
 
 		/// <summary>
-		///   Gets or sets the player's ping.
+		///     Gets or sets the player's ping.
 		/// </summary>
 		public int Ping { get; set; }
 
 		/// <summary>
-		///   Gets or sets the number of kills that the player has scored.
+		///     Gets or sets the number of kills that the player has scored.
 		/// </summary>
 		public int Kills { get; set; }
 
 		/// <summary>
-		///   Gets or sets the number of deaths.
+		///     Gets or sets the number of deaths.
 		/// </summary>
 		public int Deaths { get; set; }
 
 		/// <summary>
-		///   Gets or sets the player's ship.
+		///     Gets or sets the player's ship.
 		/// </summary>
 		public Ship Ship { get; set; }
 
 		/// <summary>
-		///   Gets or sets a value indicating whether this player is the local one.
+		///     Gets or sets a value indicating whether this player is the local one.
 		/// </summary>
 		public bool IsLocalPlayer { get; set; }
 
 		/// <summary>
-		///   Gets the player's identifier.
+		///     Gets the player's identifier.
 		/// </summary>
 		public Identifier Identifier { get; private set; }
 
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="id">The identifier of the player.</param>
 		/// <param name="name">The name of the player.</param>
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{

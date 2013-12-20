@@ -3,32 +3,32 @@
 	using System;
 
 	/// <summary>
-	///   Represents an event message. Valid fields depend on the type of the events.
+	///     Represents an event message. Valid fields depend on the type of the events.
 	/// </summary>
 	public struct EventMessage
 	{
 		/// <summary>
-		///   The creation time of the message.
+		///     The creation time of the message.
 		/// </summary>
 		public double CreationTime;
 
 		/// <summary>
-		///   The chat message, new player name, or kick reason.
+		///     The chat message, new player name, or kick reason.
 		/// </summary>
 		public string Message;
 
 		/// <summary>
-		///   The player that scored the killed, joined, left, was kicked, timed out, was renamed, or sent the chat message.
+		///     The player that scored the killed, joined, left, was kicked, timed out, was renamed, or sent the chat message.
 		/// </summary>
 		public Player Player;
 
 		/// <summary>
-		///   The player that has been killed or committed suicide.
+		///     The player that has been killed or committed suicide.
 		/// </summary>
 		public Player Vicitim;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="type">The type of the event message.</param>
 		public EventMessage(EventType type)
@@ -38,17 +38,17 @@
 		}
 
 		/// <summary>
-		///   The type of the event message.
+		///     The type of the event message.
 		/// </summary>
 		public EventType Type { get; private set; }
 
 		/// <summary>
-		///   The display string of the event message.
+		///     The display string of the event message.
 		/// </summary>
 		public string DisplayString { get; private set; }
 
 		/// <summary>
-		///   Generates the display string for the event message.
+		///     Generates the display string for the event message.
 		/// </summary>
 		public void GenerateDisplayString()
 		{

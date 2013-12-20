@@ -9,39 +9,39 @@
 	using Scripting;
 
 	/// <summary>
-	///   Stores event messages such as 'X killed Y' or received chat messages. Messages are removed from the list
-	///   automatically.
+	///     Stores event messages such as 'X killed Y' or received chat messages. Messages are removed from the list
+	///     automatically.
 	/// </summary>
 	public class EventMessageList : DisposableObject
 	{
 		/// <summary>
-		///   The list capacity determines the maximum number of stored event messages.
+		///     The list capacity determines the maximum number of stored event messages.
 		/// </summary>
 		public const int Capacity = 16;
 
 		/// <summary>
-		///   The clock that is used to determine when messages should be removed from the list.
+		///     The clock that is used to determine when messages should be removed from the list.
 		/// </summary>
 		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
-		///   The game session that generates the event messages.
+		///     The game session that generates the event messages.
 		/// </summary>
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///   The event messages. The array is always compacted such that is has no holes. New messages are added at the first free
-		///   index. The order of the messages in the list is always preserved.
+		///     The event messages. The array is always compacted such that is has no holes. New messages are added at the first free
+		///     index. The order of the messages in the list is always preserved.
 		/// </summary>
 		private readonly EventMessage[] _messages = new EventMessage[Capacity];
 
 		/// <summary>
-		///   The index of the first free message slot.
+		///     The index of the first free message slot.
 		/// </summary>
 		private int _index;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session that generates the event messages.</param>
 		public EventMessageList(GameSession gameSession)
@@ -51,12 +51,12 @@
 		}
 
 		/// <summary>
-		///   Enables or disables the event messages. When disabled, added event messages are ignored.
+		///     Enables or disables the event messages. When disabled, added event messages are ignored.
 		/// </summary>
 		public bool Enabled { get; set; }
 
 		/// <summary>
-		///   Gets the event message stored at the given index.
+		///     Gets the event message stored at the given index.
 		/// </summary>
 		/// <param name="index">The index of the event message that should be returned.</param>
 		public EventMessage this[int index]
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Gets the number of active event messages.
+		///     Gets the number of active event messages.
 		/// </summary>
 		public int Count
 		{
@@ -77,7 +77,7 @@
 		}
 
 		/// <summary>
-		///   Adds a chat message to the event list.
+		///     Adds a chat message to the event list.
 		/// </summary>
 		/// <param name="player">The identifier of the player that sent the chat message.</param>
 		/// <param name="chatMessage">The chat message that has been sent.</param>
@@ -91,7 +91,7 @@
 		}
 
 		/// <summary>
-		///   Adds a player joined message to the event list.
+		///     Adds a player joined message to the event list.
 		/// </summary>
 		/// <param name="player">The identifier of the player that has joined the session.</param>
 		public void AddJoinMessage(Identifier player)
@@ -102,7 +102,7 @@
 		}
 
 		/// <summary>
-		///   Adds a player left message to the event list.
+		///     Adds a player left message to the event list.
 		/// </summary>
 		/// <param name="player">The identifier of the player that has left the session.</param>
 		public void AddLeaveMessage(Identifier player)
@@ -113,7 +113,7 @@
 		}
 
 		/// <summary>
-		///   Adds a player kicked message to the event list.
+		///     Adds a player kicked message to the event list.
 		/// </summary>
 		/// <param name="player">The identifier of the player that has been kicked from the session.</param>
 		/// <param name="reason">The reason for the kick.</param>
@@ -125,7 +125,7 @@
 		}
 
 		/// <summary>
-		///   Adds a player timed out message to the event list.
+		///     Adds a player timed out message to the event list.
 		/// </summary>
 		/// <param name="player">The identifier of the player that has timed out.</param>
 		public void AddTimeoutMessage(Identifier player)
@@ -136,7 +136,7 @@
 		}
 
 		/// <summary>
-		///   Adds a kill message to the event list.
+		///     Adds a kill message to the event list.
 		/// </summary>
 		/// <param name="killer">The identifier of the player that has scored the kill.</param>
 		/// <param name="victim">The identifier of the player that has been killed.</param>
@@ -156,7 +156,7 @@
 		}
 
 		/// <summary>
-		///   Adds a player name change message to the event list.
+		///     Adds a player name change message to the event list.
 		/// </summary>
 		/// <param name="player">The identifier of the player that has changed the name.</param>
 		/// <param name="name">The new player name.</param>
@@ -175,7 +175,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -183,7 +183,7 @@
 		}
 
 		/// <summary>
-		///   Updates the list, removing all messages that have timed out.
+		///     Updates the list, removing all messages that have timed out.
 		/// </summary>
 		public void Update()
 		{
@@ -201,8 +201,8 @@
 		}
 
 		/// <summary>
-		///   Tries to get the player instance for the player with the given identifier. Returns false if the player could not be
-		///   found.
+		///     Tries to get the player instance for the player with the given identifier. Returns false if the player could not be
+		///     found.
 		/// </summary>
 		/// <param name="playerId">The identifier of the player instance that should be returned.</param>
 		/// <param name="player">Returns the player instance, if found.</param>
@@ -213,7 +213,7 @@
 		}
 
 		/// <summary>
-		///   Adds the given event message to the list.
+		///     Adds the given event message to the list.
 		/// </summary>
 		/// <param name="message">The message that should be added.</param>
 		private void Add(EventMessage message)
@@ -237,7 +237,7 @@
 		}
 
 		/// <summary>
-		///   Removes the event message at the given index and compacts the list.
+		///     Removes the event message at the given index and compacts the list.
 		/// </summary>
 		/// <param name="index">The index of the message that should be removed.</param>
 		private void Remove(int index)
@@ -249,7 +249,7 @@
 		}
 
 		/// <summary>
-		///   Finds the index of the oldest message.
+		///     Finds the index of the oldest message.
 		/// </summary>
 		private int FindOldest()
 		{

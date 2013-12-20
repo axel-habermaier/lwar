@@ -1,7 +1,6 @@
-using System;
-
 namespace Lwar.Screens
 {
+	using System;
 	using System.Linq;
 	using Assets;
 	using Gameplay;
@@ -17,42 +16,42 @@ namespace Lwar.Screens
 	using Scripting;
 
 	/// <summary>
-	///   Displays the score board.
+	///     Displays the score board.
 	/// </summary>
 	public class Scoreboard : DisposableObject
 	{
 		/// <summary>
-		///   The frame around the scoreboard.
+		///     The frame around the scoreboard.
 		/// </summary>
 		private readonly Frame _frame = new Frame();
 
 		/// <summary>
-		///   The game session that is played.
+		///     The game session that is played.
 		/// </summary>
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///   The input device that is used to check for user input.
+		///     The input device that is used to check for user input.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
-		///   The rows that show the stats of all active players.
+		///     The rows that show the stats of all active players.
 		/// </summary>
 		private readonly Row[] _rows = new Row[Specification.MaxPlayers];
 
 		/// <summary>
-		///   The input that causes the scoreboard to be shown.
+		///     The input that causes the scoreboard to be shown.
 		/// </summary>
 		private readonly LogicalInput _showScoreboard = new LogicalInput(Cvars.InputShowScoreboardCvar, InputLayers.Game);
 
 		/// <summary>
-		///   The header row that shows a label for each column.
+		///     The header row that shows a label for each column.
 		/// </summary>
 		private Row _header;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="inputDevice">The input device that should be used to check for user input.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
@@ -76,7 +75,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Updates the scoreboard.
+		///     Updates the scoreboard.
 		/// </summary>
 		/// <param name="size">The size of the window.</param>
 		public void Update(Size size)
@@ -112,7 +111,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the scoreboard.
+		///     Draws the scoreboard.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		public void Draw(SpriteBatch spriteBatch)
@@ -136,7 +135,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -148,42 +147,42 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Represents a row of the scoreboard.
+		///     Represents a row of the scoreboard.
 		/// </summary>
 		private struct Row
 		{
 			/// <summary>
-			///   Determines the spacing between two columns.
+			///     Determines the spacing between two columns.
 			/// </summary>
 			private const int ColumnSpan = 30;
 
 			/// <summary>
-			///   Determines the spacing between two rows.
+			///     Determines the spacing between two rows.
 			/// </summary>
 			public const int RowSpan = 5;
 
 			/// <summary>
-			///   The label that shows how often the player has died.
+			///     The label that shows how often the player has died.
 			/// </summary>
 			private readonly Label _deaths;
 
 			/// <summary>
-			///   The label that shows the number of kills the player has scored.
+			///     The label that shows the number of kills the player has scored.
 			/// </summary>
 			private readonly Label _kills;
 
 			/// <summary>
-			///   The label that shows the name of the player.
+			///     The label that shows the name of the player.
 			/// </summary>
 			private readonly Label _name;
 
 			/// <summary>
-			///   The label that shows the player's ping.
+			///     The label that shows the player's ping.
 			/// </summary>
 			private readonly Label _ping;
 
 			/// <summary>
-			///   Initializes a new instance.
+			///     Initializes a new instance.
 			/// </summary>
 			/// <param name="font">The font that should be used to draw the row.</param>
 			public Row(Font font)
@@ -208,22 +207,22 @@ namespace Lwar.Screens
 			}
 
 			/// <summary>
-			///   Gets or sets a value indicating whether the row is visible.
+			///     Gets or sets a value indicating whether the row is visible.
 			/// </summary>
 			public bool Visible { get; set; }
 
 			/// <summary>
-			///   Gets the total width of the row.
+			///     Gets the total width of the row.
 			/// </summary>
 			public int Width { get; private set; }
 
 			/// <summary>
-			///   Gets the total height of the row.
+			///     Gets the total height of the row.
 			/// </summary>
 			public int Height { get; private set; }
 
 			/// <summary>
-			///   Disposes the row, releasing all labels.
+			///     Disposes the row, releasing all labels.
 			/// </summary>
 			public void Dispose()
 			{
@@ -234,7 +233,7 @@ namespace Lwar.Screens
 			}
 
 			/// <summary>
-			///   Creates the header row.
+			///     Creates the header row.
 			/// </summary>
 			/// <param name="font">The font that should be used to draw the header.</param>
 			public static Row CreateHeader(Font font)
@@ -253,7 +252,7 @@ namespace Lwar.Screens
 			}
 
 			/// <summary>
-			///   Updates the layout of the row.
+			///     Updates the layout of the row.
 			/// </summary>
 			/// <param name="offset">The offset that should be applied to the position of the row.</param>
 			public void UpdateLayout(Vector2i offset)
@@ -269,7 +268,7 @@ namespace Lwar.Screens
 			}
 
 			/// <summary>
-			///   Updates the row's contents with the given player's stats.
+			///     Updates the row's contents with the given player's stats.
 			/// </summary>
 			/// <param name="player">The player whose stats should be shown.</param>
 			public void UpdateContents(Player player)
@@ -284,7 +283,7 @@ namespace Lwar.Screens
 			}
 
 			/// <summary>
-			///   Draws the row.
+			///     Draws the row.
 			/// </summary>
 			/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 			public void Draw(SpriteBatch spriteBatch)
@@ -299,12 +298,12 @@ namespace Lwar.Screens
 			}
 
 			/// <summary>
-			///   Changes the area of the given label.
+			///     Changes the area of the given label.
 			/// </summary>
 			/// <param name="label">The label whose area should be changed.</param>
 			/// <param name="offsetX">
-			///   The offset in X-direction that should be applied to the label. The offset is increased by the
-			///   width of the label and the colum span.
+			///     The offset in X-direction that should be applied to the label. The offset is increased by the
+			///     width of the label and the column span.
 			/// </param>
 			/// <param name="offsetY">The offset in Y-direction that should be applied to the label.</param>
 			private static void ChangeArea(Label label, ref int offsetX, int offsetY)
@@ -315,4 +314,3 @@ namespace Lwar.Screens
 		}
 	}
 }
-

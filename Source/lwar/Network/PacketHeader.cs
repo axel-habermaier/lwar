@@ -6,12 +6,12 @@
 	using Pegasus.Platform.Memory;
 
 	/// <summary>
-	///   Represents the header of a packet.
+	///     Represents the header of a packet.
 	/// </summary>
 	public struct PacketHeader
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="acknowledgement">The acknowledged sequence number of the packet.</param>
 		/// <param name="timestamp">The timestamp of the unreliable messages contained within the packet.</param>
@@ -23,17 +23,17 @@
 		}
 
 		/// <summary>
-		///   Gets the acknowledged sequence number of the packet.
+		///     Gets the acknowledged sequence number of the packet.
 		/// </summary>
 		public uint Acknowledgement { get; private set; }
 
 		/// <summary>
-		///   Gets the timestamp of the unreliable messages contained within the packet.
+		///     Gets the timestamp of the unreliable messages contained within the packet.
 		/// </summary>
 		public uint Timestamp { get; private set; }
 
 		/// <summary>
-		///   Initializes a new instance from a buffer.
+		///     Initializes a new instance from a buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the header data should be read from.</param>
 		public static PacketHeader? Create(BufferReader buffer)
@@ -60,7 +60,7 @@
 		}
 
 		/// <summary>
-		///   Writes the header into the given buffer.
+		///     Writes the header into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the header should be written into.</param>
 		public void Write(BufferWriter buffer)

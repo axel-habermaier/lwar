@@ -7,43 +7,43 @@ namespace Lwar.Network.Messages
 	using Pegasus;
 
 	/// <summary>
-	///   Holds the payload of a Selection message.
+	///     Holds the payload of a Selection message.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct SelectionMessage
 	{
 		/// <summary>
-		///   The player whose ship and weapons types are changed.
+		///     The player whose ship and weapons types are changed.
 		/// </summary>
 		public Identifier Player;
 
 		/// <summary>
-		///   The selected ship type.
+		///     The selected ship type.
 		/// </summary>
 		public EntityType ShipType;
 
 		/// <summary>
-		///   The selected weapon type for the first weapon slot.
+		///     The selected weapon type for the first weapon slot.
 		/// </summary>
 		public EntityType WeaponType1;
 
 		/// <summary>
-		///   The selected weapon type for the second weapon slot.
+		///     The selected weapon type for the second weapon slot.
 		/// </summary>
 		public EntityType WeaponType2;
 
 		/// <summary>
-		///   The selected weapon type for the third weapon slot.
+		///     The selected weapon type for the third weapon slot.
 		/// </summary>
 		public EntityType WeaponType3;
 
 		/// <summary>
-		///   The selected weapon type for the fourth weapon slot.
+		///     The selected weapon type for the fourth weapon slot.
 		/// </summary>
 		public EntityType WeaponType4;
 
 		/// <summary>
-		///   Creates a message that instructs the server to change the ship and weapon types of the given player.
+		///     Creates a message that instructs the server to change the ship and weapon types of the given player.
 		/// </summary>
 		/// <param name="player">The player whose ship and weapon types should be changed.</param>
 		/// <param name="ship">The new ship type.</param>

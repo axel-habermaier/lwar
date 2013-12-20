@@ -1,7 +1,6 @@
-using System;
-
 namespace Lwar.Screens
 {
+	using System;
 	using System.Net;
 	using Gameplay;
 	using Gameplay.Entities;
@@ -17,69 +16,69 @@ namespace Lwar.Screens
 	using Scripting;
 
 	/// <summary>
-	///   Displays the entities of a game session.
+	///     Displays the entities of a game session.
 	/// </summary>
 	public class Level : Screen
 	{
 		/// <summary>
-		///   The network session that synchronizes the game state between the client and the server.
+		///     The network session that synchronizes the game state between the client and the server.
 		/// </summary>
 		private readonly NetworkSession _networkSession;
 
 		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
 
 		/// <summary>
-		///   The timer that is used to send user input to the server.
+		///     The timer that is used to send user input to the server.
 		/// </summary>
 		private readonly Timer _timer = Timer.Create(1000.0 / Specification.InputUpdateFrequency);
 
 		/// <summary>
-		///   Manages the game and debug cameras.
+		///     Manages the game and debug cameras.
 		/// </summary>
 		private CameraManager _cameraManager;
 
 		/// <summary>
-		///   The chat input that allows the user to send chat messages to all players of the current session.
+		///     The chat input that allows the user to send chat messages to all players of the current session.
 		/// </summary>
 		private ChatInput _chatInput;
 
 		/// <summary>
-		///   Displays the session's event messages to the user.
+		///     Displays the session's event messages to the user.
 		/// </summary>
 		private EventMessageDisplay _eventMessage;
 
 		/// <summary>
-		///   The game session that is played.
+		///     The game session that is played.
 		/// </summary>
 		private GameSession _gameSession;
 
 		/// <summary>
-		///   Manages the input provided by the user.
+		///     Manages the input provided by the user.
 		/// </summary>
 		private InputManager _inputManager;
 
 		/// <summary>
-		///   The message dispatcher that is used to dispatch messages received from the server.
+		///     The message dispatcher that is used to dispatch messages received from the server.
 		/// </summary>
 		private MessageDispatcher _messageDispatcher;
 
 		/// <summary>
-		///   The render context that is used to render the game session.
+		///     The render context that is used to render the game session.
 		/// </summary>
 		private RenderContext _renderContext;
 
 		/// <summary>
-		///   The scoreboard that displays the scores of the current session.
+		///     The scoreboard that displays the scores of the current session.
 		/// </summary>
 		private Scoreboard _scoreboard;
 
 		/// <summary>
-		///   Indicates whether the user input should be sent to the server during the next update cycle.
+		///     Indicates whether the user input should be sent to the server during the next update cycle.
 		/// </summary>
 		private bool _sendInput;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public Level(IPEndPoint serverEndPoint)
@@ -94,7 +93,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -120,7 +119,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Initializes the screen.
+		///     Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -144,7 +143,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Updates the screen.
+		///     Updates the screen.
 		/// </summary>
 		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
@@ -198,7 +197,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the screen.
+		///     Draws the screen.
 		/// </summary>
 		/// <param name="output">The output that the screen should render to.</param>
 		public override void Draw(RenderOutput output)
@@ -212,7 +211,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the app screen.
+		///     Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)
@@ -224,7 +223,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Sends the input to the server, if required.
+		///     Sends the input to the server, if required.
 		/// </summary>
 		private void SendInput()
 		{
@@ -243,7 +242,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Ensures that the user input is sent to the server during the next input cycle.
+		///     Ensures that the user input is sent to the server during the next input cycle.
 		/// </summary>
 		private void SendInputTimeout()
 		{
@@ -251,7 +250,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Invoked when the local player changed his or her name.
+		///     Invoked when the local player changed his or her name.
 		/// </summary>
 		/// <param name="name">The previous name of the local player.</param>
 		private void OnPlayerNameChanged(string name)
@@ -260,7 +259,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Invoked when the local player entered a chat message.
+		///     Invoked when the local player entered a chat message.
 		/// </summary>
 		/// <param name="message">The message that the local player wants to send.</param>
 		private void OnSay(string message)
@@ -269,4 +268,3 @@ namespace Lwar.Screens
 		}
 	}
 }
-

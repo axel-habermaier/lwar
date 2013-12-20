@@ -10,24 +10,24 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders bullets into a 3D scene.
+	///     Renders bullets into a 3D scene.
 	/// </summary>
 	public class BulletRenderer : Renderer<Bullet>
 	{
 		/// <summary>
-		///   The effect that is used to draw the bullets.
+		///     The effect that is used to draw the bullets.
 		/// </summary>
 		private TexturedQuadEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the bullets.
+		///     The model that is used to draw the bullets.
 		/// </summary>
 		private Model _model;
 
 		private Texture2D _texture, _texture2;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -39,7 +39,7 @@
 		}
 
 		/// <summary>
-		///   Draws all registered 2D elements.
+		///     Draws all registered 2D elements.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
 		public override void Draw(SpriteBatch spriteBatch)
@@ -65,7 +65,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

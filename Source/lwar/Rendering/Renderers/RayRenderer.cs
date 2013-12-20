@@ -10,24 +10,24 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders rays into a 3D scene.
+	///     Renders rays into a 3D scene.
 	/// </summary>
 	public class RayRenderer : Renderer<Ray>
 	{
 		/// <summary>
-		///   The effect that is used to draw the rays.
+		///     The effect that is used to draw the rays.
 		/// </summary>
 		private TexturedQuadEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the rays.
+		///     The model that is used to draw the rays.
 		/// </summary>
 		private Model _model;
 
 		private Texture2D _texture, _texture2;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -39,7 +39,7 @@
 		}
 
 		/// <summary>
-		///   Draws all rays.
+		///     Draws all rays.
 		/// </summary>
 		/// <param name="output">The output that the rays should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -61,7 +61,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

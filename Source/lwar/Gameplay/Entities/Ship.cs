@@ -6,22 +6,22 @@
 	using Pegasus.Math;
 
 	/// <summary>
-	///   Represents a ship that is controlled by a local or remote player.
+	///     Represents a ship that is controlled by a local or remote player.
 	/// </summary>
 	public class Ship : Entity<Ship>
 	{
 		/// <summary>
-		///   Gets or sets the player the ship belongs to.
+		///     Gets or sets the player the ship belongs to.
 		/// </summary>
 		public Player Player { get; private set; }
 
 		/// <summary>
-		///   The health of the ship.
+		///     The health of the ship.
 		/// </summary>
 		public int Health { get; private set; }
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="position">The updated entity position.</param>
 		/// <param name="rotation">The updated entity rotation.</param>
@@ -33,7 +33,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the entity collided another entity.
+		///     Invoked when the entity collided another entity.
 		/// </summary>
 		/// <param name="other">The other entity this instance collided with.</param>
 		/// <param name="impact">The position of the impact.</param>
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the actor is removed from the game session.
+		///     Invoked when the actor is removed from the game session.
 		/// </summary>
 		/// <remarks>This method is not called when the game session is shut down.</remarks>
 		protected override void OnRemoved()
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the ship.</param>
 		/// <param name="player">The player the ship belongs to.</param>
@@ -72,7 +72,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{

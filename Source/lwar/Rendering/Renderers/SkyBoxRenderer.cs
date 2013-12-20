@@ -10,22 +10,22 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders a skybox.
+	///     Renders a skybox.
 	/// </summary>
 	public class SkyboxRenderer : DisposableObject
 	{
 		/// <summary>
-		///   The effect that is used to draw the skybox.
+		///     The effect that is used to draw the skybox.
 		/// </summary>
 		private readonly SkyboxEffect _effect;
 
 		/// <summary>
-		///   The skybox model.
+		///     The skybox model.
 		/// </summary>
 		private readonly Model _model;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
@@ -41,7 +41,7 @@
 		}
 
 		/// <summary>
-		///   Draws the skybox.
+		///     Draws the skybox.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public void Draw(RenderOutput output)
@@ -50,7 +50,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

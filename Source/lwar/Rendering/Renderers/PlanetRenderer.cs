@@ -9,17 +9,17 @@
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders planets into a 3D scene.
+	///     Renders planets into a 3D scene.
 	/// </summary>
 	public class PlanetRenderer : Renderer<Planet>
 	{
 		/// <summary>
-		///   The effect that is used to draw the planets.
+		///     The effect that is used to draw the planets.
 		/// </summary>
 		private SphereEffect _effect;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -27,7 +27,7 @@
 		}
 
 		/// <summary>
-		///   Draws all planets.
+		///     Draws all planets.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -46,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Draws all registered 2D elements.
+		///     Draws all registered 2D elements.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
 		public override void Draw(SpriteBatch spriteBatch)
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

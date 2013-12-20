@@ -18,5 +18,5 @@ typedef struct Address {
 bool address_create(Address *adr, const char *ip, uint16_t port);
 bool address_eq(Address *adr0, Address *adr1);
 
-static const Address address_none = {{}, 0,0};
+static const Address address_none = {{0}, 0,0};
 extern Address address_multicast;
