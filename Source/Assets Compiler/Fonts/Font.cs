@@ -1,40 +1,40 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Fonts
+﻿namespace Pegasus.AssetsCompiler.Fonts
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
-	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a typeface in a given style.
+	///     Represents a typeface in a given style.
 	/// </summary>
 	internal class Font : DisposableObject
 	{
 		/// <summary>
-		///   The native freetype font instance.
+		///     The native freetype font instance.
 		/// </summary>
 		private readonly FreeType.Face _font;
 
 		/// <summary>
-		///   The native freetype font instance pointer.
+		///     The native freetype font instance pointer.
 		/// </summary>
 		private readonly IntPtr _fontPtr;
 
 		/// <summary>
-		///   The printable ASCII-glyphs.
+		///     The printable ASCII-glyphs.
 		/// </summary>
 		private readonly List<Glyph> _glyphs = new List<Glyph>();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The native freetype font instance.</param>
 		/// <param name="size">The size (in pixels) of the characters.</param>
+		/// <param name="bold">Indicates whether the font weight should be bold.</param>
+		/// <param name="italic">Indicates whether the font should be italic.</param>
 		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyphs.</param>
-		public Font(IntPtr font, int size, RenderMode renderMode)
+		public Font(IntPtr font, int size, bool bold, bool italic, RenderMode renderMode)
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.InRange(renderMode);
@@ -53,7 +53,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Gets the line height of the font.
+		///     Gets the line height of the font.
 		/// </summary>
 		public ushort LineHeight
 		{
@@ -65,7 +65,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Gets the base line offset for the font.
+		///     Gets the base line offset for the font.
 		/// </summary>
 		public ushort Baseline
 		{
@@ -77,7 +77,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the font provides kerning information.
+		///     Gets a value indicating whether the font provides kerning information.
 		/// </summary>
 		public bool HasKerning
 		{
@@ -85,7 +85,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Gets the printable ASCII-glyphs.
+		///     Gets the printable ASCII-glyphs.
 		/// </summary>
 		public IEnumerable<Glyph> Glyphs
 		{
@@ -93,7 +93,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Adds the glyph for the given character.
+		///     Adds the glyph for the given character.
 		/// </summary>
 		/// <param name="character">The character whose corresponding glyph should be added.</param>
 		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyph.</param>
@@ -115,7 +115,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Gets the kerning offset (in X direction) for the two glyphs.
+		///     Gets the kerning offset (in X direction) for the two glyphs.
 		/// </summary>
 		/// <param name="left">The left glyph.</param>
 		/// <param name="right">The right glyph.</param>
@@ -130,7 +130,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

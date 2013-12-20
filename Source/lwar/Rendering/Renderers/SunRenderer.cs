@@ -1,18 +1,17 @@
-﻿using System;
-
-namespace Lwar.Rendering.Renderers
+﻿namespace Lwar.Rendering.Renderers
 {
+	using System;
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Math;
+	using Pegasus.Platform;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders suns into a 3D scene.
+	///     Renders suns into a 3D scene.
 	/// </summary>
 	public class SunRenderer : Renderer<Sun>
 	{
@@ -20,24 +19,19 @@ namespace Lwar.Rendering.Renderers
 		private GaussianBlur _blur;
 
 		/// <summary>
-		///   The render target that is used to draw the sun effect.
+		///     The render target that is used to draw the sun effect.
 		/// </summary>
 		private RenderTarget _effectTarget;
 
 		/// <summary>
-		///   The texture that is bound to the effect render target.
-		/// </summary>
-		private Texture2D _effectTexture;
-
-		/// <summary>
-		///   The full-screen quad that is used to draw the sun special effects.
+		///     The full-screen quad that is used to draw the sun special effects.
 		/// </summary>
 		private FullscreenQuad _fullscreenQuad;
 
 		private RenderOutput _heatOutput;
 
 		/// <summary>
-		///   The sun model.
+		///     The sun model.
 		/// </summary>
 		private Model _model;
 
@@ -49,7 +43,7 @@ namespace Lwar.Rendering.Renderers
 		private SunEffect _sunEffect;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -57,7 +51,7 @@ namespace Lwar.Rendering.Renderers
 			var turbulence = Assets.LoadCubeMap(Textures.SunHeatCubemap);
 			var heat = Assets.LoadTexture2D(Textures.Heat);
 
-			_model = Model.CreateSphere(GraphicsDevice, Templates.Sun.Radius, 20);
+			_model = Model.CreateSphere(GraphicsDevice, EntityTemplates.Sun.Radius, 20);
 			_sphereEffect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };
 
 			_sunEffect = new SunEffect(GraphicsDevice, Assets)
@@ -69,20 +63,20 @@ namespace Lwar.Rendering.Renderers
 			var w = 640;
 			var h = 360;
 			var flags = TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget;
-			_effectTexture = new Texture2D(GraphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
-			_effectTexture.SetName("SunRenderer.EffectTexture");
+			var effectTexture = new Texture2D(GraphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
+			effectTexture.SetName("SunRenderer.EffectTexture");
 
-			_effectTarget = new RenderTarget(GraphicsDevice, null, _effectTexture);
+			_effectTarget = new RenderTarget(GraphicsDevice, null, effectTexture);
 			_heatOutput = new RenderOutput(GraphicsDevice) { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, w, h) };
 
 			_fullscreenQuad = new FullscreenQuad(GraphicsDevice, Assets);
 			_quadEffect = new TexturedQuadEffect(GraphicsDevice, Assets) { World = Matrix.Identity };
 
-			_blur = new GaussianBlur(GraphicsDevice, Assets, _effectTexture);
+			_blur = new GaussianBlur(GraphicsDevice, Assets, effectTexture);
 		}
 
 		/// <summary>
-		///   Draws all suns.
+		///     Draws all suns.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -119,7 +113,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{
@@ -128,7 +122,6 @@ namespace Lwar.Rendering.Renderers
 			_sphereEffect.SafeDispose();
 			_quadEffect.SafeDispose();
 			_model.SafeDispose();
-			_effectTexture.SafeDispose();
 			_effectTarget.SafeDispose();
 			_fullscreenQuad.SafeDispose();
 			_heatOutput.SafeDispose();

@@ -1,26 +1,25 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
 	using System.Collections.Generic;
 	using Gameplay.Entities;
 	using Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
-	///   Serializes and deserializes messages from and to buffers.
+	///     Serializes and deserializes messages from and to buffers.
 	/// </summary>
 	public static class MessageSerialization
 	{
 		/// <summary>
-		///   A cached list instance that is used to return multiple deserialized messages.
+		///     A cached list instance that is used to return multiple deserialized messages.
 		/// </summary>
 		private static readonly List<Message> Messages = new List<Message>();
 
 		/// <summary>
-		///   Serializes the message into the buffer.
+		///     Serializes the message into the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer into which the message should be serialized.</param>
 		/// <param name="message">The message that should be serialized.</param>
@@ -93,10 +92,10 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Deserializes a message or messages from the buffer and enqueues them in a list. For some message types sent by the
-		///   server, several Message instances are placed in the list (for instance, the Update message sent by the server
-		///   is deserialized into one update message per updated entity). The returned list remains valid only until the next call
-		///   to this method.
+		///     Deserializes a message or messages from the buffer and enqueues them in a list. For some message types sent by the
+		///     server, several Message instances are placed in the list (for instance, the Update message sent by the server
+		///     is deserialized into one update message per updated entity). The returned list remains valid only until the next call
+		///     to this method.
 		/// </summary>
 		/// <param name="buffer">The buffer from which the message should be deserialized.</param>
 		public static List<Message> Deserialize(BufferReader buffer)

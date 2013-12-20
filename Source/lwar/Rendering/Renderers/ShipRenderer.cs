@@ -1,41 +1,40 @@
-﻿using System;
-
-namespace Lwar.Rendering.Renderers
+﻿namespace Lwar.Rendering.Renderers
 {
+	using System;
 	using System.Collections.Generic;
 	using Assets;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Network;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
-	using Pegasus.Framework.Rendering.UserInterface;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
+	using Pegasus.Rendering.UserInterface;
 
 	/// <summary>
-	///   Renders ships into a 3D scene.
+	///     Renders ships into a 3D scene.
 	/// </summary>
 	public class ShipRenderer : Renderer<Ship>
 	{
 		/// <summary>
-		///   The names that are shown with the ships.
+		///     The names that are shown with the ships.
 		/// </summary>
 		private readonly List<PlayerName> _names = new List<PlayerName>(Specification.MaxPlayers);
 
 		/// <summary>
-		///   The font that is used to draw the player names below the ships.
+		///     The font that is used to draw the player names below the ships.
 		/// </summary>
 		private Font _font;
 
 		/// <summary>
-		///   The texture that is used to draw the ship.
+		///     The texture that is used to draw the ship.
 		/// </summary>
 		private Texture2D _texture;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -44,7 +43,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Draws all registered 2D elements.
+		///     Draws all registered 2D elements.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
 		public override void Draw(SpriteBatch spriteBatch)
@@ -57,7 +56,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Draws the user interface elements.
+		///     Draws the user interface elements.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		/// <param name="camera">The camera that is used to draw the scene.</param>
@@ -155,7 +154,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Invoked when an element has been added to the renderer.
+		///     Invoked when an element has been added to the renderer.
 		/// </summary>
 		/// <param name="ship">The ship that has been added.</param>
 		protected override void OnAdded(Ship ship)
@@ -164,7 +163,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Invoked when an element has been removed from the renderer.
+		///     Invoked when an element has been removed from the renderer.
 		/// </summary>
 		/// <param name="ship">The ship that has been removed.</param>
 		/// <param name="index">The index of the ship that has been removed.</param>
@@ -177,7 +176,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{
@@ -186,32 +185,32 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Represents the name of a player that is shown below the player's ship.
+		///     Represents the name of a player that is shown below the player's ship.
 		/// </summary>
 		private struct PlayerName
 		{
 			/// <summary>
-			///   The font that is used to draw the player name.
+			///     The font that is used to draw the player name.
 			/// </summary>
 			private readonly Font _font;
 
 			/// <summary>
-			///   The player whose name is shown.
+			///     The player whose name is shown.
 			/// </summary>
 			private readonly Player _player;
 
 			/// <summary>
-			///   The area occupied by the player name.
+			///     The area occupied by the player name.
 			/// </summary>
 			public Rectangle Area;
 
 			/// <summary>
-			///   The name of the player.
+			///     The name of the player.
 			/// </summary>
 			public Text Name;
 
 			/// <summary>
-			///   Initializes a new instance.
+			///     Initializes a new instance.
 			/// </summary>
 			/// <param name="font">The font that should be used to draw the player name.</param>
 			/// <param name="player">The player whose name should be shown.</param>
@@ -226,7 +225,7 @@ namespace Lwar.Rendering.Renderers
 			}
 
 			/// <summary>
-			///   Updates the player name, if the name has changed.
+			///     Updates the player name, if the name has changed.
 			/// </summary>
 			public void Update()
 			{
@@ -239,7 +238,7 @@ namespace Lwar.Rendering.Renderers
 			}
 
 			/// <summary>
-			///   Disposes the player name.
+			///     Disposes the player name.
 			/// </summary>
 			public void Dispose()
 			{

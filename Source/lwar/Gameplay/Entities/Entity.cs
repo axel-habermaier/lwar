@@ -1,25 +1,24 @@
-﻿using System;
-
-namespace Lwar.Gameplay.Entities
+﻿namespace Lwar.Gameplay.Entities
 {
+	using System;
 	using Actors;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
+	using Pegasus;
+	using Pegasus.Math;
 
 	/// <summary>
-	///   Represents an entity, a special form of an actor that is synchronized with and under control of the server.
+	///     Represents an entity, a special form of an actor that is synchronized with and under control of the server.
 	/// </summary>
 	/// <typeparam name="TEntity">The actual entity type.</typeparam>
 	public abstract class Entity<TEntity> : Actor<TEntity>, IEntity
 		where TEntity : Entity<TEntity>, new()
 	{
 		/// <summary>
-		///   Gets the template defining some of the entity's properties.
+		///     Gets the template defining some of the entity's properties.
 		/// </summary>
-		public Template Template { get; protected set; }
+		public EntityTemplate Template { get; protected set; }
 
 		/// <summary>
-		///   Gets or sets the entity's position relative to its parent.
+		///     Gets or sets the entity's position relative to its parent.
 		/// </summary>
 		public Vector2 Position
 		{
@@ -28,7 +27,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Gets or sets the entity's rotation relative to its parent.
+		///     Gets or sets the entity's rotation relative to its parent.
 		/// </summary>
 		public float Rotation
 		{
@@ -42,12 +41,12 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Gets or sets the generational identifier of the entity.
+		///     Gets or sets the generational identifier of the entity.
 		/// </summary>
 		public Identifier Identifier { get; protected set; }
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="position">The updated entity position.</param>
 		public virtual void RemoteUpdate(Vector2 position)
@@ -56,7 +55,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="position">The updated entity position.</param>
 		/// <param name="rotation">The updated entity rotation.</param>
@@ -68,7 +67,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="center">The updated circle center.</param>
 		/// <param name="radius">The updated circle radius.</param>
@@ -78,7 +77,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="origin">The updated ray origin.</param>
 		/// <param name="direction">The updated ray direction.</param>
@@ -90,7 +89,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Invoked when the entity collided another entity.
+		///     Invoked when the entity collided another entity.
 		/// </summary>
 		/// <param name="other">The other entity this instance collided with.</param>
 		/// <param name="impact">The position of the impact.</param>
@@ -99,7 +98,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{

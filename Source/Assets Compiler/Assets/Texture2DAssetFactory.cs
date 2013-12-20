@@ -1,20 +1,19 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Assets
+﻿namespace Pegasus.AssetsCompiler.Assets
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
 	using Attributes;
-	using Framework.Platform.Logging;
+	using Platform.Logging;
 
 	/// <summary>
-	///   Creates texture 2D asset instances.
+	///     Creates texture 2D asset instances.
 	/// </summary>
 	internal class Texture2DAssetFactory : IAssetFactory
 	{
 		/// <summary>
-		///   Creates an asset instance for all assets of an supported type.
+		///     Creates an asset instance for all assets of an supported type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
 		/// <param name="attributes">The attributes that affect the compilation settings of some assets.</param>

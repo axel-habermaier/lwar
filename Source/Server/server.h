@@ -1,6 +1,4 @@
-#ifndef _MSC_VER
 #include <stdbool.h>
-#endif
 
 #include "address.h"
 #include "array.h"
@@ -278,7 +276,7 @@ struct Collision {
     Vec x;
 };
 
-struct Client {
+typedef struct Client {
     List _l;
 
     Player player;
@@ -300,7 +298,7 @@ struct Client {
 
     /* count protocol violations */
     size_t misbehavior;
-};
+} Client;
 
 struct Connection {
 	char _[8];

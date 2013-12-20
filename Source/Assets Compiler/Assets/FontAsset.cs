@@ -1,14 +1,14 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Assets
+﻿namespace Pegasus.AssetsCompiler.Assets
 {
+	using System;
+
 	/// <summary>
-	///   Represents a font asset that requires compilation.
+	///     Represents a font asset that requires compilation.
 	/// </summary>
 	public class FontAsset : Asset
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		public FontAsset(string relativePath)
@@ -17,17 +17,19 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   The identifier type that should be used for the asset when generating the asset identifier list. If null is returned,
-		///   no asset identifier is generated for this asset instance.
+		///     The identifier type that should be used for the asset when generating the asset identifier list. If null is
+		///     returned,
+		///     no asset identifier is generated for this asset instance.
 		/// </summary>
 		public override string IdentifierType
 		{
-			get { return "Pegasus.Framework.Rendering.UserInterface.Font"; }
+			get { return "Pegasus.Rendering.UserInterface.Font"; }
 		}
 
 		/// <summary>
-		///   The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
-		///   asset instance.
+		///     The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for
+		///     this
+		///     asset instance.
 		/// </summary>
 		public override string IdentifierName
 		{

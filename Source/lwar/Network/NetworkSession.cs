@@ -1,54 +1,52 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Net;
 	using System.Threading;
-	using System.Threading.Tasks;
 	using Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform.Memory;
 	using Scripting;
 
 	/// <summary>
-	///   Represents a network session that implements the lwar network protocol.
+	///     Represents a network session that implements the lwar network protocol.
 	/// </summary>
 	public class NetworkSession : DisposableObject
 	{
 		/// <summary>
-		///   The number of disconnect messages that are sent to the server.
+		///     The number of disconnect messages that are sent to the server.
 		/// </summary>
 		private const int DisconnectMessageCount = 3;
 
 		/// <summary>
-		///   The time (in milliseconds) to wait between sending two disconnect messages to server.
+		///     The time (in milliseconds) to wait between sending two disconnect messages to server.
 		/// </summary>
 		private const int DisconnectSendInterval = 60;
 
 		/// <summary>
-		///   The connection to the remote server.
+		///     The connection to the remote server.
 		/// </summary>
 		private readonly ServerConnection _connection;
 
 		/// <summary>
-		///   The delivery manager is responsible for the delivery guarantees of all incoming and outgoing messages.
+		///     The delivery manager is responsible for the delivery guarantees of all incoming and outgoing messages.
 		/// </summary>
 		private readonly DeliveryManager _deliveryManager;
 
 		/// <summary>
-		///   The message queue is responsible for packing all queued outgoing messages into a packet. Reliable messages will be
-		///   resent until their reception has been acknowledged by the remote peer.
+		///     The message queue is responsible for packing all queued outgoing messages into a packet. Reliable messages will be
+		///     resent until their reception has been acknowledged by the remote peer.
 		/// </summary>
 		private readonly MessageQueue _outgoingMessages;
 
 		/// <summary>
-		///   A cached queue that is used to retreive the received messages from the server connection.
+		///     A cached queue that is used to retreive the received messages from the server connection.
 		/// </summary>
 		private readonly Queue<Message> _receivedMessages = new Queue<Message>();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public NetworkSession(IPEndPoint serverEndPoint)
@@ -63,7 +61,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets the endpoint of the server.
+		///     Gets the endpoint of the server.
 		/// </summary>
 		public IPEndPoint ServerEndPoint
 		{
@@ -71,7 +69,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets the remaining time in milliseconds before the network session will be dropped.
+		///     Gets the remaining time in milliseconds before the network session will be dropped.
 		/// </summary>
 		public double TimeToDrop
 		{
@@ -79,7 +77,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether a connection to the server is established.
+		///     Gets a value indicating whether a connection to the server is established.
 		/// </summary>
 		public bool IsConnected
 		{
@@ -87,8 +85,8 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the connection to the server has been established and the game state is currently
-		///   being synced.
+		///     Gets a value indicating whether the connection to the server has been established and the game state is currently
+		///     being synced.
 		/// </summary>
 		public bool IsSyncing
 		{
@@ -96,7 +94,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the connection to the server is lagging.
+		///     Gets a value indicating whether the connection to the server is lagging.
 		/// </summary>
 		public bool IsLagging
 		{
@@ -104,7 +102,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the connection to the server is faulted.
+		///     Gets a value indicating whether the connection to the server is faulted.
 		/// </summary>
 		public bool IsFaulted
 		{
@@ -112,7 +110,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the connection to the server has been dropped.
+		///     Gets a value indicating whether the connection to the server has been dropped.
 		/// </summary>
 		public bool IsDropped
 		{
@@ -120,7 +118,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the server is full and cannot accept any further clients.
+		///     Gets a value indicating whether the server is full and cannot accept any further clients.
 		/// </summary>
 		public bool ServerIsFull
 		{
@@ -128,7 +126,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the server implements a newer or older network protocol revision.
+		///     Gets a value indicating whether the server implements a newer or older network protocol revision.
 		/// </summary>
 		public bool VersionMismatch
 		{
@@ -136,7 +134,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Updates the state of the network session.
+		///     Updates the state of the network session.
 		/// </summary>
 		/// <param name="dispatcher">The message dispatcher that should be used to dispatch the received server messages.</param>
 		public void Update(MessageDispatcher dispatcher)
@@ -152,7 +150,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Sends the given reliable message to the server.
+		///     Sends the given reliable message to the server.
 		/// </summary>
 		/// <param name="message">The message that should be sent.</param>
 		public void Send(Message message)
@@ -161,7 +159,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

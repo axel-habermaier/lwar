@@ -1,44 +1,42 @@
-﻿using System;
-
-namespace Lwar.Screens
+﻿namespace Lwar.Screens
 {
+	using System;
 	using Assets;
 	using Gameplay;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
-	using Pegasus.Framework.Rendering.UserInterface;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Assets;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
+	using Pegasus.Rendering.UserInterface;
 
 	/// <summary>
-	///   Displays event messages on the screen.
+	///     Displays event messages on the screen.
 	/// </summary>
 	public class EventMessageDisplay : DisposableObject
 	{
 		/// <summary>
-		///   The margin between the event messages and the screen.
+		///     The margin between the event messages and the screen.
 		/// </summary>
 		private const int Margin = 10;
 
 		/// <summary>
-		///   The spacing between two lines.
+		///     The spacing between two lines.
 		/// </summary>
 		private const int LineSpacing = 4;
 
 		/// <summary>
-		///   The messages that are displayed on the screen.
+		///     The messages that are displayed on the screen.
 		/// </summary>
 		private readonly Label[] _messages = new Label[EventMessageList.Capacity];
 
 		/// <summary>
-		///   The number of messages that are displayed on the screen.
+		///     The number of messages that are displayed on the screen.
 		/// </summary>
 		private int _count;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
 		public EventMessageDisplay(AssetsManager assets)
@@ -51,7 +49,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Updates the event message display layout.
+		///     Updates the event message display layout.
 		/// </summary>
 		/// <param name="messages">The event messages that should be displayed.</param>
 		/// <param name="size">The size of the display area.</param>
@@ -72,7 +70,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the active event messages.
+		///     Draws the active event messages.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		public void Draw(SpriteBatch spriteBatch)
@@ -84,7 +82,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

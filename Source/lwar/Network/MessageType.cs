@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
+
 	/// <summary>
-	///   Identifies the type of a message.
+	///     Identifies the type of a message.
 	/// </summary>
 	public enum MessageType : byte
 	{

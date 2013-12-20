@@ -1,32 +1,31 @@
-﻿using System;
-
-namespace Lwar.Rendering.Renderers
+﻿namespace Lwar.Rendering.Renderers
 {
+	using System;
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Math;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders shockwaves into a 3D scene.
+	///     Renders shockwaves into a 3D scene.
 	/// </summary>
 	public class ShockwaveRenderer : Renderer<Shockwave>
 	{
 		/// <summary>
-		///   The effect that is used to draw the shockwaves.
+		///     The effect that is used to draw the shockwaves.
 		/// </summary>
 		private SphereEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the shockwaves.
+		///     The model that is used to draw the shockwaves.
 		/// </summary>
 		private Model _model;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -37,7 +36,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Draws all shockwaves.
+		///     Draws all shockwaves.
 		/// </summary>
 		/// <param name="output">The output that the shockwaves should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -50,7 +49,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

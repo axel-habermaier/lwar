@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Effects
+﻿namespace Pegasus.AssetsCompiler.Effects
 {
+	using System;
+
 	/// <summary>
-	///   Describes an intrinsic shader function.
+	///     Describes an intrinsic shader function.
 	/// </summary>
 	internal enum Intrinsic
 	{

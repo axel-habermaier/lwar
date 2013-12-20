@@ -1,43 +1,42 @@
-﻿using System;
-
-namespace Lwar.Gameplay.Entities
+﻿namespace Lwar.Gameplay.Entities
 {
+	using System;
 	using System.Collections.Generic;
 	using Network;
 	using Network.Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform;
+	using Pegasus.Platform.Memory;
 	using Rendering;
 
 	/// <summary>
-	///   Manages the active entities of a game session.
+	///     Manages the active entities of a game session.
 	/// </summary>
 	public sealed class EntityList : DisposableObject
 	{
 		/// <summary>
-		///   The list of active entities.
+		///     The list of active entities.
 		/// </summary>
 		private readonly DeferredList<IEntity> _entities = new DeferredList<IEntity>(false);
 
 		/// <summary>
-		///   Maps generational identifiers to entity instances.
+		///     Maps generational identifiers to entity instances.
 		/// </summary>
 		private readonly IdentifierMap<IEntity> _entityMap = new IdentifierMap<IEntity>();
 
 		/// <summary>
-		///   The game session the entity list belongs to.
+		///     The game session the entity list belongs to.
 		/// </summary>
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///   The render context that is used to draw the entities.
+		///     The render context that is used to draw the entities.
 		/// </summary>
 		private readonly RenderContext _renderContext;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session the entity list belongs to.</param>
 		/// <param name="renderContext">The render context that should be used to draw the entities.</param>
@@ -51,8 +50,8 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Gets the entity that corresponds to the given identifier. Returns null if no entity with the given identifier could
-		///   be found, or if the generation did not match.
+		///     Gets the entity that corresponds to the given identifier. Returns null if no entity with the given identifier could
+		///     be found, or if the generation did not match.
 		/// </summary>
 		/// <param name="identifier">The identifier of the entity that should be returned.</param>
 		public IEntity this[Identifier identifier]
@@ -61,7 +60,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Adds the given entity to the list.
+		///     Adds the given entity to the list.
 		/// </summary>
 		/// <param name="entity">The entity that should be added.</param>
 		public void Add(IEntity entity)
@@ -76,7 +75,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Removes the entity with the given id from the list.
+		///     Removes the entity with the given id from the list.
 		/// </summary>
 		/// <param name="entityId">The identifier of the entity that should be removed.</param>
 		public void Remove(Identifier entityId)
@@ -91,7 +90,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Updates the entity list.
+		///     Updates the entity list.
 		/// </summary>
 		/// <param name="clock">The clock that should be used for time measurements.</param>
 		public void Update(Clock clock)
@@ -104,7 +103,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Enumerates all active entities.
+		///     Enumerates all active entities.
 		/// </summary>
 		public List<IEntity>.Enumerator GetEnumerator()
 		{
@@ -112,7 +111,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -120,7 +119,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Updates the entity referenced in the update message.
+		///     Updates the entity referenced in the update message.
 		/// </summary>
 		/// <param name="message">The remote update message that should be processed.</param>
 		public void RemoteUpdate(ref Message message)
@@ -153,7 +152,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Handles a collision between the two entities.
+		///     Handles a collision between the two entities.
 		/// </summary>
 		/// <param name="entityIdentifier1">The identifier of the first entity of the collision.</param>
 		/// <param name="entityIdentifier2">The identifier of the second entity of the collision.</param>

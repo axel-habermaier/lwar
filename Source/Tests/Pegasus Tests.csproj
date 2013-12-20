@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tests</RootNamespace>
+    <AssemblyName>Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\Dependencies\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\Dependencies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise />
+  </Choose>
+  <ItemGroup>
+    <Compile Include="Parsing\BasicParsers\CharacterParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\BooleanParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\IPAddressParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\IPEndPointParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\QuotedStringParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\StringParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\WhiteSpacesParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\WhiteSpaces1Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\DigitParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\LetterParser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\EndOfInputParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\AlternativesParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\ApplyParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\BetweenParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\OptionalParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SeparatedBy1Parser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SeparatedByParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\Many1Parser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\ManyParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SkipParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SequenceSecondParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\SequenceFirstParser.Tests.cs" />
+    <Compile Include="Parsing\InputStream.Tests.cs" />
+    <Compile Include="Parsing\InputTriggerParser.Tests.cs" />
+    <Compile Include="Parsing\ParserTestsHelper.cs" />
+    <Compile Include="Parsing\BasicParsers\Float32Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Float64Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Int8Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\UInt8Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Int64Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\UInt64Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Int16Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\UInt16Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\UInt32Parser.Tests.cs" />
+    <Compile Include="Parsing\BasicParsers\Int32Parser.Tests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserInterface\SparseObjectStorage.Tests.cs" />
+    <Compile Include="UserInterface\LogicalTree.Tests.cs" />
+    <Compile Include="UserInterface\ResourceBinding.Tests.cs" />
+    <Compile Include="UserInterface\Style.Tests.cs" />
+    <Compile Include="UserInterface\Templates.Tests.cs" />
+    <Compile Include="UserInterface\TestControl.cs" />
+    <Compile Include="UserInterface\TestViewModel.cs" />
+    <Compile Include="UserInterface\ValueInheritance.Tests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="UserInterface\DependencyProperty.Tests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="UserInterface\DataBinding.Tests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pegasus\Pegasus Framework.csproj">
+      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
+      <Name>Pegasus Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

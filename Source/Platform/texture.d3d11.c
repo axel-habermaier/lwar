@@ -54,6 +54,13 @@ pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot)
 	ID3D11DeviceContext_PSSetShaderResources(PG_CONTEXT(texture), slot, 1, &texture->resourceView);
 }
 
+pgVoid pgUnbindTextureCore(pgTexture* texture, pgInt32 slot)
+{
+	ID3D11ShaderResourceView* resourceView[] = { NULL };
+	ID3D11DeviceContext_VSSetShaderResources(PG_CONTEXT(texture), slot, 1, &resourceView[0]);
+	ID3D11DeviceContext_PSSetShaderResources(PG_CONTEXT(texture), slot, 1, &resourceView[0]);
+}
+
 pgVoid pgGenerateMipmapsCore(pgTexture* texture)
 {
 	ID3D11DeviceContext_GenerateMips(PG_CONTEXT(texture), texture->resourceView);

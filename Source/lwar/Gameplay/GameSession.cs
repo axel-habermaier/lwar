@@ -1,27 +1,25 @@
-﻿using System;
-
-namespace Lwar.Gameplay
+﻿namespace Lwar.Gameplay
 {
+	using System;
 	using Actors;
 	using Entities;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform;
+	using Pegasus.Platform.Memory;
 	using Rendering;
 
 	/// <summary>
-	///   Represents a game session, managing the state of entities, players, etc.
+	///     Represents a game session, managing the state of entities, players, etc.
 	/// </summary>
 	public class GameSession : DisposableObject
 	{
 		/// <summary>
-		///   The clock that is used for time measurements.
+		///     The clock that is used for time measurements.
 		/// </summary>
 		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="renderContext">The render context that is used to draw the game session.</param>
 		public GameSession(RenderContext renderContext)
@@ -36,32 +34,32 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   The entities that are currently active.
+		///     The entities that are currently active.
 		/// </summary>
 		public EntityList Entities { get; private set; }
 
 		/// <summary>
-		///   The actors that are currently active, not including any entities.
+		///     The actors that are currently active, not including any entities.
 		/// </summary>
 		public ActorList Actors { get; private set; }
 
 		/// <summary>
-		///   The players that are currently playing.
+		///     The players that are currently playing.
 		/// </summary>
 		public PlayerList Players { get; private set; }
 
 		/// <summary>
-		///   Gets the root transformation.
+		///     Gets the root transformation.
 		/// </summary>
 		public Transformation RootTransform { get; private set; }
 
 		/// <summary>
-		///   Gets the event messages that display game session events to the user such as player kills or received chat messages.
+		///     Gets the event messages that display game session events to the user such as player kills or received chat messages.
 		/// </summary>
 		public EventMessageList EventMessages { get; private set; }
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -73,7 +71,7 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Updates the game session.
+		///     Updates the game session.
 		/// </summary>
 		public void Update()
 		{

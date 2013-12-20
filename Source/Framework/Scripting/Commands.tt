@@ -1,5 +1,0 @@
-﻿<#
-	SourceFile = "ICommands.cs";
-	Namespace = "Pegasus.Framework.Scripting";
-#>
-<#@ include file="RegistryGenerator.tt" #>

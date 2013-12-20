@@ -1,32 +1,31 @@
-﻿using System;
-
-namespace Lwar.Screens
+﻿namespace Lwar.Screens
 {
+	using System;
 	using Assets;
 	using Network;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
-	using Pegasus.Framework.Rendering.UserInterface;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
+	using Pegasus.Rendering.UserInterface;
 
 	/// <summary>
-	///   Informs the user that the network session is waiting for new messages from the server.
+	///     Informs the user that the network session is waiting for new messages from the server.
 	/// </summary>
 	public class WaitingForServer : Screen
 	{
 		/// <summary>
-		///   The network session that is waiting for new messages from the server.
+		///     The network session that is waiting for new messages from the server.
 		/// </summary>
 		private readonly NetworkSession _networkSession;
 
 		/// <summary>
-		///   The label that informs the user about the remaining time before the connection is dropped.
+		///     The label that informs the user about the remaining time before the connection is dropped.
 		/// </summary>
 		private Label _timeoutLabel;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="networkSession">The network session that is waiting for new messages from the server.</param>
 		public WaitingForServer(NetworkSession networkSession)
@@ -38,7 +37,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -46,7 +45,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Initializes the screen.
+		///     Initializes the screen.
 		/// </summary>
 		public override void Initialize()
 		{
@@ -57,12 +56,12 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Updates the screen.
+		///     Updates the screen.
 		/// </summary>
 		/// <param name="topmost">Indicates whether the app screen is the topmost one.</param>
 		public override void Update(bool topmost)
 		{
-			_timeoutLabel.Area = new Rectangle(0, 0, Window.Width, Window.Height);
+			_timeoutLabel.Area = new Rectangle(0, 0, (int)Window.ActualWidth, (int)Window.ActualHeight);
 			_timeoutLabel.Text = String.Format("Waiting for server ({0} seconds)...", (int)(_networkSession.TimeToDrop / 1000) + 1);
 
 			if (!_networkSession.IsLagging || _networkSession.IsDropped)
@@ -70,7 +69,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the user interface elements of the app screen.
+		///     Draws the user interface elements of the app screen.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)

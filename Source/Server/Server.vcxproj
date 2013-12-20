@@ -38,6 +38,7 @@
     <ProjectGuid>{8243791D-FE6E-40BF-A303-D981AE9968C2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Server</RootNamespace>
+    <ProjectName>lwar Server</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|Win32'" Label="Configuration">
@@ -122,50 +123,50 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Direct3D11|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenGL3|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Direct3D11|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenGL3|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <TargetName>lwar-server</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|Win32'">
@@ -176,11 +177,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -199,10 +202,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -218,9 +223,11 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -236,9 +243,11 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -256,10 +265,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -279,11 +289,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -306,10 +317,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -329,10 +341,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

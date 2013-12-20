@@ -1,27 +1,26 @@
-﻿using System;
-
-namespace Lwar.Gameplay
+﻿namespace Lwar.Gameplay
 {
+	using System;
 	using Network;
 	using Network.Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Input;
+	using Pegasus.Platform.Memory;
 	using Scripting;
 
 	/// <summary>
-	///   Manages the input state of the local player.
+	///     Manages the input state of the local player.
 	/// </summary>
 	public class InputManager : DisposableObject
 	{
 		/// <summary>
-		///   The input device that provides the input by the user.
+		///     The input device that provides the input by the user.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
-		///   The input message that is sent to the server periodically.
+		///     The input message that is sent to the server periodically.
 		/// </summary>
 		private InputMessage _inputMessage;
 
@@ -41,7 +40,7 @@ namespace Lwar.Gameplay
 		#endregion
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="inputDevice">The input device that provides the input by the user.</param>
 		public InputManager(LogicalInputDevice inputDevice)
@@ -74,7 +73,7 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Updates the current input state.
+		///     Updates the current input state.
 		/// </summary>
 		public void Update()
 		{
@@ -91,8 +90,8 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Copies the current input state into the returned message. The returned message is missing the identifier of the local
-		///   player and the target is given in screen coordinates instead of world coordinates.
+		///     Copies the current input state into the returned message. The returned message is missing the identifier of the local
+		///     player and the target is given in screen coordinates instead of world coordinates.
 		/// </summary>
 		public Message CreateInputMessage()
 		{
@@ -129,7 +128,7 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Removes the oldest trigger state from the given input state and adds the current one.
+		///     Removes the oldest trigger state from the given input state and adds the current one.
 		/// </summary>
 		/// <param name="inputState">The input state that stores the last eight trigger states.</param>
 		/// <param name="triggered">The new triggered state that should be stored in the input state.</param>
@@ -139,7 +138,7 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -156,17 +155,17 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Stores the state of an input until it is sent to the server.
+		///     Stores the state of an input until it is sent to the server.
 		/// </summary>
 		private struct InputState
 		{
 			/// <summary>
-			///   The logical input that is used to determine whether the input is triggered.
+			///     The logical input that is used to determine whether the input is triggered.
 			/// </summary>
 			public LogicalInput Input;
 
 			/// <summary>
-			///   Indicates whether the state has been triggered since the last update of the server.
+			///     Indicates whether the state has been triggered since the last update of the server.
 			/// </summary>
 			public bool Triggered;
 		}

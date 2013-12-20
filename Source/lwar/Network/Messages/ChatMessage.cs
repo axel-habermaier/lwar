@@ -1,30 +1,29 @@
-using System;
-
 namespace Lwar.Network.Messages
 {
+	using System;
 	using System.Runtime.InteropServices;
 	using System.Text;
 	using Gameplay;
-	using Pegasus.Framework;
+	using Pegasus;
 
 	/// <summary>
-	///   Holds the payload of a Chat message.
+	///     Holds the payload of a Chat message.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct ChatMessage
 	{
 		/// <summary>
-		///   The message sent by the player.
+		///     The message sent by the player.
 		/// </summary>
 		public string Message;
 
 		/// <summary>
-		///   The player that sent the message.
+		///     The player that sent the message.
 		/// </summary>
 		public Identifier Player;
 
 		/// <summary>
-		///   Creates a chat message that the server broadcasts to all players.
+		///     Creates a chat message that the server broadcasts to all players.
 		/// </summary>
 		/// <param name="player">The player who wrote the chat message.</param>
 		/// <param name="message">The message that should be sent.</param>

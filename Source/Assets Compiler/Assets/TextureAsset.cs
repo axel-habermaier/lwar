@@ -1,21 +1,19 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Assets
+﻿namespace Pegasus.AssetsCompiler.Assets
 {
+	using System;
 	using System.Drawing;
 	using System.Drawing.Imaging;
 	using System.Runtime.InteropServices;
-	using Framework;
-	using Framework.Platform.Graphics;
-	using Framework.Platform.Memory;
+	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a texture asset that requires compilation.
+	///     Represents a texture asset that requires compilation.
 	/// </summary>
 	public abstract class TextureAsset : Asset
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		protected TextureAsset(string relativePath)
@@ -26,7 +24,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		/// <param name="sourceDirectory">The source directory of the asset.</param>
@@ -36,32 +34,32 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether mipmaps should be generated for the texture. Default is true.
+		///     Gets or sets a value indicating whether mipmaps should be generated for the texture. Default is true.
 		/// </summary>
 		public bool Mipmaps { get; set; }
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the texture should not use texture compression. Default is false.
+		///     Gets or sets a value indicating whether the texture should not use texture compression. Default is false.
 		/// </summary>
 		public bool Uncompressed { get; set; }
 
 		/// <summary>
-		///   Gets the texture description.
+		///     Gets the texture description.
 		/// </summary>
 		protected TextureDescription Description { get; set; }
 
 		/// <summary>
-		///   Gets the surfaces of the texture.
+		///     Gets the surfaces of the texture.
 		/// </summary>
 		protected Surface[] Surfaces { get; set; }
 
 		/// <summary>
-		///   Gets or sets the source bitmap.
+		///     Gets or sets the source bitmap.
 		/// </summary>
 		protected Bitmap Bitmap { get; set; }
 
 		/// <summary>
-		///   Gets the suitable compressed format for the texture.
+		///     Gets the suitable compressed format for the texture.
 		/// </summary>
 		public SurfaceFormat CompressedFormat
 		{
@@ -83,7 +81,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Serializes the uncompressed texture into the given buffer.
+		///     Serializes the uncompressed texture into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the DDS image should be serialized into.</param>
 		internal unsafe void Write(BufferWriter buffer)
@@ -114,7 +112,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -122,7 +120,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Chooses a suitable compressed format for the given uncompressed format.
+		///     Chooses a suitable compressed format for the given uncompressed format.
 		/// </summary>
 		/// <param name="format">The pixel format for which a suitable compressed format should be chosen.</param>
 		/// <param name="componentCount">Returns the number of color components of each pixel.</param>
@@ -143,7 +141,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Loads and converts the image data.
+		///     Loads and converts the image data.
 		/// </summary>
 		/// <param name="bitmap">The bitmap from which the data should be loaded.</param>
 		protected unsafe BufferPointer GetBitmapData(Bitmap bitmap)
@@ -208,7 +206,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Checks whether the texture dimensions are a power of two.
+		///     Checks whether the texture dimensions are a power of two.
 		/// </summary>
 		public bool IsPowerOfTwo()
 		{

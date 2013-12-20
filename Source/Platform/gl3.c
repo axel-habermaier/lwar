@@ -268,15 +268,15 @@ GLenum pgConvertStencilOperation(pgStencilOperation stencilOperation)
 	case PG_STENCIL_OP_REPLACE:
 		return GL_REPLACE;
 	case PG_STENCIL_OP_INCREMENT_AND_CLAMP:
-		return GL_INCR_WRAP;
+		return GL_INCR;
 	case PG_STENCIL_OP_DECREMENT_AND_CLAMP:
-		return GL_DECR_WRAP;
+		return GL_DECR;
 	case PG_STENCIL_OP_INVERT:
 		return GL_INVERT;
 	case PG_STENCIL_OP_INCREMENT:
-		return GL_INCR;
+		return GL_INCR_WRAP;
 	case PG_STENCIL_OP_DECREMENT:
-		return GL_DECR;
+		return GL_DECR_WRAP;
 	default:						
 		PG_NO_SWITCH_DEFAULT;
 	}
@@ -575,7 +575,7 @@ pgVoid pgSetClearColor(pgGraphicsDevice* device, pgColor color)
 		return;
 
 	device->clearColor = color;
-	glClearColor(color.red, color.green, color.blue, color.alpha);
+	glClearColor(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, color.alpha / 255.0f);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 

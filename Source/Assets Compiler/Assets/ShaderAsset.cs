@@ -1,18 +1,16 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Assets
+﻿namespace Pegasus.AssetsCompiler.Assets
 {
+	using System;
 	using System.Linq;
-	using Framework;
-	using Framework.Platform.Graphics;
+	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a shader that requires compilation.
+	///     Represents a shader that requires compilation.
 	/// </summary>
 	public class ShaderAsset : Asset
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="effect">The name of the effect the shader belongs to.</param>
 		/// <param name="name">The name of the shader method.</param>
@@ -24,12 +22,12 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the type of the shader.
+		///     Gets the type of the shader.
 		/// </summary>
 		public ShaderType Type { get; private set; }
 
 		/// <summary>
-		///   Gets the shader asset path for the given effect name, shader method name, and shader type.
+		///     Gets the shader asset path for the given effect name, shader method name, and shader type.
 		/// </summary>
 		/// <param name="effect">The name of the effect the shader belongs to.</param>
 		/// <param name="name">The name of the shader method.</param>
@@ -42,6 +40,11 @@ namespace Pegasus.AssetsCompiler.Assets
 
 			var lastNamespaceEnd = effect.IndexOf('.', Configuration.AssetsProject.RootNamespace.Length + 1);
 			effect = effect.Substring(lastNamespaceEnd + 1);
+
+			if (effect.StartsWith("Internal."))
+				effect = effect.Substring("Internal.".Length);
+			else
+				effect = effect.Replace(".Internal.", "");
 
 			var extension = type.ToString().Where(Char.IsUpper).Aggregate(String.Empty, (s, c) => s + c).ToLower();
 			return String.Format("Effects/{0}.{1}.{2}", effect, name, extension);

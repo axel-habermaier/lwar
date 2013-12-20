@@ -1,0 +1,246 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+namespace Pegasus.Math
+{
+	using System.Globalization;
+	using System.Runtime.InteropServices;
+<# foreach (var info in GetInfo()) { #>
+
+	/// <summary>
+	///   Represents a circle with the position and radius stored as <#= info.Description #> values.
+	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct Circle<#= info.Name #> : IEquatable<Circle<#= info.Name #>>
+	{
+		/// <summary>
+		///   The position of the circle's center.
+		/// </summary>
+		public <#= info.PositionType #> Position;
+
+		/// <summary>
+		///   The circle's radius.
+		/// </summary>
+		public <#= info.Type #> Radius;
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="x">The X-component of the circle's position.</param>
+		/// <param name="y">The Y-component of the circle's position.</param>
+		/// <param name="radius">The circle's radius.</param>
+		public Circle<#= info.Name #>(<#= info.Type #> x, <#= info.Type #> y, <#= info.Type #> radius)
+			: this(new <#= info.PositionType #>(x, y), radius)
+		{
+		}
+
+		/// <summary>
+		///   Initializes a new instance.
+		/// </summary>
+		/// <param name="position">The position of the circle's center.</param>
+		/// <param name="radius">The circle's radius.</param>
+		public Circle<#= info.Name #>(<#= info.PositionType #> position, <#= info.Type #> radius)
+		{
+			Position = position;
+			Radius = radius;
+		}
+
+		/// <summary>
+		///   Returns a copy of the circle with the given offsets added to the position of the returned circle.
+		/// </summary>
+		/// <param name="x">The offset that should be applied to the circle's position in x-direction.</param>
+		/// <param name="y">The offset that should be applied to the circle's position in y-direction.</param>
+		public Circle<#= info.Name #> Offset(<#= info.Type #> x, <#= info.Type #> y)
+		{
+			return Offset(new <#= info.PositionType #>(Position.X + x, Position.Y + y));
+		}
+
+		/// <summary>
+		///   Returns a copy of the circle with the given offsets added to the position of the returned circle.
+		/// </summary>
+		/// <param name="offset">The offset that should be applied to the circle's position.</param>
+		public Circle<#= info.Name #> Offset(<#= info.PositionType #> offset)
+		{
+			return new Circle<#= info.Name #>(Position + offset, Radius);
+		}
+
+		/// <summary>
+		///   Determines whether the given circle is equal to this circle.
+		/// </summary>
+		/// <param name="other">The other circle to compare with this circle.</param>
+		public bool Equals(Circle<#= info.Name #> other)
+		{
+			return <#= info.EqualsMethod("Position.X", "other.Position.X") #> && <#= info.EqualsMethod("Position.Y", "other.Position.Y") #> 
+				&& <#= info.EqualsMethod("Radius", "other.Radius") #>;
+		}
+
+		/// <summary>
+		///   Determines whether the specified object is equal to this circle.
+		/// </summary>
+		/// <param name="value">The object to compare with this circle.</param>
+		public override bool Equals(object value)
+		{
+			if (ReferenceEquals(null, value))
+				return false;
+
+			if (value.GetType() != typeof(Circle<#= info.Name #>))
+				return false;
+
+			return Equals((Circle<#= info.Name #>)value);
+		}
+
+		/// <summary>
+		///   Returns a hash code for this circle.
+		/// </summary>
+		public override int GetHashCode()
+		{
+			return (Position.GetHashCode() * 397) ^ Radius.GetHashCode();
+		}
+
+		/// <summary>
+		///   Tests for equality between two circle.
+		/// </summary>
+		/// <param name="left">The first circle to compare.</param>
+		/// <param name="right">The second circle to compare.</param>
+		public static bool operator ==(Circle<#= info.Name #> left, Circle<#= info.Name #> right)
+		{
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		///   Tests for inequality between two circle.
+		/// </summary>
+		/// <param name="left">The first circle to compare.</param>
+		/// <param name="right">The second circle to compare.</param>
+		public static bool operator !=(Circle<#= info.Name #> left, Circle<#= info.Name #> right)
+		{
+			return !(left == right);
+		}
+
+		/// <summary>
+		///   Returns a string representation of this circle.
+		/// </summary>
+		public override string ToString()
+		{
+			return String.Format(CultureInfo.InvariantCulture, "Position: {0}, Radius: {1}", Position, Radius);
+		}
+
+		/// <summary>
+		///   Checks whether this circle intersects with the given circle.
+		/// </summary>
+		/// <param name="circle">The circle that should be checked.</param>
+		public bool Intersects(Circle<#= info.Name #> circle)
+		{
+			var distance = (Position - circle.Position).SquaredLength;
+			var radiusSum = Radius + circle.Radius;
+			return distance <= radiusSum * radiusSum;
+		}
+
+		/// <summary>
+		///   Checks whether this circle intersects with the given rectangle.
+		/// </summary>
+		/// <param name="rectangle">The rectangle that should be checked.</param>
+		public bool Intersects(<#= info.RectangleType #> rectangle)
+		{
+			// Find the closest point to the circle that lies within the rectangle
+			var closestX = MathUtils.Clamp(Position.X, rectangle.Left, rectangle.Right);
+			var closestY = MathUtils.Clamp(Position.Y, rectangle.Top, rectangle.Bottom);
+			var closest = new <#= info.PositionType #>(closestX, closestY);
+
+			// Calculate the distance between the circle's center and the closest point
+			var distance = Position - closest;
+
+			// There is an intersection only if the distance is less than or equal to the circle's radius
+			return distance.SquaredLength <= Radius * Radius;
+		}
+
+		/// <summary>
+		///   Checks whether the given point lies within the circle.
+		/// </summary>
+		/// <param name="point">The point that should be checked.</param>
+		public bool Intersects(<#= info.PositionType #> point)
+		{
+			var distance = (Position - point).SquaredLength;
+			return distance <= Radius * Radius;
+		}
+	}
+<# } #>
+}
+
+<#+
+
+struct Info
+{
+	public string Name;
+	public string Type;
+	public string Description;
+	public string PositionType;
+	public string RectangleType;
+	public string EqualsMethodFormat;
+
+	public string EqualsMethod(string left, string right)
+	{
+		return String.Format(EqualsMethodFormat, left, right);
+	}
+}
+
+IEnumerable<Info> GetInfo()
+{
+	yield return new Info 
+	{ 
+		Name = "", 
+		Type = "int", 
+		Description = "32-bit signed integer",  
+		PositionType = "Vector2i",
+		RectangleType = "Rectangle",
+		EqualsMethodFormat = "{0} == {1}"
+	};
+
+	yield return new Info 
+	{ 
+		Name = "F", 
+		Type = "float", 
+		Description = "32-bit floating point", 
+		PositionType = "Vector2",
+		RectangleType = "RectangleF",
+		EqualsMethodFormat = "MathUtils.Equals({0}, {1})" 
+	};
+
+	yield return new Info 
+	{ 
+		Name = "D", 
+		Type = "double", 
+		Description = "64-bit floating point", 
+		PositionType = "Vector2d",
+		RectangleType = "RectangleD",
+		EqualsMethodFormat = "MathUtils.Equals({0}, {1})" 
+	};
+
+	yield return new Info 
+	{ 
+		Name = "F8", 
+		Type = "Fixed8", 
+		Description = "32-bit signed fixed-point (in 24.8 format)", 
+		PositionType = "Vector2f8",
+		RectangleType = "RectangleF8",
+		EqualsMethodFormat = "{0} == {1}" 
+	};
+
+	yield return new Info 
+	{ 
+		Name = "F16", 
+		Type = "Fixed16", 
+		Description = "32-bit signed fixed-point (in 16.16 format)", 
+		PositionType = "Vector2f16",
+		RectangleType = "RectangleF16",
+		EqualsMethodFormat = "{0} == {1}"
+	};
+}
+
+#>

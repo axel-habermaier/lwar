@@ -1,40 +1,39 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
 	using System.Collections.Generic;
 	using Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
-	///   The message queue is responsible for packing all queued messages into a packet and sending it to the remote
-	///   peer. Reliable messages will be resent until their reception has been acknowledged by the remote peer.
+	///     The message queue is responsible for packing all queued messages into a packet and sending it to the remote
+	///     peer. Reliable messages will be resent until their reception has been acknowledged by the remote peer.
 	/// </summary>
 	public class MessageQueue
 	{
 		/// <summary>
-		///   Cached delegate of the message serialization function.
+		///     Cached delegate of the message serialization function.
 		/// </summary>
 		private static readonly Action<BufferWriter, Message> MessageSerializer = MessageSerialization.Serialize;
 
 		/// <summary>
-		///   The delivery manager that is used to enforce the message delivery constraints.
+		///     The delivery manager that is used to enforce the message delivery constraints.
 		/// </summary>
 		private readonly DeliveryManager _deliveryManager;
 
 		/// <summary>
-		///   The queued reliable messages that have not yet been sent or that have not yet been acknowledged.
+		///     The queued reliable messages that have not yet been sent or that have not yet been acknowledged.
 		/// </summary>
 		private readonly Queue<Message> _reliableMessages = new Queue<Message>();
 
 		/// <summary>
-		///   The queued unreliable messages that have not yet been sent.
+		///     The queued unreliable messages that have not yet been sent.
 		/// </summary>
 		private readonly Queue<Message> _unreliableMessages = new Queue<Message>();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="deliveryManager">The delivery manager that is used to enforce the message delivery constraints.</param>
 		public MessageQueue(DeliveryManager deliveryManager)
@@ -44,7 +43,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether any messages are waiting in the queue.
+		///     Gets a value indicating whether any messages are waiting in the queue.
 		/// </summary>
 		public bool HasPendingData
 		{
@@ -52,7 +51,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Enqueues the reliable message.
+		///     Enqueues the reliable message.
 		/// </summary>
 		/// <param name="message">The message that should be enqueued.</param>
 		public void Enqueue(ref Message message)
@@ -66,8 +65,8 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Sends all queued messages, resending all reliable messages that have previously been sent but not yet acknowledged.
-		///   Returns the number of bytes that have been written.
+		///     Sends all queued messages, resending all reliable messages that have previously been sent but not yet acknowledged.
+		///     Returns the number of bytes that have been written.
 		/// </summary>
 		public int WritePacket(byte[] buffer)
 		{
@@ -88,7 +87,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Removes all acknowledged reliable messages from the queue.
+		///     Removes all acknowledged reliable messages from the queue.
 		/// </summary>
 		private void RemoveAckedMessages()
 		{
@@ -103,7 +102,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Adds all queued messages to the buffer that fit into the remaining space.
+		///     Adds all queued messages to the buffer that fit into the remaining space.
 		/// </summary>
 		/// <param name="messages">The messages that should be written to the buffer.</param>
 		/// <param name="buffer">The buffer the messages should be written into.</param>

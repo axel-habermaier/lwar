@@ -1,28 +1,27 @@
-﻿using System;
-
-namespace Lwar.Gameplay.Entities
+﻿namespace Lwar.Gameplay.Entities
 {
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
+	using System;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform;
 
 	/// <summary>
-	///   Represents a planet.
+	///     Represents a planet.
 	/// </summary>
 	public class Planet : Entity<Planet>
 	{
 		/// <summary>
-		///   A cached random number generator.
+		///     A cached random number generator.
 		/// </summary>
 		private static readonly Random Random = new Random();
 
 		/// <summary>
-		///   The rotation speed of the planet.
+		///     The rotation speed of the planet.
 		/// </summary>
 		private float _rotationSpeed;
 
 		/// <summary>
-		///   Invoked when the entity is added to the game session.
+		///     Invoked when the entity is added to the game session.
 		/// </summary>
 		protected override void OnAdded()
 		{
@@ -33,7 +32,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Updates the entity's internal state.
+		///     Updates the entity's internal state.
 		/// </summary>
 		/// <param name="clock">The clock that should be used for time measurements.</param>
 		public override void Update(Clock clock)
@@ -42,13 +41,13 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the planet.</param>
-		/// <param name="template">The template defining the planet's type.</param>
-		public static Planet Create(Identifier id, Template template)
+		/// <param name="entityTemplate">The template defining the planet's type.</param>
+		public static Planet Create(Identifier id, EntityTemplate entityTemplate)
 		{
-			Assert.ArgumentNotNull(template);
+			Assert.ArgumentNotNull(entityTemplate);
 
 			var rotationSpeed = Random.Next(30, 50) / 200.0f;
 			rotationSpeed *= (Random.Next() % 2 == 1 ? 1 : -1);
@@ -56,7 +55,7 @@ namespace Lwar.Gameplay.Entities
 			var planet = GetInstance();
 			planet.Identifier = id;
 			planet._rotationSpeed = rotationSpeed;
-			planet.Template = template;
+			planet.Template = entityTemplate;
 			return planet;
 		}
 	}

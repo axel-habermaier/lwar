@@ -1,29 +1,28 @@
-﻿using System;
-
-namespace Lwar.Rendering
+﻿namespace Lwar.Rendering
 {
+	using System;
 	using System.Linq;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
+	using Assets.Effects;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Assets;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 	using Renderers;
 
 	/// <summary>
-	///   Represents the context in which rendering operations are performed.
+	///     Represents the context in which rendering operations are performed.
 	/// </summary>
 	public class RenderContext : DisposableObject
 	{
 		/// <summary>
-		///   The renderer that is used to draw the parallax scrolling effect.
+		///     The renderer that is used to draw the parallax scrolling effect.
 		/// </summary>
 		private readonly ParallaxRenderer _parallaxRenderer;
 
 		/// <summary>
-		///   The renderers that the context uses to render the scene.
+		///     The renderers that the context uses to render the scene.
 		/// </summary>
 		private readonly IRenderer[] _renderers = new IRenderer[]
 		{
@@ -40,22 +39,22 @@ namespace Lwar.Rendering
 		};
 
 		/// <summary>
-		///   The renderer that is used to draw the skybox.
+		///     The renderer that is used to draw the skybox.
 		/// </summary>
 		private readonly SkyboxRenderer _skyboxRenderer;
 
 		/// <summary>
-		///   The sprite batch that is used to draw 2D sprites into the scene.
+		///     The sprite batch that is used to draw 2D sprites into the scene.
 		/// </summary>
 		private readonly SpriteBatch _spriteBatch;
 
 		/// <summary>
-		///   The sprite effect that is used to draw 2D sprites into the scene.
+		///     The sprite effect that is used to draw 2D sprites into the scene.
 		/// </summary>
-		private readonly SpriteEffect _spriteEffect = new SpriteEffect();
+		private readonly SpriteEffect _spriteEffect;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
@@ -64,17 +63,17 @@ namespace Lwar.Rendering
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
-			_spriteBatch = new SpriteBatch(graphicsDevice, _spriteEffect);
+			_spriteEffect = new SpriteEffect(graphicsDevice, assets);
+			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 			_parallaxRenderer = new ParallaxRenderer(graphicsDevice, assets);
-			_spriteEffect.Initialize(graphicsDevice, assets);
 
 			foreach (var renderer in _renderers)
 				renderer.Initialize(graphicsDevice, assets);
 		}
 
 		/// <summary>
-		///   Adds the given element to the appropriate renderer.
+		///     Adds the given element to the appropriate renderer.
 		/// </summary>
 		/// <typeparam name="TElement">The type of the element that should be added.</typeparam>
 		/// <param name="element">The element that should be added.</param>
@@ -86,7 +85,7 @@ namespace Lwar.Rendering
 		}
 
 		/// <summary>
-		///   Removes the given element from the appropriate renderer.
+		///     Removes the given element from the appropriate renderer.
 		/// </summary>
 		/// <typeparam name="TElement">The type of the element that should be removed.</typeparam>
 		/// <param name="element">The element that should be removed.</param>
@@ -98,7 +97,7 @@ namespace Lwar.Rendering
 		}
 
 		/// <summary>
-		///   Draws the current frame.
+		///     Draws the current frame.
 		/// </summary>
 		/// <param name="output">The output that the render context should render to.</param>
 		public void Draw(RenderOutput output)
@@ -133,7 +132,7 @@ namespace Lwar.Rendering
 		}
 
 		/// <summary>
-		///   Draws the user interface elements.
+		///     Draws the user interface elements.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		/// <param name="camera">The camera that is used to draw the scene.</param>
@@ -146,7 +145,7 @@ namespace Lwar.Rendering
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

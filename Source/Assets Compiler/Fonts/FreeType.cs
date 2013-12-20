@@ -1,5 +1,4 @@
-﻿using System;
-#if Linux && x64
+﻿#if Linux && x64
 // FT_Long is 64 bits wide on x64 Linux
 using Long = System.Int64;
 #else
@@ -10,21 +9,17 @@ using Long = System.Int32;
 
 namespace Pegasus.AssetsCompiler.Fonts
 {
+	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
-	using Framework;
-	using Framework.Platform.Logging;
+	using Platform.Logging;
 
 	/// <summary>
-	///   Provides access to native freetype functions.
+	///     Provides access to native freetype functions.
 	/// </summary>
-#if !DEBUG
-	[SuppressUnmanagedCodeSecurity]
-#endif
 	internal static class FreeType
 	{
 		/// <summary>
-		///   The name of the freetype dynamic link library.
+		///     The name of the freetype dynamic link library.
 		/// </summary>
 		private const string LibraryName =
 #if Linux
@@ -36,7 +31,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 #endif
 
 		/// <summary>
-		///   Invokes the given function, which should return a freetype error result. Throws an exception if an error occurred.
+		///     Invokes the given function, which should return a freetype error result. Throws an exception if an error occurred.
 		/// </summary>
 		/// <param name="function">The function that should be invoked.</param>
 		public static void Invoke(Func<Error> function)
@@ -80,7 +75,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		public static extern Error GetKerning(IntPtr face, uint leftGlyph, uint rightGlyph, uint kernMode, out Vector kerning);
 
 		// Disable annoying "private field is never used" warnings on Mono
-		#pragma warning disable 0169
+#pragma warning disable 0169
 
 		[StructLayout(LayoutKind.Sequential)]
 		public class Face
@@ -242,6 +237,6 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal Long y;
 		}
 
-		#pragma warning restore 0169
+#pragma warning restore 0169
 	}
 }

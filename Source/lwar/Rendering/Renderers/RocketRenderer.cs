@@ -1,31 +1,30 @@
-﻿using System;
-
-namespace Lwar.Rendering.Renderers
+﻿namespace Lwar.Rendering.Renderers
 {
+	using System;
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders rockets into a 3D scene.
+	///     Renders rockets into a 3D scene.
 	/// </summary>
 	public class RocketRenderer : Renderer<Rocket>
 	{
 		/// <summary>
-		///   The effect that is used to draw the rockets.
+		///     The effect that is used to draw the rockets.
 		/// </summary>
 		private TexturedQuadEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the rockets.
+		///     The model that is used to draw the rockets.
 		/// </summary>
 		private Model _model;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -36,7 +35,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Draws all rockets.
+		///     Draws all rockets.
 		/// </summary>
 		/// <param name="output">The output that the rockets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -52,7 +51,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

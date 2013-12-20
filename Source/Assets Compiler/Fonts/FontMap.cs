@@ -1,35 +1,33 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Fonts
+﻿namespace Pegasus.AssetsCompiler.Fonts
 {
+	using System;
 	using System.Drawing;
 	using System.Drawing.Imaging;
 	using System.Linq;
 	using Assets;
 	using Compilers;
-	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
-	using Rectangle = Framework.Math.Rectangle;
-	using Size = Framework.Math.Size;
+	using Platform.Logging;
+	using Platform.Memory;
+	using Rectangle = Math.Rectangle;
+	using Size = Math.Size;
 
 	/// <summary>
-	///   Represents a font as a bitmap, containing all glyphs of a given font.
+	///     Represents a font as a bitmap, containing all glyphs of a given font.
 	/// </summary>
 	internal class FontMap : Texture2DAsset
 	{
 		/// <summary>
-		///   The padding around the glyphs in the font map in pixels.
+		///     The padding around the glyphs in the font map in pixels.
 		/// </summary>
 		private const int Padding = 1;
 
 		/// <summary>
-		///   The glyphs stored in the font map.
+		///     The glyphs stored in the font map.
 		/// </summary>
 		private readonly GlyphArea[] _glyphAreas;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The font that should be stored in the font map.</param>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
@@ -48,12 +46,12 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Gets the size of the font map.
+		///     Gets the size of the font map.
 		/// </summary>
 		public Size Size { get; private set; }
 
 		/// <summary>
-		///   Determines the size of the font map and the layout of the glyphs.
+		///     Determines the size of the font map and the layout of the glyphs.
 		/// </summary>
 		private void Layout()
 		{
@@ -105,7 +103,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Generates the bitmap storing all glyphs and writes it to the temporary asset directory.
+		///     Generates the bitmap storing all glyphs and writes it to the temporary asset directory.
 		/// </summary>
 		private void GenerateBitmap()
 		{
@@ -120,7 +118,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Processes the font map and appends it to the given buffer.
+		///     Processes the font map and appends it to the given buffer.
 		/// </summary>
 		/// <param name="buffer"></param>
 		public void Compile(BufferWriter buffer)
@@ -130,7 +128,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Gets the area that the glyph corresponding to the given character occupies in the font mpa.
+		///     Gets the area that the glyph corresponding to the given character occupies in the font mpa.
 		/// </summary>
 		/// <param name="character">The character the glyph are should be returned for.</param>
 		public Rectangle GetGlyphArea(char character)
@@ -143,17 +141,17 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Stores the area that a glyph occupies in the font map.
+		///     Stores the area that a glyph occupies in the font map.
 		/// </summary>
 		private class GlyphArea
 		{
 			/// <summary>
-			///   The area occupied by the glyph.
+			///     The area occupied by the glyph.
 			/// </summary>
 			public Rectangle Area;
 
 			/// <summary>
-			///   The glyph that occupies the area.
+			///     The glyph that occupies the area.
 			/// </summary>
 			public Glyph Glyph;
 		}

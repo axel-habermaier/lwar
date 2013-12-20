@@ -391,6 +391,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces);
 pgVoid pgDestroyTextureCore(pgTexture* texture);
 
 pgVoid pgBindTextureCore(pgTexture* texture, pgInt32 slot);
+pgVoid pgUnbindTextureCore(pgTexture* texture, pgInt32 slot);
 pgVoid pgGenerateMipmapsCore(pgTexture* texture);
 
 pgBool pgIsCompressedFormat(pgSurfaceFormat format);

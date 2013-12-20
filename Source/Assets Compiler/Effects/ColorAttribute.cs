@@ -1,23 +1,22 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Effects
+﻿namespace Pegasus.AssetsCompiler.Effects
 {
-	using Framework.Platform.Graphics;
+	using System;
+	using Platform.Graphics;
 
 	/// <summary>
-	///   Indicates that a shader argument or return value represents a color.
+	///     Indicates that a shader argument or return value represents a color.
 	/// </summary>
 	public class ColorAttribute : SemanticsAttribute
 	{
 		/// <summary>
-		///   Initializes a new instance with index 0.
+		///     Initializes a new instance with index 0.
 		/// </summary>
 		public ColorAttribute()
 		{
 		}
 
 		/// <summary>
-		///   Initializes a new instance with the given index.
+		///     Initializes a new instance with the given index.
 		/// </summary>
 		/// <param name="index">The index of the color.</param>
 		public ColorAttribute(int index)
@@ -26,7 +25,7 @@ namespace Pegasus.AssetsCompiler.Effects
 		}
 
 		/// <summary>
-		///   Gets the corresponding data semantics literal.
+		///     Gets the corresponding data semantics literal.
 		/// </summary>
 		internal override DataSemantics Semantics
 		{

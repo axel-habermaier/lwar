@@ -1,24 +1,23 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Compilers
+﻿namespace Pegasus.AssetsCompiler.Compilers
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using Assets;
 	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.
+	///     Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.
 	/// </summary>
 	/// <typeparam name="TAsset">The type of the asset that is compiled</typeparam>
 	public abstract class AssetCompiler<TAsset> : DisposableObject, IAssetCompiler
 		where TAsset : Asset
 	{
 		/// <summary>
-		///   Compiles all assets of the compiler's asset source type.
+		///     Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
 		public virtual bool Compile(IEnumerable<Asset> assets)
@@ -30,7 +29,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Removes the compiled assets and all temporary files written by the compiler.
+		///     Removes the compiled assets and all temporary files written by the compiler.
 		/// </summary>
 		/// <param name="assets">The assets that should be cleaned.</param>
 		public virtual void Clean(IEnumerable<Asset> assets)
@@ -46,7 +45,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Compiles the asset.
+		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		protected bool Compile(TAsset asset)
@@ -79,7 +78,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Compiles the asset, appending the compiled output to the given buffer.
+		///     Compiles the asset, appending the compiled output to the given buffer.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -89,7 +88,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Compiles the asset and logs the exception that might occur during the compilation.
+		///     Compiles the asset and logs the exception that might occur during the compilation.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -100,7 +99,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 				Compile(asset, buffer);
 				return true;
 			}
-			catch (AppException)
+			catch (PegasusException)
 			{
 			}
 			catch (Exception e)
@@ -113,7 +112,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Compiles the asset.
+		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -122,7 +121,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Removes the compiled asset and all temporary files written by the compiler.
+		///     Removes the compiled asset and all temporary files written by the compiler.
 		/// </summary>
 		/// <param name="asset">The asset that should be cleaned.</param>
 		protected virtual void Clean(TAsset asset)
@@ -130,7 +129,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

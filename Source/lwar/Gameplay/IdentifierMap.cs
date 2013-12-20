@@ -1,24 +1,23 @@
-﻿using System;
-
-namespace Lwar.Gameplay
+﻿namespace Lwar.Gameplay
 {
-	using Pegasus.Framework;
+	using System;
+	using Pegasus;
 
 	/// <summary>
-	///   Maps generational identifiers to concrete objects.
+	///     Maps generational identifiers to concrete objects.
 	/// </summary>
 	/// <typeparam name="T">The type of the mapped objects.</typeparam>
 	public sealed class IdentifierMap<T>
 		where T : class, IGenerationalIdentity
 	{
 		/// <summary>
-		///   Maps each identifier to the corresponding object.
+		///     Maps each identifier to the corresponding object.
 		/// </summary>
 		private readonly T[] _map = new T[UInt16.MaxValue];
 
 		/// <summary>
-		///   Gets the object that corresponds to the given identifier. Returns null if no object with the given identifier could
-		///   be found, or if the generation did not match.
+		///     Gets the object that corresponds to the given identifier. Returns null if no object with the given identifier could
+		///     be found, or if the generation did not match.
 		/// </summary>
 		/// <param name="identifier">The identifier of the object that should be returned.</param>
 		public T this[Identifier identifier]
@@ -34,7 +33,7 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Adds a mapping for the given object.
+		///     Adds a mapping for the given object.
 		/// </summary>
 		/// <param name="obj">The object that should be mapped.</param>
 		public void Add(T obj)
@@ -46,7 +45,7 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Removes the mapping for the given object.
+		///     Removes the mapping for the given object.
 		/// </summary>
 		/// <param name="obj">The object whose mapping should be removed.</param>
 		public void Remove(T obj)

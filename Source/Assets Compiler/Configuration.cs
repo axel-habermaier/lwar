@@ -1,75 +1,120 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler
+﻿namespace Pegasus.AssetsCompiler
 {
+	using System;
+	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.IO;
+	using System.Linq;
 	using System.Reflection;
-	using Framework.Platform;
-	using Framework.Platform.Logging;
+	using Platform;
+	using Platform.Logging;
 
 	/// <summary>
-	///   Provides access to the asset compiler configuration.
+	///     Provides access to the asset compiler configuration.
 	/// </summary>
 	internal static class Configuration
 	{
 		/// <summary>
-		///   The prefix that is used for reserved shader identifiers.
+		///     The prefix that is used for reserved shader identifiers.
 		/// </summary>
 		public const string ReservedIdentifierPrefix = "_";
 
 		/// <summary>
-		///   The prefix that is used for internally generated shader identifiers.
+		///     The prefix that is used for internally generated shader identifiers.
 		/// </summary>
 		public const string ReservedInternalIdentifierPrefix = "_pg_";
 
 		/// <summary>
-		///   The path to the source assets.
-		/// </summary>
-		public static readonly string SourceDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets");
-
-		/// <summary>
-		///   The path to the assets list.
-		/// </summary>
-		public static readonly string AssetListPath = Path.Combine(Environment.CurrentDirectory, "Assets.dll");
-
-		/// <summary>
-		///   The asset list assembly.
+		///     The asset list assembly.
 		/// </summary>
 		private static Assembly _assetListAssembly;
 
 		/// <summary>
-		///   The assets project file.
+		///     The assets project file.
 		/// </summary>
 		private static AssetsProject _assetsProject;
 
 		/// <summary>
-		///   The path to the assets project.
+		///     Gets the path to the compiled assets project.
 		/// </summary>
-		private static readonly string AssetsProjectPath = Path.Combine(SourceDirectory, "Assets.csproj");
+		public static string AssetListPath
+		{
+			get { return AssetsProject.CompiledAssemblyPath; }
+		}
 
 		/// <summary>
-		///   The path where the temporary asset files should be stored.
+		///     Gets the path to the C# file that should contain the generated effect code.
 		/// </summary>
-		public static readonly string TempDirectory = Path.Combine(Environment.CurrentDirectory, "../../Assets/obj");
+		public static string CSharpEffectFile
+		{
+			get { return Path.Combine(SourceDirectory, "Effects", "Effects.cs"); }
+		}
 
 		/// <summary>
-		///   The path where the compiled assets should be stored.
+		///     Gets the path to the C# file that should contain the C# code generated from the Xaml files.
 		/// </summary>
-		public static readonly string TargetDirectory = Environment.CurrentDirectory;
+		public static string CSharpXamlFile
+		{
+			get { return Path.Combine(SourceDirectory, "UserInterface.cs"); }
+		}
 
 		/// <summary>
-		///   The path to the C# file that should contain the generated effect code.
+		///     Gets the path to the C# file that should contain the generated asset identifiers.
 		/// </summary>
-		public static readonly string CSharpEffectFile = Path.Combine(SourceDirectory, "Effects", "Effects.cs");
+		public static string CSharpAssetIdentifiersFile
+		{
+			get { return Path.Combine(SourceDirectory, "AssetIdentifiers.cs"); }
+		}
 
 		/// <summary>
-		///   The path to the C# file that should contain the generated asset identifiers.
+		///     Gets the path to the C# file that should contain the font loader class.
 		/// </summary>
-		public static readonly string CSharpAssetIdentifiersFile = Path.Combine(SourceDirectory, "Assets.cs");
+		public static string CSharpFontLoaderFile
+		{
+			get { return Path.Combine(SourceDirectory, "Fonts", "FontLoader.cs"); }
+		}
 
 		/// <summary>
-		///   Get the asset list assembly.
+		///     Gets or set the path to the assets project that is compiled.
+		/// </summary>
+		public static string AssetsProjectPath { get; set; }
+
+		/// <summary>
+		///     Gets the path to the source assets.
+		/// </summary>
+		public static string SourceDirectory
+		{
+			get { return AssetsProject.SourceDirectory; }
+		}
+
+		/// <summary>
+		///     Gets the path where the temporary asset files should be stored.
+		/// </summary>
+		public static string TempDirectory
+		{
+			get { return AssetsProject.TempDirectory; }
+		}
+
+		/// <summary>
+		///     Gets the path where the compiled assets should be stored.
+		/// </summary>
+		public static string TargetDirectory
+		{
+			get { return AssetsProject.TargetDirectory; }
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether Xaml files should be the only kind of asset that is compiled.
+		/// </summary>
+		public static bool XamlFilesOnly { get; set; }
+
+		/// <summary>
+		///     Gets or sets the unique identifier of all asset files contained in the compiled assets project.
+		/// </summary>
+		public static int UniqueFileIdentifier { get; set; }
+
+		/// <summary>
+		///     Get the asset list assembly.
 		/// </summary>
 		public static Assembly AssetListAssembly
 		{
@@ -86,7 +131,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Gets the assets project file.
+		///     Gets the assets project file.
 		/// </summary>
 		public static AssetsProject AssetsProject
 		{
@@ -100,12 +145,13 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether HLSL shaders should be compiled.
+		///     Gets a value indicating whether HLSL shaders should be compiled.
 		/// </summary>
 		public static bool CompileHlsl { get; private set; }
 
 		/// <summary>
-		///   Checks whether the HLSL compiler is available and disable HLSL shader compilation if the compiler cannot be invoked.
+		///     Checks whether the HLSL compiler is available and disable HLSL shader compilation if the compiler cannot be
+		///     invoked.
 		/// </summary>
 		public static void CheckFxcAvailability()
 		{
@@ -125,6 +171,19 @@ namespace Pegasus.AssetsCompiler
 
 				CompileHlsl = false;
 			}
+		}
+
+		/// <summary>
+		///     Gets the types that should be checked when searching all relevant types via reflection.
+		/// </summary>
+		public static IEnumerable<Type> GetReflectionTypes()
+		{
+			var assetCompilerTypes = Assembly.GetExecutingAssembly().GetTypes();
+			if (XamlFilesOnly)
+				return assetCompilerTypes;
+
+			var assetListTypes = AssetListAssembly.GetTypes();
+			return assetListTypes.Union(assetCompilerTypes);
 		}
 	}
 }

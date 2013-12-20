@@ -38,6 +38,7 @@
     <ProjectGuid>{E008FA73-A930-40B5-93A4-959A4D30492D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Platform</RootNamespace>
+    <ProjectName>Pegasus Platform</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|Win32'" Label="Configuration">
@@ -122,50 +123,50 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <TargetName>Pegasus.Platform</TargetName>
+    <TargetName>platform</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|x64'">
-    <TargetName>Pegasus.Platform</TargetName>
+    <TargetName>platform</TargetName>
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <TargetName>Pegasus.Platform</TargetName>
+    <TargetName>platform</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|x64'">
-    <TargetName>Pegasus.Platform</TargetName>
+    <TargetName>platform</TargetName>
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Direct3D11|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <TargetName>Pegasus.Platform</TargetName>
+    <TargetName>platform</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Direct3D11|x64'">
-    <TargetName>Pegasus.Platform</TargetName>
+    <TargetName>platform</TargetName>
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenGL3|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
-    <TargetName>Pegasus.Platform</TargetName>
+    <TargetName>platform</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenGL3|x64'">
-    <TargetName>Pegasus.Platform</TargetName>
+    <TargetName>platform</TargetName>
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -275,7 +276,7 @@
       <CallingConvention>StdCall</CallingConvention>
       <CompileAs>CompileAsC</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -299,7 +300,7 @@
       <CallingConvention>StdCall</CallingConvention>
       <CompileAs>CompileAsC</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -324,7 +325,7 @@
       <CompileAs>CompileAsC</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir)/glew</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
@@ -353,7 +354,7 @@
       <CompileAs>CompileAsC</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir)/glew</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -414,7 +415,7 @@
     <ClCompile Include="inputLayout.d3d11.c" />
     <ClCompile Include="linux.c" />
     <ClCompile Include="pg.c" />
-    <ClCompile Include="pgGraphics.c" />
+    <ClCompile Include="graphics.c" />
     <ClCompile Include="pipelineStates.c" />
     <ClCompile Include="pipelineStates.d3d11.c" />
     <ClCompile Include="pipelineStates.gl3.c" />

@@ -1,23 +1,22 @@
-﻿using System;
-
-namespace Lwar.Gameplay.Entities
+﻿namespace Lwar.Gameplay.Entities
 {
+	using System;
 	using Actors;
-	using Pegasus.Framework.Math;
+	using Pegasus.Math;
 
 	/// <summary>
-	///   Represents an entity, a special form of an actor that is synchronized with and under control of the server.
+	///     Represents an entity, a special form of an actor that is synchronized with and under control of the server.
 	/// </summary>
 	public interface IEntity : IActor, IGenerationalIdentity
 	{
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="position">The updated entity position.</param>
 		void RemoteUpdate(Vector2 position);
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="position">The updated entity position.</param>
 		/// <param name="rotation">The updated entity rotation.</param>
@@ -25,14 +24,14 @@ namespace Lwar.Gameplay.Entities
 		void RemoteUpdate(Vector2 position, float rotation, int health);
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="center">The updated circle center.</param>
 		/// <param name="radius">The updated circle radius.</param>
 		void RemoteUpdate(Vector2 center, float radius);
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="origin">The updated ray origin.</param>
 		/// <param name="direction">The updated ray direction.</param>
@@ -41,7 +40,7 @@ namespace Lwar.Gameplay.Entities
 		void RemoteUpdate(Vector2 origin, float direction, float length, IEntity target);
 
 		/// <summary>
-		///   Invoked when the entity collided another entity.
+		///     Invoked when the entity collided another entity.
 		/// </summary>
 		/// <param name="other">The other entity this instance collided with.</param>
 		/// <param name="impact">The position of the impact.</param>

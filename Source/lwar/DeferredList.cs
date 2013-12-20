@@ -1,44 +1,43 @@
-﻿using System;
-
-namespace Lwar
+﻿namespace Lwar
 {
+	using System;
 	using System.Collections.Generic;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Platform.Memory;
+	using Pegasus;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
-	///   Represents a list where additions and removals are deferred until some later point in time.
+	///     Represents a list where additions and removals are deferred until some later point in time.
 	/// </summary>
 	/// <typeparam name="T">The type of the elements contained in the list.</typeparam>
 	public class DeferredList<T> : DisposableObject
 		where T : class, IDisposable
 	{
 		/// <summary>
-		///   The items that will be added to the list.
+		///     The items that will be added to the list.
 		/// </summary>
 		private readonly List<T> _addedItems = new List<T>();
 
 		/// <summary>
-		///   The items that are in the list.
+		///     The items that are in the list.
 		/// </summary>
 		private readonly List<T> _items = new List<T>();
 
 		/// <summary>
-		///   Indicates whether the order of the items in the list is preserved across removal operations.
+		///     Indicates whether the order of the items in the list is preserved across removal operations.
 		/// </summary>
 		private readonly bool _preserveOrder;
 
 		/// <summary>
-		///   The items that will be removed from the list.
+		///     The items that will be removed from the list.
 		/// </summary>
 		private readonly List<T> _removedItems = new List<T>();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="preserveOrder">
-		///   Indicates whether the order of the items in the list should be preserved during removal operations. If the order is
-		///   unimportant, removal operations will be more efficient if this flag is set to true.
+		///     Indicates whether the order of the items in the list should be preserved during removal operations. If the order is
+		///     unimportant, removal operations will be more efficient if this flag is set to true.
 		/// </param>
 		public DeferredList(bool preserveOrder = true)
 		{
@@ -46,7 +45,7 @@ namespace Lwar
 		}
 
 		/// <summary>
-		///   Gets the number of items in the list.
+		///     Gets the number of items in the list.
 		/// </summary>
 		public int Count
 		{
@@ -58,7 +57,7 @@ namespace Lwar
 		}
 
 		/// <summary>
-		///   Returns the item at the indicated position.
+		///     Returns the item at the indicated position.
 		/// </summary>
 		/// <param name="index">The index of the item that should be returned.</param>
 		public T this[int index]
@@ -73,7 +72,7 @@ namespace Lwar
 		}
 
 		/// <summary>
-		///   Updates the list, processing all deferred additions and removals.
+		///     Updates the list, processing all deferred additions and removals.
 		/// </summary>
 		public void Update()
 		{
@@ -103,7 +102,7 @@ namespace Lwar
 		}
 
 		/// <summary>
-		///   Adds the item to the list. The actual addition is deferred until the next time the list is updated.
+		///     Adds the item to the list. The actual addition is deferred until the next time the list is updated.
 		/// </summary>
 		/// <param name="item">The item that should be added to the list.</param>
 		public void Add(T item)
@@ -117,7 +116,7 @@ namespace Lwar
 		}
 
 		/// <summary>
-		///   Removes the item from the list. The actual removal is deferred until the next time the list is updated.
+		///     Removes the item from the list. The actual removal is deferred until the next time the list is updated.
 		/// </summary>
 		/// <param name="item">The item that should be removed from the list.</param>
 		public void Remove(T item)
@@ -130,8 +129,8 @@ namespace Lwar
 		}
 
 		/// <summary>
-		///   Removes all items and newly added items from the list. The actual clearing is deferred until the
-		///   next time the list is updated.
+		///     Removes all items and newly added items from the list. The actual clearing is deferred until the
+		///     next time the list is updated.
 		/// </summary>
 		public void Clear()
 		{
@@ -143,7 +142,7 @@ namespace Lwar
 		}
 
 		/// <summary>
-		///   Enumerates all items in the list.
+		///     Enumerates all items in the list.
 		/// </summary>
 		public List<T>.Enumerator GetEnumerator()
 		{
@@ -152,7 +151,7 @@ namespace Lwar
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

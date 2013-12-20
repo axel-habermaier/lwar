@@ -1,25 +1,23 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Assets
+﻿namespace Pegasus.AssetsCompiler.Assets
 {
+	using System;
 	using System.IO;
 	using Compilers;
-	using Framework;
-	using Framework.Platform;
-	using Framework.Platform.Memory;
+	using Platform;
+	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a source asset that requires compilation.
+	///     Represents a source asset that requires compilation.
 	/// </summary>
 	public abstract class Asset : DisposableObject
 	{
 		/// <summary>
-		///   The source directory of the asset.
+		///     The source directory of the asset.
 		/// </summary>
 		private readonly string _sourceDirectory;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		/// <param name="doNotCreateTargetPath">If true, the target path for the asset is not created.</param>
@@ -29,7 +27,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		/// <param name="sourceDirectory">The source directory of the asset.</param>
@@ -51,7 +49,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the file name the asset, i.e., Tex.png.
+		///     Gets the file name the asset, i.e., Tex.png.
 		/// </summary>
 		public string FileName
 		{
@@ -59,7 +57,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the file name the asset excluding the file extension, i.e., Tex.
+		///     Gets the file name the asset excluding the file extension, i.e., Tex.
 		/// </summary>
 		public string FileNameWithoutExtension
 		{
@@ -67,12 +65,12 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the path to the asset relative to the asset source directory, i.e., Textures/Tex.png.
+		///     Gets the path to the asset relative to the asset source directory, i.e., Textures/Tex.png.
 		/// </summary>
 		public string RelativePath { get; private set; }
 
 		/// <summary>
-		///   Gets the relative path to the asset directory in the source directory, i.e. /Textures/.
+		///     Gets the relative path to the asset directory in the source directory, i.e. /Textures/.
 		/// </summary>
 		public string RelativeDirectory
 		{
@@ -80,7 +78,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the path to the asset relative to the asset source directory without the file extensions, i.e., Textures/Tex.
+		///     Gets the path to the asset relative to the asset source directory without the file extensions, i.e., Textures/Tex.
 		/// </summary>
 		public string RelativePathWithoutExtension
 		{
@@ -92,7 +90,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the absolute path to the asset in the source directory, i.e. C:/AssetsSources/Textures/Tex.png.
+		///     Gets the absolute path to the asset in the source directory, i.e. C:/AssetsSources/Textures/Tex.png.
 		/// </summary>
 		public string SourcePath
 		{
@@ -100,7 +98,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the absolute path to the asset directory in the source directory, i.e. C:/AssetsSources/Textures/.
+		///     Gets the absolute path to the asset directory in the source directory, i.e. C:/AssetsSources/Textures/.
 		/// </summary>
 		public string SourceDirectory
 		{
@@ -108,16 +106,20 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the absolute path to the asset in the target directory, i.e. C:/Binaries/Assets/Textures/Tex.{ext}.
+		///     Gets the absolute path to the asset in the target directory, i.e. C:/Binaries/Assets/Textures/Tex.{ext}.
 		/// </summary>
-		public string TargetPath
+		public virtual string TargetPath
 		{
-			get { return Path.Combine(Configuration.TargetDirectory, RelativePathWithoutExtension) + PlatformInfo.AssetExtension; }
+			get
+			{
+				var extension = "." + Configuration.UniqueFileIdentifier + PlatformInfo.AssetExtension;
+				return Path.Combine(Configuration.TargetDirectory, RelativePathWithoutExtension) + extension;
+			}
 		}
 
 		/// <summary>
-		///   Gets the absolute path to the compiled asset in the temp directory, i.e.
-		///   C:/AssetsSources/obj/Assets/Textures/Tex.{ext}.
+		///     Gets the absolute path to the compiled asset in the temp directory, i.e.
+		///     C:/AssetsSources/obj/Assets/Textures/Tex.{ext}.
 		/// </summary>
 		public string TempPath
 		{
@@ -125,8 +127,8 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the absolute path to the asset in the temp directory without the file extension, i.e.
-		///   C:/AssetsSources/obj/Assets/Textures/Tex.
+		///     Gets the absolute path to the asset in the temp directory without the file extension, i.e.
+		///     C:/AssetsSources/obj/Assets/Textures/Tex.
 		/// </summary>
 		public string TempPathWithoutExtension
 		{
@@ -134,7 +136,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets the path to the asset hash file.
+		///     Gets the path to the asset hash file.
 		/// </summary>
 		public string HashPath
 		{
@@ -142,8 +144,9 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   The identifier type that should be used for the asset when generating the asset identifier list. If null is returned,
-		///   no asset identifier is generated for this asset instance.
+		///     The identifier type that should be used for the asset when generating the asset identifier list. If null is
+		///     returned,
+		///     no asset identifier is generated for this asset instance.
 		/// </summary>
 		public virtual string IdentifierType
 		{
@@ -151,8 +154,10 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for this
-		///   asset instance.
+		///     Gets the name that should be used for the asset identifier. If null is returned, no asset identifier is generated
+		///     for
+		///     this
+		///     asset instance.
 		/// </summary>
 		public virtual string IdentifierName
 		{
@@ -160,7 +165,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -168,7 +173,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{
@@ -176,7 +181,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Gets a value indicating which action the compiler has to take.
+		///     Gets a value indicating which action the compiler has to take.
 		/// </summary>
 		public CompilationAction GetRequiredAction()
 		{
@@ -205,7 +210,7 @@ namespace Pegasus.AssetsCompiler.Assets
 		}
 
 		/// <summary>
-		///   Writes a hash of the source asset to disk.
+		///     Writes a hash of the source asset to disk.
 		/// </summary>
 		internal void WriteHash()
 		{

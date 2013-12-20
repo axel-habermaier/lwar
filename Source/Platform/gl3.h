@@ -5,7 +5,6 @@
 // OS-specific includes and definitions
 //====================================================================================================================
 
-#define GLEW_STATIC
 #include "glExt.h"
 
 #ifdef WINDOWS
@@ -69,7 +68,7 @@ pgVoid pgCheckGLError(pgString file, pgInt32 line);
 #define PG_GL_FREE(func, handle)														\
 	PG_MULTILINE_MACRO_BEGIN															\
 	if ((handle) != 0)																	\
-	func(1, &(handle));																	\
+		func(1, &(handle));																\
 	PG_ASSERT_NO_GL_ERRORS();															\
 	(handle) = 0;																		\
 	PG_MULTILINE_MACRO_END

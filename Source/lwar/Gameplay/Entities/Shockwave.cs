@@ -1,21 +1,20 @@
-﻿using System;
-
-namespace Lwar.Gameplay.Entities
+﻿namespace Lwar.Gameplay.Entities
 {
-	using Pegasus.Framework.Math;
+	using System;
+	using Pegasus.Math;
 
 	/// <summary>
-	///   Represents a shockwave.
+	///     Represents a shockwave.
 	/// </summary>
 	public class Shockwave : Entity<Shockwave>
 	{
 		/// <summary>
-		///   Gets the current radius of the shockwave.
+		///     Gets the current radius of the shockwave.
 		/// </summary>
 		public float Radius { get; private set; }
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="center">The updated circle center.</param>
 		/// <param name="radius">The updated circle radius.</param>
@@ -26,7 +25,7 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the shockwave.</param>
 		public static Shockwave Create(Identifier id)

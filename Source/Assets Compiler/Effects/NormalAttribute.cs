@@ -1,16 +1,15 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Effects
+﻿namespace Pegasus.AssetsCompiler.Effects
 {
-	using Framework.Platform.Graphics;
+	using System;
+	using Platform.Graphics;
 
 	/// <summary>
-	///   Indicates that a shader argument or return value represents a normal.
+	///     Indicates that a shader argument or return value represents a normal.
 	/// </summary>
 	public class NormalAttribute : SemanticsAttribute
 	{
 		/// <summary>
-		///   Gets the corresponding data semantics literal.
+		///     Gets the corresponding data semantics literal.
 		/// </summary>
 		internal override DataSemantics Semantics
 		{

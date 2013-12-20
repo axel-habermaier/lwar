@@ -1,31 +1,30 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Compilers
+﻿namespace Pegasus.AssetsCompiler.Compilers
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
 	using System.Text;
 	using Assets;
-	using CodeGeneration.Effects;
+	using CSharp;
 	using Effects;
-	using Framework;
-	using Framework.Platform;
-	using Framework.Platform.Graphics;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
-	using Effect = Effects.Effect;
+	using Effects.Compilation;
+	using Platform;
+	using Platform.Graphics;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
-	///   Compiles effects written in C#.
+	///     Compiles effects written in C#.
 	/// </summary>
 	[UsedImplicitly]
 	internal class EffectCompiler : AssetCompiler<ShaderAsset>
 	{
 		/// <summary>
-		///   Compiles all assets of the compiler's asset source type. Returns true to indicate that the compilation of all assets
-		///   has been successful.
+		///     Compiles all assets of the compiler's asset source type. Returns true to indicate that the compilation of all
+		///     assets
+		///     has been successful.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
 		public override bool Compile(IEnumerable<Asset> assets)
@@ -45,7 +44,8 @@ namespace Pegasus.AssetsCompiler.Compilers
 					foreach (var asset in csharpAssets)
 						Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 
-					using (var project = new EffectsProject { CSharpFiles = csharpAssets })
+					var csharpFiles = csharpAssets.Select(asset => new CSharpFile(Configuration.SourceDirectory, asset.RelativePath));
+					using (var project = new EffectsProject { CSharpFiles = csharpFiles })
 					{
 						if (!project.Compile())
 							return false;
@@ -70,7 +70,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Removes the compiled assets and all temporary files written by the compiler.
+		///     Removes the compiled assets and all temporary files written by the compiler.
 		/// </summary>
 		/// <param name="assets">The assets that should be cleaned.</param>
 		public override void Clean(IEnumerable<Asset> assets)
@@ -93,7 +93,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Checks whether any of the C# effect assets have changed.
+		///     Checks whether any of the C# effect assets have changed.
 		/// </summary>
 		/// <param name="shaderAssets">The shader assets that should be checked to determine the compilation action.</param>
 		/// <param name="csharpAssets">The C# assets that should be checked to determine the compilation action.</param>
@@ -119,7 +119,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Creates the assets for the shaders declared in the assets assembly.
+		///     Creates the assets for the shaders declared in the assets assembly.
 		/// </summary>
 		private static IEnumerable<ShaderAsset> CreateAssets()
 		{
@@ -132,7 +132,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Compiles the asset.
+		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -168,7 +168,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Removes the compiled asset and all temporary files written by the compiler.
+		///     Removes the compiled asset and all temporary files written by the compiler.
 		/// </summary>
 		/// <param name="asset">The asset that should be cleaned.</param>
 		protected override void Clean(ShaderAsset asset)
@@ -178,7 +178,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Writes the generated GLSL shader code to the buffer.
+		///     Writes the generated GLSL shader code to the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		/// <param name="source">The GLSL shader source code.</param>
@@ -194,7 +194,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Compiles the HLSL shader of the given profile and writes the generated code into the buffer.
+		///     Compiles the HLSL shader of the given profile and writes the generated code into the buffer.
 		/// </summary>
 		/// <param name="asset">The asset that contains the shader source code.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -215,7 +215,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Gets the path of the temporary HLSL shader file.
+		///     Gets the path of the temporary HLSL shader file.
 		/// </summary>
 		/// <param name="asset">The asset the path should be returned for.</param>
 		private static string GetHlslPath(Asset asset)
@@ -224,7 +224,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Gets the path of the temporary compile HLSL shader file.
+		///     Gets the path of the temporary compile HLSL shader file.
 		/// </summary>
 		/// <param name="asset">The asset the path should be returned for.</param>
 		private static string GetCompiledHlslShaderPath(Asset asset)

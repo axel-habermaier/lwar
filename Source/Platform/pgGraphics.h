@@ -445,6 +445,7 @@ PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDesc
 PG_API_EXPORT pgVoid pgDestroyTexture(pgTexture* texture);
 
 PG_API_EXPORT pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot);
+PG_API_EXPORT pgVoid pgUnbindTexture(pgTexture* texture, pgInt32 slot);
 PG_API_EXPORT pgVoid pgGenerateMipmaps(pgTexture* texture);
 
 //====================================================================================================================
@@ -454,6 +455,7 @@ PG_API_EXPORT pgVoid pgGenerateMipmaps(pgTexture* texture);
 PG_API_EXPORT pgRenderTarget* pgCreateRenderTarget(pgGraphicsDevice* device, pgTexture** colorBuffers, pgInt32 count, pgTexture* depthStencil);
 PG_API_EXPORT pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget);
 
+PG_API_EXPORT pgVoid pgGetRenderTargetSize(pgRenderTarget* renderTarget, pgInt32* width, pgInt32* height);
 PG_API_EXPORT pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color);
 PG_API_EXPORT pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil);
 PG_API_EXPORT pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget);

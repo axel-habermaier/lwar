@@ -1,76 +1,71 @@
-﻿using System;
-
-namespace Lwar.Screens
+﻿namespace Lwar.Screens
 {
+	using System;
 	using System.Text;
 	using Assets;
-	using Gameplay;
 	using Network;
-	using Network.Messages;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Input;
-	using Pegasus.Framework.Platform.Logging;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
-	using Pegasus.Framework.Rendering.UserInterface;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Assets;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Input;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
+	using Pegasus.Rendering.UserInterface;
 	using Scripting;
 
 	/// <summary>
-	///   Shows the chat input field during an active game session.
+	///     Shows the chat input field during an active game session.
 	/// </summary>
 	public class ChatInput : DisposableObject
 	{
 		/// <summary>
-		///   The margin of the chat input and the border of the screen.
+		///     The margin of the chat input and the border of the screen.
 		/// </summary>
 		private const int Margin = 100;
 
 		/// <summary>
-		///   The input trigger that is used to determine whether the chat input should be shown.
+		///     The input trigger that is used to determine whether the chat input should be shown.
 		/// </summary>
 		private readonly LogicalInput _activate = new LogicalInput(Cvars.InputChatCvar, InputLayers.Game);
 
 		/// <summary>
-		///   The input trigger that cancels the chat input.
+		///     The input trigger that cancels the chat input.
 		/// </summary>
 		private readonly LogicalInput _cancel = new LogicalInput(Key.Escape.WentDown(), InputLayers.Chat);
 
 		/// <summary>
-		///   The frame around the chat input.
+		///     The frame around the chat input.
 		/// </summary>
 		private readonly Frame _frame = new Frame();
 
 		/// <summary>
-		///   The input device that is used to check for user input.
+		///     The input device that is used to check for user input.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
-		///   The label that informs the user if the text is too long.
+		///     The label that informs the user if the text is too long.
 		/// </summary>
 		private readonly Label _lengthWarning;
 
 		/// <summary>
-		///   The chat input prompt.
+		///     The chat input prompt.
 		/// </summary>
 		private readonly Label _prompt;
 
 		/// <summary>
-		///   The input trigger that submits a non-empty chat message.
+		///     The input trigger that submits a non-empty chat message.
 		/// </summary>
 		private readonly LogicalInput _submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputLayers.Chat);
 
 		/// <summary>
-		///   The chat input text box.
+		///     The chat input text box.
 		/// </summary>
 		private readonly TextBox _textBox;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="inputDevice">The input device that should be used to check for user input.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
@@ -97,7 +92,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the chat message entered by the user exceeds the maximum allowed length.
+		///     Gets a value indicating whether the chat message entered by the user exceeds the maximum allowed length.
 		/// </summary>
 		private bool LengthExceeded
 		{
@@ -105,7 +100,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the chat input is currently active.
+		///     Gets a value indicating whether the chat input is currently active.
 		/// </summary>
 		private bool Active
 		{
@@ -113,7 +108,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -133,7 +128,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Shows the chat input.
+		///     Shows the chat input.
 		/// </summary>
 		private void Show()
 		{
@@ -142,7 +137,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Hides the chat input and clears the currently entered chat message.
+		///     Hides the chat input and clears the currently entered chat message.
 		/// </summary>
 		private void Hide()
 		{
@@ -152,8 +147,8 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Sends the current message to the server, if the message is non-empty and does not exceed the length limit. Returns
-		///   false to indicate that there was a problem sending the message.
+		///     Sends the current message to the server, if the message is non-empty and does not exceed the length limit. Returns
+		///     false to indicate that there was a problem sending the message.
 		/// </summary>
 		private bool Send()
 		{
@@ -168,7 +163,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Updates the chat input's state.
+		///     Updates the chat input's state.
 		/// </summary>
 		/// <param name="size">The size of the window.</param>
 		public void Update(Size size)
@@ -201,7 +196,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Draws the chat input, if it is active.
+		///     Draws the chat input, if it is active.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		public void Draw(SpriteBatch spriteBatch)
@@ -222,7 +217,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Invoked whenever a printable character is entered.
+		///     Invoked whenever a printable character is entered.
 		/// </summary>
 		/// <param name="c">The character that has been entered.</param>
 		private void OnCharacterEntered(char c)
@@ -232,7 +227,7 @@ namespace Lwar.Screens
 		}
 
 		/// <summary>
-		///   Invoked whenever a key is pressed.
+		///     Invoked whenever a key is pressed.
 		/// </summary>
 		/// <param name="key">The key that was pressed.</param>
 		private void OnKeyPressed(KeyEventArgs key)

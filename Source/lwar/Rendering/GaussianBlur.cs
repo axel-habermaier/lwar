@@ -1,31 +1,29 @@
-﻿using System;
-
-namespace Lwar.Rendering
+﻿namespace Lwar.Rendering
 {
+	using System;
 	using System.Collections.Generic;
 	using Assets.Effects;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Assets;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Represents a GPU-based gaussian blur filter than can be applied to a texture.
+	///     Represents a GPU-based gaussian blur filter than can be applied to a texture.
 	/// </summary>
 	public class GaussianBlur : DisposableObject
 	{
 		/// <summary>
-		///   The minimum size of the temporary textures.
+		///     The minimum size of the temporary textures.
 		/// </summary>
 		private const int MinimumSize = 16;
 
 		private readonly BlurEffect _blurEffect;
 
 		/// <summary>
-		///   The full-screen quad that is used to blur the textures.
+		///     The full-screen quad that is used to blur the textures.
 		/// </summary>
 		private readonly FullscreenQuad _fullscreenQuad;
 
@@ -33,21 +31,21 @@ namespace Lwar.Rendering
 		private readonly TexturedQuadEffect _quadEffect;
 
 		/// <summary>
-		///   The temporary render targets that are required to blur the input texture.
+		///     The temporary render targets that are required to blur the input texture.
 		/// </summary>
 		private readonly RenderTarget[] _renderTargets;
 
 		private readonly Size[] _sizes;
 
 		/// <summary>
-		///   The input texture that is blurred.
+		///     The input texture that is blurred.
 		/// </summary>
 		private readonly Texture2D _texture;
 
 		private readonly Texture2D[] _textures;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to apply the blur effect.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
@@ -98,7 +96,7 @@ namespace Lwar.Rendering
 		}
 
 		/// <summary>
-		///   Blurs the input texture.
+		///     Blurs the input texture.
 		/// </summary>
 		public Texture2D Blur(RenderOutput output)
 		{
@@ -138,7 +136,7 @@ namespace Lwar.Rendering
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

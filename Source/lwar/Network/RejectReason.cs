@@ -1,19 +1,19 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
+
 	/// <summary>
-	///   Indicates why a connect attempt has been rejected by the server.
+	///     Indicates why a connect attempt has been rejected by the server.
 	/// </summary>
 	public enum RejectReason
 	{
 		/// <summary>
-		///   Indicates that the server was full.
+		///     Indicates that the server was full.
 		/// </summary>
 		Full = 1,
 
 		/// <summary>
-		///   Indicates that the server uses another version of the network protocol than the client.
+		///     Indicates that the server uses another version of the network protocol than the client.
 		/// </summary>
 		VersionMismatch = 2,
 	}

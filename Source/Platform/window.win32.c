@@ -7,13 +7,10 @@
 //====================================================================================================================
 
 #define WndClassName "PegasusWindowClass"
-#define InputWndClassName "PegasusInputWindowClass"
 
 static struct pgWindowsState
 {
 	pgInt32		openWindows;
-	HWND		inputWindow;
-	pgWindow*	activeWindow;
 	pgMessage	message;
 } state;
 
@@ -22,7 +19,7 @@ static pgVoid Shutdown();
 static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc);
 static pgVoid HandleWindowMessages(HWND hwnd);
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+static LRESULT HandleKeyboardInput(LPARAM lParam);
 static pgVoid CenterCursor(pgWindow* window);
 static pgKey TranslateKey(UINT virtualKey);
 
@@ -83,25 +80,11 @@ pgVoid pgCloseWindowCore(pgWindow* window)
 	if (--state.openWindows == 0)
 		Shutdown();
 
-	if (state.activeWindow == window)
-		state.activeWindow = NULL;
-
 	window->hwnd = NULL;
 }
 
 pgBool pgProcessWindowEvent(pgWindow* window, pgMessage* message)
 {
-	// Only check the input window if the given window is the active one
-	if (state.activeWindow == window)
-	{
-		HandleWindowMessages(state.inputWindow);
-		if (state.message.type != PG_MESSAGE_INVALID)
-		{
-			*message = state.message;
-			return PG_TRUE;
-		}
-	}
-		
 	HandleWindowMessages(window->hwnd);
 	if (state.message.type != PG_MESSAGE_INVALID)
 	{
@@ -253,23 +236,13 @@ static pgVoid Initialize()
 {
 	RAWINPUTDEVICE device;
 
-	RegisterWindowClass(InputWndClassName, InputWndProc);
 	RegisterWindowClass(WndClassName, WndProc);
 	
-	// Open the hidden input window
-	state.inputWindow = CreateWindowEx(0, InputWndClassName, "", WS_POPUP | WS_DISABLED, 0, 0, 1, 1,
-		NULL, NULL, GetModuleHandle(NULL), NULL);
-
-    if (state.inputWindow == NULL)
-        pgWin32Error("Failed to initialize the input initialization window.");
-
-    ShowWindow(state.inputWindow, SW_HIDE);
-
 	// Register the keyboard raw input device.
 	device.usUsagePage = 0x01; // keyboard
 	device.usUsage = 0x06; // keyboard
 	device.dwFlags = 0;
-	device.hwndTarget = state.inputWindow;
+	device.hwndTarget = NULL;
 
 	if (!RegisterRawInputDevices(&device, 1, sizeof(RAWINPUTDEVICE)))
 		pgWin32Error("Failed to register keyboard raw input device.");
@@ -279,14 +252,8 @@ static pgVoid Shutdown()
 {
 	PG_ASSERT(state.openWindows == 0, "There should be no open windows left.");
 
-	if (state.inputWindow != NULL && !DestroyWindow(state.inputWindow))
-		pgWin32Error("Failed to destroy input window.");
-
 	if (!UnregisterClass(WndClassName, GetModuleHandle(NULL)))
 		pgWin32Error("Unable to unregister window class.");
-
-	if (!UnregisterClass(InputWndClassName, GetModuleHandle(NULL)))
-		pgWin32Error("Unable to unregister input window class.");
 }
 
 static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc)
@@ -332,7 +299,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		// Get the pgWindow instance that was passed as the last argument of CreateWindow
 		window = (pgWindow*)((CREATESTRUCT*)lParam)->lpCreateParams;
 
-		// Set as the "user data" parameter of the window and set the window's hwnd
+		// Set the "user data" parameter of the window and set the window's hwnd
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
 		window->hwnd = hwnd;
 	}
@@ -381,10 +348,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		if (LOWORD(wParam) == WA_INACTIVE)
 			message->type = PG_MESSAGE_LOST_FOCUS;
 		else
-		{
-			state.activeWindow = window;
 			message->type = PG_MESSAGE_GAINED_FOCUS;
-		}
 		break;
 
 	case WM_NCACTIVATE:
@@ -392,10 +356,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		if (!wParam)
 			message->type = PG_MESSAGE_LOST_FOCUS;
 		else
-		{
-			state.activeWindow = window;
 			message->type = PG_MESSAGE_GAINED_FOCUS;
-		}
 		break;
 
 	case WM_MOUSEMOVE:
@@ -520,20 +481,20 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		message->character = (pgUint16)wParam;
 		message->scanCode = (pgInt32)((pgByte*)&lParam)[2];
 		break;
+
+	case WM_INPUT:
+		HandleKeyboardInput(lParam);
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-static LRESULT CALLBACK InputWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+static LRESULT HandleKeyboardInput(LPARAM lParam)
 {
 	pgMessage* message = &state.message;
 	RAWINPUT input;
 	UINT size;
 	UINT outSize;
-
-	if (msg != WM_INPUT)
-		return DefWindowProc(hwnd, msg, wParam, lParam);
 
 	size = sizeof(RAWINPUT);
 	outSize = GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &input, &size, sizeof(RAWINPUTHEADER));

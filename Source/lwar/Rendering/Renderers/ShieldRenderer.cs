@@ -1,32 +1,31 @@
-﻿using System;
-
-namespace Lwar.Rendering.Renderers
+﻿namespace Lwar.Rendering.Renderers
 {
+	using System;
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Actors;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
+	using Pegasus.Math;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders shield effects into a 3D scene.
+	///     Renders shield effects into a 3D scene.
 	/// </summary>
 	public class ShieldRenderer : Renderer<Shield>
 	{
 		/// <summary>
-		///   The effect that is used to draw the shields.
+		///     The effect that is used to draw the shields.
 		/// </summary>
 		private SphereEffect _effect;
 
 		/// <summary>
-		///   The model that is used to draw the shields.
+		///     The model that is used to draw the shields.
 		/// </summary>
 		private Model _model;
 
 		/// <summary>
-		///   Initializes the renderer.
+		///     Initializes the renderer.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -38,7 +37,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Draws all registered 3D elements.
+		///     Draws all registered 3D elements.
 		/// </summary>
 		/// <param name="output">The output that the elements should be rendered to.</param>
 		public override void Draw(RenderOutput output)
@@ -53,7 +52,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposingCore()
 		{

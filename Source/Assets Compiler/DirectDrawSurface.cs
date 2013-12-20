@@ -1,43 +1,41 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler
+﻿namespace Pegasus.AssetsCompiler
 {
+	using System;
 	using System.Collections.Generic;
-	using Framework;
-	using Framework.Platform.Graphics;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform.Graphics;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
-	///   Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at
-	///   http://msdn.microsoft.com/en-us/library/windows/apps/jj651550.aspx.
+	///     Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at
+	///     http://msdn.microsoft.com/en-us/library/windows/apps/jj651550.aspx.
 	/// </summary>
 	internal class DirectDrawSurface
 	{
 		// ReSharper restore InconsistentNaming
 
 		/// <summary>
-		///   The magic DDS file code "DDS ".
+		///     The magic DDS file code "DDS ".
 		/// </summary>
 		private const int MagicCode = 0x20534444;
 
 		/// <summary>
-		///   The texture description for the image.
+		///     The texture description for the image.
 		/// </summary>
 		private readonly TextureDescription _description;
 
 		/// <summary>
-		///   The surfaces of the image.
+		///     The surfaces of the image.
 		/// </summary>
 		private readonly Surface[] _surfaces;
 
 		/// <summary>
-		///   The DDS file header.
+		///     The DDS file header.
 		/// </summary>
 		private Header _header;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer that contains the contents of the DDS file.</param>
 		public unsafe DirectDrawSurface(BufferReader buffer)
@@ -110,7 +108,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Gets the texture description for the image.
+		///     Gets the texture description for the image.
 		/// </summary>
 		public TextureDescription Description
 		{
@@ -118,7 +116,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Gets the surfaces of the image.
+		///     Gets the surfaces of the image.
 		/// </summary>
 		public IEnumerable<Surface> Surfaces
 		{
@@ -126,7 +124,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Serializes the DDS image into the given buffer.
+		///     Serializes the DDS image into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the DDS image should be serialized into.</param>
 		internal unsafe void Write(BufferWriter buffer)
@@ -154,7 +152,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Converts the DDS data format to the corresponding surface format.
+		///     Converts the DDS data format to the corresponding surface format.
 		/// </summary>
 		/// <param name="format">The data format that should be converted.</param>
 		private static SurfaceFormat ToSurfaceFormat(Format format)
@@ -179,7 +177,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Converts the DDS resource dimension to the corresponding texture type.
+		///     Converts the DDS resource dimension to the corresponding texture type.
 		/// </summary>
 		private TextureType GetTextureType()
 		{
@@ -200,7 +198,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Creates a four-character code from the given values.
+		///     Creates a four-character code from the given values.
 		/// </summary>
 		private static uint MakeFourCharacterCode(uint ch0, uint ch1, uint ch2, uint ch3)
 		{
@@ -208,7 +206,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Gets the surface information for a particular data format.
+		///     Gets the surface information for a particular data format.
 		/// </summary>
 		/// <param name="width">The width of the surface.</param>
 		/// <param name="height">The height of the surface.</param>
@@ -286,7 +284,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Returns the number of bits per pixel for the given data format.
+		///     Returns the number of bits per pixel for the given data format.
 		/// </summary>
 		/// <param name="format">The data format for which the number of bits per pixel should be returned.</param>
 		private static int BitsPerPixel(Format format)
@@ -407,7 +405,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   The cubemap flags.
+		///     The cubemap flags.
 		/// </summary>
 		[Flags]
 		private enum CubemapFlags
@@ -427,7 +425,7 @@ namespace Pegasus.AssetsCompiler
 		// ReSharper disable InconsistentNaming
 
 		/// <summary>
-		///   Indicates in which DXGI format the data in the DDS file is stored.
+		///     Indicates in which DXGI format the data in the DDS file is stored.
 		/// </summary>
 		private enum Format
 		{
@@ -536,17 +534,17 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Represents the header of the DDS file.
+		///     Represents the header of the DDS file.
 		/// </summary>
 		private unsafe struct Header
 		{
 			/// <summary>
-			///   Unused data that is only required to ensure that the Header struct has the correct unmanaged size.
+			///     Unused data that is only required to ensure that the Header struct has the correct unmanaged size.
 			/// </summary>
 			private fixed uint _unused [16];
 
 			/// <summary>
-			///   Initializes a new instance from the given buffer.
+			///     Initializes a new instance from the given buffer.
 			/// </summary>
 			/// <param name="buffer">The buffer from which the instance should be initialized.</param>
 			public Header(BufferReader buffer)
@@ -580,70 +578,70 @@ namespace Pegasus.AssetsCompiler
 			}
 
 			/// <summary>
-			///   Gets the size of the texture array.
+			///     Gets the size of the texture array.
 			/// </summary>
 			public uint ArraySize { get; private set; }
 
 			/// <summary>
-			///   Gets the texture format.
+			///     Gets the texture format.
 			/// </summary>
 			public Format Format { get; private set; }
 
 			/// <summary>
-			///   Gets the texture dimension.
+			///     Gets the texture dimension.
 			/// </summary>
 			public ResourceDimension ResourceDimension { get; private set; }
 
 			/// <summary>
-			///   Gets the miscellaneous flags.
+			///     Gets the miscellaneous flags.
 			/// </summary>
 			public ResourceOptionFlags MiscFlags { get; private set; }
 
 			/// <summary>
-			///   Gets the cube map flags.
+			///     Gets the cube map flags.
 			/// </summary>
 			public CubemapFlags CubeMapFlags { get; private set; }
 
 			/// <summary>
-			///   Gets the pixel format.
+			///     Gets the pixel format.
 			/// </summary>
 			public PixelFormat PixelFormat { get; private set; }
 
 			/// <summary>
-			///   Gets the depth of the texture.
+			///     Gets the depth of the texture.
 			/// </summary>
 			public uint Depth { get; private set; }
 
 			public HeaderFlags Flags { get; private set; }
 
 			/// <summary>
-			///   Gets the height of the texture.
+			///     Gets the height of the texture.
 			/// </summary>
 			public uint Height { get; private set; }
 
 			/// <summary>
-			///   Gets the number of mipmaps.
+			///     Gets the number of mipmaps.
 			/// </summary>
 			public uint MipMapCount { get; private set; }
 
 			/// <summary>
-			///   Gets the size of the header in bytes.
+			///     Gets the size of the header in bytes.
 			/// </summary>
 			public uint Size { get; private set; }
 
 			/// <summary>
-			///   Gets the surface flags.
+			///     Gets the surface flags.
 			/// </summary>
 			public SurfaceFlags SurfaceFlags { get; private set; }
 
 			/// <summary>
-			///   Gets the width of the texture.
+			///     Gets the width of the texture.
 			/// </summary>
 			public uint Width { get; private set; }
 		}
 
 		/// <summary>
-		///   The header flags.
+		///     The header flags.
 		/// </summary>
 		[Flags]
 		private enum HeaderFlags
@@ -658,12 +656,12 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Provides information about the pixel format of the DDS file.
+		///     Provides information about the pixel format of the DDS file.
 		/// </summary>
 		private struct PixelFormat
 		{
 			/// <summary>
-			///   Initializes a new instance from the given buffer.
+			///     Initializes a new instance from the given buffer.
 			/// </summary>
 			/// <param name="buffer">The buffer from which the instance should be initialized.</param>
 			public PixelFormat(BufferReader buffer)
@@ -682,48 +680,48 @@ namespace Pegasus.AssetsCompiler
 			}
 
 			/// <summary>
-			///   Gets the alpha channel bit mask.
+			///     Gets the alpha channel bit mask.
 			/// </summary>
 			public uint ABitMask { get; private set; }
 
 			/// <summary>
-			///   Gets the blue channel bit mask.
+			///     Gets the blue channel bit mask.
 			/// </summary>
 			public uint BBitMask { get; private set; }
 
 			/// <summary>
-			///   Gets the green channel bit mask.
+			///     Gets the green channel bit mask.
 			/// </summary>
 			public uint GBitMask { get; private set; }
 
 			/// <summary>
-			///   Gets the red channel bit mask.
+			///     Gets the red channel bit mask.
 			/// </summary>
 			public uint RBitMask { get; private set; }
 
 			/// <summary>
-			///   Gets the RGB bit count.
+			///     Gets the RGB bit count.
 			/// </summary>
 			public uint RgbBitCount { get; private set; }
 
 			/// <summary>
-			///   Gets the pixel format flags.
+			///     Gets the pixel format flags.
 			/// </summary>
 			public PixelFormatFlags Flags { get; private set; }
 
 			/// <summary>
-			///   Gets the four-character code.
+			///     Gets the four-character code.
 			/// </summary>
 			public uint FourCC { get; private set; }
 
 			/// <summary>
-			///   Gets the size of the pixel format structure in bytes.
+			///     Gets the size of the pixel format structure in bytes.
 			/// </summary>
 			public uint Size { get; private set; }
 		}
 
 		/// <summary>
-		///   The pixel format flags.
+		///     The pixel format flags.
 		/// </summary>
 		[Flags]
 		private enum PixelFormatFlags
@@ -738,7 +736,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   The resource dimension.
+		///     The resource dimension.
 		/// </summary>
 		private enum ResourceDimension
 		{
@@ -750,7 +748,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   The resource option flags.
+		///     The resource option flags.
 		/// </summary>
 		[Flags]
 		private enum ResourceOptionFlags
@@ -768,7 +766,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   The surface flags.
+		///     The surface flags.
 		/// </summary>
 		[Flags]
 		private enum SurfaceFlags

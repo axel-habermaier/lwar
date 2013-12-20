@@ -7,9 +7,15 @@
 // We're using D3D's C interface
 #define CINTERFACE
 #define COBJMACROS
+#define INITGUID
 
 #include <dxgi.h>
 #include <d3d11.h>
+
+#ifdef DEBUG
+	#include <DXGIDebug.h>
+	#include <Initguid.h>
+#endif
 
 #pragma warning(pop)
 
@@ -42,7 +48,8 @@
 	ID3D11Device*			ptr;		\
 	ID3D11DeviceContext*	context;	\
 	IDXGIFactory*			factory;	\
-	IDXGIAdapter*			adapter;	
+	IDXGIAdapter*			adapter;	\
+	IUnknown*				debug;
 
 #define PG_SWAP_CHAIN_PLATFORM		\
 	IDXGISwapChain*			ptr;	\

@@ -1,26 +1,25 @@
-﻿using System;
-
-namespace Lwar.Gameplay.Entities
+﻿namespace Lwar.Gameplay.Entities
 {
-	using Pegasus.Framework.Math;
+	using System;
+	using Pegasus.Math;
 
 	/// <summary>
-	///   Represents a ray.
+	///     Represents a ray.
 	/// </summary>
 	public class Ray : Entity<Ray>
 	{
 		/// <summary>
-		///   Gets the length of the ray.
+		///     Gets the length of the ray.
 		/// </summary>
 		public float Length { get; private set; }
 
 		/// <summary>
-		///   Gets the current target entity or null if there is none.
+		///     Gets the current target entity or null if there is none.
 		/// </summary>
 		public IEntity Target { get; private set; }
 
 		/// <summary>
-		///   Applies the update message sent by the server to the entity's state.
+		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="origin">The updated ray origin.</param>
 		/// <param name="direction">The updated ray direction.</param>
@@ -35,14 +34,14 @@ namespace Lwar.Gameplay.Entities
 		}
 
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="id">The generational identifier of the ray.</param>
 		public static Ray Create(Identifier id)
 		{
 			var ray = GetInstance();
 			ray.Identifier = id;
-			ray.Template = Templates.Ray;
+			ray.Template = EntityTemplates.Ray;
 			return ray;
 		}
 	}

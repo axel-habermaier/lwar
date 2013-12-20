@@ -1,29 +1,28 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler
+﻿namespace Pegasus.AssetsCompiler
 {
+	using System;
 	using System.Linq;
-	using Framework.Platform;
-	using Framework.Platform.Graphics;
-	using Framework.Platform.Logging;
+	using Platform;
+	using Platform.Graphics;
+	using Platform.Logging;
 
 	/// <summary>
-	///   Runs an external asset compilation tool.
+	///     Runs an external asset compilation tool.
 	/// </summary>
 	internal static class ExternalTool
 	{
 		/// <summary>
-		///   The path to the nvcompress executable.
+		///     The path to the nvcompress executable.
 		/// </summary>
 		private static readonly string NvCompressPath = GetExecutable(PlatformInfo.Platform, "../../Tools/nvcompress");
 
 		/// <summary>
-		///   The path to the nvassemble executable.
+		///     The path to the nvassemble executable.
 		/// </summary>
 		private static readonly string NvAssemblePath = GetExecutable(PlatformInfo.Platform, "../../Tools/nvassemble");
 
 		/// <summary>
-		///   Runs the nvcompress tool with the given arguments.
+		///     Runs the nvcompress tool with the given arguments.
 		/// </summary>
 		/// <param name="input">The path of the input file that should be processed.</param>
 		/// <param name="output">The path of the output file that should be generated.</param>
@@ -69,7 +68,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Runs the nvassemble tool with the given arguments.
+		///     Runs the nvassemble tool with the given arguments.
 		/// </summary>
 		/// <param name="paths">The paths of the cube map faces.</param>
 		/// <param name="output">The path of the output file that should be generated.</param>
@@ -87,7 +86,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Runs the DirectX offline shader compiler. Returns false to indicate that compiler errors have occurred.
+		///     Runs the DirectX offline shader compiler. Returns false to indicate that compiler errors have occurred.
 		/// </summary>
 		/// <param name="input">The shader file that should be compiled.</param>
 		/// <param name="output">The output file that should store the compiled shader.</param>
@@ -121,7 +120,7 @@ namespace Pegasus.AssetsCompiler
 		}
 
 		/// <summary>
-		///   Constructs the platform-specific executable path to a tool.
+		///     Constructs the platform-specific executable path to a tool.
 		/// </summary>
 		/// <param name="platform">The platform for which the tool should be executed.</param>
 		/// <param name="path">The platform-independent path to the tool.</param>

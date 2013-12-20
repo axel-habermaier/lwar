@@ -1,24 +1,23 @@
-﻿using System;
-
-namespace Lwar.Network
+﻿namespace Lwar.Network
 {
+	using System;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Messages;
-	using Pegasus.Framework;
+	using Pegasus;
 
 	/// <summary>
-	///   Dispatches messages received from the server.
+	///     Dispatches messages received from the server.
 	/// </summary>
 	public sealed class MessageDispatcher
 	{
 		/// <summary>
-		///   The game session the messages are dispatched to.
+		///     The game session the messages are dispatched to.
 		/// </summary>
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session the messages should be dispatched to.</param>
 		public MessageDispatcher(GameSession gameSession)
@@ -27,7 +26,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Dispatches the given message.
+		///     Dispatches the given message.
 		/// </summary>
 		/// <param name="message">The message that should be dispatched.</param>
 		public void Dispatch(Message message)
@@ -106,7 +105,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///   Adds a new entity to the game session.
+		///     Adds a new entity to the game session.
 		/// </summary>
 		/// <param name="entityId">The identifier of the new entity.</param>
 		/// <param name="type">The type of the new entity.</param>
@@ -122,16 +121,16 @@ namespace Lwar.Network
 					entity = Ship.Create(entityId, player);
 					break;
 				case EntityType.Earth:
-					entity = Planet.Create(entityId, Templates.Earth);
+					entity = Planet.Create(entityId, EntityTemplates.Earth);
 					break;
 				case EntityType.Mars:
-					entity = Planet.Create(entityId, Templates.Mars);
+					entity = Planet.Create(entityId, EntityTemplates.Mars);
 					break;
 				case EntityType.Moon:
-					entity = Planet.Create(entityId, Templates.Moon);
+					entity = Planet.Create(entityId, EntityTemplates.Moon);
 					break;
 				case EntityType.Jupiter:
-					entity = Planet.Create(entityId, Templates.Jupiter);
+					entity = Planet.Create(entityId, EntityTemplates.Jupiter);
 					break;
 				case EntityType.Sun:
 					entity = Sun.Create(entityId);

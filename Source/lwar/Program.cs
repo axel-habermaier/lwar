@@ -1,26 +1,23 @@
-﻿using System;
-
-namespace Lwar
+﻿namespace Lwar
 {
-	using Assets;
+	using System;
 	using Pegasus.Framework;
-	using Rendering;
 	using Scripting;
 
 	/// <summary>
-	///   Starts up and configures the application.
+	///     Starts up and configures the application.
 	/// </summary>
 	internal static class Program
 	{
 		/// <summary>
-		///   The entry point of the application.
+		///     The entry point of the application.
 		/// </summary>
 		private static void Main()
 		{
 			Commands.Initialize();
 			Cvars.Initialize();
 
-			Bootstrapper<LwarApp>.Run("lwar", Fonts.LiberationMono11, new SpriteEffect());
+			Bootstrapper<App>.Run("lwar");
 		}
 	}
 }

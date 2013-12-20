@@ -1,59 +1,57 @@
-﻿using System;
-
-namespace Lwar.Rendering.Renderers
+﻿namespace Lwar.Rendering.Renderers
 {
+	using System;
 	using Assets;
 	using Assets.Effects;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
-	using Pegasus.Framework.Platform;
-	using Pegasus.Framework.Platform.Assets;
-	using Pegasus.Framework.Platform.Graphics;
-	using Pegasus.Framework.Platform.Memory;
-	using Pegasus.Framework.Rendering;
+	using Pegasus;
+	using Pegasus.Math;
+	using Pegasus.Platform.Assets;
+	using Pegasus.Platform.Graphics;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
-	///   Renders a parallax scrolling effect.
+	///     Renders a parallax scrolling effect.
 	/// </summary>
 	public class ParallaxRenderer : DisposableObject
 	{
 		/// <summary>
-		///   The number of stars that are rendered.
+		///     The number of stars that are rendered.
 		/// </summary>
 		private const int StarCount = 8192;
 
 		/// <summary>
-		///   The maximum allowed distance of the generated stars from the origin in world units.
+		///     The maximum allowed distance of the generated stars from the origin in world units.
 		/// </summary>
 		private const int Range = 16384;
 
 		/// <summary>
-		///   The number of different star textures in the texture atlas.
+		///     The number of different star textures in the texture atlas.
 		/// </summary>
 		private const int StarTypeCount = 8;
 
 		/// <summary>
-		///   The Y-coordinate of the stars.
+		///     The Y-coordinate of the stars.
 		/// </summary>
 		private const float StarLayer = -2000.0f;
 
 		/// <summary>
-		///   The allowed range of the star's relative distance to the viewer.
+		///     The allowed range of the star's relative distance to the viewer.
 		/// </summary>
 		private static readonly Vector2 DistanceRange = new Vector2(0.1f, 0.8f);
 
 		/// <summary>
-		///   The effect that is used to draw the parallax scrolling star field.
+		///     The effect that is used to draw the parallax scrolling star field.
 		/// </summary>
 		private readonly ParallaxEffect _effect;
 
 		/// <summary>
-		///   The model that stores the stars.
+		///     The model that stores the stars.
 		/// </summary>
 		private readonly Model _model;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
@@ -126,7 +124,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Draws the skybox.
+		///     Draws the skybox.
 		/// </summary>
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public void Draw(RenderOutput output)
@@ -142,7 +140,7 @@ namespace Lwar.Rendering.Renderers
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

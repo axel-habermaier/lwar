@@ -1,6 +1,10 @@
 #ifndef __LIST_H
 #define __LIST_H
 
+#ifdef _MSC_VER
+#define inline __inline
+#endif
+
 /* This file is from Linux Kernel (include/linux/list.h) 
  * and modified by simply removing hardware prefetching of list items. 
  * Here by copyright, credits attributed to where ever they belong.

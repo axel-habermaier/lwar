@@ -1,17 +1,16 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Effects
+﻿namespace Pegasus.AssetsCompiler.Effects
 {
+	using System;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
-	///   Represents a 4x4 matrix.
+	///     Represents a 4x4 matrix.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public class Matrix
 	{
 		/// <summary>
-		///   Multiplies each element of the matrix with the scalar value.
+		///     Multiplies each element of the matrix with the scalar value.
 		/// </summary>
 		/// <param name="matrix">The matrix that should be multiplied.</param>
 		/// <param name="value">The value each element of the matrix should be multiplied with.</param>
@@ -21,7 +20,7 @@ namespace Pegasus.AssetsCompiler.Effects
 		}
 
 		/// <summary>
-		///   Multiplies each element of the matrix with the scalar value.
+		///     Multiplies each element of the matrix with the scalar value.
 		/// </summary>
 		/// <param name="matrix">The matrix that should be multiplied.</param>
 		/// <param name="value">The value each element of the matrix should be multiplied with.</param>
@@ -31,7 +30,7 @@ namespace Pegasus.AssetsCompiler.Effects
 		}
 
 		/// <summary>
-		///   Multiplies the matrix with the vector.
+		///     Multiplies the matrix with the vector.
 		/// </summary>
 		/// <param name="matrix">The matrix that should be multiplied.</param>
 		/// <param name="vector">The vector that should be multiplied.</param>
@@ -41,7 +40,7 @@ namespace Pegasus.AssetsCompiler.Effects
 		}
 
 		/// <summary>
-		///   Multiplies two matrices.
+		///     Multiplies two matrices.
 		/// </summary>
 		/// <param name="matrix1">The first matrix that should be multiplied.</param>
 		/// <param name="matrix2">The second matrix that should be multiplied.</param>
@@ -51,7 +50,7 @@ namespace Pegasus.AssetsCompiler.Effects
 		}
 
 		/// <summary>
-		///   Performs an element-wise addition.
+		///     Performs an element-wise addition.
 		/// </summary>
 		/// <param name="matrix1">The first matrix that should be added.</param>
 		/// <param name="matrix2">The second matrix that should be added.</param>
@@ -61,7 +60,7 @@ namespace Pegasus.AssetsCompiler.Effects
 		}
 
 		/// <summary>
-		///   Performs an element-wise subtraction.
+		///     Performs an element-wise subtraction.
 		/// </summary>
 		/// <param name="matrix1">The matrix the second matrix should be subtracted from.</param>
 		/// <param name="matrix2">The matrix that should be subtracted.</param>
@@ -71,7 +70,7 @@ namespace Pegasus.AssetsCompiler.Effects
 		}
 
 		/// <summary>
-		///   Gets the element of the matrix at the given column and the given row.
+		///     Gets the element of the matrix at the given column and the given row.
 		/// </summary>
 		/// <param name="row">The zero-based index of the row of the element that should be returned.</param>
 		/// <param name="column">The zero-based index of the column of the element that should be returned.</param>

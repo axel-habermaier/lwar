@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+	<Include>../Pegasus UI/TypeInfo.xml</Include>
+
+	<Class Name="Lwar.UserInterface.UserControl1"></Class>
+</Types>

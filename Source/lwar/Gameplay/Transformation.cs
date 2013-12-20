@@ -1,29 +1,28 @@
-﻿using System;
-
-namespace Lwar.Gameplay
+﻿namespace Lwar.Gameplay
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using Pegasus.Framework;
-	using Pegasus.Framework.Math;
+	using Pegasus;
+	using Pegasus.Math;
 
 	/// <summary>
-	///   Represents a transformation in a transformation hierarchy.
+	///     Represents a transformation in a transformation hierarchy.
 	/// </summary>
 	public class Transformation
 	{
 		/// <summary>
-		///   The children of the transformation.
+		///     The children of the transformation.
 		/// </summary>
 		private readonly List<Transformation> _children = new List<Transformation>();
 
 		/// <summary>
-		///   The parent of the transformation.
+		///     The parent of the transformation.
 		/// </summary>
 		private Transformation _parent;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public Transformation()
 		{
@@ -31,17 +30,17 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Gets the absolute transformation matrix.
+		///     Gets the absolute transformation matrix.
 		/// </summary>
 		public Matrix Matrix { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the position relative to the parent.
+		///     Gets or sets the position relative to the parent.
 		/// </summary>
 		public Vector3 Position { get; set; }
 
 		/// <summary>
-		///   Gets or sets the 2D position relative to the parent.
+		///     Gets or sets the 2D position relative to the parent.
 		/// </summary>
 		public Vector2 Position2D
 		{
@@ -50,12 +49,12 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Gets or sets the rotation relative to the parent.
+		///     Gets or sets the rotation relative to the parent.
 		/// </summary>
 		public Vector3 Rotation { get; set; }
 
 		/// <summary>
-		///   Resest the transformation to its default values.
+		///     Resest the transformation to its default values.
 		/// </summary>
 		public void Reset()
 		{
@@ -68,8 +67,8 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Attaches the transformation to the given parent. If the transformation already has a parent, it is detached from its
-		///   old parent before it is attached to the new one.
+		///     Attaches the transformation to the given parent. If the transformation already has a parent, it is detached from its
+		///     old parent before it is attached to the new one.
 		/// </summary>
 		/// <param name="parent">The parent the transformation should be attached to.</param>
 		public void AttachTo(Transformation parent)
@@ -90,8 +89,8 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Detaches the transformation from the hierarchy. The children of the transformation are attached to the
-		///   transformation's parent.
+		///     Detaches the transformation from the hierarchy. The children of the transformation are attached to the
+		///     transformation's parent.
 		/// </summary>
 		public void Detach()
 		{
@@ -110,7 +109,7 @@ namespace Lwar.Gameplay
 		}
 
 		/// <summary>
-		///   Updates the transformation hierarchy.
+		///     Updates the transformation hierarchy.
 		/// </summary>
 		public void Update()
 		{

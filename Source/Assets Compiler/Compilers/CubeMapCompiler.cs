@@ -1,23 +1,22 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Compilers
+﻿namespace Pegasus.AssetsCompiler.Compilers
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using Assets;
-	using Framework.Platform;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
-	///   Compiles cubemap textures.
+	///     Compiles cubemap textures.
 	/// </summary>
 	[UsedImplicitly]
 	internal sealed class CubeMapCompiler : AssetCompiler<CubeMapAsset>
 	{
 		/// <summary>
-		///   Compiles the asset.
+		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -32,7 +31,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Removes the compiled asset and all temporary files written by the compiler.
+		///     Removes the compiled asset and all temporary files written by the compiler.
 		/// </summary>
 		/// <param name="asset">The asset that should be cleaned.</param>
 		protected override void Clean(CubeMapAsset asset)
@@ -45,7 +44,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Compiles a cube map that should be compressed.
+		///     Compiles a cube map that should be compressed.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
@@ -74,7 +73,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Gets the paths of the temporary cubemap face files.
+		///     Gets the paths of the temporary cubemap face files.
 		/// </summary>
 		/// <param name="asset">The asset the paths should be returned for.</param>
 		private static IEnumerable<string> GetFacePaths(Asset asset)
@@ -84,7 +83,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Gets the path of the temporary assembled cubemap file.
+		///     Gets the path of the temporary assembled cubemap file.
 		/// </summary>
 		/// <param name="asset">The asset the path should be returned for.</param>
 		private static string GetAssembledFilePath(Asset asset)
@@ -93,7 +92,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 		}
 
 		/// <summary>
-		///   Gets the path of the temporary compressed cubemap file.
+		///     Gets the path of the temporary compressed cubemap file.
 		/// </summary>
 		/// <param name="asset">The asset the path should be returned for.</param>
 		private static string GetCompressedFilePath(Asset asset)

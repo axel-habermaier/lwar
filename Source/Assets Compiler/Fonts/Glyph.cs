@@ -1,20 +1,18 @@
-﻿using System;
-
-namespace Pegasus.AssetsCompiler.Fonts
+﻿namespace Pegasus.AssetsCompiler.Fonts
 {
+	using System;
 	using System.Drawing;
 	using System.Drawing.Imaging;
-	using Framework;
-	using Framework.Platform.Logging;
-	using Framework.Platform.Memory;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a single character of a font face.
+	///     Represents a single character of a font face.
 	/// </summary>
 	internal class Glyph : DisposableObject
 	{
 		/// <summary>
-		///   Creates the bitmap for the glyph.
+		///     Creates the bitmap for the glyph.
 		/// </summary>
 		/// <param name="glyphInfo">Provides information about the glyph.</param>
 		/// <param name="index">The index of the glyph in the font file.</param>
@@ -57,42 +55,42 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Gets the index of the glyph in the font file.
+		///     Gets the index of the glyph in the font file.
 		/// </summary>
 		public uint Index { get; private set; }
 
 		/// <summary>
-		///   Gets the offset in pixels from the drawing position to the leftmost border of the glyph.
+		///     Gets the offset in pixels from the drawing position to the leftmost border of the glyph.
 		/// </summary>
 		public int OffsetX { get; private set; }
 
 		/// <summary>
-		///   Gets the offset in pixels from the drawing position on the base line to the topmost border of the glyph.
+		///     Gets the offset in pixels from the drawing position on the base line to the topmost border of the glyph.
 		/// </summary>
 		public int OffsetY { get; private set; }
 
 		/// <summary>
-		///   Gets the number of pixels that the pen should advance after drawing the glyph.
+		///     Gets the number of pixels that the pen should advance after drawing the glyph.
 		/// </summary>
 		public int AdvanceX { get; private set; }
 
 		/// <summary>
-		///   Gets the bitmap containing the glyph.
+		///     Gets the bitmap containing the glyph.
 		/// </summary>
 		public Bitmap Bitmap { get; private set; }
 
 		/// <summary>
-		///   Gets the character of the glyph.
+		///     Gets the character of the glyph.
 		/// </summary>
 		public char Character { get; private set; }
 
 		/// <summary>
-		///   Gets the size of the glyph.
+		///     Gets the size of the glyph.
 		/// </summary>
 		public Size Size { get; private set; }
 
 		/// <summary>
-		///   Gets an aliased bitmap from the given glyph bitmap.
+		///     Gets an aliased bitmap from the given glyph bitmap.
 		/// </summary>
 		/// <param name="glyph">The glyph the should be copied to a bitmap.</param>
 		private static unsafe Bitmap GetAliasedBitmap(FreeType.Bitmap glyph)
@@ -130,7 +128,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Gets an anti-aliased bitmap from the given glyph bitmap.
+		///     Gets an anti-aliased bitmap from the given glyph bitmap.
 		/// </summary>
 		/// <param name="glyph">The glyph the should be copied to a bitmap.</param>
 		private static unsafe Bitmap GetAntiAliasedBitmap(FreeType.Bitmap glyph)
@@ -151,7 +149,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
