@@ -38,8 +38,8 @@ void log_die(const char* message, ...)
 
 void log_error(const char* message, ...)
 {
-	/*if (_callbacks.error == NULL)
-		return;*/
+	if (_callbacks.error == NULL)
+		return;
 
 	va_list vl;
 	va_start(vl, message);
@@ -49,8 +49,8 @@ void log_error(const char* message, ...)
 
 void log_warn(const char* message, ...)
 {
-	/*if (_callbacks.warning == NULL)
-		return;*/
+	if (_callbacks.warning == NULL)
+		return;
 
 	va_list vl;
 	va_start(vl, message);
@@ -60,8 +60,8 @@ void log_warn(const char* message, ...)
 
 void log_info(const char* message, ...)
 {
-	/*if (_callbacks.info == NULL)
-		return;*/
+	if (_callbacks.info == NULL)
+		return;
 
 	va_list vl;
 	va_start(vl, message);
@@ -71,8 +71,8 @@ void log_info(const char* message, ...)
 
 void log_debug(const char* message, ...)
 {
-	/*if (_callbacks.debug == NULL)
-		return;*/
+	if (_callbacks.debug == NULL)
+		return;
 
 	va_list vl;
 	va_start(vl, message);
