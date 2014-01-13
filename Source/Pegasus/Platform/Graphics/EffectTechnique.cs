@@ -66,6 +66,7 @@
 		/// </summary>
 		internal void Unbind()
 		{
+			Assert.NotNull(_unbind, "No unbind action has been set.");
 			_unbind();
 		}
 	}
