@@ -10,7 +10,7 @@
 	///   Represents a dynamic vertex buffer that is split into several chunks. Each chunk is of the requested size; therefore,
 	///   the amount of memory allocated on the GPU is the product of the chunk size and the number of chunks. The chunks are
 	///   updated in a round-robin fashion, updating only those parts of the vertex buffer that the GPU is currently not using.
-	///   This frees the GPU driver from copying the buffer, which sometimes causes noticable hiccups.
+	///   This frees the GPU driver from copying the buffer, which sometimes causes noticeable hiccups.
 	///   When the dynamic vertex buffer runs out of chunks that it can safely update, it introduces a CPU/GPU synchronization
 	///   point.
 	/// </summary>

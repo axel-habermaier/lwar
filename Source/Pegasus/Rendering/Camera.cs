@@ -136,7 +136,7 @@
 		/// </summary>
 		protected abstract void UpdateViewMatrixCore();
 
-		// Disable annoying "private field is is assigned byt its value is never used" warnings on Mono
+		// Disable annoying "private field is assigned but its value is never used" warnings on Mono
 #pragma warning disable 0414
 
 		/// <summary>
