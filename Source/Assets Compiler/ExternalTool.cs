@@ -86,18 +86,17 @@
 		}
 
 		/// <summary>
-		///     Runs the DirectX offline shader compiler. Returns false to indicate that compiler errors have occurred.
+		///     Runs the DirectX offline shader compiler.
 		/// </summary>
 		/// <param name="input">The shader file that should be compiled.</param>
 		/// <param name="output">The output file that should store the compiled shader.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
 		public static void Fxc(string input, string output, string profile)
 		{
-			string optimization;
 #if DEBUG
-			optimization = "/Od /Zi";
+			var optimization = "/Od /Zi";
 #else
-			optimization = "/O3";
+			var optimization = "/O3";
 #endif
 
 			using (var fxc = new ExternalProcess("fxc",

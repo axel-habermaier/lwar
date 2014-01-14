@@ -1,24 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
-<AssetsProject Name="lwar">
+<AssetsProject>
 	<Configuration>
+		<Identifier Name="lwar" />
 		<TempDirectory Name="../obj/Assets" />
+
 		<OutputDirectory Name="../../Binaries x64/Debug Direct3D11" Platform="x64" Debug="true" Graphics="Direct3D11" />
+		<OutputDirectory Name="../../Binaries x64/Debug OpenGL3" Platform="x64" Debug="true" Graphics="OpenGL3" />
+		<OutputDirectory Name="../../Binaries x64/Release Direct3D11" Platform="x64" Debug="false" Graphics="Direct3D11" />
+		<OutputDirectory Name="../../Binaries x64/Release OpenGL3" Platform="x64" Debug="false" Graphics="OpenGL3" />
+
+		<OutputDirectory Name="../../Binaries x86/Debug Direct3D11" Platform="x86" Debug="true" Graphics="Direct3D11" />
+		<OutputDirectory Name="../../Binaries x86/Debug OpenGL3" Platform="x86" Debug="true" Graphics="OpenGL3" />
+		<OutputDirectory Name="../../Binaries x86/Release Direct3D11" Platform="x86" Debug="false" Graphics="Direct3D11" />
+		<OutputDirectory Name="../../Binaries x86/Release OpenGL3" Platform="x86" Debug="false" Graphics="OpenGL3" />
 
 		<Compiler
 			Compile="Templates/Compiler.cs;Templates/TemplateAsset.cs"
 			Type="lwar.Assets.TemplatesCompiler"
 			AssetType="lwar.Assets.Template"
 			AssetTag="Template" />
-		
+
 		<GeneratedFile Type="Effect" Name="../Rendering/Effects/Effects.cs" />
 		<GeneratedFile Type="UserInterface" Name="../UserInterface/UserInterface.cs" />
 		<GeneratedFile Type="FontLoader" Name="../UserInterface/FontLoad.cs" />
 		<GeneratedFile Type="AssetIdentifier" Name="AssetIdentifiers.cs" />
-		
-		<UserInterfaceTypes File="../UserInterface/TypeInfo.xml" />
+		<GeneratedFile Type="Registry" Name="../Scripting/Registries.cs" />
+
+		<TypeInfo File="../UserInterface/TypeInfo.xml" />
 	</Configuration>
-		
+
 	<Assets>
 		<Font Name="Fonts/LiberationMono-Regular.ttf" Family="Liberation Mono" Size="11" Bold="false" Italic="false" ClearType="true" />
 
@@ -59,5 +70,8 @@
 		<UserInterface Name="../UserInterface/UserControl1.xaml" />
 		<UserInterface Name="../UserInterface/Style/ButtonStyle.xaml" />
 		<UserInterface Name="../UserInterface/Style/CheckBoxStyle.xaml" />
+
+		<Registry Name="../Scripting/ICommands.cs" />
+		<Registry Name="../Scripting/ICvars.cs" />
 	</Assets>
 </AssetsProject>
