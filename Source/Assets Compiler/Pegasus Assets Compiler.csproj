@@ -1,0 +1,491 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug Direct3D11</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Pegasus.AssetsCompiler</RootNamespace>
+    <AssemblyName>pgc</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries x64\Debug Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Commandlineparameters>recompile</Commandlineparameters>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|AnyCPU' ">
+    <OutputPath>..\..\Binaries x64\Release Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;x64;Windows</DefineConstants>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86' ">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries x86\Debug Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x86;Windows</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x86' ">
+    <OutputPath>..\..\Binaries x86\Release Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;x86;Windows</DefineConstants>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|AnyCPU'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x64;Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <Commandlineparameters>recompile</Commandlineparameters>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x86;Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|AnyCPU'">
+    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;x64;Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
+    <OutputPath>..\..\Binaries\Release\</OutputPath>
+    <DefineConstants>TRACE;x86;Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|AnyCPU'">
+    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;x64;Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
+    <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;x86;Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|AnyCPU'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\Binaries x86\Debug OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x86;Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Tests|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Debug Tests</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <DefineConstants>x64;Windows</DefineConstants>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Tests|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Debug Tests</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <DefineConstants>x86;Windows</DefineConstants>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.NRefactory">
+      <HintPath>..\..\Dependencies\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>..\..\Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\Dependencies\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Pegasus\Assert.cs">
+      <Link>Pegasus\Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Framework\ISealable.cs">
+      <Link>Pegasus\ISealable.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Framework\PegasusException.cs">
+      <Link>Pegasus\PegasusException.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Framework\UserInterface\Thickness.cs">
+      <Link>Pegasus\Thickness.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Circle.cs">
+      <Link>Pegasus\Circle.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Fixed.cs">
+      <Link>Pegasus\Fixed.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\LineSegment.cs">
+      <Link>Pegasus\LineSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\MathUtils.cs">
+      <Link>Pegasus\MathUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Matrix.cs">
+      <Link>Pegasus\Matrix.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Rectangle.cs">
+      <Link>Pegasus\Rectangle.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Size.cs">
+      <Link>Pegasus\Size.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Vector2.cs">
+      <Link>Pegasus\Vector2.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Vector3.cs">
+      <Link>Pegasus\Vector3.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Math\Vector4.cs">
+      <Link>Pegasus\Vector4.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\ExternalProcess.cs">
+      <Link>Pegasus\ExternalProcess.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\Color.cs">
+      <Link>Pegasus\Color.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\DataSemantics.cs">
+      <Link>Pegasus\DataSemantics.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\GraphicsApi.cs">
+      <Link>Pegasus\GraphicsApi.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\ShaderInput.cs">
+      <Link>Pegasus\ShaderInput.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\ShaderType.cs">
+      <Link>Pegasus\ShaderType.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\Surface.cs">
+      <Link>Pegasus\Surface.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\SurfaceFormat.cs">
+      <Link>Pegasus\SurfaceFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureAddressMode.cs">
+      <Link>Pegasus\TextureAddressMode.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureDescription.cs">
+      <Link>Pegasus\TextureDescription.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureFilter.cs">
+      <Link>Pegasus\TextureFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureFlags.cs">
+      <Link>Pegasus\TextureFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\TextureType.cs">
+      <Link>Pegasus\TextureType.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\VertexDataFormat.cs">
+      <Link>Pegasus\VertexDataFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Logging\Log.cs">
+      <Link>Pegasus\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Logging\LogEntry.cs">
+      <Link>Pegasus\LogEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Logging\LogType.cs">
+      <Link>Pegasus\LogType.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\BufferPointer.cs">
+      <Link>Pegasus\BufferPointer.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\BufferReader.cs">
+      <Link>Pegasus\BufferReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\BufferWriter.cs">
+      <Link>Pegasus\BufferWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\DisposableExtensions.cs">
+      <Link>Pegasus\DisposableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\DisposableObject.cs">
+      <Link>Pegasus\DisposableObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\EndianConverter.cs">
+      <Link>Pegasus\EndianConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\Endianess.cs">
+      <Link>Pegasus\Endianess.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\ObjectPool.cs">
+      <Link>Pegasus\ObjectPool.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\Pool.cs">
+      <Link>Pegasus\Pool.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Memory\PooledObject.cs">
+      <Link>Pegasus\PooledObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\NativeLibrary.cs">
+      <Link>Pegasus\NativeLibrary.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\PlatformInfo.cs">
+      <Link>Pegasus\PlatformInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\PlatformType.cs">
+      <Link>Pegasus\PlatformType.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\ResharperAttributes.cs">
+      <Link>Pegasus\ResharperAttributes.cs</Link>
+    </Compile>
+    <Compile Include="AssetsProject.cs" />
+    <Compile Include="Assets\Attributes\AssetAttribute.cs" />
+    <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
+    <Compile Include="Assets\Attributes\CubeMapAttribute.cs" />
+    <Compile Include="Assets\Attributes\Texture2DAttribute.cs" />
+    <Compile Include="Assets\XamlAsset.cs" />
+    <Compile Include="Assets\XamlAssetFactory.cs" />
+    <Compile Include="Assets\CubeMapAssetFactory.cs" />
+    <Compile Include="Assets\EffectAssetFactory.cs" />
+    <Compile Include="Assets\FontAssetFactory.cs" />
+    <Compile Include="Assets\IAssetFactory.cs" />
+    <Compile Include="Assets\ShaderAsset.cs" />
+    <Compile Include="Assets\Texture2DAssetFactory.cs" />
+    <Compile Include="Assets\TextureAsset.cs" />
+    <Compile Include="Compilers\AssetIdentifierListGenerator.cs" />
+    <Compile Include="CSharp\CodeElement.cs" />
+    <Compile Include="CSharp\CSharpFile.cs" />
+    <Compile Include="CSharp\CSharpProject.cs" />
+    <Compile Include="CSharp\Extensions.cs" />
+    <Compile Include="CSharp\IErrorReporter.cs" />
+    <Compile Include="Registries\Command.cs" />
+    <Compile Include="Registries\CommandParameter.cs" />
+    <Compile Include="Registries\CSharpCodeGenerator.cs" />
+    <Compile Include="Registries\RegistryElement.cs" />
+    <Compile Include="Registries\RegistryFile.cs" />
+    <Compile Include="Registries\Registry.cs" />
+    <Compile Include="Registries\RegistryProject.cs" />
+    <Compile Include="Registries\Validator.cs" />
+    <Compile Include="Compilers\AssetCompiler.cs" />
+    <Compile Include="AssetWriter.cs" />
+    <Compile Include="CompilationUnit.cs" />
+    <Compile Include="Compilers\CompilationAction.cs" />
+    <Compile Include="Compilers\EffectCompiler.cs" />
+    <Compile Include="Compilers\XamlCompiler.cs" />
+    <Compile Include="Effects\ShaderAttribute.cs" />
+    <Compile Include="Fonts\Error.cs" />
+    <Compile Include="Fonts\Font.cs" />
+    <Compile Include="Fonts\FontMap.cs" />
+    <Compile Include="Fonts\FreeTypeLibrary.cs" />
+    <Compile Include="Fonts\Glyph.cs" />
+    <Compile Include="Fonts\FreeType.cs" />
+    <Compile Include="Fonts\RenderMode.cs" />
+    <Compile Include="Hash.cs" />
+    <Compile Include="Compilers\IAssetCompiler.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Assets\EffectAsset.cs" />
+    <Compile Include="Assets\CubeMapAsset.cs" />
+    <Compile Include="Compilers\CubeMapCompiler.cs" />
+    <Compile Include="DirectDrawSurface.cs" />
+    <Compile Include="Effects\Compilation\CrossCompiler.Supported.cs" />
+    <Compile Include="Effects\Compilation\CrossCompiler.Unsupported.cs" />
+    <Compile Include="CSharp\CodeWriter.cs" />
+    <Compile Include="Effects\Compilation\EffectElement.cs" />
+    <Compile Include="Effects\Compilation\CSharpCodeGenerator.cs" />
+    <Compile Include="Effects\Compilation\DataType.cs" />
+    <Compile Include="Effects\Compilation\EffectTechnique.cs" />
+    <Compile Include="Effects\Compilation\Extensions.cs" />
+    <Compile Include="Effects\Compilation\CrossCompiler.cs" />
+    <Compile Include="Effects\Compilation\GlslCompiler.cs" />
+    <Compile Include="Effects\Compilation\HlslCompiler.cs" />
+    <Compile Include="Effects\Compilation\ShaderTexture.cs" />
+    <Compile Include="Effects\Compilation\ShaderLiteral.cs" />
+    <Compile Include="Effects\Compilation\EffectFile.cs" />
+    <Compile Include="Effects\Compilation\EffectsProject.cs" />
+    <Compile Include="Effects\Intrinsic.cs" />
+    <Compile Include="Effects\MapsToAttribute.cs" />
+    <Compile Include="Effects\Operators.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Operators.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Effects\Technique.cs" />
+    <Compile Include="Effects\Vectors.cs" />
+    <Compile Include="Effects\SemanticsAttribute.cs" />
+    <Compile Include="ExternalTool.cs" />
+    <Compile Include="Assets\FontAsset.cs" />
+    <Compile Include="Compilers\FontCompiler.cs" />
+    <Compile Include="ConfigurationFileParser.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Assets\Asset.cs" />
+    <Compile Include="Assets\Texture2DAsset.cs" />
+    <Compile Include="Compilers\Texture2DCompiler.cs" />
+    <Compile Include="Effects\Swizzle.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Swizzle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Effects\Compilation\ConstantBuffer.cs" />
+    <Compile Include="Effects\Compilation\EffectClass.cs" />
+    <Compile Include="Effects\Compilation\ShaderConstant.cs" />
+    <Compile Include="Effects\Compilation\ShaderMethod.cs" />
+    <Compile Include="Effects\Compilation\ShaderParameter.cs" />
+    <Compile Include="Effects\ConstantAttribute.cs" />
+    <Compile Include="Effects\Effect.cs" />
+    <Compile Include="Effects\EffectAttribute.cs" />
+    <Compile Include="Effects\FragmentShaderAttribute.cs" />
+    <Compile Include="Effects\CubeMap.cs" />
+    <Compile Include="Effects\Matrix.cs" />
+    <Compile Include="Effects\Texture2D.cs" />
+    <Compile Include="Effects\ColorAttribute.cs" />
+    <Compile Include="Effects\NormalAttribute.cs" />
+    <Compile Include="Effects\PositionAttribute.cs" />
+    <Compile Include="Effects\TexCoordsAttribute.cs" />
+    <Compile Include="Effects\VertexShaderAttribute.cs" />
+    <Compile Include="Registries\Cvar.cs" />
+    <Compile Include="Registries\RegistryGenerator.cs" />
+    <Compile Include="Xaml\IXamlType.cs" />
+    <Compile Include="Xaml\XamlClass.cs" />
+    <Compile Include="Xaml\XamlEnumeration.cs" />
+    <Compile Include="Xaml\XamlLiteral.cs" />
+    <Compile Include="Xaml\XamlPrimitiveType.cs" />
+    <Compile Include="Xaml\XamlProperty.cs" />
+    <Compile Include="Xaml\XamlType.cs" />
+    <Compile Include="Xaml\XamlTypeConverter.cs" />
+    <Compile Include="Xaml\XamlNamespace.cs" />
+    <Compile Include="Xaml\XamlFile.cs" />
+    <Compile Include="Xaml\XamlToCSharpSerializer.cs" />
+    <Compile Include="Xaml\XamlTypeInfoFile.cs" />
+    <Compile Include="Xaml\XamlTypeInfoProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Effects\Operators.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Operators.cs</LastGenOutput>
+    </None>
+    <None Include="Effects\Swizzle.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Swizzle.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
