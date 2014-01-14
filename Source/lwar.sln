@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar App", "lwar\lwar App.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
 	ProjectSection(ProjectDependencies) = postProject
-		{1F608B12-403C-4639-947A-B559E8EF121C} = {1F608B12-403C-4639-947A-B559E8EF121C}
-		{8243791D-FE6E-40BF-A303-D981AE9968C2} = {8243791D-FE6E-40BF-A303-D981AE9968C2}
 		{E008FA73-A930-40B5-93A4-959A4D30492D} = {E008FA73-A930-40B5-93A4-959A4D30492D}
 	EndProjectSection
 EndProject
@@ -18,9 +16,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pegasus Platform", "Platform\Platform.vcxproj", "{E008FA73-A930-40B5-93A4-959A4D30492D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lwar Server", "Server\Server.vcxproj", "{8243791D-FE6E-40BF-A303-D981AE9968C2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1F608B12-403C-4639-947A-B559E8EF121C} = {1F608B12-403C-4639-947A-B559E8EF121C}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{C4621122-D07F-4FD1-A423-0283770B2A69}"
 	ProjectSection(SolutionItems) = preProject

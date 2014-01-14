@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace Lwar.AssetsCompiler.EntityTemplates
+﻿namespace Lwar.AssetsCompiler.EntityTemplates
 {
 	using System;
-	using AssetsCompiler.EntityTemplates.Compilation;
+	using Compilation;
 	using Pegasus.Math;
 
 	/// <summary>
-	///   The weapon entity templates that are shared between the client and the server.
+	///     The weapon entity templates that are shared between the client and the server.
 	/// </summary>
 	public static class Weapons
 	{

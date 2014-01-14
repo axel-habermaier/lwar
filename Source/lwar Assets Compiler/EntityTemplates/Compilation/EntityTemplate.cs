@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lwar.AssetsCompiler.EntityTemplates.Compilation
+﻿namespace Lwar.AssetsCompiler.EntityTemplates.Compilation
 {
 	using System;
 	using Pegasus.Math;
@@ -21,7 +19,7 @@ namespace Lwar.AssetsCompiler.EntityTemplates.Compilation
 		public int Interval;
 		public float Length;
 		public float Mass;
-		public Func<EntityTemplate, string> Model;
+		public Func<EntityTemplate, string> Model = _ => null;
 
 		/// <summary>
 		///     The name of the template. This field is set by the template compiler.
@@ -32,13 +30,5 @@ namespace Lwar.AssetsCompiler.EntityTemplates.Compilation
 		public float Rotation;
 		public float Shield;
 		public string Texture;
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		public EntityTemplate()
-		{
-			Model = _ => null;
-		}
 	}
 }
