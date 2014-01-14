@@ -34,6 +34,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar Assets", "Lwar Assets\lwar Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7} = {3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus Assets Compiler", "Assets Compiler\Pegasus Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
 EndProject
