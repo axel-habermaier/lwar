@@ -126,9 +126,9 @@
     <Compile Include="UserInterface\DataBinding.Tests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Pegasus\Pegasus Framework.csproj">
+    <ProjectReference Include="..\Pegasus\Pegasus.csproj">
       <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
-      <Name>Pegasus Framework</Name>
+      <Name>Pegasus</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

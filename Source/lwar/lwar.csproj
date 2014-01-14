@@ -302,9 +302,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Pegasus\Pegasus Framework.csproj">
+    <ProjectReference Include="..\Pegasus\Pegasus.csproj">
       <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
-      <Name>Pegasus Framework</Name>
+      <Name>Pegasus</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

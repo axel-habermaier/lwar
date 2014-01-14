@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar App", "lwar\lwar App.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar", "lwar\lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1F608B12-403C-4639-947A-B559E8EF121C} = {1F608B12-403C-4639-947A-B559E8EF121C}
 		{8243791D-FE6E-40BF-A303-D981AE9968C2} = {8243791D-FE6E-40BF-A303-D981AE9968C2}
@@ -11,14 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar App", "lwar\lwar App.c
 		{1785E559-5B80-4EB1-956F-415B210A6B45} = {1785E559-5B80-4EB1-956F-415B210A6B45}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus Framework", "Pegasus\Pegasus Framework.csproj", "{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus", "Pegasus\Pegasus.csproj", "{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8FACAC14-48D0-45B8-BB39-F926835C850E} = {8FACAC14-48D0-45B8-BB39-F926835C850E}
 		{032C4229-B3A4-417F-8ED3-B2470E371F2D} = {032C4229-B3A4-417F-8ED3-B2470E371F2D}
 		{E008FA73-A930-40B5-93A4-959A4D30492D} = {E008FA73-A930-40B5-93A4-959A4D30492D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pegasus Platform", "Platform\Platform.vcxproj", "{E008FA73-A930-40B5-93A4-959A4D30492D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Platform", "Platform\Platform.vcxproj", "{E008FA73-A930-40B5-93A4-959A4D30492D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lwar Server", "Server\Server.vcxproj", "{8243791D-FE6E-40BF-A303-D981AE9968C2}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -38,9 +38,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar Assets", "Lwar Assets\
 		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7} = {3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus Assets Compiler", "Assets Compiler\Pegasus Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Assets Compiler\Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus Tests", "Tests\Pegasus Tests.csproj", "{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus Assets", "Pegasus Assets\Pegasus Assets.csproj", "{8FACAC14-48D0-45B8-BB39-F926835C850E}"
 EndProject

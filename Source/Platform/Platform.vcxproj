@@ -38,7 +38,7 @@
     <ProjectGuid>{E008FA73-A930-40B5-93A4-959A4D30492D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Platform</RootNamespace>
-    <ProjectName>Pegasus Platform</ProjectName>
+    <ProjectName>Platform</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug OpenGL3|Win32'" Label="Configuration">
