@@ -35,6 +35,7 @@ Pegasus.Framework
 	* Define cvars/commands as object instances on partial classes, generate code-behind similar to registries nowadays
 	* Register instances defining cvars/commands on registries manually
 	* Refactor cvar/command parsing to remove object-casts
+	* Use Mono.CSharp and allow arbitrary (?) C# code to be executed on the console?
 - Add texture quality switch cvar -> asset reloading required
 - Particle System
 
