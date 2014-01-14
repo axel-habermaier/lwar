@@ -17,33 +17,6 @@
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
-    <DebugType>full</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <PlatformTarget>x64</PlatformTarget>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-    <Commandlineparameters>recompile</Commandlineparameters>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|AnyCPU' ">
-    <OutputPath>..\..\Binaries x64\Release Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;x64;Windows</DefineConstants>
-    <Optimize>True</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86' ">
     <DebugSymbols>True</DebugSymbols>
     <OutputPath>..\..\Binaries x86\Debug Direct3D11\</OutputPath>
@@ -71,23 +44,9 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|AnyCPU'">
-    <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x64;Linux</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <Commandlineparameters>recompile</Commandlineparameters>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries\Debug\</OutputPath>
+    <OutputPath>..\..\Binaries x86\Debug OpenGL3\</OutputPath>
     <DefineConstants>TRACE;DEBUG;x86;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -99,20 +58,8 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|AnyCPU'">
-    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;x64;Linux</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>True</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
-    <OutputPath>..\..\Binaries\Release\</OutputPath>
+    <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE;x86;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
@@ -122,18 +69,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|AnyCPU'">
-    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;x64;Windows</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>True</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
@@ -146,19 +81,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|AnyCPU'">
-    <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
     <DebugSymbols>True</DebugSymbols>
@@ -174,21 +96,65 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Tests|AnyCPU'">
-    <Prefer32Bit>false</Prefer32Bit>
-    <OutputPath>bin\Debug Tests</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <DefineConstants>x64;Windows</DefineConstants>
-    <DebugType>none</DebugType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>../../Binaries x64\Debug Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Tests|x86'">
-    <Prefer32Bit>false</Prefer32Bit>
-    <OutputPath>bin\Debug Tests</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <DefineConstants>x86;Windows</DefineConstants>
-    <DebugType>none</DebugType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x64'">
+    <OutputPath>../../Binaries x64\Release Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;x64;Windows</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x64;Linux</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x64'">
+    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;x64;Linux</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
+    <OutputPath>../../Binaries x64\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;x64;Windows</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>../../Binaries x64\Debug OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.NRefactory">
