@@ -14,13 +14,9 @@
 		<TypeInfo File="../UserInterface/TypeInfo.xml" />
 	</Configuration>
 
-	<Compilers>
-		<Compiler
-			Compile="Templates/Compiler.cs;Templates/TemplateAsset.cs"
-			Type="lwar.Assets.TemplatesCompiler"
-			AssetType="lwar.Assets.Template"
-			AssetTag="Template" />
-	</Compilers>
+	<References>
+		<Assembly File="../../lwar Assets Compiler/bin/Lwar.AssetsCompiler.dll" />
+	</References>
 
 	<Assets>
 		<Font Name="Fonts/LiberationMono-Regular.ttf" Family="Liberation Mono" Size="11" Bold="false" Italic="false" ClearType="true" />

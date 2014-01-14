@@ -618,5 +618,14 @@
     </None>
     <None Include="Scripting\RegistryGenerator.tt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Framework\UserInterface\TypeInfo.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Framework\UserInterface\Controls\AppWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
