@@ -134,7 +134,7 @@
 			foreach (var cvar in _registry.Cvars.Concat(_importedRegistry.Cvars))
 			{
 				_writer.AppendLine("/// <summary>");
-				_writer.AppendLine("///   Raised when the '{0}' cvar is changing. The new value is passed to the event handler.", cvar.Name);
+				_writer.AppendLine("///     Raised when the '{0}' cvar is changing. The new value is passed to the event handler.", cvar.Name);
 				_writer.AppendLine("/// </summary>");
 				_writer.AppendLine("public static event Action<{0}> {1}Changing", cvar.Type, cvar.Name);
 				_writer.AppendBlockStatement(() =>
@@ -146,7 +146,7 @@
 				_writer.Newline();
 
 				_writer.AppendLine("/// <summary>");
-				_writer.AppendLine("///   Raised when the '{0}' cvar is changed. The previous value is passed to the event handler.", cvar.Name);
+				_writer.AppendLine("///     Raised when the '{0}' cvar is changed. The previous value is passed to the event handler.", cvar.Name);
 				_writer.AppendLine("/// </summary>");
 				_writer.AppendLine("public static event Action<{0}> {1}Changed", cvar.Type, cvar.Name);
 				_writer.AppendBlockStatement(() =>
@@ -189,7 +189,7 @@
 			foreach (var command in _registry.Commands.Concat(_importedRegistry.Commands))
 			{
 				_writer.AppendLine("/// <summary>");
-				_writer.AppendLine("///   Raised when the '{0}' command is invoked.", command.Name);
+				_writer.AppendLine("///     Raised when the '{0}' command is invoked.", command.Name);
 				_writer.AppendLine("/// </summary>");
 				_writer.AppendLine("public static event Action{0} On{1}", GetTypeArguments(command), command.Name);
 				_writer.AppendBlockStatement(() =>
@@ -208,7 +208,7 @@
 		private void GenerateInitializeMethod()
 		{
 			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Initializes the instances declared by the registry.");
+			_writer.AppendLine("///     Initializes the instances declared by the registry.");
 			_writer.AppendLine("/// </summary>");
 			_writer.AppendLine("public static void Initialize()");
 			_writer.AppendBlockStatement(() =>
@@ -273,7 +273,7 @@
 		private void GenerateResolveMethod()
 		{
 			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Initializes the instances imported by the registry.");
+			_writer.AppendLine("///     Initializes the instances imported by the registry.");
 			_writer.AppendLine("/// </summary>");
 			_writer.AppendLine("public static void Resolve()");
 			_writer.AppendBlockStatement(() =>
@@ -426,7 +426,7 @@
 		private static IEnumerable<string> GetSummary(IEnumerable<string> documentation)
 		{
 			yield return " <summary>";
-			yield return "   " + GetSummaryText(documentation);
+			yield return "     " + GetSummaryText(documentation);
 			yield return " </summary>";
 		}
 

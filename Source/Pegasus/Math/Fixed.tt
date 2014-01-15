@@ -9,52 +9,52 @@ namespace Pegasus.Math
 <# foreach (var fractionalBits in new int[] { 8, 16 }) { #>
 
 	/// <summary>
-	///   Represents a 32-bit signed fixed-point value, with <#= fractionalBits #> bits being used for the fractional part of the value.
+	///     Represents a 32-bit signed fixed-point value, with <#= fractionalBits #> bits being used for the fractional part of the value.
 	/// </summary>
 	public struct Fixed<#= fractionalBits #> : IEquatable<Fixed<#= fractionalBits #>>, IComparable<Fixed<#= fractionalBits #>>, IComparable
 	{
 		/// <summary>
-		///   The number of bits that are used to store the fractional part of the value.
+		///     The number of bits that are used to store the fractional part of the value.
 		/// </summary>
 		private const int FractionalBits = <#= fractionalBits #>;
 
 		/// <summary>
-		///   Epsilon value for fixed-point equality comparisons.
+		///     Epsilon value for fixed-point equality comparisons.
 		/// </summary>
 		public static readonly Fixed<#= fractionalBits #> Epsilon = MathUtils.Epsilon;
 
 		/// <summary>
-		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
+		///     Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
 		/// </summary>
 		public static readonly Fixed<#= fractionalBits #> Pi = System.Math.PI;
 
 		/// <summary>
-		///   Represents a 360 degree rotation.
+		///     Represents a 360 degree rotation.
 		/// </summary>
 		public static readonly Fixed<#= fractionalBits #> TwoPi = System.Math.PI * 2;
 
 		/// <summary>
-		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
+		///     Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
 		/// </summary>
 		public static readonly Fixed<#= fractionalBits #> PiOver2 = System.Math.PI / 2;
 
 		/// <summary>
-		///   Represents the largest possible value of the integer part of a fixed-point value.
+		///     Represents the largest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MaxValue = Int32.MaxValue >> FractionalBits;
 
 		/// <summary>
-		///   Represents the smallest possible value of the integer part of a fixed-point value.
+		///     Represents the smallest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MinValue = Int32.MinValue >> FractionalBits;
 
 		/// <summary>
-		///   The raw value stored as a 32-bit signed integer.
+		///     The raw value stored as a 32-bit signed integer.
 		/// </summary>
 		private int _rawValue;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The integer value that should be converted.</param>
 		public Fixed<#= fractionalBits #>(int value)
@@ -64,7 +64,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public Fixed<#= fractionalBits #>(float value)
@@ -74,7 +74,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public Fixed<#= fractionalBits #>(double value)
@@ -84,7 +84,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets or sets the raw value stored as a 32-bit signed integer.
+		///     Gets or sets the raw value stored as a 32-bit signed integer.
 		/// </summary>
 		public int RawValue
 		{
@@ -93,7 +93,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns the fully qualified type name of this instance.
+		///     Returns the fully qualified type name of this instance.
 		/// </summary>
 		public override string ToString()
 		{
@@ -103,7 +103,7 @@ namespace Pegasus.Math
 		#region Cast operators
 
 		/// <summary>
-		///   Implicitely casts an integer value to its fixed-point representation.
+		///     Implicitly casts an integer value to its fixed-point representation.
 		/// </summary>
 		/// <param name="value">The integer value that should be converted.</param>
 		public static implicit operator Fixed<#= fractionalBits #>(int value)
@@ -112,7 +112,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts a fixed-point value to its integer representation.
+		///     Implicitly casts a fixed-point value to its integer representation.
 		/// </summary>
 		/// <param name="value">The fixed-point value that should be converted.</param>
 		public static explicit operator int(Fixed<#= fractionalBits #> value)
@@ -121,7 +121,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts an floating-point value to its fixed-point representation.
+		///     Implicitly casts an floating-point value to its fixed-point representation.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public static implicit operator Fixed<#= fractionalBits #>(float value)
@@ -130,7 +130,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts a fixed-point value to its floating-point representation.
+		///     Implicitly casts a fixed-point value to its floating-point representation.
 		/// </summary>
 		/// <param name="value">The fixed-point value that should be converted.</param>
 		public static explicit operator float(Fixed<#= fractionalBits #> value)
@@ -139,7 +139,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts an floating-point value to its fixed-point representation.
+		///     Implicitly casts an floating-point value to its fixed-point representation.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public static implicit operator Fixed<#= fractionalBits #>(double value)
@@ -148,7 +148,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts a fixed-point value to its floating-point representation.
+		///     Implicitly casts a fixed-point value to its floating-point representation.
 		/// </summary>
 		/// <param name="value">The fixed-point value that should be converted.</param>
 		public static explicit operator double(Fixed<#= fractionalBits #> value)
@@ -161,7 +161,7 @@ namespace Pegasus.Math
 		#region Equality operators and comparison
 
 		/// <summary>
-		///   Indicates whether the current fixed-point value is equal to another fixed-point value.
+		///     Indicates whether the current fixed-point value is equal to another fixed-point value.
 		/// </summary>
 		/// <param name="other">The value to compare with this value.</param>
 		public bool Equals(Fixed<#= fractionalBits #> other)
@@ -170,7 +170,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the current fixed-point value is equal to another object.
+		///     Indicates whether the current fixed-point value is equal to another object.
 		/// </summary>
 		/// <param name="obj">An object to compare with this value.</param>
 		public override bool Equals(object obj)
@@ -181,7 +181,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns the hash code for this instance.
+		///     Returns the hash code for this instance.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -189,7 +189,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Compares the current value with the given one.
+		///     Compares the current value with the given one.
 		/// </summary>
 		/// <param name="other">The value this instance should be compared with.</param>
 		public int CompareTo(object other)
@@ -202,7 +202,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Compares the current value with the given one.
+		///     Compares the current value with the given one.
 		/// </summary>
 		/// <param name="other">The value this instance should be compared with.</param>
 		public int CompareTo(Fixed<#= fractionalBits #> other)
@@ -211,7 +211,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two fixed-point values.
+		///     Tests for equality between two fixed-point values.
 		/// </summary>
 		/// <param name="left">The first fixed-point value to compare.</param>
 		/// <param name="right">The second fixed-point value to compare.</param>
@@ -221,7 +221,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two fixed-point values.
+		///     Tests for inequality between two fixed-point values.
 		/// </summary>
 		/// <param name="left">The first fixed-point value to compare.</param>
 		/// <param name="right">The second fixed-point value to compare.</param>
@@ -235,7 +235,7 @@ namespace Pegasus.Math
 		#region Arithmetic operators
 
 		/// <summary>
-		///   Adds the two fixed-point values and returns the result.
+		///     Adds the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -245,7 +245,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Subtracts the two fixed-point values and returns the result.
+		///     Subtracts the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -255,7 +255,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Negates the fixed-point value.
+		///     Negates the fixed-point value.
 		/// </summary>
 		/// <param name="value">The value that should be negated.</param>
 		public static Fixed<#= fractionalBits #> operator -(Fixed<#= fractionalBits #> value)
@@ -264,7 +264,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Multiplies the two fixed-point values and returns the result.
+		///     Multiplies the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -279,7 +279,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Multiplies the fixed-point value and the integer value and returns the result.
+		///     Multiplies the fixed-point value and the integer value and returns the result.
 		/// </summary>
 		/// <param name="left">The fixed-point operand.</param>
 		/// <param name="right">The integer operand.</param>
@@ -289,7 +289,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Multiplies the fixed-point value and the integer value and returns the result.
+		///     Multiplies the fixed-point value and the integer value and returns the result.
 		/// </summary>
 		/// <param name="left">The integer operand.</param>
 		/// <param name="right">The fixed-point operand.</param>
@@ -299,7 +299,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the two fixed-point values and returns the result.
+		///     Divides the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -316,7 +316,7 @@ namespace Pegasus.Math
 		#region Relational operators
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than the second one.
+		///     Indicates whether the first fixed-point value is smaller than the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -326,7 +326,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than the second one.
+		///     Indicates whether the first fixed-point value is smaller than the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -336,7 +336,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than or equal to the second one.
+		///     Indicates whether the first fixed-point value is smaller than or equal to the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -346,7 +346,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than or equal to the second one.
+		///     Indicates whether the first fixed-point value is smaller than or equal to the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -360,7 +360,7 @@ namespace Pegasus.Math
 		#region Functions
 
 		/// <summary>
-		/// Returns the absolute value of a fixed-point value.
+		///     Returns the absolute value of a fixed-point value.
 		/// </summary>
 		/// <param name="value">The value whose absolute should be returned.</param>
 		public static Fixed<#= fractionalBits #> Abs(Fixed<#= fractionalBits #> value)
@@ -372,7 +372,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Computes the square root of the given fixed-point value.
+		///     Computes the square root of the given fixed-point value.
 		/// </summary>
 		/// <param name="value">The value for which the square root should be computed.</param>
 		public static Fixed<#= fractionalBits #> Sqrt(Fixed<#= fractionalBits #> value)

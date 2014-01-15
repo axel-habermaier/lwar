@@ -14,38 +14,38 @@ namespace Pegasus.Math
 <# foreach (var info in GetInfo()) { #>
 
 	/// <summary>
-	///   Represents a rectangle with the left, top, width, and height stored as <#= info.Description #> values.
+	///     Represents a rectangle with the left, top, width, and height stored as <#= info.Description #> values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Rectangle<#= info.Name #> : IEquatable<Rectangle<#= info.Name #>>
 	{
 		/// <summary>
-		///   Represents a rectangle at the origin with an area of 0.
+		///     Represents a rectangle at the origin with an area of 0.
 		/// </summary>
 		public static readonly Rectangle<#= info.Name #> Empty;
 
 		/// <summary>
-		///   The X-coordinate of the left edge of the rectangle.
+		///     The X-coordinate of the left edge of the rectangle.
 		/// </summary>
 		public <#= info.Type #> Left;
 
 		/// <summary>
-		///   The Y-coordinate of the top edge of the rectangle.
+		///     The Y-coordinate of the top edge of the rectangle.
 		/// </summary>
 		public <#= info.Type #> Top;
 
 		/// <summary>
-		///   The width of the rectangle.
+		///     The width of the rectangle.
 		/// </summary>
 		public <#= info.Type #> Width;
 
 		/// <summary>
-		///   The height of the rectangle.
+		///     The height of the rectangle.
 		/// </summary>
 		public <#= info.Type #> Height;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="left">The X-coordinate of the left edge of the rectangle.</param>
 		/// <param name="top">The Y-coordinate of the left edge of the rectangle.</param>
@@ -60,7 +60,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="position">The position of the rectangle's top left corner.</param>
 		/// <param name="width">The width of the rectangle.</param>
@@ -74,7 +74,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="left">The X-coordinate of the left edge of the rectangle.</param>
 		/// <param name="top">The Y-coordinate of the left edge of the rectangle.</param>
@@ -88,7 +88,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="position">The position of the rectangle's top left corner.</param>
 		/// <param name="size">The size of the rectangle.</param>
@@ -101,7 +101,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the X-coordinate of the right edge of the rectangle.
+		///     Gets the X-coordinate of the right edge of the rectangle.
 		/// </summary>
 		public <#= info.Type #> Right
 		{
@@ -109,7 +109,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the Y-coordinate of the bottom edge of the rectangle.
+		///     Gets the Y-coordinate of the bottom edge of the rectangle.
 		/// </summary>
 		public <#= info.Type #> Bottom
 		{
@@ -117,7 +117,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the position of the rectangle's top left corner.
+		///     Gets the position of the rectangle's top left corner.
 		/// </summary>
 		public <#= info.PositionType #> Position
 		{
@@ -125,7 +125,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the size of the rectangle.
+		///     Gets the size of the rectangle.
 		/// </summary>
 		public <#= info.SizeType #> Size
 		{
@@ -133,7 +133,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the position of the rectangle's top left corner.
+		///     Gets the position of the rectangle's top left corner.
 		/// </summary>
 		public <#= info.PositionType #> TopLeft
 		{
@@ -141,7 +141,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the position of the rectangle's top right corner.
+		///     Gets the position of the rectangle's top right corner.
 		/// </summary>
 		public <#= info.PositionType #> TopRight
 		{
@@ -149,7 +149,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the position of the rectangle's bottom left corner.
+		///     Gets the position of the rectangle's bottom left corner.
 		/// </summary>
 		public <#= info.PositionType #> BottomLeft
 		{
@@ -157,7 +157,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the position of the rectangle's bottom right corner.
+		///     Gets the position of the rectangle's bottom right corner.
 		/// </summary>
 		public <#= info.PositionType #> BottomRight
 		{
@@ -165,7 +165,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a copy of the rectangle with the given offsets added to the position of the returned rectangle.
+		///     Returns a copy of the rectangle with the given offsets added to the position of the returned rectangle.
 		/// </summary>
 		/// <param name="x">The offset that should be applied to the rectangle's left edge.</param>
 		/// <param name="y">The offset that should be applied to the rectangle's top edge.</param>
@@ -175,7 +175,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a copy of the rectangle with the given offsets added to the position of the returned rectangle.
+		///     Returns a copy of the rectangle with the given offsets added to the position of the returned rectangle.
 		/// </summary>
 		/// <param name="offset">The offset that should be applied to the rectangle's position.</param>
 		public Rectangle<#= info.Name #> Offset(<#= info.PositionType #> offset)
@@ -184,8 +184,8 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
-		///   by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
+		///     Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///     by the given amount in both directions, and the rectangle is moved by the given amount in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
 		public Rectangle<#= info.Name #> Enlarge(<#= info.Type #> amount)
@@ -194,8 +194,8 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
-		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		///     Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///     by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="amount">The amount that the rectangle should be enlarged in both X and Y directions.</param>
 		public Rectangle<#= info.Name #> Enlarge(<#= info.PositionType #> amount)
@@ -204,8 +204,8 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
-		///   by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
+		///     Returns an enlarged copy of the rectangle. The returned rectangle has a width and a height that is enlarged 
+		///     by the given amount in both directions, and the rectangle is moved by the given amounts in the (left, up) direction.
 		/// </summary>
 		/// <param name="x">The amount that the rectangle should be enlarged in X-direction.</param>
 		/// <param name="y">The amount that the rectangle should be enlarged in Y-direction.</param>
@@ -215,7 +215,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the given rectangle is equal to this rectangle.
+		///     Determines whether the given rectangle is equal to this rectangle.
 		/// </summary>
 		/// <param name="other">The other rectangle to compare with this rectangle.</param>
 		public bool Equals(Rectangle<#= info.Name #> other)
@@ -225,7 +225,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this rectangle.
+		///     Determines whether the specified object is equal to this rectangle.
 		/// </summary>
 		/// <param name="value">The object to compare with this rectangle.</param>
 		public override bool Equals(object value)
@@ -240,7 +240,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this rectangle.
+		///     Returns a hash code for this rectangle.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -252,7 +252,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two rectangles.
+		///     Tests for equality between two rectangles.
 		/// </summary>
 		/// <param name="left">The first rectangle to compare.</param>
 		/// <param name="right">The second rectangle to compare.</param>
@@ -262,7 +262,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two rectangles.
+		///     Tests for inequality between two rectangles.
 		/// </summary>
 		/// <param name="left">The first rectangle to compare.</param>
 		/// <param name="right">The second rectangle to compare.</param>
@@ -272,7 +272,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this rectangle.
+		///     Returns a string representation of this rectangle.
 		/// </summary>
 		public override string ToString()
 		{
@@ -280,7 +280,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Checks whether this rectangle intersects with the given rectangle.
+		///     Checks whether this rectangle intersects with the given rectangle.
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be checked.</param>
 		public bool Intersects(Rectangle<#= info.Name #> rectangle)
@@ -295,7 +295,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Checks whether this rectangle intersects with the given circle.
+		///     Checks whether this rectangle intersects with the given circle.
 		/// </summary>
 		/// <param name="circle">The circle that should be checked.</param>
 		public bool Intersects(<#= info.CircleType #> circle)
@@ -304,7 +304,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Checks whether the given point lies within the rectangle.
+		///     Checks whether the given point lies within the rectangle.
 		/// </summary>
 		/// <param name="point">The point that should be checked.</param>
 		public bool Intersects(<#= info.PositionType #> point)

@@ -134,7 +134,7 @@
 			foreach (var buffer in ConstantBuffers)
 			{
 				_writer.AppendLine("/// <summary>");
-				_writer.AppendLine("///   Indicates whether the contents of {0} have changed.", buffer.Name);
+				_writer.AppendLine("///     Indicates whether the contents of {0} have changed.", buffer.Name);
 				_writer.AppendLine("/// </summary>");
 				_writer.AppendLine("private bool {0} = true;", GetDirtyFlagName(buffer.Name));
 				_writer.Newline();
@@ -149,7 +149,7 @@
 			foreach (var buffer in ConstantBuffers)
 			{
 				_writer.AppendLine("/// <summary>");
-				_writer.AppendLine("///   Passes the shader constants in the {0} constant buffer to the GPU.", buffer.Name);
+				_writer.AppendLine("///     Passes the shader constants in the {0} constant buffer to the GPU.", buffer.Name);
 				_writer.AppendLine("/// </summary>");
 				_writer.AppendLine("private readonly ConstantBuffer {0};", GetFieldName(buffer.Name));
 				_writer.Newline();
@@ -175,7 +175,7 @@
 		private void GenerateConstructor()
 		{
 			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Initializes a new instance.");
+			_writer.AppendLine("///     Initializes a new instance.");
 			_writer.AppendLine("/// </summary>");
 			_writer.AppendLine("/// <param name=\"graphicsDevice\">The graphics device this instance belongs to.</param>");
 			_writer.AppendLine("/// <param name=\"assets\">The assets manager that should be used to load required assets.</param>");
@@ -270,7 +270,7 @@
 		private void GenerateBindMethod()
 		{
 			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Binds all textures and non-shared constant buffers required by the effect.");
+			_writer.AppendLine("///     Binds all textures and non-shared constant buffers required by the effect.");
 			_writer.AppendLine("/// </summary>");
 			_writer.Append("private ");
 			if (Constants.Any())
@@ -315,7 +315,7 @@
 		private void GenerateUnbindMethod()
 		{
 			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Unbinds all textures required by the effect.");
+			_writer.AppendLine("///     Unbinds all textures required by the effect.");
 			_writer.AppendLine("/// </summary>");
 			_writer.Append("private void {0}()", _unbindMethodName);
 			_writer.AppendBlockStatement(() =>
@@ -340,7 +340,7 @@
 				return;
 
 			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///   Disposes the object, releasing all managed and unmanaged resources.");
+			_writer.AppendLine("///     Disposes the object, releasing all managed and unmanaged resources.");
 			_writer.AppendLine("/// </summary>");
 			_writer.AppendLine("protected override void __OnDisposing()");
 			_writer.AppendBlockStatement(() =>
@@ -369,13 +369,13 @@
 				_writer.AppendBlockStatement(() =>
 				{
 					_writer.AppendLine("/// <summary>");
-					_writer.AppendLine("///   The size of the struct in bytes.");
+					_writer.AppendLine("///     The size of the struct in bytes.");
 					_writer.AppendLine("/// </summary>");
 					_writer.AppendLine("public const int Size = {0};", buffers[i].Size);
 					_writer.Newline();
 
 					_writer.AppendLine("/// <summary>");
-					_writer.AppendLine("///   The slot the constant buffer is assigned to.");
+					_writer.AppendLine("///     The slot the constant buffer is assigned to.");
 					_writer.AppendLine("/// </summary>");
 					_writer.AppendLine("public const int Slot = {0};", buffers[i].Slot);
 					_writer.Newline();

@@ -188,19 +188,19 @@
 				writer.Newline();
 
 				writer.AppendLine("/// <summary>");
-				writer.AppendLine("///   Provides a method to search for a font based on certain font settings.");
+				writer.AppendLine("///     Provides a method to search for a font based on certain font settings.");
 				writer.AppendLine("/// </summary>");
 				writer.AppendLine("internal class FontLoader : IFontLoader");
 				writer.AppendBlockStatement(() =>
 				{
 					writer.AppendLine("/// <summary>");
-					writer.AppendLine("///   The assets manager that is used to load the fonts.");
+					writer.AppendLine("///     The assets manager that is used to load the fonts.");
 					writer.AppendLine("/// </summary>");
 					writer.AppendLine("private AssetsManager _assets;");
 
 					writer.Newline();
 					writer.AppendLine("/// <summary>");
-					writer.AppendLine("///   Initializes a new instance.");
+					writer.AppendLine("///     Initializes a new instance.");
 					writer.AppendLine("/// </summary>");
 					writer.AppendLine("/// <param name=\"assets\">The assets manager that should be used to load the fonts.</param>");
 					writer.AppendLine("public FontLoader(AssetsManager assets)");
@@ -212,14 +212,14 @@
 
 					writer.Newline();
 					writer.AppendLine("/// <summary>");
-					writer.AppendLine("///   Sets the next font loader that is used to load the font if the current loader fails to");
-					writer.AppendLine("///   load an appropriate font.");
+					writer.AppendLine("///     Sets the next font loader that is used to load the font if the current loader fails to");
+					writer.AppendLine("///     load an appropriate font.");
 					writer.AppendLine("/// </summary>");
 					writer.AppendLine("public IFontLoader Next {{ private get; set; }}");
 
 					writer.Newline();
 					writer.AppendLine("/// <summary>");
-					writer.AppendLine("///   Gets the font matching the given font settings.");
+					writer.AppendLine("///     Gets the font matching the given font settings.");
 					writer.AppendLine("/// </summary>");
 					writer.AppendLine("/// <param name=\"fontFamily\">The family of the font that should be returned.</param>");
 					writer.AppendLine("/// <param name=\"size\">The size of the font that should be returned.</param>");

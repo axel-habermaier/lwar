@@ -14,23 +14,23 @@ namespace Pegasus.Math
 <# foreach (var info in GetInfo()) { #>
 
 	/// <summary>
-	///   Represents a circle with the position and radius stored as <#= info.Description #> values.
+	///     Represents a circle with the position and radius stored as <#= info.Description #> values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Circle<#= info.Name #> : IEquatable<Circle<#= info.Name #>>
 	{
 		/// <summary>
-		///   The position of the circle's center.
+		///     The position of the circle's center.
 		/// </summary>
 		public <#= info.PositionType #> Position;
 
 		/// <summary>
-		///   The circle's radius.
+		///     The circle's radius.
 		/// </summary>
 		public <#= info.Type #> Radius;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="x">The X-component of the circle's position.</param>
 		/// <param name="y">The Y-component of the circle's position.</param>
@@ -41,7 +41,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="position">The position of the circle's center.</param>
 		/// <param name="radius">The circle's radius.</param>
@@ -52,7 +52,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a copy of the circle with the given offsets added to the position of the returned circle.
+		///     Returns a copy of the circle with the given offsets added to the position of the returned circle.
 		/// </summary>
 		/// <param name="x">The offset that should be applied to the circle's position in x-direction.</param>
 		/// <param name="y">The offset that should be applied to the circle's position in y-direction.</param>
@@ -62,7 +62,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a copy of the circle with the given offsets added to the position of the returned circle.
+		///     Returns a copy of the circle with the given offsets added to the position of the returned circle.
 		/// </summary>
 		/// <param name="offset">The offset that should be applied to the circle's position.</param>
 		public Circle<#= info.Name #> Offset(<#= info.PositionType #> offset)
@@ -71,7 +71,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the given circle is equal to this circle.
+		///     Determines whether the given circle is equal to this circle.
 		/// </summary>
 		/// <param name="other">The other circle to compare with this circle.</param>
 		public bool Equals(Circle<#= info.Name #> other)
@@ -81,7 +81,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this circle.
+		///     Determines whether the specified object is equal to this circle.
 		/// </summary>
 		/// <param name="value">The object to compare with this circle.</param>
 		public override bool Equals(object value)
@@ -96,7 +96,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this circle.
+		///     Returns a hash code for this circle.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -104,7 +104,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two circle.
+		///     Tests for equality between two circle.
 		/// </summary>
 		/// <param name="left">The first circle to compare.</param>
 		/// <param name="right">The second circle to compare.</param>
@@ -114,7 +114,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two circle.
+		///     Tests for inequality between two circle.
 		/// </summary>
 		/// <param name="left">The first circle to compare.</param>
 		/// <param name="right">The second circle to compare.</param>
@@ -124,7 +124,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this circle.
+		///     Returns a string representation of this circle.
 		/// </summary>
 		public override string ToString()
 		{
@@ -132,7 +132,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Checks whether this circle intersects with the given circle.
+		///     Checks whether this circle intersects with the given circle.
 		/// </summary>
 		/// <param name="circle">The circle that should be checked.</param>
 		public bool Intersects(Circle<#= info.Name #> circle)
@@ -143,7 +143,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Checks whether this circle intersects with the given rectangle.
+		///     Checks whether this circle intersects with the given rectangle.
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be checked.</param>
 		public bool Intersects(<#= info.RectangleType #> rectangle)
@@ -161,7 +161,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Checks whether the given point lies within the circle.
+		///     Checks whether the given point lies within the circle.
 		/// </summary>
 		/// <param name="point">The point that should be checked.</param>
 		public bool Intersects(<#= info.PositionType #> point)
