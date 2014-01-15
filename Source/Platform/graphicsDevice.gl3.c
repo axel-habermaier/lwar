@@ -32,7 +32,6 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 		areContextExtsInitialized = PG_TRUE;
 	}
 
-	pgDestroyContext(&device->context);
 	pgCreateContext(&device->context);
 	pgMakeCurrent(&device->context);
 

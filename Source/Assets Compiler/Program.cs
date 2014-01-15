@@ -63,14 +63,15 @@
 					clean = true;
 				}
 
-				Configuration.CheckFxcAvailability();
+				if (!Configuration.XamlFilesOnly)
+					Configuration.CheckFxcAvailability();
 
 				var success = true;
 				using (var compilationUnit = new CompilationUnit())
 				{
 					compilationUnit.LoadAssets();
 
-					if (clean || !Configuration.CheckAssetFileVersion())
+					if (!Configuration.XamlFilesOnly && (clean || !Configuration.CheckAssetFileVersion()))
 						compilationUnit.Clean();
 
 					if (compile)

@@ -79,7 +79,6 @@
     <Compile Include="context.glx.c" />
     <Compile Include="glExt.c" />
     <Compile Include="linux.c" />
-    <Compile Include="pgGraphics.c" />
     <Compile Include="query.c" />
     <Compile Include="query.d3d11.c" />
     <Compile Include="query.gl3.c" />
@@ -87,6 +86,7 @@
     <Compile Include="texture.d3d11.c" />
     <Compile Include="texture.gl3.c" />
     <Compile Include="buffer.c" />
+    <Compile Include="graphics.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="d3d11.h" />

@@ -20,10 +20,10 @@ Source/Platform/obj
 Source/Platform/Platform.md.pc
 Source/Server/Server.md.pc
 lwarMono.userprefs
-Source/Lwar Assets/obj
-Source/Lwar Assets/bin
-Source/Lwar Assets/temp
-Source/Lwar Assets/Binaries
+Source/lwar Assets/obj
+Source/lwar Assets/bin
+Source/lwar Assets/temp
+Source/lwar Assets/Binaries
 Source/Pegasus Assets/obj
 Source/Pegasus Assets/bin
 Source/Pegasus Assets/temp

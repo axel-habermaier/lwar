@@ -226,6 +226,8 @@ pgVoid pgInitializeContextExtensions(pgContext* context)
 
 	if (!wglExtsSupported)
 		PG_DIE("Not all required WGL extensions are supported.");
+
+	pgDestroyContext(context);
 }
 
 pgVoid pgMakeCurrent(pgContext* context)
