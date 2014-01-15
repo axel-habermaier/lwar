@@ -35,8 +35,8 @@ Source/lwar UI/bin
 Binaries x64
 Binaries x86
 log.txt
-Source/Lwar Assets/AssetIdentifiers.cs
-Source/Lwar Assets/Effects/Effects.cs
+Source/lwar Assets/AssetIdentifiers.cs
+Source/lwar Assets/Effects/Effects.cs
 Source/Pegasus Assets/AssetIdentifiers.cs
 Source/Pegasus Assets/Effects/Effects.cs
 Source/lwar/Gameplay/Entities/EntityType.cs
@@ -50,7 +50,7 @@ lwar.sln.ide
 Source/TestResults
 Source/Tests/bin
 Source/Tests/obj
-Source/Lwar Assets/Fonts/FontLoader.cs
+Source/lwar Assets/Fonts/FontLoader.cs
 Source/Pegasus Assets/Fonts/FontLoader.cs
 *.ipch
 /Source/lwar UI/UserInterface.cs
