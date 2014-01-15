@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   Represents a base class for controls typically defined in Xaml.
+	///     Represents a base class for controls typically defined in Xaml.
 	/// </summary>
 	public class UserControl : ContentControl
 	{

@@ -11,107 +11,107 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Efficiently draws large amounts of 2D sprites by batching together quads with the same texture.
+	///     Efficiently draws large amounts of 2D sprites by batching together quads with the same texture.
 	/// </summary>
 	public sealed class SpriteBatch : DisposableObject
 	{
 		/// <summary>
-		///   The maximum number of quads that can be queued.
+		///     The maximum number of quads that can be queued.
 		/// </summary>
 		private const int MaxQuads = 8192;
 
 		/// <summary>
-		///   The number of chunks that the dynamic vertex buffer allocates.
+		///     The number of chunks that the dynamic vertex buffer allocates.
 		/// </summary>
 		private const int ChunkCount = 3;
 
 		/// <summary>
-		///   The effect that is used to draw the sprites.
+		///     The effect that is used to draw the sprites.
 		/// </summary>
 		private readonly SpriteEffect _effect;
 
 		/// <summary>
-		///   The index buffer that is used for drawing.
+		///     The index buffer that is used for drawing.
 		/// </summary>
 		private readonly IndexBuffer _indexBuffer;
 
 		/// <summary>
-		///   The size of a single quad in bytes.
+		///     The size of a single quad in bytes.
 		/// </summary>
 		private readonly int _quadSize = Marshal.SizeOf(typeof(Quad));
 
 		/// <summary>
-		///   The list of all quads.
+		///     The list of all quads.
 		/// </summary>
 		private readonly Quad[] _quads = new Quad[MaxQuads];
 
 		/// <summary>
-		///   Rasterizer state for sprite batch rendering with active scissor test.
+		///     Rasterizer state for sprite batch rendering with active scissor test.
 		/// </summary>
 		private readonly RasterizerState _scissorRasterizerState;
 
 		/// <summary>
-		///   The vertex buffer that is used for drawing.
+		///     The vertex buffer that is used for drawing.
 		/// </summary>
 		private readonly DynamicVertexBuffer _vertexBuffer;
 
 		/// <summary>
-		///   The vertex input layout used by the sprite batch.
+		///     The vertex input layout used by the sprite batch.
 		/// </summary>
 		private readonly VertexInputLayout _vertexLayout;
 
 		/// <summary>
-		///   The blend state that should be used for drawing.
+		///     The blend state that should be used for drawing.
 		/// </summary>
 		private BlendState _blendState;
 
 		/// <summary>
-		///   The index of the section that is currently in use.
+		///     The index of the section that is currently in use.
 		/// </summary>
 		private int _currentSection = -1;
 
 		/// <summary>
-		///   The index of the section list that is currently being used.
+		///     The index of the section list that is currently being used.
 		/// </summary>
 		private int _currentSectionList = -1;
 
 		/// <summary>
-		///   The depth stencil state that should be used for drawing.
+		///     The depth stencil state that should be used for drawing.
 		/// </summary>
 		private DepthStencilState _depthStencilState;
 
 		/// <summary>
-		///   The number of quads that are currently queued.
+		///     The number of quads that are currently queued.
 		/// </summary>
 		private int _numQuads;
 
 		/// <summary>
-		///   The number of section lists that are currently used.
+		///     The number of section lists that are currently used.
 		/// </summary>
 		private int _numSectionLists;
 
 		/// <summary>
-		///   The number of sections that are currently used.
+		///     The number of sections that are currently used.
 		/// </summary>
 		private int _numSections;
 
 		/// <summary>
-		///   The sampler state that should be used for drawing.
+		///     The sampler state that should be used for drawing.
 		/// </summary>
 		private SamplerState _samplerState;
 
 		/// <summary>
-		///   A mapping from a texture to its corresponding section list.
+		///     A mapping from a texture to its corresponding section list.
 		/// </summary>
 		private SectionList[] _sectionLists = new SectionList[4];
 
 		/// <summary>
-		///   The list of all sections.
+		///     The list of all sections.
 		/// </summary>
 		private Section[] _sections = new Section[16];
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
@@ -162,7 +162,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the sampler state that should be used for drawing.
+		///     Gets or sets the sampler state that should be used for drawing.
 		/// </summary>
 		public SamplerState SamplerState
 		{
@@ -177,7 +177,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the depth stencil state that should be used for drawing.
+		///     Gets or sets the depth stencil state that should be used for drawing.
 		/// </summary>
 		public DepthStencilState DepthStencilState
 		{
@@ -192,7 +192,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the blend state that should be used for drawing.
+		///     Gets or sets the blend state that should be used for drawing.
 		/// </summary>
 		public BlendState BlendState
 		{
@@ -207,33 +207,33 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the scissor area that should be used for the scissor test. All batched sprites are drawn before the area
-		///   is changed.
+		///     Gets or sets the scissor area that should be used for the scissor test. All batched sprites are drawn before the area
+		///     is changed.
 		/// </summary>
 		public Rectangle ScissorArea { get; set; }
 
 		/// <summary>
-		///   Gets or sets a value indicating whether a scissor test should be performed during rendering. All batched sprites are
-		///   drawn before the scissor test is enabled or disabled.
+		///     Gets or sets a value indicating whether a scissor test should be performed during rendering. All batched sprites are
+		///     drawn before the scissor test is enabled or disabled.
 		/// </summary>
 		public bool UseScissorTest { get; set; }
 
 		/// <summary>
-		///   Gets or sets the world matrix used by the sprite batch. All batched sprites are drawn before the world matrix is
-		///   changed.
+		///     Gets or sets the world matrix used by the sprite batch. All batched sprites are drawn before the world matrix is
+		///     changed.
 		/// </summary>
 		public Matrix WorldMatrix { get; set; }
 
 		/// <summary>
-		///   Gets or sets the layer of all subsequent drawing operations. All sprites within the same layer are drawn in some
-		///   unspecified order. Layers, on the other hand, are drawn from lowest to highest, such that sprites in a higher layer
-		///   overlap or hide sprites in a lower layer at the same position, depending on the blend and depth stencil
-		///   state settings.
+		///     Gets or sets the layer of all subsequent drawing operations. All sprites within the same layer are drawn in some
+		///     unspecified order. Layers, on the other hand, are drawn from lowest to highest, such that sprites in a higher layer
+		///     overlap or hide sprites in a lower layer at the same position, depending on the blend and depth stencil
+		///     state settings.
 		/// </summary>
 		public int Layer { get; set; }
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -245,7 +245,7 @@
 		}
 
 		/// <summary>
-		///   Draws the given rectangle.
+		///     Draws the given rectangle.
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
@@ -255,7 +255,7 @@
 		}
 
 		/// <summary>
-		///   Draws the given rectangle.
+		///     Draws the given rectangle.
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
@@ -266,7 +266,7 @@
 		}
 
 		/// <summary>
-		///   Draws the given rectangle.
+		///     Draws the given rectangle.
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
@@ -279,7 +279,7 @@
 		}
 
 		/// <summary>
-		///   Draws the given rectangle.
+		///     Draws the given rectangle.
 		/// </summary>
 		/// <param name="position">The position of the quad that should be drawn.</param>
 		/// <param name="size">The size of the quad that should be drawn.</param>
@@ -302,7 +302,7 @@
 		}
 
 		/// <summary>
-		///   Draws a textured rectangle at the given position with the texture's size.
+		///     Draws a textured rectangle at the given position with the texture's size.
 		/// </summary>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
 		/// <param name="position">The position of the quad.</param>
@@ -316,7 +316,7 @@
 		}
 
 		/// <summary>
-		///   Draws a textured rectangle at the given position with the texture's size and rotation.
+		///     Draws a textured rectangle at the given position with the texture's size and rotation.
 		/// </summary>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
 		/// <param name="angle">The rotation of the quad.</param>
@@ -338,7 +338,7 @@
 		}
 
 		/// <summary>
-		///   Draws the given quad.
+		///     Draws the given quad.
 		/// </summary>
 		/// <param name="quad">The quad that should be added.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
@@ -358,7 +358,7 @@
 		}
 
 		/// <summary>
-		///   Draws the outline of a rectangle.
+		///     Draws the outline of a rectangle.
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
 		/// <param name="color">The color of the outline.</param>
@@ -371,7 +371,7 @@
 		}
 
 		/// <summary>
-		///   Draws the outline of a circle.
+		///     Draws the outline of a circle.
 		/// </summary>
 		/// <param name="circle">The circle that should be drawn.</param>
 		/// <param name="color">The color of the outline.</param>
@@ -403,7 +403,7 @@
 		}
 
 		/// <summary>
-		///   Draws a line.
+		///     Draws a line.
 		/// </summary>
 		/// <param name="start">The start of the line.</param>
 		/// <param name="end">The end of the line.</param>
@@ -435,7 +435,7 @@
 		}
 
 		/// <summary>
-		///   Draws the given quads.
+		///     Draws the given quads.
 		/// </summary>
 		/// <param name="quads">The quads that should be added.</param>
 		/// <param name="count">The number of quads to draw.</param>
@@ -459,7 +459,7 @@
 		}
 
 		/// <summary>
-		///   Draws all batched sprites.
+		///     Draws all batched sprites.
 		/// </summary>
 		/// <param name="output">The output the sprite batch should draw to.</param>
 		public void DrawBatch(RenderOutput output)
@@ -516,7 +516,7 @@
 		}
 
 		/// <summary>
-		///   Resets the internal state.
+		///     Resets the internal state.
 		/// </summary>
 		private void Reset()
 		{
@@ -528,8 +528,8 @@
 		}
 
 		/// <summary>
-		///   Check whether adding the given number of quads would overflow the internal quad buffer. Returns true
-		///   if the quads can be batched.
+		///     Check whether adding the given number of quads would overflow the internal quad buffer. Returns true
+		///     if the quads can be batched.
 		/// </summary>
 		/// <param name="quadCount">The additional number of quads that should be drawn.</param>
 		private bool CheckQuadCount(int quadCount)
@@ -547,7 +547,7 @@
 		}
 
 		/// <summary>
-		///   Copies the quads to the vertex buffer, sorted by texture.
+		///     Copies the quads to the vertex buffer, sorted by texture.
 		/// </summary>
 		private unsafe void UpdateVertexBuffer()
 		{
@@ -583,8 +583,8 @@
 		}
 
 		/// <summary>
-		///   Checks whether the current texture has to be changed, and if so, creates a new section and possibly a new section
-		///   list. Or, if any rendering settings have been changed, a new section and/or section list might be added as well.
+		///     Checks whether the current texture has to be changed, and if so, creates a new section and possibly a new section
+		///     list. Or, if any rendering settings have been changed, a new section and/or section list might be added as well.
 		/// </summary>
 		/// <param name="texture">The texture that should be used for newly added quads.</param>
 		private void ChangeTexture(Texture2D texture)
@@ -633,8 +633,8 @@
 		}
 
 		/// <summary>
-		///   Checks whether the section list with the specified index matches the given texture and the current rendering
-		///   settings.
+		///     Checks whether the section list with the specified index matches the given texture and the current rendering
+		///     settings.
 		/// </summary>
 		/// <param name="sectionList">The index of the section list that should be checked.</param>
 		/// <param name="texture">The texture that should be used to draw the quads.</param>
@@ -648,7 +648,7 @@
 		}
 
 		/// <summary>
-		///   Adds a new section, allocating more space for the new section if required.
+		///     Adds a new section, allocating more space for the new section if required.
 		/// </summary>
 		private void AddSection()
 		{
@@ -663,7 +663,7 @@
 		}
 
 		/// <summary>
-		///   Adds the given section list, allocating more space for the new section list if required.
+		///     Adds the given section list, allocating more space for the new section list if required.
 		/// </summary>
 		/// <param name="sectionList">The section list that should be added.</param>
 		private void AddSectionList(SectionList sectionList)
@@ -681,30 +681,30 @@
 		#region Nested type: Section
 
 		/// <summary>
-		///   Represents a section of the quad list, with each quad using the same texture and rendering settings.
+		///     Represents a section of the quad list, with each quad using the same texture and rendering settings.
 		/// </summary>
 		private struct Section
 		{
 			/// <summary>
-			///   The offset into the quad list. All quads from [Offset, Offset + _numQuads) use the same texture and rendering
-			///   settings.
+			///     The offset into the quad list. All quads from [Offset, Offset + _numQuads) use the same texture and rendering
+			///     settings.
 			/// </summary>
 			public readonly int Offset;
 
 			/// <summary>
-			///   The index of the next section of the quad list using the same texture and rendering settings or -1 if this is the
-			///   last
-			///   section.
+			///     The index of the next section of the quad list using the same texture and rendering settings or -1 if this is the
+			///     last
+			///     section.
 			/// </summary>
 			public int Next;
 
 			/// <summary>
-			///   The number of quads in this section.
+			///     The number of quads in this section.
 			/// </summary>
 			public int NumQuads;
 
 			/// <summary>
-			///   Initializes the instance.
+			///     Initializes the instance.
 			/// </summary>
 			/// <param name="offset">The index of the first quad of this section.</param>
 			public Section(int offset)
@@ -720,67 +720,67 @@
 		#region Nested type: SectionList
 
 		/// <summary>
-		///   Represents a list of sections using the same texture and rendering settings.
+		///     Represents a list of sections using the same texture and rendering settings.
 		/// </summary>
 		private struct SectionList
 		{
 			/// <summary>
-			///   The blend state used by the sections.
+			///     The blend state used by the sections.
 			/// </summary>
 			public readonly BlendState BlendState;
 
 			/// <summary>
-			///   The depth stencil state used by the sections.
+			///     The depth stencil state used by the sections.
 			/// </summary>
 			public readonly DepthStencilState DepthStencilState;
 
 			/// <summary>
-			///   The index of the first section of the list or -1 if there is none.
+			///     The index of the first section of the list or -1 if there is none.
 			/// </summary>
 			public readonly int FirstSection;
 
 			/// <summary>
-			///   The layer of the section list.
+			///     The layer of the section list.
 			/// </summary>
 			public readonly int Layer;
 
 			/// <summary>
-			///   The sampler state used by the sections.
+			///     The sampler state used by the sections.
 			/// </summary>
 			public readonly SamplerState SamplerState;
 
 			/// <summary>
-			///   The scissor area used by the sections.
+			///     The scissor area used by the sections.
 			/// </summary>
 			public readonly Rectangle ScissorArea;
 
 			/// <summary>
-			///   The texture used by the sections.
+			///     The texture used by the sections.
 			/// </summary>
 			public readonly Texture2D Texture;
 
 			/// <summary>
-			///   Indicates whether the scissor test should be enabled when drawing the sections.
+			///     Indicates whether the scissor test should be enabled when drawing the sections.
 			/// </summary>
 			public readonly bool UseScissorTest;
 
 			/// <summary>
-			///   The world matrix used by the sections.
+			///     The world matrix used by the sections.
 			/// </summary>
 			public readonly Matrix WorldMatrix;
 
 			/// <summary>
-			///   The index of the last section of the list or -1 if there is none.
+			///     The index of the last section of the list or -1 if there is none.
 			/// </summary>
 			public int LastSection;
 
 			/// <summary>
-			///   The total number of quads of the section list across all sections.
+			///     The total number of quads of the section list across all sections.
 			/// </summary>
 			public int NumQuads;
 
 			/// <summary>
-			///   Initializes the instance.
+			///     Initializes the instance.
 			/// </summary>
 			/// <param name="blendState">The blend state used by the sections.</param>
 			/// <param name="depthStencilState">The depth stencil state used by the sections.</param>
@@ -816,18 +816,18 @@
 			}
 
 			/// <summary>
-			///   Used to compare the layers of two section lists.
+			///     Used to compare the layers of two section lists.
 			/// </summary>
 			public class LayerComparer : IComparer<SectionList>
 			{
 				/// <summary>
-				///   The singleton comparer instance.
+				///     The singleton comparer instance.
 				/// </summary>
 				public static readonly LayerComparer Instance = new LayerComparer();
 
 				/// <summary>
-				///   Compares two section list and returns a value indicating whether one belongs to a lower, the same, or greater layer
-				///   than the other.
+				///     Compares two section list and returns a value indicating whether one belongs to a lower, the same, or greater layer
+				///     than the other.
 				/// </summary>
 				/// <param name="x">The first section list to compare.</param>
 				/// <param name="y">The second section list to compare.</param>

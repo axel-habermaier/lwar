@@ -11,8 +11,7 @@
 
 	/// <summary>
 	///     Represents a field of an effect class that defines the combination of shaders that should be set on the GPU to
-	///     create
-	///     a graphical effect.
+	///     create a graphical effect.
 	/// </summary>
 	internal class EffectTechnique : EffectElement
 	{

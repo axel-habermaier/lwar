@@ -3,9 +3,9 @@
 	using System;
 
 	/// <summary>
-	///   Applies the two parsers in sequence. The second parser is only applied if the first parser
-	///   succeeds. The results of both parsers are passed to the given function, whose return value is the result
-	///   of the pipe2 parser.
+	///     Applies the two parsers in sequence. The second parser is only applied if the first parser
+	///     succeeds. The results of both parsers are passed to the given function, whose return value is the result
+	///     of the pipe2 parser.
 	/// </summary>
 	/// <typeparam name="TResultFirst">The type of the first parser's result.</typeparam>
 	/// <typeparam name="TResultSecond">The type of the second parser's result.</typeparam>
@@ -13,22 +13,22 @@
 	public class Pipe2Parser<TResultFirst, TResultSecond, TResult> : Parser<TResult>
 	{
 		/// <summary>
-		///   The parser that is applied first.
+		///     The parser that is applied first.
 		/// </summary>
 		private readonly Parser<TResultFirst> _first;
 
 		/// <summary>
-		///   A function that is applied to the results of both parsers.
+		///     A function that is applied to the results of both parsers.
 		/// </summary>
 		private readonly Func<TResultFirst, TResultSecond, TResult> _function;
 
 		/// <summary>
-		///   The parser that is applied second.
+		///     The parser that is applied second.
 		/// </summary>
 		private readonly Parser<TResultSecond> _second;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="first">The parser that is applied first.</param>
 		/// <param name="second">The parser that is applied second.</param>
@@ -46,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Applies the first parser, then, if successful, the second one and returns the result of the second parser.
+		///     Applies the first parser, then, if successful, the second one and returns the result of the second parser.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<TResult> Parse(InputStream inputStream)

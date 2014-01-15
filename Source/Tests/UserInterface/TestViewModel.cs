@@ -1,11 +1,10 @@
 ﻿namespace Tests.UserInterface
 {
 	using System;
-	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
 
 	/// <summary>
-	///   The control that is used for UI-related unit tests. The view model is recursive.
+	///     The control that is used for UI-related unit tests. The view model is recursive.
 	/// </summary>
 	public class TestViewModel : ViewModel
 	{
@@ -33,11 +32,11 @@
 		}
 
 		/// <summary>
-		///   Initializes the recursive Model property for the given number of levels.
+		///     Initializes the recursive Model property for the given number of levels.
 		/// </summary>
 		/// <param name="levels">
-		///   The number of levels that should be initialized. This is the number of times the Model property
-		///   can be called, starting with the current instance.
+		///     The number of levels that should be initialized. This is the number of times the Model property
+		///     can be called, starting with the current instance.
 		/// </param>
 		public void InitializeRecursively(int levels)
 		{

@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   Indicates which blend function should be used.
+	///     Indicates which blend function should be used.
 	/// </summary>
 	public enum BlendOption
 	{

@@ -4,38 +4,38 @@
 	using Math;
 
 	/// <summary>
-	///   Represents a layout where all child elements can position themselves with coordinates relative to the canvas.
+	///     Represents a layout where all child elements can position themselves with coordinates relative to the canvas.
 	/// </summary>
 	public class Canvas : Panel
 	{
 		/// <summary>
-		///   The distance between the left side of an UI element and and the left side of its parent Canvas.
+		///     The distance between the left side of an UI element and and the left side of its parent Canvas.
 		/// </summary>
 		public static readonly DependencyProperty<double> LeftProperty =
 			new DependencyProperty<double>(defaultValue: Double.NaN, affectsArrange: true, validationCallback: ValidatePosition);
 
 		/// <summary>
-		///   The distance between the right side of an UI element and the right side of its parent Canvas.
-		///   If the Left property is also set, the Right value is ignored.
+		///     The distance between the right side of an UI element and the right side of its parent Canvas.
+		///     If the Left property is also set, the Right value is ignored.
 		/// </summary>
 		public static readonly DependencyProperty<double> RightProperty =
 			new DependencyProperty<double>(defaultValue: Double.NaN, affectsArrange: true, validationCallback: ValidatePosition);
 
 		/// <summary>
-		///   The distance between the top of an UI element and the top of its parent Canvas.
+		///     The distance between the top of an UI element and the top of its parent Canvas.
 		/// </summary>
 		public static readonly DependencyProperty<double> TopProperty =
 			new DependencyProperty<double>(defaultValue: Double.NaN, affectsArrange: true, validationCallback: ValidatePosition);
 
 		/// <summary>
-		///   The distance between the bottom of an UI element and the bottom of its parent Canvas.
-		///   If the Top property is also set, the Bottom value is ignored.
+		///     The distance between the bottom of an UI element and the bottom of its parent Canvas.
+		///     If the Top property is also set, the Bottom value is ignored.
 		/// </summary>
 		public static readonly DependencyProperty<double> BottomProperty =
 			new DependencyProperty<double>(defaultValue: Double.NaN, affectsArrange: true, validationCallback: ValidatePosition);
 
 		/// <summary>
-		///   Gets the distance between the left side of the given UI element and its parent Canvas.
+		///     Gets the distance between the left side of the given UI element and its parent Canvas.
 		/// </summary>
 		/// <param name="element">The element the distance should be returned for.</param>
 		public static double GetLeft(UIElement element)
@@ -45,7 +45,7 @@
 		}
 
 		/// <summary>
-		///   Sets the distance between the left side of the given UI element and its parent Canvas.
+		///     Sets the distance between the left side of the given UI element and its parent Canvas.
 		/// </summary>
 		/// <param name="element">The element the distance should be set for.</param>
 		/// <param name="distance">The distance that should be set.</param>
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Gets the distance between the right side of the given UI element and its parent Canvas.
+		///     Gets the distance between the right side of the given UI element and its parent Canvas.
 		/// </summary>
 		/// <param name="element">The element the distance should be returned for.</param>
 		public static double GetRight(UIElement element)
@@ -66,7 +66,7 @@
 		}
 
 		/// <summary>
-		///   Sets the distance between the right side of the given UI element and its parent Canvas.
+		///     Sets the distance between the right side of the given UI element and its parent Canvas.
 		/// </summary>
 		/// <param name="element">The element the distance should be set for.</param>
 		/// <param name="distance">The distance that should be set.</param>
@@ -77,7 +77,7 @@
 		}
 
 		/// <summary>
-		///   Gets the distance between the top of the given UI element and its parent Canvas.
+		///     Gets the distance between the top of the given UI element and its parent Canvas.
 		/// </summary>
 		/// <param name="element">The element the distance should be returned for.</param>
 		public static double GetTop(UIElement element)
@@ -87,7 +87,7 @@
 		}
 
 		/// <summary>
-		///   Sets the distance between the left side of the given UI element and its parent Canvas.
+		///     Sets the distance between the left side of the given UI element and its parent Canvas.
 		/// </summary>
 		/// <param name="element">The element the distance should be set for.</param>
 		/// <param name="distance">The distance that should be set.</param>
@@ -98,7 +98,7 @@
 		}
 
 		/// <summary>
-		///   Gets the distance between the bottom of the given UI element and its parent Canvas.
+		///     Gets the distance between the bottom of the given UI element and its parent Canvas.
 		/// </summary>
 		/// <param name="element">The element the distance should be returned for.</param>
 		public static double GetBottom(UIElement element)
@@ -108,7 +108,7 @@
 		}
 
 		/// <summary>
-		///   Sets the distance between the bottom of the given UI element and its parent Canvas.
+		///     Sets the distance between the bottom of the given UI element and its parent Canvas.
 		/// </summary>
 		/// <param name="element">The element the distance should be set for.</param>
 		/// <param name="distance">The distance that should be set.</param>
@@ -119,7 +119,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given value is a valid canvas position.
+		///     Checks whether the given value is a valid canvas position.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidatePosition(double value)
@@ -129,12 +129,12 @@
 		}
 
 		/// <summary>
-		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
+		///     Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
 		/// <param name="availableSize">
-		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
-		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
-		///   element might be able to use scrolling in this case.
+		///     The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
+		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
+		///     element might be able to use scrolling in this case.
 		/// </param>
 		protected override SizeD MeasureCore(SizeD availableSize)
 		{
@@ -149,13 +149,13 @@
 		}
 
 		/// <summary>
-		///   Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
-		///   element. If this value is smaller than the given size, the UI element's alignment properties position it
-		///   appropriately.
+		///     Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
+		///     element. If this value is smaller than the given size, the UI element's alignment properties position it
+		///     appropriately.
 		/// </summary>
 		/// <param name="finalSize">
-		///   The final area allocated by the UI element's parent that the UI element should use to arrange
-		///   itself and its children.
+		///     The final area allocated by the UI element's parent that the UI element should use to arrange
+		///     itself and its children.
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{

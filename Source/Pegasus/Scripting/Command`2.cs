@@ -5,22 +5,22 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Represents a command with two parameters.
+	///     Represents a command with two parameters.
 	/// </summary>
 	public sealed class Command<T1, T2> : ICommand
 	{
 		/// <summary>
-		///   The representation the command's first parameter.
+		///     The representation the command's first parameter.
 		/// </summary>
 		private readonly CommandParameter _parameter1;
 
 		/// <summary>
-		///   The representation the command's second parameter.
+		///     The representation the command's second parameter.
 		/// </summary>
 		private readonly CommandParameter _parameter2;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="name">The external name of the command that is used to refer to the command in the console, for instance.</param>
 		/// <param name="description">A string describing the usage and the purpose of the command.</param>
@@ -41,12 +41,12 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the command can only be invoked by the system and not via the console.
+		///     Gets a value indicating whether the command can only be invoked by the system and not via the console.
 		/// </summary>
 		public bool SystemOnly { get; private set; }
 
 		/// <summary>
-		///   Gets the command's parameters.
+		///     Gets the command's parameters.
 		/// </summary>
 		public IEnumerable<CommandParameter> Parameters
 		{
@@ -58,17 +58,17 @@
 		}
 
 		/// <summary>
-		///   Gets the external name of the command that is used to refer to the command in the console, for instance.
+		///     Gets the external name of the command that is used to refer to the command in the console, for instance.
 		/// </summary>
 		public string Name { get; private set; }
 
 		/// <summary>
-		///   Gets a string describing the usage and the purpose of the command.
+		///     Gets a string describing the usage and the purpose of the command.
 		/// </summary>
 		public string Description { get; private set; }
 
 		/// <summary>
-		///   Invokes the command, extracting the command's parameters (if any) from the given parameters array.
+		///     Invokes the command, extracting the command's parameters (if any) from the given parameters array.
 		/// </summary>
 		/// <param name="parameters">The parameters that should be used to invoke the command.</param>
 		/// <param name="userInvoked">If true, indicates that the command was invoked by the user (e.g., via the console).</param>
@@ -84,7 +84,7 @@
 		}
 
 		/// <summary>
-		///   Invokes the command.
+		///     Invokes the command.
 		/// </summary>
 		/// <param name="value1">The value of the first parameter of the command.</param>
 		/// <param name="value2">The value of the second parameter of the command.</param>
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Raised when the command has been invoked.
+		///     Raised when the command has been invoked.
 		/// </summary>
 		public event Action<T1, T2> Invoked;
 	}

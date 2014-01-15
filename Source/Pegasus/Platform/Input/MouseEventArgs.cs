@@ -3,12 +3,12 @@
 	using System;
 
 	/// <summary>
-	///   Provides information about mouse button press and release events.
+	///     Provides information about mouse button press and release events.
 	/// </summary>
 	public struct MouseEventArgs
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="button">The mouse button that was pressed or released.</param>
 		/// <param name="doubleClick">Indicates whether the mouse press was a double click.</param>
@@ -26,22 +26,22 @@
 		}
 
 		/// <summary>
-		///   Gets the mouse button that was pressed or released.
+		///     Gets the mouse button that was pressed or released.
 		/// </summary>
 		public MouseButton Button { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the mouse press was a double click.
+		///     Gets a value indicating whether the mouse press was a double click.
 		/// </summary>
 		public bool DoubleClick { get; private set; }
 
 		/// <summary>
-		///   Gets the mouse position along the X axis when the button was pressed or released.
+		///     Gets the mouse position along the X axis when the button was pressed or released.
 		/// </summary>
 		public int X { get; private set; }
 
 		/// <summary>
-		///   Gets the mouse position along the Y axis when the button was pressed or released.
+		///     Gets the mouse position along the Y axis when the button was pressed or released.
 		/// </summary>
 		public int Y { get; private set; }
 	}

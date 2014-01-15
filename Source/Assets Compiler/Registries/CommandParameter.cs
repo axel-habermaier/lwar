@@ -88,7 +88,7 @@
 				Error(_parameter, "Unexpected modifier '{0}'.", _parameter.ParameterModifier.ToString().ToLower());
 
 			if (_parameter.Type is ComposedType)
-				Error(_parameter, "Unexepcted array declaration.");
+				Error(_parameter, "Unexpected array declaration.");
 		}
 	}
 }

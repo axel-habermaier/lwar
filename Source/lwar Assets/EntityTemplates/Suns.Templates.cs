@@ -4,7 +4,7 @@
 	using Compilation;
 
 	/// <summary>
-	///   The sun entity templates that are shared between the client and the server.
+	///     The sun entity templates that are shared between the client and the server.
 	/// </summary>
 	public static class Suns
 	{

@@ -7,27 +7,27 @@
 	using Scripting;
 
 	/// <summary>
-	///   Represents a clock.
+	///     Represents a clock.
 	/// </summary>
 	public sealed class Clock : PooledObject<Clock>
 	{
 		/// <summary>
-		///   The offset that is applied to all times returned by this instance.
+		///     The offset that is applied to all times returned by this instance.
 		/// </summary>
 		private double _offset;
 
 		/// <summary>
-		///   Scales the passing of time. If null, time advances in constant steps.
+		///     Scales the passing of time. If null, time advances in constant steps.
 		/// </summary>
 		private Cvar<double> _scale;
 
 		/// <summary>
-		///   The current time in seconds.
+		///     The current time in seconds.
 		/// </summary>
 		private double _time;
 
 		/// <summary>
-		///   Gets the unmodified system time in seconds.
+		///     Gets the unmodified system time in seconds.
 		/// </summary>
 		public static double SystemTime
 		{
@@ -35,7 +35,7 @@
 		}
 
 		/// <summary>
-		///   Gets the current time in seconds.
+		///     Gets the current time in seconds.
 		/// </summary>
 		public double Seconds
 		{
@@ -47,7 +47,7 @@
 		}
 
 		/// <summary>
-		///   Gets the current time in milliseconds.
+		///     Gets the current time in milliseconds.
 		/// </summary>
 		public double Milliseconds
 		{
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the time scale factor is about to be changed.
+		///     Invoked when the time scale factor is about to be changed.
 		/// </summary>
 		/// <param name="factor">The new time scale factor.</param>
 		private void TimeScaleChanging(double factor)
@@ -65,7 +65,7 @@
 		}
 
 		/// <summary>
-		///   Resets the clock to zero.
+		///     Resets the clock to zero.
 		/// </summary>
 		public void Reset()
 		{
@@ -74,7 +74,7 @@
 		}
 
 		/// <summary>
-		///   Updates the internal time.
+		///     Updates the internal time.
 		/// </summary>
 		private void Update()
 		{
@@ -89,7 +89,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="scale">Scales the passing of time. If null, time advances in constant steps.</param>
 		public static Clock Create(Cvar<double> scale = null)
@@ -106,7 +106,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnReturning()
 		{
@@ -115,7 +115,7 @@
 		}
 
 		/// <summary>
-		///   Provides access to the native function.
+		///     Provides access to the native function.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

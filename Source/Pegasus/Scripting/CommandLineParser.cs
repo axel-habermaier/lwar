@@ -5,13 +5,13 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Parses the command line, consisting of a string of cvar set requests. For instance, the
-	///   command line "-time_scale 0.01" sets the value of the time scale cvar to 0.01.
+	///     Parses the command line, consisting of a string of cvar set requests. For instance, the
+	///     command line "-time_scale 0.01" sets the value of the time scale cvar to 0.01.
 	/// </summary>
 	internal static class CommandLineParser
 	{
 		/// <summary>
-		///   Parses the command line and executes all successfully parsed cvar set instructions.
+		///     Parses the command line and executes all successfully parsed cvar set instructions.
 		/// </summary>
 		public static void Parse()
 		{
@@ -59,7 +59,7 @@
 		}
 
 		/// <summary>
-		///   Parses the given string and updates the cvar's value.
+		///     Parses the given string and updates the cvar's value.
 		/// </summary>
 		/// <param name="cvar">The cvar that should be updated.</param>
 		/// <param name="value">The string value the cvar should be updated to.</param>

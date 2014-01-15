@@ -6,10 +6,10 @@
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Input;
-	using Platform.Logging;
 	using Platform.Memory;
 	using Rendering;
 	using Scripting;
+	using Platform.Logging;
 
 	/// <summary>
 	///     Represents an operating system window that hosts UI elements.

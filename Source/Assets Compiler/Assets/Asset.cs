@@ -108,7 +108,7 @@
 		/// <summary>
 		///     Gets the absolute path to the asset in the target directory, i.e. C:/Binaries/Assets/Textures/Tex.{ext}.
 		/// </summary>
-		public virtual string TargetPath
+		public string TargetPath
 		{
 			get
 			{

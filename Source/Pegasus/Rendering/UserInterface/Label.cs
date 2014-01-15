@@ -7,22 +7,22 @@
 	using Scripting;
 
 	/// <summary>
-	///   Represents a text label.
+	///     Represents a text label.
 	/// </summary>
 	public sealed class Label : DisposableObject
 	{
 		/// <summary>
-		///   The layout of the label's text.
+		///     The layout of the label's text.
 		/// </summary>
 		private readonly TextLayout _layout;
 
 		/// <summary>
-		///   The renderer for the label's text.
+		///     The renderer for the label's text.
 		/// </summary>
 		private TextRenderer _textRenderer;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The font that should be used for drawing the text.</param>
 		public Label(Font font)
@@ -31,7 +31,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The font that should be used for drawing the text.</param>
 		/// <param name="text">The text that should be displayed.</param>
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the label's text.
+		///     Gets or sets the label's text.
 		/// </summary>
 		public string Text
 		{
@@ -66,7 +66,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the label's area.
+		///     Gets or sets the label's area.
 		/// </summary>
 		public Rectangle Area
 		{
@@ -79,7 +79,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the amount of spacing between lines.
+		///     Gets or sets the amount of spacing between lines.
 		/// </summary>
 		public int LineSpacing
 		{
@@ -92,7 +92,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the font that is used to draw the label's text.
+		///     Gets or sets the font that is used to draw the label's text.
 		/// </summary>
 		public Font Font
 		{
@@ -105,7 +105,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the text color.
+		///     Gets or sets the text color.
 		/// </summary>
 		public Color Color
 		{
@@ -118,7 +118,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the alignment of the label's text.
+		///     Gets or sets the alignment of the label's text.
 		/// </summary>
 		public TextAlignment Alignment
 		{
@@ -131,8 +131,8 @@
 		}
 
 		/// <summary>
-		///   Gets the actual text rendering area. Usually, the actual area is smaller than the desired size.
-		///   If any words overlap, however, the actual area is bigger.
+		///     Gets the actual text rendering area. Usually, the actual area is smaller than the desired size.
+		///     If any words overlap, however, the actual area is bigger.
 		/// </summary>
 		public Rectangle ActualArea
 		{
@@ -145,8 +145,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when assets are reloaded. Forces the relayouting of the label's text just in case that the font has been
-		///   changed.
+		///     Invoked when assets are reloaded. Forces the relayouting of the label's text just in case that the font has been
+		///     changed.
 		/// </summary>
 		private void OnReloadAssets()
 		{
@@ -154,7 +154,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -163,7 +163,7 @@
 		}
 
 		/// <summary>
-		///   Draws the label using the given sprite batch.
+		///     Draws the label using the given sprite batch.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the label.</param>
 		public void Draw(SpriteBatch spriteBatch)

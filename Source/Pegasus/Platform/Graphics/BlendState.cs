@@ -7,20 +7,20 @@
 	using Memory;
 
 	/// <summary>
-	///   Describes a blend state of the output merger pipeline stage. Objects of this class are immutable once
-	///   they have been bound to the pipeline for the first time. In debug builds, an exception is
-	///   thrown if an attempt is made to change a property after the state has been bound to the pipeline;
-	///   in release builds, any such changes are simply ignored.
+	///     Describes a blend state of the output merger pipeline stage. Objects of this class are immutable once
+	///     they have been bound to the pipeline for the first time. In debug builds, an exception is
+	///     thrown if an attempt is made to change a property after the state has been bound to the pipeline;
+	///     in release builds, any such changes are simply ignored.
 	/// </summary>
 	public sealed class BlendState : PipelineState
 	{
 		/// <summary>
-		///   The description of the blend state.
+		///     The description of the blend state.
 		/// </summary>
 		private BlendDescription _description;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		public BlendState(GraphicsDevice graphicsDevice)
@@ -30,7 +30,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether blend is enabled.
+		///     Gets or sets a value indicating whether blend is enabled.
 		/// </summary>
 		public bool BlendEnabled
 		{
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the blend type for the source.
+		///     Gets or sets the blend type for the source.
 		/// </summary>
 		public BlendOption SourceBlend
 		{
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the blend type for the destination.
+		///     Gets or sets the blend type for the destination.
 		/// </summary>
 		public BlendOption DestinationBlend
 		{
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the blend operation.
+		///     Gets or sets the blend operation.
 		/// </summary>
 		public BlendOperation BlendOperation
 		{
@@ -82,7 +82,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the blend type for the source alpha.
+		///     Gets or sets the blend type for the source alpha.
 		/// </summary>
 		public BlendOption SourceBlendAlpha
 		{
@@ -95,7 +95,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the blend type for the destination alpha.
+		///     Gets or sets the blend type for the destination alpha.
 		/// </summary>
 		public BlendOption DestinationBlendAlpha
 		{
@@ -108,7 +108,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the blend operation for the alpha channel.
+		///     Gets or sets the blend operation for the alpha channel.
 		/// </summary>
 		public BlendOperation BlendOperationAlpha
 		{
@@ -121,7 +121,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value that determines which color channel writes are enabled.
+		///     Gets or sets a value that determines which color channel writes are enabled.
 		/// </summary>
 		public ColorWriteChannels WriteMask
 		{
@@ -134,27 +134,27 @@
 		}
 
 		/// <summary>
-		///   Gets a default blend state with blending disabled.
+		///     Gets a default blend state with blending disabled.
 		/// </summary>
 		public static BlendState Opaque { get; private set; }
 
 		/// <summary>
-		///   Gets a default blend state for premultiplied alpha blending.
+		///     Gets a default blend state for premultiplied alpha blending.
 		/// </summary>
 		public static BlendState Premultiplied { get; private set; }
 
 		/// <summary>
-		///   Gets a default blend state for additive alpha blending.
+		///     Gets a default blend state for additive alpha blending.
 		/// </summary>
 		public static BlendState Additive { get; private set; }
 
 		/// <summary>
-		///   Gets a default blend state for alpha blending.
+		///     Gets a default blend state for alpha blending.
 		/// </summary>
 		public static BlendState Alpha { get; private set; }
 
 		/// <summary>
-		///   Initializes the default instances.
+		///     Initializes the default instances.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
 		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
@@ -197,7 +197,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the default instances.
+		///     Disposes the default instances.
 		/// </summary>
 		internal static void DisposeDefaultInstances()
 		{
@@ -208,7 +208,7 @@
 		}
 
 		/// <summary>
-		///   Compiles the pipeline state object.
+		///     Compiles the pipeline state object.
 		/// </summary>
 		protected override void Compile()
 		{
@@ -216,7 +216,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -224,7 +224,7 @@
 		}
 
 		/// <summary>
-		///   Sets the state on the pipeline. The state can no longer be changed afterwards.
+		///     Sets the state on the pipeline. The state can no longer be changed afterwards.
 		/// </summary>
 		public void Bind()
 		{
@@ -235,9 +235,9 @@
 		}
 
 #if DEBUG
-		/// <summary>
-		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
+	/// <summary>
+	///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+	/// </summary>
 		protected override void OnRenamed()
 		{
 			if (State != IntPtr.Zero)
@@ -246,7 +246,7 @@
 #endif
 
 		/// <summary>
-		///   Describes the blend state.
+		///     Describes the blend state.
 		/// </summary>
 		[StructLayout(LayoutKind.Sequential)]
 		private struct BlendDescription
@@ -262,7 +262,7 @@
 		}
 
 		/// <summary>
-		///   Provides access to the native blend state functions.
+		///     Provides access to the native blend state functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

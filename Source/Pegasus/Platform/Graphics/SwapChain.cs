@@ -7,18 +7,18 @@
 	using Memory;
 
 	/// <summary>
-	///   A swap chain provides a front buffer and a back buffer for a window that can be used as the target of a
-	///   rendering operation by a graphics device.
+	///     A swap chain provides a front buffer and a back buffer for a window that can be used as the target of a
+	///     rendering operation by a graphics device.
 	/// </summary>
 	public sealed class SwapChain : GraphicsObject
 	{
 		/// <summary>
-		///   The native swap chain instance.
+		///     The native swap chain instance.
 		/// </summary>
 		private readonly IntPtr _swapChain;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="window">The window the swap chain should be bound to.</param>
@@ -36,12 +36,12 @@
 		}
 
 		/// <summary>
-		///   Gets swap chain's back buffer.
+		///     Gets swap chain's back buffer.
 		/// </summary>
 		public RenderTarget BackBuffer { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the swap chain is currently in full screen mode.
+		///     Gets a value indicating whether the swap chain is currently in full screen mode.
 		/// </summary>
 		public bool IsFullscreen
 		{
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		///   Presents the back buffer to the screen.
+		///     Presents the back buffer to the screen.
 		/// </summary>
 		public void Present()
 		{
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -71,8 +71,8 @@
 		}
 
 		/// <summary>
-		///   Switches to full screen mode with the given resolution. If the swap chain already is in full screen mode, the
-		///   resolution is changed.
+		///     Switches to full screen mode with the given resolution. If the swap chain already is in full screen mode, the
+		///     resolution is changed.
 		/// </summary>
 		/// <param name="resolution">The resolution that should be used.</param>
 		public bool SwitchToFullscreen(Size resolution)
@@ -81,7 +81,7 @@
 		}
 
 		/// <summary>
-		///   Switches to windowed mode if the swap chain is currently in full screen mode.
+		///     Switches to windowed mode if the swap chain is currently in full screen mode.
 		/// </summary>
 		public bool SwitchToWindowed()
 		{
@@ -89,7 +89,7 @@
 		}
 
 		/// <summary>
-		///   Provides access to the native swap chain functions.
+		///     Provides access to the native swap chain functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

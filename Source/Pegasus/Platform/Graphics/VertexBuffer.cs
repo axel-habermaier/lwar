@@ -5,13 +5,13 @@
 	using Memory;
 
 	/// <summary>
-	///   A vertex buffer holds vertex data such as position, texture coordinates, or color information for
-	///   a list of vertices.
+	///     A vertex buffer holds vertex data such as position, texture coordinates, or color information for
+	///     a list of vertices.
 	/// </summary>
 	public sealed class VertexBuffer : Buffer
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="usage">A value describing the usage pattern of the buffer.</param>
@@ -23,7 +23,7 @@
 		}
 
 		/// <summary>
-		///   Creates a vertex buffer that is large enough to hold the given data.
+		///     Creates a vertex buffer that is large enough to hold the given data.
 		/// </summary>
 		/// <typeparam name="T">The type of the data that should be stored in the vertex buffer.</typeparam>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
@@ -41,7 +41,7 @@
 		}
 
 		/// <summary>
-		///   Creates a vertex buffer that is large enough to hold the given data.
+		///     Creates a vertex buffer that is large enough to hold the given data.
 		/// </summary>
 		/// <typeparam name="T">The type of the data that should be stored in the vertex buffer.</typeparam>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>

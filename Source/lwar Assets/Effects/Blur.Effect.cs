@@ -4,13 +4,13 @@
 	using Pegasus.AssetsCompiler.Effects;
 
 	/// <summary>
-	///   Applies a Gaussian blur filter to a texture.
+	///     Applies a Gaussian blur filter to a texture.
 	/// </summary>
 	[Effect]
 	public class BlurEffect : Effect
 	{
 		/// <summary>
-		///   Applies a single-pass Gaussian blur filter.
+		///     Applies a single-pass Gaussian blur filter.
 		/// </summary>
 		public readonly Technique Gaussian = new Technique
 		{
@@ -19,7 +19,7 @@
 		};
 
 		/// <summary>
-		///   The texture that is blurred.
+		///     The texture that is blurred.
 		/// </summary>
 		public readonly Texture2D Texture;
 

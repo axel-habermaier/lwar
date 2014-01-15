@@ -5,28 +5,28 @@
 	using Rendering;
 
 	/// <summary>
-	///   Converts arbitrary content into UI elements.
+	///     Converts arbitrary content into UI elements.
 	/// </summary>
 	public sealed class ContentPresenter : UIElement
 	{
 		/// <summary>
-		///   The content of a content control.
+		///     The content of a content control.
 		/// </summary>
 		public static readonly DependencyProperty<object> ContentProperty =
 			new DependencyProperty<object>(affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
-		///   The presented element of the content presenter.
+		///     The presented element of the content presenter.
 		/// </summary>
 		private UIElement _presentedElement;
 
 		/// <summary>
-		///   A cached text block instance that the presenter can use to present text content.
+		///     A cached text block instance that the presenter can use to present text content.
 		/// </summary>
 		private TextBlock _textBlock;
 
 		/// <summary>
-		///   Initializes the type.
+		///     Initializes the type.
 		/// </summary>
 		static ContentPresenter()
 		{
@@ -34,7 +34,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the content of the content control.
+		///     Gets or sets the content of the content control.
 		/// </summary>
 		public object Content
 		{
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Gets the number of visual children for this visual.
+		///     Gets the number of visual children for this visual.
 		/// </summary>
 		protected internal override int VisualChildrenCount
 		{
@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
+		///     Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
 		protected internal override UIElementCollection.Enumerator LogicalChildren
 		{
@@ -65,7 +65,7 @@
 		}
 
 		/// <summary>
-		///   Updates the logical and visual parents of the new and old content.
+		///     Updates the logical and visual parents of the new and old content.
 		/// </summary>
 		private static void OnContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
 		{
@@ -96,7 +96,7 @@
 		}
 
 		/// <summary>
-		///   Gets the visual child at the specified index.
+		///     Gets the visual child at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
 		protected internal override UIElement GetVisualChild(int index)
@@ -108,12 +108,12 @@
 		}
 
 		/// <summary>
-		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
+		///     Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
 		/// <param name="availableSize">
-		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
-		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
-		///   element might be able to use scrolling in this case.
+		///     The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
+		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
+		///     element might be able to use scrolling in this case.
 		/// </param>
 		protected override SizeD MeasureCore(SizeD availableSize)
 		{
@@ -125,13 +125,13 @@
 		}
 
 		/// <summary>
-		///   Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
-		///   element. If this value is smaller than the given size, the UI element's alignment properties position it
-		///   appropriately.
+		///     Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
+		///     element. If this value is smaller than the given size, the UI element's alignment properties position it
+		///     appropriately.
 		/// </summary>
 		/// <param name="finalSize">
-		///   The final area allocated by the UI element's parent that the UI element should use to arrange
-		///   itself and its children.
+		///     The final area allocated by the UI element's parent that the UI element should use to arrange
+		///     itself and its children.
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{
@@ -143,7 +143,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the UI element is attached to a new logical tree.
+		///     Invoked when the UI element is attached to a new logical tree.
 		/// </summary>
 		protected override void OnAttached()
 		{
@@ -152,7 +152,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the UI element has been detached from its current logical tree.
+		///     Invoked when the UI element has been detached from its current logical tree.
 		/// </summary>
 		protected override void OnDetached()
 		{

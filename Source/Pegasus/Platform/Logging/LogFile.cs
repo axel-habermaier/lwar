@@ -8,27 +8,27 @@
 	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>
-	///   Captures all generated logs and outputs them to a log file.
+	///     Captures all generated logs and outputs them to a log file.
 	/// </summary>
 	internal class LogFile : DisposableObject
 	{
 		/// <summary>
-		///   The number of log messages that must be queued before the messages are written to the file system.
+		///     The number of log messages that must be queued before the messages are written to the file system.
 		/// </summary>
 		private const int BatchSize = 250;
 
 		/// <summary>
-		///   The file the log is written to.
+		///     The file the log is written to.
 		/// </summary>
 		private readonly AppFile _file;
 
 		/// <summary>
-		///   The the unwritten log entries that have been generated.
+		///     The the unwritten log entries that have been generated.
 		/// </summary>
 		private readonly Queue<LogEntry> _logEntries = new Queue<LogEntry>();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="appName">The name of the application.</param>
 		public LogFile(string appName)
@@ -44,7 +44,7 @@
 		}
 
 		/// <summary>
-		///   Gets the path of the log file.
+		///     Gets the path of the log file.
 		/// </summary>
 		public string FilePath
 		{
@@ -52,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Enqueues the given log entry.
+		///     Enqueues the given log entry.
 		/// </summary>
 		/// <param name="entry">The log entry that should be enqueued.</param>
 		private void Enqueue(LogEntry entry)
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Writes the generated log messages into the log file.
+		///     Writes the generated log messages into the log file.
 		/// </summary>
 		/// <param name="force">If true, all unwritten messages are written; otherwise, writes are batched to improve performance.</param>
 		private void WriteToFile(bool force = false)
@@ -75,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Writes the queued log entries to the given stream.
+		///     Writes the queued log entries to the given stream.
 		/// </summary>
 		/// <param name="writer">The stream the entry should be written to.</param>
 		private void WriteQueuedEntries(TextWriter writer)
@@ -96,8 +96,8 @@
 		}
 
 		/// <summary>
-		///   Copies all generated log entries to the console. This method should only be invoked once in order to show all log
-		///   entries on the console that have been generated before the console is initialized.
+		///     Copies all generated log entries to the console. This method should only be invoked once in order to show all log
+		///     entries on the console that have been generated before the console is initialized.
 		/// </summary>
 		public void WriteToConsole(Console console)
 		{
@@ -129,7 +129,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

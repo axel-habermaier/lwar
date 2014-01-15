@@ -4,12 +4,12 @@
 	using System.Net;
 
 	/// <summary>
-	///   Parses an IP endpoint in the format of IP address [:port].
+	///     Parses an IP endpoint in the format of IP address [:port].
 	/// </summary>
 	public class IPEndPointParser : CombinedParser<IPEndPoint>
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public IPEndPointParser()
 		{

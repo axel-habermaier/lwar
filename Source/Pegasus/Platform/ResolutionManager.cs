@@ -8,22 +8,22 @@
 	using Scripting;
 
 	/// <summary>
-	///   Manages resolution and fullscreen mode changes.
+	///     Manages resolution and fullscreen mode changes.
 	/// </summary>
 	internal class ResolutionManager : DisposableObject
 	{
 		/// <summary>
-		///   The swap chain that is affected by resolution changes.
+		///     The swap chain that is affected by resolution changes.
 		/// </summary>
 		private readonly SwapChain _swapChain;
 
 		/// <summary>
-		///   The window that is affected by resolution changes.
+		///     The window that is affected by resolution changes.
 		/// </summary>
 		private readonly NativeWindow _window;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that is affected by resolution changes.</param>
 		/// <param name="swapChain">The swap chain that should be affected by resolution changes.</param>
@@ -39,7 +39,7 @@
 		}
 
 		/// <summary>
-		///   Updates the resolution manager, ensuring that the application state remains consistent.
+		///     Updates the resolution manager, ensuring that the application state remains consistent.
 		/// </summary>
 		public void Update()
 		{
@@ -65,7 +65,7 @@
 		}
 
 		/// <summary>
-		///   Updates the state of the graphics subsystem, handling transitions in and out of fullscreen mode.
+		///     Updates the state of the graphics subsystem, handling transitions in and out of fullscreen mode.
 		/// </summary>
 		private void UpdateGraphicsState()
 		{
@@ -97,7 +97,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

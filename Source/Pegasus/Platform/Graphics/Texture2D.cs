@@ -5,12 +5,12 @@
 	using Memory;
 
 	/// <summary>
-	///   A 2D texture manages two-dimensional texel data.
+	///     A 2D texture manages two-dimensional texel data.
 	/// </summary>
 	public sealed class Texture2D : Texture
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		internal Texture2D(GraphicsDevice graphicsDevice)
@@ -19,7 +19,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="size">The size of the texture.</param>
@@ -31,7 +31,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="width">The width of the texture.</param>
@@ -61,12 +61,12 @@
 		}
 
 		/// <summary>
-		///   Gets a 1x1 pixels fully white two-dimensional texture object.
+		///     Gets a 1x1 pixels fully white two-dimensional texture object.
 		/// </summary>
 		public static Texture2D White { get; private set; }
 
 		/// <summary>
-		///   Gets the size of the texture.
+		///     Gets the size of the texture.
 		/// </summary>
 		public Size Size
 		{
@@ -74,7 +74,7 @@
 		}
 
 		/// <summary>
-		///   Gets the width of the texture.
+		///     Gets the width of the texture.
 		/// </summary>
 		public int Width
 		{
@@ -82,7 +82,7 @@
 		}
 
 		/// <summary>
-		///   Gets the height of the texture.
+		///     Gets the height of the texture.
 		/// </summary>
 		public int Height
 		{
@@ -90,7 +90,7 @@
 		}
 
 		/// <summary>
-		///   Gets the format of the texture.
+		///     Gets the format of the texture.
 		/// </summary>
 		public SurfaceFormat Format
 		{
@@ -98,7 +98,7 @@
 		}
 
 		/// <summary>
-		///   Initializes the default instances.
+		///     Initializes the default instances.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
 		internal static unsafe void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
@@ -138,7 +138,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the default instances.
+		///     Disposes the default instances.
 		/// </summary>
 		internal static void DisposeDefaultInstances()
 		{

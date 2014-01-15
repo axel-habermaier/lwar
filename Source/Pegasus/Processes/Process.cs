@@ -6,27 +6,27 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents an asynchronous process.
+	///     Represents an asynchronous process.
 	/// </summary>
 	/// <remarks>
-	///   Process are not pooled as the process schedulers typically hold a reference to scheduled processes even after
-	///   they have been disposed. For pooled processes, it would be hard to determine correctly when a process instance
-	///   can safely be returned to the pool.
+	///     Process are not pooled as the process schedulers typically hold a reference to scheduled processes even after
+	///     they have been disposed. For pooled processes, it would be hard to determine correctly when a process instance
+	///     can safely be returned to the pool.
 	/// </remarks>
 	internal sealed class Process : /* PooledObject<Process> */ DisposableObject, IResumableProcess
 	{
 		/// <summary>
-		///   Gets the asynchronous operation that the process is currently waiting for.
+		///     Gets the asynchronous operation that the process is currently waiting for.
 		/// </summary>
 		private IAsyncOperation _asyncOperation;
 
 		/// <summary>
-		///   The task returned by the asynchronous method that the process represents.
+		///     The task returned by the asynchronous method that the process represents.
 		/// </summary>
 		private Task _task;
 
 		/// <summary>
-		///   Gets or sets the task returned by the asynchronous method that the process represents.
+		///     Gets or sets the task returned by the asynchronous method that the process represents.
 		/// </summary>
 		internal Task Task
 		{
@@ -40,12 +40,12 @@
 		}
 
 		/// <summary>
-		///   Sets the continuation that should be invoked when the process is resumed after waiting for an asynchronous operation.
+		///     Sets the continuation that should be invoked when the process is resumed after waiting for an asynchronous operation.
 		/// </summary>
 		internal Action Continuation { private get; set; }
 
 		/// <summary>
-		///   Gets the context for the process.
+		///     Gets the context for the process.
 		/// </summary>
 		internal ProcessContext Context
 		{
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the process has completed because of an unhandled exception.
+		///     Gets a value indicating whether the process has completed because of an unhandled exception.
 		/// </summary>
 		public bool IsFaulted
 		{
@@ -61,13 +61,13 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the execution of the process has been canceled before it has been completed, either
-		///   by calling the Cancel() function or by the process throwing an exception.
+		///     Gets a value indicating whether the execution of the process has been canceled before it has been completed, either
+		///     by calling the Cancel() function or by the process throwing an exception.
 		/// </summary>
 		public bool IsCanceled { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the execution of the process has completed without being canceled.
+		///     Gets a value indicating whether the execution of the process has completed without being canceled.
 		/// </summary>
 		public bool IsCompleted
 		{
@@ -75,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Immediately cancels the execution of the process, provided that the process is still being executed.
+		///     Immediately cancels the execution of the process, provided that the process is still being executed.
 		/// </summary>
 		public void Cancel()
 		{
@@ -93,7 +93,7 @@
 		}
 
 		/// <summary>
-		///   Resumes the process if the asynchronous operation the process is currently waiting for has completed executing.
+		///     Resumes the process if the asynchronous operation the process is currently waiting for has completed executing.
 		/// </summary>
 		public void Resume()
 		{
@@ -122,7 +122,7 @@
 		}
 
 		/// <summary>
-		///   Runs the process.
+		///     Runs the process.
 		/// </summary>
 		/// <param name="asyncAction">The asynchronous action that the process should execute.</param>
 		internal void Run(AsyncAction asyncAction)
@@ -132,7 +132,7 @@
 		}
 
 		/// <summary>
-		///   Instructs the process to wait for the completion of the given asynchronous operation.
+		///     Instructs the process to wait for the completion of the given asynchronous operation.
 		/// </summary>
 		/// <param name="asyncOperation">The asynchronous operation that the process should wait for.</param>
 		internal void WaitFor(IAsyncOperation asyncOperation)
@@ -150,7 +150,7 @@
 		}
 
 		/// <summary>
-		///   Rethrows the exception that occurred during the execution of the task, if any.
+		///     Rethrows the exception that occurred during the execution of the task, if any.
 		/// </summary>
 		private void RethrowException()
 		{
@@ -165,7 +165,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

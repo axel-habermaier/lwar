@@ -6,43 +6,43 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a rectangle with possibly non-axis aligned edges.
+	///     Represents a rectangle with possibly non-axis aligned edges.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct Quad
 	{
 		/// <summary>
-		///   Holds position, texture coordinates, and color data for a vertex.
+		///     Holds position, texture coordinates, and color data for a vertex.
 		/// </summary>
 		[StructLayout(LayoutKind.Explicit, Pack = 1)]
 		private struct Vertex
 		{
 			/// <summary>
-			///   The size in bytes of the structure.
+			///     The size in bytes of the structure.
 			/// </summary>
 			public const int Size = 20;
 
 			/// <summary>
-			///   Gets or sets the vertex' position.
+			///     Gets or sets the vertex' position.
 			/// </summary>
 			[FieldOffset(0)]
 			public Vector2 Position;
 
 			/// <summary>
-			///   Gets or sets the vertex' texture coordinates.
+			///     Gets or sets the vertex' texture coordinates.
 			/// </summary>
 			[FieldOffset(8)]
 			public Vector2 TextureCoordinates;
 
 			/// <summary>
-			///   Gets or sets the vertex' color.
+			///     Gets or sets the vertex' color.
 			/// </summary>
 			[FieldOffset(16)]
 			public Color Color;
 		}
 
 		/// <summary>
-		///   Gets a vertex input layout for drawing quads with an appropriate vertex buffer and vertex shader.
+		///     Gets a vertex input layout for drawing quads with an appropriate vertex buffer and vertex shader.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to construct the input layout.</param>
 		/// <param name="vertexBuffer">The vertex buffer that holds the vertex data.</param>
@@ -65,14 +65,14 @@
 		}
 
 		/// <summary>
-		///   Creates a dynamic vertex buffer that holds the given number of quads.
+		///     Creates a dynamic vertex buffer that holds the given number of quads.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to construct the dynamic vertex buffer.</param>
 		/// <param name="quadCount">The number of quads that the dynamic vertex buffer should be able to hold.</param>
 		/// <param name="chunkCount">The number of chunks that the dynamic vertex buffer should allocate.</param>
 		/// <param name="requiresSynchronization">
-		///   If true, mapping the vertex buffer and all drawing operations involving the vertex buffer require CPU/GPU
-		///   synchronization.
+		///     If true, mapping the vertex buffer and all drawing operations involving the vertex buffer require CPU/GPU
+		///     synchronization.
 		/// </param>
 		public static DynamicVertexBuffer CreateDynamicVertexBuffer(GraphicsDevice graphicsDevice, int quadCount, int chunkCount,
 																	bool requiresSynchronization)
@@ -81,33 +81,33 @@
 		}
 
 		/// <summary>
-		///   The vertex that conceptually represents the bottom left corner of the quad.
+		///     The vertex that conceptually represents the bottom left corner of the quad.
 		/// </summary>
 		private Vertex _bottomLeft;
 
 		/// <summary>
-		///   The vertex that conceptually represents the bottom right corner of the quad.
+		///     The vertex that conceptually represents the bottom right corner of the quad.
 		/// </summary>
 		private Vertex _bottomRight;
 
 		/// <summary>
-		///   The vertex that conceptually represents the top left corner of the quad.
+		///     The vertex that conceptually represents the top left corner of the quad.
 		/// </summary>
 		private Vertex _topLeft;
 
 		/// <summary>
-		///   The vertex that conceptually represents the top right corner of the quad.
+		///     The vertex that conceptually represents the top right corner of the quad.
 		/// </summary>
 		private Vertex _topRight;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="rectangle">The position and size of the rectangular quad.</param>
 		/// <param name="color">The color of the quad.</param>
 		/// <param name="textureArea">
-		///   The area of the texture that contains the quad's image data. If not given, the whole texture
-		///   is placed onto the rectangle.
+		///     The area of the texture that contains the quad's image data. If not given, the whole texture
+		///     is placed onto the rectangle.
 		/// </param>
 		public Quad(RectangleF rectangle, Color color, RectangleF? textureArea = null)
 			: this()
@@ -130,7 +130,7 @@
 		}
 
 		/// <summary>
-		///   Changes the color of the quad.
+		///     Changes the color of the quad.
 		/// </summary>
 		/// <param name="color">The new color of the quad.</param>
 		public void SetColor(Color color)
@@ -142,7 +142,7 @@
 		}
 
 		/// <summary>
-		///   Applies the given transformation matrix to the quad's vertices.
+		///     Applies the given transformation matrix to the quad's vertices.
 		/// </summary>
 		/// <param name="quad">The quad that should be transformed.</param>
 		/// <param name="matrix">The transformation matrix that should be applied.</param>
@@ -155,7 +155,7 @@
 		}
 
 		/// <summary>
-		///   Applies the given position offset to the quad's vertices.
+		///     Applies the given position offset to the quad's vertices.
 		/// </summary>
 		/// <param name="quad">The quad that should be transformed.</param>
 		/// <param name="positionOffset">The position offset that should be applied.</param>

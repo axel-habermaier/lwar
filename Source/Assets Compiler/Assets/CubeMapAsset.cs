@@ -26,8 +26,7 @@
 
 		/// <summary>
 		///     The identifier type that should be used for the asset when generating the asset identifier list. If null is
-		///     returned,
-		///     no asset identifier is generated for this asset instance.
+		///     returned, no asset identifier is generated for this asset instance.
 		/// </summary>
 		public override string IdentifierType
 		{
@@ -36,8 +35,7 @@
 
 		/// <summary>
 		///     The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for
-		///     this
-		///     asset instance.
+		///     this asset instance.
 		/// </summary>
 		public override string IdentifierName
 		{

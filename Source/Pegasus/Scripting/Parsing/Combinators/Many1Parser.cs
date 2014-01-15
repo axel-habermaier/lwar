@@ -4,21 +4,21 @@
 	using System.Collections.Generic;
 
 	/// <summary>
-	///   Applies the given parser one or more times and returns the parser's results as a list in the order of occurrence.
-	///   The many parser parses as many occurrences of the given parser as possible. At the end of the sequence the given
-	///   parser must fail without consuming any input; otherwise, the many parser fails with the error returned by the given
-	///   parser.
+	///     Applies the given parser one or more times and returns the parser's results as a list in the order of occurrence.
+	///     The many parser parses as many occurrences of the given parser as possible. At the end of the sequence the given
+	///     parser must fail without consuming any input; otherwise, the many parser fails with the error returned by the given
+	///     parser.
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser's result.</typeparam>
 	public class Many1Parser<TResult> : Parser<TResult[]>
 	{
 		/// <summary>
-		///   The parser that is applied zero or more times.
+		///     The parser that is applied zero or more times.
 		/// </summary>
 		private readonly Parser<TResult> _parser;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="parser">The parser that is applied zero or more times.</param>
 		public Many1Parser(Parser<TResult> parser)
@@ -28,7 +28,7 @@
 		}
 
 		/// <summary>
-		///   Parses the given input string and returns the parser's reply.
+		///     Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<TResult[]> Parse(InputStream inputStream)

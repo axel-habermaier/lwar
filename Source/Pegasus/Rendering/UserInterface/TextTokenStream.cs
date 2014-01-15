@@ -3,38 +3,38 @@
 	using System;
 
 	/// <summary>
-	///   Represents a stream of text tokens for the given text. Wrap tokens are inserted when the remainder
-	///   of the text should be placed on a new line.
+	///     Represents a stream of text tokens for the given text. Wrap tokens are inserted when the remainder
+	///     of the text should be placed on a new line.
 	/// </summary>
 	internal struct TextTokenStream
 	{
 		/// <summary>
-		///   The font that is used to determine the size of the text's characters.
+		///     The font that is used to determine the size of the text's characters.
 		/// </summary>
 		private readonly Font _font;
 
 		/// <summary>
-		///   The maximum width of a line.
+		///     The maximum width of a line.
 		/// </summary>
 		private readonly int _maxLineWidth;
 
 		/// <summary>
-		///   The text that should be wrapped.
+		///     The text that should be wrapped.
 		/// </summary>
 		private readonly Text _text;
 
 		/// <summary>
-		///   The width of the current line.
+		///     The width of the current line.
 		/// </summary>
 		private int _lineWidth;
 
 		/// <summary>
-		///   The current text token.
+		///     The current text token.
 		/// </summary>
 		private TextToken _token;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The font that should be used to determine the width of the text's characters.</param>
 		/// <param name="text">The text that should be wrapped.</param>
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Gets the next token in the stream.
+		///     Gets the next token in the stream.
 		/// </summary>
 		public TextToken GetNextToken()
 		{
@@ -87,7 +87,7 @@
 		}
 
 		/// <summary>
-		///   Handles a word token, splitting the token over multiple lines, if necessary.
+		///     Handles a word token, splitting the token over multiple lines, if necessary.
 		/// </summary>
 		private TextToken HandleWordToken()
 		{
@@ -136,8 +136,8 @@
 		}
 
 		/// <summary>
-		///   Handles a space token. If the token doesn't fit into the current line or if no other tokens follow on the
-		///   current line, it is replaced by a new line token.
+		///     Handles a space token. If the token doesn't fit into the current line or if no other tokens follow on the
+		///     current line, it is replaced by a new line token.
 		/// </summary>
 		/// <returns></returns>
 		private TextToken HandleSpaceToken()
@@ -211,7 +211,7 @@
 		}
 
 		/// <summary>
-		///   Replaces the current space token with a new line token and advances the token stream.
+		///     Replaces the current space token with a new line token and advances the token stream.
 		/// </summary>
 		private TextToken ReplaceSpaceWithNewLineToken()
 		{
@@ -225,7 +225,7 @@
 		}
 
 		/// <summary>
-		///   Advances the token stream and returns the current token.
+		///     Advances the token stream and returns the current token.
 		/// </summary>
 		/// <param name="offset">The offset into the text.</param>
 		/// <returns></returns>

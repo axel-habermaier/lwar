@@ -3,12 +3,12 @@
 	using System;
 
 	/// <summary>
-	///   Represents a cubemap associated with a sampler state that can be used by an effect.
+	///     Represents a cubemap associated with a sampler state that can be used by an effect.
 	/// </summary>
 	public struct CubeMapView
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="cubeMap">The texture that should be bound.</param>
 		/// <param name="sampler">The sampler that should be bound.</param>
@@ -25,17 +25,17 @@
 		}
 
 		/// <summary>
-		///   Gets the bound texture.
+		///     Gets the bound texture.
 		/// </summary>
 		public CubeMap CubeMap { get; private set; }
 
 		/// <summary>
-		///   Gets the bound sampler state.
+		///     Gets the bound sampler state.
 		/// </summary>
 		public SamplerState Sampler { get; private set; }
 
 		/// <summary>
-		///   Binds the texture and sampler state to the GPU.
+		///     Binds the texture and sampler state to the GPU.
 		/// </summary>
 		/// <param name="slot">The slot the texture and sampler state should be bound to.</param>
 		internal void Bind(int slot)

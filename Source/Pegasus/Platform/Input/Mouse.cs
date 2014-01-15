@@ -7,27 +7,27 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents the state of the mouse.
+	///     Represents the state of the mouse.
 	/// </summary>
 	public class Mouse : DisposableObject
 	{
 		/// <summary>
-		///   Stores whether a button is currently being double-clicked.
+		///     Stores whether a button is currently being double-clicked.
 		/// </summary>
 		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length];
 
 		/// <summary>
-		///   The mouse button states.
+		///     The mouse button states.
 		/// </summary>
 		private readonly InputState[] _states = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
 
 		/// <summary>
-		///   The window that generates the mouse events.
+		///     The window that generates the mouse events.
 		/// </summary>
 		private readonly NativeWindow _window;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the mouse events.</param>
 		internal Mouse(NativeWindow window)
@@ -40,7 +40,7 @@
 		}
 
 		/// <summary>
-		///   Gets the position of the mouse.
+		///     Gets the position of the mouse.
 		/// </summary>
 		public Vector2i Position
 		{
@@ -54,7 +54,7 @@
 		}
 
 		/// <summary>
-		///   Raised when the mouse has been moved.
+		///     Raised when the mouse has been moved.
 		/// </summary>
 		public event Action<int, int> Moved
 		{
@@ -63,7 +63,7 @@
 		}
 
 		/// <summary>
-		///   Raised when the mouse wheel is scrolled.
+		///     Raised when the mouse wheel is scrolled.
 		/// </summary>
 		public event Action<int> Wheel
 		{
@@ -72,7 +72,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when a button has been pressed.
+		///     Invoked when a button has been pressed.
 		/// </summary>
 		/// <param name="button">Identifies the mouse button that has been pressed.</param>
 		private void ButtonPressed(MouseEventArgs button)
@@ -82,7 +82,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when a button has been released.
+		///     Invoked when a button has been released.
 		/// </summary>
 		/// <param name="button">Identifies the mouse button that has been released.</param>
 		private void ButtonReleased(MouseEventArgs button)
@@ -91,7 +91,7 @@
 		}
 
 		/// <summary>
-		///   Updates the mouse state.
+		///     Updates the mouse state.
 		/// </summary>
 		internal void Update()
 		{
@@ -103,7 +103,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the button is currently being pressed down.
+		///     Gets a value indicating whether the button is currently being pressed down.
 		/// </summary>
 		/// <param name="button">The button that should be checked.</param>
 		public bool IsPressed(MouseButton button)
@@ -113,7 +113,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the button is currently being double-clicked.
+		///     Gets a value indicating whether the button is currently being double-clicked.
 		/// </summary>
 		/// <param name="button">The button that should be checked.</param>
 		public bool IsDoubleClicked(MouseButton button)
@@ -123,8 +123,8 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the button was pressed during the current frame. WentDown is
-		///   only true during the single frame when IsPressed changed from false to true.
+		///     Gets a value indicating whether the button was pressed during the current frame. WentDown is
+		///     only true during the single frame when IsPressed changed from false to true.
 		/// </summary>
 		/// <param name="button">The button that should be checked.</param>
 		public bool WentDown(MouseButton button)
@@ -134,8 +134,8 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the button was released during the current frame. WentUp is
-		///   only true during the single frame when IsPressed changed from true to false.
+		///     Gets a value indicating whether the button was released during the current frame. WentUp is
+		///     only true during the single frame when IsPressed changed from true to false.
 		/// </summary>
 		/// <param name="button">The button that should be checked.</param>
 		public bool WentUp(MouseButton button)
@@ -145,7 +145,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -154,7 +154,7 @@
 		}
 
 		/// <summary>
-		///   Provides access to the native mouse functions.
+		///     Provides access to the native mouse functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

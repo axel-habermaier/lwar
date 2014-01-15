@@ -5,17 +5,17 @@
 	using System.Linq;
 
 	/// <summary>
-	///   Provides access to all cvars.
+	///     Provides access to all cvars.
 	/// </summary>
 	public static class CvarRegistry
 	{
 		/// <summary>
-		///   The registered cvars.
+		///     The registered cvars.
 		/// </summary>
 		private static readonly Dictionary<string, ICvar> Cvars = new Dictionary<string, ICvar>();
 
 		/// <summary>
-		///   Gets all registered cvars.
+		///     Gets all registered cvars.
 		/// </summary>
 		internal static IEnumerable<ICvar> All
 		{
@@ -23,7 +23,7 @@
 		}
 
 		/// <summary>
-		///   Registers the given cvar.
+		///     Registers the given cvar.
 		/// </summary>
 		/// <param name="cvar">The cvar that should be registered.</param>
 		public static void Register(ICvar cvar)
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Finds the cvar with the given name. Returns false if no such cvar is found.
+		///     Finds the cvar with the given name. Returns false if no such cvar is found.
 		/// </summary>
 		/// <param name="name">The name of the cvar that should be returned.</param>
 		/// <param name="cvar">The cvar with the given name, if it is found.</param>
@@ -49,7 +49,7 @@
 		}
 
 		/// <summary>
-		///   Resolves the cvar reference to the cvar with the given type and name.
+		///     Resolves the cvar reference to the cvar with the given type and name.
 		/// </summary>
 		/// <param name="name">The name of the cvar that should be returned.</param>
 		public static Cvar<T> Resolve<T>(string name)
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Executes all deferred cvar updates for cvars with the given update mode.
+		///     Executes all deferred cvar updates for cvars with the given update mode.
 		/// </summary>
 		/// <param name="mode">The mode of the cvars that should be updated.</param>
 		internal static void ExecuteDeferredUpdates(UpdateMode mode)
@@ -74,7 +74,7 @@
 		}
 
 		/// <summary>
-		///   Executes all deferred cvar updates.
+		///     Executes all deferred cvar updates.
 		/// </summary>
 		internal static void ExecuteDeferredUpdates()
 		{

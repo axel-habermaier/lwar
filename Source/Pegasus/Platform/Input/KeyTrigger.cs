@@ -3,22 +3,22 @@
 	using System;
 
 	/// <summary>
-	///   Represents a trigger that triggers if a key is in a certain state.
+	///     Represents a trigger that triggers if a key is in a certain state.
 	/// </summary>
 	internal sealed class KeyTrigger : InputTrigger
 	{
 		/// <summary>
-		///   The key that is monitored by the trigger.
+		///     The key that is monitored by the trigger.
 		/// </summary>
 		private readonly Key _key;
 
 		/// <summary>
-		///   Determines the type of the trigger.
+		///     Determines the type of the trigger.
 		/// </summary>
 		private readonly KeyTriggerType _triggerType;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="triggerType">Determines the type of the trigger.</param>
 		/// <param name="key">The key that is monitored by the trigger.</param>
@@ -32,10 +32,10 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the current object is equal to another object of the same type.
+		///     Indicates whether the current object is equal to another object of the same type.
 		/// </summary>
 		/// <returns>
-		///   true if the current object is equal to other; otherwise, false.
+		///     true if the current object is equal to other; otherwise, false.
 		/// </returns>
 		public override bool Equals(InputTrigger other)
 		{
@@ -47,7 +47,7 @@
 		}
 
 		/// <summary>
-		///   Evaluates the trigger, returning true to indicate that the trigger has fired.
+		///     Evaluates the trigger, returning true to indicate that the trigger has fired.
 		/// </summary>
 		/// <param name="device">The logical input device that should be used to evaluate the trigger.</param>
 		internal override bool Evaluate(LogicalInputDevice device)
@@ -72,7 +72,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{

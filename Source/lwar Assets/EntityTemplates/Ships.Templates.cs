@@ -5,7 +5,7 @@
 	using Pegasus.Math;
 
 	/// <summary>
-	///   The ship entity templates that are shared between the client and the server.
+	///     The ship entity templates that are shared between the client and the server.
 	/// </summary>
 	public static class Ships
 	{

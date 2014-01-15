@@ -7,20 +7,20 @@
 	using Memory;
 
 	/// <summary>
-	///   Describes a sampler state of a shader pipeline stage. Objects of this class are immutable once
-	///   they have been bound to the pipeline for the first time. In debug builds, an exception is
-	///   thrown if an attempt is made to change a property after the state has been bound to the pipeline;
-	///   in release builds, any such changes are simply ignored.
+	///     Describes a sampler state of a shader pipeline stage. Objects of this class are immutable once
+	///     they have been bound to the pipeline for the first time. In debug builds, an exception is
+	///     thrown if an attempt is made to change a property after the state has been bound to the pipeline;
+	///     in release builds, any such changes are simply ignored.
 	/// </summary>
 	public sealed class SamplerState : PipelineState
 	{
 		/// <summary>
-		///   The description of the sampler state.
+		///     The description of the sampler state.
 		/// </summary>
 		private SamplerDescription _description;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		public SamplerState(GraphicsDevice graphicsDevice)
@@ -30,67 +30,67 @@
 		}
 
 		/// <summary>
-		///   Gets a default sampler state with point-filtering and wrap address mode.
+		///     Gets a default sampler state with point-filtering and wrap address mode.
 		/// </summary>
 		public static SamplerState PointWrap { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with point-filtering and clamp address mode.
+		///     Gets a default sampler state with point-filtering and clamp address mode.
 		/// </summary>
 		public static SamplerState PointClamp { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with point-filtering and wrap address mode for textures without mipmaps.
+		///     Gets a default sampler state with point-filtering and wrap address mode for textures without mipmaps.
 		/// </summary>
 		public static SamplerState PointWrapNoMipmaps { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with point-filtering and clamp address mode for textures without mipmaps.
+		///     Gets a default sampler state with point-filtering and clamp address mode for textures without mipmaps.
 		/// </summary>
 		public static SamplerState PointClampNoMipmaps { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with bilinear filtering and wrap address mode.
+		///     Gets a default sampler state with bilinear filtering and wrap address mode.
 		/// </summary>
 		public static SamplerState BilinearWrap { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with bilinear filtering and clamp address mode.
+		///     Gets a default sampler state with bilinear filtering and clamp address mode.
 		/// </summary>
 		public static SamplerState BilinearClamp { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with bilinear filtering and wrap address mode for textures without mipmaps.
+		///     Gets a default sampler state with bilinear filtering and wrap address mode for textures without mipmaps.
 		/// </summary>
 		public static SamplerState BilinearWrapNoMipmaps { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with bilinear filtering and clamp address mode for textures without mipmaps.
+		///     Gets a default sampler state with bilinear filtering and clamp address mode for textures without mipmaps.
 		/// </summary>
 		public static SamplerState BilinearClampNoMipmaps { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with trilinea filtering and wrap address mode.
+		///     Gets a default sampler state with trilinea filtering and wrap address mode.
 		/// </summary>
 		public static SamplerState TrilinearWrap { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with trilinear filtering and clamp address mode.
+		///     Gets a default sampler state with trilinear filtering and clamp address mode.
 		/// </summary>
 		public static SamplerState TrilinearClamp { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with anisotropic filtering and wrap address mode.
+		///     Gets a default sampler state with anisotropic filtering and wrap address mode.
 		/// </summary>
 		public static SamplerState AnisotropicWrap { get; private set; }
 
 		/// <summary>
-		///   Gets a default sampler state with anisotropic filtering and clamp address mode.
+		///     Gets a default sampler state with anisotropic filtering and clamp address mode.
 		/// </summary>
 		public static SamplerState AnisotropicClamp { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the texture filter.
+		///     Gets or sets the texture filter.
 		/// </summary>
 		public TextureFilter Filter
 		{
@@ -103,7 +103,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the address mode along the U axis.
+		///     Gets or sets the address mode along the U axis.
 		/// </summary>
 		public TextureAddressMode AddressU
 		{
@@ -116,7 +116,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the address mode along the V axis.
+		///     Gets or sets the address mode along the V axis.
 		/// </summary>
 		public TextureAddressMode AddressV
 		{
@@ -129,7 +129,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the address mode along the W axis.
+		///     Gets or sets the address mode along the W axis.
 		/// </summary>
 		public TextureAddressMode AddressW
 		{
@@ -142,7 +142,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the offset from the calculated mipmap level.
+		///     Gets or sets the offset from the calculated mipmap level.
 		/// </summary>
 		public float MipLodBias
 		{
@@ -155,7 +155,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the maximum anisotropy value.
+		///     Gets or sets the maximum anisotropy value.
 		/// </summary>
 		public int MaximumAnisotropy
 		{
@@ -168,7 +168,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the comparison function.
+		///     Gets or sets the comparison function.
 		/// </summary>
 		public Comparison Comparison
 		{
@@ -181,7 +181,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the border color.
+		///     Gets or sets the border color.
 		/// </summary>
 		public Color BorderColor
 		{
@@ -194,7 +194,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the minimum LOD.
+		///     Gets or sets the minimum LOD.
 		/// </summary>
 		public float MinimumLod
 		{
@@ -207,7 +207,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the maximum LOD.
+		///     Gets or sets the maximum LOD.
 		/// </summary>
 		public float MaximumLod
 		{
@@ -220,7 +220,7 @@
 		}
 
 		/// <summary>
-		///   Initializes the default instances.
+		///     Initializes the default instances.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
 		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
@@ -301,7 +301,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the default instances.
+		///     Disposes the default instances.
 		/// </summary>
 		internal static void DisposeDefaultInstances()
 		{
@@ -323,7 +323,7 @@
 		}
 
 		/// <summary>
-		///   Binds the state on the given slot.
+		///     Binds the state on the given slot.
 		/// </summary>
 		/// <param name="slot">The slot the sampler state should be bound to.</param>
 		internal void Bind(int slot)
@@ -335,7 +335,7 @@
 		}
 
 		/// <summary>
-		///   Compiles the pipeline state object.
+		///     Compiles the pipeline state object.
 		/// </summary>
 		protected override void Compile()
 		{
@@ -343,7 +343,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -362,7 +362,7 @@
 #endif
 
 		/// <summary>
-		///   Provides access to the native sampler state functions.
+		///     Provides access to the native sampler state functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]
@@ -387,7 +387,7 @@
 		}
 
 		/// <summary>
-		///   Describes the sampler state.
+		///     Describes the sampler state.
 		/// </summary>
 		[StructLayout(LayoutKind.Sequential)]
 		private struct SamplerDescription

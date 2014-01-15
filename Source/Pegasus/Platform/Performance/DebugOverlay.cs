@@ -10,43 +10,43 @@
 	using Scripting;
 
 	/// <summary>
-	///   Manages statistics about the performance of the application and other information useful for debugging.
+	///     Manages statistics about the performance of the application and other information useful for debugging.
 	/// </summary>
 	public sealed class DebugOverlay : DisposableObject
 	{
 		/// <summary>
-		///   The update frequency of the statistics in Hz.
+		///     The update frequency of the statistics in Hz.
 		/// </summary>
 		private const int UpdateFrequency = 30;
 
 		/// <summary>
-		///   The string builder that is used to construct the output.
+		///     The string builder that is used to construct the output.
 		/// </summary>
 		private readonly StringBuilder _builder = new StringBuilder();
 
 		/// <summary>
-		///   A weak reference to an object to which no strong reference exists. When the weak reference is no longer set to a
-		///   valid instance of an object, it is an indication that a garbage collection has occurred.
+		///     A weak reference to an object to which no strong reference exists. When the weak reference is no longer set to a
+		///     valid instance of an object, it is an indication that a garbage collection has occurred.
 		/// </summary>
 		private readonly WeakReference _gcCheck = new WeakReference(new object());
 
 		/// <summary>
-		///   The label that is used to draw platform info and frame stats.
+		///     The label that is used to draw platform info and frame stats.
 		/// </summary>
 		private readonly Label _platformInfo;
 
 		/// <summary>
-		///   The timer that is used to periodically update the statistics.
+		///     The timer that is used to periodically update the statistics.
 		/// </summary>
 		private readonly Timer _timer = Timer.Create(1000.0 / UpdateFrequency);
 
 		/// <summary>
-		///   The approximate amount of garbage collections that have occurred since the application has been started.
+		///     The approximate amount of garbage collections that have occurred since the application has been started.
 		/// </summary>
 		private int _garbageCollections;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
@@ -63,17 +63,17 @@
 		}
 
 		/// <summary>
-		///   Gets the GPU frame time measurements.
+		///     Gets the GPU frame time measurements.
 		/// </summary>
 		internal GraphicsDeviceProfiler GraphicsDeviceProfiler { get; private set; }
 
 		/// <summary>
-		///   Gets the CPU frame time measurements.
+		///     Gets the CPU frame time measurements.
 		/// </summary>
 		internal IMeasurement CpuFrameTime { get; private set; }
 
 		/// <summary>
-		///   Updates the statistics.
+		///     Updates the statistics.
 		/// </summary>
 		/// <param name="size">The size of the area that the statistics should be drawn on.</param>
 		internal void Update(Size size)
@@ -91,7 +91,7 @@
 		}
 
 		/// <summary>
-		///   Updates the statistics.
+		///     Updates the statistics.
 		/// </summary>
 		private void UpdateStatistics()
 		{
@@ -124,7 +124,7 @@
 		}
 
 		/// <summary>
-		///   Draws the statistics.
+		///     Draws the statistics.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the statistics.</param>
 		internal void Draw(SpriteBatch spriteBatch)
@@ -137,7 +137,7 @@
 		}
 
 		/// <summary>
-		///   Writes the results of the given measurement to the string builder.
+		///     Writes the results of the given measurement to the string builder.
 		/// </summary>
 		/// <param name="measurement">The measurement that should be written to the string builder.</param>
 		/// <param name="label">The label that describes the measurement.</param>
@@ -149,7 +149,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

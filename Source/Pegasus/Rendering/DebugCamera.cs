@@ -8,72 +8,72 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a six-degrees-of-freedom debug camera.
+	///     Represents a six-degrees-of-freedom debug camera.
 	/// </summary>
 	public class DebugCamera : Camera
 	{
 		/// <summary>
-		///   The rotation speed of the camera.
+		///     The rotation speed of the camera.
 		/// </summary>
 		private const float RotationSpeed = 0.01f;
 
 		/// <summary>
-		///   The move speed of the camera.
+		///     The move speed of the camera.
 		/// </summary>
 		private const float MoveSpeed = 1000.0f;
 
 		/// <summary>
-		///   Triggered when the user wants to move backward.
+		///     Triggered when the user wants to move backward.
 		/// </summary>
 		private readonly LogicalInput _backward;
 
 		/// <summary>
-		///   The clock that is used to scale the movement of the camera.
+		///     The clock that is used to scale the movement of the camera.
 		/// </summary>
 		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
-		///   Triggered when the user wants to move forward.
+		///     Triggered when the user wants to move forward.
 		/// </summary>
 		private readonly LogicalInput _forward;
 
 		/// <summary>
-		///   The logical input device that provides the input for the camera.
+		///     The logical input device that provides the input for the camera.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
-		///   The input layer that must be activated to control the camera.
+		///     The input layer that must be activated to control the camera.
 		/// </summary>
 		private readonly InputLayer _layer;
 
 		/// <summary>
-		///   Triggered when the user wants to strafe left.
+		///     Triggered when the user wants to strafe left.
 		/// </summary>
 		private readonly LogicalInput _left;
 
 		/// <summary>
-		///   Triggered when the user wants to strafe right.
+		///     Triggered when the user wants to strafe right.
 		/// </summary>
 		private readonly LogicalInput _right;
 
 		/// <summary>
-		///   The mouse movement since the last update.
+		///     The mouse movement since the last update.
 		/// </summary>
 		private Vector2i _mouseDelta;
 
 		/// <summary>
-		///   The current position of the camera.
+		///     The current position of the camera.
 		/// </summary>
 		private Vector3 _position;
 
 		/// <summary>
-		///   The current rotation of the camera around the X and Y axis.
+		///     The current rotation of the camera around the X and Y axis.
 		/// </summary>
 		private Vector2 _rotation;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		/// <param name="inputDevice">The logical input device that provides the input for the camera.</param>
@@ -103,7 +103,7 @@
 		}
 
 		/// <summary>
-		///   Updates the projection matrix based on the current camera configuration.
+		///     Updates the projection matrix based on the current camera configuration.
 		/// </summary>
 		protected override void UpdateProjectionMatrixCore()
 		{
@@ -111,7 +111,7 @@
 		}
 
 		/// <summary>
-		///   Updates the view matrix based on the current camera configuration.
+		///     Updates the view matrix based on the current camera configuration.
 		/// </summary>
 		protected override void UpdateViewMatrixCore()
 		{
@@ -127,7 +127,7 @@
 		}
 
 		/// <summary>
-		///   Resets the debug camera.
+		///     Resets the debug camera.
 		/// </summary>
 		public void Reset()
 		{
@@ -137,7 +137,7 @@
 		}
 
 		/// <summary>
-		///   Updates the position and viewing angle of the camera based on the input provided by the user.
+		///     Updates the position and viewing angle of the camera based on the input provided by the user.
 		/// </summary>
 		public void Update()
 		{
@@ -178,7 +178,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the position of the mouse has changed.
+		///     Invoked when the position of the mouse has changed.
 		/// </summary>
 		/// <param name="x">The new position in X direction.</param>
 		/// <param name="y">The new position in Y direction.</param>
@@ -191,7 +191,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

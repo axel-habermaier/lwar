@@ -3,18 +3,18 @@
 	using System;
 
 	/// <summary>
-	///   Represents a control with a single logical child of any type as its content.
+	///     Represents a control with a single logical child of any type as its content.
 	/// </summary>
 	public class ContentControl : Control
 	{
 		/// <summary>
-		///   The content of a content control.
+		///     The content of a content control.
 		/// </summary>
 		public static readonly DependencyProperty<object> ContentProperty =
 			new DependencyProperty<object>(affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
-		///   The default template that defines the visual appearance of a user control.
+		///     The default template that defines the visual appearance of a user control.
 		/// </summary>
 		internal static readonly ControlTemplate DefaultTemplate = control =>
 		{
@@ -25,7 +25,7 @@
 		};
 
 		/// <summary>
-		/// Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public ContentControl()
 		{
@@ -36,7 +36,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the content of the content control.
+		///     Gets or sets the content of the content control.
 		/// </summary>
 		public object Content
 		{

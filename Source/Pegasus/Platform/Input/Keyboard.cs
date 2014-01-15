@@ -4,22 +4,22 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents the state of the keyboard.
+	///     Represents the state of the keyboard.
 	/// </summary>
 	public class Keyboard : DisposableObject
 	{
 		/// <summary>
-		///   The key states.
+		///     The key states.
 		/// </summary>
 		private readonly InputState[] _states = new InputState[Enum.GetValues(typeof(Key)).Length];
 
 		/// <summary>
-		///   The window that generates the key events.
+		///     The window that generates the key events.
 		/// </summary>
 		private readonly NativeWindow _window;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the key events.</param>
 		internal Keyboard(NativeWindow window)
@@ -34,12 +34,12 @@
 		}
 
 		/// <summary>
-		///   Raised when a text character was entered.
+		///     Raised when a text character was entered.
 		/// </summary>
 		public event Action<char> CharacterEntered;
 
 		/// <summary>
-		///   Raised when a key was pressed.
+		///     Raised when a key was pressed.
 		/// </summary>
 		public event Action<KeyEventArgs> KeyPressed
 		{
@@ -48,7 +48,7 @@
 		}
 
 		/// <summary>
-		///   Raised when a key was released.
+		///     Raised when a key was released.
 		/// </summary>
 		public event Action<KeyEventArgs> KeyReleased
 		{
@@ -57,7 +57,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -68,12 +68,12 @@
 		}
 
 		/// <summary>
-		///   Invoked when a character has been entered as the result of a dead key press.
+		///     Invoked when a character has been entered as the result of a dead key press.
 		/// </summary>
 		/// <param name="character">Identifies the character that has been entered.</param>
 		/// <param name="cancel">
-		///   If set to true, the dead character is removed such that the subsequently entered character is not
-		///   influenced by the dead character.
+		///     If set to true, the dead character is removed such that the subsequently entered character is not
+		///     influenced by the dead character.
 		/// </param>
 		private static void OnDeadCharacterEntered(CharacterEnteredEventArgs character, out bool cancel)
 		{
@@ -82,7 +82,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when a character has been entered.
+		///     Invoked when a character has been entered.
 		/// </summary>
 		/// <param name="character">Identifies the character that has been entered.</param>
 		private void OnCharacterEntered(CharacterEnteredEventArgs character)
@@ -100,7 +100,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when a key has been released.
+		///     Invoked when a key has been released.
 		/// </summary>
 		/// <param name="key">Identifies the key that has been released.</param>
 		private void OnKeyReleased(KeyEventArgs key)
@@ -109,7 +109,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when a key has been pressed.
+		///     Invoked when a key has been pressed.
 		/// </summary>
 		/// <param name="key">Identifies the key that has been pressed.</param>
 		private void OnKeyPressed(KeyEventArgs key)
@@ -118,7 +118,7 @@
 		}
 
 		/// <summary>
-		///   Updates the keyboard state.
+		///     Updates the keyboard state.
 		/// </summary>
 		internal void Update()
 		{
@@ -127,7 +127,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the key is currently being pressed down.
+		///     Gets a value indicating whether the key is currently being pressed down.
 		/// </summary>
 		/// <param name="key">The key that should be checked.</param>
 		public bool IsPressed(Key key)
@@ -137,8 +137,8 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the key was pressed during the current frame. WentDown is
-		///   only true during the single frame when IsPressed changed from false to true.
+		///     Gets a value indicating whether the key was pressed during the current frame. WentDown is
+		///     only true during the single frame when IsPressed changed from false to true.
 		/// </summary>
 		/// <param name="key">The key that should be checked.</param>
 		public bool WentDown(Key key)
@@ -148,8 +148,8 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the key was released during the current frame. WentUp is
-		///   only true during the single frame when IsPressed changed from true to false.
+		///     Gets a value indicating whether the key was released during the current frame. WentUp is
+		///     only true during the single frame when IsPressed changed from true to false.
 		/// </summary>
 		/// <param name="key">The key that should be checked.</param>
 		public bool WentUp(Key key)
@@ -159,8 +159,8 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether a system key repeat event occurred. IsRepeated is also true
-		///   when the key is pressed, i.e., when WentDown is true.
+		///     Gets a value indicating whether a system key repeat event occurred. IsRepeated is also true
+		///     when the key is pressed, i.e., when WentDown is true.
 		/// </summary>
 		/// <param name="key">The key that should be checked.</param>
 		public bool IsRepeated(Key key)

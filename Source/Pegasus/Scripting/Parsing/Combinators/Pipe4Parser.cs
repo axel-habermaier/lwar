@@ -3,9 +3,9 @@
 	using System;
 
 	/// <summary>
-	///   Applies the four parsers in sequence. The second parser is only applied if the first parser
-	///   succeeds, and the third parser is only applied if the second once succeeds, and so on. The results of all four
-	///   parsers are passed to the given function, whose return value is the result of the pipe4 parser.
+	///     Applies the four parsers in sequence. The second parser is only applied if the first parser
+	///     succeeds, and the third parser is only applied if the second once succeeds, and so on. The results of all four
+	///     parsers are passed to the given function, whose return value is the result of the pipe4 parser.
 	/// </summary>
 	/// <typeparam name="TResultFirst">The type of the first parser's result.</typeparam>
 	/// <typeparam name="TResultSecond">The type of the second parser's result.</typeparam>
@@ -15,32 +15,32 @@
 	public class Pipe4Parser<TResultFirst, TResultSecond, TResultThird, TResultFourth, TResult> : Parser<TResult>
 	{
 		/// <summary>
-		///   The parser that is applied first.
+		///     The parser that is applied first.
 		/// </summary>
 		private readonly Parser<TResultFirst> _first;
 
 		/// <summary>
-		///   The parser that is applied fourth.
+		///     The parser that is applied fourth.
 		/// </summary>
 		private readonly Parser<TResultFourth> _fourth;
 
 		/// <summary>
-		///   A function that is applied to the results of both parsers.
+		///     A function that is applied to the results of both parsers.
 		/// </summary>
 		private readonly Func<TResultFirst, TResultSecond, TResultThird, TResultFourth, TResult> _function;
 
 		/// <summary>
-		///   The parser that is applied second.
+		///     The parser that is applied second.
 		/// </summary>
 		private readonly Parser<TResultSecond> _second;
 
 		/// <summary>
-		///   The parser that is applied third.
+		///     The parser that is applied third.
 		/// </summary>
 		private readonly Parser<TResultThird> _third;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="first">The parser that is applied first.</param>
 		/// <param name="second">The parser that is applied second.</param>
@@ -65,7 +65,7 @@
 		}
 
 		/// <summary>
-		///   Applies the first parser, then, if successful, the second one and returns the result of the second parser.
+		///     Applies the first parser, then, if successful, the second one and returns the result of the second parser.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<TResult> Parse(InputStream inputStream)

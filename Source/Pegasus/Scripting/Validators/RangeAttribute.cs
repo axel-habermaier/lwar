@@ -3,12 +3,12 @@
 	using System;
 
 	/// <summary>
-	///   Ensures that the validated value lies within the given bounds.
+	///     Ensures that the validated value lies within the given bounds.
 	/// </summary>
 	public class RangeAttribute : ValidatorAttribute
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="lowerBound">The lower bound of the range.</param>
 		/// <param name="upperBound">The upper bound of the range.</param>
@@ -25,17 +25,17 @@
 		}
 
 		/// <summary>
-		///   Gets the lower bound of the range.
+		///     Gets the lower bound of the range.
 		/// </summary>
 		public IComparable LowerBound { get; private set; }
 
 		/// <summary>
-		///   Gets the upper bound of the range.
+		///     Gets the upper bound of the range.
 		/// </summary>
 		public IComparable UpperBound { get; private set; }
 
 		/// <summary>
-		///   Gets an error message that describes a validation error.
+		///     Gets an error message that describes a validation error.
 		/// </summary>
 		public override string ErrorMessage
 		{
@@ -47,7 +47,7 @@
 		}
 
 		/// <summary>
-		///   Gets a description of the validation performed by the validator.
+		///     Gets a description of the validation performed by the validator.
 		/// </summary>
 		public override string Description
 		{
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Validates the given value, returning true to indicate that validation succeeded.
+		///     Validates the given value, returning true to indicate that validation succeeded.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
 		public override bool Validate(object value)

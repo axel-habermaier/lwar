@@ -5,23 +5,23 @@
 	using System.Reflection;
 
 	/// <summary>
-	///   Provides helper methods for tasks involving reflection as well as default reflection info objects for often reflected
-	///   methods and properties.
+	///     Provides helper methods for tasks involving reflection as well as default reflection info objects for often reflected
+	///     methods and properties.
 	/// </summary>
 	internal static class ReflectionHelper
 	{
 		/// <summary>
-		///   A cached event info instance for the INotifyPropertyChanged.PropertyChanged event.
+		///     A cached event info instance for the INotifyPropertyChanged.PropertyChanged event.
 		/// </summary>
 		private static readonly EventInfo PropertyChangedEventInfo = typeof(INotifyPropertyChanged).GetEvent("PropertyChanged");
 
 		/// <summary>
-		///   A cached property info instance for the UIElement.ViewModel property.
+		///     A cached property info instance for the UIElement.ViewModel property.
 		/// </summary>
 		public static readonly PropertyInfo ViewModelPropertyInfo = typeof(UIElement).GetProperty("ViewModel");
 
 		/// <summary>
-		///   In debug builds, checks whether all cached reflection info objects could be resolved successfully.
+		///     In debug builds, checks whether all cached reflection info objects could be resolved successfully.
 		/// </summary>
 		[Conditional("DEBUG")]
 		public static void Validate()
@@ -31,7 +31,7 @@
 		}
 
 		/// <summary>
-		///   Attaches the given handler to the given object's property changed event.
+		///     Attaches the given handler to the given object's property changed event.
 		/// </summary>
 		/// <param name="obj">The object the handler should be attached to.</param>
 		/// <param name="handler">The handler that should be attached.</param>
@@ -44,7 +44,7 @@
 		}
 
 		/// <summary>
-		///   Detaches the given handler from the given object's property changed event.
+		///     Detaches the given handler from the given object's property changed event.
 		/// </summary>
 		/// <param name="obj">The object the handler should be detached from.</param>
 		/// <param name="handler">The handler that should be detached.</param>
@@ -57,7 +57,7 @@
 		}
 
 		/// <summary>
-		///   Gets the instance of the dependency property with the given name or null if it could not be found.
+		///     Gets the instance of the dependency property with the given name or null if it could not be found.
 		/// </summary>
 		/// <param name="type">The type of the dependency object that declares the dependency property.</param>
 		/// <param name="propertyName">The name of the dependency property without the 'Property' suffix.</param>

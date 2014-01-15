@@ -8,38 +8,38 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   An indicator that shows the current insertion and deletion position within an editable text.
+	///     An indicator that shows the current insertion and deletion position within an editable text.
 	/// </summary>
 	internal class Caret : DisposableObject
 	{
 		/// <summary>
-		///   The frequency of the caret (in times per second).
+		///     The frequency of the caret (in times per second).
 		/// </summary>
 		private const int Frequency = 2;
 
 		/// <summary>
-		///   The string that is used to visualize the caret.
+		///     The string that is used to visualize the caret.
 		/// </summary>
 		private readonly Text _caretVisual = Text.Create("_");
 
 		/// <summary>
-		///   The clock that is used to determine whether the caret should be visible.
+		///     The clock that is used to determine whether the caret should be visible.
 		/// </summary>
 		private Clock _clock = Clock.Create();
 
 		/// <summary>
-		///   The logical position of the caret, corresponding to an index of a character of the editable text.
+		///     The logical position of the caret, corresponding to an index of a character of the editable text.
 		/// </summary>
 		private int _position;
 
 		/// <summary>
-		///   The text that can be edited with the caret.
+		///     The text that can be edited with the caret.
 		/// </summary>
 		private Text _text = Text.Create(String.Empty);
 
 		/// <summary>
-		///   Gets or sets the text that can be edited with the caret. If the text is changed, the caret
-		///   is automatically moved to the end of the text.
+		///     Gets or sets the text that can be edited with the caret. If the text is changed, the caret
+		///     is automatically moved to the end of the text.
 		/// </summary>
 		public string TextString
 		{
@@ -58,7 +58,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the logical position of the cursor. The position is always clamped into the valid range.
+		///     Gets or sets the logical position of the cursor. The position is always clamped into the valid range.
 		/// </summary>
 		public int Position
 		{
@@ -74,12 +74,12 @@
 		}
 
 		/// <summary>
-		///   Raised when an editing operation changed the text.
+		///     Raised when an editing operation changed the text.
 		/// </summary>
 		public event Action<string> TextChanged;
 
 		/// <summary>
-		///   Changes the text, raising the text changed event if necessary.
+		///     Changes the text, raising the text changed event if necessary.
 		/// </summary>
 		/// <param name="text">The new text.</param>
 		private void ChangeText(Text text)
@@ -94,7 +94,7 @@
 		}
 
 		/// <summary>
-		///   Moves the caret by the given delta.
+		///     Moves the caret by the given delta.
 		/// </summary>
 		/// <param name="delta">The delta by which the caret should be moved.</param>
 		public void Move(int delta)
@@ -104,7 +104,7 @@
 		}
 
 		/// <summary>
-		///   Moves the caret to the beginning of the text.
+		///     Moves the caret to the beginning of the text.
 		/// </summary>
 		public void MoveToBeginning()
 		{
@@ -113,7 +113,7 @@
 		}
 
 		/// <summary>
-		///   Moves the caret to the end of the text.
+		///     Moves the caret to the end of the text.
 		/// </summary>
 		public void MoveToEnd()
 		{
@@ -122,7 +122,7 @@
 		}
 
 		/// <summary>
-		///   Inserts the given character at the current caret position.
+		///     Inserts the given character at the current caret position.
 		/// </summary>
 		/// <param name="c">The character that should be inserted.</param>
 		public void InsertCharacter(char c)
@@ -152,7 +152,7 @@
 		}
 
 		/// <summary>
-		///   Removes the character at the current caret position (similar to pressing the Delete key in a Windows text box).
+		///     Removes the character at the current caret position (similar to pressing the Delete key in a Windows text box).
 		/// </summary>
 		public void RemoveCurrentCharacter()
 		{
@@ -175,8 +175,8 @@
 		}
 
 		/// <summary>
-		///   Removes the character that is immediately before the current caret position (similar to
-		///   pressing the Backspace key in a Windows text box).
+		///     Removes the character that is immediately before the current caret position (similar to
+		///     pressing the Backspace key in a Windows text box).
 		/// </summary>
 		public void RemovePreviousCharacter()
 		{
@@ -205,7 +205,7 @@
 		}
 
 		/// <summary>
-		///   Draws the caret.
+		///     Draws the caret.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing the caret.</param>
 		/// <param name="font">The font that should be used to draw the caret.</param>
@@ -223,7 +223,7 @@
 		}
 
 		/// <summary>
-		///   Gets the width of the visualization of the caret.
+		///     Gets the width of the visualization of the caret.
 		/// </summary>
 		/// <param name="font">The font that is used to draw the caret.</param>
 		public int GetWidth(Font font)
@@ -233,7 +233,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

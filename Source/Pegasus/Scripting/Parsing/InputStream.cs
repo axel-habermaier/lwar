@@ -3,17 +3,17 @@
 	using System;
 
 	/// <summary>
-	///   Provides read-access to a sequence of UTF-16 characters. The only supported newline token is \n.
+	///     Provides read-access to a sequence of UTF-16 characters. The only supported newline token is \n.
 	/// </summary>
 	public class InputStream
 	{
 		/// <summary>
-		///   Gets the input string that should be parsed.
+		///     Gets the input string that should be parsed.
 		/// </summary>
 		private readonly string _input;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="input">The string that should be parsed.</param>
 		/// <param name="name">The name of the input stream.</param>
@@ -30,17 +30,17 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the input stream.
+		///     Gets the name of the input stream.
 		/// </summary>
 		public string Name { get; private set; }
 
 		/// <summary>
-		///   Gets the current state of the input stream.
+		///     Gets the current state of the input stream.
 		/// </summary>
 		internal InputStreamState State { get; set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the end of the input has been reached.
+		///     Gets a value indicating whether the end of the input has been reached.
 		/// </summary>
 		internal bool EndOfInput
 		{
@@ -48,7 +48,7 @@
 		}
 
 		/// <summary>
-		///   Returns the current line.
+		///     Returns the current line.
 		/// </summary>
 		internal string CurrentLine
 		{
@@ -62,8 +62,8 @@
 		}
 
 		/// <summary>
-		///   Returns the current character without changing the stream state. If the stream is at the end of the input,
-		///   Char.MaxValue is returned to indicate the failure.
+		///     Returns the current character without changing the stream state. If the stream is at the end of the input,
+		///     Char.MaxValue is returned to indicate the failure.
 		/// </summary>
 		/// <returns></returns>
 		internal char Peek()
@@ -75,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Returns a substring of the input with the requested length, starting at the given offset.
+		///     Returns a substring of the input with the requested length, starting at the given offset.
 		/// </summary>
 		/// <param name="position">The first character of the substring.</param>
 		/// <param name="length">The length of the substring.</param>
@@ -89,7 +89,7 @@
 		}
 
 		/// <summary>
-		///   Skips the given number of characters.
+		///     Skips the given number of characters.
 		/// </summary>
 		/// <param name="count">The number of characters that should be skipped.</param>
 		internal void Skip(int count)
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Skips zero or more white spaces until the first non-white space character or the end of the input is reached.
+		///     Skips zero or more white spaces until the first non-white space character or the end of the input is reached.
 		/// </summary>
 		internal void SkipWhiteSpaces()
 		{
@@ -110,7 +110,7 @@
 		}
 
 		/// <summary>
-		///   Skips all characters that satisfy the given predicate and returns the number of skipped characters.
+		///     Skips all characters that satisfy the given predicate and returns the number of skipped characters.
 		/// </summary>
 		/// <param name="predicate">The predicate that is used to decide how many characters to skip.</param>
 		internal int Skip(Predicate<char> predicate)
@@ -127,8 +127,8 @@
 		}
 
 		/// <summary>
-		///   Skips the given string and returns false if either the end of the input has been reached or there were any other
-		///   characters in the stream.
+		///     Skips the given string and returns false if either the end of the input has been reached or there were any other
+		///     characters in the stream.
 		/// </summary>
 		/// <param name="s">The string that should be skipped.</param>
 		internal bool Skip(string s)
@@ -147,7 +147,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the remainder of the input consists of whitespace only.
+		///     Checks whether the remainder of the input consists of whitespace only.
 		/// </summary>
 		internal bool WhiteSpaceUntilEndOfInput()
 		{
@@ -161,7 +161,7 @@
 		}
 
 		/// <summary>
-		///   Returns true if the given character represents a newline token.
+		///     Returns true if the given character represents a newline token.
 		/// </summary>
 		/// <param name="character">The character that should be checked.</param>
 		private static bool IsNewline(char character)

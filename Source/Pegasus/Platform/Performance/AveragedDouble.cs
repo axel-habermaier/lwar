@@ -4,52 +4,52 @@
 	using System.Text;
 
 	/// <summary>
-	///   Represents a measurement that is averaged over a certain number of samples.
+	///     Represents a measurement that is averaged over a certain number of samples.
 	/// </summary>
 	internal class AveragedDouble
 	{
 		/// <summary>
-		///   The last couple of values for a more stable average.
+		///     The last couple of values for a more stable average.
 		/// </summary>
 		private readonly double[] _average;
 
 		/// <summary>
-		///   The number of samples for the computation of the average.
+		///     The number of samples for the computation of the average.
 		/// </summary>
 		private readonly int _sampleCount;
 
 		/// <summary>
-		///   The unit of measure of the averaged values that is shown when printing the value.
+		///     The unit of measure of the averaged values that is shown when printing the value.
 		/// </summary>
 		private readonly string _unitOfMeasure;
 
 		/// <summary>
-		///   The current write index in the average array (circular writes).
+		///     The current write index in the average array (circular writes).
 		/// </summary>
 		private int _averageIndex;
 
 		/// <summary>
-		///   A value indicating whether the entire average array has been filled at least once.
+		///     A value indicating whether the entire average array has been filled at least once.
 		/// </summary>
 		private bool _averageIsFilled;
 
 		/// <summary>
-		///   The last value that has been measured.
+		///     The last value that has been measured.
 		/// </summary>
 		private double _last;
 
 		/// <summary>
-		///   The maximum supported value.
+		///     The maximum supported value.
 		/// </summary>
 		private double _max = Double.MinValue;
 
 		/// <summary>
-		///   The minimum supported value.
+		///     The minimum supported value.
 		/// </summary>
 		private double _min = Double.MaxValue;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="unitOfMeasure">The unit of measure of the averaged values that should be shown when printing the value.</param>
 		/// <param name="sampleCount">The number of samples for the computation of the average.</param>
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Writes the results of the measurement into the given string builder.
+		///     Writes the results of the measurement into the given string builder.
 		/// </summary>
 		/// <param name="builder">The string builder the results should be written to.</param>
 		internal void WriteResults(StringBuilder builder)
@@ -91,7 +91,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Adds the given measured value to the statistics.
+		///     Adds the given measured value to the statistics.
 		/// </summary>
 		/// <param name="value">The value that should be added.</param>
 		internal void AddMeasurement(double value)

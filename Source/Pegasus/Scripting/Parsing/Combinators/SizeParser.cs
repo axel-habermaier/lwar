@@ -4,12 +4,12 @@ namespace Pegasus.Scripting.Parsing.Combinators
 	using Math;
 
 	/// <summary>
-	///   Parses a Size value.
+	///     Parses a Size value.
 	/// </summary>
 	public class SizeParser : CombinedParser<Size>
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public SizeParser()
 		{

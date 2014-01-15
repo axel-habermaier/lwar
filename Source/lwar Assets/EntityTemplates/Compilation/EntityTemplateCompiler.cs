@@ -14,37 +14,37 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Pegasus.AssetsCompiler;
 	using Pegasus.AssetsCompiler.Assets;
-	using Pegasus.AssetsCompiler.CSharp;
 	using Pegasus.AssetsCompiler.Compilers;
+	using Pegasus.AssetsCompiler.CSharp;
 	using Pegasus.Platform.Logging;
 
 	/// <summary>
-	///   Compiles entity template declarations.
+	///     Compiles entity template declarations.
 	/// </summary>
 	internal class EntityTemplateCompiler : AssetCompiler<EntityTemplateAsset>
 	{
 		/// <summary>
-		///   The path of the client file containing the template declarations.
+		///     The path of the client file containing the template declarations.
 		/// </summary>
 		private const string ClientTemplates = "../../Source/lwar/Gameplay/Entities/EntityTemplates.cs";
 
 		/// <summary>
-		///   The path of the client file containing the entity type enumeration.
+		///     The path of the client file containing the entity type enumeration.
 		/// </summary>
 		private const string ClientTypeEnumeration = "../../Source/lwar/Gameplay/Entities/EntityType.cs";
 
 		/// <summary>
-		///   The path of the server file containing the template declarations.
+		///     The path of the server file containing the template declarations.
 		/// </summary>
 		private const string ServerTemplates = "../../Source/Server/templates.c";
 
 		/// <summary>
-		///   The path of the server header file.
+		///     The path of the server header file.
 		/// </summary>
 		private const string ServerHeader = "../../Source/Server/entity.h";
 
 		/// <summary>
-		///   Compiles all assets of the compiler's asset source type.
+		///     Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
 		public override bool Compile(IEnumerable<Asset> assets)
@@ -72,7 +72,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		}
 
 		/// <summary>
-		///   Checks whether any of the templates have changed.
+		///     Checks whether any of the templates have changed.
 		/// </summary>
 		/// <param name="assets">The assets that should be checked to determine the compilation action.</param>
 		private static CompilationAction DetermineAction(IEnumerable<Asset> assets)
@@ -93,7 +93,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		}
 
 		/// <summary>
-		///   Writes the contents of the given code writer to the file at the given path.
+		///     Writes the contents of the given code writer to the file at the given path.
 		/// </summary>
 		/// <param name="path">The path of the file that should be written.</param>
 		/// <param name="writer">The contents of the file that should be written.</param>
@@ -104,7 +104,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		}
 
 		/// <summary>
-		///   Generates the server templates file.
+		///     Generates the server templates file.
 		/// </summary>
 		/// <param name="templates">The declared templates.</param>
 		private static void GenerateServerTemplates(EntityTemplate[] templates)
@@ -171,7 +171,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		}
 
 		/// <summary>
-		///   Generates the server header file.
+		///     Generates the server header file.
 		/// </summary>
 		/// <param name="templates">The declared templates.</param>
 		private static void GenerateServerHeader(IEnumerable<EntityTemplate> templates)
@@ -195,7 +195,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		}
 
 		/// <summary>
-		///   Generates the server templates file.
+		///     Generates the server templates file.
 		/// </summary>
 		/// <param name="templates">The declared templates.</param>
 		private static void GenerateClientTemplates(EntityTemplate[] templates)
@@ -278,7 +278,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		}
 
 		/// <summary>
-		///   Generates the server entity type enumeration file.
+		///     Generates the server entity type enumeration file.
 		/// </summary>
 		/// <param name="templates">The declared templates.</param>
 		private static void GenerateClientTypeEnumeration(IEnumerable<EntityTemplate> templates)
@@ -302,7 +302,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		}
 
 		/// <summary>
-		///   Gets the declared templates.
+		///     Gets the declared templates.
 		/// </summary>
 		/// <param name="templates">The names of the classes that declare the templates.</param>
 		private static IEnumerable<EntityTemplate> GetTemplates(IEnumerable<string> templates)
@@ -322,7 +322,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		}
 
 		/// <summary>
-		///   Gets the names of the classes declaring entity templates.
+		///     Gets the names of the classes declaring entity templates.
 		/// </summary>
 		/// <param name="templates">The template assets that declare the entity templates.</param>
 		private static IEnumerable<string> GetClassNames(IEnumerable<EntityTemplateAsset> templates)
@@ -354,7 +354,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		}
 
 		/// <summary>
-		///   Removes the compiled assets and all temporary files written by the compiler.
+		///     Removes the compiled assets and all temporary files written by the compiler.
 		/// </summary>
 		/// <param name="assets">The assets that should be cleaned.</param>
 		public override void Clean(IEnumerable<Asset> assets)

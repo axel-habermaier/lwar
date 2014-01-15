@@ -5,22 +5,22 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Provides the metadata and operations for drawing text.
+	///     Provides the metadata and operations for drawing text.
 	/// </summary>
 	public sealed class Font
 	{
 		/// <summary>
-		///   The glyphs of the font.
+		///     The glyphs of the font.
 		/// </summary>
 		private Glyph[] _glyphs;
 
 		/// <summary>
-		///   Stores the kerning pairs in a space-efficient way.
+		///     Stores the kerning pairs in a space-efficient way.
 		/// </summary>
 		private KerningPair[] _kerning;
 
 		/// <summary>
-		///   Gets a value indicating whether the font supportes kerning.
+		///     Gets a value indicating whether the font supportes kerning.
 		/// </summary>
 		public bool KerningSupported
 		{
@@ -28,17 +28,17 @@
 		}
 
 		/// <summary>
-		///   Gets the line height.
+		///     Gets the line height.
 		/// </summary>
 		public int LineHeight { get; private set; }
 
 		/// <summary>
-		///   Gets the font texture.
+		///     Gets the font texture.
 		/// </summary>
 		internal Texture2D Texture { get; private set; }
 
 		/// <summary>
-		///   Reinitializes the font.
+		///     Reinitializes the font.
 		/// </summary>
 		/// <param name="glyphs">The glyphs of the font.</param>
 		/// <param name="kerning">The kerning information of the font.</param>
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Returns the width of the text.
+		///     Returns the width of the text.
 		/// </summary>
 		/// <param name="textString">The text whose width should be computed.</param>
 		public int MeasureWidth(string textString)
@@ -68,7 +68,7 @@
 		}
 
 		/// <summary>
-		///   Returns the width of the text.
+		///     Returns the width of the text.
 		/// </summary>
 		/// <param name="text">The text whose width should be computed.</param>
 		public int MeasureWidth(Text text)
@@ -78,7 +78,7 @@
 		}
 
 		/// <summary>
-		///   Returns the width of the text from text[start] to text[end - 1].
+		///     Returns the width of the text from text[start] to text[end - 1].
 		/// </summary>
 		/// <param name="textString">The text whose width should be computed.</param>
 		/// <param name="start">The index of the first character.</param>
@@ -92,7 +92,7 @@
 		}
 
 		/// <summary>
-		///   Returns the width of the text from text[start] to text[end - 1].
+		///     Returns the width of the text from text[start] to text[end - 1].
 		/// </summary>
 		/// <param name="text">The text whose width should be computed.</param>
 		/// <param name="start">The index of the first character.</param>
@@ -118,7 +118,7 @@
 		}
 
 		/// <summary>
-		///   Gets the kerning offset for the character pair.
+		///     Gets the kerning offset for the character pair.
 		/// </summary>
 		/// <param name="first">The first character.</param>
 		/// <param name="second">The second character.</param>
@@ -137,16 +137,16 @@
 		}
 
 		/// <summary>
-		///   Gets the area of the glyph that corresponds to the character at the given index of
-		///   the text. The start index is used to decide whether a kerning offset has to be
-		///   applied to the glyph position.
+		///     Gets the area of the glyph that corresponds to the character at the given index of
+		///     the text. The start index is used to decide whether a kerning offset has to be
+		///     applied to the glyph position.
 		/// </summary>
 		/// <param name="text">The text for which the glyph are should be computed.</param>
 		/// <param name="start">The first index of the text that is considered; required for font kerning.</param>
 		/// <param name="index">The index of the character for which the glyph area should be returned.</param>
 		/// <param name="offset">
-		///   The offset that should be applied to the glyph's position. The X-value of
-		///   the offset is updated to reflect the glyph width and the kerning offset.
+		///     The offset that should be applied to the glyph's position. The X-value of
+		///     the offset is updated to reflect the glyph width and the kerning offset.
 		/// </param>
 		/// <returns></returns>
 		internal Rectangle GetGlyphArea(Text text, int start, int index, ref Vector2i offset)
@@ -171,9 +171,9 @@
 		}
 
 		/// <summary>
-		///   Creates a quad for the character at the given index. Not all characters are visible, so
-		///   in some cases, no quad is created for a given index. The function returns true to indicate
-		///   that a valid quad was created; false, otherwise.
+		///     Creates a quad for the character at the given index. Not all characters are visible, so
+		///     in some cases, no quad is created for a given index. The function returns true to indicate
+		///     that a valid quad was created; false, otherwise.
 		/// </summary>
 		/// <param name="character">The character for which the quad should be created.</param>
 		/// <param name="area">The area of the glyph.</param>
@@ -195,7 +195,7 @@
 		}
 
 		/// <summary>
-		///   Gets the glyph instance for the given glyph character.
+		///     Gets the glyph instance for the given glyph character.
 		/// </summary>
 		/// <param name="glyph">The glyph character.</param>
 		private Glyph GetGlyph(char glyph)

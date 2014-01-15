@@ -4,37 +4,37 @@
 	using System.Diagnostics;
 
 	/// <summary>
-	///   Represents a strongly-typed property that has multiple sources (such as data bindings, style setters, animation,
-	///   etc.).
+	///     Represents a strongly-typed property that has multiple sources (such as data bindings, style setters, animation,
+	///     etc.).
 	/// </summary>
 	/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 	public sealed class DependencyProperty<T> : DependencyProperty
 	{
 		/// <summary>
-		///   The callback that is used to validate whether the given value is a valid value for the dependency property.
+		///     The callback that is used to validate whether the given value is a valid value for the dependency property.
 		/// </summary>
 		private readonly DependencyPropertyValidationCallback<T> _validationCallback;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="defaultValue">The default value of the dependency property.</param>
 		/// <param name="validationCallback">
-		///   The callback that should be used to validate whether the given value is a valid value
-		///   for the dependency property.
+		///     The callback that should be used to validate whether the given value is a valid value
+		///     for the dependency property.
 		/// </param>
 		/// <param name="inherits">Indicates whether the value of the dependency property is inheritable.</param>
 		/// <param name="affectsMeasure">
-		///   Indicates that changes to the value of the dependency property potentially affect the measure pass of the layout
-		///   engine. Implies affectsArrange and affectsRender.
+		///     Indicates that changes to the value of the dependency property potentially affect the measure pass of the layout
+		///     engine. Implies affectsArrange and affectsRender.
 		/// </param>
 		/// <param name="affectsArrange">
-		///   Indicates that changes to the value of the dependency property potentially affect the arrange pass of the layout
-		///   engine. Implies affectsRender.
+		///     Indicates that changes to the value of the dependency property potentially affect the arrange pass of the layout
+		///     engine. Implies affectsRender.
 		/// </param>
 		/// <param name="affectsRender">
-		///   Indicates that changes to the value of the dependency property potentially requires a redraw, without affecting
-		///   measurement or arrangement.
+		///     Indicates that changes to the value of the dependency property potentially requires a redraw, without affecting
+		///     measurement or arrangement.
 		/// </param>
 		/// <param name="prohibitsAnimations"> Indicates that the dependency property cannot be animated.</param>
 		/// <param name="prohibitsDataBinding">Indicates that the dependency property does not support data binding.</param>
@@ -53,12 +53,12 @@
 		}
 
 		/// <summary>
-		///   Gets the default value of the dependency property.
+		///     Gets the default value of the dependency property.
 		/// </summary>
 		public T DefaultValue { get; private set; }
 
 		/// <summary>
-		///   Gets the type of the value stored by the dependency property.
+		///     Gets the type of the value stored by the dependency property.
 		/// </summary>
 		internal override Type ValueType
 		{
@@ -66,12 +66,12 @@
 		}
 
 		/// <summary>
-		///   Raised when the value of the dependency property has been changed on any dependency object.
+		///     Raised when the value of the dependency property has been changed on any dependency object.
 		/// </summary>
 		internal event DependencyPropertyChangedHandler<T> Changed;
 
 		/// <summary>
-		///   In debug builds, checks whether the given value is a valid value for the dependency property.
+		///     In debug builds, checks whether the given value is a valid value for the dependency property.
 		/// </summary>
 		/// <param name="value">The value that should be checked.</param>
 		[Conditional("DEBUG")]
@@ -85,7 +85,7 @@
 		}
 
 		/// <summary>
-		///   Adds an untyped changed handler to the dependency property for the given dependency object.
+		///     Adds an untyped changed handler to the dependency property for the given dependency object.
 		/// </summary>
 		/// <param name="obj">The dependency object the handler should be added to.</param>
 		/// <param name="handler">The handler that should be added.</param>
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Removes an untyped changed handler from the dependency property for the given dependency object.
+		///     Removes an untyped changed handler from the dependency property for the given dependency object.
 		/// </summary>
 		/// <param name="obj">The dependency object the handler should be removed from.</param>
 		/// <param name="handler">The handler that should be removed.</param>
@@ -115,7 +115,7 @@
 		}
 
 		/// <summary>
-		///   Gets the untyped value of the dependency property for the given dependency object.
+		///     Gets the untyped value of the dependency property for the given dependency object.
 		/// </summary>
 		/// <param name="obj">The dependency object the value should be returned for.</param>
 		internal override object GetValue(DependencyObject obj)
@@ -125,7 +125,7 @@
 		}
 
 		/// <summary>
-		///   Copies the dependency property's inherited value from source to target.
+		///     Copies the dependency property's inherited value from source to target.
 		/// </summary>
 		/// <param name="source">The dependency object the value should be retrieved from.</param>
 		/// <param name="target">The dependency object the value should be set for.</param>
@@ -139,7 +139,7 @@
 		}
 
 		/// <summary>
-		///   Unsets the inherited value of the given dependency object.
+		///     Unsets the inherited value of the given dependency object.
 		/// </summary>
 		/// <param name="obj">The dependency object whose inherited value should be unset.</param>
 		internal override void UnsetInheritedValue(DependencyObject obj)
@@ -151,7 +151,7 @@
 		}
 
 		/// <summary>
-		///   Raises the Changed event.
+		///     Raises the Changed event.
 		/// </summary>
 		internal void OnValueChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs<T> changedEventArgs)
 		{

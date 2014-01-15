@@ -12,6 +12,9 @@
 			FragmentShader = "FragmentShader"
 		};
 
+		[Constant("ShieldConstantBuffer")]
+		public readonly Vector3 ImpactPosition;
+
 		public readonly Technique Planet = new Technique
 		{
 			VertexShader = "VertexShaderPlanet",
@@ -26,17 +29,14 @@
 
 		public readonly CubeMap SphereTexture;
 
-		[Constant]
-		public readonly Matrix World;
-
 		[Constant("PlanetConstantBuffer")]
 		public readonly Vector3 SunPosition;
 
 		[Constant("ShieldConstantBuffer")]
-		public readonly Vector3 ImpactPosition;
-
-		[Constant("ShieldConstantBuffer")]
 		public readonly float TimeToLive;
+
+		[Constant]
+		public readonly Matrix World;
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,

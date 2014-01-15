@@ -3,17 +3,17 @@
 	using System;
 
 	/// <summary>
-	///   A sparse storage for dependency property values.
+	///     A sparse storage for dependency property values.
 	/// </summary>
 	internal struct DependencyPropertyStore
 	{
 		/// <summary>
-		///   The values that are currently stored.
+		///     The values that are currently stored.
 		/// </summary>
 		private SparseObjectStorage<DependencyPropertyValue> _values;
 
 		/// <summary>
-		///   Gets the value for the given dependency property. If no value is found, null is returned.
+		///     Gets the value for the given dependency property. If no value is found, null is returned.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the value should be returned for.</param>
@@ -24,7 +24,7 @@
 		}
 
 		/// <summary>
-		///   Gets the value for the given dependency property or adds it if no value is found.
+		///     Gets the value for the given dependency property or adds it if no value is found.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the value should be returned for.</param>
@@ -35,7 +35,7 @@
 		}
 
 		/// <summary>
-		///   Gets the value for the given dependency property or adds it if no value is found and a value should be added.
+		///     Gets the value for the given dependency property or adds it if no value is found and a value should be added.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the value should be returned for.</param>
@@ -52,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Copies the values of all inheriting dependency properties from the given object to the given inheriting object.
+		///     Copies the values of all inheriting dependency properties from the given object to the given inheriting object.
 		/// </summary>
 		/// <param name="obj">The parent object the inherited values should be retrieved from.</param>
 		/// <param name="inheritingObject">The inheriting object whose inheriting dependency properties should be set.</param>
@@ -71,7 +71,7 @@
 		}
 
 		/// <summary>
-		///   Unsets all inherited values of all inheriting dependency properties.
+		///     Unsets all inherited values of all inheriting dependency properties.
 		/// </summary>
 		/// <param name="obj">The dependency object whose inherited values should be unset.</param>
 		public void UnsetInheritedValues(DependencyObject obj)
@@ -86,7 +86,7 @@
 		}
 
 		/// <summary>
-		/// Changes the activation state of all bindings that are set on any dependency properties.
+		///     Changes the activation state of all bindings that are set on any dependency properties.
 		/// </summary>
 		/// <param name="activated">Indicates whether the bindings should be activated.</param>
 		public void SetBindingsActivationState(bool activated)

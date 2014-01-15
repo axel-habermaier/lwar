@@ -6,17 +6,17 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Manages the input functions for the console.
+	///     Manages the input functions for the console.
 	/// </summary>
 	internal class ConsoleInput : DisposableObject
 	{
 		/// <summary>
-		///   The logical input device that provides the user input.
+		///     The logical input device that provides the user input.
 		/// </summary>
 		private readonly LogicalInputDevice _device;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The logical input device that provides the user input.</param>
 		public ConsoleInput(LogicalInputDevice device)
@@ -55,67 +55,67 @@
 		}
 
 		/// <summary>
-		///   Gets the logical input for the console's toggle action.
+		///     Gets the logical input for the console's toggle action.
 		/// </summary>
 		public LogicalInput Toggle { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's clear action.
+		///     Gets the logical input for the console's clear action.
 		/// </summary>
 		public LogicalInput Clear { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's clear prompt action.
+		///     Gets the logical input for the console's clear prompt action.
 		/// </summary>
 		public LogicalInput ClearPrompt { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's scroll down action.
+		///     Gets the logical input for the console's scroll down action.
 		/// </summary>
 		public LogicalInput ScrollDown { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's scroll to bottom action.
+		///     Gets the logical input for the console's scroll to bottom action.
 		/// </summary>
 		public LogicalInput ScrollToBottom { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's scroll to top action.
+		///     Gets the logical input for the console's scroll to top action.
 		/// </summary>
 		public LogicalInput ScrollToTop { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's scroll up action.
+		///     Gets the logical input for the console's scroll up action.
 		/// </summary>
 		public LogicalInput ScrollUp { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's show new history action.
+		///     Gets the logical input for the console's show new history action.
 		/// </summary>
 		public LogicalInput ShowNewerHistory { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's show older history action.
+		///     Gets the logical input for the console's show older history action.
 		/// </summary>
 		public LogicalInput ShowOlderHistory { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's submit action.
+		///     Gets the logical input for the console's submit action.
 		/// </summary>
 		public LogicalInput Submit { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's auto-completion action in forward direction.
+		///     Gets the logical input for the console's auto-completion action in forward direction.
 		/// </summary>
 		public LogicalInput AutoCompleteNext { get; private set; }
 
 		/// <summary>
-		///   Gets the logical input for the console's auto-completion action in backwards direction.
+		///     Gets the logical input for the console's auto-completion action in backwards direction.
 		/// </summary>
 		public LogicalInput AutoCompletePrevious { get; private set; }
 
 		/// <summary>
-		///   Invoked when the activation state of the console has been changed.
+		///     Invoked when the activation state of the console has been changed.
 		/// </summary>
 		public void OnActivationChanged(bool activated)
 		{
@@ -128,7 +128,7 @@
 		}
 
 		/// <summary>
-		///   Raised when a text character was entered.
+		///     Raised when a text character was entered.
 		/// </summary>
 		public event Action<char> CharEntered
 		{
@@ -137,7 +137,7 @@
 		}
 
 		/// <summary>
-		///   Raised when a key was pressed.
+		///     Raised when a key was pressed.
 		/// </summary>
 		public event Action<KeyEventArgs> KeyPressed
 		{
@@ -146,7 +146,7 @@
 		}
 
 		/// <summary>
-		///   Raised when the mouse wheel has been moved.
+		///     Raised when the mouse wheel has been moved.
 		/// </summary>
 		public event Action<int> MouseWheel
 		{
@@ -155,7 +155,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

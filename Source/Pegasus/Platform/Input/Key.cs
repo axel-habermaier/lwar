@@ -3,7 +3,7 @@ namespace Pegasus.Platform.Input
 	using System;
 
 	/// <summary>
-	///   Identifies a keyboard key.
+	///     Identifies a keyboard key.
 	/// </summary>
 	public enum Key
 	{

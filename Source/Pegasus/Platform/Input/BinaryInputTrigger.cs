@@ -3,32 +3,32 @@
 	using System;
 
 	/// <summary>
-	///   Represents a binary trigger that combines two sub-triggers.
+	///     Represents a binary trigger that combines two sub-triggers.
 	/// </summary>
 	internal sealed class BinaryInputTrigger : InputTrigger
 	{
 		/// <summary>
-		///   The left sub-trigger.
+		///     The left sub-trigger.
 		/// </summary>
 		private readonly InputTrigger _left;
 
 		/// <summary>
-		///   The right sub-trigger.
+		///     The right sub-trigger.
 		/// </summary>
 		private readonly InputTrigger _right;
 
 		/// <summary>
-		///   Determines the type of the trigger.
+		///     Determines the type of the trigger.
 		/// </summary>
 		private readonly BinaryInputTriggerType _triggerType;
 
 		/// <summary>
-		///   Indicates whether a ChordOnce trigger should trigger again.
+		///     Indicates whether a ChordOnce trigger should trigger again.
 		/// </summary>
 		private bool _shouldTrigger = true;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="triggerType">Determines the type of the trigger.</param>
 		/// <param name="left">The left sub-trigger.</param>
@@ -45,10 +45,10 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the current object is equal to another object of the same type.
+		///     Indicates whether the current object is equal to another object of the same type.
 		/// </summary>
 		/// <returns>
-		///   true if the current object is equal to other; otherwise, false.
+		///     true if the current object is equal to other; otherwise, false.
 		/// </returns>
 		public override bool Equals(InputTrigger other)
 		{
@@ -60,7 +60,7 @@
 		}
 
 		/// <summary>
-		///   Evaluates the trigger, returning true to indicate that the trigger has fired.
+		///     Evaluates the trigger, returning true to indicate that the trigger has fired.
 		/// </summary>
 		/// <param name="device">The logical input device that should be used to evaluate the trigger.</param>
 		internal override bool Evaluate(LogicalInputDevice device)
@@ -94,11 +94,11 @@
 		}
 
 		/// <summary>
-		///   Sets the logical input device the logical input is currently registered on.
+		///     Sets the logical input device the logical input is currently registered on.
 		/// </summary>
 		/// <param name="device">
-		///   The logical input device the logical input is currently registered on. Null should be passed to
-		///   indicate that the logical input is currently not registered on any device.
+		///     The logical input device the logical input is currently registered on. Null should be passed to
+		///     indicate that the logical input is currently not registered on any device.
 		/// </param>
 		internal override void IsRegisteredOn(LogicalInputDevice device)
 		{
@@ -107,7 +107,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{

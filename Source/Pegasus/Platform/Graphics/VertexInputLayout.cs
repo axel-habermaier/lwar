@@ -7,28 +7,28 @@
 	using System.Security;
 
 	/// <summary>
-	///   An input-layout holds a definition of how to feed vertex data that
-	///   is laid out in memory into the input-assembler stage of the graphics pipeline.
+	///     An input-layout holds a definition of how to feed vertex data that
+	///     is laid out in memory into the input-assembler stage of the graphics pipeline.
 	/// </summary>
 	public sealed class VertexInputLayout : GraphicsObject
 	{
 		/// <summary>
-		///   The index buffer used by the vertex layout or null if the layout does not use indices.
+		///     The index buffer used by the vertex layout or null if the layout does not use indices.
 		/// </summary>
 		private readonly IndexBuffer _indexBuffer;
 
 		/// <summary>
-		///   The input bindings used by the vertex layout.
+		///     The input bindings used by the vertex layout.
 		/// </summary>
 		private readonly VertexInputBinding[] _vertexInputBindings;
 
 		/// <summary>
-		///   The native vertex input layout instance.
+		///     The native vertex input layout instance.
 		/// </summary>
 		private readonly IntPtr _vertexInputLayout;
 
 		/// <summary>
-		///   Initializes a new instance without an index buffer binding.
+		///     Initializes a new instance without an index buffer binding.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="vertexInputBindings">The bindings for the vertex inputs that should belong to the input layout.</param>
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance with an index buffer binding.
+		///     Initializes a new instance with an index buffer binding.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="indexBuffer">The input index buffer that should be used by the input layout.</param>
@@ -50,7 +50,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance with an index buffer binding.
+		///     Initializes a new instance with an index buffer binding.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="indexBuffer">The input index buffer that should be used by the input layout.</param>
@@ -77,7 +77,7 @@
 		}
 
 		/// <summary>
-		///   Gets the list of vertex input bindings for this input layout.
+		///     Gets the list of vertex input bindings for this input layout.
 		/// </summary>
 		public IEnumerable<VertexInputBinding> VertexInputBindings
 		{
@@ -85,7 +85,7 @@
 		}
 
 		/// <summary>
-		///   Gets the index buffer of this input layout.
+		///     Gets the index buffer of this input layout.
 		/// </summary>
 		public IndexBuffer IndexBuffer
 		{
@@ -93,7 +93,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Binds the input layout to the input-assembler stage of the pipeline.
+		///     Binds the input layout to the input-assembler stage of the pipeline.
 		/// </summary>
 		public void Bind()
 		{
@@ -110,7 +110,7 @@
 		}
 
 		/// <summary>
-		///   Provides access to the native vertex input layout functions.
+		///     Provides access to the native vertex input layout functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

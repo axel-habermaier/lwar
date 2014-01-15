@@ -17,7 +17,7 @@
 		/// <summary>
 		///     Compiles, recompiles, or cleans the assets.
 		/// </summary>
-		/// <param name="args"></param>
+		/// <param name="args">The command line arguments passed by the user.</param>
 		[STAThread]
 		public static int Main(string[] args)
 		{

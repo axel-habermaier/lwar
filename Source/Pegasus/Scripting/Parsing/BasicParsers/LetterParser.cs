@@ -3,12 +3,12 @@
 	using System;
 
 	/// <summary>
-	///   Parses a single letter character.
+	///     Parses a single letter character.
 	/// </summary>
 	public class LetterParser : Parser<char>
 	{
 		/// <summary>
-		///   Checks whether the current character in the input stream is a letter.
+		///     Checks whether the current character in the input stream is a letter.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<char> Parse(InputStream inputStream)

@@ -1,28 +1,27 @@
-﻿using System;
-
-namespace Pegasus.Math
+﻿namespace Pegasus.Math
 {
+	using System;
 	using System.Globalization;
 	using System.Runtime.InteropServices;
 
 	/// <summary>
-	///   Represents a size value with the width and height stored as 32-bit signed integer values.
+	///     Represents a size value with the width and height stored as 32-bit signed integer values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Size : IEquatable<Size>
 	{
 		/// <summary>
-		///   The width.
+		///     The width.
 		/// </summary>
 		public int Width;
 
 		/// <summary>
-		///   The height.
+		///     The height.
 		/// </summary>
 		public int Height;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="width">The width.</param>
 		/// <param name="height">The height.</param>
@@ -34,7 +33,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this size instance.
+		///     Determines whether the specified object is equal to this size instance.
 		/// </summary>
 		/// <param name="obj">The object to compare with this instance.</param>
 		public override bool Equals(object obj)
@@ -47,7 +46,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified size instance is equal to this size instance.
+		///     Determines whether the specified size instance is equal to this size instance.
 		/// </summary>
 		/// <param name="other">The size instance to compare with this instance.</param>
 		public bool Equals(Size other)
@@ -56,10 +55,10 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this instance.
+		///     Returns a hash code for this instance.
 		/// </summary>
 		/// <returns>
-		///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+		///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
 		/// </returns>
 		public override int GetHashCode()
 		{
@@ -69,7 +68,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two sizes.
+		///     Tests for equality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -79,7 +78,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two sizes.
+		///     Tests for inequality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -89,7 +88,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -99,7 +98,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="size">The size that should be scaled.</param>
@@ -109,7 +108,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by the given factor.
+		///     Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -119,7 +118,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitly converts a size to a vector.
+		///     Implicitly converts a size to a vector.
 		/// </summary>
 		/// <param name="size">The size that should be converted.</param>
 		public static implicit operator Vector2i(Size size)
@@ -128,7 +127,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this size instance.
+		///     Returns a string representation of this size instance.
 		/// </summary>
 		public override string ToString()
 		{
@@ -137,23 +136,23 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a size value with the width and height stored as 32-bit floating point values.
+	///     Represents a size value with the width and height stored as 32-bit floating point values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct SizeF : IEquatable<SizeF>
 	{
 		/// <summary>
-		///   The width.
+		///     The width.
 		/// </summary>
 		public float Width;
 
 		/// <summary>
-		///   The height.
+		///     The height.
 		/// </summary>
 		public float Height;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="width">The width.</param>
 		/// <param name="height">The height.</param>
@@ -165,7 +164,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this size instance.
+		///     Determines whether the specified object is equal to this size instance.
 		/// </summary>
 		/// <param name="obj">The object to compare with this instance.</param>
 		public override bool Equals(object obj)
@@ -178,7 +177,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified size instance is equal to this size instance.
+		///     Determines whether the specified size instance is equal to this size instance.
 		/// </summary>
 		/// <param name="other">The size instance to compare with this instance.</param>
 		public bool Equals(SizeF other)
@@ -187,10 +186,10 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this instance.
+		///     Returns a hash code for this instance.
 		/// </summary>
 		/// <returns>
-		///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+		///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
 		/// </returns>
 		public override int GetHashCode()
 		{
@@ -200,7 +199,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two sizes.
+		///     Tests for equality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -210,7 +209,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two sizes.
+		///     Tests for inequality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -220,7 +219,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -230,7 +229,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="size">The size that should be scaled.</param>
@@ -240,7 +239,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by the given factor.
+		///     Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -250,7 +249,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitly converts a size to a vector.
+		///     Implicitly converts a size to a vector.
 		/// </summary>
 		/// <param name="size">The size that should be converted.</param>
 		public static implicit operator Vector2(SizeF size)
@@ -259,7 +258,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this size instance.
+		///     Returns a string representation of this size instance.
 		/// </summary>
 		public override string ToString()
 		{
@@ -268,23 +267,23 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a size value with the width and height stored as 32-bit signed fixed-point (in 24.8 format) values.
+	///     Represents a size value with the width and height stored as 32-bit signed fixed-point (in 24.8 format) values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct SizeF8 : IEquatable<SizeF8>
 	{
 		/// <summary>
-		///   The width.
+		///     The width.
 		/// </summary>
 		public Fixed8 Width;
 
 		/// <summary>
-		///   The height.
+		///     The height.
 		/// </summary>
 		public Fixed8 Height;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="width">The width.</param>
 		/// <param name="height">The height.</param>
@@ -296,7 +295,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this size instance.
+		///     Determines whether the specified object is equal to this size instance.
 		/// </summary>
 		/// <param name="obj">The object to compare with this instance.</param>
 		public override bool Equals(object obj)
@@ -309,7 +308,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified size instance is equal to this size instance.
+		///     Determines whether the specified size instance is equal to this size instance.
 		/// </summary>
 		/// <param name="other">The size instance to compare with this instance.</param>
 		public bool Equals(SizeF8 other)
@@ -318,10 +317,10 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this instance.
+		///     Returns a hash code for this instance.
 		/// </summary>
 		/// <returns>
-		///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+		///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
 		/// </returns>
 		public override int GetHashCode()
 		{
@@ -331,7 +330,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two sizes.
+		///     Tests for equality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -341,7 +340,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two sizes.
+		///     Tests for inequality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -351,7 +350,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -361,7 +360,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="size">The size that should be scaled.</param>
@@ -371,7 +370,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by the given factor.
+		///     Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -381,7 +380,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitly converts a size to a vector.
+		///     Implicitly converts a size to a vector.
 		/// </summary>
 		/// <param name="size">The size that should be converted.</param>
 		public static implicit operator Vector2f8(SizeF8 size)
@@ -390,7 +389,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this size instance.
+		///     Returns a string representation of this size instance.
 		/// </summary>
 		public override string ToString()
 		{
@@ -399,23 +398,23 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a size value with the width and height stored as 32-bit signed fixed-point (in 16.16 format) values.
+	///     Represents a size value with the width and height stored as 32-bit signed fixed-point (in 16.16 format) values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct SizeF16 : IEquatable<SizeF16>
 	{
 		/// <summary>
-		///   The width.
+		///     The width.
 		/// </summary>
 		public Fixed16 Width;
 
 		/// <summary>
-		///   The height.
+		///     The height.
 		/// </summary>
 		public Fixed16 Height;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="width">The width.</param>
 		/// <param name="height">The height.</param>
@@ -427,7 +426,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this size instance.
+		///     Determines whether the specified object is equal to this size instance.
 		/// </summary>
 		/// <param name="obj">The object to compare with this instance.</param>
 		public override bool Equals(object obj)
@@ -440,7 +439,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified size instance is equal to this size instance.
+		///     Determines whether the specified size instance is equal to this size instance.
 		/// </summary>
 		/// <param name="other">The size instance to compare with this instance.</param>
 		public bool Equals(SizeF16 other)
@@ -449,10 +448,10 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this instance.
+		///     Returns a hash code for this instance.
 		/// </summary>
 		/// <returns>
-		///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+		///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
 		/// </returns>
 		public override int GetHashCode()
 		{
@@ -462,7 +461,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two sizes.
+		///     Tests for equality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -472,7 +471,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two sizes.
+		///     Tests for inequality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -482,7 +481,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -492,7 +491,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="size">The size that should be scaled.</param>
@@ -502,7 +501,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by the given factor.
+		///     Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -512,7 +511,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitly converts a size to a vector.
+		///     Implicitly converts a size to a vector.
 		/// </summary>
 		/// <param name="size">The size that should be converted.</param>
 		public static implicit operator Vector2f16(SizeF16 size)
@@ -521,7 +520,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this size instance.
+		///     Returns a string representation of this size instance.
 		/// </summary>
 		public override string ToString()
 		{
@@ -530,23 +529,23 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a size value with the width and height stored as 64-bit floating point values.
+	///     Represents a size value with the width and height stored as 64-bit floating point values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct SizeD : IEquatable<SizeD>
 	{
 		/// <summary>
-		///   The width.
+		///     The width.
 		/// </summary>
 		public double Width;
 
 		/// <summary>
-		///   The height.
+		///     The height.
 		/// </summary>
 		public double Height;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="width">The width.</param>
 		/// <param name="height">The height.</param>
@@ -558,7 +557,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this size instance.
+		///     Determines whether the specified object is equal to this size instance.
 		/// </summary>
 		/// <param name="obj">The object to compare with this instance.</param>
 		public override bool Equals(object obj)
@@ -571,7 +570,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified size instance is equal to this size instance.
+		///     Determines whether the specified size instance is equal to this size instance.
 		/// </summary>
 		/// <param name="other">The size instance to compare with this instance.</param>
 		public bool Equals(SizeD other)
@@ -580,10 +579,10 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this instance.
+		///     Returns a hash code for this instance.
 		/// </summary>
 		/// <returns>
-		///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+		///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
 		/// </returns>
 		public override int GetHashCode()
 		{
@@ -593,7 +592,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two sizes.
+		///     Tests for equality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -603,7 +602,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two sizes.
+		///     Tests for inequality between two sizes.
 		/// </summary>
 		/// <param name="left">The first size to compare.</param>
 		/// <param name="right">The second size to compare.</param>
@@ -613,7 +612,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -623,7 +622,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the size by the given factor.
+		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="size">The size that should be scaled.</param>
@@ -633,7 +632,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the size by the given factor.
+		///     Divides the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -643,7 +642,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitly converts a size to a vector.
+		///     Implicitly converts a size to a vector.
 		/// </summary>
 		/// <param name="size">The size that should be converted.</param>
 		public static implicit operator Vector2d(SizeD size)
@@ -652,7 +651,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this size instance.
+		///     Returns a string representation of this size instance.
 		/// </summary>
 		public override string ToString()
 		{
@@ -660,4 +659,3 @@ namespace Pegasus.Math
 		}
 	}
 }
-

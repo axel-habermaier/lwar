@@ -8,7 +8,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 	using Pegasus.Math;
 
 	/// <summary>
-	///   Represents an entity template that is shared between the client and the server.
+	///     Represents an entity template that is shared between the client and the server.
 	/// </summary>
 	public class EntityTemplate
 	{
@@ -26,7 +26,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		public Func<EntityTemplate, string> Model;
 
 		/// <summary>
-		///   The name of the template. This field is set by the template compiler.
+		///     The name of the template. This field is set by the template compiler.
 		/// </summary>
 		public string Name;
 
@@ -36,7 +36,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		public string Texture;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public EntityTemplate()
 		{

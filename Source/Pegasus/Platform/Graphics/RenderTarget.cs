@@ -25,11 +25,12 @@
 		private readonly IntPtr _renderTarget;
 
 		/// <summary>
-		/// The depth stencil buffer that is bound to the render target.
+		///     The depth stencil buffer that is bound to the render target.
 		/// </summary>
 		private readonly Texture2D _depthStencil;
+
 		/// <summary>
-		/// The color buffers that are bound to the render target.
+		///     The color buffers that are bound to the render target.
 		/// </summary>
 		private readonly Texture[] _colorBuffers;
 
@@ -147,9 +148,9 @@
 		}
 
 #if DEBUG
-		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
+	/// <summary>
+	///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+	/// </summary>
 		protected override void OnRenamed()
 		{
 			if (_renderTarget != IntPtr.Zero)

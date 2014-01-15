@@ -4,12 +4,12 @@
 	using Platform;
 
 	/// <summary>
-	///   Ensures that the validated string is a file name.
+	///     Ensures that the validated string is a file name.
 	/// </summary>
 	public class FileNameAttribute : ValidatorAttribute
 	{
 		/// <summary>
-		///   Gets an error message that describes a validation error.
+		///     Gets an error message that describes a validation error.
 		/// </summary>
 		public override string ErrorMessage
 		{
@@ -20,7 +20,7 @@
 		}
 
 		/// <summary>
-		///   Gets a description of the validation performed by the validator.
+		///     Gets a description of the validation performed by the validator.
 		/// </summary>
 		public override string Description
 		{
@@ -28,7 +28,7 @@
 		}
 
 		/// <summary>
-		///   Validates the given value, returning true to indicate that validation succeeded.
+		///     Validates the given value, returning true to indicate that validation succeeded.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
 		public override bool Validate(object value)

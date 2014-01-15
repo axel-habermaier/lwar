@@ -5,17 +5,17 @@
 	using System.Linq;
 
 	/// <summary>
-	///   Provides extension methods for logging-related types.
+	///     Provides extension methods for logging-related types.
 	/// </summary>
 	public static class LogExtensions
 	{
 		/// <summary>
-		///   The number of characters of the longest type literal.
+		///     The number of characters of the longest type literal.
 		/// </summary>
 		private static readonly int MaxTypeLength = Enum.GetNames(typeof(LogType)).Max(c => c.Length);
 
 		/// <summary>
-		///   The display strings of the log types, all of the same length.
+		///     The display strings of the log types, all of the same length.
 		/// </summary>
 		private static readonly string[] TypeDisplayStrings =
 			Enum.GetNames(typeof(LogType))
@@ -23,7 +23,7 @@
 				.ToArray();
 
 		/// <summary>
-		///   Initializes the type.
+		///     Initializes the type.
 		/// </summary>
 		static LogExtensions()
 		{
@@ -31,7 +31,7 @@
 		}
 
 		/// <summary>
-		///   Appends spaces to the given string until the string length matches the desired length.
+		///     Appends spaces to the given string until the string length matches the desired length.
 		/// </summary>
 		/// <param name="content">The content whose length should be normalized.</param>
 		/// <param name="length">The desired length of the string.</param>
@@ -46,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Validates the assumptions made about a logging enumeration.
+		///     Validates the assumptions made about a logging enumeration.
 		/// </summary>
 		/// <param name="enumeration">The type of the enumeration that should be validated.</param>
 		/// <param name="lowestValue">The lowest value that must be defined by the enumeration.</param>
@@ -65,7 +65,7 @@
 		}
 
 		/// <summary>
-		///   Converts the given log type to a string with a normalized length.
+		///     Converts the given log type to a string with a normalized length.
 		/// </summary>
 		/// <param name="type">The log type that should be converted to a string.</param>
 		public static string ToDisplayString(this LogType type)

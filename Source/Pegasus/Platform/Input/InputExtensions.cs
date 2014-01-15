@@ -4,12 +4,12 @@
 	using Scripting;
 
 	/// <summary>
-	///   Provides extension methods for the input system.
+	///     Provides extension methods for the input system.
 	/// </summary>
 	public static class InputExtensions
 	{
 		/// <summary>
-		///   Creates a trigger that triggers when the key is released.
+		///     Creates a trigger that triggers when the key is released.
 		/// </summary>
 		public static InputTrigger IsReleased(this Key key)
 		{
@@ -18,7 +18,7 @@
 		}
 
 		/// <summary>
-		///   Creates a trigger that triggers when the key is pressed.
+		///     Creates a trigger that triggers when the key is pressed.
 		/// </summary>
 		public static InputTrigger IsPressed(this Key key)
 		{
@@ -27,7 +27,7 @@
 		}
 
 		/// <summary>
-		///   Creates a trigger that triggers when the key is repeated.
+		///     Creates a trigger that triggers when the key is repeated.
 		/// </summary>
 		public static InputTrigger IsRepeated(this Key key)
 		{
@@ -36,7 +36,7 @@
 		}
 
 		/// <summary>
-		///   Creates a trigger that triggers when the key went down.
+		///     Creates a trigger that triggers when the key went down.
 		/// </summary>
 		public static InputTrigger WentDown(this Key key)
 		{
@@ -45,7 +45,7 @@
 		}
 
 		/// <summary>
-		///   Creates a trigger that triggers when the key went up.
+		///     Creates a trigger that triggers when the key went up.
 		/// </summary>
 		public static InputTrigger WentUp(this Key key)
 		{
@@ -54,7 +54,7 @@
 		}
 
 		/// <summary>
-		///   Creates a trigger that triggers when the mouse button is released.
+		///     Creates a trigger that triggers when the mouse button is released.
 		/// </summary>
 		public static InputTrigger IsReleased(this MouseButton button)
 		{
@@ -63,7 +63,7 @@
 		}
 
 		/// <summary>
-		///   Creates a trigger that triggers when the mouse button is pressed.
+		///     Creates a trigger that triggers when the mouse button is pressed.
 		/// </summary>
 		public static InputTrigger IsPressed(this MouseButton button)
 		{
@@ -72,7 +72,7 @@
 		}
 
 		/// <summary>
-		///   Creates a trigger that triggers when the mouse button went down.
+		///     Creates a trigger that triggers when the mouse button went down.
 		/// </summary>
 		public static InputTrigger WentDown(this MouseButton button)
 		{
@@ -81,7 +81,7 @@
 		}
 
 		/// <summary>
-		///   Creates trigger that triggers when the mouse button went up.
+		///     Creates trigger that triggers when the mouse button went up.
 		/// </summary>
 		public static InputTrigger WentUp(this MouseButton button)
 		{
@@ -90,7 +90,7 @@
 		}
 
 		/// <summary>
-		///   Creates trigger that triggers when the mouse has been double-clicked.
+		///     Creates trigger that triggers when the mouse has been double-clicked.
 		/// </summary>
 		public static InputTrigger DoubleClicked(this MouseButton button)
 		{
@@ -99,7 +99,7 @@
 		}
 
 		/// <summary>
-		///   Creates a configurable trigger.
+		///     Creates a configurable trigger.
 		/// </summary>
 		public static InputTrigger ToTrigger(this Cvar<InputTrigger> cvar)
 		{
@@ -108,7 +108,7 @@
 		}
 
 		/// <summary>
-		///   Converts the given binary input trigger type into its corresponding expression string.
+		///     Converts the given binary input trigger type into its corresponding expression string.
 		/// </summary>
 		/// <param name="triggerType">The binary input trigger type that should be converted.</param>
 		internal static string ToExpressionString(this BinaryInputTriggerType triggerType)

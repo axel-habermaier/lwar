@@ -10,53 +10,53 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents a native operating system window.
+	///     Represents a native operating system window.
 	/// </summary>
 	internal sealed class NativeWindow : DisposableObject
 	{
 		/// <summary>
-		///   Reacts to a character being entered as the result of a dead key press.
+		///     Reacts to a character being entered as the result of a dead key press.
 		/// </summary>
 		/// <param name="character">Provides information about the character that has been entered.</param>
 		/// <param name="cancel">
-		///   If set to true, the dead character is removed such that the subsequently entered character is not
-		///   influenced by the dead character.
+		///     If set to true, the dead character is removed such that the subsequently entered character is not
+		///     influenced by the dead character.
 		/// </param>
 		public delegate void DeadCharacterEnteredHandler(CharacterEnteredEventArgs character, out bool cancel);
 
 		/// <summary>
-		///   The minimal window size supported by the library.
+		///     The minimal window size supported by the library.
 		/// </summary>
 		public static readonly Size MinimumSize = new Size(800, 600);
 
 		/// <summary>
-		///   The maximal window size supported by the library.
+		///     The maximal window size supported by the library.
 		/// </summary>
 		public static readonly Size MaximumSize = new Size(4096, 2160);
 
 		/// <summary>
-		///   The window callbacks that have been passed to the native code. We must keep a reference in order to prevent
-		///   the garbage collector from freeing the delegates while they are still being used by native code.
+		///     The window callbacks that have been passed to the native code. We must keep a reference in order to prevent
+		///     the garbage collector from freeing the delegates while they are still being used by native code.
 		/// </summary>
 		private readonly NativeMethods.Callbacks _callbacks;
 
 		/// <summary>
-		///   The native window instance.
+		///     The native window instance.
 		/// </summary>
 		private readonly IntPtr _window;
 
 		/// <summary>
-		///   A value indicating whether the mouse is currently captured by the window.
+		///     A value indicating whether the mouse is currently captured by the window.
 		/// </summary>
 		private bool _mouseCaptured;
 
 		/// <summary>
-		///   The current placement of the window.
+		///     The current placement of the window.
 		/// </summary>
 		private NativeMethods.Placement _placement;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="title">The title of the window.</param>
 		/// <param name="position">The screen position of the window's top left corner.</param>
@@ -93,12 +93,12 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the window currently has the focus.
+		///     Gets a value indicating whether the window currently has the focus.
 		/// </summary>
 		public bool Focused { get; private set; }
 
 		/// <summary>
-		///   Gets the native window instance.
+		///     Gets the native window instance.
 		/// </summary>
 		internal IntPtr NativePtr
 		{
@@ -106,7 +106,7 @@
 		}
 
 		/// <summary>
-		///   Sets the window's title.
+		///     Sets the window's title.
 		/// </summary>
 		public string Title
 		{
@@ -120,7 +120,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the size of the window's rendering area.
+		///     Gets or sets the size of the window's rendering area.
 		/// </summary>
 		public Size Size
 		{
@@ -137,7 +137,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the screen position of the window's left upper corner.
+		///     Gets or sets the screen position of the window's left upper corner.
 		/// </summary>
 		public Vector2i Position
 		{
@@ -154,7 +154,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the window state.
+		///     Gets or sets the window state.
 		/// </summary>
 		public WindowMode Mode
 		{
@@ -171,7 +171,7 @@
 		}
 
 		/// <summary>
-		///   Gets the width of the window's rendering area.
+		///     Gets the width of the window's rendering area.
 		/// </summary>
 		public int Width
 		{
@@ -179,7 +179,7 @@
 		}
 
 		/// <summary>
-		///   Gets the height of the window's rendering area.
+		///     Gets the height of the window's rendering area.
 		/// </summary>
 		public int Height
 		{
@@ -187,7 +187,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the mouse is currently captured by the window.
+		///     Gets or sets a value indicating whether the mouse is currently captured by the window.
 		/// </summary>
 		public bool MouseCaptured
 		{
@@ -203,7 +203,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -211,7 +211,7 @@
 		}
 
 		/// <summary>
-		///   Processes all pending window events.
+		///     Processes all pending window events.
 		/// </summary>
 		public void ProcessEvents()
 		{
@@ -227,18 +227,18 @@
 		}
 
 		/// <summary>
-		///   Raised when the user requested the window to be closed. The window is not actually closed
-		///   until Dispose() is called.
+		///     Raised when the user requested the window to be closed. The window is not actually closed
+		///     until Dispose() is called.
 		/// </summary>
 		public event Action Closing;
 
 		/// <summary>
-		///   Raised when a character was entered.
+		///     Raised when a character was entered.
 		/// </summary>
 		public event Action<CharacterEnteredEventArgs> CharacterEntered;
 
 		/// <summary>
-		///   Raises the character entered event.
+		///     Raises the character entered event.
 		/// </summary>
 		/// <param name="character">The character that has been entered.</param>
 		/// <param name="scanCode">The scan code of the key that generated the character.</param>
@@ -249,12 +249,12 @@
 		}
 
 		/// <summary>
-		///   Raised when a character was entered as a result of a dead key press.
+		///     Raised when a character was entered as a result of a dead key press.
 		/// </summary>
 		public event DeadCharacterEnteredHandler DeadCharacterEntered;
 
 		/// <summary>
-		///   Raises the dead character entered event.
+		///     Raises the dead character entered event.
 		/// </summary>
 		/// <param name="character">The character that has been entered.</param>
 		/// <param name="scanCode">The scan code of the key that generated the character.</param>
@@ -268,12 +268,12 @@
 		}
 
 		/// <summary>
-		///   Raised when a key was pressed.
+		///     Raised when a key was pressed.
 		/// </summary>
 		public event Action<KeyEventArgs> KeyPressed;
 
 		/// <summary>
-		///   Raises the key pressed event.
+		///     Raises the key pressed event.
 		/// </summary>
 		/// <param name="key">The key that has been pressed.</param>
 		/// <param name="scanCode">The scan code of the key.</param>
@@ -284,12 +284,12 @@
 		}
 
 		/// <summary>
-		///   Raised when a key was released.
+		///     Raised when a key was released.
 		/// </summary>
 		public event Action<KeyEventArgs> KeyReleased;
 
 		/// <summary>
-		///   Raises the key released event.
+		///     Raises the key released event.
 		/// </summary>
 		/// <param name="key">The key that has been released.</param>
 		/// <param name="scanCode">The scan code of the key.</param>
@@ -300,12 +300,12 @@
 		}
 
 		/// <summary>
-		///   Raised when the mouse wheel was moved.
+		///     Raised when the mouse wheel was moved.
 		/// </summary>
 		public event Action<int> MouseWheel = d => { };
 
 		/// <summary>
-		///   Raises the mouse wheel event.
+		///     Raises the mouse wheel event.
 		/// </summary>
 		/// <param name="delta">The mouse wheel delta.</param>
 		private void OnMouseWheel(int delta)
@@ -315,12 +315,12 @@
 		}
 
 		/// <summary>
-		///   Raised when a mouse button was pressed.
+		///     Raised when a mouse button was pressed.
 		/// </summary>
 		public event Action<MouseEventArgs> MousePressed = e => { };
 
 		/// <summary>
-		///   Raises the mouse pressed event.
+		///     Raises the mouse pressed event.
 		/// </summary>
 		/// <param name="button">The mouse button that has been pressed.</param>
 		/// <param name="doubleClick">Indicates whether the event represents a double click.</param>
@@ -333,12 +333,12 @@
 		}
 
 		/// <summary>
-		///   Raised when a mouse button was released.
+		///     Raised when a mouse button was released.
 		/// </summary>
 		public event Action<MouseEventArgs> MouseReleased = e => { };
 
 		/// <summary>
-		///   Raises the mouse released event.
+		///     Raises the mouse released event.
 		/// </summary>
 		/// <param name="button">The mouse button that has been released.</param>
 		/// <param name="x">The X coordinate of the mouse.</param>
@@ -350,12 +350,12 @@
 		}
 
 		/// <summary>
-		///   Raised when the mouse was moved inside the window.
+		///     Raised when the mouse was moved inside the window.
 		/// </summary>
 		public event Action<int, int> MouseMoved;
 
 		/// <summary>
-		///   Raises the mouse moved event.
+		///     Raises the mouse moved event.
 		/// </summary>
 		/// <param name="x">The X coordinate of the mouse.</param>
 		/// <param name="y">The Y coordinate of the mouse.</param>
@@ -366,12 +366,12 @@
 		}
 
 		/// <summary>
-		///   Raised when the mouse entered the window.
+		///     Raised when the mouse entered the window.
 		/// </summary>
 		public event Action MouseEntered;
 
 		/// <summary>
-		///   Raises the mouse entered event.
+		///     Raises the mouse entered event.
 		/// </summary>
 		private void OnMouseEntered()
 		{
@@ -380,12 +380,12 @@
 		}
 
 		/// <summary>
-		///   Raised when the mouse left the window.
+		///     Raised when the mouse left the window.
 		/// </summary>
 		public event Action MouseLeft;
 
 		/// <summary>
-		///   Raises the mouse left event.
+		///     Raises the mouse left event.
 		/// </summary>
 		private void OnMouseLeft()
 		{
@@ -394,7 +394,7 @@
 		}
 
 		/// <summary>
-		///   Provides access to the native window-related types and functions.
+		///     Provides access to the native window-related types and functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

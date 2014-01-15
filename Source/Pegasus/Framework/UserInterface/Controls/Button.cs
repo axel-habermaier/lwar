@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///   Represents a button control.
+	///     Represents a button control.
 	/// </summary>
 	public class Button : ContentControl
 	{

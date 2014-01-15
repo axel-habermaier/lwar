@@ -7,17 +7,17 @@
 	using Memory;
 
 	/// <summary>
-	///   Base class for graphics buffers.
+	///     Base class for graphics buffers.
 	/// </summary>
 	public abstract class Buffer : GraphicsObject
 	{
 		/// <summary>
-		///   The native buffer instance.
+		///     The native buffer instance.
 		/// </summary>
 		private readonly IntPtr _buffer;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="type">The type of the buffer.</param>
@@ -32,7 +32,7 @@
 		}
 
 		/// <summary>
-		///   Gets the native buffer instance.
+		///     Gets the native buffer instance.
 		/// </summary>
 		internal IntPtr NativePtr
 		{
@@ -40,8 +40,8 @@
 		}
 
 		/// <summary>
-		///   Maps the buffer and returns a pointer that the CPU can access. The operations that are allowed on the
-		///   returned pointer depend on the given map mode.
+		///     Maps the buffer and returns a pointer that the CPU can access. The operations that are allowed on the
+		///     returned pointer depend on the given map mode.
 		/// </summary>
 		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
 		public IntPtr Map(MapMode mapMode)
@@ -51,8 +51,8 @@
 		}
 
 		/// <summary>
-		///   Maps the buffer and returns a pointer that the CPU can access. The operations that are allowed on the
-		///   returned pointer depend on the given map mode.
+		///     Maps the buffer and returns a pointer that the CPU can access. The operations that are allowed on the
+		///     returned pointer depend on the given map mode.
 		/// </summary>
 		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
 		/// <param name="offset">A zero-based index denoting the first byte of the buffer that should be mapped.</param>
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -72,7 +72,7 @@
 		}
 
 		/// <summary>
-		///   Unmaps the buffer.
+		///     Unmaps the buffer.
 		/// </summary>
 		public void Unmap()
 		{
@@ -81,7 +81,7 @@
 		}
 
 		/// <summary>
-		///   Copies the given data to the buffer, overwriting all previous data.
+		///     Copies the given data to the buffer, overwriting all previous data.
 		/// </summary>
 		/// <param name="data">The data that should be copied.</param>
 		/// <param name="size">The size of the data that should be copied in bytes.</param>
@@ -97,7 +97,7 @@
 		}
 
 		/// <summary>
-		///   Updates the content of a constant buffer.
+		///     Updates the content of a constant buffer.
 		/// </summary>
 		/// <param name="data">The data that should be copied to the constant buffer.</param>
 		protected void UpdateConstantBuffer(IntPtr data)
@@ -109,7 +109,7 @@
 		}
 
 		/// <summary>
-		///   Binds the buffer to the given slot.
+		///     Binds the buffer to the given slot.
 		/// </summary>
 		/// <param name="slot">The slot the constant buffer should be bound to.</param>
 		protected void BindBuffer(int slot)
@@ -130,7 +130,7 @@
 #endif
 
 		/// <summary>
-		///   Provides access to the native buffer functions.
+		///     Provides access to the native buffer functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

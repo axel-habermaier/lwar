@@ -7,17 +7,17 @@
 	using Validators;
 
 	/// <summary>
-	///   Represents a parameter of a command.
+	///     Represents a parameter of a command.
 	/// </summary>
 	public struct CommandParameter
 	{
 		/// <summary>
-		///   The validators that are used to validate a parameter value.
+		///     The validators that are used to validate a parameter value.
 		/// </summary>
 		private readonly ValidatorAttribute[] _validators;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="name">The name of the parameter.</param>
 		/// <param name="type">The type of the parameter.</param>
@@ -42,7 +42,7 @@
 		}
 
 		/// <summary>
-		///   Gets the validators that are used to validate the values of the parameter.
+		///     Gets the validators that are used to validate the values of the parameter.
 		/// </summary>
 		public IEnumerable<ValidatorAttribute> Validators
 		{
@@ -50,32 +50,32 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the parameter.
+		///     Gets the name of the parameter.
 		/// </summary>
 		public string Name { get; private set; }
 
 		/// <summary>
-		///   Gets the type of the parameter.
+		///     Gets the type of the parameter.
 		/// </summary>
 		public Type Type { get; private set; }
 
 		/// <summary>
-		///   Gets the default value that is used if no value has been specified.
+		///     Gets the default value that is used if no value has been specified.
 		/// </summary>
 		public object DefaultValue { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the parameter has a default value.
+		///     Gets a value indicating whether the parameter has a default value.
 		/// </summary>
 		public bool HasDefaultValue { get; private set; }
 
 		/// <summary>
-		///   Gets the description of the parameter.
+		///     Gets the description of the parameter.
 		/// </summary>
 		public string Description { get; private set; }
 
 		/// <summary>
-		///   Validates the given value.
+		///     Validates the given value.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
 		[Pure]

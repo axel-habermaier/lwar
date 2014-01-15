@@ -5,7 +5,7 @@
 	using Pegasus.Framework.UserInterface.Controls;
 
 	/// <summary>
-	///   The control that is used for UI-related unit tests.
+	///     The control that is used for UI-related unit tests.
 	/// </summary>
 	public class TestControl : UserControl
 	{
@@ -15,7 +15,7 @@
 		public static readonly DependencyProperty<int> IntegerTestProperty2 = new DependencyProperty<int>();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public TestControl()
 		{
@@ -62,27 +62,27 @@
 		}
 
 		/// <summary>
-		///   Gets the canvas that is the direct child of the control.
+		///     Gets the canvas that is the direct child of the control.
 		/// </summary>
 		public Canvas Canvas1 { get; private set; }
 
 		/// <summary>
-		///   Gets the canvas that is the third child of Canvas1.
+		///     Gets the canvas that is the third child of Canvas1.
 		/// </summary>
 		public Canvas Canvas2 { get; private set; }
 
 		/// <summary>
-		///   Gets the first button of the control that is the first child of Canvas1.
+		///     Gets the first button of the control that is the first child of Canvas1.
 		/// </summary>
 		public Button Button1 { get; private set; }
 
 		/// <summary>
-		///   Gets the second button of the control that is the second child of Canvas1.
+		///     Gets the second button of the control that is the second child of Canvas1.
 		/// </summary>
 		public Button Button2 { get; private set; }
 
 		/// <summary>
-		///   Gets the third button of the control that is the first child of Canvas2.
+		///     Gets the third button of the control that is the first child of Canvas2.
 		/// </summary>
 		public Button Button3 { get; private set; }
 	}

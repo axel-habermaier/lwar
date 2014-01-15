@@ -7,47 +7,47 @@
 	using Rendering.UserInterface;
 
 	/// <summary>
-	///   Provides layouting, input, hit testing, rendering, and other base functionality for all UI elements.
+	///     Provides layouting, input, hit testing, rendering, and other base functionality for all UI elements.
 	/// </summary>
 	public abstract partial class UIElement : DependencyObject
 	{
 		/// <summary>
-		///   The cached font instance that is currently being used for text rendering.
+		///     The cached font instance that is currently being used for text rendering.
 		/// </summary>
 		private Font _cachedFont;
 
 		/// <summary>
-		///   The size of the UI element that has been computed by the last measure pass of the layout engine.
+		///     The size of the UI element that has been computed by the last measure pass of the layout engine.
 		/// </summary>
 		private SizeD _desiredSize;
 
 		/// <summary>
-		///   Stores the handlers of the UI element's routed events.
+		///     Stores the handlers of the UI element's routed events.
 		/// </summary>
 		private RoutedEventStore _eventStore = new RoutedEventStore();
 
 		/// <summary>
-		///   A value indicating whether the UI element is connected to the visual tree's root element.
+		///     A value indicating whether the UI element is connected to the visual tree's root element.
 		/// </summary>
 		private bool _isAttachedToRoot;
 
 		/// <summary>
-		///   Caches the layouting information of the UI element during the measure and arrange phases for performance reasons.
+		///     Caches the layouting information of the UI element during the measure and arrange phases for performance reasons.
 		/// </summary>
 		private LayoutInfo _layoutInfo;
 
 		/// <summary>
-		///   The resources used by the UI element.
+		///     The resources used by the UI element.
 		/// </summary>
 		private ResourceDictionary _resources = new ResourceDictionary();
 
 		/// <summary>
-		///   A value indicating whether the UI element uses and implicitly set style.
+		///     A value indicating whether the UI element uses and implicitly set style.
 		/// </summary>
 		private bool _usesImplicitStyle = true;
 
 		/// <summary>
-		///   Initializes the type.
+		///     Initializes the type.
 		/// </summary>
 		static UIElement()
 		{
@@ -60,7 +60,7 @@
 		}
 
 		/// <summary>
-		///   Adds the given handler to the given routed event.
+		///     Adds the given handler to the given routed event.
 		/// </summary>
 		/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
 		/// <param name="routedEvent">The routed event that should be handled.</param>
@@ -75,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Removes the given handler from the given routed event.
+		///     Removes the given handler from the given routed event.
 		/// </summary>
 		/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
 		/// <param name="routedEvent">The routed event that should be handled.</param>
@@ -90,7 +90,7 @@
 		}
 
 		/// <summary>
-		///   Unsets the cached font object.
+		///     Unsets the cached font object.
 		/// </summary>
 		/// <param name="obj">The object defining the cached font object that should be unset.</param>
 		private static void UnsetCachedFont(object obj)
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given horizontal alignment is a valid value.
+		///     Checks whether the given horizontal alignment is a valid value.
 		/// </summary>
 		/// <param name="alignment">The alignment that should be checked.</param>
 		private static bool ValidateAlignment(HorizontalAlignment alignment)
@@ -113,7 +113,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given vertical alignment is a valid value.
+		///     Checks whether the given vertical alignment is a valid value.
 		/// </summary>
 		/// <param name="alignment">The alignment that should be checked.</param>
 		private static bool ValidateAlignment(VerticalAlignment alignment)
@@ -125,7 +125,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given value is a valid width or height value.
+		///     Checks whether the given value is a valid width or height value.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidateWidthHeight(double value)
@@ -135,7 +135,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given value is a valid minimum width or height value.
+		///     Checks whether the given value is a valid minimum width or height value.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidateMinWidthHeight(double value)
@@ -144,7 +144,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the given value is a valid maximum width or height value.
+		///     Checks whether the given value is a valid maximum width or height value.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidateMaxWidthHeight(double value)
@@ -153,8 +153,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when a resource within the resource dictionary has been replaced, added, or removed, invalidating all
-		///   resources for this UI element and all of its children.
+		///     Invoked when a resource within the resource dictionary has been replaced, added, or removed, invalidating all
+		///     resources for this UI element and all of its children.
 		/// </summary>
 		private void ResourceChanged(ResourceDictionary resources, object key)
 		{
@@ -162,7 +162,7 @@
 		}
 
 		/// <summary>
-		///   Raises the resources invalidated event for this UI element and all of its logical children.
+		///     Raises the resources invalidated event for this UI element and all of its logical children.
 		/// </summary>
 		private void InvalidateResources()
 		{
@@ -184,7 +184,7 @@
 		}
 
 		/// <summary>
-		///   Applies a style change to the UI element.
+		///     Applies a style change to the UI element.
 		/// </summary>
 		private static void OnStyleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Style> property)
 		{
@@ -207,7 +207,7 @@
 		}
 
 		/// <summary>
-		///   Binds the implicit style to the UI element, if no other style is set.
+		///     Binds the implicit style to the UI element, if no other style is set.
 		/// </summary>
 		private void BindImplicitStyle()
 		{
@@ -222,7 +222,7 @@
 		}
 
 		/// <summary>
-		///   Searches the tree for a resource with the given key.
+		///     Searches the tree for a resource with the given key.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be returned.</param>
 		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
@@ -244,7 +244,7 @@
 		}
 
 		/// <summary>
-		///   Searches the tree for a resource with the given key.
+		///     Searches the tree for a resource with the given key.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be returned.</param>
 		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
@@ -265,10 +265,10 @@
 		}
 
 		/// <summary>
-		///   Changes the logical parent of the UI element.
+		///     Changes the logical parent of the UI element.
 		/// </summary>
 		/// <param name="parent">
-		///   The new logical parent of the UI element. If null, the UI element is no longer part of the logical tree.
+		///     The new logical parent of the UI element. If null, the UI element is no longer part of the logical tree.
 		/// </param>
 		internal void ChangeLogicalParent(UIElement parent)
 		{
@@ -305,7 +305,7 @@
 		}
 
 		/// <summary>
-		///   Notifies all inheriting objects about a change of an inheriting dependency property.
+		///     Notifies all inheriting objects about a change of an inheriting dependency property.
 		/// </summary>
 		/// <param name="property">The inheriting dependency property that has been changed.</param>
 		/// <param name="newValue">The new value that should be inherited.</param>
@@ -316,7 +316,7 @@
 		}
 
 		/// <summary>
-		///   Sets a binding for the dependency property.
+		///     Sets a binding for the dependency property.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be set.</param>
@@ -331,7 +331,7 @@
 		}
 
 		/// <summary>
-		///   Creates a data binding.
+		///     Creates a data binding.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
@@ -350,7 +350,7 @@
 		}
 
 		/// <summary>
-		///   Creates a data binding with the UI element's view model as the source object.
+		///     Creates a data binding with the UI element's view model as the source object.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
 		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
@@ -365,7 +365,7 @@
 		}
 
 		/// <summary>
-		///   Creates a template binding.
+		///     Creates a template binding.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
@@ -381,7 +381,7 @@
 		}
 
 		/// <summary>
-		///   Creates a resource binding.
+		///     Creates a resource binding.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
 		/// <param name="key">The key of the resource that should be bound to the dependency property.</param>
@@ -395,13 +395,13 @@
 		}
 
 		/// <summary>
-		///   Updates the UI element's desired size. This method should be called from a parent UI element's MeasureCore method to
-		///   perform a the first pass of a recursive layout update.
+		///     Updates the UI element's desired size. This method should be called from a parent UI element's MeasureCore method to
+		///     perform a the first pass of a recursive layout update.
 		/// </summary>
 		/// <param name="availableSize">
-		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
-		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
-		///   element might be able to use scrolling in this case.
+		///     The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
+		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
+		///     element might be able to use scrolling in this case.
 		/// </param>
 		public void Measure(SizeD availableSize)
 		{
@@ -430,24 +430,24 @@
 		}
 
 		/// <summary>
-		///   Computes and returns the desired size of the element given the available space allocated by the parent UI element.
+		///     Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
 		/// <param name="availableSize">
-		///   The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
-		///   to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
-		///   element might be able to use scrolling in this case.
+		///     The available space that the parent UI element can allocate to this UI element. Can be infinity if the parent wants
+		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
+		///     element might be able to use scrolling in this case.
 		/// </param>
 		protected abstract SizeD MeasureCore(SizeD availableSize);
 
 		/// <summary>
-		///   Determines the size and position of the UI element and all of its children. This method should be called from a
-		///   parent UI element's ArrangeCore method to perform the second pass of a recursive layout update.
+		///     Determines the size and position of the UI element and all of its children. This method should be called from a
+		///     parent UI element's ArrangeCore method to perform the second pass of a recursive layout update.
 		/// </summary>
 		/// <param name="finalRect">The final size and position of the UI element.</param>
 		/// <remarks>
-		///   The first time a UI element is layouted, Measure is always called before Arrange. Later layout passes
-		///   triggered by some changes to the UI element's state might only call Arrange if the UI element's measurement remained
-		///   unaffected by the state change.
+		///     The first time a UI element is layouted, Measure is always called before Arrange. Later layout passes
+		///     triggered by some changes to the UI element's state might only call Arrange if the UI element's measurement remained
+		///     unaffected by the state change.
 		/// </remarks>
 		public void Arrange(RectangleD finalRect)
 		{
@@ -482,7 +482,7 @@
 		}
 
 		/// <summary>
-		///   Adapts the size of the UI element according to the layouting information.
+		///     Adapts the size of the UI element according to the layouting information.
 		/// </summary>
 		/// <param name="size">The size that should be adapted.</param>
 		/// <param name="availableSize">The size that is available to this UI element.</param>
@@ -510,18 +510,18 @@
 		}
 
 		/// <summary>
-		///   Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
-		///   element. If this value is smaller than the given size, the UI element's alignment properties position it
-		///   appropriately.
+		///     Determines the size of the UI element and positions all of its children. Returns the actual size used by the UI
+		///     element. If this value is smaller than the given size, the UI element's alignment properties position it
+		///     appropriately.
 		/// </summary>
 		/// <param name="finalSize">
-		///   The final area allocated by the UI element's parent that the UI element should use to arrange
-		///   itself and its children.
+		///     The final area allocated by the UI element's parent that the UI element should use to arrange
+		///     itself and its children.
 		/// </param>
 		protected abstract SizeD ArrangeCore(SizeD finalSize);
 
 		/// <summary>
-		///   Computes the alignment offset based on the available size and the actual size of the UI element.
+		///     Computes the alignment offset based on the available size and the actual size of the UI element.
 		/// </summary>
 		/// <param name="availableSize">The available size the UI element should be aligned in.</param>
 		private Vector2d ComputeAlignmentOffset(SizeD availableSize)
@@ -566,8 +566,8 @@
 		}
 
 		/// <summary>
-		///   Increases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and
-		///   3, the returned size has a width of 10 + 2 + 3 = 15.
+		///     Increases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and
+		///     3, the returned size has a width of 10 + 2 + 3 = 15.
 		/// </summary>
 		/// <param name="size">The size the thickness should be added to.</param>
 		private SizeD IncreaseByMargin(SizeD size)
@@ -577,8 +577,8 @@
 		}
 
 		/// <summary>
-		///   Decreases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and
-		///   3, the returned size has a width of 10 - 2 - 3 = 5.
+		///     Decreases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and
+		///     3, the returned size has a width of 10 - 2 - 3 = 5.
 		/// </summary>
 		/// <param name="size">The size the thickness should be added to.</param>
 		private SizeD DecreaseByMargin(SizeD size)
@@ -588,35 +588,35 @@
 		}
 
 		/// <summary>
-		///   Invoked when the UI element is attached to a new logical parent.
+		///     Invoked when the UI element is attached to a new logical parent.
 		/// </summary>
 		protected virtual void OnAttached()
 		{
 		}
 
 		/// <summary>
-		///   Invoked when the UI element is now (transitively) attached to the root of a visual tree.
+		///     Invoked when the UI element is now (transitively) attached to the root of a visual tree.
 		/// </summary>
 		protected virtual void OnAttachedToRoot()
 		{
 		}
 
 		/// <summary>
-		///   Invoked when the UI element has been detached from its current logical parent.
+		///     Invoked when the UI element has been detached from its current logical parent.
 		/// </summary>
 		protected virtual void OnDetached()
 		{
 		}
 
 		/// <summary>
-		///   Invoked when the UI element is no longer (transitively) attached to the root of a visual tree.
+		///     Invoked when the UI element is no longer (transitively) attached to the root of a visual tree.
 		/// </summary>
 		protected virtual void OnDetachedFromRoot()
 		{
 		}
 
 		/// <summary>
-		/// Invoked when the size of the UI element has changed.
+		///     Invoked when the size of the UI element has changed.
 		/// </summary>
 		/// <param name="oldSize">The old size of the UI element.</param>
 		/// <param name="newSize">The new size of the UI element.</param>
@@ -625,14 +625,14 @@
 		}
 
 		/// <summary>
-		///   Invoked when the visual children of the UI element have changed.
+		///     Invoked when the visual children of the UI element have changed.
 		/// </summary>
 		protected internal virtual void OnVisualChildrenChanged()
 		{
 		}
 
 		/// <summary>
-		///   Gets the visual child at the specified index.
+		///     Gets the visual child at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the visual child that should be returned.</param>
 		protected internal virtual UIElement GetVisualChild(int index)

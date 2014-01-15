@@ -4,22 +4,22 @@
 	using System.Collections.ObjectModel;
 
 	/// <summary>
-	///   Represents an ordered collection of UI elements.
+	///     Represents an ordered collection of UI elements.
 	/// </summary>
 	public class UIElementCollection : Collection<UIElement>
 	{
 		/// <summary>
-		///   The logical parent of the UI elements contained in the collection.
+		///     The logical parent of the UI elements contained in the collection.
 		/// </summary>
 		private readonly UIElement _logicalParent;
 
 		/// <summary>
-		///   The version of the collection. Each modification of the collection increments the version number by one.
+		///     The version of the collection. Each modification of the collection increments the version number by one.
 		/// </summary>
 		private int _version;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="logicalParent">The logical parent of the UI elements contained in the collection.</param>
 		public UIElementCollection(UIElement logicalParent)
@@ -29,7 +29,7 @@
 		}
 
 		/// <summary>
-		///   Removes all elements from the collection.
+		///     Removes all elements from the collection.
 		/// </summary>
 		protected override void ClearItems()
 		{
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Inserts an element into the collection at the specified index.
+		///     Inserts an element into the collection at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index at which the item that should be inserted.</param>
 		/// <param name="item">The item that should be inserted.</param>
@@ -59,13 +59,13 @@
 		}
 
 		/// <summary>
-		///   Removes the element at the specified index of the collection.
+		///     Removes the element at the specified index of the collection.
 		/// </summary>
 		/// <param name="index">The zero-based index of the element that should be removed.</param>
 		protected override void RemoveItem(int index)
 		{
 			this[index].ChangeLogicalParent(null);
-			
+
 			++_version;
 			base.RemoveItem(index);
 
@@ -73,7 +73,7 @@
 		}
 
 		/// <summary>
-		///   Replaces the element at the specified index.
+		///     Replaces the element at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the element that should be replaced.</param>
 		/// <param name="item">The new value for the element at the specified index.</param>
@@ -91,7 +91,7 @@
 		}
 
 		/// <summary>
-		///   Gets an enumerator for the collection.
+		///     Gets an enumerator for the collection.
 		/// </summary>
 		public new Enumerator GetEnumerator()
 		{
@@ -99,42 +99,42 @@
 		}
 
 		/// <summary>
-		///   Enumerates an UI element collection.
+		///     Enumerates an UI element collection.
 		/// </summary>
 		public struct Enumerator
 		{
 			/// <summary>
-			///   Represents an enumerator that does not enumerate any elements.
+			///     Represents an enumerator that does not enumerate any elements.
 			/// </summary>
 			public static readonly Enumerator Empty = new Enumerator();
 
 			/// <summary>
-			///   The elements that are enumerated.
+			///     The elements that are enumerated.
 			/// </summary>
 			private UIElementCollection _collection;
 
 			/// <summary>
-			///   The index of the current enumerated element.
+			///     The index of the current enumerated element.
 			/// </summary>
 			private int _current;
 
 			/// <summary>
-			///   The single element that is enumerated.
+			///     The single element that is enumerated.
 			/// </summary>
 			private UIElement _singleElement;
 
 			/// <summary>
-			///   The version of the collection when the enumerator was created.
+			///     The version of the collection when the enumerator was created.
 			/// </summary>
 			private int _version;
 
 			/// <summary>
-			///   Gets the element at the current position of the enumerator.
+			///     Gets the element at the current position of the enumerator.
 			/// </summary>
 			public UIElement Current { get; private set; }
 
 			/// <summary>
-			///   Creates an enumerator for a single UI element.
+			///     Creates an enumerator for a single UI element.
 			/// </summary>
 			/// <param name="element">The UI element that should be enumerated.</param>
 			public static Enumerator FromElement(UIElement element)
@@ -144,7 +144,7 @@
 			}
 
 			/// <summary>
-			///   Creates an enumerator for a single UI element.
+			///     Creates an enumerator for a single UI element.
 			/// </summary>
 			/// <param name="collection">The UI elements that should be enumerated.</param>
 			public static Enumerator FromElements(UIElementCollection collection)
@@ -154,7 +154,7 @@
 			}
 
 			/// <summary>
-			///   Advances the enumerator to the next UI element.
+			///     Advances the enumerator to the next UI element.
 			/// </summary>
 			public bool MoveNext()
 			{
@@ -186,10 +186,10 @@
 			}
 
 			/// <summary>
-			///   Gets the enumerator that can be used with C#'s foreach loops.
+			///     Gets the enumerator that can be used with C#'s foreach loops.
 			/// </summary>
 			/// <remarks>
-			///   This method just returns the enumerator object. It is only required to enable foreach support.
+			///     This method just returns the enumerator object. It is only required to enable foreach support.
 			/// </remarks>
 			public Enumerator GetEnumerator()
 			{

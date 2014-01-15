@@ -5,37 +5,37 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a camera that can be used to draw 3D scenes.
+	///     Represents a camera that can be used to draw 3D scenes.
 	/// </summary>
 	public class Camera3D : Camera
 	{
 		/// <summary>
-		///   The distance to the far clipping plane.
+		///     The distance to the far clipping plane.
 		/// </summary>
 		private float _farDistance;
 
 		/// <summary>
-		///   The field of view of the camera in radians.
+		///     The field of view of the camera in radians.
 		/// </summary>
 		private float _fieldOfView;
 
 		/// <summary>
-		///   The distance to the near clipping plane.
+		///     The distance to the near clipping plane.
 		/// </summary>
 		private float _nearDistance;
 
 		/// <summary>
-		///   The target the camera looks at.
+		///     The target the camera looks at.
 		/// </summary>
 		private Vector3 _target;
 
 		/// <summary>
-		///   The up vector.
+		///     The up vector.
 		/// </summary>
 		private Vector3 _up;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		public Camera3D(GraphicsDevice graphicsDevice)
@@ -46,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the target the camera looks at.
+		///     Gets or sets the target the camera looks at.
 		/// </summary>
 		public Vector3 Target
 		{
@@ -59,7 +59,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the up vector.
+		///     Gets or sets the up vector.
 		/// </summary>
 		public Vector3 Up
 		{
@@ -72,7 +72,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the field of view of the camera in radians.
+		///     Gets or sets the field of view of the camera in radians.
 		/// </summary>
 		public float FieldOfView
 		{
@@ -85,7 +85,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the distance to the far clipping plane.
+		///     Gets or sets the distance to the far clipping plane.
 		/// </summary>
 		public float FarDistance
 		{
@@ -98,7 +98,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the distance to the near clipping plane.
+		///     Gets or sets the distance to the near clipping plane.
 		/// </summary>
 		public float NearDistance
 		{
@@ -111,7 +111,7 @@
 		}
 
 		/// <summary>
-		///   Updates the projection matrix based on the current camera configuration.
+		///     Updates the projection matrix based on the current camera configuration.
 		/// </summary>
 		protected override void UpdateProjectionMatrixCore()
 		{
@@ -119,7 +119,7 @@
 		}
 
 		/// <summary>
-		///   Updates the view matrix based on the current camera configuration.
+		///     Updates the view matrix based on the current camera configuration.
 		/// </summary>
 		protected override void UpdateViewMatrixCore()
 		{

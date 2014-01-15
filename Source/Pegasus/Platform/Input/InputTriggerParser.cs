@@ -5,15 +5,15 @@
 	using Scripting.Parsing;
 
 	/// <summary>
-	///   Parses input trigger expressions. The precedence of the three operators '+', '&', and '|' is encoded in the grammar,
-	///   where the precedence of '+' is higher than the precedence of '&', which is higher than the precedence of '|'. All
-	///   three operators are left-associative. As the parser rules correspond to C#'s operator rules, an expression
-	///   parsed by the parser describes the same input trigger as if it had been written directly in C#.
+	///     Parses input trigger expressions. The precedence of the three operators '+', '&', and '|' is encoded in the grammar,
+	///     where the precedence of '+' is higher than the precedence of '&', which is higher than the precedence of '|'. All
+	///     three operators are left-associative. As the parser rules correspond to C#'s operator rules, an expression
+	///     parsed by the parser describes the same input trigger as if it had been written directly in C#.
 	/// </summary>
 	internal class InputTriggerParser : CombinedParser<InputTrigger>
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public InputTriggerParser()
 		{
@@ -63,7 +63,7 @@
 		}
 
 		/// <summary>
-		///   Creates a parser for a binary trigger.
+		///     Creates a parser for a binary trigger.
 		/// </summary>
 		/// <param name="operandParser">The parser for the binary trigger operands.</param>
 		/// <param name="operatorParser">The parser for the binary trigger operator.</param>

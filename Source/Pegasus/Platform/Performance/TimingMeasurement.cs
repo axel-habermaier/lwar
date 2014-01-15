@@ -4,27 +4,27 @@
 	using System.Text;
 
 	/// <summary>
-	///   Represents a timing measurement that is averaged over a certain number of frames.
+	///     Represents a timing measurement that is averaged over a certain number of frames.
 	/// </summary>
 	public class TimingMeasurement : IMeasurement
 	{
 		/// <summary>
-		///   The number of samples for the computation of the average.
+		///     The number of samples for the computation of the average.
 		/// </summary>
 		private const int AverageSamples = 32;
 
 		/// <summary>
-		///   The averaged value of the timing measurements.
+		///     The averaged value of the timing measurements.
 		/// </summary>
 		private readonly AveragedDouble _value = new AveragedDouble("ms", AverageSamples);
 
 		/// <summary>
-		///   The timestamp at the beginning of the measurement.
+		///     The timestamp at the beginning of the measurement.
 		/// </summary>
 		private double _beginTime;
 
 		/// <summary>
-		///   Invoked when the measurement should begin.
+		///     Invoked when the measurement should begin.
 		/// </summary>
 		public void Begin()
 		{
@@ -32,7 +32,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the measurement should end.
+		///     Invoked when the measurement should end.
 		/// </summary>
 		public void End()
 		{
@@ -40,7 +40,7 @@
 		}
 
 		/// <summary>
-		///   Writes the results of the measurement into the given string builder.
+		///     Writes the results of the measurement into the given string builder.
 		/// </summary>
 		/// <param name="builder">The string builder the results should be written to.</param>
 		public void WriteResults(StringBuilder builder)

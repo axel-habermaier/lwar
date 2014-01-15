@@ -5,47 +5,46 @@
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
-	using Assets;
 	using CSharp;
 	using Platform.Memory;
 
 	/// <summary>
-	///   Generates a C# class from a registry specification interface.
+	///     Generates a C# class from a registry specification interface.
 	/// </summary>
 	public class RegistryGenerator : IDisposable
 	{
 		/// <summary>
-		///   The registry project.
+		///     The registry project.
 		/// </summary>
 		private RegistryProject _project;
 
 		/// <summary>
-		///   Gets the errors that have been raised during the compilation.
+		///     Gets the errors that have been raised during the compilation.
 		/// </summary>
 		public IEnumerable<string> Errors { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the source file from which the code is generated.
+		///     Gets or sets the source file from which the code is generated.
 		/// </summary>
 		public string SourceFile { get; set; }
 
 		/// <summary>
-		///   Gets or sets the file defining the cvars or commands that should be imported.
+		///     Gets or sets the file defining the cvars or commands that should be imported.
 		/// </summary>
 		public string Import { get; set; }
 
 		/// <summary>
-		///   Gets the generated code.
+		///     Gets the generated code.
 		/// </summary>
 		public string GeneratedCode { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the namespace in which the generated class should live.
+		///     Gets or sets the namespace in which the generated class should live.
 		/// </summary>
 		public string Namespace { get; set; }
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		public void Dispose()
 		{
@@ -53,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Generates the registry C# class.
+		///     Generates the registry C# class.
 		/// </summary>
 		public void GenerateRegistry()
 		{
@@ -73,14 +72,14 @@
 		}
 
 		/// <summary>
-		///   Gets the imported registry.
+		///     Gets the imported registry.
 		/// </summary>
 		private Registry GetImportedRegistry()
 		{
 			if (String.IsNullOrWhiteSpace(Import))
 				return new Registry();
 
-			using (var project = new RegistryProject { CSharpFiles = new[] { new CSharpFile("", Import),  } })
+			using (var project = new RegistryProject { CSharpFiles = new[] { new CSharpFile("", Import), } })
 			{
 				RegistryFile[] file;
 				project.TryGetValidatedFiles(out file);

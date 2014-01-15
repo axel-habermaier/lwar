@@ -4,17 +4,17 @@
 	using System.Collections.Generic;
 
 	/// <summary>
-	///   Represents an object that exposes dependency properties.
+	///     Represents an object that exposes dependency properties.
 	/// </summary>
 	public abstract class DependencyObject
 	{
 		/// <summary>
-		///   Stores the values of the dependency object's dependency properties.
+		///     Stores the values of the dependency object's dependency properties.
 		/// </summary>
 		private DependencyPropertyStore _propertyStore = new DependencyPropertyStore();
 
 		/// <summary>
-		///   Sets the value of the dependency property.
+		///     Sets the value of the dependency property.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be set.</param>
@@ -26,7 +26,7 @@
 		}
 
 		/// <summary>
-		///   Sets the inherited value of the dependency property.
+		///     Sets the inherited value of the dependency property.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be set.</param>
@@ -40,7 +40,7 @@
 		}
 
 		/// <summary>
-		///   Sets the value of the dependency property originating from a style setter.
+		///     Sets the value of the dependency property originating from a style setter.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be set.</param>
@@ -52,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Sets the value of the dependency property originating from a style setter being triggered.
+		///     Sets the value of the dependency property originating from a style setter being triggered.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be set.</param>
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Sets the value of the dependency property originating from an animation.
+		///     Sets the value of the dependency property originating from an animation.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be set.</param>
@@ -78,7 +78,7 @@
 		}
 
 		/// <summary>
-		///   Sets a binding for the dependency property.
+		///     Sets a binding for the dependency property.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be set.</param>
@@ -93,7 +93,7 @@
 		}
 
 		/// <summary>
-		///   Sets the value of the dependency property originating from a binding.
+		///     Sets the value of the dependency property originating from a binding.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be set.</param>
@@ -105,7 +105,7 @@
 		}
 
 		/// <summary>
-		///   Unsets the last value of the dependency property that originated from a style.
+		///     Unsets the last value of the dependency property that originated from a style.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be unset.</param>
@@ -116,7 +116,7 @@
 		}
 
 		/// <summary>
-		///   Unsets the inherited value of the dependency property.
+		///     Unsets the inherited value of the dependency property.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be unset.</param>
@@ -129,7 +129,7 @@
 		}
 
 		/// <summary>
-		///   Unsets the last value of the dependency property that originated from a style setter being triggered.
+		///     Unsets the last value of the dependency property that originated from a style setter being triggered.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be unset.</param>
@@ -140,7 +140,7 @@
 		}
 
 		/// <summary>
-		///   Unsets the last value of the dependency property that originated from an animation.
+		///     Unsets the last value of the dependency property that originated from an animation.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be unset.</param>
@@ -153,7 +153,7 @@
 		}
 
 		/// <summary>
-		///   Unsets the current binding of the dependency property.
+		///     Unsets the current binding of the dependency property.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose binding should be removed.</param>
@@ -163,7 +163,7 @@
 		}
 
 		/// <summary>
-		///   Gets the value of the dependency property.
+		///     Gets the value of the dependency property.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be returned.</param>
@@ -181,7 +181,7 @@
 		}
 
 		/// <summary>
-		///   Gets the current effective value of the dependency property. Returns true to indicate that an effective value is set.
+		///     Gets the current effective value of the dependency property. Returns true to indicate that an effective value is set.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property whose value should be returned.</param>
@@ -202,7 +202,7 @@
 		}
 
 		/// <summary>
-		///   Adds the change handler to the dependency property's changed event.
+		///     Adds the change handler to the dependency property's changed event.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the change handler should be added to.</param>
@@ -216,7 +216,7 @@
 		}
 
 		/// <summary>
-		///   Removes the change handler from the dependency property's changed event.
+		///     Removes the change handler from the dependency property's changed event.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <param name="property">The dependency property the change handler should be removed from.</param>
@@ -232,7 +232,7 @@
 		}
 
 		/// <summary>
-		/// Changes the activation state of all bindings that are set on any of the dependency object's dependency properties.
+		///     Changes the activation state of all bindings that are set on any of the dependency object's dependency properties.
 		/// </summary>
 		/// <param name="activated">Indicates whether the bindings should be activated.</param>
 		internal void SetBindingsActivationState(bool activated)
@@ -241,14 +241,14 @@
 		}
 
 		/// <summary>
-		///   Notifies all inheriting objects about a change of an inheriting dependency property.
+		///     Notifies all inheriting objects about a change of an inheriting dependency property.
 		/// </summary>
 		/// <param name="property">The inheriting dependency property that has been changed.</param>
 		/// <param name="newValue">The new value that should be inherited.</param>
 		protected abstract void InheritedValueChanged<T>(DependencyProperty<T> property, T newValue);
 
 		/// <summary>
-		///   Invalidates the inherited values of all inheriting dependency properties.
+		///     Invalidates the inherited values of all inheriting dependency properties.
 		/// </summary>
 		/// <param name="inheritedObject">The new inherited dependency object.</param>
 		protected void InvalidateInheritedValues(DependencyObject inheritedObject)
@@ -260,33 +260,33 @@
 		}
 
 		/// <summary>
-		///   Abuses the IDisposable interface to allow for a more streamlined implementation of the many Set*Value and Unset*Value
-		///   methods that set or unset a dependency property's value.
+		///     Abuses the IDisposable interface to allow for a more streamlined implementation of the many Set*Value and Unset*Value
+		///     methods that set or unset a dependency property's value.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
 		/// <remarks>
-		///   Alternative implementations would rely on virtual methods or delegates, which probably introduce too much
-		///   overhead.
+		///     Alternative implementations would rely on virtual methods or delegates, which probably introduce too much
+		///     overhead.
 		/// </remarks>
 		private struct DependencyPropertyValueSetter<T> : IDisposable
 		{
 			/// <summary>
-			///   The dependency object for which the value is be changed.
+			///     The dependency object for which the value is be changed.
 			/// </summary>
 			private readonly DependencyObject _object;
 
 			/// <summary>
-			///   The old value of the dependency property before the change was made.
+			///     The old value of the dependency property before the change was made.
 			/// </summary>
 			private readonly T _oldValue;
 
 			/// <summary>
-			///   The dependency property that is about to change its value.
+			///     The dependency property that is about to change its value.
 			/// </summary>
 			private readonly DependencyProperty<T> _property;
 
 			/// <summary>
-			///   Initializes a new instance.
+			///     Initializes a new instance.
 			/// </summary>
 			/// <param name="obj">The dependency object for which the value should be changed.</param>
 			/// <param name="property">The dependency property that is about to change its value.</param>
@@ -298,7 +298,7 @@
 			}
 
 			/// <summary>
-			///   Initializes a new instance.
+			///     Initializes a new instance.
 			/// </summary>
 			/// <param name="obj">The dependency object for which the value should be changed.</param>
 			/// <param name="property">The dependency property that is about to change its value.</param>
@@ -316,12 +316,12 @@
 			}
 
 			/// <summary>
-			///   Gets the property value instance for the dependency object's dependency property.
+			///     Gets the property value instance for the dependency object's dependency property.
 			/// </summary>
 			public DependencyPropertyValue<T> PropertyValue { get; private set; }
 
 			/// <summary>
-			///   Raises the changed event if the property's value has changed.
+			///     Raises the changed event if the property's value has changed.
 			/// </summary>
 			public void Dispose()
 			{

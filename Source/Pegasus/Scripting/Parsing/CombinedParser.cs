@@ -3,18 +3,18 @@
 	using System;
 
 	/// <summary>
-	///   An abstract base class for the implementation of combined parsers.
+	///     An abstract base class for the implementation of combined parsers.
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser result.</typeparam>
 	public abstract class CombinedParser<TResult> : Parser<TResult>
 	{
 		/// <summary>
-		///   Gets or sets the combined parser.
+		///     Gets or sets the combined parser.
 		/// </summary>
 		protected Parser<TResult> Parser { get; set; }
 
 		/// <summary>
-		///   Parses the given input string and returns the parser's reply.
+		///     Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override sealed Reply<TResult> Parse(InputStream inputStream)

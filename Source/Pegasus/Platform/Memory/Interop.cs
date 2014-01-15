@@ -5,7 +5,7 @@
 	using System.Security;
 
 	/// <summary>
-	///   Provides access to certain native functions in a platform-independent way.
+	///     Provides access to certain native functions in a platform-independent way.
 	/// </summary>
 #if !DEBUG
 	[SuppressUnmanagedCodeSecurity]
@@ -13,7 +13,7 @@
 	internal static class Interop
 	{
 		/// <summary>
-		///   Copies count bytes from the source to the destination.
+		///     Copies count bytes from the source to the destination.
 		/// </summary>
 		/// <param name="dest">The address of the first byte that should be written.</param>
 		/// <param name="src">The address of the first byte that should be read.</param>

@@ -424,7 +424,6 @@
     <Compile Include="Xaml\IXamlType.cs" />
     <Compile Include="Xaml\XamlClass.cs" />
     <Compile Include="Xaml\XamlEnumeration.cs" />
-    <Compile Include="Xaml\XamlLiteral.cs" />
     <Compile Include="Xaml\XamlPrimitiveType.cs" />
     <Compile Include="Xaml\XamlProperty.cs" />
     <Compile Include="Xaml\XamlType.cs" />

@@ -3,13 +3,13 @@
 	using System;
 
 	/// <summary>
-	///   Parses a string literal enclosed in double quotes. Double quotes can be used inside the string literal if they are
-	///   escaped by a backslash '\"'.
+	///     Parses a string literal enclosed in double quotes. Double quotes can be used inside the string literal if they are
+	///     escaped by a backslash '\"'.
 	/// </summary>
 	public class QuotedStringParser : Parser<string>
 	{
 		/// <summary>
-		///   Parses the given input string and returns the parser's reply.
+		///     Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<string> Parse(InputStream inputStream)

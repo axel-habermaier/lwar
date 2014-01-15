@@ -3,32 +3,32 @@
 	using System;
 
 	/// <summary>
-	///   Determines the type of a mouse input trigger.
+	///     Determines the type of a mouse input trigger.
 	/// </summary>
 	internal enum MouseTriggerType
 	{
 		/// <summary>
-		///   Indicates that the mouse trigger triggers when the mouse button is released.
+		///     Indicates that the mouse trigger triggers when the mouse button is released.
 		/// </summary>
 		Released,
 
 		/// <summary>
-		///   Indicates that the mouse trigger triggers when the mouse button is pressed.
+		///     Indicates that the mouse trigger triggers when the mouse button is pressed.
 		/// </summary>
 		Pressed,
 
 		/// <summary>
-		///   Indicates that the mouse trigger triggers when the mouse button went down.
+		///     Indicates that the mouse trigger triggers when the mouse button went down.
 		/// </summary>
 		WentDown,
 
 		/// <summary>
-		///   Indicates that the mouse trigger triggers when the mouse button went up.
+		///     Indicates that the mouse trigger triggers when the mouse button went up.
 		/// </summary>
 		WentUp,
 
 		/// <summary>
-		///   Indicates that the mouse trigger triggers when the mouse button has been double-clicked.
+		///     Indicates that the mouse trigger triggers when the mouse button has been double-clicked.
 		/// </summary>
 		DoubleClicked
 	}

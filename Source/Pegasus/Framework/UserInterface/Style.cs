@@ -3,29 +3,29 @@
 	using System;
 
 	/// <summary>
-	///   Enables sharing of dependency property values between different dependency objects.
+	///     Enables sharing of dependency property values between different dependency objects.
 	/// </summary>
 	public sealed class Style : ISealable
 	{
 		/// <summary>
-		///   The collection of setters that apply property values.
+		///     The collection of setters that apply property values.
 		/// </summary>
 		private SealableCollection<Setter> _setters = SealableCollection<Setter>.Empty;
 
 		/// <summary>
-		///   The triggers that apply property values only when certain conditions hold.
+		///     The triggers that apply property values only when certain conditions hold.
 		/// </summary>
 		private SealableCollection<Trigger> _triggers = SealableCollection<Trigger>.Empty;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public Style()
 		{
 		}
 
 		/// <summary>
-		///   Initializes a new style instance, based on the given style.
+		///     Initializes a new style instance, based on the given style.
 		/// </summary>
 		/// <param name="baseStyle">The style instance the current style is based on, inheriting all of its setters and triggers.</param>
 		public Style(Style baseStyle)
@@ -39,12 +39,12 @@
 		}
 
 		/// <summary>
-		///   Gets the base style of this style, or null if there is none.
+		///     Gets the base style of this style, or null if there is none.
 		/// </summary>
 		public Style BaseStyle { get; private set; }
 
 		/// <summary>
-		///   Gets the collection of setters that apply property values.
+		///     Gets the collection of setters that apply property values.
 		/// </summary>
 		public SealableCollection<Setter> Setters
 		{
@@ -61,7 +61,7 @@
 		}
 
 		/// <summary>
-		///   Gets the triggers that apply property values only when certain conditions hold.
+		///     Gets the triggers that apply property values only when certain conditions hold.
 		/// </summary>
 		public SealableCollection<Trigger> Triggers
 		{
@@ -78,12 +78,12 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the style is sealed and can no longer be modified.
+		///     Gets a value indicating whether the style is sealed and can no longer be modified.
 		/// </summary>
 		public bool IsSealed { get; private set; }
 
 		/// <summary>
-		///   Seals the object such that it can no longer be modified.
+		///     Seals the object such that it can no longer be modified.
 		/// </summary>
 		public void Seal()
 		{
@@ -99,7 +99,7 @@
 		}
 
 		/// <summary>
-		///   Applies the style to the given UI element.
+		///     Applies the style to the given UI element.
 		/// </summary>
 		/// <param name="element">The UI element the style should be applied to.</param>
 		internal void Apply(UIElement element)
@@ -116,7 +116,7 @@
 		}
 
 		/// <summary>
-		///   Unsets the style from the given UI element.
+		///     Unsets the style from the given UI element.
 		/// </summary>
 		/// <param name="element">The UI element the style should be unset from.</param>
 		internal void Unset(UIElement element)
@@ -131,8 +131,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the triggered state of a trigger has potentially changed. In that case, we have to reapply all triggers
-		///   in order to guarantee that the correct triggered value is set.
+		///     Invoked when the triggered state of a trigger has potentially changed. In that case, we have to reapply all triggers
+		///     in order to guarantee that the correct triggered value is set.
 		/// </summary>
 		/// <param name="element">The UI element for which the triggered state has changed.</param>
 		private void OnTriggerStateChanged(UIElement element)
@@ -150,7 +150,7 @@
 		}
 
 		/// <summary>
-		///   Registers the trigger state changed event handler for all triggers of the style.
+		///     Registers the trigger state changed event handler for all triggers of the style.
 		/// </summary>
 		private void RegisterTriggerStateChangedEvents()
 		{
@@ -159,7 +159,7 @@
 		}
 
 		/// <summary>
-		///   Recursively copies all setters and triggers of the base style to this instance.
+		///     Recursively copies all setters and triggers of the base style to this instance.
 		/// </summary>
 		/// <param name="baseStyle">The base style that should be copied.</param>
 		private void CopyBaseStyle(Style baseStyle)

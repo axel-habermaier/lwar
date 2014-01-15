@@ -166,7 +166,7 @@
 		}
 
 		/// <summary>
-		///     Gets the documentation of the given node. Only documentation comments immediately preceeding the given node are
+		///     Gets the documentation of the given node. Only documentation comments immediately preceding the given node are
 		///     returned.
 		/// </summary>
 		/// <param name="node">The node whose documentation should be returned.</param>

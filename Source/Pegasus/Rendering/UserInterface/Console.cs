@@ -9,77 +9,77 @@
 	using Scripting;
 
 	/// <summary>
-	///   A Quake-like in-game console.
+	///     A Quake-like in-game console.
 	/// </summary>
 	internal sealed class Console : DisposableObject
 	{
 		/// <summary>
-		///   The maximum length of all console input or output.
+		///     The maximum length of all console input or output.
 		/// </summary>
 		public const int MaxLength = 4096;
 
 		/// <summary>
-		///   The display color of error messages.
+		///     The display color of error messages.
 		/// </summary>
 		private static readonly Color ErrorColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);
 
 		/// <summary>
-		///   The display color of warnings.
+		///     The display color of warnings.
 		/// </summary>
 		private static readonly Color WarningColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);
 
 		/// <summary>
-		///   The display color of normal messages.
+		///     The display color of normal messages.
 		/// </summary>
 		private static readonly Color InfoColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
 		/// <summary>
-		///   The background color of the console.
+		///     The background color of the console.
 		/// </summary>
 		private static readonly Color BackgroundColor = new Color(0xEE333333);
 
 		/// <summary>
-		///   The display color of debug messages.
+		///     The display color of debug messages.
 		/// </summary>
 		private static readonly Color DebugInfoColor = new Color(1.0f, 0.0f, 1.0f, 1.0f);
 
 		/// <summary>
-		///   The font used by the console.
+		///     The font used by the console.
 		/// </summary>
 		private readonly Font _font;
 
 		/// <summary>
-		///   The current input for the console.
+		///     The current input for the console.
 		/// </summary>
 		private readonly ConsoleInput _input;
 
 		/// <summary>
-		///   The console's prompt.
+		///     The console's prompt.
 		/// </summary>
 		private readonly ConsolePrompt _prompt;
 
 		/// <summary>
-		///   Indicates whether the console is currently active.
+		///     Indicates whether the console is currently active.
 		/// </summary>
 		private bool _active;
 
 		/// <summary>
-		///   The console's content.
+		///     The console's content.
 		/// </summary>
 		private ConsoleContent _content;
 
 		/// <summary>
-		///   The margin between the console borders and the rows.
+		///     The margin between the console borders and the rows.
 		/// </summary>
 		private Size _margin = new Size(5, 5);
 
 		/// <summary>
-		///   The current size of the console.
+		///     The current size of the console.
 		/// </summary>
 		private Size _size;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="inputDevice">The input device that provides the user input.</param>
@@ -108,7 +108,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the console is currently active.
+		///     Gets or sets a value indicating whether the console is currently active.
 		/// </summary>
 		private bool Active
 		{
@@ -125,7 +125,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -145,7 +145,7 @@
 		}
 
 		/// <summary>
-		///   Invoked whenever a printable character is entered.
+		///     Invoked whenever a printable character is entered.
 		/// </summary>
 		/// <param name="c">The character that has been entered.</param>
 		private void OnCharEntered(char c)
@@ -155,7 +155,7 @@
 		}
 
 		/// <summary>
-		///   Invoked whenever a key is pressed.
+		///     Invoked whenever a key is pressed.
 		/// </summary>
 		/// <param name="key">The key that was pressed.</param>
 		private void OnKeyPressed(KeyEventArgs key)
@@ -165,7 +165,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the user used the mouse wheel to scroll.
+		///     Invoked when the user used the mouse wheel to scroll.
 		/// </summary>
 		/// <param name="delta">The delta that the mouse wheel has been moved.</param>
 		private void OnMouseWheelMoved(int delta)
@@ -180,7 +180,7 @@
 		}
 
 		/// <summary>
-		///   Draws the console.
+		///     Draws the console.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the console.</param>
 		public void Draw(SpriteBatch spriteBatch)
@@ -205,7 +205,7 @@
 		}
 
 		/// <summary>
-		///   Updates the console.
+		///     Updates the console.
 		/// </summary>
 		/// <param name="size">The size of the area that the console should be drawn on.</param>
 		internal void Update(Size size)
@@ -229,7 +229,7 @@
 		}
 
 		/// <summary>
-		///   Handles the user input relevant to the console of the given device.
+		///     Handles the user input relevant to the console of the given device.
 		/// </summary>
 		private void HandleInput()
 		{
@@ -289,7 +289,7 @@
 		}
 
 		/// <summary>
-		///   Shows or hides the console.
+		///     Shows or hides the console.
 		/// </summary>
 		/// <param name="show">Indicates whether the console should be shown.</param>
 		private void ShowConsole(bool show)
@@ -298,7 +298,7 @@
 		}
 
 		/// <summary>
-		///   Outputs an error on the console.
+		///     Outputs an error on the console.
 		/// </summary>
 		/// <param name="entry">The log entry that should be displayed.</param>
 		public void ShowError(LogEntry entry)
@@ -307,7 +307,7 @@
 		}
 
 		/// <summary>
-		///   Outputs a warning on the console.
+		///     Outputs a warning on the console.
 		/// </summary>
 		/// <param name="entry">The warning that should be displayed.</param>
 		public void ShowWarning(LogEntry entry)
@@ -316,7 +316,7 @@
 		}
 
 		/// <summary>
-		///   Outputs an informational message on the console.
+		///     Outputs an informational message on the console.
 		/// </summary>
 		/// <param name="entry">The message that should be displayed.</param>
 		public void ShowInfo(LogEntry entry)
@@ -325,7 +325,7 @@
 		}
 
 		/// <summary>
-		///   Outputs a debug message on the console.
+		///     Outputs a debug message on the console.
 		/// </summary>
 		/// <param name="entry">The warning that should be displayed.</param>
 		public void ShowDebugInfo(LogEntry entry)
@@ -334,7 +334,7 @@
 		}
 
 		/// <summary>
-		///   Shows the given entry on the console.
+		///     Shows the given entry on the console.
 		/// </summary>
 		/// <param name="entry">The entry that should be shown.</param>
 		/// <param name="color">The color that should be used to colorize the message.</param>

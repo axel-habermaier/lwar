@@ -3,27 +3,27 @@
 	using System;
 
 	/// <summary>
-	///   Parses a string that satisfies the given predicates. The parser fails if not at least one character can be parsed.
+	///     Parses a string that satisfies the given predicates. The parser fails if not at least one character can be parsed.
 	/// </summary>
 	public class StringParser : Parser<string>
 	{
 		/// <summary>
-		///   A description describing the expected input in the case of a parser error.
+		///     A description describing the expected input in the case of a parser error.
 		/// </summary>
 		private readonly string _description;
 
 		/// <summary>
-		///   The predicate that the first character of the parsed string must satisfy.
+		///     The predicate that the first character of the parsed string must satisfy.
 		/// </summary>
 		private readonly Func<char, bool> _firstCharacter;
 
 		/// <summary>
-		///   The predicate that all but the first character of the parsed string must satisfy.
+		///     The predicate that all but the first character of the parsed string must satisfy.
 		/// </summary>
 		private readonly Func<char, bool> _otherCharacters;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="firstCharacter">The predicate that the first character of the parsed string must satisfy.</param>
 		/// <param name="otherCharacters">The predicate that all but the first character of the parsed string must satisfy.</param>
@@ -36,7 +36,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="characters">The predicate that all characters of the parsed string must satisfy.</param>
 		/// <param name="description">A description describing the expected input in the case of a parser error.</param>
@@ -48,7 +48,7 @@
 		}
 
 		/// <summary>
-		///   Parses the given input string and returns the parser's reply.
+		///     Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<string> Parse(InputStream inputStream)

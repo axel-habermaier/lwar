@@ -3,17 +3,17 @@
 	using System;
 
 	/// <summary>
-	///   Parses a Boolean value (either 'true'/'false', '1'/'0', or 'on'/'off').
+	///     Parses a Boolean value (either 'true'/'false', '1'/'0', or 'on'/'off').
 	/// </summary>
 	public class BooleanParser : Parser<bool>
 	{
 		/// <summary>
-		///   The error message that is displayed if the parser failed.
+		///     The error message that is displayed if the parser failed.
 		/// </summary>
 		internal const string ErrorMessage = "Boolean value (either 'true'/'false', '1'/'0', or 'on'/'off')";
 
 		/// <summary>
-		///   Parses a Boolean value.
+		///     Parses a Boolean value.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<bool> Parse(InputStream inputStream)
@@ -32,7 +32,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the next input in the stream is equal to the given keyword.
+		///     Checks whether the next input in the stream is equal to the given keyword.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		/// <param name="keyword">The keyword that should be the next input.</param>

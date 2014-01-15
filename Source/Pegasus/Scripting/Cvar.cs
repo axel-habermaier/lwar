@@ -6,28 +6,28 @@
 	using Validators;
 
 	/// <summary>
-	///   Represents a configurable value.
+	///     Represents a configurable value.
 	/// </summary>
 	/// <typeparam name="T">The type of the value.</typeparam>
 	public sealed class Cvar<T> : ICvar
 	{
 		/// <summary>
-		///   The default value of the cvar.
+		///     The default value of the cvar.
 		/// </summary>
 		private readonly T _defaultValue;
 
 		/// <summary>
-		///   The validators that are used to validate the values of the cvar.
+		///     The validators that are used to validate the values of the cvar.
 		/// </summary>
 		private readonly ValidatorAttribute[] _validators;
 
 		/// <summary>
-		///   The current value of the cvar.
+		///     The current value of the cvar.
 		/// </summary>
 		private T _value;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="name">The external name of the cvar.</param>
 		/// <param name="defaultValue">The default value of the cvar.</param>
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the value of the cvar.
+		///     Gets or sets the value of the cvar.
 		/// </summary>
 		public T Value
 		{
@@ -73,18 +73,18 @@
 		}
 
 		/// <summary>
-		///   Gets the deferred value of the cvar that will be set the next time it is updated. This property has no meaning
-		///   if the cvar's update mode is immediate.
+		///     Gets the deferred value of the cvar that will be set the next time it is updated. This property has no meaning
+		///     if the cvar's update mode is immediate.
 		/// </summary>
 		public T DeferredValue { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the cvar is readonly and cannot be set from the console.
+		///     Gets a value indicating whether the cvar is readonly and cannot be set from the console.
 		/// </summary>
 		public bool SystemOnly { get; private set; }
 
 		/// <summary>
-		///   Gets the validators that are used to validate the values of the cvar.
+		///     Gets the validators that are used to validate the values of the cvar.
 		/// </summary>
 		public IEnumerable<ValidatorAttribute> Validators
 		{
@@ -92,7 +92,7 @@
 		}
 
 		/// <summary>
-		///   Sets the cvar's current value to the deferred one.
+		///     Sets the cvar's current value to the deferred one.
 		/// </summary>
 		public void SetDeferredValue()
 		{
@@ -104,13 +104,13 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the cvar has a deferred update pending.
+		///     Gets a value indicating whether the cvar has a deferred update pending.
 		/// </summary>
 		public bool HasDeferredValue { get; private set; }
 
 		/// <summary>
-		///   Gets the deferred value of the cvar that will be set the next time it is updated. This property has no meaning
-		///   if the cvar's update mode is immediate.
+		///     Gets the deferred value of the cvar that will be set the next time it is updated. This property has no meaning
+		///     if the cvar's update mode is immediate.
 		/// </summary>
 		object ICvar.DeferredValue
 		{
@@ -118,12 +118,12 @@
 		}
 
 		/// <summary>
-		///   Gets the update mode of the cvar.
+		///     Gets the update mode of the cvar.
 		/// </summary>
 		public UpdateMode UpdateMode { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the value of the cvar.
+		///     Gets or sets the value of the cvar.
 		/// </summary>
 		object ICvar.Value
 		{
@@ -131,7 +131,7 @@
 		}
 
 		/// <summary>
-		///   Gets the cvar's default value.
+		///     Gets the cvar's default value.
 		/// </summary>
 		object ICvar.DefaultValue
 		{
@@ -139,22 +139,22 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the cvar's value is persisted across sessions.
+		///     Indicates whether the cvar's value is persisted across sessions.
 		/// </summary>
 		public bool Persistent { get; private set; }
 
 		/// <summary>
-		///   Gets the external name of the cvar that is used to refer to the cvar in the console, for instance.
+		///     Gets the external name of the cvar that is used to refer to the cvar in the console, for instance.
 		/// </summary>
 		public string Name { get; private set; }
 
 		/// <summary>
-		///   Gets a string describing the usage and the purpose of the cvar.
+		///     Gets a string describing the usage and the purpose of the cvar.
 		/// </summary>
 		public string Description { get; private set; }
 
 		/// <summary>
-		///   Gets the type of the cvar's value.
+		///     Gets the type of the cvar's value.
 		/// </summary>
 		Type ICvar.ValueType
 		{
@@ -162,7 +162,7 @@
 		}
 
 		/// <summary>
-		///   Sets the cvar's value.
+		///     Sets the cvar's value.
 		/// </summary>
 		/// <param name="value">The value that should be set.</param>
 		/// <param name="setByUser">If true, indicates that the cvar was set by the user (e.g., via the console).</param>
@@ -177,7 +177,7 @@
 		}
 
 		/// <summary>
-		///   Validates the given value, returning true if the value is valid.
+		///     Validates the given value, returning true if the value is valid.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
 		private bool ValidateValue(T value)
@@ -196,7 +196,7 @@
 		}
 
 		/// <summary>
-		///   Immediately updates the cvar's value to the given one, ignoring the cvar's update mode.
+		///     Immediately updates the cvar's value to the given one, ignoring the cvar's update mode.
 		/// </summary>
 		/// <param name="value">The value that should be set.</param>
 		public void SetImmediate(T value)
@@ -207,7 +207,7 @@
 		}
 
 		/// <summary>
-		///   Sets the cvar's current value to the new one.
+		///     Sets the cvar's current value to the new one.
 		/// </summary>
 		/// <param name="value">The value the cvar should be set to.</param>
 		private void UpdateValue(T value)
@@ -230,7 +230,7 @@
 		}
 
 		/// <summary>
-		///   Sets the cvar's deferred value.
+		///     Sets the cvar's deferred value.
 		/// </summary>
 		/// <param name="value"></param>
 		private void DeferredUpdate(T value)
@@ -261,12 +261,12 @@
 		}
 
 		/// <summary>
-		///   Raised when the value of the cvar is about to change, passing the new value to the event handlers.
+		///     Raised when the value of the cvar is about to change, passing the new value to the event handlers.
 		/// </summary>
 		public event Action<T> Changing;
 
 		/// <summary>
-		///   Raised when the value of the cvar has changed, passing the old value to the event handlers.
+		///     Raised when the value of the cvar has changed, passing the old value to the event handlers.
 		/// </summary>
 		public event Action<T> Changed;
 	}

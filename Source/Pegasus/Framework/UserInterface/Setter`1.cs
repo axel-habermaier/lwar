@@ -3,22 +3,22 @@
 	using System;
 
 	/// <summary>
-	///   Applies a typed property value.
+	///     Applies a typed property value.
 	/// </summary>
 	public class Setter<T> : Setter
 	{
 		/// <summary>
-		///   The dependency property that is set by the setter.
+		///     The dependency property that is set by the setter.
 		/// </summary>
 		private readonly DependencyProperty<T> _dependencyProperty;
 
 		/// <summary>
-		///   The value that the dependency property is set to.
+		///     The value that the dependency property is set to.
 		/// </summary>
 		private readonly T _value;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="dependencyProperty"> The dependency property that should be set by the setter.</param>
 		/// <param name="value">he value that the dependency property should be set to.</param>
@@ -31,7 +31,7 @@
 		}
 
 		/// <summary>
-		///   Applies the setter's value to the given UI element.
+		///     Applies the setter's value to the given UI element.
 		/// </summary>
 		/// <param name="element">The UI element the setter's value should be applied to.</param>
 		internal override void Apply(UIElement element)
@@ -41,8 +41,8 @@
 		}
 
 		/// <summary>
-		///   Applies the setter's value to the given UI element when the setter is applied as the result of a trigger being
-		///   triggered.
+		///     Applies the setter's value to the given UI element when the setter is applied as the result of a trigger being
+		///     triggered.
 		/// </summary>
 		/// <param name="element">The UI element the setter's value should be applied to.</param>
 		internal override void ApplyTriggered(UIElement element)
@@ -52,8 +52,8 @@
 		}
 
 		/// <summary>
-		///   Unsets the setter's value from the given UI element when the setter is no longer applied as the result of a
-		///   trigger being triggered.
+		///     Unsets the setter's value from the given UI element when the setter is no longer applied as the result of a
+		///     trigger being triggered.
 		/// </summary>
 		/// <param name="element">The UI element the setter's value should be applied to.</param>
 		internal override void UnsetTriggered(UIElement element)
@@ -63,7 +63,7 @@
 		}
 
 		/// <summary>
-		///   Unsets the setter's value from the given UI element.
+		///     Unsets the setter's value from the given UI element.
 		/// </summary>
 		/// <param name="element">The UI element the setter's value should be unset from.</param>
 		internal override void Unset(UIElement element)

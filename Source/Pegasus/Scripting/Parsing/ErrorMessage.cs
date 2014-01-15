@@ -3,17 +3,17 @@
 	using System;
 
 	/// <summary>
-	///   Represents a parser error message.
+	///     Represents a parser error message.
 	/// </summary>
 	public struct ErrorMessage
 	{
 		/// <summary>
-		///   An error message describing an unexpected end of input error.
+		///     An error message describing an unexpected end of input error.
 		/// </summary>
 		internal static readonly ErrorMessage UnexpectedEndOfInput = new ErrorMessage(ErrorType.Unexpected, "end of input");
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="type">A value describing the type of the error.</param>
 		/// <param name="message">A message describing the error.</param>
@@ -28,12 +28,12 @@
 		}
 
 		/// <summary>
-		///   Gets a value describing the type of the error.
+		///     Gets a value describing the type of the error.
 		/// </summary>
 		public ErrorType Type { get; private set; }
 
 		/// <summary>
-		///   Gets a message describing the error.
+		///     Gets a message describing the error.
 		/// </summary>
 		public string Message { get; private set; }
 	}

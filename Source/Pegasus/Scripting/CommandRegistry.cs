@@ -5,17 +5,17 @@
 	using System.Linq;
 
 	/// <summary>
-	///   Provides access to all commands.
+	///     Provides access to all commands.
 	/// </summary>
 	public static class CommandRegistry
 	{
 		/// <summary>
-		///   The registered commands.
+		///     The registered commands.
 		/// </summary>
 		private static readonly Dictionary<string, ICommand> Commands = new Dictionary<string, ICommand>();
 
 		/// <summary>
-		///   Gets all registered commands.
+		///     Gets all registered commands.
 		/// </summary>
 		internal static IEnumerable<ICommand> All
 		{
@@ -23,7 +23,7 @@
 		}
 
 		/// <summary>
-		///   Registers the given command.
+		///     Registers the given command.
 		/// </summary>
 		/// <param name="command">The command that should be registered.</param>
 		public static void Register(ICommand command)
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Finds the command with the given name. Returns false if no such command is found.
+		///     Finds the command with the given name. Returns false if no such command is found.
 		/// </summary>
 		/// <param name="name">The name of the command that should be returned.</param>
 		/// <param name="command">The command with the given name, if it is found.</param>
@@ -49,7 +49,7 @@
 		}
 
 		/// <summary>
-		///   Resolves the command reference to the parameterless command with given name.
+		///     Resolves the command reference to the parameterless command with given name.
 		/// </summary>
 		/// <param name="name">The name of the command that should be returned.</param>
 		public static Command Resolve(string name)
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Resolves the command reference to the command with the given parameter type and name.
+		///     Resolves the command reference to the command with the given parameter type and name.
 		/// </summary>
 		/// <param name="name">The name of the command that should be returned.</param>
 		public static Command<T> Resolve<T>(string name)
@@ -75,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Resolves the command reference to the command with the given parameter types and name.
+		///     Resolves the command reference to the command with the given parameter types and name.
 		/// </summary>
 		/// <param name="name">The name of the command that should be returned.</param>
 		public static Command<T1, T2> Resolve<T1, T2>(string name)
@@ -88,7 +88,7 @@
 		}
 
 		/// <summary>
-		///   Resolves the command reference to the command with the given parameter types and name.
+		///     Resolves the command reference to the command with the given parameter types and name.
 		/// </summary>
 		/// <param name="name">The name of the command that should be returned.</param>
 		public static Command<T1, T2, T3> Resolve<T1, T2, T3>(string name)

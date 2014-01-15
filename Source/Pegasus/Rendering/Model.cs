@@ -8,32 +8,32 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a 3D model.
+	///     Represents a 3D model.
 	/// </summary>
 	public class Model : DisposableObject
 	{
 		/// <summary>
-		///   The index buffer containing the model's indices.
+		///     The index buffer containing the model's indices.
 		/// </summary>
 		private readonly IndexBuffer _indexBuffer;
 
 		/// <summary>
-		///   The number of indices in the index buffer.
+		///     The number of indices in the index buffer.
 		/// </summary>
 		private readonly int _indexCount;
 
 		/// <summary>
-		///   The layout of the vertex buffer.
+		///     The layout of the vertex buffer.
 		/// </summary>
 		private readonly VertexInputLayout _layout;
 
 		/// <summary>
-		///   The vertex buffer containing the vertex data of the model.
+		///     The vertex buffer containing the vertex data of the model.
 		/// </summary>
 		private readonly VertexBuffer _vertexBuffer;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="vertexBuffer">The vertex buffer containing the vertex data of the model.</param>
 		/// <param name="layout">The layout of the vertex buffer.</param>
@@ -54,7 +54,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Draws the model.
+		///     Draws the model.
 		/// </summary>
 		/// <param name="output">The output the model should be rendered to.</param>
 		/// <param name="effect">The effect technique that should be used for rendering.</param>
@@ -77,12 +77,12 @@
 		}
 
 		/// <summary>
-		///   Creates a quad with the given width and height, lying in the y = 0 plane.
+		///     Creates a quad with the given width and height, lying in the y = 0 plane.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
 		/// <param name="size">The size of the quad.</param>
 		/// <param name="offset">
-		///   The offset that should be applied to the generated quad. By default, the center of the quad lies in the origin.
+		///     The offset that should be applied to the generated quad. By default, the center of the quad lies in the origin.
 		/// </param>
 		public static Model CreateQuad(GraphicsDevice graphicsDevice, Size size, Vector2 offset = default(Vector2))
 		{
@@ -90,13 +90,13 @@
 		}
 
 		/// <summary>
-		///   Creates a quad with the given width and height, lying in the y = 0 plane.
+		///     Creates a quad with the given width and height, lying in the y = 0 plane.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
 		/// <param name="width">The width of the quad.</param>
 		/// <param name="height">The height of the quad.</param>
 		/// <param name="offset">
-		///   The offset that should be applied to the generated quad. By default, the center of the quad lies in the origin.
+		///     The offset that should be applied to the generated quad. By default, the center of the quad lies in the origin.
 		/// </param>
 		public static Model CreateQuad(GraphicsDevice graphicsDevice, float width, float height, Vector2 offset = default(Vector2))
 		{
@@ -143,7 +143,7 @@
 		}
 
 		/// <summary>
-		///   Creates a full-screen quad.
+		///     Creates a full-screen quad.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
 		public static Model CreateFullScreenQuad(GraphicsDevice graphicsDevice)
@@ -197,7 +197,7 @@
 		}
 
 		/// <summary>
-		///   Creates a skybox cube.
+		///     Creates a skybox cube.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the skybox.</param>
 		public static unsafe Model CreateSkybox(GraphicsDevice graphicsDevice)
@@ -239,8 +239,8 @@
 		}
 
 		/// <summary>
-		///   Creates a model of a sphere with the given radius, using the given subdivision factor to determine the smoothness of
-		///   the sphere.
+		///     Creates a model of a sphere with the given radius, using the given subdivision factor to determine the smoothness of
+		///     the sphere.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to draw the sphere.</param>
 		/// <param name="radius">The radius of the sphere.</param>

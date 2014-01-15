@@ -5,27 +5,27 @@
 	using Scripting;
 
 	/// <summary>
-	///   Represents a timer that periodically raises a timeout event.
+	///     Represents a timer that periodically raises a timeout event.
 	/// </summary>
 	public sealed class Timer : PooledObject<Timer>
 	{
 		/// <summary>
-		///   The clock that is used to determine when the timeout event should be raised.
+		///     The clock that is used to determine when the timeout event should be raised.
 		/// </summary>
 		private Clock _clock;
 
 		/// <summary>
-		///   The timeout in milliseconds after which the timeout event is raised.
+		///     The timeout in milliseconds after which the timeout event is raised.
 		/// </summary>
 		private double _timeout;
 
 		/// <summary>
-		///   Raised when a timeout occurred.
+		///     Raised when a timeout occurred.
 		/// </summary>
 		public event Action Timeout;
 
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="timeout">The timeout in milliseconds after which the timeout event should be raised.</param>
 		/// <param name="scale">Scales the passing of time. If null, time advances in constant steps.</param>
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Updates the timer, raising the timeout event if enough time has passed.
+		///     Updates the timer, raising the timeout event if enough time has passed.
 		/// </summary>
 		public void Update()
 		{
@@ -52,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the pooled instance is returned to the pool.
+		///     Invoked when the pooled instance is returned to the pool.
 		/// </summary>
 		protected override void OnReturning()
 		{

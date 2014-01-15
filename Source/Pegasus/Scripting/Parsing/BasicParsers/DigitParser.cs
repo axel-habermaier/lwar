@@ -3,12 +3,12 @@
 	using System;
 
 	/// <summary>
-	///   Parses a single digit character.
+	///     Parses a single digit character.
 	/// </summary>
 	public class DigitParser : Parser<char>
 	{
 		/// <summary>
-		///   Checks whether the current character in the input stream is a digit.
+		///     Checks whether the current character in the input stream is a digit.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<char> Parse(InputStream inputStream)

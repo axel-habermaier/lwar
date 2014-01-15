@@ -9,8 +9,7 @@
 	{
 		/// <summary>
 		///     Indicates that the compiler can skip the asset as the latest version of the processed asset is already at the
-		///     target
-		///     location.
+		///     target location.
 		/// </summary>
 		Skip,
 

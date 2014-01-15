@@ -5,7 +5,7 @@
 	using System.Net.Sockets;
 
 	/// <summary>
-	///   Provides extension methods for network-related types.
+	///     Provides extension methods for network-related types.
 	/// </summary>
 	public static class Extensions
 	{
@@ -15,7 +15,7 @@
 #endif
 
 		/// <summary>
-		///   Enables the socket to use both IPv6 and IPv6-mapped IPv4 addresses.
+		///     Enables the socket to use both IPv6 and IPv6-mapped IPv4 addresses.
 		/// </summary>
 		/// <param name="socket">The socket for which dual mode should be enabled.</param>
 		internal static void EnableDualMode(this Socket socket)
@@ -37,8 +37,8 @@
 		}
 
 		/// <summary>
-		///   Checks whether the two end points actually represent the same IP address and port. This method
-		///   takes IPv4 addresses into account that have been embedded into an IPv6 one.
+		///     Checks whether the two end points actually represent the same IP address and port. This method
+		///     takes IPv4 addresses into account that have been embedded into an IPv6 one.
 		/// </summary>
 		/// <param name="endPoint1">The first end point that should be checked.</param>
 		/// <param name="endPoint2">The second end point that should be checked.</param>

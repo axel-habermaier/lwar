@@ -6,6 +6,12 @@
 	[Effect]
 	public class ParallaxEffect : Effect
 	{
+		// Must be in sync with ParallaxRenderer's distance range
+		private const float DistanceMin = 0.1f;
+		private const float DistanceMax = 0.8f;
+		private const float SpeedMin = 0.85f;
+		private const float SpeedMax = 0.9999f;
+
 		public readonly Technique Default = new Technique
 		{
 			VertexShader = "VertexShader",
@@ -13,12 +19,6 @@
 		};
 
 		public readonly Texture2D TextureAtlas;
-
-		// Must be in sync with ParallaxRenderer's distance range
-		private const float DistanceMin = 0.1f;
-		private const float DistanceMax = 0.8f;
-		private const float SpeedMin = 0.85f;
-		private const float SpeedMax = 0.9999f;
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,

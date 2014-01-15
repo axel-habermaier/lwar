@@ -6,55 +6,55 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Binds a target dependency object/dependency property pair to a source object and a property path.
+	///     Binds a target dependency object/dependency property pair to a source object and a property path.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
 	/// <remarks>With the current implementation of the data binding, a property path can only access up to three properties.</remarks>
 	internal sealed class DataBinding<T> : Binding<T>
 	{
 		/// <summary>
-		///   The number of member accesses in the source expression.
+		///     The number of member accesses in the source expression.
 		/// </summary>
 		private readonly byte _memberAccessCount;
 
 		/// <summary>
-		///   The source object that is passed to the source expression in order to get the value that is set on the target
-		///   property.
+		///     The source object that is passed to the source expression in order to get the value that is set on the target
+		///     property.
 		/// </summary>
 		private readonly object _sourceObject;
 
 		/// <summary>
-		///   If greater than 0, the properties accessed by the source expression are currently changing.
+		///     If greater than 0, the properties accessed by the source expression are currently changing.
 		/// </summary>
 		private byte _isChanging;
 
 		/// <summary>
-		///   Indicates whether the currently bound value is null.
+		///     Indicates whether the currently bound value is null.
 		/// </summary>
 		private bool _isNull;
 
 		/// <summary>
-		///   Provides information about the first member access (such as 'a.b') in a property path 'a.b.c.d'.
+		///     Provides information about the first member access (such as 'a.b') in a property path 'a.b.c.d'.
 		/// </summary>
 		private MemberAccess _memberAccess1;
 
 		/// <summary>
-		///   Provides information about the second member access (such as 'b.c') in a property path 'a.b.c.d'.
+		///     Provides information about the second member access (such as 'b.c') in a property path 'a.b.c.d'.
 		/// </summary>
 		private MemberAccess _memberAccess2;
 
 		/// <summary>
-		///   Provides information about the third member access (such as 'c.d') in a property path 'a.b.c.d'.
+		///     Provides information about the third member access (such as 'c.d') in a property path 'a.b.c.d'.
 		/// </summary>
 		private MemberAccess _memberAccess3;
 
 		/// <summary>
-		///   The compiled expression that is used to get the value from the source object.
+		///     The compiled expression that is used to get the value from the source object.
 		/// </summary>
 		private Func<object, T> _sourceFunc;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
 		/// <param name="property1">The name of the first property in the property path.</param>
@@ -82,7 +82,7 @@
 		}
 
 		/// <summary>
-		///   Gets the property path that is bound to the dependency property.
+		///     Gets the property path that is bound to the dependency property.
 		/// </summary>
 		private string PropertyPath
 		{
@@ -99,7 +99,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the binding has been activated.
+		///     Invoked when the binding has been activated.
 		/// </summary>
 		protected override void OnActivated()
 		{
@@ -107,7 +107,7 @@
 		}
 
 		/// <summary>
-		///   Initializes the binding.
+		///     Initializes the binding.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -118,7 +118,7 @@
 		}
 
 		/// <summary>
-		///   Removes the binding.
+		///     Removes the binding.
 		/// </summary>
 		internal override void Remove()
 		{
@@ -128,7 +128,7 @@
 		}
 
 		/// <summary>
-		///   Compiles the function to access the source value.
+		///     Compiles the function to access the source value.
 		/// </summary>
 		private void CompileFunction()
 		{
@@ -148,7 +148,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the first accessed member changed.
+		///     Invoked when the first accessed member changed.
 		/// </summary>
 		private void OnMember1Changed()
 		{
@@ -156,7 +156,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the second accessed member changed.
+		///     Invoked when the second accessed member changed.
 		/// </summary>
 		private void OnMember2Changed()
 		{
@@ -164,7 +164,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the third accessed member changed.
+		///     Invoked when the third accessed member changed.
 		/// </summary>
 		private void OnMember3Changed()
 		{
@@ -172,13 +172,13 @@
 		}
 
 		/// <summary>
-		///   Handles a value change of an accessed member.
+		///     Handles a value change of an accessed member.
 		/// </summary>
 		/// <param name="memberAccess">The member that has been accessed.</param>
 		/// <param name="nextMemberAccess">The next member access that must be updated.</param>
 		/// <param name="memberAccessCount">
-		///   The number of member accesses the source expression must contain for the next member
-		///   access to be updated.
+		///     The number of member accesses the source expression must contain for the next member
+		///     access to be updated.
 		/// </param>
 		private void OnMemberChanged(ref MemberAccess memberAccess, ref MemberAccess nextMemberAccess, int memberAccessCount)
 		{
@@ -216,7 +216,7 @@
 		}
 
 		/// <summary>
-		///   Updates the target property with the current source value.
+		///     Updates the target property with the current source value.
 		/// </summary>
 		private void UpdateTargetProperty()
 		{
@@ -233,37 +233,37 @@
 		}
 
 		/// <summary>
-		///   Provides information about a member access in the source expression.
+		///     Provides information about a member access in the source expression.
 		/// </summary>
 		private struct MemberAccess
 		{
 			/// <summary>
-			///   The name of the accessed property.
+			///     The name of the accessed property.
 			/// </summary>
 			private readonly string _propertyName;
 
 			/// <summary>
-			///   The strongly-typed changed handler that has been added for the dependency property.
+			///     The strongly-typed changed handler that has been added for the dependency property.
 			/// </summary>
 			private Delegate _changeHandler;
 
 			/// <summary>
-			///   The dependency property that is accessed, if any.
+			///     The dependency property that is accessed, if any.
 			/// </summary>
 			private DependencyProperty _dependencyProperty;
 
 			/// <summary>
-			///   The reflection info instance for the property that is accessed, if any.
+			///     The reflection info instance for the property that is accessed, if any.
 			/// </summary>
 			private PropertyInfo _propertyInfo;
 
 			/// <summary>
-			///   The source object that is accessed.
+			///     The source object that is accessed.
 			/// </summary>
 			private object _sourceObject;
 
 			/// <summary>
-			///   Initializes a new instance.
+			///     Initializes a new instance.
 			/// </summary>
 			/// <param name="propertyName">The name of the property that should be accessed.</param>
 			public MemberAccess(string propertyName)
@@ -274,12 +274,12 @@
 			}
 
 			/// <summary>
-			///   Gets or sets the type of the value currently stored by the accessed property.
+			///     Gets or sets the type of the value currently stored by the accessed property.
 			/// </summary>
 			public Type ValueType { get; set; }
 
 			/// <summary>
-			///   Gets the name of the member that is accessed.
+			///     Gets the name of the member that is accessed.
 			/// </summary>
 			public string MemberName
 			{
@@ -287,12 +287,12 @@
 			}
 
 			/// <summary>
-			///   Sets the change handler that is invoked when the value of the member has changed.
+			///     Sets the change handler that is invoked when the value of the member has changed.
 			/// </summary>
 			public Action Changed { private get; set; }
 
 			/// <summary>
-			///   Sets the source object that is accessed.
+			///     Sets the source object that is accessed.
 			/// </summary>
 			public object SourceObject
 			{
@@ -317,7 +317,7 @@
 			}
 
 			/// <summary>
-			///   Gets the value of the accessed member.
+			///     Gets the value of the accessed member.
 			/// </summary>
 			public object Value
 			{
@@ -337,7 +337,7 @@
 			}
 
 			/// <summary>
-			///   Gets the access expression for the accessed property or dependency property.
+			///     Gets the access expression for the accessed property or dependency property.
 			/// </summary>
 			/// <param name="expression">The expression that defines the property that should be accessed.</param>
 			public Expression GetAccessExpression(Expression expression)
@@ -346,7 +346,7 @@
 			}
 
 			/// <summary>
-			///   Attaches the instance to the source object's property changed event.
+			///     Attaches the instance to the source object's property changed event.
 			/// </summary>
 			private void AttachToChangeEvent()
 			{
@@ -372,7 +372,7 @@
 			}
 
 			/// <summary>
-			///   Detaches the instance from the source object's property changed event.
+			///     Detaches the instance from the source object's property changed event.
 			/// </summary>
 			private void DetachFromChangeEvent()
 			{
@@ -397,7 +397,7 @@
 			}
 
 			/// <summary>
-			///   Gets the reflection info of the property or the instance of the dependency property that is accessed.
+			///     Gets the reflection info of the property or the instance of the dependency property that is accessed.
 			/// </summary>
 			private void GetReflectedProperty()
 			{
@@ -414,7 +414,7 @@
 			}
 
 			/// <summary>
-			///   Handles a change notification for a property.
+			///     Handles a change notification for a property.
 			/// </summary>
 			/// <param name="obj">The object the changed property belongs to.</param>
 			/// <param name="property">The name of the property that has changed.</param>
@@ -428,7 +428,7 @@
 			}
 
 			/// <summary>
-			///   Handles a change notification for a dependency property.
+			///     Handles a change notification for a dependency property.
 			/// </summary>
 			/// <param name="obj">The dependency object the changed dependency property belongs to.</param>
 			/// <param name="property">The dependency property that has changed.</param>
@@ -442,7 +442,7 @@
 			}
 
 			/// <summary>
-			///   Deactivates the change handling of the member access.
+			///     Deactivates the change handling of the member access.
 			/// </summary>
 			public void Remove()
 			{

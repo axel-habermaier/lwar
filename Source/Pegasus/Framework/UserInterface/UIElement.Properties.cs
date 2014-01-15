@@ -9,109 +9,109 @@
 	public partial class UIElement
 	{
 		/// <summary>
-		///   The view model of the UI element.
+		///     The view model of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<ViewModel> ViewModelProperty =
 			new DependencyProperty<ViewModel>(inherits: true, prohibitsAnimations: true);
 
 		/// <summary>
-		///   The background color of the UI element.
+		///     The background color of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<Color> BackgroundProperty =
 			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 0), affectsRender: true);
 
 		/// <summary>
-		///   The style of the UI element.
+		///     The style of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<Style> StyleProperty =
 			new DependencyProperty<Style>(affectsMeasure: true);
 
 		/// <summary>
-		///   The font family used for text rendering by the UI element.
+		///     The font family used for text rendering by the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<string> FontFamilyProperty =
 			new DependencyProperty<string>(affectsMeasure: true, inherits: true);
 
 		/// <summary>
-		///   The font size used for text rendering by the UI element.
+		///     The font size used for text rendering by the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<int> FontSizeProperty =
 			new DependencyProperty<int>(affectsMeasure: true, inherits: true);
 
 		/// <summary>
-		///   Indicates whether a bold font is used for text rendering by the UI element.
+		///     Indicates whether a bold font is used for text rendering by the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<bool> FontBoldProperty =
 			new DependencyProperty<bool>(defaultValue: false, affectsMeasure: true, inherits: true);
 
 		/// <summary>
-		///   Indicates whether an italic font is used for text rendering by the UI element.
+		///     Indicates whether an italic font is used for text rendering by the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<bool> FontItalicProperty =
 			new DependencyProperty<bool>(defaultValue: false, affectsMeasure: true, inherits: true);
 
 		/// <summary>
-		///   Indicates whether the mouse is currently hovering the UI element.
+		///     Indicates whether the mouse is currently hovering the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<bool> IsMouseOverProperty =
 			new DependencyProperty<bool>();
 
 		/// <summary>
-		///   The width of the UI element, measured in pixels.
+		///     The width of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> WidthProperty =
 			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
 
 		/// <summary>
-		///   The height of the UI element, measured in pixels.
+		///     The height of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> HeightProperty =
 			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
 
 		/// <summary>
-		///   The minimum width constraint of the UI element, measured in pixels.
+		///     The minimum width constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MinWidthProperty =
 			new DependencyProperty<double>(defaultValue: 0.0, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
 
 		/// <summary>
-		///   The minimum height constraint of the UI element, measured in pixels.
+		///     The minimum height constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MinHeightProperty =
 			new DependencyProperty<double>(defaultValue: 0.0, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
 
 		/// <summary>
-		///   The maximum width constraint of the UI element, measured in pixels.
+		///     The maximum width constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MaxWidthProperty =
 			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
 
 		/// <summary>
-		///   The maximum height constraint of the UI element, measured in pixels.
+		///     The maximum height constraint of the UI element, measured in pixels.
 		/// </summary>
 		public static readonly DependencyProperty<double> MaxHeightProperty =
 			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
 
 		/// <summary>
-		///   The actual width of the UI element, measured in pixels, as determined by the layouting system.
+		///     The actual width of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
 		public static readonly DependencyProperty<double> ActualWidthProperty =
 			new DependencyProperty<double>();
 
 		/// <summary>
-		///   The actual height of the UI element, measured in pixels, as determined by the layouting system.
+		///     The actual height of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
 		public static readonly DependencyProperty<double> ActualHeightProperty =
 			new DependencyProperty<double>();
 
 		/// <summary>
-		///   The outer margin of the UI element.
+		///     The outer margin of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<Thickness> MarginProperty =
 			new DependencyProperty<Thickness>(affectsMeasure: true);
 
 		/// <summary>
-		///   The horizontal alignment characteristics of the UI element.
+		///     The horizontal alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<HorizontalAlignment> HorizontalAlignmentProperty =
 			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Stretch,
@@ -119,7 +119,7 @@
 														validationCallback: ValidateAlignment);
 
 		/// <summary>
-		///   The vertical alignment characteristics of the UI element.
+		///     The vertical alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<VerticalAlignment> VerticalAlignmentProperty =
 			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Stretch,
@@ -127,13 +127,13 @@
 													  validationCallback: ValidateAlignment);
 
 		/// <summary>
-		///   Indicates whether the UI element is visible.
+		///     Indicates whether the UI element is visible.
 		/// </summary>
 		public static readonly DependencyProperty<Visibility> VisibilityProperty =
 			new DependencyProperty<Visibility>(defaultValue: Visibility.Visible, affectsMeasure: true);
 
 		/// <summary>
-		///   Gets or sets the view model of the UI element.
+		///     Gets or sets the view model of the UI element.
 		/// </summary>
 		public ViewModel ViewModel
 		{
@@ -142,7 +142,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the background color of the control.
+		///     Gets or sets the background color of the control.
 		/// </summary>
 		public Color Background
 		{
@@ -151,7 +151,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the style of the UI element.
+		///     Gets or sets the style of the UI element.
 		/// </summary>
 		public Style Style
 		{
@@ -160,7 +160,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the font family used for text rendering by the UI element.
+		///     Gets or sets the font family used for text rendering by the UI element.
 		/// </summary>
 		public string FontFamily
 		{
@@ -169,7 +169,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the font size used for text rendering by the UI element.
+		///     Gets or sets the font size used for text rendering by the UI element.
 		/// </summary>
 		public int FontSize
 		{
@@ -178,7 +178,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether a bold font is used for text rendering by the UI element.
+		///     Gets or sets a value indicating whether a bold font is used for text rendering by the UI element.
 		/// </summary>
 		public bool FontBold
 		{
@@ -187,7 +187,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether an italic font is used for text rendering by the UI element.
+		///     Gets or sets a value indicating whether an italic font is used for text rendering by the UI element.
 		/// </summary>
 		public bool FontItalic
 		{
@@ -196,7 +196,7 @@
 		}
 
 		/// <summary>
-		///   Gets the resources used by the UI element.
+		///     Gets the resources used by the UI element.
 		/// </summary>
 		public ResourceDictionary Resources
 		{
@@ -213,7 +213,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the width of the UI element, measured in pixels.
+		///     Gets or sets the width of the UI element, measured in pixels.
 		/// </summary>
 		public double Width
 		{
@@ -222,7 +222,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the height of the UI element, measured in pixels.
+		///     Gets or sets the height of the UI element, measured in pixels.
 		/// </summary>
 		public double Height
 		{
@@ -231,7 +231,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the minimum width constraint of the UI element, measured in pixels.
+		///     Gets or sets the minimum width constraint of the UI element, measured in pixels.
 		/// </summary>
 		public double MinWidth
 		{
@@ -240,7 +240,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the minimum height constraint of the UI element, measured in pixels.
+		///     Gets or sets the minimum height constraint of the UI element, measured in pixels.
 		/// </summary>
 		public double MinHeight
 		{
@@ -249,7 +249,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the maximum width constraint of the UI element, measured in pixels.
+		///     Gets or sets the maximum width constraint of the UI element, measured in pixels.
 		/// </summary>
 		public double MaxWidth
 		{
@@ -258,7 +258,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the maximum height constraint of the UI element, measured in pixels.
+		///     Gets or sets the maximum height constraint of the UI element, measured in pixels.
 		/// </summary>
 		public double MaxHeight
 		{
@@ -267,7 +267,7 @@
 		}
 
 		/// <summary>
-		///   Gets  the actual width of the UI element, measured in pixels, as determined by the layouting system.
+		///     Gets  the actual width of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
 		public double ActualWidth
 		{
@@ -276,7 +276,7 @@
 		}
 
 		/// <summary>
-		///   Gets the actual height of the UI element, measured in pixels, as determined by the layouting system.
+		///     Gets the actual height of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
 		public double ActualHeight
 		{
@@ -285,7 +285,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the outer margin of the UI element.
+		///     Gets or sets the outer margin of the UI element.
 		/// </summary>
 		public Thickness Margin
 		{
@@ -294,7 +294,7 @@
 		}
 
 		/// <summary>
-		///   The horizontal alignment characteristics of the UI element.
+		///     The horizontal alignment characteristics of the UI element.
 		/// </summary>
 		public HorizontalAlignment HorizontalAlignment
 		{
@@ -303,7 +303,7 @@
 		}
 
 		/// <summary>
-		///   The vertical alignment characteristics of the UI element.
+		///     The vertical alignment characteristics of the UI element.
 		/// </summary>
 		public VerticalAlignment VerticalAlignment
 		{
@@ -312,7 +312,7 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the UI element is visible.
+		///     Indicates whether the UI element is visible.
 		/// </summary>
 		public Visibility Visibility
 		{
@@ -321,7 +321,7 @@
 		}
 
 		/// <summary>
-		///   Gets the size of the UI element that has been computed by the last measure pass of the layout engine.
+		///     Gets the size of the UI element that has been computed by the last measure pass of the layout engine.
 		/// </summary>
 		public SizeD DesiredSize
 		{
@@ -329,7 +329,7 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the mouse is currently hovering the UI element.
+		///     Indicates whether the mouse is currently hovering the UI element.
 		/// </summary>
 		public bool IsMouseOver
 		{
@@ -338,7 +338,7 @@
 		}
 
 		/// <summary>
-		///   Gets the font used for text rendering.
+		///     Gets the font used for text rendering.
 		/// </summary>
 		protected Font Font
 		{
@@ -359,27 +359,27 @@
 		}
 
 		/// <summary>
-		///   Gets the logical parent of the UI element.
+		///     Gets the logical parent of the UI element.
 		/// </summary>
 		public UIElement Parent { get; internal set; }
 
 		/// <summary>
-		///   Gets an enumerator that can be used to enumerate all logical children of the UI element.
+		///     Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
 		protected internal abstract UIElementCollection.Enumerator LogicalChildren { get; }
 
 		/// <summary>
-		///   Gets the final render size of the UI element.
+		///     Gets the final render size of the UI element.
 		/// </summary>
 		public SizeD RenderSize { get; internal set; }
 
 		/// <summary>
-		///   Gets or sets the offset value of the UI element.
+		///     Gets or sets the offset value of the UI element.
 		/// </summary>
 		protected internal Vector2d VisualOffset { get; protected set; }
 
 		/// <summary>
-		///   Gets the number of visual children for this UI element.
+		///     Gets the number of visual children for this UI element.
 		/// </summary>
 		protected internal virtual int VisualChildrenCount
 		{
@@ -387,7 +387,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the UI element is attached to the visual tree's root element.
+		///     Gets or sets a value indicating whether the UI element is attached to the visual tree's root element.
 		/// </summary>
 		protected internal bool IsAttachedToRoot
 		{

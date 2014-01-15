@@ -6,24 +6,24 @@
 	using ICSharpCode.NRefactory.CSharp;
 
 	/// <summary>
-	///   Represents a registry declaration.
+	///     Represents a registry declaration.
 	/// </summary>
 	internal class Registry : RegistryElement
 	{
 		/// <summary>
-		///   The declaration of the interface that represents the registry.
+		///     The declaration of the interface that represents the registry.
 		/// </summary>
 		private readonly TypeDeclaration _type;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public Registry()
 		{
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="type">The declaration of the interface that represents the registry.</param>
 		public Registry(TypeDeclaration type)
@@ -32,7 +32,7 @@
 		}
 
 		/// <summary>
-		///   Gets the name of the registry.
+		///     Gets the name of the registry.
 		/// </summary>
 		public string Name
 		{
@@ -46,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Gets the namespaces that are imported by the registry.
+		///     Gets the namespaces that are imported by the registry.
 		/// </summary>
 		public IEnumerable<string> ImportedNamespaces
 		{
@@ -71,7 +71,7 @@
 		}
 
 		/// <summary>
-		///   Gets the cvars declared by the registry.
+		///     Gets the cvars declared by the registry.
 		/// </summary>
 		public IEnumerable<Cvar> Cvars
 		{
@@ -79,7 +79,7 @@
 		}
 
 		/// <summary>
-		///   Gets the commands declared by the registry.
+		///     Gets the commands declared by the registry.
 		/// </summary>
 		public IEnumerable<Command> Commands
 		{
@@ -87,7 +87,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -103,8 +103,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{

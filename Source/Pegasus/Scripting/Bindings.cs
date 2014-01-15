@@ -10,27 +10,27 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Manages all registered instruction bindings.
+	///     Manages all registered instruction bindings.
 	/// </summary>
 	internal class Bindings : DisposableObject
 	{
 		/// <summary>
-		///   The registered instruction bindings.
+		///     The registered instruction bindings.
 		/// </summary>
 		private readonly List<Binding> _bindings = new List<Binding>();
 
 		/// <summary>
-		///   The logical input device that is used to determine whether the logical inputs are triggered.
+		///     The logical input device that is used to determine whether the logical inputs are triggered.
 		/// </summary>
 		private readonly LogicalInputDevice _device;
 
 		/// <summary>
-		///   The parser that is used to parse the instructions.
+		///     The parser that is used to parse the instructions.
 		/// </summary>
 		private readonly Parser<Instruction> _parser;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The logical input device that is used to determine whether the logical inputs are triggered.</param>
 		public Bindings(LogicalInputDevice device)
@@ -47,7 +47,7 @@
 		}
 
 		/// <summary>
-		///   Executes all instructions for which the binding's trigger has been triggered.
+		///     Executes all instructions for which the binding's trigger has been triggered.
 		/// </summary>
 		public void Update()
 		{
@@ -59,7 +59,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -70,7 +70,7 @@
 		}
 
 		/// <summary>
-		///   Lists all active bindings.
+		///     Lists all active bindings.
 		/// </summary>
 		private void OnListBindings()
 		{
@@ -100,7 +100,7 @@
 		}
 
 		/// <summary>
-		///   Removes all bindings.
+		///     Removes all bindings.
 		/// </summary>
 		private void OnUnbindAll()
 		{
@@ -109,7 +109,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the unbind command is used.
+		///     Invoked when the unbind command is used.
 		/// </summary>
 		/// <param name="trigger">The trigger that should be unbound.</param>
 		private void OnUnbind(InputTrigger trigger)
@@ -136,7 +136,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the bind command is used.
+		///     Invoked when the bind command is used.
 		/// </summary>
 		/// <param name="trigger">The trigger that should be bound.</param>
 		/// <param name="command">The instruction that should be bound.</param>

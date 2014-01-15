@@ -6,17 +6,17 @@
 	using System.Security;
 
 	/// <summary>
-	///   Represents a query that can be used to retrieve information from the GPU.
+	///     Represents a query that can be used to retrieve information from the GPU.
 	/// </summary>
 	public abstract class Query : GraphicsObject
 	{
 		/// <summary>
-		///   The native query instance.
+		///     The native query instance.
 		/// </summary>
 		private readonly IntPtr _query;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
 		/// <param name="type">The type of the query.</param>
@@ -28,7 +28,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the query has completed and whether the result data (if any) is available.
+		///     Gets a value indicating whether the query has completed and whether the result data (if any) is available.
 		/// </summary>
 		public bool Completed
 		{
@@ -36,8 +36,8 @@
 		}
 
 		/// <summary>
-		///   Waits for the completion of the query by stalling the CPU until the query has completed and the result data (if any)
-		///   is available.
+		///     Waits for the completion of the query by stalling the CPU until the query has completed and the result data (if any)
+		///     is available.
 		/// </summary>
 		public void WaitForCompletion()
 		{
@@ -48,7 +48,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Begins the query.
+		///     Begins the query.
 		/// </summary>
 		protected void BeginQuery()
 		{
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Ends the query.
+		///     Ends the query.
 		/// </summary>
 		protected void EndQuery()
 		{
@@ -72,7 +72,7 @@
 		}
 
 		/// <summary>
-		///   Gets the result of the query.
+		///     Gets the result of the query.
 		/// </summary>
 		/// <param name="data">The address of the memory the result should be written to.</param>
 		/// <param name="size">The size of the data that should be retrieved.</param>
@@ -93,7 +93,7 @@
 #endif
 
 		/// <summary>
-		///   Provides access to the native query functions.
+		///     Provides access to the native query functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

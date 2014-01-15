@@ -8,32 +8,32 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Represents a configuration file that can be processed by the application, changed, and/or written to disk.
+	///     Represents a configuration file that can be processed by the application, changed, and/or written to disk.
 	/// </summary>
 	internal class ConfigurationFile
 	{
 		/// <summary>
-		///   The token that starts a single-line comment.
+		///     The token that starts a single-line comment.
 		/// </summary>
 		private const string CommentToken = "//";
 
 		/// <summary>
-		///   The name of the automatically executed configuration file.
+		///     The name of the automatically executed configuration file.
 		/// </summary>
 		public const string AutoExec = "autoexec.cfg";
 
 		/// <summary>
-		///   The application file that is used to read and write the configuration.
+		///     The application file that is used to read and write the configuration.
 		/// </summary>
 		private readonly AppFile _file;
 
 		/// <summary>
-		///   The parser that is used to parse the file.
+		///     The parser that is used to parse the file.
 		/// </summary>
 		private readonly InstructionParser _parser;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="parser"> The parser that should be used to parse the file.</param>
 		/// <param name="appName">The name of the application.</param>
@@ -57,7 +57,7 @@
 		}
 
 		/// <summary>
-		///   Parses the individual lines of the configuration file.
+		///     Parses the individual lines of the configuration file.
 		/// </summary>
 		/// <param name="silent">Indicates whether parser errors should be silently ignored.</param>
 		private IEnumerable<ConfigurationLine> ParseLines(bool silent)
@@ -85,7 +85,7 @@
 		}
 
 		/// <summary>
-		///   Parses the given line.
+		///     Parses the given line.
 		/// </summary>
 		/// <param name="line">The line that should be parsed.</param>
 		/// <param name="lineNumber">The number of the line that should be parsed.</param>
@@ -121,7 +121,7 @@
 		}
 
 		/// <summary>
-		///   Processes all set cvar and command invocation user requests stored in the configuration file.
+		///     Processes all set cvar and command invocation user requests stored in the configuration file.
 		/// </summary>
 		public void Process()
 		{
@@ -134,7 +134,7 @@
 		}
 
 		/// <summary>
-		///   Persists the given cvars in the configuration file.
+		///     Persists the given cvars in the configuration file.
 		/// </summary>
 		/// <param name="cvars">The cvars that should be persisted in the file.</param>
 		public void Persist(IEnumerable<ICvar> cvars)

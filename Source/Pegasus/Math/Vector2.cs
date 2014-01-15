@@ -1,34 +1,36 @@
 ﻿// ReSharper disable InconsistentNaming
+
 using System;
 
 namespace Pegasus.Math
 {
 	using System.Globalization;
 	using System.Runtime.InteropServices;
+	using Math = System.Math;
 
 	/// <summary>
-	///   Represents a two-component vector of 32-bit floating point values.
+	///     Represents a two-component vector of 32-bit floating point values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Vector2 : IEquatable<Vector2>
 	{
 		/// <summary>
-		///   A vector with all components set to zero.
+		///     A vector with all components set to zero.
 		/// </summary>
 		public static readonly Vector2 Zero = new Vector2(0, 0);
 
 		/// <summary>
-		///   The X-component of the vector.
+		///     The X-component of the vector.
 		/// </summary>
 		public float X;
 
 		/// <summary>
-		///   The Y-component of the vector.
+		///     The Y-component of the vector.
 		/// </summary>
 		public float Y;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="x">The X-component of the vector.</param>
 		/// <param name="y">The Y-component of the vector.</param>
@@ -39,15 +41,15 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the length of the vector.
+		///     Gets the length of the vector.
 		/// </summary>
 		public float Length
 		{
-			get { return (float)System.Math.Sqrt(SquaredLength); }
+			get { return (float)Math.Sqrt(SquaredLength); }
 		}
 
 		/// <summary>
-		///   Gets the squared length of the vector.
+		///     Gets the squared length of the vector.
 		/// </summary>
 		public float SquaredLength
 		{
@@ -55,7 +57,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
+		///     Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
 		/// </summary>
 		public Vector2 Normalize()
 		{
@@ -67,7 +69,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the given vector is equal to this vector.
+		///     Determines whether the given vector is equal to this vector.
 		/// </summary>
 		/// <param name="other">The other vector to compare with this vector.</param>
 		public bool Equals(Vector2 other)
@@ -76,7 +78,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this vector.
+		///     Determines whether the specified object is equal to this vector.
 		/// </summary>
 		/// <param name="value">The object to compare with this vector.</param>
 		public override bool Equals(object value)
@@ -91,7 +93,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this vector.
+		///     Returns a hash code for this vector.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -99,7 +101,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this vector.
+		///     Returns a string representation of this vector.
 		/// </summary>
 		public override string ToString()
 		{
@@ -107,7 +109,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two vectors.
+		///     Tests for equality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -117,7 +119,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two vectors.
+		///     Tests for inequality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -127,7 +129,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector addition.
+		///     Performs a vector addition.
 		/// </summary>
 		/// <param name="left">The first vector to add.</param>
 		/// <param name="right">The second vector to add.</param>
@@ -137,7 +139,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Negates the components of a vector.
+		///     Negates the components of a vector.
 		/// </summary>
 		/// <param name="vector">The vector whose components should be negated.</param>
 		public static Vector2 operator -(Vector2 vector)
@@ -146,7 +148,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector subtraction.
+		///     Performs a vector subtraction.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -156,7 +158,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="vector">The vector that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -166,7 +168,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="vector">The vector that should be scaled.</param>
@@ -176,7 +178,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the vector by a scalar value.
+		///     Divides the vector by a scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -186,7 +188,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Computes the dot product of the two vectors.
+		///     Computes the dot product of the two vectors.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -196,7 +198,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Applies the given transformation matrix to the vector.
+		///     Applies the given transformation matrix to the vector.
 		/// </summary>
 		/// <param name="vector">The vector that should be transformed.</param>
 		/// <param name="matrix">The transformation matrix that should be applied.</param>
@@ -209,28 +211,28 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a two-component vector of 64-bit floating point values.
+	///     Represents a two-component vector of 64-bit floating point values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Vector2d : IEquatable<Vector2d>
 	{
 		/// <summary>
-		///   A vector with all components set to zero.
+		///     A vector with all components set to zero.
 		/// </summary>
 		public static readonly Vector2d Zero = new Vector2d(0, 0);
 
 		/// <summary>
-		///   The X-component of the vector.
+		///     The X-component of the vector.
 		/// </summary>
 		public double X;
 
 		/// <summary>
-		///   The Y-component of the vector.
+		///     The Y-component of the vector.
 		/// </summary>
 		public double Y;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="x">The X-component of the vector.</param>
 		/// <param name="y">The Y-component of the vector.</param>
@@ -241,15 +243,15 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the length of the vector.
+		///     Gets the length of the vector.
 		/// </summary>
 		public double Length
 		{
-			get { return System.Math.Sqrt(SquaredLength); }
+			get { return Math.Sqrt(SquaredLength); }
 		}
 
 		/// <summary>
-		///   Gets the squared length of the vector.
+		///     Gets the squared length of the vector.
 		/// </summary>
 		public double SquaredLength
 		{
@@ -257,7 +259,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
+		///     Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
 		/// </summary>
 		public Vector2d Normalize()
 		{
@@ -269,7 +271,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the given vector is equal to this vector.
+		///     Determines whether the given vector is equal to this vector.
 		/// </summary>
 		/// <param name="other">The other vector to compare with this vector.</param>
 		public bool Equals(Vector2d other)
@@ -278,7 +280,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this vector.
+		///     Determines whether the specified object is equal to this vector.
 		/// </summary>
 		/// <param name="value">The object to compare with this vector.</param>
 		public override bool Equals(object value)
@@ -293,7 +295,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this vector.
+		///     Returns a hash code for this vector.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -301,7 +303,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this vector.
+		///     Returns a string representation of this vector.
 		/// </summary>
 		public override string ToString()
 		{
@@ -309,7 +311,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two vectors.
+		///     Tests for equality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -319,7 +321,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two vectors.
+		///     Tests for inequality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -329,7 +331,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector addition.
+		///     Performs a vector addition.
 		/// </summary>
 		/// <param name="left">The first vector to add.</param>
 		/// <param name="right">The second vector to add.</param>
@@ -339,7 +341,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Negates the components of a vector.
+		///     Negates the components of a vector.
 		/// </summary>
 		/// <param name="vector">The vector whose components should be negated.</param>
 		public static Vector2d operator -(Vector2d vector)
@@ -348,7 +350,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector subtraction.
+		///     Performs a vector subtraction.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -358,7 +360,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="vector">The vector that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -368,7 +370,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="vector">The vector that should be scaled.</param>
@@ -378,7 +380,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the vector by a scalar value.
+		///     Divides the vector by a scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -388,7 +390,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Computes the dot product of the two vectors.
+		///     Computes the dot product of the two vectors.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -399,28 +401,28 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a two-component vector of 32-bit signed integer values.
+	///     Represents a two-component vector of 32-bit signed integer values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Vector2i : IEquatable<Vector2i>
 	{
 		/// <summary>
-		///   A vector with all components set to zero.
+		///     A vector with all components set to zero.
 		/// </summary>
 		public static readonly Vector2i Zero = new Vector2i(0, 0);
 
 		/// <summary>
-		///   The X-component of the vector.
+		///     The X-component of the vector.
 		/// </summary>
 		public int X;
 
 		/// <summary>
-		///   The Y-component of the vector.
+		///     The Y-component of the vector.
 		/// </summary>
 		public int Y;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="x">The X-component of the vector.</param>
 		/// <param name="y">The Y-component of the vector.</param>
@@ -431,7 +433,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the length of the vector.
+		///     Gets the length of the vector.
 		/// </summary>
 		public Fixed16 Length
 		{
@@ -439,7 +441,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the squared length of the vector.
+		///     Gets the squared length of the vector.
 		/// </summary>
 		public int SquaredLength
 		{
@@ -447,7 +449,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
+		///     Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
 		/// </summary>
 		public Vector2f16 Normalize()
 		{
@@ -459,7 +461,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the given vector is equal to this vector.
+		///     Determines whether the given vector is equal to this vector.
 		/// </summary>
 		/// <param name="other">The other vector to compare with this vector.</param>
 		public bool Equals(Vector2i other)
@@ -468,7 +470,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this vector.
+		///     Determines whether the specified object is equal to this vector.
 		/// </summary>
 		/// <param name="value">The object to compare with this vector.</param>
 		public override bool Equals(object value)
@@ -483,7 +485,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this vector.
+		///     Returns a hash code for this vector.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -491,7 +493,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this vector.
+		///     Returns a string representation of this vector.
 		/// </summary>
 		public override string ToString()
 		{
@@ -499,7 +501,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two vectors.
+		///     Tests for equality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -509,7 +511,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two vectors.
+		///     Tests for inequality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -519,7 +521,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector addition.
+		///     Performs a vector addition.
 		/// </summary>
 		/// <param name="left">The first vector to add.</param>
 		/// <param name="right">The second vector to add.</param>
@@ -529,7 +531,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Negates the components of a vector.
+		///     Negates the components of a vector.
 		/// </summary>
 		/// <param name="vector">The vector whose components should be negated.</param>
 		public static Vector2i operator -(Vector2i vector)
@@ -538,7 +540,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector subtraction.
+		///     Performs a vector subtraction.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -548,7 +550,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="vector">The vector that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -558,7 +560,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="vector">The vector that should be scaled.</param>
@@ -568,7 +570,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the vector by a scalar value.
+		///     Divides the vector by a scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -578,7 +580,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Computes the dot product of the two vectors.
+		///     Computes the dot product of the two vectors.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -589,28 +591,28 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a two-component vector of 32-bit signed fixed-point (in 24.8 format) values.
+	///     Represents a two-component vector of 32-bit signed fixed-point (in 24.8 format) values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Vector2f8 : IEquatable<Vector2f8>
 	{
 		/// <summary>
-		///   A vector with all components set to zero.
+		///     A vector with all components set to zero.
 		/// </summary>
 		public static readonly Vector2f8 Zero = new Vector2f8(0, 0);
 
 		/// <summary>
-		///   The X-component of the vector.
+		///     The X-component of the vector.
 		/// </summary>
 		public Fixed8 X;
 
 		/// <summary>
-		///   The Y-component of the vector.
+		///     The Y-component of the vector.
 		/// </summary>
 		public Fixed8 Y;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="x">The X-component of the vector.</param>
 		/// <param name="y">The Y-component of the vector.</param>
@@ -621,7 +623,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the length of the vector.
+		///     Gets the length of the vector.
 		/// </summary>
 		public Fixed8 Length
 		{
@@ -629,7 +631,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the squared length of the vector.
+		///     Gets the squared length of the vector.
 		/// </summary>
 		public Fixed8 SquaredLength
 		{
@@ -637,7 +639,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
+		///     Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
 		/// </summary>
 		public Vector2f8 Normalize()
 		{
@@ -649,7 +651,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the given vector is equal to this vector.
+		///     Determines whether the given vector is equal to this vector.
 		/// </summary>
 		/// <param name="other">The other vector to compare with this vector.</param>
 		public bool Equals(Vector2f8 other)
@@ -658,7 +660,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this vector.
+		///     Determines whether the specified object is equal to this vector.
 		/// </summary>
 		/// <param name="value">The object to compare with this vector.</param>
 		public override bool Equals(object value)
@@ -673,7 +675,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this vector.
+		///     Returns a hash code for this vector.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -681,7 +683,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this vector.
+		///     Returns a string representation of this vector.
 		/// </summary>
 		public override string ToString()
 		{
@@ -689,7 +691,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two vectors.
+		///     Tests for equality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -699,7 +701,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two vectors.
+		///     Tests for inequality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -709,7 +711,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector addition.
+		///     Performs a vector addition.
 		/// </summary>
 		/// <param name="left">The first vector to add.</param>
 		/// <param name="right">The second vector to add.</param>
@@ -719,7 +721,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Negates the components of a vector.
+		///     Negates the components of a vector.
 		/// </summary>
 		/// <param name="vector">The vector whose components should be negated.</param>
 		public static Vector2f8 operator -(Vector2f8 vector)
@@ -728,7 +730,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector subtraction.
+		///     Performs a vector subtraction.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -738,7 +740,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="vector">The vector that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -748,7 +750,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="vector">The vector that should be scaled.</param>
@@ -758,7 +760,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the vector by a scalar value.
+		///     Divides the vector by a scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -768,7 +770,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Computes the dot product of the two vectors.
+		///     Computes the dot product of the two vectors.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -779,28 +781,28 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a two-component vector of 32-bit signed fixed-point (in 16.16 format) values.
+	///     Represents a two-component vector of 32-bit signed fixed-point (in 16.16 format) values.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Vector2f16 : IEquatable<Vector2f16>
 	{
 		/// <summary>
-		///   A vector with all components set to zero.
+		///     A vector with all components set to zero.
 		/// </summary>
 		public static readonly Vector2f16 Zero = new Vector2f16(0, 0);
 
 		/// <summary>
-		///   The X-component of the vector.
+		///     The X-component of the vector.
 		/// </summary>
 		public Fixed16 X;
 
 		/// <summary>
-		///   The Y-component of the vector.
+		///     The Y-component of the vector.
 		/// </summary>
 		public Fixed16 Y;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="x">The X-component of the vector.</param>
 		/// <param name="y">The Y-component of the vector.</param>
@@ -811,7 +813,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the length of the vector.
+		///     Gets the length of the vector.
 		/// </summary>
 		public Fixed16 Length
 		{
@@ -819,7 +821,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Gets the squared length of the vector.
+		///     Gets the squared length of the vector.
 		/// </summary>
 		public Fixed16 SquaredLength
 		{
@@ -827,7 +829,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
+		///     Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
 		/// </summary>
 		public Vector2f16 Normalize()
 		{
@@ -839,7 +841,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the given vector is equal to this vector.
+		///     Determines whether the given vector is equal to this vector.
 		/// </summary>
 		/// <param name="other">The other vector to compare with this vector.</param>
 		public bool Equals(Vector2f16 other)
@@ -848,7 +850,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Determines whether the specified object is equal to this vector.
+		///     Determines whether the specified object is equal to this vector.
 		/// </summary>
 		/// <param name="value">The object to compare with this vector.</param>
 		public override bool Equals(object value)
@@ -863,7 +865,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a hash code for this vector.
+		///     Returns a hash code for this vector.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -871,7 +873,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns a string representation of this vector.
+		///     Returns a string representation of this vector.
 		/// </summary>
 		public override string ToString()
 		{
@@ -879,7 +881,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for equality between two vectors.
+		///     Tests for equality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -889,7 +891,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two vectors.
+		///     Tests for inequality between two vectors.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
@@ -899,7 +901,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector addition.
+		///     Performs a vector addition.
 		/// </summary>
 		/// <param name="left">The first vector to add.</param>
 		/// <param name="right">The second vector to add.</param>
@@ -909,7 +911,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Negates the components of a vector.
+		///     Negates the components of a vector.
 		/// </summary>
 		/// <param name="vector">The vector whose components should be negated.</param>
 		public static Vector2f16 operator -(Vector2f16 vector)
@@ -918,7 +920,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Performs a vector subtraction.
+		///     Performs a vector subtraction.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -928,7 +930,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="vector">The vector that should be scaled.</param>
 		/// <param name="factor">The factor that should be applied.</param>
@@ -938,7 +940,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Scales the vector by the given factor.
+		///     Scales the vector by the given factor.
 		/// </summary>
 		/// <param name="factor">The factor that should be applied.</param>
 		/// <param name="vector">The vector that should be scaled.</param>
@@ -948,7 +950,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the vector by a scalar value.
+		///     Divides the vector by a scalar value.
 		/// </summary>
 		/// <param name="vector">The vector that should be divided.</param>
 		/// <param name="factor">The scalar value the vector should be divided by.</param>
@@ -958,7 +960,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Computes the dot product of the two vectors.
+		///     Computes the dot product of the two vectors.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -970,4 +972,3 @@ namespace Pegasus.Math
 }
 
 // ReSharper restore InconsistentNaming
-

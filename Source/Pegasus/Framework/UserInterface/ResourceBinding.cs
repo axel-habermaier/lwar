@@ -4,19 +4,19 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Binds a target UI element/dependency property pair to a resource and updates the target dependency property's
-	///   value every time the resource changes.
+	///     Binds a target UI element/dependency property pair to a resource and updates the target dependency property's
+	///     value every time the resource changes.
 	/// </summary>
 	/// <typeparam name="T">The type of the value that is bound.</typeparam>
 	internal sealed class ResourceBinding<T> : Binding<T>
 	{
 		/// <summary>
-		///   The key of the resource that is bound to the dependency property.
+		///     The key of the resource that is bound to the dependency property.
 		/// </summary>
 		private readonly object _key;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be bound to the dependency property.</param>
 		internal ResourceBinding(object key)
@@ -26,7 +26,7 @@
 		}
 
 		/// <summary>
-		///   Gets the target object as an instance of UIElement.
+		///     Gets the target object as an instance of UIElement.
 		/// </summary>
 		private UIElement TargetObject
 		{
@@ -34,7 +34,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the binding has been activated.
+		///     Invoked when the binding has been activated.
 		/// </summary>
 		protected override void OnActivated()
 		{
@@ -42,7 +42,7 @@
 		}
 
 		/// <summary>
-		///   Initializes the binding.
+		///     Initializes the binding.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   Removes the binding.
+		///     Removes the binding.
 		/// </summary>
 		internal override void Remove()
 		{
@@ -59,7 +59,7 @@
 		}
 
 		/// <summary>
-		///   Sets the bound resource to the target dependency property.
+		///     Sets the bound resource to the target dependency property.
 		/// </summary>
 		private void SetResource()
 		{

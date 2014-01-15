@@ -3,22 +3,22 @@
 	using System;
 
 	/// <summary>
-	///   Describes the type of a buffer.
+	///     Describes the type of a buffer.
 	/// </summary>
 	public enum BufferType
 	{
 		/// <summary>
-		///   Indicates that a buffer is a constant buffer.
+		///     Indicates that a buffer is a constant buffer.
 		/// </summary>
 		ConstantBuffer = 2701,
 
 		/// <summary>
-		///   Indicates that a buffer is a vertex buffer.
+		///     Indicates that a buffer is a vertex buffer.
 		/// </summary>
 		VertexBuffer = 2702,
 
 		/// <summary>
-		///   Indicates that a buffer is an index buffer.
+		///     Indicates that a buffer is an index buffer.
 		/// </summary>
 		IndexBuffer = 2703
 	}

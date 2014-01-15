@@ -7,17 +7,17 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Explains the usage of the cvar and command system.
+	///     Explains the usage of the cvar and command system.
 	/// </summary>
 	internal class Help : DisposableObject
 	{
 		/// <summary>
-		///   A cached string builder instance that is used to build up the help texts.
+		///     A cached string builder instance that is used to build up the help texts.
 		/// </summary>
 		private readonly StringBuilder _builder = new StringBuilder();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public Help()
 		{
@@ -25,7 +25,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when a description of the cvar or command with the given name should be displayed.
+		///     Invoked when a description of the cvar or command with the given name should be displayed.
 		/// </summary>
 		/// <param name="name">The name of the cvar or the command for which the help should be displayed.</param>
 		private void OnHelp(string name)
@@ -49,7 +49,7 @@
 		}
 
 		/// <summary>
-		///   Prints the help for the console system.
+		///     Prints the help for the console system.
 		/// </summary>
 		private void PrintHelp()
 		{
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Prints the help for the given cvar.
+		///     Prints the help for the given cvar.
 		/// </summary>
 		/// <param name="cvar">The cvar the help should be printed for.</param>
 		private void PrintCvarHelp(ICvar cvar)
@@ -95,7 +95,7 @@
 		}
 
 		/// <summary>
-		///   Prints the help for the given command.
+		///     Prints the help for the given command.
 		/// </summary>
 		/// <param name="command">The command the help should be printed for.</param>
 		private void PrintCommandHelp(ICommand command)
@@ -132,7 +132,7 @@
 		}
 
 		/// <summary>
-		///   Gets a string that contains a hint about the usage of help.
+		///     Gets a string that contains a hint about the usage of help.
 		/// </summary>
 		/// <param name="name">The cvar or command name that should be used in the hint.</param>
 		public static string GetHint(string name)
@@ -141,7 +141,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

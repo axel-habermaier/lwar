@@ -6,27 +6,27 @@
 	using UserInterface;
 
 	/// <summary>
-	///   Improves text drawing performance by caching the quads of a text.
+	///     Improves text drawing performance by caching the quads of a text.
 	/// </summary>
 	public struct TextRenderer
 	{
 		/// <summary>
-		///   The text color.
+		///     The text color.
 		/// </summary>
 		private Color _color;
 
 		/// <summary>
-		///   The number of cached quads.
+		///     The number of cached quads.
 		/// </summary>
 		private int _numQuads;
 
 		/// <summary>
-		///   The quads of the text.
+		///     The quads of the text.
 		/// </summary>
 		private Quad[] _quads;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="color">The text color.</param>
 		public TextRenderer(Color color)
@@ -36,7 +36,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the text color.
+		///     Gets or sets the text color.
 		/// </summary>
 		public Color Color
 		{
@@ -51,11 +51,11 @@
 		}
 
 		/// <summary>
-		///   Rebuilds the cache of the layouted text quads for more efficient rendering.
+		///     Rebuilds the cache of the layouted text quads for more efficient rendering.
 		/// </summary>
 		/// <param name="font">
-		///   The font that was used to layout the text and that should be used
-		///   to draw the text.
+		///     The font that was used to layout the text and that should be used
+		///     to draw the text.
 		/// </param>
 		/// <param name="text">The text that was layouted and should be drawn.</param>
 		/// <param name="layoutData">The layouting data for the individual characters of the text.</param>
@@ -93,7 +93,7 @@
 		}
 
 		/// <summary>
-		///   Draws a single line of non-layouted, non-cached text.
+		///     Draws a single line of non-layouted, non-cached text.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the text.</param>
 		/// <param name="font">The font that should be used to draw the text.</param>
@@ -128,7 +128,7 @@
 		}
 
 		/// <summary>
-		///   Draws the cached text.
+		///     Draws the cached text.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the text.</param>
 		/// <param name="texture">The font texture.</param>

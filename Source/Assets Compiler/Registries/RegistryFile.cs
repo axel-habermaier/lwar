@@ -7,17 +7,17 @@
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 
 	/// <summary>
-	///   Represents a C# source code file that declares a registry interface.
+	///     Represents a C# source code file that declares a registry interface.
 	/// </summary>
 	internal class RegistryFile : RegistryElement
 	{
 		/// <summary>
-		///   The parsed syntax tree of the file.
+		///     The parsed syntax tree of the file.
 		/// </summary>
 		private readonly AstNode _syntaxTree;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="errorReporter">The error reporter that should be used to report validation errors.</param>
 		/// <param name="syntaxTree">The parsed syntax tree of the effect file.</param>
@@ -29,7 +29,7 @@
 		}
 
 		/// <summary>
-		///   Gets the registry declared in the file.
+		///     Gets the registry declared in the file.
 		/// </summary>
 		public Registry Registry
 		{
@@ -37,7 +37,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should initialize itself.
+		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
 		{
@@ -48,8 +48,8 @@
 		}
 
 		/// <summary>
-		///   Invoked when the element should validate itself. This method is invoked only if no errors occurred during
-		///   initialization.
+		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during
+		///     initialization.
 		/// </summary>
 		protected override void Validate()
 		{

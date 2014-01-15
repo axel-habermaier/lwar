@@ -7,22 +7,22 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a scheduler for asynchronous processes that always schedules the processes non-concurrently.
+	///     Represents a scheduler for asynchronous processes that always schedules the processes non-concurrently.
 	/// </summary>
 	public sealed class ProcessScheduler : DisposableObject
 	{
 		/// <summary>
-		///   The processes that have been added since or during the last call to RunProcesses.
+		///     The processes that have been added since or during the last call to RunProcesses.
 		/// </summary>
 		private readonly List<IResumableProcess> _added = new List<IResumableProcess>();
 
 		/// <summary>
-		///   The processes currently being scheduled by the scheduler.
+		///     The processes currently being scheduled by the scheduler.
 		/// </summary>
 		private readonly List<IResumableProcess> _processes = new List<IResumableProcess>();
 
 		/// <summary>
-		///   Creates a new process that the scheduler is responsible for.
+		///     Creates a new process that the scheduler is responsible for.
 		/// </summary>
 		/// <param name="asyncAction">The asynchronous action that the process should execute.</param>
 		/// <param name="path">The file name of the caller.</param>
@@ -47,7 +47,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new process that the scheduler is responsible for.
+		///     Creates a new process that the scheduler is responsible for.
 		/// </summary>
 		/// <typeparam name="TResult">The type of the result of the process.</typeparam>
 		/// <param name="asyncFunc">The asynchronous function that the process should execute.</param>
@@ -74,7 +74,7 @@
 		}
 
 		/// <summary>
-		///   Resumes all asynchronous processes that are waiting to be resumed. This method must be called periodically.
+		///     Resumes all asynchronous processes that are waiting to be resumed. This method must be called periodically.
 		/// </summary>
 		public void RunProcesses()
 		{
@@ -103,7 +103,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

@@ -6,22 +6,22 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents a Udp-based socket that can be used to send and receive multicast packets over the network.
+	///     Represents a Udp-based socket that can be used to send and receive multicast packets over the network.
 	/// </summary>
 	public class MulticastSocket : DisposableObject
 	{
 		/// <summary>
-		///   The multicast group that the socket listens to or sends to.
+		///     The multicast group that the socket listens to or sends to.
 		/// </summary>
 		private readonly IPEndPoint _multicastGroup;
 
 		/// <summary>
-		///   The UDP socket that is used for sending and receiving the data.
+		///     The UDP socket that is used for sending and receiving the data.
 		/// </summary>
 		private readonly UdpSocket _udpSocket = new UdpSocket();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="multicastGroup">The multicast group that the socket should listen to or send to.</param>
 		/// <param name="timeToLive">The time to live for the multicast messages.</param>
@@ -42,7 +42,7 @@
 		}
 
 		/// <summary>
-		///   Sends the given packet over the connection.
+		///     Sends the given packet over the connection.
 		/// </summary>
 		/// <param name="buffer">The buffer that contains the data that should be sent.</param>
 		/// <param name="size">The number of bytes that should be sent.</param>
@@ -52,7 +52,7 @@
 		}
 
 		/// <summary>
-		///   Tries to receive a packet sent over the connection. Returns true if a packet has been received, false otherwise.
+		///     Tries to receive a packet sent over the connection. Returns true if a packet has been received, false otherwise.
 		/// </summary>
 		/// <param name="buffer">The buffer the received data should be written to.</param>
 		/// <param name="remoteEndPoint">After the method completes, contains the endpoint of the peer that sent the packet.</param>
@@ -66,7 +66,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

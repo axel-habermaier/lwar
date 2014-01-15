@@ -4,12 +4,12 @@ namespace Pegasus.Scripting.Parsing.Combinators
 	using Math;
 
 	/// <summary>
-	///   Parses a Vector2i value.
+	///     Parses a Vector2i value.
 	/// </summary>
 	public class Vector2IParser : CombinedParser<Vector2i>
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public Vector2IParser()
 		{

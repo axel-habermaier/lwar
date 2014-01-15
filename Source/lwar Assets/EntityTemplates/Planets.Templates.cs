@@ -4,7 +4,7 @@
 	using Compilation;
 
 	/// <summary>
-	///   The planet entity templates that are shared between the client and the server.
+	///     The planet entity templates that are shared between the client and the server.
 	/// </summary>
 	public static class Planets
 	{

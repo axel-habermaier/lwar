@@ -10,22 +10,22 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Interprets user-provided input to set and view cvars and invoke commands.
+	///     Interprets user-provided input to set and view cvars and invoke commands.
 	/// </summary>
 	internal class Interpreter : DisposableObject
 	{
 		/// <summary>
-		///   The name of the application.
+		///     The name of the application.
 		/// </summary>
 		private readonly string _appName;
 
 		/// <summary>
-		///   The parser that is used to parse a user request.
+		///     The parser that is used to parse a user request.
 		/// </summary>
 		private readonly InstructionParser _parser;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="appName">The name of the application.</param>
 		public Interpreter(string appName)
@@ -46,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -61,7 +61,7 @@
 		}
 
 		/// <summary>
-		///   Toggles the value of a Boolean console variable.
+		///     Toggles the value of a Boolean console variable.
 		/// </summary>
 		/// <param name="name">The name of the console variable whose value should be toggled.</param>
 		private static void OnToggle(string name)
@@ -81,7 +81,7 @@
 		}
 
 		/// <summary>
-		///   Prints information about the application.
+		///     Prints information about the application.
 		/// </summary>
 		private void OnPrintAppInfo()
 		{
@@ -96,7 +96,7 @@
 		}
 
 		/// <summary>
-		///   Resets the cvar with the given name to its default value.
+		///     Resets the cvar with the given name to its default value.
 		/// </summary>
 		/// <param name="name">The name of the cvar that should be reset to its default value.</param>
 		private static void OnResetCvar(string name)
@@ -111,7 +111,7 @@
 		}
 
 		/// <summary>
-		///   Executes the given user-provided input.
+		///     Executes the given user-provided input.
 		/// </summary>
 		/// <param name="input">The input that should be executed.</param>
 		private void OnExecute(string input)
@@ -130,7 +130,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the commands in the given file should be processed.
+		///     Invoked when the commands in the given file should be processed.
 		/// </summary>
 		/// <param name="fileName">The name of the file in the application's user directory that should be processed.</param>
 		private void OnProcess(string fileName)
@@ -140,7 +140,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when the persistent cvars should be written to the given file.
+		///     Invoked when the persistent cvars should be written to the given file.
 		/// </summary>
 		/// <param name="fileName">The name of the file in the application's user directory that the cvars should be written to.</param>
 		private void OnPersist(string fileName)
@@ -150,7 +150,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when all commands with a matching name should be listed.
+		///     Invoked when all commands with a matching name should be listed.
 		/// </summary>
 		/// <param name="pattern">The name pattern of the commands that should be listed.</param>
 		private static void OnListCommands(string pattern)
@@ -159,7 +159,7 @@
 		}
 
 		/// <summary>
-		///   Invoked when all cvars with a matching name should be listed.
+		///     Invoked when all cvars with a matching name should be listed.
 		/// </summary>
 		/// <param name="pattern">The name pattern of the cvars that should be listed.</param>
 		private static void OnListCvars(string pattern)
@@ -168,7 +168,7 @@
 		}
 
 		/// <summary>
-		///   Lists all elements matching the given predicate.
+		///     Lists all elements matching the given predicate.
 		/// </summary>
 		/// <typeparam name="T">The type of the elements that should be shown.</typeparam>
 		/// <param name="source">The elements that should be shown.</param>
@@ -199,8 +199,8 @@
 		}
 
 		/// <summary>
-		///   Returns an ordered sequence of all elements of the source sequence, whose selected property matches the given
-		///   pattern.
+		///     Returns an ordered sequence of all elements of the source sequence, whose selected property matches the given
+		///     pattern.
 		/// </summary>
 		/// <typeparam name="T">The type of the items that should be checked.</typeparam>
 		/// <param name="source">The items that should be checked.</param>

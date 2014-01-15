@@ -5,52 +5,52 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Determines a layout for a text based on the font, desired with, alignment, etc.
+	///     Determines a layout for a text based on the font, desired with, alignment, etc.
 	/// </summary>
 	internal class TextLayout : DisposableObject
 	{
 		/// <summary>
-		///   The alignment of the text within the desired area.
+		///     The alignment of the text within the desired area.
 		/// </summary>
 		private TextAlignment _alignment;
 
 		/// <summary>
-		///   The areas of the individual characters of the text.
+		///     The areas of the individual characters of the text.
 		/// </summary>
 		private Rectangle[] _characterAreas;
 
 		/// <summary>
-		///   The desired drawing area of the text. If the text doesn't fit, it overlaps vertically.
+		///     The desired drawing area of the text. If the text doesn't fit, it overlaps vertically.
 		/// </summary>
 		private Rectangle _desiredArea;
 
 		/// <summary>
-		///   Indicates that the metadata is out of date.
+		///     Indicates that the metadata is out of date.
 		/// </summary>
 		private bool _dirty;
 
 		/// <summary>
-		///   The font that is used to determine the size of the individual characters.
+		///     The font that is used to determine the size of the individual characters.
 		/// </summary>
 		private Font _font;
 
 		/// <summary>
-		///   The number of lines that are currently used.
+		///     The number of lines that are currently used.
 		/// </summary>
 		private int _lineCount;
 
 		/// <summary>
-		///   The amount of spacing between lines.
+		///     The amount of spacing between lines.
 		/// </summary>
 		private int _lineSpacing;
 
 		/// <summary>
-		///   The individual lines of the text.
+		///     The individual lines of the text.
 		/// </summary>
 		private TextLine[] _lines;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The font that is used to determine the size of the individual characters.</param>
 		/// <param name="text">The text that should be layouted.</param>
@@ -64,12 +64,12 @@
 		}
 
 		/// <summary>
-		///   Gets the text that is layouted.
+		///     Gets the text that is layouted.
 		/// </summary>
 		public Text Text { get; private set; }
 
 		/// <summary>
-		///   Gets the layouting data for the individual characters of the layouted text.
+		///     Gets the layouting data for the individual characters of the layouted text.
 		/// </summary>
 		public Rectangle[] LayoutData
 		{
@@ -77,7 +77,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the text that should be layouted.
+		///     Gets or sets the text that should be layouted.
 		/// </summary>
 		public string TextString
 		{
@@ -99,7 +99,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the amount of spacing between lines.
+		///     Gets or sets the amount of spacing between lines.
 		/// </summary>
 		public int LineSpacing
 		{
@@ -115,7 +115,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the desired drawing area of the text. If the text doesn't fit, it overlaps vertically.
+		///     Gets or sets the desired drawing area of the text. If the text doesn't fit, it overlaps vertically.
 		/// </summary>
 		public Rectangle DesiredArea
 		{
@@ -139,7 +139,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the font that is used to determine the size of the individual characters.
+		///     Gets or sets the font that is used to determine the size of the individual characters.
 		/// </summary>
 		public Font Font
 		{
@@ -157,7 +157,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the alignment of the text within the desired area.
+		///     Gets or sets the alignment of the text within the desired area.
 		/// </summary>
 		public TextAlignment Alignment
 		{
@@ -173,13 +173,13 @@
 		}
 
 		/// <summary>
-		///   Gets the actual text rendering area. Usually, the actual area is smaller than the desired area.
-		///   If any words overlap, however, the actual area is bigger.
+		///     Gets the actual text rendering area. Usually, the actual area is smaller than the desired area.
+		///     If any words overlap, however, the actual area is bigger.
 		/// </summary>
 		public Rectangle ActualArea { get; private set; }
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -187,13 +187,13 @@
 		}
 
 		/// <summary>
-		///   Raised when the layout has changed.
+		///     Raised when the layout has changed.
 		/// </summary>
 		public event Action LayoutChanged;
 
 		/// <summary>
-		///   Updates the layout if any changes have been made since the last layout update that
-		///   might possibly affect the text's layout.
+		///     Updates the layout if any changes have been made since the last layout update that
+		///     might possibly affect the text's layout.
 		/// </summary>
 		public void UpdateLayout()
 		{
@@ -214,7 +214,7 @@
 		}
 
 		/// <summary>
-		///   Draws debugging visualizations of the sequences and lines.
+		///     Draws debugging visualizations of the sequences and lines.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the debug visualizations.</param>
 		public void DrawDebugVisualizations(SpriteBatch spriteBatch)
@@ -227,7 +227,7 @@
 		}
 
 		/// <summary>
-		///   Relayouts the text.
+		///     Relayouts the text.
 		/// </summary>
 		public void Relayout()
 		{
@@ -236,7 +236,7 @@
 		}
 
 		/// <summary>
-		///   Computes the physical position of the caret at the given logical caret position.
+		///     Computes the physical position of the caret at the given logical caret position.
 		/// </summary>
 		/// <param name="position">The logical position of the caret.</param>
 		public Vector2i ComputeCaretPosition(int position)
@@ -268,7 +268,7 @@
 		}
 
 		/// <summary>
-		///   Creates the character areas and lines for the text.
+		///     Creates the character areas and lines for the text.
 		/// </summary>
 		private void ComputeCharacterAreasAndLines()
 		{
@@ -325,7 +325,7 @@
 		}
 
 		/// <summary>
-		///   Aligns the lines.
+		///     Aligns the lines.
 		/// </summary>
 		private void AlignLines()
 		{
@@ -358,7 +358,7 @@
 		}
 
 		/// <summary>
-		///   Add the given line to the lines array.
+		///     Add the given line to the lines array.
 		/// </summary>
 		/// <param name="line">The line that should be added.</param>
 		private void AddLine(TextLine line)
@@ -380,7 +380,7 @@
 		}
 
 		/// <summary>
-		///   Starts a new line.
+		///     Starts a new line.
 		/// </summary>
 		/// <param name="line">The predecessor of the new line.</param>
 		/// <param name="offset">The position offset.</param>
@@ -399,7 +399,7 @@
 		}
 
 		/// <summary>
-		///   Computes the character areas of the characters in the given sequence.
+		///     Computes the character areas of the characters in the given sequence.
 		/// </summary>
 		/// <param name="sequence">The sequence whose character areas should be computed.</param>
 		/// <param name="offset">The offset of the character position.</param>
@@ -410,8 +410,8 @@
 		}
 
 		/// <summary>
-		///   Computes the actual text rendering area. Usually, the actual area is smaller than the desired area.
-		///   If any words overlap, however, the actual area is bigger.
+		///     Computes the actual text rendering area. Usually, the actual area is smaller than the desired area.
+		///     If any words overlap, however, the actual area is bigger.
 		/// </summary>
 		private void ComputeActualArea()
 		{
@@ -443,7 +443,7 @@
 		}
 
 		/// <summary>
-		///   Computes the actual height of the text rendering area.
+		///     Computes the actual height of the text rendering area.
 		/// </summary>
 		private int ComputeHeight()
 		{
@@ -453,7 +453,7 @@
 		}
 
 		/// <summary>
-		///   Offsets the position of the lines and character areas without performing a full layout pass.
+		///     Offsets the position of the lines and character areas without performing a full layout pass.
 		/// </summary>
 		/// <param name="offset">The position offset.</param>
 		private void OffsetPosition(Vector2i offset)

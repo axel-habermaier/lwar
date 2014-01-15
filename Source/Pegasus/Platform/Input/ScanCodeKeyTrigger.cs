@@ -3,34 +3,34 @@
 	using System;
 
 	/// <summary>
-	///   Represents a trigger that triggers if a key is in a certain state. It is similar to a KeyTrigger, except
-	///   that it identifies the monitored key by its scan code.
+	///     Represents a trigger that triggers if a key is in a certain state. It is similar to a KeyTrigger, except
+	///     that it identifies the monitored key by its scan code.
 	/// </summary>
 	internal sealed class ScanCodeKeyTrigger : InputTrigger
 	{
 		/// <summary>
-		///   The scan code of the key that the trigger monitors.
+		///     The scan code of the key that the trigger monitors.
 		/// </summary>
 		private readonly int _scanCode;
 
 		/// <summary>
-		///   Determines the type of the trigger.
+		///     Determines the type of the trigger.
 		/// </summary>
 		private readonly KeyTriggerType _triggerType;
 
 		/// <summary>
-		///   The logical input device that is currently used to evaluate the trigger. We must store a reference
-		///   to it in order to be able to unregister from the keyboard's key event.
+		///     The logical input device that is currently used to evaluate the trigger. We must store a reference
+		///     to it in order to be able to unregister from the keyboard's key event.
 		/// </summary>
 		private LogicalInputDevice _device;
 
 		/// <summary>
-		///   The state of the monitored key.
+		///     The state of the monitored key.
 		/// </summary>
 		private InputState _state = new InputState();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="triggerType">Determines the type of the trigger.</param>
 		/// <param name="scanCode">The scan code of the key that the trigger monitors.</param>
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Indicates whether the current object is equal to another object of the same type.
+		///     Indicates whether the current object is equal to another object of the same type.
 		/// </summary>
 		public override bool Equals(InputTrigger other)
 		{
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Evaluates the trigger, returning true to indicate that the trigger has fired.
+		///     Evaluates the trigger, returning true to indicate that the trigger has fired.
 		/// </summary>
 		/// <param name="device">The logical input device that should be used to evaluate the trigger.</param>
 		internal override bool Evaluate(LogicalInputDevice device)
@@ -87,11 +87,11 @@
 		}
 
 		/// <summary>
-		///   Sets the logical input device the logical input is currently registered on.
+		///     Sets the logical input device the logical input is currently registered on.
 		/// </summary>
 		/// <param name="device">
-		///   The logical input device the logical input is currently registered on. Null should be passed to
-		///   indicate that the logical input is currently not registered on any device.
+		///     The logical input device the logical input is currently registered on. Null should be passed to
+		///     indicate that the logical input is currently not registered on any device.
 		/// </param>
 		internal override void IsRegisteredOn(LogicalInputDevice device)
 		{
@@ -114,7 +114,7 @@
 		}
 
 		/// <summary>
-		///   Invoked whenever a key is pressed.
+		///     Invoked whenever a key is pressed.
 		/// </summary>
 		/// <param name="key">The key that was pressed.</param>
 		private void OnKeyPressed(KeyEventArgs key)
@@ -124,7 +124,7 @@
 		}
 
 		/// <summary>
-		///   Invoked whenever a key is released.
+		///     Invoked whenever a key is released.
 		/// </summary>
 		/// <param name="key">The key that was released.</param>
 		private void OnKeyReleased(KeyEventArgs key)
@@ -134,7 +134,7 @@
 		}
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{

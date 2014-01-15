@@ -6,120 +6,120 @@
 	using Memory;
 
 	/// <summary>
-	///   Manages timestamp queries to profile the time the GPU spends on rendering each frame.
+	///     Manages timestamp queries to profile the time the GPU spends on rendering each frame.
 	/// </summary>
 	internal class GraphicsDeviceProfiler : DisposableObject, IMeasurement
 	{
 		/// <summary>
-		///   The number of samples for the computation of the average.
+		///     The number of samples for the computation of the average.
 		/// </summary>
 		private const int AverageSamples = 32;
 
 		/// <summary>
-		///   The number of queries that is used to compute the frame time. As the CPU and the GPU work asynchronously,
-		///   the results of the queries are not immediately available. In order to avoid stalling the CPU, the results
-		///   of the queries are checked BufferSize frames later.
+		///     The number of queries that is used to compute the frame time. As the CPU and the GPU work asynchronously,
+		///     the results of the queries are not immediately available. In order to avoid stalling the CPU, the results
+		///     of the queries are checked BufferSize frames later.
 		/// </summary>
 		private const int BufferSize = 3;
 
 		/// <summary>
-		///   The timestamp queries that mark the beginning of a frame.
+		///     The timestamp queries that mark the beginning of a frame.
 		/// </summary>
 		private readonly TimestampQuery[] _beginQueries = new TimestampQuery[BufferSize];
 
 		/// <summary>
-		///   The number of blend state binding changes that have been made.
+		///     The number of blend state binding changes that have been made.
 		/// </summary>
 		private readonly AveragedInteger _blendStateBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The number of buffer mapping operations that have been made.
+		///     The number of buffer mapping operations that have been made.
 		/// </summary>
 		private readonly AveragedInteger _bufferMapCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The number of constant buffer binding changes that have been made.
+		///     The number of constant buffer binding changes that have been made.
 		/// </summary>
 		private readonly AveragedInteger _constantBufferBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The number of constant buffer updates that have been made.
+		///     The number of constant buffer updates that have been made.
 		/// </summary>
 		private readonly AveragedInteger _constantBufferUpdates = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The number of depth stencil state binding changes that have been made.
+		///     The number of depth stencil state binding changes that have been made.
 		/// </summary>
 		private readonly AveragedInteger _depthStencilStateBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The timestamp disjoint queries that are used to check whether the timestamps are valid and that allow the
-		///   correct interpretation of the timestamp values.
+		///     The timestamp disjoint queries that are used to check whether the timestamps are valid and that allow the
+		///     correct interpretation of the timestamp values.
 		/// </summary>
 		private readonly TimestampDisjointQuery[] _disjointQueries = new TimestampDisjointQuery[BufferSize];
 
 		/// <summary>
-		///   The number of draw calls that have been made.
+		///     The number of draw calls that have been made.
 		/// </summary>
 		private readonly AveragedInteger _drawCalls = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The timestamp queries that mark the end of a frame.
+		///     The timestamp queries that mark the end of a frame.
 		/// </summary>
 		private readonly TimestampQuery[] _endQueries = new TimestampQuery[BufferSize];
 
 		/// <summary>
-		///   The graphics device that is profiled.
+		///     The graphics device that is profiled.
 		/// </summary>
 		private readonly GraphicsDevice _graphicsDevice;
 
 		/// <summary>
-		///   The number of input layout binding changes that have been made.
+		///     The number of input layout binding changes that have been made.
 		/// </summary>
 		private readonly AveragedInteger _inputLayoutBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The number of rasterizer state binding changes that have been made.
+		///     The number of rasterizer state binding changes that have been made.
 		/// </summary>
 		private readonly AveragedInteger _rasterizerStateBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The number of render target binding changes that have been made.
+		///     The number of render target binding changes that have been made.
 		/// </summary>
 		private readonly AveragedInteger _renderTargetBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   Gets the statistical render time information.
+		///     Gets the statistical render time information.
 		/// </summary>
 		private readonly AveragedDouble _renderTime = new AveragedDouble("ms", AverageSamples);
 
 		/// <summary>
-		///   The number of sampler staste binding changes that have been made.
+		///     The number of sampler staste binding changes that have been made.
 		/// </summary>
 		private readonly AveragedInteger _samplerStateBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The number of shader binding changes that have been made.
+		///     The number of shader binding changes that have been made.
 		/// </summary>
 		private readonly AveragedInteger _shaderBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The number of texture binding changes that have been made.
+		///     The number of texture binding changes that have been made.
 		/// </summary>
 		private readonly AveragedInteger _textureBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The number of vertices that have been drawn.
+		///     The number of vertices that have been drawn.
 		/// </summary>
 		private readonly AveragedInteger _vertexCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///   The index denoting the queries whose results that are checked next.
+		///     The index denoting the queries whose results that are checked next.
 		/// </summary>
 		private int _index;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be profiled.</param>
 		public GraphicsDeviceProfiler(GraphicsDevice graphicsDevice)
@@ -147,7 +147,7 @@
 		}
 
 		/// <summary>
-		///   Gets the index of the queries that should be issued during the current frame.
+		///     Gets the index of the queries that should be issued during the current frame.
 		/// </summary>
 		private int StartIndex
 		{
@@ -155,7 +155,7 @@
 		}
 
 		/// <summary>
-		///   Gets the index of the queries whose results should be checked during the current frame.
+		///     Gets the index of the queries whose results should be checked during the current frame.
 		/// </summary>
 		private int ResultIndex
 		{
@@ -163,7 +163,7 @@
 		}
 
 		/// <summary>
-		///   Marks the beginning of a new frame.
+		///     Marks the beginning of a new frame.
 		/// </summary>
 		public void Begin()
 		{
@@ -172,7 +172,7 @@
 		}
 
 		/// <summary>
-		///   Marks the end of the current frame.
+		///     Marks the end of the current frame.
 		/// </summary>
 		public void End()
 		{
@@ -215,7 +215,7 @@
 		}
 
 		/// <summary>
-		///   Writes the results of the frame time measurement into the given string builder.
+		///     Writes the results of the frame time measurement into the given string builder.
 		/// </summary>
 		/// <param name="builder">The string builder the results should be written to.</param>
 		public void WriteResults(StringBuilder builder)
@@ -224,7 +224,7 @@
 		}
 
 		/// <summary>
-		///   Writes the graphics device state changes into the given string builder.
+		///     Writes the graphics device state changes into the given string builder.
 		/// </summary>
 		/// <param name="builder">The string builder the results should be written to.</param>
 		public void WriteFrameInfo(StringBuilder builder)
@@ -236,7 +236,7 @@
 		}
 
 		/// <summary>
-		///   Writes the graphics device state changes into the given string builder.
+		///     Writes the graphics device state changes into the given string builder.
 		/// </summary>
 		/// <param name="builder">The string builder the results should be written to.</param>
 		public void WriteStateChanges(StringBuilder builder)
@@ -256,7 +256,7 @@
 		}
 
 		/// <summary>
-		///   Writes the labeled value of the given averaged integer to the given string builder.
+		///     Writes the labeled value of the given averaged integer to the given string builder.
 		/// </summary>
 		/// <param name="builder">The builder that the value should be written to.</param>
 		/// <param name="value">The averaged integer that should be written to the string builder.</param>
@@ -273,7 +273,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

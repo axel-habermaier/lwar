@@ -4,12 +4,12 @@
 	using Math;
 
 	/// <summary>
-	///   Parses a Vector2 value.
+	///     Parses a Vector2 value.
 	/// </summary>
 	public class Vector2Parser : CombinedParser<Vector2>
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public Vector2Parser()
 		{

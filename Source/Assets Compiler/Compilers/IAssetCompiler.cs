@@ -11,8 +11,7 @@ namespace Pegasus.AssetsCompiler.Compilers
 	{
 		/// <summary>
 		///     Compiles all assets of the compiler's asset source type. Returns true to indicate that the compilation of all
-		///     assets
-		///     has been successful.
+		///     assets has been successful.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
 		bool Compile(IEnumerable<Asset> assets);

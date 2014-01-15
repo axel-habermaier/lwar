@@ -8,32 +8,32 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents the graphics device.
+	///     Represents the graphics device.
 	/// </summary>
 	public sealed class GraphicsDevice : DisposableObject
 	{
 		/// <summary>
-		///   The native graphics device instance.
+		///     The native graphics device instance.
 		/// </summary>
 		private readonly IntPtr _device;
 
 		/// <summary>
-		///   The current primitive type of the input assembler stage.
+		///     The current primitive type of the input assembler stage.
 		/// </summary>
 		private PrimitiveType _primitiveType;
 
 		/// <summary>
-		///   The current scissor rectangle of the rasterizer stage of the device.
+		///     The current scissor rectangle of the rasterizer stage of the device.
 		/// </summary>
 		private Rectangle _scissor;
 
 		/// <summary>
-		///   The current viewport of the rasterizer stage of the device.
+		///     The current viewport of the rasterizer stage of the device.
 		/// </summary>
 		private Rectangle _viewport;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		internal GraphicsDevice()
 		{
@@ -48,7 +48,7 @@
 		}
 
 		/// <summary>
-		///   Gets the native graphics device instance.
+		///     Gets the native graphics device instance.
 		/// </summary>
 		internal IntPtr NativePtr
 		{
@@ -60,7 +60,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the current viewport of the rasterizer stage of the device.
+		///     Gets or sets the current viewport of the rasterizer stage of the device.
 		/// </summary>
 		internal Rectangle Viewport
 		{
@@ -79,7 +79,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the current scissor area of the rasterizer stage of the device.
+		///     Gets or sets the current scissor area of the rasterizer stage of the device.
 		/// </summary>
 		internal Rectangle ScissorArea
 		{
@@ -98,7 +98,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the current primitive type of the input assembler stage.
+		///     Gets or sets the current primitive type of the input assembler stage.
 		/// </summary>
 		internal PrimitiveType PrimitiveType
 		{
@@ -117,7 +117,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -131,7 +131,7 @@
 		}
 
 		/// <summary>
-		///   Draws primitiveCount-many primitives, starting at the given offset into the currently bound vertex buffers.
+		///     Draws primitiveCount-many primitives, starting at the given offset into the currently bound vertex buffers.
 		/// </summary>
 		/// <param name="primitiveCount">The number of primitives that should be drawn.</param>
 		/// <param name="offset">The offset into the vertex buffers.</param>
@@ -142,8 +142,8 @@
 		}
 
 		/// <summary>
-		///   Draws indexCount-many indices, starting at the given index offset into the currently bound index buffer, where the
-		///   vertex offset is added to each index before accessing the currently bound vertex buffers.
+		///     Draws indexCount-many indices, starting at the given index offset into the currently bound index buffer, where the
+		///     vertex offset is added to each index before accessing the currently bound vertex buffers.
 		/// </summary>
 		/// <param name="indexCount">The number of indices to draw.</param>
 		/// <param name="indexOffset">The location of the first index read by the GPU from the index buffer.</param>
@@ -155,7 +155,7 @@
 		}
 
 		/// <summary>
-		///   Gets the statistics and resets all values to zero. This method should be called once per frame.
+		///     Gets the statistics and resets all values to zero. This method should be called once per frame.
 		/// </summary>
 		internal GraphicsDeviceStatistics GetStatistics()
 		{
@@ -165,7 +165,7 @@
 		}
 
 		/// <summary>
-		///   Provides access to the native graphics device functions.
+		///     Provides access to the native graphics device functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

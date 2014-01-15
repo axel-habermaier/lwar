@@ -5,12 +5,12 @@
 	using Memory;
 
 	/// <summary>
-	///   An index buffer holds indices that are used to index into vertex buffers.
+	///     An index buffer holds indices that are used to index into vertex buffers.
 	/// </summary>
 	public sealed class IndexBuffer : Buffer
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="usage">A value describing the usage pattern of the buffer.</param>
@@ -25,12 +25,12 @@
 		}
 
 		/// <summary>
-		///   Gets the size of the indices.
+		///     Gets the size of the indices.
 		/// </summary>
 		public IndexSize IndexSize { get; private set; }
 
 		/// <summary>
-		///   Creates an index buffer that is large enough to hold the given indices.
+		///     Creates an index buffer that is large enough to hold the given indices.
 		/// </summary>
 		/// <typeparam name="T">The type of the data that should be stored in the index buffer.</typeparam>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   Creates an index buffer that is large enough to hold the given data.
+		///     Creates an index buffer that is large enough to hold the given data.
 		/// </summary>
 		/// <typeparam name="T">The type of the data that should be stored in the index buffer.</typeparam>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
@@ -71,7 +71,7 @@
 		}
 
 		/// <summary>
-		///   Gets the index size from the given type.
+		///     Gets the index size from the given type.
 		/// </summary>
 		private static IndexSize GetIndexSize<T>()
 		{

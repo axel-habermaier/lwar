@@ -4,28 +4,28 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents an asynchronous operation that waits for a delegate to return true.
+	///     Represents an asynchronous operation that waits for a delegate to return true.
 	/// </summary>
 	internal class DelegateOperation : PooledObject<DelegateOperation>, IAsyncOperation
 	{
 		/// <summary>
-		///   The delegate that is awaited to become true.
+		///     The delegate that is awaited to become true.
 		/// </summary>
 		private Func<bool> _delegate;
 
 		/// <summary>
-		///   Gets the exception that has been thrown during the execution of the task.
+		///     Gets the exception that has been thrown during the execution of the task.
 		/// </summary>
 		public Exception Exception { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the operation has completed.
+		///     Gets a value indicating whether the operation has completed.
 		/// </summary>
 		public bool IsCompleted { get; private set; }
 
 		/// <summary>
-		///   Updates the state of the asynchronous operation, setting its Exception and IsCompleted properties if the
-		///   process has terminated.
+		///     Updates the state of the asynchronous operation, setting its Exception and IsCompleted properties if the
+		///     process has terminated.
 		/// </summary>
 		public void UpdateState()
 		{
@@ -40,7 +40,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new instance.
+		///     Creates a new instance.
 		/// </summary>
 		/// <param name="func">The function that should be awaited to return true.</param>
 		public static DelegateOperation Create(Func<bool> func)

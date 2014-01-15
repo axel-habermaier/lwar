@@ -4,25 +4,25 @@
 	using System.Linq;
 
 	/// <summary>
-	///   A sparse storage for objects implementing SpareObjectStorage.IStorageLocation. The values are stored in an array,
-	///   sorted by SpareObjectStorage.IStorageLocation.Location. A binary search is used to find the value of an object,
-	///   whereas insertions are guaranteed to insert the value at the correct array index.
+	///     A sparse storage for objects implementing SpareObjectStorage.IStorageLocation. The values are stored in an array,
+	///     sorted by SpareObjectStorage.IStorageLocation.Location. A binary search is used to find the value of an object,
+	///     whereas insertions are guaranteed to insert the value at the correct array index.
 	/// </summary>
 	internal struct SparseObjectStorage<T>
 		where T : class, SparseObjectStorage<T>.IStorageLocation
 	{
 		/// <summary>
-		///   The number of stored values.
+		///     The number of stored values.
 		/// </summary>
 		private int _valueCount;
 
 		/// <summary>
-		///   The values that are currently stored.
+		///     The values that are currently stored.
 		/// </summary>
 		private T[] _values;
 
 		/// <summary>
-		///   Gets an enumerator for all values currently stored in the sparse object storage.
+		///     Gets an enumerator for all values currently stored in the sparse object storage.
 		/// </summary>
 		internal Enumerator GetEnumerator()
 		{
@@ -30,7 +30,7 @@
 		}
 
 		/// <summary>
-		///   Adds the value to the store. The new value is added such that the ordering of the values array is maintained.
+		///     Adds the value to the store. The new value is added such that the ordering of the values array is maintained.
 		/// </summary>
 		/// <param name="value">The value that should be added.</param>
 		internal void Add(T value)
@@ -80,8 +80,8 @@
 		}
 
 		/// <summary>
-		///   Performs a binary search to find the value index for the given location. Returns null if no value has been stored
-		///   yet at the given location.
+		///     Performs a binary search to find the value index for the given location. Returns null if no value has been stored
+		///     yet at the given location.
 		/// </summary>
 		/// <param name="location">The index of the property the value index should be returned for.</param>
 		internal T Get(int location)
@@ -120,27 +120,27 @@
 		}
 
 		/// <summary>
-		///   Enumerates all stored values of a sparse object storage.
+		///     Enumerates all stored values of a sparse object storage.
 		/// </summary>
 		internal struct Enumerator
 		{
 			/// <summary>
-			///   The number of values that are enumerated.
+			///     The number of values that are enumerated.
 			/// </summary>
 			private readonly int _valueCount;
 
 			/// <summary>
-			///   The index of the current enumerated element.
+			///     The index of the current enumerated element.
 			/// </summary>
 			private int _current;
 
 			/// <summary>
-			///   The values that are enumerated.
+			///     The values that are enumerated.
 			/// </summary>
 			private T[] _values;
 
 			/// <summary>
-			///   Initializes a new instance.
+			///     Initializes a new instance.
 			/// </summary>
 			/// <param name="valueCount">The number of values that should be enumerated.</param>
 			/// <param name="values">The values that should be enumerated.</param>
@@ -154,12 +154,12 @@
 			}
 
 			/// <summary>
-			///   Gets the element at the current position of the enumerator.
+			///     Gets the element at the current position of the enumerator.
 			/// </summary>
 			public T Current { get; private set; }
 
 			/// <summary>
-			///   Advances the enumerator to the next UI element.
+			///     Advances the enumerator to the next UI element.
 			/// </summary>
 			public bool MoveNext()
 			{
@@ -180,10 +180,10 @@
 			}
 
 			/// <summary>
-			///   Gets the enumerator that can be used with C#'s foreach loops.
+			///     Gets the enumerator that can be used with C#'s foreach loops.
 			/// </summary>
 			/// <remarks>
-			///   This method just returns the enumerator object. It is only required to enable foreach support.
+			///     This method just returns the enumerator object. It is only required to enable foreach support.
 			/// </remarks>
 			public Enumerator GetEnumerator()
 			{
@@ -192,12 +192,12 @@
 		}
 
 		/// <summary>
-		///   Provides a storage location for objects that should be stored in a sparse object storage.
+		///     Provides a storage location for objects that should be stored in a sparse object storage.
 		/// </summary>
 		internal interface IStorageLocation
 		{
 			/// <summary>
-			///   The storage location of the value that remains unchanged and unique throughout the lifetime of the application.
+			///     The storage location of the value that remains unchanged and unique throughout the lifetime of the application.
 			/// </summary>
 			int Location { get; }
 		}

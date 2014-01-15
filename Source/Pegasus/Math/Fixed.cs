@@ -1,56 +1,55 @@
-﻿using System;
-
-namespace Pegasus.Math
+﻿namespace Pegasus.Math
 {
+	using System;
 	using System.Globalization;
 
 	/// <summary>
-	///   Represents a 32-bit signed fixed-point value, with 8 bits being used for the fractional part of the value.
+	///     Represents a 32-bit signed fixed-point value, with 8 bits being used for the fractional part of the value.
 	/// </summary>
 	public struct Fixed8 : IEquatable<Fixed8>, IComparable<Fixed8>, IComparable
 	{
 		/// <summary>
-		///   The number of bits that are used to store the fractional part of the value.
+		///     The number of bits that are used to store the fractional part of the value.
 		/// </summary>
 		private const int FractionalBits = 8;
 
 		/// <summary>
-		///   Epsilon value for fixed-point equality comparisons.
-		/// </summary>
-		public static readonly Fixed8 Epsilon = MathUtils.Epsilon;
-
-		/// <summary>
-		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
-		/// </summary>
-		public static readonly Fixed8 Pi = System.Math.PI;
-
-		/// <summary>
-		///   Represents a 360 degree rotation.
-		/// </summary>
-		public static readonly Fixed8 TwoPi = System.Math.PI * 2;
-
-		/// <summary>
-		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
-		/// </summary>
-		public static readonly Fixed8 PiOver2 = System.Math.PI / 2;
-
-		/// <summary>
-		///   Represents the largest possible value of the integer part of a fixed-point value.
+		///     Represents the largest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MaxValue = Int32.MaxValue >> FractionalBits;
 
 		/// <summary>
-		///   Represents the smallest possible value of the integer part of a fixed-point value.
+		///     Represents the smallest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MinValue = Int32.MinValue >> FractionalBits;
 
 		/// <summary>
-		///   The raw value stored as a 32-bit signed integer.
+		///     Epsilon value for fixed-point equality comparisons.
+		/// </summary>
+		public static readonly Fixed8 Epsilon = MathUtils.Epsilon;
+
+		/// <summary>
+		///     Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
+		/// </summary>
+		public static readonly Fixed8 Pi = Math.PI;
+
+		/// <summary>
+		///     Represents a 360 degree rotation.
+		/// </summary>
+		public static readonly Fixed8 TwoPi = Math.PI * 2;
+
+		/// <summary>
+		///     Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
+		/// </summary>
+		public static readonly Fixed8 PiOver2 = Math.PI / 2;
+
+		/// <summary>
+		///     The raw value stored as a 32-bit signed integer.
 		/// </summary>
 		private int _rawValue;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The integer value that should be converted.</param>
 		public Fixed8(int value)
@@ -60,27 +59,27 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public Fixed8(float value)
 		{
 			Assert.ArgumentInRange(value, MinValue, MaxValue);
-			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public Fixed8(double value)
 		{
 			Assert.ArgumentInRange(value, MinValue, MaxValue);
-			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
-		///   Gets or sets the raw value stored as a 32-bit signed integer.
+		///     Gets or sets the raw value stored as a 32-bit signed integer.
 		/// </summary>
 		public int RawValue
 		{
@@ -89,7 +88,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns the fully qualified type name of this instance.
+		///     Returns the fully qualified type name of this instance.
 		/// </summary>
 		public override string ToString()
 		{
@@ -99,7 +98,7 @@ namespace Pegasus.Math
 		#region Cast operators
 
 		/// <summary>
-		///   Implicitely casts an integer value to its fixed-point representation.
+		///     Implicitely casts an integer value to its fixed-point representation.
 		/// </summary>
 		/// <param name="value">The integer value that should be converted.</param>
 		public static implicit operator Fixed8(int value)
@@ -108,7 +107,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts a fixed-point value to its integer representation.
+		///     Implicitely casts a fixed-point value to its integer representation.
 		/// </summary>
 		/// <param name="value">The fixed-point value that should be converted.</param>
 		public static explicit operator int(Fixed8 value)
@@ -117,7 +116,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts an floating-point value to its fixed-point representation.
+		///     Implicitely casts an floating-point value to its fixed-point representation.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public static implicit operator Fixed8(float value)
@@ -126,7 +125,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts a fixed-point value to its floating-point representation.
+		///     Implicitely casts a fixed-point value to its floating-point representation.
 		/// </summary>
 		/// <param name="value">The fixed-point value that should be converted.</param>
 		public static explicit operator float(Fixed8 value)
@@ -135,7 +134,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts an floating-point value to its fixed-point representation.
+		///     Implicitely casts an floating-point value to its fixed-point representation.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public static implicit operator Fixed8(double value)
@@ -144,7 +143,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts a fixed-point value to its floating-point representation.
+		///     Implicitely casts a fixed-point value to its floating-point representation.
 		/// </summary>
 		/// <param name="value">The fixed-point value that should be converted.</param>
 		public static explicit operator double(Fixed8 value)
@@ -157,7 +156,29 @@ namespace Pegasus.Math
 		#region Equality operators and comparison
 
 		/// <summary>
-		///   Indicates whether the current fixed-point value is equal to another fixed-point value.
+		///     Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(object other)
+		{
+			if (other == null)
+				return 1;
+
+			Assert.ArgumentSatisfies(other is Fixed8, "The given object is not of type 'Fixed8'.");
+			return CompareTo((Fixed8)other);
+		}
+
+		/// <summary>
+		///     Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(Fixed8 other)
+		{
+			return _rawValue.CompareTo(other._rawValue);
+		}
+
+		/// <summary>
+		///     Indicates whether the current fixed-point value is equal to another fixed-point value.
 		/// </summary>
 		/// <param name="other">The value to compare with this value.</param>
 		public bool Equals(Fixed8 other)
@@ -166,7 +187,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the current fixed-point value is equal to another object.
+		///     Indicates whether the current fixed-point value is equal to another object.
 		/// </summary>
 		/// <param name="obj">An object to compare with this value.</param>
 		public override bool Equals(object obj)
@@ -177,7 +198,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns the hash code for this instance.
+		///     Returns the hash code for this instance.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -185,29 +206,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Compares the current value with the given one.
-		/// </summary>
-		/// <param name="other">The value this instance should be compared with.</param>
-		public int CompareTo(object other)
-		{
-			if (other == null) 
-				return 1;
-
-			Assert.ArgumentSatisfies(other is Fixed8, "The given object is not of type 'Fixed8'.");
-			return CompareTo((Fixed8)other);
-		}
-
-		/// <summary>
-		///   Compares the current value with the given one.
-		/// </summary>
-		/// <param name="other">The value this instance should be compared with.</param>
-		public int CompareTo(Fixed8 other)
-		{
-			return _rawValue.CompareTo(other._rawValue);
-		}
-
-		/// <summary>
-		///   Tests for equality between two fixed-point values.
+		///     Tests for equality between two fixed-point values.
 		/// </summary>
 		/// <param name="left">The first fixed-point value to compare.</param>
 		/// <param name="right">The second fixed-point value to compare.</param>
@@ -217,7 +216,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two fixed-point values.
+		///     Tests for inequality between two fixed-point values.
 		/// </summary>
 		/// <param name="left">The first fixed-point value to compare.</param>
 		/// <param name="right">The second fixed-point value to compare.</param>
@@ -231,7 +230,7 @@ namespace Pegasus.Math
 		#region Arithmetic operators
 
 		/// <summary>
-		///   Adds the two fixed-point values and returns the result.
+		///     Adds the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -241,7 +240,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Subtracts the two fixed-point values and returns the result.
+		///     Subtracts the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -251,7 +250,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Negates the fixed-point value.
+		///     Negates the fixed-point value.
 		/// </summary>
 		/// <param name="value">The value that should be negated.</param>
 		public static Fixed8 operator -(Fixed8 value)
@@ -260,7 +259,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Multiplies the two fixed-point values and returns the result.
+		///     Multiplies the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -275,7 +274,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Multiplies the fixed-point value and the integer value and returns the result.
+		///     Multiplies the fixed-point value and the integer value and returns the result.
 		/// </summary>
 		/// <param name="left">The fixed-point operand.</param>
 		/// <param name="right">The integer operand.</param>
@@ -285,7 +284,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Multiplies the fixed-point value and the integer value and returns the result.
+		///     Multiplies the fixed-point value and the integer value and returns the result.
 		/// </summary>
 		/// <param name="left">The integer operand.</param>
 		/// <param name="right">The fixed-point operand.</param>
@@ -295,7 +294,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the two fixed-point values and returns the result.
+		///     Divides the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -312,7 +311,7 @@ namespace Pegasus.Math
 		#region Relational operators
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than the second one.
+		///     Indicates whether the first fixed-point value is smaller than the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -322,7 +321,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than the second one.
+		///     Indicates whether the first fixed-point value is smaller than the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -332,7 +331,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than or equal to the second one.
+		///     Indicates whether the first fixed-point value is smaller than or equal to the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -342,7 +341,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than or equal to the second one.
+		///     Indicates whether the first fixed-point value is smaller than or equal to the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -356,7 +355,7 @@ namespace Pegasus.Math
 		#region Functions
 
 		/// <summary>
-		/// Returns the absolute value of a fixed-point value.
+		///     Returns the absolute value of a fixed-point value.
 		/// </summary>
 		/// <param name="value">The value whose absolute should be returned.</param>
 		public static Fixed8 Abs(Fixed8 value)
@@ -368,7 +367,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Computes the square root of the given fixed-point value.
+		///     Computes the square root of the given fixed-point value.
 		/// </summary>
 		/// <param name="value">The value for which the square root should be computed.</param>
 		public static Fixed8 Sqrt(Fixed8 value)
@@ -421,52 +420,52 @@ namespace Pegasus.Math
 	}
 
 	/// <summary>
-	///   Represents a 32-bit signed fixed-point value, with 16 bits being used for the fractional part of the value.
+	///     Represents a 32-bit signed fixed-point value, with 16 bits being used for the fractional part of the value.
 	/// </summary>
 	public struct Fixed16 : IEquatable<Fixed16>, IComparable<Fixed16>, IComparable
 	{
 		/// <summary>
-		///   The number of bits that are used to store the fractional part of the value.
+		///     The number of bits that are used to store the fractional part of the value.
 		/// </summary>
 		private const int FractionalBits = 16;
 
 		/// <summary>
-		///   Epsilon value for fixed-point equality comparisons.
-		/// </summary>
-		public static readonly Fixed16 Epsilon = MathUtils.Epsilon;
-
-		/// <summary>
-		///   Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
-		/// </summary>
-		public static readonly Fixed16 Pi = System.Math.PI;
-
-		/// <summary>
-		///   Represents a 360 degree rotation.
-		/// </summary>
-		public static readonly Fixed16 TwoPi = System.Math.PI * 2;
-
-		/// <summary>
-		///   Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
-		/// </summary>
-		public static readonly Fixed16 PiOver2 = System.Math.PI / 2;
-
-		/// <summary>
-		///   Represents the largest possible value of the integer part of a fixed-point value.
+		///     Represents the largest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MaxValue = Int32.MaxValue >> FractionalBits;
 
 		/// <summary>
-		///   Represents the smallest possible value of the integer part of a fixed-point value.
+		///     Represents the smallest possible value of the integer part of a fixed-point value.
 		/// </summary>
 		public const int MinValue = Int32.MinValue >> FractionalBits;
 
 		/// <summary>
-		///   The raw value stored as a 32-bit signed integer.
+		///     Epsilon value for fixed-point equality comparisons.
+		/// </summary>
+		public static readonly Fixed16 Epsilon = MathUtils.Epsilon;
+
+		/// <summary>
+		///     Represents a 180 degree rotation or the ratio of the circumference of a circle to its diameter.
+		/// </summary>
+		public static readonly Fixed16 Pi = Math.PI;
+
+		/// <summary>
+		///     Represents a 360 degree rotation.
+		/// </summary>
+		public static readonly Fixed16 TwoPi = Math.PI * 2;
+
+		/// <summary>
+		///     Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
+		/// </summary>
+		public static readonly Fixed16 PiOver2 = Math.PI / 2;
+
+		/// <summary>
+		///     The raw value stored as a 32-bit signed integer.
 		/// </summary>
 		private int _rawValue;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The integer value that should be converted.</param>
 		public Fixed16(int value)
@@ -476,27 +475,27 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public Fixed16(float value)
 		{
 			Assert.ArgumentInRange(value, MinValue, MaxValue);
-			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public Fixed16(double value)
 		{
 			Assert.ArgumentInRange(value, MinValue, MaxValue);
-			_rawValue = (int)System.Math.Round(value * (1 << FractionalBits));
+			_rawValue = (int)Math.Round(value * (1 << FractionalBits));
 		}
 
 		/// <summary>
-		///   Gets or sets the raw value stored as a 32-bit signed integer.
+		///     Gets or sets the raw value stored as a 32-bit signed integer.
 		/// </summary>
 		public int RawValue
 		{
@@ -505,7 +504,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns the fully qualified type name of this instance.
+		///     Returns the fully qualified type name of this instance.
 		/// </summary>
 		public override string ToString()
 		{
@@ -515,7 +514,7 @@ namespace Pegasus.Math
 		#region Cast operators
 
 		/// <summary>
-		///   Implicitely casts an integer value to its fixed-point representation.
+		///     Implicitely casts an integer value to its fixed-point representation.
 		/// </summary>
 		/// <param name="value">The integer value that should be converted.</param>
 		public static implicit operator Fixed16(int value)
@@ -524,7 +523,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts a fixed-point value to its integer representation.
+		///     Implicitely casts a fixed-point value to its integer representation.
 		/// </summary>
 		/// <param name="value">The fixed-point value that should be converted.</param>
 		public static explicit operator int(Fixed16 value)
@@ -533,7 +532,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts an floating-point value to its fixed-point representation.
+		///     Implicitely casts an floating-point value to its fixed-point representation.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public static implicit operator Fixed16(float value)
@@ -542,7 +541,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts a fixed-point value to its floating-point representation.
+		///     Implicitely casts a fixed-point value to its floating-point representation.
 		/// </summary>
 		/// <param name="value">The fixed-point value that should be converted.</param>
 		public static explicit operator float(Fixed16 value)
@@ -551,7 +550,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts an floating-point value to its fixed-point representation.
+		///     Implicitely casts an floating-point value to its fixed-point representation.
 		/// </summary>
 		/// <param name="value">The floating-point value that should be converted.</param>
 		public static implicit operator Fixed16(double value)
@@ -560,7 +559,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Implicitely casts a fixed-point value to its floating-point representation.
+		///     Implicitely casts a fixed-point value to its floating-point representation.
 		/// </summary>
 		/// <param name="value">The fixed-point value that should be converted.</param>
 		public static explicit operator double(Fixed16 value)
@@ -573,7 +572,29 @@ namespace Pegasus.Math
 		#region Equality operators and comparison
 
 		/// <summary>
-		///   Indicates whether the current fixed-point value is equal to another fixed-point value.
+		///     Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(object other)
+		{
+			if (other == null)
+				return 1;
+
+			Assert.ArgumentSatisfies(other is Fixed16, "The given object is not of type 'Fixed16'.");
+			return CompareTo((Fixed16)other);
+		}
+
+		/// <summary>
+		///     Compares the current value with the given one.
+		/// </summary>
+		/// <param name="other">The value this instance should be compared with.</param>
+		public int CompareTo(Fixed16 other)
+		{
+			return _rawValue.CompareTo(other._rawValue);
+		}
+
+		/// <summary>
+		///     Indicates whether the current fixed-point value is equal to another fixed-point value.
 		/// </summary>
 		/// <param name="other">The value to compare with this value.</param>
 		public bool Equals(Fixed16 other)
@@ -582,7 +603,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the current fixed-point value is equal to another object.
+		///     Indicates whether the current fixed-point value is equal to another object.
 		/// </summary>
 		/// <param name="obj">An object to compare with this value.</param>
 		public override bool Equals(object obj)
@@ -593,7 +614,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Returns the hash code for this instance.
+		///     Returns the hash code for this instance.
 		/// </summary>
 		public override int GetHashCode()
 		{
@@ -601,29 +622,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Compares the current value with the given one.
-		/// </summary>
-		/// <param name="other">The value this instance should be compared with.</param>
-		public int CompareTo(object other)
-		{
-			if (other == null) 
-				return 1;
-
-			Assert.ArgumentSatisfies(other is Fixed16, "The given object is not of type 'Fixed16'.");
-			return CompareTo((Fixed16)other);
-		}
-
-		/// <summary>
-		///   Compares the current value with the given one.
-		/// </summary>
-		/// <param name="other">The value this instance should be compared with.</param>
-		public int CompareTo(Fixed16 other)
-		{
-			return _rawValue.CompareTo(other._rawValue);
-		}
-
-		/// <summary>
-		///   Tests for equality between two fixed-point values.
+		///     Tests for equality between two fixed-point values.
 		/// </summary>
 		/// <param name="left">The first fixed-point value to compare.</param>
 		/// <param name="right">The second fixed-point value to compare.</param>
@@ -633,7 +632,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Tests for inequality between two fixed-point values.
+		///     Tests for inequality between two fixed-point values.
 		/// </summary>
 		/// <param name="left">The first fixed-point value to compare.</param>
 		/// <param name="right">The second fixed-point value to compare.</param>
@@ -647,7 +646,7 @@ namespace Pegasus.Math
 		#region Arithmetic operators
 
 		/// <summary>
-		///   Adds the two fixed-point values and returns the result.
+		///     Adds the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -657,7 +656,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Subtracts the two fixed-point values and returns the result.
+		///     Subtracts the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -667,7 +666,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Negates the fixed-point value.
+		///     Negates the fixed-point value.
 		/// </summary>
 		/// <param name="value">The value that should be negated.</param>
 		public static Fixed16 operator -(Fixed16 value)
@@ -676,7 +675,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Multiplies the two fixed-point values and returns the result.
+		///     Multiplies the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -691,7 +690,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Multiplies the fixed-point value and the integer value and returns the result.
+		///     Multiplies the fixed-point value and the integer value and returns the result.
 		/// </summary>
 		/// <param name="left">The fixed-point operand.</param>
 		/// <param name="right">The integer operand.</param>
@@ -701,7 +700,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Multiplies the fixed-point value and the integer value and returns the result.
+		///     Multiplies the fixed-point value and the integer value and returns the result.
 		/// </summary>
 		/// <param name="left">The integer operand.</param>
 		/// <param name="right">The fixed-point operand.</param>
@@ -711,7 +710,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Divides the two fixed-point values and returns the result.
+		///     Divides the two fixed-point values and returns the result.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -728,7 +727,7 @@ namespace Pegasus.Math
 		#region Relational operators
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than the second one.
+		///     Indicates whether the first fixed-point value is smaller than the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -738,7 +737,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than the second one.
+		///     Indicates whether the first fixed-point value is smaller than the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -748,7 +747,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than or equal to the second one.
+		///     Indicates whether the first fixed-point value is smaller than or equal to the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -758,7 +757,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Indicates whether the first fixed-point value is smaller than or equal to the second one.
+		///     Indicates whether the first fixed-point value is smaller than or equal to the second one.
 		/// </summary>
 		/// <param name="left">The first fixed-point operand.</param>
 		/// <param name="right">The second fixed-point operand.</param>
@@ -772,7 +771,7 @@ namespace Pegasus.Math
 		#region Functions
 
 		/// <summary>
-		/// Returns the absolute value of a fixed-point value.
+		///     Returns the absolute value of a fixed-point value.
 		/// </summary>
 		/// <param name="value">The value whose absolute should be returned.</param>
 		public static Fixed16 Abs(Fixed16 value)
@@ -784,7 +783,7 @@ namespace Pegasus.Math
 		}
 
 		/// <summary>
-		///   Computes the square root of the given fixed-point value.
+		///     Computes the square root of the given fixed-point value.
 		/// </summary>
 		/// <param name="value">The value for which the square root should be computed.</param>
 		public static Fixed16 Sqrt(Fixed16 value)

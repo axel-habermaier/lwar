@@ -7,20 +7,20 @@
 	using Memory;
 
 	/// <summary>
-	///   Describes a depth stencil state of the output merger pipeline stage. Objects of this class are immutable once
-	///   they have been bound to the pipeline for the first time. In debug builds, an exception is
-	///   thrown if an attempt is made to change a property after the state has been bound to the pipeline;
-	///   in release builds, any such changes are simply ignored.
+	///     Describes a depth stencil state of the output merger pipeline stage. Objects of this class are immutable once
+	///     they have been bound to the pipeline for the first time. In debug builds, an exception is
+	///     thrown if an attempt is made to change a property after the state has been bound to the pipeline;
+	///     in release builds, any such changes are simply ignored.
 	/// </summary>
 	public sealed class DepthStencilState : PipelineState
 	{
 		/// <summary>
-		///   The description of the depth stencil state.
+		///     The description of the depth stencil state.
 		/// </summary>
 		private DepthStencilDescription _description;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		public DepthStencilState(GraphicsDevice graphicsDevice)
@@ -30,7 +30,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the depth test is enabled.
+		///     Gets or sets a value indicating whether the depth test is enabled.
 		/// </summary>
 		public bool DepthTestEnabled
 		{
@@ -43,7 +43,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether depth writes are enabled.
+		///     Gets or sets a value indicating whether depth writes are enabled.
 		/// </summary>
 		public bool DepthWriteEnabled
 		{
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the depth comparison function.
+		///     Gets or sets the depth comparison function.
 		/// </summary>
 		public Comparison DepthFunction
 		{
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the stencil test is enabled.
+		///     Gets or sets a value indicating whether the stencil test is enabled.
 		/// </summary>
 		public bool StencilEnabled
 		{
@@ -82,7 +82,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the stencil read mask.
+		///     Gets or sets the stencil read mask.
 		/// </summary>
 		public byte StencilReadMask
 		{
@@ -95,7 +95,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the stencil write mask.
+		///     Gets or sets the stencil write mask.
 		/// </summary>
 		public byte StencilWriteMask
 		{
@@ -108,7 +108,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the stencil operation description for front faces.
+		///     Gets or sets the stencil operation description for front faces.
 		/// </summary>
 		public StencilOperationDescription FrontFace
 		{
@@ -121,7 +121,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the stencil operation description for back faces.
+		///     Gets or sets the stencil operation description for back faces.
 		/// </summary>
 		public StencilOperationDescription BackFace
 		{
@@ -134,23 +134,23 @@
 		}
 
 		/// <summary>
-		///   Gets a default depth stencil state with depth read and write enabled, less comparison operation
-		///   and stencil operations disabled.
+		///     Gets a default depth stencil state with depth read and write enabled, less comparison operation
+		///     and stencil operations disabled.
 		/// </summary>
 		public static DepthStencilState DepthEnabled { get; private set; }
 
 		/// <summary>
-		///   Gets a default depth stencil state with all depth and stencil operations disabled.
+		///     Gets a default depth stencil state with all depth and stencil operations disabled.
 		/// </summary>
 		public static DepthStencilState DepthDisabled { get; private set; }
 
 		/// <summary>
-		///   Gets a default depth stencil state with depth writes disabled and all stencil operations disabled.
+		///     Gets a default depth stencil state with depth writes disabled and all stencil operations disabled.
 		/// </summary>
 		public static DepthStencilState DepthRead { get; private set; }
 
 		/// <summary>
-		///   Initializes the default instances.
+		///     Initializes the default instances.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
 		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
@@ -167,7 +167,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the default instances.
+		///     Disposes the default instances.
 		/// </summary>
 		internal static void DisposeDefaultInstances()
 		{
@@ -177,7 +177,7 @@
 		}
 
 		/// <summary>
-		///   Compiles the pipeline state object.
+		///     Compiles the pipeline state object.
 		/// </summary>
 		protected override void Compile()
 		{
@@ -185,7 +185,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -193,7 +193,7 @@
 		}
 
 		/// <summary>
-		///   Sets the state on the pipeline. The state can no longer be changed afterwards.
+		///     Sets the state on the pipeline. The state can no longer be changed afterwards.
 		/// </summary>
 		public void Bind()
 		{
@@ -215,7 +215,7 @@
 #endif
 
 		/// <summary>
-		///   Describes the depth stencil state.
+		///     Describes the depth stencil state.
 		/// </summary>
 		[StructLayout(LayoutKind.Sequential)]
 		private struct DepthStencilDescription
@@ -231,7 +231,7 @@
 		}
 
 		/// <summary>
-		///   Provides access to the native depth stencil state functions.
+		///     Provides access to the native depth stencil state functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

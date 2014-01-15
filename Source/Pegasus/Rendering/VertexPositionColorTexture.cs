@@ -6,37 +6,37 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Holds position, texture coordinates, and color data for a vertex.
+	///     Holds position, texture coordinates, and color data for a vertex.
 	/// </summary>
 	[StructLayout(LayoutKind.Explicit, Pack = 1)]
 	public struct VertexPositionColorTexture
 	{
 		/// <summary>
-		///   The size in bytes of the structure.
+		///     The size in bytes of the structure.
 		/// </summary>
 		public const int Size = 28;
 
 		/// <summary>
-		///   Gets or sets the vertex' position.
+		///     Gets or sets the vertex' position.
 		/// </summary>
 		[FieldOffset(0)]
 		public Vector4 Position;
 
 		/// <summary>
-		///   Gets or sets the vertex' texture coordinates.
+		///     Gets or sets the vertex' texture coordinates.
 		/// </summary>
 		[FieldOffset(16)]
 		public Vector2 TextureCoordinates;
 
 		/// <summary>
-		///   Gets or sets the vertex' color.
+		///     Gets or sets the vertex' color.
 		/// </summary>
 		[FieldOffset(24)]
 		public Color Color;
 
 		/// <summary>
-		///   Gets a vertex input layout for drawing VertexPositionColorTexture vertices with an appropriate vertex buffer
-		///   and vertex shader.
+		///     Gets a vertex input layout for drawing VertexPositionColorTexture vertices with an appropriate vertex buffer
+		///     and vertex shader.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to construct the input layout.</param>
 		/// <param name="vertexBuffer">The vertex buffer that holds the vertex data.</param>

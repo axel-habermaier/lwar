@@ -3,13 +3,13 @@
 	using System;
 
 	/// <summary>
-	///   Represents a sequence of text, i.e., sequence of letters and digits or special characters, as well as
-	///   individual new line tokens or spaces.
+	///     Represents a sequence of text, i.e., sequence of letters and digits or special characters, as well as
+	///     individual new line tokens or spaces.
 	/// </summary>
 	internal struct TextSequence
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="character">The index of the one and only character of the sequence.</param>
 		public TextSequence(int character)
@@ -20,7 +20,7 @@
 		}
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="text">The text for which the sequence should be created.</param>
 		/// <param name="index">The index of the first character in the sequence.</param>
@@ -32,18 +32,18 @@
 		}
 
 		/// <summary>
-		///   Gets the index of the first character of the sequence.
+		///     Gets the index of the first character of the sequence.
 		/// </summary>
 		public int FirstCharacter { get; private set; }
 
 		/// <summary>
-		///   Gets the index one past the last character of the sequence.
+		///     Gets the index one past the last character of the sequence.
 		/// </summary>
 		public int LastCharacter { get; private set; }
 
 		/// <summary>
-		///   Gets a value indicating whether the sequence is invalid and should be ignored. Some operations
-		///   might produce invalid sequences with zero or less characters.
+		///     Gets a value indicating whether the sequence is invalid and should be ignored. Some operations
+		///     might produce invalid sequences with zero or less characters.
 		/// </summary>
 		public bool IsInvalid
 		{
@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///   Computes the width of the sequence.
+		///     Computes the width of the sequence.
 		/// </summary>
 		/// <param name="font">The font that should be used to determine the width of sequence.</param>
 		/// <param name="text">The text the sequence was created for.</param>
@@ -61,8 +61,8 @@
 		}
 
 		/// <summary>
-		///   Splits the given sequence into two sequences, with the first split part's width being
-		///   less than or equal to the given allowed width.
+		///     Splits the given sequence into two sequences, with the first split part's width being
+		///     less than or equal to the given allowed width.
 		/// </summary>
 		/// <param name="font">The font that should be used to determine the width of sequence.</param>
 		/// <param name="text">The text the sequence was created for.</param>
@@ -97,8 +97,8 @@
 		}
 
 		/// <summary>
-		///   Searches the text, starting at the given offset, for the first whitespace character and
-		///   returns its index.
+		///     Searches the text, starting at the given offset, for the first whitespace character and
+		///     returns its index.
 		/// </summary>
 		/// <param name="text">The text that should be searched.</param>
 		/// <param name="offset">The offset into the text where the search should begin.</param>

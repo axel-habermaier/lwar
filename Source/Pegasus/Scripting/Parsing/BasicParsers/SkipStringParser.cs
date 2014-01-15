@@ -3,22 +3,22 @@
 	using System;
 
 	/// <summary>
-	///   Parses a given string.
+	///     Parses a given string.
 	/// </summary>
 	public class SkipStringParser : Parser<string>
 	{
 		/// <summary>
-		///   Indicates whether case is ignored.
+		///     Indicates whether case is ignored.
 		/// </summary>
 		private readonly bool _ignoreCase;
 
 		/// <summary>
-		///   The string that is parsed.
+		///     The string that is parsed.
 		/// </summary>
 		private readonly string _string;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="str">The string that should be parsed.</param>
 		/// <param name="ignoreCase">Indicates whether case should be ignored.</param>
@@ -31,7 +31,7 @@
 		}
 
 		/// <summary>
-		///   Parses the given input string and returns the parser's reply.
+		///     Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<string> Parse(InputStream inputStream)

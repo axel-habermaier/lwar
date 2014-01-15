@@ -4,17 +4,17 @@
 	using System.Net;
 
 	/// <summary>
-	///   Parses an IPv4 or IPv6 address.
+	///     Parses an IPv4 or IPv6 address.
 	/// </summary>
 	public class IPAddressParser : Parser<IPAddress>
 	{
 		/// <summary>
-		///   The description that is displayed if the parser failed.
+		///     The description that is displayed if the parser failed.
 		/// </summary>
 		internal const string Description = "IP address (either IPv4 or IPv6)";
 
 		/// <summary>
-		///   Parses the given input string and returns the parser's reply.
+		///     Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
 		public override Reply<IPAddress> Parse(InputStream inputStream)

@@ -6,11 +6,8 @@
 	[Effect]
 	public class TexturedQuadEffect : Effect
 	{
-		public readonly Technique TexturedQuad = new Technique
-		{
-			VertexShader = "VertexShader",
-			FragmentShader = "TexturedQuadFragmentShader"
-		};
+		[Constant]
+		public readonly Vector4 Color;
 
 		public readonly Technique ColoredTexturedQuad = new Technique
 		{
@@ -26,11 +23,14 @@
 
 		public readonly Texture2D Texture;
 
-		[Constant]
-		public readonly Matrix World;
+		public readonly Technique TexturedQuad = new Technique
+		{
+			VertexShader = "VertexShader",
+			FragmentShader = "TexturedQuadFragmentShader"
+		};
 
 		[Constant]
-		public readonly Vector4 Color;
+		public readonly Matrix World;
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,

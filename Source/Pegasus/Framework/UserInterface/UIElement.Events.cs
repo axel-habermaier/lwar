@@ -5,13 +5,13 @@
 	public partial class UIElement
 	{
 		/// <summary>
-		///   Occurs when a key is pressed while the UI element is focused.
+		///     Occurs when a key is pressed while the UI element is focused.
 		/// </summary>
 		public static readonly RoutedEvent<RoutedEventArgs> KeyDownEvent =
 			new RoutedEvent<RoutedEventArgs>(RoutingStrategy.Bubble);
 
 		/// <summary>
-		///   Occurs when a key is pressed while the UI element is focused.
+		///     Occurs when a key is pressed while the UI element is focused.
 		/// </summary>
 		public event RoutedEventHandler<RoutedEventArgs> KeyDown
 		{
@@ -20,7 +20,7 @@
 		}
 
 		/// <summary>
-		///   Raised when a change to a resource dictionary in this UI element or one of its ancestors has occurred.
+		///     Raised when a change to a resource dictionary in this UI element or one of its ancestors has occurred.
 		/// </summary>
 		internal event Action ResourcesInvalidated;
 	}

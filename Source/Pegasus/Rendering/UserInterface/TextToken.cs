@@ -3,33 +3,33 @@
 	using System;
 
 	/// <summary>
-	///   Represents a text marker or text sequence.
+	///     Represents a text marker or text sequence.
 	/// </summary>
 	internal struct TextToken
 	{
 		/// <summary>
-		///   The end of text token.
+		///     The end of text token.
 		/// </summary>
 		public static readonly TextToken EndOfText = new TextToken { Type = TextTokenType.EndOfText };
 
 		/// <summary>
-		///   The wrap token.
+		///     The wrap token.
 		/// </summary>
 		public static readonly TextToken Wrap = new TextToken { Type = TextTokenType.Wrap };
 
 		/// <summary>
-		///   Gets the type of the token.
+		///     Gets the type of the token.
 		/// </summary>
 		public TextTokenType Type { get; private set; }
 
 		/// <summary>
-		///   Gets the text sequence corresponding to token. This property is only valid
-		///   for tokens of type Word, NewLine, and Space.
+		///     Gets the text sequence corresponding to token. This property is only valid
+		///     for tokens of type Word, NewLine, and Space.
 		/// </summary>
 		public TextSequence Sequence { get; private set; }
 
 		/// <summary>
-		///   Gets the next token for the given text, starting at the given offset.
+		///     Gets the next token for the given text, starting at the given offset.
 		/// </summary>
 		/// <param name="text">The text for which the next token should be returned.</param>
 		/// <param name="offset">The offset into the text string.</param>
@@ -53,7 +53,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new line token.
+		///     Creates a new line token.
 		/// </summary>
 		/// <param name="index">The index of the new line character in the text.</param>
 		public static TextToken CreateNewLineToken(int index)
@@ -62,7 +62,7 @@
 		}
 
 		/// <summary>
-		///   Creates a space token.
+		///     Creates a space token.
 		/// </summary>
 		/// <param name="index">The index of the space character in the text.</param>
 		public static TextToken CreateSpaceToken(int index)
@@ -71,7 +71,7 @@
 		}
 
 		/// <summary>
-		///   Creates a wrapped space token.
+		///     Creates a wrapped space token.
 		/// </summary>
 		/// <param name="index">The index of the space character in the text.</param>
 		public static TextToken CreateWrappedSpaceToken(int index)
@@ -80,7 +80,7 @@
 		}
 
 		/// <summary>
-		///   Creates a word token.
+		///     Creates a word token.
 		/// </summary>
 		/// <param name="text">The text for which the token should be created.</param>
 		/// <param name="index">The index of the space character in the text.</param>
@@ -90,8 +90,8 @@
 		}
 
 		/// <summary>
-		///   Splits the given token into two tokens, with the first split part's width being
-		///   less than or equal to the given allowed width. Only allowed on word tokens.
+		///     Splits the given token into two tokens, with the first split part's width being
+		///     less than or equal to the given allowed width. Only allowed on word tokens.
 		/// </summary>
 		/// <param name="font">The font that should be used to determine the width of tokens.</param>
 		/// <param name="text">The text the token was created for.</param>

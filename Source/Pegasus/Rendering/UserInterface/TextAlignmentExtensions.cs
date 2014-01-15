@@ -3,13 +3,13 @@
 	using System;
 
 	/// <summary>
-	///   Provides extension methods for the text alignment enumeration.
+	///     Provides extension methods for the text alignment enumeration.
 	/// </summary>
 	public static class TextAlignmentExtensions
 	{
 		/// <summary>
-		///   Checks whether the given alignment specifies the given flag. We cannot use .Net's Enum.HasFlag method,
-		///   as this method boxes the enumeration value each time it is called.
+		///     Checks whether the given alignment specifies the given flag. We cannot use .Net's Enum.HasFlag method,
+		///     as this method boxes the enumeration value each time it is called.
 		/// </summary>
 		/// <param name="alignment">The alignment value that should be checked.</param>
 		/// <param name="flag">The flag that should be checked.</param>
@@ -19,7 +19,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the text should be left aligned.
+		///     Checks whether the text should be left aligned.
 		/// </summary>
 		/// <param name="alignment">The alignment value that should be checked.</param>
 		public static bool IsLeftAligned(this TextAlignment alignment)
@@ -28,7 +28,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the text should be right aligned.
+		///     Checks whether the text should be right aligned.
 		/// </summary>
 		/// <param name="alignment">The alignment value that should be checked.</param>
 		public static bool IsRightAligned(this TextAlignment alignment)
@@ -37,7 +37,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the text should be horizontally centered.
+		///     Checks whether the text should be horizontally centered.
 		/// </summary>
 		/// <param name="alignment">The alignment value that should be checked.</param>
 		public static bool IsHorizontallyCentered(this TextAlignment alignment)
@@ -46,7 +46,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the text should be top aligned.
+		///     Checks whether the text should be top aligned.
 		/// </summary>
 		/// <param name="alignment">The alignment value that should be checked.</param>
 		public static bool IsTopAligned(this TextAlignment alignment)
@@ -55,7 +55,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the text should be bottom aligned.
+		///     Checks whether the text should be bottom aligned.
 		/// </summary>
 		/// <param name="alignment">The alignment value that should be checked.</param>
 		public static bool IsBottomAligned(this TextAlignment alignment)
@@ -64,7 +64,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the text should be vertically centered.
+		///     Checks whether the text should be vertically centered.
 		/// </summary>
 		/// <param name="alignment">The alignment value that should be checked.</param>
 		public static bool IsVerticallyCentered(this TextAlignment alignment)

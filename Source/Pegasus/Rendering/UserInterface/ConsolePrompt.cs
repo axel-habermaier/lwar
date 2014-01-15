@@ -13,67 +13,67 @@
 	using Scripting;
 
 	/// <summary>
-	///   The input prompt of the console.
+	///     The input prompt of the console.
 	/// </summary>
 	internal class ConsolePrompt : DisposableObject
 	{
 		/// <summary>
-		///   The prompt token.
+		///     The prompt token.
 		/// </summary>
 		internal const string Prompt = "]";
 
 		/// <summary>
-		///   The maximum history size.
+		///     The maximum history size.
 		/// </summary>
 		private const int MaxHistory = 64;
 
 		/// <summary>
-		///   The name of the console history file.
+		///     The name of the console history file.
 		/// </summary>
 		private const string HistoryFileName = "console.txt";
 
 		/// <summary>
-		///   The input history.
+		///     The input history.
 		/// </summary>
 		private readonly string[] _history;
 
 		/// <summary>
-		///   The input text box.
+		///     The input text box.
 		/// </summary>
 		private readonly TextBox _input;
 
 		/// <summary>
-		///   The prompt label.
+		///     The prompt label.
 		/// </summary>
 		private readonly Label _prompt;
 
 		/// <summary>
-		///   The area of the prompt.
+		///     The area of the prompt.
 		/// </summary>
 		private Rectangle _area;
 
 		/// <summary>
-		///   The current auto-completion index.
+		///     The current auto-completion index.
 		/// </summary>
 		private int _autoCompletionIndex;
 
 		/// <summary>
-		///   The currently active auto-completion list.
+		///     The currently active auto-completion list.
 		/// </summary>
 		private string[] _autoCompletionList;
 
 		/// <summary>
-		///   Stores the current index into the input history.
+		///     Stores the current index into the input history.
 		/// </summary>
 		private int _historyIndex;
 
 		/// <summary>
-		///   The number of history slots that are currently used.
+		///     The number of history slots that are currently used.
 		/// </summary>
 		private int _numHistory;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The font that should be used to draw the prompt.</param>
 		/// <param name="color">The text color of the prompt.</param>
@@ -109,7 +109,7 @@
 		}
 
 		/// <summary>
-		///   Gets the actual area of the prompt.
+		///     Gets the actual area of the prompt.
 		/// </summary>
 		public Rectangle ActualArea
 		{
@@ -117,7 +117,7 @@
 		}
 
 		/// <summary>
-		///   Injects a key press event.
+		///     Injects a key press event.
 		/// </summary>
 		/// <param name="args">The key that was pressed.</param>
 		public void InjectKeyPress(KeyEventArgs args)
@@ -126,7 +126,7 @@
 		}
 
 		/// <summary>
-		///   Draws the prompt.
+		///     Draws the prompt.
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the prompt.</param>
 		public void Draw(SpriteBatch spriteBatch)
@@ -136,7 +136,7 @@
 		}
 
 		/// <summary>
-		///   Resizes the prompt area.
+		///     Resizes the prompt area.
 		/// </summary>
 		/// <param name="area">The new prompt area.</param>
 		public void Resize(Rectangle area)
@@ -149,7 +149,7 @@
 		}
 
 		/// <summary>
-		///   Inserts the given character at the current caret position.
+		///     Inserts the given character at the current caret position.
 		/// </summary>
 		/// <param name="c">The character that should be inserted.</param>
 		public void InsertCharacter(char c)
@@ -162,8 +162,8 @@
 		}
 
 		/// <summary>
-		///   Submits the current user input to the input history, returns the current input, and
-		///   resets the input.
+		///     Submits the current user input to the input history, returns the current input, and
+		///     resets the input.
 		/// </summary>
 		public string Submit()
 		{
@@ -191,7 +191,7 @@
 		}
 
 		/// <summary>
-		///   Clears the user input.
+		///     Clears the user input.
 		/// </summary>
 		public void Clear()
 		{
@@ -201,7 +201,7 @@
 		}
 
 		/// <summary>
-		///   Shows the next newer history entry, if any.
+		///     Shows the next newer history entry, if any.
 		/// </summary>
 		public void ShowNewerHistoryEntry()
 		{
@@ -209,7 +209,7 @@
 		}
 
 		/// <summary>
-		///   Shows the next older history entry, if any.
+		///     Shows the next older history entry, if any.
 		/// </summary>
 		public void ShowOlderHistoryEntry()
 		{
@@ -217,7 +217,7 @@
 		}
 
 		/// <summary>
-		///   Shows the next auto-completed value if completion is possible.
+		///     Shows the next auto-completed value if completion is possible.
 		/// </summary>
 		public void AutoCompleteNext()
 		{
@@ -225,7 +225,7 @@
 		}
 
 		/// <summary>
-		///   Shows the previous auto-completed value if completion is possible.
+		///     Shows the previous auto-completed value if completion is possible.
 		/// </summary>
 		public void AutoCompletePrevious()
 		{
@@ -233,7 +233,7 @@
 		}
 
 		/// <summary>
-		///   Shows the next or previous auto-completed value if completion is possible.
+		///     Shows the next or previous auto-completed value if completion is possible.
 		/// </summary>
 		/// <param name="next">If true, the next auto-completed entry is shown; otherwise, the previous one is shown.</param>
 		private void AutoComplete(bool next)
@@ -259,7 +259,7 @@
 		}
 
 		/// <summary>
-		///   Gets the auto completion list for the current input.
+		///     Gets the auto completion list for the current input.
 		/// </summary>
 		private string[] GetAutoCompletionList()
 		{
@@ -282,7 +282,7 @@
 		}
 
 		/// <summary>
-		///   Shows the history entry at the given index.
+		///     Shows the history entry at the given index.
 		/// </summary>
 		/// <param name="index">The index of the entry that should be shown.</param>
 		private void ShowHistory(int index)
@@ -308,7 +308,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

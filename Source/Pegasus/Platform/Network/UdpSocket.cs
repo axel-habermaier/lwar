@@ -6,17 +6,17 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents a Udp-based socket that can be used to unreliably send and receive packets over the network.
+	///     Represents a Udp-based socket that can be used to unreliably send and receive packets over the network.
 	/// </summary>
 	public class UdpSocket : DisposableObject
 	{
 		/// <summary>
-		///   The underlying socket that is used to send and receive packets.
+		///     The underlying socket that is used to send and receive packets.
 		/// </summary>
 		private readonly Socket _socket;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public UdpSocket()
 		{
@@ -25,7 +25,7 @@
 		}
 
 		/// <summary>
-		///   Gets the underlying socket instance.
+		///     Gets the underlying socket instance.
 		/// </summary>
 		internal Socket Socket
 		{
@@ -33,7 +33,7 @@
 		}
 
 		/// <summary>
-		///   Sends the given packet over the connection.
+		///     Sends the given packet over the connection.
 		/// </summary>
 		/// <param name="buffer">The buffer that contains the data that should be sent.</param>
 		/// <param name="size">The number of bytes that should be sent.</param>
@@ -54,7 +54,7 @@
 		}
 
 		/// <summary>
-		///   Tries to receive a packet sent over the connection. Returns true if a packet has been received, false otherwise.
+		///     Tries to receive a packet sent over the connection. Returns true if a packet has been received, false otherwise.
 		/// </summary>
 		/// <param name="buffer">The buffer the received data should be written to.</param>
 		/// <param name="remoteEndPoint">After the method completes, contains the endpoint of the peer that sent the packet.</param>
@@ -84,7 +84,7 @@
 		}
 
 		/// <summary>
-		///   Binds the socket to the given local endpoint.
+		///     Binds the socket to the given local endpoint.
 		/// </summary>
 		/// <param name="localEndPoint">The local endpoint the socket should be bound to.</param>
 		public void Bind(IPEndPoint localEndPoint)
@@ -102,7 +102,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

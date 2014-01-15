@@ -5,17 +5,17 @@
 	using System.Linq;
 
 	/// <summary>
-	///   Provides resources used by UI elements.
+	///     Provides resources used by UI elements.
 	/// </summary>
 	public struct ResourceDictionary
 	{
 		/// <summary>
-		///   The underlying dictionary instance that stores the resources.
+		///     The underlying dictionary instance that stores the resources.
 		/// </summary>
 		private Dictionary<object, object> _dictionary;
 
 		/// <summary>
-		///   Gets the number of resources contained in the dictionary.
+		///     Gets the number of resources contained in the dictionary.
 		/// </summary>
 		public int Count
 		{
@@ -23,7 +23,7 @@
 		}
 
 		/// <summary>
-		///   Gets the resource with the specified key.
+		///     Gets the resource with the specified key.
 		/// </summary>
 		/// <param name="key">The key of the resource to get or set.</param>
 		public object this[object key]
@@ -32,7 +32,7 @@
 		}
 
 		/// <summary>
-		///   Gets a value indicating whether the resource dictionary has already been initialized.
+		///     Gets a value indicating whether the resource dictionary has already been initialized.
 		/// </summary>
 		internal bool IsInitialized
 		{
@@ -40,7 +40,7 @@
 		}
 
 		/// <summary>
-		///   Initializes the resource dictionary.
+		///     Initializes the resource dictionary.
 		/// </summary>
 		internal void Initialize()
 		{
@@ -49,12 +49,12 @@
 		}
 
 		/// <summary>
-		///   Raised when a key of the resource dictionary has changed.
+		///     Raised when a key of the resource dictionary has changed.
 		/// </summary>
 		internal event ResourceKeyChangedHandler ResourceChanged;
 
 		/// <summary>
-		///   Adds a resource with the provided key to the dictionary.
+		///     Adds a resource with the provided key to the dictionary.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be add.</param>
 		/// <param name="resource">The resource that should be added.</param>
@@ -70,8 +70,8 @@
 		}
 
 		/// <summary>
-		///   Adds a resource with the provided key to the dictionary. If a resource with the given key already exists, it is
-		///   replaced by the new resource.
+		///     Adds a resource with the provided key to the dictionary. If a resource with the given key already exists, it is
+		///     replaced by the new resource.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be add.</param>
 		/// <param name="resource">The resource that should be added.</param>
@@ -86,7 +86,7 @@
 		}
 
 		/// <summary>
-		///   Removes the resource with the specified key from the dictionary.
+		///     Removes the resource with the specified key from the dictionary.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be removed.</param>
 		public bool Remove(object key)
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Removes all resources from the dictionary.
+		///     Removes all resources from the dictionary.
 		/// </summary>
 		public void Clear()
 		{
@@ -111,7 +111,7 @@
 		}
 
 		/// <summary>
-		///   Determines whether the dictionary contains a resource with the specified key.
+		///     Determines whether the dictionary contains a resource with the specified key.
 		/// </summary>
 		public bool ContainsKey(object key)
 		{
@@ -119,7 +119,7 @@
 		}
 
 		/// <summary>
-		///   Gets the resource associated with the specified key.
+		///     Gets the resource associated with the specified key.
 		/// </summary>
 		/// <param name="key">The key of the resource that should be returned.</param>
 		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
@@ -130,7 +130,7 @@
 		}
 
 		/// <summary>
-		///   Seals the given resource, if necessary.
+		///     Seals the given resource, if necessary.
 		/// </summary>
 		/// <param name="resource">The resource that should be sealed.</param>
 		private static void SealResource(object resource)
@@ -141,7 +141,7 @@
 		}
 
 		/// <summary>
-		///   Raises the resource changed event.
+		///     Raises the resource changed event.
 		/// </summary>
 		/// <param name="key">The key of the resource that has been changed.</param>
 		private void RaiseChangeEvent(object key)

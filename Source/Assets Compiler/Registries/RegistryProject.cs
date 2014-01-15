@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using Assets;
 	using CSharp;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
@@ -10,17 +9,17 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///   Represents a C# project with registry declaration interfaces for which a C# registry class is generated.
+	///     Represents a C# project with registry declaration interfaces for which a C# registry class is generated.
 	/// </summary>
 	internal class RegistryProject : CSharpProject<RegistryFile>
 	{
 		/// <summary>
-		///   The errors that have been raised during the compilation.
+		///     The errors that have been raised during the compilation.
 		/// </summary>
 		private readonly List<LogEntry> _errors = new List<LogEntry>();
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		public RegistryProject()
 		{
@@ -28,12 +27,12 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the namespace in which the generated class should live.
+		///     Gets or sets the namespace in which the generated class should live.
 		/// </summary>
 		public string Namespace { get; set; }
 
 		/// <summary>
-		///   Gets the errors that have been raised during the compilation of the project.
+		///     Gets the errors that have been raised during the compilation of the project.
 		/// </summary>
 		public IEnumerable<LogEntry> Errors
 		{
@@ -41,17 +40,17 @@
 		}
 
 		/// <summary>
-		///   Gets the generated code.
+		///     Gets the generated code.
 		/// </summary>
 		public string GeneratedCode { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the imported registry.
+		///     Gets or sets the imported registry.
 		/// </summary>
 		public Registry ImportedRegistry { get; set; }
 
 		/// <summary>
-		///   Outputs a compilation message.
+		///     Outputs a compilation message.
 		/// </summary>
 		/// <param name="type">The type of the compilation message.</param>
 		/// <param name="file">The name of the file for which the message should be raised.</param>
@@ -70,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Creates a code element representing the a file.
+		///     Creates a code element representing the a file.
 		/// </summary>
 		/// <param name="fileName">The name of the file.</param>
 		/// <param name="syntaxTree">The syntax tree of the file.</param>
@@ -81,7 +80,7 @@
 		}
 
 		/// <summary>
-		///   Compiles the given file.
+		///     Compiles the given file.
 		/// </summary>
 		/// <param name="file">The file that should be compiled.</param>
 		protected override void Compile(RegistryFile file)

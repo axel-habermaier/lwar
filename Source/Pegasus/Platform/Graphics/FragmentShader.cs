@@ -5,12 +5,12 @@
 	using System.Security;
 
 	/// <summary>
-	///   A fragment shader is a program that controls the fragment-shader stage.
+	///     A fragment shader is a program that controls the fragment-shader stage.
 	/// </summary>
 	internal sealed class FragmentShader : Shader
 	{
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		public FragmentShader(GraphicsDevice graphicsDevice)
@@ -19,7 +19,7 @@
 		}
 
 		/// <summary>
-		///   Reinitializes the shader.
+		///     Reinitializes the shader.
 		/// </summary>
 		/// <param name="shaderCode">The shader source code.</param>
 		/// <param name="length">The length of the shader code in bytes.</param>
@@ -30,7 +30,7 @@
 		}
 
 		/// <summary>
-		///   Provides access to the native shader functions.
+		///     Provides access to the native shader functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]

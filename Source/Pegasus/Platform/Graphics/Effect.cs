@@ -7,26 +7,26 @@
 	// ReSharper disable InconsistentNaming
 
 	/// <summary>
-	///   Represents a shader-based rendering effect.
+	///     Represents a shader-based rendering effect.
 	/// </summary>
 	/// <remarks>
-	///   The effect cannot be derived from DisposableObject, as that might introduce name clashes with variable names used by
-	///   the effect.
+	///     The effect cannot be derived from DisposableObject, as that might introduce name clashes with variable names used by
+	///     the effect.
 	/// </remarks>
 	public abstract class Effect : IDisposable
 	{
 		/// <summary>
-		///   Indicates whether the effect has already been disposed.
+		///     Indicates whether the effect has already been disposed.
 		/// </summary>
 		private bool _isDisposed;
 
 		/// <summary>
-		///   The context of the effect that can be used to load and bind effect resources.
+		///     The context of the effect that can be used to load and bind effect resources.
 		/// </summary>
 		protected EffectContext __context;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
@@ -49,7 +49,7 @@
 #endif
 
 		/// <summary>
-		///   Disposes the effect, releasing all managed and unmanaged resources.
+		///     Disposes the effect, releasing all managed and unmanaged resources.
 		/// </summary>
 		void IDisposable.Dispose()
 		{
@@ -63,7 +63,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the effect, releasing all managed and unmanaged resources.
+		///     Disposes the effect, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected virtual void __OnDisposing()
 		{

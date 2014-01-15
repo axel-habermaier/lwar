@@ -7,20 +7,20 @@
 	using Memory;
 
 	/// <summary>
-	///   Describes the state of the rasterizer pipeline stage. Objects of this class are immutable once
-	///   they have been bound to the pipeline for the first time. In debug builds, an exception is
-	///   thrown if an attempt is made to change a property after the state has been bound to the pipeline;
-	///   in release builds, any such changes are simply ignored.
+	///     Describes the state of the rasterizer pipeline stage. Objects of this class are immutable once
+	///     they have been bound to the pipeline for the first time. In debug builds, an exception is
+	///     thrown if an attempt is made to change a property after the state has been bound to the pipeline;
+	///     in release builds, any such changes are simply ignored.
 	/// </summary>
 	public sealed class RasterizerState : PipelineState
 	{
 		/// <summary>
-		///   The description of the rasterizer state.
+		///     The description of the rasterizer state.
 		/// </summary>
 		private RasterizerDescription _description;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		public RasterizerState(GraphicsDevice graphicsDevice)
@@ -30,22 +30,22 @@
 		}
 
 		/// <summary>
-		///   Gets a default rasterizer state with culling disabled.
+		///     Gets a default rasterizer state with culling disabled.
 		/// </summary>
 		public static RasterizerState CullNone { get; private set; }
 
 		/// <summary>
-		///   Gets a default rasterizer state with clockwise culling enabled.
+		///     Gets a default rasterizer state with clockwise culling enabled.
 		/// </summary>
 		public static RasterizerState CullClockwise { get; private set; }
 
 		/// <summary>
-		///   Gets a default rasterizer state with counter-clockwise culling enabled.
+		///     Gets a default rasterizer state with counter-clockwise culling enabled.
 		/// </summary>
 		public static RasterizerState CullCounterClockwise { get; private set; }
 
 		/// <summary>
-		///   Gets or sets the fill mode.
+		///     Gets or sets the fill mode.
 		/// </summary>
 		public FillMode FillMode
 		{
@@ -58,7 +58,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the cull mode.
+		///     Gets or sets the cull mode.
 		/// </summary>
 		public CullMode CullMode
 		{
@@ -71,7 +71,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether counter-clockwise faces are front-facing.
+		///     Gets or sets a value indicating whether counter-clockwise faces are front-facing.
 		/// </summary>
 		public bool FrontIsCounterClockwise
 		{
@@ -84,7 +84,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the depth bias.
+		///     Gets or sets the depth bias.
 		/// </summary>
 		public int DepthBias
 		{
@@ -97,7 +97,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the depth bias clamp.
+		///     Gets or sets the depth bias clamp.
 		/// </summary>
 		public float DepthBiasClamp
 		{
@@ -110,7 +110,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the slope scaled depth bias.
+		///     Gets or sets the slope scaled depth bias.
 		/// </summary>
 		public float SlopeScaledDepthBias
 		{
@@ -123,7 +123,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether depth clip is enabled.
+		///     Gets or sets a value indicating whether depth clip is enabled.
 		/// </summary>
 		public bool DepthClipEnabled
 		{
@@ -136,7 +136,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether the scissor test is enabled.
+		///     Gets or sets a value indicating whether the scissor test is enabled.
 		/// </summary>
 		public bool ScissorEnabled
 		{
@@ -149,7 +149,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether multisampling is enabled.
+		///     Gets or sets a value indicating whether multisampling is enabled.
 		/// </summary>
 		public bool MultisampleEnabled
 		{
@@ -162,7 +162,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets a value indicating whether lines are antialiased.
+		///     Gets or sets a value indicating whether lines are antialiased.
 		/// </summary>
 		public bool AntialiasedLineEnabled
 		{
@@ -175,7 +175,7 @@
 		}
 
 		/// <summary>
-		///   Initializes the default instances.
+		///     Initializes the default instances.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
 		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
@@ -205,7 +205,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the default instances.
+		///     Disposes the default instances.
 		/// </summary>
 		internal static void DisposeDefaultInstances()
 		{
@@ -215,7 +215,7 @@
 		}
 
 		/// <summary>
-		///   Compiles the pipeline state object.
+		///     Compiles the pipeline state object.
 		/// </summary>
 		protected override void Compile()
 		{
@@ -223,7 +223,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -231,7 +231,7 @@
 		}
 
 		/// <summary>
-		///   Sets the state on the pipeline. The state can no longer be changed afterwards.
+		///     Sets the state on the pipeline. The state can no longer be changed afterwards.
 		/// </summary>
 		public void Bind()
 		{
@@ -253,7 +253,7 @@
 #endif
 
 		/// <summary>
-		///   Provides access to the native rasterizer state functions.
+		///     Provides access to the native rasterizer state functions.
 		/// </summary>
 #if !DEBUG
 		[SuppressUnmanagedCodeSecurity]
@@ -278,7 +278,7 @@
 		}
 
 		/// <summary>
-		///   Describes the rasterizer state.
+		///     Describes the rasterizer state.
 		/// </summary>
 		[StructLayout(LayoutKind.Sequential)]
 		private struct RasterizerDescription

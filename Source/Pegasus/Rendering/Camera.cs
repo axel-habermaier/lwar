@@ -7,42 +7,42 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Represents a camera that can be used to draw scenes.
+	///     Represents a camera that can be used to draw scenes.
 	/// </summary>
 	public abstract class Camera : DisposableObject
 	{
 		/// <summary>
-		///   The constant buffer that holds the camera-related data that is passed to each vertex shader.
+		///     The constant buffer that holds the camera-related data that is passed to each vertex shader.
 		/// </summary>
 		private readonly ConstantBuffer _cameraBuffer;
 
 		/// <summary>
-		///   Gets the camera's projection matrix.
+		///     Gets the camera's projection matrix.
 		/// </summary>
 		protected Matrix Projection;
 
 		/// <summary>
-		///   Gets the camera's view matrix.
+		///     Gets the camera's view matrix.
 		/// </summary>
 		protected Matrix View;
 
 		/// <summary>
-		///   Indicates whether the contents of the camera buffer are outdated.
+		///     Indicates whether the contents of the camera buffer are outdated.
 		/// </summary>
 		private bool _bufferUpdateRequired = true;
 
 		/// <summary>
-		///   The camera's position within the world.
+		///     The camera's position within the world.
 		/// </summary>
 		private Vector3 _position;
 
 		/// <summary>
-		///   The camera's viewport.
+		///     The camera's viewport.
 		/// </summary>
 		private Rectangle _viewport;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		protected Camera(GraphicsDevice graphicsDevice)
@@ -56,7 +56,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the camera's position within the world.
+		///     Gets or sets the camera's position within the world.
 		/// </summary>
 		public Vector3 Position
 		{
@@ -69,7 +69,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the camera's viewport.
+		///     Gets or sets the camera's viewport.
 		/// </summary>
 		public Rectangle Viewport
 		{
@@ -85,7 +85,7 @@
 		}
 
 		/// <summary>
-		///   Activates this camera instance, causing all subsequent drawing operations to be relative to this camera instance.
+		///     Activates this camera instance, causing all subsequent drawing operations to be relative to this camera instance.
 		/// </summary>
 		internal unsafe void Bind()
 		{
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -109,7 +109,7 @@
 		}
 
 		/// <summary>
-		///   Updates the projection matrix based on the current camera configuration.
+		///     Updates the projection matrix based on the current camera configuration.
 		/// </summary>
 		protected void UpdateProjectionMatrix()
 		{
@@ -118,7 +118,7 @@
 		}
 
 		/// <summary>
-		///   Updates the view matrix based on the current camera configuration.
+		///     Updates the view matrix based on the current camera configuration.
 		/// </summary>
 		protected void UpdateViewMatrix()
 		{
@@ -127,12 +127,12 @@
 		}
 
 		/// <summary>
-		///   Updates the projection matrix based on the current camera configuration.
+		///     Updates the projection matrix based on the current camera configuration.
 		/// </summary>
 		protected abstract void UpdateProjectionMatrixCore();
 
 		/// <summary>
-		///   Updates the view matrix based on the current camera configuration.
+		///     Updates the view matrix based on the current camera configuration.
 		/// </summary>
 		protected abstract void UpdateViewMatrixCore();
 
@@ -140,43 +140,43 @@
 #pragma warning disable 0414
 
 		/// <summary>
-		///   Stores the camera data that is passed to the vertex shaders.
+		///     Stores the camera data that is passed to the vertex shaders.
 		/// </summary>
 		[StructLayout(LayoutKind.Sequential, Pack = 1, Size = Size)]
 		private struct CameraBuffer
 		{
 			/// <summary>
-			///   The size of the struct in bytes.
+			///     The size of the struct in bytes.
 			/// </summary>
 			public const int Size = 208;
 
 			/// <summary>
-			///   The slot that is used to pass the camera buffer to the vertex shaders.
+			///     The slot that is used to pass the camera buffer to the vertex shaders.
 			/// </summary>
 			public const int Slot = 0;
 
 			/// <summary>
-			///   The view matrix of the camera.
+			///     The view matrix of the camera.
 			/// </summary>
 			private readonly Matrix _view;
 
 			/// <summary>
-			///   The projection matrix of the camera.
+			///     The projection matrix of the camera.
 			/// </summary>
 			private readonly Matrix _projection;
 
 			/// <summary>
-			///   The product of the view and the projection matrix that is pre-calculated on the CPU.
+			///     The product of the view and the projection matrix that is pre-calculated on the CPU.
 			/// </summary>
 			private readonly Matrix _viewProjection;
 
 			/// <summary>
-			///   The position of the camera in world space.
+			///     The position of the camera in world space.
 			/// </summary>
 			private readonly Vector3 _cameraPosition;
 
 			/// <summary>
-			///   Initializes a new instance.
+			///     Initializes a new instance.
 			/// </summary>
 			/// <param name="view">The view matrix of the camera.</param>
 			/// <param name="projection"> The projection matrix of the camera.</param>

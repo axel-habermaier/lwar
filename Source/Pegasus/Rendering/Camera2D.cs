@@ -5,17 +5,17 @@
 	using Platform.Graphics;
 
 	/// <summary>
-	///   Represents a camera that can be used to draw 2D scenes.
+	///     Represents a camera that can be used to draw 2D scenes.
 	/// </summary>
 	public class Camera2D : Camera
 	{
 		/// <summary>
-		///   The camera's position within the world.
+		///     The camera's position within the world.
 		/// </summary>
 		private Vector2 _position;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		public Camera2D(GraphicsDevice graphicsDevice)
@@ -24,7 +24,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the camera's position within the world.
+		///     Gets or sets the camera's position within the world.
 		/// </summary>
 		public new Vector2 Position
 		{
@@ -37,7 +37,7 @@
 		}
 
 		/// <summary>
-		///   Updates the projection matrix based on the current camera configuration.
+		///     Updates the projection matrix based on the current camera configuration.
 		/// </summary>
 		protected override void UpdateProjectionMatrixCore()
 		{
@@ -45,7 +45,7 @@
 		}
 
 		/// <summary>
-		///   Updates the view matrix based on the current camera configuration.
+		///     Updates the view matrix based on the current camera configuration.
 		/// </summary>
 		protected override void UpdateViewMatrixCore()
 		{

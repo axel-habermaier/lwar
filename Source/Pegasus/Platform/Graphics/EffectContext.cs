@@ -5,26 +5,26 @@
 	using Assets;
 
 	/// <summary>
-	///   Represents the context of an effect.
+	///     Represents the context of an effect.
 	/// </summary>
 	/// <remarks>
-	///   These methods are not declared in the Effect class in order to avoid possible name clashes with variables
-	///   declared by the effect writer.
+	///     These methods are not declared in the Effect class in order to avoid possible name clashes with variables
+	///     declared by the effect writer.
 	/// </remarks>
 	public struct EffectContext
 	{
 		/// <summary>
-		///   The assets manager that should be used to load the effect assets.
+		///     The assets manager that should be used to load the effect assets.
 		/// </summary>
 		private readonly AssetsManager _assets;
 
 		/// <summary>
-		///   The graphics device the graphics resources should be created for.
+		///     The graphics device the graphics resources should be created for.
 		/// </summary>
 		private readonly GraphicsDevice _graphicsDevice;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device the graphics resources should be created for.</param>
 		/// <param name="assets">The assets manager that should be used to load the effect assets.</param>
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>
-		///   Binds the given texture view to the GPU.
+		///     Binds the given texture view to the GPU.
 		/// </summary>
 		/// <param name="view">The texture view that should be bound.</param>
 		/// <param name="slot">The slot the texture view should be bound to.</param>
@@ -49,7 +49,7 @@
 		}
 
 		/// <summary>
-		///   Unbinds the given texture view from the GPU.
+		///     Unbinds the given texture view from the GPU.
 		/// </summary>
 		/// <param name="view">The texture view that should be unbound.</param>
 		/// <param name="slot">The slot the texture view should be unbound from.</param>
@@ -60,7 +60,7 @@
 		}
 
 		/// <summary>
-		///   Binds the given texture view to the GPU.
+		///     Binds the given texture view to the GPU.
 		/// </summary>
 		/// <param name="view">The texture view that should be bound.</param>
 		/// <param name="slot">The slot the texture view should be bound to.</param>
@@ -71,7 +71,7 @@
 		}
 
 		/// <summary>
-		///   Unbinds the given texture view from the GPU.
+		///     Unbinds the given texture view from the GPU.
 		/// </summary>
 		/// <param name="view">The texture view that should be unbound.</param>
 		/// <param name="slot">The slot the texture view should be unbound from.</param>
@@ -82,7 +82,7 @@
 		}
 
 		/// <summary>
-		///   Creates a constant buffer.
+		///     Creates a constant buffer.
 		/// </summary>
 		/// <param name="size">The size of the constant buffer's contents in bytes.</param>
 		/// <param name="slot">The slot the constant buffer should be bound to.</param>
@@ -93,7 +93,7 @@
 		}
 
 		/// <summary>
-		///   Binds the given constant buffer to the GPU.
+		///     Binds the given constant buffer to the GPU.
 		/// </summary>
 		/// <param name="buffer">The constant buffer that should be bound.</param>
 		public void Bind(ConstantBuffer buffer)
@@ -105,8 +105,8 @@
 		}
 
 		/// <summary>
-		///   Updates the given constant buffer with the given data. The size of the data is determined by the parameter that has
-		///   been passed to the constructor of the constant buffer instance.
+		///     Updates the given constant buffer with the given data. The size of the data is determined by the parameter that has
+		///     been passed to the constructor of the constant buffer instance.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be updated.</param>
 		/// <param name="data">The data that should be copied to the GPU.</param>
@@ -120,7 +120,7 @@
 		}
 
 		/// <summary>
-		///   Creates a new effect technique instance.
+		///     Creates a new effect technique instance.
 		/// </summary>
 		/// <param name="bind">The action that should be invoked to bind the required textures and constant buffers.</param>
 		/// <param name="unbind">The action that should be invoked to unbind the required textures.</param>
@@ -138,7 +138,7 @@
 		}
 
 		/// <summary>
-		///   Binds the given technique to the GPU.
+		///     Binds the given technique to the GPU.
 		/// </summary>
 		/// <param name="technique">The technique that should be bound.</param>
 		public void Bind(EffectTechnique technique)
@@ -148,7 +148,7 @@
 		}
 
 		/// <summary>
-		///   Checks whether the instance is initialized.
+		///     Checks whether the instance is initialized.
 		/// </summary>
 		[Conditional("DEBUG")]
 		private void ValidateInitialization()

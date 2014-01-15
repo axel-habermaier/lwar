@@ -7,27 +7,27 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///   Control for text input.
+	///     Control for text input.
 	/// </summary>
 	public sealed class TextBox : DisposableObject
 	{
 		/// <summary>
-		///   The caret of the text box.
+		///     The caret of the text box.
 		/// </summary>
 		private readonly Caret _caret = new Caret();
 
 		/// <summary>
-		///   The layout of the text box's text.
+		///     The layout of the text box's text.
 		/// </summary>
 		private readonly TextLayout _layout;
 
 		/// <summary>
-		///   The renderer for the text box' text.
+		///     The renderer for the text box' text.
 		/// </summary>
 		private TextRenderer _textRenderer;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The font that is used to draw the text.</param>
 		public TextBox(Font font)
@@ -42,7 +42,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the label's area.
+		///     Gets or sets the label's area.
 		/// </summary>
 		public Rectangle Area
 		{
@@ -59,8 +59,8 @@
 		}
 
 		/// <summary>
-		///   Gets the actual text rendering area. Usually, the actual area is smaller than the desired size.
-		///   If any words overlap, however, the actual area is bigger.
+		///     Gets the actual text rendering area. Usually, the actual area is smaller than the desired size.
+		///     If any words overlap, however, the actual area is bigger.
 		/// </summary>
 		public Rectangle ActualArea
 		{
@@ -75,7 +75,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the text that is shown in the text box.
+		///     Gets or sets the text that is shown in the text box.
 		/// </summary>
 		public string Text
 		{
@@ -90,7 +90,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the font that is used to draw the text.
+		///     Gets or sets the font that is used to draw the text.
 		/// </summary>
 		public Font Font
 		{
@@ -99,7 +99,7 @@
 		}
 
 		/// <summary>
-		///   Gets or sets the text color.
+		///     Gets or sets the text color.
 		/// </summary>
 		public Color Color
 		{
@@ -108,7 +108,7 @@
 		}
 
 		/// <summary>
-		///   Inserts the given character at the current caret position.
+		///     Inserts the given character at the current caret position.
 		/// </summary>
 		/// <param name="c">The character that should be inserted.</param>
 		public void InsertCharacter(char c)
@@ -118,7 +118,7 @@
 		}
 
 		/// <summary>
-		///   Injects a key press event.
+		///     Injects a key press event.
 		/// </summary>
 		/// <param name="args">The key that was pressed.</param>
 		public void InjectKeyPress(KeyEventArgs args)
@@ -145,7 +145,7 @@
 		}
 
 		/// <summary>
-		///   Draws the text box.
+		///     Draws the text box.
 		/// </summary>
 		public void Draw(SpriteBatch spriteBatch)
 		{
@@ -161,7 +161,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
