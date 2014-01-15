@@ -215,6 +215,12 @@
     <Compile Include="..\Pegasus\Math\Vector4.cs">
       <Link>Pegasus\Vector4.cs</Link>
     </Compile>
+    <Compile Include="..\Pegasus\Platform\Assets\AssetHeader.cs">
+      <Link>Pegasus\AssetHeader.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Platform\Assets\AssetType.cs">
+      <Link>Pegasus\AssetType.cs</Link>
+    </Compile>
     <Compile Include="..\Pegasus\Platform\ExternalProcess.cs">
       <Link>Pegasus\ExternalProcess.cs</Link>
     </Compile>

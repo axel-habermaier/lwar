@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
+	using System.Globalization;
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
@@ -33,6 +34,14 @@
 		///     The assets project file.
 		/// </summary>
 		private static AssetsProject _assetsProject;
+
+		/// <summary>
+		///     Gets the path to the file that is used to store the asset file version of the previously compiled assets.
+		/// </summary>
+		private static string AssetFileVersionPath
+		{
+			get { return Path.Combine(TempDirectory, "AssetFileVersion" + PlatformInfo.AssetExtension); }
+		}
 
 		/// <summary>
 		///     Gets the path to the compiled assets project.
@@ -171,6 +180,27 @@
 
 				CompileHlsl = false;
 			}
+		}
+
+		/// <summary>
+		///     Checks the asset file version of the previously compiled assets. If the version is unknown or outdated, all assets must
+		///     be re-compiled.
+		/// </summary>
+		public static bool CheckAssetFileVersion()
+		{
+			if (!File.Exists(AssetFileVersionPath))
+				return false;
+
+			ushort version;
+			return UInt16.TryParse(File.ReadAllText(AssetFileVersionPath), out version) && version == PlatformInfo.AssetFileVersion;
+		}
+
+		/// <summary>
+		///     Stores the asset file version of the just-compiled assets.
+		/// </summary>
+		public static void StoreAssetFileVersion()
+		{
+			File.WriteAllText(AssetFileVersionPath, PlatformInfo.AssetFileVersion.ToString(CultureInfo.InvariantCulture));
 		}
 
 		/// <summary>

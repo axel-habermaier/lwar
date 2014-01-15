@@ -6,6 +6,7 @@
 	using System.Linq;
 	using Assets;
 	using Platform;
+	using Platform.Assets;
 	using Platform.Logging;
 	using Platform.Memory;
 
@@ -23,6 +24,7 @@
 		protected override void Compile(CubeMapAsset asset, BufferWriter buffer)
 		{
 			asset.Load();
+			AssetHeader.Write(buffer, AssetType.CubeMap);
 
 			if (asset.Uncompressed)
 				asset.Write(buffer);

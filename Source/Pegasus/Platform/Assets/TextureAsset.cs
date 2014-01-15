@@ -5,18 +5,18 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents a texture asset.
+	///     Represents a texture asset.
 	/// </summary>
 	internal abstract class TextureAsset<T> : Asset
 		where T : Texture, IDisposable
 	{
 		/// <summary>
-		///   Creates a new texture object.
+		///     Creates a new texture object.
 		/// </summary>
 		private readonly Func<GraphicsDevice, T> _createTexture;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="createTexture">Creates a new texture object.</param>
 		protected TextureAsset(Func<GraphicsDevice, T> createTexture)
@@ -26,17 +26,19 @@
 		}
 
 		/// <summary>
-		///   The texture that is managed by this asset instance.
+		///     The texture that is managed by this asset instance.
 		/// </summary>
 		internal T Texture { get; private set; }
 
 		/// <summary>
-		///   Loads or reloads the asset using the given asset buffer.
+		///     Loads or reloads the asset using the given asset buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
 		/// <param name="name">The name of the asset.</param>
 		internal override unsafe void Load(BufferReader buffer, string name)
 		{
+			AssetHeader.Validate(buffer, Type, name);
+
 			var description = new TextureDescription
 			{
 				Width = buffer.ReadUInt32(),
@@ -75,7 +77,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

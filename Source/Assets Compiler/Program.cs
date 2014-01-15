@@ -70,7 +70,7 @@
 				{
 					compilationUnit.LoadAssets();
 
-					if (clean)
+					if (clean || !Configuration.CheckAssetFileVersion())
 						compilationUnit.Clean();
 
 					if (compile)
@@ -82,6 +82,9 @@
 						Log.Info("Done.");
 					else
 					{
+						if (success)
+							Configuration.StoreAssetFileVersion();
+
 						Console.WriteLine();
 						Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds);
 					}

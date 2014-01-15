@@ -5,25 +5,27 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents a vertex shader asset.
+	///     Represents a vertex shader asset.
 	/// </summary>
 	internal sealed class VertexShaderAsset : ShaderAsset<VertexShader>
 	{
 		/// <summary>
-		///   Gets the friendly name of the asset.
+		///     Gets the type of the asset.
 		/// </summary>
-		internal override string FriendlyName
+		internal override AssetType Type
 		{
-			get { return "Vertex Shader"; }
+			get { return AssetType.VertexShader; }
 		}
 
 		/// <summary>
-		///   Loads or reloads the asset using the given asset reader.
+		///     Loads or reloads the asset using the given asset reader.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
 		/// <param name="name">The name of the asset.</param>
 		internal override unsafe void Load(BufferReader buffer, string name)
 		{
+			AssetHeader.Validate(buffer, AssetType.VertexShader, name);
+
 			if (Shader == null)
 				Shader = new VertexShader(GraphicsDevice);
 

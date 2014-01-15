@@ -223,6 +223,8 @@
     <Compile Include="Framework\UserInterface\VerticalAlignment.cs" />
     <Compile Include="Framework\UserInterface\Visibility.cs" />
     <Compile Include="Math\LineSegment.cs" />
+    <Compile Include="Platform\Assets\AssetHeader.cs" />
+    <Compile Include="Platform\Assets\AssetType.cs" />
     <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />
     <Compile Include="Platform\Performance\AveragedInteger.cs" />

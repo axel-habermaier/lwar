@@ -5,25 +5,27 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents a fragment shader asset.
+	///     Represents a fragment shader asset.
 	/// </summary>
 	internal sealed class FragmentShaderAsset : ShaderAsset<FragmentShader>
 	{
 		/// <summary>
-		///   Gets the friendly name of the asset.
+		///     Gets the type of the asset.
 		/// </summary>
-		internal override string FriendlyName
+		internal override AssetType Type
 		{
-			get { return "Fragment Shader"; }
+			get { return AssetType.FragmentShader; }
 		}
 
 		/// <summary>
-		///   Loads or reloads the asset using the given asset reader.
+		///     Loads or reloads the asset using the given asset reader.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
 		/// <param name="name">The name of the asset.</param>
 		internal override unsafe void Load(BufferReader buffer, string name)
 		{
+			AssetHeader.Validate(buffer, AssetType.FragmentShader, name);
+
 			if (Shader == null)
 				Shader = new FragmentShader(GraphicsDevice);
 

@@ -8,6 +8,7 @@
 	using CSharp;
 	using Fonts;
 	using Platform;
+	using Platform.Assets;
 	using Platform.Logging;
 	using Platform.Memory;
 
@@ -70,6 +71,7 @@
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		protected override void Compile(FontAsset asset, BufferWriter buffer)
 		{
+			AssetHeader.Write(buffer, AssetType.Font);
 			_regenerateFontLoader = true;
 
 			// Read the font configuration

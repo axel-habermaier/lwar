@@ -6,35 +6,37 @@
 	using Rendering.UserInterface;
 
 	/// <summary>
-	///   Represents a font asset.
+	///     Represents a font asset.
 	/// </summary>
 	internal sealed class FontAsset : Asset
 	{
 		/// <summary>
-		///   The font texture.
+		///     The font texture.
 		/// </summary>
 		private Texture2DAsset _texture;
 
 		/// <summary>
-		///   The font that is managed by this asset instance.
+		///     The font that is managed by this asset instance.
 		/// </summary>
 		internal Font Font { get; private set; }
 
 		/// <summary>
-		///   Gets the friendly name of the asset.
+		///     Gets the type of the asset.
 		/// </summary>
-		internal override string FriendlyName
+		internal override AssetType Type
 		{
-			get { return "Font"; }
+			get { return AssetType.Font; }
 		}
 
 		/// <summary>
-		///   Loads or reloads the asset using the given asset buffer.
+		///     Loads or reloads the asset using the given asset buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
 		/// <param name="name">The name of the asset.</param>
 		internal override void Load(BufferReader buffer, string name)
 		{
+			AssetHeader.Validate(buffer, AssetType.Font, name);
+
 			if (Font == null)
 				Font = new Font();
 
@@ -103,7 +105,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{

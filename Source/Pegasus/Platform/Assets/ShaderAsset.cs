@@ -6,18 +6,18 @@
 	using Memory;
 
 	/// <summary>
-	///   Represents a shader asset.
+	///     Represents a shader asset.
 	/// </summary>
 	internal abstract class ShaderAsset<T> : Asset
 		where T : Shader
 	{
 		/// <summary>
-		///   The shader that is managed by this asset instance.
+		///     The shader that is managed by this asset instance.
 		/// </summary>
 		public T Shader { get; protected set; }
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override sealed void OnDisposing()
 		{
@@ -25,7 +25,7 @@
 		}
 
 		/// <summary>
-		///   Extracts the graphics API-dependent shader code from the buffer.
+		///     Extracts the graphics API-dependent shader code from the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the shader.</param>
 		/// <param name="shaderCode">The extracted shader source code.</param>

@@ -15,6 +15,11 @@
 		public const string AssetExtension = ".pg";
 
 		/// <summary>
+		///     The compiled asset file version supported by the application.
+		/// </summary>
+		public const ushort AssetFileVersion = 1;
+
+		/// <summary>
 		///     Indicates whether the platform is a big or little endian architecture.
 		/// </summary>
 		public const EndianessType Endianess = 

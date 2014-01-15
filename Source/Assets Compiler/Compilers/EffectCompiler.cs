@@ -11,6 +11,7 @@
 	using Effects;
 	using Effects.Compilation;
 	using Platform;
+	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
@@ -145,6 +146,8 @@
 				switch (asset.Type)
 				{
 					case ShaderType.VertexShader:
+						AssetHeader.Write(buffer, AssetType.VertexShader);
+
 						var count = reader.ReadByte();
 						buffer.WriteByte(count);
 
@@ -154,6 +157,7 @@
 						profile = "vs_4_0";
 						break;
 					case ShaderType.FragmentShader:
+						AssetHeader.Write(buffer, AssetType.FragmentShader);
 						profile = "ps_4_0";
 						break;
 					default:

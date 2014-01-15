@@ -11,33 +11,33 @@
 	using Scripting;
 
 	/// <summary>
-	///   Tracks all assets that it loaded. If an asset has already been loaded and it is
-	///   requested again, the previously loaded instance is returned instead of loading the asset again.
+	///     Tracks all assets that it loaded. If an asset has already been loaded and it is
+	///     requested again, the previously loaded instance is returned instead of loading the asset again.
 	/// </summary>
 	public sealed class AssetsManager : DisposableObject
 	{
 		/// <summary>
-		///   The name of the assets directory.
+		///     The name of the assets directory.
 		/// </summary>
 		private const string AssetDirectory = "";
 
 		/// <summary>
-		///   The path to the asset compiler.
+		///     The path to the asset compiler.
 		/// </summary>
 		private const string AssetCompiler = "pgc.exe";
 
 		/// <summary>
-		///   The loaded assets.
+		///     The loaded assets.
 		/// </summary>
 		private readonly Dictionary<string, Asset> _assets = new Dictionary<string, Asset>();
 
 		/// <summary>
-		///   The graphics device for which the assets are managed.
+		///     The graphics device for which the assets are managed.
 		/// </summary>
 		private readonly GraphicsDevice _device;
 
 		/// <summary>
-		///   Initializes a new instance.
+		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The graphics device that should be used to load the assets.</param>
 		internal AssetsManager(GraphicsDevice device)
@@ -49,7 +49,7 @@
 		}
 
 		/// <summary>
-		///   Loads the given asset.
+		///     Loads the given asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be loaded.</param>
 		/// <param name="assetName">The name of the asset that should be loaded.</param>
@@ -61,7 +61,7 @@
 		}
 
 		/// <summary>
-		///   Reloads all assets.
+		///     Reloads all assets.
 		/// </summary>
 		private void ReloadAssets()
 		{
@@ -82,7 +82,7 @@
 				{
 					try
 					{
-						Log.Info("Reloading {1} '{0}'...", pair.Key, pair.Value.FriendlyName);
+						Log.Info("Reloading {1} '{0}'...", pair.Key, pair.Value.Type);
 						Load(pair.Value, pair.Key);
 					}
 					catch (IOException e)
@@ -101,7 +101,7 @@
 		}
 
 		/// <summary>
-		///   Disposes the object, releasing all managed and unmanaged resources.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
@@ -112,8 +112,8 @@
 		}
 
 		/// <summary>
-		///   Finds and returns the asset with the given name or returns null if the asset has not yet been loaded.
-		///   Throws an exception if an asset with the same name but a different type has previously been loaded.
+		///     Finds and returns the asset with the given name or returns null if the asset has not yet been loaded.
+		///     Throws an exception if an asset with the same name but a different type has previously been loaded.
 		/// </summary>
 		/// <typeparam name="TAsset">The type of the asset that should be found.</typeparam>
 		/// <param name="assetName">The name of the asset that should be found.</param>
@@ -130,7 +130,7 @@
 				if (typedAsset == null)
 				{
 					const string message = "Asset '{0}' is already loaded and has type '{1}'.";
-					Log.Die(message, assetName, asset.FriendlyName);
+					Log.Die(message, assetName, asset.Type);
 				}
 				return typedAsset;
 			}
@@ -139,7 +139,7 @@
 		}
 
 		/// <summary>
-		///   Loads and returns an asset with the given type and name or returns a previously loaded instance.
+		///     Loads and returns an asset with the given type and name or returns a previously loaded instance.
 		/// </summary>
 		/// <typeparam name="TAsset">The type of the asset that should be loaded.</typeparam>
 		/// <param name="assetName">The name of the asset that should be loaded.</param>
@@ -158,7 +158,7 @@
 			asset = new TAsset { GraphicsDevice = _device, Assets = this };
 			try
 			{
-				Log.Info("Loading {0} '{1}'...", asset.FriendlyName, assetName);
+				Log.Info("Loading {0} '{1}'...", asset.Type, assetName);
 				Load(asset, assetName);
 
 				_assets.Add(assetName, asset);
@@ -174,7 +174,7 @@
 		}
 
 		/// <summary>
-		///   Loads a font.
+		///     Loads a font.
 		/// </summary>
 		/// <param name="font">The identifier of the font asset that should be loaded.</param>
 		public Font LoadFont(AssetIdentifier<Font> font)
@@ -183,7 +183,7 @@
 		}
 
 		/// <summary>
-		///   Loads a vertex shader.
+		///     Loads a vertex shader.
 		/// </summary>
 		/// <param name="shaderFilePath">The path to the vertex shader file.</param>
 		internal VertexShader LoadVertexShader(string shaderFilePath)
@@ -193,7 +193,7 @@
 		}
 
 		/// <summary>
-		///   Loads a fragment shader.
+		///     Loads a fragment shader.
 		/// </summary>
 		/// <param name="shaderFilePath">The path to the fragment shader file.</param>
 		internal FragmentShader LoadFragmentShader(string shaderFilePath)
@@ -203,7 +203,7 @@
 		}
 
 		/// <summary>
-		///   Loads a 2D texture.
+		///     Loads a 2D texture.
 		/// </summary>
 		/// <param name="texture">The identifier of the texture 2D asset that should be loaded.</param>
 		public Texture2D LoadTexture2D(AssetIdentifier<Texture2D> texture)
@@ -212,7 +212,7 @@
 		}
 
 		/// <summary>
-		///   Loads a cube map.
+		///     Loads a cube map.
 		/// </summary>
 		/// <param name="cubeMap">The identifier of the cube map asset that should be loaded.</param>
 		public CubeMap LoadCubeMap(AssetIdentifier<CubeMap> cubeMap)
