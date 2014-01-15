@@ -30,7 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		..\Documentation\gameplay.txt = ..\Documentation\gameplay.txt
 		..\Documentation\network.txt = ..\Documentation\network.txt
 		..\Documentation\todo.txt = ..\Documentation\todo.txt
-		..\Documentation\ui concepts.txt = ..\Documentation\ui concepts.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar Assets", "Lwar Assets\lwar Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"

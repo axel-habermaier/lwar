@@ -27,17 +27,17 @@ Client
 Pegasus.Framework
 ========
 - Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
-- Refactor cvar/command system
-	* Invoke commands/set cvars on objects (console.visible, window.size, etc.)
-	* Add IntelliSense-like code completion for objects and cvars/commands, including when cvars/commands are expected as parameters
-	* Add C# expression evaluator (1+1, if-then-else, variables, loops) to console
-	* Allow multi-line console input
-	* Define cvars/commands as object instances on partial classes, generate code-behind similar to registries nowadays
-	* Register instances defining cvars/commands on registries manually
-	* Refactor cvar/command parsing to remove object-casts
-	* Use Mono.CSharp and allow arbitrary (?) C# code to be executed on the console?
 - Add texture quality switch cvar -> asset reloading required
 - Particle System
+- UI
+	* Events (routed events: http://msdn.microsoft.com/en-us/library/ms742806.aspx, attached events: http://msdn.microsoft.com/en-us/library/bb613550.aspx)
+	* Controls: TextBox, Scrollviewer, Combobox, Checkbox, Button, Image, ItemsControl, GridView
+	* Layouting: DockPanel
+	* Animation System
+	* Refactor UI drawing (http://msdn.microsoft.com/en-us/library/ms748373.aspx)
+	* Input handling (http://msdn.microsoft.com/en-us/library/ms754010.aspx)
+	* Implement two way bindings
+	* Keyboard & logical focus: http://msdn.microsoft.com/en-us/library/aa969768.aspx
 
 Pegasus.Platform
 ========
