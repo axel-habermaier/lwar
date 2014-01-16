@@ -162,6 +162,12 @@
 			var compilers = CreateTypeInstances<IAssetCompiler>();
 			try
 			{
+				if (Configuration.XamlFilesOnly)
+				{
+					compilers.OfType<XamlCompiler>().Single().Clean(_assets);
+					return;
+				} 
+
 				foreach (var compiler in compilers)
 					compiler.Clean(_assets);
 			}

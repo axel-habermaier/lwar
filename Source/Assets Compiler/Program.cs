@@ -71,7 +71,7 @@
 				{
 					compilationUnit.LoadAssets();
 
-					if (!Configuration.XamlFilesOnly && (clean || !Configuration.CheckAssetFileVersion()))
+					if (clean || !Configuration.CheckAssetFileVersion())
 						compilationUnit.Clean();
 
 					if (compile)

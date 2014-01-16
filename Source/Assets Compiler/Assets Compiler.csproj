@@ -57,6 +57,14 @@
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
+     <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar Assets/lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar UI/lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
@@ -69,6 +77,14 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
+     <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar Assets/lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar UI/lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
     <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
@@ -130,6 +146,14 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+     <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar Assets/lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar UI/lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x64'">
     <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
@@ -141,6 +165,14 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
+     <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar Assets/lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar UI/lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
     <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
