@@ -51,4 +51,12 @@ pgFloat64 pgGetTime()
     return (double)(((pgUint64)time.tv_sec) * 1e9 + time.tv_nsec) * 1e-9;
 }
 
+pgVoid pgShowMessageBox(pgString caption, pgString message)
+{
+	PG_UNUSED(caption);
+	PG_UNUSED(message);
+
+	PG_DIE("Message boxes are not supported by Linux.");
+}
+
 #endif

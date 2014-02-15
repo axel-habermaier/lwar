@@ -348,7 +348,6 @@
     <Compile Include="Platform\Clock.cs" />
     <Compile Include="Platform\ResolutionManager.cs" />
     <Compile Include="Platform\Timer.cs" />
-    <Compile Include="Platform\Win32.cs" />
     <Compile Include="Rendering\Camera3D.cs" />
     <Compile Include="Rendering\Camera2D.cs" />
     <Compile Include="Rendering\FullscreenQuad.cs" />

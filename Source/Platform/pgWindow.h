@@ -200,4 +200,6 @@ PG_API_EXPORT pgVoid pgCaptureMouse(pgWindow* window);
 PG_API_EXPORT pgVoid pgReleaseMouse(pgWindow* window);
 PG_API_EXPORT pgVoid pgGetMousePosition(pgWindow* window, pgInt32* x, pgInt32* y);
 
+PG_API_EXPORT pgVoid pgShowMessageBox(pgString caption, pgString message);
+
 #endif

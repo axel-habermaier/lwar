@@ -14,9 +14,9 @@
 	internal class NativeLibrary : DisposableObject
 	{
 #if Linux
-	/// <summary>
-	///   The name of the native Pegasus.Platform library.
-	/// </summary>
+		/// <summary>
+		///   The name of the native Pegasus.Platform library.
+		/// </summary>
 		internal const string LibraryName = "libPlatform.so";
 #else
 		/// <summary>
@@ -70,6 +70,21 @@
 		}
 
 		/// <summary>
+		///     Shows a message box containing the given text. Only supported on Windows.
+		/// </summary>
+		/// <param name="caption">The caption of the message box.</param>
+		/// <param name="text">The text that should be displayed in the message box.</param>
+		/// <param name="arguments">The arguments for the text format string.</param>
+		[Conditional("Windows"), StringFormatMethod("text")]
+		public static void ShowMessageBox(string caption, string text, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(caption);
+			Assert.ArgumentNotNullOrWhitespace(text);
+
+			NativeMethods.ShowMessageBox(caption, String.Format(text, arguments));
+		}
+
+		/// <summary>
 		///     Invoked when the native library generates a log entry.
 		/// </summary>
 		/// <param name="type">The type of the generated log entry.</param>
@@ -102,6 +117,9 @@
 
 			[DllImport(LibraryName, EntryPoint = "pgGetGraphicsApi")]
 			public static extern GraphicsApi GetGraphicsApi();
+
+			[DllImport(LibraryName, EntryPoint = "pgShowMessageBox")]
+			public static extern void ShowMessageBox(string caption, string message);
 		}
 	}
 }

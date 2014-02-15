@@ -23,6 +23,14 @@ pgFloat64 pgGetTime()
 	return time.QuadPart / pgGetFequency();
 }
 
+pgVoid pgShowMessageBox(pgString caption, pgString message)
+{
+	PG_ASSERT_NOT_NULL(caption);
+	PG_ASSERT_NOT_NULL(message);
+
+	MessageBox(NULL, message, caption, MB_ICONERROR | MB_OK);
+}
+
 //====================================================================================================================
 // Windows-specific functions
 //====================================================================================================================

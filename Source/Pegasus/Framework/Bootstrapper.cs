@@ -51,7 +51,7 @@
 						Commands.Process(ConfigurationFile.AutoExec);
 						CommandLineParser.Parse();
 						CvarRegistry.ExecuteDeferredUpdates();
-
+						
 						var app = new TApp();
 						app.Run(appName, logFile);
 
@@ -67,7 +67,7 @@
 					message = String.Format(message, e.Message, logFile.FilePath);
 					Log.Error("{0}", message);
 					Log.Error("Stack trace:\n{0}", e.StackTrace);
-					Win32.ShowMessage(appName + " Fatal Error", message);
+					NativeLibrary.ShowMessageBox(appName + " Fatal Error", message);
 				}
 			}
 		}
