@@ -46,8 +46,7 @@
 			Assert.That(typeof(T) == typeof(uint) || typeof(T) == typeof(ushort),
 						"Unsupported index type '{0}'. Indices must be of type uint or ushort.", typeof(T).FullName);
 
-			return
-				indices.UsePointer(ptr => new IndexBuffer(graphicsDevice, usage, ptr, indices.Size(), GetIndexSize<T>()));
+			return indices.UsePointer(ptr => new IndexBuffer(graphicsDevice, usage, ptr, indices.Size(), GetIndexSize<T>()));
 		}
 
 		/// <summary>
