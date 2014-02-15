@@ -52,7 +52,7 @@
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(vertexBuffer);
-			Assert.That(Marshal.SizeOf(typeof(Vertex)) == Vertex.Size, "Unexpected unamanged size.");
+			Assert.That(Marshal.SizeOf(typeof(Vertex)) == Vertex.Size, "Unexpected unmanaged size.");
 
 			var inputElements = new[]
 			{
