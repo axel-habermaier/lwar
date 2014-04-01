@@ -187,7 +187,8 @@
 		/// <param name="source">The GLSL shader source code.</param>
 		private static void CompileGlslShader(BufferWriter buffer, string source)
 		{
-			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" + source;
+			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
+				"#extension GL_ARB_separate_shader_objects : enable\n" + source;
 
 			var code = Encoding.UTF8.GetBytes(shader);
 			buffer.WriteInt32(code.Length + 1);

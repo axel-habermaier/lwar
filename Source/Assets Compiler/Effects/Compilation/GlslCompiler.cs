@@ -83,15 +83,7 @@
 		protected override void GenerateVertexShaderOutputs(IEnumerable<ShaderParameter> outputs)
 		{
 			foreach (var output in outputs)
-			{
-				//if (output.Semantics == DataSemantics.Position)
-				//{
-				//	Writer.AppendLine("out gl_PerVertex");
-				//	Writer.AppendBlockStatement(() => Writer.AppendLine("vec4 gl_Position;"), true);
-				//}
-				//else
-					Writer.AppendLine("out {0} {1};", ToShaderType(output.Type), Escape(output.Name));
-			}
+				Writer.AppendLine("layout(location = {2}) out {0} {1};", ToShaderType(output.Type), Escape(output.Name), (int)output.Semantics);
 		}
 
 		/// <summary>
@@ -101,7 +93,7 @@
 		protected override void GenerateFragmentShaderInputs(IEnumerable<ShaderParameter> inputs)
 		{
 			foreach (var input in inputs)
-				Writer.AppendLine("in {0} {1};", ToShaderType(input.Type), Escape(input.Name));
+				Writer.AppendLine("layout(location = {2}) in {0} {1};", ToShaderType(input.Type), Escape(input.Name), (int)input.Semantics);
 		}
 
 		/// <summary>
