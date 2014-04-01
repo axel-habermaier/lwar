@@ -84,12 +84,12 @@
 		{
 			foreach (var output in outputs)
 			{
-				if (output.Semantics == DataSemantics.Position)
-				{
-					Writer.AppendLine("out gl_PerVertex");
-					Writer.AppendBlockStatement(() => Writer.AppendLine("vec4 gl_Position;"), true);
-				}
-				else
+				//if (output.Semantics == DataSemantics.Position)
+				//{
+				//	Writer.AppendLine("out gl_PerVertex");
+				//	Writer.AppendBlockStatement(() => Writer.AppendLine("vec4 gl_Position;"), true);
+				//}
+				//else
 					Writer.AppendLine("out {0} {1};", ToShaderType(output.Type), Escape(output.Name));
 			}
 		}

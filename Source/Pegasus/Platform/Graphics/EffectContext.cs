@@ -134,17 +134,19 @@
 			Assert.ArgumentNotNull(unbind);
 			ValidateInitialization();
 
-			return new EffectTechnique(_assets.LoadVertexShader(vertexShader), _assets.LoadFragmentShader(fragmentShader), bind, unbind);
+			var program = new ShaderProgram(_graphicsDevice, _assets.LoadVertexShader(vertexShader), _assets.LoadFragmentShader(fragmentShader));
+			program.SetDescription("Vertex Shader '{0}', Fragment Shader '{1}'", vertexShader, fragmentShader);
+
+			return new EffectTechnique(program, bind, unbind);
 		}
 
 		/// <summary>
-		///     Binds the given technique to the GPU.
+		///     Disposes the effect technique instance.
 		/// </summary>
-		/// <param name="technique">The technique that should be bound.</param>
-		public void Bind(EffectTechnique technique)
+		/// <param name="technique">The effect technique that should be disposed.</param>
+		public void DisposeTechnique(EffectTechnique technique)
 		{
-			ValidateInitialization();
-			technique.Bind();
+			technique.Dispose();
 		}
 
 		/// <summary>

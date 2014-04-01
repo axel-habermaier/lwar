@@ -184,7 +184,6 @@ extern "C" {
 #endif /*__cplusplus*/
 
 extern int ogl_ext_ARB_sampler_objects;
-extern int ogl_ext_ARB_separate_shader_objects;
 extern int ogl_ext_ARB_shading_language_420pack;
 extern int ogl_ext_EXT_texture_filter_anisotropic;
 extern int ogl_ext_EXT_texture_compression_s3tc;
@@ -1176,130 +1175,6 @@ extern void (CODEGEN_FUNCPTR *_ptrc_glGetSamplerParameterfv)(GLuint , GLenum , G
 extern void (CODEGEN_FUNCPTR *_ptrc_glGetSamplerParameterIuiv)(GLuint , GLenum , GLuint *);
 #define glGetSamplerParameterIuiv _ptrc_glGetSamplerParameterIuiv
 #endif /*GL_ARB_sampler_objects*/ 
-
-#ifndef GL_ARB_separate_shader_objects
-#define GL_ARB_separate_shader_objects 1
-extern void (CODEGEN_FUNCPTR *_ptrc_glUseProgramStages)(GLuint , GLbitfield , GLuint );
-#define glUseProgramStages _ptrc_glUseProgramStages
-extern void (CODEGEN_FUNCPTR *_ptrc_glActiveShaderProgram)(GLuint , GLuint );
-#define glActiveShaderProgram _ptrc_glActiveShaderProgram
-extern GLuint (CODEGEN_FUNCPTR *_ptrc_glCreateShaderProgramv)(GLenum , GLsizei , const GLchar* const *);
-#define glCreateShaderProgramv _ptrc_glCreateShaderProgramv
-extern void (CODEGEN_FUNCPTR *_ptrc_glBindProgramPipeline)(GLuint );
-#define glBindProgramPipeline _ptrc_glBindProgramPipeline
-extern void (CODEGEN_FUNCPTR *_ptrc_glDeleteProgramPipelines)(GLsizei , const GLuint *);
-#define glDeleteProgramPipelines _ptrc_glDeleteProgramPipelines
-extern void (CODEGEN_FUNCPTR *_ptrc_glGenProgramPipelines)(GLsizei , GLuint *);
-#define glGenProgramPipelines _ptrc_glGenProgramPipelines
-extern GLboolean (CODEGEN_FUNCPTR *_ptrc_glIsProgramPipeline)(GLuint );
-#define glIsProgramPipeline _ptrc_glIsProgramPipeline
-extern void (CODEGEN_FUNCPTR *_ptrc_glGetProgramPipelineiv)(GLuint , GLenum , GLint *);
-#define glGetProgramPipelineiv _ptrc_glGetProgramPipelineiv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform1i)(GLuint , GLint , GLint );
-#define glProgramUniform1i _ptrc_glProgramUniform1i
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform1iv)(GLuint , GLint , GLsizei , const GLint *);
-#define glProgramUniform1iv _ptrc_glProgramUniform1iv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform1f)(GLuint , GLint , GLfloat );
-#define glProgramUniform1f _ptrc_glProgramUniform1f
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform1fv)(GLuint , GLint , GLsizei , const GLfloat *);
-#define glProgramUniform1fv _ptrc_glProgramUniform1fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform1d)(GLuint , GLint , GLdouble );
-#define glProgramUniform1d _ptrc_glProgramUniform1d
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform1dv)(GLuint , GLint , GLsizei , const GLdouble *);
-#define glProgramUniform1dv _ptrc_glProgramUniform1dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform1ui)(GLuint , GLint , GLuint );
-#define glProgramUniform1ui _ptrc_glProgramUniform1ui
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform1uiv)(GLuint , GLint , GLsizei , const GLuint *);
-#define glProgramUniform1uiv _ptrc_glProgramUniform1uiv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform2i)(GLuint , GLint , GLint , GLint );
-#define glProgramUniform2i _ptrc_glProgramUniform2i
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform2iv)(GLuint , GLint , GLsizei , const GLint *);
-#define glProgramUniform2iv _ptrc_glProgramUniform2iv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform2f)(GLuint , GLint , GLfloat , GLfloat );
-#define glProgramUniform2f _ptrc_glProgramUniform2f
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform2fv)(GLuint , GLint , GLsizei , const GLfloat *);
-#define glProgramUniform2fv _ptrc_glProgramUniform2fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform2d)(GLuint , GLint , GLdouble , GLdouble );
-#define glProgramUniform2d _ptrc_glProgramUniform2d
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform2dv)(GLuint , GLint , GLsizei , const GLdouble *);
-#define glProgramUniform2dv _ptrc_glProgramUniform2dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform2ui)(GLuint , GLint , GLuint , GLuint );
-#define glProgramUniform2ui _ptrc_glProgramUniform2ui
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform2uiv)(GLuint , GLint , GLsizei , const GLuint *);
-#define glProgramUniform2uiv _ptrc_glProgramUniform2uiv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform3i)(GLuint , GLint , GLint , GLint , GLint );
-#define glProgramUniform3i _ptrc_glProgramUniform3i
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform3iv)(GLuint , GLint , GLsizei , const GLint *);
-#define glProgramUniform3iv _ptrc_glProgramUniform3iv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform3f)(GLuint , GLint , GLfloat , GLfloat , GLfloat );
-#define glProgramUniform3f _ptrc_glProgramUniform3f
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform3fv)(GLuint , GLint , GLsizei , const GLfloat *);
-#define glProgramUniform3fv _ptrc_glProgramUniform3fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform3d)(GLuint , GLint , GLdouble , GLdouble , GLdouble );
-#define glProgramUniform3d _ptrc_glProgramUniform3d
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform3dv)(GLuint , GLint , GLsizei , const GLdouble *);
-#define glProgramUniform3dv _ptrc_glProgramUniform3dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform3ui)(GLuint , GLint , GLuint , GLuint , GLuint );
-#define glProgramUniform3ui _ptrc_glProgramUniform3ui
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform3uiv)(GLuint , GLint , GLsizei , const GLuint *);
-#define glProgramUniform3uiv _ptrc_glProgramUniform3uiv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform4i)(GLuint , GLint , GLint , GLint , GLint , GLint );
-#define glProgramUniform4i _ptrc_glProgramUniform4i
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform4iv)(GLuint , GLint , GLsizei , const GLint *);
-#define glProgramUniform4iv _ptrc_glProgramUniform4iv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform4f)(GLuint , GLint , GLfloat , GLfloat , GLfloat , GLfloat );
-#define glProgramUniform4f _ptrc_glProgramUniform4f
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform4fv)(GLuint , GLint , GLsizei , const GLfloat *);
-#define glProgramUniform4fv _ptrc_glProgramUniform4fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform4d)(GLuint , GLint , GLdouble , GLdouble , GLdouble , GLdouble );
-#define glProgramUniform4d _ptrc_glProgramUniform4d
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform4dv)(GLuint , GLint , GLsizei , const GLdouble *);
-#define glProgramUniform4dv _ptrc_glProgramUniform4dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform4ui)(GLuint , GLint , GLuint , GLuint , GLuint , GLuint );
-#define glProgramUniform4ui _ptrc_glProgramUniform4ui
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniform4uiv)(GLuint , GLint , GLsizei , const GLuint *);
-#define glProgramUniform4uiv _ptrc_glProgramUniform4uiv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix2fv)(GLuint , GLint , GLsizei , GLboolean , const GLfloat *);
-#define glProgramUniformMatrix2fv _ptrc_glProgramUniformMatrix2fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix3fv)(GLuint , GLint , GLsizei , GLboolean , const GLfloat *);
-#define glProgramUniformMatrix3fv _ptrc_glProgramUniformMatrix3fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix4fv)(GLuint , GLint , GLsizei , GLboolean , const GLfloat *);
-#define glProgramUniformMatrix4fv _ptrc_glProgramUniformMatrix4fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix2dv)(GLuint , GLint , GLsizei , GLboolean , const GLdouble *);
-#define glProgramUniformMatrix2dv _ptrc_glProgramUniformMatrix2dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix3dv)(GLuint , GLint , GLsizei , GLboolean , const GLdouble *);
-#define glProgramUniformMatrix3dv _ptrc_glProgramUniformMatrix3dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix4dv)(GLuint , GLint , GLsizei , GLboolean , const GLdouble *);
-#define glProgramUniformMatrix4dv _ptrc_glProgramUniformMatrix4dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix2x3fv)(GLuint , GLint , GLsizei , GLboolean , const GLfloat *);
-#define glProgramUniformMatrix2x3fv _ptrc_glProgramUniformMatrix2x3fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix3x2fv)(GLuint , GLint , GLsizei , GLboolean , const GLfloat *);
-#define glProgramUniformMatrix3x2fv _ptrc_glProgramUniformMatrix3x2fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix2x4fv)(GLuint , GLint , GLsizei , GLboolean , const GLfloat *);
-#define glProgramUniformMatrix2x4fv _ptrc_glProgramUniformMatrix2x4fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix4x2fv)(GLuint , GLint , GLsizei , GLboolean , const GLfloat *);
-#define glProgramUniformMatrix4x2fv _ptrc_glProgramUniformMatrix4x2fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix3x4fv)(GLuint , GLint , GLsizei , GLboolean , const GLfloat *);
-#define glProgramUniformMatrix3x4fv _ptrc_glProgramUniformMatrix3x4fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix4x3fv)(GLuint , GLint , GLsizei , GLboolean , const GLfloat *);
-#define glProgramUniformMatrix4x3fv _ptrc_glProgramUniformMatrix4x3fv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix2x3dv)(GLuint , GLint , GLsizei , GLboolean , const GLdouble *);
-#define glProgramUniformMatrix2x3dv _ptrc_glProgramUniformMatrix2x3dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix3x2dv)(GLuint , GLint , GLsizei , GLboolean , const GLdouble *);
-#define glProgramUniformMatrix3x2dv _ptrc_glProgramUniformMatrix3x2dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix2x4dv)(GLuint , GLint , GLsizei , GLboolean , const GLdouble *);
-#define glProgramUniformMatrix2x4dv _ptrc_glProgramUniformMatrix2x4dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix4x2dv)(GLuint , GLint , GLsizei , GLboolean , const GLdouble *);
-#define glProgramUniformMatrix4x2dv _ptrc_glProgramUniformMatrix4x2dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix3x4dv)(GLuint , GLint , GLsizei , GLboolean , const GLdouble *);
-#define glProgramUniformMatrix3x4dv _ptrc_glProgramUniformMatrix3x4dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glProgramUniformMatrix4x3dv)(GLuint , GLint , GLsizei , GLboolean , const GLdouble *);
-#define glProgramUniformMatrix4x3dv _ptrc_glProgramUniformMatrix4x3dv
-extern void (CODEGEN_FUNCPTR *_ptrc_glValidateProgramPipeline)(GLuint );
-#define glValidateProgramPipeline _ptrc_glValidateProgramPipeline
-extern void (CODEGEN_FUNCPTR *_ptrc_glGetProgramPipelineInfoLog)(GLuint , GLsizei , GLsizei *, GLchar *);
-#define glGetProgramPipelineInfoLog _ptrc_glGetProgramPipelineInfoLog
-#endif /*GL_ARB_separate_shader_objects*/ 
 
 extern void (CODEGEN_FUNCPTR *_ptrc_glCullFace)(GLenum );
 #define glCullFace _ptrc_glCullFace

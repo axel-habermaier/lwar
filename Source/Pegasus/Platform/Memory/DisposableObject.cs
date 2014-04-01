@@ -42,7 +42,7 @@
 		/// </summary>
 		/// <param name="description">The description of the instance.</param>
 		/// <param name="arguments">The arguments that should be copied into the description.</param>
-		[Conditional("DEBUG")]
+		[Conditional("DEBUG"), StringFormatMethod("description")]
 		public void SetDescription(string description, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(description);

@@ -6,7 +6,7 @@
 // Helper functions
 //====================================================================================================================
 
-static pgVoid Compile(pgShader* shader, pgUint8* shaderCode);
+static pgVoid pgCompile(pgShader* shader, GLenum shaderType, pgUint8* shaderCode, pgUint8* end);
 
 //====================================================================================================================
 // Core functions
@@ -14,33 +14,67 @@ static pgVoid Compile(pgShader* shader, pgUint8* shaderCode);
 
 pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* input, pgInt32 inputCount)
 {
-	PG_UNUSED(end);
 	PG_UNUSED(input);
 	PG_UNUSED(inputCount);
 
-	shader->glType = GL_VERTEX_SHADER;
-	shader->bit = GL_VERTEX_SHADER_BIT;
-	Compile(shader, shaderData);
+	pgCompile(shader, GL_VERTEX_SHADER, shaderData, end);
 }
 
 pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end)
 {
-	PG_UNUSED(end);
-
-	shader->glType = GL_FRAGMENT_SHADER;
-	shader->bit = GL_FRAGMENT_SHADER_BIT;
-	Compile(shader, shaderData);
+	pgCompile(shader, GL_FRAGMENT_SHADER, shaderData, end);
 }
 
 pgVoid pgDestroyShaderCore(pgShader* shader)
 {
-	glDeleteProgram(shader->id);
+	glDeleteShader(shader->id);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
-pgVoid pgBindShaderCore(pgShader* shader)
+pgVoid pgCreateProgramCore(pgProgram* program)
 {
-	glUseProgramStages(shader->device->pipeline, shader->bit, shader->id);
+	GLchar buffer[4096];
+	GLint success, logLength;
+
+	program->id = glCreateProgram();
+	PG_ASSERT_NO_GL_ERRORS();
+	if (program->id == 0)
+		PG_DIE("Failed to create OpenGL program object.");
+
+	glAttachShader(program->id, program->vertexShader->id);
+	glAttachShader(program->id, program->fragmentShader->id);
+	PG_ASSERT_NO_GL_ERRORS();
+
+	glLinkProgram(program->id);
+	PG_ASSERT_NO_GL_ERRORS();
+
+	glGetProgramiv(program->id, GL_LINK_STATUS, &success);
+	glGetProgramInfoLog(program->id, sizeof(buffer) / sizeof(GLchar), &logLength, buffer);
+
+	if (success == GL_FALSE)
+		PG_DIE("Program linking failed: %s", buffer);
+
+	if (logLength != 0)
+		PG_WARN("%s", buffer);
+
+	PG_ASSERT_NO_GL_ERRORS();
+
+	glDetachShader(program->id, program->vertexShader->id);
+	glDetachShader(program->id, program->fragmentShader->id);
+	PG_ASSERT_NO_GL_ERRORS();
+
+	program->device->program = NULL;
+}
+
+pgVoid pgDestroyProgramCore(pgProgram* program)
+{
+	glDeleteProgram(program->id);
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgBindProgramCore(pgProgram* program)
+{
+	glUseProgram(program->id);
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
@@ -48,27 +82,31 @@ pgVoid pgBindShaderCore(pgShader* shader)
 // Helper functions
 //====================================================================================================================
 
-static pgVoid Compile(pgShader* shader, pgUint8* shaderCode)
+static pgVoid pgCompile(pgShader* shader, GLenum shaderType, pgUint8* shaderCode, pgUint8* end)
 {
-	static GLchar buffer[4096];
+	GLchar buffer[4096];
 	GLint success, logLength;
+	GLint shaderLength = (GLint)(end - shaderCode) - 1;
 	const GLchar* code = (GLchar*)shaderCode;
 
-	shader->id = glCreateShaderProgramv(shader->glType, 1, &code);
+	shader->id = glCreateShader(shaderType);
 	PG_ASSERT_NO_GL_ERRORS();
 	if (shader->id == 0)
 		PG_DIE("Failed to create OpenGL shader object.");
 
-	glGetProgramiv(shader->id, GL_LINK_STATUS, &success);
-	glGetProgramInfoLog(shader->id, sizeof(buffer), &logLength, buffer);
+	glShaderSource(shader->id, 1, &code, &shaderLength);
+	PG_ASSERT_NO_GL_ERRORS();
 
+	glCompileShader(shader->id);
+	PG_ASSERT_NO_GL_ERRORS();
+
+	glGetShaderiv(shader->id, GL_COMPILE_STATUS, &success);
+	glGetShaderInfoLog(shader->id, sizeof(buffer) / sizeof(GLchar), &logLength, buffer);
 	if (success == GL_FALSE)
 		PG_DIE("Shader compilation failed: %s", buffer);
 
 	if (logLength != 0)
 		PG_WARN("%s", buffer);
-
-	PG_ASSERT_NO_GL_ERRORS();
 }
 
 #endif

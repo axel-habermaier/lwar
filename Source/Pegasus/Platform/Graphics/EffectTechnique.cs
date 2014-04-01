@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using Memory;
 
 	/// <summary>
 	///     Represents a combination of shaders that are currently set on the GPU to create a rendering effect.
@@ -13,9 +14,9 @@
 		private readonly Action _bind;
 
 		/// <summary>
-		///     The fragment shader that is used by the technique.
+		///     The shader program that is used by the technique.
 		/// </summary>
-		private readonly FragmentShader _fragmentShader;
+		private readonly ShaderProgram _shaderProgram;
 
 		/// <summary>
 		///     The action that must be invoked to unbind the required textures.
@@ -23,26 +24,18 @@
 		private readonly Action _unbind;
 
 		/// <summary>
-		///     The vertex shader that is used by the technique.
-		/// </summary>
-		private readonly VertexShader _vertexShader;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="vertexShader">The vertex shader that should be used by the technique.</param>
-		/// <param name="fragmentShader">The fragment shader that should be used by the technique.</param>
+		/// <param name="shaderProgram">The shader program that should be used by the technique.</param>
 		/// <param name="bind">The action that should be invoked to bind the required textures and constant buffers.</param>
 		/// <param name="unbind">The action that should be invoked to unbind the required textures.</param>
-		internal EffectTechnique(VertexShader vertexShader, FragmentShader fragmentShader, Action bind, Action unbind)
+		internal EffectTechnique(ShaderProgram shaderProgram, Action bind, Action unbind)
 		{
-			Assert.ArgumentNotNull(vertexShader);
-			Assert.ArgumentNotNull(fragmentShader);
+			Assert.ArgumentNotNull(shaderProgram);
 			Assert.ArgumentNotNull(bind);
 			Assert.ArgumentNotNull(unbind);
 
-			_vertexShader = vertexShader;
-			_fragmentShader = fragmentShader;
+			_shaderProgram = shaderProgram;
 			_bind = bind;
 			_unbind = unbind;
 		}
@@ -52,13 +45,11 @@
 		/// </summary>
 		internal void Bind()
 		{
-			Assert.NotNull(_vertexShader, "No vertex shader has been set.");
-			Assert.NotNull(_fragmentShader, "No fragment shader has been set.");
+			Assert.NotNull(_shaderProgram, "No ShaderProgram has been set.");
 			Assert.NotNull(_bind, "No bind action has been set.");
 
 			_bind();
-			_vertexShader.Bind();
-			_fragmentShader.Bind();
+			_shaderProgram.Bind();
 		}
 
 		/// <summary>
@@ -68,6 +59,15 @@
 		{
 			Assert.NotNull(_unbind, "No unbind action has been set.");
 			_unbind();
+		}
+
+		
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		internal void Dispose()
+		{
+			_shaderProgram.SafeDispose();
 		}
 	}
 }

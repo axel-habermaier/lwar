@@ -99,9 +99,9 @@
 		private readonly AveragedInteger _samplerStateBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
-		///     The number of shader binding changes that have been made.
+		///     The number of program binding changes that have been made.
 		/// </summary>
-		private readonly AveragedInteger _shaderBindingCount = new AveragedInteger(AverageSamples);
+		private readonly AveragedInteger _programBindingCount = new AveragedInteger(AverageSamples);
 
 		/// <summary>
 		///     The number of texture binding changes that have been made.
@@ -206,7 +206,7 @@
 			_constantBufferBindingCount.AddMeasurement(statistics.ConstantBufferBindingCount);
 			_constantBufferUpdates.AddMeasurement(statistics.ConstantBufferUpdates);
 			_bufferMapCount.AddMeasurement(statistics.BufferMapCount);
-			_shaderBindingCount.AddMeasurement(statistics.ShaderBindingCount);
+			_programBindingCount.AddMeasurement(statistics.ProgramBindingCount);
 			_inputLayoutBindingCount.AddMeasurement(statistics.InputLayoutBindingCount);
 			_blendStateBindingCount.AddMeasurement(statistics.BlendStateBindingCount);
 			_depthStencilStateBindingCount.AddMeasurement(statistics.DepthStencilStateBindingCount);
@@ -244,7 +244,7 @@
 			builder.Append("State Changes");
 			WriteValue(builder, _renderTargetBindingCount, "   Render Targets:           ");
 			WriteValue(builder, _textureBindingCount, "   Textures:                 ");
-			WriteValue(builder, _shaderBindingCount, "   Shaders:                  ");
+			WriteValue(builder, _programBindingCount, "   Programs:                 ");
 			WriteValue(builder, _constantBufferBindingCount, "   Constant Buffers:         ");
 			WriteValue(builder, _inputLayoutBindingCount, "   Input Layouts:            ");
 

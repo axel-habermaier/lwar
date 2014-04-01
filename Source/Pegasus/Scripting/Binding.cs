@@ -2,12 +2,18 @@
 {
 	using System;
 	using Platform.Input;
+	using Platform.Logging;
 
 	/// <summary>
 	///     Binds an instruction to a logical input. Whenever the input is triggered, the instruction is executed.
 	/// </summary>
 	internal struct Binding
 	{
+		/// <summary>
+		///     The error message that was generated while parsing the command.
+		/// </summary>
+		private readonly string _errorMessage;
+
 		/// <summary>
 		///     The instruction that is executed when the input is triggered.
 		/// </summary>
@@ -17,7 +23,7 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="input">The input that should trigger the execution of the instruction.</param>
-		/// <param name="command">The unparsed instruction.</param>
+		/// <param name="command">The command string.</param>
 		/// <param name="instruction">The instruction that should be executed when the input is triggered.</param>
 		public Binding(LogicalInput input, string command, Instruction instruction)
 			: this()
@@ -31,7 +37,25 @@
 		}
 
 		/// <summary>
-		///     The unparsed instruction.
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="input">The input that should trigger the execution of the instruction.</param>
+		/// <param name="command">The command string.</param>
+		/// <param name="errorMessage">The error message that was generated while parsing the command.</param>
+		public Binding(LogicalInput input, string command, string errorMessage)
+			: this()
+		{
+			Assert.ArgumentNotNull(input);
+			Assert.ArgumentNotNullOrWhitespace(command);
+			Assert.ArgumentNotNullOrWhitespace(errorMessage);
+
+			Input = input;
+			Command = command;
+			_errorMessage = errorMessage;
+		}
+
+		/// <summary>
+		///     The original command string.
 		/// </summary>
 		public string Command { get; private set; }
 
@@ -45,8 +69,10 @@
 		/// </summary>
 		public void ExecuteIfTriggered()
 		{
-			if (Input.IsTriggered)
+			if (Input.IsTriggered && _errorMessage == null)
 				_instruction.Execute(true);
+			else if (Input.IsTriggered)
+				Log.Error("Error while parsing the command '{0}':\n{1}", Command, _errorMessage);
 		}
 	}
 }

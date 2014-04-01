@@ -26,11 +26,15 @@
 		/// <param name="inputs">The shader input data layout.</param>
 		internal unsafe void Reinitialize(byte* shaderCode, int length, ShaderInput[] inputs)
 		{
+			Assert.ArgumentNotNull(new IntPtr(shaderCode));
+			Assert.ArgumentSatisfies(length > 0, "Invalid shader code length.");
 			Assert.ArgumentNotNull(inputs);
 			Assert.ArgumentSatisfies(inputs.Length > 0, "The shader must have at least one input.");
 
 			DestroyShader();
 			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, shaderCode, length, inputs, inputs.Length);
+
+			OnReinitialized();
 		}
 
 		/// <summary>

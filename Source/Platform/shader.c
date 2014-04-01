@@ -1,12 +1,6 @@
 #include "prelude.h"
 
 //====================================================================================================================
-// Helper functions
-//====================================================================================================================
-
-pgShader** pgGetBoundShader(pgShader* shader);
-
-//====================================================================================================================
 // Exported functions
 //====================================================================================================================
 
@@ -50,49 +44,69 @@ pgShader* pgCreateFragmentShader(pgGraphicsDevice* device, pgVoid* shaderData, p
 
 pgVoid pgDestroyShader(pgShader* shader)
 {
-	pgShader** boundShader = pgGetBoundShader(shader);
-
 	if (shader == NULL)
 		return;
 
-	PG_ASSERT_NOT_NULL(boundShader);
-	if (*boundShader == shader)
-		*boundShader = NULL;
+	switch (shader->type)
+	{
+	case PG_VERTEX_SHADER:
+		if (shader->device->vertexShader == shader)
+			shader->device->vertexShader = NULL;
+		break;
+	case PG_FRAGMENT_SHADER:
+		if (shader->device->fragmentShader == shader)
+			shader->device->fragmentShader = NULL;
+		break;
+	default:
+		PG_NO_SWITCH_DEFAULT;
+	}
 
 	pgDestroyShaderCore(shader);
 	PG_FREE(shader);
 }
 
-pgVoid pgBindShader(pgShader* shader)
+pgProgram* pgCreateProgram(pgGraphicsDevice* device, pgShader* vertexShader, pgShader* fragmentShader)
 {
-	pgShader** boundShader = pgGetBoundShader(shader);
-	PG_ASSERT_NOT_NULL(shader);
+	pgProgram* program;
 
-	if (*boundShader == shader)
-		return;
+	PG_ASSERT_NOT_NULL(device);
+	PG_ASSERT_NOT_NULL(vertexShader);
+	PG_ASSERT_NOT_NULL(fragmentShader);
+	PG_ASSERT(vertexShader->type == PG_VERTEX_SHADER, "Vertex shader has unexpected shader type.");
+	PG_ASSERT(fragmentShader->type == PG_FRAGMENT_SHADER, "Fragment shader has unexpected shader type.");
+	
+	PG_ALLOC(pgProgram, program);
+	program->device = device;
+	program->vertexShader = vertexShader;
+	program->fragmentShader = fragmentShader;
 
-	*boundShader = shader;
-	pgBindShaderCore(shader);
-
-	++shader->device->statistics.shaderBindingCount;
+	pgCreateProgramCore(program);
+	return program;
 }
 
-//====================================================================================================================
-// Helper functions
-//====================================================================================================================
-
-pgShader** pgGetBoundShader(pgShader* shader)
+pgVoid pgDestroyProgram(pgProgram* program)
 {
-	if (shader == NULL)
-		return NULL;
+	if (program == NULL)
+		return;
 
-	switch (shader->type)
-	{
-	case PG_VERTEX_SHADER:
-		return  &shader->device->vertexShader;
-	case PG_FRAGMENT_SHADER:
-		return &shader->device->fragmentShader;
-	default:
-		PG_NO_SWITCH_DEFAULT;
-	}
+	if (program->device->program == program)
+		program->device->program = NULL;
+
+	pgDestroyProgramCore(program);
+	PG_FREE(program);
+}
+
+pgVoid pgBindProgram(pgProgram* program)
+{
+	PG_ASSERT_NOT_NULL(program);
+
+	if (program->device->program == program)
+		return;
+
+	pgBindProgramCore(program);
+	++program->device->statistics.programBindingCount;
+
+	program->device->program = program;
+	program->device->vertexShader = program->vertexShader;
+	program->device->fragmentShader = program->fragmentShader;
 }

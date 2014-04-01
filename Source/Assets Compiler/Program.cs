@@ -38,24 +38,18 @@
 				var recompile = command == "recompile";
 				var compile = command == "compile";
 				var clean = command == "clean";
-				var ui = args.Length >= 4 && args[3].Trim().ToLower() == "/ui";
-				var project = args.Length >= 3 ? args[2].Trim() : String.Empty;
+				var ui = args.Length >= 3 && args[2].Trim().ToLower() == "/ui";
+				var project = args.Length >= 2 ? args[1].Trim() : String.Empty;
 
-				var fileId = 0;
-				if (args.Length >= 2 && !Int32.TryParse(args[1].Trim(), out fileId))
-					fileId = -1;
-
-				if (String.IsNullOrWhiteSpace(project) || (!recompile && !clean && !compile) || fileId == -1)
+				if (String.IsNullOrWhiteSpace(project) || (!recompile && !clean && !compile))
 				{
 					Log.Error("The asset compiler must be invoked with the following arguments: the 'clean', 'compile', or " +
-							  "'recompile' command followed by the non-negative unique file identifier and the path " +
-							  " to the assets project that should be compiled.");
+							  "'recompile' command followed by the path to the assets project that should be compiled.");
 					return -1;
 				}
 
 				Configuration.XamlFilesOnly = ui;
 				Configuration.AssetsProjectPath = project;
-				Configuration.UniqueFileIdentifier = fileId;
 
 				if (recompile)
 				{

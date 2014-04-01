@@ -49,19 +49,31 @@ pgVoid pgDestroyShaderCore(pgShader* shader)
 	}
 }
 
-pgVoid pgBindShaderCore(pgShader* shader)
+pgVoid pgCreateProgramCore(pgProgram* program)
 {
-	switch (shader->type)
+	PG_UNUSED(program);
+	// Nothing to do here
+}
+
+pgVoid pgDestroyProgramCore(pgProgram* program)
+{
+	PG_UNUSED(program);
+	// Nothing to do here
+}
+
+pgVoid pgBindProgramCore(pgProgram* program)
+{
+	if (program->device->vertexShader != program->vertexShader)
 	{
-	case PG_VERTEX_SHADER:
+		pgShader* shader = program->vertexShader;
 		ID3D11DeviceContext_VSSetShader(PG_CONTEXT(shader), shader->ptr.vertexShader, NULL, 0);
 		ID3D11DeviceContext_IASetInputLayout(PG_CONTEXT(shader), shader->inputLayout);
-		break;
-	case PG_FRAGMENT_SHADER:
+	}
+
+	if (program->device->fragmentShader != program->fragmentShader)
+	{
+		pgShader* shader = program->fragmentShader;
 		ID3D11DeviceContext_PSSetShader(PG_CONTEXT(shader), shader->ptr.pixelShader, NULL, 0);
-		break;
-	default:
-		PG_NO_SWITCH_DEFAULT;
 	}
 }
 

@@ -11,6 +11,7 @@ typedef struct pgWindow					pgWindow;
 typedef struct pgGraphicsDevice			pgGraphicsDevice;
 typedef struct pgSwapChain				pgSwapChain;
 typedef struct pgShader					pgShader;
+typedef struct pgProgram				pgProgram;
 typedef struct pgBuffer					pgBuffer;
 typedef struct pgInputLayout			pgInputLayout;
 typedef struct pgTexture				pgTexture;
@@ -248,7 +249,7 @@ typedef struct
 	pgInt32		constantBufferBindingCount;
 	pgInt32		constantBufferUpdates;
 	pgInt32		bufferMapCount;
-	pgInt32		shaderBindingCount;
+	pgInt32		programBindingCount;
 	pgInt32		inputLayoutBindingCount;
 	pgInt32		blendStateBindingCount;
 	pgInt32		depthStencilStateBindingCount;
@@ -404,14 +405,17 @@ PG_API_EXPORT pgVoid pgSwapChainWindowed(pgSwapChain* swapChain);
 PG_API_EXPORT pgBool pgSwapChainIsFullscreen(pgSwapChain* swapChain);
 
 //====================================================================================================================
-// Shader functions
+// Shader and Program functions
 //====================================================================================================================
 
 PG_API_EXPORT pgShader* pgCreateVertexShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length, pgShaderInput* inputs, pgInt32 inputCount);
 PG_API_EXPORT pgShader* pgCreateFragmentShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length);
 PG_API_EXPORT pgVoid pgDestroyShader(pgShader* shader);
 
-PG_API_EXPORT pgVoid pgBindShader(pgShader* shader);
+PG_API_EXPORT pgProgram* pgCreateProgram(pgGraphicsDevice* device, pgShader* vertexShader, pgShader* fragmentShader);
+PG_API_EXPORT pgVoid pgDestroyProgram(pgProgram* program);
+
+PG_API_EXPORT pgVoid pgBindProgram(pgProgram* program);
 
 //====================================================================================================================
 // Buffer functions

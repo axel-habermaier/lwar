@@ -194,8 +194,8 @@
 					var fragmentShader = ShaderAsset.GetPath(_effect.FullName, technique.FragmentShader.Name, ShaderType.FragmentShader);
 
 					_writer.AppendLine("{0} = {1}.CreateTechnique({2}, {3},", technique.Name, ContextVariableName, _bindMethodName, _unbindMethodName);
-					_writer.AppendLine("\t\"{0}.{1}\", ", Path.ChangeExtension(vertexShader, null), Configuration.UniqueFileIdentifier);
-					_writer.AppendLine("\t\"{0}.{1}\");", Path.ChangeExtension(fragmentShader, null), Configuration.UniqueFileIdentifier);
+					_writer.AppendLine("\t\"{0}.{1}\", ", Path.ChangeExtension(vertexShader, null), Configuration.AssetsProject.Name);
+					_writer.AppendLine("\t\"{0}.{1}\");", Path.ChangeExtension(fragmentShader, null), Configuration.AssetsProject.Name);
 				}
 
 				foreach (var buffer in ConstantBuffers)
@@ -336,17 +336,17 @@
 		/// </summary>
 		private void GenerateOnDisposingMethod()
 		{
-			if (!ConstantBuffers.Any())
-				return;
-
 			_writer.AppendLine("/// <summary>");
 			_writer.AppendLine("///     Disposes the object, releasing all managed and unmanaged resources.");
 			_writer.AppendLine("/// </summary>");
 			_writer.AppendLine("protected override void __OnDisposing()");
 			_writer.AppendBlockStatement(() =>
 			{
-				if (!ConstantBuffers.Any())
-					_writer.AppendLine("// Nothing to do here");
+				foreach (var technique in _effect.Techniques)
+					_writer.AppendLine("{0}.DisposeTechnique({1});", ContextVariableName, technique.Name);
+
+				if (ConstantBuffers.Any())
+					_writer.Newline();
 
 				foreach (var buffer in ConstantBuffers)
 					_writer.AppendLine("{0}.SafeDispose();", GetFieldName(buffer.Name));

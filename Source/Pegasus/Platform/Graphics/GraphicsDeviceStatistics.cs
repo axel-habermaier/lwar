@@ -45,9 +45,9 @@
 		public int BufferMapCount;
 
 		/// <summary>
-		///     The number of shader binding changes that have been made.
+		///     The number of program binding changes that have been made.
 		/// </summary>
-		public int ShaderBindingCount;
+		public int ProgramBindingCount;
 
 		/// <summary>
 		///     The number of input layout binding changes that have been made.

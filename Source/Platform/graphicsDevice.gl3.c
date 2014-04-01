@@ -40,16 +40,10 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 		InitializeOpenGLExtensions();
 		areOpenGLExtsInitialized = PG_TRUE;
 	}
-
-	PG_GL_ALLOC("Program Pipeline", glGenProgramPipelines, device->pipeline);
-	glBindProgramPipeline(device->pipeline);
-	PG_ASSERT_NO_GL_ERRORS();
 }
 
 pgVoid pgDestroyGraphicsDeviceCore(pgGraphicsDevice* device)
 {
-	PG_GL_FREE(glDeleteProgramPipelines, device->pipeline);
-
 	pgDestroyContext(&device->context);
 	pgDestroyContextWindow(&device->context);
 }
@@ -142,7 +136,6 @@ static pgVoid InitializeOpenGLExtensions()
 		PG_DIE("Only OpenGL %d.%d seems to be supported. OpenGL 3.3 is required.", major, minor);
 
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_sampler_objects, "ARB_sampler_objects");
-	glExtsSupported &= GlExtSupported(ogl_ext_ARB_separate_shader_objects, "ARB_separate_shader_objects");
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_shading_language_420pack, "ARB_shading_language_420pack");
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_filter_anisotropic, "EXT_texture_filter_anisotropic");
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_compression_s3tc, "EXT_texture_compression_s3tc");

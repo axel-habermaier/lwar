@@ -25,6 +25,15 @@ pgVoid pgDestroyBuffer(pgBuffer* buffer)
 	if (buffer == NULL)
 		return;
 
+	if (buffer->type == PG_CONSTANT_BUFFER)
+	{
+		for (int i = 0; i < PG_CONSTANT_BUFFER_SLOT_COUNT; ++i)
+		{
+			if (buffer->device->constantBuffers[i] == buffer)
+				buffer->device->constantBuffers[i] = NULL;
+		}
+	}
+
 	pgDestroyBufferCore(buffer);
 	PG_FREE(buffer);
 }

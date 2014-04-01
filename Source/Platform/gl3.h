@@ -100,7 +100,6 @@ pgVoid pgSwapBuffers(pgContext* context);
 #define PG_GRAPHICS_DEVICE_PLATFORM			\
 	pgContext		context;				\
 	GLenum			glPrimitiveType;		\
-	GLuint			pipeline;				\
 	/* Begin device state */				\
 	GLboolean		depthWritesEnabled;		\
 	GLboolean		scissorEnabled;			\
@@ -135,9 +134,10 @@ pgVoid pgSwapBuffers(pgContext* context);
 	pgContext context;
 
 #define PG_SHADER_PLATFORM	\
-	GLuint id;				\
-	GLenum glType;			\
-	GLenum bit;
+	GLuint id;			
+
+#define PG_PROGRAM_PLATFORM	\
+	GLuint id;
 
 #define PG_BUFFER_PLATFORM	\
 	GLuint	id;				\

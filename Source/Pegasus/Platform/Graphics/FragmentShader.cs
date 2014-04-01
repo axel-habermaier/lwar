@@ -25,8 +25,13 @@
 		/// <param name="length">The length of the shader code in bytes.</param>
 		internal unsafe void Reinitialize(byte* shaderCode, int length)
 		{
+			Assert.ArgumentNotNull(new IntPtr(shaderCode));
+			Assert.ArgumentSatisfies(length > 0, "Invalid shader code length.");
+
 			DestroyShader();
 			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, shaderCode, length);
+
+			OnReinitialized();
 		}
 
 		/// <summary>

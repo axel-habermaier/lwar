@@ -49,7 +49,7 @@
 	ID3D11DeviceContext*	context;	\
 	IDXGIFactory*			factory;	\
 	IDXGIAdapter*			adapter;	\
-	IUnknown*				debug;
+	IUnknown*				debug;		
 
 #define PG_SWAP_CHAIN_PLATFORM		\
 	IDXGISwapChain*			ptr;	\
@@ -62,6 +62,8 @@
 		ID3D11PixelShader*		pixelShader;	\
 	} ptr;										\
 	ID3D11InputLayout* inputLayout;
+
+#define PG_PROGRAM_PLATFORM
 
 #define PG_BUFFER_PLATFORM	\
 	ID3D11Buffer* ptr;

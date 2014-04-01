@@ -123,6 +123,7 @@ pgInt32 pgPrimitiveCountToVertexCount(pgGraphicsDevice* device, pgInt32 primitiv
 
 pgVoid pgValidateDeviceState(pgGraphicsDevice* device)
 {
+	PG_ASSERT_NOT_NULL(device->program);
 	PG_ASSERT_NOT_NULL(device->vertexShader);
 	PG_ASSERT_NOT_NULL(device->fragmentShader);
 	PG_ASSERT_NOT_NULL(device->depthStencilState);

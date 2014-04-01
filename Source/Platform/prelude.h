@@ -296,6 +296,7 @@ struct pgGraphicsDevice
 	pgTexture*				textures[PG_TEXTURE_SLOT_COUNT];
 	pgShader*				vertexShader;
 	pgShader*				fragmentShader;
+	pgProgram*				program;
 	pgPrimitiveType			primitiveType;
 	pgDepthStencilState*	depthStencilState;
 	pgBlendState*			blendState;
@@ -322,7 +323,7 @@ pgVoid pgPrintDeviceInfoCore(pgGraphicsDevice* device);
 pgVoid pgValidateDeviceState(pgGraphicsDevice* device);
 
 //====================================================================================================================
-// Shader
+// Shader and Program
 //====================================================================================================================
 
 struct pgShader
@@ -332,11 +333,22 @@ struct pgShader
 	PG_SHADER_PLATFORM
 };
 
+struct pgProgram
+{
+	pgGraphicsDevice* device;
+	pgShader* vertexShader;
+	pgShader* fragmentShader;
+	PG_PROGRAM_PLATFORM
+};
+
 pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* inputs, pgInt32 inputCount);
 pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end);
 pgVoid pgDestroyShaderCore(pgShader* shader);
 
-pgVoid pgBindShaderCore(pgShader* shader);
+pgVoid pgCreateProgramCore(pgProgram* program);
+pgVoid pgDestroyProgramCore(pgProgram* program);
+
+pgVoid pgBindProgramCore(pgProgram* program);
 
 //====================================================================================================================
 // Buffer

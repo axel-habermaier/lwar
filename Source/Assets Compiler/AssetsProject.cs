@@ -46,6 +46,7 @@
 			_document = XDocument.Load(projectFile);
 			_projectFile = _document.Root;
 
+			Name = Path.GetFileNameWithoutExtension(projectFile);
 			SourceDirectory = Path.GetFullPath(Path.GetDirectoryName(projectFile));
 			TargetDirectory = Environment.CurrentDirectory;
 			TempDirectory = Path.Combine(SourceDirectory, "obj");
@@ -118,6 +119,11 @@
 				return assemblyName.Value;
 			}
 		}
+
+		/// <summary>
+		/// Gets the name of the assets project.
+		/// </summary>
+		public string Name { get; private set; }
 
 		/// <summary>
 		///     Gets the path to the compiled assets assembly.

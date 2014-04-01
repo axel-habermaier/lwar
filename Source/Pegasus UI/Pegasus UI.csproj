@@ -143,9 +143,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; compile 0 &quot;$(ProjectPath)&quot; /ui" WorkingDirectory="$(TargetDir)" />
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; compile &quot;$(ProjectPath)&quot; /ui" WorkingDirectory="$(TargetDir)" />
   </Target>
   <Target Name="Clean">
-    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; clean 0 &quot;$(ProjectPath)&quot; /ui" WorkingDirectory="$(TargetDir)" />
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; clean &quot;$(ProjectPath)&quot; /ui" WorkingDirectory="$(TargetDir)" />
   </Target>
 </Project>

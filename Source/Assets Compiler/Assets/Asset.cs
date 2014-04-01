@@ -112,7 +112,7 @@
 		{
 			get
 			{
-				var extension = "." + Configuration.UniqueFileIdentifier + PlatformInfo.AssetExtension;
+				var extension = "." + Configuration.AssetsProject.Name + PlatformInfo.AssetExtension;
 				return Path.Combine(Configuration.TargetDirectory, RelativePathWithoutExtension) + extension;
 			}
 		}

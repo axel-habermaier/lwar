@@ -61,14 +61,17 @@
 		}
 
 		/// <summary>
-		///     Reloads all assets.
+		///     Reloads all assets of the given assets project.
 		/// </summary>
-		private void ReloadAssets()
+		/// <param name="assetsProject">The absolute or relative path to the assets project file.</param>
+		private void ReloadAssets(string assetsProject)
 		{
 			try
 			{
 				int exitCode;
-				using (var compiler = new ExternalProcess(AssetCompiler, "compile"))
+				var commandLine = String.Format("compile \"{0}\"", assetsProject);
+
+				using (var compiler = new ExternalProcess(AssetCompiler, commandLine))
 					foreach (var output in compiler.Run(out exitCode))
 						output.RaiseLogEvent();
 

@@ -261,7 +261,7 @@
 															  ((bool)font["aliased"]).ToString().ToLower());
 											writer.IncreaseIndent();
 											writer.AppendLine("font = \"{0}.{1}\";",
-															  asset.RelativePathWithoutExtension, Configuration.UniqueFileIdentifier);
+															  asset.RelativePathWithoutExtension, Configuration.AssetsProject.Name);
 											writer.DecreaseIndent();
 										}
 										writer.AppendLine("break;");

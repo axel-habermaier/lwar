@@ -142,21 +142,15 @@
 		/// <param name="command">The instruction that should be bound.</param>
 		private void OnBind(InputTrigger trigger, string command)
 		{
-			if (String.IsNullOrWhiteSpace(command))
-			{
-				Log.Error("The second parameter of the bind command must not be empty.");
-				return;
-			}
-
 			var reply = _parser.Parse(command);
+
+			var input = new LogicalInput(trigger, InputLayer.All);
+			_device.Add(input);
+
 			if (reply.Status == ReplyStatus.Success)
-			{
-				var input = new LogicalInput(trigger, InputLayer.All);
-				_device.Add(input);
 				_bindings.Add(new Binding(input, command, reply.Result));
-			}
 			else
-				Log.Error("Error while parsing the second parameter of the bind command: {0}", reply.Errors.ErrorMessage);
+				_bindings.Add(item: new Binding(input, command, reply.Errors.ErrorMessage));
 		}
 	}
 }

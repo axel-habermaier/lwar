@@ -16,6 +16,19 @@
 		protected IntPtr _shader;
 
 		/// <summary>
+		///     Gets the native shader instance.
+		/// </summary>
+		internal IntPtr NativePtr
+		{
+			get { return _shader; }
+		}
+
+		/// <summary>
+		///     Raised when the underlying native shader instance has been reinitialized.
+		/// </summary>
+		public event Action Reinitialized;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
@@ -42,17 +55,18 @@
 		}
 
 		/// <summary>
-		///     Binds the shader to the pipeline.
+		///     Raises the reinitialization event.
 		/// </summary>
-		public void Bind()
+		protected void OnReinitialized()
 		{
-			NativeMethods.BindShader(_shader);
+			if (Reinitialized != null)
+				Reinitialized();
 		}
 
 #if DEBUG
-	/// <summary>
-	///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-	/// </summary>
+		/// <summary>
+		///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
 		protected override void OnRenamed()
 		{
 			if (_shader != IntPtr.Zero)
@@ -70,9 +84,6 @@
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyShader")]
 			public static extern void DestroyShader(IntPtr shader);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindShader")]
-			public static extern void BindShader(IntPtr shader);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetShaderName")]
 			[Conditional("DEBUG")]

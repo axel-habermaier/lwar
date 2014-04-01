@@ -199,6 +199,12 @@ pgVoid pgDestroySamplerState(pgSamplerState* samplerState)
 	if (samplerState == NULL)
 		return;
 
+	for (int i = 0; i < PG_TEXTURE_SLOT_COUNT; ++i)
+	{
+		if (samplerState->device->samplers[i] == samplerState)
+			samplerState->device->samplers[i] = NULL;
+	}
+
 	pgDestroySamplerStateCore(samplerState);
 	PG_FREE(samplerState);
 }
