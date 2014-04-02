@@ -27,19 +27,6 @@
 		private const string AssetCompiler = "pgc.exe";
 
 		/// <summary>
-		///     The friendly names that are used to describe the type of an asset.
-		/// </summary>
-		private static readonly string[] AssetTypeFriendlyNames =
-		{
-			"Unknown",
-			"Font",
-			"Fragment Shader",
-			"Vertex Shader",
-			"Cube Map",
-			"2D Texture"
-		};
-
-		/// <summary>
 		///     The loaded assets.
 		/// </summary>
 		private readonly Dictionary<string, Asset> _assets = new Dictionary<string, Asset>();
@@ -59,18 +46,6 @@
 
 			_device = device;
 			Commands.OnReloadAssets += ReloadAssets;
-		}
-
-		/// <summary>
-		///     Gets the friendly name of the given asset type.
-		/// </summary>
-		/// <param name="assetType">The asset type the friendly name should be returned for.</param>
-		private static string GetAssetTypeFriendlyName(AssetType assetType)
-		{
-			Assert.ArgumentInRange(assetType);
-			Assert.That((int)assetType >= 0 && (int)assetType < AssetTypeFriendlyNames.Length, "Out of range.");
-
-			return AssetTypeFriendlyNames[(int)assetType];
 		}
 
 		/// <summary>
@@ -118,7 +93,7 @@
 					{
 						try
 						{
-							Log.Info("Reloading {1} '{0}'...", pair.Key, GetAssetTypeFriendlyName(pair.Value.Type));
+							Log.Info("Reloading {1} '{0}'...", pair.Key, pair.Value.Type.ToDisplayString());
 							Load(pair.Value, pair.Key);
 						}
 						catch (IOException e)
@@ -167,7 +142,7 @@
 				if (typedAsset == null)
 				{
 					const string message = "Asset '{0}' is already loaded and has type '{1}'.";
-					Log.Die(message, assetName, GetAssetTypeFriendlyName(asset.Type));
+					Log.Die(message, assetName, asset.Type.ToDisplayString());
 				}
 				return typedAsset;
 			}
@@ -195,7 +170,7 @@
 			asset = new TAsset { GraphicsDevice = _device, Assets = this };
 			try
 			{
-				Log.Info("Loading {0} '{1}'...", GetAssetTypeFriendlyName(asset.Type), assetName);
+				Log.Info("Loading {0} '{1}'...", asset.Type.ToDisplayString(), assetName);
 				Load(asset, assetName);
 
 				_assets.Add(assetName, asset);
