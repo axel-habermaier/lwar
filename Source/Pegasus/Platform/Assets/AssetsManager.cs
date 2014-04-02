@@ -27,6 +27,19 @@
 		private const string AssetCompiler = "pgc.exe";
 
 		/// <summary>
+		///     The friendly names that are used to describe the type of an asset.
+		/// </summary>
+		private static readonly string[] AssetTypeFriendlyNames =
+		{
+			"Unknown",
+			"Font",
+			"Fragment Shader",
+			"Vertex Shader",
+			"Cube Map",
+			"2D Texture"
+		};
+
+		/// <summary>
 		///     The loaded assets.
 		/// </summary>
 		private readonly Dictionary<string, Asset> _assets = new Dictionary<string, Asset>();
@@ -49,6 +62,18 @@
 		}
 
 		/// <summary>
+		///     Gets the friendly name of the given asset type.
+		/// </summary>
+		/// <param name="assetType">The asset type the friendly name should be returned for.</param>
+		private static string GetAssetTypeFriendlyName(AssetType assetType)
+		{
+			Assert.ArgumentInRange(assetType);
+			Assert.That((int)assetType >= 0 && (int)assetType < AssetTypeFriendlyNames.Length, "Out of range.");
+
+			return AssetTypeFriendlyNames[(int)assetType];
+		}
+
+		/// <summary>
 		///     Loads the given asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be loaded.</param>
@@ -61,45 +86,54 @@
 		}
 
 		/// <summary>
-		///     Reloads all assets of the given assets project.
+		///     Reloads all assets of the given asset projects.
 		/// </summary>
-		/// <param name="assetsProject">The absolute or relative path to the assets project file.</param>
-		private void ReloadAssets(string assetsProject)
+		/// <param name="paths">
+		///     The path to the assets project files that should be recompiled and reloaded. Different assets projects
+		///     should be separated by semicolon.
+		/// </param>
+		private void ReloadAssets(string paths)
 		{
-			try
+			var assetProjects = paths.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+			foreach (var assetProject in assetProjects)
 			{
-				int exitCode;
-				var commandLine = String.Format("compile \"{0}\"", assetsProject);
+				Log.Info("Compiling assets project '{0}'...", assetProject);
 
-				using (var compiler = new ExternalProcess(AssetCompiler, commandLine))
-					foreach (var output in compiler.Run(out exitCode))
-						output.RaiseLogEvent();
-
-				if (exitCode != 0)
+				try
 				{
-					Log.Error("Errors occurred during asset compilation. Asset reloading aborted.");
-					return;
-				}
+					int exitCode;
+					var commandLine = String.Format("compile \"{0}\"", assetProject);
 
-				foreach (var pair in _assets)
-				{
-					try
+					using (var compiler = new ExternalProcess(AssetCompiler, commandLine))
+						foreach (var output in compiler.Run(out exitCode))
+							output.RaiseLogEvent();
+
+					if (exitCode != 0)
 					{
-						Log.Info("Reloading {1} '{0}'...", pair.Key, pair.Value.Type);
-						Load(pair.Value, pair.Key);
+						Log.Error("Errors occurred during asset compilation. Asset reloading of asset project '{0}' aborted.", assetProject);
+						continue;
 					}
-					catch (IOException e)
+
+					foreach (var pair in _assets)
 					{
-						Log.Die("Failed to reload asset '{0}': {1}", pair.Key, e.Message);
+						try
+						{
+							Log.Info("Reloading {1} '{0}'...", pair.Key, GetAssetTypeFriendlyName(pair.Value.Type));
+							Load(pair.Value, pair.Key);
+						}
+						catch (IOException e)
+						{
+							Log.Die("Failed to reload asset '{0}': {1}", pair.Key, e.Message);
+						}
 					}
 				}
-			}
-			catch (Win32Exception e)
-			{
-				if (e.NativeErrorCode == 2)
-					Log.Warn("{0} not found.", AssetCompiler);
-				else
-					Log.Error("{0} failed: {1}", AssetCompiler, e.Message);
+				catch (Win32Exception e)
+				{
+					if (e.NativeErrorCode == 2)
+						Log.Warn("{0} not found.", AssetCompiler);
+					else
+						Log.Error("{0} failed: {1}", AssetCompiler, e.Message);
+				}
 			}
 		}
 
@@ -133,7 +167,7 @@
 				if (typedAsset == null)
 				{
 					const string message = "Asset '{0}' is already loaded and has type '{1}'.";
-					Log.Die(message, assetName, asset.Type);
+					Log.Die(message, assetName, GetAssetTypeFriendlyName(asset.Type));
 				}
 				return typedAsset;
 			}
@@ -161,7 +195,7 @@
 			asset = new TAsset { GraphicsDevice = _device, Assets = this };
 			try
 			{
-				Log.Info("Loading {0} '{1}'...", asset.Type, assetName);
+				Log.Info("Loading {0} '{1}'...", GetAssetTypeFriendlyName(asset.Type), assetName);
 				Load(asset, assetName);
 
 				_assets.Add(assetName, asset);
