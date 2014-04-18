@@ -4,7 +4,7 @@
 	using Memory;
 
 	/// <summary>
-	///     Represents a combination of shaders that are currently set on the GPU to create a rendering effect.
+	///     Represents a combination of shaders that can be set on the GPU to create a rendering effect.
 	/// </summary>
 	public struct EffectTechnique
 	{
@@ -41,7 +41,7 @@
 		}
 
 		/// <summary>
-		///     Binds the shaders used by the technique.
+		///     Binds the shaders, textures, and constant buffers used by the technique.
 		/// </summary>
 		internal void Bind()
 		{

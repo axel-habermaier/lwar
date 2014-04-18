@@ -1,11 +1,10 @@
-﻿using System;
-
-namespace Pegasus.Platform.Assets
+﻿namespace Pegasus.Platform.Assets
 {
+	using System;
 	using Logging;
 
 	/// <summary>
-	/// Provides extension methods for the 'AssetType' enumeration.
+	///     Provides extension methods for the 'AssetType' enumeration.
 	/// </summary>
 	internal static class AssetTypeExtensions
 	{

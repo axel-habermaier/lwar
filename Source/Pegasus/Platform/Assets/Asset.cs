@@ -25,7 +25,7 @@
 		internal GraphicsDevice GraphicsDevice { get; set; }
 
 		/// <summary>
-		///     Loads or reloads the asset using the given asset reader.
+		///     Loads or reloads the asset from the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>
 		/// <param name="name">The name of the asset.</param>
