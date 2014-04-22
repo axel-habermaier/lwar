@@ -53,7 +53,7 @@
 			Commands.Bind(Key.F3.WentDown(), "connect 127.0.0.1");
 			Commands.Bind(Key.F4.WentDown(), "disconnect");
 			Commands.Bind(Key.F5.WentDown(), 
-				"reload_assets \"../../Source/Pegasus Assets/Pegasus Assets.csproj;../../Source/lwar Assets/lwar Assets.csproj\"");
+				"reload_assets \"../../Source/Assets/Pegasus Assets/Pegasus Assets.csproj;../../Source/Assets/lwar Assets/lwar Assets.csproj\"");
 
 			Commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
 			Commands.Bind(Key.Escape.WentDown(), "exit");

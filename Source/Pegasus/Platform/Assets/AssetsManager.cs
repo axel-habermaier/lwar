@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.ComponentModel;
 	using System.IO;
 	using Graphics;
 	using Logging;
@@ -89,47 +90,52 @@
 		/// </param>
 		private void ReloadAssets(string paths)
 		{
-			//var assetProjects = paths.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-			//foreach (var assetProject in assetProjects)
-			//{
-			//	Log.Info("Compiling assets project '{0}'...", assetProject);
+			var assetProjects = paths.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+			foreach (var assetProject in assetProjects)
+			{
+				Log.Info("\\cyanCompiling assets project '{0}'...", assetProject);
 
-			//	try
-			//	{
-			//		int exitCode;
-			//		var commandLine = String.Format("compile \"{0}\"", assetProject);
+				try
+				{
+					int exitCode;
+					var commandLine = String.Format("compile \"{0}\"", assetProject);
 
-			//		using (var compiler = new ExternalProcess(AssetCompiler, commandLine))
-			//			foreach (var output in compiler.Run(out exitCode))
-			//				output.RaiseLogEvent();
+					using (var compiler = new ExternalProcess(AssetCompiler, commandLine))
+						foreach (var output in compiler.Run(out exitCode))
+							output.RaiseLogEvent();
 
-			//		if (exitCode != 0)
-			//		{
-			//			Log.Error("Errors occurred during asset compilation. Asset reloading of asset project '{0}' aborted.", assetProject);
-			//			continue;
-			//		}
+					Log.Info("\\cyanCompleted compilation of assets project '{0}'.", assetProject);
 
-			//		foreach (var pair in _assets)
-			//		{
-			//			try
-			//			{
-			//				Log.Info("Reloading {1} '{0}'...", pair.Key, pair.Value.Type.ToDisplayString());
-			//				Load(pair.Value, pair.Key);
-			//			}
-			//			catch (IOException e)
-			//			{
-			//				Log.Die("Failed to reload asset '{0}': {1}", pair.Key, e.Message);
-			//			}
-			//		}
-			//	}
-			//	catch (Win32Exception e)
-			//	{
-			//		if (e.NativeErrorCode == 2)
-			//			Log.Warn("{0} not found.", AssetCompiler);
-			//		else
-			//			Log.Error("{0} failed: {1}", AssetCompiler, e.Message);
-			//	}
-			//}
+					if (exitCode != 0)
+					{
+						Log.Error("Errors occurred during asset compilation. Asset reloading of asset project '{0}' aborted.", assetProject);
+						continue;
+					}
+
+					foreach (var info in _loadedAssets)
+					{
+						try
+						{
+							Log.Info("Reloading {1} {0}...", GetAssetDisplayName(info), info.Type.ToDisplayString());
+							Load(info);
+						}
+						catch (IOException e)
+						{
+							Log.Die("Failed to reload asset {0}: {1}", GetAssetDisplayName(info), e.Message);
+						}
+					}
+
+					foreach (var program in _loadedPrograms)
+						program.Reinitialize();
+				}
+				catch (Win32Exception e)
+				{
+					if (e.NativeErrorCode == 2)
+						Log.Warn("{0} not found.", AssetCompiler);
+					else
+						Log.Error("{0} failed: {1}", AssetCompiler, e.Message);
+				}
+			}
 		}
 
 		/// <summary>
