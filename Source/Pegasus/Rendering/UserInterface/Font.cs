@@ -51,7 +51,6 @@
 		/// </summary>
 		/// <param name="glyphs">The glyphs of the font.</param>
 		/// <param name="kerning">The kerning information of the font.</param>
-		/// <param name="texture">The texture containing the font's glyph images.</param>
 		/// <param name="lineHeight">The height of a single line.</param>
 		internal void Reinitialize(Glyph[] glyphs, KerningPair[] kerning, int lineHeight)
 		{

@@ -143,6 +143,7 @@
 				// Let the application initialize itself
 				Initialize();
 
+				Assets.LoadPending();
 				while (_running)
 				{
 					using (new Measurement(Window.DebugOverlay.CpuFrameTime))

@@ -226,7 +226,7 @@
 				{
 					var info = _pendingAssets[i - 1];
 
-					Log.Info("Loading {0} {1}...", info.Type, GetAssetDisplayName(info));
+					Log.Info("Loading {0} {1}...", info.Type.ToDisplayString(), GetAssetDisplayName(info));
 					Load(info);
 
 					_pendingAssets.RemoveAt(i - 1);
@@ -412,11 +412,11 @@
 			// We know that the path ends with '.[AssetsProjectName].pg'. We'll remove that from the string and display the
 			// project information separately.
 
-			var dotIndex = info.Path.LastIndexOf('.', info.Path.Length - 3);
+			var dotIndex = info.Path.LastIndexOf('.', info.Path.Length - 4);
 			if (dotIndex == -1)
 				Log.Die("Asset name has unexpected structure: '{0}'.", info.Path);
 
-			var project = info.Path.Substring(dotIndex, info.Path.Length - 3 - dotIndex);
+			var project = info.Path.Substring(dotIndex+ 1, info.Path.Length - 4 - dotIndex);
 			var name = info.Path.Substring(0, dotIndex);
 			return String.Format("'{0}://{1}'", project, name);
 		}
