@@ -217,16 +217,6 @@
 		}
 
 		/// <summary>
-		///     Gets the statistics and resets all values to zero. This method should be called once per frame.
-		/// </summary>
-		internal GraphicsDeviceStatistics GetStatistics()
-		{
-			GraphicsDeviceStatistics statistics;
-			NativeMethods.GetStatistics(_device, out statistics);
-			return statistics;
-		}
-
-		/// <summary>
 		///     Marks the beginning of a frame, properly synchronizing the GPU and the CPU.
 		/// </summary>
 		internal void BeginFrame()
@@ -292,9 +282,6 @@
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDrawIndexed")]
 			public static extern void DrawIndexed(IntPtr device, int indexCount, int indexOffset, int vertexOffset);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetStatistics")]
-			public static extern void GetStatistics(IntPtr device, out GraphicsDeviceStatistics statistics);
 		}
 	}
 }

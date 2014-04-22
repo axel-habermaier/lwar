@@ -240,23 +240,6 @@ typedef struct
 	pgUint8 alpha;
 } pgColor;
 
-typedef struct 
-{
-	pgInt32		drawCalls;
-	pgInt32		vertexCount;
-	pgInt32		renderTargetBindingCount;
-	pgInt32		textureBindingCount;
-	pgInt32		constantBufferBindingCount;
-	pgInt32		constantBufferUpdates;
-	pgInt32		bufferMapCount;
-	pgInt32		programBindingCount;
-	pgInt32		inputLayoutBindingCount;
-	pgInt32		blendStateBindingCount;
-	pgInt32		depthStencilStateBindingCount;
-	pgInt32		samplerStateBindingCount;
-	pgInt32		rasterizerStateBindingCount;
-} pgStatistics;
-
 typedef struct
 {
 	pgUint64	frequency;
@@ -388,8 +371,6 @@ PG_API_EXPORT pgVoid pgSetPrimitiveType(pgGraphicsDevice* device, pgPrimitiveTyp
 
 PG_API_EXPORT pgVoid pgDraw(pgGraphicsDevice* device, pgInt32 primitiveCount, pgInt32 offset);
 PG_API_EXPORT pgVoid pgDrawIndexed(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 indexOffset, pgInt32 vertexOffset);
-
-PG_API_EXPORT pgVoid pgGetStatistics(pgGraphicsDevice* device, pgStatistics* statistics);
 
 //====================================================================================================================
 // Swap chain functions

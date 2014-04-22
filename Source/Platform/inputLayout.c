@@ -42,6 +42,4 @@ pgVoid pgBindInputLayout(pgInputLayout* inputLayout)
 
 	inputLayout->device->inputLayout = inputLayout;
 	pgBindInputLayoutCore(inputLayout);
-
-	++inputLayout->device->statistics.inputLayoutBindingCount;
 }

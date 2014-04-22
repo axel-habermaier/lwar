@@ -260,7 +260,6 @@
     <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />
     <Compile Include="Platform\Performance\AveragedInteger.cs" />
-    <Compile Include="Platform\Graphics\GraphicsDeviceStatistics.cs" />
     <Compile Include="Platform\Network\SocketOperationException.cs" />
     <Compile Include="Platform\Assets\AssetIdentifier.cs" />
     <Compile Include="Platform\Graphics\SyncedQuery.cs" />

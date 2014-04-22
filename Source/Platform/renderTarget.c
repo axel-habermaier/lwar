@@ -92,8 +92,6 @@ pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget)
 
 	renderTarget->device->renderTarget = renderTarget;
 	pgBindRenderTargetCore(renderTarget);
-
-	++renderTarget->device->statistics.renderTargetBindingCount;
 }
 
 //====================================================================================================================

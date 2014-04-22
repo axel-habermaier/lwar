@@ -39,8 +39,6 @@ pgVoid pgBindBlendState(pgBlendState* blendState)
 
 	blendState->device->blendState = blendState;
 	pgBindBlendStateCore(blendState);
-
-	++blendState->device->statistics.blendStateBindingCount;
 }
 
 pgVoid pgSetBlendDescDefaults(pgBlendDesc* description)
@@ -95,8 +93,6 @@ pgVoid pgBindDepthStencilState(pgDepthStencilState* depthStencilState)
 
 	depthStencilState->device->depthStencilState = depthStencilState;
 	pgBindDepthStencilStateCore(depthStencilState);
-
-	++depthStencilState->device->statistics.depthStencilStateBindingCount;
 }
 
 pgVoid pgSetDepthStencilDescDefaults(pgDepthStencilDesc* description)
@@ -157,8 +153,6 @@ pgVoid pgBindRasterizerState(pgRasterizerState* rasterizerState)
 
 	rasterizerState->device->rasterizerState = rasterizerState;
 	pgBindRasterizerStateCore(rasterizerState);
-
-	++rasterizerState->device->statistics.rasterizerStateBindingCount;
 }
 
 pgVoid pgSetRasterizerDescDefaults(pgRasterizerDesc* description)
@@ -219,8 +213,6 @@ pgVoid pgBindSamplerState(pgSamplerState* samplerState, pgInt32 slot)
 
 	samplerState->device->samplers[slot] = samplerState;
 	pgBindSamplerStateCore(samplerState, slot);
-
-	++samplerState->device->statistics.samplerStateBindingCount;
 }
 
 pgVoid pgSetSamplerDescDefaults(pgSamplerDesc* description)

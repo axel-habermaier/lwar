@@ -290,7 +290,6 @@ pgInt32 pgClamp(pgInt32 value, pgInt32 min, pgInt32 max);
 
 struct pgGraphicsDevice
 {
-	pgStatistics			statistics;
 	pgSamplerState*			samplers[PG_SAMPLER_SLOT_COUNT];
 	pgBuffer*				constantBuffers[PG_CONSTANT_BUFFER_SLOT_COUNT];
 	pgTexture*				textures[PG_TEXTURE_SLOT_COUNT];

@@ -104,7 +104,6 @@ pgVoid pgBindProgram(pgProgram* program)
 		return;
 
 	pgBindProgramCore(program);
-	++program->device->statistics.programBindingCount;
 
 	program->device->program = program;
 	program->device->vertexShader = program->vertexShader;
