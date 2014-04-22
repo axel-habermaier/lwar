@@ -19,7 +19,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86' ">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x86\Debug Direct3D11\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Debug Direct3D11\</OutputPath>
     <DefineConstants>TRACE;DEBUG;x86;Windows</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -32,7 +32,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x86' ">
-    <OutputPath>..\..\Binaries x86\Release Direct3D11\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Release Direct3D11\</OutputPath>
     <DefineConstants>TRACE;x86;Windows</DefineConstants>
     <Optimize>True</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -46,7 +46,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x86\Debug OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
     <DefineConstants>TRACE;DEBUG;x86;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -67,7 +67,7 @@
     </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
-    <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE;x86;Linux</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
@@ -87,7 +87,7 @@
     </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
-    <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE;x86;Windows</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
@@ -100,7 +100,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x86\Debug OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
     <DefineConstants>TRACE;DEBUG;x86;Windows</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -114,7 +114,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug Direct3D11\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Debug Direct3D11\</OutputPath>
     <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -125,7 +125,7 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x64'">
-    <OutputPath>..\..\Binaries x64\Release Direct3D11\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Release Direct3D11\</OutputPath>
     <DefineConstants>TRACE;x64;Windows</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
@@ -137,7 +137,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
     <DefineConstants>TRACE;DEBUG;x64;Linux</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -156,7 +156,7 @@
     </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x64'">
-    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE;x64;Linux</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
@@ -175,7 +175,7 @@
     </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
-    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE;x64;Windows</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
@@ -187,7 +187,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
     <DefineConstants>TRACE;DEBUG;x64;Windows</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -199,13 +199,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.NRefactory">
-      <HintPath>..\..\Dependencies\ICSharpCode.NRefactory.dll</HintPath>
+      <HintPath>..\..\../Dependencies\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.CSharp">
-      <HintPath>..\..\Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+      <HintPath>..\..\../Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\Dependencies\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\../Dependencies\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -214,145 +214,145 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Pegasus\Assert.cs">
+    <Compile Include="..\..\Pegasus\Assert.cs">
       <Link>Pegasus\Assert.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Framework\ISealable.cs">
+    <Compile Include="..\..\Pegasus\Framework\ISealable.cs">
       <Link>Pegasus\ISealable.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Framework\PegasusException.cs">
+    <Compile Include="..\..\Pegasus\Framework\PegasusException.cs">
       <Link>Pegasus\PegasusException.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Framework\UserInterface\Thickness.cs">
+    <Compile Include="..\..\Pegasus\Framework\UserInterface\Thickness.cs">
       <Link>Pegasus\Thickness.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\Circle.cs">
+    <Compile Include="..\..\Pegasus\Math\Circle.cs">
       <Link>Pegasus\Circle.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\Fixed.cs">
+    <Compile Include="..\..\Pegasus\Math\Fixed.cs">
       <Link>Pegasus\Fixed.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\LineSegment.cs">
+    <Compile Include="..\..\Pegasus\Math\LineSegment.cs">
       <Link>Pegasus\LineSegment.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\MathUtils.cs">
+    <Compile Include="..\..\Pegasus\Math\MathUtils.cs">
       <Link>Pegasus\MathUtils.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\Matrix.cs">
+    <Compile Include="..\..\Pegasus\Math\Matrix.cs">
       <Link>Pegasus\Matrix.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\Rectangle.cs">
+    <Compile Include="..\..\Pegasus\Math\Rectangle.cs">
       <Link>Pegasus\Rectangle.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\Size.cs">
+    <Compile Include="..\..\Pegasus\Math\Size.cs">
       <Link>Pegasus\Size.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\Vector2.cs">
+    <Compile Include="..\..\Pegasus\Math\Vector2.cs">
       <Link>Pegasus\Vector2.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\Vector3.cs">
+    <Compile Include="..\..\Pegasus\Math\Vector3.cs">
       <Link>Pegasus\Vector3.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Math\Vector4.cs">
+    <Compile Include="..\..\Pegasus\Math\Vector4.cs">
       <Link>Pegasus\Vector4.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Assets\AssetHeader.cs">
+    <Compile Include="..\..\Pegasus\Platform\Assets\AssetHeader.cs">
       <Link>Pegasus\AssetHeader.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Assets\AssetType.cs">
+    <Compile Include="..\..\Pegasus\Platform\Assets\AssetType.cs">
       <Link>Pegasus\AssetType.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\ExternalProcess.cs">
+    <Compile Include="..\..\Pegasus\Platform\ExternalProcess.cs">
       <Link>Pegasus\ExternalProcess.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\Color.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\Color.cs">
       <Link>Pegasus\Color.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\DataSemantics.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\DataSemantics.cs">
       <Link>Pegasus\DataSemantics.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\GraphicsApi.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\GraphicsApi.cs">
       <Link>Pegasus\GraphicsApi.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\ShaderInput.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\ShaderInput.cs">
       <Link>Pegasus\ShaderInput.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\ShaderType.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\ShaderType.cs">
       <Link>Pegasus\ShaderType.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\Surface.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\Surface.cs">
       <Link>Pegasus\Surface.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\SurfaceFormat.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\SurfaceFormat.cs">
       <Link>Pegasus\SurfaceFormat.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\TextureAddressMode.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\TextureAddressMode.cs">
       <Link>Pegasus\TextureAddressMode.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\TextureDescription.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\TextureDescription.cs">
       <Link>Pegasus\TextureDescription.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\TextureFilter.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\TextureFilter.cs">
       <Link>Pegasus\TextureFilter.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\TextureFlags.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\TextureFlags.cs">
       <Link>Pegasus\TextureFlags.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\TextureType.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\TextureType.cs">
       <Link>Pegasus\TextureType.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\VertexDataFormat.cs">
+    <Compile Include="..\..\Pegasus\Platform\Graphics\VertexDataFormat.cs">
       <Link>Pegasus\VertexDataFormat.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Logging\Log.cs">
+    <Compile Include="..\..\Pegasus\Platform\Logging\Log.cs">
       <Link>Pegasus\Log.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Logging\LogEntry.cs">
+    <Compile Include="..\..\Pegasus\Platform\Logging\LogEntry.cs">
       <Link>Pegasus\LogEntry.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Logging\LogType.cs">
+    <Compile Include="..\..\Pegasus\Platform\Logging\LogType.cs">
       <Link>Pegasus\LogType.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\BufferPointer.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\BufferPointer.cs">
       <Link>Pegasus\BufferPointer.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\BufferReader.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\BufferReader.cs">
       <Link>Pegasus\BufferReader.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\BufferWriter.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\BufferWriter.cs">
       <Link>Pegasus\BufferWriter.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\DisposableExtensions.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\DisposableExtensions.cs">
       <Link>Pegasus\DisposableExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\DisposableObject.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\DisposableObject.cs">
       <Link>Pegasus\DisposableObject.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\EndianConverter.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\EndianConverter.cs">
       <Link>Pegasus\EndianConverter.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\Endianess.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\Endianess.cs">
       <Link>Pegasus\Endianess.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\ObjectPool.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\ObjectPool.cs">
       <Link>Pegasus\ObjectPool.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\Pool.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\Pool.cs">
       <Link>Pegasus\Pool.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Memory\PooledObject.cs">
+    <Compile Include="..\..\Pegasus\Platform\Memory\PooledObject.cs">
       <Link>Pegasus\PooledObject.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\NativeLibrary.cs">
+    <Compile Include="..\..\Pegasus\Platform\NativeLibrary.cs">
       <Link>Pegasus\NativeLibrary.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\PlatformInfo.cs">
+    <Compile Include="..\..\Pegasus\Platform\PlatformInfo.cs">
       <Link>Pegasus\PlatformInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\PlatformType.cs">
+    <Compile Include="..\..\Pegasus\Platform\PlatformType.cs">
       <Link>Pegasus\PlatformType.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\ResharperAttributes.cs">
+    <Compile Include="..\..\Pegasus\Platform\ResharperAttributes.cs">
       <Link>Pegasus\ResharperAttributes.cs</Link>
     </Compile>
     <Compile Include="AssetsProject.cs" />

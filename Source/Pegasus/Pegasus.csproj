@@ -203,16 +203,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Pegasus Assets\AssetIdentifiers.cs">
+    <Compile Include="..\Assets\Pegasus Assets\AssetIdentifiers.cs">
       <Link>Assets\AssetIdentifiers.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus Assets\Effects\Effects.cs">
+    <Compile Include="..\Assets\Pegasus Assets\Effects\Effects.cs">
       <Link>Assets\Effects.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus Assets\Fonts\FontLoader.cs">
+    <Compile Include="..\Assets\Pegasus Assets\Fonts\FontLoader.cs">
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus UI\UserInterface.cs">
+    <Compile Include="../User Interface\Pegasus UI\UserInterface.cs">
       <Link>Framework\UserInterface\UserInterface.cs</Link>
     </Compile>
     <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />

@@ -21,7 +21,7 @@
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>..\..\Binaries x86\Debug Direct3D11\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Debug Direct3D11\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,7 +33,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>True</Optimize>
-    <OutputPath>..\..\Binaries x86\Release Direct3D11\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Release Direct3D11\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,7 +43,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64' ">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug Direct3D11\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Debug Direct3D11\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -56,7 +56,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x64' ">
-    <OutputPath>..\..\Binaries x64\Release Direct3D11\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Release Direct3D11\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
@@ -69,7 +69,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x86\Debug OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -83,7 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x64'">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -95,7 +95,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
-    <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
@@ -107,7 +107,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
-    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
@@ -120,7 +120,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x86\Debug OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -139,7 +139,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x64'">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -156,7 +156,7 @@
     </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
-    <OutputPath>..\..\Binaries x86\Release OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
@@ -173,7 +173,7 @@
     </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x64'">
-    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
@@ -193,13 +193,13 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="ICSharpCode.NRefactory">
-      <HintPath>..\..\Dependencies\ICSharpCode.NRefactory.dll</HintPath>
+      <HintPath>..\..\../Dependencies\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.CSharp">
-      <HintPath>..\..\Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+      <HintPath>..\..\../Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\Dependencies\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\../Dependencies\Mono.Cecil.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

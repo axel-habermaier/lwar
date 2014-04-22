@@ -192,7 +192,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\lwar UI\UserInterface.cs">
+    <Compile Include="..\User Interface/lwar UI\UserInterface.cs">
       <Link>UserInterface\UserInterface.cs</Link>
     </Compile>
     <Compile Include="Gameplay\Actors\Actor.cs" />
@@ -306,13 +306,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gameplay\Entities\Planet.cs" />
     <Compile Include="Rendering\Renderers\SkyBoxRenderer.cs" />
-    <Compile Include="..\lwar Assets\AssetIdentifiers.cs">
+    <Compile Include="..\Assets\lwar Assets\AssetIdentifiers.cs">
       <Link>Assets\AssetIdentifiers.cs</Link>
     </Compile>
-    <Compile Include="..\lwar Assets\Effects\Effects.cs">
+    <Compile Include="..\Assets\lwar Assets\Effects\Effects.cs">
       <Link>Assets\Effects.cs</Link>
     </Compile>
-    <Compile Include="..\lwar Assets\Fonts\FontLoader.cs">
+    <Compile Include="..\Assets\lwar Assets\Fonts\FontLoader.cs">
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
   </ItemGroup>
