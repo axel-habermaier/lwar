@@ -53,7 +53,7 @@
 		/// </summary>
 		public override void Initialize()
 		{
-			_statusMessage = new Label(Assets.LoadFont(Fonts.LiberationMono11))
+			_statusMessage = new Label(Assets.Load(Fonts.LiberationMono11))
 			{
 				Alignment = TextAlignment.Centered | TextAlignment.Middle,
 				Text = String.Format("Connecting to {0}...", _networkSession.ServerEndPoint)

@@ -29,7 +29,7 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			var texture = Assets.LoadCubeMap(Textures.SunHeatCubemap);
+			var texture = Assets.Load(Textures.SunHeatCubemap);
 
 			_model = Model.CreateSphere(1, 10);
 			_effect = new SphereEffect(Assets) { SphereTexture = new CubeMapView(texture, SamplerState.BilinearClampNoMipmaps) };

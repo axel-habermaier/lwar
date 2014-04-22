@@ -43,7 +43,7 @@
 		{
 			Assert.ArgumentNotNull(assets);
 
-			var font = assets.LoadFont(Fonts.LiberationMono11);
+			var font = assets.Load(Fonts.LiberationMono11);
 			for (var i = 0; i < _messages.Length; ++i)
 				_messages[i] = new Label(font) { LineSpacing = LineSpacing };
 		}

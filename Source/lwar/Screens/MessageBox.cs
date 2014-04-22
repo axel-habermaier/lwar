@@ -60,7 +60,7 @@
 		/// </summary>
 		public override void Initialize()
 		{
-			_messageLabel = new Label(Assets.LoadFont(Fonts.LiberationMono11))
+			_messageLabel = new Label(Assets.Load(Fonts.LiberationMono11))
 			{
 				Text = _message + "\n\nPress [Space] to continue...",
 				Alignment = TextAlignment.Middle | TextAlignment.Centered

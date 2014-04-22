@@ -240,12 +240,12 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 							writer.AppendLine("maxHealth: {0:0.0######}f,", template.Health);
 							writer.AppendLine("radius: {0:0.0######}f,", template.Radius);
 							if (template.Texture != null)
-								writer.AppendLine("texture: assets.LoadTexture2D({0}),", template.Texture);
+								writer.AppendLine("texture: assets.Load({0}),", template.Texture);
 							else
 								writer.AppendLine("texture: null,");
 
 							if (template.CubeMap != null)
-								writer.AppendLine("cubeMap: assets.LoadCubeMap({0}),", template.CubeMap);
+								writer.AppendLine("cubeMap: assets.Load({0}),", template.CubeMap);
 							else
 								writer.AppendLine("cubeMap: null,");
 

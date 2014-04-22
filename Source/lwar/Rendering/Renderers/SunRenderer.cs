@@ -47,9 +47,9 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			var sun = Assets.LoadCubeMap(Textures.SunCubemap);
-			var turbulence = Assets.LoadCubeMap(Textures.SunHeatCubemap);
-			var heat = Assets.LoadTexture2D(Textures.Heat);
+			var sun = Assets.Load(Textures.SunCubemap);
+			var turbulence = Assets.Load(Textures.SunHeatCubemap);
+			var heat = Assets.Load(Textures.Heat);
 
 			_model = Model.CreateSphere(EntityTemplates.Sun.Radius, 20);
 			_sphereEffect = new SphereEffect(Assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };

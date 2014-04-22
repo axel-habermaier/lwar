@@ -2,23 +2,12 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///     Represents a combination of different shader programs that control the various pipeline stages of the GPU.
 	/// </summary>
-	internal sealed class ShaderProgram : GraphicsObject
+	public sealed class ShaderProgram : GraphicsObject
 	{
-		/// <summary>
-		///     The fragment shader used by the shader program.
-		/// </summary>
-		private readonly FragmentShader _fragmentShader;
-
-		/// <summary>
-		///     The vertex shader used by the shader program.
-		/// </summary>
-		private readonly VertexShader _vertexShader;
-
 		/// <summary>
 		///     The native shader program instance.
 		/// </summary>
@@ -34,14 +23,21 @@
 			Assert.ArgumentNotNull(vertexShader);
 			Assert.ArgumentNotNull(fragmentShader);
 
-			_vertexShader = vertexShader;
-			_fragmentShader = fragmentShader;
-
-			_vertexShader.Reinitialized += Reinitialize;
-			_fragmentShader.Reinitialized += Reinitialize;
+			VertexShader = vertexShader;
+			FragmentShader = fragmentShader;
 
 			Reinitialize();
 		}
+
+		/// <summary>
+		///     Gets the fragment shader used by the shader program.
+		/// </summary>
+		public FragmentShader FragmentShader { get; private set; }
+
+		/// <summary>
+		///     Gets the vertex shader used by the shader program.
+		/// </summary>
+		public VertexShader VertexShader { get; private set; }
 
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
@@ -49,9 +45,6 @@
 		protected override void OnDisposing()
 		{
 			Destroy();
-
-			_vertexShader.Reinitialized -= Reinitialize;
-			_fragmentShader.Reinitialized -= Reinitialize;
 		}
 
 		/// <summary>
@@ -75,12 +68,14 @@
 		/// <summary>
 		///     Reinitializes the shader program.
 		/// </summary>
-		private void Reinitialize()
+		internal void Reinitialize()
 		{
 			Assert.NotDisposed(this);
 
 			Destroy();
-			_shaderProgram = NativeMethods.CreateProgram(GraphicsDevice.Current.NativePtr, _vertexShader.NativePtr, _fragmentShader.NativePtr);
+
+			if (VertexShader.NativePtr != IntPtr.Zero && FragmentShader.NativePtr != IntPtr.Zero)
+				_shaderProgram = NativeMethods.CreateProgram(GraphicsDevice.Current.NativePtr, VertexShader.NativePtr, FragmentShader.NativePtr);
 		}
 
 		/// <summary>

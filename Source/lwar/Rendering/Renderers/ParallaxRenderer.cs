@@ -60,7 +60,7 @@
 
 			_effect = new ParallaxEffect(assets)
 			{
-				TextureAtlas = new Texture2DView(assets.LoadTexture2D(Textures.Parallax), SamplerState.BilinearWrapNoMipmaps)
+				TextureAtlas = new Texture2DView(assets.Load(Textures.Parallax), SamplerState.BilinearWrapNoMipmaps)
 			};
 
 			var random = new Random();

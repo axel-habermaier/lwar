@@ -24,8 +24,6 @@
 
 			DestroyShader();
 			_shader = NativeMethods.CreateShader(GraphicsDevice.Current.NativePtr, shaderCode, length, inputs, inputs.Length);
-
-			OnReinitialized();
 		}
 
 		/// <summary>

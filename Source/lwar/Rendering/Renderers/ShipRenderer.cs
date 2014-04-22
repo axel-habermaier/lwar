@@ -38,8 +38,8 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			_texture = Assets.LoadTexture2D(Textures.Ship);
-			_font = Assets.LoadFont(Fonts.LiberationMono11);
+			_texture = Assets.Load(Textures.Ship);
+			_font = Assets.Load(Fonts.LiberationMono11);
 		}
 
 		/// <summary>

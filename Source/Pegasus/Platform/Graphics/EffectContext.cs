@@ -124,7 +124,7 @@
 			Assert.ArgumentNotNull(unbind);
 			ValidateInitialization();
 
-			var program = new ShaderProgram(_assets.LoadVertexShader(vertexShader), _assets.LoadFragmentShader(fragmentShader));
+			var program = _assets.Load(vertexShader, fragmentShader);
 			program.SetDescription("Vertex Shader '{0}', Fragment Shader '{1}'", vertexShader, fragmentShader);
 
 			return new EffectTechnique(program, bind, unbind);

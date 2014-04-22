@@ -32,7 +32,7 @@
 			_model = Model.CreateSphere(1.0f, 16);
 			_effect = new SphereEffect(Assets)
 			{
-				SphereTexture = new CubeMapView(Assets.LoadCubeMap(Textures.ShieldsCubemap), SamplerState.TrilinearClamp)
+				SphereTexture = new CubeMapView(Assets.Load(Textures.ShieldsCubemap), SamplerState.TrilinearClamp)
 			};
 		}
 

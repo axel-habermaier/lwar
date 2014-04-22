@@ -3,11 +3,12 @@
 	using System;
 	using Math;
 	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Provides the metadata and operations for drawing text.
 	/// </summary>
-	public sealed class Font
+	public sealed class Font : DisposableObject
 	{
 		/// <summary>
 		///     The glyphs of the font.
@@ -18,6 +19,14 @@
 		///     Stores the kerning pairs in a space-efficient way.
 		/// </summary>
 		private KerningPair[] _kerning;
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		public Font()
+		{
+			Texture = new Texture2D();
+		}
 
 		/// <summary>
 		///     Gets a value indicating whether the font supportes kerning.
@@ -44,14 +53,12 @@
 		/// <param name="kerning">The kerning information of the font.</param>
 		/// <param name="texture">The texture containing the font's glyph images.</param>
 		/// <param name="lineHeight">The height of a single line.</param>
-		internal void Reinitialize(Glyph[] glyphs, KerningPair[] kerning, Texture2D texture, int lineHeight)
+		internal void Reinitialize(Glyph[] glyphs, KerningPair[] kerning, int lineHeight)
 		{
 			Assert.ArgumentNotNull(glyphs);
-			Assert.ArgumentNotNull(texture);
 
 			_glyphs = glyphs;
 			_kerning = kerning;
-			Texture = texture;
 			LineHeight = lineHeight;
 		}
 
@@ -211,6 +218,14 @@
 				return new Glyph();
 
 			return _glyphs[index];
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			// Nothing to do here
 		}
 	}
 }

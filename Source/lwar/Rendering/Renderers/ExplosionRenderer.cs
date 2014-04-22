@@ -27,7 +27,7 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			_texture = Assets.LoadTexture2D(Textures.Explosion);
+			_texture = Assets.Load(Textures.Explosion);
 		}
 
 		/// <summary>

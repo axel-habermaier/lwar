@@ -24,11 +24,6 @@
 		}
 
 		/// <summary>
-		///     Raised when the underlying native shader instance has been reinitialized.
-		/// </summary>
-		internal event Action Reinitialized;
-
-		/// <summary>
 		///     Destroys the native shader instance.
 		/// </summary>
 		protected void DestroyShader()
@@ -43,15 +38,6 @@
 		protected override void OnDisposing()
 		{
 			NativeMethods.DestroyShader(_shader);
-		}
-
-		/// <summary>
-		///     Raises the reinitialization event.
-		/// </summary>
-		protected void OnReinitialized()
-		{
-			if (Reinitialized != null)
-				Reinitialized();
 		}
 
 #if DEBUG

@@ -31,8 +31,8 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			_texture = Assets.LoadTexture2D(Textures.Bullet);
-			_texture2 = Assets.LoadTexture2D(Textures.BulletGlow);
+			_texture = Assets.Load(Textures.Bullet);
+			_texture2 = Assets.Load(Textures.BulletGlow);
 
 			_model = Model.CreateQuad(_texture.Size);
 			_effect = new TexturedQuadEffect(Assets);

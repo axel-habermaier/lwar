@@ -82,7 +82,7 @@
 			_inputDevice.Keyboard.CharacterEntered += OnCharacterEntered;
 			_inputDevice.Keyboard.KeyPressed += OnKeyPressed;
 
-			var font = assets.LoadFont(Fonts.LiberationMono11);
+			var font = assets.Load(Fonts.LiberationMono11);
 			_prompt = new Label(font, "Say: ");
 			_textBox = new TextBox(font);
 			_lengthWarning = new Label(font, "The message exceeds the maximum allowed width for a chat message and cannot be sent.")

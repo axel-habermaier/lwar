@@ -49,7 +49,7 @@
 		/// </summary>
 		public override void Initialize()
 		{
-			_timeoutLabel = new Label(Assets.LoadFont(Fonts.LiberationMono11))
+			_timeoutLabel = new Label(Assets.Load(Fonts.LiberationMono11))
 			{
 				Alignment = TextAlignment.Middle | TextAlignment.Centered
 			};

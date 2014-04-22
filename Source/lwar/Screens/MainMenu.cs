@@ -31,7 +31,7 @@
 		{
 			IsOpaque = true;
 
-			_label = new Label(Assets.LoadFont(Fonts.LiberationMono11))
+			_label = new Label(Assets.Load(Fonts.LiberationMono11))
 			{
 				Text = "Welcome to lwar!",
 				Alignment = TextAlignment.Centered | TextAlignment.Middle

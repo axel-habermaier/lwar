@@ -57,6 +57,9 @@
 		/// <param name="text">The text the sequence was created for.</param>
 		public int ComputeWidth(Font font, Text text)
 		{
+			if (text.Length == 0)
+				return 0;
+
 			return font.MeasureWidth(text, FirstCharacter, LastCharacter);
 		}
 

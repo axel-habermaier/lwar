@@ -32,7 +32,7 @@
 		{
 			Assert.ArgumentNotNull(assets);
 
-			var cubemap = assets.LoadCubeMap(Textures.SpaceCubemap);
+			var cubemap = assets.Load(Textures.SpaceCubemap);
 
 			_model = Model.CreateSkybox();
 			_effect = new SkyboxEffect( assets) { Skybox = new CubeMapView(cubemap, SamplerState.BilinearClampNoMipmaps) };

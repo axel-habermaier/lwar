@@ -320,15 +320,10 @@
     <Compile Include="Platform\Memory\ObjectPool.cs" />
     <Compile Include="Platform\AppFile.cs" />
     <Compile Include="Framework\PegasusException.cs" />
-    <Compile Include="Platform\Assets\Asset.cs" />
-    <Compile Include="Platform\Assets\CubeMapAsset.cs" />
-    <Compile Include="Platform\Assets\ShaderAsset.cs" />
     <Compile Include="Platform\Graphics\CubeMapView.cs" />
     <Compile Include="Platform\Graphics\Effect.cs" />
     <Compile Include="Platform\Graphics\EffectContext.cs" />
     <Compile Include="Platform\Graphics\EffectTechnique.cs" />
-    <Compile Include="Platform\Assets\FragmentShaderAsset.cs" />
-    <Compile Include="Platform\Assets\Texture2DAsset.cs" />
     <Compile Include="Platform\Graphics\Shader.cs" />
     <Compile Include="Platform\Graphics\ShaderInput.cs" />
     <Compile Include="Platform\Graphics\Texture2DView.cs" />
@@ -384,9 +379,6 @@
       <DependentUpon>Vector2.tt</DependentUpon>
     </Compile>
     <Compile Include="Platform\Network\UdpSocket.cs" />
-    <Compile Include="Platform\Assets\FontAsset.cs" />
-    <Compile Include="Platform\Assets\VertexShaderAsset.cs" />
-    <Compile Include="Platform\Assets\TextureAsset.cs" />
     <Compile Include="Platform\Memory\BufferReader.cs" />
     <Compile Include="Platform\Memory\BufferWriter.cs" />
     <Compile Include="Platform\Graphics\Query.cs" />

@@ -287,7 +287,7 @@
 						writer.DecreaseIndent();
 
 						writer.NewLine();
-						writer.AppendLine("return _assets.LoadFont(font.Value);");
+						writer.AppendLine("return _assets.Load(font.Value);");
 					});
 				});
 			});

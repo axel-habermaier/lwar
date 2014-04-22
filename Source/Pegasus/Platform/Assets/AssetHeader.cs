@@ -30,25 +30,23 @@
 		/// </summary>
 		/// <param name="buffer">The buffer the asset file header should be read from.</param>
 		/// <param name="assetType">The type of the asset that is expected to follow in the buffer.</param>
-		/// <param name="assetName">The name of the asset that should be used in case of errors.</param>
-		public static void Validate(BufferReader buffer, AssetType assetType, string assetName)
+		public static void Validate(BufferReader buffer, AssetType assetType)
 		{
 			Assert.ArgumentNotNull(buffer);
 			Assert.ArgumentInRange(assetType);
-			Assert.ArgumentNotNull(assetName);
 
 			if (!buffer.CanRead(3))
-				Log.Die("Asset '{0}' is corrupted: Header information missing.", assetName);
+				throw new InvalidOperationException("Asset is corrupted: Header information missing.");
 
 			if (buffer.ReadByte() != 'p' || buffer.ReadByte() != 'g')
-				Log.Die("Asset '{0}' is corrupted: Application identifier mismatch in asset file header.", assetName);
+				throw new InvalidOperationException("Asset is corrupted: Application identifier mismatch in asset file header.");
 
 			if (buffer.ReadUInt16() != PlatformInfo.AssetFileVersion)
-				Log.Die("Asset '{0}' is stored in an outdated version of the compiled asset format and must be re-compiled.", assetName);
+				throw new InvalidOperationException("Asset is stored in an outdated version of the compiled asset format and must be re-compiled.");
 
 			var actualType = (AssetType)buffer.ReadByte();
 			if (actualType != assetType)
-				Log.Die("Asset '{0}' is of type '{1}', but is loaded as type '{2}'.", assetName, actualType, assetType);
+				throw new InvalidOperationException(String.Format("Asset is of type '{0}', but is loaded as type '{1}'.", actualType, assetType));
 		}
 	}
 }

@@ -36,7 +36,9 @@
 
 			_camera = new Camera2D();
 
-			var font = Application.Current.Assets.LoadFont(Fonts.LiberationMono11);
+			var font = Application.Current.Assets.Load(Fonts.LiberationMono11);
+			Application.Current.Assets.LoadPending();
+
 			DebugOverlay = new DebugOverlay(font);
 			Console = new Console(InputDevice, font);
 

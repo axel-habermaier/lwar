@@ -28,7 +28,7 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			var texture = Assets.LoadTexture2D(Textures.Rocket);
+			var texture = Assets.Load(Textures.Rocket);
 
 			_model = Model.CreateQuad(texture.Size);
 			_effect = new TexturedQuadEffect(Assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };
