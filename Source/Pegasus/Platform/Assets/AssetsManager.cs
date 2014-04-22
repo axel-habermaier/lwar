@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.ComponentModel;
 	using System.IO;
 	using Graphics;
 	using Logging;
@@ -22,6 +23,11 @@
 		private const string AssetCompiler = "pgc.exe";
 
 		/// <summary>
+		///     Indicates whether the asset manager loads its asset asynchronously.
+		/// </summary>
+		private readonly bool _asyncLoading;
+
+		/// <summary>
 		///     The list of loaded assets.
 		/// </summary>
 		private readonly List<AssetInfo> _loadedAssets = new List<AssetInfo>();
@@ -34,18 +40,27 @@
 		/// <summary>
 		///     The list of pending assets, i.e., assets that have not yet been loaded.
 		/// </summary>
-		private readonly List<AssetInfo> _pendingAssets = new List<AssetInfo>();
+		private readonly List<AssetInfo> _pendingAssets;
 
 		/// <summary>
 		///     The list of pending shader programs, i.e., assets that have not yet been loaded.
 		/// </summary>
-		private readonly List<ShaderProgram> _pendingPrograms = new List<ShaderProgram>();
+		private readonly List<ShaderProgram> _pendingPrograms;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		internal AssetsManager()
+		/// <param name="asyncLoading">Indicates whether the asset manager should load its asset asynchronously.</param>
+		internal AssetsManager(bool asyncLoading)
 		{
+			_asyncLoading = asyncLoading;
+
+			if (asyncLoading)
+			{
+				_pendingAssets = new List<AssetInfo>();
+				_pendingPrograms = new List<ShaderProgram>();
+			}
+
 			Commands.OnReloadAssets += ReloadAssets;
 		}
 
@@ -128,6 +143,9 @@
 		/// <param name="infos">The list of asset infos that should be cleared.</param>
 		private static void Clear(List<AssetInfo> infos)
 		{
+			if (infos == null)
+				return;
+
 			foreach (var asset in infos)
 				asset.Asset.SafeDispose();
 
@@ -140,6 +158,9 @@
 		/// <param name="infos">The list of shader programs that should be cleared.</param>
 		private static void Clear(List<ShaderProgram> infos)
 		{
+			if (infos == null)
+				return;
+
 			infos.SafeDisposeAll();
 			infos.Clear();
 		}
@@ -159,9 +180,11 @@
 			if (shaderProgram != null)
 				return shaderProgram;
 
-			// Create the shader program and the info object and add it to the pending list
 			shaderProgram = new ShaderProgram(vs, fs);
-			_pendingPrograms.Add(shaderProgram);
+			if (_asyncLoading)
+				_pendingPrograms.Add(shaderProgram);
+			else
+				_loadedPrograms.Add(shaderProgram);
 
 			return shaderProgram;
 		}
@@ -172,7 +195,7 @@
 		/// <param name="font">The identifier of the font asset that should be loaded.</param>
 		public Font Load(AssetIdentifier<Font> font)
 		{
-			return (Font)Allocate(font);
+			return (Font)LoadAsset(font);
 		}
 
 		/// <summary>
@@ -181,7 +204,7 @@
 		/// <param name="shader">The identifier of the vertex shader asset that should be loaded.</param>
 		internal VertexShader Load(AssetIdentifier<VertexShader> shader)
 		{
-			return (VertexShader)Allocate(shader);
+			return (VertexShader)LoadAsset(shader);
 		}
 
 		/// <summary>
@@ -190,7 +213,7 @@
 		/// <param name="shader">The identifier of the fragment shader asset that should be loaded.</param>
 		internal FragmentShader Load(AssetIdentifier<FragmentShader> shader)
 		{
-			return (FragmentShader)Allocate(shader);
+			return (FragmentShader)LoadAsset(shader);
 		}
 
 		/// <summary>
@@ -199,7 +222,7 @@
 		/// <param name="texture">The identifier of the texture 2D asset that should be loaded.</param>
 		public Texture2D Load(AssetIdentifier<Texture2D> texture)
 		{
-			return (Texture2D)Allocate(texture);
+			return (Texture2D)LoadAsset(texture);
 		}
 
 		/// <summary>
@@ -208,7 +231,7 @@
 		/// <param name="cubeMap">The identifier of the cube map asset that should be loaded.</param>
 		public CubeMap Load(AssetIdentifier<CubeMap> cubeMap)
 		{
-			return (CubeMap)Allocate(cubeMap);
+			return (CubeMap)LoadAsset(cubeMap);
 		}
 
 		/// <summary>
@@ -217,8 +240,10 @@
 		///     of the function.
 		/// </summary>
 		/// <param name="timeoutInMilliseconds">The timeout in milliseconds.</param>
-		public void LoadPending(double timeoutInMilliseconds = Double.MaxValue)
+		public void LoadPending(double timeoutInMilliseconds)
 		{
+			Assert.That(_asyncLoading, "Async loading has not been enabled for this asset manager.");
+
 			using (var clock = Clock.Create())
 			{
 				var start = clock.Milliseconds;
@@ -256,7 +281,7 @@
 		///     Loads the asset corresponding to the asset info object.
 		/// </summary>
 		/// <param name="info">The info object of the asset that should be loaded.</param>
-		private void Load(AssetInfo info)
+		private static void Load(AssetInfo info)
 		{
 			try
 			{
@@ -310,6 +335,9 @@
 		/// <param name="identifier">The identifier that should be searched for.</param>
 		private static IDisposable Find(List<AssetInfo> infos, uint identifier)
 		{
+			if (infos == null)
+				return null;
+
 			foreach (var info in infos)
 			{
 				if (info.Identifier == identifier)
@@ -336,6 +364,9 @@
 		/// <param name="fragmentShader">The fragment shader of the shader program.</param>
 		private static ShaderProgram Find(List<ShaderProgram> shaderPrograms, VertexShader vertexShader, FragmentShader fragmentShader)
 		{
+			if (shaderPrograms == null)
+				return null;
+
 			foreach (var shaderProgram in shaderPrograms)
 			{
 				if (shaderProgram.VertexShader == vertexShader && shaderProgram.FragmentShader == fragmentShader)
@@ -356,10 +387,11 @@
 		}
 
 		/// <summary>
-		///     Allocates the asset instance for the given asset identifier.
+		///     Allocates the asset instance for the given asset identifier. If asynchronous loading is enabled,
+		///     actual loading of the asset is deferred.
 		/// </summary>
 		/// <param name="identifier">The identifier of the asset the instance should be allocated for.</param>
-		private IDisposable Allocate<T>(AssetIdentifier<T> identifier)
+		private IDisposable LoadAsset<T>(AssetIdentifier<T> identifier)
 			where T : class, IDisposable
 		{
 			// Check if we've loaded the requested asset before
@@ -389,7 +421,15 @@
 					break;
 			}
 
-			_pendingAssets.Add(AssetInfo.Create(identifier, asset));
+			var info = AssetInfo.Create(identifier, asset);
+			if (_asyncLoading)
+				_pendingAssets.Add(info);
+			else
+			{
+				_loadedAssets.Add(info);
+				Load(info);
+			}
+
 			return asset;
 		}
 
@@ -416,7 +456,7 @@
 			if (dotIndex == -1)
 				Log.Die("Asset name has unexpected structure: '{0}'.", info.Path);
 
-			var project = info.Path.Substring(dotIndex+ 1, info.Path.Length - 4 - dotIndex);
+			var project = info.Path.Substring(dotIndex + 1, info.Path.Length - 4 - dotIndex);
 			var name = info.Path.Substring(0, dotIndex);
 			return String.Format("'{0}://{1}'", project, name);
 		}
