@@ -15,15 +15,6 @@
 		private Vector2 _position;
 
 		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
-		public Camera2D(GraphicsDevice graphicsDevice)
-			: base(graphicsDevice)
-		{
-		}
-
-		/// <summary>
 		///     Gets or sets the camera's position within the world.
 		/// </summary>
 		public new Vector2 Position

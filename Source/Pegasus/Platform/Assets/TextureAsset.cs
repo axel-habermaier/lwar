@@ -13,13 +13,13 @@
 		/// <summary>
 		///     Creates a new texture object.
 		/// </summary>
-		private readonly Func<GraphicsDevice, T> _createTexture;
+		private readonly Func<T> _createTexture;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="createTexture">Creates a new texture object.</param>
-		protected TextureAsset(Func<GraphicsDevice, T> createTexture)
+		protected TextureAsset(Func<T> createTexture)
 		{
 			Assert.ArgumentNotNull(createTexture);
 			_createTexture = createTexture;
@@ -70,7 +70,7 @@
 			}
 
 			if (Texture == null)
-				Texture = _createTexture(GraphicsDevice);
+				Texture = _createTexture();
 
 			Texture.Reinitialize(description, surfaces);
 			Texture.SetName(name);

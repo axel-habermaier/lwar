@@ -10,12 +10,12 @@
 	/// <summary>
 	///     Represents the graphics device.
 	/// </summary>
-	public sealed class GraphicsDevice : DisposableObject
+	internal sealed class GraphicsDevice : DisposableObject
 	{
 		/// <summary>
 		///     The maximum number of frames the GPU can be behind the CPU.
 		/// </summary>
-		public const int FrameLag = 3;
+		private const int FrameLag = 3;
 
 		/// <summary>
 		///     The timestamp queries that mark the beginning of a frame.
@@ -68,21 +68,24 @@
 		/// </summary>
 		internal GraphicsDevice()
 		{
+			Assert.IsNull(Current, "Another graphics device has already been initialized.");
+
 			Log.Info("Initializing graphics device...");
 			_device = NativeMethods.CreateGraphicsDevice();
+			Current = this;
 
-			RasterizerState.InitializeDefaultInstances(this);
-			SamplerState.InitializeDefaultInstances(this);
-			DepthStencilState.InitializeDefaultInstances(this);
-			BlendState.InitializeDefaultInstances(this);
-			Texture2D.InitializeDefaultInstances(this);
+			RasterizerState.InitializeDefaultInstances();
+			SamplerState.InitializeDefaultInstances();
+			DepthStencilState.InitializeDefaultInstances();
+			BlendState.InitializeDefaultInstances();
+			Texture2D.InitializeDefaultInstances();
 
 			for (var i = 0; i < FrameLag; ++i)
 			{
-				_syncedQueries[i] = new SyncedQuery(this);
-				_beginQueries[i] = new TimestampQuery(this);
-				_endQueries[i] = new TimestampQuery(this);
-				_disjointQueries[i] = new TimestampDisjointQuery(this);
+				_syncedQueries[i] = new SyncedQuery();
+				_beginQueries[i] = new TimestampQuery();
+				_endQueries[i] = new TimestampQuery();
+				_disjointQueries[i] = new TimestampDisjointQuery();
 
 				_syncedQueries[i].SetName("Synced Query {0}", i);
 				_beginQueries[i].SetName("GPU Profiling Begin Query {0}", i);
@@ -171,7 +174,12 @@
 		/// <summary>
 		///     Gets the GPU frame time in seconds for the last frame.
 		/// </summary>
-		public double FrameTime { get; private set; }
+		internal double FrameTime { get; private set; }
+
+		/// <summary>
+		///     Gets the application-wide graphics device instance.
+		/// </summary>
+		internal static GraphicsDevice Current { get; private set; }
 
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
@@ -190,6 +198,7 @@
 			Texture2D.DisposeDefaultInstances();
 
 			NativeMethods.DestroyGraphicsDevice(_device);
+			Current = null;
 		}
 
 		/// <summary>

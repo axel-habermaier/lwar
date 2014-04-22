@@ -79,29 +79,25 @@
 		/// <summary>
 		///     Creates a quad with the given width and height, lying in the y = 0 plane.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
 		/// <param name="size">The size of the quad.</param>
 		/// <param name="offset">
 		///     The offset that should be applied to the generated quad. By default, the center of the quad lies in the origin.
 		/// </param>
-		public static Model CreateQuad(GraphicsDevice graphicsDevice, Size size, Vector2 offset = default(Vector2))
+		public static Model CreateQuad(Size size, Vector2 offset = default(Vector2))
 		{
-			return CreateQuad(graphicsDevice, size.Width, size.Height, offset);
+			return CreateQuad(size.Width, size.Height, offset);
 		}
 
 		/// <summary>
 		///     Creates a quad with the given width and height, lying in the y = 0 plane.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
 		/// <param name="width">The width of the quad.</param>
 		/// <param name="height">The height of the quad.</param>
 		/// <param name="offset">
 		///     The offset that should be applied to the generated quad. By default, the center of the quad lies in the origin.
 		/// </param>
-		public static Model CreateQuad(GraphicsDevice graphicsDevice, float width, float height, Vector2 offset = default(Vector2))
+		public static Model CreateQuad(float width, float height, Vector2 offset = default(Vector2))
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
-
 			var rectangle = new RectangleF(-width / 2.0f + offset.X, -height / 2.0f + offset.Y, width, height);
 			var texture = new RectangleF(0, 0, 1, 1);
 
@@ -135,9 +131,9 @@
 
 			var indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
 
-			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
-			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
-			var layout = VertexPositionNormalTexture.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
+			var vertexBuffer = VertexBuffer.Create(vertices);
+			var indexBuffer = IndexBuffer.Create(indices);
+			var layout = VertexPositionNormalTexture.GetInputLayout(vertexBuffer, indexBuffer);
 
 			return new Model(vertexBuffer, layout, indexBuffer, indices.Length);
 		}
@@ -145,11 +141,8 @@
 		/// <summary>
 		///     Creates a full-screen quad.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
-		public static Model CreateFullScreenQuad(GraphicsDevice graphicsDevice)
+		public static Model CreateFullScreenQuad()
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
-
 			// For OpenGL, we have to flip the quad upside-down and change its winding, because OpenGL's window
 			// coordinate origins are at the bottom left corner... annoying
 			ushort[] indices;
@@ -189,9 +182,9 @@
 				}
 			};
 
-			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
-			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
-			var layout = VertexPositionNormalTexture.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
+			var vertexBuffer = VertexBuffer.Create(vertices);
+			var indexBuffer = IndexBuffer.Create(indices);
+			var layout = VertexPositionNormalTexture.GetInputLayout(vertexBuffer, indexBuffer);
 
 			return new Model(vertexBuffer, layout, indexBuffer, indices.Length);
 		}
@@ -199,10 +192,8 @@
 		/// <summary>
 		///     Creates a skybox cube.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the skybox.</param>
-		public static unsafe Model CreateSkybox(GraphicsDevice graphicsDevice)
+		public static unsafe Model CreateSkybox()
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.That(sizeof(Vector4) == 4 * sizeof(float), "Vector4 has an unexpected unmanaged size.");
 
 			var vertices = new[]
@@ -225,15 +216,15 @@
 				7, 6, 2, 1, 0, 4, 4, 7, 1
 			};
 
-			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
-			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
+			var vertexBuffer = VertexBuffer.Create(vertices);
+			var indexBuffer = IndexBuffer.Create(indices);
 
 			var inputElements = new[]
 			{
 				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, DataSemantics.Position, sizeof(Vector4), 0)
 			};
 
-			var layout = new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);
+			var layout = new VertexInputLayout(indexBuffer, inputElements);
 
 			return new Model(vertexBuffer, layout, indexBuffer, indices.Length);
 		}
@@ -242,12 +233,10 @@
 		///     Creates a model of a sphere with the given radius, using the given subdivision factor to determine the smoothness of
 		///     the sphere.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the sphere.</param>
 		/// <param name="radius">The radius of the sphere.</param>
 		/// <param name="subdivision">The subdivision factor; the higher the value, the smoother the sphere.</param>
-		public static Model CreateSphere(GraphicsDevice graphicsDevice, float radius, int subdivision)
+		public static Model CreateSphere(float radius, int subdivision)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentInRange(subdivision, 1, 100);
 
 			// Create a cube and project it into a sphere
@@ -317,9 +306,9 @@
 			generateFace(topRightFront, topRightBack, bottomRightFront); // Right
 
 			// Construct and return the model
-			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices.ToArray());
-			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices.ToArray());
-			var layout = VertexPositionNormal.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
+			var vertexBuffer = VertexBuffer.Create(vertices.ToArray());
+			var indexBuffer = IndexBuffer.Create(indices.ToArray());
+			var layout = VertexPositionNormal.GetInputLayout(vertexBuffer, indexBuffer);
 
 			return new Model(vertexBuffer, layout, indexBuffer, indices.Count);
 		}

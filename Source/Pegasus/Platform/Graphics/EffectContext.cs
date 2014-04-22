@@ -19,21 +19,12 @@
 		private readonly AssetsManager _assets;
 
 		/// <summary>
-		///     The graphics device the graphics resources should be created for.
-		/// </summary>
-		private readonly GraphicsDevice _graphicsDevice;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device the graphics resources should be created for.</param>
 		/// <param name="assets">The assets manager that should be used to load the effect assets.</param>
-		internal EffectContext(GraphicsDevice graphicsDevice, AssetsManager assets)
+		internal EffectContext(AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
-
-			_graphicsDevice = graphicsDevice;
 			_assets = assets;
 		}
 
@@ -89,7 +80,7 @@
 		public ConstantBuffer CreateConstantBuffer(int size, int slot)
 		{
 			ValidateInitialization();
-			return new ConstantBuffer(_graphicsDevice, size, slot);
+			return new ConstantBuffer(size, slot);
 		}
 
 		/// <summary>
@@ -134,7 +125,7 @@
 			Assert.ArgumentNotNull(unbind);
 			ValidateInitialization();
 
-			var program = new ShaderProgram(_graphicsDevice, _assets.LoadVertexShader(vertexShader), _assets.LoadFragmentShader(fragmentShader));
+			var program = new ShaderProgram(_assets.LoadVertexShader(vertexShader), _assets.LoadFragmentShader(fragmentShader));
 			program.SetDescription("Vertex Shader '{0}', Fragment Shader '{1}'", vertexShader, fragmentShader);
 
 			return new EffectTechnique(program, bind, unbind);
@@ -155,7 +146,6 @@
 		[Conditional("DEBUG")]
 		private void ValidateInitialization()
 		{
-			Assert.NotNull(_graphicsDevice, "No graphics device has been set.");
 			Assert.NotNull(_assets, "No assets manager has been set.");
 		}
 	}

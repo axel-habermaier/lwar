@@ -20,11 +20,6 @@
 		internal AssetsManager Assets { get; set; }
 
 		/// <summary>
-		///     The graphics device for which the assets are loaded.
-		/// </summary>
-		internal GraphicsDevice GraphicsDevice { get; set; }
-
-		/// <summary>
 		///     Loads or reloads the asset from the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer that should be used to load the asset.</param>

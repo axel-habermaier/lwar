@@ -11,9 +11,8 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
-		public TimestampQuery(GraphicsDevice graphicsDevice)
-			: base(graphicsDevice, QueryType.Timestamp)
+		public TimestampQuery()
+			: base(QueryType.Timestamp)
 		{
 		}
 

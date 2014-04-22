@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Text;
-	using Graphics;
 	using Math;
 	using Memory;
 	using Rendering;
@@ -48,11 +47,9 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
-		internal DebugOverlay(GraphicsDevice graphicsDevice, Font font)
+		internal DebugOverlay(Font font)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(font);
 
 			_platformInfo = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };

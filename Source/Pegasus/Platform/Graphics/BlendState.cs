@@ -22,9 +22,7 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		public BlendState(GraphicsDevice graphicsDevice)
-			: base(graphicsDevice)
+		public BlendState()
 		{
 			NativeMethods.SetBlendDescDefaults(out _description);
 		}
@@ -156,12 +154,11 @@
 		/// <summary>
 		///     Initializes the default instances.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
-		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
+		internal static void InitializeDefaultInstances()
 		{
-			Opaque = new BlendState(graphicsDevice);
+			Opaque = new BlendState();
 
-			Premultiplied = new BlendState(graphicsDevice)
+			Premultiplied = new BlendState()
 			{
 				BlendEnabled = true,
 				SourceBlend = BlendOption.One,
@@ -170,7 +167,7 @@
 				DestinationBlendAlpha = BlendOption.InverseSourceAlpha
 			};
 
-			Additive = new BlendState(graphicsDevice)
+			Additive = new BlendState()
 			{
 				BlendEnabled = true,
 				SourceBlend = BlendOption.One,
@@ -179,7 +176,7 @@
 				DestinationBlendAlpha = BlendOption.One
 			};
 
-			Alpha = new BlendState(graphicsDevice)
+			Alpha = new BlendState()
 			{
 				BlendEnabled = true,
 				SourceBlend = BlendOption.SourceAlpha,
@@ -212,7 +209,7 @@
 		/// </summary>
 		protected override void Compile()
 		{
-			State = NativeMethods.CreateBlendState(GraphicsDevice.NativePtr, ref _description);
+			State = NativeMethods.CreateBlendState(GraphicsDevice.Current.NativePtr, ref _description);
 		}
 
 		/// <summary>

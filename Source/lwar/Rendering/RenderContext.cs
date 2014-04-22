@@ -56,20 +56,18 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets)
+		public RenderContext(AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
-			_spriteEffect = new SpriteEffect(graphicsDevice, assets);
-			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
-			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
-			_parallaxRenderer = new ParallaxRenderer(graphicsDevice, assets);
+			_spriteEffect = new SpriteEffect(assets);
+			_spriteBatch = new SpriteBatch(assets);
+			_skyboxRenderer = new SkyboxRenderer(assets);
+			_parallaxRenderer = new ParallaxRenderer(assets);
 
 			foreach (var renderer in _renderers)
-				renderer.Initialize(graphicsDevice, assets);
+				renderer.Initialize(assets);
 		}
 
 		/// <summary>

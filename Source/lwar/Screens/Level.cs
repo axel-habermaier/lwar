@@ -123,12 +123,12 @@ namespace Lwar.Screens
 		/// </summary>
 		public override void Initialize()
 		{
-			EntityTemplates.Initialize(GraphicsDevice, Assets);
+			EntityTemplates.Initialize(Assets);
 
-			_renderContext = new RenderContext(GraphicsDevice, Assets);
+			_renderContext = new RenderContext(Assets);
 			_gameSession = new GameSession(_renderContext);
 			_messageDispatcher = new MessageDispatcher(_gameSession);
-			_cameraManager = new CameraManager(Window, GraphicsDevice, InputDevice);
+			_cameraManager = new CameraManager(Window, InputDevice);
 			_inputManager = new InputManager(InputDevice);
 			_eventMessage = new EventMessageDisplay(Assets);
 

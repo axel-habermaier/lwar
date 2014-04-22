@@ -2,7 +2,6 @@
 {
 	using System;
 	using Pegasus.Platform.Assets;
-	using Pegasus.Platform.Graphics;
 	using Pegasus.Rendering;
 
 	/// <summary>
@@ -13,9 +12,8 @@
 		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets);
+		void Initialize(AssetsManager assets);
 
 		/// <summary>
 		///     Draws all registered 3D elements.

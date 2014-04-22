@@ -27,7 +27,7 @@
 			AssetHeader.Validate(buffer, AssetType.FragmentShader, name);
 
 			if (Shader == null)
-				Shader = new FragmentShader(GraphicsDevice);
+				Shader = new FragmentShader();
 
 			byte* data;
 			int length;

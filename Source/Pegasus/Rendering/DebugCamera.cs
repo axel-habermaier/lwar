@@ -75,13 +75,10 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		/// <param name="inputDevice">The logical input device that provides the input for the camera.</param>
 		/// <param name="layer">The input layer that must be activated to control the camera.</param>
-		public DebugCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, InputLayer layer)
-			: base(graphicsDevice)
+		public DebugCamera(LogicalInputDevice inputDevice, InputLayer layer)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
 			Assert.ArgumentSatisfies(layer.IsPrimitive, "Invalid input layer.");
 

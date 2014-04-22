@@ -38,15 +38,12 @@
 		///     Gets a vertex input layout for drawing VertexPositionColorTexture vertices with an appropriate vertex buffer
 		///     and vertex shader.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to construct the input layout.</param>
 		/// <param name="vertexBuffer">The vertex buffer that holds the vertex data.</param>
 		/// <param name="indexBuffer">The index buffer that holds the vertex indices.</param>
-		public static VertexInputLayout GetInputLayout(GraphicsDevice graphicsDevice, VertexBuffer vertexBuffer,
-													   IndexBuffer indexBuffer)
+		public static VertexInputLayout GetInputLayout(VertexBuffer vertexBuffer, IndexBuffer indexBuffer)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(vertexBuffer);
-			Assert.That(Marshal.SizeOf(typeof(VertexPositionColorTexture)) == Size, "Unexpected unamanged size.");
+			Assert.That(Marshal.SizeOf(typeof(VertexPositionColorTexture)) == Size, "Unexpected unmanaged size.");
 
 			var inputElements = new[]
 			{
@@ -55,7 +52,7 @@
 				new VertexInputBinding(vertexBuffer, VertexDataFormat.Color, DataSemantics.Color0, Size, 24)
 			};
 
-			return new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);
+			return new VertexInputLayout(indexBuffer, inputElements);
 		}
 	}
 }

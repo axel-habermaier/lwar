@@ -34,11 +34,11 @@
 			RenderOutputPanel.InitializeRenderOutput += InitializeRenderOutputPanel;
 			RenderOutputPanel.DisposeRenderOutput += DisposeRenderOutputPanel;
 
-			_camera = new Camera2D(Application.Current.GraphicsDevice);
+			_camera = new Camera2D();
 
 			var font = Application.Current.Assets.LoadFont(Fonts.LiberationMono11);
-			DebugOverlay = new DebugOverlay(Application.Current.GraphicsDevice, font);
-			Console = new Console(Application.Current.GraphicsDevice, InputDevice, font);
+			DebugOverlay = new DebugOverlay(font);
+			Console = new Console(InputDevice, font);
 
 			// Ensure that the console and the statistics are properly initialized
 			DebugOverlay.Update(Size);
@@ -83,22 +83,19 @@
 		/// <param name="panelSize">The size of the render output panel.</param>
 		private void InitializeRenderOutputPanel(Size panelSize)
 		{
-			var graphicsDevice = Application.Current.GraphicsDevice;
-			Assert.NotNull(graphicsDevice);
-
 			// Initialize the color buffer of the render target
-			var colorBuffer = new Texture2D(graphicsDevice, panelSize, SurfaceFormat.Rgba8, TextureFlags.RenderTarget);
+			var colorBuffer = new Texture2D(panelSize, SurfaceFormat.Rgba8, TextureFlags.RenderTarget);
 			colorBuffer.SetName("MainWindow.RenderOutputPanel.ColorBuffer");
 
 			// Initialize the depth stencil buffer of the render target
-			var depthStencil = new Texture2D(graphicsDevice, panelSize, SurfaceFormat.Depth24Stencil8, TextureFlags.DepthStencil);
+			var depthStencil = new Texture2D(panelSize, SurfaceFormat.Depth24Stencil8, TextureFlags.DepthStencil);
 			depthStencil.SetName("MainWindow.RenderOutputPanel.DepthStencil");
 
 			// Initialize the render output panel's graphics properties
 			RenderOutputPanel.OutputTexture = colorBuffer;
-			RenderOutputPanel.RenderOutput = new RenderOutput(graphicsDevice)
+			RenderOutputPanel.RenderOutput = new RenderOutput()
 			{
-				RenderTarget = new RenderTarget(graphicsDevice, depthStencil, colorBuffer),
+				RenderTarget = new RenderTarget(depthStencil, colorBuffer),
 				Viewport = new Rectangle(0, 0, panelSize)
 			};
 		}

@@ -18,14 +18,11 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the quad.</param>
 		/// <param name="assets">The assets manager that should be used to load the quad resources.</param>
-		public FullscreenQuad(GraphicsDevice graphicsDevice, AssetsManager assets)
+		public FullscreenQuad(AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
-
-			_model = Model.CreateFullScreenQuad(graphicsDevice);
+			_model = Model.CreateFullScreenQuad();
 		}
 
 		/// <summary>

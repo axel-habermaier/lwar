@@ -41,7 +41,7 @@
 				Font = new Font();
 
 			if (_texture == null)
-				_texture = new Texture2DAsset { GraphicsDevice = GraphicsDevice, Assets = Assets };
+				_texture = new Texture2DAsset { Assets = Assets };
 
 			// Load the font map
 			_texture.Load(buffer, name);

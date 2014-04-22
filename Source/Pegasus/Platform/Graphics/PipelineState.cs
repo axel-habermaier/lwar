@@ -12,15 +12,6 @@
 	public abstract class PipelineState : GraphicsObject
 	{
 		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		protected PipelineState(GraphicsDevice graphicsDevice)
-			: base(graphicsDevice)
-		{
-		}
-
-		/// <summary>
 		///     Gets or sets the native state instance.
 		/// </summary>
 		protected IntPtr State { get; set; }

@@ -4,7 +4,6 @@
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform.Assets;
-	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
@@ -33,14 +32,6 @@
 		protected LogicalInputDevice InputDevice
 		{
 			get { return Application.Current.Window.InputDevice; }
-		}
-
-		/// <summary>
-		///     Gets the graphics device that is used to draw the app.
-		/// </summary>
-		protected GraphicsDevice GraphicsDevice
-		{
-			get { return Application.Current.GraphicsDevice; }
 		}
 
 		/// <summary>

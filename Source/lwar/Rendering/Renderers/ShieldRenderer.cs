@@ -29,8 +29,8 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			_model = Model.CreateSphere(GraphicsDevice, 1.0f, 16);
-			_effect = new SphereEffect(GraphicsDevice, Assets)
+			_model = Model.CreateSphere(1.0f, 16);
+			_effect = new SphereEffect(Assets)
 			{
 				SphereTexture = new CubeMapView(Assets.LoadCubeMap(Textures.ShieldsCubemap), SamplerState.TrilinearClamp)
 			};

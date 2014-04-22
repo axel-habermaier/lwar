@@ -27,7 +27,7 @@
 			AssetHeader.Validate(buffer, AssetType.VertexShader, name);
 
 			if (Shader == null)
-				Shader = new VertexShader(GraphicsDevice);
+				Shader = new VertexShader();
 
 			var inputCount = buffer.ReadByte();
 			var inputs = new ShaderInput[inputCount];

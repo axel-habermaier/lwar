@@ -70,11 +70,6 @@
 		}
 
 		/// <summary>
-		///     Gets the graphics device that is used to render the application.
-		/// </summary>
-		public GraphicsDevice GraphicsDevice { get; private set; }
-
-		/// <summary>
 		///     Gets the name of the application.
 		/// </summary>
 		public string Name { get; private set; }
@@ -133,8 +128,8 @@
 
 			Name = name;
 
-			using (GraphicsDevice = new GraphicsDevice())
-			using (Assets = new AssetsManager(GraphicsDevice))
+			using (var graphicsDevice = new GraphicsDevice())
+			using (Assets = new AssetsManager())
 			using (Window = new AppWindow(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
 			{
@@ -166,7 +161,7 @@
 						Window.Console.Update(Window.Size);
 
 						// Draw the current frame
-						GraphicsDevice.BeginFrame();
+						graphicsDevice.BeginFrame();
 
 						// Let the application perform all custom drawing for the current frame
 						Draw(Window.RenderOutput);
@@ -174,8 +169,8 @@
 						// Draw the user interface
 						_root.Draw();
 
-						GraphicsDevice.EndFrame();
-						Window.DebugOverlay.GpuFrameTime.AddMeasurement(GraphicsDevice.FrameTime);
+						graphicsDevice.EndFrame();
+						Window.DebugOverlay.GpuFrameTime.AddMeasurement(graphicsDevice.FrameTime);
 					}
 
 					// Presents the contents of all windows' backbuffers.

@@ -10,15 +10,6 @@
 	internal sealed class FragmentShader : Shader
 	{
 		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		public FragmentShader(GraphicsDevice graphicsDevice)
-			: base(graphicsDevice)
-		{
-		}
-
-		/// <summary>
 		///     Reinitializes the shader.
 		/// </summary>
 		/// <param name="shaderCode">The shader source code.</param>
@@ -29,7 +20,7 @@
 			Assert.ArgumentSatisfies(length > 0, "Invalid shader code length.");
 
 			DestroyShader();
-			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, shaderCode, length);
+			_shader = NativeMethods.CreateShader(GraphicsDevice.Current.NativePtr, shaderCode, length);
 
 			OnReinitialized();
 		}

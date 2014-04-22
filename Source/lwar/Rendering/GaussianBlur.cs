@@ -47,18 +47,16 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to apply the blur effect.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
 		/// <param name="texture">The texture that should be blurred.</param>
-		public GaussianBlur(GraphicsDevice graphicsDevice, AssetsManager assets, Texture2D texture)
+		public GaussianBlur(AssetsManager assets, Texture2D texture)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 			Assert.ArgumentNotNull(texture);
 			Assert.InRange(texture.Width, MinimumSize, 2048);
 
 			_texture = texture;
-			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);
+			_fullscreenQuad = new FullscreenQuad(assets);
 
 			var width = texture.Width;
 			var height = texture.Height;
@@ -81,18 +79,18 @@
 			height = texture.Height;
 			for (var i = 0; i < count; ++i)
 			{
-				_textures[i] = new Texture2D(graphicsDevice, width, height, texture.Format, TextureFlags.RenderTarget);
+				_textures[i] = new Texture2D(width, height, texture.Format, TextureFlags.RenderTarget);
 
 				width /= 2;
 				height /= 2;
 			}
 
 			for (var i = 0; i < _renderTargets.Length; ++i)
-				_renderTargets[i] = new RenderTarget(graphicsDevice, null, _textures[i]);
+				_renderTargets[i] = new RenderTarget(null, _textures[i]);
 
-			_output = new RenderOutput(graphicsDevice);
-			_blurEffect = new BlurEffect(graphicsDevice, assets);
-			_quadEffect = new TexturedQuadEffect(graphicsDevice, assets);
+			_output = new RenderOutput();
+			_blurEffect = new BlurEffect(assets);
+			_quadEffect = new TexturedQuadEffect(assets);
 		}
 
 		/// <summary>

@@ -22,9 +22,7 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		public SamplerState(GraphicsDevice graphicsDevice)
-			: base(graphicsDevice)
+		public SamplerState()
 		{
 			NativeMethods.SetSamplerDescDefaults(out _description);
 		}
@@ -222,10 +220,9 @@
 		/// <summary>
 		///     Initializes the default instances.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
-		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
+		internal static void InitializeDefaultInstances()
 		{
-			PointWrap = new SamplerState(graphicsDevice)
+			PointWrap = new SamplerState()
 			{
 				AddressU = TextureAddressMode.Wrap,
 				AddressV = TextureAddressMode.Wrap,
@@ -233,9 +230,9 @@
 				Filter = TextureFilter.Nearest
 			};
 
-			PointClamp = new SamplerState(graphicsDevice) { Filter = TextureFilter.Nearest };
+			PointClamp = new SamplerState() { Filter = TextureFilter.Nearest };
 
-			PointWrapNoMipmaps = new SamplerState(graphicsDevice)
+			PointWrapNoMipmaps = new SamplerState()
 			{
 				AddressU = TextureAddressMode.Wrap,
 				AddressV = TextureAddressMode.Wrap,
@@ -243,18 +240,18 @@
 				Filter = TextureFilter.NearestNoMipmaps
 			};
 
-			PointClampNoMipmaps = new SamplerState(graphicsDevice) { Filter = TextureFilter.NearestNoMipmaps };
+			PointClampNoMipmaps = new SamplerState() { Filter = TextureFilter.NearestNoMipmaps };
 
-			BilinearWrap = new SamplerState(graphicsDevice)
+			BilinearWrap = new SamplerState()
 			{
 				AddressU = TextureAddressMode.Wrap,
 				AddressV = TextureAddressMode.Wrap,
 				AddressW = TextureAddressMode.Wrap,
 			};
 
-			BilinearClamp = new SamplerState(graphicsDevice);
+			BilinearClamp = new SamplerState();
 
-			BilinearWrapNoMipmaps = new SamplerState(graphicsDevice)
+			BilinearWrapNoMipmaps = new SamplerState()
 			{
 				AddressU = TextureAddressMode.Wrap,
 				AddressV = TextureAddressMode.Wrap,
@@ -262,9 +259,9 @@
 				Filter = TextureFilter.BilinearNoMipmaps
 			};
 
-			BilinearClampNoMipmaps = new SamplerState(graphicsDevice) { Filter = TextureFilter.BilinearNoMipmaps };
+			BilinearClampNoMipmaps = new SamplerState() { Filter = TextureFilter.BilinearNoMipmaps };
 
-			TrilinearWrap = new SamplerState(graphicsDevice)
+			TrilinearWrap = new SamplerState()
 			{
 				AddressU = TextureAddressMode.Wrap,
 				AddressV = TextureAddressMode.Wrap,
@@ -273,9 +270,9 @@
 				MaximumAnisotropy = 1
 			};
 
-			TrilinearClamp = new SamplerState(graphicsDevice) { Filter = TextureFilter.Trilinear, MaximumAnisotropy = 1 };
+			TrilinearClamp = new SamplerState() { Filter = TextureFilter.Trilinear, MaximumAnisotropy = 1 };
 
-			AnisotropicWrap = new SamplerState(graphicsDevice)
+			AnisotropicWrap = new SamplerState()
 			{
 				AddressU = TextureAddressMode.Wrap,
 				AddressV = TextureAddressMode.Wrap,
@@ -283,7 +280,7 @@
 				Filter = TextureFilter.Anisotropic
 			};
 
-			AnisotropicClamp = new SamplerState(graphicsDevice) { Filter = TextureFilter.Anisotropic };
+			AnisotropicClamp = new SamplerState() { Filter = TextureFilter.Anisotropic };
 
 			PointWrap.SetName("PointWrap");
 			PointClamp.SetName("PointClamp");
@@ -339,7 +336,7 @@
 		/// </summary>
 		protected override void Compile()
 		{
-			State = NativeMethods.CreateSamplerState(GraphicsDevice.NativePtr, ref _description);
+			State = NativeMethods.CreateSamplerState(GraphicsDevice.Current.NativePtr, ref _description);
 		}
 
 		/// <summary>
@@ -351,9 +348,9 @@
 		}
 
 #if DEBUG
-	/// <summary>
-	///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-	/// </summary>
+		/// <summary>
+		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
 		protected override void OnRenamed()
 		{
 			if (State != IntPtr.Zero)

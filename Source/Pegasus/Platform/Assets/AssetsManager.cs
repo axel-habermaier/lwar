@@ -32,19 +32,10 @@
 		private readonly Dictionary<string, Asset> _assets = new Dictionary<string, Asset>();
 
 		/// <summary>
-		///     The graphics device for which the assets are managed.
-		/// </summary>
-		private readonly GraphicsDevice _device;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="device">The graphics device that should be used to load the assets.</param>
-		internal AssetsManager(GraphicsDevice device)
+		internal AssetsManager()
 		{
-			Assert.ArgumentNotNull(device);
-
-			_device = device;
 			Commands.OnReloadAssets += ReloadAssets;
 		}
 
@@ -167,7 +158,7 @@
 			if (asset != null)
 				return asset;
 
-			asset = new TAsset { GraphicsDevice = _device, Assets = this };
+			asset = new TAsset { Assets = this };
 			try
 			{
 				Log.Info("Loading {0} '{1}'...", asset.Type.ToDisplayString(), assetName);

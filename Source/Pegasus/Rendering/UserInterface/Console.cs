@@ -81,12 +81,10 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="inputDevice">The input device that provides the user input.</param>
 		/// <param name="font">The font that should be used for drawing.</param>
-		public Console(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, Font font)
+		public Console(LogicalInputDevice inputDevice, Font font)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
 			Assert.ArgumentNotNull(font);
 

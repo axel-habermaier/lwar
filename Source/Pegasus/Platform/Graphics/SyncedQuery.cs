@@ -10,9 +10,8 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
-		public SyncedQuery(GraphicsDevice graphicsDevice)
-			: base(graphicsDevice, QueryType.Synced)
+		public SyncedQuery()
+			: base(QueryType.Synced)
 		{
 		}
 

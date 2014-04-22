@@ -27,11 +27,9 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="vertexShader">The vertex shader that the shader program should use.</param>
 		/// <param name="fragmentShader">The fragment shader that the shader program should use.</param>
-		public ShaderProgram(GraphicsDevice graphicsDevice, VertexShader vertexShader, FragmentShader fragmentShader)
-			: base(graphicsDevice)
+		public ShaderProgram(VertexShader vertexShader, FragmentShader fragmentShader)
 		{
 			Assert.ArgumentNotNull(vertexShader);
 			Assert.ArgumentNotNull(fragmentShader);
@@ -82,7 +80,7 @@
 			Assert.NotDisposed(this);
 
 			Destroy();
-			_shaderProgram = NativeMethods.CreateProgram(GraphicsDevice.NativePtr, _vertexShader.NativePtr, _fragmentShader.NativePtr);
+			_shaderProgram = NativeMethods.CreateProgram(GraphicsDevice.Current.NativePtr, _vertexShader.NativePtr, _fragmentShader.NativePtr);
 		}
 
 		/// <summary>

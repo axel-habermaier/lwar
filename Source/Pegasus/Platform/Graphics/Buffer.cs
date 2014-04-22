@@ -19,16 +19,14 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="type">The type of the buffer.</param>
 		/// <param name="usage">A value describing the usage pattern of the buffer.</param>
 		/// <param name="data">The data that should be copied into the buffer.</param>
 		/// <param name="size">The size of the buffer in bytes.</param>
-		protected Buffer(GraphicsDevice graphicsDevice, BufferType type, ResourceUsage usage, IntPtr data, int size)
-			: base(graphicsDevice)
+		protected Buffer(BufferType type, ResourceUsage usage, IntPtr data, int size)
 		{
 			Assert.ArgumentSatisfies(size > 0, "A buffer must have a size greater than 0.");
-			_buffer = NativeMethods.CreateBuffer(graphicsDevice.NativePtr, type, usage, data, size);
+			_buffer = NativeMethods.CreateBuffer(GraphicsDevice.Current.NativePtr, type, usage, data, size);
 		}
 
 		/// <summary>

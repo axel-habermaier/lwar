@@ -12,7 +12,7 @@
 		///     Initializes a new instance.
 		/// </summary>
 		public Texture2DAsset()
-			: base(device => new Texture2D(device))
+			: base(() => new Texture2D())
 		{
 		}
 

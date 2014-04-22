@@ -12,7 +12,7 @@
 		///     Initializes a new instance.
 		/// </summary>
 		public CubeMapAsset()
-			: base(device => new CubeMap(device))
+			: base(() => new CubeMap())
 		{
 		}
 
