@@ -6,53 +6,53 @@
 /.svn
 *.suo
 /Source/*.suo
-/Source/Server/obj
+/Source/Other/Server/obj
 *.opensdf
 autoexec.cfg
 lwar.log
 .directory
 Source/lwar/obj
-Source/Assets Compiler/obj
-Source/Assets Compiler/bin
+Source/Assets/Assets Compiler/obj
+Source/Assets/Assets Compiler/bin
 Source/Pegasus/obj
 *.generated.cs
-Source/Platform/obj
-Source/Platform/Platform.md.pc
-Source/Server/Server.md.pc
+Source/Other/Platform/obj
+Source/Other/Platform/Platform.md.pc
+Source/Other/Server/Server.md.pc
 lwarMono.userprefs
-Source/lwar Assets/obj
-Source/lwar Assets/bin
-Source/lwar Assets/temp
-Source/lwar Assets/Binaries
-Source/Pegasus Assets/obj
-Source/Pegasus Assets/bin
-Source/Pegasus Assets/temp
-Source/Pegasus Assets/Binaries
-Source/Pegasus UI/obj
-Source/Pegasus UI/bin
-Source/lwar UI/obj
-Source/lwar UI/bin
+Source/Assets/lwar Assets/obj
+Source/Assets/lwar Assets/bin
+Source/Assets/lwar Assets/temp
+Source/Assets/lwar Assets/Binaries
+Source/Assets/Pegasus Assets/obj
+Source/Assets/Pegasus Assets/bin
+Source/Assets/Pegasus Assets/temp
+Source/Assets/Pegasus Assets/Binaries
+Source/User Interface/Pegasus UI/obj
+Source/User Interface/Pegasus UI/bin
+Source/User Interface/lwar UI/obj
+Source/User Interface/lwar UI/bin
 Binaries x64
 Binaries x86
 log.txt
-Source/lwar Assets/AssetIdentifiers.cs
-Source/lwar Assets/Effects/Effects.cs
-Source/Pegasus Assets/AssetIdentifiers.cs
-Source/Pegasus Assets/Effects/Effects.cs
+Source/Assets/lwar Assets/AssetIdentifiers.cs
+Source/Assets/lwar Assets/Effects/Effects.cs
+Source/Assets/Pegasus Assets/AssetIdentifiers.cs
+Source/Assets/Pegasus Assets/Effects/Effects.cs
 Source/lwar/Gameplay/Entities/EntityType.cs
 Source/lwar/Gameplay/Entities/EntityTemplates.cs
-Source/Server/templates.c
-Source/Server/entity.h
+Source/Other/Server/templates.c
+Source/Other/Server/entity.h
 lwar.sln.ide
 *.psess
 *.vsp
 *.vspx
 Source/TestResults
-Source/Tests/bin
-Source/Tests/obj
-Source/lwar Assets/Fonts/FontLoader.cs
-Source/Pegasus Assets/Fonts/FontLoader.cs
+Source/Other/Tests/bin
+Source/Other/Tests/obj
+Source/Assets/lwar Assets/Fonts/FontLoader.cs
+Source/Assets/Pegasus Assets/Fonts/FontLoader.cs
 *.ipch
-/Source/lwar UI/UserInterface.cs
-/Source/Pegasus UI/UserInterface.cs
+/Source/User Interface/lwar UI/UserInterface.cs
+/Source/User Interface/Pegasus UI/UserInterface.cs
 *.nvuser
