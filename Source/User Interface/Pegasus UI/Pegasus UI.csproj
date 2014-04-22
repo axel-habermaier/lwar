@@ -52,7 +52,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>../../Binaries x64\Debug Direct3D11\</OutputPath>
+    <OutputPath>../../../Binaries x64\Debug Direct3D11\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -60,7 +60,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x64'">
-    <OutputPath>../../Binaries x64\Release Direct3D11\</OutputPath>
+    <OutputPath>../../../Binaries x64\Release Direct3D11\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -70,7 +70,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>../../Binaries x64\Debug OpenGL3\</OutputPath>
+    <OutputPath>../../../Binaries x64\Debug OpenGL3\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -78,7 +78,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
-    <OutputPath>../../Binaries x64\Release OpenGL3\</OutputPath>
+    <OutputPath>../../../Binaries x64\Release OpenGL3\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

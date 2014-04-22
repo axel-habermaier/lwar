@@ -13,7 +13,7 @@
 		/// </summary>
 		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
 		public XamlAsset(string relativePath)
-			: base(relativePath)
+			: base(relativePath, doNotCreateTargetPath: true)
 		{
 		}
 
