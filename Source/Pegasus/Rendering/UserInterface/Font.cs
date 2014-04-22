@@ -224,7 +224,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			// Nothing to do here
+			Texture.SafeDispose();
 		}
 	}
 }
