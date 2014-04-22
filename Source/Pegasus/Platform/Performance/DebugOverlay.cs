@@ -58,14 +58,14 @@
 			_platformInfo = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
 			_timer.Timeout += UpdateStatistics;
 
-			GraphicsDeviceProfiler = new GraphicsDeviceProfiler(graphicsDevice);
+			GpuFrameTime = new AveragedDouble("ms", 32);
 			CpuFrameTime = new TimingMeasurement();
 		}
 
 		/// <summary>
 		///     Gets the GPU frame time measurements.
 		/// </summary>
-		internal GraphicsDeviceProfiler GraphicsDeviceProfiler { get; private set; }
+		internal AveragedDouble GpuFrameTime { get; private set; }
 
 		/// <summary>
 		///     Gets the CPU frame time measurements.
@@ -95,31 +95,18 @@
 		/// </summary>
 		private void UpdateStatistics()
 		{
-			if (Cvars.ShowPlatformInfo)
-			{
-				_builder.Append("Platform:                    ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
-				_builder.Append("Debug Mode:                  ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
-				_builder.Append("Renderer:                    ").Append(PlatformInfo.GraphicsApi).Append("\n");
-				_builder.Append("# of GCs:                    ").Append(_garbageCollections);
-			}
+			if (!Cvars.ShowDebugOverlay)
+				return;
 
-			if (Cvars.ShowFrameStats && Cvars.ShowPlatformInfo)
-				_builder.Append("\n\n");
+			_builder.Append("Platform:   ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
+			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
+			_builder.Append("Renderer:   ").Append(PlatformInfo.GraphicsApi).Append("\n");
+			_builder.Append("# of GCs:   ").Append(_garbageCollections).Append("\n");
+			_builder.Append("GPU Time:   ");
+			GpuFrameTime.WriteResults(_builder);
+			WriteMeasurement(CpuFrameTime, "\nCPU Time:   ");
 
-			if (Cvars.ShowFrameStats)
-			{
-				_builder.Append("Frame\n");
-				WriteMeasurement(GraphicsDeviceProfiler, "   GPU Time:                 ");
-				WriteMeasurement(CpuFrameTime, "   CPU Time:                 ");
-				GraphicsDeviceProfiler.WriteFrameInfo(_builder);
-				_builder.Append("\n\n");
-
-				GraphicsDeviceProfiler.WriteStateChanges(_builder);
-			}
-
-			if (Cvars.ShowFrameStats || Cvars.ShowPlatformInfo)
-				_platformInfo.Text = _builder.ToString();
-
+			_platformInfo.Text = _builder.ToString();
 			_builder.Clear();
 		}
 
@@ -132,7 +119,7 @@
 			spriteBatch.Layer = Int32.MaxValue - 2;
 			spriteBatch.WorldMatrix = Matrix.Identity;
 
-			if (Cvars.ShowPlatformInfo || Cvars.ShowFrameStats)
+			if (Cvars.ShowDebugOverlay)
 				_platformInfo.Draw(spriteBatch);
 		}
 
@@ -156,9 +143,7 @@
 			_platformInfo.SafeDispose();
 
 			_timer.Timeout -= UpdateStatistics;
-
 			_timer.SafeDispose();
-			GraphicsDeviceProfiler.SafeDispose();
 		}
 	}
 }

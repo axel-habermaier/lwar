@@ -359,7 +359,6 @@
     <Compile Include="Rendering\VertexPositionNormal.cs" />
     <Compile Include="Rendering\DebugCamera.cs" />
     <Compile Include="Rendering\VertexPositionNormalTexture.cs" />
-    <Compile Include="Platform\Performance\GraphicsDeviceProfiler.cs" />
     <Compile Include="Math\Circle.cs">
       <DependentUpon>Circle.tt</DependentUpon>
       <AutoGen>True</AutoGen>

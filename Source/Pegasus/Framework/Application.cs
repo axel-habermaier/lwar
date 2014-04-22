@@ -150,28 +150,32 @@
 
 				while (_running)
 				{
-					// Handle all input
-					_root.HandleInput();
-
-					// Update the application logic and the UI
-					Update();
-
-					resolutionManager.Update();
-					_root.UpdateLayout();
-
-					// Update the statistics
-					Window.DebugOverlay.Update(Window.Size);
-					Window.Console.Update(Window.Size);
-
-					// Draw the current frame
-					using (new Measurement(Window.DebugOverlay.GraphicsDeviceProfiler))
 					using (new Measurement(Window.DebugOverlay.CpuFrameTime))
 					{
+						// Handle all input
+						_root.HandleInput();
+
+						// Update the application logic and the UI
+						Update();
+
+						resolutionManager.Update();
+						_root.UpdateLayout();
+
+						// Update the statistics
+						Window.DebugOverlay.Update(Window.Size);
+						Window.Console.Update(Window.Size);
+
+						// Draw the current frame
+						GraphicsDevice.BeginFrame();
+
 						// Let the application perform all custom drawing for the current frame
 						Draw(Window.RenderOutput);
 
 						// Draw the user interface
 						_root.Draw();
+
+						GraphicsDevice.EndFrame();
+						Window.DebugOverlay.GpuFrameTime.AddMeasurement(GraphicsDevice.FrameTime);
 					}
 
 					// Presents the contents of all windows' backbuffers.

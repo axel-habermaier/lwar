@@ -70,14 +70,9 @@
 		/// <param name="graphicsDevice">The graphics device that should be used to construct the dynamic vertex buffer.</param>
 		/// <param name="quadCount">The number of quads that the dynamic vertex buffer should be able to hold.</param>
 		/// <param name="chunkCount">The number of chunks that the dynamic vertex buffer should allocate.</param>
-		/// <param name="requiresSynchronization">
-		///     If true, mapping the vertex buffer and all drawing operations involving the vertex buffer require CPU/GPU
-		///     synchronization.
-		/// </param>
-		public static DynamicVertexBuffer CreateDynamicVertexBuffer(GraphicsDevice graphicsDevice, int quadCount, int chunkCount,
-																	bool requiresSynchronization)
+		public static DynamicVertexBuffer CreateDynamicVertexBuffer(GraphicsDevice graphicsDevice, int quadCount, int chunkCount)
 		{
-			return DynamicVertexBuffer.Create<Vertex>(graphicsDevice, quadCount * 4, chunkCount, requiresSynchronization);
+			return DynamicVertexBuffer.Create<Vertex>(graphicsDevice, quadCount * 4, chunkCount);
 		}
 
 		/// <summary>

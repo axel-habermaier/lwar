@@ -13,9 +13,35 @@
 	public sealed class GraphicsDevice : DisposableObject
 	{
 		/// <summary>
+		///     The maximum number of frames the GPU can be behind the CPU.
+		/// </summary>
+		public const int FrameLag = 3;
+
+		/// <summary>
+		///     The timestamp queries that mark the beginning of a frame.
+		/// </summary>
+		private readonly TimestampQuery[] _beginQueries = new TimestampQuery[FrameLag];
+
+		/// <summary>
 		///     The native graphics device instance.
 		/// </summary>
 		private readonly IntPtr _device;
+
+		/// <summary>
+		///     The timestamp disjoint queries that are used to check whether the timestamps are valid and that allow the
+		///     correct interpretation of the timestamp values.
+		/// </summary>
+		private readonly TimestampDisjointQuery[] _disjointQueries = new TimestampDisjointQuery[FrameLag];
+
+		/// <summary>
+		///     The timestamp queries that mark the end of a frame.
+		/// </summary>
+		private readonly TimestampQuery[] _endQueries = new TimestampQuery[FrameLag];
+
+		/// <summary>
+		///     The synced queries that are used to synchronize the GPU and the CPU.
+		/// </summary>
+		private readonly SyncedQuery[] _syncedQueries = new SyncedQuery[3];
 
 		/// <summary>
 		///     The current primitive type of the input assembler stage.
@@ -26,6 +52,11 @@
 		///     The current scissor rectangle of the rasterizer stage of the device.
 		/// </summary>
 		private Rectangle _scissor;
+
+		/// <summary>
+		///     The index of the synced query that is currently used to synchronize the GPU and the CPU.
+		/// </summary>
+		private int _syncedIndex;
 
 		/// <summary>
 		///     The current viewport of the rasterizer stage of the device.
@@ -45,6 +76,27 @@
 			DepthStencilState.InitializeDefaultInstances(this);
 			BlendState.InitializeDefaultInstances(this);
 			Texture2D.InitializeDefaultInstances(this);
+
+			for (var i = 0; i < FrameLag; ++i)
+			{
+				_syncedQueries[i] = new SyncedQuery(this);
+				_beginQueries[i] = new TimestampQuery(this);
+				_endQueries[i] = new TimestampQuery(this);
+				_disjointQueries[i] = new TimestampDisjointQuery(this);
+
+				_syncedQueries[i].SetName("Synced Query {0}", i);
+				_beginQueries[i].SetName("GPU Profiling Begin Query {0}", i);
+				_endQueries[i].SetName("GPU Profiling End Query {0}", i);
+				_disjointQueries[i].SetName("GPU Profiling Disjoint Query {0}", i);
+
+				_beginQueries[i].Query();
+				_endQueries[i].Query();
+				_disjointQueries[i].Begin();
+				_disjointQueries[i].End();
+				_syncedQueries[i].MarkSyncPoint();
+			}
+
+			_syncedQueries[0].MarkSyncPoint();
 		}
 
 		/// <summary>
@@ -117,10 +169,20 @@
 		}
 
 		/// <summary>
+		///     Gets the GPU frame time in seconds for the last frame.
+		/// </summary>
+		public double FrameTime { get; private set; }
+
+		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_syncedQueries.SafeDisposeAll();
+			_beginQueries.SafeDisposeAll();
+			_endQueries.SafeDisposeAll();
+			_disjointQueries.SafeDisposeAll();
+
 			RasterizerState.DisposeDefaultInstances();
 			SamplerState.DisposeDefaultInstances();
 			DepthStencilState.DisposeDefaultInstances();
@@ -162,6 +224,44 @@
 			GraphicsDeviceStatistics statistics;
 			NativeMethods.GetStatistics(_device, out statistics);
 			return statistics;
+		}
+
+		/// <summary>
+		///     Marks the beginning of a frame, properly synchronizing the GPU and the CPU.
+		/// </summary>
+		internal void BeginFrame()
+		{
+			// Make sure the GPU is not more than FrameLag frames behind, so let's wait for the completion of the synced
+			// query issued FrameLag frames ago
+			_syncedQueries[_syncedIndex].WaitForCompletion();
+
+			// Get the GPU frame time for the frame that we just synced
+			// However, timestamps might be invalid if the GPU changed its clock rate, for instance
+			var result = _disjointQueries[_syncedIndex].Result;
+			if (result.Valid)
+			{
+				var begin = _beginQueries[_syncedIndex].Timestamp;
+				var end = _endQueries[_syncedIndex].Timestamp;
+				FrameTime = (end - begin) / (double)result.Frequency * 1000.0;
+			}
+
+			// Issue timing queries for the current frame
+			_disjointQueries[_syncedIndex].Begin();
+			_beginQueries[_syncedIndex].Query();
+		}
+
+		/// <summary>
+		///     Marks the beginning of a frame, properly synchronizing the GPU and the CPU and updating the GPU frame time.
+		/// </summary>
+		internal void EndFrame()
+		{
+			// Issue timing queries to get frame end time
+			_endQueries[_syncedIndex].Query();
+			_disjointQueries[_syncedIndex].End();
+
+			// We've completed the frame, so issue the synced query for the current frame and update the synced index
+			_syncedQueries[_syncedIndex].MarkSyncPoint();
+			_syncedIndex = (_syncedIndex + 1) % FrameLag;
 		}
 
 		/// <summary>

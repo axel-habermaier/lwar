@@ -57,8 +57,7 @@
 
 			Commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
 			Commands.Bind(Key.Escape.WentDown(), "exit");
-			Commands.Bind(Key.F9.WentDown(), "toggle show_platform_info");
-			Commands.Bind(Key.F10.WentDown(), "toggle show_frame_stats");
+			Commands.Bind(Key.F10.WentDown(), "toggle show_debug_overlay");
 
 			_camera = new Camera2D(GraphicsDevice);
 			_spriteBatch = new SpriteBatch(GraphicsDevice, Assets)

@@ -48,14 +48,8 @@ internal interface ICvars
 	WindowMode WindowMode { get; set; }
 
 	/// <summary>
-	///     Shows or hides the platform information.
+	///     Shows or hides the debug overlay.
 	/// </summary>
 	[Cvar(PlatformInfo.IsDebug), Persistent]
-	bool ShowPlatformInfo { get; set; }
-
-	/// <summary>
-	///     Shows or hides the frame statistics.
-	/// </summary>
-	[Cvar(PlatformInfo.IsDebug), Persistent]
-	bool ShowFrameStats { get; set; }
+	bool ShowDebugOverlay { get; set; }
 }

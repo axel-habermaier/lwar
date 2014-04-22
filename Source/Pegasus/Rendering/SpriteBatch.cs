@@ -143,7 +143,7 @@
 			}
 
 			// Initialize the graphics objects
-			_vertexBuffer = Quad.CreateDynamicVertexBuffer(graphicsDevice, MaxQuads, ChunkCount, requiresSynchronization: true);
+			_vertexBuffer = Quad.CreateDynamicVertexBuffer(graphicsDevice, MaxQuads, ChunkCount);
 			_indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
 			_vertexLayout = Quad.GetInputLayout(graphicsDevice, _vertexBuffer.Buffer, _indexBuffer);
 
@@ -507,9 +507,6 @@
 				output.DrawIndexed(_effect.Default, numIndices, offset, _vertexBuffer.VertexOffset);
 				offset += numIndices;
 			}
-
-			// We're no longer using the current vertex buffer chunk for drawing
-			_vertexBuffer.MarkEndOfUse();
 
 			// Reset the internal state
 			Reset();

@@ -55,3 +55,4 @@ Source/Pegasus Assets/Fonts/FontLoader.cs
 *.ipch
 /Source/lwar UI/UserInterface.cs
 /Source/Pegasus UI/UserInterface.cs
+*.nvuser

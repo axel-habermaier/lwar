@@ -29,10 +29,12 @@
 		/// <summary>
 		///     Sets the name of the graphics object. This method is only available in debug builds.
 		/// </summary>
-		[Conditional("DEBUG")]
-		public void SetName(string name)
+		[Conditional("DEBUG"), StringFormatMethod("name")]
+		public void SetName(string name, params object[] arguments)
 		{
 #if DEBUG
+			name = String.Format(name, arguments);
+
 			Assert.ArgumentNotNullOrWhitespace(name);
 			Name = name;
 			OnRenamed();
