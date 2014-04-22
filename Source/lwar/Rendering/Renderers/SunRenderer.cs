@@ -51,10 +51,10 @@
 			var turbulence = Assets.Load(Textures.SunHeatCubemap);
 			var heat = Assets.Load(Textures.Heat);
 
-			_model = Model.CreateSphere(EntityTemplates.Sun.Radius, 20);
-			_sphereEffect = new SphereEffect(Assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };
+			_model = Model.CreateSphere(GraphicsDevice, EntityTemplates.Sun.Radius, 20);
+			_sphereEffect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };
 
-			_sunEffect = new SunEffect(Assets)
+			_sunEffect = new SunEffect(GraphicsDevice, Assets)
 			{
 				CubeMap = new CubeMapView(turbulence, SamplerState.TrilinearClamp),
 				HeatMap = new Texture2DView(heat, SamplerState.BilinearClampNoMipmaps)
@@ -63,16 +63,16 @@
 			var w = 640;
 			var h = 360;
 			var flags = TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget;
-			var effectTexture = new Texture2D(w, h, SurfaceFormat.Rgba8, flags);
+			var effectTexture = new Texture2D(GraphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
 			effectTexture.SetName("SunRenderer.EffectTexture");
 
-			_effectTarget = new RenderTarget(null, effectTexture);
-			_heatOutput = new RenderOutput() { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, w, h) };
+			_effectTarget = new RenderTarget(GraphicsDevice, null, effectTexture);
+			_heatOutput = new RenderOutput(GraphicsDevice) { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, w, h) };
 
-			_fullscreenQuad = new FullscreenQuad(Assets);
-			_quadEffect = new TexturedQuadEffect(Assets) { World = Matrix.Identity };
+			_fullscreenQuad = new FullscreenQuad(GraphicsDevice, Assets);
+			_quadEffect = new TexturedQuadEffect(GraphicsDevice, Assets) { World = Matrix.Identity };
 
-			_blur = new GaussianBlur(Assets, effectTexture);
+			_blur = new GaussianBlur(GraphicsDevice, Assets, effectTexture);
 		}
 
 		/// <summary>

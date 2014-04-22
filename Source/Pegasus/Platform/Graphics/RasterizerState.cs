@@ -22,7 +22,9 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public RasterizerState()
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
+		public RasterizerState(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice)
 		{
 			NativeMethods.SetRasterizerDescDefaults(out _description);
 		}
@@ -175,20 +177,21 @@
 		/// <summary>
 		///     Initializes the default instances.
 		/// </summary>
-		internal static void InitializeDefaultInstances()
+		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
+		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
 		{
-			CullNone = new RasterizerState()
+			CullNone = new RasterizerState(graphicsDevice)
 			{
 				CullMode = CullMode.None
 			};
 
-			CullClockwise = new RasterizerState()
+			CullClockwise = new RasterizerState(graphicsDevice)
 			{
 				CullMode = CullMode.Back,
 				FrontIsCounterClockwise = true
 			};
 
-			CullCounterClockwise = new RasterizerState()
+			CullCounterClockwise = new RasterizerState(graphicsDevice)
 			{
 				CullMode = CullMode.Back,
 				FrontIsCounterClockwise = false
@@ -216,7 +219,7 @@
 		/// </summary>
 		protected override void Compile()
 		{
-			State = NativeMethods.CreateRasterizerState(GraphicsDevice.Current.NativePtr, ref _description);
+			State = NativeMethods.CreateRasterizerState(GraphicsDevice.NativePtr, ref _description);
 		}
 
 		/// <summary>

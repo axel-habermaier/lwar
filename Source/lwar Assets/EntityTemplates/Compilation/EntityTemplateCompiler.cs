@@ -223,9 +223,10 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 
 					writer.NewLine();
 
-					writer.AppendLine("public static void Initialize(AssetsManager assets)");
+					writer.AppendLine("public static void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)");
 					writer.AppendBlockStatement(() =>
 					{
+						writer.AppendLine("Assert.ArgumentNotNull(graphicsDevice);");
 						writer.AppendLine("Assert.ArgumentNotNull(assets);");
 						writer.NewLine();
 

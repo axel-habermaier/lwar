@@ -29,6 +29,11 @@
 		}
 
 		/// <summary>
+		///     Gets the graphics device that is used for drawing.
+		/// </summary>
+		protected GraphicsDevice GraphicsDevice { get; private set; }
+
+		/// <summary>
 		///     Gets the assets manager that is used to load all required assets.
 		/// </summary>
 		protected AssetsManager Assets { get; private set; }
@@ -36,12 +41,15 @@
 		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public void Initialize(AssetsManager assets)
+		public void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.NotDisposed(this);
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
+			GraphicsDevice = graphicsDevice;
 			Assets = assets;
 			Initialize();
 		}

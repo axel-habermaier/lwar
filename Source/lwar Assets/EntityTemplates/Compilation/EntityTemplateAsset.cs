@@ -6,7 +6,6 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 {
 	using System;
 	using Pegasus.AssetsCompiler.Assets;
-	using Pegasus.Platform.Assets;
 
 	/// <summary>
 	///     Represents a C# file that contains an entity template definition.

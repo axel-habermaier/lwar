@@ -12,10 +12,19 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		protected GraphicsObject()
+		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
+		protected GraphicsObject(GraphicsDevice graphicsDevice)
 		{
+			Assert.ArgumentNotNull(graphicsDevice);
+			GraphicsDevice = graphicsDevice;
+
 			SetName("Unnamed");
 		}
+
+		/// <summary>
+		///     Gets the graphics device this instance belongs to.
+		/// </summary>
+		protected GraphicsDevice GraphicsDevice { get; private set; }
 
 		/// <summary>
 		///     Sets the name of the graphics object. This method is only available in debug builds.
@@ -35,9 +44,9 @@
 
 #if DEBUG
 
-		/// <summary>
-		///   Gets the name of the graphics object. This property is only available in debug builds.
-		/// </summary>
+	/// <summary>
+	///   Gets the name of the graphics object. This property is only available in debug builds.
+	/// </summary>
 		protected string Name { get; private set; }
 
 		/// <summary>

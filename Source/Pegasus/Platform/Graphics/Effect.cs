@@ -28,11 +28,14 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
-		protected Effect(AssetsManager assets)
+		protected Effect(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
-			__context = new EffectContext(assets);
+
+			__context = new EffectContext(graphicsDevice, assets);
 		}
 
 #if DEBUG

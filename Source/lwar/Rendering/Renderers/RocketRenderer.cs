@@ -30,8 +30,8 @@
 		{
 			var texture = Assets.Load(Textures.Rocket);
 
-			_model = Model.CreateQuad(texture.Size);
-			_effect = new TexturedQuadEffect(Assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };
+			_model = Model.CreateQuad(GraphicsDevice, texture.Size);
+			_effect = new TexturedQuadEffect(GraphicsDevice, Assets) { Texture = new Texture2DView(texture, SamplerState.TrilinearClamp) };
 		}
 
 		/// <summary>

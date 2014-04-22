@@ -12,30 +12,34 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		internal Texture2D()
-			: base()
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
+		internal Texture2D(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice)
 		{
 		}
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="size">The size of the texture.</param>
 		/// <param name="format">The format of the texture.</param>
 		/// <param name="flags">The flags that indicates which operations are supported on the texture.</param>
-		public Texture2D(Size size, SurfaceFormat format, TextureFlags flags)
-			: this(size.Width, size.Height, format, flags)
+		public Texture2D(GraphicsDevice graphicsDevice, Size size, SurfaceFormat format, TextureFlags flags)
+			: this(graphicsDevice, size.Width, size.Height, format, flags)
 		{
 		}
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="width">The width of the texture.</param>
 		/// <param name="height">The height of the texture.</param>
 		/// <param name="format">The format of the texture.</param>
 		/// <param name="flags">The flags that indicates which operations are supported on the texture.</param>
-		public Texture2D(int width, int height, SurfaceFormat format, TextureFlags flags)
+		public Texture2D(GraphicsDevice graphicsDevice, int width, int height, SurfaceFormat format, TextureFlags flags)
+			: base(graphicsDevice)
 		{
 			Assert.ArgumentInRange(width, 1, 8192);
 			Assert.ArgumentInRange(height, 1, 8192);
@@ -96,7 +100,8 @@
 		/// <summary>
 		///     Initializes the default instances.
 		/// </summary>
-		internal static unsafe void InitializeDefaultInstances()
+		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
+		internal static unsafe void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
 		{
 			var description = new TextureDescription
 			{
@@ -126,7 +131,7 @@
 					}
 				};
 
-				White = new Texture2D();
+				White = new Texture2D(graphicsDevice);
 				White.Reinitialize(description, surfaces);
 				White.SetName("White");
 			}

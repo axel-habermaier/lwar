@@ -22,7 +22,9 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public DepthStencilState()
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
+		public DepthStencilState(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice)
 		{
 			NativeMethods.SetDepthStencilDescDefaults(out _description);
 		}
@@ -150,11 +152,12 @@
 		/// <summary>
 		///     Initializes the default instances.
 		/// </summary>
-		internal static void InitializeDefaultInstances()
+		/// <param name="graphicsDevice">The graphics device associated with the default instances.</param>
+		internal static void InitializeDefaultInstances(GraphicsDevice graphicsDevice)
 		{
-			DepthEnabled = new DepthStencilState();
-			DepthDisabled = new DepthStencilState() { DepthTestEnabled = false, DepthWriteEnabled = false };
-			DepthRead = new DepthStencilState() { DepthWriteEnabled = false };
+			DepthEnabled = new DepthStencilState(graphicsDevice);
+			DepthDisabled = new DepthStencilState(graphicsDevice) { DepthTestEnabled = false, DepthWriteEnabled = false };
+			DepthRead = new DepthStencilState(graphicsDevice) { DepthWriteEnabled = false };
 
 			DepthEnabled.SetName("DepthEnabled");
 			DepthDisabled.SetName("DepthDisabled");
@@ -178,7 +181,7 @@
 		/// </summary>
 		protected override void Compile()
 		{
-			State = NativeMethods.CreateDepthStencilState(GraphicsDevice.Current.NativePtr, ref _description);
+			State = NativeMethods.CreateDepthStencilState(GraphicsDevice.NativePtr, ref _description);
 		}
 
 		/// <summary>

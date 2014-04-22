@@ -23,9 +23,11 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public Font()
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
+		public Font(GraphicsDevice graphicsDevice)
 		{
-			Texture = new Texture2D();
+			Assert.ArgumentNotNull(graphicsDevice);
+			Texture = new Texture2D(graphicsDevice);
 		}
 
 		/// <summary>

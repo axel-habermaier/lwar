@@ -65,17 +65,19 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <typeparam name="T">The type of the data stored in the vertex buffer.</typeparam>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="elementCount">The number of elements of type T that the buffer should be able to store.</param>
 		/// <param name="chunkCount">The number of chunks that should be allocated.</param>
-		public static DynamicVertexBuffer Create<T>(int elementCount, int chunkCount)
+		public static DynamicVertexBuffer Create<T>(GraphicsDevice graphicsDevice, int elementCount, int chunkCount)
 			where T : struct
 		{
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentInRange(elementCount, 1, UInt16.MaxValue);
 			Assert.ArgumentInRange(chunkCount, 2, Byte.MaxValue);
 
 			return new DynamicVertexBuffer
 			{
-				Buffer = VertexBuffer.Create<T>(elementCount * chunkCount, ResourceUsage.Dynamic),
+				Buffer = VertexBuffer.Create<T>(graphicsDevice, elementCount * chunkCount, ResourceUsage.Dynamic),
 				_chunkCount = chunkCount,
 				_elementCount = elementCount,
 				_chunkSize = elementCount * Marshal.SizeOf(typeof(T))

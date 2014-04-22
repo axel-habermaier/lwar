@@ -16,6 +16,11 @@
 		private const int ViewportBufferSlot = 1;
 
 		/// <summary>
+		///     The graphics device that is used for rendering.
+		/// </summary>
+		private readonly GraphicsDevice _graphicsDevice;
+
+		/// <summary>
 		///     The constant buffer that holds the viewport-related data that is passed to each vertex shader.
 		/// </summary>
 		private readonly ConstantBuffer _viewportBuffer;
@@ -33,9 +38,13 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public RenderOutput()
+		/// <param name="graphicsDevice">The graphics device that should be used for rendering.</param>
+		public RenderOutput(GraphicsDevice graphicsDevice)
 		{
-			_viewportBuffer = new ConstantBuffer(16, ViewportBufferSlot);
+			Assert.ArgumentNotNull(graphicsDevice);
+
+			_graphicsDevice = graphicsDevice;
+			_viewportBuffer = new ConstantBuffer(graphicsDevice, 16, ViewportBufferSlot);
 			_viewportBuffer.SetName("RenderOutput.ViewportBuffer");
 		}
 
@@ -83,8 +92,8 @@
 			Bind();
 			effect.Bind();
 
-			GraphicsDevice.Current.PrimitiveType = primitiveType;
-			GraphicsDevice.Current.Draw(primitiveCount, offset);
+			_graphicsDevice.PrimitiveType = primitiveType;
+			_graphicsDevice.Draw(primitiveCount, offset);
 
 			effect.Unbind();
 		}
@@ -104,8 +113,8 @@
 			Bind();
 			effect.Bind();
 
-			GraphicsDevice.Current.PrimitiveType = primitiveType;
-			GraphicsDevice.Current.DrawIndexed(indexCount, indexOffset, vertexOffset);
+			_graphicsDevice.PrimitiveType = primitiveType;
+			_graphicsDevice.DrawIndexed(indexCount, indexOffset, vertexOffset);
 
 			effect.Unbind();
 		}
@@ -142,7 +151,7 @@
 		private unsafe void Bind()
 		{
 			Assert.NotDisposed(this);
-			Assert.NotNull(GraphicsDevice.Current, "No graphics device has been set.");
+			Assert.NotNull(_graphicsDevice, "No graphics device has been set.");
 			Assert.NotNull(RenderTarget, "No render target has been set.");
 			Assert.NotNull(Camera, "No camera has been set.");
 			Assert.That(Viewport.Width * Viewport.Height > 0, "Viewport has area 0.");
@@ -150,8 +159,8 @@
 			RenderTarget.Bind();
 			Camera.Bind();
 
-			GraphicsDevice.Current.Viewport = Viewport;
-			GraphicsDevice.Current.ScissorArea = ScissorArea;
+			_graphicsDevice.Viewport = Viewport;
+			_graphicsDevice.ScissorArea = ScissorArea;
 
 			if (_viewportHasChanged)
 			{

@@ -34,8 +34,8 @@
 			_texture = Assets.Load(Textures.Phaser);
 			_texture2 = Assets.Load(Textures.PhaserGlow);
 
-			_model = Model.CreateQuad(_texture.Size, new Vector2(_texture.Size.Width / 2.0f, 0));
-			_effect = new TexturedQuadEffect(Assets);
+			_model = Model.CreateQuad(GraphicsDevice, _texture.Size, new Vector2(_texture.Size.Width / 2.0f, 0));
+			_effect = new TexturedQuadEffect(GraphicsDevice, Assets);
 		}
 
 		/// <summary>

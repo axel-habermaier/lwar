@@ -31,8 +31,8 @@
 		{
 			var texture = Assets.Load(Textures.SunHeatCubemap);
 
-			_model = Model.CreateSphere(1, 10);
-			_effect = new SphereEffect(Assets) { SphereTexture = new CubeMapView(texture, SamplerState.BilinearClampNoMipmaps) };
+			_model = Model.CreateSphere(GraphicsDevice, 1, 10);
+			_effect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(texture, SamplerState.BilinearClampNoMipmaps) };
 		}
 
 		/// <summary>

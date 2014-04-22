@@ -27,15 +27,17 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public SkyboxRenderer(AssetsManager assets)
+		public SkyboxRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
 			var cubemap = assets.Load(Textures.SpaceCubemap);
 
-			_model = Model.CreateSkybox();
-			_effect = new SkyboxEffect( assets) { Skybox = new CubeMapView(cubemap, SamplerState.BilinearClampNoMipmaps) };
+			_model = Model.CreateSkybox(graphicsDevice);
+			_effect = new SkyboxEffect(graphicsDevice, assets) { Skybox = new CubeMapView(cubemap, SamplerState.BilinearClampNoMipmaps) };
 		}
 
 		/// <summary>

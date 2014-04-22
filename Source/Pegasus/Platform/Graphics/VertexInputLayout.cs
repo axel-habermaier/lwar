@@ -30,29 +30,35 @@
 		/// <summary>
 		///     Initializes a new instance without an index buffer binding.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="vertexInputBindings">The bindings for the vertex inputs that should belong to the input layout.</param>
-		public VertexInputLayout(params VertexInputBinding[] vertexInputBindings)
-			: this(null, 0, vertexInputBindings)
+		public VertexInputLayout(GraphicsDevice graphicsDevice, params VertexInputBinding[] vertexInputBindings)
+			: this(graphicsDevice, null, 0, vertexInputBindings)
 		{
 		}
 
 		/// <summary>
 		///     Initializes a new instance with an index buffer binding.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="indexBuffer">The input index buffer that should be used by the input layout.</param>
 		/// <param name="vertexInputBindings">The bindings for the vertex inputs that should belong to the input layout.</param>
-		public VertexInputLayout(IndexBuffer indexBuffer, params VertexInputBinding[] vertexInputBindings)
-			: this(indexBuffer, 0, vertexInputBindings)
+		public VertexInputLayout(GraphicsDevice graphicsDevice, IndexBuffer indexBuffer,
+								 params VertexInputBinding[] vertexInputBindings)
+			: this(graphicsDevice, indexBuffer, 0, vertexInputBindings)
 		{
 		}
 
 		/// <summary>
 		///     Initializes a new instance with an index buffer binding.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="indexBuffer">The input index buffer that should be used by the input layout.</param>
 		/// <param name="indexOffset">The offset into the index buffer.</param>
 		/// <param name="vertexInputBindings">The bindings for the vertex inputs that should belong to the input layout.</param>
-		public VertexInputLayout(IndexBuffer indexBuffer, int indexOffset, params VertexInputBinding[] vertexInputBindings)
+		public VertexInputLayout(GraphicsDevice graphicsDevice, IndexBuffer indexBuffer, int indexOffset,
+								 params VertexInputBinding[] vertexInputBindings)
+			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(vertexInputBindings);
 			Assert.ArgumentInRange(indexOffset, 0, Int32.MaxValue);
@@ -63,10 +69,10 @@
 			_indexBuffer = indexBuffer;
 
 			if (indexBuffer == null)
-				_vertexInputLayout = NativeMethods.CreateInputLayout(GraphicsDevice.Current.NativePtr, IntPtr.Zero, 0, IndexSize.SixteenBits,
+				_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, IntPtr.Zero, 0, IndexSize.SixteenBits,
 																	 _vertexInputBindings, _vertexInputBindings.Length);
 			else
-				_vertexInputLayout = NativeMethods.CreateInputLayout(GraphicsDevice.Current.NativePtr, indexBuffer.NativePtr, indexOffset,
+				_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, indexBuffer.NativePtr, indexOffset,
 																	 indexBuffer.IndexSize, _vertexInputBindings, _vertexInputBindings.Length);
 		}
 

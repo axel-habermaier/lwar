@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using Framework;
 
 	/// <summary>
 	///     Represents a combination of different shader programs that control the various pipeline stages of the GPU.
@@ -16,9 +17,11 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="vertexShader">The vertex shader that the shader program should use.</param>
 		/// <param name="fragmentShader">The fragment shader that the shader program should use.</param>
-		public ShaderProgram(VertexShader vertexShader, FragmentShader fragmentShader)
+		public ShaderProgram(GraphicsDevice graphicsDevice, VertexShader vertexShader, FragmentShader fragmentShader)
+			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(vertexShader);
 			Assert.ArgumentNotNull(fragmentShader);
@@ -75,7 +78,7 @@
 			Destroy();
 
 			if (VertexShader.NativePtr != IntPtr.Zero && FragmentShader.NativePtr != IntPtr.Zero)
-				_shaderProgram = NativeMethods.CreateProgram(GraphicsDevice.Current.NativePtr, VertexShader.NativePtr, FragmentShader.NativePtr);
+				_shaderProgram = NativeMethods.CreateProgram(Application.Current.GraphicsDevice.NativePtr, VertexShader.NativePtr, FragmentShader.NativePtr);
 		}
 
 		/// <summary>

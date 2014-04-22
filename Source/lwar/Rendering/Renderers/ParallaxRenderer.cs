@@ -53,12 +53,14 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
 		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public ParallaxRenderer(AssetsManager assets)
+		public ParallaxRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
-			_effect = new ParallaxEffect(assets)
+			_effect = new ParallaxEffect(graphicsDevice, assets)
 			{
 				TextureAtlas = new Texture2DView(assets.Load(Textures.Parallax), SamplerState.BilinearWrapNoMipmaps)
 			};
@@ -114,9 +116,9 @@
 			}
 
 			// Generate the model
-			var vertexBuffer = VertexBuffer.Create(vertices);
-			var indexBuffer = IndexBuffer.Create(indices);
-			var inputLayout = VertexPositionNormal.GetInputLayout(vertexBuffer, indexBuffer);
+			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
+			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
+			var inputLayout = VertexPositionNormal.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
 
 			_model = new Model(vertexBuffer, inputLayout, indexBuffer, indices.Length);
 		}

@@ -10,7 +10,9 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		internal CubeMap()
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
+		internal CubeMap(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice)
 		{
 		}
 	}

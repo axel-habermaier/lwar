@@ -23,7 +23,7 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			_effect = new SphereEffect(Assets);
+			_effect = new SphereEffect(GraphicsDevice, Assets);
 		}
 
 		/// <summary>

@@ -113,13 +113,15 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="assets">The assets manager that should be used to load required assets.</param>
-		public SpriteBatch(AssetsManager assets)
+		public SpriteBatch(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
 
 			WorldMatrix = Matrix.Identity;
-			_effect = new SpriteEffect(assets);
+			_effect = new SpriteEffect(graphicsDevice, assets);
 
 			// Initialize the indices; this can be done once, so after the indices are copied to the index buffer,
 			// we never have to change the index buffer again
@@ -141,11 +143,11 @@
 			}
 
 			// Initialize the graphics objects
-			_vertexBuffer = Quad.CreateDynamicVertexBuffer(MaxQuads, ChunkCount);
-			_indexBuffer = IndexBuffer.Create(indices);
-			_vertexLayout = Quad.GetInputLayout(_vertexBuffer.Buffer, _indexBuffer);
+			_vertexBuffer = Quad.CreateDynamicVertexBuffer(graphicsDevice, MaxQuads, ChunkCount);
+			_indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
+			_vertexLayout = Quad.GetInputLayout(graphicsDevice, _vertexBuffer.Buffer, _indexBuffer);
 
-			_scissorRasterizerState = new RasterizerState()
+			_scissorRasterizerState = new RasterizerState(graphicsDevice)
 			{
 				CullMode = CullMode.None,
 				ScissorEnabled = true

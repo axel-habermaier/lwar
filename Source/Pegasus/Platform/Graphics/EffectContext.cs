@@ -19,12 +19,21 @@
 		private readonly AssetsManager _assets;
 
 		/// <summary>
+		///     The graphics device the graphics resources should be created for.
+		/// </summary>
+		private readonly GraphicsDevice _graphicsDevice;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device the graphics resources should be created for.</param>
 		/// <param name="assets">The assets manager that should be used to load the effect assets.</param>
-		internal EffectContext(AssetsManager assets)
+		internal EffectContext(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
+
+			_graphicsDevice = graphicsDevice;
 			_assets = assets;
 		}
 
@@ -80,7 +89,7 @@
 		public ConstantBuffer CreateConstantBuffer(int size, int slot)
 		{
 			ValidateInitialization();
-			return new ConstantBuffer(size, slot);
+			return new ConstantBuffer(_graphicsDevice, size, slot);
 		}
 
 		/// <summary>
@@ -117,8 +126,8 @@
 		/// <param name="unbind">The action that should be invoked to unbind the required textures.</param>
 		/// <param name="vertexShader">The vertex shader that should be used by the technique.</param>
 		/// <param name="fragmentShader">The fragment shader that should be used by the technique.</param>
-		public EffectTechnique CreateTechnique(Action bind, Action unbind,
-											   AssetIdentifier<VertexShader> vertexShader, AssetIdentifier<FragmentShader> fragmentShader)
+		public EffectTechnique CreateTechnique(Action bind, Action unbind, 
+			AssetIdentifier<VertexShader> vertexShader, AssetIdentifier<FragmentShader> fragmentShader)
 		{
 			Assert.ArgumentNotNull(bind);
 			Assert.ArgumentNotNull(unbind);
@@ -145,6 +154,7 @@
 		[Conditional("DEBUG")]
 		private void ValidateInitialization()
 		{
+			Assert.NotNull(_graphicsDevice, "No graphics device has been set.");
 			Assert.NotNull(_assets, "No assets manager has been set.");
 		}
 	}

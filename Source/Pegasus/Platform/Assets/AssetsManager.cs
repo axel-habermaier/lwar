@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.ComponentModel;
 	using System.IO;
 	using Graphics;
 	using Logging;
@@ -28,6 +27,11 @@
 		private readonly bool _asyncLoading;
 
 		/// <summary>
+		///     The graphics device that is used to load the assets.
+		/// </summary>
+		private readonly GraphicsDevice _graphicsDevice;
+
+		/// <summary>
 		///     The list of loaded assets.
 		/// </summary>
 		private readonly List<AssetInfo> _loadedAssets = new List<AssetInfo>();
@@ -50,9 +54,13 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used to load the assets.</param>
 		/// <param name="asyncLoading">Indicates whether the asset manager should load its asset asynchronously.</param>
-		internal AssetsManager(bool asyncLoading)
+		internal AssetsManager(GraphicsDevice graphicsDevice, bool asyncLoading)
 		{
+			Assert.ArgumentNotNull(graphicsDevice);
+
+			_graphicsDevice = graphicsDevice;
 			_asyncLoading = asyncLoading;
 
 			if (asyncLoading)
@@ -180,7 +188,7 @@
 			if (shaderProgram != null)
 				return shaderProgram;
 
-			shaderProgram = new ShaderProgram(vs, fs);
+			shaderProgram = new ShaderProgram(_graphicsDevice, vs, fs);
 			if (_asyncLoading)
 				_pendingPrograms.Add(shaderProgram);
 			else
@@ -402,19 +410,19 @@
 			switch (identifier.AssetType)
 			{
 				case AssetType.CubeMap:
-					asset = new CubeMap();
+					asset = new CubeMap(_graphicsDevice);
 					break;
 				case AssetType.Texture2D:
-					asset = new Texture2D();
+					asset = new Texture2D(_graphicsDevice);
 					break;
 				case AssetType.FragmentShader:
-					asset = new FragmentShader();
+					asset = new FragmentShader(_graphicsDevice);
 					break;
 				case AssetType.VertexShader:
-					asset = new VertexShader();
+					asset = new VertexShader(_graphicsDevice);
 					break;
 				case AssetType.Font:
-					asset = new Font();
+					asset = new Font(_graphicsDevice);
 					break;
 				default:
 					Log.Die("Unexpected asset type.");

@@ -73,8 +73,10 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		/// <param name="inputDevice">The input device that provides the input for the camera.</param>
-		public GameCamera(LogicalInputDevice inputDevice)
+		public GameCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
+			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(inputDevice);
 

@@ -15,10 +15,11 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="size">The size of the constant buffer's contents in bytes.</param>
 		/// <param name="slot">The slot the constant buffer should be bound to.</param>
-		internal ConstantBuffer(int size, int slot)
-			: base(BufferType.ConstantBuffer, ResourceUsage.Dynamic, IntPtr.Zero, size)
+		internal ConstantBuffer(GraphicsDevice graphicsDevice, int size, int slot)
+			: base(graphicsDevice, BufferType.ConstantBuffer, ResourceUsage.Dynamic, IntPtr.Zero, size)
 		{
 			_slot = slot;
 		}

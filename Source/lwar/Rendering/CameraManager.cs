@@ -33,17 +33,19 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that displays the scene rendered from the point of view of the active camera.</param>
+		/// <param name="graphicsDevice">The graphics device the cameras are created for.</param>
 		/// <param name="inputDevice">The logical input device that provides the user input for the cameras.</param>
-		public CameraManager(Window window, LogicalInputDevice inputDevice)
+		public CameraManager(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
 		{
 			Assert.ArgumentNotNull(window);
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
 
 			_window = window;
 			_inputDevice = inputDevice;
 
-			GameCamera = new GameCamera(inputDevice);
-			_debugCamera = new DebugCamera(inputDevice, InputLayers.Debug);
+			GameCamera = new GameCamera(graphicsDevice, inputDevice);
+			_debugCamera = new DebugCamera(graphicsDevice, inputDevice, InputLayers.Debug);
 
 			ActiveCamera = GameCamera;
 			GameCamera.IsActive = true;

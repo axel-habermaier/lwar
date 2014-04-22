@@ -44,10 +44,13 @@
 		/// <summary>
 		///     Gets a vertex input layout for drawing quads with an appropriate vertex buffer and vertex shader.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used to construct the input layout.</param>
 		/// <param name="vertexBuffer">The vertex buffer that holds the vertex data.</param>
 		/// <param name="indexBuffer">The index buffer that holds the vertex indices.</param>
-		public static VertexInputLayout GetInputLayout(VertexBuffer vertexBuffer, IndexBuffer indexBuffer)
+		public static VertexInputLayout GetInputLayout(GraphicsDevice graphicsDevice, VertexBuffer vertexBuffer,
+													   IndexBuffer indexBuffer)
 		{
+			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(vertexBuffer);
 			Assert.That(Marshal.SizeOf(typeof(Vertex)) == Vertex.Size, "Unexpected unmanaged size.");
 
@@ -58,17 +61,18 @@
 				new VertexInputBinding(vertexBuffer, VertexDataFormat.Color, DataSemantics.Color0, Vertex.Size, 16)
 			};
 
-			return new VertexInputLayout(indexBuffer, inputElements);
+			return new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);
 		}
 
 		/// <summary>
 		///     Creates a dynamic vertex buffer that holds the given number of quads.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used to construct the dynamic vertex buffer.</param>
 		/// <param name="quadCount">The number of quads that the dynamic vertex buffer should be able to hold.</param>
 		/// <param name="chunkCount">The number of chunks that the dynamic vertex buffer should allocate.</param>
-		public static DynamicVertexBuffer CreateDynamicVertexBuffer(int quadCount, int chunkCount)
+		public static DynamicVertexBuffer CreateDynamicVertexBuffer(GraphicsDevice graphicsDevice, int quadCount, int chunkCount)
 		{
-			return DynamicVertexBuffer.Create<Vertex>(quadCount * 4, chunkCount);
+			return DynamicVertexBuffer.Create<Vertex>(graphicsDevice, quadCount * 4, chunkCount);
 		}
 
 		/// <summary>

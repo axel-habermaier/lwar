@@ -34,7 +34,7 @@
 			RenderOutputPanel.InitializeRenderOutput += InitializeRenderOutputPanel;
 			RenderOutputPanel.DisposeRenderOutput += DisposeRenderOutputPanel;
 
-			_camera = new Camera2D();
+			_camera = new Camera2D(Application.Current.GraphicsDevice);
 
 			var font = Application.Current.Assets.Load(Fonts.LiberationMono11);
 			Application.Current.Assets.LoadPending(1000);
@@ -86,18 +86,18 @@
 		private void InitializeRenderOutputPanel(Size panelSize)
 		{
 			// Initialize the color buffer of the render target
-			var colorBuffer = new Texture2D(panelSize, SurfaceFormat.Rgba8, TextureFlags.RenderTarget);
+			var colorBuffer = new Texture2D(Application.Current.GraphicsDevice, panelSize, SurfaceFormat.Rgba8, TextureFlags.RenderTarget);
 			colorBuffer.SetName("MainWindow.RenderOutputPanel.ColorBuffer");
 
 			// Initialize the depth stencil buffer of the render target
-			var depthStencil = new Texture2D(panelSize, SurfaceFormat.Depth24Stencil8, TextureFlags.DepthStencil);
+			var depthStencil = new Texture2D(Application.Current.GraphicsDevice, panelSize, SurfaceFormat.Depth24Stencil8, TextureFlags.DepthStencil);
 			depthStencil.SetName("MainWindow.RenderOutputPanel.DepthStencil");
 
 			// Initialize the render output panel's graphics properties
 			RenderOutputPanel.OutputTexture = colorBuffer;
-			RenderOutputPanel.RenderOutput = new RenderOutput()
+			RenderOutputPanel.RenderOutput = new RenderOutput(Application.Current.GraphicsDevice)
 			{
-				RenderTarget = new RenderTarget(depthStencil, colorBuffer),
+				RenderTarget = new RenderTarget(Application.Current.GraphicsDevice, depthStencil, colorBuffer),
 				Viewport = new Rectangle(0, 0, panelSize)
 			};
 		}

@@ -20,15 +20,17 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="window">The window the swap chain should be bound to.</param>
 		/// <param name="fullscreen">Indicates whether the swap chain should be set to full screen mode.</param>
 		/// <param name="resolution">Indicates the swap chain's default resolution in full screen mode.</param>
-		internal SwapChain(NativeWindow window, bool fullscreen, Size resolution)
+		internal SwapChain(GraphicsDevice graphicsDevice, NativeWindow window, bool fullscreen, Size resolution)
+			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(window);
 
-			_swapChain = NativeMethods.CreateSwapChain(GraphicsDevice.Current.NativePtr, window.NativePtr, fullscreen, resolution.Width, resolution.Height);
-			BackBuffer = new RenderTarget(NativeMethods.GetBackBuffer(_swapChain));
+			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr, fullscreen, resolution.Width, resolution.Height);
+			BackBuffer = new RenderTarget(graphicsDevice, NativeMethods.GetBackBuffer(_swapChain));
 
 			BackBuffer.Bind();
 		}

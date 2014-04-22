@@ -16,6 +16,16 @@
 		private IntPtr _texture;
 
 		/// <summary>
+		///     Initializes a new instance, copying the given byte array to GPU memory.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
+		protected Texture(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice)
+		{
+			Assert.ArgumentNotNull(graphicsDevice);
+		}
+
+		/// <summary>
 		///     Gets the native texture instance.
 		/// </summary>
 		internal IntPtr NativePtr
@@ -71,7 +81,7 @@
 			_texture = IntPtr.Zero;
 
 			Description = description;
-			_texture = NativeMethods.CreateTexture(GraphicsDevice.Current.NativePtr, ref description, surfaces);
+			_texture = NativeMethods.CreateTexture(GraphicsDevice.NativePtr, ref description, surfaces);
 		}
 
 		/// <summary>

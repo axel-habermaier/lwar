@@ -34,8 +34,8 @@
 			_texture = Assets.Load(Textures.Bullet);
 			_texture2 = Assets.Load(Textures.BulletGlow);
 
-			_model = Model.CreateQuad(_texture.Size);
-			_effect = new TexturedQuadEffect(Assets);
+			_model = Model.CreateQuad(GraphicsDevice, _texture.Size);
+			_effect = new TexturedQuadEffect(GraphicsDevice, Assets);
 		}
 
 		/// <summary>

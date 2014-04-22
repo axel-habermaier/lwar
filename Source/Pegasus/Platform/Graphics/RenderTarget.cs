@@ -37,8 +37,10 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="renderTarget">The native render target instance.</param>
-		internal RenderTarget(IntPtr renderTarget)
+		internal RenderTarget(GraphicsDevice graphicsDevice, IntPtr renderTarget)
+			: base(graphicsDevice)
 		{
 			_renderTarget = renderTarget;
 			_ownsNativeObject = false;
@@ -47,9 +49,11 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="depthStencil">The depth stencil buffer that should be bound to the render target.</param>
 		/// <param name="colorBuffers">The color buffers that should be bound to the render target.</param>
-		public RenderTarget(Texture2D depthStencil, params Texture[] colorBuffers)
+		public RenderTarget(GraphicsDevice graphicsDevice, Texture2D depthStencil, params Texture[] colorBuffers)
+			: base(graphicsDevice)
 		{
 			IntPtr[] colorBuffersPtrs = null;
 			var count = 0;
@@ -63,7 +67,7 @@
 			if (depthStencil != null)
 				depthStencilPtr = depthStencil.NativePtr;
 
-			_renderTarget = NativeMethods.CreateRenderTarget(GraphicsDevice.Current.NativePtr, colorBuffersPtrs, count, depthStencilPtr);
+			_renderTarget = NativeMethods.CreateRenderTarget(graphicsDevice.NativePtr, colorBuffersPtrs, count, depthStencilPtr);
 			_ownsNativeObject = true;
 			_depthStencil = depthStencil;
 			_colorBuffers = colorBuffers;

@@ -12,8 +12,9 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public TimestampDisjointQuery()
-			: base(QueryType.TimestampDisjoint)
+		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
+		public TimestampDisjointQuery(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice, QueryType.TimestampDisjoint)
 		{
 		}
 

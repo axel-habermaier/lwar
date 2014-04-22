@@ -59,8 +59,8 @@
 			Commands.Bind(Key.Escape.WentDown(), "exit");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_debug_overlay");
 
-			_camera = new Camera2D();
-			_spriteBatch = new SpriteBatch(Assets)
+			_camera = new Camera2D(GraphicsDevice);
+			_spriteBatch = new SpriteBatch(GraphicsDevice, Assets)
 			{
 				BlendState = BlendState.Premultiplied,
 				DepthStencilState = DepthStencilState.DepthDisabled,

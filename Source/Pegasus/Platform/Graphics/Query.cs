@@ -18,11 +18,13 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="graphicsDevice">The graphics device this instance belongs to.</param>
 		/// <param name="type">The type of the query.</param>
-		protected Query(QueryType type)
+		protected Query(GraphicsDevice graphicsDevice, QueryType type)
+			: base(graphicsDevice)
 		{
 			Assert.ArgumentInRange(type);
-			_query = NativeMethods.CreateQuery(GraphicsDevice.Current.NativePtr, type);
+			_query = NativeMethods.CreateQuery(graphicsDevice.NativePtr, type);
 		}
 
 		/// <summary>

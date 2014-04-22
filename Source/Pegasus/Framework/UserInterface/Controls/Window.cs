@@ -82,17 +82,17 @@
 		internal Window(string title, Vector2i position, Size size, WindowMode mode)
 		{
 			Assert.ArgumentNotNull(title);
-			Assert.NotNull(GraphicsDevice.Current, "The application's graphics device has not yet been initialized.");
 
+			var graphicsDevice = Application.Current.GraphicsDevice;
 			_window = new NativeWindow(title, position, size, mode);
-			SwapChain = new SwapChain(_window, false, _window.Size);
-			_output = new RenderOutput()
+			SwapChain = new SwapChain(graphicsDevice, _window, false, _window.Size);
+			_output = new RenderOutput(graphicsDevice)
 			{
 				RenderTarget = SwapChain.BackBuffer,
-				Camera = new Camera2D()
+				Camera = new Camera2D(graphicsDevice)
 			};
 
-			_spriteBatch = new SpriteBatch(Application.Current.Assets)
+			_spriteBatch = new SpriteBatch(graphicsDevice, Application.Current.Assets)
 			{
 				BlendState = BlendState.Premultiplied,
 				DepthStencilState = DepthStencilState.DepthDisabled,

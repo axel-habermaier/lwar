@@ -37,7 +37,9 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public Camera3D()
+		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
+		public Camera3D(GraphicsDevice graphicsDevice)
+			: base(graphicsDevice)
 		{
 			_nearDistance = 1.0f;
 			_farDistance = 1000.0f;
