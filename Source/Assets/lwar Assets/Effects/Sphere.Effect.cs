@@ -116,7 +116,7 @@
 			var maxDistance = 70;
 			var distance = Min(Distance(worldPosition, ImpactPosition) / maxDistance, 1.0f);
 
-			color = new Vector4(0,0,0,0);// SphereTexture.Sample(normal) * (1 - distance) * TimeToLive;
+			color = SphereTexture.Sample(normal) * (1 - distance) * TimeToLive;
 		}
 	}
 }

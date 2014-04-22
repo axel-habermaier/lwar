@@ -190,10 +190,11 @@ pgSamplerState* pgCreateSamplerState(pgGraphicsDevice* device, pgSamplerDesc* de
 
 pgVoid pgDestroySamplerState(pgSamplerState* samplerState)
 {
+	int i;
 	if (samplerState == NULL)
 		return;
 
-	for (int i = 0; i < PG_TEXTURE_SLOT_COUNT; ++i)
+	for (i = 0; i < PG_TEXTURE_SLOT_COUNT; ++i)
 	{
 		if (samplerState->device->samplers[i] == samplerState)
 			samplerState->device->samplers[i] = NULL;

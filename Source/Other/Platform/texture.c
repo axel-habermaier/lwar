@@ -30,10 +30,11 @@ pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDescription* descr
 
 pgVoid pgDestroyTexture(pgTexture* texture)
 {
+	int i;
 	if (texture == NULL)
 		return;
 
-	for (int i = 0; i < PG_TEXTURE_SLOT_COUNT; ++i)
+	for (i = 0; i < PG_TEXTURE_SLOT_COUNT; ++i)
 	{
 		if (texture->device->textures[i] == texture)
 			texture->device->textures[i] = NULL;

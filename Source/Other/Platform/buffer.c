@@ -22,12 +22,13 @@ pgBuffer* pgCreateBuffer(pgGraphicsDevice* device, pgBufferType type, pgResource
 
 pgVoid pgDestroyBuffer(pgBuffer* buffer)
 {
+	int i;
 	if (buffer == NULL)
 		return;
 
 	if (buffer->type == PG_CONSTANT_BUFFER)
 	{
-		for (int i = 0; i < PG_CONSTANT_BUFFER_SLOT_COUNT; ++i)
+		for (i = 0; i < PG_CONSTANT_BUFFER_SLOT_COUNT; ++i)
 		{
 			if (buffer->device->constantBuffers[i] == buffer)
 				buffer->device->constantBuffers[i] = NULL;

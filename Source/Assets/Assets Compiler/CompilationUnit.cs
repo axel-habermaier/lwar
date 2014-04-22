@@ -121,13 +121,17 @@
 		/// </summary>
 		public bool Compile()
 		{
-			var compilers = CreateTypeInstances<IAssetCompiler>();
+			IAssetCompiler[] compilers = null;
 
 			try
 			{
 				if (Configuration.XamlFilesOnly)
-					return compilers.OfType<XamlCompiler>().Single().Compile(_assets);
+				{
+					compilers = new [] { new XamlCompiler() };
+					return compilers[0].Compile(_assets);
+				}
 
+				compilers = CreateTypeInstances<IAssetCompiler>();
 				var success = true;
 
 				foreach (var compiler in compilers)
@@ -163,15 +167,17 @@
 		{
 			Log.Info("Cleaning compiled assets and temporary files...");
 
-			var compilers = CreateTypeInstances<IAssetCompiler>();
+			IAssetCompiler[] compilers = null;
 			try
 			{
 				if (Configuration.XamlFilesOnly)
 				{
-					compilers.OfType<XamlCompiler>().Single().Clean(_assets);
+					compilers = new [] { new XamlCompiler() };
+					compilers[0].Clean(_assets);
 					return;
 				} 
 
+				compilers = CreateTypeInstances<IAssetCompiler>();
 				foreach (var compiler in compilers)
 					compiler.Clean(_assets);
 			}
