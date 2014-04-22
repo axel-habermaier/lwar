@@ -134,7 +134,7 @@
 			Name = name;
 
 			using (GraphicsDevice = new GraphicsDevice())
-			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: true))
+			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
 			using (Window = new AppWindow(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
 			{
@@ -148,7 +148,7 @@
 				// Let the application initialize itself
 				Initialize();
 
-				Assets.LoadPending(1000);
+				//Assets.LoadPending(1000);
 				while (_running)
 				{
 					using (new Measurement(Window.DebugOverlay.CpuFrameTime))

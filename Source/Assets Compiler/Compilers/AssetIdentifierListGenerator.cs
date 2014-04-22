@@ -31,14 +31,12 @@
 		{
 			Assert.ArgumentNotNull(assets);
 
-			var i = 0u;
 			_assets = assets.Where(asset => asset.IdentifierType != null && asset.IdentifierName != null)
 							.Select(asset => new AssetInfo
 							{
 								Asset = asset,
 								Name = GetAssetPath(asset),
 								IdentifierType = asset.IdentifierType,
-								Identifier = i++
 							})
 							.ToArray();
 
@@ -127,11 +125,10 @@
 					writer.AppendBlockStatement(() =>
 					{
 						foreach (var asset in currentAssets)
-							writer.AppendLine("{0} = new AssetIdentifier<{1}>(\"{2}.{3}{7}\", {4}, {5}, AssetType.{6});",
+							writer.AppendLine("{0} = new AssetIdentifier<{1}>(AssetType.{5}, \"{2}.{3}{4}\");",
 											  EscapeName(asset.Asset.IdentifierName), asset.IdentifierType,
 											  asset.Asset.RelativePathWithoutExtension, Configuration.AssetsProject.Name,
-											  Configuration.AssetProjectIdentifier, asset.Identifier, asset.Asset.AssetType,
-											  PlatformInfo.AssetExtension);
+											  PlatformInfo.AssetExtension, asset.Asset.AssetType);
 					});
 				}
 			};
@@ -171,11 +168,6 @@
 			public string IdentifierType;
 
 			/// <summary>
-			///     The unique identifier of the asset.
-			/// </summary>
-			public uint Identifier;
-
-			/// <summary>
 			///     The remaining name of the asset.
 			/// </summary>
 			public string Name;
@@ -190,7 +182,6 @@
 					Asset = Asset,
 					IdentifierType = IdentifierType,
 					Name = Name.Substring(Name.IndexOf('/') + 1),
-					Identifier = Identifier
 				};
 			}
 		}

@@ -11,31 +11,21 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="assetName">The name of the asset.</param>
-		/// <param name="projectIdentifier">The identifier of the assets project the asset belongs to.</param>
-		/// <param name="assetIdentifier">The unique identifier of the asset within its asset project.</param>
 		/// <param name="assetType">The type of the asset.</param>
-		public AssetIdentifier(string assetName, byte projectIdentifier, ushort assetIdentifier, AssetType assetType)
+		/// <param name="assetName">The name of the asset.</param>
+		public AssetIdentifier(AssetType assetType, string assetName)
 			: this()
 		{
 			Assert.ArgumentNotNullOrWhitespace(assetName);
-			Assert.ArgumentInRange(assetType);
 
-			AssetName = assetName;
-			ProjectIdentifier = projectIdentifier;
-			Identifier = assetIdentifier;
 			AssetType = assetType;
+			AssetName = assetName;
+			HashCode = assetName.GetHashCode();
+
+#if DEBUG
+			AssetHashCollision.Validate(AssetName, HashCode);
+#endif
 		}
-
-		/// <summary>
-		///     Gets the identifier of the assets project the asset belongs to.
-		/// </summary>
-		internal byte ProjectIdentifier { get; private set; }
-
-		/// <summary>
-		///     Gets the unique identifier of the asset within its asset project.
-		/// </summary>
-		internal ushort Identifier { get; private set; }
 
 		/// <summary>
 		///     Gets the type of the asset.
@@ -43,17 +33,14 @@
 		internal AssetType AssetType { get; private set; }
 
 		/// <summary>
+		///     The application-wide unique hash code of the asset.
+		/// </summary>
+		internal int HashCode { get; private set; }
+
+		/// <summary>
 		///     Gets the name of the asset.
 		/// </summary>
 		internal string AssetName { get; private set; }
-
-		/// <summary>
-		///     Gets the globally unique identifier of the asset.
-		/// </summary>
-		internal uint GlobalIdentifier
-		{
-			get { return (uint)((Identifier << 16) | ((byte)AssetType << 8) | (ProjectIdentifier)); }
-		}
 
 		/// <summary>
 		///     Indicates whether the current object is equal to another object of the same type.
@@ -61,8 +48,7 @@
 		/// <param name="other">An object to compare with this object.</param>
 		public bool Equals(AssetIdentifier<T> other)
 		{
-			return ProjectIdentifier == other.ProjectIdentifier &&
-				   Identifier == other.Identifier && AssetType == other.AssetType;
+			return HashCode == other.HashCode;
 		}
 
 		/// <summary>
@@ -81,13 +67,7 @@
 		/// </summary>
 		public override int GetHashCode()
 		{
-			unchecked
-			{
-				var hashCode = ProjectIdentifier.GetHashCode();
-				hashCode = (hashCode * 397) ^ Identifier.GetHashCode();
-				hashCode = (hashCode * 397) ^ (int)AssetType;
-				return hashCode;
-			}
+			return HashCode;
 		}
 
 		/// <summary>

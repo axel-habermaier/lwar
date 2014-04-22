@@ -340,15 +340,15 @@
 		///     Searches the given asset info list for an asset with the given identifier.
 		/// </summary>
 		/// <param name="infos">The list of asset infos that should be searched.</param>
-		/// <param name="identifier">The identifier that should be searched for.</param>
-		private static IDisposable Find(List<AssetInfo> infos, uint identifier)
+		/// <param name="hashCode">The hash code of the asset that should be searched for.</param>
+		private static IDisposable Find(List<AssetInfo> infos, int hashCode)
 		{
 			if (infos == null)
 				return null;
 
 			foreach (var info in infos)
 			{
-				if (info.Identifier == identifier)
+				if (info.HashCode == hashCode)
 					return info.Asset;
 			}
 
@@ -358,10 +358,10 @@
 		/// <summary>
 		///     Searches the lists of pending and loaded assets for an asset with the given identifier.
 		/// </summary>
-		/// <param name="identifier">The identifier that should be searched for.</param>
-		private IDisposable Find(uint identifier)
+		/// <param name="hashCode">The hash code of the asset that should be searched for.</param>
+		private IDisposable Find(int hashCode)
 		{
-			return Find(_pendingAssets, identifier) ?? Find(_loadedAssets, identifier);
+			return Find(_pendingAssets, hashCode) ?? Find(_loadedAssets, hashCode);
 		}
 
 		/// <summary>
@@ -403,7 +403,7 @@
 			where T : class, IDisposable
 		{
 			// Check if we've loaded the requested asset before
-			var asset = Find(identifier.GlobalIdentifier);
+			var asset = Find(identifier.HashCode);
 			if (asset != null)
 				return asset;
 
@@ -656,9 +656,9 @@
 			public string Path { get; private set; }
 
 			/// <summary>
-			///     Gets the globally unique identifier of the asset.
+			///     Gets the globally unique hash code of the asset.
 			/// </summary>
-			public uint Identifier { get; private set; }
+			public int HashCode { get; private set; }
 
 			/// <summary>
 			///     Gets the type of the asset.
@@ -679,7 +679,7 @@
 				return new AssetInfo
 				{
 					Path = identifier.AssetName,
-					Identifier = identifier.GlobalIdentifier,
+					HashCode = identifier.HashCode,
 					Type = identifier.AssetType,
 					Asset = asset
 				};
