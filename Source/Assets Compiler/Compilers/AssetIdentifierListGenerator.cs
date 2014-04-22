@@ -18,6 +18,11 @@
 		private readonly AssetInfo[] _assets;
 
 		/// <summary>
+		///  Indicates whether the asset list has changed since the last compilation.
+		/// </summary>
+		private readonly bool _hasChanged = true;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="assets">The assets that have been compiled.</param>
@@ -32,6 +37,20 @@
 								IdentifierType = asset.IdentifierType
 							})
 							.ToArray();
+
+			try
+			{
+				var path = Path.Combine(Configuration.TempDirectory, String.Format("AssetList.txt"));
+				var assetList = String.Join(Environment.NewLine, _assets.OrderBy(a => a.Name).Select(a => a.Name));
+				if (!File.Exists(path) || File.ReadAllText(path) != assetList)
+					File.WriteAllText(path, assetList);
+				else
+					_hasChanged = false;
+			}
+			catch (IOException)
+			{
+				// We have to recompile
+			}
 		}
 
 		/// <summary>
@@ -40,6 +59,9 @@
 		/// <param name="namespaceName">The name of the namespace the classes should be placed in.</param>
 		public void Generate(string namespaceName)
 		{
+			if (!_hasChanged)
+				return;
+			 
 			var writer = new CodeWriter();
 			writer.WriterHeader();
 			writer.AppendLine("using System;");
