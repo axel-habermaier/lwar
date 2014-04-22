@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Represents a shader that controls a programmable stage of the graphics pipeline.
 	/// </summary>
-	internal abstract class Shader : GraphicsObject
+	public abstract class Shader : GraphicsObject
 	{
 		/// <summary>
 		///     The native shader instance.
@@ -26,7 +26,7 @@
 		/// <summary>
 		///     Raised when the underlying native shader instance has been reinitialized.
 		/// </summary>
-		public event Action Reinitialized;
+		internal event Action Reinitialized;
 
 		/// <summary>
 		///     Destroys the native shader instance.

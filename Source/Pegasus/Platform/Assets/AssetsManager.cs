@@ -46,7 +46,7 @@
 		/// <param name="assetName">The name of the asset that should be loaded.</param>
 		private static void Load(Asset asset, string assetName)
 		{
-			var path = Path.Combine(AssetDirectory, assetName) + PlatformInfo.AssetExtension;
+			var path = Path.Combine(AssetDirectory, assetName);
 			using (var reader = BufferReader.Create(File.ReadAllBytes(path)))
 				asset.Load(reader, assetName);
 		}
@@ -188,21 +188,19 @@
 		/// <summary>
 		///     Loads a vertex shader.
 		/// </summary>
-		/// <param name="shaderFilePath">The path to the vertex shader file.</param>
-		internal VertexShader LoadVertexShader(string shaderFilePath)
+		/// <param name="shader">The identifier of the vertex shader asset that should be loaded.</param>
+		internal VertexShader LoadVertexShader(AssetIdentifier<VertexShader> shader)
 		{
-			Assert.ArgumentNotNullOrWhitespace(shaderFilePath);
-			return Load<VertexShaderAsset>(shaderFilePath).Shader;
+			return Load<VertexShaderAsset>(shader.AssetName).Shader;
 		}
 
 		/// <summary>
 		///     Loads a fragment shader.
 		/// </summary>
-		/// <param name="shaderFilePath">The path to the fragment shader file.</param>
-		internal FragmentShader LoadFragmentShader(string shaderFilePath)
+		/// <param name="shader">The identifier of the fragment shader asset that should be loaded.</param>
+		internal FragmentShader LoadFragmentShader(AssetIdentifier<FragmentShader> shader)
 		{
-			Assert.ArgumentNotNullOrWhitespace(shaderFilePath);
-			return Load<FragmentShaderAsset>(shaderFilePath).Shader;
+			return Load<FragmentShaderAsset>(shader.AssetName).Shader;
 		}
 
 		/// <summary>

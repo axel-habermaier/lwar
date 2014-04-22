@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.AssetsCompiler.Assets
 {
 	using System;
+	using Platform.Assets;
 
 	/// <summary>
 	///     Represents a Xaml file that is cross-compiled into C# code targeting the Pegasus UI library.
@@ -14,6 +15,14 @@
 		public XamlAsset(string relativePath)
 			: base(relativePath)
 		{
+		}
+
+		/// <summary>
+		///     Gets the type of the asset.
+		/// </summary>
+		public override AssetType AssetType
+		{
+			get { return AssetType.Xaml; }
 		}
 	}
 }

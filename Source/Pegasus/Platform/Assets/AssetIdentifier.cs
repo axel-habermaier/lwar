@@ -9,6 +9,40 @@
 		where T : class
 	{
 		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="assetName">The name of the asset.</param>
+		/// <param name="projectIdentifier">The identifier of the assets project the asset belongs to.</param>
+		/// <param name="assetIdentifier">The unique identifier of the asset within its asset project.</param>
+		/// <param name="assetType">The type of the asset.</param>
+		public AssetIdentifier(string assetName, byte projectIdentifier, ushort assetIdentifier, AssetType assetType)
+			: this()
+		{
+			Assert.ArgumentNotNullOrWhitespace(assetName);
+			Assert.ArgumentInRange(assetType);
+
+			AssetName = assetName;
+			ProjectIdentifier = projectIdentifier;
+			Identifier = assetIdentifier;
+			AssetType = assetType;
+		}
+
+		/// <summary>
+		///     Gets the identifier of the assets project the asset belongs to.
+		/// </summary>
+		public byte ProjectIdentifier { get; private set; }
+
+		/// <summary>
+		///     Gets the unique identifier of the asset within its asset project.
+		/// </summary>
+		public ushort Identifier { get; private set; }
+
+		/// <summary>
+		///     Gets the type of the asset.
+		/// </summary>
+		public AssetType AssetType { get; private set; }
+
+		/// <summary>
 		///     Gets the name of the asset.
 		/// </summary>
 		internal string AssetName { get; private set; }
@@ -19,17 +53,8 @@
 		/// <param name="other">An object to compare with this object.</param>
 		public bool Equals(AssetIdentifier<T> other)
 		{
-			return string.Equals(AssetName, other.AssetName);
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="assetName">The name of the asset.</param>
-		public static implicit operator AssetIdentifier<T>(string assetName)
-		{
-			Assert.ArgumentNotNullOrWhitespace(assetName);
-			return new AssetIdentifier<T> { AssetName = assetName };
+			return string.Equals(AssetName, other.AssetName) && ProjectIdentifier == other.ProjectIdentifier &&
+				Identifier == other.Identifier && AssetType == other.AssetType;
 		}
 
 		/// <summary>
@@ -48,7 +73,14 @@
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return (AssetName != null ? AssetName.GetHashCode() : 0);
+			unchecked
+			{
+				var hashCode = ProjectIdentifier.GetHashCode();
+				hashCode = (hashCode * 397) ^ Identifier.GetHashCode();
+				hashCode = (hashCode * 397) ^ (int)AssetType;
+				hashCode = (hashCode * 397) ^ (AssetName != null ? AssetName.GetHashCode() : 0);
+				return hashCode;
+			}
 		}
 
 		/// <summary>

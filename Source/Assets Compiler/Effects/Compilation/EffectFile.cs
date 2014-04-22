@@ -9,6 +9,7 @@
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using Platform.Graphics;
+	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -79,7 +80,15 @@
 		{
 			var content = new byte[2 * 1024 * 1024];
 
-			using (var asset = new ShaderAsset(effect.FullName, shader.Name, shader.Type))
+			ShaderAsset asset = null;
+			if (shader.Type == ShaderType.FragmentShader)
+				asset = new FragmentShaderAsset(effect.FullName, shader.Name);
+			else if (shader.Type == ShaderType.VertexShader)
+				asset = new VertexShaderAsset(effect.FullName, shader.Name);
+			else
+				Log.Die("Unsupported shader type.");
+
+			using (asset)
 			using (var buffer = BufferWriter.Create(content))
 			{
 				if (shader.Type == ShaderType.VertexShader)

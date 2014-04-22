@@ -53,7 +53,7 @@
 				foreach (var constant in constantBuffer.Constants)
 					Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
 			}, true);
-			Writer.Newline();
+			Writer.NewLine();
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@
 					Writer.AppendLine("{0} {1}{2} = {3};", ToShaderType(input.Type),
 									  Configuration.ReservedInternalIdentifierPrefix, input.Name, Escape(input.Name));
 
-				Writer.Newline();
+				Writer.NewLine();
 				Shader.MethodBody.AcceptVisitor(this);
 			});
 		}

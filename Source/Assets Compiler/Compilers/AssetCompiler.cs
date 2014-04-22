@@ -17,6 +17,14 @@
 		where TAsset : Asset
 	{
 		/// <summary>
+		///     Gets the additional assets created by the compiler.
+		/// </summary>
+		public virtual IEnumerable<Asset> AdditionalAssets
+		{
+			get { return Enumerable.Empty<Asset>(); }
+		}
+
+		/// <summary>
 		///     Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>

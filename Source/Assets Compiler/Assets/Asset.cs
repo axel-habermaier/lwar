@@ -4,6 +4,7 @@
 	using System.IO;
 	using Compilers;
 	using Platform;
+	using Platform.Assets;
 	using Platform.Memory;
 
 	/// <summary>
@@ -54,6 +55,14 @@
 		public string FileName
 		{
 			get { return Path.GetFileName(RelativePath); }
+		}
+
+		/// <summary>
+		///     Gets the type of the asset.
+		/// </summary>
+		public virtual AssetType AssetType
+		{
+			get { return AssetType.Unknown; }
 		}
 
 		/// <summary>

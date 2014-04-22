@@ -62,7 +62,7 @@
 				_writer.AppendLine("using Pegasus.Platform.Graphics;");
 				foreach (var xamlNamespace in xamlFile.Namespaces)
 					_writer.AppendLine("using {0};", xamlNamespace);
-				_writer.Newline();
+				_writer.NewLine();
 
 				var baseType = _xamlRoot.Attribute("Type").Value;
 				_writer.AppendLine("public partial class {0} : {1}", className, baseType);
@@ -75,7 +75,7 @@
 					_writer.AppendLine("/// </summary>");
 					_writer.AppendLine("public {0}()", className);
 					_writer.AppendBlockStatement(() => _writer.AppendLine("InitializeComponents();"));
-					_writer.Newline();
+					_writer.NewLine();
 
 					_writer.AppendLine("/// <summary>");
 					_writer.AppendLine("///     Initializes the UI element's children.");
@@ -85,7 +85,7 @@
 				});
 			});
 
-			_writer.Newline();
+			_writer.NewLine();
 		}
 
 		/// <summary>
@@ -107,7 +107,7 @@
 			}
 
 			if (hasMembers)
-				_writer.Newline();
+				_writer.NewLine();
 		}
 
 		/// <summary>
@@ -241,7 +241,7 @@
 
 			_writer.AppendLine("{0}.{3}.{1}({2});", parent, element.Attribute("Method").Value,
 							   String.Join(", ", parameters), element.Attribute("TargetProperty").Value);
-			_writer.Newline();
+			_writer.NewLine();
 		}
 
 		/// <summary>

@@ -44,6 +44,11 @@
 		}
 
 		/// <summary>
+		///     Gets the identifier of the asset project that is used to distinguish assets from different projects.
+		/// </summary>
+		public static uint AssetProjectIdentifier { get; set; }
+
+		/// <summary>
 		///     Gets the path to the compiled assets project.
 		/// </summary>
 		public static string AssetListPath

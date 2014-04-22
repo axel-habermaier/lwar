@@ -48,13 +48,13 @@
 		{
 			AddIndentation();
 			_buffer.AppendFormat(format, arguments);
-			Newline();
+			NewLine();
 		}
 
 		/// <summary>
 		///     Appends a new line to the buffer.
 		/// </summary>
-		public void Newline()
+		public void NewLine()
 		{
 			_buffer.AppendLine();
 			_atBeginningOfLine = true;
@@ -66,7 +66,7 @@
 		public void EnsureNewLine()
 		{
 			if (!_atBeginningOfLine)
-				Newline();
+				NewLine();
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@
 			if (terminateWithSemicolon)
 				Append(";");
 
-			Newline();
+			NewLine();
 		}
 
 		/// <summary>
@@ -192,7 +192,7 @@
 			AppendLine(commentToken + "     the code is regenerated.");
 			AppendLine(commentToken + " </auto-generated>");
 			AppendLine(commentToken + "------------------------------------------------------------------------------");
-			Newline();
+			NewLine();
 		}
 
 		/// <summary>

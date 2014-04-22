@@ -10,6 +10,11 @@ namespace Pegasus.AssetsCompiler.Compilers
 	internal interface IAssetCompiler : IDisposable
 	{
 		/// <summary>
+		///     Gets the additional assets created by the compiler.
+		/// </summary>
+		IEnumerable<Asset> AdditionalAssets { get; }
+
+		/// <summary>
 		///     Compiles all assets of the compiler's asset source type. Returns true to indicate that the compilation of all
 		///     assets has been successful.
 		/// </summary>

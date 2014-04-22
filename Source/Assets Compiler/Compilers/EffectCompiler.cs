@@ -23,19 +23,38 @@
 	internal class EffectCompiler : AssetCompiler<ShaderAsset>
 	{
 		/// <summary>
+		///     The shader assets that are compiled.
+		/// </summary>
+		private readonly ShaderAsset[] _shaderAssets;
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		public EffectCompiler()
+		{
+			_shaderAssets = CreateAssets().ToArray();
+		}
+
+		/// <summary>
+		///     Gets the additional assets created by the compiler.
+		/// </summary>
+		public override IEnumerable<Asset> AdditionalAssets
+		{
+			get { return _shaderAssets; }
+		}
+
+		/// <summary>
 		///     Compiles all assets of the compiler's asset source type. Returns true to indicate that the compilation of all
 		///     assets has been successful.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
 		public override bool Compile(IEnumerable<Asset> assets)
 		{
-			var shaderAssets = CreateAssets().ToArray();
-
 			try
 			{
 				var csharpAssets = assets.OfType<EffectAsset>().ToArray();
 
-				if (DetermineAction(shaderAssets, csharpAssets) == CompilationAction.Skip)
+				if (DetermineAction(_shaderAssets, csharpAssets) == CompilationAction.Skip)
 					Log.Info("Skipping effect compilation (no changes detected).");
 				else
 				{
@@ -53,7 +72,7 @@
 				}
 
 				var success = true;
-				foreach (var asset in shaderAssets)
+				foreach (var asset in _shaderAssets)
 					success &= Compile(asset);
 
 				return success;
@@ -62,10 +81,6 @@
 			{
 				Log.Error("Effect cross-compilation failed: {0}", e.Message);
 				return false;
-			}
-			finally
-			{
-				shaderAssets.SafeDisposeAll();
 			}
 		}
 
@@ -90,6 +105,14 @@
 			{
 				shaderAssets.SafeDisposeAll();
 			}
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_shaderAssets.SafeDisposeAll();
 		}
 
 		/// <summary>
@@ -128,7 +151,26 @@
 				   from method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
 				   let attribute = method.GetCustomAttributes(false).OfType<ShaderAttribute>().SingleOrDefault()
 				   where attribute != null
-				   select new ShaderAsset(type.FullName, method.Name, attribute.ShaderType);
+				   select CreateShaderAsset(type.FullName, method.Name, attribute.ShaderType);
+		}
+
+		/// <summary>
+		///     Initializes a shader asset instance.
+		/// </summary>
+		/// <param name="effect">The name of the effect the shader belongs to.</param>
+		/// <param name="name">The name of the shader method.</param>
+		/// <param name="type">The type of the shader.</param>
+		private static ShaderAsset CreateShaderAsset(string effect, string name, ShaderType type)
+		{
+			ShaderAsset asset = null;
+			if (type == ShaderType.FragmentShader)
+				asset = new FragmentShaderAsset(effect, name);
+			else if (type == ShaderType.VertexShader)
+				asset = new VertexShaderAsset(effect, name);
+			else
+				Log.Die("Unsupported shader type.");
+
+			return asset;
 		}
 
 		/// <summary>
@@ -188,7 +230,7 @@
 		private static void CompileGlslShader(BufferWriter buffer, string source)
 		{
 			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
-				"#extension GL_ARB_separate_shader_objects : enable\n" + source;
+						 "#extension GL_ARB_separate_shader_objects : enable\n" + source;
 
 			var code = Encoding.UTF8.GetBytes(shader);
 			buffer.WriteInt32(code.Length + 1);

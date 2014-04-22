@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Describes the type of an asset.
 	/// </summary>
-	internal enum AssetType : byte
+	public enum AssetType : byte
 	{
 		/// <summary>
 		///     Indicates that the type of the asset is unknown.
@@ -35,6 +35,16 @@
 		/// <summary>
 		///     Indicates that the asset is a 2D texture.
 		/// </summary>
-		Texture2D = 5
+		Texture2D = 5,
+
+		/// <summary>
+		///     Indicates that the asset is an effect.
+		/// </summary>
+		Effect = 6,
+
+		/// <summary>
+		///     Indicates that the asset is a Xaml resource.
+		/// </summary>
+		Xaml = 7,
 	}
 }

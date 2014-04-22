@@ -7,7 +7,7 @@
 	/// <summary>
 	///     A fragment shader is a program that controls the fragment-shader stage.
 	/// </summary>
-	internal sealed class FragmentShader : Shader
+	public sealed class FragmentShader : Shader
 	{
 		/// <summary>
 		///     Reinitializes the shader.

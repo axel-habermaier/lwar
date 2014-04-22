@@ -6,7 +6,6 @@
 	using System.Linq;
 	using Assets;
 	using CSharp;
-	using Platform.Graphics;
 	using Platform.Memory;
 
 	/// <summary>
@@ -54,7 +53,7 @@
 			_writer.AppendLine("using Pegasus.Platform.Assets;");
 			_writer.AppendLine("using Pegasus.Platform.Graphics;");
 			_writer.AppendLine("using Pegasus.Platform.Memory;");
-			_writer.Newline();
+			_writer.NewLine();
 		}
 
 		/// <summary>
@@ -101,7 +100,7 @@
 				_writer.AppendBlockStatement(GenerateClass);
 			});
 
-			_writer.Newline();
+			_writer.NewLine();
 		}
 
 		/// <summary>
@@ -137,7 +136,7 @@
 				_writer.AppendLine("///     Indicates whether the contents of {0} have changed.", buffer.Name);
 				_writer.AppendLine("/// </summary>");
 				_writer.AppendLine("private bool {0} = true;", GetDirtyFlagName(buffer.Name));
-				_writer.Newline();
+				_writer.NewLine();
 			}
 		}
 
@@ -152,7 +151,7 @@
 				_writer.AppendLine("///     Passes the shader constants in the {0} constant buffer to the GPU.", buffer.Name);
 				_writer.AppendLine("/// </summary>");
 				_writer.AppendLine("private readonly ConstantBuffer {0};", GetFieldName(buffer.Name));
-				_writer.Newline();
+				_writer.NewLine();
 			}
 		}
 
@@ -165,7 +164,7 @@
 			{
 				WriteDocumentation(constant.Documentation);
 				_writer.AppendLine("private {0} {1};", ToCSharpType(constant.Type), GetFieldName(constant.Name));
-				_writer.Newline();
+				_writer.NewLine();
 			}
 		}
 
@@ -189,24 +188,24 @@
 			{
 				foreach (var technique in _effect.Techniques)
 				{
-					var vertexShader = ShaderAsset.GetPath(_effect.FullName, technique.VertexShader.Name, ShaderType.VertexShader);
-					var fragmentShader = ShaderAsset.GetPath(_effect.FullName, technique.FragmentShader.Name, ShaderType.FragmentShader);
-
-					_writer.AppendLine("{0} = {1}.CreateTechnique({2}, {3},", technique.Name, ContextVariableName, _bindMethodName, _unbindMethodName);
-					_writer.AppendLine("\t\"{0}.{1}\", ", Path.ChangeExtension(vertexShader, null), Configuration.AssetsProject.Name);
-					_writer.AppendLine("\t\"{0}.{1}\");", Path.ChangeExtension(fragmentShader, null), Configuration.AssetsProject.Name);
+					_writer.AppendLine("{0} = {1}.CreateTechnique({2}, {3}, {4}, {5});", technique.Name, ContextVariableName,
+									   _bindMethodName, _unbindMethodName,
+									   ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + technique.VertexShader.Name)
+												  .Replace("/", "."),
+									   ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + technique.FragmentShader.Name)
+												  .Replace("/", "."));
 				}
 
 				foreach (var buffer in ConstantBuffers)
 				{
-					_writer.Newline();
+					_writer.NewLine();
 					_writer.AppendLine("{0} = {2}.CreateConstantBuffer({1}.Size, {1}.Slot);", GetFieldName(buffer.Name),
 									   GetStructName(buffer), ContextVariableName);
 					_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
 				}
 			});
 
-			_writer.Newline();
+			_writer.NewLine();
 		}
 
 		/// <summary>
@@ -230,7 +229,7 @@
 							_writer.AppendLine("{0} = true;", GetDirtyFlagName(buffer.Name));
 						});
 					});
-					_writer.Newline();
+					_writer.NewLine();
 				}
 			}
 		}
@@ -247,7 +246,7 @@
 			}
 
 			if (_effect.Textures.Any())
-				_writer.Newline();
+				_writer.NewLine();
 		}
 
 		/// <summary>
@@ -259,7 +258,7 @@
 			{
 				WriteDocumentation(technique.Documentation);
 				_writer.AppendLine("public EffectTechnique {0} {{ get; private set; }}", technique.Name);
-				_writer.Newline();
+				_writer.NewLine();
 			}
 		}
 
@@ -290,12 +289,12 @@
 						foreach (var constant in buffer.Constants)
 							_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedIdentifierPrefix);
 
-						_writer.Newline();
+						_writer.NewLine();
 						_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
 						_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
 										   Configuration.ReservedIdentifierPrefix, ContextVariableName);
 					});
-					_writer.Newline();
+					_writer.NewLine();
 				}
 
 				foreach (var texture in _effect.Textures)
@@ -305,7 +304,7 @@
 					_writer.AppendLine("{1}.Bind({0});", GetFieldName(buffer.Name), ContextVariableName);
 			});
 
-			_writer.Newline();
+			_writer.NewLine();
 		}
 
 		/// <summary>
@@ -327,7 +326,7 @@
 			});
 
 			if (ConstantBuffers.Any())
-				_writer.Newline();
+				_writer.NewLine();
 		}
 
 		/// <summary>
@@ -345,14 +344,14 @@
 					_writer.AppendLine("{0}.DisposeTechnique({1});", ContextVariableName, technique.Name);
 
 				if (ConstantBuffers.Any())
-					_writer.Newline();
+					_writer.NewLine();
 
 				foreach (var buffer in ConstantBuffers)
 					_writer.AppendLine("{0}.SafeDispose();", GetFieldName(buffer.Name));
 			});
 
 			if (ConstantBuffers.Any())
-				_writer.Newline();
+				_writer.NewLine();
 		}
 
 		/// <summary>
@@ -371,13 +370,13 @@
 					_writer.AppendLine("///     The size of the struct in bytes.");
 					_writer.AppendLine("/// </summary>");
 					_writer.AppendLine("public const int Size = {0};", buffers[i].Size);
-					_writer.Newline();
+					_writer.NewLine();
 
 					_writer.AppendLine("/// <summary>");
 					_writer.AppendLine("///     The slot the constant buffer is assigned to.");
 					_writer.AppendLine("/// </summary>");
 					_writer.AppendLine("public const int Slot = {0};", buffers[i].Slot);
-					_writer.Newline();
+					_writer.NewLine();
 
 					var constants = buffers[i].GetLayoutedConstants().ToArray();
 					for (var j = 0; j < constants.Length; ++j)
@@ -387,12 +386,12 @@
 						_writer.AppendLine("public {0} {1};", ToCSharpType(constants[j].Constant.Type), constants[j].Constant.Name);
 
 						if (j < buffers[i].Constants.Length - 1)
-							_writer.Newline();
+							_writer.NewLine();
 					}
 				});
 
 				if (i < buffers.Length - 1)
-					_writer.Newline();
+					_writer.NewLine();
 			}
 		}
 

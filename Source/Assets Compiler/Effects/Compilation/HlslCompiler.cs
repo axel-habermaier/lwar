@@ -78,7 +78,7 @@
 					Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
 				}
 			});
-			Writer.Newline();
+			Writer.NewLine();
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@
 		{
 			Writer.AppendLine("{0} {1} : register(t{2});", ToShaderType(texture.Type), Escape(texture.Name), texture.Slot);
 			Writer.AppendLine("SamplerState {0} : register(s{1});", GetSamplerName(texture.Name), texture.Slot);
-			Writer.Newline();
+			Writer.NewLine();
 		}
 
 		/// <summary>
@@ -169,11 +169,11 @@
 			Writer.AppendBlockStatement(() =>
 			{
 				Writer.AppendLine("{0} {1};", OutputStructName, OutputVariableName);
-				Writer.Newline();
+				Writer.NewLine();
 
 				Shader.MethodBody.AcceptVisitor(this);
 
-				Writer.Newline();
+				Writer.NewLine();
 				Writer.AppendLine("return {0};", OutputVariableName);
 			});
 		}

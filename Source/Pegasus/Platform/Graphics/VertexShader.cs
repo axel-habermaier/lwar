@@ -7,7 +7,7 @@
 	/// <summary>
 	///     A vertex shader is a program that controls the vertex-shader stage.
 	/// </summary>
-	internal sealed class VertexShader : Shader
+	public sealed class VertexShader : Shader
 	{
 		/// <summary>
 		///     Reinitializes the shader.

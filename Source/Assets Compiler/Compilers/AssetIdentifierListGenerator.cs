@@ -6,6 +6,7 @@
 	using System.Linq;
 	using Assets;
 	using CSharp;
+	using Platform;
 
 	/// <summary>
 	///     Generates a class that contains the identifiers of all compiled assets.
@@ -26,15 +27,18 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="assets">The assets that have been compiled.</param>
-		public AssetIdentifierListGenerator(List<Asset> assets)
+		public AssetIdentifierListGenerator(IEnumerable<Asset> assets)
 		{
 			Assert.ArgumentNotNull(assets);
+
+			var i = 0u;
 			_assets = assets.Where(asset => asset.IdentifierType != null && asset.IdentifierName != null)
 							.Select(asset => new AssetInfo
 							{
 								Asset = asset,
-								Name = asset.RelativePathWithoutExtension,
-								IdentifierType = asset.IdentifierType
+								Name = GetAssetPath(asset),
+								IdentifierType = asset.IdentifierType,
+								Identifier = i++
 							})
 							.ToArray();
 
@@ -54,10 +58,22 @@
 		}
 
 		/// <summary>
+		///     Gets the path for the asset that is used to build up the list of nested namespaces. Places shaders in a sub-namespace.
+		/// </summary>
+		/// <param name="asset">The asset the path should be generated for.</param>
+		private static string GetAssetPath(Asset asset)
+		{
+			if (asset is ShaderAsset)
+				return ShaderAsset.GetAssetIdentifier(asset.RelativeDirectory, asset.FileNameWithoutExtension);
+
+			return asset.RelativePathWithoutExtension;
+		} 
+
+		/// <summary>
 		///     Generates the asset list code.
 		/// </summary>
-		/// <param name="namespaceName">The name of the namespace the classes should be placed in.</param>
-		public void Generate(string namespaceName)
+		/// <param name="assetsNamespace">The name of the assets namespace.</param>
+		public void Generate(string assetsNamespace)
 		{
 			if (!_hasChanged)
 				return;
@@ -66,9 +82,9 @@
 			writer.WriterHeader();
 			writer.AppendLine("using System;");
 			writer.AppendLine("using Pegasus.Platform.Assets;");
-			writer.Newline();
+			writer.NewLine();
 
-			writer.AppendLine("namespace {0}", namespaceName);
+			writer.AppendLine("namespace {0}", assetsNamespace);
 			writer.AppendBlockStatement(() => GenerateRecursive(writer, "", _assets, false));
 
 			File.WriteAllText(Configuration.CSharpAssetIdentifiersFile, writer.ToString());
@@ -88,13 +104,12 @@
 			{
 				var currentAssets = assets.Where(asset => !asset.Name.Contains("/")).ToArray();
 				foreach (var asset in currentAssets)
-					writer.AppendLine("public static AssetIdentifier<{0}> {1} = \"{2}.{3}\";",
-									  asset.IdentifierType, EscapeName(asset.Asset.IdentifierName),
-									  asset.Asset.RelativePathWithoutExtension, Configuration.AssetsProject.Name);
+					writer.AppendLine("public static AssetIdentifier<{0}> {1} {{ get; private set; }}",
+									  asset.IdentifierType, EscapeName(asset.Asset.IdentifierName));
 
 				var groups = assets.Where(asset => asset.Name.Contains("/")).GroupBy(asset => asset.Name.Split('/')[0]).ToArray();
 				if (groups.Length > 0 && currentAssets.Length > 0)
-					writer.Newline();
+					writer.NewLine();
 
 				for (var i = 0; i < groups.Length; ++i)
 				{
@@ -102,7 +117,22 @@
 					GenerateRecursive(writer, EscapeName(group.Key), group.Select(asset => asset.RemoveTopLevel()), true);
 
 					if (i + 1 < groups.Length)
-						writer.Newline();
+						writer.NewLine();
+				}
+
+				if (encloseWithClass)
+				{
+					writer.NewLine();
+					writer.AppendLine("static {0}()", className);
+					writer.AppendBlockStatement(() =>
+					{
+						foreach (var asset in currentAssets)
+							writer.AppendLine("{0} = new AssetIdentifier<{1}>(\"{2}.{3}{7}\", {4}, {5}, AssetType.{6});",
+											  EscapeName(asset.Asset.IdentifierName), asset.IdentifierType,
+											  asset.Asset.RelativePathWithoutExtension, Configuration.AssetsProject.Name,
+											  Configuration.AssetProjectIdentifier, asset.Identifier, asset.Asset.AssetType,
+											  PlatformInfo.AssetExtension);
+					});
 				}
 			};
 
@@ -141,6 +171,11 @@
 			public string IdentifierType;
 
 			/// <summary>
+			///     The unique identifier of the asset.
+			/// </summary>
+			public uint Identifier;
+
+			/// <summary>
 			///     The remaining name of the asset.
 			/// </summary>
 			public string Name;
@@ -150,7 +185,13 @@
 			/// </summary>
 			public AssetInfo RemoveTopLevel()
 			{
-				return new AssetInfo { Asset = Asset, IdentifierType = IdentifierType, Name = Name.Substring(Name.IndexOf('/') + 1) };
+				return new AssetInfo
+				{
+					Asset = Asset,
+					IdentifierType = IdentifierType,
+					Name = Name.Substring(Name.IndexOf('/') + 1),
+					Identifier = Identifier
+				};
 			}
 		}
 	}

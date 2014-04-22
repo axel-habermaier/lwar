@@ -133,7 +133,7 @@
     <Prefer32Bit>false</Prefer32Bit>
      <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot; 3" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -151,7 +151,7 @@
     <Prefer32Bit>false</Prefer32Bit>
      <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot; 3" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -168,7 +168,7 @@
     <Prefer32Bit>false</Prefer32Bit>
      <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot; 3" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -185,7 +185,7 @@
     <Prefer32Bit>false</Prefer32Bit>
      <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot; 3" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -210,11 +210,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; compile &quot;$(ProjectPath)&quot;" WorkingDirectory="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT'" />
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; compile &quot;$(ProjectPath)&quot; 3" WorkingDirectory="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT'" />
     <!--$(ProjectDir)/Pegasus Assets.csproj-->
   </Target>
   <Target Name="Clean">
-    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; clean &quot;$(ProjectPath)&quot;" WorkingDirectory="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT'" />
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; clean &quot;$(ProjectPath)&quot; 3" WorkingDirectory="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT'" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

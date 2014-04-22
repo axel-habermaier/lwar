@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Drawing;
+	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Memory;
 
@@ -32,6 +33,14 @@
 		protected Texture2DAsset(string relativePath, string sourceDirectory)
 			: base(relativePath, sourceDirectory)
 		{
+		}
+
+		/// <summary>
+		///     Gets the type of the asset.
+		/// </summary>
+		public override AssetType AssetType
+		{
+			get { return AssetType.Texture2D; }
 		}
 
 		/// <summary>

@@ -1,13 +1,14 @@
 ﻿namespace Pegasus.AssetsCompiler.Assets
 {
 	using System;
+	using System.IO;
 	using System.Linq;
 	using Platform.Graphics;
 
 	/// <summary>
 	///     Represents a shader that requires compilation.
 	/// </summary>
-	public class ShaderAsset : Asset
+	public abstract class ShaderAsset : Asset
 	{
 		/// <summary>
 		///     Initializes a new instance.
@@ -15,7 +16,7 @@
 		/// <param name="effect">The name of the effect the shader belongs to.</param>
 		/// <param name="name">The name of the shader method.</param>
 		/// <param name="type">The type of the shader.</param>
-		public ShaderAsset(string effect, string name, ShaderType type)
+		protected ShaderAsset(string effect, string name, ShaderType type)
 			: base(GetPath(effect, name, type), Configuration.TempDirectory)
 		{
 			Type = type;
@@ -25,6 +26,23 @@
 		///     Gets the type of the shader.
 		/// </summary>
 		public ShaderType Type { get; private set; }
+
+		/// <summary>
+		///     Gets the name of the asset identifier.
+		/// </summary>
+		public static string GetAssetIdentifier(string relativeDirectory, string fileName)
+		{
+			return Path.Combine(relativeDirectory.Replace("Effects", ""), "Shaders", fileName.Replace(".", "/")).Replace("\\", "/");
+		}
+
+		/// <summary>
+		///     Gets the name that should be used for the asset identifier. If null is returned, no asset identifier is generated
+		///     for this asset instance.
+		/// </summary>
+		public override string IdentifierName
+		{
+			get { return Path.GetFileNameWithoutExtension(FileNameWithoutExtension.Replace(".", "/")); }
+		}
 
 		/// <summary>
 		///     Gets the shader asset path for the given effect name, shader method name, and shader type.

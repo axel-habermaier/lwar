@@ -135,7 +135,11 @@
 
 				if (success)
 				{
-					var assetListGenerator = new AssetIdentifierListGenerator(_assets);
+					IEnumerable<Asset> assets = _assets;
+					foreach (var compiler in compilers)
+						assets = assets.Union(compiler.AdditionalAssets);
+
+					var assetListGenerator = new AssetIdentifierListGenerator(assets);
 					assetListGenerator.Generate(Configuration.AssetsProject.RootNamespace);
 				}
 
@@ -175,18 +179,6 @@
 			{
 				compilers.SafeDisposeAll();
 			}
-		}
-
-		/// <summary>
-		///     Adds a compiler to the compilation unit.
-		/// </summary>
-		/// <param name="asset">The compiler that should be added.</param>
-		private void Add(Asset asset)
-		{
-			Assert.ArgumentNotNull(asset);
-			Assert.That(_assets.All(a => a.RelativePath != asset.RelativePath), "The asset has already been added.");
-
-			_assets.Add(asset);
 		}
 	}
 }

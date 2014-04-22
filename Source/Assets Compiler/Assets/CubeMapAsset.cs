@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Drawing;
+	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Memory;
 
@@ -22,6 +23,14 @@
 		public CubeMapAsset(string relativePath)
 			: base(relativePath)
 		{
+		}
+
+		/// <summary>
+		///     Gets the type of the asset.
+		/// </summary>
+		public override AssetType AssetType
+		{
+			get { return AssetType.CubeMap; }
 		}
 
 		/// <summary>

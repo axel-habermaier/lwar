@@ -57,7 +57,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
-     <CustomCommands>
+    <CustomCommands>
       <CustomCommands>
         <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
         <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
@@ -77,7 +77,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
-     <CustomCommands>
+    <CustomCommands>
       <CustomCommands>
         <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
         <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
@@ -146,7 +146,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-     <CustomCommands>
+    <CustomCommands>
       <CustomCommands>
         <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
         <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
@@ -165,7 +165,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
-     <CustomCommands>
+    <CustomCommands>
       <CustomCommands>
         <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
         <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
@@ -360,6 +360,8 @@
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
     <Compile Include="Assets\Attributes\CubeMapAttribute.cs" />
     <Compile Include="Assets\Attributes\Texture2DAttribute.cs" />
+    <Compile Include="Assets\FragmentShaderAsset.cs" />
+    <Compile Include="Assets\VertexShaderAsset.cs" />
     <Compile Include="Assets\XamlAsset.cs" />
     <Compile Include="Assets\XamlAssetFactory.cs" />
     <Compile Include="Assets\CubeMapAssetFactory.cs" />

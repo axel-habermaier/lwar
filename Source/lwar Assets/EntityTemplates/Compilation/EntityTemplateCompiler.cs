@@ -117,22 +117,22 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 			writer.AppendLine("#include <stdint.h>");
 			writer.AppendLine("#include <stddef.h>");
 			writer.AppendLine("#include <stdlib.h>");
-			writer.Newline();
+			writer.NewLine();
 			writer.AppendLine("#include \"server.h\"");
 			writer.AppendLine("#include \"rules.h\"");
 			writer.AppendLine("#include \"vector.h\"");
-			writer.Newline();
+			writer.NewLine();
 
 			// Write the callback prototypes
 			foreach (var act in templates.Select(t => t.Act).Where(a => a != null).Distinct())
 				writer.AppendLine("void {0}(Entity *self);", act);
 
-			writer.Newline();
+			writer.NewLine();
 
 			foreach (var collide in templates.Select(t => t.Collide).Where(c => c != null).Distinct())
 				writer.AppendLine("void {0}(Entity *self, Entity *other, Real impact);", collide);
 
-			writer.Newline();
+			writer.NewLine();
 
 			// Write the template definitions
 			foreach (var template in templates)
@@ -155,10 +155,10 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 					writer.AppendLine("{0:0.0######}f, // rotation", template.Rotation);
 				}, true);
 
-				writer.Newline();
+				writer.NewLine();
 			}
 
-			writer.Newline();
+			writer.NewLine();
 			writer.AppendLine("void templates_register()");
 			writer.AppendBlockStatement(() =>
 			{
@@ -187,7 +187,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 					writer.AppendLine("ENTITY_TYPE_{0} = {1},", template.Name.ToUpper(), ++i);
 			}, true);
 
-			writer.Newline();
+			writer.NewLine();
 			foreach (var template in templates)
 				writer.AppendLine("extern EntityType type_{0};", template.Name.ToLower());
 
@@ -213,7 +213,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 				writer.AppendLine("using Pegasus.Platform.Graphics;");
 				writer.AppendLine("using Pegasus.Platform.Memory;");
 				writer.AppendLine("using Pegasus.Rendering;");
-				writer.Newline();
+				writer.NewLine();
 
 				writer.AppendLine("public static class EntityTemplates");
 				writer.AppendBlockStatement(() =>
@@ -221,13 +221,13 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 					foreach (var template in templates)
 						writer.AppendLine("public static EntityTemplate {0} {{ get; private set; }}", template.Name);
 
-					writer.Newline();
+					writer.NewLine();
 
 					writer.AppendLine("public static void Initialize(AssetsManager assets)");
 					writer.AppendBlockStatement(() =>
 					{
 						writer.AppendLine("Assert.ArgumentNotNull(assets);");
-						writer.Newline();
+						writer.NewLine();
 
 						for (var i = 0; i < templates.Length; ++i)
 						{
@@ -259,11 +259,11 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 							writer.AppendLine(");");
 
 							if (i + 1 < templates.Length)
-								writer.Newline();
+								writer.NewLine();
 						}
 					});
 
-					writer.Newline();
+					writer.NewLine();
 					writer.AppendLine("public static void Dispose()");
 					writer.AppendBlockStatement(() =>
 					{

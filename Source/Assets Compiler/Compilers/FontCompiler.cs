@@ -185,7 +185,7 @@
 				writer.AppendLine("using Pegasus.Platform.Assets;");
 				writer.AppendLine("using Pegasus.Platform.Logging;");
 				writer.AppendLine("using Pegasus.Rendering.UserInterface;");
-				writer.Newline();
+				writer.NewLine();
 
 				writer.AppendLine("/// <summary>");
 				writer.AppendLine("///     Provides a method to search for a font based on certain font settings.");
@@ -198,7 +198,7 @@
 					writer.AppendLine("/// </summary>");
 					writer.AppendLine("private AssetsManager _assets;");
 
-					writer.Newline();
+					writer.NewLine();
 					writer.AppendLine("/// <summary>");
 					writer.AppendLine("///     Initializes a new instance.");
 					writer.AppendLine("/// </summary>");
@@ -210,14 +210,14 @@
 						writer.AppendLine("_assets = assets;");
 					});
 
-					writer.Newline();
+					writer.NewLine();
 					writer.AppendLine("/// <summary>");
 					writer.AppendLine("///     Sets the next font loader that is used to load the font if the current loader fails to");
 					writer.AppendLine("///     load an appropriate font.");
 					writer.AppendLine("/// </summary>");
 					writer.AppendLine("public IFontLoader Next {{ private get; set; }}");
 
-					writer.Newline();
+					writer.NewLine();
 					writer.AppendLine("/// <summary>");
 					writer.AppendLine("///     Gets the font matching the given font settings.");
 					writer.AppendLine("/// </summary>");
@@ -233,9 +233,9 @@
 						var fonts = assets.Select(font => _parser.Parse(font.SourcePath));
 
 						writer.AppendLine("Assert.ArgumentNotNullOrWhitespace(fontFamily);");
-						writer.Newline();
+						writer.NewLine();
 
-						writer.AppendLine("string font = null;");
+						writer.AppendLine("AssetIdentifier<Font>? font = null;");
 						writer.AppendLine("switch (fontFamily)");
 						writer.AppendBlockStatement(() =>
 						{
@@ -260,8 +260,10 @@
 															  ((bool)font["italic"]).ToString().ToLower(),
 															  ((bool)font["aliased"]).ToString().ToLower());
 											writer.IncreaseIndent();
-											writer.AppendLine("font = \"{0}.{1}\";",
-															  asset.RelativePathWithoutExtension, Configuration.AssetsProject.Name);
+											writer.AppendLine("font = {0}.{1}.{2};", 
+												Configuration.AssetsProject.RootNamespace, 
+												Path.GetDirectoryName(asset.RelativePath).Replace("/", "."), 
+												asset.FileNameWithoutExtension.Replace(" ", ""));
 											writer.DecreaseIndent();
 										}
 										writer.AppendLine("break;");
@@ -273,7 +275,7 @@
 							}
 						});
 
-						writer.Newline();
+						writer.NewLine();
 						writer.AppendLine("if (font == null && Next != null)");
 						writer.IncreaseIndent();
 						writer.AppendLine("return Next.LoadFont(fontFamily, size, bold, italic, aliased);");
@@ -284,8 +286,8 @@
 										  "italic = {{3}}, aliased = {{4}}.\", fontFamily, size, bold, italic, aliased);");
 						writer.DecreaseIndent();
 
-						writer.Newline();
-						writer.AppendLine("return _assets.LoadFont(font);");
+						writer.NewLine();
+						writer.AppendLine("return _assets.LoadFont(font.Value);");
 					});
 				});
 			});

@@ -51,7 +51,7 @@
 				foreach (var literal in effect.Literals)
 					GenerateLiteral(literal);
 
-				Writer.Newline();
+				Writer.NewLine();
 			}
 
 			foreach (var constantBuffer in effect.ConstantBuffers)
@@ -66,18 +66,18 @@
 			if (shader.Type == ShaderType.VertexShader)
 			{
 				GenerateVertexShaderInputs(shader.Inputs);
-				Writer.Newline();
+				Writer.NewLine();
 
 				GenerateVertexShaderOutputs(shader.Outputs);
-				Writer.Newline();
+				Writer.NewLine();
 			}
 			else
 			{
 				GenerateFragmentShaderInputs(shader.Inputs);
-				Writer.Newline();
+				Writer.NewLine();
 
 				GenerateFragmentShaderOutputs(shader.Outputs);
-				Writer.Newline();
+				Writer.NewLine();
 			}
 
 			GenerateMainMethod();

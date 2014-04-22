@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.AssetsCompiler.Assets
 {
 	using System;
+	using Platform.Assets;
 
 	/// <summary>
 	///     Represents a C# shader effect file that requires compilation.
@@ -14,6 +15,14 @@
 		public EffectAsset(string relativePath)
 			: base(relativePath)
 		{
+		}
+
+		/// <summary>
+		///     Gets the type of the asset.
+		/// </summary>
+		public override AssetType AssetType
+		{
+			get { return AssetType.Effect; }
 		}
 	}
 }

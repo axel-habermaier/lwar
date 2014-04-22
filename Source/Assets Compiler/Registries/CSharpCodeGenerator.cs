@@ -52,7 +52,7 @@
 			_writer.WriterHeader();
 			_writer.AppendLine("using System;");
 			_writer.AppendLine("using System.Diagnostics;");
-			_writer.Newline();
+			_writer.NewLine();
 
 			_writer.AppendLine("namespace {0}", namespaceName);
 			_writer.AppendBlockStatement(() =>
@@ -62,7 +62,7 @@
 												.OrderBy(import => import))
 					_writer.AppendLine("using {0};", import);
 
-				_writer.Newline();
+				_writer.NewLine();
 
 				_writer.AppendLine("internal static class {0}", _registry.Name);
 				_writer.AppendBlockStatement(() =>
@@ -90,14 +90,14 @@
 			{
 				WriteDocumentation(cvar.Documentation);
 				_writer.AppendLine("public static Cvar<{0}> {1} {{ get; private set; }}", cvar.Type, GetPropertyName(cvar));
-				_writer.Newline();
+				_writer.NewLine();
 			}
 
 			foreach (var command in _registry.Commands.Concat(_importedRegistry.Commands))
 			{
 				WriteDocumentation(GetSummary(command.Documentation));
 				_writer.AppendLine("public static Command{0} {1} {{ get; private set; }}", GetTypeArguments(command), GetPropertyName(command));
-				_writer.Newline();
+				_writer.NewLine();
 			}
 		}
 
@@ -122,7 +122,7 @@
 					});
 				});
 
-				_writer.Newline();
+				_writer.NewLine();
 			}
 		}
 
@@ -143,7 +143,7 @@
 					_writer.AppendLine("remove {{ {0}.Changing -= value; }}", GetPropertyName(cvar));
 				});
 
-				_writer.Newline();
+				_writer.NewLine();
 
 				_writer.AppendLine("/// <summary>");
 				_writer.AppendLine("///     Raised when the '{0}' cvar is changed. The previous value is passed to the event handler.", cvar.Name);
@@ -155,7 +155,7 @@
 					_writer.AppendLine("remove {{ {0}.Changed -= value; }}", GetPropertyName(cvar));
 				});
 
-				_writer.Newline();
+				_writer.NewLine();
 			}
 		}
 
@@ -177,7 +177,7 @@
 					_writer.AppendLine("{0}.Invoke({1});", GetPropertyName(command), GetInvocationArguments(command));
 				});
 
-				_writer.Newline();
+				_writer.NewLine();
 			}
 		}
 
@@ -198,7 +198,7 @@
 					_writer.AppendLine("remove {{ {0}.Invoked -= value; }}", GetPropertyName(command));
 				});
 
-				_writer.Newline();
+				_writer.NewLine();
 			}
 		}
 
@@ -214,11 +214,11 @@
 			_writer.AppendBlockStatement(() =>
 			{
 				GenerateInstanceInitialization();
-				_writer.Newline();
+				_writer.NewLine();
 
 				GenerateInstanceRegistration();
 			});
-			_writer.Newline();
+			_writer.NewLine();
 		}
 
 		/// <summary>
@@ -238,7 +238,7 @@
 			}
 
 			if (_registry.Cvars.Any() && _registry.Commands.Any())
-				_writer.Newline();
+				_writer.NewLine();
 
 			foreach (var command in _registry.Commands)
 			{
@@ -261,7 +261,7 @@
 				_writer.AppendLine("CvarRegistry.Register({0});", GetPropertyName(cvar));
 
 			if (_registry.Cvars.Any() && _registry.Commands.Any())
-				_writer.Newline();
+				_writer.NewLine();
 
 			foreach (var command in _registry.Commands)
 				_writer.AppendLine("CommandRegistry.Register({0});", GetPropertyName(command));
@@ -282,7 +282,7 @@
 					_writer.AppendLine("{2} = CvarRegistry.Resolve<{1}>(\"{0}\");", GetRuntimeName(cvar.Name), cvar.Type, GetPropertyName(cvar));
 
 				if (_importedRegistry.Cvars.Any() && _importedRegistry.Commands.Any())
-					_writer.Newline();
+					_writer.NewLine();
 
 				foreach (var command in _importedRegistry.Commands)
 				{

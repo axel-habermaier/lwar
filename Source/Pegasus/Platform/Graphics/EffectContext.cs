@@ -117,10 +117,9 @@
 		/// <param name="unbind">The action that should be invoked to unbind the required textures.</param>
 		/// <param name="vertexShader">The vertex shader that should be used by the technique.</param>
 		/// <param name="fragmentShader">The fragment shader that should be used by the technique.</param>
-		public EffectTechnique CreateTechnique(Action bind, Action unbind, string vertexShader, string fragmentShader)
+		public EffectTechnique CreateTechnique(Action bind, Action unbind,
+											   AssetIdentifier<VertexShader> vertexShader, AssetIdentifier<FragmentShader> fragmentShader)
 		{
-			Assert.ArgumentNotNullOrWhitespace(vertexShader);
-			Assert.ArgumentNotNullOrWhitespace(fragmentShader);
 			Assert.ArgumentNotNull(bind);
 			Assert.ArgumentNotNull(unbind);
 			ValidateInitialization();
