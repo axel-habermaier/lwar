@@ -6,7 +6,7 @@
 /.svn
 *.suo
 /Source/*.suo
-/Source/Other/Server/obj
+/Source/Server/obj
 *.opensdf
 autoexec.cfg
 lwar.log
@@ -18,7 +18,7 @@ Source/Pegasus/obj
 *.generated.cs
 Source/Other/Platform/obj
 Source/Other/Platform/Platform.md.pc
-Source/Other/Server/Server.md.pc
+Source/Server/Server.md.pc
 lwarMono.userprefs
 Source/Assets/lwar Assets/obj
 Source/Assets/lwar Assets/bin
@@ -41,8 +41,8 @@ Source/Assets/Pegasus Assets/AssetIdentifiers.cs
 Source/Assets/Pegasus Assets/Effects/Effects.cs
 Source/lwar/Gameplay/Entities/EntityType.cs
 Source/lwar/Gameplay/Entities/EntityTemplates.cs
-Source/Other/Server/templates.c
-Source/Other/Server/entity.h
+Source/Server/templates.c
+Source/Server/entity.h
 lwar.sln.ide
 *.psess
 *.vsp

@@ -36,12 +36,12 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		/// <summary>
 		///     The path of the server file containing the template declarations.
 		/// </summary>
-		private const string ServerTemplates = "../../Source/Other/Server/templates.c";
+		private const string ServerTemplates = "../../Source/Server/templates.c";
 
 		/// <summary>
 		///     The path of the server header file.
 		/// </summary>
-		private const string ServerHeader = "../../Source/Other/Server/entity.h";
+		private const string ServerHeader = "../../Source/Server/entity.h";
 
 		/// <summary>
 		///     Compiles all assets of the compiler's asset source type.
