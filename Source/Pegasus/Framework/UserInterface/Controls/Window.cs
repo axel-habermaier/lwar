@@ -107,7 +107,7 @@
 
 			_bindings = new Bindings(InputDevice);
 
-			// Make sure the window's input state and update are initialized correctly
+			// Make sure the window's input state and layout are initialized correctly
 			HandleInput();
 			UpdateLayout();
 		}

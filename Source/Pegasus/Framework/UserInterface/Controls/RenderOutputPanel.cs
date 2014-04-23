@@ -114,7 +114,7 @@
 			var x = (int)Math.Round(VisualOffset.X);
 			var y = (int)Math.Round(VisualOffset.Y);
 
-			// Take the different coordinates origins for OpenGL and Direct3D into account when rendering 
+			// Take the different coordinate origins for OpenGL and Direct3D into account when rendering 
 			// the render target's color buffer... annoying
 #if Direct3D11
 			var textureArea = new RectangleF(0, 1, 1, -1);
