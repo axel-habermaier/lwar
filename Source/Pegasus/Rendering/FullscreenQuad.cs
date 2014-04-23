@@ -1,7 +1,7 @@
 ﻿namespace Pegasus.Rendering
 {
 	using System;
-	using Platform.Assets;
+	using Assets;
 	using Platform.Graphics;
 	using Platform.Memory;
 

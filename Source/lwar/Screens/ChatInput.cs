@@ -6,13 +6,14 @@
 	using Network;
 	using Pegasus;
 	using Pegasus.Math;
-	using Pegasus.Platform.Assets;
+	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Pegasus.Rendering.UserInterface;
 	using Scripting;
+	using Fonts = Assets.Fonts;
 
 	/// <summary>
 	///     Shows the chat input field during an active game session.

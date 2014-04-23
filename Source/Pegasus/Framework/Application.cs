@@ -4,7 +4,6 @@
 	using System.Threading;
 	using Assets;
 	using Platform;
-	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Performance;

@@ -4,7 +4,7 @@
 	using Assets;
 	using Assets.Effects;
 	using Pegasus;
-	using Pegasus.Platform.Assets;
+	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;

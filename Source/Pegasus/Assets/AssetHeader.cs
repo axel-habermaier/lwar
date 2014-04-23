@@ -1,8 +1,8 @@
-﻿namespace Pegasus.Platform.Assets
+﻿namespace Pegasus.Assets
 {
 	using System;
-	using Logging;
-	using Memory;
+	using Platform;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents the header of a compiled asset file.

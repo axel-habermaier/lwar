@@ -1,9 +1,8 @@
-﻿using System;
-
-namespace Pegasus.Platform.Assets
+﻿namespace Pegasus.Assets
 {
+	using System;
 	using System.Collections.Generic;
-	using Logging;
+	using Platform.Logging;
 
 	/// <summary>
 	///     Used to check for asset hash collisions in debug builds.

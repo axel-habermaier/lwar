@@ -3,8 +3,8 @@
 	using System;
 	using System.IO;
 	using Compilers;
+	using Pegasus.Assets;
 	using Platform;
-	using Platform.Assets;
 	using Platform.Memory;
 
 	/// <summary>

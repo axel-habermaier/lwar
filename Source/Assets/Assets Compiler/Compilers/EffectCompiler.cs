@@ -10,8 +10,8 @@
 	using CSharp;
 	using Effects;
 	using Effects.Compilation;
+	using Pegasus.Assets;
 	using Platform;
-	using Platform.Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;

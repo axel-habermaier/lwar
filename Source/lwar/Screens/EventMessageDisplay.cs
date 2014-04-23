@@ -5,10 +5,11 @@
 	using Gameplay;
 	using Pegasus;
 	using Pegasus.Math;
-	using Pegasus.Platform.Assets;
+	using Pegasus.Assets;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Pegasus.Rendering.UserInterface;
+	using Fonts = Assets.Fonts;
 
 	/// <summary>
 	///     Displays event messages on the screen.

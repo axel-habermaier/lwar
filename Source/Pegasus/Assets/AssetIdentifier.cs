@@ -1,4 +1,4 @@
-﻿namespace Pegasus.Platform.Assets
+﻿namespace Pegasus.Assets
 {
 	using System;
 

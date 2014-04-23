@@ -3,7 +3,7 @@
 	using System;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Platform.Assets;
+	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;

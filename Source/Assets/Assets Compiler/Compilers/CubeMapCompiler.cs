@@ -5,8 +5,8 @@
 	using System.IO;
 	using System.Linq;
 	using Assets;
+	using Pegasus.Assets;
 	using Platform;
-	using Platform.Assets;
 	using Platform.Logging;
 	using Platform.Memory;
 

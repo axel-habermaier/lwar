@@ -7,8 +7,8 @@
 	using Assets;
 	using CSharp;
 	using Fonts;
+	using Pegasus.Assets;
 	using Platform;
-	using Platform.Assets;
 	using Platform.Logging;
 	using Platform.Memory;
 
@@ -260,10 +260,10 @@
 															  ((bool)font["italic"]).ToString().ToLower(),
 															  ((bool)font["aliased"]).ToString().ToLower());
 											writer.IncreaseIndent();
-											writer.AppendLine("font = {0}.{1}.{2};", 
-												Configuration.AssetsProject.RootNamespace, 
-												Path.GetDirectoryName(asset.RelativePath).Replace("/", "."), 
-												asset.FileNameWithoutExtension.Replace(" ", ""));
+											writer.AppendLine("font = {0}.{1}.{2};",
+															  Configuration.AssetsProject.RootNamespace,
+															  Path.GetDirectoryName(asset.RelativePath).Replace("/", "."),
+															  asset.FileNameWithoutExtension.Replace(" ", ""));
 											writer.DecreaseIndent();
 										}
 										writer.AppendLine("break;");

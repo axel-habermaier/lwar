@@ -1,7 +1,7 @@
 ﻿namespace Lwar.Rendering.Renderers
 {
 	using System;
-	using Pegasus.Platform.Assets;
+	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Rendering;
 

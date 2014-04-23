@@ -1,13 +1,14 @@
-﻿namespace Pegasus.Platform.Assets
+﻿namespace Pegasus.Assets
 {
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.IO;
-	using Graphics;
-	using Logging;
 	using Math;
-	using Memory;
+	using Platform;
+	using Platform.Graphics;
+	using Platform.Logging;
+	using Platform.Memory;
 	using Rendering.UserInterface;
 	using Scripting;
 

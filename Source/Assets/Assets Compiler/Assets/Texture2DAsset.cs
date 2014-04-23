@@ -2,7 +2,7 @@
 {
 	using System;
 	using System.Drawing;
-	using Platform.Assets;
+	using Pegasus.Assets;
 	using Platform.Graphics;
 	using Platform.Memory;
 

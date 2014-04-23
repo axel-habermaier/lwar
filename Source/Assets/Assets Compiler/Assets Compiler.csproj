@@ -217,6 +217,12 @@
     <Compile Include="..\..\Pegasus\Assert.cs">
       <Link>Pegasus\Assert.cs</Link>
     </Compile>
+    <Compile Include="..\..\Pegasus\Assets\AssetHeader.cs">
+      <Link>Pegasus\AssetHeader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Assets\AssetType.cs">
+      <Link>Pegasus\AssetType.cs</Link>
+    </Compile>
     <Compile Include="..\..\Pegasus\Framework\ISealable.cs">
       <Link>Pegasus\ISealable.cs</Link>
     </Compile>
@@ -255,12 +261,6 @@
     </Compile>
     <Compile Include="..\..\Pegasus\Math\Vector4.cs">
       <Link>Pegasus\Vector4.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Pegasus\Platform\Assets\AssetHeader.cs">
-      <Link>Pegasus\AssetHeader.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Pegasus\Platform\Assets\AssetType.cs">
-      <Link>Pegasus\AssetType.cs</Link>
     </Compile>
     <Compile Include="..\..\Pegasus\Platform\ExternalProcess.cs">
       <Link>Pegasus\ExternalProcess.cs</Link>
