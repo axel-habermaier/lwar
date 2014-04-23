@@ -100,7 +100,7 @@
 					Log.Warn("Ignoring asset '{0}': Compilation settings are ambiguous: One of {1}.", group.Key,
 							 String.Join(", ", group.Select(a => a.GetType().Name)));
 
-					group.SafeDisposeAll();
+					group.SafeDisposeEnumerable();
 				}
 				else
 					yield return group.First();

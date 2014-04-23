@@ -25,16 +25,17 @@
 		}
 
 		/// <summary>
-		///     Disposes all objects contained in the enumerable if the enumerable is not null.
+		///     Disposes all objects contained in the array if the array is not null.
 		/// </summary>
-		/// <param name="enumerable">The enumerable that should be disposed.</param>
+		/// <param name="array">The array that should be disposed.</param>
 		[DebuggerHidden]
-		public static void SafeDisposeAll(this IEnumerable<IDisposable> enumerable)
+		public static void SafeDisposeAll<T>(this T[] array)
+			where T : IDisposable
 		{
-			if (enumerable == null)
+			if (array == null)
 				return;
 
-			foreach (var obj in enumerable)
+			foreach (var obj in array)
 				obj.SafeDispose();
 		}
 
@@ -43,7 +44,7 @@
 		/// </summary>
 		/// <param name="enumerable">The enumerable that should be disposed.</param>
 		[DebuggerHidden]
-		public static void SafeDisposeAll(this IEnumerable<DisposableObject> enumerable)
+		public static void SafeDisposeEnumerable(this IEnumerable<IDisposable> enumerable)
 		{
 			if (enumerable == null)
 				return;
@@ -59,6 +60,10 @@
 		[DebuggerHidden]
 		public static void SafeDispose(this IDisposable obj)
 		{
+			var disposableObject = obj as DisposableObject;
+			if (disposableObject != null && disposableObject.IsDisposed)
+				return;
+
 			if (obj != null)
 				obj.Dispose();
 		}
