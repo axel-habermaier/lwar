@@ -13,7 +13,7 @@
 		/// <summary>
 		///     Represents an empty sealable collection that cannot be modified.
 		/// </summary>
-		public static readonly SealableCollection<T> Empty = new SealableCollection<T>() { IsSealed = true };
+		public static readonly SealableCollection<T> Empty = new SealableCollection<T> { IsSealed = true };
 
 		/// <summary>
 		///     The version of the collection. Each modification of the collection increments the version number by one.
