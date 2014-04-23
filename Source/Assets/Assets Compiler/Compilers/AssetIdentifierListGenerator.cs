@@ -16,18 +16,42 @@
 		/// <summary>
 		///     The assets that have been compiled.
 		/// </summary>
-		private readonly AssetInfo[] _assets;
+		private AssetInfo[] _assets;
 
 		/// <summary>
-		///  Indicates whether the asset list has changed since the last compilation.
+		///     Gets the path to the file that is used to determine whether the asset list has changed.
 		/// </summary>
-		private readonly bool _hasChanged = true;
+		private static string ChangeFilePath
+		{
+			get { return Path.Combine(Configuration.TempDirectory, String.Format("AssetList.txt")); }
+		}
 
 		/// <summary>
-		///     Initializes a new instance.
+		///     Cleans all temporary data.
+		/// </summary>
+		public void Clean()
+		{
+			File.Delete(ChangeFilePath);
+		}
+
+		/// <summary>
+		///     Gets the path for the asset that is used to build up the list of nested namespaces. Places shaders in a sub-namespace.
+		/// </summary>
+		/// <param name="asset">The asset the path should be generated for.</param>
+		private static string GetAssetPath(Asset asset)
+		{
+			if (asset is ShaderAsset)
+				return ShaderAsset.GetAssetIdentifier(asset.RelativeDirectory, asset.FileNameWithoutExtension);
+
+			return asset.RelativePathWithoutExtension;
+		}
+
+		/// <summary>
+		///     Generates the asset list code.
 		/// </summary>
 		/// <param name="assets">The assets that have been compiled.</param>
-		public AssetIdentifierListGenerator(IEnumerable<Asset> assets)
+		/// <param name="assetsNamespace">The name of the assets namespace.</param>
+		public void Generate(IEnumerable<Asset> assets, string assetsNamespace)
 		{
 			Assert.ArgumentNotNull(assets);
 
@@ -42,44 +66,22 @@
 
 			try
 			{
-				var path = Path.Combine(Configuration.TempDirectory, String.Format("AssetList.txt"));
+				var path = ChangeFilePath;
 				var assetList = String.Join(Environment.NewLine, _assets.OrderBy(a => a.Name).Select(a => a.Name));
 				if (!File.Exists(path) || File.ReadAllText(path) != assetList)
 					File.WriteAllText(path, assetList);
 				else
-					_hasChanged = false;
+					return;
 			}
 			catch (IOException)
 			{
 				// We have to recompile
 			}
-		}
 
-		/// <summary>
-		///     Gets the path for the asset that is used to build up the list of nested namespaces. Places shaders in a sub-namespace.
-		/// </summary>
-		/// <param name="asset">The asset the path should be generated for.</param>
-		private static string GetAssetPath(Asset asset)
-		{
-			if (asset is ShaderAsset)
-				return ShaderAsset.GetAssetIdentifier(asset.RelativeDirectory, asset.FileNameWithoutExtension);
-
-			return asset.RelativePathWithoutExtension;
-		} 
-
-		/// <summary>
-		///     Generates the asset list code.
-		/// </summary>
-		/// <param name="assetsNamespace">The name of the assets namespace.</param>
-		public void Generate(string assetsNamespace)
-		{
-			if (!_hasChanged)
-				return;
-			 
 			var writer = new CodeWriter();
 			writer.WriterHeader();
 			writer.AppendLine("using System;");
-			writer.AppendLine("using Pegasus.Platform.Assets;");
+			writer.AppendLine("using Pegasus.Assets;");
 			writer.NewLine();
 
 			writer.AppendLine("namespace {0}", assetsNamespace);
@@ -125,7 +127,7 @@
 					writer.AppendBlockStatement(() =>
 					{
 						foreach (var asset in currentAssets)
-							writer.AppendLine("{0} = new AssetIdentifier<{1}>(AssetType.{5}, \"{2}.{3}{4}\");",
+							writer.AppendLine("{0} = new AssetIdentifier<{1}>({5}, \"{2}.{3}{4}\");",
 											  EscapeName(asset.Asset.IdentifierName), asset.IdentifierType,
 											  asset.Asset.RelativePathWithoutExtension, Configuration.AssetsProject.Name,
 											  PlatformInfo.AssetExtension, asset.Asset.AssetType);

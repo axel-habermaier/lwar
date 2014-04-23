@@ -4,7 +4,8 @@
 	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.IO;
-	using Math;
+	using System.Linq;
+	using AssetLoaders;
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
@@ -22,6 +23,11 @@
 		///     The path to the asset compiler.
 		/// </summary>
 		private const string AssetCompiler = "pgc.exe";
+
+		/// <summary>
+		///     The list of loaders that can be used to load assets.
+		/// </summary>
+		private static readonly AssetLoader[] Loaders;
 
 		/// <summary>
 		///     Indicates whether the asset manager loads its asset asynchronously.
@@ -52,6 +58,18 @@
 		///     The list of pending shader programs, i.e., assets that have not yet been loaded.
 		/// </summary>
 		private readonly List<ShaderProgram> _pendingPrograms;
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static AssetsManager()
+		{
+			Loaders = AppDomain.CurrentDomain.GetAssemblies()
+							   .SelectMany(a => a.GetTypes())
+							   .Where(t => t.IsClass && !t.IsAbstract && typeof(AssetLoader).IsAssignableFrom(t))
+							   .Select(t => Activator.CreateInstance(t) as AssetLoader)
+							   .ToArray();
+		}
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -117,7 +135,7 @@
 					{
 						try
 						{
-							Log.Info("Reloading {1} {0}...", GetAssetDisplayName(info), info.Type.ToDisplayString());
+							Log.Info("Reloading {1} {0}...", GetAssetDisplayName(info), GetAssetTypeDisplayName(info));
 							Load(info);
 						}
 						catch (IOException e)
@@ -266,7 +284,7 @@
 				{
 					var info = _pendingAssets[i - 1];
 
-					Log.Info("Loading {0} {1}...", info.Type.ToDisplayString(), GetAssetDisplayName(info));
+					Log.Info("Loading {0} {1}...", GetAssetTypeDisplayName(info), GetAssetDisplayName(info));
 					Load(info);
 
 					_pendingAssets.RemoveAt(i - 1);
@@ -303,38 +321,7 @@
 				using (var buffer = BufferReader.Create(File.ReadAllBytes(info.Path)))
 				{
 					AssetHeader.Validate(buffer, info.Type);
-
-					switch (info.Type)
-					{
-						case AssetType.CubeMap:
-							var cubeMap = (CubeMap)info.Asset;
-							LoadTexture(buffer, cubeMap);
-							cubeMap.SetName(GetAssetDisplayName(info));
-							break;
-						case AssetType.Texture2D:
-							var texture2D = (Texture2D)info.Asset;
-							LoadTexture(buffer, texture2D);
-							texture2D.SetName(GetAssetDisplayName(info));
-							break;
-						case AssetType.FragmentShader:
-							var fragmentShader = (FragmentShader)info.Asset;
-							LoadFragmentShader(buffer, fragmentShader);
-							fragmentShader.SetName(GetAssetDisplayName(info));
-							break;
-						case AssetType.VertexShader:
-							var vertexShader = (VertexShader)info.Asset;
-							LoadVertexShader(buffer, vertexShader);
-							vertexShader.SetName(GetAssetDisplayName(info));
-							break;
-						case AssetType.Font:
-							var font = (Font)info.Asset;
-							LoadFont(buffer, font);
-							font.Texture.SetName(GetAssetDisplayName(info));
-							break;
-						default:
-							Log.Die("Unexpected asset type.");
-							break;
-					}
+					Loaders.Single(l => l.AssetType == info.Type).Load(buffer, info.Asset, info.Path);
 				}
 			}
 			catch (Exception e)
@@ -414,27 +401,7 @@
 			if (asset != null)
 				return asset;
 
-			switch (identifier.AssetType)
-			{
-				case AssetType.CubeMap:
-					asset = new CubeMap(_graphicsDevice);
-					break;
-				case AssetType.Texture2D:
-					asset = new Texture2D(_graphicsDevice);
-					break;
-				case AssetType.FragmentShader:
-					asset = new FragmentShader(_graphicsDevice);
-					break;
-				case AssetType.VertexShader:
-					asset = new VertexShader(_graphicsDevice);
-					break;
-				case AssetType.Font:
-					asset = new Font(_graphicsDevice);
-					break;
-				default:
-					Log.Die("Unexpected asset type.");
-					break;
-			}
+			asset = Loaders.Single(l => l.AssetType == identifier.AssetType).Allocate(_graphicsDevice);
 
 			var info = AssetInfo.Create(identifier, asset);
 			if (_asyncLoading)
@@ -477,179 +444,12 @@
 		}
 
 		/// <summary>
-		///     Loads the texture from the given buffer.
+		///     Gets the display name for the asset type.
 		/// </summary>
-		/// <param name="buffer">The buffer the texture data should be read from.</param>
-		/// <param name="texture">The texture instance that should be reinitialized with the loaded data.</param>
-		private static unsafe void LoadTexture(BufferReader buffer, Texture texture)
+		/// <param name="info">The asset info object the type display name should be returned for.</param>
+		private static string GetAssetTypeDisplayName(AssetInfo info)
 		{
-			var description = new TextureDescription
-			{
-				Width = buffer.ReadUInt32(),
-				Height = buffer.ReadUInt32(),
-				Depth = buffer.ReadUInt32(),
-				ArraySize = buffer.ReadUInt32(),
-				Type = (TextureType)buffer.ReadInt32(),
-				Format = (SurfaceFormat)buffer.ReadInt32(),
-				Mipmaps = buffer.ReadUInt32(),
-				SurfaceCount = buffer.ReadUInt32()
-			};
-
-			var surfaces = new Surface[description.SurfaceCount];
-
-			for (var i = 0; i < description.SurfaceCount; ++i)
-			{
-				surfaces[i] = new Surface
-				{
-					Width = buffer.ReadUInt32(),
-					Height = buffer.ReadUInt32(),
-					Depth = buffer.ReadUInt32(),
-					Size = buffer.ReadUInt32(),
-					Stride = buffer.ReadUInt32(),
-					Data = buffer.Pointer
-				};
-
-				var surfaceSize = surfaces[i].Size * surfaces[i].Depth;
-				buffer.Skip((int)surfaceSize);
-			}
-
-			texture.Reinitialize(description, surfaces);
-		}
-
-		/// <summary>
-		///     Loads the shader from the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the shader data should be read from.</param>
-		/// <param name="shader">The shader instance that should be reinitialized with the loaded data.</param>
-		private static unsafe void LoadFragmentShader(BufferReader buffer, FragmentShader shader)
-		{
-			byte* data;
-			int length;
-			ExtractShaderCode(buffer, out data, out length);
-
-			shader.Reinitialize(data, length);
-		}
-
-		/// <summary>
-		///     Loads the shader from the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the shader data should be read from.</param>
-		/// <param name="shader">The shader instance that should be reinitialized with the loaded data.</param>
-		private static unsafe void LoadVertexShader(BufferReader buffer, VertexShader shader)
-		{
-			var inputCount = buffer.ReadByte();
-			var inputs = new ShaderInput[inputCount];
-
-			for (var i = 0; i < inputCount; ++i)
-			{
-				inputs[i] = new ShaderInput
-				{
-					Format = (VertexDataFormat)buffer.ReadByte(),
-					Semantics = (DataSemantics)buffer.ReadByte()
-				};
-			}
-
-			byte* data;
-			int length;
-			ExtractShaderCode(buffer, out data, out length);
-
-			shader.Reinitialize(data, length, inputs);
-		}
-
-		/// <summary>
-		///     Loads the font from the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the font data should be read from.</param>
-		/// <param name="font">The shader instance that should be reinitialized with the font data.</param>
-		private static void LoadFont(BufferReader buffer, Font font)
-		{
-			// Load the font map
-			AssetHeader.Validate(buffer, AssetType.Texture2D);
-			LoadTexture(buffer, font.Texture);
-
-			// Load the font metadata
-			var lineHeight = buffer.ReadUInt16();
-
-			// Load the glyph metadata
-			var numGlyphs = buffer.ReadUInt16();
-			var glyphs = new Glyph[256];
-
-			for (var i = 0; i < numGlyphs; ++i)
-			{
-				var index = buffer.ReadByte();
-
-				// Read the texture coordinates
-				var x = buffer.ReadUInt16();
-				var y = buffer.ReadUInt16();
-				glyphs[index].Area.Width = buffer.ReadUInt16();
-				glyphs[index].Area.Height = buffer.ReadUInt16();
-
-				// Compute the texture coordinates
-				var textureLeft = x / (float)font.Texture.Width;
-				var textureRight = (x + glyphs[index].Area.Width) / (float)font.Texture.Width;
-				var textureTop = (y + glyphs[index].Area.Height) / (float)font.Texture.Height;
-				var textureBottom = y / (float)font.Texture.Height;
-
-				glyphs[index].TextureArea = new RectangleF(textureLeft, textureTop,
-														   textureRight - textureLeft,
-														   textureBottom - textureTop);
-
-				// Read the glyph offsets
-				glyphs[index].Area.Left = buffer.ReadInt16();
-				glyphs[index].Area.Top = buffer.ReadInt16();
-				glyphs[index].AdvanceX = buffer.ReadInt16();
-			}
-
-			// Load the kerning data
-			var kerningCount = buffer.ReadUInt16();
-			KerningPair[] kernings = null;
-			if (kerningCount != 0)
-			{
-				kernings = new KerningPair[kerningCount];
-
-				for (var i = 0; i < kerningCount; ++i)
-				{
-					var first = buffer.ReadUInt16();
-					var second = buffer.ReadUInt16();
-					var offset = buffer.ReadInt16();
-
-					kernings[i] = new KerningPair((char)first, (char)second, offset);
-
-					if (glyphs[first].KerningStart == 0)
-						glyphs[first].KerningStart = i;
-
-					++glyphs[first].KerningCount;
-				}
-			}
-
-			font.Reinitialize(glyphs, kernings, lineHeight);
-		}
-
-		/// <summary>
-		///     Extracts the graphics API-dependent shader code from the buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer that should be used to load the shader.</param>
-		/// <param name="shaderCode">The extracted shader source code.</param>
-		/// <param name="length">The length of the extracted shader code in bytes.</param>
-		private static unsafe void ExtractShaderCode(BufferReader buffer, out byte* shaderCode, out int length)
-		{
-			switch (NativeLibrary.GraphicsApi)
-			{
-				case GraphicsApi.Direct3D11:
-					buffer.Skip(buffer.ReadInt32());
-					if (buffer.EndOfBuffer)
-						Log.Die("The HLSL version of the shader cannot be loaded as it was not compiled into the shader asset file.");
-
-					shaderCode = buffer.Pointer;
-					length = buffer.BufferSize - buffer.Count;
-					break;
-				case GraphicsApi.OpenGL3:
-					length = buffer.ReadInt32();
-					shaderCode = buffer.Pointer;
-					break;
-				default:
-					throw new InvalidOperationException("Unsupported Graphics API.");
-			}
+			return Loaders.Single(l => l.AssetType == info.Type).AssetTypeName;
 		}
 
 		/// <summary>
@@ -670,7 +470,7 @@
 			/// <summary>
 			///     Gets the type of the asset.
 			/// </summary>
-			public AssetType Type { get; private set; }
+			public byte Type { get; private set; }
 
 			/// <summary>
 			///     Gets the asset this info object provides information about.

@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.AssetsCompiler.Assets
 {
 	using System;
-	using Pegasus.Assets;
 
 	/// <summary>
 	///     Represents a font asset that requires compilation.
@@ -29,9 +28,9 @@
 		/// <summary>
 		///     Gets the type of the asset.
 		/// </summary>
-		public override AssetType AssetType
+		public override byte AssetType
 		{
-			get { return AssetType.Font; }
+			get { return (byte)Pegasus.Assets.AssetType.Font; }
 		}
 
 		/// <summary>

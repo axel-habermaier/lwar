@@ -38,9 +38,9 @@
 		/// <summary>
 		///     Gets the type of the asset.
 		/// </summary>
-		public override AssetType AssetType
+		public override byte AssetType
 		{
-			get { return AssetType.Texture2D; }
+			get { return (byte)Pegasus.Assets.AssetType.Texture2D; }
 		}
 
 		/// <summary>

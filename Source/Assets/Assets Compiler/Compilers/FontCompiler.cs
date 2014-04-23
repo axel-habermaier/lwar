@@ -71,7 +71,7 @@
 		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
 		protected override void Compile(FontAsset asset, BufferWriter buffer)
 		{
-			AssetHeader.Write(buffer, AssetType.Font);
+			AssetHeader.Write(buffer, (byte)AssetType.Font);
 			_regenerateFontLoader = true;
 
 			// Read the font configuration
@@ -182,7 +182,7 @@
 				writer.AppendLine("using System;");
 				writer.AppendLine("using Pegasus;");
 				writer.AppendLine("using Pegasus.Framework.UserInterface;");
-				writer.AppendLine("using Pegasus.Platform.Assets;");
+				writer.AppendLine("using Pegasus.Assets;");
 				writer.AppendLine("using Pegasus.Platform.Logging;");
 				writer.AppendLine("using Pegasus.Rendering.UserInterface;");
 				writer.NewLine();

@@ -22,7 +22,7 @@
 		protected override void Compile(Texture2DAsset asset, BufferWriter buffer)
 		{
 			asset.Load();
-			AssetHeader.Write(buffer, AssetType.Texture2D);
+			AssetHeader.Write(buffer, (byte)AssetType.Texture2D);
 
 			if (asset.Uncompressed)
 				asset.Write(buffer);

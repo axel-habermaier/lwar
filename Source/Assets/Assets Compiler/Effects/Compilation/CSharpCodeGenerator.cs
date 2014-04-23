@@ -50,7 +50,7 @@
 			_writer.AppendLine("using Pegasus;");
 			_writer.AppendLine("using Pegasus.Math;");
 			_writer.AppendLine("using Pegasus.Platform;");
-			_writer.AppendLine("using Pegasus.Platform.Assets;");
+			_writer.AppendLine("using Pegasus.Assets;");
 			_writer.AppendLine("using Pegasus.Platform.Graphics;");
 			_writer.AppendLine("using Pegasus.Platform.Memory;");
 			_writer.NewLine();

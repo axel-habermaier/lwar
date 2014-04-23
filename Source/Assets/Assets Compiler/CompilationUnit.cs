@@ -143,8 +143,8 @@
 					foreach (var compiler in compilers)
 						assets = assets.Union(compiler.AdditionalAssets);
 
-					var assetListGenerator = new AssetIdentifierListGenerator(assets);
-					assetListGenerator.Generate(Configuration.AssetsProject.RootNamespace);
+					var assetListGenerator = new AssetIdentifierListGenerator();
+					assetListGenerator.Generate(assets, Configuration.AssetsProject.RootNamespace);
 				}
 
 				return success;
@@ -180,6 +180,9 @@
 				compilers = CreateTypeInstances<IAssetCompiler>();
 				foreach (var compiler in compilers)
 					compiler.Clean(_assets);
+
+				var assetListGenerator = new AssetIdentifierListGenerator();
+				assetListGenerator.Clean();
 			}
 			finally
 			{

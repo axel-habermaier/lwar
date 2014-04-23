@@ -187,7 +187,7 @@
 				switch (asset.Type)
 				{
 					case ShaderType.VertexShader:
-						AssetHeader.Write(buffer, AssetType.VertexShader);
+						AssetHeader.Write(buffer, (byte)AssetType.VertexShader);
 
 						var count = reader.ReadByte();
 						buffer.WriteByte(count);
@@ -198,7 +198,7 @@
 						profile = "vs_4_0";
 						break;
 					case ShaderType.FragmentShader:
-						AssetHeader.Write(buffer, AssetType.FragmentShader);
+						AssetHeader.Write(buffer, (byte)AssetType.FragmentShader);
 						profile = "ps_4_0";
 						break;
 					default:

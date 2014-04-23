@@ -209,7 +209,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 				writer.AppendLine("using Assets;");
 				writer.AppendLine("using Pegasus;");
 				writer.AppendLine("using Pegasus.Platform;");
-				writer.AppendLine("using Pegasus.Platform.Assets;");
+				writer.AppendLine("using Pegasus.Assets;");
 				writer.AppendLine("using Pegasus.Platform.Graphics;");
 				writer.AppendLine("using Pegasus.Platform.Memory;");
 				writer.AppendLine("using Pegasus.Rendering;");

@@ -60,9 +60,9 @@
 		/// <summary>
 		///     Gets the type of the asset.
 		/// </summary>
-		public virtual AssetType AssetType
+		public virtual byte AssetType
 		{
-			get { return AssetType.Unknown; }
+			get { throw new NotSupportedException(); }
 		}
 
 		/// <summary>

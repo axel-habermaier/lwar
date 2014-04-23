@@ -1,10 +1,9 @@
 ﻿namespace Pegasus.Assets
 {
 	using System;
-	using Platform.Logging;
 
 	/// <summary>
-	///     Describes the type of an asset.
+	///     Describes the type of an asset supported by the framework.
 	/// </summary>
 	public enum AssetType : byte
 	{
@@ -37,45 +36,5 @@
 		///     Indicates that the asset is a 2D texture.
 		/// </summary>
 		Texture2D = 5,
-
-		/// <summary>
-		///     Indicates that the asset is an effect.
-		/// </summary>
-		Effect = 6,
-
-		/// <summary>
-		///     Indicates that the asset is a Xaml resource.
-		/// </summary>
-		Xaml = 7,
-	}
-
-	/// <summary>
-	///     Provides extension methods for the 'AssetType' enumeration.
-	/// </summary>
-	internal static class AssetTypeExtensions
-	{
-		/// <summary>
-		///     Gets the friendly name of the given asset type.
-		/// </summary>
-		/// <param name="assetType">The asset type the friendly name should be returned for.</param>
-		public static string ToDisplayString(this AssetType assetType)
-		{
-			switch (assetType)
-			{
-				case AssetType.Font:
-					return "Font";
-				case AssetType.FragmentShader:
-					return "Fragment Shader";
-				case AssetType.VertexShader:
-					return "Vertex Shader";
-				case AssetType.CubeMap:
-					return "Cube Map";
-				case AssetType.Texture2D:
-					return "2D Texture";
-				default:
-					Log.Die("Unsupported or unknown asset type.");
-					return "Unknown";
-			}
-		}
 	}
 }

@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.AssetsCompiler.Assets
 {
 	using System;
-	using Pegasus.Assets;
 	using Platform.Graphics;
 
 	/// <summary>
@@ -22,9 +21,9 @@
 		/// <summary>
 		///     Gets the type of the asset.
 		/// </summary>
-		public override AssetType AssetType
+		public override byte AssetType
 		{
-			get { return AssetType.FragmentShader; }
+			get { return (byte)Pegasus.Assets.AssetType.FragmentShader; }
 		}
 
 		/// <summary>

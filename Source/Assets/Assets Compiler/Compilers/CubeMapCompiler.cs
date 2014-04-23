@@ -24,7 +24,7 @@
 		protected override void Compile(CubeMapAsset asset, BufferWriter buffer)
 		{
 			asset.Load();
-			AssetHeader.Write(buffer, AssetType.CubeMap);
+			AssetHeader.Write(buffer, (byte)AssetType.CubeMap);
 
 			if (asset.Uncompressed)
 				asset.Write(buffer);

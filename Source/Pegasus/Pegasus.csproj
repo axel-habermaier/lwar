@@ -215,6 +215,15 @@
     <Compile Include="../User Interface\Pegasus UI\UserInterface.cs">
       <Link>Framework\UserInterface\UserInterface.cs</Link>
     </Compile>
+    <Compile Include="Assets\AssetLoaders\CubeMapAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\AssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\FontAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\FragmentShaderAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\ShaderAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\Texture2DAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\TextureAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\VertexShaderAssetLoader.cs" />
+    <Compile Include="Assets\AssetType.cs" />
     <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />
     <Compile Include="Framework\UserInterface\Controls\AppWindow.cs" />
     <Compile Include="Framework\UserInterface\Controls\RenderOutputPanel.cs" />
@@ -255,7 +264,6 @@
     <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Assets\AssetHashCollision.cs" />
     <Compile Include="Assets\AssetHeader.cs" />
-    <Compile Include="Assets\AssetType.cs" />
     <Compile Include="Platform\Graphics\ShaderProgram.cs" />
     <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />

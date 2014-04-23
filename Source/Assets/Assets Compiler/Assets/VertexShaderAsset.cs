@@ -22,9 +22,9 @@
 		/// <summary>
 		///     Gets the type of the asset.
 		/// </summary>
-		public override AssetType AssetType
+		public override byte AssetType
 		{
-			get { return AssetType.VertexShader; }
+			get { return (byte)Pegasus.Assets.AssetType.VertexShader; }
 		}
 
 		/// <summary>

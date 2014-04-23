@@ -16,13 +16,5 @@
 			: base(relativePath, doNotCreateTargetPath: true)
 		{
 		}
-
-		/// <summary>
-		///     Gets the type of the asset.
-		/// </summary>
-		public override AssetType AssetType
-		{
-			get { return AssetType.Xaml; }
-		}
 	}
 }

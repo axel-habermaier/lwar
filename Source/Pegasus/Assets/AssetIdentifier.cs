@@ -13,7 +13,7 @@
 		/// </summary>
 		/// <param name="assetType">The type of the asset.</param>
 		/// <param name="assetName">The name of the asset.</param>
-		public AssetIdentifier(AssetType assetType, string assetName)
+		public AssetIdentifier(byte assetType, string assetName)
 			: this()
 		{
 			Assert.ArgumentNotNullOrWhitespace(assetName);
@@ -30,7 +30,7 @@
 		/// <summary>
 		///     Gets the type of the asset.
 		/// </summary>
-		internal AssetType AssetType { get; private set; }
+		internal byte AssetType { get; private set; }
 
 		/// <summary>
 		///     The application-wide unique hash code of the asset.
