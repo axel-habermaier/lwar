@@ -87,11 +87,11 @@
 		{
 			// Initialize the color buffer of the render target
 			var colorBuffer = new Texture2D(Application.Current.GraphicsDevice, panelSize, SurfaceFormat.Rgba8, TextureFlags.RenderTarget);
-			colorBuffer.SetName("MainWindow.RenderOutputPanel.ColorBuffer");
+			colorBuffer.SetName("AppWindow.RenderOutputPanel.ColorBuffer");
 
 			// Initialize the depth stencil buffer of the render target
 			var depthStencil = new Texture2D(Application.Current.GraphicsDevice, panelSize, SurfaceFormat.Depth24Stencil8, TextureFlags.DepthStencil);
-			depthStencil.SetName("MainWindow.RenderOutputPanel.DepthStencil");
+			depthStencil.SetName("AppWindow.RenderOutputPanel.DepthStencil");
 
 			// Initialize the render output panel's graphics properties
 			RenderOutputPanel.OutputTexture = colorBuffer;
