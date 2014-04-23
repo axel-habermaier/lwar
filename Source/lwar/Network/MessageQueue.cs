@@ -106,7 +106,7 @@
 		/// </summary>
 		/// <param name="messages">The messages that should be written to the buffer.</param>
 		/// <param name="buffer">The buffer the messages should be written into.</param>
-		private static void AddMessages(IEnumerable<Message> messages, BufferWriter buffer)
+		private static void AddMessages(Queue<Message> messages, BufferWriter buffer)
 		{
 			foreach (var message in messages)
 			{

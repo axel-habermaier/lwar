@@ -53,6 +53,11 @@
 		private double _lastPacketTimestamp;
 
 		/// <summary>
+		///     A cached IP end point representing the sender of a received message.
+		/// </summary>
+		private IPEndPoint _sender = new IPEndPoint(IPAddress.IPv6Any, 0);
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The endpoint of the server.</param>
@@ -141,19 +146,20 @@
 
 			try
 			{
-				var sender = new IPEndPoint(IPAddress.IPv6Any, 0);
-				int receivedBytes;
+				_sender.Address = IPAddress.IPv6Any;
+				_sender.Port = 0;
 
-				while (_socket.TryReceive(_buffer, ref sender, out receivedBytes))
+				int receivedBytes;
+				while (_socket.TryReceive(_buffer, ref _sender, out receivedBytes))
 				{
 					using (var reader = BufferReader.Create(_buffer, 0, receivedBytes, Endianess.Big))
 					{
-						if (sender.SameEndPoint(ServerEndPoint))
+						if (_sender.SameEndPoint(ServerEndPoint))
 							HandlePacket(reader, messageQueue, deliveryManager);
 						else
 						{
 							Log.Warn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
-									 sender, ServerEndPoint);
+									 _sender, ServerEndPoint);
 						}
 					}
 

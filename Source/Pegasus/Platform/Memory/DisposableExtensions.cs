@@ -10,6 +10,21 @@
 	public static class DisposableExtensions
 	{
 		/// <summary>
+		///     Disposes all objects contained in the list if the list is not null.
+		/// </summary>
+		/// <param name="list">The list that should be disposed.</param>
+		[DebuggerHidden]
+		public static void SafeDisposeAll<T>(this List<T> list)
+			where T : IDisposable
+		{
+			if (list == null)
+				return;
+
+			foreach (var obj in list)
+				obj.SafeDispose();
+		}
+
+		/// <summary>
 		///     Disposes all objects contained in the enumerable if the enumerable is not null.
 		/// </summary>
 		/// <param name="enumerable">The enumerable that should be disposed.</param>

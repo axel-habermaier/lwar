@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.IO;
+	using Framework;
 	using Memory;
 	using Rendering.UserInterface;
 	using Console = Rendering.UserInterface.Console;
@@ -87,7 +88,7 @@
 				writer.Write("[");
 				writer.Write(entry.LogType.ToDisplayString());
 				writer.Write("]   ");
-				writer.Write(entry.Time.ToString("HH:mm:ss.ffff"));
+				writer.Write(entry.Time.ToString("F4").PadLeft(9));
 
 				writer.Write("   ");
 				Text.Write(writer, entry.Message);

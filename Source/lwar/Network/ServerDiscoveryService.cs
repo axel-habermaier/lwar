@@ -5,6 +5,7 @@
 	using System.Linq;
 	using System.Net;
 	using Messages;
+	using Pegasus.Platform;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
@@ -98,14 +99,14 @@
 			var server = _knownServers.SingleOrDefault(s => s.EndPoint.Equals(endPoint));
 			if (server == null)
 			{
-				server = new ServerInfo { EndPoint = endPoint, DiscoveryTime = DateTime.Now };
+				server = new ServerInfo { EndPoint = endPoint, DiscoveryTime = Clock.SystemTime };
 				_knownServers.Add(server);
 
 				if (ServerDiscovered != null)
 					ServerDiscovered(endPoint);
 			}
 			else
-				server.DiscoveryTime = DateTime.Now;
+				server.DiscoveryTime = Clock.SystemTime;
 		}
 
 		/// <summary>
@@ -124,7 +125,7 @@
 			/// <summary>
 			///     The last time a discovery message has been received from the server.
 			/// </summary>
-			public DateTime DiscoveryTime;
+			public double DiscoveryTime;
 
 			/// <summary>
 			///     The end point of the server.
@@ -136,7 +137,7 @@
 			/// </summary>
 			public bool HasTimedOut
 			{
-				get { return (DateTime.Now - DiscoveryTime).TotalMilliseconds > ServerTimeout; }
+				get { return (Clock.SystemTime - DiscoveryTime) * 1000 > ServerTimeout; }
 			}
 		}
 	}

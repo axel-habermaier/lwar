@@ -42,6 +42,11 @@
 		}
 
 		/// <summary>
+		///     Gets the application startup time in seconds, i.e., the timestamp of the internal CPU clock at application startup.
+		/// </summary>
+		public double StartupTime { get; private set; }
+
+		/// <summary>
 		///     Gets the application instance of this app domain.
 		/// </summary>
 		public static Application Current
@@ -131,6 +136,7 @@
 			Assert.ArgumentNotNull(logFile);
 
 			Name = name;
+			StartupTime = Clock.SystemTime;
 
 			using (GraphicsDevice = new GraphicsDevice())
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))

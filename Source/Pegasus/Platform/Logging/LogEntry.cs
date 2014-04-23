@@ -9,6 +9,19 @@
 	public struct LogEntry
 	{
 		/// <summary>
+		///     Used to measure the time since the start of the application.
+		/// </summary>
+		private static readonly Stopwatch Stopwatch = new Stopwatch();
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static LogEntry()
+		{
+			Stopwatch.Start();
+		}
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="logType">The type of the log entry.</param>
@@ -21,7 +34,7 @@
 
 			LogType = logType;
 			Message = message;
-			Time = DateTime.Now;
+			Time = Stopwatch.Elapsed.TotalSeconds;
 		}
 
 		/// <summary>
@@ -37,7 +50,7 @@
 		/// <summary>
 		///     Gets the date and time of the creation of the log entry.
 		/// </summary>
-		public DateTime Time { get; private set; }
+		public double Time { get; private set; }
 
 		/// <summary>
 		///     Raises the appropriate log event for the log entries.
