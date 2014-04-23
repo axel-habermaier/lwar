@@ -11,6 +11,14 @@
 #include <X11/Xatom.h>
 #include <X11/extensions/Xrandr.h>
 
+#include <arpa/inet.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 typedef struct
 {
 	Display*	display;
@@ -39,5 +47,14 @@ pgVoid pgShutdownX11();
 	XIM			inputMethod;	\
 	XIC			inputContext;	\
 	Cursor		cursor;
+
+//====================================================================================================================
+// Network types and defines
+//====================================================================================================================
+
+typedef int Socket;
+#define socket_error(s)   ((s) < 0)
+#define socket_invalid(s) ((s) < 0)
+#define closesocket close
 
 #endif

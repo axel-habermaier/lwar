@@ -1,4 +1,5 @@
 #include "prelude.h"
+#include <stdio.h>
 
 #ifdef WINDOWS
 
@@ -35,6 +36,20 @@ pgVoid pgShowMessageBox(pgString caption, pgString message)
 // Windows-specific functions
 //====================================================================================================================
 
+pgString pgGetWin32ErrorMessage(DWORD error)
+{
+	static char buffer[2048];
+	DWORD success;
+
+	success = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, error,
+							MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer, sizeof(buffer), NULL);
+
+	if (!success)
+		sprintf(buffer, "(error code: 0x%X)", error);
+
+	return buffer;
+}
+
 pgVoid pgWin32Error(pgString message) 
 { 
 	pgDieWin32Error(message, GetLastError());
@@ -42,16 +57,25 @@ pgVoid pgWin32Error(pgString message)
 
 pgVoid pgDieWin32Error(pgString message, DWORD error)
 {
-	static char buffer[2048];
-	DWORD success;
+	PG_DIE("%s %s", message, pgGetWin32ErrorMessage(error));
+}
 
-	success = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,	NULL, error,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer,	sizeof(buffer), NULL);
+//====================================================================================================================
+// Internal functions
+//====================================================================================================================
 
-	if (success)
-		PG_DIE("%s %s", message, buffer);
-	else
-		PG_DIE("%s (error code: 0x%X)", message, error);
+pgVoid pgInitializeCore()
+{
+	WSADATA wsaData;
+
+	if (WSAStartup(MAKEWORD(1, 1), &wsaData) != 0)
+		pgWin32Error("Winsock initialization failed.");
+}
+
+pgVoid pgShutdownCore()
+{
+	if (WSACleanup() != 0)
+		pgWin32Error("Failed to shut down Winsock.");
 }
 
 //====================================================================================================================

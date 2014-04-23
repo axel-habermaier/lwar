@@ -36,10 +36,14 @@
 	#include <windows.h>
 #pragma warning(pop)
 
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
 //====================================================================================================================
 // Windows functions
 //====================================================================================================================
 
+pgString pgGetWin32ErrorMessage(DWORD error);
 pgVoid pgWin32Error(pgString message);
 pgVoid pgDieWin32Error(pgString message, DWORD error);
 
@@ -51,5 +55,13 @@ pgVoid pgDieWin32Error(pgString message, DWORD error);
 	HWND	hwnd;			\
 	HCURSOR cursor;			\
 	pgBool  cursorInside;
+
+//====================================================================================================================
+// Network types and defines
+//====================================================================================================================
+
+typedef SOCKET Socket;
+#define socket_error(s)   ((s) == SOCKET_ERROR)
+#define socket_invalid(s) ((s) == INVALID_SOCKET)
 
 #endif

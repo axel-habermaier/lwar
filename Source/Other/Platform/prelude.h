@@ -138,6 +138,7 @@
 #include "pg.h"
 #include "pgWindow.h"
 #include "pgGraphics.h"
+#include "pgNetwork.h"
 
 //====================================================================================================================
 // Pegasus logging, state and internal functions
@@ -177,6 +178,7 @@ PG_NORETURN pgVoid pgNoReturn();
 
 #ifdef WINDOWS
 	#include "win32.h"	
+
 	#ifdef OPENGL3
 		#include "gl3.h"
 	#elif defined(DIRECT3D11)
@@ -190,6 +192,13 @@ PG_NORETURN pgVoid pgNoReturn();
 #else
 	#error Unsupported compiler, operating system, or operating system/graphics API combination
 #endif
+
+//====================================================================================================================
+// Pegasus
+//====================================================================================================================
+
+pgVoid pgInitializeCore();
+pgVoid pgShutdownCore();
 
 //====================================================================================================================
 // Window
@@ -538,5 +547,15 @@ pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain);
 
 pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
+
+//====================================================================================================================
+// Network
+//====================================================================================================================
+
+struct pgSocket
+{
+	Socket socket;
+	pgPacketReceivedCallback callback;
+};
 
 #endif

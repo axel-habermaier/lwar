@@ -59,4 +59,16 @@ pgVoid pgShowMessageBox(pgString caption, pgString message)
 	PG_DIE("Message boxes are not supported by Linux.");
 }
 
+//====================================================================================================================
+// Internal functions
+//====================================================================================================================
+
+pgVoid pgInitializeCore()
+{
+}
+
+pgVoid pgShutdownCore()
+{
+}
+
 #endif
