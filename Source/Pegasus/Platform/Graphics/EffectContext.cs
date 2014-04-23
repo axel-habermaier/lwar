@@ -140,15 +140,6 @@
 		}
 
 		/// <summary>
-		///     Disposes the effect technique instance.
-		/// </summary>
-		/// <param name="technique">The effect technique that should be disposed.</param>
-		public void DisposeTechnique(EffectTechnique technique)
-		{
-			technique.Dispose();
-		}
-
-		/// <summary>
 		///     Checks whether the instance is initialized.
 		/// </summary>
 		[Conditional("DEBUG")]

@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Memory;
 
 	/// <summary>
 	///     Represents a combination of shaders that can be set on the GPU to create a rendering effect.
@@ -59,15 +58,6 @@
 		{
 			Assert.NotNull(_unbind, "No unbind action has been set.");
 			_unbind();
-		}
-
-		
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		internal void Dispose()
-		{
-			_shaderProgram.SafeDispose();
 		}
 	}
 }

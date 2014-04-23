@@ -341,12 +341,6 @@
 			_writer.AppendLine("protected override void __OnDisposing()");
 			_writer.AppendBlockStatement(() =>
 			{
-				foreach (var technique in _effect.Techniques)
-					_writer.AppendLine("{0}.DisposeTechnique({1});", ContextVariableName, technique.Name);
-
-				if (ConstantBuffers.Any())
-					_writer.NewLine();
-
 				foreach (var buffer in ConstantBuffers)
 					_writer.AppendLine("{0}.SafeDispose();", GetFieldName(buffer.Name));
 			});
