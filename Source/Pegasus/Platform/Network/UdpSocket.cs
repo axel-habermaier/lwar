@@ -106,6 +106,21 @@
 		}
 
 		/// <summary>
+		///     Binds the socket to the given port.
+		/// </summary>
+		/// <param name="multicastGroup">The multicast group that the socket should listen to or send to.</param>
+		/// <param name="timeToLive">The time to live for the multicast messages.</param>
+		public unsafe void BindMulticast(IPEndPoint multicastGroup, int timeToLive = 1)
+		{
+			Assert.NotDisposed(this);
+			Assert.ArgumentInRange(timeToLive, 1, Int32.MaxValue);
+
+			var address = multicastGroup.Address;
+			if (!NativeMethods.BindMulticast(_socket, timeToLive, &address, multicastGroup.Port))
+				throw new NetworkException();
+		}
+
+		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
@@ -153,6 +168,9 @@
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindUdpSocket")]
 			public static extern bool BindSocket(IntPtr socket, ushort port);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindUdpSocketMulticast")]
+			public static extern unsafe bool BindMulticast(IntPtr socket, int timeToLive, IPAddress* address, ushort port);
 		}
 	}
 }

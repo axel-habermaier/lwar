@@ -14,10 +14,10 @@
 	/// </summary>
 	public class MainMenu : Screen
 	{
-		///// <summary>
-		/////     The service that is used to automatically discover server instances.
-		///// </summary>
-		//private readonly ServerDiscoveryService _discoveryService = new ServerDiscoveryService();
+		/// <summary>
+		///     The service that is used to automatically discover server instances.
+		/// </summary>
+		private readonly ServerDiscoveryService _discoveryService = new ServerDiscoveryService();
 
 		/// <summary>
 		///     The label that is used to draw the menu.
@@ -37,8 +37,8 @@
 				Alignment = TextAlignment.Centered | TextAlignment.Middle
 			};
 
-			//_discoveryService.ServerDiscovered += s => Log.Info("Discovered {0}.", s);
-			//_discoveryService.ServerHasShutdown += s => Log.Info("Removed discovered server {0}.", s);
+			_discoveryService.ServerDiscovered += s => Log.Info("Discovered {0}.", s);
+			_discoveryService.ServerHasShutdown += s => Log.Info("Removed discovered server {0}.", s);
 		}
 
 		/// <summary>
@@ -48,7 +48,7 @@
 		public override void Update(bool topmost)
 		{
 			_label.Area = new Rectangle(0, 0, (int)Window.ActualWidth, (int)Window.ActualHeight);
-			//_discoveryService.Update();
+			_discoveryService.Update();
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@
 		protected override void OnDisposing()
 		{
 			_label.SafeDispose();
-			//_discoveryService.SafeDispose();
+			_discoveryService.SafeDispose();
 		}
 	}
 }

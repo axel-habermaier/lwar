@@ -1,8 +1,8 @@
 ﻿namespace Lwar.Network
 {
 	using System;
-	using System.Net;
 	using Gameplay;
+	using Pegasus.Platform.Network;
 
 	/// <summary>
 	///     Provides access to lwar network specification constants.
@@ -61,14 +61,9 @@
 		public const byte Revision = 20;
 
 		/// <summary>
-		///     The number of discovery messages that should be sent per minute for automatic server discovery.
-		/// </summary>
-		public const double DiscoveryMessageFrequency = 12;
-
-		/// <summary>
 		///     The time (in seconds) after which a discovered server has presumably shut down.
 		/// </summary>
-		public const int DiscoveryTimeout = 5;
+		public const int DiscoveryTimeout = 10;
 
 		/// <summary>
 		///     The identifier of the player that represents the server.

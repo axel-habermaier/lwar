@@ -3,6 +3,7 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using Logging;
 
 	/// <summary>
 	///     Represents an IPv4 or IPv6 internet protocol address.
@@ -13,10 +14,18 @@
 		///     The underlying native IP address.
 		/// </summary>
 		[UsedImplicitly]
-		private fixed byte _bytes[16];
+		private fixed byte _bytes [16];
 
 		/// <summary>
-		/// Gets a value indicating whether the IP address is an IPv6-mapped IPv4 address.
+		///     Represents the '::' IPv6 address.
+		/// </summary>
+		public static IPAddress Any
+		{
+			get { return new IPAddress(); }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the IP address is an IPv6-mapped IPv4 address.
 		/// </summary>
 		public bool IsMappedIPv4
 		{
@@ -33,6 +42,19 @@
 					return ip->_bytes[10] == 255 && ip->_bytes[11] == 255;
 				}
 			}
+		}
+
+		/// <summary>
+		///     Initializes a new instance from a string.
+		/// </summary>
+		/// <param name="ipAddress">The textual representation of the IP address.</param>
+		public static IPAddress Parse(string ipAddress)
+		{
+			IPAddress address;
+			if (!TryParse(ipAddress, out address))
+				Log.Die("'{0}' is not a valid IP address.", ipAddress);
+
+			return address;
 		}
 
 		/// <summary>
@@ -74,7 +96,7 @@
 		/// </summary>
 		public bool Equals(IPAddress other)
 		{
-			fixed(IPAddress* ip = &this)
+			fixed (IPAddress* ip = &this)
 			{
 				for (var i = 0; i < 16; ++i)
 				{
@@ -102,7 +124,7 @@
 		/// </summary>
 		public override int GetHashCode()
 		{
-			fixed(IPAddress* ip = &this)
+			fixed (IPAddress* ip = &this)
 				return ip->_bytes[15] * 397 ^ ip->_bytes[14];
 		}
 

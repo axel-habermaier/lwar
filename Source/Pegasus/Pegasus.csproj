@@ -267,7 +267,6 @@
     <Compile Include="Platform\Graphics\ShaderProgram.cs" />
     <Compile Include="Platform\Network\IPAddress.cs" />
     <Compile Include="Platform\Network\IPEndPoint.cs" />
-    <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />
     <Compile Include="Platform\Performance\AveragedInteger.cs" />
     <Compile Include="Platform\Network\NetworkException.cs" />

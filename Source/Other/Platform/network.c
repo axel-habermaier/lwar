@@ -131,6 +131,48 @@ PG_API_EXPORT pgBool pgBindUdpSocket(pgSocket* socket, pgUint16 port)
 	return PG_TRUE;
 }
 
+PG_API_EXPORT pgBool pgBindUdpSocketMulticast(pgSocket* socket, pgInt32 timeToLive, pgIPAddress* ipAddress, pgUint16 port)
+{
+	int loop = 1;
+	struct sockaddr_in6 addr = { 0 };
+	struct ipv6_mreq group = { 0 };
+
+	PG_ASSERT_NOT_NULL(socket);
+	PG_ASSERT_NOT_NULL(ipAddress);
+
+	if (socket_error(setsockopt(socket->socket, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, (char*)&loop, sizeof(loop))))
+	{
+		pgNetworkError("Failed to enable multicast looping.");
+		return PG_FALSE;
+	}
+
+	if (socket_error(setsockopt(socket->socket, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, (char*)&timeToLive, sizeof(timeToLive))))
+	{
+		pgNetworkError("Failed to set multicast TTL.");
+		return PG_FALSE;
+	}
+
+	addr.sin6_family = AF_INET6;
+	addr.sin6_port = htons(port);
+	memcpy(&addr.sin6_addr, ipAddress, sizeof(pgIPAddress));
+
+	group.ipv6mr_multiaddr = addr.sin6_addr;
+	if (socket_error(setsockopt(socket->socket, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, (char*)&group, sizeof(group))))
+	{
+		pgNetworkError("Failed to add multicast membership.");
+		return PG_FALSE;
+	}
+
+	addr.sin6_addr = in6addr_any;
+	if (socket_error(bind(socket->socket, (struct sockaddr*)&addr, sizeof(addr))))
+	{
+		pgNetworkError("Failed to bind multicast UDP socket.");
+		return PG_FALSE;
+	}
+
+	return PG_TRUE;
+}
+
 PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* packet)
 {
 	struct sockaddr_storage from = { 0 };

@@ -44,6 +44,7 @@ PG_API_EXPORT pgSocket* pgCreateUdpSocket();
 PG_API_EXPORT pgBool pgDestroyUdpSocket(pgSocket* socket);
 
 PG_API_EXPORT pgBool pgBindUdpSocket(pgSocket* socket, pgUint16 port);
+PG_API_EXPORT pgBool pgBindUdpSocketMulticast(pgSocket* socket, pgInt32 timeToLive, pgIPAddress* ipAddress, pgUint16 port);
 
 PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* packet);
 PG_API_EXPORT pgBool pgSendUdpPacket(pgSocket* socket, pgPacket* packet);
