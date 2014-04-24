@@ -137,24 +137,26 @@ PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* 
 	struct sockaddr_in6* from6 = NULL;
 	struct sockaddr_in* from4 = NULL;
 	socklen_t len = sizeof(from);
+	int size;
 
 	PG_ASSERT_NOT_NULL(socket);
 	PG_ASSERT_NOT_NULL(packet);
 	PG_ASSERT_NOT_NULL(packet->address);
 	PG_ASSERT_NOT_NULL(packet->data);
 
-	packet->size = recvfrom(socket->socket, (char*)packet->data, packet->capacity, 0, (struct sockaddr*)&from, &len);
+	size = recvfrom(socket->socket, (char*)packet->data, packet->capacity, 0, (struct sockaddr*)&from, &len);
+	packet->size = (pgUint32)size;
 
 #ifdef WINDOWS
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
 #else
-	if (socket_error(packet->size) && errno == EAGAIN)
+	if (socket_error(size) && errno == EAGAIN)
 #endif
 	{
 		return PG_RECEIVE_NO_DATA;
 	}
 
-	if (socket_error(packet->size))
+	if (socket_error(size))
 	{
 		pgNetworkError("Receiving of UDP packet failed.");
 		return PG_RECEIVE_ERROR;
