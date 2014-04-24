@@ -81,7 +81,16 @@
 			where TElement : class
 		{
 			Assert.ArgumentNotNull(element);
-			_renderers.OfType<Renderer<TElement>>().Single().Add(element);
+
+			foreach (var renderer in _renderers)
+			{
+				var typedRenderer = renderer as Renderer<TElement>;
+				if (typedRenderer != null)
+				{
+					typedRenderer.Add(element);
+					break;
+				}
+			}
 		}
 
 		/// <summary>
@@ -93,7 +102,16 @@
 			where TElement : class
 		{
 			Assert.ArgumentNotNull(element);
-			_renderers.OfType<Renderer<TElement>>().Single().Remove(element);
+
+			foreach (var renderer in _renderers)
+			{
+				var typedRenderer = renderer as Renderer<TElement>;
+				if (typedRenderer != null)
+				{
+					typedRenderer.Remove(element);
+					break;
+				}
+			}
 		}
 
 		/// <summary>

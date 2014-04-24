@@ -60,8 +60,6 @@
 			Assert.ArgumentNotNull(serverEndPoint);
 
 			_socket = new UdpSocket();
-			//_socket.Bind(serverEndPoint.Port);
-
 			ServerEndPoint = serverEndPoint;
 			State = ConnectionState.Connecting;
 		}

@@ -53,7 +53,9 @@
 				Error = message => EnqueueLogEntry(LogType.Error, message),
 				Warning = message => EnqueueLogEntry(LogType.Warning, message),
 				Info = message => EnqueueLogEntry(LogType.Info, message),
+#if DEBUG
 				Debug = message => EnqueueLogEntry(LogType.Debug, message)
+#endif
 			};
 
 			Commands.OnStartServer += Run;
@@ -86,7 +88,7 @@
 			Assert.InRange(type);
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			_logs.Enqueue(new LogEntry(type, "(Server) " + message.Trim()));
+			_logs.Enqueue(new LogEntry(type, message.Trim()));
 		}
 
 		/// <summary>

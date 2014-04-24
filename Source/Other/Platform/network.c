@@ -226,7 +226,7 @@ PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* 
 		break;
 	case AF_INET6:
 		from6 = (struct sockaddr_in6*)&from;
-		packet->port = from6->sin6_port;
+		packet->port = htons(from6->sin6_port);
 		packet->address->ipv6 = from6->sin6_addr;
 		packet->address->isIPv6 = PG_TRUE;
 		break;
@@ -241,10 +241,7 @@ PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* 
 
 PG_API_EXPORT pgBool pgSendUdpPacket(pgSocket* socket, pgPacket* packet)
 {
-	struct sockaddr_in ipv4 = { 0 };
 	struct sockaddr_in6 ipv6 = { 0 };
-	struct sockaddr* addr = NULL;
-	socklen_t len = 0;
 	int sent = 0;
 
 	PG_ASSERT_NOT_NULL(socket);
@@ -252,26 +249,21 @@ PG_API_EXPORT pgBool pgSendUdpPacket(pgSocket* socket, pgPacket* packet)
 	PG_ASSERT_NOT_NULL(packet->address);
 	PG_ASSERT_NOT_NULL(packet->data);
 
+	ipv6.sin6_family = AF_INET6;
+	ipv6.sin6_port = htons(packet->port);
+	
 	if (packet->address->isIPv6)
-	{
-		memset(&ipv6, 0, sizeof(ipv6));
-		ipv6.sin6_family = AF_INET6;
-		ipv6.sin6_port = packet->port;
 		ipv6.sin6_addr = packet->address->ipv6;
-		addr = (struct sockaddr*)&ipv6;
-		len = sizeof(ipv6);
-	}
 	else
 	{
-		memset(&ipv4, 0, sizeof(ipv4));
-		ipv4.sin_family = AF_INET;
-		ipv4.sin_port = packet->port;
-		ipv4.sin_addr = packet->address->ipv4;
-		addr = (struct sockaddr*)&ipv4;
-		len = sizeof(ipv4);
+		// Map IPv4 address to IPv6
+		byte* addr = (byte*)&ipv6.sin6_addr;
+		memcpy(addr + 12, &packet->address->ipv4, sizeof(packet->address->ipv4));
+		addr[10] = 255;
+		addr[11] = 255;
 	}
 	
-	sent = sendto(socket->socket, (const char*)packet->data, packet->size, 0, addr, len);
+	sent = sendto(socket->socket, (const char*)packet->data, packet->size, 0, (struct sockaddr*)&ipv6, sizeof(struct sockaddr_in6));
 	if (socket_error(sent))
 	{
 		pgNetworkError("Failed to send UDP packet.");

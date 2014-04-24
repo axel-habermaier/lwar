@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///     Raised when a network error occurred.

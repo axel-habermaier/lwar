@@ -14,9 +14,12 @@ void server_log_callbacks(LogCallbacks callbacks)
 
 static const char* format(const char* message, va_list vl)
 {
-	static char buffer[4096];
+	char temp[2048];
+	static char buffer[2048];
 
-	if (vsnprintf((char*)buffer, sizeof(buffer), (char*)message, vl) < 0)
+	if (vsnprintf((char*)temp, sizeof(temp), (char*)message, vl) < 0)
+		log_die("Error while generating log message.");
+	else if (sprintf((char*)buffer, "(Server) %s", temp) < 0)
 		log_die("Error while generating log message.");
 	else
 		return buffer;
