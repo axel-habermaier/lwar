@@ -1,7 +1,7 @@
 ﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
 	using System;
-	using System.Net;
+	using Platform.Network;
 
 	/// <summary>
 	///     Parses an IPv4 or IPv6 address.
@@ -37,7 +37,7 @@
 			else
 				length = inputStream.Skip(c => Char.IsDigit(c) || c == '.');
 
-			if (IPAddress.TryParse(inputStream.Substring(state.Position, length), out address))
+			if (IPAddress.TryCreate(inputStream.Substring(state.Position, length), out address))
 				return Success(address);
 
 			inputStream.State = state;

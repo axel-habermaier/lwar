@@ -1,13 +1,13 @@
 ﻿namespace Lwar
 {
 	using System;
-	using System.Net;
 	using Assets;
 	using Network;
 	using Pegasus;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Platform.Network;
 	using Pegasus.Rendering;
 	using Screens;
 	using Scripting;
@@ -124,7 +124,7 @@
 			Assert.ArgumentNotNull(address);
 
 			Disconnect();
-			_screenManager.Add(new Level(new IPEndPoint(address, port)));
+			_screenManager.Add(new Level(IPEndPoint.Create(address, port)));
 		}
 
 		/// <summary>

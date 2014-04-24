@@ -1,7 +1,6 @@
 namespace Lwar.Screens
 {
 	using System;
-	using System.Net;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Network;
@@ -11,6 +10,7 @@ namespace Lwar.Screens
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Platform.Network;
 	using Pegasus.Rendering;
 	using Rendering;
 	using Scripting;

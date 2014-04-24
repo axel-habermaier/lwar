@@ -18,12 +18,16 @@ pgVoid pgInitialize(pgLogCallback callback)
 
 	pgState.initialized = PG_TRUE;
 	pgState.logCallback = callback;
+
+	pgInitializeCore();
 }
 
 pgVoid pgShutdown()
 {
 	PG_ASSERT(pgState.initialized == PG_TRUE, "Library is not initialized.");
 	pgState.initialized = PG_FALSE;
+
+	pgShutdownCore();
 }
 
 //====================================================================================================================

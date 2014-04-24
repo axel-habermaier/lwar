@@ -1,5 +1,5 @@
-﻿using System.Net;
-using Lwar.Network;
+﻿using Lwar.Network;
+using Pegasus.Platform.Network;
 using Pegasus.Scripting;
 using Pegasus.Scripting.Validators;
 

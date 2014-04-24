@@ -2,11 +2,11 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Net;
 	using System.Threading;
 	using Messages;
 	using Pegasus;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Platform.Network;
 	using Scripting;
 
 	/// <summary>
@@ -41,7 +41,7 @@
 		private readonly MessageQueue _outgoingMessages;
 
 		/// <summary>
-		///     A cached queue that is used to retreive the received messages from the server connection.
+		///     A cached queue that is used to retrieve the received messages from the server connection.
 		/// </summary>
 		private readonly Queue<Message> _receivedMessages = new Queue<Message>();
 
@@ -141,8 +141,8 @@
 		{
 			Assert.ArgumentNotNull(dispatcher);
 
-			_connection.Receive(_receivedMessages, _deliveryManager);
 			_connection.Send(_outgoingMessages);
+			_connection.Receive(_receivedMessages, _deliveryManager);
 			_connection.Update();
 
 			while (_receivedMessages.Count != 0)

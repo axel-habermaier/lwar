@@ -265,10 +265,13 @@
     <Compile Include="Assets\AssetHashCollision.cs" />
     <Compile Include="Assets\AssetHeader.cs" />
     <Compile Include="Platform\Graphics\ShaderProgram.cs" />
+    <Compile Include="Platform\Network\AddressFamily.cs" />
+    <Compile Include="Platform\Network\IPAddress.cs" />
+    <Compile Include="Platform\Network\IPEndPoint.cs" />
     <Compile Include="Platform\Network\MulticastSocket.cs" />
     <Compile Include="Platform\Performance\AveragedDouble.cs" />
     <Compile Include="Platform\Performance\AveragedInteger.cs" />
-    <Compile Include="Platform\Network\SocketOperationException.cs" />
+    <Compile Include="Platform\Network\NetworkException.cs" />
     <Compile Include="Assets\AssetIdentifier.cs" />
     <Compile Include="Platform\Graphics\SyncedQuery.cs" />
     <Compile Include="Platform\Input\CharacterEnteredEventArgs.cs" />
@@ -324,7 +327,6 @@
     <Compile Include="Framework\UserInterface\UIElementCollection.cs" />
     <Compile Include="Framework\UserInterface\ViewModel.cs" />
     <Compile Include="Math\Vector3.cs" />
-    <Compile Include="Platform\Network\Extensions.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />
     <Compile Include="Platform\AppFile.cs" />
     <Compile Include="Framework\PegasusException.cs" />

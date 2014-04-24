@@ -555,7 +555,18 @@ pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 struct pgSocket
 {
 	Socket socket;
-	pgPacketReceivedCallback callback;
+};
+
+struct pgIPAddress
+{
+	union
+	{
+		struct in_addr ipv4;
+		struct in6_addr ipv6;
+	};
+
+	pgBool isIPv6;
+	pgChar str[INET6_ADDRSTRLEN];
 };
 
 #endif

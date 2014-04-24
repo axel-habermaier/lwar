@@ -1,7 +1,7 @@
 ﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
 	using System;
-	using System.Net;
+	using Platform.Network;
 
 	/// <summary>
 	///     Parses an IP endpoint in the format of IP address [:port].
@@ -17,7 +17,7 @@
 
 			var ip = Between(ipParser, Character('['), Character(']')) | ipParser;
 			var port = (~Character(':') + UInt16).Optional(0);
-			Parser = Pipe(ip, port, (i, p) => new IPEndPoint(i, p));
+			Parser = Pipe(ip, port, (i, p) => IPEndPoint.Create(i, p));
 		}
 	}
 }

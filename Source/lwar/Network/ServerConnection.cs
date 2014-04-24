@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Net;
 	using Messages;
 	using Pegasus;
 	using Pegasus.Platform;
@@ -53,11 +52,6 @@
 		private double _lastPacketTimestamp;
 
 		/// <summary>
-		///     A cached IP end point representing the sender of a received message.
-		/// </summary>
-		private IPEndPoint _sender = new IPEndPoint(IPAddress.IPv6Any, 0);
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The endpoint of the server.</param>
@@ -66,6 +60,8 @@
 			Assert.ArgumentNotNull(serverEndPoint);
 
 			_socket = new UdpSocket();
+			//_socket.Bind(serverEndPoint.Port);
+
 			ServerEndPoint = serverEndPoint;
 			State = ConnectionState.Connecting;
 		}
@@ -112,7 +108,7 @@
 				if (State == ConnectionState.Connected && messageQueue.HasPendingData)
 					SendMessages(messageQueue);
 			}
-			catch (SocketOperationException e)
+			catch (NetworkException e)
 			{
 				Log.Error("The connection to the server has been terminated due to an error: {0}", e.Message);
 				State = ConnectionState.Faulted;
@@ -146,20 +142,20 @@
 
 			try
 			{
-				_sender.Address = IPAddress.IPv6Any;
-				_sender.Port = 0;
-
 				int receivedBytes;
-				while (_socket.TryReceive(_buffer, ref _sender, out receivedBytes))
+				IPEndPoint sender;
+
+				while (_socket.TryReceive(_buffer, out sender, out receivedBytes))
 				{
+					using (sender)
 					using (var reader = BufferReader.Create(_buffer, 0, receivedBytes, Endianess.Big))
 					{
-						if (_sender.SameEndPoint(ServerEndPoint))
+						if (sender.IsEquivalentTo(ServerEndPoint))
 							HandlePacket(reader, messageQueue, deliveryManager);
 						else
 						{
 							Log.Warn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
-									 _sender, ServerEndPoint);
+									 sender, ServerEndPoint);
 						}
 					}
 
@@ -167,7 +163,7 @@
 						return;
 				}
 			}
-			catch (SocketOperationException e)
+			catch (NetworkException e)
 			{
 				Log.Error("The connection to the server has been terminated due to an error: {0}", e.Message);
 				State = ConnectionState.Faulted;
@@ -301,6 +297,7 @@
 		{
 			_clock.SafeDispose();
 			_socket.SafeDispose();
+			ServerEndPoint.SafeDispose();
 		}
 	}
 }
