@@ -265,7 +265,6 @@
     <Compile Include="Assets\AssetHashCollision.cs" />
     <Compile Include="Assets\AssetHeader.cs" />
     <Compile Include="Platform\Graphics\ShaderProgram.cs" />
-    <Compile Include="Platform\Network\AddressFamily.cs" />
     <Compile Include="Platform\Network\IPAddress.cs" />
     <Compile Include="Platform\Network\IPEndPoint.cs" />
     <Compile Include="Platform\Network\MulticastSocket.cs" />

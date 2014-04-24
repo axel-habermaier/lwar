@@ -4,121 +4,137 @@
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Logging;
-	using Memory;
 
 	/// <summary>
 	///     Represents an IPv4 or IPv6 internet protocol address.
 	/// </summary>
-	public class IPAddress : PooledObject<IPAddress>
+	public struct IPAddress
 	{
 		/// <summary>
 		///     The underlying native IP address.
 		/// </summary>
-		private IntPtr _ipAddress;
+		private byte[] _bytes;
 
 		/// <summary>
-		///     Gets a value indicating whether the IP address is in IPv4 or IPv6 format.
+		///     Gets the bytes of the IP address.
 		/// </summary>
-		public AddressFamily Family
+		internal byte[] AddressBytes
 		{
-			get
-			{
-				Assert.NotPooled(this);
-				return NativeMethods.GetAddressFamily(_ipAddress);
-			}
+			get { return _bytes; }
 		}
 
 		/// <summary>
-		///     Gets the underlying native IP address.
+		///     Initializes an empty IP address.
 		/// </summary>
-		internal IntPtr NativePtr
+		public static IPAddress CreateEmpty()
 		{
-			get { return _ipAddress; }
+			return new IPAddress { _bytes = new byte[16] };
 		}
 
 		/// <summary>
-		///     Initializes a new instance.
+		///     Initializes a new instance from a string.
 		/// </summary>
 		/// <param name="ipAddress">The textual representation of the IP address.</param>
-		public static IPAddress Create(string ipAddress)
+		public static IPAddress Parse(string ipAddress)
 		{
-			Assert.ArgumentNotNull(ipAddress);
-
-			var address = GetInstance();
-			address._ipAddress = NativeMethods.CreateIPAddress(ipAddress);
-
-			if (address._ipAddress == IntPtr.Zero)
+			IPAddress address;
+			if (!TryParse(ipAddress, out address))
 				Log.Die("'{0}' is not a valid IP address.", ipAddress);
 
 			return address;
 		}
 
 		/// <summary>
-		///     Tries to initialize a new instance.
+		///     Tries to initialize a new instance from a string.
 		/// </summary>
 		/// <param name="ipAddress">The textual representation of the IP address.</param>
 		/// <param name="address">The IP address instance that is returned on success</param>
-		public static bool TryCreate(string ipAddress, out IPAddress address)
+		public static unsafe bool TryParse(string ipAddress, out IPAddress address)
 		{
 			Assert.ArgumentNotNull(ipAddress);
 
-			var parsedAddress = NativeMethods.CreateIPAddress(ipAddress);
-			if (parsedAddress == IntPtr.Zero)
+			var bytes = new byte[16];
+			fixed (byte* data = bytes)
 			{
-				address = null;
-				return false;
+				if (!NativeMethods.TryParseIPAddress(ipAddress, data))
+				{
+					address = new IPAddress();
+					return false;
+				}
+
+				address = new IPAddress { _bytes = bytes };
+				return true;
 			}
-
-			address = GetInstance();
-			address._ipAddress = parsedAddress;
-			return true;
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="ipAddress">The native IP address.</param>
-		internal static IPAddress Create(IntPtr ipAddress)
-		{
-			Assert.ArgumentNotNull(ipAddress);
-
-			var address = GetInstance();
-			address._ipAddress = ipAddress;
-
-			return address;
-		}
-
-		/// <summary>
-		///     Invoked when the pooled instance is returned to the pool.
-		/// </summary>
-		protected override void OnReturning()
-		{
-			NativeMethods.DestroyIPAddress(_ipAddress);
 		}
 
 		/// <summary>
 		///     Returns a string that represents the current object.
 		/// </summary>
-		public override string ToString()
+		public override unsafe string ToString()
 		{
-			Assert.NotPooled(this);
-			
-			var address = NativeMethods.ToString(_ipAddress);
-			if (address == IntPtr.Zero)
-				return "<unknown>";
+			fixed (byte* bytes = _bytes)
+			{
+				var address = NativeMethods.ToString(bytes);
+				if (address == IntPtr.Zero)
+					return "<unknown>";
 
-			return Marshal.PtrToStringAnsi(address);
+				return Marshal.PtrToStringAnsi(address);
+			}
 		}
 
 		/// <summary>
-		///     Determines whether the given IP address is equivalent to the current instance. IP addresses are considered
-		///     equivalent if they are equal or if one of them is an IPv4 address and the other one represents the same IPv4 address
-		///     embedded into an IPv6 address.
+		///     Indicates whether the the given IP address is equal to the current one.
 		/// </summary>
-		public bool IsEquivalentTo(IPAddress other)
+		public bool Equals(IPAddress other)
 		{
-			Assert.ArgumentNotNull(other);
-			return NativeMethods.Equals(_ipAddress, other._ipAddress);
+			if (_bytes == null && other._bytes == null)
+				return true;
+
+			if (_bytes == null || other._bytes == null)
+				return false;
+
+			for (var i = 0; i < 16; ++i)
+			{
+				if (_bytes[i] != other._bytes[i])
+					return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		///     Indicates whether the the given object is equal to the current one.
+		/// </summary>
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj))
+				return false;
+
+			return obj is IPAddress && Equals((IPAddress)obj);
+		}
+
+		/// <summary>
+		///     Returns the hash code for this instance.
+		/// </summary>
+		public override int GetHashCode()
+		{
+			return (_bytes != null ? _bytes.GetHashCode() : 0);
+		}
+
+		/// <summary>
+		///     Indicates whether the two given IP addresses are equal.
+		/// </summary>
+		public static bool operator ==(IPAddress left, IPAddress right)
+		{
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		///     Indicates whether the two given IP addresses are not equal.
+		/// </summary>
+		public static bool operator !=(IPAddress left, IPAddress right)
+		{
+			return !left.Equals(right);
 		}
 
 		/// <summary>
@@ -129,20 +145,11 @@
 #endif
 		private static class NativeMethods
 		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateIPAddress")]
-			public static extern IntPtr CreateIPAddress(string ipAddress);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyIPAddress")]
-			public static extern void DestroyIPAddress(IntPtr ipAddress);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgTryParseIPAddress")]
+			public static extern unsafe bool TryParseIPAddress(string address, byte* ipAddress);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgIPAddressToString")]
-			public static extern IntPtr ToString(IntPtr ipAddress);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgIpAddressesAreEqual")]
-			public static extern bool Equals(IntPtr ipAddress1, IntPtr ipAddress2);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetAddressFamily")]
-			public static extern AddressFamily GetAddressFamily(IntPtr ipAddress);
+			public static extern unsafe IntPtr ToString(byte* ipAddress);
 		}
 	}
 }

@@ -557,16 +557,4 @@ struct pgSocket
 	Socket socket;
 };
 
-struct pgIPAddress
-{
-	union
-	{
-		struct in_addr ipv4;
-		struct in6_addr ipv6;
-	};
-
-	pgBool isIPv6;
-	pgChar str[INET6_ADDRSTRLEN];
-};
-
 #endif

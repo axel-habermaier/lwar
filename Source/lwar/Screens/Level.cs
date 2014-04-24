@@ -83,8 +83,6 @@ namespace Lwar.Screens
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public Level(IPEndPoint serverEndPoint)
 		{
-			Assert.ArgumentNotNull(serverEndPoint);
-
 			_networkSession = new NetworkSession(serverEndPoint);
 			IsOpaque = true;
 			_timer.Timeout += SendInputTimeout;

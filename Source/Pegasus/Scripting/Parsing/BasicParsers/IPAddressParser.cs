@@ -37,7 +37,7 @@
 			else
 				length = inputStream.Skip(c => Char.IsDigit(c) || c == '.');
 
-			if (IPAddress.TryCreate(inputStream.Substring(state.Position, length), out address))
+			if (IPAddress.TryParse(inputStream.Substring(state.Position, length), out address))
 				return Success(address);
 
 			inputStream.State = state;

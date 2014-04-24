@@ -7,8 +7,8 @@
 // Network types
 //====================================================================================================================
 
-typedef struct pgIPAddress  pgIPAddress;
 typedef struct pgSocket		pgSocket;
+typedef		   pgByte	    pgIPAddress;
 
 typedef struct pgPacket
 {
@@ -26,22 +26,12 @@ typedef enum pgReceiveStatus
 	PG_RECEIVE_NO_DATA = 2
 } pgReceiveStatus;
 
-typedef enum pgAddressFamily
-{
-	PG_IPV6 = 1,
-	PG_IPV4 = 2
-} pgAddressFamily;
-
 //====================================================================================================================
 // Address functions
 //====================================================================================================================
 
-PG_API_EXPORT pgIPAddress* pgCreateIPAddress(pgString address);
-PG_API_EXPORT pgVoid pgDestroyIPAddress(pgIPAddress* address);
-
+PG_API_EXPORT pgBool pgTryParseIPAddress(pgString address, pgIPAddress* ipAddress);
 PG_API_EXPORT pgString pgIPAddressToString(pgIPAddress* address);
-PG_API_EXPORT pgBool pgIpAddressesAreEqual(pgIPAddress* address1, pgIPAddress* address2);
-PG_API_EXPORT pgAddressFamily pgGetAddressFamily(pgIPAddress* address);
 
 //====================================================================================================================
 // UDP socket functions

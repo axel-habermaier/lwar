@@ -57,8 +57,6 @@
 		/// <param name="serverEndPoint">The endpoint of the server.</param>
 		public ServerConnection(IPEndPoint serverEndPoint)
 		{
-			Assert.ArgumentNotNull(serverEndPoint);
-
 			_socket = new UdpSocket();
 			ServerEndPoint = serverEndPoint;
 			State = ConnectionState.Connecting;
@@ -145,10 +143,9 @@
 
 				while (_socket.TryReceive(_buffer, out sender, out receivedBytes))
 				{
-					using (sender)
 					using (var reader = BufferReader.Create(_buffer, 0, receivedBytes, Endianess.Big))
 					{
-						if (sender.IsEquivalentTo(ServerEndPoint))
+						if (sender == ServerEndPoint)
 							HandlePacket(reader, messageQueue, deliveryManager);
 						else
 						{
@@ -295,7 +292,6 @@
 		{
 			_clock.SafeDispose();
 			_socket.SafeDispose();
-			ServerEndPoint.SafeDispose();
 		}
 	}
 }

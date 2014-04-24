@@ -16,6 +16,11 @@
 		private readonly IntPtr _socket;
 
 		/// <summary>
+		///     A cached IP address instance used when receiving data.
+		/// </summary>
+		private IPAddress _ipAddress = IPAddress.CreateEmpty();
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public UdpSocket()
@@ -34,16 +39,16 @@
 		public unsafe void Send(byte[] buffer, int size, IPEndPoint remoteEndPoint)
 		{
 			Assert.ArgumentNotNull(buffer);
-			Assert.ArgumentNotNull(remoteEndPoint);
 			Assert.NotDisposed(this);
 
 			fixed (byte* data = buffer)
+			fixed (byte* address = remoteEndPoint.Address.AddressBytes)
 			{
 				var packet = new NativeMethods.Packet
 				{
 					Capacity = (uint)buffer.Length,
 					Data = data,
-					Address = remoteEndPoint.Address.NativePtr,
+					Address = address,
 					Port = remoteEndPoint.Port,
 					Size = (uint)size
 				};
@@ -65,28 +70,27 @@
 			Assert.NotDisposed(this);
 
 			size = 0;
-			remoteEndPoint = IPEndPoint.Create();
+			remoteEndPoint = new IPEndPoint();
 
 			fixed (byte* data = buffer)
+			fixed (byte* address = _ipAddress.AddressBytes)
 			{
 				var packet = new NativeMethods.Packet
 				{
 					Capacity = (uint)buffer.Length,
 					Data = data,
-					Address = remoteEndPoint.Address.NativePtr
+					Address = address
 				};
 
 				switch (NativeMethods.TryReceive(_socket, &packet))
 				{
 					case NativeMethods.ReceiveStatus.Error:
-						remoteEndPoint.SafeDispose();
 						throw new NetworkException();
 					case NativeMethods.ReceiveStatus.NoPacketAvailable:
-						remoteEndPoint.SafeDispose();
 						return false;
 					case NativeMethods.ReceiveStatus.PacketReceived:
 						size = (int)packet.Size;
-						remoteEndPoint.Port = packet.Port;
+						remoteEndPoint = new IPEndPoint(_ipAddress, packet.Port);
 						return true;
 					default:
 						Assert.NotReached("Unknown receive status.");
@@ -96,7 +100,7 @@
 		}
 
 		/// <summary>
-		/// Binds the socket to the given port.
+		///     Binds the socket to the given port.
 		/// </summary>
 		/// <param name="port">The port the socket should be bound to.</param>
 		public void Bind(ushort port)
@@ -136,7 +140,7 @@
 				public byte* Data;
 				public uint Size;
 				public uint Capacity;
-				public IntPtr Address;
+				public byte* Address;
 				public ushort Port;
 			}
 

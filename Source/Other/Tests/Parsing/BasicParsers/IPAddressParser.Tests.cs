@@ -17,12 +17,12 @@
 
 		private void CheckIPv4Valid(string ip, bool parseAll = true)
 		{
-			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(IP.Parse(ip));
+			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(IP.Parse(ip).MapToIPv6());
 		}
 
 		private void CheckIPv4Valid(string ip, IP expected, bool parseAll = true)
 		{
-			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(expected);
+			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(expected.MapToIPv6());
 		}
 
 		private void CheckIPv6Valid(string ip, bool parseAll = true)

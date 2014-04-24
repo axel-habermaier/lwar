@@ -40,6 +40,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Assets\Assets Compiler\Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Other\Tests\Tests.csproj", "{4F8CF071-FFAA-49BB-B792-289C6EBD8E28}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E008FA73-A930-40B5-93A4-959A4D30492D} = {E008FA73-A930-40B5-93A4-959A4D30492D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus Assets", "Assets\Pegasus Assets\Pegasus Assets.csproj", "{8FACAC14-48D0-45B8-BB39-F926835C850E}"
 EndProject

@@ -51,8 +51,6 @@
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public NetworkSession(IPEndPoint serverEndPoint)
 		{
-			Assert.ArgumentNotNull(serverEndPoint);
-
 			_deliveryManager = new DeliveryManager();
 			_connection = new ServerConnection(serverEndPoint);
 
