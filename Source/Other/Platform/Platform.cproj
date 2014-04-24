@@ -87,6 +87,7 @@
     <Compile Include="texture.gl3.c" />
     <Compile Include="buffer.c" />
     <Compile Include="graphics.c" />
+    <Compile Include="network.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="d3d11.h" />
@@ -100,5 +101,6 @@
     <None Include="wglExt.h" />
     <None Include="win32.h" />
     <None Include="glExt.h" />
+    <None Include="pgNetwork.h" />
   </ItemGroup>
 </Project>

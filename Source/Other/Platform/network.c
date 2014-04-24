@@ -148,7 +148,7 @@ PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* 
 #ifdef WINDOWS
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
 #else
-	if (socket_error(read_bytes) && errno == EAGAIN)
+	if (socket_error(packet->size) && errno == EAGAIN)
 #endif
 	{
 		return PG_RECEIVE_NO_DATA;
@@ -173,7 +173,7 @@ PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* 
 		memcpy(packet->address, &from6->sin6_addr, sizeof(from6->sin6_addr));
 		break;
 	default:
-		PG_WARN("Received a UDP packet form a socket with an unsupported address family.");
+		PG_ERROR("Received a UDP packet form a socket with an unsupported address family.");
 		return PG_RECEIVE_ERROR;
 	}
 
