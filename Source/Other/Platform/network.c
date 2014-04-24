@@ -173,7 +173,7 @@ PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* 
 		memcpy(packet->address, &from6->sin6_addr, sizeof(from6->sin6_addr));
 		break;
 	default:
-		PG_ERROR("Received a UDP packet form a socket with an unsupported address family.");
+		PG_ERROR("Received a UDP packet from a socket with an unsupported address family.");
 		return PG_RECEIVE_ERROR;
 	}
 
