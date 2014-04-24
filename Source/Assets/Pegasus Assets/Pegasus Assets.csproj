@@ -131,7 +131,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
-     <CustomCommands>
+    <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
@@ -149,7 +149,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
-     <CustomCommands>
+    <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
@@ -166,7 +166,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-     <CustomCommands>
+    <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
@@ -183,7 +183,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-     <CustomCommands>
+    <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
@@ -193,13 +193,13 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="ICSharpCode.NRefactory">
-      <HintPath>..\..\../Dependencies\ICSharpCode.NRefactory.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.CSharp">
-      <HintPath>..\..\../Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\../Dependencies\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Mono.Cecil.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -192,9 +192,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\User Interface/lwar UI\UserInterface.cs">
-      <Link>UserInterface\UserInterface.cs</Link>
-    </Compile>
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
     <Compile Include="Gameplay\Actors\Explosion.cs" />
@@ -314,6 +311,9 @@
     </Compile>
     <Compile Include="..\Assets\lwar Assets\Fonts\FontLoader.cs">
       <Link>Assets\FontLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\User Interface\lwar UI\UserInterface.cs">
+      <Link>UserInterface\UserInterface.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -199,13 +199,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.NRefactory">
-      <HintPath>..\..\../Dependencies\ICSharpCode.NRefactory.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.CSharp">
-      <HintPath>..\..\../Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\../Dependencies\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

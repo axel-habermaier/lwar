@@ -18,13 +18,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{C1E58E7D-3F83-4AA9-9FC4-4309F29EC986}"
 EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Server", "Server\Server.cproj", "{F35D340A-310C-4414-BE7F-87F061CE7C83}"
+EndProject
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Platform", "Other\Platform\Platform.cproj", "{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus", "Pegasus\Pegasus.csproj", "{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar", "lwar\lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
-EndProject
-Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Server", "Server\Server.cproj", "{F35D340A-310C-4414-BE7F-87F061CE7C83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

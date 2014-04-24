@@ -212,9 +212,6 @@
     <Compile Include="..\Assets\Pegasus Assets\Fonts\FontLoader.cs">
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
-    <Compile Include="../User Interface\Pegasus UI\UserInterface.cs">
-      <Link>Framework\UserInterface\UserInterface.cs</Link>
-    </Compile>
     <Compile Include="Assets\AssetLoaders\CubeMapAssetLoader.cs" />
     <Compile Include="Assets\AssetLoaders\AssetLoader.cs" />
     <Compile Include="Assets\AssetLoaders\FontAssetLoader.cs" />
@@ -596,6 +593,9 @@
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
     <Compile Include="Scripting\Validators\WindowSizeAttribute.cs" />
+    <Compile Include="..\User Interface\Pegasus UI\UserInterface.cs">
+      <Link>Framework\UserInterface\UserInterface.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
