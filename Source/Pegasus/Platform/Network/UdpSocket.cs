@@ -16,11 +16,6 @@
 		private readonly IntPtr _socket;
 
 		/// <summary>
-		///     A cached IP address instance used when receiving data.
-		/// </summary>
-		private IPAddress _ipAddress = IPAddress.CreateEmpty();
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public UdpSocket()
@@ -41,14 +36,14 @@
 			Assert.ArgumentNotNull(buffer);
 			Assert.NotDisposed(this);
 
+			var address = remoteEndPoint.Address;
 			fixed (byte* data = buffer)
-			fixed (byte* address = remoteEndPoint.Address.AddressBytes)
 			{
 				var packet = new NativeMethods.Packet
 				{
 					Capacity = (uint)buffer.Length,
 					Data = data,
-					Address = address,
+					Address = &address,
 					Port = remoteEndPoint.Port,
 					Size = (uint)size
 				};
@@ -71,15 +66,15 @@
 
 			size = 0;
 			remoteEndPoint = new IPEndPoint();
+			var address = new IPAddress();
 
 			fixed (byte* data = buffer)
-			fixed (byte* address = _ipAddress.AddressBytes)
 			{
 				var packet = new NativeMethods.Packet
 				{
 					Capacity = (uint)buffer.Length,
 					Data = data,
-					Address = address
+					Address = &address
 				};
 
 				switch (NativeMethods.TryReceive(_socket, &packet))
@@ -90,7 +85,7 @@
 						return false;
 					case NativeMethods.ReceiveStatus.PacketReceived:
 						size = (int)packet.Size;
-						remoteEndPoint = new IPEndPoint(_ipAddress, packet.Port);
+						remoteEndPoint = new IPEndPoint(address, packet.Port);
 						return true;
 					default:
 						Assert.NotReached("Unknown receive status.");
@@ -140,7 +135,7 @@
 				public byte* Data;
 				public uint Size;
 				public uint Capacity;
-				public byte* Address;
+				public IPAddress* Address;
 				public ushort Port;
 			}
 

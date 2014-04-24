@@ -8,7 +8,10 @@
 //====================================================================================================================
 
 typedef struct pgSocket		pgSocket;
-typedef		   pgByte	    pgIPAddress;
+typedef	struct pgIPAddress
+{
+	pgByte ip[16];
+} pgIPAddress;
 
 typedef struct pgPacket
 {

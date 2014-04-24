@@ -42,3 +42,6 @@ PG_ASSERT_SIZE(pgBufferType, 4);
 PG_ASSERT_SIZE(pgShaderType, 4);
 PG_ASSERT_SIZE(pgTextureFlags, 4);
 PG_ASSERT_SIZE(pgAttachmentPoint, 4);
+
+// IP address size
+PG_COMPILE_TIME_ASSERT(IPAddress, sizeof(pgIPAddress) >= sizeof(struct in6_addr));

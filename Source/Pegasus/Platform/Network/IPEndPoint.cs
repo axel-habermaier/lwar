@@ -34,6 +34,9 @@
 		/// </summary>
 		public override string ToString()
 		{
+			if (Address.IsMappedIPv4)
+				return String.Format("{0}:{1}", Address, Port);
+
 			return String.Format("[{0}]:{1}", Address, Port);
 		}
 

@@ -3,45 +3,36 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
-	using Logging;
 
 	/// <summary>
 	///     Represents an IPv4 or IPv6 internet protocol address.
 	/// </summary>
-	public struct IPAddress
+	public unsafe struct IPAddress
 	{
 		/// <summary>
 		///     The underlying native IP address.
 		/// </summary>
-		private byte[] _bytes;
+		[UsedImplicitly]
+		private fixed byte _bytes[16];
 
 		/// <summary>
-		///     Gets the bytes of the IP address.
+		/// Gets a value indicating whether the IP address is an IPv6-mapped IPv4 address.
 		/// </summary>
-		internal byte[] AddressBytes
+		public bool IsMappedIPv4
 		{
-			get { return _bytes; }
-		}
+			get
+			{
+				fixed (IPAddress* ip = &this)
+				{
+					for (var i = 0; i < 8; ++i)
+					{
+						if (ip->_bytes[i] != 0)
+							return false;
+					}
 
-		/// <summary>
-		///     Initializes an empty IP address.
-		/// </summary>
-		public static IPAddress CreateEmpty()
-		{
-			return new IPAddress { _bytes = new byte[16] };
-		}
-
-		/// <summary>
-		///     Initializes a new instance from a string.
-		/// </summary>
-		/// <param name="ipAddress">The textual representation of the IP address.</param>
-		public static IPAddress Parse(string ipAddress)
-		{
-			IPAddress address;
-			if (!TryParse(ipAddress, out address))
-				Log.Die("'{0}' is not a valid IP address.", ipAddress);
-
-			return address;
+					return ip->_bytes[10] == 255 && ip->_bytes[11] == 255;
+				}
+			}
 		}
 
 		/// <summary>
@@ -49,37 +40,33 @@
 		/// </summary>
 		/// <param name="ipAddress">The textual representation of the IP address.</param>
 		/// <param name="address">The IP address instance that is returned on success</param>
-		public static unsafe bool TryParse(string ipAddress, out IPAddress address)
+		public static bool TryParse(string ipAddress, out IPAddress address)
 		{
 			Assert.ArgumentNotNull(ipAddress);
 
-			var bytes = new byte[16];
-			fixed (byte* data = bytes)
-			{
-				if (!NativeMethods.TryParseIPAddress(ipAddress, data))
-				{
-					address = new IPAddress();
-					return false;
-				}
-
-				address = new IPAddress { _bytes = bytes };
-				return true;
-			}
+			address = new IPAddress();
+			fixed (IPAddress* addr = &address)
+				return NativeMethods.TryParseIPAddress(ipAddress, addr);
 		}
 
 		/// <summary>
 		///     Returns a string that represents the current object.
 		/// </summary>
-		public override unsafe string ToString()
+		public override string ToString()
 		{
-			fixed (byte* bytes = _bytes)
-			{
-				var address = NativeMethods.ToString(bytes);
-				if (address == IntPtr.Zero)
-					return "<unknown>";
+			var that = this;
+			var address = NativeMethods.ToString(&that);
 
-				return Marshal.PtrToStringAnsi(address);
-			}
+			if (address == IntPtr.Zero)
+				return "<unknown>";
+
+			const string ipv6Prefix = "::ffff:";
+
+			var str = Marshal.PtrToStringAnsi(address);
+			if (IsMappedIPv4 && str.StartsWith(ipv6Prefix))
+				return str.Substring(ipv6Prefix.Length);
+
+			return str;
 		}
 
 		/// <summary>
@@ -87,16 +74,13 @@
 		/// </summary>
 		public bool Equals(IPAddress other)
 		{
-			if (_bytes == null && other._bytes == null)
-				return true;
-
-			if (_bytes == null || other._bytes == null)
-				return false;
-
-			for (var i = 0; i < 16; ++i)
+			fixed(IPAddress* ip = &this)
 			{
-				if (_bytes[i] != other._bytes[i])
-					return false;
+				for (var i = 0; i < 16; ++i)
+				{
+					if (ip->_bytes[i] != other._bytes[i])
+						return false;
+				}
 			}
 
 			return true;
@@ -118,7 +102,8 @@
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return (_bytes != null ? _bytes.GetHashCode() : 0);
+			fixed(IPAddress* ip = &this)
+				return ip->_bytes[15] * 397 ^ ip->_bytes[14];
 		}
 
 		/// <summary>
@@ -146,10 +131,10 @@
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgTryParseIPAddress")]
-			public static extern unsafe bool TryParseIPAddress(string address, byte* ipAddress);
+			public static extern bool TryParseIPAddress(string address, IPAddress* ipAddress);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgIPAddressToString")]
-			public static extern unsafe IntPtr ToString(byte* ipAddress);
+			public static extern IntPtr ToString(IPAddress* ipAddress);
 		}
 	}
 }

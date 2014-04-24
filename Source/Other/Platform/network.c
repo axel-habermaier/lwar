@@ -261,7 +261,7 @@ static PG_NORETURN pgVoid pgNetworkDie(pgString message)
 
 static pgVoid pgMapIPAddress(struct in_addr ipv4, pgIPAddress* ipv6)
 {
-	memset(ipv6, 0, 16);
-	memset(ipv6 + 10, 255, 2);
-	memcpy(ipv6 + 12, &ipv4, sizeof(ipv6));
+	memset(ipv6, 0, sizeof(pgIPAddress));
+	memset(&ipv6->ip[0] + 10, 255, 2);
+	memcpy(&ipv6->ip[0] + 12, &ipv4, sizeof(ipv4));
 }
