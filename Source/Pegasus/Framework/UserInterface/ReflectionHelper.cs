@@ -70,8 +70,8 @@
 			var fieldName = String.Format("{0}Property", propertyName);
 			var propertyField = type.GetRuntimeFields().SingleOrDefault(f => f.IsPublic && f.IsStatic && f.Name == fieldName);
 
-			// For some reason, inherited static fields are not returned by GetRuntimeFields(); so let's check the base
-			// types explicitly if we didn't find a matching property on the current type
+			// For some reason, inherited static fields are not returned by GetRuntimeFields(), so let's check the base
+			// types explicitly if we didn't find a matching dependency property field on the current type
 			var baseType = type.GetTypeInfo().BaseType;
 			if (propertyField == null && baseType != typeof(object))
 				return GetDependencyProperty(baseType, propertyName);
