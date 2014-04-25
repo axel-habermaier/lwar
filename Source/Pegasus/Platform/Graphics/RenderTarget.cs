@@ -4,7 +4,6 @@
 	using System.Diagnostics;
 	using System.Linq;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Math;
 	using Memory;
 
@@ -148,9 +147,9 @@
 		}
 
 #if DEBUG
-	/// <summary>
-	///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-	/// </summary>
+		/// <summary>
+		///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
 		protected override void OnRenamed()
 		{
 			if (_renderTarget != IntPtr.Zero)
@@ -161,9 +160,6 @@
 		/// <summary>
 		///     Provides access to the native render target functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateRenderTarget")]

@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///     Raised when a network error occurred.
@@ -35,9 +34,6 @@
 		/// <summary>
 		///     Provides access to the native network functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetLastNetworkError")]

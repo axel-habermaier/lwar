@@ -5,7 +5,6 @@
 	/// <summary>
 	///     Represents a fatal error that causes the execution of the application to be aborted.
 	/// </summary>
-	[Serializable]
 	public class PegasusException : Exception
 	{
 		/// <summary>

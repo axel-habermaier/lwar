@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Framework;
 
 	/// <summary>
@@ -79,15 +78,13 @@
 			Destroy();
 
 			if (VertexShader.NativePtr != IntPtr.Zero && FragmentShader.NativePtr != IntPtr.Zero)
-				_shaderProgram = NativeMethods.CreateProgram(Application.Current.GraphicsDevice.NativePtr, VertexShader.NativePtr, FragmentShader.NativePtr);
+				_shaderProgram = NativeMethods.CreateProgram(Application.Current.GraphicsDevice.NativePtr, VertexShader.NativePtr,
+															 FragmentShader.NativePtr);
 		}
 
 		/// <summary>
 		///     Provides access to the native shader program functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateProgram")]

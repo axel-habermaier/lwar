@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using Platform.Logging;
@@ -364,7 +365,11 @@
 				{
 					var notifyPropertyChanged = _sourceObject as INotifyPropertyChanged;
 					if (notifyPropertyChanged == null)
+					{
+						Log.Debug("Possibly unintended data binding: Target property is neither a dependency property, nor does " +
+							"the containing type implement INotifyPropertyChanged. Support for automatic value updates disabled.");
 						return;
+					}
 
 					_changeHandler = (PropertyChangedHandler)PropertyChanged;
 					ReflectionHelper.AttachPropertyChangedEventHandler(notifyPropertyChanged, (PropertyChangedHandler)_changeHandler);
@@ -407,7 +412,11 @@
 				if (_sourceObject is DependencyObject)
 					_dependencyProperty = ReflectionHelper.GetDependencyProperty(_sourceObject.GetType(), _propertyName);
 
-				_propertyInfo = _sourceObject.GetType().GetProperty(_propertyName, BindingFlags.Public | BindingFlags.Instance);
+				var name = _propertyName;
+				_propertyInfo = _sourceObject.GetType()
+											 .GetRuntimeProperties()
+											 .SingleOrDefault(p => p.GetMethod.IsPublic && !p.GetMethod.IsStatic && p.Name == name);
+
 				if (_propertyInfo == null)
 					Log.Die("Unable to find public, non-static property or dependency property '{0}' on '{1}'.",
 							_propertyName, _sourceObject.GetType().FullName);

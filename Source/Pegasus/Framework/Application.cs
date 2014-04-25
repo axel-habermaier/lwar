@@ -186,9 +186,6 @@
 
 					// Presents the contents of all windows' backbuffers.
 					_root.Present();
-
-					if (!_root.HasFocusedWindows)
-						Thread.Sleep(50);
 				}
 
 				// The game loop has been exited; time to clean up

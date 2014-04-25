@@ -2,8 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.ComponentModel;
-	using System.Linq;
 	using AssetLoaders;
 	using Platform;
 	using Platform.Graphics;
@@ -19,14 +17,9 @@
 	public sealed class AssetsManager : DisposableObject
 	{
 		/// <summary>
-		///     The path to the asset compiler.
+		///     The registered asset loaders that can be used to load assets.
 		/// </summary>
-		private const string AssetCompiler = "pgc.exe";
-
-		/// <summary>
-		///     The list of loaders that can be used to load assets.
-		/// </summary>
-		private static readonly AssetLoader[] Loaders;
+		private static readonly Dictionary<byte, AssetLoader> Loaders = new Dictionary<byte, AssetLoader>();
 
 		/// <summary>
 		///     Indicates whether the asset manager loads its asset asynchronously.
@@ -59,15 +52,15 @@
 		private readonly List<ShaderProgram> _pendingPrograms;
 
 		/// <summary>
-		///     Initializes the type.
+		///     Initializes the type, registering the default asset loaders.
 		/// </summary>
 		static AssetsManager()
 		{
-			Loaders = AppDomain.CurrentDomain.GetAssemblies()
-							   .SelectMany(a => a.GetTypes())
-							   .Where(t => t.IsClass && !t.IsAbstract && typeof(AssetLoader).IsAssignableFrom(t))
-							   .Select(t => Activator.CreateInstance(t) as AssetLoader)
-							   .ToArray();
+			RegisterAssetLoader(new FontAssetLoader());
+			RegisterAssetLoader(new Texture2DAssetLoader());
+			RegisterAssetLoader(new CubeMapAssetLoader());
+			RegisterAssetLoader(new FragmentShaderAssetLoader());
+			RegisterAssetLoader(new VertexShaderAssetLoader());
 		}
 
 		/// <summary>
@@ -100,60 +93,37 @@
 		}
 
 		/// <summary>
-		///     Reloads all assets of the given asset projects.
+		///     Registers an asset loader that assets manager can subsequently use to load assets.
 		/// </summary>
-		/// <param name="paths">
-		///     The path to the assets project files that should be recompiled and reloaded. Different assets projects
-		///     should be separated by semicolon.
-		/// </param>
-		private void ReloadAssets(string paths)
+		/// <param name="assetLoader">The asset loader that should be registered.</param>
+		public static void RegisterAssetLoader(AssetLoader assetLoader)
 		{
-			var assetProjects = paths.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (var assetProject in assetProjects)
-			{
-				Log.Info("\\cyanCompiling assets project '{0}'...", assetProject);
+			Assert.ArgumentNotNull(assetLoader);
+			Assert.That(!Loaders.ContainsKey(assetLoader.AssetType), "An asset loader for this asset type has already been registered.");
 
+			Loaders.Add(assetLoader.AssetType, assetLoader);
+		}
+
+		/// <summary>
+		///     Reloads all currently loaded assets.
+		/// </summary>
+		private void ReloadAssets()
+		{
+			foreach (var info in _loadedAssets)
+			{
 				try
 				{
-					int exitCode;
-					var commandLine = String.Format("compile \"{0}\"", assetProject);
-
-					using (var compiler = new ExternalProcess(AssetCompiler, commandLine))
-						foreach (var output in compiler.Run(out exitCode))
-							output.RaiseLogEvent();
-
-					Log.Info("\\cyanCompleted compilation of assets project '{0}'.", assetProject);
-
-					if (exitCode != 0)
-					{
-						Log.Error("Errors occurred during asset compilation. Asset reloading of asset project '{0}' aborted.", assetProject);
-						continue;
-					}
-
-					foreach (var info in _loadedAssets)
-					{
-						try
-						{
-							Log.Info("Reloading {1} {0}...", GetAssetDisplayName(info), GetAssetTypeDisplayName(info));
-							Load(info);
-						}
-						catch (FileSystemException e)
-						{
-							Log.Die("Failed to reload asset {0}: {1}", GetAssetDisplayName(info), e.Message);
-						}
-					}
-
-					foreach (var program in _loadedPrograms)
-						program.Reinitialize();
+					Log.Info("Reloading {1} {0}...", GetAssetDisplayName(info), Loaders[info.Type].AssetTypeName);
+					Load(info);
 				}
-				catch (Win32Exception e)
+				catch (FileSystemException e)
 				{
-					if (e.NativeErrorCode == 2)
-						Log.Warn("{0} not found.", AssetCompiler);
-					else
-						Log.Error("{0} failed: {1}", AssetCompiler, e.Message);
+					Log.Die("Failed to reload asset {0}: {1}", GetAssetDisplayName(info), e.Message);
 				}
 			}
+
+			foreach (var program in _loadedPrograms)
+				program.Reinitialize();
 		}
 
 		/// <summary>
@@ -283,7 +253,7 @@
 				{
 					var info = _pendingAssets[i - 1];
 
-					Log.Info("Loading {0} {1}...", GetAssetTypeDisplayName(info), GetAssetDisplayName(info));
+					Log.Info("Loading {0} {1}...", Loaders[info.Type].AssetTypeName, GetAssetDisplayName(info));
 					Load(info);
 
 					_pendingAssets.RemoveAt(i - 1);
@@ -320,7 +290,7 @@
 				using (var buffer = BufferReader.Create(FileSystem.ReadAllBytes(info.Path)))
 				{
 					AssetHeader.Validate(buffer, info.Type);
-					Loaders.Single(l => l.AssetType == info.Type).Load(buffer, info.Asset, info.Path);
+					Loaders[info.Type].Load(buffer, info.Asset, info.Path);
 				}
 			}
 			catch (Exception e)
@@ -400,7 +370,7 @@
 			if (asset != null)
 				return asset;
 
-			asset = Loaders.Single(l => l.AssetType == identifier.AssetType).Allocate(_graphicsDevice);
+			asset = Loaders[identifier.AssetType].Allocate(_graphicsDevice);
 
 			var info = AssetInfo.Create(identifier, asset);
 			if (_asyncLoading)
@@ -440,15 +410,6 @@
 			var project = info.Path.Substring(dotIndex + 1, info.Path.Length - 4 - dotIndex);
 			var name = info.Path.Substring(0, dotIndex);
 			return String.Format("'{0}://{1}'", project, name);
-		}
-
-		/// <summary>
-		///     Gets the display name for the asset type.
-		/// </summary>
-		/// <param name="info">The asset info object the type display name should be returned for.</param>
-		private static string GetAssetTypeDisplayName(AssetInfo info)
-		{
-			return Loaders.Single(l => l.AssetType == info.Type).AssetTypeName;
 		}
 
 		/// <summary>

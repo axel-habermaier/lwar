@@ -3,7 +3,6 @@
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///     Represents a GPU texture.
@@ -22,7 +21,6 @@
 		protected Texture(GraphicsDevice graphicsDevice)
 			: base(graphicsDevice)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 		}
 
 		/// <summary>
@@ -39,7 +37,7 @@
 		protected TextureDescription Description { get; private set; }
 
 		/// <summary>
-		///     Gets a value indicating whether the texture has mipmaps, either loaded explicitely or generated automatically.
+		///     Gets a value indicating whether the texture has mipmaps, either loaded explicitly or generated automatically.
 		/// </summary>
 		public bool HasMipmaps
 		{
@@ -122,9 +120,9 @@
 		}
 
 #if DEBUG
-	/// <summary>
-	///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-	/// </summary>
+		/// <summary>
+		///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
 		protected override void OnRenamed()
 		{
 			if (_texture != IntPtr.Zero)
@@ -135,9 +133,6 @@
 		/// <summary>
 		///     Provides access to the native Texture2D functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateTexture")]

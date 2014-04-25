@@ -135,7 +135,7 @@
 
 			var length = _text.Length;
 			var insertIndex = _text.MapToSource(_position);
-			var source = _text.SourceString.Insert(insertIndex, c.ToString(CultureInfo.InvariantCulture));
+			var source = _text.SourceString.Insert(insertIndex, c.ToString());
 
 			var text = Text.Create(source);
 			ChangeText(text);

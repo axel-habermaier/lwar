@@ -2,15 +2,13 @@
 {
 	using System;
 	using System.Globalization;
-	using System.Text;
-	using System.Threading;
 	using System.Threading.Tasks;
+	using Assets;
+	using Assets.AssetLoaders;
 	using Platform;
 	using Platform.Logging;
-	using Rendering.UserInterface;
 	using Scripting;
 	using UserInterface;
-	using Console = System.Console;
 
 	/// <summary>
 	///     Starts up the application and handles command line arguments and fatal application exceptions.
@@ -22,22 +20,21 @@
 		/// <summary>
 		///     Runs the application. This method does not return until the application is shut down.
 		/// </summary>
+		/// <param name="arguments">The command line arguments that have been passed to the application.</param>
 		/// <param name="appName">The name of the application.</param>
-		public static void Run(string appName)
+		public static void Run(string[] arguments, string appName)
 		{
 			Assert.ArgumentNotNullOrWhitespace(appName);
 
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
-			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+			CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
 			using (new NativeLibrary(appName))
 			using (var logFile = new LogFile(appName))
 			{
 				try
 				{
-					PrintToConsole();
-
 					Log.Info("Starting {0} ({1} x{2}, {3}).", appName, PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64", PlatformInfo.GraphicsApi);
 
 					ReflectionHelper.Validate();
@@ -50,9 +47,9 @@
 						// Process the autoexec.cfg first, then the command line, so that cvar values set via the command line overwrite
 						// the autoexec.cfg. Afterwards, perform all deferred updates so that all cvars are set to their updated values
 						Commands.Process(ConfigurationFile.AutoExec);
-						CommandLineParser.Parse();
+						CommandLineParser.Parse(arguments);
 						CvarRegistry.ExecuteDeferredUpdates();
-						
+
 						var app = new TApp();
 						app.Run(appName, logFile);
 
@@ -71,32 +68,6 @@
 					NativeLibrary.ShowMessageBox(appName + " Fatal Error", message);
 				}
 			}
-		}
-
-		/// <summary>
-		///     Wires up the log events to write all logged messages to the console.
-		/// </summary>
-		private static void PrintToConsole()
-		{
-			Log.OnFatalError += WriteToConsole;
-			Log.OnError += WriteToConsole;
-			Log.OnWarning += WriteToConsole;
-			Log.OnInfo += WriteToConsole;
-			Log.OnDebugInfo += WriteToConsole;
-		}
-
-		/// <summary>
-		///     Writes the given log entry to the given text writer.
-		/// </summary>
-		/// <param name="entry">The log entry that should be written.</param>
-		private static void WriteToConsole(LogEntry entry)
-		{
-			Console.Out.Write("[");
-			Console.Out.Write(entry.LogType.ToDisplayString());
-			Console.Out.Write("] ");
-
-			Text.Write(Console.Out, entry.Message);
-			Console.Out.WriteLine();
 		}
 	}
 }

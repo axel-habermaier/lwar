@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///     A vertex shader is a program that controls the vertex-shader stage.
@@ -38,9 +37,6 @@
 		/// <summary>
 		///     Provides access to the native shader functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateVertexShader")]

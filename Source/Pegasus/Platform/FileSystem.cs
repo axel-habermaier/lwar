@@ -31,7 +31,11 @@
 				if (error == IntPtr.Zero)
 					return "<unknown>";
 
-				return Marshal.PtrToStringAuto(error);
+#if Windows
+				return Marshal.PtrToStringUni(error);
+#else
+				return Marshal.PtrToStringAnsi(error);
+#endif
 			}
 		}
 
@@ -46,7 +50,7 @@
 			if (String.IsNullOrWhiteSpace(fileName))
 				return false;
 
-			return fileName.ToLower().All(c => Char.IsLetterOrDigit(c) || c == '_' || c == '.');
+			return fileName.ToLower().ToCharArray().Any(c => Char.IsLetterOrDigit(c) || c == '_' || c == '.');
 		}
 
 		/// <summary>
@@ -141,9 +145,6 @@
 		/// <summary>
 		///     Provides access to the native file system functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReadAppFile")]

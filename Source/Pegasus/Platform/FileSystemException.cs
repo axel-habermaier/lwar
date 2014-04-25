@@ -34,9 +34,6 @@
 		/// <summary>
 		///     Provides access to the native file system functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetLastFileError")]

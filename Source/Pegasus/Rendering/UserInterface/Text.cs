@@ -279,7 +279,7 @@
 		/// </summary>
 		/// <param name="writer">The text writer that the text should be written to.</param>
 		/// <param name="text">The text that should be written.</param>
-		internal static void Write(TextWriter writer, string text)
+		public static void Write(TextWriter writer, string text)
 		{
 			Assert.ArgumentNotNull(writer);
 			Assert.ArgumentNotNullOrWhitespace(text);

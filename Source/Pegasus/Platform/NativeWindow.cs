@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Framework.UserInterface.Controls;
 	using Input;
 	using Logging;
@@ -396,9 +395,6 @@
 		/// <summary>
 		///     Provides access to the native window-related types and functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			public delegate void CharacterEnteredCallback(ushort character, int scanCode);

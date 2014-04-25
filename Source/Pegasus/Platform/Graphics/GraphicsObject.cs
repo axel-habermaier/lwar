@@ -44,20 +44,20 @@
 
 #if DEBUG
 
-	/// <summary>
-	///   Gets the name of the graphics object. This property is only available in debug builds.
-	/// </summary>
+		/// <summary>
+		///		Gets the name of the graphics object. This property is only available in debug builds.
+		/// </summary>
 		protected string Name { get; private set; }
 
 		/// <summary>
-		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		///		Invoked after the name of the graphics object has changed. This method is only available in debug builds.
 		/// </summary>
 		protected virtual void OnRenamed()
 		{
 		}
 
 		/// <summary>
-		///   Returns a string that represents the current object.
+		///		Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{

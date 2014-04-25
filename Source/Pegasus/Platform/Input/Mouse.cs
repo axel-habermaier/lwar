@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Math;
 	using Memory;
 
@@ -156,9 +155,6 @@
 		/// <summary>
 		///     Provides access to the native mouse functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetMousePosition")]

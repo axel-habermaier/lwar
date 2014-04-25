@@ -3,7 +3,6 @@
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///     Represents a shader that controls a programmable stage of the graphics pipeline.
@@ -63,9 +62,6 @@
 		/// <summary>
 		///     Provides access to the native shader functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyShader")]

@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Memory;
 
 	/// <summary>
@@ -131,9 +130,6 @@
 		/// <summary>
 		///     Provides access to the native socket functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			public enum ReceiveStatus
@@ -141,17 +137,6 @@
 				Error = 0,
 				PacketReceived = 1,
 				NoPacketAvailable = 2
-			}
-
-			[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-			[StructLayout(LayoutKind.Sequential)]
-			public unsafe struct Packet
-			{
-				public byte* Data;
-				public uint Size;
-				public uint Capacity;
-				public IPAddress* Address;
-				public ushort Port;
 			}
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateUdpSocket")]
@@ -171,6 +156,17 @@
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindUdpSocketMulticast")]
 			public static extern unsafe bool BindMulticast(IntPtr socket, int timeToLive, IPAddress* address, ushort port);
+
+			[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+			[StructLayout(LayoutKind.Sequential)]
+			public unsafe struct Packet
+			{
+				public byte* Data;
+				public uint Size;
+				public uint Capacity;
+				public IPAddress* Address;
+				public ushort Port;
+			}
 		}
 	}
 }

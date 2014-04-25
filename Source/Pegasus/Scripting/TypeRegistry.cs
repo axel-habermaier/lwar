@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Reflection;
 	using Framework.UserInterface.Controls;
 	using Parsing;
 	using Parsing.BasicParsers;
@@ -72,7 +73,7 @@
 			Assert.ArgumentNotNull(parser);
 			Assert.ArgumentNotNull(examples);
 			Assert.ArgumentSatisfies(description == null || !String.IsNullOrWhiteSpace(description), "The description cannot be empty.");
-			Assert.ArgumentSatisfies(examples.Length > 0 || typeof(T).IsEnum, "The examples can be empty for enumeration types only.");
+			Assert.ArgumentSatisfies(examples.Length > 0 || typeof(T).GetTypeInfo().IsEnum, "The examples can be empty for enumeration types only.");
 			Assert.That(!RegisteredTypes.ContainsKey(typeof(T)), "The type has already been registered.");
 
 			description = description ?? typeof(T).Name;
@@ -111,7 +112,7 @@
 			if (RegisteredTypes.TryGetValue(type, out info))
 				return info.Parser;
 
-			if (type.IsEnum)
+			if (type.GetTypeInfo().IsEnum)
 				return new EnumerationLiteralParser<object>(type, false);
 
 			Log.Die("An attempt was made to get a parser for an unregistered type.");
@@ -139,7 +140,7 @@
 			if (RegisteredTypes.TryGetValue(type, out info))
 				return info.Description;
 
-			if (type.IsEnum)
+			if (type.GetTypeInfo().IsEnum)
 				return type.Name;
 
 			Log.Die("An attempt was made to get the description of an unregistered type.");
@@ -167,7 +168,7 @@
 			if (RegisteredTypes.TryGetValue(type, out info))
 				return info.Examples;
 
-			if (type.IsEnum)
+			if (type.GetTypeInfo().IsEnum)
 				return Enum.GetNames(type);
 
 			Log.Die("An attempt was made to get examples for an unregistered type.");
@@ -186,17 +187,17 @@
 			if (RegisteredTypes.TryGetValue(value.GetType(), out info))
 				return info.ToDisplayString(value);
 
-			if (value.GetType().IsEnum)
-				value.ToString();
+			if (value.GetType().GetTypeInfo().IsEnum)
+				return value.ToString();
 
 			// Try all base types of the value, as typically only the base type of a hierarchy is registered
-			var baseType = value.GetType().BaseType;
+			var baseType = value.GetType().GetTypeInfo().BaseType;
 			while (baseType != typeof(object))
 			{
 				if (RegisteredTypes.TryGetValue(baseType, out info))
 					return info.ToDisplayString(value);
 
-				baseType = baseType.BaseType;
+				baseType = baseType.GetTypeInfo().BaseType;
 			}
 
 			Log.Die("An attempt was made to get the string representation of a value of an unregistered type.");

@@ -3,7 +3,6 @@
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Graphics;
 	using Logging;
 	using Memory;
@@ -14,9 +13,9 @@
 	internal class NativeLibrary : DisposableObject
 	{
 #if Linux
-		/// <summary>
-		///   The name of the native Pegasus.Platform library.
-		/// </summary>
+	/// <summary>
+	///   The name of the native Pegasus.Platform library.
+	/// </summary>
 		internal const string LibraryName = "libPlatform.so";
 #else
 		/// <summary>
@@ -101,9 +100,6 @@
 		/// <summary>
 		///     Provides access to the native platform types and functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			public delegate void LogCallback(LogType type, string message);

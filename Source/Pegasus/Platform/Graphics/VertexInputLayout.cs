@@ -4,7 +4,6 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///     An input-layout holds a definition of how to feed vertex data that
@@ -112,9 +111,6 @@
 		/// <summary>
 		///     Provides access to the native vertex input layout functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateInputLayout")]

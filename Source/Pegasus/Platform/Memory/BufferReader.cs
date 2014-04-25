@@ -345,7 +345,8 @@
 		/// </summary>
 		public string ReadString()
 		{
-			return Encoding.UTF8.GetString(ReadByteArray());
+			var bytes = ReadByteArray();
+			return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
 		}
 
 		/// <summary>

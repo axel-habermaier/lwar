@@ -113,14 +113,10 @@ internal interface ICommands
 	void ShowConsole(bool show);
 
 	/// <summary>
-	///     Reloads all assets of the given asset projects.
+	///     Reloads all currently loaded assets.
 	/// </summary>
-	/// <param name="paths">
-	///     The path to the assets project files that should be recompiled and reloaded. Different assets projects
-	///     should be separated by semicolon.
-	/// </param>
 	[Command]
-	void ReloadAssets([NotEmpty] string paths);
+	void ReloadAssets();
 
 	/// <summary>
 	///     Restarts the graphics subsystem after a resolution or video mode change.

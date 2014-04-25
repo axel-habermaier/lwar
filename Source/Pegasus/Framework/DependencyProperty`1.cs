@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using System.Reflection;
 
 	/// <summary>
 	///     Represents a strongly-typed property that has multiple sources (such as data bindings, style setters, animation,
@@ -78,7 +79,7 @@
 		internal void ValidateValue(T value)
 		{
 			// For enumeration types, check if the given literal is defined
-			if (typeof(T).IsEnum)
+			if (typeof(T).GetTypeInfo().IsEnum)
 				Assert.That(Enum.IsDefined(typeof(T), value), "The given value is not defined by the enumeration.");
 
 			Assert.That(_validationCallback == null || _validationCallback(value), "Attempted to set an invalid value.");

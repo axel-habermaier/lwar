@@ -2,14 +2,10 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///     Provides access to certain native functions in a platform-independent way.
 	/// </summary>
-#if !DEBUG
-	[SuppressUnmanagedCodeSecurity]
-#endif
 	internal static class Interop
 	{
 		/// <summary>

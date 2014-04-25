@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using System.Linq;
 	using System.Reflection;
 
 	/// <summary>
@@ -13,12 +14,12 @@
 		/// <summary>
 		///     A cached event info instance for the INotifyPropertyChanged.PropertyChanged event.
 		/// </summary>
-		private static readonly EventInfo PropertyChangedEventInfo = typeof(INotifyPropertyChanged).GetEvent("PropertyChanged");
+		private static readonly EventInfo PropertyChangedEventInfo = typeof(INotifyPropertyChanged).GetRuntimeEvent("PropertyChanged");
 
 		/// <summary>
 		///     A cached property info instance for the UIElement.ViewModel property.
 		/// </summary>
-		public static readonly PropertyInfo ViewModelPropertyInfo = typeof(UIElement).GetProperty("ViewModel");
+		public static readonly PropertyInfo ViewModelPropertyInfo = typeof(UIElement).GetRuntimeProperty("ViewModel");
 
 		/// <summary>
 		///     In debug builds, checks whether all cached reflection info objects could be resolved successfully.
@@ -66,13 +67,14 @@
 			Assert.ArgumentNotNull(type);
 			Assert.ArgumentNotNullOrWhitespace(propertyName);
 
-			const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
-
 			var fieldName = String.Format("{0}Property", propertyName);
-			var propertyField = type.GetField(fieldName, bindingFlags);
+			var propertyField = type.GetRuntimeFields().SingleOrDefault(f => f.IsPublic && f.IsStatic && f.Name == fieldName);
 
-			if (propertyField == null)
-				return null;
+			// For some reason, inherited static fields are not returned by GetRuntimeFields(); so let's check the base
+			// types explicitly if we didn't find a matching property on the current type
+			var baseType = type.GetTypeInfo().BaseType;
+			if (propertyField == null && baseType != typeof(object))
+				return GetDependencyProperty(baseType, propertyName);
 
 			return (DependencyProperty)propertyField.GetValue(null);
 		}

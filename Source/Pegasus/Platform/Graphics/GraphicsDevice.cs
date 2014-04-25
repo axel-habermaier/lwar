@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Logging;
 	using Math;
 	using Memory;
@@ -95,8 +94,6 @@
 				_disjointQueries[i].End();
 				_syncedQueries[i].MarkSyncPoint();
 			}
-
-			_syncedQueries[0].MarkSyncPoint();
 		}
 
 		/// <summary>
@@ -257,9 +254,6 @@
 		/// <summary>
 		///     Provides access to the native graphics device functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateGraphicsDevice")]

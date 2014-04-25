@@ -17,12 +17,12 @@
 
 		private void CheckIPv4Valid(string ip, bool parseAll = true)
 		{
-			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(IP.Parse(ip).MapToIPv6());
+			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(IP.Parse(ip));
 		}
 
 		private void CheckIPv4Valid(string ip, IP expected, bool parseAll = true)
 		{
-			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(expected.MapToIPv6());
+			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(expected);
 		}
 
 		private void CheckIPv6Valid(string ip, bool parseAll = true)
@@ -33,6 +33,16 @@
 		private void CheckIPv6Valid(string ip, IP expected, bool parseAll = true)
 		{
 			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(expected);
+		}
+
+		private void CheckMappedIPv4Valid(string ip, bool parseAll = true)
+		{
+			IP.Parse(Success(ip, parseAll).ToString()).MapToIPv6().Should().Be(IP.Parse(ip));
+		}
+
+		private void CheckMappedIPv4Valid(string ip, IP expected, bool parseAll = true)
+		{
+			IP.Parse(Success(ip, parseAll).ToString()).MapToIPv6().Should().Be(expected);
 		}
 
 		private void CheckIPv4Invalid(string ip)
@@ -77,7 +87,7 @@
 			CheckIPv4Valid("172.14.2.3");
 			CheckIPv4Valid("127.0.0.1");
 			CheckIPv4Valid("127.0.0.1 ", IP.Parse("127.0.0.1"), false);
-			CheckIPv4Valid("0.0.0.1");
+			CheckIPv4Valid("1.0.0.1");
 			CheckIPv4Valid("127.1.1.1]", IP.Parse("127.1.1.1"), false);
 			CheckIPv4Valid("172.14.2.3:", IP.Parse("172.14.2.3"), false);
 			CheckIPv4Valid("127.0.0.1:32", IP.Parse("127.0.0.1"), false);
@@ -93,10 +103,10 @@
 			CheckIPv6Valid("0:0:0:0:0:0:0:0");
 			CheckIPv6Valid("::1");
 			CheckIPv6Valid("::");
-			CheckIPv6Valid("::ffff:192.0.2.128");
-			CheckIPv6Valid("::ffff:192.0.2.128]", IP.Parse("::ffff:192.0.2.128"), false);
-			CheckIPv6Valid("::ffff:192.0.2.128]:22", IP.Parse("::ffff:192.0.2.128"), false);
-			CheckIPv6Valid("::x:192.0.2.128", IP.Parse("::"), false);
+			CheckMappedIPv4Valid("::ffff:192.0.2.128");
+			CheckMappedIPv4Valid("::ffff:192.0.2.128]", IP.Parse("::ffff:192.0.2.128"), false);
+			CheckMappedIPv4Valid("::ffff:192.0.2.128]:22", IP.Parse("::ffff:192.0.2.128"), false);
+			CheckIPv4Valid("::x:192.0.2.128", IP.Parse("::"), false);
 			CheckIPv6Valid("::1]:546", IP.Parse("::1"), false);
 		}
 	}

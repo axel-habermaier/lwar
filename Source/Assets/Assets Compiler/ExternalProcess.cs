@@ -1,12 +1,12 @@
-﻿namespace Pegasus.Platform
+﻿namespace Pegasus.AssetsCompiler
 {
 	using System;
 	using System.Collections.Concurrent;
 	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Threading.Tasks;
-	using Logging;
-	using Memory;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents external process.

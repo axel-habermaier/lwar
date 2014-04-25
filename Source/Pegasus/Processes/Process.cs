@@ -170,7 +170,6 @@
 		protected override void OnDisposing()
 		{
 			Cancel();
-			_task.Dispose();
 		}
 	}
 }

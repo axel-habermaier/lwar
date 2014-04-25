@@ -145,10 +145,9 @@
 		}
 
 		/// <summary>
-		///     Invoked when assets are reloaded. Forces the relayouting of the label's text just in case that the font has been
-		///     changed.
+		///     Invoked when assets are reloaded. Relayouts the label's text just in case that the font has been changed.
 		/// </summary>
-		private void OnReloadAssets(string assetsProjectPath)
+		private void OnReloadAssets()
 		{
 			_layout.Relayout();
 		}

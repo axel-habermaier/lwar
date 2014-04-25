@@ -3,7 +3,6 @@
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Memory;
 
 	/// <summary>
@@ -132,9 +131,6 @@
 		/// <summary>
 		///     Provides access to the native buffer functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateBuffer")]

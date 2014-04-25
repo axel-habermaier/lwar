@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Logging;
 
 	/// <summary>
@@ -147,9 +146,6 @@
 		/// <summary>
 		///     Provides access to the native IP address functions.
 		/// </summary>
-#if !DEBUG
-		[SuppressUnmanagedCodeSecurity]
-#endif
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgTryParseIPAddress")]

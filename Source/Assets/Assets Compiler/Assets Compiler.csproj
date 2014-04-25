@@ -262,9 +262,6 @@
     <Compile Include="..\..\Pegasus\Math\Vector4.cs">
       <Link>Pegasus\Vector4.cs</Link>
     </Compile>
-    <Compile Include="..\..\Pegasus\Platform\ExternalProcess.cs">
-      <Link>Pegasus\ExternalProcess.cs</Link>
-    </Compile>
     <Compile Include="..\..\Pegasus\Platform\Graphics\Color.cs">
       <Link>Pegasus\Color.cs</Link>
     </Compile>
@@ -377,6 +374,7 @@
     <Compile Include="CSharp\CSharpProject.cs" />
     <Compile Include="CSharp\Extensions.cs" />
     <Compile Include="CSharp\IErrorReporter.cs" />
+    <Compile Include="ExternalProcess.cs" />
     <Compile Include="Registries\Command.cs" />
     <Compile Include="Registries\CommandParameter.cs" />
     <Compile Include="Registries\CSharpCodeGenerator.cs" />

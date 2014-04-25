@@ -13,9 +13,9 @@
 		/// <summary>
 		///     Parses the command line and executes all successfully parsed cvar set instructions.
 		/// </summary>
-		public static void Parse()
+		/// <param name="arguments">The command line arguments that have been passed to the application.</param>
+		public static void Parse(string[] arguments)
 		{
-			var arguments = Environment.GetCommandLineArgs();
 			if (arguments.Length == 1)
 			{
 				Log.Info("No command line arguments have been provided.");

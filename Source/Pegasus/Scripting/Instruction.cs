@@ -29,8 +29,7 @@
 			Assert.ArgumentNotNull(target);
 			Assert.That(!(target is ICommand) || (parameter is object[] && ((object[])parameter).Length == ((ICommand)target).Parameters.Count()),
 						"Incorrect command parameters.");
-			Assert.That(!(target is ICvar) || (parameter == null || ((ICvar)target).ValueType.IsInstanceOfType(parameter)),
-						"Incorrect cvar parameters.");
+			Assert.That(!(target is ICvar) || parameter != null, "Incorrect cvar parameter.");
 
 			_target = target;
 			_parameter = parameter;
