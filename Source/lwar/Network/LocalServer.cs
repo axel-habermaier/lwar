@@ -111,7 +111,7 @@
 
 			_cancellation = new CancellationTokenSource();
 			var token = _cancellation.Token;
-
+			 //TODO
 			_task = Task.Factory.StartNew(() =>
 			{
 				ulong serverTime = 0;
@@ -122,7 +122,7 @@
 					{
 						if (clock.Milliseconds < 1000 / UpdateFrequency)
 						{
-							Thread.Sleep(0);
+							//Thread.Sleep(0);
 							continue;
 						}
 
@@ -172,7 +172,6 @@
 			NativeMethods.Shutdown();
 			Log.Info("Server has shut down.");
 
-			_task.SafeDispose();
 			_cancellation.SafeDispose();
 			_task = null;
 			_cancellation = null;

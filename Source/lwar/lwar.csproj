@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug Direct3D11</Configuration>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{288C9D6B-72B8-4EFF-B636-E8886657AF1A}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lwar</RootNamespace>
-    <AssemblyName>lwar</AssemblyName>
+    <AssemblyName>lwar-client</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>Svn</SccProjectName>
-    <SccLocalPath>Svn</SccLocalPath>
-    <SccAuxPath>Svn</SccAuxPath>
-    <SccProvider>SubversionScc</SccProvider>
-    <ExpressionBlendVersion>5.0.40218.0</ExpressionBlendVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86' ">
     <DebugSymbols>True</DebugSymbols>
@@ -187,10 +187,9 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
@@ -274,7 +273,6 @@
     <Compile Include="Gameplay\IGenerationalIdentity.cs" />
     <Compile Include="Gameplay\Transformation.cs" />
     <Compile Include="Screens\Level.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Scripting\ICommands.cs" />
     <Compile Include="Scripting\ICvars.cs" />
     <Compile Include="Network\ConnectionState.cs" />
@@ -331,15 +329,11 @@
       <LastGenOutput>Cvars.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pegasus\Pegasus.csproj">
-      <Project>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</Project>
+      <Project>{c8a6f23b-0b3d-4910-8512-bede93d1f604}</Project>
       <Name>Pegasus</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

@@ -85,7 +85,7 @@
 			for (var i = 0; i < skipBytes; ++i)
 				buffer.ReadByte();
 
-			return Encoding.UTF8.GetString(bytes);
+			return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
 		}
 	}
 }

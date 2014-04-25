@@ -1,13 +1,11 @@
-﻿namespace Lwar
+﻿namespace Lwar.DesktopLauncher
 {
 	using System;
-	using Pegasus.Framework;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Rendering.UserInterface;
-	using Scripting;
 
 	/// <summary>
-	///     Starts up and configures the application.
+	///     Launches lwar as a desktop application.
 	/// </summary>
 	internal static class Program
 	{
@@ -17,11 +15,7 @@
 		private static void Main(string[] args)
 		{
 			PrintToConsole();
-
-			Commands.Initialize();
-			Cvars.Initialize();
-
-			Bootstrapper<App>.Run(args, "lwar");
+			App.Launch(args);
 		}
 
 		/// <summary>

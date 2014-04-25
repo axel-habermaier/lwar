@@ -3,6 +3,7 @@
 	using System;
 	using Assets;
 	using Network;
+	using Pegasus.Framework;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
@@ -33,10 +34,9 @@
 		protected override void Initialize()
 		{
 			RegisterFontLoader(new FontLoader(Assets));
-
 			Commands.Resolve();
 			Cvars.Resolve();
-
+			
 			Commands.OnConnect += Connect;
 			Commands.OnDisconnect += Disconnect;
 
@@ -130,6 +130,17 @@
 		{
 			_screenManager.Clear();
 			_screenManager.Add(new MainMenu());
+		}
+
+		/// <summary>
+		///     Launches the application.
+		/// </summary>
+		public static void Launch(string[] args)
+		{
+			Commands.Initialize();
+			Cvars.Initialize();
+
+			Bootstrapper<App>.Run(args, "lwar");
 		}
 	}
 }

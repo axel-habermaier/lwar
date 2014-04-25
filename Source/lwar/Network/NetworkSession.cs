@@ -168,7 +168,8 @@
 
 				_connection.Send(_outgoingMessages);
 				_connection.Update();
-				Thread.Sleep(DisconnectSendInterval);
+				// TODO
+				//Thread.Sleep(DisconnectSendInterval);
 			}
 
 			_connection.SafeDispose();
