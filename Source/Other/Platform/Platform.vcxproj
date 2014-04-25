@@ -372,6 +372,7 @@
     <ClCompile Include="context.glx.c" />
     <ClCompile Include="context.wgl.c" />
     <ClCompile Include="d3d11.c" />
+    <ClCompile Include="fileSystem.c" />
     <ClCompile Include="glExt.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Direct3D11|x64'">Use</PrecompiledHeader>
@@ -494,6 +495,7 @@
     <ClInclude Include="glxExt.h" />
     <ClInclude Include="linux.h" />
     <ClInclude Include="pg.h" />
+    <ClInclude Include="pgFileSystem.h" />
     <ClInclude Include="pgGraphics.h" />
     <ClInclude Include="pgNetwork.h" />
     <ClInclude Include="pgWindow.h" />

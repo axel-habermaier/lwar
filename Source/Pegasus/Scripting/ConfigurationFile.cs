@@ -165,7 +165,7 @@
 					line.Content = content + line.Content.Substring(line.EndOfRequest);
 			}
 
-			var fileContent = String.Join(Environment.NewLine, lines.Select(line => line.Content));
+			var fileContent = String.Join("\n", lines.Select(line => line.Content));
 			if (_file.Write(fileContent, e => Log.Error("Failed to write '{0}': {1}", _file.FileName, e.Message)))
 				Log.Info("'{0}' has been written.", _file.FileName);
 		}

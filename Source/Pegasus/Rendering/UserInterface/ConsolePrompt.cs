@@ -319,7 +319,7 @@
 
 			var builder = new StringBuilder();
 			for (var i = 0; i < _numHistory; ++i)
-				builder.AppendLine(_history[i]);
+				builder.Append(_history[i]).Append("\n");
 
 			var file = new AppFile(HistoryFileName);
 			file.Write(builder.ToString(),

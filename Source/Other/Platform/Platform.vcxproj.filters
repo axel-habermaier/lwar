@@ -114,6 +114,7 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="network.c" />
+    <ClCompile Include="fileSystem.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="prelude.h" />
@@ -144,6 +145,9 @@
       <Filter>Graphics\OpenGL 3\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="pgNetwork.h">
+      <Filter>Public API</Filter>
+    </ClInclude>
+    <ClInclude Include="pgFileSystem.h">
       <Filter>Public API</Filter>
     </ClInclude>
   </ItemGroup>

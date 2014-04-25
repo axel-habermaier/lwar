@@ -139,6 +139,7 @@
 #include "pgWindow.h"
 #include "pgGraphics.h"
 #include "pgNetwork.h"
+#include "pgFileSystem.h"
 
 //====================================================================================================================
 // Pegasus logging, state and internal functions

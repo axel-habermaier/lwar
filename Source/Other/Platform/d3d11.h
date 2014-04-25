@@ -13,8 +13,7 @@
 #include <d3d11.h>
 
 #ifdef DEBUG
-	#include <DXGIDebug.h>
-	#include <Initguid.h>
+	struct IDXGI_Debug;
 #endif
 
 #pragma warning(pop)

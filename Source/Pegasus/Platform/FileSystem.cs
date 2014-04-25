@@ -31,7 +31,7 @@
 				if (error == IntPtr.Zero)
 					return "<unknown>";
 
-				return Marshal.PtrToStringAnsi(error);
+				return Marshal.PtrToStringAuto(error);
 			}
 		}
 
@@ -46,7 +46,7 @@
 			if (String.IsNullOrWhiteSpace(fileName))
 				return false;
 
-			return fileName.ToLower().All(c => Char.IsLetterOrDigit(c) || c == '_');
+			return fileName.ToLower().All(c => Char.IsLetterOrDigit(c) || c == '_' || c == '.');
 		}
 
 		/// <summary>
@@ -60,11 +60,11 @@
 
 			fixed (byte* buffer = Buffer)
 			{
-				var length = MaxFileSize;
+				var length = (uint)MaxFileSize;
 				if (!NativeMethods.ReadAppFile(path, buffer, ref length))
 					throw new FileSystemException();
 
-				return new ArraySegment<byte>(Buffer, 0, length);
+				return new ArraySegment<byte>(Buffer, 0, (int)length);
 			}
 		}
 
@@ -79,11 +79,11 @@
 
 			fixed (byte* buffer = Buffer)
 			{
-				var length = MaxFileSize;
+				var length = (uint)MaxFileSize;
 				if (!NativeMethods.ReadUserFile(fileName, buffer, ref length))
 					throw new FileSystemException();
 
-				return Encoding.UTF8.GetString(Buffer, 0, length);
+				return Encoding.UTF8.GetString(Buffer, 0, (int)length);
 			}
 		}
 
@@ -101,7 +101,7 @@
 			var data = Encoding.UTF8.GetBytes(content);
 			fixed (byte* dataPtr = data)
 			{
-				if (!NativeMethods.WriteUserFile(fileName, dataPtr, data.Length))
+				if (!NativeMethods.WriteUserFile(fileName, dataPtr, (uint)data.Length))
 					throw new FileSystemException();
 			}
 		}
@@ -120,7 +120,7 @@
 			var data = Encoding.UTF8.GetBytes(content);
 			fixed (byte* dataPtr = data)
 			{
-				if (!NativeMethods.AppendUserFile(fileName, dataPtr, data.Length))
+				if (!NativeMethods.AppendUserFile(fileName, dataPtr, (uint)data.Length))
 					throw new FileSystemException();
 			}
 		}
@@ -146,17 +146,17 @@
 #endif
 		private static class NativeMethods
 		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReadAllBytes")]
-			public static extern unsafe bool ReadAppFile([MarshalAs(UnmanagedType.LPStr)] string path, byte* buffer, ref int sizeInBytes);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReadAppFile")]
+			public static extern unsafe bool ReadAppFile([MarshalAs(UnmanagedType.LPStr)] string path, byte* buffer, ref uint sizeInBytes);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReadAllText")]
-			public static extern unsafe bool ReadUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName, byte* buffer, ref int sizeInBytes);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReadUserFile")]
+			public static extern unsafe bool ReadUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName, byte* buffer, ref uint sizeInBytes);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgWriteAllText")]
-			public static extern unsafe bool WriteUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName, byte* content, int sizeInBytes);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgWriteUserFile")]
+			public static extern unsafe bool WriteUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName, byte* content, uint sizeInBytes);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgAppendText")]
-			public static extern unsafe bool AppendUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName, byte* content, int sizeInBytes);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgAppendUserFile")]
+			public static extern unsafe bool AppendUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName, byte* content, uint sizeInBytes);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDeleteUserFile")]
 			public static extern bool DeleteUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName);

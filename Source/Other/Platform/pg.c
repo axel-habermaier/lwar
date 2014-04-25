@@ -22,8 +22,8 @@ pgVoid pgInitialize(pgLogCallback callback, pgString appName)
 	pgState.initialized = PG_TRUE;
 	pgState.logCallback = callback;
 
-	PG_ALLOC_ARRAY(pgChar, length, pgState.appName);
-	memcpy(pgState.appName, appName, length);
+	PG_ALLOC_ARRAY(pgChar, length + 1, pgState.appName);
+	memcpy(pgState.appName, appName, length + 1);
 
 	pgInitializeCore();
 }

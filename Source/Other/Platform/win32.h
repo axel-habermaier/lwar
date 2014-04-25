@@ -31,6 +31,26 @@
 #define NODEFERWINDOWPOS
 #define NOMCX
 
+#ifdef _WIN32_WINNT
+	#undef _WIN32_WINNT
+#endif
+
+#ifdef NTDDI_VERSION
+	#undef NTDDI_VERSION
+#endif
+
+#ifdef _WIN32_WINNT
+	#undef _WIN32_WINNT
+#endif
+
+#ifdef WINVER
+	#undef WINVER
+#endif
+
+#define NTDDI_VERSION NTDDI_WIN7
+#define _WIN32_WINNT _WIN32_WINNT_WIN7
+#define WINVER _WIN32_WINNT_WIN7
+
 // Disable all warnings for the windows header
 #pragma warning(push, 0)
 	#include <windows.h>
