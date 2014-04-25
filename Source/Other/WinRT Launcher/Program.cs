@@ -1,6 +1,7 @@
-﻿namespace lwar.Launchers.Desktop
+﻿namespace lwar.Launchers.WinRT
 {
 	using System;
+	using System.Diagnostics;
 	using Lwar;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Rendering.UserInterface;
@@ -15,14 +16,15 @@
 		/// </summary>
 		private static void Main(string[] args)
 		{
-			PrintToConsole();
+			PrintDebugOutput();
 			App.Launch(args);
 		}
 
 		/// <summary>
-		///     Wires up the log events to write all logged messages to the console.
+		///     Wires up the log events to write all logged messages to the debug output.
 		/// </summary>
-		private static void PrintToConsole()
+		[Conditional("DEBUG")]
+		private static void PrintDebugOutput()
 		{
 			Log.OnFatalError += WriteToConsole;
 			Log.OnError += WriteToConsole;
@@ -37,12 +39,12 @@
 		/// <param name="entry">The log entry that should be written.</param>
 		private static void WriteToConsole(LogEntry entry)
 		{
-			Console.Out.Write("[");
-			Console.Out.Write(entry.LogType.ToDisplayString());
-			Console.Out.Write("] ");
+			//Debug.WriteLine("[{0}]");
+			//Debug.Write(entry.LogType.ToDisplayString());
+			//Debug.Write("] ");
 
-			Text.Write(Console.Out, entry.Message);
-			Console.Out.WriteLine();
+			//Text.Write(Console.Out, entry.Message);
+			//Console.Out.WriteLine();
 		}
 	}
 }

@@ -57,3 +57,4 @@ Source/Assets/Pegasus Assets/Fonts/FontLoader.cs
 /Source/User Interface/lwar UI/UserInterface.cs
 /Source/User Interface/Pegasus UI/UserInterface.cs
 *.nvuser
+/Source/Other/WinRT Launcher/obj

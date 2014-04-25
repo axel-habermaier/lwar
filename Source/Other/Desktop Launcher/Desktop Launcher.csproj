@@ -7,7 +7,7 @@
     <ProjectGuid>{5ECB6AC4-D100-4327-BAC7-C2F6C3A7BFFF}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>lwar.DesktopLauncher</RootNamespace>
+    <RootNamespace>lwar.Launchers.Desktop</RootNamespace>
     <AssemblyName>lwar</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
