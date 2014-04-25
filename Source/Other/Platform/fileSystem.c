@@ -131,6 +131,8 @@ PG_API_EXPORT const pgPathChar* pgGetUserDirectory()
 
 	if (!exists && !CreateDirectoryW(pathBuffer, NULL))
 		pgFileSystemDie("Failed to create app directory.");
+#else
+	pathBuffer[0] = '\0';
 #endif
 
 	return pathBuffer;
