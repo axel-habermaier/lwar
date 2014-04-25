@@ -22,7 +22,7 @@
 			where T : class
 		{
 			if (argument == null)
-				throw new ArgumentNullException("Reference type parameter cannot be null.");
+				throw new ArgumentNullException();
 		}
 
 		/// <summary>
@@ -33,7 +33,7 @@
 		public static void ArgumentNotNull(IntPtr pointer)
 		{
 			if (pointer == IntPtr.Zero)
-				throw new ArgumentNullException("Pointer type parameter cannot be null.");
+				throw new ArgumentNullException();
 		}
 
 		/// <summary>
@@ -73,7 +73,7 @@
 			where TEnum : struct
 		{
 			if (!Enum.IsDefined(typeof(TEnum), argument))
-				throw new ArgumentOutOfRangeException("Enumeration parameter is out of range.");
+				throw new ArgumentOutOfRangeException();
 		}
 
 		/// <summary>
@@ -88,10 +88,10 @@
 			where T : IComparable<T>
 		{
 			if (argument.CompareTo(min) < 0)
-				throw new ArgumentOutOfRangeException("Parameter underflows.");
+				throw new ArgumentOutOfRangeException();
 
 			if (argument.CompareTo(max) > 0)
-				throw new ArgumentOutOfRangeException("Parameter overflows.");
+				throw new ArgumentOutOfRangeException();
 		}
 
 		/// <summary>
