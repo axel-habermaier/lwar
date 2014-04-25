@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Globalization;
+	using System.Text;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
@@ -30,6 +31,7 @@
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
+			using (new NativeLibrary(appName))
 			using (var logFile = new LogFile(appName))
 			{
 				try
@@ -42,9 +44,8 @@
 					Commands.Initialize();
 					Cvars.Initialize();
 
-					using (new NativeLibrary())
 					using (new Help())
-					using (new Interpreter(appName))
+					using (new Interpreter())
 					{
 						// Process the autoexec.cfg first, then the command line, so that cvar values set via the command line overwrite
 						// the autoexec.cfg. Afterwards, perform all deferred updates so that all cvars are set to their updated values

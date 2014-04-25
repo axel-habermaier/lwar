@@ -56,7 +56,7 @@ typedef pgVoid (*pgLogCallback)(pgLogType type, pgString message);
 // Pegasus library functions
 //====================================================================================================================
 
-PG_API_EXPORT pgVoid pgInitialize(pgLogCallback callback);
+PG_API_EXPORT pgVoid pgInitialize(pgLogCallback callback, pgString appName);
 PG_API_EXPORT pgVoid pgShutdown();
 PG_API_EXPORT pgFloat64 pgGetTime();
 

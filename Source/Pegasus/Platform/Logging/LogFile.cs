@@ -3,7 +3,8 @@
 	using System;
 	using System.Collections.Generic;
 	using System.IO;
-	using Framework;
+	using System.Runtime.InteropServices;
+	using System.Text;
 	using Memory;
 	using Rendering.UserInterface;
 	using Console = Rendering.UserInterface.Console;
@@ -34,13 +35,15 @@
 		/// <param name="appName">The name of the application.</param>
 		public LogFile(string appName)
 		{
+			Assert.ArgumentNotNullOrWhitespace(appName);
+
 			Log.OnFatalError += Enqueue;
 			Log.OnError += Enqueue;
 			Log.OnWarning += Enqueue;
 			Log.OnInfo += Enqueue;
 			Log.OnDebugInfo += Enqueue;
 
-			_file = new AppFile(appName, String.Format("{0}.log", appName));
+			_file = new AppFile(String.Format("{0}.log", appName));
 			_file.Delete(e => Log.Warn("Failed to delete the current contents of the log file: {0}", e.Message));
 		}
 
@@ -49,7 +52,7 @@
 		/// </summary>
 		public string FilePath
 		{
-			get { return _file.AbsolutePath; }
+			get { return String.Format("{0}/{1}", FileSystem.UserDirectory, _file.FileName); }
 		}
 
 		/// <summary>
@@ -71,29 +74,35 @@
 			if (!force && _logEntries.Count < BatchSize)
 				return;
 
-			if (_file.Append(WriteQueuedEntries, e => Log.Warn("Failed to append to log file: {0}", e.Message)))
+			if (_file.Append(WriteQueuedEntries(), e => Log.Warn("Failed to append to log file: {0}", e.Message)))
 				_logEntries.Clear();
 		}
 
 		/// <summary>
-		///     Writes the queued log entries to the given stream.
+		/// A cached string builder instance used when writing queued log entries.
 		/// </summary>
-		/// <param name="writer">The stream the entry should be written to.</param>
-		private void WriteQueuedEntries(TextWriter writer)
+		readonly StringBuilder _builder = new StringBuilder(1024);
+
+		/// <summary>
+		///     Writes the queued log entries.
+		/// </summary>
+		private string WriteQueuedEntries()
 		{
-			Assert.ArgumentNotNull(writer);
+			_builder.Clear();
 
 			foreach (var entry in _logEntries)
 			{
-				writer.Write("[");
-				writer.Write(entry.LogType.ToDisplayString());
-				writer.Write("]   ");
-				writer.Write(entry.Time.ToString("F4").PadLeft(9));
+				_builder.Append("[");
+				_builder.Append(entry.LogType.ToDisplayString());
+				_builder.Append("]   ");
+				_builder.Append(entry.Time.ToString("F4").PadLeft(9));
 
-				writer.Write("   ");
-				Text.Write(writer, entry.Message);
-				writer.WriteLine();
+				_builder.Append("   ");
+				Text.Write(_builder, entry.Message);
+				_builder.Append("\n");
 			}
+
+			return _builder.ToString();
 		}
 
 		/// <summary>

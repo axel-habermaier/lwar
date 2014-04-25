@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
-	using System.IO;
 	using System.Linq;
 	using AssetLoaders;
 	using Platform;
@@ -138,7 +137,7 @@
 							Log.Info("Reloading {1} {0}...", GetAssetDisplayName(info), GetAssetTypeDisplayName(info));
 							Load(info);
 						}
-						catch (IOException e)
+						catch (FileSystemException e)
 						{
 							Log.Die("Failed to reload asset {0}: {1}", GetAssetDisplayName(info), e.Message);
 						}
@@ -318,7 +317,7 @@
 		{
 			try
 			{
-				using (var buffer = BufferReader.Create(File.ReadAllBytes(info.Path)))
+				using (var buffer = BufferReader.Create(FileSystem.ReadAllBytes(info.Path)))
 				{
 					AssetHeader.Validate(buffer, info.Type);
 					Loaders.Single(l => l.AssetType == info.Type).Load(buffer, info.Asset, info.Path);

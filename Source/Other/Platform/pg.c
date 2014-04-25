@@ -9,15 +9,21 @@ pgLibraryState pgState;
 // Exported functions
 //====================================================================================================================
 
-pgVoid pgInitialize(pgLogCallback callback)
+pgVoid pgInitialize(pgLogCallback callback, pgString appName)
 {
+	size_t length = strlen(appName);
+
 	// We have to use the default C assert() here, as we are about to initialize the infrastructure for the 
 	// PG_ASSERT macros
 	assert(callback != NULL);
+	assert(appName != NULL);
 	assert(pgState.initialized == PG_FALSE);
 
 	pgState.initialized = PG_TRUE;
 	pgState.logCallback = callback;
+
+	PG_ALLOC_ARRAY(pgChar, length, pgState.appName);
+	memcpy(pgState.appName, appName, length);
 
 	pgInitializeCore();
 }
@@ -26,6 +32,9 @@ pgVoid pgShutdown()
 {
 	PG_ASSERT(pgState.initialized == PG_TRUE, "Library is not initialized.");
 	pgState.initialized = PG_FALSE;
+
+	PG_FREE(pgState.appName);
+	pgState.appName = NULL;
 
 	pgShutdownCore();
 }

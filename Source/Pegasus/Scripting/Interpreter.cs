@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Text;
+	using Framework;
 	using Parsing;
 	using Platform;
 	using Platform.Logging;
@@ -15,11 +16,6 @@
 	internal class Interpreter : DisposableObject
 	{
 		/// <summary>
-		///     The name of the application.
-		/// </summary>
-		private readonly string _appName;
-
-		/// <summary>
 		///     The parser that is used to parse a user request.
 		/// </summary>
 		private readonly InstructionParser _parser;
@@ -27,12 +23,8 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="appName">The name of the application.</param>
-		public Interpreter(string appName)
+		public Interpreter()
 		{
-			Assert.ArgumentNotNullOrWhitespace(appName);
-
-			_appName = appName;
 			_parser = new InstructionParser();
 
 			Commands.OnExecute += OnExecute;
@@ -86,11 +78,11 @@
 		private void OnPrintAppInfo()
 		{
 			var builder = new StringBuilder();
-			builder.AppendFormat("\nApplication Name:     {0}\n", _appName);
+			builder.AppendFormat("\nApplication Name:     {0}\n", Application.Current.Name);
 			builder.AppendFormat("Operating System:     {0}\n", PlatformInfo.Platform);
 			builder.AppendFormat("CPU Architecture:     {0}\n", IntPtr.Size == 8 ? "x64" : "x86");
 			builder.AppendFormat("Graphics API:         {0}\n", PlatformInfo.GraphicsApi);
-			builder.AppendFormat("User File Directory:  {0}\n", AppFile.Folder);
+			builder.AppendFormat("User File Directory:  {0}\n", FileSystem.UserDirectory);
 
 			Log.Info("{0}", builder);
 		}
@@ -135,7 +127,7 @@
 		/// <param name="fileName">The name of the file in the application's user directory that should be processed.</param>
 		private void OnProcess(string fileName)
 		{
-			var configFile = new ConfigurationFile(_parser, _appName, fileName);
+			var configFile = new ConfigurationFile(_parser, fileName);
 			configFile.Process();
 		}
 
@@ -145,7 +137,7 @@
 		/// <param name="fileName">The name of the file in the application's user directory that the cvars should be written to.</param>
 		private void OnPersist(string fileName)
 		{
-			var configFile = new ConfigurationFile(_parser, _appName, fileName);
+			var configFile = new ConfigurationFile(_parser, fileName);
 			configFile.Persist(CvarRegistry.All.Where(cvar => cvar.Persistent));
 		}
 

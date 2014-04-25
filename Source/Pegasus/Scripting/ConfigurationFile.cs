@@ -36,12 +36,10 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="parser"> The parser that should be used to parse the file.</param>
-		/// <param name="appName">The name of the application.</param>
 		/// <param name="fileName">The name of the configuration file.</param>
-		public ConfigurationFile(InstructionParser parser, string appName, string fileName)
+		public ConfigurationFile(InstructionParser parser, string fileName)
 		{
 			Assert.ArgumentNotNull(parser);
-			Assert.ArgumentNotNullOrWhitespace(appName);
 
 			if (String.IsNullOrWhiteSpace(fileName))
 			{
@@ -50,9 +48,9 @@
 			}
 
 			_parser = parser;
-			_file = new AppFile(appName, fileName);
+			_file = new AppFile(fileName);
 
-			if (!_file.IsValid)
+			if (!FileSystem.IsValidFileName(fileName))
 				Log.Error("'{0}' is not a valid file name.", _file.FileName);
 		}
 
@@ -125,7 +123,7 @@
 		/// </summary>
 		public void Process()
 		{
-			if (!_file.IsValid)
+			if (!FileSystem.IsValidFileName(_file.FileName))
 				return;
 
 			Log.Info("Processing '{0}'...", _file.FileName);
@@ -141,7 +139,7 @@
 		{
 			Assert.ArgumentNotNull(cvars);
 
-			if (!_file.IsValid)
+			if (!FileSystem.IsValidFileName(_file.FileName))
 				return;
 
 			var lines = ParseLines(true).ToList();

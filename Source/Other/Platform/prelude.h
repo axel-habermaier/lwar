@@ -148,6 +148,7 @@ typedef struct
 {
 	pgBool			initialized;
 	pgLogCallback	logCallback;
+	pgChar*			appName;
 } pgLibraryState;
 
 extern pgLibraryState pgState;

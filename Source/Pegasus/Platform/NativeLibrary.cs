@@ -47,15 +47,15 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public NativeLibrary()
+		/// <param name="appName">The name of the application.</param>
+		public NativeLibrary(string appName)
 		{
+			Assert.ArgumentNotNullOrWhitespace(appName);
 			Assert.That(!_isInitialized, "The library has already been initialized.");
 
 			_logCallback = OnLoggedMessage;
 
-			Log.Info("Initializing native platform library...");
-			NativeMethods.Initialize(_logCallback);
-
+			NativeMethods.Initialize(_logCallback, appName);
 			_isInitialized = true;
 		}
 
@@ -64,7 +64,6 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Log.Info("Shutting down native platform library...");
 			NativeMethods.Shutdown();
 			_isInitialized = false;
 		}
@@ -110,7 +109,7 @@
 			public delegate void LogCallback(LogType type, string message);
 
 			[DllImport(LibraryName, EntryPoint = "pgInitialize")]
-			public static extern void Initialize(LogCallback callback);
+			public static extern void Initialize(LogCallback callback, [MarshalAs(UnmanagedType.LPStr)] string appName);
 
 			[DllImport(LibraryName, EntryPoint = "pgShutdown")]
 			public static extern void Shutdown();

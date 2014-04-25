@@ -296,6 +296,27 @@
 		}
 
 		/// <summary>
+		///     Writes the given string into the given string builder, removing all color specifiers.
+		/// </summary>
+		/// <param name="writer">The string builder that the text should be written to.</param>
+		/// <param name="text">The text that should be written.</param>
+		internal static void Write(StringBuilder writer, string text)
+		{
+			Assert.ArgumentNotNull(writer);
+			Assert.ArgumentNotNullOrWhitespace(text);
+
+			for (var i = 0; i < text.Length; ++i)
+			{
+				ColorSpecifier color;
+
+				if (TryMatch(text, i, out color))
+					i += color.Specifier.Length - 1;
+				else
+					writer.Append(text[i]);
+			}
+		}
+
+		/// <summary>
 		///     Provides color information for a range of characters.
 		/// </summary>
 		private struct ColorRange

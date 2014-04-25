@@ -36,8 +36,7 @@
 			Assert.ArgumentNotNull(value);
 			Assert.ArgumentSatisfies(value is string, "The value must be a string.");
 
-			var file = new AppFile("ignored", (string)value);
-			return file.IsValid;
+			return FileSystem.IsValidFileName((string)value);
 		}
 	}
 }

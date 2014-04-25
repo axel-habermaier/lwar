@@ -3,7 +3,6 @@
 	using System;
 	using System.Linq;
 	using System.Text;
-	using Framework;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
@@ -85,11 +84,14 @@
 			_input = new TextBox(font) { Color = color };
 			_prompt = new Label(font, Prompt) { Color = color };
 
-			var file = new AppFile(Application.Current.Name, HistoryFileName);
+			var file = new AppFile(HistoryFileName);
 			string content;
 
-			if (!file.Read(out content, e => Log.Error("Failed to load console history from '{0}': {1}", file.AbsolutePath, e.Message)))
+			if (!file.Read(out content, e => Log.Error("Failed to load console history from '{0}/{1}': {2}",
+													   FileSystem.UserDirectory, file.FileName, e.Message)))
+			{
 				return;
+			}
 
 			var history = content.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 			history = history.Where(h => h.Length <= Console.MaxLength).ToArray();
@@ -319,8 +321,9 @@
 			for (var i = 0; i < _numHistory; ++i)
 				builder.AppendLine(_history[i]);
 
-			var file = new AppFile(Application.Current.Name, HistoryFileName);
-			file.Write(builder.ToString(), e => Log.Error("Failed to persist console history in '{0}': {1}", file.AbsolutePath, e.Message));
+			var file = new AppFile(HistoryFileName);
+			file.Write(builder.ToString(),
+					   e => Log.Error("Failed to persist console history in '{0}/{1}': {2}", FileSystem.UserDirectory, file.FileName, e.Message));
 		}
 	}
 }
