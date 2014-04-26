@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///     Raised when a network error occurred.
@@ -34,6 +35,7 @@
 		/// <summary>
 		///     Provides access to the native file system functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetLastFileError")]

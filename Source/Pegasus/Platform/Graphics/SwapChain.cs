@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Math;
 	using Memory;
 
@@ -90,6 +91,7 @@
 		/// <summary>
 		///     Provides access to the native swap chain functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateSwapChain")]

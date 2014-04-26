@@ -133,9 +133,10 @@
 		}
 
 		/// <summary>
-		///     Launches the application.
+		///     Entrypoint of the application.
 		/// </summary>
-		public static void Launch(string[] args)
+		/// <param name="args">The command line arguments passed to the application.</param>
+		public static void Main(string[] args)
 		{
 			Commands.Initialize();
 			Cvars.Initialize();

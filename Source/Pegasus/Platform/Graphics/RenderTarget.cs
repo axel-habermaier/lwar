@@ -4,6 +4,7 @@
 	using System.Diagnostics;
 	using System.Linq;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Math;
 	using Memory;
 
@@ -160,6 +161,7 @@
 		/// <summary>
 		///     Provides access to the native render target functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateRenderTarget")]

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Framework;
 
 	/// <summary>
@@ -85,6 +86,7 @@
 		/// <summary>
 		///     Provides access to the native shader program functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateProgram")]

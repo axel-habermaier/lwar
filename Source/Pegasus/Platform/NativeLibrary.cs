@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Graphics;
 	using Logging;
 	using Memory;
@@ -100,6 +101,7 @@
 		/// <summary>
 		///     Provides access to the native platform types and functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			public delegate void LogCallback(LogType type, string message);

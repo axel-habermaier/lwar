@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Logging;
 	using Math;
 	using Memory;
@@ -254,6 +255,7 @@
 		/// <summary>
 		///     Provides access to the native graphics device functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateGraphicsDevice")]

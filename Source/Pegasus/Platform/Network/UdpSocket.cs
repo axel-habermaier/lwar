@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Memory;
 
 	/// <summary>
@@ -130,6 +131,7 @@
 		/// <summary>
 		///     Provides access to the native socket functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			public enum ReceiveStatus

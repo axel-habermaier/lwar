@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///     Represents a query that can be used to retrieve information from the GPU.
@@ -94,6 +95,7 @@
 		/// <summary>
 		///     Provides access to the native query functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateQuery")]

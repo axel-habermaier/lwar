@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///     A fragment shader is a program that controls the fragment-shader stage.
@@ -34,6 +35,7 @@
 		/// <summary>
 		///     Provides access to the native shader functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateFragmentShader")]

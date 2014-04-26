@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Concurrent;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Pegasus;
@@ -122,7 +123,7 @@
 					{
 						if (clock.Milliseconds < 1000 / UpdateFrequency)
 						{
-							//Thread.Sleep(0);
+							Thread.Sleep(0);
 							continue;
 						}
 
@@ -193,6 +194,7 @@
 		/// <summary>
 		///     Provides access to the native service types and functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 #if Windows

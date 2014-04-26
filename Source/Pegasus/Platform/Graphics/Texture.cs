@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 
 	/// <summary>
 	///     Represents a GPU texture.
@@ -133,6 +134,7 @@
 		/// <summary>
 		///     Provides access to the native Texture2D functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateTexture")]

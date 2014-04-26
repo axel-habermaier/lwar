@@ -3,6 +3,7 @@
 	using System;
 	using System.Linq;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using System.Text;
 
 	/// <summary>
@@ -145,6 +146,7 @@
 		/// <summary>
 		///     Provides access to the native file system functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReadAppFile")]

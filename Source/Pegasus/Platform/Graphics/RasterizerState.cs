@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Memory;
 
 	/// <summary>
@@ -254,6 +255,7 @@
 		/// <summary>
 		///     Provides access to the native rasterizer state functions.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateRasterizerState")]

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using System.Security;
 	using Memory;
 	using Scripting;
 
@@ -116,6 +117,7 @@
 		/// <summary>
 		///     Provides access to the native function.
 		/// </summary>
+		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetTime")]
