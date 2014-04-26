@@ -38,7 +38,7 @@
 		/// <param name="keyword">The keyword that should be the next input.</param>
 		private bool IsKeyword(InputStream inputStream, string keyword)
 		{
-			foreach (var character in keyword)
+			foreach (var character in keyword.ToCharArray())
 			{
 				if (inputStream.EndOfInput || Char.ToLower(inputStream.Peek()) != character)
 					return false;

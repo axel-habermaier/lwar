@@ -135,7 +135,7 @@
 		{
 			Assert.ArgumentNotNull(s);
 
-			foreach (var character in s)
+			foreach (var character in s.ToCharArray())
 			{
 				if (EndOfInput || Peek() != character)
 					return false;
