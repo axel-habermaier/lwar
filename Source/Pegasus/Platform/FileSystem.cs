@@ -51,7 +51,7 @@
 			if (String.IsNullOrWhiteSpace(fileName))
 				return false;
 
-			return fileName.ToLower().ToCharArray().Any(c => Char.IsLetterOrDigit(c) || c == '_' || c == '.');
+			return fileName.ToCharArray().Any(c => Char.IsLetterOrDigit(c) || c == '_' || c == '.');
 		}
 
 		/// <summary>
