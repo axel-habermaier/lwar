@@ -7,7 +7,6 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Rendering.UserInterface;
 	using Scripting;
 
 	/// <summary>
@@ -192,51 +191,6 @@
 		}
 
 		/// <summary>
-		///     Loads a font.
-		/// </summary>
-		/// <param name="font">The identifier of the font asset that should be loaded.</param>
-		public Font Load(AssetIdentifier<Font> font)
-		{
-			return (Font)LoadAsset(font);
-		}
-
-		/// <summary>
-		///     Loads a vertex shader.
-		/// </summary>
-		/// <param name="shader">The identifier of the vertex shader asset that should be loaded.</param>
-		internal VertexShader Load(AssetIdentifier<VertexShader> shader)
-		{
-			return (VertexShader)LoadAsset(shader);
-		}
-
-		/// <summary>
-		///     Loads a fragment shader.
-		/// </summary>
-		/// <param name="shader">The identifier of the fragment shader asset that should be loaded.</param>
-		internal FragmentShader Load(AssetIdentifier<FragmentShader> shader)
-		{
-			return (FragmentShader)LoadAsset(shader);
-		}
-
-		/// <summary>
-		///     Loads a 2D texture.
-		/// </summary>
-		/// <param name="texture">The identifier of the texture 2D asset that should be loaded.</param>
-		public Texture2D Load(AssetIdentifier<Texture2D> texture)
-		{
-			return (Texture2D)LoadAsset(texture);
-		}
-
-		/// <summary>
-		///     Loads a cube map.
-		/// </summary>
-		/// <param name="cubeMap">The identifier of the cube map asset that should be loaded.</param>
-		public CubeMap Load(AssetIdentifier<CubeMap> cubeMap)
-		{
-			return (CubeMap)LoadAsset(cubeMap);
-		}
-
-		/// <summary>
 		///     Loads all pending assets. If the timeout is exceeded when loading the assets, the function returns without
 		///     all assets loaded. However, it is guaranteed that at least one pending asset is loaded with every invocation
 		///     of the function.
@@ -358,21 +312,21 @@
 		}
 
 		/// <summary>
-		///     Allocates the asset instance for the given asset identifier. If asynchronous loading is enabled,
-		///     actual loading of the asset is deferred.
+		///     Loads the given asset. If asynchronous loading is enabled, actual loading of the asset is deferred and an
+		///     uninitialized object is returned.
 		/// </summary>
-		/// <param name="identifier">The identifier of the asset the instance should be allocated for.</param>
-		private IDisposable LoadAsset<T>(AssetIdentifier<T> identifier)
+		/// <param name="assetIdentifier">The identifier of the asset that should be loaded.</param>
+		public T Load<T>(AssetIdentifier<T> assetIdentifier)
 			where T : class, IDisposable
 		{
 			// Check if we've loaded the requested asset before
-			var asset = Find(identifier.HashCode);
+			var asset = Find(assetIdentifier.HashCode);
 			if (asset != null)
-				return asset;
+				return (T)asset;
 
-			asset = Loaders[identifier.AssetType].Allocate(_graphicsDevice);
+			asset = Loaders[assetIdentifier.AssetType].Allocate(_graphicsDevice);
 
-			var info = AssetInfo.Create(identifier, asset);
+			var info = AssetInfo.Create(assetIdentifier, asset);
 			if (_asyncLoading)
 				_pendingAssets.Add(info);
 			else
@@ -381,7 +335,7 @@
 				Load(info);
 			}
 
-			return asset;
+			return (T)asset;
 		}
 
 		/// <summary>

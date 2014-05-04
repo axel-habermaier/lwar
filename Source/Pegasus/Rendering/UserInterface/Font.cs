@@ -31,7 +31,7 @@
 		}
 
 		/// <summary>
-		///     Gets a value indicating whether the font supportes kerning.
+		///     Gets a value indicating whether the font supports kerning.
 		/// </summary>
 		public bool KerningSupported
 		{
@@ -149,14 +149,13 @@
 		///     the text. The start index is used to decide whether a kerning offset has to be
 		///     applied to the glyph position.
 		/// </summary>
-		/// <param name="text">The text for which the glyph are should be computed.</param>
+		/// <param name="text">The text for which the glyph area should be computed.</param>
 		/// <param name="start">The first index of the text that is considered; required for font kerning.</param>
 		/// <param name="index">The index of the character for which the glyph area should be returned.</param>
 		/// <param name="offset">
 		///     The offset that should be applied to the glyph's position. The X-value of
 		///     the offset is updated to reflect the glyph width and the kerning offset.
 		/// </param>
-		/// <returns></returns>
 		internal Rectangle GetGlyphArea(Text text, int start, int index, ref Vector2i offset)
 		{
 			Assert.ArgumentNotNull(text);
