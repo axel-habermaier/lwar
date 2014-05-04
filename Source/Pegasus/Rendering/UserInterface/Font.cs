@@ -211,7 +211,7 @@
 
 			// Ensure that a '□' (at index 0) is printed for all characters that are not supported by the font.
 			if (index < 0 || index >= _glyphs.Length || _glyphs[index].IsInvalid)
-				return GetGlyph((char)0); // The font processor guarantees that '□' at index 0 is supported by the font
+				return _glyphs[0]; // The font processor guarantees that '□' at index 0 is supported by the font
 
 			// New lines should not be visible at all, and should have no width
 			if (glyph == '\n')

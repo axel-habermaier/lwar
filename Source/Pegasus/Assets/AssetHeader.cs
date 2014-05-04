@@ -33,7 +33,7 @@
 		{
 			Assert.ArgumentNotNull(buffer);
 
-			if (!buffer.CanRead(3))
+			if (!buffer.CanRead(5))
 				throw new InvalidOperationException("Asset is corrupted: Header information missing.");
 
 			if (buffer.ReadByte() != 'p' || buffer.ReadByte() != 'g')
