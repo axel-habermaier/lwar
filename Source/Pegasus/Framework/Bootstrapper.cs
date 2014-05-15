@@ -2,13 +2,14 @@
 {
 	using System;
 	using System.Globalization;
+	using System.Threading;
 	using System.Threading.Tasks;
-	using Assets;
-	using Assets.AssetLoaders;
 	using Platform;
 	using Platform.Logging;
+	using Rendering.UserInterface;
 	using Scripting;
 	using UserInterface;
+	using Console = System.Console;
 
 	/// <summary>
 	///     Starts up the application and handles command line arguments and fatal application exceptions.
@@ -27,8 +28,10 @@
 			Assert.ArgumentNotNullOrWhitespace(appName);
 
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
-			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-			CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
+			PrintToConsole();
 
 			using (new NativeLibrary(appName))
 			using (var logFile = new LogFile(appName))
@@ -68,6 +71,32 @@
 					NativeLibrary.ShowMessageBox(appName + " Fatal Error", message);
 				}
 			}
+		}
+
+		/// <summary>
+		///     Wires up the log events to write all logged messages to the console.
+		/// </summary>
+		private static void PrintToConsole()
+		{
+			Log.OnFatalError += WriteToConsole;
+			Log.OnError += WriteToConsole;
+			Log.OnWarning += WriteToConsole;
+			Log.OnInfo += WriteToConsole;
+			Log.OnDebugInfo += WriteToConsole;
+		}
+
+		/// <summary>
+		///     Writes the given log entry to the given text writer.
+		/// </summary>
+		/// <param name="entry">The log entry that should be written.</param>
+		private static void WriteToConsole(LogEntry entry)
+		{
+			Console.Out.Write("[");
+			Console.Out.Write(entry.LogType.ToDisplayString());
+			Console.Out.Write("] ");
+
+			Text.Write(Console.Out, entry.Message);
+			Console.Out.WriteLine();
 		}
 	}
 }
