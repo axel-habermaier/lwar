@@ -172,7 +172,7 @@
 		}
 
 		/// <summary>
-		///     Gets the GPU frame time in seconds for the last frame.
+		///     Gets the GPU frame time in milliseconds for the last frame.
 		/// </summary>
 		public double FrameTime { get; private set; }
 

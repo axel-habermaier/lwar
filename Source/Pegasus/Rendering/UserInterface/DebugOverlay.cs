@@ -56,14 +56,14 @@
 		}
 
 		/// <summary>
-		///     Gets the GPU frame time measurements.
+		///     Sets the GPU frame time in milliseconds that is displayed by the debug overlay.
 		/// </summary>
-		internal double GpuFrameTime { get; set; }
+		internal double GpuFrameTime { private get; set; }
 
 		/// <summary>
-		///     Gets the CPU frame time measurements.
+		///     Sets the CPU frame time in milliseconds that is displayed by the debug overlay.
 		/// </summary>
-		internal double CpuFrameTime { get; set; }
+		internal double CpuFrameTime { private get; set; }
 
 		/// <summary>
 		///     Updates the statistics.
