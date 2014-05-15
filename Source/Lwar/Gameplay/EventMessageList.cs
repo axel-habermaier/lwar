@@ -21,7 +21,7 @@
 		/// <summary>
 		///     The clock that is used to determine when messages should be removed from the list.
 		/// </summary>
-		private readonly Clock _clock = new Clock();
+		private Clock _clock = new Clock();
 
 		/// <summary>
 		///     The game session that generates the event messages.
