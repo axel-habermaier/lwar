@@ -39,7 +39,6 @@ static pgVoid pgSetUserFilePath(pgString fileName);
 static pgVoid pgAddToPath(pgString path);
 
 static pgBool pgIsPathSeparator(pgPathChar character);
-static pgVoid pgNormalize();
 
 static FILE* pgOpenFile(pgFileMode fileMode);
 static pgBool pgCloseFile(FILE* file);
@@ -198,7 +197,7 @@ static pgVoid pgSetUserFilePath(pgString fileName)
 static pgVoid pgAddToPath(pgString path)
 {
 	pgPathChar* path1 = pathBuffer;
-	pgPathChar* path2;
+	const pgPathChar* path2;
 	size_t length1;
 	size_t length2;
 	size_t length;
@@ -259,16 +258,6 @@ static pgVoid pgAddToPath(pgString path)
 static pgBool pgIsPathSeparator(pgPathChar character)
 {
 	return character == '/' || character == '\\';
-}
-
-static pgVoid pgNormalize()
-{
-	int i;
-	for (i = 0; pathBuffer[i] != '\0'; ++i)
-	{
-		if (pathBuffer[i] == '\\')
-			pathBuffer[i] = '/';
-	}
 }
 
 static FILE* pgOpenFile(pgFileMode fileMode)

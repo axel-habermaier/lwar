@@ -88,6 +88,7 @@
     <Compile Include="buffer.c" />
     <Compile Include="graphics.c" />
     <Compile Include="network.c" />
+    <Compile Include="fileSystem.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="d3d11.h" />
@@ -102,5 +103,6 @@
     <None Include="win32.h" />
     <None Include="glExt.h" />
     <None Include="pgNetwork.h" />
+    <None Include="pgFileSystem.h" />
   </ItemGroup>
 </Project>

@@ -134,8 +134,11 @@ PG_API_EXPORT pgBool pgBindUdpSocket(pgSocket* socket, pgUint16 port)
 PG_API_EXPORT pgBool pgBindUdpSocketMulticast(pgSocket* socket, pgInt32 timeToLive, pgIPAddress* ipAddress, pgUint16 port)
 {
 	int loop = 1;
-	struct sockaddr_in6 addr = { 0 };
-	struct ipv6_mreq group = { 0 };
+	struct sockaddr_in6 addr;
+	struct ipv6_mreq group;
+
+	memset(&addr, 0, sizeof(struct sockaddr_in6));
+	memset(&group, 0, sizeof(struct ipv6_mreq));
 
 	PG_ASSERT_NOT_NULL(socket);
 	PG_ASSERT_NOT_NULL(ipAddress);
