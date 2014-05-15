@@ -59,6 +59,11 @@
 		private int _syncedIndex;
 
 		/// <summary>
+		/// A value indicating whether the graphics device can currently be used for drawing.
+		/// </summary>
+		private bool _canDraw;
+
+		/// <summary>
 		///     The current viewport of the rasterizer stage of the device.
 		/// </summary>
 		private Rectangle _viewport;
@@ -198,6 +203,8 @@
 		internal void Draw(int primitiveCount, int offset = 0)
 		{
 			Assert.NotDisposed(this);
+			Assert.That(_canDraw, "Drawing commands can only be issued between a call to BeginFrame() and EndFrame().");
+
 			NativeMethods.Draw(_device, primitiveCount, offset);
 		}
 
@@ -211,6 +218,8 @@
 		internal void DrawIndexed(int indexCount, int indexOffset = 0, int vertexOffset = 0)
 		{
 			Assert.NotDisposed(this);
+			Assert.That(_canDraw, "Drawing commands can only be issued between a call to BeginFrame() and EndFrame().");
+
 			NativeMethods.DrawIndexed(_device, indexCount, indexOffset, vertexOffset);
 		}
 
@@ -236,6 +245,9 @@
 			// Issue timing queries for the current frame
 			_disjointQueries[_syncedIndex].Begin();
 			_beginQueries[_syncedIndex].Query();
+
+			// The graphics device can now be safely used for drawing
+			_canDraw = true;
 		}
 
 		/// <summary>
@@ -250,6 +262,9 @@
 			// We've completed the frame, so issue the synced query for the current frame and update the synced index
 			_syncedQueries[_syncedIndex].MarkSyncPoint();
 			_syncedIndex = (_syncedIndex + 1) % FrameLag;
+
+			// The graphics device can no longer safely be used for drawing
+			_canDraw = false;
 		}
 
 		/// <summary>

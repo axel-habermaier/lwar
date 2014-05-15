@@ -68,6 +68,8 @@
 					message = String.Format(message, e.Message, logFile.FilePath);
 					Log.Error("{0}", message);
 					Log.Error("Stack trace:\n{0}", e.StackTrace);
+
+					logFile.WriteToFile(force: true);
 					NativeLibrary.ShowMessageBox(appName + " Fatal Error", message);
 				}
 			}

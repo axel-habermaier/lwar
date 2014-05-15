@@ -2,8 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.IO;
-	using System.Runtime.InteropServices;
 	using System.Text;
 	using Memory;
 	using Rendering.UserInterface;
@@ -18,6 +16,11 @@
 		///     The number of log messages that must be queued before the messages are written to the file system.
 		/// </summary>
 		private const int BatchSize = 250;
+
+		/// <summary>
+		///     A cached string builder instance used when writing queued log entries.
+		/// </summary>
+		private readonly StringBuilder _builder = new StringBuilder(1024);
 
 		/// <summary>
 		///     The file the log is written to.
@@ -69,24 +72,19 @@
 		///     Writes the generated log messages into the log file.
 		/// </summary>
 		/// <param name="force">If true, all unwritten messages are written; otherwise, writes are batched to improve performance.</param>
-		private void WriteToFile(bool force = false)
+		internal void WriteToFile(bool force = false)
 		{
 			if (!force && _logEntries.Count < BatchSize)
 				return;
 
-			if (_file.Append(WriteQueuedEntries(), e => Log.Warn("Failed to append to log file: {0}", e.Message)))
+			if (_file.Append(GenerateLogEntryString(), e => Log.Warn("Failed to append to log file: {0}", e.Message)))
 				_logEntries.Clear();
 		}
 
 		/// <summary>
-		/// A cached string builder instance used when writing queued log entries.
+		///     Generates the string for the queued log entries that must be appended to the log file.
 		/// </summary>
-		readonly StringBuilder _builder = new StringBuilder(1024);
-
-		/// <summary>
-		///     Writes the queued log entries.
-		/// </summary>
-		private string WriteQueuedEntries()
+		private string GenerateLogEntryString()
 		{
 			_builder.Clear();
 

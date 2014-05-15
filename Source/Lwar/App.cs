@@ -36,7 +36,7 @@
 			RegisterFontLoader(new FontLoader(Assets));
 			Commands.Resolve();
 			Cvars.Resolve();
-			
+
 			Commands.OnConnect += Connect;
 			Commands.OnDisconnect += Disconnect;
 
