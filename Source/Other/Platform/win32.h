@@ -54,10 +54,9 @@
 // Disable all warnings for the windows header
 #pragma warning(push, 0)
 	#include <windows.h>
+	#include <winsock2.h>
+	#include <ws2tcpip.h>
 #pragma warning(pop)
-
-#include <winsock2.h>
-#include <ws2tcpip.h>
 
 //====================================================================================================================
 // Windows functions
