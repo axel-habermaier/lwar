@@ -21,6 +21,11 @@
 		private readonly byte[] _buffer = new byte[Specification.MaxPacketSize];
 
 		/// <summary>
+		///     Indicates whether the initialization of the service failed.
+		/// </summary>
+		private  bool _isFaulted;
+
+		/// <summary>
 		///     The list of known servers that have been discovered.
 		/// </summary>
 		private readonly List<ServerInfo> _knownServers = new List<ServerInfo>();
@@ -40,7 +45,15 @@
 		/// </summary>
 		public ServerDiscoveryService()
 		{
-			_multicastSocket.BindMulticast(Specification.MulticastGroup);
+			try
+			{
+				_multicastSocket.BindMulticast(Specification.MulticastGroup);
+			}
+			catch (NetworkException e)
+			{
+				_isFaulted = true;
+				Log.Error("Failed to initialize server discovery service: {0}", e.Message);
+			}
 		}
 
 		/// <summary>
@@ -59,14 +72,6 @@
 		/// </summary>
 		public void Update()
 		{
-			// Check for incoming discovery messages
-			int size;
-			while (_multicastSocket.TryReceive(_buffer, out _serverEndPoint, out size))
-			{
-				using (var reader = BufferReader.Create(_buffer, 0, size, Endianess.Big))
-					HandleDiscoveryMessage(new DiscoveryMessage(reader));
-			}
-
 			// Remove all servers that have timed out
 			for (var i = 0; i < _knownServers.Count; ++i)
 			{
@@ -78,6 +83,25 @@
 
 				_knownServers.RemoveAt(i);
 				--i;
+			}
+
+			if (_isFaulted)
+				return;
+
+			try
+			{
+				// Check for incoming discovery messages
+				int size;
+				while (_multicastSocket.TryReceive(_buffer, out _serverEndPoint, out size))
+				{
+					using (var reader = BufferReader.Create(_buffer, 0, size, Endianess.Big))
+						HandleDiscoveryMessage(new DiscoveryMessage(reader));
+				}
+			}
+			catch (NetworkException e)
+			{
+				_isFaulted = true;
+				Log.Error("Server discovery service failure: {0}", e.Message);
 			}
 		}
 
