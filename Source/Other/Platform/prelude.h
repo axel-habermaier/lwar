@@ -21,6 +21,7 @@
 	#pragma warning(disable : 4206) // nonstandard extension used: translation unit is empty
 	#pragma warning(disable : 4201) // nonstandard extension used: nameless struct/union
 	#pragma warning(disable : 4255) // 'function' : no function prototype given: converting '()' to '(void)'
+	#pragma warning(disable : 4711) // function 'function' selected for automatic inline expansion
 	#define _CRT_SECURE_NO_WARNINGS // No warnings about non-secure standard library functions
 
 	#define PG_INLINE __forceinline
