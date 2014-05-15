@@ -5,7 +5,6 @@
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Input;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a six-degrees-of-freedom debug camera.
@@ -26,11 +25,6 @@
 		///     Triggered when the user wants to move backward.
 		/// </summary>
 		private readonly LogicalInput _backward;
-
-		/// <summary>
-		///     The clock that is used to scale the movement of the camera.
-		/// </summary>
-		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
 		///     Triggered when the user wants to move forward.
@@ -56,6 +50,11 @@
 		///     Triggered when the user wants to strafe right.
 		/// </summary>
 		private readonly LogicalInput _right;
+
+		/// <summary>
+		///     The clock that is used to scale the movement of the camera.
+		/// </summary>
+		private Clock _clock = new Clock();
 
 		/// <summary>
 		///     The mouse movement since the last update.
@@ -200,7 +199,6 @@
 			_inputDevice.Remove(_backward);
 			_inputDevice.Remove(_left);
 			_inputDevice.Remove(_right);
-			_clock.SafeDispose();
 
 			base.OnDisposing();
 		}

@@ -95,7 +95,6 @@
 		/// <param name="clock">The clock that should be used for time measurements.</param>
 		public void Update(Clock clock)
 		{
-			Assert.ArgumentNotNull(clock);
 			_entities.Update();
 
 			foreach (var entity in _entities)

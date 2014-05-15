@@ -200,36 +200,35 @@
 		{
 			Assert.That(_asyncLoading, "Async loading has not been enabled for this asset manager.");
 
-			using (var clock = Clock.Create())
+			var clock = new Clock();
+			var start = clock.Milliseconds;
+
+			for (var i = _pendingAssets.Count; i > 0; --i)
 			{
-				var start = clock.Milliseconds;
-				for (var i = _pendingAssets.Count; i > 0; --i)
-				{
-					var info = _pendingAssets[i - 1];
+				var info = _pendingAssets[i - 1];
 
-					Log.Info("Loading {0} {1}...", Loaders[info.Type].AssetTypeName, GetAssetDisplayName(info));
-					Load(info);
+				Log.Info("Loading {0} {1}...", Loaders[info.Type].AssetTypeName, GetAssetDisplayName(info));
+				Load(info);
 
-					_pendingAssets.RemoveAt(i - 1);
-					_loadedAssets.Add(info);
+				_pendingAssets.RemoveAt(i - 1);
+				_loadedAssets.Add(info);
 
-					if (!ContinueLoading(clock, start, timeoutInMilliseconds))
-						return;
-				}
+				if (!ContinueLoading(start, clock.Milliseconds, timeoutInMilliseconds))
+					return;
+			}
 
-				// At this point, we know that all pending loads of all shaders are completed, hence we can now safely
-				// reinitialize the pending shader programs
-				for (var i = _pendingPrograms.Count; i > 0; --i)
-				{
-					var program = _pendingPrograms[i - 1];
-					program.Reinitialize();
+			// At this point, we know that all pending loads of all shaders are completed, hence we can now safely
+			// reinitialize the pending shader programs
+			for (var i = _pendingPrograms.Count; i > 0; --i)
+			{
+				var program = _pendingPrograms[i - 1];
+				program.Reinitialize();
 
-					_pendingPrograms.RemoveAt(i - 1);
-					_loadedPrograms.Add(program);
+				_pendingPrograms.RemoveAt(i - 1);
+				_loadedPrograms.Add(program);
 
-					if (!ContinueLoading(clock, start, timeoutInMilliseconds))
-						return;
-				}
+				if (!ContinueLoading(start, clock.Milliseconds, timeoutInMilliseconds))
+					return;
 			}
 		}
 
@@ -341,11 +340,14 @@
 		/// <summary>
 		///     Checks whether asynchronous loading should continue.
 		/// </summary>
-		private static bool ContinueLoading(Clock clock, double start, double timeout)
+		/// <param name="start">The time in milliseconds when asset loading was started.</param>
+		/// <param name="now">The current time in milliseconds.</param>
+		/// <param name="timeout">The timeout in milliseconds.</param>
+		private static bool ContinueLoading(double start, double now, double timeout)
 		{
 			// Check if there's enough time for another asset; that's just a wild guess, obviously, but we assume that we're
 			// good if we've more than 20% of the time left
-			return clock.Milliseconds - start < timeout - (timeout * 0.2);
+			return now - start < timeout - (timeout * 0.2);
 		}
 
 		/// <summary>

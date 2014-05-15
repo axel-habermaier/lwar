@@ -28,11 +28,6 @@ namespace Lwar.Screens
 		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
 
 		/// <summary>
-		///     The timer that is used to send user input to the server.
-		/// </summary>
-		private readonly Timer _timer = Timer.Create(1000.0 / Specification.InputUpdateFrequency);
-
-		/// <summary>
 		///     Manages the game and debug cameras.
 		/// </summary>
 		private CameraManager _cameraManager;
@@ -78,6 +73,11 @@ namespace Lwar.Screens
 		private bool _sendInput;
 
 		/// <summary>
+		///     The timer that is used to send user input to the server.
+		/// </summary>
+		private Timer _timer = new Timer(1000.0 / Specification.InputUpdateFrequency);
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
@@ -96,7 +96,6 @@ namespace Lwar.Screens
 		protected override void OnDisposing()
 		{
 			_timer.Timeout -= SendInputTimeout;
-			_timer.SafeDispose();
 
 			_cameraManager.SafeDispose();
 			_inputManager.SafeDispose();

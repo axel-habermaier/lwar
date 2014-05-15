@@ -172,7 +172,6 @@
 			}
 
 			_connection.SafeDispose();
-			_deliveryManager.SafeDispose();
 		}
 	}
 }

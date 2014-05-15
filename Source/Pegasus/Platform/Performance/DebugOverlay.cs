@@ -35,14 +35,14 @@
 		private readonly Label _platformInfo;
 
 		/// <summary>
-		///     The timer that is used to periodically update the statistics.
-		/// </summary>
-		private readonly Timer _timer = Timer.Create(1000.0 / UpdateFrequency);
-
-		/// <summary>
 		///     The approximate amount of garbage collections that have occurred since the application has been started.
 		/// </summary>
 		private int _garbageCollections;
+
+		/// <summary>
+		///     The timer that is used to periodically update the statistics.
+		/// </summary>
+		private Timer _timer = new Timer(1000.0 / UpdateFrequency);
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -138,9 +138,7 @@
 		protected override void OnDisposing()
 		{
 			_platformInfo.SafeDispose();
-
 			_timer.Timeout -= UpdateStatistics;
-			_timer.SafeDispose();
 		}
 	}
 }

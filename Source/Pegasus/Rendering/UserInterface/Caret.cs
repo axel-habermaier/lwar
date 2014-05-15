@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.Rendering.UserInterface
 {
 	using System;
-	using System.Globalization;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
@@ -25,7 +24,7 @@
 		/// <summary>
 		///     The clock that is used to determine whether the caret should be visible.
 		/// </summary>
-		private Clock _clock = Clock.Create();
+		private Clock _clock;
 
 		/// <summary>
 		///     The logical position of the caret, corresponding to an index of a character of the editable text.
@@ -68,8 +67,7 @@
 				_position = Math.Min(_text.Length, value);
 				_position = Math.Max(0, _position);
 
-				_clock.SafeDispose();
-				_clock = Clock.Create();
+				_clock.Reset();
 			}
 		}
 
@@ -237,7 +235,6 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_clock.SafeDispose();
 			_caretVisual.SafeDispose();
 			_text.SafeDispose();
 		}

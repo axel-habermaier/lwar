@@ -16,7 +16,7 @@
 		/// <summary>
 		///     The clock that is used for time measurements.
 		/// </summary>
-		private readonly Clock _clock = Clock.Create();
+		private  Clock _clock = new Clock();
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -66,8 +66,6 @@
 			Actors.SafeDispose();
 			Entities.SafeDispose();
 			Players.SafeDispose();
-			EventMessages.SafeDispose();
-			_clock.SafeDispose();
 		}
 
 		/// <summary>

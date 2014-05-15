@@ -274,6 +274,7 @@
     <Compile Include="Platform\Memory\ArrayPool.cs" />
     <Compile Include="Framework\Bootstrapper.cs" />
     <Compile Include="Framework\UserInterface\Controls\WindowMode.cs" />
+    <Compile Include="Platform\StepTimer.cs" />
     <Compile Include="Processes\AsyncAction.cs" />
     <Compile Include="Processes\AsyncFunc.cs" />
     <Compile Include="Processes\Awaiter.cs" />

@@ -15,8 +15,8 @@
 	/// </summary>
 	public class SunRenderer : Renderer<Sun>
 	{
-		private readonly Clock _clock = Clock.Create();
 		private GaussianBlur _blur;
+		private Clock _clock = new Clock();
 
 		/// <summary>
 		///     The render target that is used to draw the sun effect.
@@ -117,7 +117,6 @@
 		/// </summary>
 		protected override void OnDisposingCore()
 		{
-			_clock.SafeDispose();
 			_sunEffect.SafeDispose();
 			_sphereEffect.SafeDispose();
 			_quadEffect.SafeDispose();

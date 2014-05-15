@@ -48,19 +48,11 @@
 		public static DelayOperation Create(double time)
 		{
 			var operation = GetInstance();
-			operation._clock = Clock.Create();
+			operation._clock = new Clock();
 			operation._time = time;
 			operation.SetDescription(String.Format("Delaying process for {0}ms.", time));
 			operation.IsCompleted = false;
 			return operation;
-		}
-
-		/// <summary>
-		///     Invoked when the pooled instance is returned to the pool.
-		/// </summary>
-		protected override void OnReturning()
-		{
-			_clock.SafeDispose();
 		}
 	}
 }

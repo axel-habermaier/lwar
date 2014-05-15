@@ -71,7 +71,6 @@
 		/// <param name="clock">The clock that should be used for time measurements.</param>
 		public void Update(Clock clock)
 		{
-			Assert.ArgumentNotNull(clock);
 			_actors.Update();
 
 			foreach (var actor in _actors)

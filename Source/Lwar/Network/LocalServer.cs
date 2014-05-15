@@ -112,30 +112,25 @@
 
 			_cancellation = new CancellationTokenSource();
 			var token = _cancellation.Token;
-			 //TODO
+			
 			_task = Task.Factory.StartNew(() =>
 			{
-				ulong serverTime = 0;
-
-				using (var clock = Clock.Create())
+				var timer = new StepTimer
 				{
-					while (!token.IsCancellationRequested)
-					{
-						if (clock.Milliseconds < 1000 / UpdateFrequency)
-						{
-							Thread.Sleep(0);
-							continue;
-						}
+					IsFixedTimeStep = true,
+					TargetElapsedSeconds = 1.0 / UpdateFrequency
+				};
 
-						clock.Reset();
-
-						serverTime += 1000 / UpdateFrequency;
-						if (NativeMethods.Update(serverTime, true) >= 0)
-							continue;
-
+				timer.UpdateRequired += () =>
+				{
+					if (NativeMethods.Update((ulong)(timer.TotalSeconds * 1000), true) < 0)
 						EnqueueLogEntry(LogType.Error, "Server stopped after error.");
-						break;
-					}
+				};
+
+				while (!token.IsCancellationRequested)
+				{
+					timer.Update();
+					Thread.Sleep(1);
 				}
 			}, token);
 		}

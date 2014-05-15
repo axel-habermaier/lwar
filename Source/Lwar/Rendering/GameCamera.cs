@@ -7,7 +7,6 @@
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
-	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 
 	/// <summary>
@@ -41,19 +40,19 @@
 		private const float ZoomChangeSpeed = 100.0f;
 
 		/// <summary>
-		///     The factor that is applied to the zoom value when the starfield zoom mode is selected.
+		///     The factor that is applied to the zoom value when the star field zoom mode is selected.
 		/// </summary>
 		private const float StarfieldZoomFactor = 0.2f;
-
-		/// <summary>
-		///     The clock that is used to animate changes of the XZ plane distance.
-		/// </summary>
-		private readonly Clock _clock = Clock.Create();
 
 		/// <summary>
 		///     The input device that provides the input for the camera.
 		/// </summary>
 		private readonly LogicalInputDevice _inputDevice;
+
+		/// <summary>
+		///     The clock that is used to animate changes of the XZ plane distance.
+		/// </summary>
+		private Clock _clock = new Clock();
 
 		/// <summary>
 		///     The target distance to the XZ plane the camera is moving to.
@@ -86,6 +85,7 @@
 			_inputDevice = inputDevice;
 			_inputDevice.Mouse.Wheel += OnZoomChanged;
 			_targetZoom = _zoom;
+			_clock.Reset();
 		}
 
 		/// <summary>
@@ -240,9 +240,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_clock.SafeDispose();
 			_inputDevice.Mouse.Wheel -= OnZoomChanged;
-
 			base.OnDisposing();
 		}
 

@@ -39,7 +39,7 @@
 		/// <summary>
 		///     Provides the time that is used to check whether a connection is lagging or dropped.
 		/// </summary>
-		private readonly Clock _clock = Clock.Create();
+		private Clock _clock = new Clock();
 
 		/// <summary>
 		///     The Udp socket that is used for the communication with the server.
@@ -290,7 +290,6 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_clock.SafeDispose();
 			_socket.SafeDispose();
 		}
 	}

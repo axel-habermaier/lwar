@@ -5,14 +5,13 @@
 	using Pegasus;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Logging;
-	using Pegasus.Platform.Memory;
 	using Scripting;
 
 	/// <summary>
 	///     Stores event messages such as 'X killed Y' or received chat messages. Messages are removed from the list
 	///     automatically.
 	/// </summary>
-	public class EventMessageList : DisposableObject
+	public class EventMessageList
 	{
 		/// <summary>
 		///     The list capacity determines the maximum number of stored event messages.
@@ -22,7 +21,7 @@
 		/// <summary>
 		///     The clock that is used to determine when messages should be removed from the list.
 		/// </summary>
-		private readonly Clock _clock = Clock.Create();
+		private readonly Clock _clock = new Clock();
 
 		/// <summary>
 		///     The game session that generates the event messages.
@@ -172,14 +171,6 @@
 			}
 
 			Assert.That(!String.IsNullOrWhiteSpace(message.Player.Name), "The player's name is unknown.");
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			_clock.SafeDispose();
 		}
 
 		/// <summary>

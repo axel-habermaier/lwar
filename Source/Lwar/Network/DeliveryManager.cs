@@ -9,12 +9,12 @@
 	/// <summary>
 	///     Manages the delivery guarantees of all incoming and outgoing messages.
 	/// </summary>
-	public class DeliveryManager : DisposableObject
+	public class DeliveryManager
 	{
 		/// <summary>
 		///     Determines the current time for the creation of the unreliable message timestamps.
 		/// </summary>
-		private readonly Clock _clock = Clock.Create();
+		private Clock _clock = new Clock();
 
 		/// <summary>
 		///     The sequence number of the last reliable message that has been assigned and acknowledged.
@@ -109,14 +109,6 @@
 				message.SequenceNumber = ++_lastAssignedReliableSequenceNumber;
 			else
 				message.SequenceNumber = ++_lastAssignedUnreliableSequenceNumber;
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			_clock.SafeDispose();
 		}
 	}
 }
