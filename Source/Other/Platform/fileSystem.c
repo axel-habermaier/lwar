@@ -39,6 +39,7 @@ static pgVoid pgSetUserFilePath(pgString fileName);
 static pgVoid pgAddToPath(pgString path);
 
 static pgBool pgIsPathSeparator(pgPathChar character);
+static pgVoid pgNormalize();
 
 static FILE* pgOpenFile(pgFileMode fileMode);
 static pgBool pgCloseFile(FILE* file);
@@ -120,7 +121,6 @@ PG_API_EXPORT const pgPathChar* pgGetUserDirectory()
 	length = wcslen(userDir);
 	memcpy(pathBuffer, userDir, (length + 1) * sizeof(pgPathChar));
 	pgAddToPath(pgState.appName);
-	pgNormalize();
 
 	CoTaskMemFree(userDir);
 
@@ -134,6 +134,7 @@ PG_API_EXPORT const pgPathChar* pgGetUserDirectory()
 	pathBuffer[0] = '\0';
 #endif
 
+	pgNormalize();
 	return pathBuffer;
 }
 
@@ -258,6 +259,16 @@ static pgVoid pgAddToPath(pgString path)
 static pgBool pgIsPathSeparator(pgPathChar character)
 {
 	return character == '/' || character == '\\';
+}
+
+static pgVoid pgNormalize()
+{
+	int i;
+	for (i = 0; pathBuffer[i] != '\0'; ++i)
+	{
+		if (pathBuffer[i] == '\\')
+			pathBuffer[i] = '/';
+	}
 }
 
 static FILE* pgOpenFile(pgFileMode fileMode)
