@@ -12,7 +12,7 @@
 autoexec.cfg
 lwar.log
 .directory
-Source/lwar/obj
+Source/Lwar/obj
 Source/Assets/Assets Compiler/obj
 Source/Assets/Assets Compiler/bin
 Source/Pegasus/obj
@@ -21,27 +21,27 @@ Source/Other/Platform/obj
 Source/Other/Platform/Platform.md.pc
 Source/Server/Server.md.pc
 lwarMono.userprefs
-Source/Assets/lwar Assets/obj
-Source/Assets/lwar Assets/bin
-Source/Assets/lwar Assets/temp
-Source/Assets/lwar Assets/Binaries
+Source/Assets/Lwar Assets/obj
+Source/Assets/Lwar Assets/bin
+Source/Assets/Lwar Assets/temp
+Source/Assets/Lwar Assets/Binaries
 Source/Assets/Pegasus Assets/obj
 Source/Assets/Pegasus Assets/bin
 Source/Assets/Pegasus Assets/temp
 Source/Assets/Pegasus Assets/Binaries
 Source/User Interface/Pegasus UI/obj
 Source/User Interface/Pegasus UI/bin
-Source/User Interface/lwar UI/obj
-Source/User Interface/lwar UI/bin
+Source/User Interface/Lwar UI/obj
+Source/User Interface/Lwar UI/bin
 Binaries x64
 Binaries x86
 log.txt
-Source/Assets/lwar Assets/AssetIdentifiers.cs
-Source/Assets/lwar Assets/Effects/Effects.cs
+Source/Assets/Lwar Assets/AssetIdentifiers.cs
+Source/Assets/Lwar Assets/Effects/Effects.cs
 Source/Assets/Pegasus Assets/AssetIdentifiers.cs
 Source/Assets/Pegasus Assets/Effects/Effects.cs
-Source/lwar/Gameplay/Entities/EntityType.cs
-Source/lwar/Gameplay/Entities/EntityTemplates.cs
+Source/Lwar/Gameplay/Entities/EntityType.cs
+Source/Lwar/Gameplay/Entities/EntityTemplates.cs
 Source/Server/templates.c
 Source/Server/entity.h
 lwar.sln.ide
@@ -51,10 +51,10 @@ lwar.sln.ide
 Source/TestResults
 Source/Other/Tests/bin
 Source/Other/Tests/obj
-Source/Assets/lwar Assets/Fonts/FontLoader.cs
+Source/Assets/Lwar Assets/Fonts/FontLoader.cs
 Source/Assets/Pegasus Assets/Fonts/FontLoader.cs
 *.ipch
-/Source/User Interface/lwar UI/UserInterface.cs
+/Source/User Interface/Lwar UI/UserInterface.cs
 /Source/User Interface/Pegasus UI/UserInterface.cs
 *.nvuser
 /Source/Other/WinRT Launcher/obj
