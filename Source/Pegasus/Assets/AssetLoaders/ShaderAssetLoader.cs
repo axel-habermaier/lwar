@@ -34,7 +34,7 @@ namespace Pegasus.Assets.AssetLoaders
 					shaderCode = buffer.Pointer;
 					break;
 				default:
-					throw new InvalidOperationException("Unsupported Graphics API.");
+					throw new InvalidOperationException("Unsupported graphics API.");
 			}
 		}
 	}
