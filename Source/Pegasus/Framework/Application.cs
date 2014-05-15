@@ -6,7 +6,6 @@
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
-	using Platform.Performance;
 	using Rendering;
 	using Scripting;
 	using UserInterface;
@@ -155,36 +154,37 @@
 
 				while (_running)
 				{
-					using (new Measurement(Window.DebugOverlay.CpuFrameTime))
-					{
-						// Handle all input
-						_root.HandleInput();
+					var cpuStartTime = Clock.SystemTime;
 
-						// Update the application logic and the UI
-						Update();
+					// Handle all input
+					_root.HandleInput();
 
-						resolutionManager.Update();
-						_root.UpdateLayout();
+					// Update the application logic and the UI
+					Update();
 
-						// Update the statistics
-						Window.DebugOverlay.Update(Window.Size);
-						Window.Console.Update(Window.Size);
+					resolutionManager.Update();
+					_root.UpdateLayout();
 
-						// Draw the current frame
-						GraphicsDevice.BeginFrame();
+					// Update the statistics
+					Window.DebugOverlay.Update(Window.Size);
+					Window.Console.Update(Window.Size);
 
-						// Let the application perform all custom drawing for the current frame
-						Draw(Window.RenderOutput);
+					// Draw the current frame
+					GraphicsDevice.BeginFrame();
 
-						// Draw the user interface
-						_root.Draw();
+					// Let the application perform all custom drawing for the current frame
+					Draw(Window.RenderOutput);
 
-						GraphicsDevice.EndFrame();
-						Window.DebugOverlay.GpuFrameTime.AddMeasurement(GraphicsDevice.FrameTime);
-					}
+					// Draw the user interface
+					_root.Draw();
+
+					GraphicsDevice.EndFrame();
 
 					// Presents the contents of all windows' backbuffers.
 					_root.Present();
+					
+					Window.DebugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
+					Window.DebugOverlay.CpuFrameTime = (Clock.SystemTime - cpuStartTime) * 1000;
 
 					if (!_root.HasFocusedWindows)
 						Thread.Sleep(50);

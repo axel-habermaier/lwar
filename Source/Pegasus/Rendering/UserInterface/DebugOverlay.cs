@@ -1,11 +1,10 @@
-﻿namespace Pegasus.Platform.Performance
+﻿namespace Pegasus.Rendering.UserInterface
 {
 	using System;
 	using System.Text;
 	using Math;
-	using Memory;
-	using Rendering;
-	using Rendering.UserInterface;
+	using Platform;
+	using Platform.Memory;
 	using Scripting;
 
 	/// <summary>
@@ -54,20 +53,17 @@
 
 			_platformInfo = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
 			_timer.Timeout += UpdateStatistics;
-
-			GpuFrameTime = new AveragedDouble("ms", 32);
-			CpuFrameTime = new TimingMeasurement();
 		}
 
 		/// <summary>
 		///     Gets the GPU frame time measurements.
 		/// </summary>
-		internal AveragedDouble GpuFrameTime { get; private set; }
+		internal double GpuFrameTime { get; set; }
 
 		/// <summary>
 		///     Gets the CPU frame time measurements.
 		/// </summary>
-		internal IMeasurement CpuFrameTime { get; private set; }
+		internal double CpuFrameTime { get; set; }
 
 		/// <summary>
 		///     Updates the statistics.
@@ -99,9 +95,8 @@
 			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
 			_builder.Append("Renderer:   ").Append(PlatformInfo.GraphicsApi).Append("\n");
 			_builder.Append("# of GCs:   ").Append(_garbageCollections).Append("\n");
-			_builder.Append("GPU Time:   ");
-			GpuFrameTime.WriteResults(_builder);
-			WriteMeasurement(CpuFrameTime, "\nCPU Time:   ");
+			_builder.Append("GPU Time:   ").Append(GpuFrameTime.ToString("F2")).Append("ms\n");
+			_builder.Append("CPU Time:   ").Append(CpuFrameTime.ToString("F2")).Append("ms\n");
 
 			_platformInfo.Text = _builder.ToString();
 			_builder.Clear();
@@ -118,18 +113,6 @@
 
 			if (Cvars.ShowDebugOverlay)
 				_platformInfo.Draw(spriteBatch);
-		}
-
-		/// <summary>
-		///     Writes the results of the given measurement to the string builder.
-		/// </summary>
-		/// <param name="measurement">The measurement that should be written to the string builder.</param>
-		/// <param name="label">The label that describes the measurement.</param>
-		private void WriteMeasurement(IMeasurement measurement, string label)
-		{
-			_builder.Append(label);
-			measurement.WriteResults(_builder);
-			_builder.Append("\n");
 		}
 
 		/// <summary>

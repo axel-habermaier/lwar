@@ -5,8 +5,8 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
-	using Platform.Performance;
 	using Rendering;
+	using Rendering.UserInterface;
 	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>

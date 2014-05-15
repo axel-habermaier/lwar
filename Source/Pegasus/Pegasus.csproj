@@ -263,8 +263,6 @@
     <Compile Include="Platform\FileSystemException.cs" />
     <Compile Include="Platform\Network\IPAddress.cs" />
     <Compile Include="Platform\Network\IPEndPoint.cs" />
-    <Compile Include="Platform\Performance\AveragedDouble.cs" />
-    <Compile Include="Platform\Performance\AveragedInteger.cs" />
     <Compile Include="Platform\Network\NetworkException.cs" />
     <Compile Include="Assets\AssetIdentifier.cs" />
     <Compile Include="Platform\Graphics\SyncedQuery.cs" />
@@ -340,12 +338,10 @@
     <Compile Include="Platform\Graphics\TextureDescription.cs" />
     <Compile Include="Platform\Graphics\TextureFlags.cs" />
     <Compile Include="Platform\Graphics\TextureType.cs" />
-    <Compile Include="Platform\Performance\IMeasurement.cs" />
     <Compile Include="Platform\Input\InputLayer.cs" />
     <Compile Include="Platform\Logging\LogEntry.cs" />
     <Compile Include="Platform\Logging\LogFile.cs" />
     <Compile Include="Platform\Logging\LogType.cs" />
-    <Compile Include="Platform\Performance\Measurement.cs" />
     <Compile Include="Platform\Clock.cs" />
     <Compile Include="Platform\ResolutionManager.cs" />
     <Compile Include="Platform\Timer.cs" />
@@ -587,8 +583,7 @@
     <Compile Include="Platform\Input\Key.cs" />
     <Compile Include="Platform\Input\MouseButton.cs" />
     <Compile Include="Rendering\UserInterface\Font.cs" />
-    <Compile Include="Platform\Performance\DebugOverlay.cs" />
-    <Compile Include="Platform\Performance\TimingMeasurement.cs" />
+    <Compile Include="Rendering\UserInterface\DebugOverlay.cs" />
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
     <Compile Include="Scripting\Validators\WindowSizeAttribute.cs" />
