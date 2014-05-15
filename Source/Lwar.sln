@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar", "lwar\lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lwar", "Lwar\Lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1F608B12-403C-4639-947A-B559E8EF121C} = {1F608B12-403C-4639-947A-B559E8EF121C}
 		{8243791D-FE6E-40BF-A303-D981AE9968C2} = {8243791D-FE6E-40BF-A303-D981AE9968C2}
@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus", "Pegasus\Pegasus.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Platform", "Other\Platform\Platform.vcxproj", "{E008FA73-A930-40B5-93A4-959A4D30492D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lwar Server", "Server\Server.vcxproj", "{8243791D-FE6E-40BF-A303-D981AE9968C2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lwar Server", "Server\Server.vcxproj", "{8243791D-FE6E-40BF-A303-D981AE9968C2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1F608B12-403C-4639-947A-B559E8EF121C} = {1F608B12-403C-4639-947A-B559E8EF121C}
 	EndProjectSection
@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		..\Documentation\todo.txt = ..\Documentation\todo.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar Assets", "Assets\Lwar Assets\lwar Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lwar Assets", "Assets\Lwar Assets\Lwar Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7} = {3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}
 	EndProjectSection
@@ -46,7 +46,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Other\Tests\Tests.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus Assets", "Assets\Pegasus Assets\Pegasus Assets.csproj", "{8FACAC14-48D0-45B8-BB39-F926835C850E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar UI", "User Interface\lwar UI\lwar UI.csproj", "{1785E559-5B80-4EB1-956F-415B210A6B45}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lwar UI", "User Interface\Lwar UI\Lwar UI.csproj", "{1785E559-5B80-4EB1-956F-415B210A6B45}"
 	ProjectSection(ProjectDependencies) = postProject
 		{032C4229-B3A4-417F-8ED3-B2470E371F2D} = {032C4229-B3A4-417F-8ED3-B2470E371F2D}
 		{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7} = {3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}

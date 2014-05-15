@@ -22,7 +22,7 @@
 		/// <summary>
 		///     The name of the native Pegasus.Platform library.
 		/// </summary>
-		internal const string LibraryName = "platform.dll";
+		internal const string LibraryName = "Platform.dll";
 #endif
 
 		/// <summary>

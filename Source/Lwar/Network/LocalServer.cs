@@ -198,7 +198,7 @@
 		private static class NativeMethods
 		{
 #if Windows
-			private const string LibraryName = "lwar-server.dll";
+			private const string LibraryName = "Lwar Server.dll";
 #else
 			private const string LibraryName = "liblwar-server.so";
 #endif

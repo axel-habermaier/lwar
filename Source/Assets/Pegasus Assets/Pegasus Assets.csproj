@@ -8,7 +8,7 @@
     <ProjectGuid>{8FACAC14-48D0-45B8-BB39-F926835C850E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Pegasus.Assets</RootNamespace>
-    <AssemblyName>pegasus.assets</AssemblyName>
+    <AssemblyName>Pegasus Assets</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>Svn</SccProjectName>
     <SccLocalPath>Svn</SccLocalPath>
