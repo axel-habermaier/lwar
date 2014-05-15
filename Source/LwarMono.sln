@@ -5,7 +5,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{E8E7A1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Assets\Assets Compiler\Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar Assets", "Assets\lwar Assets\lwar Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lwar Assets", "Assets\Lwar Assets\Lwar Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus Assets", "Assets\Pegasus Assets\Pegasus Assets.csproj", "{8FACAC14-48D0-45B8-BB39-F926835C850E}"
 EndProject
@@ -24,7 +24,7 @@ Project("{2857B73E-F847-4B02-9238-064979017E93}") = "Platform", "Other\Platform\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus", "Pegasus\Pegasus.csproj", "{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lwar", "lwar\lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lwar", "Lwar\Lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -139,7 +139,7 @@ Global
 		{94C7A0B3-7F1A-4632-A1F1-72938065DA3F} = {C1E58E7D-3F83-4AA9-9FC4-4309F29EC986}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = lwar\lwar.csproj
+		StartupItem = Lwar\Lwar.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
 		$1.FileWidth = 140
