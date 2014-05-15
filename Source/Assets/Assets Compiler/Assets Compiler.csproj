@@ -59,10 +59,10 @@
     <Optimize>False</Optimize>
     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar Assets/lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar UI/lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Assets/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/User Interface/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Assets/Lwar Assets/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/User Interface/Lwar UI/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -79,10 +79,10 @@
     <WarningLevel>4</WarningLevel>
     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar Assets/lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar UI/lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Assets/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/User Interface/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Assets/Lwar Assets/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/User Interface/Lwar UI/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -148,10 +148,10 @@
     <Optimize>false</Optimize>
     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar Assets/lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar UI/lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Assets/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/User Interface/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Assets/Lwar Assets/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/User Interface/Lwar UI/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -167,10 +167,10 @@
     <WarningLevel>4</WarningLevel>
     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 0 &quot;$(SolutionDir)/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar Assets/lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean 1 &quot;$(SolutionDir)/lwar UI/lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Assets/Pegasus Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/User Interface/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Assets/Lwar Assets/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/User Interface/Lwar UI/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

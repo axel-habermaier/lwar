@@ -1,3 +1,4 @@
+*.csproj~
 *.sdf
 *.user
 /Binaries
@@ -10,7 +11,7 @@
 /Source/Other/Desktop Launcher/obj
 *.opensdf
 autoexec.cfg
-lwar.log
+Lwar.log
 .directory
 Source/Lwar/obj
 Source/Assets/Assets Compiler/obj
@@ -20,7 +21,7 @@ Source/Pegasus/obj
 Source/Other/Platform/obj
 Source/Other/Platform/Platform.md.pc
 Source/Server/Server.md.pc
-lwarMono.userprefs
+LwarMono.userprefs
 Source/Assets/Lwar Assets/obj
 Source/Assets/Lwar Assets/bin
 Source/Assets/Lwar Assets/temp
@@ -44,7 +45,7 @@ Source/Lwar/Gameplay/Entities/EntityType.cs
 Source/Lwar/Gameplay/Entities/EntityTemplates.cs
 Source/Server/templates.c
 Source/Server/entity.h
-lwar.sln.ide
+Lwar.sln.ide
 *.psess
 *.vsp
 *.vspx

@@ -26,12 +26,12 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		/// <summary>
 		///     The path of the client file containing the template declarations.
 		/// </summary>
-		private const string ClientTemplates = "../../Source/lwar/Gameplay/Entities/EntityTemplates.cs";
+		private const string ClientTemplates = "../../Source/Lwar/Gameplay/Entities/EntityTemplates.cs";
 
 		/// <summary>
 		///     The path of the client file containing the entity type enumeration.
 		/// </summary>
-		private const string ClientTypeEnumeration = "../../Source/lwar/Gameplay/Entities/EntityType.cs";
+		private const string ClientTypeEnumeration = "../../Source/Lwar/Gameplay/Entities/EntityType.cs";
 
 		/// <summary>
 		///     The path of the server file containing the template declarations.
