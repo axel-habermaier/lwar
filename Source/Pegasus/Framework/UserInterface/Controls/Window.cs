@@ -331,14 +331,14 @@
 			_output.ClearColor(Background);
 			_output.ClearDepth();
 
+			_spriteBatch.BlendState = BlendState.Premultiplied;
+			_spriteBatch.Layer = 0;
+
 			Assert.That(VisualChildrenCount == 1, "A window must have exactly one child element.");
 			GetVisualChild(0).Draw(_spriteBatch);
 
-			_spriteBatch.BlendState = BlendState.Premultiplied;
-			_spriteBatch.DrawBatch(_output);
-			Assert.That(_spriteBatch.Layer == 0, "Unbalanced layer increase and decrease operations.");
-
 			OnWindowDrawn(_spriteBatch);
+			_spriteBatch.DrawBatch(_output);
 		}
 
 		/// <summary>

@@ -103,7 +103,7 @@
 			Assert.ArgumentInRange(alignment);
 			Assert.ArgumentInRange(wrapping);
 
-			if (_font == font && _text == text && _desiredSize == desiredSize && _lineSpacing == lineSpacing &&
+			if (_font == font && _text == text && (Size == desiredSize || _desiredSize == desiredSize) && _lineSpacing == lineSpacing &&
 				_alignment == alignment && _wrapping == wrapping)
 				return;
 
@@ -126,6 +126,10 @@
 			ComputeCharacterAreasAndLines();
 			ComputeActualSize();
 			AlignLines();
+
+			// Reset the desired size so that the early-out of this method works correctly next time
+			if (wrapping == TextWrapping.NoWrap)
+				_desiredSize = desiredSize;
 		}
 
 		/// <summary>
