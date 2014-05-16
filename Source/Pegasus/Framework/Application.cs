@@ -169,8 +169,12 @@
 					Window.DebugOverlay.Update(Window.Size);
 					Window.Console.Update(Window.Size);
 
+					Window.DebugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;
+
 					// Draw the current frame
 					GraphicsDevice.BeginFrame();
+
+					cpuStartTime = Clock.SystemTime;
 
 					// Let the application perform all custom drawing for the current frame
 					Draw(Window.RenderOutput);
@@ -178,13 +182,12 @@
 					// Draw the user interface
 					_root.Draw();
 
-					GraphicsDevice.EndFrame();
-
-					// Presents the contents of all windows' backbuffers.
-					_root.Present();
-					
 					Window.DebugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
-					Window.DebugOverlay.CpuFrameTime = (Clock.SystemTime - cpuStartTime) * 1000;
+					Window.DebugOverlay.CpuRenderTime = (Clock.SystemTime - cpuStartTime) * 1000;
+
+					// End the frame and present the contents of all windows' backbuffers.
+					GraphicsDevice.EndFrame();
+					_root.Present();
 
 					if (!_root.HasFocusedWindows)
 						Thread.Sleep(50);

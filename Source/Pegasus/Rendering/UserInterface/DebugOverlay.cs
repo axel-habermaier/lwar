@@ -18,6 +18,11 @@
 		private const int UpdateFrequency = 30;
 
 		/// <summary>
+		///     The number of measurements that are used to calculate an average.
+		/// </summary>
+		private const int AverageSampleCount = 16;
+
+		/// <summary>
 		///     The string builder that is used to construct the output.
 		/// </summary>
 		private readonly StringBuilder _builder = new StringBuilder();
@@ -34,9 +39,29 @@
 		private readonly Label _platformInfo;
 
 		/// <summary>
+		///     The total CPU frame time in milliseconds that is displayed by the debug overlay.
+		/// </summary>
+		private AveragedDouble _cpuFrameTime = new AveragedDouble(AverageSampleCount);
+
+		/// <summary>
+		///     The CPU render time in milliseconds that is displayed by the debug overlay.
+		/// </summary>
+		private AveragedDouble _cpuRenderTime = new AveragedDouble(AverageSampleCount);
+
+		/// <summary>
+		///     The CPU update time in milliseconds that is displayed by the debug overlay.
+		/// </summary>
+		private AveragedDouble _cpuUpdateTime = new AveragedDouble(AverageSampleCount);
+
+		/// <summary>
 		///     The approximate amount of garbage collections that have occurred since the application has been started.
 		/// </summary>
 		private int _garbageCollections;
+
+		/// <summary>
+		///     The GPU frame time in milliseconds that is displayed by the debug overlay.
+		/// </summary>
+		private AveragedDouble _gpuFrameTime = new AveragedDouble(AverageSampleCount);
 
 		/// <summary>
 		///     The timer that is used to periodically update the statistics.
@@ -58,12 +83,26 @@
 		/// <summary>
 		///     Sets the GPU frame time in milliseconds that is displayed by the debug overlay.
 		/// </summary>
-		internal double GpuFrameTime { private get; set; }
+		internal double GpuFrameTime
+		{
+			set { _gpuFrameTime.AddMeasurement(value); }
+		}
 
 		/// <summary>
-		///     Sets the CPU frame time in milliseconds that is displayed by the debug overlay.
+		///     Sets the CPU update time in milliseconds that is displayed by the debug overlay.
 		/// </summary>
-		internal double CpuFrameTime { private get; set; }
+		internal double CpuUpdateTime
+		{
+			set { _cpuUpdateTime.AddMeasurement(value); }
+		}
+
+		/// <summary>
+		///     Sets the CPU render time in milliseconds that is displayed by the debug overlay.
+		/// </summary>
+		internal double CpuRenderTime
+		{
+			set { _cpuRenderTime.AddMeasurement(value); }
+		}
 
 		/// <summary>
 		///     Updates the statistics.
@@ -80,6 +119,7 @@
 			const int padding = 5;
 			_platformInfo.Area = new Rectangle(padding, padding, size.Width - 2 * padding, size.Height - 2 * padding);
 
+			_cpuFrameTime.AddMeasurement(_cpuUpdateTime.LastValue + _cpuRenderTime.LastValue);
 			_timer.Update();
 		}
 
@@ -90,13 +130,15 @@
 		{
 			if (!Cvars.ShowDebugOverlay)
 				return;
-
-			_builder.Append("Platform:   ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
-			_builder.Append("Debug Mode: ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
-			_builder.Append("Renderer:   ").Append(PlatformInfo.GraphicsApi).Append("\n");
-			_builder.Append("# of GCs:   ").Append(_garbageCollections).Append("\n");
-			_builder.Append("GPU Time:   ").Append(GpuFrameTime.ToString("F2")).Append("ms\n");
-			_builder.Append("CPU Time:   ").Append(CpuFrameTime.ToString("F2")).Append("ms\n");
+			
+			_builder.Append("Platform:    ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
+			_builder.Append("Debug Mode:  ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
+			_builder.Append("Renderer:    ").Append(PlatformInfo.GraphicsApi).Append("\n");
+			_builder.Append("# of GCs:    ").Append(_garbageCollections).Append("\n");
+			_builder.Append("GPU Time:    ").Append(_gpuFrameTime.Average.ToString("F2")).Append("ms\n");
+			_builder.Append("CPU Time:    ").Append(_cpuFrameTime.Average.ToString("F2")).Append("ms\n");
+			_builder.Append("Update Time: ").Append(_cpuUpdateTime.Average.ToString("F2")).Append("ms\n");
+			_builder.Append("Render Time: ").Append(_cpuRenderTime.Average.ToString("F2")).Append("ms\n");
 
 			_platformInfo.Text = _builder.ToString();
 			_builder.Clear();
@@ -122,6 +164,92 @@
 		{
 			_platformInfo.SafeDispose();
 			_timer.Timeout -= UpdateStatistics;
+		}
+
+		/// <summary>
+		///     Represents a measurement that is averaged over a certain number of samples.
+		/// </summary>
+		internal struct AveragedDouble
+		{
+			/// <summary>
+			///     The last couple of values for a more stable average.
+			/// </summary>
+			private readonly double[] _values;
+
+			/// <summary>
+			///     The current write index in the average array (circular writes).
+			/// </summary>
+			private int _averageIndex;
+
+			/// <summary>
+			///     A value indicating whether the entire average array has been filled at least once.
+			/// </summary>
+			private bool _averageIsFilled;
+
+			/// <summary>
+			///     The maximum supported value.
+			/// </summary>
+			private double _max;
+
+			/// <summary>
+			///     The minimum supported value.
+			/// </summary>
+			private double _min;
+
+			/// <summary>
+			///     Initializes a new instance.
+			/// </summary>
+			/// <param name="sampleCount">The number of samples for the computation of the average.</param>
+			public AveragedDouble(int sampleCount)
+				: this()
+			{
+				_values = new double[sampleCount];
+				_max = Double.MinValue;
+				_min = Double.MaxValue;
+			}
+
+			/// <summary>
+			///     Gets the last value that has been measured.
+			/// </summary>
+			internal double LastValue { get; private set; }
+
+			/// <summary>
+			///     Gets the averaged value.
+			/// </summary>
+			internal double Average
+			{
+				get
+				{
+					double average = 0;
+					var count = _averageIsFilled ? _values.Length : _averageIndex;
+
+					for (var i = 0; i < count; ++i)
+						average += _values[i];
+
+					average /= count;
+					return average;
+				}
+			}
+
+			/// <summary>
+			///     Adds the given measured value to the statistics.
+			/// </summary>
+			/// <param name="value">The value that should be added.</param>
+			internal void AddMeasurement(double value)
+			{
+				LastValue = value;
+
+				if (LastValue > _max)
+					_max = LastValue;
+				if (LastValue < _min)
+					_min = LastValue;
+
+				_values[_averageIndex] = LastValue;
+				_averageIndex = (_averageIndex + 1) % _values.Length;
+
+				if (_averageIndex == 0)
+					_averageIsFilled = true;
+			}
 		}
 	}
 }
