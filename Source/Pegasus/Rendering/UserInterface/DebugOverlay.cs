@@ -139,7 +139,7 @@
 			_builder.Append("GPU Time:    ").Append(_gpuFrameTime.Average.ToString("F2")).Append("ms\n");
 			_builder.Append("CPU Time:    ").Append(_cpuFrameTime.Average.ToString("F2")).Append("ms\n");
 			_builder.Append("Update Time: ").Append(_cpuUpdateTime.Average.ToString("F2")).Append("ms\n");
-			_builder.Append("Render Time: ").Append(_cpuRenderTime.Average.ToString("F2")).Append("ms\n");
+			_builder.Append("Render Time: ").Append(_cpuRenderTime.Average.ToString("F2")).Append("ms");
 
 			_platformInfo.Text = _builder.ToString();
 			_builder.Clear();

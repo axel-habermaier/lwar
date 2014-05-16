@@ -57,7 +57,7 @@
 				// The distance to the sun - assumes the sun lies at the origin
 				var distance = planet.Position.Length;
 
-				spriteBatch.DrawOutline(new CircleF(Vector2.Zero, distance), new Color(32, 32, 32, 64), 12, 200);
+				spriteBatch.DrawOutline(new CircleF(Vector2.Zero, distance), new Color(255, 255, 255, 64), 12, 200);
 			}
 		}
 

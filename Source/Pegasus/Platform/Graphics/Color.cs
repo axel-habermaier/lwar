@@ -32,34 +32,13 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="value">The value that will be assigned to all components.</param>
-		public Color(byte value)
-		{
-			Alpha = Red = Green = Blue = value;
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="value">The value that will be assigned to all components.</param>
-		public Color(float value)
-		{
-			Alpha = Red = Green = Blue = ToByte(value);
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
 		/// <param name="red">The red component of the color.</param>
 		/// <param name="green">The green component of the color.</param>
 		/// <param name="blue">The blue component of the color.</param>
 		/// <param name="alpha">The alpha component of the color.</param>
 		public Color(byte red, byte green, byte blue, byte alpha)
+			: this(ToFloat(red), ToFloat(green), ToFloat(blue), ToFloat(alpha))
 		{
-			Red = red;
-			Green = green;
-			Blue = blue;
-			Alpha = alpha;
 		}
 
 		/// <summary>
@@ -71,9 +50,9 @@
 		/// <param name="alpha">The alpha component of the color.</param>
 		public Color(float red, float green, float blue, float alpha)
 		{
-			Red = ToByte(red);
-			Green = ToByte(green);
-			Blue = ToByte(blue);
+			Red = ToByte(red * alpha);
+			Green = ToByte(green * alpha);
+			Blue = ToByte(blue * alpha);
 			Alpha = ToByte(alpha);
 		}
 
@@ -82,41 +61,11 @@
 		/// </summary>
 		/// <param name="argb">A packed unsigned integer containing all four color components.</param>
 		public Color(uint argb)
+			: this(ToFloat((byte)((argb >> 16) & 255)),
+				   ToFloat((byte)((argb >> 8) & 255)),
+				   ToFloat((byte)(argb & 255)),
+				   ToFloat((byte)((argb >> 24) & 255)))
 		{
-			Alpha = (byte)((argb >> 24) & 255);
-			Red = (byte)((argb >> 16) & 255);
-			Green = (byte)((argb >> 8) & 255);
-			Blue = (byte)(argb & 255);
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="argb">A packed integer containing all four color components.</param>
-		public Color(int argb)
-		{
-			Alpha = (byte)((argb >> 24) & 255);
-			Red = (byte)((argb >> 16) & 255);
-			Green = (byte)((argb >> 8) & 255);
-			Blue = (byte)(argb & 255);
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="red">The red component of the color.</param>
-		/// <param name="green">The green component of the color.</param>
-		/// <param name="blue">The blue component of the color.</param>
-		/// <param name="alpha">The alpha component of the color.</param>
-		public static Color FromRgba(byte red, byte green, byte blue, byte alpha)
-		{
-			return new Color
-			{
-				Red = red,
-				Green = green,
-				Blue = blue,
-				Alpha = alpha
-			};
 		}
 
 		/// <summary>

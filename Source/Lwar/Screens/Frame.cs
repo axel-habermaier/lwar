@@ -13,7 +13,7 @@
 		/// <summary>
 		///     The color of the frame.
 		/// </summary>
-		public Color FrameColor = new Color(32, 32, 32, 64);
+		public Color FrameColor = new Color(255, 255, 255, 64);
 
 		/// <summary>
 		///     The margin of the frame, i.e., the distance between the outer border of the frame and its content.

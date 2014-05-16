@@ -119,9 +119,13 @@
 			_numQuads = 0;
 			_dirty = true;
 
+			// We always wrap - we fake no wrapping text by removing the width restriction
+			if (wrapping == TextWrapping.NoWrap)
+				_desiredSize.Width = Int32.MaxValue;
+
 			ComputeCharacterAreasAndLines();
-			AlignLines();
 			ComputeActualSize();
+			AlignLines();
 		}
 
 		/// <summary>
@@ -279,7 +283,7 @@
 		/// </summary>
 		private void AlignLines()
 		{
-			if (_alignment == TextAlignment.Left)
+			if (_alignment == TextAlignment.Left || _wrapping == TextWrapping.NoWrap)
 				return;
 
 			for (var i = 0; i < _lineCount; ++i)

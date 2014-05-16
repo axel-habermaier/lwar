@@ -409,24 +409,34 @@
 				return;
 
 			_layoutInfo = new LayoutInfo(this);
-			var hasWidth = !Double.IsNaN(_layoutInfo.Width);
-			var hasHeight = !Double.IsNaN(_layoutInfo.Height);
+			availableSize = RestrictSize(availableSize);
 
 			_desiredSize = MeasureCore(DecreaseByMargin(availableSize));
 
 			Assert.That(!Double.IsInfinity(_desiredSize.Width) && !Double.IsNaN(_desiredSize.Width), "MeasureCore returned invalid width.");
 			Assert.That(!Double.IsInfinity(_desiredSize.Height) && !Double.IsNaN(_desiredSize.Height), "MeasureCore returned invalid height.");
 
-			if (hasWidth)
-				_desiredSize.Width = _layoutInfo.Width;
-
-			if (hasHeight)
-				_desiredSize.Height = _layoutInfo.Height;
-
-			_desiredSize.Width = MathUtils.Clamp(_desiredSize.Width, _layoutInfo.MinWidth, _layoutInfo.MaxWidth);
-			_desiredSize.Height = MathUtils.Clamp(_desiredSize.Height, _layoutInfo.MinHeight, _layoutInfo.MaxHeight);
-
+			_desiredSize = RestrictSize(_desiredSize);
 			_desiredSize = IncreaseByMargin(_desiredSize);
+		}
+
+		/// <summary>
+		///     Restricts the given size, taking the explicit size as well as the minimum and maximum size of the UI element into
+		///     account.
+		/// </summary>
+		/// <param name="size">The size that should be restricted.</param>
+		private SizeD RestrictSize(SizeD size)
+		{
+			if (_layoutInfo.HasExplicitWidth)
+				size.Width = _layoutInfo.Width;
+
+			if (_layoutInfo.HasExplicitHeight)
+				size.Height = _layoutInfo.Height;
+
+			size.Width = MathUtils.Clamp(size.Width, _layoutInfo.MinWidth, _layoutInfo.MaxWidth);
+			size.Height = MathUtils.Clamp(size.Height, _layoutInfo.MinHeight, _layoutInfo.MaxHeight);
+
+			return size;
 		}
 
 		/// <summary>

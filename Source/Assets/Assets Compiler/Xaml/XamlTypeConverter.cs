@@ -94,7 +94,7 @@
 					Log.Die("Failed to convert color value '{0}'.", value);
 			}
 
-			return String.Format("Color.FromRgba({0}, {1}, {2}, {3})", color.R, color.G, color.B, color.A);
+			return String.Format("new Color({0}, {1}, {2}, {3})", color.R, color.G, color.B, color.A);
 		}
 	}
 }

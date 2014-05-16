@@ -25,7 +25,19 @@
 			MaxWidth = element.MaxWidth;
 			MaxHeight = element.MaxHeight;
 			Margin = element.Margin;
+			HasExplicitWidth = !Double.IsNaN(Width);
+			HasExplicitHeight = !Double.IsNaN(Height);
 		}
+
+		/// <summary>
+		///     Gets a value indicating whether the UI element has an explicit width set.
+		/// </summary>
+		public bool HasExplicitWidth { get; private set; }
+
+		/// <summary>
+		///     Gets a value indicating whether the UI element has an explicit height set.
+		/// </summary>
+		public bool HasExplicitHeight { get; private set; }
 
 		/// <summary>
 		///     Gets the horizontal alignment of the UI element.

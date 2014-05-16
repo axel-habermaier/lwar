@@ -9,6 +9,17 @@
 		<Literal>ClearType</Literal>
 		<Literal>Aliased</Literal>
 	</Enumeration>
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.TextWrapping">
+		<Literal>NoWrap</Literal>
+		<Literal>Wrap</Literal>
+	</Enumeration>
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.TextAlignment">
+		<Literal>Left</Literal>
+		<Literal>Right</Literal>
+		<Literal>Center</Literal>
+	</Enumeration>
 	
 	<Enumeration Name="Pegasus.Framework.UserInterface.Visibility">
 		<Literal>Collapsed</Literal>
@@ -60,6 +71,8 @@
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.TextBlock" Inherits="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground"/>
+		<Property Type="Pegasus.Framework.UserInterface.TextWrapping" Name="TextWrapping"/>
+		<Property Type="Pegasus.Framework.UserInterface.TextAlignment" Name="TextAlignment"/>
 		<Property Type="string" Name="Text" IsContentProperty="true"/>
 	</Class>
 

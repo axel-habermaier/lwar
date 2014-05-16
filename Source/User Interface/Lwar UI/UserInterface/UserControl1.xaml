@@ -42,5 +42,7 @@
 		</Border>
 		<Border Canvas.Left="373" Canvas.Top="161.793" Background="#4C20BBBB" Height="56" Width="66"/>
 		<TextBlock Text="{Binding Text}" />
+		<TextBlock Text="Hallo Welt, wie geht's denn so?" Background="White" Width="50" TextWrapping="Wrap" TextAlignment="Right"></TextBlock>
+		<Border Canvas.Left="221" Canvas.Top="185" Background="#4C20FFBB" Height="85" Width="177"/>
 	</Canvas>
 </UserControl>
