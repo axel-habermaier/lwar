@@ -13,7 +13,7 @@
 			<Setter Property="Background" Value="Red"/>
 		</Style>
 	</UserControl.Resources>
-	<Canvas>
+	<Canvas Margin="0,0,-165,0">
 		<Border Background="Red">
 			<TextBlock Margin="18,31,0,15" Foreground="#FF1AA6E8" Background="#FFBD4C0B">Hallo</TextBlock>
 		</Border>
@@ -44,5 +44,15 @@
 		<TextBlock Text="{Binding Text}" />
 		<TextBlock Text="Hallo Welt, wie geht's denn so?" Background="White" Width="50" TextWrapping="Wrap" TextAlignment="Right"></TextBlock>
 		<Border Canvas.Left="221" Canvas.Top="185" Background="#4C20FFBB" Height="85" Width="177"/>
+		<Grid Width="200" Height="200" Canvas.Left="460" Canvas.Top="53" Background="OrangeRed">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+		</Grid>
 	</Canvas>
 </UserControl>

@@ -482,7 +482,7 @@
 		/// </summary>
 		private void ReplaceListSyntax(XElement element)
 		{
-			foreach (var child in element.Elements())
+			foreach (var child in element.Elements().ToArray())
 				ReplaceListSyntax(child);
 
 			if (element.Name.LocalName.Contains("."))
@@ -498,7 +498,7 @@
 		/// </summary>
 		private void ReplaceDictionarySyntax(XElement element)
 		{
-			foreach (var child in element.Elements())
+			foreach (var child in element.Elements().ToArray())
 				ReplaceDictionarySyntax(child);
 
 			if (element.Name.LocalName.Contains("."))

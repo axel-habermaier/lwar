@@ -21,29 +21,36 @@
 		{
 			var xamlAssets = assets.OfType<XamlAsset>().ToArray();
 
-			if (DetermineAction(xamlAssets) == CompilationAction.Skip)
-				Log.Info("Skipping compilation of Xaml files (no changes detected).");
-			else
+			try
 			{
-				var typeInfo = new XamlTypeInfoProvider(Path.Combine(Configuration.SourceDirectory, "TypeInfo.xml"));
-				var serializer = new XamlToCSharpSerializer(typeInfo);
-
-				foreach (var asset in xamlAssets)
+				if (DetermineAction(xamlAssets) == CompilationAction.Skip)
+					Log.Info("Skipping compilation of Xaml files (no changes detected).");
+				else
 				{
-					Log.Info("Compiling '{0}'...", asset.RelativePath);
+					var typeInfo = new XamlTypeInfoProvider(Path.Combine(Configuration.SourceDirectory, "TypeInfo.xml"));
+					var serializer = new XamlToCSharpSerializer(typeInfo);
 
-					var xamlFile = new XamlFile(asset.SourcePath, typeInfo);
-					if (xamlFile.Root != null)
+					foreach (var asset in xamlAssets)
 					{
-						var className = Path.GetFileNameWithoutExtension(asset.RelativePath);
-						var namespaceName = Path.GetDirectoryName(asset.RelativePath).Replace("/", ".").Replace("\\", ".");
-						serializer.SerializeToCSharp(xamlFile, namespaceName, className);
+						Log.Info("Compiling '{0}'...", asset.RelativePath);
+
+						var xamlFile = new XamlFile(asset.SourcePath, typeInfo);
+						if (xamlFile.Root != null)
+						{
+							var className = Path.GetFileNameWithoutExtension(asset.RelativePath);
+							var namespaceName = Path.GetDirectoryName(asset.RelativePath).Replace("/", ".").Replace("\\", ".");
+							serializer.SerializeToCSharp(xamlFile, namespaceName, className);
+						}
+
+						Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 					}
 
-					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
+					File.WriteAllText(Configuration.CSharpXamlFile, serializer.GetGeneratedCode());
 				}
-
-				File.WriteAllText(Configuration.CSharpXamlFile, serializer.GetGeneratedCode());
+			}
+			catch (Exception e)
+			{
+				Log.Die("Xaml compilation error: {0}. {1}", e.Message, e.StackTrace);
 			}
 
 			return true;

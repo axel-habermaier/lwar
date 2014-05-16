@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Types>
+	<!-- Enumerations ================================================================================================= -->
+	
 	<Enumeration Name="Pegasus.Framework.UserInterface.Controls.Orientation">
 		<Literal>Vertical</Literal>
 		<Literal>Horizontal</Literal>
@@ -41,6 +43,63 @@
 		<Literal>Right</Literal>
 	</Enumeration>
 
+	<!-- Misc Classes ================================================================================================= -->
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.ControlTemplate">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.UIElementCollection" IsList="true">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Setter">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Trigger">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.SettersCollection" IsList="true">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.TriggersCollection" IsList="true">
+	</Class>
+
+	<Class Name="System.Collections.Generic.List&lt;ColumnDefinition&gt;" IsList="true">
+	</Class>
+
+	<Class Name="System.Collections.Generic.List&lt;RowDefinition&gt;" IsList="true">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.ColumnDefinition">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.RowDefinition">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.ResourceDictionary" IsDictionary="true">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.ViewModel">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Thickness">
+	</Class>
+
+	<Class Name="Pegasus.Platform.Graphics.Color">
+	</Class>
+
+	<Class Name="Pegasus.Framework.Application">
+		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.TextOptions">
+		<Property Type="Pegasus.Framework.UserInterface.TextRenderingMode" Name="TextRenderingMode"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Style">
+		<Property Type="Pegasus.Framework.UserInterface.SettersCollection" Name="Setters" IsContentProperty="true"/>
+		<Property Type="Pegasus.Framework.UserInterface.TriggersCollection" Name="Triggers"/>
+	</Class>
+
 	<Class Name="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="Pegasus.Framework.UserInterface.ViewModel" Name="ViewModel"/>
 		<Property Type="Pegasus.Platform.Graphics.Color" Name="Background"/>
@@ -64,6 +123,8 @@
 		<Property Type="Pegasus.Framework.UserInterface.Visibility" Name="Visibility"/>
 	</Class>
 
+	<!-- Controls ================================================================================================= -->
+
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Control" Inherits="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground"/>
 		<Property Type="Pegasus.Framework.UserInterface.Controls.ControlTemplate" Name="Template"/>
@@ -80,13 +141,6 @@
 		<Property Type="object" Name="Content" IsContentProperty="true"/>
 	</Class>
 
-	<Class Name="Pegasus.Framework.UserInterface.Controls.Decorator" Inherits="Pegasus.Framework.UserInterface.UIElement">
-		<Property Type="Pegasus.Framework.UserInterface.UIElement" Name="Child" IsContentProperty="true"/>
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.Controls.Border" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
-	</Class>
-
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ContentPresenter" Inherits="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="object" Name="Content" IsContentProperty="true"/>
 	</Class>
@@ -94,16 +148,16 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Button" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
 
+	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
+	</Class>
+
+	<!-- Panels ================================================================================================= -->
+
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Panel" Inherits="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="int" Name="ZIndex"/>
 		<Property Type="Pegasus.Framework.UserInterface.UIElementCollection" Name="Children" IsContentProperty="true"/>
 	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.Style">
-		<Property Type="Pegasus.Framework.UserInterface.SettersCollection" Name="Setters" IsContentProperty="true"/>
-		<Property Type="Pegasus.Framework.UserInterface.TriggersCollection" Name="Triggers"/>
-	</Class>
-
+	
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Canvas" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
 		<Property Type="double" Name="Left"/>
 		<Property Type="double" Name="Right"/>
@@ -115,7 +169,18 @@
 		<Property Type="Pegasus.Framework.UserInterface.Controls.Orientation" Name="Orientation"/>
 	</Class>
 
-	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
+	<Class Name="Pegasus.Framework.UserInterface.Controls.Grid" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
+		<Property Type="System.Collections.Generic.List&lt;ColumnDefinition&gt;" Name="ColumnDefinitions"/>
+		<Property Type="System.Collections.Generic.List&lt;RowDefinition&gt;" Name="RowDefinitions"/>
+	</Class>
+
+	<!-- Decorators ================================================================================================= -->
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.Decorator" Inherits="Pegasus.Framework.UserInterface.UIElement">
+		<Property Type="Pegasus.Framework.UserInterface.UIElement" Name="Child" IsContentProperty="true"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.Border" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.RenderOutputPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
@@ -125,38 +190,4 @@
 		<Property Type="string" Name="Title"/>
 	</Class>
 
-	<Class Name="Pegasus.Framework.Application">
-		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources"/>
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.TextOptions">
-		<Property Type="Pegasus.Framework.UserInterface.TextRenderingMode" Name="TextRenderingMode"/>
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.Controls.ControlTemplate">
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.UIElementCollection" IsList="true">
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.Setter">
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.SettersCollection" IsList="true">
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.TriggersCollection" IsList="true">
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.ResourceDictionary" IsDictionary="true">
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.ViewModel">
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.Thickness">
-	</Class>
-
-	<Class Name="Pegasus.Platform.Graphics.Color">
-	</Class>
 </Types>

@@ -220,6 +220,7 @@
     <Compile Include="Assets\AssetType.cs" />
     <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />
     <Compile Include="Framework\UserInterface\Controls\AppWindow.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Grid.cs" />
     <Compile Include="Framework\UserInterface\Controls\RenderOutputPanel.cs" />
     <Compile Include="Framework\UserInterface\RootUIElement.cs" />
     <Compile Include="Framework\UserInterface\Controls\Window.cs" />
