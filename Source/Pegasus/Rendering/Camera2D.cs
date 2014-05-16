@@ -41,7 +41,7 @@
 		/// </summary>
 		protected override void UpdateProjectionMatrixCore()
 		{
-			Projection = Matrix.CreateOrthographic(Viewport.Left, Viewport.Right, Viewport.Bottom, Viewport.Top, -1, 0);
+			_projection = Matrix.CreateOrthographic(Viewport.Left, Viewport.Right, Viewport.Bottom, Viewport.Top, -1, 0);
 		}
 
 		/// <summary>
@@ -49,7 +49,7 @@
 		/// </summary>
 		protected override void UpdateViewMatrixCore()
 		{
-			View = Matrix.CreateLookAt(new Vector3(Position.X, Position.Y, 0),
+			_view = Matrix.CreateLookAt(new Vector3(Position.X, Position.Y, 0),
 									   new Vector3(Position.X, Position.Y, -1),
 									   new Vector3(0, 1, 0));
 		}

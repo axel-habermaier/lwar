@@ -115,7 +115,7 @@
 		/// </summary>
 		protected override void UpdateProjectionMatrixCore()
 		{
-			Projection = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / (float)Viewport.Height, _nearDistance, _farDistance);
+			_projection = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / (float)Viewport.Height, _nearDistance, _farDistance);
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@
 		/// </summary>
 		protected override void UpdateViewMatrixCore()
 		{
-			View = Matrix.CreateLookAt(Position, Target, Up);
+			_view = Matrix.CreateLookAt(Position, Target, Up);
 		}
 	}
 }

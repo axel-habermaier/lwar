@@ -17,6 +17,12 @@
 			new DependencyProperty<string>(defaultValue: String.Empty, affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
+		///     Indicates whether the text should be wrapped when it reaches the edge of the text block.
+		/// </summary>
+		public static readonly DependencyProperty<TextWrapping> TextWrappingProperty =
+			new DependencyProperty<TextWrapping>(defaultValue: TextWrapping.NoWrap, affectsMeasure: true, prohibitsAnimations: true);
+
+		/// <summary>
 		///     The foreground color of the text.
 		/// </summary>
 		public static readonly DependencyProperty<Color> ForegroundProperty = Control.ForegroundProperty;
@@ -46,6 +52,15 @@
 		{
 			get { return GetValue(ForegroundProperty); }
 			set { SetValue(ForegroundProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the text should be wrapped when it reaches the edge of the text block.
+		/// </summary>
+		public TextWrapping TextWrapping
+		{
+			get { return GetValue(TextWrappingProperty); }
+			set { SetValue(TextWrappingProperty, value); }
 		}
 
 		/// <summary>
@@ -107,7 +122,7 @@
 
 			spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background);
 			using (var text = Rendering.UserInterface.Text.Create(Text))
-				TextRenderer.Draw(spriteBatch, Font, text, Foreground, new Vector2i(x, y));
+				spriteBatch.DrawText(Font, text, Foreground, new Vector2i(x, y));
 		}
 	}
 }

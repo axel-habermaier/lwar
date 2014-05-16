@@ -78,52 +78,8 @@
 			for (var i = 0; i < text.Length; ++i)
 			{
 				Quad quad;
-				if (font.CreateGlyphQuad(text[i], ref layoutData[i], _color, out quad))
-				{
-					Color? color;
-
-					text.GetColor(i, out color);
-
-					if (color.HasValue)
-						quad.SetColor(color.Value);
-
+				if (font.CreateGlyphQuad(text, i, ref layoutData[i], _color, out quad))
 					_quads[_numQuads++] = quad;
-				}
-			}
-		}
-
-		/// <summary>
-		///     Draws a single line of non-layouted, non-cached text.
-		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the text.</param>
-		/// <param name="font">The font that should be used to draw the text.</param>
-		/// <param name="text">The text that should be drawn.</param>
-		/// <param name="color">The color that should be used to draw the text.</param>
-		/// <param name="position">The position of the text's top left corner.</param>
-		public static void Draw(SpriteBatch spriteBatch, Font font, Text text, Color color, Vector2i position)
-		{
-			Assert.ArgumentNotNull(font);
-			Assert.ArgumentNotNull(text);
-
-			if (text.IsWhitespaceOnly)
-				return;
-
-			for (var i = 0; i < text.Length; ++i)
-			{
-				Quad quad;
-				var area = font.GetGlyphArea(text, 0, i, ref position);
-
-				if (font.CreateGlyphQuad(text[i], ref area, color, out quad))
-				{
-					Color? textColor;
-
-					text.GetColor(i, out textColor);
-
-					if (textColor.HasValue)
-						quad.SetColor(textColor.Value);
-
-					spriteBatch.Draw(ref quad, font.Texture);
-				}
 			}
 		}
 

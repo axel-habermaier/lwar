@@ -19,12 +19,12 @@
 		/// <summary>
 		///     Gets the camera's projection matrix.
 		/// </summary>
-		protected Matrix Projection;
+		protected Matrix _projection;
 
 		/// <summary>
 		///     Gets the camera's view matrix.
 		/// </summary>
-		protected Matrix View;
+		protected Matrix _view;
 
 		/// <summary>
 		///     Indicates whether the contents of the camera buffer are outdated.
@@ -91,7 +91,7 @@
 		{
 			if (_bufferUpdateRequired)
 			{
-				var bufferData = new CameraBuffer(ref View, ref Projection, ref _position);
+				var bufferData = new CameraBuffer(ref _view, ref _projection, ref _position);
 				_cameraBuffer.CopyData(&bufferData);
 
 				_bufferUpdateRequired = false;

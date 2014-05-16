@@ -106,7 +106,7 @@
 		/// </summary>
 		protected override void UpdateProjectionMatrixCore()
 		{
-			Projection = Matrix.CreatePerspectiveFieldOfView(MathUtils.DegToRad(30), Viewport.Width / (float)Viewport.Height, 1, 1000);
+			_projection = Matrix.CreatePerspectiveFieldOfView(MathUtils.DegToRad(30), Viewport.Width / (float)Viewport.Height, 1, 1000);
 		}
 
 		/// <summary>
@@ -122,7 +122,7 @@
 			var up = new Vector3(0, 1, 0);
 			up = Vector3.Transform(ref up, ref rotation);
 
-			View = Matrix.CreateLookAt(_position, target, up);
+			_view = Matrix.CreateLookAt(_position, target, up);
 		}
 
 		/// <summary>

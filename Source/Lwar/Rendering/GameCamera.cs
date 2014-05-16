@@ -222,7 +222,7 @@
 		public Vector2 ToScreenCoodinates(Vector2 worldCoordinates)
 		{
 			var coordinates = new Vector4(worldCoordinates.X, 0, worldCoordinates.Y);
-			var transformation = View * Projection;
+			var transformation = _view * _projection;
 
 			// Project to view space
 			coordinates = Vector4.Transform(ref coordinates, ref transformation);

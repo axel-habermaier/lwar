@@ -3,12 +3,13 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
+	using Assets;
 	using Assets.Effects;
 	using Math;
-	using Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
+	using UserInterface;
 
 	/// <summary>
 	///     Efficiently draws large amounts of 2D sprites by batching together quads with the same texture.
@@ -245,6 +246,19 @@
 		}
 
 		/// <summary>
+		///     Draws the outline of a rectangle.
+		/// </summary>
+		/// <param name="rectangle">The rectangle that should be drawn.</param>
+		/// <param name="color">The color of the outline.</param>
+		public void DrawOutline(RectangleF rectangle, Color color)
+		{
+			DrawLine(rectangle.TopLeft, rectangle.TopRight, color, 1);
+			DrawLine(rectangle.BottomLeft, rectangle.BottomRight, color, 1);
+			DrawLine(rectangle.TopLeft, rectangle.BottomLeft, color, 1);
+			DrawLine(rectangle.TopRight, rectangle.BottomRight, color, 1);
+		}
+
+		/// <summary>
 		///     Draws the given rectangle.
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
@@ -358,16 +372,28 @@
 		}
 
 		/// <summary>
-		///     Draws the outline of a rectangle.
+		///     Draws a single line of text.
 		/// </summary>
-		/// <param name="rectangle">The rectangle that should be drawn.</param>
-		/// <param name="color">The color of the outline.</param>
-		public void DrawOutline(RectangleF rectangle, Color color)
+		/// <param name="font">The font that should be used to draw the text.</param>
+		/// <param name="text">The text that should be drawn.</param>
+		/// <param name="color">The color that should be used to draw the text.</param>
+		/// <param name="position">The position of the text's top left corner.</param>
+		public void DrawText(Font font, Text text, Color color, Vector2i position)
 		{
-			DrawLine(rectangle.TopLeft, rectangle.TopRight, color, 1);
-			DrawLine(rectangle.BottomLeft, rectangle.BottomRight, color, 1);
-			DrawLine(rectangle.TopLeft, rectangle.BottomLeft, color, 1);
-			DrawLine(rectangle.TopRight, rectangle.BottomRight, color, 1);
+			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNull(text);
+
+			if (text.IsWhitespaceOnly)
+				return;
+
+			for (var i = 0; i < text.Length; ++i)
+			{
+				Quad quad;
+				var area = font.GetGlyphArea(text, 0, i, ref position);
+
+				if (font.CreateGlyphQuad(text, i, ref area, color, out quad))
+					Draw(ref quad, font.Texture);
+			}
 		}
 
 		/// <summary>

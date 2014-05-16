@@ -216,8 +216,8 @@
 			if (((int)Math.Round(_clock.Seconds * Frequency)) % 2 != 0)
 				return;
 
-			TextRenderer.Draw(spriteBatch, font, _caretVisual, Color.White, position);
-			TextRenderer.Draw(spriteBatch, font, _caretVisual, Color.White, position + new Vector2i(0, 1));
+			spriteBatch.DrawText(font, _caretVisual, Color.White, position);
+			spriteBatch.DrawText(font, _caretVisual, Color.White, position + new Vector2i(0, 1));
 		}
 
 		/// <summary>

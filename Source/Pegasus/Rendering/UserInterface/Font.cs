@@ -182,18 +182,29 @@
 		///     in some cases, no quad is created for a given index. The function returns true to indicate
 		///     that a valid quad was created; false, otherwise.
 		/// </summary>
-		/// <param name="character">The character for which the quad should be created.</param>
+		/// <param name="text">The text containing the character that the quad should be created for.</param>
+		/// <param name="index">The index of the character within the text that the quad should be created for.</param>
 		/// <param name="area">The area of the glyph.</param>
 		/// <param name="color">The color of the character.</param>
 		/// <param name="quad">Returns the created quad.</param>
-		internal bool CreateGlyphQuad(char character, ref Rectangle area, Color color, out Quad quad)
+		internal bool CreateGlyphQuad(Text text, int index, ref Rectangle area, Color color, out Quad quad)
 		{
+			Assert.ArgumentNotNull(text);
+			Assert.ArgumentSatisfies(index < text.Length, "Out of bounds.");
+
 			// Spaces and new lines are invisible, so don't bother drawing them
+			var character = text[index];
 			if (character == ' ' || character == '\n')
 			{
 				quad = new Quad();
 				return false;
 			}
+
+			Color? textColor;
+			text.GetColor(index, out textColor);
+
+			if (textColor.HasValue)
+				color = textColor.Value;
 
 			var glyph = GetGlyph(character);
 			quad = new Quad(new RectangleF(area.Left, area.Top, area.Width, area.Height), color, glyph.TextureArea);
@@ -209,11 +220,12 @@
 		{
 			var index = (int)glyph;
 
-			// Ensure that a '□' (at index 0) is printed for all characters that are not supported by the font.
+			// Print a '□' for all characters that are not supported by the font; the font processor guarantees 
+			// that the glyph for '□' is at index 0
 			if (index < 0 || index >= _glyphs.Length || _glyphs[index].IsInvalid)
-				return _glyphs[0]; // The font processor guarantees that '□' at index 0 is supported by the font
+				return _glyphs[0];
 
-			// New lines should not be visible at all, and should have no width
+			// New lines are not be visible at all, and have no width
 			if (glyph == '\n')
 				return new Glyph();
 

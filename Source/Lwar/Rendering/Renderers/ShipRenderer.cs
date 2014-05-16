@@ -148,7 +148,7 @@
 					spriteBatch.DrawLine(start, middle, new Color(0, 255, 0, 255), 5);
 
 				// Draw the name
-				TextRenderer.Draw(spriteBatch, _font, name.Name, Color.White, name.Area.Position);
+				spriteBatch.DrawText(_font, name.Name, Color.White, name.Area.Position);
 				++i;
 			}
 		}
