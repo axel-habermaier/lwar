@@ -96,7 +96,7 @@
 				_builder.Append(entry.Time.ToString("F4").PadLeft(9));
 
 				_builder.Append("   ");
-				Text.Write(_builder, entry.Message);
+				TextString.Write(_builder, entry.Message);
 				_builder.Append("\n");
 			}
 

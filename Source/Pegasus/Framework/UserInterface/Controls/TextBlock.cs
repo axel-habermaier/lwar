@@ -2,6 +2,7 @@
 {
 	using System;
 	using Math;
+	using Platform;
 	using Platform.Graphics;
 	using Rendering;
 
@@ -121,7 +122,7 @@
 			var y = (int)Math.Round(VisualOffset.Y);
 
 			spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background);
-			using (var text = Rendering.UserInterface.Text.Create(Text))
+			using (var text = TextString.Create(Text))
 				spriteBatch.DrawText(Font, text, Foreground, new Vector2i(x, y));
 		}
 	}

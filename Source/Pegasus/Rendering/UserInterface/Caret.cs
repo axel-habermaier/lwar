@@ -19,7 +19,7 @@
 		/// <summary>
 		///     The string that is used to visualize the caret.
 		/// </summary>
-		private readonly Text _caretVisual = Text.Create("_");
+		private readonly TextString _caretVisual = Platform.TextString.Create("_");
 
 		/// <summary>
 		///     The clock that is used to determine whether the caret should be visible.
@@ -34,7 +34,7 @@
 		/// <summary>
 		///     The text that can be edited with the caret.
 		/// </summary>
-		private Text _text = Text.Create(String.Empty);
+		private TextString _text = Platform.TextString.Create(String.Empty);
 
 		/// <summary>
 		///     Gets or sets the text that can be edited with the caret. If the text is changed, the caret
@@ -51,7 +51,7 @@
 				if (_text.SourceString == value)
 					return;
 
-				ChangeText(Text.Create(value));
+				ChangeText(Platform.TextString.Create(value));
 				_position = _text.Length;
 			}
 		}
@@ -80,7 +80,7 @@
 		///     Changes the text, raising the text changed event if necessary.
 		/// </summary>
 		/// <param name="text">The new text.</param>
-		private void ChangeText(Text text)
+		private void ChangeText(TextString text)
 		{
 			Assert.ArgumentNotNull(text);
 
@@ -135,7 +135,7 @@
 			var insertIndex = _text.MapToSource(_position);
 			var source = _text.SourceString.Insert(insertIndex, c.ToString());
 
-			var text = Text.Create(source);
+			var text = Platform.TextString.Create(source);
 			ChangeText(text);
 
 			// Due to the insertion, less characters might now be visible and we have to adjust the caret position accordingly. To do that,
@@ -165,7 +165,7 @@
 			if (position != 0)
 				position = _text.MapToSource(position - 1) + 1;
 
-			var text = Text.Create(_text.SourceString.Remove(position, 1));
+			var text = Platform.TextString.Create(_text.SourceString.Remove(position, 1));
 			ChangeText(text);
 
 			// The caret position doesn't change, but we have to ensure that it does not get out of bounds
@@ -193,7 +193,7 @@
 
 			var sourceString = _text.SourceString.Remove(removalIndex, 1);
 
-			var text = Text.Create(sourceString);
+			var text = Platform.TextString.Create(sourceString);
 			ChangeText(text);
 
 			// Due to the deletion, more characters might now be visible and we have to adjust the caret position accordingly. To do that,

@@ -1,6 +1,8 @@
 ﻿namespace Pegasus.Rendering.UserInterface
 {
 	using System;
+	using Platform;
+	using Platform.Graphics;
 
 	/// <summary>
 	///     Represents a text marker or text sequence.
@@ -34,7 +36,7 @@
 		/// <param name="text">The text for which the next token should be returned.</param>
 		/// <param name="offset">The offset into the text string.</param>
 		/// <returns></returns>
-		public static TextToken Next(Text text, int offset)
+		public static TextToken Next(TextString text, int offset)
 		{
 			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(offset >= 0, "Out of bounds.");
@@ -84,7 +86,7 @@
 		/// </summary>
 		/// <param name="text">The text for which the token should be created.</param>
 		/// <param name="index">The index of the space character in the text.</param>
-		public static TextToken CreateWordToken(Text text, int index)
+		public static TextToken CreateWordToken(TextString text, int index)
 		{
 			return new TextToken { Type = TextTokenType.Word, Sequence = new TextSequence(text, index) };
 		}
@@ -98,7 +100,7 @@
 		/// <param name="allowedWidth">The maximum allowed with for the first split part.</param>
 		/// <param name="part1">Returns the token for the first split part.</param>
 		/// <param name="part2">Returns the token for the second split part.</param>
-		public void Split(Font font, Text text, int allowedWidth, out TextToken part1, out TextToken part2)
+		public void Split(Font font, TextString text, int allowedWidth, out TextToken part1, out TextToken part2)
 		{
 			Assert.That(Type == TextTokenType.Word, "Wrong token type.");
 

@@ -1,16 +1,16 @@
-﻿namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Platform
 {
 	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Text;
-	using Platform.Graphics;
-	using Platform.Memory;
+	using Graphics;
+	using Memory;
 
 	/// <summary>
 	///     Represents a text that may optionally contain color specifiers.
 	/// </summary>
-	public class Text : PooledObject<Text>
+	public class TextString : PooledObject<TextString>
 	{
 		/// <summary>
 		///     The marker that introduces a color specifier.
@@ -115,7 +115,7 @@
 		/// <param name="textString">
 		///     The string, possibly containing color specifiers, that is the source for the text.
 		/// </param>
-		public static Text Create(string textString)
+		public static TextString Create(string textString)
 		{
 			Assert.ArgumentNotNull(textString);
 

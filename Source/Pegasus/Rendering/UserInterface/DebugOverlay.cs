@@ -4,6 +4,7 @@
 	using System.Text;
 	using Math;
 	using Platform;
+	using Platform.Graphics;
 	using Platform.Memory;
 	using Scripting;
 

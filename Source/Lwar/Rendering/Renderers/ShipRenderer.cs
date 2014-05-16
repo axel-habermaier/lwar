@@ -8,6 +8,7 @@
 	using Network;
 	using Pegasus;
 	using Pegasus.Math;
+	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
@@ -207,7 +208,7 @@
 			/// <summary>
 			///     The name of the player.
 			/// </summary>
-			public Text Name;
+			public TextString Name;
 
 			/// <summary>
 			///     Initializes a new instance.
@@ -233,7 +234,7 @@
 					return;
 
 				Name.SafeDispose();
-				Name = Text.Create(_player.Name);
+				Name = TextString.Create(_player.Name);
 				Area = new Rectangle(Vector2i.Zero, _font.MeasureWidth(Name), _font.LineHeight);
 			}
 

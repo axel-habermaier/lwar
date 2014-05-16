@@ -227,6 +227,7 @@
     <Compile Include="Framework\UserInterface\RoutedEventStorage`1.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventStorage.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventStore.cs" />
+    <Compile Include="Framework\UserInterface\TextAlignment.cs" />
     <Compile Include="Framework\UserInterface\TextWrapping.cs" />
     <Compile Include="Framework\UserInterface\UIElement.cs" />
     <Compile Include="Framework\UserInterface\UIElement.Properties.cs" />
@@ -315,7 +316,7 @@
     <Compile Include="Framework\UserInterface\SealableCollection.cs" />
     <Compile Include="Framework\UserInterface\Setter.cs" />
     <Compile Include="Framework\UserInterface\Style.cs" />
-    <Compile Include="Rendering\UserInterface\Text.cs" />
+    <Compile Include="Platform\TextString.cs" />
     <Compile Include="Framework\UserInterface\Trigger.cs" />
     <Compile Include="Framework\UserInterface\UIElement.Events.cs" />
     <Compile Include="Framework\UserInterface\UIElementCollection.cs" />
@@ -510,8 +511,6 @@
     <Compile Include="Scripting\Interpreter.cs" />
     <Compile Include="Platform\Memory\NativeMemoryExtensions.cs" />
     <Compile Include="Rendering\UserInterface\ConsolePrompt.cs" />
-    <Compile Include="Rendering\UserInterface\Glyph.cs" />
-    <Compile Include="Rendering\UserInterface\KerningPair.cs" />
     <Compile Include="Rendering\UserInterface\ConsoleContent.cs" />
     <Compile Include="Rendering\UserInterface\TextAlignmentExtensions.cs" />
     <Compile Include="Math\MathUtils.cs" />
@@ -583,7 +582,7 @@
     <Compile Include="Assets\AssetsManager.cs" />
     <Compile Include="Platform\Input\Key.cs" />
     <Compile Include="Platform\Input\MouseButton.cs" />
-    <Compile Include="Rendering\UserInterface\Font.cs" />
+    <Compile Include="Platform\Graphics\Font.cs" />
     <Compile Include="Rendering\UserInterface\DebugOverlay.cs" />
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />

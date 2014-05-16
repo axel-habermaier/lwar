@@ -1,6 +1,8 @@
 ﻿namespace Pegasus.Rendering.UserInterface
 {
 	using System;
+	using Platform;
+	using Platform.Graphics;
 
 	/// <summary>
 	///     Represents a stream of text tokens for the given text. Wrap tokens are inserted when the remainder
@@ -21,7 +23,7 @@
 		/// <summary>
 		///     The text that should be wrapped.
 		/// </summary>
-		private readonly Text _text;
+		private readonly TextString _text;
 
 		/// <summary>
 		///     The width of the current line.
@@ -39,7 +41,7 @@
 		/// <param name="font">The font that should be used to determine the width of the text's characters.</param>
 		/// <param name="text">The text that should be wrapped.</param>
 		/// <param name="maxLineWidth">The maximum width of a line.</param>
-		public TextTokenStream(Font font, Text text, int maxLineWidth)
+		public TextTokenStream(Font font, TextString text, int maxLineWidth)
 			: this()
 		{
 			Assert.ArgumentNotNull(font);

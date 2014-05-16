@@ -3,6 +3,7 @@
 	using System;
 	using Controls;
 	using Math;
+	using Platform.Graphics;
 	using Rendering;
 	using Rendering.UserInterface;
 

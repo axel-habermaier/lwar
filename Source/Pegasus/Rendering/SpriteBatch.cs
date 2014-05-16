@@ -6,6 +6,7 @@
 	using Assets;
 	using Assets.Effects;
 	using Math;
+	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
@@ -378,7 +379,20 @@
 		/// <param name="text">The text that should be drawn.</param>
 		/// <param name="color">The color that should be used to draw the text.</param>
 		/// <param name="position">The position of the text's top left corner.</param>
-		public void DrawText(Font font, Text text, Color color, Vector2i position)
+		public void DrawText(Font font, string text, Color color, Vector2i position)
+		{
+			using (var textString = TextString.Create(text))
+				DrawText(font, textString, color, position);
+		}
+
+		/// <summary>
+		///     Draws a single line of text.
+		/// </summary>
+		/// <param name="font">The font that should be used to draw the text.</param>
+		/// <param name="text">The text that should be drawn.</param>
+		/// <param name="color">The color that should be used to draw the text.</param>
+		/// <param name="position">The position of the text's top left corner.</param>
+		public void DrawText(Font font, TextString text, Color color, Vector2i position)
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.ArgumentNotNull(text);

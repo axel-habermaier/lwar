@@ -1,9 +1,10 @@
-﻿namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
 	using Math;
-	using Platform.Graphics;
-	using Platform.Memory;
+	using Memory;
+	using Rendering;
+	using Rendering.UserInterface;
 
 	/// <summary>
 	///     Provides the metadata and operations for drawing text.
@@ -18,7 +19,7 @@
 		/// <summary>
 		///     Stores the kerning pairs in a space-efficient way.
 		/// </summary>
-		private KerningPair[] _kerning;
+		private KerningPair[] _kernings;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -35,7 +36,7 @@
 		/// </summary>
 		public bool KerningSupported
 		{
-			get { return _kerning != null; }
+			get { return _kernings != null; }
 		}
 
 		/// <summary>
@@ -52,14 +53,14 @@
 		///     Reinitializes the font.
 		/// </summary>
 		/// <param name="glyphs">The glyphs of the font.</param>
-		/// <param name="kerning">The kerning information of the font.</param>
+		/// <param name="kernings">The kerning information of the font.</param>
 		/// <param name="lineHeight">The height of a single line.</param>
-		internal void Reinitialize(Glyph[] glyphs, KerningPair[] kerning, int lineHeight)
+		internal void Reinitialize(Glyph[] glyphs, KerningPair[] kernings, int lineHeight)
 		{
 			Assert.ArgumentNotNull(glyphs);
 
 			_glyphs = glyphs;
-			_kerning = kerning;
+			_kernings = kernings;
 			LineHeight = lineHeight;
 		}
 
@@ -71,7 +72,7 @@
 		{
 			Assert.ArgumentNotNull(textString);
 
-			using (var text = Text.Create(textString))
+			using (var text = TextString.Create(textString))
 				return MeasureWidth(text, 0, text.Length);
 		}
 
@@ -79,7 +80,7 @@
 		///     Returns the width of the text.
 		/// </summary>
 		/// <param name="text">The text whose width should be computed.</param>
-		public int MeasureWidth(Text text)
+		public int MeasureWidth(TextString text)
 		{
 			Assert.ArgumentNotNull(text);
 			return MeasureWidth(text, 0, text.Length);
@@ -95,7 +96,7 @@
 		{
 			Assert.ArgumentNotNull(textString);
 
-			using (var text = Text.Create(textString))
+			using (var text = TextString.Create(textString))
 				return MeasureWidth(text, start, end);
 		}
 
@@ -105,7 +106,7 @@
 		/// <param name="text">The text whose width should be computed.</param>
 		/// <param name="start">The index of the first character.</param>
 		/// <param name="end">The index of the first character that is not measured.</param>
-		public int MeasureWidth(Text text, int start, int end)
+		public int MeasureWidth(TextString text, int start, int end)
 		{
 			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(start >= 0, "Out of bounds.");
@@ -137,8 +138,8 @@
 
 			for (var i = firstGlyph.KerningStart; i < end; ++i)
 			{
-				if (_kerning[i].SecondGlyph == second)
-					return _kerning[i].Offset;
+				if (_kernings[i].SecondGlyph == second)
+					return _kernings[i].Offset;
 			}
 
 			return 0;
@@ -156,7 +157,7 @@
 		///     The offset that should be applied to the glyph's position. The X-value of
 		///     the offset is updated to reflect the glyph width and the kerning offset.
 		/// </param>
-		internal Rectangle GetGlyphArea(Text text, int start, int index, ref Vector2i offset)
+		internal Rectangle GetGlyphArea(TextString text, int start, int index, ref Vector2i offset)
 		{
 			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(start >= 0, "Out of bounds.");
@@ -187,7 +188,7 @@
 		/// <param name="area">The area of the glyph.</param>
 		/// <param name="color">The color of the character.</param>
 		/// <param name="quad">Returns the created quad.</param>
-		internal bool CreateGlyphQuad(Text text, int index, ref Rectangle area, Color color, out Quad quad)
+		internal bool CreateGlyphQuad(TextString text, int index, ref Rectangle area, Color color, out Quad quad)
 		{
 			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(index < text.Length, "Out of bounds.");
@@ -238,6 +239,79 @@
 		protected override void OnDisposing()
 		{
 			Texture.SafeDispose();
+		}
+
+		/// <summary>
+		///     Provides the metadata for a glyph used by a font.
+		/// </summary>
+		internal struct Glyph
+		{
+			/// <summary>
+			///     The number of pixels to advance the drawing cursor after drawing this glyph.
+			/// </summary>
+			public short AdvanceX;
+
+			/// <summary>
+			///     The area of the glyph, relative to the current drawing cursor.
+			/// </summary>
+			public Rectangle Area;
+
+			/// <summary>
+			///     The amount of kerning pairs with this glyph as the first partner.
+			/// </summary>
+			public int KerningCount;
+
+			/// <summary>
+			///     The index of the first kerning pair with this glyph as the first partner.
+			/// </summary>
+			public int KerningStart;
+
+			/// <summary>
+			///     The area of the font texture that contains the glyph's image data.
+			/// </summary>
+			public RectangleF TextureArea;
+
+			/// <summary>
+			///     Gets a value indicating whether the glyph is invalid, as not all fonts support all glyph.
+			/// </summary>
+			public bool IsInvalid
+			{
+				get { return Area == Rectangle.Empty && TextureArea == RectangleF.Empty; }
+			}
+		}
+
+		/// <summary>
+		///     A kerning pair stores an position offset for two glyphs.
+		/// </summary>
+		internal struct KerningPair
+		{
+			/// <summary>
+			///     The kerning offset.
+			/// </summary>
+			public readonly short Offset;
+
+			/// <summary>
+			///     The second glyph of the kerning pair.
+			/// </summary>
+			public readonly char SecondGlyph;
+
+			/// <summary>
+			///     The first glyph of the kerning pair.
+			/// </summary>
+			public char FirstGlyph;
+
+			/// <summary>
+			///     Initializes a new instance.
+			/// </summary>
+			/// <param name="firstGlyph">The first glyph of the kerning pair.</param>
+			/// <param name="secondGlyph">The second glyph of the kerning pair.</param>
+			/// <param name="offset">The kerning offset.</param>
+			public KerningPair(char firstGlyph, char secondGlyph, short offset)
+			{
+				FirstGlyph = firstGlyph;
+				SecondGlyph = secondGlyph;
+				Offset = offset;
+			}
 		}
 	}
 }

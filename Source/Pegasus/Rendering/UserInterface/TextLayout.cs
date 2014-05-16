@@ -2,6 +2,8 @@
 {
 	using System;
 	using Math;
+	using Platform;
+	using Platform.Graphics;
 	using Platform.Memory;
 
 	/// <summary>
@@ -66,7 +68,7 @@
 		/// <summary>
 		///     Gets the text that is layouted.
 		/// </summary>
-		public Text Text { get; private set; }
+		public TextString Text { get; private set; }
 
 		/// <summary>
 		///     Gets the layouting data for the individual characters of the layouted text.
@@ -90,7 +92,7 @@
 					return;
 
 				Text.SafeDispose();
-				Text = Text.Create(value);
+				Text = Platform.TextString.Create(value);
 				_dirty = true;
 
 				if (_characterAreas == null || Text.Length > _characterAreas.Length)

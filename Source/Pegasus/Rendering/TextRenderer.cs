@@ -2,6 +2,7 @@
 {
 	using System;
 	using Math;
+	using Platform;
 	using Platform.Graphics;
 	using UserInterface;
 
@@ -59,7 +60,7 @@
 		/// </param>
 		/// <param name="text">The text that was layouted and should be drawn.</param>
 		/// <param name="layoutData">The layouting data for the individual characters of the text.</param>
-		internal void RebuildCache(Font font, Text text, Rectangle[] layoutData)
+		internal void RebuildCache(Font font, TextString text, Rectangle[] layoutData)
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.ArgumentNotNull(text);

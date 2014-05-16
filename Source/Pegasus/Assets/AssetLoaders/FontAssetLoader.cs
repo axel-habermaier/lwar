@@ -4,7 +4,6 @@ namespace Pegasus.Assets.AssetLoaders
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
-	using Rendering.UserInterface;
 
 	/// <summary>
 	///     Loads font assets.
@@ -49,7 +48,7 @@ namespace Pegasus.Assets.AssetLoaders
 			Assert.ArgumentNotNull(buffer);
 			Assert.ArgumentNotNull(font);
 			Assert.ArgumentNotNullOrWhitespace(assetName);
-			
+
 			// Load the font map
 			AssetHeader.Validate(buffer, (byte)Assets.AssetType.Texture2D);
 			TextureAssetLoader.Load(buffer, font.Texture, assetName);
@@ -59,7 +58,7 @@ namespace Pegasus.Assets.AssetLoaders
 
 			// Load the glyph metadata
 			var numGlyphs = buffer.ReadUInt16();
-			var glyphs = new Glyph[256];
+			var glyphs = new Font.Glyph[256];
 
 			for (var i = 0; i < numGlyphs; ++i)
 			{
@@ -89,10 +88,10 @@ namespace Pegasus.Assets.AssetLoaders
 
 			// Load the kerning data
 			var kerningCount = buffer.ReadUInt16();
-			KerningPair[] kernings = null;
+			Font.KerningPair[] kernings = null;
 			if (kerningCount != 0)
 			{
-				kernings = new KerningPair[kerningCount];
+				kernings = new Font.KerningPair[kerningCount];
 
 				for (var i = 0; i < kerningCount; ++i)
 				{
@@ -100,7 +99,7 @@ namespace Pegasus.Assets.AssetLoaders
 					var second = buffer.ReadUInt16();
 					var offset = buffer.ReadInt16();
 
-					kernings[i] = new KerningPair((char)first, (char)second, offset);
+					kernings[i] = new Font.KerningPair((char)first, (char)second, offset);
 
 					if (glyphs[first].KerningStart == 0)
 						glyphs[first].KerningStart = i;

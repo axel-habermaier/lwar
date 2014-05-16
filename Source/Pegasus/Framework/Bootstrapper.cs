@@ -97,7 +97,7 @@
 			Console.Out.Write(entry.LogType.ToDisplayString());
 			Console.Out.Write("] ");
 
-			Text.Write(Console.Out, entry.Message);
+			TextString.Write(Console.Out, entry.Message);
 			Console.Out.WriteLine();
 		}
 	}
