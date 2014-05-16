@@ -442,7 +442,7 @@
 			private void DependencyPropertyChanged(DependencyObject obj, DependencyProperty property)
 			{
 				Assert.That(obj == _sourceObject, "Received an unexpected dependency property change notification.");
-				Assert.NotNull(_dependencyProperty, "Received un unexpected dependency property change notification.");
+				Assert.NotNull(_dependencyProperty, "Received an unexpected dependency property change notification.");
 
 				if (property == _dependencyProperty && Changed != null)
 					Changed();

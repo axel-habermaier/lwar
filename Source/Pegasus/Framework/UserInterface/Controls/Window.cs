@@ -252,7 +252,7 @@
 			// Update the logical inputs based on the new state of the input system
 			InputDevice.Update();
 
-			// Check if any command bindings have been triggered and update the resolution manager
+			// Check if any command bindings have been triggered
 			_bindings.Update();
 		}
 
