@@ -185,11 +185,9 @@
 		{
 			++_isChanging;
 
-#if DEBUG
-			if (Active && !_isNull && memberAccess.Value == null)
-				Log.Debug("Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
-						  PropertyPath, memberAccess.MemberName);
-#endif
+			Log.DebugIf(Active && !_isNull && memberAccess.Value == null,
+						"Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
+						PropertyPath, memberAccess.MemberName);
 
 			var value = memberAccess.Value;
 			_isNull = value == null;
@@ -367,7 +365,7 @@
 					if (notifyPropertyChanged == null)
 					{
 						Log.Debug("Possibly unintended data binding: Target property is neither a dependency property, nor does " +
-							"the containing type implement INotifyPropertyChanged. Support for automatic value updates disabled.");
+								  "the containing type implement INotifyPropertyChanged. Support for automatic value updates disabled.");
 						return;
 					}
 

@@ -40,12 +40,9 @@
 		///     Raises the OnFatalError event with the given message and terminates the application by throwing
 		///     an InvalidOperationException.
 		/// </summary>
-		/// <param name="message">
-		///     The message that should be formatted and passed as an argument of the OnFatalError event.
-		/// </param>
+		/// <param name="message">The message that should be formatted and passed as an argument of the OnFatalError event.</param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
-		[DebuggerHidden]
-		[StringFormatMethod("message")]
+		[DebuggerHidden, StringFormatMethod("message")]
 		public static void Die(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
@@ -60,9 +57,7 @@
 		/// <summary>
 		///     Raises the OnError event with the given message.
 		/// </summary>
-		/// <param name="message">
-		///     The message that should be formatted and passed as an argument of the OnError event.
-		/// </param>
+		/// <param name="message">The message that should be formatted and passed as an argument of the OnError event.</param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[StringFormatMethod("message")]
 		public static void Error(string message, params object[] arguments)
@@ -76,9 +71,7 @@
 		/// <summary>
 		///     Raises the OnWarning event with the given message.
 		/// </summary>
-		/// <param name="message">
-		///     The message that should be formatted and passed as an argument of the OnWarning event.
-		/// </param>
+		/// <param name="message">The message that should be formatted and passed as an argument of the OnWarning event.</param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[StringFormatMethod("message")]
 		public static void Warn(string message, params object[] arguments)
@@ -92,9 +85,7 @@
 		/// <summary>
 		///     Raises the OnInfo event with the given message.
 		/// </summary>
-		/// <param name="message">
-		///     The message that should be formatted and passed as an argument of the OnInfo event.
-		/// </param>
+		/// <param name="message">The message that should be formatted and passed as an argument of the OnInfo event.</param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
 		[StringFormatMethod("message")]
 		public static void Info(string message, params object[] arguments)
@@ -108,17 +99,29 @@
 		/// <summary>
 		///     In debug builds, raises the OnDebugInfo event with the given message.
 		/// </summary>
-		/// <param name="message">
-		///     The message that should be formatted and passed as an argument of the OnDebugInfo event.
-		/// </param>
+		/// <param name="message">The message that should be formatted and passed as an argument of the OnDebugInfo event.</param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
-		[Conditional("DEBUG")]
-		[StringFormatMethod("message")]
+		[Conditional("DEBUG"), StringFormatMethod("message")]
 		public static void Debug(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
 
 			if (OnDebugInfo != null)
+				OnDebugInfo(new LogEntry(LogType.Debug, String.Format(message, arguments)));
+		}
+
+		/// <summary>
+		///     In debug builds, raises the OnDebugInfo event with the given message if the given condition is true.
+		/// </summary>
+		/// <param name="condition">The condition that must be true for the message to be displayed.</param>
+		/// <param name="message">The message that should be formatted and passed as an argument of the OnDebugInfo event.</param>
+		/// <param name="arguments">The arguments that should be copied into the message.</param>
+		[Conditional("DEBUG"), StringFormatMethod("message")]
+		public static void DebugIf(bool condition, string message, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(message);
+
+			if (condition && OnDebugInfo != null)
 				OnDebugInfo(new LogEntry(LogType.Debug, String.Format(message, arguments)));
 		}
 	}
