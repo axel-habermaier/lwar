@@ -70,9 +70,15 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ColumnDefinition">
+		<Property Type="double" Name="MinWidth"/>
+		<Property Type="double" Name="MaxWidth"/>
+		<Property Type="double" Name="Width"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.RowDefinition">
+		<Property Type="double" Name="MinHeight"/>
+		<Property Type="double" Name="MaxHeight"/>
+		<Property Type="double" Name="Height"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.ResourceDictionary" IsDictionary="true">
@@ -172,6 +178,8 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Grid" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
 		<Property Type="System.Collections.Generic.List&lt;ColumnDefinition&gt;" Name="ColumnDefinitions"/>
 		<Property Type="System.Collections.Generic.List&lt;RowDefinition&gt;" Name="RowDefinitions"/>
+		<Property Type="int" Name="Column"/>
+		<Property Type="int" Name="Row"/>
 	</Class>
 
 	<!-- Decorators ================================================================================================= -->

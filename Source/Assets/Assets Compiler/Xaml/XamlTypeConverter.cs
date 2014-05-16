@@ -19,7 +19,7 @@
 			{ "bool", s => s },
 			{ "string", s => String.Format("\"{0}\"", s) },
 			{ "object", s => String.Format("\"{0}\"", s) },
-			{ "double", s => s },
+			{ "double", s => s.ToLower() == "auto" ? "Double.NaN" : s },
 			{ "float", s => s },
 			{ "byte", s => s },
 			{ "char", s => s },

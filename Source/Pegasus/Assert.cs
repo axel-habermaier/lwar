@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections;
+	using System.Collections.Generic;
 	using System.Diagnostics;
 	using Framework;
 	using Platform;
@@ -103,7 +104,7 @@
 		public static void ArgumentInRange(int argument, ICollection collection)
 		{
 			ArgumentNotNull(collection);
-			ArgumentInRange(argument, 0, collection.Count);
+			ArgumentInRange(argument, 0, collection.Count - 1);
 		}
 
 		/// <summary>
@@ -295,14 +296,13 @@
 		/// <summary>
 		///     Throws an InvalidOperationException if the argument is outside the range.
 		/// </summary>
-		/// <typeparam name="T">The type of the array that specifies the bounds.</typeparam>
 		/// <param name="index">The value of the index to check.</param>
-		/// <param name="array">The array that defines the valid range of the given index argument.</param>
+		/// <param name="collection">The collection that defines the valid range of the given index argument.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
-		public static void InRange<T>(int index, T[] array)
+		public static void InRange(int index, ICollection collection)
 		{
-			ArgumentNotNull(array);
-			InRange(index, 0, array.Length);
+			ArgumentNotNull(collection);
+			InRange(index, 0, collection.Count - 1);
 		}
 
 		/// <summary>

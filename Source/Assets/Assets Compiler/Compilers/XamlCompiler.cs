@@ -21,36 +21,29 @@
 		{
 			var xamlAssets = assets.OfType<XamlAsset>().ToArray();
 
-			try
+			if (DetermineAction(xamlAssets) == CompilationAction.Skip)
+				Log.Info("Skipping compilation of Xaml files (no changes detected).");
+			else
 			{
-				if (DetermineAction(xamlAssets) == CompilationAction.Skip)
-					Log.Info("Skipping compilation of Xaml files (no changes detected).");
-				else
+				var typeInfo = new XamlTypeInfoProvider(Path.Combine(Configuration.SourceDirectory, "TypeInfo.xml"));
+				var serializer = new XamlToCSharpSerializer(typeInfo);
+
+				foreach (var asset in xamlAssets)
 				{
-					var typeInfo = new XamlTypeInfoProvider(Path.Combine(Configuration.SourceDirectory, "TypeInfo.xml"));
-					var serializer = new XamlToCSharpSerializer(typeInfo);
+					Log.Info("Compiling '{0}'...", asset.RelativePath);
 
-					foreach (var asset in xamlAssets)
+					var xamlFile = new XamlFile(asset.SourcePath, typeInfo);
+					if (xamlFile.Root != null)
 					{
-						Log.Info("Compiling '{0}'...", asset.RelativePath);
-
-						var xamlFile = new XamlFile(asset.SourcePath, typeInfo);
-						if (xamlFile.Root != null)
-						{
-							var className = Path.GetFileNameWithoutExtension(asset.RelativePath);
-							var namespaceName = Path.GetDirectoryName(asset.RelativePath).Replace("/", ".").Replace("\\", ".");
-							serializer.SerializeToCSharp(xamlFile, namespaceName, className);
-						}
-
-						Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
+						var className = Path.GetFileNameWithoutExtension(asset.RelativePath);
+						var namespaceName = Path.GetDirectoryName(asset.RelativePath).Replace("/", ".").Replace("\\", ".");
+						serializer.SerializeToCSharp(xamlFile, namespaceName, className);
 					}
 
-					File.WriteAllText(Configuration.CSharpXamlFile, serializer.GetGeneratedCode());
+					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 				}
-			}
-			catch (Exception e)
-			{
-				Log.Die("Xaml compilation error: {0}. {1}", e.Message, e.StackTrace);
+
+				File.WriteAllText(Configuration.CSharpXamlFile, serializer.GetGeneratedCode());
 			}
 
 			return true;

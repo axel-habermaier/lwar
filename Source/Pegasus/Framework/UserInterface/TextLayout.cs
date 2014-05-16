@@ -125,11 +125,12 @@
 
 			ComputeCharacterAreasAndLines();
 			ComputeActualSize();
-			AlignLines();
 
-			// Reset the desired size so that the early-out of this method works correctly next time
+			// Reset the desired size so that the alignment works correctly
 			if (wrapping == TextWrapping.NoWrap)
 				_desiredSize = desiredSize;
+
+			AlignLines();
 		}
 
 		/// <summary>
@@ -287,7 +288,7 @@
 		/// </summary>
 		private void AlignLines()
 		{
-			if (_alignment == TextAlignment.Left || _wrapping == TextWrapping.NoWrap)
+			if (_alignment == TextAlignment.Left)
 				return;
 
 			for (var i = 0; i < _lineCount; ++i)

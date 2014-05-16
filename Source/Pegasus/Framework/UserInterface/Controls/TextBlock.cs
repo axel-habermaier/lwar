@@ -143,7 +143,12 @@
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{
-			Assert.That(finalSize.Width >= _measuredSize.Width && finalSize.Height >= _measuredSize.Height, "Unexpected final size.");
+			var width = Double.IsInfinity(finalSize.Width) ? Int32.MaxValue : (int)Math.Round(finalSize.Width);
+			var height = Double.IsInfinity(finalSize.Height) ? Int32.MaxValue : (int)Math.Round(finalSize.Height);
+
+			_textLayout.Update(Font, Text, new Size(width, height), 0, TextAlignment, TextWrapping);
+			_measuredSize = new SizeD(_textLayout.Size.Width, _textLayout.Size.Height);
+
 			return _measuredSize;
 		}
 
