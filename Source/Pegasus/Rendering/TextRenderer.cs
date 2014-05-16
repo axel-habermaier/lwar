@@ -4,7 +4,6 @@
 	using Math;
 	using Platform;
 	using Platform.Graphics;
-	using UserInterface;
 
 	/// <summary>
 	///     Improves text drawing performance by caching the quads of a text.

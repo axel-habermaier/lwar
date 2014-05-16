@@ -228,6 +228,7 @@
     <Compile Include="Framework\UserInterface\RoutedEventStorage.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventStore.cs" />
     <Compile Include="Framework\UserInterface\TextAlignment.cs" />
+    <Compile Include="Framework\UserInterface\TextLayout.cs" />
     <Compile Include="Framework\UserInterface\TextWrapping.cs" />
     <Compile Include="Framework\UserInterface\UIElement.cs" />
     <Compile Include="Framework\UserInterface\UIElement.Properties.cs" />
@@ -352,6 +353,11 @@
     <Compile Include="Rendering\FullscreenQuad.cs" />
     <Compile Include="Rendering\Model.cs" />
     <Compile Include="Rendering\RenderOutput.cs" />
+    <Compile Include="Rendering\UserInterface\TextLine.cs" />
+    <Compile Include="Rendering\UserInterface\TextSequence.cs" />
+    <Compile Include="Rendering\UserInterface\TextToken.cs" />
+    <Compile Include="Rendering\UserInterface\TextTokenStream.cs" />
+    <Compile Include="Rendering\UserInterface\TextTokenType.cs" />
     <Compile Include="Rendering\VertexPositionNormal.cs" />
     <Compile Include="Rendering\DebugCamera.cs" />
     <Compile Include="Rendering\VertexPositionNormalTexture.cs" />
@@ -533,11 +539,11 @@
     <Compile Include="Rendering\UserInterface\TextBox.cs" />
     <Compile Include="Rendering\TextRenderer.cs" />
     <Compile Include="Rendering\UserInterface\TextLayout.cs" />
-    <Compile Include="Rendering\UserInterface\TextLine.cs" />
-    <Compile Include="Rendering\UserInterface\TextSequence.cs" />
-    <Compile Include="Rendering\UserInterface\TextToken.cs" />
-    <Compile Include="Rendering\UserInterface\TextTokenStream.cs" />
-    <Compile Include="Rendering\UserInterface\TextTokenType.cs" />
+    <Compile Include="Framework\UserInterface\TextLine.cs" />
+    <Compile Include="Framework\UserInterface\TextSequence.cs" />
+    <Compile Include="Framework\UserInterface\TextToken.cs" />
+    <Compile Include="Framework\UserInterface\TextTokenStream.cs" />
+    <Compile Include="Framework\UserInterface\TextTokenType.cs" />
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Platform\NativeWindow.cs" />
     <Compile Include="Assert.cs" />

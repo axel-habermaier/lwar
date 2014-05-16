@@ -7,7 +7,7 @@
 	using Rendering;
 
 	/// <summary>
-	///     Displays text.
+	///     Represents a text block that draws text into the UI.
 	/// </summary>
 	public class TextBlock : UIElement
 	{
@@ -24,9 +24,25 @@
 			new DependencyProperty<TextWrapping>(defaultValue: TextWrapping.NoWrap, affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
+		///     Indicates whether the text should be left-aligned, right-aligned or centered within the text block.
+		/// </summary>
+		public static readonly DependencyProperty<TextAlignment> TextAlignmentProperty =
+			new DependencyProperty<TextAlignment>(defaultValue: TextAlignment.Left, affectsMeasure: true, prohibitsAnimations: true);
+
+		/// <summary>
 		///     The foreground color of the text.
 		/// </summary>
 		public static readonly DependencyProperty<Color> ForegroundProperty = Control.ForegroundProperty;
+
+		/// <summary>
+		///     Caches the measure text size during the measure phase of a layouting pass.
+		/// </summary>
+		private SizeD _measuredSize;
+
+		/// <summary>
+		///     The cached text layout that is used to layout and draw the text of the text block.
+		/// </summary>
+		private TextLayout _textLayout = new TextLayout();
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -65,6 +81,16 @@
 		}
 
 		/// <summary>
+		///     Gets or sets a value indicating whether the text should be left-aligned, right-aligned or centered within the text
+		///     block.
+		/// </summary>
+		public TextAlignment TextAlignment
+		{
+			get { return GetValue(TextAlignmentProperty); }
+			set { SetValue(TextAlignmentProperty, value); }
+		}
+
+		/// <summary>
 		///     Gets or sets the text content of the text block.
 		/// </summary>
 		public string Text
@@ -96,7 +122,14 @@
 		protected override SizeD MeasureCore(SizeD availableSize)
 		{
 			Assert.NotNull(Font);
-			return new SizeD(Font.MeasureWidth(Text), Font.LineHeight);
+
+			var width = Double.IsInfinity(availableSize.Width) ? Int32.MaxValue : (int)Math.Round(availableSize.Width);
+			var height = Double.IsInfinity(availableSize.Height) ? Int32.MaxValue : (int)Math.Round(availableSize.Height);
+
+			_textLayout.Update(Font, Text, new Size(width, height), 0, TextAlignment, TextWrapping);
+			_measuredSize = new SizeD(_textLayout.Size.Width, _textLayout.Size.Height);
+
+			return _measuredSize;
 		}
 
 		/// <summary>
@@ -110,8 +143,7 @@
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{
-			Assert.NotNull(Font);
-			return new SizeD(Font.MeasureWidth(Text), Font.LineHeight);
+			return _measuredSize;
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)
@@ -122,8 +154,7 @@
 			var y = (int)Math.Round(VisualOffset.Y);
 
 			spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background);
-			using (var text = TextString.Create(Text))
-				spriteBatch.DrawText(Font, text, Foreground, new Vector2i(x, y));
+			_textLayout.Draw(spriteBatch, new Vector2i(x, y), Foreground);
 		}
 	}
 }

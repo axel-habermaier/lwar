@@ -2,7 +2,6 @@
 {
 	using System;
 	using Platform.Graphics;
-	using Rendering.UserInterface;
 
 	/// <summary>
 	///     Provides a method to search for a font based on certain font settings.

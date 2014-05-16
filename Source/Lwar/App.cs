@@ -11,6 +11,8 @@
 	using Pegasus.Rendering;
 	using Screens;
 	using Scripting;
+	using UserInterface;
+	using MainMenu = Screens.MainMenu;
 
 	/// <summary>
 	///     Represents the lwar application.
@@ -64,6 +66,9 @@
 				DepthStencilState = DepthStencilState.DepthDisabled,
 				SamplerState = SamplerState.PointClampNoMipmaps
 			};
+
+			var uc1 = new UserControl1();
+			Window.LayoutRoot = uc1;
 		}
 
 		/// <summary>

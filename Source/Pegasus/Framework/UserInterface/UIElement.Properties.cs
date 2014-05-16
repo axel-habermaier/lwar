@@ -4,7 +4,6 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Logging;
-	using Rendering.UserInterface;
 
 	public partial class UIElement
 	{
