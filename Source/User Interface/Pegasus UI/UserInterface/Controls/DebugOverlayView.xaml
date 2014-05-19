@@ -7,11 +7,11 @@
 	mc:Ignorable="d"
 	x:Class="Pegasus.Framework.UserInterface.Controls.DebugOverlayView"
 	x:Name="UserControl"
-	d:DesignWidth="640" d:DesignHeight="480" Foreground="White" Background="#66222222"
+	Foreground="White" Background="#66222222"
 	d:DataContext="{d:DesignInstance Type={x:Type controls:DebugOverlayViewModel}, IsDesignTimeCreatable=True}"
 	HorizontalAlignment="Left" VerticalAlignment="Bottom" Visibility="{Binding Visibility}">
 
-	<Grid Margin="5">
+	<Grid Margin="15">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
