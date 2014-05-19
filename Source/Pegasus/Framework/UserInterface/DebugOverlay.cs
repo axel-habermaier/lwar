@@ -1,15 +1,13 @@
-﻿namespace Pegasus.Rendering.UserInterface
+﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
-	using System.Text;
-	using Math;
+	using Controls;
 	using Platform;
-	using Platform.Graphics;
 	using Platform.Memory;
 	using Scripting;
 
 	/// <summary>
-	///     Manages statistics about the performance of the application and other information useful for debugging.
+	///     Displays statistics about the performance of the application and other information useful for debugging.
 	/// </summary>
 	public sealed class DebugOverlay : DisposableObject
 	{
@@ -24,20 +22,15 @@
 		private const int AverageSampleCount = 16;
 
 		/// <summary>
-		///     The string builder that is used to construct the output.
-		/// </summary>
-		private readonly StringBuilder _builder = new StringBuilder();
-
-		/// <summary>
 		///     A weak reference to an object to which no strong reference exists. When the weak reference is no longer set to a
 		///     valid instance of an object, it is an indication that a garbage collection has occurred.
 		/// </summary>
 		private readonly WeakReference _gcCheck = new WeakReference(new object());
 
 		/// <summary>
-		///     The label that is used to draw platform info and frame stats.
+		///     The view model that is set on the debug overlay view.
 		/// </summary>
-		private readonly Label _platformInfo;
+		private readonly DebugOverlayViewModel _viewModel = new DebugOverlayViewModel();
 
 		/// <summary>
 		///     The total CPU frame time in milliseconds that is displayed by the debug overlay.
@@ -72,13 +65,13 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="font">The font that should be used for drawing.</param>
-		internal DebugOverlay(Font font)
+		internal DebugOverlay()
 		{
-			Assert.ArgumentNotNull(font);
+			Cvars.ShowDebugOverlayCvar.Changed += UpdateVisibility;
+			UpdateVisibility(Cvars.ShowDebugOverlay);
 
-			_platformInfo = new Label(font) { LineSpacing = 2, Alignment = TextAlignment.Bottom };
-			_timer.Timeout += UpdateStatistics;
+			_timer.Timeout += UpdateViewModel;
+			Application.Current.Window.LayoutRoot.Children.Add(new DebugOverlayView { ViewModel = _viewModel });
 		}
 
 		/// <summary>
@@ -108,54 +101,40 @@
 		/// <summary>
 		///     Updates the statistics.
 		/// </summary>
-		/// <param name="size">The size of the area that the statistics should be drawn on.</param>
-		internal void Update(Size size)
+		internal void Update()
 		{
 			if (!_gcCheck.IsAlive)
 			{
 				++_garbageCollections;
+				_viewModel.GarbageCollections = _garbageCollections.ToString();
 				_gcCheck.Target = new object();
 			}
-
-			const int padding = 5;
-			_platformInfo.Area = new Rectangle(padding, padding, size.Width - 2 * padding, size.Height - 2 * padding);
 
 			_cpuFrameTime.AddMeasurement(_cpuUpdateTime.LastValue + _cpuRenderTime.LastValue);
 			_timer.Update();
 		}
 
 		/// <summary>
-		///     Updates the statistics.
+		///     Updates the view model.
 		/// </summary>
-		private void UpdateStatistics()
+		private void UpdateViewModel()
 		{
 			if (!Cvars.ShowDebugOverlay)
 				return;
 
-			_builder.Append("Platform:    ").Append(PlatformInfo.Platform).Append(" ").Append(IntPtr.Size * 8).Append("bit\n");
-			_builder.Append("Debug Mode:  ").Append(PlatformInfo.IsDebug.ToString().ToLower()).Append("\n");
-			_builder.Append("Renderer:    ").Append(PlatformInfo.GraphicsApi).Append("\n");
-			_builder.Append("# of GCs:    ").Append(_garbageCollections).Append("\n");
-			_builder.Append("GPU Time:    ").Append(_gpuFrameTime.Average.ToString("F2")).Append("ms\n");
-			_builder.Append("CPU Time:    ").Append(_cpuFrameTime.Average.ToString("F2")).Append("ms\n");
-			_builder.Append("Update Time: ").Append(_cpuUpdateTime.Average.ToString("F2")).Append("ms\n");
-			_builder.Append("Render Time: ").Append(_cpuRenderTime.Average.ToString("F2")).Append("ms");
-
-			_platformInfo.Text = _builder.ToString();
-			_builder.Clear();
+			_viewModel.GpuTime = _gpuFrameTime.ToString();
+			_viewModel.CpuTime = _cpuFrameTime.ToString();
+			_viewModel.UpdateTime = _cpuUpdateTime.ToString();
+			_viewModel.RenderTime = _cpuRenderTime.ToString();
 		}
 
 		/// <summary>
-		///     Draws the statistics.
+		///     Updates the visibility of the debug overlay.
 		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the statistics.</param>
-		internal void Draw(SpriteBatch spriteBatch)
+		/// <param name="visibility">Indicates whether the debug overlay should be shown.</param>
+		private void UpdateVisibility(bool visibility)
 		{
-			spriteBatch.Layer = Int32.MaxValue - 2;
-			spriteBatch.WorldMatrix = Matrix.Identity;
-
-			if (Cvars.ShowDebugOverlay)
-				_platformInfo.Draw(spriteBatch);
+			_viewModel.Visibility = Cvars.ShowDebugOverlay ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 		/// <summary>
@@ -163,14 +142,15 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_platformInfo.SafeDispose();
-			_timer.Timeout -= UpdateStatistics;
+			Cvars.ShowDebugOverlayCvar.Changed -= UpdateVisibility;
+			_timer.Timeout -= UpdateViewModel;
+			_viewModel.SafeDispose();
 		}
 
 		/// <summary>
 		///     Represents a measurement that is averaged over a certain number of samples.
 		/// </summary>
-		internal struct AveragedDouble
+		private struct AveragedDouble
 		{
 			/// <summary>
 			///     The last couple of values for a more stable average.
@@ -217,7 +197,7 @@
 			/// <summary>
 			///     Gets the averaged value.
 			/// </summary>
-			internal double Average
+			private double Average
 			{
 				get
 				{
@@ -250,6 +230,130 @@
 
 				if (_averageIndex == 0)
 					_averageIsFilled = true;
+			}
+
+			/// <summary>
+			///     Returns the averaged value as a string.
+			/// </summary>
+			/// <returns></returns>
+			public override string ToString()
+			{
+				return Average.ToString("F2");
+			}
+		}
+
+		/// <summary>
+		///     The view model of the debug overlay.
+		/// </summary>
+		[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+		private class DebugOverlayViewModel : ViewModel
+		{
+			/// <summary>
+			///     The averaged CPU frame time.
+			/// </summary>
+			private string _cpuFrameTime;
+
+			/// <summary>
+			///     The minimum number of garbage collections that have been performed since the start of the application.
+			/// </summary>
+			private string _garbageCollections = "0";
+
+			/// <summary>
+			///     The averaged GPU frame time.
+			/// </summary>
+			private string _gpuFrameTime;
+
+			/// <summary>
+			///     The averaged CPU render time.
+			/// </summary>
+			private string _renderTime;
+
+			/// <summary>
+			///     The averaged CPU update time.
+			/// </summary>
+			private string _updateTime;
+
+			/// <summary>
+			///     The visibility of the debug overlay.
+			/// </summary>
+			private Visibility _visibility;
+
+			/// <summary>
+			///     Gets or sets the visibility of the debug overlay.
+			/// </summary>
+			public Visibility Visibility
+			{
+				get { return _visibility; }
+				set { ChangePropertyValue(ref _visibility, value); }
+			}
+
+			/// <summary>
+			///     Gets a string describing the platform the application is currently being executed on.
+			/// </summary>
+			public string Platform
+			{
+				get { return String.Format("{0} {1}bit", PlatformInfo.Platform, IntPtr.Size * 8); }
+			}
+
+			/// <summary>
+			///     Gets a string indicating whether the application was built in debug mode.
+			/// </summary>
+			public string DebugMode
+			{
+				get { return PlatformInfo.IsDebug ? "true" : "false"; }
+			}
+
+			/// <summary>
+			///     Gets a string describing the renderer back end that is currently used to render the application.
+			/// </summary>
+			public string Renderer
+			{
+				get { return PlatformInfo.GraphicsApi.ToString(); }
+			}
+
+			/// <summary>
+			///     Gets or sets the minimum number of garbage collections that have been performed since the start of the application.
+			/// </summary>
+			public string GarbageCollections
+			{
+				get { return _garbageCollections; }
+				set { ChangePropertyValue(ref _garbageCollections, value); }
+			}
+
+			/// <summary>
+			///     Gets or sets the averaged GPU frame time.
+			/// </summary>
+			public string GpuTime
+			{
+				get { return _gpuFrameTime; }
+				set { ChangePropertyValue(ref _gpuFrameTime, value); }
+			}
+
+			/// <summary>
+			///     Gets or sets the averaged CPU frame time.
+			/// </summary>
+			public string CpuTime
+			{
+				get { return _cpuFrameTime; }
+				set { ChangePropertyValue(ref _cpuFrameTime, value); }
+			}
+
+			/// <summary>
+			///     Gets or sets the averaged CPU update time.
+			/// </summary>
+			public string UpdateTime
+			{
+				get { return _updateTime; }
+				set { ChangePropertyValue(ref _updateTime, value); }
+			}
+
+			/// <summary>
+			///     Gets or sets the averaged CPU render time.
+			/// </summary>
+			public string RenderTime
+			{
+				get { return _renderTime; }
+				set { ChangePropertyValue(ref _renderTime, value); }
 			}
 		}
 	}

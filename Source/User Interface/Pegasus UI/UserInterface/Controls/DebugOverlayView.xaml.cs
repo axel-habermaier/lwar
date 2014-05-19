@@ -1,0 +1,56 @@
+﻿namespace Pegasus.Framework.UserInterface.Controls
+{
+	using System;
+	using System.Windows.Controls;
+
+	public partial class DebugOverlayView : UserControl
+	{
+		public DebugOverlayView()
+		{
+			InitializeComponent();
+		}
+	}
+
+	internal class DebugOverlayViewModel
+	{
+		public string Platform
+		{
+			get { return "Windows (x64)"; }
+		}
+
+		public string DebugMode
+		{
+			get { return "true"; }
+		}
+
+		public string Renderer
+		{
+			get { return "Direct3D 11"; }
+		}
+
+		public string GarbageCollections
+		{
+			get { return "2"; }
+		}
+
+		public string GpuTime
+		{
+			get { return "0.1"; }
+		}
+
+		public string CpuTime
+		{
+			get { return "1.1"; }
+		}
+
+		public string UpdateTime
+		{
+			get { return "0.1"; }
+		}
+
+		public string RenderTime
+		{
+			get { return "1.0"; }
+		}
+	}
+}

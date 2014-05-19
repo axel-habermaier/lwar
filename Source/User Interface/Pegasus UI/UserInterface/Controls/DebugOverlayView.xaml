@@ -1,0 +1,65 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls"
+	mc:Ignorable="d"
+	x:Class="Pegasus.Framework.UserInterface.Controls.DebugOverlayView"
+	x:Name="UserControl"
+	d:DesignWidth="640" d:DesignHeight="480" Foreground="White" Background="#66222222"
+	d:DataContext="{d:DesignInstance Type={x:Type controls:DebugOverlayViewModel}, IsDesignTimeCreatable=True}"
+	HorizontalAlignment="Left" VerticalAlignment="Bottom" Visibility="{Binding Visibility}">
+
+	<Grid Margin="5">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+
+		<TextBlock Grid.Row="0" Grid.Column="0" Text="Platform: "/>
+		<TextBlock Grid.Row="1" Grid.Column="0" Text="Debug Mode: "/>
+		<TextBlock Grid.Row="2" Grid.Column="0" Text="Renderer: "/>
+		<TextBlock Grid.Row="3" Grid.Column="0" Text="# of GCs: "/>
+		<TextBlock Grid.Row="4" Grid.Column="0" Text="GPU Time: "/> 
+		<TextBlock Grid.Row="5" Grid.Column="0" Text="CPU Time: "/>
+		<TextBlock Grid.Row="6" Grid.Column="0" Text="Update Time: "/>
+		<TextBlock Grid.Row="7" Grid.Column="0" Text="Render Time: "/>
+
+		<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Platform}" />
+		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DebugMode}" />
+		<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Renderer}" />
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GarbageCollections}" />
+
+		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+			<TextBlock Text="{Binding GpuTime}" />
+			<TextBlock Text="ms"/>
+		</StackPanel>
+
+		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+			<TextBlock Text="{Binding CpuTime}" />
+			<TextBlock Text="ms"/>
+		</StackPanel>
+
+		<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+			<TextBlock Text="{Binding UpdateTime}" />
+			<TextBlock Text="ms"/>
+		</StackPanel>
+
+		<StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
+			<TextBlock Text="{Binding RenderTime}" />
+			<TextBlock Text="ms"/>
+		</StackPanel>
+	</Grid>
+</UserControl>

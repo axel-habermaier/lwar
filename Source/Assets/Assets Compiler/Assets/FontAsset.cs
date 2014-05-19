@@ -22,7 +22,7 @@
 		/// </summary>
 		public override string IdentifierType
 		{
-			get { return "Pegasus.Rendering.UserInterface.Font"; }
+			get { return "Pegasus.Platform.Graphics.Font"; }
 		}
 
 		/// <summary>

@@ -3,12 +3,13 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.CompilerServices;
+	using Platform.Memory;
 
 	/// <summary>
 	///     A view model can be bound to an UI element, providing both the values that the UI displays and the methods that
 	///     handle UI commands.
 	/// </summary>
-	public abstract class ViewModel : INotifyPropertyChanged
+	public abstract class ViewModel : DisposableObject, INotifyPropertyChanged
 	{
 		/// <summary>
 		///     Raised when a property of the view model has been changed.
@@ -32,6 +33,13 @@
 
 			if (PropertyChanged != null)
 				PropertyChanged(this, propertyName);
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
 		}
 	}
 }

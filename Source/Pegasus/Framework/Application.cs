@@ -7,6 +7,7 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Rendering;
+	using Rendering.UserInterface;
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
@@ -141,6 +142,7 @@
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
 			using (Window = new AppWindow(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
+			using (var debugOverlay = new DebugOverlay())
 			{
 				Window.Title = name;
 				RegisterFontLoader(new FontLoader(Assets));
@@ -166,10 +168,10 @@
 					_root.UpdateLayout();
 
 					// Update the statistics
-					Window.DebugOverlay.Update(Window.Size);
+					debugOverlay.Update();
 					Window.Console.Update(Window.Size);
 
-					Window.DebugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;
+					debugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;
 
 					// Draw the current frame
 					GraphicsDevice.BeginFrame();
@@ -182,8 +184,8 @@
 					// Draw the user interface
 					_root.Draw();
 
-					Window.DebugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
-					Window.DebugOverlay.CpuRenderTime = (Clock.SystemTime - cpuStartTime) * 1000;
+					debugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
+					debugOverlay.CpuRenderTime = (Clock.SystemTime - cpuStartTime) * 1000;
 
 					// End the frame and present the contents of all windows' backbuffers.
 					GraphicsDevice.EndFrame();

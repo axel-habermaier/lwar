@@ -6,7 +6,6 @@
 	using Platform.Graphics;
 	using Platform.Memory;
 	using Rendering;
-	using Rendering.UserInterface;
 	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>
@@ -37,11 +36,9 @@
 			_camera = new Camera2D(Application.Current.GraphicsDevice);
 
 			var font = Application.Current.Assets.Load(Fonts.LiberationMono11);
-			DebugOverlay = new DebugOverlay(font);
 			Console = new Console(InputDevice, font);
 
-			// Ensure that the console and the statistics are properly initialized
-			DebugOverlay.Update(Size);
+			// Ensure that the console is properly initialized
 			Console.Update(Size);
 		}
 
@@ -57,11 +54,6 @@
 		///     Gets or sets the console that should be drawn on top of the window's backbuffer.
 		/// </summary>
 		internal Console Console { get; set; }
-
-		/// <summary>
-		///     Gets or sets the debug overlay that should be drawn on top of the window's backbuffer.
-		/// </summary>
-		internal DebugOverlay DebugOverlay { get; set; }
 
 		/// <summary>
 		///     Gets the render output that should be used for 3D rendering.
@@ -122,7 +114,6 @@
 
 			_camera.SafeDispose();
 			Console.SafeDispose();
-			DebugOverlay.SafeDispose();
 
 			base.OnClosing();
 		}
@@ -142,11 +133,9 @@
 			if (Console != null)
 				Console.Draw(spriteBatch);
 
-			if (DebugOverlay != null)
-				DebugOverlay.Draw(spriteBatch);
-
 			_renderOutputPanel.RenderOutput.Camera = camera;
 			spriteBatch.Layer = 0;
+			spriteBatch.WorldMatrix = Matrix.Identity;
 		}
 	}
 }

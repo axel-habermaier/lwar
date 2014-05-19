@@ -17,8 +17,8 @@
 		private static readonly Dictionary<string, Func<string, string>> Converters = new Dictionary<string, Func<string, string>>
 		{
 			{ "bool", s => s },
-			{ "string", s => String.Format("\"{0}\"", s) },
-			{ "object", s => String.Format("\"{0}\"", s) },
+			{ "string", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
+			{ "object", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
 			{ "double", s => s.ToLower() == "auto" ? "Double.NaN" : s },
 			{ "float", s => s },
 			{ "byte", s => s },
@@ -60,7 +60,7 @@
 
 			try
 			{
-				return converter(value.Trim());
+				return converter(value);
 			}
 			catch (Exception e)
 			{

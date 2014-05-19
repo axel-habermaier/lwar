@@ -666,6 +666,8 @@
 				child.VisualOffset += VisualOffset;
 				child.Draw(spriteBatch);
 			}
+
+			--spriteBatch.Layer;
 		}
 
 		protected abstract void OnDraw(SpriteBatch spriteBatch);

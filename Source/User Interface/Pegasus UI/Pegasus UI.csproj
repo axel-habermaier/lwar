@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <ExpressionBlendVersion>12.0.41212.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -115,6 +116,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="UserInterface\Controls\DebugOverlayView.xaml.cs">
+      <DependentUpon>DebugOverlayView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\Controls\LayoutRoot.cs" />
     <Compile Include="UserInterface\Controls\RenderOutputPanel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -132,6 +136,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="UserInterface\Controls\AppWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Controls\DebugOverlayView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -413,7 +413,7 @@
 				var name = _propertyName;
 				_propertyInfo = _sourceObject.GetType()
 											 .GetRuntimeProperties()
-											 .SingleOrDefault(p => p.GetMethod.IsPublic && !p.GetMethod.IsStatic && p.Name == name);
+											 .SingleOrDefault(p => p.GetMethod != null && p.GetMethod.IsPublic && !p.GetMethod.IsStatic && p.Name == name);
 
 				if (_propertyInfo == null)
 					Log.Die("Unable to find public, non-static property or dependency property '{0}' on '{1}'.",

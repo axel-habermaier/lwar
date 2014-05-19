@@ -593,7 +593,7 @@
     <Compile Include="Platform\Input\Key.cs" />
     <Compile Include="Platform\Input\MouseButton.cs" />
     <Compile Include="Platform\Graphics\Font.cs" />
-    <Compile Include="Rendering\UserInterface\DebugOverlay.cs" />
+    <Compile Include="Framework\UserInterface\DebugOverlay.cs" />
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
     <Compile Include="Scripting\Validators\WindowSizeAttribute.cs" />

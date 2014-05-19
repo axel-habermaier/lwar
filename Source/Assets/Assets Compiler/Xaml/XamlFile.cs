@@ -417,6 +417,10 @@
 			}
 
 			// The root object must be called 'this'
+			var rootName = Root.Attribute("Name");
+			if (rootName != null)
+				rootName.Remove();
+
 			Root.Add(new XAttribute("Name", "this"));
 		}
 
