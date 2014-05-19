@@ -187,6 +187,9 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="States\State.cs" />
+    <Compile Include="States\MainMenuState.cs" />
+    <Compile Include="States\StateManager.cs" />
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
     <Compile Include="Gameplay\Actors\Explosion.cs" />

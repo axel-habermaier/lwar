@@ -57,7 +57,7 @@
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
 		public override void DrawUserInterface(SpriteBatch spriteBatch)
 		{
-			_label.Draw(spriteBatch);
+			//_label.Draw(spriteBatch);
 		}
 
 		/// <summary>

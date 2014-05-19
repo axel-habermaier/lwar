@@ -14,9 +14,9 @@
 	internal class NativeLibrary : DisposableObject
 	{
 #if Linux
-	/// <summary>
-	///   The name of the native Pegasus.Platform library.
-	/// </summary>
+		/// <summary>
+		///   The name of the native Pegasus.Platform library.
+		/// </summary>
 		internal const string LibraryName = "libPlatform.so";
 #else
 		/// <summary>

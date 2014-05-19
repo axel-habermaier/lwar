@@ -1,10 +1,10 @@
 ﻿namespace Lwar
 {
 	using System;
+	using States;
 	using Assets;
 	using Network;
 	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
@@ -13,23 +13,23 @@
 	using Screens;
 	using Scripting;
 	using UserInterface;
-	using MainMenu = Screens.MainMenu;
 
 	/// <summary>
 	///     Represents the lwar application.
 	/// </summary>
 	public sealed partial class App
 	{
-		private Camera2D _camera;
-
 		/// <summary>
 		///     The local game server that can be used to hosts game sessions locally.
 		/// </summary>
-		private LocalServer _localServer;
+		private readonly LocalServer _localServer = new LocalServer();
 
-		private ScreenManager _screenManager;
+		private readonly ScreenManager _screenManager = new ScreenManager();
+		private Camera2D _camera;
 
 		private SpriteBatch _spriteBatch;
+
+		private StateManager _stateManager = new StateManager();
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -46,9 +46,8 @@
 			Window.InputDevice.ActivateLayer(InputLayers.Game);
 			Window.Closing += Exit;
 
-			_localServer = new LocalServer();
-			_screenManager = new ScreenManager();
 			_screenManager.Add(new MainMenu());
+			_stateManager.TransitionTo(new MainMenuState());
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");
 			Commands.Bind(Key.F2.WentDown(), "stop_server");
@@ -68,8 +67,8 @@
 				SamplerState = SamplerState.PointClampNoMipmaps
 			};
 
-			var uc1 = new UserControl1();
-			Window.LayoutRoot.Children.Add(uc1);
+			//var uc1 = new UserControl1();
+			//Window.LayoutRoot.Children.Add(uc1);
 		}
 
 		/// <summary>
@@ -79,6 +78,7 @@
 		{
 			_localServer.Update();
 			_screenManager.Update();
+			_stateManager.Update();
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@
 		}
 
 		/// <summary>
-		///     Entrypoint of the application.
+		///     The entry point of the application.
 		/// </summary>
 		/// <param name="args">The command line arguments passed to the application.</param>
 		public static void Main(string[] args)
