@@ -2,7 +2,6 @@
 {
 	using System;
 	using Math;
-	using Platform;
 	using Platform.Graphics;
 	using Rendering;
 
@@ -33,11 +32,6 @@
 		///     The foreground color of the text.
 		/// </summary>
 		public static readonly DependencyProperty<Color> ForegroundProperty = Control.ForegroundProperty;
-
-		/// <summary>
-		///     Caches the measure text size during the measure phase of a layouting pass.
-		/// </summary>
-		private SizeD _measuredSize;
 
 		/// <summary>
 		///     The cached text layout that is used to layout and draw the text of the text block.
@@ -126,10 +120,8 @@
 			var width = Double.IsInfinity(availableSize.Width) ? Int32.MaxValue : (int)Math.Round(availableSize.Width);
 			var height = Double.IsInfinity(availableSize.Height) ? Int32.MaxValue : (int)Math.Round(availableSize.Height);
 
-			_textLayout.Update(Font, Text, new Size(width, height), 0, TextAlignment, TextWrapping);
-			_measuredSize = new SizeD(_textLayout.Size.Width, _textLayout.Size.Height);
-
-			return _measuredSize;
+			var size = _textLayout.Measure(Font, Text, new Size(width, height), 0, TextAlignment, TextWrapping);
+			return new SizeD(size.Width, size.Height);
 		}
 
 		/// <summary>
@@ -146,10 +138,8 @@
 			var width = Double.IsInfinity(finalSize.Width) ? Int32.MaxValue : (int)Math.Round(finalSize.Width);
 			var height = Double.IsInfinity(finalSize.Height) ? Int32.MaxValue : (int)Math.Round(finalSize.Height);
 
-			_textLayout.Update(Font, Text, new Size(width, height), 0, TextAlignment, TextWrapping);
-			_measuredSize = new SizeD(_textLayout.Size.Width, _textLayout.Size.Height);
-
-			return _measuredSize;
+			var size = _textLayout.Arrange(Font, Text, new Size(width, height), 0, TextAlignment, TextWrapping);
+			return new SizeD(size.Width, size.Height);
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)

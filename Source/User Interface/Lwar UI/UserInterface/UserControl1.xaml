@@ -58,9 +58,9 @@
 			<TextBlock Text="Sehr gut." Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Background="HotPink"></TextBlock>
 			<TextBlock Text="Hallo Welt" Grid.Column="0" TextAlignment="Center" Grid.Row="0" Background="Indigo" Foreground="White"></TextBlock> 
 			<TextBlock Text="Sehr gut." Grid.Column="1" Grid.Row="0" TextWrapping="Wrap" TextAlignment="Right" Background="HotPink"></TextBlock>
-			<TextBlock Text="Sehr gut." Grid.Column="2" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" Background="Green"></TextBlock>
+			<TextBlock Text="Sehr gut." Grid.Column="2" Grid.Row="1" TextWrapping="NoWrap" TextAlignment="Center" Background="Green"></TextBlock>
 			<TextBlock Text="Hallo" Grid.Column="0" Grid.Row="1" TextAlignment="Right" Background="Indigo" Foreground="White"></TextBlock>
-			<TextBlock Text="Hallo Welt 222" Grid.Column="0" Grid.Row="2" TextAlignment="Right" Background="Indigo" Foreground="White"></TextBlock>
+			<TextBlock Text="Hallo Welt 22" Grid.Column="0" Grid.Row="2" TextAlignment="Right" Background="Indigo" Foreground="White"></TextBlock>
 			<TextBlock Text="Hallo" Grid.Column="2" Grid.Row="2" TextAlignment="Right" Background="Indigo" Foreground="White"></TextBlock>
 		</Grid>
 	</Canvas>

@@ -34,6 +34,17 @@
 		}
 
 		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="text">The text for which the sequence should be created.</param>
+		public TextSequence(TextString text)
+			: this()
+		{
+			FirstCharacter = 0;
+			LastCharacter = text.Length;
+		}
+
+		/// <summary>
 		///     Gets the index of the first character of the sequence.
 		/// </summary>
 		public int FirstCharacter { get; private set; }
