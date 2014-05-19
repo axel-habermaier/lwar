@@ -89,11 +89,12 @@
 			if (_valueCount == 0)
 				return null;
 
+			const int linearSearchThreshold = 4;
 			var start = 0;
 			var end = _valueCount;
 
-			// Perform a binary search while there are more than three elements
-			while (end - start > 3)
+			// Perform a binary search while the element count exceeds the linear search threshold
+			while (end - start > linearSearchThreshold)
 			{
 				// Split the interval into two halves
 				var center = start + (end - start) / 2;
@@ -109,7 +110,8 @@
 					start = center + 1;
 			}
 
-			// For less than three elements, just use a linear search
+			// We'll use a linear search if there are only a few elements left to search, as profiling seems to indicate
+			// that a simple linear search is more efficient in this case
 			for (var i = start; i < end + 1 && i < _valueCount; ++i)
 			{
 				if (_values[i].Location == location)
