@@ -31,8 +31,8 @@
 		{
 			InitializeComponents();
 
-			RenderOutputPanel.InitializeRenderOutput += InitializeRenderOutputPanel;
-			RenderOutputPanel.DisposeRenderOutput += DisposeRenderOutputPanel;
+			_renderOutputPanel.InitializeRenderOutput += InitializeRenderOutputPanel;
+			_renderOutputPanel.DisposeRenderOutput += DisposeRenderOutputPanel;
 
 			_camera = new Camera2D(Application.Current.GraphicsDevice);
 
@@ -46,13 +46,11 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the layout root of the application window. The top-level UI element of the window is the render output
-		///     panel; the layout root is the render output panel's child.
+		///     Gets the layout root of the application window.
 		/// </summary>
-		public UIElement LayoutRoot
+		public LayoutRoot LayoutRoot
 		{
-			get { return RenderOutputPanel.Child; }
-			set { RenderOutputPanel.Child = value; }
+			get { return _layoutRoot; }
 		}
 
 		/// <summary>
@@ -72,8 +70,8 @@
 		{
 			get
 			{
-				Assert.NotNull(RenderOutputPanel.RenderOutput, "The render output panel has not yet been initialized.");
-				return RenderOutputPanel.RenderOutput;
+				Assert.NotNull(_renderOutputPanel.RenderOutput, "The render output panel has not yet been initialized.");
+				return _renderOutputPanel.RenderOutput;
 			}
 		}
 
@@ -92,8 +90,8 @@
 			depthStencil.SetName("AppWindow.RenderOutputPanel.DepthStencil");
 
 			// Initialize the render output panel's graphics properties
-			RenderOutputPanel.OutputTexture = colorBuffer;
-			RenderOutputPanel.RenderOutput = new RenderOutput(Application.Current.GraphicsDevice)
+			_renderOutputPanel.OutputTexture = colorBuffer;
+			_renderOutputPanel.RenderOutput = new RenderOutput(Application.Current.GraphicsDevice)
 			{
 				RenderTarget = new RenderTarget(Application.Current.GraphicsDevice, depthStencil, colorBuffer),
 				Viewport = new Rectangle(0, 0, panelSize)
@@ -105,14 +103,14 @@
 		/// </summary>
 		private void DisposeRenderOutputPanel()
 		{
-			if (RenderOutputPanel.RenderOutput != null)
-				RenderOutputPanel.RenderOutput.RenderTarget.SafeDispose();
+			if (_renderOutputPanel.RenderOutput != null)
+				_renderOutputPanel.RenderOutput.RenderTarget.SafeDispose();
 
-			RenderOutputPanel.OutputTexture.SafeDispose();
-			RenderOutputPanel.RenderOutput.SafeDispose();
+			_renderOutputPanel.OutputTexture.SafeDispose();
+			_renderOutputPanel.RenderOutput.SafeDispose();
 
-			RenderOutputPanel.OutputTexture = null;
-			RenderOutputPanel.RenderOutput = null;
+			_renderOutputPanel.OutputTexture = null;
+			_renderOutputPanel.RenderOutput = null;
 		}
 
 		/// <summary>
@@ -135,8 +133,8 @@
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		protected override void OnWindowDrawn(SpriteBatch spriteBatch)
 		{
-			var camera = RenderOutputPanel.RenderOutput.Camera;
-			RenderOutputPanel.RenderOutput.Camera = _camera;
+			var camera = _renderOutputPanel.RenderOutput.Camera;
+			_renderOutputPanel.RenderOutput.Camera = _camera;
 
 			spriteBatch.WorldMatrix = Matrix.Identity;
 			spriteBatch.UseScissorTest = false;
@@ -147,7 +145,7 @@
 			if (DebugOverlay != null)
 				DebugOverlay.Draw(spriteBatch);
 
-			RenderOutputPanel.RenderOutput.Camera = camera;
+			_renderOutputPanel.RenderOutput.Camera = camera;
 			spriteBatch.Layer = 0;
 		}
 	}

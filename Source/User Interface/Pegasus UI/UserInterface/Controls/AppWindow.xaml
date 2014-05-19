@@ -6,7 +6,9 @@
              mc:Ignorable="d" 
              FontFamily="Liberation Mono" 
              FontSize="11"
-             TextOptions.TextRenderingMode="Aliased" Background="Black" Title="Pegasus" Height="506.85" Width="871">
-	<controls:RenderOutputPanel x:Name="RenderOutputPanel">
-	</controls:RenderOutputPanel>
+             TextOptions.TextRenderingMode="Aliased" Background="Black" Title="Pegasus">
+	<controls:LayoutRoot x:Name="LayoutRoot">
+		<controls:RenderOutputPanel x:Name="RenderOutputPanel">
+		</controls:RenderOutputPanel>
+	</controls:LayoutRoot>
 </Window>

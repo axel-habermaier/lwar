@@ -157,7 +157,7 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
 
-	<!-- Panels ================================================================================================= -->
+	<!-- Layouts ================================================================================================= -->
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Panel" Inherits="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="int" Name="ZIndex"/>
@@ -181,6 +181,8 @@
 		<Property Type="int" Name="Column"/>
 		<Property Type="int" Name="Row"/>
 	</Class>
+	
+	<Class Name="Pegasus.Framework.UserInterface.Controls.LayoutRoot" Inherits="Pegasus.Framework.UserInterface.Controls.Panel"/>
 
 	<!-- Decorators ================================================================================================= -->
 

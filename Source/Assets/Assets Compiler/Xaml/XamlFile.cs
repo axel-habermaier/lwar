@@ -389,20 +389,31 @@
 		}
 
 		/// <summary>
-		///     Assigns names to all unnamed objects.
+		///     Assigns names to all unnamed objects and assigns appropriate field names to named objects.
 		/// </summary>
 		private void AssignNames()
 		{
 			foreach (var element in Root.Descendants().Where(e => e.Name.LocalName == "Create" || e.Name.LocalName == "Delegate"))
 			{
 				element.Add(new XAttribute("GenerateMember", element.Attribute("Name") != null));
+				var nameAttribute = element.Attribute("Name");
 
-				if (element.Attribute("Name") != null)
-					continue;
-
-				var typeName = element.Attribute("Type").Value;
-				var name = GenerateUniqueName(typeName);
-				element.Add(new XAttribute("Name", name));
+				if (nameAttribute != null)
+				{
+					var name = nameAttribute.Value;
+					if (!name.StartsWith("_"))
+					{
+						nameAttribute.Remove();
+						nameAttribute = new XAttribute("Name", "_" + Char.ToLower(name[0]) + name.Substring(1));
+						element.Add(nameAttribute);
+					}
+				}
+				else
+				{
+					var typeName = element.Attribute("Type").Value;
+					var name = GenerateUniqueName(typeName);
+					element.Add(new XAttribute("Name", name));
+				}
 			}
 
 			// The root object must be called 'this'

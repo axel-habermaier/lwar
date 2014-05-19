@@ -4,16 +4,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Height="300" Width="505"
+             mc:Ignorable="d" Height="273" Width="660"
              FontFamily="Liberation Mono" 
-             FontSize="11" 
+             FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"
              TextOptions.TextRenderingMode="Aliased">
 	<UserControl.Resources>
 		<Style x:Key="Bla" TargetType="Button">
 			<Setter Property="Background" Value="Red"/>
 		</Style>
 	</UserControl.Resources>
-	<Canvas Margin="0,0,-165,0">
+	<Canvas Background="#33FFAABB">
 		<Border Background="Red">
 			<TextBlock Margin="18,31,0,15" Foreground="#FF1AA6E8" Background="#FFBD4C0B">Hallo</TextBlock>
 		</Border>
@@ -39,7 +39,7 @@
 		</Border>
 		<Border Background="Red" Canvas.Left="110.4" Canvas.Top="164.666" Margin="0">
 			<TextBlock Foreground="#FF1AA6E8" Text="Padded" Background="#FFC14905" Margin="8,0,0,8"/>
-		</Border> 
+		</Border>
 		<Border Canvas.Left="373" Canvas.Top="161.793" Background="#4C20BBBB" Height="56" Width="66"/>
 		<TextBlock Text="{Binding Text}" />
 		<TextBlock Text="Hallo Welt, wie geht's denn so?" Background="White" Width="50" TextWrapping="Wrap" TextAlignment="Center"></TextBlock>
@@ -50,13 +50,13 @@
 				<RowDefinition Height="100"/>
 				<RowDefinition Height="50"/>
 			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions> 
+			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="40"/>
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 			<TextBlock Text="Sehr gut." Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Background="HotPink"></TextBlock>
-			<TextBlock Text="Hallo Welt" Grid.Column="0" TextAlignment="Center" Grid.Row="0" Background="Indigo" Foreground="White"></TextBlock> 
+			<TextBlock Text="Hallo Welt" Grid.Column="0" TextAlignment="Center" Grid.Row="0" Background="Indigo" Foreground="White"></TextBlock>
 			<TextBlock Text="Sehr gut." Grid.Column="1" Grid.Row="0" TextWrapping="Wrap" TextAlignment="Right" Background="HotPink"></TextBlock>
 			<TextBlock Text="Sehr gut." Grid.Column="2" Grid.Row="1" TextWrapping="NoWrap" TextAlignment="Center" Background="Green"></TextBlock>
 			<TextBlock Text="Hallo" Grid.Column="0" Grid.Row="1" TextAlignment="Right" Background="Indigo" Foreground="White"></TextBlock>

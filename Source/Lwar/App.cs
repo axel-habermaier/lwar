@@ -4,6 +4,7 @@
 	using Assets;
 	using Network;
 	using Pegasus.Framework;
+	using Pegasus.Framework.UserInterface;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
@@ -68,7 +69,7 @@
 			};
 
 			var uc1 = new UserControl1();
-			Window.LayoutRoot = uc1;
+			Window.LayoutRoot.Children.Add(uc1);
 		}
 
 		/// <summary>
