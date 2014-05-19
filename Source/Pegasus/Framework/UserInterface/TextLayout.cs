@@ -339,7 +339,7 @@
 		/// </summary>
 		private void AlignLines()
 		{
-			if (_alignment == TextAlignment.Left)
+			if (_alignment == TextAlignment.Left || (_wrapping == TextWrapping.NoWrap && _desiredArrangeSize.Width <= _arrangedSize.Width))
 				return;
 
 			for (var i = 0; i < _lineCount; ++i)
