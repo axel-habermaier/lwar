@@ -352,6 +352,162 @@
     <Compile Include="..\..\Pegasus\Platform\ResharperAttributes.cs">
       <Link>Pegasus\ResharperAttributes.cs</Link>
     </Compile>
+    <Compile Include="..\..\Pegasus\Platform\TextString.cs">
+      <Link>Pegasus\TextString.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\AttemptParser.cs">
+      <Link>Pegasus\AttemptParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\BooleanParser.cs">
+      <Link>Pegasus\BooleanParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\CharacterParser.cs">
+      <Link>Pegasus\CharacterParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\DescriptionParser.cs">
+      <Link>Pegasus\DescriptionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\DigitParser.cs">
+      <Link>Pegasus\DigitParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\EndOfInputParser.cs">
+      <Link>Pegasus\EndOfInputParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\EnumerationLiteralParser.cs">
+      <Link>Pegasus\EnumerationLiteralParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\Float32Parser.cs">
+      <Link>Pegasus\Float32Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\Float64Parser.cs">
+      <Link>Pegasus\Float64Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\Int16Parser.cs">
+      <Link>Pegasus\Int16Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\Int32Parser.cs">
+      <Link>Pegasus\Int32Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\Int64Parser.cs">
+      <Link>Pegasus\Int64Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\Int8Parser.cs">
+      <Link>Pegasus\Int8Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\LetterParser.cs">
+      <Link>Pegasus\LetterParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\NumberParser.cs">
+      <Link>Pegasus\NumberParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\QuotedStringParser.cs">
+      <Link>Pegasus\QuotedStringParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\ReferenceParser.cs">
+      <Link>Pegasus\ReferenceParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\SkipStringParser.cs">
+      <Link>Pegasus\SkipStringParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\StringParser.cs">
+      <Link>Pegasus\StringParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\UInt16Parser.cs">
+      <Link>Pegasus\UInt16Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\UInt32Parser.cs">
+      <Link>Pegasus\UInt32Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\UInt64Parser.cs">
+      <Link>Pegasus\UInt64Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\UInt8Parser.cs">
+      <Link>Pegasus\UInt8Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\WhiteSpaces1Parser.cs">
+      <Link>Pegasus\WhiteSpaces1Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\BasicParsers\WhiteSpacesParser.cs">
+      <Link>Pegasus\WhiteSpacesParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\AlternativesParser.cs">
+      <Link>Pegasus\AlternativesParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\ApplyParser.cs">
+      <Link>Pegasus\ApplyParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\BetweenParser.cs">
+      <Link>Pegasus\BetweenParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\Many1Parser.cs">
+      <Link>Pegasus\Many1Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\ManyParser.cs">
+      <Link>Pegasus\ManyParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\OptionalParser.cs">
+      <Link>Pegasus\OptionalParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\Pipe2Parser.cs">
+      <Link>Pegasus\Pipe2Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\Pipe3Parser.cs">
+      <Link>Pegasus\Pipe3Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\Pipe4Parser.cs">
+      <Link>Pegasus\Pipe4Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\SeparatedBy1Parser.cs">
+      <Link>Pegasus\SeparatedBy1Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\SeparatedByParser.cs">
+      <Link>Pegasus\SeparatedByParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\SequenceFirstParser.cs">
+      <Link>Pegasus\SequenceFirstParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\SequenceSecondParser.cs">
+      <Link>Pegasus\SequenceSecondParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\SizeParser.cs">
+      <Link>Pegasus\SizeParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Combinators\SkipParser.cs">
+      <Link>Pegasus\SkipParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\CombinedParser.cs">
+      <Link>Pegasus\CombinedParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\ErrorMessage.cs">
+      <Link>Pegasus\ErrorMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\ErrorMessageList.cs">
+      <Link>Pegasus\ErrorMessageList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\ErrorType.cs">
+      <Link>Pegasus\ErrorType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\InputStream.cs">
+      <Link>Pegasus\InputStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\InputStreamState.cs">
+      <Link>Pegasus\InputStreamState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\None.cs">
+      <Link>Pegasus\None.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Parser.cs">
+      <Link>Pegasus\Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\Reply.cs">
+      <Link>Pegasus\Reply.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\Parsing\ReplyStatus.cs">
+      <Link>Pegasus\ReplyStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Scripting\TypeRegistry.cs">
+      <Link>Pegasus\TypeRegistry.cs</Link>
+    </Compile>
     <Compile Include="AssetsProject.cs" />
     <Compile Include="Assets\Attributes\AssetAttribute.cs" />
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
@@ -462,8 +618,10 @@
     <Compile Include="Effects\VertexShaderAttribute.cs" />
     <Compile Include="Registries\Cvar.cs" />
     <Compile Include="Registries\RegistryGenerator.cs" />
+    <Compile Include="Xaml\DataBindingParser.cs" />
     <Compile Include="Xaml\IXamlType.cs" />
     <Compile Include="Xaml\XamlClass.cs" />
+    <Compile Include="Xaml\XamlDataBinding.cs" />
     <Compile Include="Xaml\XamlEnumeration.cs" />
     <Compile Include="Xaml\XamlPrimitiveType.cs" />
     <Compile Include="Xaml\XamlProperty.cs" />

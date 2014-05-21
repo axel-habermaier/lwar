@@ -39,8 +39,8 @@
 			Assert.ArgumentNotNull(inputDevice);
 
 			var font = Application.Current.Assets.Load(Fonts.LiberationMono11);
-			//Console = new Console(inputDevice, font);
-			//Console.Update(window.Size);
+			Console = new Console(inputDevice, font);
+			Console.Update(window.Size);
 
 			//_view = new ConsoleView(Console);
 			//_window = window;

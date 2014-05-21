@@ -197,7 +197,9 @@
 				case "Data":
 				{
 					var parentName = element.Parent.Attribute("Name").Value;
-					_writer.Append("{0}.CreateDataBinding({1}, BindingMode.OneWay, ", parentName, element.Attribute("TargetProperty").Value);
+					var bindingModeAttribute = element.Attribute("BindingMode");
+					var bindingMode = bindingModeAttribute == null ? "OneWay" : bindingModeAttribute.Value;
+					_writer.Append("{0}.CreateDataBinding({1}, BindingMode.{2}, ", parentName, element.Attribute("TargetProperty").Value, bindingMode);
 
 					var path = element.Attribute("Path").Value;
 					var properties = path.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);

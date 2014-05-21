@@ -6,7 +6,9 @@
 	using System.Linq;
 	using System.Text.RegularExpressions;
 	using System.Xml.Linq;
+	using Platform;
 	using Platform.Logging;
+	using Scripting.Parsing;
 
 	/// <summary>
 	///     Applies a number of transformations to a Xaml file to facilitate the cross-compilation of the Xaml code to C#.
@@ -654,19 +656,22 @@
 											   .ToArray())
 			{
 				var binding = bindingElement.Value;
-				var path = @"[a-zA-Z0-9\.]*";
-				var regex = new Regex(@"\{Binding (?<path>" + path + @")(, Converter=\{(?<converter>.*)\})?\}");
-				var match = regex.Match(binding);
-				if (!match.Success)
-					Log.Die("Unable to parse data binding '{0}'.", binding);
+				var parser = new DataBindingParser();
+
+				var dataBinding = parser.Parse(binding);
+				if (dataBinding.Status != ReplyStatus.Success)
+				{
+					using (var text = TextString.Create(dataBinding.Errors.ErrorMessage))
+						Log.Die("{0}", text);
+				}
 
 				var element = new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Data"),
-												  new XAttribute("Path", match.Groups["path"]),
+												  new XAttribute("Path", dataBinding.Result.Path),
 												  new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property"));
 
-				if (match.Groups["converter"].Success)
+				if (dataBinding.Result.Converter != null)
 				{
-					var converter = match.Groups["converter"].Value;
+					var converter = dataBinding.Result.Converter;
 					var split = converter.Split(new []{":"},StringSplitOptions.RemoveEmptyEntries);
 					XName converterType = null;
 
@@ -679,6 +684,9 @@
 
 					element.Add(new XAttribute("Converter", GetClrType(converterType).FullName));
 				}
+
+				if (dataBinding.Result.BindingMode != null)
+					element.Add(new XAttribute("BindingMode", dataBinding.Result.BindingMode));
 
 				bindingElement.SetValue(String.Empty);
 				bindingElement.ReplaceWith(element);

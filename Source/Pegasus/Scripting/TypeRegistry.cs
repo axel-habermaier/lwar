@@ -3,11 +3,8 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Reflection;
-	using Framework.UserInterface.Controls;
 	using Parsing;
 	using Parsing.BasicParsers;
-	using Parsing.Combinators;
-	using Platform.Input;
 	using Platform.Logging;
 
 	/// <summary>
@@ -43,18 +40,6 @@
 			Register(new Float32Parser(), "32-bit floating point number", f => f.ToString("F"), "-17.1", "0.0", "17");
 			Register(new Float64Parser(), "64-bit floating point number", d => d.ToString("F"), "-17.1", "0.0", "17");
 			Register(stringParser, "string", null, "\"\"", "word", "\"multiple words\"", "\"escaped quote: \\\"\"");
-
-			// Register common .NET framework types
-			Register(new IPAddressParser(), "IPv4 or IPv6 address", null, "::1", "127.0.0.1");
-			Register(new IPEndPointParser(), "IPv4 or IPv6 address with optional port", null, "::1", "[::1]:8081", "127.0.0.1", "127.0.0.1:8081");
-
-			// Register common Pegasus framework types
-			Register(new EnumerationLiteralParser<WindowMode>(ignoreCase: true), null, null);
-			Register(new Vector2Parser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10.0;10.5");
-			Register(new Vector2IParser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10;10");
-			Register(new SizeParser(), null, s => String.Format("{0};{1}", s.Width, s.Height), "0;0", "-10;10");
-			Register(new InputTriggerParser(), null, i => String.Format("[{0}]", i), "[Key(Return,WentDown)]", "[Key(A,Pressed)]",
-					 "[Key(Left,Repeated)]", "[Mouse(Left,Pressed) | Mouse(Right,Pressed)]");
 		}
 
 		/// <summary>

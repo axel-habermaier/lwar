@@ -317,6 +317,14 @@
 		}
 
 		/// <summary>
+		///     Returns the string with all color specifiers removed.
+		/// </summary>
+		public override string ToString()
+		{
+			return _text.ToString();
+		}
+
+		/// <summary>
 		///     Provides color information for a range of characters.
 		/// </summary>
 		private struct ColorRange
