@@ -86,16 +86,17 @@
 		/// <param name="value">The value that should be set.</param>
 		public void SetLocalValue(T value)
 		{
-			if (_binding != null)
-				_binding.Remove();
+			if (_binding != null && _binding.Remove(overwrittenByLocalValue: true))
+			{
+				_sources &= ~ValueSources.Binding;
+				_binding = null;
+			}
 
-			_binding = null;
 			_baseValue = value;
 
 			_sources |= ValueSources.Local;
 			_sources &= ~ValueSources.Style;
 			_sources &= ~ValueSources.Inherited;
-			_sources &= ~ValueSources.Binding;
 		}
 
 		/// <summary>

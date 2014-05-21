@@ -12,9 +12,18 @@ namespace Pegasus.Framework.UserInterface.Converters
 		///     Converts the given value to a string.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
-		public override string Convert(sbyte value)
+		public override string ConvertToTarget(sbyte value)
 		{
 			return value.ToString(CultureInfo.InvariantCulture);
+		}
+
+		/// <summary>
+		///     Converts the given value to the source type.
+		/// </summary>
+		/// <param name="value">The value that should be converted.</param>
+		public override sbyte ConvertToSource(string value)
+		{
+			return SByte.Parse(value, CultureInfo.InvariantCulture);
 		}
 	}
 }

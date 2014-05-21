@@ -119,9 +119,7 @@
 		{
 			Assert.That(_isActive, "The view model is not active.");
 
-			if (_isModal && _view != null)
-				Application.Current.Window.LayoutRoot.RemoveModal(_view);
-			else if (_view != null)
+			if (_view != null)
 				Application.Current.Window.LayoutRoot.Remove(_view);
 
 			OnDeactivated();

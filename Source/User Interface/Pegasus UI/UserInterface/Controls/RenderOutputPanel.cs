@@ -4,16 +4,11 @@
 	using System.Windows.Controls;
 	using System.Windows.Media;
 
-	public abstract class RenderOutputPanel : Border
+	public class RenderOutputPanel : Border
 	{
-		protected RenderOutputPanel()
+		public RenderOutputPanel()
 		{
 			Background = new SolidColorBrush(Colors.Black);
 		}
-	}
-
-	// TODO: REMOVE
-	public class ConsoleOutputPanel : RenderOutputPanel
-	{
 	}
 }

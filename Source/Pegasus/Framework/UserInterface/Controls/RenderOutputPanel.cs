@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Provides a render output for arbitrary 2D or 3D drawing. The final image is then drawn into the UI.
 	/// </summary>
-	public abstract class RenderOutputPanel : Decorator
+	public class RenderOutputPanel : Decorator
 	{
 		/// <summary>
 		///     The color buffer of the render output's render target that should be drawn into the UI.
@@ -137,7 +137,7 @@
 		///     Draws the contents of the panel into the given render output.
 		/// </summary>
 		/// <param name="renderOutput">The render output the content should be drawn into.</param>
-		protected abstract void Draw(RenderOutput renderOutput);
+		//protected abstract void Draw(RenderOutput renderOutput);
 
 		protected override sealed void OnDraw(SpriteBatch spriteBatch)
 		{
@@ -160,7 +160,7 @@
 #endif
 
 			// Draw the contents of the render output panel into the output texture
-			Draw(_renderOutput);
+			//Draw(_renderOutput);
 
 			// Draw the contents into the UI
 			var quad = new Quad(new RectangleF(x, y, width, height), Color.White, textureArea);

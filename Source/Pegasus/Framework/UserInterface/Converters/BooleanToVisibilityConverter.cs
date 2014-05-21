@@ -11,9 +11,18 @@ namespace Pegasus.Framework.UserInterface.Converters
 		///     Converts the given Boolean value to the corresponding Visibility literal.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
-		public override Visibility Convert(bool value)
+		public override Visibility ConvertToTarget(bool value)
 		{
 			return value ? Visibility.Visible : Visibility.Collapsed;
+		}
+
+		/// <summary>
+		///     Converts the given value to the source type.
+		/// </summary>
+		/// <param name="value">The value that should be converted.</param>
+		public override bool ConvertToSource(Visibility value)
+		{
+			return value == Visibility.Visible;
 		}
 	}
 }

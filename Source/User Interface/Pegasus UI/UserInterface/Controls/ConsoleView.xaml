@@ -6,5 +6,5 @@
 			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
-	<controls:ConsoleOutputPanel x:Name="ConsolePanel" />
+	<controls:RenderOutputPanel x:Name="ConsolePanel" />
 </UserControl>

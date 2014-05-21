@@ -69,9 +69,11 @@
 		}
 
 		/// <summary>
-		///     Removes the binding.
+		///     Removes the binding. The binding can decide to ignore the removal if it would be overwritten by a local value. True is
+		///     returned to indicate that the binding was removed.
 		/// </summary>
-		internal abstract void Remove();
+		/// <param name="overwrittenByLocalValue">Indicates whether the binding is removed because it was overriden by a local value.</param>
+		internal abstract bool Remove(bool overwrittenByLocalValue = false);
 
 		/// <summary>
 		///     Initializes the binding.

@@ -218,8 +218,8 @@
     <Compile Include="Assets\AssetLoaders\TextureAssetLoader.cs" />
     <Compile Include="Assets\AssetLoaders\VertexShaderAssetLoader.cs" />
     <Compile Include="Assets\AssetType.cs" />
+    <Compile Include="Framework\UserInterface\BindingMode.cs" />
     <Compile Include="Framework\UserInterface\Controls\ColumnDefinition.cs" />
-    <Compile Include="Framework\UserInterface\Controls\ConsoleView.cs" />
     <Compile Include="Framework\UserInterface\Controls\ConsoleViewModel.cs" />
     <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />
     <Compile Include="Framework\UserInterface\Controls\AppWindow.cs" />

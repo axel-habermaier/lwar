@@ -196,10 +196,6 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.RenderOutputPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 	</Class>
 
-	<!-- TODO: REMOVE THIS -->
-	<Class Name="Pegasus.Framework.UserInterface.Controls.ConsoleOutputPanel" Inherits="Pegasus.Framework.UserInterface.Controls.RenderOutputPanel">
-	</Class>
-
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Window" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 		<Property Type="string" Name="Title"/>
 	</Class>

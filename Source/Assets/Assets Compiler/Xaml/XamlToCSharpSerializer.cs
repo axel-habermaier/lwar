@@ -197,7 +197,7 @@
 				case "Data":
 				{
 					var parentName = element.Parent.Attribute("Name").Value;
-					_writer.Append("{0}.CreateDataBinding({1}, ", parentName, element.Attribute("TargetProperty").Value);
+					_writer.Append("{0}.CreateDataBinding({1}, BindingMode.OneWay, ", parentName, element.Attribute("TargetProperty").Value);
 
 					var path = element.Attribute("Path").Value;
 					var properties = path.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);

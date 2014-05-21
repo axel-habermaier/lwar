@@ -29,18 +29,18 @@
 
 		private void Bind(object sourceObject, string property1, string property2 = null, string property3 = null)
 		{
-			_control.CreateDataBinding(sourceObject, UIElement.MarginProperty, property1, property2, property3);
+			_control.CreateDataBinding(sourceObject, UIElement.MarginProperty, BindingMode.OneWay, property1, property2, property3);
 		}
 
 		private void BindToViewModel(string property1, string property2 = null)
 		{
 			_control.ViewModel = _viewModel;
-			_control.CreateDataBinding(UIElement.MarginProperty, property1, property2);
+			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, property1, property2);
 		}
 
 		private void BindWidth(string property1, string property2 = null)
 		{
-			_control.CreateDataBinding(UIElement.WidthProperty, property1, property2);
+			_control.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, property1, property2);
 		}
 
 		private class UntypedViewModelA : ViewModel
@@ -66,15 +66,285 @@
 		}
 
 		[Test]
-		public void DoubleToString_ValueConversion()
+		public void BindingMode_OneWay()
+		{
+			_viewModel.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneWay, "Integer");
+
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Integer = 8;
+			_control.IntegerTest1.Should().Be(8);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Integer.Should().Be(8);
+			_control.IntegerTest1.Should().Be(33);
+		}
+
+		[Test]
+		public void BindingMode_OneWayToSource()
+		{
+			_viewModel.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneWayToSource, "Integer");
+
+			_control.IntegerTest1.Should().Be(0);
+
+			_viewModel.Integer = 8;
+			_control.IntegerTest1.Should().Be(0);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Integer.Should().Be(33);
+			_control.IntegerTest1.Should().Be(33);
+		}
+
+		[Test]
+		public void BindingMode_OneWayToSource_FirstObjectChanged()
+		{
+			_viewModel.InitializeRecursively(2);
+			_viewModel.Model.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Integer");
+
+			var model = new TestViewModel();
+			model.InitializeRecursively(1);
+			model.Model.Integer = 7777;
+			_viewModel.Model = model;
+
+			_control.IntegerTest1.Should().Be(0);
+
+			_control.IntegerTest1 = 42;
+			_viewModel.Model.Model.Integer.Should().Be(42);
+			_control.IntegerTest1.Should().Be(42);
+		}
+
+		[Test]
+		public void BindingMode_OneWayToSource_Property_Property()
 		{
 			_viewModel.InitializeRecursively(1);
-			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, "Width", converter: new DoubleToStringConverter());
+			_viewModel.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneWayToSource, "Model", "Integer");
+
+			_control.IntegerTest1.Should().Be(0);
+
+			_viewModel.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(0);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Model.Integer.Should().Be(33);
+			_control.IntegerTest1.Should().Be(33);
+		}
+
+		[Test]
+		public void BindingMode_OneWayToSource_Property_Property_Property()
+		{
+			_viewModel.InitializeRecursively(2);
+			_viewModel.Model.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Integer");
+
+			_control.IntegerTest1.Should().Be(0);
+
+			_viewModel.Model.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(0);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Model.Model.Integer.Should().Be(33);
+			_control.IntegerTest1.Should().Be(33);
+		}
+
+		[Test]
+		public void BindingMode_OneWayToSource_SecondObjectChanged()
+		{
+			_viewModel.InitializeRecursively(2);
+			_viewModel.Model.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Integer");
+
+			var model = new TestViewModel();
+			model.Integer = 7777;
+			_viewModel.Model.Model = model;
+
+			_control.IntegerTest1.Should().Be(0);
+
+			_control.IntegerTest1 = 42;
+			_viewModel.Model.Model.Integer.Should().Be(42);
+			_control.IntegerTest1.Should().Be(42);
+		}
+
+		[Test]
+		public void BindingMode_OneWay_Property_Property()
+		{
+			_viewModel.InitializeRecursively(1);
+			_viewModel.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneWay, "Model", "Integer");
+
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(8);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Model.Integer.Should().Be(8);
+			_control.IntegerTest1.Should().Be(33);
+		}
+
+		[Test]
+		public void BindingMode_OneWay_Property_Property_Property()
+		{
+			_viewModel.InitializeRecursively(2);
+			_viewModel.Model.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneWay, "Model", "Model", "Integer");
+
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Model.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(8);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Model.Model.Integer.Should().Be(8);
+			_control.IntegerTest1.Should().Be(33);
+		}
+
+		[Test]
+		public void BindingMode_TwoWay()
+		{
+			_viewModel.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.TwoWay, "Integer");
+
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Integer = 8;
+			_control.IntegerTest1.Should().Be(8);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Integer.Should().Be(33);
+			_control.IntegerTest1.Should().Be(33);
+
+			_viewModel.Integer = 8;
+			_control.IntegerTest1.Should().Be(8);
+		}
+
+		[Test]
+		public void BindingMode_TwoWay_FirstObjectChanged()
+		{
+			_viewModel.InitializeRecursively(2);
+			_viewModel.Model.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.TwoWay, "Model", "Model", "Integer");
+
+			var model = new TestViewModel();
+			model.InitializeRecursively(1);
+			model.Model.Integer = 7777;
+			_viewModel.Model = model;
+
+			_control.IntegerTest1.Should().Be(7777);
+
+			_control.IntegerTest1 = 42;
+			_viewModel.Model.Model.Integer.Should().Be(42);
+			_control.IntegerTest1.Should().Be(42);
+
+			model.Model.Integer = 66;
+			_control.IntegerTest1.Should().Be(66);
+		}
+
+		[Test]
+		public void BindingMode_TwoWay_Property_Property()
+		{
+			_viewModel.InitializeRecursively(1);
+			_viewModel.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.TwoWay, "Model", "Integer");
+
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(8);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Model.Integer.Should().Be(33);
+			_control.IntegerTest1.Should().Be(33);
+
+			_viewModel.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(8);
+		}
+
+		[Test]
+		public void BindingMode_TwoWay_Property_Property_Property()
+		{
+			_viewModel.InitializeRecursively(2);
+			_viewModel.Model.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.TwoWay, "Model", "Model", "Integer");
+
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Model.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(8);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Model.Model.Integer.Should().Be(33);
+			_control.IntegerTest1.Should().Be(33);
+
+			_viewModel.Model.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(8);
+		}
+
+		[Test]
+		public void BindingMode_TwoWay_SecondObjectChanged()
+		{
+			_viewModel.InitializeRecursively(2);
+			_viewModel.Model.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.TwoWay, "Model", "Model", "Integer");
+
+			var model = new TestViewModel();
+			model.Integer = 7777;
+			_viewModel.Model.Model = model;
+
+			_control.IntegerTest1.Should().Be(7777);
+
+			_control.IntegerTest1 = 42;
+			_viewModel.Model.Model.Integer.Should().Be(42);
+			_control.IntegerTest1.Should().Be(42);
+
+			model.Integer = 66;
+			_control.IntegerTest1.Should().Be(66);
+		}
+
+		[Test]
+		public void DoubleToString_ValueConversion_OneWay()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "Width",
+									   converter: new DoubleToStringConverter());
 
 			_control.StringTest.Should().Be("0");
 
 			_viewModel.Width = 21.5;
 			_control.StringTest.Should().Be("21.5");
+		}
+
+		[Test]
+		public void DoubleToString_ValueConversion_OneWayToSource()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "Width",
+									   converter: new DoubleToStringConverter());
+
+			_viewModel.Width.Should().Be(0);
+
+			_control.StringTest = "21.5";
+			_viewModel.Width.Should().Be(21.5);
+		}
+
+		[Test]
+		public void DoubleToString_ValueConversion_TwoWay()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.TwoWay, "Width",
+									   converter: new DoubleToStringConverter());
+
+			_viewModel.Width.Should().Be(0);
+			_control.StringTest.Should().Be("0");
+
+			_control.StringTest = "21.5";
+			_viewModel.Width.Should().Be(21.5);
+
+			_viewModel.Width = 0.5;
+			_control.StringTest.Should().Be("0.5");
 		}
 
 		[Test]
@@ -215,7 +485,7 @@
 		public void ViewModel_ChangeType()
 		{
 			_control.ViewModel = new UntypedViewModelA { Value = _margin1 };
-			_control.CreateDataBinding(UIElement.MarginProperty, "Value");
+			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, "Value");
 
 			_control.Margin.Should().Be(_margin1);
 
@@ -229,7 +499,7 @@
 		public void ViewModel_ChangeType_AfterNull()
 		{
 			_control.ViewModel = new UntypedViewModelA { Value = _margin1 };
-			_control.CreateDataBinding(UIElement.MarginProperty, "Value");
+			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, "Value");
 
 			_control.Margin.Should().Be(_margin1);
 
@@ -246,7 +516,7 @@
 		public void ViewModel_ChangeType_Twice()
 		{
 			_control.ViewModel = new UntypedViewModelA { Value = _margin1 };
-			_control.CreateDataBinding(UIElement.MarginProperty, "Value");
+			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, "Value");
 
 			_control.Margin.Should().Be(_margin1);
 
@@ -282,7 +552,7 @@
 		{
 			var viewModel = new UntypedViewModelA { Value = new UntypedViewModelA { Value = _margin1 } };
 			_control.ViewModel = viewModel;
-			_control.CreateDataBinding(UIElement.MarginProperty, "Value", "Value");
+			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, "Value", "Value");
 
 			_control.Margin.Should().Be(_margin1);
 

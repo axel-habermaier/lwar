@@ -29,6 +29,12 @@
 		///     Converts the given value to the target type.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
-		public abstract TTarget Convert(TSource value);
+		public abstract TTarget ConvertToTarget(TSource value);
+
+		/// <summary>
+		///     Converts the given value to the source type.
+		/// </summary>
+		/// <param name="value">The value that should be converted.</param>
+		public abstract TSource ConvertToSource(TTarget value);
 	}
 }

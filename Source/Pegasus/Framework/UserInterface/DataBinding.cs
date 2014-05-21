@@ -15,6 +15,11 @@
 	internal sealed class DataBinding<T> : Binding<T>
 	{
 		/// <summary>
+		///     Indicates the direction of the data flow of the data binding.
+		/// </summary>
+		private readonly BindingMode _bindingMode;
+
+		/// <summary>
 		///     The converter that is used to convert the source value to the dependency property type.
 		/// </summary>
 		private readonly IValueConverter _converter;
@@ -29,11 +34,6 @@
 		///     property.
 		/// </summary>
 		private readonly object _sourceObject;
-
-		/// <summary>
-		///     If greater than 0, the properties accessed by the source expression are currently changing.
-		/// </summary>
-		private byte _isChanging;
 
 		/// <summary>
 		///     Indicates whether the currently bound value is null.
@@ -56,25 +56,35 @@
 		private MemberAccess _memberAccess3;
 
 		/// <summary>
-		///     The compiled expression that is used to get the value from the source object.
+		///     The compiled expression that is used to get the value from the source.
 		/// </summary>
 		private Func<object, IValueConverter, T> _sourceFunc;
+
+		/// <summary>
+		///     The compiled expression that is used to set the value of the source.
+		/// </summary>
+		private Action<object, T, IValueConverter> _targetFunc;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
+		/// <param name="bindingMode">Indicates the direction of the data flow of the data binding.</param>
 		/// <param name="property1">The name of the first property in the property path.</param>
 		/// <param name="property2">The name of the second property in the property path.</param>
 		/// <param name="property3">The name of the third property in the property path.</param>
 		/// <param name="converter">The converter that should be used to convert the source value to the dependency property type.</param>
-		internal DataBinding(object sourceObject, string property1, string property2 = null, string property3 = null,
+		internal DataBinding(object sourceObject, BindingMode bindingMode,
+							 string property1, string property2 = null, string property3 = null,
 							 IValueConverter converter = null)
 		{
+			Assert.ArgumentNotNull(sourceObject);
+			Assert.ArgumentInRange(bindingMode);
 			Assert.ArgumentNotNullOrWhitespace(property1);
 
 			_sourceObject = sourceObject;
 			_converter = converter;
+			_bindingMode = bindingMode;
 
 			_memberAccessCount = 1;
 			_memberAccess1 = new MemberAccess(property1) { Changed = OnMember1Changed };
@@ -126,27 +136,40 @@
 
 			// Set the source object of the first member access
 			_memberAccess1.SourceObject = _sourceObject;
+
+			if (_bindingMode != BindingMode.OneWay)
+				_targetObject.AddChangedHandler(_targetProperty, OnTargetPropertyChanged);
 		}
 
 		/// <summary>
-		///     Removes the binding.
+		///     Removes the binding. The binding can decide to ignore the removal if it would be overwritten by a local value. True is
+		///     returned to indicate that the binding was removed.
 		/// </summary>
-		internal override void Remove()
+		/// <param name="overwrittenByLocalValue">Indicates whether the binding is removed because it was overriden by a local value.</param>
+		internal override bool Remove(bool overwrittenByLocalValue = false)
 		{
+			if (overwrittenByLocalValue && _bindingMode != BindingMode.OneWay)
+				return false;
+
 			_memberAccess1.Remove();
 			_memberAccess2.Remove();
 			_memberAccess3.Remove();
+
+			if (_bindingMode != BindingMode.OneWay)
+				_targetObject.RemoveChangedHandler(_targetProperty, OnTargetPropertyChanged);
+
+			return true;
 		}
 
 		/// <summary>
-		///     Compiles the function to access the source value.
+		///     Compiles the function that is used to get the source value.
 		/// </summary>
-		private void CompileFunction()
+		private void CompileSourceFunction()
 		{
 			var sourceObjectParameter = Expression.Parameter(typeof(object));
 			var converterParameter = Expression.Parameter(typeof(IValueConverter));
-			var expression = Expression.Convert(sourceObjectParameter, _sourceObject.GetType()) as Expression;
 
+			var expression = Expression.Convert(sourceObjectParameter, _sourceObject.GetType()) as Expression;
 			expression = _memberAccess1.GetAccessExpression(expression);
 
 			if (_memberAccessCount > 1)
@@ -159,11 +182,43 @@
 			{
 				var converterType = _converter.GetType();
 				var castConverter = Expression.Convert(converterParameter, converterType);
-				expression = Expression.Call(castConverter, converterType.GetMethod("Convert"), expression);
+				expression = Expression.Call(castConverter, converterType.GetMethod("ConvertToTarget"), expression);
 			}
 
-			_sourceFunc = Expression.Lambda<Func<object, IValueConverter, T>>(expression, sourceObjectParameter, converterParameter).Compile();
-			UpdateTargetProperty();
+			_sourceFunc = Expression.Lambda<Func<object, IValueConverter, T>>(
+				expression, sourceObjectParameter, converterParameter).Compile();
+		}
+
+		/// <summary>
+		///     Compiles the function that is used to set the source value.
+		/// </summary>
+		private void CompileTargetFunction()
+		{
+			var sourceObjectParameter = Expression.Parameter(typeof(object));
+			var valueParameter = Expression.Parameter(typeof(T));
+			var converterParameter = Expression.Parameter(typeof(IValueConverter));
+
+			var expression = Expression.Convert(sourceObjectParameter, _sourceObject.GetType()) as Expression;
+			expression = _memberAccess1.GetAccessExpression(expression);
+
+			if (_memberAccessCount > 1)
+				expression = _memberAccess2.GetAccessExpression(expression);
+
+			if (_memberAccessCount > 2)
+				expression = _memberAccess3.GetAccessExpression(expression);
+
+			Expression value = valueParameter;
+			if (_converter != null)
+			{
+				var converterType = _converter.GetType();
+				var castConverter = Expression.Convert(converterParameter, converterType);
+				value = Expression.Call(castConverter, converterType.GetMethod("ConvertToSource"), valueParameter);
+			}
+
+			var convertExpression = (UnaryExpression)expression;
+			var assignment = Expression.Assign(convertExpression.Operand, value);
+			_targetFunc = Expression.Lambda<Action<object, T, IValueConverter>>(
+				assignment, sourceObjectParameter, valueParameter, converterParameter).Compile();
 		}
 
 		/// <summary>
@@ -191,6 +246,20 @@
 		}
 
 		/// <summary>
+		///     Invoked when the target value changed. Updates the source property with the new target value.
+		/// </summary>
+		private void OnTargetPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<T> args)
+		{
+			if (!Active || _bindingMode == BindingMode.OneWay)
+				return;
+
+			if (_targetFunc == null)
+				CompileTargetFunction();
+
+			_targetFunc(_sourceObject, _targetObject.GetValue(_targetProperty), _converter);
+		}
+
+		/// <summary>
 		///     Handles a value change of an accessed member.
 		/// </summary>
 		/// <param name="memberAccess">The member that has been accessed.</param>
@@ -201,34 +270,32 @@
 		/// </param>
 		private void OnMemberChanged(ref MemberAccess memberAccess, ref MemberAccess nextMemberAccess, int memberAccessCount)
 		{
-			++_isChanging;
-
 			Log.DebugIf(Active && !_isNull && memberAccess.Value == null,
 						"Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
 						PropertyPath, memberAccess.MemberName);
 
-			var value = memberAccess.Value;
-			_isNull = value == null;
-
-			// If the value is not null and the type of a value somewhere in the middle of the path has changed,
-			// we have to regenerate the source function
-			if (memberAccessCount < _memberAccessCount && !_isNull)
+			if (memberAccessCount < _memberAccessCount)
 			{
-				var type = value.GetType();
+				var value = memberAccess.Value;
+				_isNull = value == null;
 
-				if (type != memberAccess.ValueType)
+				// If the value is not null and the type of a value somewhere in the middle of the path has changed,
+				// we have to regenerate the source function
+				if (!_isNull)
 				{
-					_sourceFunc = null;
-					memberAccess.ValueType = type;
+					var type = value.GetType();
+
+					if (type != memberAccess.ValueType)
+					{
+						_sourceFunc = null;
+						_targetFunc = null;
+						memberAccess.ValueType = type;
+					}
 				}
-			}
 
-			if (_memberAccessCount > memberAccessCount)
 				nextMemberAccess.SourceObject = value;
-
-			--_isChanging;
-
-			if (_isChanging == 0)
+			}
+			else
 				UpdateTargetProperty();
 		}
 
@@ -237,11 +304,11 @@
 		/// </summary>
 		private void UpdateTargetProperty()
 		{
-			if (!Active)
+			if (!Active || _bindingMode == BindingMode.OneWayToSource)
 				return;
 
 			if (_sourceFunc == null && !_isNull)
-				CompileFunction();
+				CompileSourceFunction();
 
 			if (!_isNull)
 				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(_sourceObject, _converter));
@@ -356,7 +423,7 @@
 			/// <summary>
 			///     Gets the access expression for the accessed property or dependency property.
 			/// </summary>
-			/// <param name="expression">The expression that defines the property that should be accessed.</param>
+			/// <param name="expression">The expression to the left-hand side of the access expression.</param>
 			public Expression GetAccessExpression(Expression expression)
 			{
 				return Expression.Convert(Expression.Property(expression, _propertyInfo), Value.GetType());

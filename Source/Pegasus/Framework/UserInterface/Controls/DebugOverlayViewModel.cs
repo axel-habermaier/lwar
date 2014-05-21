@@ -26,6 +26,11 @@
 		private readonly WeakReference _gcCheck = new WeakReference(new object());
 
 		/// <summary>
+		///     The view of the debug overlay.
+		/// </summary>
+		private readonly DebugOverlayView _view;
+
+		/// <summary>
 		///     The total CPU frame time in milliseconds that is displayed by the debug overlay.
 		/// </summary>
 		private AveragedDouble _cpuFrameTime = new AveragedDouble(AverageSampleCount);
@@ -64,7 +69,9 @@
 			UpdateVisibility(Cvars.ShowDebugOverlay);
 
 			_timer.Timeout += UpdateViewModel;
-			Application.Current.Window.LayoutRoot.Children.Add(new DebugOverlayView { ViewModel = this });
+			_view = new DebugOverlayView { ViewModel = this };
+
+			Application.Current.Window.LayoutRoot.AddTopmost(_view);
 		}
 
 		/// <summary>
@@ -209,6 +216,8 @@
 		{
 			Cvars.ShowDebugOverlayCvar.Changed -= UpdateVisibility;
 			_timer.Timeout -= UpdateViewModel;
+
+			Application.Current.Window.LayoutRoot.Remove(_view);
 		}
 
 		/// <summary>

@@ -74,6 +74,14 @@
 		public bool Remove(UIElement element)
 		{
 			Assert.ArgumentNotNull(element);
+
+			var zIndex = GetZIndex(element);
+			if (zIndex != TopmostZIndex && zIndex >= ModalZIndexStart)
+			{
+				Assert.That(_modalElementCount > 0, "More modal UI elements have been removed than added.");
+				--_modalElementCount;
+			}
+
 			return Children.Remove(element);
 		}
 
@@ -91,19 +99,6 @@
 		}
 
 		/// <summary>
-		///     Removes the given modal UI element from the layout root.
-		/// </summary>
-		/// <param name="element">The UI element that should be removed.</param>
-		public bool RemoveModal(UIElement element)
-		{
-			Assert.ArgumentNotNull(element);
-			Assert.That(_modalElementCount > 0, "More modal UI elements have been removed than added.");
-
-			--_modalElementCount;
-			return Children.Remove(element);
-		}
-
-		/// <summary>
 		///     Adds the given UI element to the layout root, showing it above all other previously added UI elements.
 		/// </summary>
 		/// <param name="element">The UI element that should be added.</param>
@@ -113,15 +108,6 @@
 
 			Children.Add(element);
 			SetZIndex(element, TopmostZIndex);
-		}
-
-		/// <summary>
-		///     Removes the given topmost UI element from the layout root.
-		/// </summary>
-		/// <param name="element">The UI element that should be removed.</param>
-		public bool RemoveTopmost(UIElement element)
-		{
-			return Remove(element);
 		}
 	}
 }

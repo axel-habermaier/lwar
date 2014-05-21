@@ -12,9 +12,18 @@ namespace Pegasus.Framework.UserInterface.Converters
 		///     Converts the given value to a string.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
-		public override string Convert(uint value)
+		public override string ConvertToTarget(uint value)
 		{
 			return value.ToString(CultureInfo.InvariantCulture);
+		}
+
+		/// <summary>
+		///     Converts the given value to the source type.
+		/// </summary>
+		/// <param name="value">The value that should be converted.</param>
+		public override uint ConvertToSource(string value)
+		{
+			return UInt32.Parse(value, CultureInfo.InvariantCulture);
 		}
 	}
 }

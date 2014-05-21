@@ -8,9 +8,9 @@
 	/// </summary>
 	public class TestViewModel : ViewModel
 	{
+		private int _integer;
 		private TestViewModel _model;
 		private Thickness _thickness;
-
 		private double _width;
 
 		public Thickness Thickness
@@ -29,6 +29,12 @@
 		{
 			get { return _model; }
 			set { ChangePropertyValue(ref _model, value); }
+		}
+
+		public int Integer
+		{
+			get { return _integer; }
+			set { ChangePropertyValue(ref _integer, value); }
 		}
 
 		/// <summary>
