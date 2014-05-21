@@ -145,7 +145,7 @@
 
 				// Shift down the items until we find the index where the current item should be inserted.
 				var j = i;
-				for (; j > 0 && itemZIndex < GetZIndex(_children[j - 1]); --j)
+				for (; j > 0 && itemZIndex < GetZIndex(_children[_zLookup[j - 1]]); --j)
 					_zLookup[j] = _zLookup[j - 1];
 
 				_zLookup[j] = i;

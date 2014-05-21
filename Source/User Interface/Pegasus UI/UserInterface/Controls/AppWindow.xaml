@@ -8,7 +8,5 @@
              FontSize="11"
              TextOptions.TextRenderingMode="Aliased" Background="Black" Title="Pegasus">
 	<controls:LayoutRoot x:Name="LayoutRoot">
-		<controls:RenderOutputPanel x:Name="RenderOutputPanel">
-		</controls:RenderOutputPanel>
 	</controls:LayoutRoot>
 </Window>

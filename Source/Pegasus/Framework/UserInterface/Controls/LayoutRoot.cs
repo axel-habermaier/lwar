@@ -10,6 +10,21 @@
 	public sealed class LayoutRoot : Panel
 	{
 		/// <summary>
+		///     The z-index of the first modal child UI element.
+		/// </summary>
+		private const int ModalZIndexStart = Int32.MaxValue / 2;
+
+		/// <summary>
+		///     The z-index of the topmost UI elements.
+		/// </summary>
+		private const int TopmostZIndex = Int32.MaxValue;
+
+		/// <summary>
+		///     The current number of modal UI elements that the layout root contains.
+		/// </summary>
+		private int _modalElementCount;
+
+		/// <summary>
 		///     Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
 		/// <param name="availableSize">
@@ -40,6 +55,73 @@
 				child.Arrange(new RectangleD(Vector2d.Zero, finalSize));
 
 			return finalSize;
+		}
+
+		/// <summary>
+		///     Adds the given UI element to the layout root, showing it above all other previously added non-modal UI elements.
+		/// </summary>
+		/// <param name="element">The UI element that should be added.</param>
+		public void Add(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			Children.Add(element);
+		}
+
+		/// <summary>
+		///     Removes the given UI element from the layout root.
+		/// </summary>
+		/// <param name="element">The UI element that should be removed.</param>
+		public bool Remove(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			return Children.Remove(element);
+		}
+
+		/// <summary>
+		///     Adds the given UI element to the layout root, showing it above all other previously added non-modal and modal UI
+		///     elements.
+		/// </summary>
+		/// <param name="element">The UI element that should be added.</param>
+		public void AddModal(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+
+			Children.Add(element);
+			SetZIndex(element, ModalZIndexStart + _modalElementCount++);
+		}
+
+		/// <summary>
+		///     Removes the given modal UI element from the layout root.
+		/// </summary>
+		/// <param name="element">The UI element that should be removed.</param>
+		public bool RemoveModal(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			Assert.That(_modalElementCount > 0, "More modal UI elements have been removed than added.");
+
+			--_modalElementCount;
+			return Children.Remove(element);
+		}
+
+		/// <summary>
+		///     Adds the given UI element to the layout root, showing it above all other previously added UI elements.
+		/// </summary>
+		/// <param name="element">The UI element that should be added.</param>
+		public void AddTopmost(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+
+			Children.Add(element);
+			SetZIndex(element, TopmostZIndex);
+		}
+
+		/// <summary>
+		///     Removes the given topmost UI element from the layout root.
+		/// </summary>
+		/// <param name="element">The UI element that should be removed.</param>
+		public bool RemoveTopmost(UIElement element)
+		{
+			return Remove(element);
 		}
 	}
 }

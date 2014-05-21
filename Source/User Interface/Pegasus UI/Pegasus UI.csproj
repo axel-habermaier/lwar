@@ -116,6 +116,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="UserInterface\Controls\ConsoleView.xaml.cs">
+      <DependentUpon>ConsoleView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\Controls\DebugOverlayView.xaml.cs">
       <DependentUpon>DebugOverlayView.xaml</DependentUpon>
     </Compile>
@@ -139,6 +142,10 @@
     <Page Include="UserInterface\Controls\AppWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Controls\ConsoleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserInterface\Controls\DebugOverlayView.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -219,6 +219,8 @@
     <Compile Include="Assets\AssetLoaders\VertexShaderAssetLoader.cs" />
     <Compile Include="Assets\AssetType.cs" />
     <Compile Include="Framework\UserInterface\Controls\ColumnDefinition.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ConsoleView.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ConsoleViewModel.cs" />
     <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />
     <Compile Include="Framework\UserInterface\Controls\AppWindow.cs" />
     <Compile Include="Framework\UserInterface\Controls\Grid.cs" />
@@ -610,7 +612,7 @@
     <Compile Include="Platform\Input\Key.cs" />
     <Compile Include="Platform\Input\MouseButton.cs" />
     <Compile Include="Platform\Graphics\Font.cs" />
-    <Compile Include="Framework\UserInterface\DebugOverlay.cs" />
+    <Compile Include="Framework\UserInterface\Controls\DebugOverlayViewModel.cs" />
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
     <Compile Include="Scripting\Validators\WindowSizeAttribute.cs" />

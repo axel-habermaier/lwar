@@ -337,7 +337,6 @@
 			Assert.That(VisualChildrenCount == 1, "A window must have exactly one child element.");
 			GetVisualChild(0).Draw(_spriteBatch);
 
-			OnWindowDrawn(_spriteBatch);
 			_spriteBatch.DrawBatch(_output);
 		}
 
@@ -352,14 +351,6 @@
 		protected override sealed void OnDraw(SpriteBatch spriteBatch)
 		{
 			throw new NotSupportedException("Call Draw() instead.");
-		}
-
-		/// <summary>
-		///     Invoked after the window has been drawn.
-		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
-		protected virtual void OnWindowDrawn(SpriteBatch spriteBatch)
-		{
 		}
 
 		/// <summary>

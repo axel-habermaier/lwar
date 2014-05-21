@@ -10,7 +10,6 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
-	using UserInterface;
 
 	/// <summary>
 	///     Efficiently draws large amounts of 2D sprites by batching together quads with the same texture.

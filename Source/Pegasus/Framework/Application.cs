@@ -136,19 +136,18 @@
 			Assert.ArgumentNotNull(logFile);
 
 			Name = name;
-			//StartupTime = Clock.SystemTime;
 
 			using (GraphicsDevice = new GraphicsDevice())
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
 			using (Window = new AppWindow(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
-			using (var debugOverlay = new DebugOverlay())
+			using (var debugOverlay = new DebugOverlayViewModel())
 			{
 				Window.Title = name;
 				RegisterFontLoader(new FontLoader(Assets));
 
 				// Copy the recorded log history to the console and explain the usage of the console
-				logFile.WriteToConsole(Window.Console);
+				logFile.WriteToConsole(Window.Console.Console);
 				Commands.Help();
 
 				// Let the application initialize itself
@@ -169,7 +168,6 @@
 
 					// Update the statistics
 					debugOverlay.Update();
-					Window.Console.Update(Window.Size);
 
 					debugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;
 
@@ -179,7 +177,7 @@
 					cpuStartTime = Clock.SystemTime;
 
 					// Let the application perform all custom drawing for the current frame
-					Draw(Window.RenderOutput);
+					//Draw(Window.RenderOutput);
 
 					// Draw the user interface
 					_root.Draw();

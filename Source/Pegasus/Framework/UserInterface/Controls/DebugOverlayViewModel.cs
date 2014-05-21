@@ -1,14 +1,13 @@
-﻿namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework.UserInterface.Controls
 {
 	using System;
-	using Controls;
 	using Platform;
 	using Scripting;
 
 	/// <summary>
 	///     Displays statistics about the performance of the application and other information useful for debugging.
 	/// </summary>
-	public sealed class DebugOverlay : ViewModel
+	internal sealed class DebugOverlayViewModel : ViewModel
 	{
 		/// <summary>
 		///     The update frequency of the statistics in Hz.
@@ -59,7 +58,7 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		internal DebugOverlay()
+		internal DebugOverlayViewModel()
 		{
 			Cvars.ShowDebugOverlayCvar.Changed += UpdateVisibility;
 			UpdateVisibility(Cvars.ShowDebugOverlay);

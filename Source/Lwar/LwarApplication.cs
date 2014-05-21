@@ -7,11 +7,10 @@
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Platform.Network;
 	using Pegasus.Rendering;
 	using Screens;
 	using Scripting;
-	using States;
+	using UserInterface;
 
 	/// <summary>
 	///     Represents the Lwar application.
@@ -24,9 +23,8 @@
 		private readonly LocalServer _localServer = new LocalServer();
 
 		private readonly ScreenManager _screenManager = new ScreenManager();
-		private readonly StateManager _stateManager = new StateManager();
+		private readonly RootViewModel _viewModel = new RootViewModel();
 		private Camera2D _camera;
-
 		private SpriteBatch _spriteBatch;
 
 		/// <summary>
@@ -38,14 +36,10 @@
 			Commands.Resolve();
 			Cvars.Resolve();
 
-			Commands.OnConnect += Connect;
-			Commands.OnDisconnect += Disconnect;
-
 			Window.InputDevice.ActivateLayer(InputLayers.Game);
 			Window.Closing += Exit;
 
 			_screenManager.Add(new MainMenu());
-			_stateManager.TransitionTo(new MainMenuState());
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");
 			Commands.Bind(Key.F2.WentDown(), "stop_server");
@@ -67,6 +61,8 @@
 
 			//var uc1 = new UserControl1();
 			//Window.LayoutRoot.Children.Add(uc1);
+
+			_viewModel.Activate();
 		}
 
 		/// <summary>
@@ -76,7 +72,7 @@
 		{
 			_localServer.Update();
 			_screenManager.Update();
-			_stateManager.Update();
+			_viewModel.Update();
 		}
 
 		/// <summary>
@@ -105,35 +101,13 @@
 		/// </summary>
 		protected override void Dispose()
 		{
-			Commands.OnConnect -= Connect;
-			Commands.OnDisconnect -= Disconnect;
-
+			_viewModel.Deactivate();
 			_camera.SafeDispose();
 			_spriteBatch.SafeDispose();
 			_screenManager.SafeDispose();
 			_localServer.SafeDispose();
 
 			base.Dispose();
-		}
-
-		/// <summary>
-		///     Connects to the server at the given end point and joins the game session.
-		/// </summary>
-		/// <param name="address">The IP address of the server.</param>
-		/// <param name="port">The port of the server.</param>
-		private void Connect(IPAddress address, ushort port)
-		{
-			Disconnect();
-			_screenManager.Add(new Level(new IPEndPoint(address, port)));
-		}
-
-		/// <summary>
-		///     Disconnects from the game session the client is currently connected to.
-		/// </summary>
-		private void Disconnect()
-		{
-			_screenManager.Clear();
-			_screenManager.Add(new MainMenu());
 		}
 
 		/// <summary>
