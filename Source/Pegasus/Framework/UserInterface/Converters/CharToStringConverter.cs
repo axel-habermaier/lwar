@@ -6,13 +6,13 @@ namespace Pegasus.Framework.UserInterface.Converters
 	/// <summary>
 	///     Converts a character value to a string.
 	/// </summary>
-	public class CharToStringConverter : IValueConverter<char, string>
+	public class CharToStringConverter : ValueConverter<CharToStringConverter, char, string>
 	{
 		/// <summary>
 		///     Converts the given value to a string.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
-		public string Convert(char value)
+		public override string Convert(char value)
 		{
 			return value.ToString(CultureInfo.InvariantCulture);
 		}

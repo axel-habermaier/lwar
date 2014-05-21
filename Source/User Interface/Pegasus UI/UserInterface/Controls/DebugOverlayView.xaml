@@ -10,14 +10,9 @@
 	x:Name="UserControl"
 	Foreground="White" Background="#66222222"
 	d:DataContext="{d:DesignInstance Type={x:Type controls:DebugOverlayViewModel}, IsDesignTimeCreatable=True}"
-	HorizontalAlignment="Left" VerticalAlignment="Bottom">
-	<UserControl.Resources>
-		<converters:Int32ToStringConverter x:Key="Int32ToStringConverter" />
-		<converters:BooleanToStringConverter x:Key="BooleanToStringConverter" />
-		<converters:DoubleToStringConverter Format="F2" x:Key="DoubleToStringConverter" />
-		<converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-	</UserControl.Resources>
-	<Grid Margin="15" Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+	HorizontalAlignment="Left" VerticalAlignment="Bottom"
+	Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}">
+	<Grid Margin="15">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -44,27 +39,27 @@
 		<TextBlock Grid.Row="7" Grid.Column="0" Text="Render Time: " />
 
 		<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Platform}" />
-		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DebugMode, Converter={StaticResource BooleanToStringConverter}}" />
+		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DebugMode, Converter={converters:BooleanToStringConverter}}" />
 		<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Renderer}" />
-		<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GarbageCollections, Converter={StaticResource Int32ToStringConverter}}" />
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GarbageCollections, Converter={converters:Int32ToStringConverter}}" />
 
 		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
-			<TextBlock Text="{Binding GpuTime, Converter={StaticResource DoubleToStringConverter}}" />
+			<TextBlock Text="{Binding GpuTime, Converter={converters:FrameTimeToStringConverter}}" />
 			<TextBlock Text="ms" />
 		</StackPanel>
 
 		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
-			<TextBlock Text="{Binding CpuTime, Converter={StaticResource DoubleToStringConverter}}" />
+			<TextBlock Text="{Binding CpuTime, Converter={converters:FrameTimeToStringConverter}}" />
 			<TextBlock Text="ms" />
 		</StackPanel>
 
 		<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-			<TextBlock Text="{Binding UpdateTime, Converter={StaticResource DoubleToStringConverter}}" />
+			<TextBlock Text="{Binding UpdateTime, Converter={converters:FrameTimeToStringConverter}}" />
 			<TextBlock Text="ms" />
 		</StackPanel>
 
 		<StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
-			<TextBlock Text="{Binding RenderTime, Converter={StaticResource DoubleToStringConverter}}" />
+			<TextBlock Text="{Binding RenderTime, Converter={converters:FrameTimeToStringConverter}}" />
 			<TextBlock Text="ms" />
 		</StackPanel>
 	</Grid>

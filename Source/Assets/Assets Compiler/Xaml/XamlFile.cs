@@ -34,6 +34,11 @@
 		private readonly Dictionary<string, XamlNamespace[]> _namespaceMap = new Dictionary<string, XamlNamespace[]>();
 
 		/// <summary>
+		/// Maps an Xml namespace shortcut to the corresponding Xml namespace.
+		/// </summary>
+		private readonly Dictionary<string, string> _namespaceShortcutMap = new Dictionary<string, string>(); 
+
+		/// <summary>
 		///     Provides type information about types referenced by the Xaml file.
 		/// </summary>
 		private readonly XamlTypeInfoProvider _typeInfoProvider;
@@ -650,7 +655,7 @@
 			{
 				var binding = bindingElement.Value;
 				var path = @"[a-zA-Z0-9\.]*";
-				var regex = new Regex(@"\{Binding (?<path>" + path + @")(, Converter=\{StaticResource (?<converter>.*)\})?\}");
+				var regex = new Regex(@"\{Binding (?<path>" + path + @")(, Converter=\{(?<converter>.*)\})?\}");
 				var match = regex.Match(binding);
 				if (!match.Success)
 					Log.Die("Unable to parse data binding '{0}'.", binding);
@@ -660,7 +665,20 @@
 												  new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property"));
 
 				if (match.Groups["converter"].Success)
-					element.Add(new XAttribute("Converter", match.Groups["converter"].Value));
+				{
+					var converter = match.Groups["converter"].Value;
+					var split = converter.Split(new []{":"},StringSplitOptions.RemoveEmptyEntries);
+					XName converterType = null;
+
+					if (split.Length == 1)
+						converterType = split[0];
+					else if (split.Length == 2)
+						converterType = String.Format("{{{0}}}{1}", split[0], split[1]);
+					else
+						Log.Die("Unable to parse converter type '{0}'.", converter);
+
+					element.Add(new XAttribute("Converter", GetClrType(converterType).FullName));
+				}
 
 				bindingElement.SetValue(String.Empty);
 				bindingElement.ReplaceWith(element);
@@ -867,6 +885,8 @@
 			var xamlNamespace = xamlName.NamespaceName;
 			if (xamlNamespace == String.Empty)
 				xamlNamespace = DefaultNamespace.NamespaceName;
+			else if (_namespaceShortcutMap.ContainsKey(xamlName.NamespaceName))
+				xamlNamespace = _namespaceShortcutMap[xamlName.NamespaceName];
 
 			if (!_namespaceMap.ContainsKey(xamlNamespace))
 				Log.Die("Unknown Xaml namespace '{0}'.", xamlNamespace);
@@ -880,11 +900,13 @@
 		private void BuildNamespaceMap()
 		{
 			// Add the default namespaces
+			_namespaceShortcutMap.Add(String.Empty, "http://schemas.microsoft.com/winfx/2006/xaml");
 			_namespaceMap.Add("http://schemas.microsoft.com/winfx/2006/xaml", new[]
 			{
 				new XamlNamespace("Pegasus.Framework.UserInterface")
 			});
 
+			_namespaceShortcutMap.Add("x", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
 			_namespaceMap.Add("http://schemas.microsoft.com/winfx/2006/xaml/presentation", new[]
 			{
 				new XamlNamespace("Pegasus.Framework"),
@@ -907,6 +929,7 @@
 					? attribute.Value.Substring(colon + 1)
 					: attribute.Value.Substring(colon + 1, semicolon - colon - 1);
 
+				_namespaceShortcutMap.Add(attribute.Name.LocalName, attribute.Value);
 				_namespaceMap.Add(attribute.Value, new[] { new XamlNamespace(importedNamespace.Trim()) });
 			}
 		}

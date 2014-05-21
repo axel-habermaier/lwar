@@ -210,7 +210,7 @@
 
 					var converter = element.Attribute("Converter");
 					if (converter != null)
-						_writer.Append(", converter: (IValueConverter)Resources[\"{0}\"]", converter.Value);
+						_writer.Append(", converter: {0}.Instance", converter.Value);
 
 					_writer.AppendLine(");");
 					break;

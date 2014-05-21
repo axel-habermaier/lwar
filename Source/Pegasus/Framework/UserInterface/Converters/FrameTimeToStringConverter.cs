@@ -4,17 +4,17 @@ namespace Pegasus.Framework.UserInterface.Converters
 	using System.Globalization;
 
 	/// <summary>
-	///     Converts an unsigned 64 bit integer value to a string.
+	///     Converts a frame time value to a string.
 	/// </summary>
-	public class UInt64ToStringConverter : ValueConverter<UInt64ToStringConverter, ulong, string>
+	public class FrameTimeToStringConverter : ValueConverter<FrameTimeToStringConverter, double, string>
 	{
 		/// <summary>
 		///     Converts the given value to a string.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
-		public override string Convert(ulong value)
+		public override string Convert(double value)
 		{
-			return value.ToString(CultureInfo.InvariantCulture);
+			return value.ToString("F2", CultureInfo.InvariantCulture);
 		}
 	}
 }

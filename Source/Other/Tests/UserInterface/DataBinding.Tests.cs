@@ -66,6 +66,18 @@
 		}
 
 		[Test]
+		public void DoubleToString_ValueConversion()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, "Width", converter: new DoubleToStringConverter());
+
+			_control.StringTest.Should().Be("0");
+
+			_viewModel.Width = 21.5;
+			_control.StringTest.Should().Be("21.5");
+		}
+
+		[Test]
 		public void Source_ChangeNotificationUnregisteredCorrectly()
 		{
 			_viewModel.InitializeRecursively(1);
@@ -181,33 +193,6 @@
 
 			_viewModel.Model.Thickness = _margin1;
 			_control.Margin.Should().Be(_margin1);
-		}
-
-		[Test]
-		public void DoubleToString_FormattedValueConversion()
-		{
-			var converter = new DoubleToStringConverter { Format = "F2" };
-
-			_viewModel.InitializeRecursively(1);
-			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, "Width", converter: converter);
-
-			_viewModel.Width = 21.5124423;
-			_control.StringTest.Should().Be("21.51");
-
-			_viewModel.Width = 0.008;
-			_control.StringTest.Should().Be("0.01");
-		}
-
-		[Test]
-		public void DoubleToString_ValueConversion()
-		{
-			_viewModel.InitializeRecursively(1);
-			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, "Width", converter: new DoubleToStringConverter());
-
-			_control.StringTest.Should().Be("0");
-
-			_viewModel.Width = 21.5;
-			_control.StringTest.Should().Be("21.5");
 		}
 
 		[Test]

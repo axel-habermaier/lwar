@@ -6,13 +6,13 @@ namespace Pegasus.Framework.UserInterface.Converters
 	/// <summary>
 	///     Converts an unsigned byte value to a string.
 	/// </summary>
-	public class ByteToStringConverter : IValueConverter<byte, string>
+	public class ByteToStringConverter : ValueConverter<ByteToStringConverter, byte, string>
 	{
 		/// <summary>
 		///     Converts the given value to a string.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
-		public string Convert(byte value)
+		public override string Convert(byte value)
 		{
 			return value.ToString(CultureInfo.InvariantCulture);
 		}

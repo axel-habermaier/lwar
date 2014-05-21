@@ -52,5 +52,10 @@
 		{
 			get { return "1.0"; }
 		}
+
+		public bool IsVisible
+		{
+			get { return true; }
+		}
 	}
 }

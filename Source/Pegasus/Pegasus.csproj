@@ -227,6 +227,7 @@
     <Compile Include="Framework\UserInterface\Converters\ByteToStringConverter.cs" />
     <Compile Include="Framework\UserInterface\Converters\CharToStringConverter.cs" />
     <Compile Include="Framework\UserInterface\Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\FrameTimeToStringConverter.cs" />
     <Compile Include="Framework\UserInterface\Converters\Int16ToStringConverter.cs" />
     <Compile Include="Framework\UserInterface\Converters\Int32ToStringConverter.cs" />
     <Compile Include="Framework\UserInterface\Converters\Int64ToStringConverter.cs" />
@@ -240,6 +241,7 @@
     <Compile Include="Framework\UserInterface\Converters\UInt16ToStringConverter.cs" />
     <Compile Include="Framework\UserInterface\Converters\UInt32ToStringConverter.cs" />
     <Compile Include="Framework\UserInterface\Converters\UInt64ToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\ValueConverter.cs" />
     <Compile Include="Framework\UserInterface\RootUIElement.cs" />
     <Compile Include="Framework\UserInterface\Controls\Window.cs" />
     <Compile Include="Framework\UserInterface\LayoutInfo.cs" />

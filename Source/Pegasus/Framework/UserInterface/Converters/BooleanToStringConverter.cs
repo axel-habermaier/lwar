@@ -5,13 +5,13 @@ namespace Pegasus.Framework.UserInterface.Converters
 	/// <summary>
 	///     Converts a Boolean value to a string.
 	/// </summary>
-	public class BooleanToStringConverter : IValueConverter<bool, string>
+	public class BooleanToStringConverter : ValueConverter<BooleanToStringConverter, bool, string>
 	{
 		/// <summary>
 		///     Converts the given value to a string.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
-		public string Convert(bool value)
+		public override string Convert(bool value)
 		{
 			return value ? "true" : "false";
 		}

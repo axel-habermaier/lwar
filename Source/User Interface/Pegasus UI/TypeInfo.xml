@@ -212,12 +212,9 @@
 	<Class Name="Pegasus.Framework.UserInterface.Converters.UInt32ToStringConverter" />
 	<Class Name="Pegasus.Framework.UserInterface.Converters.Int64ToStringConverter" />
 	<Class Name="Pegasus.Framework.UserInterface.Converters.UInt64ToStringConverter" />
-	<Class Name="Pegasus.Framework.UserInterface.Converters.SingleToStringConverter">
-		<Property Name="Format" Type="string"/>
-	</Class>
-	<Class Name="Pegasus.Framework.UserInterface.Converters.DoubleToStringConverter">
-		<Property Name="Format" Type="string"/>
-	</Class>
+	<Class Name="Pegasus.Framework.UserInterface.Converters.SingleToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.DoubleToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.FrameTimeToStringConverter" />
 	<Class Name="Pegasus.Framework.UserInterface.Converters.BooleanToVisibilityConverter" />
 
 </Types>

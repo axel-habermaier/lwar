@@ -6,13 +6,13 @@ namespace Pegasus.Framework.UserInterface.Converters
 	/// <summary>
 	///     Converts an unsigned 16 bit integer value to a string.
 	/// </summary>
-	public class UInt16ToStringConverter : IValueConverter<ushort, string>
+	public class UInt16ToStringConverter : ValueConverter<UInt16ToStringConverter, ushort, string>
 	{
 		/// <summary>
 		///     Converts the given value to a string.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
-		public string Convert(ushort value)
+		public override string Convert(ushort value)
 		{
 			return value.ToString(CultureInfo.InvariantCulture);
 		}
