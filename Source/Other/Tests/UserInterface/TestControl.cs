@@ -13,6 +13,7 @@
 		public static readonly DependencyProperty<bool> BooleanTestProperty2 = new DependencyProperty<bool>();
 		public static readonly DependencyProperty<int> IntegerTestProperty1 = new DependencyProperty<int>();
 		public static readonly DependencyProperty<int> IntegerTestProperty2 = new DependencyProperty<int>();
+		public static readonly DependencyProperty<string> StringTestProperty = new DependencyProperty<string>();
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -59,6 +60,12 @@
 		{
 			get { return GetValue(IntegerTestProperty2); }
 			set { SetValue(IntegerTestProperty2, value); }
+		}
+
+		public string StringTest
+		{
+			get { return GetValue(StringTestProperty); }
+			set { SetValue(StringTestProperty, value); }
 		}
 
 		/// <summary>

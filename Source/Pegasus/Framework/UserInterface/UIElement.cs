@@ -2,6 +2,7 @@
 {
 	using System;
 	using Controls;
+	using Converters;
 	using Math;
 	using Platform.Graphics;
 	using Rendering;
@@ -339,14 +340,16 @@
 		/// <param name="property1">The name of the first property in the property path.</param>
 		/// <param name="property2">The name of the second property in the property path.</param>
 		/// <param name="property3">The name of the third property in the property path.</param>
+		/// <param name="converter">The convert that should be used to convert the source value to the property type.</param>
 		public void CreateDataBinding<T>(object sourceObject, DependencyProperty<T> targetProperty,
-										 string property1, string property2 = null, string property3 = null)
+										 string property1, string property2 = null, string property3 = null,
+										 IValueConverter converter = null)
 		{
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentNotNullOrWhitespace(property1);
 			Assert.ArgumentNotNull(targetProperty);
 
-			SetBinding(targetProperty, new DataBinding<T>(sourceObject, property1, property2, property3));
+			SetBinding(targetProperty, new DataBinding<T>(sourceObject, property1, property2, property3, converter));
 		}
 
 		/// <summary>
@@ -356,12 +359,14 @@
 		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
 		/// <param name="property1">The name of the first property in the property path.</param>
 		/// <param name="property2">The name of the second property in the property path.</param>
-		public void CreateDataBinding<T>(DependencyProperty<T> targetProperty, string property1, string property2 = null)
+		/// <param name="converter">The convert that should be used to convert the source value to the property type.</param>
+		public void CreateDataBinding<T>(DependencyProperty<T> targetProperty, string property1, string property2 = null,
+										 IValueConverter converter = null)
 		{
 			Assert.ArgumentNotNullOrWhitespace(property1);
 			Assert.ArgumentNotNull(targetProperty);
 
-			CreateDataBinding(this, targetProperty, "ViewModel", property1, property2);
+			CreateDataBinding(this, targetProperty, "ViewModel", property1, property2, converter);
 		}
 
 		/// <summary>

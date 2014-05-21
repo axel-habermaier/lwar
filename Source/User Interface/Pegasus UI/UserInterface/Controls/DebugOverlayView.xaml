@@ -4,14 +4,20 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls"
+	xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters"
 	mc:Ignorable="d"
 	x:Class="Pegasus.Framework.UserInterface.Controls.DebugOverlayView"
 	x:Name="UserControl"
 	Foreground="White" Background="#66222222"
 	d:DataContext="{d:DesignInstance Type={x:Type controls:DebugOverlayViewModel}, IsDesignTimeCreatable=True}"
-	HorizontalAlignment="Left" VerticalAlignment="Bottom" Visibility="{Binding Visibility}">
-
-	<Grid Margin="15">
+	HorizontalAlignment="Left" VerticalAlignment="Bottom">
+	<UserControl.Resources>
+		<converters:Int32ToStringConverter x:Key="Int32ToStringConverter" />
+		<converters:BooleanToStringConverter x:Key="BooleanToStringConverter" />
+		<converters:DoubleToStringConverter Format="F2" x:Key="DoubleToStringConverter" />
+		<converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+	</UserControl.Resources>
+	<Grid Margin="15" Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -28,38 +34,38 @@
 			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
-		<TextBlock Grid.Row="0" Grid.Column="0" Text="Platform: "/>
-		<TextBlock Grid.Row="1" Grid.Column="0" Text="Debug Mode: "/>
-		<TextBlock Grid.Row="2" Grid.Column="0" Text="Renderer: "/>
-		<TextBlock Grid.Row="3" Grid.Column="0" Text="# of GCs: "/>
-		<TextBlock Grid.Row="4" Grid.Column="0" Text="GPU Time: "/> 
-		<TextBlock Grid.Row="5" Grid.Column="0" Text="CPU Time: "/>
-		<TextBlock Grid.Row="6" Grid.Column="0" Text="Update Time: "/>
-		<TextBlock Grid.Row="7" Grid.Column="0" Text="Render Time: "/>
+		<TextBlock Grid.Row="0" Grid.Column="0" Text="Platform: " />
+		<TextBlock Grid.Row="1" Grid.Column="0" Text="Debug Mode: " />
+		<TextBlock Grid.Row="2" Grid.Column="0" Text="Renderer: " />
+		<TextBlock Grid.Row="3" Grid.Column="0" Text="# of GCs: " />
+		<TextBlock Grid.Row="4" Grid.Column="0" Text="GPU Time: " />
+		<TextBlock Grid.Row="5" Grid.Column="0" Text="CPU Time: " />
+		<TextBlock Grid.Row="6" Grid.Column="0" Text="Update Time: " />
+		<TextBlock Grid.Row="7" Grid.Column="0" Text="Render Time: " />
 
 		<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Platform}" />
-		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DebugMode}" />
+		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DebugMode, Converter={StaticResource BooleanToStringConverter}}" />
 		<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Renderer}" />
-		<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GarbageCollections}" />
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GarbageCollections, Converter={StaticResource Int32ToStringConverter}}" />
 
 		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
-			<TextBlock Text="{Binding GpuTime}" />
-			<TextBlock Text="ms"/>
+			<TextBlock Text="{Binding GpuTime, Converter={StaticResource DoubleToStringConverter}}" />
+			<TextBlock Text="ms" />
 		</StackPanel>
 
 		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
-			<TextBlock Text="{Binding CpuTime}" />
-			<TextBlock Text="ms"/>
+			<TextBlock Text="{Binding CpuTime, Converter={StaticResource DoubleToStringConverter}}" />
+			<TextBlock Text="ms" />
 		</StackPanel>
 
 		<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-			<TextBlock Text="{Binding UpdateTime}" />
-			<TextBlock Text="ms"/>
+			<TextBlock Text="{Binding UpdateTime, Converter={StaticResource DoubleToStringConverter}}" />
+			<TextBlock Text="ms" />
 		</StackPanel>
 
 		<StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
-			<TextBlock Text="{Binding RenderTime}" />
-			<TextBlock Text="ms"/>
+			<TextBlock Text="{Binding RenderTime, Converter={StaticResource DoubleToStringConverter}}" />
+			<TextBlock Text="ms" />
 		</StackPanel>
 	</Grid>
 </UserControl>

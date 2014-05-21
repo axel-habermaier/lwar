@@ -200,4 +200,24 @@
 		<Property Type="string" Name="Title"/>
 	</Class>
 
+	<!-- Default Converters ============================================================================================ -->
+
+	<Class Name="Pegasus.Framework.UserInterface.Converters.BooleanToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.ByteToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.SByteToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.CharToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.Int16ToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.UInt16ToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.Int32ToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.UInt32ToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.Int64ToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.UInt64ToStringConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.SingleToStringConverter">
+		<Property Name="Format" Type="string"/>
+	</Class>
+	<Class Name="Pegasus.Framework.UserInterface.Converters.DoubleToStringConverter">
+		<Property Name="Format" Type="string"/>
+	</Class>
+	<Class Name="Pegasus.Framework.UserInterface.Converters.BooleanToVisibilityConverter" />
+
 </Types>

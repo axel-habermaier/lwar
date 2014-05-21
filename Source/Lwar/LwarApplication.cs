@@ -1,7 +1,6 @@
 ﻿namespace Lwar
 {
 	using System;
-	using States;
 	using Assets;
 	using Network;
 	using Pegasus.Framework;
@@ -12,12 +11,12 @@
 	using Pegasus.Rendering;
 	using Screens;
 	using Scripting;
-	using UserInterface;
+	using States;
 
 	/// <summary>
-	///     Represents the lwar application.
+	///     Represents the Lwar application.
 	/// </summary>
-	public sealed partial class App
+	public sealed partial class LwarApplication
 	{
 		/// <summary>
 		///     The local game server that can be used to hosts game sessions locally.
@@ -25,11 +24,10 @@
 		private readonly LocalServer _localServer = new LocalServer();
 
 		private readonly ScreenManager _screenManager = new ScreenManager();
+		private readonly StateManager _stateManager = new StateManager();
 		private Camera2D _camera;
 
 		private SpriteBatch _spriteBatch;
-
-		private StateManager _stateManager = new StateManager();
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -147,7 +145,7 @@
 			Commands.Initialize();
 			Cvars.Initialize();
 
-			Bootstrapper<App>.Run(args, "Lwar");
+			Bootstrapper<LwarApplication>.Run(args, "Lwar");
 		}
 	}
 }

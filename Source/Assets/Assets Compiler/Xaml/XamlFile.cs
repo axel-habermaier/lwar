@@ -93,6 +93,7 @@
 			}
 
 			InlineMergedResourceDictionaries();
+			RemoveResourceDictionaryCreations();
 
 			TrimElementLiterals();
 			RemoveIgnorableElements();
@@ -108,9 +109,9 @@
 			RemoveDuplicatedResourceKeys();
 
 			RewriteTemplateBindings();
+			RewriteDataBindings();
 			RewriteDynamicResourceBindings();
 			RewriteStaticResourceBindings();
-			RewriteDataBindings();
 
 			PushDownControlTemplateTargetType();
 			PushDownStyleTargetType();
@@ -179,8 +180,17 @@
 					dictionary.ReplaceWith(content.Elements());
 				}
 
-				merge.Parent.ReplaceWith(merge.Elements());
+				merge.ReplaceWith(merge.Elements());
 			}
+		}
+
+		/// <summary>
+		///     Removes all explicit creations of resource dictionaries.
+		/// </summary>
+		private void RemoveResourceDictionaryCreations()
+		{
+			foreach (var dictionary in GetNamedElements(Root, "ResourceDictionary").ToArray())
+				dictionary.ReplaceWith(dictionary.Elements());
 		}
 
 		/// <summary>
@@ -206,7 +216,7 @@
 		private void AddSetterConstructorParameters()
 		{
 			foreach (var setter in Root.DescendantsAndSelf()
-									   .Where(e => e.Name.LocalName == "Create" && e.Attribute("Type").Value == "Setter"))
+									   .Where(e => e.Name.LocalName == "Create" && e.Attribute("Type").Value == "Pegasus.Framework.UserInterface.Setter"))
 			{
 				var property = setter.Element(DefaultNamespace + "Setter.Property");
 				var value = setter.Element(DefaultNamespace + "Setter.Value");
@@ -243,12 +253,20 @@
 			Assert.That(split.Length == 2, "Expected property element to be of form 'TargetType.PropertyName'.");
 
 			var parentType = element.Parent.Attribute("Type").Value;
+			var typeName = parentType.Substring(parentType.LastIndexOf(".", StringComparison.Ordinal) + 1);
 			var propertyName = split[1];
 
-			var isAttached = parentType != split[0];
+			var isAttached = typeName != split[0];
 			var content = element.HasElements ? (object)element.Elements() : (object)element.Value;
-			var classType = (XamlClass)GetClrType(split[0]);
 
+			if (isAttached)
+				parentType = GetClrType(split[0]).FullName;
+
+			IXamlType xamlType;
+			if (!_typeInfoProvider.TryFind(parentType, out xamlType))
+				Log.Die("Unable to find class for type '{0}'.", parentType);
+
+			var classType = (XamlClass)xamlType;
 			XamlProperty xamlProperty;
 			if (!classType.TryFind(split[1], out xamlProperty))
 				Log.Die("Unable to find property '{0}' in '{1}'.", split[1], classType.FullName);
@@ -351,7 +369,10 @@
 			if (element.Name.LocalName.Contains(".") || element.Name.LocalName == "Binding")
 				return;
 
-			var newElement = new XElement(DefaultNamespace + "Create", new XAttribute("Type", element.Name.LocalName), element.Attributes(),
+			var type = GetClrType(element.Name);
+			var newElement = new XElement(DefaultNamespace + "Create",
+										  new XAttribute("Type", type.FullName),
+										  element.Attributes(),
 										  element.Elements());
 			if (element.Parent != null)
 				element.ReplaceWith(newElement);
@@ -432,6 +453,8 @@
 		{
 			Assert.ArgumentNotNull(clrType);
 
+			var lastDot = clrType.LastIndexOf(".", StringComparison.Ordinal);
+			clrType = clrType.Substring(lastDot + 1);
 			var name = Char.ToLower(clrType[0]) + clrType.Substring(1);
 
 			int count;
@@ -455,11 +478,11 @@
 		/// </summary>
 		private void AddImplicitStyleKeys()
 		{
-			foreach (var element in Root.DescendantsAndSelf().Where(e => e.Name.LocalName.Contains("...Add")))
+			foreach (var element in Root.DescendantsAndSelf().Where(e => e.Name.LocalName.Contains("...Add")).ToArray())
 			{
 				var value = element.Elements(DefaultNamespace + "Style").SingleOrDefault();
 				if (value == null)
-					return;
+					continue;
 
 				var key = value.Elements(value.Name + ".Key").SingleOrDefault();
 				if (key != null)
@@ -509,7 +532,7 @@
 		}
 
 		/// <summary>
-		///     Recursively replaces Xaml's special dictionary syntax with explicit calls to the list's Add method.
+		///     Recursively replaces Xaml's special dictionary syntax with explicit calls to the dictionary's Add method.
 		/// </summary>
 		private void ReplaceDictionarySyntax(XElement element)
 		{
@@ -562,6 +585,8 @@
 				var binding = bindingElement.Value;
 				var regex = new Regex(@"\{TemplateBinding ((Property=(?<property>.*))|(?<property>.*))\}");
 				var match = regex.Match(binding);
+				if (!match.Success)
+					Log.Die("Unable to parse template binding '{0}'.", binding);
 
 				bindingElement.SetValue(String.Empty);
 				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Template"),
@@ -582,6 +607,8 @@
 				var binding = bindingElement.Value;
 				var regex = new Regex(@"\{DynamicResource ((Key=(?<key>.*))|(?<key>.*))\}");
 				var match = regex.Match(binding);
+				if (!match.Success)
+					Log.Die("Unable to parse dynamic resource binding '{0}'.", binding);
 
 				bindingElement.SetValue(String.Empty);
 				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "DynamicResource"),
@@ -602,6 +629,8 @@
 				var binding = bindingElement.Value;
 				var regex = new Regex(@"\{StaticResource ((ResourceKey=(?<key>.*))|(?<key>.*))\}");
 				var match = regex.Match(binding);
+				if (!match.Success)
+					Log.Die("Unable to parse static resource binding '{0}'.", binding);
 
 				bindingElement.SetValue(String.Empty);
 				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "StaticResource"),
@@ -620,13 +649,21 @@
 											   .ToArray())
 			{
 				var binding = bindingElement.Value;
-				var regex = new Regex(@"\{Binding ((Path=(?<path>.*))|(?<path>.*))\}");
+				var path = @"[a-zA-Z0-9\.]*";
+				var regex = new Regex(@"\{Binding (?<path>" + path + @")(, Converter=\{StaticResource (?<converter>.*)\})?\}");
 				var match = regex.Match(binding);
+				if (!match.Success)
+					Log.Die("Unable to parse data binding '{0}'.", binding);
+
+				var element = new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Data"),
+												  new XAttribute("Path", match.Groups["path"]),
+												  new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property"));
+
+				if (match.Groups["converter"].Success)
+					element.Add(new XAttribute("Converter", match.Groups["converter"].Value));
 
 				bindingElement.SetValue(String.Empty);
-				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Data"),
-														new XAttribute("Path", match.Groups["path"]),
-														new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
+				bindingElement.ReplaceWith(element);
 			}
 		}
 

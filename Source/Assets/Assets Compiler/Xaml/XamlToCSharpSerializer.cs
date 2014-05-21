@@ -131,8 +131,10 @@
 						if (child.Name.LocalName == "Set")
 							_writer.AppendLine("{0}.{1} = {2};", parentName, child.Attribute("Property").Value, value);
 						else
+						{
 							_writer.AppendLine("{0}.Set{1}({2}, {3});", child.Attribute("Type").Value,
 											   child.Attribute("Property").Value, parentName, value);
+						}
 						break;
 					case "Invoke":
 						InvokeMethod(child);
@@ -205,6 +207,10 @@
 					_writer.Append("\"{0}\"", properties[0]);
 					if (properties.Length > 1)
 						_writer.Append(", \"{0}\"", properties[1]);
+
+					var converter = element.Attribute("Converter");
+					if (converter != null)
+						_writer.Append(", converter: (IValueConverter)Resources[\"{0}\"]", converter.Value);
 
 					_writer.AppendLine(");");
 					break;

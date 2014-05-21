@@ -4,6 +4,7 @@
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using Converters;
 	using Platform.Logging;
 
 	/// <summary>
@@ -13,6 +14,11 @@
 	/// <remarks>With the current implementation of the data binding, a property path can only access up to three properties.</remarks>
 	internal sealed class DataBinding<T> : Binding<T>
 	{
+		/// <summary>
+		///     The converter that is used to convert the source value to the dependency property type.
+		/// </summary>
+		private readonly IValueConverter _converter;
+
 		/// <summary>
 		///     The number of member accesses in the source expression.
 		/// </summary>
@@ -52,7 +58,7 @@
 		/// <summary>
 		///     The compiled expression that is used to get the value from the source object.
 		/// </summary>
-		private Func<object, T> _sourceFunc;
+		private Func<object, IValueConverter, T> _sourceFunc;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -61,11 +67,15 @@
 		/// <param name="property1">The name of the first property in the property path.</param>
 		/// <param name="property2">The name of the second property in the property path.</param>
 		/// <param name="property3">The name of the third property in the property path.</param>
-		internal DataBinding(object sourceObject, string property1, string property2 = null, string property3 = null)
+		/// <param name="converter">The converter that should be used to convert the source value to the dependency property type.</param>
+		internal DataBinding(object sourceObject, string property1, string property2 = null, string property3 = null,
+							 IValueConverter converter = null)
 		{
 			Assert.ArgumentNotNullOrWhitespace(property1);
 
 			_sourceObject = sourceObject;
+			_converter = converter;
+
 			_memberAccessCount = 1;
 			_memberAccess1 = new MemberAccess(property1) { Changed = OnMember1Changed };
 
@@ -133,8 +143,10 @@
 		/// </summary>
 		private void CompileFunction()
 		{
-			var parameter = Expression.Parameter(typeof(object));
-			var expression = Expression.Convert(parameter, _sourceObject.GetType()) as Expression;
+			var sourceObjectParameter = Expression.Parameter(typeof(object));
+			var converterParameter = Expression.Parameter(typeof(IValueConverter));
+			var expression = Expression.Convert(sourceObjectParameter, _sourceObject.GetType()) as Expression;
+
 			expression = _memberAccess1.GetAccessExpression(expression);
 
 			if (_memberAccessCount > 1)
@@ -143,8 +155,14 @@
 			if (_memberAccessCount > 2)
 				expression = _memberAccess3.GetAccessExpression(expression);
 
-			expression = Expression.Convert(expression, typeof(T));
-			_sourceFunc = Expression.Lambda<Func<object, T>>(expression, parameter).Compile();
+			if (_converter != null)
+			{
+				var converterType = _converter.GetType();
+				var castConverter = Expression.Convert(converterParameter, converterType);
+				expression = Expression.Call(castConverter, converterType.GetMethod("Convert"), expression);
+			}
+
+			_sourceFunc = Expression.Lambda<Func<object, IValueConverter, T>>(expression, sourceObjectParameter, converterParameter).Compile();
 			UpdateTargetProperty();
 		}
 
@@ -226,7 +244,7 @@
 				CompileFunction();
 
 			if (!_isNull)
-				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(_sourceObject));
+				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(_sourceObject, _converter));
 			else
 				_targetObject.SetBoundValue(_targetProperty, _targetProperty.DefaultValue);
 		}
