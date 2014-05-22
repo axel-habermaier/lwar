@@ -15,7 +15,7 @@
 
 		private void TestTrigger(InputTrigger trigger)
 		{
-			Success(TypeRegistry.ToString(trigger), trigger);
+			Success(String.Format("[{0}]", trigger), trigger);
 		}
 
 		[Test]
