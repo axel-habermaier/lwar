@@ -250,13 +250,7 @@
 		/// </summary>
 		private void OnTargetPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<T> args)
 		{
-			if (!Active || _bindingMode == BindingMode.OneWay)
-				return;
-
-			if (_targetFunc == null)
-				CompileTargetFunction();
-
-			_targetFunc(_sourceObject, _targetObject.GetValue(_targetProperty), _converter);
+			UpdateSourceProperty();
 		}
 
 		/// <summary>
@@ -296,7 +290,10 @@
 				nextMemberAccess.SourceObject = value;
 			}
 			else
+			{
 				UpdateTargetProperty();
+				UpdateSourceProperty();
+			}
 		}
 
 		/// <summary>
@@ -314,6 +311,20 @@
 				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(_sourceObject, _converter));
 			else
 				_targetObject.SetBoundValue(_targetProperty, _targetProperty.DefaultValue);
+		}
+
+		/// <summary>
+		/// Updates the source property with the current target value.
+		/// </summary>
+		private void UpdateSourceProperty()
+		{
+			if (!Active || _bindingMode == BindingMode.OneWay)
+				return;
+
+			if (_targetFunc == null)
+				CompileTargetFunction();
+
+			_targetFunc(_sourceObject, _targetObject.GetValue(_targetProperty), _converter);
 		}
 
 		/// <summary>

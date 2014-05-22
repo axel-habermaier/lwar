@@ -114,6 +114,13 @@
 			_control.IntegerTest1 = 42;
 			_viewModel.Model.Model.Integer.Should().Be(42);
 			_control.IntegerTest1.Should().Be(42);
+
+			model = new TestViewModel();
+			model.InitializeRecursively(1);
+			model.Model.Integer = 7777;
+			_viewModel.Model = model;
+			_viewModel.Model.Model.Integer.Should().Be(42);
+			_control.IntegerTest1.Should().Be(42);
 		}
 
 		[Test]
@@ -164,6 +171,12 @@
 			_control.IntegerTest1.Should().Be(0);
 
 			_control.IntegerTest1 = 42;
+			_viewModel.Model.Model.Integer.Should().Be(42);
+			_control.IntegerTest1.Should().Be(42);
+
+			model = new TestViewModel();
+			model.Integer = 7777;
+			_viewModel.Model.Model = model;
 			_viewModel.Model.Model.Integer.Should().Be(42);
 			_control.IntegerTest1.Should().Be(42);
 		}
