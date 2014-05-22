@@ -262,6 +262,10 @@
 			}
 			else
 			{
+				var propertyType = memberAccess.PropertyType;
+				if (propertyType != null && !propertyType.IsValueType)
+					_isNull = memberAccess.Value == null;
+
 				UpdateTargetProperty();
 				UpdateSourceProperty();
 			}
@@ -414,6 +418,23 @@
 			///     Gets or sets the type of the value currently stored by the accessed property.
 			/// </summary>
 			public Type ValueType { get; set; }
+
+			/// <summary>
+			///     Gets the declared type of the accessed property.
+			/// </summary>
+			public Type PropertyType
+			{
+				get
+				{
+					if (_dependencyProperty != null)
+						return _dependencyProperty.ValueType;
+
+					if (_propertyInfo != null)
+						return _propertyInfo.PropertyType;
+
+					return null;
+				}
+			}
 
 			/// <summary>
 			///     Gets the name of the member that is accessed.

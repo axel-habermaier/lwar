@@ -83,5 +83,44 @@
 			control.Margin.Should().Be(margin);
 			control.ViewModel.Should().Be(viewModel);
 		}
+
+		[Test]
+		public void BoundValue()
+		{
+			var viewModel = new TestViewModel { String = "Test123" };
+			var control = new TestControl();
+
+			control.CreateDataBinding(viewModel, TestControl.DefaultStringTestProperty, BindingMode.OneWay, "String");
+			control.DefaultStringTest.Should().Be(viewModel.String);
+
+			control = new TestControl { IsAttachedToRoot = false };
+			control.CreateDataBinding(viewModel, TestControl.DefaultStringTestProperty, BindingMode.OneWay, "String");
+
+			control.IsAttachedToRoot = true;
+			control.DefaultStringTest.Should().Be(viewModel.String);
+		}
+
+		[Test]
+		public void NullBoundValue()
+		{
+			var control = new TestControl() { IsAttachedToRoot = false };
+			control.CreateDataBinding(TestControl.DefaultStringTestProperty, BindingMode.OneWay, "String");
+
+			control.IsAttachedToRoot = true;
+			control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
+
+			var viewModel = new TestViewModel();
+			control = new TestControl() { IsAttachedToRoot = false };
+			control.CreateDataBinding(viewModel, TestControl.DefaultStringTestProperty, BindingMode.OneWay, "Model", "String");
+
+			control.IsAttachedToRoot = true;
+			control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
+
+			control = new TestControl() { IsAttachedToRoot = false };
+			control.CreateDataBinding(TestControl.DefaultStringTestProperty, BindingMode.OneWay, "Model", "String");
+
+			control.IsAttachedToRoot = true;
+			control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
+		}
 	}
 }

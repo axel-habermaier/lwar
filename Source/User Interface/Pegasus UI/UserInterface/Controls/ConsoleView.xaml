@@ -6,5 +6,5 @@
 			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
-	<controls:RenderOutputPanel x:Name="ConsolePanel" />
+	<controls:RenderOutputPanel SizeCallback="{Binding OnSizeChanged}" Texture2D="{Binding OutputTexture}" DrawCallback="{Binding OnDraw}" />
 </UserControl>

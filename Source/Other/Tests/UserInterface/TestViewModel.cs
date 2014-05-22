@@ -10,6 +10,7 @@
 	{
 		private int _integer;
 		private TestViewModel _model;
+		private string _string;
 		private Thickness _thickness;
 		private double _width;
 
@@ -35,6 +36,12 @@
 		{
 			get { return _integer; }
 			set { ChangePropertyValue(ref _integer, value); }
+		}
+
+		public string String
+		{
+			get { return _string; }
+			set { ChangePropertyValue(ref _string, value); }
 		}
 
 		/// <summary>

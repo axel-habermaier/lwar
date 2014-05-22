@@ -66,6 +66,38 @@
 		}
 
 		[Test]
+		public void BindingMode_OneWay_SourceIsNull()
+		{
+			_control.IsAttachedToRoot = false;
+			_control.CreateDataBinding(TestControl.DefaultStringTestProperty, BindingMode.OneWay, "String");
+
+			_control.IsAttachedToRoot = true;
+			_control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
+		}
+
+		[Test]
+		public void BindingMode_OneWay_SecondPropertyIsNull()
+		{
+			_control.IsAttachedToRoot = false;
+			_control.CreateDataBinding(_viewModel, TestControl.DefaultStringTestProperty, BindingMode.OneWay, "Model", "String");
+			_control.IsAttachedToRoot = true;
+
+			_control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
+
+			_control = new TestControl();
+			_viewModel.InitializeRecursively(1);
+			_viewModel.Model.String = null;
+			_control.IsAttachedToRoot = false;
+			_control.CreateDataBinding(_viewModel, TestControl.DefaultStringTestProperty, BindingMode.OneWay, "Model", "String");
+			_control.IsAttachedToRoot = true;
+
+			_control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
+
+			_viewModel.Model.String = "A";
+			_control.DefaultStringTest.Should().Be(_viewModel.Model.String);
+		}
+
+		[Test]
 		public void BindingMode_OneWay()
 		{
 			_viewModel.Integer = 17;

@@ -3,12 +3,13 @@
 	using System;
 	using Pegasus;
 	using Pegasus.Framework;
+	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
 
 	/// <summary>
 	///     A base class for Lwar specific view models.
 	/// </summary>
-	public abstract class LwarViewModel
+	public abstract class LwarViewModel : ViewModel
 	{
 		/// <summary>
 		///     The view model's child in the view model stack.
@@ -89,6 +90,9 @@
 				Assert.That(!_isActive, "The View property cannot be changed when the view model is active.");
 
 				_view = value;
+
+				if (_view != null)
+					_view.ViewModel = this;
 			}
 		}
 

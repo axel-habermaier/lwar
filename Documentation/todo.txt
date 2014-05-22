@@ -1,3 +1,9 @@
+- Databinding: OnActivate -> update source property for onewaytosource bindings?
+- Default binding modes
+- Bindings should overwrite all previously set ones
+- Update source property if null??
+
+
 Client
 ========
 - Effects

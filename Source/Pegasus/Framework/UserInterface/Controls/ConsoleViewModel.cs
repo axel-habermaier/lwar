@@ -2,6 +2,7 @@
 {
 	using System;
 	using Assets;
+	using Math;
 	using Platform.Graphics;
 	using Platform.Input;
 	using Platform.Memory;
@@ -9,24 +10,16 @@
 	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>
-	///     Displays the in-game console.
+	///     Displays the in-game console. TODO: Convert to UI framework
 	/// </summary>
 	internal class ConsoleViewModel : ViewModel
 	{
-		/// <summary>
-		///     The console view.
-		/// </summary>
-		//private readonly ConsoleView _view;
-
-		/// <summary>
-		///     The window in which the console is shown.
-		/// </summary>
-		//private AppWindow _window;
-
-		//private Camera2D Camera;
-		//private Console Console;
-		//private SpriteBatch SpriteBatch;
-		//Texture2D 
+		private readonly Camera2D _camera2D;
+		private readonly LayoutRoot _root;
+		private readonly SpriteBatch _spriteBatch;
+		private readonly ConsoleView _view = new ConsoleView();
+		private Texture2D _outputTexture;
+		private RenderOutput _renderOutput;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -41,37 +34,28 @@
 			var font = Application.Current.Assets.Load(Fonts.LiberationMono11);
 			Console = new Console(inputDevice, font);
 			Console.Update(window.Size);
+			OnDraw = Draw;
+			OnSizeChanged = InitializeRenderOutput;
 
-			//_view = new ConsoleView(Console);
-			//_window = window;
-			//window.LayoutRoot.AddTopmost(_view);
+			_root = window.LayoutRoot;
+			_root.AddTopmost(_view);
+			_view.ViewModel = this;
+			_camera2D = new Camera2D(Application.Current.GraphicsDevice);
 
-			//var colorBuffer = new Texture2D(Application.Current.GraphicsDevice, panelSize, SurfaceFormat.Rgba8, TextureFlags.RenderTarget);
-			//colorBuffer.SetName("RenderOutputPanel.ColorBuffer");
+			InitializeRenderOutput(window.Size);
 
-			//renderOutput = new RenderOutput(Application.Current.GraphicsDevice)
-			//{
-			//	RenderTarget = new RenderTarget(Application.Current.GraphicsDevice, depthStencil, colorBuffer),
-			//	Viewport = new Rectangle(0, 0, panelSize)
-			//};
+			_spriteBatch = new SpriteBatch(Application.Current.GraphicsDevice, Application.Current.Assets)
+			{
+				BlendState = BlendState.Premultiplied,
+				DepthStencilState = DepthStencilState.DepthDisabled,
+				SamplerState = SamplerState.PointClampNoMipmaps
+			};
+		}
 
-			//_consolePanel.Camera = new Camera2D(Application.Current.GraphicsDevice);
-			//_consolePanel.SpriteBatch = new SpriteBatch(Application.Current.GraphicsDevice, Application.Current.Assets)
-			//{
-			//	BlendState = BlendState.Premultiplied,
-			//	DepthStencilState = DepthStencilState.DepthDisabled,
-			//	SamplerState = SamplerState.PointClampNoMipmaps
-			//};
-
-			//renderOutput.Camera = Camera;
-
-			//renderOutput.ClearColor(new Color());
-
-			//Camera.Viewport = renderOutput.Viewport;
-			//Console.Update(renderOutput.Viewport.Size);
-			//Console.Draw(SpriteBatch);
-
-			//SpriteBatch.DrawBatch(renderOutput);
+		public Texture2D OutputTexture
+		{
+			get { return _outputTexture; }
+			set { ChangePropertyValue(ref _outputTexture, value); }
 		}
 
 		/// <summary>
@@ -79,13 +63,61 @@
 		/// </summary>
 		public Console Console { get; private set; }
 
+		public Action OnDraw { get; private set; }
+
+		public Action<Size> OnSizeChanged { get; private set; }
+
+		private void Draw()
+		{
+			_renderOutput.ClearColor(new Color());
+
+			Console.Update(_renderOutput.Viewport.Size);
+			Console.Draw(_spriteBatch);
+
+			_spriteBatch.DrawBatch(_renderOutput);
+		}
+
+		private void InitializeRenderOutput(Size size)
+		{
+			DisposeRenderOutput();
+
+			if (size.Width == 0 || size.Height == 0)
+				return;
+
+			OutputTexture = new Texture2D(Application.Current.GraphicsDevice, size, SurfaceFormat.Rgba8, TextureFlags.RenderTarget);
+			OutputTexture.SetName("RenderOutputPanel.ColorBuffer");
+
+			_camera2D.Viewport = new Rectangle(0, 0, size);
+
+			_renderOutput = new RenderOutput(Application.Current.GraphicsDevice)
+			{
+				RenderTarget = new RenderTarget(Application.Current.GraphicsDevice, null, OutputTexture),
+				Viewport = _camera2D.Viewport,
+				Camera = _camera2D
+			};
+		}
+
+		private void DisposeRenderOutput()
+		{
+			if (_renderOutput != null)
+				_renderOutput.RenderTarget.SafeDispose();
+
+			OutputTexture.SafeDispose();
+			_renderOutput.SafeDispose();
+
+			OutputTexture = null;
+		}
+
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			DisposeRenderOutput();
 			Console.SafeDispose();
-			//_window.LayoutRoot.Remove(_view);
+			_spriteBatch.SafeDispose();
+			_root.Remove(_view);
+			_camera2D.SafeDispose();
 		}
 	}
 }
