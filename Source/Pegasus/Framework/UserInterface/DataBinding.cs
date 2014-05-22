@@ -166,27 +166,13 @@
 		/// </summary>
 		private void CompileSourceFunction()
 		{
-			var sourceObjectParameter = Expression.Parameter(typeof(object));
-			var converterParameter = Expression.Parameter(typeof(IValueConverter));
-
-			var expression = Expression.Convert(sourceObjectParameter, _sourceObject.GetType()) as Expression;
-			expression = _memberAccess1.GetAccessExpression(expression);
-
-			if (_memberAccessCount > 1)
-				expression = _memberAccess2.GetAccessExpression(expression);
-
-			if (_memberAccessCount > 2)
-				expression = _memberAccess3.GetAccessExpression(expression);
+			var expression = Expressions.GetMemberAccessExpression(this);
 
 			if (_converter != null)
-			{
-				var converterType = _converter.GetType();
-				var castConverter = Expression.Convert(converterParameter, converterType);
-				expression = Expression.Call(castConverter, converterType.GetMethod("ConvertToTarget"), expression);
-			}
+				expression = Expressions.InvokeConvertToTargetMethod(this, expression);
 
 			_sourceFunc = Expression.Lambda<Func<object, IValueConverter, T>>(
-				expression, sourceObjectParameter, converterParameter).Compile();
+				expression, Expressions.SourceObjectParameter, Expressions.ConverterParameter).Compile();
 		}
 
 		/// <summary>
@@ -194,31 +180,16 @@
 		/// </summary>
 		private void CompileTargetFunction()
 		{
-			var sourceObjectParameter = Expression.Parameter(typeof(object));
-			var valueParameter = Expression.Parameter(typeof(T));
-			var converterParameter = Expression.Parameter(typeof(IValueConverter));
+			var expression = Expressions.GetMemberAccessExpression(this);
 
-			var expression = Expression.Convert(sourceObjectParameter, _sourceObject.GetType()) as Expression;
-			expression = _memberAccess1.GetAccessExpression(expression);
-
-			if (_memberAccessCount > 1)
-				expression = _memberAccess2.GetAccessExpression(expression);
-
-			if (_memberAccessCount > 2)
-				expression = _memberAccess3.GetAccessExpression(expression);
-
-			Expression value = valueParameter;
+			Expression value = Expressions.ValueParameter;
 			if (_converter != null)
-			{
-				var converterType = _converter.GetType();
-				var castConverter = Expression.Convert(converterParameter, converterType);
-				value = Expression.Call(castConverter, converterType.GetMethod("ConvertToSource"), valueParameter);
-			}
+				value = Expressions.InvokeConvertToSourceMethod(this);
 
 			var convertExpression = (UnaryExpression)expression;
 			var assignment = Expression.Assign(convertExpression.Operand, value);
 			_targetFunc = Expression.Lambda<Action<object, T, IValueConverter>>(
-				assignment, sourceObjectParameter, valueParameter, converterParameter).Compile();
+				assignment, Expressions.SourceObjectParameter, Expressions.ValueParameter, Expressions.ConverterParameter).Compile();
 		}
 
 		/// <summary>
@@ -314,7 +285,7 @@
 		}
 
 		/// <summary>
-		/// Updates the source property with the current target value.
+		///     Updates the source property with the current target value.
 		/// </summary>
 		private void UpdateSourceProperty()
 		{
@@ -325,6 +296,77 @@
 				CompileTargetFunction();
 
 			_targetFunc(_sourceObject, _targetObject.GetValue(_targetProperty), _converter);
+		}
+
+		/// <summary>
+		///     Helper for the compilation of the source and target functions.
+		/// </summary>
+		private static class Expressions
+		{
+			/// <summary>
+			///     Represents the source object parameter of the functions.
+			/// </summary>
+			public static readonly ParameterExpression SourceObjectParameter = Expression.Parameter(typeof(object));
+
+			/// <summary>
+			///     Represents the converter object parameter of the functions.
+			/// </summary>
+			public static readonly ParameterExpression ConverterParameter = Expression.Parameter(typeof(IValueConverter));
+
+			/// <summary>
+			///     Represents the value parameter of the functions.
+			/// </summary>
+			public static readonly ParameterExpression ValueParameter = Expression.Parameter(typeof(T));
+
+			/// <summary>
+			///     Invokes the converter method with the given name.
+			/// </summary>
+			/// <param name="binding">The binding the expression is created for.</param>
+			/// <param name="methodName">The name of the converter method that should be invoked.</param>
+			/// <param name="methodParameter">The parameter for the converter method.</param>
+			private static Expression InvokeConverterMethod(DataBinding<T> binding, string methodName, Expression methodParameter)
+			{
+				var converterType = binding._converter.GetType();
+				var castConverter = Expression.Convert(ConverterParameter, converterType);
+				return Expression.Call(castConverter, converterType.GetMethod(methodName), methodParameter);
+			}
+
+			/// <summary>
+			///     Invokes the to source conversion function.
+			/// </summary>
+			/// <param name="binding">The binding the expression is created for.</param>
+			public static Expression InvokeConvertToSourceMethod(DataBinding<T> binding)
+			{
+				return InvokeConverterMethod(binding, "ConvertToSource", ValueParameter);
+			}
+
+			/// <summary>
+			///     Invokes the to target conversion function.
+			/// </summary>
+			/// <param name="binding">The binding the expression is created for.</param>
+			/// <param name="methodParameter">The parameter for the converter method.</param>
+			public static Expression InvokeConvertToTargetMethod(DataBinding<T> binding, Expression methodParameter)
+			{
+				return InvokeConverterMethod(binding, "ConvertToTarget", methodParameter);
+			}
+
+			/// <summary>
+			///     Generates the expression that accesses the members of the binding's property path.
+			/// </summary>
+			/// <param name="binding">The binding the expression is created for.</param>
+			public static Expression GetMemberAccessExpression(DataBinding<T> binding)
+			{
+				var expression = Expression.Convert(SourceObjectParameter, binding._sourceObject.GetType()) as Expression;
+				expression = binding._memberAccess1.GetAccessExpression(expression);
+
+				if (binding._memberAccessCount > 1)
+					expression = binding._memberAccess2.GetAccessExpression(expression);
+
+				if (binding._memberAccessCount > 2)
+					expression = binding._memberAccess3.GetAccessExpression(expression);
+
+				return expression;
+			}
 		}
 
 		/// <summary>
