@@ -19,7 +19,6 @@
 		private readonly Thickness _margin1 = new Thickness(2);
 		private readonly Thickness _margin2 = new Thickness(4);
 		private readonly Thickness _margin3 = new Thickness(8);
-		private readonly Thickness _margin4 = new Thickness(16);
 		private const double Width1 = 4;
 		private const double Width2 = 66;
 		private const double Width3 = 128;
@@ -709,6 +708,20 @@
 
 			_control.ViewModel = null;
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
+		}
+
+		[Test]
+		public void DefaultBindingMode()
+		{
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.Default, "Bool");
+			_viewModel.Bool = true;
+
+			_control.BooleanTest1.Should().BeFalse();
+
+			_viewModel.Bool = false;
+			_control.BooleanTest1 = true;
+
+			_viewModel.Bool.Should().BeTrue();
 		}
 	}
 }

@@ -40,15 +40,21 @@
 		///     Indicates that changes to the value of the dependency property potentially requires a redraw, without affecting
 		///     measurement or arrangement.
 		/// </param>
-		/// <param name="prohibitsAnimations"> Indicates that the dependency property cannot be animated.</param>
+		/// <param name="prohibitsAnimations">Indicates that the dependency property cannot be animated.</param>
 		/// <param name="prohibitsDataBinding">Indicates that the dependency property does not support data binding.</param>
+		/// <param name="defaultBindingMode">The default data binding mode of the dependency property.</param>
 		protected DependencyProperty(bool inherits,
 									 bool affectsMeasure,
 									 bool affectsArrange,
 									 bool affectsRender,
 									 bool prohibitsAnimations,
-									 bool prohibitsDataBinding)
+									 bool prohibitsDataBinding,
+									 BindingMode defaultBindingMode)
 		{
+			Assert.ArgumentInRange(defaultBindingMode);
+			Assert.ArgumentSatisfies(defaultBindingMode != BindingMode.Default, "Unsupported binding mode.");
+
+			DefaultBindingMode = defaultBindingMode;
 			Index = _propertyCount++;
 
 			if (inherits)
@@ -71,6 +77,11 @@
 
 			DependencyProperties.Add(this);
 		}
+
+		/// <summary>
+		///     Gets the default data binding mode of the dependency property.
+		/// </summary>
+		public BindingMode DefaultBindingMode { get; private set; }
 
 		/// <summary>
 		///     Gets a value indicating whether the value of the dependency property is potentially inherited.

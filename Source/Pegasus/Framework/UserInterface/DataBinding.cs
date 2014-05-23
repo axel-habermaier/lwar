@@ -15,11 +15,6 @@
 	internal sealed class DataBinding<T> : Binding<T>
 	{
 		/// <summary>
-		///     Indicates the direction of the data flow of the data binding.
-		/// </summary>
-		private readonly BindingMode _bindingMode;
-
-		/// <summary>
 		///     The converter that is used to convert the source value to the dependency property type.
 		/// </summary>
 		private readonly IValueConverter _converter;
@@ -34,6 +29,11 @@
 		///     property.
 		/// </summary>
 		private readonly object _sourceObject;
+
+		/// <summary>
+		///     Indicates the direction of the data flow of the data binding.
+		/// </summary>
+		private BindingMode _bindingMode;
 
 		/// <summary>
 		///     Indicates whether the currently bound value is null.
@@ -136,6 +136,10 @@
 
 			// Set the source object of the first member access
 			_memberAccess1.SourceObject = _sourceObject;
+
+			// Check if the default binding mode of the target dependency property should be used
+			if (_bindingMode == BindingMode.Default)
+				_bindingMode = _targetProperty.DefaultBindingMode;
 
 			if (_bindingMode != BindingMode.OneWay)
 				_targetObject.AddChangedHandler(_targetProperty, OnTargetPropertyChanged);

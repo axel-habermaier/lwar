@@ -39,6 +39,7 @@
 		/// </param>
 		/// <param name="prohibitsAnimations"> Indicates that the dependency property cannot be animated.</param>
 		/// <param name="prohibitsDataBinding">Indicates that the dependency property does not support data binding.</param>
+		/// <param name="defaultBindingMode">The default data binding mode of the dependency property.</param>
 		public DependencyProperty(T defaultValue = default(T),
 								  DependencyPropertyValidationCallback<T> validationCallback = null,
 								  bool inherits = false,
@@ -46,8 +47,9 @@
 								  bool affectsArrange = false,
 								  bool affectsRender = false,
 								  bool prohibitsAnimations = false,
-								  bool prohibitsDataBinding = false)
-			: base(inherits, affectsMeasure, affectsArrange, affectsRender, prohibitsAnimations, prohibitsDataBinding)
+								  bool prohibitsDataBinding = false,
+								  BindingMode defaultBindingMode = BindingMode.OneWay)
+			: base(inherits, affectsMeasure, affectsArrange, affectsRender, prohibitsAnimations, prohibitsDataBinding, defaultBindingMode)
 		{
 			DefaultValue = defaultValue;
 			_validationCallback = validationCallback;

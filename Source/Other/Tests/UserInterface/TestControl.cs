@@ -1,7 +1,6 @@
 ﻿namespace Tests.UserInterface
 {
 	using System;
-	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
 
@@ -10,7 +9,9 @@
 	/// </summary>
 	public class TestControl : UserControl
 	{
-		public static readonly DependencyProperty<bool> BooleanTestProperty1 = new DependencyProperty<bool>();
+		public static readonly DependencyProperty<bool> BooleanTestProperty1 =
+			new DependencyProperty<bool>(defaultBindingMode: BindingMode.OneWayToSource);
+
 		public static readonly DependencyProperty<bool> BooleanTestProperty2 = new DependencyProperty<bool>();
 		public static readonly DependencyProperty<int> IntegerTestProperty1 = new DependencyProperty<int>();
 		public static readonly DependencyProperty<int> IntegerTestProperty2 = new DependencyProperty<int>();

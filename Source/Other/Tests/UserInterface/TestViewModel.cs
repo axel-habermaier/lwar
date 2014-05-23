@@ -8,6 +8,7 @@
 	/// </summary>
 	public class TestViewModel : ViewModel
 	{
+		private bool _bool;
 		private int _integer;
 		private TestViewModel _model;
 		private string _string;
@@ -42,6 +43,12 @@
 		{
 			get { return _string; }
 			set { ChangePropertyValue(ref _string, value); }
+		}
+
+		public bool Bool
+		{
+			get { return _bool; }
+			set { ChangePropertyValue(ref _bool, value); }
 		}
 
 		/// <summary>
