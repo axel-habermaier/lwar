@@ -1,5 +1,3 @@
-- Bindings should overwrite all previously set ones
-
 Client
 ========
 - Effects

@@ -4,7 +4,6 @@
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Framework.UserInterface;
-	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Framework.UserInterface.Converters;
 
 	[TestFixture]
@@ -407,6 +406,30 @@
 		}
 
 		[Test]
+		public void OneWayToSource_FirstChangedToNull()
+		{
+			_viewModel.InitializeRecursively(2);
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Bool");
+
+			_control.BooleanTest1 = true;
+			_viewModel.Model.Model.Bool.Should().BeTrue();
+
+			_viewModel.Model = null;
+
+			Action action = () => _control.BooleanTest1 = false;
+			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void OneWayToSource_Property_NotSet()
+		{
+			_control.StringTest = "ABC";
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "String");
+			_viewModel.String.Should().Be("ABC");
+		}
+
+		[Test]
 		public void OneWayToSource_NoSourceObject()
 		{
 			_control.CreateDataBinding(TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Bool");
@@ -444,21 +467,6 @@
 		}
 
 		[Test]
-		public void OneWayToSource_FirstChangedToNull()
-		{
-			_viewModel.InitializeRecursively(2);
-			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Bool");
-
-			_control.BooleanTest1 = true;
-			_viewModel.Model.Model.Bool.Should().BeTrue();
-
-			_viewModel.Model = null;
-
-			Action action = () => _control.BooleanTest1 = false;
-			action.ShouldNotThrow();
-		}
-
-		[Test]
 		public void OneWayToSource_SecondChangedToNull()
 		{
 			_viewModel.InitializeRecursively(2);
@@ -471,6 +479,50 @@
 
 			Action action = () => _control.BooleanTest1 = false;
 			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void Overwrite_OneWay()
+		{
+			_viewModel.String = "ABC";
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "String");
+			_control.StringTest.Should().Be("ABC");
+
+			_viewModel = new TestViewModel { String = "DEF" };
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "String");
+			_control.StringTest.Should().Be("DEF");
+		}
+
+		[Test]
+		public void Overwrite_OneWayToSource()
+		{
+			_control.StringTest = "ABC";
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "String");
+			_viewModel.String.Should().Be("ABC");
+
+			_viewModel = new TestViewModel { String = "DEF" };
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "String");
+			_viewModel.String.Should().Be("DEF");
+		}
+
+		[Test]
+		public void Overwrite_TwoWay()
+		{
+			_viewModel.String = "ABC";
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.TwoWay, "String");
+			_control.StringTest.Should().Be("ABC");
+			_viewModel.String.Should().Be("ABC");
+
+			_viewModel = new TestViewModel { String = "DEF" };
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.TwoWay, "String");
+			_control.StringTest.Should().Be("DEF");
+			_viewModel.String.Should().Be("DEF");
 		}
 
 		[Test]
@@ -605,6 +657,41 @@
 
 			_viewModel.Width = Width3;
 			_control.Width.Should().Be(Width2);
+		}
+
+		[Test]
+		public void UpdateOnActivation()
+		{
+			_control.IsAttachedToRoot = false;
+			_control.StringTest = "ABC";
+			_control.BooleanTest1 = true;
+			_control.Width = 17;
+
+			_viewModel.String = "DEF";
+			_viewModel.Bool = false;
+			_viewModel.Width = 1;
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "String");
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Bool");
+			_control.CreateDataBinding(_viewModel, UIElement.WidthProperty, BindingMode.TwoWay, "Width");
+
+			_control.StringTest.Should().Be("ABC");
+			_control.BooleanTest1.Should().Be(true);
+			_control.Width.Should().Be(17);
+
+			_viewModel.String.Should().Be("DEF");
+			_viewModel.Bool.Should().BeFalse();
+			_viewModel.Width.Should().Be(1);
+
+			_control.IsAttachedToRoot = true;
+
+			_control.StringTest.Should().Be("DEF");
+			_control.BooleanTest1.Should().Be(true);
+			_control.Width.Should().Be(1);
+
+			_viewModel.String.Should().Be("DEF");
+			_viewModel.Bool.Should().BeTrue();
+			_viewModel.Width.Should().Be(1);
 		}
 
 		[Test]
@@ -790,41 +877,6 @@
 
 			_control.ViewModel = null;
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
-		}
-
-		[Test]
-		public void UpdateOnActivation()
-		{
-			_control.IsAttachedToRoot = false;
-			_control.StringTest = "ABC";
-			_control.BooleanTest1 = true;
-			_control.Width = 17;
-
-			_viewModel.String = "DEF";
-			_viewModel.Bool = false;
-			_viewModel.Width = 1;
-
-			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "String");
-			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Bool");
-			_control.CreateDataBinding(_viewModel, UIElement.WidthProperty, BindingMode.TwoWay, "Width");
-
-			_control.StringTest.Should().Be("ABC");
-			_control.BooleanTest1.Should().Be(true);
-			_control.Width.Should().Be(17);
-
-			_viewModel.String.Should().Be("DEF");
-			_viewModel.Bool.Should().BeFalse();
-			_viewModel.Width.Should().Be(1);
-
-			_control.IsAttachedToRoot = true;
-
-			_control.StringTest.Should().Be("DEF");
-			_control.BooleanTest1.Should().Be(true);
-			_control.Width.Should().Be(1);
-
-			_viewModel.String.Should().Be("DEF");
-			_viewModel.Bool.Should().BeTrue();
-			_viewModel.Width.Should().Be(1);
 		}
 	}
 }
