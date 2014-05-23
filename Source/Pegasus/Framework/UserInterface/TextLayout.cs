@@ -301,7 +301,7 @@
 		/// <param name="layoutInfo">The layout info the layouting information should be obtained from.</param>
 		private void AlignLines(ref LayoutInfo layoutInfo)
 		{
-			if (layoutInfo.Alignment == TextAlignment.Left || 
+			if (layoutInfo.Alignment == TextAlignment.Left ||
 				(layoutInfo.Wrapping == TextWrapping.NoWrap && layoutInfo.DesiredSize.Width <= layoutInfo.ActualSize.Width))
 				return;
 

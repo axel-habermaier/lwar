@@ -1,4 +1,4 @@
-﻿namespace Pegasus.Framework
+﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
 	using System.Collections.Generic;

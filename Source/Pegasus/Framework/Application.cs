@@ -7,7 +7,6 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Rendering;
-	using Rendering.UserInterface;
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
@@ -41,11 +40,10 @@
 			Current = this;
 		}
 
+		//public double StartupTime { get; private set; }
 		/// <summary>
 		///     Gets the application startup time in seconds, i.e., the timestamp of the internal CPU clock at application startup.
 		/// </summary>
-		//public double StartupTime { get; private set; }
-
 		/// <summary>
 		///     Gets the application instance of this app domain.
 		/// </summary>

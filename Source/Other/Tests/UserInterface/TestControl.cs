@@ -2,6 +2,7 @@
 {
 	using System;
 	using Pegasus.Framework;
+	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
 
 	/// <summary>
