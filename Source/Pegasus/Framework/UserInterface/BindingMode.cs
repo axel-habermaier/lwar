@@ -8,9 +8,14 @@
 	public enum BindingMode
 	{
 		/// <summary>
+		///     Indicates that the target dependency property's default binding mode is used.
+		/// </summary>
+		Default,
+
+		/// <summary>
 		///     Indicates that the data flows from the source to the target only.
 		/// </summary>
-		OneWay = 1,
+		OneWay,
 
 		/// <summary>
 		///     Indicates that the data flows from the target to the source only.

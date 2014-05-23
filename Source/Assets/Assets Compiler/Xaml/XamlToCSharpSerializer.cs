@@ -198,7 +198,7 @@
 				{
 					var parentName = element.Parent.Attribute("Name").Value;
 					var bindingModeAttribute = element.Attribute("BindingMode");
-					var bindingMode = bindingModeAttribute == null ? "OneWay" : bindingModeAttribute.Value;
+					var bindingMode = bindingModeAttribute == null ? "Default" : bindingModeAttribute.Value;
 					_writer.Append("{0}.CreateDataBinding({1}, BindingMode.{2}, ", parentName, element.Attribute("TargetProperty").Value, bindingMode);
 
 					var path = element.Attribute("Path").Value;
