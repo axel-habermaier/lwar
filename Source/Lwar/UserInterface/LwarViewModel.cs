@@ -5,6 +5,7 @@
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
+	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///     A base class for Lwar specific view models.
@@ -42,9 +43,15 @@
 		/// </summary>
 		public LwarViewModel Child
 		{
-			get { return _child; }
+			get
+			{
+				Assert.NotDisposed(this);
+				return _child;
+			}
 			set
 			{
+				Assert.NotDisposed(this);
+
 				if (_child != null)
 				{
 					_child.Parent = null;
@@ -70,10 +77,16 @@
 		/// </summary>
 		protected bool IsModal
 		{
-			get { return _isModal; }
+			get
+			{
+				Assert.NotDisposed(this);
+				return _isModal;
+			}
 			set
 			{
+				Assert.NotDisposed(this);
 				Assert.That(!_isActive, "The IsModal property cannot be changed when the view model is active.");
+
 				_isModal = value;
 			}
 		}
@@ -83,11 +96,16 @@
 		/// </summary>
 		protected UserControl View
 		{
-			get { return _view; }
+			get
+			{
+				Assert.NotDisposed(this);
+				return _view;
+			}
 			set
 			{
 				Assert.ArgumentNotNull(value);
 				Assert.That(!_isActive, "The View property cannot be changed when the view model is active.");
+				Assert.NotDisposed(this);
 
 				_view = value;
 
@@ -103,6 +121,7 @@
 		{
 			Assert.That(!_isActive, "The view model is already active.");
 			Assert.That(_view != null || GetType() == typeof(RootViewModel), "No view has been set for the view model.");
+			Assert.NotDisposed(this);
 
 			if (_isModal && _view != null)
 				Application.Current.Window.LayoutRoot.AddModal(_view);
@@ -122,6 +141,7 @@
 		public void Deactivate()
 		{
 			Assert.That(_isActive, "The view model is not active.");
+			Assert.NotDisposed(this);
 
 			if (_view != null)
 				Application.Current.Window.LayoutRoot.Remove(_view);
@@ -138,6 +158,8 @@
 		/// </summary>
 		public void Update()
 		{
+			Assert.NotDisposed(this);
+
 			if (_child != null)
 				_child.Update();
 
@@ -163,6 +185,34 @@
 		/// </summary>
 		protected virtual void OnUpdate()
 		{
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override sealed void OnDisposing()
+		{
+			_child.SafeDispose();
+			_child = null;
+
+			if (_isActive)
+				Deactivate();
+		}
+
+		/// <summary>
+		///     Replaces the current view model with the given one, optionally disposing the current view model.
+		/// </summary>
+		/// <param name="viewModel">The new view model the current one should be replaced with.</param>
+		/// <param name="disposeSelf">Indicates whether the current view model should be disposed after it has been replaced.</param>
+		protected void ReplaceSelf(LwarViewModel viewModel, bool disposeSelf)
+		{
+			Assert.That(Parent != null && Parent.Child == this, "The current view model cannot be replaced.");
+			Assert.NotDisposed(this);
+
+			Parent.Child = viewModel;
+
+			if (disposeSelf)
+				this.SafeDispose();
 		}
 	}
 }

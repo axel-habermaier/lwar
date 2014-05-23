@@ -101,7 +101,7 @@
 		/// </summary>
 		protected override void Dispose()
 		{
-			_viewModel.Deactivate();
+			_viewModel.SafeDispose();
 			_camera.SafeDispose();
 			_spriteBatch.SafeDispose();
 			_screenManager.SafeDispose();

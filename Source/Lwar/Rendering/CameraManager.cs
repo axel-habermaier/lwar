@@ -2,6 +2,7 @@
 {
 	using System;
 	using Pegasus;
+	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
@@ -12,7 +13,7 @@
 	/// <summary>
 	///     Manages the game and debug cameras.
 	/// </summary>
-	public class CameraManager : DisposableObject
+	public class CameraManager : DisposableObject, INotifyPropertyChanged
 	{
 		/// <summary>
 		///     The debug camera that can be used to freely navigate the scene.
@@ -64,6 +65,11 @@
 		public Camera ActiveCamera { get; private set; }
 
 		/// <summary>
+		///     Raised when a property of the current object has been changed.
+		/// </summary>
+		public event PropertyChangedHandler PropertyChanged;
+
+		/// <summary>
 		///     Toggles between the game and the debug camera.
 		/// </summary>
 		private void ToggleDebugCamera()
@@ -85,6 +91,7 @@
 			}
 
 			GameCamera.IsActive = ActiveCamera == GameCamera;
+			PropertyChanged(this, "ActiveCamera");
 		}
 
 		/// <summary>

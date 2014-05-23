@@ -4,43 +4,59 @@
 	using System.Windows;
 	using System.Windows.Controls;
 	using System.Windows.Media;
-
-	public class Texture2D
-	{
-	}
+	using System.Windows.Media.Media3D;
+	using Platform.Graphics;
 
 	public class RenderOutputPanel : Border
 	{
-		public static readonly DependencyProperty SizeCallbackProperty = DependencyProperty.Register(
-			"SizeCallback", typeof(Action<Size>), typeof(RenderOutputPanel), new PropertyMetadata(default(Action<Size>)));
+		public static readonly DependencyProperty HasDepthStencilProperty = DependencyProperty.Register(
+			"HasDepthStencil", typeof(bool), typeof(RenderOutputPanel), new PropertyMetadata(false));
 
-		public static readonly DependencyProperty Texture2DProperty = DependencyProperty.Register(
-			"Texture2D", typeof(Texture2D), typeof(RenderOutputPanel), new PropertyMetadata(default(Texture2D)));
+		public static readonly DependencyProperty DepthStencilFormatProperty = DependencyProperty.Register(
+			"DepthStencilFormat", typeof(SurfaceFormat), typeof(RenderOutputPanel), new PropertyMetadata(SurfaceFormat.Depth24Stencil8));
+
+		public static readonly DependencyProperty ColorBufferFormatProperty = DependencyProperty.Register(
+			"ColorBufferFormat", typeof(SurfaceFormat), typeof(RenderOutputPanel), new PropertyMetadata(SurfaceFormat.Rgba8));
 
 		public static readonly DependencyProperty DrawCallbackProperty = DependencyProperty.Register(
 			"DrawCallback", typeof(Action), typeof(RenderOutputPanel), new PropertyMetadata(default(Action)));
+
+		public static readonly DependencyProperty CameraProperty = DependencyProperty.Register(
+			"Camera", typeof(Camera), typeof(RenderOutputPanel), new PropertyMetadata(default(Camera)));
 
 		public RenderOutputPanel()
 		{
 			Background = new SolidColorBrush(Colors.Black);
 		}
 
+		public Camera Camera
+		{
+			get { return (Camera)GetValue(CameraProperty); }
+			set { SetValue(CameraProperty, value); }
+		}
+
+		public bool HasDepthStencil
+		{
+			get { return (bool)GetValue(HasDepthStencilProperty); }
+			set { SetValue(HasDepthStencilProperty, value); }
+		}
+
+		public SurfaceFormat DepthStencilFormat
+		{
+			get { return (SurfaceFormat)GetValue(DepthStencilFormatProperty); }
+			set { SetValue(DepthStencilFormatProperty, value); }
+		}
+
+		public SurfaceFormat ColorBufferFormat
+		{
+			get { return (SurfaceFormat)GetValue(ColorBufferFormatProperty); }
+			set { SetValue(ColorBufferFormatProperty, value); }
+		}
+
 		public Action DrawCallback
 		{
 			get { return (Action)GetValue(DrawCallbackProperty); }
 			set { SetValue(DrawCallbackProperty, value); }
-		}
-
-		public Texture2D Texture2D
-		{
-			get { return (Texture2D)GetValue(Texture2DProperty); }
-			set { SetValue(Texture2DProperty, value); }
-		}
-
-		public Action<Size> SizeCallback
-		{
-			get { return (Action<Size>)GetValue(SizeCallbackProperty); }
-			set { SetValue(SizeCallbackProperty, value); }
 		}
 	}
 }

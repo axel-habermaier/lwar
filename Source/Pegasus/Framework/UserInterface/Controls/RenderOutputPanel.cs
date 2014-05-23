@@ -4,6 +4,7 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Logging;
+	using Platform.Memory;
 	using Rendering;
 
 	/// <summary>
@@ -12,42 +13,98 @@
 	public sealed class RenderOutputPanel : Decorator
 	{
 		/// <summary>
-		///     The size callback of the render output panel.
+		///     A value indicating whether the render output panel has a depth stencil buffer.
 		/// </summary>
-		public static readonly DependencyProperty<Action<Size>> SizeCallbackProperty = new DependencyProperty<Action<Size>>();
+		public static readonly DependencyProperty<bool> HasDepthStencilProperty = new DependencyProperty<bool>();
 
 		/// <summary>
-		///     The texture that contains the render output panel's contents.
+		///     The surface format of the render output panel's depth stencil buffer.
 		/// </summary>
-		public static readonly DependencyProperty<Texture2D> Texture2DProperty = new DependencyProperty<Texture2D>();
+		public static readonly DependencyProperty<SurfaceFormat> DepthStencilFormatProperty =
+			new DependencyProperty<SurfaceFormat>(SurfaceFormat.Depth24Stencil8);
+
+		/// <summary>
+		///     The surface format of the render output panel's color buffer.
+		/// </summary>
+		public static readonly DependencyProperty<SurfaceFormat> ColorBufferFormatProperty =
+			new DependencyProperty<SurfaceFormat>(SurfaceFormat.Rgba8);
+
+		/// <summary>
+		///     The camera that is used to draw to the content's of the render output panel.
+		/// </summary>
+		public static readonly DependencyProperty<Camera> CameraProperty = new DependencyProperty<Camera>();
 
 		/// <summary>
 		///     The callback that is invoked when the contents of the texture should be updated.
 		/// </summary>
-		public static readonly DependencyProperty<Action> DrawCallbackProperty = new DependencyProperty<Action>();
+		public static readonly DependencyProperty<Action<RenderOutput>> DrawCallbackProperty = new DependencyProperty<Action<RenderOutput>>();
 
 		/// <summary>
-		///     Gets or sets the size callback of the render output panel.
+		///     The depth stencil texture of the render output.
 		/// </summary>
-		public Action<Size> SizeCallback
+		private Texture2D _depthStencil;
+
+		/// <summary>
+		///     The color buffer of the render output.
+		/// </summary>
+		private Texture2D _outputTexture;
+
+		/// <summary>
+		///     The render output that is used to draw into the output texture.
+		/// </summary>
+		private RenderOutput _renderOutput;
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static RenderOutputPanel()
 		{
-			get { return GetValue(SizeCallbackProperty); }
-			set { SetValue(SizeCallbackProperty, value); }
+			HasDepthStencilProperty.Changed += (obj, args) => ((RenderOutputPanel)obj).DisposeGraphicsResources();
+			DepthStencilFormatProperty.Changed += (obj, args) => ((RenderOutputPanel)obj).DisposeGraphicsResources();
+			ColorBufferFormatProperty.Changed += (obj, args) => ((RenderOutputPanel)obj).DisposeGraphicsResources();
+			CameraProperty.Changed += OnCameraChanged;
 		}
 
 		/// <summary>
-		///     Gets or sets the texture that contains the render output panel's contents.
+		///     Gets or sets value indicating whether the render output panel has a depth stencil buffer.
 		/// </summary>
-		public Texture2D Texture2D
+		public bool HasDepthStencil
 		{
-			get { return GetValue(Texture2DProperty); }
-			set { SetValue(Texture2DProperty, value); }
+			get { return GetValue(HasDepthStencilProperty); }
+			set { SetValue(HasDepthStencilProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the surface format of the render output panel's depth stencil buffer.
+		/// </summary>
+		public SurfaceFormat DepthStencilFormat
+		{
+			get { return GetValue(DepthStencilFormatProperty); }
+			set { SetValue(DepthStencilFormatProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the surface format of the render output panel's color buffer.
+		/// </summary>
+		public SurfaceFormat ColorBufferFormat
+		{
+			get { return GetValue(ColorBufferFormatProperty); }
+			set { SetValue(ColorBufferFormatProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the camera that is used to draw to the content's of the render output panel.
+		/// </summary>
+		public Camera Camera
+		{
+			get { return GetValue(CameraProperty); }
+			set { SetValue(CameraProperty, value); }
 		}
 
 		/// <summary>
 		///     Gets or sets the callback that is invoked when the contents of the texture should be updated.
 		/// </summary>
-		public Action DrawCallback
+		public Action<RenderOutput> DrawCallback
 		{
 			get { return GetValue(DrawCallbackProperty); }
 			set { SetValue(DrawCallbackProperty, value); }
@@ -62,6 +119,21 @@
 		}
 
 		/// <summary>
+		///     Changes the camera of the render output.
+		/// </summary>
+		private static void OnCameraChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Camera> args)
+		{
+			var renderOutputPanel = (RenderOutputPanel)obj;
+			if (renderOutputPanel._renderOutput == null)
+				return;
+
+			renderOutputPanel._renderOutput.Camera = args.NewValue;
+
+			if (args.NewValue != null)
+				args.NewValue.Viewport = renderOutputPanel._renderOutput.Viewport;
+		}
+
+		/// <summary>
 		///     Invoked when the size of the UI element has changed.
 		/// </summary>
 		/// <param name="oldSize">The old size of the UI element.</param>
@@ -69,91 +141,79 @@
 		protected override void OnSizeChanged(SizeD oldSize, SizeD newSize)
 		{
 			base.OnSizeChanged(oldSize, newSize);
-
-			if (SizeCallback != null)
-				SizeCallback(new Size((int)Math.Round(newSize.Width), (int)Math.Round(newSize.Height)));
+			DisposeGraphicsResources();
 		}
 
-		///// <summary>
-		/////     Initializes the render output and texture properties.
-		///// </summary>
-		//private void Initialize()
-		//{
-		//	if (!IsAttachedToRoot)
-		//		return;
+		/// <summary>
+		///     Invoked when the UI element is no longer (transitively) attached to the root of a visual tree.
+		/// </summary>
+		protected override void OnDetachedFromRoot()
+		{
+			DisposeGraphicsResources();
+		}
 
-		//	// No need to initialize the render output if its area is 0
-		//	if (!HasVisibleArea)
-		//		return;
+		/// <summary>
+		///     Initializes all graphics resources.
+		/// </summary>
+		private void InitializeGraphicsResources()
+		{
+			// No need to initialize the graphics resources if the panel's area is 0
+			if (!HasVisibleArea)
+				return;
 
-		//	var size = new Size((int)Math.Round(ActualWidth), (int)Math.Round(ActualHeight));
-		//	InitializeCore(size, out _renderOutput, out _outputTexture);
+			var size = new Size((int)Math.Round(ActualWidth), (int)Math.Round(ActualHeight));
 
-		//	Assert.NotNull(_renderOutput, "The render output has not been initialized.");
-		//	Assert.NotNull(_outputTexture, "The output texture has not been initialized.");
-		//	Assert.That(_outputTexture.Format == SurfaceFormat.Rgba8, "Invalid output texture format.");
-		//}
+			// Initialize the color buffer of the render target
+			_outputTexture = new Texture2D(Application.Current.GraphicsDevice, size, ColorBufferFormat, TextureFlags.RenderTarget);
+			_outputTexture.SetName("RenderOutputPanel.ColorBuffer");
 
-		///// <summary>
-		/////     Initializes the render output panel's graphics objects.
-		///// </summary>
-		///// <param name="panelSize">The size of the render output panel.</param>
-		///// <param name="renderOutput">The render output that has been initialized for this render output panel.</param>
-		///// <param name="outputTexture">The output texture that contains the contents of this render output panel.</param>
-		//protected virtual void InitializeCore(Size panelSize, out RenderOutput renderOutput, out Texture2D outputTexture)
-		//{
-		//	// Initialize the color buffer of the render target
-		//	var colorBuffer = new Texture2D(Application.Current.GraphicsDevice, panelSize, SurfaceFormat.Rgba8, TextureFlags.RenderTarget);
-		//	colorBuffer.SetName("RenderOutputPanel.ColorBuffer");
+			// Initialize the depth stencil buffer of the render target
+			if (HasDepthStencil)
+			{
+				_depthStencil = new Texture2D(Application.Current.GraphicsDevice, size, DepthStencilFormat, TextureFlags.DepthStencil);
+				_depthStencil.SetName("RenderOutputPanel.DepthStencil");
+			}
 
-		//	// Initialize the depth stencil buffer of the render target
-		//	var depthStencil = new Texture2D(Application.Current.GraphicsDevice, panelSize, SurfaceFormat.Depth24Stencil8, TextureFlags.DepthStencil);
-		//	depthStencil.SetName("RenderOutputPanel.DepthStencil");
+			// Initialize the render output panel's graphics properties
+			var viewport = new Rectangle(0, 0, size);
+			_renderOutput = new RenderOutput(Application.Current.GraphicsDevice)
+			{
+				RenderTarget = new RenderTarget(Application.Current.GraphicsDevice, _depthStencil, _outputTexture),
+				Viewport = viewport,
+				Camera = Camera
+			};
 
-		//	// Initialize the render output panel's graphics properties
-		//	outputTexture = colorBuffer;
-		//	renderOutput = new RenderOutput(Application.Current.GraphicsDevice)
-		//	{
-		//		RenderTarget = new RenderTarget(Application.Current.GraphicsDevice, depthStencil, colorBuffer),
-		//		Viewport = new Rectangle(0, 0, panelSize)
-		//	};
-		//}
+			if (_renderOutput.Camera != null)
+				_renderOutput.Camera.Viewport = viewport;
+		}
 
-		///// <summary>
-		/////     Dispose the render output and the texture instances.
-		///// </summary>
-		//private void Dispose()
-		//{
-		//	DisposeCore(_renderOutput, _outputTexture);
+		/// <summary>
+		///     Disposes all graphics resources.
+		/// </summary>
+		private void DisposeGraphicsResources()
+		{
+			_depthStencil.SafeDispose();
+			_outputTexture.SafeDispose();
 
-		//	Assert.NullOrDisposed(_renderOutput);
-		//	Assert.NullOrDisposed(_outputTexture);
+			if (_renderOutput != null)
+				_renderOutput.RenderTarget.SafeDispose();
 
-		//	_renderOutput = null;
-		//	_outputTexture = null;
-		//}
+			_renderOutput.SafeDispose();
 
-		///// <summary>
-		/////     Disposes the render output panel's graphics objects.
-		///// </summary>
-		///// <param name="renderOutput">The render output that should be disposed.</param>
-		///// <param name="outputTexture">The output texture that should be disposed.</param>
-		//protected virtual void DisposeCore(RenderOutput renderOutput, Texture2D outputTexture)
-		//{
-		//	if (renderOutput != null)
-		//		renderOutput.RenderTarget.SafeDispose();
-
-		//	outputTexture.SafeDispose();
-		//	renderOutput.SafeDispose();
-		//}
+			_renderOutput = null;
+			_outputTexture = null;
+			_depthStencil = null;
+		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)
 		{
-			Log.DebugIf(Texture2D == null, "No texture has been set for the render output panel.");
 			Log.DebugIf(DrawCallback == null, "No draw callback has been set for the render output panel.");
 
-			if (!HasVisibleArea || Texture2D == null || DrawCallback == null)
+			if (!HasVisibleArea || DrawCallback == null)
 				return;
+
+			if (_renderOutput == null)
+				InitializeGraphicsResources();
 
 			var width = (int)Math.Round(ActualWidth);
 			var height = (int)Math.Round(ActualHeight);
@@ -169,11 +229,11 @@
 #endif
 
 			// Update the contents of the texture
-			DrawCallback();
+			DrawCallback(_renderOutput);
 
 			// Draw the contents into the UI
 			var quad = new Quad(new RectangleF(x, y, width, height), Color.White, textureArea);
-			spriteBatch.Draw(ref quad, Texture2D);
+			spriteBatch.Draw(ref quad, _outputTexture);
 		}
 	}
 }
