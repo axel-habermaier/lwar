@@ -1,4 +1,3 @@
-- Databinding: OnActivate -> update source property for onewaytosource bindings?
 - Bindings should overwrite all previously set ones
 
 Client

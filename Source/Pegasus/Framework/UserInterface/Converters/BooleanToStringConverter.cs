@@ -22,7 +22,10 @@ namespace Pegasus.Framework.UserInterface.Converters
 		/// <param name="value">The value that should be converted.</param>
 		public override bool ConvertToSource(string value)
 		{
-			return value == "true" ? true : false;
+			if (String.IsNullOrWhiteSpace(value))
+				return false;
+
+			return value == "true";
 		}
 	}
 }

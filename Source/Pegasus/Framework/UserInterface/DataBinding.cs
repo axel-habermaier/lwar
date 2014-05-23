@@ -125,6 +125,7 @@
 		protected override void OnActivated()
 		{
 			UpdateTargetProperty();
+			UpdateSourceProperty();
 		}
 
 		/// <summary>

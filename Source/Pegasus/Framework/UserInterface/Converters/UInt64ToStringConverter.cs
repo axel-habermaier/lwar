@@ -23,6 +23,9 @@ namespace Pegasus.Framework.UserInterface.Converters
 		/// <param name="value">The value that should be converted.</param>
 		public override ulong ConvertToSource(string value)
 		{
+			if (String.IsNullOrWhiteSpace(value))
+				return default(ulong);
+
 			return UInt64.Parse(value, CultureInfo.InvariantCulture);
 		}
 	}

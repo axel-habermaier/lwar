@@ -4,6 +4,7 @@
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Framework.UserInterface;
+	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Framework.UserInterface.Converters;
 
 	[TestFixture]
@@ -789,6 +790,41 @@
 
 			_control.ViewModel = null;
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
+		}
+
+		[Test]
+		public void UpdateOnActivation()
+		{
+			_control.IsAttachedToRoot = false;
+			_control.StringTest = "ABC";
+			_control.BooleanTest1 = true;
+			_control.Width = 17;
+
+			_viewModel.String = "DEF";
+			_viewModel.Bool = false;
+			_viewModel.Width = 1;
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "String");
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Bool");
+			_control.CreateDataBinding(_viewModel, UIElement.WidthProperty, BindingMode.TwoWay, "Width");
+
+			_control.StringTest.Should().Be("ABC");
+			_control.BooleanTest1.Should().Be(true);
+			_control.Width.Should().Be(17);
+
+			_viewModel.String.Should().Be("DEF");
+			_viewModel.Bool.Should().BeFalse();
+			_viewModel.Width.Should().Be(1);
+
+			_control.IsAttachedToRoot = true;
+
+			_control.StringTest.Should().Be("DEF");
+			_control.BooleanTest1.Should().Be(true);
+			_control.Width.Should().Be(1);
+
+			_viewModel.String.Should().Be("DEF");
+			_viewModel.Bool.Should().BeTrue();
+			_viewModel.Width.Should().Be(1);
 		}
 	}
 }

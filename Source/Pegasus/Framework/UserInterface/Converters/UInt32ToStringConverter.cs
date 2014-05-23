@@ -23,6 +23,9 @@ namespace Pegasus.Framework.UserInterface.Converters
 		/// <param name="value">The value that should be converted.</param>
 		public override uint ConvertToSource(string value)
 		{
+			if (String.IsNullOrWhiteSpace(value))
+				return default(uint);
+
 			return UInt32.Parse(value, CultureInfo.InvariantCulture);
 		}
 	}

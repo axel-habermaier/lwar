@@ -23,6 +23,9 @@ namespace Pegasus.Framework.UserInterface.Converters
 		/// <param name="value">The value that should be converted.</param>
 		public override byte ConvertToSource(string value)
 		{
+			if (String.IsNullOrWhiteSpace(value))
+				return default(byte);
+
 			return Byte.Parse(value, CultureInfo.InvariantCulture);
 		}
 	}
