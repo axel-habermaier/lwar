@@ -297,7 +297,7 @@
 		/// </summary>
 		private void UpdateSourceProperty()
 		{
-			if (!Active || _bindingMode == BindingMode.OneWay)
+			if (!Active || _bindingMode == BindingMode.OneWay || _isNull)
 				return;
 
 			if (_targetFunc == null)

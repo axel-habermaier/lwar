@@ -65,38 +65,6 @@
 		}
 
 		[Test]
-		public void BindingMode_OneWay_SourceIsNull()
-		{
-			_control.IsAttachedToRoot = false;
-			_control.CreateDataBinding(TestControl.DefaultStringTestProperty, BindingMode.OneWay, "String");
-
-			_control.IsAttachedToRoot = true;
-			_control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
-		}
-
-		[Test]
-		public void BindingMode_OneWay_SecondPropertyIsNull()
-		{
-			_control.IsAttachedToRoot = false;
-			_control.CreateDataBinding(_viewModel, TestControl.DefaultStringTestProperty, BindingMode.OneWay, "Model", "String");
-			_control.IsAttachedToRoot = true;
-
-			_control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
-
-			_control = new TestControl();
-			_viewModel.InitializeRecursively(1);
-			_viewModel.Model.String = null;
-			_control.IsAttachedToRoot = false;
-			_control.CreateDataBinding(_viewModel, TestControl.DefaultStringTestProperty, BindingMode.OneWay, "Model", "String");
-			_control.IsAttachedToRoot = true;
-
-			_control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
-
-			_viewModel.Model.String = "A";
-			_control.DefaultStringTest.Should().Be(_viewModel.Model.String);
-		}
-
-		[Test]
 		public void BindingMode_OneWay()
 		{
 			_viewModel.Integer = 17;
@@ -247,6 +215,38 @@
 		}
 
 		[Test]
+		public void BindingMode_OneWay_SecondPropertyIsNull()
+		{
+			_control.IsAttachedToRoot = false;
+			_control.CreateDataBinding(_viewModel, TestControl.DefaultStringTestProperty, BindingMode.OneWay, "Model", "String");
+			_control.IsAttachedToRoot = true;
+
+			_control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
+
+			_control = new TestControl();
+			_viewModel.InitializeRecursively(1);
+			_viewModel.Model.String = null;
+			_control.IsAttachedToRoot = false;
+			_control.CreateDataBinding(_viewModel, TestControl.DefaultStringTestProperty, BindingMode.OneWay, "Model", "String");
+			_control.IsAttachedToRoot = true;
+
+			_control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
+
+			_viewModel.Model.String = "A";
+			_control.DefaultStringTest.Should().Be(_viewModel.Model.String);
+		}
+
+		[Test]
+		public void BindingMode_OneWay_SourceIsNull()
+		{
+			_control.IsAttachedToRoot = false;
+			_control.CreateDataBinding(TestControl.DefaultStringTestProperty, BindingMode.OneWay, "String");
+
+			_control.IsAttachedToRoot = true;
+			_control.DefaultStringTest.Should().Be(TestControl.DefaultStringTestProperty.DefaultValue);
+		}
+
+		[Test]
 		public void BindingMode_TwoWay()
 		{
 			_viewModel.Integer = 17;
@@ -349,6 +349,20 @@
 		}
 
 		[Test]
+		public void DefaultBindingMode()
+		{
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.Default, "Bool");
+			_viewModel.Bool = true;
+
+			_control.BooleanTest1.Should().BeFalse();
+
+			_viewModel.Bool = false;
+			_control.BooleanTest1 = true;
+
+			_viewModel.Bool.Should().BeTrue();
+		}
+
+		[Test]
 		public void DoubleToString_ValueConversion_OneWay()
 		{
 			_viewModel.InitializeRecursively(1);
@@ -389,6 +403,73 @@
 
 			_viewModel.Width = 0.5;
 			_control.StringTest.Should().Be("0.5");
+		}
+
+		[Test]
+		public void OneWayToSource_NoSourceObject()
+		{
+			_control.CreateDataBinding(TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Bool");
+
+			Action action = () => _control.BooleanTest1 = true;
+			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void OneWayToSource_Property_Property_FirstNotSet()
+		{
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Model", "Bool");
+
+			Action action = () => _control.BooleanTest1 = true;
+			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void OneWayToSource_Property_Property_Property_FirstNotSet()
+		{
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Bool");
+
+			Action action = () => _control.BooleanTest1 = true;
+			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void OneWayToSource_Property_Property_Property_SecondNotSet()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Bool");
+
+			Action action = () => _control.BooleanTest1 = true;
+			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void OneWayToSource_FirstChangedToNull()
+		{
+			_viewModel.InitializeRecursively(2);
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Bool");
+
+			_control.BooleanTest1 = true;
+			_viewModel.Model.Model.Bool.Should().BeTrue();
+
+			_viewModel.Model = null;
+
+			Action action = () => _control.BooleanTest1 = false;
+			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void OneWayToSource_SecondChangedToNull()
+		{
+			_viewModel.InitializeRecursively(2);
+			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Bool");
+
+			_control.BooleanTest1 = true;
+			_viewModel.Model.Model.Bool.Should().BeTrue();
+
+			_viewModel.Model.Model = null;
+
+			Action action = () => _control.BooleanTest1 = false;
+			action.ShouldNotThrow();
 		}
 
 		[Test]
@@ -708,20 +789,6 @@
 
 			_control.ViewModel = null;
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
-		}
-
-		[Test]
-		public void DefaultBindingMode()
-		{
-			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.Default, "Bool");
-			_viewModel.Bool = true;
-
-			_control.BooleanTest1.Should().BeFalse();
-
-			_viewModel.Bool = false;
-			_control.BooleanTest1 = true;
-
-			_viewModel.Bool.Should().BeTrue();
 		}
 	}
 }

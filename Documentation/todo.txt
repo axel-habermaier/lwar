@@ -1,7 +1,5 @@
 - Databinding: OnActivate -> update source property for onewaytosource bindings?
 - Bindings should overwrite all previously set ones
-- Update source property if null in property path??
-
 
 Client
 ========
