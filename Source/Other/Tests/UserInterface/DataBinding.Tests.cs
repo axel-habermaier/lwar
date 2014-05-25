@@ -645,6 +645,40 @@
 		}
 
 		[Test]
+		public void Source_Property_Property_Property_ValueChanged()
+		{
+			_viewModel.InitializeRecursively(2);
+
+			Bind(_viewModel, "Model", "Model", "Thickness");
+			_control.Margin.Should().Be(new Thickness());
+
+			_viewModel.Model.Model.Thickness = _margin1;
+			_control.Margin.Should().Be(_margin1);
+		}
+
+		[Test]
+		public void Source_Property_Property_ValueChanged()
+		{
+			_viewModel.InitializeRecursively(1);
+
+			Bind(_viewModel, "Model", "Thickness");
+			_control.Margin.Should().Be(new Thickness());
+
+			_viewModel.Model.Thickness = _margin1;
+			_control.Margin.Should().Be(_margin1);
+		}
+
+#if DEBUG
+		[Test]
+		public void TargetDependencyPropertyCannotBeFound()
+		{
+			var control = new Control();
+			Action action = () => _control.CreateDataBinding(control, TestControl.StringTestProperty, BindingMode.Default, "String");
+
+			action.ShouldThrow<PegasusException>();
+		}
+
+		[Test]
 		public void BindToGetOnlyProperty()
 		{
 			var source = new GetSetOnly();
@@ -674,39 +708,7 @@
 			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.TwoWay, "SetOnly");
 			action.ShouldThrow<PegasusException>();
 		}
-
-		[Test]
-		public void Source_Property_Property_Property_ValueChanged()
-		{
-			_viewModel.InitializeRecursively(2);
-
-			Bind(_viewModel, "Model", "Model", "Thickness");
-			_control.Margin.Should().Be(new Thickness());
-
-			_viewModel.Model.Model.Thickness = _margin1;
-			_control.Margin.Should().Be(_margin1);
-		}
-
-		[Test]
-		public void Source_Property_Property_ValueChanged()
-		{
-			_viewModel.InitializeRecursively(1);
-
-			Bind(_viewModel, "Model", "Thickness");
-			_control.Margin.Should().Be(new Thickness());
-
-			_viewModel.Model.Thickness = _margin1;
-			_control.Margin.Should().Be(_margin1);
-		}
-
-		[Test]
-		public void TargetDependencyPropertyCannotBeFound()
-		{
-			var control = new Control();
-			Action action = () => _control.CreateDataBinding(control, TestControl.StringTestProperty, BindingMode.Default, "String");
-
-			action.ShouldThrow<PegasusException>();
-		}
+#endif
 
 		[Test]
 		public void UnsetBinding()
