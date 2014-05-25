@@ -22,7 +22,7 @@
 		/// <summary>
 		///     The number of member accesses in the source expression.
 		/// </summary>
-		private readonly byte _memberAccessCount;
+		private readonly int _memberAccessCount;
 
 		/// <summary>
 		///     The source object that is passed to the source expression in order to get the value that is set on the target
@@ -34,11 +34,6 @@
 		///     Indicates the direction of the data flow of the data binding.
 		/// </summary>
 		private BindingMode _bindingMode;
-
-		/// <summary>
-		///     Indicates whether the currently bound value is null.
-		/// </summary>
-		private bool _isNull;
 
 		/// <summary>
 		///     Provides information about the first member access (such as 'a.b') in a property path 'a.b.c.d'.
@@ -56,9 +51,19 @@
 		private MemberAccess _memberAccess3;
 
 		/// <summary>
+		///     Indicates whether the property path contains a null value, not including the last accessed property.
+		/// </summary>
+		private bool _pathHasNullValue;
+
+		/// <summary>
 		///     The compiled expression that is used to get the value from the source.
 		/// </summary>
 		private Func<object, IValueConverter, T> _sourceFunc;
+
+		/// <summary>
+		///     Indicates whether the value of the source property is null.
+		/// </summary>
+		private bool _sourceValueIsNull;
 
 		/// <summary>
 		///     The compiled expression that is used to set the value of the source.
@@ -81,25 +86,20 @@
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentInRange(bindingMode);
 			Assert.ArgumentNotNullOrWhitespace(property1);
+			Assert.ArgumentSatisfies(property3 == null || property2 != null, "Property 2 must be non-null when property 3 is non-null.");
 
 			_sourceObject = sourceObject;
 			_converter = converter;
 			_bindingMode = bindingMode;
+			_memberAccessCount = property3 == null ? (property2 == null ? 1 : 2) : 3;
 
-			_memberAccessCount = 1;
 			_memberAccess1 = new MemberAccess(property1) { Changed = OnMember1Changed };
 
-			if (!String.IsNullOrWhiteSpace(property2))
-			{
-				_memberAccessCount = 2;
+			if (_memberAccessCount >= 2)
 				_memberAccess2 = new MemberAccess(property2) { Changed = OnMember2Changed };
-			}
 
-			if (!String.IsNullOrWhiteSpace(property3))
-			{
-				_memberAccessCount = 3;
+			if (_memberAccessCount == 3)
 				_memberAccess3 = new MemberAccess(property3) { Changed = OnMember3Changed };
-			}
 		}
 
 		/// <summary>
@@ -135,15 +135,20 @@
 		{
 			Assert.ArgumentSatisfies(!_targetProperty.IsDataBindingProhibited, "Data binding is not allowed on the target property.");
 
-			// Set the source object of the first member access
-			_memberAccess1.SourceObject = _sourceObject;
-
 			// Check if the default binding mode of the target dependency property should be used
 			if (_bindingMode == BindingMode.Default)
 				_bindingMode = _targetProperty.DefaultBindingMode;
 
 			if (_bindingMode != BindingMode.OneWay)
 				_targetObject.AddChangedHandler(_targetProperty, OnTargetPropertyChanged);
+
+			// Set the access types of the members
+			_memberAccess1.SetAccessTypes(_memberAccessCount == 1, _bindingMode);
+			_memberAccess2.SetAccessTypes(_memberAccessCount == 2, _bindingMode);
+			_memberAccess3.SetAccessTypes(_memberAccessCount == 3, _bindingMode);
+
+			// Set the source object of the first member access
+			_memberAccess1.SourceObject = _sourceObject;
 		}
 
 		/// <summary>
@@ -171,7 +176,7 @@
 		/// </summary>
 		private void CompileSourceFunction()
 		{
-			var expression = Expressions.GetMemberAccessExpression(this);
+			var expression = Expressions.GetReadExpression(this, _memberAccessCount);
 
 			if (_converter != null)
 				expression = Expressions.InvokeConvertToTargetMethod(this, expression);
@@ -185,16 +190,13 @@
 		/// </summary>
 		private void CompileTargetFunction()
 		{
-			var expression = Expressions.GetMemberAccessExpression(this);
-
 			Expression value = Expressions.ValueParameter;
 			if (_converter != null)
 				value = Expressions.InvokeConvertToSourceMethod(this);
 
-			var convertExpression = (UnaryExpression)expression;
-			var assignment = Expression.Assign(convertExpression.Operand, value);
+			var expression = Expressions.GetWriteExpression(this, value);
 			_targetFunc = Expression.Lambda<Action<object, T, IValueConverter>>(
-				assignment, Expressions.SourceObjectParameter, Expressions.ValueParameter, Expressions.ConverterParameter).Compile();
+				expression, Expressions.SourceObjectParameter, Expressions.ValueParameter, Expressions.ConverterParameter).Compile();
 		}
 
 		/// <summary>
@@ -240,18 +242,18 @@
 		/// </param>
 		private void OnMemberChanged(ref MemberAccess memberAccess, ref MemberAccess nextMemberAccess, int memberAccessCount)
 		{
-			Log.DebugIf(Active && !_isNull && memberAccess.Value == null,
+			Log.DebugIf(Active && !_pathHasNullValue && memberAccess.Value == null,
 						"Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
 						PropertyPath, memberAccess.MemberName);
 
 			if (memberAccessCount < _memberAccessCount)
 			{
 				var value = memberAccess.Value;
-				_isNull = value == null;
+				_pathHasNullValue = value == null;
 
 				// If the value is not null and the type of a value somewhere in the middle of the path has changed,
 				// we have to regenerate the source function
-				if (!_isNull)
+				if (!_pathHasNullValue)
 				{
 					var type = value.GetType();
 
@@ -268,8 +270,7 @@
 			else
 			{
 				var propertyType = memberAccess.PropertyType;
-				if (propertyType != null && !propertyType.IsValueType)
-					_isNull = memberAccess.Value == null;
+				_sourceValueIsNull = propertyType == null || (!propertyType.IsValueType && memberAccess.Value == null);
 
 				UpdateTargetProperty();
 				UpdateSourceProperty();
@@ -284,10 +285,10 @@
 			if (!Active || _bindingMode == BindingMode.OneWayToSource)
 				return;
 
-			if (_sourceFunc == null && !_isNull)
+			if (_sourceFunc == null && !_pathHasNullValue && !_sourceValueIsNull)
 				CompileSourceFunction();
 
-			if (!_isNull)
+			if (!_pathHasNullValue && !_sourceValueIsNull)
 				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(_sourceObject, _converter));
 			else
 				_targetObject.SetBoundValue(_targetProperty, _targetProperty.DefaultValue);
@@ -298,7 +299,7 @@
 		/// </summary>
 		private void UpdateSourceProperty()
 		{
-			if (!Active || _bindingMode == BindingMode.OneWay || _isNull)
+			if (!Active || _bindingMode == BindingMode.OneWay || _pathHasNullValue)
 				return;
 
 			if (_targetFunc == null)
@@ -360,21 +361,45 @@
 			}
 
 			/// <summary>
-			///     Generates the expression that accesses the members of the binding's property path.
+			///     Generates the expression that reads the members of the binding's property path.
 			/// </summary>
 			/// <param name="binding">The binding the expression is created for.</param>
-			public static Expression GetMemberAccessExpression(DataBinding<T> binding)
+			/// <param name="readPropertyCount">The number of properties that should be read.</param>
+			public static Expression GetReadExpression(DataBinding<T> binding, int readPropertyCount)
 			{
 				var expression = Expression.Convert(SourceObjectParameter, binding._sourceObject.GetType()) as Expression;
-				expression = binding._memberAccess1.GetAccessExpression(expression);
 
-				if (binding._memberAccessCount > 1)
-					expression = binding._memberAccess2.GetAccessExpression(expression);
+				if (readPropertyCount > 0)
+					expression = binding._memberAccess1.GetReadExpression(expression);
 
-				if (binding._memberAccessCount > 2)
-					expression = binding._memberAccess3.GetAccessExpression(expression);
+				if (readPropertyCount > 1)
+					expression = binding._memberAccess2.GetReadExpression(expression);
+
+				if (readPropertyCount > 2)
+					expression = binding._memberAccess3.GetReadExpression(expression);
 
 				return expression;
+			}
+
+			/// <summary>
+			///     Generates the expression that writes the last member of the binding's property path.
+			/// </summary>
+			/// <param name="binding">The binding the expression is created for.</param>
+			/// <param name="value">The expression generating the value that should be written.</param>
+			public static Expression GetWriteExpression(DataBinding<T> binding, Expression value)
+			{
+				var expression = GetReadExpression(binding, binding._memberAccessCount - 1);
+
+				if (binding._memberAccessCount == 1)
+					return binding._memberAccess1.GetWriteExpression(expression, value);
+
+				if (binding._memberAccessCount == 2)
+					return binding._memberAccess2.GetWriteExpression(expression, value);
+
+				if (binding._memberAccessCount == 3)
+					return binding._memberAccess3.GetWriteExpression(expression, value);
+
+				throw new InvalidOperationException("Unexpected member count.");
 			}
 		}
 
@@ -383,11 +408,6 @@
 		/// </summary>
 		private struct MemberAccess
 		{
-			/// <summary>
-			///     The name of the accessed property.
-			/// </summary>
-			private readonly string _propertyName;
-
 			/// <summary>
 			///     The strongly-typed changed handler that has been added for the dependency property.
 			/// </summary>
@@ -399,25 +419,29 @@
 			private DependencyProperty _dependencyProperty;
 
 			/// <summary>
+			///     Indicates whether the accessed member is read.
+			/// </summary>
+			private bool _isRead;
+
+			/// <summary>
+			///     Indicates whether the accessed member is written.
+			/// </summary>
+			private bool _isWritten;
+
+			/// <summary>
 			///     The reflection info instance for the property that is accessed, if any.
 			/// </summary>
 			private PropertyInfo _propertyInfo;
 
 			/// <summary>
+			///     The name of the accessed property.
+			/// </summary>
+			private readonly string _propertyName;
+
+			/// <summary>
 			///     The source object that is accessed.
 			/// </summary>
 			private object _sourceObject;
-
-			/// <summary>
-			///     Initializes a new instance.
-			/// </summary>
-			/// <param name="propertyName">The name of the property that should be accessed.</param>
-			public MemberAccess(string propertyName)
-				: this()
-			{
-				Assert.ArgumentNotNullOrWhitespace(propertyName);
-				_propertyName = propertyName;
-			}
 
 			/// <summary>
 			///     Gets or sets the type of the value currently stored by the accessed property.
@@ -500,12 +524,57 @@
 			}
 
 			/// <summary>
-			///     Gets the access expression for the accessed property or dependency property.
+			///     Initializes a new instance.
+			/// </summary>
+			/// <param name="propertyName">The name of the property that should be accessed.</param>
+			public MemberAccess(string propertyName)
+				: this()
+			{
+				Assert.ArgumentNotNullOrWhitespace(propertyName);
+				 _propertyName = propertyName;
+			}
+
+			/// <summary>
+			///     Sets the access types of the member.
+			/// </summary>
+			/// <param name="isLast">Indicates whether the property is the last one of the property path.</param>
+			/// <param name="bindingMode">The binding mode of the data binding.</param>
+			public void SetAccessTypes(bool isLast, BindingMode bindingMode)
+			{
+				_isRead = !isLast || bindingMode != BindingMode.OneWayToSource;
+				_isWritten = isLast && bindingMode != BindingMode.OneWay;
+			}
+
+			/// <summary>
+			///     Gets the read expression for the accessed property or dependency property.
 			/// </summary>
 			/// <param name="expression">The expression to the left-hand side of the access expression.</param>
-			public Expression GetAccessExpression(Expression expression)
+			public Expression GetReadExpression(Expression expression)
 			{
-				return Expression.Convert(Expression.Property(expression, _propertyInfo), Value.GetType());
+				Assert.ArgumentNotNull(expression);
+				Assert.That(_isRead, "Property cannot be read.");
+				Assert.That(_propertyInfo != null, "Unknown property.");
+
+				var value = Value;
+				var isNull = !PropertyType.IsValueType && value == null;
+				var targetType = isNull ? PropertyType : value.GetType();
+
+				return Expression.Convert(Expression.Property(expression, _propertyInfo), targetType);
+			}
+
+			/// <summary>
+			///     Gets the write expression for the accessed property or dependency property.
+			/// </summary>
+			/// <param name="objectExpression">The expression representing the object on which the property should be written.</param>
+			/// <param name="valueExpression">The expression representing the value that should be written.</param>
+			public Expression GetWriteExpression(Expression objectExpression, Expression valueExpression)
+			{
+				Assert.ArgumentNotNull(objectExpression);
+				Assert.ArgumentNotNull(valueExpression);
+				Assert.That(_propertyInfo != null, "Unknown property.");
+				Assert.That(_isWritten, "Property cannot be written.");
+
+				return Expression.Assign(Expression.Property(objectExpression, _propertyInfo), valueExpression);
 			}
 
 			/// <summary>
@@ -575,13 +644,20 @@
 					_dependencyProperty = ReflectionHelper.GetDependencyProperty(_sourceObject.GetType(), _propertyName);
 
 				var name = _propertyName;
-				_propertyInfo = _sourceObject.GetType()
-											 .GetRuntimeProperties()
-											 .SingleOrDefault(p => p.GetMethod != null && p.GetMethod.IsPublic && !p.GetMethod.IsStatic && p.Name == name);
+				_propertyInfo = _sourceObject
+					.GetType()
+					.GetRuntimeProperties()
+					.SingleOrDefault(p => p.Name == name);
 
-				if (_propertyInfo == null)
-					Log.Die("Unable to find public, non-static property or dependency property '{0}' on '{1}'.",
+				Assert.NotNull(_propertyInfo, "Unable to find public, non-static property '{0}' on '{1}'.",
+							   _propertyName, _sourceObject.GetType().FullName);
+
+				var method = _propertyInfo.CanRead ? _propertyInfo.GetMethod : _propertyInfo.SetMethod;
+				Assert.That(!method.IsStatic, "Cannot data bind to static property '{0}' on '{1};.",
 							_propertyName, _sourceObject.GetType().FullName);
+
+				Assert.That(!_isRead || _propertyInfo.CanRead, "Cannot read non-readable property.");
+				Assert.That(!_isWritten || _propertyInfo.CanWrite, "Cannot write to non-writable property.");
 			}
 
 			/// <summary>

@@ -17,18 +17,12 @@
 		private static readonly EventInfo PropertyChangedEventInfo = typeof(INotifyPropertyChanged).GetRuntimeEvent("PropertyChanged");
 
 		/// <summary>
-		///     A cached property info instance for the UIElement.ViewModel property.
-		/// </summary>
-		public static readonly PropertyInfo ViewModelPropertyInfo = typeof(UIElement).GetRuntimeProperty("ViewModel");
-
-		/// <summary>
 		///     In debug builds, checks whether all cached reflection info objects could be resolved successfully.
 		/// </summary>
 		[Conditional("DEBUG")]
 		public static void Validate()
 		{
 			Assert.NotNull(PropertyChangedEventInfo, "Unable to find the INotifyPropertyChanged.PropertyChanged event.");
-			Assert.NotNull(ViewModelPropertyInfo, "Unable to find the UIElement.ViewModel property.");
 		}
 
 		/// <summary>
@@ -76,6 +70,7 @@
 			if (propertyField == null && baseType != typeof(object))
 				return GetDependencyProperty(baseType, propertyName);
 
+			Assert.NotNull(propertyField, "Unable to find dependency property '{0}' on '{1}'.", propertyName, type.FullName);
 			return (DependencyProperty)propertyField.GetValue(null);
 		}
 	}

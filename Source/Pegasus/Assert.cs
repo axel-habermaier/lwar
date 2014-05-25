@@ -136,7 +136,7 @@
 			ArgumentNotNull(formatMessage);
 
 			if (obj != null)
-				throw new InvalidOperationException(String.Format(formatMessage, parameters));
+				throw new PegasusException(String.Format(formatMessage, parameters));
 		}
 
 		/// <summary>
@@ -153,7 +153,7 @@
 			ArgumentNotNull(formatMessage);
 
 			if (obj == null)
-				throw new InvalidOperationException(String.Format(formatMessage, parameters));
+				throw new PegasusException(String.Format(formatMessage, parameters));
 		}
 
 		/// <summary>
@@ -166,7 +166,7 @@
 			where T : class
 		{
 			if (obj == null)
-				throw new InvalidOperationException("Expected a valid reference.");
+				throw new PegasusException("Expected a valid reference.");
 		}
 
 		/// <summary>
@@ -179,7 +179,7 @@
 			ArgumentNotNull(s);
 
 			if (String.IsNullOrWhiteSpace(s))
-				throw new InvalidOperationException("String cannot be empty or consist of whitespace only.");
+				throw new PegasusException("String cannot be empty or consist of whitespace only.");
 		}
 
 		/// <summary>
@@ -194,7 +194,7 @@
 			ArgumentNotNull(formatMessage);
 
 			if (!condition)
-				throw new InvalidOperationException(String.Format(formatMessage, parameters));
+				throw new PegasusException(String.Format(formatMessage, parameters));
 		}
 
 		/// <summary>
@@ -218,7 +218,7 @@
 			ArgumentNotNull(obj);
 
 			if (obj.IsSealed)
-				throw new InvalidOperationException(String.Format("The '{0}' instance has already been sealed.", obj.GetType().FullName));
+				throw new PegasusException("The '{0}' instance has already been sealed.", obj.GetType().FullName);
 		}
 
 		/// <summary>
@@ -230,7 +230,7 @@
 			where T : DisposableObject
 		{
 			if (obj != null && !obj.IsDisposed)
-				throw new InvalidOperationException(String.Format("The '{0}' instance has not been disposed.", typeof(T).FullName));
+				throw new PegasusException("The '{0}' instance has not been disposed.", typeof(T).FullName);
 		}
 
 		/// <summary>
@@ -243,7 +243,7 @@
 			ArgumentNotNull(obj);
 
 			if (obj.IsDisposed)
-				throw new ObjectDisposedException(obj.GetType().FullName);
+				throw new PegasusException(obj.GetType().FullName);
 		}
 
 		/// <summary>
@@ -257,7 +257,7 @@
 			ArgumentNotNull(obj);
 
 			if (obj.IsAvailable)
-				throw new InvalidOperationException(obj.GetType().FullName);
+				throw new PegasusException(obj.GetType().FullName);
 		}
 
 		/// <summary>
@@ -270,7 +270,7 @@
 			where TEnum : struct
 		{
 			if (!Enum.IsDefined(typeof(TEnum), argument))
-				throw new InvalidOperationException("The enumeration value lies outside the allowable range.");
+				throw new PegasusException("The enumeration value lies outside the allowable range.");
 		}
 
 		/// <summary>
@@ -285,12 +285,10 @@
 			where T : IComparable<T>
 		{
 			if (index.CompareTo(min) < 0)
-				throw new InvalidOperationException(
-					String.Format("Lower bound violation. Expected argument to lie between {0} and {1}.", min, max));
+				throw new PegasusException("Lower bound violation. Expected argument to lie between {0} and {1}.", min, max);
 
 			if (index.CompareTo(max) > 0)
-				throw new InvalidOperationException(
-					String.Format("Upper bound violation. Expected argument to lie between {0} and {1}.", min, max));
+				throw new PegasusException("Upper bound violation. Expected argument to lie between {0} and {1}.", min, max);
 		}
 
 		/// <summary>
@@ -315,7 +313,7 @@
 			ArgumentNotNull(obj);
 
 			if (!(obj is T))
-				throw new InvalidCastException("The given object is not of the requested type.");
+				throw new PegasusException("The given object is not of the requested type.");
 		}
 	}
 }

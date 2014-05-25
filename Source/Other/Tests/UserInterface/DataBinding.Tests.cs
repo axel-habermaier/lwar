@@ -3,7 +3,9 @@
 	using System;
 	using FluentAssertions;
 	using NUnit.Framework;
+	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
+	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Framework.UserInterface.Converters;
 
 	[TestFixture]
@@ -61,6 +63,19 @@
 			{
 				get { return _value; }
 				set { ChangePropertyValue(ref _value, value); }
+			}
+		}
+
+		private class GetSetOnly
+		{
+			public bool SetOnly
+			{
+				set { }
+			}
+
+			public bool GetOnly
+			{
+				get { return true; }
 			}
 		}
 
@@ -421,21 +436,21 @@
 		}
 
 		[Test]
-		public void OneWayToSource_Property_NotSet()
-		{
-			_control.StringTest = "ABC";
-
-			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "String");
-			_viewModel.String.Should().Be("ABC");
-		}
-
-		[Test]
 		public void OneWayToSource_NoSourceObject()
 		{
 			_control.CreateDataBinding(TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "Bool");
 
 			Action action = () => _control.BooleanTest1 = true;
 			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void OneWayToSource_Property_NotSet()
+		{
+			_control.StringTest = "ABC";
+
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "String");
+			_viewModel.String.Should().Be("ABC");
 		}
 
 		[Test]
@@ -482,6 +497,16 @@
 		}
 
 		[Test]
+		public void OneWayToSource_ViewModel_Property_NotSet()
+		{
+			_control.StringTest = "ABC";
+			_control.ViewModel = _viewModel;
+
+			_control.CreateDataBinding(TestControl.StringTestProperty, BindingMode.OneWayToSource, "String");
+			_viewModel.String.Should().Be("ABC");
+		}
+
+		[Test]
 		public void Overwrite_OneWay()
 		{
 			_viewModel.String = "ABC";
@@ -506,7 +531,7 @@
 			_viewModel = new TestViewModel { String = "DEF" };
 
 			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "String");
-			_viewModel.String.Should().Be("DEF");
+			_viewModel.String.Should().Be("ABC");
 		}
 
 		[Test]
@@ -620,6 +645,37 @@
 		}
 
 		[Test]
+		public void BindToGetOnlyProperty()
+		{
+			var source = new GetSetOnly();
+			Action action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWay, "GetOnly");
+			action.ShouldNotThrow();
+
+			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "GetOnly");
+			action.ShouldThrow<PegasusException>();
+
+			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.TwoWay, "GetOnly");
+			action.ShouldThrow<PegasusException>();
+		}
+
+		[Test]
+		public void BindToSetOnlyProperty()
+		{
+			var source = new GetSetOnly();
+			Action action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWay, "SetOnly");
+			action.ShouldThrow<PegasusException>();
+
+			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWay, "SetOnly", "SetOnly");
+			action.ShouldThrow<PegasusException>();
+
+			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "SetOnly");
+			action.ShouldNotThrow();
+
+			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.TwoWay, "SetOnly");
+			action.ShouldThrow<PegasusException>();
+		}
+
+		[Test]
 		public void Source_Property_Property_Property_ValueChanged()
 		{
 			_viewModel.InitializeRecursively(2);
@@ -641,6 +697,15 @@
 
 			_viewModel.Model.Thickness = _margin1;
 			_control.Margin.Should().Be(_margin1);
+		}
+
+		[Test]
+		public void TargetDependencyPropertyCannotBeFound()
+		{
+			var control = new Control();
+			Action action = () => _control.CreateDataBinding(control, TestControl.StringTestProperty, BindingMode.Default, "String");
+
+			action.ShouldThrow<PegasusException>();
 		}
 
 		[Test]

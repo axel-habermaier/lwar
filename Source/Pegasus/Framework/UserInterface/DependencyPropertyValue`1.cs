@@ -211,7 +211,9 @@
 		public void SetBinding(Binding<T> binding)
 		{
 			Assert.ArgumentNotNull(binding);
-			Assert.IsNull(_binding, "There is already another binding for this property.");
+
+			if (_binding != null)
+				_binding.Remove();
 
 			_binding = binding;
 			_sources |= ValueSources.Binding;
