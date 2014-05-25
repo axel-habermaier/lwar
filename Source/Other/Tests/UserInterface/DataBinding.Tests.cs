@@ -3,9 +3,7 @@
 	using System;
 	using FluentAssertions;
 	using NUnit.Framework;
-	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
-	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Framework.UserInterface.Converters;
 
 	[TestFixture]
@@ -667,48 +665,6 @@
 			_viewModel.Model.Thickness = _margin1;
 			_control.Margin.Should().Be(_margin1);
 		}
-
-#if DEBUG
-		[Test]
-		public void TargetDependencyPropertyCannotBeFound()
-		{
-			var control = new Control();
-			Action action = () => _control.CreateDataBinding(control, TestControl.StringTestProperty, BindingMode.Default, "String");
-
-			action.ShouldThrow<PegasusException>();
-		}
-
-		[Test]
-		public void BindToGetOnlyProperty()
-		{
-			var source = new GetSetOnly();
-			Action action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWay, "GetOnly");
-			action.ShouldNotThrow();
-
-			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "GetOnly");
-			action.ShouldThrow<PegasusException>();
-
-			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.TwoWay, "GetOnly");
-			action.ShouldThrow<PegasusException>();
-		}
-
-		[Test]
-		public void BindToSetOnlyProperty()
-		{
-			var source = new GetSetOnly();
-			Action action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWay, "SetOnly");
-			action.ShouldThrow<PegasusException>();
-
-			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWay, "SetOnly", "SetOnly");
-			action.ShouldThrow<PegasusException>();
-
-			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.OneWayToSource, "SetOnly");
-			action.ShouldNotThrow();
-
-			action = () => _control.CreateDataBinding(source, TestControl.BooleanTestProperty1, BindingMode.TwoWay, "SetOnly");
-			action.ShouldThrow<PegasusException>();
-		}
-#endif
 
 		[Test]
 		public void UnsetBinding()
