@@ -5,13 +5,9 @@
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
-	using Platform.Input;
 	using Platform.Logging;
 	using Scripting;
-	using Scripting.Parsing.BasicParsers;
-	using Scripting.Parsing.Combinators;
 	using UserInterface;
-	using UserInterface.Controls;
 
 	/// <summary>
 	///     Starts up the application and handles command line arguments and fatal application exceptions.
@@ -42,7 +38,6 @@
 				{
 					Log.Info("Starting {0} ({1} x{2}, {3}).", appName, PlatformInfo.Platform, IntPtr.Size == 4 ? "32" : "64", PlatformInfo.GraphicsApi);
 
-					InitializeTypeRegistry();
 					ReflectionHelper.Validate();
 					Commands.Initialize();
 					Cvars.Initialize();
@@ -76,22 +71,6 @@
 					NativeLibrary.ShowMessageBox(appName + " Fatal Error", message);
 				}
 			}
-		}
-
-		/// <summary>
-		///     Registers common Pegasus framework types on the type registry.
-		/// </summary>
-		private static void InitializeTypeRegistry()
-		{
-			TypeRegistry.Register(new IPAddressParser(), "IPv4 or IPv6 address", null, "::1", "127.0.0.1");
-			TypeRegistry.Register(new IPEndPointParser(), "IPv4 or IPv6 address with optional port", null, "::1", "[::1]:8081", "127.0.0.1",
-								  "127.0.0.1:8081");
-			TypeRegistry.Register(new EnumerationLiteralParser<WindowMode>(ignoreCase: true), null, null);
-			TypeRegistry.Register(new Vector2Parser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10.0;10.5");
-			TypeRegistry.Register(new Vector2IParser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10;10");
-			TypeRegistry.Register(new SizeParser(), null, s => String.Format("{0};{1}", s.Width, s.Height), "0;0", "-10;10");
-			TypeRegistry.Register(new InputTriggerParser(), null, i => String.Format("[{0}]", i), "[Key(Return,WentDown)]", "[Key(A,Pressed)]",
-								  "[Key(Left,Repeated)]", "[Mouse(Left,Pressed) | Mouse(Right,Pressed)]");
 		}
 
 		/// <summary>

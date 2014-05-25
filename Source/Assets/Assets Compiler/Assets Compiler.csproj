@@ -505,9 +505,6 @@
     <Compile Include="..\..\Pegasus\Scripting\Parsing\ReplyStatus.cs">
       <Link>Pegasus\ReplyStatus.cs</Link>
     </Compile>
-    <Compile Include="..\..\Pegasus\Scripting\TypeRegistry.cs">
-      <Link>Pegasus\TypeRegistry.cs</Link>
-    </Compile>
     <Compile Include="AssetsProject.cs" />
     <Compile Include="Assets\Attributes\AssetAttribute.cs" />
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
@@ -531,6 +528,7 @@
     <Compile Include="CSharp\Extensions.cs" />
     <Compile Include="CSharp\IErrorReporter.cs" />
     <Compile Include="ExternalProcess.cs" />
+    <Compile Include="Pegasus\TypeRegistry.cs" />
     <Compile Include="Registries\Command.cs" />
     <Compile Include="Registries\CommandParameter.cs" />
     <Compile Include="Registries\CSharpCodeGenerator.cs" />
