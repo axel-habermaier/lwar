@@ -188,6 +188,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="UserInterface\InGameViewModel.cs" />
+    <Compile Include="UserInterface\LoadingViewModel.cs" />
     <Compile Include="UserInterface\LwarViewModel.cs" />
     <Compile Include="UserInterface\LwarViewModel`1.cs" />
     <Compile Include="UserInterface\MainMenuViewModel.cs" />

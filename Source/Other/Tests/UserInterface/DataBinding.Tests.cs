@@ -1,6 +1,7 @@
 ﻿namespace Tests.UserInterface
 {
 	using System;
+	using System.Text;
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Framework.UserInterface;
@@ -718,6 +719,31 @@
 		}
 
 		[Test]
+		public void ValueTypeBoxing()
+		{
+			var obj = new object();
+			var viewModel = new UntypedViewModelA { Value = 1 };
+
+			_control.ViewModel = viewModel;
+
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.TwoWay, "Value");
+			_control.ObjectTest.Should().Be(1);
+
+			_control.ObjectTest = 0.0m;
+			viewModel.Value.Should().Be(0.0m);
+
+			viewModel.Value = 17u;
+			_control.ObjectTest.Should().Be(17u);
+
+			viewModel.Value = obj;
+			_control.ObjectTest.Should().Be(obj);
+
+			viewModel.Value = 33;
+			_control.ObjectTest = obj;
+			viewModel.Value.Should().Be(obj);
+		}
+
+		[Test]
 		public void ViewModel_ChangeType()
 		{
 			_control.ViewModel = new UntypedViewModelA { Value = _margin1 };
@@ -746,6 +772,21 @@
 			_control.ViewModel = new UntypedViewModelB { Value = margin };
 
 			_control.Margin.Should().Be(margin);
+		}
+
+		[Test]
+		public void ViewModel_ChangeType_SecondProperty()
+		{
+			var builder = new StringBuilder();
+			var viewModel = new UntypedViewModelA { Value = builder };
+
+			_control.ViewModel = viewModel;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.OneWay, "Value");
+
+			_control.ObjectTest.Should().Be(builder);
+
+			viewModel.Value = "Test";
+			_control.ObjectTest.Should().Be("Test");
 		}
 
 		[Test]

@@ -128,8 +128,8 @@
 			else if (_view != null)
 				Application.Current.Window.LayoutRoot.Add(_view);
 
-			_isActive = true;
 			OnActivated();
+			_isActive = true;
 
 			if (_child != null)
 				_child.Activate();

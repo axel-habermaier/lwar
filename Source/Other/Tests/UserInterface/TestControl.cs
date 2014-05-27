@@ -12,6 +12,7 @@
 		public static readonly DependencyProperty<bool> BooleanTestProperty1 =
 			new DependencyProperty<bool>(defaultBindingMode: BindingMode.OneWayToSource);
 
+		public static readonly DependencyProperty<object> ObjectTestProperty = new DependencyProperty<object>();
 		public static readonly DependencyProperty<bool> BooleanTestProperty2 = new DependencyProperty<bool>();
 		public static readonly DependencyProperty<int> IntegerTestProperty1 = new DependencyProperty<int>();
 		public static readonly DependencyProperty<int> IntegerTestProperty2 = new DependencyProperty<int>();
@@ -39,6 +40,12 @@
 			Canvas2.Children.Add(Button3);
 
 			Content = Canvas1;
+		}
+
+		public object ObjectTest
+		{
+			get { return GetValue(ObjectTestProperty); }
+			set { SetValue(ObjectTestProperty, value); }
 		}
 
 		public bool BooleanTest1
