@@ -181,6 +181,9 @@
 			if (_converter != null)
 				expression = Expressions.InvokeConvertToTargetMethod(this, expression);
 
+			if (!typeof(T).IsValueType && ActualSourcePropertyType.IsValueType)
+				expression = Expression.Convert(expression, typeof(T));
+
 			_sourceFunc = Expression.Lambda<Func<object, IValueConverter, T>>(
 				expression, Expressions.SourceObjectParameter, Expressions.ConverterParameter).Compile();
 		}
@@ -197,6 +200,27 @@
 			var expression = Expressions.GetWriteExpression(this, value);
 			_targetFunc = Expression.Lambda<Action<object, T, IValueConverter>>(
 				expression, Expressions.SourceObjectParameter, Expressions.ValueParameter, Expressions.ConverterParameter).Compile();
+		}
+
+		/// <summary>
+		/// Gets the actual type of the last property in the property path.
+		/// </summary>
+		private Type ActualSourcePropertyType
+		{
+			get
+			{
+				if (_memberAccessCount == 1)
+					return _memberAccess1.ValueType;
+
+				if (_memberAccessCount == 2)
+					return _memberAccess2.ValueType;
+
+				if (_memberAccessCount == 3)
+					return _memberAccess3.ValueType;
+
+				Assert.NotReached("Unexpected number of member accesses.");
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -269,8 +293,25 @@
 			}
 			else
 			{
+				// We try to avoid getting the value of the property here via reflection when the property is 
+				// of value type - changes to these properties are likely to occur often and we want to avoid  
+				// boxing the value every time the property is changed.
 				var propertyType = memberAccess.PropertyType;
 				_sourceValueIsNull = propertyType == null || (!propertyType.IsValueType && memberAccess.Value == null);
+
+				if (!_sourceValueIsNull && propertyType != null && !propertyType.IsValueType)
+				{
+					var type = memberAccess.Value.GetType();
+
+					if (type != memberAccess.ValueType)
+					{
+						_sourceFunc = null;
+						_targetFunc = null;
+						memberAccess.ValueType = type;
+					}
+				}
+				else if (propertyType != null && propertyType.IsValueType)
+					memberAccess.ValueType = propertyType;
 
 				UpdateTargetProperty();
 				UpdateSourceProperty();

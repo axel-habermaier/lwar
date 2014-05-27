@@ -719,7 +719,7 @@
 		}
 
 		[Test]
-		public void ValueTypeBoxing()
+		public void ValueTypeBoxing_BothUntyped()
 		{
 			var obj = new object();
 			var viewModel = new UntypedViewModelA { Value = 1 };
