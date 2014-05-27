@@ -3,12 +3,14 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.CompilerServices;
+	using Platform;
 	using Platform.Memory;
 
 	/// <summary>
 	///     A view model can be bound to an UI element, providing both the values that the UI displays and the methods that
 	///     handle UI commands.
 	/// </summary>
+	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 	public abstract class ViewModel : DisposableObject, INotifyPropertyChanged
 	{
 		/// <summary>

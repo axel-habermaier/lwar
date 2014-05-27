@@ -8,7 +8,6 @@
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	[MeansImplicitUse(ImplicitUseKindFlags.Assign | ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.WithMembers)]
-	[BaseTypeRequired(typeof(Effect))]
 	public class EffectAttribute : Attribute
 	{
 	}

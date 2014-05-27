@@ -18,273 +18,212 @@ namespace Pegasus.Platform
 {
 	using System;
 
+	// =================================================================================================================
+	// Attributes provided by Jetbrain's Resharper for static code analysis                                          
+	// =================================================================================================================
+
 	/// <summary>
-	///     Indicates that the marked method builds string by format pattern and (optional) arguments.
-	///     Parameter, which contains format string, should be given in constructor.
-	///     The format string should be in <see cref="string.Format(IFormatProvider,string,object[])" /> -like form
+	///     Specifies how the symbol is used implicitly when marked with <see cref="MeansImplicitUseAttribute" /> or
+	///     <see cref="UsedImplicitlyAttribute" />.
 	/// </summary>
-	/// <example>
-	///     <code>
-	/// [StringFormatMethod("message")]
-	/// public void ShowError(string message, params object[] args)
-	/// {
-	///   //Do something
-	/// }
-	/// public void Foo()
-	/// {
-	///   ShowError("Failed: {0}"); // Warning: Non-existing argument in format string
-	/// }
-	/// </code>
-	/// </example>
-	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-	public sealed class StringFormatMethodAttribute : Attribute
+	[Flags]
+	public enum ImplicitUseKindFlags
 	{
 		/// <summary>
-		///     Initializes new instance of StringFormatMethodAttribute
+		///     Indicates that the marked symbol is accessed, assigned, and instantiated implicitly.
 		/// </summary>
-		/// <param name="formatParameterName">Specifies which parameter of an annotated method should be treated as format-string</param>
-		public StringFormatMethodAttribute(string formatParameterName)
-		{
-			FormatParameterName = formatParameterName;
-		}
+		Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
 
 		/// <summary>
-		///     Gets format parameter name
+		///     Indicates that the marked symbol is accessed.
 		/// </summary>
+		Access = 1,
+
+		/// <summary>
+		///     Indicates that the marked symbol is assigned.
+		/// </summary>
+		Assign = 2,
+
+		/// <summary>
+		///     Indicates implicit instantiation of a type with a fixed constructor signature.
+		/// </summary>
+		InstantiatedWithFixedConstructorSignature = 4,
+
+		/// <summary>
+		///     Indicates implicit instantiation of a type without a fixed constructor signature.
+		/// </summary>
+		InstantiatedNoFixedConstructorSignature = 8,
+	}
+
+	/// <summary>
+	///     Specifies whether only the symbol or all of its members are considered used implicitly when marked with
+	///     <see cref="MeansImplicitUseAttribute" /> or <see cref="UsedImplicitlyAttribute" />.
+	/// </summary>
+	[Flags]
+	public enum ImplicitUseTargetFlags
+	{
+		/// <summary>
+		///     The marked symbol itself is considered used.
+		/// </summary>
+		Default = Itself,
+
+		/// <summary>
+		///     The marked symbol itself is considered used.
+		/// </summary>
+		Itself = 1,
+
+		/// <summary>
+		///     All members of the marked symbol are considered used.
+		/// </summary>
+		Members = 2,
+
+		/// <summary>
+		///     The marked symbol itself and all of its members are considered used.
+		/// </summary>
+		WithMembers = Itself | Members
+	}
+
+	/// <summary>
+	///     Indicates that the marked attribute causes the symbol it is applied to to be considered used implicitly, for instance
+	///     when the symbol is used via reflection only. Prevents code analysis tools like Resharper to incorrectly mark the symbol
+	///     as unused.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+	public sealed class MeansImplicitUseAttribute : Attribute
+	{
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="useKindFlags">Specifies how the symbol is used implicitly.</param>
+		/// <param name="targetFlags">Specifies whether only the marked symbol or all of its members are considered used.</param>
 		[UsedImplicitly]
-		public string FormatParameterName { get; private set; }
-	}
-
-	/// <summary>
-	///     Indicates that the value of the marked element could be <c>null</c> sometimes,
-	///     so the check for <c>null</c> is necessary before its usage.
-	/// </summary>
-	/// <example>
-	///     <code>
-	/// [CanBeNull]
-	/// public object Test()
-	/// {
-	///   return null;
-	/// }
-	/// 
-	/// public void UseTest()
-	/// {
-	///   var p = Test(); 
-	///   var s = p.ToString(); // Warning: Possible 'System.NullReferenceException' 
-	/// }
-	/// </code>
-	/// </example>
-	[AttributeUsage(
-		AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate |
-		AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-	public sealed class CanBeNullAttribute : Attribute
-	{
-	}
-
-	/// <summary>
-	///     Indicates that the value of the marked element could never be <c>null</c>
-	/// </summary>
-	/// <example>
-	///     <code>
-	/// [NotNull]
-	/// public object Foo()
-	/// {
-	///   return null; // Warning: Possible 'null' assignment
-	/// } 
-	/// </code>
-	/// </example>
-	[AttributeUsage(
-		AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate |
-		AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-	public sealed class NotNullAttribute : Attribute
-	{
-	}
-
-	/// <summary>
-	///     When applied to a target attribute, specifies a requirement for any type marked with
-	///     the target attribute to implement or inherit specific type or types.
-	/// </summary>
-	/// <example>
-	///     <code>
-	/// [BaseTypeRequired(typeof(IComponent)] // Specify requirement
-	/// public class ComponentAttribute : Attribute 
-	/// {}
-	/// 
-	/// [Component] // ComponentAttribute requires implementing IComponent interface
-	/// public class MyComponent : IComponent
-	/// {}
-	/// </code>
-	/// </example>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-	[BaseTypeRequired(typeof(Attribute))]
-	public sealed class BaseTypeRequiredAttribute : Attribute
-	{
-		/// <summary>
-		///     Initializes new instance of BaseTypeRequiredAttribute
-		/// </summary>
-		/// <param name="baseType">Specifies which types are required</param>
-		public BaseTypeRequiredAttribute(Type baseType)
-		{
-			BaseTypes = new[] { baseType };
-		}
-
-		/// <summary>
-		///     Gets enumerations of specified base types
-		/// </summary>
-		public Type[] BaseTypes { get; private set; }
-	}
-
-	/// <summary>
-	///     Indicates that the marked symbol is used implicitly (e.g. via reflection, in external library),
-	///     so this symbol will not be marked as unused (as well as by other usage inspections)
-	/// </summary>
-	[AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
-	public sealed class UsedImplicitlyAttribute : Attribute
-	{
-		[UsedImplicitly]
-		public UsedImplicitlyAttribute()
-			: this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
-		{
-		}
-
-		[UsedImplicitly]
-		public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
+		public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags = ImplicitUseKindFlags.Default,
+										 ImplicitUseTargetFlags targetFlags = ImplicitUseTargetFlags.Default)
 		{
 			UseKindFlags = useKindFlags;
 			TargetFlags = targetFlags;
 		}
 
+		/// <summary>
+		///     Gets a value indicating how the marked symbol is used implicitly.
+		/// </summary>
 		[UsedImplicitly]
-		public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
-			: this(useKindFlags, ImplicitUseTargetFlags.Default)
-		{
-		}
+		public ImplicitUseKindFlags UseKindFlags { get; private set; }
 
+		/// <summary>
+		///     Gets a value indicating whether only the marked symbol or all of its members are considered used.
+		/// </summary>
+		[UsedImplicitly]
+		public ImplicitUseTargetFlags TargetFlags { get; private set; }
+	}
+
+	/// <summary>
+	///     Indicates that the marked symbol is used implicitly, for instance when the symbol is used via reflection only.
+	///     Prevents code analysis tools like Resharper to incorrectly mark the symbol as unused.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
+	public sealed class UsedImplicitlyAttribute : Attribute
+	{
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="targetFlags">Specifies whether only the marked symbol or all of its members are considered used.</param>
 		[UsedImplicitly]
 		public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
 			: this(ImplicitUseKindFlags.Default, targetFlags)
 		{
 		}
 
-		[UsedImplicitly]
-		public ImplicitUseKindFlags UseKindFlags { get; private set; }
-
 		/// <summary>
-		///     Gets value indicating what is meant to be used
+		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="useKindFlags">Specifies how the symbol is used implicitly.</param>
 		[UsedImplicitly]
-		public ImplicitUseTargetFlags TargetFlags { get; private set; }
-	}
-
-	/// <summary>
-	///     Should be used on attributes and causes ReSharper
-	///     to not mark symbols marked with such attributes as unused (as well as by other usage inspections)
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-	public sealed class MeansImplicitUseAttribute : Attribute
-	{
-		[UsedImplicitly]
-		public MeansImplicitUseAttribute()
-			: this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
+		public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
+			: this(useKindFlags, ImplicitUseTargetFlags.Default)
 		{
 		}
 
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="useKindFlags">Specifies how the symbol is used implicitly.</param>
+		/// <param name="targetFlags">Specifies whether only the marked symbol or all of its members are considered used.</param>
 		[UsedImplicitly]
-		public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
+		public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags = ImplicitUseKindFlags.Default,
+									   ImplicitUseTargetFlags targetFlags = ImplicitUseTargetFlags.Default)
 		{
 			UseKindFlags = useKindFlags;
 			TargetFlags = targetFlags;
 		}
 
-		[UsedImplicitly]
-		public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags)
-			: this(useKindFlags, ImplicitUseTargetFlags.Default)
-		{
-		}
-
-		[UsedImplicitly]
-		public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
-			: this(ImplicitUseKindFlags.Default, targetFlags)
-		{
-		}
-
+		/// <summary>
+		///     Gets a value indicating how the marked symbol is used implicitly.
+		/// </summary>
 		[UsedImplicitly]
 		public ImplicitUseKindFlags UseKindFlags { get; private set; }
 
 		/// <summary>
-		///     Gets value indicating what is meant to be used
+		///     Gets a value indicating whether only the marked symbol or all of its members are considered used.
 		/// </summary>
 		[UsedImplicitly]
 		public ImplicitUseTargetFlags TargetFlags { get; private set; }
 	}
 
-	[Flags]
-	public enum ImplicitUseKindFlags
-	{
-		Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
-
-		/// <summary>
-		///     Only entity marked with attribute considered used
-		/// </summary>
-		Access = 1,
-
-		/// <summary>
-		///     Indicates implicit assignment to a member
-		/// </summary>
-		Assign = 2,
-
-		/// <summary>
-		///     Indicates implicit instantiation of a type with fixed constructor signature.
-		///     That means any unused constructor parameters won't be reported as such.
-		/// </summary>
-		InstantiatedWithFixedConstructorSignature = 4,
-
-		/// <summary>
-		///     Indicates implicit instantiation of a type
-		/// </summary>
-		InstantiatedNoFixedConstructorSignature = 8,
-	}
-
 	/// <summary>
-	///     Specify what is considered used implicitly when marked with <see cref="MeansImplicitUseAttribute" /> or
-	///     <see cref="UsedImplicitlyAttribute" />
+	///     Indicates that the marked method builds strings by format pattern and (optional) arguments. Applying this attribute to
+	///     the method with the name of the string format parameter passed to the attribute's constructor allows tools like
+	///     Resharper to highlight format parameters and warn about format string and parameter mismatches.
 	/// </summary>
-	[Flags]
-	public enum ImplicitUseTargetFlags
+	/// <example>
+	///     <code>
+	/// 		[StringFormatMethod("message")]
+	/// 		public void ShowError(string message, params object[] args)
+	/// 		{
+	/// 		  // ...
+	/// 		}
+	/// 		public void Foo()
+	/// 		{
+	/// 		  ShowError("Failed: {0}"); // Warning: Non-existing argument in format string
+	/// 		}
+	/// 	</code>
+	/// </example>
+	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+	public sealed class StringFormatMethodAttribute : Attribute
 	{
-		Default = Itself,
-
-		Itself = 1,
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="formatParameterName">The name of the format string parameter.</param>
+		public StringFormatMethodAttribute(string formatParameterName)
+		{
+			FormatParameterName = formatParameterName;
+		}
 
 		/// <summary>
-		///     Members of entity marked with attribute are considered used
+		///     Gets the name of the format string parameter.
 		/// </summary>
-		Members = 2,
-
-		/// <summary>
-		///     Entity marked with attribute and all its members considered used
-		/// </summary>
-		WithMembers = Itself | Members
+		[UsedImplicitly]
+		public string FormatParameterName { get; private set; }
 	}
 
 	/// <summary>
 	///     Indicates that a method does not make any observable state changes.
-	///     The same as <see cref="System.Diagnostics.Contracts.PureAttribute" />
 	/// </summary>
 	/// <example>
 	///     <code>
-	///  [Pure]
-	///  private int Multiply(int x, int y)
-	///  {
-	///    return x*y;
-	///  }
-	/// 
-	///  public void Foo()
-	///  {
-	///    const int a=2, b=2;
-	///    Multiply(a, b); // Waring: Return value of pure method is not used
-	///  }
-	///  </code>
+	/// 		[Pure]
+	/// 		private int Multiply(int x, int y)
+	/// 		{
+	/// 		  return x*y;
+	/// 		}
+	/// 		
+	/// 		public void Foo()
+	/// 		{
+	/// 		  const int a=2, b=2;
+	/// 		  Multiply(a, b); // Waring: Return value of pure method is not used
+	/// 		}
+	///   </code>
 	/// </example>
 	[AttributeUsage(AttributeTargets.Method, Inherited = true)]
 	public sealed class PureAttribute : Attribute
