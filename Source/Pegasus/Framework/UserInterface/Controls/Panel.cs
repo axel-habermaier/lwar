@@ -72,6 +72,26 @@
 		}
 
 		/// <summary>
+		///     Adds the given UI element to the layout root, showing it above all other previously added non-modal UI elements.
+		/// </summary>
+		/// <param name="element">The UI element that should be added.</param>
+		public void Add(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			Children.Add(element);
+		}
+
+		/// <summary>
+		///     Removes the given UI element from the layout root.
+		/// </summary>
+		/// <param name="element">The UI element that should be removed.</param>
+		public bool Remove(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			return Children.Remove(element);
+		}
+
+		/// <summary>
 		///     Sets the z-order dirty flag if a panel's child element's z-index property has changed.
 		/// </summary>
 		private static void OnZIndexChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<int> args)

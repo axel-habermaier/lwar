@@ -8,7 +8,7 @@
 			 Foreground="White">
 
 	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}" HasDepthStencil="true" DrawCallback="{Binding OnDraw}">
-		<controls:PilePanel>
+		<controls:AreaPanel>
 
 			<StackPanel Orientation="Horizontal"
 						HorizontalAlignment="Center"
@@ -29,7 +29,7 @@
 				</StackPanel>
 			</Border>
 
-		</controls:PilePanel>
+		</controls:AreaPanel>
 	</controls:RenderOutputPanel>
 
 </UserControl>

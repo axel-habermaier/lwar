@@ -4,15 +4,10 @@
 	using Math;
 
 	/// <summary>
-	///     Stacks its children along the z-axis, allowing each child to take up the entire area of the panel.
+	///     Allows each child to take up the entire area of the panel.
 	/// </summary>
-	public sealed class PilePanel : Panel
+	public sealed class AreaPanel : Panel
 	{
-		/// <summary>
-		///     The current number of modal UI elements that the layout root contains.
-		/// </summary>
-		private int _modalElementCount;
-
 		/// <summary>
 		///     Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
@@ -44,26 +39,6 @@
 				child.Arrange(new RectangleD(Vector2d.Zero, finalSize));
 
 			return finalSize;
-		}
-
-		/// <summary>
-		///     Adds the given UI element to the layout root, showing it above all other previously added non-modal UI elements.
-		/// </summary>
-		/// <param name="element">The UI element that should be added.</param>
-		public void Add(UIElement element)
-		{
-			Assert.ArgumentNotNull(element);
-			Children.Add(element);
-		}
-
-		/// <summary>
-		///     Removes the given UI element from the layout root.
-		/// </summary>
-		/// <param name="element">The UI element that should be removed.</param>
-		public bool Remove(UIElement element)
-		{
-			Assert.ArgumentNotNull(element);
-			return Children.Remove(element);
 		}
 	}
 }

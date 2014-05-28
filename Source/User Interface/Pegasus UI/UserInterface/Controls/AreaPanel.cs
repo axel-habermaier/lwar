@@ -3,7 +3,7 @@
 	using System;
 	using System.Windows.Controls;
 
-	public class PilePanel : Panel
+	public class AreaPanel : Panel
 	{
 	}
 }

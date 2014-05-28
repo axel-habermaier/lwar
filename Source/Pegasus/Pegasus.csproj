@@ -235,7 +235,7 @@
     <Compile Include="Framework\UserInterface\Converters\Int64ToStringConverter.cs" />
     <Compile Include="Framework\UserInterface\Converters\IValueConverter`2.cs" />
     <Compile Include="Framework\UserInterface\Converters\IValueConverter.cs" />
-    <Compile Include="Framework\UserInterface\Controls\PilePanel.cs" />
+    <Compile Include="Framework\UserInterface\Controls\AreaPanel.cs" />
     <Compile Include="Framework\UserInterface\Controls\RenderOutputPanel.cs" />
     <Compile Include="Framework\UserInterface\Controls\RowDefinition.cs" />
     <Compile Include="Framework\UserInterface\Converters\SByteToStringConverter.cs" />

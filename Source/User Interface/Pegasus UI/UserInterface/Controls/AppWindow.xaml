@@ -7,6 +7,6 @@
              FontFamily="Liberation Mono" 
              FontSize="11"
              TextOptions.TextRenderingMode="Aliased" Background="Black" Title="Pegasus">
-	<controls:PilePanel x:Name="LayoutRoot">
-	</controls:PilePanel>
+	<controls:AreaPanel x:Name="LayoutRoot">
+	</controls:AreaPanel>
 </Window>

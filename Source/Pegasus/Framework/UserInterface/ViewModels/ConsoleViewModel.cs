@@ -14,7 +14,7 @@
 	/// </summary>
 	internal class ConsoleViewModel : ViewModel
 	{
-		private readonly PilePanel _root;
+		private readonly AreaPanel _root;
 		private readonly SpriteBatch _spriteBatch;
 		private readonly ConsoleView _view = new ConsoleView();
 

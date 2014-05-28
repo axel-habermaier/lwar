@@ -35,7 +35,7 @@
 		/// <summary>
 		///     Gets the layout root of the application window.
 		/// </summary>
-		public PilePanel LayoutRoot
+		public AreaPanel LayoutRoot
 		{
 			get { return _layoutRoot; }
 		}
