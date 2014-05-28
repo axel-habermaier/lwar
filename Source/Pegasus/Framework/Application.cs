@@ -9,6 +9,7 @@
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
+	using UserInterface.ViewModels;
 
 	/// <summary>
 	///     Represents the application. There can be only one instance per app domain.

@@ -79,6 +79,20 @@
 		}
 
 		[Test]
+		public void AutomaticallyInvokeToString()
+		{
+			_viewModel.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "Integer");
+			_control.StringTest.Should().Be("17");
+
+			var builder = new StringBuilder().Append("ABC");
+			var sourceObject = new UntypedViewModelA { Value = builder };
+
+			_control.CreateDataBinding(sourceObject, TestControl.StringTestProperty, BindingMode.OneWay, "Value");
+			_control.StringTest.Should().Be(builder.ToString());
+		}
+
+		[Test]
 		public void BindingMode_OneWay()
 		{
 			_viewModel.Integer = 17;

@@ -23,11 +23,6 @@
 		private bool _isActive;
 
 		/// <summary>
-		///     A value indicating whether the view model's view is modal.
-		/// </summary>
-		private bool _isModal;
-
-		/// <summary>
 		///     The view associated with the view model.
 		/// </summary>
 		private UserControl _view;
@@ -73,25 +68,6 @@
 		}
 
 		/// <summary>
-		///     Gets or sets a value indicating whether the view model's view is modal.
-		/// </summary>
-		protected bool IsModal
-		{
-			get
-			{
-				Assert.NotDisposed(this);
-				return _isModal;
-			}
-			set
-			{
-				Assert.NotDisposed(this);
-				Assert.That(!_isActive, "The IsModal property cannot be changed when the view model is active.");
-
-				_isModal = value;
-			}
-		}
-
-		/// <summary>
 		///     Gets or sets the view associated with the view model.
 		/// </summary>
 		protected UserControl View
@@ -123,13 +99,12 @@
 			Assert.That(_view != null || GetType() == typeof(RootViewModel), "No view has been set for the view model.");
 			Assert.NotDisposed(this);
 
-			if (_isModal && _view != null)
-				Application.Current.Window.LayoutRoot.AddModal(_view);
-			else if (_view != null)
-				Application.Current.Window.LayoutRoot.Add(_view);
-
 			OnActivated();
+
 			_isActive = true;
+
+			if (_view != null)
+				Application.Current.Window.LayoutRoot.Add(_view);
 
 			if (_child != null)
 				_child.Activate();

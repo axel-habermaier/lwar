@@ -182,7 +182,7 @@
 		<Property Type="int" Name="Row"/>
 	</Class>
 	
-	<Class Name="Pegasus.Framework.UserInterface.Controls.LayoutRoot" Inherits="Pegasus.Framework.UserInterface.Controls.Panel"/>
+	<Class Name="Pegasus.Framework.UserInterface.Controls.PilePanel" Inherits="Pegasus.Framework.UserInterface.Controls.Panel"/>
 
 	<!-- Decorators ================================================================================================= -->
 

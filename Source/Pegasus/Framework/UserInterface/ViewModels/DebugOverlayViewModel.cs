@@ -1,6 +1,7 @@
-﻿namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.ViewModels
 {
 	using System;
+	using Controls;
 	using Platform;
 	using Scripting;
 
@@ -71,7 +72,7 @@
 			_timer.Timeout += UpdateViewModel;
 			_view = new DebugOverlayView { ViewModel = this };
 
-			Application.Current.Window.LayoutRoot.AddTopmost(_view);
+			Application.Current.Window.LayoutRoot.Add(_view);
 		}
 
 		/// <summary>

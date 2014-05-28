@@ -4,21 +4,10 @@
 	using Math;
 
 	/// <summary>
-	///     Represents the root layout of an application window. Allows its children to be stacked along the z-axis, allowing each
-	///     child to take up the entire area of the window.
+	///     Stacks its children along the z-axis, allowing each child to take up the entire area of the panel.
 	/// </summary>
-	public sealed class LayoutRoot : Panel
+	public sealed class PilePanel : Panel
 	{
-		/// <summary>
-		///     The z-index of the first modal child UI element.
-		/// </summary>
-		private const int ModalZIndexStart = Int32.MaxValue / 2;
-
-		/// <summary>
-		///     The z-index of the topmost UI elements.
-		/// </summary>
-		private const int TopmostZIndex = Int32.MaxValue;
-
 		/// <summary>
 		///     The current number of modal UI elements that the layout root contains.
 		/// </summary>
@@ -74,40 +63,7 @@
 		public bool Remove(UIElement element)
 		{
 			Assert.ArgumentNotNull(element);
-
-			var zIndex = GetZIndex(element);
-			if (zIndex != TopmostZIndex && zIndex >= ModalZIndexStart)
-			{
-				Assert.That(_modalElementCount > 0, "More modal UI elements have been removed than added.");
-				--_modalElementCount;
-			}
-
 			return Children.Remove(element);
-		}
-
-		/// <summary>
-		///     Adds the given UI element to the layout root, showing it above all other previously added non-modal and modal UI
-		///     elements.
-		/// </summary>
-		/// <param name="element">The UI element that should be added.</param>
-		public void AddModal(UIElement element)
-		{
-			Assert.ArgumentNotNull(element);
-
-			Children.Add(element);
-			SetZIndex(element, ModalZIndexStart + _modalElementCount++);
-		}
-
-		/// <summary>
-		///     Adds the given UI element to the layout root, showing it above all other previously added UI elements.
-		/// </summary>
-		/// <param name="element">The UI element that should be added.</param>
-		public void AddTopmost(UIElement element)
-		{
-			Assert.ArgumentNotNull(element);
-
-			Children.Add(element);
-			SetZIndex(element, TopmostZIndex);
 		}
 	}
 }

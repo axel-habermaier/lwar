@@ -40,7 +40,7 @@
 		/// <param name="port">The port of the server.</param>
 		private void Connect(IPAddress address, ushort port)
 		{
-			ReplaceSelf(new InGameViewModel(new IPEndPoint(address, port)), disposeSelf: true);
+			ReplaceSelf(new GameSessionViewModel(new IPEndPoint(address, port)), disposeSelf: true);
 		}
 	}
 }

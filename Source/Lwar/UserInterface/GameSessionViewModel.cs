@@ -5,6 +5,7 @@
 	using Gameplay.Entities;
 	using Network;
 	using Network.Messages;
+	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
@@ -19,7 +20,7 @@
 	/// <summary>
 	///     Displays a game session.
 	/// </summary>
-	public class InGameViewModel : LwarViewModel<InGameView>
+	public class GameSessionViewModel : LwarViewModel<GameSessionView>
 	{
 		/// <summary>
 		///     The network session that synchronizes the game state between the client and the server.
@@ -27,13 +28,7 @@
 		private readonly NetworkSession _networkSession;
 
 		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
-
-		private SpriteBatch _spriteBatch;
-
-		/// <summary>
-		///     The timer that is used to send user input to the server.
-		/// </summary>
-		private Timer _timer = new Timer(1000.0 / Specification.InputUpdateFrequency);
+		private Camera2D _camera;
 
 		/// <summary>
 		///     The game session that is played.
@@ -44,6 +39,16 @@
 		///     Manages the input provided by the user.
 		/// </summary>
 		private InputManager _inputManager;
+
+		/// <summary>
+		///     Indicates whether the connection to the server is lagging.
+		/// </summary>
+		private bool _isLagging;
+
+		/// <summary>
+		///     Indicates whether the game session is being loaded.
+		/// </summary>
+		private bool _isLoading = true;
 
 		/// <summary>
 		///     The message dispatcher that is used to dispatch messages received from the server.
@@ -60,17 +65,27 @@
 		/// </summary>
 		private bool _sendInput;
 
-		private Camera2D _camera;
+		private SpriteBatch _spriteBatch;
+
+		/// <summary>
+		///     The timer that is used to send user input to the server.
+		/// </summary>
+		private Timer _timer = new Timer(1000.0 / Specification.InputUpdateFrequency);
+
+		/// <summary>
+		///     The remaining number of seconds before the connection of the server is dropped.
+		/// </summary>
+		private double _waitForServerTimeout;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
-		public InGameViewModel(IPEndPoint serverEndPoint)
+		public GameSessionViewModel(IPEndPoint serverEndPoint)
 		{
 			OnDraw = Draw;
 			CameraManager = new CameraManager(Application.Current.Window, Application.Current.GraphicsDevice, Application.Current.Window.InputDevice);
-			View = new InGameView();
+			View = new GameSessionView();
 
 			_networkSession = new NetworkSession(serverEndPoint);
 			_timer.Timeout += SendInputTimeout;
@@ -80,8 +95,6 @@
 				DepthStencilState = DepthStencilState.DepthDisabled,
 				SamplerState = SamplerState.PointClampNoMipmaps
 			};
-			
-			Log.Info("Connecting to {0}...", serverEndPoint);
 		}
 
 		/// <summary>
@@ -93,6 +106,45 @@
 		///     Gets the callback that should be used to redraw the 3D scene.
 		/// </summary>
 		public Action<RenderOutput> OnDraw { get; private set; }
+
+		/// <summary>
+		///     Gets the endpoint of the server that hosts the game session.
+		/// </summary>
+		public IPEndPoint ServerEndPoint
+		{
+			get { return _networkSession.ServerEndPoint; }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the game session is being loaded.
+		/// </summary>
+		public bool IsLoading
+		{
+			get { return _isLoading; }
+			private set { ChangePropertyValue(ref _isLoading, value); }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the connection to the server is lagging.
+		/// </summary>
+		public bool IsLagging
+		{
+			get { return _isLagging; }
+			private set { ChangePropertyValue(ref _isLagging, value); }
+		}
+
+		/// <summary>
+		///     Gets the remaining number of seconds before the connection of the server is dropped.
+		/// </summary>
+		public double WaitForServerTimeout
+		{
+			get { return _waitForServerTimeout; }
+			private set
+			{
+				if (IsLagging)
+					ChangePropertyValue(ref _waitForServerTimeout, Math.Round(value));
+			}
+		}
 
 		/// <summary>
 		///     Sends the input to the server, if required.
@@ -111,6 +163,24 @@
 
 			_networkSession.Send(message);
 			_sendInput = false;
+		}
+
+		/// <summary>
+		///     Finalizes the game state synchronization and starts the game session.
+		/// </summary>
+		private void OnConnected()
+		{
+			var localPlayer = _gameSession.Players.LocalPlayer;
+			Assert.NotNull(localPlayer, "Game state synced but local player is unknown.");
+
+			_networkSession.Send(SelectionMessage.Create(localPlayer, EntityType.Ship,
+				EntityType.Gun, EntityType.Phaser,
+				EntityType.Phaser, EntityType.Phaser));
+
+			_gameSession.EventMessages.Enabled = true;
+			IsLoading = false;
+
+			Log.Info("Game state synced. Now connected to game session hosted by {0}.", _networkSession.ServerEndPoint);
 		}
 
 		/// <summary>
@@ -189,7 +259,8 @@
 			//_chatInput = new ChatInput(InputDevice, Assets);
 			Application.Current.Window.InputDevice.Add(_respawn);
 
-			Child = new LoadingViewModel(_gameSession, _networkSession);
+			_networkSession.OnConnected += OnConnected;
+			//_networkSession.IsDropped
 		}
 
 		/// <summary>
@@ -224,19 +295,23 @@
 		/// </summary>
 		protected override void OnUpdate()
 		{
-			SendInput();
-			_timer.Update();
 			_networkSession.Update(_messageDispatcher);
 
-			if (_networkSession.IsConnected)
-			{
-				_gameSession.Update();
-				_inputManager.Update();
-				//_eventMessage.Update(_gameSession.EventMessages, Window.Size);
+			IsLagging = _networkSession.IsLagging;
+			WaitForServerTimeout = _networkSession.TimeToDrop / 1000;
 
-				CameraManager.GameCamera.Ship = _gameSession.Players.LocalPlayer.Ship;
-				CameraManager.Update();
-			}
+			if (!_networkSession.IsConnected)
+				return;
+
+			SendInput();
+
+			_timer.Update();
+			_gameSession.Update();
+			_inputManager.Update();
+			//_eventMessage.Update(_gameSession.EventMessages, Window.Size);
+
+			CameraManager.GameCamera.Ship = _gameSession.Players.LocalPlayer.Ship;
+			CameraManager.Update();
 
 			if (_networkSession.IsDropped)
 			{
@@ -257,7 +332,7 @@
 			}
 
 			//if (_networkSession.IsLagging && topmost)
-				//ScreenManager.Add(new WaitingForServer(_networkSession));
+			//ScreenManager.Add(new WaitingForServer(_networkSession));
 
 			if (!_networkSession.IsSyncing)
 			{
@@ -268,8 +343,21 @@
 			var localPlayer = _gameSession.Players.LocalPlayer;
 			if (localPlayer != null && localPlayer.Ship == null && _respawn.IsTriggered)
 				_networkSession.Send(SelectionMessage.Create(localPlayer, EntityType.Ship,
-															 EntityType.Gun, EntityType.Phaser,
-															 EntityType.Phaser, EntityType.Phaser));
+					EntityType.Gun, EntityType.Phaser,
+					EntityType.Phaser, EntityType.Phaser));
+		}
+
+		/// <summary>
+		/// Opens the main menu and shows a message box with the given header and message.
+		/// </summary>
+		/// <param name="header">The header of the message box.</param>
+		/// <param name="message">The message that the message box should display.</param>
+		void ShowMessageBox(string header, string message)
+		{
+			var mainMenu = new MainMenuViewModel();
+			//mainMenu.Child = new 
+
+			ReplaceSelf(mainMenu, true);
 		}
 	}
 }

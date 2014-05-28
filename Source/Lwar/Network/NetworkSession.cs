@@ -46,6 +46,11 @@
 		private readonly Queue<Message> _receivedMessages = new Queue<Message>();
 
 		/// <summary>
+		///     The cached state of the server connection.
+		/// </summary>
+		private ConnectionState _connectionState;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
@@ -53,6 +58,7 @@
 		{
 			_deliveryManager = new DeliveryManager();
 			_connection = new ServerConnection(serverEndPoint);
+			_connectionState = _connection.State;
 
 			_outgoingMessages = new MessageQueue(_deliveryManager);
 			Send(ConnectMessage.Create(Cvars.PlayerName));
@@ -132,12 +138,75 @@
 		}
 
 		/// <summary>
+		///     Raises the appropriate state event.
+		/// </summary>
+		private void HandleConnectionStateChange()
+		{
+			if (_connectionState == _connection.State)
+				return;
+
+			_connectionState = _connection.State;
+
+			switch (_connectionState)
+			{
+				case ConnectionState.Connecting:
+				case ConnectionState.Syncing:
+					break;
+				case ConnectionState.Connected:
+					if (OnConnected != null)
+						OnConnected();
+					break;
+				case ConnectionState.Dropped:
+					if (OnDropped != null)
+						OnDropped();
+					break;
+				case ConnectionState.Faulted:
+					if (OnFaulted != null)
+						OnFaulted();
+					break;
+				case ConnectionState.Full:
+					if (OnRejected != null)
+						OnRejected(RejectReason.Full);
+					break;
+				case ConnectionState.VersionMismatch:
+					if (OnRejected != null)
+						OnRejected(RejectReason.VersionMismatch);
+					break;
+				default:
+					Assert.NotReached("Unknown connection state.");
+					break;
+			}
+		}
+
+		/// <summary>
+		///     Raised when the connection to the server has been successfully established and the game state has been synchronized.
+		/// </summary>
+		public event Action OnConnected;
+
+		/// <summary>
+		///     Raised when a connection error occurred.
+		/// </summary>
+		public event Action OnFaulted;
+
+		/// <summary>
+		///     Raised when the connection was dropped.
+		/// </summary>
+		public event Action OnDropped;
+
+		/// <summary>
+		///     Raised when a connection attempt has been rejected.
+		/// </summary>
+		public event Action<RejectReason> OnRejected;
+
+		/// <summary>
 		///     Updates the state of the network session.
 		/// </summary>
 		/// <param name="dispatcher">The message dispatcher that should be used to dispatch the received server messages.</param>
 		public void Update(MessageDispatcher dispatcher)
 		{
 			Assert.ArgumentNotNull(dispatcher);
+
+			HandleConnectionStateChange();
 
 			_connection.Send(_outgoingMessages);
 			_connection.Receive(_receivedMessages, _deliveryManager);

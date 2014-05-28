@@ -17,12 +17,18 @@
 		private static readonly EventInfo PropertyChangedEventInfo = typeof(INotifyPropertyChanged).GetRuntimeEvent("PropertyChanged");
 
 		/// <summary>
+		///     A cached method info instance for the Object.ToString() method.
+		/// </summary>
+		public static readonly MethodInfo ToStringMethodInfo = typeof(object).GetRuntimeMethod("ToString", new Type[] { });
+
+		/// <summary>
 		///     In debug builds, checks whether all cached reflection info objects could be resolved successfully.
 		/// </summary>
 		[Conditional("DEBUG")]
 		public static void Validate()
 		{
 			Assert.NotNull(PropertyChangedEventInfo, "Unable to find the INotifyPropertyChanged.PropertyChanged event.");
+			Assert.NotNull(ToStringMethodInfo, "Unable to find the Object.ToString() method.");
 		}
 
 		/// <summary>

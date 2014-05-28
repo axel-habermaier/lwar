@@ -1,7 +1,8 @@
-﻿namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.ViewModels
 {
 	using System;
 	using Assets;
+	using Controls;
 	using Platform.Graphics;
 	using Platform.Input;
 	using Platform.Memory;
@@ -13,7 +14,7 @@
 	/// </summary>
 	internal class ConsoleViewModel : ViewModel
 	{
-		private readonly LayoutRoot _root;
+		private readonly PilePanel _root;
 		private readonly SpriteBatch _spriteBatch;
 		private readonly ConsoleView _view = new ConsoleView();
 
@@ -35,7 +36,7 @@
 			Camera = new Camera2D(Application.Current.GraphicsDevice);
 
 			_root = window.LayoutRoot;
-			_root.AddTopmost(_view);
+			_root.Add(_view);
 			_view.ViewModel = this;
 
 			_spriteBatch = new SpriteBatch(Application.Current.GraphicsDevice, Application.Current.Assets)

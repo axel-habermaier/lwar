@@ -181,7 +181,9 @@
 			if (_converter != null)
 				expression = Expressions.InvokeConvertToTargetMethod(this, expression);
 
-			if (!typeof(T).IsValueType && ActualSourcePropertyType.IsValueType)
+			if (typeof(T) == typeof(string) && ActualSourcePropertyType != typeof(string))
+				expression = Expression.Call(expression, ReflectionHelper.ToStringMethodInfo);
+			else if (!typeof(T).IsValueType && ActualSourcePropertyType.IsValueType)
 				expression = Expression.Convert(expression, typeof(T));
 
 			_sourceFunc = Expression.Lambda<Func<object, IValueConverter, T>>(

@@ -4,6 +4,7 @@
 	using Math;
 	using Platform.Memory;
 	using Rendering;
+	using ViewModels;
 
 	/// <summary>
 	///     Represents the default window of an application.
@@ -34,7 +35,7 @@
 		/// <summary>
 		///     Gets the layout root of the application window.
 		/// </summary>
-		public LayoutRoot LayoutRoot
+		public PilePanel LayoutRoot
 		{
 			get { return _layoutRoot; }
 		}

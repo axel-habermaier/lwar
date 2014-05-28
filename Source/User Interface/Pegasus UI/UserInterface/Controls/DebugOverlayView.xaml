@@ -1,17 +1,18 @@
-﻿<UserControl
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls"
-	xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters"
-	mc:Ignorable="d"
-	x:Class="Pegasus.Framework.UserInterface.Controls.DebugOverlayView"
-	x:Name="UserControl"
-	Foreground="White" Background="#66222222"
-	d:DataContext="{d:DesignInstance Type={x:Type controls:DebugOverlayViewModel}, IsDesignTimeCreatable=True}"
-	HorizontalAlignment="Left" VerticalAlignment="Bottom"
-	Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}">
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls"
+			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters"
+			 mc:Ignorable="d"
+			 x:Class="Pegasus.Framework.UserInterface.Controls.DebugOverlayView"
+			 x:Name="UserControl"
+			 Foreground="White" Background="#66222222"
+			 d:DataContext="{d:DesignInstance Type={x:Type controls:DebugOverlayViewModel}, IsDesignTimeCreatable=True}"
+			 HorizontalAlignment="Left" VerticalAlignment="Bottom"
+			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
+			 Panel.ZIndex="2147483646">
+	
 	<Grid Margin="15">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -63,4 +64,5 @@
 			<TextBlock Text="ms" />
 		</StackPanel>
 	</Grid>
+	
 </UserControl>
