@@ -6,7 +6,6 @@
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
-	using Rendering;
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
@@ -40,7 +39,6 @@
 			Current = this;
 		}
 
-		//public double StartupTime { get; private set; }
 		/// <summary>
 		///     Gets the application startup time in seconds, i.e., the timestamp of the internal CPU clock at application startup.
 		/// </summary>
@@ -66,7 +64,7 @@
 		/// <summary>
 		///     Gets the application-wide resources.
 		/// </summary>
-		public ResourceDictionary Resources
+		protected ResourceDictionary Resources
 		{
 			get { return _root.Resources; }
 		}
@@ -100,12 +98,6 @@
 		///     Invoked when the application should update the its state.
 		/// </summary>
 		protected abstract void Update();
-
-		/// <summary>
-		///     Invoked when the application should draw a frame.
-		/// </summary>
-		/// <param name="output">The render output that should be used to draw the frame.</param>
-		protected abstract void Draw(RenderOutput output);
 
 		/// <summary>
 		///     Exists the application.
@@ -174,10 +166,6 @@
 
 					cpuStartTime = Clock.SystemTime;
 
-					// Let the application perform all custom drawing for the current frame
-					//Draw(Window.RenderOutput);
-
-					// Draw the user interface
 					_root.Draw();
 
 					debugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
