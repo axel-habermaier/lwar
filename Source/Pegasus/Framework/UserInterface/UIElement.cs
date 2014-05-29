@@ -664,18 +664,17 @@
 			if (Visibility != Visibility.Visible)
 				return;
 
-			++spriteBatch.Layer;
 			OnDraw(spriteBatch);
 
 			var count = VisualChildrenCount;
 			for (var i = 0; i < count; ++i)
 			{
+				++spriteBatch.Layer;
+
 				var child = GetVisualChild(i);
 				child.VisualOffset += VisualOffset;
 				child.Draw(spriteBatch);
 			}
-
-			--spriteBatch.Layer;
 		}
 
 		protected abstract void OnDraw(SpriteBatch spriteBatch);

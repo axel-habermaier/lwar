@@ -34,6 +34,22 @@
 		protected LwarViewModel Parent { get; private set; }
 
 		/// <summary>
+		///     Gets the view model's root view model in the view model stack. The root is null for the root view model as well as
+		///     for view models that are not in the stack.
+		/// </summary>
+		protected LwarViewModel Root
+		{
+			get
+			{
+				if (GetType() == typeof(RootViewModel))
+					return this;
+
+				Assert.NotNull(Parent, "The view model has no parent.");
+				return Parent.Root;
+			}
+		}
+
+		/// <summary>
 		///     Gets or sets the view model's child in the view model stack.
 		/// </summary>
 		public LwarViewModel Child
@@ -175,19 +191,18 @@
 		}
 
 		/// <summary>
-		///     Replaces the current view model with the given one, optionally disposing the current view model.
+		///     Replaces the current view model's child with the given one, disposing the current child view model.
 		/// </summary>
-		/// <param name="viewModel">The new view model the current one should be replaced with.</param>
-		/// <param name="disposeSelf">Indicates whether the current view model should be disposed after it has been replaced.</param>
-		protected void ReplaceSelf(LwarViewModel viewModel, bool disposeSelf)
+		/// <param name="viewModel">The new view model the current child view model should be replaced with.</param>
+		public void ReplaceChild(LwarViewModel viewModel)
 		{
-			Assert.That(Parent != null && Parent.Child == this, "The current view model cannot be replaced.");
 			Assert.NotDisposed(this);
 
-			Parent.Child = viewModel;
+			var currentChild = Child;
+			Child = viewModel;
 
-			if (disposeSelf)
-				this.SafeDispose();
+			if (currentChild != null)
+				currentChild.SafeDispose();
 		}
 	}
 }

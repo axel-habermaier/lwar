@@ -18,7 +18,7 @@
 		///     The duration in milliseconds that the proxy waits for a new packet from the server before the connection is
 		///     considered to be dropped.
 		/// </summary>
-		private const int DroppedTimeout = 15000;
+		private const int DroppedTimeout = 10000;
 
 		/// <summary>
 		///     The duration in milliseconds that the proxy waits for a new packet from the server before the connection is

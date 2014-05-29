@@ -8,6 +8,7 @@
 	<StackPanel>
 		<TextBlock Text="{Binding Header}" Background="#FF5B5B5B"></TextBlock>
 		<TextBlock Text="{Binding Message}"></TextBlock>
+		
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 			<Button Margin="0,0,10,0">OK</Button>
 			<Button>Cancel</Button>

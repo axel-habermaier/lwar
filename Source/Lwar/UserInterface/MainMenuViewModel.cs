@@ -40,7 +40,7 @@
 		/// <param name="port">The port of the server.</param>
 		private void Connect(IPAddress address, ushort port)
 		{
-			ReplaceSelf(new GameSessionViewModel(new IPEndPoint(address, port)), disposeSelf: true);
+			Root.ReplaceChild(new GameSessionViewModel(new IPEndPoint(address, port)));
 		}
 	}
 }

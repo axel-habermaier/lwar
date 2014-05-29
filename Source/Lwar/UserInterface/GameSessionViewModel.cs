@@ -7,6 +7,7 @@
 	using Network.Messages;
 	using Pegasus;
 	using Pegasus.Framework;
+	using Pegasus.Framework.UserInterface;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
@@ -260,7 +261,29 @@
 			Application.Current.Window.InputDevice.Add(_respawn);
 
 			_networkSession.OnConnected += OnConnected;
-			//_networkSession.IsDropped
+			_networkSession.OnDropped += () => ShowErrorBox("Connection Lost", "The connection to the server has been lost.");
+			_networkSession.OnFaulted += () => ShowErrorBox("Connection Error", "The game session has been aborted due to a network error.");
+			_networkSession.OnRejected += OnConnectionRejected;
+		}
+
+		/// <summary>
+		///     Shows an error message box explaining why the connection was rejected.
+		/// </summary>
+		/// <param name="reason">The reason for the rejection.</param>
+		private void OnConnectionRejected(RejectReason reason)
+		{
+			switch (reason)
+			{
+				case RejectReason.Full:
+					ShowErrorBox("Connection Rejected", "The server is full.");
+					break;
+				case RejectReason.VersionMismatch:
+					ShowErrorBox("Connection Rejected", "The server uses an incompatible version of the network protocol.");
+					break;
+				default:
+					Assert.NotReached("Unknown reject reason.");
+					break;
+			}
 		}
 
 		/// <summary>
@@ -313,27 +336,6 @@
 			CameraManager.GameCamera.Ship = _gameSession.Players.LocalPlayer.Ship;
 			CameraManager.Update();
 
-			if (_networkSession.IsDropped)
-			{
-				//MessageBox.Show(this, LogType.Error, "The connection to the server has been lost.", true);
-				return;
-			}
-
-			if (_networkSession.IsFaulted)
-			{
-				//MessageBox.Show(this, LogType.Error, "The game session has been aborted due to a network error.", true);
-				return;
-			}
-
-			if (_networkSession.ServerIsFull || _networkSession.VersionMismatch)
-			{
-				//ScreenManager.Remove(this);
-				return;
-			}
-
-			//if (_networkSession.IsLagging && topmost)
-			//ScreenManager.Add(new WaitingForServer(_networkSession));
-
 			if (!_networkSession.IsSyncing)
 			{
 				//_scoreboard.Update(Window.Size);
@@ -348,16 +350,17 @@
 		}
 
 		/// <summary>
-		/// Opens the main menu and shows a message box with the given header and message.
+		///     Opens the main menu and shows a message box with the given header and error message.
 		/// </summary>
 		/// <param name="header">The header of the message box.</param>
 		/// <param name="message">The message that the message box should display.</param>
-		void ShowMessageBox(string header, string message)
+		private void ShowErrorBox(string header, string message)
 		{
-			var mainMenu = new MainMenuViewModel();
-			//mainMenu.Child = new 
+			Log.Error("{0}", message);
+			MessageBox.Show(header, message);
 
-			ReplaceSelf(mainMenu, true);
+			var mainMenu = new MainMenuViewModel();
+			Root.ReplaceChild(mainMenu);
 		}
 	}
 }
