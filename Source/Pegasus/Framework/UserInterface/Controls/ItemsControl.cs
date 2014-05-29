@@ -79,8 +79,46 @@
 		private static void OnItemsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<IEnumerable> args)
 		{
 			var itemsControl = obj as ItemsControl;
-			if (itemsControl != null)
-				itemsControl.RegenerateItems();
+			if (itemsControl == null)
+				return;
+
+			itemsControl.RegenerateItems();
+
+			var observable = args.OldValue as INotifyCollectionChanged;
+			if (observable != null)
+				observable.CollectionChanged -= itemsControl.OnCollectionChanged;
+
+			observable = args.NewValue as INotifyCollectionChanged;
+			if (observable != null)
+				observable.CollectionChanged += itemsControl.OnCollectionChanged;
+		}
+
+		/// <summary>
+		///     Replays the changes to the collection to the items host.
+		/// </summary>
+		private void OnCollectionChanged(IEnumerable collection, CollectionChangedEventArgs args)
+		{
+			switch (args.Action)
+			{
+				case CollectionChangedAction.Add:
+					if (_itemsHost != null)
+						_itemsHost.Children.Insert(args.Index, CreateUIElement(args.Item));
+					break;
+				case CollectionChangedAction.Remove:
+					if (_itemsHost != null)
+						_itemsHost.Children.RemoveAt(args.Index);
+					break;
+				case CollectionChangedAction.Replace:
+					if (_itemsHost != null)
+						_itemsHost.Children[args.Index] = CreateUIElement(args.Item);
+					break;
+				case CollectionChangedAction.Reset:
+					RegenerateItems();
+					break;
+				default:
+					Assert.NotReached("Unknown change action.");
+					break;
+			}
 		}
 
 		/// <summary>
@@ -142,12 +180,21 @@
 			Assert.NotNull(template, "ItemTemplate cannot be null.");
 
 			foreach (var item in items)
-			{
-				var child = template();
-				child.DataContext = item;
+				_itemsHost.Add(CreateUIElement(item));
+		}
 
-				_itemsHost.Add(child);
-			}
+		/// <summary>
+		///     Creates a child UI element for the given item.
+		/// </summary>
+		/// <param name="item">The item the UI element should be created for.</param>
+		private UIElement CreateUIElement(object item)
+		{
+			var template = ItemTemplate;
+			Assert.NotNull(template, "ItemTemplate cannot be null.");
+
+			var child = template();
+			child.DataContext = item;
+			return child;
 		}
 
 		/// <summary>

@@ -34,7 +34,6 @@
 			public int Value
 			{
 				get { return GetValue(ValueProperty); }
-				set { SetValue(ValueProperty, value); }
 			}
 		}
 
