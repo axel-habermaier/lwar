@@ -1,12 +1,11 @@
-﻿namespace Lwar.Screens
+﻿namespace Lwar.UserInterface
 {
 	using System;
 	using System.Text;
-	using Assets;
 	using Network;
 	using Pegasus;
-	using Pegasus.Math;
 	using Pegasus.Assets;
+	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;

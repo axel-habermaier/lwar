@@ -229,10 +229,10 @@
     <Compile Include="Network\ServerDiscoveryService.cs" />
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
-    <Compile Include="Screens\ChatInput.cs" />
-    <Compile Include="Screens\EventMessageDisplay.cs" />
-    <Compile Include="Screens\Frame.cs" />
-    <Compile Include="Screens\Scoreboard.cs" />
+    <Compile Include="UserInterface\ChatInput.cs" />
+    <Compile Include="UserInterface\EventMessageDisplay.cs" />
+    <Compile Include="UserInterface\Frame.cs" />
+    <Compile Include="UserInterface\Scoreboard.cs" />
     <Compile Include="Rendering\Renderers\ParallaxRenderer.cs" />
     <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShockwaveRenderer.cs" />
@@ -240,8 +240,6 @@
     <Compile Include="Rendering\Renderers\PhaserRenderer.cs" />
     <Compile Include="Rendering\Renderers\IRenderer.cs" />
     <Compile Include="Rendering\ZoomMode.cs" />
-    <Compile Include="Screens\Screen.cs" />
-    <Compile Include="Screens\ScreenManager.cs" />
     <Compile Include="Scripting\Commands.cs">
       <DependentUpon>Commands.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -256,10 +254,6 @@
     <Compile Include="Gameplay\Entities\EntityList.cs" />
     <Compile Include="Rendering\GameCamera.cs" />
     <Compile Include="Gameplay\PlayerList.cs" />
-    <Compile Include="Screens\MessageBox.cs" />
-    <Compile Include="Screens\WaitingForServer.cs" />
-    <Compile Include="Screens\MainMenu.cs" />
-    <Compile Include="Screens\Loading.cs" />
     <Compile Include="Gameplay\Entities\Bullet.cs" />
     <Compile Include="Rendering\CameraManager.cs" />
     <Compile Include="Gameplay\IdentifierMap.cs" />
@@ -272,7 +266,6 @@
     <Compile Include="Gameplay\Entities\Ship.cs" />
     <Compile Include="Gameplay\IGenerationalIdentity.cs" />
     <Compile Include="Gameplay\Transformation.cs" />
-    <Compile Include="Screens\Level.cs" />
     <Compile Include="Scripting\ICommands.cs" />
     <Compile Include="Scripting\ICvars.cs" />
     <Compile Include="Network\ConnectionState.cs" />

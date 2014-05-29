@@ -1,11 +1,10 @@
-﻿namespace Lwar.Screens
+﻿namespace Lwar.UserInterface
 {
 	using System;
-	using Assets;
 	using Gameplay;
 	using Pegasus;
-	using Pegasus.Math;
 	using Pegasus.Assets;
+	using Pegasus.Math;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Pegasus.Rendering.UserInterface;

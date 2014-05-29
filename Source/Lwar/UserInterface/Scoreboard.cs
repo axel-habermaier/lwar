@@ -1,4 +1,4 @@
-namespace Lwar.Screens
+namespace Lwar.UserInterface
 {
 	using System;
 	using System.Linq;

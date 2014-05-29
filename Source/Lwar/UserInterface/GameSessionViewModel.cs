@@ -30,6 +30,8 @@
 
 		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
 		private Camera2D _camera;
+		private ChatInput _chatInput;
+		private EventMessageDisplay _eventMessage;
 
 		/// <summary>
 		///     The game session that is played.
@@ -60,6 +62,8 @@
 		///     The render context that is used to render the game session.
 		/// </summary>
 		private RenderContext _renderContext;
+
+		private Scoreboard _scoreboard;
 
 		/// <summary>
 		///     Indicates whether the user input should be sent to the server during the next update cycle.
@@ -232,9 +236,9 @@
 			_spriteBatch.DrawBatch(renderOutput);
 
 			renderOutput.Camera = camera;
-			//_eventMessage.Draw(spriteBatch);
-			//_scoreboard.Draw(spriteBatch);
-			//_chatInput.Draw(spriteBatch);
+			_eventMessage.Draw(_spriteBatch);
+			_scoreboard.Draw(_spriteBatch);
+			_chatInput.Draw(_spriteBatch);
 		}
 
 		/// <summary>
@@ -249,15 +253,13 @@
 			_messageDispatcher = new MessageDispatcher(_gameSession);
 			_inputManager = new InputManager(Application.Current.Window.InputDevice);
 			_camera = new Camera2D(Application.Current.GraphicsDevice);
-			//_eventMessage = new EventMessageDisplay(Assets);
+			_eventMessage = new EventMessageDisplay(Application.Current.Assets);
 
 			Commands.OnSay += OnSay;
 			Cvars.PlayerNameChanged += OnPlayerNameChanged;
 
-			//ScreenManager.Add(new Loading(_gameSession, _networkSession));
-
-			//_scoreboard = new Scoreboard(InputDevice, Assets, _gameSession);
-			//_chatInput = new ChatInput(InputDevice, Assets);
+			_scoreboard = new Scoreboard(Application.Current.Window.InputDevice, Application.Current.Assets, _gameSession);
+			_chatInput = new ChatInput(Application.Current.Window.InputDevice, Application.Current.Assets);
 			Application.Current.Window.InputDevice.Add(_respawn);
 
 			_networkSession.OnConnected += OnConnected;
@@ -298,10 +300,10 @@
 			_spriteBatch.SafeDispose();
 			_gameSession.SafeDispose();
 			_renderContext.SafeDispose();
-			//_scoreboard.SafeDispose();
-			//_chatInput.SafeDispose();
+			_scoreboard.SafeDispose();
+			_chatInput.SafeDispose();
 			_networkSession.SafeDispose();
-			//_eventMessage.SafeDispose();
+			_eventMessage.SafeDispose();
 			EntityTemplates.Dispose();
 			_camera.SafeDispose();
 
@@ -331,15 +333,15 @@
 			_timer.Update();
 			_gameSession.Update();
 			_inputManager.Update();
-			//_eventMessage.Update(_gameSession.EventMessages, Window.Size);
+			_eventMessage.Update(_gameSession.EventMessages, Application.Current.Window.Size);
 
 			CameraManager.GameCamera.Ship = _gameSession.Players.LocalPlayer.Ship;
 			CameraManager.Update();
 
 			if (!_networkSession.IsSyncing)
 			{
-				//_scoreboard.Update(Window.Size);
-				//_chatInput.Update(Window.Size);
+				_scoreboard.Update(Application.Current.Window.Size);
+				_chatInput.Update(Application.Current.Window.Size);
 			}
 
 			var localPlayer = _gameSession.Players.LocalPlayer;
