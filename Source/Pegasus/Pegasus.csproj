@@ -218,6 +218,13 @@
     <Compile Include="Assets\AssetLoaders\TextureAssetLoader.cs" />
     <Compile Include="Assets\AssetLoaders\VertexShaderAssetLoader.cs" />
     <Compile Include="Assets\AssetType.cs" />
+    <Compile Include="Framework\CustomCollection.cs" />
+    <Compile Include="Framework\CollectionChangedAction.cs" />
+    <Compile Include="Framework\CollectionChangedEventArgs.cs" />
+    <Compile Include="Framework\CollectionChangedHandler.cs" />
+    <Compile Include="Framework\INotifyCollectionChanged.cs" />
+    <Compile Include="Framework\ObservableCollection.cs" />
+    <Compile Include="Framework\PropertyChangedHandler.cs" />
     <Compile Include="Framework\UserInterface\BindingMode.cs" />
     <Compile Include="Framework\UserInterface\Controls\ColumnDefinition.cs" />
     <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />

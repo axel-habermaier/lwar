@@ -60,7 +60,7 @@
 				if (_presentedElement == null)
 					return UIElementCollection.Enumerator.Empty;
 
-				return UIElementCollection.Enumerator.FromElement(_presentedElement);
+				return UIElementCollection.Enumerator.FromItem(_presentedElement);
 			}
 		}
 

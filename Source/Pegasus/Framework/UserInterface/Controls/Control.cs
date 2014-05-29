@@ -71,7 +71,7 @@
 				if (_templateRoot == null)
 					return UIElementCollection.Enumerator.Empty;
 
-				return UIElementCollection.Enumerator.FromElement(_templateRoot);
+				return UIElementCollection.Enumerator.FromItem(_templateRoot);
 			}
 		}
 

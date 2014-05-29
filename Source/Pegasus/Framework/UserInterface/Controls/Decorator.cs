@@ -41,7 +41,7 @@
 				if (Child == null)
 					return UIElementCollection.Enumerator.Empty;
 
-				return UIElementCollection.Enumerator.FromElement(Child);
+				return UIElementCollection.Enumerator.FromItem(Child);
 			}
 		}
 

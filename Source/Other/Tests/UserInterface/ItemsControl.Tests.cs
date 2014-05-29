@@ -5,6 +5,7 @@
 	using System.Linq;
 	using FluentAssertions;
 	using NUnit.Framework;
+	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
 
@@ -46,6 +47,85 @@
 				var children = ((Panel)_control.GetVisualChild(0)).Children;
 				return children.Select(child => ((ItemControl)child).Value);
 			}
+		}
+
+		[Test]
+		public void ObservableChange_Add()
+		{
+			var items = new ObservableCollection<int> { 1, 2, 3 };
+			_control.ItemsSource = items;
+			Values.Should().Equal(items);
+
+			items.Add(56);
+			Values.Should().Equal(items);
+
+			items.Insert(0, 22);
+			Values.Should().Equal(items);
+
+			items.Insert(3, 22);
+			Values.Should().Equal(items);
+		}
+
+		[Test]
+		public void ObservableChange_Remove()
+		{
+			var items = new ObservableCollection<int> { 1, 2, 3, 6, 234, 7 };
+			_control.ItemsSource = items;
+			Values.Should().Equal(items);
+
+			items.Remove(1);
+			Values.Should().Equal(items);
+
+			items.Remove(7);
+			Values.Should().Equal(items);
+
+			items.Remove(3);
+			Values.Should().Equal(items);
+		}
+
+		[Test]
+		public void ObservableChange_RemoveAt()
+		{
+			var items = new ObservableCollection<int> { 1, 2, 3, 6, 234, 7 };
+			_control.ItemsSource = items;
+			Values.Should().Equal(items);
+
+			items.RemoveAt(items.Count - 1);
+			Values.Should().Equal(items);
+
+			items.Remove(0);
+			Values.Should().Equal(items);
+
+			items.Remove(3);
+			Values.Should().Equal(items);
+		}
+
+		[Test]
+		public void ObservableChange_Replace()
+		{
+			var items = new ObservableCollection<int> { 1, 2, 3, 6, 234, 7 };
+			_control.ItemsSource = items;
+			Values.Should().Equal(items);
+
+			items[0] = 22;
+			Values.Should().Equal(items);
+
+			items[items.Count - 1] = 2134;
+			Values.Should().Equal(items);
+
+			items[4] = 7482;
+			Values.Should().Equal(items);
+		}
+
+		[Test]
+		public void ObservableChanged_Clear()
+		{
+			var items = new ObservableCollection<int> { 1, 2, 3, 6, 234, 7 };
+			_control.ItemsSource = items;
+			Values.Should().Equal(items);
+
+			items.Clear();
+			Values.Should().HaveCount(0);
 		}
 
 		[Test]
