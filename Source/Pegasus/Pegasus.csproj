@@ -220,6 +220,8 @@
     <Compile Include="Assets\AssetType.cs" />
     <Compile Include="Framework\UserInterface\BindingMode.cs" />
     <Compile Include="Framework\UserInterface\Controls\ColumnDefinition.cs" />
+    <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ItemsControl.cs" />
     <Compile Include="Framework\UserInterface\MessageBox.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\ConsoleViewModel.cs" />
     <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />

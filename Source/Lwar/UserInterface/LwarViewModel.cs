@@ -102,7 +102,7 @@
 				_view = value;
 
 				if (_view != null)
-					_view.ViewModel = this;
+					_view.DataContext = this;
 			}
 		}
 

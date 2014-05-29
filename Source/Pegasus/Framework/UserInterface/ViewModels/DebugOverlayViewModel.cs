@@ -70,7 +70,7 @@
 			UpdateVisibility(Cvars.ShowDebugOverlay);
 
 			_timer.Timeout += UpdateViewModel;
-			_view = new DebugOverlayView { ViewModel = this };
+			_view = new DebugOverlayView { DataContext = this };
 
 			Application.Current.Window.LayoutRoot.Add(_view);
 		}

@@ -96,6 +96,15 @@
 				control._templateRoot.ChangeLogicalParent(control);
 
 			control.OnVisualChildrenChanged();
+			control.OnTemplateChanged(control._templateRoot);
+		}
+
+		/// <summary>
+		///     Invoked when the template has been changed.
+		/// </summary>
+		/// <param name="templateRoot">The new root element of the template.</param>
+		protected virtual void OnTemplateChanged(UIElement templateRoot)
+		{
 		}
 
 		/// <summary>

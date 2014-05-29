@@ -60,7 +60,7 @@
 		/// </summary>
 		public void Show()
 		{
-			var view = new MessageBoxView { ViewModel = this };
+			var view = new MessageBoxView { DataContext = this };
 			Panel.SetZIndex(view, ZIndex);
 
 			Application.Current.Window.LayoutRoot.Add(view);

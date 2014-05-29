@@ -5,7 +5,7 @@
 	using Rendering;
 
 	/// <summary>
-	///     Converts arbitrary content into UI elements.
+	///     Displays arbitrary content in the UI.
 	/// </summary>
 	public sealed class ContentPresenter : UIElement
 	{

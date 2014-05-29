@@ -34,7 +34,7 @@
 
 		private void BindToViewModel(string property1, string property2 = null)
 		{
-			_control.ViewModel = _viewModel;
+			_control.DataContext = _viewModel;
 			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, property1, property2);
 		}
 
@@ -513,7 +513,7 @@
 		public void OneWayToSource_ViewModel_Property_NotSet()
 		{
 			_control.StringTest = "ABC";
-			_control.ViewModel = _viewModel;
+			_control.DataContext = _viewModel;
 
 			_control.CreateDataBinding(TestControl.StringTestProperty, BindingMode.OneWayToSource, "String");
 			_viewModel.String.Should().Be("ABC");
@@ -684,7 +684,7 @@
 		[Test]
 		public void UnsetBinding()
 		{
-			_control.ViewModel = _viewModel;
+			_control.DataContext = _viewModel;
 			_viewModel.Width = Width1;
 
 			BindWidth("Width");
@@ -738,7 +738,7 @@
 			var obj = new object();
 			var viewModel = new UntypedViewModelA { Value = 1 };
 
-			_control.ViewModel = viewModel;
+			_control.DataContext = viewModel;
 
 			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.TwoWay, "Value");
 			_control.ObjectTest.Should().Be(1);
@@ -760,13 +760,13 @@
 		[Test]
 		public void ViewModel_ChangeType()
 		{
-			_control.ViewModel = new UntypedViewModelA { Value = _margin1 };
+			_control.DataContext = new UntypedViewModelA { Value = _margin1 };
 			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, "Value");
 
 			_control.Margin.Should().Be(_margin1);
 
 			var margin = new Thickness(65);
-			_control.ViewModel = new UntypedViewModelB { Value = margin };
+			_control.DataContext = new UntypedViewModelB { Value = margin };
 
 			_control.Margin.Should().Be(margin);
 		}
@@ -774,16 +774,16 @@
 		[Test]
 		public void ViewModel_ChangeType_AfterNull()
 		{
-			_control.ViewModel = new UntypedViewModelA { Value = _margin1 };
+			_control.DataContext = new UntypedViewModelA { Value = _margin1 };
 			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, "Value");
 
 			_control.Margin.Should().Be(_margin1);
 
-			_control.ViewModel = null;
+			_control.DataContext = null;
 			_control.Margin.Should().Be(new Thickness());
 
 			var margin = new Thickness(65);
-			_control.ViewModel = new UntypedViewModelB { Value = margin };
+			_control.DataContext = new UntypedViewModelB { Value = margin };
 
 			_control.Margin.Should().Be(margin);
 		}
@@ -794,7 +794,7 @@
 			var builder = new StringBuilder();
 			var viewModel = new UntypedViewModelA { Value = builder };
 
-			_control.ViewModel = viewModel;
+			_control.DataContext = viewModel;
 			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.OneWay, "Value");
 
 			_control.ObjectTest.Should().Be(builder);
@@ -806,24 +806,24 @@
 		[Test]
 		public void ViewModel_ChangeType_Twice()
 		{
-			_control.ViewModel = new UntypedViewModelA { Value = _margin1 };
+			_control.DataContext = new UntypedViewModelA { Value = _margin1 };
 			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, "Value");
 
 			_control.Margin.Should().Be(_margin1);
 
 			var margin = new Thickness(65);
-			_control.ViewModel = new UntypedViewModelB { Value = margin };
+			_control.DataContext = new UntypedViewModelB { Value = margin };
 
 			_control.Margin.Should().Be(margin);
 
-			_control.ViewModel = new UntypedViewModelA { Value = _margin1 };
+			_control.DataContext = new UntypedViewModelA { Value = _margin1 };
 			_control.Margin.Should().Be(_margin1);
 		}
 
 		[Test]
 		public void ViewModel_NotSet()
 		{
-			_control.ViewModel = null;
+			_control.DataContext = null;
 			BindWidth("Width");
 
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
@@ -842,7 +842,7 @@
 		public void ViewModel_Property_ChangeType()
 		{
 			var viewModel = new UntypedViewModelA { Value = new UntypedViewModelA { Value = _margin1 } };
-			_control.ViewModel = viewModel;
+			_control.DataContext = viewModel;
 			_control.CreateDataBinding(UIElement.MarginProperty, BindingMode.OneWay, "Value", "Value");
 
 			_control.Margin.Should().Be(_margin1);
@@ -877,7 +877,7 @@
 		[Test]
 		public void ViewModel_Property_Property_NotSet()
 		{
-			_control.ViewModel = _viewModel;
+			_control.DataContext = _viewModel;
 			BindWidth("Model", "Width");
 
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
@@ -899,7 +899,7 @@
 		public void ViewModel_Property_Property_RemoveProperty()
 		{
 			_viewModel.InitializeRecursively(1);
-			_control.ViewModel = _viewModel;
+			_control.DataContext = _viewModel;
 			_viewModel.Model.Width = Width1;
 
 			BindWidth("Model", "Width");
@@ -913,13 +913,13 @@
 		public void ViewModel_Property_Property_RemoveViewModel()
 		{
 			_viewModel.InitializeRecursively(1);
-			_control.ViewModel = _viewModel;
+			_control.DataContext = _viewModel;
 			_viewModel.Model.Width = Width1;
 
 			BindWidth("Model", "Width");
 			_control.Width.Should().Be(Width1);
 
-			_control.ViewModel = null;
+			_control.DataContext = null;
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
 		}
 
@@ -938,7 +938,7 @@
 		[Test]
 		public void ViewModel_Property_Property_ViewModel_NotSet()
 		{
-			_control.ViewModel = null;
+			_control.DataContext = null;
 			BindWidth("Model", "Width");
 
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
@@ -947,13 +947,13 @@
 		[Test]
 		public void ViewModel_Remove()
 		{
-			_control.ViewModel = _viewModel;
+			_control.DataContext = _viewModel;
 			_viewModel.Width = Width1;
 
 			BindWidth("Width");
 			_control.Width.Should().Be(Width1);
 
-			_control.ViewModel = null;
+			_control.DataContext = null;
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
 		}
 	}

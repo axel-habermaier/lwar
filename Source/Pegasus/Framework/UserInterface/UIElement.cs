@@ -365,11 +365,10 @@
 		/// <param name="property2">The name of the second property in the property path.</param>
 		/// <param name="converter">The convert that should be used to convert the source value to the property type.</param>
 		public void CreateDataBinding<T>(DependencyProperty<T> targetProperty, BindingMode bindingMode,
-										 string property1, string property2 = null,
+										 string property1 = null, string property2 = null,
 										 IValueConverter converter = null)
 		{
-			Assert.ArgumentNotNullOrWhitespace(property1);
-			CreateDataBinding(this, targetProperty, bindingMode, "ViewModel", property1, property2, converter);
+			CreateDataBinding(this, targetProperty, bindingMode, "DataContext", property1, property2, converter);
 		}
 
 		/// <summary>

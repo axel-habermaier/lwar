@@ -8,10 +8,10 @@
 	public partial class UIElement
 	{
 		/// <summary>
-		///     The view model of the UI element.
+		///     The data context of the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<ViewModel> ViewModelProperty =
-			new DependencyProperty<ViewModel>(inherits: true, prohibitsAnimations: true);
+		public static readonly DependencyProperty<object> DataContextProperty =
+			new DependencyProperty<object>(inherits: true, prohibitsAnimations: true);
 
 		/// <summary>
 		///     The background color of the UI element.
@@ -114,16 +114,16 @@
 		/// </summary>
 		public static readonly DependencyProperty<HorizontalAlignment> HorizontalAlignmentProperty =
 			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Stretch,
-														affectsArrange: true,
-														validationCallback: ValidateAlignment);
+				affectsArrange: true,
+				validationCallback: ValidateAlignment);
 
 		/// <summary>
 		///     The vertical alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<VerticalAlignment> VerticalAlignmentProperty =
 			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Stretch,
-													  affectsArrange: true,
-													  validationCallback: ValidateAlignment);
+				affectsArrange: true,
+				validationCallback: ValidateAlignment);
 
 		/// <summary>
 		///     Indicates whether the UI element is visible.
@@ -132,12 +132,12 @@
 			new DependencyProperty<Visibility>(defaultValue: Visibility.Visible, affectsMeasure: true);
 
 		/// <summary>
-		///     Gets or sets the view model of the UI element.
+		///     Gets or sets the data context of the UI element.
 		/// </summary>
-		public ViewModel ViewModel
+		public object DataContext
 		{
-			get { return GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get { return GetValue(DataContextProperty); }
+			set { SetValue(DataContextProperty, value); }
 		}
 
 		/// <summary>

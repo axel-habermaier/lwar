@@ -20,7 +20,7 @@
 			UIElement.MarginProperty.Inherits.Should().BeFalse();
 
 			// This is just to ensure that the view model property actually inherits its value
-			UIElement.ViewModelProperty.Inherits.Should().BeTrue();
+			UIElement.DataContextProperty.Inherits.Should().BeTrue();
 		}
 
 		private TestViewModel _viewModel1;
@@ -73,48 +73,48 @@
 		[Test]
 		public void InheritedProperty_Inherits()
 		{
-			_control1.ViewModel = _viewModel1;
+			_control1.DataContext = _viewModel1;
 
-			_control1.Canvas1.ViewModel.Should().Be(_viewModel1);
-			_control1.Button1.ViewModel.Should().Be(_viewModel1);
-			_control1.Button2.ViewModel.Should().Be(_viewModel1);
+			_control1.Canvas1.DataContext.Should().Be(_viewModel1);
+			_control1.Button1.DataContext.Should().Be(_viewModel1);
+			_control1.Button2.DataContext.Should().Be(_viewModel1);
 		}
 
 		[Test]
 		public void InheritedProperty_Inherits_Overrides()
 		{
-			_control1.ViewModel = _viewModel1;
-			_control1.Canvas2.ViewModel = _viewModel2;
+			_control1.DataContext = _viewModel1;
+			_control1.Canvas2.DataContext = _viewModel2;
 
-			_control1.Canvas1.ViewModel.Should().Be(_viewModel1);
-			_control1.Button1.ViewModel.Should().Be(_viewModel1);
-			_control1.Button2.ViewModel.Should().Be(_viewModel1);
-			_control1.Canvas2.ViewModel.Should().Be(_viewModel2);
-			_control1.Button3.ViewModel.Should().Be(_viewModel2);
+			_control1.Canvas1.DataContext.Should().Be(_viewModel1);
+			_control1.Button1.DataContext.Should().Be(_viewModel1);
+			_control1.Button2.DataContext.Should().Be(_viewModel1);
+			_control1.Canvas2.DataContext.Should().Be(_viewModel2);
+			_control1.Button3.DataContext.Should().Be(_viewModel2);
 		}
 
 		[Test]
 		public void Inherits_TreeChange()
 		{
-			_control1.ViewModel = _viewModel1;
-			_control2.ViewModel = _viewModel2;
+			_control1.DataContext = _viewModel1;
+			_control2.DataContext = _viewModel2;
 
-			_control1.Button3.ViewModel.Should().Be(_viewModel1);
+			_control1.Button3.DataContext.Should().Be(_viewModel1);
 			_control1.Canvas2.Children.Remove(_control1.Button3);
 			_control2.Canvas2.Children.Add(_control1.Button3);
 
-			_control1.Button3.ViewModel.Should().Be(_viewModel2);
+			_control1.Button3.DataContext.Should().Be(_viewModel2);
 		}
 
 		[Test]
 		public void Inherits_TreeRemove()
 		{
-			_control1.ViewModel = _viewModel1;
+			_control1.DataContext = _viewModel1;
 
-			_control1.Button3.ViewModel.Should().Be(_viewModel1);
+			_control1.Button3.DataContext.Should().Be(_viewModel1);
 			_control1.Canvas2.Children.Remove(_control1.Button3);
 
-			_control1.Button3.ViewModel.Should().Be(UIElement.ViewModelProperty.DefaultValue);
+			_control1.Button3.DataContext.Should().Be(UIElement.DataContextProperty.DefaultValue);
 		}
 
 		[Test]

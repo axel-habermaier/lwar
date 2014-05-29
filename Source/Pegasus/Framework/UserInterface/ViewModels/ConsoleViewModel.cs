@@ -37,7 +37,7 @@
 
 			_root = window.LayoutRoot;
 			_root.Add(_view);
-			_view.ViewModel = this;
+			_view.DataContext = this;
 
 			_spriteBatch = new SpriteBatch(Application.Current.GraphicsDevice, Application.Current.Assets)
 			{

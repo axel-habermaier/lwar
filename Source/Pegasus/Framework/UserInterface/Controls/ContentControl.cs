@@ -14,9 +14,9 @@
 			new DependencyProperty<object>(affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
-		///     The default template that defines the visual appearance of a user control.
+		///     The default template that defines the visual appearance of a content control.
 		/// </summary>
-		internal static readonly ControlTemplate DefaultTemplate = control =>
+		private static readonly ControlTemplate DefaultTemplate = control =>
 		{
 			var presenter = new ContentPresenter();
 			presenter.CreateTemplateBinding(control, ContentProperty, ContentPresenter.ContentProperty);
@@ -29,9 +29,6 @@
 		/// </summary>
 		public ContentControl()
 		{
-			// We set an implicit default template as a style value. This is an inexpensive way of setting
-			// an implicit default style for all content controls. Using SetValue(), on the other hand,
-			// would take precedence over all templates set by a style
 			SetStyleValue(TemplateProperty, DefaultTemplate);
 		}
 
