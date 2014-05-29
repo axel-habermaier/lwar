@@ -231,7 +231,7 @@
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
     <Compile Include="UserInterface\ChatInput.cs" />
     <Compile Include="UserInterface\Frame.cs" />
-    <Compile Include="UserInterface\Scoreboard.cs" />
+    <Compile Include="UserInterface\ScoreboardViewModel.cs" />
     <Compile Include="Rendering\Renderers\ParallaxRenderer.cs" />
     <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShockwaveRenderer.cs" />

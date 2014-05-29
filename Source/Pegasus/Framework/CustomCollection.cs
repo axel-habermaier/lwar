@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
 
 	/// <summary>
@@ -20,6 +21,44 @@
 		{
 			++_version;
 			base.ClearItems();
+		}
+
+		/// <summary>
+		///     Adds the items to the collection.
+		/// </summary>
+		/// <param name="items">The items that should be added.</param>
+		public void AddRange(IEnumerable<T> items)
+		{
+			Assert.ArgumentNotNull(items);
+
+			foreach (var item in items)
+				Add(item);
+		}
+
+		/// <summary>
+		///     Adds the items to the collection.
+		/// </summary>
+		/// <param name="items">The items that should be added.</param>
+		/// <remarks>Performance optimization (foreach does not allocate an enumerator object on the heap).</remarks>
+		public void AddRange(List<T> items)
+		{
+			Assert.ArgumentNotNull(items);
+
+			foreach (var item in items)
+				Add(item);
+		}
+
+		/// <summary>
+		///     Adds the items to the collection.
+		/// </summary>
+		/// <param name="items">The items that should be added.</param>
+		/// <remarks>Performance optimization (foreach does not allocate an enumerator object on the heap).</remarks>
+		public void AddRange(T[] items)
+		{
+			Assert.ArgumentNotNull(items);
+
+			foreach (var item in items)
+				Add(item);
 		}
 
 		/// <summary>

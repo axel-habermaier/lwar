@@ -179,7 +179,7 @@
 		{
 			if (!_gcCheck.IsAlive)
 			{
-				++_garbageCollections;
+				++GarbageCollections;
 				_gcCheck.Target = new object();
 			}
 

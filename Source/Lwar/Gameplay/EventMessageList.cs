@@ -71,6 +71,8 @@
 			var message = EventMessage.Create(EventType.Chat, chatMessage);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
+			else
+				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -82,6 +84,8 @@
 			var message = EventMessage.Create(EventType.Join);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
+			else
+				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -93,6 +97,8 @@
 			var message = EventMessage.Create(EventType.Leave);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
+			else
+				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -105,6 +111,8 @@
 			var message = EventMessage.Create(EventType.Kicked, reason);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
+			else
+				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -116,6 +124,8 @@
 			var message = EventMessage.Create(EventType.Timeout);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
+			else
+				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -136,6 +146,8 @@
 			var message = EventMessage.Create(type);
 			if (TryGetPlayer(killer, out message.Player) && TryGetPlayer(victim, out message.Vicitim))
 				Add(message);
+			else
+				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -152,7 +164,11 @@
 			{
 				if (!String.IsNullOrWhiteSpace(message.Player.Name) && message.Player.Name != name)
 					Add(message);
+				else
+					message.SafeDispose();
 			}
+			else
+				message.SafeDispose();
 
 			Assert.That(!String.IsNullOrWhiteSpace(message.Player.Name), "The player's name is unknown.");
 		}

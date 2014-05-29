@@ -63,7 +63,10 @@
 		/// </summary>
 		private RenderContext _renderContext;
 
-		private Scoreboard _scoreboard;
+		/// <summary>
+		///     The view model for the scoreboard.
+		/// </summary>
+		private ScoreboardViewModel _scoreboard;
 
 		/// <summary>
 		///     Indicates whether the user input should be sent to the server during the next update cycle.
@@ -100,6 +103,15 @@
 				DepthStencilState = DepthStencilState.DepthDisabled,
 				SamplerState = SamplerState.PointClampNoMipmaps
 			};
+		}
+
+		/// <summary>
+		///     Gets the view model for the scoreboard.
+		/// </summary>
+		public ScoreboardViewModel Scoreboard
+		{
+			get { return _scoreboard; }
+			private set { ChangePropertyValue(ref _scoreboard, value); }
 		}
 
 		/// <summary>
@@ -250,7 +262,6 @@
 			_spriteBatch.DrawBatch(renderOutput);
 
 			renderOutput.Camera = camera;
-			_scoreboard.Draw(_spriteBatch);
 			_chatInput.Draw(_spriteBatch);
 		}
 
@@ -270,7 +281,7 @@
 			Commands.OnSay += OnSay;
 			Cvars.PlayerNameChanged += OnPlayerNameChanged;
 
-			_scoreboard = new Scoreboard(Application.Current.Window.InputDevice, Application.Current.Assets, _gameSession);
+			Scoreboard = new ScoreboardViewModel(_gameSession);
 			_chatInput = new ChatInput(Application.Current.Window.InputDevice, Application.Current.Assets);
 			Application.Current.Window.InputDevice.Add(_respawn);
 
@@ -280,6 +291,7 @@
 			_networkSession.OnRejected += OnConnectionRejected;
 
 			OnPropertyChanged("EventMessages");
+			OnPropertyChanged("Players");
 		}
 
 		/// <summary>
@@ -314,7 +326,6 @@
 			_spriteBatch.SafeDispose();
 			_gameSession.SafeDispose();
 			_renderContext.SafeDispose();
-			_scoreboard.SafeDispose();
 			_chatInput.SafeDispose();
 			_networkSession.SafeDispose();
 			EntityTemplates.Dispose();
@@ -352,7 +363,7 @@
 
 			if (!_networkSession.IsSyncing)
 			{
-				_scoreboard.Update(Application.Current.Window.Size);
+				_scoreboard.Update();
 				_chatInput.Update(Application.Current.Window.Size);
 			}
 

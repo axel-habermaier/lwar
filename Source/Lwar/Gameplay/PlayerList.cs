@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
+	using Network;
 	using Network.Messages;
 	using Pegasus;
 	using Pegasus.Platform.Memory;
@@ -23,9 +24,23 @@
 		private readonly DeferredList<Player> _players = new DeferredList<Player>(false);
 
 		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		public PlayerList()
+		{
+			ServerPlayer = Player.Create(Specification.ServerPlayerIdentifier, "<Server>");
+			_playerMap.Add(ServerPlayer);
+		}
+
+		/// <summary>
 		///     Gets the local player.
 		/// </summary>
 		public Player LocalPlayer { get; private set; }
+
+		/// <summary>
+		///     Gets the server player.
+		/// </summary>
+		public Player ServerPlayer { get; private set; }
 
 		/// <summary>
 		///     Gets the player that corresponds to the given identifier. Returns null if no player with the given identifier could
@@ -61,6 +76,9 @@
 		/// <param name="isLocalPlayer">Indicates whether the new player is the local one.</param>
 		public void Add(Identifier playerId, string name, bool isLocalPlayer)
 		{
+			if (playerId == Specification.ServerPlayerIdentifier)
+				return;
+
 			Assert.ArgumentNotNullOrWhitespace(name);
 			Assert.That(_playerMap[playerId] == null, "A player with the same id has already been added.");
 			Assert.That(!isLocalPlayer || LocalPlayer == null, "Cannot change the local player.");
@@ -69,11 +87,14 @@
 			_players.Add(player);
 			_playerMap.Add(player);
 
-			if (isLocalPlayer)
-			{
-				LocalPlayer = player;
-				LocalPlayer.IsLocalPlayer = true;
-			}
+			if (!isLocalPlayer)
+				return;
+
+			LocalPlayer = player;
+			LocalPlayer.IsLocalPlayer = true;
+
+			if (PlayerAdded != null)
+				PlayerAdded(player);
 		}
 
 		/// <summary>
@@ -83,13 +104,16 @@
 		public void Remove(Identifier playerId)
 		{
 			Assert.ArgumentSatisfies(LocalPlayer == null || playerId != LocalPlayer.Identifier,
-									 "Cannot remove the local player.");
+				"Cannot remove the local player.");
 
 			var player = _playerMap[playerId];
 			Assert.NotNull(player, "Cannot remove unknown player.");
 
 			_players.Remove(player);
 			_playerMap.Remove(player);
+
+			if (PlayerRemoved != null)
+				PlayerRemoved(player);
 		}
 
 		/// <summary>
@@ -99,6 +123,21 @@
 		{
 			_players.Update();
 		}
+
+		/// <summary>
+		///     Raised when a player has been added.
+		/// </summary>
+		public event Action<Player> PlayerAdded;
+
+		/// <summary>
+		///     Raised when a player has been removed.
+		/// </summary>
+		public event Action<Player> PlayerRemoved;
+
+		/// <summary>
+		///     Raised when the stats of a player have been updated.
+		/// </summary>
+		public event Action<Player> PlayerStatsUpdated;
 
 		/// <summary>
 		///     Enumerates all active players.
@@ -114,6 +153,7 @@
 		protected override void OnDisposing()
 		{
 			_players.SafeDispose();
+			ServerPlayer.SafeDispose();
 		}
 
 		/// <summary>
@@ -144,6 +184,9 @@
 			player.Kills = stats.Kills;
 			player.Deaths = stats.Deaths;
 			player.Ping = stats.Ping;
+
+			if (PlayerStatsUpdated != null)
+				PlayerStatsUpdated(player);
 		}
 	}
 }

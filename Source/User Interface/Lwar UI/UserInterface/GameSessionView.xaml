@@ -9,11 +9,27 @@
 
 	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}" HasDepthStencil="true" DrawCallback="{Binding OnDraw}">
 		<controls:AreaPanel>
-			
+
 			<ItemsControl ItemsSource="{Binding EventMessages}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<TextBlock Text="{Binding DisplayString}" Margin="2"></TextBlock>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+			
+			<ItemsControl ItemsSource="{Binding Scoreboard.Players}" 
+						  Visibility="{Binding Scoreboard.Show, Converter={converters:BooleanToVisibilityConverter}}"
+						  HorizontalAlignment="Center" 
+						  VerticalAlignment="Center" 
+						  Background="#66666666">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="{Binding Name}"></TextBlock>
+							<TextBlock Text="{Binding Kills}" Margin="10,0,0,0"></TextBlock>
+							<TextBlock Text="{Binding Deaths}" Margin="10,0,0,0"></TextBlock>
+						</StackPanel>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
@@ -22,11 +38,11 @@
 						HorizontalAlignment="Center"
 						VerticalAlignment="Center"
 						Visibility="{Binding IsLoading, Converter={converters:BooleanToVisibilityConverter}}">
-				
+
 				<TextBlock Text="Connection to " />
 				<TextBlock Text="{Binding ServerEndPoint}" />
 				<TextBlock Text="..." />
-				
+
 			</StackPanel>
 
 			<Border Background="#AF252525" Visibility="{Binding IsLagging, Converter={converters:BooleanToVisibilityConverter}}">
