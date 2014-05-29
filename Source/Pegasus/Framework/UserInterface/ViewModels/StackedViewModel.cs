@@ -1,20 +1,18 @@
-﻿namespace Lwar.UserInterface
+﻿namespace Pegasus.Framework.UserInterface.ViewModels
 {
 	using System;
-	using Pegasus;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Platform.Memory;
+	using Controls;
+	using Platform.Memory;
 
 	/// <summary>
-	///     A base class for Lwar specific view models.
+	///     A base class for stacked view models.
 	/// </summary>
-	public abstract class LwarViewModel : DisposableNotifyPropertyChanged
+	public abstract class StackedViewModel : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
 		///     The view model's child in the view model stack.
 		/// </summary>
-		private LwarViewModel _child;
+		private StackedViewModel _child;
 
 		/// <summary>
 		///     A value indicating whether the view model is currently active.
@@ -30,13 +28,13 @@
 		///     Gets the view model's parent view model in the view model stack. The parent is null for the root view model as well as
 		///     for view models that are not in the stack.
 		/// </summary>
-		protected LwarViewModel Parent { get; private set; }
+		protected StackedViewModel Parent { get; private set; }
 
 		/// <summary>
 		///     Gets the view model's root view model in the view model stack. The root is null for the root view model as well as
 		///     for view models that are not in the stack.
 		/// </summary>
-		protected LwarViewModel Root
+		protected StackedViewModel Root
 		{
 			get
 			{
@@ -51,7 +49,7 @@
 		/// <summary>
 		///     Gets or sets the view model's child in the view model stack.
 		/// </summary>
-		public LwarViewModel Child
+		public StackedViewModel Child
 		{
 			get
 			{
@@ -103,6 +101,14 @@
 				if (_view != null)
 					_view.DataContext = this;
 			}
+		}
+
+		/// <summary>
+		///     Creates a view model that can be used as the root of the view model stack.
+		/// </summary>
+		public static StackedViewModel CreateRoot()
+		{
+			return new RootViewModel();
 		}
 
 		/// <summary>
@@ -193,7 +199,7 @@
 		///     Replaces the current view model's child with the given one, disposing the current child view model.
 		/// </summary>
 		/// <param name="viewModel">The new view model the current child view model should be replaced with.</param>
-		public void ReplaceChild(LwarViewModel viewModel)
+		public void ReplaceChild(StackedViewModel viewModel)
 		{
 			Assert.NotDisposed(this);
 
@@ -202,6 +208,13 @@
 
 			if (currentChild != null)
 				currentChild.SafeDispose();
+		}
+
+		/// <summary>
+		///     Represents the non-visible root of the view model stack.
+		/// </summary>
+		private class RootViewModel : StackedViewModel
+		{
 		}
 	}
 }

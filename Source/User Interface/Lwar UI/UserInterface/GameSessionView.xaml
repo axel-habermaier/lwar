@@ -19,7 +19,7 @@
 			</ItemsControl>
 			
 			<ItemsControl ItemsSource="{Binding Scoreboard.Players}" 
-						  Visibility="{Binding Scoreboard.Show, Converter={converters:BooleanToVisibilityConverter}}"
+						  Visibility="{Binding Scoreboard.IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
 						  HorizontalAlignment="Center" 
 						  VerticalAlignment="Center" 
 						  Background="#66666666">

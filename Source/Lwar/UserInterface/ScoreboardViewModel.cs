@@ -14,7 +14,7 @@ namespace Lwar.UserInterface
 	public class ScoreboardViewModel : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
-		///     The input that causes the scoreboard to be shown.
+		///     The input that causes the scoreboard to be shown. TODO: Replace with UI framework input
 		/// </summary>
 		private readonly LogicalInput _showScoreboard = new LogicalInput(Cvars.InputShowScoreboardCvar, InputLayers.Game);
 
@@ -31,7 +31,7 @@ namespace Lwar.UserInterface
 		/// <summary>
 		///     Indicates whether the scoreboard should be shown.
 		/// </summary>
-		private bool _show;
+		private bool _isVisible;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -58,10 +58,10 @@ namespace Lwar.UserInterface
 		/// <summary>
 		///     Gets a value indicating whether the scoreboard should be shown.
 		/// </summary>
-		public bool Show
+		public bool IsVisible
 		{
-			get { return _show; }
-			private set { ChangePropertyValue(ref _show, value); }
+			get { return _isVisible; }
+			private set { ChangePropertyValue(ref _isVisible, value); }
 		}
 
 		/// <summary>
@@ -98,7 +98,7 @@ namespace Lwar.UserInterface
 		/// </summary>
 		public void Update()
 		{
-			Show = _showScoreboard.IsTriggered;
+			IsVisible = _showScoreboard.IsTriggered;
 
 			if (!_isDirty)
 				return;
@@ -107,7 +107,7 @@ namespace Lwar.UserInterface
 
 			Players.Clear();
 			Players.AddRange(_players
-				.OrderByDescending(p => p.Kills)
+				.OrderByDescending(player => player.Kills)
 				.ThenBy(player => player.Deaths)
 				.ThenBy(player => player.Name));
 		}

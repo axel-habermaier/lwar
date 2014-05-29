@@ -9,6 +9,7 @@
 	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
+	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Input;
@@ -22,7 +23,7 @@
 	/// <summary>
 	///     Displays a game session.
 	/// </summary>
-	public class GameSessionViewModel : LwarViewModel<GameSessionView>
+	public class GameSessionViewModel : StackedViewModel
 	{
 		/// <summary>
 		///     The network session that synchronizes the game state between the client and the server.
@@ -330,6 +331,7 @@
 			_networkSession.SafeDispose();
 			EntityTemplates.Dispose();
 			_camera.SafeDispose();
+			Scoreboard.SafeDispose();
 
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;

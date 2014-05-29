@@ -188,8 +188,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="UserInterface\GameSessionViewModel.cs" />
-    <Compile Include="UserInterface\LwarViewModel.cs" />
-    <Compile Include="UserInterface\LwarViewModel`1.cs" />
     <Compile Include="UserInterface\MainMenuViewModel.cs" />
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
@@ -305,7 +303,6 @@
     <Compile Include="..\User Interface\Lwar UI\UserInterface.cs">
       <Link>UserInterface\UserInterface.cs</Link>
     </Compile>
-    <Compile Include="UserInterface\RootViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

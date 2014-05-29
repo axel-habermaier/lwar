@@ -294,6 +294,7 @@
     <Compile Include="Framework\UserInterface\Thickness.cs" />
     <Compile Include="Framework\UserInterface\VerticalAlignment.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\MessageBoxViewModel.cs" />
+    <Compile Include="Framework\UserInterface\ViewModels\StackedViewModel.cs" />
     <Compile Include="Framework\UserInterface\Visibility.cs" />
     <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Assets\AssetHashCollision.cs" />

@@ -4,6 +4,7 @@
 	using Assets;
 	using Network;
 	using Pegasus.Framework;
+	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform.Input;
 	using Pegasus.Platform.Memory;
 	using Scripting;
@@ -19,7 +20,10 @@
 		/// </summary>
 		private readonly LocalServer _localServer = new LocalServer();
 
-		private readonly RootViewModel _viewModel = new RootViewModel();
+		/// <summary>
+		///     The root view model of the view model stacked used by the application.
+		/// </summary>
+		private readonly StackedViewModel _viewModelRoot = StackedViewModel.CreateRoot();
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -43,10 +47,10 @@
 			Commands.Bind(Key.Escape.WentDown(), "exit");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_debug_overlay");
 
-			//var uc1 = new UserControl1();
-			//Window.LayoutRoot.Children.Add(uc1);
+			//Window.LayoutRoot.Children.Add(new UserControl1());
 
-			_viewModel.Activate();
+			_viewModelRoot.Child = new MainMenuViewModel();
+			_viewModelRoot.Activate();
 		}
 
 		/// <summary>
@@ -55,7 +59,7 @@
 		protected override void Update()
 		{
 			_localServer.Update();
-			_viewModel.Update();
+			_viewModelRoot.Update();
 		}
 
 		/// <summary>
@@ -63,7 +67,7 @@
 		/// </summary>
 		protected override void Dispose()
 		{
-			_viewModel.SafeDispose();
+			_viewModelRoot.SafeDispose();
 			_localServer.SafeDispose();
 
 			base.Dispose();
