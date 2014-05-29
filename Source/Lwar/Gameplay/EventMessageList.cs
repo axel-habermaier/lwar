@@ -210,7 +210,10 @@
 		private void Add(EventMessage message)
 		{
 			if (!Enabled)
+			{
+				message.SafeDispose();
 				return;
+			}
 
 			message.CreationTime = _clock.Seconds;
 

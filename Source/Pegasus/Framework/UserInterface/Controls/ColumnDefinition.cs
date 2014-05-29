@@ -5,32 +5,54 @@
 	/// <summary>
 	///     Represents a column of a Grid layout.
 	/// </summary>
-	public class ColumnDefinition
+	public class ColumnDefinition : DependencyObject
 	{
 		/// <summary>
-		///     Initializes a new instance.
+		///     The width of the column. Can be NaN to indicate that the column should automatically size itself to the
+		///     width of its children.
 		/// </summary>
-		public ColumnDefinition()
-		{
-			Width = Double.NaN;
-			MaxWidth = Double.PositiveInfinity;
-		}
+		public static readonly DependencyProperty<double> WidthProperty =
+			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true);
 
 		/// <summary>
-		///     Gets or sets the minimum allowed width of the column.
+		///     The minimum width of the column.
 		/// </summary>
-		public double MinWidth { get; set; }
+		public static readonly DependencyProperty<double> MinWidthProperty =
+			new DependencyProperty<double>(affectsMeasure: true);
 
 		/// <summary>
-		///     Gets or sets the maximum allowed width of the column.
+		///     The maximum width of the column.
 		/// </summary>
-		public double MaxWidth { get; set; }
+		public static readonly DependencyProperty<double> MaxWidthProperty =
+			new DependencyProperty<double>(defaultValue: Double.MaxValue, affectsMeasure: true);
 
 		/// <summary>
 		///     Gets or sets the width of the column. Can be NaN to indicate that the column should automatically size itself to the
 		///     width of its children.
 		/// </summary>
-		public double Width { get; set; }
+		public double Width
+		{
+			get { return GetValue(WidthProperty); }
+			set { SetValue(WidthProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the minimum width of the column.
+		/// </summary>
+		public double MinWidth
+		{
+			get { return GetValue(MinWidthProperty); }
+			set { SetValue(MinWidthProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the maximum width of the column.
+		/// </summary>
+		public double MaxWidth
+		{
+			get { return GetValue(MaxWidthProperty); }
+			set { SetValue(MaxWidthProperty, value); }
+		}
 
 		/// <summary>
 		///     Gets the actual width of the column.
@@ -54,7 +76,7 @@
 		/// <summary>
 		///     Gets or sets the horizontal offset of the column.
 		/// </summary>
-		public double Offset { get; set; }
+		internal double Offset { get; set; }
 
 		/// <summary>
 		///     Resets the actual width to the default value as if the column contained no children.
@@ -82,6 +104,16 @@
 
 			if (width > ActualWidth)
 				ActualWidth = Math.Min(width, MaxWidth);
+		}
+
+		/// <summary>
+		///     Notifies all inheriting objects about a change of an inheriting dependency property.
+		/// </summary>
+		/// <param name="property">The inheriting dependency property that has been changed.</param>
+		/// <param name="newValue">The new value that should be inherited.</param>
+		protected override void InheritedValueChanged<T>(DependencyProperty<T> property, T newValue)
+		{
+			//TODO
 		}
 	}
 }

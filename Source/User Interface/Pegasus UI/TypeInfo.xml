@@ -66,10 +66,24 @@
 	<Class Name="Pegasus.Framework.UserInterface.TriggersCollection" IsList="true">
 	</Class>
 
+	<Class Name="Pegasus.Framework.ObservableCollection&lt;DataGridColumn&gt;" IsList="true">
+	</Class>
+
 	<Class Name="System.Collections.Generic.List&lt;ColumnDefinition&gt;" IsList="true">
 	</Class>
 
 	<Class Name="System.Collections.Generic.List&lt;RowDefinition&gt;" IsList="true">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridColumn">
+		<Property Type="double" Name="MinWidth"/>
+		<Property Type="double" Name="MaxWidth"/>
+		<Property Type="double" Name="Width"/>
+		<Property Type="object" Name="Header"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridTextColumn" Inherits="Pegasus.Framework.UserInterface.Controls.DataGridColumn">
+		<Property Type="string" Name="PropertyName"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ColumnDefinition">
@@ -162,6 +176,10 @@
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ItemsControl" Inherits="Pegasus.Framework.UserInterface.Controls.Control">
 		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="ItemTemplate"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGrid" Inherits="Pegasus.Framework.UserInterface.Controls.ItemsControl">
+		<Property Type="Pegasus.Framework.ObservableCollection&lt;DataGridColumn&gt;" Name="Columns"/>
 	</Class>
 
 	<!-- Layouts ================================================================================================= -->

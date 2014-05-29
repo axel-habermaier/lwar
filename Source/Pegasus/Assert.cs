@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections;
-	using System.Collections.Generic;
 	using System.Diagnostics;
 	using Framework;
 	using Platform;
@@ -314,6 +313,21 @@
 
 			if (!(obj is T))
 				throw new PegasusException("The given object is not of the requested type.");
+		}
+
+		/// <summary>
+		///     Throws an InvalidCastException if the object is not the same as or subtype of the given type.
+		/// </summary>
+		/// <param name="obj">The object to check.</param>
+		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
+		/// <param name="parameters">The parameters for the error message.</param>
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		public static void OfType<T>(object obj, string formatMessage, params object[] parameters)
+		{
+			ArgumentNotNull(obj);
+
+			if (!(obj is T))
+				throw new PegasusException(formatMessage, parameters);
 		}
 	}
 }

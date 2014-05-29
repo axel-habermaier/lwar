@@ -5,21 +5,31 @@
 	/// <summary>
 	///     Represents a row of a Grid layout.
 	/// </summary>
-	public class RowDefinition
+	public class RowDefinition : DependencyObject
 	{
 		/// <summary>
-		///     Initializes a new instance.
+		///     The height of the row. Can be NaN to indicate that the row should automatically size itself to the
+		///     height of its children.
 		/// </summary>
-		public RowDefinition()
-		{
-			Height = Double.NaN;
-			MaxHeight = Double.PositiveInfinity;
-		}
+		public static readonly DependencyProperty<double> HeightProperty =
+			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true);
+
+		/// <summary>
+		///     The minimum height of the row.
+		/// </summary>
+		public static readonly DependencyProperty<double> MinHeightProperty =
+			new DependencyProperty<double>(affectsMeasure: true);
+
+		/// <summary>
+		///     The maximum height of the row.
+		/// </summary>
+		public static readonly DependencyProperty<double> MaxHeightProperty =
+			new DependencyProperty<double>(defaultValue: Double.MaxValue, affectsMeasure: true);
 
 		/// <summary>
 		///     Gets or sets the vertical offset of the row.
 		/// </summary>
-		public double Offset { get; set; }
+		internal double Offset { get; set; }
 
 		/// <summary>
 		///     Gets the effective maximum height of the row, depending on whether a height has explicitly been set.
@@ -36,20 +46,32 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the minimum allowed height of the row.
+		///     Gets or sets the height of the row. Can be NaN to indicate that the row should automatically size itself to the
+		///     height of its children.
 		/// </summary>
-		public double MinHeight { get; set; }
+		public double Height
+		{
+			get { return GetValue(HeightProperty); }
+			set { SetValue(HeightProperty, value); }
+		}
 
 		/// <summary>
-		///     Gets or sets the maximum allowed height of the row.
+		///     Gets or sets the minimum height of the row.
 		/// </summary>
-		public double MaxHeight { get; set; }
+		public double MinHeight
+		{
+			get { return GetValue(MinHeightProperty); }
+			set { SetValue(MinHeightProperty, value); }
+		}
 
 		/// <summary>
-		///     Gets or sets the height of the row. Can be NaN to indicate that the row should automatically size itself to the height
-		///     of its children.
+		///     Gets or sets the maximum height of the row.
 		/// </summary>
-		public double Height { get; set; }
+		public double MaxHeight
+		{
+			get { return GetValue(MaxHeightProperty); }
+			set { SetValue(MaxHeightProperty, value); }
+		}
 
 		/// <summary>
 		///     Gets the actual height of the row.
@@ -82,6 +104,16 @@
 
 			if (height > ActualHeight)
 				ActualHeight = Math.Min(height, MaxHeight);
+		}
+
+		/// <summary>
+		///     Notifies all inheriting objects about a change of an inheriting dependency property.
+		/// </summary>
+		/// <param name="property">The inheriting dependency property that has been changed.</param>
+		/// <param name="newValue">The new value that should be inherited.</param>
+		protected override void InheritedValueChanged<T>(DependencyProperty<T> property, T newValue)
+		{
+			// TODO
 		}
 	}
 }

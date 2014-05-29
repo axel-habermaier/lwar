@@ -230,6 +230,7 @@
     <Compile Include="Framework\PropertyChangedHandler.cs" />
     <Compile Include="Framework\UserInterface\BindingMode.cs" />
     <Compile Include="Framework\UserInterface\Controls\ColumnDefinition.cs" />
+    <Compile Include="Framework\UserInterface\Controls\DataGrid.cs" />
     <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />
     <Compile Include="Framework\UserInterface\Controls\ItemsControl.cs" />
     <Compile Include="Framework\UserInterface\MessageBox.cs" />
