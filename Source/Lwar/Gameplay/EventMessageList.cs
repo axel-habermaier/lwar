@@ -1,27 +1,25 @@
 ﻿namespace Lwar.Gameplay
 {
 	using System;
+	using System.Collections.Generic;
 	using Network;
 	using Pegasus;
+	using Pegasus.Framework;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Logging;
+	using Pegasus.Platform.Memory;
 	using Scripting;
 
 	/// <summary>
 	///     Stores event messages such as 'X killed Y' or received chat messages. Messages are removed from the list
 	///     automatically.
 	/// </summary>
-	public class EventMessageList
+	public class EventMessageList : DisposableObject
 	{
 		/// <summary>
-		///     The list capacity determines the maximum number of stored event messages.
+		///     The maximum number of event messages that can be displayed simultaneously.
 		/// </summary>
-		public const int Capacity = 16;
-
-		/// <summary>
-		///     The clock that is used to determine when messages should be removed from the list.
-		/// </summary>
-		private Clock _clock = new Clock();
+		private const int MaxMessageCount = 16;
 
 		/// <summary>
 		///     The game session that generates the event messages.
@@ -29,15 +27,14 @@
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///     The event messages. The array is always compacted such that is has no holes. New messages are added at the first free
-		///     index. The order of the messages in the list is always preserved.
+		///     The event messages.
 		/// </summary>
-		private readonly EventMessage[] _messages = new EventMessage[Capacity];
+		private readonly ObservableCollection<EventMessage> _messages = new ObservableCollection<EventMessage>();
 
 		/// <summary>
-		///     The index of the first free message slot.
+		///     The clock that is used to determine when messages should be removed from the list.
 		/// </summary>
-		private int _index;
+		private Clock _clock = new Clock();
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -50,30 +47,17 @@
 		}
 
 		/// <summary>
+		///     Gets the event messages.
+		/// </summary>
+		public IEnumerable<EventMessage> Messages
+		{
+			get { return _messages; }
+		}
+
+		/// <summary>
 		///     Enables or disables the event messages. When disabled, added event messages are ignored.
 		/// </summary>
 		public bool Enabled { get; set; }
-
-		/// <summary>
-		///     Gets the event message stored at the given index.
-		/// </summary>
-		/// <param name="index">The index of the event message that should be returned.</param>
-		public EventMessage this[int index]
-		{
-			get
-			{
-				Assert.ArgumentInRange(index, 0, _index - 1);
-				return _messages[index];
-			}
-		}
-
-		/// <summary>
-		///     Gets the number of active event messages.
-		/// </summary>
-		public int Count
-		{
-			get { return _index; }
-		}
 
 		/// <summary>
 		///     Adds a chat message to the event list.
@@ -84,7 +68,7 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(chatMessage);
 
-			var message = new EventMessage(EventType.Chat) { Message = chatMessage };
+			var message = EventMessage.Create(EventType.Chat, chatMessage);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
 		}
@@ -95,7 +79,7 @@
 		/// <param name="player">The identifier of the player that has joined the session.</param>
 		public void AddJoinMessage(Identifier player)
 		{
-			var message = new EventMessage(EventType.Join);
+			var message = EventMessage.Create(EventType.Join);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
 		}
@@ -106,7 +90,7 @@
 		/// <param name="player">The identifier of the player that has left the session.</param>
 		public void AddLeaveMessage(Identifier player)
 		{
-			var message = new EventMessage(EventType.Leave);
+			var message = EventMessage.Create(EventType.Leave);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
 		}
@@ -118,7 +102,7 @@
 		/// <param name="reason">The reason for the kick.</param>
 		public void AddKickedMessage(Identifier player, string reason)
 		{
-			var message = new EventMessage(EventType.Kicked) { Message = reason };
+			var message = EventMessage.Create(EventType.Kicked, reason);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
 		}
@@ -129,7 +113,7 @@
 		/// <param name="player">The identifier of the player that has timed out.</param>
 		public void AddTimeoutMessage(Identifier player)
 		{
-			var message = new EventMessage(EventType.Timeout);
+			var message = EventMessage.Create(EventType.Timeout);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
 		}
@@ -149,7 +133,7 @@
 			else
 				type = EventType.Kill;
 
-			var message = new EventMessage(type);
+			var message = EventMessage.Create(type);
 			if (TryGetPlayer(killer, out message.Player) && TryGetPlayer(victim, out message.Vicitim))
 				Add(message);
 		}
@@ -163,7 +147,7 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
 
-			var message = new EventMessage(EventType.Name) { Message = name };
+			var message = EventMessage.Create(EventType.Name, name);
 			if (TryGetPlayer(player, out message.Player))
 			{
 				if (!String.IsNullOrWhiteSpace(message.Player.Name) && message.Player.Name != name)
@@ -178,16 +162,16 @@
 		/// </summary>
 		public void Update()
 		{
-			for (var i = 0; i < _index; ++i)
+			for (var i = 0; i < _messages.Count; ++i)
 			{
 				var timeout = _messages[i].Type == EventType.Chat ? Cvars.ChatMessageDisplayTime : Cvars.EventMessageDisplayTime;
 				var timedOut = _clock.Seconds - _messages[i].CreationTime > timeout;
 
-				if (timedOut)
-				{
-					Remove(i);
-					--i;
-				}
+				if (!timedOut)
+					continue;
+
+				RemoveAt(i);
+				--i;
 			}
 		}
 
@@ -214,49 +198,31 @@
 
 			message.CreationTime = _clock.Seconds;
 
-			// If the list is full, remove the oldest message, compact the list, and add the new one at the end
-			if (_index == Capacity)
-			{
-				var oldest = FindOldest();
-				Remove(oldest);
-			}
+			if (_messages.Count == MaxMessageCount)
+				RemoveAt(0);
 
 			message.GenerateDisplayString();
-			_messages[_index++] = message;
+			_messages.Add(message);
 
 			Log.Info("{0}", message.DisplayString);
 		}
 
 		/// <summary>
-		///     Removes the event message at the given index and compacts the list.
+		///     Removes the event message at the given index.
 		/// </summary>
-		/// <param name="index">The index of the message that should be removed.</param>
-		private void Remove(int index)
+		/// <param name="index">The zero-based index of the event message that should be removed.</param>
+		private void RemoveAt(int index)
 		{
-			Assert.ArgumentInRange(index, 0, Capacity - 1);
-
-			Array.Copy(_messages, index + 1, _messages, index, _index - index - 1);
-			--_index;
+			_messages[index].SafeDispose();
+			_messages.RemoveAt(index);
 		}
 
 		/// <summary>
-		///     Finds the index of the oldest message.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		private int FindOldest()
+		protected override void OnDisposing()
 		{
-			var oldest = Double.MaxValue;
-			var slot = -1;
-
-			for (var i = 0; i < _index; ++i)
-			{
-				if (_messages[i].CreationTime < oldest)
-				{
-					slot = i;
-					oldest = _messages[i].CreationTime;
-				}
-			}
-
-			return slot;
+			_messages.SafeDisposeAll();
 		}
 	}
 }

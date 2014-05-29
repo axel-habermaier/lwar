@@ -48,6 +48,9 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ControlTemplate">
 	</Class>
 
+	<Class Name="Pegasus.Framework.UserInterface.Controls.DataTemplate">
+	</Class>
+
 	<Class Name="Pegasus.Framework.UserInterface.UIElementCollection" IsList="true">
 	</Class>
 
@@ -157,10 +160,15 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
 
+	<Class Name="Pegasus.Framework.UserInterface.Controls.ItemsControl" Inherits="Pegasus.Framework.UserInterface.Controls.Control">
+		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="ItemTemplate"/>
+	</Class>
+
 	<!-- Layouts ================================================================================================= -->
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Panel" Inherits="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="int" Name="ZIndex"/>
+		<Property Type="bool" Name="IsItemsHost"/>
 		<Property Type="Pegasus.Framework.UserInterface.UIElementCollection" Name="Children" IsContentProperty="true"/>
 	</Class>
 	

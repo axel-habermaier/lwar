@@ -66,6 +66,7 @@
 			Actors.SafeDispose();
 			Entities.SafeDispose();
 			Players.SafeDispose();
+			EventMessages.SafeDispose();
 		}
 
 		/// <summary>

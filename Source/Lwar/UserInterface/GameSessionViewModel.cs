@@ -1,6 +1,7 @@
 ﻿namespace Lwar.UserInterface
 {
 	using System;
+	using System.Collections.Generic;
 	using Gameplay;
 	using Gameplay.Entities;
 	using Network;
@@ -31,7 +32,6 @@
 		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
 		private Camera2D _camera;
 		private ChatInput _chatInput;
-		private EventMessageDisplay _eventMessage;
 
 		/// <summary>
 		///     The game session that is played.
@@ -100,6 +100,20 @@
 				DepthStencilState = DepthStencilState.DepthDisabled,
 				SamplerState = SamplerState.PointClampNoMipmaps
 			};
+		}
+
+		/// <summary>
+		///     Gets the event messages that should be displayed.
+		/// </summary>
+		public IEnumerable<EventMessage> EventMessages
+		{
+			get
+			{
+				if (_gameSession != null)
+					return _gameSession.EventMessages.Messages;
+
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -236,7 +250,6 @@
 			_spriteBatch.DrawBatch(renderOutput);
 
 			renderOutput.Camera = camera;
-			_eventMessage.Draw(_spriteBatch);
 			_scoreboard.Draw(_spriteBatch);
 			_chatInput.Draw(_spriteBatch);
 		}
@@ -253,7 +266,6 @@
 			_messageDispatcher = new MessageDispatcher(_gameSession);
 			_inputManager = new InputManager(Application.Current.Window.InputDevice);
 			_camera = new Camera2D(Application.Current.GraphicsDevice);
-			_eventMessage = new EventMessageDisplay(Application.Current.Assets);
 
 			Commands.OnSay += OnSay;
 			Cvars.PlayerNameChanged += OnPlayerNameChanged;
@@ -266,6 +278,8 @@
 			_networkSession.OnDropped += () => ShowErrorBox("Connection Lost", "The connection to the server has been lost.");
 			_networkSession.OnFaulted += () => ShowErrorBox("Connection Error", "The game session has been aborted due to a network error.");
 			_networkSession.OnRejected += OnConnectionRejected;
+
+			NotifyPropertyChanged("EventMessages");
 		}
 
 		/// <summary>
@@ -303,7 +317,6 @@
 			_scoreboard.SafeDispose();
 			_chatInput.SafeDispose();
 			_networkSession.SafeDispose();
-			_eventMessage.SafeDispose();
 			EntityTemplates.Dispose();
 			_camera.SafeDispose();
 
@@ -333,7 +346,6 @@
 			_timer.Update();
 			_gameSession.Update();
 			_inputManager.Update();
-			_eventMessage.Update(_gameSession.EventMessages, Application.Current.Window.Size);
 
 			CameraManager.GameCamera.Ship = _gameSession.Players.LocalPlayer.Ship;
 			CameraManager.Update();

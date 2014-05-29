@@ -134,6 +134,7 @@
 			ResolveTypes();
 
 			RewriteControlTemplateInstantiations(Root);
+			RewriteDataTemplateInstantiations(Root);
 		}
 
 		/// <summary>
@@ -213,6 +214,22 @@
 
 			element.ReplaceWith(new XElement(DefaultNamespace + "Delegate",
 											 new XElement(DefaultNamespace + "Parameter", new XAttribute("Name", "templatedControl")),
+											 new XElement(DefaultNamespace + "Return", element.Elements().Single().Attribute("Name").Value),
+											 element.Attributes(), element.Elements()));
+		}
+
+		/// <summary>
+		///     Recursively rewrites the instantiation of all data templates to delegate instantiations.
+		/// </summary>
+		private void RewriteDataTemplateInstantiations(XElement element)
+		{
+			foreach (var child in element.Elements().ToArray())
+				RewriteDataTemplateInstantiations(child);
+
+			if (element.Name.LocalName != "Create" || element.Attribute("Type").Value != "Pegasus.Framework.UserInterface.Controls.DataTemplate")
+				return;
+
+			element.ReplaceWith(new XElement(DefaultNamespace + "Delegate",
 											 new XElement(DefaultNamespace + "Return", element.Elements().Single().Attribute("Name").Value),
 											 element.Attributes(), element.Elements()));
 		}

@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics;
+	using Framework;
 
 	/// <summary>
 	///     Provides extension methods for classes implementing the IDisposable interface.
@@ -22,6 +23,25 @@
 
 			foreach (var obj in list)
 				obj.SafeDispose();
+
+			list.Clear();
+		}
+
+		/// <summary>
+		///     Disposes all objects contained in the collection if the collection is not null.
+		/// </summary>
+		/// <param name="collection">The collection that should be disposed.</param>
+		//[DebuggerHidden]
+		public static void SafeDisposeAll<T>(this ObservableCollection<T> collection)
+			where T : IDisposable
+		{
+			if (collection == null)
+				return;
+
+			foreach (var obj in collection)
+				obj.SafeDispose();
+
+			collection.Clear();
 		}
 
 		/// <summary>

@@ -9,6 +9,14 @@
 
 	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}" HasDepthStencil="true" DrawCallback="{Binding OnDraw}">
 		<controls:AreaPanel>
+			
+			<ItemsControl ItemsSource="{Binding EventMessages}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding DisplayString}"></TextBlock>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
 
 			<StackPanel Orientation="Horizontal"
 						HorizontalAlignment="Center"

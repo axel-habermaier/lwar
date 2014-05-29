@@ -223,11 +223,35 @@
     <Compile Include="..\..\Pegasus\Assets\AssetType.cs">
       <Link>Pegasus\AssetType.cs</Link>
     </Compile>
+    <Compile Include="..\..\Pegasus\Framework\CollectionChangedAction.cs">
+      <Link>Pegasus\CollectionChangedAction.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Framework\CollectionChangedEventArgs.cs">
+      <Link>Pegasus\CollectionChangedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Framework\CollectionChangedHandler.cs">
+      <Link>Pegasus\CollectionChangedHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Framework\CustomCollection.cs">
+      <Link>Pegasus\CustomCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Framework\INotifyCollectionChanged.cs">
+      <Link>Pegasus\INotifyCollectionChanged.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Framework\INotifyPropertyChanged.cs">
+      <Link>Pegasus\INotifyPropertyChanged.cs</Link>
+    </Compile>
     <Compile Include="..\..\Pegasus\Framework\ISealable.cs">
       <Link>Pegasus\ISealable.cs</Link>
     </Compile>
+    <Compile Include="..\..\Pegasus\Framework\ObservableCollection.cs">
+      <Link>Pegasus\ObservableCollection.cs</Link>
+    </Compile>
     <Compile Include="..\..\Pegasus\Framework\PegasusException.cs">
       <Link>Pegasus\PegasusException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Pegasus\Framework\PropertyChangedHandler.cs">
+      <Link>Pegasus\PropertyChangedHandler.cs</Link>
     </Compile>
     <Compile Include="..\..\Pegasus\Framework\UserInterface\Thickness.cs">
       <Link>Pegasus\Thickness.cs</Link>

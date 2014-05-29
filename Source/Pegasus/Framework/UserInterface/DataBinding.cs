@@ -639,11 +639,7 @@
 				{
 					var notifyPropertyChanged = _sourceObject as INotifyPropertyChanged;
 					if (notifyPropertyChanged == null)
-					{
-						Log.Debug("Possibly unintended data binding: The source property is neither a dependency property, nor does " +
-								  "the containing type implement INotifyPropertyChanged. Support for automatic value updates disabled.");
 						return;
-					}
 
 					_changeHandler = (PropertyChangedHandler)PropertyChanged;
 					ReflectionHelper.AttachPropertyChangedEventHandler(notifyPropertyChanged, (PropertyChangedHandler)_changeHandler);

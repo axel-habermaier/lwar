@@ -230,7 +230,6 @@
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
     <Compile Include="UserInterface\ChatInput.cs" />
-    <Compile Include="UserInterface\EventMessageDisplay.cs" />
     <Compile Include="UserInterface\Frame.cs" />
     <Compile Include="UserInterface\Scoreboard.cs" />
     <Compile Include="Rendering\Renderers\ParallaxRenderer.cs" />
