@@ -13,7 +13,7 @@
 	/// <summary>
 	///     Manages the game and debug cameras.
 	/// </summary>
-	public class CameraManager : DisposableObject, INotifyPropertyChanged
+	public class CameraManager : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
 		///     The debug camera that can be used to freely navigate the scene.
@@ -29,6 +29,11 @@
 		///     The window that outputs the scene rendered from the point of view of the active camera.
 		/// </summary>
 		private readonly Window _window;
+
+		/// <summary>
+		///     The active camera that is used to draw the scene.
+		/// </summary>
+		private Camera _activeCamera;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -60,14 +65,13 @@
 		public GameCamera GameCamera { get; private set; }
 
 		/// <summary>
-		///     Gets the active camera that should be used to draw the scene.
+		///     Gets the active camera that is used to draw the scene.
 		/// </summary>
-		public Camera ActiveCamera { get; private set; }
-
-		/// <summary>
-		///     Raised when a property of the current object has been changed.
-		/// </summary>
-		public event PropertyChangedHandler PropertyChanged;
+		public Camera ActiveCamera
+		{
+			get { return _activeCamera; }
+			private set { ChangePropertyValue(ref _activeCamera, value); }
+		}
 
 		/// <summary>
 		///     Toggles between the game and the debug camera.
@@ -91,7 +95,6 @@
 			}
 
 			GameCamera.IsActive = ActiveCamera == GameCamera;
-			PropertyChanged(this, "ActiveCamera");
 		}
 
 		/// <summary>

@@ -3,14 +3,13 @@
 	using System;
 	using Pegasus;
 	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///     A base class for Lwar specific view models.
 	/// </summary>
-	public abstract class LwarViewModel : ViewModel
+	public abstract class LwarViewModel : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
 		///     The view model's child in the view model stack.

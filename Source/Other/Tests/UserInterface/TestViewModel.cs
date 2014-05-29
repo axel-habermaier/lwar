@@ -1,12 +1,13 @@
 ﻿namespace Tests.UserInterface
 {
 	using System;
+	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
 
 	/// <summary>
 	///     The control that is used for UI-related unit tests. The view model is recursive.
 	/// </summary>
-	public class TestViewModel : ViewModel
+	public class TestViewModel : NotifyPropertyChanged
 	{
 		private bool _bool;
 		private int _integer;

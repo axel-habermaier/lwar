@@ -12,7 +12,7 @@
 	/// <summary>
 	///     Displays the in-game console. TODO: Convert to UI framework
 	/// </summary>
-	internal class ConsoleViewModel : ViewModel
+	internal class ConsoleViewModel : DisposableNotifyPropertyChanged
 	{
 		private readonly AreaPanel _root;
 		private readonly SpriteBatch _spriteBatch;

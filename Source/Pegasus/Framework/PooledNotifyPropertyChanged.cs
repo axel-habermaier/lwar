@@ -1,4 +1,4 @@
-﻿namespace Pegasus.Framework.UserInterface
+﻿namespace Pegasus.Framework
 {
 	using System;
 	using System.Collections.Generic;
@@ -7,11 +7,11 @@
 	using Platform.Memory;
 
 	/// <summary>
-	///     A view model can be bound to an UI element, providing both the values that the UI displays and the methods that
-	///     handle UI commands.
+	///     A base class for pooled classes requiring property change notifications.
 	/// </summary>
 	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-	public abstract class ViewModel : DisposableObject, INotifyPropertyChanged
+	public abstract class PooledNotifyPropertyChanged<T> : PooledObject<T>, INotifyPropertyChanged
+		where T : PooledObject<T>, new()
 	{
 		/// <summary>
 		///     Raised when a property of the view model has been changed.
@@ -24,32 +24,25 @@
 		/// <param name="field">The backing field that stores the property value.</param>
 		/// <param name="newValue">The new value that should be set on the property.</param>
 		/// <param name="propertyName">The name of the property that is being changed.</param>
-		protected void ChangePropertyValue<T>(ref T field, T newValue, [CallerMemberName] string propertyName = "")
+		protected void ChangePropertyValue<TProperty>(ref TProperty field, TProperty newValue, [CallerMemberName] string propertyName = "")
 		{
 			Assert.ArgumentNotNullOrWhitespace(propertyName);
 
-			if (EqualityComparer<T>.Default.Equals(field, newValue))
+			if (EqualityComparer<TProperty>.Default.Equals(field, newValue))
 				return;
 
 			field = newValue;
-			NotifyPropertyChanged(propertyName);
+			OnPropertyChanged(propertyName);
 		}
 
 		/// <summary>
 		///     Raises the changed event for the given property.
 		/// </summary>
 		/// <param name="propertyName">The name of the property that was changed.</param>
-		protected void NotifyPropertyChanged(string propertyName)
+		protected void OnPropertyChanged(string propertyName)
 		{
 			if (PropertyChanged != null)
 				PropertyChanged(this, propertyName);
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
 		}
 	}
 }

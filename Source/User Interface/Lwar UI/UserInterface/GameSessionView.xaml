@@ -13,7 +13,7 @@
 			<ItemsControl ItemsSource="{Binding EventMessages}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<TextBlock Text="{Binding DisplayString}"></TextBlock>
+						<TextBlock Text="{Binding DisplayString}" Margin="2"></TextBlock>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>

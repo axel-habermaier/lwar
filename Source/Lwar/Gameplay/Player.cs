@@ -3,32 +3,68 @@
 	using System;
 	using Entities;
 	using Pegasus;
-	using Pegasus.Platform.Memory;
+	using Pegasus.Framework;
 
 	/// <summary>
 	///     Represents a player.
 	/// </summary>
-	public class Player : PooledObject<Player>, IGenerationalIdentity
+	public class Player : PooledNotifyPropertyChanged<Player>, IGenerationalIdentity
 	{
+		/// <summary>
+		///     The number of deaths.
+		/// </summary>
+		private int _deaths;
+
+		/// <summary>
+		///     The number of kills that the player has scored.
+		/// </summary>
+		private int _kills;
+
+		/// <summary>
+		///     The name of the player
+		/// </summary>
+		private string _name;
+
+		/// <summary>
+		///     The player's ping.
+		/// </summary>
+		private int _ping;
+
 		/// <summary>
 		///     Gets or sets the name of the player.
 		/// </summary>
-		public string Name { get; set; }
+		public string Name
+		{
+			get { return _name; }
+			set { ChangePropertyValue(ref _name, value); }
+		}
 
 		/// <summary>
 		///     Gets or sets the player's ping.
 		/// </summary>
-		public int Ping { get; set; }
+		public int Ping
+		{
+			get { return _ping; }
+			set { ChangePropertyValue(ref _ping, value); }
+		}
 
 		/// <summary>
 		///     Gets or sets the number of kills that the player has scored.
 		/// </summary>
-		public int Kills { get; set; }
+		public int Kills
+		{
+			get { return _kills; }
+			set { ChangePropertyValue(ref _kills, value); }
+		}
 
 		/// <summary>
 		///     Gets or sets the number of deaths.
 		/// </summary>
-		public int Deaths { get; set; }
+		public int Deaths
+		{
+			get { return _deaths; }
+			set { ChangePropertyValue(ref _deaths, value); }
+		}
 
 		/// <summary>
 		///     Gets or sets the player's ship.

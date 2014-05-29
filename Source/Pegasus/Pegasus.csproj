@@ -223,6 +223,9 @@
     <Compile Include="Framework\CollectionChangedEventArgs.cs" />
     <Compile Include="Framework\CollectionChangedHandler.cs" />
     <Compile Include="Framework\INotifyCollectionChanged.cs" />
+    <Compile Include="Framework\DisposableNotifyPropertyChanged.cs" />
+    <Compile Include="Framework\PooledNotifyPropertyChanged.cs" />
+    <Compile Include="Framework\NotifyPropertyChanged.cs" />
     <Compile Include="Framework\ObservableCollection.cs" />
     <Compile Include="Framework\PropertyChangedHandler.cs" />
     <Compile Include="Framework\UserInterface\BindingMode.cs" />
@@ -355,7 +358,6 @@
     <Compile Include="Framework\UserInterface\Trigger.cs" />
     <Compile Include="Framework\UserInterface\UIElement.Events.cs" />
     <Compile Include="Framework\UserInterface\UIElementCollection.cs" />
-    <Compile Include="Framework\UserInterface\ViewModel.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />
     <Compile Include="Platform\AppFile.cs" />

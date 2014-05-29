@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Displays statistics about the performance of the application and other information useful for debugging.
 	/// </summary>
-	internal sealed class DebugOverlayViewModel : ViewModel
+	internal sealed class DebugOverlayViewModel : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
 		///     The update frequency of the statistics in Hz.
@@ -195,10 +195,10 @@
 			if (!Cvars.ShowDebugOverlay)
 				return;
 
-			NotifyPropertyChanged("GpuTime");
-			NotifyPropertyChanged("CpuTime");
-			NotifyPropertyChanged("UpdateTime");
-			NotifyPropertyChanged("RenderTime");
+			OnPropertyChanged("GpuTime");
+			OnPropertyChanged("CpuTime");
+			OnPropertyChanged("UpdateTime");
+			OnPropertyChanged("RenderTime");
 		}
 
 		/// <summary>
@@ -207,7 +207,7 @@
 		/// <param name="visibility">Indicates whether the debug overlay should be shown.</param>
 		private void UpdateVisibility(bool visibility)
 		{
-			NotifyPropertyChanged("IsVisible");
+			OnPropertyChanged("IsVisible");
 		}
 
 		/// <summary>

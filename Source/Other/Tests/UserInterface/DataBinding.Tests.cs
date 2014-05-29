@@ -1,11 +1,14 @@
 ﻿namespace Tests.UserInterface
 {
 	using System;
+	using System.ComponentModel;
 	using System.Text;
 	using FluentAssertions;
 	using NUnit.Framework;
+	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Converters;
+	using Pegasus.Framework.UserInterface.ViewModels;
 
 	[TestFixture]
 	public class DataBindingTests
@@ -43,7 +46,7 @@
 			_control.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, property1, property2);
 		}
 
-		private class UntypedViewModelA : ViewModel
+		private class UntypedViewModelA : NotifyPropertyChanged
 		{
 			private object _value;
 
@@ -54,7 +57,7 @@
 			}
 		}
 
-		private class UntypedViewModelB : ViewModel
+		private class UntypedViewModelB : NotifyPropertyChanged
 		{
 			private object _value;
 

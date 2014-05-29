@@ -279,7 +279,7 @@
 			_networkSession.OnFaulted += () => ShowErrorBox("Connection Error", "The game session has been aborted due to a network error.");
 			_networkSession.OnRejected += OnConnectionRejected;
 
-			NotifyPropertyChanged("EventMessages");
+			OnPropertyChanged("EventMessages");
 		}
 
 		/// <summary>

@@ -6,7 +6,7 @@
 	/// <summary>
 	///     Displays a message box.
 	/// </summary>
-	internal class MessageBoxViewModel : ViewModel
+	internal class MessageBoxViewModel : NotifyPropertyChanged
 	{
 		/// <summary>
 		///     The z-index used to display message boxes.
