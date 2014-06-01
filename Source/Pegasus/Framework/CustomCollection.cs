@@ -15,6 +15,22 @@
 		private int _version;
 
 		/// <summary>
+		///     Initializes a new, empty instance.
+		/// </summary>
+		protected CustomCollection()
+		{
+		}
+
+		/// <summary>
+		///     Initializes a new instance, containing all items from the given list.
+		/// </summary>
+		/// <param name="list">The list of items that should be contained in the new instance.</param>
+		protected CustomCollection(IList<T> list)
+			: base(list)
+		{
+		}
+
+		/// <summary>
 		///     Removes all elements from the collection.
 		/// </summary>
 		protected override void ClearItems()

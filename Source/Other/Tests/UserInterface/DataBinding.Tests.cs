@@ -1,14 +1,13 @@
 ﻿namespace Tests.UserInterface
 {
 	using System;
-	using System.ComponentModel;
 	using System.Text;
 	using FluentAssertions;
 	using NUnit.Framework;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
+	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Framework.UserInterface.Converters;
-	using Pegasus.Framework.UserInterface.ViewModels;
 
 	[TestFixture]
 	public class DataBindingTests
@@ -68,17 +67,12 @@
 			}
 		}
 
-		private class GetSetOnly
+		[Test]
+		public void BindDirectlyToDataContext()
 		{
-			public bool SetOnly
-			{
-				set { }
-			}
-
-			public bool GetOnly
-			{
-				get { return true; }
-			}
+			_control.DataContext = 333;
+			_control.CreateDataBinding(TestControl.IntegerTestProperty1, BindingMode.OneWay);
+			_control.IntegerTest1.Should().Be(333);
 		}
 
 		[Test]
@@ -398,7 +392,7 @@
 		{
 			_viewModel.InitializeRecursively(1);
 			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "Width",
-									   converter: new DoubleToStringConverter());
+				converter: new DoubleToStringConverter());
 
 			_control.StringTest.Should().Be("0");
 
@@ -411,7 +405,7 @@
 		{
 			_viewModel.InitializeRecursively(1);
 			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "Width",
-									   converter: new DoubleToStringConverter());
+				converter: new DoubleToStringConverter());
 
 			_viewModel.Width.Should().Be(0);
 
@@ -424,7 +418,7 @@
 		{
 			_viewModel.InitializeRecursively(1);
 			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.TwoWay, "Width",
-									   converter: new DoubleToStringConverter());
+				converter: new DoubleToStringConverter());
 
 			_viewModel.Width.Should().Be(0);
 			_control.StringTest.Should().Be("0");

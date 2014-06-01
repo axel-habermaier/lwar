@@ -221,7 +221,7 @@
 			Assert.NotNull(template, "ItemTemplate cannot be null.");
 
 			foreach (var item in items)
-				AddItem(CreateChildElement(item), ItemsHost.Children.Count);
+				AddItem(item, ItemsHost.Children.Count);
 		}
 
 		/// <summary>
