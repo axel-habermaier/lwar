@@ -16,7 +16,7 @@
 		/// </summary>
 		private static readonly Dictionary<string, Func<string, string>> Converters = new Dictionary<string, Func<string, string>>
 		{
-			{ "bool", s => s },
+			{ "bool", s => s.ToLower() },
 			{ "string", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
 			{ "object", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
 			{ "double", s => s.ToLower() == "auto" ? "Double.NaN" : s },

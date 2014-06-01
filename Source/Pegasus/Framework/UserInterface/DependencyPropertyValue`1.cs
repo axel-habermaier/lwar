@@ -124,7 +124,7 @@
 		}
 
 		/// <summary>
-		///     Sets the property's value to the given inherited value
+		///     Sets the property's value to the given inherited value.
 		/// </summary>
 		/// <param name="value">The value that should be set.</param>
 		public void SetInheritedValue(T value)

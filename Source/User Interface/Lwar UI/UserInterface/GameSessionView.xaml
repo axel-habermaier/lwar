@@ -4,6 +4,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls;assembly=PegasusUI"
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
+			 xmlns:userInterface="clr-namespace:Lwar.UserInterface"
 			 mc:Ignorable="d"
 			 Foreground="White">
 
@@ -18,17 +19,7 @@
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 
-			<DataGrid ItemsSource="{Binding Scoreboard.Players}"
-					  Visibility="{Binding Scoreboard.IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
-					  HorizontalAlignment="Center"
-					  VerticalAlignment="Center"
-					  Background="#66666666">
-				<DataGrid.Columns>
-					<controls:DataGridTextColumn Width="250" Header="Player" PropertyName="Name"/>
-					<controls:DataGridTextColumn Width="50" Header="Kills" PropertyName="Kills"/>
-					<controls:DataGridTextColumn Width="50" Header="Deaths" PropertyName="Deaths"/>
-				</DataGrid.Columns>
-			</DataGrid>
+			<userInterface:Scoreboard DataContext="{Binding Scoreboard}"/>
 
 			<StackPanel Orientation="Horizontal"
 						HorizontalAlignment="Center"

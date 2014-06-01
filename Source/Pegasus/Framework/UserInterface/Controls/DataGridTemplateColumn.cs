@@ -4,9 +4,9 @@ namespace Pegasus.Framework.UserInterface.Controls
 	using System.Collections.Generic;
 
 	/// <summary>
-	///     Represents a base class for columns of a data grid.
+	///     Represents a column of a data grid.
 	/// </summary>
-	public abstract class DataGridColumn : DependencyObject
+	public class DataGridTemplateColumn : DependencyObject
 	{
 		/// <summary>
 		///     The width of the column.
@@ -32,11 +32,31 @@ namespace Pegasus.Framework.UserInterface.Controls
 		public static readonly DependencyProperty<object> HeaderProperty = new DependencyProperty<object>(affectsMeasure: true);
 
 		/// <summary>
+		///     The template that defines the visualization of the column cells.
+		/// </summary>
+		public static readonly DependencyProperty<DataTemplate> CellTemplateProperty =
+			new DependencyProperty<DataTemplate>(affectsMeasure: true);
+
+		/// <summary>
+		///     The header of the column.
+		/// </summary>
+		private DataGridColumnHeader _columnHeader;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		protected DataGridColumn()
+		public DataGridTemplateColumn()
 		{
 			CellElements = new List<UIElement>();
+		}
+
+		/// <summary>
+		///     Gets or sets the template that defines the visualization of the column cells.
+		/// </summary>
+		public DataTemplate CellTemplate
+		{
+			get { return GetValue(CellTemplateProperty); }
+			set { SetValue(CellTemplateProperty, value); }
 		}
 
 		/// <summary>
@@ -81,9 +101,29 @@ namespace Pegasus.Framework.UserInterface.Controls
 		}
 
 		/// <summary>
+		///     Creates the column header at the given column index.
+		/// </summary>
+		/// <param name="columnIndex">The zero-based index of the column.</param>
+		internal UIElement CreateColumnHeader(int columnIndex)
+		{
+			_columnHeader = _columnHeader ?? new DataGridColumnHeader();
+			_columnHeader.Content = Header;
+
+			Grid.SetColumn(_columnHeader, columnIndex);
+			return _columnHeader;
+		}
+
+		/// <summary>
 		///     Creates a cell UI element for the given item.
 		/// </summary>
 		/// <param name="item">The item the UI element should be created for.</param>
-		internal abstract UIElement CreateCellElement(object item);
+		internal UIElement CreateCellElement(object item)
+		{
+			Assert.NotNull(CellTemplate);
+
+			var child = CellTemplate();
+			child.DataContext = item;
+			return child;
+		}
 	}
 }

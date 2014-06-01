@@ -12,6 +12,7 @@
 		private bool _bool;
 		private int _integer;
 		private TestViewModel _model;
+		private object _object;
 		private string _string;
 		private Thickness _thickness;
 		private double _width;
@@ -32,6 +33,12 @@
 		{
 			get { return _model; }
 			set { ChangePropertyValue(ref _model, value); }
+		}
+
+		public object Object
+		{
+			get { return _object; }
+			set { ChangePropertyValue(ref _object, value); }
 		}
 
 		public int Integer

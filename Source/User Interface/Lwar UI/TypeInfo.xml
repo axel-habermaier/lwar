@@ -2,5 +2,6 @@
 <Types>
 	<Include>../Pegasus UI/TypeInfo.xml</Include>
 
-	<Class Name="Lwar.UserInterface.UserControl1"></Class>
+	<Class Name="Lwar.UserInterface.UserControl1" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Scoreboard" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
 </Types>

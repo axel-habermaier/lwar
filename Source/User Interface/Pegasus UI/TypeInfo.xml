@@ -75,15 +75,12 @@
 	<Class Name="System.Collections.Generic.List&lt;RowDefinition&gt;" IsList="true">
 	</Class>
 
-	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridColumn">
+	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridTemplateColumn">
 		<Property Type="double" Name="MinWidth"/>
 		<Property Type="double" Name="MaxWidth"/>
 		<Property Type="double" Name="Width"/>
 		<Property Type="object" Name="Header"/>
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridTextColumn" Inherits="Pegasus.Framework.UserInterface.Controls.DataGridColumn">
-		<Property Type="string" Name="PropertyName"/>
+		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="CellTemplate"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ColumnDefinition">
@@ -99,9 +96,6 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.ResourceDictionary" IsDictionary="true">
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.ViewModel">
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Thickness">
@@ -124,7 +118,7 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.UIElement">
-		<Property Type="Pegasus.Framework.UserInterface.ViewModel" Name="ViewModel"/>
+		<Property Type="object" Name="DataContext"/>
 		<Property Type="Pegasus.Platform.Graphics.Color" Name="Background"/>
 		<Property Type="Pegasus.Framework.UserInterface.Style" Name="Style"/>
 		<Property Type="string" Name="FontFamily"/>
@@ -174,12 +168,17 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
 
+	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridColumnHeader" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
+	</Class>
+
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ItemsControl" Inherits="Pegasus.Framework.UserInterface.Controls.Control">
 		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="ItemTemplate"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGrid" Inherits="Pegasus.Framework.UserInterface.Controls.ItemsControl">
 		<Property Type="Pegasus.Framework.ObservableCollection&lt;DataGridColumn&gt;" Name="Columns"/>
+		<Property Type="Pegasus.Framework.UserInterface.Style" Name="ColumnHeaderStyle"/>
+		<Property Type="bool" Name="AutoGenerateColumns"/>
 	</Class>
 
 	<!-- Layouts ================================================================================================= -->

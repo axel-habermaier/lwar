@@ -14,18 +14,43 @@
 		private static readonly ControlTemplate DefaultTemplate = control => new Grid { IsItemsHost = true };
 
 		/// <summary>
+		///     The style defining the appearance of the column headers.
+		/// </summary>
+		public static readonly DependencyProperty<Style> ColumnHeaderStyleProperty = new DependencyProperty<Style>(affectsMeasure: true);
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public DataGrid()
 		{
 			SetStyleValue(TemplateProperty, DefaultTemplate);
-			Columns = new ObservableCollection<DataGridColumn>();
+			Columns = new ObservableCollection<DataGridTemplateColumn>();
+		}
+
+		/// <summary>
+		///     Gets or sets the style defining the appearance of the column headers.
+		/// </summary>
+		public Style ColumnHeaderStyle
+		{
+			get { return GetValue(ColumnHeaderStyleProperty); }
+			set { SetValue(ColumnHeaderStyleProperty, value); }
 		}
 
 		/// <summary>
 		///     Gets a collection that contains all the columns of the data grid.
 		/// </summary>
-		public ObservableCollection<DataGridColumn> Columns { get; private set; }
+		public ObservableCollection<DataGridTemplateColumn> Columns { get; private set; }
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the columns of the data grid should be generated automatically.
+		///     Automatic column generation is not supported by the UI framework. The property, however, is required as WPF has the
+		///     property set to true by default.
+		/// </summary>
+		public bool AutoGenerateColumns
+		{
+			get { return false; }
+			set { Assert.That(!value, "Not implemented."); }
+		}
 
 		/// <summary>
 		///     Gets the grid that is used to layout the items of the data grid.
@@ -96,7 +121,7 @@
 		/// <param name="column">The data grid column that should be the source of the data binding.</param>
 		/// <param name="propertyName">The name of the property of the data grid column that should be bound.</param>
 		private static void BindColumnProperty<T>(ColumnDefinition gridColumn, DependencyProperty<T> dependencyProperty,
-												  DataGridColumn column, string propertyName)
+												  DataGridTemplateColumn column, string propertyName)
 		{
 			var binding = new DataBinding<T>(column, BindingMode.OneWay, propertyName);
 			gridColumn.SetBinding(dependencyProperty, binding);
@@ -114,13 +139,9 @@
 			var index = 0;
 			foreach (var column in Columns)
 			{
-				if (column.Header == null)
-					continue;
-
-				var presenter = new ContentPresenter { Content = column.Header };
-				Grid.SetColumn(presenter, index++);
-
-				ItemsHost.Add(presenter);
+				var header = column.CreateColumnHeader(index++);
+				header.Style = ColumnHeaderStyle;
+				ItemsHost.Add(header);
 			}
 		}
 
