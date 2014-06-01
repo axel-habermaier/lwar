@@ -100,9 +100,9 @@
 		/// <summary>
 		///     Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
-		protected internal override UIElementCollection.Enumerator LogicalChildren
+		protected internal override Enumerator<UIElement> LogicalChildren
 		{
-			get { return UIElementCollection.Enumerator.Empty; }
+			get { return Enumerator<UIElement>.Empty; }
 		}
 
 		/// <summary>

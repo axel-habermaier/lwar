@@ -31,15 +31,5 @@ namespace Pegasus.Framework.UserInterface.Controls
 			child.CreateDataBinding(TextBlock.TextProperty, BindingMode.OneWay, PropertyName);
 			return child;
 		}
-
-		/// <summary>
-		///     Notifies all inheriting objects about a change of an inheriting dependency property.
-		/// </summary>
-		/// <param name="property">The inheriting dependency property that has been changed.</param>
-		/// <param name="newValue">The new value that should be inherited.</param>
-		protected override void InheritedValueChanged<T>(DependencyProperty<T> property, T newValue)
-		{
-			// TODO
-		}
 	}
 }

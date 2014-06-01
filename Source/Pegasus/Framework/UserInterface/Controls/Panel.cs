@@ -49,12 +49,12 @@
 		/// <summary>
 		///     Gets an enumerator that can be used to enumerate all logical children of the panel.
 		/// </summary>
-		protected internal override sealed UIElementCollection.Enumerator LogicalChildren
+		protected internal override sealed Enumerator<UIElement> LogicalChildren
 		{
 			get
 			{
 				if (_children == null)
-					return UIElementCollection.Enumerator.Empty;
+					return Enumerator<UIElement>.Empty;
 
 				return _children.GetEnumerator();
 			}

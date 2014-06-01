@@ -235,6 +235,9 @@
     <Compile Include="..\..\Pegasus\Framework\CustomCollection.cs">
       <Link>Pegasus\CustomCollection.cs</Link>
     </Compile>
+    <Compile Include="..\..\Pegasus\Framework\Enumerator.cs">
+      <Link>Pegasus\Enumerator.cs</Link>
+    </Compile>
     <Compile Include="..\..\Pegasus\Framework\INotifyCollectionChanged.cs">
       <Link>Pegasus\INotifyCollectionChanged.cs</Link>
     </Compile>

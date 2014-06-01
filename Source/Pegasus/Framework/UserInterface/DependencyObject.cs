@@ -245,7 +245,9 @@
 		/// </summary>
 		/// <param name="property">The inheriting dependency property that has been changed.</param>
 		/// <param name="newValue">The new value that should be inherited.</param>
-		protected abstract void InheritedValueChanged<T>(DependencyProperty<T> property, T newValue);
+		protected virtual void InheritedValueChanged<T>(DependencyProperty<T> property, T newValue)
+		{
+		}
 
 		/// <summary>
 		///     Invalidates the inherited values of all inheriting dependency properties.

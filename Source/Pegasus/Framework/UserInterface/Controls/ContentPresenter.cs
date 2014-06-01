@@ -53,15 +53,9 @@
 		/// <summary>
 		///     Gets an enumerator that can be used to enumerate all logical children of the UI element.
 		/// </summary>
-		protected internal override UIElementCollection.Enumerator LogicalChildren
+		protected internal override Enumerator<UIElement> LogicalChildren
 		{
-			get
-			{
-				if (_presentedElement == null)
-					return UIElementCollection.Enumerator.Empty;
-
-				return UIElementCollection.Enumerator.FromItem(_presentedElement);
-			}
+			get { return Enumerator<UIElement>.FromItem(_presentedElement); }
 		}
 
 		/// <summary>

@@ -222,6 +222,7 @@
     <Compile Include="Framework\CollectionChangedAction.cs" />
     <Compile Include="Framework\CollectionChangedEventArgs.cs" />
     <Compile Include="Framework\CollectionChangedHandler.cs" />
+    <Compile Include="Framework\Enumerator.cs" />
     <Compile Include="Framework\INotifyCollectionChanged.cs" />
     <Compile Include="Framework\DisposableNotifyPropertyChanged.cs" />
     <Compile Include="Framework\PooledNotifyPropertyChanged.cs" />
