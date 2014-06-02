@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
+	using System.Runtime.Serialization;
 
 	/// <summary>
 	///     A base class for bindings that automatically ensures that values are synchronized between source and target.
@@ -40,7 +41,11 @@
 					return;
 
 				_active = value;
-				OnActivated();
+
+				if (_active)
+					OnActivated();
+				else
+					OnDeactivated();
 			}
 		}
 
@@ -48,6 +53,13 @@
 		///     Invoked when the binding has been activated.
 		/// </summary>
 		protected abstract void OnActivated();
+
+		/// <summary>
+		///     Invoked when the binding has been deactivated.
+		/// </summary>
+		protected virtual void OnDeactivated()
+		{
+		}
 
 		/// <summary>
 		///     Initializes the binding.

@@ -984,14 +984,28 @@
 		[Test]
 		public void ChainedDataContextBinding_InheritedOverwrite_DifferentTypes()
 		{
-			_viewModel.Width = 77;
-			_viewModel.Object = new UntypedViewModelA { Value = 33 };
+			_viewModel.Width = 77.0;
+			_viewModel.Object = new UntypedViewModelA { Value = 33.0 };
 
 			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Value");
 			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Object");
 			_control.DataContext = _viewModel;
 
 			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void SetDataContext_AfterElementActivated()
+		{
+			var textBlock = new TextBlock();
+			textBlock.CreateDataBinding(TextBlock.TextProperty, BindingMode.OneWay, "String");
+			textBlock.Text.Should().Be(TextBlock.TextProperty.DefaultValue);
+
+			_control.Canvas2.Add(textBlock);
+
+			_viewModel.String = "ABC";
+			_control.DataContext = _viewModel;
+			textBlock.Text.Should().Be("ABC");
 		}
 	}
 }

@@ -15,6 +15,11 @@
 	internal sealed class DataBinding<T> : Binding<T>
 	{
 		/// <summary>
+		///     Indicates whether the first property in the property path is the data context of an UI element.
+		/// </summary>
+		private readonly bool _boundToDataContext;
+
+		/// <summary>
 		///     The converter that is used to convert the source value to the dependency property type.
 		/// </summary>
 		private readonly IValueConverter _converter;
@@ -92,6 +97,7 @@
 			_converter = converter;
 			_bindingMode = bindingMode;
 			_memberAccessCount = property3 == null ? (property2 == null ? 1 : 2) : 3;
+			_boundToDataContext = sourceObject is UIElement && property1 == "DataContext";
 
 			_memberAccess1 = new MemberAccess(property1) { Changed = OnMember1Changed };
 
@@ -120,12 +126,59 @@
 		}
 
 		/// <summary>
+		///     Gets the source object of the data binding. If the first property of the property path is the data context of the source
+		///     UI element, the UI element's parent element is considered as the source.
+		/// </summary>
+		private object SourceObject
+		{
+			get
+			{
+				if (_boundToDataContext && ReferenceEquals(_targetProperty, UIElement.DataContextProperty))
+					return ((UIElement)_sourceObject).Parent;
+
+				return _sourceObject;
+			}
+		}
+
+		/// <summary>
+		///     Gets the actual type of the last property in the property path.
+		/// </summary>
+		private Type ActualSourcePropertyType
+		{
+			get
+			{
+				if (_memberAccessCount == 1)
+					return _memberAccess1.ValueType;
+
+				if (_memberAccessCount == 2)
+					return _memberAccess2.ValueType;
+
+				if (_memberAccessCount == 3)
+					return _memberAccess3.ValueType;
+
+				Assert.NotReached("Unexpected number of member accesses.");
+				return null;
+			}
+		}
+
+		/// <summary>
 		///     Invoked when the binding has been activated.
 		/// </summary>
 		protected override void OnActivated()
 		{
+			// Set the source object of the first member access
+			_memberAccess1.SourceObject = SourceObject;
+
 			UpdateTargetProperty();
 			UpdateSourceProperty();
+		}
+
+		/// <summary>
+		///     Invoked when the binding has been deactivated.
+		/// </summary>
+		protected override void OnDeactivated()
+		{
+			_memberAccess1.SourceObject = null;
 		}
 
 		/// <summary>
@@ -148,7 +201,7 @@
 			_memberAccess3.SetAccessTypes(_memberAccessCount == 3, _bindingMode);
 
 			// Set the source object of the first member access
-			_memberAccess1.SourceObject = _sourceObject;
+			//_memberAccess1.SourceObject = SourceObject;
 		}
 
 		/// <summary>
@@ -205,27 +258,6 @@
 		}
 
 		/// <summary>
-		/// Gets the actual type of the last property in the property path.
-		/// </summary>
-		private Type ActualSourcePropertyType
-		{
-			get
-			{
-				if (_memberAccessCount == 1)
-					return _memberAccess1.ValueType;
-
-				if (_memberAccessCount == 2)
-					return _memberAccess2.ValueType;
-
-				if (_memberAccessCount == 3)
-					return _memberAccess3.ValueType;
-
-				Assert.NotReached("Unexpected number of member accesses.");
-				return null;
-			}
-		}
-
-		/// <summary>
 		///     Invoked when the first accessed member changed.
 		/// </summary>
 		private void OnMember1Changed()
@@ -269,8 +301,8 @@
 		private void OnMemberChanged(ref MemberAccess memberAccess, ref MemberAccess nextMemberAccess, int memberAccessCount)
 		{
 			Log.DebugIf(Active && !_pathHasNullValue && memberAccess.Value == null,
-						"Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
-						PropertyPath, memberAccess.MemberName);
+				"Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
+				PropertyPath, memberAccess.MemberName);
 
 			if (memberAccessCount < _memberAccessCount)
 			{
@@ -332,7 +364,7 @@
 				CompileSourceFunction();
 
 			if (!_pathHasNullValue && !_sourceValueIsNull)
-				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(_sourceObject, _converter));
+				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(SourceObject, _converter));
 			else
 				_targetObject.SetBoundValue(_targetProperty, _targetProperty.DefaultValue);
 		}
@@ -348,7 +380,7 @@
 			if (_targetFunc == null)
 				CompileTargetFunction();
 
-			_targetFunc(_sourceObject, _targetObject.GetValue(_targetProperty), _converter);
+			_targetFunc(SourceObject, _targetObject.GetValue(_targetProperty), _converter);
 		}
 
 		/// <summary>
@@ -410,7 +442,7 @@
 			/// <param name="readPropertyCount">The number of properties that should be read.</param>
 			public static Expression GetReadExpression(DataBinding<T> binding, int readPropertyCount)
 			{
-				var expression = Expression.Convert(SourceObjectParameter, binding._sourceObject.GetType()) as Expression;
+				var expression = Expression.Convert(SourceObjectParameter, binding.SourceObject.GetType()) as Expression;
 
 				if (readPropertyCount > 0)
 					expression = binding._memberAccess1.GetReadExpression(expression);
@@ -452,6 +484,11 @@
 		private struct MemberAccess
 		{
 			/// <summary>
+			///     The name of the accessed property.
+			/// </summary>
+			private readonly string _propertyName;
+
+			/// <summary>
 			///     The strongly-typed changed handler that has been added for the dependency property.
 			/// </summary>
 			private Delegate _changeHandler;
@@ -477,14 +514,20 @@
 			private PropertyInfo _propertyInfo;
 
 			/// <summary>
-			///     The name of the accessed property.
-			/// </summary>
-			private readonly string _propertyName;
-
-			/// <summary>
 			///     The source object that is accessed.
 			/// </summary>
 			private object _sourceObject;
+
+			/// <summary>
+			///     Initializes a new instance.
+			/// </summary>
+			/// <param name="propertyName">The name of the property that should be accessed.</param>
+			public MemberAccess(string propertyName)
+				: this()
+			{
+				Assert.ArgumentNotNullOrWhitespace(propertyName);
+				_propertyName = propertyName;
+			}
 
 			/// <summary>
 			///     Gets or sets the type of the value currently stored by the accessed property.
@@ -528,7 +571,6 @@
 			{
 				set
 				{
-					// Don't do unnecessary work; a value of null, however, must always be propagated
 					if (_sourceObject == value && value != null)
 						return;
 
@@ -564,17 +606,6 @@
 
 					return _dependencyProperty.GetValue(dependencyObject);
 				}
-			}
-
-			/// <summary>
-			///     Initializes a new instance.
-			/// </summary>
-			/// <param name="propertyName">The name of the property that should be accessed.</param>
-			public MemberAccess(string propertyName)
-				: this()
-			{
-				Assert.ArgumentNotNullOrWhitespace(propertyName);
-				 _propertyName = propertyName;
 			}
 
 			/// <summary>
@@ -689,11 +720,11 @@
 					.SingleOrDefault(p => p.Name == name);
 
 				Assert.NotNull(_propertyInfo, "Unable to find public, non-static property '{0}' on '{1}'.",
-							   _propertyName, _sourceObject.GetType().FullName);
+					_propertyName, _sourceObject.GetType().FullName);
 
 				var method = _propertyInfo.CanRead ? _propertyInfo.GetMethod : _propertyInfo.SetMethod;
 				Assert.That(!method.IsStatic, "Cannot data bind to static property '{0}' on '{1};.",
-							_propertyName, _sourceObject.GetType().FullName);
+					_propertyName, _sourceObject.GetType().FullName);
 
 				Assert.That(!_isRead || _propertyInfo.CanRead, "Cannot read non-readable property.");
 				Assert.That(!_isWritten || _propertyInfo.CanWrite, "Cannot write to non-writable property.");

@@ -207,6 +207,7 @@
 
 		protected override void OnDraw(SpriteBatch spriteBatch)
 		{
+			Log.DebugIf(Camera == null, "No camera has been set for the render output panel.");
 			Log.DebugIf(DrawCallback == null, "No draw callback has been set for the render output panel.");
 
 			if (!HasVisibleArea || DrawCallback == null)

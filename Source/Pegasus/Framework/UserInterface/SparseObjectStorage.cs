@@ -139,7 +139,7 @@
 			/// <summary>
 			///     The values that are enumerated.
 			/// </summary>
-			private T[] _values;
+			private static T[] _values;
 
 			/// <summary>
 			///     Initializes a new instance.
@@ -152,7 +152,16 @@
 				Assert.ArgumentSatisfies(values == null || valueCount <= values.Length, "Too many values.");
 
 				_valueCount = valueCount;
-				_values = values;
+
+				// We have to make a copy of the values here, as the list may be changed while it is being enumerated
+				if (values == null)
+					return;
+
+				if (_values == null || _values.Length < values.Length)
+					_values = new T[values.Length];
+
+				for (var i = 0; i < values.Length; ++i)
+					_values[i] = values[i];
 			}
 
 			/// <summary>
