@@ -68,14 +68,6 @@
 		}
 
 		[Test]
-		public void BindDirectlyToDataContext()
-		{
-			_control.DataContext = 333;
-			_control.CreateDataBinding(TestControl.IntegerTestProperty1, BindingMode.OneWay);
-			_control.IntegerTest1.Should().Be(333);
-		}
-
-		[Test]
 		public void AutomaticallyInvokeToString()
 		{
 			_viewModel.Integer = 17;
@@ -87,6 +79,14 @@
 
 			_control.CreateDataBinding(sourceObject, TestControl.StringTestProperty, BindingMode.OneWay, "Value");
 			_control.StringTest.Should().Be(builder.ToString());
+		}
+
+		[Test]
+		public void BindDirectlyToDataContext()
+		{
+			_control.DataContext = 333;
+			_control.CreateDataBinding(TestControl.IntegerTestProperty1, BindingMode.OneWay);
+			_control.IntegerTest1.Should().Be(333);
 		}
 
 		[Test]
@@ -374,6 +374,111 @@
 		}
 
 		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_DifferentTypes()
+		{
+			_viewModel.Width = 77.0;
+			_viewModel.Object = new UntypedViewModelA { Value = 33.0 };
+
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Value");
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Object");
+			_control.DataContext = _viewModel;
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately_SetDataContextFirst()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.DataContext = _viewModel;
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately_SetDataContextFirst_ReversedBindingOrder()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.DataContext = _viewModel;
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately_SetDataContextInBetween()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+			_control.DataContext = _viewModel;
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately_SetDataContextInBetween_ReversedBindingOrder()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+			_control.DataContext = _viewModel;
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately_SetDataContextLast()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+			_control.DataContext = _viewModel;
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately_SetDataContextLast_ReversedBindingOrder()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+			_control.DataContext = _viewModel;
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Later()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+			_control.DataContext = _viewModel;
+			_control.Button3.Width.Should().Be(77);
+
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
 		public void DefaultBindingMode()
 		{
 			_control.CreateDataBinding(_viewModel, TestControl.BooleanTestProperty1, BindingMode.Default, "Bool");
@@ -558,6 +663,20 @@
 			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.TwoWay, "String");
 			_control.StringTest.Should().Be("DEF");
 			_viewModel.String.Should().Be("DEF");
+		}
+
+		[Test]
+		public void SetDataContext_AfterElementActivated()
+		{
+			var textBlock = new TextBlock();
+			textBlock.CreateDataBinding(TextBlock.TextProperty, BindingMode.OneWay, "String");
+			textBlock.Text.Should().Be(TextBlock.TextProperty.DefaultValue);
+
+			_control.Canvas2.Add(textBlock);
+
+			_viewModel.String = "ABC";
+			_control.DataContext = _viewModel;
+			textBlock.Text.Should().Be("ABC");
 		}
 
 		[Test]
@@ -952,125 +1071,6 @@
 
 			_control.DataContext = null;
 			_control.Width.Should().Be(UIElement.WidthProperty.DefaultValue);
-		}
-
-		[Test]
-		public void ChainedDataContextBinding_InheritedOverwrite_Later()
-		{
-			_viewModel.Width = 77;
-			_viewModel.Model = new TestViewModel { Width = 33 };
-
-			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
-			_control.DataContext = _viewModel;
-			_control.Button3.Width.Should().Be(77);
-
-			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
-			_control.Button3.Width.Should().Be(33);
-		}
-
-		[Test]
-		public void ChainedDataContextBinding_InheritedOverwrite_Immediately1a()
-		{
-			_viewModel.Width = 77;
-			_viewModel.Model = new TestViewModel { Width = 33 };
-
-			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
-			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
-			_control.DataContext = _viewModel;
-
-			_control.Button3.Width.Should().Be(33);
-		}
-
-		[Test]
-		public void ChainedDataContextBinding_InheritedOverwrite_Immediately1b()
-		{
-			_viewModel.Width = 77;
-			_viewModel.Model = new TestViewModel { Width = 33 };
-
-			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
-			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
-			_control.DataContext = _viewModel;
-
-			_control.Button3.Width.Should().Be(33);
-		}
-
-		[Test]
-		public void ChainedDataContextBinding_InheritedOverwrite_Immediately2a()
-		{
-			_viewModel.Width = 77;
-			_viewModel.Model = new TestViewModel { Width = 33 };
-
-			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
-			_control.DataContext = _viewModel;
-			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
-
-			_control.Button3.Width.Should().Be(33);
-		}
-
-		[Test]
-		public void ChainedDataContextBinding_InheritedOverwrite_Immediately2b()
-		{
-			_viewModel.Width = 77;
-			_viewModel.Model = new TestViewModel { Width = 33 };
-
-			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
-			_control.DataContext = _viewModel;
-			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
-
-			_control.Button3.Width.Should().Be(33);
-		}
-
-		[Test]
-		public void ChainedDataContextBinding_InheritedOverwrite_Immediately3a()
-		{
-			_viewModel.Width = 77;
-			_viewModel.Model = new TestViewModel { Width = 33 };
-
-			_control.DataContext = _viewModel;
-			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
-			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
-
-			_control.Button3.Width.Should().Be(33);
-		}
-
-		[Test]
-		public void ChainedDataContextBinding_InheritedOverwrite_Immediately3b()
-		{
-			_viewModel.Width = 77;
-			_viewModel.Model = new TestViewModel { Width = 33 };
-
-			_control.DataContext = _viewModel;
-			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
-			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
-
-			_control.Button3.Width.Should().Be(33);
-		}
-
-		[Test]
-		public void ChainedDataContextBinding_InheritedOverwrite_DifferentTypes()
-		{
-			_viewModel.Width = 77.0;
-			_viewModel.Object = new UntypedViewModelA { Value = 33.0 };
-
-			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Value");
-			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Object");
-			_control.DataContext = _viewModel;
-
-			_control.Button3.Width.Should().Be(33);
-		}
-
-		[Test]
-		public void SetDataContext_AfterElementActivated()
-		{
-			var textBlock = new TextBlock();
-			textBlock.CreateDataBinding(TextBlock.TextProperty, BindingMode.OneWay, "String");
-			textBlock.Text.Should().Be(TextBlock.TextProperty.DefaultValue);
-
-			_control.Canvas2.Add(textBlock);
-
-			_viewModel.String = "ABC";
-			_control.DataContext = _viewModel;
-			textBlock.Text.Should().Be("ABC");
 		}
 	}
 }
