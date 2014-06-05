@@ -1,4 +1,4 @@
-﻿namespace Pegasus.Framework
+﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
 	using System.Linq;
@@ -127,6 +127,11 @@
 		internal struct Enumerator
 		{
 			/// <summary>
+			///     The values that are enumerated.
+			/// </summary>
+			private static T[] _values;
+
+			/// <summary>
 			///     The number of values that are enumerated.
 			/// </summary>
 			private readonly int _valueCount;
@@ -135,11 +140,6 @@
 			///     The index of the current enumerated element.
 			/// </summary>
 			private int _current;
-
-			/// <summary>
-			///     The values that are enumerated.
-			/// </summary>
-			private static T[] _values;
 
 			/// <summary>
 			///     Initializes a new instance.

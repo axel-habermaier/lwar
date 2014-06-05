@@ -5,7 +5,7 @@
 	using System.Linq;
 	using FluentAssertions;
 	using NUnit.Framework;
-	using Pegasus.Framework;
+	using Pegasus.Framework.UserInterface;
 
 	[TestFixture]
 	public class SparseObjectStorageTests

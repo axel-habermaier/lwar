@@ -969,7 +969,7 @@
 		}
 
 		[Test]
-		public void ChainedDataContextBinding_InheritedOverwrite_Immediately()
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately1a()
 		{
 			_viewModel.Width = 77;
 			_viewModel.Model = new TestViewModel { Width = 33 };
@@ -977,6 +977,71 @@
 			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
 			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
 			_control.DataContext = _viewModel;
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately1b()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+			_control.DataContext = _viewModel;
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately2a()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+			_control.DataContext = _viewModel;
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately2b()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+			_control.DataContext = _viewModel;
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately3a()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.DataContext = _viewModel;
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+
+			_control.Button3.Width.Should().Be(33);
+		}
+
+		[Test]
+		public void ChainedDataContextBinding_InheritedOverwrite_Immediately3b()
+		{
+			_viewModel.Width = 77;
+			_viewModel.Model = new TestViewModel { Width = 33 };
+
+			_control.DataContext = _viewModel;
+			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Model");
+			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Width");
 
 			_control.Button3.Width.Should().Be(33);
 		}

@@ -334,16 +334,16 @@
 
 				var changedEventArgs = new DependencyPropertyChangedEventArgs<T>(_property, _oldValue, newValue);
 
+				// If the property inherits its value, we have to push down the change to all inheriting objects
+				if (_property.Inherits)
+					_object.InheritedValueChanged(_property, newValue);
+
 				// Invoke the static changed handlers
 				_property.OnValueChanged(_object, changedEventArgs);
 
 				// Invoke the instance changed handlers, if any
 				if (PropertyValue.ChangedHandlers != null)
 					PropertyValue.ChangedHandlers(_object, changedEventArgs);
-
-				// If the property inherits its value, we have to push down the change to all inheriting objects
-				if (_property.Inherits)
-					_object.InheritedValueChanged(_property, newValue);
 			}
 		}
 	}

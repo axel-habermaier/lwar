@@ -166,11 +166,7 @@
 		/// </summary>
 		protected override void OnActivated()
 		{
-			// Set the source object of the first member access
 			_memberAccess1.SourceObject = SourceObject;
-
-			UpdateTargetProperty();
-			UpdateSourceProperty();
 		}
 
 		/// <summary>
@@ -199,9 +195,6 @@
 			_memberAccess1.SetAccessTypes(_memberAccessCount == 1, _bindingMode);
 			_memberAccess2.SetAccessTypes(_memberAccessCount == 2, _bindingMode);
 			_memberAccess3.SetAccessTypes(_memberAccessCount == 3, _bindingMode);
-
-			// Set the source object of the first member access
-			//_memberAccess1.SourceObject = SourceObject;
 		}
 
 		/// <summary>
@@ -595,7 +588,7 @@
 			{
 				get
 				{
-					if (_sourceObject == null)
+					if (_sourceObject == null || (_dependencyProperty == null && _propertyInfo == null))
 						return null;
 
 					if (_dependencyProperty == null)
@@ -719,8 +712,11 @@
 					.GetRuntimeProperties()
 					.SingleOrDefault(p => p.Name == name);
 
-				Assert.NotNull(_propertyInfo, "Unable to find public, non-static property '{0}' on '{1}'.",
+				Log.DebugIf(_propertyInfo == null, "Unable to find public, non-static property '{0}' on '{1}'.",
 					_propertyName, _sourceObject.GetType().FullName);
+
+				if (_propertyInfo == null)
+					return;
 
 				var method = _propertyInfo.CanRead ? _propertyInfo.GetMethod : _propertyInfo.SetMethod;
 				Assert.That(!method.IsStatic, "Cannot data bind to static property '{0}' on '{1};.",
