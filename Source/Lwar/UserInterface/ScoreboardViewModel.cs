@@ -100,7 +100,7 @@ namespace Lwar.UserInterface
 		{
 			IsVisible = _showScoreboard.IsTriggered;
 
-			if (!_isDirty)
+			if (!_isDirty || !IsVisible)
 				return;
 
 			_isDirty = false;

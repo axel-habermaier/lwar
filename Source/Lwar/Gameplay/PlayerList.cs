@@ -181,6 +181,13 @@
 			if (player == null)
 				return;
 
+			var hasChanged = player.Kills != stats.Kills ||
+							 player.Deaths != stats.Deaths ||
+							 player.Ping != stats.Ping;
+
+			if (!hasChanged)
+				return;
+
 			player.Kills = stats.Kills;
 			player.Deaths = stats.Deaths;
 			player.Ping = stats.Ping;
