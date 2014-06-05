@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///     Represents a class that can be sealed, preventing any future modification of the class.
+	///     Represents an object that can be sealed, preventing any future modification of the object.
 	/// </summary>
 	public interface ISealable
 	{

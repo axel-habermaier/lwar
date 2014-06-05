@@ -122,7 +122,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the object is not null.
+		///     Throws a PegasusException if the object is not null.
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
 		/// <param name="obj">The object to check for null.</param>
@@ -139,7 +139,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the object is null.
+		///     Throws a PegasusException if the object is null.
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
 		/// <param name="obj">The object to check for null.</param>
@@ -156,7 +156,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the object is null.
+		///     Throws a PegasusException if the object is null.
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
 		/// <param name="obj">The object to check for null.</param>
@@ -169,7 +169,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the string argument is null or empty (or only whitespace).
+		///     Throws a PegasusException if the string argument is null or empty (or only whitespace).
 		/// </summary>
 		/// <param name="s">The string to check.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -182,7 +182,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the condition does not hold.
+		///     Throws a PegasusException if the condition does not hold.
 		/// </summary>
 		/// <param name="condition">The condition that, if false, causes the exception to be raised.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
@@ -197,7 +197,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the method is invoked.
+		///     Throws a PegasusException if the method is invoked.
 		/// </summary>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
@@ -208,7 +208,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the given object has already been sealed.
+		///     Throws a PegasusException if the given object has already been sealed.
 		/// </summary>
 		/// <param name="obj">The object that should be checked.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -221,7 +221,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the given object is not null or has not been disposed.
+		///     Throws a PegasusException if the given object is not null or has not been disposed.
 		/// </summary>
 		/// <param name="obj">The object that should be checked.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -233,7 +233,7 @@
 		}
 
 		/// <summary>
-		///     Throws an ObjectDisposedException if the given object has already been disposed.
+		///     Throws a PegasusException if the given object has already been disposed.
 		/// </summary>
 		/// <param name="obj">The object that should be checked.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -246,7 +246,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the given object has already been returned to the pool.
+		///     Throws a PegasusException if the given object has already been returned to the pool.
 		/// </summary>
 		/// <param name="obj">The object that should be checked.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -260,7 +260,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the enum argument is outside the range of the enumeration.
+		///     Throws a PegasusException if the enum argument is outside the range of the enumeration.
 		/// </summary>
 		/// <typeparam name="TEnum">The type of the enumeration.</typeparam>
 		/// <param name="argument">The enumeration value to check.</param>
@@ -273,7 +273,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the argument is outside the range.
+		///     Throws a PegasusException if the argument is outside the range.
 		/// </summary>
 		/// <typeparam name="T">The type of the value to check.</typeparam>
 		/// <param name="index">The value to check.</param>
@@ -291,7 +291,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidOperationException if the argument is outside the range.
+		///     Throws a PegasusException if the argument is outside the range.
 		/// </summary>
 		/// <param name="index">The value of the index to check.</param>
 		/// <param name="collection">The collection that defines the valid range of the given index argument.</param>
@@ -303,7 +303,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidCastException if the object is not the same as or subtype of the given type.
+		///     Throws a PegasusException if the object is not the same as or subtype of the given type.
 		/// </summary>
 		/// <param name="obj">The object to check.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
@@ -316,7 +316,7 @@
 		}
 
 		/// <summary>
-		///     Throws an InvalidCastException if the object is not the same as or subtype of the given type.
+		///     Throws a PegasusException if the object is not the same as or subtype of the given type.
 		/// </summary>
 		/// <param name="obj">The object to check.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
