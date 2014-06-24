@@ -26,7 +26,6 @@ Client
 
 Pegasus.Framework
 ========
-- Track fullscreen resolution changes and add standard timeout-and-reset functionality for invalid resolutions
 - Add texture quality switch cvar -> asset reloading required
 - Particle System
 - UI
@@ -40,6 +39,12 @@ Pegasus.Framework
 Pegasus.Platform
 ========
 - Linux: Fullscreen mode somewhat buggy when resolution is changed
+- Drop all display mode change code and instead use fake fullscreen (fullscreen window in desktop resolution, with the app scaling up
+  lower resolutions by itself, if necessary)
+	* Should work reliably for both Windows/Linux as well as Direct3D/OpenGL
+	* Should have much simpler implementation
+	* Should allow correct Alt+Tab behavior
+	* Potential performance hit and vsync problems
 
 Assets Compiler
 ========
@@ -49,6 +54,7 @@ Assets Compiler
 - Organize assets into different packages
 	- All assets of a package are loaded at the same time
 	- Assign offsets per asset per package and use that instead of name at runtime
+- Compile 3D models (using ASSIMP: http://assimp.sourceforge.net/, https://code.google.com/p/assimp-net/)
 
 Network
 ========
