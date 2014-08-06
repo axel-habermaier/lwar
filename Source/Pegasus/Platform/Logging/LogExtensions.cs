@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Provides extension methods for logging-related types.
 	/// </summary>
-	public static class LogExtensions
+	internal static class LogExtensions
 	{
 		/// <summary>
 		///     The number of characters of the longest type literal.

@@ -4,7 +4,6 @@
 	using System.Collections.Generic;
 	using System.Text;
 	using Memory;
-	using Rendering.UserInterface;
 	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>

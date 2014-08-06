@@ -345,8 +345,9 @@
 		private static bool ContinueLoading(double start, double now, double timeout)
 		{
 			// Check if there's enough time for another asset; that's just a wild guess, obviously, but we assume that we're
-			// good if we've more than 20% of the time left
-			return now - start < timeout - (timeout * 0.2);
+			// good if we've more than 'threshold' percent of the time left.
+			const double threshold = 0.2;
+			return now - start < timeout - (timeout * threshold);
 		}
 
 		/// <summary>

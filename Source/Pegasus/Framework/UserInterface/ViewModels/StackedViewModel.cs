@@ -38,7 +38,7 @@
 		{
 			get
 			{
-				if (GetType() == typeof(RootViewModel))
+				if (this is RootViewModel)
 					return this;
 
 				Assert.NotNull(Parent, "The view model has no parent.");
