@@ -112,7 +112,6 @@
 			{
 				try
 				{
-					Log.Info("Reloading {1} {0}...", GetAssetDisplayName(info), Loaders[info.Type].AssetTypeName);
 					Load(info);
 				}
 				catch (FileSystemException e)
@@ -206,8 +205,6 @@
 			for (var i = _pendingAssets.Count; i > 0; --i)
 			{
 				var info = _pendingAssets[i - 1];
-
-				Log.Info("Loading {0} {1}...", Loaders[info.Type].AssetTypeName, GetAssetDisplayName(info));
 				Load(info);
 
 				_pendingAssets.RemoveAt(i - 1);
@@ -240,6 +237,8 @@
 		{
 			try
 			{
+				Log.Info("Loading {0} {1}...", Loaders[info.Type].AssetTypeName, GetAssetDisplayName(info));
+
 				using (var buffer = BufferReader.Create(FileSystem.ReadAllBytes(info.Path)))
 				{
 					AssetHeader.Validate(buffer, info.Type);
