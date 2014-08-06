@@ -21,6 +21,20 @@
 		/// <param name="value">The value that should be set.</param>
 		public void SetValue<T>(DependencyProperty<T> property, T value)
 		{
+			Assert.That(!property.IsReadOnly, "Cannot set value of read-only dependency property");
+
+			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
+				setter.PropertyValue.SetLocalValue(value);
+		}
+
+		/// <summary>
+		///     Sets the value of the read-only dependency property.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the dependency property.</typeparam>
+		/// <param name="property">The dependency property whose value should be set.</param>
+		/// <param name="value">The value that should be set.</param>
+		internal void SetReadOnlyValue<T>(DependencyProperty<T> property, T value)
+		{
 			using (var setter = new DependencyPropertyValueSetter<T>(this, property, value))
 				setter.PropertyValue.SetLocalValue(value);
 		}

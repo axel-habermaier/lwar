@@ -1,13 +1,14 @@
-﻿namespace Pegasus.Platform
+﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
-	using Framework.UserInterface.Controls;
+	using Controls;
 	using Input;
-	using Logging;
 	using Math;
-	using Memory;
+	using Platform;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a native operating system window.
@@ -270,7 +271,7 @@
 		/// <summary>
 		///     Raised when a key was pressed.
 		/// </summary>
-		public event Action<KeyEventArgs> KeyPressed;
+		public event Action<Key, int> KeyPressed;
 
 		/// <summary>
 		///     Raises the key pressed event.
@@ -280,13 +281,13 @@
 		private void OnKeyPressed(Key key, int scanCode)
 		{
 			if (KeyPressed != null)
-				KeyPressed(new KeyEventArgs(key, scanCode));
+				KeyPressed(key, scanCode);
 		}
 
 		/// <summary>
 		///     Raised when a key was released.
 		/// </summary>
-		public event Action<KeyEventArgs> KeyReleased;
+		public event Action<Key, int> KeyReleased;
 
 		/// <summary>
 		///     Raises the key released event.
@@ -296,13 +297,13 @@
 		private void OnKeyReleased(Key key, int scanCode)
 		{
 			if (KeyReleased != null)
-				KeyReleased(new KeyEventArgs(key, scanCode));
+				KeyReleased(key, scanCode);
 		}
 
 		/// <summary>
 		///     Raised when the mouse wheel was moved.
 		/// </summary>
-		public event Action<int> MouseWheel = d => { };
+		public event Action<int> MouseWheel;
 
 		/// <summary>
 		///     Raises the mouse wheel event.
@@ -317,7 +318,7 @@
 		/// <summary>
 		///     Raised when a mouse button was pressed.
 		/// </summary>
-		public event Action<MouseEventArgs> MousePressed = e => { };
+		public event Action<MouseButton, bool, Vector2i> MousePressed;
 
 		/// <summary>
 		///     Raises the mouse pressed event.
@@ -329,13 +330,13 @@
 		private void OnMousePressed(MouseButton button, bool doubleClick, int x, int y)
 		{
 			if (MousePressed != null)
-				MousePressed(new MouseEventArgs(button, doubleClick, x, y));
+				MousePressed(button, doubleClick, new Vector2i(x, y));
 		}
 
 		/// <summary>
 		///     Raised when a mouse button was released.
 		/// </summary>
-		public event Action<MouseEventArgs> MouseReleased = e => { };
+		public event Action<MouseButton, Vector2i> MouseReleased;
 
 		/// <summary>
 		///     Raises the mouse released event.
@@ -346,13 +347,13 @@
 		private void OnMouseReleased(MouseButton button, int x, int y)
 		{
 			if (MouseReleased != null)
-				MouseReleased(new MouseEventArgs(button, false, x, y));
+				MouseReleased(button, new Vector2i(x, y));
 		}
 
 		/// <summary>
 		///     Raised when the mouse was moved inside the window.
 		/// </summary>
-		public event Action<int, int> MouseMoved;
+		public event Action<Vector2i> MouseMoved;
 
 		/// <summary>
 		///     Raises the mouse moved event.
@@ -362,7 +363,7 @@
 		private void OnMouseMoved(int x, int y)
 		{
 			if (MouseMoved != null)
-				MouseMoved(x, y);
+				MouseMoved(new Vector2i(x, y));
 		}
 
 		/// <summary>

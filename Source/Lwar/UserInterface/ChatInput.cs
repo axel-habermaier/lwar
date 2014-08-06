@@ -7,7 +7,7 @@
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Platform.Input;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Pegasus.Rendering.UserInterface;

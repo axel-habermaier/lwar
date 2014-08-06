@@ -57,6 +57,7 @@
 			FontSizeProperty.Changed += (o, e) => UnsetCachedFont(o);
 			FontBoldProperty.Changed += (o, e) => UnsetCachedFont(o);
 			FontItalicProperty.Changed += (o, e) => UnsetCachedFont(o);
+			FocusableProperty.Changed += OnFocusableChanged;
 			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
 		}
 
@@ -280,6 +281,7 @@
 			Assert.That(parent == null || Parent == null, "The element is already attached to the logical tree.");
 
 			Parent = parent;
+			IsFocused = false;
 
 			// Changing the parent possibly invalidates the inherited property values of this UI element and its children
 			InvalidateInheritedValues(parent);
@@ -399,6 +401,59 @@
 			Assert.ArgumentNotNull(targetProperty);
 
 			SetBinding(targetProperty, new ResourceBinding<T>(key));
+		}
+
+		/// <summary>
+		///     Gets the window the UI element is contained in or null if it isn't contained in any window.
+		/// </summary>
+		/// <param name="uiElement">The UI element the parent window should be returned for.</param>
+		private static Window GetParentWindow(UIElement uiElement)
+		{
+			while (uiElement != null)
+			{
+				var window = uiElement as Window;
+				if (window != null)
+					return window;
+
+				uiElement = uiElement.Parent;
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		///     Sets the keyboard focus to this UI element, provided that it is focusable.
+		/// </summary>
+		public void Focus()
+		{
+			if (!Focusable)
+				return;
+
+			var window = GetParentWindow(this);
+			Assert.NotNull(window, "The UI element is not part of a logical tree.");
+
+			window.FocusedElement = this;
+		}
+
+		/// <summary>
+		///     Checks whether the UI element is still focusable if it currently has the focus. If not, notifies the parent window
+		///     that the focus has been lost.
+		/// </summary>
+		private static void OnFocusableChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<bool> args)
+		{
+			var uiElement = obj as UIElement;
+			if (uiElement == null)
+				return;
+
+			if (args.NewValue || !uiElement.IsFocused)
+				return;
+
+			var window = GetParentWindow(uiElement);
+			if (window == null)
+				return;
+
+			Assert.That(window.FocusedElement == uiElement, "Inconsistent focused element state.");
+			window.FocusedElement = null;
 		}
 
 		/// <summary>
@@ -590,7 +645,7 @@
 		private SizeD IncreaseByMargin(SizeD size)
 		{
 			return new SizeD(size.Width + _layoutInfo.Margin.Left + _layoutInfo.Margin.Right,
-							 size.Height + _layoutInfo.Margin.Top + _layoutInfo.Margin.Bottom);
+				size.Height + _layoutInfo.Margin.Top + _layoutInfo.Margin.Bottom);
 		}
 
 		/// <summary>
@@ -601,7 +656,7 @@
 		private SizeD DecreaseByMargin(SizeD size)
 		{
 			return new SizeD(size.Width - _layoutInfo.Margin.Left - _layoutInfo.Margin.Right,
-							 size.Height - _layoutInfo.Margin.Top - _layoutInfo.Margin.Bottom);
+				size.Height - _layoutInfo.Margin.Top - _layoutInfo.Margin.Bottom);
 		}
 
 		/// <summary>

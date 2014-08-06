@@ -52,8 +52,7 @@
 		/// <summary>
 		///     Indicates whether the mouse is currently hovering the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<bool> IsMouseOverProperty =
-			new DependencyProperty<bool>();
+		public static readonly DependencyProperty<bool> IsMouseOverProperty = new DependencyProperty<bool>(isReadOnly: true);
 
 		/// <summary>
 		///     The width of the UI element, measured in pixels.
@@ -114,22 +113,30 @@
 		/// </summary>
 		public static readonly DependencyProperty<HorizontalAlignment> HorizontalAlignmentProperty =
 			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Stretch,
-				affectsArrange: true,
-				validationCallback: ValidateAlignment);
+				affectsArrange: true, validationCallback: ValidateAlignment);
 
 		/// <summary>
 		///     The vertical alignment characteristics of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<VerticalAlignment> VerticalAlignmentProperty =
 			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Stretch,
-				affectsArrange: true,
-				validationCallback: ValidateAlignment);
+				affectsArrange: true, validationCallback: ValidateAlignment);
 
 		/// <summary>
 		///     Indicates whether the UI element is visible.
 		/// </summary>
 		public static readonly DependencyProperty<Visibility> VisibilityProperty =
 			new DependencyProperty<Visibility>(defaultValue: Visibility.Visible, affectsMeasure: true);
+
+		/// <summary>
+		///     Indicates whether the UI element can receive the keyboard focus.
+		/// </summary>
+		public static readonly DependencyProperty<bool> FocusableProperty = new DependencyProperty<bool>();
+
+		/// <summary>
+		///     Indicates whether the UI element currently has the keyboard focus.
+		/// </summary>
+		public static readonly DependencyProperty<bool> IsFocusedProperty = new DependencyProperty<bool>(isReadOnly: true);
 
 		/// <summary>
 		///     Gets or sets the data context of the UI element.
@@ -311,12 +318,30 @@
 		}
 
 		/// <summary>
-		///     Indicates whether the UI element is visible.
+		///     Gets or sets a value indicating whether the UI element is visible.
 		/// </summary>
 		public Visibility Visibility
 		{
 			get { return GetValue(VisibilityProperty); }
 			set { SetValue(VisibilityProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the UI element can receive the keyboard focus.
+		/// </summary>
+		public bool Focusable
+		{
+			get { return GetValue(FocusableProperty); }
+			set { SetValue(FocusableProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the UI element currently has the keyboard focus.
+		/// </summary>
+		public bool IsFocused
+		{
+			get { return GetValue(IsFocusedProperty); }
+			internal set { SetReadOnlyValue(IsFocusedProperty, value); }
 		}
 
 		/// <summary>
@@ -328,12 +353,12 @@
 		}
 
 		/// <summary>
-		///     Indicates whether the mouse is currently hovering the UI element.
+		///     Gets or sets a value indicating whether the mouse is currently hovering the UI element.
 		/// </summary>
 		public bool IsMouseOver
 		{
 			get { return GetValue(IsMouseOverProperty); }
-			set { SetValue(IsMouseOverProperty, value); }
+			set { SetReadOnlyValue(IsMouseOverProperty, value); }
 		}
 
 		/// <summary>

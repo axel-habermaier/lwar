@@ -5,7 +5,7 @@ namespace Lwar.UserInterface
 	using Gameplay;
 	using Pegasus;
 	using Pegasus.Framework;
-	using Pegasus.Platform.Input;
+	using Pegasus.Framework.UserInterface.Input;
 	using Scripting;
 
 	/// <summary>

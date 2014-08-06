@@ -5,7 +5,7 @@
 	using Network.Messages;
 	using Pegasus;
 	using Pegasus.Math;
-	using Pegasus.Platform.Input;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Memory;
 	using Scripting;
 

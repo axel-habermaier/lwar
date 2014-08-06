@@ -122,5 +122,20 @@
 			control.Margin.Should().Be(margin);
 			control.DataContext.Should().Be(viewModel);
 		}
+
+		[Test]
+		public void SetValueReadOnly()
+		{
+			var control = new TestControl();
+
+#if DEBUG
+			Action action = () => control.SetValue(TestControl.ReadOnlyProperty, 3);
+			action.ShouldThrow<Exception>();
+#endif
+
+			control.GetValue(TestControl.ReadOnlyProperty).Should().Be(0);
+			control.SetReadOnlyValue(TestControl.ReadOnlyProperty, 3);
+			control.GetValue(TestControl.ReadOnlyProperty).Should().Be(3);
+		}
 	}
 }

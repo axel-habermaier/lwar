@@ -1,9 +1,9 @@
-﻿namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
 	using System.Collections.Generic;
-	using Logging;
-	using Memory;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Manages logical inputs that are triggered by input triggers. A logical input device has support for 32 unique and

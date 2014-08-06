@@ -39,6 +39,10 @@
 		/// </param>
 		/// <param name="prohibitsAnimations"> Indicates that the dependency property cannot be animated.</param>
 		/// <param name="prohibitsDataBinding">Indicates that the dependency property does not support data binding.</param>
+		/// <param name="isReadOnly">
+		///     Indicates that the dependency property is read-only and can only be set internally by the
+		///     framework.
+		/// </param>
 		/// <param name="defaultBindingMode">The default data binding mode of the dependency property.</param>
 		public DependencyProperty(T defaultValue = default(T),
 								  DependencyPropertyValidationCallback<T> validationCallback = null,
@@ -48,8 +52,10 @@
 								  bool affectsRender = false,
 								  bool prohibitsAnimations = false,
 								  bool prohibitsDataBinding = false,
+								  bool isReadOnly = false,
 								  BindingMode defaultBindingMode = BindingMode.OneWay)
-			: base(inherits, affectsMeasure, affectsArrange, affectsRender, prohibitsAnimations, prohibitsDataBinding, defaultBindingMode)
+			: base(inherits, affectsMeasure, affectsArrange, affectsRender, prohibitsAnimations,
+				prohibitsDataBinding, isReadOnly, defaultBindingMode)
 		{
 			DefaultValue = defaultValue;
 			_validationCallback = validationCallback;

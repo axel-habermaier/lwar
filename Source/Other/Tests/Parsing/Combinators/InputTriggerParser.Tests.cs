@@ -1,9 +1,9 @@
-﻿namespace Tests.Parsing
+﻿namespace Tests.Parsing.Combinators
 {
 	using System;
 	using NUnit.Framework;
-	using Pegasus.Platform.Input;
-	using Pegasus.Scripting;
+	using Pegasus.Framework.UserInterface.Input;
+	using Pegasus.Scripting.Parsing.Combinators;
 
 	[TestFixture]
 	public class InputTriggerParserTests : ParserTestsHelper<InputTrigger>
@@ -52,21 +52,21 @@
 		public void Valid_LeftAssociativity_Alias()
 		{
 			Success("[Key(X, Repeated) | Key(Y, Repeated) | Key(Z, Repeated)]",
-					Key.X.IsRepeated() | Key.Y.IsRepeated() | Key.Z.IsRepeated());
+				Key.X.IsRepeated() | Key.Y.IsRepeated() | Key.Z.IsRepeated());
 		}
 
 		[Test]
 		public void Valid_LeftAssociativity_Chord()
 		{
 			Success("[Key(X, Repeated) & Key(Y, Repeated) & Key(Z, Repeated)]",
-					Key.X.IsRepeated() & Key.Y.IsRepeated() & Key.Z.IsRepeated());
+				Key.X.IsRepeated() & Key.Y.IsRepeated() & Key.Z.IsRepeated());
 		}
 
 		[Test]
 		public void Valid_LeftAssociativity_ChordOnce()
 		{
 			Success("[Key(X, Repeated) + Key(Y, Repeated) + Key(Z, Repeated)]",
-					Key.X.IsRepeated() + Key.Y.IsRepeated() + Key.Z.IsRepeated());
+				Key.X.IsRepeated() + Key.Y.IsRepeated() + Key.Z.IsRepeated());
 		}
 
 		[Test]
@@ -92,49 +92,49 @@
 		public void Valid_Parens()
 		{
 			Success("[(Key(X, Repeated) | Key(Y, Repeated)) & Key(Z, Repeated)]",
-					(Key.X.IsRepeated() | Key.Y.IsRepeated()) & Key.Z.IsRepeated());
+				(Key.X.IsRepeated() | Key.Y.IsRepeated()) & Key.Z.IsRepeated());
 		}
 
 		[Test]
 		public void Valid_Precedence_AliasLowerThanChord1()
 		{
 			Success("[Key(X, Repeated) | Key(Y, Repeated) & Key(Z, Repeated)]",
-					Key.X.IsRepeated() | Key.Y.IsRepeated() & Key.Z.IsRepeated());
+				Key.X.IsRepeated() | Key.Y.IsRepeated() & Key.Z.IsRepeated());
 		}
 
 		[Test]
 		public void Valid_Precedence_AliasLowerThanChord2()
 		{
 			Success("[Key(X, Repeated) & Key(Y, Repeated) | Key(Z, Repeated)]",
-					Key.X.IsRepeated() & Key.Y.IsRepeated() | Key.Z.IsRepeated());
+				Key.X.IsRepeated() & Key.Y.IsRepeated() | Key.Z.IsRepeated());
 		}
 
 		[Test]
 		public void Valid_Precedence_AliasLowerThanChordOnce1()
 		{
 			Success("[Key(X, Repeated) | Key(Y, Repeated) & Key(Z, Repeated)]",
-					Key.X.IsRepeated() | Key.Y.IsRepeated() & Key.Z.IsRepeated());
+				Key.X.IsRepeated() | Key.Y.IsRepeated() & Key.Z.IsRepeated());
 		}
 
 		[Test]
 		public void Valid_Precedence_AliasLowerThanChordOnce2()
 		{
 			Success("[Key(X, Repeated) & Key(Y, Repeated) | Key(Z, Repeated)]",
-					Key.X.IsRepeated() & Key.Y.IsRepeated() | Key.Z.IsRepeated());
+				Key.X.IsRepeated() & Key.Y.IsRepeated() | Key.Z.IsRepeated());
 		}
 
 		[Test]
 		public void Valid_Precedence_ChordLowerThanChordOnce1()
 		{
 			Success("[Key(X, Repeated) + Key(Y, Repeated) & Key(Z, Repeated)]",
-					Key.X.IsRepeated() + Key.Y.IsRepeated() & Key.Z.IsRepeated());
+				Key.X.IsRepeated() + Key.Y.IsRepeated() & Key.Z.IsRepeated());
 		}
 
 		[Test]
 		public void Valid_Precedence_ChordLowerThanChordOnce2()
 		{
 			Success("[Key(X, Repeated) & Key(Y, Repeated) + Key(Z, Repeated)]",
-					Key.X.IsRepeated() & Key.Y.IsRepeated() + Key.Z.IsRepeated());
+				Key.X.IsRepeated() & Key.Y.IsRepeated() + Key.Z.IsRepeated());
 		}
 	}
 }

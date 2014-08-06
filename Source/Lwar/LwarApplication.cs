@@ -5,7 +5,7 @@
 	using Network;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.ViewModels;
-	using Pegasus.Platform.Input;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Memory;
 	using Scripting;
 	using UserInterface;

@@ -1,14 +1,18 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Abstract base class that associates data to a routed event that has been raised.
 	/// </summary>
-	public abstract class RoutedEventArgs<T> : PooledObject<T>, IRoutedEventArgs
+	public abstract class RoutedEventArgs<T> : IRoutedEventArgs
 		where T : RoutedEventArgs<T>, new()
 	{
+		/// <summary>
+		///     A cached instance of the event argument class that should be used to reduce the pressure on the garbage collector.
+		/// </summary>
+		internal static readonly T CachedInstance = new T();
+
 		/// <summary>
 		///     Gets or sets a value indicating whether the routed event has already been handled.
 		/// </summary>

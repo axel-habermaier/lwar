@@ -1,4 +1,4 @@
-﻿namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
 	using Scripting;

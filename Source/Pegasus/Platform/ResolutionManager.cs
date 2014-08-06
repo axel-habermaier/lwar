@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Platform
 {
 	using System;
+	using Framework.UserInterface;
 	using Framework.UserInterface.Controls;
 	using Graphics;
 	using Logging;

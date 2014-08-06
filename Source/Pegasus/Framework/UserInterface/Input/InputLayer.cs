@@ -1,6 +1,7 @@
-﻿namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
+	using Platform;
 
 	/// <summary>
 	///     Represents an input layer. The active input layer of a logical input device determines which logical inputs are

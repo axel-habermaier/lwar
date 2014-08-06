@@ -42,6 +42,10 @@
 		/// </param>
 		/// <param name="prohibitsAnimations">Indicates that the dependency property cannot be animated.</param>
 		/// <param name="prohibitsDataBinding">Indicates that the dependency property does not support data binding.</param>
+		/// <param name="isReadOnly">
+		///     Indicates that the dependency property is read-only and can only be set internally by the
+		///     framework.
+		/// </param>
 		/// <param name="defaultBindingMode">The default data binding mode of the dependency property.</param>
 		protected DependencyProperty(bool inherits,
 									 bool affectsMeasure,
@@ -49,6 +53,7 @@
 									 bool affectsRender,
 									 bool prohibitsAnimations,
 									 bool prohibitsDataBinding,
+									 bool isReadOnly,
 									 BindingMode defaultBindingMode)
 		{
 			Assert.ArgumentInRange(defaultBindingMode);
@@ -75,6 +80,9 @@
 			if (prohibitsDataBinding)
 				_flags |= MetadataFlags.IsDataBindingProhibited;
 
+			if (isReadOnly)
+				_flags |= MetadataFlags.IsReadOnly;
+
 			DependencyProperties.Add(this);
 		}
 
@@ -93,8 +101,7 @@
 
 		/// <summary>
 		///     Gets a value indicating whether changes to the value of the dependency property potentially affect the measure pass
-		///     of the layout
-		///     engine.
+		///     of the layout engine.
 		/// </summary>
 		public bool AffectsMeasure
 		{
@@ -103,8 +110,7 @@
 
 		/// <summary>
 		///     Gets a value indicating whether changes to the value of the dependency property potentially affect the arrange pass
-		///     of the layout
-		///     engine.
+		///     of the layout engine.
 		/// </summary>
 		public bool AffectsArrange
 		{
@@ -113,8 +119,7 @@
 
 		/// <summary>
 		///     Gets a value indicating whether changes to the value of the dependency property potentially requires a redraw,
-		///     without affecting
-		///     measurement or arrangement.
+		///     without affecting measurement or arrangement.
 		/// </summary>
 		public bool AffectsRender
 		{
@@ -122,7 +127,7 @@
 		}
 
 		/// <summary>
-		///     Gets a value indicating that the dependency property cannot be animated.
+		///     Gets a value indicating whether the dependency property can be animated.
 		/// </summary>
 		public bool IsAnimationProhibited
 		{
@@ -130,11 +135,19 @@
 		}
 
 		/// <summary>
-		///     Gets a value indicating that the dependency property does not support data binding.
+		///     Gets a value indicating whether the dependency property supports data binding.
 		/// </summary>
 		public bool IsDataBindingProhibited
 		{
 			get { return (_flags & MetadataFlags.IsDataBindingProhibited) == MetadataFlags.IsDataBindingProhibited; }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the dependency property is read-only.
+		/// </summary>
+		public bool IsReadOnly
+		{
+			get { return (_flags & MetadataFlags.IsReadOnly) == MetadataFlags.IsReadOnly; }
 		}
 
 		/// <summary>
@@ -218,7 +231,12 @@
 			/// <summary>
 			///     Indicates that the dependency property does not support data binding.
 			/// </summary>
-			IsDataBindingProhibited = 32
+			IsDataBindingProhibited = 32,
+
+			/// <summary>
+			///     Indicates that the dependency property is read-only and can only be set internally by the framework.
+			/// </summary>
+			IsReadOnly
 		}
 	}
 }

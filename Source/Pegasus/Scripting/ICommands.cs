@@ -1,4 +1,4 @@
-﻿using Pegasus.Platform.Input;
+﻿using Pegasus.Framework.UserInterface.Input;
 using Pegasus.Scripting;
 using Pegasus.Scripting.Validators;
 

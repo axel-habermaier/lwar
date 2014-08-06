@@ -18,6 +18,7 @@
 		public static readonly DependencyProperty<int> IntegerTestProperty2 = new DependencyProperty<int>();
 		public static readonly DependencyProperty<string> StringTestProperty = new DependencyProperty<string>();
 		public static readonly DependencyProperty<string> DefaultStringTestProperty = new DependencyProperty<string>("ABCD");
+		public static readonly DependencyProperty<int> ReadOnlyProperty = new DependencyProperty<int>(isReadOnly: true);
 
 		/// <summary>
 		///     Initializes a new instance.

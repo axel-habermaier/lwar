@@ -1,7 +1,7 @@
 ﻿namespace Pegasus.Scripting
 {
 	using System;
-	using Platform.Input;
+	using Framework.UserInterface.Input;
 	using Platform.Logging;
 
 	/// <summary>

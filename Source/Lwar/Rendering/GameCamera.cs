@@ -6,7 +6,7 @@
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Platform.Input;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Rendering;
 
 	/// <summary>

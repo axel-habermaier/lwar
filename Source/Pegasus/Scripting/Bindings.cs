@@ -5,7 +5,7 @@
 	using System.Linq;
 	using System.Text;
 	using Parsing;
-	using Platform.Input;
+	using Framework.UserInterface.Input;
 	using Platform.Logging;
 	using Platform.Memory;
 

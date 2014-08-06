@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Represents the root element of all visual trees within an application.
 	/// </summary>
-	internal class RootUIElement : Panel
+	internal sealed class RootUIElement : Panel
 	{
 		/// <summary>
 		///     Initializes a new instance.
@@ -19,7 +19,7 @@
 		}
 
 		/// <summary>
-		///     Gets a value indicating whether any of the currently open windows has the focus.
+		///     Gets a value indicating whether any of the currently open windows has the operating system focus.
 		/// </summary>
 		public bool HasFocusedWindows
 		{
@@ -30,7 +30,7 @@
 					Assert.OfType<Window>(child);
 
 					var window = child as Window;
-					if (window.Focused)
+					if (window.OsFocused)
 						return true;
 				}
 				return false;

@@ -1,8 +1,8 @@
-﻿namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Scripting.Parsing.Combinators
 {
 	using System;
 	using System.Linq;
-	using Scripting.Parsing;
+	using Framework.UserInterface.Input;
 
 	/// <summary>
 	///     Parses input trigger expressions. The precedence of the three operators '+', '&', and '|' is encoded in the grammar,
@@ -74,7 +74,7 @@
 		{
 			return SeparatedBy1(operandParser, operatorParser)
 				.Apply(triggers =>
-						   triggers.Aggregate((binaries, next) => new BinaryInputTrigger(triggerType, binaries, next)))
+					triggers.Aggregate((binaries, next) => new BinaryInputTrigger(triggerType, binaries, next)))
 				   + ~WhiteSpaces;
 		}
 	}

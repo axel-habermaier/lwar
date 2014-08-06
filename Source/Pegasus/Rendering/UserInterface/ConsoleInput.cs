@@ -2,7 +2,7 @@
 {
 	using System;
 	using Platform;
-	using Platform.Input;
+	using Framework.UserInterface.Input;
 	using Platform.Memory;
 
 	/// <summary>

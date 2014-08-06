@@ -1,7 +1,9 @@
-﻿namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
-	using Memory;
+	using Controls;
+	using Platform;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents the state of the keyboard.
@@ -16,21 +18,21 @@
 		/// <summary>
 		///     The window that generates the key events.
 		/// </summary>
-		private readonly NativeWindow _window;
+		private readonly Window _window;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the key events.</param>
-		internal Keyboard(NativeWindow window)
+		internal Keyboard(Window window)
 		{
 			Assert.ArgumentNotNull(window);
 
 			_window = window;
-			_window.KeyPressed += OnKeyPressed;
-			_window.KeyReleased += OnKeyReleased;
-			_window.CharacterEntered += OnCharacterEntered;
-			_window.DeadCharacterEntered += OnDeadCharacterEntered;
+			_window.NativeWindow.KeyPressed += OnKeyPressed;
+			_window.NativeWindow.KeyReleased += OnKeyReleased;
+			_window.NativeWindow.CharacterEntered += OnCharacterEntered;
+			_window.NativeWindow.DeadCharacterEntered += OnDeadCharacterEntered;
 		}
 
 		/// <summary>
@@ -41,30 +43,22 @@
 		/// <summary>
 		///     Raised when a key was pressed.
 		/// </summary>
-		public event Action<KeyEventArgs> KeyPressed
-		{
-			add { _window.KeyPressed += value; }
-			remove { _window.KeyPressed -= value; }
-		}
+		public event Action<KeyEventArgs> KeyPressed;
 
 		/// <summary>
 		///     Raised when a key was released.
 		/// </summary>
-		public event Action<KeyEventArgs> KeyReleased
-		{
-			add { _window.KeyReleased += value; }
-			remove { _window.KeyReleased -= value; }
-		}
+		public event Action<KeyEventArgs> KeyReleased;
 
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_window.KeyPressed -= OnKeyPressed;
-			_window.KeyReleased -= OnKeyReleased;
-			_window.CharacterEntered -= OnCharacterEntered;
-			_window.DeadCharacterEntered -= OnDeadCharacterEntered;
+			_window.NativeWindow.KeyPressed -= OnKeyPressed;
+			_window.NativeWindow.KeyReleased -= OnKeyReleased;
+			_window.NativeWindow.CharacterEntered -= OnCharacterEntered;
+			_window.NativeWindow.DeadCharacterEntered -= OnDeadCharacterEntered;
 		}
 
 		/// <summary>
@@ -103,18 +97,30 @@
 		///     Invoked when a key has been released.
 		/// </summary>
 		/// <param name="key">Identifies the key that has been released.</param>
-		private void OnKeyReleased(KeyEventArgs key)
+		/// <param name="scanCode">The scan code of the key that has been released.</param>
+		private void OnKeyReleased(Key key, int scanCode)
 		{
-			_states[(int)key.Key].KeyReleased();
+			Assert.ArgumentInRange(key);
+			_states[(int)key].KeyReleased();
+
+			var args = KeyEventArgs.Create(key, scanCode, _states[(int)key]);
+			if (KeyReleased != null)
+				KeyReleased(args);
 		}
 
 		/// <summary>
 		///     Invoked when a key has been pressed.
 		/// </summary>
 		/// <param name="key">Identifies the key that has been pressed.</param>
-		private void OnKeyPressed(KeyEventArgs key)
+		/// <param name="scanCode">The scan code of the key that has been pressed.</param>
+		private void OnKeyPressed(Key key, int scanCode)
 		{
-			_states[(int)key.Key].KeyPressed();
+			Assert.ArgumentInRange(key);
+			_states[(int)key].KeyPressed();
+
+			var args = KeyEventArgs.Create(key, scanCode, _states[(int)key]);
+			if (KeyPressed != null)
+				KeyPressed(args);
 		}
 
 		/// <summary>

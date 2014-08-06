@@ -3,7 +3,7 @@
 	using System;
 	using Math;
 	using Platform.Graphics;
-	using Platform.Input;
+	using Framework.UserInterface.Input;
 	using Platform.Memory;
 
 	/// <summary>

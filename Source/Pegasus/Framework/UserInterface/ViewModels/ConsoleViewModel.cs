@@ -4,7 +4,7 @@
 	using Assets;
 	using Controls;
 	using Platform.Graphics;
-	using Platform.Input;
+	using Input;
 	using Platform.Memory;
 	using Rendering;
 	using Console = Rendering.UserInterface.Console;

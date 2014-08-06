@@ -133,7 +133,7 @@
     <Compile Include="Parsing\Combinators\SequenceSecondParser.Tests.cs" />
     <Compile Include="Parsing\Combinators\SequenceFirstParser.Tests.cs" />
     <Compile Include="Parsing\InputStream.Tests.cs" />
-    <Compile Include="Parsing\InputTriggerParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\InputTriggerParser.Tests.cs" />
     <Compile Include="Parsing\ParserTestsHelper.cs" />
     <Compile Include="Parsing\BasicParsers\Float32Parser.Tests.cs" />
     <Compile Include="Parsing\BasicParsers\Float64Parser.Tests.cs" />

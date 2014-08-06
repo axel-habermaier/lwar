@@ -1,16 +1,23 @@
 ﻿namespace Pegasus.Framework.UserInterface.Controls
 {
 	using System;
+	using Input;
 	using Math;
 	using Platform.Memory;
 	using Rendering;
+	using Scripting;
 	using ViewModels;
 
 	/// <summary>
 	///     Represents the default window of an application.
 	/// </summary>
-	partial class AppWindow
+	public partial class AppWindow
 	{
+		/// <summary>
+		///     Manages the input bindings registered for this window.
+		/// </summary>
+		private readonly Bindings _bindings;
+
 		/// <summary>
 		///     The camera that is used to draw the console and the debug overlay.
 		/// </summary>
@@ -28,9 +35,16 @@
 		{
 			InitializeComponents();
 
+			InputDevice = new LogicalInputDevice(Keyboard, Mouse);
+			_bindings = new Bindings(InputDevice);
 			_camera = new Camera2D(Application.Current.GraphicsDevice);
 			Console = new ConsoleViewModel(this, InputDevice);
 		}
+
+		/// <summary>
+		///     Gets the logical input device that is used to handle all of the user input of this window.
+		/// </summary>
+		public LogicalInputDevice InputDevice { get; private set; }
 
 		/// <summary>
 		///     Gets the layout root of the application window.
@@ -50,10 +64,30 @@
 		/// </summary>
 		protected override void OnClosing()
 		{
+			_bindings.SafeDispose();
+			InputDevice.SafeDispose();
+
 			_camera.SafeDispose();
 			Console.SafeDispose();
 
 			base.OnClosing();
+		}
+
+		/// <summary>
+		///     Processes all pending window events and handles the window's user input.
+		/// </summary>
+		internal override void HandleInput()
+		{
+			base.HandleInput();
+
+			// Update the logical inputs based on the new state of the input system and check if any command 
+			// bindings have been triggered. However, if a text input element is currently focused, these steps
+			// are skipped as we don't want to accidentally trigger any inputs or commands while entering text.
+			if (FocusedElement is ITextInputControl)
+				return;
+
+			InputDevice.Update();
+			_bindings.Update();
 		}
 	}
 }

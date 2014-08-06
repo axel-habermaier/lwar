@@ -5,7 +5,7 @@
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Platform.Input;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Scripting;

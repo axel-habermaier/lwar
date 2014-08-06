@@ -6,7 +6,7 @@
 	using Math;
 	using Platform;
 	using Platform.Graphics;
-	using Platform.Input;
+	using Framework.UserInterface.Input;
 	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;

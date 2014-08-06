@@ -4,7 +4,7 @@
 	using Math;
 	using Platform;
 	using Platform.Graphics;
-	using Platform.Input;
+	using Framework.UserInterface.Input;
 
 	/// <summary>
 	///     Represents a six-degrees-of-freedom debug camera.
@@ -179,14 +179,13 @@
 		/// <summary>
 		///     Invoked when the position of the mouse has changed.
 		/// </summary>
-		/// <param name="x">The new position in X direction.</param>
-		/// <param name="y">The new position in Y direction.</param>
-		private void MouseMoved(int x, int y)
+		/// <param name="position">The new position of the mouse.</param>
+		private void MouseMoved(Vector2i position)
 		{
 			if (_inputDevice.InputLayer != _layer)
 				return;
 
-			_mouseDelta += new Vector2i(x, y) - new Vector2i(Viewport.Width, Viewport.Height) / 2;
+			_mouseDelta += position - new Vector2i(Viewport.Width, Viewport.Height) / 2;
 		}
 
 		/// <summary>

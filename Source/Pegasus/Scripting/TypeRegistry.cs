@@ -7,7 +7,7 @@
 	using Parsing;
 	using Parsing.BasicParsers;
 	using Parsing.Combinators;
-	using Platform.Input;
+	using Framework.UserInterface.Input;
 	using Platform.Logging;
 
 	/// <summary>

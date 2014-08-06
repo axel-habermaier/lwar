@@ -2,14 +2,12 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Input;
 	using Math;
-	using Platform;
 	using Platform.Graphics;
-	using Platform.Input;
 	using Platform.Logging;
 	using Platform.Memory;
 	using Rendering;
-	using Scripting;
 
 	/// <summary>
 	///     Represents an operating system window that hosts UI elements.
@@ -37,19 +35,6 @@
 		public Mouse Mouse { get; private set; }
 
 		/// <summary>
-		///     Gets the logical input device that is used to handle all of the user input of this window.
-		/// </summary>
-		public LogicalInputDevice InputDevice { get; private set; }
-
-		/// <summary>
-		///     Gets a value indicating whether the window is open.
-		/// </summary>
-		public bool IsOpen
-		{
-			get { return _window != null; }
-		}
-
-		/// <summary>
 		///     The output the window's contents are rendered to.
 		/// </summary>
 		private readonly RenderOutput _output;
@@ -60,9 +45,9 @@
 		private readonly SpriteBatch _spriteBatch;
 
 		/// <summary>
-		///     Manages the input bindings registered for this window.
+		///     The UI element that currently has the keyboard focus.
 		/// </summary>
-		private readonly Bindings _bindings;
+		private UIElement _focusedElement;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -79,12 +64,17 @@
 		/// <param name="position">The screen position of the window's top left corner.</param>
 		/// <param name="size">The size of the window's rendering area.</param>
 		/// <param name="mode">Indicates the window mode.</param>
-		internal Window(string title, Vector2i position, Size size, WindowMode mode)
+		public Window(string title, Vector2i position, Size size, WindowMode mode)
 		{
 			Assert.ArgumentNotNull(title);
 
 			var graphicsDevice = Application.Current.GraphicsDevice;
+
 			_window = new NativeWindow(title, position, size, mode);
+			FocusedElement = this;
+			Keyboard = new Keyboard(this);
+			Mouse = new Mouse(this);
+
 			SwapChain = new SwapChain(graphicsDevice, _window, false, _window.Size);
 			_output = new RenderOutput(graphicsDevice)
 			{
@@ -100,16 +90,6 @@
 			};
 
 			Application.Current.AddWindow(this);
-
-			Keyboard = new Keyboard(_window);
-			Mouse = new Mouse(_window);
-			InputDevice = new LogicalInputDevice(Keyboard, Mouse);
-
-			_bindings = new Bindings(InputDevice);
-
-			// Make sure the window's input state and layout are initialized correctly
-			HandleInput();
-			UpdateLayout();
 		}
 
 		/// <summary>
@@ -142,9 +122,9 @@
 		}
 
 		/// <summary>
-		///     Gets a value indicating whether the window currently has the focus.
+		///     Gets a value indicating whether the window currently has the operating system focus.
 		/// </summary>
-		public bool Focused
+		public bool OsFocused
 		{
 			get
 			{
@@ -169,6 +149,14 @@
 				CheckWindowOpen();
 				_window.Closing -= value;
 			}
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the window is open.
+		/// </summary>
+		public bool IsOpen
+		{
+			get { return _window != null; }
 		}
 
 		/// <summary>
@@ -235,9 +223,33 @@
 		}
 
 		/// <summary>
-		///     Processes all pending window events and handles the window's user input	.
+		///     Gets or sets the UI element that currently has the keyboard focus. Unless the focus has been shifted to another UI
+		///     element, it is the window itself.
 		/// </summary>
-		public void HandleInput()
+		internal UIElement FocusedElement
+		{
+			get
+			{
+				Assert.NotNull(_focusedElement);
+				return _focusedElement;
+			}
+			set
+			{
+				if (value == null)
+					value = this;
+
+				if (_focusedElement != null)
+					_focusedElement.IsFocused = false;
+
+				_focusedElement = value;
+				_focusedElement.IsFocused = true;
+			}
+		}
+
+		/// <summary>
+		///     Processes all pending window events and handles the window's user input.
+		/// </summary>
+		internal virtual void HandleInput()
 		{
 			CheckWindowOpen();
 
@@ -248,12 +260,6 @@
 
 			// Process all pending operating system events
 			_window.ProcessEvents();
-
-			// Update the logical inputs based on the new state of the input system
-			InputDevice.Update();
-
-			// Check if any command bindings have been triggered
-			_bindings.Update();
 		}
 
 		/// <summary>
@@ -273,8 +279,6 @@
 			OnClosing();
 			Application.Current.RemoveWindow(this);
 
-			_bindings.SafeDispose();
-			InputDevice.SafeDispose();
 			Mouse.SafeDispose();
 			Keyboard.SafeDispose();
 
@@ -299,7 +303,6 @@
 		{
 			Log.Error("Finalizer runs for an instance of '{0}'.", GetType().FullName);
 		}
-
 #endif
 
 		/// <summary>

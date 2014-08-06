@@ -1,11 +1,11 @@
-﻿namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
 
 	/// <summary>
 	///     Represents the state of an input key.
 	/// </summary>
-	internal struct InputState : IEquatable<InputState>
+	public struct InputState : IEquatable<InputState>
 	{
 		/// <summary>
 		///     Gets a value indicating whether the key is currently being pressed down.

@@ -12,7 +12,7 @@
 	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Platform.Input;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;

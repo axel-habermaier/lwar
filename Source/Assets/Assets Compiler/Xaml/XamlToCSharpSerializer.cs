@@ -65,7 +65,7 @@
 				_writer.NewLine();
 
 				var baseType = _xamlRoot.Attribute("Type").Value;
-				_writer.AppendLine("public partial class {0} : {1}", className, baseType);
+				_writer.AppendLine("partial class {0} : {1}", className, baseType);
 				_writer.AppendBlockStatement(() =>
 				{
 					GenerateMembers();

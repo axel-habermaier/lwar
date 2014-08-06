@@ -1,10 +1,12 @@
-﻿namespace Pegasus.Platform.Input
+﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using Controls;
 	using Math;
-	using Memory;
+	using Platform;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents the state of the mouse.
@@ -24,19 +26,19 @@
 		/// <summary>
 		///     The window that generates the mouse events.
 		/// </summary>
-		private readonly NativeWindow _window;
+		private readonly Window _window;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the mouse events.</param>
-		internal Mouse(NativeWindow window)
+		internal Mouse(Window window)
 		{
 			Assert.ArgumentNotNull(window);
 
 			_window = window;
-			_window.MousePressed += ButtonPressed;
-			_window.MouseReleased += ButtonReleased;
+			_window.NativeWindow.MousePressed += OnButtonPressed;
+			_window.NativeWindow.MouseReleased += OnButtonReleased;
 		}
 
 		/// <summary>
@@ -47,7 +49,7 @@
 			get
 			{
 				int x, y;
-				NativeMethods.GetMousePosition(_window.NativePtr, out x, out y);
+				NativeMethods.GetMousePosition(_window.NativeWindow.NativePtr, out x, out y);
 
 				return new Vector2i(x, y);
 			}
@@ -56,10 +58,10 @@
 		/// <summary>
 		///     Raised when the mouse has been moved.
 		/// </summary>
-		public event Action<int, int> Moved
+		public event Action<Vector2i> Moved
 		{
-			add { _window.MouseMoved += value; }
-			remove { _window.MouseMoved -= value; }
+			add { _window.NativeWindow.MouseMoved += value; }
+			remove { _window.NativeWindow.MouseMoved -= value; }
 		}
 
 		/// <summary>
@@ -67,27 +69,37 @@
 		/// </summary>
 		public event Action<int> Wheel
 		{
-			add { _window.MouseWheel += value; }
-			remove { _window.MouseWheel -= value; }
+			add { _window.NativeWindow.MouseWheel += value; }
+			remove { _window.NativeWindow.MouseWheel -= value; }
 		}
 
 		/// <summary>
 		///     Invoked when a button has been pressed.
 		/// </summary>
 		/// <param name="button">Identifies the mouse button that has been pressed.</param>
-		private void ButtonPressed(MouseEventArgs button)
+		/// <param name="doubleClick">Indicates whether the event represents a double click.</param>
+		/// <param name="position">The position of the mouse at the time of the button press.</param>
+		private void OnButtonPressed(MouseButton button, bool doubleClick, Vector2i position)
 		{
-			_states[(int)button.Button].KeyPressed();
-			_doubleClicked[(int)button.Button] |= button.DoubleClick;
+			Assert.ArgumentInRange(button);
+
+			_states[(int)button].KeyPressed();
+			_doubleClicked[(int)button] |= doubleClick;
+
+			var args = MouseEventArgs.Create(button, doubleClick, position, _states[(int)button]);
 		}
 
 		/// <summary>
 		///     Invoked when a button has been released.
 		/// </summary>
-		/// <param name="button">Identifies the mouse button that has been released.</param>
-		private void ButtonReleased(MouseEventArgs button)
+		/// <param name="button">Identifies the mouse button that has been pressed.</param>
+		/// <param name="position">The position of the mouse at the time of the button press.</param>
+		private void OnButtonReleased(MouseButton button, Vector2i position)
 		{
-			_states[(int)button.Button].KeyReleased();
+			Assert.ArgumentInRange(button);
+			_states[(int)button].KeyReleased();
+
+			var args = MouseEventArgs.Create(button, false, position, _states[(int)button]);
 		}
 
 		/// <summary>
@@ -149,8 +161,8 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_window.MousePressed -= ButtonPressed;
-			_window.MouseReleased -= ButtonReleased;
+			_window.NativeWindow.MousePressed -= OnButtonPressed;
+			_window.NativeWindow.MouseReleased -= OnButtonReleased;
 		}
 
 		/// <summary>
