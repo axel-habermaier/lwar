@@ -212,6 +212,12 @@
 			_gameSession.EventMessages.Enabled = true;
 			IsLoading = false;
 
+			Commands.OnSay += OnSay;
+			Cvars.PlayerNameChanged += OnPlayerNameChanged;
+
+			// Resend player name, as it might have been changed during the connection attempt
+			OnPlayerNameChanged(Cvars.PlayerName);
+
 			Log.Info("Game state synced. Now connected to game session hosted by {0}.", _networkSession.ServerEndPoint);
 		}
 
@@ -278,9 +284,6 @@
 			_messageDispatcher = new MessageDispatcher(_gameSession);
 			_inputManager = new InputManager(Application.Current.Window.InputDevice);
 			_camera = new Camera2D(Application.Current.GraphicsDevice);
-
-			Commands.OnSay += OnSay;
-			Cvars.PlayerNameChanged += OnPlayerNameChanged;
 
 			Scoreboard = new ScoreboardViewModel(_gameSession);
 			_chatInput = new ChatInput(Application.Current.Window.InputDevice, Application.Current.Assets);

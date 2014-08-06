@@ -191,6 +191,9 @@
 			else
 				removalIndex = _text.MapToSource(_position) - 1;
 
+			if (removalIndex < 0)
+				return;
+
 			var sourceString = _text.SourceString.Remove(removalIndex, 1);
 
 			var text = Platform.TextString.Create(sourceString);
