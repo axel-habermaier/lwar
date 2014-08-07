@@ -128,7 +128,7 @@
 		/// <summary>
 		///     Tries to find the type information for the type with the given full name.
 		/// </summary>
-		/// <param name="fullName">The full name of thetype.</param>
+		/// <param name="fullName">The full name of the type.</param>
 		/// <param name="type">Returns the type if one has been found.</param>
 		public bool TryFind(string fullName, out IXamlType type)
 		{
@@ -140,7 +140,7 @@
 		///     Tries to find the type information for the type with the given name.
 		/// </summary>
 		/// <param name="namespaceName">The namespace the type is defined in.</param>
-		/// <param name="typeName">The name of thetype.</param>
+		/// <param name="typeName">The name of the type.</param>
 		/// <param name="type">Returns the type if one has been found.</param>
 		public bool TryFind(string namespaceName, string typeName, out IXamlType type)
 		{

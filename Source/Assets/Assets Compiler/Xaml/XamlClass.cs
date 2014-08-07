@@ -17,6 +17,11 @@
 		private readonly XamlProperty[] _properties;
 
 		/// <summary>
+		///     The events defined by the class.
+		/// </summary>
+		private readonly XamlEvent[] _events;
+
+		/// <summary>
 		///     Initializes a new instances.
 		/// </summary>
 		/// <param name="file">The file that provides the information about the class.</param>
@@ -31,6 +36,7 @@
 			var isList = element.Attribute("IsList");
 			var isDictionary = element.Attribute("IsDictionary");
 			var properties = element.Elements("Property").ToArray();
+			var events = element.Elements("Event").ToArray();
 
 			if (name == null || String.IsNullOrWhiteSpace(name.Value))
 				file.Report(LogType.Fatal, element, "Invalid or missing class name.");
@@ -40,6 +46,7 @@
 			IsList = isList != null && isList.Value.Trim().ToLower() == "true";
 			IsDictionary = isDictionary != null && isDictionary.Value.Trim().ToLower() == "true";
 			_properties = properties.Select(p => new XamlProperty(file, p)).ToArray();
+			_events = events.Select(e => new XamlEvent(file, e)).ToArray();
 
 			name.Remove();
 
@@ -54,6 +61,9 @@
 
 			foreach (var property in properties)
 				property.Remove();
+
+			foreach (var xamlEvent in events)
+				xamlEvent.Remove();
 
 			file.ReportInvalidAttributes(element);
 			file.ReportInvalidElements(element);
@@ -74,6 +84,24 @@
 
 				foreach (var property in Parent.Properties)
 					yield return property;
+			}
+		}
+
+		/// <summary>
+		///     Gets the events defined by the class.
+		/// </summary>
+		public IEnumerable<XamlEvent> Events
+		{
+			get
+			{
+				foreach (var xamlEvent in _events)
+					yield return xamlEvent;
+
+				if (!HasParent)
+					yield break;
+
+				foreach (var xamlEvent in Parent.Events)
+					yield return xamlEvent;
 			}
 		}
 
@@ -124,6 +152,17 @@
 		{
 			property = Properties.FirstOrDefault(p => p.Name == propertyName);
 			return property != null;
+		}
+
+		/// <summary>
+		///     Tries to find an event of the given name. Returns true to indicate that an event was found.
+		/// </summary>
+		/// <param name="eventName">The name of the event that should be returned.</param>
+		/// <param name="xamlEvent">Returns the event, if it could be found.</param>
+		public bool TryFind(string eventName, out XamlEvent xamlEvent)
+		{
+			xamlEvent = Events.FirstOrDefault(e => e.Name == eventName);
+			return xamlEvent != null;
 		}
 	}
 }

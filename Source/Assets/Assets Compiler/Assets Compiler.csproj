@@ -648,6 +648,7 @@
     <Compile Include="Xaml\XamlClass.cs" />
     <Compile Include="Xaml\XamlDataBinding.cs" />
     <Compile Include="Xaml\XamlEnumeration.cs" />
+    <Compile Include="Xaml\XamlEvent.cs" />
     <Compile Include="Xaml\XamlPrimitiveType.cs" />
     <Compile Include="Xaml\XamlProperty.cs" />
     <Compile Include="Xaml\XamlType.cs" />

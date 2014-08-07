@@ -23,6 +23,14 @@
 		}
 
 		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		public Button()
+		{
+			Focusable = true;
+		}
+
+		/// <summary>
 		///     Raised when the button has been clicked or the enter key has been pressed while the button has the keyboard focus.
 		/// </summary>
 		public event RoutedEventHandler<RoutedEventArgs> Click
@@ -48,7 +56,7 @@
 		}
 
 		/// <summary>
-		///     Raises the Click event, setting the mouse event to handled.
+		///     Raises the Click event, setting the mouse event to handled. Additionally, sets the keyboard focus to the button.
 		/// </summary>
 		private static void OnLeftMouseButtonUp(object sender, MouseButtonEventArgs e)
 		{
@@ -58,6 +66,7 @@
 
 			e.Handled = true;
 			button.RaiseEvent(ClickEvent, RoutedEventArgs.Default);
+			button.Focus();
 		}
 	}
 }

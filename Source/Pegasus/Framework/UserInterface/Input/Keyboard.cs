@@ -169,6 +169,11 @@
 		{
 			for (var i = 0; i < _states.Length; ++i)
 				_states[i].Update();
+
+			// We have to check every frame whether the focused element must be reset; it could have been removed
+			// or hidden since the last frame, among other things.
+			if (!FocusedElement.CanBeFocused)
+				FocusedElement = null;
 		}
 
 		/// <summary>

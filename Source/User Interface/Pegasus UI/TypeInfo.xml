@@ -167,6 +167,7 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Button" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
+		<Event Type="RoutedEventArgs" Name="Click"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">

@@ -36,9 +36,9 @@
 		private readonly Dictionary<string, XamlNamespace[]> _namespaceMap = new Dictionary<string, XamlNamespace[]>();
 
 		/// <summary>
-		/// Maps an Xml namespace shortcut to the corresponding Xml namespace.
+		///     Maps an Xml namespace shortcut to the corresponding Xml namespace.
 		/// </summary>
-		private readonly Dictionary<string, string> _namespaceShortcutMap = new Dictionary<string, string>(); 
+		private readonly Dictionary<string, string> _namespaceShortcutMap = new Dictionary<string, string>();
 
 		/// <summary>
 		///     Provides type information about types referenced by the Xaml file.
@@ -213,9 +213,9 @@
 				return;
 
 			element.ReplaceWith(new XElement(DefaultNamespace + "Delegate",
-											 new XElement(DefaultNamespace + "Parameter", new XAttribute("Name", "templatedControl")),
-											 new XElement(DefaultNamespace + "Return", element.Elements().Single().Attribute("Name").Value),
-											 element.Attributes(), element.Elements()));
+				new XElement(DefaultNamespace + "Parameter", new XAttribute("Name", "templatedControl")),
+				new XElement(DefaultNamespace + "Return", element.Elements().Single().Attribute("Name").Value),
+				element.Attributes(), element.Elements()));
 		}
 
 		/// <summary>
@@ -230,8 +230,8 @@
 				return;
 
 			element.ReplaceWith(new XElement(DefaultNamespace + "Delegate",
-											 new XElement(DefaultNamespace + "Return", element.Elements().Single().Attribute("Name").Value),
-											 element.Attributes(), element.Elements()));
+				new XElement(DefaultNamespace + "Return", element.Elements().Single().Attribute("Name").Value),
+				element.Attributes(), element.Elements()));
 		}
 
 		/// <summary>
@@ -256,9 +256,9 @@
 
 				setter.Add(new XElement(DefaultNamespace + "TypeParameter", xamlProperty.Type.FullName));
 				setter.Add(new XElement(DefaultNamespace + "Parameter",
-										new XAttribute("Type", "Pegasus.AssetCompiler.Xaml.XamlLiteral"), property.Value + "Property"));
+					new XAttribute("Type", "Pegasus.AssetCompiler.Xaml.XamlLiteral"), property.Value + "Property"));
 				setter.Add(new XElement(DefaultNamespace + "Parameter",
-										new XAttribute("Type", xamlProperty.Type.FullName), content));
+					new XAttribute("Type", xamlProperty.Type.FullName), content));
 			}
 		}
 
@@ -299,16 +299,16 @@
 			if (isAttached)
 			{
 				newElement = new XElement(DefaultNamespace + "SetAttached",
-										  new XAttribute("Type", classType.FullName),
-										  new XAttribute("Property", propertyName),
-										  new XElement(DefaultNamespace + "Value",
-													   new XAttribute("Type", xamlProperty.Type.FullName), content));
+					new XAttribute("Type", classType.FullName),
+					new XAttribute("Property", propertyName),
+					new XElement(DefaultNamespace + "Value",
+						new XAttribute("Type", xamlProperty.Type.FullName), content));
 			}
 			else
 			{
 				var propertyType = xamlProperty.Type.FullName;
 				newElement = new XElement(DefaultNamespace + "Set", new XAttribute("Property", propertyName),
-										  new XElement(DefaultNamespace + "Value", new XAttribute("Type", propertyType), content));
+					new XElement(DefaultNamespace + "Value", new XAttribute("Type", propertyType), content));
 			}
 
 			if (element.Parent != null)
@@ -346,10 +346,10 @@
 			}
 
 			var newElement = new XElement(DefaultNamespace + "Invoke", new XAttribute("Method", "Add"),
-										  new XAttribute("TargetProperty", targetProperty),
-										  new XElement(DefaultNamespace + "Parameter", key, new XAttribute("Type", keyType)),
-										  new XElement(DefaultNamespace + "Parameter",
-													   new XAttribute("Type", typeof(object).AssemblyQualifiedName), element.Elements()));
+				new XAttribute("TargetProperty", targetProperty),
+				new XElement(DefaultNamespace + "Parameter", key, new XAttribute("Type", keyType)),
+				new XElement(DefaultNamespace + "Parameter",
+					new XAttribute("Type", typeof(object).AssemblyQualifiedName), element.Elements()));
 
 			if (element.Parent != null)
 				element.ReplaceWith(newElement);
@@ -372,9 +372,9 @@
 			targetProperty = targetProperty.Substring(targetProperty.LastIndexOf(".", StringComparison.Ordinal) + 1);
 
 			var newElement = new XElement(DefaultNamespace + "Invoke", new XAttribute("Method", "Add"),
-										  new XAttribute("TargetProperty", targetProperty),
-										  new XElement(DefaultNamespace + "Parameter",
-													   new XAttribute("Type", typeof(object).AssemblyQualifiedName), element.Elements()));
+				new XAttribute("TargetProperty", targetProperty),
+				new XElement(DefaultNamespace + "Parameter",
+					new XAttribute("Type", typeof(object).AssemblyQualifiedName), element.Elements()));
 
 			if (element.Parent != null)
 				element.ReplaceWith(newElement);
@@ -395,9 +395,9 @@
 
 			var type = GetClrType(element.Name);
 			var newElement = new XElement(DefaultNamespace + "Create",
-										  new XAttribute("Type", type.FullName),
-										  element.Attributes(),
-										  element.Elements());
+				new XAttribute("Type", type.FullName),
+				element.Attributes(),
+				element.Elements());
 			if (element.Parent != null)
 				element.ReplaceWith(newElement);
 			else
@@ -614,8 +614,8 @@
 
 				bindingElement.SetValue(String.Empty);
 				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Template"),
-														new XAttribute("SourceProperty", match.Groups["property"] + "Property"),
-														new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
+					new XAttribute("SourceProperty", match.Groups["property"] + "Property"),
+					new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
 			}
 		}
 
@@ -636,8 +636,8 @@
 
 				bindingElement.SetValue(String.Empty);
 				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "DynamicResource"),
-														new XAttribute("ResourceKey", match.Groups["key"]),
-														new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
+					new XAttribute("ResourceKey", match.Groups["key"]),
+					new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
 			}
 		}
 
@@ -658,8 +658,8 @@
 
 				bindingElement.SetValue(String.Empty);
 				bindingElement.ReplaceWith(new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "StaticResource"),
-														new XAttribute("ResourceKey", match.Groups["key"]),
-														new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
+					new XAttribute("ResourceKey", match.Groups["key"]),
+					new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property")));
 			}
 		}
 
@@ -672,6 +672,9 @@
 											   .Where(e => !e.Elements().Any() && e.Value.StartsWith("{Binding"))
 											   .ToArray())
 			{
+				var split = bindingElement.Name.LocalName.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+				Assert.That(split.Length == 2, "Expected property element to be of form 'TargetType.PropertyName'.");
+
 				var binding = bindingElement.Value;
 				var parser = new DataBindingParser();
 
@@ -682,31 +685,50 @@
 						Log.Die("{0}", text);
 				}
 
-				var element = new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Data"),
-												  new XAttribute("Path", dataBinding.Result.Path),
-												  new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property"));
+				IXamlType xamlType;
+				if (!TryGetClrType(bindingElement.Name.Namespace + split[0], out xamlType))
+					Log.Die("Unable to find class for type '{0}'.", split[0]);
 
-				if (dataBinding.Result.Converter != null)
+				var classType = (XamlClass)xamlType;
+				XamlEvent xamlEvent;
+				if (!classType.TryFind(split[1], out xamlEvent))
 				{
-					var converter = dataBinding.Result.Converter;
-					var split = converter.Split(new []{":"},StringSplitOptions.RemoveEmptyEntries);
-					XName converterType = null;
+					// Property data binding
+					var element = new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Data"),
+						new XAttribute("Path", dataBinding.Result.Path),
+						new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property"));
 
-					if (split.Length == 1)
-						converterType = split[0];
-					else if (split.Length == 2)
-						converterType = String.Format("{{{0}}}{1}", split[0], split[1]);
-					else
-						Log.Die("Unable to parse converter type '{0}'.", converter);
+					if (dataBinding.Result.Converter != null)
+					{
+						var converter = dataBinding.Result.Converter;
+						split = converter.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+						XName converterType = null;
 
-					element.Add(new XAttribute("Converter", GetClrType(converterType).FullName));
+						if (split.Length == 1)
+							converterType = split[0];
+						else if (split.Length == 2)
+							converterType = String.Format("{{{0}}}{1}", split[0], split[1]);
+						else
+							Log.Die("Unable to parse converter type '{0}'.", converter);
+
+						element.Add(new XAttribute("Converter", GetClrType(converterType).FullName));
+					}
+
+					if (dataBinding.Result.BindingMode != null)
+						element.Add(new XAttribute("BindingMode", dataBinding.Result.BindingMode));
+
+					bindingElement.SetValue(String.Empty);
+					bindingElement.ReplaceWith(element);
 				}
+				else
+				{
+					// Event binding
+					var eventElement = new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Event"),
+						new XAttribute("Method", dataBinding.Result.Path),
+						new XAttribute("TargetEvent", bindingElement.Name.LocalName + "Event"));
 
-				if (dataBinding.Result.BindingMode != null)
-					element.Add(new XAttribute("BindingMode", dataBinding.Result.BindingMode));
-
-				bindingElement.SetValue(String.Empty);
-				bindingElement.ReplaceWith(element);
+					bindingElement.ReplaceWith(eventElement);
+				}
 			}
 		}
 

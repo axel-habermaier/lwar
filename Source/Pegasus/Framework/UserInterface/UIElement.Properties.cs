@@ -448,5 +448,13 @@
 					OnDetachedFromRoot();
 			}
 		}
+
+		/// <summary>
+		///     Gets a value indicating whether the UI element can receive the keyboard focus.
+		/// </summary>
+		internal bool CanBeFocused
+		{
+			get { return IsAttachedToRoot && Focusable && Visibility != Visibility.Visible && IsHitTestVisible; }
+		}
 	}
 }

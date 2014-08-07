@@ -217,6 +217,13 @@
 					_writer.AppendLine(");");
 					break;
 				}
+				case "Event":
+				{
+					var parentName = element.Parent.Attribute("Name").Value;
+					_writer.AppendLine("{0}.CreateEventBinding({1}, \"{2}\");",
+						parentName, element.Attribute("TargetEvent").Value, element.Attribute("Method").Value);
+					break;
+				}
 				case "Template":
 				{
 					var parentName = element.Parent.Attribute("Name").Value;

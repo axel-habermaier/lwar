@@ -5,7 +5,6 @@
 	using Converters;
 	using Math;
 	using Platform.Graphics;
-	using Platform.Logging;
 	using Rendering;
 
 	/// <summary>
@@ -58,7 +57,6 @@
 			FontSizeProperty.Changed += (o, e) => UnsetCachedFont(o);
 			FontBoldProperty.Changed += (o, e) => UnsetCachedFont(o);
 			FontItalicProperty.Changed += (o, e) => UnsetCachedFont(o);
-			FocusableProperty.Changed += OnFocusableChanged;
 			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
 		}
 
@@ -282,7 +280,6 @@
 			Assert.That(parent == null || Parent == null, "The element is already attached to the logical tree.");
 
 			Parent = parent;
-			IsFocused = false;
 
 			// Changing the parent possibly invalidates the inherited property values of this UI element and its children
 			InvalidateInheritedValues(parent);
@@ -437,27 +434,6 @@
 		}
 
 		/// <summary>
-		///     Checks whether the UI element is still focusable if it currently has the focus. If not, notifies the parent window
-		///     that the focus has been lost.
-		/// </summary>
-		private static void OnFocusableChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<bool> args)
-		{
-			var uiElement = obj as UIElement;
-			if (uiElement == null)
-				return;
-
-			if (args.NewValue || !uiElement.IsFocused)
-				return;
-
-			var window = GetParentWindow(uiElement);
-			if (window == null)
-				return;
-
-			Assert.That(window.Keyboard.FocusedElement == uiElement, "Inconsistent focused element state.");
-			window.Keyboard.FocusedElement = null;
-		}
-
-		/// <summary>
 		///     First invokes the class handlers of the given routed event, then the instance handlers.
 		/// </summary>
 		/// <typeparam name="T">The type of the event arguments.</typeparam>
@@ -578,9 +554,9 @@
 		}
 
 		/// <summary>
-		///     Performs a detailed hit test for the given position. The position is guaranteed to lie within the UI element's 
-		///		bounds. This method should be overridden to implement special hit testing logic that is more precise than a 
-		///		simple bounding box check.
+		///     Performs a detailed hit test for the given position. The position is guaranteed to lie within the UI element's
+		///     bounds. This method should be overridden to implement special hit testing logic that is more precise than a
+		///     simple bounding box check.
 		/// </summary>
 		/// <param name="position">The position that should be checked for a hit.</param>
 		/// <returns>Returns true if the UI element is hit; false, otherwise.</returns>
