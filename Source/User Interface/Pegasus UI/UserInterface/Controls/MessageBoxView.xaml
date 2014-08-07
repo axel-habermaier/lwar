@@ -2,16 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Width="500"
+             mc:Ignorable="d" d:DesignWidth="500"
              HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"
-			 Background="Black">
+			 Background="#FF323232">
 	<StackPanel>
 		<TextBlock Text="{Binding Header}" Background="#FF5B5B5B"></TextBlock>
-		<TextBlock Text="{Binding Message}"></TextBlock>
+		<TextBlock Text="{Binding Message}" Margin="0,10,0,0"></TextBlock>
 		
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-			<Button Margin="0,0,10,0">OK</Button>
-			<Button>Cancel</Button>
-		</StackPanel>
+		<Button Margin="0,20,0,0" HorizontalAlignment="Center" Click="{Binding Close}">OK</Button>
 	</StackPanel>
 </UserControl>

@@ -578,7 +578,7 @@
 		/// <returns>Returns true if the UI element is hit; false, otherwise.</returns>
 		protected virtual bool HitTestCore(Vector2d position)
 		{
-			return true;
+			return Background.HasValue;
 		}
 
 		/// <summary>

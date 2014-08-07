@@ -24,6 +24,11 @@
 		private string _message;
 
 		/// <summary>
+		///     The message box UI element.
+		/// </summary>
+		private MessageBoxView _view;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="header">The header of the message box.</param>
@@ -56,14 +61,22 @@
 		}
 
 		/// <summary>
+		///     Closes the message box.
+		/// </summary>
+		public void Close()
+		{
+			Application.Current.Window.LayoutRoot.Remove(_view);
+		}
+
+		/// <summary>
 		///     Shows the message box.
 		/// </summary>
 		public void Show()
 		{
-			var view = new MessageBoxView { DataContext = this };
-			Panel.SetZIndex(view, ZIndex);
+			_view = new MessageBoxView { DataContext = this };
+			Panel.SetZIndex(_view, ZIndex);
 
-			Application.Current.Window.LayoutRoot.Add(view);
+			Application.Current.Window.LayoutRoot.Add(_view);
 		}
 	}
 }
