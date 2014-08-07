@@ -30,12 +30,10 @@ Pegasus.Framework
 - Particle System
 - UI
 	* Events (routed events: http://msdn.microsoft.com/en-us/library/ms742806.aspx, attached events: http://msdn.microsoft.com/en-us/library/bb613550.aspx)
-	* Controls: TextBox, Scrollviewer, Combobox, Checkbox, Button, Image
+	* Controls: TextBox, Scrollviewer, Combobox, Checkbox, Image
 	* Animation System
 	* Refactor UI drawing (http://msdn.microsoft.com/en-us/library/ms748373.aspx)
 		-> Instead of separate draw calls per layer, use depth tests and layer by z axis in a single draw call
-	* Input handling (http://msdn.microsoft.com/en-us/library/ms754010.aspx)
-	* Keyboard & logical focus: http://msdn.microsoft.com/en-us/library/aa969768.aspx
 
 Pegasus.Platform
 ========
