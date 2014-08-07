@@ -286,6 +286,7 @@
 			var availableSize = new SizeD(size.Width, size.Height);
 			Measure(availableSize);
 			Arrange(new RectangleD(0, 0, availableSize));
+			UpdateVisualOffsets(Vector2d.Zero);
 		}
 
 		/// <summary>

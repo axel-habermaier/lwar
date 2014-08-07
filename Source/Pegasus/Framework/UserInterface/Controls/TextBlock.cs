@@ -14,19 +14,20 @@
 		///     The text content of the text block.
 		/// </summary>
 		public static readonly DependencyProperty<string> TextProperty =
-			new DependencyProperty<string>(defaultValue: String.Empty, affectsMeasure: true, prohibitsAnimations: true);
+			new DependencyProperty<string>(defaultValue: String.Empty, affectsMeasure: true, prohibitsAnimations: true,
+				validationCallback: ValidateText);
 
 		/// <summary>
 		///     Indicates whether the text should be wrapped when it reaches the edge of the text block.
 		/// </summary>
 		public static readonly DependencyProperty<TextWrapping> TextWrappingProperty =
-			new DependencyProperty<TextWrapping>(defaultValue: TextWrapping.NoWrap, affectsMeasure: true, prohibitsAnimations: true);
+			new DependencyProperty<TextWrapping>(defaultValue: TextWrapping.NoWrap, affectsMeasure: true, prohibitsAnimations: true, inherits: true);
 
 		/// <summary>
 		///     Indicates whether the text should be left-aligned, right-aligned or centered within the text block.
 		/// </summary>
 		public static readonly DependencyProperty<TextAlignment> TextAlignmentProperty =
-			new DependencyProperty<TextAlignment>(defaultValue: TextAlignment.Left, affectsMeasure: true, prohibitsAnimations: true);
+			new DependencyProperty<TextAlignment>(defaultValue: TextAlignment.Left, affectsMeasure: true, prohibitsAnimations: true, inherits: true);
 
 		/// <summary>
 		///     The foreground color of the text.
@@ -157,7 +158,20 @@
 		/// <param name="position">The logical position of the caret.</param>
 		internal Vector2i ComputeCaretPosition(int position)
 		{
-			return _textLayout.ComputeCaretPosition(position);
+			var x = (int)Math.Round(VisualOffset.X);
+			var y = (int)Math.Round(VisualOffset.Y);
+			return _textLayout.ComputeCaretPosition(position) + new Vector2i(x, y);
+		}
+
+		/// <summary>
+		///     Gets the index of the character closest to the given position.
+		/// </summary>
+		/// <param name="position">The position the closest character should be returned for.</param>
+		internal int GetCharacterIndexAt(Vector2i position)
+		{
+			var x = (int)Math.Round(VisualOffset.X);
+			var y = (int)Math.Round(VisualOffset.Y);
+			return _textLayout.GetCharacterIndexAt(position - new Vector2i(x, y));
 		}
 
 		/// <summary>

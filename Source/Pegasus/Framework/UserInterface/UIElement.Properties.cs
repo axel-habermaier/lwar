@@ -412,9 +412,9 @@
 		public SizeD RenderSize { get; internal set; }
 
 		/// <summary>
-		///     Gets or sets the offset value of the UI element.
+		///     Gets or sets the absolute offset value of the UI element for drawing.
 		/// </summary>
-		protected internal Vector2d VisualOffset { get; protected set; }
+		protected Vector2d VisualOffset { get; set; }
 
 		/// <summary>
 		///     Gets the number of visual children for this UI element.

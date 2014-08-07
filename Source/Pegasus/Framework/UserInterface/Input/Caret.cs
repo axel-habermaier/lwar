@@ -51,7 +51,7 @@
 		public int Position
 		{
 			get { return _position; }
-			private set
+			set
 			{
 				using (var text = GetText())
 					_position = Math.Min(text.Length, value);
@@ -224,7 +224,7 @@
 			if (((int)Math.Round(_clock.Seconds * BlinkingFrequency)) % 2 != 0)
 				return;
 
-			var top = new Vector2(position.X, position.Y);
+			var top = new Vector2(position.X, position.Y - 2);
 			var bottom = new Vector2(0, lineHeight) + top;
 			spriteBatch.DrawLine(top, bottom, color, 1);
 		}

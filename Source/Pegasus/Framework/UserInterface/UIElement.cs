@@ -704,6 +704,22 @@
 		}
 
 		/// <summary>
+		///     Updates the visual offsets of this UI element and all of its children.
+		/// </summary>
+		/// <param name="visualOffset">The visual offset that should be applied to the UI element.</param>
+		internal void UpdateVisualOffsets(Vector2d visualOffset)
+		{
+			VisualOffset += visualOffset;
+
+			var count = VisualChildrenCount;
+			for (var i = 0; i < count; ++i)
+			{
+				var child = GetVisualChild(i);
+				child.UpdateVisualOffsets(VisualOffset);
+			}
+		}
+
+		/// <summary>
 		///     Adapts the size of the UI element according to the layouting information.
 		/// </summary>
 		/// <param name="size">The size that should be adapted.</param>
@@ -876,7 +892,6 @@
 				++spriteBatch.Layer;
 
 				var child = GetVisualChild(i);
-				child.VisualOffset += VisualOffset;
 				child.Draw(spriteBatch);
 			}
 		}

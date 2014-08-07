@@ -8,6 +8,6 @@
 		<TextBlock Foreground="White">Welcome to Lwar!</TextBlock>
 		<Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding PlaySingle}">Single Player</Button>
 		<Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Exit}">Exit</Button>
-		<TextBox Foreground="Green" Margin="10">Hallo</TextBox>
+		<TextBox Background="Orange" Foreground="Green" Width="100">Hal wefw fwef wef w fwewe flo</TextBox>
 	</StackPanel>
 </UserControl>

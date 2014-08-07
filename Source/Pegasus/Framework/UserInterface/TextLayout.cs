@@ -142,7 +142,7 @@
 			// The caret 'origin' is at the top left corner of the desired area; 
 			// non-left/top aligned layouts are not supported
 			if (position == 0)
-				return _position;
+				return Vector2i.Zero;
 
 			// Find the line that contains the caret
 			var lineIndex = 0;
@@ -157,13 +157,48 @@
 
 			// The caret position is relative to the line 'origin'
 			var lineY = lineIndex * (_arranged.Font.LineHeight + _arranged.LineSpacing);
-			var result = _position + new Vector2i(0, lineY);
+			var result = new Vector2i(0, lineY);
 
 			// Calculate the caret's offset from the line's left edge
 			if (!_lines[lineIndex].IsInvalid)
 				result.X += _arranged.Font.MeasureWidth(_arranged.Text, Math.Max(0, _lines[lineIndex].FirstCharacter), position);
 
 			return result;
+		}
+
+		/// <summary>
+		///     Gets the index of the character closest to the given position.
+		/// </summary>
+		/// <param name="position">The position the closest character should be returned for.</param>
+		internal int GetCharacterIndexAt(Vector2i position)
+		{
+			// Search for the correct line
+			var lineIndex = 0;
+			var lineHeight = _arranged.Font.LineHeight + _arranged.LineSpacing;
+
+			while (lineIndex < _lineCount - 1 && position.Y > 0)
+			{
+				if (position.Y < (lineIndex + 1) * lineHeight)
+					break;
+
+				++lineIndex;
+			}
+
+			// Search for the correct character on the line
+			var characterIndex = _lines[lineIndex].FirstCharacter;
+			var lastCharacter = lineIndex == _lineCount - 1 ? _lines[lineIndex].LastCharacter : _lines[lineIndex].LastCharacter - 1;
+			while (characterIndex < lastCharacter && position.X > 0)
+			{
+				var start = _arranged.Font.MeasureWidth(_arranged.Text, _lines[lineIndex].FirstCharacter, characterIndex);
+				var end = _arranged.Font.MeasureWidth(_arranged.Text, _lines[lineIndex].FirstCharacter, characterIndex + 1);
+
+				if (position.X <= end - (end - start) / 2)
+					break;
+
+				++characterIndex;
+			}
+
+			return characterIndex;
 		}
 
 		/// <summary>

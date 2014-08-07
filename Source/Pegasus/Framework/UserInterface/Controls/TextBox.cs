@@ -2,7 +2,6 @@
 {
 	using System;
 	using Input;
-	using Platform.Graphics;
 	using Rendering;
 
 	/// <summary>
@@ -15,7 +14,7 @@
 		/// </summary>
 		private static readonly ControlTemplate DefaultTemplate = control =>
 		{
-			var textBlock = new TextBlock();
+			var textBlock = new TextBlock { Margin = new Thickness(2) };
 			textBlock.CreateTemplateBinding(control, TextBlock.TextProperty, TextBlock.TextProperty);
 
 			return textBlock;
@@ -43,6 +42,7 @@
 		{
 			KeyDownEvent.Raised += OnKeyDown;
 			TextInputEvent.Raised += OnTextInput;
+			MouseLeftButtonDownEvent.Raised += OnMouseLeftButtonDown;
 			IsFocusedProperty.Changed += OnFocused;
 		}
 
@@ -79,6 +79,18 @@
 				Assert.ArgumentNotNull(value);
 				SetValue(TextProperty, value);
 			}
+		}
+
+		/// <summary>
+		///     Sets the caret to the character closest to the mouse.
+		/// </summary>
+		private static void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			var textBox = sender as TextBox;
+			if (textBox == null || textBox._textBlock == null)
+				return;
+
+			textBox._caret.Position = textBox._textBlock.GetCharacterIndexAt(e.Position);
 		}
 
 		/// <summary>
@@ -157,6 +169,9 @@
 			{
 				_textBlock = FindTextBlock(templateRoot);
 				Assert.NotNull(_textBlock, "The text box has control template that does not contain a text block.");
+
+				_textBlock.TextAlignment = TextAlignment.Left;
+				_textBlock.TextWrapping = TextWrapping.Wrap;
 			}
 		}
 
@@ -185,10 +200,8 @@
 		{
 			base.OnDraw(spriteBatch);
 
-			if (_textBlock == null || !IsFocused)
-				return;
-
-			_caret.Draw(spriteBatch, _textBlock.ComputeCaretPosition(_caret.Position), _textBlock.Font.LineHeight, Color.White);
+			if (_textBlock != null && IsFocused)
+				_caret.Draw(spriteBatch, _textBlock.ComputeCaretPosition(_caret.Position), _textBlock.Font.LineHeight, Foreground);
 		}
 	}
 }
