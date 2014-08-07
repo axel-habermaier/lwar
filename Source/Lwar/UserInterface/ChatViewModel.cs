@@ -78,11 +78,17 @@
 		}
 
 		/// <summary>
-		///     Sends the current message to the server, if the message is non-empty and does not exceed the length limit. Returns
-		///     false to indicate that there was a problem sending the message.
+		///     Sends the current message to the server, if the message is non-empty and does not exceed the length limit, or cancels
+		///     the input.
 		/// </summary>
-		public void Send(object sender, KeyEventArgs e)
+		public void Submit(object sender, KeyEventArgs e)
 		{
+			if (e.Key == Key.Escape)
+			{
+				e.Handled = true;
+				IsVisible = false;
+			}
+
 			if (LengthExceeded || String.IsNullOrWhiteSpace(Message) || (e.Key != Key.Return && e.Key != Key.NumpadEnter))
 				return;
 
