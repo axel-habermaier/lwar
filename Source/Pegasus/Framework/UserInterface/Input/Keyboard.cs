@@ -3,6 +3,7 @@
 	using System;
 	using Controls;
 	using Platform;
+	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -120,6 +121,8 @@
 
 			if (CharacterEntered != null)
 				CharacterEntered(character.Character);
+
+			FocusedElement.RaiseEvent(UIElement.TextInputEvent, TextInputEventArgs.Create(character.Character, character.ScanCode));
 		}
 
 		/// <summary>
@@ -172,7 +175,7 @@
 
 			// We have to check every frame whether the focused element must be reset; it could have been removed
 			// or hidden since the last frame, among other things.
-			if (!FocusedElement.CanBeFocused)
+			if (FocusedElement != _window && !FocusedElement.CanBeFocused)
 				FocusedElement = null;
 		}
 

@@ -230,6 +230,8 @@
     <Compile Include="Framework\ObservableCollection.cs" />
     <Compile Include="Framework\PropertyChangedHandler.cs" />
     <Compile Include="Framework\UserInterface\BindingMode.cs" />
+    <Compile Include="Framework\UserInterface\Controls\TextBox.cs" />
+    <Compile Include="Framework\UserInterface\Input\Caret.cs" />
     <Compile Include="Framework\UserInterface\Controls\ColumnDefinition.cs" />
     <Compile Include="Framework\UserInterface\Controls\DataGrid.cs" />
     <Compile Include="Framework\UserInterface\Controls\DataGridColumnHeader.cs" />
@@ -239,6 +241,7 @@
     <Compile Include="Framework\UserInterface\Controls\ITextInputControl.cs" />
     <Compile Include="Framework\UserInterface\Input\MouseButtonEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Input\MouseWheelEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Input\TextInputEventArgs.cs" />
     <Compile Include="Framework\UserInterface\MessageBox.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventBinding.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\ConsoleViewModel.cs" />

@@ -106,6 +106,15 @@
 		}
 
 		/// <summary>
+		///     Validates a value of the text dependency property.
+		/// </summary>
+		/// <param name="value">The value that should be validated.</param>
+		private static bool ValidateText(string value)
+		{
+			return true;
+		}
+
+		/// <summary>
 		///     Computes and returns the desired size of the element given the available space allocated by the parent UI element.
 		/// </summary>
 		/// <param name="availableSize">
@@ -140,6 +149,27 @@
 
 			var size = _textLayout.Arrange(Font, Text, new Size(width, height), 0, TextAlignment, TextWrapping);
 			return new SizeD(size.Width, size.Height);
+		}
+
+		/// <summary>
+		///     Computes the physical position of the caret at the given logical caret position.
+		/// </summary>
+		/// <param name="position">The logical position of the caret.</param>
+		internal Vector2i ComputeCaretPosition(int position)
+		{
+			return _textLayout.ComputeCaretPosition(position);
+		}
+
+		/// <summary>
+		///     Performs a detailed hit test for the given position. The position is guaranteed to lie within the UI element's
+		///     bounds. This method should be overridden to implement special hit testing logic that is more precise than a
+		///     simple bounding box check.
+		/// </summary>
+		/// <param name="position">The position that should be checked for a hit.</param>
+		/// <returns>Returns true if the UI element is hit; false, otherwise.</returns>
+		protected override bool HitTestCore(Vector2d position)
+		{
+			return _textLayout.HitTest(position) || base.HitTestCore(position);
 		}
 
 		protected override void OnDraw(SpriteBatch spriteBatch)

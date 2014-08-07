@@ -78,12 +78,15 @@
 		/// </summary>
 		internal override void HandleInput()
 		{
-			base.HandleInput();
-
 			// Update the logical inputs based on the new state of the input system and check if any command 
 			// bindings have been triggered. However, if a text input element is currently focused, these steps
 			// are skipped as we don't want to accidentally trigger any inputs or commands while entering text.
-			if (Keyboard.FocusedElement is ITextInputControl)
+			var wasTextInput = Keyboard.FocusedElement is ITextInputControl;
+			base.HandleInput();
+
+			// We check before and after the input update such that logical inputs and command bindings are
+			// disabled for the entire frame that had a text input keyboard focus at some point.
+			if (wasTextInput || Keyboard.FocusedElement is ITextInputControl)
 				return;
 
 			InputDevice.Update();

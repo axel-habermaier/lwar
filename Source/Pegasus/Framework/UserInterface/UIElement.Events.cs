@@ -30,6 +30,18 @@
 			new RoutedEvent<KeyEventArgs>(RoutingStrategy.Tunnel);
 
 		/// <summary>
+		///     Raised when the UI element gets text input.
+		/// </summary>
+		public static readonly RoutedEvent<TextInputEventArgs> TextInputEvent =
+			new RoutedEvent<TextInputEventArgs>(RoutingStrategy.Bubble);
+
+		/// <summary>
+		///     Raised when the UI element gets text input.
+		/// </summary>
+		public static readonly RoutedEvent<TextInputEventArgs> PreviewTextInputEvent =
+			new RoutedEvent<TextInputEventArgs>(RoutingStrategy.Tunnel);
+
+		/// <summary>
 		///     Raised when a mouse button is pressed while the mouse is over the UI element.
 		/// </summary>
 		public static readonly RoutedEvent<MouseButtonEventArgs> MouseDownEvent =
@@ -171,6 +183,24 @@
 		{
 			add { AddHandler(PreviewKeyUpEvent, value); }
 			remove { RemoveHandler(PreviewKeyUpEvent, value); }
+		}
+
+		/// <summary>
+		///     Raised when the UI element gets text input.
+		/// </summary>
+		public event RoutedEventHandler<TextInputEventArgs> TextInput
+		{
+			add { AddHandler(TextInputEvent, value); }
+			remove { RemoveHandler(TextInputEvent, value); }
+		}
+
+		/// <summary>
+		///     Raised when the UI element gets text input.
+		/// </summary>
+		public event RoutedEventHandler<TextInputEventArgs> PreviewTextInput
+		{
+			add { AddHandler(PreviewTextInputEvent, value); }
+			remove { RemoveHandler(PreviewTextInputEvent, value); }
 		}
 
 		/// <summary>

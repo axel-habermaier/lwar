@@ -3,6 +3,7 @@
 	using System;
 	using Controls;
 	using Converters;
+	using Input;
 	using Math;
 	using Platform.Graphics;
 	using Rendering;
@@ -58,6 +59,7 @@
 			FontBoldProperty.Changed += (o, e) => UnsetCachedFont(o);
 			FontItalicProperty.Changed += (o, e) => UnsetCachedFont(o);
 			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
+			MouseDownEvent.Raised += OnMouseDown;
 		}
 
 		/// <summary>
@@ -99,6 +101,16 @@
 			var uiElement = obj as UIElement;
 			if (uiElement != null)
 				uiElement._cachedFont = null;
+		}
+
+		/// <summary>
+		///     Sets the keyboard focus to this UI element if the element is focusable.
+		/// </summary>
+		private static void OnMouseDown(object sender, MouseButtonEventArgs e)
+		{
+			var uiElement = sender as UIElement;
+			if (uiElement != null && uiElement.Focusable)
+				uiElement.Focus();
 		}
 
 		/// <summary>
@@ -332,7 +344,7 @@
 		}
 
 		/// <summary>
-		/// Creates an event binding.
+		///     Creates an event binding.
 		/// </summary>
 		/// <typeparam name="T">The type of the routed event arguments.</typeparam>
 		/// <param name="routedEvent">The routed event that should be bound.</param>
@@ -448,6 +460,19 @@
 		}
 
 		/// <summary>
+		///     Removes the keyboard focus from this UI element, provided that it is focused.
+		/// </summary>
+		public void Unfocus()
+		{
+			if (!Focusable)
+				return;
+
+			var window = GetParentWindow(this);
+			if (window != null && window.Keyboard.FocusedElement == this)
+				window.Keyboard.FocusedElement = null;
+		}
+
+		/// <summary>
 		///     First invokes the class handlers of the given routed event, then the instance handlers.
 		/// </summary>
 		/// <typeparam name="T">The type of the event arguments.</typeparam>
@@ -545,7 +570,7 @@
 			if (Visibility != Visibility.Visible || !IsHitTestVisible)
 				return null;
 
-			// Check if the position lies within the elements's bounding box. If not, there can be no hit.
+			// Check if the position lies within the element's bounding box. If not, there can be no hit.
 			var horizontalHit = position.X >= VisualOffset.X && position.X <= VisualOffset.X + RenderSize.Width;
 			var verticalHit = position.Y >= VisualOffset.Y && position.Y <= VisualOffset.Y + RenderSize.Height;
 

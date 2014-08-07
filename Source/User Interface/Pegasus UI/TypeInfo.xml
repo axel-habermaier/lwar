@@ -158,6 +158,10 @@
 		<Property Type="string" Name="Text" IsContentProperty="true"/>
 	</Class>
 
+	<Class Name="Pegasus.Framework.UserInterface.Controls.TextBox" Inherits="Pegasus.Framework.UserInterface.Controls.Control">
+		<Property Type="string" Name="Text" IsContentProperty="true"/>
+	</Class>
+
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ContentControl" Inherits="Pegasus.Framework.UserInterface.Controls.Control">
 		<Property Type="object" Name="Content" IsContentProperty="true"/>
 	</Class>

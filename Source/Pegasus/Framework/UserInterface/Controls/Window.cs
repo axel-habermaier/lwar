@@ -63,12 +63,11 @@
 		{
 			Assert.ArgumentNotNull(title);
 
-			var graphicsDevice = Application.Current.GraphicsDevice;
-
 			_window = new NativeWindow(title, position, size, mode);
 			Keyboard = new Keyboard(this) { FocusedElement = this };
 			Mouse = new Mouse(this);
 
+			var graphicsDevice = Application.Current.GraphicsDevice;
 			SwapChain = new SwapChain(graphicsDevice, _window, false, _window.Size);
 			_output = new RenderOutput(graphicsDevice)
 			{

@@ -78,7 +78,7 @@
 			Assert.ArgumentInRange(wrapping);
 
 			if (text == String.Empty)
-				return new Size();
+				return new Size(0, font.LineHeight);
 
 			if (_measured.SizeOutdated(font, text, desiredSize, lineSpacing, alignment, wrapping))
 			{
@@ -114,7 +114,10 @@
 			Assert.ArgumentInRange(wrapping);
 
 			if (text == String.Empty)
-				return new Size();
+			{
+				_arranged.Text = String.Empty;
+				return new Size(0, font.LineHeight);
+			}
 
 			if (_arranged.SizeOutdated(font, text, desiredSize, lineSpacing, alignment, wrapping))
 			{
@@ -128,6 +131,39 @@
 			}
 
 			return _arranged.ActualSize;
+		}
+
+		/// <summary>
+		///     Computes the physical position of the caret at the given logical caret position.
+		/// </summary>
+		/// <param name="position">The logical position of the caret.</param>
+		public Vector2i ComputeCaretPosition(int position)
+		{
+			// The caret 'origin' is at the top left corner of the desired area; 
+			// non-left/top aligned layouts are not supported
+			if (position == 0)
+				return _position;
+
+			// Find the line that contains the caret
+			var lineIndex = 0;
+			while (lineIndex < _lineCount && _lines[lineIndex].LastCharacter <= position)
+				++lineIndex;
+
+			Assert.That(lineIndex >= 0, "Could not find line of caret.");
+
+			// If the caret does not belong to the last line, place it at the end of the last line anyway
+			if (lineIndex == _lineCount)
+				--lineIndex;
+
+			// The caret position is relative to the line 'origin'
+			var lineY = lineIndex * (_arranged.Font.LineHeight + _arranged.LineSpacing);
+			var result = _position + new Vector2i(0, lineY);
+
+			// Calculate the caret's offset from the line's left edge
+			if (!_lines[lineIndex].IsInvalid)
+				result.X += _arranged.Font.MeasureWidth(_arranged.Text, Math.Max(0, _lines[lineIndex].FirstCharacter), position);
+
+			return result;
 		}
 
 		/// <summary>
@@ -351,6 +387,19 @@
 			// We know that each line has a height of _font.LineHeight pixels. Additionally, after each line (except
 			// the last one), we have a spacing of _lineSpacing pixels.
 			return _lineCount * layoutInfo.Font.LineHeight + Math.Max(0, _lineCount - 1) * layoutInfo.LineSpacing;
+		}
+
+		/// <summary>
+		///     Performs hit test for the given position.
+		/// </summary>
+		/// <param name="position">The position that should be checked for a hit.</param>
+		internal bool HitTest(Vector2d position)
+		{
+			// Check if the position lies within the text's bounding box. If not, there can be no hit.
+			var horizontalHit = position.X >= _position.X && position.X <= _position.X + _arranged.ActualSize.Width;
+			var verticalHit = position.Y >= _position.Y && position.Y <= _position.Y + _arranged.ActualSize.Height;
+
+			return horizontalHit && verticalHit;
 		}
 
 		/// <summary>
