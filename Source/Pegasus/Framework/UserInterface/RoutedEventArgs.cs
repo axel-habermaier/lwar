@@ -8,9 +8,9 @@
 	public class RoutedEventArgs
 	{
 		/// <summary>
-		///     Gets the object the event originated from.
+		///     Gets the UI element the event originated from.
 		/// </summary>
-		public object Source { get; internal set; }
+		public UIElement Source { get; internal set; }
 
 		/// <summary>
 		///     Gets the routed event that has been raised.
