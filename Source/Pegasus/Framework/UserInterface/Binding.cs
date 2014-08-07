@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
-	using System.Runtime.Serialization;
 
 	/// <summary>
 	///     A base class for bindings that automatically ensures that values are synchronized between source and target.

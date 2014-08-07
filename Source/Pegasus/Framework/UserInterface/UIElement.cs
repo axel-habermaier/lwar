@@ -332,6 +332,21 @@
 		}
 
 		/// <summary>
+		/// Creates an event binding.
+		/// </summary>
+		/// <typeparam name="T">The type of the routed event arguments.</typeparam>
+		/// <param name="routedEvent">The routed event that should be bound.</param>
+		/// <param name="method">The method that should be invoked when the routed event is raised.</param>
+		public void CreateEventBinding<T>(RoutedEvent<T> routedEvent, string method)
+			where T : RoutedEventArgs
+		{
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNullOrWhitespace(method);
+
+			var binding = new RoutedEventBinding<T>(this, routedEvent, method);
+		}
+
+		/// <summary>
 		///     Creates a data binding.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>

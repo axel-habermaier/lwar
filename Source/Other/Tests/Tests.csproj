@@ -148,6 +148,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInterface\ItemsControl.Tests.cs" />
     <Compile Include="UserInterface\RoutedEvent.Tests.cs" />
+    <Compile Include="UserInterface\RoutedEventBinding.Tests.cs" />
     <Compile Include="UserInterface\SparseObjectStorage.Tests.cs" />
     <Compile Include="UserInterface\LogicalTree.Tests.cs" />
     <Compile Include="UserInterface\ResourceBinding.Tests.cs" />
