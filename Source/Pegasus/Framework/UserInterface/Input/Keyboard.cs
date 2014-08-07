@@ -21,6 +21,11 @@
 		private readonly Window _window;
 
 		/// <summary>
+		///     The UI element that currently has the keyboard focus.
+		/// </summary>
+		private UIElement _focusedElement;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the key events.</param>
@@ -33,6 +38,30 @@
 			_window.NativeWindow.KeyReleased += OnKeyReleased;
 			_window.NativeWindow.CharacterEntered += OnCharacterEntered;
 			_window.NativeWindow.DeadCharacterEntered += OnDeadCharacterEntered;
+		}
+
+		/// <summary>
+		///     Gets the UI element that currently has the keyboard focus. Unless the focus has been shifted to another UI
+		///     element, it is the window itself.
+		/// </summary>
+		public UIElement FocusedElement
+		{
+			get
+			{
+				Assert.NotNull(_focusedElement);
+				return _focusedElement;
+			}
+			internal set
+			{
+				if (value == null)
+					value = _window;
+
+				if (_focusedElement != null)
+					_focusedElement.IsFocused = false;
+
+				_focusedElement = value;
+				_focusedElement.IsFocused = true;
+			}
 		}
 
 		/// <summary>
@@ -104,8 +133,13 @@
 			_states[(int)key].KeyReleased();
 
 			var args = KeyEventArgs.Create(key, scanCode, _states[(int)key]);
+			args.RoutedEvent = null;
+
 			if (KeyReleased != null)
 				KeyReleased(args);
+
+			FocusedElement.RaiseEvent(UIElement.PreviewKeyUpEvent, args);
+			FocusedElement.RaiseEvent(UIElement.KeyUpEvent, args);
 		}
 
 		/// <summary>
@@ -119,8 +153,13 @@
 			_states[(int)key].KeyPressed();
 
 			var args = KeyEventArgs.Create(key, scanCode, _states[(int)key]);
+			args.RoutedEvent = null;
+
 			if (KeyPressed != null)
 				KeyPressed(args);
+
+			FocusedElement.RaiseEvent(UIElement.PreviewKeyDownEvent, args);
+			FocusedElement.RaiseEvent(UIElement.KeyDownEvent, args);
 		}
 
 		/// <summary>

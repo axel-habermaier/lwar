@@ -158,6 +158,7 @@
 					_root.UpdateLayout();
 
 					// Update the statistics
+					Window.Console.Update();
 					debugOverlay.Update();
 
 					debugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;

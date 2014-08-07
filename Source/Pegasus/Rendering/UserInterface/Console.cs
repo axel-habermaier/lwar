@@ -1,9 +1,9 @@
 ﻿namespace Pegasus.Rendering.UserInterface
 {
 	using System;
+	using Framework.UserInterface.Input;
 	using Math;
 	using Platform.Graphics;
-	using Framework.UserInterface.Input;
 	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;
@@ -108,10 +108,10 @@
 		/// <summary>
 		///     Gets or sets a value indicating whether the console is currently active.
 		/// </summary>
-		private bool Active
+		public bool Active
 		{
 			get { return _active; }
-			set
+			private set
 			{
 				if (value == _active)
 					return;
@@ -119,8 +119,16 @@
 				_active = value;
 				_prompt.Clear();
 				_input.OnActivationChanged(value);
+
+				if (ActiveChanged != null)
+					ActiveChanged();
 			}
 		}
+
+		/// <summary>
+		///     Raised when the Active property has changed its value.
+		/// </summary>
+		public event Action ActiveChanged;
 
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
@@ -208,8 +216,6 @@
 		/// <param name="size">The size of the area that the console should be drawn on.</param>
 		internal void Update(Size size)
 		{
-			HandleInput();
-
 			if (_size.Width == size.Width && _size.Height == size.Height / 2)
 				return;
 
@@ -218,7 +224,7 @@
 
 			// Calculate the prompt area
 			var promptArea = new Rectangle(_margin.Width, _size.Height - _font.LineHeight - _margin.Height,
-										   _size.Width - 2 * _margin.Width, _font.LineHeight);
+				_size.Width - 2 * _margin.Width, _font.LineHeight);
 			_prompt.Resize(promptArea);
 
 			// Resize the content area
@@ -229,7 +235,7 @@
 		/// <summary>
 		///     Handles the user input relevant to the console of the given device.
 		/// </summary>
-		private void HandleInput()
+		internal void HandleInput()
 		{
 			// Check wheter the console should be toggle on or off
 			if (_input.Toggle.IsTriggered)

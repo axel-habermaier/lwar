@@ -5,6 +5,7 @@
 	using Converters;
 	using Math;
 	using Platform.Graphics;
+	using Platform.Logging;
 	using Rendering;
 
 	/// <summary>
@@ -68,7 +69,7 @@
 		/// <param name="routedEvent">The routed event that should be handled.</param>
 		/// <param name="handler">The handler that should be invoked when the routed event has been raised.</param>
 		public void AddHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
-			where T : class, IRoutedEventArgs
+			where T : RoutedEventArgs
 		{
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(handler);
@@ -83,7 +84,7 @@
 		/// <param name="routedEvent">The routed event that should be handled.</param>
 		/// <param name="handler">The handler that should be invoked when the routed event has been raised.</param>
 		public void RemoveHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
-			where T : class, IRoutedEventArgs
+			where T : RoutedEventArgs
 		{
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(handler);
@@ -432,7 +433,7 @@
 			var window = GetParentWindow(this);
 			Assert.NotNull(window, "The UI element is not part of a logical tree.");
 
-			window.FocusedElement = this;
+			window.Keyboard.FocusedElement = this;
 		}
 
 		/// <summary>
@@ -452,8 +453,128 @@
 			if (window == null)
 				return;
 
-			Assert.That(window.FocusedElement == uiElement, "Inconsistent focused element state.");
-			window.FocusedElement = null;
+			Assert.That(window.Keyboard.FocusedElement == uiElement, "Inconsistent focused element state.");
+			window.Keyboard.FocusedElement = null;
+		}
+
+		/// <summary>
+		///     Raises the given routed event with the given event arguments.
+		/// </summary>
+		/// <typeparam name="T">The type of the event arguments.</typeparam>
+		/// <param name="routedEvent">The routed event that should be raised.</param>
+		/// <param name="eventArgs">The arguments the routed event should be raised with.</param>
+		internal void RaiseEvent<T>(RoutedEvent<T> routedEvent, T eventArgs)
+			where T : RoutedEventArgs
+		{
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNull(eventArgs);
+
+			eventArgs.Source = this;
+			eventArgs.RoutedEvent = routedEvent;
+
+			Log.Debug("Raising event {0} on {1}", eventArgs.GetType().Name, GetType().Name);
+
+			switch (routedEvent.RoutingStrategy)
+			{
+				case RoutingStrategy.Direct:
+					_eventStore.InvokeHandlers(routedEvent, this, eventArgs);
+					break;
+				case RoutingStrategy.Bubble:
+					RaiseBubblingEvent(routedEvent, eventArgs);
+					break;
+				case RoutingStrategy.Tunnel:
+					RaiseTunnelingEvent(this, routedEvent, eventArgs);
+					break;
+				default:
+					Assert.NotReached("Unknown routing strategy.");
+					break;
+			}
+		}
+
+		/// <summary>
+		///     Raises the given bubbling routed event with the given event arguments.
+		/// </summary>
+		/// <typeparam name="T">The type of the event arguments.</typeparam>
+		/// <param name="routedEvent">The routed event that should be raised.</param>
+		/// <param name="eventArgs">The arguments the routed event should be raised with.</param>
+		private void RaiseBubblingEvent<T>(RoutedEvent<T> routedEvent, T eventArgs)
+			where T : RoutedEventArgs
+		{
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNull(eventArgs);
+			Assert.ArgumentSatisfies(routedEvent.RoutingStrategy == RoutingStrategy.Bubble, "Unexpected routing strategy.");
+
+			var uiElement = this;
+			while (uiElement != null && !eventArgs.Handled)
+			{
+				_eventStore.InvokeHandlers(routedEvent, uiElement, eventArgs);
+				uiElement = uiElement.Parent;
+			}
+		}
+
+		/// <summary>
+		///     Raises the given tunneling routed event with the given event arguments.
+		/// </summary>
+		/// <typeparam name="T">The type of the event arguments.</typeparam>
+		/// <param name="uiElement">The UI element the event should be raised for.</param>
+		/// <param name="routedEvent">The routed event that should be raised.</param>
+		/// <param name="eventArgs">The arguments the routed event should be raised with.</param>
+		private static void RaiseTunnelingEvent<T>(UIElement uiElement, RoutedEvent<T> routedEvent, T eventArgs)
+			where T : RoutedEventArgs
+		{
+			Assert.ArgumentNotNull(uiElement);
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNull(eventArgs);
+			Assert.ArgumentSatisfies(routedEvent.RoutingStrategy == RoutingStrategy.Tunnel, "Unexpected routing strategy.");
+
+			if (uiElement.Parent != null)
+				RaiseTunnelingEvent(uiElement.Parent, routedEvent, eventArgs);
+
+			uiElement._eventStore.InvokeHandlers(routedEvent, uiElement, eventArgs);
+		}
+
+		/// <summary>
+		///     Returns the child UI element of the current UI element that lies at the given position.
+		/// </summary>
+		/// <param name="position">The position that should be checked for a hit.</param>
+		internal UIElement HitTest(Vector2d position)
+		{
+			// If the element isn't visible or hit test visible, there can be no hit.
+			if (Visibility != Visibility.Visible || !IsHitTestVisible)
+				return null;
+
+			// Check if the position lies within the elements's bounding box. If not, there can be no hit.
+			var horizontalHit = position.X >= VisualOffset.X && position.X <= VisualOffset.X + RenderSize.Width;
+			var verticalHit = position.Y >= VisualOffset.Y && position.Y <= VisualOffset.Y + RenderSize.Height;
+
+			if (!horizontalHit || !verticalHit)
+				return null;
+
+			// Find and return the first visual child that is hit.
+			// We have to iterate the visual children in reverse order, as they are enumerated from
+			// bottom to top (optimized for drawing), whereas we want to check the topmost children first.
+			var count = VisualChildrenCount;
+			for (var i = count; i > 0; --i)
+			{
+				var hitTestResult = GetVisualChild(i - 1).HitTest(position);
+				if (hitTestResult != null)
+					return hitTestResult;
+			}
+
+			// If no child was hit, check if we should return this UI element instead.
+			return HitTestCore(position) ? this : null;
+		}
+
+		/// <summary>
+		///     Performs a detailed hit test for the given position. The position is guaranteed to lie within the UI element's 
+		///		bounds. This method should be overridden to implement special hit testing logic that is more precise than a 
+		///		simple bounding box check.
+		/// </summary>
+		/// <param name="position">The position that should be checked for a hit.</param>
+		/// <returns>Returns true if the UI element is hit; false, otherwise.</returns>
+		protected virtual bool HitTestCore(Vector2d position)
+		{
+			return true;
 		}
 
 		/// <summary>

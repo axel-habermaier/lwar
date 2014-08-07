@@ -237,6 +237,8 @@
     <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />
     <Compile Include="Framework\UserInterface\Controls\ItemsControl.cs" />
     <Compile Include="Framework\UserInterface\Controls\ITextInputControl.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseButtonEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseWheelEventArgs.cs" />
     <Compile Include="Framework\UserInterface\MessageBox.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\ConsoleViewModel.cs" />
     <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />
@@ -273,11 +275,9 @@
     <Compile Include="Framework\UserInterface\TextWrapping.cs" />
     <Compile Include="Framework\UserInterface\UIElement.cs" />
     <Compile Include="Framework\UserInterface\UIElement.Properties.cs" />
-    <Compile Include="Framework\UserInterface\RoutedEventArgs.cs" />
     <Compile Include="Framework\UserInterface\RoutedEvent`1.cs" />
-    <Compile Include="Framework\UserInterface\IRoutedEventArgs.cs" />
     <Compile Include="Framework\UserInterface\RoutedEvent.cs" />
-    <Compile Include="Framework\UserInterface\RoutedEventArgs`1.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventArgs.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventHandler.cs" />
     <Compile Include="Framework\UserInterface\RoutingStrategy.cs" />
     <Compile Include="Framework\UserInterface\SparseObjectStorage.cs" />

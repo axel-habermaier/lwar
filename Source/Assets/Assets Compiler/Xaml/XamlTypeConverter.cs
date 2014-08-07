@@ -31,6 +31,7 @@
 			{ "ulong", s => s },
 			{ "Pegasus.Framework.UserInterface.Thickness", s => String.Format("new Thickness({0})", s) },
 			{ "Pegasus.Platform.Graphics.Color", ConvertColor },
+			{ "Pegasus.Platform.Graphics.Color?", ConvertColor },
 			{ "System.Type", s => String.Format("typeof({0})", s) },
 			{ "Pegasus.AssetCompiler.Xaml.XamlLiteral", s => s }
 		};

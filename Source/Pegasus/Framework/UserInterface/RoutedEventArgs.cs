@@ -3,9 +3,23 @@
 	using System;
 
 	/// <summary>
-	///     Associates only the data common to all routed events to a routed event that has been raised.
+	///     Associates common data to a routed event that has been raised.
 	/// </summary>
-	public class RoutedEventArgs : RoutedEventArgs<RoutedEventArgs>
+	public class RoutedEventArgs
 	{
+		/// <summary>
+		///     Gets the object the event originated from.
+		/// </summary>
+		public object Source { get; internal set; }
+
+		/// <summary>
+		///     Gets the routed event that has been raised.
+		/// </summary>
+		public RoutedEvent RoutedEvent { get; internal set; }
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the routed event has already been handled.
+		/// </summary>
+		public bool Handled { get; set; }
 	}
 }

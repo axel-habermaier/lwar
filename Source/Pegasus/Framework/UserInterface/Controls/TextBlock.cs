@@ -149,7 +149,8 @@
 			var x = (int)Math.Round(VisualOffset.X);
 			var y = (int)Math.Round(VisualOffset.Y);
 
-			spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background);
+			if (Background.HasValue)
+				spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background.Value);
 
 			++spriteBatch.Layer;
 			_textLayout.Draw(spriteBatch, new Vector2i(x, y), Foreground);

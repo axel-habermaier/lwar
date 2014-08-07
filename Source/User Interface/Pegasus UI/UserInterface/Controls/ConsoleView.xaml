@@ -3,8 +3,10 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls"
+			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300"
-			 Panel.ZIndex="2147483647">
-	<controls:RenderOutputPanel Camera="{Binding Camera}" DrawCallback="{Binding OnDraw}" />
+			 Panel.ZIndex="2147483647" 
+			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}">
+	<controls:RenderOutputPanel x:Name="RenderOutput" Camera="{Binding Camera}" DrawCallback="{Binding OnDraw}" />
 </UserControl>

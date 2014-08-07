@@ -7,7 +7,7 @@
 			 mc:Ignorable="d"
 			 x:Class="Pegasus.Framework.UserInterface.Controls.DebugOverlayView"
 			 x:Name="UserControl"
-			 Foreground="White" Background="#66222222"
+			 Foreground="White" Background="#66333333"
 			 d:DataContext="{d:DesignInstance Type={x:Type controls:DebugOverlayViewModel}, IsDesignTimeCreatable=True}"
 			 HorizontalAlignment="Left" VerticalAlignment="Bottom"
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"

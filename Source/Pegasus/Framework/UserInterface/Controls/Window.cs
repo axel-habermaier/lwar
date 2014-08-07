@@ -45,11 +45,6 @@
 		private readonly SpriteBatch _spriteBatch;
 
 		/// <summary>
-		///     The UI element that currently has the keyboard focus.
-		/// </summary>
-		private UIElement _focusedElement;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public Window()
@@ -71,8 +66,7 @@
 			var graphicsDevice = Application.Current.GraphicsDevice;
 
 			_window = new NativeWindow(title, position, size, mode);
-			FocusedElement = this;
-			Keyboard = new Keyboard(this);
+			Keyboard = new Keyboard(this) { FocusedElement = this };
 			Mouse = new Mouse(this);
 
 			SwapChain = new SwapChain(graphicsDevice, _window, false, _window.Size);
@@ -124,7 +118,7 @@
 		/// <summary>
 		///     Gets a value indicating whether the window currently has the operating system focus.
 		/// </summary>
-		public bool OsFocused
+		public bool Focused
 		{
 			get
 			{
@@ -223,30 +217,6 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the UI element that currently has the keyboard focus. Unless the focus has been shifted to another UI
-		///     element, it is the window itself.
-		/// </summary>
-		internal UIElement FocusedElement
-		{
-			get
-			{
-				Assert.NotNull(_focusedElement);
-				return _focusedElement;
-			}
-			set
-			{
-				if (value == null)
-					value = this;
-
-				if (_focusedElement != null)
-					_focusedElement.IsFocused = false;
-
-				_focusedElement = value;
-				_focusedElement.IsFocused = true;
-			}
-		}
-
-		/// <summary>
 		///     Processes all pending window events and handles the window's user input.
 		/// </summary>
 		internal virtual void HandleInput()
@@ -331,7 +301,8 @@
 			_output.Camera.Viewport = viewport;
 			_output.Viewport = viewport;
 
-			_output.ClearColor(Background);
+			Assert.That(Background.HasValue, "No background color has been set for the window.");
+			_output.ClearColor(Background.Value);
 			_output.ClearDepth();
 
 			_spriteBatch.BlendState = BlendState.Premultiplied;

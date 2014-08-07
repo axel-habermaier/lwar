@@ -104,6 +104,9 @@
 	<Class Name="Pegasus.Platform.Graphics.Color">
 	</Class>
 
+	<Class Name="Pegasus.Platform.Graphics.Color?">
+	</Class>
+
 	<Class Name="Pegasus.Framework.Application">
 		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources"/>
 	</Class>
@@ -119,12 +122,13 @@
 
 	<Class Name="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="object" Name="DataContext"/>
-		<Property Type="Pegasus.Platform.Graphics.Color" Name="Background"/>
+		<Property Type="Pegasus.Platform.Graphics.Color?" Name="Background"/>
 		<Property Type="Pegasus.Framework.UserInterface.Style" Name="Style"/>
 		<Property Type="string" Name="FontFamily"/>
 		<Property Type="int" Name="FontSize"/>
 		<Property Type="bool" Name="FontBold"/>
 		<Property Type="bool" Name="FontItalic"/>
+		<Property Type="bool" Name="IsHitTestVisible"/>
 		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources"/>
 		<Property Type="double" Name="Width"/>
 		<Property Type="double" Name="Height"/>

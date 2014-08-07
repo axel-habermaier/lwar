@@ -16,8 +16,8 @@
 		/// <summary>
 		///     The background color of the UI element.
 		/// </summary>
-		public static readonly DependencyProperty<Color> BackgroundProperty =
-			new DependencyProperty<Color>(defaultValue: new Color(0, 0, 0, 0), affectsRender: true);
+		public static readonly DependencyProperty<Color?> BackgroundProperty =
+			new DependencyProperty<Color?>(defaultValue: null, affectsRender: true);
 
 		/// <summary>
 		///     The style of the UI element.
@@ -139,6 +139,11 @@
 		public static readonly DependencyProperty<bool> IsFocusedProperty = new DependencyProperty<bool>(isReadOnly: true);
 
 		/// <summary>
+		///     Indicates whether the UI element participates in hit testing.
+		/// </summary>
+		public static readonly DependencyProperty<bool> IsHitTestVisibleProperty = new DependencyProperty<bool>(defaultValue: true);
+
+		/// <summary>
 		///     Gets or sets the data context of the UI element.
 		/// </summary>
 		public object DataContext
@@ -150,7 +155,7 @@
 		/// <summary>
 		///     Gets or sets the background color of the control.
 		/// </summary>
-		public Color Background
+		public Color? Background
 		{
 			get { return GetValue(BackgroundProperty); }
 			set { SetValue(BackgroundProperty, value); }
@@ -342,6 +347,15 @@
 		{
 			get { return GetValue(IsFocusedProperty); }
 			internal set { SetReadOnlyValue(IsFocusedProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the UI element participates in hit testing.
+		/// </summary>
+		public bool IsHitTestVisible
+		{
+			get { return GetValue(IsHitTestVisibleProperty); }
+			set { SetValue(IsHitTestVisibleProperty, value); }
 		}
 
 		/// <summary>

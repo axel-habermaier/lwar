@@ -19,7 +19,7 @@
 		/// <param name="routedEvent">The routed event the handler should be added to.</param>
 		/// <param name="handler">The handler that should be invoked when the routed event is raised.</param>
 		public void AddHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
-			where T : class, IRoutedEventArgs
+			where T : RoutedEventArgs
 		{
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(handler);
@@ -38,7 +38,7 @@
 		/// <param name="routedEvent">The routed event the handler should be removed from.</param>
 		/// <param name="handler">The handler that should no longer be invoked when the routed event is raised.</param>
 		public void RemoveHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
-			where T : class, IRoutedEventArgs
+			where T : RoutedEventArgs
 		{
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(handler);
@@ -56,7 +56,7 @@
 		/// <param name="sender">The object that raises the event.</param>
 		/// <param name="arguments">The arguments that should be passed to the event handlers.</param>
 		public void InvokeHandlers<T>(RoutedEvent<T> routedEvent, object sender, T arguments)
-			where T : class, IRoutedEventArgs
+			where T : RoutedEventArgs
 		{
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(arguments);

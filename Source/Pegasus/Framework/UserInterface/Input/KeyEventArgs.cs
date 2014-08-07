@@ -5,8 +5,20 @@
 	/// <summary>
 	///     Provides information about key press and release events.
 	/// </summary>
-	public class KeyEventArgs : RoutedEventArgs<KeyEventArgs>
+	public sealed class KeyEventArgs : RoutedEventArgs
 	{
+		/// <summary>
+		///     A cached instance of the event argument class that should be used to reduce the pressure on the garbage collector.
+		/// </summary>
+		private static readonly KeyEventArgs CachedInstance = new KeyEventArgs();
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		private KeyEventArgs()
+		{
+		}
+
 		/// <summary>
 		///     Gets the key that was pressed or released. The key depends on the keyboard layout.
 		/// </summary>

@@ -1,11 +1,13 @@
 ﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
+	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Controls;
 	using Math;
 	using Platform;
+	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -29,6 +31,11 @@
 		private readonly Window _window;
 
 		/// <summary>
+		///     The UI element the mouse is currently over. Null if the mouse is not over any UI element.
+		/// </summary>
+		private UIElement _hoveredElement;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the mouse events.</param>
@@ -39,6 +46,8 @@
 			_window = window;
 			_window.NativeWindow.MousePressed += OnButtonPressed;
 			_window.NativeWindow.MouseReleased += OnButtonReleased;
+			_window.NativeWindow.MouseWheel += OnWheel;
+			_window.NativeWindow.MouseMoved += OnMove;
 		}
 
 		/// <summary>
@@ -56,7 +65,7 @@
 		}
 
 		/// <summary>
-		///     Raised when the mouse has been moved.
+		///     Raised when the mouse has been moved within the bounds of the window.
 		/// </summary>
 		public event Action<Vector2i> Moved
 		{
@@ -65,7 +74,7 @@
 		}
 
 		/// <summary>
-		///     Raised when the mouse wheel is scrolled.
+		///     Raised when the mouse wheel is scrolled within the bounds of the window.
 		/// </summary>
 		public event Action<int> Wheel
 		{
@@ -86,7 +95,24 @@
 			_states[(int)button].KeyPressed();
 			_doubleClicked[(int)button] |= doubleClick;
 
-			var args = MouseEventArgs.Create(button, doubleClick, position, _states[(int)button]);
+			if (_hoveredElement == null)
+				return;
+
+			var args = MouseButtonEventArgs.Create(position, _states, button, doubleClick);
+			_hoveredElement.RaiseEvent(UIElement.PreviewMouseDownEvent, args);
+			_hoveredElement.RaiseEvent(UIElement.MouseDownEvent, args);
+
+			if (button == MouseButton.Left)
+			{
+				_hoveredElement.RaiseEvent(UIElement.PreviewMouseLeftButtonDownEvent, args);
+				_hoveredElement.RaiseEvent(UIElement.MouseLeftButtonDownEvent, args);
+			}
+
+			if (button == MouseButton.Right)
+			{
+				_hoveredElement.RaiseEvent(UIElement.PreviewMouseRightButtonDownEvent, args);
+				_hoveredElement.RaiseEvent(UIElement.MouseRightButtonDownEvent, args);
+			}
 		}
 
 		/// <summary>
@@ -99,7 +125,77 @@
 			Assert.ArgumentInRange(button);
 			_states[(int)button].KeyReleased();
 
-			var args = MouseEventArgs.Create(button, false, position, _states[(int)button]);
+			if (_hoveredElement == null)
+				return;
+
+			var args = MouseButtonEventArgs.Create(position, _states, button, false);
+			_hoveredElement.RaiseEvent(UIElement.PreviewMouseUpEvent, args);
+			_hoveredElement.RaiseEvent(UIElement.MouseUpEvent, args);
+
+			if (button == MouseButton.Left)
+			{
+				_hoveredElement.RaiseEvent(UIElement.PreviewMouseLeftButtonUpEvent, args);
+				_hoveredElement.RaiseEvent(UIElement.MouseLeftButtonUpEvent, args);
+			}
+
+			if (button == MouseButton.Right)
+			{
+				_hoveredElement.RaiseEvent(UIElement.PreviewMouseRightButtonUpEvent, args);
+				_hoveredElement.RaiseEvent(UIElement.MouseRightButtonUpEvent, args);
+			}
+		}
+
+		/// <summary>
+		///     Invoked when the mouse wheel has been changed.
+		/// </summary>
+		/// <param name="delta">A value indicating the amount the mouse wheel has changed.</param>
+		private void OnWheel(int delta)
+		{
+			if (_hoveredElement == null)
+				return;
+
+			var args = MouseWheelEventArgs.Create(Position, _states, delta);
+			_hoveredElement.RaiseEvent(UIElement.PreviewMouseWheelEvent, args);
+			_hoveredElement.RaiseEvent(UIElement.MouseWheelEvent, args);
+		}
+
+		/// <summary>
+		///     Invoked when the mouse has been moved.
+		/// </summary>
+		/// <param name="position">The new position of the mouse.</param>
+		private void OnMove(Vector2i position)
+		{
+			UpdateHoveredElement(position);
+
+			if (_hoveredElement == null)
+				return;
+
+			var args = MouseEventArgs.Create(position, _states);
+			_hoveredElement.RaiseEvent(UIElement.PreviewMouseMoveEvent, args);
+			_hoveredElement.RaiseEvent(UIElement.MouseMoveEvent, args);
+		}
+
+		/// <summary>
+		///     Updates the hovered UI element, if necessary.
+		/// </summary>
+		/// <param name="position">The position of the mouse.</param>
+		private void UpdateHoveredElement(Vector2i position)
+		{
+			var hoveredElement = _window.HitTest(new Vector2d(position.X, position.Y));
+			if (hoveredElement == _hoveredElement)
+				return;
+
+			var args = MouseEventArgs.Create(Position, _states);
+
+			if (_hoveredElement != null)
+				_hoveredElement.RaiseEvent(UIElement.MouseLeaveEvent, args);
+
+			_hoveredElement = hoveredElement;
+
+			if (_hoveredElement != null)
+				_hoveredElement.RaiseEvent(UIElement.MouseEnterEvent, args);
+
+			Log.Debug("Hovered element: {0}", _hoveredElement == null ? "none" : _hoveredElement.GetType().Name);
 		}
 
 		/// <summary>
@@ -112,6 +208,10 @@
 				_states[i].Update();
 				_doubleClicked[i] = false;
 			}
+
+			// We have to check every frame for a new hovered element, as the UI might change at any time
+			// (due to animations, UI elements becoming visible/invisible, etc.).
+			UpdateHoveredElement(Position);
 		}
 
 		/// <summary>
@@ -163,6 +263,8 @@
 		{
 			_window.NativeWindow.MousePressed -= OnButtonPressed;
 			_window.NativeWindow.MouseReleased -= OnButtonReleased;
+			_window.NativeWindow.MouseWheel -= OnWheel;
+			_window.NativeWindow.MouseMoved -= OnMove;
 		}
 
 		/// <summary>

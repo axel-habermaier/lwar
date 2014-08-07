@@ -55,9 +55,9 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the console that should be drawn on top of the window's backbuffer.
+		///     Gets the console that should be drawn on top of the window's contents.
 		/// </summary>
-		internal ConsoleViewModel Console { get; set; }
+		internal ConsoleViewModel Console { get; private set; }
 
 		/// <summary>
 		///     Invoked when the window is being closed.
@@ -83,7 +83,7 @@
 			// Update the logical inputs based on the new state of the input system and check if any command 
 			// bindings have been triggered. However, if a text input element is currently focused, these steps
 			// are skipped as we don't want to accidentally trigger any inputs or commands while entering text.
-			if (FocusedElement is ITextInputControl)
+			if (Keyboard.FocusedElement is ITextInputControl)
 				return;
 
 			InputDevice.Update();

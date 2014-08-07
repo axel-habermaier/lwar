@@ -3,8 +3,8 @@
 	using System;
 	using Assets;
 	using Controls;
-	using Platform.Graphics;
 	using Input;
+	using Platform.Graphics;
 	using Platform.Memory;
 	using Rendering;
 	using Console = Rendering.UserInterface.Console;
@@ -31,6 +31,7 @@
 			var font = Application.Current.Assets.Load(Fonts.LiberationMono11);
 			Console = new Console(inputDevice, font);
 			Console.Update(window.Size);
+			Console.ActiveChanged += () => OnPropertyChanged("IsVisible");
 
 			OnDraw = Draw;
 			Camera = new Camera2D(Application.Current.GraphicsDevice);
@@ -47,6 +48,11 @@
 			};
 		}
 
+		public bool IsVisible
+		{
+			get { return Console.Active; }
+		}
+
 		public Camera2D Camera { get; private set; }
 
 		/// <summary>
@@ -55,6 +61,11 @@
 		public Console Console { get; private set; }
 
 		public Action<RenderOutput> OnDraw { get; private set; }
+
+		public void Update()
+		{
+			Console.HandleInput();
+		}
 
 		private void Draw(RenderOutput renderOutput)
 		{

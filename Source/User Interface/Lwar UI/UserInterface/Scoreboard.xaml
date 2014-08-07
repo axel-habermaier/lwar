@@ -9,10 +9,11 @@
 			 FontFamily="Liberation Mono" 
              FontSize="11"
              TextOptions.TextRenderingMode="Aliased"
-			 d:DataContext="{d:DesignInstance Type={x:Type controls:ScoreboardViewModel}, IsDesignTimeCreatable=True}">
+			 d:DataContext="{d:DesignInstance Type={x:Type controls:ScoreboardViewModel}, IsDesignTimeCreatable=True}"
+			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
+			 IsHitTestVisible="False">
 	
 	<DataGrid ItemsSource="{Binding Players}"
-			  Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
 			  AutoGenerateColumns="False"
 			  HorizontalAlignment="Center"
 			  VerticalAlignment="Center"

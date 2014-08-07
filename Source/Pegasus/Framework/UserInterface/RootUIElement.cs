@@ -30,7 +30,7 @@
 					Assert.OfType<Window>(child);
 
 					var window = child as Window;
-					if (window.OsFocused)
+					if (window.Focused)
 						return true;
 				}
 				return false;

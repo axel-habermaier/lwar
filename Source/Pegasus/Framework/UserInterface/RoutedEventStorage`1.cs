@@ -7,7 +7,7 @@
 	/// </summary>
 	/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
 	internal class RoutedEventStorage<T> : RoutedEventStorage
-		where T : class, IRoutedEventArgs
+		where T : RoutedEventArgs
 	{
 		/// <summary>
 		///     The handlers that must be invoked when the routed event is raised.

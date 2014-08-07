@@ -7,7 +7,7 @@
 	/// </summary>
 	/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
 	public class RoutedEvent<T> : RoutedEvent
-		where T : class, IRoutedEventArgs
+		where T : RoutedEventArgs
 	{
 		/// <summary>
 		///     Initializes a new instance.

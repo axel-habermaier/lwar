@@ -17,7 +17,8 @@
 			var x = (int)Math.Round(VisualOffset.X);
 			var y = (int)Math.Round(VisualOffset.Y);
 
-			spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background);
+			if (Background.HasValue)
+				spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background.Value);
 		}
 	}
 }
