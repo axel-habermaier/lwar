@@ -118,7 +118,7 @@
 		{
 			Log.DebugIf(_dataContext == null, "Event invocation missed: Data context was a null value.");
 
-			if (_dataContext != null)
+			if (_dataContext != null && _handler != null)
 				_handler(_dataContext, sender, args);
 		}
 	}

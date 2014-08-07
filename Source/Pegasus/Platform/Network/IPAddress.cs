@@ -11,6 +11,11 @@
 	public unsafe struct IPAddress
 	{
 		/// <summary>
+		///     Represents the IP address of the local host.
+		/// </summary>
+		public static readonly IPAddress LocalHost = Parse("::1");
+
+		/// <summary>
 		///     The underlying native IP address.
 		/// </summary>
 		[UsedImplicitly]

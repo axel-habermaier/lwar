@@ -443,9 +443,8 @@
 				return;
 
 			var window = GetParentWindow(this);
-			Assert.NotNull(window, "The UI element is not part of a logical tree.");
-
-			window.Keyboard.FocusedElement = this;
+			if (window != null)
+				window.Keyboard.FocusedElement = this;
 		}
 
 		/// <summary>
@@ -559,7 +558,9 @@
 			var count = VisualChildrenCount;
 			for (var i = count; i > 0; --i)
 			{
-				var hitTestResult = GetVisualChild(i - 1).HitTest(position);
+				var child = GetVisualChild(i - 1);
+				var hitTestResult = child.HitTest(position);
+
 				if (hitTestResult != null)
 					return hitTestResult;
 			}

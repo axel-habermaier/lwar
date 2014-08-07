@@ -43,5 +43,22 @@
 		{
 			Root.ReplaceChild(new GameSessionViewModel(new IPEndPoint(address, port)));
 		}
+
+		/// <summary>
+		///     Starts a single player game.
+		/// </summary>
+		public void PlaySingle()
+		{
+			Commands.StartServer();
+			Commands.Connect(IPAddress.LocalHost);
+		}
+
+		/// <summary>
+		///     Exists the game.
+		/// </summary>
+		public void Exit()
+		{
+			Commands.Exit();
+		}
 	}
 }
