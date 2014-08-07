@@ -378,7 +378,7 @@
 		/// <summary>
 		///     Gets the font used for text rendering.
 		/// </summary>
-		internal protected Font Font
+		protected internal Font Font
 		{
 			get
 			{
@@ -454,7 +454,22 @@
 		/// </summary>
 		internal bool CanBeFocused
 		{
-			get { return IsAttachedToRoot && Focusable && Visibility == Visibility.Visible && IsHitTestVisible; }
+			get
+			{
+				if (!IsAttachedToRoot || !Focusable)
+					return false;
+
+				var element = this;
+				while (element != null)
+				{
+					if (element.Visibility != Visibility.Visible || !element.IsHitTestVisible)
+						return false;
+
+					element = element.Parent;
+				}
+
+				return true;
+			}
 		}
 	}
 }

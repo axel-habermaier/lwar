@@ -24,7 +24,7 @@
 		///     The maximum height of the row.
 		/// </summary>
 		public static readonly DependencyProperty<double> MaxHeightProperty =
-			new DependencyProperty<double>(defaultValue: Double.MaxValue, affectsMeasure: true);
+			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true);
 
 		/// <summary>
 		///     Gets or sets the vertical offset of the row.

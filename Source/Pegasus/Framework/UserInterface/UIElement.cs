@@ -618,7 +618,10 @@
 		public void Measure(SizeD availableSize)
 		{
 			if (Visibility == Visibility.Collapsed)
+			{
+				_desiredSize = new SizeD();
 				return;
+			}
 
 			_layoutInfo = new LayoutInfo(this);
 			availableSize = RestrictSize(availableSize);
@@ -674,7 +677,14 @@
 		public void Arrange(RectangleD finalRect)
 		{
 			if (Visibility == Visibility.Collapsed)
+			{
+				VisualOffset = Vector2d.Zero;
+				RenderSize = new SizeD();
+				ActualWidth = 0;
+				ActualHeight = 0;
+
 				return;
+			}
 
 			_layoutInfo = new LayoutInfo(this);
 

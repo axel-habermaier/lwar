@@ -142,6 +142,10 @@
 		<Property Type="Pegasus.Framework.UserInterface.HorizontalAlignment" Name="HorizontalAlignment"/>
 		<Property Type="Pegasus.Framework.UserInterface.VerticalAlignment" Name="VerticalAlignment"/>
 		<Property Type="Pegasus.Framework.UserInterface.Visibility" Name="Visibility"/>
+		<Event Type="KeyEventArgs" Name="PreviewKeyDown"/>
+		<Event Type="KeyEventArgs" Name="KeyDown"/>
+		<Event Type="KeyEventArgs" Name="PreviewKeyUp"/>
+		<Event Type="KeyEventArgs" Name="KeyUp"/>
 	</Class>
 
 	<!-- Controls ================================================================================================= -->

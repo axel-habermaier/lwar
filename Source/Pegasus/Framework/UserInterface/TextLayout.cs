@@ -172,6 +172,9 @@
 		/// <param name="position">The position the closest character should be returned for.</param>
 		internal int GetCharacterIndexAt(Vector2i position)
 		{
+			if (String.IsNullOrWhiteSpace(_arranged.Text))
+				return 0;
+
 			// Search for the correct line
 			var lineIndex = 0;
 			var lineHeight = _arranged.Font.LineHeight + _arranged.LineSpacing;

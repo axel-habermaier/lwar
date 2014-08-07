@@ -110,7 +110,15 @@
 				var column = ColumnDefinitions[columnIndex];
 				var row = RowDefinitions[rowIndex];
 
-				child.Measure(new SizeD(column.EffectiveMaxWidth, row.EffectiveMaxHeight));
+				var width = Math.Min(column.EffectiveMaxWidth, availableSize.Width);
+				for (var c = columnIndex; c > 0; --c)
+					width -= ColumnDefinitions[c - 1].ActualWidth;
+
+				var height = Math.Min(row.EffectiveMaxHeight, availableSize.Height);
+				for (var r = rowIndex; r > 0; --r)
+					height -= RowDefinitions[r - 1].ActualHeight;
+
+				child.Measure(new SizeD(width, height));
 				var desiredSize = child.DesiredSize;
 
 				column.RegisterChildWidth(desiredSize.Width);

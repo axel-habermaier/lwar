@@ -32,7 +32,6 @@
 
 		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
 		private Camera2D _camera;
-		private ChatInput _chatInput;
 
 		/// <summary>
 		///     The game session that is played.
@@ -68,6 +67,11 @@
 		///     The view model for the scoreboard.
 		/// </summary>
 		private ScoreboardViewModel _scoreboard;
+
+		/// <summary>
+		/// The view model for the chat input.
+		/// </summary>
+		private ChatViewModel _chat;
 
 		/// <summary>
 		///     Indicates whether the user input should be sent to the server during the next update cycle.
@@ -113,6 +117,15 @@
 		{
 			get { return _scoreboard; }
 			private set { ChangePropertyValue(ref _scoreboard, value); }
+		}
+
+		/// <summary>
+		///     Gets the view model for the chat input.
+		/// </summary>
+		public ChatViewModel Chat
+		{
+			get { return _chat; }
+			private set { ChangePropertyValue(ref _chat, value); }
 		}
 
 		/// <summary>
@@ -269,7 +282,6 @@
 			_spriteBatch.DrawBatch(renderOutput);
 
 			renderOutput.Camera = camera;
-			_chatInput.Draw(_spriteBatch);
 		}
 
 		/// <summary>
@@ -286,7 +298,7 @@
 			_camera = new Camera2D(Application.Current.GraphicsDevice);
 
 			Scoreboard = new ScoreboardViewModel(_gameSession);
-			_chatInput = new ChatInput(Application.Current.Window.InputDevice, Application.Current.Assets);
+			Chat = new ChatViewModel();
 			Application.Current.Window.InputDevice.Add(_respawn);
 
 			_networkSession.OnConnected += OnConnected;
@@ -330,11 +342,11 @@
 			_spriteBatch.SafeDispose();
 			_gameSession.SafeDispose();
 			_renderContext.SafeDispose();
-			_chatInput.SafeDispose();
 			_networkSession.SafeDispose();
 			EntityTemplates.Dispose();
 			_camera.SafeDispose();
 			Scoreboard.SafeDispose();
+			Chat.SafeDispose();
 
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
@@ -367,10 +379,7 @@
 			CameraManager.Update();
 
 			if (!_networkSession.IsSyncing)
-			{
 				_scoreboard.Update();
-				_chatInput.Update(Application.Current.Window.Size);
-			}
 
 			var localPlayer = _gameSession.Players.LocalPlayer;
 			if (localPlayer != null && localPlayer.Ship == null && _respawn.IsTriggered)

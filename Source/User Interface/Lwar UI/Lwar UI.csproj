@@ -115,6 +115,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="UserInterface\ChatView.xaml.cs">
+      <DependentUpon>ChatView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\Scoreboard.xaml.cs">
       <DependentUpon>Scoreboard.xaml</DependentUpon>
     </Compile>
@@ -148,6 +151,10 @@
     <Page Include="UserInterface\Styles\ButtonStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\ChatView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserInterface\Styles\CheckBoxStyle.xaml">
       <Generator>MSBuild:Compile</Generator>

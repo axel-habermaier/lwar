@@ -24,7 +24,7 @@
 		///     The maximum width of the column.
 		/// </summary>
 		public static readonly DependencyProperty<double> MaxWidthProperty =
-			new DependencyProperty<double>(defaultValue: Double.MaxValue, affectsMeasure: true);
+			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true);
 
 		/// <summary>
 		///     Gets or sets the width of the column. Can be NaN to indicate that the column should automatically size itself to the
