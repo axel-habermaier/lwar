@@ -236,7 +236,7 @@
 			/// <summary>
 			///     Indicates that the dependency property is read-only and can only be set internally by the framework.
 			/// </summary>
-			IsReadOnly
+			IsReadOnly = 64
 		}
 	}
 }

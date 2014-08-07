@@ -1,7 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
-	using System.Diagnostics;
+	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Controls;
@@ -19,6 +19,11 @@
 		///     Stores whether a button is currently being double-clicked.
 		/// </summary>
 		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length];
+
+		/// <summary>
+		///     A stack of hovered UI elements, with the topmost element in the visual tree at the bottom of the stack.
+		/// </summary>
+		private readonly Stack<UIElement> _hoveredElements = new Stack<UIElement>(32);
 
 		/// <summary>
 		///     The mouse button states.
@@ -181,6 +186,9 @@
 		/// <param name="position">The position of the mouse.</param>
 		private void UpdateHoveredElement(Vector2i position)
 		{
+			Assert.That((_hoveredElement == null && _hoveredElements.Count == 0) ||
+				(_hoveredElement != null && _hoveredElements.Count != 0), "Invalid hovered elements state.");
+
 			var hoveredElement = _window.HitTest(new Vector2d(position.X, position.Y));
 			if (hoveredElement == _hoveredElement)
 				return;
@@ -188,14 +196,61 @@
 			var args = MouseEventArgs.Create(Position, _states);
 
 			if (_hoveredElement != null)
-				_hoveredElement.RaiseEvent(UIElement.MouseLeaveEvent, args);
+				UnsetIsMouseOver(_hoveredElement, args);
 
 			_hoveredElement = hoveredElement;
 
 			if (_hoveredElement != null)
-				_hoveredElement.RaiseEvent(UIElement.MouseEnterEvent, args);
+				SetIsMouseOver(args);
+		}
 
-			Log.Debug("Hovered element: {0}", _hoveredElement == null ? "none" : _hoveredElement.GetType().Name);
+		/// <summary>
+		///     Sets the IsMouseOver property and raises the MouseEnter event of all currently hovered UI
+		///		elements that are in the path of the hovered element to the root.
+		/// </summary>
+		/// <param name="args">The event arguments that should be passed to the MouseLeaveEvent.</param>
+		private void SetIsMouseOver(MouseEventArgs args)
+		{
+			var hoveredElement = _hoveredElement;
+			while (hoveredElement != null)
+			{
+				if (!hoveredElement.IsMouseOver)
+				{
+					hoveredElement.IsMouseOver = true;
+					hoveredElement.RaiseEvent(UIElement.MouseEnterEvent, args);
+				}
+
+				_hoveredElements.Push(hoveredElement);
+				hoveredElement = hoveredElement.Parent;
+			}
+		}
+
+		/// <summary>
+		///     Unsets the IsMouseOver property and raises the MouseLeave event of all currently hovered UI
+		///		elements that are not in the path of the given UI element to the root.
+		/// </summary>
+		/// <param name="uiElement">The UI element that starts the path to the root.</param>
+		/// <param name="args">The event arguments that should be passed to the MouseLeaveEvent.</param>
+		private void UnsetIsMouseOver(UIElement uiElement, MouseEventArgs args)
+		{
+			if (uiElement.Parent != null)
+				UnsetIsMouseOver(uiElement.Parent, args);
+
+			if (_hoveredElements.Count == 0)
+				return;
+
+			var topmostElement = _hoveredElements.Pop();
+			if (uiElement == topmostElement)
+				return;
+
+			topmostElement.IsMouseOver = false;
+			foreach (var hoveredElement in _hoveredElements)
+			{
+				hoveredElement.IsMouseOver = false;
+				hoveredElement.RaiseEvent(UIElement.MouseLeaveEvent, args);
+			}
+
+			_hoveredElements.Clear();
 		}
 
 		/// <summary>

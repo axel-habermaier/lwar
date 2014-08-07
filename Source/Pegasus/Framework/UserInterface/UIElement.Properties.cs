@@ -367,12 +367,12 @@
 		}
 
 		/// <summary>
-		///     Gets or sets a value indicating whether the mouse is currently hovering the UI element.
+		///     Gets value indicating whether the mouse is currently hovering the UI element or any of its visual children.
 		/// </summary>
 		public bool IsMouseOver
 		{
 			get { return GetValue(IsMouseOverProperty); }
-			set { SetReadOnlyValue(IsMouseOverProperty, value); }
+			internal set { SetReadOnlyValue(IsMouseOverProperty, value); }
 		}
 
 		/// <summary>

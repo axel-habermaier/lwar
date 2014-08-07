@@ -472,8 +472,6 @@
 			eventArgs.Source = this;
 			eventArgs.RoutedEvent = routedEvent;
 
-			Log.Debug("Raising event {0} on {1}", eventArgs.GetType().Name, GetType().Name);
-
 			switch (routedEvent.RoutingStrategy)
 			{
 				case RoutingStrategy.Direct:
