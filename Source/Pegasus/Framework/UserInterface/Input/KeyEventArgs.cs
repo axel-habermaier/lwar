@@ -45,6 +45,7 @@
 		{
 			Assert.ArgumentInRange(key);
 
+			CachedInstance.Reset();
 			CachedInstance.Key = key;
 			CachedInstance.ScanCode = scanCode;
 			CachedInstance.State = state;

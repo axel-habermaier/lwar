@@ -17,5 +17,21 @@
 			: base(routingStrategy)
 		{
 		}
+
+		/// <summary>
+		///     Raised when the routed event has been raised on any UI element.
+		/// </summary>
+		public event RoutedEventHandler<T> Raised;
+
+		/// <summary>
+		///     Invokes the class handlers of this routed event.
+		/// </summary>
+		/// <param name="sender">The object that raised the event.</param>
+		/// <param name="args">The routed event arguments.</param>
+		internal void InvokeClassHandlers(object sender, T args)
+		{
+			if (Raised != null)
+				Raised(sender, args);
+		}
 	}
 }

@@ -50,6 +50,7 @@
 			Assert.ArgumentInRange(button);
 			Assert.ArgumentNotNull(inputStates);
 
+			CachedInstance.Reset();
 			CachedInstance.Position = position;
 			CachedInstance.InputStates = inputStates;
 			CachedInstance.Button = button;

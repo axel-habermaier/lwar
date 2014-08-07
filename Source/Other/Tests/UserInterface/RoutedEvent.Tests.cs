@@ -22,99 +22,224 @@
 			_stackPanel.Add(new Border());
 			_stackPanel.Add(_button);
 			_stackPanel.Add(new Border());
-			_actualEvents = new List<UIElement>();
+			_actualInstanceEvents = new List<UIElement>();
+			_actualClassEvents = new List<UIElement>();
+			_handlingElement = null;
 		}
 
-		private void RecordEvent<T>(object sender, T args)
+		private void RecordInstanceEvent<T>(object sender, T args)
 			where T : RoutedEventArgs
 		{
-			_actualEvents.Add((UIElement)sender);
+			_actualInstanceEvents.Add((UIElement)sender);
+
+			if (sender == _handlingElement)
+				args.Handled = true;
+		}
+
+		private void RecordClassEvent<T>(object sender, T args)
+			where T : RoutedEventArgs
+		{
+			_actualClassEvents.Add((UIElement)sender);
+
+			if (sender == _handlingElement)
+				args.Handled = true;
 		}
 
 		private void RegisterHandlers<T>(UIElement uiElement, RoutedEvent<T> routedEvent)
 			where T : RoutedEventArgs
 		{
-			uiElement.AddHandler(routedEvent, RecordEvent);
+			uiElement.AddHandler(routedEvent, RecordInstanceEvent);
 			for (var i = 0; i < uiElement.VisualChildrenCount; ++i)
 				RegisterHandlers(uiElement.GetVisualChild(i), routedEvent);
 		}
 
-		private void TestEvent<T>(UIElement uiElement, RoutedEvent<T> routedEvent, T args, params UIElement[] expectedEvents)
+		private void TestInstanceHandlers<T>(UIElement uiElement, RoutedEvent<T> routedEvent, T args, params UIElement[] expectedEvents)
 			where T : RoutedEventArgs
 		{
 			RegisterHandlers(_stackPanel, routedEvent);
 			uiElement.RaiseEvent(routedEvent, args);
 
-			var actual = _actualEvents.Select(element => element.GetType().FullName);
+			var actual = _actualInstanceEvents.Select(element => element.GetType().FullName);
 			var expected = expectedEvents.Select(element => element.GetType().FullName);
 			actual.Should().Equal(expected);
+		}
+
+		private void TestClassHandler<T>(UIElement uiElement, RoutedEvent<T> routedEvent, T args, params UIElement[] expectedEvents)
+			where T : RoutedEventArgs
+		{
+			try
+			{
+				routedEvent.Raised += RecordClassEvent;
+				uiElement.RaiseEvent(routedEvent, args);
+
+				var actual = _actualClassEvents.Select(element => element.GetType().FullName);
+				var expected = expectedEvents.Select(element => element.GetType().FullName);
+				actual.Should().Equal(expected);
+			}
+			finally
+			{
+				routedEvent.Raised -= RecordClassEvent;
+			}
 		}
 
 		private StackPanel _stackPanel;
 		private TextBlock _textBlock;
 		private Button _button;
-		private List<UIElement> _actualEvents;
+		private UIElement _handlingElement;
+		private List<UIElement> _actualInstanceEvents;
+		private List<UIElement> _actualClassEvents;
 
 		[Test]
-		public void BubblingEvent_AllLevels()
+		public void BubblingEvent_ClassHandlers_AllLevels()
 		{
-			TestEvent(_textBlock, UIElement.KeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+			TestClassHandler(_textBlock, UIElement.KeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
 				_textBlock, _button, _stackPanel);
 		}
 
 		[Test]
-		public void BubblingEvent_OneLevel()
+		public void BubblingEvent_ClassHandlers_Handled()
 		{
-			TestEvent(_stackPanel, UIElement.KeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+			_handlingElement = _textBlock;
+			TestClassHandler(_textBlock, UIElement.KeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()), _textBlock);
+		}
+
+		[Test]
+		public void BubblingEvent_ClassHandlers_OneLevel()
+		{
+			TestClassHandler(_stackPanel, UIElement.KeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
 				_stackPanel);
 		}
 
 		[Test]
-		public void BubblingEvent_TwoLevels()
+		public void BubblingEvent_ClassHandlers_TwoLevels()
 		{
-			TestEvent(_button, UIElement.KeyDownEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+			TestClassHandler(_button, UIElement.KeyDownEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
 				_button, _stackPanel);
 		}
 
 		[Test]
-		public void DirectEvent_Bottom()
+		public void BubblingEvent_InstanceHandlers_AllLevels()
 		{
-			TestEvent(_textBlock, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Vector2i(), new InputState[] { }),
-				_textBlock);
+			TestInstanceHandlers(_textBlock, UIElement.KeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+				_textBlock, _button, _stackPanel);
 		}
 
 		[Test]
-		public void DirectEvent_Middle()
+		public void BubblingEvent_InstanceHandlers_Handled()
 		{
-			TestEvent(_button, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Vector2i(), new InputState[] { }),
+			_handlingElement = _textBlock;
+			TestInstanceHandlers(_textBlock, UIElement.KeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()), _textBlock);
+		}
+
+		[Test]
+		public void BubblingEvent_InstanceHandlers_OneLevel()
+		{
+			TestInstanceHandlers(_stackPanel, UIElement.KeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+				_stackPanel);
+		}
+
+		[Test]
+		public void BubblingEvent_InstanceHandlers_TwoLevels()
+		{
+			TestInstanceHandlers(_button, UIElement.KeyDownEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+				_button, _stackPanel);
+		}
+
+		[Test]
+		public void DirectEvent_ClassHandler_InstanceHandlers_Middle()
+		{
+			TestClassHandler(_button, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Vector2i(), new InputState[] { }),
 				_button);
 		}
 
 		[Test]
-		public void DirectEvent_Top()
+		public void DirectEvent_ClassHandler_InstanceHandlers_Top()
 		{
-			TestEvent(_stackPanel, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Vector2i(), new InputState[] { }),
+			TestClassHandler(_stackPanel, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Vector2i(), new InputState[] { }),
 				_stackPanel);
 		}
 
 		[Test]
-		public void TunnelingEvent_AllLevels()
+		public void DirectEvent_ClassHandlers_Bottom()
 		{
-			TestEvent(_textBlock, UIElement.PreviewKeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+			TestClassHandler(_textBlock, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Vector2i(), new InputState[] { }),
+				_textBlock);
+		}
+
+		[Test]
+		public void DirectEvent_InstanceHandlers_Bottom()
+		{
+			TestInstanceHandlers(_textBlock, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Vector2i(), new InputState[] { }),
+				_textBlock);
+		}
+
+		[Test]
+		public void DirectEvent_InstanceHandlers_Middle()
+		{
+			TestInstanceHandlers(_button, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Vector2i(), new InputState[] { }),
+				_button);
+		}
+
+		[Test]
+		public void DirectEvent_InstanceHandlers_Top()
+		{
+			TestInstanceHandlers(_stackPanel, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Vector2i(), new InputState[] { }),
+				_stackPanel);
+		}
+
+		[Test]
+		public void TunnelingEvent_ClassHandlers_AllLevels()
+		{
+			TestClassHandler(_textBlock, UIElement.PreviewKeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
 				_stackPanel, _button, _textBlock);
 		}
 
 		[Test]
-		public void TunnelingEvent_OneLevel()
+		public void TunnelingEvent_ClassHandlers_Handled()
 		{
-			TestEvent(_stackPanel, UIElement.PreviewKeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+			_handlingElement = _stackPanel;
+			TestClassHandler(_textBlock, UIElement.PreviewKeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()), _stackPanel);
+		}
+
+		[Test]
+		public void TunnelingEvent_ClassHandlers_OneLevel()
+		{
+			TestClassHandler(_stackPanel, UIElement.PreviewKeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
 				_stackPanel);
 		}
 
 		[Test]
-		public void TunnelingEvent_TwoLevels()
+		public void TunnelingEvent_ClassHandlers_TwoLevels()
 		{
-			TestEvent(_button, UIElement.PreviewKeyDownEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+			TestClassHandler(_button, UIElement.PreviewKeyDownEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+				_stackPanel, _button);
+		}
+
+		[Test]
+		public void TunnelingEvent_InstanceHandlers_AllLevels()
+		{
+			TestInstanceHandlers(_textBlock, UIElement.PreviewKeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+				_stackPanel, _button, _textBlock);
+		}
+
+		[Test]
+		public void TunnelingEvent_InstanceHandlers_Handled()
+		{
+			_handlingElement = _stackPanel;
+			TestInstanceHandlers(_textBlock, UIElement.PreviewKeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()), _stackPanel);
+		}
+
+		[Test]
+		public void TunnelingEvent_InstanceHandlers_OneLevel()
+		{
+			TestInstanceHandlers(_stackPanel, UIElement.PreviewKeyUpEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
+				_stackPanel);
+		}
+
+		[Test]
+		public void TunnelingEvent_InstanceHandlers_TwoLevels()
+		{
+			TestInstanceHandlers(_button, UIElement.PreviewKeyDownEvent, KeyEventArgs.Create(Key.A, 0, new InputState()),
 				_stackPanel, _button);
 		}
 	}

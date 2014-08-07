@@ -79,6 +79,7 @@
 		{
 			Assert.ArgumentNotNull(inputStates);
 
+			CachedInstance.Reset();
 			CachedInstance.Position = position;
 			CachedInstance.InputStates = inputStates;
 

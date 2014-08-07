@@ -458,6 +458,19 @@
 		}
 
 		/// <summary>
+		///     First invokes the class handlers of the given routed event, then the instance handlers.
+		/// </summary>
+		/// <typeparam name="T">The type of the event arguments.</typeparam>
+		/// <param name="routedEvent">The routed event that should be raised.</param>
+		/// <param name="eventArgs">The arguments the routed event should be raised with.</param>
+		private void InvokeEventHandlers<T>(RoutedEvent<T> routedEvent, T eventArgs)
+			where T : RoutedEventArgs
+		{
+			routedEvent.InvokeClassHandlers(this, eventArgs);
+			_eventStore.InvokeHandlers(routedEvent, this, eventArgs);
+		}
+
+		/// <summary>
 		///     Raises the given routed event with the given event arguments.
 		/// </summary>
 		/// <typeparam name="T">The type of the event arguments.</typeparam>
@@ -475,7 +488,7 @@
 			switch (routedEvent.RoutingStrategy)
 			{
 				case RoutingStrategy.Direct:
-					_eventStore.InvokeHandlers(routedEvent, this, eventArgs);
+					InvokeEventHandlers(routedEvent, eventArgs);
 					break;
 				case RoutingStrategy.Bubble:
 					RaiseBubblingEvent(routedEvent, eventArgs);
@@ -505,7 +518,7 @@
 			var uiElement = this;
 			while (uiElement != null && !eventArgs.Handled)
 			{
-				_eventStore.InvokeHandlers(routedEvent, uiElement, eventArgs);
+				uiElement.InvokeEventHandlers(routedEvent, eventArgs);
 				uiElement = uiElement.Parent;
 			}
 		}
@@ -528,7 +541,8 @@
 			if (uiElement.Parent != null)
 				RaiseTunnelingEvent(uiElement.Parent, routedEvent, eventArgs);
 
-			uiElement._eventStore.InvokeHandlers(routedEvent, uiElement, eventArgs);
+			if (!eventArgs.Handled)
+				uiElement.InvokeEventHandlers(routedEvent, eventArgs);
 		}
 
 		/// <summary>
