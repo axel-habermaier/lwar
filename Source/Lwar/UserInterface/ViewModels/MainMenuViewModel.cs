@@ -1,9 +1,10 @@
-﻿namespace Lwar.UserInterface
+﻿namespace Lwar.UserInterface.ViewModels
 {
 	using System;
 	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform.Network;
 	using Scripting;
+	using Views;
 
 	/// <summary>
 	///     Represents the main menu that is shown when no game is active.

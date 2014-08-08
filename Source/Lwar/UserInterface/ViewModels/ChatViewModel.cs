@@ -1,4 +1,4 @@
-﻿namespace Lwar.UserInterface
+﻿namespace Lwar.UserInterface.ViewModels
 {
 	using System;
 	using System.Text;
@@ -11,13 +11,8 @@
 	/// <summary>
 	///     Shows the chat input field during an active game session.
 	/// </summary>
-	public class ChatViewModel : DisposableNotifyPropertyChanged
+	public class ChatViewModel : NotifyPropertyChanged
 	{
-		/// <summary>
-		///     The input trigger that is used to determine whether the chat input should be shown.
-		/// </summary>
-		private readonly LogicalInput _activate = new LogicalInput(Cvars.InputChatCvar, InputLayers.Game);
-
 		/// <summary>
 		///     Indicates whether the scoreboard should be shown.
 		/// </summary>
@@ -28,15 +23,13 @@
 		/// </summary>
 		private string _message;
 
-		//private readonly LogicalInput _submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputLayers.Chat);
-
 		/// <summary>
-		///     Initializes a new instance.
+		///     Gets the maximum allowed length of a chat message. When characters are entered that require more than one UTF8 code
+		///     point, the length exceeded property might be true even before max length characters are entered.
 		/// </summary>
-		public ChatViewModel()
+		public int MaxMessageLength
 		{
-			Application.Current.Window.InputDevice.Add(_activate);
-			IsVisible = true;
+			get { return Specification.ChatMessageLength; }
 		}
 
 		/// <summary>
@@ -49,7 +42,7 @@
 			{
 				Assert.ArgumentNotNull(value);
 
-				_message = value;
+				ChangePropertyValue(ref _message, value);
 				OnPropertyChanged("LengthExceeded");
 			}
 		}
@@ -60,7 +53,7 @@
 		public bool IsVisible
 		{
 			get { return _isVisible; }
-			private set
+			set
 			{
 				if (_isVisible != value)
 					Message = String.Empty;
@@ -89,20 +82,14 @@
 				IsVisible = false;
 			}
 
-			if (LengthExceeded || String.IsNullOrWhiteSpace(Message) || (e.Key != Key.Return && e.Key != Key.NumpadEnter))
+			if (LengthExceeded || (e.Key != Key.Return && e.Key != Key.NumpadEnter))
 				return;
 
-			Commands.Say(Message);
+			if (!String.IsNullOrWhiteSpace(Message))
+				Commands.Say(Message);
+
 			e.Handled = true;
 			IsVisible = false;
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			Application.Current.Window.InputDevice.Remove(_activate);
 		}
 	}
 }

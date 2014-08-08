@@ -1,4 +1,4 @@
-namespace Lwar.UserInterface
+namespace Lwar.UserInterface.ViewModels
 {
 	using System;
 	using System.Linq;
@@ -24,14 +24,14 @@ namespace Lwar.UserInterface
 		private bool _isDirty;
 
 		/// <summary>
-		///     The players of the current game session.
-		/// </summary>
-		private PlayerList _players;
-
-		/// <summary>
 		///     Indicates whether the scoreboard should be shown.
 		/// </summary>
 		private bool _isVisible;
+
+		/// <summary>
+		///     The players of the current game session.
+		/// </summary>
+		private PlayerList _players;
 
 		/// <summary>
 		///     Initializes a new instance.

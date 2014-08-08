@@ -3,6 +3,7 @@
 	using System;
 	using Input;
 	using Math;
+	using Platform;
 	using Rendering;
 
 	/// <summary>
@@ -16,7 +17,7 @@
 		private static readonly ControlTemplate DefaultTemplate = control =>
 		{
 			var textBlock = new TextBlock { Margin = new Thickness(2) };
-			textBlock.CreateTemplateBinding(control, TextBlock.TextProperty, TextBlock.TextProperty);
+			textBlock.CreateTemplateBinding(control, TextBox.TextProperty, TextBlock.TextProperty);
 
 			return textBlock;
 		};
@@ -24,7 +25,14 @@
 		/// <summary>
 		///     The text content of the text block.
 		/// </summary>
-		public static readonly DependencyProperty<string> TextProperty = TextBlock.TextProperty;
+		public static readonly DependencyProperty<string> TextProperty =
+			new DependencyProperty<string>(defaultValue: String.Empty, affectsMeasure: true, prohibitsAnimations: true,
+				defaultBindingMode: BindingMode.TwoWay, validationCallback: ValidateText);
+
+		/// <summary>
+		///     The maximum number of characters that can be manually entered into the text box.
+		/// </summary>
+		public static readonly DependencyProperty<int> MaxLengthProperty = new DependencyProperty<int>(validationCallback: ValidateMaxLength);
 
 		/// <summary>
 		///     The caret that is used to insert and delete text.
@@ -70,6 +78,15 @@
 		}
 
 		/// <summary>
+		///     Gets or sets the maximum number of characters that can be manually entered into the text box.
+		/// </summary>
+		public int MaxLength
+		{
+			get { return GetValue(MaxLengthProperty); }
+			set { SetValue(MaxLengthProperty, value); }
+		}
+
+		/// <summary>
 		///     Gets or sets the text content of the text block.
 		/// </summary>
 		public string Text
@@ -80,6 +97,24 @@
 				Assert.ArgumentNotNull(value);
 				SetValue(TextProperty, value);
 			}
+		}
+
+		/// <summary>
+		///     Validates a value of the text dependency property.
+		/// </summary>
+		/// <param name="value">The value that should be validated.</param>
+		private static bool ValidateText(string value)
+		{
+			return true;
+		}
+
+		/// <summary>
+		///     Validates a value for the max length property.
+		/// </summary>
+		/// <param name="value">The value that should be validated.</param>
+		private static bool ValidateMaxLength(int value)
+		{
+			return value > 0;
 		}
 
 		/// <summary>
@@ -114,6 +149,11 @@
 			var textBox = sender as TextBox;
 			if (textBox == null)
 				return;
+
+			// Check if we've exceeded the maximum length
+			using (var text = TextString.Create(textBox.Text))
+				if (text.Length >= textBox.MaxLength)
+					return;
 
 			textBox._caret.InsertCharacter(e.Character);
 			e.Handled = true;

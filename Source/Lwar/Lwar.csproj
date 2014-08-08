@@ -187,9 +187,9 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="UserInterface\ChatViewModel.cs" />
-    <Compile Include="UserInterface\GameSessionViewModel.cs" />
-    <Compile Include="UserInterface\MainMenuViewModel.cs" />
+    <Compile Include="UserInterface\ViewModels\ChatViewModel.cs" />
+    <Compile Include="UserInterface\ViewModels\GameSessionViewModel.cs" />
+    <Compile Include="UserInterface\ViewModels\MainMenuViewModel.cs" />
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
     <Compile Include="Gameplay\Actors\Explosion.cs" />
@@ -228,7 +228,7 @@
     <Compile Include="Network\ServerDiscoveryService.cs" />
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
-    <Compile Include="UserInterface\ScoreboardViewModel.cs" />
+    <Compile Include="UserInterface\ViewModels\ScoreboardViewModel.cs" />
     <Compile Include="Rendering\Renderers\ParallaxRenderer.cs" />
     <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShockwaveRenderer.cs" />
@@ -300,8 +300,9 @@
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
     <Compile Include="..\User Interface\Lwar UI\UserInterface.cs">
-      <Link>UserInterface\UserInterface.cs</Link>
+      <Link>UserInterface\Views\UserInterface.cs</Link>
     </Compile>
+    <Compile Include="UserInterface\Views\ChatView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

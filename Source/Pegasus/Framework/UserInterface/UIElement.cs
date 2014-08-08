@@ -451,7 +451,7 @@
 		/// </summary>
 		public void Focus()
 		{
-			if (!Focusable)
+			if (!CanBeFocused)
 				return;
 
 			var window = GetParentWindow(this);
@@ -464,7 +464,7 @@
 		/// </summary>
 		public void Unfocus()
 		{
-			if (!Focusable)
+			if (!IsFocused)
 				return;
 
 			var window = GetParentWindow(this);

@@ -1,4 +1,4 @@
-﻿namespace Lwar.UserInterface
+﻿namespace Lwar.UserInterface.Views
 {
 	using System;
 	using System.Collections.Generic;

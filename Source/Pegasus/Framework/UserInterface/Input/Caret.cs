@@ -33,6 +33,11 @@
 		private int _position;
 
 		/// <summary>
+		///     The text contained in the text control during the previous caret operation.
+		/// </summary>
+		private string _text;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="textControl">The text control that uses the caret.</param>
@@ -76,6 +81,12 @@
 		{
 			Assert.ArgumentNotNull(_textControl);
 			Assert.ArgumentNotNull(_textControl.Text);
+
+			if (_text != _textControl.Text)
+			{
+				_text = _textControl.Text;
+				Position = 0;
+			}
 
 			return TextString.Create(_textControl.Text);
 		}

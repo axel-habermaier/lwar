@@ -4,7 +4,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls;assembly=PegasusUI"
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
-			 xmlns:userInterface="clr-namespace:Lwar.UserInterface"
+			 xmlns:userInterface="clr-namespace:Lwar.UserInterface.Views"
 			 mc:Ignorable="d"
 			 Foreground="White">
 

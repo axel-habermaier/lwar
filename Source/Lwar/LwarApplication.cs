@@ -9,6 +9,7 @@
 	using Pegasus.Platform.Memory;
 	using Scripting;
 	using UserInterface;
+	using UserInterface.ViewModels;
 
 	/// <summary>
 	///     Represents the Lwar application.

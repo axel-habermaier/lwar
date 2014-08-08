@@ -1,4 +1,4 @@
-﻿namespace Lwar.UserInterface
+﻿namespace Lwar.UserInterface.ViewModels
 {
 	using System;
 	using System.Collections.Generic;
@@ -9,16 +9,17 @@
 	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
 	using Pegasus.Rendering;
 	using Rendering;
 	using Scripting;
+	using Views;
 
 	/// <summary>
 	///     Displays a game session.
@@ -32,6 +33,16 @@
 
 		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
 		private Camera2D _camera;
+
+		/// <summary>
+		///     The input trigger that is used to determine whether the chat input should be shown.
+		/// </summary>
+		private readonly LogicalInput _activateChatInput = new LogicalInput(Cvars.InputChatCvar, InputLayers.Game);
+
+		/// <summary>
+		///     The view model for the chat input.
+		/// </summary>
+		private ChatViewModel _chat;
 
 		/// <summary>
 		///     The game session that is played.
@@ -67,11 +78,6 @@
 		///     The view model for the scoreboard.
 		/// </summary>
 		private ScoreboardViewModel _scoreboard;
-
-		/// <summary>
-		/// The view model for the chat input.
-		/// </summary>
-		private ChatViewModel _chat;
 
 		/// <summary>
 		///     Indicates whether the user input should be sent to the server during the next update cycle.
@@ -300,6 +306,7 @@
 			Scoreboard = new ScoreboardViewModel(_gameSession);
 			Chat = new ChatViewModel();
 			Application.Current.Window.InputDevice.Add(_respawn);
+			Application.Current.Window.InputDevice.Add(_activateChatInput);
 
 			_networkSession.OnConnected += OnConnected;
 			_networkSession.OnDropped += () => ShowErrorBox("Connection Lost", "The connection to the server has been lost.");
@@ -346,12 +353,12 @@
 			EntityTemplates.Dispose();
 			_camera.SafeDispose();
 			Scoreboard.SafeDispose();
-			Chat.SafeDispose();
 
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
 
 			Application.Current.Window.InputDevice.Remove(_respawn);
+			Application.Current.Window.InputDevice.Remove(_activateChatInput);
 
 			Log.Info("The game session has ended.");
 		}
@@ -368,6 +375,9 @@
 
 			if (!_networkSession.IsConnected)
 				return;
+
+			if (_activateChatInput.IsTriggered)
+				_chat.IsVisible = true;
 
 			SendInput();
 

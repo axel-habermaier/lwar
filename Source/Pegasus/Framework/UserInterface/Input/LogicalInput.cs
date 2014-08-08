@@ -80,7 +80,7 @@
 		/// <param name="device">The logical input device that should be used to evaluate trigger.</param>
 		internal void Update(LogicalInputDevice device)
 		{
-			IsTriggered = _layers.Contains(device.InputLayer) && Trigger.Evaluate(device);
+			IsTriggered = !device.TextInputEnabled && _layers.Contains(device.InputLayer) && Trigger.Evaluate(device);
 		}
 	}
 }

@@ -27,11 +27,6 @@
 		private readonly ActivationState[] _layerStates = new ActivationState[32];
 
 		/// <summary>
-		///     A value indicating whether the logical input device provides text input.
-		/// </summary>
-		private ActivationState _textInput = new ActivationState();
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="keyboard">The keyboard that should be associated with this logical device.</param>
@@ -61,20 +56,9 @@
 		public Mouse Mouse { get; private set; }
 
 		/// <summary>
-		///     Gets or sets a value indicating whether the logical input device provides text input. The actual update is deferred
-		///     until the next frame. Text input is only disabled if the deactivation count matches the activation count.
+		///     Gets or sets a value indicating whether the logical input device provides text input.
 		/// </summary>
-		public bool TextInputEnabled
-		{
-			get { return _textInput.Count != 0; }
-			set
-			{
-				if (value)
-					_textInput.Activate();
-				else
-					_textInput.Deactivate();
-			}
-		}
+		public bool TextInputEnabled { get; set; }
 
 		/// <summary>
 		///     Registers a logical input on the logical input device. Subsequently, the logical input's IsTriggered
@@ -151,9 +135,6 @@
 
 			if (InputLayer.Priority == 0)
 				return;
-
-			// Update the text input state
-			_textInput.Update();
 
 			// Update all inputs
 			foreach (var input in _inputs)
