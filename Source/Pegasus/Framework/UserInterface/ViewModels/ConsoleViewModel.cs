@@ -33,7 +33,6 @@
 			Console.Update(window.Size);
 			Console.ActiveChanged += () => OnPropertyChanged("IsVisible");
 
-			OnDraw = Draw;
 			Camera = new Camera2D(Application.Current.GraphicsDevice);
 
 			_root = window.LayoutRoot;
@@ -60,14 +59,12 @@
 		/// </summary>
 		public Console Console { get; private set; }
 
-		public Action<RenderOutput> OnDraw { get; private set; }
-
 		public void Update()
 		{
 			Console.HandleInput();
 		}
 
-		private void Draw(RenderOutput renderOutput)
+		public void OnDraw(RenderOutput renderOutput)
 		{
 			renderOutput.ClearColor(new Color());
 

@@ -35,14 +35,19 @@
 		public static readonly DependencyProperty<Camera> CameraProperty = new DependencyProperty<Camera>();
 
 		/// <summary>
-		///     The callback that is invoked when the contents of the texture should be updated.
+		///     The name of the draw method that is invoked on the data context when the contents of the texture should be updated.
 		/// </summary>
-		public static readonly DependencyProperty<Action<RenderOutput>> DrawCallbackProperty = new DependencyProperty<Action<RenderOutput>>();
+		public static readonly DependencyProperty<string> DrawMethodProperty = new DependencyProperty<string>();
 
 		/// <summary>
 		///     The depth stencil texture of the render output.
 		/// </summary>
 		private Texture2D _depthStencil;
+
+		/// <summary>
+		///     The draw method that is invoked on the data context when the contents of the texture should be updated.
+		/// </summary>
+		private DrawCallback _drawMethod;
 
 		/// <summary>
 		///     The color buffer of the render output.
@@ -63,6 +68,8 @@
 			DepthStencilFormatProperty.Changed += (obj, args) => ((RenderOutputPanel)obj).DisposeGraphicsResources();
 			ColorBufferFormatProperty.Changed += (obj, args) => ((RenderOutputPanel)obj).DisposeGraphicsResources();
 			CameraProperty.Changed += OnCameraChanged;
+			DrawMethodProperty.Changed += (obj, args) => GetDrawMethodDelegate(obj);
+			DataContextProperty.Changed += (obj, args) => GetDrawMethodDelegate(obj);
 		}
 
 		/// <summary>
@@ -102,12 +109,13 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the callback that is invoked when the contents of the texture should be updated.
+		///     Gets or sets the name of the draw method that is invoked on the data context when the contents of the texture should be
+		///     updated.
 		/// </summary>
-		public Action<RenderOutput> DrawCallback
+		public string DrawMethod
 		{
-			get { return GetValue(DrawCallbackProperty); }
-			set { SetValue(DrawCallbackProperty, value); }
+			get { return GetValue(DrawMethodProperty); }
+			set { SetValue(DrawMethodProperty, value); }
 		}
 
 		/// <summary>
@@ -117,6 +125,33 @@
 		{
 			get { return !MathUtils.Equals(ActualWidth, 0) && !MathUtils.Equals(ActualHeight, 0); }
 		}
+
+		/// <summary>
+		///     Gets the delegate of the draw method.
+		/// </summary>
+		private static void GetDrawMethodDelegate(object obj)
+		{
+			var renderOutputPanel = obj as RenderOutputPanel;
+			if (renderOutputPanel == null)
+				return;
+
+			var dataContext = renderOutputPanel.DataContext;
+			var drawMethod = renderOutputPanel.DrawMethod;
+
+			if (dataContext == null || String.IsNullOrWhiteSpace(drawMethod))
+				return;
+
+			var method = dataContext.GetType().GetMethod(drawMethod);
+			if (method == null || method.ReturnType != typeof(void) || method.GetParameters().Length != 1 ||
+				method.GetParameters()[0].ParameterType != typeof(RenderOutput))
+			{
+				Log.Die("Unable to find method 'void {0}.{1}({2})'.", dataContext.GetType().FullName, drawMethod, typeof(RenderOutput).FullName);
+				return;
+			}
+
+			renderOutputPanel._drawMethod = (DrawCallback)Delegate.CreateDelegate(typeof(DrawCallback), dataContext, method);
+		}
+
 
 		/// <summary>
 		///     Changes the camera of the render output.
@@ -208,9 +243,9 @@
 		protected override void OnDraw(SpriteBatch spriteBatch)
 		{
 			Log.DebugIf(Camera == null, "No camera has been set for the render output panel.");
-			Log.DebugIf(DrawCallback == null, "No draw callback has been set for the render output panel.");
+			Log.DebugIf(_drawMethod == null, "No draw callback has been set for the render output panel.");
 
-			if (!HasVisibleArea || DrawCallback == null)
+			if (!HasVisibleArea || _drawMethod == null)
 				return;
 
 			if (_renderOutput == null)
@@ -230,11 +265,17 @@
 #endif
 
 			// Update the contents of the texture
-			DrawCallback(_renderOutput);
+			_drawMethod(_renderOutput);
 
 			// Draw the contents into the UI
 			var quad = new Quad(new RectangleF(x, y, width, height), Color.White, textureArea);
 			spriteBatch.Draw(ref quad, _outputTexture);
 		}
+
+		/// <summary>
+		///     The type of the draw method that is invoked on the data context.
+		/// </summary>
+		/// <param name="renderOutput">The render output that should be drawn to.</param>
+		private delegate void DrawCallback(RenderOutput renderOutput);
 	}
 }

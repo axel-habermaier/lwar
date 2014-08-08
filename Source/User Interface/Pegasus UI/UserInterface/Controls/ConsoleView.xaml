@@ -8,5 +8,5 @@
 			 d:DesignHeight="300" d:DesignWidth="300"
 			 Panel.ZIndex="2147483647" 
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}">
-	<controls:RenderOutputPanel x:Name="RenderOutput" Camera="{Binding Camera}" DrawCallback="{Binding OnDraw}" />
+	<controls:RenderOutputPanel x:Name="RenderOutput" Camera="{Binding Camera}" DrawMethod="OnDraw" />
 </UserControl>

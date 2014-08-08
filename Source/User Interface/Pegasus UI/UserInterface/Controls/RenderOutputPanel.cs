@@ -18,8 +18,8 @@
 		public static readonly DependencyProperty ColorBufferFormatProperty = DependencyProperty.Register(
 			"ColorBufferFormat", typeof(SurfaceFormat), typeof(RenderOutputPanel), new PropertyMetadata(SurfaceFormat.Rgba8));
 
-		public static readonly DependencyProperty DrawCallbackProperty = DependencyProperty.Register(
-			"DrawCallback", typeof(Action), typeof(RenderOutputPanel), new PropertyMetadata(default(Action)));
+		public static readonly DependencyProperty DrawMethodProperty = DependencyProperty.Register(
+			"DrawMethod", typeof(string), typeof(RenderOutputPanel), new PropertyMetadata(default(Action)));
 
 		public static readonly DependencyProperty CameraProperty = DependencyProperty.Register(
 			"Camera", typeof(Camera), typeof(RenderOutputPanel), new PropertyMetadata(default(Camera)));
@@ -53,10 +53,10 @@
 			set { SetValue(ColorBufferFormatProperty, value); }
 		}
 
-		public Action DrawCallback
+		public string DrawMethod
 		{
-			get { return (Action)GetValue(DrawCallbackProperty); }
-			set { SetValue(DrawCallbackProperty, value); }
+			get { return (string)GetValue(DrawMethodProperty); }
+			set { SetValue(DrawMethodProperty, value); }
 		}
 	}
 }

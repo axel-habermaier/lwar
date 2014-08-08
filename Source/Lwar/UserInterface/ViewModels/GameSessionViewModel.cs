@@ -102,7 +102,6 @@
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public GameSessionViewModel(IPEndPoint serverEndPoint)
 		{
-			OnDraw = Draw;
 			CameraManager = new CameraManager(Application.Current.Window, Application.Current.GraphicsDevice, Application.Current.Window.InputDevice);
 			View = new GameSessionView();
 
@@ -152,11 +151,6 @@
 		///     Gets the camera manager that toggles between the game camera and the debug camera.
 		/// </summary>
 		public CameraManager CameraManager { get; private set; }
-
-		/// <summary>
-		///     Gets the callback that should be used to redraw the 3D scene.
-		/// </summary>
-		public Action<RenderOutput> OnDraw { get; private set; }
 
 		/// <summary>
 		///     Gets the endpoint of the server that hosts the game session.
@@ -270,7 +264,7 @@
 		///     Draws the 3D scene to the given render output.
 		/// </summary>
 		/// <param name="renderOutput">The renderoutput the current scene should be drawn to.</param>
-		private void Draw(RenderOutput renderOutput)
+		public void OnDraw(RenderOutput renderOutput)
 		{
 			renderOutput.ClearColor(new Color(0, 0, 0, 255));
 			renderOutput.ClearDepth();

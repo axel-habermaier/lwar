@@ -8,7 +8,7 @@
 			 mc:Ignorable="d"
 			 Foreground="White">
 
-	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}" HasDepthStencil="true" DrawCallback="{Binding OnDraw}">
+	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}" HasDepthStencil="true" DrawMethod="OnDraw">
 		<controls:AreaPanel>
 
 			<ItemsControl ItemsSource="{Binding EventMessages}" IsHitTestVisible="False">
