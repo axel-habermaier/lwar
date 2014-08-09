@@ -41,16 +41,19 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="mouse">The mouse device that raised the event.</param>
 		/// <param name="position">The position of the mouse at the time the event was generated.</param>
 		/// <param name="inputStates">The states of the mouse buttons.</param>
 		/// <param name="button">The mouse button that was pressed or released.</param>
 		/// <param name="doubleClick">Indicates whether the mouse press was a double click.</param>
-		public static MouseButtonEventArgs Create(Vector2i position, InputState[] inputStates, MouseButton button, bool doubleClick)
+		public static MouseButtonEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates, MouseButton button, bool doubleClick)
 		{
+			Assert.ArgumentNotNull(mouse);
 			Assert.ArgumentInRange(button);
 			Assert.ArgumentNotNull(inputStates);
 
 			CachedInstance.Reset();
+			CachedInstance.Mouse = mouse;
 			CachedInstance.Position = position;
 			CachedInstance.InputStates = inputStates;
 			CachedInstance.Button = button;

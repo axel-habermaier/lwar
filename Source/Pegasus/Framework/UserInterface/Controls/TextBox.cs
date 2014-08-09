@@ -17,7 +17,7 @@
 		private static readonly ControlTemplate DefaultTemplate = control =>
 		{
 			var textBlock = new TextBlock { Margin = new Thickness(2) };
-			textBlock.CreateTemplateBinding(control, TextBox.TextProperty, TextBlock.TextProperty);
+			textBlock.CreateTemplateBinding(control, TextProperty, TextBlock.TextProperty);
 
 			return textBlock;
 		};
@@ -105,7 +105,7 @@
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidateText(string value)
 		{
-			return true;
+			return value != null;
 		}
 
 		/// <summary>
@@ -147,13 +147,16 @@
 		private static void OnTextInput(object sender, TextInputEventArgs e)
 		{
 			var textBox = sender as TextBox;
-			if (textBox == null)
+			if (textBox == null || textBox._textBlock == null)
 				return;
 
 			// Check if we've exceeded the maximum length
-			using (var text = TextString.Create(textBox.Text))
-				if (text.Length >= textBox.MaxLength)
-					return;
+			if (textBox.MaxLength > 0)
+			{
+				using (var text = TextString.Create(textBox.Text))
+					if (text.Length >= textBox.MaxLength)
+						return;
+			}
 
 			textBox._caret.InsertCharacter(e.Character);
 			e.Handled = true;
@@ -165,16 +168,22 @@
 		private static void OnKeyDown(object sender, KeyEventArgs e)
 		{
 			var textBox = sender as TextBox;
-			if (textBox == null)
+			if (textBox == null || textBox._textBlock == null)
 				return;
 
 			switch (e.Key)
 			{
 				case Key.Right:
-					textBox._caret.Move(1);
+					if (e.Keyboard.IsPressed(Key.LeftControl) || e.Keyboard.IsPressed(Key.RightControl))
+						textBox._caret.Position = textBox.GetBeginningOfNextWord();
+					else
+						textBox._caret.Move(1);
 					break;
 				case Key.Left:
-					textBox._caret.Move(-1);
+					if (e.Keyboard.IsPressed(Key.LeftControl) || e.Keyboard.IsPressed(Key.RightControl))
+						textBox._caret.Position = textBox.GetBeginningOfPreviousWord();
+					else
+						textBox._caret.Move(-1);
 					break;
 				case Key.Home:
 					textBox._caret.MoveToBeginning();
@@ -196,6 +205,46 @@
 			}
 
 			e.Handled = true;
+		}
+
+		/// <summary>
+		///     Gets the index of the beginning of the next word.
+		/// </summary>
+		private int GetBeginningOfNextWord()
+		{
+			using (var text = TextString.Create(Text))
+			{
+				var encounteredWhitespace = false;
+				for (var i = _caret.Position; i < text.Length; ++i)
+				{
+					if (Char.IsWhiteSpace(text[i]))
+						encounteredWhitespace = true;
+					else if (encounteredWhitespace)
+						return i;
+				}
+
+				return text.Length;
+			}
+		}
+
+		/// <summary>
+		///     Gets the index of the beginning of the previous word.
+		/// </summary>
+		private int GetBeginningOfPreviousWord()
+		{
+			using (var text = TextString.Create(Text))
+			{
+				var encounteredNonWhitespace = false;
+				for (var i = _caret.Position; i > 0; --i)
+				{
+					if (!Char.IsWhiteSpace(text[i - 1]))
+						encounteredNonWhitespace = true;
+					else if (encounteredNonWhitespace)
+						return i;
+				}
+
+				return 0;
+			}
 		}
 
 		/// <summary>

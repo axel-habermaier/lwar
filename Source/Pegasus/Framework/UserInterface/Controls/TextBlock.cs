@@ -112,7 +112,7 @@
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidateText(string value)
 		{
-			return true;
+			return value != null;
 		}
 
 		/// <summary>

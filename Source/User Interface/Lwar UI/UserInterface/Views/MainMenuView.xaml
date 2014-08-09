@@ -5,9 +5,8 @@
 			 mc:Ignorable="d"
 			 HorizontalAlignment="Center" VerticalAlignment="Center">
 	<StackPanel>
-		<TextBlock Foreground="White">Welcome to Lwar!</TextBlock>
+		<TextBlock Foreground="White" Margin="0,0,0,10">Welcome to Lwar!</TextBlock>
 		<Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding PlaySingle}">Single Player</Button>
 		<Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Exit}">Exit</Button>
-		<TextBox Background="Orange" Foreground="Green" Width="100">Hal wefw fwef wef w fwewe flo</TextBox>
 	</StackPanel>
 </UserControl>

@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
+	using System.Globalization;
 	using Controls;
 	using Math;
 	using Platform;
@@ -95,10 +96,12 @@
 		///     Sets the text of the text control.
 		/// </summary>
 		/// <param name="text">The text that should be set on the text control.</param>
-		private void SetText(TextString text)
+		private void SetText(string text)
 		{
 			Assert.ArgumentNotNull(text);
-			_textControl.Text = text.SourceString;
+
+			_text = text;
+			_textControl.Text = text;
 		}
 
 		/// <summary>
@@ -141,12 +144,10 @@
 			{
 				var length = text.Length;
 				var insertIndex = text.MapToSource(_position);
-				var updateSourceString = text.SourceString.Insert(insertIndex, c.ToString());
+				SetText(text.SourceString.Insert(insertIndex, c.ToString(CultureInfo.InvariantCulture)));
 
-				using (var updatedText = TextString.Create(updateSourceString))
+				using (var updatedText = GetText())
 				{
-					SetText(updatedText);
-
 					// Due to the insertion, less characters might now be visible and we have to adjust the caret position accordingly. To do that,
 					// we calculate the new text position of the inserted character and use the delta to adjust the caret. Then there are two cases:
 					// If we inserted a character that completes a color specifier or an emoticon following the current position, we should not 
@@ -176,8 +177,7 @@
 				if (position != 0)
 					position = text.MapToSource(position - 1) + 1;
 
-				using (var updatedText = TextString.Create(text.SourceString.Remove(position, 1)))
-					SetText(updatedText);
+				SetText(text.SourceString.Remove(position, 1));
 			}
 
 			// The caret position doesn't change, but we have to ensure that it does not get out of bounds
@@ -207,14 +207,13 @@
 					return;
 
 				var sourceString = text.SourceString.Remove(removalIndex, 1);
+				SetText(sourceString);
 
 				using (var updatedText = TextString.Create(sourceString))
 				{
-					SetText(updatedText);
-
 					// Due to the deletion, more characters might now be visible and we have to adjust the caret position accordingly. To do that,
 					// we calculate the new text position for the removed index and use the delta to adjust the caret
-					var newPosition = text.MapToText(removalIndex);
+					var newPosition = updatedText.MapToText(removalIndex);
 					Move(newPosition - _position);
 				}
 			}

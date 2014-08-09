@@ -26,6 +26,11 @@
 		protected InputState[] InputStates { get; set; }
 
 		/// <summary>
+		///     Gets the mouse device that raised the event.
+		/// </summary>
+		public Mouse Mouse { get; protected set; }
+
+		/// <summary>
 		///     Gets the position of the mouse at the time the event was generated.
 		/// </summary>
 		public Vector2i Position { get; protected set; }
@@ -73,13 +78,16 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="mouse">The mouse device that raised the event.</param>
 		/// <param name="position">The position of the mouse at the time the event was generated.</param>
 		/// <param name="inputStates">The states of the mouse buttons.</param>
-		public static MouseEventArgs Create(Vector2i position, InputState[] inputStates)
+		public static MouseEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates)
 		{
+			Assert.ArgumentNotNull(mouse);
 			Assert.ArgumentNotNull(inputStates);
 
 			CachedInstance.Reset();
+			CachedInstance.Mouse = mouse;
 			CachedInstance.Position = position;
 			CachedInstance.InputStates = inputStates;
 

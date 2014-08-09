@@ -29,11 +29,13 @@ Pegasus.Framework
 - Add texture quality switch cvar -> asset reloading required
 - Particle System
 - UI
-	* Events (routed events: http://msdn.microsoft.com/en-us/library/ms742806.aspx, attached events: http://msdn.microsoft.com/en-us/library/bb613550.aspx)
-	* Controls: TextBox, Scrollviewer, Combobox, Checkbox, Image
+	* Controls: Scrollviewer, Combobox, Checkbox, Image
 	* Animation System
 	* Refactor UI drawing (http://msdn.microsoft.com/en-us/library/ms748373.aspx)
 		-> Instead of separate draw calls per layer, use depth tests and layer by z axis in a single draw call
+	* Input bindings, logical inputs local to UI elements, should solve all layering and text input issues
+	* Fix layouting bugs
+	* TextBox: Text selection, copy & paste
 
 Pegasus.Platform
 ========

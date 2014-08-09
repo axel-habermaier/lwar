@@ -3,7 +3,6 @@
 	using System;
 	using Controls;
 	using Platform;
-	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -25,6 +24,13 @@
 		///     The UI element that currently has the keyboard focus.
 		/// </summary>
 		private UIElement _focusedElement;
+
+		/// <summary>
+		///     Initializes a new instance for testing purposes.
+		/// </summary>
+		internal Keyboard()
+		{
+		}
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -135,7 +141,7 @@
 			Assert.ArgumentInRange(key);
 			_states[(int)key].KeyReleased();
 
-			var args = KeyEventArgs.Create(key, scanCode, _states[(int)key]);
+			var args = KeyEventArgs.Create(this, key, scanCode, _states[(int)key]);
 			args.RoutedEvent = null;
 
 			if (KeyReleased != null)
@@ -155,7 +161,7 @@
 			Assert.ArgumentInRange(key);
 			_states[(int)key].KeyPressed();
 
-			var args = KeyEventArgs.Create(key, scanCode, _states[(int)key]);
+			var args = KeyEventArgs.Create(this, key, scanCode, _states[(int)key]);
 			args.RoutedEvent = null;
 
 			if (KeyPressed != null)

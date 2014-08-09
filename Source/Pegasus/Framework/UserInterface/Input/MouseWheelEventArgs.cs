@@ -28,14 +28,17 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="mouse">The mouse device that raised the event.</param>
 		/// <param name="position">The position of the mouse at the time the event was generated.</param>
 		/// <param name="inputStates">The states of the mouse buttons.</param>
 		/// <param name="delta">A value indicating the amount the mouse wheel has changed.</param>
-		public static MouseWheelEventArgs Create(Vector2i position, InputState[] inputStates, int delta)
+		public static MouseWheelEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates, int delta)
 		{
+			Assert.ArgumentNotNull(mouse);
 			Assert.ArgumentNotNull(inputStates);
 
 			CachedInstance.Reset();
+			CachedInstance.Mouse = mouse;
 			CachedInstance.Position = position;
 			CachedInstance.InputStates = inputStates;
 			CachedInstance.Delta = delta;

@@ -72,7 +72,7 @@
 			var button = new Button { DataContext = this };
 			button.CreateEventBinding(UIElement.KeyUpEvent, "OnEventParameters");
 
-			button.RaiseEvent(UIElement.KeyUpEvent, KeyEventArgs.Create(Key.A, 17, new InputState()));
+			button.RaiseEvent(UIElement.KeyUpEvent, KeyEventArgs.Create(new Keyboard(), Key.A, 17, new InputState()));
 			_parameterMethodInvoked.Should().BeTrue();
 			_parameterlessMethodInvoked.Should().BeFalse();
 			_sender.Should().Be(button);

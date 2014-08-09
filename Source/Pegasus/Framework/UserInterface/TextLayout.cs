@@ -141,7 +141,7 @@
 		{
 			// The caret 'origin' is at the top left corner of the desired area; 
 			// non-left/top aligned layouts are not supported
-			if (position == 0 || String.IsNullOrWhiteSpace(_arranged.Text))
+			if (position == 0 || String.IsNullOrEmpty(_arranged.Text))
 				return Vector2i.Zero;
 
 			// Find the line that contains the caret
@@ -162,7 +162,7 @@
 			// Calculate the caret's offset from the line's left edge
 			if (!_lines[lineIndex].IsInvalid)
 				result.X += _arranged.Font.MeasureWidth(_arranged.Text, Math.Max(0, _lines[lineIndex].FirstCharacter), position);
-			
+
 			return result;
 		}
 
@@ -172,7 +172,7 @@
 		/// <param name="position">The position the closest character should be returned for.</param>
 		internal int GetCharacterIndexAt(Vector2i position)
 		{
-			if (String.IsNullOrWhiteSpace(_arranged.Text))
+			if (String.IsNullOrEmpty(_arranged.Text))
 				return 0;
 
 			// Search for the correct line

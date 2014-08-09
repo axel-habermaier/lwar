@@ -7,7 +7,6 @@
 	using Controls;
 	using Math;
 	using Platform;
-	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -39,6 +38,13 @@
 		///     The UI element the mouse is currently over. Null if the mouse is not over any UI element.
 		/// </summary>
 		private UIElement _hoveredElement;
+
+		/// <summary>
+		///     Initializes a new instance for testing purposes.
+		/// </summary>
+		internal Mouse()
+		{
+		}
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -103,7 +109,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseButtonEventArgs.Create(position, _states, button, doubleClick);
+			var args = MouseButtonEventArgs.Create(this, position, _states, button, doubleClick);
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseDownEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseDownEvent, args);
 
@@ -133,7 +139,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseButtonEventArgs.Create(position, _states, button, false);
+			var args = MouseButtonEventArgs.Create(this, position, _states, button, false);
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseUpEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseUpEvent, args);
 
@@ -159,7 +165,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseWheelEventArgs.Create(Position, _states, delta);
+			var args = MouseWheelEventArgs.Create(this, Position, _states, delta);
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseWheelEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseWheelEvent, args);
 		}
@@ -175,7 +181,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseEventArgs.Create(position, _states);
+			var args = MouseEventArgs.Create(this, position, _states);
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseMoveEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseMoveEvent, args);
 		}
@@ -187,13 +193,13 @@
 		private void UpdateHoveredElement(Vector2i position)
 		{
 			Assert.That((_hoveredElement == null && _hoveredElements.Count == 0) ||
-				(_hoveredElement != null && _hoveredElements.Count != 0), "Invalid hovered elements state.");
+						(_hoveredElement != null && _hoveredElements.Count != 0), "Invalid hovered elements state.");
 
 			var hoveredElement = _window.HitTest(new Vector2d(position.X, position.Y));
 			if (hoveredElement == _hoveredElement)
 				return;
 
-			var args = MouseEventArgs.Create(Position, _states);
+			var args = MouseEventArgs.Create(this, Position, _states);
 
 			if (_hoveredElement != null)
 				UnsetIsMouseOver(_hoveredElement, args);
@@ -206,7 +212,7 @@
 
 		/// <summary>
 		///     Sets the IsMouseOver property and raises the MouseEnter event of all currently hovered UI
-		///		elements that are in the path of the hovered element to the root.
+		///     elements that are in the path of the hovered element to the root.
 		/// </summary>
 		/// <param name="args">The event arguments that should be passed to the MouseLeaveEvent.</param>
 		private void SetIsMouseOver(MouseEventArgs args)
@@ -227,7 +233,7 @@
 
 		/// <summary>
 		///     Unsets the IsMouseOver property and raises the MouseLeave event of all currently hovered UI
-		///		elements that are not in the path of the given UI element to the root.
+		///     elements that are not in the path of the given UI element to the root.
 		/// </summary>
 		/// <param name="uiElement">The UI element that starts the path to the root.</param>
 		/// <param name="args">The event arguments that should be passed to the MouseLeaveEvent.</param>
