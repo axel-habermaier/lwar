@@ -1,10 +1,10 @@
 ﻿namespace Pegasus.Rendering
 {
 	using System;
+	using Framework.UserInterface.Input;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
-	using Framework.UserInterface.Input;
 
 	/// <summary>
 	///     Represents a six-degrees-of-freedom debug camera.
@@ -78,7 +78,7 @@
 			Assert.ArgumentNotNull(inputDevice);
 
 			_inputDevice = inputDevice;
-			_inputDevice.Mouse.Moved += MouseMoved;
+			_inputDevice.MouseMoved += MouseMoved;
 
 			_forward = new LogicalInput(Key.W.IsPressed());
 			_backward = new LogicalInput(Key.S.IsPressed());
@@ -92,6 +92,11 @@
 
 			Reset();
 		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the debug camera is active.
+		/// </summary>
+		public bool IsActive { get; set; }
 
 		/// <summary>
 		///     Updates the projection matrix based on the current camera configuration.
@@ -132,6 +137,9 @@
 		/// </summary>
 		public void Update()
 		{
+			if (!IsActive)
+				return;
+
 			var move = Vector3.Zero;
 
 			if (_forward.IsTriggered)
@@ -168,10 +176,11 @@
 		/// <summary>
 		///     Invoked when the position of the mouse has changed.
 		/// </summary>
-		/// <param name="position">The new position of the mouse.</param>
-		private void MouseMoved(Vector2i position)
+		/// <param name="eventArgs">Contains the new position of the mouse.</param>
+		private void MouseMoved(MouseEventArgs eventArgs)
 		{
-			_mouseDelta += position - new Vector2i(Viewport.Width, Viewport.Height) / 2;
+			if (IsActive)
+				_mouseDelta += eventArgs.Position - new Vector2i(Viewport.Width, Viewport.Height) / 2;
 		}
 
 		/// <summary>
@@ -179,7 +188,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_inputDevice.Mouse.Moved -= MouseMoved;
+			_inputDevice.MouseMoved -= MouseMoved;
 			_inputDevice.Remove(_forward);
 			_inputDevice.Remove(_backward);
 			_inputDevice.Remove(_left);

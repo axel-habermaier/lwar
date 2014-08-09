@@ -83,7 +83,7 @@
 			Up = new Vector3(0, 0, 1);
 
 			_inputDevice = inputDevice;
-			_inputDevice.Mouse.Wheel += OnZoomChanged;
+			_inputDevice.MouseWheel += OnZoomChanged;
 			_targetZoom = _zoom;
 			_clock.Reset();
 		}
@@ -127,7 +127,7 @@
 		/// </summary>
 		public void Update()
 		{
-			if (Ship == null)
+			if (Ship == null || !IsActive)
 				return;
 
 			// Scale to [0,1] range
@@ -239,17 +239,18 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_inputDevice.Mouse.Wheel -= OnZoomChanged;
+			_inputDevice.MouseWheel -= OnZoomChanged;
 			base.OnDisposing();
 		}
-
+	
 		/// <summary>
 		///     Updates the camera's distance to the XZ plane.
 		/// </summary>
-		/// <param name="delta">The delta that should be applied to the camera's distance to the XZ plane.</param>
-		private void OnZoomChanged(int delta)
+		/// <param name="args">Contains the delta that should be applied to the camera's distance to the XZ plane.</param>
+		private void OnZoomChanged(MouseWheelEventArgs args)
 		{
-			_targetZoom = MathUtils.Clamp(_targetZoom + -1 * delta * DeltaScale, MinZoom, MaxZoom);
+			if (IsActive)
+			_targetZoom = MathUtils.Clamp(_targetZoom + -1 * args.Delta * DeltaScale, MinZoom, MaxZoom);
 		}
 	}
 }

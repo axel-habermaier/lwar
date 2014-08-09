@@ -48,9 +48,11 @@
 
 			_window = window;
 			_window.KeyDown += OnKeyDown;
-			_window.KeyDown += OnKeyUp;
+			_window.KeyUp += OnKeyUp;
 			_window.MouseDown += OnMouseDown;
 			_window.MouseUp += OnMouseUp;
+			_window.MouseWheel += OnMouseWheel;
+			_window.MouseMove += OnMouseMoved;
 		}
 
 		/// <summary>
@@ -77,12 +79,50 @@
 		/// <summary>
 		///     Raised when a key has been pressed.
 		/// </summary>
-		internal event Action<KeyEventArgs> KeyPressed;
+		public event Action<KeyEventArgs> KeyPressed;
 
 		/// <summary>
 		///     Raised when a key has been released.
 		/// </summary>
-		internal event Action<KeyEventArgs> KeyReleased;
+		public event Action<KeyEventArgs> KeyReleased;
+
+		/// <summary>
+		///     Raised when a mouse button was pressed.
+		/// </summary>
+		public event Action<MouseButtonEventArgs> MouseButtonPressed;
+
+		/// <summary>
+		///     Raised when a mouse button was released.
+		/// </summary>
+		public event Action<MouseButtonEventArgs> MouseButtonReleased;
+
+		/// <summary>
+		///     Raised when the mouse was moved.
+		/// </summary>
+		public event Action<MouseEventArgs> MouseMoved;
+
+		/// <summary>
+		///     Raised when the mouse wheel changed.
+		/// </summary>
+		public event Action<MouseWheelEventArgs> MouseWheel;
+
+		/// <summary>
+		///     Raises the mouse wheel event.
+		/// </summary>
+		private void OnMouseWheel(object sender, MouseWheelEventArgs e)
+		{
+			if (MouseWheel != null)
+				MouseWheel(e);
+		}
+
+		/// <summary>
+		///     Raises the mouse move event.
+		/// </summary>
+		private void OnMouseMoved(object sender, MouseEventArgs e)
+		{
+			if (MouseMoved != null)
+				MouseMoved(e);
+		}
 
 		/// <summary>
 		///     Updates the mouse button state of the mouse button the event has been raised for.
@@ -91,6 +131,9 @@
 		{
 			_mouseButtonStates[(int)e.Button].Pressed();
 			_doubleClicked[(int)e.Button] |= e.DoubleClick;
+
+			if (MouseButtonPressed != null)
+				MouseButtonPressed(e);
 		}
 
 		/// <summary>
@@ -99,6 +142,9 @@
 		private void OnMouseUp(object sender, MouseButtonEventArgs e)
 		{
 			_mouseButtonStates[(int)e.Button].Released();
+
+			if (MouseButtonReleased != null)
+				MouseButtonReleased(e);
 		}
 
 		/// <summary>
@@ -174,9 +220,11 @@
 		protected override void OnDisposing()
 		{
 			_window.KeyDown -= OnKeyDown;
-			_window.KeyDown -= OnKeyUp;
+			_window.KeyUp -= OnKeyUp;
 			_window.MouseDown -= OnMouseDown;
 			_window.MouseUp -= OnMouseUp;
+			_window.MouseWheel -= OnMouseWheel;
+			_window.MouseMove -= OnMouseMoved;
 		}
 
 		/// <summary>

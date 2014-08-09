@@ -377,7 +377,9 @@
 
 			_timer.Update();
 			_gameSession.Update();
-			_inputManager.Update();
+
+			if (CameraManager.GameCamera.IsActive)
+				_inputManager.Update();
 
 			CameraManager.GameCamera.Ship = _gameSession.Players.LocalPlayer.Ship;
 			CameraManager.Update();

@@ -4,8 +4,8 @@
 	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Platform.Graphics;
 	using Pegasus.Framework.UserInterface.Input;
+	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Scripting;
@@ -54,8 +54,6 @@
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);
 
 			ActiveCamera = GameCamera;
-			GameCamera.IsActive = true;
-
 			Commands.OnToggleDebugCamera += ToggleDebugCamera;
 		}
 
@@ -70,7 +68,20 @@
 		public Camera ActiveCamera
 		{
 			get { return _activeCamera; }
-			private set { ChangePropertyValue(ref _activeCamera, value); }
+			private set
+			{
+				Assert.ArgumentNotNull(value);
+
+				_debugCamera.IsActive = false;
+				GameCamera.IsActive = false;
+
+				ChangePropertyValue(ref _activeCamera, value);
+
+				if (_activeCamera is GameCamera)
+					GameCamera.IsActive = true;
+				else
+					_debugCamera.IsActive = true;
+			}
 		}
 
 		/// <summary>
@@ -89,8 +100,6 @@
 				_debugCamera.Reset();
 				_window.MouseCaptured = true;
 			}
-
-			GameCamera.IsActive = ActiveCamera == GameCamera;
 		}
 
 		/// <summary>
