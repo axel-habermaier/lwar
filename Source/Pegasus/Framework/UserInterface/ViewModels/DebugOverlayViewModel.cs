@@ -1,9 +1,9 @@
 ﻿namespace Pegasus.Framework.UserInterface.ViewModels
 {
 	using System;
-	using Controls;
 	using Platform;
 	using Scripting;
+	using Views;
 
 	/// <summary>
 	///     Displays statistics about the performance of the application and other information useful for debugging.

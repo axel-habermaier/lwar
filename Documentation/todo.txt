@@ -34,6 +34,8 @@ Pegasus.Framework
 	* Refactor UI drawing (http://msdn.microsoft.com/en-us/library/ms748373.aspx)
 		-> Instead of separate draw calls per layer, use depth tests and layer by z axis in a single draw call
 	* Input bindings, logical inputs local to UI elements, should solve all layering and text input issues
+		-> Bind to data context methods, bind to console commands
+		-> How to handle method/command parameters?
 	* Fix layouting bugs
 	* TextBox: Text selection, copy & paste
 

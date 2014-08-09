@@ -57,15 +57,15 @@
 			switch (_triggerType)
 			{
 				case KeyTriggerType.Released:
-					return !device.Keyboard.IsPressed(_key);
+					return !device.IsPressed(_key);
 				case KeyTriggerType.WentDown:
-					return device.Keyboard.WentDown(_key);
+					return device.WentDown(_key);
 				case KeyTriggerType.Pressed:
-					return device.Keyboard.IsPressed(_key);
+					return device.IsPressed(_key);
 				case KeyTriggerType.WentUp:
-					return device.Keyboard.WentUp(_key);
+					return device.WentUp(_key);
 				case KeyTriggerType.Repeated:
-					return device.Keyboard.IsRepeated(_key);
+					return device.IsRepeated(_key);
 				default:
 					return false;
 			}

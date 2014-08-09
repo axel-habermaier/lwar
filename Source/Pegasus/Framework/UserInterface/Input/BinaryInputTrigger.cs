@@ -100,10 +100,10 @@
 		///     The logical input device the logical input is currently registered on. Null should be passed to
 		///     indicate that the logical input is currently not registered on any device.
 		/// </param>
-		internal override void IsRegisteredOn(LogicalInputDevice device)
+		internal override void SetLogicalDevice(LogicalInputDevice device)
 		{
-			_left.IsRegisteredOn(device);
-			_right.IsRegisteredOn(device);
+			_left.SetLogicalDevice(device);
+			_right.SetLogicalDevice(device);
 		}
 
 		/// <summary>

@@ -139,7 +139,7 @@
 		private void OnKeyReleased(Key key, int scanCode)
 		{
 			Assert.ArgumentInRange(key);
-			_states[(int)key].KeyReleased();
+			_states[(int)key].Released();
 
 			var args = KeyEventArgs.Create(this, key, scanCode, _states[(int)key]);
 			args.RoutedEvent = null;
@@ -159,7 +159,7 @@
 		private void OnKeyPressed(Key key, int scanCode)
 		{
 			Assert.ArgumentInRange(key);
-			_states[(int)key].KeyPressed();
+			_states[(int)key].Pressed();
 
 			var args = KeyEventArgs.Create(this, key, scanCode, _states[(int)key]);
 			args.RoutedEvent = null;

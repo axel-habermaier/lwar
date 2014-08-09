@@ -37,11 +37,6 @@
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
-		///     The input layer that must be activated to control the camera.
-		/// </summary>
-		private readonly InputLayer _layer;
-
-		/// <summary>
 		///     Triggered when the user wants to strafe left.
 		/// </summary>
 		private readonly LogicalInput _left;
@@ -76,22 +71,19 @@
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		/// <param name="inputDevice">The logical input device that provides the input for the camera.</param>
-		/// <param name="layer">The input layer that must be activated to control the camera.</param>
-		public DebugCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, InputLayer layer)
+		public DebugCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(inputDevice);
-			Assert.ArgumentSatisfies(layer.IsPrimitive, "Invalid input layer.");
 
 			_inputDevice = inputDevice;
 			_inputDevice.Mouse.Moved += MouseMoved;
-			_layer = layer;
 
-			_forward = new LogicalInput(Key.W.IsPressed(), layer);
-			_backward = new LogicalInput(Key.S.IsPressed(), layer);
-			_left = new LogicalInput(Key.A.IsPressed(), layer);
-			_right = new LogicalInput(Key.D.IsPressed(), layer);
+			_forward = new LogicalInput(Key.W.IsPressed());
+			_backward = new LogicalInput(Key.S.IsPressed());
+			_left = new LogicalInput(Key.A.IsPressed());
+			_right = new LogicalInput(Key.D.IsPressed());
 
 			inputDevice.Add(_forward);
 			inputDevice.Add(_backward);
@@ -140,9 +132,6 @@
 		/// </summary>
 		public void Update()
 		{
-			if (_inputDevice.InputLayer != _layer)
-				return;
-
 			var move = Vector3.Zero;
 
 			if (_forward.IsTriggered)
@@ -182,9 +171,6 @@
 		/// <param name="position">The new position of the mouse.</param>
 		private void MouseMoved(Vector2i position)
 		{
-			if (_inputDevice.InputLayer != _layer)
-				return;
-
 			_mouseDelta += position - new Vector2i(Viewport.Width, Viewport.Height) / 2;
 		}
 

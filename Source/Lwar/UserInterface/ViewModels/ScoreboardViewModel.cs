@@ -16,7 +16,7 @@ namespace Lwar.UserInterface.ViewModels
 		/// <summary>
 		///     The input that causes the scoreboard to be shown. TODO: Replace with UI framework input
 		/// </summary>
-		private readonly LogicalInput _showScoreboard = new LogicalInput(Cvars.InputShowScoreboardCvar, InputLayers.Game);
+		private readonly LogicalInput _showScoreboard = new LogicalInput(Cvars.InputShowScoreboardCvar);
 
 		/// <summary>
 		///     Indicates whether the player list is potentially dirty.

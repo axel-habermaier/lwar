@@ -7,6 +7,7 @@
 	using Platform.Graphics;
 	using Platform.Memory;
 	using Rendering;
+	using Views;
 	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>

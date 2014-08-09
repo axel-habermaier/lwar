@@ -211,7 +211,6 @@
 			var z = origin.Z + distance * direction.Z;
 
 			var worldCoordinates = new Vector2(x, z) * 2 - new Vector2(Position.X, Position.Z);
-			//Log.Info("Mouse world coordinates: {0}", worldCoordinates);
 			return worldCoordinates;
 		}
 
@@ -250,8 +249,7 @@
 		/// <param name="delta">The delta that should be applied to the camera's distance to the XZ plane.</param>
 		private void OnZoomChanged(int delta)
 		{
-			if (_inputDevice.InputLayer == InputLayers.Game)
-				_targetZoom = MathUtils.Clamp(_targetZoom + -1 * delta * DeltaScale, MinZoom, MaxZoom);
+			_targetZoom = MathUtils.Clamp(_targetZoom + -1 * delta * DeltaScale, MinZoom, MaxZoom);
 		}
 	}
 }

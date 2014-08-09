@@ -27,18 +27,18 @@
 			var controlPressed = Key.LeftControl.IsPressed() | Key.RightControl.IsPressed();
 			var controlReleased = Key.LeftControl.IsReleased() | Key.RightControl.IsReleased();
 
-			Toggle = new LogicalInput(new ScanCodeKeyTrigger(KeyTriggerType.WentDown, PlatformInfo.ConsoleKey), InputLayer.All);
-			Submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown(), InputLayer.Console);
-			Clear = new LogicalInput(controlPressed + Key.L.IsPressed(), InputLayer.Console);
-			ClearPrompt = new LogicalInput(Key.Escape.WentDown(), InputLayer.Console);
-			ShowOlderHistory = new LogicalInput(Key.Up.IsRepeated(), InputLayer.Console);
-			ShowNewerHistory = new LogicalInput(Key.Down.IsRepeated(), InputLayer.Console);
-			ScrollUp = new LogicalInput(Key.PageUp.IsRepeated() & controlReleased, InputLayer.Console);
-			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated() & controlReleased, InputLayer.Console);
-			ScrollToTop = new LogicalInput(controlPressed + Key.PageUp.IsPressed(), InputLayer.Console);
-			ScrollToBottom = new LogicalInput(controlPressed + Key.PageDown.IsPressed(), InputLayer.Console);
-			AutoCompleteNext = new LogicalInput(Key.Tab.WentDown() & Key.LeftShift.IsReleased(), InputLayer.Console);
-			AutoCompletePrevious = new LogicalInput(Key.Tab.IsPressed() + Key.LeftShift.IsPressed(), InputLayer.Console);
+			Toggle = new LogicalInput(new ScanCodeKeyTrigger(KeyTriggerType.WentDown, PlatformInfo.ConsoleKey));
+			Submit = new LogicalInput(Key.Return.WentDown() | Key.NumpadEnter.WentDown());
+			Clear = new LogicalInput(controlPressed + Key.L.IsPressed());
+			ClearPrompt = new LogicalInput(Key.Escape.WentDown());
+			ShowOlderHistory = new LogicalInput(Key.Up.IsRepeated());
+			ShowNewerHistory = new LogicalInput(Key.Down.IsRepeated());
+			ScrollUp = new LogicalInput(Key.PageUp.IsRepeated() & controlReleased);
+			ScrollDown = new LogicalInput(Key.PageDown.IsRepeated() & controlReleased);
+			ScrollToTop = new LogicalInput(controlPressed + Key.PageUp.IsPressed());
+			ScrollToBottom = new LogicalInput(controlPressed + Key.PageDown.IsPressed());
+			AutoCompleteNext = new LogicalInput(Key.Tab.WentDown() & Key.LeftShift.IsReleased());
+			AutoCompletePrevious = new LogicalInput(Key.Tab.IsPressed() + Key.LeftShift.IsPressed());
 
 			device.Add(Toggle);
 			device.Add(Submit);
@@ -113,19 +113,6 @@
 		///     Gets the logical input for the console's auto-completion action in backwards direction.
 		/// </summary>
 		public LogicalInput AutoCompletePrevious { get; private set; }
-
-		/// <summary>
-		///     Invoked when the activation state of the console has been changed.
-		/// </summary>
-		public void OnActivationChanged(bool activated)
-		{
-			if (activated)
-				_device.ActivateLayer(InputLayer.Console);
-			else
-				_device.DeactivateLayer(InputLayer.Console);
-
-			_device.TextInputEnabled = activated;
-		}
 
 		/// <summary>
 		///     Raised when a text character was entered.

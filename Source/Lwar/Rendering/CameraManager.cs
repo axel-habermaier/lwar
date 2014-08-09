@@ -51,7 +51,7 @@
 			_inputDevice = inputDevice;
 
 			GameCamera = new GameCamera(graphicsDevice, inputDevice);
-			_debugCamera = new DebugCamera(graphicsDevice, inputDevice, InputLayers.Debug);
+			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);
 
 			ActiveCamera = GameCamera;
 			GameCamera.IsActive = true;
@@ -81,16 +81,12 @@
 			if (ActiveCamera == _debugCamera)
 			{
 				ActiveCamera = GameCamera;
-
-				_inputDevice.DeactivateLayer(InputLayers.Debug);
 				_window.MouseCaptured = false;
 			}
 			else
 			{
 				ActiveCamera = _debugCamera;
 				_debugCamera.Reset();
-
-				_inputDevice.ActivateLayer(InputLayers.Debug);
 				_window.MouseCaptured = true;
 			}
 
@@ -114,10 +110,7 @@
 			Commands.OnToggleDebugCamera -= ToggleDebugCamera;
 
 			if (ActiveCamera == _debugCamera)
-			{
 				_window.MouseCaptured = false;
-				_inputDevice.DeactivateLayer(InputLayers.Debug);
-			}
 
 			_debugCamera.SafeDispose();
 			GameCamera.SafeDispose();

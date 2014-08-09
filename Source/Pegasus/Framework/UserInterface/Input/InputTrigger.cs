@@ -49,7 +49,7 @@
 		///     The logical input device the logical input is currently registered on. Null should be passed to
 		///     indicate that the logical input is currently not registered on any device.
 		/// </param>
-		internal virtual void IsRegisteredOn(LogicalInputDevice device)
+		internal virtual void SetLogicalDevice(LogicalInputDevice device)
 		{
 		}
 

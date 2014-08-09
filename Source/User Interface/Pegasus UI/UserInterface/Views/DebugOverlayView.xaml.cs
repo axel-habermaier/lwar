@@ -1,4 +1,4 @@
-﻿namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Views
 {
 	using System;
 	using System.Windows.Controls;

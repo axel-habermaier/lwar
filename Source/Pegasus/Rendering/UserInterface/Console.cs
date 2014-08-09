@@ -118,7 +118,6 @@
 
 				_active = value;
 				_prompt.Clear();
-				_input.OnActivationChanged(value);
 
 				if (ActiveChanged != null)
 					ActiveChanged();

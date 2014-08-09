@@ -93,21 +93,21 @@
 		///     The logical input device the logical input is currently registered on. Null should be passed to
 		///     indicate that the logical input is currently not registered on any device.
 		/// </param>
-		internal override void IsRegisteredOn(LogicalInputDevice device)
+		internal override void SetLogicalDevice(LogicalInputDevice device)
 		{
 			if (device == _device)
 				return;
 
 			if (device == null && _device != null)
 			{
-				_device.Keyboard.KeyPressed -= OnKeyPressed;
-				_device.Keyboard.KeyReleased -= OnKeyReleased;
+				_device.KeyPressed -= OnKeyPressed;
+				_device.KeyReleased -= OnKeyReleased;
 			}
 
 			if (device != null)
 			{
-				device.Keyboard.KeyPressed += OnKeyPressed;
-				device.Keyboard.KeyReleased += OnKeyReleased;
+				device.KeyPressed += OnKeyPressed;
+				device.KeyReleased += OnKeyReleased;
 			}
 
 			_device = device;
@@ -120,7 +120,7 @@
 		private void OnKeyPressed(KeyEventArgs key)
 		{
 			if (key.ScanCode == _scanCode)
-				_state.KeyPressed();
+				_state.Pressed();
 		}
 
 		/// <summary>
@@ -130,7 +130,7 @@
 		private void OnKeyReleased(KeyEventArgs key)
 		{
 			if (key.ScanCode == _scanCode)
-				_state.KeyReleased();
+				_state.Released();
 		}
 
 		/// <summary>

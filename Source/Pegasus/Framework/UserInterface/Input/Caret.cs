@@ -150,8 +150,8 @@
 				{
 					// Due to the insertion, less characters might now be visible and we have to adjust the caret position accordingly. To do that,
 					// we calculate the new text position of the inserted character and use the delta to adjust the caret. Then there are two cases:
-					// If we inserted a character that completes a color specifier or an emoticon following the current position, we should not 
-					// move the caret. Otherwise, we move back by the delta and advance to the next character.
+					// If we inserted a character that completes a color specifier following the current position, we should not move the caret.
+					// Otherwise, we move back by the delta and advance to the next character.
 					var newPosition = updatedText.MapToText(insertIndex);
 					if (updatedText.Length < length && newPosition == _position)
 						Move(0);

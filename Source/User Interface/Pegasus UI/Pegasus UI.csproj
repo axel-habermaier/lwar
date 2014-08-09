@@ -120,7 +120,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="UserInterface\Controls\DataGridTextColumn.cs" />
-    <Compile Include="UserInterface\Controls\DebugOverlayView.xaml.cs">
+    <Compile Include="UserInterface\Views\DebugOverlayView.xaml.cs">
       <DependentUpon>DebugOverlayView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserInterface\Controls\AreaPanel.cs" />
@@ -144,15 +144,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserInterface\Controls\ConsoleView.xaml">
+    <Page Include="UserInterface\Views\ConsoleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserInterface\Controls\DebugOverlayView.xaml">
+    <Page Include="UserInterface\Views\DebugOverlayView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserInterface\Controls\MessageBoxView.xaml">
+    <Page Include="UserInterface\Views\MessageBoxView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

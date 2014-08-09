@@ -4,7 +4,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" d:DesignWidth="500"
              HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"
-			 Background="#FF323232">
+			 Background="#FF323232"
+			 Focusable="True"
+			 KeyDown="{Binding Close}">
 	<StackPanel>
 		<TextBlock Text="{Binding Header}" Background="#FF5B5B5B"></TextBlock>
 		<TextBlock Text="{Binding Message}" Margin="0,10,0,0"></TextBlock>

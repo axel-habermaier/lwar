@@ -2,6 +2,8 @@
 {
 	using System;
 	using Controls;
+	using Input;
+	using Views;
 
 	/// <summary>
 	///     Displays a message box.
@@ -69,6 +71,18 @@
 		}
 
 		/// <summary>
+		///     Closes the message box.
+		/// </summary>
+		public void Close(object sender, KeyEventArgs e)
+		{
+			if (e.Key != Key.Return && e.Key != Key.NumpadEnter && e.Key != Key.Escape)
+				return;
+
+			e.Handled = true;
+			Close();
+		}
+
+		/// <summary>
 		///     Shows the message box.
 		/// </summary>
 		public void Show()
@@ -77,6 +91,7 @@
 			Panel.SetZIndex(_view, ZIndex);
 
 			Application.Current.Window.LayoutRoot.Add(_view);
+			_view.Focus();
 		}
 	}
 }

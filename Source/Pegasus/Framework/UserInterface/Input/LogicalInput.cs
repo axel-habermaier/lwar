@@ -16,30 +16,21 @@
 	public class LogicalInput
 	{
 		/// <summary>
-		///     The input layer(s) that must be active for the input to be triggered.
-		/// </summary>
-		private readonly InputLayer _layers;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="trigger">The trigger that triggers the logical input.</param>
-		/// <param name="layers">The input layer(s) that must be active for the input to be triggered.</param>
-		public LogicalInput(InputTrigger trigger, InputLayer layers)
+		public LogicalInput(InputTrigger trigger)
 		{
 			Assert.ArgumentNotNull(trigger);
-
 			Trigger = trigger;
-			_layers = layers;
 		}
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="configurableTrigger">The configurable trigger that triggers the logical input.</param>
-		/// <param name="layers">The input layer(s) that must be active for the input to be triggered.</param>
-		public LogicalInput(Cvar<InputTrigger> configurableTrigger, InputLayer layers)
-			: this(configurableTrigger.ToTrigger(), layers)
+		public LogicalInput(Cvar<InputTrigger> configurableTrigger)
+			: this(configurableTrigger.ToTrigger())
 		{
 			Assert.ArgumentNotNull(configurableTrigger);
 		}
@@ -66,12 +57,12 @@
 		///     The logical input device the logical input is currently registered on. Null should be passed to
 		///     indicate that the logical input is currently not registered on any device.
 		/// </param>
-		internal void IsRegisteredOn(LogicalInputDevice device)
+		internal void SetLogicalDevice(LogicalInputDevice device)
 		{
 			IsRegistered = device != null;
 			IsTriggered = false;
 
-			Trigger.IsRegisteredOn(device);
+			Trigger.SetLogicalDevice(device);
 		}
 
 		/// <summary>
@@ -80,7 +71,7 @@
 		/// <param name="device">The logical input device that should be used to evaluate trigger.</param>
 		internal void Update(LogicalInputDevice device)
 		{
-			IsTriggered = !device.TextInputEnabled && _layers.Contains(device.InputLayer) && Trigger.Evaluate(device);
+			IsTriggered = !device.TextInputEnabled && Trigger.Evaluate(device);
 		}
 	}
 }

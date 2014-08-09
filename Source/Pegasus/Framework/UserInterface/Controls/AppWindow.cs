@@ -35,7 +35,7 @@
 		{
 			InitializeComponents();
 
-			InputDevice = new LogicalInputDevice(Keyboard, Mouse);
+			InputDevice = new LogicalInputDevice(this);
 			_bindings = new Bindings(InputDevice);
 			_camera = new Camera2D(Application.Current.GraphicsDevice);
 			Console = new ConsoleViewModel(this, InputDevice);

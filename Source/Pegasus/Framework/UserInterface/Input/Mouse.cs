@@ -103,7 +103,7 @@
 		{
 			Assert.ArgumentInRange(button);
 
-			_states[(int)button].KeyPressed();
+			_states[(int)button].Pressed();
 			_doubleClicked[(int)button] |= doubleClick;
 
 			if (_hoveredElement == null)
@@ -134,7 +134,7 @@
 		private void OnButtonReleased(MouseButton button, Vector2i position)
 		{
 			Assert.ArgumentInRange(button);
-			_states[(int)button].KeyReleased();
+			_states[(int)button].Released();
 
 			if (_hoveredElement == null)
 				return;

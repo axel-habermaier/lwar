@@ -49,16 +49,16 @@
 
 			_inputDevice = inputDevice;
 
-			_forward.Input = new LogicalInput(Cvars.InputForwardCvar, InputLayers.Game);
-			_backward.Input = new LogicalInput(Cvars.InputBackwardCvar, InputLayers.Game);
-			_turnLeft.Input = new LogicalInput(Cvars.InputTurnLeftCvar, InputLayers.Game);
-			_turnRight.Input = new LogicalInput(Cvars.InputTurnRightCvar, InputLayers.Game);
-			_strafeLeft.Input = new LogicalInput(Cvars.InputStrafeLeftCvar, InputLayers.Game);
-			_strafeRight.Input = new LogicalInput(Cvars.InputStrafeRightCvar, InputLayers.Game);
-			_shooting1.Input = new LogicalInput(Cvars.InputPrimaryWeaponCvar, InputLayers.Game);
-			_shooting2.Input = new LogicalInput(Cvars.InputSecondaryWeaponCvar, InputLayers.Game);
-			_shooting3.Input = new LogicalInput(Cvars.InputTertiaryWeaponCvar, InputLayers.Game);
-			_shooting4.Input = new LogicalInput(Cvars.InputQuaternaryWeaponCvar, InputLayers.Game);
+			_forward.Input = new LogicalInput(Cvars.InputForwardCvar);
+			_backward.Input = new LogicalInput(Cvars.InputBackwardCvar);
+			_turnLeft.Input = new LogicalInput(Cvars.InputTurnLeftCvar);
+			_turnRight.Input = new LogicalInput(Cvars.InputTurnRightCvar);
+			_strafeLeft.Input = new LogicalInput(Cvars.InputStrafeLeftCvar);
+			_strafeRight.Input = new LogicalInput(Cvars.InputStrafeRightCvar);
+			_shooting1.Input = new LogicalInput(Cvars.InputPrimaryWeaponCvar);
+			_shooting2.Input = new LogicalInput(Cvars.InputSecondaryWeaponCvar);
+			_shooting3.Input = new LogicalInput(Cvars.InputTertiaryWeaponCvar);
+			_shooting4.Input = new LogicalInput(Cvars.InputQuaternaryWeaponCvar);
 
 			_inputDevice.Add(_forward.Input);
 			_inputDevice.Add(_backward.Input);

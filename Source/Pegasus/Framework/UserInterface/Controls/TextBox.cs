@@ -127,6 +127,7 @@
 				return;
 
 			textBox._caret.Position = textBox._textBlock.GetCharacterIndexAt(e.Position);
+			e.Handled = true;
 		}
 
 		/// <summary>

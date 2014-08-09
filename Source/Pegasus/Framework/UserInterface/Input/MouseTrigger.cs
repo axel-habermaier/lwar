@@ -57,15 +57,15 @@
 			switch (_triggerType)
 			{
 				case MouseTriggerType.Released:
-					return !device.Mouse.IsPressed(_button);
+					return !device.IsPressed(_button);
 				case MouseTriggerType.WentDown:
-					return device.Mouse.WentDown(_button);
+					return device.WentDown(_button);
 				case MouseTriggerType.Pressed:
-					return device.Mouse.IsPressed(_button);
+					return device.IsPressed(_button);
 				case MouseTriggerType.WentUp:
-					return device.Mouse.WentUp(_button);
+					return device.WentUp(_button);
 				case MouseTriggerType.DoubleClicked:
-					return device.Mouse.IsDoubleClicked(_button);
+					return device.IsDoubleClicked(_button);
 				default:
 					return false;
 			}

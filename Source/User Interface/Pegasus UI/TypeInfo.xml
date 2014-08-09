@@ -129,6 +129,7 @@
 		<Property Type="bool" Name="FontBold"/>
 		<Property Type="bool" Name="FontItalic"/>
 		<Property Type="bool" Name="IsHitTestVisible"/>
+		<Property Type="bool" Name="Focusable"/>
 		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources"/>
 		<Property Type="double" Name="Width"/>
 		<Property Type="double" Name="Height"/>

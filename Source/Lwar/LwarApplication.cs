@@ -35,7 +35,6 @@
 			Commands.Resolve();
 			Cvars.Resolve();
 
-			Window.InputDevice.ActivateLayer(InputLayers.Game);
 			Window.Closing += Exit;
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");

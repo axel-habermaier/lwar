@@ -144,7 +144,7 @@
 		{
 			var reply = _parser.Parse(command);
 
-			var input = new LogicalInput(trigger, InputLayer.All);
+			var input = new LogicalInput(trigger);
 			_device.Add(input);
 
 			if (reply.Status == ReplyStatus.Success)

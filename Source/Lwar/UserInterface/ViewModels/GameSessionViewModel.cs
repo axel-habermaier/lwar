@@ -31,13 +31,13 @@
 		/// </summary>
 		private readonly NetworkSession _networkSession;
 
-		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown(), InputLayers.Game);
+		private readonly LogicalInput _respawn = new LogicalInput(MouseButton.Left.WentDown());
 		private Camera2D _camera;
 
 		/// <summary>
 		///     The input trigger that is used to determine whether the chat input should be shown.
 		/// </summary>
-		private readonly LogicalInput _activateChatInput = new LogicalInput(Cvars.InputChatCvar, InputLayers.Game);
+		private readonly LogicalInput _activateChatInput = new LogicalInput(Cvars.InputChatCvar);
 
 		/// <summary>
 		///     The view model for the chat input.

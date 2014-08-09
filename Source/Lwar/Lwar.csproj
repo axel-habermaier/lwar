@@ -206,7 +206,6 @@
     <Compile Include="Gameplay\EventMessageList.cs" />
     <Compile Include="Gameplay\EventType.cs" />
     <Compile Include="Gameplay\InterpolatedValue.cs" />
-    <Compile Include="InputLayers.cs" />
     <Compile Include="Network\LeaveReason.cs" />
     <Compile Include="Network\Messages\AddMessage.cs" />
     <Compile Include="Network\Messages\ChatMessage.cs" />
