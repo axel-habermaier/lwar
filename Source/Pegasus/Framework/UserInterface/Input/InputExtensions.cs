@@ -99,15 +99,6 @@
 		}
 
 		/// <summary>
-		///     Creates a configurable trigger.
-		/// </summary>
-		public static InputTrigger ToTrigger(this Cvar<InputTrigger> cvar)
-		{
-			Assert.ArgumentNotNull(cvar);
-			return new ConfigurableTrigger(cvar);
-		}
-
-		/// <summary>
 		///     Converts the given binary input trigger type into its corresponding expression string.
 		/// </summary>
 		/// <param name="triggerType">The binary input trigger type that should be converted.</param>

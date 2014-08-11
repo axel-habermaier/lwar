@@ -65,6 +65,7 @@
 			FontItalicProperty.Changed += (o, e) => UnsetCachedFont(o);
 			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
 			MouseDownEvent.Raised += OnMouseDown;
+			MouseUpEvent.Raised += OnMouseUp;
 			KeyDownEvent.Raised += OnKey;
 			KeyUpEvent.Raised += OnKey;
 			DataContextProperty.Changed += OnDataContextChanged;
@@ -121,6 +122,16 @@
 			if (uiElement != null && uiElement.Focusable)
 				uiElement.Focus();
 
+			if (uiElement != null && uiElement._inputBindings != null)
+				uiElement._inputBindings.HandleEvent(e);
+		}
+
+		/// <summary>
+		///     Invokes any triggered input bindings of the UI element that raised the event.
+		/// </summary>
+		private static void OnMouseUp(object sender, MouseButtonEventArgs e)
+		{
+			var uiElement = sender as UIElement;
 			if (uiElement != null && uiElement._inputBindings != null)
 				uiElement._inputBindings.HandleEvent(e);
 		}

@@ -76,26 +76,9 @@
 		public Keyboard Keyboard { get; private set; }
 
 		/// <summary>
-		///     Gets the set of key modifiers that was pressed when the event was raised.
+		///     Gets the set of key modifiers that were pressed when the event was raised.
 		/// </summary>
-		public KeyModifiers Modifiers
-		{
-			get
-			{
-				var modifiers = KeyModifiers.None;
-
-				if (Keyboard.IsPressed(Key.LeftAlt) || Keyboard.IsPressed(Key.RightAlt))
-					modifiers |= KeyModifiers.Alt;
-
-				if (Keyboard.IsPressed(Key.LeftControl) || Keyboard.IsPressed(Key.RightControl))
-					modifiers |= KeyModifiers.Control;
-
-				if (Keyboard.IsPressed(Key.LeftShift) || Keyboard.IsPressed(Key.RightShift))
-					modifiers |= KeyModifiers.Shift;
-
-				return modifiers;
-			}
-		}
+		public KeyModifiers Modifiers { get; private set; }
 
 		/// <summary>
 		///     Initializes a cached instance.
@@ -114,6 +97,7 @@
 			CachedInstance.Key = key;
 			CachedInstance.ScanCode = scanCode;
 			CachedInstance._state = state;
+			CachedInstance.Modifiers = keyboard.GetModifiers();
 
 			return CachedInstance;
 		}

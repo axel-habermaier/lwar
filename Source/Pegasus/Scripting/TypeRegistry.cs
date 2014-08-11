@@ -55,6 +55,7 @@
 			Register(new EnumerationLiteralParser<MouseButton>(false), "Mouse button", null, "Left", "Right", "Middle", "XButton1", "XButton2");
 			Register(new InputTriggerParser(), null, i => String.Format("[{0}]", i), "[Key(Return,WentDown)]", "[Key(A,Pressed)]",
 				"[Key(Left,Repeated)]", "[Mouse(Left,Pressed) | Mouse(Right,Pressed)]");
+			Register(new ConfigurableInputParser(), null, null, "Key.A+Control", "Mouse.Left+Alt", "Mouse.XButton1+Shift+Alt");
 		}
 
 		/// <summary>

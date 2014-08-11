@@ -8,6 +8,6 @@
 		public string Key { get; set; }
 		public ModifierKeys Modifiers { get; set; }
 		public string Method { get; set; }
-		public KeyTriggerType Trigger { get; set; }
+		public TriggerMode TriggerMode { get; set; }
 	}
 }

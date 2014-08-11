@@ -98,7 +98,7 @@
 			if (device == _device)
 				return;
 
-			if (device == null && _device != null)
+			if (_device != null)
 			{
 				_device.KeyPressed -= OnKeyPressed;
 				_device.KeyReleased -= OnKeyReleased;

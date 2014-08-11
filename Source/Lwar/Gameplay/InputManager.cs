@@ -49,16 +49,16 @@
 
 			_inputDevice = inputDevice;
 
-			_forward.Input = new LogicalInput(Cvars.InputForwardCvar);
-			_backward.Input = new LogicalInput(Cvars.InputBackwardCvar);
-			_turnLeft.Input = new LogicalInput(Cvars.InputTurnLeftCvar);
-			_turnRight.Input = new LogicalInput(Cvars.InputTurnRightCvar);
-			_strafeLeft.Input = new LogicalInput(Cvars.InputStrafeLeftCvar);
-			_strafeRight.Input = new LogicalInput(Cvars.InputStrafeRightCvar);
-			_shooting1.Input = new LogicalInput(Cvars.InputPrimaryWeaponCvar);
-			_shooting2.Input = new LogicalInput(Cvars.InputSecondaryWeaponCvar);
-			_shooting3.Input = new LogicalInput(Cvars.InputTertiaryWeaponCvar);
-			_shooting4.Input = new LogicalInput(Cvars.InputQuaternaryWeaponCvar);
+			_forward.Input = new LogicalInput(Cvars.InputForwardCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_backward.Input = new LogicalInput(Cvars.InputBackwardCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_turnLeft.Input = new LogicalInput(Cvars.InputTurnLeftCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_turnRight.Input = new LogicalInput(Cvars.InputTurnRightCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_strafeLeft.Input = new LogicalInput(Cvars.InputStrafeLeftCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_strafeRight.Input = new LogicalInput(Cvars.InputStrafeRightCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_shooting1.Input = new LogicalInput(Cvars.InputPrimaryWeaponCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_shooting2.Input = new LogicalInput(Cvars.InputSecondaryWeaponCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_shooting3.Input = new LogicalInput(Cvars.InputTertiaryWeaponCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_shooting4.Input = new LogicalInput(Cvars.InputQuaternaryWeaponCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
 
 			_inputDevice.Add(_forward.Input);
 			_inputDevice.Add(_backward.Input);

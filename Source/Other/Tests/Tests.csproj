@@ -124,6 +124,7 @@
     <Compile Include="Parsing\Combinators\AlternativesParser.Tests.cs" />
     <Compile Include="Parsing\Combinators\ApplyParser.Tests.cs" />
     <Compile Include="Parsing\Combinators\BetweenParser.Tests.cs" />
+    <Compile Include="Parsing\Combinators\ConfigurableInputParser.Tests.cs" />
     <Compile Include="Parsing\Combinators\OptionalParser.Tests.cs" />
     <Compile Include="Parsing\Combinators\SeparatedBy1Parser.Tests.cs" />
     <Compile Include="Parsing\Combinators\SeparatedByParser.Tests.cs" />

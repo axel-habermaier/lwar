@@ -411,7 +411,7 @@
 		/// </summary>
 		public void ShowScoreboard()
 		{
-			_scoreboard.IsVisible = !_chat.IsVisible;
+			_scoreboard.IsVisible = true;
 		}
 
 		/// <summary>

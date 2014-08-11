@@ -24,14 +24,13 @@
 	<Class Name="Pegasus.Framework.UserInterface.Input.KeyBinding">
 		<Property Type="Pegasus.Framework.UserInterface.Input.Key" Name="Key"/>
 		<Property Type="Pegasus.Framework.UserInterface.Input.KeyModifiers" Name="Modifiers"/>
-		<Property Type="Pegasus.Framework.UserInterface.Input.KeyTriggerType" Name="Trigger"/>
+		<Property Type="Pegasus.Framework.UserInterface.Input.TriggerMode" Name="TriggerMode"/>
 		<Property Type="string" Name="Method"/>
 	</Class>
 
-	<Class Name="Pegasus.Framework.UserInterface.Input.CvarKeyBinding">
+	<Class Name="Pegasus.Framework.UserInterface.Input.ConfigurableBinding">
 		<Property Type="Pegasus.Scripting.Cvar" Name="Cvar"/>
-		<Property Type="Pegasus.Framework.UserInterface.Input.KeyModifiers" Name="Modifiers"/>
-		<Property Type="Pegasus.Framework.UserInterface.Input.KeyTriggerType" Name="Trigger"/>
+		<Property Type="Pegasus.Framework.UserInterface.Input.TriggerMode" Name="TriggerMode"/>
 		<Property Type="string" Name="Method"/>
 	</Class>
 
@@ -54,6 +53,14 @@
 	</Class>
 
 	<Class Name="System.Collections.Generic.List&lt;RowDefinition&gt;" IsList="true">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Input.Keyboard">
+		<Property Type="bool" Name="HandlesAllInput"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Input.Mouse">
+		<Property Type="bool" Name="HandlesAllInput"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridTemplateColumn">
@@ -244,12 +251,9 @@
 
 	<!-- Enumerations ================================================================================================= -->
 
-	<Enumeration Name="Pegasus.Framework.UserInterface.Input.KeyTriggerType">
-		<Literal>Released</Literal>
-		<Literal>Pressed</Literal>
-		<Literal>Repeated</Literal>
-		<Literal>WentDown</Literal>
-		<Literal>WentUp</Literal>
+	<Enumeration Name="Pegasus.Framework.UserInterface.Input.TriggerMode">
+		<Literal>Deactivated</Literal>
+		<Literal>Activated</Literal>
 	</Enumeration>
 	
 	<Enumeration Name="Pegasus.Framework.UserInterface.Controls.Orientation">

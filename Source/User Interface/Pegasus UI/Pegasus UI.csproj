@@ -120,9 +120,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="UserInterface\Controls\DataGridTextColumn.cs" />
-    <Compile Include="UserInterface\Input\CvarKeyBinding.cs" />
+    <Compile Include="UserInterface\Input\ConfigurableBinding.cs" />
     <Compile Include="UserInterface\Input\KeyBinding.cs" />
-    <Compile Include="UserInterface\Input\KeyTriggerType.cs" />
+    <Compile Include="UserInterface\Input\Keyboard.cs" />
+    <Compile Include="UserInterface\Input\TriggerMode.cs" />
+    <Compile Include="UserInterface\Input\Mouse.cs" />
     <Compile Include="UserInterface\Views\DebugOverlayView.xaml.cs">
       <DependentUpon>DebugOverlayView.xaml</DependentUpon>
     </Compile>

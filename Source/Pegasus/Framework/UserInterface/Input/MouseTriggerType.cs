@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Determines the type of a mouse input trigger.
 	/// </summary>
-	internal enum MouseTriggerType
+	public enum MouseTriggerType
 	{
 		/// <summary>
 		///     Indicates that the mouse trigger triggers when the mouse button is released.

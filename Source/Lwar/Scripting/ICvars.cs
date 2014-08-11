@@ -31,72 +31,72 @@ internal interface ICvars
 	/// <summary>
 	///     When triggered in an active game session, shows the scoreboard.
 	/// </summary>
-	[Cvar(Key.Tab), Persistent]
-	Key InputShowScoreboard { get; set; }
+	[Cvar("Key.Tab"), Persistent]
+	ConfigurableInput InputShowScoreboard { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, moves the player forwards.
 	/// </summary>
-	[Cvar("Key.W.IsPressed()"), Persistent]
-	InputTrigger InputForward { get; set; }
+	[Cvar("Key.W"), Persistent]
+	ConfigurableInput InputForward { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, moves the player backwards.
 	/// </summary>
-	[Cvar("Key.S.IsPressed()"), Persistent]
-	InputTrigger InputBackward { get; set; }
+	[Cvar("Key.S"), Persistent]
+	ConfigurableInput InputBackward { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, turns the player to the left.
 	/// </summary>
-	[Cvar("Key.Q.IsPressed()"), Persistent]
-	InputTrigger InputTurnLeft { get; set; }
+	[Cvar("Key.Q"), Persistent]
+	ConfigurableInput InputTurnLeft { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, turns the player to the right.
 	/// </summary>
-	[Cvar("Key.E.IsPressed()"), Persistent]
-	InputTrigger InputTurnRight { get; set; }
+	[Cvar("Key.E"), Persistent]
+	ConfigurableInput InputTurnRight { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, moves the player to the left.
 	/// </summary>
-	[Cvar("Key.A.IsPressed()"), Persistent]
-	InputTrigger InputStrafeLeft { get; set; }
+	[Cvar("Key.A"), Persistent]
+	ConfigurableInput InputStrafeLeft { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, moves the player to the right.
 	/// </summary>
-	[Cvar("Key.D.IsPressed()"), Persistent]
-	InputTrigger InputStrafeRight { get; set; }
+	[Cvar("Key.D"), Persistent]
+	ConfigurableInput InputStrafeRight { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, fires the player's primary weapon.
 	/// </summary>
-	[Cvar("MouseButton.Left.IsPressed()"), Persistent]
-	InputTrigger InputPrimaryWeapon { get; set; }
+	[Cvar("MouseButton.Left"), Persistent]
+	ConfigurableInput InputPrimaryWeapon { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, fires the player's secondary weapon.
 	/// </summary>
-	[Cvar("MouseButton.Right.IsPressed()"), Persistent]
-	InputTrigger InputSecondaryWeapon { get; set; }
+	[Cvar("MouseButton.Right"), Persistent]
+	ConfigurableInput InputSecondaryWeapon { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, fires the player's tertiary weapon.
 	/// </summary>
-	[Cvar("Key.Num1.IsPressed()"), Persistent]
-	InputTrigger InputTertiaryWeapon { get; set; }
+	[Cvar("Key.Num1"), Persistent]
+	ConfigurableInput InputTertiaryWeapon { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, fires the player's quaternary weapon.
 	/// </summary>
-	[Cvar("Key.Num2.IsPressed()"), Persistent]
-	InputTrigger InputQuaternaryWeapon { get; set; }
+	[Cvar("Key.Num2"), Persistent]
+	ConfigurableInput InputQuaternaryWeapon { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, opens the chat input.
 	/// </summary>
-	[Cvar(Key.Return), Persistent]
-	Key InputChat { get; set; }
+	[Cvar("Key.Return"), Persistent]
+	ConfigurableInput InputChat { get; set; }
 }

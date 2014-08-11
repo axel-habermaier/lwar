@@ -28,11 +28,16 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="configurableTrigger">The configurable trigger that triggers the logical input.</param>
-		public LogicalInput(Cvar<InputTrigger> configurableTrigger)
-			: this(configurableTrigger.ToTrigger())
+		/// <param name="configurableInput">The configurable input that triggers the logical input.</param>
+		/// <param name="keyTriggerType">Determines the type of a key input trigger.</param>
+		/// <param name="mouseTriggerType">Determines the type of a mouse input trigger.</param>
+		public LogicalInput(Cvar<ConfigurableInput> configurableInput, KeyTriggerType keyTriggerType, MouseTriggerType mouseTriggerType)
 		{
-			Assert.ArgumentNotNull(configurableTrigger);
+			Assert.ArgumentNotNull(configurableInput);
+			Assert.ArgumentInRange(keyTriggerType);
+			Assert.ArgumentInRange(mouseTriggerType);
+
+			Trigger = new ConfigurableTrigger(configurableInput, keyTriggerType, mouseTriggerType);
 		}
 
 		/// <summary>

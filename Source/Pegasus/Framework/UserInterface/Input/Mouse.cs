@@ -15,6 +15,11 @@
 	public class Mouse : DisposableObject
 	{
 		/// <summary>
+		///     Indicates whether all mouse input events are handled by an UI element.
+		/// </summary>
+		public static readonly DependencyProperty<bool> HandlesAllInputProperty = new DependencyProperty<bool>();
+
+		/// <summary>
 		///     Stores whether a button is currently being double-clicked.
 		/// </summary>
 		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length];
@@ -38,6 +43,14 @@
 		///     The UI element the mouse is currently over. Null if the mouse is not over any UI element.
 		/// </summary>
 		private UIElement _hoveredElement;
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static Mouse()
+		{
+			HandlesAllInputProperty.Changed += OnHandlesAllInput;
+		}
 
 		/// <summary>
 		///     Initializes a new instance for testing purposes.
@@ -76,6 +89,64 @@
 		}
 
 		/// <summary>
+		///     Ensures that the UI element handles all keyboard input events.
+		/// </summary>
+		private static void OnHandlesAllInput(DependencyObject obj, DependencyPropertyChangedEventArgs<bool> args)
+		{
+			var element = obj as UIElement;
+			if (element == null)
+				return;
+
+			if (args.NewValue)
+			{
+				element.MouseDown += HandleEvent;
+				element.MouseUp += HandleEvent;
+				element.MouseLeftButtonDown += HandleEvent;
+				element.MouseLeftButtonUp += HandleEvent;
+				element.MouseRightButtonDown += HandleEvent;
+				element.MouseRightButtonDown += HandleEvent;
+			}
+			else
+			{
+				element.MouseDown -= HandleEvent;
+				element.MouseUp -= HandleEvent;
+				element.MouseLeftButtonDown -= HandleEvent;
+				element.MouseLeftButtonUp -= HandleEvent;
+				element.MouseRightButtonDown -= HandleEvent;
+				element.MouseRightButtonUp -= HandleEvent;
+			}
+		}
+
+		/// <summary>
+		///     Marks the event as handled.
+		/// </summary>
+		private static void HandleEvent(object sender, MouseButtonEventArgs e)
+		{
+			e.Handled = true;
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether all keyboard input events are handled by the UI element.
+		/// </summary>
+		/// <param name="element">The UI element that should be checked.</param>
+		public static bool GetHandlesAllInput(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			return element.GetValue(HandlesAllInputProperty);
+		}
+
+		/// <summary>
+		///     Sets a value indicating that all keyboard input events are handled by the UI element.
+		/// </summary>
+		/// <param name="element">The UI element that should handle all keyboard input events.</param>
+		/// <param name="handlesAllInput">Indicates whether the UI element should handle all keyboard input events.</param>
+		public static void SetHandlesAllInput(UIElement element, bool handlesAllInput)
+		{
+			Assert.ArgumentNotNull(element);
+			element.SetValue(HandlesAllInputProperty, handlesAllInput);
+		}
+
+		/// <summary>
 		///     Raised when the mouse has been moved within the bounds of the window.
 		/// </summary>
 		public event Action<Vector2i> Moved
@@ -109,7 +180,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseButtonEventArgs.Create(this, position, _states, button, doubleClick);
+			var args = MouseButtonEventArgs.Create(this, position, _states, button, doubleClick, _window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseDownEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseDownEvent, args);
 
@@ -139,7 +210,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseButtonEventArgs.Create(this, position, _states, button, false);
+			var args = MouseButtonEventArgs.Create(this, position, _states, button, false, _window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseUpEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseUpEvent, args);
 
@@ -165,7 +236,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseWheelEventArgs.Create(this, Position, _states, delta);
+			var args = MouseWheelEventArgs.Create(this, Position, _states, delta, _window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseWheelEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseWheelEvent, args);
 		}
@@ -181,7 +252,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseEventArgs.Create(this, position, _states);
+			var args = MouseEventArgs.Create(this, position, _states, _window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseMoveEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseMoveEvent, args);
 		}
@@ -199,7 +270,7 @@
 			if (hoveredElement == _hoveredElement)
 				return;
 
-			var args = MouseEventArgs.Create(this, Position, _states);
+			var args = MouseEventArgs.Create(this, Position, _states, _window.Keyboard.GetModifiers());
 
 			if (_hoveredElement != null)
 				UnsetIsMouseOver(_hoveredElement, args);

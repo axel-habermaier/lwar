@@ -36,6 +36,11 @@
 		public Vector2i Position { get; protected set; }
 
 		/// <summary>
+		///     Gets the set of key modifiers that was pressed when the event was raised.
+		/// </summary>
+		public KeyModifiers Modifiers { get; protected set; }
+
+		/// <summary>
 		///     Gets the state of the left mouse button.
 		/// </summary>
 		public InputState LeftButton
@@ -81,7 +86,8 @@
 		/// <param name="mouse">The mouse device that raised the event.</param>
 		/// <param name="position">The position of the mouse at the time the event was generated.</param>
 		/// <param name="inputStates">The states of the mouse buttons.</param>
-		public static MouseEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates)
+		/// <param name="modifiers">The key modifiers that were pressed when the event was raised.</param>
+		public static MouseEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates, KeyModifiers modifiers)
 		{
 			Assert.ArgumentNotNull(mouse);
 			Assert.ArgumentNotNull(inputStates);
@@ -90,6 +96,7 @@
 			CachedInstance.Mouse = mouse;
 			CachedInstance.Position = position;
 			CachedInstance.InputStates = inputStates;
+			CachedInstance.Modifiers = modifiers;
 
 			return CachedInstance;
 		}

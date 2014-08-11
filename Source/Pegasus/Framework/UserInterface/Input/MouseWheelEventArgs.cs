@@ -32,7 +32,8 @@
 		/// <param name="position">The position of the mouse at the time the event was generated.</param>
 		/// <param name="inputStates">The states of the mouse buttons.</param>
 		/// <param name="delta">A value indicating the amount the mouse wheel has changed.</param>
-		public static MouseWheelEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates, int delta)
+		/// <param name="modifiers">The key modifiers that were pressed when the event was raised.</param>
+		public static MouseWheelEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates, int delta, KeyModifiers modifiers)
 		{
 			Assert.ArgumentNotNull(mouse);
 			Assert.ArgumentNotNull(inputStates);
@@ -42,6 +43,7 @@
 			CachedInstance.Position = position;
 			CachedInstance.InputStates = inputStates;
 			CachedInstance.Delta = delta;
+			CachedInstance.Modifiers = modifiers;
 
 			return CachedInstance;
 		}

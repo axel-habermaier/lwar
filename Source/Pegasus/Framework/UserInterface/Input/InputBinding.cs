@@ -20,6 +20,11 @@
 		private Action _targetMethod;
 
 		/// <summary>
+		///     The trigger mode of the input binding.
+		/// </summary>
+		private TriggerMode _triggerMode = TriggerMode.Activated;
+
+		/// <summary>
 		///     Gets or sets the name of the data context method that is invoked when the binding is triggered.
 		/// </summary>
 		public string Method
@@ -31,6 +36,21 @@
 				Assert.NotSealed(this);
 
 				_method = value;
+			}
+		}
+
+		/// <summary>
+		///     Gets or sets the trigger mode of the input binding.
+		/// </summary>
+		public TriggerMode TriggerMode
+		{
+			get { return _triggerMode; }
+			set
+			{
+				Assert.ArgumentInRange(value);
+				Assert.NotSealed(this);
+
+				_triggerMode = value;
 			}
 		}
 
@@ -91,35 +111,5 @@
 		/// </summary>
 		/// <param name="args">The arguments of the event that should be checked.</param>
 		protected abstract bool IsTriggered(RoutedEventArgs args);
-
-		/// <summary>
-		///     Checks whether the given event triggers the given key input.
-		/// </summary>
-		/// <param name="args">The arguments of the event that should be checked.</param>
-		/// <param name="key">The expected key the event should have been raised for.</param>
-		/// <param name="modifiers">The expected state of the modifier keys.</param>
-		/// <param name="trigger">The type of the key trigger.</param>
-		protected static bool IsTriggered(RoutedEventArgs args, Key key, KeyModifiers modifiers, KeyTriggerType trigger)
-		{
-			var keyEventArgs = args as KeyEventArgs;
-			if (keyEventArgs == null || keyEventArgs.Key != key || keyEventArgs.Modifiers != modifiers)
-				return false;
-
-			switch (trigger)
-			{
-				case KeyTriggerType.Released:
-					return !keyEventArgs.IsPressed;
-				case KeyTriggerType.Pressed:
-					return keyEventArgs.IsPressed;
-				case KeyTriggerType.Repeated:
-					return keyEventArgs.IsRepeated;
-				case KeyTriggerType.WentDown:
-					return keyEventArgs.WentDown;
-				case KeyTriggerType.WentUp:
-					return keyEventArgs.WentUp;
-				default:
-					return false;
-			}
-		}
 	}
 }

@@ -284,7 +284,7 @@
 			var content = element.HasElements ? (object)element.Elements() : (object)element.Value;
 
 			if (isAttached)
-				parentType = GetClrType(split[0]).FullName;
+				parentType = GetClrType(element.Name.Namespace + split[0]).FullName;
 
 			IXamlType xamlType;
 			if (!_typeInfoProvider.TryFind(parentType, out xamlType))

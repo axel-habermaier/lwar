@@ -12,9 +12,9 @@
 			 Focusable="true"
 			 Foreground="White">
 	<UserControl.InputBindings>
-		<input:CvarKeyBinding Cvar="Lwar.Scripting.Cvars.InputChatCvar" Method="ShowChatInput"></input:CvarKeyBinding>
-		<input:CvarKeyBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" Trigger="WentDown" Method="ShowScoreboard"></input:CvarKeyBinding>
-		<input:CvarKeyBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" Trigger="WentUp" Method="HideScoreboard"></input:CvarKeyBinding>
+		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputChatCvar" Method="ShowChatInput"></input:ConfigurableBinding>
+		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" TriggerMode="Activated" Method="ShowScoreboard"></input:ConfigurableBinding>
+		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" TriggerMode="Deactivated" Method="HideScoreboard"></input:ConfigurableBinding>
 	</UserControl.InputBindings>
 
 	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}" HasDepthStencil="true" DrawMethod="OnDraw">

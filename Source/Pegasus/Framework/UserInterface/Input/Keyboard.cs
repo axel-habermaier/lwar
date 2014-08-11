@@ -11,6 +11,11 @@
 	public class Keyboard : DisposableObject
 	{
 		/// <summary>
+		///     Indicates whether all keyboard input events are handled by an UI element.
+		/// </summary>
+		public static readonly DependencyProperty<bool> HandlesAllInputProperty = new DependencyProperty<bool>();
+
+		/// <summary>
 		///     The key states.
 		/// </summary>
 		private readonly InputState[] _states = new InputState[Enum.GetValues(typeof(Key)).Length];
@@ -24,6 +29,14 @@
 		///     The UI element that currently has the keyboard focus.
 		/// </summary>
 		private UIElement _focusedElement;
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static Keyboard()
+		{
+			HandlesAllInputProperty.Changed += OnHandlesAllInput;
+		}
 
 		/// <summary>
 		///     Initializes a new instance for testing purposes.
@@ -69,6 +82,56 @@
 				_focusedElement = value;
 				_focusedElement.IsFocused = true;
 			}
+		}
+
+		/// <summary>
+		///     Ensures that the UI element handles all keyboard input events.
+		/// </summary>
+		private static void OnHandlesAllInput(DependencyObject obj, DependencyPropertyChangedEventArgs<bool> args)
+		{
+			var element = obj as UIElement;
+			if (element == null)
+				return;
+
+			if (args.NewValue)
+			{
+				element.KeyUp += HandleEvent;
+				element.KeyDown += HandleEvent;
+			}
+			else
+			{
+				element.KeyUp -= HandleEvent;
+				element.KeyDown -= HandleEvent;
+			}
+		}
+
+		/// <summary>
+		///     Marks the event as handled.
+		/// </summary>
+		private static void HandleEvent(object sender, KeyEventArgs e)
+		{
+			e.Handled = true;
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether all keyboard input events are handled by the UI element.
+		/// </summary>
+		/// <param name="element">The UI element that should be checked.</param>
+		public static bool GetHandlesAllInput(UIElement element)
+		{
+			Assert.ArgumentNotNull(element);
+			return element.GetValue(HandlesAllInputProperty);
+		}
+
+		/// <summary>
+		///     Sets a value indicating that all keyboard input events are handled by the UI element.
+		/// </summary>
+		/// <param name="element">The UI element that should handle all keyboard input events.</param>
+		/// <param name="handlesAllInput">Indicates whether the UI element should handle all keyboard input events.</param>
+		public static void SetHandlesAllInput(UIElement element, bool handlesAllInput)
+		{
+			Assert.ArgumentNotNull(element);
+			element.SetValue(HandlesAllInputProperty, handlesAllInput);
 		}
 
 		/// <summary>
@@ -239,6 +302,25 @@
 		{
 			Assert.ArgumentInRange(key);
 			return _states[(int)key].IsRepeated;
+		}
+
+		/// <summary>
+		///     Gets the set of key modifiers that are currently pressed.
+		/// </summary>
+		public KeyModifiers GetModifiers()
+		{
+			var modifiers = KeyModifiers.None;
+
+			if (IsPressed(Key.LeftAlt) || IsPressed(Key.RightAlt))
+				modifiers |= KeyModifiers.Alt;
+
+			if (IsPressed(Key.LeftControl) || IsPressed(Key.RightControl))
+				modifiers |= KeyModifiers.Control;
+
+			if (IsPressed(Key.LeftShift) || IsPressed(Key.RightShift))
+				modifiers |= KeyModifiers.Shift;
+
+			return modifiers;
 		}
 	}
 }

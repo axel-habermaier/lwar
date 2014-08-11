@@ -239,7 +239,8 @@
     <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />
     <Compile Include="Framework\UserInterface\Controls\ItemsControl.cs" />
     <Compile Include="Framework\UserInterface\Controls\ITextInputControl.cs" />
-    <Compile Include="Framework\UserInterface\Input\CvarKeyBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\ConfigurableBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\ConfigurableInput.cs" />
     <Compile Include="Framework\UserInterface\Input\InputBinding.cs" />
     <Compile Include="Framework\UserInterface\Input\InputBindingCollection.cs" />
     <Compile Include="Framework\UserInterface\Input\KeyBinding.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Framework\UserInterface\Input\MouseButtonEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Input\MouseWheelEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Input\TextInputEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Input\TriggerMode.cs" />
     <Compile Include="Framework\UserInterface\MessageBox.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventBinding.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\ConsoleViewModel.cs" />
@@ -468,6 +470,7 @@
     </Compile>
     <Compile Include="Scripting\ConfigurationFile.cs" />
     <Compile Include="Scripting\ConfigurationLine.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\ConfigurableInputParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\SizeParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Vector2IParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Vector2Parser.cs" />

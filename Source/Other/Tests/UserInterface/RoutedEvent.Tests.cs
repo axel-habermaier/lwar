@@ -148,42 +148,48 @@
 		[Test]
 		public void DirectEvent_ClassHandler_InstanceHandlers_Middle()
 		{
-			TestClassHandler(_button, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }),
+			TestClassHandler(_button, UIElement.MouseEnterEvent,
+				MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }, KeyModifiers.None),
 				_button);
 		}
 
 		[Test]
 		public void DirectEvent_ClassHandler_InstanceHandlers_Top()
 		{
-			TestClassHandler(_stackPanel, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }),
+			TestClassHandler(_stackPanel, UIElement.MouseEnterEvent,
+				MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }, KeyModifiers.None),
 				_stackPanel);
 		}
 
 		[Test]
 		public void DirectEvent_ClassHandlers_Bottom()
 		{
-			TestClassHandler(_textBlock, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }),
+			TestClassHandler(_textBlock, UIElement.MouseEnterEvent,
+				MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }, KeyModifiers.None),
 				_textBlock);
 		}
 
 		[Test]
 		public void DirectEvent_InstanceHandlers_Bottom()
 		{
-			TestInstanceHandlers(_textBlock, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }),
+			TestInstanceHandlers(_textBlock, UIElement.MouseEnterEvent,
+				MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }, KeyModifiers.None),
 				_textBlock);
 		}
 
 		[Test]
 		public void DirectEvent_InstanceHandlers_Middle()
 		{
-			TestInstanceHandlers(_button, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }),
+			TestInstanceHandlers(_button, UIElement.MouseEnterEvent,
+				MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }, KeyModifiers.None),
 				_button);
 		}
 
 		[Test]
 		public void DirectEvent_InstanceHandlers_Top()
 		{
-			TestInstanceHandlers(_stackPanel, UIElement.MouseEnterEvent, MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }),
+			TestInstanceHandlers(_stackPanel, UIElement.MouseEnterEvent,
+				MouseEventArgs.Create(new Mouse(), new Vector2i(), new InputState[] { }, KeyModifiers.None),
 				_stackPanel);
 		}
 
