@@ -3,10 +3,19 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls;assembly=PegasusUI"
+			 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input;assembly=PegasusUI"
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
 			 xmlns:userInterface="clr-namespace:Lwar.UserInterface.Views"
 			 mc:Ignorable="d"
+			 d:DesignHeight="600"
+			 d:DesignWidth="800"
+			 Focusable="true"
 			 Foreground="White">
+	<UserControl.InputBindings>
+		<input:CvarKeyBinding Cvar="Lwar.Scripting.Cvars.InputChatCvar" Method="ShowChatInput"></input:CvarKeyBinding>
+		<input:CvarKeyBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" Trigger="WentDown" Method="ShowScoreboard"></input:CvarKeyBinding>
+		<input:CvarKeyBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" Trigger="WentUp" Method="HideScoreboard"></input:CvarKeyBinding>
+	</UserControl.InputBindings>
 
 	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}" HasDepthStencil="true" DrawMethod="OnDraw">
 		<controls:AreaPanel>

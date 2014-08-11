@@ -14,11 +14,6 @@ namespace Lwar.UserInterface.ViewModels
 	public class ScoreboardViewModel : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
-		///     The input that causes the scoreboard to be shown. TODO: Replace with UI framework input
-		/// </summary>
-		private readonly LogicalInput _showScoreboard = new LogicalInput(Cvars.InputShowScoreboardCvar);
-
-		/// <summary>
 		///     Indicates whether the player list is potentially dirty.
 		/// </summary>
 		private bool _isDirty;
@@ -43,7 +38,6 @@ namespace Lwar.UserInterface.ViewModels
 
 			_players = gameSession.Players;
 			Players = new ObservableCollection<Player>();
-			Application.Current.Window.InputDevice.Add(_showScoreboard);
 
 			_players.PlayerAdded += OnPlayerAdded;
 			_players.PlayerRemoved += OnPlayerRemoved;
@@ -61,7 +55,7 @@ namespace Lwar.UserInterface.ViewModels
 		public bool IsVisible
 		{
 			get { return _isVisible; }
-			private set { ChangePropertyValue(ref _isVisible, value); }
+			set { ChangePropertyValue(ref _isVisible, value); }
 		}
 
 		/// <summary>
@@ -98,8 +92,6 @@ namespace Lwar.UserInterface.ViewModels
 		/// </summary>
 		public void Update()
 		{
-			IsVisible = _showScoreboard.IsTriggered;
-
 			if (!_isDirty || !IsVisible)
 				return;
 

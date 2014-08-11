@@ -58,7 +58,7 @@
 		{
 			var reply = _literalParser.Parse(inputStream);
 			if (reply.Status != ReplyStatus.Success)
-				return ForwardError(reply);
+				return Expected(string.Format("valid '{0}' literal", _enumeration.Name));
 
 			try
 			{

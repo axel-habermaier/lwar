@@ -13,6 +13,11 @@
 		private static readonly KeyEventArgs CachedInstance = new KeyEventArgs();
 
 		/// <summary>
+		///     The state of the key that was pressed or released.
+		/// </summary>
+		private InputState _state;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		private KeyEventArgs()
@@ -31,14 +36,66 @@
 		public int ScanCode { get; private set; }
 
 		/// <summary>
-		///     Gets the state of the key that was pressed or released.
+		///     Gets a value indicating whether the key or button is currently being pressed down.
 		/// </summary>
-		public InputState State { get; private set; }
+		public bool IsPressed
+		{
+			get { return _state.IsPressed; }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the key or button was pressed during the current frame. WentDown is
+		///     only true during the single frame when IsPressed changed from false to true.
+		/// </summary>
+		public bool WentDown
+		{
+			get { return _state.WentDown; }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the key or button was released during the current frame. WentUp is
+		///     only true during the single frame when IsPressed changed from true to false.
+		/// </summary>
+		public bool WentUp
+		{
+			get { return _state.WentUp; }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether a key or button repeat event occurred. IsRepeated is also true
+		///     when the key or button is pressed, i.e., when WentDown is true.
+		/// </summary>
+		public bool IsRepeated
+		{
+			get { return _state.IsRepeated; }
+		}
 
 		/// <summary>
 		///     Gets the keyboard device that raised the event.
 		/// </summary>
 		public Keyboard Keyboard { get; private set; }
+
+		/// <summary>
+		///     Gets the set of key modifiers that was pressed when the event was raised.
+		/// </summary>
+		public KeyModifiers Modifiers
+		{
+			get
+			{
+				var modifiers = KeyModifiers.None;
+
+				if (Keyboard.IsPressed(Key.LeftAlt) || Keyboard.IsPressed(Key.RightAlt))
+					modifiers |= KeyModifiers.Alt;
+
+				if (Keyboard.IsPressed(Key.LeftControl) || Keyboard.IsPressed(Key.RightControl))
+					modifiers |= KeyModifiers.Control;
+
+				if (Keyboard.IsPressed(Key.LeftShift) || Keyboard.IsPressed(Key.RightShift))
+					modifiers |= KeyModifiers.Shift;
+
+				return modifiers;
+			}
+		}
 
 		/// <summary>
 		///     Initializes a cached instance.
@@ -56,7 +113,7 @@
 			CachedInstance.Keyboard = keyboard;
 			CachedInstance.Key = key;
 			CachedInstance.ScanCode = scanCode;
-			CachedInstance.State = state;
+			CachedInstance._state = state;
 
 			return CachedInstance;
 		}

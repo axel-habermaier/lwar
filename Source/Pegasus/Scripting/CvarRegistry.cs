@@ -29,7 +29,7 @@
 		public static void Register(ICvar cvar)
 		{
 			Assert.ArgumentNotNull(cvar);
-			Assert.NotNullOrWhitespace(cvar.Name);
+			Assert.NotNullOrWhitespace(cvar.Name, "The cvar cannot have an empty name.");
 			Assert.That(!Cvars.ContainsKey(cvar.Name), "A cvar with the name '{0}' has already been registered.", cvar.Name);
 			Assert.That(CommandRegistry.All.All(command => command.Name != cvar.Name),
 						"A command with the name '{0}' has already been registered.", cvar.Name);

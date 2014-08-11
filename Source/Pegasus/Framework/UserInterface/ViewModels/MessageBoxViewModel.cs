@@ -2,7 +2,6 @@
 {
 	using System;
 	using Controls;
-	using Input;
 	using Views;
 
 	/// <summary>
@@ -68,18 +67,6 @@
 		public void Close()
 		{
 			Application.Current.Window.LayoutRoot.Remove(_view);
-		}
-
-		/// <summary>
-		///     Closes the message box.
-		/// </summary>
-		public void Close(object sender, KeyEventArgs e)
-		{
-			if (e.Key != Key.Return && e.Key != Key.NumpadEnter && e.Key != Key.Escape)
-				return;
-
-			e.Handled = true;
-			Close();
 		}
 
 		/// <summary>

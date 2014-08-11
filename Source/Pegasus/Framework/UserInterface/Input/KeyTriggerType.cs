@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Determines the type of a key input trigger.
 	/// </summary>
-	internal enum KeyTriggerType
+	public enum KeyTriggerType
 	{
 		/// <summary>
 		///     Indicates that the key trigger triggers when the key is released.

@@ -239,6 +239,11 @@
     <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />
     <Compile Include="Framework\UserInterface\Controls\ItemsControl.cs" />
     <Compile Include="Framework\UserInterface\Controls\ITextInputControl.cs" />
+    <Compile Include="Framework\UserInterface\Input\CvarKeyBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\InputBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\InputBindingCollection.cs" />
+    <Compile Include="Framework\UserInterface\Input\KeyBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\KeyModifiers.cs" />
     <Compile Include="Framework\UserInterface\Input\MouseButtonEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Input\MouseWheelEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Input\TextInputEventArgs.cs" />

@@ -6,13 +6,21 @@
 
 	public class AreaPanel : Panel
 	{
-
 		protected override Size MeasureOverride(Size availableSize)
 		{
+			var size = new Size(0, 0);
 			foreach (UIElement child in Children)
+			{
 				child.Measure(availableSize);
 
-			return availableSize;
+				if (child.DesiredSize.Width > size.Width)
+					size.Width = child.DesiredSize.Width;
+
+				if (child.DesiredSize.Height > size.Height)
+					size.Height = child.DesiredSize.Height;
+			}
+
+			return size;
 		}
 
 		protected override Size ArrangeOverride(Size finalSize)

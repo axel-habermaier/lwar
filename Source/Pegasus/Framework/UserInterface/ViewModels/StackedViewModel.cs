@@ -125,7 +125,10 @@
 			_isActive = true;
 
 			if (_view != null)
+			{
 				Application.Current.Window.LayoutRoot.Add(_view);
+				_view.Focus();
+			}
 
 			if (_child != null)
 				_child.Activate();

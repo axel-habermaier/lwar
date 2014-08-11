@@ -181,8 +181,21 @@
 
 			// We have to check every frame whether the focused element must be reset; it could have been removed
 			// or hidden since the last frame, among other things.
-			if (FocusedElement != _window && !FocusedElement.CanBeFocused)
-				FocusedElement = null;
+			if (FocusedElement == _window || FocusedElement.CanBeFocused)
+				return;
+
+			// Check if the element is still a child of the window. If so, focus the closest focusable
+			// element in the tree. Otherwise, focus the window.
+			if (FocusedElement.ParentWindow == null)
+				FocusedElement = _window;
+			else
+			{
+				var uiElement = FocusedElement;
+				while (uiElement != _window && !uiElement.CanBeFocused)
+					uiElement = uiElement.Parent;
+
+				FocusedElement = uiElement;
+			}
 		}
 
 		/// <summary>

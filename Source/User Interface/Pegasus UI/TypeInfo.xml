@@ -1,48 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Types>
-	<!-- Enumerations ================================================================================================= -->
-	
-	<Enumeration Name="Pegasus.Framework.UserInterface.Controls.Orientation">
-		<Literal>Vertical</Literal>
-		<Literal>Horizontal</Literal>
-	</Enumeration>
-
-	<Enumeration Name="Pegasus.Framework.UserInterface.TextRenderingMode">
-		<Literal>ClearType</Literal>
-		<Literal>Aliased</Literal>
-	</Enumeration>
-
-	<Enumeration Name="Pegasus.Framework.UserInterface.TextWrapping">
-		<Literal>NoWrap</Literal>
-		<Literal>Wrap</Literal>
-	</Enumeration>
-
-	<Enumeration Name="Pegasus.Framework.UserInterface.TextAlignment">
-		<Literal>Left</Literal>
-		<Literal>Right</Literal>
-		<Literal>Center</Literal>
-	</Enumeration>
-	
-	<Enumeration Name="Pegasus.Framework.UserInterface.Visibility">
-		<Literal>Collapsed</Literal>
-		<Literal>Visible</Literal>
-		<Literal>Hidden</Literal>
-	</Enumeration>
-	
-	<Enumeration Name="Pegasus.Framework.UserInterface.VerticalAlignment">
-		<Literal>Stretch</Literal>
-		<Literal>Top</Literal>
-		<Literal>Center</Literal>
-		<Literal>Bottom</Literal>
-	</Enumeration>
-	
-	<Enumeration Name="Pegasus.Framework.UserInterface.HorizontalAlignment">
-		<Literal>Stretch</Literal>
-		<Literal>Left</Literal>
-		<Literal>Center</Literal>
-		<Literal>Right</Literal>
-	</Enumeration>
-
 	<!-- Misc Classes ================================================================================================= -->
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ControlTemplate">
@@ -52,6 +10,29 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.UIElementCollection" IsList="true">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Input.InputBindingCollection" IsList="true">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Input.KeyModifiers">
+	</Class>
+
+	<Class Name="Pegasus.Scripting.Cvar">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Input.KeyBinding">
+		<Property Type="Pegasus.Framework.UserInterface.Input.Key" Name="Key"/>
+		<Property Type="Pegasus.Framework.UserInterface.Input.KeyModifiers" Name="Modifiers"/>
+		<Property Type="Pegasus.Framework.UserInterface.Input.KeyTriggerType" Name="Trigger"/>
+		<Property Type="string" Name="Method"/>
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Input.CvarKeyBinding">
+		<Property Type="Pegasus.Scripting.Cvar" Name="Cvar"/>
+		<Property Type="Pegasus.Framework.UserInterface.Input.KeyModifiers" Name="Modifiers"/>
+		<Property Type="Pegasus.Framework.UserInterface.Input.KeyTriggerType" Name="Trigger"/>
+		<Property Type="string" Name="Method"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Setter">
@@ -76,23 +57,23 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridTemplateColumn">
-		<Property Type="double" Name="MinWidth"/>
-		<Property Type="double" Name="MaxWidth"/>
-		<Property Type="double" Name="Width"/>
-		<Property Type="object" Name="Header"/>
-		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="CellTemplate"/>
+		<Property Type="double" Name="MinWidth" />
+		<Property Type="double" Name="MaxWidth" />
+		<Property Type="double" Name="Width" />
+		<Property Type="object" Name="Header" />
+		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="CellTemplate" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ColumnDefinition">
-		<Property Type="double" Name="MinWidth"/>
-		<Property Type="double" Name="MaxWidth"/>
-		<Property Type="double" Name="Width"/>
+		<Property Type="double" Name="MinWidth" />
+		<Property Type="double" Name="MaxWidth" />
+		<Property Type="double" Name="Width" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.RowDefinition">
-		<Property Type="double" Name="MinHeight"/>
-		<Property Type="double" Name="MaxHeight"/>
-		<Property Type="double" Name="Height"/>
+		<Property Type="double" Name="MinHeight" />
+		<Property Type="double" Name="MaxHeight" />
+		<Property Type="double" Name="Height" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.ResourceDictionary" IsDictionary="true">
@@ -108,138 +89,140 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.Application">
-		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources"/>
+		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.TextOptions">
-		<Property Type="Pegasus.Framework.UserInterface.TextRenderingMode" Name="TextRenderingMode"/>
+		<Property Type="Pegasus.Framework.UserInterface.TextRenderingMode" Name="TextRenderingMode" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Style">
-		<Property Type="Pegasus.Framework.UserInterface.SettersCollection" Name="Setters" IsContentProperty="true"/>
-		<Property Type="Pegasus.Framework.UserInterface.TriggersCollection" Name="Triggers"/>
+		<Property Type="Pegasus.Framework.UserInterface.SettersCollection" Name="Setters" IsContentProperty="true" />
+		<Property Type="Pegasus.Framework.UserInterface.TriggersCollection" Name="Triggers" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.UIElement">
-		<Property Type="object" Name="DataContext"/>
-		<Property Type="Pegasus.Platform.Graphics.Color?" Name="Background"/>
-		<Property Type="Pegasus.Framework.UserInterface.Style" Name="Style"/>
-		<Property Type="string" Name="FontFamily"/>
-		<Property Type="int" Name="FontSize"/>
-		<Property Type="bool" Name="FontBold"/>
-		<Property Type="bool" Name="FontItalic"/>
-		<Property Type="bool" Name="IsHitTestVisible"/>
-		<Property Type="bool" Name="Focusable"/>
-		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources"/>
-		<Property Type="double" Name="Width"/>
-		<Property Type="double" Name="Height"/>
-		<Property Type="double" Name="MinWidth"/>
-		<Property Type="double" Name="MinHeight"/>
-		<Property Type="double" Name="MaxWidth"/>
-		<Property Type="double" Name="MaxHeight"/>
-		<Property Type="double" Name="ActualWidth"/>
-		<Property Type="double" Name="ActualHeight"/>
-		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="Margin"/>
-		<Property Type="Pegasus.Framework.UserInterface.HorizontalAlignment" Name="HorizontalAlignment"/>
-		<Property Type="Pegasus.Framework.UserInterface.VerticalAlignment" Name="VerticalAlignment"/>
-		<Property Type="Pegasus.Framework.UserInterface.Visibility" Name="Visibility"/>
-		<Event Type="KeyEventArgs" Name="PreviewKeyDown"/>
-		<Event Type="KeyEventArgs" Name="KeyDown"/>
-		<Event Type="KeyEventArgs" Name="PreviewKeyUp"/>
-		<Event Type="KeyEventArgs" Name="KeyUp"/>
+		<Property Type="object" Name="DataContext" />
+		<Property Type="Pegasus.Platform.Graphics.Color?" Name="Background" />
+		<Property Type="Pegasus.Framework.UserInterface.Style" Name="Style" />
+		<Property Type="string" Name="FontFamily" />
+		<Property Type="int" Name="FontSize" />
+		<Property Type="bool" Name="FontBold" />
+		<Property Type="bool" Name="FontItalic" />
+		<Property Type="bool" Name="IsHitTestVisible" />
+		<Property Type="bool" Name="Focusable" />
+		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources" />
+		<Property Type="double" Name="Width" />
+		<Property Type="double" Name="Height" />
+		<Property Type="double" Name="MinWidth" />
+		<Property Type="double" Name="MinHeight" />
+		<Property Type="double" Name="MaxWidth" />
+		<Property Type="double" Name="MaxHeight" />
+		<Property Type="double" Name="ActualWidth" />
+		<Property Type="double" Name="ActualHeight" />
+		<Property Type="Pegasus.Framework.UserInterface.Input.InputBindingCollection" Name="InputBindings" />
+		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="Margin" />
+		<Property Type="Pegasus.Framework.UserInterface.HorizontalAlignment" Name="HorizontalAlignment" />
+		<Property Type="Pegasus.Framework.UserInterface.VerticalAlignment" Name="VerticalAlignment" />
+		<Property Type="Pegasus.Framework.UserInterface.Visibility" Name="Visibility" />
+		<Event Type="KeyEventArgs" Name="PreviewKeyDown" />
+		<Event Type="KeyEventArgs" Name="KeyDown" />
+		<Event Type="KeyEventArgs" Name="PreviewKeyUp" />
+		<Event Type="KeyEventArgs" Name="KeyUp" />
 	</Class>
 
 	<!-- Controls ================================================================================================= -->
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Control" Inherits="Pegasus.Framework.UserInterface.UIElement">
-		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground"/>
-		<Property Type="Pegasus.Framework.UserInterface.Controls.ControlTemplate" Name="Template"/>
+		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground" />
+		<Property Type="Pegasus.Framework.UserInterface.Controls.ControlTemplate" Name="Template" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.TextBlock" Inherits="Pegasus.Framework.UserInterface.UIElement">
-		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground"/>
-		<Property Type="Pegasus.Framework.UserInterface.TextWrapping" Name="TextWrapping"/>
-		<Property Type="Pegasus.Framework.UserInterface.TextAlignment" Name="TextAlignment"/>
-		<Property Type="string" Name="Text" IsContentProperty="true"/>
+		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground" />
+		<Property Type="Pegasus.Framework.UserInterface.TextWrapping" Name="TextWrapping" />
+		<Property Type="Pegasus.Framework.UserInterface.TextAlignment" Name="TextAlignment" />
+		<Property Type="string" Name="Text" IsContentProperty="true" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.TextBox" Inherits="Pegasus.Framework.UserInterface.Controls.Control">
-		<Property Type="string" Name="Text" IsContentProperty="true"/>
-		<Property Type="int" Name="MaxLength"/>
+		<Property Type="string" Name="Text" IsContentProperty="true" />
+		<Property Type="int" Name="MaxLength" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ContentControl" Inherits="Pegasus.Framework.UserInterface.Controls.Control">
-		<Property Type="object" Name="Content" IsContentProperty="true"/>
+		<Property Type="object" Name="Content" IsContentProperty="true" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ContentPresenter" Inherits="Pegasus.Framework.UserInterface.UIElement">
-		<Property Type="object" Name="Content" IsContentProperty="true"/>
+		<Property Type="object" Name="Content" IsContentProperty="true" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Button" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
-		<Event Type="RoutedEventArgs" Name="Click"/>
+		<Event Type="RoutedEventArgs" Name="Click" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
 
-	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridColumnHeader" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
+	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridColumnHeader"
+		   Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ItemsControl" Inherits="Pegasus.Framework.UserInterface.Controls.Control">
-		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="ItemTemplate"/>
+		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="ItemTemplate" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGrid" Inherits="Pegasus.Framework.UserInterface.Controls.ItemsControl">
-		<Property Type="Pegasus.Framework.ObservableCollection&lt;DataGridColumn&gt;" Name="Columns"/>
-		<Property Type="Pegasus.Framework.UserInterface.Style" Name="ColumnHeaderStyle"/>
-		<Property Type="bool" Name="AutoGenerateColumns"/>
+		<Property Type="Pegasus.Framework.ObservableCollection&lt;DataGridColumn&gt;" Name="Columns" />
+		<Property Type="Pegasus.Framework.UserInterface.Style" Name="ColumnHeaderStyle" />
+		<Property Type="bool" Name="AutoGenerateColumns" />
 	</Class>
 
 	<!-- Layouts ================================================================================================= -->
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Panel" Inherits="Pegasus.Framework.UserInterface.UIElement">
-		<Property Type="int" Name="ZIndex"/>
-		<Property Type="bool" Name="IsItemsHost"/>
-		<Property Type="Pegasus.Framework.UserInterface.UIElementCollection" Name="Children" IsContentProperty="true"/>
+		<Property Type="int" Name="ZIndex" />
+		<Property Type="bool" Name="IsItemsHost" />
+		<Property Type="Pegasus.Framework.UserInterface.UIElementCollection" Name="Children" IsContentProperty="true" />
 	</Class>
-	
+
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Canvas" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
-		<Property Type="double" Name="Left"/>
-		<Property Type="double" Name="Right"/>
-		<Property Type="double" Name="Top"/>
-		<Property Type="double" Name="Bottom"/>
+		<Property Type="double" Name="Left" />
+		<Property Type="double" Name="Right" />
+		<Property Type="double" Name="Top" />
+		<Property Type="double" Name="Bottom" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.StackPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
-		<Property Type="Pegasus.Framework.UserInterface.Controls.Orientation" Name="Orientation"/>
+		<Property Type="Pegasus.Framework.UserInterface.Controls.Orientation" Name="Orientation" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Grid" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
-		<Property Type="System.Collections.Generic.List&lt;ColumnDefinition&gt;" Name="ColumnDefinitions"/>
-		<Property Type="System.Collections.Generic.List&lt;RowDefinition&gt;" Name="RowDefinitions"/>
-		<Property Type="int" Name="Column"/>
-		<Property Type="int" Name="Row"/>
+		<Property Type="System.Collections.Generic.List&lt;ColumnDefinition&gt;" Name="ColumnDefinitions" />
+		<Property Type="System.Collections.Generic.List&lt;RowDefinition&gt;" Name="RowDefinitions" />
+		<Property Type="int" Name="Column" />
+		<Property Type="int" Name="Row" />
 	</Class>
-	
-	<Class Name="Pegasus.Framework.UserInterface.Controls.AreaPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Panel"/>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.AreaPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Panel" />
 
 	<!-- Decorators ================================================================================================= -->
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Decorator" Inherits="Pegasus.Framework.UserInterface.UIElement">
-		<Property Type="Pegasus.Framework.UserInterface.UIElement" Name="Child" IsContentProperty="true"/>
+		<Property Type="Pegasus.Framework.UserInterface.UIElement" Name="Child" IsContentProperty="true" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Border" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.RenderOutputPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
-		<Property Name="HasDepthStencil" Type="bool"/>
-		<Property Name="DrawMethod" Type="string"/>
+		<Property Name="HasDepthStencil" Type="bool" />
+		<Property Name="DrawMethod" Type="string" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Window" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
-		<Property Type="string" Name="Title"/>
+		<Property Type="string" Name="Title" />
 	</Class>
 
 	<!-- Default Converters ============================================================================================ -->
@@ -259,4 +242,165 @@
 	<Class Name="Pegasus.Framework.UserInterface.Converters.FrameTimeToStringConverter" />
 	<Class Name="Pegasus.Framework.UserInterface.Converters.BooleanToVisibilityConverter" />
 
+	<!-- Enumerations ================================================================================================= -->
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.Input.KeyTriggerType">
+		<Literal>Released</Literal>
+		<Literal>Pressed</Literal>
+		<Literal>Repeated</Literal>
+		<Literal>WentDown</Literal>
+		<Literal>WentUp</Literal>
+	</Enumeration>
+	
+	<Enumeration Name="Pegasus.Framework.UserInterface.Controls.Orientation">
+		<Literal>Vertical</Literal>
+		<Literal>Horizontal</Literal>
+	</Enumeration>
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.TextRenderingMode">
+		<Literal>ClearType</Literal>
+		<Literal>Aliased</Literal>
+	</Enumeration>
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.TextWrapping">
+		<Literal>NoWrap</Literal>
+		<Literal>Wrap</Literal>
+	</Enumeration>
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.TextAlignment">
+		<Literal>Left</Literal>
+		<Literal>Right</Literal>
+		<Literal>Center</Literal>
+	</Enumeration>
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.Visibility">
+		<Literal>Collapsed</Literal>
+		<Literal>Visible</Literal>
+		<Literal>Hidden</Literal>
+	</Enumeration>
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.VerticalAlignment">
+		<Literal>Stretch</Literal>
+		<Literal>Top</Literal>
+		<Literal>Center</Literal>
+		<Literal>Bottom</Literal>
+	</Enumeration>
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.HorizontalAlignment">
+		<Literal>Stretch</Literal>
+		<Literal>Left</Literal>
+		<Literal>Center</Literal>
+		<Literal>Right</Literal>
+	</Enumeration>
+
+	<Enumeration Name="Pegasus.Framework.UserInterface.Input.Key">
+		<Literal>A</Literal>
+		<Literal>B</Literal>
+		<Literal>C</Literal>
+		<Literal>D</Literal>
+		<Literal>E</Literal>
+		<Literal>F</Literal>
+		<Literal>G</Literal>
+		<Literal>H</Literal>
+		<Literal>I</Literal>
+		<Literal>J</Literal>
+		<Literal>K</Literal>
+		<Literal>L</Literal>
+		<Literal>M</Literal>
+		<Literal>N</Literal>
+		<Literal>O</Literal>
+		<Literal>P</Literal>
+		<Literal>Q</Literal>
+		<Literal>R</Literal>
+		<Literal>S</Literal>
+		<Literal>T</Literal>
+		<Literal>U</Literal>
+		<Literal>V</Literal>
+		<Literal>W</Literal>
+		<Literal>X</Literal>
+		<Literal>Y</Literal>
+		<Literal>Z</Literal>
+		<Literal>Num0</Literal>
+		<Literal>Num1</Literal>
+		<Literal>Num2</Literal>
+		<Literal>Num3</Literal>
+		<Literal>Num4</Literal>
+		<Literal>Num5</Literal>
+		<Literal>Num6</Literal>
+		<Literal>Num7</Literal>
+		<Literal>Num8</Literal>
+		<Literal>Num9</Literal>
+		<Literal>Escape</Literal>
+		<Literal>LeftControl</Literal>
+		<Literal>LeftShift</Literal>
+		<Literal>LeftAlt</Literal>
+		<Literal>LeftSystem</Literal>
+		<Literal>RightControl</Literal>
+		<Literal>RightShift</Literal>
+		<Literal>RightAlt</Literal>
+		<Literal>RightSystem</Literal>
+		<Literal>Menu</Literal>
+		<Literal>LeftBracket</Literal>
+		<Literal>RightBracket</Literal>
+		<Literal>Semicolon</Literal>
+		<Literal>Comma</Literal>
+		<Literal>Period</Literal>
+		<Literal>Quote</Literal>
+		<Literal>Slash</Literal>
+		<Literal>BackSlash</Literal>
+		<Literal>Grave</Literal>
+		<Literal>Equal</Literal>
+		<Literal>Dash</Literal>
+		<Literal>Space</Literal>
+		<Literal>Return</Literal>
+		<Literal>Back</Literal>
+		<Literal>Tab</Literal>
+		<Literal>PageUp</Literal>
+		<Literal>PageDown</Literal>
+		<Literal>End</Literal>
+		<Literal>Home</Literal>
+		<Literal>Insert</Literal>
+		<Literal>Delete</Literal>
+		<Literal>Add</Literal>
+		<Literal>Subtract</Literal>
+		<Literal>Multiply</Literal>
+		<Literal>Divide</Literal>
+		<Literal>Left</Literal>
+		<Literal>Right</Literal>
+		<Literal>Up</Literal>
+		<Literal>Down</Literal>
+		<Literal>Numpad0</Literal>
+		<Literal>Numpad1</Literal>
+		<Literal>Numpad2</Literal>
+		<Literal>Numpad3</Literal>
+		<Literal>Numpad4</Literal>
+		<Literal>Numpad5</Literal>
+		<Literal>Numpad6</Literal>
+		<Literal>Numpad7</Literal>
+		<Literal>Numpad8</Literal>
+		<Literal>Numpad9</Literal>
+		<Literal>F1</Literal>
+		<Literal>F2</Literal>
+		<Literal>F3</Literal>
+		<Literal>F4</Literal>
+		<Literal>F5</Literal>
+		<Literal>F6</Literal>
+		<Literal>F7</Literal>
+		<Literal>F8</Literal>
+		<Literal>F9</Literal>
+		<Literal>F10</Literal>
+		<Literal>F11</Literal>
+		<Literal>F12</Literal>
+		<Literal>F13</Literal>
+		<Literal>F14</Literal>
+		<Literal>F15</Literal>
+		<Literal>Pause</Literal>
+		<Literal>NumpadEnter</Literal>
+		<Literal>NumpadDecimal</Literal>
+		<Literal>NumLock</Literal>
+		<Literal>Scroll</Literal>
+		<Literal>Print</Literal>
+		<Literal>CapsLock</Literal>
+		<Literal>BackSlash2</Literal>
+	</Enumeration>
 </Types>

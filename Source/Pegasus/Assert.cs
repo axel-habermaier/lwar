@@ -135,7 +135,7 @@
 			ArgumentNotNull(formatMessage);
 
 			if (obj != null)
-				throw new PegasusException(String.Format(formatMessage, parameters));
+				throw new PegasusException(formatMessage, parameters);
 		}
 
 		/// <summary>
@@ -152,7 +152,7 @@
 			ArgumentNotNull(formatMessage);
 
 			if (obj == null)
-				throw new PegasusException(String.Format(formatMessage, parameters));
+				throw new PegasusException(formatMessage, parameters);
 		}
 
 		/// <summary>
@@ -169,16 +169,18 @@
 		}
 
 		/// <summary>
-		///     Throws a PegasusException if the string argument is null or empty (or only whitespace).
+		///     Throws a PegasusException if the string is null or empty (or only whitespace).
 		/// </summary>
 		/// <param name="s">The string to check.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
-		public static void NotNullOrWhitespace(string s)
+		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
+		/// <param name="parameters">The parameters for the error message.</param>
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		public static void NotNullOrWhitespace(string s, string formatMessage, params object[] parameters)
 		{
 			ArgumentNotNull(s);
 
 			if (String.IsNullOrWhiteSpace(s))
-				throw new PegasusException("String cannot be empty or consist of whitespace only.");
+				throw new PegasusException(formatMessage, parameters);
 		}
 
 		/// <summary>
@@ -193,7 +195,7 @@
 			ArgumentNotNull(formatMessage);
 
 			if (!condition)
-				throw new PegasusException(String.Format(formatMessage, parameters));
+				throw new PegasusException(formatMessage, parameters);
 		}
 
 		/// <summary>

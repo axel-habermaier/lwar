@@ -198,9 +198,6 @@
 				case Key.Delete:
 					textBox._caret.RemoveCurrentCharacter();
 					break;
-				case Key.Escape:
-					textBox.Unfocus();
-					break;
 				default:
 					return;
 			}

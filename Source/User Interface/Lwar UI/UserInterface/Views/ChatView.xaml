@@ -4,11 +4,17 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
+			 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input;assembly=PegasusUI"
 			 mc:Ignorable="d"
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
 			 Foreground="White"
 			 HorizontalAlignment="Center"
 			 VerticalAlignment="Bottom">
+	<UserControl.InputBindings>
+		<input:KeyBinding Key="Return" Method="Send" />
+		<input:KeyBinding Key="NumpadEnter" Method="Send" />
+		<input:KeyBinding Key="Escape" Method="Cancel" />
+	</UserControl.InputBindings>
 	<StackPanel Height="200">
 		<Border Background="#20FFFFFF">
 			<Grid Margin="5" VerticalAlignment="Top">
@@ -21,7 +27,7 @@
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 				<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,2,0,0">Say:</TextBlock>
-				<TextBox x:Name="MessageInput" Width="600" PreviewKeyDown="{Binding Submit}" Text="{Binding Message}" Grid.Row="0"
+				<TextBox x:Name="MessageInput" Width="600" Text="{Binding Message}" Grid.Row="0"
 						 Grid.Column="1"
 						 HorizontalAlignment="Stretch" MaxLength="{Binding MaxMessageLength}" />
 				<TextBlock Margin="0,10,0,0" Foreground="Red" Grid.Row="1" Grid.Column="1" TextWrapping="NoWrap"

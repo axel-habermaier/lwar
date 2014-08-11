@@ -29,11 +29,13 @@
 			{ "uint", s => s },
 			{ "long", s => s },
 			{ "ulong", s => s },
-			{ "Pegasus.Framework.UserInterface.Thickness", s => String.Format("new Thickness({0})", s) },
+			{ "Pegasus.Framework.UserInterface.Thickness", s => String.Format("new Pegasus.Framework.UserInterface.Thickness({0})", s) },
 			{ "Pegasus.Platform.Graphics.Color", ConvertColor },
 			{ "Pegasus.Platform.Graphics.Color?", ConvertColor },
 			{ "System.Type", s => String.Format("typeof({0})", s) },
-			{ "Pegasus.AssetCompiler.Xaml.XamlLiteral", s => s }
+			{ "Pegasus.AssetCompiler.Xaml.XamlLiteral", s => s },
+			{ "Pegasus.Framework.UserInterface.Input.KeyModifiers", ConvertKeyModifiers },
+			{ "Pegasus.Scripting.Cvar", s => s }
 		};
 
 		/// <summary>
@@ -68,6 +70,16 @@
 				Log.Die("Failed to convert '{0}' to type '{1}': {2}", value, targetType.FullName, e.Message);
 				return null;
 			}
+		}
+
+		/// <summary>
+		///     Converts a key modifiers value.
+		/// </summary>
+		/// <param name="value">The key modifiers value that should be converted.</param>
+		private static string ConvertKeyModifiers(string value)
+		{
+			var modifiers = value.Split(new[] { "+" }, StringSplitOptions.RemoveEmptyEntries);
+			return String.Join(" | ", modifiers.Select(m => "Pegasus.Framework.UserInterface.Input.KeyModifiers." + m));
 		}
 
 		/// <summary>

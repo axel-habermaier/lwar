@@ -5,7 +5,6 @@
 	using Network;
 	using Pegasus;
 	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface.Input;
 	using Scripting;
 
 	/// <summary>
@@ -71,24 +70,24 @@
 		}
 
 		/// <summary>
-		///     Sends the current message to the server, if the message is non-empty and does not exceed the length limit, or cancels
-		///     the input.
+		///     Sends the current message to the server, if the message is non-empty and does not exceed the length limit.
 		/// </summary>
-		public void Submit(object sender, KeyEventArgs e)
+		public void Send()
 		{
-			if (e.Key == Key.Escape)
-			{
-				e.Handled = true;
-				IsVisible = false;
-			}
-
-			if (LengthExceeded || (e.Key != Key.Return && e.Key != Key.NumpadEnter))
+			if (LengthExceeded)
 				return;
 
 			if (!String.IsNullOrWhiteSpace(Message))
 				Commands.Say(Message);
 
-			e.Handled = true;
+			IsVisible = false;
+		}
+
+		/// <summary>
+		///     Cancels and hides the chat input.
+		/// </summary>
+		public void Cancel()
+		{
 			IsVisible = false;
 		}
 	}

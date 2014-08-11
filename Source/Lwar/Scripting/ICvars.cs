@@ -31,8 +31,8 @@ internal interface ICvars
 	/// <summary>
 	///     When triggered in an active game session, shows the scoreboard.
 	/// </summary>
-	[Cvar("Key.Tab.IsPressed()"), Persistent]
-	InputTrigger InputShowScoreboard { get; set; }
+	[Cvar(Key.Tab), Persistent]
+	Key InputShowScoreboard { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, moves the player forwards.
@@ -97,6 +97,6 @@ internal interface ICvars
 	/// <summary>
 	///     When triggered in an active game session, opens the chat input.
 	/// </summary>
-	[Cvar("Key.Return.WentDown() | Key.NumpadEnter.WentDown()"), Persistent]
-	InputTrigger InputChat { get; set; }
+	[Cvar(Key.Return), Persistent]
+	Key InputChat { get; set; }
 }

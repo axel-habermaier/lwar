@@ -1,6 +1,8 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
+	using Controls;
+	using Input;
 	using Math;
 	using Platform.Graphics;
 	using Platform.Logging;
@@ -470,6 +472,22 @@
 
 				return true;
 			}
+		}
+
+		/// <summary>
+		///     Gets the list of input bindings associated with this UI element.
+		/// </summary>
+		public InputBindingCollection InputBindings
+		{
+			get { return _inputBindings ?? (_inputBindings = new InputBindingCollection(this)); }
+		}
+
+		/// <summary>
+		///     Gets the window the UI element is contained in or null if it isn't contained in any window.
+		/// </summary>
+		internal Window ParentWindow
+		{
+			get { return GetParentWindow(this); }
 		}
 	}
 }

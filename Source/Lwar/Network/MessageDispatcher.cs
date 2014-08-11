@@ -56,7 +56,7 @@
 				case MessageType.Join:
 					// Give the server player a default name
 					var name = message.Join.Player == Specification.ServerPlayerIdentifier ? "Server" : message.Join.Name;
-					Assert.NotNullOrWhitespace(name);
+					Assert.NotNullOrWhitespace(name, "The player name cannot be empty.");
 
 					_gameSession.Players.Add(message.Join.Player, name, message.Join.IsLocalPlayer);
 

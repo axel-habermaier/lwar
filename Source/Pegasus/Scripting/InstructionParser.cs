@@ -79,8 +79,7 @@
 				return Success(reply.Result);
 
 			var type = string.Format("Cvar type: {0}", TypeRegistry.GetDescription(cvar.ValueType));
-			var examples = string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
-			return ForwardError(reply, type, examples, Help.GetHint(cvar.Name));
+			return ForwardError(reply, type, GetExampleString(cvar.ValueType), Help.GetHint(cvar.Name));
 		}
 
 		/// <summary>
@@ -108,10 +107,9 @@
 				if (inputStream.WhiteSpaceUntilEndOfInput() && !parameters[i].HasDefaultValue)
 				{
 					inputStream.SkipWhiteSpaces(); // To get the correct column in the error message
-					var examples = string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(parameters[i].Type)));
 
 					return Errors(new ErrorMessage(ErrorType.Expected, TypeRegistry.GetDescription(parameters[i].Type)),
-								  new ErrorMessage(ErrorType.Message, examples),
+								  new ErrorMessage(ErrorType.Message, GetExampleString(parameters[i].Type)),
 								  new ErrorMessage(ErrorType.Message, Help.GetHint(command.Name)));
 				}
 
@@ -127,12 +125,20 @@
 				else
 				{
 					var parameterType = string.Format("Parameter type: {0}", TypeRegistry.GetDescription(parameters[i].Type));
-					var examples = string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(parameters[i].Type)));
-					return ForwardError(reply, parameterType, examples, Help.GetHint(command.Name));
+					return ForwardError(reply, parameterType, GetExampleString(parameters[i].Type), Help.GetHint(command.Name));
 				}
 			}
 
 			return EndOfInstruction.Apply(_ => new Instruction(command, values)).Parse(inputStream);
+		}
+
+		/// <summary>
+		/// Gets the example string for the given type.
+		/// </summary>
+		/// <param name="type">The type the examples should be returned for.</param>
+		private static string GetExampleString(Type type)
+		{
+			return string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(type).Take(10)));
 		}
 	}
 }

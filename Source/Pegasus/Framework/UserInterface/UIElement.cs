@@ -29,6 +29,11 @@
 		private RoutedEventStore _eventStore = new RoutedEventStore();
 
 		/// <summary>
+		///     The list of input bindings associated with this UI element.
+		/// </summary>
+		private InputBindingCollection _inputBindings;
+
+		/// <summary>
 		///     A value indicating whether the UI element is connected to the visual tree's root element.
 		/// </summary>
 		private bool _isAttachedToRoot;
@@ -60,6 +65,9 @@
 			FontItalicProperty.Changed += (o, e) => UnsetCachedFont(o);
 			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
 			MouseDownEvent.Raised += OnMouseDown;
+			KeyDownEvent.Raised += OnKey;
+			KeyUpEvent.Raised += OnKey;
+			DataContextProperty.Changed += OnDataContextChanged;
 		}
 
 		/// <summary>
@@ -104,13 +112,37 @@
 		}
 
 		/// <summary>
-		///     Sets the keyboard focus to this UI element if the element is focusable.
+		///     Sets the keyboard focus to this UI element if the element is focusable and invokes any triggered input bindings of the
+		///     UI element that raised the event.
 		/// </summary>
 		private static void OnMouseDown(object sender, MouseButtonEventArgs e)
 		{
 			var uiElement = sender as UIElement;
 			if (uiElement != null && uiElement.Focusable)
 				uiElement.Focus();
+
+			if (uiElement != null && uiElement._inputBindings != null)
+				uiElement._inputBindings.HandleEvent(e);
+		}
+
+		/// <summary>
+		///     Updates the target methods of all input bindings of the UI element with the changed data context.
+		/// </summary>
+		private static void OnDataContextChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
+		{
+			var uiElement = obj as UIElement;
+			if (uiElement != null && uiElement._inputBindings != null)
+				uiElement._inputBindings.BindToDataContext(args.NewValue);
+		}
+
+		/// <summary>
+		///     Invokes any triggered input bindings of the UI element that raised the event.
+		/// </summary>
+		private static void OnKey(object sender, KeyEventArgs e)
+		{
+			var uiElement = sender as UIElement;
+			if (uiElement != null && uiElement._inputBindings != null)
+				uiElement._inputBindings.HandleEvent(e);
 		}
 
 		/// <summary>

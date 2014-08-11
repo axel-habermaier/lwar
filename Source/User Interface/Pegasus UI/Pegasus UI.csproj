@@ -120,6 +120,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="UserInterface\Controls\DataGridTextColumn.cs" />
+    <Compile Include="UserInterface\Input\CvarKeyBinding.cs" />
+    <Compile Include="UserInterface\Input\KeyBinding.cs" />
+    <Compile Include="UserInterface\Input\KeyTriggerType.cs" />
     <Compile Include="UserInterface\Views\DebugOverlayView.xaml.cs">
       <DependentUpon>DebugOverlayView.xaml</DependentUpon>
     </Compile>
@@ -137,7 +140,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TypeInfo.xml" />
+    <None Include="TypeInfo.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Include="UserInterface\Controls\AppWindow.xaml">

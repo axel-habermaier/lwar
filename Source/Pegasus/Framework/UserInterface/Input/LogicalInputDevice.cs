@@ -7,9 +7,9 @@
 
 	/// <summary>
 	///     Manages logical inputs that are triggered by input triggers. The logical input device listens for the corresponding
-	///     input events on its associated window, guaranteeing that it only sees inputs that have not been handled by some other
-	///     UI element within the window. Therefore, the key and mouse button input states within the logical device might
-	///     differ from the actual input states of the window's keyboard and mouse.
+	///     input events on its associated UI element, guaranteeing that it only sees inputs that have not already been handled by
+	///     some other UI element within the element tree. Therefore, the key and mouse button input states within the logical
+	///     device might differ from the actual input states of the window's keyboard and mouse.
 	/// </summary>
 	public class LogicalInputDevice : DisposableObject
 	{
@@ -34,25 +34,25 @@
 		private readonly InputState[] _mouseButtonStates = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
 
 		/// <summary>
-		///     The window that is associated with this logical device.
+		///     The UI element that is associated with this logical device.
 		/// </summary>
-		private readonly Window _window;
+		private readonly UIElement _uiElement;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="window">The window that should be associated with this logical device.</param>
-		public LogicalInputDevice(Window window)
+		/// <param name="uiElement">The UI element that should be associated with this logical device.</param>
+		public LogicalInputDevice(UIElement uiElement)
 		{
-			Assert.ArgumentNotNull(window);
+			Assert.ArgumentNotNull(uiElement);
 
-			_window = window;
-			_window.KeyDown += OnKeyDown;
-			_window.KeyUp += OnKeyUp;
-			_window.MouseDown += OnMouseDown;
-			_window.MouseUp += OnMouseUp;
-			_window.MouseWheel += OnMouseWheel;
-			_window.MouseMove += OnMouseMoved;
+			_uiElement = uiElement;
+			_uiElement.KeyDown += OnKeyDown;
+			_uiElement.KeyUp += OnKeyUp;
+			_uiElement.MouseDown += OnMouseDown;
+			_uiElement.MouseUp += OnMouseUp;
+			_uiElement.MouseWheel += OnMouseWheel;
+			_uiElement.MouseMove += OnMouseMoved;
 		}
 
 		/// <summary>
@@ -63,17 +63,33 @@
 		/// <summary>
 		///     Gets the keyboard that is associated with this logical device.
 		/// </summary>
+		// TODO: Remove
 		public Keyboard Keyboard
 		{
-			get { return _window.Keyboard; }
+			get
+			{
+				var uiElement = _uiElement;
+				while (!(uiElement is Window))
+					uiElement = uiElement.Parent;
+
+				return ((Window)uiElement).Keyboard;
+			}
 		}
 
 		/// <summary>
 		///     Gets the mouse that is associated with this logical device.
 		/// </summary>
+		// TODO: Remove
 		public Mouse Mouse
 		{
-			get { return _window.Mouse; }
+			get
+			{
+				var uiElement = _uiElement;
+				while (!(uiElement is Window))
+					uiElement = uiElement.Parent;
+
+				return ((Window)uiElement).Mouse;
+			}
 		}
 
 		/// <summary>
@@ -219,12 +235,12 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_window.KeyDown -= OnKeyDown;
-			_window.KeyUp -= OnKeyUp;
-			_window.MouseDown -= OnMouseDown;
-			_window.MouseUp -= OnMouseUp;
-			_window.MouseWheel -= OnMouseWheel;
-			_window.MouseMove -= OnMouseMoved;
+			_uiElement.KeyDown -= OnKeyDown;
+			_uiElement.KeyUp -= OnKeyUp;
+			_uiElement.MouseDown -= OnMouseDown;
+			_uiElement.MouseUp -= OnMouseUp;
+			_uiElement.MouseWheel -= OnMouseWheel;
+			_uiElement.MouseMove -= OnMouseMoved;
 		}
 
 		/// <summary>

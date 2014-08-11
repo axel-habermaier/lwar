@@ -35,11 +35,6 @@
 		private Camera2D _camera;
 
 		/// <summary>
-		///     The input trigger that is used to determine whether the chat input should be shown.
-		/// </summary>
-		private readonly LogicalInput _activateChatInput = new LogicalInput(Cvars.InputChatCvar);
-
-		/// <summary>
 		///     The view model for the chat input.
 		/// </summary>
 		private ChatViewModel _chat;
@@ -300,7 +295,6 @@
 			Scoreboard = new ScoreboardViewModel(_gameSession);
 			Chat = new ChatViewModel();
 			Application.Current.Window.InputDevice.Add(_respawn);
-			Application.Current.Window.InputDevice.Add(_activateChatInput);
 
 			_networkSession.OnConnected += OnConnected;
 			_networkSession.OnDropped += () => ShowErrorBox("Connection Lost", "The connection to the server has been lost.");
@@ -352,7 +346,6 @@
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
 
 			Application.Current.Window.InputDevice.Remove(_respawn);
-			Application.Current.Window.InputDevice.Remove(_activateChatInput);
 
 			Log.Info("The game session has ended.");
 		}
@@ -369,9 +362,6 @@
 
 			if (!_networkSession.IsConnected)
 				return;
-
-			if (_activateChatInput.IsTriggered)
-				_chat.IsVisible = true;
 
 			SendInput();
 
@@ -406,6 +396,30 @@
 
 			var mainMenu = new MainMenuViewModel();
 			Root.ReplaceChild(mainMenu);
+		}
+
+		/// <summary>
+		///     Shows the chat input.
+		/// </summary>
+		public void ShowChatInput()
+		{
+			_chat.IsVisible = true;
+		}
+
+		/// <summary>
+		///     Shows the scoreboard.
+		/// </summary>
+		public void ShowScoreboard()
+		{
+			_scoreboard.IsVisible = !_chat.IsVisible;
+		}
+
+		/// <summary>
+		///     Hides the scoreboard.
+		/// </summary>
+		public void HideScoreboard()
+		{
+			_scoreboard.IsVisible = false;
 		}
 	}
 }
