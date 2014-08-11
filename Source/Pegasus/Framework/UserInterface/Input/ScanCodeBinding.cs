@@ -4,54 +4,52 @@
 	using Platform.Logging;
 
 	/// <summary>
-	///     Represents an input binding that is triggered by a key event.
+	///     Represents an input binding that is triggered by a key event, identifying the key by its scan code.
 	/// </summary>
-	public sealed class KeyBinding : InputBinding
+	public sealed class ScanCodeBinding : InputBinding
 	{
-		/// <summary>
-		///     The key that activates the binding.
-		/// </summary>
-		private Key _key;
-
 		/// <summary>
 		///     The key modifiers that must be pressed for the binding to trigger.
 		/// </summary>
 		private KeyModifiers _modifiers;
 
 		/// <summary>
+		///     The scan code of the key that activates the binding.
+		/// </summary>
+		private int _scanCode;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public KeyBinding()
+		public ScanCodeBinding()
 		{
 		}
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="key">The key that should activate the binding.</param>
+		/// <param name="scanCode">The scan code of the key that should activate the binding.</param>
 		/// <param name="method">The name of the method that should be invoked when the binding is triggered.</param>
 		/// <param name="modifiers">The key modifiers that must be pressed for the binding to trigger.</param>
-		public KeyBinding(Key key, string method, KeyModifiers modifiers = KeyModifiers.None)
+		public ScanCodeBinding(int scanCode, string method, KeyModifiers modifiers = KeyModifiers.None)
 		{
 			Assert.ArgumentNotNullOrWhitespace(method);
 
-			Key = key;
+			ScanCode = scanCode;
 			Modifiers = modifiers;
 			Method = method;
 		}
 
 		/// <summary>
-		///     Gets or sets the key that activates the binding.
+		///     Gets or sets the scan code of the key that activates the binding.
 		/// </summary>
-		public Key Key
+		public int ScanCode
 		{
-			get { return _key; }
+			get { return _scanCode; }
 			set
 			{
-				Assert.ArgumentInRange(value);
 				Assert.NotSealed(this);
-
-				_key = value;
+				_scanCode = value;
 			}
 		}
 
@@ -81,9 +79,9 @@
 			switch (TriggerMode)
 			{
 				case TriggerMode.Activated:
-					return args.RoutedEvent == UIElement.KeyDownEvent && keyEventArgs.Key == Key && keyEventArgs.Modifiers == Modifiers;
+					return args.RoutedEvent == UIElement.KeyDownEvent && keyEventArgs.ScanCode == _scanCode && keyEventArgs.Modifiers == Modifiers;
 				case TriggerMode.Deactivated:
-					return args.RoutedEvent == UIElement.KeyUpEvent && (keyEventArgs.Key == Key || keyEventArgs.Modifiers != Modifiers);
+					return args.RoutedEvent == UIElement.KeyUpEvent && (keyEventArgs.ScanCode == _scanCode || keyEventArgs.Modifiers != Modifiers);
 				default:
 					Log.Die("Unknown trigger mode.");
 					return false;

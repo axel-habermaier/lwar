@@ -81,10 +81,9 @@
 		/// <param name="input">The input whose line endings should be normalized.</param>
 		private static string Normalize(string input)
 		{
-			var result = input.Replace("\r\n", "\n");
-			result = result.Replace("\r", "\n");
-			result = result.Replace("\t", String.Join(" ", Enumerable.Range(0, SpacesPerTab).Select(_ => String.Empty)));
-			return result;
+			return input.Replace("\r\n", "\n")
+						.Replace("\r", "\n")
+						.Replace("\t", String.Join(" ", Enumerable.Range(0, SpacesPerTab).Select(_ => String.Empty)));
 		}
 
 		/// <summary>

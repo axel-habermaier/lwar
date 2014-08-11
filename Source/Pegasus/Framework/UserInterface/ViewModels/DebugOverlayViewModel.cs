@@ -64,15 +64,17 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		internal DebugOverlayViewModel()
+		internal DebugOverlayViewModel(AppWindow window)
 		{
+			Assert.ArgumentNotNull(window);
+
 			Cvars.ShowDebugOverlayCvar.Changed += UpdateVisibility;
 			UpdateVisibility(Cvars.ShowDebugOverlay);
 
 			_timer.Timeout += UpdateViewModel;
 			_view = new DebugOverlayView { DataContext = this };
 
-			Application.Current.Window.LayoutRoot.Add(_view);
+			window.LayoutRoot.Add(_view);
 		}
 
 		/// <summary>

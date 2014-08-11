@@ -10,6 +10,7 @@
 	using UserInterface;
 	using UserInterface.Controls;
 	using UserInterface.ViewModels;
+	using UserInterface.Views;
 
 	/// <summary>
 	///     Represents the application. There can be only one instance per app domain.
@@ -56,7 +57,7 @@
 			private set
 			{
 				Assert.That(_current == null || value == null,
-							"There can only be one instance of '{0}' per app domain.", typeof(Application).FullName);
+					"There can only be one instance of '{0}' per app domain.", typeof(Application).FullName);
 
 				_current = value;
 			}
@@ -81,9 +82,17 @@
 		public AssetsManager Assets { get; private set; }
 
 		/// <summary>
+		///     Gets the view model of the window the application is rendered to.
+		/// </summary>
+		private AppWindowViewModel _appWindowViewModel;
+
+		/// <summary>
 		///     Gets the window the application is rendered to.
 		/// </summary>
-		public AppWindow Window { get; private set; }
+		public AppWindow Window
+		{
+			get { return _appWindowViewModel.Window; }
+		}
 
 		/// <summary>
 		///     Gets the graphics device of the application.
@@ -130,15 +139,15 @@
 
 			using (GraphicsDevice = new GraphicsDevice())
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
-			using (Window = new AppWindow(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
+			using (_appWindowViewModel = new AppWindowViewModel(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
 			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
-			using (var debugOverlay = new DebugOverlayViewModel())
 			{
+				var debugOverlay = _appWindowViewModel.DebugOverlay;
 				Window.Title = name;
 				RegisterFontLoader(new FontLoader(Assets));
 
 				// Copy the recorded log history to the console and explain the usage of the console
-				logFile.WriteToConsole(Window.Console.Console);
+				//TODO: logFile.WriteToConsole(Window.Console.Console);
 				Commands.Help();
 
 				// Let the application initialize itself
@@ -157,8 +166,9 @@
 					resolutionManager.Update();
 					_root.UpdateLayout();
 
+					_appWindowViewModel.Update();
 					// Update the statistics
-					Window.Console.Update();
+					//Window.Console.Update();
 					debugOverlay.Update();
 
 					debugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;

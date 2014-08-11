@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Types>
+	<!-- User Controls ================================================================================================ -->
+	<Class Name="Pegasus.Framework.UserInterface.Views.ConsoleView">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Views.DebugOverlayView">
+	</Class>
+
 	<!-- Misc Classes ================================================================================================= -->
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ControlTemplate">
@@ -172,6 +179,9 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.UserControl" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
 
+	<Class Name="Pegasus.Framework.UserInterface.Controls.ScrollViewer" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
+	</Class>
+
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridColumnHeader"
 		   Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 	</Class>
@@ -199,6 +209,11 @@
 		<Property Type="double" Name="Right" />
 		<Property Type="double" Name="Top" />
 		<Property Type="double" Name="Bottom" />
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.DockPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
+		<Property Type="Pegasus.Framework.UserInterface.Controls.Dock" Name="Dock" />
+		<Property Type="bool" Name="LastChildFill"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.StackPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
@@ -251,6 +266,13 @@
 
 	<!-- Enumerations ================================================================================================= -->
 
+	<Enumeration Name="Pegasus.Framework.UserInterface.Controls.Dock">
+		<Literal>Left</Literal>
+		<Literal>Right</Literal>
+		<Literal>Top</Literal>
+		<Literal>Bottom</Literal>
+	</Enumeration>
+	
 	<Enumeration Name="Pegasus.Framework.UserInterface.Input.TriggerMode">
 		<Literal>Deactivated</Literal>
 		<Literal>Activated</Literal>

@@ -4,9 +4,25 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls"
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters"
+			 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input"
 			 mc:Ignorable="d"
+			 x:Class="Pegasus.Framework.UserInterface.Views.ConsoleView"
 			 d:DesignHeight="300" d:DesignWidth="300"
-			 Panel.ZIndex="2147483647" 
-			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}">
-	<controls:RenderOutputPanel x:Name="RenderOutput" Camera="{Binding Camera}" DrawMethod="OnDraw" />
+			 Panel.ZIndex="2147483647"
+			 Background="#EE333333"
+			 Foreground="White" Height="{Binding Height}"
+			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
+			 input:Keyboard.HandlesAllInput="true"
+			 input:Mouse.HandlesAllInput="true"
+			 VerticalAlignment="Top"
+			 HorizontalAlignment="Stretch">
+	<DockPanel Margin="5">
+		<DockPanel DockPanel.Dock="Bottom">
+			<TextBlock Margin="0,2,3,0" DockPanel.Dock="Left">]</TextBlock>
+			<TextBox Background="Blue" DockPanel.Dock="Bottom" />
+		</DockPanel>
+		<ScrollViewer Background="Red" Margin="0,0,0,5" DockPanel.Dock="Bottom">
+			<ItemsControl />
+		</ScrollViewer>
+	</DockPanel>
 </UserControl>

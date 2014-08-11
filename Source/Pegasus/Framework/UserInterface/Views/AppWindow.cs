@@ -1,12 +1,12 @@
-﻿namespace Pegasus.Framework.UserInterface.Controls
+﻿namespace Pegasus.Framework.UserInterface.Views
 {
 	using System;
+	using Controls;
 	using Input;
 	using Math;
+	using Platform;
 	using Platform.Memory;
-	using Rendering;
 	using Scripting;
-	using ViewModels;
 
 	/// <summary>
 	///     Represents the default window of an application.
@@ -17,11 +17,6 @@
 		///     Manages the input bindings registered for this window.
 		/// </summary>
 		private readonly Bindings _bindings;
-
-		/// <summary>
-		///     The camera that is used to draw the console and the debug overlay.
-		/// </summary>
-		private readonly Camera _camera;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -37,8 +32,8 @@
 
 			InputDevice = new LogicalInputDevice(this);
 			_bindings = new Bindings(InputDevice);
-			_camera = new Camera2D(Application.Current.GraphicsDevice);
-			Console = new ConsoleViewModel(this, InputDevice);
+
+			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "ToggleConsoleVisibility"));
 		}
 
 		/// <summary>
@@ -55,20 +50,12 @@
 		}
 
 		/// <summary>
-		///     Gets the console that should be drawn on top of the window's contents.
-		/// </summary>
-		internal ConsoleViewModel Console { get; private set; }
-
-		/// <summary>
 		///     Invoked when the window is being closed.
 		/// </summary>
 		protected override void OnClosing()
 		{
 			_bindings.SafeDispose();
 			InputDevice.SafeDispose();
-
-			_camera.SafeDispose();
-			Console.SafeDispose();
 
 			base.OnClosing();
 		}
