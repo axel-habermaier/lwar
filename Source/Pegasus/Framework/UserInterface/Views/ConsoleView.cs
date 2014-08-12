@@ -31,7 +31,7 @@
 		private void OnVisibleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Visibility> args)
 		{
 			if (args.NewValue == Visibility.Visible)
-				_consoleInput.Focus();
+				_prompt.Focus();
 		}
 
 		/// <summary>

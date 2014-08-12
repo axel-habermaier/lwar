@@ -131,6 +131,15 @@
 		}
 
 		/// <summary>
+		///     Moves to the end of the text if the text has been changed manually without using the cursor.
+		/// </summary>
+		public void MoveToEndIfTextChanged()
+		{
+			if (_text != _textControl.Text)
+				MoveToEnd();
+		}
+
+		/// <summary>
 		///     Inserts the given character at the current caret position.
 		/// </summary>
 		/// <param name="c">The character that should be inserted.</param>

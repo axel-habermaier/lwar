@@ -35,6 +35,12 @@
 		public static readonly DependencyProperty<int> MaxLengthProperty = new DependencyProperty<int>(validationCallback: ValidateMaxLength);
 
 		/// <summary>
+		///     Raised when the text contained in the text box has been changed.
+		/// </summary>
+		public static readonly RoutedEvent<TextChangedEventArgs> TextChangedEvent =
+			new RoutedEvent<TextChangedEventArgs>(RoutingStrategy.Bubble);
+
+		/// <summary>
 		///     The caret that is used to insert and delete text.
 		/// </summary>
 		private Caret _caret;
@@ -53,6 +59,7 @@
 			TextInputEvent.Raised += OnTextInput;
 			MouseLeftButtonDownEvent.Raised += OnMouseLeftButtonDown;
 			IsFocusedProperty.Changed += OnFocused;
+			TextProperty.Changed += OnTextChanged;
 		}
 
 		/// <summary>
@@ -100,6 +107,15 @@
 		}
 
 		/// <summary>
+		///     Raised when the text contained in the text box has been changed.
+		/// </summary>
+		public event RoutedEventHandler<TextChangedEventArgs> TextChanged
+		{
+			add { AddHandler(TextChangedEvent, value); }
+			remove { RemoveHandler(TextChangedEvent, value); }
+		}
+
+		/// <summary>
 		///     Validates a value of the text dependency property.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
@@ -114,7 +130,20 @@
 		/// <param name="value">The value that should be validated.</param>
 		private static bool ValidateMaxLength(int value)
 		{
-			return value > 0;
+			return value >= 0;
+		}
+
+		/// <summary>
+		///     Raises the text changed event.
+		/// </summary>
+		private static void OnTextChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<string> args)
+		{
+			var textBox = obj as TextBox;
+			if (textBox == null)
+				return;
+
+			textBox.RaiseEvent(TextChangedEvent, TextChangedEventArgs.Create(args.NewValue));
+			textBox._caret.MoveToEndIfTextChanged();
 		}
 
 		/// <summary>

@@ -4,7 +4,6 @@
 	using Math;
 	using Memory;
 	using Rendering;
-	using Rendering.UserInterface;
 
 	/// <summary>
 	///     Provides the metadata and operations for drawing text.

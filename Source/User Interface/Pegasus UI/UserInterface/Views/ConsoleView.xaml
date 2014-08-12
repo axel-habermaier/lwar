@@ -14,11 +14,29 @@
 			 input:Mouse.HandlesAllInput="true"
 			 VerticalAlignment="Stretch"
 			 HorizontalAlignment="Stretch">
+	<UserControl.InputBindings>
+		<input:KeyBinding Key="Return" Method="Submit" TriggerOnRepeat="false"></input:KeyBinding>
+		<input:KeyBinding Key="L" Method="Clear" Modifiers="Control" TriggerOnRepeat="false"></input:KeyBinding>
+	</UserControl.InputBindings>
 	<Border Background="#EE333333" x:Name="LayoutRoot" VerticalAlignment="Top">
 		<DockPanel Margin="5">
 			<DockPanel DockPanel.Dock="Bottom">
-				<TextBlock Margin="0,2,3,0" DockPanel.Dock="Left">]</TextBlock>
-				<TextBox x:Name="ConsoleInput" DockPanel.Dock="Bottom" Text="{Binding ConsoleInput}" />
+				<TextBlock Margin="0,2,2,0" DockPanel.Dock="Left" Text="{Binding Prompt.Token}"></TextBlock>
+				<TextBox 
+					DataContext="{Binding Prompt}"
+					MaxLength="{Binding MaxLength}"
+					x:Name="Prompt"
+					DockPanel.Dock="Bottom" 
+					Text="{Binding Input}"
+					TextChanged="{Binding TextChanged}">
+					<TextBox.InputBindings>
+						<input:KeyBinding Key="Escape" Method="ClearInput" />
+						<input:KeyBinding Key="Down" Method="ShowNewerHistoryEntry" TriggerOnRepeat="True" />
+						<input:KeyBinding Key="Up" Method="ShowOlderHistoryEntry" TriggerOnRepeat="True" />
+						<input:KeyBinding Key="Tab" Method="AutoCompleteNext" TriggerOnRepeat="True" />
+						<input:KeyBinding Key="Tab" Modifiers="Shift" Method="AutoCompletePrevious" TriggerOnRepeat="True" />
+					</TextBox.InputBindings>
+				</TextBox>
 			</DockPanel>
 			<ScrollViewer Margin="0,0,0,3" DockPanel.Dock="Bottom">
 				<ItemsControl ItemsSource="{Binding LogEntries}">

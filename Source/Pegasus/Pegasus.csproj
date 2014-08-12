@@ -234,6 +234,7 @@
     <Compile Include="Framework\UserInterface\Controls\DockPanel.cs" />
     <Compile Include="Framework\UserInterface\Controls\ScrollViewer.cs" />
     <Compile Include="Framework\UserInterface\Controls\TextBox.cs" />
+    <Compile Include="Framework\UserInterface\Controls\TextChangedEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Converters\LogTypeToColorConverter.cs" />
     <Compile Include="Framework\UserInterface\Input\Caret.cs" />
     <Compile Include="Framework\UserInterface\Controls\ColumnDefinition.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="Framework\UserInterface\MessageBox.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventBinding.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\AppWindowViewModel.cs" />
+    <Compile Include="Framework\UserInterface\ViewModels\ConsolePromptViewModel.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\ConsoleViewModel.cs" />
     <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />
     <Compile Include="Framework\UserInterface\Views\AppWindow.cs" />

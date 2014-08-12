@@ -67,7 +67,6 @@
 		public void Update()
 		{
 			DebugOverlay.Update();
-			Console.Update();
 		}
 
 		/// <summary>
