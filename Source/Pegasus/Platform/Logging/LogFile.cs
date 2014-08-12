@@ -4,7 +4,6 @@
 	using System.Collections.Generic;
 	using System.Text;
 	using Memory;
-	using Console = Rendering.UserInterface.Console;
 
 	/// <summary>
 	///     Captures all generated logs and outputs them to a log file.
@@ -100,39 +99,6 @@
 			}
 
 			return _builder.ToString();
-		}
-
-		/// <summary>
-		///     Copies all generated log entries to the console. This method should only be invoked once in order to show all log
-		///     entries on the console that have been generated before the console is initialized.
-		/// </summary>
-		public void WriteToConsole(Console console)
-		{
-			Assert.ArgumentNotNull(console);
-
-			foreach (var logEntry in _logEntries)
-			{
-				switch (logEntry.LogType)
-				{
-					case LogType.Fatal:
-						console.ShowError(logEntry);
-						break;
-					case LogType.Error:
-						console.ShowError(logEntry);
-						break;
-					case LogType.Warning:
-						console.ShowWarning(logEntry);
-						break;
-					case LogType.Info:
-						console.ShowInfo(logEntry);
-						break;
-					case LogType.Debug:
-						console.ShowDebugInfo(logEntry);
-						break;
-					default:
-						throw new InvalidOperationException("Unknown log entry type.");
-				}
-			}
 		}
 
 		/// <summary>

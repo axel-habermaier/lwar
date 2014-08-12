@@ -419,11 +419,6 @@
     <Compile Include="Rendering\FullscreenQuad.cs" />
     <Compile Include="Rendering\Model.cs" />
     <Compile Include="Rendering\RenderOutput.cs" />
-    <Compile Include="Rendering\UserInterface\TextLine.cs" />
-    <Compile Include="Rendering\UserInterface\TextSequence.cs" />
-    <Compile Include="Rendering\UserInterface\TextToken.cs" />
-    <Compile Include="Rendering\UserInterface\TextTokenStream.cs" />
-    <Compile Include="Rendering\UserInterface\TextTokenType.cs" />
     <Compile Include="Rendering\VertexPositionNormal.cs" />
     <Compile Include="Rendering\DebugCamera.cs" />
     <Compile Include="Rendering\VertexPositionNormalTexture.cs" />
@@ -575,7 +570,6 @@
     <Compile Include="Scripting\Parsing\BasicParsers\Int32Parser.cs" />
     <Compile Include="Scripting\Parsing\BasicParsers\NumberParser.cs" />
     <Compile Include="Scripting\InstructionParser.cs" />
-    <Compile Include="Rendering\UserInterface\ConsoleInput.cs" />
     <Compile Include="Framework\UserInterface\Input\InputState.cs" />
     <Compile Include="Scripting\Bindings.cs" />
     <Compile Include="Framework\UserInterface\Input\Keyboard.cs" />
@@ -583,9 +577,6 @@
     <Compile Include="Framework\UserInterface\Input\Mouse.cs" />
     <Compile Include="Scripting\Interpreter.cs" />
     <Compile Include="Platform\Memory\NativeMemoryExtensions.cs" />
-    <Compile Include="Rendering\UserInterface\ConsolePrompt.cs" />
-    <Compile Include="Rendering\UserInterface\ConsoleContent.cs" />
-    <Compile Include="Rendering\UserInterface\TextAlignmentExtensions.cs" />
     <Compile Include="Math\MathUtils.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Platform\Graphics\MapMode.cs" />
@@ -599,13 +590,7 @@
     <Compile Include="Platform\PlatformInfo.cs" />
     <Compile Include="Rendering\Quad.cs" />
     <Compile Include="Rendering\SpriteBatch.cs" />
-    <Compile Include="Rendering\UserInterface\Caret.cs" />
-    <Compile Include="Rendering\UserInterface\Console.cs" />
-    <Compile Include="Rendering\UserInterface\Label.cs" />
-    <Compile Include="Rendering\UserInterface\TextAlignment.cs" />
-    <Compile Include="Rendering\UserInterface\TextBox.cs" />
     <Compile Include="Rendering\TextRenderer.cs" />
-    <Compile Include="Rendering\UserInterface\TextLayout.cs" />
     <Compile Include="Framework\UserInterface\TextLine.cs" />
     <Compile Include="Framework\UserInterface\TextSequence.cs" />
     <Compile Include="Framework\UserInterface\TextToken.cs" />

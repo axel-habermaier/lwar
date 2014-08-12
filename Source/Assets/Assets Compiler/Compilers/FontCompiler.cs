@@ -184,7 +184,6 @@
 				writer.AppendLine("using Pegasus.Framework.UserInterface;");
 				writer.AppendLine("using Pegasus.Assets;");
 				writer.AppendLine("using Pegasus.Platform.Logging;");
-				writer.AppendLine("using Pegasus.Rendering.UserInterface;");
 				writer.AppendLine("using Pegasus.Platform.Graphics;");
 				writer.NewLine();
 

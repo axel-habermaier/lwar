@@ -74,10 +74,22 @@
 		}
 
 		/// <summary>
-		///     Initializes the console prompt.
+		///     Shows or hides the console.
 		/// </summary>
-		public void InitializePrompt()
+		/// <param name="show">Indicates whether the console should be shown or hidden.</param>
+		private void ShowConsole(bool show)
 		{
+			IsVisible = show;
+		}
+
+		/// <summary>
+		///     Initializes the console view model. The initialization is a two-stage process as most of the required subsystems are not
+		///     yet initialized when the console view model is created. However, we have to create the console view model as early as
+		///     possible in order to not miss any log entries.
+		/// </summary>
+		public void Initialize()
+		{
+			Commands.OnShowConsole += ShowConsole;
 			Prompt = new ConsolePromptViewModel();
 		}
 
@@ -158,6 +170,8 @@
 			Log.OnWarning -= AddLogEntry;
 			Log.OnInfo -= AddLogEntry;
 			Log.OnDebugInfo -= AddLogEntry;
+			Commands.OnShowConsole -= ShowConsole;
+
 			Prompt.SafeDispose();
 		}
 

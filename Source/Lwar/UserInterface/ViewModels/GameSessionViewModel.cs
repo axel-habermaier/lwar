@@ -97,6 +97,7 @@
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public GameSessionViewModel(IPEndPoint serverEndPoint)
 		{
+			Commands.ShowConsole(false);
 			CameraManager = new CameraManager(Application.Current.Window, Application.Current.GraphicsDevice, Application.Current.Window.InputDevice);
 			View = new GameSessionView();
 

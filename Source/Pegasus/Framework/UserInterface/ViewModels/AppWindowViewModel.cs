@@ -29,7 +29,7 @@
 			Assert.ArgumentNotNull(consoleViewModel);
 
 			Console = consoleViewModel;
-			Console.InitializePrompt();
+			Console.Initialize();
 
 			DebugOverlay = new DebugOverlayViewModel();
 			Window = new AppWindow(this, Application.Current.Name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode);

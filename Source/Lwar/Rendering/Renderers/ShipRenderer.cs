@@ -12,7 +12,6 @@
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
-	using Pegasus.Rendering.UserInterface;
 
 	/// <summary>
 	///     Renders ships into a 3D scene.
