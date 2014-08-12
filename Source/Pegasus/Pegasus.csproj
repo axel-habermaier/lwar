@@ -590,7 +590,6 @@
     <Compile Include="Platform\PlatformInfo.cs" />
     <Compile Include="Rendering\Quad.cs" />
     <Compile Include="Rendering\SpriteBatch.cs" />
-    <Compile Include="Rendering\TextRenderer.cs" />
     <Compile Include="Framework\UserInterface\TextLine.cs" />
     <Compile Include="Framework\UserInterface\TextSequence.cs" />
     <Compile Include="Framework\UserInterface\TextToken.cs" />
