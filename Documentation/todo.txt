@@ -16,6 +16,8 @@ Client
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
 - Camera zoom bug in very-low FPS situations
+- Camera zoom bug: zooming when dead leads to strange camera behavior when respawning
+- Starfield disappears when dead
 - Multiple player names might overlap
 - Let camera follow ship (sort of: attach the camera to the ship with a spring)
 - Show server network statistics

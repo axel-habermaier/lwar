@@ -413,7 +413,7 @@
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNullOrWhitespace(method);
 
-			var binding = new RoutedEventBinding<T>(this, routedEvent, method);
+			new RoutedEventBinding<T>(this, routedEvent, method);
 		}
 
 		/// <summary>

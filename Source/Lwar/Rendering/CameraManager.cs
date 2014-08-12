@@ -21,11 +21,6 @@
 		private readonly DebugCamera _debugCamera;
 
 		/// <summary>
-		///     The logical input device that provides the user input for the cameras.
-		/// </summary>
-		private readonly LogicalInputDevice _inputDevice;
-
-		/// <summary>
 		///     The window that outputs the scene rendered from the point of view of the active camera.
 		/// </summary>
 		private readonly Window _window;
@@ -48,7 +43,6 @@
 			Assert.ArgumentNotNull(inputDevice);
 
 			_window = window;
-			_inputDevice = inputDevice;
 
 			GameCamera = new GameCamera(graphicsDevice, inputDevice);
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);

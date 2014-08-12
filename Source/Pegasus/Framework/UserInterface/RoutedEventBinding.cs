@@ -17,16 +17,6 @@
 		private readonly string _methodName;
 
 		/// <summary>
-		///     The routed event that is bound to.
-		/// </summary>
-		private readonly RoutedEvent<T> _routedEvent;
-
-		/// <summary>
-		///     The UI element that raises the routed event.
-		/// </summary>
-		private readonly UIElement _uiElement;
-
-		/// <summary>
 		///     The data context the event handler is invoked on.
 		/// </summary>
 		private object _dataContext;
@@ -48,8 +38,6 @@
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNullOrWhitespace(method);
 
-			_uiElement = uiElement;
-			_routedEvent = routedEvent;
 			_methodName = method;
 
 			uiElement.AddHandler(routedEvent, OnEventRaised);

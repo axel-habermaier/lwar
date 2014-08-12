@@ -11,7 +11,7 @@
 		/// <summary>
 		///     Stores the parse results.
 		/// </summary>
-		private XamlDataBinding _dataBinding;
+		private XamlDataBinding _dataBinding = new XamlDataBinding();
 
 		/// <summary>
 		///     Initializes a new instance.
