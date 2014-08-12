@@ -8,6 +8,11 @@
 	partial class ConsoleView
 	{
 		/// <summary>
+		///     Indicates whether the mouse was captured before the console was shown.
+		/// </summary>
+		private bool _mouseCaptured;
+
+		/// <summary>
 		///     Invoked once the UI element and all of its children have been fully loaded.
 		/// </summary>
 		partial void OnLoaded()
@@ -32,7 +37,14 @@
 		private void OnVisibleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Visibility> args)
 		{
 			if (args.NewValue == Visibility.Visible)
+			{
 				_prompt.Focus();
+
+				_mouseCaptured = ParentWindow.MouseCaptured;
+				ParentWindow.MouseCaptured = false;
+			}
+			else
+				ParentWindow.MouseCaptured = _mouseCaptured;
 		}
 
 		/// <summary>

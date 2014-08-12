@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using Controls;
 	using Platform.Memory;
 
 	/// <summary>
@@ -59,38 +58,6 @@
 		///     Gets or sets a value indicating whether the logical input device provides text input.
 		/// </summary>
 		internal bool TextInputEnabled { get; set; }
-
-		/// <summary>
-		///     Gets the keyboard that is associated with this logical device.
-		/// </summary>
-		// TODO: Remove
-		public Keyboard Keyboard
-		{
-			get
-			{
-				var uiElement = _uiElement;
-				while (!(uiElement is Window))
-					uiElement = uiElement.Parent;
-
-				return ((Window)uiElement).Keyboard;
-			}
-		}
-
-		/// <summary>
-		///     Gets the mouse that is associated with this logical device.
-		/// </summary>
-		// TODO: Remove
-		public Mouse Mouse
-		{
-			get
-			{
-				var uiElement = _uiElement;
-				while (!(uiElement is Window))
-					uiElement = uiElement.Parent;
-
-				return ((Window)uiElement).Mouse;
-			}
-		}
 
 		/// <summary>
 		///     Raised when a key has been pressed.

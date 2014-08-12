@@ -4,8 +4,8 @@
 	using Network;
 	using Network.Messages;
 	using Pegasus;
-	using Pegasus.Math;
 	using Pegasus.Framework.UserInterface.Input;
+	using Pegasus.Math;
 	using Pegasus.Platform.Memory;
 	using Scripting;
 
@@ -23,6 +23,11 @@
 		///     The input message that is sent to the server periodically.
 		/// </summary>
 		private InputMessage _inputMessage;
+
+		/// <summary>
+		///     The current target position of the mouse.
+		/// </summary>
+		private Vector2 _targetPosition;
 
 		#region Network-synced input states
 
@@ -70,6 +75,15 @@
 			_inputDevice.Add(_shooting2.Input);
 			_inputDevice.Add(_shooting3.Input);
 			_inputDevice.Add(_shooting4.Input);
+			_inputDevice.MouseMoved += OnMouseMoved;
+		}
+
+		/// <summary>
+		///     Updates the current target position.
+		/// </summary>
+		private void OnMouseMoved(MouseEventArgs args)
+		{
+			_targetPosition = new Vector2(args.Position.X, args.Position.Y);
 		}
 
 		/// <summary>
@@ -117,7 +131,7 @@
 			_shooting3.Triggered = false;
 			_shooting4.Triggered = false;
 
-			_inputMessage.Target = new Vector2(_inputDevice.Mouse.Position.X, _inputDevice.Mouse.Position.Y);
+			_inputMessage.Target = _targetPosition;
 			++_inputMessage.FrameNumber;
 
 			return new Message
@@ -152,6 +166,7 @@
 			_inputDevice.Remove(_shooting2.Input);
 			_inputDevice.Remove(_shooting3.Input);
 			_inputDevice.Remove(_shooting4.Input);
+			_inputDevice.MouseMoved -= OnMouseMoved;
 		}
 
 		/// <summary>

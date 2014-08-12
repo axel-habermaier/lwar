@@ -195,6 +195,9 @@
 			get { return _mouseCaptured; }
 			set
 			{
+				if (_mouseCaptured == value)
+					return;	
+
 				_mouseCaptured = value;
 				if (_mouseCaptured)
 					NativeMethods.CaptureMouse(_window);

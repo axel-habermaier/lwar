@@ -23,18 +23,24 @@ Client
 - Add debugging capabilities and statistics to network
 - Ignore new entities until at least one update message has been received
 - Refactor respawning after death
+- Refactor game session viewmodel
+- Precompute planet trajectories and world border
 
 Pegasus.Framework
 ========
 - Add texture quality switch cvar -> asset reloading required
-- Particle System
+- Add particle System
 - UI
-	* Controls: Scrollviewer, Combobox, Checkbox, Image
-	* Animation System
-	* Refactor UI drawing (http://msdn.microsoft.com/en-us/library/ms748373.aspx)
+	* Implement controls: Combobox, Checkbox, Image
+	* Implement animation System
+	* Refactor UI rendering (http://msdn.microsoft.com/en-us/library/ms748373.aspx)
 		-> Instead of separate draw calls per layer, use depth tests and layer by z axis in a single draw call
+	* Add lazy layouting, only when required or state dirty
 	* Fix layouting bugs
-	* TextBox: Text selection, copy & paste
+	* Add to TextBox: Text selection (both via mouse and keyboard), copy & paste
+	* Add to SrollViewer: Horizontal scrolling, scrollbars
+	* Add support for touch
+- Refactor resolution manager (might become unnecessary once windowed fullscreen mode is implemented)
 
 Pegasus.Platform
 ========
@@ -55,6 +61,7 @@ Assets Compiler
 	- All assets of a package are loaded at the same time
 	- Assign offsets per asset per package and use that instead of name at runtime
 - Compile 3D models (using ASSIMP: http://assimp.sourceforge.net/, https://code.google.com/p/assimp-net/)
+- Make Xaml compiler more robust
 
 Network
 ========
