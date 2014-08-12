@@ -1,8 +1,10 @@
 ﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
+	using System.Collections.Generic;
 	using Controls;
 	using Platform;
+	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -14,6 +16,11 @@
 		///     Indicates whether all keyboard input events are handled by an UI element.
 		/// </summary>
 		public static readonly DependencyProperty<bool> HandlesAllInputProperty = new DependencyProperty<bool>();
+
+		/// <summary>
+		///     The previously focused UI elements.
+		/// </summary>
+		private readonly Stack<UIElement> _focusedElements = new Stack<UIElement>();
 
 		/// <summary>
 		///     The key states.
@@ -84,6 +91,11 @@
 
 				_focusedElement = value;
 				_focusedElement.IsFocused = true;
+
+				if (_focusedElement != _window)
+					_focusedElements.Push(value);
+
+				Log.DebugIf(_focusedElements.Count > 32, "Unusually large focused elements history stack.");
 			}
 		}
 
@@ -247,8 +259,26 @@
 
 			// We have to check every frame whether the focused element must be reset; it could have been removed
 			// or hidden since the last frame, among other things.
-			if (FocusedElement == _window || FocusedElement.CanBeFocused)
+			if (FocusedElement != _window && !FocusedElement.CanBeFocused)
+				ResetFocusedElement();
+		}
+
+		/// <summary>
+		///     Resets the focused element to the first focusable previously focused element. If none exists, the
+		///     closest focusable element in the tree is focused. Otherwise, the focus is set to the window.
+		/// </summary>
+		private void ResetFocusedElement()
+		{
+			// Focus the first previously focused element, if one exists
+			while (_focusedElements.Count > 0)
+			{
+				var focusedElement = _focusedElements.Pop();
+				if (!focusedElement.CanBeFocused)
+					continue;
+
+				FocusedElement = focusedElement;
 				return;
+			}
 
 			// Check if the element is still a child of the window. If so, focus the closest focusable
 			// element in the tree. Otherwise, focus the window.

@@ -4,6 +4,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters"
 			 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input"
+			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls"
 			 mc:Ignorable="d"
 			 x:Class="Pegasus.Framework.UserInterface.Views.ConsoleView"
 			 d:DesignHeight="300" d:DesignWidth="300"
@@ -16,7 +17,12 @@
 			 HorizontalAlignment="Stretch">
 	<UserControl.InputBindings>
 		<input:KeyBinding Key="Return" Method="Submit" TriggerOnRepeat="false"></input:KeyBinding>
+		<input:KeyBinding Key="NumpadEnter" Method="Submit" TriggerOnRepeat="false"></input:KeyBinding>
 		<input:KeyBinding Key="L" Method="Clear" Modifiers="Control" TriggerOnRepeat="false"></input:KeyBinding>
+		<input:KeyBinding Key="PageUp" Method="ScrollUp" TriggerOnRepeat="true"></input:KeyBinding>
+		<input:KeyBinding Key="PageDown" Method="ScrollDown" TriggerOnRepeat="true"></input:KeyBinding>
+		<input:KeyBinding Key="PageUp" Method="ScrollToTop" Modifiers="Control" TriggerOnRepeat="true"></input:KeyBinding>
+		<input:KeyBinding Key="PageDown" Method="ScrollToBottom" Modifiers="Control" TriggerOnRepeat="true"></input:KeyBinding>
 	</UserControl.InputBindings>
 	<Border Background="#EE333333" x:Name="LayoutRoot" VerticalAlignment="Top">
 		<DockPanel Margin="5">
@@ -38,8 +44,8 @@
 					</TextBox.InputBindings>
 				</TextBox>
 			</DockPanel>
-			<ScrollViewer Margin="0,0,0,3" DockPanel.Dock="Bottom">
-				<ItemsControl ItemsSource="{Binding LogEntries}">
+			<controls:ScrollViewer Margin="0,0,0,3" DockPanel.Dock="Bottom" ScrollController="{Binding ScrollController}">
+				<ItemsControl ItemsSource="{Binding LogEntries}" VerticalAlignment="Bottom">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
 							<TextBlock Text="{Binding Message}"
@@ -49,7 +55,7 @@
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
-			</ScrollViewer>
+			</controls:ScrollViewer>
 		</DockPanel>
 	</Border>
 </UserControl>

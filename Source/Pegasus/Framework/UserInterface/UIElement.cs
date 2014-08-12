@@ -938,7 +938,13 @@
 				return;
 
 			OnDraw(spriteBatch);
+			OnDrawChildren(spriteBatch);
+		}
 
+		protected abstract void OnDraw(SpriteBatch spriteBatch);
+
+		protected virtual void OnDrawChildren(SpriteBatch spriteBatch)
+		{
 			var count = VisualChildrenCount;
 			for (var i = 0; i < count; ++i)
 			{
@@ -948,7 +954,5 @@
 				child.Draw(spriteBatch);
 			}
 		}
-
-		protected abstract void OnDraw(SpriteBatch spriteBatch);
 	}
 }

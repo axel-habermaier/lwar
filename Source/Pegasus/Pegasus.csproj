@@ -255,6 +255,9 @@
     <Compile Include="Framework\UserInterface\Input\ScanCodeBinding.cs" />
     <Compile Include="Framework\UserInterface\Input\TextInputEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Input\TriggerMode.cs" />
+    <Compile Include="Framework\UserInterface\IScrollAware.cs" />
+    <Compile Include="Framework\UserInterface\IScrollController.cs" />
+    <Compile Include="Framework\UserInterface\IScrollHandler.cs" />
     <Compile Include="Framework\UserInterface\MessageBox.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventBinding.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\AppWindowViewModel.cs" />

@@ -53,6 +53,11 @@
 		private int _numHistory;
 
 		/// <summary>
+		///     Indicates whether the input is currently being set to the result of an auto-completion operation.
+		/// </summary>
+		private bool _settingAutoCompletedInput;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public ConsolePromptViewModel()
@@ -125,8 +130,10 @@
 		public void TextChanged()
 		{
 			// Reset the auto completion list if an input was made other than setting the current completion value
-			if (_autoCompletionList != null && !Input.StartsWith(_autoCompletionList[_autoCompletionIndex]))
-				_autoCompletionList = null;
+			if (_settingAutoCompletedInput)
+				return;
+
+			_autoCompletionList = null;
 		}
 
 		/// <summary>
@@ -207,7 +214,9 @@
 					_autoCompletionIndex += _autoCompletionList.Length;
 			}
 
+			_settingAutoCompletedInput = true;
 			Input = _autoCompletionList[_autoCompletionIndex] + " ";
+			_settingAutoCompletedInput = false;
 		}
 
 		/// <summary>

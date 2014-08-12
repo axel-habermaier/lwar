@@ -25,6 +25,9 @@
 	<Class Name="Pegasus.Framework.UserInterface.Input.KeyModifiers">
 	</Class>
 
+	<Class Name="Pegasus.Framework.UserInterface.IScrollController">
+	</Class>
+	
 	<Class Name="Pegasus.Scripting.Cvar">
 	</Class>
 
@@ -183,6 +186,7 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ScrollViewer" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
+		<Property Type="Pegasus.Framework.UserInterface.IScrollController" Name="ScrollController"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridColumnHeader"

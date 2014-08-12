@@ -416,7 +416,7 @@
 		/// <summary>
 		///     Gets or sets the absolute offset value of the UI element for drawing.
 		/// </summary>
-		protected Vector2d VisualOffset { get; set; }
+		protected internal Vector2d VisualOffset { get; set; }
 
 		/// <summary>
 		///     Gets the number of visual children for this UI element.

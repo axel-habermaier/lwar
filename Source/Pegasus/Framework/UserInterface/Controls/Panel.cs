@@ -9,7 +9,7 @@
 	/// <summary>
 	///     A base class for all panel elements that position and arrange child UI elements.
 	/// </summary>
-	public abstract class Panel : UIElement
+	public abstract class Panel : UIElement, IScrollAware
 	{
 		/// <summary>
 		///     Represents the order on the z-plane in which an element appears. Elements with higher z indices are drawn above ones
@@ -75,6 +75,11 @@
 		{
 			get { return _children == null ? 0 : _children.Count; }
 		}
+
+		/// <summary>
+		///     Gets or sets the scroll handler that handles thi scrolling aware UI element.
+		/// </summary>
+		public IScrollHandler ScrollHandler { get; set; }
 
 		/// <summary>
 		///     Adds the given UI element to the panel.
@@ -196,6 +201,32 @@
 
 			if (Background.HasValue)
 				spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background.Value);
+		}
+
+		protected override void OnDrawChildren(SpriteBatch spriteBatch)
+		{
+			if (ScrollHandler != null)
+			{
+				// Only draw the children that are actually visible
+				var count = VisualChildrenCount;
+				for (var i = 0; i < count; ++i)
+				{
+					++spriteBatch.Layer;
+
+					var offset = ScrollHandler.ScrollOffset;
+					var child = GetVisualChild(i);
+
+					var topIsInside = child.VisualOffset.Y + offset.Y <= VisualOffset.Y + ActualHeight;
+					var bottomIsInside = child.VisualOffset.Y + offset.Y >= VisualOffset.Y;
+					var leftIsInside = child.VisualOffset.X + offset.X <= VisualOffset.X + ActualWidth;
+					var rightIsInside = child.VisualOffset.X + offset.X >= VisualOffset.X;
+
+					if (topIsInside && bottomIsInside && leftIsInside && rightIsInside)
+						child.Draw(spriteBatch);
+				}
+			}
+			else
+				base.OnDrawChildren(spriteBatch);
 		}
 	}
 }

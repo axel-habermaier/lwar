@@ -25,6 +25,14 @@
 		};
 
 		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static ContentControl()
+		{
+			ContentProperty.Changed += OnContentChanged;
+		}
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public ContentControl()
@@ -39,6 +47,24 @@
 		{
 			get { return GetValue(ContentProperty); }
 			set { SetValue(ContentProperty, value); }
+		}
+
+		/// <summary>
+		///     Handles the update of the content.
+		/// </summary>
+		private static void OnContentChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
+		{
+			var contentControl = obj as ContentControl;
+			if (contentControl != null)
+				contentControl.OnContentChanged(args.NewValue);
+		}
+
+		/// <summary>
+		///     Invoked when the content has been changed.
+		/// </summary>
+		/// <param name="content">The new content that has been set.</param>
+		protected virtual void OnContentChanged(object content)
+		{
 		}
 	}
 }

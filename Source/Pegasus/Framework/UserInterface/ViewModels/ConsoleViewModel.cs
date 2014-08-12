@@ -16,6 +16,11 @@
 		public const int MaxLength = 1024;
 
 		/// <summary>
+		///     The maximum number of log entries that the console can display.
+		/// </summary>
+		private const int MaxEntries = 2048;
+
+		/// <summary>
 		///     Indicates whether the console is visible.
 		/// </summary>
 		private bool _isVisible;
@@ -37,12 +42,21 @@
 			Log.OnWarning += AddLogEntry;
 			Log.OnInfo += AddLogEntry;
 			Log.OnDebugInfo += AddLogEntry;
+
+			// TODO: Test this!
+			//for (var i = 0; i < 2048; ++i)
+			//	Log.Info("Some warning oh how long that is!!!!");
 		}
 
 		/// <summary>
 		///     Gets the view model for the console prompt.
 		/// </summary>
 		public ConsolePromptViewModel Prompt { get; private set; }
+
+		/// <summary>
+		///     Gets or sets the scroll controller of the console's contents.
+		/// </summary>
+		public IScrollController ScrollController { get; set; }
 
 		/// <summary>
 		///     Gets or sets a value indicating whether the console is visible.
@@ -78,7 +92,7 @@
 				Commands.Execute(Prompt.Input);
 
 				// Show the result of the user's input
-				// TODO: _content.ScrollToBottom();
+				ScrollToBottom();
 			}
 
 			Prompt.ClearInput();
@@ -98,6 +112,38 @@
 		public void Clear()
 		{
 			LogEntries.Clear();
+		}
+
+		/// <summary>
+		///     Scrolls the console content up.
+		/// </summary>
+		public void ScrollUp()
+		{
+			ScrollController.ScrollUp();
+		}
+
+		/// <summary>
+		///     Scrolls the console content down.
+		/// </summary>
+		public void ScrollDown()
+		{
+			ScrollController.ScrollDown();
+		}
+
+		/// <summary>
+		///     Scrolls to the top of the console content.
+		/// </summary>
+		public void ScrollToTop()
+		{
+			ScrollController.ScrollToTop();
+		}
+
+		/// <summary>
+		///     Scrolls to the bottom of the console content.
+		/// </summary>
+		public void ScrollToBottom()
+		{
+			ScrollController.ScrollToBottom();
 		}
 
 		/// <summary>
@@ -121,6 +167,9 @@
 		{
 			if (entry.Message.Length > MaxLength)
 				entry = new LogEntry(entry.LogType, entry.Message.Substring(0, MaxLength - 3) + "...");
+
+			if (_logEntries.Count >= MaxEntries)
+				_logEntries.RemoveAt(0);
 
 			_logEntries.Add(entry);
 		}
