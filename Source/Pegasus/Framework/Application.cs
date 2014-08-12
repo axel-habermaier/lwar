@@ -139,7 +139,7 @@
 
 			using (GraphicsDevice = new GraphicsDevice())
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
-			using (_appWindowViewModel = new AppWindowViewModel(name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode))
+			using (_appWindowViewModel = new AppWindowViewModel())
 			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
 			{
 				var debugOverlay = _appWindowViewModel.DebugOverlay;

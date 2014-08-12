@@ -234,6 +234,7 @@
     <Compile Include="Framework\UserInterface\Controls\DockPanel.cs" />
     <Compile Include="Framework\UserInterface\Controls\ScrollViewer.cs" />
     <Compile Include="Framework\UserInterface\Controls\TextBox.cs" />
+    <Compile Include="Framework\UserInterface\Converters\LogTypeToColorConverter.cs" />
     <Compile Include="Framework\UserInterface\Input\Caret.cs" />
     <Compile Include="Framework\UserInterface\Controls\ColumnDefinition.cs" />
     <Compile Include="Framework\UserInterface\Controls\DataGrid.cs" />
@@ -316,6 +317,7 @@
     <Compile Include="Framework\UserInterface\VerticalAlignment.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\MessageBoxViewModel.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\StackedViewModel.cs" />
+    <Compile Include="Framework\UserInterface\Views\ConsoleView.cs" />
     <Compile Include="Framework\UserInterface\Visibility.cs" />
     <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Assets\AssetHashCollision.cs" />

@@ -1,9 +1,8 @@
 ﻿namespace Pegasus.Framework.UserInterface.ViewModels
 {
 	using System;
-	using Controls;
-	using Math;
 	using Platform.Memory;
+	using Scripting;
 	using Views;
 
 	/// <summary>
@@ -24,17 +23,11 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="title">The title of the window.</param>
-		/// <param name="position">The screen position of the window's top left corner.</param>
-		/// <param name="size">The size of the window's rendering area.</param>
-		/// <param name="mode">Indicates the window mode.</param>
-		internal AppWindowViewModel(string title, Vector2i position, Size size, WindowMode mode)
+		internal AppWindowViewModel()
 		{
-			Window = new AppWindow(title, position, size, mode);
-			Console = new ConsoleViewModel(Window);
-			DebugOverlay = new DebugOverlayViewModel(Window);
-
-			Window.DataContext = this;
+			Console = new ConsoleViewModel();
+			DebugOverlay = new DebugOverlayViewModel();
+			Window = new AppWindow(this, Application.Current.Name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode);
 		}
 
 		/// <summary>
@@ -61,12 +54,20 @@
 		}
 
 		/// <summary>
+		///     Shows the console.
+		/// </summary>
+		public void ShowConsole()
+		{
+			Console.IsVisible = true;
+		}
+
+		/// <summary>
 		///     Updates the application window.
 		/// </summary>
 		public void Update()
 		{
-			Console.Update();
 			DebugOverlay.Update();
+			Console.Update();
 		}
 
 		/// <summary>
@@ -75,8 +76,8 @@
 		protected override void OnDisposing()
 		{
 			Console.SafeDispose();
+			DebugOverlay.SafeDispose();
 			Window.SafeDispose();
-			_debugOverlay.SafeDispose();
 		}
 	}
 }

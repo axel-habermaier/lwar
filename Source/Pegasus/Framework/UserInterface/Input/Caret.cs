@@ -234,9 +234,12 @@
 			if (((int)Math.Round(_clock.Seconds * BlinkingFrequency)) % 2 != 0)
 				return;
 
-			var top = new Vector2(position.X, position.Y - 2);
+			var top = new Vector2(position.X, position.Y - 1);
 			var bottom = new Vector2(0, lineHeight) + top;
+
+			++spriteBatch.Layer;
 			spriteBatch.DrawLine(top, bottom, color, 1);
+			--spriteBatch.Layer;
 		}
 	}
 }

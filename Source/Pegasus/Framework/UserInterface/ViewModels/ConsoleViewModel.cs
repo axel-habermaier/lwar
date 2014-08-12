@@ -1,7 +1,8 @@
 ﻿namespace Pegasus.Framework.UserInterface.ViewModels
 {
 	using System;
-	using Views;
+	using System.Collections.Generic;
+	using Platform.Logging;
 
 	/// <summary>
 	///     Displays the in-game console.
@@ -9,19 +10,9 @@
 	internal class ConsoleViewModel : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
-		///     The console view inside the UI.
+		///     The current console input.
 		/// </summary>
-		private readonly ConsoleView _view = new ConsoleView();
-
-		/// <summary>
-		///     The window the console is displayed in.
-		/// </summary>
-		private readonly AppWindow _window;
-
-		/// <summary>
-		///     The desired height of the console overlay.
-		/// </summary>
-		private double _height;
+		private string _consoleInput;
 
 		/// <summary>
 		///     Indicates whether the console is visible.
@@ -29,16 +20,25 @@
 		private bool _isVisible;
 
 		/// <summary>
+		///     The log entries shown by the console.
+		/// </summary>
+		private ObservableCollection<LogEntry> _logEntries = new ObservableCollection<LogEntry>();
+
+		/// <summary>
+		///     The pending log entries that will be added to the console on the next frame.
+		/// </summary>
+		private List<LogEntry> _pendingLogEntries = new List<LogEntry>();
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="window">The window in which the console should be shown.</param>
-		public ConsoleViewModel(AppWindow window)
+		public ConsoleViewModel()
 		{
-			Assert.ArgumentNotNull(window);
-
-			_window = window;
-			_window.LayoutRoot.Add(_view);
-			_view.DataContext = this;
+			Log.OnFatalError += AddLogEntry;
+			Log.OnError += AddLogEntry;
+			Log.OnWarning += AddLogEntry;
+			Log.OnInfo += AddLogEntry;
+			Log.OnDebugInfo += AddLogEntry;
 		}
 
 		/// <summary>
@@ -47,24 +47,50 @@
 		public bool IsVisible
 		{
 			get { return _isVisible; }
-			set { ChangePropertyValue(ref _isVisible, value); }
+			set
+			{
+				ChangePropertyValue(ref _isVisible, value);
+				ConsoleInput = String.Empty;
+			}
 		}
 
 		/// <summary>
-		///     Gets or sets the desired height of the console overlay.
+		///     Gets the log entries shown by the console.
 		/// </summary>
-		public double Height
+		public ObservableCollection<LogEntry> LogEntries
 		{
-			get { return _height; }
-			set { ChangePropertyValue(ref _height, value); }
+			get { return _logEntries; }
 		}
 
 		/// <summary>
-		///     Updates the state of the console.
+		///     Gets or sets the current console input.
+		/// </summary>
+		public string ConsoleInput
+		{
+			get { return _consoleInput; }
+			set { ChangePropertyValue(ref _consoleInput, value); }
+		}
+
+		/// <summary>
+		///     Hides the console.
+		/// </summary>
+		public void Hide()
+		{
+			IsVisible = false;
+		}
+
+		/// <summary>
+		///     Updates the console.
 		/// </summary>
 		public void Update()
 		{
-			Height = _window.ActualHeight / 2;
+			// Cannot use foreach here, as adding the log entries might generate new log entries, causing
+			// a concurrent modification exception
+			var count = _pendingLogEntries.Count;
+			for (var i = 0; i < count; ++i)
+				_logEntries.Add(_pendingLogEntries[i]);
+
+			_pendingLogEntries.Clear();
 		}
 
 		/// <summary>
@@ -72,7 +98,20 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_window.LayoutRoot.Remove(_view);
+			Log.OnFatalError -= AddLogEntry;
+			Log.OnError -= AddLogEntry;
+			Log.OnWarning -= AddLogEntry;
+			Log.OnInfo -= AddLogEntry;
+			Log.OnDebugInfo -= AddLogEntry;
+		}
+
+		/// <summary>
+		///     Adds the given entry on the console.
+		/// </summary>
+		/// <param name="entry">The entry that should be added.</param>
+		private void AddLogEntry(LogEntry entry)
+		{
+			_pendingLogEntries.Add(entry);
 		}
 	}
 }

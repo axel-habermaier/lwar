@@ -105,6 +105,10 @@
 				element.MouseLeftButtonUp += HandleEvent;
 				element.MouseRightButtonDown += HandleEvent;
 				element.MouseRightButtonDown += HandleEvent;
+				element.MouseWheel += HandleEvent;
+				element.MouseEnter += HandleEvent;
+				element.MouseLeave += HandleEvent;
+				element.MouseMove += HandleEvent;
 			}
 			else
 			{
@@ -114,13 +118,17 @@
 				element.MouseLeftButtonUp -= HandleEvent;
 				element.MouseRightButtonDown -= HandleEvent;
 				element.MouseRightButtonUp -= HandleEvent;
+				element.MouseWheel -= HandleEvent;
+				element.MouseEnter += HandleEvent;
+				element.MouseLeave += HandleEvent;
+				element.MouseMove += HandleEvent;
 			}
 		}
 
 		/// <summary>
 		///     Marks the event as handled.
 		/// </summary>
-		private static void HandleEvent(object sender, MouseButtonEventArgs e)
+		private static void HandleEvent(object sender, MouseEventArgs e)
 		{
 			e.Handled = true;
 		}

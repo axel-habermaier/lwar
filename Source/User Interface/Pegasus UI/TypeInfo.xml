@@ -33,12 +33,14 @@
 		<Property Type="Pegasus.Framework.UserInterface.Input.KeyModifiers" Name="Modifiers"/>
 		<Property Type="Pegasus.Framework.UserInterface.Input.TriggerMode" Name="TriggerMode"/>
 		<Property Type="string" Name="Method"/>
+		<Property Type="bool" Name="TriggerOnRepeat"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Input.ConfigurableBinding">
 		<Property Type="Pegasus.Scripting.Cvar" Name="Cvar"/>
 		<Property Type="Pegasus.Framework.UserInterface.Input.TriggerMode" Name="TriggerMode"/>
 		<Property Type="string" Name="Method"/>
+		<Property Type="bool" Name="TriggerOnRepeat"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Setter">
@@ -247,7 +249,7 @@
 		<Property Type="string" Name="Title" />
 	</Class>
 
-	<!-- Default Converters ============================================================================================ -->
+	<!-- Converters ================================================================================================== -->
 
 	<Class Name="Pegasus.Framework.UserInterface.Converters.BooleanToStringConverter" />
 	<Class Name="Pegasus.Framework.UserInterface.Converters.ByteToStringConverter" />
@@ -263,6 +265,7 @@
 	<Class Name="Pegasus.Framework.UserInterface.Converters.DoubleToStringConverter" />
 	<Class Name="Pegasus.Framework.UserInterface.Converters.FrameTimeToStringConverter" />
 	<Class Name="Pegasus.Framework.UserInterface.Converters.BooleanToVisibilityConverter" />
+	<Class Name="Pegasus.Framework.UserInterface.Converters.LogTypeToColorConverter" />
 
 	<!-- Enumerations ================================================================================================= -->
 

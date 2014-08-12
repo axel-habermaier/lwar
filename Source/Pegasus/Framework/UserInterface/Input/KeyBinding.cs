@@ -19,6 +19,11 @@
 		private KeyModifiers _modifiers;
 
 		/// <summary>
+		///     Indicates whether the binding is also triggered when the OS reports a repeated key press.
+		/// </summary>
+		private bool _triggerOnRepeat = true;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public KeyBinding()
@@ -69,6 +74,19 @@
 		}
 
 		/// <summary>
+		///     Gets or sets a value indicating whether the binding is also be triggered when the OS reports a repeated key press.
+		/// </summary>
+		public bool TriggerOnRepeat
+		{
+			get { return _triggerOnRepeat; }
+			set
+			{
+				Assert.NotSealed(this);
+				_triggerOnRepeat = value;
+			}
+		}
+
+		/// <summary>
 		///     Checks whether the given event triggers the input binding.
 		/// </summary>
 		/// <param name="args">The arguments of the event that should be checked.</param>
@@ -81,7 +99,9 @@
 			switch (TriggerMode)
 			{
 				case TriggerMode.Activated:
-					return args.RoutedEvent == UIElement.KeyDownEvent && keyEventArgs.Key == Key && keyEventArgs.Modifiers == Modifiers;
+					if (args.RoutedEvent == UIElement.KeyDownEvent && keyEventArgs.Key == Key && keyEventArgs.Modifiers == Modifiers)
+						return keyEventArgs.WentDown || (keyEventArgs.IsRepeated && _triggerOnRepeat);
+					return false;
 				case TriggerMode.Deactivated:
 					return args.RoutedEvent == UIElement.KeyUpEvent && (keyEventArgs.Key == Key || keyEventArgs.Modifiers != Modifiers);
 				default:

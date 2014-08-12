@@ -133,7 +133,7 @@
     </Compile>
     <Compile Include="UserInterface\Controls\AreaPanel.cs" />
     <Compile Include="UserInterface\Controls\RenderOutputPanel.cs" />
-    <Compile Include="UserInterface\DefaultConverters.cs" />
+    <Compile Include="UserInterface\Converters.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

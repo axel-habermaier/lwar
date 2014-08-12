@@ -9,5 +9,6 @@ namespace Pegasus.Framework.UserInterface.Input
 		public string Cvar { get; set; }
 		public string Method { get; set; }
 		public TriggerMode TriggerMode { get; set; }
+		public bool TriggerOnRepeat { get; set; }
 	}
 }

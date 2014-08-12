@@ -73,6 +73,9 @@
 			}
 			internal set
 			{
+				if (_focusedElement == value)
+					return;
+
 				if (value == null)
 					value = _window;
 

@@ -21,19 +21,21 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="dataContext">The data context that should be set on the window.</param>
 		/// <param name="title">The title of the window.</param>
 		/// <param name="position">The screen position of the window's top left corner.</param>
 		/// <param name="size">The size of the window's rendering area.</param>
 		/// <param name="mode">Indicates the window mode.</param>
-		internal AppWindow(string title, Vector2i position, Size size, WindowMode mode)
+		internal AppWindow(object dataContext, string title, Vector2i position, Size size, WindowMode mode)
 			: base(title, position, size, mode)
 		{
-			InitializeComponents();
-
 			InputDevice = new LogicalInputDevice(this);
 			_bindings = new Bindings(InputDevice);
 
-			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "ToggleConsoleVisibility"));
+			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "ShowConsole", triggerOnRepeat: false));
+			DataContext = dataContext;
+
+			InitializeComponents();
 		}
 
 		/// <summary>

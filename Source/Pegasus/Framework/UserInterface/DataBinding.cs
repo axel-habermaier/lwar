@@ -246,6 +246,9 @@
 				value = Expressions.InvokeConvertToSourceMethod(this);
 
 			var expression = Expressions.GetWriteExpression(this, value);
+			if (expression == null)
+				return;
+
 			_targetFunc = Expression.Lambda<Action<object, T, IValueConverter>>(
 				expression, Expressions.SourceObjectParameter, Expressions.ValueParameter, Expressions.ConverterParameter).Compile();
 		}
@@ -373,7 +376,9 @@
 			if (_targetFunc == null)
 				CompileTargetFunction();
 
-			_targetFunc(SourceObject, _targetObject.GetValue(_targetProperty), _converter);
+			// The target function might still be null if a property could not be found on the path
+			if (_targetFunc != null)
+				_targetFunc(SourceObject, _targetObject.GetValue(_targetProperty), _converter);
 		}
 
 		/// <summary>
@@ -638,8 +643,10 @@
 			{
 				Assert.ArgumentNotNull(objectExpression);
 				Assert.ArgumentNotNull(valueExpression);
-				Assert.That(_propertyInfo != null, "Unknown property.");
 				Assert.That(_isWritten, "Property cannot be written.");
+
+				if (_propertyInfo == null)
+					return null;
 
 				return Expression.Assign(Expression.Property(objectExpression, _propertyInfo), valueExpression);
 			}

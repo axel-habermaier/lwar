@@ -3,7 +3,6 @@
 	using System;
 	using Platform;
 	using Scripting;
-	using Views;
 
 	/// <summary>
 	///     Displays statistics about the performance of the application and other information useful for debugging.
@@ -25,11 +24,6 @@
 		///     valid instance of an object, it is an indication that a garbage collection has occurred.
 		/// </summary>
 		private readonly WeakReference _gcCheck = new WeakReference(new object());
-
-		/// <summary>
-		///     The view of the debug overlay.
-		/// </summary>
-		private readonly DebugOverlayView _view;
 
 		/// <summary>
 		///     The total CPU frame time in milliseconds that is displayed by the debug overlay.
@@ -64,17 +58,12 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		internal DebugOverlayViewModel(AppWindow window)
+		internal DebugOverlayViewModel()
 		{
-			Assert.ArgumentNotNull(window);
-
 			Cvars.ShowDebugOverlayCvar.Changed += UpdateVisibility;
 			UpdateVisibility(Cvars.ShowDebugOverlay);
 
 			_timer.Timeout += UpdateViewModel;
-			_view = new DebugOverlayView { DataContext = this };
-
-			window.LayoutRoot.Add(_view);
 		}
 
 		/// <summary>
@@ -219,8 +208,6 @@
 		{
 			Cvars.ShowDebugOverlayCvar.Changed -= UpdateVisibility;
 			_timer.Timeout -= UpdateViewModel;
-
-			Application.Current.Window.LayoutRoot.Remove(_view);
 		}
 
 		/// <summary>

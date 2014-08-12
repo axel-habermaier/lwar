@@ -10,11 +10,16 @@
 		/// </summary>
 		partial void OnLoaded()
 		{
-			AddChangedHandler(VisibilityProperty, (o, e) =>
-			{
-				if (e.NewValue == Visibility.Visible)
-					_messageInput.Focus();
-			});
+			AddChangedHandler(VisibilityProperty, OnVisibleChanged);
+		}
+
+		/// <summary>
+		///     Sets the focus to the message input when the chat view becomes visible.
+		/// </summary>
+		private void OnVisibleChanged(DependencyObject o, DependencyPropertyChangedEventArgs<Visibility> e)
+		{
+			if (e.NewValue == Visibility.Visible)
+				_messageInput.Focus();
 		}
 	}
 }

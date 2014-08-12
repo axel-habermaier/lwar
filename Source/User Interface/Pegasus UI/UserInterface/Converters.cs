@@ -27,6 +27,10 @@
 			}
 		}
 
+		public class LogTypeToColorConverter : ValueConverter<LogTypeToColorConverter>
+		{
+		}
+
 		public class FrameTimeToStringConverter : ValueConverter<FrameTimeToStringConverter>
 		{
 		}

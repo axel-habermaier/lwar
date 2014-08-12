@@ -9,5 +9,6 @@
 		public ModifierKeys Modifiers { get; set; }
 		public string Method { get; set; }
 		public TriggerMode TriggerMode { get; set; }
+		public bool TriggerOnRepeat { get; set; }
 	}
 }
