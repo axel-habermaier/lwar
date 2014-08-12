@@ -57,7 +57,7 @@
 		{
 			KeyDownEvent.Raised += OnKeyDown;
 			TextInputEvent.Raised += OnTextInput;
-			MouseLeftButtonDownEvent.Raised += OnMouseLeftButtonDown;
+			MouseDownEvent.Raised += OnMouseDown;
 			IsFocusedProperty.Changed += OnFocused;
 			TextProperty.Changed += OnTextChanged;
 		}
@@ -149,10 +149,10 @@
 		/// <summary>
 		///     Sets the caret to the character closest to the mouse.
 		/// </summary>
-		private static void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		private static void OnMouseDown(object sender, MouseButtonEventArgs e)
 		{
 			var textBox = sender as TextBox;
-			if (textBox == null || textBox._textBlock == null)
+			if (textBox == null || textBox._textBlock == null || e.Button != MouseButton.Left)
 				return;
 
 			textBox._caret.Position = textBox._textBlock.GetCharacterIndexAt(e.Position);

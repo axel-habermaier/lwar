@@ -1,18 +1,12 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
-	using Math;
 
 	/// <summary>
 	///     Provides methods that can be used to control a scroll handler.
 	/// </summary>
 	public interface IScrollController
 	{
-		/// <summary>
-		///     Gets or sets the distance of a single scroll step.
-		/// </summary>
-		Vector2d ScrollStep { get; set; }
-
 		/// <summary>
 		///     Scrolls up by a step.
 		/// </summary>

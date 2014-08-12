@@ -124,6 +124,8 @@
     <Compile Include="UserInterface\Input\ConfigurableBinding.cs" />
     <Compile Include="UserInterface\Input\KeyBinding.cs" />
     <Compile Include="UserInterface\Input\Keyboard.cs" />
+    <Compile Include="UserInterface\Input\MouseWheelBinding.cs" />
+    <Compile Include="UserInterface\Input\MouseWheelDirection.cs" />
     <Compile Include="UserInterface\Input\TriggerMode.cs" />
     <Compile Include="UserInterface\Input\Mouse.cs" />
     <Compile Include="UserInterface\Views\ConsoleView.xaml.cs">

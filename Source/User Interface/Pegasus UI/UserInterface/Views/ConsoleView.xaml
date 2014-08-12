@@ -23,11 +23,13 @@
 		<input:KeyBinding Key="PageDown" Method="ScrollDown" TriggerOnRepeat="true"></input:KeyBinding>
 		<input:KeyBinding Key="PageUp" Method="ScrollToTop" Modifiers="Control" TriggerOnRepeat="true"></input:KeyBinding>
 		<input:KeyBinding Key="PageDown" Method="ScrollToBottom" Modifiers="Control" TriggerOnRepeat="true"></input:KeyBinding>
+		<input:MouseWheelBinding Method="ScrollDown" Direction="Down"></input:MouseWheelBinding>
+		<input:MouseWheelBinding Method="ScrollUp" Direction="Up"></input:MouseWheelBinding>
 	</UserControl.InputBindings>
 	<Border Background="#EE333333" x:Name="LayoutRoot" VerticalAlignment="Top">
 		<DockPanel Margin="5">
 			<DockPanel DockPanel.Dock="Bottom">
-				<TextBlock Margin="0,2,2,0" DockPanel.Dock="Left" Text="{Binding Prompt.Token}"></TextBlock>
+				<TextBlock Margin="0,2,0,0" DockPanel.Dock="Left" Text="{Binding Prompt.Token}"></TextBlock>
 				<TextBox 
 					DataContext="{Binding Prompt}"
 					MaxLength="{Binding MaxLength}"
@@ -44,14 +46,14 @@
 					</TextBox.InputBindings>
 				</TextBox>
 			</DockPanel>
-			<controls:ScrollViewer Margin="0,0,0,3" DockPanel.Dock="Bottom" ScrollController="{Binding ScrollController}">
-				<ItemsControl ItemsSource="{Binding LogEntries}" VerticalAlignment="Bottom">
+			<controls:ScrollViewer Margin="0,0,0,3" DockPanel.Dock="Bottom" ScrollController="{Binding ScrollController}" VerticalScrollStep="100">
+				<ItemsControl ItemsSource="{Binding LogEntries}" VerticalAlignment="Bottom" MinWidth="600">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
 							<TextBlock Text="{Binding Message}"
-									   Margin="0,2,0,0"
-									   TextWrapping="Wrap"
-									   Foreground="{Binding LogType, Converter={converters:LogTypeToColorConverter}}" />
+										Margin="0,2,0,0"
+										TextWrapping="Wrap"
+										Foreground="{Binding LogType, Converter={converters:LogTypeToColorConverter}}" />
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>

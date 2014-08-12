@@ -227,13 +227,15 @@
 			if (String.IsNullOrWhiteSpace(Input))
 				return null;
 
-			var commands = CommandRegistry.All
-										  .Where(command => command.Name.ToLower().StartsWith(Input.ToLower()))
-										  .Select(command => command.Name);
+			var commands = CommandRegistry
+				.All
+				.Where(command => command.Name.ToLower().StartsWith(Input.ToLower()))
+				.Select(command => command.Name);
 
-			var cvars = CvarRegistry.All
-									.Where(cvar => cvar.Name.ToLower().StartsWith(Input.ToLower()))
-									.Select(cvar => cvar.Name);
+			var cvars = CvarRegistry
+				.All
+				.Where(cvar => cvar.Name.ToLower().StartsWith(Input.ToLower()))
+				.Select(cvar => cvar.Name);
 
 			var list = cvars.Union(commands).OrderBy(item => item).ToArray();
 			if (list.Length == 0)

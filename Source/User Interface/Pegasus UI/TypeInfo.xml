@@ -39,6 +39,12 @@
 		<Property Type="bool" Name="TriggerOnRepeat"/>
 	</Class>
 
+	<Class Name="Pegasus.Framework.UserInterface.Input.MouseWheelBinding">
+		<Property Type="Pegasus.Framework.UserInterface.Input.KeyModifiers" Name="Modifiers"/>
+		<Property Type="Pegasus.Framework.UserInterface.Input.MouseWheelDirection" Name="Direction"/>
+		<Property Type="string" Name="Method"/>
+	</Class>
+
 	<Class Name="Pegasus.Framework.UserInterface.Input.ConfigurableBinding">
 		<Property Type="Pegasus.Scripting.Cvar" Name="Cvar"/>
 		<Property Type="Pegasus.Framework.UserInterface.Input.TriggerMode" Name="TriggerMode"/>
@@ -187,6 +193,8 @@
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ScrollViewer" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 		<Property Type="Pegasus.Framework.UserInterface.IScrollController" Name="ScrollController"/>
+		<Property Type="double" Name="HorizontalScrollStep"/>
+		<Property Type="double" Name="VerticalScrollStep"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridColumnHeader"
@@ -274,6 +282,11 @@
 
 	<!-- Enumerations ================================================================================================= -->
 
+	<Enumeration Name="Pegasus.Framework.UserInterface.Input.MouseWheelDirection">
+		<Literal>Up</Literal>
+		<Literal>Down</Literal>
+	</Enumeration>
+	
 	<Enumeration Name="Pegasus.Framework.UserInterface.Controls.Dock">
 		<Literal>Left</Literal>
 		<Literal>Right</Literal>

@@ -66,6 +66,7 @@
 			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
 			MouseDownEvent.Raised += OnMouseDown;
 			MouseUpEvent.Raised += OnMouseUp;
+			MouseWheelEvent.Raised += OnMouseWheel;
 			KeyDownEvent.Raised += OnKey;
 			KeyUpEvent.Raised += OnKey;
 			DataContextProperty.Changed += OnDataContextChanged;
@@ -119,8 +120,12 @@
 		private static void OnMouseDown(object sender, MouseButtonEventArgs e)
 		{
 			var uiElement = sender as UIElement;
-			if (uiElement != null && uiElement.Focusable)
+			if (uiElement != null && uiElement.CanBeFocused)
+			{
 				uiElement.Focus();
+				e.Handled = true;
+				return;
+			}
 
 			if (uiElement != null && uiElement._inputBindings != null)
 				uiElement._inputBindings.HandleEvent(e);
@@ -130,6 +135,16 @@
 		///     Invokes any triggered input bindings of the UI element that raised the event.
 		/// </summary>
 		private static void OnMouseUp(object sender, MouseButtonEventArgs e)
+		{
+			var uiElement = sender as UIElement;
+			if (uiElement != null && uiElement._inputBindings != null)
+				uiElement._inputBindings.HandleEvent(e);
+		}
+
+		/// <summary>
+		///     Invokes any triggered input bindings of the UI element that raised the event.
+		/// </summary>
+		private static void OnMouseWheel(object sender, MouseWheelEventArgs e)
 		{
 			var uiElement = sender as UIElement;
 			if (uiElement != null && uiElement._inputBindings != null)

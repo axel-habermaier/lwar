@@ -251,6 +251,8 @@
     <Compile Include="Framework\UserInterface\Input\KeyBinding.cs" />
     <Compile Include="Framework\UserInterface\Input\KeyModifiers.cs" />
     <Compile Include="Framework\UserInterface\Input\MouseButtonEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseWheelBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseWheelDirection.cs" />
     <Compile Include="Framework\UserInterface\Input\MouseWheelEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Input\ScanCodeBinding.cs" />
     <Compile Include="Framework\UserInterface\Input\TextInputEventArgs.cs" />

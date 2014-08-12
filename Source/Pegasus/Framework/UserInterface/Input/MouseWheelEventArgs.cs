@@ -21,9 +21,17 @@
 		}
 
 		/// <summary>
-		///     Gets a value that indicates the amount that the mouse wheel has changed.
+		///     Gets a value indicating the amount that the mouse wheel has changed.
 		/// </summary>
 		public int Delta { get; private set; }
+
+		/// <summary>
+		///     Gets a value indicating the direction the mouse wheel has been turned into.
+		/// </summary>
+		public MouseWheelDirection Direction
+		{
+			get { return Delta < 1 ? MouseWheelDirection.Down : MouseWheelDirection.Up; }
+		}
 
 		/// <summary>
 		///     Initializes a new instance.

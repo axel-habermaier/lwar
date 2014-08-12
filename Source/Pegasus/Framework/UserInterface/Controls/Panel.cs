@@ -209,17 +209,18 @@
 			{
 				// Only draw the children that are actually visible
 				var count = VisualChildrenCount;
+				var area = ScrollHandler.ScrollArea;
+
 				for (var i = 0; i < count; ++i)
 				{
 					++spriteBatch.Layer;
 
-					var offset = ScrollHandler.ScrollOffset;
 					var child = GetVisualChild(i);
 
-					var topIsInside = child.VisualOffset.Y + offset.Y <= VisualOffset.Y + ActualHeight;
-					var bottomIsInside = child.VisualOffset.Y + offset.Y >= VisualOffset.Y;
-					var leftIsInside = child.VisualOffset.X + offset.X <= VisualOffset.X + ActualWidth;
-					var rightIsInside = child.VisualOffset.X + offset.X >= VisualOffset.X;
+					var topIsInside = child.VisualOffset.Y  <= area.Bottom;
+					var bottomIsInside = child.VisualOffset.Y + child.ActualHeight >= area.Top;
+					var leftIsInside = child.VisualOffset.X  <= area.Right;
+					var rightIsInside = child.VisualOffset.X +child.ActualWidth >= area.Left;
 
 					if (topIsInside && bottomIsInside && leftIsInside && rightIsInside)
 						child.Draw(spriteBatch);

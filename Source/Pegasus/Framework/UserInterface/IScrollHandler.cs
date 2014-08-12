@@ -9,8 +9,8 @@
 	public interface IScrollHandler
 	{
 		/// <summary>
-		///     Gets the current scroll offset of the scroll handler.
+		///     Gets the area the scrolled content is presented in.
 		/// </summary>
-		Vector2d ScrollOffset { get; }
+		RectangleD ScrollArea { get; }
 	}
 }

@@ -13,7 +13,7 @@
 		/// <summary>
 		///     The maximum allowed length of the console prompt input and displayed log entries.
 		/// </summary>
-		public const int MaxLength = 1024;
+		public const int MaxLength = 4096;
 
 		/// <summary>
 		///     The maximum number of log entries that the console can display.
@@ -42,10 +42,6 @@
 			Log.OnWarning += AddLogEntry;
 			Log.OnInfo += AddLogEntry;
 			Log.OnDebugInfo += AddLogEntry;
-
-			// TODO: Test this!
-			//for (var i = 0; i < 2048; ++i)
-			//	Log.Info("Some warning oh how long that is!!!!");
 		}
 
 		/// <summary>

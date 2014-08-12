@@ -16,9 +16,50 @@
 			new DependencyProperty<IScrollController>(defaultBindingMode: BindingMode.OneWayToSource);
 
 		/// <summary>
+		///     The horizontal scroll speed.
+		/// </summary>
+		public static readonly DependencyProperty<double> HorizontalScrollStepProperty =
+			new DependencyProperty<double>(defaultValue: 10, validationCallback: ValidateScrollStep);
+
+		/// <summary>
+		///     The vertical scroll speed.
+		/// </summary>
+		public static readonly DependencyProperty<double> VerticalScrollStepProperty =
+			new DependencyProperty<double>(defaultValue: 10, validationCallback: ValidateScrollStep);
+
+		/// <summary>
+		///     The size of the arranged scrolled content.
+		/// </summary>
+		private SizeD _arrangedContentSize;
+
+		/// <summary>
+		///     The measured size of the scrolled content.
+		/// </summary>
+		private SizeD _measuredContentSize;
+
+		/// <summary>
 		///     The scroll aware child of the scroll viewer, if any.
 		/// </summary>
 		private IScrollAware _scrollAwareChild;
+
+		/// <summary>
+		///     The current scroll offset.
+		/// </summary>
+		private Vector2d _scrollOffset;
+
+		/// <summary>
+		///     The scrolled child.
+		/// </summary>
+		private UIElement _scrolledChild;
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static ScrollViewer()
+		{
+			ActualWidthProperty.Changed += OnSizeChanged;
+			ActualHeightProperty.Changed += OnSizeChanged;
+		}
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -26,6 +67,24 @@
 		public ScrollViewer()
 		{
 			ScrollController = new Controller(this);
+		}
+
+		/// <summary>
+		///     Gets or sets the horizontal scroll speed.
+		/// </summary>
+		public double HorizontalScrollStep
+		{
+			get { return GetValue(HorizontalScrollStepProperty); }
+			set { SetValue(HorizontalScrollStepProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the vertical scroll speed.
+		/// </summary>
+		public double VerticalScrollStep
+		{
+			get { return GetValue(VerticalScrollStepProperty); }
+			set { SetValue(VerticalScrollStepProperty, value); }
 		}
 
 		/// <summary>
@@ -38,9 +97,52 @@
 		}
 
 		/// <summary>
-		///     Gets the current scroll offset of the scroll handler.
+		///     Gets or sets the scroll offset, taking the alignment of the scroll child into account.
 		/// </summary>
-		public Vector2d ScrollOffset { get; private set; }
+		private Vector2d ScrollOffset
+		{
+			get
+			{
+				var offset = _scrollOffset;
+
+				if (_scrolledChild != null && _scrolledChild.HorizontalAlignment == HorizontalAlignment.Right)
+					offset.X = _scrolledChild.ActualWidth - ActualWidth - offset.X;
+
+				if (_scrolledChild != null && _scrolledChild.VerticalAlignment == VerticalAlignment.Bottom)
+					offset.Y = _scrolledChild.ActualHeight - ActualHeight - offset.Y;
+
+				return offset;
+			}
+		}
+
+		/// <summary>
+		///     Gets the area the scrolled content is presented in.
+		/// </summary>
+		public RectangleD ScrollArea
+		{
+			get { return new RectangleD(VisualOffset + ScrollOffset, ActualWidth, ActualHeight); }
+		}
+
+		/// <summary>
+		///     Ensures that the scroll offset is still valid after a size changed. When the scroll viewer's size is increased, more
+		///     content fits into its scroll area, possibly resulting in the scroll viewer displaying nothing if the scroll offset
+		///     is not reclamped to the new size.
+		/// </summary>
+		private static void OnSizeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<double> args)
+		{
+			var scrollViewer = obj as ScrollViewer;
+			if (scrollViewer != null)
+				scrollViewer.Scroll(Vector2d.Zero);
+		}
+
+		/// <summary>
+		///     Validates a scroll step value.
+		/// </summary>
+		/// <param name="value">The value that should be checked.</param>
+		private static bool ValidateScrollStep(double value)
+		{
+			return value > 0;
+		}
 
 		/// <summary>
 		///     Invoked when the content has been changed.
@@ -48,7 +150,8 @@
 		/// <param name="content">The new content that has been set.</param>
 		protected override void OnContentChanged(object content)
 		{
-			var scrollAwareChild = GetScrollAwareChild(content as UIElement);
+			_scrolledChild = content as UIElement;
+			var scrollAwareChild = GetScrollAwareChild(_scrolledChild);
 
 			if (_scrollAwareChild != null)
 				_scrollAwareChild.ScrollHandler = null;
@@ -57,6 +160,26 @@
 
 			if (_scrollAwareChild != null)
 				_scrollAwareChild.ScrollHandler = this;
+		}
+
+		/// <summary>
+		///     Scrolls the content by the given delta.
+		/// </summary>
+		/// <param name="delta">The delta in the scrolling position.</param>
+		private void Scroll(Vector2d delta)
+		{
+			if (_scrolledChild != null && _scrolledChild.VerticalAlignment == VerticalAlignment.Bottom)
+				delta.Y *= -1;
+
+			var offset = _scrollOffset + delta;
+			var width = _arrangedContentSize.Width;
+			var height = _arrangedContentSize.Height;
+
+			// Clamp to the range
+			offset.X = MathUtils.Clamp(offset.X, 0, width - HorizontalScrollStep);
+			offset.Y = MathUtils.Clamp(offset.Y, 0, height - VerticalScrollStep);
+
+			_scrollOffset = offset;
 		}
 
 		/// <summary>
@@ -106,7 +229,7 @@
 		/// </param>
 		protected override SizeD MeasureCore(SizeD availableSize)
 		{
-			base.MeasureCore(availableSize);
+			_measuredContentSize = base.MeasureCore(availableSize);
 			return availableSize;
 		}
 
@@ -121,7 +244,7 @@
 		/// </param>
 		protected override SizeD ArrangeCore(SizeD finalSize)
 		{
-			base.ArrangeCore(finalSize);
+			_arrangedContentSize = base.ArrangeCore(_measuredContentSize);
 			return finalSize;
 		}
 
@@ -137,7 +260,9 @@
 
 			spriteBatch.UseScissorTest = true;
 			spriteBatch.ScissorArea = new Rectangle(x, y, width, height);
-			spriteBatch.WorldMatrix = Matrix.CreateTranslation((float)ScrollOffset.X, (float)ScrollOffset.Y, 0);
+
+			var offset = ScrollOffset;
+			spriteBatch.WorldMatrix = Matrix.CreateTranslation(-(float)offset.X, -(float)offset.Y, 0);
 
 			base.OnDrawChildren(spriteBatch);
 
@@ -151,14 +276,9 @@
 		private class Controller : IScrollController
 		{
 			/// <summary>
-			///     The distance of a single scroll step.
-			/// </summary>
-			private Vector2d _scrollStep;
-
-			/// <summary>
 			///     The scroll viewer controlled by this controller.
 			/// </summary>
-			private ScrollViewer _viewer;
+			private readonly ScrollViewer _viewer;
 
 			/// <summary>
 			///     Initializes a new instance.
@@ -168,22 +288,6 @@
 			{
 				Assert.ArgumentNotNull(viewer);
 				_viewer = viewer;
-				ScrollStep = new Vector2d(1, 1);
-			}
-
-			/// <summary>
-			///     Gets or sets the distance of a single scroll step.
-			/// </summary>
-			public Vector2d ScrollStep
-			{
-				get { return _scrollStep; }
-				set
-				{
-					Assert.ArgumentSatisfies(value.X > 0, "Invalid scroll step size.");
-					Assert.ArgumentSatisfies(value.Y > 0, "Invalid scroll step size.");
-
-					_scrollStep = value;
-				}
 			}
 
 			/// <summary>
@@ -191,7 +295,7 @@
 			/// </summary>
 			public void ScrollUp()
 			{
-				throw new NotImplementedException();
+				_viewer.Scroll(new Vector2d(0, -_viewer.VerticalScrollStep));
 			}
 
 			/// <summary>
@@ -199,7 +303,7 @@
 			/// </summary>
 			public void ScrollDown()
 			{
-				throw new NotImplementedException();
+				_viewer.Scroll(new Vector2d(0, _viewer.VerticalScrollStep));
 			}
 
 			/// <summary>
@@ -207,7 +311,7 @@
 			/// </summary>
 			public void ScrollLeft()
 			{
-				throw new NotImplementedException();
+				_viewer.Scroll(new Vector2d(-_viewer.HorizontalScrollStep, 0));
 			}
 
 			/// <summary>
@@ -215,7 +319,7 @@
 			/// </summary>
 			public void ScrollRight()
 			{
-				throw new NotImplementedException();
+				_viewer.Scroll(new Vector2d(_viewer.HorizontalScrollStep, 0));
 			}
 
 			/// <summary>
@@ -223,7 +327,7 @@
 			/// </summary>
 			public void ScrollToTop()
 			{
-				throw new NotImplementedException();
+				_viewer.Scroll(new Vector2d(0, Double.NegativeInfinity));
 			}
 
 			/// <summary>
@@ -231,7 +335,7 @@
 			/// </summary>
 			public void ScrollToBottom()
 			{
-				throw new NotImplementedException();
+				_viewer.Scroll(new Vector2d(0, Double.PositiveInfinity));
 			}
 
 			/// <summary>
@@ -239,7 +343,7 @@
 			/// </summary>
 			public void ScrollToLeft()
 			{
-				throw new NotImplementedException();
+				_viewer.Scroll(new Vector2d(Double.NegativeInfinity, 0));
 			}
 
 			/// <summary>
@@ -247,7 +351,7 @@
 			/// </summary>
 			public void ScrollToRight()
 			{
-				throw new NotImplementedException();
+				_viewer.Scroll(new Vector2d(Double.PositiveInfinity, 0));
 			}
 		}
 	}
