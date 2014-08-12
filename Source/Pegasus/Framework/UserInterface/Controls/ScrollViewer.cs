@@ -262,7 +262,7 @@
 			spriteBatch.ScissorArea = new Rectangle(x, y, width, height);
 
 			var offset = ScrollOffset;
-			spriteBatch.WorldMatrix = Matrix.CreateTranslation(-(float)offset.X, -(float)offset.Y, 0);
+			spriteBatch.WorldMatrix = Matrix.CreateTranslation(-(int)Math.Round(offset.X), -(int)Math.Round(offset.Y), 0);
 
 			base.OnDrawChildren(spriteBatch);
 
