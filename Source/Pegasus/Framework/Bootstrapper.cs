@@ -8,6 +8,7 @@
 	using Platform.Logging;
 	using Scripting;
 	using UserInterface;
+	using UserInterface.ViewModels;
 
 	/// <summary>
 	///     Starts up the application and handles command line arguments and fatal application exceptions.
@@ -29,7 +30,10 @@
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
+			// Start printing to the console and initialize the console view model here, as we don't want to miss
+			// any log entries while the application initializes itself...
 			PrintToConsole();
+			var consoleViewModel = new ConsoleViewModel();
 
 			using (new NativeLibrary(appName))
 			using (var logFile = new LogFile(appName))
@@ -52,7 +56,7 @@
 						CvarRegistry.ExecuteDeferredUpdates();
 
 						var app = new TApp();
-						app.Run(appName, logFile);
+						app.Run(appName, consoleViewModel);
 
 						Commands.Persist(ConfigurationFile.AutoExec);
 					}

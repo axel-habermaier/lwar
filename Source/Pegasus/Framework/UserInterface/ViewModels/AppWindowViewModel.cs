@@ -23,9 +23,14 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		internal AppWindowViewModel()
+		/// <param name="consoleViewModel">The view model that should be used for the in-game console.</param>
+		internal AppWindowViewModel(ConsoleViewModel consoleViewModel)
 		{
-			Console = new ConsoleViewModel();
+			Assert.ArgumentNotNull(consoleViewModel);
+
+			Console = consoleViewModel;
+			Console.InitializePrompt();
+
 			DebugOverlay = new DebugOverlayViewModel();
 			Window = new AppWindow(this, Application.Current.Name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode);
 		}

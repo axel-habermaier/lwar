@@ -963,8 +963,6 @@
 			var count = VisualChildrenCount;
 			for (var i = 0; i < count; ++i)
 			{
-				++spriteBatch.Layer;
-
 				var child = GetVisualChild(i);
 				child.Draw(spriteBatch);
 			}

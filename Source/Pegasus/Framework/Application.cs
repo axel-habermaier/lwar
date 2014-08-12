@@ -28,6 +28,11 @@
 		private readonly RootUIElement _root = new RootUIElement();
 
 		/// <summary>
+		///     Gets the view model of the window the application is rendered to.
+		/// </summary>
+		private AppWindowViewModel _appWindowViewModel;
+
+		/// <summary>
 		///     Indicates whether the application should continue to run.
 		/// </summary>
 		private bool _running = true;
@@ -82,11 +87,6 @@
 		public AssetsManager Assets { get; private set; }
 
 		/// <summary>
-		///     Gets the view model of the window the application is rendered to.
-		/// </summary>
-		private AppWindowViewModel _appWindowViewModel;
-
-		/// <summary>
 		///     Gets the window the application is rendered to.
 		/// </summary>
 		public AppWindow Window
@@ -98,6 +98,14 @@
 		///     Gets the graphics device of the application.
 		/// </summary>
 		public GraphicsDevice GraphicsDevice { get; private set; }
+
+		/// <summary>
+		///     Gets the view model of the debug overlay.
+		/// </summary>
+		private DebugOverlayViewModel DebugOverlay
+		{
+			get { return _appWindowViewModel.DebugOverlay; }
+		}
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -129,25 +137,20 @@
 		///     Runs the application. This method does not return until the application is shut down.
 		/// </summary>
 		/// <param name="name">The name of the application.</param>
-		/// <param name="logFile">The log file that is used to serialize log message to the disk.</param>
-		internal void Run(string name, LogFile logFile)
+		/// <param name="consoleViewModel">The view model that should be used for the in-game console.</param>
+		internal void Run(string name, ConsoleViewModel consoleViewModel)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
-			Assert.ArgumentNotNull(logFile);
+			Assert.ArgumentNotNull(consoleViewModel);
 
 			Name = name;
 
 			using (GraphicsDevice = new GraphicsDevice())
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
-			using (_appWindowViewModel = new AppWindowViewModel())
+			using (_appWindowViewModel = new AppWindowViewModel(consoleViewModel))
 			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
 			{
-				var debugOverlay = _appWindowViewModel.DebugOverlay;
-				Window.Title = name;
 				RegisterFontLoader(new FontLoader(Assets));
-
-				// Copy the recorded log history to the console and explain the usage of the console
-				//TODO: logFile.WriteToConsole(Window.Console.Console);
 				Commands.Help();
 
 				// Let the application initialize itself
@@ -157,21 +160,15 @@
 				{
 					var cpuStartTime = Clock.SystemTime;
 
-					// Handle all input
+					// Update
 					_root.HandleInput();
-
-					// Update the application logic and the UI
 					Update();
 
 					resolutionManager.Update();
+					_appWindowViewModel.Update();
 					_root.UpdateLayout();
 
-					_appWindowViewModel.Update();
-					// Update the statistics
-					//Window.Console.Update();
-					debugOverlay.Update();
-
-					debugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;
+					DebugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;
 
 					// Draw the current frame
 					GraphicsDevice.BeginFrame();
@@ -180,8 +177,8 @@
 
 					_root.Draw();
 
-					debugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
-					debugOverlay.CpuRenderTime = (Clock.SystemTime - cpuStartTime) * 1000;
+					DebugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
+					DebugOverlay.CpuRenderTime = (Clock.SystemTime - cpuStartTime) * 1000;
 
 					// End the frame and present the contents of all windows' backbuffers.
 					GraphicsDevice.EndFrame();

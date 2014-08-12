@@ -35,8 +35,6 @@
 		/// </summary>
 		public ConsoleViewModel()
 		{
-			Prompt = new ConsolePromptViewModel();
-
 			Log.OnFatalError += AddLogEntry;
 			Log.OnError += AddLogEntry;
 			Log.OnWarning += AddLogEntry;
@@ -73,6 +71,14 @@
 		public ObservableCollection<LogEntry> LogEntries
 		{
 			get { return _logEntries; }
+		}
+
+		/// <summary>
+		///     Initializes the console prompt.
+		/// </summary>
+		public void InitializePrompt()
+		{
+			Prompt = new ConsolePromptViewModel();
 		}
 
 		/// <summary>

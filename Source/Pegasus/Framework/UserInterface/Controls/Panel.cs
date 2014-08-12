@@ -213,14 +213,12 @@
 
 				for (var i = 0; i < count; ++i)
 				{
-					++spriteBatch.Layer;
-
 					var child = GetVisualChild(i);
 
-					var topIsInside = child.VisualOffset.Y  <= area.Bottom;
+					var topIsInside = child.VisualOffset.Y <= area.Bottom;
 					var bottomIsInside = child.VisualOffset.Y + child.ActualHeight >= area.Top;
-					var leftIsInside = child.VisualOffset.X  <= area.Right;
-					var rightIsInside = child.VisualOffset.X +child.ActualWidth >= area.Left;
+					var leftIsInside = child.VisualOffset.X <= area.Right;
+					var rightIsInside = child.VisualOffset.X + child.ActualWidth >= area.Left;
 
 					if (topIsInside && bottomIsInside && leftIsInside && rightIsInside)
 						child.Draw(spriteBatch);
