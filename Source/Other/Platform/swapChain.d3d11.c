@@ -68,58 +68,6 @@ pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 heig
 	InitializeBackBuffer(swapChain);
 }
 
-// See also http://msdn.microsoft.com/en-us/library/windows/desktop/ee417025(v=vs.85).aspx#full-screen_issues
-pgBool pgSwapChainFullscreenCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height)
-{
-	DXGI_MODE_DESC desc;
-	memset(&desc, 0, sizeof(desc));
-	desc.Format = swapChain->format;
-	desc.Width = width;
-	desc.Height = height;
-	desc.RefreshRate.Numerator = 60;
-	desc.RefreshRate.Denominator = 1;
-
-	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
-	{
-		PG_ERROR("Error while resizing swap chain target.");
-		return PG_FALSE;
-	}
-
-	if (IDXGISwapChain_SetFullscreenState(swapChain->ptr, PG_TRUE, NULL) != S_OK)
-	{
-		PG_ERROR("Error while entering fullscreen mode.");
-		return PG_FALSE;
-	}
-
-	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
-	{
-		PG_ERROR("Error while resizing swap chain target.");
-		return PG_FALSE;
-	}
-
-	pgResizeSwapChain(swapChain, width, height);
-	pgPresent(swapChain);
-
-	return PG_TRUE;
-}
-
-pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain)
-{
-	DXGI_MODE_DESC desc;
-	memset(&desc, 0, sizeof(desc));
-	desc.Format = swapChain->format;
-	desc.Width = swapChain->windowedWidth;
-	desc.Height = swapChain->windowedHeight;
-	desc.RefreshRate.Numerator = 0;
-	desc.RefreshRate.Denominator = 0;
-
-	if (IDXGISwapChain_SetFullscreenState(swapChain->ptr, PG_FALSE, NULL) != S_OK)
-		PG_ERROR("Error while leaving fullscreen mode.");
-
-	if (IDXGISwapChain_ResizeTarget(swapChain->ptr, &desc) != S_OK)
-		PG_ERROR("Error while resizing swap chain target.");
-}
-
 //====================================================================================================================
 // Helper functions 
 //====================================================================================================================

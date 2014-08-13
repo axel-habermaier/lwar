@@ -23,14 +23,13 @@
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="window">The window the swap chain should be bound to.</param>
-		/// <param name="fullscreen">Indicates whether the swap chain should be set to full screen mode.</param>
 		/// <param name="resolution">Indicates the swap chain's default resolution in full screen mode.</param>
-		internal SwapChain(GraphicsDevice graphicsDevice, NativeWindow window, bool fullscreen, Size resolution)
+		internal SwapChain(GraphicsDevice graphicsDevice, NativeWindow window, Size resolution)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(window);
 
-			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr, fullscreen, resolution.Width, resolution.Height);
+			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr, resolution.Width, resolution.Height);
 			BackBuffer = new RenderTarget(graphicsDevice, NativeMethods.GetBackBuffer(_swapChain));
 
 			BackBuffer.Bind();
@@ -40,18 +39,6 @@
 		///     Gets swap chain's back buffer.
 		/// </summary>
 		public RenderTarget BackBuffer { get; private set; }
-
-		/// <summary>
-		///     Gets a value indicating whether the swap chain is currently in full screen mode.
-		/// </summary>
-		public bool IsFullscreen
-		{
-			get
-			{
-				Assert.NotDisposed(this);
-				return NativeMethods.IsFullscreen(_swapChain);
-			}
-		}
 
 		/// <summary>
 		///     Presents the back buffer to the screen.
@@ -72,31 +59,13 @@
 		}
 
 		/// <summary>
-		///     Switches to full screen mode with the given resolution. If the swap chain already is in full screen mode, the
-		///     resolution is changed.
-		/// </summary>
-		/// <param name="resolution">The resolution that should be used.</param>
-		public bool SwitchToFullscreen(Size resolution)
-		{
-			return NativeMethods.SwitchToFullscreen(_swapChain, resolution.Width, resolution.Height);
-		}
-
-		/// <summary>
-		///     Switches to windowed mode if the swap chain is currently in full screen mode.
-		/// </summary>
-		public bool SwitchToWindowed()
-		{
-			return NativeMethods.SwitchToWindowed(_swapChain);
-		}
-
-		/// <summary>
 		///     Provides access to the native swap chain functions.
 		/// </summary>
 		[SuppressUnmanagedCodeSecurity]
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateSwapChain")]
-			public static extern IntPtr CreateSwapChain(IntPtr device, IntPtr window, bool fullscreen, int width, int height);
+			public static extern IntPtr CreateSwapChain(IntPtr device, IntPtr window, int width, int height);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroySwapChain")]
 			public static extern void DestroySwapChain(IntPtr swapChain);
@@ -106,15 +75,6 @@
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetBackBuffer")]
 			public static extern IntPtr GetBackBuffer(IntPtr swapChain);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSwapChainFullscreen")]
-			public static extern bool SwitchToFullscreen(IntPtr swapChain, int width, int height);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSwapChainWindowed")]
-			public static extern bool SwitchToWindowed(IntPtr swapChain);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSwapChainIsFullscreen")]
-			public static extern bool IsFullscreen(IntPtr swapChain);
 		}
 	}
 }

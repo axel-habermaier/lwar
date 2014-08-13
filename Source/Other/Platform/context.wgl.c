@@ -55,9 +55,6 @@ pgVoid pgBindContext(pgContext* context, pgGraphicsDevice* device, pgWindow* win
 	context->hdc = GetDC(context->hwnd);
 	if (context->hdc == NULL)
 		pgWin32Error("Failed to get the device context of the swap chain window.");
-
-	context->wndStyle = GetWindowLong(context->hwnd, GWL_STYLE);
-	context->wndExStyle = GetWindowLong(context->hwnd, GWL_EXSTYLE);
 }
 
 pgVoid pgDestroyBoundContext(pgContext* context)
@@ -140,67 +137,6 @@ pgVoid pgSetPixelFormat(pgContext* context)
 	// Set the chosen pixel format
 	if (!SetPixelFormat(context->hdc, bestMatch, &descriptor))
 		pgWin32Error("Failed to set pixel format.");
-}
-
-pgBool pgContextFullscreen(pgContext* context, pgInt32 width, pgInt32 height)
-{
-	DEVMODE devMode;
-	memset(&devMode, 0, sizeof(devMode));
-	devMode.dmSize = sizeof(devMode);
-	devMode.dmPelsWidth = width;
-	devMode.dmPelsHeight = height;
-	devMode.dmBitsPerPel = 32;
-	devMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
-	
-	if (ChangeDisplaySettings(&devMode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
-	{
-		PG_ERROR("Failed to switch to fullscreen mode.");
-		return PG_FALSE;
-	}
-	else
-	{
-		WINDOWPLACEMENT placement;
-		memset(&placement, 0, sizeof(placement));
-		placement.length = sizeof(placement);
-
-		if (!GetWindowPlacement(context->hwnd, &placement))
-			pgWin32Error("Failed to get window configuration.");
-
-		// The context is moving the window, hence it has to store the original window position and size of the un-maximized window
-		context->x = placement.rcNormalPosition.left;
-		context->y = placement.rcNormalPosition.top;
-		context->width = placement.rcNormalPosition.right - context->x;
-		context->height = placement.rcNormalPosition.bottom - context->y;
-		context->maximized = IsZoomed(context->hwnd);
-
-		// Make the window compatible with fullscreen mode
-		SetWindowLong(context->hwnd, GWL_STYLE, WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
-		SetWindowLong(context->hwnd, GWL_EXSTYLE, WS_EX_APPWINDOW);
-
-		// Resize the window so that it fills the entire screen
-		SetWindowPos(context->hwnd, HWND_TOP, 0, 0, width, height, SWP_FRAMECHANGED | SWP_NOCOPYBITS);
-		ShowWindow(context->hwnd, SW_SHOW);
-
-		return PG_TRUE;
-	}
-}
-
-pgVoid pgContextWindowed(pgContext* context)
-{
-	// Return to the default mode
-	ChangeDisplaySettings(NULL, 0);
-
-	// Reset the original window flags and size
-	SetWindowLong(context->hwnd, GWL_STYLE, context->wndStyle);
-	SetWindowLong(context->hwnd, GWL_EXSTYLE, context->wndExStyle);
-	
-	// Restore the size
-	SetWindowPos(context->hwnd, HWND_TOP, context->x, context->y, context->width, context->height, SWP_FRAMECHANGED | SWP_NOCOPYBITS);
-
-	if (context->maximized)
-		ShowWindow(context->hwnd, SW_MAXIMIZE);
-	else
-		ShowWindow(context->hwnd, SW_SHOW);
 }
 
 pgVoid pgInitializeContextExtensions(pgContext* context)

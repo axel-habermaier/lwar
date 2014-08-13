@@ -65,8 +65,6 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 		
 		case PG_MESSAGE_LOST_FOCUS:
 			window->focused = PG_FALSE;
-			if (window->swapChain != NULL)
-				pgSwapChainWindowed(window->swapChain);
 
 			// If we've lost the focus, make sure that all pressed keys are unpressed, because we'll miss the up event
 			// if we're not focused; of course, if a key is not released while the window is out of focus and focused again,
@@ -105,25 +103,6 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			break;
 
 		case PG_MESSAGE_KEY_DOWN:
-			// If either the Alt key or the Return key have just been pressed, and we now have both keys active,
-			// toggle fullscreen mode
-			if (message.key == PG_KEY_LEFTALT || message.key == PG_KEY_RETURN)
-			{
-				pgBool firstTimeDown = !window->keyState[message.key];
-				pgBool otherIsDown, toggle;
-
-				if (message.key == PG_KEY_LEFTALT)
-					otherIsDown = window->keyState[PG_KEY_RETURN];
-				else
-					otherIsDown = window->keyState[PG_KEY_LEFTALT];
-
-				toggle = firstTimeDown && otherIsDown;
-				if (toggle && window->swapChain != NULL && window->fullscreen)
-					pgSwapChainWindowed(window->swapChain);
-				else if (toggle && window->swapChain != NULL && !window->fullscreen)
-					pgSwapChainFullscreen(window->swapChain, window->swapChain->fullscreenWidth, window->swapChain->fullscreenHeight);
-			}
-
 			window->keyState[message.key] = PG_TRUE;
 			window->scanCode[message.key] = message.scanCode;
 			window->callbacks.keyPressed(message.key, message.scanCode);
@@ -203,9 +182,6 @@ pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height)
 {
 	PG_ASSERT_NOT_NULL(window);
 
-	if (window->fullscreen)
-		return;
-
 	window->placement.width = width;
 	window->placement.height = height;
 
@@ -221,9 +197,6 @@ pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
 {
 	PG_ASSERT_NOT_NULL(window);
 
-	if (window->fullscreen)
-		return;
-
 	window->placement.x = x;
 	window->placement.y = y;
 
@@ -235,9 +208,6 @@ pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
 pgVoid pgSetWindowMode(pgWindow* window, pgWindowMode mode)
 {
 	PG_ASSERT_NOT_NULL(window);
-
-	if (window->fullscreen)
-		return;
 
 	window->placement.mode = mode;
 

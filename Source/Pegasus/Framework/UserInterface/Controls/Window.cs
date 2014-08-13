@@ -68,7 +68,7 @@
 			Mouse = new Mouse(this);
 
 			var graphicsDevice = Application.Current.GraphicsDevice;
-			SwapChain = new SwapChain(graphicsDevice, _window, false, _window.Size);
+			SwapChain = new SwapChain(graphicsDevice, _window, _window.Size);
 			_output = new RenderOutput(graphicsDevice)
 			{
 				RenderTarget = SwapChain.BackBuffer,

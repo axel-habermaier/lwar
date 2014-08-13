@@ -44,8 +44,8 @@
 		/// </summary>
 		public void Update()
 		{
-			if (Cvars.Fullscreen != _swapChain.IsFullscreen)
-				Cvars.FullscreenCvar.SetImmediate(_swapChain.IsFullscreen);
+			//if (Cvars.Fullscreen != _swapChain.IsFullscreen)
+				//Cvars.FullscreenCvar.SetImmediate(_swapChain.IsFullscreen);
 
 			// We do not care about the window placement in full screen mode
 			if (Cvars.Fullscreen)
@@ -82,8 +82,8 @@
 			{
 				Log.Info("Switching to fullscreen mode, resolution {0}x{1}.", Cvars.Resolution.Width, Cvars.Resolution.Height);
 
-				if (_swapChain.SwitchToFullscreen(Cvars.Resolution))
-					return;
+				//if (_swapChain.SwitchToFullscreen(Cvars.Resolution))
+					//return;
 
 				// There was an error switching to fullscreen mode, so switch back to windowed mode
 				Cvars.Fullscreen = false;
@@ -93,7 +93,7 @@
 			if (switchWindowed)
 			{
 				Log.Info("Switching to windowed mode, resolution {0}x{1}.", Cvars.WindowSize.Width, Cvars.WindowSize.Height);
-				_swapChain.SwitchToWindowed();
+				//_swapChain.SwitchToWindowed();
 			}
 		}
 

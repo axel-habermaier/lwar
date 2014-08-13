@@ -218,7 +218,6 @@ struct pgWindow
 	pgWindowPlacement	placement;
 	pgSwapChain*		swapChain;
 	pgBool				mouseCaptured;
-	pgBool				fullscreen;
 	pgBool				focused;
 	pgBool				closing;
 
@@ -534,11 +533,8 @@ struct pgSwapChain
 	pgGraphicsDevice*	device;
 	pgRenderTarget		renderTarget;
 	pgWindow*			window;
-	pgBool				fullscreen;
-	pgInt32				windowedWidth;
-	pgInt32				windowedHeight;
-	pgInt32				fullscreenWidth;
-	pgInt32				fullscreenHeight;
+	pgInt32				width;
+	pgInt32				height;
 	PG_SWAP_CHAIN_PLATFORM
 };
 
@@ -546,8 +542,6 @@ pgVoid pgCreateSwapChainCore(pgSwapChain* swapChain, pgWindow* window);
 pgVoid pgDestroySwapChainCore(pgSwapChain* swapChain);
 
 pgVoid pgPresentCore(pgSwapChain* swapChain);
-pgBool pgSwapChainFullscreenCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
-pgVoid pgSwapChainWindowedCore(pgSwapChain* swapChain);
 
 pgVoid pgResizeSwapChain(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
 pgVoid pgResizeSwapChainCore(pgSwapChain* swapChain, pgInt32 width, pgInt32 height);
