@@ -34,14 +34,19 @@
 		private InputBindingCollection _inputBindings;
 
 		/// <summary>
-		///     A value indicating whether the UI element is connected to the visual tree's root element.
-		/// </summary>
-		private bool _isAttachedToRoot;
-
-		/// <summary>
 		///     Caches the layouting information of the UI element during the measure and arrange phases for performance reasons.
 		/// </summary>
 		private LayoutInfo _layoutInfo;
+
+		/// <summary>
+		///     The available size allocated for the UI element during the last measure phase.
+		/// </summary>
+		private SizeD _previousAvailableSize;
+
+		/// <summary>
+		///     The final rectangle allocated for the UI element during the last arrange phase.
+		/// </summary>
+		private RectangleD _previousFinalRect;
 
 		/// <summary>
 		///     The resources used by the UI element.
@@ -49,15 +54,21 @@
 		private ResourceDictionary _resources = new ResourceDictionary();
 
 		/// <summary>
-		///     A value indicating whether the UI element uses and implicitly set style.
+		///     The state of the UI element;
 		/// </summary>
-		private bool _usesImplicitStyle = true;
+		private State _state;
+
+		/// <summary>
+		///     The visual parent of the UI element.
+		/// </summary>
+		private UIElement _visualParent;
 
 		/// <summary>
 		///     Initializes the type.
 		/// </summary>
 		static UIElement()
 		{
+			DependencyProperty.DependencyPropertyChanged += OnDependencyPropertyChanged;
 			StyleProperty.Changed += OnStyleChanged;
 			FontFamilyProperty.Changed += (o, e) => UnsetCachedFont(o);
 			FontSizeProperty.Changed += (o, e) => UnsetCachedFont(o);
@@ -76,6 +87,51 @@
 			PreviewKeyDownEvent.Raised += OnInputEvent;
 			PreviewKeyUpEvent.Raised += OnInputEvent;
 			DataContextProperty.Changed += OnDataContextChanged;
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		protected UIElement()
+		{
+			UsesImplicitStyle = true;
+		}
+
+		/// <summary>
+		///     Ensures that the appropriate UI element state is set to dirty if the dependency property affects the state.
+		/// </summary>
+		private static void OnDependencyPropertyChanged(DependencyObject obj, DependencyProperty property)
+		{
+			var element = obj as UIElement;
+			if (element != null)
+				element.SetDirtyState(property.AffectsMeasure, property.AffectsArrange);
+		}
+
+		/// <summary>
+		///     Sets the corresponding UI element state to dirty.
+		/// </summary>
+		/// <param name="measure">Indicates whether the measure state should be set to dirty.</param>
+		/// <param name="arrange">Indicates whether the arrange state should be set to dirty.</param>
+		private void SetDirtyState(bool measure, bool arrange)
+		{
+			if (measure)
+			{
+				var element = this;
+				while (element != null)
+				{
+					element.IsMeasureDataDirty = true;
+					element = element.VisualParent;
+				}
+			}
+			else if (arrange)
+			{
+				var element = this;
+				while (element != null)
+				{
+					element.IsArrangeDataDirty = true;
+					element = element.VisualParent;
+				}
+			}
 		}
 
 		/// <summary>
@@ -125,12 +181,11 @@
 		private static void OnMouseDown(object sender, MouseButtonEventArgs e)
 		{
 			var uiElement = sender as UIElement;
-			if (uiElement != null && uiElement.CanBeFocused)
-			{
-				uiElement.Focus();
-				e.Handled = true;
+			if (uiElement == null || !uiElement.CanBeFocused)
 				return;
-			}
+
+			uiElement.Focus();
+			e.Handled = true;
 		}
 
 		/// <summary>
@@ -226,7 +281,7 @@
 				ResourcesInvalidated();
 
 			// If we're using an implicit style, we have to check whether the style has changed
-			if (_usesImplicitStyle)
+			if (UsesImplicitStyle)
 				BindImplicitStyle();
 
 			foreach (var child in LogicalChildren)
@@ -255,7 +310,7 @@
 			{
 				// No need to set the style if the UI element is not part of a logical tree
 				property.NewValue.Apply(uiElement);
-				uiElement._usesImplicitStyle = false;
+				uiElement.UsesImplicitStyle = false;
 			}
 		}
 
@@ -270,7 +325,7 @@
 			else
 			{
 				Style = (Style)style;
-				_usesImplicitStyle = true;
+				UsesImplicitStyle = true;
 			}
 		}
 
@@ -288,8 +343,8 @@
 				return true;
 
 			// Otherwise, check the logical parent
-			if (Parent != null)
-				return Parent.TryFindResource(key, out resource);
+			if (LogicalParent != null)
+				return LogicalParent.TryFindResource(key, out resource);
 
 			// If there is no logical parent, there is no resource with the given key
 			resource = null;
@@ -325,13 +380,13 @@
 		/// </param>
 		internal void ChangeLogicalParent(UIElement parent)
 		{
-			if (parent == Parent)
+			if (parent == LogicalParent)
 				return;
 
 			Assert.That(parent != this, "Detected a loop in the logical tree.");
-			Assert.That(parent == null || Parent == null, "The element is already attached to the logical tree.");
+			Assert.That(parent == null || LogicalParent == null, "The element is already attached to the logical tree.");
 
-			Parent = parent;
+			LogicalParent = parent;
 
 			// Changing the parent possibly invalidates the inherited property values of this UI element and its children
 			InvalidateInheritedValues(parent);
@@ -480,7 +535,7 @@
 				if (window != null)
 					return window;
 
-				uiElement = uiElement.Parent;
+				uiElement = uiElement.LogicalParent;
 			}
 
 			return null;
@@ -574,7 +629,7 @@
 			while (uiElement != null && !eventArgs.Handled)
 			{
 				uiElement.InvokeEventHandlers(routedEvent, eventArgs);
-				uiElement = uiElement.Parent;
+				uiElement = uiElement.LogicalParent;
 			}
 		}
 
@@ -593,8 +648,8 @@
 			Assert.ArgumentNotNull(eventArgs);
 			Assert.ArgumentSatisfies(routedEvent.RoutingStrategy == RoutingStrategy.Tunnel, "Unexpected routing strategy.");
 
-			if (uiElement.Parent != null)
-				RaiseTunnelingEvent(uiElement.Parent, routedEvent, eventArgs);
+			if (uiElement.LogicalParent != null)
+				RaiseTunnelingEvent(uiElement.LogicalParent, routedEvent, eventArgs);
 
 			if (!eventArgs.Handled)
 				uiElement.InvokeEventHandlers(routedEvent, eventArgs);
@@ -657,12 +712,16 @@
 		/// </param>
 		public void Measure(SizeD availableSize)
 		{
+			if (!IsMeasureDataDirty && _previousAvailableSize == availableSize)
+				return;
+
 			if (Visibility == Visibility.Collapsed)
 			{
 				_desiredSize = new SizeD();
 				return;
 			}
 
+			_previousAvailableSize = availableSize;
 			_layoutInfo = new LayoutInfo(this);
 			availableSize = RestrictSize(availableSize);
 
@@ -673,6 +732,9 @@
 
 			_desiredSize = RestrictSize(_desiredSize);
 			_desiredSize = IncreaseByMargin(_desiredSize);
+
+			IsMeasureDataDirty = false;
+			IsArrangeDataDirty = true;
 		}
 
 		/// <summary>
@@ -716,6 +778,9 @@
 		/// </remarks>
 		public void Arrange(RectangleD finalRect)
 		{
+			if (!IsArrangeDataDirty && _previousFinalRect == finalRect)
+				return;
+
 			if (Visibility == Visibility.Collapsed)
 			{
 				VisualOffset = Vector2d.Zero;
@@ -726,6 +791,7 @@
 				return;
 			}
 
+			_previousFinalRect = finalRect;
 			_layoutInfo = new LayoutInfo(this);
 
 			var availableSize = DecreaseByMargin(finalRect.Size);
@@ -759,6 +825,9 @@
 		/// <param name="visualOffset">The visual offset that should be applied to the UI element.</param>
 		internal void UpdateVisualOffsets(Vector2d visualOffset)
 		{
+			if (!IsArrangeDataDirty)
+				return;
+
 			VisualOffset += visualOffset;
 
 			var count = VisualChildrenCount;
@@ -767,6 +836,8 @@
 				var child = GetVisualChild(i);
 				child.UpdateVisualOffsets(VisualOffset);
 			}
+
+			IsArrangeDataDirty = false;
 		}
 
 		/// <summary>
@@ -948,6 +1019,33 @@
 				var child = GetVisualChild(i);
 				child.Draw(spriteBatch);
 			}
+		}
+
+		/// <summary>
+		///     Provides state information for an UI element.
+		/// </summary>
+		[Flags]
+		private enum State
+		{
+			/// <summary>
+			///     Indicates that the UI element is connected to the visual tree's root element.
+			/// </summary>
+			IsAttachedToRoot = 1,
+
+			/// <summary>
+			///     Indicates that the UI element uses and implicitly set style.
+			/// </summary>
+			UsesImplicitStyle = 2,
+
+			/// <summary>
+			///     Indicates that the UI element's cached measured layout is dirty and needs to be updated.
+			/// </summary>
+			MeasureDirty = 4,
+
+			/// <summary>
+			///     Indicates that the UI element's cached arranged layout is dirty and needs to be updated.
+			/// </summary>
+			ArrangeDirty = 8
 		}
 	}
 }

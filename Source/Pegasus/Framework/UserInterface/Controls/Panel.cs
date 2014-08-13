@@ -65,7 +65,7 @@
 		/// </summary>
 		public UIElementCollection Children
 		{
-			get { return _children ?? (_children = new UIElementCollection(this)); }
+			get { return _children ?? (_children = new UIElementCollection(this, this)); }
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the scroll handler that handles thi scrolling aware UI element.
+		///     Gets or sets the scroll handler that handles this scrolling aware UI element.
 		/// </summary>
 		public IScrollHandler ScrollHandler { get; set; }
 
@@ -118,7 +118,7 @@
 			if (uiElement == null)
 				return;
 
-			var panel = uiElement.Parent as Panel;
+			var panel = uiElement.LogicalParent as Panel;
 			if (panel == null)
 				return;
 

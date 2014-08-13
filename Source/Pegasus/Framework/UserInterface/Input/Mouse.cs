@@ -291,7 +291,7 @@
 				}
 
 				_hoveredElements.Push(hoveredElement);
-				hoveredElement = hoveredElement.Parent;
+				hoveredElement = hoveredElement.LogicalParent;
 			}
 		}
 
@@ -303,8 +303,8 @@
 		/// <param name="args">The event arguments that should be passed to the MouseLeaveEvent.</param>
 		private void UnsetIsMouseOver(UIElement uiElement, MouseEventArgs args)
 		{
-			if (uiElement.Parent != null)
-				UnsetIsMouseOver(uiElement.Parent, args);
+			if (uiElement.LogicalParent != null)
+				UnsetIsMouseOver(uiElement.LogicalParent, args);
 
 			if (_hoveredElements.Count == 0)
 				return;
@@ -406,7 +406,7 @@
 			while (element != null)
 			{
 				cursor = element.Cursor;
-				element = element.Parent;
+				element = element.LogicalParent;
 
 				if (cursor != null)
 					break;

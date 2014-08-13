@@ -95,14 +95,12 @@
 		/// <summary>
 		///     The actual width of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
-		public static readonly DependencyProperty<double> ActualWidthProperty =
-			new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> ActualWidthProperty = new DependencyProperty<double>();
 
 		/// <summary>
 		///     The actual height of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
-		public static readonly DependencyProperty<double> ActualHeightProperty =
-			new DependencyProperty<double>();
+		public static readonly DependencyProperty<double> ActualHeightProperty = new DependencyProperty<double>();
 
 		/// <summary>
 		///     The outer margin of the UI element.
@@ -401,7 +399,30 @@
 		/// <summary>
 		///     Gets the logical parent of the UI element.
 		/// </summary>
-		public UIElement Parent { get; internal set; }
+		public UIElement LogicalParent { get; internal set; }
+
+		/// <summary>
+		///     Gets the visual parent of the UI element.
+		/// </summary>
+		public UIElement VisualParent
+		{
+			get { return _visualParent; }
+			internal set
+			{
+				if (_visualParent == value)
+					return;
+
+				// The old parent's layout must be invalidated
+				if (_visualParent != null)
+					_visualParent.SetDirtyState(true, true);
+
+				_visualParent = value;
+
+				// The new parent's layout must be invalidated
+				if (_visualParent != null)
+					_visualParent.SetDirtyState(true, true);
+			}
+		}
 
 		/// <summary>
 		///     Gets an enumerator that can be used to enumerate all logical children of the UI element.
@@ -414,7 +435,7 @@
 		public SizeD RenderSize { get; internal set; }
 
 		/// <summary>
-		///     Gets or sets the absolute offset value of the UI element for drawing.
+		///     Gets or sets the relative offset value of the UI element for drawing.
 		/// </summary>
 		protected internal Vector2d VisualOffset { get; set; }
 
@@ -431,18 +452,22 @@
 		/// </summary>
 		protected internal bool IsAttachedToRoot
 		{
-			get { return _isAttachedToRoot; }
+			get { return (_state & State.IsAttachedToRoot) == State.IsAttachedToRoot; }
 			set
 			{
-				if (_isAttachedToRoot == value)
+				if (IsAttachedToRoot == value)
 					return;
 
-				_isAttachedToRoot = value;
-				SetBindingsActivationState(_isAttachedToRoot);
+				if (value)
+					_state |= State.IsAttachedToRoot;
+				else
+					_state &= ~State.IsAttachedToRoot;
+
+				SetBindingsActivationState(value);
 
 				var childrenCount = VisualChildrenCount;
 				for (var i = 0; i < childrenCount; ++i)
-					GetVisualChild(i).IsAttachedToRoot = _isAttachedToRoot;
+					GetVisualChild(i).IsAttachedToRoot = value;
 
 				if (value)
 					OnAttachedToRoot();
@@ -467,7 +492,7 @@
 					if (element.Visibility != Visibility.Visible || !element.IsHitTestVisible)
 						return false;
 
-					element = element.Parent;
+					element = element.LogicalParent;
 				}
 
 				return true;
@@ -495,5 +520,50 @@
 		///     cursor is determined by the hovered child element or the default cursor is displayed.
 		/// </summary>
 		public Cursor Cursor { get; protected set; }
+
+		/// <summary>
+		///     A value indicating whether the UI element uses and implicitly set style.
+		/// </summary>
+		private bool UsesImplicitStyle
+		{
+			get { return (_state & State.UsesImplicitStyle) == State.UsesImplicitStyle; }
+			set
+			{
+				if (value)
+					_state |= State.UsesImplicitStyle;
+				else
+					_state &= ~State.UsesImplicitStyle;
+			}
+		}
+
+		/// <summary>
+		///     A value indicating whether the UI element's cached measured layout is dirty and needs to be updated.
+		/// </summary>
+		private bool IsMeasureDataDirty
+		{
+			get { return (_state & State.MeasureDirty) == State.MeasureDirty; }
+			set
+			{
+				if (value)
+					_state |= State.MeasureDirty;
+				else
+					_state &= ~State.MeasureDirty;
+			}
+		}
+
+		/// <summary>
+		///     A value indicating whether the UI element's cached arranged layout is dirty and needs to be updated.
+		/// </summary>
+		private bool IsArrangeDataDirty
+		{
+			get { return (_state & State.ArrangeDirty) == State.ArrangeDirty; }
+			set
+			{
+				if (value)
+					_state |= State.ArrangeDirty;
+				else
+					_state &= ~State.ArrangeDirty;
+			}
+		}
 	}
 }

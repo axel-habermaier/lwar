@@ -161,6 +161,11 @@
 		internal abstract Type ValueType { get; }
 
 		/// <summary>
+		///     Raised when a value of any dependency property on any dependency object has been changed.
+		/// </summary>
+		internal static event DependencyPropertyChangedHandler DependencyPropertyChanged;
+
+		/// <summary>
 		///     Adds an untyped changed handler to the dependency property for the given dependency object. Returns the delegate that
 		///     must can used to remove the untyped change handler.
 		/// </summary>
@@ -193,6 +198,18 @@
 		/// </summary>
 		/// <param name="obj">The dependency object whose inherited value should be unset.</param>
 		internal abstract void UnsetInheritedValue(DependencyObject obj);
+
+		/// <summary>
+		///     Raises the change event for the dependency property and the given dependency object.
+		/// </summary>
+		/// <param name="dependencyObject">The dependency object for which the value has been changed.</param>
+		protected void RaiseChangeEvent(DependencyObject dependencyObject)
+		{
+			Assert.ArgumentNotNull(dependencyObject);
+
+			if (DependencyPropertyChanged != null)
+				DependencyPropertyChanged(dependencyObject, this);
+		}
 
 		/// <summary>
 		///     Provides metadata for the dependency property.

@@ -135,7 +135,7 @@
 			get
 			{
 				if (_boundToDataContext && ReferenceEquals(_targetProperty, UIElement.DataContextProperty))
-					return ((UIElement)_sourceObject).Parent;
+					return ((UIElement)_sourceObject).LogicalParent;
 
 				return _sourceObject;
 			}

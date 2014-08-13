@@ -59,8 +59,11 @@
 			if (args.OldValue != null)
 				args.OldValue.ChangeLogicalParent(null);
 
-			if (args.NewValue != null)
-				args.NewValue.ChangeLogicalParent(decorator);
+			if (args.NewValue == null)
+				return;
+
+			args.NewValue.ChangeLogicalParent(decorator);
+			args.NewValue.VisualParent = decorator;
 		}
 
 		/// <summary>

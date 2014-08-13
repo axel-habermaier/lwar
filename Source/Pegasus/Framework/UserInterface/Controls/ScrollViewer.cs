@@ -88,7 +88,7 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the scroll controller that can be used to controll the scroll viewer.
+		///     Gets or sets the scroll controller that can be used to control the scroll viewer.
 		/// </summary>
 		public IScrollController ScrollController
 		{
@@ -176,8 +176,8 @@
 			var height = _arrangedContentSize.Height;
 
 			// Clamp to the range
-			offset.X = MathUtils.Clamp(offset.X, 0, width - HorizontalScrollStep);
-			offset.Y = MathUtils.Clamp(offset.Y, 0, height - VerticalScrollStep);
+			offset.X = MathUtils.Clamp(offset.X, 0, Math.Max(0, width - HorizontalScrollStep));
+			offset.Y = MathUtils.Clamp(offset.Y, 0, Math.Max(0, height - VerticalScrollStep));
 
 			_scrollOffset = offset;
 		}

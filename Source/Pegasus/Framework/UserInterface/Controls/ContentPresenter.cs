@@ -80,14 +80,20 @@
 			{
 				// Reuse the previous text block instance
 				contentPresenter._textBlock.Text = args.NewValue.ToString();
-				previousElement = null; // No need to remove the text block from the logical tree
+				previousElement = null; // No need to remove the text block from the logical or visual tree
 			}
 
 			if (previousElement != null)
+			{
 				previousElement.ChangeLogicalParent(null);
+				previousElement.VisualParent = null;
+			}
 
-			if (contentPresenter._presentedElement != null)
-				contentPresenter._presentedElement.ChangeLogicalParent(contentPresenter.Parent);
+			if (contentPresenter._presentedElement == null)
+				return;
+
+			contentPresenter._presentedElement.ChangeLogicalParent(contentPresenter.LogicalParent);
+			contentPresenter._presentedElement.VisualParent = contentPresenter;
 		}
 
 		/// <summary>
@@ -143,7 +149,7 @@
 		protected override void OnAttached()
 		{
 			if (_presentedElement != null)
-				_presentedElement.ChangeLogicalParent(Parent);
+				_presentedElement.ChangeLogicalParent(LogicalParent);
 		}
 
 		/// <summary>

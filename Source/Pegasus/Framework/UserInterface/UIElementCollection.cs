@@ -14,13 +14,22 @@
 		private readonly UIElement _logicalParent;
 
 		/// <summary>
+		///     The visual parent of the UI elements contained in the collection.
+		/// </summary>
+		private readonly UIElement _visualParent;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="logicalParent">The logical parent of the UI elements contained in the collection.</param>
-		public UIElementCollection(UIElement logicalParent)
+		/// <param name="visualParent"> The visual parent of the UI elements contained in the collection.</param>
+		public UIElementCollection(UIElement logicalParent, UIElement visualParent)
 		{
 			Assert.ArgumentNotNull(logicalParent);
+			Assert.ArgumentNotNull(visualParent);
+
 			_logicalParent = logicalParent;
+			_visualParent = visualParent;
 		}
 
 		/// <summary>
@@ -29,7 +38,10 @@
 		protected override void ClearItems()
 		{
 			foreach (var element in this)
+			{
 				element.ChangeLogicalParent(null);
+				element.VisualParent = null;
+			}
 
 			_logicalParent.OnVisualChildrenChanged();
 			base.ClearItems();
@@ -47,6 +59,7 @@
 			base.InsertItem(index, item);
 
 			item.ChangeLogicalParent(_logicalParent);
+			item.VisualParent = _visualParent;
 			_logicalParent.OnVisualChildrenChanged();
 		}
 
@@ -57,6 +70,7 @@
 		protected override void RemoveItem(int index)
 		{
 			this[index].ChangeLogicalParent(null);
+			this[index].VisualParent = null;
 
 			base.RemoveItem(index);
 
@@ -75,7 +89,10 @@
 			base.SetItem(index, item);
 
 			this[index].ChangeLogicalParent(null);
+			this[index].VisualParent = null;
+
 			item.ChangeLogicalParent(_logicalParent);
+			item.VisualParent = _visualParent;
 
 			_logicalParent.OnVisualChildrenChanged();
 		}

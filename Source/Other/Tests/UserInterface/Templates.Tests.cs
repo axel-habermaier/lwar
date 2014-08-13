@@ -61,7 +61,7 @@
 			var button = new Button { Template = _template1 };
 			var control = new UserControl { Content = button };
 
-			button.Parent.Should().Be(control);
+			button.LogicalParent.Should().Be(control);
 		}
 
 		[Test]
@@ -72,18 +72,18 @@
 			var control1 = new UserControl { Content = button };
 			var control2 = new UserControl();
 
-			button.Parent.Should().Be(control1);
-			text.Parent.Should().Be(button);
+			button.LogicalParent.Should().Be(control1);
+			text.LogicalParent.Should().Be(button);
 
 			control1.Content = null;
 
-			button.Parent.Should().Be(null);
-			text.Parent.Should().Be(button);
+			button.LogicalParent.Should().Be(null);
+			text.LogicalParent.Should().Be(button);
 
 			control2.Content = button;
 
-			button.Parent.Should().Be(control2);
-			text.Parent.Should().Be(button);
+			button.LogicalParent.Should().Be(control2);
+			text.LogicalParent.Should().Be(button);
 		}
 
 		[Test]
@@ -93,8 +93,8 @@
 			var button = new Button { Content = text, Template = _template1 };
 			var control = new UserControl { Content = button };
 
-			button.Parent.Should().Be(control);
-			text.Parent.Should().Be(button);
+			button.LogicalParent.Should().Be(control);
+			text.LogicalParent.Should().Be(button);
 		}
 
 		[Test]
@@ -104,8 +104,8 @@
 			var button = new Button { Template = _template1, Content = text };
 			var control = new UserControl { Content = button };
 
-			button.Parent.Should().Be(control);
-			text.Parent.Should().Be(button);
+			button.LogicalParent.Should().Be(control);
+			text.LogicalParent.Should().Be(button);
 		}
 
 		[Test]

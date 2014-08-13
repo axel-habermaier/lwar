@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface.Controls
 {
 	using System;
+	using System.Runtime.CompilerServices;
 	using Math;
 	using Platform.Graphics;
 	using Rendering;
@@ -87,7 +88,10 @@
 				control._templateRoot = args.NewValue(control);
 
 			if (control._templateRoot != null)
+			{
 				control._templateRoot.ChangeLogicalParent(control);
+				control._templateRoot.VisualParent = control;
+			}
 
 			control.OnVisualChildrenChanged();
 			control.OnTemplateChanged(control._templateRoot);

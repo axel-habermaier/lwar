@@ -41,18 +41,18 @@
 		[Test]
 		public void Button()
 		{
-			_control1.Button1.Parent.Should().Be(_control1.Canvas1);
-			_control1.Button2.Parent.Should().Be(_control1.Canvas1);
-			_control1.Button3.Parent.Should().Be(_control1.Canvas2);
+			_control1.Button1.LogicalParent.Should().Be(_control1.Canvas1);
+			_control1.Button2.LogicalParent.Should().Be(_control1.Canvas1);
+			_control1.Button3.LogicalParent.Should().Be(_control1.Canvas2);
 		}
 
 		[Test]
 		public void Canvas()
 		{
-			_control1.Canvas1.Parent.Should().Be(_control1);
+			_control1.Canvas1.LogicalParent.Should().Be(_control1);
 			_control1.Canvas1.Children.Should().ContainInOrder(_control1.Button1, _control1.Button2, _control1.Canvas2);
 
-			_control1.Canvas2.Parent.Should().Be(_control1.Canvas1);
+			_control1.Canvas2.LogicalParent.Should().Be(_control1.Canvas1);
 		}
 
 		[Test]
@@ -74,7 +74,7 @@
 			_control1.Canvas1.Children.Remove(_control1.Button2);
 			_control2.Canvas1.Children.Add(_control1.Button2);
 
-			_control1.Button2.Parent.Should().Be(_control2.Canvas1);
+			_control1.Button2.LogicalParent.Should().Be(_control2.Canvas1);
 		}
 
 		[Test]
@@ -83,7 +83,7 @@
 			_control1.Canvas1.Children.Remove(_control1.Button2);
 
 			_control1.Canvas1.Children.Should().ContainInOrder(_control1.Button1, _control1.Canvas2);
-			_control1.Button2.Parent.Should().BeNull();
+			_control1.Button2.LogicalParent.Should().BeNull();
 		}
 	}
 }

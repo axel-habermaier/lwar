@@ -164,6 +164,8 @@
 		/// </summary>
 		internal void OnValueChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs<T> changedEventArgs)
 		{
+			RaiseChangeEvent(dependencyObject);
+
 			if (Changed != null)
 				Changed(dependencyObject, changedEventArgs);
 		}
