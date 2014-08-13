@@ -7,6 +7,7 @@
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Framework.UserInterface.Input;
+	using Pegasus.Platform.Logging;
 	using Pegasus.Rendering;
 
 	/// <summary>
@@ -194,13 +195,6 @@
 
 			left *= width;
 			up *= height;
-
-			// Translate the screen coordinates such that the origin lies in the center of the viewport
-			screenCoordinates -= new Vector2(Viewport.Width / 2.0f, Viewport.Height / 2.0f);
-
-			// Map the screen coordinates to the range [-1;1]
-			screenCoordinates.X /= Viewport.Width / 2.0f;
-			screenCoordinates.Y /= Viewport.Height / 2.0f;
 
 			// Compute the ray 
 			var origin = Position + viewDirection * NearDistance + left * screenCoordinates.X + up * screenCoordinates.Y;

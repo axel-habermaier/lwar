@@ -35,11 +35,6 @@
 		private readonly InputState[] _states = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
 
 		/// <summary>
-		///     The window that generates the mouse events.
-		/// </summary>
-		private readonly Window _window;
-
-		/// <summary>
 		///     The UI element the mouse is currently over. Null if the mouse is not over any UI element.
 		/// </summary>
 		private UIElement _hoveredElement;
@@ -67,11 +62,11 @@
 		{
 			Assert.ArgumentNotNull(window);
 
-			_window = window;
-			_window.NativeWindow.MousePressed += OnButtonPressed;
-			_window.NativeWindow.MouseReleased += OnButtonReleased;
-			_window.NativeWindow.MouseWheel += OnWheel;
-			_window.NativeWindow.MouseMoved += OnMove;
+			Window = window;
+			Window.NativeWindow.MousePressed += OnButtonPressed;
+			Window.NativeWindow.MouseReleased += OnButtonReleased;
+			Window.NativeWindow.MouseWheel += OnWheel;
+			Window.NativeWindow.MouseMoved += OnMove;
 		}
 
 		/// <summary>
@@ -82,11 +77,16 @@
 			get
 			{
 				int x, y;
-				NativeMethods.GetMousePosition(_window.NativeWindow.NativePtr, out x, out y);
+				NativeMethods.GetMousePosition(Window.NativeWindow.NativePtr, out x, out y);
 
 				return new Vector2i(x, y);
 			}
 		}
+
+		/// <summary>
+		///     Gets or sets the window the mouse is associated with.
+		/// </summary>
+		public Window Window { get; private set; }
 
 		/// <summary>
 		///     Ensures that the UI element handles all keyboard input events.
@@ -159,8 +159,8 @@
 		/// </summary>
 		public event Action<Vector2i> Moved
 		{
-			add { _window.NativeWindow.MouseMoved += value; }
-			remove { _window.NativeWindow.MouseMoved -= value; }
+			add { Window.NativeWindow.MouseMoved += value; }
+			remove { Window.NativeWindow.MouseMoved -= value; }
 		}
 
 		/// <summary>
@@ -168,8 +168,8 @@
 		/// </summary>
 		public event Action<int> Wheel
 		{
-			add { _window.NativeWindow.MouseWheel += value; }
-			remove { _window.NativeWindow.MouseWheel -= value; }
+			add { Window.NativeWindow.MouseWheel += value; }
+			remove { Window.NativeWindow.MouseWheel -= value; }
 		}
 
 		/// <summary>
@@ -188,7 +188,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseButtonEventArgs.Create(this, position, _states, button, doubleClick, _window.Keyboard.GetModifiers());
+			var args = MouseButtonEventArgs.Create(this, position, _states, button, doubleClick, Window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseDownEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseDownEvent, args);
 
@@ -218,7 +218,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseButtonEventArgs.Create(this, position, _states, button, false, _window.Keyboard.GetModifiers());
+			var args = MouseButtonEventArgs.Create(this, position, _states, button, false, Window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseUpEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseUpEvent, args);
 
@@ -244,7 +244,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseWheelEventArgs.Create(this, Position, _states, delta, _window.Keyboard.GetModifiers());
+			var args = MouseWheelEventArgs.Create(this, Position, _states, delta, Window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseWheelEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseWheelEvent, args);
 		}
@@ -260,7 +260,7 @@
 			if (_hoveredElement == null)
 				return;
 
-			var args = MouseEventArgs.Create(this, position, _states, _window.Keyboard.GetModifiers());
+			var args = MouseEventArgs.Create(this, position, _states, Window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseMoveEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseMoveEvent, args);
 		}
@@ -274,11 +274,11 @@
 			Assert.That((_hoveredElement == null && _hoveredElements.Count == 0) ||
 						(_hoveredElement != null && _hoveredElements.Count != 0), "Invalid hovered elements state.");
 
-			var hoveredElement = _window.HitTest(new Vector2d(position.X, position.Y));
+			var hoveredElement = Window.HitTest(new Vector2d(position.X, position.Y));
 			if (hoveredElement == _hoveredElement)
 				return;
 
-			var args = MouseEventArgs.Create(this, Position, _states, _window.Keyboard.GetModifiers());
+			var args = MouseEventArgs.Create(this, Position, _states, Window.Keyboard.GetModifiers());
 
 			if (_hoveredElement != null)
 				UnsetIsMouseOver(_hoveredElement, args);
@@ -401,10 +401,10 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_window.NativeWindow.MousePressed -= OnButtonPressed;
-			_window.NativeWindow.MouseReleased -= OnButtonReleased;
-			_window.NativeWindow.MouseWheel -= OnWheel;
-			_window.NativeWindow.MouseMoved -= OnMove;
+			Window.NativeWindow.MousePressed -= OnButtonPressed;
+			Window.NativeWindow.MouseReleased -= OnButtonReleased;
+			Window.NativeWindow.MouseWheel -= OnWheel;
+			Window.NativeWindow.MouseMoved -= OnMove;
 		}
 
 		/// <summary>

@@ -28,11 +28,6 @@
 		private readonly InputState[] _states = new InputState[Enum.GetValues(typeof(Key)).Length];
 
 		/// <summary>
-		///     The window that generates the key events.
-		/// </summary>
-		private readonly Window _window;
-
-		/// <summary>
 		///     The UI element that currently has the keyboard focus.
 		/// </summary>
 		private UIElement _focusedElement;
@@ -60,12 +55,17 @@
 		{
 			Assert.ArgumentNotNull(window);
 
-			_window = window;
-			_window.NativeWindow.KeyPressed += OnKeyPressed;
-			_window.NativeWindow.KeyReleased += OnKeyReleased;
-			_window.NativeWindow.CharacterEntered += OnCharacterEntered;
-			_window.NativeWindow.DeadCharacterEntered += OnDeadCharacterEntered;
+			Window = window;
+			Window.NativeWindow.KeyPressed += OnKeyPressed;
+			Window.NativeWindow.KeyReleased += OnKeyReleased;
+			Window.NativeWindow.CharacterEntered += OnCharacterEntered;
+			Window.NativeWindow.DeadCharacterEntered += OnDeadCharacterEntered;
 		}
+
+		/// <summary>
+		///     Gets the window the keyboard is associated with.
+		/// </summary>
+		public Window Window { get; private set; }
 
 		/// <summary>
 		///     Gets the UI element that currently has the keyboard focus. Unless the focus has been shifted to another UI
@@ -84,7 +84,7 @@
 					return;
 
 				if (value == null)
-					value = _window;
+					value = Window;
 
 				if (_focusedElement != null)
 					_focusedElement.IsFocused = false;
@@ -92,7 +92,7 @@
 				_focusedElement = value;
 				_focusedElement.IsFocused = true;
 
-				if (_focusedElement != _window)
+				if (_focusedElement != Window)
 					_focusedElements.Push(value);
 
 				Log.DebugIf(_focusedElements.Count > 32, "Unusually large focused elements history stack.");
@@ -169,10 +169,10 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_window.NativeWindow.KeyPressed -= OnKeyPressed;
-			_window.NativeWindow.KeyReleased -= OnKeyReleased;
-			_window.NativeWindow.CharacterEntered -= OnCharacterEntered;
-			_window.NativeWindow.DeadCharacterEntered -= OnDeadCharacterEntered;
+			Window.NativeWindow.KeyPressed -= OnKeyPressed;
+			Window.NativeWindow.KeyReleased -= OnKeyReleased;
+			Window.NativeWindow.CharacterEntered -= OnCharacterEntered;
+			Window.NativeWindow.DeadCharacterEntered -= OnDeadCharacterEntered;
 		}
 
 		/// <summary>
@@ -259,7 +259,7 @@
 
 			// We have to check every frame whether the focused element must be reset; it could have been removed
 			// or hidden since the last frame, among other things.
-			if (FocusedElement != _window && !FocusedElement.CanBeFocused)
+			if (FocusedElement != Window && !FocusedElement.CanBeFocused)
 				ResetFocusedElement();
 		}
 
@@ -283,11 +283,11 @@
 			// Check if the element is still a child of the window. If so, focus the closest focusable
 			// element in the tree. Otherwise, focus the window.
 			if (FocusedElement.ParentWindow == null)
-				FocusedElement = _window;
+				FocusedElement = Window;
 			else
 			{
 				var uiElement = FocusedElement;
-				while (uiElement != _window && !uiElement.CanBeFocused)
+				while (uiElement != Window && !uiElement.CanBeFocused)
 					uiElement = uiElement.Parent;
 
 				FocusedElement = uiElement;

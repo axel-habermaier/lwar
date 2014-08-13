@@ -24,9 +24,18 @@
 		public static readonly DependencyProperty CameraProperty = DependencyProperty.Register(
 			"Camera", typeof(Camera), typeof(RenderOutputPanel), new PropertyMetadata(default(Camera)));
 
+		public static readonly DependencyProperty UseAppResolutionProperty = DependencyProperty.Register(
+			"UseAppResolution", typeof(bool), typeof(RenderOutputPanel), new PropertyMetadata(default(bool)));
+
 		public RenderOutputPanel()
 		{
 			Background = new SolidColorBrush(Colors.Black);
+		}
+
+		public bool UseAppResolution
+		{
+			get { return (bool)GetValue(UseAppResolutionProperty); }
+			set { SetValue(UseAppResolutionProperty, value); }
 		}
 
 		public Camera Camera

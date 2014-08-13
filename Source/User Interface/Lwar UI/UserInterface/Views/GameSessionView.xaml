@@ -17,7 +17,7 @@
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" TriggerMode="Deactivated" Method="HideScoreboard"></input:ConfigurableBinding>
 	</UserControl.InputBindings>
 
-	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}" HasDepthStencil="true" DrawMethod="OnDraw">
+	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}" HasDepthStencil="true" DrawMethod="OnDraw" UseAppResolution="{Binding UseAppResolution}">
 		<controls:AreaPanel>
 
 			<ItemsControl ItemsSource="{Binding EventMessages}" IsHitTestVisible="False">

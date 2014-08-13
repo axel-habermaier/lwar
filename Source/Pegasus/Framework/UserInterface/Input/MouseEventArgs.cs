@@ -36,6 +36,22 @@
 		public Vector2i Position { get; protected set; }
 
 		/// <summary>
+		///     Gets the position of the mouse at the time the event was generated normalized in both directions to the range -1..1 such
+		///     that the origin lies at the center of the window.
+		/// </summary>
+		public Vector2 NormalizedPosition
+		{
+			get
+			{
+				var size = Mouse.Window.Size;
+				var x = Position.X / (float)size.Width * 2 - 1;
+				var y = Position.Y / (float)size.Height * 2 - 1;
+
+				return new Vector2(x, y);
+			}
+		}
+
+		/// <summary>
 		///     Gets the set of key modifiers that was pressed when the event was raised.
 		/// </summary>
 		public KeyModifiers Modifiers { get; protected set; }

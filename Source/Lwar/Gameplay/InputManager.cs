@@ -83,7 +83,7 @@
 		/// </summary>
 		private void OnMouseMoved(MouseEventArgs args)
 		{
-			_targetPosition = new Vector2(args.Position.X, args.Position.Y);
+			_targetPosition = args.NormalizedPosition;
 		}
 
 		/// <summary>

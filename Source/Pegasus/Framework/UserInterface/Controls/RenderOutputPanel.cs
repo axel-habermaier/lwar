@@ -6,6 +6,7 @@
 	using Platform.Logging;
 	using Platform.Memory;
 	using Rendering;
+	using Scripting;
 
 	/// <summary>
 	///     Provides a render output for arbitrary 2D or 3D drawing. The final image is then drawn into the UI.
@@ -28,6 +29,13 @@
 		/// </summary>
 		public static readonly DependencyProperty<SurfaceFormat> ColorBufferFormatProperty =
 			new DependencyProperty<SurfaceFormat>(SurfaceFormat.Rgba8);
+
+		/// <summary>
+		///     Indicates whether the size of the render target is determined by the app resolution or always matches that of the render
+		///     output panel.
+		/// </summary>
+		public static readonly DependencyProperty<bool> UseAppResolutionProperty =
+			new DependencyProperty<bool>(defaultValue: false, affectsRender: true);
 
 		/// <summary>
 		///     The camera that is used to draw to the content's of the render output panel.
@@ -70,6 +78,7 @@
 			CameraProperty.Changed += OnCameraChanged;
 			DrawMethodProperty.Changed += (obj, args) => GetDrawMethodDelegate(obj);
 			DataContextProperty.Changed += (obj, args) => GetDrawMethodDelegate(obj);
+			UseAppResolutionProperty.Changed += (obj, args) => ((RenderOutputPanel)obj).DisposeGraphicsResources();
 		}
 
 		/// <summary>
@@ -97,6 +106,16 @@
 		{
 			get { return GetValue(ColorBufferFormatProperty); }
 			set { SetValue(ColorBufferFormatProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the size of the render target is determined by the app resolution or always
+		///     matches that of the render output panel.
+		/// </summary>
+		public bool UseAppResolution
+		{
+			get { return GetValue(UseAppResolutionProperty); }
+			set { SetValue(UseAppResolutionProperty, value); }
 		}
 
 		/// <summary>
@@ -152,7 +171,6 @@
 			renderOutputPanel._drawMethod = (DrawCallback)Delegate.CreateDelegate(typeof(DrawCallback), dataContext, method);
 		}
 
-
 		/// <summary>
 		///     Changes the camera of the render output.
 		/// </summary>
@@ -180,11 +198,30 @@
 		}
 
 		/// <summary>
+		///     Invoked when the UI element is now (transitively) attached to the root of a visual tree.
+		/// </summary>
+		protected override void OnAttachedToRoot()
+		{
+			Cvars.ResolutionChanged += OnResolutionChanged;
+		}
+
+		/// <summary>
 		///     Invoked when the UI element is no longer (transitively) attached to the root of a visual tree.
 		/// </summary>
 		protected override void OnDetachedFromRoot()
 		{
+			Cvars.ResolutionChanged -= OnResolutionChanged;
 			DisposeGraphicsResources();
+		}
+
+		/// <summary>
+		///     Disposes all graphics resources when the resolution has changed and the render output panel uses the app resolution.
+		/// </summary>
+		/// <param name="previousResolution">The previous app resolution.</param>
+		private void OnResolutionChanged(Size previousResolution)
+		{
+			if (UseAppResolution)
+				DisposeGraphicsResources();
 		}
 
 		/// <summary>
@@ -196,7 +233,11 @@
 			if (!HasVisibleArea)
 				return;
 
-			var size = new Size((int)Math.Round(ActualWidth), (int)Math.Round(ActualHeight));
+			Size size;
+			if (UseAppResolution)
+				size = Cvars.Resolution;
+			else
+				size = new Size((int)Math.Round(ActualWidth), (int)Math.Round(ActualHeight));
 
 			// Initialize the color buffer of the render target
 			_outputTexture = new Texture2D(Application.Current.GraphicsDevice, size, ColorBufferFormat, TextureFlags.RenderTarget);

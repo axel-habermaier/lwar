@@ -9,6 +9,7 @@
 	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
+	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform;
@@ -87,6 +88,11 @@
 		private Timer _timer = new Timer(1000.0 / Specification.InputUpdateFrequency);
 
 		/// <summary>
+		///     Indicates whether the 3D scene should be rendered using the global app resolution.
+		/// </summary>
+		private bool _useAppResolution;
+
+		/// <summary>
 		///     The remaining number of seconds before the connection of the server is dropped.
 		/// </summary>
 		private double _waitForServerTimeout;
@@ -109,6 +115,15 @@
 				DepthStencilState = DepthStencilState.DepthDisabled,
 				SamplerState = SamplerState.PointClampNoMipmaps
 			};
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the 3D scene should be rendered using the global app resolution.
+		/// </summary>
+		public bool UseAppResolution
+		{
+			get { return _useAppResolution; }
+			set { ChangePropertyValue(ref _useAppResolution, value); }
 		}
 
 		/// <summary>
@@ -297,6 +312,9 @@
 			Chat = new ChatViewModel();
 			Application.Current.Window.InputDevice.Add(_respawn);
 
+			Cvars.WindowModeChanged += WindowModeChanged;
+			UseAppResolution = Cvars.WindowMode == WindowMode.Fullscreen;
+
 			_networkSession.OnConnected += OnConnected;
 			_networkSession.OnDropped += () => ShowErrorBox("Connection Lost", "The connection to the server has been lost.");
 			_networkSession.OnFaulted += () => ShowErrorBox("Connection Error", "The game session has been aborted due to a network error.");
@@ -304,6 +322,15 @@
 
 			OnPropertyChanged("EventMessages");
 			OnPropertyChanged("Players");
+		}
+
+		/// <summary>
+		///     Ensures the 3D scene is rendered using the global app resolution if the window is in fullscreen mode.
+		/// </summary>
+		/// <param name="previousWindowMode">The previous window mode.</param>
+		private void WindowModeChanged(WindowMode previousWindowMode)
+		{
+			UseAppResolution = Cvars.WindowMode == WindowMode.Fullscreen;
 		}
 
 		/// <summary>
@@ -345,6 +372,7 @@
 
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
+			Cvars.WindowModeChanged -= WindowModeChanged;
 
 			Application.Current.Window.InputDevice.Remove(_respawn);
 

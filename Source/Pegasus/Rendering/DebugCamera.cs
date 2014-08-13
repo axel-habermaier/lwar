@@ -14,7 +14,7 @@
 		/// <summary>
 		///     The rotation speed of the camera.
 		/// </summary>
-		private const float RotationSpeed = 0.01f;
+		private const float RotationSpeed = 5f;
 
 		/// <summary>
 		///     The move speed of the camera.
@@ -54,7 +54,7 @@
 		/// <summary>
 		///     The mouse movement since the last update.
 		/// </summary>
-		private Vector2i _mouseDelta;
+		private Vector2 _mouseDelta;
 
 		/// <summary>
 		///     The current position of the camera.
@@ -129,7 +129,7 @@
 		{
 			_position = new Vector3(0, 0, -200);
 			_rotation = Vector2.Zero;
-			_mouseDelta = Vector2i.Zero;
+			_mouseDelta = Vector2.Zero;
 		}
 
 		/// <summary>
@@ -152,7 +152,7 @@
 				move.X -= 1;
 
 			_rotation += new Vector2(-_mouseDelta.Y, _mouseDelta.X) * RotationSpeed;
-			_mouseDelta = Vector2i.Zero;
+			_mouseDelta = Vector2.Zero;
 
 			if (_rotation.Y < -MathUtils.TwoPi)
 				_rotation.Y += MathUtils.TwoPi;
@@ -180,7 +180,7 @@
 		private void MouseMoved(MouseEventArgs eventArgs)
 		{
 			if (IsActive)
-				_mouseDelta += eventArgs.Position - new Vector2i(Viewport.Width, Viewport.Height) / 2;
+				_mouseDelta += eventArgs.NormalizedPosition;
 		}
 
 		/// <summary>
