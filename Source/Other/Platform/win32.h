@@ -72,7 +72,6 @@ pgVoid pgDieWin32Error(pgString message, DWORD error);
 
 #define PG_WINDOW_PLATFORM	\
 	HWND	hwnd;			\
-	HCURSOR cursor;			\
 	pgBool  cursorInside;
 
 //====================================================================================================================

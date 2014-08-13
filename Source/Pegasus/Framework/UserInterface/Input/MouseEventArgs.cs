@@ -44,10 +44,14 @@
 			get
 			{
 				var size = Mouse.Window.Size;
-				var x = Position.X / (float)size.Width * 2 - 1;
-				var y = Position.Y / (float)size.Height * 2 - 1;
+				var x = Position.X - size.Width / 2;
+				var y = Position.Y - size.Height / 2;
 
-				return new Vector2(x, y);
+				// It's important to do the division and conversion to float now and not earlier; otherwise,
+				// there would be some drift if the width or height of the window is uneven.
+				// This implementation matches what the platform library does when resetting the cursor to the
+				// center of the window when the cursor is captured.
+				return new Vector2(x / (float)size.Width, y / (float)size.Height);
 			}
 		}
 

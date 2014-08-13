@@ -48,11 +48,6 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
 
-	// Initialize the cursor
-	window->cursor = LoadCursor(NULL, IDC_ARROW);
-	if (window->cursor == NULL)
-		pgWin32Error("Failed to initialize the mouse cursor.");
-
 	// Create the window
 	CreateWindowEx(0, WndClassName, title, style, window->placement.x, window->placement.y, 
 		width, height, NULL, NULL, GetModuleHandle(NULL), window);
@@ -146,14 +141,23 @@ pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 		if (!GetMonitorInfo(monitor, &monitorInfo)) 
 			pgWin32Error("Failed to get monitor info.");
 
+		LONG x = monitorInfo.rcMonitor.left;
+		LONG y = monitorInfo.rcMonitor.top;
 		LONG width = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
 		LONG height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
 
-		if (!SetWindowPos(window->hwnd, NULL, 0, 0, width, height, SWP_FRAMECHANGED | SWP_SHOWWINDOW))
+		if (!SetWindowPos(window->hwnd, NULL, x, y, width, height, SWP_FRAMECHANGED | SWP_SHOWWINDOW))
 			pgWin32Error("Failed to change fullscreen window style.");
 	}
 	else if (!ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
 		pgWin32Error("Failed to maximize fullscreen window.");
+
+	RECT rect;
+	if (!GetWindowRect(window->hwnd, &rect))
+		pgWin32Error("Failed to get window position.");
+
+	if (!ClipCursor(&rect))
+		pgWin32Error("Failed to clip cursor to window bounds.");
 }
 
 pgVoid pgChangeToWindowedModeCore(pgWindow* window)
@@ -166,6 +170,9 @@ pgVoid pgChangeToWindowedModeCore(pgWindow* window)
 
 	if (!ShowWindow(window->hwnd, SW_RESTORE))
 		pgWin32Error("Failed to get window into normal mode.");
+
+	if (!ClipCursor(NULL))
+		pgWin32Error("Failed to release cursor.");
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
@@ -177,15 +184,11 @@ pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
 pgVoid pgCaptureMouseCore(pgWindow* window)
 {
 	CenterCursor(window);
-
-	window->cursor = NULL;
-	SetCursor(window->cursor);
 }
 
 pgVoid pgReleaseMouseCore(pgWindow* window)
 {
-	window->cursor = LoadCursor(NULL, IDC_ARROW);
-	SetCursor(window->cursor);
+	PG_UNUSED(window);
 }
 
 pgVoid pgGetMousePositionCore(pgWindow* window, pgInt32* x, pgInt32* y)
@@ -316,7 +319,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 	case WM_SETCURSOR:
 		// The mouse has moved, so if the cursor is in our window we must refresh the cursor
 		if (LOWORD(lParam) == HTCLIENT)
-			SetCursor(window->cursor);
+			SetCursor(NULL);
 		break;
 
 	case WM_CLOSE:

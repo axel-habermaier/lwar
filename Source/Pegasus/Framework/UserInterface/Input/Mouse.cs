@@ -155,24 +155,6 @@
 		}
 
 		/// <summary>
-		///     Raised when the mouse has been moved within the bounds of the window.
-		/// </summary>
-		public event Action<Vector2i> Moved
-		{
-			add { Window.NativeWindow.MouseMoved += value; }
-			remove { Window.NativeWindow.MouseMoved -= value; }
-		}
-
-		/// <summary>
-		///     Raised when the mouse wheel is scrolled within the bounds of the window.
-		/// </summary>
-		public event Action<int> Wheel
-		{
-			add { Window.NativeWindow.MouseWheel += value; }
-			remove { Window.NativeWindow.MouseWheel -= value; }
-		}
-
-		/// <summary>
 		///     Invoked when a button has been pressed.
 		/// </summary>
 		/// <param name="button">Identifies the mouse button that has been pressed.</param>

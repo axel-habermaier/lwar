@@ -5,6 +5,7 @@
 	using Math;
 	using Platform;
 	using Platform.Graphics;
+	using Platform.Logging;
 
 	/// <summary>
 	///     Represents a six-degrees-of-freedom debug camera.
@@ -19,7 +20,7 @@
 		/// <summary>
 		///     The move speed of the camera.
 		/// </summary>
-		private const float MoveSpeed = 1000.0f;
+		private const float MoveSpeed = 3000.0f;
 
 		/// <summary>
 		///     Triggered when the user wants to move backward.
@@ -151,7 +152,7 @@
 			if (_right.IsTriggered)
 				move.X -= 1;
 
-			_rotation += new Vector2(-_mouseDelta.Y, _mouseDelta.X) * RotationSpeed;
+			_rotation += new Vector2(-_mouseDelta.Y * Viewport.Height / Viewport.Width, _mouseDelta.X) * RotationSpeed;
 			_mouseDelta = Vector2.Zero;
 
 			if (_rotation.Y < -MathUtils.TwoPi)
