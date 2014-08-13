@@ -259,7 +259,7 @@
 			Assert.That((_hoveredElement == null && _hoveredElements.Count == 0) ||
 						(_hoveredElement != null && _hoveredElements.Count != 0), "Invalid hovered elements state.");
 
-			var hoveredElement = Window.HitTest(new Vector2d(position.X, position.Y));
+			var hoveredElement = Window.HitTest(new Vector2d(position.X, position.Y), boundsTestOnly: false);
 			if (hoveredElement == _hoveredElement)
 				return;
 
@@ -402,7 +402,7 @@
 
 			// Check if the hovered element or any of its parents override the default cursor
 			Cursor cursor = null;
-			var element = _hoveredElement;
+			var element = Window.HitTest(new Vector2d(Position.X, Position.Y), boundsTestOnly: true);;
 			while (element != null)
 			{
 				cursor = element.Cursor;
@@ -414,7 +414,7 @@
 
 			cursor = cursor ?? Cursor.Arrow;
 			var position = Position - cursor.HotSpot;
-			spriteBatch.Draw(cursor.Texture, new Vector2(position.X, position.Y), Color.White);
+			spriteBatch.Draw(cursor.Texture, new Vector2(position.X, position.Y), cursor.Color);
 		}
 
 		/// <summary>

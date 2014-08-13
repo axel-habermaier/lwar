@@ -17,7 +17,6 @@ Client
 		* Configuration (graphics settings, input settings, ...)
 - Camera zoom bug in very-low FPS situations
 - Camera zoom bug: zooming when dead leads to strange camera behavior when respawning
-- Starfield disappears when dead
 - Multiple player names might overlap
 - Let camera follow ship (sort of: attach the camera to the ship with a spring)
 - Show server network statistics
@@ -36,11 +35,11 @@ Pegasus.Framework
 	* Implement controls: Combobox, Checkbox, Image
 	* Implement animation System
 	* Refactor UI rendering (http://msdn.microsoft.com/en-us/library/ms748373.aspx)
-		-> Instead of separate draw calls per layer, use depth tests and layer by z axis in a single draw call
-	* Fix layouting bugs
+		-> Instead of separate draw calls per layer, use depth tests and layer by z axis in a single draw call using texture arrays
 	* Add to TextBox: Text selection (both via mouse and keyboard), copy & paste
 	* Add to SrollViewer: Horizontal scrolling, scrollbars
 	* Add support for touch
+- Triple buffer constant buffers to solve OpenGL sync problem?
 
 Pegasus.Platform
 ========

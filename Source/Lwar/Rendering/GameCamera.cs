@@ -3,11 +3,10 @@
 	using System;
 	using Gameplay.Entities;
 	using Pegasus;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Framework.UserInterface.Input;
-	using Pegasus.Platform.Logging;
 	using Pegasus.Rendering;
 
 	/// <summary>
@@ -155,8 +154,19 @@
 		/// </summary>
 		private void UpdatePosition()
 		{
-			if (Ship == null)
-				return;
+			float x;
+			float z;
+
+			if (Ship != null)
+			{
+				x = Ship.Position.X;
+				z = Ship.Position.Y;
+			}
+			else
+			{
+				x = Position.X;
+				z = Position.Z;
+			}
 
 			float zoom;
 			switch (_zoomMode)
@@ -171,7 +181,7 @@
 					throw new InvalidOperationException("Unsupported zoom mode.");
 			}
 
-			Position = new Vector3(Ship.Position.X, zoom, Ship.Position.Y);
+			Position = new Vector3(x, zoom, z);
 		}
 
 		/// <summary>
@@ -236,7 +246,7 @@
 			_inputDevice.MouseWheel -= OnZoomChanged;
 			base.OnDisposing();
 		}
-	
+
 		/// <summary>
 		///     Updates the camera's distance to the XZ plane.
 		/// </summary>
@@ -244,7 +254,7 @@
 		private void OnZoomChanged(MouseWheelEventArgs args)
 		{
 			if (IsActive)
-			_targetZoom = MathUtils.Clamp(_targetZoom + -1 * args.Delta * DeltaScale, MinZoom, MaxZoom);
+				_targetZoom = MathUtils.Clamp(_targetZoom + -1 * args.Delta * DeltaScale, MinZoom, MaxZoom);
 		}
 	}
 }

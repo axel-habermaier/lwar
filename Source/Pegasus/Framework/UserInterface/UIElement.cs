@@ -659,7 +659,8 @@
 		///     Returns the child UI element of the current UI element that lies at the given position.
 		/// </summary>
 		/// <param name="position">The position that should be checked for a hit.</param>
-		internal UIElement HitTest(Vector2d position)
+		/// <param name="boundsTestOnly">A value indicating whether only the bounds of the UI elements should be checked.</param>
+		internal UIElement HitTest(Vector2d position, bool boundsTestOnly)
 		{
 			// If the element isn't visible or hit test visible, there can be no hit.
 			if (Visibility != Visibility.Visible || !IsHitTestVisible)
@@ -679,14 +680,17 @@
 			for (var i = count; i > 0; --i)
 			{
 				var child = GetVisualChild(i - 1);
-				var hitTestResult = child.HitTest(position);
+				var hitTestResult = child.HitTest(position, boundsTestOnly);
 
 				if (hitTestResult != null)
 					return hitTestResult;
 			}
 
 			// If no child was hit, check if we should return this UI element instead.
-			return HitTestCore(position) ? this : null;
+			if (boundsTestOnly || HitTestCore(position))
+				return this;
+
+			return null;
 		}
 
 		/// <summary>

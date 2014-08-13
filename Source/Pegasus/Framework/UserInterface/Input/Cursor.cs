@@ -18,7 +18,8 @@ namespace Pegasus.Framework.UserInterface.Input
 		///     The hot spot of the cursor, i.e., the relative offset to the texture's origin where the cursor's click
 		///     location lies.
 		/// </param>
-		public Cursor(Texture2D texture, Vector2i hotSpot)
+		/// <param name="color">The color the cursor should be drawn in.</param>
+		public Cursor(Texture2D texture, Vector2i hotSpot, Color color)
 		{
 			Assert.ArgumentNotNull(texture);
 			Assert.ArgumentInRange(hotSpot.X, 0, texture.Width);
@@ -26,6 +27,7 @@ namespace Pegasus.Framework.UserInterface.Input
 
 			Texture = texture;
 			HotSpot = hotSpot;
+			Color = color;
 		}
 
 		/// <summary>
@@ -37,6 +39,11 @@ namespace Pegasus.Framework.UserInterface.Input
 		///     Gets the text insertion cursor.
 		/// </summary>
 		public static Cursor Text { get; private set; }
+
+		/// <summary>
+		///     The color the cursor is drawn in.
+		/// </summary>
+		public Color Color { get; private set; }
 
 		/// <summary>
 		///     Gets the texture that defines the cursors visual appearance.
@@ -57,8 +64,8 @@ namespace Pegasus.Framework.UserInterface.Input
 		{
 			Assert.ArgumentNotNull(assets);
 
-			Arrow = new Cursor(assets.Load(Cursors.Pointer), Vector2i.Zero);
-			Text = new Cursor(assets.Load(Cursors.Text), new Vector2i(7, 7));
+			Arrow = new Cursor(assets.Load(Cursors.Pointer), Vector2i.Zero, Color.White);
+			Text = new Cursor(assets.Load(Cursors.Text), new Vector2i(7, 7), Color.White);
 		}
 	}
 }

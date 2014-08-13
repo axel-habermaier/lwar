@@ -516,10 +516,10 @@
 		}
 
 		/// <summary>
-		///     Gets the cursor that is displayed when the mouse hovers the UI element or any of its children. If null, the displayed
-		///     cursor is determined by the hovered child element or the default cursor is displayed.
+		///     Gets or sets the cursor that is displayed when the mouse hovers the UI element or any of its children. 
+		///		If null, the displayed cursor is determined by the hovered child element or the default cursor is displayed.
 		/// </summary>
-		public Cursor Cursor { get; protected set; }
+		public Cursor Cursor { get; set; }
 
 		/// <summary>
 		///     A value indicating whether the UI element uses and implicitly set style.

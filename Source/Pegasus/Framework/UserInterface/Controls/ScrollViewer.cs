@@ -10,7 +10,7 @@
 	public class ScrollViewer : ContentControl, IScrollHandler
 	{
 		/// <summary>
-		///     The scroll controller that can be used to controll the scroll viewer.
+		///     The scroll controller that can be used to control the scroll viewer.
 		/// </summary>
 		public static readonly DependencyProperty<IScrollController> ScrollControllerProperty =
 			new DependencyProperty<IScrollController>(defaultBindingMode: BindingMode.OneWayToSource);

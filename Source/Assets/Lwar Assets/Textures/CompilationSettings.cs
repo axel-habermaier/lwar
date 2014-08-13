@@ -16,5 +16,6 @@
 [assembly: Texture2D("Textures/PhaserGlow.png", Mipmaps = false, Uncompressed = true)]
 [assembly: Texture2D("Textures/Bullet.png", Mipmaps = false, Uncompressed = true)]
 [assembly: Texture2D("Textures/BulletGlow.png", Mipmaps = false, Uncompressed = true)]
+[assembly: Texture2D("Textures/Crosshair.png", Mipmaps = false, Uncompressed = true)]
 
 #endregion
