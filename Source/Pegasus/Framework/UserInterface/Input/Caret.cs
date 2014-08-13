@@ -186,6 +186,9 @@
 				if (position != 0)
 					position = text.MapToSource(position - 1) + 1;
 
+				if (position >= text.SourceLength)
+					return;
+
 				SetText(text.SourceString.Remove(position, 1));
 			}
 
