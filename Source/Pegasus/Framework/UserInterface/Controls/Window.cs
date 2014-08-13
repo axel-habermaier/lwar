@@ -20,6 +20,21 @@
 		public static readonly DependencyProperty<bool> FullscreenProperty = new DependencyProperty<bool>();
 
 		/// <summary>
+		///     Indicates the mode the window is currently in.
+		/// </summary>
+		public static readonly DependencyProperty<WindowMode> WindowModeProperty = new DependencyProperty<WindowMode>(isReadOnly: true);
+
+		/// <summary>
+		///     The screen position of the window's left upper corner.
+		/// </summary>
+		public static readonly DependencyProperty<Vector2i> PositionProperty = new DependencyProperty<Vector2i>(isReadOnly: true);
+
+		/// <summary>
+		///     The size of the window's rendering area.
+		/// </summary>
+		public static readonly DependencyProperty<Size> SizeProperty = new DependencyProperty<Size>(isReadOnly: true);
+
+		/// <summary>
 		///     Gets the swap chain that is used to render the window's contents.
 		/// </summary>
 		internal SwapChain SwapChain { get; private set; }
@@ -95,6 +110,7 @@
 				SamplerState = SamplerState.PointClampNoMipmaps
 			};
 
+			UpdateDependencyProperties(mode, position, size);
 			Application.Current.AddWindow(this);
 		}
 
@@ -178,39 +194,27 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the size of the window's rendering area.
+		///     Gets the size of the window's rendering area.
 		/// </summary>
 		public Size Size
 		{
-			get
-			{
-				CheckWindowOpen();
-				return _window.Size;
-			}
+			get { return GetValue(SizeProperty); }
 		}
 
 		/// <summary>
-		///     Gets or sets the screen position of the window's left upper corner.
+		///     Gets the screen position of the window's left upper corner.
 		/// </summary>
 		public Vector2i Position
 		{
-			get
-			{
-				CheckWindowOpen();
-				return _window.Position;
-			}
+			get { return GetValue(PositionProperty); }
 		}
 
 		/// <summary>
-		///     Gets or sets the window state.
+		///     Gets the window state.
 		/// </summary>
 		public WindowMode Mode
 		{
-			get
-			{
-				CheckWindowOpen();
-				return _window.Mode;
-			}
+			get { return GetValue(WindowModeProperty); }
 		}
 
 		/// <summary>
@@ -236,6 +240,23 @@
 
 			// Process all pending operating system events
 			_window.ProcessEvents();
+
+			UpdateDependencyProperties(_window.Mode, _window.Position, _window.Size);
+		}
+
+		/// <summary>
+		///     Updates the size, position, and mode dependency properties.
+		/// </summary>
+		/// <param name="position">The screen position of the window's top left corner.</param>
+		/// <param name="size">The size of the window's rendering area.</param>
+		/// <param name="mode">Indicates the window mode.</param>
+		private void UpdateDependencyProperties(WindowMode mode, Vector2i position, Size size)
+		{
+			// The mode must always be set first.
+			SetReadOnlyValue(WindowModeProperty, mode);
+
+			SetReadOnlyValue(SizeProperty, size);
+			SetReadOnlyValue(PositionProperty, position);
 		}
 
 		/// <summary>

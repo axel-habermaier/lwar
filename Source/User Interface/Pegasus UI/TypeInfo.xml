@@ -9,11 +9,17 @@
 	</Class>
 
 	<!-- Misc Classes ================================================================================================= -->
-
+	
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ControlTemplate">
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataTemplate">
+	</Class>
+
+	<Class Name="Pegasus.Math.Vector2i">
+	</Class>
+
+	<Class Name="Pegasus.Math.Size">
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.UIElementCollection" IsList="true">
@@ -264,6 +270,9 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Window" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 		<Property Type="string" Name="Title" />
 		<Property Type="bool" Name="Fullscreen" />
+		<Property Type="Pegasus.Math.Vector2i" Name="Position"/>
+		<Property Type="Pegasus.Math.Size" Name="Size"/>
+		<Property Type="Pegasus.Framework.UserInterface.Controls.WindowMode" Name="Mode"/>
 	</Class>
 
 	<!-- Converters ================================================================================================== -->
@@ -286,6 +295,13 @@
 
 	<!-- Enumerations ================================================================================================= -->
 
+	<Enumeration Name="Pegasus.Framework.UserInterface.Controls.WindowMode">
+		<Literal>Minimized</Literal>
+		<Literal>Normal</Literal>
+		<Literal>Maximized</Literal>
+		<Literal>Fullscreen</Literal>
+	</Enumeration>
+	
 	<Enumeration Name="Pegasus.Framework.UserInterface.Input.MouseWheelDirection">
 		<Literal>Up</Literal>
 		<Literal>Down</Literal>

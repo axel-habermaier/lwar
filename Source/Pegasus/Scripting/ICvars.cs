@@ -24,12 +24,6 @@ internal interface ICvars
 	Size Resolution { get; set; }
 
 	/// <summary>
-	///     If true, the application is run in fullscreen mode.
-	/// </summary>
-	[Cvar(!PlatformInfo.IsDebug), Persistent]
-	bool Fullscreen { get; set; }
-
-	/// <summary>
 	///     The size in pixels of the application window in non-fullscreen mode.
 	/// </summary>
 	[Cvar("new Size(1024, 768)"), Persistent, WindowSize, SystemOnly]

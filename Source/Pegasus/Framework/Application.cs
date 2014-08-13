@@ -148,7 +148,6 @@
 			using (GraphicsDevice = new GraphicsDevice())
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
 			using (_appWindowViewModel = new AppWindowViewModel(consoleViewModel))
-			using (var resolutionManager = new ResolutionManager(Window.NativeWindow, Window.SwapChain))
 			{
 				RegisterFontLoader(new FontLoader(Assets));
 				Commands.Help();
@@ -164,7 +163,6 @@
 					_root.HandleInput();
 					Update();
 
-					resolutionManager.Update();
 					_appWindowViewModel.Update();
 					_root.UpdateLayout();
 

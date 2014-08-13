@@ -1,6 +1,8 @@
 ﻿namespace Pegasus.Framework.UserInterface.ViewModels
 {
 	using System;
+	using Controls;
+	using Math;
 	using Platform.Memory;
 	using Scripting;
 	using Views;
@@ -23,7 +25,7 @@
 		/// <summary>
 		///     Indicates whether the window should be in fullscreen or windowed mode.
 		/// </summary>
-		private bool _fullscreen;
+		private bool _fullscreen = Cvars.WindowMode == WindowMode.Fullscreen;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -38,14 +40,47 @@
 
 			DebugOverlay = new DebugOverlayViewModel();
 			Window = new AppWindow(this, Application.Current.Name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode);
-
-			Cvars.FullscreenChanged += OnFullscreenCvarChanged;
 		}
 
 		/// <summary>
 		///     Gets the window the application is rendered to.
 		/// </summary>
 		public AppWindow Window { get; private set; }
+
+		/// <summary>
+		///     Gets or sets the size of the window.
+		/// </summary>
+		public Size Size
+		{
+			get { return Cvars.WindowSize; }
+			set
+			{
+				if (Cvars.WindowMode == WindowMode.Normal && Cvars.WindowSize != value)
+					Cvars.WindowSize = value;
+			}
+		}
+
+		/// <summary>
+		///     Gets or sets the position of the window.
+		/// </summary>
+		public Vector2i Position
+		{
+			get { return Cvars.WindowPosition; }
+			set
+			{
+				if (Cvars.WindowMode == WindowMode.Normal && Cvars.WindowPosition != value)
+					Cvars.WindowPosition = value;
+			}
+		}
+
+		/// <summary>
+		///     Gets or sets the mode of the window.
+		/// </summary>
+		public WindowMode WindowMode
+		{
+			get { return Cvars.WindowMode; }
+			set { Cvars.WindowMode = value; }
+		}
 
 		/// <summary>
 		///     Gets or sets a value indicating whether the window should be in fullscreen or windowed mode.
@@ -75,20 +110,11 @@
 		}
 
 		/// <summary>
-		///     Updates the window's mode based on the cvar's value.
-		/// </summary>
-		/// <param name="previousValue">The previous value of the fullscreen cvar.</param>
-		private void OnFullscreenCvarChanged(bool previousValue)
-		{
-			Fullscreen = !previousValue;
-		}
-
-		/// <summary>
 		///     Toggles between fullscreen and windowed mode.
 		/// </summary>
 		public void ToggleFullscreen()
 		{
-			Cvars.Fullscreen = !Cvars.Fullscreen;
+			Fullscreen = !Fullscreen;
 		}
 
 		/// <summary>
@@ -112,8 +138,6 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Cvars.FullscreenChanged -= OnFullscreenCvarChanged;
-
 			Console.SafeDispose();
 			DebugOverlay.SafeDispose();
 			Window.SafeDispose();

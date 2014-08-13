@@ -121,7 +121,7 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the size of the window's rendering area.
+		///     Gets the size of the window's rendering area.
 		/// </summary>
 		public Size Size
 		{
@@ -133,7 +133,7 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the screen position of the window's left upper corner.
+		///     Gets the screen position of the window's left upper corner.
 		/// </summary>
 		public Vector2i Position
 		{
@@ -145,7 +145,7 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the window state.
+		///     Gets the window state.
 		/// </summary>
 		public WindowMode Mode
 		{
@@ -156,22 +156,6 @@
 
 				return _placement.Mode;
 			}
-		}
-
-		/// <summary>
-		///     Gets the width of the window's rendering area.
-		/// </summary>
-		public int Width
-		{
-			get { return Size.Width; }
-		}
-
-		/// <summary>
-		///     Gets the height of the window's rendering area.
-		/// </summary>
-		public int Height
-		{
-			get { return Size.Height; }
 		}
 
 		/// <summary>
