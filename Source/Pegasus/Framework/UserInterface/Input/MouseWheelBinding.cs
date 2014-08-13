@@ -92,6 +92,12 @@ namespace Pegasus.Framework.UserInterface.Input
 		/// <param name="args">The arguments of the event that should be checked.</param>
 		protected override bool IsTriggered(RoutedEventArgs args)
 		{
+			if (Preview && args.RoutedEvent != UIElement.PreviewMouseDownEvent)
+				return false;
+
+			if (!Preview && args.RoutedEvent != UIElement.MouseDownEvent)
+				return false;
+
 			var wheelEventArgs = args as MouseWheelEventArgs;
 			if (wheelEventArgs == null)
 				return false;

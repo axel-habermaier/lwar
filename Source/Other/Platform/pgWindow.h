@@ -166,7 +166,8 @@ typedef enum
 {
 	PG_WINDOW_NORMAL = 1,
 	PG_WINDOW_MAXIMIZED = 2,
-	PG_WINDOW_MINIMIZED = 3
+	PG_WINDOW_MINIMIZED = 3,
+	PG_WINDOW_FULLSCREEN = 4
 } pgWindowMode;
 
 typedef struct
@@ -192,9 +193,8 @@ PG_API_EXPORT pgBool pgIsWindowClosing(pgWindow* window);
 PG_API_EXPORT pgVoid pgGetWindowPlacement(pgWindow* window, pgWindowPlacement* placement);
 
 PG_API_EXPORT pgVoid pgSetWindowTitle(pgWindow* window, pgString title);
-PG_API_EXPORT pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height);
-PG_API_EXPORT pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y);
-PG_API_EXPORT pgVoid pgSetWindowMode(pgWindow* window, pgWindowMode mode);
+PG_API_EXPORT pgVoid pgChangeToFullscreenMode(pgWindow* window);
+PG_API_EXPORT pgVoid pgChangeToWindowedMode(pgWindow* window);
 
 PG_API_EXPORT pgVoid pgCaptureMouse(pgWindow* window);
 PG_API_EXPORT pgVoid pgReleaseMouse(pgWindow* window);

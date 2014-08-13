@@ -130,11 +130,6 @@
 				Assert.NotDisposed(this);
 				return new Size(_placement.Width, _placement.Height);
 			}
-			set
-			{
-				Assert.NotDisposed(this);
-				NativeMethods.SetWindowSize(_window, value.Width, value.Height);
-			}
 		}
 
 		/// <summary>
@@ -147,11 +142,6 @@
 				Assert.NotDisposed(this);
 				return new Vector2i(_placement.X, _placement.Y);
 			}
-			set
-			{
-				Assert.NotDisposed(this);
-				NativeMethods.SetWindowPosition(_window, value.X, value.Y);
-			}
 		}
 
 		/// <summary>
@@ -162,12 +152,9 @@
 			get
 			{
 				Assert.NotDisposed(this);
+				Assert.InRange(_placement.Mode);
+
 				return _placement.Mode;
-			}
-			set
-			{
-				Assert.NotDisposed(this);
-				NativeMethods.SetWindowMode(_window, value);
 			}
 		}
 
@@ -196,7 +183,7 @@
 			set
 			{
 				if (_mouseCaptured == value)
-					return;	
+					return;
 
 				_mouseCaptured = value;
 				if (_mouseCaptured)
@@ -228,6 +215,24 @@
 				Closing();
 
 			Focused = NativeMethods.IsFocused(_window);
+		}
+
+		/// <summary>
+		/// Sets the window into fullscreen mode.
+		/// </summary>
+		public void ChangeToFullscreenMode()
+		{
+			Assert.NotDisposed(this);
+			NativeMethods.ChangeToFullscreenMode(_window);
+		}
+
+		/// <summary>
+		///     Sets the window into windowed mode.
+		/// </summary>
+		public void ChangeToWindowedMode()
+		{
+			Assert.NotDisposed(this);
+			NativeMethods.ChangeToWindowedMode(_window);
 		}
 
 		/// <summary>
@@ -441,14 +446,11 @@
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetWindowPlacement")]
 			public static extern void GetWindowPlacement(IntPtr window, out Placement placement);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowSize")]
-			public static extern void SetWindowSize(IntPtr window, int width, int height);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgChangeToFullscreenMode")]
+			public static extern void ChangeToFullscreenMode(IntPtr window);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowPosition")]
-			public static extern void SetWindowPosition(IntPtr window, int x, int y);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowMode")]
-			public static extern void SetWindowMode(IntPtr window, WindowMode mode);
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgChangeToWindowedMode")]
+			public static extern void ChangeToWindowedMode(IntPtr window);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetWindowTitle")]
 			public static extern void SetWindowTitle(IntPtr window, string title);

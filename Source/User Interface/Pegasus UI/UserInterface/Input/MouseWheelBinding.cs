@@ -8,5 +8,6 @@
 		public ModifierKeys Modifiers { get; set; }
 		public string Method { get; set; }
 		public MouseWheelDirection Direction { get; set; }
+		public bool Preview { get; set; }
 	}
 }

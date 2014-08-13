@@ -160,12 +160,15 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
             maximizedHorz = True;
     }
 
-    if (maximizedVert && maximizedHorz)
-    	window->placement.mode = PG_WINDOW_MAXIMIZED;  
-    else if (hidden)
-    	window->placement.mode = PG_WINDOW_MINIMIZED;  
-    else
-    	window->placement.mode = PG_WINDOW_NORMAL;
+	if (window->placement.mode != PG_WINDOW_FULLSCREEN)
+	{
+		if (maximizedVert && maximizedHorz)
+			window->placement.mode = PG_WINDOW_MAXIMIZED;  
+		else if (hidden)
+			window->placement.mode = PG_WINDOW_MINIMIZED;  
+		else
+			window->placement.mode = PG_WINDOW_NORMAL;
+	}
     
     XFree(propertyValue);
 }

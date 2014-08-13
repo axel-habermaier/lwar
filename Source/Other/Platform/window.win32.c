@@ -31,7 +31,7 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
 {
 	RECT rect;
 	LONG width, height;
-	UINT style = WS_VISIBLE | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_SYSMENU | WS_POPUP;
+	UINT style = WS_VISIBLE | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_POPUP | WS_SYSMENU;
 
 	if (state.openWindows++ == 0)
 		Initialize();
@@ -99,12 +99,15 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 {
 	RECT rect;
 
-	if (IsZoomed(window->hwnd))
-		window->placement.mode = PG_WINDOW_MAXIMIZED;
-	else if (IsIconic(window->hwnd))
-		window->placement.mode = PG_WINDOW_MINIMIZED;
-	else
-		window->placement.mode = PG_WINDOW_NORMAL;
+	if (window->placement.mode != PG_WINDOW_FULLSCREEN)
+	{
+		if (IsZoomed(window->hwnd))
+			window->placement.mode = PG_WINDOW_MAXIMIZED;
+		else if (IsIconic(window->hwnd))
+			window->placement.mode = PG_WINDOW_MINIMIZED;
+		else
+			window->placement.mode = PG_WINDOW_NORMAL;
+	}
 
 	// Don't update the position and size when the window is minimized, as that only results in invalid values
 	if (IsIconic(window->hwnd))
@@ -127,43 +130,42 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 	window->placement.y = rect.top;
 }
 
-pgVoid pgSetWindowSizeCore(pgWindow* window)
+pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 {
-	RECT rect;
-	LONG width, height;
+	LONG_PTR style = GetWindowLongPtr(window->hwnd, GWL_STYLE);
+	style &= ~(WS_CAPTION | WS_THICKFRAME | WS_SYSMENU);
 
-	rect.left = 0;
-	rect.top = 0;
-	rect.right = rect.left + window->placement.width;
-	rect.bottom = rect.top + window->placement.height;
+	if (!SetWindowLongPtr(window->hwnd, GWL_STYLE, style))
+		pgWin32Error("Failed to set fullscreen window style.");
 
-	if (!AdjustWindowRect(&rect, GetWindowLong(window->hwnd, GWL_STYLE), PG_FALSE))
-		pgWin32Error("Failed to calculate new window size.");
+	if (window->placement.mode == PG_WINDOW_MAXIMIZED)
+	{
+		HMONITOR monitor = MonitorFromWindow(window->hwnd, MONITOR_DEFAULTTONEAREST);
+		MONITORINFO monitorInfo = { sizeof(MONITORINFO) };
 
-	width = rect.right - rect.left;
-	height = rect.bottom - rect.top;
+		if (!GetMonitorInfo(monitor, &monitorInfo)) 
+			pgWin32Error("Failed to get monitor info.");
+
+		LONG width = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
+		LONG height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+
+		if (!SetWindowPos(window->hwnd, NULL, 0, 0, width, height, SWP_FRAMECHANGED | SWP_SHOWWINDOW))
+			pgWin32Error("Failed to change fullscreen window style.");
+	}
+	else if (!ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
+		pgWin32Error("Failed to maximize fullscreen window.");
+}
+
+pgVoid pgChangeToWindowedModeCore(pgWindow* window)
+{ 
+	LONG_PTR style = GetWindowLongPtr(window->hwnd, GWL_STYLE);
+	style |= WS_CAPTION | WS_THICKFRAME | WS_SYSMENU;
+
+	if (!SetWindowLongPtr(window->hwnd, GWL_STYLE, style))
+		pgWin32Error("Failed to set new window style.");
 
 	if (!ShowWindow(window->hwnd, SW_RESTORE))
 		pgWin32Error("Failed to get window into normal mode.");
-
-	if (!SetWindowPos(window->hwnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE))
-		pgWin32Error("Failed to resize window.");
-}
-
-pgVoid pgSetWindowPositionCore(pgWindow* window)
-{
-	if (!SetWindowPos(window->hwnd, NULL, window->placement.x, window->placement.y, 0, 0, SWP_NOZORDER | SWP_NOSIZE))
-		pgWin32Error("Failed to move window.");
-}
-
-pgVoid pgSetWindowModeCore(pgWindow* window)
-{
-	if (window->placement.mode == PG_WINDOW_MAXIMIZED && !ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
-		pgWin32Error("Failed to maximize window.");
-	else if (window->placement.mode == PG_WINDOW_NORMAL && !ShowWindow(window->hwnd, SW_RESTORE))
-		pgWin32Error("Failed to get window into normal mode.");
-	else if (window->placement.mode == PG_WINDOW_MINIMIZED && !ShowWindow(window->hwnd, SW_SHOWMINIMIZED))
-		pgWin32Error("Failed to get window into minimized mode.");
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
@@ -329,10 +331,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 			RECT minRect = { 0, 0, PG_WINDOW_MIN_WIDTH, PG_WINDOW_MIN_HEIGHT };
 			RECT maxRect = { 0, 0, PG_WINDOW_MAX_WIDTH, PG_WINDOW_MAX_HEIGHT };
 
-			if (!AdjustWindowRect(&minRect, GetWindowLong(window->hwnd, GWL_STYLE), PG_FALSE))
+			if (!AdjustWindowRect(&minRect, (DWORD)GetWindowLongPtr(window->hwnd, GWL_STYLE), PG_FALSE))
 				pgWin32Error("Unable to get minimum window size.");
 
-			if (!AdjustWindowRect(&maxRect, GetWindowLong(window->hwnd, GWL_STYLE), PG_FALSE))
+			if (!AdjustWindowRect(&maxRect, (DWORD)GetWindowLongPtr(window->hwnd, GWL_STYLE), PG_FALSE))
 				pgWin32Error("Unable to get maximum window size.");
 
 			// Set the minimum and maximum allowed window sizes

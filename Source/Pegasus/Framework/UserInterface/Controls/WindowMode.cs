@@ -20,6 +20,11 @@
 		/// <summary>
 		///     Indicates that the window is minimized and invisible.
 		/// </summary>
-		Minimized = 3
+		Minimized = 3,
+
+		/// <summary>
+		///     Indicates that the window is in borderless fullscreen mode, filling the entire screen.
+		/// </summary>
+		Fullscreen = 4
 	}
 }

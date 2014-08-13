@@ -15,6 +15,11 @@
 		private string _method;
 
 		/// <summary>
+		///     Indicates whether the preview version of the corresponding input event should be used.
+		/// </summary>
+		private bool _preview;
+
+		/// <summary>
 		///     The target method on the associated UI element that is invoked whenever the binding is triggered.
 		/// </summary>
 		private Action _targetMethod;
@@ -51,6 +56,19 @@
 				Assert.NotSealed(this);
 
 				_triggerMode = value;
+			}
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the preview version of the corresponding input event should be used.
+		/// </summary>
+		public bool Preview
+		{
+			get { return _preview; }
+			set
+			{
+				Assert.NotSealed(this);
+				_preview = value;
 			}
 		}
 

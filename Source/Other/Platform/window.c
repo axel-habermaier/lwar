@@ -32,8 +32,11 @@ pgWindow* pgOpenWindow(pgString title, pgWindowPlacement placement, pgWindowCall
 	window->placement = placement;
 
 	pgOpenWindowCore(window, title);
-	pgGetWindowPlacement(window, &window->placement);
 
+	if (window->placement.mode == PG_WINDOW_FULLSCREEN)
+		pgChangeToFullscreenModeCore(window);
+
+	pgGetWindowPlacement(window, &window->placement);
 	return window;
 }
 
@@ -174,45 +177,13 @@ pgVoid pgGetWindowPlacement(pgWindow* window, pgWindowPlacement* placement)
 	PG_ASSERT_NOT_NULL(window);
 	PG_ASSERT_NOT_NULL(placement);
 
+	pgBool isFullscreen = window->placement.mode == PG_WINDOW_FULLSCREEN;
+
 	pgGetWindowPlacementCore(window);
 	*placement = window->placement;
-}
 
-pgVoid pgSetWindowSize(pgWindow* window, pgInt32 width, pgInt32 height)
-{
-	PG_ASSERT_NOT_NULL(window);
-
-	window->placement.width = width;
-	window->placement.height = height;
-
-	pgConstrainWindowPlacement(&window->placement);
-	pgSetWindowMode(window, PG_WINDOW_NORMAL);
-	pgSetWindowSizeCore(window);
-
-	if (window->swapChain != NULL)
-		pgResizeSwapChain(window->swapChain, window->placement.width, window->placement.height);
-}
-
-pgVoid pgSetWindowPosition(pgWindow* window, pgInt32 x, pgInt32 y)
-{
-	PG_ASSERT_NOT_NULL(window);
-
-	window->placement.x = x;
-	window->placement.y = y;
-
-	pgConstrainWindowPlacement(&window->placement);
-	pgSetWindowMode(window, PG_WINDOW_NORMAL);
-	pgSetWindowPositionCore(window);
-}
-
-pgVoid pgSetWindowMode(pgWindow* window, pgWindowMode mode)
-{
-	PG_ASSERT_NOT_NULL(window);
-
-	window->placement.mode = mode;
-
-	pgConstrainWindowPlacement(&window->placement);
-	pgSetWindowModeCore(window);
+	if (isFullscreen)
+		placement->mode = PG_WINDOW_FULLSCREEN;
 }
 
 pgVoid pgSetWindowTitle(pgWindow* window, pgString title)
@@ -221,6 +192,34 @@ pgVoid pgSetWindowTitle(pgWindow* window, pgString title)
 	PG_ASSERT_NOT_NULL(title);
 
 	pgSetWindowTitleCore(window, title);
+}
+
+pgVoid pgChangeToFullscreenMode(pgWindow* window)
+{
+	PG_ASSERT_NOT_NULL(window);
+	PG_ASSERT(window->placement.mode != PG_WINDOW_FULLSCREEN, "Window is already in fullscreen mode.");
+
+	pgChangeToFullscreenModeCore(window);
+
+	window->placement.mode = PG_WINDOW_FULLSCREEN;
+	pgGetWindowPlacement(window, &window->placement);
+
+	if (window->swapChain != NULL)
+		pgResizeSwapChain(window->swapChain, window->placement.width, window->placement.height);
+}
+
+pgVoid pgChangeToWindowedMode(pgWindow* window)
+{
+	PG_ASSERT_NOT_NULL(window);
+	PG_ASSERT(window->placement.mode == PG_WINDOW_FULLSCREEN, "Window is already in windowed mode.");
+
+	pgChangeToWindowedModeCore(window);
+
+	window->placement.mode = PG_WINDOW_NORMAL;
+	pgGetWindowPlacement(window, &window->placement);
+
+	if (window->swapChain != NULL)
+		pgResizeSwapChain(window->swapChain, window->placement.width, window->placement.height);
 }
 
 pgVoid pgCaptureMouse(pgWindow* window)

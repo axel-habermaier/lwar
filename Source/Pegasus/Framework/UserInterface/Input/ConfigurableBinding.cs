@@ -44,10 +44,12 @@
 				switch (TriggerMode)
 				{
 					case TriggerMode.Activated:
-						return args.RoutedEvent == UIElement.KeyDownEvent && keyEventArgs.Key == Cvar.Value.Key &&
+						var downEvent = Preview ? UIElement.PreviewKeyDownEvent : UIElement.KeyDownEvent;
+						return args.RoutedEvent == downEvent && keyEventArgs.Key == Cvar.Value.Key &&
 							   keyEventArgs.Modifiers == Cvar.Value.Modifiers;
 					case TriggerMode.Deactivated:
-						return args.RoutedEvent == UIElement.KeyUpEvent &&
+						var upEvent = Preview ? UIElement.PreviewKeyUpEvent : UIElement.KeyUpEvent;
+						return args.RoutedEvent == upEvent &&
 							   (keyEventArgs.Key == Cvar.Value.Key || keyEventArgs.Modifiers != Cvar.Value.Modifiers);
 					default:
 						Log.Die("Unknown trigger mode.");
@@ -64,10 +66,12 @@
 				switch (TriggerMode)
 				{
 					case TriggerMode.Activated:
-						return args.RoutedEvent == UIElement.MouseDownEvent &&
+						var downEvent = Preview ? UIElement.PreviewMouseDownEvent : UIElement.MouseDownEvent;
+						return args.RoutedEvent == downEvent &&
 							   (mouseEventArgs.Button == Cvar.Value.MouseButton && mouseEventArgs.Modifiers == Cvar.Value.Modifiers);
 					case TriggerMode.Deactivated:
-						return args.RoutedEvent == UIElement.MouseUpEvent &&
+						var upEvent = Preview ? UIElement.PreviewMouseUpEvent : UIElement.MouseUpEvent;
+						return args.RoutedEvent == upEvent &&
 							   (mouseEventArgs.Button == Cvar.Value.MouseButton || mouseEventArgs.Modifiers != Cvar.Value.Modifiers);
 					default:
 						Log.Die("Unknown trigger mode.");

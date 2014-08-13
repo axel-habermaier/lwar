@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="UserInterface\Controls\DataGridTextColumn.cs" />
     <Compile Include="UserInterface\Controls\ScrollViewer.cs" />
+    <Compile Include="UserInterface\Controls\Window.cs" />
     <Compile Include="UserInterface\Input\ConfigurableBinding.cs" />
     <Compile Include="UserInterface\Input\KeyBinding.cs" />
     <Compile Include="UserInterface\Input\Keyboard.cs" />

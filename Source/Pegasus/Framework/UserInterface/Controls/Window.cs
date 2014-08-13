@@ -15,6 +15,11 @@
 	public class Window : Decorator, IDisposable
 	{
 		/// <summary>
+		///     Indicates whether the window is in fullscreen or windowed mode.
+		/// </summary>
+		public static readonly DependencyProperty<bool> FullscreenProperty = new DependencyProperty<bool>();
+
+		/// <summary>
 		///     Gets the swap chain that is used to render the window's contents.
 		/// </summary>
 		internal SwapChain SwapChain { get; private set; }
@@ -43,6 +48,14 @@
 		///     The sprite batch that is used for drawing the window's UI elements.
 		/// </summary>
 		private readonly SpriteBatch _spriteBatch;
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static Window()
+		{
+			FullscreenProperty.Changed += OnFullscreenChanged;
+		}
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -174,11 +187,6 @@
 				CheckWindowOpen();
 				return _window.Size;
 			}
-			set
-			{
-				CheckWindowOpen();
-				_window.Size = value;
-			}
 		}
 
 		/// <summary>
@@ -190,11 +198,6 @@
 			{
 				CheckWindowOpen();
 				return _window.Position;
-			}
-			set
-			{
-				CheckWindowOpen();
-				_window.Position = value;
 			}
 		}
 
@@ -208,11 +211,15 @@
 				CheckWindowOpen();
 				return _window.Mode;
 			}
-			set
-			{
-				CheckWindowOpen();
-				_window.Mode = value;
-			}
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the window is in fullscreen or windowed mode.
+		/// </summary>
+		public bool Fullscreen
+		{
+			get { return GetValue(FullscreenProperty); }
+			set { SetValue(FullscreenProperty, value); }
 		}
 
 		/// <summary>
@@ -229,6 +236,27 @@
 
 			// Process all pending operating system events
 			_window.ProcessEvents();
+		}
+
+		/// <summary>
+		///     Changes the window's mode to either fullscreen or windowed.
+		/// </summary>
+		private static void OnFullscreenChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<bool> args)
+		{
+			var window = obj as Window;
+			if (window == null)
+				return;
+
+			if (args.NewValue && window.Mode == WindowMode.Fullscreen)
+				return;
+
+			if (!args.NewValue && window.Mode != WindowMode.Fullscreen)
+				return;
+
+			if (args.NewValue)
+				window._window.ChangeToFullscreenMode();
+			else
+				window._window.ChangeToWindowedMode();
 		}
 
 		/// <summary>

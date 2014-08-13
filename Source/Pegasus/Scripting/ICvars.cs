@@ -20,13 +20,13 @@ internal interface ICvars
 	/// <summary>
 	///     The screen resolution used by the application in fullscreen mode.
 	/// </summary>
-	[Cvar("new Size(1024, 768)", UpdateMode.OnGraphicsRestart), Persistent, WindowSize]
+	[Cvar("new Size(1024, 768)"), Persistent, WindowSize]
 	Size Resolution { get; set; }
 
 	/// <summary>
 	///     If true, the application is run in fullscreen mode.
 	/// </summary>
-	[Cvar(!PlatformInfo.IsDebug, UpdateMode.OnGraphicsRestart), Persistent]
+	[Cvar(!PlatformInfo.IsDebug), Persistent]
 	bool Fullscreen { get; set; }
 
 	/// <summary>

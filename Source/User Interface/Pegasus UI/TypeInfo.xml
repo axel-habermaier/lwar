@@ -37,12 +37,14 @@
 		<Property Type="Pegasus.Framework.UserInterface.Input.TriggerMode" Name="TriggerMode"/>
 		<Property Type="string" Name="Method"/>
 		<Property Type="bool" Name="TriggerOnRepeat"/>
+		<Property Type="bool" Name="Preview"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Input.MouseWheelBinding">
 		<Property Type="Pegasus.Framework.UserInterface.Input.KeyModifiers" Name="Modifiers"/>
 		<Property Type="Pegasus.Framework.UserInterface.Input.MouseWheelDirection" Name="Direction"/>
 		<Property Type="string" Name="Method"/>
+		<Property Type="bool" Name="Preview"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Input.ConfigurableBinding">
@@ -50,6 +52,7 @@
 		<Property Type="Pegasus.Framework.UserInterface.Input.TriggerMode" Name="TriggerMode"/>
 		<Property Type="string" Name="Method"/>
 		<Property Type="bool" Name="TriggerOnRepeat"/>
+		<Property Type="bool" Name="Preview"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Setter">
@@ -260,6 +263,7 @@
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Window" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 		<Property Type="string" Name="Title" />
+		<Property Type="bool" Name="Fullscreen" />
 	</Class>
 
 	<!-- Converters ================================================================================================== -->

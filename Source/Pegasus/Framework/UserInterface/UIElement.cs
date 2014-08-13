@@ -65,10 +65,16 @@
 			FontItalicProperty.Changed += (o, e) => UnsetCachedFont(o);
 			TextOptions.TextRenderingModeProperty.Changed += (o, e) => UnsetCachedFont(o);
 			MouseDownEvent.Raised += OnMouseDown;
-			MouseUpEvent.Raised += OnMouseUp;
-			MouseWheelEvent.Raised += OnMouseWheel;
-			KeyDownEvent.Raised += OnKey;
-			KeyUpEvent.Raised += OnKey;
+			MouseDownEvent.Raised += OnInputEvent;
+			MouseUpEvent.Raised += OnInputEvent;
+			MouseWheelEvent.Raised += OnInputEvent;
+			KeyDownEvent.Raised += OnInputEvent;
+			KeyUpEvent.Raised += OnInputEvent;
+			PreviewMouseDownEvent.Raised += OnInputEvent;
+			PreviewMouseUpEvent.Raised += OnInputEvent;
+			PreviewMouseWheelEvent.Raised += OnInputEvent;
+			PreviewKeyDownEvent.Raised += OnInputEvent;
+			PreviewKeyUpEvent.Raised += OnInputEvent;
 			DataContextProperty.Changed += OnDataContextChanged;
 		}
 
@@ -114,8 +120,7 @@
 		}
 
 		/// <summary>
-		///     Sets the keyboard focus to this UI element if the element is focusable and invokes any triggered input bindings of the
-		///     UI element that raised the event.
+		///     Sets the keyboard focus to this UI element if the element is focusable.
 		/// </summary>
 		private static void OnMouseDown(object sender, MouseButtonEventArgs e)
 		{
@@ -126,29 +131,6 @@
 				e.Handled = true;
 				return;
 			}
-
-			if (uiElement != null && uiElement._inputBindings != null)
-				uiElement._inputBindings.HandleEvent(e);
-		}
-
-		/// <summary>
-		///     Invokes any triggered input bindings of the UI element that raised the event.
-		/// </summary>
-		private static void OnMouseUp(object sender, MouseButtonEventArgs e)
-		{
-			var uiElement = sender as UIElement;
-			if (uiElement != null && uiElement._inputBindings != null)
-				uiElement._inputBindings.HandleEvent(e);
-		}
-
-		/// <summary>
-		///     Invokes any triggered input bindings of the UI element that raised the event.
-		/// </summary>
-		private static void OnMouseWheel(object sender, MouseWheelEventArgs e)
-		{
-			var uiElement = sender as UIElement;
-			if (uiElement != null && uiElement._inputBindings != null)
-				uiElement._inputBindings.HandleEvent(e);
 		}
 
 		/// <summary>
@@ -162,9 +144,9 @@
 		}
 
 		/// <summary>
-		///     Invokes any triggered input bindings of the UI element that raised the event.
+		///     Invokes any triggered input bindings of the UI element that raised the input event.
 		/// </summary>
-		private static void OnKey(object sender, KeyEventArgs e)
+		private static void OnInputEvent(object sender, RoutedEventArgs e)
 		{
 			var uiElement = sender as UIElement;
 			if (uiElement != null && uiElement._inputBindings != null)
