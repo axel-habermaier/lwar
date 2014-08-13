@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using Controls;
 
 	/// <summary>
 	///     Represents an object that exposes dependency properties.

@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 
 	/// <summary>
@@ -127,14 +128,20 @@
 		internal struct Enumerator
 		{
 			/// <summary>
-			///     The values that are enumerated.
+			///     Cached instance storing the copies of the value arrays. Necessary as the enumerator must be reentrant, but on the other
+			///     hand we do not want to create new arrays all the time.
 			/// </summary>
-			private static T[] _values;
+			private static readonly Stack<T[]> Pooled = new Stack<T[]>();
 
 			/// <summary>
 			///     The number of values that are enumerated.
 			/// </summary>
 			private readonly int _valueCount;
+
+			/// <summary>
+			///     The values that are enumerated.
+			/// </summary>
+			private readonly T[] _values;
 
 			/// <summary>
 			///     The index of the current enumerated element.
@@ -157,11 +164,16 @@
 				if (values == null)
 					return;
 
-				if (_values == null || _values.Length < values.Length)
+				if (Pooled.Count == 0)
 					_values = new T[values.Length];
+				else
+				{
+					_values = Pooled.Pop();
+					if (_values.Length < values.Length)
+						_values = new T[values.Length];
+				}
 
-				for (var i = 0; i < values.Length; ++i)
-					_values[i] = values[i];
+				Array.Copy(values, _values, values.Length);
 			}
 
 			/// <summary>
@@ -174,14 +186,12 @@
 			/// </summary>
 			public bool MoveNext()
 			{
-				// If the values array is null, we're done enumerating
-				if (_values == null)
-					return false;
-
 				// If we've reached the end of the collection, we're done
-				if (_current == _valueCount)
+				if (_current >= _valueCount)
 				{
-					_values = null;
+					if (_values != null)
+						Pooled.Push(_values);
+
 					return false;
 				}
 

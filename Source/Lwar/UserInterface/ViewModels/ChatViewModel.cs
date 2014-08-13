@@ -64,7 +64,7 @@
 		/// <summary>
 		///     Gets a value indicating whether the chat message entered by the user exceeds the maximum allowed length.
 		/// </summary>
-		private bool LengthExceeded
+		public bool LengthExceeded
 		{
 			get { return Encoding.UTF8.GetByteCount(Message) > Specification.ChatMessageLength; }
 		}

@@ -99,6 +99,30 @@
 		}
 
 		[Test]
+		public void BindToUnknownProperty_OneWay_ChangeViewModel()
+		{
+			var viewModel = new TestViewModel();
+			var control = new Button { DataContext = viewModel, IsAttachedToRoot = true };
+
+			control.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Unknown");
+
+			Action action = () => viewModel.Integer = 22;
+			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void BindToUnknownProperty_TwoWay_ChangeViewModel()
+		{
+			var viewModel = new TestViewModel();
+			var control = new Button { DataContext = viewModel, IsAttachedToRoot = true };
+
+			control.CreateDataBinding(UIElement.WidthProperty, BindingMode.TwoWay, "Unknown");
+
+			Action action = () => viewModel.Integer = 22;
+			action.ShouldNotThrow();
+		}
+
+		[Test]
 		public void BindToUnknownProperty_OneWayToSource()
 		{
 			var control = new Button { DataContext = new object(), IsAttachedToRoot = true };
@@ -113,6 +137,9 @@
 			var control = new Button { DataContext = new object(), IsAttachedToRoot = true };
 
 			Action action = () => control.CreateDataBinding(UIElement.WidthProperty, BindingMode.TwoWay, "Width");
+			action.ShouldNotThrow();
+
+			action = () => control.Width = 22;
 			action.ShouldNotThrow();
 		}
 

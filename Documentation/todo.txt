@@ -42,17 +42,11 @@ Pegasus.Framework
 	* Add to TextBox: Text selection (both via mouse and keyboard), copy & paste
 	* Add to SrollViewer: Horizontal scrolling, scrollbars
 	* Add support for touch
-- Refactor resolution manager (might become unnecessary once windowed fullscreen mode is implemented)
 
 Pegasus.Platform
 ========
-- Linux: Fullscreen mode somewhat buggy when resolution is changed
-- Drop all display mode change code and instead use fake fullscreen (fullscreen window in desktop resolution, with the app scaling up
-  lower resolutions by itself, if necessary)
-	* Should work reliably for both Windows/Linux as well as Direct3D/OpenGL
-	* Should have much simpler implementation
-	* Should allow correct Alt+Tab behavior
-	* Potential performance hit and vsync problems
+- Linux: Implement fullscreen mode and cursor clipping
+- Windows: Use raw input for mouse input?
 
 Assets Compiler
 ========

@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using AssetLoaders;
+	using Framework.UserInterface.Input;
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
@@ -80,6 +81,7 @@
 				_pendingPrograms = new List<ShaderProgram>();
 			}
 
+			Cursor.LoadCursors(this);
 			Commands.OnReloadAssets += ReloadAssets;
 		}
 

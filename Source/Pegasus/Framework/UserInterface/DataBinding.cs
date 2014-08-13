@@ -4,6 +4,7 @@
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using Controls;
 	using Converters;
 	using Platform.Logging;
 
@@ -666,7 +667,7 @@
 
 					_changeHandler = _dependencyProperty.AddUntypedChangeHandler(dependencyObject, DependencyPropertyChanged);
 				}
-				else
+				else if (_propertyInfo != null)
 				{
 					var notifyPropertyChanged = _sourceObject as INotifyPropertyChanged;
 					if (notifyPropertyChanged == null)
@@ -692,7 +693,7 @@
 
 					_dependencyProperty.RemoveUntypedChangeHandler(dependencyObject, _changeHandler);
 				}
-				else
+				else if (_propertyInfo != null)
 				{
 					var notifyPropertyChanged = _sourceObject as INotifyPropertyChanged;
 					if (notifyPropertyChanged == null)

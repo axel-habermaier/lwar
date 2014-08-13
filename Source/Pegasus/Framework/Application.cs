@@ -9,6 +9,7 @@
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
+	using UserInterface.Input;
 	using UserInterface.ViewModels;
 	using UserInterface.Views;
 

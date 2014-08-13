@@ -7,7 +7,10 @@
 	using Controls;
 	using Math;
 	using Platform;
+	using Platform.Graphics;
+	using Platform.Logging;
 	using Platform.Memory;
+	using Rendering;
 
 	/// <summary>
 	///     Represents the state of the mouse.
@@ -387,6 +390,31 @@
 			Window.NativeWindow.MouseReleased -= OnButtonReleased;
 			Window.NativeWindow.MouseWheel -= OnWheel;
 			Window.NativeWindow.MouseMoved -= OnMove;
+		}
+
+		/// <summary>
+		///     Draws the mouse cursor.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the cursor.</param>
+		internal void DrawCursor(SpriteBatch spriteBatch)
+		{
+			Assert.ArgumentNotNull(spriteBatch);
+
+			// Check if the hovered element or any of its parents override the default cursor
+			Cursor cursor = null;
+			var element = _hoveredElement;
+			while (element != null)
+			{
+				cursor = element.Cursor;
+				element = element.Parent;
+
+				if (cursor != null)
+					break;
+			}
+
+			cursor = cursor ?? Cursor.Arrow;
+			var position = Position - cursor.HotSpot;
+			spriteBatch.Draw(cursor.Texture, new Vector2(position.X, position.Y), Color.White);
 		}
 
 		/// <summary>

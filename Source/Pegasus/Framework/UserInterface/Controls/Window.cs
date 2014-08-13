@@ -360,7 +360,8 @@
 			Assert.That(VisualChildrenCount == 1, "A window must have exactly one child element.");
 			GetVisualChild(0).Draw(_spriteBatch);
 
-			_spriteBatch.Draw(new Vector2(Mouse.Position.X+5, Mouse.Position.Y+5), new Size(5, 5), Texture2D.White, new Color(255, 0, 0, 255), 0);
+			if (!MouseCaptured)
+				Mouse.DrawCursor(_spriteBatch);
 
 			_spriteBatch.DrawBatch(_output);
 		}
