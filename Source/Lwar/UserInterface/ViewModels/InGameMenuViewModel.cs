@@ -1,6 +1,7 @@
 ﻿namespace Lwar.UserInterface.ViewModels
 {
 	using System;
+	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.ViewModels;
 	using Scripting;
 	using Views;
@@ -16,11 +17,17 @@
 		private bool _isTopLevel = true;
 
 		/// <summary>
+		///     Indicates whether the mouse was captured when the in-game menu was opened.
+		/// </summary>
+		private bool _mouseWasCaptured = Application.Current.Window.MouseCaptured;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public InGameMenuViewModel()
 		{
 			View = new InGameMenuView();
+			Application.Current.Window.MouseCaptured = false;
 		}
 
 		/// <summary>
@@ -38,6 +45,7 @@
 		public void Continue()
 		{
 			Parent.ReplaceChild(null);
+			Application.Current.Window.MouseCaptured = _mouseWasCaptured;
 		}
 
 		/// <summary>
@@ -46,7 +54,7 @@
 		public void ContinueImplicit()
 		{
 			if (IsTopLevel)
-				Parent.ReplaceChild(null);
+				Continue();
 		}
 
 		/// <summary>

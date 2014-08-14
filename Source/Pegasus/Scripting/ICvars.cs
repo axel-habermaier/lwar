@@ -38,7 +38,7 @@ internal interface ICvars
 	/// <summary>
 	///     The width of the application's window in non-fullscreen mode.
 	/// </summary>
-	[Cvar(WindowMode.Normal), Persistent, SystemOnly]
+	[Cvar(WindowMode.Fullscreen), Persistent, SystemOnly]
 	WindowMode WindowMode { get; set; }
 
 	/// <summary>

@@ -4,6 +4,9 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
+			 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input;assembly=PegasusUI"
+			 input:Keyboard.HandlesAllInput="true"
+			 input:Mouse.HandlesAllInput="true"
 			 mc:Ignorable="d"
 			 Foreground="White">
 	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
