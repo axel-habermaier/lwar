@@ -107,5 +107,13 @@
 		{
 			_gameSession.SafeDispose();
 		}
+
+		/// <summary>
+		///     Stops loading the game session and returns to the main menu.
+		/// </summary>
+		public void Abort()
+		{
+			Commands.Disconnect();
+		}
 	}
 }

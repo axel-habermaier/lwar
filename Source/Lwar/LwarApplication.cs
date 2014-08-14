@@ -4,11 +4,11 @@
 	using Assets;
 	using Network;
 	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Framework.UserInterface.Input;
+	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Platform.Network;
 	using Scripting;
-	using UserInterface;
 	using UserInterface.ViewModels;
 
 	/// <summary>
@@ -36,6 +36,8 @@
 			Cvars.Resolve();
 
 			Window.Closing += Exit;
+			Commands.OnConnect += Connect;
+			Commands.OnDisconnect += Disconnect;
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");
 			Commands.Bind(Key.F2.WentDown(), "stop_server");
@@ -51,6 +53,26 @@
 
 			_viewModelRoot.Child = new MainMenuViewModel();
 			_viewModelRoot.Activate();
+		}
+
+		/// <summary>
+		///     Connects to the server at the given end point and joins the game session.
+		/// </summary>
+		/// <param name="address">The IP address of the server.</param>
+		/// <param name="port">The port of the server.</param>
+		private void Connect(IPAddress address, ushort port)
+		{
+			Commands.Disconnect();
+			_viewModelRoot.ReplaceChild(new LoadingViewModel(new IPEndPoint(address, port)));
+		}
+
+		/// <summary>
+		///     Disconnects from the current game session.
+		/// </summary>
+		private void Disconnect()
+		{
+			if (_viewModelRoot.Child is LoadingViewModel || _viewModelRoot.Child is GameSessionViewModel)
+				_viewModelRoot.ReplaceChild(new MainMenuViewModel());
 		}
 
 		/// <summary>

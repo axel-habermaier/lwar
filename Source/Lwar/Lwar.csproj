@@ -303,6 +303,7 @@
     <Compile Include="..\User Interface\Lwar UI\UserInterface.cs">
       <Link>UserInterface\Views\UserInterface.cs</Link>
     </Compile>
+    <Compile Include="UserInterface\Views\LoadingView.cs" />
     <Compile Include="UserInterface\Views\ChatView.cs" />
   </ItemGroup>
   <ItemGroup>
