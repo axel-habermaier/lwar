@@ -12,7 +12,8 @@ static pgMessage nextMessage;
 #define EVENT_MASK \
 	FocusChangeMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask | PointerMotionMask | \
 	KeyPressMask | KeyReleaseMask | StructureNotifyMask | EnterWindowMask | LeaveWindowMask
-	
+
+static pgVoid pgSetFullscreen(pgWindow* window, pgBool fullscreen);
 static void CreateHiddenCursor(pgWindow* window);
 static pgVoid CenterCursor(pgWindow* window);
 static Bool CheckEvent(Display* display, XEvent* e, XPointer userData);
@@ -66,17 +67,11 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
     hints.max_height = PG_WINDOW_MAX_HEIGHT;
     
     XSetWMNormalHints(x11.display, window->handle, &hints);
-		
 	XMapWindow(x11.display, window->handle);
-	XFlush(x11.display);
 	
 	CreateHiddenCursor(window);
-    
-    // Enforce size and position again, as the values specified in XCreateWindow are ignored
-    // However: This might move the window to the wrong monitor...
-    pgSetWindowSizeCore(window);
-    pgSetWindowPositionCore(window);
-    pgSetWindowModeCore(window);
+	XDefineCursor(x11.display, window->handle, window->cursor);
+	XFlush(x11.display);
 }
 
 pgVoid pgCloseWindowCore(pgWindow* window)
@@ -173,43 +168,14 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
     XFree(propertyValue);
 }
 
-pgVoid pgSetWindowSizeCore(pgWindow* window)
+pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 {
-	XResizeWindow(x11.display, window->handle, window->placement.width, window->placement.height);
-	XFlush(x11.display);
+	pgSetFullscreen(window, PG_TRUE);
 }
 
-pgVoid pgSetWindowPositionCore(pgWindow* window)
-{
-	XMoveWindow(x11.display, window->handle, window->placement.x, window->placement.y);
-	XFlush(x11.display);
-}
-
-pgVoid pgSetWindowModeCore(pgWindow* window)
-{
-	XMapWindow(x11.display, window->handle);
-
-	XEvent event;
-	memset(&event, 0, sizeof(event));
-	event.xclient.type = ClientMessage;
-	event.xclient.send_event = True;
-	event.xclient.window = window->handle;
-	event.xclient.message_type = x11.wmState;
-	event.xclient.format = 32;
-	
-	event.xclient.data.l[0] = window->placement.mode == PG_WINDOW_MAXIMIZED ? 1 : 0;
-	event.xclient.data.l[1] = x11.wmStateMaximizedVert;
-	event.xclient.data.l[2] = x11.wmStateMaximizedHorz;
-		
-	XSendEvent(x11.display, DefaultRootWindow(x11.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
-		
-	event.xclient.data.l[0] = window->placement.mode == PG_WINDOW_MINIMIZED ? 1 : 0;
-	event.xclient.data.l[1] = x11.wmStateHidden;
-	event.xclient.data.l[2] = 0;
-	
-	XSendEvent(x11.display, DefaultRootWindow(x11.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
-	
-	XFlush(x11.display);
+pgVoid pgChangeToWindowedModeCore(pgWindow* window)
+{ 
+	pgSetFullscreen(window, PG_FALSE);
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
@@ -220,15 +186,11 @@ pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
 pgVoid pgCaptureMouseCore(pgWindow* window)
 {
 	CenterCursor(window);
-	
-	XDefineCursor(x11.display, window->handle, window->cursor);
-    XFlush(x11.display);
 }
 
 pgVoid pgReleaseMouseCore(pgWindow* window)
 {
-	XDefineCursor(x11.display, window->handle, None);
-    XFlush(x11.display);
+    PG_UNUSED(window);
 }
 
 pgVoid pgGetMousePositionCore(pgWindow* window, pgInt32* x, pgInt32* y)
@@ -272,6 +234,34 @@ pgVoid pgCancelDeadCharacter()
 //====================================================================================================================
 // Helper functions
 //====================================================================================================================
+
+static pgVoid pgSetFullscreen(pgWindow* window, pgBool fullscreen)
+{
+	XMapWindow(x11.display, window->handle);
+
+	XEvent event;
+	memset(&event, 0, sizeof(event));
+	event.xclient.type = ClientMessage;
+	event.xclient.send_event = True;
+	event.xclient.window = window->handle;
+	event.xclient.message_type = x11.wmState;
+	event.xclient.format = 32;
+	
+	event.xclient.data.l[0] = fullscreen ? 1 : 0;
+	event.xclient.data.l[1] = x11.wmStateFullscreen;
+	event.xclient.data.l[2] = 0;
+		
+	XSendEvent(x11.display, DefaultRootWindow(x11.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
+	XFlush(x11.display);
+
+	if (fullscreen)
+	{
+		unsigned int mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask | FocusChangeMask | EnterWindowMask | LeaveWindowMask;
+		XGrabPointer(x11.display, window->handle, False, mask, GrabModeAsync, GrabModeAsync, window->handle, 0, CurrentTime);
+    }
+	else
+		XUngrabPointer(x11.display, CurrentTime);
+}
 
 static void CreateHiddenCursor(pgWindow* window)
 {

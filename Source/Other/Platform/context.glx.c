@@ -9,7 +9,6 @@
 static pgBool ctxErrorOccurred;
 static int ErrorHandler(Display* display, XErrorEvent* e);
 static pgBool GlxExtSupported(int extension, pgString extensionName);
-static pgVoid SetFullscreenState(pgContext* context, pgBool fullscreen);
 
 //====================================================================================================================
 // Core functions 
@@ -221,31 +220,6 @@ static pgBool GlxExtSupported(int extension, pgString extensionName)
 	}
 
 	return PG_TRUE;
-}
-
-static pgVoid SetFullscreenState(pgContext* context, pgBool fullscreen)
-{
-	XMapWindow(x11.display, context->window);
-
-	XEvent event;
-	memset(&event, 0, sizeof(event));
-	event.xclient.type = ClientMessage;
-	event.xclient.send_event = True;
-	event.xclient.window = context->window;
-	event.xclient.message_type = x11.wmState;
-	event.xclient.format = 32;
-	
-	event.xclient.data.l[0] = fullscreen ? 1 : 0;
-	event.xclient.data.l[1] = x11.wmStateFullscreen;
-	event.xclient.data.l[2] = 0;
-		
-	XSendEvent(x11.display, DefaultRootWindow(x11.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
-	XFlush(x11.display);
-	
-	do 
-	{
-		XWindowEvent(x11.display, context->window, StructureNotifyMask, &event);
-	} while (event.type != ClientMessage && event.xclient.message_type == x11.wmState);
 }
 
 #endif
