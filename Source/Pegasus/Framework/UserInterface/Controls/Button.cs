@@ -18,7 +18,7 @@
 		/// </summary>
 		static Button()
 		{
-			MouseLeftButtonUpEvent.Raised += OnLeftMouseButtonUp;
+			MouseUpEvent.Raised += OnMouseUp;
 		}
 
 		/// <summary>
@@ -33,10 +33,10 @@
 		/// <summary>
 		///     Raises the Click event, setting the mouse event to handled. Additionally, sets the keyboard focus to the button.
 		/// </summary>
-		private static void OnLeftMouseButtonUp(object sender, MouseButtonEventArgs e)
+		private static void OnMouseUp(object sender, MouseButtonEventArgs e)
 		{
 			var button = sender as Button;
-			if (button == null)
+			if (button == null || e.Button != MouseButton.Left)
 				return;
 
 			e.Handled = true;

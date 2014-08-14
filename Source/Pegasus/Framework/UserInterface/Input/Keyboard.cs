@@ -37,7 +37,8 @@
 		/// </summary>
 		static Keyboard()
 		{
-			HandlesAllInputProperty.Changed += OnHandlesAllInput;
+			UIElement.KeyUpEvent.Raised += HandleEvent;
+			UIElement.KeyDownEvent.Raised += HandleEvent;
 		}
 
 		/// <summary>
@@ -100,32 +101,13 @@
 		}
 
 		/// <summary>
-		///     Ensures that the UI element handles all keyboard input events.
-		/// </summary>
-		private static void OnHandlesAllInput(DependencyObject obj, DependencyPropertyChangedEventArgs<bool> args)
-		{
-			var element = obj as UIElement;
-			if (element == null)
-				return;
-
-			if (args.NewValue)
-			{
-				element.KeyUp += HandleEvent;
-				element.KeyDown += HandleEvent;
-			}
-			else
-			{
-				element.KeyUp -= HandleEvent;
-				element.KeyDown -= HandleEvent;
-			}
-		}
-
-		/// <summary>
 		///     Marks the event as handled.
 		/// </summary>
 		private static void HandleEvent(object sender, KeyEventArgs e)
 		{
-			e.Handled = true;
+			var element = sender as UIElement;
+			if (element != null && GetHandlesAllInput(element))
+				e.Handled = true;
 		}
 
 		/// <summary>

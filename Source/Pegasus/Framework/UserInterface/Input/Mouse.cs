@@ -7,8 +7,6 @@
 	using Controls;
 	using Math;
 	using Platform;
-	using Platform.Graphics;
-	using Platform.Logging;
 	using Platform.Memory;
 	using Rendering;
 
@@ -47,7 +45,12 @@
 		/// </summary>
 		static Mouse()
 		{
-			HandlesAllInputProperty.Changed += OnHandlesAllInput;
+			UIElement.MouseDownEvent.Raised += HandleEvent;
+			UIElement.MouseUpEvent.Raised += HandleEvent;
+			UIElement.MouseWheelEvent.Raised += HandleEvent;
+			UIElement.MouseEnterEvent.Raised += HandleEvent;
+			UIElement.MouseLeaveEvent.Raised += HandleEvent;
+			UIElement.MouseMoveEvent.Raised += HandleEvent;
 		}
 
 		/// <summary>
@@ -92,48 +95,13 @@
 		public Window Window { get; private set; }
 
 		/// <summary>
-		///     Ensures that the UI element handles all keyboard input events.
-		/// </summary>
-		private static void OnHandlesAllInput(DependencyObject obj, DependencyPropertyChangedEventArgs<bool> args)
-		{
-			var element = obj as UIElement;
-			if (element == null)
-				return;
-
-			if (args.NewValue)
-			{
-				element.MouseDown += HandleEvent;
-				element.MouseUp += HandleEvent;
-				element.MouseLeftButtonDown += HandleEvent;
-				element.MouseLeftButtonUp += HandleEvent;
-				element.MouseRightButtonDown += HandleEvent;
-				element.MouseRightButtonDown += HandleEvent;
-				element.MouseWheel += HandleEvent;
-				element.MouseEnter += HandleEvent;
-				element.MouseLeave += HandleEvent;
-				element.MouseMove += HandleEvent;
-			}
-			else
-			{
-				element.MouseDown -= HandleEvent;
-				element.MouseUp -= HandleEvent;
-				element.MouseLeftButtonDown -= HandleEvent;
-				element.MouseLeftButtonUp -= HandleEvent;
-				element.MouseRightButtonDown -= HandleEvent;
-				element.MouseRightButtonUp -= HandleEvent;
-				element.MouseWheel -= HandleEvent;
-				element.MouseEnter += HandleEvent;
-				element.MouseLeave += HandleEvent;
-				element.MouseMove += HandleEvent;
-			}
-		}
-
-		/// <summary>
 		///     Marks the event as handled.
 		/// </summary>
 		private static void HandleEvent(object sender, MouseEventArgs e)
 		{
-			e.Handled = true;
+			var element = sender as UIElement;
+			if (element != null && GetHandlesAllInput(element))
+				e.Handled = true;
 		}
 
 		/// <summary>
@@ -176,18 +144,6 @@
 			var args = MouseButtonEventArgs.Create(this, position, _states, button, doubleClick, Window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseDownEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseDownEvent, args);
-
-			if (button == MouseButton.Left)
-			{
-				_hoveredElement.RaiseEvent(UIElement.PreviewMouseLeftButtonDownEvent, args);
-				_hoveredElement.RaiseEvent(UIElement.MouseLeftButtonDownEvent, args);
-			}
-
-			if (button == MouseButton.Right)
-			{
-				_hoveredElement.RaiseEvent(UIElement.PreviewMouseRightButtonDownEvent, args);
-				_hoveredElement.RaiseEvent(UIElement.MouseRightButtonDownEvent, args);
-			}
 		}
 
 		/// <summary>
@@ -206,18 +162,6 @@
 			var args = MouseButtonEventArgs.Create(this, position, _states, button, false, Window.Keyboard.GetModifiers());
 			_hoveredElement.RaiseEvent(UIElement.PreviewMouseUpEvent, args);
 			_hoveredElement.RaiseEvent(UIElement.MouseUpEvent, args);
-
-			if (button == MouseButton.Left)
-			{
-				_hoveredElement.RaiseEvent(UIElement.PreviewMouseLeftButtonUpEvent, args);
-				_hoveredElement.RaiseEvent(UIElement.MouseLeftButtonUpEvent, args);
-			}
-
-			if (button == MouseButton.Right)
-			{
-				_hoveredElement.RaiseEvent(UIElement.PreviewMouseRightButtonUpEvent, args);
-				_hoveredElement.RaiseEvent(UIElement.MouseRightButtonUpEvent, args);
-			}
 		}
 
 		/// <summary>
@@ -402,7 +346,8 @@
 
 			// Check if the hovered element or any of its parents override the default cursor
 			Cursor cursor = null;
-			var element = Window.HitTest(new Vector2d(Position.X, Position.Y), boundsTestOnly: true);;
+			var element = Window.HitTest(new Vector2d(Position.X, Position.Y), boundsTestOnly: true);
+			;
 			while (element != null)
 			{
 				cursor = element.GetValue(Cursor.CursorProperty);

@@ -2,6 +2,7 @@
 {
 	using System;
 	using Controls;
+	using Scripting;
 	using Views;
 
 	/// <summary>
@@ -78,6 +79,7 @@
 			Panel.SetZIndex(_view, ZIndex);
 
 			Application.Current.Window.LayoutRoot.Add(_view);
+			Commands.ShowConsole(false);
 			_view.Focus();
 		}
 	}

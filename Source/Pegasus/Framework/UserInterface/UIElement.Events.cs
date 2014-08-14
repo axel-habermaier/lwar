@@ -66,54 +66,6 @@
 			new RoutedEvent<MouseButtonEventArgs>(RoutingStrategy.Tunnel);
 
 		/// <summary>
-		///     Raised when the left mouse button is pressed while the mouse is over the UI element.
-		/// </summary>
-		public static readonly RoutedEvent<MouseButtonEventArgs> MouseLeftButtonDownEvent =
-			new RoutedEvent<MouseButtonEventArgs>(RoutingStrategy.Bubble);
-
-		/// <summary>
-		///     Raised when the left mouse button is pressed while the mouse is over the UI element.
-		/// </summary>
-		public static readonly RoutedEvent<MouseButtonEventArgs> PreviewMouseLeftButtonDownEvent =
-			new RoutedEvent<MouseButtonEventArgs>(RoutingStrategy.Tunnel);
-
-		/// <summary>
-		///     Raised when the left mouse button is released while the mouse is over the UI element.
-		/// </summary>
-		public static readonly RoutedEvent<MouseButtonEventArgs> MouseLeftButtonUpEvent =
-			new RoutedEvent<MouseButtonEventArgs>(RoutingStrategy.Bubble);
-
-		/// <summary>
-		///     Raised when the left mouse button is released while the mouse is over the UI element.
-		/// </summary>
-		public static readonly RoutedEvent<MouseButtonEventArgs> PreviewMouseLeftButtonUpEvent =
-			new RoutedEvent<MouseButtonEventArgs>(RoutingStrategy.Tunnel);
-
-		/// <summary>
-		///     Raised when the right mouse button is pressed while the mouse is over the UI element.
-		/// </summary>
-		public static readonly RoutedEvent<MouseButtonEventArgs> MouseRightButtonDownEvent =
-			new RoutedEvent<MouseButtonEventArgs>(RoutingStrategy.Bubble);
-
-		/// <summary>
-		///     Raised when the right mouse button is pressed while the mouse is over the UI element.
-		/// </summary>
-		public static readonly RoutedEvent<MouseButtonEventArgs> PreviewMouseRightButtonDownEvent =
-			new RoutedEvent<MouseButtonEventArgs>(RoutingStrategy.Tunnel);
-
-		/// <summary>
-		///     Raised when the right mouse button is released while the mouse is over the UI element.
-		/// </summary>
-		public static readonly RoutedEvent<MouseButtonEventArgs> MouseRightButtonUpEvent =
-			new RoutedEvent<MouseButtonEventArgs>(RoutingStrategy.Bubble);
-
-		/// <summary>
-		///     Raised when the right mouse button is released while the mouse is over the UI element.
-		/// </summary>
-		public static readonly RoutedEvent<MouseButtonEventArgs> PreviewMouseRightButtonUpEvent =
-			new RoutedEvent<MouseButtonEventArgs>(RoutingStrategy.Tunnel);
-
-		/// <summary>
 		///     Raised when the mouse wheel has changed while the mouse is over the UI element.
 		/// </summary>
 		public static readonly RoutedEvent<MouseWheelEventArgs> MouseWheelEvent =
@@ -237,78 +189,6 @@
 		{
 			add { AddHandler(PreviewMouseUpEvent, value); }
 			remove { RemoveHandler(PreviewMouseUpEvent, value); }
-		}
-
-		/// <summary>
-		///     Raised when the left mouse button is pressed while the mouse is over the UI element.
-		/// </summary>
-		public event RoutedEventHandler<MouseButtonEventArgs> MouseLeftButtonDown
-		{
-			add { AddHandler(MouseLeftButtonDownEvent, value); }
-			remove { RemoveHandler(MouseLeftButtonDownEvent, value); }
-		}
-
-		/// <summary>
-		///     Raised when the left mouse button is pressed while the mouse is over the UI element.
-		/// </summary>
-		public event RoutedEventHandler<MouseButtonEventArgs> PreviewMouseLeftButtonDown
-		{
-			add { AddHandler(PreviewMouseLeftButtonDownEvent, value); }
-			remove { RemoveHandler(PreviewMouseLeftButtonDownEvent, value); }
-		}
-
-		/// <summary>
-		///     Raised when the left mouse button is released while the mouse is over the UI element.
-		/// </summary>
-		public event RoutedEventHandler<MouseButtonEventArgs> MouseLeftButtonUp
-		{
-			add { AddHandler(MouseLeftButtonUpEvent, value); }
-			remove { RemoveHandler(MouseLeftButtonUpEvent, value); }
-		}
-
-		/// <summary>
-		///     Raised when the left mouse button is released while the mouse is over the UI element.
-		/// </summary>
-		public event RoutedEventHandler<MouseButtonEventArgs> PreviewMouseLeftButtonUp
-		{
-			add { AddHandler(PreviewMouseLeftButtonUpEvent, value); }
-			remove { RemoveHandler(PreviewMouseLeftButtonUpEvent, value); }
-		}
-
-		/// <summary>
-		///     Raised when the right mouse button is pressed while the mouse is over the UI element.
-		/// </summary>
-		public event RoutedEventHandler<MouseButtonEventArgs> MouseRightButtonDown
-		{
-			add { AddHandler(MouseRightButtonDownEvent, value); }
-			remove { RemoveHandler(MouseRightButtonDownEvent, value); }
-		}
-
-		/// <summary>
-		///     Raised when the right mouse button is pressed while the mouse is over the UI element.
-		/// </summary>
-		public event RoutedEventHandler<MouseButtonEventArgs> PreviewMouseRightButtonDown
-		{
-			add { AddHandler(PreviewMouseRightButtonDownEvent, value); }
-			remove { RemoveHandler(PreviewMouseRightButtonDownEvent, value); }
-		}
-
-		/// <summary>
-		///     Raised when the right mouse button is released while the mouse is over the UI element.
-		/// </summary>
-		public event RoutedEventHandler<MouseButtonEventArgs> MouseRightButtonUp
-		{
-			add { AddHandler(MouseRightButtonUpEvent, value); }
-			remove { RemoveHandler(MouseRightButtonUpEvent, value); }
-		}
-
-		/// <summary>
-		///     Raised when the right mouse button is released while the mouse is over the UI element.
-		/// </summary>
-		public event RoutedEventHandler<MouseButtonEventArgs> PreviewMouseRightButtonUp
-		{
-			add { AddHandler(PreviewMouseRightButtonUpEvent, value); }
-			remove { RemoveHandler(PreviewMouseRightButtonUpEvent, value); }
 		}
 
 		/// <summary>
