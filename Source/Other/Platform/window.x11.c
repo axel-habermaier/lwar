@@ -353,6 +353,16 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e, pgMessage* message)
 		
 		break;
 	case KeyRelease:
+		// X11 sends a KeyRelease event directly followed by a KeyPressed event for the same key,
+		// if the key press is repeated. So swallow those fake KeyRelease events...
+		if (e->type == KeyRelease && XEventsQueued(x11.display, QueuedAfterReading))
+		{
+			XEvent next;
+			XPeekEvent(x11.display, &next);
+
+			if (next.type == KeyPress && next.xkey.time == e->xkey.time && next.xkey.keycode == e->xkey.keycode)
+				break;
+		}
 		message->type = PG_MESSAGE_KEY_UP;
 		message->key = TranslateKey(&e->xkey);
 		message->scanCode = e->xkey.keycode;
