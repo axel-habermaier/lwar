@@ -16,11 +16,14 @@
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" TriggerMode="Activated" Method="ShowScoreboard"></input:ConfigurableBinding>
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" TriggerMode="Deactivated" Method="HideScoreboard"></input:ConfigurableBinding>
 	</UserControl.InputBindings>
+	<UserControl.Resources>
+		<input:Cursor x:Key="Crosshair" Color="#FF02CDFF" HotSpot="16,16" Texture="Lwar.Assets.Textures.Crosshair"/>
+	</UserControl.Resources>
 
 	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}"
 								HasDepthStencil="true" 
 								DrawMethod="OnDraw" 
-								x:Name="Scene3D"
+								input:Cursor.Cursor="{StaticResource Crosshair}"
 								UseAppResolution="{Binding UseAppResolution}">
 		<controls:AreaPanel>
 

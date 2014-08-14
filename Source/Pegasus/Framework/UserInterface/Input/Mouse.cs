@@ -405,7 +405,7 @@
 			var element = Window.HitTest(new Vector2d(Position.X, Position.Y), boundsTestOnly: true);;
 			while (element != null)
 			{
-				cursor = element.Cursor;
+				cursor = element.GetValue(Cursor.CursorProperty);
 				element = element.LogicalParent;
 
 				if (cursor != null)
@@ -413,8 +413,7 @@
 			}
 
 			cursor = cursor ?? Cursor.Arrow;
-			var position = Position - cursor.HotSpot;
-			spriteBatch.Draw(cursor.Texture, new Vector2(position.X, position.Y), cursor.Color);
+			cursor.Draw(spriteBatch, Position);
 		}
 
 		/// <summary>

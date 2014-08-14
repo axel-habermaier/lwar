@@ -16,7 +16,7 @@
 			"Size", typeof(Size), typeof(Window), new PropertyMetadata(default(Size)));
 
 		public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(
-			"Position", typeof(Vector2i), typeof(Window), new PropertyMetadata(default(Vector2i)));
+			"Position", typeof(Point), typeof(Window), new PropertyMetadata(default(Point)));
 
 		public static readonly DependencyProperty WindowModeProperty = DependencyProperty.Register(
 			"WindowMode", typeof(WindowMode), typeof(Window), new PropertyMetadata(default(WindowMode)));
@@ -33,9 +33,9 @@
 			set { SetValue(SizeProperty, value); }
 		}
 
-		public Vector2i Position
+		public Point Position
 		{
-			get { return (Vector2i)GetValue(PositionProperty); }
+			get { return (Point)GetValue(PositionProperty); }
 			set { SetValue(PositionProperty, value); }
 		}
 
@@ -43,10 +43,6 @@
 		{
 			get { return (WindowMode)GetValue(WindowModeProperty); }
 			set { SetValue(WindowModeProperty, value); }
-		}
-
-		public struct Vector2i
-		{
 		}
 	}
 }

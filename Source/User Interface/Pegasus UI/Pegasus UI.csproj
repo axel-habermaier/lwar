@@ -123,6 +123,7 @@
     <Compile Include="UserInterface\Controls\ScrollViewer.cs" />
     <Compile Include="UserInterface\Controls\Window.cs" />
     <Compile Include="UserInterface\Input\ConfigurableBinding.cs" />
+    <Compile Include="UserInterface\Input\Cursor.cs" />
     <Compile Include="UserInterface\Input\KeyBinding.cs" />
     <Compile Include="UserInterface\Input\Keyboard.cs" />
     <Compile Include="UserInterface\Input\MouseWheelBinding.cs" />

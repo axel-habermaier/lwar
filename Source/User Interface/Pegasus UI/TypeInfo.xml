@@ -13,6 +13,15 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ControlTemplate">
 	</Class>
 
+	<Class Name="Pegasus.Platform.Graphics.Texture2D">
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Input.Cursor">
+		<Property Type="Pegasus.Platform.Graphics.Texture2D" Name="Texture"/>
+		<Property Type="Pegasus.Math.Vector2i" Name="HotSpot"/>
+		<Property Type="Pegasus.Platform.Graphics.Color" Name="Color"/>
+	</Class>
+
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataTemplate">
 	</Class>
 
