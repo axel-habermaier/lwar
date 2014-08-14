@@ -3,6 +3,7 @@
 	using System;
 	using Assets;
 	using Gameplay.Actors;
+	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Rendering;
@@ -23,11 +24,13 @@
 		private Texture2D _texture;
 
 		/// <summary>
-		///     Initializes the renderer.
+		///     Loads the required assets of the renderer.
 		/// </summary>
-		protected override void Initialize()
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			_texture = Assets.Load(Textures.Explosion);
+			_texture = assets.Load(Textures.Explosion);
 		}
 
 		/// <summary>

@@ -4,6 +4,7 @@
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
+	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -27,15 +28,24 @@
 		private Texture2D _texture, _texture2;
 
 		/// <summary>
+		///     Loads the required assets of the renderer.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
+		{
+			_texture = assets.Load(Textures.Phaser);
+			_texture2 = assets.Load(Textures.PhaserGlow);
+			_effect = new TexturedQuadEffect(graphicsDevice, assets);
+		}
+
+		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		protected override void Initialize()
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		public override void Initialize(GraphicsDevice graphicsDevice)
 		{
-			_texture = Assets.Load(Textures.Phaser);
-			_texture2 = Assets.Load(Textures.PhaserGlow);
-
-			_model = Model.CreateQuad(GraphicsDevice, _texture.Size, new Vector2(_texture.Size.Width / 2.0f, 0));
-			_effect = new TexturedQuadEffect(GraphicsDevice, Assets);
+			_model = Model.CreateQuad(graphicsDevice, _texture.Size, new Vector2(_texture.Size.Width / 2.0f, 0));
 		}
 
 		/// <summary>

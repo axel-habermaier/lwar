@@ -11,11 +11,17 @@
 	public interface IRenderer : IDisposable
 	{
 		/// <summary>
-		///     Initializes the renderer.
+		///     Loads the required assets of the renderer.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets);
+		void Load(GraphicsDevice graphicsDevice, AssetsManager assets);
+
+		/// <summary>
+		///     Initializes the renderer.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		void Initialize(GraphicsDevice graphicsDevice);
 
 		/// <summary>
 		///     Draws all registered 3D elements.

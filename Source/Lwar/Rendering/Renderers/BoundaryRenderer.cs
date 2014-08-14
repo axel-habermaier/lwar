@@ -1,30 +1,25 @@
 ﻿namespace Lwar.Rendering.Renderers
 {
 	using System;
-	using Assets;
 	using Assets.Effects;
 	using Pegasus.Assets;
+	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///     Renders a skybox.
+	///     Renders the world boundary.
 	/// </summary>
-	public class SkyboxRenderer : DisposableObject, IRenderer
+	public class BoundaryRenderer : DisposableObject, IRenderer
 	{
 		/// <summary>
-		///     The skybox cube map.
+		///     The effect that is used to draw the level boundary.
 		/// </summary>
-		private CubeMap _cubeMap;
+		private SimpleVertexEffect _effect;
 
 		/// <summary>
-		///     The effect that is used to draw the skybox.
-		/// </summary>
-		private SkyboxEffect _effect;
-
-		/// <summary>
-		///     The skybox model.
+		///     The model representing the boundary of the level.
 		/// </summary>
 		private Model _model;
 
@@ -35,8 +30,7 @@
 		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
 		public void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			_cubeMap = assets.Load(Textures.SpaceCubemap);
-			_effect = new SkyboxEffect(graphicsDevice, assets);
+			_effect = new SimpleVertexEffect(graphicsDevice, assets) { Color = new Vector4(0.3f, 0, 0, 0.3f) };
 		}
 
 		/// <summary>
@@ -45,8 +39,10 @@
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		public void Initialize(GraphicsDevice graphicsDevice)
 		{
-			_model = Model.CreateSkybox(graphicsDevice);
-			_effect.Skybox = new CubeMapView(_cubeMap, SamplerState.BilinearClampNoMipmaps);
+			const int thickness = 64;
+			var outline = new CircleOutline();
+			outline.Add(Int16.MaxValue + thickness / 2, 265, thickness);
+			_model = outline.ToModel(graphicsDevice);
 		}
 
 		/// <summary>
@@ -55,7 +51,6 @@
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public void Draw(RenderOutput output)
 		{
-			RasterizerState.CullCounterClockwise.Bind();
 			_model.Draw(output, _effect.Default);
 		}
 

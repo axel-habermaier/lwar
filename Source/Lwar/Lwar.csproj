@@ -189,6 +189,7 @@
   <ItemGroup>
     <Compile Include="Network\ServerConnection.cs" />
     <Compile Include="Rendering\CircleOutline.cs" />
+    <Compile Include="Rendering\Renderers\BoundaryRenderer.cs" />
     <Compile Include="UserInterface\ViewModels\ChatViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\GameSessionViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\LoadingViewModel.cs" />
@@ -231,7 +232,7 @@
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
     <Compile Include="UserInterface\ViewModels\ScoreboardViewModel.cs" />
-    <Compile Include="Rendering\Renderers\ParallaxRenderer.cs" />
+    <Compile Include="Rendering\Renderers\StarfieldRenderer.cs" />
     <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShockwaveRenderer.cs" />
     <Compile Include="Rendering\Renderers\RayRenderer.cs" />

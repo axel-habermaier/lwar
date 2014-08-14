@@ -3,6 +3,7 @@
 	using System;
 	using Assets.Effects;
 	using Gameplay.Entities;
+	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -44,12 +45,27 @@
 		private SimpleVertexEffect _trajectoryEffect;
 
 		/// <summary>
+		///     Loads the required assets of the renderer.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
+		{
+			_planetEffect = new SphereEffect(graphicsDevice, assets);
+			_trajectoryEffect = new SimpleVertexEffect(graphicsDevice, assets);
+		}
+
+		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		protected override void Initialize()
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		public override void Initialize(GraphicsDevice graphicsDevice)
 		{
-			_planetEffect = new SphereEffect(GraphicsDevice, Assets);
-			_trajectoryEffect = new SimpleVertexEffect(GraphicsDevice, Assets);
+			var outline = new CircleOutline();
+			foreach (var planet in Elements)
+				outline.Add(planet.Position.Length, TrajectoryPrecision, TrajectoryWidth);
+
+			_trajectories = outline.ToModel(graphicsDevice);
 		}
 
 		/// <summary>
@@ -58,9 +74,6 @@
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
 		{
-			if (_trajectories == null)
-				GenerateTrajectories();
-
 			BlendState.Premultiplied.Bind();
 			DepthStencilState.DepthEnabled.Bind();
 
@@ -75,18 +88,6 @@
 
 			_trajectoryEffect.Color = TrajectoryColor;
 			_trajectories.Draw(output, _trajectoryEffect.Default);
-		}
-
-		/// <summary>
-		///     Generates the trajectories of the planets.
-		/// </summary>
-		private void GenerateTrajectories()
-		{
-			var outline = new CircleOutline();
-			foreach (var planet in Elements)
-				outline.Add(planet.Position.Length, TrajectoryPrecision, TrajectoryWidth);
-
-			_trajectories = outline.ToModel(GraphicsDevice);
 		}
 
 		/// <summary>

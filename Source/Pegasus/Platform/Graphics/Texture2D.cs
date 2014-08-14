@@ -70,7 +70,11 @@
 		/// </summary>
 		public Size Size
 		{
-			get { return new Size((int)Description.Width, (int)Description.Height); }
+			get
+			{
+				ValidateAccess();
+				return new Size((int)Description.Width, (int)Description.Height);
+			}
 		}
 
 		/// <summary>
@@ -78,7 +82,11 @@
 		/// </summary>
 		public int Width
 		{
-			get { return (int)Description.Width; }
+			get
+			{
+				ValidateAccess();
+				return (int)Description.Width;
+			}
 		}
 
 		/// <summary>
@@ -86,7 +94,11 @@
 		/// </summary>
 		public int Height
 		{
-			get { return (int)Description.Height; }
+			get
+			{
+				ValidateAccess();
+				return (int)Description.Height;
+			}
 		}
 
 		/// <summary>
@@ -94,7 +106,11 @@
 		/// </summary>
 		public SurfaceFormat Format
 		{
-			get { return Description.Format; }
+			get
+			{
+				ValidateAccess();
+				return Description.Format;
+			}
 		}
 
 		/// <summary>

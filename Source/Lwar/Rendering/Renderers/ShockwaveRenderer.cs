@@ -4,6 +4,7 @@
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
+	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -24,15 +25,27 @@
 		/// </summary>
 		private Model _model;
 
+		private CubeMap _texture;
+
+		/// <summary>
+		///     Loads the required assets of the renderer.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
+		{
+			_texture = assets.Load(Textures.SunHeatCubemap);
+			_effect = new SphereEffect(graphicsDevice, assets);
+		}
+
 		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		protected override void Initialize()
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		public override void Initialize(GraphicsDevice graphicsDevice)
 		{
-			var texture = Assets.Load(Textures.SunHeatCubemap);
-
-			_model = Model.CreateSphere(GraphicsDevice, 1, 10);
-			_effect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(texture, SamplerState.BilinearClampNoMipmaps) };
+			_model = Model.CreateSphere(graphicsDevice, 1, 10);
+			_effect.SphereTexture = new CubeMapView(_texture, SamplerState.BilinearClampNoMipmaps);
 		}
 
 		/// <summary>

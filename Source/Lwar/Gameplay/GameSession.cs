@@ -144,6 +144,7 @@
 		public void Initialize()
 		{
 			Assert.NotNull(LocalPlayer, "Game state synced but local player is unknown.");
+			Assert.That(_assets.LoadingCompleted, "Not all assets have been loaded.");
 
 			// Handle chat input and player name changes
 			Commands.OnSay += OnSay;
@@ -155,6 +156,10 @@
 			// Initialize the camera and input managers
 			CameraManager = new CameraManager(LocalPlayer);
 			InputManager = new InputManager(this);
+
+			// Initialize the render context
+			RenderContext.Initialize();
+			Assert.That(_assets.LoadingCompleted, "The render context loaded further assets.");
 		}
 
 		/// <summary>

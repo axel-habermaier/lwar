@@ -10,13 +10,6 @@
 	public class PhaserRenderer : Renderer<Phaser>
 	{
 		/// <summary>
-		///     Initializes the renderer.
-		/// </summary>
-		protected override void Initialize()
-		{
-		}
-
-		/// <summary>
 		///     Draws all phasers.
 		/// </summary>
 		/// <param name="output">The output that the phasers should be rendered to.</param>

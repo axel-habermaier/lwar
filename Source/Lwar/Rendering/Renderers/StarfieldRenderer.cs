@@ -3,17 +3,16 @@
 	using System;
 	using Assets;
 	using Assets.Effects;
-	using Pegasus;
-	using Pegasus.Math;
 	using Pegasus.Assets;
+	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 
 	/// <summary>
-	///     Renders a parallax scrolling effect.
+	///     Renders a starfield as a parallax scrolling effect.
 	/// </summary>
-	public class ParallaxRenderer : DisposableObject
+	public class StarfieldRenderer : DisposableObject, IRenderer
 	{
 		/// <summary>
 		///     The number of stars that are rendered.
@@ -43,27 +42,36 @@
 		/// <summary>
 		///     The effect that is used to draw the parallax scrolling star field.
 		/// </summary>
-		private readonly ParallaxEffect _effect;
+		private ParallaxEffect _effect;
 
 		/// <summary>
 		///     The model that stores the stars.
 		/// </summary>
-		private readonly Model _model;
+		private Model _model;
 
 		/// <summary>
-		///     Initializes a new instance.
+		///     The texture atlas containing the stars.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
-		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public ParallaxRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
-		{
-			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(assets);
+		private Texture2D _texture;
 
-			_effect = new ParallaxEffect(graphicsDevice, assets)
-			{
-				TextureAtlas = new Texture2DView(assets.Load(Textures.Parallax), SamplerState.BilinearWrapNoMipmaps)
-			};
+		/// <summary>
+		///     Loads the required assets of the renderer.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
+		{
+			_effect = new ParallaxEffect(graphicsDevice, assets);
+			_texture = assets.Load(Textures.Parallax);
+		}
+
+		/// <summary>
+		///     Initializes the renderer.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		public void Initialize(GraphicsDevice graphicsDevice)
+		{
+			_effect.TextureAtlas = new Texture2DView(_texture, SamplerState.BilinearWrapNoMipmaps);
 
 			var random = new Random();
 			var vertices = new VertexPositionNormal[StarCount * 4];
@@ -133,10 +141,31 @@
 			if (camera == null)
 				return;
 
+			RasterizerState.CullCounterClockwise.Bind();
 			BlendState.Additive.Bind();
+
 			camera.ZoomMode = ZoomMode.Starfield;
 			_model.Draw(output, _effect.Default);
 			camera.ZoomMode = ZoomMode.Default;
+		}
+
+		/// <summary>
+		///     Draws all registered 2D elements.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
+		public void Draw(SpriteBatch spriteBatch)
+		{
+			// TODO
+		}
+
+		/// <summary>
+		///     Draws the user interface elements.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
+		/// <param name="camera">The camera that is used to draw the scene.</param>
+		public void DrawUserInterface(SpriteBatch spriteBatch, GameCamera camera)
+		{
+			// TODO
 		}
 
 		/// <summary>

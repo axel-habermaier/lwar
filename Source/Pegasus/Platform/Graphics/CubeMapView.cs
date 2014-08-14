@@ -17,6 +17,8 @@
 		{
 			Assert.ArgumentNotNull(cubeMap);
 			Assert.ArgumentNotNull(sampler);
+			Assert.That(sampler.Filter >= TextureFilter.NearestNoMipmaps || cubeMap.HasMipmaps,
+						"Texture filter '{0}' cannot be used to sample a cubemap without any mipmaps.", sampler.Filter);
 
 			CubeMap = cubeMap;
 			Sampler = sampler;
@@ -40,8 +42,6 @@
 		{
 			Assert.NotNull(CubeMap, "No texture has been set.");
 			Assert.NotNull(Sampler, "No sampler state has been set.");
-			Assert.That(Sampler.Filter >= TextureFilter.NearestNoMipmaps || CubeMap.HasMipmaps,
-						"Texture filter '{0}' cannot be used to sample a cubemap without any mipmaps.", Sampler.Filter);
 
 			CubeMap.Bind(slot);
 			Sampler.Bind(slot);

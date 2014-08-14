@@ -2,7 +2,6 @@
 {
 	using System;
 	using Gameplay;
-	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Logging;
@@ -81,19 +80,23 @@
 			}
 			catch (ConnectionDroppedException)
 			{
-				ShowErrorBox("Connection Failed", String.Format("Unable to connect to {0}. The connection attempt timed out.", ServerEndPoint));
+				ShowErrorBox("Connection Failed",
+					String.Format("Unable to connect to {0}. The connection attempt timed out.", ServerEndPoint),
+					new MainMenuViewModel());
 			}
 			catch (ServerFullException)
 			{
-				ShowErrorBox("Connection Rejected", "The server is full.");
+				ShowErrorBox("Connection Rejected", "The server is full.", new MainMenuViewModel());
 			}
 			catch (ProtocolMismatchException)
 			{
-				ShowErrorBox("Connection Rejected", "The server uses an incompatible version of the network protocol.");
+				ShowErrorBox("Connection Rejected", "The server uses an incompatible version of the network protocol.", new MainMenuViewModel());
 			}
 			catch (NetworkException e)
 			{
-				ShowErrorBox("Connection Error", String.Format("The connection attempt has been aborted due to a network error: {0}", e.Message));
+				ShowErrorBox("Connection Error",
+					String.Format("The connection attempt has been aborted due to a network error: {0}", e.Message),
+					new MainMenuViewModel());
 			}
 		}
 
@@ -103,20 +106,6 @@
 		protected override void OnDeactivated()
 		{
 			_gameSession.SafeDispose();
-		}
-
-		/// <summary>
-		///     Opens the main menu and shows a message box with the given header and error message.
-		/// </summary>
-		/// <param name="header">The header of the message box.</param>
-		/// <param name="message">The message that the message box should display.</param>
-		private void ShowErrorBox(string header, string message)
-		{
-			Log.Error("{0}: {1}", header, message);
-			MessageBox.Show(header, message);
-
-			var mainMenu = new MainMenuViewModel();
-			Root.ReplaceChild(mainMenu);
 		}
 	}
 }

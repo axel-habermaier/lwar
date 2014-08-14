@@ -2,6 +2,7 @@
 {
 	using System;
 	using Controls;
+	using Platform.Logging;
 	using Platform.Memory;
 
 	/// <summary>
@@ -184,6 +185,24 @@
 		/// </summary>
 		protected virtual void OnUpdate()
 		{
+		}
+
+		/// <summary>
+		///     Opens the main menu and shows a message box with the given header and error message.
+		/// </summary>
+		/// <param name="header">The header of the message box.</param>
+		/// <param name="message">The message that the message box should display.</param>
+		/// <param name="replacementViewModel">The view model the current view model should be replaced with.</param>
+		protected void ShowErrorBox(string header, string message, StackedViewModel replacementViewModel)
+		{
+			Assert.ArgumentNotNullOrWhitespace(header);
+			Assert.ArgumentNotNullOrWhitespace(message);
+			Assert.ArgumentNotNull(replacementViewModel);
+
+			Log.Error("{0}: {1}", header, message);
+			MessageBox.Show(header, message);
+
+			Parent.ReplaceChild(replacementViewModel);
 		}
 
 		/// <summary>

@@ -4,6 +4,7 @@
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
+	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
@@ -28,6 +29,8 @@
 		/// </summary>
 		private FullscreenQuad _fullscreenQuad;
 
+		private Texture2D _heat;
+
 		private RenderOutput _heatOutput;
 
 		/// <summary>
@@ -40,39 +43,49 @@
 
 		private SphereEffect _sphereEffect;
 
+		private CubeMap _sun;
 		private SunEffect _sunEffect;
+		private CubeMap _turbulence;
 
 		/// <summary>
-		///     Initializes the renderer.
+		///     Loads the required assets of the renderer.
 		/// </summary>
-		protected override void Initialize()
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			var sun = Assets.Load(Textures.SunCubemap);
-			var turbulence = Assets.Load(Textures.SunHeatCubemap);
-			var heat = Assets.Load(Textures.Heat);
+			_sun = assets.Load(Textures.SunCubemap);
+			_turbulence = assets.Load(Textures.SunHeatCubemap);
+			_heat = assets.Load(Textures.Heat);
 
-			_model = Model.CreateSphere(GraphicsDevice, EntityTemplates.Sun.Radius, 20);
-			_sphereEffect = new SphereEffect(GraphicsDevice, Assets) { SphereTexture = new CubeMapView(sun, SamplerState.TrilinearClamp) };
+			_sphereEffect = new SphereEffect(graphicsDevice, assets);
+			_sunEffect = new SunEffect(graphicsDevice, assets);
 
-			_sunEffect = new SunEffect(GraphicsDevice, Assets)
-			{
-				CubeMap = new CubeMapView(turbulence, SamplerState.TrilinearClamp),
-				HeatMap = new Texture2DView(heat, SamplerState.BilinearClampNoMipmaps)
-			};
+			_fullscreenQuad = new FullscreenQuad(graphicsDevice);
+			_quadEffect = new TexturedQuadEffect(graphicsDevice, assets) { World = Matrix.Identity };
 
 			var w = 640;
 			var h = 360;
 			var flags = TextureFlags.GenerateMipmaps | TextureFlags.RenderTarget;
-			var effectTexture = new Texture2D(GraphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
+			var effectTexture = new Texture2D(graphicsDevice, w, h, SurfaceFormat.Rgba8, flags);
 			effectTexture.SetName("SunRenderer.EffectTexture");
 
-			_effectTarget = new RenderTarget(GraphicsDevice, null, effectTexture);
-			_heatOutput = new RenderOutput(GraphicsDevice) { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, w, h) };
+			_effectTarget = new RenderTarget(graphicsDevice, null, effectTexture);
+			_heatOutput = new RenderOutput(graphicsDevice) { RenderTarget = _effectTarget, Viewport = new Rectangle(0, 0, w, h) };
+			_blur = new GaussianBlur(graphicsDevice, assets, effectTexture);
+		}
 
-			_fullscreenQuad = new FullscreenQuad(GraphicsDevice, Assets);
-			_quadEffect = new TexturedQuadEffect(GraphicsDevice, Assets) { World = Matrix.Identity };
+		/// <summary>
+		///     Initializes the renderer.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		public override void Initialize(GraphicsDevice graphicsDevice)
+		{
+			_model = Model.CreateSphere(graphicsDevice, EntityTemplates.Sun.Radius, 20);
+			_sphereEffect.SphereTexture = new CubeMapView(_sun, SamplerState.TrilinearClamp);
 
-			_blur = new GaussianBlur(GraphicsDevice, Assets, effectTexture);
+			_sunEffect.CubeMap = new CubeMapView(_turbulence, SamplerState.TrilinearClamp);
+			_sunEffect.HeatMap = new Texture2DView(_heat, SamplerState.BilinearClampNoMipmaps);
 		}
 
 		/// <summary>

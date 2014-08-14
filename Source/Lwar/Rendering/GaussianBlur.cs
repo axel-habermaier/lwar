@@ -58,7 +58,7 @@
 			Assert.InRange(texture.Width, MinimumSize, 2048);
 
 			_texture = texture;
-			_fullscreenQuad = new FullscreenQuad(graphicsDevice, assets);
+			_fullscreenQuad = new FullscreenQuad(graphicsDevice);
 
 			var width = texture.Width;
 			var height = texture.Height;

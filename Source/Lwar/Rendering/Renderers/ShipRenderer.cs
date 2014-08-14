@@ -7,11 +7,13 @@
 	using Gameplay.Entities;
 	using Network;
 	using Pegasus;
+	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
+	using Fonts = Assets.Fonts;
 
 	/// <summary>
 	///     Renders ships into a 3D scene.
@@ -34,12 +36,14 @@
 		private Texture2D _texture;
 
 		/// <summary>
-		///     Initializes the renderer.
+		///     Loads the required assets of the renderer.
 		/// </summary>
-		protected override void Initialize()
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			_texture = Assets.Load(Textures.Ship);
-			_font = Assets.Load(Fonts.LiberationMono11);
+			_texture = assets.Load(Textures.Ship);
+			_font = assets.Load(Fonts.LiberationMono11);
 		}
 
 		/// <summary>
@@ -78,9 +82,9 @@
 
 				// Determine the screen-space height of the ship
 				var topLeft = camera.ToScreenCoodinates(new Vector2(ship.Position.X + _texture.Width / 2.0f,
-																	ship.Position.Y - _texture.Height / 2.0f));
+					ship.Position.Y - _texture.Height / 2.0f));
 				var bottomRight = camera.ToScreenCoodinates(new Vector2(ship.Position.X - _texture.Width / 2.0f,
-																		ship.Position.Y + _texture.Height / 2.0f));
+					ship.Position.Y + _texture.Height / 2.0f));
 
 				var width = bottomRight.X - topLeft.X;
 				var height = bottomRight.Y - topLeft.Y;
@@ -103,7 +107,7 @@
 
 					// The line segment from the center of the viewport to the ship's screen space position to 
 					var line = new LineSegment(new Vector2(viewport.Width / 2.0f, viewport.Height / 2.0f),
-											   new Vector2(name.Area.Left, name.Area.Top) + new Vector2(name.Area.Width / 2.0f, name.Area.Height / 2.0f));
+						new Vector2(name.Area.Left, name.Area.Top) + new Vector2(name.Area.Width / 2.0f, name.Area.Height / 2.0f));
 
 					Vector2 intersection;
 					if (line.Intersects(left, out intersection) || line.Intersects(top, out intersection) ||

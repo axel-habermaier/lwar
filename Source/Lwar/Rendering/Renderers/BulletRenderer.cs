@@ -4,6 +4,7 @@
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Entities;
+	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -27,15 +28,24 @@
 		private Texture2D _texture, _texture2;
 
 		/// <summary>
+		///     Loads the required assets of the renderer.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
+		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
+		{
+			_texture = assets.Load(Textures.Bullet);
+			_texture2 = assets.Load(Textures.BulletGlow);
+			_effect = new TexturedQuadEffect(graphicsDevice, assets);
+		}
+
+		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		protected override void Initialize()
+		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
+		public override void Initialize(GraphicsDevice graphicsDevice)
 		{
-			_texture = Assets.Load(Textures.Bullet);
-			_texture2 = Assets.Load(Textures.BulletGlow);
-
-			_model = Model.CreateQuad(GraphicsDevice, _texture.Size);
-			_effect = new TexturedQuadEffect(GraphicsDevice, Assets);
+			_model = Model.CreateQuad(graphicsDevice, _texture.Size);
 		}
 
 		/// <summary>
@@ -50,16 +60,16 @@
 			foreach (var bullet in Elements)
 			{
 				var rectangle = new RectangleF(bullet.Position.X - _texture.Width / 2.0f,
-											   bullet.Position.Y - _texture.Height / 2.0f,
-											   _texture.Width, _texture.Height);
+					bullet.Position.Y - _texture.Height / 2.0f,
+					_texture.Width, _texture.Height);
 				spriteBatch.Draw(rectangle, _texture2, new Color(0, 255, 0, 255));
 			}
 
 			foreach (var bullet in Elements)
 			{
 				var rectangle = new RectangleF(bullet.Position.X - _texture.Width / 2.0f,
-											   bullet.Position.Y - _texture.Height / 2.0f,
-											   _texture.Width, _texture.Height);
+					bullet.Position.Y - _texture.Height / 2.0f,
+					_texture.Width, _texture.Height);
 				spriteBatch.Draw(rectangle, _texture, Color.White);
 			}
 		}

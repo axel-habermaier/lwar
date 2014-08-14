@@ -7,7 +7,6 @@
 	using Network.Messages;
 	using Pegasus;
 	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform.Logging;
@@ -202,26 +201,14 @@
 			}
 			catch (ConnectionDroppedException)
 			{
-				ShowErrorBox("Connection Lost", "The connection to the server has been lost.");
+				ShowErrorBox("Connection Lost", "The connection to the server has been lost.", new MainMenuViewModel());
 			}
 			catch (NetworkException e)
 			{
-				ShowErrorBox("Connection Error", String.Format("The game session has been aborted due to a network error: {0}", e.Message));
+				ShowErrorBox("Connection Error",
+					String.Format("The game session has been aborted due to a network error: {0}", e.Message),
+					new MainMenuViewModel());
 			}
-		}
-
-		/// <summary>
-		///     Opens the main menu and shows a message box with the given header and error message.
-		/// </summary>
-		/// <param name="header">The header of the message box.</param>
-		/// <param name="message">The message that the message box should display.</param>
-		private void ShowErrorBox(string header, string message)
-		{
-			Log.Error("{0}: {1}", header, message);
-			MessageBox.Show(header, message);
-
-			var mainMenu = new MainMenuViewModel();
-			Root.ReplaceChild(mainMenu);
 		}
 	}
 }

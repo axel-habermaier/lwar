@@ -42,7 +42,11 @@
 		/// </summary>
 		public bool HasMipmaps
 		{
-			get { return AutogenerateMipmaps || Description.Mipmaps > 1; }
+			get
+			{
+				ValidateAccess();
+				return AutogenerateMipmaps || Description.Mipmaps > 1;
+			}
 		}
 
 		/// <summary>
@@ -50,7 +54,11 @@
 		/// </summary>
 		public bool AutogenerateMipmaps
 		{
-			get { return (Description.Flags & TextureFlags.GenerateMipmaps) != 0; }
+			get
+			{
+				ValidateAccess();
+				return (Description.Flags & TextureFlags.GenerateMipmaps) != 0;
+			}
 		}
 
 		/// <summary>
@@ -58,7 +66,11 @@
 		/// </summary>
 		public bool IsColorBuffer
 		{
-			get { return (Description.Flags & TextureFlags.RenderTarget) != 0; }
+			get
+			{
+				ValidateAccess();
+				return (Description.Flags & TextureFlags.RenderTarget) != 0;
+			}
 		}
 
 		/// <summary>
@@ -66,7 +78,11 @@
 		/// </summary>
 		public bool IsDepthStencilBuffer
 		{
-			get { return (Description.Flags & TextureFlags.DepthStencil) != 0; }
+			get
+			{
+				ValidateAccess();
+				return (Description.Flags & TextureFlags.DepthStencil) != 0;
+			}
 		}
 
 		/// <summary>
@@ -89,9 +105,7 @@
 		/// <param name="slot">The slot the texture should be bound to.</param>
 		internal void Bind(int slot)
 		{
-			Assert.NotDisposed(this);
-			Assert.NotNull(_texture, "The texture has not yet been initialized.");
-
+			ValidateAccess();
 			NativeMethods.BindTexture(_texture, slot);
 		}
 
@@ -101,9 +115,7 @@
 		/// <param name="slot">The slot the texture should be unbound from.</param>
 		internal void Unbind(int slot)
 		{
-			Assert.NotDisposed(this);
-			Assert.NotNull(_texture, "The texture has not yet been initialized.");
-
+			ValidateAccess();
 			NativeMethods.UnbindTexture(_texture, slot);
 		}
 
@@ -112,9 +124,7 @@
 		/// </summary>
 		public void GenerateMipmaps()
 		{
-			Assert.NotDisposed(this);
-			Assert.NotNull(_texture, "The texture has not yet been initialized.");
-
+			ValidateAccess();
 			NativeMethods.GenerateMipmaps(_texture);
 		}
 
@@ -124,6 +134,16 @@
 		protected override void OnDisposing()
 		{
 			NativeMethods.DestroyTexture(_texture);
+		}
+
+		/// <summary>
+		///     In debug builds, checks whether the instance can be safely accessed.
+		/// </summary>
+		[Conditional("DEBUG"), DebuggerHidden]
+		protected void ValidateAccess()
+		{
+			Assert.NotDisposed(this);
+			Assert.NotNull(_texture, "The texture has not yet been initialized.");
 		}
 
 #if DEBUG
