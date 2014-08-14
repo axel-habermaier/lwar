@@ -192,6 +192,7 @@
     <Compile Include="Rendering\Renderers\BoundaryRenderer.cs" />
     <Compile Include="UserInterface\ViewModels\ChatViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\GameSessionViewModel.cs" />
+    <Compile Include="UserInterface\ViewModels\InGameMenuViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\LoadingViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\MainMenuViewModel.cs" />
     <Compile Include="Gameplay\Actors\Actor.cs" />
@@ -303,6 +304,7 @@
     <Compile Include="..\User Interface\Lwar UI\UserInterface.cs">
       <Link>UserInterface\Views\UserInterface.cs</Link>
     </Compile>
+    <Compile Include="UserInterface\Views\InGameMenuView.cs" />
     <Compile Include="UserInterface\Views\LoadingView.cs" />
     <Compile Include="UserInterface\Views\ChatView.cs" />
   </ItemGroup>

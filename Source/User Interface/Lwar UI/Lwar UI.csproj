@@ -118,6 +118,9 @@
     <Compile Include="UserInterface\Views\ChatView.xaml.cs">
       <DependentUpon>ChatView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserInterface\Views\InGameMenuView.xaml.cs">
+      <DependentUpon>InGameMenuView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\Views\Scoreboard.xaml.cs">
       <DependentUpon>Scoreboard.xaml</DependentUpon>
     </Compile>
@@ -137,6 +140,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UserInterface\Views\GameSessionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Views\InGameMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

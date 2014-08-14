@@ -32,7 +32,7 @@
 			InputDevice = new LogicalInputDevice(this);
 			_bindings = new Bindings(InputDevice);
 
-			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "ShowConsole", triggerOnRepeat: false));
+			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "ToggleConsole", triggerOnRepeat: false) { Preview = true });
 			DataContext = dataContext;
 
 			InitializeComponents();

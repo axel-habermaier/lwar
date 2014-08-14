@@ -140,6 +140,14 @@
 		}
 
 		/// <summary>
+		///     Shows the in-game menu.
+		/// </summary>
+		public void ShowInGameMenu()
+		{
+			Child = new InGameMenuViewModel();
+		}
+
+		/// <summary>
 		///     Draws the 3D scene to the given render output.
 		/// </summary>
 		/// <param name="renderOutput">The render output the current scene should be drawn to.</param>
@@ -186,7 +194,7 @@
 			try
 			{
 				// Let the game session and scoreboard update their states
-				_gameSession.Update();
+				_gameSession.Update(Child is InGameMenuViewModel);
 				Scoreboard.Update();
 
 				// Check if we're lagging or waiting for the server

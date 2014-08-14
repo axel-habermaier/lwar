@@ -10,6 +10,11 @@
 		where T : RoutedEventArgs
 	{
 		/// <summary>
+		///     The binding that is set for the routed event.
+		/// </summary>
+		private RoutedEventBinding<T> _binding;
+
+		/// <summary>
 		///     The handlers that must be invoked when the routed event is raised.
 		/// </summary>
 		private RoutedEventHandler<T> _handlers;
@@ -54,6 +59,25 @@
 
 			if (_handlers != null)
 				_handlers(sender, arguments);
+		}
+
+		/// <summary>
+		///     Sets the given binding for the routed event.
+		/// </summary>
+		/// <param name="binding">The binding that should be set.</param>
+		public void SetBinding(RoutedEventBinding<T> binding)
+		{
+			_binding = binding;
+		}
+
+		/// <summary>
+		///     Updates the activation state of the event's binding, if any.
+		/// </summary>
+		/// <param name="activated">Indicates whether the binding should be activated.</param>
+		public override void SetBindingActivationState(bool activated)
+		{
+			if (_binding != null)
+				_binding.Active = activated;
 		}
 	}
 }

@@ -56,7 +56,7 @@
 		[Test]
 		public void BindMethodWithParameters()
 		{
-			var button = new Button { DataContext = this };
+			var button = new Button { DataContext = this, IsAttachedToRoot = true };
 			button.CreateEventBinding(Button.ClickEvent, "OnEventParameters");
 
 			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
@@ -69,7 +69,7 @@
 		[Test]
 		public void BindMethodWithParameters_KeyEvent()
 		{
-			var button = new Button { DataContext = this };
+			var button = new Button { DataContext = this, IsAttachedToRoot = true };
 			button.CreateEventBinding(UIElement.KeyUpEvent, "OnEventParameters");
 
 			button.RaiseEvent(UIElement.KeyUpEvent, KeyEventArgs.Create(new Keyboard(), Key.A, 17, new InputState()));
@@ -85,7 +85,7 @@
 		[Test]
 		public void BindMethodWithoutParameters()
 		{
-			var button = new Button { DataContext = this };
+			var button = new Button { DataContext = this, IsAttachedToRoot = true };
 			button.CreateEventBinding(Button.ClickEvent, "OnEvent");
 
 			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
@@ -94,9 +94,50 @@
 		}
 
 		[Test]
-		public void DataContextChanged()
+		public void Binding_NotAttachedToRoot()
 		{
 			var button = new Button { DataContext = this };
+			button.CreateEventBinding(Button.ClickEvent, "OnEventParameters");
+
+			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
+			_parameterMethodInvoked.Should().BeFalse();
+			_parameterlessMethodInvoked.Should().BeFalse();
+		}
+
+		[Test]
+		public void Binding_BecomesAttachedToRoot()
+		{
+			var button = new Button { DataContext = this };
+			button.CreateEventBinding(Button.ClickEvent, "OnEventParameters");
+
+			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
+			_parameterMethodInvoked.Should().BeFalse();
+			_parameterlessMethodInvoked.Should().BeFalse();
+
+			button.IsAttachedToRoot = true;
+
+			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
+			_parameterMethodInvoked.Should().BeTrue();
+			_parameterlessMethodInvoked.Should().BeFalse();
+		}
+
+		[Test]
+		public void Binding_NoLongerAttachedToRoot()
+		{
+			var button = new Button { DataContext = this, IsAttachedToRoot = true};
+			button.CreateEventBinding(Button.ClickEvent, "OnEventParameters");
+
+			button.IsAttachedToRoot = false;
+
+			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
+			_parameterMethodInvoked.Should().BeFalse();
+			_parameterlessMethodInvoked.Should().BeFalse();
+		}
+
+		[Test]
+		public void DataContextChanged()
+		{
+			var button = new Button { DataContext = this, IsAttachedToRoot = true };
 			button.CreateEventBinding(Button.ClickEvent, "OnEvent");
 
 			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
@@ -115,7 +156,7 @@
 		[Test]
 		public void DataContextSetAfterBinding()
 		{
-			var button = new Button();
+			var button = new Button { IsAttachedToRoot = true };
 			button.CreateEventBinding(Button.ClickEvent, "OnEvent");
 
 			button.DataContext = this;
@@ -127,7 +168,7 @@
 		[Test]
 		public void DataContextSetAfterFirstInvocation()
 		{
-			var button = new Button();
+			var button = new Button { IsAttachedToRoot = true };
 			button.CreateEventBinding(Button.ClickEvent, "OnEvent");
 
 			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
@@ -144,7 +185,7 @@
 		[Test]
 		public void NoDataContext()
 		{
-			var button = new Button();
+			var button = new Button { IsAttachedToRoot = true };
 			button.CreateEventBinding(Button.ClickEvent, "OnEvent");
 
 			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);

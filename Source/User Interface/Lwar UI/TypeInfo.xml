@@ -1,8 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Types>
 	<Include>../Pegasus UI/TypeInfo.xml</Include>
 
 	<Class Name="Lwar.UserInterface.Views.UserControl1" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
 	<Class Name="Lwar.UserInterface.Views.Scoreboard" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
 	<Class Name="Lwar.UserInterface.Views.ChatView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.InGameMenu" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
 </Types>

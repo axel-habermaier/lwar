@@ -450,7 +450,8 @@
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNullOrWhitespace(method);
 
-			new RoutedEventBinding<T>(this, routedEvent, method);
+			var binding = new RoutedEventBinding<T>(this, routedEvent, method) { Active = IsAttachedToRoot };
+			_eventStore.SetBinding(routedEvent, binding);
 		}
 
 		/// <summary>

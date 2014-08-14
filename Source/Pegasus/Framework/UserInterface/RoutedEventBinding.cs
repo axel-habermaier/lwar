@@ -12,9 +12,24 @@
 		where T : RoutedEventArgs
 	{
 		/// <summary>
+		///     The UI element that is bound to.
+		/// </summary>
+		private readonly UIElement _element;
+
+		/// <summary>
 		///     The name of the method that is invoked when the routed event is raised.
 		/// </summary>
 		private readonly string _methodName;
+
+		/// <summary>
+		///     The routed event that is bound to.
+		/// </summary>
+		private readonly RoutedEvent<T> _routedEvent;
+
+		/// <summary>
+		///     Indicates whether the binding is currently active.
+		/// </summary>
+		private bool _active;
 
 		/// <summary>
 		///     The data context the event handler is invoked on.
@@ -29,20 +44,57 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="uiElement">The UI element that raises the routed event.</param>
+		/// <param name="element">The UI element that raises the routed event.</param>
 		/// <param name="routedEvent">The routed event that should be bound to.</param>
 		/// <param name="method">The name of the method that should be invoked when the routed event is raised.</param>
-		public RoutedEventBinding(UIElement uiElement, RoutedEvent<T> routedEvent, string method)
+		public RoutedEventBinding(UIElement element, RoutedEvent<T> routedEvent, string method)
 		{
-			Assert.ArgumentNotNull(uiElement);
+			Assert.ArgumentNotNull(element);
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNullOrWhitespace(method);
 
+			_element = element;
+			_routedEvent = routedEvent;
 			_methodName = method;
 
-			uiElement.AddHandler(routedEvent, OnEventRaised);
-			uiElement.AddChangedHandler(UIElement.DataContextProperty, OnDataContextChanged);
-			InitializeBinding(uiElement.DataContext);
+			element.AddHandler(routedEvent, OnEventRaised);
+			element.AddChangedHandler(UIElement.DataContextProperty, OnDataContextChanged);
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the binding is currently active.
+		/// </summary>
+		internal bool Active
+		{
+			get { return _active; }
+			set
+			{
+				if (_active == value)
+					return;
+
+				_active = value;
+
+				if (_active)
+					OnActivated();
+				else
+					OnDeactivated();
+			}
+		}
+
+		/// <summary>
+		///     Invoked when the binding has been activated.
+		/// </summary>
+		private void OnActivated()
+		{
+			InitializeBinding(_element.DataContext);
+		}
+
+		/// <summary>
+		///     Invoked when the binding has been deactivated.
+		/// </summary>
+		private void OnDeactivated()
+		{
+			_element.RemoveHandler(_routedEvent, OnEventRaised);
 		}
 
 		/// <summary>
@@ -50,7 +102,8 @@
 		/// </summary>
 		private void OnDataContextChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
 		{
-			InitializeBinding(args.NewValue);
+			if (Active)
+				InitializeBinding(args.NewValue);
 		}
 
 		/// <summary>

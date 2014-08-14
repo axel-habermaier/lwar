@@ -1,9 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface.Views
 {
 	using System;
-	using Input;
 	using Math;
-	using Platform;
 
 	partial class ConsoleView
 	{
@@ -19,7 +17,6 @@
 		{
 			AddChangedHandler(ActualHeightProperty, OnHeightChanged);
 			AddChangedHandler(VisibilityProperty, OnVisibleChanged);
-			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "Hide", triggerOnRepeat: false));
 			_layoutRoot.Height = 0; // Reduces flickering when the console is opened for the first time
 		}
 

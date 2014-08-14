@@ -113,14 +113,6 @@
 		}
 
 		/// <summary>
-		///     Hides the console.
-		/// </summary>
-		public void Hide()
-		{
-			IsVisible = false;
-		}
-
-		/// <summary>
 		///     Removes all log entries shown by the console.
 		/// </summary>
 		public void Clear()

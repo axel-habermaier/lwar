@@ -65,5 +65,34 @@
 			if (storage != null)
 				storage.InvokeHandlers(sender, arguments);
 		}
+
+		/// <summary>
+		///     Changes the activation state of all bindings that are set on any dependency properties.
+		/// </summary>
+		/// <param name="activated">Indicates whether the bindings should be activated.</param>
+		public void SetBindingsActivationState(bool activated)
+		{
+			foreach (var value in _values.GetEnumerator())
+				value.SetBindingActivationState(activated);
+		}
+
+		/// <summary>
+		///     Sets the binding for the routed event.
+		/// </summary>
+		/// <typeparam name="T">The type of the data associated with the routed event.</typeparam>
+		/// <param name="routedEvent">The routed event the binding should be set for.</param>
+		/// <param name="binding">The binding that should be set.</param>
+		public void SetBinding<T>(RoutedEvent<T> routedEvent, RoutedEventBinding<T> binding)
+			where T : RoutedEventArgs
+		{
+			Assert.ArgumentNotNull(routedEvent);
+			Assert.ArgumentNotNull(binding);
+
+			var storage = _values.Get(routedEvent.Index) as RoutedEventStorage<T>;
+			if (storage == null)
+				_values.Add(storage = new RoutedEventStorage<T>(routedEvent));
+
+			storage.SetBinding(binding);
+		}
 	}
 }

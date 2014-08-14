@@ -158,7 +158,7 @@
 
 			// Perform an update to fully initialize the game state
 			_clock.Reset();
-			Update();
+			Update(false);
 
 			return true;
 		}
@@ -166,12 +166,15 @@
 		/// <summary>
 		///     Updates the state of the game session.
 		/// </summary>
-		public void Update()
+		/// <param name="inGameMenuOpen">Indicates whether the in-game menu is currently open.</param>
+		public void Update(bool inGameMenuOpen)
 		{
+			if (!inGameMenuOpen)
+				InputManager.Update();
+
+			InputManager.SendInput();
 			NetworkSession.Update();
 			CameraManager.Update();
-			InputManager.Update();
-			InputManager.SendInput();
 
 			Players.Update();
 			Entities.Update(_clock);

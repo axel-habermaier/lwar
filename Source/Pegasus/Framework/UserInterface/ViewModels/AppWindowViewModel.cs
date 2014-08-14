@@ -118,11 +118,11 @@
 		}
 
 		/// <summary>
-		///     Shows the console.
+		///     Shows or hides the console.
 		/// </summary>
-		public void ShowConsole()
+		public void ToggleConsole()
 		{
-			Console.IsVisible = true;
+			Console.IsVisible = !Console.IsVisible;
 		}
 
 		/// <summary>

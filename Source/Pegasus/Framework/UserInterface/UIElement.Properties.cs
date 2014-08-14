@@ -464,6 +464,10 @@
 					_state &= ~State.IsAttachedToRoot;
 
 				SetBindingsActivationState(value);
+				_eventStore.SetBindingsActivationState(value);
+
+				if (_inputBindings != null)
+					_inputBindings.Active = value;
 
 				var childrenCount = VisualChildrenCount;
 				for (var i = 0; i < childrenCount; ++i)
@@ -504,7 +508,7 @@
 		/// </summary>
 		public InputBindingCollection InputBindings
 		{
-			get { return _inputBindings ?? (_inputBindings = new InputBindingCollection(this)); }
+			get { return _inputBindings ?? (_inputBindings = new InputBindingCollection(this) { Active = IsAttachedToRoot }); }
 		}
 
 		/// <summary>

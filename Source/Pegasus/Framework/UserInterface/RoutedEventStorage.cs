@@ -29,5 +29,11 @@
 		{
 			get { return Event.Index; }
 		}
+
+		/// <summary>
+		///     Updates the activation state of the event's binding, if any.
+		/// </summary>
+		/// <param name="activated">Indicates whether the binding should be activated.</param>
+		public abstract void SetBindingActivationState(bool activated);
 	}
 }

@@ -101,11 +101,13 @@
 			switch (TriggerMode)
 			{
 				case TriggerMode.Activated:
-					if (args.RoutedEvent == UIElement.KeyDownEvent && keyEventArgs.ScanCode == _scanCode && keyEventArgs.Modifiers == Modifiers)
+					var downEvent = Preview ? UIElement.PreviewKeyDownEvent : UIElement.KeyDownEvent;
+					if (args.RoutedEvent == downEvent && keyEventArgs.ScanCode == _scanCode && keyEventArgs.Modifiers == Modifiers)
 						return keyEventArgs.WentDown || (keyEventArgs.IsRepeated && _triggerOnRepeat);
 					return false;
 				case TriggerMode.Deactivated:
-					return args.RoutedEvent == UIElement.KeyUpEvent && (keyEventArgs.ScanCode == _scanCode || keyEventArgs.Modifiers != Modifiers);
+					var upEvent = Preview ? UIElement.PreviewKeyUpEvent : UIElement.KeyUpEvent;
+					return args.RoutedEvent == upEvent && (keyEventArgs.ScanCode == _scanCode || keyEventArgs.Modifiers != Modifiers);
 				default:
 					Log.Die("Unknown trigger mode.");
 					return false;
