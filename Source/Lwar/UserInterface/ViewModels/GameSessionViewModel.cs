@@ -9,7 +9,6 @@
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
@@ -120,6 +119,30 @@
 		}
 
 		/// <summary>
+		///     Shows the chat input.
+		/// </summary>
+		public void ShowChatInput()
+		{
+			Chat.IsVisible = true;
+		}
+
+		/// <summary>
+		///     Shows the scoreboard.
+		/// </summary>
+		public void ShowScoreboard()
+		{
+			Scoreboard.IsVisible = true;
+		}
+
+		/// <summary>
+		///     Hides the scoreboard.
+		/// </summary>
+		public void HideScoreboard()
+		{
+			Scoreboard.IsVisible = false;
+		}
+
+		/// <summary>
 		///     Draws the 3D scene to the given render output.
 		/// </summary>
 		/// <param name="renderOutput">The render output the current scene should be drawn to.</param>
@@ -194,35 +217,11 @@
 		/// <param name="message">The message that the message box should display.</param>
 		private void ShowErrorBox(string header, string message)
 		{
-			Log.Error("{0}", message);
+			Log.Error("{0}: {1}", header, message);
 			MessageBox.Show(header, message);
 
 			var mainMenu = new MainMenuViewModel();
 			Root.ReplaceChild(mainMenu);
-		}
-
-		/// <summary>
-		///     Shows the chat input.
-		/// </summary>
-		public void ShowChatInput()
-		{
-			Chat.IsVisible = true;
-		}
-
-		/// <summary>
-		///     Shows the scoreboard.
-		/// </summary>
-		public void ShowScoreboard()
-		{
-			Scoreboard.IsVisible = true;
-		}
-
-		/// <summary>
-		///     Hides the scoreboard.
-		/// </summary>
-		public void HideScoreboard()
-		{
-			Scoreboard.IsVisible = false;
 		}
 	}
 }

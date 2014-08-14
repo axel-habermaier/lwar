@@ -116,9 +116,8 @@
 				if (IsConnected && messageQueue.HasPendingData)
 					SendMessages(messageQueue);
 			}
-			catch (NetworkException e)
+			catch (NetworkException)
 			{
-				Log.Error("The connection to the server has been terminated due to an error: {0}", e.Message);
 				IsFaulted = true;
 				throw;
 			}
@@ -166,9 +165,8 @@
 					}
 				}
 			}
-			catch (NetworkException e)
+			catch (NetworkException)
 			{
-				Log.Error("The connection to the server has been terminated due to an error: {0}", e.Message);
 				IsFaulted = true;
 				throw;
 			}
