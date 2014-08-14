@@ -9,7 +9,6 @@
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
-	using UserInterface.Input;
 	using UserInterface.ViewModels;
 	using UserInterface.Views;
 
@@ -75,6 +74,14 @@
 		protected ResourceDictionary Resources
 		{
 			get { return _root.Resources; }
+		}
+
+		/// <summary>
+		///     Indicates whether the console is currently open.
+		/// </summary>
+		public bool IsConsoleOpen
+		{
+			get { return _appWindowViewModel.Console.IsVisible; }
 		}
 
 		/// <summary>

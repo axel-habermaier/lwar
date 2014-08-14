@@ -392,6 +392,9 @@
 			IsLagging = _networkSession.IsLagging;
 			WaitForServerTimeout = _networkSession.TimeToDrop / 1000;
 
+			if (_chat.IsVisible || Application.Current.IsConsoleOpen)
+				_scoreboard.IsVisible = false;
+
 			if (!_networkSession.IsConnected)
 				return;
 
@@ -410,7 +413,7 @@
 				_scoreboard.Update();
 
 			var localPlayer = _gameSession.Players.LocalPlayer;
-			if (localPlayer != null && localPlayer.Ship == null && _respawn.IsTriggered)
+			if (localPlayer != null && localPlayer.Ship == null && _respawn.IsTriggered && CameraManager.GameCamera.IsActive)
 				_networkSession.Send(SelectionMessage.Create(localPlayer, EntityType.Ship,
 					EntityType.Gun, EntityType.Phaser,
 					EntityType.Phaser, EntityType.Phaser));

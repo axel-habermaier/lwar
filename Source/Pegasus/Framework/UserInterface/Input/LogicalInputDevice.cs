@@ -28,6 +28,16 @@
 		private readonly InputState[] _keyStates = new InputState[Enum.GetValues(typeof(Key)).Length];
 
 		/// <summary>
+		///     The keyboard providing the keyboard input.
+		/// </summary>
+		private readonly Keyboard _keyboard;
+
+		/// <summary>
+		///     The mouse providing the mouse input.
+		/// </summary>
+		private readonly Mouse _mouse;
+
+		/// <summary>
 		///     The mouse button states.
 		/// </summary>
 		private readonly InputState[] _mouseButtonStates = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
@@ -52,6 +62,10 @@
 			_uiElement.MouseUp += OnMouseUp;
 			_uiElement.MouseWheel += OnMouseWheel;
 			_uiElement.MouseMove += OnMouseMoved;
+
+			var window = uiElement.ParentWindow;
+			_keyboard = window.Keyboard;
+			_mouse = window.Mouse;
 		}
 
 		/// <summary>
@@ -217,7 +231,7 @@
 		public bool IsPressed(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].IsPressed;
+			return _keyStates[(int)key].IsPressed && _keyboard.IsPressed(key);
 		}
 
 		/// <summary>
@@ -228,7 +242,7 @@
 		public bool WentDown(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].WentDown;
+			return _keyStates[(int)key].WentDown && _keyboard.WentDown(key);
 		}
 
 		/// <summary>
@@ -239,7 +253,7 @@
 		public bool WentUp(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].WentUp;
+			return _keyStates[(int)key].WentUp && _keyboard.WentUp(key);
 		}
 
 		/// <summary>
@@ -250,7 +264,7 @@
 		public bool IsRepeated(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].IsRepeated;
+			return _keyStates[(int)key].IsRepeated && _keyboard.IsRepeated(key);
 		}
 
 		/// <summary>
@@ -260,7 +274,7 @@
 		public bool IsPressed(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _mouseButtonStates[(int)button].IsPressed;
+			return _mouseButtonStates[(int)button].IsPressed && _mouse.IsPressed(button);
 		}
 
 		/// <summary>
@@ -270,7 +284,7 @@
 		public bool IsDoubleClicked(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _doubleClicked[(int)button];
+			return _doubleClicked[(int)button] && _mouse.IsDoubleClicked(button);
 		}
 
 		/// <summary>
@@ -281,7 +295,7 @@
 		public bool WentDown(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _mouseButtonStates[(int)button].WentDown;
+			return _mouseButtonStates[(int)button].WentDown && _mouse.WentDown(button);
 		}
 
 		/// <summary>
@@ -292,7 +306,7 @@
 		public bool WentUp(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _mouseButtonStates[(int)button].WentUp;
+			return _mouseButtonStates[(int)button].WentUp && _mouse.WentUp(button);
 		}
 	}
 }
