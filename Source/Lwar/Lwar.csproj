@@ -187,6 +187,7 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Rendering\CircleOutline.cs" />
     <Compile Include="UserInterface\ViewModels\ChatViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\GameSessionViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\MainMenuViewModel.cs" />

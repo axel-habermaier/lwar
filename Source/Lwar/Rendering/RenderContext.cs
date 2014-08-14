@@ -1,11 +1,10 @@
 ﻿namespace Lwar.Rendering
 {
 	using System;
-	using System.Linq;
 	using Assets.Effects;
 	using Pegasus;
-	using Pegasus.Math;
 	using Pegasus.Assets;
+	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
@@ -16,6 +15,16 @@
 	/// </summary>
 	public class RenderContext : DisposableObject
 	{
+		/// <summary>
+		///     The effect that is used to draw the level boundary.
+		/// </summary>
+		private readonly SimpleVertexEffect _boundaryEffect;
+
+		/// <summary>
+		///     The model representing the boundary of the level.
+		/// </summary>
+		private readonly Model _levelBoundary;
+
 		/// <summary>
 		///     The renderer that is used to draw the parallax scrolling effect.
 		/// </summary>
@@ -67,6 +76,12 @@
 			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
 			_skyboxRenderer = new SkyboxRenderer(graphicsDevice, assets);
 			_parallaxRenderer = new ParallaxRenderer(graphicsDevice, assets);
+			_boundaryEffect = new SimpleVertexEffect(graphicsDevice, assets);
+
+			const int thickness = 64;
+			var outline = new CircleOutline();
+			outline.Add(Int16.MaxValue + thickness / 2, 265, thickness);
+			_levelBoundary = outline.ToModel(graphicsDevice);
 
 			foreach (var renderer in _renderers)
 				renderer.Initialize(graphicsDevice, assets);
@@ -143,8 +158,8 @@
 				renderer.Draw(_spriteBatch);
 
 			// Draw the level boundaries
-			const int thickness = 64;
-			_spriteBatch.DrawOutline(new CircleF(Vector2.Zero, Int16.MaxValue + thickness / 2), new Color(255, 0, 0, 128), thickness, 265);
+			_boundaryEffect.Color = new Vector4(0.3f, 0, 0, 0.3f);
+			_levelBoundary.Draw(output, _boundaryEffect.Default);
 
 			_spriteBatch.DrawBatch(output);
 		}
@@ -169,6 +184,8 @@
 		{
 			_renderers.SafeDisposeAll();
 
+			_levelBoundary.SafeDispose();
+			_boundaryEffect.SafeDispose();
 			_skyboxRenderer.SafeDispose();
 			_parallaxRenderer.SafeDispose();
 			_spriteBatch.SafeDispose();

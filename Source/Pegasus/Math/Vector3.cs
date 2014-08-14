@@ -251,5 +251,18 @@
 			v = Vector4.Transform(ref v, ref matrix);
 			return new Vector3(v.X, v.Y, v.Z);
 		}
+
+		/// <summary>
+		///     Applies the given transformation matrix to the vector.
+		/// </summary>
+		/// <param name="vector">The vector that should be transformed.</param>
+		/// <param name="matrix">The transformation matrix that should be applied.</param>
+		/// <param name="result">The vector that stores the result of the transformation.</param>
+		public static void Transform(ref Vector3 vector, ref Matrix matrix, out Vector3 result)
+		{
+			var v = new Vector4(vector);
+			v = Vector4.Transform(ref v, ref matrix);
+			result = new Vector3(v.X, v.Y, v.Z);
+		}
 	}
 }

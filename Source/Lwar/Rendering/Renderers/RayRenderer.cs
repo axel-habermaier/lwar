@@ -51,11 +51,11 @@
 			{
 				_effect.Texture = new Texture2DView(_texture2, SamplerState.BilinearClampNoMipmaps);
 				_effect.World = Matrix.CreateScale(ray.Length, 1, 1) * ray.Transform.Matrix;
-				_effect.Color = new Vector4(1, 0, 0, 1);
+				_effect.Color = new Vector4(1, 0, 0);
 				_model.Draw(output, _effect.ColoredTexturedQuad);
 
 				_effect.Texture = new Texture2DView(_texture, SamplerState.BilinearClampNoMipmaps);
-				_effect.Color = new Vector4(1, 1, 1, 1);
+				_effect.Color = new Vector4(1, 1, 1);
 				_model.Draw(output, _effect.ColoredTexturedQuad);
 			}
 		}

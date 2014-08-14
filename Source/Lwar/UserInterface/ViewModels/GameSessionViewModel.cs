@@ -280,6 +280,9 @@
 			renderOutput.ClearColor(new Color(0, 0, 0, 255));
 			renderOutput.ClearDepth();
 
+			if (!_networkSession.IsConnected)
+				return;
+
 			_renderContext.Draw(renderOutput);
 
 			var camera = renderOutput.Camera;

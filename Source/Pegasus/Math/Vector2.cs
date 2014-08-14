@@ -202,9 +202,20 @@ namespace Pegasus.Math
 		/// <param name="matrix">The transformation matrix that should be applied.</param>
 		public static Vector2 Transform(ref Vector2 vector, ref Matrix matrix)
 		{
-			var vector4 = new Vector4(vector.X, vector.Y, 0);
-			vector4 = Vector4.Transform(ref vector4, ref matrix);
-			return new Vector2(vector4.X, vector4.Y);
+			return new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
+							   matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
+		}
+
+		/// <summary>
+		///     Applies the given transformation matrix to the vector.
+		/// </summary>
+		/// <param name="vector">The vector that should be transformed.</param>
+		/// <param name="matrix">The transformation matrix that should be applied.</param>
+		/// <param name="result">The vector that stores the result of the transformation.</param>
+		public static void Transform(ref Vector2 vector, ref Matrix matrix, out Vector2 result)
+		{
+			result = new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
+							     matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
 		}
 	}
 
@@ -395,6 +406,29 @@ namespace Pegasus.Math
 		public static double Dot(Vector2d left, Vector2d right)
 		{
 			return left.X * right.X + left.Y * right.Y;
+		}
+
+		/// <summary>
+		///     Applies the given transformation matrix to the vector.
+		/// </summary>
+		/// <param name="vector">The vector that should be transformed.</param>
+		/// <param name="matrix">The transformation matrix that should be applied.</param>
+		public static Vector2 Transform(ref Vector2 vector, ref Matrix matrix)
+		{
+			return new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
+							   matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
+		}
+
+		/// <summary>
+		///     Applies the given transformation matrix to the vector.
+		/// </summary>
+		/// <param name="vector">The vector that should be transformed.</param>
+		/// <param name="matrix">The transformation matrix that should be applied.</param>
+		/// <param name="result">The vector that stores the result of the transformation.</param>
+		public static void Transform(ref Vector2 vector, ref Matrix matrix, out Vector2 result)
+		{
+			result = new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
+							     matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
 		}
 	}
 

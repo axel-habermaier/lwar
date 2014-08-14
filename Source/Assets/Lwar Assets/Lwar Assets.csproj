@@ -224,6 +224,7 @@
   <ItemGroup>
     <Compile Include="Effects\Blur.Effect.cs" />
     <Compile Include="Effects\Parallax.Effect.cs" />
+    <Compile Include="Effects\SimpleVertex.Effect.cs" />
     <Compile Include="Effects\Skybox.Effect.cs" />
     <Compile Include="Effects\Sphere.Effect.cs" />
     <Compile Include="Effects\Sprite.Effect.cs" />

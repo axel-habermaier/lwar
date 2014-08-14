@@ -25,7 +25,6 @@ Client
 - Ignore new entities until at least one update message has been received
 - Refactor respawning after death
 - Refactor game session viewmodel
-- Precompute planet trajectories and world border
 
 Pegasus.Framework
 ========
@@ -39,7 +38,6 @@ Pegasus.Framework
 	* Add to TextBox: Text selection (both via mouse and keyboard), copy & paste
 	* Add to SrollViewer: Horizontal scrolling, scrollbars
 	* Add support for touch
-- Triple buffer constant buffers to solve OpenGL sync problem?
 
 Pegasus.Platform
 ========
