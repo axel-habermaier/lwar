@@ -35,6 +35,11 @@
 		private readonly DeliveryManager _deliveryManager;
 
 		/// <summary>
+		///     The message dispatcher that is used to dispatch incoming server messages.
+		/// </summary>
+		private readonly MessageDispatcher _messageDispatcher;
+
+		/// <summary>
 		///     The message queue is responsible for packing all queued outgoing messages into a packet. Reliable messages will be
 		///     resent until their reception has been acknowledged by the remote peer.
 		/// </summary>
@@ -46,22 +51,28 @@
 		private readonly Queue<Message> _receivedMessages = new Queue<Message>();
 
 		/// <summary>
-		///     The cached state of the server connection.
-		/// </summary>
-		private ConnectionState _connectionState;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
-		public NetworkSession(IPEndPoint serverEndPoint)
+		/// <param name="messageDispatcher">The message dispatcher that should be used to dispatch incoming server messages.</param>
+		public NetworkSession(IPEndPoint serverEndPoint, MessageDispatcher messageDispatcher)
 		{
+			Assert.ArgumentNotNull(messageDispatcher);
+
+			_messageDispatcher = messageDispatcher;
 			_deliveryManager = new DeliveryManager();
 			_connection = new ServerConnection(serverEndPoint);
-			_connectionState = _connection.State;
 
 			_outgoingMessages = new MessageQueue(_deliveryManager);
 			Send(ConnectMessage.Create(Cvars.PlayerName));
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the game state has been synced with the server.
+		/// </summary>
+		public bool IsSynced
+		{
+			get { return _connection.IsSynced && !_connection.IsFaulted; }
 		}
 
 		/// <summary>
@@ -81,23 +92,6 @@
 		}
 
 		/// <summary>
-		///     Gets a value indicating whether a connection to the server is established.
-		/// </summary>
-		public bool IsConnected
-		{
-			get { return _connection.State == ConnectionState.Connected; }
-		}
-
-		/// <summary>
-		///     Gets a value indicating whether the connection to the server has been established and the game state is currently
-		///     being synced.
-		/// </summary>
-		public bool IsSyncing
-		{
-			get { return _connection.State == ConnectionState.Syncing; }
-		}
-
-		/// <summary>
 		///     Gets a value indicating whether the connection to the server is lagging.
 		/// </summary>
 		public bool IsLagging
@@ -106,114 +100,16 @@
 		}
 
 		/// <summary>
-		///     Gets a value indicating whether the connection to the server is faulted.
-		/// </summary>
-		public bool IsFaulted
-		{
-			get { return _connection.State == ConnectionState.Faulted; }
-		}
-
-		/// <summary>
-		///     Gets a value indicating whether the connection to the server has been dropped.
-		/// </summary>
-		public bool IsDropped
-		{
-			get { return _connection.State == ConnectionState.Dropped; }
-		}
-
-		/// <summary>
-		///     Gets a value indicating whether the server is full and cannot accept any further clients.
-		/// </summary>
-		public bool ServerIsFull
-		{
-			get { return _connection.State == ConnectionState.Full; }
-		}
-
-		/// <summary>
-		///     Gets a value indicating whether the server implements a newer or older network protocol revision.
-		/// </summary>
-		public bool VersionMismatch
-		{
-			get { return _connection.State == ConnectionState.VersionMismatch; }
-		}
-
-		/// <summary>
-		///     Raises the appropriate state event.
-		/// </summary>
-		private void HandleConnectionStateChange()
-		{
-			if (_connectionState == _connection.State)
-				return;
-
-			_connectionState = _connection.State;
-
-			switch (_connectionState)
-			{
-				case ConnectionState.Connecting:
-				case ConnectionState.Syncing:
-					break;
-				case ConnectionState.Connected:
-					if (OnConnected != null)
-						OnConnected();
-					break;
-				case ConnectionState.Dropped:
-					if (OnDropped != null)
-						OnDropped();
-					break;
-				case ConnectionState.Faulted:
-					if (OnFaulted != null)
-						OnFaulted();
-					break;
-				case ConnectionState.Full:
-					if (OnRejected != null)
-						OnRejected(RejectReason.Full);
-					break;
-				case ConnectionState.VersionMismatch:
-					if (OnRejected != null)
-						OnRejected(RejectReason.VersionMismatch);
-					break;
-				default:
-					Assert.NotReached("Unknown connection state.");
-					break;
-			}
-		}
-
-		/// <summary>
-		///     Raised when the connection to the server has been successfully established and the game state has been synchronized.
-		/// </summary>
-		public event Action OnConnected;
-
-		/// <summary>
-		///     Raised when a connection error occurred.
-		/// </summary>
-		public event Action OnFaulted;
-
-		/// <summary>
-		///     Raised when the connection was dropped.
-		/// </summary>
-		public event Action OnDropped;
-
-		/// <summary>
-		///     Raised when a connection attempt has been rejected.
-		/// </summary>
-		public event Action<RejectReason> OnRejected;
-
-		/// <summary>
 		///     Updates the state of the network session.
 		/// </summary>
-		/// <param name="dispatcher">The message dispatcher that should be used to dispatch the received server messages.</param>
-		public void Update(MessageDispatcher dispatcher)
+		public void Update()
 		{
-			Assert.ArgumentNotNull(dispatcher);
-
-			HandleConnectionStateChange();
-
 			_connection.Send(_outgoingMessages);
 			_connection.Receive(_receivedMessages, _deliveryManager);
 			_connection.Update();
 
 			while (_receivedMessages.Count != 0)
-				dispatcher.Dispatch(_receivedMessages.Dequeue());
+				_messageDispatcher.Dispatch(_receivedMessages.Dequeue());
 		}
 
 		/// <summary>
@@ -231,7 +127,7 @@
 		protected override void OnDisposing()
 		{
 			// Send a couple of Disconnect messages to the server
-			for (var i = 0; i < DisconnectMessageCount && !IsDropped && !IsFaulted; ++i)
+			for (var i = 0; i < DisconnectMessageCount && !_connection.IsFaulted; ++i)
 			{
 				Send(new Message { Type = MessageType.Disconnect });
 

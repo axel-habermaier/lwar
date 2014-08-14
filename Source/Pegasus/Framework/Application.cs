@@ -9,6 +9,7 @@
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
+	using UserInterface.Input;
 	using UserInterface.ViewModels;
 	using UserInterface.Views;
 
@@ -158,6 +159,7 @@
 			using (_appWindowViewModel = new AppWindowViewModel(consoleViewModel))
 			{
 				RegisterFontLoader(new FontLoader(Assets));
+				Cursor.LoadCursors(Assets);
 				Commands.Help();
 
 				// Let the application initialize itself

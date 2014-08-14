@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using AssetLoaders;
-	using Framework.UserInterface.Input;
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
@@ -68,7 +67,7 @@
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to load the assets.</param>
 		/// <param name="asyncLoading">Indicates whether the asset manager should load its asset asynchronously.</param>
-		internal AssetsManager(GraphicsDevice graphicsDevice, bool asyncLoading)
+		public AssetsManager(GraphicsDevice graphicsDevice, bool asyncLoading)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 
@@ -81,7 +80,6 @@
 				_pendingPrograms = new List<ShaderProgram>();
 			}
 
-			Cursor.LoadCursors(this);
 			Commands.OnReloadAssets += ReloadAssets;
 		}
 
@@ -194,10 +192,10 @@
 		/// <summary>
 		///     Loads all pending assets. If the timeout is exceeded when loading the assets, the function returns without
 		///     all assets loaded. However, it is guaranteed that at least one pending asset is loaded with every invocation
-		///     of the function.
+		///     of the function. Returns true to indicate that all pending assets have been loaded.
 		/// </summary>
 		/// <param name="timeoutInMilliseconds">The timeout in milliseconds.</param>
-		public void LoadPending(double timeoutInMilliseconds)
+		public bool LoadPending(double timeoutInMilliseconds)
 		{
 			Assert.That(_asyncLoading, "Async loading has not been enabled for this asset manager.");
 
@@ -213,7 +211,7 @@
 				_loadedAssets.Add(info);
 
 				if (!ContinueLoading(start, clock.Milliseconds, timeoutInMilliseconds))
-					return;
+					return false;
 			}
 
 			// At this point, we know that all pending loads of all shaders are completed, hence we can now safely
@@ -227,8 +225,10 @@
 				_loadedPrograms.Add(program);
 
 				if (!ContinueLoading(start, clock.Milliseconds, timeoutInMilliseconds))
-					return;
+					return false;
 			}
+
+			return true;
 		}
 
 		/// <summary>
@@ -324,7 +324,7 @@
 			if (asset != null)
 				return (T)asset;
 
-			asset = Loaders[assetIdentifier.AssetType].Allocate(_graphicsDevice);
+			asset = Loaders[assetIdentifier.AssetType].Allocate(_graphicsDevice, assetIdentifier.AssetName);
 
 			var info = AssetInfo.Create(assetIdentifier, asset);
 			if (_asyncLoading)

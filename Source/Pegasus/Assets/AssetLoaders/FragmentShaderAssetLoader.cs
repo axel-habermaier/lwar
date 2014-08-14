@@ -60,9 +60,12 @@ namespace Pegasus.Assets.AssetLoaders
 		///     Allocates a new asset.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to allocate the asset.</param>
-		public override IDisposable Allocate(GraphicsDevice graphicsDevice)
+		/// <param name="assetName">The name of the asset.</param>
+		public override IDisposable Allocate(GraphicsDevice graphicsDevice, string assetName)
 		{
-			return new FragmentShader(graphicsDevice);
+			var shader = new FragmentShader(graphicsDevice);
+			shader.SetName(assetName);
+			return shader;
 		}
 	}
 }

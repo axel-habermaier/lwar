@@ -66,6 +66,8 @@
 		public void Bind()
 		{
 			Assert.NotDisposed(this);
+			Assert.NotNull(_shaderProgram, "The shader program has not yet been initialized.");
+
 			NativeMethods.BindProgram(_shaderProgram);
 		}
 

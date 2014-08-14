@@ -37,14 +37,14 @@
 		private readonly byte[] _buffer = new byte[Specification.MaxPacketSize];
 
 		/// <summary>
-		///     Provides the time that is used to check whether a connection is lagging or dropped.
-		/// </summary>
-		private Clock _clock = new Clock();
-
-		/// <summary>
 		///     The Udp socket that is used for the communication with the server.
 		/// </summary>
 		private readonly UdpSocket _socket;
+
+		/// <summary>
+		///     Provides the time that is used to check whether a connection is lagging or dropped.
+		/// </summary>
+		private Clock _clock = new Clock();
 
 		/// <summary>
 		///     The time when the last packet has been received from the server.
@@ -59,13 +59,23 @@
 		{
 			_socket = new UdpSocket();
 			ServerEndPoint = serverEndPoint;
-			State = ConnectionState.Connecting;
 		}
 
 		/// <summary>
-		///     Gets the current state of the virtual connection to the server.
+		///     Indicates whether the connection to the server has been established, i.e., a valid packet from the server has been
+		///     received within the drop timeout.
 		/// </summary>
-		public ConnectionState State { get; private set; }
+		public bool IsConnected { get; private set; }
+
+		/// <summary>
+		///     Indicates whether the server and client game state have been synced.
+		/// </summary>
+		public bool IsSynced { get; private set; }
+
+		/// <summary>
+		///     Indicates whether the connection to the server is faulted and can no longer be used.
+		/// </summary>
+		public bool IsFaulted { get; private set; }
 
 		/// <summary>
 		///     Gets the endpoint of the server.
@@ -94,20 +104,23 @@
 		/// <param name="messageQueue">The queued messages that should be sent.</param>
 		public void Send(MessageQueue messageQueue)
 		{
+			Assert.That(!IsFaulted, "The connection to the server is faulted.");
+
 			try
 			{
-				// While we're connecting or syncing, send as many packets as possible (even if the payload is empty)
-				if (State == ConnectionState.Connecting || State == ConnectionState.Syncing)
+				// While we're not yet connected, send as many packets as possible (even if the payload is empty)
+				if (!IsConnected || !IsSynced)
 					SendMessages(messageQueue);
 
 				// Once we're connected, only send a packet if we actually have some payload to send
-				if (State == ConnectionState.Connected && messageQueue.HasPendingData)
+				if (IsConnected && messageQueue.HasPendingData)
 					SendMessages(messageQueue);
 			}
 			catch (NetworkException e)
 			{
 				Log.Error("The connection to the server has been terminated due to an error: {0}", e.Message);
-				State = ConnectionState.Faulted;
+				IsFaulted = true;
+				throw;
 			}
 		}
 
@@ -132,9 +145,7 @@
 		{
 			Assert.ArgumentNotNull(messageQueue);
 			Assert.ArgumentNotNull(deliveryManager);
-
-			if (State != ConnectionState.Connecting && State != ConnectionState.Connected && State != ConnectionState.Syncing)
-				return;
+			Assert.That(!IsFaulted, "The connection to the server is faulted.");
 
 			try
 			{
@@ -150,18 +161,16 @@
 						else
 						{
 							Log.Warn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",
-									 sender, ServerEndPoint);
+								sender, ServerEndPoint);
 						}
 					}
-
-					if (State != ConnectionState.Connecting && State != ConnectionState.Connected && State != ConnectionState.Syncing)
-						return;
 				}
 			}
 			catch (NetworkException e)
 			{
 				Log.Error("The connection to the server has been terminated due to an error: {0}", e.Message);
-				State = ConnectionState.Faulted;
+				IsFaulted = true;
+				throw;
 			}
 		}
 
@@ -216,8 +225,11 @@
 
 			Assert.That(buffer.EndOfBuffer, "Received an invalid packet from the server.");
 
-			if (buffer.EndOfBuffer)
-				_lastPacketTimestamp = _clock.Milliseconds;
+			if (!buffer.EndOfBuffer)
+				return;
+
+			IsConnected = true;
+			_lastPacketTimestamp = _clock.Milliseconds;
 		}
 
 		/// <summary>
@@ -234,38 +246,22 @@
 					// accepted the connection and starts syncing the game state.
 					// The first join sent by the server is the join for the local player.
 					if (message.SequenceNumber == 1)
-					{
 						message.Join.IsLocalPlayer = true;
-						State = ConnectionState.Syncing;
-					}
 					messageQueue.Enqueue(message);
 					break;
 				case MessageType.Synced:
-					// We should only receive a sync packet if we're actually syncing
-					if (State != ConnectionState.Syncing)
-						Log.Warn("Ignored an unexpected Synced message.");
-					else
-						State = ConnectionState.Connected;
+					IsSynced = true;
 					break;
 				case MessageType.Reject:
-					// Only the first message can be a reject message
-					if (State != ConnectionState.Connecting)
-						Log.Warn("Ignored an unexpected reject message.");
-					else
+					switch (message.Reject)
 					{
-						switch (message.Reject)
-						{
-							case RejectReason.Full:
-								State = ConnectionState.Full;
-								break;
-							case RejectReason.VersionMismatch:
-								State = ConnectionState.VersionMismatch;
-								break;
-							default:
-								throw new InvalidOperationException("Unknown reject reason.");
-						}
+						case RejectReason.Full:
+							throw new ServerFullException();
+						case RejectReason.VersionMismatch:
+							throw new ProtocolMismatchException();
+						default:
+							throw new InvalidOperationException("Unknown reject reason.");
 					}
-					break;
 				default:
 					messageQueue.Enqueue(message);
 					break;
@@ -277,12 +273,11 @@
 		/// </summary>
 		public void Update()
 		{
-			if (State != ConnectionState.Connecting && State != ConnectionState.Syncing && State != ConnectionState.Connected)
+			if (_clock.Milliseconds - _lastPacketTimestamp <= DroppedTimeout)
 				return;
 
-			var delta = _clock.Milliseconds - _lastPacketTimestamp;
-			if (delta > DroppedTimeout)
-				State = ConnectionState.Dropped;
+			IsFaulted = true;
+			throw new ConnectionDroppedException();
 		}
 
 		/// <summary>

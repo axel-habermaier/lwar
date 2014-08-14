@@ -4,6 +4,7 @@
 	using Assets.Effects;
 	using Pegasus;
 	using Pegasus.Assets;
+	using Pegasus.Framework;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -65,12 +66,10 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that is used to draw the game session.</param>
-		/// <param name="assets">The assets manager that manages all assets of the game session.</param>
-		public RenderContext(GraphicsDevice graphicsDevice, AssetsManager assets)
+		public RenderContext(AssetsManager assets)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(assets);
+			var graphicsDevice = Application.Current.GraphicsDevice;
 
 			_spriteEffect = new SpriteEffect(graphicsDevice, assets);
 			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
@@ -137,6 +136,22 @@
 		{
 			Assert.ArgumentNotNull(output);
 
+			// Only clear the depth buffer; the color buffer will be completely overwritten anyway
+			output.ClearDepth();
+
+			// TODO: Replace old sprite batch rendering code
+			//var camera = renderOutput.Camera;
+			//renderOutput.Camera = _camera;
+
+			//_spriteBatch.BlendState = BlendState.Premultiplied;
+			//_spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
+			//_spriteBatch.SamplerState = SamplerState.PointClampNoMipmaps;
+			//_camera.Viewport = renderOutput.Viewport;
+			//_renderContext.DrawUserInterface(_spriteBatch, CameraManager.GameCamera);
+			//_spriteBatch.DrawBatch(renderOutput);
+
+			//renderOutput.Camera = camera;
+
 			// Draw the skybox and the parallax effect
 			RasterizerState.CullCounterClockwise.Bind();
 			_skyboxRenderer.Draw(output);
@@ -183,7 +198,6 @@
 		protected override void OnDisposing()
 		{
 			_renderers.SafeDisposeAll();
-
 			_levelBoundary.SafeDispose();
 			_boundaryEffect.SafeDispose();
 			_skyboxRenderer.SafeDispose();

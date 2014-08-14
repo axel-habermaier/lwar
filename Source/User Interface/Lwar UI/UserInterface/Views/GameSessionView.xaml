@@ -38,18 +38,6 @@
 			<userInterface:Scoreboard DataContext="{Binding Scoreboard}"/>
 			<userInterface:ChatView DataContext="{Binding Chat}"/>
 
-			<StackPanel Orientation="Horizontal"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						IsHitTestVisible="False"
-						Visibility="{Binding IsLoading, Converter={converters:BooleanToVisibilityConverter}}">
-
-				<TextBlock Text="Connection to " />
-				<TextBlock Text="{Binding ServerEndPoint}" />
-				<TextBlock Text="..." />
-
-			</StackPanel>
-
 			<Border Background="#AF252525" Visibility="{Binding IsLagging, Converter={converters:BooleanToVisibilityConverter}}" IsHitTestVisible="False">
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 					<TextBlock Text="Waiting for server (" />

@@ -71,8 +71,6 @@
 
 			InputDevice.Update();
 			_bindings.Update();
-
-			InputDevice.TextInputEnabled = Keyboard.FocusedElement is ITextInputControl;
 		}
 	}
 }

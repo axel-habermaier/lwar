@@ -28,9 +28,12 @@
 		///     Allocates a new asset.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to allocate the asset.</param>
-		public override IDisposable Allocate(GraphicsDevice graphicsDevice)
+		/// <param name="assetName">The name of the asset.</param>
+		public override IDisposable Allocate(GraphicsDevice graphicsDevice, string assetName)
 		{
-			return new Texture2D(graphicsDevice);
+			var texture = new Texture2D(graphicsDevice);
+			texture.SetName(assetName);
+			return texture;
 		}
 	}
 }

@@ -156,6 +156,21 @@
 		}
 
 		/// <summary>
+		///     Throws a PegasusException if the pointer is null.
+		/// </summary>
+		/// <param name="ptr">The pointer to check for null.</param>
+		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
+		/// <param name="parameters">The parameters for the error message.</param>
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		public static void NotNull(IntPtr ptr, string formatMessage, params object[] parameters)
+		{
+			ArgumentNotNull(formatMessage);
+
+			if (ptr == IntPtr.Zero)
+				throw new PegasusException(formatMessage, parameters);
+		}
+
+		/// <summary>
 		///     Throws a PegasusException if the object is null.
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>

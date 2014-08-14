@@ -31,6 +31,7 @@
 		///     Allocates a new asset.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to allocate the asset.</param>
-		public abstract IDisposable Allocate(GraphicsDevice graphicsDevice);
+		/// <param name="assetName">The name of the asset.</param>
+		public abstract IDisposable Allocate(GraphicsDevice graphicsDevice, string assetName);
 	}
 }

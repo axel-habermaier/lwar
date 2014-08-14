@@ -1,7 +1,7 @@
 ﻿namespace Lwar.Rendering
 {
 	using System;
-	using Gameplay.Entities;
+	using Gameplay;
 	using Pegasus;
 	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Math;
@@ -50,6 +50,11 @@
 		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
+		///     The local player of the game session.
+		/// </summary>
+		private readonly Player _localPlayer;
+
+		/// <summary>
 		///     The clock that is used to animate changes of the XZ plane distance.
 		/// </summary>
 		private Clock _clock = new Clock();
@@ -74,14 +79,17 @@
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device for which the camera is created.</param>
 		/// <param name="inputDevice">The input device that provides the input for the camera.</param>
-		public GameCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
+		/// <param name="localPlayer">The local player of the game session.</param>
+		public GameCamera(GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice, Player localPlayer)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(inputDevice);
+			Assert.ArgumentNotNull(localPlayer);
 
 			FieldOfView = MathUtils.DegToRad(20);
 			Up = new Vector3(0, 0, 1);
 
+			_localPlayer = localPlayer;
 			_inputDevice = inputDevice;
 			_inputDevice.MouseWheel += OnZoomChanged;
 			_targetZoom = _zoom;
@@ -118,16 +126,11 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the ship that the camera follows.
-		/// </summary>
-		public Ship Ship { get; set; }
-
-		/// <summary>
 		///     Updates the camera.
 		/// </summary>
 		public void Update()
 		{
-			if (Ship == null || !IsActive)
+			if (_localPlayer.Ship == null || !IsActive)
 				return;
 
 			// Scale to [0,1] range
@@ -157,10 +160,10 @@
 			float x;
 			float z;
 
-			if (Ship != null)
+			if (_localPlayer.Ship != null)
 			{
-				x = Ship.Position.X;
-				z = Ship.Position.Y;
+				x = _localPlayer.Ship.Position.X;
+				z = _localPlayer.Ship.Position.Y;
 			}
 			else
 			{

@@ -23,8 +23,6 @@ pgVoid pgDestroyQuery(pgQuery* query)
 	if (query == NULL)
 		return;
 
-	PG_ASSERT(!query->isActive, "Cannot destroy active query.");
-
 	pgDestroyQueryCore(query);
 	PG_FREE(query);
 }

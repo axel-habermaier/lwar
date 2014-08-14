@@ -1,23 +1,25 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input"
-             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="500"
-             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="White"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input"
+			 mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="500"
+			 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="White"
 			 input:Mouse.HandlesAllInput="true"
 			 input:Keyboard.HandlesAllInput="true"
 			 Focusable="True">
 	<UserControl.InputBindings>
-		<input:KeyBinding Key="Escape" Method="Close"/>
-		<input:KeyBinding Key="Return" Method="Close"/>
-		<input:KeyBinding Key="NumpadEnter" Method="Close"/>
-		<input:KeyBinding Key="Space" Method="Close"/>
+		<input:KeyBinding Key="Escape" Method="Close" />
+		<input:KeyBinding Key="Return" Method="Close" />
+		<input:KeyBinding Key="NumpadEnter" Method="Close" />
+		<input:KeyBinding Key="Space" Method="Close" />
 	</UserControl.InputBindings>
-	<StackPanel Background="#FF323232" VerticalAlignment="Center" HorizontalAlignment="Center">
-		<TextBlock Text="{Binding Header}" Background="#FF5B5B5B"></TextBlock>
-		<TextBlock Text="{Binding Message}" Margin="0,10,0,0"></TextBlock>
-		
+	<StackPanel Background="#FF323232" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="600">
+		<Border Background="#FF5B5B5B">
+			<TextBlock Text="{Binding Header}" Margin="7" />
+		</Border>
+		<TextBlock Text="{Binding Message}" Margin="7" TextWrapping="Wrap" />
+
 		<Button Margin="0,20,0,0" HorizontalAlignment="Center" Click="{Binding Close}">OK</Button>
 	</StackPanel>
 </UserControl>

@@ -16,7 +16,7 @@ namespace Lwar.UserInterface.ViewModels
 		/// <summary>
 		///     Indicates whether the player list is potentially dirty.
 		/// </summary>
-		private bool _isDirty;
+		private bool _isDirty = true;
 
 		/// <summary>
 		///     Indicates whether the scoreboard should be shown.

@@ -35,6 +35,12 @@ internal interface ICvars
 	ConfigurableInput InputShowScoreboard { get; set; }
 
 	/// <summary>
+	///     When triggered in an active game session, respawns the player after death.
+	/// </summary>
+	[Cvar("MouseButton.Left"), Persistent]
+	ConfigurableInput InputRespawn { get; set; }
+
+	/// <summary>
 	///     When triggered in an active game session, moves the player forwards.
 	/// </summary>
 	[Cvar("Key.W"), Persistent]
@@ -45,18 +51,6 @@ internal interface ICvars
 	/// </summary>
 	[Cvar("Key.S"), Persistent]
 	ConfigurableInput InputBackward { get; set; }
-
-	/// <summary>
-	///     When triggered in an active game session, turns the player to the left.
-	/// </summary>
-	[Cvar("Key.Q"), Persistent]
-	ConfigurableInput InputTurnLeft { get; set; }
-
-	/// <summary>
-	///     When triggered in an active game session, turns the player to the right.
-	/// </summary>
-	[Cvar("Key.E"), Persistent]
-	ConfigurableInput InputTurnRight { get; set; }
 
 	/// <summary>
 	///     When triggered in an active game session, moves the player to the left.

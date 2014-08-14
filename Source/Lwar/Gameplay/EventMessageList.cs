@@ -55,11 +55,6 @@
 		}
 
 		/// <summary>
-		///     Enables or disables the event messages. When disabled, added event messages are ignored.
-		/// </summary>
-		public bool Enabled { get; set; }
-
-		/// <summary>
 		///     Adds a chat message to the event list.
 		/// </summary>
 		/// <param name="player">The identifier of the player that sent the chat message.</param>
@@ -209,12 +204,6 @@
 		/// <param name="message">The message that should be added.</param>
 		private void Add(EventMessage message)
 		{
-			if (!Enabled)
-			{
-				message.SafeDispose();
-				return;
-			}
-
 			message.CreationTime = _clock.Seconds;
 
 			if (_messages.Count == MaxMessageCount)

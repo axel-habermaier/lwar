@@ -41,8 +41,6 @@ namespace Pegasus.Framework.UserInterface.Input
 		public Cursor(Texture2D texture, Vector2i hotSpot, Color color)
 		{
 			Assert.ArgumentNotNull(texture);
-			Assert.ArgumentInRange(hotSpot.X, 0, texture.Width);
-			Assert.ArgumentInRange(hotSpot.Y, 0, texture.Height);
 
 			Texture = texture;
 			HotSpot = hotSpot;
@@ -126,6 +124,8 @@ namespace Pegasus.Framework.UserInterface.Input
 		internal void Draw(SpriteBatch spriteBatch, Vector2i position)
 		{
 			Assert.ArgumentNotNull(spriteBatch);
+			Assert.ArgumentInRange(HotSpot.X, 0, Texture.Width);
+			Assert.ArgumentInRange(HotSpot.Y, 0, Texture.Height);
 
 			position = position - HotSpot;
 			spriteBatch.Draw(Texture, new Vector2(position.X, position.Y), Color);

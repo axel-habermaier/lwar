@@ -1,11 +1,10 @@
 ﻿namespace Lwar.Rendering
 {
 	using System;
+	using Gameplay;
 	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Framework.UserInterface.Input;
-	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 	using Scripting;
@@ -33,19 +32,17 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="window">The window that displays the scene rendered from the point of view of the active camera.</param>
-		/// <param name="graphicsDevice">The graphics device the cameras are created for.</param>
-		/// <param name="inputDevice">The logical input device that provides the user input for the cameras.</param>
-		public CameraManager(Window window, GraphicsDevice graphicsDevice, LogicalInputDevice inputDevice)
+		/// <param name="localPlayer">The local player of the game session.</param>
+		public CameraManager(Player localPlayer)
 		{
-			Assert.ArgumentNotNull(window);
-			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(inputDevice);
+			Assert.ArgumentNotNull(localPlayer);
 
-			_window = window;
+			var graphicsDevice = Application.Current.GraphicsDevice;
+			var inputDevice = Application.Current.Window.InputDevice;
 
-			GameCamera = new GameCamera(graphicsDevice, inputDevice);
+			GameCamera = new GameCamera(graphicsDevice, inputDevice, localPlayer);
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);
+			_window = Application.Current.Window;
 
 			ActiveCamera = GameCamera;
 			Commands.OnToggleDebugCamera += ToggleDebugCamera;

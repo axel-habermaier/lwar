@@ -187,9 +187,11 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Network\ServerConnection.cs" />
     <Compile Include="Rendering\CircleOutline.cs" />
     <Compile Include="UserInterface\ViewModels\ChatViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\GameSessionViewModel.cs" />
+    <Compile Include="UserInterface\ViewModels\LoadingViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\MainMenuViewModel.cs" />
     <Compile Include="Gameplay\Actors\Actor.cs" />
     <Compile Include="Gameplay\Actors\ActorList.cs" />
@@ -264,7 +266,6 @@
     <Compile Include="Gameplay\Transformation.cs" />
     <Compile Include="Scripting\ICommands.cs" />
     <Compile Include="Scripting\ICvars.cs" />
-    <Compile Include="Network\ConnectionState.cs" />
     <Compile Include="Network\DeliveryManager.cs" />
     <Compile Include="Network\MessageDispatcher.cs" />
     <Compile Include="Network\MessageSerialization.cs" />
@@ -276,7 +277,6 @@
     <Compile Include="Network\NetworkSession.cs" />
     <Compile Include="Network\Specification.cs" />
     <Compile Include="Network\LocalServer.cs" />
-    <Compile Include="Network\ServerConnection.cs" />
     <Compile Include="Rendering\Renderers\BulletRenderer.cs" />
     <Compile Include="Rendering\GaussianBlur.cs" />
     <Compile Include="Rendering\Renderers\SunRenderer.cs" />

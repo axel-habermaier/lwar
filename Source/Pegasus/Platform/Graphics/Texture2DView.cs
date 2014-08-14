@@ -18,8 +18,6 @@
 		{
 			Assert.ArgumentNotNull(texture);
 			Assert.ArgumentNotNull(sampler);
-			Assert.That(sampler.Filter >= TextureFilter.NearestNoMipmaps || texture.HasMipmaps,
-						"Texture filter '{0}' cannot be used to sample a 2D texture without any mipmaps.", sampler.Filter);
 
 			Texture = texture;
 			Sampler = sampler;
@@ -79,6 +77,8 @@
 		{
 			Assert.NotNull(Texture, "No texture has been set.");
 			Assert.NotNull(Sampler, "No sampler state has been set.");
+			Assert.That(Sampler.Filter >= TextureFilter.NearestNoMipmaps || Texture.HasMipmaps,
+						"Texture filter '{0}' cannot be used to sample a 2D texture without any mipmaps.", Sampler.Filter);
 
 			Texture.Bind(slot);
 			Sampler.Bind(slot);

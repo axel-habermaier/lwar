@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using Controls;
 	using Platform.Memory;
 
 	/// <summary>
@@ -28,16 +29,6 @@
 		private readonly InputState[] _keyStates = new InputState[Enum.GetValues(typeof(Key)).Length];
 
 		/// <summary>
-		///     The keyboard providing the keyboard input.
-		/// </summary>
-		private readonly Keyboard _keyboard;
-
-		/// <summary>
-		///     The mouse providing the mouse input.
-		/// </summary>
-		private readonly Mouse _mouse;
-
-		/// <summary>
 		///     The mouse button states.
 		/// </summary>
 		private readonly InputState[] _mouseButtonStates = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
@@ -46,6 +37,16 @@
 		///     The UI element that is associated with this logical device.
 		/// </summary>
 		private readonly UIElement _uiElement;
+
+		/// <summary>
+		///     The keyboard providing the keyboard input.
+		/// </summary>
+		private Keyboard _keyboard;
+
+		/// <summary>
+		///     The mouse providing the mouse input.
+		/// </summary>
+		private Mouse _mouse;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -62,16 +63,31 @@
 			_uiElement.MouseUp += OnMouseUp;
 			_uiElement.MouseWheel += OnMouseWheel;
 			_uiElement.MouseMove += OnMouseMoved;
-
-			var window = uiElement.ParentWindow;
-			_keyboard = window.Keyboard;
-			_mouse = window.Mouse;
 		}
 
 		/// <summary>
-		///     Gets or sets a value indicating whether the logical input device provides text input.
+		///     The keyboard providing the keyboard input.
 		/// </summary>
-		internal bool TextInputEnabled { get; set; }
+		private Keyboard Keyboard
+		{
+			get { return (_keyboard ?? (_keyboard = _uiElement.ParentWindow.Keyboard)); }
+		}
+
+		/// <summary>
+		///     The mouse providing the mouse input.
+		/// </summary>
+		private Mouse Mouse
+		{
+			get { return (_mouse ?? (_mouse = _uiElement.ParentWindow.Mouse)); }
+		}
+
+		/// <summary>
+		///     Gets  a value indicating whether the logical input device provides text input.
+		/// </summary>
+		internal bool TextInputEnabled
+		{
+			get { return Keyboard.FocusedElement is ITextInputControl; }
+		}
 
 		/// <summary>
 		///     Raised when a key has been pressed.
@@ -196,7 +212,7 @@
 		/// <summary>
 		///     Updates the device state.
 		/// </summary>
-		internal void Update()
+		public void Update()
 		{
 			// Update all logical inputs
 			foreach (var input in _inputs)
@@ -231,7 +247,7 @@
 		public bool IsPressed(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].IsPressed && _keyboard.IsPressed(key);
+			return _keyStates[(int)key].IsPressed && Keyboard.IsPressed(key);
 		}
 
 		/// <summary>
@@ -242,7 +258,7 @@
 		public bool WentDown(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].WentDown && _keyboard.WentDown(key);
+			return _keyStates[(int)key].WentDown && Keyboard.WentDown(key);
 		}
 
 		/// <summary>
@@ -253,7 +269,7 @@
 		public bool WentUp(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].WentUp && _keyboard.WentUp(key);
+			return _keyStates[(int)key].WentUp && Keyboard.WentUp(key);
 		}
 
 		/// <summary>
@@ -264,7 +280,7 @@
 		public bool IsRepeated(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].IsRepeated && _keyboard.IsRepeated(key);
+			return _keyStates[(int)key].IsRepeated && Keyboard.IsRepeated(key);
 		}
 
 		/// <summary>
@@ -274,7 +290,7 @@
 		public bool IsPressed(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _mouseButtonStates[(int)button].IsPressed && _mouse.IsPressed(button);
+			return _mouseButtonStates[(int)button].IsPressed && Mouse.IsPressed(button);
 		}
 
 		/// <summary>
@@ -284,7 +300,7 @@
 		public bool IsDoubleClicked(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _doubleClicked[(int)button] && _mouse.IsDoubleClicked(button);
+			return _doubleClicked[(int)button] && Mouse.IsDoubleClicked(button);
 		}
 
 		/// <summary>
@@ -295,7 +311,7 @@
 		public bool WentDown(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _mouseButtonStates[(int)button].WentDown && _mouse.WentDown(button);
+			return _mouseButtonStates[(int)button].WentDown && Mouse.WentDown(button);
 		}
 
 		/// <summary>
@@ -306,7 +322,7 @@
 		public bool WentUp(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _mouseButtonStates[(int)button].WentUp && _mouse.WentUp(button);
+			return _mouseButtonStates[(int)button].WentUp && Mouse.WentUp(button);
 		}
 	}
 }

@@ -90,6 +90,8 @@
 		internal void Bind(int slot)
 		{
 			Assert.NotDisposed(this);
+			Assert.NotNull(_texture, "The texture has not yet been initialized.");
+
 			NativeMethods.BindTexture(_texture, slot);
 		}
 
@@ -100,6 +102,8 @@
 		internal void Unbind(int slot)
 		{
 			Assert.NotDisposed(this);
+			Assert.NotNull(_texture, "The texture has not yet been initialized.");
+
 			NativeMethods.UnbindTexture(_texture, slot);
 		}
 
@@ -109,6 +113,8 @@
 		public void GenerateMipmaps()
 		{
 			Assert.NotDisposed(this);
+			Assert.NotNull(_texture, "The texture has not yet been initialized.");
+
 			NativeMethods.GenerateMipmaps(_texture);
 		}
 
