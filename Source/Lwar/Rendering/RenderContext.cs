@@ -23,6 +23,7 @@
 		{
 			new SkyboxRenderer(),
 			new StarfieldRenderer(),
+			new BoundaryRenderer(),
 			new SunRenderer(),
 			new PlanetRenderer(),
 			new ShipRenderer(),
@@ -32,8 +33,7 @@
 			new ShockwaveRenderer(),
 			new RocketRenderer(),
 			new ShieldRenderer(),
-			new ExplosionRenderer(),
-			new BoundaryRenderer()
+			new ExplosionRenderer()
 		};
 
 		/// <summary>
