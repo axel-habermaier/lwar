@@ -135,14 +135,9 @@
 		public bool Load()
 		{
 			NetworkSession.Update();
-			return _assets.LoadPending(timeoutInMilliseconds: 5) && NetworkSession.IsSynced;
-		}
+			if (!_assets.LoadPending(timeoutInMilliseconds: 10) || !NetworkSession.IsSynced)
+				return false;
 
-		/// <summary>
-		///     Initializes the game session once it has been fully loaded and the game state has been synced.
-		/// </summary>
-		public void Initialize()
-		{
 			Assert.NotNull(LocalPlayer, "Game state synced but local player is unknown.");
 			Assert.That(_assets.LoadingCompleted, "Not all assets have been loaded.");
 
@@ -160,6 +155,12 @@
 			// Initialize the render context
 			RenderContext.Initialize();
 			Assert.That(_assets.LoadingCompleted, "The render context loaded further assets.");
+
+			// Perform an update to fully initialize the game state
+			_clock.Reset();
+			Update();
+
+			return true;
 		}
 
 		/// <summary>

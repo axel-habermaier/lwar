@@ -142,19 +142,6 @@
 		}
 
 		/// <summary>
-		///     Draws the user interface elements.
-		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
-		/// <param name="camera">The camera that is used to draw the scene.</param>
-		public void DrawUserInterface(SpriteBatch spriteBatch, GameCamera camera)
-		{
-			Assert.ArgumentNotNull(spriteBatch);
-
-			foreach (var renderer in _renderers)
-				renderer.DrawUserInterface(spriteBatch, camera);
-		}
-
-		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()

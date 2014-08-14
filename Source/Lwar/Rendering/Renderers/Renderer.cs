@@ -62,15 +62,6 @@
 		}
 
 		/// <summary>
-		///     Draws the user interface elements.
-		/// </summary>
-		/// <param name="spriteBatch">The sprite batch that should be used to draw the user interface.</param>
-		/// <param name="camera">The camera that is used to draw the scene.</param>
-		public virtual void DrawUserInterface(SpriteBatch spriteBatch, GameCamera camera)
-		{
-		}
-
-		/// <summary>
 		///     Adds the element to the renderer.
 		/// </summary>
 		/// <param name="element">The element that should be drawn by the renderer.</param>

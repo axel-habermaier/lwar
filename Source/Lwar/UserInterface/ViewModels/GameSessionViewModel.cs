@@ -50,13 +50,11 @@
 		{
 			Assert.ArgumentNotNull(gameSession);
 
-			EventMessages = gameSession.EventMessages.Messages;
-			Scoreboard = new ScoreboardViewModel(gameSession);
+			_gameSession = gameSession;
+			EventMessages = _gameSession.EventMessages.Messages;
+			Scoreboard = new ScoreboardViewModel(_gameSession);
 			Chat = new ChatViewModel();
 			View = new GameSessionView();
-
-			_gameSession = gameSession;
-			_gameSession.Initialize();
 
 			// TODO: Selection via UI
 			_gameSession.NetworkSession.Send(SelectionMessage.Create(_gameSession.LocalPlayer,

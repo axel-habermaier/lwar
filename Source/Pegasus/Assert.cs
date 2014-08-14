@@ -294,8 +294,8 @@
 		/// </summary>
 		/// <typeparam name="T">The type of the value to check.</typeparam>
 		/// <param name="index">The value to check.</param>
-		/// <param name="min">The lower bound of the range.</param>
-		/// <param name="max">The upper bound of the range.</param>
+		/// <param name="min">The inclusive lower bound of the range.</param>
+		/// <param name="max">The inclusive upper bound of the range.</param>
 		[Conditional("DEBUG"), DebuggerHidden]
 		public static void InRange<T>(T index, T min, T max)
 			where T : IComparable<T>

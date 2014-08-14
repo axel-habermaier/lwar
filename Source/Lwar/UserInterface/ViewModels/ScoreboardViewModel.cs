@@ -5,8 +5,6 @@ namespace Lwar.UserInterface.ViewModels
 	using Gameplay;
 	using Pegasus;
 	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface.Input;
-	using Scripting;
 
 	/// <summary>
 	///     Displays the score board.
