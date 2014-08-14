@@ -73,11 +73,11 @@
 		/// </summary>
 		private void PropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<T> args)
 		{
-			var uiElement = obj as UIElement;
-			Assert.NotNull(uiElement, "Expected an UI element.");
+			var element = obj as UIElement;
+			Assert.NotNull(element, "Expected an UI element.");
 
-			ApplyIfTriggered(uiElement, args.NewValue, unsetIfNotTriggered: true);
-			RaiseTriggerStateChanged(uiElement);
+			ApplyIfTriggered(element, args.NewValue, unsetIfNotTriggered: true);
+			RaiseTriggerStateChanged(element);
 		}
 
 		/// <summary>

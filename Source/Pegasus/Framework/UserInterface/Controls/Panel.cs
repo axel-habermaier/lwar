@@ -114,11 +114,11 @@
 		/// </summary>
 		private static void OnZIndexChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<int> args)
 		{
-			var uiElement = obj as UIElement;
-			if (uiElement == null)
+			var element = obj as UIElement;
+			if (element == null)
 				return;
 
-			var panel = uiElement.LogicalParent as Panel;
+			var panel = element.LogicalParent as Panel;
 			if (panel == null)
 				return;
 

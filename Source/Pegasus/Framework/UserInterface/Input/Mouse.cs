@@ -243,18 +243,18 @@
 		///     Unsets the IsMouseOver property and raises the MouseLeave event of all currently hovered UI
 		///     elements that are not in the path of the given UI element to the root.
 		/// </summary>
-		/// <param name="uiElement">The UI element that starts the path to the root.</param>
+		/// <param name="element">The UI element that starts the path to the root.</param>
 		/// <param name="args">The event arguments that should be passed to the MouseLeaveEvent.</param>
-		private void UnsetIsMouseOver(UIElement uiElement, MouseEventArgs args)
+		private void UnsetIsMouseOver(UIElement element, MouseEventArgs args)
 		{
-			if (uiElement.LogicalParent != null)
-				UnsetIsMouseOver(uiElement.LogicalParent, args);
+			if (element.LogicalParent != null)
+				UnsetIsMouseOver(element.LogicalParent, args);
 
 			if (_hoveredElements.Count == 0)
 				return;
 
 			var topmostElement = _hoveredElements.Pop();
-			if (uiElement == topmostElement)
+			if (element == topmostElement)
 				return;
 
 			topmostElement.IsMouseOver = false;

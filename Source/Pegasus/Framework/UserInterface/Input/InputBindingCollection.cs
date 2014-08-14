@@ -10,7 +10,7 @@ namespace Pegasus.Framework.UserInterface.Input
 		/// <summary>
 		///     The UI element the input bindings are associated with.
 		/// </summary>
-		private readonly UIElement _uiElement;
+		private readonly UIElement _element;
 
 		/// <summary>
 		///     Indicates whether the bindings are currently active.
@@ -20,11 +20,11 @@ namespace Pegasus.Framework.UserInterface.Input
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="uiElement">The UI element the input bindings are associated with.</param>
-		public InputBindingCollection(UIElement uiElement)
+		/// <param name="element">The UI element the input bindings are associated with.</param>
+		public InputBindingCollection(UIElement element)
 		{
-			Assert.ArgumentNotNull(uiElement);
-			_uiElement = uiElement;
+			Assert.ArgumentNotNull(element);
+			_element = element;
 		}
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace Pegasus.Framework.UserInterface.Input
 		/// </summary>
 		private void OnActivated()
 		{
-			var dataContext = _uiElement.DataContext;
+			var dataContext = _element.DataContext;
 			foreach (var binding in this)
 				binding.BindToDataContext(dataContext);
 		}
@@ -77,7 +77,7 @@ namespace Pegasus.Framework.UserInterface.Input
 
 			item.Seal();
 			if (_active)
-				item.BindToDataContext(_uiElement.DataContext);
+				item.BindToDataContext(_element.DataContext);
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace Pegasus.Framework.UserInterface.Input
 
 			item.Seal();
 			if (_active)
-				item.BindToDataContext(_uiElement.DataContext);
+				item.BindToDataContext(_element.DataContext);
 		}
 
 		/// <summary>

@@ -268,11 +268,11 @@
 				FocusedElement = Window;
 			else
 			{
-				var uiElement = FocusedElement;
-				while (uiElement != Window && !uiElement.CanBeFocused)
-					uiElement = uiElement.LogicalParent;
+				var element = FocusedElement;
+				while (element != Window && !element.CanBeFocused)
+					element = element.LogicalParent;
 
-				FocusedElement = uiElement;
+				FocusedElement = element;
 			}
 		}
 

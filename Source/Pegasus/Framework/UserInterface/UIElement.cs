@@ -170,9 +170,9 @@
 		/// <param name="obj">The object defining the cached font object that should be unset.</param>
 		private static void UnsetCachedFont(object obj)
 		{
-			var uiElement = obj as UIElement;
-			if (uiElement != null)
-				uiElement._cachedFont = null;
+			var element = obj as UIElement;
+			if (element != null)
+				element._cachedFont = null;
 		}
 
 		/// <summary>
@@ -180,11 +180,11 @@
 		/// </summary>
 		private static void OnMouseDown(object sender, MouseButtonEventArgs e)
 		{
-			var uiElement = sender as UIElement;
-			if (uiElement == null || !uiElement.CanBeFocused)
+			var element = sender as UIElement;
+			if (element == null || !element.CanBeFocused)
 				return;
 
-			uiElement.Focus();
+			element.Focus();
 			e.Handled = true;
 		}
 
@@ -193,9 +193,9 @@
 		/// </summary>
 		private static void OnDataContextChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<object> args)
 		{
-			var uiElement = obj as UIElement;
-			if (uiElement != null && uiElement._inputBindings != null)
-				uiElement._inputBindings.BindToDataContext(args.NewValue);
+			var element = obj as UIElement;
+			if (element != null && element._inputBindings != null)
+				element._inputBindings.BindToDataContext(args.NewValue);
 		}
 
 		/// <summary>
@@ -203,9 +203,9 @@
 		/// </summary>
 		private static void OnInputEvent(object sender, RoutedEventArgs e)
 		{
-			var uiElement = sender as UIElement;
-			if (uiElement != null && uiElement._inputBindings != null)
-				uiElement._inputBindings.HandleEvent(e);
+			var element = sender as UIElement;
+			if (element != null && element._inputBindings != null)
+				element._inputBindings.HandleEvent(e);
 		}
 
 		/// <summary>
@@ -296,21 +296,21 @@
 		/// </summary>
 		private static void OnStyleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Style> property)
 		{
-			var uiElement = obj as UIElement;
-			if (uiElement == null)
+			var element = obj as UIElement;
+			if (element == null)
 				return;
 
 			if (property.OldValue != null)
-				property.OldValue.Unset(uiElement);
+				property.OldValue.Unset(element);
 
 			// Set the new style; if it is null, try to find an implicit style
 			if (property.NewValue == null)
-				uiElement.BindImplicitStyle();
+				element.BindImplicitStyle();
 			else
 			{
 				// No need to set the style if the UI element is not part of a logical tree
-				property.NewValue.Apply(uiElement);
-				uiElement.UsesImplicitStyle = false;
+				property.NewValue.Apply(element);
+				element.UsesImplicitStyle = false;
 			}
 		}
 
@@ -527,16 +527,16 @@
 		/// <summary>
 		///     Gets the window the UI element is contained in or null if it isn't contained in any window.
 		/// </summary>
-		/// <param name="uiElement">The UI element the parent window should be returned for.</param>
-		private static Window GetParentWindow(UIElement uiElement)
+		/// <param name="element">The UI element the parent window should be returned for.</param>
+		private static Window GetParentWindow(UIElement element)
 		{
-			while (uiElement != null)
+			while (element != null)
 			{
-				var window = uiElement as Window;
+				var window = element as Window;
 				if (window != null)
 					return window;
 
-				uiElement = uiElement.LogicalParent;
+				element = element.LogicalParent;
 			}
 
 			return null;
@@ -626,11 +626,11 @@
 			Assert.ArgumentNotNull(eventArgs);
 			Assert.ArgumentSatisfies(routedEvent.RoutingStrategy == RoutingStrategy.Bubble, "Unexpected routing strategy.");
 
-			var uiElement = this;
-			while (uiElement != null && !eventArgs.Handled)
+			var element = this;
+			while (element != null && !eventArgs.Handled)
 			{
-				uiElement.InvokeEventHandlers(routedEvent, eventArgs);
-				uiElement = uiElement.LogicalParent;
+				element.InvokeEventHandlers(routedEvent, eventArgs);
+				element = element.LogicalParent;
 			}
 		}
 
@@ -638,22 +638,22 @@
 		///     Raises the given tunneling routed event with the given event arguments.
 		/// </summary>
 		/// <typeparam name="T">The type of the event arguments.</typeparam>
-		/// <param name="uiElement">The UI element the event should be raised for.</param>
+		/// <param name="element">The UI element the event should be raised for.</param>
 		/// <param name="routedEvent">The routed event that should be raised.</param>
 		/// <param name="eventArgs">The arguments the routed event should be raised with.</param>
-		private static void RaiseTunnelingEvent<T>(UIElement uiElement, RoutedEvent<T> routedEvent, T eventArgs)
+		private static void RaiseTunnelingEvent<T>(UIElement element, RoutedEvent<T> routedEvent, T eventArgs)
 			where T : RoutedEventArgs
 		{
-			Assert.ArgumentNotNull(uiElement);
+			Assert.ArgumentNotNull(element);
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(eventArgs);
 			Assert.ArgumentSatisfies(routedEvent.RoutingStrategy == RoutingStrategy.Tunnel, "Unexpected routing strategy.");
 
-			if (uiElement.LogicalParent != null)
-				RaiseTunnelingEvent(uiElement.LogicalParent, routedEvent, eventArgs);
+			if (element.LogicalParent != null)
+				RaiseTunnelingEvent(element.LogicalParent, routedEvent, eventArgs);
 
 			if (!eventArgs.Handled)
-				uiElement.InvokeEventHandlers(routedEvent, eventArgs);
+				element.InvokeEventHandlers(routedEvent, eventArgs);
 		}
 
 		/// <summary>

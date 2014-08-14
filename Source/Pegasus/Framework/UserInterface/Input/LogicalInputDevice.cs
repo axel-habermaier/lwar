@@ -36,7 +36,7 @@
 		/// <summary>
 		///     The UI element that is associated with this logical device.
 		/// </summary>
-		private readonly UIElement _uiElement;
+		private readonly UIElement _element;
 
 		/// <summary>
 		///     The keyboard providing the keyboard input.
@@ -51,18 +51,18 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="uiElement">The UI element that should be associated with this logical device.</param>
-		public LogicalInputDevice(UIElement uiElement)
+		/// <param name="element">The UI element that should be associated with this logical device.</param>
+		public LogicalInputDevice(UIElement element)
 		{
-			Assert.ArgumentNotNull(uiElement);
+			Assert.ArgumentNotNull(element);
 
-			_uiElement = uiElement;
-			_uiElement.KeyDown += OnKeyDown;
-			_uiElement.KeyUp += OnKeyUp;
-			_uiElement.MouseDown += OnMouseDown;
-			_uiElement.MouseUp += OnMouseUp;
-			_uiElement.MouseWheel += OnMouseWheel;
-			_uiElement.MouseMove += OnMouseMoved;
+			_element = element;
+			_element.KeyDown += OnKeyDown;
+			_element.KeyUp += OnKeyUp;
+			_element.MouseDown += OnMouseDown;
+			_element.MouseUp += OnMouseUp;
+			_element.MouseWheel += OnMouseWheel;
+			_element.MouseMove += OnMouseMoved;
 		}
 
 		/// <summary>
@@ -70,7 +70,7 @@
 		/// </summary>
 		private Keyboard Keyboard
 		{
-			get { return (_keyboard ?? (_keyboard = _uiElement.ParentWindow.Keyboard)); }
+			get { return (_keyboard ?? (_keyboard = _element.ParentWindow.Keyboard)); }
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@
 		/// </summary>
 		private Mouse Mouse
 		{
-			get { return (_mouse ?? (_mouse = _uiElement.ParentWindow.Mouse)); }
+			get { return (_mouse ?? (_mouse = _element.ParentWindow.Mouse)); }
 		}
 
 		/// <summary>
@@ -232,12 +232,12 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_uiElement.KeyDown -= OnKeyDown;
-			_uiElement.KeyUp -= OnKeyUp;
-			_uiElement.MouseDown -= OnMouseDown;
-			_uiElement.MouseUp -= OnMouseUp;
-			_uiElement.MouseWheel -= OnMouseWheel;
-			_uiElement.MouseMove -= OnMouseMoved;
+			_element.KeyDown -= OnKeyDown;
+			_element.KeyUp -= OnKeyUp;
+			_element.MouseDown -= OnMouseDown;
+			_element.MouseUp -= OnMouseUp;
+			_element.MouseWheel -= OnMouseWheel;
+			_element.MouseMove -= OnMouseMoved;
 		}
 
 		/// <summary>

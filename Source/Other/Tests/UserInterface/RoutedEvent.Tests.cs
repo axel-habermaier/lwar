@@ -45,35 +45,35 @@
 				args.Handled = true;
 		}
 
-		private void RegisterHandlers<T>(UIElement uiElement, RoutedEvent<T> routedEvent)
+		private void RegisterHandlers<T>(UIElement element, RoutedEvent<T> routedEvent)
 			where T : RoutedEventArgs
 		{
-			uiElement.AddHandler(routedEvent, RecordInstanceEvent);
-			for (var i = 0; i < uiElement.VisualChildrenCount; ++i)
-				RegisterHandlers(uiElement.GetVisualChild(i), routedEvent);
+			element.AddHandler(routedEvent, RecordInstanceEvent);
+			for (var i = 0; i < element.VisualChildrenCount; ++i)
+				RegisterHandlers(element.GetVisualChild(i), routedEvent);
 		}
 
-		private void TestInstanceHandlers<T>(UIElement uiElement, RoutedEvent<T> routedEvent, T args, params UIElement[] expectedEvents)
+		private void TestInstanceHandlers<T>(UIElement element, RoutedEvent<T> routedEvent, T args, params UIElement[] expectedEvents)
 			where T : RoutedEventArgs
 		{
 			RegisterHandlers(_stackPanel, routedEvent);
-			uiElement.RaiseEvent(routedEvent, args);
+			element.RaiseEvent(routedEvent, args);
 
-			var actual = _actualInstanceEvents.Select(element => element.GetType().FullName);
-			var expected = expectedEvents.Select(element => element.GetType().FullName);
+			var actual = _actualInstanceEvents.Select(e => e.GetType().FullName);
+			var expected = expectedEvents.Select(e => e.GetType().FullName);
 			actual.Should().Equal(expected);
 		}
 
-		private void TestClassHandler<T>(UIElement uiElement, RoutedEvent<T> routedEvent, T args, params UIElement[] expectedEvents)
+		private void TestClassHandler<T>(UIElement element, RoutedEvent<T> routedEvent, T args, params UIElement[] expectedEvents)
 			where T : RoutedEventArgs
 		{
 			try
 			{
 				routedEvent.Raised += RecordClassEvent;
-				uiElement.RaiseEvent(routedEvent, args);
+				element.RaiseEvent(routedEvent, args);
 
-				var actual = _actualClassEvents.Select(element => element.GetType().FullName);
-				var expected = expectedEvents.Select(element => element.GetType().FullName);
+				var actual = _actualClassEvents.Select(e => e.GetType().FullName);
+				var expected = expectedEvents.Select(e => e.GetType().FullName);
 				actual.Should().Equal(expected);
 			}
 			finally
