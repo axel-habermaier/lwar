@@ -2,7 +2,6 @@
 {
 	using System;
 	using Pegasus;
-	using Pegasus.Math;
 	using Pegasus.Platform;
 
 	/// <summary>
@@ -19,17 +18,6 @@
 		///     The rotation speed of the planet.
 		/// </summary>
 		private float _rotationSpeed;
-
-		/// <summary>
-		///     Invoked when the entity is added to the game session.
-		/// </summary>
-		protected override void OnAdded()
-		{
-			Transform.Rotation = new Vector3(
-				MathUtils.DegToRad(Random.Next(0, 360)),
-				0.0f,
-				MathUtils.DegToRad(Random.Next(0, 360)));
-		}
 
 		/// <summary>
 		///     Updates the entity's internal state.
@@ -49,12 +37,9 @@
 		{
 			Assert.ArgumentNotNull(entityTemplate);
 
-			var rotationSpeed = Random.Next(30, 50) / 200.0f;
-			rotationSpeed *= (Random.Next() % 2 == 1 ? 1 : -1);
-
 			var planet = GetInstance();
 			planet.Identifier = id;
-			planet._rotationSpeed = rotationSpeed;
+			planet._rotationSpeed = Random.Next(30, 50) / 200.0f;
 			planet.Template = entityTemplate;
 			return planet;
 		}

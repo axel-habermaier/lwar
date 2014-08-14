@@ -14,7 +14,7 @@
 			Collide = "planet_hit",
 			Health = 1,
 			Mass = 50000,
-			Radius = 1500,
+			Radius = 4000,
 			Format = "format_pos"
 		};
 	}

@@ -22,8 +22,8 @@ enum {
     TIMEOUT_INTERVAL    =   15 * 1000 /*ms*/,
     MISBEHAVIOR_LIMIT   =   10,
 
-    MAX_PLANETS         = 10,
-    MIN_PLANET_DIST     = 1500,
+    MAX_PLANETS         = 11,
+    MIN_PLANET_DIST     = 2500,
     MAX_PLANET_DIST     = 2500,
 };
 

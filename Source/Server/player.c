@@ -151,7 +151,7 @@ void players_update() {
         p = &c->player;
 
         if(!p->ship.entity) {
-            size_t i = rand()%MAX_PLANETS;
+            size_t i = rand()%(MAX_PLANETS - 5); // spawn somewhere closer to the sun
             Real dist = (i+1) * MIN_PLANET_DIST + MIN_PLANET_DIST/2;
             Real phi  = rad(rand()%360);
             Vec x = scale(unit(phi), dist);

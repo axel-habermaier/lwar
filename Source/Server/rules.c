@@ -28,7 +28,7 @@ static void level_init() {
 	EntityType* types[] = { &type_jupiter, &type_earth, &type_moon, &type_mars };
 	
     for(i=0; i<MAX_PLANETS; i++) {
-        Real dist = (i+2) * MIN_PLANET_DIST; // + rand()%(MAX_PLANET_DIST - MIN_PLANET_DIST);
+        Real dist = 4000 + (i + 1) * MIN_PLANET_DIST; // + rand()%(MAX_PLANET_DIST - MIN_PLANET_DIST);
 
         Real phi = rad(rand()%360);
         Vec  u = unit(phi);
