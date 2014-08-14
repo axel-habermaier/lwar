@@ -4,9 +4,9 @@
 	using System.Collections.Generic;
 	using System.Windows.Controls;
 
-	public partial class Scoreboard : UserControl
+	public partial class ScoreboardView : UserControl
 	{
-		public Scoreboard()
+		public ScoreboardView()
 		{
 			InitializeComponent();
 		}

@@ -36,7 +36,7 @@
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 
-			<userInterface:Scoreboard DataContext="{Binding Scoreboard}" />
+			<userInterface:ScoreboardView DataContext="{Binding Scoreboard}" />
 			<userInterface:ChatView DataContext="{Binding Chat}" />
 
 			<Border Background="#AF252525" Visibility="{Binding IsLagging, Converter={converters:BooleanToVisibilityConverter}}"

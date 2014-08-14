@@ -11,6 +11,11 @@
 	public class InGameMenuViewModel : StackedViewModel
 	{
 		/// <summary>
+		///     Indicates whether the menu is top-level.
+		/// </summary>
+		private bool _isTopLevel = true;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public InGameMenuViewModel()
@@ -19,11 +24,29 @@
 		}
 
 		/// <summary>
+		///     Gets a value indicating whether the menu is top-level.
+		/// </summary>
+		public bool IsTopLevel
+		{
+			get { return _isTopLevel; }
+			private set { ChangePropertyValue(ref _isTopLevel, value); }
+		}
+
+		/// <summary>
 		///     Hides the in-game menu and lets the player continue playing.
 		/// </summary>
 		public void Continue()
 		{
 			Parent.ReplaceChild(null);
+		}
+
+		/// <summary>
+		///     Hides the in-game menu and lets the player continue playing when the in-game menu is closed implicitly.
+		/// </summary>
+		public void ContinueImplicit()
+		{
+			if (IsTopLevel)
+				Parent.ReplaceChild(null);
 		}
 
 		/// <summary>
@@ -41,6 +64,22 @@
 		public void Exit()
 		{
 			Commands.Exit();
+		}
+
+		/// <summary>
+		///     Opens the options menu.
+		/// </summary>
+		public void Options()
+		{
+			ReplaceChild(new OptionsMenuViewModel());
+		}
+
+		/// <summary>
+		///     Invoked when the child of the view model has been changed.
+		/// </summary>
+		protected override void OnChildChanged()
+		{
+			IsTopLevel = Child == null;
 		}
 	}
 }

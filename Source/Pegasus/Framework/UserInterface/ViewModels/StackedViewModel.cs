@@ -78,6 +78,8 @@
 					if (_isActive)
 						_child.Activate();
 				}
+
+				OnChildChanged();
 			}
 		}
 
@@ -102,6 +104,13 @@
 				if (_view != null)
 					_view.DataContext = this;
 			}
+		}
+
+		/// <summary>
+		///     Invoked when the child of the view model has been changed.
+		/// </summary>
+		protected virtual void OnChildChanged()
+		{
 		}
 
 		/// <summary>

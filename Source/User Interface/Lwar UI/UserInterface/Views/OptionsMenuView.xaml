@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Lwar.UserInterface.Views.OptionsMenuView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
+			 mc:Ignorable="d"
+			 Foreground="White">
+	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+		<StackPanel Orientation="Horizontal">
+			<TextBlock Margin="0,2,15,0">Player Name:</TextBlock>
+			<TextBox Width="250" MaxLength="{Binding MaxPlayerNameLength}" Text="{Binding PlayerName}" />
+		</StackPanel>
+		<TextBlock Margin="0,10,0,10" Foreground="Red" TextWrapping="NoWrap"
+				   Visibility="{Binding PlayerNameLengthExceeded, Converter={converters:BooleanToVisibilityConverter}}">
+			The player name exceeds the maximum allowed length.
+		</TextBlock>
+		<TextBlock Margin="0,10,0,10" Foreground="Red" TextWrapping="NoWrap"
+				   Visibility="{Binding PlayerNameMissing, Converter={converters:BooleanToVisibilityConverter}}">
+			You must enter a player name.
+		</TextBlock>
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Ok}">Ok</Button>
+			<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Cancel}">Cancel</Button>
+		</StackPanel>
+	</StackPanel>
+</UserControl>

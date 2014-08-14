@@ -232,6 +232,7 @@
     <Compile Include="Network\ServerDiscoveryService.cs" />
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
+    <Compile Include="UserInterface\ViewModels\OptionsMenuViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\ScoreboardViewModel.cs" />
     <Compile Include="Rendering\Renderers\StarfieldRenderer.cs" />
     <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
