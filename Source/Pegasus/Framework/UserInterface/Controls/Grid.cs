@@ -12,12 +12,12 @@
 		/// <summary>
 		///     Indicates which column, identified by its zero-based index, a child UI element of the grid should appear in.
 		/// </summary>
-		public static readonly DependencyProperty<int> ColumnProperty = new DependencyProperty<int>(defaultValue: 0, affectsArrange: true);
+		public static readonly DependencyProperty<int> ColumnProperty = new DependencyProperty<int>(affectsMeasure: true);
 
 		/// <summary>
 		///     Indicates which row, identified by its zero-based index, a child UI element of the grid should appear in.
 		/// </summary>
-		public static readonly DependencyProperty<int> RowProperty = new DependencyProperty<int>(defaultValue: 0, affectsArrange: true);
+		public static readonly DependencyProperty<int> RowProperty = new DependencyProperty<int>(affectsMeasure: true);
 
 		/// <summary>
 		///     Initializes a new instance.
