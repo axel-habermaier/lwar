@@ -435,9 +435,9 @@
 		public SizeD RenderSize { get; internal set; }
 
 		/// <summary>
-		///     Gets or sets the relative offset value of the UI element for drawing.
+		///     Gets the absolute visual offset of the UI element for drawing.
 		/// </summary>
-		protected internal Vector2d VisualOffset { get; set; }
+		protected internal Vector2d VisualOffset { get; private set; }
 
 		/// <summary>
 		///     Gets the number of visual children for this UI element.
@@ -452,16 +452,16 @@
 		/// </summary>
 		protected internal bool IsAttachedToRoot
 		{
-			get { return (_state & State.IsAttachedToRoot) == State.IsAttachedToRoot; }
+			get { return (_state & State.AttachedToRoot) == State.AttachedToRoot; }
 			set
 			{
 				if (IsAttachedToRoot == value)
 					return;
 
 				if (value)
-					_state |= State.IsAttachedToRoot;
+					_state |= State.AttachedToRoot;
 				else
-					_state &= ~State.IsAttachedToRoot;
+					_state &= ~State.AttachedToRoot;
 
 				SetBindingsActivationState(value);
 				_eventStore.SetBindingsActivationState(value);
@@ -561,6 +561,21 @@
 					_state |= State.ArrangeDirty;
 				else
 					_state &= ~State.ArrangeDirty;
+			}
+		}
+
+		/// <summary>
+		///     A value indicating whether the UI element's cached visual offset is dirty and needs to be updated.
+		/// </summary>
+		private bool IsVisualOffsetDirty
+		{
+			get { return (_state & State.VisualOffsetDirty) == State.VisualOffsetDirty; }
+			set
+			{
+				if (value)
+					_state |= State.VisualOffsetDirty;
+				else
+					_state &= ~State.VisualOffsetDirty;
 			}
 		}
 	}

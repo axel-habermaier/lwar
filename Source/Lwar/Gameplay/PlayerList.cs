@@ -87,11 +87,11 @@
 			_players.Add(player);
 			_playerMap.Add(player);
 
-			if (!isLocalPlayer)
-				return;
-
-			LocalPlayer = player;
-			LocalPlayer.IsLocalPlayer = true;
+			if (isLocalPlayer)
+			{
+				LocalPlayer = player;
+				LocalPlayer.IsLocalPlayer = true;
+			}
 
 			if (PlayerAdded != null)
 				PlayerAdded(player);

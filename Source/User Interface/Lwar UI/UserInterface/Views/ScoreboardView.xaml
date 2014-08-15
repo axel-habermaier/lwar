@@ -34,7 +34,7 @@
 			</Style>
 		</DataGrid.ColumnHeaderStyle>
 		<DataGrid.Columns>
-			<DataGridTemplateColumn MinWidth="230" Header="Player">
+			<DataGridTemplateColumn MinWidth="70" Header="Player">
 				<DataGridTemplateColumn.CellTemplate>
 					<DataTemplate>
 						<TextBlock Margin="2" Text="{Binding Name}" />

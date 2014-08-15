@@ -6,6 +6,7 @@
 	using Input;
 	using Math;
 	using Platform.Graphics;
+	using Platform.Logging;
 	using Rendering;
 
 	/// <summary>
@@ -47,6 +48,11 @@
 		///     The final rectangle allocated for the UI element during the last arrange phase.
 		/// </summary>
 		private RectangleD _previousFinalRect;
+
+		/// <summary>
+		///     The relative visual offset of the UI element for drawing.
+		/// </summary>
+		private Vector2d _relativeVisualOffset;
 
 		/// <summary>
 		///     The resources used by the UI element.
@@ -722,6 +728,7 @@
 
 			if (Visibility == Visibility.Collapsed)
 			{
+				IsMeasureDataDirty = false;
 				_desiredSize = new SizeD();
 				return;
 			}
@@ -788,6 +795,7 @@
 
 			if (Visibility == Visibility.Collapsed)
 			{
+				IsArrangeDataDirty = false;
 				VisualOffset = Vector2d.Zero;
 				RenderSize = new SizeD();
 				ActualWidth = 0;
@@ -817,11 +825,14 @@
 			var oldSize = RenderSize;
 			RenderSize = size;
 
-			VisualOffset = finalRect.Position + ComputeAlignmentOffset(finalRect.Size);
+			_relativeVisualOffset = finalRect.Position + ComputeAlignmentOffset(finalRect.Size);
 			RenderSize = IncreaseByMargin(size);
 
 			if (oldSize != RenderSize)
 				OnSizeChanged(oldSize, RenderSize);
+
+			IsArrangeDataDirty = false;
+			IsVisualOffsetDirty = true;
 		}
 
 		/// <summary>
@@ -830,10 +841,11 @@
 		/// <param name="visualOffset">The visual offset that should be applied to the UI element.</param>
 		internal void UpdateVisualOffsets(Vector2d visualOffset)
 		{
-			if (!IsArrangeDataDirty)
+			if (!IsVisualOffsetDirty)
 				return;
 
-			VisualOffset += visualOffset;
+			VisualOffset = _relativeVisualOffset + visualOffset;
+			Log.DebugIf(this is DataGridColumnHeader, "Offseting column header: abs {0}, rel: {1}", VisualOffset, _relativeVisualOffset);
 
 			var count = VisualChildrenCount;
 			for (var i = 0; i < count; ++i)
@@ -842,7 +854,7 @@
 				child.UpdateVisualOffsets(VisualOffset);
 			}
 
-			IsArrangeDataDirty = false;
+			IsVisualOffsetDirty = false;
 		}
 
 		/// <summary>
@@ -1035,7 +1047,7 @@
 			/// <summary>
 			///     Indicates that the UI element is connected to the visual tree's root element.
 			/// </summary>
-			IsAttachedToRoot = 1,
+			AttachedToRoot = 1,
 
 			/// <summary>
 			///     Indicates that the UI element uses and implicitly set style.
@@ -1050,7 +1062,12 @@
 			/// <summary>
 			///     Indicates that the UI element's cached arranged layout is dirty and needs to be updated.
 			/// </summary>
-			ArrangeDirty = 8
+			ArrangeDirty = 8,
+
+			/// <summary>
+			///     Indicates that the UI element's cached visual offset is dirty and needs to be updated.
+			/// </summary>
+			VisualOffsetDirty = 16
 		}
 	}
 }
