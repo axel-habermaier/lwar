@@ -6,7 +6,6 @@
 	using Input;
 	using Math;
 	using Platform.Graphics;
-	using Platform.Logging;
 	using Rendering;
 
 	/// <summary>
@@ -48,6 +47,11 @@
 		///     The final rectangle allocated for the UI element during the last arrange phase.
 		/// </summary>
 		private RectangleD _previousFinalRect;
+
+		/// <summary>
+		///     The visual offset that has previously been applied to this UI element.
+		/// </summary>
+		private Vector2d _previousVisualOffset;
 
 		/// <summary>
 		///     The relative visual offset of the UI element for drawing.
@@ -122,8 +126,10 @@
 		{
 			if (measure)
 			{
-				var element = this;
-				while (element != null)
+				IsMeasureDataDirty = true;
+				var element = VisualParent;
+
+				while (element != null && element.Visibility != Visibility.Collapsed)
 				{
 					element.IsMeasureDataDirty = true;
 					element = element.VisualParent;
@@ -131,8 +137,10 @@
 			}
 			else if (arrange)
 			{
-				var element = this;
-				while (element != null)
+				IsArrangeDataDirty = true;
+				var element = VisualParent;
+
+				while (element != null && element.Visibility != Visibility.Collapsed)
 				{
 					element.IsArrangeDataDirty = true;
 					element = element.VisualParent;
@@ -803,7 +811,6 @@
 
 				return;
 			}
-
 			_previousFinalRect = finalRect;
 			_layoutInfo = new LayoutInfo(this);
 
@@ -841,11 +848,11 @@
 		/// <param name="visualOffset">The visual offset that should be applied to the UI element.</param>
 		internal void UpdateVisualOffsets(Vector2d visualOffset)
 		{
-			if (!IsVisualOffsetDirty)
+			if (!IsVisualOffsetDirty && visualOffset == _previousVisualOffset)
 				return;
 
+			_previousVisualOffset = visualOffset;
 			VisualOffset = _relativeVisualOffset + visualOffset;
-			Log.DebugIf(this is DataGridColumnHeader, "Offseting column header: abs {0}, rel: {1}", VisualOffset, _relativeVisualOffset);
 
 			var count = VisualChildrenCount;
 			for (var i = 0; i < count; ++i)
@@ -945,7 +952,7 @@
 		///     Increases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and
 		///     3, the returned size has a width of 10 + 2 + 3 = 15.
 		/// </summary>
-		/// <param name="size">The size the thickness should be added to.</param>
+		/// <param name="size">The size the margin should be added to.</param>
 		private SizeD IncreaseByMargin(SizeD size)
 		{
 			return new SizeD(size.Width + _layoutInfo.Margin.Left + _layoutInfo.Margin.Right,
@@ -956,7 +963,7 @@
 		///     Decreases the size to encompass the margin. For instance, if the width is 10 and the left and right margins are 2 and
 		///     3, the returned size has a width of 10 - 2 - 3 = 5.
 		/// </summary>
-		/// <param name="size">The size the thickness should be added to.</param>
+		/// <param name="size">The size the margin should be added to.</param>
 		private SizeD DecreaseByMargin(SizeD size)
 		{
 			return new SizeD(size.Width - _layoutInfo.Margin.Left - _layoutInfo.Margin.Right,
