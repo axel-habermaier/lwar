@@ -192,7 +192,11 @@
 			_zOrderDirty = false;
 		}
 
-		protected override void OnDraw(SpriteBatch spriteBatch)
+		/// <summary>
+		///     Draws the UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element.</param>
+		protected override void DrawCore(SpriteBatch spriteBatch)
 		{
 			var width = (int)Math.Round(ActualWidth);
 			var height = (int)Math.Round(ActualHeight);
@@ -203,14 +207,20 @@
 				spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background.Value);
 		}
 
-		protected override void OnDrawChildren(SpriteBatch spriteBatch)
+		/// <summary>
+		///     Draws the child UI elements of the current UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element's children.</param>
+		protected override void DrawChildren(SpriteBatch spriteBatch)
 		{
 			if (ScrollHandler != null)
 			{
+				// We draw the children on a higher layer to avoid draw ordering issues.
+				++spriteBatch.Layer;
+
 				// Only draw the children that are actually visible
 				var count = VisualChildrenCount;
 				var area = ScrollHandler.ScrollArea;
-
 				for (var i = 0; i < count; ++i)
 				{
 					var child = GetVisualChild(i);
@@ -223,9 +233,11 @@
 					if (topIsInside && bottomIsInside && leftIsInside && rightIsInside)
 						child.Draw(spriteBatch);
 				}
+
+				--spriteBatch.Layer;
 			}
 			else
-				base.OnDrawChildren(spriteBatch);
+				base.DrawChildren(spriteBatch);
 		}
 	}
 }

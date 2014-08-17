@@ -374,7 +374,11 @@
 			SwapChain.Present();
 		}
 
-		protected override sealed void OnDraw(SpriteBatch spriteBatch)
+		/// <summary>
+		///     Draws the UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element.</param>
+		protected override sealed void DrawCore(SpriteBatch spriteBatch)
 		{
 			throw new NotSupportedException("Call Draw() instead.");
 		}

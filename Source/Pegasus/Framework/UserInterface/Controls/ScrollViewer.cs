@@ -248,7 +248,11 @@
 			return finalSize;
 		}
 
-		protected override void OnDrawChildren(SpriteBatch spriteBatch)
+		/// <summary>
+		///     Draws the child UI elements of the current UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element's children.</param>
+		protected override void DrawChildren(SpriteBatch spriteBatch)
 		{
 			var width = (int)Math.Round(ActualWidth);
 			var height = (int)Math.Round(ActualHeight);
@@ -264,7 +268,7 @@
 			var offset = ScrollOffset;
 			spriteBatch.WorldMatrix = Matrix.CreateTranslation(-(int)Math.Round(offset.X), -(int)Math.Round(offset.Y), 0);
 
-			base.OnDrawChildren(spriteBatch);
+			base.DrawChildren(spriteBatch);
 
 			spriteBatch.UseScissorTest = useScissorTest;
 			spriteBatch.WorldMatrix = worldMatrix;

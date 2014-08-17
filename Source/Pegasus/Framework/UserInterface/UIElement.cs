@@ -1024,25 +1024,50 @@
 			return null;
 		}
 
+		/// <summary>
+		///     Draws the UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element.</param>
 		internal void Draw(SpriteBatch spriteBatch)
 		{
+			Assert.ArgumentNotNull(spriteBatch);
+
 			if (Visibility != Visibility.Visible)
 				return;
 
-			OnDraw(spriteBatch);
-			OnDrawChildren(spriteBatch);
+			DrawCore(spriteBatch);
+			DrawChildren(spriteBatch);
 		}
 
-		protected abstract void OnDraw(SpriteBatch spriteBatch);
-
-		protected virtual void OnDrawChildren(SpriteBatch spriteBatch)
+		/// <summary>
+		///     Draws the UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element.</param>
+		protected virtual void DrawCore(SpriteBatch spriteBatch)
 		{
+			if (Background.HasValue)
+				spriteBatch.Draw(VisualArea, Texture2D.White, Background.Value);
+		}
+
+		/// <summary>
+		///     Draws the child UI elements of the current UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element's children.</param>
+		protected virtual void DrawChildren(SpriteBatch spriteBatch)
+		{
+			Assert.ArgumentNotNull(spriteBatch);
+
+			// We draw the children on a higher layer to avoid draw ordering issues.
+			++spriteBatch.Layer;
+
 			var count = VisualChildrenCount;
 			for (var i = 0; i < count; ++i)
 			{
 				var child = GetVisualChild(i);
 				child.Draw(spriteBatch);
 			}
+
+			--spriteBatch.Layer;
 		}
 
 		/// <summary>

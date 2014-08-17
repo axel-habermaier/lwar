@@ -186,18 +186,20 @@
 			return _textLayout.HitTest(position) || base.HitTestCore(position);
 		}
 
-		protected override void OnDraw(SpriteBatch spriteBatch)
+		/// <summary>
+		///     Draws the UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element.</param>
+		protected override void DrawCore(SpriteBatch spriteBatch)
 		{
-			var width = (int)Math.Round(ActualWidth);
-			var height = (int)Math.Round(ActualHeight);
+			base.DrawCore(spriteBatch);
+
 			var x = (int)Math.Round(VisualOffset.X);
 			var y = (int)Math.Round(VisualOffset.Y);
 
-			if (Background.HasValue)
-				spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background.Value);
-
 			++spriteBatch.Layer;
 			_textLayout.Draw(spriteBatch, new Vector2i(x, y), Foreground);
+			--spriteBatch.Layer;
 		}
 	}
 }

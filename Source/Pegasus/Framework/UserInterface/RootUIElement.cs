@@ -25,11 +25,8 @@
 		{
 			get
 			{
-				foreach (var child in LogicalChildren)
+				foreach (Window window in LogicalChildren)
 				{
-					Assert.OfType<Window>(child);
-
-					var window = child as Window;
 					if (window.Focused)
 						return true;
 				}
@@ -42,13 +39,8 @@
 		/// </summary>
 		public void HandleInput()
 		{
-			foreach (var child in LogicalChildren)
-			{
-				Assert.OfType<Window>(child);
-
-				var window = child as Window;
+			foreach (Window window  in LogicalChildren)
 				window.HandleInput();
-			}
 		}
 
 		/// <summary>
@@ -56,13 +48,8 @@
 		/// </summary>
 		public void UpdateLayout()
 		{
-			foreach (var child in LogicalChildren)
-			{
-				Assert.OfType<Window>(child);
-
-				var window = child as Window;
+			foreach (Window window  in LogicalChildren)
 				window.UpdateLayout();
-			}
 		}
 
 		/// <summary>
@@ -70,13 +57,8 @@
 		/// </summary>
 		public void Draw()
 		{
-			foreach (var child in LogicalChildren)
-			{
-				Assert.OfType<Window>(child);
-
-				var window = child as Window;
+			foreach (Window window  in LogicalChildren)
 				window.Draw();
-			}
 		}
 
 		/// <summary>
@@ -84,13 +66,8 @@
 		/// </summary>
 		public void Present()
 		{
-			foreach (var child in LogicalChildren)
-			{
-				Assert.OfType<Window>(child);
-
-				var window = child as Window;
+			foreach (Window window in LogicalChildren)
 				window.Present();
-			}
 		}
 
 		/// <summary>
@@ -109,7 +86,11 @@
 			throw new NotSupportedException("Call UpdateLayout() instead.");
 		}
 
-		protected override void OnDraw(SpriteBatch spriteBatch)
+		/// <summary>
+		///     Draws the UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element.</param>
+		protected override void DrawCore(SpriteBatch spriteBatch)
 		{
 			throw new NotSupportedException("Call Draw() instead.");
 		}

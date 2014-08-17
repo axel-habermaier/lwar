@@ -2,6 +2,7 @@
 {
 	using System;
 	using Math;
+	using Rendering;
 
 	/// <summary>
 	///     Allows each child to take up the entire area of the panel.
@@ -39,6 +40,24 @@
 				child.Arrange(new RectangleD(Vector2d.Zero, finalSize));
 
 			return finalSize;
+		}
+
+		/// <summary>
+		///     Draws the child UI elements of the current UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element's children.</param>
+		protected override void DrawChildren(SpriteBatch spriteBatch)
+		{
+			var count = VisualChildrenCount;
+			for (var i = 0; i < count; ++i)
+			{
+				// We draw each child on its own range of layers, as the children of an area panel are typically stacked
+				// along the Z axis and therefore overlap each other.
+				spriteBatch.Layer += 10000;
+
+				var child = GetVisualChild(i);
+				child.Draw(spriteBatch);
+			}
 		}
 	}
 }

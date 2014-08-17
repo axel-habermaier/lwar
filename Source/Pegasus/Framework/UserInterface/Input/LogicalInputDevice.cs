@@ -19,6 +19,11 @@
 		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length];
 
 		/// <summary>
+		///     The UI element that is associated with this logical device.
+		/// </summary>
+		private readonly UIElement _element;
+
+		/// <summary>
 		///     The logical inputs that are currently registered on the device.
 		/// </summary>
 		private readonly List<LogicalInput> _inputs = new List<LogicalInput>(64);
@@ -32,11 +37,6 @@
 		///     The mouse button states.
 		/// </summary>
 		private readonly InputState[] _mouseButtonStates = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
-
-		/// <summary>
-		///     The UI element that is associated with this logical device.
-		/// </summary>
-		private readonly UIElement _element;
 
 		/// <summary>
 		///     The keyboard providing the keyboard input.

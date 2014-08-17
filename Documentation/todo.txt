@@ -33,8 +33,6 @@ Pegasus.Framework
 - UI
 	* Implement controls: Combobox, Checkbox, Image
 	* Implement animation system
-	* Refactor UI rendering (http://msdn.microsoft.com/en-us/library/ms748373.aspx)
-		-> Instead of separate draw calls per layer, use depth tests and layer by z axis in a single draw call using texture arrays
 	* Add to TextBox: Text selection (both via mouse and keyboard), copy & paste
 	* Add to SrollViewer: Horizontal scrolling, scrollbars
 	* Add to Button: hover/click feedback

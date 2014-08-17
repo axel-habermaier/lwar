@@ -1,10 +1,8 @@
 ﻿namespace Pegasus.Framework.UserInterface.Controls
 {
 	using System;
-	using System.Runtime.CompilerServices;
 	using Math;
 	using Platform.Graphics;
-	using Rendering;
 
 	/// <summary>
 	///     Represents a base class for templated UI elements.
@@ -150,17 +148,6 @@
 
 			_templateRoot.Arrange(new RectangleD(0, 0, finalSize));
 			return _templateRoot.RenderSize;
-		}
-
-		protected override void OnDraw(SpriteBatch spriteBatch)
-		{
-			var width = (int)Math.Round(ActualWidth);
-			var height = (int)Math.Round(ActualHeight);
-			var x = (int)Math.Round(VisualOffset.X);
-			var y = (int)Math.Round(VisualOffset.Y);
-
-			if (Background.HasValue)
-				spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background.Value);
 		}
 	}
 }

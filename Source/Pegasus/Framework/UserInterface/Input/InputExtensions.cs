@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
-	using Scripting;
 
 	/// <summary>
 	///     Provides extension methods for the input system.

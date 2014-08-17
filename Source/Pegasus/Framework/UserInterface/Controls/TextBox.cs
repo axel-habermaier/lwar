@@ -326,9 +326,13 @@
 			return null;
 		}
 
-		protected override void OnDraw(SpriteBatch spriteBatch)
+		/// <summary>
+		///     Draws the UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element.</param>
+		protected override void DrawCore(SpriteBatch spriteBatch)
 		{
-			base.OnDraw(spriteBatch);
+			base.DrawCore(spriteBatch);
 
 			if (_textBlock != null && IsFocused)
 				_caret.Draw(spriteBatch, _textBlock.ComputeCaretPosition(_caret.Position), _textBlock.Font.LineHeight, Foreground);

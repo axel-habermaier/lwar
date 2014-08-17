@@ -202,7 +202,7 @@
 		}
 
 		/// <summary>
-		/// Sets the window into fullscreen mode.
+		///     Sets the window into fullscreen mode.
 		/// </summary>
 		public void ChangeToFullscreenMode()
 		{

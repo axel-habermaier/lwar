@@ -2,8 +2,6 @@
 {
 	using System;
 	using Math;
-	using Platform.Graphics;
-	using Rendering;
 
 	/// <summary>
 	///     Displays arbitrary content in the UI.
@@ -159,17 +157,6 @@
 		{
 			if (_presentedElement != null)
 				_presentedElement.ChangeLogicalParent(null);
-		}
-
-		protected override void OnDraw(SpriteBatch spriteBatch)
-		{
-			var width = (int)Math.Round(ActualWidth);
-			var height = (int)Math.Round(ActualHeight);
-			var x = (int)Math.Round(VisualOffset.X);
-			var y = (int)Math.Round(VisualOffset.Y);
-
-			if (Background.HasValue)
-				spriteBatch.Draw(new Rectangle(x, y, width, height), Texture2D.White, Background.Value);
 		}
 	}
 }

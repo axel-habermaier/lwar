@@ -1,7 +1,7 @@
-using System;
-
 namespace Pegasus.Framework.UserInterface.Controls
 {
+	using System;
+
 	/// <summary>
 	///     Provides information about text change events.
 	/// </summary>

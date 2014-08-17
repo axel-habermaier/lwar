@@ -147,7 +147,7 @@
 			Assert.That(_token.Type == TextTokenType.Space, "Wrong token type.");
 			Assert.That(!_token.Sequence.IsInvalid, "Unexpected invalid sequence.");
 			Assert.That(_token.Sequence.LastCharacter - _token.Sequence.FirstCharacter == 1,
-						"Space token with more than one space.");
+				"Space token with more than one space.");
 
 			// Compute the token's width and check whether it fits into the current line or any line at all
 			var width = _token.Sequence.ComputeWidth(_font, _text);

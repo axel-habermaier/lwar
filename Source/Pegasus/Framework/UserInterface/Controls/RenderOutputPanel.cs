@@ -281,7 +281,11 @@
 			_depthStencil = null;
 		}
 
-		protected override void OnDraw(SpriteBatch spriteBatch)
+		/// <summary>
+		///     Draws the UI element using the given sprite batch.
+		/// </summary>
+		/// <param name="spriteBatch">The sprite batch that should be used to draw the UI element.</param>
+		protected override void DrawCore(SpriteBatch spriteBatch)
 		{
 			Log.DebugIf(Camera == null, "No camera has been set for the render output panel.");
 			Log.DebugIf(_drawMethod == null, "No draw callback has been set for the render output panel.");
@@ -291,11 +295,6 @@
 
 			if (_renderOutput == null)
 				InitializeGraphicsResources();
-
-			var width = (int)Math.Round(ActualWidth);
-			var height = (int)Math.Round(ActualHeight);
-			var x = (int)Math.Round(VisualOffset.X);
-			var y = (int)Math.Round(VisualOffset.Y);
 
 			// Take the different coordinate origins for OpenGL and Direct3D into account when rendering 
 			// the render target's color buffer... annoying
@@ -309,7 +308,8 @@
 			_drawMethod(_renderOutput);
 
 			// Draw the contents into the UI
-			var quad = new Quad(new RectangleF(x, y, width, height), Color.White, textureArea);
+			var area = VisualArea;
+			var quad = new Quad(new RectangleF(area.Left, area.Top, area.Width, area.Height), Color.White, textureArea);
 			spriteBatch.Draw(ref quad, _outputTexture);
 		}
 

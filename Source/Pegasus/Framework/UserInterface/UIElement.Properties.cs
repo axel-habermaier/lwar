@@ -578,5 +578,21 @@
 					_state &= ~State.VisualOffsetDirty;
 			}
 		}
+
+		/// <summary>
+		///     Gets the rectangle encompassing the UI element's visual area.
+		/// </summary>
+		protected Rectangle VisualArea
+		{
+			get
+			{
+				var x = (int)Math.Round(VisualOffset.X);
+				var y = (int)Math.Round(VisualOffset.Y);
+				var width = (int)Math.Round(ActualWidth);
+				var height = (int)Math.Round(ActualHeight);
+
+				return new Rectangle(x, y, width, height);
+			}
+		}
 	}
 }
