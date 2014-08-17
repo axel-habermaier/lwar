@@ -26,7 +26,7 @@
 
 			var storage = _values.Get(routedEvent.Index) as RoutedEventStorage<T>;
 			if (storage == null)
-				_values.Add(storage = new RoutedEventStorage<T>(routedEvent));
+				_values.Add(storage = new RoutedEventStorage<T>(routedEvent), routedEvent.Index);
 
 			storage.AddHandler(handler);
 		}
@@ -90,7 +90,7 @@
 
 			var storage = _values.Get(routedEvent.Index) as RoutedEventStorage<T>;
 			if (storage == null)
-				_values.Add(storage = new RoutedEventStorage<T>(routedEvent));
+				_values.Add(storage = new RoutedEventStorage<T>(routedEvent), routedEvent.Index);
 
 			storage.SetBinding(binding);
 		}

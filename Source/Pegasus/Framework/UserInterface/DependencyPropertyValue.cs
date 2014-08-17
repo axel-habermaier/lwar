@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Represents the base class for a dependency property value.
 	/// </summary>
-	internal abstract class DependencyPropertyValue : SparseObjectStorage<DependencyPropertyValue>.IStorageLocation
+	internal abstract class DependencyPropertyValue
 	{
 		/// <summary>
 		///     The sources of the property's values.
@@ -49,14 +49,6 @@
 		public bool IsBound
 		{
 			get { return (_sources & ValueSources.Binding) == ValueSources.Binding; }
-		}
-
-		/// <summary>
-		///     Gets the storage location of the dependency property value.
-		/// </summary>
-		public int Location
-		{
-			get { return Property.Index; }
 		}
 
 		/// <summary>

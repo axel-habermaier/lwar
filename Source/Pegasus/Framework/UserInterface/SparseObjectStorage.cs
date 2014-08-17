@@ -5,107 +5,110 @@
 	using System.Linq;
 
 	/// <summary>
-	///     A sparse storage for objects implementing SpareObjectStorage.IStorageLocation. The values are stored in an array,
-	///     sorted by SpareObjectStorage.IStorageLocation.Location. A binary search is used to find the value of an object,
-	///     whereas insertions are guaranteed to insert the value at the correct array index.
+	///     A sparse storage for objects uniquely identified by an index. The values are stored in an array by index.
+	///     A binary search is used to find the value of an object, whereas insertions are guaranteed to insert the
+	///     value at the correct array index.
 	/// </summary>
 	internal struct SparseObjectStorage<T>
-		where T : class, SparseObjectStorage<T>.IStorageLocation
+		where T : class
 	{
 		/// <summary>
-		///     The number of stored values.
+		///     The number of stored objects.
 		/// </summary>
-		private int _valueCount;
+		private int _count;
 
 		/// <summary>
-		///     The values that are currently stored.
+		///     The indexed objects that are currently stored.
 		/// </summary>
-		private T[] _values;
+		private IndexedObject[] _objects;
 
 		/// <summary>
-		///     Gets an enumerator for all values currently stored in the sparse object storage.
+		///     Gets an enumerator for all objects currently stored in the sparse object storage.
 		/// </summary>
 		internal Enumerator GetEnumerator()
 		{
-			return new Enumerator(_valueCount, _values);
+			return new Enumerator(_count, _objects);
 		}
 
 		/// <summary>
-		///     Adds the value to the store. The new value is added such that the ordering of the values array is maintained.
+		///     Adds the objects to the store. The new objects is added such that the ordering of the objects array is maintained.
 		/// </summary>
-		/// <param name="value">The value that should be added.</param>
-		internal void Add(T value)
+		/// <param name="obj">The object that should be added.</param>
+		/// <param name="objectIndex">The index of the object that should be added.</param>
+		internal void Add(T obj, int objectIndex)
 		{
-			// Add the value at the beginning of the list if it is empty
-			if (_values == null)
+			Assert.ArgumentSatisfies(objectIndex >= 0, "Invalid negative index.");
+
+			// Add the object at the beginning of the list if it is empty
+			if (_objects == null)
 			{
-				_values = new T[2];
-				_values[0] = value;
-				_valueCount = 1;
+				_objects = new IndexedObject[2];
+				_objects[0] = new IndexedObject { Object = obj, Index = objectIndex };
+				_count = 1;
 				return;
 			}
 
-			Assert.That(_values.All(v => v == null || v.Location != value.Location), "The property value has already been stored.");
+			Assert.That(_objects.All(o => o.Object == null || o.Index != objectIndex), "The property value has already been stored.");
 
 			// Use a linear search to find the insertion index
 			var index = 0;
-			while (index < _valueCount && _values[index].Location < value.Location)
+			while (index < _count && _objects[index].Index < objectIndex)
 				++index;
 
-			if (_values.Length == _valueCount)
+			if (_objects.Length == _count)
 			{
-				// We have to increase the size of the store before we can add the value
-				var newLength = (int)(_values.Length * 1.5);
-				if (newLength == _values.Length)
+				// We have to increase the size of the store before we can add the object
+				var newLength = (int)(_objects.Length * 1.5);
+				if (newLength == _objects.Length)
 					++newLength;
 
-				var values = new T[newLength];
+				var objects = new IndexedObject[newLength];
 
-				// Copy all old values before the insertion index
-				Array.Copy(_values, 0, values, 0, index);
+				// Copy all old objects before the insertion index
+				Array.Copy(_objects, 0, objects, 0, index);
 
-				// Copy all old values after the insertion index
-				Array.Copy(_values, index, values, index + 1, _valueCount - index);
+				// Copy all old objects after the insertion index
+				Array.Copy(_objects, index, objects, index + 1, _count - index);
 
-				_values = values;
+				_objects = objects;
 			}
 			else
 			{
-				// Shift up all values at indices greater than the insertion index
-				Array.Copy(_values, index, _values, index + 1, _valueCount - index);
+				// Shift up all objects at indices greater than the insertion index
+				Array.Copy(_objects, index, _objects, index + 1, _count - index);
 			}
 
-			// Add the new value at the insertion index and increase the value count
-			_values[index] = value;
-			++_valueCount;
+			// Add the new object at the insertion index and increase the object count
+			_objects[index] = new IndexedObject { Object = obj, Index = objectIndex };
+			++_count;
 		}
 
 		/// <summary>
-		///     Performs a binary search to find the value index for the given location. Returns null if no value has been stored
-		///     yet at the given location.
+		///     Performs a binary search to find the object for the given index. Returns null if no object has been stored
+		///     yet at the given index.
 		/// </summary>
-		/// <param name="location">The index of the property the value index should be returned for.</param>
-		internal T Get(int location)
+		/// <param name="index">The index of the object that should be returned.</param>
+		internal T Get(int index)
 		{
-			if (_valueCount == 0)
+			if (_count == 0)
 				return null;
 
 			const int linearSearchThreshold = 4;
 			var start = 0;
-			var end = _valueCount;
+			var end = _count;
 
-			// Perform a binary search while the element count exceeds the linear search threshold
+			// Perform a binary search while the object count exceeds the linear search threshold
 			while (end - start > linearSearchThreshold)
 			{
 				// Split the interval into two halves
 				var center = start + (end - start) / 2;
 
 				// Check if the center of the interval is what we're looking for
-				if (_values[center].Location == location)
-					return _values[center];
+				if (_objects[center].Index == index)
+					return _objects[center].Object;
 
 				// Continue searching the lower or the upper half
-				if (_values[center].Location > location)
+				if (_objects[center].Index > index)
 					end = center - 1;
 				else
 					start = center + 1;
@@ -113,90 +116,90 @@
 
 			// We'll use a linear search if there are only a few elements left to search, as profiling seems to indicate
 			// that a simple linear search is more efficient in this case
-			for (var i = start; i < end + 1 && i < _valueCount; ++i)
+			for (var i = start; i < end + 1 && i < _count; ++i)
 			{
-				if (_values[i].Location == location)
-					return _values[i];
+				if (_objects[i].Index == index)
+					return _objects[i].Object;
 			}
 
 			return null;
 		}
 
 		/// <summary>
-		///     Enumerates all stored values of a sparse object storage.
+		///     Enumerates all stored objects of a sparse object storage.
 		/// </summary>
 		internal struct Enumerator
 		{
 			/// <summary>
-			///     Cached instance storing the copies of the value arrays. Necessary as the enumerator must be reentrant, but on the other
+			///     Cached instance storing the copies of the object arrays. Necessary as the enumerator must be reentrant, but on the other
 			///     hand we do not want to create new arrays all the time.
 			/// </summary>
-			private static readonly Stack<T[]> Pooled = new Stack<T[]>();
+			private static readonly Stack<IndexedObject[]> Pooled = new Stack<IndexedObject[]>();
 
 			/// <summary>
-			///     The number of values that are enumerated.
+			///     The number of objects that are enumerated.
 			/// </summary>
-			private readonly int _valueCount;
+			private readonly int _count;
 
 			/// <summary>
-			///     The values that are enumerated.
+			///     The objects that are enumerated.
 			/// </summary>
-			private readonly T[] _values;
+			private readonly IndexedObject[] _objects;
 
 			/// <summary>
-			///     The index of the current enumerated element.
+			///     The index of the current enumerated object.
 			/// </summary>
 			private int _current;
 
 			/// <summary>
 			///     Initializes a new instance.
 			/// </summary>
-			/// <param name="valueCount">The number of values that should be enumerated.</param>
-			/// <param name="values">The values that should be enumerated.</param>
-			public Enumerator(int valueCount, T[] values)
+			/// <param name="count">The number of objects that should be enumerated.</param>
+			/// <param name="objects">The objects that should be enumerated.</param>
+			internal Enumerator(int count, IndexedObject[] objects)
 				: this()
 			{
-				Assert.ArgumentSatisfies(values == null || valueCount <= values.Length, "Too many values.");
+				Assert.ArgumentSatisfies(objects == null || count <= objects.Length, "Too many values.");
 
-				_valueCount = valueCount;
+				_count = count;
 
-				// We have to make a copy of the values here, as the list may be changed while it is being enumerated
-				if (values == null)
+				// We have to make a copy of the objects here, as the list may be changed while it is being enumerated
+				if (objects == null)
 					return;
 
 				if (Pooled.Count == 0)
-					_values = new T[values.Length];
+					_objects = new IndexedObject[objects.Length];
 				else
 				{
-					_values = Pooled.Pop();
-					if (_values.Length < values.Length)
-						_values = new T[values.Length];
+					_objects = Pooled.Pop();
+					if (_objects.Length < objects.Length)
+						_objects = new IndexedObject[objects.Length];
 				}
 
-				Array.Copy(values, _values, values.Length);
+				Array.Copy(objects, _objects, objects.Length);
 			}
 
 			/// <summary>
-			///     Gets the element at the current position of the enumerator.
+			///     Gets the object at the current position of the enumerator.
 			/// </summary>
 			public T Current { get; private set; }
 
 			/// <summary>
-			///     Advances the enumerator to the next UI element.
+			///     Advances the enumerator to the next object.
 			/// </summary>
 			public bool MoveNext()
 			{
 				// If we've reached the end of the collection, we're done
-				if (_current >= _valueCount)
+				if (_current >= _count)
 				{
-					if (_values != null)
-						Pooled.Push(_values);
+					if (_objects != null)
+						Pooled.Push(_objects);
 
 					return false;
 				}
 
 				// Otherwise, enumerate the next element
-				Current = _values[_current++];
+				Current = _objects[_current++].Object;
 				return true;
 			}
 
@@ -213,14 +216,19 @@
 		}
 
 		/// <summary>
-		///     Provides a storage location for objects that should be stored in a sparse object storage.
+		///     Associates an object with its index.
 		/// </summary>
-		internal interface IStorageLocation
+		internal struct IndexedObject
 		{
 			/// <summary>
-			///     The storage location of the value that remains unchanged and unique throughout the lifetime of the application.
+			///     The index of the object.
 			/// </summary>
-			int Location { get; }
+			public int Index;
+
+			/// <summary>
+			///     The index object.
+			/// </summary>
+			public T Object;
 		}
 	}
 }

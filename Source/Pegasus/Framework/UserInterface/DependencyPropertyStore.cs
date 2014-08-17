@@ -46,7 +46,7 @@
 
 			var value = _values.Get(property.Index) as DependencyPropertyValue<T>;
 			if (value == null && addValueIfUnknown)
-				_values.Add(value = new DependencyPropertyValue<T>(property));
+				_values.Add(value = new DependencyPropertyValue<T>(property), property.Index);
 
 			return value;
 		}

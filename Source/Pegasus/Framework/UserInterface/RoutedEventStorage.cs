@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Represents the base class for a dependency property value.
 	/// </summary>
-	internal abstract class RoutedEventStorage : SparseObjectStorage<RoutedEventStorage>.IStorageLocation
+	internal abstract class RoutedEventStorage
 	{
 		/// <summary>
 		///     Initializes a new instance.
@@ -21,14 +21,6 @@
 		///     Gets the routed event whose handlers are stored.
 		/// </summary>
 		public RoutedEvent Event { get; private set; }
-
-		/// <summary>
-		///     Gets the storage location of the routed event handlers.
-		/// </summary>
-		public int Location
-		{
-			get { return Event.Index; }
-		}
 
 		/// <summary>
 		///     Updates the activation state of the event's binding, if any.

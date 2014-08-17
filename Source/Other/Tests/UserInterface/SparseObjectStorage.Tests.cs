@@ -10,7 +10,7 @@
 	[TestFixture]
 	public class SparseObjectStorageTests
 	{
-		private class Test : SparseObjectStorage<Test>.IStorageLocation
+		private class Test
 		{
 			public Test(int location)
 			{
@@ -47,7 +47,7 @@
 				addedLocations.Remove(location);
 
 				objects[i] = new Test(location);
-				storage.Add(objects[i]);
+				storage.Add(objects[i], objects[i].Location);
 			}
 
 			foreach (var obj in objects)
