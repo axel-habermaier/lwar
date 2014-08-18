@@ -69,8 +69,7 @@
 					}
 				}
 
-				var tasks = _shaderAssets.Select(Compile).ToArray();
-				Task.WaitAll(tasks);
+				base.Compile(_shaderAssets);
 			}
 			catch (Exception e)
 			{

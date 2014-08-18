@@ -194,9 +194,11 @@
     <Reference Include="System.Core" />
     <Reference Include="ICSharpCode.NRefactory">
       <HintPath>..\..\..\Dependencies\ICSharpCode.NRefactory.dll</HintPath>
+      <Package>monodevelop</Package>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.CSharp">
       <HintPath>..\..\..\Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+      <Package>monodevelop</Package>
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\..\Dependencies\Mono.Cecil.dll</HintPath>

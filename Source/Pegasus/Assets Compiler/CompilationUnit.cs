@@ -134,6 +134,7 @@
 				}
 
 				compilers = CreateTypeInstances<IAssetCompiler>();
+
 				var tasks = compilers
 					.Select(compiler => Task.Factory.StartNew(() => compiler.Compile(_assets), TaskCreationOptions.LongRunning))
 					.ToArray();

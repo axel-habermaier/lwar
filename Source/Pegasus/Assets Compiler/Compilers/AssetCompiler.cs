@@ -90,18 +90,24 @@
 					File.Copy(asset.TempPath, asset.TargetPath, true);
 					return Task.FromResult(true);
 				case CompilationAction.Process:
-					return Task.Factory.StartNew(() =>
-					{
-						Log.Info("Compiling '{0}'...", asset.RelativePath);
-
-						using (var writer = new AssetWriter(asset))
-							CompileAndHandleExceptions(asset, writer.Writer);
-
-						asset.WriteHash();
-					}, TaskCreationOptions.LongRunning);
+					return Task.Factory.StartNew(() => CompileAsset(asset), TaskCreationOptions.LongRunning);
 				default:
 					throw new InvalidOperationException("Unknown action type.");
 			}
+		}
+
+		/// <summary>
+		///     Compiles the asset.
+		/// </summary>
+		/// <param name="asset">The asset that should be compiled.</param>
+		private void CompileAsset(TAsset asset)
+		{
+			Log.Info("Compiling '{0}'...", asset.RelativePath);
+
+			using (var writer = new AssetWriter(asset))
+				CompileAndHandleExceptions(asset, writer.Writer);
+
+			asset.WriteHash();
 		}
 
 		/// <summary>
