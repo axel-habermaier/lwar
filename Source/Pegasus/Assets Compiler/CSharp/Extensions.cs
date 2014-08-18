@@ -172,18 +172,17 @@
 		/// <param name="node">The node whose documentation should be returned.</param>
 		public static IEnumerable<string> GetDocumentation(this AstNode node)
 		{
-			var sibling = node;
-			while (sibling.PrevSibling is NewLineNode ||
-				   (sibling.PrevSibling as Comment != null && ((Comment)sibling.PrevSibling).IsDocumentation))
-				sibling = sibling.PrevSibling;
-
-			while (sibling != node)
+			var children = node.Children.ToArray();
+			foreach (var child in children)
 			{
-				var comment = sibling as Comment;
+				if (child is NewLineNode)
+					continue;
+
+				var comment = child as Comment;
 				if (comment != null)
 					yield return comment.Content;
-
-				sibling = sibling.NextSibling;
+				else
+					yield break;
 			}
 		}
 

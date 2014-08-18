@@ -49,14 +49,12 @@
 		/// <param name="namespaceName">The namespace in which the generated class should live.</param>
 		public void GenerateCode(string namespaceName)
 		{
-			_writer.WriterHeader();
-			_writer.AppendLine("using System;");
-			_writer.AppendLine("using System.Diagnostics;");
-			_writer.NewLine();
-
 			_writer.AppendLine("namespace {0}", namespaceName);
 			_writer.AppendBlockStatement(() =>
 			{
+				_writer.AppendLine("using System;");
+				_writer.AppendLine("using System.Diagnostics;");
+
 				foreach (var import in _registry.ImportedNamespaces
 												.Union(_importedRegistry.ImportedNamespaces)
 												.OrderBy(import => import))
