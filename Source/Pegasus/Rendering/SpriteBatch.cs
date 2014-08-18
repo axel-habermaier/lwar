@@ -295,6 +295,19 @@
 		/// <summary>
 		///     Draws the given rectangle.
 		/// </summary>
+		/// <param name="rectangle">The rectangle that should be drawn.</param>
+		/// <param name="texture">The texture that should be used to draw the quad.</param>
+		/// <param name="color">The color of the quad.</param>
+		/// <param name="texCoords">The texture coordinates that should be used.</param>
+		public void Draw(RectangleD rectangle, Texture2D texture, Color color, RectangleF? texCoords = null)
+		{
+			var area = new RectangleF((float)rectangle.Left, (float)rectangle.Top, (float)rectangle.Width, (float)rectangle.Height);
+			Draw(area, texture, color,texCoords);
+		}
+
+		/// <summary>
+		///     Draws the given rectangle.
+		/// </summary>
 		/// <param name="position">The position of the quad that should be drawn.</param>
 		/// <param name="size">The size of the quad that should be drawn.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
@@ -577,7 +590,7 @@
 
 			if (tooManyQuads)
 				Log.Warn("Sprite batch buffer overflow: {0} out of {1} allocated quads in use (could not add {2} quad(s)).",
-						 _numQuads, MaxQuads, quadCount);
+					_numQuads, MaxQuads, quadCount);
 
 			return !tooManyQuads;
 		}
@@ -655,11 +668,11 @@
 			{
 				_currentSectionList = _numSectionLists;
 				AddSectionList(new SectionList(BlendState, DepthStencilState, SamplerState,
-											   WorldMatrix,
-											   texture,
-											   ScissorArea, UseScissorTest,
-											   Layer,
-											   _numSections));
+					WorldMatrix,
+					texture,
+					ScissorArea, UseScissorTest,
+					Layer,
+					_numSections));
 			}
 
 			_currentSection = _numSections;

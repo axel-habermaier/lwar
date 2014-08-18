@@ -50,6 +50,30 @@
 		}
 
 		/// <summary>
+		///     Scales the given value from the range [0, previousMax] to [0, newMax].
+		/// </summary>
+		/// <param name="value">The value that should be scaled.</param>
+		/// <param name="previousMax">The previous maximum value.</param>
+		/// <param name="newMax">The new maximum value.</param>
+		public static double Scale(double value, double previousMax, double newMax)
+		{
+			Assert.ArgumentSatisfies(!previousMax.Equals(0), "Invalid previous value.");
+			return value / previousMax * newMax;
+		}
+
+		/// <summary>
+		///     Scales the given value from the range [0, previousMax] to [0, newMax].
+		/// </summary>
+		/// <param name="value">The value that should be scaled.</param>
+		/// <param name="previousMax">The previous maximum value.</param>
+		/// <param name="newMax">The new maximum value.</param>
+		public static float Scale(float value, float previousMax, float newMax)
+		{
+			Assert.ArgumentSatisfies(!previousMax.Equals(0), "Invalid previous value.");
+			return value / previousMax * newMax;
+		}
+
+		/// <summary>
 		///     Clamps the given value to be in the range [min, max].
 		/// </summary>
 		/// <param name="value">The value that should be clamped.</param>

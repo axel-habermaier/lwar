@@ -156,7 +156,9 @@
 			RenderContext.Initialize();
 			Assert.That(_assets.LoadingCompleted, "The render context loaded further assets.");
 
-			// Perform an update to fully initialize the game state
+			// Clear the event messages that might contain incorrect events (such as join messages for players that
+			// have already been playing while we're still connecting) and perform an update to fully initialize the game state
+			EventMessages.Clear();
 			_clock.Reset();
 			Update(false);
 

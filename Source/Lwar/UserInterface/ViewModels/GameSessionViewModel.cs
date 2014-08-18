@@ -94,6 +94,14 @@
 		}
 
 		/// <summary>
+		///     Gets the list of players of the game session.
+		/// </summary>
+		public PlayerList Players
+		{
+			get { return _gameSession.Players; }
+		}
+
+		/// <summary>
 		///     Gets a value indicating whether the connection to the server is lagging.
 		/// </summary>
 		public bool IsLagging

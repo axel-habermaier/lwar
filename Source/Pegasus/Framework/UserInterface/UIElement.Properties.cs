@@ -582,16 +582,16 @@
 		/// <summary>
 		///     Gets the rectangle encompassing the UI element's visual area.
 		/// </summary>
-		protected Rectangle VisualArea
+		protected RectangleD VisualArea
 		{
 			get
 			{
-				var x = (int)Math.Round(VisualOffset.X);
-				var y = (int)Math.Round(VisualOffset.Y);
-				var width = (int)Math.Round(ActualWidth);
-				var height = (int)Math.Round(ActualHeight);
+				var x = Math.Round(VisualOffset.X);
+				var y = Math.Round(VisualOffset.Y);
+				var width = Math.Round(ActualWidth);
+				var height = Math.Round(ActualHeight);
 
-				return new Rectangle(x, y, width, height);
+				return new RectangleD(x, y, width, height);
 			}
 		}
 	}

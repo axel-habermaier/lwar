@@ -187,6 +187,15 @@
 		}
 
 		/// <summary>
+		///     Clears the list, removing all messages.
+		/// </summary>
+		public void Clear()
+		{
+			_messages.SafeDisposeAll();
+			_messages.Clear();
+		}
+
+		/// <summary>
 		///     Tries to get the player instance for the player with the given identifier. Returns false if the player could not be
 		///     found.
 		/// </summary>

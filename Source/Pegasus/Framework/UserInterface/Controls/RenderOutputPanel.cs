@@ -309,7 +309,7 @@
 
 			// Draw the contents into the UI
 			var area = VisualArea;
-			var quad = new Quad(new RectangleF(area.Left, area.Top, area.Width, area.Height), Color.White, textureArea);
+			var quad = new Quad(new RectangleF((float)area.Left, (float)area.Top, (float)area.Width, (float)area.Height), Color.White, textureArea);
 			spriteBatch.Draw(ref quad, _outputTexture);
 		}
 
